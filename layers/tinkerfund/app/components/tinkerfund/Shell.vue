@@ -1,6 +1,4 @@
 <script setup lang="ts">
-defineProps<{ space: string }>()
-
 useHead({
   bodyAttrs: { class: 'tf-page' },
   script: [{ key: 'tf-theme', innerHTML: tinkerfundThemeBootScript, tagPosition: 'head' }],
@@ -9,8 +7,8 @@ useHead({
 
 <template>
   <div class="shell">
-    <a class="skip" href="#tf-main">Skip to content</a>
-    <div class="demo" role="note">
+    <a class="skip tf-noprint" href="#tf-main">Skip to content</a>
+    <div class="demo tf-noprint" role="note">
       <div class="tf-wrap">
         <span>Demo shop — nothing here is real</span>
         <span aria-hidden="true">·</span>
@@ -18,11 +16,11 @@ useHead({
       </div>
     </div>
     <!-- A page with its own header is a focused flow: no footer either (#1367). -->
-    <slot name="header"><TinkerfundHeader :space="space" /></slot>
+    <slot name="header"><TinkerfundHeader /></slot>
     <main id="tf-main" class="tf-wrap main">
       <slot />
     </main>
-    <TinkerfundFooter v-if="!$slots.header" :space="space" />
+    <TinkerfundFooter v-if="!$slots.header" />
   </div>
 </template>
 

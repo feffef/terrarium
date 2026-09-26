@@ -9,14 +9,14 @@ import {
   browseTinkerfundListings,
   tinkerfundHomeSections,
   groupTinkerfundPromotions,
-  formatTinkerfundCampaignCount,
   tinkerfundStateLabel,
   tinkerfundRemaining,
+  tinkerfundDeadline,
   tinkerfundPriceBounds,
+  tinkerfundTimeLeft,
 } from '../../app/utils/browse.ts'
-
-const NOW = Date.parse('2026-06-01T12:00:00Z')
-const HOUR = 3_600_000
+import { tinkerfundCount } from '../../app/utils/shop.ts'
+import { HOUR, NOW } from './support.ts'
 
 function doc(slug: string, fields: { category?: string; launch: string; end: string; goal?: number; pledged?: number; backers?: number; prices?: number[] }) {
   return {
@@ -67,7 +67,7 @@ describe('a Campaign listing', () => {
     const [lamp] = tinkerfundListings([doc('lamp', { launch: '-12d', end: '+36h', pledged: 1250, backers: 40, prices: [19, 5] })], [], NOW)
     expect(lamp).toMatchObject({
       path: '/campaigns/lamp', title: 'lamp', category: 'desk', inventor: 'test-inventor', figure: '<path d="lamp" />',
-      pledged: 1250, goal: 1000, backers: 40, prices: [19, 5], promoted: false,
+      pledged: 1250, goal: 1000, backers: 40, prices: [19, 5], priceFrom: 5, promoted: false,
     })
     expect(lamp!.status).toMatchObject({ state: 'live', endingSoon: true, goalReached: true, percent: 125, endAt: NOW + 36 * HOUR })
   })
@@ -126,6 +126,12 @@ describe('browsing Campaigns', () => {
     expect(titles({ sort: 'popular', min: 45 })).toEqual(['hammock', 'kettle'])
     expect(titles({ sort: 'popular', max: 5 })).toEqual(['stapler', 'lamp'])
   })
+
+  it('keeps a Campaign with no Rewards until a price range is set', () => {
+    const support = tinkerfundListings([doc('support', { launch: '-1d', end: '+9d', prices: [] })], [], NOW)
+    expect(browseTinkerfundListings(support, { sort: 'popular' }).map((l) => l.title)).toEqual(['support'])
+    expect(browseTinkerfundListings(support, { sort: 'popular', min: 1 })).toEqual([])
+  })
 })
 
 describe('the Reward price range', () => {
@@ -175,7 +181,7 @@ describe('Deals', () => {
   })
 
   it('counts Campaigns in the singular and plural', () => {
-    expect([0, 1, 6].map(formatTinkerfundCampaignCount)).toEqual(['0 Campaigns', '1 Campaign', '6 Campaigns'])
+    expect([0, 1, 6].map((n) => tinkerfundCount(n, 'Campaign'))).toEqual(['0 Campaigns', '1 Campaign', '6 Campaigns'])
   })
 })
 
@@ -191,5 +197,17 @@ describe('a listing’s status copy', () => {
     expect(tinkerfundRemaining(byTitle('lamp'), NOW + 13 * HOUR)).toBe('0 days 23 hours')
     expect(tinkerfundRemaining(byTitle('kettle'), NOW)).toBe('Launches in 3 days 0 hours')
     expect(tinkerfundRemaining(byTitle('ruler'), NOW)).toBe('Ended')
+  })
+
+  it('labels the time left: to the launch while Upcoming, to the end while Live, none once Ended', () => {
+    expect(tinkerfundTimeLeft(byTitle('kettle'), NOW)).toEqual({ label: 'Launches in', text: '3 days 0 hours', at: NOW + 72 * HOUR })
+    expect(tinkerfundTimeLeft(byTitle('lamp'), NOW)).toEqual({ label: 'Remaining', text: '1 day 12 hours', at: NOW + 36 * HOUR })
+    expect(tinkerfundTimeLeft(byTitle('hammock'), NOW)).toBeUndefined()
+  })
+
+  it('dates the launch while Upcoming, else the end', () => {
+    expect(tinkerfundDeadline(byTitle('kettle'))).toEqual({ label: 'Launches', at: NOW + 72 * HOUR })
+    expect(tinkerfundDeadline(byTitle('lamp'))).toEqual({ label: 'Ends', at: NOW + 36 * HOUR })
+    expect(tinkerfundDeadline(byTitle('hammock'))).toEqual({ label: 'Ended', at: NOW - HOUR })
   })
 })

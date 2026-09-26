@@ -1,15 +1,14 @@
 <script setup lang="ts">
-// prod's front door, sections in the order issue #1367 set; an empty section
-// hides itself. Popular now is the Instrument index table (issue #1375).
-
-const { space, now, clock, cards, categories, promotions } = await useTinkerfundCatalog()
-const home = computed(() => tinkerfundHomeSections(cards.value, now.value))
-const deal = computed(() => groupTinkerfundPromotions(promotions.value, now.value).active[0])
+const { clock, cards, categories, promotions } = await useTinkerfundCatalog()
+const home = computed(() => tinkerfundHomeSections(cards.value, clock.value.now))
+const featuredLeft = computed(() => home.value.featured && tinkerfundTimeLeft(home.value.featured.status, clock.value.countdown))
+const deal = computed(() => groupTinkerfundPromotions(promotions.value, clock.value.now).active[0])
 const tiles = computed(() =>
   categories.value.map((c) => ({ ...c, count: cards.value.filter((card) => card.category === c.slug).length })),
 )
-const link = (path = '') => tinkerfundPath(space, path)
+const { link } = useTinkerfundSpace()
 const locale = useTinkerfundLocale()
+const money = useTinkerfundMoney()
 </script>
 
 <template>
@@ -17,21 +16,23 @@ const locale = useTinkerfundLocale()
     <section v-if="home.featured" class="hero tf-panel" aria-labelledby="tf-featured">
       <div class="fig">
         <span class="tf-label">FIG. 1 · {{ home.featured.registry }}</span>
-        <!-- eslint-disable-next-line vue/no-v-html -- validated, token-coloured content SVG (issue #1363) -->
-        <svg viewBox="0 0 400 300" aria-hidden="true" v-html="home.featured.figure" />
+        <TinkerfundFigure :svg="home.featured.figure" />
       </div>
       <div class="read">
         <p class="row"><span class="id">{{ home.featured.registry }}</span><TinkerfundStateChips :status="home.featured.status" :promoted="home.featured.promoted" /></p>
         <p class="tf-label">Featured · {{ home.featured.categoryName }} · {{ home.featured.inventorName }}</p>
-        <h2 id="tf-featured">{{ home.featured.title }}</h2>
+        <h2 id="tf-featured" class="tf-h1">{{ home.featured.title }}</h2>
         <p class="tag">{{ home.featured.description }}</p>
         <p class="big">{{ home.featured.status.percent }}<small>% funded</small></p>
         <TinkerfundProgressBar :percent="home.featured.status.percent" :segments="25" />
         <dl class="tiles">
-          <div><dt>Pledged</dt><dd>{{ formatTinkerfundMoney(home.featured.pledged, locale) }}</dd></div>
-          <div><dt>Goal</dt><dd>{{ formatTinkerfundMoney(home.featured.goal, locale) }}</dd></div>
+          <div><dt>Pledged</dt><dd>{{ money(home.featured.pledged) }}</dd></div>
+          <div><dt>Goal</dt><dd>{{ money(home.featured.goal) }}</dd></div>
           <div><dt>Backers</dt><dd>{{ home.featured.backers.toLocaleString(locale) }}</dd></div>
-          <div><dt>Remaining</dt><dd>{{ tinkerfundRemaining(home.featured.status, clock) }}</dd></div>
+          <div v-if="featuredLeft">
+            <dt>{{ featuredLeft.label }}</dt>
+            <dd><TinkerfundTime :at="featuredLeft.at" :text="featuredLeft.text" /></dd>
+          </div>
         </dl>
         <p class="actions">
           <NuxtLink class="tf-btn primary" :to="link(home.featured.path)">View Campaign</NuxtLink>
@@ -61,7 +62,7 @@ const locale = useTinkerfundLocale()
             <svg viewBox="0 0 24 24" aria-hidden="true" v-html="c.icon" />
             <b>{{ c.name }}</b>
             <span class="blurb">{{ c.blurb }}</span>
-            <span class="tf-label">{{ formatTinkerfundCampaignCount(c.count) }}</span>
+            <span class="tf-label">{{ tinkerfundCount(c.count, 'Campaign') }}</span>
           </NuxtLink>
         </li>
       </ul>
@@ -101,7 +102,6 @@ h2 { margin: 0; font: 800 24px/1.1 var(--tf-font); font-stretch: 80%; }
 .read > * { margin: 0; }
 .row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
 .id { padding: 4px 8px; border-radius: 5px; background: var(--tf-accent); color: var(--tf-accent-ink); font: 600 13px/1 var(--tf-mono); }
-.read h2 { font: 800 clamp(30px, 4vw, 46px)/1 var(--tf-font); font-stretch: 78%; letter-spacing: -0.01em; }
 .tag { color: var(--tf-muted); }
 .big { font: 600 clamp(40px, 5vw, 56px)/1 var(--tf-mono); letter-spacing: -0.04em; font-variant-numeric: tabular-nums; }
 .big small { margin-left: 2px; color: var(--tf-muted); font-size: 0.5em; letter-spacing: 0; }

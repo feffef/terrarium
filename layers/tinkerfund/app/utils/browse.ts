@@ -1,7 +1,11 @@
 // Browsing the shop (story #1381): Home's sections, Discover, Category and
 // Deals, all derived from baked content at the page's "now" (issue #1364).
+import type { z } from 'zod'
+import type { campaign } from '../../schemas'
+import type { TinkerfundPromotionTerms } from './campaign'
 import { formatTinkerfundCountdown, resolveTinkerfundOffset, tinkerfundCountdown } from './clock'
-import { deriveCampaignStatus, derivePromotionState, type CampaignState, type CampaignStatus } from './status'
+import { tinkerfundSlug } from './shop'
+import { campaignPriceFrom, deriveCampaignStatus, derivePromotionState, type CampaignState, type CampaignStatus } from './status'
 
 export const TINKERFUND_SORTS = {
   popular: 'Popular',
@@ -65,29 +69,19 @@ export function tinkerfundBrowseRouteQuery(query: TinkerfundBrowseQuery): Record
   return out
 }
 
+type Campaign = z.infer<typeof campaign>
+
 export interface TinkerfundCampaignDoc {
   path: string
   title: string
   description?: string
-  campaign: {
-    registry: string
-    inventor: string
-    category: string
-    goal: number
-    launch: string
-    end: string
-    backers: number
-    pledged: number
-    figures: { svg: string }[]
-    rewards: { price: number }[]
+  campaign: Pick<Campaign, 'registry' | 'inventor' | 'category' | 'goal' | 'launch' | 'end' | 'backers' | 'pledged'> & {
+    figures: Pick<Campaign['figures'][number], 'svg'>[]
+    rewards: Pick<Campaign['rewards'][number], 'price'>[]
   }
 }
 
-export interface TinkerfundPromotionTiming {
-  campaign?: string
-  start: string
-  end?: string
-}
+type PromotionTiming = Pick<TinkerfundPromotionTerms, 'campaign' | 'start' | 'end'>
 
 /** What a Campaign card or an index-table row shows. */
 export interface TinkerfundListing {
@@ -103,6 +97,7 @@ export interface TinkerfundListing {
   pledged: number
   backers: number
   prices: number[]
+  priceFrom?: number
   status: CampaignStatus
   /** An Active Promotion names this Campaign; the shop calls it a Deal. */
   promoted: boolean
@@ -110,7 +105,7 @@ export interface TinkerfundListing {
 
 export function tinkerfundListings(
   docs: TinkerfundCampaignDoc[],
-  promotions: TinkerfundPromotionTiming[],
+  promotions: PromotionTiming[],
   now: number,
 ): TinkerfundListing[] {
   const promoted = new Set(
@@ -128,21 +123,37 @@ export function tinkerfundListings(
     pledged: c.pledged,
     backers: c.backers,
     prices: c.rewards.map((r) => r.price),
+    priceFrom: campaignPriceFrom(c.rewards),
     status: deriveCampaignStatus(c, c.pledged, now),
-    promoted: promoted.has(path.split('/').pop()),
+    promoted: promoted.has(tinkerfundSlug(path)),
   }))
 }
 
+export const TINKERFUND_STATE_LABELS = { upcoming: 'Upcoming', live: 'Live', ended: 'Ended', funded: 'Funded', unfunded: 'Unfunded' } as const
+
+/** The state, or the outcome once Ended. */
 export function tinkerfundStateLabel(status: CampaignStatus): string {
-  if (status.outcome) return status.outcome === 'funded' ? 'Funded' : 'Unfunded'
-  return status.state === 'live' ? 'Live' : 'Upcoming'
+  return TINKERFUND_STATE_LABELS[status.outcome ?? status.state]
+}
+
+const DEADLINE_LABELS = { upcoming: 'Launches', live: 'Ends', ended: 'Ended' } as const
+const COUNTDOWN_LABELS = { upcoming: `${DEADLINE_LABELS.upcoming} in`, live: 'Remaining' } as const
+
+export function tinkerfundDeadline(status: CampaignStatus): { label: (typeof DEADLINE_LABELS)[CampaignState]; at: number } {
+  return { label: DEADLINE_LABELS[status.state], at: status.state === 'upcoming' ? status.launchAt : status.endAt }
 }
 
 /** `clock` may tick past the page's "now"; the state stays fixed (issue #1364). */
+export function tinkerfundTimeLeft(status: CampaignStatus, clock: number) {
+  if (status.state === 'ended') return undefined
+  const { at } = tinkerfundDeadline(status)
+  return { label: COUNTDOWN_LABELS[status.state], text: formatTinkerfundCountdown(tinkerfundCountdown(clock, at)), at }
+}
+
 export function tinkerfundRemaining(status: CampaignStatus, clock: number): string {
-  if (status.state === 'ended') return 'Ended'
-  if (status.state === 'upcoming') return `Launches in ${formatTinkerfundCountdown(tinkerfundCountdown(clock, status.launchAt))}`
-  return formatTinkerfundCountdown(tinkerfundCountdown(clock, status.endAt))
+  const left = tinkerfundTimeLeft(status, clock)
+  if (!left) return DEADLINE_LABELS.ended
+  return status.state === 'upcoming' ? `${left.label} ${left.text}` : left.text
 }
 
 const STATE_ORDER = { live: 0, upcoming: 1, ended: 2 } as const
@@ -162,14 +173,15 @@ const COMPARE: Record<TinkerfundSort, (a: TinkerfundListing, b: TinkerfundListin
 }
 
 export function browseTinkerfundListings<T extends TinkerfundListing>(listings: T[], query: TinkerfundBrowseQuery): T[] {
-  const { category, state, soon, deal, min = 0, max = Infinity } = query
+  const { category, state, soon, deal, min, max } = query
+  const priced = min !== undefined || max !== undefined
   return listings
     .filter((l) =>
       (!category || l.category === category)
       && (!state || l.status.state === state)
       && (!soon || l.status.endingSoon)
       && (!deal || l.promoted)
-      && l.prices.some((p) => p >= min && p <= max),
+      && (!priced || l.prices.some((p) => p >= (min ?? 0) && p <= (max ?? Infinity))),
     )
     .sort((a, b) => COMPARE[query.sort](a, b) || a.registry.localeCompare(b.registry))
 }
@@ -194,7 +206,7 @@ export function tinkerfundHomeSections<T extends TinkerfundListing>(listings: T[
 
 /** Active Promotions, ending soonest first (open-ended last), and Scheduled
  *  ones, starting soonest first. */
-export function groupTinkerfundPromotions<T extends TinkerfundPromotionTiming>(promotions: T[], now: number) {
+export function groupTinkerfundPromotions<T extends PromotionTiming>(promotions: T[], now: number) {
   const timed = promotions.map((p) => ({
     ...p,
     startAt: resolveTinkerfundOffset(p.start, now),
@@ -205,9 +217,5 @@ export function groupTinkerfundPromotions<T extends TinkerfundPromotionTiming>(p
     active: timed.filter((p) => p.state === 'active').sort((a, b) => (a.endAt ?? Infinity) - (b.endAt ?? Infinity)),
     scheduled: timed.filter((p) => p.state === 'scheduled').sort((a, b) => a.startAt - b.startAt),
   }
-}
-
-export function formatTinkerfundCampaignCount(n: number): string {
-  return `${n} ${n === 1 ? 'Campaign' : 'Campaigns'}`
 }
 

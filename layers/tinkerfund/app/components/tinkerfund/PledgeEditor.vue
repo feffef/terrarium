@@ -1,23 +1,19 @@
 <script setup lang="ts">
-import type { TinkerfundAccountCampaign, TinkerfundPledgeChange } from '../../utils/account'
-import type { TinkerfundPledge } from '../../utils/cart'
+import type { TinkerfundCatalogCampaign, TinkerfundPledge, TinkerfundPledgeContents } from '../../utils/cart'
 
-// Changing a Pledge (story #1385): its lines, options, Add-ons and bonus. The
-// page checks the change and shows what it costs before anything is saved.
 const props = defineProps<{
-  campaign: TinkerfundAccountCampaign
+  campaign: TinkerfundCatalogCampaign
   /** What the Pledge holds now: stock it holds stays available to it. */
   pledge: TinkerfundPledge
   /** Where to start editing from, when coming back from the review. */
-  start?: TinkerfundPledgeChange
+  start?: TinkerfundPledgeContents
   zone: string
   error?: string
 }>()
-const emit = defineEmits<{ review: [change: TinkerfundPledgeChange]; close: [] }>()
+const emit = defineEmits<{ review: [change: TinkerfundPledgeContents]; close: [] }>()
 
 const whole = (value: unknown) => Math.max(0, Math.floor(Number(value) || 0))
-const locale = useTinkerfundLocale()
-const money = (amount: number) => formatTinkerfundMoney(amount, locale.value)
+const money = useTinkerfundMoney()
 
 const from = props.start ?? props.pledge
 const draft = reactive({
@@ -26,14 +22,14 @@ const draft = reactive({
   bonus: from.bonus ?? 0,
 })
 
-type Reward = TinkerfundAccountCampaign['rewards'][number]
-const held = (id: string) => props.pledge.lines.filter((l) => l.reward === id).reduce((n, l) => n + l.quantity, 0)
+type Reward = TinkerfundCatalogCampaign['rewards'][number]
+const held = (id: string) => tinkerfundHeld(props.pledge.lines, id)
 const max = (reward: Reward) => tinkerfundMaxQuantity({ ...reward, claimed: reward.claimed - held(reward.id) })
-const addonMax = (addon: NonNullable<TinkerfundAccountCampaign['addons']>[number]) =>
+const addonMax = (addon: NonNullable<TinkerfundCatalogCampaign['addons']>[number]) =>
   tinkerfundMaxQuantity({ ...addon, claimed: addon.claimed - (props.pledge.addons.find((a) => a.id === addon.id)?.quantity ?? 0) })
-const ships = (reward: Reward) => !reward.shipsTo || reward.shipsTo.includes(props.pledge.zone)
+const ships = (reward: Reward) => tinkerfundShipsTo(reward, props.pledge.zone)
 const linesOf = (reward: Reward) => draft.lines.filter((l) => l.reward === reward.id)
-const wanted = (reward: Reward) => linesOf(reward).reduce((n, l) => n + whole(l.quantity), 0)
+const wanted = (reward: Reward) => tinkerfundHeld(linesOf(reward).map((l) => ({ ...l, quantity: whole(l.quantity) })), reward.id)
 const canAdd = (reward: Reward) => ships(reward) && wanted(reward) < max(reward) && (!!reward.options?.length || !linesOf(reward).length)
 
 function addLine(reward: Reward) {
@@ -58,7 +54,7 @@ function review() {
     <fieldset v-for="reward in campaign.rewards" :key="reward.id" class="reward tf-panel">
       <legend>{{ reward.title }} <span class="price">{{ money(reward.price) }}</span></legend>
       <p class="facts">
-        <span v-if="reward.limit">Max {{ reward.limit }} per Backer</span>
+        <span v-if="reward.limit">{{ tinkerfundLimitNotice(reward.limit) }}</span>
         <span v-if="reward.stock !== undefined">{{ tinkerfundStock({ ...reward, claimed: reward.claimed - held(reward.id) }).label }}</span>
         <span v-if="!reward.shipsTo">Digital</span>
         <span v-if="!ships(reward)" class="flag">Doesn’t ship to {{ zone }}</span>
@@ -74,7 +70,7 @@ function review() {
           <span>Quantity<span class="tf-sr"> of {{ reward.title }}{{ reward.options?.length ? ` ${i + 1}` : '' }}</span></span>
           <input v-model="line.quantity" type="number" min="0" :max="max(reward)" step="1" inputmode="numeric">
         </label>
-        <button type="button" class="link" @click="removeLine(line)">Remove<span class="tf-sr"> {{ reward.title }} {{ i + 1 }}</span></button>
+        <button type="button" class="tf-link remove" @click="removeLine(line)">Remove<span class="tf-sr"> {{ reward.title }} {{ i + 1 }}</span></button>
       </div>
       <button v-if="canAdd(reward)" type="button" class="tf-btn add" @click="addLine(reward)">
         {{ linesOf(reward).length ? 'Add another' : 'Add' }}<span class="tf-sr"> {{ reward.title }}</span>
@@ -121,7 +117,7 @@ legend { float: left; width: 100%; padding: 0; font-weight: 700; overflow-wrap: 
 select, input { box-sizing: border-box; height: 40px; padding: 6px 8px; border: 1px solid var(--tf-muted); border-radius: var(--tf-radius); background: var(--tf-surface); color: var(--tf-ink); }
 input { width: 88px; font: 600 14px/1.2 var(--tf-mono); }
 .add { justify-self: start; padding: 7px 12px; }
-.link { padding: 8px 0; border: 0; background: none; color: var(--tf-link); text-decoration: underline; cursor: pointer; font-size: 14px; }
+.remove { padding: 8px 0; font-size: 14px; }
 .flag { color: var(--tf-bad); font-size: 14px; }
 .actions { display: flex; flex-wrap: wrap; gap: 10px; justify-content: space-between; }
 </style>

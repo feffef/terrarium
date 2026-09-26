@@ -1,5 +1,5 @@
-// Derived, never stored (issue #1364). Derive at the page's "now"; only
-// countdowns tick, so a checkout never changes state mid-flow.
+// Derived, never stored (issue #1364), at the "now" each navigation and each
+// Backer action reads afresh (story #1377).
 import { resolveTinkerfundOffset } from './clock'
 
 export type CampaignState = 'upcoming' | 'live' | 'ended'
@@ -14,6 +14,11 @@ export interface CampaignStatus {
   endAt: number
 }
 
+export function deriveCampaignState(campaign: { launch: string; end: string }, now: number): CampaignState {
+  if (now < resolveTinkerfundOffset(campaign.launch, now)) return 'upcoming'
+  return now < resolveTinkerfundOffset(campaign.end, now) ? 'live' : 'ended'
+}
+
 export function deriveCampaignStatus(
   campaign: { launch: string; end: string; goal: number },
   pledged: number,
@@ -22,7 +27,7 @@ export function deriveCampaignStatus(
   const launchAt = resolveTinkerfundOffset(campaign.launch, now)
   const endAt = resolveTinkerfundOffset(campaign.end, now)
   const funded = pledged >= campaign.goal
-  const state: CampaignState = now < launchAt ? 'upcoming' : now < endAt ? 'live' : 'ended'
+  const state = deriveCampaignState(campaign, now)
   const live = state === 'live'
   return {
     state,
@@ -37,7 +42,6 @@ export function deriveCampaignStatus(
 
 export type PromotionState = 'scheduled' | 'active' | 'expired'
 
-/** A Promotion with no `end` never expires. */
 export function derivePromotionState(promotion: { start: string; end?: string }, now: number): PromotionState {
   if (now < resolveTinkerfundOffset(promotion.start, now)) return 'scheduled'
   return !promotion.end || now < resolveTinkerfundOffset(promotion.end, now) ? 'active' : 'expired'

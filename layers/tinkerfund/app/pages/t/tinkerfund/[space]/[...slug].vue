@@ -2,7 +2,7 @@
 definePageMeta({ viewTransition: true })
 
 const route = useRoute()
-const { space, path, pagesKey } = useSpace('tinkerfund')
+const { space, path, pagesKey } = useTinkerfundSpace()
 
 const { data: doc, status, error } = await useAsyncData(route.path, () => queryCollection(pagesKey).path(path).first())
 
@@ -13,7 +13,7 @@ useSeoMeta(tinkerfundSeo(doc.value
 </script>
 
 <template>
-  <TinkerfundShell :space="space">
+  <TinkerfundShell>
     <TinkerfundCampaign v-if="doc?.campaign" :doc="{ ...doc, campaign: doc.campaign }" />
     <TinkerfundUpdate v-else-if="doc?.update" :doc="{ ...doc, update: doc.update }" />
     <article v-else-if="doc" class="tf-prose">

@@ -11,16 +11,9 @@ function reset() {
 </script>
 
 <template>
-  <button type="button" class="reset" @click="reset">Reset demo</button>
+  <button type="button" class="tf-link reset" @click="reset">Reset demo</button>
 </template>
 
 <style scoped>
-.reset {
-  padding: 2px 0;
-  border: 0;
-  background: none;
-  color: var(--tf-link);
-  text-decoration: underline;
-  cursor: pointer;
-}
+.reset { padding: 2px 0; }
 </style>

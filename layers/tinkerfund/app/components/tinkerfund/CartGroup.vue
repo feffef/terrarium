@@ -1,14 +1,13 @@
 <script setup lang="ts">
-import type { TinkerfundCartRequest } from '../../types/tinkerfund'
-import type { TinkerfundCartGroup } from '../../utils/cart'
+import type { TinkerfundCartGroup, TinkerfundCartRequest } from '../../utils/cart'
 
-// One Campaign's part of the Cart: what becomes one Pledge at checkout.
-const props = defineProps<{ space: string; group: TinkerfundCartGroup; zone: string }>()
+const props = defineProps<{ group: TinkerfundCartGroup; zone: string }>()
 const emit = defineEmits<{ change: [request: TinkerfundCartRequest] }>()
 
 const id = useId()
-const locale = useTinkerfundLocale()
-const money = (amount: number) => formatTinkerfundMoney(amount, locale.value)
+const money = useTinkerfundMoney()
+const { campaignLink } = useTinkerfundSpace()
+const shippingRows = computed(() => tinkerfundShippingRows([props.group], props.zone, money))
 
 function setBonus(event: Event) {
   const value = Math.floor(Number((event.target as HTMLInputElement).value))
@@ -19,8 +18,9 @@ function setBonus(event: Event) {
 <template>
   <section class="group tf-panel" :aria-labelledby="`${id}-h`">
     <header class="head">
-      <h2 :id="`${id}-h`"><NuxtLink :to="tinkerfundPath(space, `/campaigns/${group.campaign}`)">{{ group.title }}</NuxtLink></h2>
+      <h2 :id="`${id}-h`"><NuxtLink :to="campaignLink(group.campaign)">{{ group.title }}</NuxtLink></h2>
       <p v-if="group.closed" class="notice">{{ group.closed }}: remove these to check out</p>
+      <p v-if="group.unshipped.length" class="notice">{{ tinkerfundPledgeDoesntShip(group.unshipped, zone) }}</p>
     </header>
 
     <ul class="lines">
@@ -32,7 +32,7 @@ function setBonus(event: Event) {
           <span v-if="line.unavailable" class="notice">No longer available: {{ line.unavailable }}</span>
           <span v-else-if="!line.ships" class="notice">Doesn’t ship to {{ zone }}</span>
         </div>
-        <div class="stepper">
+        <div class="tf-stepper">
           <button
             type="button"
             :aria-label="`Fewer ${line.title}`"
@@ -52,7 +52,7 @@ function setBonus(event: Event) {
           </button>
         </div>
         <span class="amount">{{ money(line.amount) }}</span>
-        <button type="button" class="remove" @click="emit('change', setTinkerfundLine(line, 0))">
+        <button type="button" class="tf-link remove" @click="emit('change', setTinkerfundLine(line, 0))">
           Remove<span class="tf-sr"> {{ line.title }}</span>
         </button>
       </li>
@@ -63,14 +63,14 @@ function setBonus(event: Event) {
         </label>
         <input :id="`${id}-bonus`" type="number" min="1" step="1" inputmode="numeric" :value="group.bonus" :disabled="!!group.closed" @change="setBonus">
         <span class="amount">{{ money(group.closed ? 0 : group.bonus) }}</span>
-        <button type="button" class="remove" @click="emit('change', { campaign: group.campaign, bonus: -group.bonus })">
+        <button type="button" class="tf-link remove" @click="emit('change', { campaign: group.campaign, bonus: -group.bonus })">
           Remove<span class="tf-sr"> bonus support</span>
         </button>
       </li>
     </ul>
 
-    <dl class="foot">
-      <div><dt>Shipping to {{ zone }}</dt><dd>{{ group.shipping ? money(group.shipping) : '—' }}</dd></div>
+    <dl class="foot tf-summary-list compact">
+      <div v-for="row in shippingRows" :key="row.label"><dt>{{ row.label }}</dt><dd>{{ row.amount }}</dd></div>
       <div><dt>Subtotal</dt><dd>{{ money(group.subtotal) }}</dd></div>
     </dl>
   </section>
@@ -92,16 +92,9 @@ li { display: grid; grid-template-columns: 1fr auto; grid-template-areas: 'what 
 .out .what b, .out .amount { color: var(--tf-muted); }
 .detail, .each { color: var(--tf-muted); font-size: 13px; }
 .each { font-family: var(--tf-mono); }
-.stepper, .bonus input { grid-area: qty; justify-self: start; }
-.stepper { display: inline-flex; border: var(--tf-hairline); border-radius: var(--tf-radius); overflow: hidden; }
-.stepper button { width: 36px; min-height: 36px; border: 0; background: none; color: var(--tf-ink); cursor: pointer; font: 600 16px/1 var(--tf-mono); }
-.stepper button:disabled { color: var(--tf-muted); cursor: not-allowed; }
-.stepper output { display: grid; place-items: center; min-width: 32px; border-inline: var(--tf-hairline); font: 600 14px/1 var(--tf-mono); }
+.tf-stepper, .bonus input { grid-area: qty; justify-self: start; }
 .bonus input { width: 96px; padding: 7px 8px; border: 1px solid var(--tf-muted); border-radius: var(--tf-radius); background: var(--tf-surface); color: var(--tf-ink); font: 600 14px/1.2 var(--tf-mono); }
 .amount { grid-area: amount; justify-self: end; font: 600 15px/1 var(--tf-mono); font-variant-numeric: tabular-nums; }
-.remove { grid-area: remove; justify-self: start; padding: 4px 0; border: 0; background: none; color: var(--tf-link); text-decoration: underline; cursor: pointer; font-size: 14px; }
-.foot { display: grid; gap: 4px; margin: 8px 0 0; }
-.foot div { display: flex; justify-content: space-between; gap: 12px; }
-.foot dt { color: var(--tf-muted); font-size: 14px; }
-.foot dd { margin: 0; font: 600 14px/1.4 var(--tf-mono); }
+.remove { grid-area: remove; justify-self: start; padding: 4px 0; font-size: 14px; }
+.foot { margin-top: 8px; }
 </style>

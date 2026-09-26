@@ -1,15 +1,12 @@
 <script setup lang="ts">
-import type { TinkerfundCartRequest } from '../../types/tinkerfund'
-import type { TinkerfundCartView } from '../../utils/cart'
+import type { TinkerfundCartRequest, TinkerfundCartView } from '../../utils/cart'
 
-// The drawer an add opens (page inventory #1367); reduced motion drops its
-// slide through the theme's global rule.
-const props = defineProps<{ space: string; view: TinkerfundCartView }>()
+const props = defineProps<{ view: TinkerfundCartView }>()
 
 const id = useId()
-const locale = useTinkerfundLocale()
-const money = (amount: number) => formatTinkerfundMoney(amount, locale.value)
-const dialog = useTemplateRef<HTMLDialogElement>('dialog')
+const money = useTinkerfundMoney()
+const { link } = useTinkerfundSpace()
+const drawer = useTemplateRef('drawer')
 const added = ref<TinkerfundCartRequest>()
 
 const group = computed(() => props.view.groups.find((g) => g.campaign === added.value?.campaign))
@@ -22,26 +19,16 @@ const line = computed(() => {
 
 function show(request: TinkerfundCartRequest) {
   added.value = request
-  if (!dialog.value?.open) dialog.value?.showModal()
-}
-const close = () => dialog.value?.close()
-const closeOnBackdrop = (e: MouseEvent) => {
-  if (e.target === dialog.value) close()
+  drawer.value?.open()
 }
 
 defineExpose({ show })
 </script>
 
 <template>
-  <dialog ref="dialog" class="drawer" :aria-labelledby="`${id}-h`" @click="closeOnBackdrop">
-    <div class="body">
-      <div class="top">
-        <h2 :id="`${id}-h`">Added to your Cart</h2>
-        <button type="button" class="close" aria-label="Close" @click="close">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18" /></svg>
-        </button>
-      </div>
-
+  <TinkerfundDrawer ref="drawer" :aria-labelledby="`${id}-h`">
+    <template #top><h2 :id="`${id}-h`">Added to your Cart</h2></template>
+    <template #default="{ close }">
       <div v-if="group" class="added tf-panel">
         <p class="tf-label">{{ group.title }}</p>
         <template v-if="line">
@@ -54,46 +41,20 @@ defineExpose({ show })
           <span class="each">{{ money(group.bonus) }}</span>
         </template>
       </div>
-
       <dl class="sum">
-        <dt>Subtotal <span>· {{ formatTinkerfundItems(view.count) }}</span></dt>
+        <dt>Subtotal <span>· {{ tinkerfundCount(view.count, 'item') }}</span></dt>
         <dd>{{ money(view.subtotal) }}</dd>
       </dl>
       <p class="note">Shipping and discounts are worked out at checkout.</p>
-
       <div class="actions">
-        <NuxtLink class="tf-btn" :to="tinkerfundPath(space, '/cart')" @click="close">View cart</NuxtLink>
-        <NuxtLink class="tf-btn primary" :to="tinkerfundPath(space, '/checkout')" @click="close">Checkout</NuxtLink>
+        <NuxtLink class="tf-btn" :to="link('/cart')" @click="close">View cart</NuxtLink>
+        <NuxtLink class="tf-btn primary" :to="link('/checkout')" @click="close">Checkout</NuxtLink>
       </div>
-    </div>
-  </dialog>
+    </template>
+  </TinkerfundDrawer>
 </template>
 
 <style scoped>
-.drawer {
-  margin: 0 0 0 auto;
-  width: min(380px, 92vw);
-  max-width: none;
-  height: 100dvh;
-  max-height: none;
-  padding: 0;
-  border: 0;
-  border-left: var(--tf-hairline);
-  background: var(--tf-surface);
-  color: var(--tf-ink);
-  translate: 0 0;
-  transition: translate var(--tf-dur) var(--tf-ease), overlay var(--tf-dur) allow-discrete,
-    display var(--tf-dur) allow-discrete;
-}
-.drawer:not([open]) { translate: 100% 0; }
-@starting-style { .drawer[open] { translate: 100% 0; } }
-.drawer::backdrop { background: rgb(0 0 0 / 0.45); }
-.body { display: grid; gap: 16px; padding: 18px; }
-.top { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
-h2 { margin: 0; font: 800 22px/1.1 var(--tf-font); font-stretch: 80%; }
-.close { display: grid; place-items: center; width: 38px; height: 38px; border: 0; border-radius: var(--tf-radius); background: none; color: var(--tf-ink); cursor: pointer; }
-.close:hover { background: var(--tf-bg); }
-svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
 .added { display: grid; gap: 4px; padding: 14px; overflow-wrap: anywhere; }
 .added > * { margin: 0; }
 .detail { color: var(--tf-muted); font-size: 14px; }

@@ -1,38 +1,35 @@
 <script setup lang="ts">
-import type { TinkerfundAddon, TinkerfundCartRequest } from '../../types/tinkerfund'
+import type { TinkerfundBacking } from '../../composables/tinkerfund'
+import type { TinkerfundAddon } from '../../types/tinkerfund'
 
 const props = defineProps<{
-  slug: string
   addons: TinkerfundAddon[]
-  state: CampaignState
+  backing: TinkerfundBacking
   /** No Reward from this Campaign in the Cart yet, so an Add-on can't be had (issue #1365). */
   needsReward?: boolean
-  /** Why the Cart turned an Add-on away, keyed `addon:<id>`. */
-  refusals?: Record<string, string>
 }>()
-const emit = defineEmits<{ add: [request: TinkerfundCartRequest] }>()
-const locale = useTinkerfundLocale()
-const rows = computed(() => props.addons.map((addon) => ({ addon, stock: tinkerfundStock(addon) })))
+const money = useTinkerfundMoney()
+const rows = computed(() => props.addons.map((addon) => ({ addon, stock: tinkerfundStock(addon), refusal: props.backing.refusals[`addon:${addon.id}`] })))
 </script>
 
 <template>
   <div class="wrap">
-    <p v-if="needsReward && state === 'live'" class="hint">Add a Reward to your Cart first: Add-ons come with one.</p>
+    <p v-if="needsReward && backing.state === 'live'" class="hint">Add a Reward to your Cart first: Add-ons come with one.</p>
     <ul class="addons">
-      <li v-for="{ addon, stock } in rows" :key="addon.id">
+      <li v-for="{ addon, stock, refusal } in rows" :key="addon.id">
         <div class="what">
           <b>{{ addon.title }}</b>
           <span v-if="addon.description" class="desc">{{ addon.description }}</span>
           <span v-if="stock.label" class="stock" :class="{ scarce: stock.soldOut }">{{ stock.label }}</span>
-          <span v-if="refusals?.[`addon:${addon.id}`]" class="scarce" role="alert">{{ refusals[`addon:${addon.id}`] }}</span>
+          <span v-if="refusal" class="scarce" role="alert">{{ refusal }}</span>
         </div>
-        <span class="price">{{ formatTinkerfundMoney(addon.price, locale) }}</span>
+        <span class="price">{{ money(addon.price) }}</span>
         <button
           type="button"
           class="tf-btn"
-          :disabled="state !== 'live' || stock.soldOut || needsReward"
+          :disabled="backing.state !== 'live' || stock.soldOut || needsReward"
           :aria-label="`Add ${addon.title} to cart`"
-          @click="emit('add', { campaign: slug, addon: addon.id, quantity: 1 })"
+          @click="backing.add({ campaign: backing.slug, addon: addon.id, quantity: 1 })"
         >
           Add
         </button>

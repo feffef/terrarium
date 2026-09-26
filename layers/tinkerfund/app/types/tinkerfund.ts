@@ -1,4 +1,4 @@
-// Both Spaces share one schema (tenant.config.ts), so prod's generated item
+// Both Spaces share one schema (schemas.ts), so prod's generated item
 // types describe qa's documents too.
 import type {
   TinkerfundProdCommentsCollectionItem,
@@ -13,5 +13,3 @@ export type TinkerfundAddon = NonNullable<TinkerfundCampaign['addons']>[number]
 export type TinkerfundStretchGoal = NonNullable<TinkerfundCampaign['stretchGoals']>[number]
 export type TinkerfundComment = TinkerfundProdCommentsCollectionItem['comments'][number]
 export type TinkerfundPromotion = TinkerfundProdPromotionsCollectionItem
-
-export type { TinkerfundCartRequest } from '../utils/cart'

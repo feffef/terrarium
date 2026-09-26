@@ -5,7 +5,7 @@ definePageMeta({ viewTransition: true, key: (route) => route.fullPath })
 const route = useRoute()
 const q = String([route.query.q].flat()[0] ?? '').trim()
 const search = useTinkerfundSearch()
-const { space } = useSpace('tinkerfund')
+const { space, link } = useTinkerfundSpace()
 const found = useAsyncData(`tinkerfund-search-${space}-${q}`, () => search(q))
 const [{ clock, cards }, { data: hits, status, error }] = await Promise.all([useTinkerfundCatalog(), found])
 const results = computed(() => {
@@ -18,10 +18,10 @@ useSeoMeta(tinkerfundSeo({ kind: 'private', space, title: q ? `Search: ${q}` : '
 </script>
 
 <template>
-  <TinkerfundShell :space="space">
+  <TinkerfundShell>
     <header class="intro">
-      <p class="tf-label">Search · {{ q ? formatTinkerfundCampaignCount(results.length) : 'Campaigns and Inventors' }}</p>
-      <h1>{{ q ? `Results for “${q}”` : 'Search' }}</h1>
+      <p class="tf-label">Search · {{ q ? tinkerfundCount(results.length, 'Campaign') : 'Campaigns and Inventors' }}</p>
+      <h1 class="tf-h1">{{ q ? `Results for “${q}”` : 'Search' }}</h1>
       <TinkerfundSearchField class="field" :value="q" :autofocus="!q" />
     </header>
 
@@ -38,7 +38,7 @@ useSeoMeta(tinkerfundSeo({ kind: 'private', space, title: q ? `Search: ${q}` : '
         <h2>Search the catalog</h2>
         <p>Type a Campaign or an Inventor’s name. Suggestions appear as you type.</p>
       </template>
-      <NuxtLink class="tf-btn" :to="tinkerfundPath(space, '/discover')">Discover Campaigns</NuxtLink>
+      <NuxtLink class="tf-btn" :to="link('/discover')">Discover Campaigns</NuxtLink>
     </div>
     <ContentLoadErrorDialog :status="status" :error="error" :context="route.path" />
   </TinkerfundShell>
@@ -47,7 +47,6 @@ useSeoMeta(tinkerfundSeo({ kind: 'private', space, title: q ? `Search: ${q}` : '
 <style scoped>
 .intro { display: grid; gap: 6px; margin-bottom: 22px; }
 .intro > * { margin: 0; }
-h1 { font: 800 clamp(30px, 4vw, 44px)/1.02 var(--tf-font); font-stretch: 78%; overflow-wrap: anywhere; }
 .field { max-width: 560px; margin-top: 10px; }
 .grid {
   display: grid;

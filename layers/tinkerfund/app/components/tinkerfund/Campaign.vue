@@ -1,37 +1,35 @@
 <script setup lang="ts">
-import type { TinkerfundCampaign, TinkerfundCartRequest, TinkerfundPage } from '../../types/tinkerfund'
+import type { TinkerfundBacking } from '../../composables/tinkerfund'
+import type { TinkerfundCampaign, TinkerfundPage } from '../../types/tinkerfund'
+import type { TinkerfundCartRequest } from '../../utils/cart'
 
-// The Campaign page (story #1380, page inventory #1367): one long page, its
-// sections reached by anchor links.
 const props = defineProps<{ doc: TinkerfundPage & { campaign: TinkerfundCampaign } }>()
 
-const { space, pagesKey, collections } = useSpace('tinkerfund')
-const { now, ticking } = await useTinkerfundClock()
-const locale = useTinkerfundLocale()
+const { space, pagesKey, collections, link } = useTinkerfundSpace()
+const money = useTinkerfundMoney()
 const categories = useTinkerfundCategories()
 
-const slug = computed(() => props.doc.path.split('/').pop()!)
-const { view: cart, change: changeCart, pledges, baked } = await useTinkerfundCart()
+const slug = computed(() => tinkerfundSlug(props.doc.path))
+const [{ view: cart, change: changeCart, pledges, baked, clock }, { zoneName }] = await Promise.all([useTinkerfundCart(), useTinkerfundShop()])
+const now = computed(() => clock.value.now)
 // Totals, Stretch goals and stock count the visitor's own Pledges (story #1384).
 const c = computed(() => withTinkerfundPledges(slug.value, props.doc.campaign, pledges.value, baked.value))
 
 const { data } = await useAsyncData(`tinkerfund-campaign-${space}-${props.doc.path}`, async () => {
-  const [inventor, thread, updates, promotions, shop] = await Promise.all([
+  const [inventor, thread, updates, promotions] = await Promise.all([
     queryCollection(collections.inventors).where('stem', '=', c.value.inventor).first(),
     queryCollection(collections.comments).where('campaign', '=', slug.value).first(),
     queryCollection(pagesKey).where('path', 'LIKE', `${props.doc.path}/updates/%`).select('path', 'title', 'update').all(),
     queryCollection(collections.promotions).all(),
-    queryCollection(collections.shop).first(),
   ])
-  return { inventor, comments: thread?.comments ?? [], updates, promotions, shop }
+  return { inventor, comments: thread?.comments ?? [], updates, promotions }
 })
 
 const status = computed(() => deriveCampaignStatus(c.value, c.value.pledged, now.value))
 const deals = computed(() => tinkerfundAutomaticDeals(data.value?.promotions ?? [], slug.value, now.value))
-const zones = computed(() => Object.fromEntries((data.value?.shop?.zones ?? []).map((z) => [z.id, z.name])))
 const updates = computed(() =>
   (data.value?.updates ?? [])
-    .map((u) => ({ ...u, n: Number(u.path.split('/').pop()), at: resolveTinkerfundOffset(u.update?.published ?? '+0h', now.value) }))
+    .map((u) => ({ ...u, n: Number(tinkerfundSlug(u.path)), at: resolveTinkerfundOffset(u.update?.published ?? '+0h', now.value) }))
     .sort((a, b) => b.n - a.n),
 )
 const comments = computed(() => data.value?.comments ?? [])
@@ -40,9 +38,11 @@ const from = computed(() => campaignPriceFrom(c.value.rewards))
 const category = computed(() => categories.value.find((x) => x.slug === c.value.category))
 
 const drawer = useTemplateRef('drawer')
-// Why the last add was turned away, keyed by what was added.
 const refusals = ref<Record<string, string>>({})
-const needsReward = computed(() => !cart.value.groups.some((g) => g.campaign === slug.value && g.lines.some((l) => 'reward' in l.ref && !l.unavailable)))
+const needsReward = computed(() => !tinkerfundRewarded(
+  cart.value.groups.find((g) => g.campaign === slug.value)?.lines ?? [],
+  tinkerfundPledgeFor(pledges.value, slug.value),
+))
 
 function addToCart(request: TinkerfundCartRequest) {
   const key = 'reward' in request ? `reward:${request.reward}` : 'addon' in request ? `addon:${request.addon}` : 'bonus'
@@ -50,14 +50,15 @@ function addToCart(request: TinkerfundCartRequest) {
   refusals.value = message ? { [key]: message } : {}
   if (!message) drawer.value?.show(request)
 }
+const backing = computed<TinkerfundBacking>(() => ({ slug: slug.value, state: status.value.state, refusals: refusals.value, add: addToCart }))
 </script>
 
 <template>
-  <article class="campaign">
+  <article class="tf-campaign">
     <TinkerfundBreadcrumbs
       :items="[
-        { label: 'Home', to: tinkerfundPath(space) },
-        { label: category?.name ?? c.category, to: tinkerfundPath(space, `/category/${c.category}`) },
+        { label: 'Home', to: link() },
+        { label: category?.name ?? c.category, to: link(`/category/${c.category}`) },
         { label: doc.title },
       ]"
     />
@@ -72,8 +73,7 @@ function addToCart(request: TinkerfundCartRequest) {
         :inventor="data?.inventor?.name"
         :campaign="c"
         :deals="deals"
-        :now="now"
-        :ticking="ticking"
+        :clock="clock"
       />
     </div>
 
@@ -107,41 +107,22 @@ function addToCart(request: TinkerfundCartRequest) {
         </template>
       </section>
 
-      <section id="rewards" class="rewards" aria-labelledby="rewards-h">
-        <div class="column">
-          <h2 id="rewards-h">Rewards</h2>
-          <p v-for="deal in deals" :key="deal.stem"><TinkerfundDealBadge :promotion="deal" /></p>
-          <TinkerfundRewardCard
-            v-for="reward in c.rewards"
-            :key="reward.id"
-            :slug="slug"
-            :reward="reward"
-            :state="status.state"
-            :zones="zones"
-            :now="now"
-            :refusal="refusals[`reward:${reward.id}`]"
-            @add="addToCart"
-          />
-          <template v-if="c.addons?.length">
-            <h3>Add-ons</h3>
-            <TinkerfundAddonList
-              :slug="slug"
-              :addons="c.addons"
-              :state="status.state"
-              :needs-reward="needsReward"
-              :refusals="refusals"
-              @add="addToCart"
-            />
-          </template>
-          <TinkerfundSupportCard :slug="slug" :state="status.state" :refusal="refusals.bonus" @add="addToCart" />
-        </div>
+      <section id="rewards" class="rewards" aria-labelledby="rewards-h" tabindex="-1">
+        <h2 id="rewards-h">Rewards</h2>
+        <p v-for="deal in deals" :key="deal.stem"><TinkerfundDealBadge :promotion="deal" /></p>
+        <TinkerfundRewardCard v-for="reward in c.rewards" :key="reward.id" :reward="reward" :backing="backing" :now="now" :zone-name="zoneName" />
+        <template v-if="c.addons?.length">
+          <h3>Add-ons</h3>
+          <TinkerfundAddonList :addons="c.addons" :backing="backing" :needs-reward="needsReward" />
+        </template>
+        <TinkerfundSupportCard :backing="backing" />
       </section>
 
       <section id="updates" aria-labelledby="updates-h">
         <h2 id="updates-h">Updates</h2>
         <ol v-if="updates.length" class="updates">
           <li v-for="u in updates" :key="u.path">
-            <NuxtLink :to="tinkerfundPath(space, u.path)">
+            <NuxtLink :to="link(u.path)">
               <span class="tf-label">Update #{{ u.n }}</span>
               <b>{{ u.title }}</b>
             </NuxtLink>
@@ -157,11 +138,11 @@ function addToCart(request: TinkerfundCartRequest) {
       </section>
     </div>
 
-    <div class="backbar">
-      <span v-if="from !== undefined" class="from">From <b>{{ formatTinkerfundMoney(from, locale) }}</b></span>
+    <div class="tf-backbar">
+      <span v-if="from !== undefined" class="from">From <b>{{ money(from) }}</b></span>
       <TinkerfundCampaignAction :slug="slug" :state="status.state" />
     </div>
-    <TinkerfundMiniCart ref="drawer" :space="space" :view="cart" />
+    <TinkerfundMiniCart ref="drawer" :view="cart" />
   </article>
 </template>
 
@@ -180,8 +161,10 @@ function addToCart(request: TinkerfundCartRequest) {
     grid-template-rows: auto auto 1fr;
     column-gap: 32px;
   }
-  .rewards { grid-column: 2; grid-row: 1 / span 3; }
-  .rewards .column {
+  .rewards {
+    grid-column: 2;
+    grid-row: 1 / span 3;
+    align-self: start;
     position: sticky;
     top: 120px;
     max-height: calc(100vh - 136px);
@@ -193,9 +176,9 @@ function addToCart(request: TinkerfundCartRequest) {
 
 h2 { margin: 0 0 14px; padding-bottom: 10px; border-bottom: var(--tf-hairline); font: 800 22px/1 var(--tf-font); font-stretch: 80%; }
 h3 { margin: 28px 0 10px; font: 800 18px/1.1 var(--tf-font); font-stretch: 82%; }
-.column { display: grid; gap: 12px; align-content: start; }
-.column > h2, .column > h3, .column > p { margin: 0; }
-.column > h3 { margin-top: 12px; }
+.rewards { display: grid; gap: 12px; align-content: start; }
+.rewards > h2, .rewards > h3, .rewards > p { margin: 0; }
+.rewards > h3 { margin-top: 12px; }
 
 .story { container-type: inline-size; }
 .story-grid { display: grid; gap: 24px; }
@@ -215,7 +198,7 @@ h3 { margin: 28px 0 10px; font: 800 18px/1.1 var(--tf-font); font-stretch: 82%; 
 .when { color: var(--tf-muted); font: 500 12px/1.4 var(--tf-mono); }
 .empty { color: var(--tf-muted); }
 
-.backbar {
+.tf-backbar {
   position: sticky;
   bottom: 0;
   z-index: 5;
@@ -230,12 +213,9 @@ h3 { margin: 28px 0 10px; font: 800 18px/1.1 var(--tf-font); font-stretch: 82%; 
 }
 .from { font-size: 14px; color: var(--tf-muted); }
 .from b { color: var(--tf-ink); font: 600 16px/1 var(--tf-mono); }
-@media (min-width: 720px) { .backbar { margin-inline: -28px; padding-inline: 28px; } }
+@media (min-width: 720px) { .tf-backbar { margin-inline: -28px; padding-inline: 28px; } }
 /* WCAG 2.2 SC 2.4.11: keep focused controls and anchor targets clear of the sticky header, section nav and back bar. */
-:global(html:has(.campaign)) { scroll-padding-top: 7rem; }
-@media (max-width: 999px) { :global(html:has(.backbar)) { scroll-padding-bottom: 6rem; } }
-@media (min-width: 1000px) {
-  .backbar { display: none; }
-  .campaign :deep(.sections a[href='#rewards']) { display: none; }
-}
+:global(html:has(.tf-campaign)) { scroll-padding-top: 7rem; }
+@media (max-width: 999px) { :global(html:has(.tf-backbar)) { scroll-padding-bottom: 6rem; } }
+@media (min-width: 1000px) { .tf-backbar { display: none; } }
 </style>

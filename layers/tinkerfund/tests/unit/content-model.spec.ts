@@ -99,6 +99,12 @@ describe('Campaign pages', () => {
     ])
   })
 
+  it('lets two Rewards share an option id, since a Pledge line names options by Reward', () => {
+    const c = validCampaign()
+    const [mug, manual] = c.rewards
+    expect(issues('pages', { campaign: { ...c, rewards: [mug, { ...manual, options: mug!.options }] } })).toEqual([])
+  })
+
   it('rejects a Reward that is neither digital nor shipped', () => {
     const c = validCampaign()
     const { shipsTo: _, ...unshipped } = c.rewards[0]!
@@ -170,7 +176,7 @@ describe('data Collections', () => {
       campaign: 'mug',
       comments: [{ author: 'Bo', posted: '-2d', text: 'Nice.', replies: [{ author: 'Ada', posted: '-1d', text: 'Thanks.', inventor: true }] }],
     })).toEqual([])
-    expect(issues('promotions', { title: 'Launch week', campaign: 'mug', discount: { amount: 5 }, start: '-1d', end: '+6d' })).toEqual([])
+    expect(issues('promotions', { title: 'Launch week', description: 'A thank-you.', campaign: 'mug', discount: { amount: 5 }, start: '-1d', end: '+6d' })).toEqual([])
     expect(issues('promotions', { title: 'Shop-wide', code: 'TINKER10', discount: { percent: 10 }, start: '-1d' })).toEqual([])
     expect(issues('backer', {
       name: 'Demo Backer',

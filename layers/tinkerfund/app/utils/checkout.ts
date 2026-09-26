@@ -1,20 +1,41 @@
 // Checkout (story #1384, Pledge flow #1365): Promotions over a Cart, then one
-// Pledge per Campaign, stored in the visitor's overlay.
-import { tinkerfundCartLineKey, tinkerfundCents as cents, tinkerfundOptionsLabel, tinkerfundShipping, tinkerfundSum as sum } from './cart'
-import type { TinkerfundCartCatalog, TinkerfundCartGroup, TinkerfundCartView, TinkerfundOverlay, TinkerfundPledge, TinkerfundZone } from './cart'
-import { resolveTinkerfundOffset } from './clock'
+// Pledge per Campaign.
+import { tinkerfundAutomaticDeals, tinkerfundPromotionTargets } from './campaign'
+import type { TinkerfundPromotionTerms } from './campaign'
+import {
+  mergeTinkerfundAddons,
+  mergeTinkerfundLines,
+  settleTinkerfundPledge,
+  tinkerfundCartLineKey,
+  tinkerfundCents as cents,
+  tinkerfundDiscount,
+  tinkerfundGoods,
+  tinkerfundDoesntShip,
+  tinkerfundHeld,
+  tinkerfundLimitNotice,
+  tinkerfundOptionsLabel,
+  tinkerfundShipsTo,
+  tinkerfundSum as sum,
+} from './cart'
+import type {
+  TinkerfundBackerState,
+  TinkerfundCartGroup,
+  TinkerfundCartView,
+  TinkerfundCatalog,
+  TinkerfundPledge,
+  TinkerfundShop,
+  TinkerfundStep,
+  TinkerfundZone,
+} from './cart'
 import { derivePromotionState } from './status'
 
-export interface TinkerfundPromotionTerms {
-  title: string
-  code?: string
-  campaign?: string
-  discount: { percent: number } | { amount: number }
-  start: string
-  end?: string
-}
-
 export interface TinkerfundQuoteGroup extends TinkerfundCartGroup {
+  /** The Promotions the Pledge holds once placed: at most one of them a code. */
+  promotions: string[]
+  /** The code the Pledge held, which the entered one replaces. */
+  replacedCode?: string
+  /** The code the Pledge holds, which saves more than the entered one. */
+  keptCode?: string
   discount: number
   total: number
 }
@@ -32,10 +53,9 @@ export interface TinkerfundQuote {
   codeProblem?: string
 }
 
-const targets = (p: TinkerfundPromotionTerms, campaign: string) => !p.campaign || p.campaign === campaign
 const goodsOf = (group: TinkerfundCartGroup) => sum(group.lines.map((l) => l.amount))
 
-function findCode<P extends TinkerfundPromotionTerms>(promotions: P[], entered: string | undefined, campaigns: string[], now: number) {
+function findCode(promotions: TinkerfundPromotionTerms[], entered: string | undefined, campaigns: string[], now: number) {
   const code = entered?.trim().toUpperCase()
   if (!code) return {}
   const promotion = promotions.find((p) => p.code === code)
@@ -43,34 +63,54 @@ function findCode<P extends TinkerfundPromotionTerms>(promotions: P[], entered: 
   const state = derivePromotionState(promotion, now)
   if (state === 'scheduled') return { problem: 'That code isn’t active yet' }
   if (state === 'expired') return { problem: 'That code has expired' }
-  if (!campaigns.some((c) => targets(promotion, c))) return { problem: 'That code doesn’t apply to anything in your Cart' }
+  if (!campaigns.some((c) => tinkerfundPromotionTargets(promotion, c))) return { problem: 'That code doesn’t apply to anything in your Cart' }
   return { promotion }
 }
 
-/** Automatic discounts plus at most one code, off Rewards and Add-ons only (issue #1365). */
-export function quoteTinkerfundCheckout(
-  view: TinkerfundCartView,
-  promotions: TinkerfundPromotionTerms[],
-  code: string | undefined,
-  now: number,
-): TinkerfundQuote {
-  const entered = findCode(promotions, code, view.groups.filter((g) => goodsOf(g) > 0).map((g) => g.campaign), now)
-  const applied = [
-    ...promotions.filter((p) => !p.code && derivePromotionState(p, now) === 'active'),
-    ...(entered.promotion ? [entered.promotion] : []),
-  ]
+/**
+ * Automatic discounts plus at most one code per Pledge, off Rewards and
+ * Add-ons only (issue #1365). Adding to a Pledge quotes the change in its
+ * discount: the terms it already earned cover what is added, one earned again
+ * adds nothing, and a code entered now replaces the code it held if it saves at
+ * least as much over the whole Pledge, so a top-up never costs more.
+ */
+export function quoteTinkerfundCheckout(view: TinkerfundCartView, shop: TinkerfundShop, code: string | undefined): TinkerfundQuote {
+  const entered = findCode(shop.promotions, code, view.groups.filter((g) => goodsOf(g) > 0).map((g) => g.campaign), shop.now)
   const deals = new Set<string>()
   const groups = view.groups.map((group): TinkerfundQuoteGroup => {
     const goods = goodsOf(group)
-    const off = applied.filter((p) => targets(p, group.campaign)).map((p) => {
-      const amount = 'percent' in p.discount ? (goods * p.discount.percent) / 100 : p.discount.amount
-      if (goods > 0) deals.add(p.title)
-      return amount
-    })
-    const discount = Math.min(goods, sum(off))
-    return { ...group, discount, total: cents(group.subtotal - discount + group.shipping) }
+    const { existing } = group
+    const held = existing?.promotions ?? []
+    const campaign = shop.catalog[group.campaign]?.campaign
+    const allGoods = (existing && campaign ? tinkerfundGoods(existing, campaign) : 0) + goods
+    const automatic = goods > 0 ? tinkerfundAutomaticDeals(shop.promotions, group.campaign, shop.now) : []
+    const settle = (kept: string[], code?: TinkerfundPromotionTerms) => {
+      const earned = [...automatic, ...(code ? [code] : [])].filter((p) => !kept.includes(p.stem))
+      const terms = [...shop.promotions.filter((p) => kept.includes(p.stem)), ...earned]
+      return { earned, stems: [...kept, ...earned.map((p) => p.stem)], discount: tinkerfundDiscount(allGoods, terms) }
+    }
+    const offered = goods > 0 && entered.promotion && tinkerfundPromotionTargets(entered.promotion, group.campaign) && !held.includes(entered.promotion.stem)
+      ? entered.promotion
+      : undefined
+    const earlier = offered && shop.promotions.find((p) => p.code && held.includes(p.stem))
+    const keep = settle(held)
+    const swap = offered ? settle(held.filter((stem) => stem !== earlier?.stem), offered) : undefined
+    const chosen = swap && swap.discount >= keep.discount ? swap : keep
+    for (const p of chosen.earned) deals.add(p.title)
+    const discount = cents(chosen.discount - (existing?.discount ?? 0))
+    return {
+      ...group,
+      promotions: chosen.stems,
+      replacedCode: chosen === swap ? earlier?.code : undefined,
+      keptCode: swap && chosen === keep ? earlier?.code : undefined,
+      discount,
+      total: cents(group.subtotal - discount + group.shipping),
+    }
   })
   const discount = sum(groups.map((g) => g.discount))
+  const enteredCode = entered.promotion?.code
+  const taken = groups.some((g) => entered.promotion && g.promotions.includes(entered.promotion.stem))
+  const kept = groups.find((g) => g.keptCode)?.keptCode
   return {
     groups,
     subtotal: view.subtotal,
@@ -78,76 +118,29 @@ export function quoteTinkerfundCheckout(
     shipping: view.shipping,
     total: cents(view.total - discount),
     deals: [...deals],
-    code: entered.promotion?.code,
-    codeProblem: entered.problem,
+    code: taken ? enteredCode : undefined,
+    codeProblem: entered.problem ?? (enteredCode && !taken && kept ? tinkerfundKeptCodeNotice(kept) : undefined),
   }
 }
 
-/** A past Pledge as baked into the `backer` collection. */
-export interface TinkerfundBakedPledge {
-  ref: string
-  campaign: string
-  placed: string
-  zone: TinkerfundZone
-  lines: { reward: string; options?: Record<string, string>; quantity: number }[]
-  addons?: { id: string; quantity: number }[]
-  bonus?: number
-}
-
-/** The Pledge a Campaign already has: the visitor's own, else a baked one they haven't cancelled. */
-export function tinkerfundPledgeFor(campaign: string, pledges: TinkerfundPledge[], baked: TinkerfundBakedPledge[]) {
-  return (
-    pledges.find((p) => p.campaign === campaign && p.cancelled === undefined) ??
-    baked.find((b) => b.campaign === campaign && !pledges.some((p) => p.ref === b.ref))
-  )
-}
-
-interface Priced {
-  id: string
-  price: number
-  claimed: number
-}
-
-type CountedPledge = Pick<TinkerfundBakedPledge, 'ref' | 'campaign' | 'lines' | 'addons' | 'bonus'> & { discount?: number }
+export const tinkerfundKeptCodeNotice = (code: string) => `Your Pledge keeps code ${code}, which saves more`
 
 /**
- * A Campaign's totals and stock with the visitor's Pledges counted (issue
- * #1364): what a Pledge raises is its Rewards, Add-ons and bonus less its
- * discount; shipping raises nothing. A Pledge that replaces a baked one counts
- * only the difference, since the baked totals already hold the baked Pledge;
- * a cancelled one counts as empty, so a cancel can pull a Campaign back below
- * its goal (story #1385).
+ * A summary's shipping rows: what new Pledges ship for, and apart from it the
+ * net change for Pledges moved to this zone, which can be negative (issue #1365).
  */
-export function withTinkerfundPledges<C extends { pledged: number; backers: number; rewards: Priced[]; addons?: Priced[] }>(
-  slug: string,
-  campaign: C,
-  pledges: TinkerfundPledge[],
-  baked: TinkerfundBakedPledge[],
-): C {
-  const mine = pledges.filter((p) => p.campaign === slug)
-  if (!mine.length) return campaign
-  const was = (p: TinkerfundPledge): CountedPledge | undefined => baked.find((b) => b.ref === p.ref)
-  const is = (p: TinkerfundPledge): CountedPledge | undefined => (p.cancelled === undefined ? p : undefined)
-  const count = (p: CountedPledge | undefined, kind: 'reward' | 'addon', id: string) =>
-    kind === 'reward'
-      ? (p?.lines ?? []).filter((l) => l.reward === id).reduce((n, l) => n + l.quantity, 0)
-      : (p?.addons ?? []).filter((a) => a.id === id).reduce((n, a) => n + a.quantity, 0)
-  const taken = (kind: 'reward' | 'addon', id: string) => mine.reduce((n, p) => n + count(is(p), kind, id) - count(was(p), kind, id), 0)
-  const amount = (p: CountedPledge | undefined) =>
-    p
-      ? campaign.rewards.reduce((n, r) => n + r.price * count(p, 'reward', r.id), 0) +
-        (campaign.addons ?? []).reduce((n, a) => n + a.price * count(p, 'addon', a.id), 0) +
-        (p.bonus ?? 0) -
-        (p.discount ?? 0)
-      : 0
+export function tinkerfundShippingRows(pledges: { shipping: number; rezoned?: boolean }[], zone: string, money: (amount: number) => string) {
+  const moved = pledges.filter((p) => p.rezoned)
+  const rest = pledges.filter((p) => !p.rezoned)
+  const shipping = sum(rest.map((p) => p.shipping))
+  const rows = rest.length || !moved.length ? [{ label: `Shipping to ${zone}`, amount: shipping ? money(shipping) : '—' }] : []
+  if (!moved.length) return rows
+  const label = moved.length === 1 ? `Shipping change, now to ${zone}` : 'Shipping change'
+  return [...rows, { label, amount: formatTinkerfundChange(sum(moved.map((p) => p.shipping)), money) }]
+}
 
-  return {
-    ...campaign,
-    pledged: cents(campaign.pledged + mine.reduce((n, p) => n + amount(is(p)) - amount(was(p)), 0)),
-    backers: campaign.backers + mine.reduce((n, p) => n + Number(!!is(p)) - Number(!!was(p)), 0),
-    rewards: campaign.rewards.map((r) => ({ ...r, claimed: r.claimed + taken('reward', r.id) })),
-    ...(campaign.addons ? { addons: campaign.addons.map((a) => ({ ...a, claimed: a.claimed + taken('addon', a.id) })) } : {}),
-  }
+export function formatTinkerfundChange(amount: number, money: (amount: number) => string): string {
+  return amount > 0 ? `+${money(amount)}` : amount < 0 ? `−${money(-amount)}` : 'No change'
 }
 
 export interface TinkerfundReceiptLine {
@@ -160,7 +153,7 @@ export interface TinkerfundReceiptLine {
 }
 
 /** What the Confirmation and the account show for one Pledge: the same receipt (issue #1365). */
-export function tinkerfundReceipt(pledge: TinkerfundPledge, entry: TinkerfundCartCatalog[string]) {
+export function tinkerfundReceipt(pledge: TinkerfundPledge, entry: TinkerfundCatalog[string]) {
   const { campaign } = entry
   const line = (key: string, item: { title: string; price: number }, quantity: number, detail?: string): TinkerfundReceiptLine =>
     ({ key, title: item.title, detail, quantity, price: item.price, amount: cents(item.price * quantity) })
@@ -194,80 +187,64 @@ function nextRefs(taken: string[], count: number): string[] {
   return Array.from({ length: count }, (_, i) => `TF-P-${String(last + 1 + i).padStart(4, '0')}`)
 }
 
-/** `into` with `add`'s quantities added, matching items by `key`. */
-function merge<T extends { quantity: number }>(into: T[], add: T[], key: (item: T) => string): T[] {
-  const out = [...into]
-  for (const item of add) {
-    const i = out.findIndex((x) => key(x) === key(item))
-    if (i < 0) out.push(item)
-    else out[i] = { ...out[i]!, quantity: out[i]!.quantity + item.quantity }
-  }
-  return out
-}
-
 export interface TinkerfundPlaceInput {
-  overlay: TinkerfundOverlay
+  state: TinkerfundBackerState
   quote: TinkerfundQuote
   zone: TinkerfundZone
   payment: string
-  catalog: TinkerfundCartCatalog
-  baked: TinkerfundBakedPledge[]
-  now: number
+  shop: TinkerfundShop
 }
 
 /**
- * Confirms a quoted checkout: one Pledge per Campaign, added to the one the
- * Campaign already has (issue #1365). Refuses the whole checkout if any part
- * can't be had, so nothing is half-pledged.
+ * One Pledge per Campaign, added to the one the Campaign already has (issue
+ * #1365). Refuses the whole checkout if any part can't be had, so nothing is
+ * half-pledged.
  */
-export function placeTinkerfundPledges(input: TinkerfundPlaceInput): { overlay?: TinkerfundOverlay; refs?: string[]; error?: string } {
-  const { overlay, quote, zone, payment, catalog, baked, now } = input
-  if (!quote.groups.length) return { error: 'Your Cart is empty' }
-  if (!payment) return { error: 'Choose how to pay' }
-  const fresh = nextRefs([...baked, ...overlay.pledges].map((p) => p.ref), quote.groups.length)
+export function placeTinkerfundPledges({ state, quote, zone, payment, shop }: TinkerfundPlaceInput): TinkerfundStep {
+  const refuse = (error: string) => ({ state, error })
+  if (!quote.groups.length) return refuse('Your Cart is empty')
+  if (!payment) return refuse('Choose how to pay')
+  const fresh = nextRefs([...shop.baked, ...state.pledges].map((p) => p.ref), quote.groups.length)
   const placed: TinkerfundPledge[] = []
 
   for (const group of quote.groups) {
-    const refuse = (why: string) => ({ error: `${group.title}: ${why}` })
-    if (group.closed) return refuse(group.closed)
+    const refuseGroup = (why: string) => refuse(`${group.title}: ${why}`)
+    if (group.closed) return refuseGroup(group.closed)
     const gone = group.lines.find((l) => l.unavailable)
-    if (gone) return refuse(`${gone.title} is no longer available`)
+    if (gone) return refuseGroup(`${gone.title} is no longer available`)
 
-    const campaign = catalog[group.campaign]!.campaign
-    const old = tinkerfundPledgeFor(group.campaign, overlay.pledges, baked)
-    const lines = merge(
-      (old?.lines ?? []).map((l) => ({ reward: l.reward, options: l.options ?? {}, quantity: l.quantity })),
+    const campaign = shop.catalog[group.campaign]!.campaign
+    const old = group.existing
+    const lines = mergeTinkerfundLines(
+      old?.lines ?? [],
       group.lines.flatMap((l) => ('reward' in l.ref ? [{ reward: l.ref.reward, options: l.ref.options, quantity: l.quantity }] : [])),
-      (l) => tinkerfundCartLineKey({ campaign: group.campaign, ...l }),
     )
     for (const reward of campaign.rewards) {
-      const held = lines.filter((l) => l.reward === reward.id).reduce((n, l) => n + l.quantity, 0)
+      const held = tinkerfundHeld(lines, reward.id)
       if (!held) continue
       // The merged Pledge moves to this zone, earlier Rewards included.
-      if (reward.shipsTo && !reward.shipsTo.includes(zone)) return refuse(`${reward.title} doesn’t ship there`)
-      if (reward.limit !== undefined && held > reward.limit) return refuse(`Max ${reward.limit} per Backer`)
+      if (!tinkerfundShipsTo(reward, zone)) return refuseGroup(tinkerfundDoesntShip(reward.title))
+      if (reward.limit !== undefined && held > reward.limit) return refuseGroup(tinkerfundLimitNotice(reward.limit))
     }
-    const addons = merge(
+    const addons = mergeTinkerfundAddons(
       old?.addons ?? [],
       group.lines.flatMap((l) => ('addon' in l.ref ? [{ id: l.ref.addon, quantity: l.quantity }] : [])),
-      (a) => a.id,
     )
     const bonus = cents((old?.bonus ?? 0) + (group.bonus ?? 0))
 
-    placed.push({
+    placed.push(settleTinkerfundPledge({
       ref: old?.ref ?? fresh.shift()!,
       campaign: group.campaign,
-      placed: old ? (typeof old.placed === 'number' ? old.placed : resolveTinkerfundOffset(old.placed, now)) : now,
+      placed: old?.placed ?? shop.now,
       zone,
       payment,
       lines,
       addons,
       ...(bonus > 0 ? { bonus } : {}),
-      discount: cents((old && 'discount' in old ? old.discount : 0) + group.discount),
-      shipping: tinkerfundShipping(lines, campaign, zone),
-    })
+      promotions: group.promotions,
+    }, shop))
   }
 
-  const kept = overlay.pledges.filter((p) => !placed.some((q) => q.ref === p.ref))
-  return { overlay: { cart: [], pledges: [...kept, ...placed] }, refs: placed.map((p) => p.ref) }
+  const kept = state.pledges.filter((p) => !placed.some((q) => q.ref === p.ref))
+  return { state: { cart: [], pledges: [...kept, ...placed] }, refs: placed.map((p) => p.ref) }
 }
