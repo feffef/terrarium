@@ -92,6 +92,12 @@ describe('quoting a checkout', () => {
     expect(quote(promotions, 'KETTLE')).toMatchObject({ discount: 0, codeProblem: 'That code doesn’t apply to anything in your Cart' })
     expect(quote(promotions, '')).toMatchObject({ code: undefined, codeProblem: undefined })
   })
+
+  it('does not apply a code to a Campaign backed with bonus support only', () => {
+    const bonusOnly = resolveTinkerfundCart([{ campaign: 'lamp', lines: [], addons: [], bonus: 6 }], catalog, NOW, 'domestic')
+    const q = quoteTinkerfundCheckout(bonusOnly, [promotion({ title: 'Lamp tenth', code: 'LAMP', campaign: 'lamp', discount: { percent: 10 } })], 'LAMP', NOW)
+    expect(q).toMatchObject({ discount: 0, code: undefined, codeProblem: 'That code doesn’t apply to anything in your Cart' })
+  })
 })
 
 describe('confirming a checkout', () => {

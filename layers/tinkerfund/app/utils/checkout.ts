@@ -33,6 +33,7 @@ export interface TinkerfundQuote {
 }
 
 const targets = (p: TinkerfundPromotionTerms, campaign: string) => !p.campaign || p.campaign === campaign
+const goodsOf = (group: TinkerfundCartGroup) => sum(group.lines.map((l) => l.amount))
 
 function findCode<P extends TinkerfundPromotionTerms>(promotions: P[], entered: string | undefined, campaigns: string[], now: number) {
   const code = entered?.trim().toUpperCase()
@@ -53,14 +54,14 @@ export function quoteTinkerfundCheckout(
   code: string | undefined,
   now: number,
 ): TinkerfundQuote {
-  const entered = findCode(promotions, code, view.groups.map((g) => g.campaign), now)
+  const entered = findCode(promotions, code, view.groups.filter((g) => goodsOf(g) > 0).map((g) => g.campaign), now)
   const applied = [
     ...promotions.filter((p) => !p.code && derivePromotionState(p, now) === 'active'),
     ...(entered.promotion ? [entered.promotion] : []),
   ]
   const deals = new Set<string>()
   const groups = view.groups.map((group): TinkerfundQuoteGroup => {
-    const goods = sum(group.lines.map((l) => l.amount))
+    const goods = goodsOf(group)
     const off = applied.filter((p) => targets(p, group.campaign)).map((p) => {
       const amount = 'percent' in p.discount ? (goods * p.discount.percent) / 100 : p.discount.amount
       if (goods > 0) deals.add(p.title)
