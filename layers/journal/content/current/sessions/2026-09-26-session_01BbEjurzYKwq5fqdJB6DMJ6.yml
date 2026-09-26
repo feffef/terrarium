@@ -1,0 +1,54 @@
+schemaVersion: 1
+session: session_01BbEjurzYKwq5fqdJB6DMJ6
+startedAt: 2026-09-26T08:08:40Z
+endedAt: 2026-09-26T08:22:40Z
+kind: interactive
+goal: Resolve Tinkerfund illustration-style Wayfinder ticket
+status: completed
+outcome: Isometric hero plus patent gallery figures chosen
+summary: "Human invoked /wayfinder on the Tinkerfund map; I took its only frontier ticket, \"Tinkerfund: illustration style\", and asked scoping questions first (invention, directions, framing, colour approach); the human chose the Rain-Aware Umbrella and three directions. I built a throwaway standalone HTML prototype (patent, risograph, flat isometric; hero + gallery shot inside the chosen \"Instrument\" identity, both themes, gzip sizes) on branch prototype/tinkerfund-illustration-style. The human picked isometric as the Campaign's face with patent figures in the Campaign gallery, min one of each; I recorded the resolution, closed the ticket and updated the map. No PR: prototype branch is never merged."
+prs: []
+docsRead:
+  - path: docs/agents/issue-tracker.md
+    reason: Wayfinding operations for this tracker
+skillsUsed:
+  - name: prototype
+    reason: UI-branch prototype for a prototype-type Wayfinder ticket
+  - name: close-session
+    reason: closure
+  - name: log-session
+    reason: (no reason given)
+  - name: wayfinder
+    reason: (invoked as a slash command)
+frictions:
+  - description: "scripts/screenshot.ts treats a URL #fragment as a locator to wait for, so screenshotting file://...html#p timed out"
+    solution: Wrote an ad-hoc playwright-core script; screenshot.ts could skip the anchor wait for file:// URLs or document it
+    severity: minor
+  - description: Copied the map body verbatim, including the previous session's provenance header; the ADR-0017 guard blocked the update once
+    solution: When rewriting an issue body, replace its header line with this session's marker; the guard's deny message gave the fix
+    severity: nit
+durationSec: 840
+models:
+  claude-opus-5-5: 69
+toolCounts:
+  ToolSearch: 1
+  mcp__github__issue_read: 6
+  Bash: 15
+  mcp__github__issue_write: 4
+  Skill: 3
+  AskUserQuestion: 2
+  Write: 1
+  Read: 3
+  SendUserFile: 1
+  mcp__github__add_issue_comment: 1
+filesEdited:
+  - layers/tinkerfund/prototypes/illustration-style/illustration-style.html
+docsReadViaShell:
+  - docs/agents/issue-tracker.md
+  - .agents/skills/prototype/UI.md
+gitBranch: HEAD
+entrypoint: remote
+cliVersion: 2.1.283
+learnings:
+  - Inline SVG coloured by CSS custom properties works in both themes, but pattern/clipPath ids must be unique per instance when the same figure renders several times on a page
+landedBy: Stop
