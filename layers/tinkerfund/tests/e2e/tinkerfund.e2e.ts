@@ -60,7 +60,7 @@ export function registerTinkerfundE2E(): void {
     it('shows every qa Campaign’s status in the component gallery', async () => {
       const html = await $fetch('/t/tinkerfund/qa')
       expect(html).toMatch(/<h1[^>]*>Component gallery<\/h1>/)
-      expect(html).toContain('<time datetime="2026-06-01T12:00:00.000Z">2026-06-01 12:00 UTC</time>')
+      expect(html).toMatch(/<time datetime="2026-06-01T12:00:00.000Z"[^>]*>2026-06-01 12:00 UTC<\/time>/)
       const status = (registry: string) => html.match(new RegExp(`${registry}</span>([\\s\\S]*?)</div>`))?.[1] ?? ''
       expect(status('TF-9001')).toMatch(/Live<[\s\S]*Ending soon[\s\S]*Goal reached[\s\S]*125% funded[\s\S]*1 day 12 hours to go/)
       expect(status('TF-9002')).toMatch(/Live<[\s\S]*Goal reached[\s\S]*100% funded[\s\S]*21 days 0 hours to go/)
