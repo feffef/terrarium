@@ -46,6 +46,97 @@ campaign:
         <path d="M110 150Q90 124 70 110" style="stroke-width:.9" /><path d="M200 144Q203 81 206 30" style="stroke-width:.9" /><path d="M258 116Q299 87 340 70" style="stroke-width:.9" /><path d="M290 228Q315 239 340 262" style="stroke-width:.9" /><path d="M150 226Q120 238 90 262" style="stroke-width:.9" /></g>
         <g style="fill:var(--tf-ink);font:500 12px var(--tf-mono)"><text x="50" y="114">10</text><text x="210" y="34">12</text><text x="344" y="74">14</text><text x="344" y="266">16</text><text x="70" y="266">18</text></g>
         <g style="fill:var(--tf-ink);font:500 11px var(--tf-mono)"><text x="126" y="292">SECTION · ROCK UNMODIFIED</text></g>
+    - style: isometric
+      caption: "Exploded: the rock, the charging coil and the dock. There is nothing else inside."
+      svg: |-
+        <ellipse cx="212" cy="214" rx="104" ry="46" style="fill:var(--tf-line)" />
+        <path d="M200 30V246" style="fill:none;stroke:var(--tf-muted);stroke-width:1.5;stroke-dasharray:4 4" />
+        <path d="M232 176C290 156 320 170 362 146" style="fill:none;stroke:var(--tf-ink);stroke-width:5;stroke-linecap:round" />
+        <path d="M126.5 192V204A73.5 42.4 0 0 0 200 246.4V234.4A73.5 42.4 0 0 1 126.5 192Z" style="fill:var(--tf-ink)" />
+        <path d="M200 234.4V246.4A73.5 42.4 0 0 0 273.5 204V192A73.5 42.4 0 0 1 200 234.4Z" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" />
+        <ellipse cx="200" cy="192" rx="73.5" ry="42.4" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" />
+        <circle cx="200" cy="244" r="3" style="fill:var(--tf-good)" />
+        <path d="M154 150V154A46 26.5 0 0 0 200 180.5V176.5A46 26.5 0 0 1 154 150Z" style="fill:var(--tf-ink)" />
+        <path d="M200 176.5V180.5A46 26.5 0 0 0 246 154V150A46 26.5 0 0 1 200 176.5Z" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" />
+        <ellipse cx="200" cy="150" rx="46" ry="26.5" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" />
+        <path d="M164 150a36 20.8 0 1 0 72 0a36 20.8 0 1 0 -72 0M171 150a29 16.7 0 1 0 58 0a29 16.7 0 1 0 -58 0M178 150a22 12.7 0 1 0 44 0a22 12.7 0 1 0 -44 0M185 150a15 8.7 0 1 0 30 0a15 8.7 0 1 0 -30 0" style="fill:none;stroke:var(--tf-warn);stroke-width:2.2" />
+        <g transform="translate(0 -56)"><path d="M140 112L168 88L210 80L196 118Z" style="fill:color-mix(in srgb, var(--tf-accent) 45%, var(--tf-surface))" />
+        <path d="M210 80L252 92L238 128L196 118Z" style="fill:color-mix(in srgb, var(--tf-accent) 70%, var(--tf-surface))" />
+        <path d="M132 150L140 112L196 118L180 172L150 166Z" style="fill:var(--tf-accent)" />
+        <path d="M196 118L238 128L236 170L180 172Z" style="fill:color-mix(in srgb, var(--tf-accent) 72%, var(--tf-ink))" />
+        <path d="M238 128L252 92L272 122L266 152L236 170Z" style="fill:var(--tf-accent)" /></g>
+        <path d="M268 24a12 12 0 0 1 0 18M276 16a24 24 0 0 1 0 34" style="fill:none;stroke:var(--tf-muted);stroke-width:3;stroke-linecap:round" />
+    - style: isometric
+      caption: "On a desk, receiving its monthly update. The support continues throughout."
+      svg: |-
+        <path d="M139.4 55L381.9 195L243.3 275L0.8 135Z" style="fill:var(--tf-line)" />
+        <path d="M126.5 132L154.2 148L133.5 160L105.8 144Z" style="fill:color-mix(in srgb, var(--tf-ink) 45%, var(--tf-surface))" />
+        <path d="M105.8 148L133.5 164L133.5 160L105.8 144Z" style="fill:var(--tf-ink)" />
+        <path d="M154.2 152L133.5 164L133.5 160L154.2 148Z" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" />
+        <path d="M129.1 114.5L136.1 118.5L130.9 121.5L123.9 117.5Z" style="fill:color-mix(in srgb, var(--tf-ink) 45%, var(--tf-surface))" />
+        <path d="M123.9 145.5L130.9 149.5L130.9 121.5L123.9 117.5Z" style="fill:var(--tf-ink)" />
+        <path d="M136.1 146.5L130.9 149.5L130.9 121.5L136.1 118.5Z" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" />
+        <path d="M72.8 87L187.2 153L187.2 77L72.8 11Z" style="fill:var(--tf-ink)" />
+        <path d="M76.3 85L183.7 147L183.7 79L76.3 17Z" style="fill:var(--tf-surface)" />
+        <path d="M83.2 57L176.8 111L176.8 103L83.2 49Z" style="fill:var(--tf-line)" />
+        <path d="M83.2 57L142.1 91L142.1 83L83.2 49Z" style="fill:var(--tf-accent)" />
+        <path d="M83.2 43L176.8 97L176.8 81L83.2 27Z" style="fill:color-mix(in srgb, var(--tf-accent) 45%, var(--tf-surface))" />
+        <text transform="matrix(.866 .5 0 1 89 37)" style="fill:var(--tf-ink);font:600 9px var(--tf-mono)">ROCK · FIRMWARE 2.3</text>
+        <text transform="matrix(.866 .5 0 1 89 57)" style="fill:var(--tf-muted);font:500 8px var(--tf-mono)">INSTALLING · 62 %</text>
+        <path d="M80 138V164A16 9.2 0 0 0 96 173.2V147.2A16 9.2 0 0 1 80 138Z" style="fill:var(--tf-ink)" />
+        <path d="M96 147.2V173.2A16 9.2 0 0 0 112 164V138A16 9.2 0 0 1 96 147.2Z" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" />
+        <ellipse cx="96" cy="138" rx="16" ry="9.2" style="fill:color-mix(in srgb, var(--tf-ink) 45%, var(--tf-surface))" />
+        <ellipse cx="96" cy="139" rx="12" ry="7" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" />
+        <path d="M112 148c18-2 20 22 0 24" style="fill:none;stroke:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface));stroke-width:5;stroke-linecap:round" />
+        <g transform="translate(120 84) scale(.62)"><path d="M126.5 184V196A73.5 42.4 0 0 0 200 238.4V226.4A73.5 42.4 0 0 1 126.5 184Z" style="fill:var(--tf-ink)" />
+        <path d="M200 226.4V238.4A73.5 42.4 0 0 0 273.5 196V184A73.5 42.4 0 0 1 200 226.4Z" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" />
+        <ellipse cx="200" cy="184" rx="73.5" ry="42.4" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" />
+        <circle cx="200" cy="236" r="3" style="fill:var(--tf-good)" /><path d="M140 112L168 88L210 80L196 118Z" style="fill:color-mix(in srgb, var(--tf-accent) 45%, var(--tf-surface))" />
+        <path d="M210 80L252 92L238 128L196 118Z" style="fill:color-mix(in srgb, var(--tf-accent) 70%, var(--tf-surface))" />
+        <path d="M132 150L140 112L196 118L180 172L150 166Z" style="fill:var(--tf-accent)" />
+        <path d="M196 118L238 128L236 170L180 172Z" style="fill:color-mix(in srgb, var(--tf-accent) 72%, var(--tf-ink))" />
+        <path d="M238 128L252 92L272 122L266 152L236 170Z" style="fill:var(--tf-accent)" /></g>
+        <path d="M292 118a12 12 0 0 1 0 18M300 110a24 24 0 0 1 0 34" style="fill:none;stroke:var(--tf-muted);stroke-width:3;stroke-linecap:round" />
+    - style: patent
+      caption: "Plan view of the dock (16): Qi coil (26), USB-C port (28), status light (30) and three feet (32). No moving parts."
+      svg: |-
+        <g style="fill:none;stroke:var(--tf-ink);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round">
+        <path d="M80 150a90 90 0 1 0 180 0a90 90 0 1 0 -180 0" style="stroke-width:2.4" />
+        <path d="M88 150a82 82 0 1 0 164 0a82 82 0 1 0 -164 0" />
+        <path d="M144 150a26 26 0 1 0 52 0a26 26 0 1 0 -52 0M136 150a34 34 0 1 0 68 0a34 34 0 1 0 -68 0M128 150a42 42 0 1 0 84 0a42 42 0 1 0 -84 0M120 150a50 50 0 1 0 100 0a50 50 0 1 0 -100 0" style="stroke-width:.9" />
+        <path d="M170 124V100M170 100H176" style="stroke-width:.9" />
+        <path d="M160 54h20v12h-20z" />
+        <path d="M166 232a4 4 0 1 0 8 0a4 4 0 1 0 -8 0" />
+        <path d="M162 214a8 8 0 1 0 16 0a8 8 0 1 0 -16 0M107 118a8 8 0 1 0 16 0a8 8 0 1 0 -16 0M217 118a8 8 0 1 0 16 0a8 8 0 1 0 -16 0" style="stroke-width:1;stroke-dasharray:5 3.5" />
+        <path d="M290 138h90v24h-90z" />
+        <path d="M300 146h70M300 138l4-26 18-16 26-4 24 8 10 20-2 18" style="stroke-width:1;stroke-dasharray:5 3.5" />
+        <path d="M296 162h10v4h-10zM364 162h10v4h-10zM331 162h8" style="stroke-width:.9" />
+        <path d="M108 110Q94 78 60 70M205 122Q243 102.3 250 60M180 56Q210 58.5 230 36M174 232Q194.5 261 230 262M111 124Q79 124.3 60 150" style="stroke-width:.9" />
+        </g>
+        <g style="fill:var(--tf-ink);font:500 12px var(--tf-mono)"><text x="44" y="68">16</text><text x="254" y="58">26</text><text x="234" y="34">28</text><text x="234" y="266">30</text><text x="40" y="154">32</text></g>
+        <g style="fill:var(--tf-ink);font:500 9px var(--tf-mono)"><text x="296" y="184">ELEVATION</text></g>
+        <g style="fill:var(--tf-ink);font:500 11px var(--tf-mono)"><text x="100" y="290">PLAN · DOCK · NO MOVING PARTS</text></g>
+    - style: patent
+      caption: "Method of operation. Step 32 is repeated indefinitely; step 36 improves it in ways described in the release notes."
+      svg: |-
+        <g style="fill:none;stroke:var(--tf-ink);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round">
+        <path d="M90 36h140v26H90z" />
+        <text x="160" y="53" style="fill:var(--tf-ink);font:500 10px var(--tf-mono);text-anchor:middle">PLACE ROCK ON DESK</text>
+        <path d="M90 78h140v26H90z" />
+        <text x="160" y="95" style="fill:var(--tf-ink);font:500 10px var(--tf-mono);text-anchor:middle">PROVIDE SUPPORT</text>
+        <path d="M160 120L230 145L160 170L90 145Z" />
+        <text x="160" y="149" style="fill:var(--tf-ink);font:500 10px var(--tf-mono);text-anchor:middle">MONTH ELAPSED?</text>
+        <path d="M90 186h140v26H90z" />
+        <text x="160" y="203" style="fill:var(--tf-ink);font:500 10px var(--tf-mono);text-anchor:middle">DOWNLOAD FIRMWARE</text>
+        <path d="M90 228h140v26H90z" />
+        <text x="160" y="245" style="fill:var(--tf-ink);font:500 10px var(--tf-mono);text-anchor:middle">INSTALL · NO REBOOT</text>
+        <path d="M160 62V78M156 72l4 6 4-6M160 104V120M156 114l4 6 4-6M160 170V186M156 180l4 6 4-6M160 212V228M156 222l4 6 4-6" />
+        <path d="M230 145H262V84H230M236 80l-6 4 6 4" />
+        <path d="M160 254V268H30V98H90M84 94l6 4-6 4" />
+        </g>
+        <g style="fill:var(--tf-ink);font:500 9px var(--tf-mono)"><text x="238" y="78">NO</text><text x="166" y="182">YES</text></g>
+        <g style="fill:var(--tf-ink);font:500 12px var(--tf-mono)"><text x="274" y="53">30</text><text x="274" y="95">32</text><text x="274" y="149">34</text><text x="274" y="203">36</text><text x="274" y="245">38</text></g>
+        <g style="fill:var(--tf-ink);font:500 11px var(--tf-mono)"><text x="96" y="290">METHOD OF OPERATION · STEP 32 REPEATS</text></g>
   rewards:
     - id: rock
       title: The Rock
