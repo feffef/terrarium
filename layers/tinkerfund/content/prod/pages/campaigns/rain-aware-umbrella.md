@@ -80,6 +80,119 @@ campaign:
         <text x="52" y="164" transform="rotate(-90 52 164)" style="fill:var(--tf-ink);font:500 12px var(--tf-mono)">880</text>
         <g style="fill:var(--tf-ink);font:500 12px var(--tf-mono)"><text x="84" y="16">A</text><text x="206" y="180">14a</text><text x="338" y="60">14b</text><text x="364" y="114">26</text><text x="328" y="254">10</text></g>
         <g style="fill:var(--tf-ink);font:500 11px var(--tf-mono)"><text x="250" y="292">DETAIL A · 5:1</text></g>
+    - style: isometric
+      caption: "The notification, as delivered. The umbrella is shown for context and was already aware."
+      svg: |-
+        <ellipse cx="186" cy="254" rx="120" ry="18" style="fill:var(--tf-line)" />
+        <g transform="translate(112 34) scale(.62)"><path d="M197 180h3v70h-3z" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" /><path d="M200 180h3v70h-3z" style="fill:var(--tf-ink)" /><path d="M200 248v10a13 13 0 0 1-26 0v-3" style="fill:none;stroke:var(--tf-ink);stroke-width:7;stroke-linecap:round" /><path d="M200 62L60 142Q94.8 118.1 101 109.5Z" style="fill:color-mix(in srgb, var(--tf-accent) 45%, var(--tf-surface))" />
+        <path d="M200 62L101 109.5Q156.4 97.8 200 96Z" style="fill:color-mix(in srgb, var(--tf-accent) 45%, var(--tf-surface))" />
+        <path d="M200 62L200 96Q243.6 97.8 299 109.5Z" style="fill:color-mix(in srgb, var(--tf-accent) 45%, var(--tf-surface))" />
+        <path d="M200 62L299 109.5Q305.2 118.1 340 142Z" style="fill:color-mix(in srgb, var(--tf-accent) 45%, var(--tf-surface))" />
+        <path d="M200 62L340 142Q305.2 146.7 299 174.5Z" style="fill:color-mix(in srgb, var(--tf-accent) 72%, var(--tf-ink))" />
+        <path d="M200 62L299 174.5Q243.6 167 200 188Z" style="fill:var(--tf-accent)" />
+        <path d="M200 62L200 188Q156.4 167 101 174.5Z" style="fill:color-mix(in srgb, var(--tf-accent) 72%, var(--tf-ink))" />
+        <path d="M200 62L101 174.5Q94.8 146.7 60 142Z" style="fill:var(--tf-accent)" /><path d="M196 48h4v15h-4z" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" />
+        <path d="M200 48h4v15h-4z" style="fill:var(--tf-ink)" />
+        <ellipse cx="200" cy="48" rx="4" ry="1.8" style="fill:var(--tf-muted)" /><path d="M212 38a10 10 0 0 1 0 14M218 33a17 17 0 0 1 0 24" style="fill:none;stroke:var(--tf-accent);stroke-width:2;stroke-linecap:round" /></g>
+        <path d="M30 40q5 8 0 12q-5 -4 0 -12zM60 90q5 8 0 12q-5 -4 0 -12zM40 150q5 8 0 12q-5 -4 0 -12zM250 30q5 8 0 12q-5 -4 0 -12zM300 60q5 8 0 12q-5 -4 0 -12zM340 24q5 8 0 12q-5 -4 0 -12zM372 100q5 8 0 12q-5 -4 0 -12zM350 160q5 8 0 12q-5 -4 0 -12zM200 20q5 8 0 12q-5 -4 0 -12zM80 20q5 8 0 12q-5 -4 0 -12z" style="fill:var(--tf-link)" />
+        <path d="M82.2 53.5L155 95.5L149.8 98.5L77 56.5Z" style="fill:var(--tf-ink)" />
+        <path d="M77 206.5L149.8 248.5L149.8 98.5L77 56.5Z" style="fill:var(--tf-ink)" />
+        <path d="M155 245.5L149.8 248.5L149.8 98.5L155 95.5Z" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" />
+        <path d="M80.5 202.5L146.3 240.5L146.3 102.5L80.5 64.5Z" style="fill:var(--tf-surface)" />
+        <path d="M82.2 103.5L144.6 139.5L144.6 107.5L82.2 71.5Z" style="fill:color-mix(in srgb, var(--tf-accent) 45%, var(--tf-surface))" />
+        <path d="M84 100.5L86.6 102L86.6 78L84 76.5Z" style="fill:var(--tf-accent)" />
+        <text transform="matrix(.866 .5 0 1 84 82.5)" style="fill:var(--tf-ink);font:600 8px var(--tf-mono)">IT IS RAINING.</text>
+        <text transform="matrix(.866 .5 0 1 84 94.5)" style="fill:var(--tf-muted);font:500 6.5px var(--tf-mono)">UMBRELLA · NOW</text>
+        <path d="M87.4 192.5L139.4 222.5L139.4 208.5L87.4 178.5Z" style="fill:var(--tf-line)" />
+        <path d="M100.20577136594005 140.5q5 8 0 12q-5 -4 0 -12z" style="fill:var(--tf-link)" />
+        <path d="M150 186q5 8 0 12q-5 -4 0 -12zM92 236q5 8 0 12q-5 -4 0 -12zM212 220q5 8 0 12q-5 -4 0 -12z" style="fill:var(--tf-link)" />
+    - style: isometric
+      caption: "Full size in signal orange; compact in slate. Both notice rain to the same standard."
+      svg: |-
+        <ellipse cx="158" cy="252" rx="44" ry="10" style="fill:var(--tf-line)" />
+        <ellipse cx="298" cy="244" rx="40" ry="9" style="fill:var(--tf-line)" />
+        <path d="M150 62L139 184L150 190Z" style="fill:var(--tf-accent)" />
+        <path d="M150 62L161 184L150 190Z" style="fill:color-mix(in srgb, var(--tf-accent) 72%, var(--tf-ink))" />
+        <ellipse cx="150" cy="184" rx="11" ry="5.5" style="fill:color-mix(in srgb, var(--tf-accent) 72%, var(--tf-ink))" />
+        <path d="M147 82L143.95 176M153 82L156.05 176" style="fill:none;stroke:color-mix(in srgb, var(--tf-accent) 45%, var(--tf-surface));stroke-width:1.2" />
+        <path d="M141.2 148L158.8 148L159.9 156L140.1 156Z" style="fill:var(--tf-ink)" />
+        <path d="M146 188h4v42h-4z" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" />
+        <path d="M150 188h4v42h-4z" style="fill:var(--tf-ink)" />
+        <path d="M150 228v10a13 13 0 0 1-26 0v-3" style="fill:none;stroke:var(--tf-ink);stroke-width:7;stroke-linecap:round" />
+        <path d="M146 48h4v15h-4z" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" />
+        <path d="M150 48h4v15h-4z" style="fill:var(--tf-ink)" />
+        <ellipse cx="150" cy="48" rx="4" ry="1.8" style="fill:var(--tf-muted)" />
+        <path d="M162 38a10 10 0 0 1 0 14M168 33a17 17 0 0 1 0 24" style="fill:none;stroke:var(--tf-accent);stroke-width:2;stroke-linecap:round" />
+        <path d="M290 132L275 202L290 208Z" style="fill:var(--tf-ink)" />
+        <path d="M290 132L305 202L290 208Z" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" />
+        <ellipse cx="290" cy="202" rx="15" ry="7.5" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" />
+        <path d="M287 152L281.75 194M293 152L298.25 194" style="fill:none;stroke:color-mix(in srgb, var(--tf-ink) 45%, var(--tf-surface));stroke-width:1.2" />
+        <path d="M278 174L302 174L303.5 182L276.5 182Z" style="fill:var(--tf-accent)" />
+        <path d="M281 212V238A9 5.2 0 0 0 290 243.2V217.2A9 5.2 0 0 1 281 212Z" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" />
+        <path d="M290 217.2V243.2A9 5.2 0 0 0 299 238V212A9 5.2 0 0 1 290 217.2Z" style="fill:var(--tf-ink)" />
+        <ellipse cx="290" cy="212" rx="9" ry="5.2" style="fill:color-mix(in srgb, var(--tf-ink) 45%, var(--tf-surface))" />
+        <path d="M286 118h4v15h-4z" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" />
+        <path d="M290 118h4v15h-4z" style="fill:var(--tf-ink)" />
+        <ellipse cx="290" cy="118" rx="4" ry="1.8" style="fill:var(--tf-muted)" />
+        <path d="M302 108a10 10 0 0 1 0 14M308 103a17 17 0 0 1 0 24" style="fill:none;stroke:var(--tf-accent);stroke-width:2;stroke-linecap:round" />
+        <g style="fill:var(--tf-muted);font:600 10px var(--tf-mono);letter-spacing:.06em;text-anchor:middle"><text x="130" y="276">FULL SIZE · SIGNAL</text><text x="300" y="276">COMPACT · SLATE</text></g>
+    - style: patent
+      caption: "System diagram. Rain enters at the sensor tip (14) and leaves the phone (20) as a notification (44), in plain language."
+      svg: |-
+        <g style="fill:none;stroke:var(--tf-ink);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round">
+        <path d="M40 46h320v124H40z" style="stroke-width:1;stroke-dasharray:5 3.5" />
+        <path d="M70 22q5 8 0 12q-5-4 0-12zM90 14q5 8 0 12q-5-4 0-12zM110 26q5 8 0 12q-5-4 0-12z" />
+        <path d="M90 40v18M86 52l4 6 4-6" />
+        <path d="M56 66h70v30H56z" />
+        <text x="60" y="76" style="fill:var(--tf-ink);font:500 8px var(--tf-mono)">14</text>
+        <text x="91" y="88" style="fill:var(--tf-ink);font:500 9px var(--tf-mono);text-anchor:middle">SENSOR TIP</text>
+        <path d="M166 66h70v30H166z" />
+        <text x="170" y="76" style="fill:var(--tf-ink);font:500 8px var(--tf-mono)">40</text>
+        <text x="201" y="88" style="fill:var(--tf-ink);font:500 9px var(--tf-mono);text-anchor:middle">MCU</text>
+        <path d="M276 66h70v30H276z" />
+        <text x="280" y="76" style="fill:var(--tf-ink);font:500 8px var(--tf-mono)">42</text>
+        <text x="311" y="88" style="fill:var(--tf-ink);font:500 9px var(--tf-mono);text-anchor:middle">BLE</text>
+        <path d="M166 122h70v30H166z" />
+        <text x="170" y="132" style="fill:var(--tf-ink);font:500 8px var(--tf-mono)">46</text>
+        <text x="201" y="144" style="fill:var(--tf-ink);font:500 9px var(--tf-mono);text-anchor:middle">BATTERY</text>
+        <path d="M276 122h70v30H276z" />
+        <text x="280" y="132" style="fill:var(--tf-ink);font:500 8px var(--tf-mono)">48</text>
+        <text x="311" y="144" style="fill:var(--tf-ink);font:500 9px var(--tf-mono);text-anchor:middle">USB-C</text>
+        <path d="M126 81h40M160 77l6 4-6 4M236 81h40M270 77l6 4-6 4M201 122v-26M197 102l4-6 4 6M276 137h-40M242 133l-6 4 6 4" />
+        <path d="M311 96v54L288 214" style="stroke-width:1;stroke-dasharray:5 3.5" />
+        <path d="M300 176a14 14 0 0 1 20 0M295 168a20 20 0 0 1 30 0" style="stroke-width:.9" />
+        <path d="M120 198h160a8 8 0 0 1 8 8v54a8 8 0 0 1-8 8H120a8 8 0 0 1-8-8v-54a8 8 0 0 1 8-8z" />
+        <path d="M120 206h160v50H120z" style="stroke-width:.9" />
+        <path d="M282 244Q307.5 265.5 340 258" style="stroke-width:.9" />
+        </g>
+        <text x="200" y="240" style="fill:var(--tf-ink);font:600 11px var(--tf-mono);text-anchor:middle">IT IS RAINING.</text>
+        <text x="200" y="222" style="fill:var(--tf-muted);font:500 8px var(--tf-mono);text-anchor:middle">UMBRELLA · NOW</text>
+        <g style="fill:var(--tf-ink);font:500 9px var(--tf-mono)"><text x="262" y="42">10 · UMBRELLA</text><text x="112" y="194">20</text></g>
+        <g style="fill:var(--tf-ink);font:500 12px var(--tf-mono)"><text x="344" y="262">44</text></g>
+        <g style="fill:var(--tf-ink);font:500 11px var(--tf-mono)"><text x="70" y="290">SYSTEM · RAIN IN, NOTIFICATION OUT</text></g>
+    - style: patent
+      caption: "The compact umbrella folded, with its three-stage telescoping shaft (16a–c) collapsed inside the canopy, and extended below. The tip (14) is the same."
+      svg: |-
+        <g style="fill:none;stroke:var(--tf-ink);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round">
+        <path d="M44 116h12v8H44z" />
+        <path d="M48 120a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" style="stroke-width:.9" />
+        <path d="M56 120C60 100 90 96 140 96S222 100 226 120S190 144 140 144S60 140 56 120Z" style="stroke-width:2.4" />
+        <path d="M70 108C110 104 180 104 214 110M70 132C110 136 180 136 214 130" style="stroke-width:.9" />
+        <path d="M70 114h150v12h-150zM80 116h140v8h-140zM90 118h130v4h-130z" style="stroke-width:1;stroke-dasharray:5 3.5" />
+        <path d="M226 116h20v8h-20z" />
+        <path d="M246 110h70a10 10 0 0 1 0 20h-70z" />
+        <path d="M299.5 110L306 116.5M293.8 110L306 122.2M288.2 110L306 127.8M282.5 110L302.5 130M276.9 110L296.9 130M271.2 110L291.2 130M265.6 110L285.6 130M259.9 110L279.9 130M256 111.8L274.2 130M256 117.4L268.6 130M256 123.1L262.9 130M256 128.7L257.3 130" style="stroke-width:.8" />
+        <path d="M326 120a10 10 0 1 0 20 0a10 10 0 1 0-20 0" style="stroke-width:.9" />
+        <path d="M44 84V110M316 84V104M44 88H316" style="stroke-width:.9" />
+        <path d="M44 216h12v8H44z" />
+        <path d="M56 220h60" style="stroke-width:1;stroke-dasharray:5 3.5" />
+        <path d="M56 216h96v8H56zM152 217h96v6h-96zM248 218h80v4h-80z" />
+        <path d="M328 210h50a10 10 0 0 1 0 20h-50z" />
+        <path d="M50 116Q69 90.5 60 60M110 98Q115 80.5 104 66M100 224Q94 236 100 248M200 223Q193.8 235.5 200 248M288 222Q281.5 235 288 248M280 130Q282.5 150 300 160M346 110Q362.5 102 366 84" style="stroke-width:.9" />
+        </g>
+        <g style="fill:var(--tf-ink);font:500 12px var(--tf-mono)"><text x="52" y="56">14</text><text x="96" y="62">10</text><text x="90" y="262">16a</text><text x="190" y="262">16b</text><text x="278" y="262">16c</text><text x="302" y="174">18</text><text x="368" y="80">34</text></g>
+        <g style="fill:var(--tf-ink);font:500 9px var(--tf-mono)"><text x="168" y="80">320</text><text x="60" y="206">EXTENDED</text></g>
+        <g style="fill:var(--tf-ink);font:500 11px var(--tf-mono)"><text x="70" y="290">COMPACT · FOLDED · 3-STAGE SHAFT (16)</text></g>
   rewards:
     - id: compact
       title: Compact
