@@ -17,7 +17,7 @@ const last = computed(() => {
     <div class="fig">
       <div class="top">
         <span class="tf-label">FIG. 1 · {{ card.registry }}</span>
-        <TinkerfundStateChips :status="card.status" :deal="card.deal" />
+        <TinkerfundStateChips :status="card.status" :promoted="card.promoted" />
       </div>
       <!-- eslint-disable-next-line vue/no-v-html -- validated, token-coloured content SVG (issue #1363) -->
       <svg viewBox="0 0 400 300" aria-hidden="true" v-html="card.figure" />

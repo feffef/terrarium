@@ -8,7 +8,8 @@ import {
   tinkerfundListings,
   browseTinkerfundListings,
   tinkerfundHomeSections,
-  tinkerfundDeals,
+  groupTinkerfundPromotions,
+  formatTinkerfundCampaignCount,
   formatTinkerfundDiscount,
   tinkerfundStateLabel,
   tinkerfundRemaining,
@@ -67,7 +68,7 @@ describe('a Campaign listing', () => {
     const [lamp] = tinkerfundListings([doc('lamp', { launch: '-12d', end: '+36h', pledged: 1250, backers: 40, prices: [19, 5] })], [], NOW)
     expect(lamp).toMatchObject({
       path: '/campaigns/lamp', title: 'lamp', category: 'desk', inventor: 'test-inventor', figure: '<path d="lamp" />',
-      pledged: 1250, goal: 1000, backers: 40, prices: [19, 5], deal: false,
+      pledged: 1250, goal: 1000, backers: 40, prices: [19, 5], promoted: false,
     })
     expect(lamp!.status).toMatchObject({ state: 'live', endingSoon: true, goalReached: true, percent: 125, endAt: NOW + 36 * HOUR })
   })
@@ -80,7 +81,7 @@ describe('a Campaign listing', () => {
       { campaign: 'c', start: '-9d', end: '-2d' },
       { start: '-30d' },
     ]
-    expect(tinkerfundListings(docs, promotions, NOW).map((l) => [l.title, l.deal])).toEqual([['a', true], ['b', false], ['c', false]])
+    expect(tinkerfundListings(docs, promotions, NOW).map((l) => [l.title, l.promoted])).toEqual([['a', true], ['b', false], ['c', false]])
   })
 })
 
@@ -160,7 +161,7 @@ describe('Home', () => {
 
 describe('Deals', () => {
   it('lists Active Promotions ending soonest first, then Scheduled ones starting soonest first, and drops Expired ones', () => {
-    const deals = tinkerfundDeals([
+    const deals = groupTinkerfundPromotions([
       { title: 'forever', start: '-30d' },
       { title: 'expired', start: '-30d', end: '-3d' },
       { title: 'week', start: '-1d', end: '+6d' },
@@ -178,6 +179,10 @@ describe('Deals', () => {
     expect(formatTinkerfundDiscount({ percent: 15 })).toBe('15% off')
     expect(formatTinkerfundDiscount({ amount: 5 })).toBe('€5 off')
     expect(formatTinkerfundDiscount({ amount: 2.5 })).toBe('€2.50 off')
+  })
+
+  it('counts Campaigns in the singular and plural', () => {
+    expect([0, 1, 6].map(formatTinkerfundCampaignCount)).toEqual(['0 Campaigns', '1 Campaign', '6 Campaigns'])
   })
 })
 

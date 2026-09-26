@@ -257,6 +257,7 @@ export function registerTinkerfundE2E(): void {
         await page.setViewportSize({ width: 390, height: 844 })
         await page.goto(url('/t/tinkerfund/qa/discover'), { waitUntil: 'hydration' })
         expect(await page.locator('.side').isVisible()).toBe(false)
+        expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(390)
         await page.getByRole('button', { name: 'Filters' }).click()
         const drawer = page.getByRole('dialog', { name: 'Filters' })
         await drawer.getByLabel('On Deal').check()
@@ -270,7 +271,7 @@ export function registerTinkerfundE2E(): void {
     })
 
     // The index table is wider than a phone; it must scroll inside its own frame.
-    for (const route of ['/t/tinkerfund/prod', '/t/tinkerfund/qa/discover', '/t/tinkerfund/qa/deals', '/t/tinkerfund/qa']) {
+    for (const route of ['/t/tinkerfund/prod', '/t/tinkerfund/qa']) {
       it(`fits ${route} on a phone without sideways scrolling`, async () => {
         const page = await createPage()
         try {

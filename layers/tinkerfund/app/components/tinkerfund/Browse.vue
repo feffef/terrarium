@@ -27,13 +27,12 @@ const drawer = useTemplateRef<HTMLDialogElement>('drawer')
 const closeOnBackdrop = (e: MouseEvent) => {
   if (e.target === drawer.value) drawer.value?.close()
 }
-const count = (n: number) => `${n} ${n === 1 ? 'Campaign' : 'Campaigns'}`
 </script>
 
 <template>
   <div class="browse">
     <div class="toolbar">
-      <p class="count" role="status">{{ count(results.length) }}</p>
+      <p class="count" role="status">{{ formatTinkerfundCampaignCount(results.length) }}</p>
       <button type="button" class="tf-btn filters-btn" @click="drawer?.showModal()">Filters</button>
       <label class="sort">
         <span class="tf-label">Sort</span>
@@ -68,7 +67,7 @@ const count = (n: number) => `${n} ${n === 1 ? 'Campaign' : 'Campaigns'}`
           </button>
         </div>
         <TinkerfundBrowseFilters :query="query" :categories="category ? undefined : categories" :bounds="bounds" @update="update" />
-        <button type="button" class="tf-btn primary" @click="drawer?.close()">Show {{ count(results.length) }}</button>
+        <button type="button" class="tf-btn primary" @click="drawer?.close()">Show {{ formatTinkerfundCampaignCount(results.length) }}</button>
       </div>
     </dialog>
   </div>

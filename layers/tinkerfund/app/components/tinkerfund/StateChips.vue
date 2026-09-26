@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import type { CampaignStatus } from '../../utils/status'
 
-defineProps<{ status: CampaignStatus; deal?: boolean }>()
+defineProps<{ status: CampaignStatus; promoted?: boolean }>()
 </script>
 
 <template>
   <span class="chips">
     <span class="chip" :data-state="status.outcome ?? status.state">{{ tinkerfundStateLabel(status) }}</span>
     <span v-if="status.endingSoon" class="chip soon">Ending soon</span>
-    <span v-if="deal" class="chip deal">Deal</span>
+    <span v-if="promoted" class="chip deal">Deal</span>
   </span>
 </template>
 

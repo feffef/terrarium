@@ -4,12 +4,11 @@
 
 const { space, now, clock, cards, categories, promotions } = await useTinkerfundCatalog()
 const home = computed(() => tinkerfundHomeSections(cards.value, now.value))
-const deal = computed(() => tinkerfundDeals(promotions.value, now.value).active[0])
+const deal = computed(() => groupTinkerfundPromotions(promotions.value, now.value).active[0])
 const tiles = computed(() =>
   categories.value.map((c) => ({ ...c, count: cards.value.filter((card) => card.category === c.slug).length })),
 )
 const link = (path = '') => tinkerfundPath(space, path)
-const count = (n: number) => `${n} ${n === 1 ? 'Campaign' : 'Campaigns'}`
 </script>
 
 <template>
@@ -21,7 +20,7 @@ const count = (n: number) => `${n} ${n === 1 ? 'Campaign' : 'Campaigns'}`
         <svg viewBox="0 0 400 300" aria-hidden="true" v-html="home.featured.figure" />
       </div>
       <div class="read">
-        <p class="row"><span class="id">{{ home.featured.registry }}</span><TinkerfundStateChips :status="home.featured.status" :deal="home.featured.deal" /></p>
+        <p class="row"><span class="id">{{ home.featured.registry }}</span><TinkerfundStateChips :status="home.featured.status" :promoted="home.featured.promoted" /></p>
         <p class="tf-label">Featured · {{ home.featured.categoryName }} · {{ home.featured.inventorName }}</p>
         <h2 id="tf-featured">{{ home.featured.title }}</h2>
         <p class="tag">{{ home.featured.description }}</p>
@@ -61,7 +60,7 @@ const count = (n: number) => `${n} ${n === 1 ? 'Campaign' : 'Campaigns'}`
             <svg viewBox="0 0 24 24" aria-hidden="true" v-html="c.icon" />
             <b>{{ c.name }}</b>
             <span class="blurb">{{ c.blurb }}</span>
-            <span class="tf-label">{{ count(c.count) }}</span>
+            <span class="tf-label">{{ formatTinkerfundCampaignCount(c.count) }}</span>
           </NuxtLink>
         </li>
       </ul>

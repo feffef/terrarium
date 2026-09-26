@@ -19,7 +19,7 @@ const campaigns = computed(() =>
 const pinned = computed(() => new Date(now.value).toISOString())
 
 const { clock, cards, categories, promotions } = await useTinkerfundCatalog()
-const deals = computed(() => tinkerfundDeals(promotions.value, now.value))
+const deals = computed(() => groupTinkerfundPromotions(promotions.value, now.value))
 // The filters drive a local query here, so the gallery's URL stays put.
 const filterQuery = ref<TinkerfundBrowseQuery>({ sort: 'popular' })
 const filtered = computed(() => browseTinkerfundListings(cards.value, filterQuery.value))
@@ -57,7 +57,7 @@ const bounds = computed(() => tinkerfundPriceBounds(cards.value))
       <h2 id="gallery-index">Index table <code>TinkerfundIndexTable</code></h2>
       <p class="case">Home's Popular now. Pick Empty Shelf for the empty row; scroll sideways on a phone.</p>
       <TinkerfundIndexTable :cards="cards" :categories="categories" :clock="clock">
-        <span class="tf-label">{{ cards.length }} Campaigns</span>
+        <span class="tf-label">{{ formatTinkerfundCampaignCount(cards.length) }}</span>
       </TinkerfundIndexTable>
     </section>
 

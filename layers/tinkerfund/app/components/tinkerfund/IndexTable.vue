@@ -50,7 +50,7 @@ const label = useId()
               <NuxtLink :to="tinkerfundPath(space, c.path)">{{ c.title }}</NuxtLink>
             </th>
             <td>{{ c.categoryName }}</td>
-            <td><TinkerfundStateChips :status="c.status" :deal="c.deal" /></td>
+            <td><TinkerfundStateChips :status="c.status" :promoted="c.promoted" /></td>
             <td v-if="c.status.state === 'upcoming'">—</td>
             <td v-else class="funded"><TinkerfundFundingBar class="mini" :percent="c.status.percent" :segments="10" />{{ c.status.percent }}%</td>
             <td class="r">{{ c.status.state === 'upcoming' ? '—' : formatTinkerfundMoney(c.pledged) }}</td>

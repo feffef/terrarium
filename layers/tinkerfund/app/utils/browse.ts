@@ -104,8 +104,8 @@ export interface TinkerfundListing {
   backers: number
   prices: number[]
   status: CampaignStatus
-  /** An Active Promotion names this Campaign. */
-  deal: boolean
+  /** An Active Promotion names this Campaign; the shop calls it a Deal. */
+  promoted: boolean
 }
 
 export function tinkerfundListings(
@@ -113,7 +113,7 @@ export function tinkerfundListings(
   promotions: TinkerfundPromotionTiming[],
   now: number,
 ): TinkerfundListing[] {
-  const onDeal = new Set(
+  const promoted = new Set(
     promotions.filter((p) => p.campaign && derivePromotionState(p, now) === 'active').map((p) => p.campaign),
   )
   return docs.map(({ path, title, description, campaign: c }) => ({
@@ -129,7 +129,7 @@ export function tinkerfundListings(
     backers: c.backers,
     prices: c.rewards.map((r) => r.price),
     status: deriveCampaignStatus(c, c.pledged, now),
-    deal: onDeal.has(path.split('/').pop()),
+    promoted: promoted.has(path.split('/').pop()),
   }))
 }
 
@@ -168,7 +168,7 @@ export function browseTinkerfundListings<T extends TinkerfundListing>(listings: 
       (!category || l.category === category)
       && (!state || l.status.state === state)
       && (!soon || l.status.endingSoon)
-      && (!deal || l.deal)
+      && (!deal || l.promoted)
       && l.prices.some((p) => p >= min && p <= max),
     )
     .sort((a, b) => COMPARE[query.sort](a, b) || a.registry.localeCompare(b.registry))
@@ -179,7 +179,7 @@ export function tinkerfundPriceBounds(listings: TinkerfundListing[]): { min: num
   return prices.length ? { min: Math.min(...prices), max: Math.max(...prices) } : { min: 0, max: 0 }
 }
 
-const JUST_LAUNCHED =resolveTinkerfundOffset('+14d', 0)
+const JUST_LAUNCHED = resolveTinkerfundOffset('+14d', 0)
 
 /** Home's lists, in page order (issue #1367); an empty one hides its section. */
 export function tinkerfundHomeSections<T extends TinkerfundListing>(listings: T[], now: number) {
@@ -194,7 +194,7 @@ export function tinkerfundHomeSections<T extends TinkerfundListing>(listings: T[
 
 /** Active Promotions, ending soonest first (open-ended last), and Scheduled
  *  ones, starting soonest first. */
-export function tinkerfundDeals<T extends TinkerfundPromotionTiming>(promotions: T[], now: number) {
+export function groupTinkerfundPromotions<T extends TinkerfundPromotionTiming>(promotions: T[], now: number) {
   const timed = promotions.map((p) => ({
     ...p,
     startAt: resolveTinkerfundOffset(p.start, now),
@@ -205,6 +205,10 @@ export function tinkerfundDeals<T extends TinkerfundPromotionTiming>(promotions:
     active: timed.filter((p) => p.state === 'active').sort((a, b) => (a.endAt ?? Infinity) - (b.endAt ?? Infinity)),
     scheduled: timed.filter((p) => p.state === 'scheduled').sort((a, b) => a.startAt - b.startAt),
   }
+}
+
+export function formatTinkerfundCampaignCount(n: number): string {
+  return `${n} ${n === 1 ? 'Campaign' : 'Campaigns'}`
 }
 
 // A fixed locale, so server and browser render the same text.
