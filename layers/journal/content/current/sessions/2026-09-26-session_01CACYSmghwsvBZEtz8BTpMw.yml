@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01CACYSmghwsvBZEtz8BTpMw
 startedAt: 2026-09-26T06:37:43Z
-endedAt: 2026-09-26T06:46:13Z
+endedAt: 2026-09-26T06:49:22Z
 kind: interactive
-goal: "Wayfinder: resolve two Tinkerfund grilling tickets"
+goal: "Wayfinder: resolve three Tinkerfund grilling tickets"
 status: completed
-outcome: Clock and Pledge-flow tickets resolved on map
-summary: "Human-instructed: the user ran /wayfinder on the Tinkerfund map (issue 1357), then asked for the next grilling ticket. Agent resolved \"Campaign timeline and the simulated clock\" (one round, all recommendations accepted) and \"the Pledge flow (cart, checkout, receipt)\" (two rounds; the user changed one answer to allow multiple Rewards per Pledge, which drove a follow-up round). Each ticket was claimed, got a resolution comment, and was closed; the map's Decisions-so-far was updated, and bundle Promotions were added to the later-phase fog. No repo code changed, no PR."
+outcome: Clock, Pledge flow, content model resolved
+summary: "Human-instructed: the user ran /wayfinder on the Tinkerfund map (issue 1357), then twice asked for the next grilling ticket. Agent resolved \"Campaign timeline and the simulated clock\", \"the Pledge flow (cart, checkout, receipt)\" (the user changed one answer to allow multiple Rewards per Pledge, driving a follow-up round), and \"content model\" (grounded in the manifest types and the Marquee/Atlas SVG pattern). Each ticket was claimed, got a resolution comment, and was closed; the map's Decisions-so-far was updated each time. No repo code changed, no PR."
 prs: []
 docsRead: []
 skillsUsed:
@@ -33,16 +33,16 @@ frictions:
   - description: Resolution comment was blocked by the ADR-0017 guard for a bare <date> placeholder, after the parallel close call had already succeeded, leaving a briefly closed ticket with no answer.
     solution: Post the resolution comment before closing, sequentially rather than in one parallel batch.
     severity: nit
-durationSec: 510
+durationSec: 699
 models:
-  claude-opus-5-5: 65
+  claude-opus-5-5: 85
 toolCounts:
-  Bash: 10
+  Bash: 14
   Skill: 5
   ToolSearch: 3
-  mcp__github__issue_read: 7
-  mcp__github__issue_write: 7
-  mcp__github__add_issue_comment: 3
+  mcp__github__issue_read: 10
+  mcp__github__issue_write: 10
+  mcp__github__add_issue_comment: 4
 docsReadViaShell:
   - docs/agents/issue-tracker.md
 gitBranch: claude/wayfinder-issue-1357-uj2o5d
