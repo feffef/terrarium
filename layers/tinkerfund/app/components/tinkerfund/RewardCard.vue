@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import type { TinkerfundCartRequest, TinkerfundReward } from '../../types/tinkerfund'
+import type { TinkerfundReward } from '../../types/tinkerfund'
+import type { TinkerfundCartRequest } from '../../utils/cart'
 
 const props = defineProps<{
   slug: string
@@ -27,7 +28,7 @@ const ships = computed(() =>
 const button = computed(() => {
   if (props.state === 'upcoming') return 'Opens at launch'
   if (props.state === 'ended') return 'Closed'
-  return stock.value.soldOut ? 'Sold out' : 'Add to cart'
+  return stock.value.soldOut ? TINKERFUND_SOLD_OUT : 'Add to cart'
 })
 
 function step(by: number) {
@@ -47,7 +48,7 @@ function add() {
     <p v-if="reward.description" class="desc">{{ reward.description }}</p>
     <ul class="facts">
       <li v-if="stock.label" :class="{ scarce: stock.soldOut }">{{ stock.label }}</li>
-      <li v-if="reward.limit">Max {{ reward.limit }} per Backer</li>
+      <li v-if="reward.limit">{{ tinkerfundLimitNotice(reward.limit) }}</li>
       <li>{{ ships }}</li>
       <li>Est. delivery {{ formatTinkerfundMonth(resolveTinkerfundOffset(reward.delivery, now), locale) }}</li>
       <li>{{ reward.claimed.toLocaleString(locale) }} claimed</li>

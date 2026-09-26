@@ -9,7 +9,7 @@ useSeoMeta(tinkerfundSeo({ kind: 'listing', space, title: 'Discover', descriptio
 <template>
   <TinkerfundShell :space="space">
     <header class="intro">
-      <p class="tf-label">Index · {{ formatTinkerfundCampaignCount(cards.length) }} on file</p>
+      <p class="tf-label">Index · {{ tinkerfundCount(cards.length, 'Campaign') }} on file</p>
       <h1>Discover</h1>
     </header>
     <TinkerfundBrowse :cards="cards" :categories="categories" :clock="clock" />

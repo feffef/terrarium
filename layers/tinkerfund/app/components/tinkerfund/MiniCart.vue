@@ -1,14 +1,12 @@
 <script setup lang="ts">
-import type { TinkerfundCartRequest } from '../../types/tinkerfund'
-import type { TinkerfundCartView } from '../../utils/cart'
+import type { TinkerfundCartRequest, TinkerfundCartView } from '../../utils/cart'
 
 // The drawer an add opens (page inventory #1367); reduced motion drops its
 // slide through the theme's global rule.
 const props = defineProps<{ space: string; view: TinkerfundCartView }>()
 
 const id = useId()
-const locale = useTinkerfundLocale()
-const money = (amount: number) => formatTinkerfundMoney(amount, locale.value)
+const money = useTinkerfundMoney()
 const dialog = useTemplateRef<HTMLDialogElement>('dialog')
 const added = ref<TinkerfundCartRequest>()
 
@@ -56,7 +54,7 @@ defineExpose({ show })
       </div>
 
       <dl class="sum">
-        <dt>Subtotal <span>· {{ formatTinkerfundItems(view.count) }}</span></dt>
+        <dt>Subtotal <span>· {{ tinkerfundCount(view.count, 'item') }}</span></dt>
         <dd>{{ money(view.subtotal) }}</dd>
       </dl>
       <p class="note">Shipping and discounts are worked out at checkout.</p>

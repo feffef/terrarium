@@ -1,20 +1,9 @@
 <script setup lang="ts">
-// The Backer account (story #1385): the demo Backer's profile, address and
-// every Pledge, the baked ones merged with the visitor's after mount.
 definePageMeta({ viewTransition: true })
 
 const route = useRoute()
-const { space, collections } = useSpace('tinkerfund')
-
-const { data, status, error } = await useAsyncData(`tinkerfund-account-${space}`, async () => {
-  const [backer, shop] = await Promise.all([queryCollection(collections.backer).first(), queryCollection(collections.shop).first()])
-  return { backer, zones: shop?.zones ?? [], payment: shop?.payments[0]?.id ?? '' }
-})
-const { loaded, pledges, baked, catalog, now } = await useTinkerfundCart()
-
-const backer = computed(() => data.value?.backer)
-const zoneName = computed(() => data.value?.zones.find((z) => z.id === backer.value?.address.zone)?.name)
-const held = computed(() => tinkerfundAccountPledges(pledges.value, baked.value, catalog.value, now.value, data.value?.payment ?? ''))
+const { space } = useSpace('tinkerfund')
+const [{ zoneName, status, error }, { loaded, backer, account }] = await Promise.all([useTinkerfundShop(), useTinkerfundCart()])
 
 useSeoMeta(tinkerfundSeo({ kind: 'private', space, title: 'Your account' }))
 </script>
@@ -41,15 +30,15 @@ useSeoMeta(tinkerfundSeo({ kind: 'private', space, title: 'Your account' }))
             {{ backer.name }}<br>{{ backer.address.street }}<br>
             {{ backer.address.postcode }} {{ backer.address.city }}<br>{{ backer.address.country }}
           </address>
-          <p v-if="zoneName" class="note">Shipping zone: {{ zoneName }}</p>
+          <p class="note">Shipping zone: {{ zoneName(backer.address.zone) }}</p>
         </section>
       </div>
 
       <section class="pledges" aria-labelledby="pledges-h">
-        <h2 id="pledges-h">Your Pledges <span v-if="loaded" class="count">{{ held.length }}</span></h2>
+        <h2 id="pledges-h">Your Pledges <span v-if="loaded" class="count">{{ account.length }}</span></h2>
         <p v-if="!loaded" class="note">Opening your Pledges…</p>
-        <p v-else-if="!held.length" class="note">No Pledges yet. <NuxtLink :to="tinkerfundPath(space, '/discover')">Find a Campaign to back</NuxtLink>.</p>
-        <TinkerfundPledgeList v-else :space="space" :pledges="held" />
+        <p v-else-if="!account.length" class="note">No Pledges yet. <NuxtLink :to="tinkerfundPath(space, '/discover')">Find a Campaign to back</NuxtLink>.</p>
+        <TinkerfundPledgeList v-else :space="space" :pledges="account" />
       </section>
     </div>
     <ContentLoadErrorDialog :status="status" :error="error" :context="route.path" />

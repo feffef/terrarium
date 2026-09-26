@@ -9,11 +9,11 @@ import {
   browseTinkerfundListings,
   tinkerfundHomeSections,
   groupTinkerfundPromotions,
-  formatTinkerfundCampaignCount,
   tinkerfundStateLabel,
   tinkerfundRemaining,
   tinkerfundPriceBounds,
 } from '../../app/utils/browse.ts'
+import { tinkerfundCount } from '../../app/utils/shop.ts'
 
 const NOW = Date.parse('2026-06-01T12:00:00Z')
 const HOUR = 3_600_000
@@ -175,7 +175,7 @@ describe('Deals', () => {
   })
 
   it('counts Campaigns in the singular and plural', () => {
-    expect([0, 1, 6].map(formatTinkerfundCampaignCount)).toEqual(['0 Campaigns', '1 Campaign', '6 Campaigns'])
+    expect([0, 1, 6].map((n) => tinkerfundCount(n, 'Campaign'))).toEqual(['0 Campaigns', '1 Campaign', '6 Campaigns'])
   })
 })
 

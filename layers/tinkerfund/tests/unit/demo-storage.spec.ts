@@ -2,18 +2,7 @@
 // shared with every other Tenant on the origin (issue #1358, #1359).
 import { describe, expect, it } from 'vitest'
 import { readTinkerfundTheme, resetTinkerfundDemo, writeTinkerfundTheme } from '../../app/utils/demo.ts'
-
-function memoryStorage(entries: Record<string, string> = {}): Storage {
-  const map = new Map(Object.entries(entries))
-  return {
-    get length() { return map.size },
-    key: (i) => [...map.keys()][i] ?? null,
-    getItem: (k) => map.get(k) ?? null,
-    setItem: (k, v) => void map.set(k, String(v)),
-    removeItem: (k) => void map.delete(k),
-    clear: () => { throw new Error('Reset must never clear() storage other Tenants share') },
-  }
-}
+import { memoryStorage } from './support.ts'
 
 describe('theme preference', () => {
   it('follows the system until the visitor picks a theme', () => {

@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import type { TinkerfundAddon, TinkerfundCartRequest } from '../../types/tinkerfund'
+import type { TinkerfundAddon } from '../../types/tinkerfund'
+import type { TinkerfundCartRequest } from '../../utils/cart'
 
 const props = defineProps<{
   slug: string

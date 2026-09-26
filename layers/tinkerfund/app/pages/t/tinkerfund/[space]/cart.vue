@@ -4,18 +4,10 @@ import type { TinkerfundZone } from '../../../../utils/cart'
 definePageMeta({ viewTransition: true })
 
 const route = useRoute()
-const { space, collections } = useSpace('tinkerfund')
-const locale = useTinkerfundLocale()
-const money = (amount: number) => formatTinkerfundMoney(amount, locale.value)
-
-const { data: shop, status, error } = await useAsyncData(`tinkerfund-cart-shop-${space}`, async () => {
-  const [shop, backer] = await Promise.all([queryCollection(collections.shop).first(), queryCollection(collections.backer).first()])
-  return { zones: shop?.zones ?? [], home: backer?.address.zone }
-})
-// The estimate starts at the demo Backer's own address; checkout settles it.
-const zone = ref<TinkerfundZone>(shop.value?.home ?? 'domestic')
-const zoneName = computed(() => shop.value?.zones.find((z) => z.id === zone.value)?.name ?? zone.value)
-const { loaded, view, change } = await useTinkerfundCart(zone)
+const { space } = useSpace('tinkerfund')
+const money = useTinkerfundMoney()
+const chosen = ref<TinkerfundZone>()
+const [{ shop, zoneName, status, error }, { loaded, zone, view, change }] = await Promise.all([useTinkerfundShop(), useTinkerfundCart(chosen)])
 const blocked = computed(() => view.value.groups.some((g) => g.lines.some((l) => l.unavailable)))
 
 useSeoMeta(tinkerfundSeo({ kind: 'private', space, title: 'Your Cart' }))
@@ -24,7 +16,7 @@ useSeoMeta(tinkerfundSeo({ kind: 'private', space, title: 'Your Cart' }))
 <template>
   <TinkerfundShell :space="space">
     <div class="cart">
-      <h1>Your Cart <span v-if="loaded && view.count" class="count">{{ formatTinkerfundItems(view.count) }}</span></h1>
+      <h1>Your Cart <span v-if="loaded && view.count" class="count">{{ tinkerfundCount(view.count, 'item') }}</span></h1>
 
       <p v-if="!loaded" class="empty tf-panel">Opening your Cart…</p>
       <section v-else-if="!view.groups.length" class="empty tf-panel">
@@ -39,7 +31,7 @@ useSeoMeta(tinkerfundSeo({ kind: 'private', space, title: 'Your Cart' }))
             :key="group.campaign"
             :space="space"
             :group="group"
-            :zone="zoneName"
+            :zone="zoneName(zone)"
             @change="change"
           />
         </div>
@@ -47,7 +39,7 @@ useSeoMeta(tinkerfundSeo({ kind: 'private', space, title: 'Your Cart' }))
         <aside class="summary tf-panel" aria-labelledby="summary-h">
           <h2 id="summary-h">Summary</h2>
           <label class="tf-label" for="tf-zone">Estimate shipping to</label>
-          <select id="tf-zone" v-model="zone">
+          <select id="tf-zone" :value="zone" @change="chosen = ($event.target as HTMLSelectElement).value as TinkerfundZone">
             <option v-for="z in shop?.zones" :key="z.id" :value="z.id">{{ z.name }}</option>
           </select>
           <dl>

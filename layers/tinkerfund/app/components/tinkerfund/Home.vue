@@ -61,7 +61,7 @@ const locale = useTinkerfundLocale()
             <svg viewBox="0 0 24 24" aria-hidden="true" v-html="c.icon" />
             <b>{{ c.name }}</b>
             <span class="blurb">{{ c.blurb }}</span>
-            <span class="tf-label">{{ formatTinkerfundCampaignCount(c.count) }}</span>
+            <span class="tf-label">{{ tinkerfundCount(c.count, 'Campaign') }}</span>
           </NuxtLink>
         </li>
       </ul>

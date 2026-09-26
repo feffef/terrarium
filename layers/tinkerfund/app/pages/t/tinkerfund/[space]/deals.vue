@@ -3,7 +3,7 @@ definePageMeta({ viewTransition: true })
 
 const { space, now, clock, cards, promotions } = await useTinkerfundCatalog()
 const deals = computed(() => groupTinkerfundPromotions(promotions.value, now.value))
-const campaignOf = (slug?: string) => slug === undefined ? undefined : cards.value.find((c) => c.path === `/campaigns/${slug}`)
+const campaignOf = (slug?: string) => slug === undefined ? undefined : cards.value.find((c) => tinkerfundSlug(c.path) === slug)
 const groups = computed(() => [
   { id: 'tf-deals-now', title: 'Running now', list: deals.value.active, scheduled: false },
   { id: 'tf-deals-soon', title: 'Starting soon', list: deals.value.scheduled, scheduled: true },

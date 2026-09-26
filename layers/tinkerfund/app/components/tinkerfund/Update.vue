@@ -9,7 +9,7 @@ const { now } = await useTinkerfundClock()
 const categories = useTinkerfundCategories()
 
 const campaignPath = props.doc.path.replace(/\/updates\/[^/]+$/, '')
-const n = props.doc.path.split('/').pop()
+const n = tinkerfundSlug(props.doc.path)
 const { data: parent } = await useAsyncData(`tinkerfund-update-parent-${space}-${campaignPath}`, () =>
   queryCollection(pagesKey).path(campaignPath).select('title', 'campaign').first(),
 )

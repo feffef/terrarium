@@ -9,6 +9,7 @@ defineProps<{
     campaign: string
     title: string
     lines: (TinkerfundReceiptLine & { ships?: boolean; unavailable?: string })[]
+    unshipped?: string[]
     bonus?: number
     discount: number
     shipping: number
@@ -22,16 +23,16 @@ defineProps<{
 }>()
 
 const id = useId()
-const locale = useTinkerfundLocale()
-const money = (amount: number) => formatTinkerfundMoney(amount, locale.value)
+const money = useTinkerfundMoney()
 </script>
 
 <template>
   <section class="pledge tf-panel" :aria-labelledby="`${id}-h`">
     <header class="top">
       <p v-if="reference" class="tf-label">Pledge <b class="ref">{{ reference }}</b></p>
-      <h2 :id="`${id}-h`"><NuxtLink :to="tinkerfundPath(space, `/campaigns/${pledge.campaign}`)">{{ pledge.title }}</NuxtLink></h2>
+      <h2 :id="`${id}-h`"><NuxtLink :to="tinkerfundCampaignPath(space, pledge.campaign)">{{ pledge.title }}</NuxtLink></h2>
       <p v-if="note" class="note">{{ note }}</p>
+      <p v-if="pledge.unshipped?.length" class="flag">{{ tinkerfundPledgeDoesntShip(pledge.unshipped, zone) }}</p>
     </header>
     <ul class="lines">
       <li v-for="line in pledge.lines" :key="line.key">

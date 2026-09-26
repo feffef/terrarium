@@ -1,11 +1,9 @@
 <script setup lang="ts">
 import type { TinkerfundAccountPledge } from '../../utils/account'
 
-// The account's Pledges (story #1385); each opens its receipt.
 defineProps<{ space: string; pledges: TinkerfundAccountPledge[] }>()
 
-const locale = useTinkerfundLocale()
-const money = (amount: number) => formatTinkerfundMoney(amount, locale.value)
+const money = useTinkerfundMoney()
 </script>
 
 <template>

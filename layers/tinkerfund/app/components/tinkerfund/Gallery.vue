@@ -2,6 +2,7 @@
 // qa's front page (issue #1375): each component in its states, against qa's
 // edge-case fixtures. Later stories add a section per component they build.
 import type { TinkerfundBrowseQuery } from '../../utils/browse'
+import type { TinkerfundShop } from '../../utils/cart'
 
 defineProps<{ title: string; description?: string }>()
 
@@ -24,7 +25,7 @@ const campaigns = computed(() =>
   (docs.value ?? [])
     .flatMap((doc) => {
       if (!doc.campaign) return []
-      const slug = doc.path.split('/').pop()!
+      const slug = tinkerfundSlug(doc.path)
       return [{
         ...doc,
         slug,
@@ -39,23 +40,30 @@ const zones = computed(() => Object.fromEntries((extra.value?.shop?.zones ?? [])
 const thread = computed(() => extra.value?.threads[0])
 const pinned = computed(() => new Date(now.value).toISOString())
 
+const specimenShop = computed<TinkerfundShop>(() => ({
+  catalog: Object.fromEntries(campaigns.value.map((doc) => [doc.slug, { title: doc.title, campaign: doc.campaign }])),
+  baked: extra.value?.backer?.pledges ?? [],
+  promotions: (extra.value?.promotions ?? []).map((p) => ({ ...p, id: p.stem })),
+  payment: 'demo-card',
+  now: now.value,
+}))
+
 // A Cart that hits every notice at once, shipped to Europe.
 const cartSpecimen = computed(() => resolveTinkerfundCart(
-  [
+  { cart: [
     { campaign: 'last-minute-lamp', lines: [{ reward: 'lamp', options: { colour: 'white' }, quantity: 1 }], addons: [{ id: 'bulb', quantity: 1 }], bonus: 3 },
     { campaign: 'goal-exact-stapler', lines: [{ reward: 'early-bird', options: {}, quantity: 1 }, { reward: 'stapler', options: {}, quantity: 2 }], addons: [{ id: 'staple', quantity: 3 }] },
     { campaign: 'indoor-hammock', lines: [{ reward: 'hammock', options: {}, quantity: 1 }], addons: [] },
     { campaign: 'self-assembling-workbench', lines: [], addons: [], bonus: 25 },
-  ],
-  Object.fromEntries(campaigns.value.map((doc) => [doc.slug, { title: doc.title, campaign: doc.campaign }])),
-  now.value,
+  ], pledges: [] },
+  specimenShop.value,
   'europe',
 ))
-const quoteSpecimen = computed(() => quoteTinkerfundCheckout(cartSpecimen.value, extra.value?.promotions ?? [], 'TINKER10', now.value))
+const quoteSpecimen = computed(() => quoteTinkerfundCheckout(cartSpecimen.value, specimenShop.value, 'TINKER10'))
 const receiptSpecimen = computed(() => {
   const stapler = campaigns.value.find((doc) => doc.slug === 'goal-exact-stapler')
   return stapler && tinkerfundReceipt(
-    { ref: 'TF-P-9004', campaign: stapler.slug, placed: now.value, zone: 'europe', payment: 'handshake', lines: [{ reward: 'stapler', options: {}, quantity: 2 }], addons: [{ id: 'staple', quantity: 3 }], bonus: 5, discount: 10.6, shipping: 8 },
+    { ref: 'TF-P-9004', campaign: stapler.slug, placed: now.value, zone: 'europe', payment: 'handshake', lines: [{ reward: 'stapler', options: {}, quantity: 2 }], addons: [{ id: 'staple', quantity: 3 }], bonus: 5, promotions: [], discount: 10.6, shipping: 8 },
     { title: stapler.title, campaign: stapler.campaign },
   )
 })
@@ -63,12 +71,11 @@ const miniCart = useTemplateRef('miniCart')
 
 // qa's baked Pledges in every state they reach, plus the Lamp's cancelled.
 const PLEDGE_STATES = ['pending', 'charged', 'delivered', 'unfunded', 'cancelled'] as const
-const accountCatalog = computed(() => Object.fromEntries(campaigns.value.map((doc) => [doc.slug, { title: doc.title, campaign: doc.campaign }])))
 const accountSpecimen = computed(() => {
-  const baked = extra.value?.backer?.pledges ?? []
-  const lamp = tinkerfundAccountPledges([], baked, accountCatalog.value, now.value, 'demo-card').find((a) => a.pledge.campaign === 'last-minute-lamp')?.pledge
+  const { pledges } = reduceTinkerfundActions([], specimenShop.value)
+  const lamp = pledges.find((p) => p.campaign === 'last-minute-lamp')
   const cancelled = lamp ? [{ ...lamp, ref: 'TF-P-9009', cancelled: now.value }] : []
-  const rows = tinkerfundAccountPledges(cancelled, baked, accountCatalog.value, now.value, 'demo-card')
+  const rows = tinkerfundAccountPledges({ cart: [], pledges: [...pledges, ...cancelled] }, specimenShop.value)
   return { rows, lamp }
 })
 
@@ -111,7 +118,7 @@ const bounds = computed(() => tinkerfundPriceBounds(cards.value))
       <h2 id="gallery-index">Index table <code>TinkerfundIndexTable</code></h2>
       <p class="case">Home's Popular now. Pick Empty Shelf for the empty row; scroll sideways on a phone.</p>
       <TinkerfundIndexTable :cards="cards" :categories="categories" :clock="clock">
-        <span class="tf-label">{{ formatTinkerfundCampaignCount(cards.length) }}</span>
+        <span class="tf-label">{{ tinkerfundCount(cards.length, 'Campaign') }}</span>
       </TinkerfundIndexTable>
     </section>
 
@@ -254,8 +261,8 @@ const bounds = computed(() => tinkerfundPriceBounds(cards.value))
         <p class="chips"><TinkerfundPledgeState v-for="state in PLEDGE_STATES" :key="state" :state="state" /></p>
         <TinkerfundPledgeList :space="space" :pledges="accountSpecimen.rows" />
         <TinkerfundPledgeEditor
-          v-if="accountSpecimen.lamp && accountCatalog['last-minute-lamp']"
-          :campaign="accountCatalog['last-minute-lamp'].campaign"
+          v-if="accountSpecimen.lamp && specimenShop.catalog['last-minute-lamp']"
+          :campaign="specimenShop.catalog['last-minute-lamp'].campaign"
           :pledge="accountSpecimen.lamp"
           zone="Domestic"
         />

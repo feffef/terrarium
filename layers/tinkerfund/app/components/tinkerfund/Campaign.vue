@@ -1,17 +1,17 @@
 <script setup lang="ts">
-import type { TinkerfundCampaign, TinkerfundCartRequest, TinkerfundPage } from '../../types/tinkerfund'
+import type { TinkerfundCampaign, TinkerfundPage } from '../../types/tinkerfund'
+import type { TinkerfundCartRequest } from '../../utils/cart'
 
 // The Campaign page (story #1380, page inventory #1367): one long page, its
 // sections reached by anchor links.
 const props = defineProps<{ doc: TinkerfundPage & { campaign: TinkerfundCampaign } }>()
 
 const { space, pagesKey, collections } = useSpace('tinkerfund')
-const { now, ticking } = await useTinkerfundClock()
 const locale = useTinkerfundLocale()
 const categories = useTinkerfundCategories()
 
-const slug = computed(() => props.doc.path.split('/').pop()!)
-const { view: cart, change: changeCart, pledges, baked } = await useTinkerfundCart()
+const slug = computed(() => tinkerfundSlug(props.doc.path))
+const { view: cart, change: changeCart, pledges, baked, now, ticking } = await useTinkerfundCart()
 // Totals, Stretch goals and stock count the visitor's own Pledges (story #1384).
 const c = computed(() => withTinkerfundPledges(slug.value, props.doc.campaign, pledges.value, baked.value))
 
@@ -31,7 +31,7 @@ const deals = computed(() => tinkerfundAutomaticDeals(data.value?.promotions ?? 
 const zones = computed(() => Object.fromEntries((data.value?.shop?.zones ?? []).map((z) => [z.id, z.name])))
 const updates = computed(() =>
   (data.value?.updates ?? [])
-    .map((u) => ({ ...u, n: Number(u.path.split('/').pop()), at: resolveTinkerfundOffset(u.update?.published ?? '+0h', now.value) }))
+    .map((u) => ({ ...u, n: Number(tinkerfundSlug(u.path)), at: resolveTinkerfundOffset(u.update?.published ?? '+0h', now.value) }))
     .sort((a, b) => b.n - a.n),
 )
 const comments = computed(() => data.value?.comments ?? [])
