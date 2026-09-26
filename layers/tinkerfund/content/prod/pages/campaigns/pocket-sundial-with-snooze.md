@@ -22,16 +22,16 @@ campaign:
       caption: "The sundial, open, keeping time."
       svg: |-
         <ellipse cx="212" cy="224" rx="110" ry="40" style="fill:var(--tf-line)" />
-        <ellipse cx="200" cy="106" rx="73.5" ry="31" style="fill:var(--tf-warn)" />
-        <ellipse cx="200" cy="102" rx="73.5" ry="31" style="fill:color-mix(in srgb, var(--tf-warn) 72%, var(--tf-ink))" />
-        <path d="M138 102a62 26 0 1 0 124 0a62 26 0 1 0 -124 0" style="fill:none;stroke:color-mix(in srgb, var(--tf-warn) 45%, var(--tf-surface));stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round" />
-        <path d="M166 133H234" style="fill:none;stroke:color-mix(in srgb, var(--tf-warn) 72%, var(--tf-ink));stroke-width:6;stroke-linecap:round;stroke-linejoin:round" />
-        <path d="M193 124a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" style="fill:none;stroke:color-mix(in srgb, var(--tf-warn) 72%, var(--tf-ink));stroke-width:3.5;stroke-linecap:round;stroke-linejoin:round" />
-        <path d="M126 176V194A74 42.7 0 0 0 200 236.7V218.7A74 42.7 0 0 1 126 176Z" style="fill:var(--tf-warn)" />
-        <path d="M200 218.7V236.7A74 42.7 0 0 0 274 194V176A74 42.7 0 0 1 200 218.7Z" style="fill:color-mix(in srgb, var(--tf-warn) 72%, var(--tf-ink))" />
-        <ellipse cx="200" cy="176" rx="74" ry="42.7" style="fill:color-mix(in srgb, var(--tf-warn) 45%, var(--tf-surface))" />
+        <ellipse cx="200" cy="106" rx="73.5" ry="31" style="fill:var(--tf-accent)" />
+        <ellipse cx="200" cy="102" rx="73.5" ry="31" style="fill:color-mix(in srgb, var(--tf-accent) 72%, var(--tf-ink))" />
+        <path d="M138 102a62 26 0 1 0 124 0a62 26 0 1 0 -124 0" style="fill:none;stroke:color-mix(in srgb, var(--tf-accent) 45%, var(--tf-surface));stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round" />
+        <path d="M166 133H234" style="fill:none;stroke:color-mix(in srgb, var(--tf-accent) 72%, var(--tf-ink));stroke-width:6;stroke-linecap:round;stroke-linejoin:round" />
+        <path d="M193 124a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" style="fill:none;stroke:color-mix(in srgb, var(--tf-accent) 72%, var(--tf-ink));stroke-width:3.5;stroke-linecap:round;stroke-linejoin:round" />
+        <path d="M126 176V194A74 42.7 0 0 0 200 236.7V218.7A74 42.7 0 0 1 126 176Z" style="fill:var(--tf-accent)" />
+        <path d="M200 218.7V236.7A74 42.7 0 0 0 274 194V176A74 42.7 0 0 1 200 218.7Z" style="fill:color-mix(in srgb, var(--tf-accent) 72%, var(--tf-ink))" />
+        <ellipse cx="200" cy="176" rx="74" ry="42.7" style="fill:color-mix(in srgb, var(--tf-accent) 45%, var(--tf-surface))" />
         <g transform="matrix(.866 .5 -.866 .5 200 176)"><circle cx="0" cy="0" r="50" style="fill:var(--tf-surface)" />
-        <path d="M-50 0a50 50 0 1 0 100 0a50 50 0 1 0 -100 0" style="fill:none;stroke:var(--tf-warn);stroke-width:2;stroke-linecap:round;stroke-linejoin:round" />
+        <path d="M-50 0a50 50 0 1 0 100 0a50 50 0 1 0 -100 0" style="fill:none;stroke:var(--tf-accent);stroke-width:2;stroke-linecap:round;stroke-linejoin:round" />
         <path d="M0 12L0 -34L23 -40Z" style="fill:var(--tf-line)" />
         <path d="M-8 12L-48.5 12M-7.6 9.4L-49.7 -5.4M-6.4 7.2L-45 -21.9M-4.9 5.6L-35.9 -34.8M-3.2 4.7L-24.6 -43.5M-1.6 4.2L-12.4 -48.4M0 4L0 -50M1.6 4.2L12.4 -48.4M3.2 4.7L24.6 -43.5M4.9 5.6L35.9 -34.8M6.4 7.2L45 -21.9M7.6 9.4L49.7 -5.4M8 12L48.5 12" style="fill:none;stroke:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface));stroke-width:1.1;stroke-linecap:round;stroke-linejoin:round" />
         <path d="M-43.5 12L-48.5 12M-45 -3.7L-49.7 -5.4M-41 -18.9L-45 -21.9M-32.8 -30.9L-35.9 -34.8M-22.5 -39L-24.6 -43.5M-11.4 -43.5L-12.4 -48.4M0 -45L0 -50M11.4 -43.5L12.4 -48.4M22.5 -39L24.6 -43.5M32.8 -30.9L35.9 -34.8M41 -18.9L45 -21.9M45 -3.7L49.7 -5.4M43.5 12L48.5 12" style="fill:none;stroke:var(--tf-ink);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round" /></g>
@@ -46,12 +46,12 @@ campaign:
       svg: |-
         <ellipse cx="212" cy="238" rx="90" ry="38" style="fill:var(--tf-line)" />
         <path d="M200 10V190" style="fill:none;stroke:var(--tf-muted);stroke-width:1.5;stroke-dasharray:4 4" />
-        <path d="M191 174a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" style="fill:none;stroke:var(--tf-warn);stroke-width:4" />
-        <path d="M209 174C250 154 300 180 360 146" style="fill:none;stroke:var(--tf-warn);stroke-width:2.5;stroke-dasharray:4 3" />
-        <path d="M146 206V222A54 31.2 0 0 0 200 253.2V237.2A54 31.2 0 0 1 146 206Z" style="fill:var(--tf-warn)" />
-        <path d="M200 237.2V253.2A54 31.2 0 0 0 254 222V206A54 31.2 0 0 1 200 237.2Z" style="fill:color-mix(in srgb, var(--tf-warn) 72%, var(--tf-ink))" />
-        <ellipse cx="200" cy="206" rx="54" ry="31.2" style="fill:color-mix(in srgb, var(--tf-warn) 45%, var(--tf-surface))" />
-        <ellipse cx="200" cy="206" rx="46" ry="26.5" style="fill:color-mix(in srgb, var(--tf-warn) 72%, var(--tf-ink))" />
+        <path d="M191 174a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" style="fill:none;stroke:var(--tf-accent);stroke-width:4" />
+        <path d="M209 174C250 154 300 180 360 146" style="fill:none;stroke:var(--tf-accent);stroke-width:2.5;stroke-dasharray:4 3" />
+        <path d="M146 206V222A54 31.2 0 0 0 200 253.2V237.2A54 31.2 0 0 1 146 206Z" style="fill:var(--tf-accent)" />
+        <path d="M200 237.2V253.2A54 31.2 0 0 0 254 222V206A54 31.2 0 0 1 200 237.2Z" style="fill:color-mix(in srgb, var(--tf-accent) 72%, var(--tf-ink))" />
+        <ellipse cx="200" cy="206" rx="54" ry="31.2" style="fill:color-mix(in srgb, var(--tf-accent) 45%, var(--tf-surface))" />
+        <ellipse cx="200" cy="206" rx="46" ry="26.5" style="fill:color-mix(in srgb, var(--tf-accent) 72%, var(--tf-ink))" />
         <g transform="translate(0 46)"><path d="M130.7 204L144.6 212L144.6 204L130.7 196Z" style="fill:var(--tf-ink)" /><path d="M151.5 208L144.6 212L144.6 204L151.5 200Z" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" /><path d="M137.6 192L151.5 200L144.6 204L130.7 196Z" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" /></g>
         <path d="M258 192l5 3-10 4 10 4-10 4 10 4-5 3" style="fill:none;stroke:var(--tf-ink);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round" />
         <path d="M152 136V139A48 27.7 0 0 0 200 166.7V163.7A48 27.7 0 0 1 152 136Z" style="fill:var(--tf-line)" />
@@ -60,19 +60,19 @@ campaign:
         <path d="M152 136a48 27.7 0 1 0 96 0a48 27.7 0 1 0 -96 0" style="fill:none;stroke:var(--tf-line);stroke-width:1.5" />
         <path d="M159 136L152 136M160.4 129.9L153.6 128.8M164.5 124.2L158.4 122.2M171 119.3L166.1 116.4M179.5 115.5L176 112M189.4 113.1L187.6 109.2M200 112.3L200 108.3M210.6 113.1L212.4 109.2M220.5 115.5L224 112M229 119.3L233.9 116.4M235.5 124.2L241.6 122.2M239.6 129.9L246.4 128.8M241 136L248 136" style="fill:none;stroke:var(--tf-ink);stroke-width:2" />
         <g transform="translate(0 -56)"><path d="M194.8 163L186.1 128L193.1 128Z" style="fill:var(--tf-muted)" /><path d="M197.8 164.7L242.8 138.7L197.8 128.7Z" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" /><path d="M194.8 163L239.8 137L194.8 127Z" style="fill:var(--tf-ink)" /></g>
-        <path d="M146 36V41A54 31.2 0 0 0 200 72.2V67.2A54 31.2 0 0 1 146 36Z" style="fill:var(--tf-warn)" />
-        <path d="M200 67.2V72.2A54 31.2 0 0 0 254 41V36A54 31.2 0 0 1 200 67.2Z" style="fill:color-mix(in srgb, var(--tf-warn) 72%, var(--tf-ink))" />
-        <ellipse cx="200" cy="36" rx="54" ry="31.2" style="fill:color-mix(in srgb, var(--tf-warn) 45%, var(--tf-surface))" />
-        <ellipse cx="200" cy="36" rx="45" ry="26" style="fill:color-mix(in srgb, var(--tf-warn) 45%, var(--tf-surface))" />
+        <path d="M146 36V41A54 31.2 0 0 0 200 72.2V67.2A54 31.2 0 0 1 146 36Z" style="fill:var(--tf-accent)" />
+        <path d="M200 67.2V72.2A54 31.2 0 0 0 254 41V36A54 31.2 0 0 1 200 67.2Z" style="fill:color-mix(in srgb, var(--tf-accent) 72%, var(--tf-ink))" />
+        <ellipse cx="200" cy="36" rx="54" ry="31.2" style="fill:color-mix(in srgb, var(--tf-accent) 45%, var(--tf-surface))" />
+        <ellipse cx="200" cy="36" rx="45" ry="26" style="fill:color-mix(in srgb, var(--tf-accent) 45%, var(--tf-surface))" />
     - style: isometric
       caption: "The two finishes. Brass, open and keeping time; graphite, closed and not, for nine minutes."
       svg: |-
         <ellipse cx="116" cy="178" rx="84" ry="40" style="fill:var(--tf-line)" />
         <ellipse cx="300" cy="192" rx="84" ry="40" style="fill:var(--tf-line)" />
-        <path d="M97 108a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" style="fill:none;stroke:var(--tf-warn);stroke-width:4" />
-        <path d="M38 150V166A68 39.2 0 0 0 106 205.2V189.2A68 39.2 0 0 1 38 150Z" style="fill:var(--tf-warn)" />
-        <path d="M106 189.2V205.2A68 39.2 0 0 0 174 166V150A68 39.2 0 0 1 106 189.2Z" style="fill:color-mix(in srgb, var(--tf-warn) 72%, var(--tf-ink))" />
-        <ellipse cx="106" cy="150" rx="68" ry="39.2" style="fill:color-mix(in srgb, var(--tf-warn) 45%, var(--tf-surface))" />
+        <path d="M97 108a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" style="fill:none;stroke:var(--tf-accent);stroke-width:4" />
+        <path d="M38 150V166A68 39.2 0 0 0 106 205.2V189.2A68 39.2 0 0 1 38 150Z" style="fill:var(--tf-accent)" />
+        <path d="M106 189.2V205.2A68 39.2 0 0 0 174 166V150A68 39.2 0 0 1 106 189.2Z" style="fill:color-mix(in srgb, var(--tf-accent) 72%, var(--tf-ink))" />
+        <ellipse cx="106" cy="150" rx="68" ry="39.2" style="fill:color-mix(in srgb, var(--tf-accent) 45%, var(--tf-surface))" />
         <ellipse cx="106" cy="150" rx="56" ry="32.3" style="fill:var(--tf-surface)" />
         <path d="M58 150L50 150M59.6 142.8L51.9 141.6M64.4 136.2L57.5 133.8M72.1 130.4L66.4 127.2M82 126L78 122M93.6 123.2L91.5 118.8M106 122.3L106 117.7M118.4 123.2L120.5 118.8M130 126L134 122M139.9 130.4L145.6 127.2M147.6 136.2L154.5 133.8M152.4 142.8L160.1 141.6M154 150L162 150" style="fill:none;stroke:var(--tf-ink);stroke-width:2" />
         <g transform="translate(-94 -10)"><path d="M194.8 163L186.1 128L193.1 128Z" style="fill:var(--tf-muted)" /><path d="M197.8 164.7L242.8 138.7L197.8 128.7Z" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" /><path d="M194.8 163L239.8 137L194.8 127Z" style="fill:var(--tf-ink)" /></g>

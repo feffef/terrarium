@@ -47,7 +47,7 @@ campaign:
         <path d="M154 150V154A46 26.5 0 0 0 200 180.5V176.5A46 26.5 0 0 1 154 150Z" style="fill:var(--tf-ink)" />
         <path d="M200 176.5V180.5A46 26.5 0 0 0 246 154V150A46 26.5 0 0 1 200 176.5Z" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" />
         <ellipse cx="200" cy="150" rx="46" ry="26.5" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" />
-        <path d="M164 150a36 20.8 0 1 0 72 0a36 20.8 0 1 0 -72 0M171 150a29 16.7 0 1 0 58 0a29 16.7 0 1 0 -58 0M178 150a22 12.7 0 1 0 44 0a22 12.7 0 1 0 -44 0M185 150a15 8.7 0 1 0 30 0a15 8.7 0 1 0 -30 0" style="fill:none;stroke:var(--tf-warn);stroke-width:2.2" />
+        <path d="M164 150a36 20.8 0 1 0 72 0a36 20.8 0 1 0 -72 0M171 150a29 16.7 0 1 0 58 0a29 16.7 0 1 0 -58 0M178 150a22 12.7 0 1 0 44 0a22 12.7 0 1 0 -44 0M185 150a15 8.7 0 1 0 30 0a15 8.7 0 1 0 -30 0" style="fill:none;stroke:var(--tf-accent);stroke-width:2.2" />
         <g transform="translate(0 -56)"><path d="M140 112L168 88L210 80L196 118Z" style="fill:color-mix(in srgb, var(--tf-accent) 45%, var(--tf-surface))" />
         <path d="M210 80L252 92L238 128L196 118Z" style="fill:color-mix(in srgb, var(--tf-accent) 70%, var(--tf-surface))" />
         <path d="M132 150L140 112L196 118L180 172L150 166Z" style="fill:var(--tf-accent)" />
