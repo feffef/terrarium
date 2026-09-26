@@ -21,8 +21,13 @@
 // verb rules instead.
 
 /** Argv-0s that stream a file's CONTENTS into the session. `find`/`ls`/`wc` are
- *  deliberately absent: they report *about* a file without showing it. */
-const READER_VERBS = new Set(['cat', 'bat', 'sed', 'head', 'tail', 'awk', 'grep', 'rg', 'less', 'more'])
+ *  deliberately absent: they report *about* a file without showing it.
+ *  `diff <a> <b>` streams both files' differing content — unlike `grep`/`rg`,
+ *  neither positional is a pattern (so it is deliberately not in `SCRIPT_FIRST`
+ *  below), and unlike `grep`/`rg` it is not in `OUTPUT_FILTERED_VERBS` either:
+ *  it always processes every file it's given, so both stay unconditionally
+ *  credited the way `cat`/`sed` already are. */
+const READER_VERBS = new Set(['cat', 'bat', 'sed', 'head', 'tail', 'awk', 'grep', 'rg', 'less', 'more', 'diff'])
 
 /** Wrappers that sit in front of the real command. `timeout` matters most: agent
  *  briefs in this environment mandate foreground commands with an explicit
@@ -448,11 +453,13 @@ function redirectsStderrToDevNull(tokens: Token[]): boolean {
  *  injects an `fs`-backed implementation; tests exercise the pure default.
  *
  *  Each `commands` entry may pair a command with its own `tool_result` output
- *  text (issue #1247): a grep/rg invocation with more than one file positional
- *  is then only credited for a file its output actually shows a match from, and
- *  one with exactly one file positional only when the output is non-empty. A
- *  bare string (no output known) skips this gate entirely, matching every
- *  caller/test that predates #1247. Issue #1327 adds a second, verb-independent
+ *  text (issue #1247): a grep/rg invocation is only credited for a file its
+ *  output actually shows a match from — `outputMentionsFile`, one file or
+ *  several alike (issue #1327's follow-up: a single-file command's bare
+ *  `output.trim() !== ''` credited off shell noise that shared the same
+ *  `output` string, such as a trailing `; echo EXIT:$?`, with no real match at
+ *  all). A bare string (no output known) skips this gate entirely, matching
+ *  every caller/test that predates #1247. Issue #1327 adds a second, verb-independent
  *  gate ahead of this one: it withholds credit from the primary side of a
  *  `cmd1 <stderr to /dev/null> || cmd2` fallback, whose shared output may
  *  really belong to `cmd2` — see `redirectsStderrToDevNull`. */
@@ -539,10 +546,10 @@ export function scanShellReads(
         return
       }
 
-      // Candidates this segment would credit, held back until the file-count/
-      // output gate below decides (issue #1247): grep/rg filter their input,
-      // so which of several given files actually reached the session depends
-      // on what the command actually matched, not the argument list alone.
+      // Candidates this segment would credit, held back until the output gate
+      // below decides (issue #1247): grep/rg filter their input, so which of
+      // the given files actually reached the session depends on what the
+      // command actually matched, not the argument list alone.
       // `matchText` is what to look for in that output — the raw argument for
       // a literal path (what grep/rg actually echoes back), but the RESOLVED
       // filename for a glob candidate, since the tool never echoes the glob
@@ -552,7 +559,6 @@ export function scanShellReads(
       let skipReason: SkipRule | null = null
       const patternSupplied = tokens.some((t) => !t.quoted && PATTERN_FLAGS.has(t.text))
       let positionals = 0
-      let fileCount = 0
       for (const t of tokens.slice(1)) {
         if (skipReason) {
           note(fromReader, t.text, skipReason)
@@ -581,7 +587,6 @@ export function scanShellReads(
           note(fromReader, t.text, 'first positional: a pattern or program, not a path')
           continue
         }
-        fileCount++
         const p = norm(t.text)
         if (isInstructionDoc(p)) candidates.push({ path: p, token: t.text, matchText: t.text })
         else if (isGlobbedInstructionDoc(p)) {
@@ -604,9 +609,13 @@ export function scanShellReads(
       } else if (OUTPUT_FILTERED_VERBS.has(verb) && output !== undefined) {
         // `output === undefined` means the caller has no tool_result to gate
         // with (every pre-#1247 caller/test) — credit unconditionally, as before.
+        // One file or several: `outputMentionsFile` is the same check either
+        // way (issue #1327's follow-up) — a single-file command's old bare
+        // `output.trim() !== ''` credited shell noise sharing the same
+        // `output` string (a trailing `; echo EXIT:$?`, a later pipeline
+        // stage) as if it were a real match.
         for (const c of candidates) {
-          const confirmed = fileCount > 1 ? outputMentionsFile(output, c.matchText) : output.trim() !== ''
-          if (confirmed) credit(c.path)
+          if (outputMentionsFile(output, c.matchText)) credit(c.path)
           else note(fromReader, c.token, 'grep/rg output does not show this file being read')
         }
       } else {
