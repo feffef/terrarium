@@ -145,6 +145,13 @@ describe('reading the Cart against the catalog', () => {
     expect(near.groups[0]!.lines[0]).toMatchObject({ quantity: 1, max: 1, amount: 20 })
   })
 
+  it('flags what the Backer’s Pledge already holds that won’t ship to the zone, since the Pledge moves there', () => {
+    const manual = [{ campaign: 'lamp', lines: [{ reward: 'manual', options: {}, quantity: 1 }], addons: [] }]
+    const state = { cart: manual, pledges: [pledgedLamps(1)] }
+    expect(resolveTinkerfundCart(state, shop(), 'europe').groups[0]!.unshipped).toEqual(['One lamp'])
+    expect(resolveTinkerfundCart(state, shop(), 'domestic').groups[0]!.unshipped).toEqual([])
+  })
+
   it('trims a quantity to what is left', () => {
     const view = read([{ campaign: 'lamp', lines: [{ reward: 'lamp', options: { colour: 'black' }, quantity: 7 }], addons: [] }])
     expect(view.groups[0]!.lines[0]).toMatchObject({ quantity: 3, max: 3, amount: 60 })

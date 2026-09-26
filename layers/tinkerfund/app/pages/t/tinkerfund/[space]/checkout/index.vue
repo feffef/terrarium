@@ -22,7 +22,7 @@ const step = computed(() => Math.max(0, STEPS.indexOf(query('step') as (typeof S
 const payment = computed(() => shop.value?.payments.find((p) => p.id === query('pay')) ?? shop.value?.payments[0])
 
 const quote = computed(() => quoteFor(query('code')))
-const stranded = computed(() => view.value.groups.some((g) => g.closed || g.lines.some((l) => l.unavailable || !l.ships)))
+const stranded = computed(() => view.value.groups.some((g) => g.closed || g.unshipped.length || g.lines.some((l) => l.unavailable || !l.ships)))
 function addsTo({ existing, shipping }: TinkerfundCartGroup) {
   if (!existing) return undefined
   const moves = existing.zone === zone.value

@@ -293,11 +293,12 @@ export function registerTinkerfundE2E(): void {
         expect(await pledged()).toBe(before)
 
         await page.goto(url('/t/tinkerfund/qa/campaigns/last-minute-lamp'), { waitUntil: 'hydration' })
+        // The demo Backer's baked Pledge already holds the one lamp they may have.
         const lamp = page.getByRole('article', { name: 'One lamp' })
         await lamp.getByRole('button', { name: 'Add to cart' }).click()
+        expect(await lamp.getByRole('alert').textContent()).toBe('Max 1 per Backer: your Pledge already holds 1')
+        await page.getByRole('article', { name: 'The manual (PDF)' }).getByRole('button', { name: 'Add to cart' }).click()
         await drawer.getByRole('button', { name: 'Close' }).click()
-        await lamp.getByRole('button', { name: 'Add to cart' }).click()
-        expect(await lamp.getByRole('alert').textContent()).toBe('Max 1 per Backer')
 
         await page.locator('.head .cart').click()
         await page.waitForURL('**/qa/cart')
@@ -305,9 +306,11 @@ export function registerTinkerfundE2E(): void {
         const groups = page.locator('.group h2')
         expect(await groups.allTextContents()).toEqual(['Goal-Exact Stapler', 'Last-Minute Lamp'])
         await page.getByRole('button', { name: 'More One stapler' }).click()
-        await expect.poll(() => page.locator('.summary').textContent()).toMatch(/Subtotal\s*€100\s*Shipping\s*€9\s*Estimated total\s*€109/)
+        // The Lamp's Pledge already pays for domestic shipping, so only the Stapler adds any.
+        await expect.poll(() => page.locator('.summary').textContent()).toMatch(/Subtotal\s*€86\s*Shipping\s*€4\s*Estimated total\s*€90/)
         await page.getByLabel('Estimate shipping to').selectOption('europe')
-        expect(await page.locator('.group', { hasText: 'Last-Minute Lamp' }).textContent()).toContain('Doesn’t ship to Europe')
+        await expect.poll(() => page.locator('.group', { hasText: 'Last-Minute Lamp' }).textContent())
+          .toContain('Your Pledge already holds One lamp, which doesn’t ship to Europe')
 
         await page.reload()
         await expect.poll(() => count.textContent()).toBe('5')

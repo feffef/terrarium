@@ -18,6 +18,7 @@ function setBonus(event: Event) {
     <header class="head">
       <h2 :id="`${id}-h`"><NuxtLink :to="tinkerfundCampaignPath(space, group.campaign)">{{ group.title }}</NuxtLink></h2>
       <p v-if="group.closed" class="notice">{{ group.closed }}: remove these to check out</p>
+      <p v-if="group.unshipped.length" class="notice">{{ tinkerfundPledgeDoesntShip(group.unshipped, zone) }}</p>
     </header>
 
     <ul class="lines">

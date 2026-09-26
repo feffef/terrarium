@@ -113,6 +113,8 @@ export const TINKERFUND_NEEDS_REWARD = 'Add-ons need a Reward from this Campaign
 export const tinkerfundLimitNotice = (limit: number, pledged = 0) =>
   `Max ${limit} per Backer${pledged ? `: your Pledge already holds ${pledged}` : ''}`
 export const tinkerfundDoesntShip = (title: string) => `${title} doesn’t ship there`
+export const tinkerfundPledgeDoesntShip = (titles: string[], zone: string) =>
+  `Your Pledge already holds ${titles.join(', ')}, which ${titles.length === 1 ? 'doesn’t' : 'don’t'} ship to ${zone}`
 
 export const tinkerfundCents = (amount: number) => Math.round(amount * 100) / 100
 export const tinkerfundSum = (xs: number[]) => tinkerfundCents(xs.reduce((a, b) => a + b, 0))
@@ -323,6 +325,8 @@ export interface TinkerfundCartGroup {
   closed?: string
   /** The Pledge this Campaign already has, which checkout adds to (issue #1365). */
   existing?: TinkerfundPledge
+  /** Rewards `existing` holds that don't ship to the zone it would move to. */
+  unshipped: string[]
   subtotal: number
   /** What shipping the Pledge adds: it pays its zone's rate once, and moving zone re-rates all of it. */
   shipping: number
@@ -376,6 +380,7 @@ export function resolveTinkerfundCart(state: TinkerfundBackerState, shop: Tinker
       bonus: draft.bonus,
       closed,
       existing,
+      unshipped: campaign.rewards.filter((r) => tinkerfundHeld(existing?.lines ?? [], r.id) && !tinkerfundShipsTo(r, zone)).map((r) => r.title),
       subtotal: tinkerfundSum([...lines.map((l) => l.amount), closed ? 0 : draft.bonus ?? 0]),
       shipping: tinkerfundCents(tinkerfundShipping(shipped, campaign, zone) - (existing?.shipping ?? 0)),
     }]
