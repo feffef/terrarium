@@ -69,7 +69,7 @@ campaign:
         <path d="M83.2 57L176.8 111L176.8 103L83.2 49Z" style="fill:var(--tf-line)" />
         <path d="M83.2 57L142.1 91L142.1 83L83.2 49Z" style="fill:var(--tf-accent)" />
         <path d="M83.2 43L176.8 97L176.8 81L83.2 27Z" style="fill:color-mix(in srgb, var(--tf-accent) 45%, var(--tf-surface))" />
-        <text transform="matrix(.866 .5 0 1 89 37)" style="stroke:none;fill:var(--tf-ink);font:600 9px var(--tf-mono)">ROCK · FIRMWARE 2.3</text>
+        <text transform="matrix(.866 .5 0 1 89 37)" style="stroke:none;fill:var(--tf-ink);font:600 9px var(--tf-mono)">ROCK · FIRMWARE 1.1</text>
         <text transform="matrix(.866 .5 0 1 89 57)" style="stroke:none;fill:var(--tf-muted);font:500 8px var(--tf-mono)">INSTALLING · 62 %</text>
         <path d="M80 138V164A16 9.2 0 0 0 96 173.2V147.2A16 9.2 0 0 1 80 138Z" style="fill:var(--tf-ink)" />
         <path d="M96 147.2V173.2A16 9.2 0 0 0 112 164V138A16 9.2 0 0 1 96 147.2Z" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" />
@@ -199,7 +199,7 @@ are the ones they received.
 - **0.9.1** — Improved stability. The rock was already very stable.
 - **0.9.0** — First release. Adds support.
 
-Known issues: none. Version 1.0 ships with every Rock.
+Known issues: none. Version 1.0 ships with every rock.
 
 ## Launching soon
 
