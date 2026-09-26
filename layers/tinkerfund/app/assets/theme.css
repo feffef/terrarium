@@ -137,7 +137,7 @@
   border-radius: var(--tf-radius-panel);
 }
 
-.tf-h1, .tf-prose h1 { margin: 0; font: 800 clamp(30px, 4vw, 44px)/1.04 var(--tf-font); font-stretch: 78%; overflow-wrap: anywhere; }
+.tf-page .tf-h1, .tf-prose h1 { margin: 0; font: 800 clamp(30px, 4vw, 44px)/1.04 var(--tf-font); font-stretch: 78%; overflow-wrap: anywhere; }
 .tf-h1[tabindex='-1'] { outline: none; }
 
 /* A button that reads as a link. */
