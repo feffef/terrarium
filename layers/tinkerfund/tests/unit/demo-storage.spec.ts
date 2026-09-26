@@ -13,20 +13,23 @@ describe('theme preference', () => {
     const storage = memoryStorage()
     writeTinkerfundTheme(storage, 'dark')
     expect(readTinkerfundTheme(storage)).toBe('dark')
+    resetTinkerfundDemo(storage)
+    expect(readTinkerfundTheme(storage)).toBe('dark')
     writeTinkerfundTheme(storage, 'system')
     expect(readTinkerfundTheme(storage)).toBe('system')
     expect(storage.length).toBe(0)
   })
 
   it('treats a tampered value as System', () => {
-    expect(readTinkerfundTheme(memoryStorage({ 'tinkerfund:theme': 'sepia' }))).toBe('system')
+    expect(readTinkerfundTheme(memoryStorage({ 'tinkerfund-theme': 'sepia' }))).toBe('system')
   })
 })
 
 describe('resetTinkerfundDemo', () => {
-  it('removes every Tinkerfund key and leaves other Tenants’ keys alone', () => {
+  // The theme is a preference, not demo state (#1367), so Reset keeps it.
+  it('removes every Tinkerfund demo key and leaves the theme and other Tenants’ keys alone', () => {
     const storage = memoryStorage({
-      'tinkerfund:theme': 'dark',
+      'tinkerfund-theme': 'dark',
       'tinkerfund:prod:actions': '[]',
       'tinkerfund:qa:actions': '[]',
       'journal:accordion': 'open',
@@ -34,6 +37,6 @@ describe('resetTinkerfundDemo', () => {
     })
     resetTinkerfundDemo(storage)
     expect(Object.fromEntries([...Array(storage.length).keys()].map((i) => [storage.key(i), 1])))
-      .toEqual({ 'journal:accordion': 1, tinkerfundish: 1 })
+      .toEqual({ 'tinkerfund-theme': 1, 'journal:accordion': 1, tinkerfundish: 1 })
   })
 })

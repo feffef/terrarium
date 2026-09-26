@@ -63,11 +63,10 @@ export function tinkerfundLocale(preferred: string | undefined): string {
   }
 }
 
-/** The section being read: the last to reach `line`, the earlier on a tie. */
-export function currentTinkerfundSection(sections: { id: string; top: number }[], line: number): string | undefined {
-  const reached = sections.filter((s) => s.top <= line)
-  if (!reached.length) return sections[0]?.id
-  return reached.reduce((a, b) => (b.top > a.top ? b : a)).id
+/** The section being read. A sticky one is always in view, so it wins only when nothing else is. */
+export function currentTinkerfundSection(sections: { id: string; inView: boolean; sticky: boolean }[]): string | undefined {
+  const seen = sections.filter((s) => s.inView)
+  return (seen.find((s) => !s.sticky) ?? seen[0])?.id
 }
 
 export function formatTinkerfundDiscount(discount: { percent: number } | { amount: number }, locale: string): string {

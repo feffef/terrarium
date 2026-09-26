@@ -4,10 +4,21 @@ import type { TinkerfundAction, TinkerfundUntimedAction } from '../utils/backer'
 import type { TinkerfundListing } from '../utils/browse'
 import type { TinkerfundCartRequest, TinkerfundShop, TinkerfundStep, TinkerfundZone } from '../utils/cart'
 import type { TinkerfundHit } from '../utils/search'
+import type { CampaignState } from '../utils/status'
+
+/** The Space a Tinkerfund component renders in, its Collections and its links. */
+export function useTinkerfundSpace() {
+  const found = useSpace('tinkerfund')
+  return {
+    ...found,
+    link: (path = '') => tinkerfundPath(found.space, path),
+    campaignLink: (slug: string) => tinkerfundCampaignPath(found.space, slug),
+  }
+}
 
 /** The Space's `shop` document, and its zones' and payment methods' names. */
 export async function useTinkerfundShop() {
-  const { space, collections } = useSpace('tinkerfund')
+  const { space, collections } = useTinkerfundSpace()
   const { data: shop, status, error } = await useAsyncData(`tinkerfund-shop-${space}`, () => queryCollection(collections.shop).first())
   return {
     shop,
@@ -27,7 +38,7 @@ export async function useTinkerfundShop() {
  */
 export async function useTinkerfundClock(): Promise<{ now: Ref<number>; ticking: boolean; refresh: () => void }> {
   const nuxtApp = useNuxtApp()
-  const { space } = useSpace('tinkerfund')
+  const { space } = useTinkerfundSpace()
   const now = useState<number | null>(`tinkerfund-now-${space}`, () => null)
   const { shop } = await useTinkerfundShop()
   const pinned = shop.value?.now ?? undefined
@@ -46,6 +57,21 @@ export function useTinkerfundMoney(): (amount: number) => string {
 
 export type TinkerfundCard = TinkerfundListing & { categoryName: string; inventorName: string }
 
+/** What a Campaign's Reward, Add-on and bonus-support controls share. */
+export interface TinkerfundBacking {
+  slug: string
+  state: CampaignState
+  /** Why the Cart turned the last add away, keyed `reward:<id>`, `addon:<id>` or `bonus`. */
+  refusals: Record<string, string>
+  add: (request: TinkerfundCartRequest) => void
+}
+
+/** A Campaign's "now", and whether its countdowns move (issue #1364). */
+export interface TinkerfundMoment {
+  now: number
+  ticking: boolean
+}
+
 /**
  * Every Campaign in the Space as a card or table row, plus the categories and
  * Promotions that browsing needs (story #1381). Totals count the Backer's
@@ -54,7 +80,7 @@ export type TinkerfundCard = TinkerfundListing & { categoryName: string; invento
  */
 export async function useTinkerfundCatalog() {
   // Every composable runs before the first await: after it, Nuxt's context is gone.
-  const { space, pagesKey, collections } = useSpace('tinkerfund')
+  const { space, pagesKey, collections } = useTinkerfundSpace()
   const categories = useTinkerfundCategories()
   const cartReady = useTinkerfundCart()
   const catalog = useAsyncData(`tinkerfund-catalog-${space}`, async () => {
@@ -90,7 +116,7 @@ export async function useTinkerfundCatalog() {
     }))
   })
 
-  return { space, now, clock, cards, categories, promotions }
+  return { space, now, ticking: ticks, clock, cards, categories, promotions }
 }
 
 /** Money and dates follow the visitor's locale (issue #1365); the server reads
@@ -109,7 +135,7 @@ export function useTinkerfundLocale(): Ref<string> {
  * `chosen` zone, else to the demo Backer's own address.
  */
 export async function useTinkerfundCart(chosen: Readonly<Ref<TinkerfundZone | undefined>> = ref()) {
-  const { space, pagesKey, collections } = useSpace('tinkerfund')
+  const { space, pagesKey, collections } = useTinkerfundSpace()
   const actions = useState<TinkerfundAction[]>(`tinkerfund-actions-${space}`, () => [])
   const loaded = useState(`tinkerfund-actions-loaded-${space}`, () => false)
 
@@ -189,7 +215,7 @@ export async function useTinkerfundCart(chosen: Readonly<Ref<TinkerfundZone | un
 }
 
 export function useTinkerfundCategories() {
-  const { space, collections } = useSpace('tinkerfund')
+  const { space, collections } = useTinkerfundSpace()
   const { data } = useAsyncData(`tinkerfund-categories-${space}`, () =>
     queryCollection(collections.categories).order('order', 'ASC').all(),
   )
@@ -202,7 +228,7 @@ export function useTinkerfundCategories() {
  * Space; the query runs in the browser once hydrated (issue #1370).
  */
 export function useTinkerfundSearch() {
-  const { pagesKey, collections } = useSpace('tinkerfund')
+  const { pagesKey, collections } = useTinkerfundSpace()
   return async (raw: string, limit?: number): Promise<TinkerfundHit[]> => {
     const term = tinkerfundSearchTerm(raw)
     if (!term) return []

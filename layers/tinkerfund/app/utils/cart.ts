@@ -3,6 +3,7 @@
 import { z } from 'zod'
 import { TINKERFUND_SOLD_OUT, tinkerfundStock } from './campaign'
 import type { TinkerfundPromotionTerms } from './campaign'
+import type { pledge } from '../../tenant.config'
 import { deriveCampaignState } from './status'
 
 const id = z.string().min(1)
@@ -46,15 +47,7 @@ export interface TinkerfundPledge extends TinkerfundDraft {
 }
 
 /** A past Pledge as baked into the `backer` collection. */
-export interface TinkerfundBakedPledge {
-  ref: string
-  campaign: string
-  placed: string
-  zone: TinkerfundZone
-  lines: { reward: string; options?: Record<string, string>; quantity: number }[]
-  addons?: AddonLine[]
-  bonus?: number
-}
+export type TinkerfundBakedPledge = z.infer<typeof pledge>
 
 interface Item {
   id: string

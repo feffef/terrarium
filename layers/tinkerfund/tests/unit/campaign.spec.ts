@@ -97,23 +97,22 @@ describe('tinkerfundLocale', () => {
 })
 
 describe('currentTinkerfundSection', () => {
-  const sections = (story: number, rewards: number, updates: number) => [
-    { id: 'story', top: story },
-    { id: 'rewards', top: rewards },
-    { id: 'updates', top: updates },
-  ]
+  const at = (inView: string[], sticky: string[] = []) =>
+    currentTinkerfundSection(['story', 'rewards', 'updates'].map((id) => ({ id, inView: inView.includes(id), sticky: sticky.includes(id) })))
 
-  it('is the last section whose top has scrolled past the line', () => {
-    expect(currentTinkerfundSection(sections(-900, -300, 400), 100)).toBe('rewards')
-    expect(currentTinkerfundSection(sections(-900, -300, 100), 100)).toBe('updates')
+  it('is the first section in view', () => {
+    expect(at(['rewards'])).toBe('rewards')
+    expect(at(['rewards', 'updates'])).toBe('rewards')
   })
 
-  it('is the first section before any has reached the line', () => {
-    expect(currentTinkerfundSection(sections(400, 900, 1400), 100)).toBe('story')
+  it('is none while no section is in view, so the last one holds', () => {
+    expect(at([])).toBeUndefined()
   })
 
-  // On desktop the Rewards column starts level with the Story.
-  it('prefers the earlier section when two start level', () => {
-    expect(currentTinkerfundSection(sections(-200, -200, 600), 100)).toBe('story')
+  // On desktop the Rewards column is sticky, so it is always in view (#1380).
+  it('counts a sticky section only when nothing else is in view', () => {
+    expect(at(['story', 'rewards'], ['rewards'])).toBe('story')
+    expect(at(['rewards', 'updates'], ['rewards'])).toBe('updates')
+    expect(at(['rewards'], ['rewards'])).toBe('rewards')
   })
 })

@@ -1,5 +1,7 @@
 // Browsing the shop (story #1381): Home's sections, Discover, Category and
 // Deals, all derived from baked content at the page's "now" (issue #1364).
+import type { z } from 'zod'
+import type { campaign } from '../../tenant.config'
 import type { TinkerfundPromotionTerms } from './campaign'
 import { formatTinkerfundCountdown, resolveTinkerfundOffset, tinkerfundCountdown } from './clock'
 import { tinkerfundSlug } from './shop'
@@ -67,21 +69,15 @@ export function tinkerfundBrowseRouteQuery(query: TinkerfundBrowseQuery): Record
   return out
 }
 
+type Campaign = z.infer<typeof campaign>
+
 export interface TinkerfundCampaignDoc {
   path: string
   title: string
   description?: string
-  campaign: {
-    registry: string
-    inventor: string
-    category: string
-    goal: number
-    launch: string
-    end: string
-    backers: number
-    pledged: number
-    figures: { svg: string }[]
-    rewards: { price: number }[]
+  campaign: Pick<Campaign, 'registry' | 'inventor' | 'category' | 'goal' | 'launch' | 'end' | 'backers' | 'pledged'> & {
+    figures: Pick<Campaign['figures'][number], 'svg'>[]
+    rewards: Pick<Campaign['rewards'][number], 'price'>[]
   }
 }
 
@@ -131,16 +127,24 @@ export function tinkerfundListings(
   }))
 }
 
+export const TINKERFUND_STATE_LABELS = { upcoming: 'Upcoming', live: 'Live', ended: 'Ended', funded: 'Funded', unfunded: 'Unfunded' } as const
+
+/** The state, or the outcome once Ended. */
 export function tinkerfundStateLabel(status: CampaignStatus): string {
-  if (status.outcome) return status.outcome === 'funded' ? 'Funded' : 'Unfunded'
-  return status.state === 'live' ? 'Live' : 'Upcoming'
+  return TINKERFUND_STATE_LABELS[status.outcome ?? status.state]
+}
+
+const DEADLINE_LABELS = { upcoming: 'Launches', live: 'Ends', ended: 'Ended' } as const
+
+export function tinkerfundDeadline(status: CampaignStatus): { label: (typeof DEADLINE_LABELS)[CampaignState]; at: number } {
+  return { label: DEADLINE_LABELS[status.state], at: status.state === 'upcoming' ? status.launchAt : status.endAt }
 }
 
 /** `clock` may tick past the page's "now"; the state stays fixed (issue #1364). */
 export function tinkerfundRemaining(status: CampaignStatus, clock: number): string {
-  if (status.state === 'ended') return 'Ended'
-  if (status.state === 'upcoming') return `Launches in ${formatTinkerfundCountdown(tinkerfundCountdown(clock, status.launchAt))}`
-  return formatTinkerfundCountdown(tinkerfundCountdown(clock, status.endAt))
+  if (status.state === 'ended') return DEADLINE_LABELS.ended
+  const left = formatTinkerfundCountdown(tinkerfundCountdown(clock, tinkerfundDeadline(status).at))
+  return status.state === 'upcoming' ? `${DEADLINE_LABELS.upcoming} in ${left}` : left
 }
 
 const STATE_ORDER = { live: 0, upcoming: 1, ended: 2 } as const
@@ -160,14 +164,15 @@ const COMPARE: Record<TinkerfundSort, (a: TinkerfundListing, b: TinkerfundListin
 }
 
 export function browseTinkerfundListings<T extends TinkerfundListing>(listings: T[], query: TinkerfundBrowseQuery): T[] {
-  const { category, state, soon, deal, min = 0, max = Infinity } = query
+  const { category, state, soon, deal, min, max } = query
+  const priced = min !== undefined || max !== undefined
   return listings
     .filter((l) =>
       (!category || l.category === category)
       && (!state || l.status.state === state)
       && (!soon || l.status.endingSoon)
       && (!deal || l.promoted)
-      && l.prices.some((p) => p >= min && p <= max),
+      && (!priced || l.prices.some((p) => p >= (min ?? 0) && p <= (max ?? Infinity))),
     )
     .sort((a, b) => COMPARE[query.sort](a, b) || a.registry.localeCompare(b.registry))
 }

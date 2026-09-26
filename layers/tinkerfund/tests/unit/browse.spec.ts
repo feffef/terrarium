@@ -11,6 +11,7 @@ import {
   groupTinkerfundPromotions,
   tinkerfundStateLabel,
   tinkerfundRemaining,
+  tinkerfundDeadline,
   tinkerfundPriceBounds,
 } from '../../app/utils/browse.ts'
 import { tinkerfundCount } from '../../app/utils/shop.ts'
@@ -126,6 +127,12 @@ describe('browsing Campaigns', () => {
     expect(titles({ sort: 'popular', min: 45 })).toEqual(['hammock', 'kettle'])
     expect(titles({ sort: 'popular', max: 5 })).toEqual(['stapler', 'lamp'])
   })
+
+  it('keeps a Campaign with no Rewards until a price range is set', () => {
+    const support = tinkerfundListings([doc('support', { launch: '-1d', end: '+9d', prices: [] })], [], NOW)
+    expect(browseTinkerfundListings(support, { sort: 'popular' }).map((l) => l.title)).toEqual(['support'])
+    expect(browseTinkerfundListings(support, { sort: 'popular', min: 1 })).toEqual([])
+  })
 })
 
 describe('the Reward price range', () => {
@@ -191,5 +198,11 @@ describe('a listing’s status copy', () => {
     expect(tinkerfundRemaining(byTitle('lamp'), NOW + 13 * HOUR)).toBe('0 days 23 hours')
     expect(tinkerfundRemaining(byTitle('kettle'), NOW)).toBe('Launches in 3 days 0 hours')
     expect(tinkerfundRemaining(byTitle('ruler'), NOW)).toBe('Ended')
+  })
+
+  it('dates the launch while Upcoming, else the end', () => {
+    expect(tinkerfundDeadline(byTitle('kettle'))).toEqual({ label: 'Launches', at: NOW + 72 * HOUR })
+    expect(tinkerfundDeadline(byTitle('lamp'))).toEqual({ label: 'Ends', at: NOW + 36 * HOUR })
+    expect(tinkerfundDeadline(byTitle('hammock'))).toEqual({ label: 'Ended', at: NOW - HOUR })
   })
 })
