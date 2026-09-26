@@ -1,8 +1,8 @@
 // Tinkerfund's tab-lifetime browser state. sessionStorage is shared by every
 // Tenant on this origin (issue #1358), so every key carries this prefix and
 // Reset removes only those — never clear() (issue #1359).
-const PREFIX = 'tinkerfund:'
-const THEME_KEY = `${PREFIX}theme`
+export const TINKERFUND_KEY_PREFIX = 'tinkerfund:'
+const THEME_KEY = `${TINKERFUND_KEY_PREFIX}theme`
 
 export type TinkerfundTheme = 'system' | 'light' | 'dark'
 
@@ -18,7 +18,7 @@ export function writeTinkerfundTheme(storage: Storage, theme: TinkerfundTheme): 
 
 export function resetTinkerfundDemo(storage: Storage): void {
   const keys = [...Array(storage.length).keys()].map((i) => storage.key(i))
-  for (const key of keys) if (key?.startsWith(PREFIX)) storage.removeItem(key)
+  for (const key of keys) if (key?.startsWith(TINKERFUND_KEY_PREFIX)) storage.removeItem(key)
 }
 
 /** Runs in <head> before first paint, so a pinned theme never flashes. */

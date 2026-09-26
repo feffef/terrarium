@@ -1,7 +1,7 @@
 // The Cart over tab-lifetime browser state (story #1383): what is stored, what
 // an add may do, and how a stored Cart reads against the baked catalog.
 import { describe, expect, it } from 'vitest'
-import { addToTinkerfundCart, readTinkerfundOverlay, resolveTinkerfundCart, writeTinkerfundOverlay } from '../../app/utils/cart.ts'
+import { addToTinkerfundCart, readTinkerfundOverlay, resolveTinkerfundCart, setTinkerfundLine, writeTinkerfundOverlay } from '../../app/utils/cart.ts'
 import type { TinkerfundDraft } from '../../app/utils/cart.ts'
 
 function memoryStorage(entries: Record<string, string> = {}): Storage {
@@ -182,5 +182,13 @@ describe('reading the Cart against the catalog', () => {
   it('trims a quantity to what is left', () => {
     const view = read([{ campaign: 'lamp', lines: [{ reward: 'lamp', options: { colour: 'black' }, quantity: 7 }], addons: [] }])
     expect(view.groups[0]!.lines[0]).toMatchObject({ quantity: 3, max: 3, amount: 57 })
+  })
+
+  it('changes a trimmed line from what it shows: one fewer, then removed', () => {
+    let cart: TinkerfundDraft[] = [{ campaign: 'lamp', lines: [{ reward: 'lamp', options: { colour: 'black' }, quantity: 7 }], addons: [] }]
+    ;({ cart } = add(cart, setTinkerfundLine(read(cart).groups[0]!.lines[0]!, 2)))
+    expect(read(cart).groups[0]!.lines[0]).toMatchObject({ quantity: 2 })
+    ;({ cart } = add(cart, setTinkerfundLine(read(cart).groups[0]!.lines[0]!, 0)))
+    expect(cart).toEqual([])
   })
 })

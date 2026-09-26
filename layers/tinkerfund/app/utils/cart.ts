@@ -2,6 +2,7 @@
 // Space-keyed sessionStorage entry, validated on read.
 import { z } from 'zod'
 import { tinkerfundStock } from './campaign'
+import { TINKERFUND_KEY_PREFIX } from './demo'
 import { deriveCampaignStatus } from './status'
 
 /** A change to the Cart: a positive amount adds, a negative one takes away. */
@@ -26,7 +27,7 @@ const overlay = z.object({ cart: z.array(draft) })
 export type TinkerfundDraft = z.infer<typeof draft>
 export type TinkerfundOverlay = z.infer<typeof overlay>
 
-const overlayKey = (space: string) => `tinkerfund:${space}:overlay`
+const overlayKey = (space: string) => `${TINKERFUND_KEY_PREFIX}${space}:overlay`
 
 export function emptyTinkerfundOverlay(): TinkerfundOverlay {
   return { cart: [] }
@@ -169,17 +170,23 @@ export function tinkerfundCartLineKey(ref: LineRef): string {
 
 export interface TinkerfundCartLine {
   key: string
-  /** Spread with a `quantity` into a request that changes this line. */
   ref: LineRef
   title: string
   detail?: string
   price: number
+  /** What is shown: the stored quantity, trimmed to `max` while the line is available. */
   quantity: number
+  stored: number
   max: number
   amount: number
   unavailable?: string
   /** False for a Reward that doesn't ship to the chosen zone. */
   ships: boolean
+}
+
+/** The request that brings `line` to `quantity`, measured from what is stored, not what is shown. */
+export function setTinkerfundLine(line: TinkerfundCartLine, quantity: number): TinkerfundCartRequest {
+  return { ...line.ref, quantity: quantity - line.stored }
 }
 
 export interface TinkerfundCartGroup {
@@ -218,7 +225,7 @@ export function resolveTinkerfundCart(
       const max = tinkerfundMaxQuantity(item)
       const why = unavailable ?? (max === 0 ? 'Sold out' : undefined)
       const q = why ? quantity : Math.min(quantity, max)
-      return { title: item.title, price: item.price, quantity: q, max, amount: why ? 0 : cents(item.price * q), unavailable: why }
+      return { title: item.title, price: item.price, quantity: q, stored: quantity, max, amount: why ? 0 : cents(item.price * q), unavailable: why }
     }
 
     let shipped = false

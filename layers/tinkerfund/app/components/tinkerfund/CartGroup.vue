@@ -37,7 +37,7 @@ function setBonus(event: Event) {
             type="button"
             :aria-label="`Fewer ${line.title}`"
             :disabled="line.quantity <= 1"
-            @click="emit('change', { ...line.ref, quantity: -1 })"
+            @click="emit('change', setTinkerfundLine(line, line.quantity - 1))"
           >
             −
           </button>
@@ -46,13 +46,13 @@ function setBonus(event: Event) {
             type="button"
             :aria-label="`More ${line.title}`"
             :disabled="!!line.unavailable || line.quantity >= line.max"
-            @click="emit('change', { ...line.ref, quantity: 1 })"
+            @click="emit('change', setTinkerfundLine(line, line.quantity + 1))"
           >
             +
           </button>
         </div>
         <span class="amount">{{ money(line.amount) }}</span>
-        <button type="button" class="remove" @click="emit('change', { ...line.ref, quantity: -line.quantity })">
+        <button type="button" class="remove" @click="emit('change', setTinkerfundLine(line, 0))">
           Remove<span class="tf-sr"> {{ line.title }}</span>
         </button>
       </li>
