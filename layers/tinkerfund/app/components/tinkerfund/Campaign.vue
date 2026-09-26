@@ -10,8 +10,10 @@ const { now, ticking } = await useTinkerfundClock()
 const locale = useTinkerfundLocale()
 const categories = useTinkerfundCategories()
 
-const c = computed(() => props.doc.campaign)
 const slug = computed(() => props.doc.path.split('/').pop()!)
+const { view: cart, change: changeCart, pledges, baked } = await useTinkerfundCart()
+// Totals, Stretch goals and stock count the visitor's own Pledges (story #1384).
+const c = computed(() => withTinkerfundPledges(slug.value, props.doc.campaign, pledges.value, baked.value))
 
 const { data } = await useAsyncData(`tinkerfund-campaign-${space}-${props.doc.path}`, async () => {
   const [inventor, thread, updates, promotions, shop] = await Promise.all([
@@ -37,7 +39,6 @@ const commentCount = computed(() => comments.value.reduce((n, t) => n + 1 + (t.r
 const from = computed(() => campaignPriceFrom(c.value.rewards))
 const category = computed(() => categories.value.find((x) => x.slug === c.value.category))
 
-const { view: cart, change: changeCart } = await useTinkerfundCart()
 const drawer = useTemplateRef('drawer')
 // Why the last add was turned away, keyed by what was added.
 const refusals = ref<Record<string, string>>({})

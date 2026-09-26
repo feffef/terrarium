@@ -341,6 +341,86 @@ export function registerTinkerfundE2E(): void {
       }
     })
 
+    it('hydrates checkout and the Confirmation cleanly', async () => {
+      await expectCleanHydration('/t/tinkerfund/qa/checkout')
+      await expectCleanHydration('/t/tinkerfund/qa/checkout/done')
+    })
+
+    // The One-Button Keypad is €38 short of its goal; one keypad at TINKER10's
+    // 10% off (€40.50) tips it over and past its €1,001 Stretch goal.
+    it('checks out in three steps with a code, and the Pledge tips a Campaign over its goal', async () => {
+      const page = await createPage()
+      try {
+        await page.goto(url('/t/tinkerfund/qa/campaigns/one-button-keypad'), { waitUntil: 'hydration' })
+        expect(await page.locator('.readout .big').textContent()).toBe('€962')
+        await page.getByRole('article', { name: 'One keypad' }).getByRole('button', { name: 'Add to cart' }).click()
+        await page.getByRole('dialog', { name: 'Added to your Cart' }).getByRole('link', { name: 'Checkout' }).click()
+
+        await page.waitForURL('**/qa/checkout')
+        const summary = page.locator('.summary')
+        await expect.poll(() => page.locator('h1').textContent()).toBe('Shipping')
+        expect(await page.locator('.head').textContent()).toContain('Secure checkout (demo)')
+        expect(await page.locator('[aria-current="step"]').textContent()).toContain('Shipping')
+        expect(await page.locator('nav, footer').count()).toBe(0)
+        expect(await page.getByRole('note').filter({ hasText: 'no payment is taken' }).count()).toBe(1)
+        expect(await page.locator('address').textContent()).toContain('1 Test Way')
+
+        await page.getByLabel('Rest of world').check()
+        await expect.poll(() => page.locator('.step [role="alert"]').textContent()).toContain('can’t be pledged to Rest of world')
+        expect(await page.locator('.pledge').textContent()).toContain('Doesn’t ship to Rest of world')
+        await page.getByLabel('Europe').check()
+        await expect.poll(() => page.url()).toContain('zone=europe')
+        await page.getByRole('link', { name: 'Continue to payment' }).click()
+
+        await expect.poll(() => page.locator('h1').textContent()).toBe('Payment')
+        expect(await page.locator('[aria-current="step"]').textContent()).toContain('Payment')
+        expect(await page.locator('.step input:not([type="radio"])').count()).toBe(0)
+        await page.getByLabel('Promissory handshake').check()
+        await page.getByLabel('Discount code').fill('nope')
+        await page.getByRole('button', { name: 'Apply' }).click()
+        await expect.poll(() => summary.getByRole('alert').textContent()).toBe('That code isn’t valid')
+        await page.getByLabel('Discount code').fill('tinker10')
+        await page.getByRole('button', { name: 'Apply' }).click()
+        await expect.poll(() => summary.textContent()).toMatch(/Subtotal\s*€45\s*Discount\s*−€4.50\s*Shipping\s*€9\s*Total\s*€49.50[\s\S]*Code TINKER10 applied/)
+
+        await page.goBack()
+        await expect.poll(() => page.locator('h1').textContent()).toBe('Shipping')
+        expect(await page.getByLabel('Europe').isChecked()).toBe(true)
+        await page.goForward()
+        await expect.poll(() => page.locator('h1').textContent()).toBe('Payment')
+        expect(await page.getByLabel('Promissory handshake').isChecked()).toBe(true)
+        await page.getByRole('link', { name: 'Review your Pledges' }).click()
+
+        await expect.poll(() => page.locator('h1').textContent()).toBe('Review')
+        expect(await page.locator('.choices-made').textContent()).toMatch(/Ship to\s*Europe[\s\S]*Pay with\s*Promissory handshake/)
+        await page.getByRole('button', { name: 'Confirm Pledge' }).click()
+
+        await page.waitForURL('**/qa/checkout/done?refs=TF-P-9004')
+        await expect.poll(() => page.locator('h1').textContent()).toBe('Your Pledge is in')
+        const receipt = await page.locator('.pledge').textContent()
+        expect(receipt).toMatch(/Pledge TF-P-9004[\s\S]*One-Button Keypad[\s\S]*1 × One keypad\s*€45[\s\S]*Discount\s*−€4.50\s*Shipping to Europe\s*€9\s*Total\s*€49.50/)
+        expect(receipt).toMatch(/You’ll only be charged if this Campaign is funded, when it ends on .*2026/)
+        expect(await page.locator('.head .cart .count').textContent()).toBe('0')
+
+        await page.getByRole('link', { name: 'See One-Button Keypad' }).click()
+        await page.waitForURL('**/qa/campaigns/one-button-keypad')
+        await expect.poll(() => page.locator('.readout .big').textContent()).toBe('€1,002.50')
+        const readout = await page.locator('.readout.tf-panel').textContent()
+        expect(readout).toContain('Goal reached')
+        expect(readout).toContain('100% funded')
+        expect(readout).toMatch(/Backers\s*31/)
+        expect(await page.locator('.goals li.yes').textContent()).toContain('The button in a second colour')
+        expect(await page.getByRole('article', { name: 'One keypad' }).textContent()).toContain('1 of 30 left')
+
+        // Browse counts the visitor's Pledges too, after a full reload.
+        await page.goto(url('/t/tinkerfund/qa/discover'), { waitUntil: 'hydration' })
+        const card = page.locator('.grid article').filter({ has: page.getByRole('link', { name: 'One-Button Keypad' }) })
+        await expect.poll(() => card.locator('.tiles').textContent()).toMatch(/Pledged\s*€1,002.50\s*Funded\s*100%/)
+      } finally {
+        await page.close()
+      }
+    })
+
     it('404s an unknown Space', async () => {
       expect((await fetch('/t/tinkerfund/staging')).status).toBe(404)
     })
@@ -469,7 +549,7 @@ export function registerTinkerfundE2E(): void {
         await page.goto(url('/t/tinkerfund/qa/discover'), { waitUntil: 'hydration' })
         const side = page.locator('.side')
         const titles = () => page.locator('.grid h3').allTextContents()
-        expect(await titles()).toHaveLength(6)
+        expect(await titles()).toHaveLength(7)
 
         await side.getByLabel('Ending soon').check()
         await expect.poll(() => new URL(page.url()).search).toBe('?soon=1')
@@ -479,7 +559,7 @@ export function registerTinkerfundE2E(): void {
         await side.getByLabel('Live', { exact: true }).check()
         await page.getByLabel('Sort').selectOption('newest')
         await expect.poll(() => new URL(page.url()).search).toBe('?state=live&sort=newest')
-        const live = ['The Self-Assembling Workbench That Has Been Assembling Itself Since the Previous Financial Year', 'Goal-Exact Stapler', 'Last-Minute Lamp']
+        const live = ['The Self-Assembling Workbench That Has Been Assembling Itself Since the Previous Financial Year', 'Goal-Exact Stapler', 'Last-Minute Lamp', 'One-Button Keypad']
         expect(await titles()).toEqual(live)
 
         await page.goto(page.url(), { waitUntil: 'hydration' })
@@ -567,7 +647,7 @@ export function registerTinkerfundE2E(): void {
       expect(lamp).toContain('1 Campaign<')
       expect(lamp).toMatch(/<h3[^>]*><a[^>]*href="\/t\/tinkerfund\/qa\/campaigns\/last-minute-lamp"/)
       const byInventor = await search('qa', 'Test Inventor')
-      expect(byInventor).toContain('4 Campaigns<')
+      expect(byInventor).toContain('5 Campaigns<')
       expect(byInventor).not.toContain('Unhurried Kettle')
     })
 
@@ -576,7 +656,7 @@ export function registerTinkerfundE2E(): void {
       expect(await search('prod', 'mug')).toContain('Counterclockwise Mug')
       for (const q of ['mug', 'Henrik', 'Lucía']) expect(await search('qa', q)).toContain(`No Campaign matches “${q}”`)
       const everything = await search('qa', 'e')
-      expect(everything).toContain('6 Campaigns<')
+      expect(everything).toContain('7 Campaigns<')
       expect(everything).not.toMatch(/TF-0\d{3}|\/t\/tinkerfund\/prod\//)
     })
 
@@ -630,7 +710,7 @@ export function registerTinkerfundE2E(): void {
         await field.pressSequentially('test inventor')
         await field.press('Enter')
         await expect.poll(() => new URL(page.url()).search).toBe('?q=test+inventor')
-        await expect.poll(() => page.locator('main .grid h3').count()).toBe(4)
+        await expect.poll(() => page.locator('main .grid h3').count()).toBe(5)
         expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(390)
 
         await field.fill('kettle')

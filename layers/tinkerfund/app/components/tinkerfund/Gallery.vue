@@ -50,6 +50,14 @@ const cartSpecimen = computed(() => resolveTinkerfundCart(
   now.value,
   'europe',
 ))
+const quoteSpecimen = computed(() => quoteTinkerfundCheckout(cartSpecimen.value, extra.value?.promotions ?? [], 'TINKER10', now.value))
+const receiptSpecimen = computed(() => {
+  const stapler = campaigns.value.find((doc) => doc.slug === 'goal-exact-stapler')
+  return stapler && tinkerfundReceipt(
+    { ref: 'TF-P-9004', campaign: stapler.slug, placed: now.value, zone: 'europe', payment: 'handshake', lines: [{ reward: 'stapler', options: {}, quantity: 2 }], addons: [{ id: 'staple', quantity: 3 }], bonus: 5, discount: 10.6, shipping: 8 },
+    { title: stapler.title, campaign: stapler.campaign },
+  )
+})
 const miniCart = useTemplateRef('miniCart')
 
 const { clock, cards, categories, promotions } = await useTinkerfundCatalog()
@@ -203,6 +211,24 @@ const bounds = computed(() => tinkerfundPriceBounds(cards.value))
       <TinkerfundMiniCart ref="miniCart" :space="space" :view="cartSpecimen" />
     </section>
 
+    <section aria-labelledby="gallery-checkout">
+      <h2 id="gallery-checkout">Checkout <code>TinkerfundCheckoutHeader</code> <code>TinkerfundPledgeSummary</code></h2>
+      <p class="case">The focused header on its second step; the Cart above quoted with the TINKER10 code, then a receipt.</p>
+      <div class="checkout">
+        <TinkerfundCheckoutHeader :space="space" :steps="['Shipping', 'Payment', 'Review']" :step="1" />
+        <TinkerfundPledgeSummary v-for="group in quoteSpecimen.groups" :key="group.campaign" :space="space" :pledge="group" zone="Europe" />
+        <TinkerfundPledgeSummary
+          v-if="receiptSpecimen"
+          :space="space"
+          :pledge="receiptSpecimen"
+          zone="Europe"
+          :reference="receiptSpecimen.ref"
+          :ends-at="now + 21 * 86_400_000"
+          note="A receipt: its reference, and the charge pending until the Campaign ends"
+        />
+      </div>
+    </section>
+
     <section aria-labelledby="gallery-comments">
       <h2 id="gallery-comments">Comment thread <code>TinkerfundComments</code></h2>
       <ul class="specimens">
@@ -269,7 +295,7 @@ h2 code { color: var(--tf-muted); }
 .specimens.wide { grid-template-columns: repeat(auto-fill, minmax(min(100%, 420px), 1fr)); }
 .stack { display: grid; gap: 6px; align-content: start; }
 .figures { max-width: 560px; }
-.cart { display: grid; gap: 14px; max-width: 760px; }
+.cart, .checkout { display: grid; gap: 14px; max-width: 760px; }
 .specimen { display: grid; gap: 8px; align-content: start; padding: 16px; }
 .specimen > * { margin: 0; }
 .cards li { display: grid; }

@@ -20,19 +20,19 @@ const mugLine = { campaign: 'mug', lines: [{ reward: 'mug', options: { colour: '
 
 describe('the stored overlay', () => {
   it('starts empty', () => {
-    expect(readTinkerfundOverlay(memoryStorage(), 'qa')).toEqual({ cart: [] })
+    expect(readTinkerfundOverlay(memoryStorage(), 'qa')).toEqual({ cart: [], pledges: [] })
   })
 
   it('keeps each Space’s Cart apart', () => {
     const storage = memoryStorage()
-    writeTinkerfundOverlay(storage, 'qa', { cart: [mugLine] })
-    expect(readTinkerfundOverlay(storage, 'qa')).toEqual({ cart: [mugLine] })
-    expect(readTinkerfundOverlay(storage, 'prod')).toEqual({ cart: [] })
+    writeTinkerfundOverlay(storage, 'qa', { cart: [mugLine], pledges: [] })
+    expect(readTinkerfundOverlay(storage, 'qa')).toEqual({ cart: [mugLine], pledges: [] })
+    expect(readTinkerfundOverlay(storage, 'prod')).toEqual({ cart: [], pledges: [] })
   })
 
   it('reads tampered or malformed state as empty', () => {
     for (const raw of ['{', '"cart"', '{"cart":[{"campaign":"mug","lines":[{"reward":"mug","quantity":-3}]}]}']) {
-      expect(readTinkerfundOverlay(memoryStorage({ 'tinkerfund:qa:overlay': raw }), 'qa')).toEqual({ cart: [] })
+      expect(readTinkerfundOverlay(memoryStorage({ 'tinkerfund:qa:overlay': raw }), 'qa')).toEqual({ cart: [], pledges: [] })
     }
   })
 })

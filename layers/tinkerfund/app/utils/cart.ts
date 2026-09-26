@@ -22,15 +22,27 @@ const draft = z.object({
   bonus: z.number().positive().optional(),
 })
 
-const overlay = z.object({ cart: z.array(draft) })
+// A confirmed Pledge (story #1384): a draft plus what checkout settled. It
+// replaces a baked `backer` Pledge with the same ref.
+const pledge = draft.extend({
+  ref: id,
+  placed: z.number(),
+  zone: z.enum(['domestic', 'europe', 'world']),
+  payment: id,
+  discount: z.number().nonnegative(),
+  shipping: z.number().nonnegative(),
+})
+
+const overlay = z.object({ cart: z.array(draft), pledges: z.array(pledge).default([]) })
 
 export type TinkerfundDraft = z.infer<typeof draft>
+export type TinkerfundPledge = z.infer<typeof pledge>
 export type TinkerfundOverlay = z.infer<typeof overlay>
 
 const overlayKey = (space: string) => `${TINKERFUND_KEY_PREFIX}${space}:overlay`
 
 export function emptyTinkerfundOverlay(): TinkerfundOverlay {
-  return { cart: [] }
+  return { cart: [], pledges: [] }
 }
 
 export function readTinkerfundOverlay(storage: Storage, space: string): TinkerfundOverlay {
@@ -46,7 +58,7 @@ export function writeTinkerfundOverlay(storage: Storage, space: string, state: T
   storage.setItem(overlayKey(space), JSON.stringify(state))
 }
 
-export type TinkerfundZone = 'domestic' | 'europe' | 'world'
+export type TinkerfundZone = TinkerfundPledge['zone']
 
 interface Item {
   id: string
@@ -103,7 +115,12 @@ function validOptions(reward: CartReward, options: Record<string, string>): bool
   )
 }
 
-const cents = (amount: number) => Math.round(amount * 100) / 100
+/** "Colour: White", for a Reward line whose options are already valid. */
+export function tinkerfundOptionsLabel(reward: CartReward, options: Record<string, string>): string | undefined {
+  return reward.options?.map((g) => `${g.name}: ${g.choices.find((c) => c.id === options[g.id])?.label}`).join(' · ') || undefined
+}
+
+export const tinkerfundCents = (amount: number) => Math.round(amount * 100) / 100
 
 function closed(campaign: TinkerfundCartCampaign, now: number): string | undefined {
   const { state } = deriveCampaignStatus({ ...campaign, goal: 1 }, 0, now)
@@ -130,7 +147,7 @@ export function addToTinkerfundCart(
     : { campaign: request.campaign, lines: [], addons: [] }
 
   if ('bonus' in request) {
-    const bonus = cents((draft.bonus ?? 0) + request.bonus)
+    const bonus = tinkerfundCents((draft.bonus ?? 0) + request.bonus)
     if (bonus > 0) draft.bonus = bonus
     else delete draft.bonus
   } else if ('reward' in request) {
@@ -207,7 +224,7 @@ export interface TinkerfundCartView {
   total: number
 }
 
-const sum = (xs: number[]) => cents(xs.reduce((a, b) => a + b, 0))
+export const tinkerfundSum = (xs: number[]) => tinkerfundCents(xs.reduce((a, b) => a + b, 0))
 
 /** Unknown ids are dropped quietly; what is known but can't be had stays, flagged and unpriced (issue #1366). */
 export function resolveTinkerfundCart(
@@ -225,7 +242,7 @@ export function resolveTinkerfundCart(
       const max = tinkerfundMaxQuantity(item)
       const why = unavailable ?? (max === 0 ? 'Sold out' : undefined)
       const q = why ? quantity : Math.min(quantity, max)
-      return { title: item.title, price: item.price, quantity: q, stored: quantity, max, amount: why ? 0 : cents(item.price * q), unavailable: why }
+      return { title: item.title, price: item.price, quantity: q, stored: quantity, max, amount: why ? 0 : tinkerfundCents(item.price * q), unavailable: why }
     }
 
     let shipped = false
@@ -233,11 +250,11 @@ export function resolveTinkerfundCart(
       const reward = campaign.rewards.find((r) => r.id === line.reward)
       if (!reward || !validOptions(reward, line.options)) return []
       const ref = { campaign: draft.campaign, reward: reward.id, options: line.options }
-      const detail = reward.options?.map((g) => `${g.name}: ${g.choices.find((c) => c.id === line.options[g.id])!.label}`).join(' · ')
+      const detail = tinkerfundOptionsLabel(reward, line.options)
       const ships = !reward.shipsTo || reward.shipsTo.includes(zone)
       const price = priced(reward, line.quantity)
       if (reward.shipsTo && ships && !price.unavailable) shipped = true
-      return [{ key: tinkerfundCartLineKey(ref), ref, detail: detail || undefined, ships, ...price }]
+      return [{ key: tinkerfundCartLineKey(ref), ref, detail, ships, ...price }]
     })
     const rewarded = rewards.some((l) => !l.unavailable)
     const addons = draft.addons.flatMap((line): TinkerfundCartLine[] => {
@@ -254,12 +271,12 @@ export function resolveTinkerfundCart(
       lines,
       bonus: draft.bonus,
       closed: shut,
-      subtotal: sum([...lines.map((l) => l.amount), shut ? 0 : draft.bonus ?? 0]),
+      subtotal: tinkerfundSum([...lines.map((l) => l.amount), shut ? 0 : draft.bonus ?? 0]),
       shipping: shipped ? campaign.shipping[zone] ?? 0 : 0,
     }]
   })
-  const subtotal = sum(groups.map((g) => g.subtotal))
-  const shipping = sum(groups.map((g) => g.shipping))
+  const subtotal = tinkerfundSum(groups.map((g) => g.subtotal))
+  const shipping = tinkerfundSum(groups.map((g) => g.shipping))
   const count = groups.reduce((n, g) => n + (g.lines.length ? g.lines.reduce((m, l) => m + l.quantity, 0) : 1), 0)
-  return { groups, count, subtotal, shipping, total: cents(subtotal + shipping) }
+  return { groups, count, subtotal, shipping, total: tinkerfundCents(subtotal + shipping) }
 }

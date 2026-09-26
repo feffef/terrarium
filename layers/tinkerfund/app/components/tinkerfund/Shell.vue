@@ -17,11 +17,12 @@ useHead({
         <TinkerfundResetDemo />
       </div>
     </div>
-    <TinkerfundHeader :space="space" />
+    <!-- A page with its own header is a focused flow: no footer either (#1367). -->
+    <slot name="header"><TinkerfundHeader :space="space" /></slot>
     <main id="tf-main" class="tf-wrap main">
       <slot />
     </main>
-    <TinkerfundFooter :space="space" />
+    <TinkerfundFooter v-if="!$slots.header" :space="space" />
   </div>
 </template>
 

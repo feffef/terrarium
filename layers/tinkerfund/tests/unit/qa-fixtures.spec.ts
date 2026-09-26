@@ -13,7 +13,7 @@ interface Campaign {
   end: string
   backers: number
   pledged: number
-  rewards: { claimed: number; stock?: number }[]
+  rewards: { price: number; claimed: number; stock?: number }[]
 }
 
 const qa = fileURLToPath(new URL('../../content/qa/', import.meta.url))
@@ -48,6 +48,17 @@ describe('qa edge cases', () => {
   it('has an Ended Campaign that is Funded many times over, and one that is Unfunded', () => {
     expect(campaigns.some((c) => c.status.outcome === 'funded' && c.status.percent >= 10_000)).toBe(true)
     expect(campaigns.some((c) => c.status.outcome === 'unfunded')).toBe(true)
+  })
+
+  // The checkout e2e tips it over with one Reward at the TINKER10 code's 10% off.
+  it('has a Live Campaign one discounted Reward tips over its goal', () => {
+    const keypad = campaigns.find((c) => c.slug === 'one-button-keypad')!
+    const price = Math.min(...keypad.rewards.map((r) => r.price))
+    expect(keypad.status.state).toBe('live')
+    expect(keypad.pledged).toBeLessThan(keypad.goal)
+    expect(keypad.pledged + price * 0.9).toBeGreaterThanOrEqual(keypad.goal)
+    const promotions = documents('promotions').map(({ doc }) => doc as { code?: string; start: string; end?: string })
+    expect(derivePromotionState(promotions.find((p) => p.code === 'TINKER10')!, now)).toBe('active')
   })
 
   it('has a category no Campaign is filed in', () => {
