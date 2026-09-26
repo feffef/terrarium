@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013nrrgCxqJWxwwXuZ28cVLh
 startedAt: 2026-09-26T16:47:45Z
-endedAt: 2026-09-26T17:34:43Z
+endedAt: 2026-09-26T17:47:12Z
 kind: autonomous
 goal: "Run scheduled visitor-loop: fix findings, ship a feature"
-status: in-review
-outcome: "Fix PR #1404 merged; feature PR #1405 opened, awaiting CI"
-summary: "Fully agent-initiated scheduled run of the visitor-loop Skill, no human prompt this session. Served a fresh production preview of origin/main, dispatched three blind first-time-visitor subagents (sonnet, fable, opus), and tallied their reports. Fixed the five findings at least two of three raised independently (PR #1404, merged): a stat-card pluralization bug, the Journal Skills page's internal-jargon presentation, session cards' unscannable PR-chip soup, missing blog post bylines, and the Atlas Relations diagram reading as clipped at 390px despite yesterday's fade-only fix. Dropped one consensus finding (a second homepage CTA to Highlights) because decisions.md already rules out changing that button's routing; addressed its underlying complaint by fixing the overwhelming page instead. Ran /code-review on the fix PR, fixed one real Standards violation it found (a drifted duplicate comment), then landed it on a green gate. Then built the feature PR (#1405, open): a homepage \"Start here\" strip of four Blog posts, content-homed on the Journal's existing Highlights page via a new optional `featured` field, picked because all three visitors independently proposed a variant of \"surface the Blog's best material higher up\" as their top idea. Both PRs proved every claim against the rendered DOM before/after and ran the full gate green."
+status: completed
+outcome: "Fix PR #1404 and feature PR #1405 both merged"
+summary: "Fully agent-initiated scheduled run of the visitor-loop Skill, no human prompt this session. Served a fresh production preview of origin/main, dispatched three blind first-time-visitor subagents (sonnet, fable, opus), and tallied their reports. Fixed the five findings at least two of three raised independently (PR #1404, merged): a stat-card pluralization bug, the Journal Skills page's internal-jargon presentation (added a plain-language `gist` field to 19 Skill entries), session cards' unscannable PR-chip soup, missing blog post bylines, and the Atlas Relations diagram reading as clipped at 390px despite yesterday's fade-only fix. Dropped one consensus finding (a second homepage CTA to Highlights) because decisions.md already rules out changing that button's routing; addressed the underlying complaint by fixing the overwhelming page instead. Then built the feature PR (#1405, merged): a homepage \"Start here\" strip of four Blog posts, content-homed on the Journal's existing Highlights page via a new optional `featured` field, picked because all three visitors independently proposed a variant of \"surface the Blog's best material higher up\" as their top idea. Ran /code-review on both PRs; each surfaced one real Standards finding (a drifted duplicate comment on the fix PR, a duplicated-rationale comment plus a fragile persona-string round-trip on the feature PR), all fixed before merge. One review finding (a misapplied \"Simplify first\" growth-freeze reading) was dismissed with reasoning, since ADR-0003 explicitly charters visitor-loop's feature PRs as net-new work. Both PRs proved every claim against the rendered DOM before/after and ran the full gate green (1666 unit + 85 e2e) before each push. No consensus finding was marked out-of-remit this run, so no issue was filed."
 prs:
   - "1404"
   - "1405"
@@ -112,27 +112,30 @@ frictions:
   - description: Repeatedly issued no-op `sleep 1` Bash calls across both PRs' build/ gate/CI wait cycles instead of ending the turn with a status line and letting the completion notification arrive on its own — a recurring pattern across the whole session, not a one-off.
     solution: When a background task or subscribed PR event is the only thing being waited on, end the turn with one status sentence and no tool call at all; never invent a filler Bash command to "pass time".
     severity: minor
-durationSec: 2819
+  - description: Repeatedly issued no-op `sleep 1` Bash calls across both PRs' build/ gate/CI wait cycles instead of ending the turn with a status line and letting the completion notification arrive on its own — a recurring pattern across the whole session that I flagged mid-session but kept doing anyway.
+    solution: When a background task or subscribed PR event is the only thing being waited on, end the turn with one status sentence and no tool call at all; never invent a filler Bash command to "pass time". Treat this as a hard rule, not a preference, since noticing it mid-session did not stop the pattern.
+    severity: minor
+durationSec: 3567
 models:
-  claude-sonnet-5: 536
+  claude-sonnet-5: 762
 toolCounts:
-  Bash: 149
-  Read: 46
+  Bash: 233
+  Read: 52
   ToolSearch: 4
   mcp__github__search_pull_requests: 1
   mcp__github__list_pull_requests: 1
   mcp__github__pull_request_read: 4
   Agent: 7
-  Grep: 21
+  Grep: 22
   Glob: 3
-  Edit: 36
+  Edit: 41
   TaskCreate: 1
-  Write: 4
+  Write: 5
   mcp__github__create_pull_request: 2
   mcp__github__subscribe_pr_activity: 2
-  Skill: 4
-  ReadNotifications: 6
-  mcp__github__add_issue_comment: 1
+  Skill: 5
+  ReadNotifications: 11
+  mcp__github__add_issue_comment: 2
 filesEdited:
   - layers/journal/tenant.config.ts
   - layers/journal/app/types/journal.ts
@@ -192,4 +195,6 @@ trigger: visitor-loop
 learnings:
   - "A pure CSS background-color fade at a scrollable diagram's edge is too subtle a scroll affordance on its own — two more independent first-time visitors still read the Atlas Relations diagram as \"clipped\" a full day after PR #1341 added exactly that fade for the same complaint. An explicit, visible text hint reads far more reliably than a color-only cue."
   - "When two or three blind visitors independently propose different-worded variants of the same underlying fix (here: \"surface the Blog's best material higher on the homepage\"), picking the smallest/most content-homed variant — reusing an existing curated list via one new optional schema field, rather than authoring new content or a new route — keeps the feature PR proportionate to a single-session chartered run."
+  - When two or three blind visitors independently propose different-worded variants of the same underlying fix, picking the smallest/most content-homed variant — reusing an existing curated list via one new optional schema field, rather than authoring new content or a new route — keeps the feature PR proportionate to a single-session chartered run.
+  - A code-review finding can misread a repo-wide rule's scope (e.g. reading CLAUDE.md's "Simplify first" growth-freeze, which targets the Platform's own instructions/governance, as forbidding any net-new Tenant feature). Cross-check a hard-violation claim against the specific ADR/ledger row that charters the work before accepting it, rather than fixing on the reviewer's say-so alone.
 landedBy: Stop
