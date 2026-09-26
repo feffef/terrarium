@@ -2,15 +2,11 @@
 import type { TinkerfundCard } from '../../composables/tinkerfund'
 
 const props = defineProps<{ card: TinkerfundCard; clock: number }>()
-const { space } = useSpace('tinkerfund')
+const { link } = useTinkerfundSpace()
 const locale = useTinkerfundLocale()
+const money = useTinkerfundMoney()
 const upcoming = computed(() => props.card.status.state === 'upcoming')
-const last = computed(() => {
-  const { status, backers } = props.card
-  if (status.state === 'ended') return { label: 'Backers', value: backers.toLocaleString(locale.value) }
-  if (status.state === 'live') return { label: 'Left', value: tinkerfundRemaining(status, props.clock) }
-  return { label: 'Launches in', value: formatTinkerfundCountdown(tinkerfundCountdown(props.clock, status.launchAt)) }
-})
+const from = computed(() => props.card.prices.length ? money(Math.min(...props.card.prices)) : '—')
 </script>
 
 <template>
@@ -20,25 +16,28 @@ const last = computed(() => {
         <span class="tf-label">FIG. 1 · {{ card.registry }}</span>
         <TinkerfundStateChips :status="card.status" :promoted="card.promoted" />
       </div>
-      <!-- eslint-disable-next-line vue/no-v-html -- validated, token-coloured content SVG (issue #1363) -->
-      <svg viewBox="0 0 400 300" aria-hidden="true" v-html="card.figure" />
+      <TinkerfundFigure :svg="card.figure" />
     </div>
     <div class="body">
       <div>
-        <h3><NuxtLink :to="tinkerfundPath(space, card.path)">{{ card.title }}</NuxtLink></h3>
+        <h3><NuxtLink :to="link(card.path)">{{ card.title }}</NuxtLink></h3>
         <p class="by">{{ card.categoryName }} · {{ card.inventorName }}</p>
       </div>
       <TinkerfundProgressBar v-if="!upcoming" :percent="card.status.percent" />
       <dl class="tiles">
         <template v-if="upcoming">
-          <div><dt>Goal</dt><dd>{{ formatTinkerfundMoney(card.goal, locale) }}</dd></div>
-          <div><dt>From</dt><dd>{{ formatTinkerfundMoney(Math.min(...card.prices), locale) }}</dd></div>
+          <div><dt>Goal</dt><dd>{{ money(card.goal) }}</dd></div>
+          <div><dt>From</dt><dd>{{ from }}</dd></div>
         </template>
         <template v-else>
-          <div><dt>Pledged</dt><dd>{{ formatTinkerfundMoney(card.pledged, locale) }}</dd></div>
+          <div><dt>Pledged</dt><dd>{{ money(card.pledged) }}</dd></div>
           <div><dt>Funded</dt><dd>{{ card.status.percent }}%</dd></div>
         </template>
-        <div><dt>{{ last.label }}</dt><dd>{{ last.value }}</dd></div>
+        <div v-if="card.status.state === 'ended'"><dt>Backers</dt><dd>{{ card.backers.toLocaleString(locale) }}</dd></div>
+        <div v-else>
+          <dt>Remaining</dt>
+          <dd><TinkerfundTime :at="tinkerfundDeadline(card.status).at" :text="tinkerfundRemaining(card.status, clock)" /></dd>
+        </div>
       </dl>
     </div>
   </article>

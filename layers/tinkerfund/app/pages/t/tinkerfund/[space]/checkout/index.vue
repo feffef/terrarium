@@ -10,7 +10,7 @@ const LABELS = ['Shipping', 'Payment', 'Review'] as const
 
 const route = useRoute()
 const router = useRouter()
-const { space } = useSpace('tinkerfund')
+const { space, link } = useTinkerfundSpace()
 const money = useTinkerfundMoney()
 const query = (key: string) => (typeof route.query[key] === 'string' ? route.query[key] : undefined)
 
@@ -49,26 +49,26 @@ async function confirm() {
   const { refs, error } = place({ zone: zone.value, payment: payment.value?.id ?? '', code: query('code') })
   refusal.value = error
   placing.value = !!refs
-  if (refs) await router.replace({ path: tinkerfundPath(space, '/checkout/done'), query: { refs: refs.join(',') } })
+  if (refs) await router.replace({ path: link('/checkout/done'), query: { refs: refs.join(',') } })
 }
 
 useSeoMeta(tinkerfundSeo({ kind: 'private', space, title: 'Checkout' }))
 </script>
 
 <template>
-  <TinkerfundShell :space="space">
+  <TinkerfundShell>
     <template #header>
-      <TinkerfundCheckoutHeader :space="space" :steps="LABELS" :step="step" />
+      <TinkerfundCheckoutHeader :steps="LABELS" :step="step" />
     </template>
 
     <div class="checkout">
-      <h1 ref="heading" tabindex="-1">{{ LABELS[step] }}</h1>
+      <h1 ref="heading" class="tf-h1" tabindex="-1">{{ LABELS[step] }}</h1>
       <p class="banner" role="note"><b>Demo</b> — no payment is taken</p>
 
       <p v-if="!loaded || placing" class="empty tf-panel">{{ placing ? 'Placing your Pledge…' : 'Opening your checkout…' }}</p>
       <section v-else-if="!view.groups.length" class="empty tf-panel">
         <p>Your Cart is empty, so there is nothing to check out.</p>
-        <NuxtLink class="tf-btn primary" :to="tinkerfundPath(space, '/cart')">Back to your Cart</NuxtLink>
+        <NuxtLink class="tf-btn primary" :to="link('/cart')">Back to your Cart</NuxtLink>
       </section>
 
       <div v-else class="layout">
@@ -88,13 +88,13 @@ useSeoMeta(tinkerfundSeo({ kind: 'private', space, title: 'Checkout' }))
                 <span>{{ z.name }}</span>
               </label>
             </fieldset>
-            <TinkerfundPledgeSummary v-for="group in quote.groups" :key="group.campaign" :space="space" :pledge="group" :zone="zoneName(zone)" :note="addsTo(group)" />
+            <TinkerfundPledgeSummary v-for="group in quote.groups" :key="group.campaign" :pledge="group" :zone="zoneName(zone)" :note="addsTo(group)" />
             <p v-if="stranded" class="refusal" role="alert">
               Something here can’t be pledged to {{ zoneName(zone) }}. Choose another zone, or
-              <NuxtLink :to="tinkerfundPath(space, '/cart')">change your Cart</NuxtLink>.
+              <NuxtLink :to="link('/cart')">change your Cart</NuxtLink>.
             </p>
             <p class="actions">
-              <NuxtLink class="tf-btn" :to="tinkerfundPath(space, '/cart')">Back to Cart</NuxtLink>
+              <NuxtLink class="tf-btn" :to="link('/cart')">Back to Cart</NuxtLink>
               <NuxtLink v-if="!stranded" class="tf-btn primary" :to="toStep(1)">Continue to payment</NuxtLink>
             </p>
           </section>
@@ -122,7 +122,6 @@ useSeoMeta(tinkerfundSeo({ kind: 'private', space, title: 'Checkout' }))
             <TinkerfundPledgeSummary
               v-for="group in quote.groups"
               :key="group.campaign"
-              :space="space"
               :pledge="group"
               :zone="zoneName(zone)"
               :note="addsTo(group)"
@@ -143,7 +142,7 @@ useSeoMeta(tinkerfundSeo({ kind: 'private', space, title: 'Checkout' }))
 
         <aside class="summary tf-panel" aria-labelledby="summary-h">
           <h2 id="summary-h">Summary</h2>
-          <dl>
+          <dl class="tf-sums">
             <div><dt>Subtotal</dt><dd>{{ money(quote.subtotal) }}</dd></div>
             <div v-if="quote.discount"><dt>Discount</dt><dd>−{{ money(quote.discount) }}</dd></div>
             <div><dt>Shipping</dt><dd>{{ money(quote.shipping) }}</dd></div>
@@ -154,7 +153,7 @@ useSeoMeta(tinkerfundSeo({ kind: 'private', space, title: 'Checkout' }))
           </ul>
           <p v-if="quote.code" class="applied">
             Code <b>{{ quote.code }}</b> applied
-            <button type="button" class="link" @click="removeCode">Remove<span class="tf-sr"> code</span></button>
+            <button type="button" class="tf-link remove" @click="removeCode">Remove<span class="tf-sr"> code</span></button>
           </p>
           <form v-else class="code" @submit.prevent="choose({ code: entered.trim().toUpperCase() || undefined })">
             <label class="tf-label" for="tf-code">Discount code</label>
@@ -180,7 +179,6 @@ useSeoMeta(tinkerfundSeo({ kind: 'private', space, title: 'Checkout' }))
 @media (min-width: 900px) { .layout { grid-template-columns: minmax(0, 1fr) 320px; } }
 .step { display: grid; gap: 14px; }
 .step > * { margin: 0; }
-h1 { margin: 0; outline: none; font: 800 clamp(28px, 4vw, 38px)/1.05 var(--tf-font); font-stretch: 78%; }
 .lead, .note { color: var(--tf-muted); }
 .address { display: grid; gap: 6px; padding: 16px; }
 .address > * { margin: 0; }
@@ -201,16 +199,9 @@ address { font-style: normal; }
 @media (min-width: 900px) { .summary { position: sticky; top: 16px; } }
 .summary h2 { margin: 0; font: 800 20px/1.1 var(--tf-font); font-stretch: 82%; }
 .summary > * { margin: 0; }
-.summary dl { display: grid; gap: 6px; }
-.summary dl div { display: flex; justify-content: space-between; gap: 12px; }
-.summary dt { color: var(--tf-muted); }
-.summary dd { margin: 0; font: 600 15px/1.4 var(--tf-mono); font-variant-numeric: tabular-nums; }
-.summary .total { padding-top: 8px; border-top: var(--tf-hairline); }
-.summary .total dt { color: var(--tf-ink); font-weight: 600; }
-.summary .total dd { font-size: 18px; }
 .deals { display: grid; gap: 4px; padding: 0; list-style: none; color: var(--tf-good); font: 500 13px/1.3 var(--tf-mono); }
 .applied { font-size: 14px; }
-.link { margin-left: 6px; padding: 0; border: 0; background: none; color: var(--tf-link); text-decoration: underline; cursor: pointer; font: inherit; }
+.remove { margin-left: 6px; }
 .code { display: grid; gap: 6px; }
 .code .row { display: flex; gap: 8px; }
 .code input { flex: 1; min-width: 0; padding: 8px 10px; border: 1px solid var(--tf-muted); border-radius: var(--tf-radius); background: var(--tf-surface); color: var(--tf-ink); font: 500 14px/1.2 var(--tf-mono); text-transform: uppercase; }

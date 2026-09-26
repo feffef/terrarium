@@ -1,33 +1,28 @@
 <script setup lang="ts">
+import type { TinkerfundBacking } from '../../composables/tinkerfund'
 import type { TinkerfundReward } from '../../types/tinkerfund'
-import type { TinkerfundCartRequest } from '../../utils/cart'
 
-const props = defineProps<{
-  slug: string
-  reward: TinkerfundReward
-  state: CampaignState
-  zones: Record<string, string>
-  now: number
-  /** Why the Cart turned the last add away. */
-  refusal?: string
-}>()
-const emit = defineEmits<{ add: [request: TinkerfundCartRequest] }>()
+const props = defineProps<{ reward: TinkerfundReward; backing: TinkerfundBacking; now: number }>()
 
 const locale = useTinkerfundLocale()
+const money = useTinkerfundMoney()
+const { zoneName } = await useTinkerfundShop()
 const id = useId()
+const state = computed(() => props.backing.state)
+const refusal = computed(() => props.backing.refusals[`reward:${props.reward.id}`])
 const stock = computed(() => tinkerfundStock(props.reward))
-const open = computed(() => props.state === 'live' && !stock.value.soldOut)
+const open = computed(() => state.value === 'live' && !stock.value.soldOut)
 const max = computed(() => tinkerfundMaxQuantity(props.reward))
 const quantity = ref(1)
 const options = reactive<Record<string, string>>(
   Object.fromEntries((props.reward.options ?? []).map((g) => [g.id, g.choices[0]!.id])),
 )
 const ships = computed(() =>
-  props.reward.shipsTo ? `Ships to ${props.reward.shipsTo.map((z) => props.zones[z] ?? z).join(', ')}` : 'Digital, nothing ships',
+  props.reward.shipsTo ? `Ships to ${props.reward.shipsTo.map(zoneName).join(', ')}` : 'Digital, nothing ships',
 )
 const button = computed(() => {
-  if (props.state === 'upcoming') return 'Opens at launch'
-  if (props.state === 'ended') return 'Closed'
+  if (state.value === 'upcoming') return 'Opens at launch'
+  if (state.value === 'ended') return 'Closed'
   return stock.value.soldOut ? TINKERFUND_SOLD_OUT : 'Add to cart'
 })
 
@@ -35,7 +30,7 @@ function step(by: number) {
   quantity.value = Math.min(max.value, Math.max(1, quantity.value + by))
 }
 function add() {
-  emit('add', { campaign: props.slug, reward: props.reward.id, options: { ...options }, quantity: quantity.value })
+  props.backing.add({ campaign: props.backing.slug, reward: props.reward.id, options: { ...options }, quantity: quantity.value })
 }
 </script>
 
@@ -43,7 +38,7 @@ function add() {
   <article class="reward" :class="{ out: stock.soldOut }" :aria-labelledby="`${id}-title`">
     <div class="head">
       <h3 :id="`${id}-title`">{{ reward.title }}</h3>
-      <p class="price">{{ formatTinkerfundMoney(reward.price, locale) }}</p>
+      <p class="price">{{ money(reward.price) }}</p>
     </div>
     <p v-if="reward.description" class="desc">{{ reward.description }}</p>
     <ul class="facts">
@@ -66,7 +61,7 @@ function add() {
           </div>
         </fieldset>
         <div class="buy">
-          <div v-if="open && max > 1" class="stepper">
+          <div v-if="open && max > 1" class="tf-stepper">
             <button type="button" aria-label="Fewer" :disabled="quantity <= 1" @click="step(-1)">−</button>
             <output :aria-label="`Quantity of ${reward.title}`" aria-live="polite">{{ quantity }}</output>
             <button type="button" aria-label="More" :disabled="quantity >= max" @click="step(1)">+</button>
@@ -104,9 +99,6 @@ form > fieldset { display: grid; gap: 10px; }
 .choices input:focus-visible + span { outline: 2px solid var(--tf-link); outline-offset: -2px; }
 .buy { display: flex; flex-wrap: wrap; gap: 8px; align-items: stretch; }
 .buy .tf-btn { flex: 1; }
-.stepper { display: inline-flex; border: var(--tf-hairline); border-radius: var(--tf-radius); overflow: hidden; }
-.stepper button { width: 36px; border: 0; background: none; cursor: pointer; font: 600 16px/1 var(--tf-mono); }
-.stepper output { display: grid; place-items: center; min-width: 32px; border-inline: var(--tf-hairline); font: 600 14px/1 var(--tf-mono); }
 :disabled { cursor: not-allowed; }
 fieldset:disabled .tf-btn, fieldset:disabled .choices { opacity: 0.6; }
 svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }

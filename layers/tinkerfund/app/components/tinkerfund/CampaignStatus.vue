@@ -1,34 +1,33 @@
 <script setup lang="ts">
+import type { TinkerfundMoment } from '../../composables/tinkerfund'
+
 const props = defineProps<{
   campaign: { registry: string; launch: string; end: string; goal: number; pledged: number }
-  now: number
-  ticking: boolean
+  moment: TinkerfundMoment
 }>()
 
 // State is fixed for the page's "now"; only the relative time moves (issue #1364).
-const status = computed(() => deriveCampaignStatus(props.campaign, props.campaign.pledged, props.now))
-const clock = ref(props.now)
+const status = computed(() => deriveCampaignStatus(props.campaign, props.campaign.pledged, props.moment.now))
+const clock = ref(props.moment.now)
 let timer: ReturnType<typeof setInterval> | undefined
 onMounted(() => {
-  if (props.ticking) timer = setInterval(() => (clock.value = Date.now()), 60_000)
+  if (props.moment.ticking) timer = setInterval(() => (clock.value = Date.now()), 60_000)
 })
 onUnmounted(() => clearInterval(timer))
 
-const STATE_LABEL = { upcoming: 'Upcoming', live: 'Live', ended: 'Ended' } as const
 const when = computed(() => {
-  const { state, launchAt, endAt } = status.value
-  if (state === 'ended') return { at: endAt, text: `Ended ${formatTinkerfundAgo(clock.value, endAt)}` }
-  const at = state === 'live' ? endAt : launchAt
-  const left = formatTinkerfundCountdown(tinkerfundCountdown(clock.value, at))
-  return { at, text: state === 'live' ? `${left} to go` : `Launches in ${left}` }
+  const { label, at } = tinkerfundDeadline(status.value)
+  const remaining = tinkerfundRemaining(status.value, clock.value)
+  const text = { upcoming: remaining, live: `${remaining} to go`, ended: `${label} ${formatTinkerfundAgo(clock.value, at)}` }
+  return { at, text: text[status.value.state] }
 })
 </script>
 
 <template>
   <div class="status">
     <span class="tf-label">{{ campaign.registry }}</span>
-    <span class="state" :data-state="status.state">{{ STATE_LABEL[status.state] }}</span>
-    <span v-if="status.outcome" class="state">{{ status.outcome === 'funded' ? 'Funded' : 'Unfunded' }}</span>
+    <span class="state" :data-state="status.state">{{ TINKERFUND_STATE_LABELS[status.state] }}</span>
+    <span v-if="status.outcome" class="state">{{ TINKERFUND_STATE_LABELS[status.outcome] }}</span>
     <span v-if="status.endingSoon" class="badge soon">Ending soon</span>
     <span v-if="status.goalReached" class="badge">Goal reached</span>
     <span class="readout">{{ status.percent }}% funded</span>

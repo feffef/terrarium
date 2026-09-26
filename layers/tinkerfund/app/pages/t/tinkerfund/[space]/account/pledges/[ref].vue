@@ -4,7 +4,7 @@ import type { TinkerfundPledgeChange } from '../../../../../../utils/account'
 definePageMeta({ viewTransition: true })
 
 const route = useRoute()
-const { space } = useSpace('tinkerfund')
+const { space, link } = useTinkerfundSpace()
 const money = useTinkerfundMoney()
 const [{ zoneName: nameOf, paymentLabel, status, error }, { loaded, account, catalog, preview, revise, cancel }] =
   await Promise.all([useTinkerfundShop(), useTinkerfundCart()])
@@ -60,24 +60,24 @@ useSeoMeta(tinkerfundSeo({ kind: 'private', space, title: `Pledge ${reference.va
 </script>
 
 <template>
-  <TinkerfundShell :space="space">
+  <TinkerfundShell>
     <div class="pledge-page">
-      <p class="back tf-noprint"><NuxtLink :to="tinkerfundPath(space, '/account')">← Your account</NuxtLink></p>
-      <h1 v-if="!loaded">Opening your Pledge…</h1>
+      <p class="back tf-noprint"><NuxtLink :to="link('/account')">← Your account</NuxtLink></p>
+      <h1 v-if="!loaded" class="tf-h1">Opening your Pledge…</h1>
       <section v-else-if="!current || !receipt || !entry" class="empty tf-panel">
-        <h1>No Pledge to show</h1>
+        <h1 class="tf-h1">No Pledge to show</h1>
         <p>Pledge {{ reference }} belongs to a tab that has since closed, or to a demo that was reset.</p>
-        <NuxtLink class="tf-btn primary" :to="tinkerfundPath(space, '/account')">Back to your account</NuxtLink>
+        <NuxtLink class="tf-btn primary" :to="link('/account')">Back to your account</NuxtLink>
       </section>
 
       <template v-else>
         <header class="intro">
           <p class="tf-label">{{ mode === 'view' ? receipt.title : `Pledge ${current.pledge.ref} · ${receipt.title}` }}</p>
-          <h1 ref="heading" tabindex="-1">{{ HEADINGS[mode] }}</h1>
+          <h1 ref="heading" class="tf-h1" tabindex="-1">{{ HEADINGS[mode] }}</h1>
           <TinkerfundPledgeState v-if="mode === 'view'" :state="current.state" />
         </header>
         <!-- Kept in the DOM so a new message is announced (#1401 review). -->
-        <p class="done" :class="{ quiet: !done }" role="status">{{ done }}</p>
+        <p :class="done ? 'done' : 'tf-sr'" role="status">{{ done }}</p>
 
         <template v-if="mode === 'view'">
           <dl class="facts tf-panel">
@@ -86,7 +86,6 @@ useSeoMeta(tinkerfundSeo({ kind: 'private', space, title: `Pledge ${reference.va
             <div><dt>Ships to</dt><dd>{{ zoneName }}</dd></div>
           </dl>
           <TinkerfundPledgeSummary
-            :space="space"
             :pledge="receipt"
             :zone="zoneName"
             :reference="current.pledge.ref"
@@ -120,8 +119,8 @@ useSeoMeta(tinkerfundSeo({ kind: 'private', space, title: `Pledge ${reference.va
         />
 
         <template v-else-if="proposal">
-          <TinkerfundPledgeSummary :space="space" :pledge="proposal.receipt" :zone="zoneName" note="Your Pledge, once changed" />
-          <dl class="difference tf-panel">
+          <TinkerfundPledgeSummary :pledge="proposal.receipt" :zone="zoneName" note="Your Pledge, once changed" />
+          <dl class="difference tf-sums tf-panel">
             <div><dt>Was</dt><dd>{{ money(receipt.total) }}</dd></div>
             <div><dt>Now</dt><dd>{{ money(proposal.receipt.total) }}</dd></div>
             <div class="total"><dt>Difference</dt><dd>{{ signed(difference) }}</dd></div>
@@ -146,16 +145,12 @@ useSeoMeta(tinkerfundSeo({ kind: 'private', space, title: `Pledge ${reference.va
 .empty > * { margin: 0; }
 .intro { display: grid; gap: 8px; }
 .intro > * { margin: 0; }
-h1 { margin: 0; outline: none; font: 800 clamp(30px, 4vw, 42px)/1.05 var(--tf-font); font-stretch: 78%; overflow-wrap: anywhere; }
-.facts, .difference { display: grid; gap: 6px; margin: 0; padding: 14px 16px; }
-.facts div, .difference div { display: flex; justify-content: space-between; gap: 12px; }
-dt { color: var(--tf-muted); }
-dd { margin: 0; text-align: right; }
-.difference dd { font: 600 15px/1.4 var(--tf-mono); font-variant-numeric: tabular-nums; }
-.difference .total { padding-top: 8px; border-top: var(--tf-hairline); }
-.difference .total dt { color: var(--tf-ink); font-weight: 600; }
+.facts { display: grid; gap: 6px; margin: 0; padding: 14px 16px; }
+.facts div { display: flex; justify-content: space-between; gap: 12px; }
+.facts dt { color: var(--tf-muted); }
+.facts dd { margin: 0; text-align: right; }
+.difference { padding: 14px 16px; }
 .done { margin: 0; padding: 10px 14px; border-radius: var(--tf-radius); background: var(--tf-accent-soft); }
-.done.quiet { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip-path: inset(50%); }
 .status, .note, .locked { margin: 0; color: var(--tf-muted); }
 .refusal { margin: 0; color: var(--tf-bad); }
 .actions { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin: 0; }

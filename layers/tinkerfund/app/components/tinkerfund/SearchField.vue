@@ -5,9 +5,9 @@ import type { TinkerfundHit } from '../../utils/search'
 // Without JavaScript it is a plain GET form to the results page.
 const props = defineProps<{ value?: string; autofocus?: boolean }>()
 
-const { space } = useSpace('tinkerfund')
+const { link } = useTinkerfundSpace()
 const search = useTinkerfundSearch()
-const action = tinkerfundPath(space, '/search')
+const action = link('/search')
 const id = useId()
 const input = useTemplateRef<HTMLInputElement>('input')
 
@@ -16,7 +16,7 @@ const hits = ref<TinkerfundHit[]>([])
 const open = ref(false)
 const active = ref(-1)
 const all = computed(() => ({ path: `${action}?q=${encodeURIComponent(term.value.trim())}`, title: `All results for “${term.value.trim()}”` }))
-const options = computed<TinkerfundHit[]>(() => [...hits.value.map((h) => ({ ...h, path: tinkerfundPath(space, h.path) })), all.value])
+const options = computed<TinkerfundHit[]>(() => [...hits.value.map((h) => ({ ...h, path: link(h.path) })), all.value])
 const expanded = computed(() => open.value && hits.value.length > 0)
 
 let timer: ReturnType<typeof setTimeout> | undefined

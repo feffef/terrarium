@@ -71,7 +71,7 @@ function review() {
           <span>Quantity<span class="tf-sr"> of {{ reward.title }}{{ reward.options?.length ? ` ${i + 1}` : '' }}</span></span>
           <input v-model="line.quantity" type="number" min="0" :max="max(reward)" step="1" inputmode="numeric">
         </label>
-        <button type="button" class="link" @click="removeLine(line)">Remove<span class="tf-sr"> {{ reward.title }} {{ i + 1 }}</span></button>
+        <button type="button" class="tf-link remove" @click="removeLine(line)">Remove<span class="tf-sr"> {{ reward.title }} {{ i + 1 }}</span></button>
       </div>
       <button v-if="canAdd(reward)" type="button" class="tf-btn add" @click="addLine(reward)">
         {{ linesOf(reward).length ? 'Add another' : 'Add' }}<span class="tf-sr"> {{ reward.title }}</span>
@@ -118,7 +118,7 @@ legend { float: left; width: 100%; padding: 0; font-weight: 700; overflow-wrap: 
 select, input { box-sizing: border-box; height: 40px; padding: 6px 8px; border: 1px solid var(--tf-muted); border-radius: var(--tf-radius); background: var(--tf-surface); color: var(--tf-ink); }
 input { width: 88px; font: 600 14px/1.2 var(--tf-mono); }
 .add { justify-self: start; padding: 7px 12px; }
-.link { padding: 8px 0; border: 0; background: none; color: var(--tf-link); text-decoration: underline; cursor: pointer; font-size: 14px; }
+.remove { padding: 8px 0; font-size: 14px; }
 .flag { color: var(--tf-bad); font-size: 14px; }
 .actions { display: flex; flex-wrap: wrap; gap: 10px; justify-content: space-between; }
 </style>

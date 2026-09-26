@@ -2,7 +2,7 @@
 definePageMeta({ viewTransition: true })
 
 const route = useRoute()
-const { space } = useSpace('tinkerfund')
+const { space, link, campaignLink } = useTinkerfundSpace()
 const money = useTinkerfundMoney()
 const [{ zoneName, paymentLabel, status, error }, { loaded, pledges, catalog, now }] = await Promise.all([useTinkerfundShop(), useTinkerfundCart()])
 
@@ -25,25 +25,24 @@ useSeoMeta(tinkerfundSeo({ kind: 'private', space, title: 'Pledge confirmed' }))
 </script>
 
 <template>
-  <TinkerfundShell :space="space">
+  <TinkerfundShell>
     <div class="done">
-      <h1 v-if="!loaded">Opening your receipt…</h1>
+      <h1 v-if="!loaded" class="tf-h1">Opening your receipt…</h1>
       <section v-else-if="!receipts.length" class="empty tf-panel">
-        <h1>No Pledge to show</h1>
+        <h1 class="tf-h1">No Pledge to show</h1>
         <p>This receipt belongs to a tab that has since closed, or to a demo that was reset.</p>
-        <NuxtLink class="tf-btn primary" :to="tinkerfundPath(space)">Back to the shop</NuxtLink>
+        <NuxtLink class="tf-btn primary" :to="link()">Back to the shop</NuxtLink>
       </section>
 
       <template v-else>
         <header class="intro">
           <p class="tf-label">Confirmation · nothing has been charged</p>
-          <h1>{{ receipts.length === 1 ? 'Your Pledge is in' : `Your ${receipts.length} Pledges are in` }}</h1>
+          <h1 class="tf-h1">{{ receipts.length === 1 ? 'Your Pledge is in' : `Your ${receipts.length} Pledges are in` }}</h1>
           <p class="lead">Paid with {{ receipts[0]!.payment }}, which is to say not at all. Each Campaign is charged separately, and only if it is funded.</p>
         </header>
         <TinkerfundPledgeSummary
           v-for="r in receipts"
           :key="r.ref"
-          :space="space"
           :pledge="r"
           :zone="r.zone"
           :reference="r.ref"
@@ -51,8 +50,8 @@ useSeoMeta(tinkerfundSeo({ kind: 'private', space, title: 'Pledge confirmed' }))
         />
         <p v-if="receipts.length > 1" class="grand">Total across your Pledges <b>{{ money(total) }}</b></p>
         <p class="actions">
-          <NuxtLink class="tf-btn primary" :to="tinkerfundPath(space, '/discover')">Keep browsing</NuxtLink>
-          <NuxtLink class="tf-btn" :to="tinkerfundCampaignPath(space, receipts[0]!.campaign)">See {{ receipts[0]!.title }}</NuxtLink>
+          <NuxtLink class="tf-btn primary" :to="link('/discover')">Keep browsing</NuxtLink>
+          <NuxtLink class="tf-btn" :to="campaignLink(receipts[0]!.campaign)">See {{ receipts[0]!.title }}</NuxtLink>
         </p>
       </template>
     </div>
@@ -66,7 +65,6 @@ useSeoMeta(tinkerfundSeo({ kind: 'private', space, title: 'Pledge confirmed' }))
 .empty > * { margin: 0; }
 .intro { display: grid; gap: 8px; }
 .intro > * { margin: 0; }
-h1 { margin: 0; font: 800 clamp(30px, 4vw, 42px)/1.05 var(--tf-font); font-stretch: 78%; }
 .lead { color: var(--tf-muted); }
 .grand { display: flex; justify-content: space-between; margin: 0; padding: 12px 16px; border-top: var(--tf-hairline); }
 .grand b { font: 600 18px/1.2 var(--tf-mono); }

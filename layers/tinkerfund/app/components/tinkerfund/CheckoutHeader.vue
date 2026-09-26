@@ -1,13 +1,14 @@
 <script setup lang="ts">
 // The focused checkout's header (page inventory #1367): no navigation, so
 // nothing pulls the Backer out of the flow but the wordmark.
-defineProps<{ space: string; steps: readonly string[]; step: number }>()
+defineProps<{ steps: readonly string[]; step: number }>()
+const { link } = useTinkerfundSpace()
 </script>
 
 <template>
-  <header class="head">
+  <header class="head tf-noprint">
     <div class="tf-wrap row">
-      <TinkerfundWordmark :to="tinkerfundPath(space)" />
+      <TinkerfundWordmark :to="link()" />
       <p class="secure">
         <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2" /><path d="M8 11V8a4 4 0 0 1 8 0v3" /></svg>
         Secure checkout (demo)

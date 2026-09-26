@@ -1,15 +1,13 @@
 <script setup lang="ts">
-// prod's front door, sections in the order issue #1367 set; an empty section
-// hides itself. Popular now is the Instrument index table (issue #1375).
-
-const { space, now, clock, cards, categories, promotions } = await useTinkerfundCatalog()
+const { now, clock, cards, categories, promotions } = await useTinkerfundCatalog()
 const home = computed(() => tinkerfundHomeSections(cards.value, now.value))
 const deal = computed(() => groupTinkerfundPromotions(promotions.value, now.value).active[0])
 const tiles = computed(() =>
   categories.value.map((c) => ({ ...c, count: cards.value.filter((card) => card.category === c.slug).length })),
 )
-const link = (path = '') => tinkerfundPath(space, path)
+const { link } = useTinkerfundSpace()
 const locale = useTinkerfundLocale()
+const money = useTinkerfundMoney()
 </script>
 
 <template>
@@ -17,8 +15,7 @@ const locale = useTinkerfundLocale()
     <section v-if="home.featured" class="hero tf-panel" aria-labelledby="tf-featured">
       <div class="fig">
         <span class="tf-label">FIG. 1 · {{ home.featured.registry }}</span>
-        <!-- eslint-disable-next-line vue/no-v-html -- validated, token-coloured content SVG (issue #1363) -->
-        <svg viewBox="0 0 400 300" aria-hidden="true" v-html="home.featured.figure" />
+        <TinkerfundFigure :svg="home.featured.figure" />
       </div>
       <div class="read">
         <p class="row"><span class="id">{{ home.featured.registry }}</span><TinkerfundStateChips :status="home.featured.status" :promoted="home.featured.promoted" /></p>
@@ -28,10 +25,13 @@ const locale = useTinkerfundLocale()
         <p class="big">{{ home.featured.status.percent }}<small>% funded</small></p>
         <TinkerfundProgressBar :percent="home.featured.status.percent" :segments="25" />
         <dl class="tiles">
-          <div><dt>Pledged</dt><dd>{{ formatTinkerfundMoney(home.featured.pledged, locale) }}</dd></div>
-          <div><dt>Goal</dt><dd>{{ formatTinkerfundMoney(home.featured.goal, locale) }}</dd></div>
+          <div><dt>Pledged</dt><dd>{{ money(home.featured.pledged) }}</dd></div>
+          <div><dt>Goal</dt><dd>{{ money(home.featured.goal) }}</dd></div>
           <div><dt>Backers</dt><dd>{{ home.featured.backers.toLocaleString(locale) }}</dd></div>
-          <div><dt>Remaining</dt><dd>{{ tinkerfundRemaining(home.featured.status, clock) }}</dd></div>
+          <div>
+            <dt>Remaining</dt>
+            <dd><TinkerfundTime :at="tinkerfundDeadline(home.featured.status).at" :text="tinkerfundRemaining(home.featured.status, clock)" /></dd>
+          </div>
         </dl>
         <p class="actions">
           <NuxtLink class="tf-btn primary" :to="link(home.featured.path)">View Campaign</NuxtLink>

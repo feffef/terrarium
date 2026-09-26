@@ -11,14 +11,12 @@ const props = defineProps<{
 }>()
 const emit = defineEmits<{ update: [query: TinkerfundBrowseQuery] }>()
 const id = useId()
-const locale = useTinkerfundLocale()
+const money = useTinkerfundMoney()
 
 const STATES = [
   { value: undefined, label: 'Any' },
-  { value: 'live', label: 'Live' },
-  { value: 'upcoming', label: 'Upcoming' },
-  { value: 'ended', label: 'Ended' },
-] as const
+  ...(['live', 'upcoming', 'ended'] as const).map((value) => ({ value, label: TINKERFUND_STATE_LABELS[value] })),
+]
 
 const set = (patch: Partial<TinkerfundBrowseQuery>) => emit('update', { ...props.query, ...patch })
 
@@ -75,7 +73,7 @@ const active = computed(() => Object.keys(tinkerfundBrowseRouteQuery({ ...props.
     <fieldset>
       <legend class="tf-label">Reward price</legend>
       <label class="range">
-        <span>From <output :for="`${id}-min`">{{ formatTinkerfundMoney(low, locale) }}</output></span>
+        <span>From <output :for="`${id}-min`">{{ money(low) }}</output></span>
         <input
           :id="`${id}-min`"
           v-model.number="low"
@@ -86,7 +84,7 @@ const active = computed(() => Object.keys(tinkerfundBrowseRouteQuery({ ...props.
         >
       </label>
       <label class="range">
-        <span>Up to <output :for="`${id}-max`">{{ formatTinkerfundMoney(high, locale) }}</output></span>
+        <span>Up to <output :for="`${id}-max`">{{ money(high) }}</output></span>
         <input
           :id="`${id}-max`"
           v-model.number="high"
@@ -98,7 +96,7 @@ const active = computed(() => Object.keys(tinkerfundBrowseRouteQuery({ ...props.
       </label>
     </fieldset>
 
-    <button v-if="active" type="button" class="clear" @click="emit('update', { sort: query.sort })">Clear filters</button>
+    <button v-if="active" type="button" class="tf-link clear" @click="emit('update', { sort: query.sort })">Clear filters</button>
   </form>
 </template>
 
@@ -112,13 +110,5 @@ input[type='radio'], input[type='checkbox'] { flex: none; width: 16px; height: 1
 .range span { color: var(--tf-muted); font-size: 14px; }
 output { color: var(--tf-ink); font: 600 14px/1 var(--tf-mono); }
 input[type='range'] { width: 100%; margin: 0; accent-color: var(--tf-accent); }
-.clear {
-  justify-self: start;
-  padding: 0;
-  border: 0;
-  background: none;
-  color: var(--tf-link);
-  text-decoration: underline;
-  cursor: pointer;
-}
+.clear { justify-self: start; }
 </style>

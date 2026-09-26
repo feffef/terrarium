@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import type { TinkerfundCard } from '../../composables/tinkerfund'
 
-// The heading goes in the default slot, beside the category filter.
 const props = defineProps<{ cards: TinkerfundCard[]; categories: { slug: string; name: string }[]; clock: number }>()
-const { space } = useSpace('tinkerfund')
+const { link } = useTinkerfundSpace()
 const locale = useTinkerfundLocale()
+const money = useTinkerfundMoney()
 const category = ref<string>()
 const rows = computed(() => props.cards.filter((c) => !category.value || c.category === category.value))
 const label = useId()
@@ -46,17 +46,16 @@ const label = useId()
           <tr v-for="c in rows" :key="c.path">
             <td>{{ c.registry }}</td>
             <th scope="row" class="inv">
-              <!-- eslint-disable-next-line vue/no-v-html -- validated, token-coloured content SVG (issue #1363) -->
-              <svg viewBox="0 0 400 300" aria-hidden="true" v-html="c.figure" />
-              <NuxtLink :to="tinkerfundPath(space, c.path)">{{ c.title }}</NuxtLink>
+              <TinkerfundFigure :svg="c.figure" />
+              <NuxtLink :to="link(c.path)">{{ c.title }}</NuxtLink>
             </th>
             <td>{{ c.categoryName }}</td>
             <td><TinkerfundStateChips :status="c.status" :promoted="c.promoted" /></td>
             <td v-if="c.status.state === 'upcoming'">—</td>
             <td v-else class="funded"><TinkerfundProgressBar class="mini" :percent="c.status.percent" :segments="10" />{{ c.status.percent }}%</td>
-            <td class="r">{{ c.status.state === 'upcoming' ? '—' : formatTinkerfundMoney(c.pledged, locale) }}</td>
+            <td class="r">{{ c.status.state === 'upcoming' ? '—' : money(c.pledged) }}</td>
             <td class="r">{{ c.backers ? c.backers.toLocaleString(locale) : '—' }}</td>
-            <td class="r">{{ tinkerfundRemaining(c.status, clock) }}</td>
+            <td class="r"><TinkerfundTime :at="tinkerfundDeadline(c.status).at" :text="tinkerfundRemaining(c.status, clock)" /></td>
           </tr>
           <tr v-if="!rows.length">
             <td colspan="8" class="none">No Campaign in this category.</td>

@@ -137,16 +137,36 @@
   border-radius: var(--tf-radius-panel);
 }
 
+.tf-h1, .tf-prose h1 { margin: 0; font: 800 clamp(30px, 4vw, 44px)/1.04 var(--tf-font); font-stretch: 78%; overflow-wrap: anywhere; }
+.tf-h1[tabindex='-1'] { outline: none; }
+
+/* A button that reads as a link. */
+.tf-link { padding: 0; border: 0; background: none; color: var(--tf-link); font: inherit; text-decoration: underline; cursor: pointer; }
+
+.tf-stepper { display: inline-flex; border: var(--tf-hairline); border-radius: var(--tf-radius); overflow: hidden; }
+.tf-stepper button { width: 36px; min-height: 36px; border: 0; background: none; color: var(--tf-ink); font: 600 16px/1 var(--tf-mono); cursor: pointer; }
+.tf-stepper button:disabled { color: var(--tf-muted); cursor: not-allowed; }
+.tf-stepper output { display: grid; place-items: center; min-width: 32px; border-inline: var(--tf-hairline); font: 600 14px/1 var(--tf-mono); }
+
+/* A money summary: label and amount per row, the total last. */
+.tf-sums { display: grid; gap: 6px; margin: 0; }
+.tf-sums div { display: flex; justify-content: space-between; gap: 12px; }
+.tf-sums dt { color: var(--tf-muted); }
+.tf-sums dd { margin: 0; font: 600 15px/1.4 var(--tf-mono); font-variant-numeric: tabular-nums; }
+.tf-sums .total { padding-top: 8px; border-top: var(--tf-hairline); }
+.tf-sums .total dt { color: var(--tf-ink); font-weight: 600; }
+.tf-sums .total dd { font-size: 18px; }
+
 /* Printing (a receipt, story #1385): the page's content alone, dark on paper. */
 @media print {
   :root:has(> .tf-page) { color-scheme: light !important; }
   .tf-page { background: none; }
-  .tf-page .shell > :not(main), .tf-page .tf-noprint { display: none !important; }
+  .tf-page .tf-noprint { display: none !important; }
   .tf-page .tf-panel { break-inside: avoid; box-shadow: none; }
 }
 
 .tf-prose { max-width: 68ch; }
-.tf-prose h1 { font: 800 clamp(32px, 5vw, 48px)/1.05 var(--tf-font); font-stretch: 78%; margin: 0 0 12px; }
+.tf-prose h1 { margin-bottom: 12px; }
 .tf-prose h2 { font: 800 24px/1.15 var(--tf-font); font-stretch: 80%; margin: 32px 0 8px; }
 .tf-prose p, .tf-prose li { color: var(--tf-ink); }
 .tf-prose :is(h2, h3) a { color: inherit; text-decoration: none; }

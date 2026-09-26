@@ -1,10 +1,7 @@
 <script setup lang="ts">
 import type { TinkerfundReceiptLine } from '../../utils/checkout'
 
-// One Campaign's Pledge, read-only: at checkout (lines flagged when they can't
-// ship) and on the Confirmation, where `reference` and `endsAt` make it a receipt.
 defineProps<{
-  space: string
   pledge: {
     campaign: string
     title: string
@@ -24,13 +21,14 @@ defineProps<{
 
 const id = useId()
 const money = useTinkerfundMoney()
+const { campaignLink } = useTinkerfundSpace()
 </script>
 
 <template>
   <section class="pledge tf-panel" :aria-labelledby="`${id}-h`">
     <header class="top">
       <p v-if="reference" class="tf-label">Pledge <b class="ref">{{ reference }}</b></p>
-      <h2 :id="`${id}-h`"><NuxtLink :to="tinkerfundCampaignPath(space, pledge.campaign)">{{ pledge.title }}</NuxtLink></h2>
+      <h2 :id="`${id}-h`"><NuxtLink :to="campaignLink(pledge.campaign)">{{ pledge.title }}</NuxtLink></h2>
       <p v-if="note" class="note">{{ note }}</p>
       <p v-if="pledge.unshipped?.length" class="flag">{{ tinkerfundPledgeDoesntShip(pledge.unshipped, zone) }}</p>
     </header>

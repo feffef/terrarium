@@ -1,15 +1,14 @@
 <script setup lang="ts">
-import type { TinkerfundCartRequest } from '../../utils/cart'
+import type { TinkerfundBacking } from '../../composables/tinkerfund'
 
 // Bonus support (issue #1365): on its own it is a no-Reward Pledge; beside a
 // Reward it tops that Pledge up.
-const props = defineProps<{ slug: string; state: CampaignState; refusal?: string }>()
-const emit = defineEmits<{ add: [request: TinkerfundCartRequest] }>()
+const props = defineProps<{ backing: TinkerfundBacking }>()
 const id = useId()
 const amount = ref(10)
 
 function add() {
-  if (amount.value > 0) emit('add', { campaign: props.slug, bonus: amount.value })
+  if (amount.value > 0) props.backing.add({ campaign: props.backing.slug, bonus: amount.value })
 }
 </script>
 
@@ -18,13 +17,13 @@ function add() {
     <h3 :id="`${id}-title`">Just support it</h3>
     <p class="desc">No Reward, only the satisfaction. With a Reward in your Cart, this adds to that Pledge as bonus support.</p>
     <form @submit.prevent="add">
-      <fieldset :disabled="state !== 'live'">
+      <fieldset :disabled="backing.state !== 'live'">
         <label :for="`${id}-amount`" class="tf-label">Amount (EUR)</label>
         <div class="row">
           <input :id="`${id}-amount`" v-model.number="amount" type="number" min="1" step="1" inputmode="numeric" required>
           <button type="submit" class="tf-btn">Add support</button>
         </div>
-        <p v-if="refusal" class="refusal" role="alert">{{ refusal }}</p>
+        <p v-if="backing.refusals.bonus" class="refusal" role="alert">{{ backing.refusals.bonus }}</p>
       </fieldset>
     </form>
   </article>

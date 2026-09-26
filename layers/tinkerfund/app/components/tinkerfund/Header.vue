@@ -1,18 +1,14 @@
 <script setup lang="ts">
-const props = defineProps<{ space: string }>()
-const link = (path = '') => tinkerfundPath(props.space, path)
+const { link } = useTinkerfundSpace()
 const categories = useTinkerfundCategories()
 const { view: cart } = await useTinkerfundCart()
-const menu = useTemplateRef<HTMLDialogElement>('menu')
-const closeOnBackdrop = (e: MouseEvent) => {
-  if (e.target === menu.value) menu.value?.close()
-}
+const menu = useTemplateRef('menu')
 </script>
 
 <template>
-  <header class="head">
+  <header class="head tf-noprint">
     <div class="tf-wrap row">
-      <button type="button" class="icon-btn menu-btn" aria-label="Menu" @click="menu?.showModal()">
+      <button type="button" class="icon-btn menu-btn" aria-label="Menu" @click="menu?.open()">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" /></svg>
       </button>
 
@@ -49,16 +45,11 @@ const closeOnBackdrop = (e: MouseEvent) => {
       </div>
     </div>
 
-    <dialog ref="menu" class="menu" aria-label="Menu" @click="closeOnBackdrop">
-      <div class="menu-body">
-        <div class="menu-top">
-          <TinkerfundWordmark :to="link()" />
-          <button type="button" class="icon-btn" aria-label="Close menu" @click="menu?.close()">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18" /></svg>
-          </button>
-        </div>
+    <TinkerfundDrawer ref="menu" class="menu" side="left" aria-label="Menu" close-label="Close menu">
+      <template #top><TinkerfundWordmark :to="link()" /></template>
+      <template #default="{ close }">
         <TinkerfundSearchField />
-        <nav aria-label="Site" @click="menu?.close()">
+        <nav aria-label="Site" @click="close">
           <NuxtLink :to="link('/discover')">Discover</NuxtLink>
           <p class="tf-label">Categories</p>
           <NuxtLink v-for="c in categories" :key="c.slug" class="sub" :to="link(`/category/${c.slug}`)">
@@ -67,8 +58,8 @@ const closeOnBackdrop = (e: MouseEvent) => {
           <NuxtLink :to="link('/deals')">Deals</NuxtLink>
           <NuxtLink :to="link('/how-it-works')">How it works</NuxtLink>
         </nav>
-      </div>
-    </dialog>
+      </template>
+    </TinkerfundDrawer>
   </header>
 </template>
 
@@ -171,26 +162,6 @@ svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width:
   .menu-btn, .search-icon { display: inline-grid; }
 }
 
-.menu {
-  margin: 0;
-  width: min(360px, 88vw);
-  max-width: none;
-  height: 100dvh;
-  max-height: none;
-  padding: 0;
-  border: 0;
-  border-right: var(--tf-hairline);
-  background: var(--tf-surface);
-  color: var(--tf-ink);
-  translate: 0 0;
-  transition: translate var(--tf-dur) var(--tf-ease), overlay var(--tf-dur) allow-discrete,
-    display var(--tf-dur) allow-discrete;
-}
-.menu:not([open]) { translate: -100% 0; }
-@starting-style { .menu[open] { translate: -100% 0; } }
-.menu::backdrop { background: rgb(0 0 0 / 0.45); }
-.menu-body { display: grid; gap: 16px; padding: 16px; }
-.menu-top { display: flex; justify-content: space-between; align-items: center; }
 .menu nav { display: grid; }
 .menu nav a { padding: 10px 0; border-bottom: var(--tf-hairline); color: var(--tf-ink); font-weight: 600; text-decoration: none; }
 .menu nav a.sub { padding-left: 14px; font-weight: 400; }

@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import type { TinkerfundAccountPledge } from '../../utils/account'
 
-defineProps<{ space: string; pledges: TinkerfundAccountPledge[] }>()
-
+defineProps<{ pledges: TinkerfundAccountPledge[] }>()
+const { link } = useTinkerfundSpace()
 const money = useTinkerfundMoney()
 </script>
 
@@ -10,7 +10,7 @@ const money = useTinkerfundMoney()
   <ul class="list">
     <li v-for="{ pledge, state, receipt } in pledges" :key="pledge.ref" class="row tf-panel">
       <p class="tf-label">Pledge <b class="ref">{{ pledge.ref }}</b></p>
-      <h3><NuxtLink :to="tinkerfundPath(space, `/account/pledges/${pledge.ref}`)">{{ receipt.title }}</NuxtLink></h3>
+      <h3><NuxtLink :to="link(`/account/pledges/${pledge.ref}`)">{{ receipt.title }}</NuxtLink></h3>
       <TinkerfundPledgeState class="state" :state="state" />
       <p class="placed">Placed <TinkerfundTime :at="pledge.placed" /></p>
       <p class="total">{{ money(receipt.total) }}</p>
