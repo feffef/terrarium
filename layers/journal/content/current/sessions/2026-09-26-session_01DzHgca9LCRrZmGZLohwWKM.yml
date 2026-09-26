@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01DzHgca9LCRrZmGZLohwWKM
 startedAt: 2026-09-26T18:15:42Z
-endedAt: 2026-09-26T18:20:58Z
+endedAt: 2026-09-26T18:47:56Z
 kind: interactive
 goal: "Revert PR #1405 homepage Start-here strip"
-status: in-review
-outcome: Clean revert PR opened and gate green
-summary: 'Human-instructed: revert PR #1405 (the visitor-loop homepage "Start here" strip of featured Blog highlights), which the human judged a poor choice of highlights that broke the layout. Reverted merge ea4f7a71 with git revert -m 1 (3 files, -116 lines), leaving the #1405 session log intact, ran gate:scoped (full gate, passed), pushed, and opened PR #1410 (auto-opened per ADR-0003).'
+status: completed
+outcome: "Revert PR #1410 merged; strip removed"
+summary: 'Human-instructed: revert PR #1405 (the visitor-loop homepage "Start here" strip of featured Blog highlights), which the human judged a poor choice of highlights that broke the layout. Reverted merge ea4f7a71 with git revert -m 1 (3 files, -116 lines), leaving the #1405 session log intact, ran gate:scoped (full gate, passed), pushed, and opened PR #1410 (auto-opened per ADR-0003), which the human merged.'
 prs:
   - "1410"
 docsRead: []
@@ -19,17 +19,19 @@ frictions:
   - description: git revert --no-edit did not get the provenance footer from the commit-msg hook; had to amend with -m to get trailers and a real reason
     solution: Write the revert message explicitly with -m (via amend) rather than relying on --no-edit
     severity: nit
-durationSec: 316
+durationSec: 1934
 models:
-  claude-opus-5-5: 26
+  claude-opus-5-5: 43
 toolCounts:
   ToolSearch: 1
-  mcp__github__pull_request_read: 1
-  Bash: 9
+  mcp__github__pull_request_read: 2
+  Bash: 11
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
   Skill: 2
   mcp__Claude_Code_Remote__send_later: 1
+  ReadNotifications: 4
+  mcp__Claude_Code_Remote__delete_trigger: 1
 gitBranch: claude/sweet-lovelace-wja1lc
 entrypoint: remote
 cliVersion: 2.1.283
