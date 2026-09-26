@@ -19,33 +19,21 @@ campaign:
     - { label: Charging, value: "Qi dock, included" }
   figures:
     - style: isometric
-      caption: The rock on its charging dock, receiving an update.
+      caption: "The rock on its charging dock, receiving an update."
       svg: |-
-        <ellipse cx="212" cy="204" rx="104" ry="48" style="fill:var(--tf-line)" />
-        <path d="M126.5 184V196A73.5 42.4 0 0 0 200 238.4V226.4A73.5 42.4 0 0 1 126.5 184Z" style="fill:var(--tf-ink)" />
-        <path d="M200 226.4V238.4A73.5 42.4 0 0 0 273.5 196V184A73.5 42.4 0 0 1 200 226.4Z" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" />
-        <ellipse cx="200" cy="184" rx="73.5" ry="42.4" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" />
-        <circle cx="200" cy="236" r="3" style="fill:var(--tf-good)" />
-        <path d="M140 112L168 88L210 80L196 118Z" style="fill:color-mix(in srgb, var(--tf-accent) 45%, var(--tf-surface))" />
-        <path d="M210 80L252 92L238 128L196 118Z" style="fill:color-mix(in srgb, var(--tf-accent) 70%, var(--tf-surface))" />
-        <path d="M132 150L140 112L196 118L180 172L150 166Z" style="fill:var(--tf-accent)" />
-        <path d="M196 118L238 128L236 170L180 172Z" style="fill:color-mix(in srgb, var(--tf-accent) 72%, var(--tf-ink))" />
-        <path d="M238 128L252 92L272 122L266 152L236 170Z" style="fill:var(--tf-accent)" />
-        <path d="M268 70a12 12 0 0 1 0 18M276 62a24 24 0 0 1 0 34" style="fill:none;stroke:var(--tf-muted);stroke-width:3;stroke-linecap:round" />
-    - style: patent
-      caption: Section through the rock, showing the firmware module (12) and antenna (14). The rock (10) is otherwise unmodified.
-      svg: |-
-        <g style="fill:none;stroke:var(--tf-ink);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round"><path d="M90 190L100 120L150 76L220 64L290 84L320 130L310 180L260 206L170 210L120 204Z" style="stroke-width:2.4" />
-        <path d="M166 124L234 124L234 164L166 164Z" />
-        <path d="M99.7 122.3L116.7 105.3M98.7 129.3L152.4 75.6M97.7 136.3L159.7 74.3M96.7 143.3L166.9 73.1M95.7 150.3L174.1 71.9M94.7 157.3L181.4 70.6M93.7 164.3L188.6 69.4M92.7 171.3L195.9 68.1M91.7 178.3L203.1 66.9M90.7 185.3L210.3 65.7M91.4 190.6L217.6 64.4M95.5 192.5L223.1 64.9M99.5 194.5L166 128M170 124L227.8 66.2M103.6 196.4L166 134M176 124L232.4 67.6M107.7 198.3L166 140M182 124L237.1 68.9M111.8 200.2L166 146M188 124L241.8 70.2M115.9 202.1L166 152M194 124L246.4 71.6M120 204L166 158M200 124L251.1 72.9M125.4 204.6L166 164M206 124L255.8 74.2M130.7 205.3L172 164M212 124L260.4 75.6M136.1 205.9L178 164M218 124L265.1 76.9M141.4 206.6L184 164M224 124L269.8 78.2M146.8 207.2L190 164M230 124L274.4 79.6M152.1 207.9L196 164M234 126L279.1 80.9M157.5 208.5L202 164M234 132L283.8 82.2M162.9 209.1L208 164M234 138L288.4 83.6M168.2 209.8L214 164M234 144L291.6 86.4M174.2 209.8L220 164M234 150L293.9 90.1M180.5 209.5L226 164M234 156L296.3 93.7M186.7 209.3L232 164M234 162L298.7 97.3M193 209L301.1 100.9M199.3 208.7L303.4 104.6M205.6 208.4L305.8 108.2M211.9 208.1L308.2 111.8M218.1 207.9L310.5 115.5M224.4 207.6L312.9 119.1M230.7 207.3L315.3 122.7M237 207L317.6 126.4M243.3 206.7L320 130M249.5 206.5L318.5 137.5M255.8 206.2L317 145M264.2 203.8L315.5 152.5M276.7 197.3L314 160M289.2 190.8L312.5 167.5M301.7 184.3L311 175" style="stroke-width:.8" />
-        <path d="M174 130h52v28h-52z" />
-        <path d="M188 136h24v16h-24zM192 132v4M200 132v4M208 132v4M192 152v4M200 152v4M208 152v4" style="stroke-width:.9" />
-        <path d="M226 144q30-6 32-28" style="stroke-width:1;stroke-dasharray:5 3.5" />
-        <path d="M118 214h164a8 8 0 0 1 8 8v12a8 8 0 0 1-8 8H118a8 8 0 0 1-8-8v-12a8 8 0 0 1 8-8z" />
-        <path d="M140 228h120" style="stroke-width:1;stroke-dasharray:5 3.5" />
-        <path d="M110 150Q90 124 70 110" style="stroke-width:.9" /><path d="M200 144Q203 81 206 30" style="stroke-width:.9" /><path d="M258 116Q299 87 340 70" style="stroke-width:.9" /><path d="M290 228Q315 239 340 262" style="stroke-width:.9" /><path d="M150 226Q120 238 90 262" style="stroke-width:.9" /></g>
-        <g style="fill:var(--tf-ink);font:500 12px var(--tf-mono)"><text x="50" y="114">10</text><text x="210" y="34">12</text><text x="344" y="74">14</text><text x="344" y="266">16</text><text x="70" y="266">18</text></g>
-        <g style="fill:var(--tf-ink);font:500 11px var(--tf-mono)"><text x="126" y="292">SECTION · ROCK UNMODIFIED</text></g>
+        <ellipse cx="212" cy="238" rx="122" ry="42" style="fill:var(--tf-line)" />
+        <path d="M116 174V188A84 48 0 0 0 200 236V222A84 48 0 0 1 116 174Z" style="fill:var(--tf-ink)" />
+        <path d="M200 222V236A84 48 0 0 0 284 188V174A84 48 0 0 1 200 222Z" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" />
+        <ellipse cx="200" cy="174" rx="84" ry="48" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" />
+        <path d="M140 174a60 34.6 0 1 0 120 0a60 34.6 0 1 0 -120 0" style="fill:none;stroke:color-mix(in srgb, var(--tf-ink) 45%, var(--tf-surface));stroke-width:2;stroke-linecap:round;stroke-linejoin:round" />
+        <path d="M256 214L268 208L268 212L256 218Z" style="fill:var(--tf-surface)" />
+        <circle cx="208" cy="230" r="3.5" style="fill:var(--tf-good)" />
+        <path d="M146 108L176 84L224 78L204 116Z" style="fill:color-mix(in srgb, var(--tf-accent) 45%, var(--tf-surface))" />
+        <path d="M224 78L264 98L242 124L204 116Z" style="fill:color-mix(in srgb, var(--tf-accent) 30%, var(--tf-surface))" />
+        <path d="M146 108L204 116L198 168L138 156Z" style="fill:var(--tf-accent)" />
+        <path d="M204 116L242 124L240 170L198 168Z" style="fill:color-mix(in srgb, var(--tf-accent) 72%, var(--tf-ink))" />
+        <path d="M242 124L264 98L270 146L240 170Z" style="fill:color-mix(in srgb, var(--tf-accent) 55%, var(--tf-ink))" />
+        <path d="M276 76a12 12 0 0 1 0 18M284 68a24 24 0 0 1 0 34" style="fill:none;stroke:var(--tf-muted);stroke-width:3;stroke-linecap:round;stroke-linejoin:round" />
     - style: isometric
       caption: "Exploded: the rock, the charging coil and the dock. There is nothing else inside."
       svg: |-
@@ -97,6 +85,25 @@ campaign:
         <path d="M196 118L238 128L236 170L180 172Z" style="fill:color-mix(in srgb, var(--tf-accent) 72%, var(--tf-ink))" />
         <path d="M238 128L252 92L272 122L266 152L236 170Z" style="fill:var(--tf-accent)" /></g>
         <path d="M292 118a12 12 0 0 1 0 18M300 110a24 24 0 0 1 0 34" style="fill:none;stroke:var(--tf-muted);stroke-width:3;stroke-linecap:round" />
+    - style: patent
+      caption: "Section through the rock, showing the firmware module (12) and antenna (14). The rock (10) is otherwise unmodified."
+      svg: |-
+        <g style="fill:none;stroke:var(--tf-ink);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round">
+        <path d="M104 132L136 80L202 52L262 60L322 98L330 158L284 216L196 232L120 208Z" style="stroke-width:2.4" />
+        <path d="M299.3 83.6L323.3 107.6M280 71.4L324.4 115.8M261.5 59.9L325.5 123.9M253.3 58.8L326.5 132.1M245.1 57.8L327.6 140.3M237 56.7L328.7 148.4M228.8 55.6L329.8 156.6M220.7 54.5L327.4 161.3M212.5 53.4L324.3 165.2M204.3 52.3L321.2 169.1M198.5 53.5L318 173.1M193.5 55.6L314.9 177M188.5 57.7L311.8 181M183.6 59.8L231.7 108M234 110.3L308.7 184.9M178.6 61.9L224.7 108M234 117.3L305.5 188.9M173.6 64L217.6 108M234 124.4L302.4 192.8M168.7 66.1L210.5 108M234 131.5L299.3 196.7M163.7 68.2L203.5 108M234 138.5L296.1 200.7M158.7 70.4L196.4 108M234 145.6L293 204.6M153.8 72.5L189.3 108M233.3 152L289.9 208.6M148.8 74.6L182.2 108M226.2 152L286.8 212.5M143.8 76.7L175.2 108M219.2 152L283.3 216.1M138.9 78.8L168.1 108M212.1 152L277.3 217.2M134.9 81.8L166 113M205 152L271.3 218.3M132.2 86.2L166 120M198 152L248 202M250 204L265.4 219.4M129.5 90.6L166 127.1M190.9 152L240.9 202M245.9 207L259.4 220.5M126.8 95L166 134.2M183.8 152L233.8 202M238.8 207L253.4 221.6M124.1 99.3L166 141.3M176.7 152L226.7 202M231.7 207L247.4 222.7M121.4 103.7L166 148.3M169.7 152L219.7 202M224.7 207L241.4 223.7M118.7 108.1L212.6 202M217.6 207L235.4 224.8M116 112.5L205.5 202M210.5 207L229.5 225.9M113.3 116.9L198.5 202M203.5 207L223.5 227M110.6 121.2L191.4 202M196.4 207L217.5 228.1M107.9 125.6L184.3 202M189.3 207L211.5 229.2M105.2 130L177.3 202M182.3 207L205.5 230.3M105 136.8L170.2 202M175.2 207L199.5 231.4M106.9 145.8L163.1 202M168.1 207L191.8 230.7M108.8 154.8L156 202M161 207L181.4 227.4M110.7 163.7L150 203M154 207L171.1 224.1M112.6 172.7L160.8 220.9M114.4 181.6L150.4 217.6M116.3 190.6L140.1 214.3M118.2 199.5L129.8 211.1" style="stroke-width:.8" />
+        <path d="M166 108h68v44h-68z" />
+        <path d="M170 134h60M174 120h8M174 126h8M212 120h10M212 126h10" style="stroke-width:.9" />
+        <path d="M188 114h20v14h-20z" />
+        <path d="M234 116q26-8 48-30M280 88l5-5" style="stroke-width:.9" />
+        <path d="M150 202h100v5h-100z" />
+        <path d="M249.8 202L244.8 207M245.6 202L240.6 207M241.4 202L236.4 207M237.1 202L232.1 207M232.9 202L227.9 207M228.6 202L223.6 207M224.4 202L219.4 207M220.1 202L215.1 207M215.9 202L210.9 207M211.7 202L206.7 207M207.4 202L202.4 207M203.2 202L198.2 207M198.9 202L193.9 207M194.7 202L189.7 207M190.4 202L185.4 207M186.2 202L181.2 207M182 202L177 207M177.7 202L172.7 207M173.5 202L168.5 207M169.2 202L164.2 207M165 202L160 207M160.7 202L155.7 207M156.5 202L151.5 207M152.3 202L150 204.3" style="stroke-width:.8" />
+        <path d="M112 242h176a8 8 0 0 1 8 8v8a8 8 0 0 1-8 8H112a8 8 0 0 1-8-8v-8a8 8 0 0 1 8-8z" />
+        <path d="M124 254h152" style="stroke-width:1;stroke-dasharray:5 3.5" />
+        <path d="M290 248h6v6h-6z" style="stroke-width:.9" />
+        <path d="M318 130Q342.5 128.5 356 108M166 120Q140 84.5 96 84M282 84Q312 71.5 320 40M296 250Q324.5 253 344 232M150 204Q113 203 90 232" style="stroke-width:.9" />
+        </g>
+        <g style="fill:var(--tf-ink);font:500 12px var(--tf-mono)"><text x="360" y="112">10</text><text x="74" y="88">12</text><text x="324" y="44">14</text><text x="348" y="236">16</text><text x="62" y="236">18</text></g>
+        <g style="fill:var(--tf-ink);font:500 11px var(--tf-mono)"><text x="120" y="290">SECTION · ROCK UNMODIFIED</text></g>
     - style: patent
       caption: "Plan view of the dock (16): Qi coil (26), USB-C port (28), status light (30) and three feet (32). No moving parts."
       svg: |-
