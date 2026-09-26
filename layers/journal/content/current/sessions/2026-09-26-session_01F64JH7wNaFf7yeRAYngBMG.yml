@@ -1,0 +1,72 @@
+schemaVersion: 1
+session: session_01F64JH7wNaFf7yeRAYngBMG
+startedAt: 2026-09-26T07:18:24Z
+endedAt: 2026-09-26T07:24:41Z
+kind: interactive
+goal: Unblock native blocking on the Tinkerfund wayfinder map
+status: in-review
+outcome: "14 native edges wired; doc fix PR #1374"
+summary: "The human ran /wayfinder on the Tinkerfund map (#1357). No ticket was free: visual identity was claimed by a live session, and the other two were blocked behind it. The human then asked me to investigate why the blocking only existed as body text. I found the \"known gap\" doc was wrong: $GH_TOKEN plus curl reaches the REST dependencies endpoint, as long as the request sends a JSON Content-Type. On the human's explicit \"do all three\", I wired all 14 edges, commented findings on #1373, and opened doc PR #1374 (+5/-5 lines). Every action was human-instructed."
+prs:
+  - "1374"
+docsRead:
+  - path: .agents/skills/wayfinder/SKILL.md
+    reason: the invoked skill
+  - path: docs/agents/issue-tracker.md
+    reason: Wayfinding operations recipe
+  - path: docs/agents/github-integration.md
+    reason: "the wrong known-gap claim, and the #505 REST fallback"
+skillsUsed:
+  - name: wayfinder
+    reason: human invoked it on map 1357
+  - name: close-session
+    reason: PR-open closure
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: docs/agents/github-integration.md claimed native issue dependencies had no path without gh, so the whole Tinkerfund map fell back to invisible Blocked-by lines
+    solution: "Corrected in PR #1374: curl + $GH_TOKEN recipe"
+    severity: moderate
+  - description: "Egress proxy rejected the dependencies POST with 415 until an explicit Content-Type: application/json header was sent"
+    solution: Documented in the same paragraph of github-integration.md
+    severity: minor
+  - description: issue_dependencies_summary read straight after a successful POST still showed 0, which briefly looked like the write had failed
+    solution: Listing /dependencies/blocked_by confirmed it; noted as stale-read gotcha in the doc
+    severity: nit
+  - description: get_sub_issues on the map returned 131K chars (full bodies), overflowing into a file I had to parse with python
+    solution: A compact frontier script (number/state/labels/assignees/body Blocked-by) would avoid it
+    severity: minor
+  - description: Piped pnpm gate:scoped --dry into tail and hit the tail-pipe guard
+    solution: Guard worked as designed; ran without the pipe
+    severity: nit
+durationSec: 377
+models:
+  claude-opus-5-5: 78
+toolCounts:
+  Bash: 21
+  ToolSearch: 4
+  mcp__github__issue_read: 5
+  mcp__Claude_Code_Remote__list_sessions: 1
+  Read: 2
+  Edit: 3
+  mcp__github__add_issue_comment: 1
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  Skill: 2
+  Write: 1
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - docs/agents/github-integration.md
+  - docs/agents/issue-tracker.md
+docsReadViaShell:
+  - .agents/skills/wayfinder/SKILL.md
+  - docs/agents/issue-tracker.md
+  - docs/agents/github-integration.md
+  - docs/agents/git-conventions.md
+gitBranch: claude/wayfinder-issue-1357-94d9vv
+entrypoint: remote_mobile
+cliVersion: 2.1.283
+ideas:
+  - "Add scripts/wayfinder-frontier.ts: given a map number, list open children with assignee and open native blockers via the GH_TOKEN REST fallback, so /wayfinder never needs the 131K-char get_sub_issues dump and reads blocking from one canonical source"
+landedBy: Stop
