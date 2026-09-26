@@ -178,7 +178,6 @@ h3 { margin: 28px 0 10px; font: 800 18px/1.1 var(--tf-font); font-stretch: 82%; 
 .specs th { padding-right: 12px; color: var(--tf-muted); font: 500 12px/1.5 var(--tf-mono); }
 .specs td { font-weight: 600; }
 
-
 .tf-backbar {
   position: sticky;
   bottom: 0;

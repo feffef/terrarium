@@ -26,8 +26,9 @@
 //     page and hits the runtime "Artifact not found" fallback (issue #773).
 //   - A Tinkerfund Campaign, Updates file, comment thread, Promotion or past
 //     Pledge naming a Campaign, Inventor, category, Reward, option or Add-on
-//     that isn't in its Space, a Campaign page off its path (issue #1366), or
-//     an Update dated before its Campaign launched.
+//     that isn't in its Space, a Campaign page off its path (issue #1366), an
+//     Update dated before its Campaign launched, or any Update on an Upcoming
+//     Campaign.
 //
 // Scope: this pass only fires on a (Tenant, Space) that actually has an
 // Atlas-shaped collection (a `pages` Document with `phenology`, alongside
