@@ -239,7 +239,8 @@ useSeoMeta({
       <JournalStatTile label="Frictions surfaced" :value="totalFrictions">
         <template #sub>
           <JournalFrictionStrata :counts="frictionSeverityTotals" :total="totalFrictions">
-            {{ frictionSeverityTotals.blocker }} blockers · {{ frictionSeverityTotals.major }} major
+            {{ frictionSeverityTotals.blocker }} blocker{{ frictionSeverityTotals.blocker === 1 ? '' : 's' }} ·
+            {{ frictionSeverityTotals.major }} major
           </JournalFrictionStrata>
         </template>
       </JournalStatTile>

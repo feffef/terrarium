@@ -256,6 +256,7 @@ function strandClass(e: Edge) {
         </a>
       </NuxtLink>
     </svg>
+    <p v-if="nodes.length" class="atlas-web-hint" aria-hidden="true">↔ scroll to see the rest</p>
     <p v-else class="empty">An empty wing. The naturalists have not yet been.</p>
   </div>
 </template>

@@ -59,6 +59,12 @@ export default defineTenant({
           name: z.string(),
           category: z.enum(['platform-operation', 'general-engineering']),
           importance: z.enum(['essential', 'routine', 'specialist', 'supporting', 'peripheral']),
+          // ≤ 12 words, plain language, no ADR/PR/session references — what a
+          // first-time visitor reads before (optionally) opening `role` below.
+          // Authored for `essential`/`routine`/`specialist` Skills, the ones
+          // the Inventory page shows in full; `supporting`/`peripheral` skip it
+          // (visitor-loop fix, 2026-09-26).
+          gist: z.string().optional(),
           // ≤ ~50 words — a tight paragraph on the Skill's role + importance to
           // this project, NOT a copy of its own description; deeper detail lives
           // in the Skill's own docs. ~80 is the outer limit; beyond that, trim.

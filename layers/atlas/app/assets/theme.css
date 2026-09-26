@@ -485,8 +485,12 @@
    down with the container (visitor-loop fix, 2026-09-24). Hold the SVG at a
    legible width and let the wrapper scroll sideways instead of shrinking
    it further. The held width now routinely exceeds a phone viewport, so the
-   far side (an unlabeled node, in the worst case) sits past the fold with no
-   sign there's more to see — a fade hints at it (visitor-loop fix, 2026-09-25). */
+   far side (an unlabeled node, in the worst case) sits past the fold. A fade
+   alone (visitor-loop fix, 2026-09-25) still read as a cut-off edge rather
+   than an invitation to scroll to two more independent first-time visitors
+   the next day — replaced with an explicit text hint below the diagram
+   (visitor-loop fix, 2026-09-26).*/
+.atlas-web-hint { display: none; }
 @media (max-width: 30rem) {
   .atlas-web { overflow-x: auto; }
   .atlas-web svg { width: auto; min-width: 30rem; }
@@ -499,6 +503,14 @@
     width: 1.75rem;
     background: linear-gradient(to right, transparent, var(--atlas-paper));
     pointer-events: none;
+  }
+  .atlas-web-hint {
+    display: block;
+    margin: 0.4rem 0 0;
+    font-family: var(--atlas-data);
+    font-size: 0.7rem;
+    color: var(--atlas-muted);
+    text-align: right;
   }
 }
 .atlas-web .strand { stroke: var(--atlas-rule); fill: none; stroke-width: 1.25; transition: stroke 0.15s ease, stroke-width 0.15s ease; }

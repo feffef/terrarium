@@ -21,6 +21,14 @@ import type { SessionCardView } from '../../types/journal'
 const { card, expanded, anchor } = defineProps<{ card: SessionCardView; expanded: boolean; anchor: string }>()
 const emit = defineEmits<{ toggle: [] }>()
 const detailId = useId()
+// A session touching a double-digit run of PRs (a workflow-built batch of
+// Tenant pages, say) turned the foot row into unscannable chip soup — cap the
+// same way the "PRs referenced" stat tile already does (visitor-loop fix,
+// 2026-09-26).
+const prParts = computed(() => ({
+  shown: card.prs.slice(0, PR_SUB_MAX),
+  rest: Math.max(0, card.prs.length - PR_SUB_MAX),
+}))
 const foldedFieldLabels = new Intl.ListFormat('en', { style: 'long', type: 'conjunction' }).format(
   FOLDED_TRACE_FIELDS.map((f) => f.label),
 )
@@ -41,7 +49,8 @@ const foldedFieldLabels = new Intl.ListFormat('en', { style: 'long', type: 'conj
         <p class="outcome">{{ card.outcome }}</p>
         <div class="foot">
           <!-- @click.stop: the whole head toggles the card; a PR chip navigates instead -->
-          <a v-for="pr in card.prs" :key="pr" class="chip pr" :href="prUrl(pr)" @click.stop>PR {{ pr.startsWith('#') ? pr : '#' + pr }}</a>
+          <a v-for="pr in prParts.shown" :key="pr" class="chip pr" :href="prUrl(pr)" @click.stop>PR {{ pr.startsWith('#') ? pr : '#' + pr }}</a>
+          <span v-if="prParts.rest" class="chip">+{{ prParts.rest }} more</span>
           <span v-if="card.model" class="chip model" title="Model(s) that drove this session">{{ card.model }}</span>
           <JournalFrictionStrata :counts="card.frictionCounts" :total="card.frictionTotal" />
           <span v-if="card.skills.length" class="skills">{{ card.skills.join(' · ') }}</span>

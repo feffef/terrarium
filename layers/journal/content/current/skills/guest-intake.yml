@@ -1,6 +1,7 @@
 name: guest-intake
 category: platform-operation
 importance: specialist
+gist: Interviews a visitor to turn their idea into a buildable spec.
 role: >-
   The intake half of the guest-demo pipeline (ADR-0023): runs a bounded,
   GitHub-comment requirements-refinement session with each guest, borrowing

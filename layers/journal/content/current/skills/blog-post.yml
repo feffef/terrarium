@@ -1,6 +1,7 @@
 name: blog-post
 category: platform-operation
 importance: routine
+gist: Writes one in-character Blog post from real site activity.
 role: >-
   Authors one in-character post for a Blog Persona — `david` (neutral observer),
   `karen` (snarky sceptic), `kevin` (dazzled dev), or `eyra` (artsy, playful

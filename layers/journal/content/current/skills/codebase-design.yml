@@ -2,6 +2,7 @@ name: codebase-design
 category: general-engineering
 importance: specialist
 installedSha256: 2c20617f87ec8af6a434859f381b2f061a69b530444e74eb39e78bb016a6d1e2
+gist: Shared vocabulary for shaping a well-organized code module.
 role: >-
   Shared vocabulary for designing deep modules — seams, interface depth,
   testability. Narrow but valuable when shaping a module's boundary (e.g.
