@@ -89,65 +89,6 @@ trials:
       out of order, and correctly said no mechanical check exists today — the
       ordering rests entirely on the agent following the bolded sentence.
   - problem: >
-      CLAUDE.md's "Start a command expected to run long... with
-      `run_in_background: true` from the outset" bullet (Working conventions,
-      added by PR #1282, merged 2026-09-20) already failed twice in the two
-      days since it landed — issue #1293 documents both recurrences
-      (`session_01HbkYXnpBCjE5XwVW2oe3ee`, `session_017p22GBvyCixua5EXU8Ynad`),
-      one with `docsRead` confirming the bullet was actually opened that
-      session and the foreground-timeout auto-background happened anyway. The
-      issue concludes a wording pass doesn't fix this ("the prose was read and
-      the failure happened anyway") and recommends a mechanical `PreToolUse`
-      guard, flagged for a human since `frictions-to-fixes/SKILL.md` §3 bars
-      dispatching a guard-touching fix unattended — so this is criterion 1
-      (prose that already failed) with nothing built yet to hold the
-      behaviour: the riskiest shape per this Skill's own framing, but the
-      prose is already failing at full length, so shrinking it to the goal
-      costs nothing further. Cut the trailing why-clause (already
-      re-explained the tail-piping guard's mechanism, itself stated two
-      bullets above) to a bare issue pointer; kept the what/where (the
-      `run_in_background: true`-from-the-outset instruction and the
-      scratchpad-logging destination) since the probe (below) still needed
-      them literally. Grepped the corpus for other copies of this wording —
-      none; only CLAUDE.md states it. Net -2 lines, one file. Small mass, but
-      the only criterion-1 candidate found in a background full-corpus survey
-      (CLAUDE.md, docs/agents/*.md, docs/adr/* prose, all 14 repo-authored
-      Skills); two runner-ups (`docs/agents/pr-workflow.md`'s verdict-before-
-      merge steps, issue #1276; `blog-post/SKILL.md`'s causal-attribution
-      bullet, issue #1168) were both rejected as mostly load-bearing
-      reference material with less prunable mass. Building the guard #1293
-      recommends is out of scope for this trial (Bounds: "changing what runs
-      unattended is not a prune — escalate that"); #1293 already tracks it.
-    territory:
-      paths:
-        - "CLAUDE.md: the \"Start a command expected to run long... with `run_in_background: true` from the outset\" bullet (Working conventions)"
-      keywords:
-        - run_in_background: true` from the outset
-        - known-long command
-        - auto-background at the 2-minute timeout
-        - issue #1293
-    opened: 2026-09-22
-    proven: true
-    check: >
-      Damage is a session running a command it should already expect to run
-      long (the full gate, `gate:scoped`, a build, `test:e2e`) that reads the
-      compressed bullet and either runs it in the foreground anyway without
-      `run_in_background: true`, or reaches for a hand-rolled `nohup … &`
-      instead of the tool's own flag, and gets a silently-wrong status when
-      the 2-minute default timeout auto-backgrounds it. NOT damage: a session
-      that already starts such a command backgrounded from the outset (the
-      intended behaviour), one that never runs a long command this run, or a
-      recurrence identical in shape to the two #1293 already cites (that
-      issue's open guard recommendation is the tracked response to those, not
-      a new finding for this trial). A Sonnet probe given only the compressed
-      bullet correctly said to pass `run_in_background: true` on the Bash-like
-      call from the start rather than defaulting to foreground, correctly
-      named the danger as a silently wrong status (not just slower turnaround)
-      from the 2-minute auto-background, correctly said to log to the
-      scratchpad directory, and correctly said the flag has to be set before
-      starting the command, not added after — a command already running in
-      the foreground can't be reclassified as backgrounded once launched.
-  - problem: >
       CLAUDE.md's "Dispatching a subagent is a procedure, not a tool call —
       invoke the `dispatch-subagents` Skill before spawning one" bullet
       (Working conventions) already failed as issue #1248: a session read the
@@ -259,3 +200,54 @@ trials:
       enforcement lives in the guard rather than the prose, and that the
       issue tracker and this file's git history hold the amendment history if
       ever needed.
+  - problem: >
+      No problem cleared the ~100-line bar this run. A full-corpus search for
+      already-failed prose surfaced only territory prior trials already
+      validated holding — CLAUDE.md's pkill bullet (held 2026-08-31, commit
+      5906fe37) and the "Don't state anything as settled" bullet (held
+      2026-08-28, commit b10e2760; its count clause separately closed
+      wontfix, issue #933) — so re-pruning either would relitigate a settled
+      verdict, not test a fresh one. Manual review of every other sizable
+      untrialed doc (ADR-0009, ADR-0025, tenant-layers/verifying-ui-changes/
+      mdc-when-to-use.md, atlas-specimen/SKILL.md, audit-skills/SKILL.md)
+      found dense, non-redundant reference or decision content — no
+      criterion-2 target either, confirmed by an empty issue search on each.
+      Per the 2026-09-25 owner direction (commit 54d3e1b4): when nothing
+      clears the bar, rewrite one whole file in simpler words instead of
+      ending the run. Picked `docs/agents/domain.md` (70 lines, untrialed, no
+      inbound section citations, unlike `tenant-layers.md`'s cited §1).
+      Shortened every paragraph; cut four restatements (the seeding note's
+      redundant customization list, a re-explanation of CLAUDE.md's own
+      single-home rule, a CONTEXT-MAP.md example unrelated to domain.md's own
+      content, the `/domain-modeling` Skill's reach-Skills aside). Kept every
+      rule and worked example: the reading order, all three ADR-0021
+      divergences, the file-structure divergence, glossary vocabulary, the
+      rule of two with both its examples, ADR-conflict flagging, and the
+      ADR-0006 proposal check (issue #573). Net: 671 → 578 words (-14%); raw
+      line count rises slightly because the original wrote whole paragraphs
+      as one unwrapped source line and this rewrite wraps at ~80 columns like
+      the rest of the repo — word count is what actually shrank. Grepped for
+      inbound references: only whole-file pointers (CLAUDE.md, ADR-0026,
+      `setup-matt-pocock-skills/SKILL.md`, two spec fixtures), none
+      section-scoped, so nothing broke.
+    territory:
+      paths:
+        - "docs/agents/domain.md (whole-file language simplification)"
+      keywords:
+        - rule of two
+        - domain-modeling Skill's generic templates
+        - ADR-0021
+    opened: 2026-09-26
+    proven: true
+    check: >
+      Damage is a session that needs a cut aside — the single-home-rule
+      restatement, the CONTEXT-MAP example, or the Skill's reach-Skills list —
+      and can't get the same outcome from the surviving text or from
+      CLAUDE.md/CONTEXT-MAP.md directly. NOT damage: a session correctly
+      following the reading order, the ADR-0021 divergences, the rule of two,
+      ADR-conflict flagging, or the ADR-0006 proposal check from the
+      rewritten text. A Sonnet probe given only the rewritten file (verified
+      at the correct commit after an initial stale-worktree false start)
+      correctly named the reading order, all three divergences, the rule of
+      two's threshold with both worked examples, and the ADR-0006 check with
+      issue #573 — so no hook ships with this rewrite.

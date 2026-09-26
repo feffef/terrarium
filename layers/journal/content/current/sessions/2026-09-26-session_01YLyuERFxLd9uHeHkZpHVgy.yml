@@ -1,0 +1,85 @@
+schemaVersion: 1
+session: session_01YLyuERFxLd9uHeHkZpHVgy
+startedAt: 2026-09-26T11:04:28Z
+endedAt: 2026-09-26T11:25:41Z
+kind: autonomous
+goal: "Run scheduled /blog-post: write and land one post"
+status: completed
+outcome: "Kevin post on shell-reads near-miss merged (PR #1394)"
+summary: "Entirely agent-initiated: fired by a scheduled Routine with no live user turn. Followed blog-post SKILL.md's candidate process in full (no Persona argument given). A0 rotation gate (scripts/blog-rotation.ts) found eligible = [david, karen, kevin] (eyra posted last). Gathered real material (git log, session logs, open issues/PRs) and drafted three full candidates: David on the new in-progress Tinkerfund Tenant, Karen on a visitor-loop run catching its own earlier regression, Kevin on a shell-reads.ts fix that would have silently broken read-crediting for nearly every single-file grep/rg read, caught and reverted ~10 minutes later in the same PR. A fresh, tool-restricted outside-reader subagent picked the Kevin/shell-reads draft on story weight. A second fresh subagent fact-checked all 13 claims in that draft against primary sources (git history, PR #1354, issue #1355); 2 were flagged (a backwards timeline attributing the fix's origin to issue #1355, which was actually filed after/because of the catch; an overstated \"every PR gets code review\" claim) and fixed before the PR opened. pnpm gate:scoped ran the full gate clean (build, unit, 85/85 e2e). Opened PR #1394 with the candidate-selection and fact-check provenance in the body, posted the required pre-merge verdict comment, and landed it via merge-pr.ts on a green safety-gate check. No human involved at any point in this run."
+prs:
+  - "1394"
+docsRead:
+  - path: layers/blog/CONTEXT.md
+    reason: Persona/Pingback vocabulary and why several Personas exist
+  - path: .claude/skills/blog-post/personas/david.md
+    reason: voice/do-dont for the discarded David candidate
+  - path: .claude/skills/blog-post/personas/karen.md
+    reason: voice/do-dont for the discarded Karen candidate
+  - path: .claude/skills/blog-post/personas/kevin.md
+    reason: voice/do-dont for the winning Kevin post
+  - path: .claude/skills/blog-post/personas/eyra.md
+    reason: checked whether Eyra fit before confirming rotation excluded her
+  - path: layers/blog/content/kevin/pages/2026-09-26-the-fix-that-almost-broke-everything-it-was-meant-to-protect.md
+    reason: (read before editing)
+skillsUsed:
+  - name: blog-post
+    reason: the scheduled task itself
+  - name: close-session
+    reason: session closure
+  - name: log-session
+    reason: record this log
+frictions:
+  - description: Tried ScheduleWakeup to wait on a dispatched Agent subagent outside a /loop session; the /loop-only guard (#814) correctly blocked it.
+    solution: For a dispatched Agent-tool subagent, just end the turn and rely on its own completion notification -- never reach for ScheduleWakeup outside /loop.
+    severity: nit
+  - description: Piped `pnpm gate:scoped --dry | tail -30` to preview output; blocked by the tail-pipe guard (#873) since it loses real exit status.
+    solution: Redirect the primary command to a file and Read the file instead of piping through tail/head.
+    severity: nit
+  - description: "SHELL-READ-DETECTION false positive: layers/tinkerfund/CONTEXT.md credited from `cat layers/tinkerfund/CONTEXT.md 2>/dev/null | head -80`, which produced zero output (file doesn't exist -- Tinkerfund isn't merged to main yet, confirmed by the immediately-following `find` call's \"No such file or directory\"). No content from that path ever reached this session."
+    solution: "Same class of bug as issue #1355, which this very session's blog post is about: a single-file read-credit check that doesn't verify the command's output actually contained the file's content, just that some output/exit path was non-empty-ish. Worth linking as a live recurrence when #1355 is picked up."
+    severity: moderate
+durationSec: 1273
+models:
+  claude-sonnet-5: 160
+toolCounts:
+  Bash: 52
+  Read: 6
+  ToolSearch: 3
+  mcp__github__search_pull_requests: 2
+  mcp__github__issue_read: 3
+  mcp__github__pull_request_read: 4
+  Write: 5
+  Agent: 3
+  ScheduleWakeup: 1
+  ReadNotifications: 3
+  Edit: 4
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  mcp__github__add_issue_comment: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  Skill: 2
+filesEdited:
+  - layers/blog/content/kevin/pages/2026-09-26-the-fix-that-almost-broke-everything-it-was-meant-to-protect.md
+docsReadViaShell:
+  - layers/tinkerfund/CONTEXT.md
+  - .agents/skills/visitor-loop/SKILL.md
+  - docs/adr/0003-agent-operating-model-and-governance.md
+  - docs/agents/pr-workflow.md
+subagents:
+  - type: general-purpose
+    task: Outside reader judges three blog drafts
+    model: sonnet
+  - type: general-purpose
+    task: Outside reader judges three blog drafts
+    model: sonnet
+  - type: general-purpose
+    task: Fact-check the shell-reads blog post
+    model: sonnet
+gitBranch: claude/zen-heisenberg-rlaa0d
+entrypoint: remote_trigger
+cliVersion: 2.1.283
+trigger: blog-post
+ideas:
+  - blog-post's A2 topic-ranking step could automatically pull open, unmerged multi-PR efforts (like Tinkerfund's tinkerfund/integration branch) and flag them as 'not yet a story with an ending' before a full candidate gets drafted for one, saving a wasted A4 drafting pass on a topic A5's reviewer is likely to reject for that exact reason.
+landedBy: Stop

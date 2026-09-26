@@ -1,11 +1,11 @@
 schemaVersion: 1
 session: session_01F64JH7wNaFf7yeRAYngBMG
 startedAt: 2026-09-26T07:18:24Z
-endedAt: 2026-09-26T07:24:41Z
+endedAt: 2026-09-26T11:46:13Z
 kind: interactive
 goal: Unblock native blocking on the Tinkerfund wayfinder map
-status: in-review
-outcome: "14 native edges wired; doc fix PR #1374"
+status: completed
+outcome: "14 native edges wired; doc fix PR #1374 merged"
 summary: "The human ran /wayfinder on the Tinkerfund map (#1357). No ticket was free: visual identity was claimed by a live session, and the other two were blocked behind it. The human then asked me to investigate why the blocking only existed as body text. I found the \"known gap\" doc was wrong: $GH_TOKEN plus curl reaches the REST dependencies endpoint, as long as the request sends a JSON Content-Type. On the human's explicit \"do all three\", I wired all 14 edges, commented findings on #1373, and opened doc PR #1374 (+5/-5 lines). Every action was human-instructed."
 prs:
   - "1374"
@@ -16,6 +16,8 @@ docsRead:
     reason: Wayfinding operations recipe
   - path: docs/agents/github-integration.md
     reason: "the wrong known-gap claim, and the #505 REST fallback"
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
 skillsUsed:
   - name: wayfinder
     reason: human invoked it on map 1357
@@ -39,15 +41,15 @@ frictions:
   - description: Piped pnpm gate:scoped --dry into tail and hit the tail-pipe guard
     solution: Guard worked as designed; ran without the pipe
     severity: nit
-durationSec: 377
+durationSec: 16069
 models:
-  claude-opus-5-5: 78
+  claude-opus-5-5: 119
 toolCounts:
-  Bash: 21
+  Bash: 28
   ToolSearch: 4
   mcp__github__issue_read: 5
   mcp__Claude_Code_Remote__list_sessions: 1
-  Read: 2
+  Read: 3
   Edit: 3
   mcp__github__add_issue_comment: 1
   mcp__github__search_pull_requests: 1
@@ -55,7 +57,10 @@ toolCounts:
   mcp__github__subscribe_pr_activity: 1
   Skill: 2
   Write: 1
-  mcp__Claude_Code_Remote__send_later: 1
+  mcp__Claude_Code_Remote__send_later: 6
+  ReadNotifications: 8
+  mcp__github__pull_request_read: 3
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - docs/agents/github-integration.md
   - docs/agents/issue-tracker.md
@@ -64,6 +69,7 @@ docsReadViaShell:
   - docs/agents/issue-tracker.md
   - docs/agents/github-integration.md
   - docs/agents/git-conventions.md
+  - docs/agents/pr-workflow.md
 gitBranch: claude/wayfinder-issue-1357-94d9vv
 entrypoint: remote_mobile
 cliVersion: 2.1.283

@@ -1,0 +1,113 @@
+schemaVersion: 1
+session: session_016u3USbZw7eybPYiDatPJmE
+startedAt: 2026-09-26T13:14:36Z
+endedAt: 2026-09-26T13:41:30Z
+kind: autonomous
+goal: Run the scheduled /prune-trial routine
+status: completed
+outcome: "Judged 1 trial (holds), opened 1 new trial, PR #1400 merged"
+summary: "Fully autonomous scheduled run, no human prompt at any point. Judged the judgeable open trial (CLAUDE.md's run_in_background bullet) via prune-trial-window.ts, session-frictions.ts, and a dedicated GitHub issue search — no recurrence since landing, prune holds, entry deleted. For a new trial, a full-corpus criterion-1 search (dispatched subagent) surfaced only territory two prior trials already validated holding; manual review of every other sizable untrialed doc found dense, non-redundant reference content, not restated prose. Per the repo's owner-directed fallback (no problem clears the bar -> rewrite one whole file), rewrote docs/agents/domain.md in plainer words (671->578 words, every rule and worked example kept), ran the full gate green, and verified comprehension via a Sonnet probe in an isolated worktree before shipping. Opened, subscribed to, verdict-commented on, and merged PR #1400 via merge-pr.ts (prune-trial's merge-on-green-gate-alone tier)."
+prs:
+  - "1400"
+docsRead:
+  - path: .agents/prune-trials.yml
+    reason: (read before editing)
+  - path: CLAUDE.md
+    reason: (no reason given)
+  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
+    reason: (no reason given)
+  - path: docs/agents/verifying-ui-changes.md
+    reason: (no reason given)
+  - path: .agents/skills/atlas-specimen/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: (no reason given)
+  - path: docs/agents/mdc-when-to-use.md
+    reason: (no reason given)
+  - path: docs/agents/tenant-layers.md
+    reason: (no reason given)
+  - path: docs/agents/guest-contributions.md
+    reason: (no reason given)
+  - path: docs/agents/domain.md
+    reason: (read before editing)
+  - path: scripts/provenance-header.ts
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: docs/research/rulebook-migration-table.md
+    reason: (no reason given)
+  - path: docs/agents/guards.md
+    reason: (no reason given)
+skillsUsed:
+  - name: prune-trial
+    reason: the run's own procedure
+  - name: dispatch-subagents
+    reason: isolated worktree probes for §4
+  - name: close-session
+    reason: PR-open closure
+  - name: log-session
+    reason: this log
+frictions:
+  - description: "Ran `pnpm gate:scoped` for the full gate without `run_in_background: true` from the outset, so it auto-backgrounded at the 2-minute timeout -- a direct instance of the very CLAUDE.md convention I was judging in this same run's trial."
+    solution: "Pass `run_in_background: true` on any command expected to run long, every time, including ones encountered mid-task rather than planned up front."
+    severity: minor
+  - description: "Two dispatched Agent-tool worktree probes (isolation: 'worktree') silently started on a stale HEAD (the pre-prune commit) instead of the pushed branch tip, so their first comprehension answers actually quoted the OLD, pre-rewrite text -- caught only because one answer's exact wording didn't match what I'd just committed."
+    solution: Always have a worktree-dispatched probe explicitly `git fetch` + `git checkout <exact SHA>` and confirm via `git log -1` before reading anything, per dispatch-subagents/SKILL.md's own "verify HEAD" guidance -- don't skip that check just because the dispatch is read-only with no commit at the end.
+    severity: moderate
+  - description: First draft of the new ledger entry (documenting the exhaustive criterion-1/2 search) was long enough that the combined diff came to +25 net lines, which runs against this repo's "every change must shrink it" mandate -- caught only by explicitly running `git diff --numstat` against the true base commit before opening the PR.
+    solution: Check `git diff --numstat <base>` for a prune-trial change before committing, not just eyeball the file; trim the ledger entry itself when it's the thing that grew.
+    severity: moderate
+  - description: First pass at the domain.md "simplify the language" rewrite only reformatted sentences (671->668 words, effectively flat) rather than cutting real content, because I judged it by read-through impression instead of a word count.
+    solution: Compare `wc -w` before/after immediately after any language- simplification rewrite, before treating it as done -- a rewrite that merely re-flows prose isn't a prune.
+    severity: minor
+durationSec: 1614
+models:
+  claude-sonnet-5: 325
+toolCounts:
+  Bash: 98
+  Read: 19
+  Agent: 6
+  ReadNotifications: 4
+  ToolSearch: 6
+  mcp__github__search_issues: 2
+  Edit: 5
+  Write: 2
+  Skill: 3
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  mcp__github__pull_request_read: 5
+  mcp__github__add_issue_comment: 1
+  mcp__github__unsubscribe_pr_activity: 1
+filesEdited:
+  - .agents/prune-trials.yml
+  - docs/agents/domain.md
+docsReadViaShell:
+  - docs/agents/guards.md
+  - docs/research/rulebook-migration-table.md
+  - .agents/skills/audit-skills/SKILL.md
+  - docs/agents/domain.md
+  - docs/agents/pr-workflow.md
+  - docs/adr/0017-provenance-footer-on-agent-authored-content.md
+  - CONTEXT.md
+  - docs/agents/git-conventions.md
+subagents:
+  - type: general-purpose
+    task: Search for issues regressing the run_in_background trial
+  - type: general-purpose
+    task: Search for issues regressing the run_in_background trial
+  - type: general-purpose
+    task: Full-corpus search for prunable criterion-1 prose
+  - task: Probe rewritten domain.md for comprehension
+    model: sonnet
+  - task: "Continue: verify worktree HEAD and exact wording"
+    model: sonnet
+  - task: Probe rewritten domain.md at correct commit
+    model: sonnet
+gitBranch: claude/practical-rubin-64lu64
+entrypoint: remote_trigger
+cliVersion: 2.1.283
+trigger: prune-trial
+learnings:
+  - "This repo's prune-trial corpus is heavily mined after ~18-23 prior trials: nearly every sizable CLAUDE.md/docs/agents bullet with real incident history has already been compressed and validated holding, so a fresh criterion-1 search now mostly re-surfaces already-tried territory rather than new candidates -- the owner's \"rewrite a whole file when nothing clears the bar\" fallback (commit 54d3e1b4) exists precisely for this state."
+landedBy: Stop
