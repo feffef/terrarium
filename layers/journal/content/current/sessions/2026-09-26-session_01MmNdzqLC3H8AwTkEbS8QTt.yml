@@ -1,0 +1,90 @@
+schemaVersion: 1
+session: session_01MmNdzqLC3H8AwTkEbS8QTt
+startedAt: 2026-09-26T02:03:38Z
+endedAt: 2026-09-26T02:39:15Z
+kind: autonomous
+goal: Run frictions-to-fixes end to end
+status: completed
+outcome: 2 PRs merged, 1 issue filed
+summary: "Scheduled, unprompted run of the frictions-to-fixes Skill (no human present). Surveyed the last 20 session logs via a background subagent, screened against the tracker and against main, and selected 2 never-fixed candidates: a shell-reads.ts grep/rg/diff crediting gap (moderate, recurring) and a missing digest dry-run doc caveat (moderate, single occurrence). Both were \"simple\" selections (no issue filed per the Skill's own rule), dispatched to two Sonnet impl agents in isolated worktrees. Reviewed both PRs myself as the ADR-0003 reviewer-agent. The digest doc fix (PR #1353) was clean and merged as-is. The shell-reads fix (PR #1354) bundled two changes; review caught that one of them (unifying single-file grep/rg confirmation onto a filename-match check) would have silently stopped crediting the overwhelming majority of genuine single-file grep/rg reads, since default single-file grep/rg output never contains the filename — verified empirically against real grep/rg, not just against the impl agent's own claim. Amended the PR myself to keep only the uncontroversial half (recognizing `diff` as a reader verb), reverted the other half back to status quo, updated the PR description to match the narrower shipped scope, and filed issue #1355 with the full analysis for a properly considered fix later. Both PRs merged this session; no escalation needed."
+prs:
+  - "1353"
+  - "1354"
+docsRead:
+  - path: docs/agents/pr-workflow.md
+    reason: merge recipe + per-tier authority
+  - path: .claude/skills/dispatch-subagents/SKILL.md
+    reason: worktree dispatch mechanics for the two impl agents
+  - path: scripts/shell-reads.ts
+    reason: (read before editing)
+  - path: .agents/skills/digest/SKILL.md
+    reason: (read before editing)
+  - path: scripts/digest.ts
+    reason: (no reason given)
+  - path: tests/unit/shell-reads.spec.ts
+    reason: (read before editing)
+  - path: docs/adr/0017-provenance-footer-on-agent-authored-content.md
+    reason: (no reason given)
+skillsUsed:
+  - name: frictions-to-fixes
+    reason: the run itself
+  - name: dispatch-subagents
+    reason: briefed and dispatched the two impl agents
+  - name: close-session
+    reason: session closure
+  - name: log-session
+    reason: this log
+frictions:
+  - description: An impl agent's own diagnosis ("this is a deliberate, documented narrowing consistent with the extractor's philosophy") rationalized a change that, verified empirically, would have made the single-file grep/rg branch almost never credit a real match again (default single-file grep/rg output never includes the filename `outputMentionsFile` requires). The agent had already run the same empirical check itself and reached the same fact, but talked itself into shipping it anyway under the extractor's stated under-crediting-is-safe philosophy, rather than recognizing the difference between "sometimes conservative" and "basically disabled for the common case".
+    solution: "Add this exact tension to the dispatch-subagents brief-authoring guidance: when an agent's own empirical finding conflicts with its proposed fix's premise, that's a stop-and-report signal, not something to rationalize past under the repo's general design philosophy."
+    severity: moderate
+  - description: My own dispatch brief for the shell-reads fix spent a paragraph speculating about a specific noise shape (a `; echo EXIT:$?` convention) that I had not actually verified is real in this environment — the impl agent picked up the same unverified speculation and repeated it as fact in its PR description and tests. Neither of us had access to the raw transcript that would confirm it.
+    solution: When a dispatch brief includes a specific technical guess about unobserved internals, mark it explicitly as speculation the impl agent must verify or drop, rather than stating it as established context.
+    severity: minor
+durationSec: 2137
+models:
+  claude-sonnet-5: 171
+toolCounts:
+  Bash: 42
+  Agent: 3
+  ScheduleWakeup: 1
+  Read: 6
+  Skill: 3
+  ReadNotifications: 6
+  ToolSearch: 3
+  mcp__github__pull_request_read: 5
+  mcp__github__pull_request_review_write: 2
+  mcp__github__list_pull_requests: 1
+  Edit: 7
+  mcp__github__search_issues: 1
+  mcp__github__issue_write: 1
+  mcp__github__update_pull_request: 1
+  Write: 1
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - .agents/skills/digest/SKILL.md
+  - scripts/shell-reads.ts
+  - tests/unit/shell-reads.spec.ts
+docsReadViaShell:
+  - CONTEXT.md
+  - docs/agents/pr-workflow.md
+  - .agents/skills/dispatch-subagents/SKILL.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - docs/agents/guards.md
+  - .agents/skills/digest/SKILL.md
+subagents:
+  - type: general-purpose
+    task: Survey and screen session frictions
+  - type: general-purpose
+    task: Fix shell-reads.ts grep/diff crediting bug
+    model: sonnet
+  - type: general-purpose
+    task: Fix digest dry-run doc gap
+    model: sonnet
+gitBranch: claude/eager-ptolemy-8dwj5u
+entrypoint: remote_trigger
+cliVersion: 2.1.283
+trigger: frictions-to-fixes
+learnings:
+  - scripts/check-worktrees.ts reports a worktree as "already merged into origin/main" even when it still holds uncommitted changes, if the worktree's own commits (if any) are already a subset of main — this can read as confusing/contradictory at a glance when the worktree is actually still mid-work, not stale cruft.
+landedBy: Stop
