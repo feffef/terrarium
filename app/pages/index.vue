@@ -107,7 +107,7 @@ const { data: tinkerfund } = await useAsyncData('tinkerfund-showcase', async () 
   return {
     entries,
     campaign: pick && {
-      url: tinkerfundPath('prod', pick.path),
+      url: tinkerfundCampaignPath('prod', tinkerfundSlug(pick.path)),
       title: pick.title,
       registry: pick.c.registry,
       figure: pick.c.figures[0]!.svg,
