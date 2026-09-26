@@ -41,6 +41,10 @@ const toStep = (i: number) => ({ query: { ...route.query, step: STEPS[i] } })
 
 const entered = ref(query('code') ?? '')
 const refusal = ref<string>()
+function removeCode() {
+  entered.value = ''
+  choose({ code: undefined })
+}
 async function confirm() {
   const { refs, error } = place({ quote: quote.value, zone: zone.value, payment: payment.value?.id ?? '' })
   refusal.value = error
@@ -146,7 +150,7 @@ useSeoMeta(tinkerfundSeo({ kind: 'private', space, title: 'Checkout' }))
           </ul>
           <p v-if="quote.code" class="applied">
             Code <b>{{ quote.code }}</b> applied
-            <button type="button" class="link" @click="choose({ code: undefined })">Remove<span class="tf-sr"> code</span></button>
+            <button type="button" class="link" @click="removeCode">Remove<span class="tf-sr"> code</span></button>
           </p>
           <form v-else class="code" @submit.prevent="choose({ code: entered.trim().toUpperCase() || undefined })">
             <label class="tf-label" for="tf-code">Discount code</label>

@@ -184,19 +184,18 @@ export function tinkerfundReceipt(pledge: TinkerfundPledge, entry: TinkerfundCar
   }
 }
 
-export type TinkerfundReceipt = ReturnType<typeof tinkerfundReceipt>
-
 function nextRefs(taken: string[], count: number): string[] {
   const last = Math.max(0, ...taken.map((ref) => Number(ref.match(/\d+$/)?.[0] ?? 0)))
   return Array.from({ length: count }, (_, i) => `TF-P-${String(last + 1 + i).padStart(4, '0')}`)
 }
 
-function merge<T>(into: T[], add: T[], same: (a: T, b: T) => boolean, bump: (a: T, b: T) => T): T[] {
+/** `into` with `add`'s quantities added, matching items by `key`. */
+function merge<T extends { quantity: number }>(into: T[], add: T[], key: (item: T) => string): T[] {
   const out = [...into]
   for (const item of add) {
-    const i = out.findIndex((x) => same(x, item))
+    const i = out.findIndex((x) => key(x) === key(item))
     if (i < 0) out.push(item)
-    else out[i] = bump(out[i]!, item)
+    else out[i] = { ...out[i]!, quantity: out[i]!.quantity + item.quantity }
   }
   return out
 }
@@ -235,8 +234,7 @@ export function placeTinkerfundPledges(input: TinkerfundPlaceInput): { overlay?:
     const lines = merge(
       (old?.lines ?? []).map((l) => ({ reward: l.reward, options: l.options ?? {}, quantity: l.quantity })),
       group.lines.flatMap((l) => ('reward' in l.ref ? [{ reward: l.ref.reward, options: l.ref.options, quantity: l.quantity }] : [])),
-      (a, b) => tinkerfundCartLineKey({ campaign: '', ...a }) === tinkerfundCartLineKey({ campaign: '', ...b }),
-      (a, b) => ({ ...a, quantity: a.quantity + b.quantity }),
+      (l) => tinkerfundCartLineKey({ campaign: group.campaign, ...l }),
     )
     for (const reward of campaign.rewards) {
       const held = lines.filter((l) => l.reward === reward.id).reduce((n, l) => n + l.quantity, 0)
@@ -245,8 +243,7 @@ export function placeTinkerfundPledges(input: TinkerfundPlaceInput): { overlay?:
     const addons = merge(
       old?.addons ?? [],
       group.lines.flatMap((l) => ('addon' in l.ref ? [{ id: l.ref.addon, quantity: l.quantity }] : [])),
-      (a, b) => a.id === b.id,
-      (a, b) => ({ ...a, quantity: a.quantity + b.quantity }),
+      (a) => a.id,
     )
     const bonus = cents((old?.bonus ?? 0) + (group.bonus ?? 0))
     const ships = lines.some((l) => campaign.rewards.find((r) => r.id === l.reward)?.shipsTo)

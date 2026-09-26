@@ -24,7 +24,7 @@ const receipts = computed(() =>
       endsAt: resolveTinkerfundOffset(entry.campaign.end, now.value),
     }]
   }))
-const total = computed(() => receipts.value.reduce((n, r) => n + r.total, 0))
+const total = computed(() => Math.round(receipts.value.reduce((n, r) => n + r.total, 0) * 100) / 100)
 
 useSeoMeta(tinkerfundSeo({ kind: 'private', space, title: 'Pledge confirmed' }))
 </script>
