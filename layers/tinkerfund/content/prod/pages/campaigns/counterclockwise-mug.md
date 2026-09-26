@@ -19,51 +19,25 @@ campaign:
     - { label: Dishwasher, value: "Top rack, drive removed" }
   figures:
     - style: isometric
-      caption: The mug at rest, stirring.
+      caption: "The mug at rest, stirring."
       svg: |-
-        <ellipse cx="210" cy="206" rx="112" ry="50" style="fill:var(--tf-line)" />
-        <path d="M120.1 186V200A75.9 43.8 0 0 0 196 243.8V229.8A75.9 43.8 0 0 1 120.1 186Z" style="fill:var(--tf-ink)" />
-        <path d="M196 229.8V243.8A75.9 43.8 0 0 0 271.9 200V186A75.9 43.8 0 0 1 196 229.8Z" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" />
-        <ellipse cx="196" cy="186" rx="75.9" ry="43.8" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" />
-        <path d="M263.5 108c52-8 58 64 0 70" style="fill:none;stroke:color-mix(in srgb, var(--tf-accent) 72%, var(--tf-ink));stroke-width:14;stroke-linecap:round" />
-        <path d="M122.5 74V186A73.5 42.4 0 0 0 196 228.4V116.4A73.5 42.4 0 0 1 122.5 74Z" style="fill:var(--tf-accent)" />
-        <path d="M196 116.4V228.4A73.5 42.4 0 0 0 269.5 186V74A73.5 42.4 0 0 1 196 116.4Z" style="fill:color-mix(in srgb, var(--tf-accent) 72%, var(--tf-ink))" />
-        <ellipse cx="196" cy="74" rx="73.5" ry="42.4" style="fill:color-mix(in srgb, var(--tf-accent) 45%, var(--tf-surface))" />
-        <ellipse cx="196" cy="77" rx="58.8" ry="33.9" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" />
-        <g style="fill:none;stroke:var(--tf-surface);stroke-width:3;stroke-linecap:round"><path d="M239.8 69.2A45.9 26.5 0 0 0 152.2 69.2" /><path d="M160.3 63.4L152.2 69.2L152.7 59.2" /></g>
-        <g style="fill:none;stroke:var(--tf-muted);stroke-width:3;stroke-linecap:round"><path d="M170 58c-8-10 8-16 0-26M198 50c-8-10 8-16 0-26M226 58c-8-10 8-16 0-26" /></g>
-    - style: patent
-      caption: Section A–A through the base, showing the drive gear (12) and the stirring vane (14).
-      svg: |-
-        <g style="fill:none;stroke:var(--tf-ink);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round"><path d="M120 60L132 60L132 196L268 196L268 60L280 60L280 250L120 250Z" style="stroke-width:2.4" />
-        <path d="M140 206L260 206L260 242L140 242Z" />
-        <path d="M120 65L125 60M120 70L130 60M120 75L132 63M120 80L132 68M120 85L132 73M120 90L132 78M120 95L132 83M120 100L132 88M120 105L132 93M120 110L132 98M120 115L132 103M120 120L132 108M120 125L132 113M120 130L132 118M120 135L132 123M120 140L132 128M120 145L132 133M120 150L132 138M120 155L132 143M120 160L132 148M120 165L132 153M120 170L132 158M120 175L132 163M120 180L132 168M120 185L132 173M120 190L132 178M120 195L132 183M120 200L132 188M120 205L132 193M120 210L134 196M268 62L270 60M120 215L139 196M268 67L275 60M120 220L144 196M268 72L280 60M120 225L149 196M268 77L280 65M120 230L140 210M144 206L154 196M268 82L280 70M120 235L140 215M149 206L159 196M268 87L280 75M120 240L140 220M154 206L164 196M268 92L280 80M120 245L140 225M159 206L169 196M268 97L280 85M120 250L140 230M164 206L174 196M268 102L280 90M125 250L140 235M169 206L179 196M268 107L280 95M130 250L140 240M174 206L184 196M268 112L280 100M135 250L143 242M179 206L189 196M268 117L280 105M140 250L148 242M184 206L194 196M268 122L280 110M145 250L153 242M189 206L199 196M268 127L280 115M150 250L158 242M194 206L204 196M268 132L280 120M155 250L163 242M199 206L209 196M268 137L280 125M160 250L168 242M204 206L214 196M268 142L280 130M165 250L173 242M209 206L219 196M268 147L280 135M170 250L178 242M214 206L224 196M268 152L280 140M175 250L183 242M219 206L229 196M268 157L280 145M180 250L188 242M224 206L234 196M268 162L280 150M185 250L193 242M229 206L239 196M268 167L280 155M190 250L198 242M234 206L244 196M268 172L280 160M195 250L203 242M239 206L249 196M268 177L280 165M200 250L208 242M244 206L254 196M268 182L280 170M205 250L213 242M249 206L259 196M268 187L280 175M210 250L218 242M254 206L264 196M268 192L280 180M215 250L223 242M259 206L280 185M220 250L228 242M260 210L280 190M225 250L233 242M260 215L280 195M230 250L238 242M260 220L280 200M235 250L243 242M260 225L280 205M240 250L248 242M260 230L280 210M245 250L253 242M260 235L280 215M250 250L258 242M260 240L280 220M255 250L280 225M260 250L280 230M265 250L280 235M270 250L280 240M275 250L280 245" style="stroke-width:.8" />
-        <path d="M280 90c48 0 48 80 0 80M280 104c30 0 30 52 0 52" />
-        <path d="M170 212L230 212L230 236L170 236Z" />
-        <circle cx="200" cy="224" r="9" />
-        <path d="M200 212V186" style="stroke-width:1;stroke-dasharray:5 3.5" />
-        <path d="M178 186h44" style="stroke-width:2.4" />
-        <path d="M146 214L164 214L164 236L146 236Z" />
-        <path d="M151 220h8M155 216v8" style="stroke-width:.9" />
-        <path d="M136 90H264" style="stroke-width:.9" />
-        <path d="M104 60h8M104 250h8M100 55v8M100 242v8" style="stroke-width:.9" />
-        <path d="M126 110Q105 97 84 96" style="stroke-width:.9" /><path d="M200 224Q148 244 96 276" style="stroke-width:.9" /><path d="M214 186Q268 194 322 214" style="stroke-width:.9" /><path d="M156 226Q126 225 96 236" style="stroke-width:.9" /><path d="M322 128Q336 110 350 104" style="stroke-width:.9" /><path d="M248 92Q274 60 300 40" style="stroke-width:.9" /></g>
-        <g style="fill:var(--tf-ink);font:500 12px var(--tf-mono)"><text x="64" y="100">10</text><text x="76" y="280">12</text><text x="326" y="218">14</text><text x="76" y="240">16</text><text x="354" y="108">18</text><text x="304" y="44">20</text></g>
-        <g style="fill:var(--tf-ink);font:500 11px var(--tf-mono)"><text x="92" y="63">A</text><text x="92" y="256">A</text></g>
-        <g style="fill:var(--tf-ink);font:500 11px var(--tf-mono)"><text x="150" y="290">SECTION A–A</text></g>
-    - style: patent
-      caption: Plan view. The direction selector (24) is omitted, as intended.
-      svg: |-
-        <g style="fill:none;stroke:var(--tf-ink);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round"><path d="M90 150a90 90 0 1 0 180 0a90 90 0 1 0-180 0" style="stroke-width:2.4" />
-        <path d="M100 150a80 80 0 1 0 160 0a80 80 0 1 0-160 0" />
-        <path d="M268 132h32a8 8 0 0 1 8 8v20a8 8 0 0 1-8 8h-32" />
-        <path d="M150 167L210 133" style="stroke-width:1;stroke-dasharray:5 3.5" />
-        <circle cx="180" cy="150" r="5" />
-        <path d="M292 142h16v16h-16z" style="stroke-width:1;stroke-dasharray:5 3.5" />
-        <path d="M208 198.5A56 56 0 1 0 152 198.5M145.8 189.4L152 198.5L141 197.7" style="stroke-width:2" />
-        <path d="M160 138Q115 105 70 84" style="stroke-width:.9" /><path d="M200.3 97.8Q246.1 67.9 292 50" style="stroke-width:.9" /><path d="M300 150Q323 167 346 196" style="stroke-width:.9" /><path d="M92 170Q78 195 64 232" style="stroke-width:.9" /></g>
-        <g style="fill:var(--tf-ink);font:500 12px var(--tf-mono)"><text x="50" y="88">14</text><text x="296" y="54">22</text><text x="350" y="200">24</text><text x="44" y="236">10</text></g>
-        <g style="fill:var(--tf-ink);font:500 11px var(--tf-mono)"><text x="110" y="290">PLAN · ROTATION FIXED</text></g>
+        <ellipse cx="206" cy="228" rx="124" ry="40" style="fill:var(--tf-line)" />
+        <path d="M104 204V220A84 48.5 0 0 0 188 268.5V252.5A84 48.5 0 0 1 104 204Z" style="fill:var(--tf-ink)" />
+        <path d="M188 252.5V268.5A84 48.5 0 0 0 272 220V204A84 48.5 0 0 1 188 252.5Z" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" />
+        <ellipse cx="188" cy="204" rx="84" ry="48.5" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" />
+        <path d="M248 244L260 237L260 241L248 248Z" style="fill:var(--tf-surface)" />
+        <circle cx="200" cy="258" r="3.5" style="fill:var(--tf-good)" />
+        <path d="M250 106c62-6 68 70 0 74" style="fill:none;stroke:color-mix(in srgb, var(--tf-accent) 72%, var(--tf-ink));stroke-width:18;stroke-linecap:round;stroke-linejoin:round" />
+        <path d="M247 102c58-6 62 64 0 66" style="fill:none;stroke:var(--tf-accent);stroke-width:8;stroke-linecap:round;stroke-linejoin:round" />
+        <path d="M116 86V204A72 41.5 0 0 0 188 245.5V127.5A72 41.5 0 0 1 116 86Z" style="fill:var(--tf-accent)" />
+        <path d="M188 127.5V245.5A72 41.5 0 0 0 260 204V86A72 41.5 0 0 1 188 127.5Z" style="fill:color-mix(in srgb, var(--tf-accent) 72%, var(--tf-ink))" />
+        <ellipse cx="188" cy="86" rx="72" ry="41.5" style="fill:color-mix(in srgb, var(--tf-accent) 45%, var(--tf-surface))" />
+        <ellipse cx="188" cy="86" rx="66" ry="38" style="fill:color-mix(in srgb, var(--tf-accent) 72%, var(--tf-ink))" />
+        <ellipse cx="188" cy="91" rx="63" ry="33" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" />
+        <path d="M144 91a44 23 0 1 0 88 0a44 23 0 1 0 -88 0M166 92a22 11.5 0 1 0 44 0a22 11.5 0 1 0 -44 0" style="fill:none;stroke:color-mix(in srgb, var(--tf-ink) 45%, var(--tf-surface));stroke-width:1.2;stroke-linecap:round;stroke-linejoin:round" />
+        <path d="M232 86A44 23 0 0 0 150 80M158 74l-8 6 1-9" style="fill:none;stroke:var(--tf-surface);stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round" />
+        <ellipse cx="188" cy="93" rx="8" ry="4" style="fill:var(--tf-ink)" />
+        <path d="M150 64c-8-10 8-16 0-26M186 54c-8-10 8-16 0-26M222 62c-8-10 8-16 0-26" style="fill:none;stroke:var(--tf-muted);stroke-width:3;stroke-linecap:round;stroke-linejoin:round" />
     - style: isometric
       caption: "Exploded: stirring vane, mug, coupling and drive. The vane lifts out for washing; the drive does not go in the dishwasher."
       svg: |-
@@ -121,6 +95,51 @@ campaign:
         <path d="M344 93A28 15 0 0 0 296 93M302 89L296 93L297 86" style="fill:none;stroke:var(--tf-surface);stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round" />
         <g style="fill:var(--tf-muted);font:600 11px var(--tf-mono);letter-spacing:.06em;text-anchor:middle"><text x="84" y="234">SLATE</text><text x="204" y="234">SIGNAL</text><text x="324" y="234">PORCELAIN</text></g>
         <g style="fill:var(--tf-muted);font:500 11px var(--tf-mono);text-anchor:middle"><text x="204" y="262">ALL THREE STIR COUNTERCLOCKWISE</text></g>
+    - style: patent
+      caption: "Plan view. The direction selector (24) is omitted, as intended."
+      svg: |-
+        <g style="fill:none;stroke:var(--tf-ink);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round">
+        <path d="M100 150a90 90 0 1 0 180 0a90 90 0 1 0 -180 0" style="stroke-width:2.4" />
+        <path d="M110 150a80 80 0 1 0 160 0a80 80 0 1 0 -160 0" />
+        <path d="M190 52V248M92 150H288" style="stroke-width:1;stroke-dasharray:5 3.5" />
+        <path d="M276 126h34a18 18 0 0 1 18 18v12a18 18 0 0 1-18 18h-34" />
+        <path d="M278 138h30a8 8 0 0 1 8 8v8a8 8 0 0 1-8 8h-30" />
+        <g transform="rotate(-30 190 150)"><path d="M140 146h100v8h-100zM184 150a6 6 0 1 0 12 0a6 6 0 1 0 -12 0" style="stroke-width:1;stroke-dasharray:5 3.5" /></g>
+        <path d="M176 150a14 14 0 1 0 28 0a14 14 0 1 0 -28 0" style="stroke-width:1;stroke-dasharray:5 3.5" />
+        <path d="M187.5 150a2.5 2.5 0 1 0 5 0a2.5 2.5 0 1 0 -5 0" />
+        <path d="M296 134h14v10h-14z" style="stroke-width:1;stroke-dasharray:5 3.5" />
+        <path d="M210.5 206.4A60 60 0 1 0 133.6 129.5M141.4 122.7L133.6 129.5L132 119.3" style="stroke-width:2.2" />
+        <path d="M233 125Q261.3 104.8 262 70M190 90Q180 60 150 50M303 134Q326 121.8 330 96M121 208Q90 218.8 80 250" style="stroke-width:.9" />
+        </g>
+        <g style="fill:var(--tf-ink);font:500 12px var(--tf-mono)"><text x="266" y="74">14</text><text x="130" y="54">22</text><text x="334" y="100">24</text><text x="60" y="254">10</text></g>
+        <text x="226" y="240" style="fill:var(--tf-ink);stroke:none;font:500 9px var(--tf-mono)">40 RPM</text>
+        <g style="fill:var(--tf-ink);font:500 11px var(--tf-mono)"><text x="110" y="290">PLAN · ROTATION FIXED</text></g>
+    - style: patent
+      caption: "Section A–A through the base, showing the drive gear (12) and the stirring vane (14)."
+      svg: |-
+        <g style="fill:none;stroke:var(--tf-ink);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round">
+        <path d="M200 40V264" style="stroke-width:1;stroke-dasharray:5 3.5" />
+        <path d="M118 56h10v140h144V56h10v152H118z" style="stroke-width:2.4" />
+        <path d="M272 56.3L282 66.3M272 63.4L282 73.4M272 70.5L282 80.5M272 77.5L282 87.5M272 84.6L282 94.6M272 91.7L282 101.7M272 98.8L282 108.8M272 105.8L282 115.8M272 112.9L282 122.9M272 120L282 130M272 127L282 137M272 134.1L282 144.1M272 141.2L282 151.2M272 148.3L282 158.3M272 155.3L282 165.3M272 162.4L282 172.4M272 169.5L282 179.5M272 176.5L282 186.5M272 183.6L282 193.6M272 190.7L282 200.7M272 197.8L282 207.8M123.2 56L128 60.8M272 204.8L275.2 208M118 57.9L128 67.9M118 65L128 75M118 72L128 82M118 79.1L128 89.1M118 86.2L128 96.2M118 93.3L128 103.3M118 100.3L128 110.3M118 107.4L128 117.4M118 114.5L128 124.5M118 121.5L128 131.5M118 128.6L128 138.6M118 135.7L128 145.7M118 142.7L128 152.7M118 149.8L128 159.8M118 156.9L128 166.9M118 164L128 174M118 171L128 181M118 178.1L128 188.1M118 185.2L128 195.2M118 192.2L128 202.2M118 199.3L126.7 208M118 206.4L119.6 208M263.2 196L272 204.8M256.1 196L268.1 208M249 196L261 208M242 196L254 208M234.9 196L246.9 208M227.8 196L239.8 208M220.7 196L232.7 208M213.7 196L225.7 208M206.6 196L218.6 208M199.5 196L211.5 208M192.5 196L204.5 208M185.4 196L197.4 208M178.3 196L190.3 208M171.3 196L183.3 208M164.2 196L176.2 208M157.1 196L169.1 208M150 196L162 208M143 196L155 208M135.9 196L147.9 208M128.8 196L140.8 208M128 202.2L133.8 208" style="stroke-width:.8" />
+        <path d="M130 94q35 6 70 0t70 0" style="stroke-width:.9" />
+        <path d="M174 190h52v6h-52zM194 178h12v12h-12z" />
+        <path d="M208 192.9L204.9 196M208 188.7L200.7 196M204.4 188L196.4 196M200.2 188L192.2 196M196 188L192 192" style="stroke-width:.8" />
+        <path d="M282 100c50 0 50 80 0 80M282 112c32 0 32 56 0 56" />
+        <path d="M136 216h128a8 8 0 0 1 8 8v22a8 8 0 0 1-8 8H136a8 8 0 0 1-8-8v-22a8 8 0 0 1 8-8z" />
+        <path d="M146 224h32v22h-32z" />
+        <path d="M178 235h13" style="stroke-width:.9" />
+        <path d="M192 235a8 8 0 1 0 16 0a8 8 0 1 0 -16 0" />
+        <path d="M208 235L211 235M206.9 239L209.5 240.5M204 241.9L205.5 244.5M200 243L200 246M196 241.9L194.5 244.5M193.1 239L190.5 240.5M192 235L189 235M193.1 231L190.5 229.5M196 228.1L194.5 225.5M200 227L200 224M204 228.1L205.5 225.5M206.9 231L209.5 229.5" style="stroke-width:.9" />
+        <path d="M190 216h20v6h-20z" />
+        <path d="M210 216.4L204.4 222M206.1 216L200.1 222M201.9 216L195.9 222M197.7 216L191.7 222M193.4 216L190 219.4" style="stroke-width:.8" />
+        <path d="M264 232h8v6h-8z" style="stroke-width:.9" />
+        <path d="M100 56h12M100 208h12" style="stroke-width:.9" />
+        <path d="M122 130Q106 114.5 84 118M208 241Q213.8 264.5 236 274M226 193Q260.3 224.5 306 216M146 240Q113.5 242.5 96 270M330 140Q349 129.5 352 108M277 60Q293.5 55.8 300 40" style="stroke-width:.9" />
+        </g>
+        <text x="148" y="239" style="fill:var(--tf-ink);stroke:none;font:500 9px var(--tf-mono)">M</text>
+        <g style="fill:var(--tf-ink);font:500 12px var(--tf-mono)"><text x="64" y="122">10</text><text x="240" y="278">12</text><text x="310" y="220">14</text><text x="76" y="274">16</text><text x="356" y="112">18</text><text x="304" y="44">20</text></g>
+        <g style="fill:var(--tf-ink);font:500 11px var(--tf-mono)"><text x="88" y="60">A</text><text x="88" y="212">A</text></g>
+        <g style="fill:var(--tf-ink);font:500 11px var(--tf-mono)"><text x="150" y="290">SECTION A–A</text></g>
     - style: patent
       caption: "Exploded elevation: vane (14) with its magnet (22), body (10), floor magnet (12), drive (16) and USB-C port (18). Drive removed, top rack."
       svg: |-
