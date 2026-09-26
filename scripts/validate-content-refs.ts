@@ -31,8 +31,8 @@
 // Scope: this pass only fires on a (Tenant, Space) that actually has an
 // Atlas-shaped collection (a `pages` Document with `phenology`, alongside
 // `interactions`/`observations`), a Midden-shaped `artifacts` collection, or
-// Tinkerfund — it is a no-op for `journal`/`blog`, whose `pages` Documents never declare
-// `phenology` and never have an `artifacts` sibling.
+// a Tinkerfund-shaped one (a `pages` Document with `campaign`, or a `backer`
+// collection) — it is a no-op for `journal`/`blog`, which have none of these.
 //
 // Usage:  pnpm validate:content   (runs this after validate-content.ts;
 //         see package.json)       Exits 0 if every reference resolves and
@@ -42,8 +42,10 @@ import { execFileSync } from 'node:child_process'
 import { globSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { pathToFileURL } from 'node:url'
+import type { z } from 'zod'
 import { expand, loadManifests, root, type ExpandedCollection } from '../shared/expand.ts'
 import { DIG_SEASON_SLUGS, digSeasonOf, type DigSeason } from '../layers/midden/app/utils/strata.ts'
+import type { campaign, pledge } from '../layers/tinkerfund/tenant.config.ts'
 import { parseDocument, splitFrontmatter } from './validate-content.ts'
 
 export interface RefViolation {
@@ -534,24 +536,15 @@ function checkArtifacts(
 // validate-content.ts has already checked each Document's shape, so this
 // reads the fields it needs without re-checking their types.
 
-interface TinkerfundCampaignRefs {
-  registry: string
-  inventor: string
-  category: string
-  rewards: { id: string; options?: { id: string; choices: { id: string }[] }[] }[]
-  addons?: { id: string }[]
-}
+type TinkerfundCampaign = z.infer<typeof campaign>
+type TinkerfundPledge = z.infer<typeof pledge>
 
-interface TinkerfundPledgeRefs {
-  campaign: string
-  lines: { reward: string; options?: Record<string, string> }[]
-  addons?: { id: string }[]
-}
+type PageDoc = ReturnType<typeof splitFrontmatter> & { rel: string; file: string }
 
 const TF_CAMPAIGN_PAGE = /^campaigns\/([^/]+)\.md$/
 const TF_UPDATE_PAGE = /^campaigns\/([^/]+)\/updates\/[^/]+\.md$/
 
-function tinkerfundPledgeRefs(pledges: TinkerfundPledgeRefs[], campaigns: Map<string, TinkerfundCampaignRefs>): string[] {
+function tinkerfundPledgeRefs(pledges: TinkerfundPledge[], campaigns: Map<string, TinkerfundCampaign>): string[] {
   const msgs: string[] = []
   pledges.forEach((pledge, i) => {
     const at = `pledges.${i}`
@@ -581,38 +574,42 @@ function tinkerfundPledgeRefs(pledges: TinkerfundPledgeRefs[], campaigns: Map<st
   return msgs
 }
 
-function checkTinkerfund(groupCols: ExpandedCollection[], projectRoot: string, violations: RefViolation[]): number {
+/** Returns how many data Documents it checked; the caller counts the pages. */
+function checkTinkerfund(
+  pagesKey: string,
+  pages: PageDoc[],
+  groupCols: ExpandedCollection[],
+  projectRoot: string,
+  violations: RefViolation[],
+): number {
   let checked = 0
-  const docs = (collection: string) => {
+  const files = (collection: string) => {
     const col = groupCols.find((c) => c.collection === collection)
-    if (!col) return []
-    const cwd = join(projectRoot, col.cwdRel)
-    return globSync(col.include, { cwd })
-      .sort()
-      .map((rel) => {
-        checked++
-        return { key: col.key, file: join(col.cwdRel, rel), rel, data: parseDocument(join(cwd, rel)) }
-      })
+    return col ? globSync(col.include, { cwd: join(projectRoot, col.cwdRel) }).sort().map((rel) => ({ col, rel })) : []
   }
-  const stems = (collection: string) => new Set(docs(collection).map((d) => d.rel.replace(/\.yml$/, '')))
+  const docs = (collection: string) =>
+    files(collection).map(({ col, rel }) => {
+      checked++
+      return { key: col.key, file: join(col.cwdRel, rel), data: parseDocument(join(projectRoot, col.cwdRel, rel)) }
+    })
+  const stems = (collection: string) => new Set(files(collection).map(({ rel }) => rel.replace(/\.yml$/, '')))
   const report = (doc: { key: string; file: string }, messages: string[]) => {
     if (messages.length) violations.push({ key: doc.key, file: doc.file, messages })
   }
 
-  const pages = docs('pages')
   const inventors = stems('inventors')
   const categories = stems('categories')
-  const campaigns = new Map<string, TinkerfundCampaignRefs>()
-  for (const page of pages) {
-    const slug = TF_CAMPAIGN_PAGE.exec(page.rel)?.[1]
-    if (slug && page.data.campaign) campaigns.set(slug, page.data.campaign as TinkerfundCampaignRefs)
-  }
+  const located = pages.map((page) => ({
+    page,
+    slug: TF_CAMPAIGN_PAGE.exec(page.rel)?.[1],
+    campaign: page.frontmatter.campaign as TinkerfundCampaign | undefined,
+  }))
+  const campaigns = new Map<string, TinkerfundCampaign>()
+  for (const { slug, campaign } of located) if (slug && campaign) campaigns.set(slug, campaign)
 
   const registries = new Map<string, string>()
-  for (const page of pages) {
+  for (const { page, slug, campaign } of located) {
     const msgs: string[] = []
-    const campaign = page.data.campaign as TinkerfundCampaignRefs | undefined
-    const slug = TF_CAMPAIGN_PAGE.exec(page.rel)?.[1]
     if (slug && !campaign) msgs.push('a page at campaigns/<slug>.md must carry campaign frontmatter')
     if (campaign) {
       if (!slug) msgs.push('campaign frontmatter belongs only on a page at campaigns/<slug>.md')
@@ -624,12 +621,12 @@ function checkTinkerfund(groupCols: ExpandedCollection[], projectRoot: string, v
     }
     const updateOf = TF_UPDATE_PAGE.exec(page.rel)?.[1]
     if (updateOf) {
-      if (!page.data.update) msgs.push('an Update page must carry update frontmatter')
+      if (!page.frontmatter.update) msgs.push('an Update page must carry update frontmatter')
       if (!campaigns.has(updateOf)) msgs.push(`updates a Campaign "${updateOf}" that is not in this Space`)
-    } else if (page.data.update) {
+    } else if (page.frontmatter.update) {
       msgs.push('update frontmatter belongs only on a page at campaigns/<slug>/updates/<n>.md')
     }
-    report(page, msgs)
+    report({ key: pagesKey, file: page.file }, msgs)
   }
 
   for (const doc of [...docs('comments'), ...docs('promotions')]) {
@@ -639,7 +636,7 @@ function checkTinkerfund(groupCols: ExpandedCollection[], projectRoot: string, v
     }
   }
   for (const doc of docs('backer')) {
-    report(doc, tinkerfundPledgeRefs((doc.data.pledges ?? []) as TinkerfundPledgeRefs[], campaigns))
+    report(doc, tinkerfundPledgeRefs((doc.data.pledges ?? []) as TinkerfundPledge[], campaigns))
   }
   return checked
 }
@@ -677,25 +674,26 @@ export function validateReferences(cols: ExpandedCollection[], projectRoot = roo
   for (const groupCols of groups.values()) {
     const pagesCol = groupCols.find((c) => c.collection === 'pages' && c.type === 'page')
     if (!pagesCol) continue // no routed guide in this Space — nothing to key Specimens off
-    if (pagesCol.tenant === 'tinkerfund') {
+
+    const pagesCwd = join(projectRoot, pagesCol.cwdRel)
+    const pages: PageDoc[] = globSync(pagesCol.include, { cwd: pagesCwd })
+      .sort()
+      .map((rel) => ({ rel, file: join(pagesCol.cwdRel, rel), ...splitFrontmatter(readFileSync(join(pagesCwd, rel), 'utf8')) }))
+    filesChecked += pages.length
+
+    if (pages.some((p) => p.frontmatter.campaign) || groupCols.some((c) => c.collection === 'backer')) {
       groupsChecked++
-      filesChecked += checkTinkerfund(groupCols, projectRoot, violations)
+      filesChecked += checkTinkerfund(pagesCol.key, pages, groupCols, projectRoot, violations)
       continue
     }
 
-    const pagesCwd = join(projectRoot, pagesCol.cwdRel)
-    const pageRelFiles = globSync(pagesCol.include, { cwd: pagesCwd }).sort()
-
     const specimenSlugs = new Set<string>()
-    const pageBodies = new Map<string, { file: string; frontmatter: Record<string, unknown>; body: string }>()
-    for (const rel of pageRelFiles) {
-      filesChecked++
-      const slug = rel.replace(/\.md$/, '')
+    const pageBodies = new Map<string, PageDoc>()
+    for (const page of pages) {
+      const slug = page.rel.replace(/\.md$/, '')
       if (slug === 'index') continue // the Biome landing page, not a Specimen
-      const raw = readFileSync(join(pagesCwd, rel), 'utf8')
-      const { frontmatter, body } = splitFrontmatter(raw)
       specimenSlugs.add(slug)
-      pageBodies.set(slug, { file: join(pagesCol.cwdRel, rel), frontmatter, body })
+      pageBodies.set(slug, page)
     }
 
     const interactionsCol = groupCols.find((c) => c.collection === 'interactions')
