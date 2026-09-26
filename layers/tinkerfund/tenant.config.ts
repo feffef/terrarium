@@ -14,7 +14,7 @@ const count = z.number().int().nonnegative()
 const zone = z.enum(['domestic', 'europe', 'world'])
 const TOKEN = String.raw`var\(--tf-[a-z-]+\)`
 const THEME_COLOUR = new RegExp(String.raw`^(?:none|currentColor|${TOKEN}|color-mix\(in srgb, *${TOKEN}(?: \d+%)?, *${TOKEN}(?: \d+%)?\))$`)
-const COLOUR_VALUE = /\b(?:fill|stroke|color)\s*(?:=\s*["']|:)\s*([^"';]+)/g
+const COLOUR_VALUE = /\b(?:fill|stroke|color)\s*(?:=\s*["']?|:)\s*([^"';]+)/g
 
 /** Inner SVG markup, coloured only by theme tokens so it reads in both themes
  *  (issue #1363). No ids: the same figure can appear twice on one page. The

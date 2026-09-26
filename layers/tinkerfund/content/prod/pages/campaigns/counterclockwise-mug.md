@@ -110,7 +110,7 @@ campaign:
   addons:
     - { id: coaster, title: Matching coaster, price: 6, claimed: 88 }
     - { id: spare-vane, title: "Spare stirring vane (counterclockwise)", price: 9, claimed: 31 }
-    - { id: travel-lid, title: Travel lid, description: Keeps the stirring in., price: 12, claimed: 214, stock: 300 }
+    - { id: travel-lid, title: Travel lid, description: Keeps the stirring in., price: 12, claimed: 140, stock: 300 }
   stretchGoals:
     - { id: saucer, amount: 16000, title: A saucer that also turns }
     - { id: porcelain, amount: 24000, title: "A third colour: porcelain white" }

@@ -130,6 +130,7 @@ describe('SVG markup', () => {
   it.each([
     ['a hex fill', '<path fill="#c2410c" d="M0 0" />'],
     ['a single-quoted hex fill', `<path fill='#c2410c' d="M0 0" />`],
+    ['an unquoted hex fill', '<path fill=#c2410c d="M0 0" />'],
     ['a named stroke', '<path style="stroke:black" d="M0 0" />'],
     ['a literal inside color-mix', '<path style="fill:color-mix(in srgb, var(--tf-accent) 70%, #000)" d="M0 0" />'],
     ['a non-Tinkerfund variable', '<path fill="var(--accent)" d="M0 0" />'],
