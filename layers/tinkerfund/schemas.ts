@@ -156,12 +156,8 @@ export const pledge = z
   })
   .strict()
 
-// Campaigns live at campaigns/<slug>.md, their Updates at
-// campaigns/<slug>/updates/<n>.md; other pages carry neither field.
-export const page = z.object({
-  campaign: campaign.optional(),
-  update: z.object({ published: offset }).strict().optional(),
-})
+// Campaigns live at campaigns/<slug>.md; other pages carry no campaign.
+export const page = z.object({ campaign: campaign.optional() })
 
 export const inventor = z.object({ name: z.string(), bio: z.string(), portrait: svg(1024) }).strict()
 
@@ -171,6 +167,14 @@ export const commentThread = z
   .object({
     campaign: slug,
     comments: z.array(comment.extend({ replies: z.array(comment).optional() })),
+  })
+  .strict()
+
+export const updateLog = z
+  .object({
+    campaign: slug,
+    /** `body` is plain text; a blank line separates paragraphs. */
+    updates: z.array(z.object({ title: z.string(), published: offset, body: z.string().min(1) }).strict()),
   })
   .strict()
 

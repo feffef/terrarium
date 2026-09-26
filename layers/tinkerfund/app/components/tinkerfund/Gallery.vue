@@ -28,11 +28,12 @@ const { data: docs } = await useAsyncData(`tinkerfund-gallery-${space}`, () =>
   queryCollection(pagesKey).where('campaign', 'IS NOT NULL').all(),
 )
 const { data: extra } = await useAsyncData(`tinkerfund-gallery-extra-${space}`, async () => {
-  const [threads, backer] = await Promise.all([
+  const [threads, logs, backer] = await Promise.all([
     queryCollection(collections.comments).all(),
+    queryCollection(collections.updates).all(),
     queryCollection(collections.backer).first(),
   ])
-  return { threads, backer }
+  return { threads, logs, backer }
 })
 
 const campaigns = computed(() =>
@@ -51,6 +52,7 @@ const campaigns = computed(() =>
     .sort((a, b) => a.campaign.registry.localeCompare(b.campaign.registry)),
 )
 const thread = computed(() => extra.value?.threads[0])
+const log = computed(() => extra.value?.logs[0])
 const pinned = computed(() => new Date(now.value).toISOString())
 const backing = (slug: string, state: CampaignState, refusals: Record<string, string> = {}): TinkerfundBacking =>
   ({ slug, state, refusals, add: () => {} })
@@ -280,6 +282,20 @@ const bounds = computed(() => tinkerfundPriceBounds(cards.value))
         />
         <div><TinkerfundCancelPledge :reference="FIXTURE.lamp.pledge" :title="FIXTURE.lamp.title" /></div>
       </div>
+    </section>
+
+    <section aria-labelledby="gallery-updates">
+      <h2 id="gallery-updates">Updates <code>TinkerfundUpdates</code></h2>
+      <ul class="specimens">
+        <li v-if="log" class="specimen tf-panel">
+          <p class="case">{{ log.campaign }}: the newest Update open</p>
+          <TinkerfundUpdates :updates="log.updates" :now="now" />
+        </li>
+        <li class="specimen tf-panel">
+          <p class="case">No Updates</p>
+          <TinkerfundUpdates :updates="[]" :now="now" />
+        </li>
+      </ul>
     </section>
 
     <section aria-labelledby="gallery-comments">

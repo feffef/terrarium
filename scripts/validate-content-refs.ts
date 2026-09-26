@@ -24,9 +24,11 @@
 //     #521) naming no real Document in this (Tenant, Space)'s `artifacts`
 //     collection — otherwise silent until a human/agent views the rendered
 //     page and hits the runtime "Artifact not found" fallback (issue #773).
-//   - A Tinkerfund Campaign, Update, comment thread, Promotion or past Pledge
-//     naming a Campaign, Inventor, category, Reward, option or Add-on that
-//     isn't in its Space, or a Campaign/Update page off its path (issue #1366).
+//   - A Tinkerfund Campaign, Updates file, comment thread, Promotion or past
+//     Pledge naming a Campaign, Inventor, category, Reward, option or Add-on
+//     that isn't in its Space, a Campaign page off its path (issue #1366), an
+//     Update dated before its Campaign launched, or any Update on an Upcoming
+//     Campaign.
 //
 // Scope: this pass only fires on a (Tenant, Space) that actually has an
 // Atlas-shaped collection (a `pages` Document with `phenology`, alongside
@@ -45,7 +47,8 @@ import { pathToFileURL } from 'node:url'
 import type { z } from 'zod'
 import { expand, loadManifests, root, type ExpandedCollection } from '../shared/expand.ts'
 import { DIG_SEASON_SLUGS, digSeasonOf, type DigSeason } from '../layers/midden/app/utils/strata.ts'
-import type { campaign, pledge } from '../layers/tinkerfund/schemas.ts'
+import { TINKERFUND_OFFSET, resolveTinkerfundOffset } from '../layers/tinkerfund/app/utils/clock.ts'
+import type { campaign, pledge, updateLog } from '../layers/tinkerfund/schemas.ts'
 import { parseDocument, splitFrontmatter } from './validate-content.ts'
 
 export interface RefViolation {
@@ -538,11 +541,11 @@ function checkArtifacts(
 
 type TinkerfundCampaign = z.infer<typeof campaign>
 type TinkerfundPledge = z.infer<typeof pledge>
+type TinkerfundUpdate = z.infer<typeof updateLog>['updates'][number]
 
 type PageDoc = ReturnType<typeof splitFrontmatter> & { rel: string; file: string }
 
 const TF_CAMPAIGN_PAGE = /^campaigns\/([^/]+)\.md$/
-const TF_UPDATE_PAGE = /^campaigns\/([^/]+)\/updates\/[^/]+\.md$/
 
 function pledgeRefs(pledges: TinkerfundPledge[], campaigns: Map<string, TinkerfundCampaign>): string[] {
   const msgs: string[] = []
@@ -572,6 +575,20 @@ function pledgeRefs(pledges: TinkerfundPledge[], campaigns: Map<string, Tinkerfu
     })
   })
   return msgs
+}
+
+function updateRefs(slug: string, campaign: TinkerfundCampaign, updates: TinkerfundUpdate[]): string[] {
+  const at = (offset: string) => (TINKERFUND_OFFSET.test(offset) ? resolveTinkerfundOffset(offset, 0) : undefined)
+  const launch = at(campaign.launch)
+  if (launch === undefined) return []
+  // Offsets count from "now", so a positive launch is an Upcoming Campaign (utils/status.ts).
+  if (launch > 0 && updates.length) return [`updates: "${slug}" is Upcoming, so it has no Updates yet`]
+  return updates.flatMap((update, i) => {
+    const published = at(update.published)
+    return published !== undefined && published < launch
+      ? [`updates.${i}.published: "${update.published}" is before "${slug}" launched (${campaign.launch})`]
+      : []
+  })
 }
 
 /** Returns how many data Documents it checked; the caller counts the pages. */
@@ -619,16 +636,16 @@ function checkCampaignsAndPledges(
       if (holder) msgs.push(`campaign.registry: "${campaign.registry}" is already used by ${holder}`)
       else registries.set(campaign.registry, slug ?? page.rel)
     }
-    const updateOf = TF_UPDATE_PAGE.exec(page.rel)?.[1]
-    if (updateOf) {
-      if (!page.frontmatter.update) msgs.push('an Update page must carry update frontmatter')
-      if (!campaigns.has(updateOf)) msgs.push(`updates a Campaign "${updateOf}" that is not in this Space`)
-    } else if (page.frontmatter.update) {
-      msgs.push('update frontmatter belongs only on a page at campaigns/<slug>/updates/<n>.md')
-    }
     report({ key: pagesKey, file: page.file }, msgs)
   }
 
+  for (const doc of docs('updates')) {
+    const slug = doc.data.campaign as string
+    const campaign = campaigns.get(slug)
+    report(doc, campaign
+      ? updateRefs(slug, campaign, (doc.data.updates ?? []) as TinkerfundUpdate[])
+      : [`campaign: "${slug}" is not a Campaign in this Space`])
+  }
   for (const doc of [...docs('comments'), ...docs('promotions')]) {
     const campaign = doc.data.campaign
     if (typeof campaign === 'string' && !campaigns.has(campaign)) {

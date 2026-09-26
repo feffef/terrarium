@@ -36,8 +36,8 @@ the tests a new Campaign disturbs.
    - Inventor: reuse one, or add `inventors/<slug>.yml` (a one-sentence bio in
      the voice, a portrait ≤ 1024 B on a 100×100 viewBox, tokens only).
    - Live or Ended: `comments/<slug>.yml` with 5–10 comments, some with one
-     level of Inventor replies (`inventor: true`), and 2–3 Updates at
-     `pages/campaigns/<slug>/updates/<n>.md` (`update.published`).
+     level of Inventor replies (`inventor: true`), and 2–3 Updates in
+     `updates/<slug>.yml`, each dated within the Campaign's timeline.
    - Upcoming: no comments, no Updates, 0 Backers.
    Done when every dated thing sits inside the Campaign's own timeline and says
    nothing its date contradicts (no "arrived" before the Reward's `delivery`, no

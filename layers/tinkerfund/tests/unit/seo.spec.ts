@@ -29,11 +29,6 @@ describe('tinkerfundSeo', () => {
       .toBe('Back independent inventors and their inventions before they reach anyone else.')
   })
 
-  it('marks an Update as an article', () => {
-    expect(tinkerfundSeo({ kind: 'update', space: 'prod', title: 'We shipped' }).ogType).toBe('article')
-    expect(tinkerfundSeo({ kind: 'campaign', space: 'prod', title: 'Mug' }).ogType).toBe('website')
-  })
-
   it('keeps the visitor-only pages and the 404 out of search results', () => {
     expect(tinkerfundSeo({ kind: 'private', space: 'prod', title: 'Cart' }).robots).toBe('noindex, nofollow')
     const notFound = tinkerfundSeo({ kind: 'not-found', space: 'prod' })
