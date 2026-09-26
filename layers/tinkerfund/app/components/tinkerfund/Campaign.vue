@@ -35,9 +35,10 @@ const category = computed(() => categories.value.find((x) => x.slug === c.value.
 
 const drawer = useTemplateRef('drawer')
 const refusals = ref<Record<string, string>>({})
+const pledge = computed(() => tinkerfundPledgeFor(pledges.value, slug.value))
 const needsReward = computed(() => !tinkerfundRewarded(
   cart.value.groups.find((g) => g.campaign === slug.value)?.lines ?? [],
-  tinkerfundPledgeFor(pledges.value, slug.value),
+  pledge.value,
 ))
 
 function addToCart(request: TinkerfundCartRequest) {
@@ -70,7 +71,7 @@ const backing = computed<TinkerfundBacking>(() => ({ slug: slug.value, state: st
         :campaign="c"
         :deals="deals"
         :clock="clock"
-        :pledge="tinkerfundPledgeFor(pledges, slug)?.ref"
+        :pledge-ref="pledge?.ref"
       />
     </div>
 
@@ -128,7 +129,7 @@ const backing = computed<TinkerfundBacking>(() => ({ slug: slug.value, state: st
 
     <div class="tf-backbar">
       <span v-if="from !== undefined" class="from">From <b>{{ money(from) }}</b></span>
-      <TinkerfundCampaignAction :slug="slug" :state="status.state" />
+      <TinkerfundCampaignAction :slug="slug" :state="status.state" quiet />
     </div>
     <TinkerfundMiniCart ref="drawer" :view="cart" />
   </article>

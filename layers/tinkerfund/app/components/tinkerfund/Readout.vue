@@ -11,7 +11,7 @@ const props = defineProps<{
   deals: TinkerfundPromotion[]
   clock: TinkerfundClock
   /** The visitor's own Pledge on this Campaign, if any. */
-  pledge?: string
+  pledgeRef?: string
   /** The page's h1 by default; the qa gallery shows several at once. */
   heading?: 'h1' | 'h3'
 }>()
@@ -44,8 +44,8 @@ const from = computed(() => campaignPriceFrom(props.campaign.rewards))
     <p v-for="deal in deals" :key="deal.stem" class="deals">
       <TinkerfundDealBadge :promotion="deal" />
     </p>
-    <p v-if="pledge" class="backed">
-      You backed this Campaign · <NuxtLink :to="link(`/account/pledges/${pledge}`)">Pledge {{ pledge }}</NuxtLink>
+    <p v-if="pledgeRef" class="backed">
+      You backed this Campaign · <NuxtLink :to="link(`/account/pledges/${pledgeRef}`)">Pledge {{ pledgeRef }}</NuxtLink>
     </p>
     <TinkerfundCampaignAction :slug="slug" :state="status.state" />
   </div>

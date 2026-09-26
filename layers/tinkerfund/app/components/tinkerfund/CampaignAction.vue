@@ -1,7 +1,12 @@
 <script setup lang="ts">
 // Only a Live Campaign takes Pledges (issue #1364): Upcoming offers a
 // reminder, Ended is locked.
-const props = defineProps<{ slug: string; state: CampaignState }>()
+const props = defineProps<{
+  slug: string
+  state: CampaignState
+  /** A second copy of the action on the same page shows its message without announcing it twice. */
+  quiet?: boolean
+}>()
 const { space } = useTinkerfundSpace()
 const notify = useState(`tinkerfund-notify-${space}-${props.slug}`, () => false)
 </script>
@@ -13,7 +18,7 @@ const notify = useState(`tinkerfund-notify-${space}-${props.slug}`, () => false)
       <svg viewBox="0 0 24 24" aria-hidden="true"><path :d="notify ? 'M5 12.5l4.5 4.5L19 7.5' : 'M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15zM10 20.5h4'" /></svg>
       Notify me
     </button>
-    <span class="said" role="status">{{ notify ? 'We will tell you when it launches.' : '' }}</span>
+    <span class="said" :role="quiet ? undefined : 'status'">{{ notify ? 'We will tell you when it launches.' : '' }}</span>
   </span>
   <p v-else class="tf-btn locked">
     <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2" /><path d="M8 11V8a4 4 0 0 1 8 0v3" /></svg>
