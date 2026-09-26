@@ -35,6 +35,20 @@ const campaigns = computed(() =>
 const zones = computed(() => Object.fromEntries((extra.value?.shop?.zones ?? []).map((z) => [z.id, z.name])))
 const thread = computed(() => extra.value?.threads[0])
 const pinned = computed(() => new Date(now.value).toISOString())
+
+// A Cart that hits every notice at once, shipped to Europe.
+const cartSpecimen = computed(() => resolveTinkerfundCart(
+  [
+    { campaign: 'last-minute-lamp', lines: [{ reward: 'lamp', options: { colour: 'white' }, quantity: 1 }], addons: [{ id: 'bulb', quantity: 1 }], bonus: 3 },
+    { campaign: 'goal-exact-stapler', lines: [{ reward: 'early-bird', options: {}, quantity: 1 }, { reward: 'stapler', options: {}, quantity: 2 }], addons: [{ id: 'staple', quantity: 3 }] },
+    { campaign: 'indoor-hammock', lines: [{ reward: 'hammock', options: {}, quantity: 1 }], addons: [] },
+    { campaign: 'self-assembling-workbench', lines: [], addons: [], bonus: 25 },
+  ],
+  Object.fromEntries(campaigns.value.map((doc) => [doc.slug, { title: doc.title, campaign: doc.campaign }])),
+  now.value,
+  'europe',
+))
+const miniCart = useTemplateRef('miniCart')
 </script>
 
 <template>
@@ -113,6 +127,36 @@ const pinned = computed(() => new Date(now.value).toISOString())
       </ul>
     </section>
 
+    <section aria-labelledby="gallery-support">
+      <h2 id="gallery-support">Bonus support <code>TinkerfundSupportCard</code></h2>
+      <ul class="specimens">
+        <li class="stack">
+          <p class="case">Live</p>
+          <TinkerfundSupportCard slug="last-minute-lamp" state="live" />
+        </li>
+        <li class="stack">
+          <p class="case">Ended, with a refusal</p>
+          <TinkerfundSupportCard slug="indoor-hammock" state="ended" refusal="Pledging has closed" />
+        </li>
+      </ul>
+    </section>
+
+    <section aria-labelledby="gallery-cart">
+      <h2 id="gallery-cart">Cart <code>TinkerfundCartGroup</code> <code>TinkerfundMiniCart</code></h2>
+      <p class="case">
+        Shipped to Europe: a Reward that doesn’t ship there, sold-out lines, an Ended Campaign, and a no-Reward Pledge.
+      </p>
+      <div class="cart">
+        <TinkerfundCartGroup v-for="group in cartSpecimen.groups" :key="group.campaign" :space="space" :group="group" zone="Europe" />
+      </div>
+      <p>
+        <button type="button" class="tf-btn" @click="miniCart?.show({ campaign: 'goal-exact-stapler', reward: 'stapler', options: {}, quantity: 2 })">
+          Open the mini-cart
+        </button>
+      </p>
+      <TinkerfundMiniCart ref="miniCart" :space="space" :view="cartSpecimen" />
+    </section>
+
     <section aria-labelledby="gallery-comments">
       <h2 id="gallery-comments">Comment thread <code>TinkerfundComments</code></h2>
       <ul class="specimens">
@@ -170,6 +214,7 @@ h2 code { color: var(--tf-muted); }
 .specimens.wide { grid-template-columns: repeat(auto-fill, minmax(min(100%, 420px), 1fr)); }
 .stack { display: grid; gap: 6px; align-content: start; }
 .figures { max-width: 560px; }
+.cart { display: grid; gap: 14px; max-width: 760px; }
 .specimen { display: grid; gap: 8px; align-content: start; padding: 16px; }
 .specimen > * { margin: 0; }
 h3 { font-size: 18px; line-height: 1.25; overflow-wrap: anywhere; }

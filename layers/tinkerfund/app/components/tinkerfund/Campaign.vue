@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { TinkerfundCampaign, TinkerfundPage } from '../../types/tinkerfund'
+import type { TinkerfundCampaign, TinkerfundCartRequest, TinkerfundPage } from '../../types/tinkerfund'
 
 // The Campaign page (story #1380, page inventory #1367): one long page, its
 // sections reached by anchor links.
@@ -8,7 +8,6 @@ const props = defineProps<{ doc: TinkerfundPage & { campaign: TinkerfundCampaign
 const { space, pagesKey, collections } = useSpace('tinkerfund')
 const { now, ticking } = await useTinkerfundClock()
 const locale = useTinkerfundLocale()
-const addToCart = useTinkerfundAddToCart()
 const categories = useTinkerfundCategories()
 
 const c = computed(() => props.doc.campaign)
@@ -37,6 +36,19 @@ const comments = computed(() => data.value?.comments ?? [])
 const commentCount = computed(() => comments.value.reduce((n, t) => n + 1 + (t.replies?.length ?? 0), 0))
 const from = computed(() => campaignPriceFrom(c.value.rewards))
 const category = computed(() => categories.value.find((x) => x.slug === c.value.category))
+
+const { view: cart, change: changeCart } = await useTinkerfundCart()
+const drawer = useTemplateRef('drawer')
+// Why the last add was turned away, keyed by what was added.
+const refusals = ref<Record<string, string>>({})
+const needsReward = computed(() => !cart.value.groups.some((g) => g.campaign === slug.value && g.lines.some((l) => 'reward' in l.ref && !l.unavailable)))
+
+function addToCart(request: TinkerfundCartRequest) {
+  const key = 'reward' in request ? `reward:${request.reward}` : 'addon' in request ? `addon:${request.addon}` : 'bonus'
+  const message = changeCart(request)
+  refusals.value = message ? { [key]: message } : {}
+  if (!message) drawer.value?.show(request)
+}
 </script>
 
 <template>
@@ -106,12 +118,21 @@ const category = computed(() => categories.value.find((x) => x.slug === c.value.
             :state="status.state"
             :zones="zones"
             :now="now"
+            :refusal="refusals[`reward:${reward.id}`]"
             @add="addToCart"
           />
           <template v-if="c.addons?.length">
             <h3>Add-ons</h3>
-            <TinkerfundAddonList :slug="slug" :addons="c.addons" :state="status.state" @add="addToCart" />
+            <TinkerfundAddonList
+              :slug="slug"
+              :addons="c.addons"
+              :state="status.state"
+              :needs-reward="needsReward"
+              :refusals="refusals"
+              @add="addToCart"
+            />
           </template>
+          <TinkerfundSupportCard :slug="slug" :state="status.state" :refusal="refusals.bonus" @add="addToCart" />
         </div>
       </section>
 
@@ -139,6 +160,7 @@ const category = computed(() => categories.value.find((x) => x.slug === c.value.
       <span v-if="from !== undefined" class="from">From <b>{{ formatTinkerfundMoney(from, locale) }}</b></span>
       <TinkerfundCampaignAction :slug="slug" :state="status.state" />
     </div>
+    <TinkerfundMiniCart ref="drawer" :space="space" :view="cart" />
   </article>
 </template>
 

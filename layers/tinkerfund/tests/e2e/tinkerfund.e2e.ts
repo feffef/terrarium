@@ -257,6 +257,87 @@ export function registerTinkerfundE2E(): void {
       }
     })
 
+    it('hydrates the Cart cleanly', async () => {
+      await expectCleanHydration('/t/tinkerfund/qa/cart')
+    })
+
+    it('adds from two Campaigns through the drawer, edits the Cart, and keeps prod’s Cart apart', async () => {
+      const page = await createPage()
+      try {
+        await page.goto(url('/t/tinkerfund/qa/campaigns/goal-exact-stapler'), { waitUntil: 'hydration' })
+        const count = page.locator('.head .cart .count')
+        const pledged = () => page.locator('.readout .big').textContent()
+        const before = await pledged()
+        expect(await count.textContent()).toBe('0')
+        expect(await page.getByRole('button', { name: 'Add One more staple to cart' }).isDisabled()).toBe(true)
+
+        const stapler = page.getByRole('article', { name: 'One stapler' })
+        await stapler.getByRole('button', { name: 'More' }).click()
+        await stapler.getByRole('button', { name: 'Add to cart' }).click()
+        const drawer = page.getByRole('dialog', { name: 'Added to your Cart' })
+        await drawer.waitFor()
+        expect(await drawer.textContent()).toMatch(/One stapler[\s\S]*2 × €25[\s\S]*Subtotal · 2 items[\s\S]*€50/)
+        await drawer.getByRole('button', { name: 'Close' }).click()
+
+        await page.getByRole('button', { name: 'Add One more staple to cart' }).click()
+        expect(await drawer.textContent()).toMatch(/One more staple[\s\S]*1 × €1/)
+        await drawer.getByRole('button', { name: 'Close' }).click()
+        await page.getByLabel('Amount (EUR)').fill('5')
+        await page.getByRole('button', { name: 'Add support' }).click()
+        expect(await drawer.textContent()).toMatch(/Bonus support[\s\S]*€5[\s\S]*Subtotal · 3 items[\s\S]*€56/)
+        await drawer.getByRole('button', { name: 'Close' }).click()
+        expect(await count.textContent()).toBe('3')
+        expect(await pledged()).toBe(before)
+
+        await page.goto(url('/t/tinkerfund/qa/campaigns/last-minute-lamp'), { waitUntil: 'hydration' })
+        const lamp = page.getByRole('article', { name: 'One lamp' })
+        await lamp.getByRole('button', { name: 'Add to cart' }).click()
+        await drawer.getByRole('button', { name: 'Close' }).click()
+        await lamp.getByRole('button', { name: 'Add to cart' }).click()
+        expect(await lamp.getByRole('alert').textContent()).toBe('Max 1 per Backer')
+
+        await page.locator('.head .cart').click()
+        await page.waitForURL('**/qa/cart')
+        await expect.poll(() => page.locator('h1').textContent()).toMatch(/Your Cart\s*4 items/)
+        const groups = page.locator('.group h2')
+        expect(await groups.allTextContents()).toEqual(['Goal-Exact Stapler', 'Last-Minute Lamp'])
+        await page.getByRole('button', { name: 'More One stapler' }).click()
+        await expect.poll(() => page.locator('.summary').textContent()).toMatch(/Subtotal\s*€100\s*Shipping\s*€9\s*Estimated total\s*€109/)
+        await page.getByLabel('Estimate shipping to').selectOption('europe')
+        expect(await page.locator('.group', { hasText: 'Last-Minute Lamp' }).textContent()).toContain('Doesn’t ship to Europe')
+
+        await page.reload({ waitUntil: 'hydration' })
+        await expect.poll(() => count.textContent()).toBe('5')
+
+        await page.goto(url('/t/tinkerfund/prod/cart'), { waitUntil: 'hydration' })
+        await expect.poll(() => page.locator('.empty').textContent()).toContain('Your Cart is empty')
+        expect(await count.textContent()).toBe('0')
+      } finally {
+        await page.close()
+      }
+    })
+
+    it('Reset demo empties the Cart and removes only Tinkerfund’s keys', async () => {
+      const page = await createPage()
+      try {
+        await page.goto(url('/t/tinkerfund/qa/campaigns/goal-exact-stapler'), { waitUntil: 'hydration' })
+        await page.evaluate(() => sessionStorage.setItem('journal:keep', '1'))
+        await page.getByRole('article', { name: 'One stapler' }).getByRole('button', { name: 'Add to cart' }).click()
+        await page.getByRole('dialog', { name: 'Added to your Cart' }).getByRole('button', { name: 'Close' }).click()
+        expect(await page.evaluate(() => sessionStorage.getItem('tinkerfund:qa:overlay'))).toContain('stapler')
+
+        await Promise.all([
+          page.waitForEvent('load'),
+          page.locator('.foot').getByRole('button', { name: 'Reset demo' }).click(),
+        ])
+        expect(await page.evaluate(() => sessionStorage.getItem('tinkerfund:qa:overlay'))).toBeNull()
+        expect(await page.evaluate(() => sessionStorage.getItem('journal:keep'))).toBe('1')
+        expect(await page.locator('.head .cart .count').textContent()).toBe('0')
+      } finally {
+        await page.close()
+      }
+    })
+
     it('404s an unknown Space', async () => {
       expect((await fetch('/t/tinkerfund/staging')).status).toBe(404)
     })

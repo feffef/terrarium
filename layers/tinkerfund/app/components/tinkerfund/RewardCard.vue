@@ -7,6 +7,8 @@ const props = defineProps<{
   state: CampaignState
   zones: Record<string, string>
   now: number
+  /** Why the Cart turned the last add away. */
+  refusal?: string
 }>()
 const emit = defineEmits<{ add: [request: TinkerfundCartRequest] }>()
 
@@ -14,7 +16,7 @@ const locale = useTinkerfundLocale()
 const id = useId()
 const stock = computed(() => tinkerfundStock(props.reward))
 const open = computed(() => props.state === 'live' && !stock.value.soldOut)
-const max = computed(() => Math.min(props.reward.limit ?? Infinity, stock.value.left ?? Infinity))
+const max = computed(() => tinkerfundMaxQuantity(props.reward))
 const quantity = ref(1)
 const options = reactive<Record<string, string>>(
   Object.fromEntries((props.reward.options ?? []).map((g) => [g.id, g.choices[0]!.id])),
@@ -73,6 +75,7 @@ function add() {
             {{ button }}
           </button>
         </div>
+        <p v-if="refusal" class="refusal" role="alert">{{ refusal }}</p>
       </fieldset>
     </form>
   </article>
@@ -86,7 +89,8 @@ h3 { margin: 0; font: 700 19px/1.15 var(--tf-font); font-stretch: 88%; overflow-
 .price { margin: 0; font: 600 20px/1 var(--tf-mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
 .desc { color: var(--tf-muted); font-size: 14px; }
 .facts { display: flex; flex-wrap: wrap; gap: 4px 12px; padding: 0; list-style: none; font: 500 12px/1.4 var(--tf-mono); color: var(--tf-muted); }
-.scarce { color: var(--tf-bad); }
+.scarce, .refusal { color: var(--tf-bad); }
+.refusal { margin: 0; font-size: 14px; }
 fieldset { min-width: 0; margin: 0; padding: 0; border: 0; }
 form > fieldset { display: grid; gap: 10px; }
 .group { display: grid; gap: 6px; }
