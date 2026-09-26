@@ -1,0 +1,4 @@
+name: Outdoors
+blurb: Equipment for weather, daylight and the space between them.
+icon: '<circle cx="12" cy="10" r="4" /><path d="M12 2v2M4 10H2M22 10h-2M5 17h14M8 21h8" />'
+order: 3

@@ -2,8 +2,9 @@
 // One Tenant's tile on the root index: header, that Tenant's rooms (the main way
 // in), then a teaser (the default slot, supplied by the page).
 // `dress` names the Tenant whose own global tokens tint the tile (each layer's
-// theme.css registers them on :root), so the tile tracks the Tenant's palette
-// and light/dark pairs without copying a colour.
+// theme.css registers them on :root, or — Tinkerfund — on `.tf-tokens`, which
+// the tile then carries), so the tile tracks the Tenant's palette and
+// light/dark pairs without copying a colour.
 import type { ShowcaseEntry } from '~/utils/showcase'
 
 const props = defineProps<{
@@ -13,7 +14,7 @@ const props = defineProps<{
   noun: string
   blurb: string
   entries: ShowcaseEntry[]
-  dress: 'blog' | 'atlas' | 'midden'
+  dress: 'blog' | 'atlas' | 'midden' | 'tinkerfund'
   teaserLabel: string
 }>()
 
@@ -21,7 +22,7 @@ const { listed, overflow } = listEntries(props.entries)
 </script>
 
 <template>
-  <article class="tile" :class="`tile--${dress}`">
+  <article class="tile" :class="[`tile--${dress}`, { 'tf-tokens': dress === 'tinkerfund' }]">
     <span class="rail" aria-hidden="true">
       <span v-for="e in entries" :key="e.path" class="rail-seg" :style="{ background: e.accent }" />
     </span>
@@ -97,6 +98,12 @@ const { listed, overflow } = listEntries(props.entries)
   --tile-display: var(--midden-serif);
   --tile-panel: var(--midden-paper-2);
   --tile-panel-line: var(--midden-rule);
+}
+.tile--tinkerfund {
+  --tile-accent: var(--tf-accent);
+  --tile-display: var(--tf-font);
+  --tile-panel: var(--tf-surface);
+  --tile-panel-line: var(--tf-line);
 }
 
 .rail {

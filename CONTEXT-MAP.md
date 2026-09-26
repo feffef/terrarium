@@ -22,6 +22,10 @@ context when you work on that Tenant.
 - **Marquee** — [`layers/marquee/CONTEXT.md`](./layers/marquee/CONTEXT.md) —
   Screening, Chapter, Poster; why the Marquee exists (a guest-requested
   demo/content Tenant, ADR-0023, issue #551).
+- **Tinkerfund** — [`layers/tinkerfund/CONTEXT.md`](./layers/tinkerfund/CONTEXT.md) —
+  Campaign, Inventor, Backer, Pledge, Reward, Promotion and the rest of a
+  crowdfunding shop's vocabulary; why Tinkerfund exists (a design-showcase
+  demo/content Tenant, issue #1375).
 - **Commons** — [`layers/commons/CONTEXT.md`](./layers/commons/CONTEXT.md) — why the
   Commons exists: the first **Aggregator** (a platform view reading across Tenants
   via the **Catalog**), with **Search** and **Timeline** Spaces, validating the

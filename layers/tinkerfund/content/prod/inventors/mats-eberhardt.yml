@@ -1,0 +1,7 @@
+name: Mats Eberhardt
+bio: Sensor engineer in Bergen, where it rains on about two hundred days a year. Built the first prototype to settle an argument about whether it was raining.
+portrait: |-
+  <path d="M18 96c4-22 18-32 32-32s28 10 32 32z" style="fill:var(--tf-muted)" />
+  <circle cx="50" cy="38" r="18" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" />
+  <path d="M34 42c2 18 30 18 32 0c-4 6-8 8-16 8s-12-2-16-8z" style="fill:var(--tf-ink)" />
+  <path d="M30 32c4-14 36-14 40 0l6 2H24z" style="fill:var(--tf-ink)" />

@@ -1,0 +1,32 @@
+campaign: rain-aware-umbrella
+comments:
+  - author: Ingrid H.
+    posted: -8d
+    text: Will it tell me when it stops raining?
+    replies:
+      - author: Mats Eberhardt
+        posted: -8d
+        text: It will stop telling you that it is raining.
+        inventor: true
+  - author: Callum R.
+    posted: -7d
+    text: Sad it doesn’t ship to Canada. We have rain here too.
+    replies:
+      - author: Mats Eberhardt
+        posted: -6d
+        text: We believe you. Shipping outside Europe is something we will look at after the Campaign.
+        inventor: true
+  - author: Aiko T.
+    posted: -5d
+    text: Backed the household pack. Now all three of us will know.
+  - author: Bram de V.
+    posted: -3d
+    text: Just picked up the 15% deal. The slate canopy looks very serious, which I like.
+  - author: Nadia S.
+    posted: -1d
+    text: Does the app work indoors?
+    replies:
+      - author: Mats Eberhardt
+        posted: -20h
+        text: Yes. Indoors it will tell you, correctly, that it is not raining.
+        inventor: true

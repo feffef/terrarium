@@ -1,0 +1,7 @@
+name: Lucía Ferrer
+bio: Clockmaker in Valencia, trained on the repair of tower clocks. Believes most mornings would benefit from nine more minutes.
+portrait: |-
+  <path d="M18 96c4-22 18-32 32-32s28 10 32 32z" style="fill:color-mix(in srgb, var(--tf-accent) 72%, var(--tf-ink))" />
+  <circle cx="50" cy="38" r="18" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" />
+  <path d="M32 34a18 18 0 0 1 36 0c-6-6-30-6-36 0z" style="fill:var(--tf-ink)" />
+  <path d="M36 40h10M54 40h10M46 40h8M36 40a5 5 0 0 0 10 0M54 40a5 5 0 0 0 10 0" style="fill:none;stroke:var(--tf-surface);stroke-width:2" />

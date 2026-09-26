@@ -1,0 +1,5 @@
+title: Lamp week (scheduled)
+campaign: last-minute-lamp
+discount: { amount: 2 }
+start: +2d
+end: +9d

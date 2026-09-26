@@ -1,0 +1,7 @@
+name: Noor Haddad
+bio: Firmware engineer in Rotterdam. Spent four years reducing a full-size keyboard to the one key she actually used, and has not looked back.
+portrait: |-
+  <path d="M18 96c4-22 18-32 32-32s28 10 32 32z" style="fill:var(--tf-link)" />
+  <circle cx="50" cy="16" r="9" style="fill:var(--tf-ink)" />
+  <circle cx="50" cy="38" r="18" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" />
+  <path d="M32 36a18 18 0 0 1 36 0c-8-8-28-8-36 0z" style="fill:var(--tf-ink)" />

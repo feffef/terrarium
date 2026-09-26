@@ -1,0 +1,5 @@
+title: Five euros off everything (expired code)
+code: EXPIRED5
+discount: { amount: 5 }
+start: -30d
+end: -3d
