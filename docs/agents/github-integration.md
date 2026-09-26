@@ -191,10 +191,10 @@ instead of retried as a keyword query.
 **Recovery tip:** if the retry above still comes back empty, broaden the
 string into a phrase rather than a bare name.
 
-**Known gap:** the wayfinding *Blocking* recipes (`gh api …/dependencies/blocked_by`)
-have **no MCP equivalent** — native issue dependencies aren't exposed as MCP
-tools. Use the `Blocked by: #<n>` body-line fallback described under
-[`issue-tracker.md`](./issue-tracker.md)'s Wayfinding operations instead.
+**No MCP tool for issue dependencies** (wayfinding *Blocking*): `curl` the same
+REST endpoint with `$GH_TOKEN` and `Content-Type: application/json` (the proxy
+answers 415 without it). A summary read right after a write can be stale
+(issue #1373).
 
 **Known gap:** there is **no GitHub API to attach a file or image directly to
 an issue or issue comment** — neither REST nor GraphQL exposes an attachment
