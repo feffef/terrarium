@@ -306,7 +306,7 @@ export function registerTinkerfundE2E(): void {
         await page.getByLabel('Estimate shipping to').selectOption('europe')
         expect(await page.locator('.group', { hasText: 'Last-Minute Lamp' }).textContent()).toContain('Doesn’t ship to Europe')
 
-        await page.reload({ waitUntil: 'hydration' })
+        await page.reload()
         await expect.poll(() => count.textContent()).toBe('5')
 
         await page.goto(url('/t/tinkerfund/prod/cart'), { waitUntil: 'hydration' })
