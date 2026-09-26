@@ -103,7 +103,7 @@ tbody tr:hover { background: var(--tf-accent-soft); }
   .wide, .inv svg, .funded .mini { display: none; }
   .state { width: 1%; }
   .state :deep(.chip) { white-space: normal; }
-  .inv { min-width: 0; font-size: 14px; }
+  .inv { min-width: 0; font-size: 13px; }
   th, td { padding: 10px 6px; }
   thead th { letter-spacing: 0; }
 }
