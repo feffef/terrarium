@@ -75,5 +75,5 @@ span {
   transition: background-color var(--tf-dur) var(--tf-ease), color var(--tf-dur) var(--tf-ease);
 }
 input:checked + span { background: var(--tf-ink); color: var(--tf-surface); }
-input:focus-visible + span { outline: 2px solid var(--tf-link); outline-offset: -2px; }
+.options:has(input:focus-visible) { outline: 2px solid var(--tf-link); outline-offset: 2px; }
 </style>

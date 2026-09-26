@@ -52,6 +52,45 @@ export function registerTinkerfundE2E(): void {
       expect(html).toContain('Demo shop — nothing here is real')
     })
 
+    // Chromium's default placeholder grey misses 4.5:1 on --tf-bg, and the
+    // placeholder is the field's only visible label.
+    it('draws the search placeholder in the muted token', async () => {
+      const page = await createPage()
+      try {
+        await page.emulateMedia({ colorScheme: 'dark' })
+        await page.goto(url('/t/tinkerfund/qa/how-it-works'), { waitUntil: 'hydration' })
+        const placeholder = await page.locator('.head input[name="q"]').first().evaluate((el) => {
+          const s = getComputedStyle(el, '::placeholder')
+          return { color: s.color, opacity: s.opacity }
+        })
+        expect(placeholder).toEqual({ color: 'rgb(143, 156, 164)', opacity: '1' })
+      } finally {
+        await page.close()
+      }
+    })
+
+    // WCAG 1.4.11: the ring must sit on the surface, not over the checked
+    // option's ink fill.
+    it('rings the theme switch on the surface when tabbed into', async () => {
+      const page = await createPage()
+      try {
+        await page.emulateMedia({ colorScheme: 'dark' })
+        await page.goto(url('/t/tinkerfund/qa/how-it-works'), { waitUntil: 'hydration' })
+        await page.locator('.foot').getByRole('button', { name: 'Reset demo' }).focus()
+        await page.keyboard.press('Tab')
+        expect(await page.getByLabel('System').evaluate((el) => el === document.activeElement)).toBe(true)
+        const ring = await page.locator('.theme .options').evaluate((el) => {
+          const s = getComputedStyle(el)
+          return { style: s.outlineStyle, color: s.outlineColor, offset: s.outlineOffset }
+        })
+        expect(ring).toEqual({ style: 'solid', color: 'rgb(138, 180, 255)', offset: '2px' })
+        const checkedSpan = await page.locator('.theme input:checked + span').evaluate((el) => getComputedStyle(el).outlineStyle)
+        expect(checkedSpan).toBe('none')
+      } finally {
+        await page.close()
+      }
+    })
+
     it('switches theme, keeps it across a reload, and Reset demo returns it to System', async () => {
       const page = await createPage()
       try {
@@ -65,6 +104,7 @@ export function registerTinkerfundE2E(): void {
         expect(await bg()).toBe(light)
         await page.getByLabel('Dark').check()
         expect(await bg()).toBe(dark)
+        expect(await page.evaluate(() => getComputedStyle(document.documentElement).colorScheme)).toBe('dark')
 
         await open()
         expect(await page.evaluate(() => document.documentElement.dataset.tfTheme)).toBe('dark')

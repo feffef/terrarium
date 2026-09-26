@@ -56,7 +56,7 @@ const closeOnBackdrop = (e: MouseEvent) => {
           </button>
         </div>
         <TinkerfundSearchField :action="link('/search')" />
-        <nav aria-label="Menu" @click="menu?.close()">
+        <nav aria-label="Site" @click="menu?.close()">
           <NuxtLink :to="link('/discover')">Discover</NuxtLink>
           <p class="tf-label">Categories</p>
           <NuxtLink v-for="c in TINKERFUND_CATEGORIES" :key="c.slug" class="sub" :to="link(`/category/${c.slug}`)">

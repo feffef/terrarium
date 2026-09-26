@@ -32,8 +32,6 @@
 }
 
 .tf-page {
-  color-scheme: light dark;
-
   --tf-bg: light-dark(#f2f4f3, #0c1013);
   --tf-surface: light-dark(#ffffff, #13191d);
   --tf-ink: light-dark(#11171b, #e1e7ea);
@@ -70,8 +68,10 @@
   font: 400 16px/1.5 var(--tf-font);
   -webkit-font-smoothing: antialiased;
 }
-:root[data-tf-theme='light'] .tf-page { color-scheme: light; }
-:root[data-tf-theme='dark'] .tf-page { color-scheme: dark; }
+/* On <html>, so the page scrollbar and canvas follow the theme too. */
+:root:has(> .tf-page) { color-scheme: light dark; }
+:root[data-tf-theme='light']:has(> .tf-page) { color-scheme: light; }
+:root[data-tf-theme='dark']:has(> .tf-page) { color-scheme: dark; }
 
 @media (prefers-reduced-motion: reduce) {
   .tf-page, .tf-page *, .tf-page *::before, .tf-page *::after {
@@ -83,8 +83,8 @@
 
 /* Page change: a short fade-up, on pages that opt in with
    definePageMeta({ viewTransition: true }). Nuxt skips it under reduced motion. */
-::view-transition-old(root) { animation: 140ms ease both tf-out; }
-::view-transition-new(root) { animation: 220ms var(--tf-ease, ease) both tf-in; }
+:root:has(> .tf-page)::view-transition-old(root) { animation: 140ms ease both tf-out; }
+:root:has(> .tf-page)::view-transition-new(root) { animation: 220ms var(--tf-ease, ease) both tf-in; }
 @keyframes tf-out { to { opacity: 0; } }
 @keyframes tf-in { from { opacity: 0; transform: translateY(8px); } }
 

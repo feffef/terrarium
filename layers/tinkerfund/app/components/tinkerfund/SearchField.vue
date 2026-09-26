@@ -24,6 +24,8 @@ defineProps<{ action: string }>()
   color: var(--tf-muted);
 }
 svg { width: 20px; height: 20px; flex: none; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
-input { width: 100%; border: 0; background: none; outline: none; color: var(--tf-ink); }
+input { width: 100%; border: 0; background: none; color: var(--tf-ink); }
+input::placeholder { color: var(--tf-muted); opacity: 1; }
+input:focus-visible { outline: none; }
 label:focus-within { outline: 2px solid var(--tf-link); outline-offset: 2px; }
 </style>
