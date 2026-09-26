@@ -1,6 +1,7 @@
 <script setup lang="ts">
 const props = defineProps<{ space: string }>()
 const link = (path = '') => tinkerfundPath(props.space, path)
+const categories = useTinkerfundCategories()
 </script>
 
 <template>
@@ -12,7 +13,7 @@ const link = (path = '') => tinkerfundPath(props.space, path)
       </div>
       <nav aria-label="Categories">
         <p class="tf-label">Categories</p>
-        <NuxtLink v-for="c in TINKERFUND_CATEGORIES" :key="c.slug" :to="link(`/category/${c.slug}`)">{{ c.name }}</NuxtLink>
+        <NuxtLink v-for="c in categories" :key="c.slug" :to="link(`/category/${c.slug}`)">{{ c.name }}</NuxtLink>
       </nav>
       <nav aria-label="Tinkerfund">
         <p class="tf-label">Tinkerfund</p>

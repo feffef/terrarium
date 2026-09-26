@@ -5,6 +5,7 @@ const route = useRoute()
 const { space, path, pagesKey } = useSpace('tinkerfund')
 
 const { data: doc, status, error } = await useAsyncData(route.path, () => queryCollection(pagesKey).path(path).first())
+const { now, ticking } = await useTinkerfundClock()
 
 if (!doc.value && !error.value) setResponseStatus(404)
 
@@ -17,6 +18,7 @@ useSeoMeta(tinkerfundSeo(doc.value
   <TinkerfundShell :space="space">
     <article v-if="doc" class="tf-prose">
       <h1>{{ doc.title }}</h1>
+      <TinkerfundCampaignStatus v-if="doc.campaign" :campaign="doc.campaign" :now="now" :ticking="ticking" />
       <ContentRenderer :value="doc" />
     </article>
 
