@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01CACYSmghwsvBZEtz8BTpMw
 startedAt: 2026-09-26T06:37:43Z
-endedAt: 2026-09-26T06:52:44Z
+endedAt: 2026-09-26T07:10:23Z
 kind: interactive
-goal: "Wayfinder: resolve four Tinkerfund grilling tickets"
+goal: "Wayfinder: work the Tinkerfund map's grilling tickets"
 status: completed
-outcome: Clock, Pledge flow, content model, pages resolved
-summary: 'Human-instructed: the user ran /wayfinder on the Tinkerfund map (issue 1357), then repeatedly asked for the next grilling ticket. Agent resolved "Campaign timeline and the simulated clock", "the Pledge flow (cart, checkout, receipt)" (the user changed one answer to allow multiple Rewards per Pledge), "content model", and "page inventory and navigation". Each ticket was claimed, got a resolution comment, and was closed; the map was updated each time. Agent-initiated per the wayfinder skill: graduated the search fog into a new research ticket "how search works" and added it as a blocker of the spec ticket. No repo code changed, no PR.'
+outcome: Five grilling tickets and search research resolved
+summary: "Human-instructed throughout: the user ran /wayfinder on the Tinkerfund map (issue 1357) and repeatedly asked for the next grilling ticket, then asked to run the search research. Resolved: simulated clock, Pledge flow, content model, page inventory, launch catalog. A research subagent (worktree-isolated, agent-dispatched at the user's request) recommended a server search route; the user ruled out server code entirely, and after the agent verified in @nuxt/content 3.15.0 that every in-app navigation already queries Content in the browser, the user chose consistency with the rest of Terrarium: search like Commons. Agent amended the browser-state and search decisions, and closed the server-route ticket. No repo code changed, no PR."
 prs: []
 docsRead: []
 skillsUsed:
@@ -19,6 +19,10 @@ skillsUsed:
   - name: close-session
     reason: (no reason given)
   - name: log-session
+    reason: (no reason given)
+  - name: dispatch-subagents
+    reason: (no reason given)
+  - name: research
     reason: (no reason given)
 frictions:
   - description: wayfinder skill exists in .claude/skills but was absent from the harness's available-skills list; had to ls to confirm before invoking.
@@ -33,19 +37,38 @@ frictions:
   - description: Resolution comment was blocked by the ADR-0017 guard for a bare <date> placeholder, after the parallel close call had already succeeded, leaving a briefly closed ticket with no answer.
     solution: Post the resolution comment before closing, sequentially rather than in one parallel batch.
     severity: nit
-durationSec: 901
+  - description: The earlier browser-state research set 'no client-side Content queries' without noticing useAsyncData re-queries in the browser on every in-app navigation, so the rule was unkeepable and misled the search research into recommending server code.
+    solution: Research briefs that set a runtime constraint should verify it against how the Platform's own pages actually fetch (the catch-all page) before recording it.
+    severity: moderate
+  - description: Agent relayed the subagent's server-route recommendation and filed a follow-up ticket without first checking it against the map's own Out of scope line ('anything server-side'), costing the user an interrupt.
+    solution: Check new recommendations against the map's Out of scope before surfacing them.
+    severity: minor
+durationSec: 1961
 models:
-  claude-opus-5-5: 101
+  claude-opus-5-5: 157
 toolCounts:
-  Bash: 15
-  Skill: 5
+  Bash: 24
+  Skill: 6
   ToolSearch: 3
-  mcp__github__issue_read: 11
-  mcp__github__issue_write: 15
-  mcp__github__add_issue_comment: 5
+  mcp__github__issue_read: 16
+  mcp__github__issue_write: 23
+  mcp__github__add_issue_comment: 9
+  Agent: 1
+filesEdited:
+  - docs/research/tinkerfund-search.md
 docsReadViaShell:
   - docs/agents/issue-tracker.md
+  - docs/research/mermaid-server-side-rendering.md
+  - docs/adr/0019-patched-nuxt-content-client-db-loading.md
+  - docs/research/nuxt-content-review-grounding.md
+subagents:
+  - type: general-purpose
+    task: Research Tinkerfund search approach
 gitBranch: claude/wayfinder-issue-1357-uj2o5d
 entrypoint: remote_mobile
 cliVersion: 2.1.283
+learnings:
+  - "@nuxt/content 3.15.0 runs queryCollection in the browser via lazily imported @sqlite.org/sqlite-wasm plus a per-collection SQL dump whenever the query executes client-side, including useAsyncData on client-side navigation."
+ideas:
+  - Open a Platform issue asking whether the catch-all page's browser-side Content queries (about 856 KB of WASM plus the Collection's data on the first in-app navigation) are intended; if not, a getCachedData override or payload reuse on the catch-all page could avoid it. It's human-only, so a human must decide.
 landedBy: Stop
