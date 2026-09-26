@@ -78,6 +78,29 @@ describe('quoting a checkout', () => {
     expect(quote({ cart: more, pledges: [mugs], zone: 'europe' })).toMatchObject({ subtotal: 3, shipping: 2, total: 5 })
   })
 
+  describe('adding to a Pledge that earned a Promotion', () => {
+    const lamp: TinkerfundPledge = {
+      ref: 'TF-P-9001', campaign: 'lamp', placed: NOW, zone: 'domestic', payment: 'demo-card',
+      lines: [{ reward: 'lamp', options: black, quantity: 1 }], addons: [], promotions: [], discount: 0, shipping: 5,
+    }
+    const oneMore = [{ campaign: 'lamp', lines: [{ reward: 'lamp', options: { colour: 'white' }, quantity: 1 }], addons: [] }]
+
+    it('takes a fixed amount off once per Pledge, never again on a merge', () => {
+      const fiveOff = promotion({ title: 'Five off every Pledge', discount: { amount: 5 } })
+      const earned = { ...lamp, promotions: [fiveOff.id], discount: 5 }
+      const q = quote({ cart: oneMore, pledges: [earned], at: { promotions: [fiveOff] } })
+      expect(q).toMatchObject({ subtotal: 20, discount: 0, shipping: 0, total: 20 })
+      const placed = placeTinkerfundPledges({ state: { cart: oneMore, pledges: [earned] }, quote: q, zone: 'domestic', payment: 'demo-card', shop: shop({ promotions: [fiveOff] }) })
+      expect(placed.state.pledges[0]).toMatchObject({ promotions: [fiveOff.id], discount: 5 })
+    })
+
+    it('keeps a percentage it earned on what it adds, though that Promotion has since expired', () => {
+      const expired = promotion({ title: 'Lamp tenth', campaign: 'lamp', discount: { percent: 10 }, end: '-1h' })
+      const earned = { ...lamp, promotions: [expired.id], discount: 2 }
+      expect(quote({ cart: oneMore, pledges: [earned], at: { promotions: [expired] } })).toMatchObject({ discount: 2, total: 18 })
+    })
+  })
+
   it('does not apply a code to a Campaign backed with bonus support only', () => {
     const q = quote({
       cart: [{ campaign: 'lamp', lines: [], addons: [], bonus: 6 }],

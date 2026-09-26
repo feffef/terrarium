@@ -8,6 +8,8 @@ import {
   settleTinkerfundPledge,
   tinkerfundCartLineKey,
   tinkerfundCents as cents,
+  tinkerfundDiscount,
+  tinkerfundGoods,
   tinkerfundDoesntShip,
   tinkerfundHeld,
   tinkerfundLimitNotice,
@@ -61,22 +63,31 @@ function findCode(promotions: TinkerfundPromotionTerms[], entered: string | unde
   return { promotion }
 }
 
-/** Automatic discounts plus at most one code, off Rewards and Add-ons only (issue #1365). */
+/**
+ * Automatic discounts plus at most one code, off Rewards and Add-ons only
+ * (issue #1365). Adding to a Pledge quotes the change in its discount: the
+ * terms it already earned cover what is added, and one earned again adds
+ * nothing.
+ */
 export function quoteTinkerfundCheckout(view: TinkerfundCartView, shop: TinkerfundShop, code: string | undefined): TinkerfundQuote {
   const entered = findCode(shop.promotions, code, view.groups.filter((g) => goodsOf(g) > 0).map((g) => g.campaign), shop.now)
   const deals = new Set<string>()
   const groups = view.groups.map((group): TinkerfundQuoteGroup => {
     const goods = goodsOf(group)
-    const applied = [
-      ...tinkerfundAutomaticDeals(shop.promotions, group.campaign, shop.now),
-      ...(entered.promotion && tinkerfundPromotionTargets(entered.promotion, group.campaign) ? [entered.promotion] : []),
-    ]
-    const off = applied.map((p) => {
-      if (goods > 0) deals.add(p.title)
-      return 'percent' in p.discount ? (goods * p.discount.percent) / 100 : p.discount.amount
-    })
-    const discount = Math.min(goods, sum(off))
-    return { ...group, promotions: goods > 0 ? applied.map((p) => p.id) : [], discount, total: cents(group.subtotal - discount + group.shipping) }
+    const { existing } = group
+    const held = existing?.promotions ?? []
+    const earned = goods > 0
+      ? [
+          ...tinkerfundAutomaticDeals(shop.promotions, group.campaign, shop.now),
+          ...(entered.promotion && tinkerfundPromotionTargets(entered.promotion, group.campaign) ? [entered.promotion] : []),
+        ].filter((p) => !held.includes(p.id))
+      : []
+    for (const p of earned) deals.add(p.title)
+    const campaign = shop.catalog[group.campaign]?.campaign
+    const heldGoods = existing && campaign ? tinkerfundGoods(existing, campaign) : 0
+    const terms = [...shop.promotions.filter((p) => held.includes(p.id)), ...earned]
+    const discount = cents(tinkerfundDiscount(heldGoods + goods, terms) - (existing?.discount ?? 0))
+    return { ...group, promotions: earned.map((p) => p.id), discount, total: cents(group.subtotal - discount + group.shipping) }
   })
   const discount = sum(groups.map((g) => g.discount))
   return {
