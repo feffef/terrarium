@@ -67,6 +67,17 @@ describe('quoting a checkout', () => {
     expect(withCode('')).toMatchObject({ code: undefined, codeProblem: undefined })
   })
 
+  it('charges a Pledge’s shipping once: adding to one that already ships quotes only the difference', () => {
+    const mugs: TinkerfundPledge = {
+      ref: 'TF-P-9001', campaign: 'mug', placed: NOW, zone: 'domestic', payment: 'demo-card',
+      lines: [{ reward: 'mug', options: {}, quantity: 1 }], addons: [], discount: 0, shipping: 2,
+    }
+    const more = [{ campaign: 'mug', lines: [{ reward: 'mug', options: {}, quantity: 1 }], addons: [] }]
+    expect(quote({ cart: more, pledges: [mugs] })).toMatchObject({ subtotal: 3, shipping: 0, total: 3 })
+    // Moving it to Europe re-rates the whole Pledge: €4 instead of the €2 it paid.
+    expect(quote({ cart: more, pledges: [mugs], zone: 'europe' })).toMatchObject({ subtotal: 3, shipping: 2, total: 5 })
+  })
+
   it('does not apply a code to a Campaign backed with bonus support only', () => {
     const q = quote({
       cart: [{ campaign: 'lamp', lines: [], addons: [], bonus: 6 }],

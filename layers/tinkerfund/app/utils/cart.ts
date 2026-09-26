@@ -295,7 +295,10 @@ export interface TinkerfundCartGroup {
   lines: TinkerfundCartLine[]
   bonus?: number
   closed?: string
+  /** The Pledge this Campaign already has, which checkout adds to (issue #1365). */
+  existing?: TinkerfundPledge
   subtotal: number
+  /** What shipping the Pledge adds: it pays its zone's rate once, and moving zone re-rates all of it. */
   shipping: number
 }
 
@@ -338,15 +341,17 @@ export function resolveTinkerfundCart(state: TinkerfundBackerState, shop: Tinker
     })
     const lines = [...rewards, ...addons]
     if (!lines.length && !draft.bonus) return []
-    const shipped = rewards.flatMap((l) => ('reward' in l.ref && l.ships && !l.unavailable ? [l.ref] : []))
+    const existing = tinkerfundPledgeFor(state.pledges, draft.campaign)
+    const shipped = [...existing?.lines ?? [], ...rewards.flatMap((l) => ('reward' in l.ref && l.ships && !l.unavailable ? [l.ref] : []))]
     return [{
       campaign: draft.campaign,
       title: entry.title,
       lines,
       bonus: draft.bonus,
       closed,
+      existing,
       subtotal: tinkerfundSum([...lines.map((l) => l.amount), closed ? 0 : draft.bonus ?? 0]),
-      shipping: tinkerfundShipping(shipped, campaign, zone),
+      shipping: tinkerfundCents(tinkerfundShipping(shipped, campaign, zone) - (existing?.shipping ?? 0)),
     }]
   })
   const subtotal = tinkerfundSum(groups.map((g) => g.subtotal))

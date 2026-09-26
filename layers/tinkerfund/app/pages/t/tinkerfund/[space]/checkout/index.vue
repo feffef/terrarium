@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { TinkerfundCartGroup } from '../../../../../utils/cart'
+
 // The focused checkout (story #1384, Pledge flow #1365). Every choice lives in
 // the URL query, so browser Back walks the steps and a reload keeps them.
 definePageMeta({ viewTransition: true })
@@ -13,7 +15,7 @@ const money = useTinkerfundMoney()
 const query = (key: string) => (typeof route.query[key] === 'string' ? route.query[key] : undefined)
 
 const chosen = computed(() => tinkerfundZone.safeParse(query('zone')).data)
-const [{ shop, zoneName, status, error }, { loaded, zone, view, quote: quoteFor, place, pledges, backer }] =
+const [{ shop, zoneName, status, error }, { loaded, zone, view, quote: quoteFor, place, backer }] =
   await Promise.all([useTinkerfundShop(), useTinkerfundCart(chosen)])
 
 const step = computed(() => Math.max(0, STEPS.indexOf(query('step') as (typeof STEPS)[number])))
@@ -21,7 +23,13 @@ const payment = computed(() => shop.value?.payments.find((p) => p.id === query('
 
 const quote = computed(() => quoteFor(query('code')))
 const stranded = computed(() => view.value.groups.some((g) => g.closed || g.lines.some((l) => l.unavailable || !l.ships)))
-const adding = (campaign: string) => tinkerfundPledgeFor(pledges.value, campaign)?.ref
+function addsTo({ existing, shipping }: TinkerfundCartGroup) {
+  if (!existing) return undefined
+  const moves = existing.zone === zone.value
+    ? ''
+    : `, which moves from ${zoneName(existing.zone)}: it ships for ${money(existing.shipping + shipping)} instead of ${money(existing.shipping)}`
+  return `Adds to your Pledge ${existing.ref}${moves}`
+}
 
 // A choice replaces the entry; a step pushes one, so Back returns to it.
 const choose = (change: Record<string, string | undefined>) => router.replace({ query: { ...route.query, ...change } })
@@ -80,7 +88,7 @@ useSeoMeta(tinkerfundSeo({ kind: 'private', space, title: 'Checkout' }))
                 <span>{{ z.name }}</span>
               </label>
             </fieldset>
-            <TinkerfundPledgeSummary v-for="group in quote.groups" :key="group.campaign" :space="space" :pledge="group" :zone="zoneName(zone)" />
+            <TinkerfundPledgeSummary v-for="group in quote.groups" :key="group.campaign" :space="space" :pledge="group" :zone="zoneName(zone)" :note="addsTo(group)" />
             <p v-if="stranded" class="refusal" role="alert">
               Something here can’t be pledged to {{ zoneName(zone) }}. Choose another zone, or
               <NuxtLink :to="tinkerfundPath(space, '/cart')">change your Cart</NuxtLink>.
@@ -117,7 +125,7 @@ useSeoMeta(tinkerfundSeo({ kind: 'private', space, title: 'Checkout' }))
               :space="space"
               :pledge="group"
               :zone="zoneName(zone)"
-              :note="adding(group.campaign) && `Adds to your Pledge ${adding(group.campaign)}`"
+              :note="addsTo(group)"
             />
             <p class="note">One Pledge per Campaign. You’re only charged if a Campaign is funded, when it ends.</p>
             <p v-if="stranded" class="refusal" role="alert">
