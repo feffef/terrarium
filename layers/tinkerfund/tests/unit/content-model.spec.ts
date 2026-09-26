@@ -129,6 +129,7 @@ describe('SVG markup', () => {
 
   it.each([
     ['a hex fill', '<path fill="#c2410c" d="M0 0" />'],
+    ['a single-quoted hex fill', `<path fill='#c2410c' d="M0 0" />`],
     ['a named stroke', '<path style="stroke:black" d="M0 0" />'],
     ['a literal inside color-mix', '<path style="fill:color-mix(in srgb, var(--tf-accent) 70%, #000)" d="M0 0" />'],
     ['a non-Tinkerfund variable', '<path fill="var(--accent)" d="M0 0" />'],
@@ -140,10 +141,10 @@ describe('SVG markup', () => {
     const markup = (bytes: number) => `<g>${' '.repeat(bytes - 7)}</g>`
     expect(markup(4096)).toHaveLength(4096)
     expect(issues('pages', figure(markup(4096)))).toEqual([])
-    expect(issues('pages', figure(markup(4098)))).toEqual([expect.stringMatching(/^campaign\.figures\.0\.svg: .*4096 bytes/)])
+    expect(issues('pages', figure(markup(4097)))).toEqual([expect.stringMatching(/^campaign\.figures\.0\.svg: .*4096 bytes/)])
     expect(issues('inventors', { name: 'Ada', bio: 'x', portrait: markup(1024) })).toEqual([])
-    expect(issues('inventors', { name: 'Ada', bio: 'x', portrait: markup(1026) })).toEqual([expect.stringMatching(/^portrait: .*1024 bytes/)])
-    expect(issues('categories', { name: 'Desk', blurb: 'x', icon: markup(1026), order: 1 })).toEqual([expect.stringMatching(/^icon: .*1024 bytes/)])
+    expect(issues('inventors', { name: 'Ada', bio: 'x', portrait: markup(1025) })).toEqual([expect.stringMatching(/^portrait: .*1024 bytes/)])
+    expect(issues('categories', { name: 'Desk', blurb: 'x', icon: markup(1025), order: 1 })).toEqual([expect.stringMatching(/^icon: .*1024 bytes/)])
   })
 
   it('rejects an id, which would collide when a figure is drawn twice on one page', () => {
