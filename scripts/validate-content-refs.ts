@@ -599,16 +599,16 @@ function checkTinkerfund(
 
   const inventors = stems('inventors')
   const categories = stems('categories')
-  const located = pages.map((page) => ({
+  const pageCampaigns = pages.map((page) => ({
     page,
     slug: TF_CAMPAIGN_PAGE.exec(page.rel)?.[1],
     campaign: page.frontmatter.campaign as TinkerfundCampaign | undefined,
   }))
   const campaigns = new Map<string, TinkerfundCampaign>()
-  for (const { slug, campaign } of located) if (slug && campaign) campaigns.set(slug, campaign)
+  for (const { slug, campaign } of pageCampaigns) if (slug && campaign) campaigns.set(slug, campaign)
 
   const registries = new Map<string, string>()
-  for (const { page, slug, campaign } of located) {
+  for (const { page, slug, campaign } of pageCampaigns) {
     const msgs: string[] = []
     if (slug && !campaign) msgs.push('a page at campaigns/<slug>.md must carry campaign frontmatter')
     if (campaign) {
