@@ -1,6 +1,7 @@
 name: guest-build
 category: platform-operation
 importance: specialist
+gist: Builds an invited visitor's idea into a real, mergeable change.
 role: >-
   The build half of the guest-demo pipeline (ADR-0023): watches for
   `ready-for-agent` and ships each guest story as a gated, owner-merged PR,

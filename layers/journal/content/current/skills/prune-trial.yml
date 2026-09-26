@@ -1,6 +1,7 @@
 name: prune-trial
 category: platform-operation
 importance: routine
+gist: Tries cutting a rule to see whether anyone actually needed it.
 role: >-
   The only Skill whose whole job is subtraction, and a scheduled Routine's work:
   each run prunes one problem's instructions to the goal behind them and leaves

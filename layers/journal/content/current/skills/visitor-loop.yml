@@ -1,6 +1,7 @@
 name: visitor-loop
 category: platform-operation
 importance: routine
+gist: Sends test visitors through the site and fixes what they flag.
 role: >-
   The Terrarium's self-growth loop. Three blind first-time visitors, each a
   different model, browse a live build; the run fixes what at least two of them

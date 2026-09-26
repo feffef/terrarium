@@ -262,5 +262,6 @@ function spokeLeave() {
         </a>
       </NuxtLink>
     </svg>
+    <p v-if="view.spokes.length" class="atlas-web-hint" aria-hidden="true">↔ scroll to see the rest</p>
   </div>
 </template>

@@ -82,6 +82,10 @@ export interface SkillDoc {
   name: string
   category: 'platform-operation' | 'general-engineering'
   importance: Importance
+  // ≤12 words, plain language — shown before the jargon-heavier `role` below,
+  // which folds behind a disclosure when this is present (visitor-loop fix,
+  // 2026-09-26). Optional: not authored for `supporting`/`peripheral` Skills.
+  gist?: string
   role: string
   // Internal audit-skills log (ADR-0015 amendment) — not rendered by
   // SkillInventory.vue. Required, like `frictions` on SessionDoc: no

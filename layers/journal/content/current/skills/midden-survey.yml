@@ -1,6 +1,7 @@
 name: midden-survey
 category: platform-operation
 importance: specialist
+gist: Surveys recently discarded code and flags what's worth keeping.
 role: >-
   The Midden's field-walk: sweeps for freshly discarded work — deleted files
   and dropped dependencies mechanically (scripts/midden-survey.ts), closed
