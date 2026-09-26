@@ -1,6 +1,7 @@
 <script setup lang="ts">
 const props = defineProps<{ space: string }>()
 const link = (path = '') => tinkerfundPath(props.space, path)
+const categories = useTinkerfundCategories()
 const menu = useTemplateRef<HTMLDialogElement>('menu')
 const closeOnBackdrop = (e: MouseEvent) => {
   if (e.target === menu.value) menu.value?.close()
@@ -23,7 +24,7 @@ const closeOnBackdrop = (e: MouseEvent) => {
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m7 10 5 5 5-5" /></svg>
         </button>
         <div id="tf-categories" popover class="cats">
-          <NuxtLink v-for="c in TINKERFUND_CATEGORIES" :key="c.slug" :to="link(`/category/${c.slug}`)">
+          <NuxtLink v-for="c in categories" :key="c.slug" :to="link(`/category/${c.slug}`)">
             {{ c.name }}
           </NuxtLink>
           <NuxtLink :to="link('/discover')">All Campaigns</NuxtLink>
@@ -59,7 +60,7 @@ const closeOnBackdrop = (e: MouseEvent) => {
         <nav aria-label="Site" @click="menu?.close()">
           <NuxtLink :to="link('/discover')">Discover</NuxtLink>
           <p class="tf-label">Categories</p>
-          <NuxtLink v-for="c in TINKERFUND_CATEGORIES" :key="c.slug" class="sub" :to="link(`/category/${c.slug}`)">
+          <NuxtLink v-for="c in categories" :key="c.slug" class="sub" :to="link(`/category/${c.slug}`)">
             {{ c.name }}
           </NuxtLink>
           <NuxtLink :to="link('/deals')">Deals</NuxtLink>

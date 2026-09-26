@@ -1,0 +1,9 @@
+name: Robin Demo
+email: robin@example.test
+address:
+  street: 12 Sample Street
+  city: Berlin
+  postcode: "10115"
+  country: Germany
+  zone: domestic
+pledges: []

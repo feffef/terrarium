@@ -24,11 +24,14 @@
 //     #521) naming no real Document in this (Tenant, Space)'s `artifacts`
 //     collection — otherwise silent until a human/agent views the rendered
 //     page and hits the runtime "Artifact not found" fallback (issue #773).
+//   - A Tinkerfund Campaign, Update, comment thread, Promotion or past Pledge
+//     naming a Campaign, Inventor, category, Reward, option or Add-on that
+//     isn't in its Space, or a Campaign/Update page off its path (issue #1366).
 //
 // Scope: this pass only fires on a (Tenant, Space) that actually has an
 // Atlas-shaped collection (a `pages` Document with `phenology`, alongside
-// `interactions`/`observations`) or a Midden-shaped `artifacts` collection —
-// it is a no-op for `journal`/`blog`, whose `pages` Documents never declare
+// `interactions`/`observations`), a Midden-shaped `artifacts` collection, or
+// Tinkerfund — it is a no-op for `journal`/`blog`, whose `pages` Documents never declare
 // `phenology` and never have an `artifacts` sibling.
 //
 // Usage:  pnpm validate:content   (runs this after validate-content.ts;
@@ -527,6 +530,120 @@ function checkArtifacts(
   return { checked, slugs }
 }
 
+// ── Tinkerfund (issue #1366) ────────────────────────────────────────────────
+// validate-content.ts has already checked each Document's shape, so this
+// reads the fields it needs without re-checking their types.
+
+interface TinkerfundCampaignRefs {
+  registry: string
+  inventor: string
+  category: string
+  rewards: { id: string; options?: { id: string; choices: { id: string }[] }[] }[]
+  addons?: { id: string }[]
+}
+
+interface TinkerfundPledgeRefs {
+  campaign: string
+  lines: { reward: string; options?: Record<string, string> }[]
+  addons?: { id: string }[]
+}
+
+const TF_CAMPAIGN_PAGE = /^campaigns\/([^/]+)\.md$/
+const TF_UPDATE_PAGE = /^campaigns\/([^/]+)\/updates\/[^/]+\.md$/
+
+function tinkerfundPledgeRefs(pledges: TinkerfundPledgeRefs[], campaigns: Map<string, TinkerfundCampaignRefs>): string[] {
+  const msgs: string[] = []
+  pledges.forEach((pledge, i) => {
+    const at = `pledges.${i}`
+    const campaign = campaigns.get(pledge.campaign)
+    if (!campaign) {
+      msgs.push(`${at}.campaign: "${pledge.campaign}" is not a Campaign in this Space`)
+      return
+    }
+    pledge.lines.forEach((line, j) => {
+      const reward = campaign.rewards.find((r) => r.id === line.reward)
+      if (!reward) {
+        msgs.push(`${at}.lines.${j}.reward: "${line.reward}" is not a Reward of "${pledge.campaign}"`)
+        return
+      }
+      for (const [group, choice] of Object.entries(line.options ?? {})) {
+        if (!reward.options?.some((g) => g.id === group && g.choices.some((c) => c.id === choice))) {
+          msgs.push(`${at}.lines.${j}.options.${group}: "${choice}" is not an option of Reward "${reward.id}"`)
+        }
+      }
+    })
+    pledge.addons?.forEach((addon, j) => {
+      if (!campaign.addons?.some((a) => a.id === addon.id)) {
+        msgs.push(`${at}.addons.${j}.id: "${addon.id}" is not an Add-on of "${pledge.campaign}"`)
+      }
+    })
+  })
+  return msgs
+}
+
+function checkTinkerfund(groupCols: ExpandedCollection[], projectRoot: string, violations: RefViolation[]): number {
+  let checked = 0
+  const docs = (collection: string) => {
+    const col = groupCols.find((c) => c.collection === collection)
+    if (!col) return []
+    const cwd = join(projectRoot, col.cwdRel)
+    return globSync(col.include, { cwd })
+      .sort()
+      .map((rel) => {
+        checked++
+        return { key: col.key, file: join(col.cwdRel, rel), rel, data: parseDocument(join(cwd, rel)) }
+      })
+  }
+  const stems = (collection: string) => new Set(docs(collection).map((d) => d.rel.replace(/\.yml$/, '')))
+  const report = (doc: { key: string; file: string }, messages: string[]) => {
+    if (messages.length) violations.push({ key: doc.key, file: doc.file, messages })
+  }
+
+  const pages = docs('pages')
+  const inventors = stems('inventors')
+  const categories = stems('categories')
+  const campaigns = new Map<string, TinkerfundCampaignRefs>()
+  for (const page of pages) {
+    const slug = TF_CAMPAIGN_PAGE.exec(page.rel)?.[1]
+    if (slug && page.data.campaign) campaigns.set(slug, page.data.campaign as TinkerfundCampaignRefs)
+  }
+
+  const registries = new Map<string, string>()
+  for (const page of pages) {
+    const msgs: string[] = []
+    const campaign = page.data.campaign as TinkerfundCampaignRefs | undefined
+    const slug = TF_CAMPAIGN_PAGE.exec(page.rel)?.[1]
+    if (slug && !campaign) msgs.push('a page at campaigns/<slug>.md must carry campaign frontmatter')
+    if (campaign) {
+      if (!slug) msgs.push('campaign frontmatter belongs only on a page at campaigns/<slug>.md')
+      if (!inventors.has(campaign.inventor)) msgs.push(`campaign.inventor: "${campaign.inventor}" is not an Inventor in this Space`)
+      if (!categories.has(campaign.category)) msgs.push(`campaign.category: "${campaign.category}" is not a category in this Space`)
+      const holder = registries.get(campaign.registry)
+      if (holder) msgs.push(`campaign.registry: "${campaign.registry}" is already used by ${holder}`)
+      else registries.set(campaign.registry, slug ?? page.rel)
+    }
+    const updateOf = TF_UPDATE_PAGE.exec(page.rel)?.[1]
+    if (updateOf) {
+      if (!page.data.update) msgs.push('an Update page must carry update frontmatter')
+      if (!campaigns.has(updateOf)) msgs.push(`updates a Campaign "${updateOf}" that is not in this Space`)
+    } else if (page.data.update) {
+      msgs.push('update frontmatter belongs only on a page at campaigns/<slug>/updates/<n>.md')
+    }
+    report(page, msgs)
+  }
+
+  for (const doc of [...docs('comments'), ...docs('promotions')]) {
+    const campaign = doc.data.campaign
+    if (typeof campaign === 'string' && !campaigns.has(campaign)) {
+      report(doc, [`campaign: "${campaign}" is not a Campaign in this Space`])
+    }
+  }
+  for (const doc of docs('backer')) {
+    report(doc, tinkerfundPledgeRefs((doc.data.pledges ?? []) as TinkerfundPledgeRefs[], campaigns))
+  }
+  return checked
+}
+
 // ── Main pass ────────────────────────────────────────────────────────────────
 
 interface PhenologyFrontmatter {
@@ -560,6 +677,11 @@ export function validateReferences(cols: ExpandedCollection[], projectRoot = roo
   for (const groupCols of groups.values()) {
     const pagesCol = groupCols.find((c) => c.collection === 'pages' && c.type === 'page')
     if (!pagesCol) continue // no routed guide in this Space — nothing to key Specimens off
+    if (pagesCol.tenant === 'tinkerfund') {
+      groupsChecked++
+      filesChecked += checkTinkerfund(groupCols, projectRoot, violations)
+      continue
+    }
 
     const pagesCwd = join(projectRoot, pagesCol.cwdRel)
     const pageRelFiles = globSync(pagesCol.include, { cwd: pagesCwd }).sort()

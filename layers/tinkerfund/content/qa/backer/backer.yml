@@ -1,0 +1,18 @@
+name: Test Backer
+email: backer@example.test
+address:
+  street: 1 Test Way
+  city: Testville
+  postcode: "00000"
+  country: Germany
+  zone: domestic
+pledges:
+  - ref: TF-P-9001
+    campaign: last-minute-lamp
+    placed: -5d
+    zone: domestic
+    lines:
+      - { reward: lamp, options: { colour: black }, quantity: 1 }
+    addons:
+      - { id: bulb, quantity: 2 }
+    bonus: 3

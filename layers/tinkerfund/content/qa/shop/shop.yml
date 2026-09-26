@@ -1,0 +1,9 @@
+# qa is frozen at this instant, so offsets resolve the same on every run.
+now: "2026-06-01T12:00:00Z"
+currency: EUR
+zones:
+  - { id: domestic, name: Domestic }
+  - { id: europe, name: Europe }
+  - { id: world, name: Rest of world }
+payments:
+  - { id: demo-card, label: "Tinkerfund Demo Card ····4242" }

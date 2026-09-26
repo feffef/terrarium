@@ -40,6 +40,26 @@ export function registerTinkerfundE2E(): void {
       await expectCleanHydration('/t/tinkerfund/qa/how-it-works')
     })
 
+    it('lists the categories collection in the header', async () => {
+      const html = await $fetch('/t/tinkerfund/prod/how-it-works')
+      expect(html).toMatch(/category\/kitchen[\s\S]*category\/desk[\s\S]*category\/outdoors/)
+    })
+
+    // qa pins now 36h before this Campaign ends (issue #1364).
+    it('derives a Campaign’s state and countdown from qa’s pinned now', async () => {
+      const html = await $fetch('/t/tinkerfund/qa/campaigns/last-minute-lamp')
+      expect(html).toContain('TF-9001')
+      expect(html).toMatch(/data-state="live"[^>]*>Live</)
+      expect(html).toContain('Ending soon')
+      expect(html).toContain('Goal reached')
+      expect(html).toContain('125% funded')
+      expect(html).toMatch(/<time [^>]*datetime="2026-06-03T00:00:00.000Z"[^>]*>1 day 12 hours to go<\/time>/)
+    })
+
+    it('hydrates a Campaign page cleanly', async () => {
+      await expectCleanHydration('/t/tinkerfund/qa/campaigns/last-minute-lamp')
+    })
+
     it('404s an unknown Space', async () => {
       expect((await fetch('/t/tinkerfund/staging')).status).toBe(404)
     })
