@@ -53,7 +53,11 @@ pnpm exec tsx scripts/digest.ts gather <date>
 ```
 
 The JSON gives you `prs` (merged/referenced), `otherCommits` (direct-to-main
-work), `sessions` (goal/outcome/status, frictions, learnings, ideas), and a `rollup`. Author a
+work), `sessions` (goal/outcome/status, frictions, learnings, ideas), and a `rollup`.
+**A dry run must call `gather` for its numbers too** — never re-derive a day's
+session set by reading session-log files and filtering on the filename's date.
+`gather` cuts each day by a session's own UTC `endedAt`, which can silently
+disagree with a filename-date filter and change the count. Author a
 short catch-up from it and save to
 `layers/journal/content/current/pages/digests/<date>.md`:
 
