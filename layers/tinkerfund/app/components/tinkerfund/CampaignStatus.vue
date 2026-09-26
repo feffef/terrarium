@@ -5,7 +5,7 @@ const props = defineProps<{
   ticking: boolean
 }>()
 
-// State is fixed for the page's "now"; only the countdown moves (issue #1364).
+// State is fixed for the page's "now"; only the relative time moves (issue #1364).
 const status = computed(() => deriveCampaignStatus(props.campaign, props.campaign.pledged, props.now))
 const clock = ref(props.now)
 let timer: ReturnType<typeof setInterval> | undefined
@@ -15,9 +15,9 @@ onMounted(() => {
 onUnmounted(() => clearInterval(timer))
 
 const STATE_LABEL = { upcoming: 'Upcoming', live: 'Live', ended: 'Ended' } as const
-const countdown = computed(() => {
+const when = computed(() => {
   const { state, launchAt, endAt } = status.value
-  if (state === 'ended') return undefined
+  if (state === 'ended') return { at: endAt, text: `Ended ${formatTinkerfundAgo(clock.value, endAt)}` }
   const at = state === 'live' ? endAt : launchAt
   const left = formatTinkerfundCountdown(tinkerfundCountdown(clock.value, at))
   return { at, text: state === 'live' ? `${left} to go` : `Launches in ${left}` }
@@ -32,7 +32,7 @@ const countdown = computed(() => {
     <span v-if="status.endingSoon" class="badge soon">Ending soon</span>
     <span v-if="status.goalReached" class="badge">Goal reached</span>
     <span class="readout">{{ status.percent }}% funded</span>
-    <time v-if="countdown" class="readout" :datetime="new Date(countdown.at).toISOString()">{{ countdown.text }}</time>
+    <TinkerfundTime class="readout" :at="when.at" :text="when.text" />
   </div>
 </template>
 

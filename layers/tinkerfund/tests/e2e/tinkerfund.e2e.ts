@@ -132,7 +132,7 @@ export function registerTinkerfundE2E(): void {
       expect(stapler).toMatch(/Early-bird stapler[\s\S]*?<fieldset disabled[\s\S]*?Sold out/)
 
       expect(await page('unhurried-kettle')).toMatch(/Notify me[\s\S]*Opens at launch/)
-      expect(await page('indoor-hammock')).toMatch(/Unfunded[\s\S]*Pledging has closed[\s\S]*Closed/)
+      expect(await page('indoor-hammock')).toMatch(/Unfunded[\s\S]*Ended 1 hour ago[\s\S]*Pledging has closed[\s\S]*Closed/)
       expect(await page('self-assembling-workbench')).toContain('3 of 3 left')
     })
 
@@ -182,6 +182,8 @@ export function registerTinkerfundE2E(): void {
       const page = await createPage()
       try {
         await page.goto(url('/t/tinkerfund/qa/campaigns/unhurried-kettle'), { waitUntil: 'hydration' })
+        // The exact launch time is the visitor's own, so only the browser fills it in.
+        await expect.poll(() => page.locator('.readout time').first().getAttribute('title')).toMatch(/2026/)
         await page.getByRole('button', { name: /^Figure 2:/ }).click()
         expect(await page.locator('.hero .frame .cap').first().textContent()).toBe('FIG. 2 · TF-9003')
         const notify = page.locator('.readout button[aria-pressed]')
