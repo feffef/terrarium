@@ -5,7 +5,7 @@ import type { TinkerfundCartRequest } from '../../utils/cart'
 
 const props = defineProps<{ doc: TinkerfundPage & { campaign: TinkerfundCampaign } }>()
 
-const { space, pagesKey, collections, link } = useTinkerfundSpace()
+const { space, collections, link } = useTinkerfundSpace()
 const money = useTinkerfundMoney()
 const categories = useTinkerfundCategories()
 
@@ -16,22 +16,18 @@ const now = computed(() => clock.value.now)
 const c = computed(() => withTinkerfundPledges(slug.value, props.doc.campaign, pledges.value, baked.value))
 
 const { data } = await useAsyncData(`tinkerfund-campaign-${space}-${props.doc.path}`, async () => {
-  const [inventor, thread, updates, promotions] = await Promise.all([
+  const [inventor, thread, log, promotions] = await Promise.all([
     queryCollection(collections.inventors).where('stem', '=', c.value.inventor).first(),
     queryCollection(collections.comments).where('campaign', '=', slug.value).first(),
-    queryCollection(pagesKey).where('path', 'LIKE', `${props.doc.path}/updates/%`).select('path', 'title', 'update').all(),
+    queryCollection(collections.updates).where('campaign', '=', slug.value).first(),
     queryCollection(collections.promotions).all(),
   ])
-  return { inventor, comments: thread?.comments ?? [], updates, promotions }
+  return { inventor, comments: thread?.comments ?? [], updates: log?.updates ?? [], promotions }
 })
 
 const status = computed(() => deriveCampaignStatus(c.value, c.value.pledged, now.value))
 const deals = computed(() => tinkerfundAutomaticDeals(data.value?.promotions ?? [], slug.value, now.value))
-const updates = computed(() =>
-  (data.value?.updates ?? [])
-    .map((u) => ({ ...u, n: Number(tinkerfundSlug(u.path)), at: resolveTinkerfundOffset(u.update?.published ?? '+0h', now.value) }))
-    .sort((a, b) => b.n - a.n),
-)
+const updates = computed(() => data.value?.updates ?? [])
 const comments = computed(() => data.value?.comments ?? [])
 const commentCount = computed(() => comments.value.reduce((n, t) => n + 1 + (t.replies?.length ?? 0), 0))
 const from = computed(() => campaignPriceFrom(c.value.rewards))
@@ -120,16 +116,7 @@ const backing = computed<TinkerfundBacking>(() => ({ slug: slug.value, state: st
 
       <section id="updates" aria-labelledby="updates-h">
         <h2 id="updates-h">Updates</h2>
-        <ol v-if="updates.length" class="updates">
-          <li v-for="u in updates" :key="u.path">
-            <NuxtLink :to="link(u.path)">
-              <span class="tf-label">Update #{{ u.n }}</span>
-              <b>{{ u.title }}</b>
-            </NuxtLink>
-            <TinkerfundTime class="when" :at="u.at" :text="formatTinkerfundAgo(now, u.at)" />
-          </li>
-        </ol>
-        <p v-else class="empty">No Updates yet.</p>
+        <TinkerfundUpdates :updates="updates" :now="now" />
       </section>
 
       <section id="comments" aria-labelledby="comments-h">
@@ -190,13 +177,6 @@ h3 { margin: 28px 0 10px; font: 800 18px/1.1 var(--tf-font); font-stretch: 82%; 
 .specs th, .specs td { padding: 8px 0; border-top: var(--tf-hairline); text-align: left; vertical-align: top; }
 .specs th { padding-right: 12px; color: var(--tf-muted); font: 500 12px/1.5 var(--tf-mono); }
 .specs td { font-weight: 600; }
-
-.updates { display: grid; margin: 0; padding: 0; list-style: none; }
-.updates li { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 12px; align-items: baseline; padding: 12px 0; border-bottom: var(--tf-hairline); }
-.updates a { display: grid; gap: 4px; color: var(--tf-ink); text-decoration: none; }
-.updates a:hover b { text-decoration: underline; }
-.when { color: var(--tf-muted); font: 500 12px/1.4 var(--tf-mono); }
-.empty { color: var(--tf-muted); }
 
 .tf-backbar {
   position: sticky;

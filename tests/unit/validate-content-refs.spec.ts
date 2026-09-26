@@ -523,7 +523,7 @@ describe('commitDateWithinSeason() — the removedIn/stratum corroboration (Midd
 // ── validateReferences() — Tinkerfund-shaped Spaces (issue #1366) ───────────
 // Selected by content shape, not Tenant name, so the fixture Tenant is neutral.
 
-const SHOP_COLLECTIONS = ['pages', 'inventors', 'categories', 'comments', 'promotions', 'backer', 'shop']
+const SHOP_COLLECTIONS = ['pages', 'inventors', 'categories', 'comments', 'updates', 'promotions', 'backer', 'shop']
 
 function shopCols(): ExpandedCollection[] {
   return SHOP_COLLECTIONS.map((collection) => ({
@@ -542,7 +542,7 @@ function write(rel: string, text: string): void {
   writeFileSync(join(dir, rel), text)
 }
 
-function campaignPage(opts: { registry?: string; inventor?: string; category?: string } = {}): string {
+function campaignPage(opts: { registry?: string; inventor?: string; category?: string; launch?: string } = {}): string {
   return [
     '---',
     'title: Counterclockwise Mug',
@@ -550,6 +550,7 @@ function campaignPage(opts: { registry?: string; inventor?: string; category?: s
     `  registry: ${opts.registry ?? 'TF-0001'}`,
     `  inventor: ${opts.inventor ?? 'ada'}`,
     `  category: ${opts.category ?? 'kitchen'}`,
+    `  launch: "${opts.launch ?? '-10d'}"`,
     '  rewards:',
     '    - id: mug',
     '      options:',
@@ -564,10 +565,10 @@ function campaignPage(opts: { registry?: string; inventor?: string; category?: s
 function writeValidShop(): void {
   write('pages/index.md', '---\ntitle: Home\n---\n')
   write('pages/campaigns/mug.md', campaignPage())
-  write('pages/campaigns/mug/updates/1.md', '---\ntitle: We shipped\nupdate: { published: "-1d" }\n---\n')
   write('inventors/ada.yml', 'name: Ada\n')
   write('categories/kitchen.yml', 'name: Kitchen\n')
   write('comments/mug.yml', 'campaign: mug\ncomments: []\n')
+  write('updates/mug.yml', 'campaign: mug\nupdates:\n  - { title: Launched, published: "-10d" }\n  - { title: We shipped, published: "-1d" }\n')
   write('promotions/launch.yml', 'title: Launch\ncampaign: mug\n')
   write('promotions/shopwide.yml', 'title: Everything\n')
   write('backer/backer.yml', [
@@ -588,7 +589,7 @@ describe('validateReferences() — Tinkerfund-shaped Space', () => {
     const report = validateReferences(shopCols(), dir)
     expect(report.violations).toEqual([])
     expect(report.groupsChecked).toBe(1)
-    // 3 pages, 1 comment thread, 2 Promotions, 1 backer; Inventors and categories are only looked up.
+    // 2 pages, 1 comment thread, 1 Updates file, 2 Promotions, 1 backer; Inventors and categories are only looked up.
     expect(report.filesChecked).toBe(7)
   })
 
@@ -623,14 +624,25 @@ describe('validateReferences() — Tinkerfund-shaped Space', () => {
     ])
   })
 
-  it('rejects an Update of an unknown Campaign, or one with no publish offset', () => {
+  it('rejects Updates of a Campaign not in this Space', () => {
     writeValidShop()
-    write('pages/campaigns/rock/updates/1.md', '---\ntitle: Orphan\nupdate: { published: "-1d" }\n---\n')
-    write('pages/campaigns/mug/updates/2.md', '---\ntitle: Undated\n---\n')
-    expect(shopViolations()).toEqual([
-      expect.stringMatching(/mug\/updates\/2\.md: .*update/),
-      expect.stringMatching(/rock\/updates\/1\.md: .*"rock"/),
-    ])
+    write('updates/rock.yml', 'campaign: rock\nupdates: []\n')
+    expect(shopViolations()).toEqual([expect.stringMatching(/updates\/rock\.yml: campaign: "rock"/)])
+  })
+
+  it('rejects an Update published before its Campaign launched', () => {
+    writeValidShop()
+    write('updates/mug.yml', 'campaign: mug\nupdates:\n  - { title: Launched, published: "-10d" }\n  - { title: Teaser, published: "-11d" }\n')
+    expect(shopViolations()).toEqual(['updates/mug.yml: updates.1.published: "-11d" is before "mug" launched (-10d)'])
+  })
+
+  it('rejects Updates on an Upcoming Campaign, but not an empty Updates file', () => {
+    writeValidShop()
+    write('pages/campaigns/rock.md', campaignPage({ registry: 'TF-0002', launch: '+5d' }))
+    write('pages/campaigns/lamp.md', campaignPage({ registry: 'TF-0003', launch: '+5d' }))
+    write('updates/rock.yml', 'campaign: rock\nupdates:\n  - { title: Soon, published: "+6d" }\n')
+    write('updates/lamp.yml', 'campaign: lamp\nupdates: []\n')
+    expect(shopViolations()).toEqual(['updates/rock.yml: updates: "rock" is Upcoming, so it has no Updates yet'])
   })
 
   it('rejects a Promotion or comment thread naming an unknown Campaign', () => {

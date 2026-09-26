@@ -9,6 +9,7 @@ import {
   tinkerfundAutomaticDeals,
   tinkerfundLocale,
   tinkerfundStock,
+  tinkerfundUpdates,
 } from '../../app/utils/campaign.ts'
 import { HOUR, NOW } from './support.ts'
 
@@ -23,6 +24,29 @@ describe('tinkerfundStock', () => {
 
   it('has no count when stock is unlimited', () => {
     expect(tinkerfundStock({ claimed: 380 })).toEqual({ left: undefined, soldOut: false, label: undefined })
+  })
+})
+
+describe('tinkerfundUpdates', () => {
+  it('lists newest first, numbered in publishing order whatever the file order', () => {
+    const updates = tinkerfundUpdates(
+      [
+        { title: 'Shipped', published: '-2d', body: 'Done.' },
+        { title: 'Funded', published: '-9d', body: 'Thanks.' },
+        { title: 'Tooling', published: '-5d', body: 'Moulds.' },
+      ],
+      NOW,
+    )
+    expect(updates.map((u) => [u.n, u.title, u.at])).toEqual([
+      [3, 'Shipped', NOW - 48 * HOUR],
+      [2, 'Tooling', NOW - 120 * HOUR],
+      [1, 'Funded', NOW - 216 * HOUR],
+    ])
+  })
+
+  it('splits the body into paragraphs at blank lines', () => {
+    const [update] = tinkerfundUpdates([{ title: 'T', published: '-1d', body: 'One\nline.\n\nTwo.\n  \nThree.' }], NOW)
+    expect(update!.paragraphs).toEqual(['One\nline.', 'Two.', 'Three.'])
   })
 })
 

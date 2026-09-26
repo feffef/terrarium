@@ -1,8 +1,8 @@
 // What the Campaign page derives from its content (story #1380). Crowd data is
 // baked; these read it at the page's "now" (issue #1364).
 import type { z } from 'zod'
-import type { promotion } from '../../schemas'
-import { TINKERFUND_HOUR } from './clock'
+import type { promotion, updateLog } from '../../schemas'
+import { TINKERFUND_HOUR, resolveTinkerfundOffset } from './clock'
 import { tinkerfundCount } from './shop'
 import { derivePromotionState } from './status'
 
@@ -18,6 +18,17 @@ export function formatTinkerfundAgo(now: number, at: number): string {
   const hours = Math.floor((now - at) / TINKERFUND_HOUR)
   if (hours < 1) return 'just now'
   return `${hours < 24 ? tinkerfundCount(hours, 'hour') : tinkerfundCount(Math.floor(hours / 24), 'day')} ago`
+}
+
+type TinkerfundUpdateTerms = z.infer<typeof updateLog>['updates'][number]
+
+/** Newest first; `n` counts from the oldest, so an Update keeps its number and anchor. */
+export function tinkerfundUpdates(updates: TinkerfundUpdateTerms[], now: number) {
+  return updates
+    .map((u) => ({ ...u, at: resolveTinkerfundOffset(u.published, now), paragraphs: u.body.split(/\n\s*\n/) }))
+    .sort((a, b) => a.at - b.at)
+    .map((u, i) => ({ ...u, n: i + 1 }))
+    .reverse()
 }
 
 /** A Promotion as the shop reads it: its content, named by its content stem. */

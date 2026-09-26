@@ -1,0 +1,13 @@
+campaign: rain-aware-umbrella
+updates:
+  - title: Why the app says “It is raining”
+    published: -7d
+    body: |-
+      We tested several wordings for the alert. “Rain detected” tested as cold.
+      “You may want your umbrella” confused people who were holding it. “It is
+      raining” was understood by everyone.
+  - title: 15% off for one week
+    published: -3d
+    body: |-
+      To help us past halfway, every Reward is 15% off for the next seven days.
+      The discount is applied automatically; there is no code to enter.
