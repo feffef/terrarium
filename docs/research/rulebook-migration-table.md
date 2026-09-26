@@ -367,7 +367,7 @@ of them and splitting would inflate the row count without adding a decision.
 | --- | --- | --- | --- | --- | --- | --- |
 | IT-01 | `docs/research/` is for verified reference; an unimplemented idea belongs in an issue | Conventions | J | none | Placement judgement | — |
 | IT-02 | The redundancy check applies to every open issue, no exemptions | Conventions | W | none | A stage in `triage`/`auto-triage`; both already specify it | 0 |
-| IT-03 | A PRD carries no triage label while it's a concept document; sub-issues inherit its hold | PRDs | G | none | A validator: flag a triage label on an issue whose body carries the on-hold line. **Tracker state, not repo state** — outside the gate's reach by construction | M |
+| IT-03 | A spec carries no triage label while it's a concept document; sub-issues inherit its hold | Specs | G | none | A validator: flag a triage label on an issue whose body carries the on-hold line. **Tracker state, not repo state** — outside the gate's reach by construction | M |
 | IT-04 | Filter discovery to external PRs by `authorAssociation`; that split **is** the ADR-0020 line | PRs as triage | W | none | **Built** — `.github/workflows/pr-authorassociation-label.yml` applies `trusted`; the absence of it means Public | 0 |
 | IT-05 | Post a review verdict before merging, never as APPROVE | PRs as triage | H (refusal) | #301, #853 | Duplicate of `PR-06`/`PR-07`, homed there — **fixed**: `issue-tracker.md` now points instead of restating | — |
 | IT-06 | Reply before resolving a review thread | PRs as triage | H (refusal) | none | `PreToolUse` on `resolve_review_thread`: deny unless a reply by this session exists on that thread. Same shape as `PR-06` | S |
