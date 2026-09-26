@@ -45,7 +45,7 @@ import { pathToFileURL } from 'node:url'
 import type { z } from 'zod'
 import { expand, loadManifests, root, type ExpandedCollection } from '../shared/expand.ts'
 import { DIG_SEASON_SLUGS, digSeasonOf, type DigSeason } from '../layers/midden/app/utils/strata.ts'
-import type { campaign, pledge } from '../layers/tinkerfund/tenant.config.ts'
+import type { campaign, pledge } from '../layers/tinkerfund/schemas.ts'
 import { parseDocument, splitFrontmatter } from './validate-content.ts'
 
 export interface RefViolation {

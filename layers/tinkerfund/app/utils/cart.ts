@@ -3,8 +3,8 @@
 import { z } from 'zod'
 import { TINKERFUND_SOLD_OUT, tinkerfundStock } from './campaign'
 import type { TinkerfundPromotionTerms } from './campaign'
-import { pledge, slug } from '../../tenant.config'
-import type { campaign as campaignSchema, zone } from '../../tenant.config'
+import { pledge, slug } from '../../schemas'
+import type { campaign as campaignSchema, zone } from '../../schemas'
 import { deriveCampaignState } from './status'
 
 export type TinkerfundZone = z.infer<typeof zone>

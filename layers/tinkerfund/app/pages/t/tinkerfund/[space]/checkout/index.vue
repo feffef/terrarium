@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { zone as zoneSchema } from '../../../../../../tenant.config'
+import { zone as zoneSchema } from '../../../../../../schemas'
 import type { TinkerfundQuoteGroup } from '../../../../../utils/checkout'
 
 // The focused checkout (story #1384, Pledge flow #1365). Every choice lives in

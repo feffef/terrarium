@@ -1,7 +1,7 @@
 // Browsing the shop (story #1381): Home's sections, Discover, Category and
 // Deals, all derived from baked content at the page's "now" (issue #1364).
 import type { z } from 'zod'
-import type { campaign } from '../../tenant.config'
+import type { campaign } from '../../schemas'
 import type { TinkerfundPromotionTerms } from './campaign'
 import { formatTinkerfundCountdown, resolveTinkerfundOffset, tinkerfundCountdown } from './clock'
 import { tinkerfundSlug } from './shop'

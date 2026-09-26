@@ -2,7 +2,7 @@
 // shop to give the Cart, the Pledges and every total (issue #1359).
 import { z } from 'zod'
 import { cancelTinkerfundPledge, reviseTinkerfundPledge } from './account'
-import { pledge, slug, zone } from '../../tenant.config'
+import { pledge, slug, zone } from '../../schemas'
 import {
   addToTinkerfundCart,
   resolveTinkerfundCart,
