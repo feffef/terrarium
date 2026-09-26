@@ -137,6 +137,14 @@
   border-radius: var(--tf-radius-panel);
 }
 
+/* Printing (a receipt, story #1385): the page's content alone, dark on paper. */
+@media print {
+  :root:has(> .tf-page) { color-scheme: light !important; }
+  .tf-page { background: none; }
+  .tf-page .shell > :not(main), .tf-page .tf-noprint { display: none !important; }
+  .tf-page .tf-panel { break-inside: avoid; box-shadow: none; }
+}
+
 .tf-prose { max-width: 68ch; }
 .tf-prose h1 { font: 800 clamp(32px, 5vw, 48px)/1.05 var(--tf-font); font-stretch: 78%; margin: 0 0 12px; }
 .tf-prose h2 { font: 800 24px/1.15 var(--tf-font); font-stretch: 80%; margin: 32px 0 8px; }

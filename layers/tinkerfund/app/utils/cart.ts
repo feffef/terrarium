@@ -31,6 +31,8 @@ const pledge = draft.extend({
   payment: id,
   discount: z.number().nonnegative(),
   shipping: z.number().nonnegative(),
+  /** When the Backer cancelled it (story #1385): it stays on the account, counting for nothing. */
+  cancelled: z.number().optional(),
 })
 
 const overlay = z.object({ cart: z.array(draft), pledges: z.array(pledge).default([]) })
@@ -85,8 +87,8 @@ export interface TinkerfundCartCampaign {
 
 export type TinkerfundCartCatalog = Record<string, { title: string; campaign: TinkerfundCartCampaign }>
 
-const GONE = 'No longer available'
-const NEEDS_REWARD = 'Add-ons need a Reward from this Campaign'
+export const TINKERFUND_GONE = 'No longer available'
+export const TINKERFUND_NEEDS_REWARD = 'Add-ons need a Reward from this Campaign'
 
 type Limited = { stock?: number; claimed: number; limit?: number }
 
@@ -95,7 +97,7 @@ export function tinkerfundMaxQuantity(item: Limited): number {
 }
 
 /** Why `wanted` of an item can't be had, if it can't. Stock is only taken at checkout (issue #1365). */
-function shortfall(item: Limited, wanted: number): string | undefined {
+export function tinkerfundShortfall(item: Limited, wanted: number): string | undefined {
   const { left } = tinkerfundStock(item)
   if (left === 0) return 'Sold out'
   if (item.limit !== undefined && wanted > item.limit) return `Max ${item.limit} per Backer`
@@ -107,7 +109,7 @@ export function formatTinkerfundItems(count: number): string {
 }
 
 /** Every option group answered with one of its own choices, and nothing else. */
-function validOptions(reward: CartReward, options: Record<string, string>): boolean {
+export function tinkerfundValidOptions(reward: CartReward, options: Record<string, string>): boolean {
   const groups = reward.options ?? []
   return (
     Object.keys(options).length === groups.length &&
@@ -136,7 +138,7 @@ export function addToTinkerfundCart(
 ): { cart: TinkerfundDraft[]; error?: string } {
   const refuse = (error: string) => ({ cart, error })
   const campaign = catalog[request.campaign]?.campaign
-  if (!campaign) return refuse(GONE)
+  if (!campaign) return refuse(TINKERFUND_GONE)
   const grows = ('bonus' in request ? request.bonus : request.quantity) > 0
   const shut = grows ? closed(campaign, now) : undefined
   if (shut) return refuse(shut)
@@ -152,24 +154,24 @@ export function addToTinkerfundCart(
     else delete draft.bonus
   } else if ('reward' in request) {
     const reward = campaign.rewards.find((r) => r.id === request.reward)
-    if (!reward || !validOptions(reward, request.options)) return refuse(GONE)
+    if (!reward || !tinkerfundValidOptions(reward, request.options)) return refuse(TINKERFUND_GONE)
     const key = tinkerfundCartLineKey(request)
     let line = draft.lines.find((l) => tinkerfundCartLineKey({ ...l, campaign: draft.campaign }) === key)
     if (!line) draft.lines.push((line = { reward: reward.id, options: { ...request.options }, quantity: 0 }))
     line.quantity += request.quantity
     draft.lines = draft.lines.filter((l) => l.quantity > 0)
     const held = draft.lines.filter((l) => l.reward === reward.id).reduce((n, l) => n + l.quantity, 0)
-    const short = grows ? shortfall(reward, held) : undefined
+    const short = grows ? tinkerfundShortfall(reward, held) : undefined
     if (short) return refuse(short)
   } else {
     const addon = campaign.addons?.find((a) => a.id === request.addon)
-    if (!addon) return refuse(GONE)
-    if (grows && !draft.lines.length) return refuse(NEEDS_REWARD)
+    if (!addon) return refuse(TINKERFUND_GONE)
+    if (grows && !draft.lines.length) return refuse(TINKERFUND_NEEDS_REWARD)
     let line = draft.addons.find((a) => a.id === addon.id)
     if (!line) draft.addons.push((line = { id: addon.id, quantity: 0 }))
     line.quantity += request.quantity
     draft.addons = draft.addons.filter((a) => a.quantity > 0)
-    const short = grows ? shortfall(addon, line.quantity) : undefined
+    const short = grows ? tinkerfundShortfall(addon, line.quantity) : undefined
     if (short) return refuse(short)
   }
 
@@ -248,7 +250,7 @@ export function resolveTinkerfundCart(
     let shipped = false
     const rewards = draft.lines.flatMap((line): TinkerfundCartLine[] => {
       const reward = campaign.rewards.find((r) => r.id === line.reward)
-      if (!reward || !validOptions(reward, line.options)) return []
+      if (!reward || !tinkerfundValidOptions(reward, line.options)) return []
       const ref = { campaign: draft.campaign, reward: reward.id, options: line.options }
       const detail = tinkerfundOptionsLabel(reward, line.options)
       const ships = !reward.shipsTo || reward.shipsTo.includes(zone)
@@ -261,7 +263,7 @@ export function resolveTinkerfundCart(
       const addon = campaign.addons?.find((a) => a.id === line.id)
       if (!addon) return []
       const ref = { campaign: draft.campaign, addon: addon.id }
-      return [{ key: tinkerfundCartLineKey(ref), ref, ships: true, ...priced(addon, line.quantity, shut ?? (rewarded ? undefined : NEEDS_REWARD)) }]
+      return [{ key: tinkerfundCartLineKey(ref), ref, ships: true, ...priced(addon, line.quantity, shut ?? (rewarded ? undefined : TINKERFUND_NEEDS_REWARD)) }]
     })
     const lines = [...rewards, ...addons]
     if (!lines.length && !draft.bonus) return []
