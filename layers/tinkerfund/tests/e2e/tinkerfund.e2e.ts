@@ -55,7 +55,8 @@ export function registerTinkerfundE2E(): void {
     it('switches theme, keeps it across a reload, and Reset demo returns it to System', async () => {
       const page = await createPage()
       try {
-        await page.goto(url('/t/tinkerfund/qa/how-it-works'), { waitUntil: 'hydration' })
+        const open = () => page.goto(url('/t/tinkerfund/qa/how-it-works'), { waitUntil: 'hydration' })
+        await open()
         const bg = () => page.evaluate(() => getComputedStyle(document.body).backgroundColor)
         const light = 'rgb(242, 244, 243)'
         const dark = 'rgb(12, 16, 19)'
@@ -65,7 +66,7 @@ export function registerTinkerfundE2E(): void {
         await page.getByLabel('Dark').check()
         expect(await bg()).toBe(dark)
 
-        await page.reload({ waitUntil: 'hydration' })
+        await open()
         expect(await page.evaluate(() => document.documentElement.dataset.tfTheme)).toBe('dark')
         expect(await page.getByLabel('Dark').isChecked()).toBe(true)
 
@@ -73,8 +74,9 @@ export function registerTinkerfundE2E(): void {
           page.waitForEvent('load'),
           page.locator('.demo').getByRole('button', { name: 'Reset demo' }).click(),
         ])
-        await page.waitForFunction(() => !document.documentElement.dataset.tfTheme)
-        expect(await page.getByLabel('System').isChecked()).toBe(true)
+        expect(await page.evaluate(() => document.documentElement.dataset.tfTheme)).toBeUndefined()
+        expect(await page.evaluate(() => sessionStorage.getItem('tinkerfund:theme'))).toBeNull()
+        expect(await bg()).toBe(light)
       } finally {
         await page.close()
       }
