@@ -332,7 +332,7 @@ live and what one must contain.
 
 ## Tenants
 
-The Platform currently hosts six Tenants. Each has its own **context**
+The Platform currently hosts seven Tenants. Each has its own **context**
 (vocabulary + reason-to-exist) co-located with its code; this roster is the
 pointer into them (see `CONTEXT-MAP.md`).
 
@@ -353,6 +353,9 @@ pointer into them (see `CONTEXT-MAP.md`).
   in in-universe story order, one chapter per film. A guest-requested
   demo/content Tenant (ADR-0023, issue #551). →
   [`layers/marquee/CONTEXT.md`](./layers/marquee/CONTEXT.md)
+- **Tinkerfund** — a crowdfunding shop for fun, mostly useless inventions; a
+  design showcase in which every interaction is simulated in the browser. A
+  demo/content Tenant. → [`layers/tinkerfund/CONTEXT.md`](./layers/tinkerfund/CONTEXT.md)
 - **Commons** — the Platform's shared, cross-Tenant space: the home for
   **Aggregator** views that read across every Tenant. Two Spaces today — **Search**
   (one box over every opted-in page) and **Timeline** (every timestamped page,

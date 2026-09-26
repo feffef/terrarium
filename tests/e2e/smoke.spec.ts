@@ -41,6 +41,7 @@ import { registerAtlasE2E } from '../../layers/atlas/tests/e2e/atlas.e2e.ts'
 import { registerMiddenE2E } from '../../layers/midden/tests/e2e/midden.e2e.ts'
 import { registerMarqueeE2E } from '../../layers/marquee/tests/e2e/marquee.e2e.ts'
 import { registerCommonsE2E } from '../../layers/commons/tests/e2e/commons.e2e.ts'
+import { registerTinkerfundE2E } from '../../layers/tinkerfund/tests/e2e/tinkerfund.e2e.ts'
 
 const chromiumPath = findPreinstalledChromium() ?? findSystemChrome()
 
@@ -158,4 +159,5 @@ describe('L2 smoke render', async () => {
   registerMiddenE2E()
   registerMarqueeE2E()
   registerCommonsE2E()
+  registerTinkerfundE2E()
 })
