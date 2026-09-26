@@ -27,5 +27,5 @@ useSeoMeta(tinkerfundSeo({
 </template>
 
 <style scoped>
-.about { margin-top: 44px; color: var(--tf-muted); }
+.about { margin-top: 44px; }
 </style>

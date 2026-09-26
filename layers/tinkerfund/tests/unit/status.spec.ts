@@ -2,8 +2,7 @@
 // stored (issue #1364).
 import { describe, expect, it } from 'vitest'
 import { deriveCampaignState, deriveCampaignStatus, derivePromotionState, campaignPriceFrom } from '../../app/utils/status.ts'
-
-const NOW = Date.parse('2026-06-01T12:00:00Z')
+import { NOW } from './support.ts'
 
 function campaign(launch: string, end: string, goal = 1000) {
   return { launch, end, goal }

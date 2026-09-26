@@ -2,8 +2,8 @@
 // shares its one build (tests/README.md). Browser flows run only in qa, whose
 // pinned now keeps every countdown and funded state still, and each browser
 // test costs the gate serial time, so they are few and wide (issue #1360).
-// prod follows real time, so it is checked only through server-rendered HTML
-// whose shape doesn't depend on the minute.
+// prod is checked only through server-rendered HTML whose shape doesn't depend
+// on the minute (its clock: `shop.now` in tenant.config.ts).
 import type { Page } from 'playwright-core'
 import { describe, expect, it } from 'vitest'
 import { $fetch, createPage, fetch, url } from '@nuxt/test-utils/e2e'
@@ -130,7 +130,6 @@ export function registerTinkerfundE2E(): void {
         expect(await $fetch('/t/tinkerfund/prod')).not.toContain('Component gallery')
       })
 
-      // Offsets are relative to real time, so prod's states hold on any day.
       for (const [slug, action] of [
         ['counterclockwise-mug', 'Back this Campaign'],
         ['solo-pea-rest', 'Pledging has closed'],
@@ -178,9 +177,8 @@ export function registerTinkerfundE2E(): void {
         expect(html).toContain('<meta property="og:type" content="article">')
       })
 
-      // prod's offsets are relative to real time, so its derived states are fixed:
-      // the Mug is the Live Campaign furthest past its goal, the Keyboard ends
-      // within 48h, and the Umbrella's Promotion ends soonest (story #1381).
+      // On any day, the Mug is the Live Campaign furthest past its goal, the
+      // Keyboard ends within 48h, and the Umbrella's Promotion ends soonest (story #1381).
       it('renders Home’s sections in order, the featured Campaign first', async () => {
         const html = main(await $fetch('/t/tinkerfund/prod'))
         expect(html).toMatch(/id="tf-featured"[^>]*>Counterclockwise Mug</)
@@ -553,7 +551,7 @@ export function registerTinkerfundE2E(): void {
         await expect.poll(() => summary.getByRole('alert').textContent()).toBe('That code isn’t valid')
         await page.getByLabel('Discount code').fill('tinker10')
         await page.getByRole('button', { name: 'Apply' }).click()
-        await expect.poll(() => summary.textContent()).toMatch(/Subtotal\s*€45\s*Discount\s*−€4.50\s*Shipping\s*€9\s*Total\s*€49.50[\s\S]*Code TINKER10 applied/)
+        await expect.poll(() => summary.textContent()).toMatch(/Subtotal\s*€45\s*Discount\s*−€4.50\s*Shipping to Europe\s*€9\s*Total\s*€49.50[\s\S]*Code TINKER10 applied/)
 
         await page.goBack()
         await expect.poll(h1).toBe('Shipping')
@@ -624,7 +622,7 @@ export function registerTinkerfundE2E(): void {
         expect(await page.locator('.group h2').allTextContents()).toEqual(['Goal-Exact Stapler', 'Last-Minute Lamp'])
         await page.getByRole('button', { name: 'More One stapler' }).click()
         // The Lamp's Pledge already pays for domestic shipping, so only the Stapler adds any.
-        await expect.poll(() => page.locator('.summary').textContent()).toMatch(/Subtotal\s*€86\s*Shipping\s*€4\s*Estimated total\s*€90/)
+        await expect.poll(() => page.locator('.summary').textContent()).toMatch(/Subtotal\s*€86\s*Shipping to Domestic\s*€4\s*Estimated total\s*€90/)
         await page.getByLabel('Estimate shipping to').selectOption('europe')
         await expect.poll(() => page.locator('.group', { hasText: 'Last-Minute Lamp' }).textContent())
           .toContain('Your Pledge already holds One lamp, which doesn’t ship to Europe')
@@ -640,6 +638,12 @@ export function registerTinkerfundE2E(): void {
         await page.getByLabel('Europe').check()
         await expect.poll(() => page.locator('.pledge', { hasText: 'Last-Minute Lamp' }).textContent())
           .toContain('Your Pledge already holds One lamp, which doesn’t ship to Europe')
+
+        // None of it reaches prod's Cart (issue #1383).
+        await page.goto(url('/t/tinkerfund/prod/cart'), { waitUntil: 'hydration' })
+        await expect.poll(() => page.locator('.empty').textContent()).toContain('Your Cart is empty')
+        expect(await count.textContent()).toBe('0')
+        expect(await page.evaluate(() => Object.keys(sessionStorage).filter((k) => k.startsWith('tinkerfund:prod:')))).toEqual([])
       })
 
       // The One-Button Keypad again: one keypad (€45) tips it over its €1,000

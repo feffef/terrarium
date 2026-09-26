@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { TinkerfundCard } from '../../composables/tinkerfund'
+import type { TinkerfundCard, TinkerfundClock } from '../../composables/tinkerfund'
 import type { TinkerfundBrowseQuery, TinkerfundSort } from '../../utils/browse'
 
 // Discover, or a Category page when `category` is set. Every filter and the
@@ -7,7 +7,7 @@ import type { TinkerfundBrowseQuery, TinkerfundSort } from '../../utils/browse'
 const props = defineProps<{
   cards: TinkerfundCard[]
   categories: { slug: string; name: string }[]
-  clock: number
+  clock: TinkerfundClock
   category?: string
 }>()
 

@@ -1,5 +1,4 @@
 <script setup lang="ts">
-// A content figure (issue #1363): decorative unless it has a caption.
 defineProps<{ svg: string; caption?: string }>()
 </script>
 

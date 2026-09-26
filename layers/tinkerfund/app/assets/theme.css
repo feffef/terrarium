@@ -147,13 +147,18 @@
 .tf-stepper button:disabled { color: var(--tf-muted); cursor: not-allowed; }
 .tf-stepper output { display: grid; place-items: center; min-width: 32px; border-inline: var(--tf-hairline); font: 600 14px/1 var(--tf-mono); }
 
-.tf-sums { display: grid; gap: 6px; margin: 0; }
-.tf-sums div { display: flex; justify-content: space-between; gap: 12px; }
-.tf-sums dt { color: var(--tf-muted); }
-.tf-sums dd { margin: 0; font: 600 15px/1.4 var(--tf-mono); font-variant-numeric: tabular-nums; }
-.tf-sums .total { padding-top: 8px; border-top: var(--tf-hairline); }
-.tf-sums .total dt { color: var(--tf-ink); font-weight: 600; }
-.tf-sums .total dd { font-size: 18px; }
+/* Label-and-value rows: totals, receipts, the choices made. `compact` sits
+   inside a panel; `text` holds words, not amounts. */
+.tf-summary-list { display: grid; gap: 6px; margin: 0; }
+.tf-summary-list div { display: flex; justify-content: space-between; gap: 12px; }
+.tf-summary-list dt { color: var(--tf-muted); }
+.tf-summary-list dd { margin: 0; text-align: right; font: 600 15px/1.4 var(--tf-mono); font-variant-numeric: tabular-nums; }
+.tf-summary-list .total { padding-top: 8px; border-top: var(--tf-hairline); }
+.tf-summary-list .total dt { color: var(--tf-ink); font-weight: 600; }
+.tf-summary-list .total dd { font-size: 18px; }
+.tf-summary-list.compact { gap: 4px; }
+.tf-summary-list.compact :is(dt, dd) { font-size: 14px; }
+.tf-summary-list.text dd { font: 600 1em/1.5 var(--tf-font); }
 
 /* Printing (a receipt, story #1385): the page's content alone, dark on paper. */
 @media print {

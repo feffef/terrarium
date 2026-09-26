@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import type { TinkerfundCartGroup } from '../../../../../utils/cart'
+import { zone as zoneSchema } from '../../../../../../tenant.config'
+import type { TinkerfundQuoteGroup } from '../../../../../utils/checkout'
 
 // The focused checkout (story #1384, Pledge flow #1365). Every choice lives in
 // the URL query, so browser Back walks the steps and a reload keeps them.
@@ -14,22 +15,24 @@ const { space, link } = useTinkerfundSpace()
 const money = useTinkerfundMoney()
 const query = (key: string) => (typeof route.query[key] === 'string' ? route.query[key] : undefined)
 
-const chosen = computed(() => tinkerfundZone.safeParse(query('zone')).data)
-const [{ shop, zoneName, status, error }, { loaded, zone, view, quote: quoteFor, place, backer }] =
+const chosen = computed(() => zoneSchema.safeParse(query('zone')).data)
+const [{ shop, zoneName, paymentLabel, status, error }, { loaded, zone, view, quote: quoteFor, place, backer }] =
   await Promise.all([useTinkerfundShop(), useTinkerfundCart(chosen)])
 
 const step = computed(() => Math.max(0, STEPS.indexOf(query('step') as (typeof STEPS)[number])))
-const payment = computed(() => shop.value?.payments.find((p) => p.id === query('pay')) ?? shop.value?.payments[0])
+const payment = computed(() => (shop.value?.payments.some((p) => p.id === query('pay')) ? query('pay') : shop.value?.payments[0]?.id) ?? '')
 
 const quote = computed(() => quoteFor(query('code')))
 const stranded = computed(() => view.value.groups.some((g) => g.closed || g.unshipped.length || g.lines.some((l) => l.unavailable || !l.ships)))
-function addsTo({ existing, shipping }: TinkerfundCartGroup) {
+function addsTo({ existing, shipping, rezoned, replacedCode }: TinkerfundQuoteGroup) {
   if (!existing) return undefined
-  const moves = existing.zone === zone.value
-    ? ''
-    : `, which moves from ${zoneName(existing.zone)}: it ships for ${money(existing.shipping + shipping)} instead of ${money(existing.shipping)}`
-  return `Adds to your Pledge ${existing.ref}${moves}`
+  const moves = rezoned
+    ? `, which moves from ${zoneName(existing.zone)}: it ships for ${money(existing.shipping + shipping)} instead of ${money(existing.shipping)}`
+    : ''
+  const code = replacedCode ? ` Code ${quote.value.code} replaces its earlier code ${replacedCode}: a Pledge holds one code.` : ''
+  return `Adds to your Pledge ${existing.ref}${moves}.${code}`
 }
+const shippingRow = computed(() => tinkerfundShippingRow(quote.value, zoneName(zone.value), money))
 
 // A choice replaces the entry; a step pushes one, so Back returns to it.
 const choose = (change: Record<string, string | undefined>) => router.replace({ query: { ...route.query, ...change } })
@@ -46,7 +49,7 @@ function removeCode() {
   choose({ code: undefined })
 }
 async function confirm() {
-  const { refs, error } = place({ zone: zone.value, payment: payment.value?.id ?? '', code: query('code') })
+  const { refs, error } = place({ zone: zone.value, payment: payment.value, code: query('code') })
   refusal.value = error
   placing.value = !!refs
   if (refs) await router.replace({ path: link('/checkout/done'), query: { refs: refs.join(',') } })
@@ -104,7 +107,7 @@ useSeoMeta(tinkerfundSeo({ kind: 'private', space, title: 'Checkout' }))
             <fieldset class="choices stacked">
               <legend>Payment method</legend>
               <label v-for="p in shop?.payments" :key="p.id">
-                <input type="radio" name="pay" :value="p.id" :checked="p.id === payment?.id" @change="choose({ pay: p.id })">
+                <input type="radio" name="pay" :value="p.id" :checked="p.id === payment" @change="choose({ pay: p.id })">
                 <span>{{ p.label }}</span>
               </label>
             </fieldset>
@@ -115,9 +118,9 @@ useSeoMeta(tinkerfundSeo({ kind: 'private', space, title: 'Checkout' }))
           </section>
 
           <section v-else class="step" aria-label="Review">
-            <dl class="choices-made tf-panel">
+            <dl class="choices-made tf-summary-list text tf-panel">
               <div><dt>Ship to</dt><dd>{{ zoneName(zone) }} <NuxtLink :to="toStep(0)">Change<span class="tf-sr"> shipping</span></NuxtLink></dd></div>
-              <div><dt>Pay with</dt><dd>{{ payment?.label }} <NuxtLink :to="toStep(1)">Change<span class="tf-sr"> payment</span></NuxtLink></dd></div>
+              <div><dt>Pay with</dt><dd>{{ paymentLabel(payment) }} <NuxtLink :to="toStep(1)">Change<span class="tf-sr"> payment</span></NuxtLink></dd></div>
             </dl>
             <TinkerfundPledgeSummary
               v-for="group in quote.groups"
@@ -142,10 +145,10 @@ useSeoMeta(tinkerfundSeo({ kind: 'private', space, title: 'Checkout' }))
 
         <aside class="summary tf-panel" aria-labelledby="summary-h">
           <h2 id="summary-h">Summary</h2>
-          <dl class="tf-sums">
+          <dl class="tf-summary-list">
             <div><dt>Subtotal</dt><dd>{{ money(quote.subtotal) }}</dd></div>
             <div v-if="quote.discount"><dt>Discount</dt><dd>−{{ money(quote.discount) }}</dd></div>
-            <div><dt>Shipping</dt><dd>{{ money(quote.shipping) }}</dd></div>
+            <div><dt>{{ shippingRow.label }}</dt><dd>{{ shippingRow.amount }}</dd></div>
             <div class="total"><dt>Total</dt><dd>{{ money(quote.total) }}</dd></div>
           </dl>
           <ul v-if="quote.deals.length" class="deals">
@@ -188,10 +191,7 @@ address { font-style: normal; }
 .choices.stacked { display: grid; }
 .choices label { display: flex; gap: 10px; align-items: center; padding: 10px 14px; border: var(--tf-hairline); border-radius: var(--tf-radius); background: var(--tf-surface); cursor: pointer; }
 .choices label:has(:checked) { border-color: var(--tf-ink); box-shadow: inset 0 0 0 1px var(--tf-ink); }
-.choices-made { display: grid; gap: 6px; margin: 0; padding: 14px 16px; }
-.choices-made div { display: flex; justify-content: space-between; gap: 12px; }
-.choices-made dt { color: var(--tf-muted); }
-.choices-made dd { margin: 0; font-weight: 600; text-align: right; }
+.choices-made { padding: 14px 16px; }
 .choices-made a { margin-left: 8px; font-weight: 400; font-size: 14px; }
 .actions { display: flex; flex-wrap: wrap; gap: 10px; justify-content: space-between; }
 .refusal { color: var(--tf-bad); font-size: 14px; }

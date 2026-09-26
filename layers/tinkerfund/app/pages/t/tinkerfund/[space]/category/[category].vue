@@ -2,7 +2,8 @@
 definePageMeta({ viewTransition: true })
 
 const route = useRoute()
-const { space, clock, cards, categories } = await useTinkerfundCatalog()
+const { space } = useTinkerfundSpace()
+const { clock, cards, categories } = await useTinkerfundCatalog()
 const { link } = useTinkerfundSpace()
 const category = computed(() => categories.value.find((c) => c.slug === route.params.category))
 

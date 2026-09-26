@@ -7,12 +7,12 @@ import { z } from 'zod'
 import { defineTenant } from '../../shared/manifest'
 import { TINKERFUND_OFFSET, resolveTinkerfundOffset } from './app/utils/clock'
 
-const slug = z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, 'must be a lowercase slug')
+export const slug = z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, 'must be a lowercase slug')
 const offset = z.string().regex(TINKERFUND_OFFSET, 'must be an offset like "-12d" or "+36h"')
 const money = z.number().positive()
 const count = z.number().int().nonnegative()
 const positiveCount = z.number().int().positive()
-const zone = z.enum(['domestic', 'europe', 'world'])
+export const zone = z.enum(['domestic', 'europe', 'world'])
 const TOKEN = String.raw`var\(--tf-[a-z-]+\)`
 const THEME_COLOUR = new RegExp(String.raw`^(?:none|currentColor|${TOKEN}|color-mix\(in srgb, *${TOKEN}(?: \d+%)?, *${TOKEN}(?: \d+%)?\))$`)
 const COLOUR_VALUE = /\b(?:fill|stroke|color)\s*(?:=\s*["']?|:)\s*([^"';]+)/g
@@ -132,6 +132,22 @@ export const campaign = z
 
 const comment = z.object({ author: z.string(), posted: offset, text: z.string(), inventor: z.boolean().optional() }).strict()
 
+export const promotion = z
+  .object({
+    title: z.string(),
+    description: z.string().optional(),
+    code: z.string().regex(/^[A-Z0-9]+$/, 'must be upper-case letters and digits').optional(),
+    campaign: slug.optional(),
+    discount: z.union([
+      z.object({ percent: z.number().int().min(1).max(100) }).strict(),
+      z.object({ amount: money }).strict(),
+    ]),
+    start: offset,
+    /** Left out, the Promotion never expires. */
+    end: offset.optional(),
+  })
+  .strict()
+
 export const pledge = z
   .object({
     ref: z.string(),
@@ -181,21 +197,7 @@ export default defineTenant({
     promotions: {
       type: 'data',
       source: '*.yml',
-      schema: z
-        .object({
-          title: z.string(),
-          description: z.string().optional(),
-          code: z.string().regex(/^[A-Z0-9]+$/, 'must be upper-case letters and digits').optional(),
-          campaign: slug.optional(),
-          discount: z.union([
-            z.object({ percent: z.number().int().min(1).max(100) }).strict(),
-            z.object({ amount: money }).strict(),
-          ]),
-          start: offset,
-          /** Left out, the Promotion never expires. */
-          end: offset.optional(),
-        })
-        .strict(),
+      schema: promotion,
     },
     backer: {
       type: 'data',

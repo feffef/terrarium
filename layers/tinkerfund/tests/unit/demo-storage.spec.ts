@@ -26,7 +26,6 @@ describe('theme preference', () => {
 })
 
 describe('resetTinkerfundDemo', () => {
-  // The theme is a preference, not demo state (#1367), so Reset keeps it.
   it('removes every Tinkerfund demo key and leaves the theme and other Tenants’ keys alone', () => {
     const storage = memoryStorage({
       'tinkerfund-theme': 'dark',

@@ -2,11 +2,10 @@
 import type { TinkerfundBacking } from '../../composables/tinkerfund'
 import type { TinkerfundReward } from '../../types/tinkerfund'
 
-const props = defineProps<{ reward: TinkerfundReward; backing: TinkerfundBacking; now: number }>()
+const props = defineProps<{ reward: TinkerfundReward; backing: TinkerfundBacking; now: number; zoneName: (id: string) => string }>()
 
 const locale = useTinkerfundLocale()
 const money = useTinkerfundMoney()
-const { zoneName } = await useTinkerfundShop()
 const id = useId()
 const state = computed(() => props.backing.state)
 const refusal = computed(() => props.backing.refusals[`reward:${props.reward.id}`])
@@ -18,7 +17,7 @@ const options = reactive<Record<string, string>>(
   Object.fromEntries((props.reward.options ?? []).map((g) => [g.id, g.choices[0]!.id])),
 )
 const ships = computed(() =>
-  props.reward.shipsTo ? `Ships to ${props.reward.shipsTo.map(zoneName).join(', ')}` : 'Digital, nothing ships',
+  props.reward.shipsTo ? `Ships to ${props.reward.shipsTo.map((zone) => props.zoneName(zone)).join(', ')}` : 'Digital, nothing ships',
 )
 const button = computed(() => {
   if (state.value === 'upcoming') return 'Opens at launch'

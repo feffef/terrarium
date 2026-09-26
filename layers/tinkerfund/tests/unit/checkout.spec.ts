@@ -3,8 +3,8 @@
 import { describe, expect, it } from 'vitest'
 import { resolveTinkerfundCart, withTinkerfundPledges } from '../../app/utils/cart.ts'
 import type { TinkerfundBackerState, TinkerfundDraft, TinkerfundPledge, TinkerfundShop, TinkerfundZone } from '../../app/utils/cart.ts'
-import { placeTinkerfundPledges, quoteTinkerfundCheckout, tinkerfundReceipt } from '../../app/utils/checkout.ts'
-import { catalog, NOW, promotion, shop } from './support.ts'
+import { placeTinkerfundPledges, quoteTinkerfundCheckout, tinkerfundReceipt, tinkerfundShippingRow } from '../../app/utils/checkout.ts'
+import { catalog, DAY, NOW, promotion, shop } from './support.ts'
 
 const black = { colour: 'black' }
 const cart: TinkerfundDraft[] = [
@@ -78,6 +78,21 @@ describe('quoting a checkout', () => {
     expect(quote({ cart: more, pledges: [mugs], zone: 'europe' })).toMatchObject({ subtotal: 3, shipping: 2, total: 5 })
   })
 
+  it('shows a cheaper zone for a Pledge as a shipping change naming the new zone, never a bare negative shipping', () => {
+    const mugs: TinkerfundPledge = {
+      ref: 'TF-P-9001', campaign: 'mug', placed: NOW, zone: 'europe', payment: 'demo-card',
+      lines: [{ reward: 'mug', options: {}, quantity: 1 }], addons: [], promotions: [], discount: 0, shipping: 4,
+    }
+    const more = [{ campaign: 'mug', lines: [{ reward: 'mug', options: {}, quantity: 1 }], addons: [] }]
+    const moved = quote({ cart: more, pledges: [mugs], zone: 'domestic' })
+    expect(moved).toMatchObject({ subtotal: 3, shipping: -2, total: 1 })
+    const money = (amount: number) => `€${amount}`
+    expect(tinkerfundShippingRow(moved, 'Domestic', money)).toEqual({ label: 'Shipping change, now to Domestic', amount: '−€2' })
+    expect(tinkerfundShippingRow(moved.groups[0]!, 'Domestic', money)).toEqual({ label: 'Shipping change, now to Domestic', amount: '−€2' })
+    expect(tinkerfundShippingRow(quote({ cart: more, pledges: [mugs], zone: 'europe' }), 'Europe', money)).toEqual({ label: 'Shipping to Europe', amount: '—' })
+    expect(tinkerfundShippingRow(quote(), 'Domestic', money)).toEqual({ label: 'Shipping to Domestic', amount: '€7' })
+  })
+
   describe('adding to a Pledge that earned a Promotion', () => {
     const lamp: TinkerfundPledge = {
       ref: 'TF-P-9001', campaign: 'lamp', placed: NOW, zone: 'domestic', payment: 'demo-card',
@@ -87,17 +102,43 @@ describe('quoting a checkout', () => {
 
     it('takes a fixed amount off once per Pledge, never again on a merge', () => {
       const fiveOff = promotion({ title: 'Five off every Pledge', discount: { amount: 5 } })
-      const earned = { ...lamp, promotions: [fiveOff.id], discount: 5 }
+      const earned = { ...lamp, promotions: [fiveOff.stem], discount: 5 }
       const q = quote({ cart: oneMore, pledges: [earned], at: { promotions: [fiveOff] } })
       expect(q).toMatchObject({ subtotal: 20, discount: 0, shipping: 0, total: 20 })
       const placed = placeTinkerfundPledges({ state: { cart: oneMore, pledges: [earned] }, quote: q, zone: 'domestic', payment: 'demo-card', shop: shop({ promotions: [fiveOff] }) })
-      expect(placed.state.pledges[0]).toMatchObject({ promotions: [fiveOff.id], discount: 5 })
+      expect(placed.state.pledges[0]).toMatchObject({ promotions: [fiveOff.stem], discount: 5 })
     })
 
     it('keeps a percentage it earned on what it adds, though that Promotion has since expired', () => {
       const expired = promotion({ title: 'Lamp tenth', campaign: 'lamp', discount: { percent: 10 }, end: '-1h' })
-      const earned = { ...lamp, promotions: [expired.id], discount: 2 }
+      const earned = { ...lamp, promotions: [expired.stem], discount: 2 }
       expect(quote({ cart: oneMore, pledges: [earned], at: { promotions: [expired] } })).toMatchObject({ discount: 2, total: 18 })
+    })
+
+    it('holds at most one code: a code entered in a top-up replaces the earlier one over the whole Pledge, keeping automatic ones', () => {
+      const five = promotion({ title: 'Five', code: 'FIVE', discount: { amount: 5 } })
+      const ten = promotion({ title: 'Ten', code: 'TEN', discount: { percent: 10 } })
+      const twenty = promotion({ title: 'Twenty', code: 'TWENTY', discount: { percent: 20 } })
+      const at = { promotions: [five, ten, twenty, lampTenth] }
+      const topUp = (pledge: TinkerfundPledge, code: string) => {
+        const q = quote({ cart: oneMore, pledges: [pledge], at, code })
+        const { state } = placeTinkerfundPledges({ state: { cart: oneMore, pledges: [pledge] }, quote: q, zone: 'domestic', payment: 'demo-card', shop: shop(at) })
+        return { group: q.groups[0]!, pledge: state.pledges[0]! }
+      }
+      const start = { ...lamp, promotions: [five.stem, lampTenth.stem], discount: 7 }
+
+      const first = topUp(start, 'TEN')
+      // Two lamps: the automatic tenth and TEN's tenth of €40, less the €7 it already had off.
+      expect(first.group).toMatchObject({ replacedCode: 'FIVE', discount: 1 })
+      expect(first.pledge).toMatchObject({ promotions: [lampTenth.stem, ten.stem], discount: 8 })
+
+      const second = topUp(first.pledge, 'TWENTY')
+      expect(second.group).toMatchObject({ replacedCode: 'TEN', discount: 10 })
+      expect(second.pledge).toMatchObject({ promotions: [lampTenth.stem, twenty.stem], discount: 18 })
+
+      const same = topUp(start, 'FIVE')
+      expect(same.group.replacedCode).toBeUndefined()
+      expect(same.pledge.promotions).toEqual([five.stem, lampTenth.stem])
     })
   })
 
@@ -148,7 +189,7 @@ describe('confirming a checkout', () => {
   })
 
   const existing: TinkerfundPledge = {
-    ref: 'TF-P-9001', campaign: 'lamp', placed: NOW - 5 * 86_400_000, zone: 'domestic', payment: 'handshake',
+    ref: 'TF-P-9001', campaign: 'lamp', placed: NOW - 5 * DAY, zone: 'domestic', payment: 'handshake',
     lines: [{ reward: 'manual', options: {}, quantity: 1 }], addons: [], bonus: 3, promotions: [], discount: 0, shipping: 0,
   }
 

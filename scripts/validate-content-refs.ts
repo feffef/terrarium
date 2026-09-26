@@ -532,7 +532,7 @@ function checkArtifacts(
   return { checked, slugs }
 }
 
-// ── Tinkerfund (issue #1366) ────────────────────────────────────────────────
+// ── Campaigns and Pledges (Tinkerfund, issue #1366) ─────────────────────────
 // validate-content.ts has already checked each Document's shape, so this
 // reads the fields it needs without re-checking their types.
 
@@ -544,7 +544,7 @@ type PageDoc = ReturnType<typeof splitFrontmatter> & { rel: string; file: string
 const TF_CAMPAIGN_PAGE = /^campaigns\/([^/]+)\.md$/
 const TF_UPDATE_PAGE = /^campaigns\/([^/]+)\/updates\/[^/]+\.md$/
 
-function tinkerfundPledgeRefs(pledges: TinkerfundPledge[], campaigns: Map<string, TinkerfundCampaign>): string[] {
+function pledgeRefs(pledges: TinkerfundPledge[], campaigns: Map<string, TinkerfundCampaign>): string[] {
   const msgs: string[] = []
   pledges.forEach((pledge, i) => {
     const at = `pledges.${i}`
@@ -575,7 +575,7 @@ function tinkerfundPledgeRefs(pledges: TinkerfundPledge[], campaigns: Map<string
 }
 
 /** Returns how many data Documents it checked; the caller counts the pages. */
-function checkTinkerfund(
+function checkCampaignsAndPledges(
   pagesKey: string,
   pages: PageDoc[],
   groupCols: ExpandedCollection[],
@@ -636,7 +636,7 @@ function checkTinkerfund(
     }
   }
   for (const doc of docs('backer')) {
-    report(doc, tinkerfundPledgeRefs((doc.data.pledges ?? []) as TinkerfundPledge[], campaigns))
+    report(doc, pledgeRefs((doc.data.pledges ?? []) as TinkerfundPledge[], campaigns))
   }
   return checked
 }
@@ -683,7 +683,7 @@ export function validateReferences(cols: ExpandedCollection[], projectRoot = roo
 
     if (pages.some((p) => p.frontmatter.campaign) || groupCols.some((c) => c.collection === 'backer')) {
       groupsChecked++
-      filesChecked += checkTinkerfund(pagesCol.key, pages, groupCols, projectRoot, violations)
+      filesChecked += checkCampaignsAndPledges(pagesCol.key, pages, groupCols, projectRoot, violations)
       continue
     }
 

@@ -1,6 +1,6 @@
 ---
 title: Last-Minute Lamp
-description: Live, over its goal and ending within 48 hours of the pinned now.
+description: Live, over its goal and ending within 48 hours of the pinned now. Its Story heading is there so the Shift+Tab e2e has a link in the Story to keep clear of the sticky nav.
 campaign:
   registry: TF-9001
   inventor: test-inventor

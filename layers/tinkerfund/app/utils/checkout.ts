@@ -30,8 +30,10 @@ import type {
 import { derivePromotionState } from './status'
 
 export interface TinkerfundQuoteGroup extends TinkerfundCartGroup {
-  /** The Promotions this checkout earns the Pledge. */
+  /** The Promotions the Pledge holds once placed: at most one of them a code. */
   promotions: string[]
+  /** The code the Pledge held, which the entered one replaces. */
+  replacedCode?: string
   discount: number
   total: number
 }
@@ -41,6 +43,7 @@ export interface TinkerfundQuote {
   subtotal: number
   discount: number
   shipping: number
+  rezoned: boolean
   total: number
   /** Titles of the Promotions that took something off. */
   deals: string[]
@@ -64,10 +67,10 @@ function findCode(promotions: TinkerfundPromotionTerms[], entered: string | unde
 }
 
 /**
- * Automatic discounts plus at most one code, off Rewards and Add-ons only
- * (issue #1365). Adding to a Pledge quotes the change in its discount: the
- * terms it already earned cover what is added, and one earned again adds
- * nothing.
+ * Automatic discounts plus at most one code per Pledge, off Rewards and
+ * Add-ons only (issue #1365). Adding to a Pledge quotes the change in its
+ * discount: the terms it already earned cover what is added, one earned again
+ * adds nothing, and a code entered now replaces the code it held.
  */
 export function quoteTinkerfundCheckout(view: TinkerfundCartView, shop: TinkerfundShop, code: string | undefined): TinkerfundQuote {
   const entered = findCode(shop.promotions, code, view.groups.filter((g) => goodsOf(g) > 0).map((g) => g.campaign), shop.now)
@@ -75,19 +78,24 @@ export function quoteTinkerfundCheckout(view: TinkerfundCartView, shop: Tinkerfu
   const groups = view.groups.map((group): TinkerfundQuoteGroup => {
     const goods = goodsOf(group)
     const { existing } = group
-    const held = existing?.promotions ?? []
+    const code = goods > 0 && entered.promotion && tinkerfundPromotionTargets(entered.promotion, group.campaign) ? entered.promotion : undefined
+    const replaced = code && shop.promotions.find((p) => p.code && p.stem !== code.stem && existing?.promotions.includes(p.stem))
+    const held = (existing?.promotions ?? []).filter((stem) => stem !== replaced?.stem)
     const earned = goods > 0
-      ? [
-          ...tinkerfundAutomaticDeals(shop.promotions, group.campaign, shop.now),
-          ...(entered.promotion && tinkerfundPromotionTargets(entered.promotion, group.campaign) ? [entered.promotion] : []),
-        ].filter((p) => !held.includes(p.id))
+      ? [...tinkerfundAutomaticDeals(shop.promotions, group.campaign, shop.now), ...(code ? [code] : [])].filter((p) => !held.includes(p.stem))
       : []
     for (const p of earned) deals.add(p.title)
     const campaign = shop.catalog[group.campaign]?.campaign
     const heldGoods = existing && campaign ? tinkerfundGoods(existing, campaign) : 0
-    const terms = [...shop.promotions.filter((p) => held.includes(p.id)), ...earned]
+    const terms = [...shop.promotions.filter((p) => held.includes(p.stem)), ...earned]
     const discount = cents(tinkerfundDiscount(heldGoods + goods, terms) - (existing?.discount ?? 0))
-    return { ...group, promotions: earned.map((p) => p.id), discount, total: cents(group.subtotal - discount + group.shipping) }
+    return {
+      ...group,
+      promotions: [...held, ...earned.map((p) => p.stem)],
+      replacedCode: replaced?.code,
+      discount,
+      total: cents(group.subtotal - discount + group.shipping),
+    }
   })
   const discount = sum(groups.map((g) => g.discount))
   return {
@@ -95,11 +103,22 @@ export function quoteTinkerfundCheckout(view: TinkerfundCartView, shop: Tinkerfu
     subtotal: view.subtotal,
     discount,
     shipping: view.shipping,
+    rezoned: view.rezoned,
     total: cents(view.total - discount),
     deals: [...deals],
     code: entered.promotion?.code,
     codeProblem: entered.problem,
   }
+}
+
+/** A summary's shipping row: a Pledge moved to a cheaper zone (issue #1365) reads as a change, never as a negative "Shipping". */
+export function tinkerfundShippingRow({ shipping, rezoned }: { shipping: number; rezoned?: boolean }, zone: string, money: (amount: number) => string) {
+  if (!rezoned) return { label: `Shipping to ${zone}`, amount: shipping ? money(shipping) : '—' }
+  return { label: `Shipping change, now to ${zone}`, amount: formatTinkerfundChange(shipping, money) }
+}
+
+export function formatTinkerfundChange(amount: number, money: (amount: number) => string): string {
+  return amount > 0 ? `+${money(amount)}` : amount < 0 ? `−${money(-amount)}` : 'No change'
 }
 
 export interface TinkerfundReceiptLine {
@@ -200,7 +219,7 @@ export function placeTinkerfundPledges({ state, quote, zone, payment, shop }: Ti
       lines,
       addons,
       ...(bonus > 0 ? { bonus } : {}),
-      promotions: [...new Set([...old?.promotions ?? [], ...group.promotions])],
+      promotions: group.promotions,
     }, shop))
   }
 

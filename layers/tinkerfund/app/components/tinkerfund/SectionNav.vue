@@ -8,11 +8,14 @@ const target = (id: string) => document.getElementById(id)
 const isSticky = (el: HTMLElement | null) => !!el && getComputedStyle(el).position === 'sticky'
 
 let observer: IntersectionObserver | undefined
-onMounted(() => {
+let resizes: ResizeObserver | undefined
+const inView = new Map<string, boolean>()
+
+// The band from just below the nav to mid-screen is where a section is being read.
+function watchSections() {
   const bar = nav.value!
   const line = Number.parseFloat(getComputedStyle(bar).top) + bar.offsetHeight + 24
-  const inView = new Map<string, boolean>()
-  // The band from just below the nav to mid-screen is where a section is being read.
+  observer?.disconnect()
   observer = new IntersectionObserver((entries) => {
     for (const entry of entries) inView.set(entry.target.id, entry.isIntersecting)
     current.value = currentTinkerfundSection(
@@ -23,8 +26,19 @@ onMounted(() => {
     const el = target(id)
     if (el) observer.observe(el)
   }
+}
+
+// The band moves when the nav or the page header above it changes size, so it is measured again.
+onMounted(() => {
+  resizes = new ResizeObserver(watchSections)
+  resizes.observe(nav.value!)
+  const header = document.getElementById('tf-main')?.previousElementSibling
+  if (header) resizes.observe(header)
 })
-onUnmounted(() => observer?.disconnect())
+onUnmounted(() => {
+  resizes?.disconnect()
+  observer?.disconnect()
+})
 
 // A sticky section (desktop Rewards, #1380) is already in view: jumping to it
 // would only scroll the page away from what is being read.

@@ -1,7 +1,8 @@
 <script setup lang="ts">
 definePageMeta({ viewTransition: true })
 
-const { space, clock, cards, categories } = await useTinkerfundCatalog()
+const { space } = useTinkerfundSpace()
+const { clock, cards, categories } = await useTinkerfundCatalog()
 
 useSeoMeta(tinkerfundSeo({ kind: 'listing', space, title: 'Discover', description: 'Every Campaign on Tinkerfund, to filter and sort.' }))
 </script>

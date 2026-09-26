@@ -1,12 +1,11 @@
 <script setup lang="ts">
-import type { TinkerfundCard } from '../../composables/tinkerfund'
+import type { TinkerfundCard, TinkerfundClock } from '../../composables/tinkerfund'
 
-const props = defineProps<{ card: TinkerfundCard; clock: number }>()
+const props = defineProps<{ card: TinkerfundCard; clock: TinkerfundClock }>()
 const { link } = useTinkerfundSpace()
-const locale = useTinkerfundLocale()
 const money = useTinkerfundMoney()
 const upcoming = computed(() => props.card.status.state === 'upcoming')
-const from = computed(() => props.card.prices.length ? money(Math.min(...props.card.prices)) : '—')
+const time = computed(() => tinkerfundTimeTile(props.card.status, props.clock.countdown))
 </script>
 
 <template>
@@ -27,16 +26,15 @@ const from = computed(() => props.card.prices.length ? money(Math.min(...props.c
       <dl class="tiles">
         <template v-if="upcoming">
           <div><dt>Goal</dt><dd>{{ money(card.goal) }}</dd></div>
-          <div><dt>From</dt><dd>{{ from }}</dd></div>
+          <div><dt>From</dt><dd>{{ card.priceFrom === undefined ? '—' : money(card.priceFrom) }}</dd></div>
         </template>
         <template v-else>
           <div><dt>Pledged</dt><dd>{{ money(card.pledged) }}</dd></div>
           <div><dt>Funded</dt><dd>{{ card.status.percent }}%</dd></div>
         </template>
-        <div v-if="card.status.state === 'ended'"><dt>Backers</dt><dd>{{ card.backers.toLocaleString(locale) }}</dd></div>
-        <div v-else>
-          <dt>Remaining</dt>
-          <dd><TinkerfundTime :at="tinkerfundDeadline(card.status).at" :text="tinkerfundRemaining(card.status, clock)" /></dd>
+        <div>
+          <dt>{{ time.label }}</dt>
+          <dd><TinkerfundTime :at="time.at" :text="time.text" /></dd>
         </div>
       </dl>
     </div>

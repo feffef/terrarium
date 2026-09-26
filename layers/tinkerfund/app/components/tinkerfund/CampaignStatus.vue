@@ -1,24 +1,17 @@
 <script setup lang="ts">
-import type { TinkerfundMoment } from '../../composables/tinkerfund'
+import type { TinkerfundClock } from '../../composables/tinkerfund'
 
 const props = defineProps<{
   campaign: { registry: string; launch: string; end: string; goal: number; pledged: number }
-  moment: TinkerfundMoment
+  clock: TinkerfundClock
 }>()
 
-// State is fixed for the page's "now"; only the relative time moves (issue #1364).
-const status = computed(() => deriveCampaignStatus(props.campaign, props.campaign.pledged, props.moment.now))
-const clock = ref(props.moment.now)
-let timer: ReturnType<typeof setInterval> | undefined
-onMounted(() => {
-  if (props.moment.ticking) timer = setInterval(() => (clock.value = Date.now()), 60_000)
-})
-onUnmounted(() => clearInterval(timer))
-
+const status = computed(() => deriveCampaignStatus(props.campaign, props.campaign.pledged, props.clock.now))
 const when = computed(() => {
   const { label, at } = tinkerfundDeadline(status.value)
-  const remaining = tinkerfundRemaining(status.value, clock.value)
-  const text = { upcoming: remaining, live: `${remaining} to go`, ended: `${label} ${formatTinkerfundAgo(clock.value, at)}` }
+  const { countdown } = props.clock
+  const remaining = tinkerfundRemaining(status.value, countdown)
+  const text = { upcoming: remaining, live: `${remaining} to go`, ended: `${label} ${formatTinkerfundAgo(countdown, at)}` }
   return { at, text: text[status.value.state] }
 })
 </script>

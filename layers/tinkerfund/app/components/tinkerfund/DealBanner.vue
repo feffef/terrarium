@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { TinkerfundClock } from '../../composables/tinkerfund'
+
 defineProps<{
   promotion: {
     title: string
@@ -8,7 +10,7 @@ defineProps<{
     startAt: number
     endAt?: number
   }
-  clock: number
+  clock: TinkerfundClock
   /** Scheduled Promotions count down to their start. */
   scheduled?: boolean
   /** Where "See all Deals" goes; left out on Deals itself. */
@@ -26,10 +28,10 @@ const locale = useTinkerfundLocale()
       <span v-if="promotion.code">Use code <code>{{ promotion.code }}</code> at checkout.</span>
       <span v-else>Applied automatically.</span>
       <span v-if="scheduled">
-        <TinkerfundTime :at="promotion.startAt" :text="`Starts in ${formatTinkerfundCountdown(tinkerfundCountdown(clock, promotion.startAt))}`" />.
+        <TinkerfundTime :at="promotion.startAt" :text="`Starts in ${formatTinkerfundCountdown(tinkerfundCountdown(clock.countdown, promotion.startAt))}`" />.
       </span>
       <span v-else-if="promotion.endAt">
-        <TinkerfundTime :at="promotion.endAt" :text="`Ends in ${formatTinkerfundCountdown(tinkerfundCountdown(clock, promotion.endAt))}`" />.
+        <TinkerfundTime :at="promotion.endAt" :text="`Ends in ${formatTinkerfundCountdown(tinkerfundCountdown(clock.countdown, promotion.endAt))}`" />.
       </span>
       <span v-else>No end date.</span>
     </p>

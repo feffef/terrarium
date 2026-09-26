@@ -10,6 +10,7 @@ import {
   tinkerfundLocale,
   tinkerfundStock,
 } from '../../app/utils/campaign.ts'
+import { HOUR, NOW } from './support.ts'
 
 describe('tinkerfundStock', () => {
   it('counts what is left of a limited Reward', () => {
@@ -26,9 +27,6 @@ describe('tinkerfundStock', () => {
 })
 
 describe('formatTinkerfundAgo', () => {
-  const NOW = Date.parse('2026-06-01T12:00:00Z')
-  const HOUR = 3_600_000
-
   it('says hours within the first day, days after', () => {
     expect(formatTinkerfundAgo(NOW, NOW - 25 * HOUR)).toBe('1 day ago')
     expect(formatTinkerfundAgo(NOW, NOW - 11 * 24 * HOUR)).toBe('11 days ago')
@@ -42,7 +40,6 @@ describe('formatTinkerfundAgo', () => {
 })
 
 describe('tinkerfundAutomaticDeals', () => {
-  const NOW = Date.parse('2026-06-01T12:00:00Z')
   const deal = { title: 'A tenth off', discount: { percent: 10 }, start: '-1d' }
 
   it('keeps Active automatic Promotions for this Campaign or the whole shop', () => {

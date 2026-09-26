@@ -56,6 +56,15 @@ describe('adding to the Cart', () => {
     expect(add(cart, { campaign: 'lamp', addon: 'bulb', quantity: 1 }).cart[0]!.addons).toEqual([{ id: 'bulb', quantity: 1 }])
   })
 
+  it('takes an Add-on alone once the Campaign’s Pledge already holds a Reward', () => {
+    const state = { cart: [], pledges: [pledgedLamps(1)] }
+    const { state: next, error } = addToTinkerfundCart(state, { campaign: 'lamp', addon: 'bulb', quantity: 1 }, shop())
+    expect(error).toBeUndefined()
+    const line = resolveTinkerfundCart(next, shop(), 'domestic').groups[0]!.lines[0]!
+    expect(line).toMatchObject({ title: 'Bulb', amount: 4 })
+    expect(line.unavailable).toBeUndefined()
+  })
+
   it('refuses a Campaign that is not Live, and anything it does not offer', () => {
     expect(add([], { campaign: 'ruler', reward: 'ruler', options: {}, quantity: 1 }).error).toBe('Pledging has closed')
     expect(add([], { campaign: 'clock', reward: 'clock', options: {}, quantity: 1 }).error).toBe('Opens at launch')

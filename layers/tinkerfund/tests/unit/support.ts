@@ -2,9 +2,10 @@
 // shop every Backer step is tested against.
 import type { TinkerfundPromotionTerms } from '../../app/utils/campaign.ts'
 import type { TinkerfundBakedPledge, TinkerfundCatalog, TinkerfundShop } from '../../app/utils/cart.ts'
+import { TINKERFUND_HOUR } from '../../app/utils/clock.ts'
 
 export const NOW = Date.parse('2026-06-01T12:00:00Z')
-export const HOUR = 3_600_000
+export const HOUR = TINKERFUND_HOUR
 export const DAY = 24 * HOUR
 
 /** sessionStorage is shared with every Tenant on the origin, so clear() must never run (issue #1359). */
@@ -89,8 +90,8 @@ export const baked: TinkerfundBakedPledge[] = [
   { ref: 'TF-P-0005', campaign: 'gone', placed: '-9d', zone: 'domestic', lines: [] },
 ]
 
-export const promotion = (p: Omit<TinkerfundPromotionTerms, 'id' | 'start'> & { start?: string }): TinkerfundPromotionTerms =>
-  ({ id: p.title.toLowerCase().replace(/\W+/g, '-'), start: '-1d', ...p })
+export const promotion = (p: Omit<TinkerfundPromotionTerms, 'stem' | 'start'> & { start?: string }): TinkerfundPromotionTerms =>
+  ({ stem: p.title.toLowerCase().replace(/\W+/g, '-'), start: '-1d', ...p })
 
 export const shop = (over: Partial<TinkerfundShop> = {}): TinkerfundShop =>
   ({ catalog, baked: [], promotions: [], payment: 'demo-card', now: NOW, ...over })

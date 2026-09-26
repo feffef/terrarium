@@ -8,6 +8,7 @@ const { space, link } = useTinkerfundSpace()
 const money = useTinkerfundMoney()
 const chosen = ref<TinkerfundZone>()
 const [{ shop, zoneName, status, error }, { loaded, zone, view, change }] = await Promise.all([useTinkerfundShop(), useTinkerfundCart(chosen)])
+const shippingRow = computed(() => tinkerfundShippingRow(view.value, zoneName(zone.value), money))
 const blocked = computed(() => view.value.groups.some((g) => g.lines.some((l) => l.unavailable)))
 
 useSeoMeta(tinkerfundSeo({ kind: 'private', space, title: 'Your Cart' }))
@@ -41,9 +42,9 @@ useSeoMeta(tinkerfundSeo({ kind: 'private', space, title: 'Your Cart' }))
           <select id="tf-zone" :value="zone" @change="chosen = ($event.target as HTMLSelectElement).value as TinkerfundZone">
             <option v-for="z in shop?.zones" :key="z.id" :value="z.id">{{ z.name }}</option>
           </select>
-          <dl class="tf-sums">
+          <dl class="sums tf-summary-list">
             <div><dt>Subtotal</dt><dd>{{ money(view.subtotal) }}</dd></div>
-            <div><dt>Shipping</dt><dd>{{ money(view.shipping) }}</dd></div>
+            <div><dt>{{ shippingRow.label }}</dt><dd>{{ shippingRow.amount }}</dd></div>
             <div class="total"><dt>Estimated total</dt><dd>{{ money(view.total) }}</dd></div>
           </dl>
           <p class="note">Discounts and codes apply at checkout. You’re only charged if a Campaign is funded.</p>
@@ -69,7 +70,7 @@ h1 { display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: baseline; }
 @media (min-width: 900px) { .summary { position: sticky; top: 76px; } }
 .summary h2 { margin: 0; font: 800 20px/1.1 var(--tf-font); font-stretch: 82%; }
 select { padding: 8px 10px; border: 1px solid var(--tf-muted); border-radius: var(--tf-radius); background: var(--tf-surface); color: var(--tf-ink); font: inherit; }
-.tf-sums { margin-top: 4px; }
+.sums { margin-top: 4px; }
 .note { margin: 0; color: var(--tf-muted); font-size: 14px; }
 .blocked { margin: 0; color: var(--tf-bad); font-size: 14px; }
 </style>

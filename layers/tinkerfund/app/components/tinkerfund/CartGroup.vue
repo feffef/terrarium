@@ -7,6 +7,7 @@ const emit = defineEmits<{ change: [request: TinkerfundCartRequest] }>()
 const id = useId()
 const money = useTinkerfundMoney()
 const { campaignLink } = useTinkerfundSpace()
+const shippingRow = computed(() => tinkerfundShippingRow(props.group, props.zone, money))
 
 function setBonus(event: Event) {
   const value = Math.floor(Number((event.target as HTMLInputElement).value))
@@ -68,8 +69,8 @@ function setBonus(event: Event) {
       </li>
     </ul>
 
-    <dl class="foot">
-      <div><dt>Shipping to {{ zone }}</dt><dd>{{ group.shipping ? money(group.shipping) : '—' }}</dd></div>
+    <dl class="foot tf-summary-list compact">
+      <div><dt>{{ shippingRow.label }}</dt><dd>{{ shippingRow.amount }}</dd></div>
       <div><dt>Subtotal</dt><dd>{{ money(group.subtotal) }}</dd></div>
     </dl>
   </section>
@@ -95,8 +96,5 @@ li { display: grid; grid-template-columns: 1fr auto; grid-template-areas: 'what 
 .bonus input { width: 96px; padding: 7px 8px; border: 1px solid var(--tf-muted); border-radius: var(--tf-radius); background: var(--tf-surface); color: var(--tf-ink); font: 600 14px/1.2 var(--tf-mono); }
 .amount { grid-area: amount; justify-self: end; font: 600 15px/1 var(--tf-mono); font-variant-numeric: tabular-nums; }
 .remove { grid-area: remove; justify-self: start; padding: 4px 0; font-size: 14px; }
-.foot { display: grid; gap: 4px; margin: 8px 0 0; }
-.foot div { display: flex; justify-content: space-between; gap: 12px; }
-.foot dt { color: var(--tf-muted); font-size: 14px; }
-.foot dd { margin: 0; font: 600 14px/1.4 var(--tf-mono); }
+.foot { margin-top: 8px; }
 </style>

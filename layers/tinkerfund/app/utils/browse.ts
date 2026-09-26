@@ -5,7 +5,7 @@ import type { campaign } from '../../tenant.config'
 import type { TinkerfundPromotionTerms } from './campaign'
 import { formatTinkerfundCountdown, resolveTinkerfundOffset, tinkerfundCountdown } from './clock'
 import { tinkerfundSlug } from './shop'
-import { deriveCampaignStatus, derivePromotionState, type CampaignState, type CampaignStatus } from './status'
+import { campaignPriceFrom, deriveCampaignStatus, derivePromotionState, type CampaignState, type CampaignStatus } from './status'
 
 export const TINKERFUND_SORTS = {
   popular: 'Popular',
@@ -97,6 +97,7 @@ export interface TinkerfundListing {
   pledged: number
   backers: number
   prices: number[]
+  priceFrom?: number
   status: CampaignStatus
   /** An Active Promotion names this Campaign; the shop calls it a Deal. */
   promoted: boolean
@@ -122,6 +123,7 @@ export function tinkerfundListings(
     pledged: c.pledged,
     backers: c.backers,
     prices: c.rewards.map((r) => r.price),
+    priceFrom: campaignPriceFrom(c.rewards),
     status: deriveCampaignStatus(c, c.pledged, now),
     promoted: promoted.has(tinkerfundSlug(path)),
   }))
@@ -135,6 +137,7 @@ export function tinkerfundStateLabel(status: CampaignStatus): string {
 }
 
 const DEADLINE_LABELS = { upcoming: 'Launches', live: 'Ends', ended: 'Ended' } as const
+const COUNTDOWN_LABELS = { upcoming: `${DEADLINE_LABELS.upcoming} in`, live: 'Remaining' } as const
 
 export function tinkerfundDeadline(status: CampaignStatus): { label: (typeof DEADLINE_LABELS)[CampaignState]; at: number } {
   return { label: DEADLINE_LABELS[status.state], at: status.state === 'upcoming' ? status.launchAt : status.endAt }
@@ -144,7 +147,14 @@ export function tinkerfundDeadline(status: CampaignStatus): { label: (typeof DEA
 export function tinkerfundRemaining(status: CampaignStatus, clock: number): string {
   if (status.state === 'ended') return DEADLINE_LABELS.ended
   const left = formatTinkerfundCountdown(tinkerfundCountdown(clock, tinkerfundDeadline(status).at))
-  return status.state === 'upcoming' ? `${DEADLINE_LABELS.upcoming} in ${left}` : left
+  return status.state === 'upcoming' ? `${COUNTDOWN_LABELS.upcoming} ${left}` : left
+}
+
+/** A card's time tile (story #1381): the countdown while Upcoming or Live, the outcome once Ended. */
+export function tinkerfundTimeTile(status: CampaignStatus, clock: number): { label: string; text: string; at: number } {
+  const { at } = tinkerfundDeadline(status)
+  if (status.state === 'ended') return { label: DEADLINE_LABELS.ended, text: tinkerfundStateLabel(status), at }
+  return { label: COUNTDOWN_LABELS[status.state], text: formatTinkerfundCountdown(tinkerfundCountdown(clock, at)), at }
 }
 
 const STATE_ORDER = { live: 0, upcoming: 1, ended: 2 } as const

@@ -13,11 +13,10 @@ import {
   tinkerfundRemaining,
   tinkerfundDeadline,
   tinkerfundPriceBounds,
+  tinkerfundTimeTile,
 } from '../../app/utils/browse.ts'
 import { tinkerfundCount } from '../../app/utils/shop.ts'
-
-const NOW = Date.parse('2026-06-01T12:00:00Z')
-const HOUR = 3_600_000
+import { HOUR, NOW } from './support.ts'
 
 function doc(slug: string, fields: { category?: string; launch: string; end: string; goal?: number; pledged?: number; backers?: number; prices?: number[] }) {
   return {
@@ -68,7 +67,7 @@ describe('a Campaign listing', () => {
     const [lamp] = tinkerfundListings([doc('lamp', { launch: '-12d', end: '+36h', pledged: 1250, backers: 40, prices: [19, 5] })], [], NOW)
     expect(lamp).toMatchObject({
       path: '/campaigns/lamp', title: 'lamp', category: 'desk', inventor: 'test-inventor', figure: '<path d="lamp" />',
-      pledged: 1250, goal: 1000, backers: 40, prices: [19, 5], promoted: false,
+      pledged: 1250, goal: 1000, backers: 40, prices: [19, 5], priceFrom: 5, promoted: false,
     })
     expect(lamp!.status).toMatchObject({ state: 'live', endingSoon: true, goalReached: true, percent: 125, endAt: NOW + 36 * HOUR })
   })
@@ -198,6 +197,13 @@ describe('a listing’s status copy', () => {
     expect(tinkerfundRemaining(byTitle('lamp'), NOW + 13 * HOUR)).toBe('0 days 23 hours')
     expect(tinkerfundRemaining(byTitle('kettle'), NOW)).toBe('Launches in 3 days 0 hours')
     expect(tinkerfundRemaining(byTitle('ruler'), NOW)).toBe('Ended')
+  })
+
+  it('gives a card’s time tile: the countdown to launch or end, or the outcome once Ended', () => {
+    expect(tinkerfundTimeTile(byTitle('kettle'), NOW)).toEqual({ label: 'Launches in', text: '3 days 0 hours', at: NOW + 72 * HOUR })
+    expect(tinkerfundTimeTile(byTitle('lamp'), NOW)).toEqual({ label: 'Remaining', text: '1 day 12 hours', at: NOW + 36 * HOUR })
+    expect(tinkerfundTimeTile(byTitle('hammock'), NOW)).toEqual({ label: 'Ended', text: 'Unfunded', at: NOW - HOUR })
+    expect(tinkerfundTimeTile(byTitle('ruler'), NOW).text).toBe('Funded')
   })
 
   it('dates the launch while Upcoming, else the end', () => {

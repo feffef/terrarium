@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { TinkerfundReceiptLine } from '../../utils/checkout'
 
-defineProps<{
+const props = defineProps<{
   pledge: {
     campaign: string
     title: string
@@ -10,6 +10,7 @@ defineProps<{
     bonus?: number
     discount: number
     shipping: number
+    rezoned?: boolean
     total: number
   }
   zone: string
@@ -22,6 +23,7 @@ defineProps<{
 const id = useId()
 const money = useTinkerfundMoney()
 const { campaignLink } = useTinkerfundSpace()
+const shippingRow = computed(() => tinkerfundShippingRow(props.pledge, props.zone, money))
 </script>
 
 <template>
@@ -47,9 +49,9 @@ const { campaignLink } = useTinkerfundSpace()
         <span class="amount">{{ money(pledge.bonus) }}</span>
       </li>
     </ul>
-    <dl class="sums">
+    <dl class="sums tf-summary-list compact">
       <div v-if="pledge.discount"><dt>Discount</dt><dd>−{{ money(pledge.discount) }}</dd></div>
-      <div><dt>Shipping to {{ zone }}</dt><dd>{{ pledge.shipping ? money(pledge.shipping) : '—' }}</dd></div>
+      <div><dt>{{ shippingRow.label }}</dt><dd>{{ shippingRow.amount }}</dd></div>
       <div class="total"><dt>Total</dt><dd>{{ money(pledge.total) }}</dd></div>
     </dl>
     <p v-if="endsAt !== undefined" class="pending">
@@ -72,11 +74,7 @@ li { display: flex; justify-content: space-between; gap: 12px; padding: 8px 0; b
 .what { display: grid; gap: 2px; min-width: 0; overflow-wrap: anywhere; }
 .detail { color: var(--tf-muted); font-size: 13px; }
 .flag { color: var(--tf-bad); font-size: 14px; }
-.amount, dd { font: 600 14px/1.4 var(--tf-mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
-.sums { display: grid; gap: 4px; margin: 4px 0 0; }
-.sums div { display: flex; justify-content: space-between; gap: 12px; }
-dt { color: var(--tf-muted); font-size: 14px; }
-dd { margin: 0; }
-.total dt { color: var(--tf-ink); font-weight: 600; }
+.amount { font: 600 14px/1.4 var(--tf-mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.sums { margin-top: 4px; }
 .pending { margin: 4px 0 0; padding: 10px 12px; border-radius: var(--tf-radius); background: var(--tf-bg); font-size: 14px; }
 </style>

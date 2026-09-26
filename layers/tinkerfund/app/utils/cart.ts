@@ -3,30 +3,27 @@
 import { z } from 'zod'
 import { TINKERFUND_SOLD_OUT, tinkerfundStock } from './campaign'
 import type { TinkerfundPromotionTerms } from './campaign'
-import type { pledge } from '../../tenant.config'
+import { pledge, slug } from '../../tenant.config'
+import type { campaign as campaignSchema, zone } from '../../tenant.config'
 import { deriveCampaignState } from './status'
 
-const id = z.string().min(1)
-const quantity = z.number().int().positive()
+export type TinkerfundZone = z.infer<typeof zone>
 
-export const tinkerfundZone = z.enum(['domestic', 'europe', 'world'])
-export type TinkerfundZone = z.infer<typeof tinkerfundZone>
-
-/** What a Pledge holds, shaped like a Pledge in `backer` (issue #1365). */
-export const tinkerfundPledgeContents = z.object({
-  lines: z.array(z.object({ reward: id, options: z.record(id, id), quantity })),
-  addons: z.array(z.object({ id, quantity })),
-  bonus: z.number().positive().optional(),
-})
+/** What a Pledge holds. Unlike a baked Pledge it always spells out options and
+ *  Add-ons, so the Backer's steps never meet a missing one. */
+export const tinkerfundPledgeContents = pledge
+  .pick({ addons: true, bonus: true })
+  .required({ addons: true })
+  .extend({ lines: z.array(pledge.shape.lines.element.required({ options: true })) })
 export type TinkerfundPledgeContents = z.infer<typeof tinkerfundPledgeContents>
 type Line = TinkerfundPledgeContents['lines'][number]
 type AddonLine = TinkerfundPledgeContents['addons'][number]
 
 /** A change to the Cart: a positive amount adds, a negative one takes away. */
 export const tinkerfundCartRequest = z.union([
-  z.object({ campaign: id, reward: id, options: z.record(id, id), quantity: z.number().int() }),
-  z.object({ campaign: id, addon: id, quantity: z.number().int() }),
-  z.object({ campaign: id, bonus: z.number() }),
+  z.object({ campaign: slug, reward: slug, options: z.record(slug, slug), quantity: z.number().int() }),
+  z.object({ campaign: slug, addon: slug, quantity: z.number().int() }),
+  z.object({ campaign: slug, bonus: z.number() }),
 ])
 export type TinkerfundCartRequest = z.infer<typeof tinkerfundCartRequest>
 
@@ -49,31 +46,16 @@ export interface TinkerfundPledge extends TinkerfundDraft {
 /** A past Pledge as baked into the `backer` collection. */
 export type TinkerfundBakedPledge = z.infer<typeof pledge>
 
-interface Item {
-  id: string
-  title: string
-  price: number
-  claimed: number
-  stock?: number
-}
+type CampaignContent = z.infer<typeof campaignSchema>
+type Reward = CampaignContent['rewards'][number]
+type Item = NonNullable<CampaignContent['addons']>[number]
 
-interface Reward extends Item {
-  limit?: number
-  options?: { id: string; name: string; choices: { id: string; label: string }[] }[]
-  shipsTo?: TinkerfundZone[]
-  delivery: string
-}
-
+const CATALOG_FIELDS = ['launch', 'end', 'goal', 'pledged', 'backers', 'rewards', 'addons', 'shipping'] as const
 /** What the Backer's steps need of a Campaign: its baked content, figures left out. */
-export interface TinkerfundCatalogCampaign {
-  launch: string
-  end: string
-  goal: number
-  pledged: number
-  backers: number
-  rewards: Reward[]
-  addons?: Item[]
-  shipping: Partial<Record<TinkerfundZone, number>>
+export type TinkerfundCatalogCampaign = Pick<CampaignContent, (typeof CATALOG_FIELDS)[number]>
+
+export function tinkerfundCatalogCampaign(campaign: TinkerfundCatalogCampaign): TinkerfundCatalogCampaign {
+  return Object.fromEntries(CATALOG_FIELDS.map((field) => [field, campaign[field]])) as TinkerfundCatalogCampaign
 }
 
 export type TinkerfundCatalog = Record<string, { title: string; campaign: TinkerfundCatalogCampaign }>
@@ -113,7 +95,7 @@ export const tinkerfundCents = (amount: number) => Math.round(amount * 100) / 10
 export const tinkerfundSum = (xs: number[]) => tinkerfundCents(xs.reduce((a, b) => a + b, 0))
 
 export function tinkerfundHeld(lines: Pick<Line, 'reward' | 'quantity'>[], reward: string): number {
-  return tinkerfundSum(lines.filter((l) => l.reward === reward).map((l) => l.quantity))
+  return lines.reduce((n, l) => (l.reward === reward ? n + l.quantity : n), 0)
 }
 
 export function tinkerfundShipsTo(reward: Pick<Reward, 'shipsTo'>, zone: TinkerfundZone): boolean {
@@ -194,7 +176,7 @@ export function tinkerfundDiscount(goods: number, terms: Pick<TinkerfundPromotio
 export function settleTinkerfundPledge(pledge: Omit<TinkerfundPledge, 'discount' | 'shipping'>, shop: Pick<TinkerfundShop, 'catalog' | 'promotions'>): TinkerfundPledge {
   const campaign = shop.catalog[pledge.campaign]?.campaign
   if (!campaign) return { ...pledge, discount: 0, shipping: 0 }
-  const terms = shop.promotions.filter((p) => pledge.promotions.includes(p.id))
+  const terms = shop.promotions.filter((p) => pledge.promotions.includes(p.stem))
   return { ...pledge, discount: tinkerfundDiscount(tinkerfundGoods(pledge, campaign), terms), shipping: tinkerfundShipping(pledge.lines, campaign, pledge.zone) }
 }
 
@@ -262,6 +244,7 @@ export function addToTinkerfundCart(state: TinkerfundBackerState, request: Tinke
   if (closed) return refuse(closed)
 
   const old = state.cart.find((d) => d.campaign === request.campaign)
+  const existing = tinkerfundPledgeFor(state.pledges, request.campaign)
   const draft: TinkerfundDraft = old ? { ...old } : { campaign: request.campaign, lines: [], addons: [] }
 
   if ('bonus' in request) {
@@ -272,13 +255,13 @@ export function addToTinkerfundCart(state: TinkerfundBackerState, request: Tinke
     const reward = campaign.rewards.find((r) => r.id === request.reward)
     if (!reward || !tinkerfundValidOptions(reward, request.options)) return refuse(TINKERFUND_GONE)
     draft.lines = mergeTinkerfundLines(draft.lines, [{ reward: reward.id, options: { ...request.options }, quantity: request.quantity }])
-    const pledged = tinkerfundHeld(tinkerfundPledgeFor(state.pledges, request.campaign)?.lines ?? [], reward.id)
+    const pledged = tinkerfundHeld(existing?.lines ?? [], reward.id)
     const short = adding ? tinkerfundShortfall(reward, tinkerfundHeld(draft.lines, reward.id), pledged) : undefined
     if (short) return refuse(short)
   } else {
     const addon = campaign.addons?.find((a) => a.id === request.addon)
     if (!addon) return refuse(TINKERFUND_GONE)
-    if (adding && !draft.lines.length) return refuse(TINKERFUND_NEEDS_REWARD)
+    if (adding && !draft.lines.length && !existing?.lines.length) return refuse(TINKERFUND_NEEDS_REWARD)
     draft.addons = mergeTinkerfundAddons(draft.addons, [{ id: addon.id, quantity: request.quantity }])
     const short = adding ? tinkerfundShortfall(addon, draft.addons.find((a) => a.id === addon.id)?.quantity ?? 0) : undefined
     if (short) return refuse(short)
@@ -323,6 +306,8 @@ export interface TinkerfundCartGroup {
   subtotal: number
   /** What shipping the Pledge adds: it pays its zone's rate once, and moving zone re-rates all of it. */
   shipping: number
+  /** `existing` moves zone, so `shipping` is a change, and can be negative. */
+  rezoned: boolean
 }
 
 export interface TinkerfundCartView {
@@ -330,6 +315,7 @@ export interface TinkerfundCartView {
   count: number
   subtotal: number
   shipping: number
+  rezoned: boolean
   total: number
 }
 
@@ -356,7 +342,7 @@ export function resolveTinkerfundCart(state: TinkerfundBackerState, shop: Tinker
       const detail = tinkerfundOptionsLabel(reward, line.options)
       return [{ key: tinkerfundCartLineKey(ref), ref, detail, ships: tinkerfundShipsTo(reward, zone), ...lineOf(reward, line.quantity, closed, tinkerfundHeld(existing?.lines ?? [], reward.id)) }]
     })
-    const rewarded = rewards.some((l) => !l.unavailable)
+    const rewarded = !!existing?.lines.length || rewards.some((l) => !l.unavailable)
     const addons = draft.addons.flatMap((line): TinkerfundCartLine[] => {
       const addon = campaign.addons?.find((a) => a.id === line.id)
       if (!addon) return []
@@ -376,10 +362,11 @@ export function resolveTinkerfundCart(state: TinkerfundBackerState, shop: Tinker
       unshipped: campaign.rewards.filter((r) => tinkerfundHeld(existing?.lines ?? [], r.id) && !tinkerfundShipsTo(r, zone)).map((r) => r.title),
       subtotal: tinkerfundSum([...lines.map((l) => l.amount), closed ? 0 : draft.bonus ?? 0]),
       shipping: tinkerfundCents(tinkerfundShipping(shipped, campaign, zone) - (existing?.shipping ?? 0)),
+      rezoned: !!existing && existing.zone !== zone,
     }]
   })
   const subtotal = tinkerfundSum(groups.map((g) => g.subtotal))
   const shipping = tinkerfundSum(groups.map((g) => g.shipping))
   const count = groups.reduce((n, g) => n + (g.lines.length ? g.lines.reduce((m, l) => m + l.quantity, 0) : 1), 0)
-  return { groups, count, subtotal, shipping, total: tinkerfundCents(subtotal + shipping) }
+  return { groups, count, subtotal, shipping, rezoned: groups.some((g) => g.rezoned), total: tinkerfundCents(subtotal + shipping) }
 }

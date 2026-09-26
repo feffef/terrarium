@@ -2,28 +2,28 @@
 // shop to give the Cart, the Pledges and every total (issue #1359).
 import { z } from 'zod'
 import { cancelTinkerfundPledge, reviseTinkerfundPledge } from './account'
+import { pledge, slug, zone } from '../../tenant.config'
 import {
   addToTinkerfundCart,
   resolveTinkerfundCart,
   tinkerfundCartRequest,
   settleTinkerfundPledge,
   tinkerfundPledgeContents,
-  tinkerfundZone,
 } from './cart'
 import type { TinkerfundBackerState, TinkerfundBakedPledge, TinkerfundPledge, TinkerfundShop, TinkerfundStep } from './cart'
 import { placeTinkerfundPledges, quoteTinkerfundCheckout } from './checkout'
 import { resolveTinkerfundOffset } from './clock'
 import { TINKERFUND_KEY_PREFIX } from './demo'
 
-const id = z.string().min(1)
+const ref = pledge.shape.ref
 /** When the action was taken: it replays at that "now". */
 const at = z.number()
 
 const action = z.discriminatedUnion('type', [
   z.object({ type: z.literal('cart'), at, request: tinkerfundCartRequest }),
-  z.object({ type: z.literal('place'), at, zone: tinkerfundZone, payment: id, code: z.string().optional() }),
-  z.object({ type: z.literal('change'), at, ref: id, change: tinkerfundPledgeContents }),
-  z.object({ type: z.literal('cancel'), at, ref: id }),
+  z.object({ type: z.literal('place'), at, zone, payment: slug, code: z.string().optional() }),
+  z.object({ type: z.literal('change'), at, ref, change: tinkerfundPledgeContents }),
+  z.object({ type: z.literal('cancel'), at, ref }),
 ])
 const actions = z.array(action)
 

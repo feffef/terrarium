@@ -65,8 +65,6 @@ export function cancelTinkerfundPledge(state: TinkerfundBackerState, ref: string
   return error ? { state, error } : { state: replace(state, { ...found.pledge, cancelled: shop.now }) }
 }
 
-export type TinkerfundPledgeChange = TinkerfundPledgeContents
-
 /**
  * The Pledge with new lines, Add-ons and bonus, under the same rules as the
  * Cart (issue #1365). What it already holds counts as still available to it,
@@ -75,7 +73,7 @@ export type TinkerfundPledgeChange = TinkerfundPledgeContents
 export function reviseTinkerfundPledge(
   state: TinkerfundBackerState,
   ref: string,
-  change: TinkerfundPledgeChange,
+  change: TinkerfundPledgeContents,
   shop: TinkerfundShop,
 ): TinkerfundStep {
   const refuse = (error: string) => ({ state, error })

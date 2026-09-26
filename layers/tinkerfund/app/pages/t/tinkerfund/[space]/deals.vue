@@ -1,9 +1,9 @@
 <script setup lang="ts">
 definePageMeta({ viewTransition: true })
 
-const { space, now, clock, cards, promotions } = await useTinkerfundCatalog()
-const { link } = useTinkerfundSpace()
-const deals = computed(() => groupTinkerfundPromotions(promotions.value, now.value))
+const { space, link } = useTinkerfundSpace()
+const { clock, cards, promotions } = await useTinkerfundCatalog()
+const deals = computed(() => groupTinkerfundPromotions(promotions.value, clock.value.now))
 const campaignOf = (slug?: string) => slug === undefined ? undefined : cards.value.find((c) => tinkerfundSlug(c.path) === slug)
 const groups = computed(() => [
   { id: 'tf-deals-now', title: 'Running now', list: deals.value.active, scheduled: false },
@@ -27,7 +27,7 @@ useSeoMeta(tinkerfundSeo({ kind: 'listing', space, title: 'Deals', description: 
 
     <section v-for="group in groups" :key="group.id" :aria-labelledby="group.id" class="group">
       <h2 :id="group.id" :class="{ 'tf-sr': !group.scheduled }">{{ group.title }}</h2>
-      <article v-for="p in group.list" :key="p.slug" class="deal">
+      <article v-for="p in group.list" :key="p.stem" class="deal">
         <TinkerfundDealBanner :promotion="p" :clock="clock" :scheduled="group.scheduled" />
         <div v-if="campaignOf(p.campaign)" class="campaign">
           <TinkerfundCampaignCard :card="campaignOf(p.campaign)!" :clock="clock" />

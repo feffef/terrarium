@@ -8,20 +8,22 @@ import type { CampaignState } from '../../utils/status'
 
 defineProps<{ title: string; description?: string }>()
 
-// The qa fixtures (content/qa) the specimens below are built from.
 const FIXTURE = {
-  lamp: 'last-minute-lamp',
-  stapler: 'goal-exact-stapler',
-  hammock: 'indoor-hammock',
+  lamp: { slug: 'last-minute-lamp', title: 'Last-Minute Lamp', reward: 'lamp', addon: 'bulb', pledge: 'TF-P-9001' },
+  stapler: { slug: 'goal-exact-stapler', rewards: ['early-bird', 'stapler'], addon: 'staple' },
+  hammock: { slug: 'indoor-hammock', reward: 'hammock' },
   workbench: 'self-assembling-workbench',
   code: 'TINKER10',
   zone: 'europe',
   payment: 'handshake',
-  pledge: 'TF-P-9001',
+  /** Refs no qa Pledge uses, for the specimens' own Pledges. */
+  receipt: 'TF-P-9004',
+  cancelled: 'TF-P-9009',
 } as const
 
 const { space, pagesKey, collections, link } = useTinkerfundSpace()
-const { now, ticking, clock, cards, categories, promotions } = await useTinkerfundCatalog()
+const [{ clock, cards, categories, promotions }, { zoneName }] = await Promise.all([useTinkerfundCatalog(), useTinkerfundShop()])
+const now = computed(() => clock.value.now)
 const { data: docs } = await useAsyncData(`tinkerfund-gallery-${space}`, () =>
   queryCollection(pagesKey).where('campaign', 'IS NOT NULL').all(),
 )
@@ -64,9 +66,9 @@ const specimenShop = computed<TinkerfundShop>(() => ({
 // A Cart that hits every notice at once.
 const cartSpecimen = computed(() => resolveTinkerfundCart(
   { cart: [
-    { campaign: FIXTURE.lamp, lines: [{ reward: 'lamp', options: { colour: 'white' }, quantity: 1 }], addons: [{ id: 'bulb', quantity: 1 }], bonus: 3 },
-    { campaign: FIXTURE.stapler, lines: [{ reward: 'early-bird', options: {}, quantity: 1 }, { reward: 'stapler', options: {}, quantity: 2 }], addons: [{ id: 'staple', quantity: 3 }] },
-    { campaign: FIXTURE.hammock, lines: [{ reward: 'hammock', options: {}, quantity: 1 }], addons: [] },
+    { campaign: FIXTURE.lamp.slug, lines: [{ reward: FIXTURE.lamp.reward, options: { colour: 'white' }, quantity: 1 }], addons: [{ id: FIXTURE.lamp.addon, quantity: 1 }], bonus: 3 },
+    { campaign: FIXTURE.stapler.slug, lines: FIXTURE.stapler.rewards.map((reward, i) => ({ reward, options: {}, quantity: i + 1 })), addons: [{ id: FIXTURE.stapler.addon, quantity: 3 }] },
+    { campaign: FIXTURE.hammock.slug, lines: [{ reward: FIXTURE.hammock.reward, options: {}, quantity: 1 }], addons: [] },
     { campaign: FIXTURE.workbench, lines: [], addons: [], bonus: 25 },
   ], pledges: [] },
   specimenShop.value,
@@ -74,9 +76,9 @@ const cartSpecimen = computed(() => resolveTinkerfundCart(
 ))
 const quoteSpecimen = computed(() => quoteTinkerfundCheckout(cartSpecimen.value, specimenShop.value, FIXTURE.code))
 const receiptSpecimen = computed(() => {
-  const stapler = specimenShop.value.catalog[FIXTURE.stapler]
+  const stapler = specimenShop.value.catalog[FIXTURE.stapler.slug]
   return stapler && tinkerfundReceipt(
-    { ref: 'TF-P-9004', campaign: FIXTURE.stapler, placed: now.value, zone: FIXTURE.zone, payment: FIXTURE.payment, lines: [{ reward: 'stapler', options: {}, quantity: 2 }], addons: [{ id: 'staple', quantity: 3 }], bonus: 5, promotions: [], discount: 10.6, shipping: 8 },
+    { ref: FIXTURE.receipt, campaign: FIXTURE.stapler.slug, placed: now.value, zone: FIXTURE.zone, payment: FIXTURE.payment, lines: [{ reward: FIXTURE.stapler.rewards[1], options: {}, quantity: 2 }], addons: [{ id: FIXTURE.stapler.addon, quantity: 3 }], bonus: 5, promotions: [], discount: 10.6, shipping: 8 },
     stapler,
   )
 })
@@ -86,10 +88,10 @@ const miniCart = useTemplateRef('miniCart')
 const PLEDGE_STATES = ['pending', 'charged', 'delivered', 'unfunded', 'cancelled'] as const
 const accountSpecimen = computed(() => {
   const { pledges } = reduceTinkerfundActions([], specimenShop.value)
-  const lamp = pledges.find((p) => p.campaign === FIXTURE.lamp)
-  const cancelled = lamp ? [{ ...lamp, ref: 'TF-P-9009', cancelled: now.value }] : []
+  const lamp = pledges.find((p) => p.campaign === FIXTURE.lamp.slug)
+  const cancelled = lamp ? [{ ...lamp, ref: FIXTURE.cancelled, cancelled: now.value }] : []
   const rows = tinkerfundAccountPledges({ cart: [], pledges: [...pledges, ...cancelled] }, specimenShop.value)
-  return { rows, lamp, entry: specimenShop.value.catalog[FIXTURE.lamp] }
+  return { rows, lamp, entry: specimenShop.value.catalog[FIXTURE.lamp.slug] }
 })
 
 const deals = computed(() => groupTinkerfundPromotions(promotions.value, now.value))
@@ -113,7 +115,7 @@ const bounds = computed(() => tinkerfundPriceBounds(cards.value))
         <li v-for="doc in campaigns" :key="doc.path" class="specimen tf-panel">
           <p class="case">{{ doc.description }}</p>
           <h3><NuxtLink :to="link(doc.path)">{{ doc.title }}</NuxtLink></h3>
-          <TinkerfundCampaignStatus :campaign="doc.campaign" :moment="{ now, ticking }" />
+          <TinkerfundCampaignStatus :campaign="doc.campaign" :clock="clock" />
         </li>
       </ul>
     </section>
@@ -150,8 +152,8 @@ const bounds = computed(() => tinkerfundPriceBounds(cards.value))
       <h2 id="gallery-deal">Deal banner <code>TinkerfundDealBanner</code></h2>
       <p class="case">An Active Promotion applied automatically, and a Scheduled one; qa's expired code never shows.</p>
       <div class="deals">
-        <TinkerfundDealBanner v-for="p in deals.active" :key="p.slug" :promotion="p" :clock="clock" more="#gallery-deal" />
-        <TinkerfundDealBanner v-for="p in deals.scheduled" :key="p.slug" :promotion="p" :clock="clock" scheduled />
+        <TinkerfundDealBanner v-for="p in deals.active" :key="p.stem" :promotion="p" :clock="clock" more="#gallery-deal" />
+        <TinkerfundDealBanner v-for="p in deals.scheduled" :key="p.stem" :promotion="p" :clock="clock" scheduled />
       </div>
     </section>
 
@@ -168,7 +170,7 @@ const bounds = computed(() => tinkerfundPriceBounds(cards.value))
             :title="doc.title"
             :campaign="doc.campaign"
             :deals="doc.deals"
-            :moment="{ now, ticking }"
+            :clock="clock"
             heading="h3"
           />
         </li>
@@ -189,7 +191,7 @@ const bounds = computed(() => tinkerfundPriceBounds(cards.value))
         <template v-for="doc in campaigns" :key="doc.path">
           <li v-for="reward in doc.campaign.rewards" :key="`${doc.path}-${reward.id}`" class="stack">
             <p class="case">{{ doc.campaign.registry }} · {{ doc.state }}</p>
-            <TinkerfundRewardCard :reward="reward" :backing="backing(doc.slug, doc.state)" :now="now" />
+            <TinkerfundRewardCard :reward="reward" :backing="backing(doc.slug, doc.state)" :now="now" :zone-name="zoneName" />
           </li>
         </template>
       </ul>
@@ -216,11 +218,11 @@ const bounds = computed(() => tinkerfundPriceBounds(cards.value))
       <ul class="specimens">
         <li class="stack">
           <p class="case">Live</p>
-          <TinkerfundSupportCard :backing="backing(FIXTURE.lamp, 'live')" />
+          <TinkerfundSupportCard :backing="backing(FIXTURE.lamp.slug, 'live')" />
         </li>
         <li class="stack">
           <p class="case">Ended, with a refusal</p>
-          <TinkerfundSupportCard :backing="backing(FIXTURE.hammock, 'ended', { bonus: 'Pledging has closed' })" />
+          <TinkerfundSupportCard :backing="backing(FIXTURE.hammock.slug, 'ended', { bonus: 'Pledging has closed' })" />
         </li>
       </ul>
     </section>
@@ -234,7 +236,7 @@ const bounds = computed(() => tinkerfundPriceBounds(cards.value))
         <TinkerfundCartGroup v-for="group in cartSpecimen.groups" :key="group.campaign" :group="group" zone="Europe" />
       </div>
       <p>
-        <button type="button" class="tf-btn" @click="miniCart?.show({ campaign: FIXTURE.stapler, reward: 'stapler', options: {}, quantity: 2 })">
+        <button type="button" class="tf-btn" @click="miniCart?.show({ campaign: FIXTURE.stapler.slug, reward: FIXTURE.stapler.rewards[1], options: {}, quantity: 2 })">
           Open the mini-cart
         </button>
       </p>
@@ -252,7 +254,7 @@ const bounds = computed(() => tinkerfundPriceBounds(cards.value))
           :pledge="receiptSpecimen"
           zone="Europe"
           :reference="receiptSpecimen.ref"
-          :ends-at="now + 21 * 86_400_000"
+          :ends-at="resolveTinkerfundOffset('+21d', now)"
           note="A receipt: its reference, and the charge pending until the Campaign ends"
         />
       </div>
@@ -276,7 +278,7 @@ const bounds = computed(() => tinkerfundPriceBounds(cards.value))
           :pledge="accountSpecimen.lamp"
           zone="Domestic"
         />
-        <div><TinkerfundCancelPledge :reference="FIXTURE.pledge" title="Last-Minute Lamp" /></div>
+        <div><TinkerfundCancelPledge :reference="FIXTURE.lamp.pledge" :title="FIXTURE.lamp.title" /></div>
       </div>
     </section>
 

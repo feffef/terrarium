@@ -1,8 +1,7 @@
 import type { Ref } from 'vue'
-import type { TinkerfundPledgeChange } from '../utils/account'
 import type { TinkerfundAction, TinkerfundUntimedAction } from '../utils/backer'
 import type { TinkerfundListing } from '../utils/browse'
-import type { TinkerfundCartRequest, TinkerfundShop, TinkerfundStep, TinkerfundZone } from '../utils/cart'
+import type { TinkerfundCartRequest, TinkerfundPledgeContents, TinkerfundShop, TinkerfundStep, TinkerfundZone } from '../utils/cart'
 import type { TinkerfundHit } from '../utils/search'
 import type { CampaignState } from '../utils/status'
 
@@ -29,24 +28,41 @@ export async function useTinkerfundShop() {
   }
 }
 
+/** A page's clock (issue #1364). */
+export interface TinkerfundClock {
+  /** The page's "now": Campaign and Promotion states hold still at it. */
+  now: number
+  /** What countdowns count from: `now`, moving on once a minute unless the Space pins its clock (`qa`). */
+  countdown: number
+}
+
 /**
  * The Space's "now" (issue #1364): read once on the server and carried to the
  * client in the payload, as the Atlas's `useGlassToday` does, so hydration
  * agrees. Each later client navigation, and `refresh`, reads it afresh.
- * `ticking` is false when the Space pins its clock (`qa`), so countdowns stay
- * frozen there.
  */
-export async function useTinkerfundClock(): Promise<{ now: Ref<number>; ticking: boolean; refresh: () => void }> {
+export async function useTinkerfundClock(): Promise<{ now: Ref<number>; clock: Ref<TinkerfundClock>; refresh: () => void }> {
   const nuxtApp = useNuxtApp()
   const { space } = useTinkerfundSpace()
   const now = useState<number | null>(`tinkerfund-now-${space}`, () => null)
+  const moved = ref(0)
+  let ticking = false
+  let timer: ReturnType<typeof setInterval> | undefined
+  // Registered before the first await, while the component is still current.
+  onMounted(() => {
+    if (ticking) timer = setInterval(() => (moved.value = Date.now()), 60_000)
+  })
+  onUnmounted(() => clearInterval(timer))
+
   const { shop } = await useTinkerfundShop()
   const pinned = shop.value?.now ?? undefined
+  ticking = !pinned
   const refresh = () => {
     now.value = tinkerfundNow(pinned, Date.now())
   }
   if (now.value === null || (import.meta.client && !nuxtApp.isHydrating)) refresh()
-  return { now: now as Ref<number>, ticking: !pinned, refresh }
+  const clock = computed(() => ({ now: now.value!, countdown: Math.max(now.value!, moved.value) }))
+  return { now: now as Ref<number>, clock, refresh }
 }
 
 /** Money follows the visitor's locale (issue #1365). */
@@ -66,17 +82,10 @@ export interface TinkerfundBacking {
   add: (request: TinkerfundCartRequest) => void
 }
 
-/** A Campaign's "now", and whether its countdowns move (issue #1364). */
-export interface TinkerfundMoment {
-  now: number
-  ticking: boolean
-}
-
 /**
  * Every Campaign in the Space as a card or table row, plus the categories and
  * Promotions that browsing needs (story #1381). Totals count the Backer's
- * Pledges once mounted (issue #1364). `clock` starts at the page's "now" and,
- * in `prod`, moves once a minute so countdowns follow.
+ * Pledges once mounted (issue #1364).
  */
 export async function useTinkerfundCatalog() {
   // Every composable runs before the first await: after it, Nuxt's context is gone.
@@ -90,33 +99,22 @@ export async function useTinkerfundCatalog() {
     ])
     return { docs, inventors }
   })
-  const clock = ref(0)
-  let ticking = false
-  let timer: ReturnType<typeof setInterval> | undefined
-  onMounted(() => {
-    if (ticking) timer = setInterval(() => (clock.value = Date.now()), 60_000)
-  })
-  onUnmounted(() => clearInterval(timer))
+  const [{ data }, { clock, pledges, baked, promotions }] = await Promise.all([catalog, cartReady])
 
-  const [{ data }, { now, ticking: ticks, pledges, baked, promotions: terms }] = await Promise.all([catalog, cartReady])
-  clock.value = now.value
-  ticking = ticks
-
-  const promotions = computed(() => terms.value.map((p) => ({ ...p, slug: p.id })))
   const cards = computed<TinkerfundCard[]>(() => {
     const docs = (data.value?.docs ?? []).flatMap((d) => d.campaign
       ? [{ ...d, campaign: withTinkerfundPledges(tinkerfundSlug(d.path), d.campaign, pledges.value, baked.value) }]
       : [])
     const inventors = new Map((data.value?.inventors ?? []).map((i) => [i.stem, i.name]))
     const categoryNames = new Map(categories.value.map((c) => [c.slug, c.name]))
-    return tinkerfundListings(docs, promotions.value, now.value).map((l) => ({
+    return tinkerfundListings(docs, promotions.value, clock.value.now).map((l) => ({
       ...l,
       categoryName: categoryNames.get(l.category) ?? l.category,
       inventorName: inventors.get(l.inventor) ?? l.inventor,
     }))
   })
 
-  return { space, now, ticking: ticks, clock, cards, categories, promotions }
+  return { clock, cards, categories, promotions }
 }
 
 /** Money and dates follow the visitor's locale (issue #1365); the server reads
@@ -158,17 +156,17 @@ export async function useTinkerfundCart(chosen: Readonly<Ref<TinkerfundZone | un
     {
       // Every page's payload carries this, so it keeps what the Backer's steps read and drops the figures.
       transform: (docs) =>
-        Object.fromEntries(docs.flatMap(({ path, title, campaign: c }) => c
-          ? [[tinkerfundSlug(path), { title, campaign: { launch: c.launch, end: c.end, goal: c.goal, pledged: c.pledged, backers: c.backers, rewards: c.rewards, addons: c.addons, shipping: c.shipping } }]]
+        Object.fromEntries(docs.flatMap(({ path, title, campaign }) => campaign
+          ? [[tinkerfundSlug(path), { title, campaign: tinkerfundCatalogCampaign(campaign) }]]
           : [])),
     },
   )
   const backerData = useAsyncData(`tinkerfund-backer-${space}`, () => queryCollection(collections.backer).first())
   const promotionsData = useAsyncData(`tinkerfund-promotions-${space}`, () => queryCollection(collections.promotions).all())
-  const [{ now, ticking, refresh }, { shop: shopDoc }, { data: baseline }, { data: backer }, { data: promotionDocs }] =
+  const [{ now, clock, refresh }, { shop: shopDoc }, { data: baseline }, { data: backer }, { data: promotionDocs }] =
     await Promise.all([clockReady, shopReady, catalogData, backerData, promotionsData])
 
-  const promotions = computed(() => (promotionDocs.value ?? []).map((p) => ({ ...p, id: p.stem })))
+  const promotions = computed(() => promotionDocs.value ?? [])
   const baked = computed(() => backer.value?.pledges ?? [])
   const shop = computed<TinkerfundShop>(() => ({
     catalog: baseline.value ?? {},
@@ -185,7 +183,6 @@ export async function useTinkerfundCart(chosen: Readonly<Ref<TinkerfundZone | un
   const account = computed(() => tinkerfundAccountPledges(state.value, shop.value))
   const quote = (code: string | undefined) => quoteTinkerfundCheckout(view.value, shop.value, code)
 
-  /** What `action` would do now, without taking it. */
   const preview = (action: TinkerfundUntimedAction): TinkerfundStep =>
     applyTinkerfundAction(state.value, { ...action, at: now.value }, shop.value)
 
@@ -208,10 +205,10 @@ export async function useTinkerfundCart(chosen: Readonly<Ref<TinkerfundZone | un
     const { refs, error } = act({ type: 'place', ...choices })
     return { refs, error }
   }
-  const revise = (ref: string, change: TinkerfundPledgeChange) => act({ type: 'change', ref, change }).error
+  const revise = (ref: string, change: TinkerfundPledgeContents) => act({ type: 'change', ref, change }).error
   const cancel = (ref: string) => act({ type: 'cancel', ref }).error
 
-  return { loaded, zone, view, quote, account, change, place, revise, cancel, preview, pledges, baked, catalog, promotions, backer, now, ticking }
+  return { loaded, zone, view, quote, account, change, place, revise, cancel, preview, pledges, baked, catalog, promotions, backer, clock }
 }
 
 export function useTinkerfundCategories() {

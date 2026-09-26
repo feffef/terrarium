@@ -4,7 +4,7 @@ definePageMeta({ viewTransition: true })
 const route = useRoute()
 const { space, link, campaignLink } = useTinkerfundSpace()
 const money = useTinkerfundMoney()
-const [{ zoneName, paymentLabel, status, error }, { loaded, pledges, catalog, now }] = await Promise.all([useTinkerfundShop(), useTinkerfundCart()])
+const [{ zoneName, paymentLabel, status, error }, { loaded, pledges, catalog, clock }] = await Promise.all([useTinkerfundShop(), useTinkerfundCart()])
 
 const refs = computed(() => String(route.query.refs ?? '').split(',').filter(Boolean))
 const receipts = computed(() =>
@@ -16,7 +16,7 @@ const receipts = computed(() =>
       ...tinkerfundReceipt(pledge, entry),
       zone: zoneName(pledge.zone),
       payment: paymentLabel(pledge.payment),
-      endsAt: resolveTinkerfundOffset(entry.campaign.end, now.value),
+      endsAt: resolveTinkerfundOffset(entry.campaign.end, clock.value.now),
     }]
   }))
 const total = computed(() => tinkerfundSum(receipts.value.map((r) => r.total)))

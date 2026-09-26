@@ -1,17 +1,16 @@
 <script setup lang="ts">
-import type { TinkerfundPledgeChange } from '../../utils/account'
-import type { TinkerfundCatalogCampaign, TinkerfundPledge } from '../../utils/cart'
+import type { TinkerfundCatalogCampaign, TinkerfundPledge, TinkerfundPledgeContents } from '../../utils/cart'
 
 const props = defineProps<{
   campaign: TinkerfundCatalogCampaign
   /** What the Pledge holds now: stock it holds stays available to it. */
   pledge: TinkerfundPledge
   /** Where to start editing from, when coming back from the review. */
-  start?: TinkerfundPledgeChange
+  start?: TinkerfundPledgeContents
   zone: string
   error?: string
 }>()
-const emit = defineEmits<{ review: [change: TinkerfundPledgeChange]; close: [] }>()
+const emit = defineEmits<{ review: [change: TinkerfundPledgeContents]; close: [] }>()
 
 const whole = (value: unknown) => Math.max(0, Math.floor(Number(value) || 0))
 const money = useTinkerfundMoney()

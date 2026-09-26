@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { TinkerfundPledgeChange } from '../../../../../../utils/account'
+import type { TinkerfundPledgeContents } from '../../../../../../utils/cart'
 
 definePageMeta({ viewTransition: true })
 
@@ -17,7 +17,7 @@ const zoneName = computed(() => nameOf(current.value?.pledge.zone))
 const payment = computed(() => paymentLabel(current.value?.pledge.payment))
 
 const mode = ref<'view' | 'edit' | 'review'>('view')
-const proposal = ref<{ change: TinkerfundPledgeChange; receipt: ReturnType<typeof tinkerfundReceipt> }>()
+const proposal = ref<{ change: TinkerfundPledgeContents; receipt: ReturnType<typeof tinkerfundReceipt> }>()
 const refusal = ref<string>()
 const done = ref<string>()
 const heading = ref<HTMLElement>()
@@ -31,7 +31,7 @@ function edit() {
   done.value = undefined
   mode.value = 'edit'
 }
-function review(change: TinkerfundPledgeChange) {
+function review(change: TinkerfundPledgeContents) {
   const { state, error } = preview({ type: 'change', ref: reference.value, change })
   const pledge = state.pledges.find((p) => p.ref === reference.value)
   refusal.value = error
@@ -53,7 +53,6 @@ function withdraw() {
 }
 
 const difference = computed(() => proposal.value && receipt.value ? tinkerfundCents(proposal.value.receipt.total - receipt.value.total) : 0)
-const signed = (amount: number) => (amount > 0 ? `+${money(amount)}` : amount < 0 ? `−${money(-amount)}` : 'No change')
 const print = () => window.print()
 
 useSeoMeta(tinkerfundSeo({ kind: 'private', space, title: `Pledge ${reference.value}` }))
@@ -80,7 +79,7 @@ useSeoMeta(tinkerfundSeo({ kind: 'private', space, title: `Pledge ${reference.va
         <p :class="done ? 'done' : 'tf-sr'" role="status">{{ done }}</p>
 
         <template v-if="mode === 'view'">
-          <dl class="facts tf-panel">
+          <dl class="facts tf-summary-list text tf-panel">
             <div><dt>Placed</dt><dd><TinkerfundTime :at="current.pledge.placed" /></dd></div>
             <div><dt>Paid with</dt><dd>{{ payment }}</dd></div>
             <div><dt>Ships to</dt><dd>{{ zoneName }}</dd></div>
@@ -120,10 +119,10 @@ useSeoMeta(tinkerfundSeo({ kind: 'private', space, title: `Pledge ${reference.va
 
         <template v-else-if="proposal">
           <TinkerfundPledgeSummary :pledge="proposal.receipt" :zone="zoneName" note="Your Pledge, once changed" />
-          <dl class="difference tf-sums tf-panel">
+          <dl class="difference tf-summary-list tf-panel">
             <div><dt>Was</dt><dd>{{ money(receipt.total) }}</dd></div>
             <div><dt>Now</dt><dd>{{ money(proposal.receipt.total) }}</dd></div>
-            <div class="total"><dt>Difference</dt><dd>{{ signed(difference) }}</dd></div>
+            <div class="total"><dt>Difference</dt><dd>{{ formatTinkerfundChange(difference, money) }}</dd></div>
           </dl>
           <p class="note">Still pending: you’re only charged if the Campaign is funded, when it ends on <TinkerfundTime :at="current.endsAt" />.</p>
           <p v-if="refusal" class="refusal" role="alert">{{ refusal }}</p>
@@ -145,11 +144,7 @@ useSeoMeta(tinkerfundSeo({ kind: 'private', space, title: `Pledge ${reference.va
 .empty > * { margin: 0; }
 .intro { display: grid; gap: 8px; }
 .intro > * { margin: 0; }
-.facts { display: grid; gap: 6px; margin: 0; padding: 14px 16px; }
-.facts div { display: flex; justify-content: space-between; gap: 12px; }
-.facts dt { color: var(--tf-muted); }
-.facts dd { margin: 0; text-align: right; }
-.difference { padding: 14px 16px; }
+.facts, .difference { padding: 14px 16px; }
 .done { margin: 0; padding: 10px 14px; border-radius: var(--tf-radius); background: var(--tf-accent-soft); }
 .status, .note, .locked { margin: 0; color: var(--tf-muted); }
 .refusal { margin: 0; color: var(--tf-bad); }

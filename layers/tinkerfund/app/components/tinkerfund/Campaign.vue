@@ -10,7 +10,8 @@ const money = useTinkerfundMoney()
 const categories = useTinkerfundCategories()
 
 const slug = computed(() => tinkerfundSlug(props.doc.path))
-const { view: cart, change: changeCart, pledges, baked, now, ticking } = await useTinkerfundCart()
+const [{ view: cart, change: changeCart, pledges, baked, clock }, { zoneName }] = await Promise.all([useTinkerfundCart(), useTinkerfundShop()])
+const now = computed(() => clock.value.now)
 // Totals, Stretch goals and stock count the visitor's own Pledges (story #1384).
 const c = computed(() => withTinkerfundPledges(slug.value, props.doc.campaign, pledges.value, baked.value))
 
@@ -38,7 +39,7 @@ const category = computed(() => categories.value.find((x) => x.slug === c.value.
 
 const drawer = useTemplateRef('drawer')
 const refusals = ref<Record<string, string>>({})
-const needsReward = computed(() => !cart.value.groups.some((g) => g.campaign === slug.value && g.lines.some((l) => 'reward' in l.ref && !l.unavailable)))
+const needsReward = computed(() => !tinkerfundPledgeFor(pledges.value, slug.value)?.lines.length && !cart.value.groups.some((g) => g.campaign === slug.value && g.lines.some((l) => 'reward' in l.ref && !l.unavailable)))
 
 function addToCart(request: TinkerfundCartRequest) {
   const key = 'reward' in request ? `reward:${request.reward}` : 'addon' in request ? `addon:${request.addon}` : 'bonus'
@@ -69,7 +70,7 @@ const backing = computed<TinkerfundBacking>(() => ({ slug: slug.value, state: st
         :inventor="data?.inventor?.name"
         :campaign="c"
         :deals="deals"
-        :moment="{ now, ticking }"
+        :clock="clock"
       />
     </div>
 
@@ -106,7 +107,7 @@ const backing = computed<TinkerfundBacking>(() => ({ slug: slug.value, state: st
       <section id="rewards" class="rewards" aria-labelledby="rewards-h" tabindex="-1">
         <h2 id="rewards-h">Rewards</h2>
         <p v-for="deal in deals" :key="deal.stem"><TinkerfundDealBadge :promotion="deal" /></p>
-        <TinkerfundRewardCard v-for="reward in c.rewards" :key="reward.id" :reward="reward" :backing="backing" :now="now" />
+        <TinkerfundRewardCard v-for="reward in c.rewards" :key="reward.id" :reward="reward" :backing="backing" :now="now" :zone-name="zoneName" />
         <template v-if="c.addons?.length">
           <h3>Add-ons</h3>
           <TinkerfundAddonList :addons="c.addons" :backing="backing" :needs-reward="needsReward" />

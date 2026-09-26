@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import type { TinkerfundCard } from '../../composables/tinkerfund'
+import type { TinkerfundCard, TinkerfundClock } from '../../composables/tinkerfund'
 
-const props = defineProps<{ cards: TinkerfundCard[]; categories: { slug: string; name: string }[]; clock: number }>()
+const props = defineProps<{ cards: TinkerfundCard[]; categories: { slug: string; name: string }[]; clock: TinkerfundClock }>()
 const { link } = useTinkerfundSpace()
 const locale = useTinkerfundLocale()
 const money = useTinkerfundMoney()
@@ -55,7 +55,7 @@ const label = useId()
             <td v-else class="funded"><TinkerfundProgressBar class="mini" :percent="c.status.percent" :segments="10" />{{ c.status.percent }}%</td>
             <td class="r">{{ c.status.state === 'upcoming' ? '—' : money(c.pledged) }}</td>
             <td class="r">{{ c.backers ? c.backers.toLocaleString(locale) : '—' }}</td>
-            <td class="r"><TinkerfundTime :at="tinkerfundDeadline(c.status).at" :text="tinkerfundRemaining(c.status, clock)" /></td>
+            <td class="r"><TinkerfundTime :at="tinkerfundDeadline(c.status).at" :text="tinkerfundRemaining(c.status, clock.countdown)" /></td>
           </tr>
           <tr v-if="!rows.length">
             <td colspan="8" class="none">No Campaign in this category.</td>

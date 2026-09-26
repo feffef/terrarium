@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { TinkerfundMoment } from '../../composables/tinkerfund'
+import type { TinkerfundClock } from '../../composables/tinkerfund'
 import type { TinkerfundCampaign, TinkerfundPromotion } from '../../types/tinkerfund'
 
 const props = defineProps<{
@@ -9,21 +9,21 @@ const props = defineProps<{
   inventor?: string
   campaign: TinkerfundCampaign
   deals: TinkerfundPromotion[]
-  moment: TinkerfundMoment
+  clock: TinkerfundClock
   /** The page's h1 by default; the qa gallery shows several at once. */
   heading?: 'h1' | 'h3'
 }>()
 
 const locale = useTinkerfundLocale()
 const money = useTinkerfundMoney()
-const status = computed(() => deriveCampaignStatus(props.campaign, props.campaign.pledged, props.moment.now))
+const status = computed(() => deriveCampaignStatus(props.campaign, props.campaign.pledged, props.clock.now))
 const deadline = computed(() => tinkerfundDeadline(status.value))
 const from = computed(() => campaignPriceFrom(props.campaign.rewards))
 </script>
 
 <template>
   <div class="readout tf-panel">
-    <TinkerfundCampaignStatus :campaign="campaign" :moment="moment" />
+    <TinkerfundCampaignStatus :campaign="campaign" :clock="clock" />
     <p class="date">{{ deadline.label }} <TinkerfundTime :at="deadline.at" /></p>
     <component :is="heading ?? 'h1'" class="tf-h1">{{ title }}</component>
     <p v-if="description" class="lead">{{ description }}</p>
