@@ -28,7 +28,7 @@ const ships = computed(() =>
 const button = computed(() => {
   if (props.state === 'upcoming') return 'Opens at launch'
   if (props.state === 'ended') return 'Closed'
-  return stock.value.soldOut ? 'Sold out' : 'Add to cart'
+  return stock.value.soldOut ? TINKERFUND_SOLD_OUT : 'Add to cart'
 })
 
 function step(by: number) {

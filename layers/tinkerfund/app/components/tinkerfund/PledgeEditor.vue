@@ -2,7 +2,6 @@
 import type { TinkerfundPledgeChange } from '../../utils/account'
 import type { TinkerfundCatalogCampaign, TinkerfundPledge } from '../../utils/cart'
 
-// The page checks the change and shows what it costs before anything is saved.
 const props = defineProps<{
   campaign: TinkerfundCatalogCampaign
   /** What the Pledge holds now: stock it holds stays available to it. */
