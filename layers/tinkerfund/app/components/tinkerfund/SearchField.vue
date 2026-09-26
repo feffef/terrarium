@@ -88,7 +88,8 @@ function leave(e: FocusEvent) {
         @keydown.esc="close"
       >
     </label>
-    <div v-show="expanded" :id="`${id}-list`" class="list" role="listbox" aria-label="Suggestions">
+    <!-- Focus stays in the field, or browsers that don't focus a clicked link close the list before the click lands. -->
+    <div v-show="expanded" :id="`${id}-list`" class="list" role="listbox" aria-label="Suggestions" @mousedown.prevent>
       <NuxtLink
         v-for="(option, i) in options"
         :id="`${id}-${i}`"
