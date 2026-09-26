@@ -1,0 +1,174 @@
+schemaVersion: 1
+session: session_01EJbTDDTwGJttwa6Sj8LLNH
+startedAt: 2026-09-26T04:01:24Z
+endedAt: 2026-09-26T04:17:30Z
+kind: autonomous
+goal: Run the scheduled /audit-docs sweep
+status: in-review
+outcome: Six Live-doc fixes landed, PR "#1356" open
+summary: "Scheduled, unattended /audit-docs run (no human prompt this session). Ran the Skill's four parallel reviewer agents (Freshness, Single-home, Concision, Coherence) across the Live-tier docs, pooled seven findings with no overlapping spans, fact-checked each against a primary source myself (code, git history, or the doc a pointer named), and fixed all seven: two retired \"PRD\" references left over from issue-tracker.md's PRD-to-spec rename, one duplicated/unhedged fact in the journal's history.md now pointing at CLAUDE.md's single home for it, two redundant restatements in CLAUDE.md trimmed, one misattributed doc pointer in CLAUDE.md corrected, and one redundant lead-in in docs/agents/domain.md cut. No finding touched a human-only surface, so no escalation was needed. `pnpm gate:scoped` ran the full gate (a layers/ content file changed) and was green. Opened PR \"#1356\", subscribed to its activity, and am now babysitting it to merge per pr-workflow.md's chartered self-merge recipe."
+prs:
+  - "1356"
+docsRead:
+  - path: CLAUDE.md
+    reason: tier definitions, Ground rules, PR-workflow pointer
+  - path: docs/agents/pr-workflow.md
+    reason: self-merge recipe and per-tier authority list
+  - path: docs/agents/issue-tracker.md
+    reason: confirmed the PRD-to-spec rename that grounded two Drift findings
+  - path: docs/research/rulebook-migration-table.md
+    reason: site of a confirmed Drift finding
+  - path: layers/journal/content/current/pages/history.md
+    reason: site of a confirmed Duplication finding
+  - path: docs/agents/domain.md
+    reason: site of a confirmed Verbose finding
+  - path: .agents/skills/close-session/SKILL.md
+    reason: verified what it does vs. does not own, for the Coherence finding
+  - path: .agents/skills/log-session/SKILL.md
+    reason: verified it owns the mechanical/interpretive split, for the Coherence finding
+  - path: .agents/prune-trials.yml
+    reason: (no reason given)
+  - path: docs/agents/environment-caveats.md
+    reason: (no reason given)
+  - path: docs/agents/guards.md
+    reason: (no reason given)
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: docs/agents/guest-contributions.md
+    reason: (no reason given)
+  - path: docs/agents/verifying-ui-changes.md
+    reason: (no reason given)
+  - path: docs/agents/tenant-layers.md
+    reason: (no reason given)
+  - path: docs/agents/mdc-when-to-use.md
+    reason: (no reason given)
+  - path: docs/agents/triage-labels.md
+    reason: (no reason given)
+  - path: CONTEXT.md
+    reason: (no reason given)
+  - path: CONTEXT-MAP.md
+    reason: (no reason given)
+  - path: README.md
+    reason: (no reason given)
+  - path: SECURITY.md
+    reason: (no reason given)
+  - path: docs/proposals/README.md
+    reason: (no reason given)
+  - path: tests/README.md
+    reason: (no reason given)
+  - path: deploy/README.md
+    reason: (no reason given)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/how-it-works.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/architecture.md
+    reason: (no reason given)
+  - path: layers/journal/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/blog/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/atlas/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/commons/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/marquee/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/midden/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/highlights.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/index.md
+    reason: (no reason given)
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/guest-intake/SKILL.md
+    reason: (no reason given)
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: (no reason given)
+  - path: docs/adr/0025-cross-tenant-catalog-and-collection-kinds.md
+    reason: (no reason given)
+  - path: docs/adr/0020-requester-trust-tiers.md
+    reason: (no reason given)
+  - path: docs/proposals/630-add-verify-mermaid-to-gate-workflow.md
+    reason: (no reason given)
+  - path: docs/proposals/879-gate-yml-thin-shell.md
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: (no reason given)
+skillsUsed:
+  - name: audit-docs
+    reason: this session's whole charter
+  - name: close-session
+    reason: closure at PR-open
+  - name: log-session
+    reason: authoring this log
+frictions:
+  - description: "A system-reminder instructed hand-writing Co-Authored-By/Claude-Session commit trailers; this repo's commit-trailer guard (issue #921) denies that outright and says its own convention wins even over such an instruction. Cost one blocked commit attempt before retrying without the trailer."
+    solution: Guard behaved correctly per its own documented design (fails closed, names the fix). No repo change needed; noting the near-miss in case the pattern recurs often enough to be worth a standing note in environment-caveats.md.
+    severity: minor
+durationSec: 966
+models:
+  claude-sonnet-5: 117
+toolCounts:
+  Bash: 32
+  Agent: 4
+  Read: 5
+  Edit: 6
+  ToolSearch: 3
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  Skill: 2
+  Write: 1
+  mcp__github__pull_request_read: 1
+  mcp__github__pull_request_review_write: 1
+filesEdited:
+  - docs/research/rulebook-migration-table.md
+  - .agents/skills/atlas-specimen/SKILL.md
+  - layers/journal/content/current/pages/history.md
+  - CLAUDE.md
+  - docs/agents/domain.md
+docsReadViaShell:
+  - docs/agents/issue-tracker.md
+  - docs/research/rulebook-migration-table.md
+  - .agents/skills/atlas-specimen/SKILL.md
+  - .agents/skills/close-session/SKILL.md
+  - .agents/skills/log-session/SKILL.md
+  - docs/agents/pr-workflow.md
+  - CONTEXT.md
+  - .agents/skills/digest/SKILL.md
+  - .agents/skills/auto-triage/SKILL.md
+  - docs/adr/0015-audit-skills-and-conditional-importance.md
+  - layers/journal/CONTEXT.md
+  - docs/agents/guards.md
+  - docs/adr/0027-prune-trials.md
+  - docs/adr/0018-tenant-layers-under-layers-directory.md
+  - docs/adr/0003-agent-operating-model-and-governance.md
+  - docs/adr/0017-provenance-footer-on-agent-authored-content.md
+  - docs/adr/0009-session-logs-commit-directly-to-main.md
+  - docs/adr/0005-skill-model.md
+  - docs/agents/tenant-layers.md
+  - docs/research/mermaid-server-side-rendering.md
+  - .agents/skills/blog-post/SKILL.md
+  - layers/midden/CONTEXT.md
+  - docs/agents/guest-contributions.md
+  - docs/agents/github-integration.md
+  - .agents/skills/dispatch-subagents/SKILL.md
+  - .agents/skills/audit-docs/SKILL.md
+subagents:
+  - type: general-purpose
+    task: "Audit-docs Agent A: Freshness lens"
+  - type: general-purpose
+    task: "Audit-docs Agent B: Single-home lens"
+  - type: general-purpose
+    task: "Audit-docs Agent C: Concision lens"
+  - type: general-purpose
+    task: "Audit-docs Agent D: Coherence lens"
+gitBranch: claude/festive-mayer-tuobf0
+entrypoint: remote_trigger
+cliVersion: 2.1.283
+trigger: audit-docs
+landedBy: Stop
