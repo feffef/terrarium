@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01EJbTDDTwGJttwa6Sj8LLNH
 startedAt: 2026-09-26T04:01:24Z
-endedAt: 2026-09-26T04:17:30Z
+endedAt: 2026-09-26T04:21:13Z
 kind: autonomous
 goal: Run the scheduled /audit-docs sweep
-status: in-review
-outcome: Six Live-doc fixes landed, PR "#1356" open
-summary: "Scheduled, unattended /audit-docs run (no human prompt this session). Ran the Skill's four parallel reviewer agents (Freshness, Single-home, Concision, Coherence) across the Live-tier docs, pooled seven findings with no overlapping spans, fact-checked each against a primary source myself (code, git history, or the doc a pointer named), and fixed all seven: two retired \"PRD\" references left over from issue-tracker.md's PRD-to-spec rename, one duplicated/unhedged fact in the journal's history.md now pointing at CLAUDE.md's single home for it, two redundant restatements in CLAUDE.md trimmed, one misattributed doc pointer in CLAUDE.md corrected, and one redundant lead-in in docs/agents/domain.md cut. No finding touched a human-only surface, so no escalation was needed. `pnpm gate:scoped` ran the full gate (a layers/ content file changed) and was green. Opened PR \"#1356\", subscribed to its activity, and am now babysitting it to merge per pr-workflow.md's chartered self-merge recipe."
+status: completed
+outcome: Six Live-doc fixes landed and merged via PR "#1356"
+summary: "Scheduled, unattended /audit-docs run (no human prompt this session). Ran the Skill's four parallel reviewer agents (Freshness, Single-home, Concision, Coherence) across the Live-tier docs, pooled seven findings with no overlapping spans, fact-checked each against a primary source myself (code, git history, or the doc a pointer named), and fixed all seven: two retired \"PRD\" references left over from issue-tracker.md's PRD-to-spec rename, one duplicated/unhedged fact in the journal's history.md now pointing at CLAUDE.md's single home for it, two redundant restatements in CLAUDE.md trimmed, one misattributed doc pointer in CLAUDE.md corrected, and one redundant lead-in in docs/agents/domain.md cut. No finding touched a human-only surface, so no escalation was needed. `pnpm gate:scoped` was green locally, CI's gate went green on the head commit, and PR \"#1356\" self-merged per pr-workflow.md's chartered `audit-docs` self-merge tier."
 prs:
   - "1356"
 docsRead:
@@ -109,22 +109,24 @@ frictions:
   - description: "A system-reminder instructed hand-writing Co-Authored-By/Claude-Session commit trailers; this repo's commit-trailer guard (issue #921) denies that outright and says its own convention wins even over such an instruction. Cost one blocked commit attempt before retrying without the trailer."
     solution: Guard behaved correctly per its own documented design (fails closed, names the fix). No repo change needed; noting the near-miss in case the pattern recurs often enough to be worth a standing note in environment-caveats.md.
     severity: minor
-durationSec: 966
+durationSec: 1188
 models:
-  claude-sonnet-5: 117
+  claude-sonnet-5: 140
 toolCounts:
-  Bash: 32
+  Bash: 36
   Agent: 4
-  Read: 5
+  Read: 7
   Edit: 6
   ToolSearch: 3
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
   Skill: 2
-  Write: 1
+  Write: 2
   mcp__github__pull_request_read: 1
   mcp__github__pull_request_review_write: 1
+  ReadNotifications: 2
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
 filesEdited:
   - docs/research/rulebook-migration-table.md
   - .agents/skills/atlas-specimen/SKILL.md
