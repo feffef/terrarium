@@ -43,3 +43,7 @@ campaign:
 ---
 
 A lamp that is almost out of time.
+
+## Why the hurry
+
+The switch took longer than the lamp.
