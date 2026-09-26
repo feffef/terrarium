@@ -43,7 +43,11 @@ Checked by the schema and `validate:content`, and by the tools before that:
 
 - `viewBox` 0 0 400 300; the markup is the inner SVG only.
 - Colours only from theme tokens — `none`, `currentColor`, `var(--tf-*)` or a
-  `color-mix` of two tokens — so a figure reads in light and dark.
+  `color-mix` of two tokens — so a figure reads in light and dark. The invention
+  is drawn in the accent family (`a1–a3`) and its hardware in the ink family
+  (`k1–k3`), like every Campaign in the catalog; `good` and `link` only for
+  small signals (an LED, a phone notification). `--tf-warn` is the marker
+  yellow the identity keeps for urgency, so it never colours a figure.
 - No `id` attributes: a figure can appear twice on one page. Hatch with
   explicit segments, not `<pattern>` or `clipPath`.
 - ≤ 4096 bytes each: round coordinates to one decimal and reuse path data.
@@ -54,7 +58,7 @@ Checked by the schema and `validate:content`, and by the tools before that:
 In `tools/` beside this file, run from the repo root:
 
 - `lib.mjs` — drawing helpers: token palette `C` (`a1–a3` accent faces, `k1–k3`
-  ink faces, `w`/`l`/`g` warn, link and good), iso projection (`iso`, `box`,
+  ink faces, `good`/`link` and their mixes for signals), iso projection (`iso`, `box`,
   `cyl`, `TOP` for drawing on the ground plane), patent strokes (`G0`, `K24`,
   `T9`, `HID`, `HATCH` with `hatch()` clipped to polygons), `leaders`, `nums`,
   `title`, `dimH`/`dimV`, and `check()` (the schema's svg rule, locally). Write
@@ -82,6 +86,9 @@ the launch catalog's drawings actually had:
   rim.
 - Are arcs bent the right way? A dimple drawn through the top of its circle
   filled the pea with hatching.
+- Is the lettering crisp? Text inside a stroked group inherits the outline and
+  smears into bold unless it sets `stroke:none`; the lib helpers do, and
+  `check()` flags any that doesn't.
 - Is any text clipped at the frame edge or colliding with a leader, arrow or
   another label? Right-anchor text near the right edge; keep labels ≥ 9 px.
 - Are numerals unique, each with exactly one leader, and named in the caption?

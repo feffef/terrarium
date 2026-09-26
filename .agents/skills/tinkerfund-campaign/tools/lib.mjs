@@ -4,7 +4,7 @@
 export const r1 = (n) => { const v = Math.round(n * 10) / 10; return Object.is(v, -0) ? 0 : v }
 export const f = (n) => String(r1(n))
 
-// ---- colour tokens: a1-a3 accent faces, k1-k3 ink faces, w/l/g warn/link/good ----
+// ---- colour tokens: a1-a3 accent faces (the invention), k1-k3 ink faces (hardware), good/link small signals ----
 export const C = {
   a1: 'var(--tf-accent)',
   a2: 'color-mix(in srgb, var(--tf-accent) 72%, var(--tf-ink))',
@@ -17,9 +17,6 @@ export const C = {
   mu: 'var(--tf-muted)',
   good: 'var(--tf-good)',
   link: 'var(--tf-link)',
-  warn: 'var(--tf-warn)',
-  w2: 'color-mix(in srgb, var(--tf-warn) 72%, var(--tf-ink))',
-  w3: 'color-mix(in srgb, var(--tf-warn) 45%, var(--tf-surface))',
   g2: 'color-mix(in srgb, var(--tf-good) 70%, var(--tf-ink))',
   l2: 'color-mix(in srgb, var(--tf-link) 72%, var(--tf-ink))',
   l3: 'color-mix(in srgb, var(--tf-link) 45%, var(--tf-surface))',
@@ -69,8 +66,8 @@ export const leader = (x1, y1, x2, y2, bow = 0.25) => {
   return `M${f(x1)} ${f(y1)}Q${f(mx - dy * bow)} ${f(my + dx * bow)} ${f(x2)} ${f(y2)}`
 }
 export const leaders = (arr) => T9(arr.map((a) => leader(...a)).join(''))
-export const nums = (arr, size = 12) => `<g style="fill:var(--tf-ink);font:500 ${size}px var(--tf-mono)">` + arr.map(([x, y, t]) => `<text x="${f(x)}" y="${f(y)}">${t}</text>`).join('') + '</g>'
-export const title = (x, t) => `<g style="fill:var(--tf-ink);font:500 11px var(--tf-mono)"><text x="${x}" y="290">${t}</text></g>`
+export const nums = (arr, size = 12) => `<g style="fill:var(--tf-ink);stroke:none;font:500 ${size}px var(--tf-mono)">` + arr.map(([x, y, t]) => `<text x="${f(x)}" y="${f(y)}">${t}</text>`).join('') + '</g>'
+export const title = (x, t) => `<g style="fill:var(--tf-ink);stroke:none;font:500 11px var(--tf-mono)"><text x="${x}" y="290">${t}</text></g>`
 
 /** Hatch lines clipped (even-odd) to one or more polygons. angle in degrees, spacing px. Returns a d string. */
 export function hatch(polys, spacing = 5, angle = 45) {
@@ -124,7 +121,7 @@ export const dimH = (x1, x2, y, label, size = 9) => T9(`M${f(x1)} ${f(y)}H${f(x2
 export const dimV = (y1, y2, x, label, size = 9) => T9(`M${f(x)} ${f(y1)}V${f(y2)}M${f(x - 2.5)} ${f(y1 + 6)}l2.5-6 2.5 6M${f(x - 2.5)} ${f(y2 - 6)}l2.5 6 2.5-6`) + (label ? `<text x="${f(x + 5)}" y="${f((y1 + y2) / 2 + 3)}" style="fill:var(--tf-ink);stroke:none;font:500 ${size}px var(--tf-mono)">${label}</text>` : '')
 export const txt = (x, y, t, size = 9, extra = '') => `<text x="${f(x)}" y="${f(y)}" style="fill:var(--tf-ink);stroke:none;font:500 ${size}px var(--tf-mono)${extra}">${t}</text>`
 
-// ---- a fast local copy of the schema's svg() rule in tenant.config.ts; validate:content is the authority ----
+// ---- the schema's svg() rule in tenant.config.ts (validate:content is the authority), plus a lettering check ----
 const TOKEN = String.raw`var\(--tf-[a-z-]+\)`
 const THEME_COLOUR = new RegExp(String.raw`^(?:none|currentColor|${TOKEN}|color-mix\(in srgb, *${TOKEN}(?: \d+%)?, *${TOKEN}(?: \d+%)?\))$`)
 const COLOUR_VALUE = /\b(?:fill|stroke|color)\s*(?:=\s*["']?|:)\s*([^"';]+)/g
@@ -135,6 +132,8 @@ export function check(markup, maxBytes = 4096) {
     if (!THEME_COLOUR.test(colour)) problems.push(`colour "${colour}" is not a theme token`)
   }
   if (/\sid\s*=/.test(markup)) problems.push('must not set an id')
+  // Lettering inside a stroked patent group inherits its outline and smears into bold.
+  if (/style="(?=[^"]*font:)(?![^"]*stroke:none)/.test(markup)) problems.push('text must set stroke:none')
   const bytes = new TextEncoder().encode(markup).length
   if (bytes > maxBytes) problems.push(`is ${bytes} bytes, over ${maxBytes}`)
   return { bytes, problems }
