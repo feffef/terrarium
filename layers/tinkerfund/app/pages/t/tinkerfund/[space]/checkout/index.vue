@@ -57,6 +57,7 @@ useSeoMeta(tinkerfundSeo({ kind: 'private', space, title: 'Checkout' }))
     </template>
 
     <div class="checkout">
+      <h1>{{ LABELS[step] }}</h1>
       <p class="banner" role="note"><b>Demo</b> — no payment is taken</p>
 
       <p v-if="!loaded" class="empty tf-panel">Opening your checkout…</p>
@@ -67,8 +68,7 @@ useSeoMeta(tinkerfundSeo({ kind: 'private', space, title: 'Checkout' }))
 
       <div v-else class="layout">
         <div class="steps">
-          <section v-if="step === 0" aria-labelledby="ship-h" class="step">
-            <h1 id="ship-h">Shipping</h1>
+          <section v-if="step === 0" class="step" aria-label="Shipping">
             <div v-if="shop?.backer" class="address tf-panel">
               <p class="tf-label">Ship to · the demo Backer</p>
               <address>
@@ -94,8 +94,7 @@ useSeoMeta(tinkerfundSeo({ kind: 'private', space, title: 'Checkout' }))
             </p>
           </section>
 
-          <section v-else-if="step === 1" aria-labelledby="pay-h" class="step">
-            <h1 id="pay-h">Payment</h1>
+          <section v-else-if="step === 1" class="step" aria-label="Payment">
             <p class="lead">Pick a way not to pay. Tinkerfund never asks for card details.</p>
             <fieldset class="choices stacked">
               <legend>Payment method</legend>
@@ -110,8 +109,7 @@ useSeoMeta(tinkerfundSeo({ kind: 'private', space, title: 'Checkout' }))
             </p>
           </section>
 
-          <section v-else aria-labelledby="review-h" class="step">
-            <h1 id="review-h">Review</h1>
+          <section v-else class="step" aria-label="Review">
             <dl class="choices-made tf-panel">
               <div><dt>Ship to</dt><dd>{{ zoneName }} <NuxtLink :to="toStep(0)">Change<span class="tf-sr"> shipping</span></NuxtLink></dd></div>
               <div><dt>Pay with</dt><dd>{{ payment?.label }} <NuxtLink :to="toStep(1)">Change<span class="tf-sr"> payment</span></NuxtLink></dd></div>
@@ -174,7 +172,7 @@ useSeoMeta(tinkerfundSeo({ kind: 'private', space, title: 'Checkout' }))
 @media (min-width: 900px) { .layout { grid-template-columns: minmax(0, 1fr) 320px; } }
 .step { display: grid; gap: 14px; }
 .step > * { margin: 0; }
-h1 { font: 800 clamp(28px, 4vw, 38px)/1.05 var(--tf-font); font-stretch: 78%; }
+h1 { margin: 0; font: 800 clamp(28px, 4vw, 38px)/1.05 var(--tf-font); font-stretch: 78%; }
 .lead, .note { color: var(--tf-muted); }
 .address { display: grid; gap: 6px; padding: 16px; }
 .address > * { margin: 0; }

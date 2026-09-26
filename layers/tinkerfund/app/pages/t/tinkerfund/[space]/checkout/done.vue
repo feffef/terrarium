@@ -32,7 +32,7 @@ useSeoMeta(tinkerfundSeo({ kind: 'private', space, title: 'Pledge confirmed' }))
 <template>
   <TinkerfundShell :space="space">
     <div class="done">
-      <p v-if="!loaded" class="empty tf-panel">Opening your receipt…</p>
+      <h1 v-if="!loaded">Opening your receipt…</h1>
       <section v-else-if="!receipts.length" class="empty tf-panel">
         <h1>No Pledge to show</h1>
         <p>This receipt belongs to a tab that has since closed, or to a demo that was reset.</p>

@@ -402,7 +402,7 @@ export function registerTinkerfundE2E(): void {
         await page.getByRole('link', { name: 'See One-Button Keypad' }).click()
         await page.waitForURL('**/qa/campaigns/one-button-keypad')
         await expect.poll(() => page.locator('.readout .big').textContent()).toBe('€1,002.50')
-        const readout = await page.locator('.readout').textContent()
+        const readout = await page.locator('.readout.tf-panel').textContent()
         expect(readout).toContain('Goal reached')
         expect(readout).toContain('100% funded')
         expect(readout).toMatch(/Backers\s*31/)
