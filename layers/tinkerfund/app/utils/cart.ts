@@ -22,15 +22,27 @@ const draft = z.object({
   bonus: z.number().positive().optional(),
 })
 
-const overlay = z.object({ cart: z.array(draft) })
+// A confirmed Pledge (story #1384): a draft plus what checkout settled. It
+// replaces a baked `backer` Pledge with the same ref.
+const pledge = draft.extend({
+  ref: id,
+  placed: z.number(),
+  zone: z.enum(['domestic', 'europe', 'world']),
+  payment: id,
+  discount: z.number().nonnegative(),
+  shipping: z.number().nonnegative(),
+})
+
+const overlay = z.object({ cart: z.array(draft), pledges: z.array(pledge).default([]) })
 
 export type TinkerfundDraft = z.infer<typeof draft>
+export type TinkerfundPledge = z.infer<typeof pledge>
 export type TinkerfundOverlay = z.infer<typeof overlay>
 
 const overlayKey = (space: string) => `${TINKERFUND_KEY_PREFIX}${space}:overlay`
 
 export function emptyTinkerfundOverlay(): TinkerfundOverlay {
-  return { cart: [] }
+  return { cart: [], pledges: [] }
 }
 
 export function readTinkerfundOverlay(storage: Storage, space: string): TinkerfundOverlay {
@@ -46,7 +58,7 @@ export function writeTinkerfundOverlay(storage: Storage, space: string, state: T
   storage.setItem(overlayKey(space), JSON.stringify(state))
 }
 
-export type TinkerfundZone = 'domestic' | 'europe' | 'world'
+export type TinkerfundZone = TinkerfundPledge['zone']
 
 interface Item {
   id: string
@@ -101,6 +113,11 @@ function validOptions(reward: CartReward, options: Record<string, string>): bool
     Object.keys(options).length === groups.length &&
     groups.every((g) => g.choices.some((c) => c.id === options[g.id]))
   )
+}
+
+/** "Colour: White", for a Reward line whose options are already valid. */
+export function tinkerfundOptionsLabel(reward: CartReward, options: Record<string, string>): string | undefined {
+  return reward.options?.map((g) => `${g.name}: ${g.choices.find((c) => c.id === options[g.id])?.label}`).join(' · ') || undefined
 }
 
 const cents = (amount: number) => Math.round(amount * 100) / 100
@@ -233,11 +250,11 @@ export function resolveTinkerfundCart(
       const reward = campaign.rewards.find((r) => r.id === line.reward)
       if (!reward || !validOptions(reward, line.options)) return []
       const ref = { campaign: draft.campaign, reward: reward.id, options: line.options }
-      const detail = reward.options?.map((g) => `${g.name}: ${g.choices.find((c) => c.id === line.options[g.id])!.label}`).join(' · ')
+      const detail = tinkerfundOptionsLabel(reward, line.options)
       const ships = !reward.shipsTo || reward.shipsTo.includes(zone)
       const price = priced(reward, line.quantity)
       if (reward.shipsTo && ships && !price.unavailable) shipped = true
-      return [{ key: tinkerfundCartLineKey(ref), ref, detail: detail || undefined, ships, ...price }]
+      return [{ key: tinkerfundCartLineKey(ref), ref, detail, ships, ...price }]
     })
     const rewarded = rewards.some((l) => !l.unavailable)
     const addons = draft.addons.flatMap((line): TinkerfundCartLine[] => {
