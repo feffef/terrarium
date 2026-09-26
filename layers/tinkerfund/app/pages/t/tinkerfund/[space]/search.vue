@@ -20,7 +20,7 @@ useSeoMeta(tinkerfundSeo({ kind: 'private', space, title: q ? `Search: ${q}` : '
 <template>
   <TinkerfundShell :space="space">
     <header class="intro">
-      <p class="tf-label">Search · {{ q ? formatTinkerfundCampaignCount(results.length) : 'Campaigns and Inventors' }}</p>
+      <p class="tf-label">Search · {{ q ? tinkerfundCount(results.length, 'Campaign') : 'Campaigns and Inventors' }}</p>
       <h1>{{ q ? `Results for “${q}”` : 'Search' }}</h1>
       <TinkerfundSearchField class="field" :value="q" :autofocus="!q" />
     </header>

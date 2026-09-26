@@ -1,11 +1,10 @@
 <script setup lang="ts">
-import type { TinkerfundAccountCampaign, TinkerfundPledgeChange } from '../../utils/account'
-import type { TinkerfundPledge } from '../../utils/cart'
+import type { TinkerfundPledgeChange } from '../../utils/account'
+import type { TinkerfundCatalogCampaign, TinkerfundPledge } from '../../utils/cart'
 
-// Changing a Pledge (story #1385): its lines, options, Add-ons and bonus. The
-// page checks the change and shows what it costs before anything is saved.
+// The page checks the change and shows what it costs before anything is saved.
 const props = defineProps<{
-  campaign: TinkerfundAccountCampaign
+  campaign: TinkerfundCatalogCampaign
   /** What the Pledge holds now: stock it holds stays available to it. */
   pledge: TinkerfundPledge
   /** Where to start editing from, when coming back from the review. */
@@ -16,8 +15,7 @@ const props = defineProps<{
 const emit = defineEmits<{ review: [change: TinkerfundPledgeChange]; close: [] }>()
 
 const whole = (value: unknown) => Math.max(0, Math.floor(Number(value) || 0))
-const locale = useTinkerfundLocale()
-const money = (amount: number) => formatTinkerfundMoney(amount, locale.value)
+const money = useTinkerfundMoney()
 
 const from = props.start ?? props.pledge
 const draft = reactive({
@@ -26,14 +24,14 @@ const draft = reactive({
   bonus: from.bonus ?? 0,
 })
 
-type Reward = TinkerfundAccountCampaign['rewards'][number]
-const held = (id: string) => props.pledge.lines.filter((l) => l.reward === id).reduce((n, l) => n + l.quantity, 0)
+type Reward = TinkerfundCatalogCampaign['rewards'][number]
+const held = (id: string) => tinkerfundHeld(props.pledge.lines, id)
 const max = (reward: Reward) => tinkerfundMaxQuantity({ ...reward, claimed: reward.claimed - held(reward.id) })
-const addonMax = (addon: NonNullable<TinkerfundAccountCampaign['addons']>[number]) =>
+const addonMax = (addon: NonNullable<TinkerfundCatalogCampaign['addons']>[number]) =>
   tinkerfundMaxQuantity({ ...addon, claimed: addon.claimed - (props.pledge.addons.find((a) => a.id === addon.id)?.quantity ?? 0) })
-const ships = (reward: Reward) => !reward.shipsTo || reward.shipsTo.includes(props.pledge.zone)
+const ships = (reward: Reward) => tinkerfundShipsTo(reward, props.pledge.zone)
 const linesOf = (reward: Reward) => draft.lines.filter((l) => l.reward === reward.id)
-const wanted = (reward: Reward) => linesOf(reward).reduce((n, l) => n + whole(l.quantity), 0)
+const wanted = (reward: Reward) => tinkerfundHeld(linesOf(reward).map((l) => ({ ...l, quantity: whole(l.quantity) })), reward.id)
 const canAdd = (reward: Reward) => ships(reward) && wanted(reward) < max(reward) && (!!reward.options?.length || !linesOf(reward).length)
 
 function addLine(reward: Reward) {
@@ -58,7 +56,7 @@ function review() {
     <fieldset v-for="reward in campaign.rewards" :key="reward.id" class="reward tf-panel">
       <legend>{{ reward.title }} <span class="price">{{ money(reward.price) }}</span></legend>
       <p class="facts">
-        <span v-if="reward.limit">Max {{ reward.limit }} per Backer</span>
+        <span v-if="reward.limit">{{ tinkerfundLimitNotice(reward.limit) }}</span>
         <span v-if="reward.stock !== undefined">{{ tinkerfundStock({ ...reward, claimed: reward.claimed - held(reward.id) }).label }}</span>
         <span v-if="!reward.shipsTo">Digital</span>
         <span v-if="!ships(reward)" class="flag">Doesn’t ship to {{ zone }}</span>

@@ -40,7 +40,7 @@ const closeOnBackdrop = (e: MouseEvent) => {
 <template>
   <div class="browse">
     <div class="toolbar">
-      <p class="count" role="status">{{ formatTinkerfundCampaignCount(results.length) }}</p>
+      <p class="count" role="status">{{ tinkerfundCount(results.length, 'Campaign') }}</p>
       <button type="button" class="tf-btn filters-btn" @click="drawer?.showModal()">Filters</button>
       <label class="sort">
         <span class="tf-label">Sort</span>
@@ -75,7 +75,7 @@ const closeOnBackdrop = (e: MouseEvent) => {
           </button>
         </div>
         <TinkerfundBrowseFilters :query="query" :categories="category ? undefined : categories" :bounds="bounds" @update="update" />
-        <button type="button" class="tf-btn primary" @click="drawer?.close()">Show {{ formatTinkerfundCampaignCount(results.length) }}</button>
+        <button type="button" class="tf-btn primary" @click="drawer?.close()">Show {{ tinkerfundCount(results.length, 'Campaign') }}</button>
       </div>
     </dialog>
   </div>

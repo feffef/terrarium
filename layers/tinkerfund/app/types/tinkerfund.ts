@@ -13,5 +13,3 @@ export type TinkerfundAddon = NonNullable<TinkerfundCampaign['addons']>[number]
 export type TinkerfundStretchGoal = NonNullable<TinkerfundCampaign['stretchGoals']>[number]
 export type TinkerfundComment = TinkerfundProdCommentsCollectionItem['comments'][number]
 export type TinkerfundPromotion = TinkerfundProdPromotionsCollectionItem
-
-export type { TinkerfundCartRequest } from '../utils/cart'

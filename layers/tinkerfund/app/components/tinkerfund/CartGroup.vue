@@ -1,14 +1,11 @@
 <script setup lang="ts">
-import type { TinkerfundCartRequest } from '../../types/tinkerfund'
-import type { TinkerfundCartGroup } from '../../utils/cart'
+import type { TinkerfundCartGroup, TinkerfundCartRequest } from '../../utils/cart'
 
-// One Campaign's part of the Cart: what becomes one Pledge at checkout.
 const props = defineProps<{ space: string; group: TinkerfundCartGroup; zone: string }>()
 const emit = defineEmits<{ change: [request: TinkerfundCartRequest] }>()
 
 const id = useId()
-const locale = useTinkerfundLocale()
-const money = (amount: number) => formatTinkerfundMoney(amount, locale.value)
+const money = useTinkerfundMoney()
 
 function setBonus(event: Event) {
   const value = Math.floor(Number((event.target as HTMLInputElement).value))
@@ -19,7 +16,7 @@ function setBonus(event: Event) {
 <template>
   <section class="group tf-panel" :aria-labelledby="`${id}-h`">
     <header class="head">
-      <h2 :id="`${id}-h`"><NuxtLink :to="tinkerfundPath(space, `/campaigns/${group.campaign}`)">{{ group.title }}</NuxtLink></h2>
+      <h2 :id="`${id}-h`"><NuxtLink :to="tinkerfundCampaignPath(space, group.campaign)">{{ group.title }}</NuxtLink></h2>
       <p v-if="group.closed" class="notice">{{ group.closed }}: remove these to check out</p>
     </header>
 

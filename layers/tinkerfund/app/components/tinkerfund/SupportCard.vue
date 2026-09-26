@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { TinkerfundCartRequest } from '../../types/tinkerfund'
+import type { TinkerfundCartRequest } from '../../utils/cart'
 
 // Bonus support (issue #1365): on its own it is a no-Reward Pledge; beside a
 // Reward it tops that Pledge up.

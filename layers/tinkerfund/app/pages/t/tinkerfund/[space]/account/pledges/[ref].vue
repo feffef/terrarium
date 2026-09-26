@@ -1,29 +1,20 @@
 <script setup lang="ts">
 import type { TinkerfundPledgeChange } from '../../../../../../utils/account'
 
-// One Pledge (story #1385): the Confirmation's receipt, printable, and — while
-// its Campaign is Live — a change with a priced review, or a cancel.
 definePageMeta({ viewTransition: true })
 
 const route = useRoute()
-const { space, collections } = useSpace('tinkerfund')
-const locale = useTinkerfundLocale()
-const money = (amount: number) => formatTinkerfundMoney(amount, locale.value)
-
-const { data: shop, status, error } = await useAsyncData(`tinkerfund-pledge-shop-${space}`, () => queryCollection(collections.shop).first())
-const { loaded, pledges, baked, catalog, now, revise, cancel } = await useTinkerfundCart()
+const { space } = useSpace('tinkerfund')
+const money = useTinkerfundMoney()
+const [{ zoneName: nameOf, paymentLabel, status, error }, { loaded, account, catalog, preview, revise, cancel }] =
+  await Promise.all([useTinkerfundShop(), useTinkerfundCart()])
 
 const reference = computed(() => String(route.params.ref))
-const current = computed(() =>
-  tinkerfundAccountPledges(pledges.value, baked.value, catalog.value, now.value, shop.value?.payments[0]?.id ?? '')
-    .find((a) => a.pledge.ref === reference.value))
+const current = computed(() => account.value.find((a) => a.pledge.ref === reference.value))
 const entry = computed(() => current.value && catalog.value[current.value.pledge.campaign])
 const receipt = computed(() => current.value?.receipt)
-const zoneName = computed(() => {
-  const zone = current.value?.pledge.zone
-  return shop.value?.zones.find((z) => z.id === zone)?.name ?? zone ?? ''
-})
-const payment = computed(() => shop.value?.payments.find((p) => p.id === current.value?.pledge.payment)?.label ?? current.value?.pledge.payment)
+const zoneName = computed(() => nameOf(current.value?.pledge.zone))
+const payment = computed(() => paymentLabel(current.value?.pledge.payment))
 
 const mode = ref<'view' | 'edit' | 'review'>('view')
 const proposal = ref<{ change: TinkerfundPledgeChange; receipt: ReturnType<typeof tinkerfundReceipt> }>()
@@ -41,20 +32,21 @@ function edit() {
   mode.value = 'edit'
 }
 function review(change: TinkerfundPledgeChange) {
-  const { pledge, error } = reviseTinkerfundPledge(current.value!.pledge, change, entry.value!, now.value)
+  const { state, error } = preview({ type: 'change', ref: reference.value, change })
+  const pledge = state.pledges.find((p) => p.ref === reference.value)
   refusal.value = error
-  if (!pledge) return
+  if (error || !pledge) return
   proposal.value = { change, receipt: tinkerfundReceipt(pledge, entry.value!) }
   mode.value = 'review'
 }
 function confirm() {
-  refusal.value = revise(current.value!.pledge, proposal.value!.change)
+  refusal.value = revise(reference.value, proposal.value!.change)
   if (refusal.value) return
   done.value = 'Your Pledge is changed.'
   mode.value = 'view'
 }
 function withdraw() {
-  refusal.value = cancel(current.value!.pledge)
+  refusal.value = cancel(reference.value)
   if (refusal.value) return
   done.value = 'Your Pledge is cancelled. Nothing will be charged.'
   focusHeading()

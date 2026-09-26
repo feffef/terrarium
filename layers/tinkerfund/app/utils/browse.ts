@@ -1,6 +1,8 @@
 // Browsing the shop (story #1381): Home's sections, Discover, Category and
 // Deals, all derived from baked content at the page's "now" (issue #1364).
+import type { TinkerfundPromotionTerms } from './campaign'
 import { formatTinkerfundCountdown, resolveTinkerfundOffset, tinkerfundCountdown } from './clock'
+import { tinkerfundSlug } from './shop'
 import { deriveCampaignStatus, derivePromotionState, type CampaignState, type CampaignStatus } from './status'
 
 export const TINKERFUND_SORTS = {
@@ -83,11 +85,7 @@ export interface TinkerfundCampaignDoc {
   }
 }
 
-export interface TinkerfundPromotionTiming {
-  campaign?: string
-  start: string
-  end?: string
-}
+type PromotionTiming = Pick<TinkerfundPromotionTerms, 'campaign' | 'start' | 'end'>
 
 /** What a Campaign card or an index-table row shows. */
 export interface TinkerfundListing {
@@ -110,7 +108,7 @@ export interface TinkerfundListing {
 
 export function tinkerfundListings(
   docs: TinkerfundCampaignDoc[],
-  promotions: TinkerfundPromotionTiming[],
+  promotions: PromotionTiming[],
   now: number,
 ): TinkerfundListing[] {
   const promoted = new Set(
@@ -129,7 +127,7 @@ export function tinkerfundListings(
     backers: c.backers,
     prices: c.rewards.map((r) => r.price),
     status: deriveCampaignStatus(c, c.pledged, now),
-    promoted: promoted.has(path.split('/').pop()),
+    promoted: promoted.has(tinkerfundSlug(path)),
   }))
 }
 
@@ -194,7 +192,7 @@ export function tinkerfundHomeSections<T extends TinkerfundListing>(listings: T[
 
 /** Active Promotions, ending soonest first (open-ended last), and Scheduled
  *  ones, starting soonest first. */
-export function groupTinkerfundPromotions<T extends TinkerfundPromotionTiming>(promotions: T[], now: number) {
+export function groupTinkerfundPromotions<T extends PromotionTiming>(promotions: T[], now: number) {
   const timed = promotions.map((p) => ({
     ...p,
     startAt: resolveTinkerfundOffset(p.start, now),
@@ -205,9 +203,5 @@ export function groupTinkerfundPromotions<T extends TinkerfundPromotionTiming>(p
     active: timed.filter((p) => p.state === 'active').sort((a, b) => (a.endAt ?? Infinity) - (b.endAt ?? Infinity)),
     scheduled: timed.filter((p) => p.state === 'scheduled').sort((a, b) => a.startAt - b.startAt),
   }
-}
-
-export function formatTinkerfundCampaignCount(n: number): string {
-  return `${n} ${n === 1 ? 'Campaign' : 'Campaigns'}`
 }
 

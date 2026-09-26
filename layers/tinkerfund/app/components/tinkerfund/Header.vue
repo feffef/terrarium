@@ -39,7 +39,7 @@ const closeOnBackdrop = (e: MouseEvent) => {
         <NuxtLink class="icon-btn search-icon" :to="link('/search')" aria-label="Search">
           <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7" /><path d="m20 20-4-4" /></svg>
         </NuxtLink>
-        <NuxtLink class="cart" :to="link('/cart')" :aria-label="`Cart, ${formatTinkerfundItems(cart.count)}`">
+        <NuxtLink class="cart" :to="link('/cart')" :aria-label="`Cart, ${tinkerfundCount(cart.count, 'item')}`">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h2.5l2.2 11h10.6L20.5 8H7" /><circle cx="9.5" cy="19.5" r="1.3" /><circle cx="16.5" cy="19.5" r="1.3" /></svg>
           <span class="count">{{ cart.count }}</span>
         </NuxtLink>

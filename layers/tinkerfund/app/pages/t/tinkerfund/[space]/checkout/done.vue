@@ -1,15 +1,10 @@
 <script setup lang="ts">
-// The Confirmation (story #1384): the Pledges a checkout just placed, named
-// by ref in the URL and read from the visitor's overlay after mount.
 definePageMeta({ viewTransition: true })
 
 const route = useRoute()
-const { space, collections } = useSpace('tinkerfund')
-const locale = useTinkerfundLocale()
-const money = (amount: number) => formatTinkerfundMoney(amount, locale.value)
-
-const { data: shop, status, error } = await useAsyncData(`tinkerfund-done-shop-${space}`, () => queryCollection(collections.shop).first())
-const { loaded, pledges, catalog, now } = await useTinkerfundCart()
+const { space } = useSpace('tinkerfund')
+const money = useTinkerfundMoney()
+const [{ zoneName, paymentLabel, status, error }, { loaded, pledges, catalog, now }] = await Promise.all([useTinkerfundShop(), useTinkerfundCart()])
 
 const refs = computed(() => String(route.query.refs ?? '').split(',').filter(Boolean))
 const receipts = computed(() =>
@@ -19,8 +14,8 @@ const receipts = computed(() =>
     if (!pledge || !entry) return []
     return [{
       ...tinkerfundReceipt(pledge, entry),
-      zone: shop.value?.zones.find((z) => z.id === pledge.zone)?.name ?? pledge.zone,
-      payment: shop.value?.payments.find((p) => p.id === pledge.payment)?.label ?? pledge.payment,
+      zone: zoneName(pledge.zone),
+      payment: paymentLabel(pledge.payment),
       endsAt: resolveTinkerfundOffset(entry.campaign.end, now.value),
     }]
   }))
@@ -57,7 +52,7 @@ useSeoMeta(tinkerfundSeo({ kind: 'private', space, title: 'Pledge confirmed' }))
         <p v-if="receipts.length > 1" class="grand">Total across your Pledges <b>{{ money(total) }}</b></p>
         <p class="actions">
           <NuxtLink class="tf-btn primary" :to="tinkerfundPath(space, '/discover')">Keep browsing</NuxtLink>
-          <NuxtLink class="tf-btn" :to="tinkerfundPath(space, `/campaigns/${receipts[0]!.campaign}`)">See {{ receipts[0]!.title }}</NuxtLink>
+          <NuxtLink class="tf-btn" :to="tinkerfundCampaignPath(space, receipts[0]!.campaign)">See {{ receipts[0]!.title }}</NuxtLink>
         </p>
       </template>
     </div>

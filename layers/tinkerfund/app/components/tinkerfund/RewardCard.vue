@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import type { TinkerfundCartRequest, TinkerfundReward } from '../../types/tinkerfund'
+import type { TinkerfundReward } from '../../types/tinkerfund'
+import type { TinkerfundCartRequest } from '../../utils/cart'
 
 const props = defineProps<{
   slug: string
@@ -47,7 +48,7 @@ function add() {
     <p v-if="reward.description" class="desc">{{ reward.description }}</p>
     <ul class="facts">
       <li v-if="stock.label" :class="{ scarce: stock.soldOut }">{{ stock.label }}</li>
-      <li v-if="reward.limit">Max {{ reward.limit }} per Backer</li>
+      <li v-if="reward.limit">{{ tinkerfundLimitNotice(reward.limit) }}</li>
       <li>{{ ships }}</li>
       <li>Est. delivery {{ formatTinkerfundMonth(resolveTinkerfundOffset(reward.delivery, now), locale) }}</li>
       <li>{{ reward.claimed.toLocaleString(locale) }} claimed</li>

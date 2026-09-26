@@ -1,7 +1,7 @@
 // Campaign and Promotion state is derived from the clock and totals, never
 // stored (issue #1364).
 import { describe, expect, it } from 'vitest'
-import { deriveCampaignStatus, derivePromotionState, campaignPriceFrom } from '../../app/utils/status.ts'
+import { deriveCampaignState, deriveCampaignStatus, derivePromotionState, campaignPriceFrom } from '../../app/utils/status.ts'
 
 const NOW = Date.parse('2026-06-01T12:00:00Z')
 
@@ -45,6 +45,13 @@ describe('deriveCampaignStatus', () => {
       launchAt: Date.parse('2026-05-31T12:00:00Z'),
       endAt: Date.parse('2026-06-03T00:00:00Z'),
     })
+  })
+})
+
+describe('deriveCampaignState', () => {
+  it('needs only the clock, not the totals', () => {
+    expect([['+1h', '+2d'], ['+0h', '+2d'], ['-2d', '+0h']].map(([launch, end]) => deriveCampaignState({ launch: launch!, end: end! }, NOW)))
+      .toEqual(['upcoming', 'live', 'ended'])
   })
 })
 

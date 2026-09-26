@@ -327,13 +327,13 @@ export function registerTinkerfundE2E(): void {
         await page.evaluate(() => sessionStorage.setItem('journal:keep', '1'))
         await page.getByRole('article', { name: 'One stapler' }).getByRole('button', { name: 'Add to cart' }).click()
         await page.getByRole('dialog', { name: 'Added to your Cart' }).getByRole('button', { name: 'Close' }).click()
-        expect(await page.evaluate(() => sessionStorage.getItem('tinkerfund:qa:overlay'))).toContain('stapler')
+        expect(await page.evaluate(() => sessionStorage.getItem('tinkerfund:qa:actions'))).toContain('stapler')
 
         await Promise.all([
           page.waitForEvent('load'),
           page.locator('.foot').getByRole('button', { name: 'Reset demo' }).click(),
         ])
-        expect(await page.evaluate(() => sessionStorage.getItem('tinkerfund:qa:overlay'))).toBeNull()
+        expect(await page.evaluate(() => sessionStorage.getItem('tinkerfund:qa:actions'))).toBeNull()
         expect(await page.evaluate(() => sessionStorage.getItem('journal:keep'))).toBe('1')
         expect(await page.locator('.head .cart .count').textContent()).toBe('0')
       } finally {
