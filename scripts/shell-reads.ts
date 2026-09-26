@@ -21,8 +21,13 @@
 // verb rules instead.
 
 /** Argv-0s that stream a file's CONTENTS into the session. `find`/`ls`/`wc` are
- *  deliberately absent: they report *about* a file without showing it. */
-const READER_VERBS = new Set(['cat', 'bat', 'sed', 'head', 'tail', 'awk', 'grep', 'rg', 'less', 'more'])
+ *  deliberately absent: they report *about* a file without showing it.
+ *  `diff <a> <b>` streams both files' differing content — unlike `grep`/`rg`,
+ *  neither positional is a pattern (so it is deliberately not in `SCRIPT_FIRST`
+ *  below), and unlike `grep`/`rg` it is not in `OUTPUT_FILTERED_VERBS` either:
+ *  it always processes every file it's given, so both stay unconditionally
+ *  credited the way `cat`/`sed` already are. */
+const READER_VERBS = new Set(['cat', 'bat', 'sed', 'head', 'tail', 'awk', 'grep', 'rg', 'less', 'more', 'diff'])
 
 /** Wrappers that sit in front of the real command. `timeout` matters most: agent
  *  briefs in this environment mandate foreground commands with an explicit
@@ -604,6 +609,18 @@ export function scanShellReads(
       } else if (OUTPUT_FILTERED_VERBS.has(verb) && output !== undefined) {
         // `output === undefined` means the caller has no tool_result to gate
         // with (every pre-#1247 caller/test) — credit unconditionally, as before.
+        // Multi-file keeps the strict `outputMentionsFile` check (#1247): which
+        // of several named files matched is only knowable from the file-prefixed
+        // output grep/rg emit for 2+ files. Single-file stays a bare non-empty
+        // check: default single-file grep/rg output has NO filename prefix at
+        // all (verified empirically — `grep -n pat file` prints `<line>:<text>`,
+        // and unqualified `grep pat file` prints just `<text>`), so requiring
+        // `outputMentionsFile` here would reject the overwhelmingly common real
+        // match shape, trading a narrow false-positive for a systemic false
+        // negative. The narrow false-positive this leaves open (issue #1247's
+        // fileCount===1 case can still be fooled by non-grep noise sharing the
+        // same `output` string) needs a fix that doesn't cost the common case —
+        // tracked as issue #1355 rather than guessed at here.
         for (const c of candidates) {
           const confirmed = fileCount > 1 ? outputMentionsFile(output, c.matchText) : output.trim() !== ''
           if (confirmed) credit(c.path)

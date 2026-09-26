@@ -648,6 +648,27 @@ describe('|| fallback attribution (issue #1327)', () => {
   })
 })
 
+describe('diff as a reader verb', () => {
+  // `diff` was entirely absent from `READER_VERBS` — a session rejected
+  // outright as "not a reader command" despite `diff` visibly streaming both
+  // files' differing content into view, the same as any other reader.
+  it('credits both files of a bare `diff a b`', () => {
+    expect(paths('diff docs/agents/a.md docs/agents/b.md')).toEqual(['docs/agents/a.md', 'docs/agents/b.md'])
+  })
+
+  it('credits both files with a flag in front — neither positional is a pattern, unlike grep/rg', () => {
+    expect(paths('diff -u docs/agents/a.md docs/agents/b.md')).toEqual(['docs/agents/a.md', 'docs/agents/b.md'])
+  })
+
+  it('stays ungated by output — diff always processes every file it is given, unlike grep/rg', () => {
+    const scan = scanShellReads(
+      [{ command: 'diff docs/agents/a.md docs/agents/b.md', output: '' }],
+      rel,
+    )
+    expect(scan.paths.sort()).toEqual(['docs/agents/a.md', 'docs/agents/b.md'])
+  })
+})
+
 describe('no other consumer acts on the field', () => {
   // The rule is a decision, not an accident (ADR-0009's shell-read amendment):
   // nothing may read `docsReadViaShell` except the trace that derives it, the
