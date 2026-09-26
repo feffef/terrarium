@@ -12,8 +12,28 @@ const offset = z.string().regex(TINKERFUND_OFFSET, 'must be an offset like "-12d
 const money = z.number().positive()
 const count = z.number().int().nonnegative()
 const zone = z.enum(['domestic', 'europe', 'world'])
-/** Inner SVG markup, coloured only by theme tokens (issue #1363). */
-const svg = z.string().min(1)
+const TOKEN = String.raw`var\(--tf-[a-z-]+\)`
+const THEME_COLOUR = new RegExp(String.raw`^(?:none|currentColor|${TOKEN}|color-mix\(in srgb, *${TOKEN}(?: \d+%)?, *${TOKEN}(?: \d+%)?\))$`)
+const COLOUR_VALUE = /\b(?:fill|stroke|color)\s*(?:=\s*["']?|:)\s*([^"';]+)/g
+
+/** Inner SVG markup, coloured only by theme tokens so it reads in both themes
+ *  (issue #1363). No ids: the same figure can appear twice on one page. The
+ *  byte budget is story #1378's. Figures draw on a 400×300 viewBox, portraits
+ *  on 100×100, icons on 24×24. */
+function svg(maxBytes: number) {
+  return z
+    .string()
+    .min(1)
+    .superRefine((markup, ctx) => {
+      for (const [, value] of markup.matchAll(COLOUR_VALUE)) {
+        const colour = value!.trim()
+        if (!THEME_COLOUR.test(colour)) ctx.addIssue({ code: z.ZodIssueCode.custom, message: `colour "${colour}" is not a theme token` })
+      }
+      if (/\sid\s*=/.test(markup)) ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'must not set an id' })
+      const bytes = new TextEncoder().encode(markup).length
+      if (bytes > maxBytes) ctx.addIssue({ code: z.ZodIssueCode.custom, message: `is ${bytes} bytes, over its ${maxBytes} bytes budget` })
+    })
+}
 
 // Stored browser actions point at these ids, so each must name one thing (#1366).
 function flagDuplicateIds(ctx: z.RefinementCtx, lists: Record<string, { id: string }[] | undefined>): void {
@@ -87,7 +107,7 @@ const campaign = z
     pledged: z.number().nonnegative(),
     specifications: z.array(z.object({ label: z.string(), value: z.string() }).strict()).min(1),
     figures: z
-      .array(z.object({ style: z.enum(['isometric', 'patent']), caption: z.string(), svg }).strict())
+      .array(z.object({ style: z.enum(['isometric', 'patent']), caption: z.string(), svg: svg(4096) }).strict())
       .min(2),
     rewards: z.array(reward),
     addons: z.array(addon).optional(),
@@ -133,12 +153,12 @@ export default defineTenant({
     inventors: {
       type: 'data',
       source: '*.yml',
-      schema: z.object({ name: z.string(), bio: z.string(), portrait: svg }).strict(),
+      schema: z.object({ name: z.string(), bio: z.string(), portrait: svg(1024) }).strict(),
     },
     categories: {
       type: 'data',
       source: '*.yml',
-      schema: z.object({ name: z.string(), blurb: z.string(), icon: svg, order: count }).strict(),
+      schema: z.object({ name: z.string(), blurb: z.string(), icon: svg(1024), order: count }).strict(),
     },
     comments: {
       type: 'data',

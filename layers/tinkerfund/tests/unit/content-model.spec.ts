@@ -118,6 +118,43 @@ describe('Campaign pages', () => {
   })
 })
 
+describe('SVG markup', () => {
+  const figure = (svg: string) => ({ campaign: { ...validCampaign(), figures: [{ style: 'isometric', caption: 'x', svg }, validCampaign().figures[1]] } })
+
+  it('accepts colour from theme tokens, alone or mixed', () => {
+    expect(issues('pages', figure(
+      '<g style="fill:var(--tf-accent);stroke:none"><path d="M0 0" fill="color-mix(in srgb, var(--tf-accent) 70%, var(--tf-ink))" stroke="currentColor" /></g>',
+    ))).toEqual([])
+  })
+
+  it.each([
+    ['a hex fill', '<path fill="#c2410c" d="M0 0" />'],
+    ['a single-quoted hex fill', `<path fill='#c2410c' d="M0 0" />`],
+    ['an unquoted hex fill', '<path fill=#c2410c d="M0 0" />'],
+    ['a named stroke', '<path style="stroke:black" d="M0 0" />'],
+    ['a literal inside color-mix', '<path style="fill:color-mix(in srgb, var(--tf-accent) 70%, #000)" d="M0 0" />'],
+    ['a non-Tinkerfund variable', '<path fill="var(--accent)" d="M0 0" />'],
+  ])('rejects %s, which cannot follow the theme', (_, svg) => {
+    expect(issues('pages', figure(svg))).toEqual([expect.stringMatching(/^campaign\.figures\.0\.svg: .*theme token/)])
+  })
+
+  it('holds a figure to 4 KiB and a portrait or icon to 1 KiB', () => {
+    const markup = (bytes: number) => `<g>${' '.repeat(bytes - 7)}</g>`
+    expect(markup(4096)).toHaveLength(4096)
+    expect(issues('pages', figure(markup(4096)))).toEqual([])
+    expect(issues('pages', figure(markup(4097)))).toEqual([expect.stringMatching(/^campaign\.figures\.0\.svg: .*4096 bytes/)])
+    expect(issues('inventors', { name: 'Ada', bio: 'x', portrait: markup(1024) })).toEqual([])
+    expect(issues('inventors', { name: 'Ada', bio: 'x', portrait: markup(1025) })).toEqual([expect.stringMatching(/^portrait: .*1024 bytes/)])
+    expect(issues('categories', { name: 'Desk', blurb: 'x', icon: markup(1025), order: 1 })).toEqual([expect.stringMatching(/^icon: .*1024 bytes/)])
+  })
+
+  it('rejects an id, which would collide when a figure is drawn twice on one page', () => {
+    expect(issues('inventors', { name: 'Ada', bio: 'x', portrait: '<clipPath id="c"><circle r="4" /></clipPath>' })).toEqual([
+      expect.stringMatching(/^portrait: .*id/),
+    ])
+  })
+})
+
 describe('Update pages', () => {
   it('accepts a publish offset and rejects a malformed one', () => {
     expect(issues('pages', { update: { published: '-3d' } })).toEqual([])
