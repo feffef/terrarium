@@ -1,0 +1,79 @@
+schemaVersion: 1
+session: session_01EdwL8ccXPLBheopdW5vWJr
+startedAt: 2026-09-26T07:12:58Z
+endedAt: 2026-09-26T07:40:56Z
+kind: interactive
+goal: Resolve Tinkerfund visual identity wayfinder ticket
+status: completed
+outcome: Instrument identity chosen; ticket closed, map updated
+summary: "The human asked me to run /wayfinder on map #1357. As the skill directs, I picked the first frontier ticket, \"Tinkerfund: visual identity\" (#1362), claimed it and worked it as a HITL prototype. The human answered my setup questions (standalone HTML, Commerce/Editorial/Lab directions, committed fonts). Round 1: three variants published as an Artifact. The human asked for blends of A and C (round 2: D/E/F), then picked \"E plus F's index table\", which I built as G. The human approved pushing the prototype to the throwaway branch prototype/tinkerfund-visual-identity. I posted the resolution, closed #1362 and appended the map's Decisions-so-far line. No PR: nothing substantive was committed on the session branch."
+prs: []
+docsRead:
+  - path: .agents/skills/wayfinder/SKILL.md
+    reason: the invoked workflow
+  - path: .agents/skills/prototype/UI.md
+    reason: UI prototype shape and capture rules
+  - path: docs/agents/issue-tracker.md
+    reason: "Wayfinding operations: claim, blocking, resolve"
+  - path: docs/agents/git-conventions.md
+    reason: branching before the throwaway-branch push
+skillsUsed:
+  - name: wayfinder
+    reason: "work through map #1357"
+  - name: prototype
+    reason: the ticket is a prototype ticket
+  - name: artifact-design
+    reason: publishing the variants as a viewable page
+  - name: close-session
+    reason: closure after resolving the ticket
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Map tickets encode blocking only as a 'Blocked by' body line; GitHub's native dependency summary reports 0 blockers, so a frontier query trusting it would treat 'write the spec' (#1369) as takeable.
+    solution: Wire native blocked_by edges when charting (issue-tracker.md already says native is canonical), or have the frontier query also parse the body line.
+    severity: minor
+  - description: Harness rule 'never push to a branch other than the assigned one' conflicts with the prototype skill's throwaway-branch capture; the assigned branch is unsuitable too because CLAUDE.md auto-opens a PR for substantive commits there.
+    solution: Had to ask the human. Say in prototype/wayfinder guidance (or issue-tracker.md) that the throwaway prototype/research branch needs a human OK in harness-restricted sessions, or bless that pattern in CLAUDE.md.
+    severity: minor
+  - description: "The commit on prototype/tinkerfund-visual-identity has no ADR-0017 provenance footer: it was made in a git worktree under the scratchpad with no node_modules, so .githooks/commit-msg failed open silently."
+    solution: Have the commit-msg hook resolve tsx from the main checkout (git rev-parse --git-common-dir), or warn instead of exiting 0 silently.
+    severity: minor
+  - description: "First screenshot pass captured variant A six times: navigating file:// only by changing the #hash doesn't reload the page, so the boot-time hash parse never re-ran."
+    solution: Go to about:blank between captures (did that), or listen for hashchange in prototypes.
+    severity: nit
+  - description: Google Fonts is blocked in the container (cert error), so no screenshot showed the real typefaces; the human judged fonts I never saw render.
+    solution: "For font decisions, commit the woff2 files into the prototype, or inline them as data: URIs, so they can be checked locally."
+    severity: minor
+  - description: get_sub_issues on the map returned 129k characters (full bodies) and overflowed to a file I had to parse with python just to list the frontier.
+    solution: "Note in github-integration.md: parse the saved JSON for number/state/labels/assignees, or use list_issues with fields."
+    severity: nit
+  - description: The map-body update was denied by the provenance guard because I kept the original session's header line when rewriting the body.
+    solution: Guard worked as designed; when rewriting an issue body, replace the header with this session's id.
+    severity: nit
+durationSec: 1679
+models:
+  claude-opus-5-5: 110
+toolCounts:
+  Bash: 30
+  ToolSearch: 2
+  mcp__github__issue_read: 6
+  mcp__github__issue_write: 4
+  AskUserQuestion: 2
+  Skill: 3
+  Write: 1
+  Read: 5
+  Artifact: 3
+  mcp__github__add_issue_comment: 1
+docsReadViaShell:
+  - docs/agents/issue-tracker.md
+  - .agents/skills/prototype/SKILL.md
+  - .agents/skills/prototype/UI.md
+  - docs/agents/git-conventions.md
+gitBranch: claude/wayfinder-issue-1357-gq8840
+entrypoint: remote_mobile
+cliVersion: 2.1.283
+learnings:
+  - The artifact CSP allows Google Fonts, so a standalone prototype can show open-licence faces even when the container can't fetch them.
+ideas:
+  - Add a wayfinder helper script (scripts/wayfinder-frontier.ts) that lists a map's frontier by reading sub-issues, native dependencies and the 'Blocked by' body fallback, so sessions stop hand-parsing a 100k-character sub-issue dump.
+landedBy: Stop
