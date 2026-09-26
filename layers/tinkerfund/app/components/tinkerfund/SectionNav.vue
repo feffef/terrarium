@@ -4,28 +4,51 @@ const props = defineProps<{ sections: { id: string; label: string; count?: numbe
 const nav = useTemplateRef<HTMLElement>('nav')
 const current = ref(props.sections[0]?.id)
 
-let frame = 0
-function update() {
-  cancelAnimationFrame(frame)
-  frame = requestAnimationFrame(() => {
-    const line = (nav.value?.getBoundingClientRect().bottom ?? 0) + 24
-    const tops = props.sections.flatMap(({ id }) => {
-      const el = document.getElementById(id)
-      return el ? [{ id, top: el.getBoundingClientRect().top }] : []
-    })
-    current.value = currentTinkerfundSection(tops, line) ?? current.value
-  })
+const target = (id: string) => document.getElementById(id)
+const isSticky = (el: HTMLElement | null) => !!el && getComputedStyle(el).position === 'sticky'
+
+let observer: IntersectionObserver | undefined
+let resizes: ResizeObserver | undefined
+const inView = new Map<string, boolean>()
+
+// The band from just below the nav to mid-screen is where a section is being read.
+function watchSections() {
+  const bar = nav.value!
+  const line = Number.parseFloat(getComputedStyle(bar).top) + bar.offsetHeight + 24
+  observer?.disconnect()
+  observer = new IntersectionObserver((entries) => {
+    for (const entry of entries) inView.set(entry.target.id, entry.isIntersecting)
+    current.value = currentTinkerfundSection(
+      props.sections.map(({ id }) => ({ id, inView: !!inView.get(id), sticky: isSticky(target(id)) })),
+    ) ?? current.value
+  }, { rootMargin: `-${line}px 0px -50% 0px` })
+  for (const { id } of props.sections) {
+    const el = target(id)
+    if (el) observer.observe(el)
+  }
 }
+
+// The band moves when the nav or the sticky site header above it changes size, so it is measured again.
 onMounted(() => {
-  update()
-  addEventListener('scroll', update, { passive: true })
-  addEventListener('resize', update, { passive: true })
+  resizes = new ResizeObserver(watchSections)
+  resizes.observe(nav.value!)
+  const header = document.querySelector('.tf-header')
+  if (header) resizes.observe(header)
 })
 onUnmounted(() => {
-  cancelAnimationFrame(frame)
-  removeEventListener('scroll', update)
-  removeEventListener('resize', update)
+  resizes?.disconnect()
+  observer?.disconnect()
 })
+
+// A sticky section (desktop Rewards, #1380) is already in view: jumping to it
+// would only scroll the page away from what is being read.
+function go(event: MouseEvent, id: string) {
+  const el = target(id)
+  if (!isSticky(el)) return
+  event.preventDefault()
+  el!.focus({ preventScroll: true })
+  current.value = id
+}
 </script>
 
 <template>
@@ -35,6 +58,7 @@ onUnmounted(() => {
       :key="s.id"
       :href="`#${s.id}`"
       :aria-current="s.id === current ? 'location' : undefined"
+      @click="go($event, s.id)"
     >
       {{ s.label }}<small v-if="s.count !== undefined">{{ s.count }}</small>
     </a>

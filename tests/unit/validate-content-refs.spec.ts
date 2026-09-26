@@ -7,7 +7,7 @@
 // kind, so a regression here is caught in isolation from the real content.
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
-import { join } from 'node:path'
+import { dirname, join } from 'node:path'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 import { z } from 'zod'
 import {
@@ -517,5 +517,148 @@ describe('commitDateWithinSeason() — the removedIn/stratum corroboration (Midd
     // whose UTC instant crosses midnight, still belongs to that calendar day
     // as git renders it (%cI carries the committer's own offset).
     expect(commitDateWithinSeason('2026-07-13T20:00:00-07:00', closed)).toBe(true)
+  })
+})
+
+// ── validateReferences() — Tinkerfund-shaped Spaces (issue #1366) ───────────
+// Selected by content shape, not Tenant name, so the fixture Tenant is neutral.
+
+const SHOP_COLLECTIONS = ['pages', 'inventors', 'categories', 'comments', 'promotions', 'backer', 'shop']
+
+function shopCols(): ExpandedCollection[] {
+  return SHOP_COLLECTIONS.map((collection) => ({
+    key: `shopfront_qa_${collection}`,
+    tenant: 'shopfront',
+    space: 'qa',
+    collection,
+    include: collection === 'pages' ? '**/*.md' : '*.yml',
+    cwdRel: collection,
+    ...(collection === 'pages' ? { type: 'page' as const, schema: pageSchema } : { type: 'data' as const, schema: dataSchema }),
+  }))
+}
+
+function write(rel: string, text: string): void {
+  mkdirSync(dirname(join(dir, rel)), { recursive: true })
+  writeFileSync(join(dir, rel), text)
+}
+
+function campaignPage(opts: { registry?: string; inventor?: string; category?: string } = {}): string {
+  return [
+    '---',
+    'title: Counterclockwise Mug',
+    'campaign:',
+    `  registry: ${opts.registry ?? 'TF-0001'}`,
+    `  inventor: ${opts.inventor ?? 'ada'}`,
+    `  category: ${opts.category ?? 'kitchen'}`,
+    '  rewards:',
+    '    - id: mug',
+    '      options:',
+    '        - { id: colour, choices: [{ id: red }, { id: blue }] }',
+    '  addons:',
+    '    - id: coaster',
+    '---',
+    'The pitch.',
+  ].join('\n')
+}
+
+function writeValidShop(): void {
+  write('pages/index.md', '---\ntitle: Home\n---\n')
+  write('pages/campaigns/mug.md', campaignPage())
+  write('pages/campaigns/mug/updates/1.md', '---\ntitle: We shipped\nupdate: { published: "-1d" }\n---\n')
+  write('inventors/ada.yml', 'name: Ada\n')
+  write('categories/kitchen.yml', 'name: Kitchen\n')
+  write('comments/mug.yml', 'campaign: mug\ncomments: []\n')
+  write('promotions/launch.yml', 'title: Launch\ncampaign: mug\n')
+  write('promotions/shopwide.yml', 'title: Everything\n')
+  write('backer/backer.yml', [
+    'pledges:',
+    '  - campaign: mug',
+    '    lines: [{ reward: mug, options: { colour: red }, quantity: 1 }]',
+    '    addons: [{ id: coaster, quantity: 1 }]',
+  ].join('\n'))
+}
+
+function shopViolations(): string[] {
+  return validateReferences(shopCols(), dir).violations.flatMap((v) => v.messages.map((m) => `${v.file}: ${m}`))
+}
+
+describe('validateReferences() — Tinkerfund-shaped Space', () => {
+  it('accepts a Space whose references all resolve, counting only the Documents it checks', () => {
+    writeValidShop()
+    const report = validateReferences(shopCols(), dir)
+    expect(report.violations).toEqual([])
+    expect(report.groupsChecked).toBe(1)
+    // 3 pages, 1 comment thread, 2 Promotions, 1 backer; Inventors and categories are only looked up.
+    expect(report.filesChecked).toBe(7)
+  })
+
+  it('checks Pledges in a backer doc even in a Space with no Campaign yet', () => {
+    write('pages/index.md', '---\ntitle: Home\n---\n')
+    write('backer/backer.yml', 'pledges:\n  - campaign: mug\n    lines: []\n')
+    expect(shopViolations()).toEqual(['backer/backer.yml: pledges.0.campaign: "mug" is not a Campaign in this Space'])
+  })
+
+  it('rejects a Campaign naming an unknown Inventor or category', () => {
+    writeValidShop()
+    write('pages/campaigns/mug.md', campaignPage({ inventor: 'nobody', category: 'garage' }))
+    expect(shopViolations()).toEqual([
+      expect.stringMatching(/campaigns\/mug\.md: campaign\.inventor: "nobody"/),
+      expect.stringMatching(/campaigns\/mug\.md: campaign\.category: "garage"/),
+    ])
+  })
+
+  it('rejects a registry number two Campaigns share', () => {
+    writeValidShop()
+    write('pages/campaigns/rock.md', campaignPage())
+    expect(shopViolations()).toEqual([expect.stringMatching(/campaigns\/rock\.md: campaign\.registry: "TF-0001" .*mug/)])
+  })
+
+  it('rejects a Campaign outside campaigns/, and a campaigns/ page that is not one', () => {
+    writeValidShop()
+    write('pages/mug.md', campaignPage({ registry: 'TF-0002' }))
+    write('pages/campaigns/about.md', '---\ntitle: About\n---\n')
+    expect(shopViolations()).toEqual([
+      expect.stringMatching(/campaigns\/about\.md: .*campaign/),
+      expect.stringMatching(/pages\/mug\.md: .*campaigns\//),
+    ])
+  })
+
+  it('rejects an Update of an unknown Campaign, or one with no publish offset', () => {
+    writeValidShop()
+    write('pages/campaigns/rock/updates/1.md', '---\ntitle: Orphan\nupdate: { published: "-1d" }\n---\n')
+    write('pages/campaigns/mug/updates/2.md', '---\ntitle: Undated\n---\n')
+    expect(shopViolations()).toEqual([
+      expect.stringMatching(/mug\/updates\/2\.md: .*update/),
+      expect.stringMatching(/rock\/updates\/1\.md: .*"rock"/),
+    ])
+  })
+
+  it('rejects a Promotion or comment thread naming an unknown Campaign', () => {
+    writeValidShop()
+    write('promotions/launch.yml', 'title: Launch\ncampaign: rock\n')
+    write('comments/mug.yml', 'campaign: rock\ncomments: []\n')
+    expect(shopViolations()).toEqual([
+      expect.stringMatching(/comments\/mug\.yml: campaign: "rock"/),
+      expect.stringMatching(/promotions\/launch\.yml: campaign: "rock"/),
+    ])
+  })
+
+  it('rejects a past Pledge naming an unknown Campaign, Reward, option or Add-on', () => {
+    writeValidShop()
+    write('backer/backer.yml', [
+      'pledges:',
+      '  - campaign: rock',
+      '    lines: []',
+      '  - campaign: mug',
+      '    lines: [{ reward: cup, quantity: 1 }, { reward: mug, options: { colour: green, size: xl }, quantity: 1 }]',
+      '    addons: [{ id: saucer, quantity: 1 }]',
+    ].join('\n'))
+    expect(shopViolations()).toEqual([
+      'backer/backer.yml: pledges.0.campaign: "rock" is not a Campaign in this Space',
+      'backer/backer.yml: pledges.1.lines.0.reward: "cup" is not a Reward of "mug"',
+      'backer/backer.yml: pledges.1.lines.1.options.colour: "green" is not an option of Reward "mug"',
+      'backer/backer.yml: pledges.1.lines.1.options.size: "xl" is not an option of Reward "mug"',
+      'backer/backer.yml: pledges.1.addons.0.id: "saucer" is not an Add-on of "mug"',
+    ])
   })
 })

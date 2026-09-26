@@ -1,79 +1,120 @@
 import type { Ref } from 'vue'
-import type { TinkerfundCartRequest } from '../types/tinkerfund'
+import type { TinkerfundAction, TinkerfundUntimedAction } from '../utils/backer'
 import type { TinkerfundListing } from '../utils/browse'
-import type { TinkerfundAccountCatalog, TinkerfundPledgeChange } from '../utils/account'
-import type { TinkerfundOverlay, TinkerfundPledge, TinkerfundZone } from '../utils/cart'
-import type { TinkerfundBakedPledge, TinkerfundPlaceInput } from '../utils/checkout'
+import type { TinkerfundCartRequest, TinkerfundPledgeContents, TinkerfundShop, TinkerfundStep, TinkerfundZone } from '../utils/cart'
 import type { TinkerfundHit } from '../utils/search'
+import type { CampaignState } from '../utils/status'
+
+/** The Space a Tinkerfund component renders in, its Collections and its links. */
+export function useTinkerfundSpace() {
+  const found = useSpace('tinkerfund')
+  return {
+    ...found,
+    link: (path = '') => tinkerfundPath(found.space, path),
+    campaignLink: (slug: string) => tinkerfundCampaignPath(found.space, slug),
+  }
+}
+
+/** The Space's `shop` document, and its zones' and payment methods' names. */
+export async function useTinkerfundShop() {
+  const { space, collections } = useTinkerfundSpace()
+  const { data: shop, status, error } = await useAsyncData(`tinkerfund-shop-${space}`, () => queryCollection(collections.shop).first())
+  return {
+    shop,
+    status,
+    error,
+    zoneName: (id: string | undefined) => shop.value?.zones.find((z) => z.id === id)?.name ?? id ?? '',
+    paymentLabel: (id: string | undefined) => shop.value?.payments.find((p) => p.id === id)?.label ?? id ?? '',
+  }
+}
+
+/** A page's clock (issue #1364). */
+export interface TinkerfundClock {
+  /** The page's "now": Campaign and Promotion states hold still at it. */
+  now: number
+  /** What countdowns count from: `now`, moving on once a minute unless the Space pins its clock (`qa`). */
+  countdown: number
+}
 
 /**
  * The Space's "now" (issue #1364): read once on the server and carried to the
  * client in the payload, as the Atlas's `useGlassToday` does, so hydration
- * agrees. Each later client navigation reads it afresh. `ticking` is false
- * when the Space pins its clock (`qa`), so countdowns stay frozen there.
+ * agrees. Each later client navigation, and `refresh`, reads it afresh.
  */
-export async function useTinkerfundClock(): Promise<{ now: Ref<number>; ticking: boolean }> {
+export async function useTinkerfundClock(): Promise<{ now: Ref<number>; clock: Ref<TinkerfundClock>; refresh: () => void }> {
   const nuxtApp = useNuxtApp()
-  const { space, collections } = useSpace('tinkerfund')
+  const { space } = useTinkerfundSpace()
   const now = useState<number | null>(`tinkerfund-now-${space}`, () => null)
-  const { data: shop } = await useAsyncData(`tinkerfund-shop-${space}`, () => queryCollection(collections.shop).first())
+  const moved = ref(0)
+  let ticking = false
+  let timer: ReturnType<typeof setInterval> | undefined
+  // Registered before the first await, while the component is still current.
+  onMounted(() => {
+    if (ticking) timer = setInterval(() => (moved.value = Date.now()), 60_000)
+  })
+  onUnmounted(() => clearInterval(timer))
+
+  const { shop } = await useTinkerfundShop()
   const pinned = shop.value?.now ?? undefined
-  if (now.value === null || (import.meta.client && !nuxtApp.isHydrating)) now.value = tinkerfundNow(pinned, Date.now())
-  return { now: now as Ref<number>, ticking: !pinned }
+  ticking = !pinned
+  const refresh = () => {
+    now.value = tinkerfundNow(pinned, Date.now())
+  }
+  if (now.value === null || (import.meta.client && !nuxtApp.isHydrating)) refresh()
+  const clock = computed(() => ({ now: now.value!, countdown: Math.max(now.value!, moved.value) }))
+  return { now: now as Ref<number>, clock, refresh }
+}
+
+/** Money follows the visitor's locale (issue #1365). */
+export function useTinkerfundMoney(): (amount: number) => string {
+  const locale = useTinkerfundLocale()
+  return (amount) => formatTinkerfundMoney(amount, locale.value)
 }
 
 export type TinkerfundCard = TinkerfundListing & { categoryName: string; inventorName: string }
 
+/** What a Campaign's Reward, Add-on and bonus-support controls share. */
+export interface TinkerfundBacking {
+  slug: string
+  state: CampaignState
+  /** Why the Cart turned the last add away, keyed `reward:<id>`, `addon:<id>` or `bonus`. */
+  refusals: Record<string, string>
+  add: (request: TinkerfundCartRequest) => void
+}
+
 /**
  * Every Campaign in the Space as a card or table row, plus the categories and
- * Promotions that browsing needs (story #1381). Totals count the visitor's
- * Pledges once mounted (issue #1364). `clock` starts at the page's "now" and,
- * in `prod`, moves once a minute so countdowns follow.
+ * Promotions that browsing needs (story #1381). Totals count the Backer's
+ * Pledges once mounted (issue #1364).
  */
 export async function useTinkerfundCatalog() {
   // Every composable runs before the first await: after it, Nuxt's context is gone.
-  const { space, pagesKey, collections } = useSpace('tinkerfund')
-  const clockReady = useTinkerfundClock()
+  const { space, pagesKey, collections } = useTinkerfundSpace()
+  const categories = useTinkerfundCategories()
   const cartReady = useTinkerfundCart()
   const catalog = useAsyncData(`tinkerfund-catalog-${space}`, async () => {
-    const [docs, promotions, categories, inventors] = await Promise.all([
+    const [docs, inventors] = await Promise.all([
       queryCollection(pagesKey).where('campaign', 'IS NOT NULL').select('path', 'title', 'description', 'campaign').all(),
-      queryCollection(collections.promotions).all(),
-      queryCollection(collections.categories).order('order', 'ASC').all(),
       queryCollection(collections.inventors).select('stem', 'name').all(),
     ])
-    return { docs, promotions, categories, inventors }
+    return { docs, inventors }
   })
-  const clock = ref(0)
-  let ticking = false
-  let timer: ReturnType<typeof setInterval> | undefined
-  onMounted(() => {
-    if (ticking) timer = setInterval(() => (clock.value = Date.now()), 60_000)
-  })
-  onUnmounted(() => clearInterval(timer))
+  const [{ data }, { clock, pledges, baked, promotions }] = await Promise.all([catalog, cartReady])
 
-  const [{ now, ticking: ticks }, { data }, { pledges, baked }] = await Promise.all([clockReady, catalog, cartReady])
-  clock.value = now.value
-  ticking = ticks
-
-  const promotions = computed(() => (data.value?.promotions ?? []).map((p) => ({ ...p, slug: p.stem })))
-  const categories = computed(() =>
-    (data.value?.categories ?? []).map((c) => ({ slug: c.stem, name: c.name, blurb: c.blurb, icon: c.icon })),
-  )
   const cards = computed<TinkerfundCard[]>(() => {
     const docs = (data.value?.docs ?? []).flatMap((d) => d.campaign
-      ? [{ ...d, campaign: withTinkerfundPledges(d.path.split('/').pop()!, d.campaign, pledges.value, baked.value) }]
+      ? [{ ...d, campaign: withTinkerfundPledges(tinkerfundSlug(d.path), d.campaign, pledges.value, baked.value) }]
       : [])
     const inventors = new Map((data.value?.inventors ?? []).map((i) => [i.stem, i.name]))
     const categoryNames = new Map(categories.value.map((c) => [c.slug, c.name]))
-    return tinkerfundListings(docs, promotions.value, now.value).map((l) => ({
+    return tinkerfundListings(docs, promotions.value, clock.value.now).map((l) => ({
       ...l,
       categoryName: categoryNames.get(l.category) ?? l.category,
       inventorName: inventors.get(l.inventor) ?? l.inventor,
     }))
   })
 
-  return { space, now, clock, cards, categories, promotions }
+  return { clock, cards, categories, promotions }
 }
 
 /** Money and dates follow the visitor's locale (issue #1365); the server reads
@@ -84,94 +125,98 @@ export function useTinkerfundLocale(): Ref<string> {
 }
 
 /**
- * The visitor's Cart and Pledges in this Space (issue #1359): empty on the
- * server and on the first client render, then read from sessionStorage after
- * mount, so hydration always agrees. `change` answers why it refused, if it
- * did; `catalog` counts the visitor's Pledges into totals and stock.
+ * The demo Backer in this Space (issue #1359): their stored actions, replayed
+ * over the baked shop into a Cart, Pledges and totals. Empty on the server and
+ * on the first client render, then read from sessionStorage after mount, so
+ * hydration always agrees. An action is taken at a freshly read "now"; one
+ * the rules refuse is not stored, and answers why. The Cart ships to the
+ * `chosen` zone, else to the demo Backer's own address.
  */
-export async function useTinkerfundCart(zone: Ref<TinkerfundZone> = ref('domestic')) {
-  const { space, pagesKey, collections } = useSpace('tinkerfund')
-  const overlay = useState(`tinkerfund-overlay-${space}`, emptyTinkerfundOverlay)
-  const loaded = useState(`tinkerfund-overlay-loaded-${space}`, () => false)
+export async function useTinkerfundCart(chosen: Readonly<Ref<TinkerfundZone | undefined>> = ref()) {
+  const { space, pagesKey, collections } = useTinkerfundSpace()
+  const actions = useState<TinkerfundAction[]>(`tinkerfund-actions-${space}`, () => [])
+  const loaded = useState(`tinkerfund-actions-loaded-${space}`, () => false)
 
   // Registered before the first await, while the component is still current.
   onMounted(() => {
     if (loaded.value) return
     try {
-      overlay.value = readTinkerfundOverlay(sessionStorage, space)
+      actions.value = readTinkerfundActions(sessionStorage, space)
     } catch {
-      // Storage blocked: the Cart lasts until the next page load.
+      // Storage blocked: the actions last until the next page load.
     }
     loaded.value = true
   })
 
-  const clock = useTinkerfundClock()
+  const clockReady = useTinkerfundClock()
+  const shopReady = useTinkerfundShop()
   const catalogData = useAsyncData(
     `tinkerfund-cart-catalog-${space}`,
     () => queryCollection(pagesKey).where('campaign', 'IS NOT NULL').select('path', 'title', 'campaign').all(),
     {
-      // The Cart needs prices and limits, not figures, in every page's payload.
+      // Every page's payload carries this, so it keeps what the Backer's steps read and drops the figures.
       transform: (docs) =>
-        Object.fromEntries(docs.flatMap(({ path, title, campaign: c }) => c
-          ? [[path.split('/').pop()!, { title, campaign: { launch: c.launch, end: c.end, goal: c.goal, pledged: c.pledged, backers: c.backers, rewards: c.rewards, addons: c.addons, shipping: c.shipping } }]]
+        Object.fromEntries(docs.flatMap(({ path, title, campaign }) => campaign
+          ? [[tinkerfundSlug(path), { title, campaign: tinkerfundCatalogCampaign(campaign) }]]
           : [])),
     },
   )
-  const bakedData = useAsyncData(`tinkerfund-backer-pledges-${space}`, async () =>
-    (await queryCollection(collections.backer).first())?.pledges ?? [])
-  const [{ now }, { data: baseline }, { data: bakedPledges }] = await Promise.all([clock, catalogData, bakedData])
+  const backerData = useAsyncData(`tinkerfund-backer-${space}`, () => queryCollection(collections.backer).first())
+  const promotionsData = useAsyncData(`tinkerfund-promotions-${space}`, () => queryCollection(collections.promotions).all())
+  const [{ now, clock, refresh }, { shop: shopDoc }, { data: baseline }, { data: backer }, { data: promotionDocs }] =
+    await Promise.all([clockReady, shopReady, catalogData, backerData, promotionsData])
 
-  const pledges = computed(() => overlay.value.pledges)
-  const baked = computed<TinkerfundBakedPledge[]>(() => bakedPledges.value ?? [])
-  const catalog = computed<TinkerfundAccountCatalog>(() =>
-    Object.fromEntries(Object.entries(baseline.value ?? {}).map(([slug, entry]) =>
-      [slug, { ...entry, campaign: withTinkerfundPledges(slug, entry.campaign, pledges.value, baked.value) }])))
+  const promotions = computed(() => promotionDocs.value ?? [])
+  const baked = computed(() => backer.value?.pledges ?? [])
+  const shop = computed<TinkerfundShop>(() => ({
+    catalog: baseline.value ?? {},
+    baked: baked.value,
+    promotions: promotions.value,
+    payment: shopDoc.value?.payments[0]?.id ?? '',
+    now: now.value,
+  }))
+  const state = computed(() => reduceTinkerfundActions(actions.value, shop.value))
+  const pledges = computed(() => state.value.pledges)
+  const catalog = computed(() => tinkerfundCountedCatalog(shop.value, pledges.value))
+  const zone = computed(() => chosen.value ?? backer.value?.address.zone ?? 'domestic')
+  const view = computed(() => resolveTinkerfundCart(state.value, shop.value, zone.value))
+  const account = computed(() => tinkerfundAccountPledges(state.value, shop.value))
+  const quote = (code: string | undefined) => quoteTinkerfundCheckout(view.value, shop.value, code)
 
-  function save(next: TinkerfundOverlay) {
-    overlay.value = next
+  const preview = (action: TinkerfundUntimedAction): TinkerfundStep =>
+    applyTinkerfundAction(state.value, { ...action, at: now.value }, shop.value)
+
+  function act(action: TinkerfundUntimedAction): TinkerfundStep {
+    refresh()
+    const taken: TinkerfundAction = { ...action, at: now.value }
+    const step = applyTinkerfundAction(state.value, taken, shop.value)
+    if (step.error) return step
+    actions.value = [...actions.value, taken]
     try {
-      writeTinkerfundOverlay(sessionStorage, space, next)
+      writeTinkerfundActions(sessionStorage, space, actions.value)
     } catch {
-      // As above.
+      // Storage blocked: the actions last until the next page load.
     }
+    return step
   }
 
-  function change(request: TinkerfundCartRequest): string | undefined {
-    const { cart, error } = addToTinkerfundCart(overlay.value.cart, request, catalog.value, now.value)
-    if (error) return error
-    save({ ...overlay.value, cart })
-  }
-
-  /** Confirms the quoted checkout; answers the new Pledges' refs, or why not. */
-  function place(input: Omit<TinkerfundPlaceInput, 'overlay' | 'catalog' | 'baked' | 'now'>): { refs?: string[]; error?: string } {
-    const { overlay: next, refs, error } = placeTinkerfundPledges({ ...input, overlay: overlay.value, catalog: catalog.value, baked: baked.value, now: now.value })
-    if (next) save(next)
+  const change = (request: TinkerfundCartRequest) => act({ type: 'cart', request }).error
+  const place = (choices: { zone: TinkerfundZone; payment: string; code?: string }) => {
+    const { refs, error } = act({ type: 'place', ...choices })
     return { refs, error }
   }
+  const revise = (ref: string, change: TinkerfundPledgeContents) => act({ type: 'change', ref, change }).error
+  const cancel = (ref: string) => act({ type: 'cancel', ref }).error
 
-  type Outcome = { pledge?: TinkerfundPledge; error?: string }
-  function keep(pledge: TinkerfundPledge, act: (entry: TinkerfundAccountCatalog[string]) => Outcome): string | undefined {
-    const entry = catalog.value[pledge.campaign]
-    if (!entry) return TINKERFUND_GONE
-    const { pledge: next, error } = act(entry)
-    if (next) save({ ...overlay.value, pledges: [...overlay.value.pledges.filter((p) => p.ref !== next.ref), next] })
-    return error
-  }
-  /** Changes or cancels a Pledge, baked or the visitor's own (story #1385); answers why not, if it refused. */
-  const revise = (pledge: TinkerfundPledge, change: TinkerfundPledgeChange) =>
-    keep(pledge, (entry) => reviseTinkerfundPledge(pledge, change, entry, now.value))
-  const cancel = (pledge: TinkerfundPledge) => keep(pledge, (entry) => cancelTinkerfundPledge(pledge, entry, now.value))
-
-  const view = computed(() => resolveTinkerfundCart(overlay.value.cart, catalog.value, now.value, zone.value))
-  return { loaded, view, change, place, revise, cancel, pledges, baked, catalog, now }
+  return { loaded, zone, view, quote, account, change, place, revise, cancel, preview, pledges, baked, catalog, promotions, backer, clock }
 }
 
-export function useTinkerfundCategories(): Ref<{ slug: string; name: string }[]> {
-  const { space, collections } = useSpace('tinkerfund')
+export function useTinkerfundCategories() {
+  const { space, collections } = useTinkerfundSpace()
   const { data } = useAsyncData(`tinkerfund-categories-${space}`, () =>
     queryCollection(collections.categories).order('order', 'ASC').all(),
   )
-  return computed(() => (data.value ?? []).map((c) => ({ slug: c.stem, name: c.name })))
+  return computed(() => (data.value ?? []).map((c) => ({ slug: c.stem, name: c.name, blurb: c.blurb, icon: c.icon })))
 }
 
 /**
@@ -180,7 +225,7 @@ export function useTinkerfundCategories(): Ref<{ slug: string; name: string }[]>
  * Space; the query runs in the browser once hydrated (issue #1370).
  */
 export function useTinkerfundSearch() {
-  const { pagesKey, collections } = useSpace('tinkerfund')
+  const { pagesKey, collections } = useTinkerfundSpace()
   return async (raw: string, limit?: number): Promise<TinkerfundHit[]> => {
     const term = tinkerfundSearchTerm(raw)
     if (!term) return []

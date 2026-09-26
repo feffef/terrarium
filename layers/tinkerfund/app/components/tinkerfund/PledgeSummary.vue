@@ -1,17 +1,16 @@
 <script setup lang="ts">
 import type { TinkerfundReceiptLine } from '../../utils/checkout'
 
-// One Campaign's Pledge, read-only: at checkout (lines flagged when they can't
-// ship) and on the Confirmation, where `reference` and `endsAt` make it a receipt.
-defineProps<{
-  space: string
+const props = defineProps<{
   pledge: {
     campaign: string
     title: string
     lines: (TinkerfundReceiptLine & { ships?: boolean; unavailable?: string })[]
+    unshipped?: string[]
     bonus?: number
     discount: number
     shipping: number
+    rezoned?: boolean
     total: number
   }
   zone: string
@@ -22,16 +21,18 @@ defineProps<{
 }>()
 
 const id = useId()
-const locale = useTinkerfundLocale()
-const money = (amount: number) => formatTinkerfundMoney(amount, locale.value)
+const money = useTinkerfundMoney()
+const { campaignLink } = useTinkerfundSpace()
+const shippingRows = computed(() => tinkerfundShippingRows([props.pledge], props.zone, money))
 </script>
 
 <template>
   <section class="pledge tf-panel" :aria-labelledby="`${id}-h`">
     <header class="top">
       <p v-if="reference" class="tf-label">Pledge <b class="ref">{{ reference }}</b></p>
-      <h2 :id="`${id}-h`"><NuxtLink :to="tinkerfundPath(space, `/campaigns/${pledge.campaign}`)">{{ pledge.title }}</NuxtLink></h2>
+      <h2 :id="`${id}-h`"><NuxtLink :to="campaignLink(pledge.campaign)">{{ pledge.title }}</NuxtLink></h2>
       <p v-if="note" class="note">{{ note }}</p>
+      <p v-if="pledge.unshipped?.length" class="flag">{{ tinkerfundPledgeDoesntShip(pledge.unshipped, zone) }}</p>
     </header>
     <ul class="lines">
       <li v-for="line in pledge.lines" :key="line.key">
@@ -48,9 +49,9 @@ const money = (amount: number) => formatTinkerfundMoney(amount, locale.value)
         <span class="amount">{{ money(pledge.bonus) }}</span>
       </li>
     </ul>
-    <dl class="sums">
+    <dl class="sums tf-summary-list compact">
       <div v-if="pledge.discount"><dt>Discount</dt><dd>−{{ money(pledge.discount) }}</dd></div>
-      <div><dt>Shipping to {{ zone }}</dt><dd>{{ pledge.shipping ? money(pledge.shipping) : '—' }}</dd></div>
+      <div v-for="row in shippingRows" :key="row.label"><dt>{{ row.label }}</dt><dd>{{ row.amount }}</dd></div>
       <div class="total"><dt>Total</dt><dd>{{ money(pledge.total) }}</dd></div>
     </dl>
     <p v-if="endsAt !== undefined" class="pending">
@@ -73,11 +74,7 @@ li { display: flex; justify-content: space-between; gap: 12px; padding: 8px 0; b
 .what { display: grid; gap: 2px; min-width: 0; overflow-wrap: anywhere; }
 .detail { color: var(--tf-muted); font-size: 13px; }
 .flag { color: var(--tf-bad); font-size: 14px; }
-.amount, dd { font: 600 14px/1.4 var(--tf-mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
-.sums { display: grid; gap: 4px; margin: 4px 0 0; }
-.sums div { display: flex; justify-content: space-between; gap: 12px; }
-dt { color: var(--tf-muted); font-size: 14px; }
-dd { margin: 0; }
-.total dt { color: var(--tf-ink); font-weight: 600; }
+.amount { font: 600 14px/1.4 var(--tf-mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.sums { margin-top: 4px; }
 .pending { margin: 4px 0 0; padding: 10px 12px; border-radius: var(--tf-radius); background: var(--tf-bg); font-size: 14px; }
 </style>

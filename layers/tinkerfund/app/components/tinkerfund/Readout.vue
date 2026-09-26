@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { TinkerfundClock } from '../../composables/tinkerfund'
 import type { TinkerfundCampaign, TinkerfundPromotion } from '../../types/tinkerfund'
 
 const props = defineProps<{
@@ -8,26 +9,23 @@ const props = defineProps<{
   inventor?: string
   campaign: TinkerfundCampaign
   deals: TinkerfundPromotion[]
-  now: number
-  ticking: boolean
+  clock: TinkerfundClock
   /** The page's h1 by default; the qa gallery shows several at once. */
   heading?: 'h1' | 'h3'
 }>()
 
 const locale = useTinkerfundLocale()
-const money = (amount: number) => formatTinkerfundMoney(amount, locale.value)
-const status = computed(() => deriveCampaignStatus(props.campaign, props.campaign.pledged, props.now))
+const money = useTinkerfundMoney()
+const status = computed(() => deriveCampaignStatus(props.campaign, props.campaign.pledged, props.clock.now))
+const deadline = computed(() => tinkerfundDeadline(status.value))
 const from = computed(() => campaignPriceFrom(props.campaign.rewards))
-const DATE_LABEL = { upcoming: 'Launches', live: 'Ends', ended: 'Ended' } as const
 </script>
 
 <template>
   <div class="readout tf-panel">
-    <TinkerfundCampaignStatus :campaign="campaign" :now="now" :ticking="ticking" />
-    <p class="date">
-      {{ DATE_LABEL[status.state] }} <TinkerfundTime :at="status.state === 'upcoming' ? status.launchAt : status.endAt" />
-    </p>
-    <component :is="heading ?? 'h1'" class="title">{{ title }}</component>
+    <TinkerfundCampaignStatus :campaign="campaign" :clock="clock" />
+    <p class="date">{{ deadline.label }} <TinkerfundTime :at="deadline.at" /></p>
+    <component :is="heading ?? 'h1'" class="tf-h1">{{ title }}</component>
     <p v-if="description" class="lead">{{ description }}</p>
     <p v-if="inventor" class="by">by <b>{{ inventor }}</b></p>
     <div>
@@ -51,7 +49,6 @@ const DATE_LABEL = { upcoming: 'Launches', live: 'Ends', ended: 'Ended' } as con
 .readout { display: grid; gap: 14px; align-content: start; padding: 20px; box-shadow: var(--tf-shadow); }
 .readout > * { margin: 0; }
 .readout :deep(.status) { margin-bottom: 0; }
-.title { font: 800 clamp(30px, 4vw, 42px)/1.02 var(--tf-font); font-stretch: 78%; overflow-wrap: anywhere; }
 .lead { color: var(--tf-muted); }
 .date { color: var(--tf-muted); font: 500 12px/1.4 var(--tf-mono); }
 .by { font-size: 14px; }

@@ -10,6 +10,7 @@ import {
   tinkerfundLocale,
   tinkerfundStock,
 } from '../../app/utils/campaign.ts'
+import { HOUR, NOW } from './support.ts'
 
 describe('tinkerfundStock', () => {
   it('counts what is left of a limited Reward', () => {
@@ -26,9 +27,6 @@ describe('tinkerfundStock', () => {
 })
 
 describe('formatTinkerfundAgo', () => {
-  const NOW = Date.parse('2026-06-01T12:00:00Z')
-  const HOUR = 3_600_000
-
   it('says hours within the first day, days after', () => {
     expect(formatTinkerfundAgo(NOW, NOW - 25 * HOUR)).toBe('1 day ago')
     expect(formatTinkerfundAgo(NOW, NOW - 11 * 24 * HOUR)).toBe('11 days ago')
@@ -42,7 +40,6 @@ describe('formatTinkerfundAgo', () => {
 })
 
 describe('tinkerfundAutomaticDeals', () => {
-  const NOW = Date.parse('2026-06-01T12:00:00Z')
   const deal = { title: 'A tenth off', discount: { percent: 10 }, start: '-1d' }
 
   it('keeps Active automatic Promotions for this Campaign or the whole shop', () => {
@@ -97,23 +94,22 @@ describe('tinkerfundLocale', () => {
 })
 
 describe('currentTinkerfundSection', () => {
-  const sections = (story: number, rewards: number, updates: number) => [
-    { id: 'story', top: story },
-    { id: 'rewards', top: rewards },
-    { id: 'updates', top: updates },
-  ]
+  const at = (inView: string[], sticky: string[] = []) =>
+    currentTinkerfundSection(['story', 'rewards', 'updates'].map((id) => ({ id, inView: inView.includes(id), sticky: sticky.includes(id) })))
 
-  it('is the last section whose top has scrolled past the line', () => {
-    expect(currentTinkerfundSection(sections(-900, -300, 400), 100)).toBe('rewards')
-    expect(currentTinkerfundSection(sections(-900, -300, 100), 100)).toBe('updates')
+  it('is the first section in view', () => {
+    expect(at(['rewards'])).toBe('rewards')
+    expect(at(['rewards', 'updates'])).toBe('rewards')
   })
 
-  it('is the first section before any has reached the line', () => {
-    expect(currentTinkerfundSection(sections(400, 900, 1400), 100)).toBe('story')
+  it('is none while no section is in view, so the last one holds', () => {
+    expect(at([])).toBeUndefined()
   })
 
-  // On desktop the Rewards column starts level with the Story.
-  it('prefers the earlier section when two start level', () => {
-    expect(currentTinkerfundSection(sections(-200, -200, 600), 100)).toBe('story')
+  // On desktop the Rewards column is sticky, so it is always in view (#1380).
+  it('counts a sticky section only when nothing else is in view', () => {
+    expect(at(['story', 'rewards'], ['rewards'])).toBe('story')
+    expect(at(['rewards', 'updates'], ['rewards'])).toBe('updates')
+    expect(at(['rewards'], ['rewards'])).toBe('rewards')
   })
 })

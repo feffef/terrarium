@@ -2,9 +2,7 @@
 // (issue #1364).
 import { describe, expect, it } from 'vitest'
 import { formatTinkerfundCountdown, resolveTinkerfundOffset, tinkerfundCountdown, tinkerfundNow } from '../../app/utils/clock.ts'
-
-const NOW = Date.parse('2026-06-01T12:00:00Z')
-const HOUR = 3_600_000
+import { HOUR, NOW } from './support.ts'
 
 describe('resolveTinkerfundOffset', () => {
   it('resolves day and hour offsets in both directions', () => {

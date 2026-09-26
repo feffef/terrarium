@@ -1,8 +1,9 @@
 // Tinkerfund's tab-lifetime browser state. sessionStorage is shared by every
-// Tenant on this origin (issue #1358), so every key carries this prefix and
-// Reset removes only those — never clear() (issue #1359).
+// Tenant on this origin (issue #1358), so every demo key carries this prefix and
+// Reset removes only those — never clear() (issue #1359). The theme is a
+// preference, not demo state (#1367), so Reset leaves it.
 export const TINKERFUND_KEY_PREFIX = 'tinkerfund:'
-const THEME_KEY = `${TINKERFUND_KEY_PREFIX}theme`
+const THEME_KEY = 'tinkerfund-theme'
 
 export type TinkerfundTheme = 'system' | 'light' | 'dark'
 

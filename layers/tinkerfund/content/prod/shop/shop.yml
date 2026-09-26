@@ -1,4 +1,3 @@
-# No `now`: prod follows real time.
 currency: EUR
 zones:
   - { id: domestic, name: Domestic }

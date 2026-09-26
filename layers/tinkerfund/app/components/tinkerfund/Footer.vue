@@ -1,11 +1,10 @@
 <script setup lang="ts">
-const props = defineProps<{ space: string }>()
-const link = (path = '') => tinkerfundPath(props.space, path)
+const { link } = useTinkerfundSpace()
 const categories = useTinkerfundCategories()
 </script>
 
 <template>
-  <footer class="foot">
+  <footer class="foot tf-noprint">
     <div class="tf-wrap grid">
       <div class="brand">
         <TinkerfundWordmark :to="link()" />

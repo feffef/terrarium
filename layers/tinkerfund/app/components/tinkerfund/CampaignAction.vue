@@ -2,7 +2,7 @@
 // Only a Live Campaign takes Pledges (issue #1364): Upcoming offers a
 // reminder, Ended is locked.
 const props = defineProps<{ slug: string; state: CampaignState }>()
-const { space } = useSpace('tinkerfund')
+const { space } = useTinkerfundSpace()
 const notify = useState(`tinkerfund-notify-${space}-${props.slug}`, () => false)
 </script>
 

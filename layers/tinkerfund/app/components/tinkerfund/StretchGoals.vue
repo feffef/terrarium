@@ -2,14 +2,14 @@
 import type { TinkerfundStretchGoal } from '../../types/tinkerfund'
 
 defineProps<{ goals: TinkerfundStretchGoal[]; pledged: number }>()
-const locale = useTinkerfundLocale()
+const money = useTinkerfundMoney()
 </script>
 
 <template>
   <ul class="goals">
     <li v-for="goal in goals" :key="goal.id" :class="{ yes: pledged >= goal.amount }">
       <span class="box" aria-hidden="true">{{ pledged >= goal.amount ? '✓' : '' }}</span>
-      <span class="amount">{{ formatTinkerfundMoney(goal.amount, locale) }}</span>
+      <span class="amount">{{ money(goal.amount) }}</span>
       <span>{{ goal.title }}</span>
       <span class="tf-sr">{{ pledged >= goal.amount ? '(unlocked)' : '(not yet)' }}</span>
     </li>

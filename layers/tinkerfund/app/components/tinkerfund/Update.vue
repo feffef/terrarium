@@ -1,15 +1,14 @@
 <script setup lang="ts">
 import type { TinkerfundPage } from '../../types/tinkerfund'
 
-// An Update lives at campaigns/<slug>/updates/<n> (tenant.config.ts).
 const props = defineProps<{ doc: TinkerfundPage & { update: NonNullable<TinkerfundPage['update']> } }>()
 
-const { space, pagesKey } = useSpace('tinkerfund')
+const { space, pagesKey, link } = useTinkerfundSpace()
 const { now } = await useTinkerfundClock()
 const categories = useTinkerfundCategories()
 
 const campaignPath = props.doc.path.replace(/\/updates\/[^/]+$/, '')
-const n = props.doc.path.split('/').pop()
+const n = tinkerfundSlug(props.doc.path)
 const { data: parent } = await useAsyncData(`tinkerfund-update-parent-${space}-${campaignPath}`, () =>
   queryCollection(pagesKey).path(campaignPath).select('title', 'campaign').first(),
 )
@@ -21,11 +20,11 @@ const at = computed(() => resolveTinkerfundOffset(props.doc.update.published, no
   <article class="update">
     <TinkerfundBreadcrumbs
       :items="[
-        { label: 'Home', to: tinkerfundPath(space) },
+        { label: 'Home', to: link() },
         ...(parent?.campaign
-          ? [{ label: category?.name ?? parent.campaign.category, to: tinkerfundPath(space, `/category/${parent.campaign.category}`) }]
+          ? [{ label: category?.name ?? parent.campaign.category, to: link(`/category/${parent.campaign.category}`) }]
           : []),
-        { label: parent?.title ?? 'Campaign', to: tinkerfundPath(space, campaignPath) },
+        { label: parent?.title ?? 'Campaign', to: link(campaignPath) },
         { label: `Update #${n}` },
       ]"
     />
@@ -37,7 +36,7 @@ const at = computed(() => resolveTinkerfundOffset(props.doc.update.published, no
       <h1>{{ doc.title }}</h1>
       <ContentRenderer :value="doc" />
       <p class="back">
-        <NuxtLink class="tf-btn" :to="tinkerfundPath(space, `${campaignPath}#updates`)">All Updates</NuxtLink>
+        <NuxtLink class="tf-btn" :to="link(`${campaignPath}#updates`)">All Updates</NuxtLink>
       </p>
     </div>
   </article>

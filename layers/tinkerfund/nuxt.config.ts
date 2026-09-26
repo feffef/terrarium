@@ -4,10 +4,7 @@ import { fileURLToPath } from 'node:url'
 
 export default defineNuxtConfig({
   css: [fileURLToPath(new URL('./app/assets/theme.css', import.meta.url))],
-  // Installs Nuxt's view-transition plugin with every page off by default, so
-  // no other Tenant changes; a Tinkerfund page opts in with
-  // definePageMeta({ viewTransition: true }) (issue #1361). Nuxt 4.5 renders an
-  // object here as "[object Object]", hence the boolean-plus-app-default pair.
+  // Nuxt reads a page's viewTransition meta only with this flag on; the app default stays off, pages opt in (#1376).
   experimental: { viewTransition: true },
   app: { viewTransition: false },
 })

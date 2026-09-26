@@ -1,5 +1,7 @@
 ---
 title: Last-Minute Lamp
+# The Story's "Why the hurry" heading gives the Shift+Tab e2e a link in the
+# Story to keep clear of the sticky header and section nav.
 description: Live, over its goal and ending within 48 hours of the pinned now.
 campaign:
   registry: TF-9001
@@ -43,3 +45,7 @@ campaign:
 ---
 
 A lamp that is almost out of time.
+
+## Why the hurry
+
+The switch took longer than the lamp.
