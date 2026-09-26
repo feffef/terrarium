@@ -76,6 +76,18 @@ const { data: spotlight } = await useAsyncData('atlas-spotlight', async () => {
   return pickOfTheDay(picks)
 })
 
+// "Start here" strip (visitor-loop feature, 2026-09-26): a hand-picked few
+// Blog posts, content-homed on the Journal's own Highlights page (`featured`
+// frontmatter, `pages` schema) rather than re-curated here — the Journal
+// already keeps the canonical "best of" list; this just surfaces a few of its
+// picks a click earlier than the Journal itself.
+const { data: featured } = await useAsyncData('home-featured', async () => {
+  const r = resolveSpaceRoute('journal', 'current', undefined)
+  if (!r) return []
+  const doc = await queryCollection(r.pagesKey).where('path', '=', '/highlights').select('featured').first()
+  return doc?.featured ?? []
+})
+
 // Trench only: the Stores are off display (layers/midden/CONTEXT.md). Artifacts
 // aren't routed (ADR-0006), so a find links to its Site's dig report, which
 // anchors it as `#artifact-<stem>`.
@@ -123,6 +135,23 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
         </div>
       </section>
     </div>
+
+    <section v-if="featured?.length" class="starthere" aria-labelledby="starthere-heading">
+      <h2 id="starthere-heading" class="eyebrow">Start here</h2>
+      <div class="starthere-grid">
+        <NuxtLink
+          v-for="f in featured"
+          :key="f.href"
+          :to="f.href"
+          class="starthere-card"
+          :style="{ '--sh-accent': personaMeta(f.persona.toLowerCase()).accent }"
+        >
+          <span class="starthere-persona">{{ f.persona }}</span>
+          <span class="starthere-title">{{ f.title }}</span>
+          <span class="starthere-blurb">{{ f.blurb }}</span>
+        </NuxtLink>
+      </div>
+    </section>
 
     <section class="explore" aria-labelledby="explore-heading">
       <div class="explore-head">
@@ -413,12 +442,65 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
   overflow: hidden;
 }
 
+.starthere,
 .explore {
   display: flex;
   flex-direction: column;
   gap: 1.35rem;
   padding-top: 2.25rem;
   border-top: 1px solid var(--root-line);
+}
+
+/* ── "Start here" strip — a few Blog posts picked out a click earlier than
+   the Journal's own Highlights page. ── */
+.starthere-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.9rem;
+}
+@media (min-width: 56.01rem) {
+  .starthere-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+.starthere-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--root-line);
+  border-left: 3px solid var(--sh-accent);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--root-bg) 70%, transparent);
+  color: var(--root-ink);
+  text-decoration: none;
+  transition: transform 0.15s ease, border-color 0.15s ease;
+}
+.starthere-card:hover {
+  transform: translateY(-2px);
+  border-color: color-mix(in srgb, var(--sh-accent) 55%, var(--root-line));
+}
+.starthere-persona {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--sh-accent);
+}
+.starthere-title {
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.3;
+  text-wrap: balance;
+}
+.starthere-card:hover .starthere-title {
+  text-decoration: underline;
+  text-decoration-color: var(--sh-accent);
+}
+.starthere-blurb {
+  font-size: 0.85rem;
+  line-height: 1.45;
+  color: var(--root-muted);
 }
 .explore-head {
   display: flex;

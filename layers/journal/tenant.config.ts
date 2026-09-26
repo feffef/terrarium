@@ -43,6 +43,23 @@ export default defineTenant({
         onramp: z.number().int().positive().optional(),
         onrampLabel: z.string().optional(),
         onrampBlurb: z.string().optional(),
+        // The homepage's "Start here" strip (visitor-loop feature, 2026-09-26):
+        // a page opts a hand-picked few of its own links in via `featured`, the
+        // same content-homed shape as `onramp` above. Only `highlights.md`
+        // populates it today, curating a few Blog posts out of its own
+        // already-curated longer list — `href` may point anywhere in the
+        // Platform, not just this Tenant, since a homepage strip is inherently
+        // cross-Tenant (unlike `onramp`, which stays in-Space).
+        featured: z
+          .array(
+            z.object({
+              href: z.string(),
+              persona: z.string(),
+              title: z.string(),
+              blurb: z.string(),
+            }),
+          )
+          .optional(),
       }),
     },
     // The Platform's Skill Inventory — structured data, not routed. Strict → L1.
