@@ -3,10 +3,9 @@ import { resolveSpaceRoute } from '#shared/routing'
 
 // The showcase Tenants below the hero. Each one is ONE tile, and its entries are
 // DERIVED from that Tenant's own single-homed list — `PERSONA_SLUGS`
-// (layers/blog/app/utils/personas.ts), `BIOMES` (layers/atlas/app/utils/biomes.ts)
-// and Tinkerfund's `categories` collection — so a Persona, Biome or category
-// added there appears here without this page being touched, and can never drift
-// from that Tenant's names or colours.
+// (layers/blog/app/utils/personas.ts) and `BIOMES` (layers/atlas/app/utils/biomes.ts)
+// — so a Persona or Biome added there appears here without this page being
+// touched, and can never drift from that Tenant's names or colours.
 
 // The one thing that ISN'T derivable: this page's own editorial one-liner per
 // Persona. Keyed by slug with no fallback — a new Persona still lists itself,
@@ -89,23 +88,22 @@ const { data: find } = await useAsyncData('midden-find', async () => {
   return d && { ...d, url: `/t/midden/trench${d.site ? `/${d.site}` : ''}#artifact-${d.stem}` }
 })
 
-// Tinkerfund's aisles are its `prod` categories, in the shop's own order, then Deals.
+// Tinkerfund's rooms are its two Spaces: the shop, and the edge-case data its own
+// e2e tests run against (layers/tinkerfund/CONTEXT.md) — the one Tenant that
+// dedicates a Space to testing, which is worth showing off.
+const tinkerfundEntries = [
+  { name: 'The Shop', path: tinkerfundPath('prod'), note: 'the storefront, on real time', accent: 'var(--tf-accent)' },
+  { name: 'The QA Space', path: tinkerfundPath('qa'), note: 'awkward test data and a component gallery', accent: 'var(--tf-ink)' },
+]
+
 const { data: tinkerfund } = await useAsyncData('tinkerfund-showcase', async () => {
   const r = resolveSpaceRoute('tinkerfund', 'prod', undefined)
   if (!r) return null
-  const [categories, docs] = await Promise.all([
-    queryCollection(r.collections.categories).order('order', 'ASC').all(),
-    queryCollection(r.pagesKey).where('campaign', 'IS NOT NULL').select('path', 'title', 'campaign').all(),
-  ])
-  const entries = [
-    ...categories.map((c) => ({ name: c.name, path: tinkerfundPath('prod', `/category/${c.stem}`), accent: 'var(--tf-accent)' })),
-    { name: 'Deals', path: tinkerfundPath('prod', '/deals'), accent: 'var(--tf-ink)' },
-  ]
+  const docs = await queryCollection(r.pagesKey).where('campaign', 'IS NOT NULL').select('path', 'title', 'campaign').all()
   const campaigns = docs.flatMap((d) => (d.campaign ? [{ path: d.path, title: d.title, c: d.campaign }] : []))
   campaigns.sort((a, b) => a.path.localeCompare(b.path))
   const pick = pickOfTheDay(campaigns)
   return {
-    entries,
     campaign: pick && {
       url: tinkerfundCampaignPath('prod', tinkerfundSlug(pick.path)),
       title: pick.title,
@@ -243,11 +241,11 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
           v-if="tinkerfund"
           tenant="Tinkerfund"
           path="/t/tinkerfund"
-          noun="aisles"
+          noun="spaces"
           dress="tinkerfund"
           teaser-label="Campaign of the day"
           blurb="A crowdfunding shop the agents built to a real storefront's standard, for inventions like a mug that stirs itself counterclockwise. Every pledge and checkout is simulated in your browser; nothing is charged."
-          :entries="tinkerfund.entries"
+          :entries="tinkerfundEntries"
         >
           <NuxtLink v-if="tinkerfund.campaign" :to="tinkerfund.campaign.url" class="campaign">
             <span class="campaign-fig">

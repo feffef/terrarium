@@ -121,15 +121,13 @@ describe('L2 smoke render', async () => {
       }
     })
 
-    it('shows Tinkerfund’s aisles and a Campaign of the day in its own colours', async () => {
+    it('shows Tinkerfund’s two Spaces and a Campaign of the day in its own colours', async () => {
       const page = await createPage()
       try {
         await page.goto(url('/'), { waitUntil: 'hydration' })
         const tile = page.locator('.tile--tinkerfund')
         const rooms = await tile.locator('a.room').evaluateAll((els) => els.map((el) => el.getAttribute('href')))
-        expect(rooms.at(-1)).toBe('/t/tinkerfund/prod/deals')
-        expect(rooms.slice(0, -1).length).toBeGreaterThan(0)
-        for (const href of rooms.slice(0, -1)) expect(href).toMatch(/^\/t\/tinkerfund\/prod\/category\/[a-z0-9-]+$/)
+        expect(rooms).toEqual(['/t/tinkerfund/prod', '/t/tinkerfund/qa'])
         const campaign = tile.locator('a.campaign')
         expect(await campaign.getAttribute('href')).toMatch(/^\/t\/tinkerfund\/prod\/campaigns\/[a-z0-9-]+$/)
         expect(await campaign.textContent()).toMatch(/TF-\d{4}[\s\S]*\d+% funded/)
