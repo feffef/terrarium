@@ -158,7 +158,7 @@ export function registerTinkerfundE2E(): void {
         const current = () => page.locator('nav[aria-label="Sections"] [aria-current]').textContent()
         expect(await current()).toContain('Story')
 
-        const bar = page.locator('.backbar')
+        const bar = page.locator('.tf-backbar')
         expect((await bar.boundingBox())!.y + (await bar.boundingBox())!.height).toBeCloseTo(844, -1)
         await bar.getByRole('link', { name: 'Back this Campaign' }).click()
         await expect.poll(current).toContain('Rewards')
@@ -193,7 +193,7 @@ export function registerTinkerfundE2E(): void {
           const focus = await page.evaluate(() => {
             const el = document.activeElement!
             if (!el.closest('#rewards')) return undefined
-            return { name: el.textContent?.trim() || el.getAttribute('aria-label') || el.tagName, bottom: el.getBoundingClientRect().bottom, barTop: document.querySelector('.backbar')!.getBoundingClientRect().top }
+            return { name: el.textContent?.trim() || el.getAttribute('aria-label') || el.tagName, bottom: el.getBoundingClientRect().bottom, barTop: document.querySelector('.tf-backbar')!.getBoundingClientRect().top }
           })
           if (!focus) {
             if (checked.length) break
@@ -244,9 +244,12 @@ export function registerTinkerfundE2E(): void {
         // The exact launch time is the visitor's own, so only the browser fills it in.
         await expect.poll(() => page.locator('.readout time').first().getAttribute('title')).toMatch(/2026/)
         expect(await page.locator('.readout .date').textContent()).toMatch(/Launches .*2026/)
-        // On desktop the Reward column is always in view, so the nav skips it.
+        // On desktop the Rewards tab points at the sticky column, already in view (#1380).
         await page.setViewportSize({ width: 1280, height: 800 })
-        expect(await page.locator('nav[aria-label="Sections"] a[href="#rewards"]').isVisible()).toBe(false)
+        const rewardsTab = page.locator('nav[aria-label="Sections"] a[href="#rewards"]')
+        await rewardsTab.click()
+        expect(await rewardsTab.getAttribute('aria-current')).toBe('location')
+        expect(await page.evaluate(() => document.activeElement?.id)).toBe('rewards')
         await page.getByRole('button', { name: /^Figure 2:/ }).click()
         expect(await page.locator('.hero .frame .cap').first().textContent()).toBe('FIG. 2 · TF-9003')
         const notify = page.locator('.readout button[aria-pressed]')
@@ -578,7 +581,7 @@ export function registerTinkerfundE2E(): void {
       }
     })
 
-    it('switches theme, keeps it across a reload, and Reset demo returns it to System', async () => {
+    it('switches theme and keeps it across a reload and Reset demo', async () => {
       const page = await createPage()
       try {
         const open = () => page.goto(url('/t/tinkerfund/qa/how-it-works'), { waitUntil: 'hydration' })
@@ -601,9 +604,9 @@ export function registerTinkerfundE2E(): void {
           page.waitForEvent('load'),
           page.locator('.demo').getByRole('button', { name: 'Reset demo' }).click(),
         ])
-        expect(await page.evaluate(() => document.documentElement.dataset.tfTheme)).toBeUndefined()
-        expect(await page.evaluate(() => sessionStorage.getItem('tinkerfund:theme'))).toBeNull()
-        expect(await bg()).toBe(light)
+        expect(await page.evaluate(() => document.documentElement.dataset.tfTheme)).toBe('dark')
+        expect(await page.evaluate(() => sessionStorage.getItem('tinkerfund-theme'))).toBe('dark')
+        expect(await bg()).toBe(dark)
       } finally {
         await page.close()
       }
@@ -798,6 +801,29 @@ export function registerTinkerfundE2E(): void {
         expect(await suggestions.getByRole('option', { selected: true }).textContent()).toContain('Last-Minute Lamp')
         await field.press('Enter')
         await expect.poll(() => new URL(page.url()).pathname).toBe('/t/tinkerfund/qa/campaigns/last-minute-lamp')
+      } finally {
+        await page.close()
+      }
+    })
+
+    // Story #1382's bar again, for the header's suggestions.
+    it('suggests only qa Campaigns in qa’s header', async () => {
+      const page = await createPage()
+      try {
+        await page.setViewportSize({ width: 1280, height: 800 })
+        await page.goto(url('/t/tinkerfund/qa/how-it-works'), { waitUntil: 'hydration' })
+        const field = page.locator('.head').getByRole('combobox', { name: 'Search Campaigns' })
+        const suggestions = page.locator('.head').getByRole('listbox', { name: 'Suggestions' })
+        await field.pressSequentially('er')
+        await suggestions.waitFor()
+        const links = await suggestions.getByRole('option').evaluateAll((els) => els.map((el) => el.getAttribute('href') ?? ''))
+        expect(links.length).toBeGreaterThan(1)
+        for (const href of links) expect(href).toMatch(/^\/t\/tinkerfund\/qa\//)
+        for (const q of ['Rock', 'Sundial', 'Henrik']) {
+          await field.fill('')
+          await field.pressSequentially(q)
+          await expect.poll(() => page.locator('.head .field [role="status"]').textContent()).toBe(`No Campaign matches “${q}”.`)
+        }
       } finally {
         await page.close()
       }
