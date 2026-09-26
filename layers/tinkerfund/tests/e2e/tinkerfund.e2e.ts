@@ -5,6 +5,9 @@ import { describe, expect, it } from 'vitest'
 import { $fetch, createPage, fetch, url } from '@nuxt/test-utils/e2e'
 import { expectCleanHydration } from '../../../../tests/support/e2e.ts'
 
+// The rendered page only: the Nuxt payload after it carries the whole catalog.
+const main = (html: string) => html.slice(html.indexOf('<main'), html.indexOf('</main>'))
+
 export function registerTinkerfundE2E(): void {
   describe('tinkerfund Tenant', () => {
     it('redirects the Tenant root to prod', async () => {
@@ -492,6 +495,143 @@ export function registerTinkerfundE2E(): void {
         expect(await bg()).toBe(light)
       } finally {
         await page.close()
+      }
+    })
+
+    // prod's offsets are relative to real time, so its derived states are fixed:
+    // the Mug is the Live Campaign furthest past its goal, the Keyboard ends
+    // within 48h, and the Umbrella's Promotion ends soonest (story #1381).
+    it('renders Home’s sections in order, the featured Campaign first', async () => {
+      const html = main(await $fetch('/t/tinkerfund/prod'))
+      expect(html).toMatch(/id="tf-featured"[^>]*>Counterclockwise Mug</)
+      expect(html).toMatch(/340<small[^>]*>% funded/)
+      const order = ['tf-featured', 'tf-ending', '15% off the Rain-Aware Umbrella', 'tf-categories-h', 'tf-popular', 'tf-launched']
+      const at = order.map((marker) => html.indexOf(marker))
+      expect(at.every((i) => i > 0), `missing: ${order.filter((_, i) => at[i]! < 0).join(', ')}`).toBe(true)
+      expect(at).toEqual([...at].sort((a, b) => a - b))
+      const ending = html.slice(at[1], at[2])
+      expect(ending).toContain('One-Key Keyboard')
+      expect(ending).not.toContain('Counterclockwise Mug')
+      const popular = html.slice(at[4], at[5])
+      expect(popular).toMatch(/TF-0001[\s\S]*TF-0006[\s\S]*TF-0003[\s\S]*TF-0004/)
+      expect(popular).not.toContain('TF-0005')
+    })
+
+    it('filters the index table by category', async () => {
+      const page = await createPage()
+      try {
+        await page.goto(url('/t/tinkerfund/prod'), { waitUntil: 'hydration' })
+        const table = page.locator('.index')
+        await table.getByRole('button', { name: 'Kitchen' }).click()
+        expect(await table.locator('tbody .inv a').allTextContents()).toEqual(['Counterclockwise Mug'])
+        expect(await table.getByRole('button', { name: 'Kitchen' }).getAttribute('aria-pressed')).toBe('true')
+      } finally {
+        await page.close()
+      }
+    })
+
+    it('renders Discover straight from its URL query', async () => {
+      const html = main(await $fetch('/t/tinkerfund/qa/discover?category=workshop&state=live'))
+      expect(html).toContain('1 Campaign<')
+      expect(html).toContain('The Self-Assembling Workbench')
+      expect(html).not.toContain('Unhurried Kettle')
+    })
+
+    it('filters, sorts and keeps both in the URL, then opens a Campaign', async () => {
+      const page = await createPage()
+      try {
+        await page.setViewportSize({ width: 1280, height: 900 })
+        await page.goto(url('/t/tinkerfund/qa/discover'), { waitUntil: 'hydration' })
+        const side = page.locator('.side')
+        const titles = () => page.locator('.grid h3').allTextContents()
+        expect(await titles()).toHaveLength(7)
+
+        await side.getByLabel('Ending soon').check()
+        await expect.poll(() => new URL(page.url()).search).toBe('?soon=1')
+        expect(await titles()).toEqual(['Last-Minute Lamp'])
+
+        await side.getByLabel('Ending soon').uncheck()
+        await side.getByLabel('Live', { exact: true }).check()
+        await page.getByLabel('Sort').selectOption('newest')
+        await expect.poll(() => new URL(page.url()).search).toBe('?state=live&sort=newest')
+        const live = ['The Self-Assembling Workbench That Has Been Assembling Itself Since the Previous Financial Year', 'Goal-Exact Stapler', 'Last-Minute Lamp', 'One-Button Keypad']
+        expect(await titles()).toEqual(live)
+
+        await page.goto(page.url(), { waitUntil: 'hydration' })
+        expect(await side.getByLabel('Live', { exact: true }).isChecked()).toBe(true)
+        expect(await page.getByLabel('Sort').inputValue()).toBe('newest')
+        expect(await titles()).toEqual(live)
+
+        await page.locator('.grid').getByRole('link', { name: 'Goal-Exact Stapler' }).click()
+        await expect.poll(() => new URL(page.url()).pathname).toBe('/t/tinkerfund/qa/campaigns/goal-exact-stapler')
+      } finally {
+        await page.close()
+      }
+    })
+
+    it('opens the filters in a drawer on a phone', async () => {
+      const page = await createPage()
+      try {
+        await page.setViewportSize({ width: 390, height: 844 })
+        await page.goto(url('/t/tinkerfund/qa/discover'), { waitUntil: 'hydration' })
+        expect(await page.locator('.side').isVisible()).toBe(false)
+        expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(390)
+        await page.getByRole('button', { name: 'Filters' }).click()
+        const drawer = page.getByRole('dialog', { name: 'Filters' })
+        await drawer.getByLabel('On Deal').check()
+        await expect.poll(() => new URL(page.url()).search).toBe('?deal=1')
+        await drawer.getByRole('button', { name: 'Show 1 Campaign' }).click()
+        await expect.poll(() => drawer.isVisible()).toBe(false)
+        expect(await page.locator('.grid h3').allTextContents()).toEqual(['Goal-Exact Stapler'])
+      } finally {
+        await page.close()
+      }
+    })
+
+    // The index table is wider than a phone; it must scroll inside its own frame.
+    for (const route of ['/t/tinkerfund/prod', '/t/tinkerfund/qa']) {
+      it(`fits ${route} on a phone without sideways scrolling`, async () => {
+        const page = await createPage()
+        try {
+          await page.setViewportSize({ width: 390, height: 844 })
+          await page.goto(url(route), { waitUntil: 'hydration' })
+          expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(390)
+        } finally {
+          await page.close()
+        }
+      })
+    }
+
+    it('shows the empty state when nothing matches', async () => {
+      const html = await $fetch('/t/tinkerfund/qa/category/empty-shelf')
+      expect(html).toMatch(/<h1[^>]*>Empty Shelf<\/h1>/)
+      expect(html).toContain('No Campaign is filed here.')
+      expect(html).toContain('No Campaigns match these filters')
+    })
+
+    it('answers an unknown category with the branded 404', async () => {
+      const res = await fetch('/t/tinkerfund/qa/category/no-such-category', { headers: { accept: 'text/html' } })
+      expect(res.status).toBe(404)
+      expect(await res.text()).toContain('This page isn’t in the catalog')
+    })
+
+    it('lists Active Deals with their Campaign and Scheduled ones as starting soon', async () => {
+      const html = main(await $fetch('/t/tinkerfund/qa/deals'))
+      expect(html).toMatch(/A tenth off the stapler \(active, automatic\)[\s\S]*Applied automatically\.[\s\S]*Goal-Exact Stapler/)
+      expect(html).toMatch(/Starting soon[\s\S]*Lamp week \(scheduled\)[\s\S]*Starts in 2 days 0 hours/)
+      expect(html).not.toContain('EXPIRED5')
+    })
+
+    for (const route of ['/t/tinkerfund/qa/discover?sort=funded', '/t/tinkerfund/qa/deals', '/t/tinkerfund/prod']) {
+      it(`hydrates ${route} cleanly`, async () => {
+        await expectCleanHydration(route)
+      })
+    }
+
+    it('shows the browse components in the gallery', async () => {
+      const html = await $fetch('/t/tinkerfund/qa')
+      for (const name of ['TinkerfundCampaignCard', 'TinkerfundIndexTable', 'TinkerfundBrowseFilters', 'TinkerfundDealBanner']) {
+        expect(html).toMatch(new RegExp(`<code[^>]*>${name}</code>`))
       }
     })
   })
