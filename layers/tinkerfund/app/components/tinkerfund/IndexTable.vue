@@ -35,7 +35,7 @@ const label = useId()
             <th scope="col" class="wide">ID</th>
             <th scope="col">Invention</th>
             <th scope="col" class="wide">Category</th>
-            <th scope="col">Status</th>
+            <th scope="col" class="state">Status</th>
             <th scope="col">Funded</th>
             <th scope="col" class="r wide">Pledged</th>
             <th scope="col" class="r wide">Backers</th>
@@ -50,7 +50,7 @@ const label = useId()
               <NuxtLink :to="link(c.path)">{{ c.title }}</NuxtLink>
             </th>
             <td class="wide">{{ c.categoryName }}</td>
-            <td><TinkerfundStateChips :status="c.status" :promoted="c.promoted" /></td>
+            <td class="state"><TinkerfundStateChips :status="c.status" :promoted="c.promoted" /></td>
             <td v-if="c.status.state === 'upcoming'">—</td>
             <td v-else class="funded"><TinkerfundProgressBar class="mini" :percent="c.status.percent" :segments="10" />{{ c.status.percent }}%</td>
             <td class="r wide">{{ c.status.state === 'upcoming' ? '—' : money(c.pledged) }}</td>
@@ -101,6 +101,7 @@ tbody tr:hover { background: var(--tf-accent-soft); }
 @media (max-width: 640px) {
   table { min-width: 0; }
   .wide, .inv svg, .funded .mini { display: none; }
+  .state { width: 1%; }
   .inv { min-width: 0; font-size: 15px; }
   th, td { padding: 10px 8px; }
 }
