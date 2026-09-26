@@ -17,33 +17,20 @@ useSeoMeta(tinkerfundSeo({
 <template>
   <TinkerfundShell :space="space">
     <TinkerfundGallery v-if="landing && space === 'qa'" :title="landing.title" :description="landing.description" />
-    <section v-else-if="landing" class="hero tf-panel">
-      <div class="fig" aria-hidden="true">
-        <span class="tf-label">FIG. 0 · TF-0000</span>
-      </div>
-      <div class="read">
-        <p class="tf-label">Tinkerfund · {{ space }}</p>
+    <template v-else-if="landing">
+      <header class="intro">
         <h1>{{ landing.title }}</h1>
-        <p class="lead">{{ landing.description }}</p>
-        <ContentRenderer :value="landing" class="body" />
-        <p class="actions">
-          <NuxtLink class="tf-btn primary" :to="tinkerfundPath(space, '/discover')">Discover Campaigns</NuxtLink>
-          <NuxtLink class="tf-btn" :to="tinkerfundPath(space, '/how-it-works')">How it works</NuxtLink>
-        </p>
-      </div>
-    </section>
+        <ContentRenderer :value="landing" class="lead" />
+      </header>
+      <TinkerfundHome />
+    </template>
     <ContentLoadErrorDialog :status="status" :error="error" :context="route.path" />
   </TinkerfundShell>
 </template>
 
 <style scoped>
-.hero { display: grid; overflow: hidden; box-shadow: var(--tf-shadow); }
-@media (min-width: 860px) { .hero { grid-template-columns: 1fr 1.15fr; } }
-.fig { min-height: 220px; padding: 14px; background: var(--tf-paper), var(--tf-surface); border-bottom: var(--tf-hairline); }
-@media (min-width: 860px) { .fig { border-bottom: 0; border-right: var(--tf-hairline); } }
-.read { display: grid; gap: 14px; align-content: start; padding: 22px; }
-h1 { margin: 0; font: 800 clamp(32px, 4.5vw, 48px)/1 var(--tf-font); font-stretch: 78%; letter-spacing: -0.01em; }
-.lead { margin: 0; color: var(--tf-muted); }
-.body :deep(p) { margin: 0; }
-.actions { display: flex; flex-wrap: wrap; gap: 10px; margin: 4px 0 0; }
+.intro { display: grid; gap: 8px; max-width: 68ch; margin-bottom: 28px; }
+h1 { margin: 0; font: 800 clamp(30px, 4.2vw, 44px)/1.02 var(--tf-font); font-stretch: 78%; letter-spacing: -0.01em; }
+.lead { color: var(--tf-muted); }
+.lead :deep(p) { margin: 0; }
 </style>

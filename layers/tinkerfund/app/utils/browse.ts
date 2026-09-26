@@ -161,7 +161,7 @@ const COMPARE: Record<TinkerfundSort, (a: TinkerfundListing, b: TinkerfundListin
   funded: (a, b) => b.status.percent - a.status.percent,
 }
 
-export function browseTinkerfundListings(listings: TinkerfundListing[], query: TinkerfundBrowseQuery): TinkerfundListing[] {
+export function browseTinkerfundListings<T extends TinkerfundListing>(listings: T[], query: TinkerfundBrowseQuery): T[] {
   const { category, state, soon, deal, min = 0, max = Infinity } = query
   return listings
     .filter((l) =>
@@ -177,7 +177,7 @@ export function browseTinkerfundListings(listings: TinkerfundListing[], query: T
 const JUST_LAUNCHED = resolveTinkerfundOffset('+14d', 0)
 
 /** Home's lists, in page order (issue #1367); an empty one hides its section. */
-export function tinkerfundHomeSections(listings: TinkerfundListing[], now: number) {
+export function tinkerfundHomeSections<T extends TinkerfundListing>(listings: T[], now: number) {
   const live = listings.filter((l) => l.status.state === 'live')
   return {
     featured: browseTinkerfundListings(live, { sort: 'funded' })[0],
