@@ -10,6 +10,7 @@ import {
   tinkerfundValidOptions,
 } from './cart'
 import type { TinkerfundCartCampaign, TinkerfundDraft, TinkerfundPledge } from './cart'
+import { tinkerfundReceipt } from './checkout'
 import type { TinkerfundBakedPledge } from './checkout'
 import { resolveTinkerfundOffset } from './clock'
 import { deriveCampaignStatus } from './status'
@@ -30,6 +31,7 @@ export interface TinkerfundAccountPledge {
   /** Only a Pending Pledge can still be changed or cancelled. */
   locked: boolean
   endsAt: number
+  receipt: ReturnType<typeof tinkerfundReceipt>
 }
 
 const ships = (pledge: Pick<TinkerfundPledge, 'lines'>, campaign: TinkerfundCartCampaign) =>
@@ -162,10 +164,10 @@ export function tinkerfundAccountPledges(
   ]
   return all
     .flatMap((pledge) => {
-      const campaign = catalog[pledge.campaign]?.campaign
-      if (!campaign) return []
-      const state = stateOf(pledge, campaign, now)
-      return [{ pledge, state, locked: state !== 'pending', endsAt: resolveTinkerfundOffset(campaign.end, now) }]
+      const entry = catalog[pledge.campaign]
+      if (!entry) return []
+      const state = stateOf(pledge, entry.campaign, now)
+      return [{ pledge, state, locked: state !== 'pending', endsAt: resolveTinkerfundOffset(entry.campaign.end, now), receipt: tinkerfundReceipt(pledge, entry) }]
     })
     .sort((a, b) => b.pledge.placed - a.pledge.placed)
 }

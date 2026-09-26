@@ -15,7 +15,7 @@ const props = defineProps<{
 }>()
 const emit = defineEmits<{ review: [change: TinkerfundPledgeChange]; close: [] }>()
 
-const id = useId()
+const whole = (value: unknown) => Math.max(0, Math.floor(Number(value) || 0))
 const locale = useTinkerfundLocale()
 const money = (amount: number) => formatTinkerfundMoney(amount, locale.value)
 
@@ -33,14 +33,14 @@ const addonMax = (addon: NonNullable<TinkerfundAccountCampaign['addons']>[number
   tinkerfundMaxQuantity({ ...addon, claimed: addon.claimed - (props.pledge.addons.find((a) => a.id === addon.id)?.quantity ?? 0) })
 const ships = (reward: Reward) => !reward.shipsTo || reward.shipsTo.includes(props.pledge.zone)
 const linesOf = (reward: Reward) => draft.lines.filter((l) => l.reward === reward.id)
-const canAdd = (reward: Reward) => ships(reward) && max(reward) > 0 && (!!reward.options?.length || !linesOf(reward).length)
+const wanted = (reward: Reward) => linesOf(reward).reduce((n, l) => n + whole(l.quantity), 0)
+const canAdd = (reward: Reward) => ships(reward) && wanted(reward) < max(reward) && (!!reward.options?.length || !linesOf(reward).length)
 
 function addLine(reward: Reward) {
   const options = Object.fromEntries((reward.options ?? []).map((g) => [g.id, g.choices[0]!.id]))
   draft.lines.push({ reward: reward.id, options, quantity: 1 })
 }
 const removeLine = (line: (typeof draft.lines)[number]) => draft.lines.splice(draft.lines.indexOf(line), 1)
-const whole = (value: unknown) => Math.max(0, Math.floor(Number(value) || 0))
 
 function review() {
   emit('review', {
@@ -52,8 +52,7 @@ function review() {
 </script>
 
 <template>
-  <form class="editor" :aria-labelledby="`${id}-h`" @submit.prevent="review">
-    <h2 :id="`${id}-h`">Change your Pledge</h2>
+  <form class="editor" aria-label="Change your Pledge" @submit.prevent="review">
     <p class="note">Rewards ship to {{ zone }}. Stock you already hold stays yours while you change it.</p>
 
     <fieldset v-for="reward in campaign.rewards" :key="reward.id" class="reward tf-panel">
@@ -110,7 +109,6 @@ function review() {
 <style scoped>
 .editor { display: grid; gap: 14px; }
 .editor > * { margin: 0; }
-h2 { font: 800 24px/1.1 var(--tf-font); font-stretch: 80%; }
 .note, .facts { color: var(--tf-muted); font-size: 14px; }
 .reward { display: grid; gap: 10px; min-width: 0; margin: 0; padding: 14px 16px; }
 legend { float: left; width: 100%; padding: 0; font-weight: 700; overflow-wrap: anywhere; }
@@ -120,7 +118,7 @@ legend { float: left; width: 100%; padding: 0; font-weight: 700; overflow-wrap: 
 .line { display: flex; flex-wrap: wrap; gap: 10px; align-items: end; padding-top: 10px; border-top: var(--tf-hairline); }
 .line label, .addon { display: grid; gap: 4px; font-size: 14px; }
 .addon { grid-template-columns: 1fr auto; align-items: center; }
-select, input { min-height: 38px; padding: 6px 8px; border: 1px solid var(--tf-muted); border-radius: var(--tf-radius); background: var(--tf-surface); color: var(--tf-ink); }
+select, input { box-sizing: border-box; height: 40px; padding: 6px 8px; border: 1px solid var(--tf-muted); border-radius: var(--tf-radius); background: var(--tf-surface); color: var(--tf-ink); }
 input { width: 88px; font: 600 14px/1.2 var(--tf-mono); }
 .add { justify-self: start; padding: 7px 12px; }
 .link { padding: 8px 0; border: 0; background: none; color: var(--tf-link); text-decoration: underline; cursor: pointer; font-size: 14px; }

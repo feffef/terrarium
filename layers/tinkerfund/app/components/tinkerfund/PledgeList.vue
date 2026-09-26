@@ -1,11 +1,8 @@
 <script setup lang="ts">
-import type { TinkerfundPledgeState } from '../../utils/account'
+import type { TinkerfundAccountPledge } from '../../utils/account'
 
-// The account's Pledges, newest first (story #1385); each opens its receipt.
-defineProps<{
-  space: string
-  rows: { ref: string; title: string; placed: number; state: TinkerfundPledgeState; total: number }[]
-}>()
+// The account's Pledges (story #1385); each opens its receipt.
+defineProps<{ space: string; pledges: TinkerfundAccountPledge[] }>()
 
 const locale = useTinkerfundLocale()
 const money = (amount: number) => formatTinkerfundMoney(amount, locale.value)
@@ -13,12 +10,12 @@ const money = (amount: number) => formatTinkerfundMoney(amount, locale.value)
 
 <template>
   <ul class="list">
-    <li v-for="row in rows" :key="row.ref" class="row tf-panel">
-      <p class="tf-label">Pledge <b class="ref">{{ row.ref }}</b></p>
-      <h3><NuxtLink :to="tinkerfundPath(space, `/account/pledges/${row.ref}`)">{{ row.title }}</NuxtLink></h3>
-      <TinkerfundPledgeState class="state" :state="row.state" />
-      <p class="placed">Placed <TinkerfundTime :at="row.placed" /></p>
-      <p class="total">{{ money(row.total) }}</p>
+    <li v-for="{ pledge, state, receipt } in pledges" :key="pledge.ref" class="row tf-panel">
+      <p class="tf-label">Pledge <b class="ref">{{ pledge.ref }}</b></p>
+      <h3><NuxtLink :to="tinkerfundPath(space, `/account/pledges/${pledge.ref}`)">{{ receipt.title }}</NuxtLink></h3>
+      <TinkerfundPledgeState class="state" :state="state" />
+      <p class="placed">Placed <TinkerfundTime :at="pledge.placed" /></p>
+      <p class="total">{{ money(receipt.total) }}</p>
     </li>
   </ul>
 </template>

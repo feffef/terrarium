@@ -11,12 +11,13 @@ const { data: docs } = await useAsyncData(`tinkerfund-gallery-${space}`, () =>
   queryCollection(pagesKey).where('campaign', 'IS NOT NULL').all(),
 )
 const { data: extra } = await useAsyncData(`tinkerfund-gallery-extra-${space}`, async () => {
-  const [promotions, threads, shop] = await Promise.all([
+  const [promotions, threads, shop, backer] = await Promise.all([
     queryCollection(collections.promotions).all(),
     queryCollection(collections.comments).all(),
     queryCollection(collections.shop).first(),
+    queryCollection(collections.backer).first(),
   ])
-  return { promotions, threads, shop }
+  return { promotions, threads, shop, backer }
 })
 
 const campaigns = computed(() =>
@@ -59,6 +60,17 @@ const receiptSpecimen = computed(() => {
   )
 })
 const miniCart = useTemplateRef('miniCart')
+
+// qa's baked Pledges in every state they reach, plus the Lamp's cancelled.
+const PLEDGE_STATES = ['pending', 'charged', 'delivered', 'unfunded', 'cancelled'] as const
+const accountCatalog = computed(() => Object.fromEntries(campaigns.value.map((doc) => [doc.slug, { title: doc.title, campaign: doc.campaign }])))
+const accountSpecimen = computed(() => {
+  const baked = extra.value?.backer?.pledges ?? []
+  const lamp = tinkerfundAccountPledges([], baked, accountCatalog.value, now.value, 'demo-card').find((a) => a.pledge.campaign === 'last-minute-lamp')?.pledge
+  const cancelled = lamp ? [{ ...lamp, ref: 'TF-P-9009', cancelled: now.value }] : []
+  const rows = tinkerfundAccountPledges(cancelled, baked, accountCatalog.value, now.value, 'demo-card')
+  return { rows, lamp }
+})
 
 const { clock, cards, categories, promotions } = await useTinkerfundCatalog()
 const deals = computed(() => groupTinkerfundPromotions(promotions.value, now.value))
@@ -229,6 +241,28 @@ const bounds = computed(() => tinkerfundPriceBounds(cards.value))
       </div>
     </section>
 
+    <section aria-labelledby="gallery-account">
+      <h2 id="gallery-account">
+        Account <code>TinkerfundPledgeList</code> <code>TinkerfundPledgeState</code> <code>TinkerfundPledgeEditor</code>
+        <code>TinkerfundCancelPledge</code>
+      </h2>
+      <p class="case">
+        Every Pledge state; qa’s baked Pledges plus a cancelled one; the editor on the Lamp Pledge, with its per-Backer
+        limit, options, a digital Reward and an Add-on the Pledge holds the last of; and the cancel dialog.
+      </p>
+      <div class="checkout">
+        <p class="chips"><TinkerfundPledgeState v-for="state in PLEDGE_STATES" :key="state" :state="state" /></p>
+        <TinkerfundPledgeList :space="space" :pledges="accountSpecimen.rows" />
+        <TinkerfundPledgeEditor
+          v-if="accountSpecimen.lamp && accountCatalog['last-minute-lamp']"
+          :campaign="accountCatalog['last-minute-lamp'].campaign"
+          :pledge="accountSpecimen.lamp"
+          zone="Domestic"
+        />
+        <div><TinkerfundCancelPledge reference="TF-P-9001" title="Last-Minute Lamp" /></div>
+      </div>
+    </section>
+
     <section aria-labelledby="gallery-comments">
       <h2 id="gallery-comments">Comment thread <code>TinkerfundComments</code></h2>
       <ul class="specimens">
@@ -305,6 +339,7 @@ h2 code { color: var(--tf-muted); }
 .matches { margin: 0; padding: 0; list-style: none; font: 500 13px/1.8 var(--tf-mono); }
 .deals { display: grid; gap: 14px; }
 .search { max-width: 480px; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; }
 h3 { font-size: 18px; line-height: 1.25; overflow-wrap: anywhere; }
 .case { max-width: 68ch; margin: 0; color: var(--tf-muted); font-size: 14px; }
 </style>

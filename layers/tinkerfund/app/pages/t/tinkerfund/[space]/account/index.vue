@@ -14,11 +14,7 @@ const { loaded, pledges, baked, catalog, now } = await useTinkerfundCart()
 
 const backer = computed(() => data.value?.backer)
 const zoneName = computed(() => data.value?.zones.find((z) => z.id === backer.value?.address.zone)?.name)
-const rows = computed(() =>
-  tinkerfundAccountPledges(pledges.value, baked.value, catalog.value, now.value, data.value?.payment ?? '').map(({ pledge, state }) => {
-    const entry = catalog.value[pledge.campaign]!
-    return { ref: pledge.ref, title: entry.title, placed: pledge.placed, state, total: tinkerfundReceipt(pledge, entry).total }
-  }))
+const held = computed(() => tinkerfundAccountPledges(pledges.value, baked.value, catalog.value, now.value, data.value?.payment ?? ''))
 
 useSeoMeta(tinkerfundSeo({ kind: 'private', space, title: 'Your account' }))
 </script>
@@ -50,10 +46,10 @@ useSeoMeta(tinkerfundSeo({ kind: 'private', space, title: 'Your account' }))
       </div>
 
       <section class="pledges" aria-labelledby="pledges-h">
-        <h2 id="pledges-h">Your Pledges <span v-if="loaded" class="count">{{ rows.length }}</span></h2>
+        <h2 id="pledges-h">Your Pledges <span v-if="loaded" class="count">{{ held.length }}</span></h2>
         <p v-if="!loaded" class="note">Opening your Pledges…</p>
-        <p v-else-if="!rows.length" class="note">No Pledges yet. <NuxtLink :to="tinkerfundPath(space, '/discover')">Find a Campaign to back</NuxtLink>.</p>
-        <TinkerfundPledgeList v-else :space="space" :rows="rows" />
+        <p v-else-if="!held.length" class="note">No Pledges yet. <NuxtLink :to="tinkerfundPath(space, '/discover')">Find a Campaign to back</NuxtLink>.</p>
+        <TinkerfundPledgeList v-else :space="space" :pledges="held" />
       </section>
     </div>
     <ContentLoadErrorDialog :status="status" :error="error" :context="route.path" />

@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import type { TinkerfundPledgeChange } from '../../../../../../utils/account'
-import type { TinkerfundPledge } from '../../../../../../utils/cart'
 
 // One Pledge (story #1385): the Confirmation's receipt, printable, and — while
 // its Campaign is Live — a change with a priced review, or a cancel.
@@ -19,8 +18,7 @@ const held = computed(() =>
   tinkerfundAccountPledges(pledges.value, baked.value, catalog.value, now.value, shop.value?.payments[0]?.id ?? '')
     .find((a) => a.pledge.ref === reference.value))
 const entry = computed(() => held.value && catalog.value[held.value.pledge.campaign])
-const receiptOf = (pledge: TinkerfundPledge) => tinkerfundReceipt(pledge, entry.value!)
-const receipt = computed(() => held.value && entry.value && receiptOf(held.value.pledge))
+const receipt = computed(() => held.value?.receipt)
 const zoneName = computed(() => {
   const zone = held.value?.pledge.zone
   return shop.value?.zones.find((z) => z.id === zone)?.name ?? zone ?? ''
@@ -28,7 +26,7 @@ const zoneName = computed(() => {
 const payment = computed(() => shop.value?.payments.find((p) => p.id === held.value?.pledge.payment)?.label ?? held.value?.pledge.payment)
 
 const mode = ref<'view' | 'edit' | 'review'>('view')
-const proposal = ref<{ change: TinkerfundPledgeChange; pledge: TinkerfundPledge }>()
+const proposal = ref<{ change: TinkerfundPledgeChange; receipt: ReturnType<typeof tinkerfundReceipt> }>()
 const refusal = ref<string>()
 const done = ref<string>()
 const heading = ref<HTMLElement>()
@@ -44,7 +42,7 @@ function review(change: TinkerfundPledgeChange) {
   const { pledge, error } = reviseTinkerfundPledge(held.value!.pledge, change, entry.value!, now.value)
   refusal.value = error
   if (!pledge) return
-  proposal.value = { change, pledge }
+  proposal.value = { change, receipt: tinkerfundReceipt(pledge, entry.value!) }
   mode.value = 'review'
 }
 function confirm() {
@@ -58,7 +56,7 @@ function withdraw() {
   if (!refusal.value) done.value = 'Your Pledge is cancelled. Nothing will be charged.'
 }
 
-const difference = computed(() => proposal.value && receipt.value ? tinkerfundCents(receiptOf(proposal.value.pledge).total - receipt.value.total) : 0)
+const difference = computed(() => proposal.value && receipt.value ? tinkerfundCents(proposal.value.receipt.total - receipt.value.total) : 0)
 const signed = (amount: number) => (amount > 0 ? `+${money(amount)}` : amount < 0 ? `−${money(-amount)}` : 'No change')
 const print = () => window.print()
 
@@ -78,8 +76,8 @@ useSeoMeta(tinkerfundSeo({ kind: 'private', space, title: `Pledge ${reference.va
 
       <template v-else-if="mode === 'view'">
         <header class="intro">
-          <p class="tf-label">Receipt · Pledge {{ held.pledge.ref }}</p>
-          <h1 ref="heading" tabindex="-1">{{ receipt.title }}</h1>
+          <p class="tf-label">{{ receipt.title }}</p>
+          <h1 ref="heading" tabindex="-1">Receipt</h1>
           <TinkerfundPledgeState :state="held.state" />
         </header>
         <p v-if="done" class="done" role="status">{{ done }}</p>
@@ -114,7 +112,7 @@ useSeoMeta(tinkerfundSeo({ kind: 'private', space, title: `Pledge ${reference.va
       <template v-else-if="mode === 'edit'">
         <header class="intro">
           <p class="tf-label">Pledge {{ held.pledge.ref }} · {{ receipt.title }}</p>
-          <h1 ref="heading" tabindex="-1">Change</h1>
+          <h1 ref="heading" tabindex="-1">Change your Pledge</h1>
         </header>
         <TinkerfundPledgeEditor
           :campaign="entry.campaign"
@@ -132,10 +130,10 @@ useSeoMeta(tinkerfundSeo({ kind: 'private', space, title: `Pledge ${reference.va
           <p class="tf-label">Pledge {{ held.pledge.ref }} · {{ receipt.title }}</p>
           <h1 ref="heading" tabindex="-1">Review changes</h1>
         </header>
-        <TinkerfundPledgeSummary :space="space" :pledge="receiptOf(proposal.pledge)" :zone="zoneName" note="Your Pledge, once changed" />
+        <TinkerfundPledgeSummary :space="space" :pledge="proposal.receipt" :zone="zoneName" note="Your Pledge, once changed" />
         <dl class="difference tf-panel">
           <div><dt>Was</dt><dd>{{ money(receipt.total) }}</dd></div>
-          <div><dt>Now</dt><dd>{{ money(receiptOf(proposal.pledge).total) }}</dd></div>
+          <div><dt>Now</dt><dd>{{ money(proposal.receipt.total) }}</dd></div>
           <div class="total"><dt>Difference</dt><dd>{{ signed(difference) }}</dd></div>
         </dl>
         <p class="note">Still pending: you’re only charged if the Campaign is funded, when it ends on <TinkerfundTime :at="held.endsAt" />.</p>
