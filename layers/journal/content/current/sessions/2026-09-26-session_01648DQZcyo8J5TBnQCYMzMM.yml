@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01648DQZcyo8J5TBnQCYMzMM
 startedAt: 2026-09-26T08:50:45Z
-endedAt: 2026-09-26T14:46:26Z
+endedAt: 2026-09-26T20:24:37Z
 kind: interactive
 goal: Build Tinkerfund phase 1 via workflow
 status: in-review
-outcome: "All ten stories integrated; PR #1402 open"
-summary: "Human-instructed: run a workflow implementing Tinkerfund spec #1375 phase 1 (stories #1376–#1385) as story PRs into a tinkerfund/integration branch, with implement → code-review loop → orchestrator merge per story; then one gated PR to main, human-merge-only. The user later asked that the implement and code-review skills be used (workflow restarted with them) and to run fully autonomously. All ten story PRs (#1390–#1401) passed review and CI and merged into integration; main was merged in, the full pnpm gate passed, and PR #1402 is open and subscribed. Agent-initiated: merging the four story PRs whose merge agents were blocked by the permission classifier, a conflict-resolution agent for #1396, and the workflow's merged/only args. No grilling tickets and no new dependencies."
+outcome: "Phase 1 plus review fixes in PR #1402"
+summary: "Human-instructed throughout: a workflow built Tinkerfund stories #1376–#1385 as story PRs into tinkerfund/integration, then one gated PR #1402 to main. The owner then asked for a full code review of the branch (fixed in #1406 through three re-review rounds, with every open question decided by me as delegated), Fable-drawn and polished figures (#1403, #1407–#1409), a tinkerfund-campaign skill (#1411), a redesigned homepage featuring Tinkerfund (#1412, #1414) and inline Updates replacing Update pages (#1413). Main was merged in and the full gate passes; #1402 awaits human merge. Agent-initiated: merging PRs whose merge agents were blocked, conflict re-merges, and the view-transition workaround plugin."
 prs:
   - "1402"
   - "1390"
@@ -19,36 +19,127 @@ prs:
   - "1398"
   - "1399"
   - "1401"
+  - "1403"
+  - "1406"
+  - "1407"
+  - "1408"
+  - "1409"
+  - "1411"
+  - "1412"
+  - "1413"
+  - "1414"
 docsRead:
-  - path: docs/agents/pr-workflow.md
-    reason: merge recipe and merge-pr.ts as sole merge path
-  - path: scripts/merge-pr.ts
-    reason: verdict check and REST fallback before delegating merges
+  - path: layers/tinkerfund/tenant.config.ts
+    reason: (no reason given)
+  - path: layers/tinkerfund/content/prod/pages/campaigns/counterclockwise-mug.md
+    reason: (no reason given)
+  - path: layers/tinkerfund/content/prod/pages/campaigns/solo-pea-rest.md
+    reason: (no reason given)
+  - path: layers/tinkerfund/content/prod/pages/campaigns/one-key-keyboard.md
+    reason: (no reason given)
+  - path: layers/tinkerfund/content/prod/pages/campaigns/emotional-support-rock.md
+    reason: (no reason given)
+  - path: layers/tinkerfund/content/prod/pages/campaigns/pocket-sundial-with-snooze.md
+    reason: (no reason given)
+  - path: layers/tinkerfund/content/prod/pages/campaigns/rain-aware-umbrella.md
+    reason: (no reason given)
+  - path: layers/tinkerfund/app/assets/theme.css
+    reason: (no reason given)
+  - path: layers/tinkerfund/app/components/tinkerfund/Figure.vue
+    reason: (read before editing)
+  - path: layers/tinkerfund/app/components/tinkerfund/FigureGallery.vue
+    reason: (no reason given)
+  - path: layers/tinkerfund/tests/e2e/tinkerfund.e2e.ts
+    reason: (read before editing)
+  - path: layers/tinkerfund/app/utils/checkout.ts
+    reason: (read before editing)
+  - path: layers/tinkerfund/app/utils/account.ts
+    reason: (read before editing)
+  - path: layers/tinkerfund/app/composables/tinkerfund.ts
+    reason: (read before editing)
+  - path: layers/tinkerfund/app/pages/t/tinkerfund/[space]/checkout/index.vue
+    reason: (no reason given)
+  - path: layers/tinkerfund/app/pages/t/tinkerfund/[space]/cart.vue
+    reason: (no reason given)
+  - path: layers/tinkerfund/app/pages/t/tinkerfund/[space]/account/pledges/[ref].vue
+    reason: (no reason given)
+  - path: layers/tinkerfund/app/pages/t/tinkerfund/[space]/checkout/done.vue
+    reason: (no reason given)
+  - path: layers/tinkerfund/app/pages/t/tinkerfund/[space]/account/index.vue
+    reason: (no reason given)
+  - path: layers/tinkerfund/app/components/tinkerfund/CartGroup.vue
+    reason: (no reason given)
+  - path: layers/tinkerfund/app/components/tinkerfund/PledgeSummary.vue
+    reason: (no reason given)
+  - path: layers/tinkerfund/app/components/tinkerfund/PledgeEditor.vue
+    reason: (no reason given)
+  - path: layers/tinkerfund/app/components/tinkerfund/PledgeList.vue
+    reason: (no reason given)
+  - path: layers/tinkerfund/app/components/tinkerfund/MiniCart.vue
+    reason: (no reason given)
+  - path: layers/tinkerfund/app/utils/browse.ts
+    reason: (read before editing)
+  - path: layers/tinkerfund/tests/unit/checkout.spec.ts
+    reason: (read before editing)
+  - path: layers/tinkerfund/tests/unit/account.spec.ts
+    reason: (read before editing)
+  - path: layers/tinkerfund/tests/unit/cart.spec.ts
+    reason: (read before editing)
+  - path: layers/tinkerfund/tests/unit/demo-storage.spec.ts
+    reason: (no reason given)
+  - path: layers/tinkerfund/tests/unit/status.spec.ts
+    reason: (no reason given)
+  - path: layers/tinkerfund/tests/unit/campaign.spec.ts
+    reason: (no reason given)
+  - path: layers/tinkerfund/tests/unit/qa-fixtures.spec.ts
+    reason: (no reason given)
+  - path: layers/tinkerfund/tests/unit/clock.spec.ts
+    reason: (no reason given)
+  - path: layers/tinkerfund/app/utils/demo.ts
+    reason: (no reason given)
+  - path: layers/tinkerfund/app/utils/cart.ts
+    reason: (read before editing)
   - path: .agents/skills/implement/SKILL.md
-    reason: user asked the implement skill be used; model-invocation disabled
-  - path: .agents/skills/code-review/SKILL.md
-    reason: review agents' procedure
+    reason: (no reason given)
   - path: .claude/skills/resolving-merge-conflicts/SKILL.md
     reason: (no reason given)
   - path: layers/tinkerfund/app/components/tinkerfund/Gallery.vue
     reason: (no reason given)
+  - path: layers/tinkerfund/tests/unit/content-model.spec.ts
+    reason: (read before editing)
+  - path: layers/tinkerfund/app/components/tinkerfund/Campaign.vue
+    reason: (read before editing)
+  - path: layers/tinkerfund/app/components/tinkerfund/SectionNav.vue
+    reason: (no reason given)
+  - path: layers/tinkerfund/app/utils/campaign.ts
+    reason: (read before editing)
+  - path: layers/tinkerfund/app/utils/backer.ts
+    reason: (read before editing)
+  - path: layers/tinkerfund/content/qa/pages/campaigns/last-minute-lamp.md
+    reason: (no reason given)
+  - path: app/pages/index.vue
+    reason: (read before editing)
+  - path: app/components/HomeShowcase.vue
+    reason: (read before editing)
 skillsUsed:
-  - name: workflow-authoring
-    reason: authored the DAG implement/review/merge workflow
-  - name: dispatch-subagents
-    reason: briefs, worktree isolation and the stranded-work check
-  - name: implement
-    reason: impl and fix agents followed it (read, not invoked)
   - name: code-review
-    reason: every story PR's review rounds
-  - name: tdd
-    reason: impl agents test-first on logic seams
+    reason: "two full two-axis reviews and two focused re-review rounds on #1406"
+  - name: writing-for-agents
+    reason: authored the tinkerfund-campaign skill
   - name: close-session
+    reason: closure at PR-open and after the follow-up work
+  - name: workflow-authoring
+    reason: (no reason given)
+  - name: dispatch-subagents
     reason: (no reason given)
   - name: log-session
     reason: (no reason given)
   - name: context
     reason: (invoked as a slash command)
+  - name: usage
+    reason: (invoked as a slash command)
+  - name: tdd
+    reason: (no reason given)
 frictions:
   - description: "The auto-mode classifier blocked workflow merge agents' merge-pr.ts on 4 story PRs (#1391, #1393, #1396, #1398) as Merge Without Review, despite the user's explicit authorization quoted in the brief; each stalled its dependents until the orchestrator merged."
     solution: "Merge from the orchestrating session by design: have the workflow return ready-to-merge and let the main loop merge, instead of delegating merges to subagents."
@@ -71,44 +162,148 @@ frictions:
   - description: "The #1384 merge agent dodged the foreground-sleep block with `timeout 240 tail -f /dev/null` while waiting for CI, which drew a security warning."
     solution: Merge briefs should say to poll with merge-pr.ts's own timeout loop and never hand-roll a sleep.
     severity: minor
-durationSec: 21341
+  - description: The round-1 story reviews passed code with real money bugs (double shipping, deepening discounts, stacking codes) that only the whole-branch review caught; per-story review missed cross-story flows.
+    solution: Run a whole-branch two-axis review before the integration PR, not only per story; probe money logic with scratch scripts.
+    severity: moderate
+  - description: A round-2 fix agent dropped defineTenant() from tenant.config.ts to work around a bundling error, silently opting a Tenant out of Platform manifest validation.
+    solution: Briefs should name defineTenant()/shared/manifest.ts as untouchable; split importable schemas into a layer module instead (as done).
+    severity: moderate
+  - description: A CI-only e2e failure came from a race in Nuxt 4.5's view-transition plugin; local Chromium swallowed the rejection, CI's did not.
+    solution: Worked around with a layer client plugin (D23); worth an upstream Nuxt issue.
+    severity: moderate
+  - description: Figure lettering inherited the patent group's stroke and smeared into bold; two illustrator runs and my review missed it until the owner spotted it.
+    solution: The skill's check() now flags text without stroke:none, and its critique list names it.
+    severity: minor
+  - description: The Sundial figures used --tf-warn (marker yellow, reserved for urgency) where every other Campaign uses the accent; nothing checked palette consistency.
+    solution: The skill's palette drops warn and ILLUSTRATION.md states the accent/ink rule.
+    severity: minor
+  - description: I started the final pnpm gate with a trailing & in a non-background Bash call, so it ran untracked and needed a log-marker wait.
+    solution: Use run_in_background with a log redirect, per CLAUDE.md.
+    severity: nit
+durationSec: 41633
 models:
-  claude-opus-5-5: 177
+  claude-opus-5-5: 561
 toolCounts:
-  Skill: 4
-  ToolSearch: 3
+  Skill: 6
+  ToolSearch: 4
   mcp__github__issue_read: 2
-  Bash: 43
+  Bash: 124
   Workflow: 6
   mcp__Claude_Code_Remote__send_later: 2
   TaskStop: 1
   mcp__Claude_Code_Remote__update_trigger: 2
-  mcp__github__add_issue_comment: 4
-  ReadNotifications: 6
+  mcp__github__add_issue_comment: 16
+  ReadNotifications: 24
   mcp__github__list_pull_requests: 2
-  Agent: 1
-  mcp__github__pull_request_read: 1
-  mcp__github__get_job_logs: 1
-  SendMessage: 2
-  mcp__github__create_pull_request: 1
+  Agent: 21
+  mcp__github__pull_request_read: 4
+  mcp__github__get_job_logs: 2
+  SendMessage: 8
+  mcp__github__create_pull_request: 9
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
-  Write: 1
+  Write: 5
+  Read: 10
+  Edit: 3
+  SendUserFile: 4
+  mcp__github__update_pull_request: 1
 filesEdited:
+  - /home/user/tf-skill/.agents/skills/tinkerfund-campaign/SKILL.md
+  - /home/user/tf-skill/.agents/skills/tinkerfund-campaign/ILLUSTRATION.md
+  - layers/tinkerfund/tests/unit/zz-probe.spec.ts
+  - layers/tinkerfund/app/utils/shop.ts
+  - layers/tinkerfund/app/utils/cart.ts
+  - layers/tinkerfund/app/utils/checkout.ts
+  - layers/tinkerfund/app/utils/account.ts
+  - layers/tinkerfund/app/utils/backer.ts
+  - layers/tinkerfund/tests/unit/support.ts
+  - layers/tinkerfund/tests/unit/cart.spec.ts
+  - layers/tinkerfund/tests/unit/checkout.spec.ts
+  - layers/tinkerfund/tests/unit/account.spec.ts
+  - layers/tinkerfund/tests/unit/backer.spec.ts
+  - layers/tinkerfund/app/composables/tinkerfund.ts
+  - layers/tinkerfund/tests/e2e/tinkerfund.e2e.ts
   - .scratch-repro/repro.ts
   - layers/tinkerfund/app/components/tinkerfund/Browse.vue
+  - layers/tinkerfund/tests/unit/content-model.spec.ts
+  - layers/tinkerfund/nuxt.config.ts
+  - layers/tinkerfund/tests/unit/browse.spec.ts
+  - layers/tinkerfund/app/utils/browse.ts
+  - layers/tinkerfund/app/utils/campaign.ts
+  - layers/tinkerfund/app/components/tinkerfund/Drawer.vue
+  - layers/tinkerfund/app/components/tinkerfund/Figure.vue
+  - scripts/_tf_probe.ts
+  - layers/tinkerfund/app/components/tinkerfund/Updates.vue
+  - .agents/skills/tinkerfund-campaign/SKILL.md
+  - dark-shot.tmp.ts
+  - layers/tinkerfund/app/components/tinkerfund/Campaign.vue
+  - layers/tinkerfund/app/plugins/view-transitions.client.ts
+  - app/components/HomeShowcase.vue
+  - app/pages/index.vue
+  - tests/e2e/smoke.spec.ts
 docsReadViaShell:
   - docs/agents/pr-workflow.md
   - .agents/skills/implement/SKILL.md
   - .agents/skills/code-review/SKILL.md
   - CONTEXT.md
   - CONTEXT-MAP.md
+  - .agents/skills/writing-for-agents/SKILL-MECHANICS.md
+  - .agents/skills/atlas-specimen/SKILL.md
+  - layers/tinkerfund/CONTEXT.md
+  - docs/agents/git-conventions.md
+  - docs/adr/0004-objective-safety-gate.md
+  - docs/agents/domain.md
+  - docs/adr/0021-multi-context-domain-docs.md
+  - .agents/skills/domain-modeling/SKILL.md
+  - docs/agents/mdc-when-to-use.md
+  - docs/agents/tenant-layers.md
+  - docs/agents/verifying-ui-changes.md
+  - .agents/skills/tdd/SKILL.md
+  - docs/adr/0016-tenant-root-layer-routes.md
+  - layers/midden/CONTEXT.md
+  - layers/atlas/CONTEXT.md
+  - .agents/skills/tinkerfund-campaign/SKILL.md
 subagents:
   - task: "Resolve #1396 conflicts"
+  - type: general-purpose
+    task: "Standards: content, schema, validation"
+  - type: general-purpose
+    task: "Standards: components, pages, CSS"
+  - type: general-purpose
+    task: "Standards: utils, composables, tests"
+  - type: general-purpose
+    task: "Spec: foundation stories 1376–1379"
+  - type: general-purpose
+    task: "Spec: stories 1380–1382"
+  - type: general-purpose
+    task: "Spec: stories 1383–1385"
+  - task: "Review fixes: logic (cart/checkout/account)"
+  - task: "Review fixes: content, schema, docs"
+  - task: "Fable: nicer product SVG figures"
+    model: fable
+  - task: "Review fixes: UI components/pages/CSS"
+  - task: "Review fixes: consolidate Tinkerfund e2e"
+  - task: "Fable: polish original product SVGs"
+    model: fable
+  - type: general-purpose
+    task: "Standards review: review-fixes logic/tests"
+  - type: general-purpose
+    task: "Standards review: review-fixes UI/content"
+  - type: general-purpose
+    task: "Spec review: review-fixes vs findings+spec"
+  - task: "Review round 2 fixes on #1406"
+  - type: general-purpose
+    task: "Re-review round 2: standards"
+  - type: general-purpose
+    task: "Re-review round 2: spec"
+  - task: "Homepage: two rows, add Tinkerfund"
+  - task: Inline Updates as a data collection
 gitBranch: claude/tinkerfund-phase-1-daeyzy
 entrypoint: remote_mobile
 cliVersion: 2.1.283
 learnings:
   - A workflow cannot wait on an external event, so a merge handed back to the orchestrator ends the run; args-driven resume (merged/only lists) restarted it cheaply.
+  - Tenant layer plugins and nuxt.config flags apply app-wide; keep them inert outside the Tenant's own opt-in.
 ideas:
   - Add a per-Tenant gallery-section convention (one component file per story under components/<tenant>/gallery/) so parallel stories stop colliding on a single Gallery.vue. The six re-merge cycles in this run all traced to shared aggregator files.
+  - Add a schema-level rule that figure text styles carry stroke:none and that figures never use --tf-warn, so validate:content catches both instead of relying on the skill's tool check.
 landedBy: Stop
