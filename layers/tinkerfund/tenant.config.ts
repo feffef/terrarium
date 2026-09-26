@@ -4,7 +4,7 @@
 // stays out of the Commons' Catalog. The content model is issue #1366;
 // cross-Document references are checked in scripts/validate-content-refs.ts.
 import { z } from 'zod'
-import { defineTenant } from '../../shared/manifest'
+import type { TenantManifest } from '../../shared/manifest'
 import { TINKERFUND_OFFSET, resolveTinkerfundOffset } from './app/utils/clock'
 
 export const slug = z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, 'must be a lowercase slug')
@@ -160,7 +160,9 @@ export const pledge = z
   })
   .strict()
 
-export default defineTenant({
+// `satisfies`, not defineTenant(): the app imports this file's schemas at runtime,
+// and its server build can't resolve a runtime import of shared/manifest.ts.
+export default {
   name: 'tinkerfund',
   spaces: ['prod', 'qa'],
   collections: {
@@ -227,4 +229,4 @@ export default defineTenant({
         .strict(),
     },
   },
-})
+} satisfies TenantManifest
