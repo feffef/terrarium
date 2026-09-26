@@ -1,7 +1,7 @@
 schemaVersion: 1
 session: session_01EdwL8ccXPLBheopdW5vWJr
 startedAt: 2026-09-26T07:12:58Z
-endedAt: 2026-09-26T07:40:56Z
+endedAt: 2026-09-26T07:45:49Z
 kind: interactive
 goal: Resolve Tinkerfund visual identity wayfinder ticket
 status: completed
@@ -29,9 +29,6 @@ skillsUsed:
   - name: log-session
     reason: (no reason given)
 frictions:
-  - description: Map tickets encode blocking only as a 'Blocked by' body line; GitHub's native dependency summary reports 0 blockers, so a frontier query trusting it would treat 'write the spec' (#1369) as takeable.
-    solution: Wire native blocked_by edges when charting (issue-tracker.md already says native is canonical), or have the frontier query also parse the body line.
-    severity: minor
   - description: Harness rule 'never push to a branch other than the assigned one' conflicts with the prototype skill's throwaway-branch capture; the assigned branch is unsuitable too because CLAUDE.md auto-opens a PR for substantive commits there.
     solution: Had to ask the human. Say in prototype/wayfinder guidance (or issue-tracker.md) that the throwaway prototype/research branch needs a human OK in harness-restricted sessions, or bless that pattern in CLAUDE.md.
     severity: minor
@@ -50,13 +47,13 @@ frictions:
   - description: The map-body update was denied by the provenance guard because I kept the original session's header line when rewriting the body.
     solution: Guard worked as designed; when rewriting an issue body, replace the header with this session's id.
     severity: nit
-durationSec: 1679
+durationSec: 1971
 models:
-  claude-opus-5-5: 110
+  claude-opus-5-5: 122
 toolCounts:
-  Bash: 30
+  Bash: 33
   ToolSearch: 2
-  mcp__github__issue_read: 6
+  mcp__github__issue_read: 9
   mcp__github__issue_write: 4
   AskUserQuestion: 2
   Skill: 3
