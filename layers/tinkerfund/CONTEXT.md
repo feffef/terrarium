@@ -28,17 +28,30 @@ surface — and anyone who wants to back a counterclockwise mug.
 
 ## Spaces
 
-- **`prod`** — realistic simulated content, on a clock that follows real time.
-- **`qa`** — deliberately awkward edge-case data on a pinned "now". The
-  e2e tests run against it, and its front page is a component gallery.
+- **`prod`** — realistic simulated content.
+- **`qa`** — deliberately awkward edge-case data. The e2e tests run against
+  it, and its front page is a component gallery.
 
 ## Glossary
 
+"Ending soon", "Goal reached" and "Deal(s)" are interface copy, not terms.
+"Deal" is how the shop talks about a Promotion; the model still says Promotion.
+
 ### Campaign
 One invention raising money toward a funding goal by a deadline. A Campaign
-moves **Upcoming → Live → Ended**; an Ended Campaign is **Funded** if it
-reached its goal and **Unfunded** if not. Its state is always derived from the
-clock, never stored.
+moves **Upcoming → Live → Ended** as time passes; an Ended Campaign is
+**Funded** if it reached its goal and **Unfunded** if not.
+
+### Registry number
+A Campaign's catalogue number, such as TF-0042. No two Campaigns in a Space
+share one.
+
+### Category
+The shelf a Campaign sits on, such as Kitchen or Desk. Every Campaign has
+exactly one; a category may be empty.
+
+### Update
+A dated post in which the Inventor reports on their Campaign's progress.
 
 ### Inventor
 The person behind a Campaign.
@@ -76,6 +89,16 @@ Money a Backer adds to a Pledge beyond the price of what they picked.
 Where a Pledge ships to — Domestic, Europe or Rest of world — which sets its
 flat shipping rate.
 
-### UI copy, not terms
-"Ending soon", "Goal reached" and "Deal(s)" appear in the interface only.
-"Deal" is how the shop talks about a Promotion; the model still says Promotion.
+## What lives where
+
+- **This file** — Tinkerfund's vocabulary and why it exists.
+- **Root `CONTEXT.md`** — the platform-wide terms Tinkerfund leans on, and the
+  Tenants roster that points here.
+- **[spec #1375](https://github.com/feffef/terrarium/issues/1375)** — the
+  full spec, linking the ticket that holds each locked decision (a
+  content/design Tenant's decisions live there and in this file, not in
+  ADRs — ADR-0021).
+- **`layers/tinkerfund/tenant.config.ts`** — the content model: each
+  Collection's shape, and how each Space tells time (`shop.now`).
+- **`scripts/validate-content-refs.ts`** — the cross-Document references a
+  schema can't check, such as a past Pledge naming a real Reward.
