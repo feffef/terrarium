@@ -2,11 +2,15 @@
 // the baked catalog.
 import { describe, expect, it } from 'vitest'
 import { addToTinkerfundCart, resolveTinkerfundCart, setTinkerfundLine } from '../../app/utils/cart.ts'
-import type { TinkerfundBackerState, TinkerfundCartRequest, TinkerfundDraft, TinkerfundZone } from '../../app/utils/cart.ts'
-import { shop } from './support.ts'
+import type { TinkerfundBackerState, TinkerfundCartRequest, TinkerfundDraft, TinkerfundPledge, TinkerfundZone } from '../../app/utils/cart.ts'
+import { NOW, shop } from './support.ts'
 
 const black = { campaign: 'lamp', reward: 'lamp', options: { colour: 'black' } }
 const empty: TinkerfundBackerState = { cart: [], pledges: [] }
+const pledgedLamps = (quantity: number): TinkerfundPledge => ({
+  ref: 'TF-P-9001', campaign: 'lamp', placed: NOW, zone: 'domestic', payment: 'demo-card',
+  lines: [{ reward: 'lamp', options: { colour: 'black' }, quantity }], addons: [], promotions: [], discount: 0, shipping: 5,
+})
 
 function add(cart: TinkerfundDraft[], request: TinkerfundCartRequest) {
   const { state, error } = addToTinkerfundCart({ ...empty, cart }, request, shop())
@@ -28,6 +32,12 @@ describe('adding to the Cart', () => {
   it('holds a Reward to its per-Backer limit across every option', () => {
     const { cart } = add([], { ...black, quantity: 2 })
     expect(add(cart, { ...black, options: { colour: 'white' }, quantity: 2 })).toEqual({ cart, error: 'Max 3 per Backer' })
+  })
+
+  it('counts what the Backer already pledged towards the per-Backer limit', () => {
+    const state = { cart: [], pledges: [pledgedLamps(2)] }
+    expect(addToTinkerfundCart(state, { ...black, options: { colour: 'white' }, quantity: 2 }, shop()).error).toBe('Max 3 per Backer: your Pledge already holds 2')
+    expect(addToTinkerfundCart(state, { ...black, quantity: 1 }, shop()).error).toBeUndefined()
   })
 
   it('holds a Reward to the stock that is left', () => {
@@ -125,6 +135,14 @@ describe('reading the Cart against the catalog', () => {
     const view = read([{ campaign: 'lamp', lines: [{ reward: 'lamp', options: { colour: 'black' }, quantity: 1 }], addons: [] }], 'europe')
     expect(view.groups[0]!.lines[0]!.ships).toBe(false)
     expect(view).toMatchObject({ subtotal: 20, shipping: 0 })
+  })
+
+  it('flags a line the Backer’s Pledge has already taken to the per-Backer limit, and trims one it nearly has', () => {
+    const line = (quantity: number) => ({ campaign: 'lamp', lines: [{ reward: 'lamp', options: { colour: 'white' }, quantity }], addons: [] })
+    const full = resolveTinkerfundCart({ cart: [line(1)], pledges: [pledgedLamps(3)] }, shop(), 'domestic')
+    expect(full.groups[0]!.lines[0]).toMatchObject({ unavailable: 'Max 3 per Backer: your Pledge already holds 3', amount: 0 })
+    const near = resolveTinkerfundCart({ cart: [line(2)], pledges: [pledgedLamps(2)] }, shop(), 'domestic')
+    expect(near.groups[0]!.lines[0]).toMatchObject({ quantity: 1, max: 1, amount: 20 })
   })
 
   it('trims a quantity to what is left', () => {

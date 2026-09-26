@@ -158,7 +158,7 @@ describe('confirming a checkout', () => {
     expect(place({ state: { cart: manual, pledges: [lamps] }, zone: 'europe' }).error).toBe('Lamp: One lamp doesn’t ship there')
   })
 
-  it('adds to the Pledge a Campaign already has, keeping its reference and the per-Backer limit', () => {
+  it('adds to the Pledge a Campaign already has, keeping its reference, up to the per-Backer limit', () => {
     const result = place({ state: { cart, pledges: [existing] } })
     expect(result.refs).toEqual(['TF-P-9001', 'TF-P-9002'])
     expect(result.state.pledges[0]).toEqual({
@@ -168,7 +168,10 @@ describe('confirming a checkout', () => {
       addons: [{ id: 'bulb', quantity: 1 }], bonus: 9, promotions: ['lamp-tenth'], discount: 4.9, shipping: 5,
     })
 
-    expect(place({ state: { cart, pledges: result.state.pledges } }).error).toBe('Lamp: Max 3 per Backer')
+    const again = place({ state: { cart, pledges: result.state.pledges } })
+    expect(again.state.pledges[0]!.lines).toEqual([{ reward: 'manual', options: {}, quantity: 1 }, { reward: 'lamp', options: black, quantity: 3 }])
+    const bothColours = [{ campaign: 'lamp', lines: [{ reward: 'lamp', options: black, quantity: 1 }, { reward: 'lamp', options: { colour: 'white' }, quantity: 1 }], addons: [] }]
+    expect(place({ state: { cart: bothColours, pledges: result.state.pledges } }).error).toBe('Lamp: Max 3 per Backer')
   })
 })
 
