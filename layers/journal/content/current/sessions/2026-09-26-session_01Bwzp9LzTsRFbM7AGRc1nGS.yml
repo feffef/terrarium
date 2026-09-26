@@ -1,0 +1,81 @@
+schemaVersion: 1
+session: session_01Bwzp9LzTsRFbM7AGRc1nGS
+startedAt: 2026-09-26T20:28:18Z
+endedAt: 2026-09-26T21:04:57Z
+kind: interactive
+goal: Visitor-loop run scoped to Tinkerfund
+status: in-review
+outcome: Fix PR open; feature PR next
+summary: "Human-instructed: the owner ran /visitor-loop \"on tinkerfund only\" and, when asked, set the scope: visitors enter via / then stay in /t/tinkerfund/prod, and fixes stay in layers/tinkerfund/. Three blind visitors (sonnet, fable, opus) reported. Five findings reached consensus. I fixed three (the mobile index table, \"Notify me\" feedback, a backed-Campaign line), dropped moving deadlines as the owner's #1364 design, and marked the homepage signposting out of remit. The fixes have rendered-DOM before/after evidence and a green gate; PR 1415 is open. The Rock firmware-notes feature, chosen by me from the visitors' ideas, follows after merge."
+prs:
+  - "1415"
+docsRead:
+  - path: layers/tinkerfund/app/components/tinkerfund/Campaign.vue
+    reason: (no reason given)
+skillsUsed:
+  - name: visitor-loop
+    reason: the run itself
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: code-review
+    reason: (no reason given)
+frictions:
+  - description: The table fix took four build/probe rounds. Each column-width guess needed a full ~2-minute pnpm build before the DOM could be measured.
+    solution: Measure per-column widths in the first probe, and test the tightest viewport (360px) from the start, not just 390px.
+    severity: minor
+  - description: The Stop hook demanded a commit/push each time the turn ended mid-build, which fragmented one fix into five commits.
+    solution: Commit once when evidence is complete. Squash-merge hides the fragments, but a single-commit run is what pr-workflow asks for.
+    severity: nit
+  - description: The visitor-brief says to send it verbatim, but a scoped run ('tinkerfund only') has to edit its start instruction. The Skill has no scoped-run provision.
+    solution: Asked the owner and edited only the brief's first paragraph. If scoped runs recur, visitor-loop could name how a scope rides into the brief.
+    severity: nit
+durationSec: 2200
+models:
+  claude-opus-5-5: 183
+toolCounts:
+  Bash: 61
+  AskUserQuestion: 1
+  ToolSearch: 2
+  mcp__github__search_pull_requests: 1
+  mcp__github__pull_request_read: 6
+  Agent: 7
+  Read: 4
+  mcp__github__search_issues: 2
+  mcp__github__issue_read: 2
+  Write: 2
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  Skill: 3
+filesEdited:
+  - .probe-visitor.ts
+docsReadViaShell:
+  - .agents/skills/visitor-loop/visitor-brief.md
+  - .agents/skills/visitor-loop/decisions.md
+  - layers/tinkerfund/CONTEXT.md
+  - docs/agents/verifying-ui-changes.md
+  - docs/agents/pr-workflow.md
+  - CONTEXT.md
+subagents:
+  - type: general-purpose
+    task: Visitor 1 (sonnet)
+    model: sonnet
+  - type: general-purpose
+    task: Visitor 2 (fable)
+    model: fable
+  - type: general-purpose
+    task: Visitor 3 (opus)
+    model: opus
+  - type: general-purpose
+    task: Standards review of PR 1415
+  - type: general-purpose
+    task: Spec review of PR 1415
+  - type: general-purpose
+    task: Standards review of PR 1415
+  - type: general-purpose
+    task: Spec review of PR 1415
+gitBranch: claude/visitor-loop-tinkerfund-2ynnw3
+entrypoint: remote_mobile
+cliVersion: 2.1.283
+landedBy: Stop
