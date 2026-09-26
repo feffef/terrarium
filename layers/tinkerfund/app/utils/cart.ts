@@ -124,6 +124,11 @@ export function tinkerfundOptionsLabel(reward: CartReward, options: Record<strin
 
 export const tinkerfundCents = (amount: number) => Math.round(amount * 100) / 100
 
+/** A Pledge's flat shipping (issue #1365): the zone's rate once any of its Rewards ships. */
+export function tinkerfundShipping(lines: { reward: string }[], campaign: TinkerfundCartCampaign, zone: TinkerfundZone): number {
+  return lines.some((l) => campaign.rewards.find((r) => r.id === l.reward)?.shipsTo) ? campaign.shipping[zone] ?? 0 : 0
+}
+
 function closed(campaign: TinkerfundCartCampaign, now: number): string | undefined {
   const { state } = deriveCampaignStatus({ ...campaign, goal: 1 }, 0, now)
   if (state === 'upcoming') return 'Opens at launch'

@@ -5,6 +5,7 @@ import {
   TINKERFUND_NEEDS_REWARD,
   tinkerfundCartLineKey,
   tinkerfundCents,
+  tinkerfundShipping,
   tinkerfundShortfall,
   tinkerfundSum,
   tinkerfundValidOptions,
@@ -34,9 +35,6 @@ export interface TinkerfundAccountPledge {
   receipt: ReturnType<typeof tinkerfundReceipt>
 }
 
-const ships = (pledge: Pick<TinkerfundPledge, 'lines'>, campaign: TinkerfundCartCampaign) =>
-  pledge.lines.some((l) => campaign.rewards.find((r) => r.id === l.reward)?.shipsTo)
-
 /** A baked Pledge read as a stored one. Baked Pledges carry no payment, so they
  *  read as paid with `payment`, the shop's first demo method. */
 function fromBaked(b: TinkerfundBakedPledge, campaign: TinkerfundCartCampaign, now: number, payment: string): TinkerfundPledge {
@@ -51,7 +49,7 @@ function fromBaked(b: TinkerfundBakedPledge, campaign: TinkerfundCartCampaign, n
     addons: b.addons ?? [],
     ...(b.bonus ? { bonus: b.bonus } : {}),
     discount: 0,
-    shipping: ships({ lines }, campaign) ? campaign.shipping[b.zone] ?? 0 : 0,
+    shipping: tinkerfundShipping(lines, campaign, b.zone),
   }
 }
 
@@ -139,7 +137,7 @@ export function reviseTinkerfundPledge(
     lines,
     addons,
     discount: Math.min(pledge.discount, tinkerfundSum(goods)),
-    shipping: ships({ lines }, campaign) ? campaign.shipping[pledge.zone] ?? 0 : 0,
+    shipping: tinkerfundShipping(lines, campaign, pledge.zone),
   }
   if (bonus) next.bonus = bonus
   else delete next.bonus

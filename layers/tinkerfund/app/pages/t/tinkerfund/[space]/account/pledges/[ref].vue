@@ -14,16 +14,16 @@ const { data: shop, status, error } = await useAsyncData(`tinkerfund-pledge-shop
 const { loaded, pledges, baked, catalog, now, revise, cancel } = await useTinkerfundCart()
 
 const reference = computed(() => String(route.params.ref))
-const held = computed(() =>
+const current = computed(() =>
   tinkerfundAccountPledges(pledges.value, baked.value, catalog.value, now.value, shop.value?.payments[0]?.id ?? '')
     .find((a) => a.pledge.ref === reference.value))
-const entry = computed(() => held.value && catalog.value[held.value.pledge.campaign])
-const receipt = computed(() => held.value?.receipt)
+const entry = computed(() => current.value && catalog.value[current.value.pledge.campaign])
+const receipt = computed(() => current.value?.receipt)
 const zoneName = computed(() => {
-  const zone = held.value?.pledge.zone
+  const zone = current.value?.pledge.zone
   return shop.value?.zones.find((z) => z.id === zone)?.name ?? zone ?? ''
 })
-const payment = computed(() => shop.value?.payments.find((p) => p.id === held.value?.pledge.payment)?.label ?? held.value?.pledge.payment)
+const payment = computed(() => shop.value?.payments.find((p) => p.id === current.value?.pledge.payment)?.label ?? current.value?.pledge.payment)
 
 const mode = ref<'view' | 'edit' | 'review'>('view')
 const proposal = ref<{ change: TinkerfundPledgeChange; receipt: ReturnType<typeof tinkerfundReceipt> }>()
@@ -39,20 +39,20 @@ function edit() {
   mode.value = 'edit'
 }
 function review(change: TinkerfundPledgeChange) {
-  const { pledge, error } = reviseTinkerfundPledge(held.value!.pledge, change, entry.value!, now.value)
+  const { pledge, error } = reviseTinkerfundPledge(current.value!.pledge, change, entry.value!, now.value)
   refusal.value = error
   if (!pledge) return
   proposal.value = { change, receipt: tinkerfundReceipt(pledge, entry.value!) }
   mode.value = 'review'
 }
 function confirm() {
-  refusal.value = revise(held.value!.pledge, proposal.value!.change)
+  refusal.value = revise(current.value!.pledge, proposal.value!.change)
   if (refusal.value) return
   done.value = 'Your Pledge is changed.'
   mode.value = 'view'
 }
 function withdraw() {
-  refusal.value = cancel(held.value!.pledge)
+  refusal.value = cancel(current.value!.pledge)
   if (!refusal.value) done.value = 'Your Pledge is cancelled. Nothing will be charged.'
 }
 
@@ -68,7 +68,7 @@ useSeoMeta(tinkerfundSeo({ kind: 'private', space, title: `Pledge ${reference.va
     <div class="pledge-page">
       <p class="back tf-noprint"><NuxtLink :to="tinkerfundPath(space, '/account')">← Your account</NuxtLink></p>
       <h1 v-if="!loaded">Opening your Pledge…</h1>
-      <section v-else-if="!held || !receipt || !entry" class="empty tf-panel">
+      <section v-else-if="!current || !receipt || !entry" class="empty tf-panel">
         <h1>No Pledge to show</h1>
         <p>Pledge {{ reference }} belongs to a tab that has since closed, or to a demo that was reset.</p>
         <NuxtLink class="tf-btn primary" :to="tinkerfundPath(space, '/account')">Back to your account</NuxtLink>
@@ -78,11 +78,11 @@ useSeoMeta(tinkerfundSeo({ kind: 'private', space, title: `Pledge ${reference.va
         <header class="intro">
           <p class="tf-label">{{ receipt.title }}</p>
           <h1 ref="heading" tabindex="-1">Receipt</h1>
-          <TinkerfundPledgeState :state="held.state" />
+          <TinkerfundPledgeState :state="current.state" />
         </header>
         <p v-if="done" class="done" role="status">{{ done }}</p>
         <dl class="facts tf-panel">
-          <div><dt>Placed</dt><dd><TinkerfundTime :at="held.pledge.placed" /></dd></div>
+          <div><dt>Placed</dt><dd><TinkerfundTime :at="current.pledge.placed" /></dd></div>
           <div><dt>Paid with</dt><dd>{{ payment }}</dd></div>
           <div><dt>Ships to</dt><dd>{{ zoneName }}</dd></div>
         </dl>
@@ -90,33 +90,33 @@ useSeoMeta(tinkerfundSeo({ kind: 'private', space, title: `Pledge ${reference.va
           :space="space"
           :pledge="receipt"
           :zone="zoneName"
-          :reference="held.pledge.ref"
-          :ends-at="held.state === 'pending' ? held.endsAt : undefined"
+          :reference="current.pledge.ref"
+          :ends-at="current.state === 'pending' ? current.endsAt : undefined"
         />
-        <p v-if="held.state === 'cancelled'" class="status">Cancelled <TinkerfundTime :at="held.pledge.cancelled!" />. Nothing was charged.</p>
-        <p v-else-if="held.state === 'unfunded'" class="status">Not charged: the Campaign ended <TinkerfundTime :at="held.endsAt" /> short of its goal.</p>
-        <p v-else-if="held.state !== 'pending'" class="status">
-          Charged when the Campaign was funded, <TinkerfundTime :at="held.endsAt" />.{{ held.state === 'delivered' ? ' Delivered.' : '' }}
+        <p v-if="current.state === 'cancelled'" class="status">Cancelled <TinkerfundTime :at="current.pledge.cancelled!" />. Nothing was charged.</p>
+        <p v-else-if="current.state === 'unfunded'" class="status">Not charged: the Campaign ended <TinkerfundTime :at="current.endsAt" /> short of its goal.</p>
+        <p v-else-if="current.state !== 'pending'" class="status">
+          Charged when the Campaign was funded, <TinkerfundTime :at="current.endsAt" />.{{ current.state === 'delivered' ? ' Delivered.' : '' }}
         </p>
         <p v-else-if="refusal" class="refusal" role="alert">{{ refusal }}</p>
         <div class="actions tf-noprint">
           <button type="button" class="tf-btn" @click="print">Print receipt</button>
-          <template v-if="!held.locked">
+          <template v-if="!current.locked">
             <button type="button" class="tf-btn primary" @click="edit">Change Pledge</button>
-            <TinkerfundCancelPledge :reference="held.pledge.ref" :title="receipt.title" @confirm="withdraw" />
+            <TinkerfundCancelPledge :reference="current.pledge.ref" :title="receipt.title" @confirm="withdraw" />
           </template>
-          <p v-else-if="held.state !== 'cancelled'" class="locked">Locked: its Campaign has ended.</p>
+          <p v-else-if="current.state !== 'cancelled'" class="locked">Locked: its Campaign has ended.</p>
         </div>
       </template>
 
       <template v-else-if="mode === 'edit'">
         <header class="intro">
-          <p class="tf-label">Pledge {{ held.pledge.ref }} · {{ receipt.title }}</p>
+          <p class="tf-label">Pledge {{ current.pledge.ref }} · {{ receipt.title }}</p>
           <h1 ref="heading" tabindex="-1">Change your Pledge</h1>
         </header>
         <TinkerfundPledgeEditor
           :campaign="entry.campaign"
-          :pledge="held.pledge"
+          :pledge="current.pledge"
           :start="proposal?.change"
           :zone="zoneName"
           :error="refusal"
@@ -127,7 +127,7 @@ useSeoMeta(tinkerfundSeo({ kind: 'private', space, title: `Pledge ${reference.va
 
       <template v-else-if="proposal">
         <header class="intro">
-          <p class="tf-label">Pledge {{ held.pledge.ref }} · {{ receipt.title }}</p>
+          <p class="tf-label">Pledge {{ current.pledge.ref }} · {{ receipt.title }}</p>
           <h1 ref="heading" tabindex="-1">Review changes</h1>
         </header>
         <TinkerfundPledgeSummary :space="space" :pledge="proposal.receipt" :zone="zoneName" note="Your Pledge, once changed" />
@@ -136,7 +136,7 @@ useSeoMeta(tinkerfundSeo({ kind: 'private', space, title: `Pledge ${reference.va
           <div><dt>Now</dt><dd>{{ money(proposal.receipt.total) }}</dd></div>
           <div class="total"><dt>Difference</dt><dd>{{ signed(difference) }}</dd></div>
         </dl>
-        <p class="note">Still pending: you’re only charged if the Campaign is funded, when it ends on <TinkerfundTime :at="held.endsAt" />.</p>
+        <p class="note">Still pending: you’re only charged if the Campaign is funded, when it ends on <TinkerfundTime :at="current.endsAt" />.</p>
         <p v-if="refusal" class="refusal" role="alert">{{ refusal }}</p>
         <p class="actions">
           <button type="button" class="tf-btn" @click="mode = 'edit'">Back to changes</button>

@@ -1,6 +1,6 @@
 // Checkout (story #1384, Pledge flow #1365): Promotions over a Cart, then one
 // Pledge per Campaign, stored in the visitor's overlay.
-import { tinkerfundCartLineKey, tinkerfundCents as cents, tinkerfundOptionsLabel, tinkerfundSum as sum } from './cart'
+import { tinkerfundCartLineKey, tinkerfundCents as cents, tinkerfundOptionsLabel, tinkerfundShipping, tinkerfundSum as sum } from './cart'
 import type { TinkerfundCartCatalog, TinkerfundCartGroup, TinkerfundCartView, TinkerfundOverlay, TinkerfundPledge, TinkerfundZone } from './cart'
 import { resolveTinkerfundOffset } from './clock'
 import { derivePromotionState } from './status'
@@ -253,7 +253,6 @@ export function placeTinkerfundPledges(input: TinkerfundPlaceInput): { overlay?:
       (a) => a.id,
     )
     const bonus = cents((old?.bonus ?? 0) + (group.bonus ?? 0))
-    const ships = lines.some((l) => campaign.rewards.find((r) => r.id === l.reward)?.shipsTo)
 
     placed.push({
       ref: old?.ref ?? fresh.shift()!,
@@ -265,7 +264,7 @@ export function placeTinkerfundPledges(input: TinkerfundPlaceInput): { overlay?:
       addons,
       ...(bonus > 0 ? { bonus } : {}),
       discount: cents((old && 'discount' in old ? old.discount : 0) + group.discount),
-      shipping: ships ? campaign.shipping[zone] ?? 0 : 0,
+      shipping: tinkerfundShipping(lines, campaign, zone),
     })
   }
 
