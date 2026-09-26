@@ -161,13 +161,6 @@ describe('SVG markup', () => {
   })
 })
 
-describe('Update pages', () => {
-  it('accepts a publish offset and rejects a malformed one', () => {
-    expect(issues('pages', { update: { published: '-3d' } })).toEqual([])
-    expect(issues('pages', { update: { published: 'yesterday' } })).toHaveLength(1)
-  })
-})
-
 describe('data Collections', () => {
   it('accepts well-formed Documents', () => {
     expect(issues('inventors', { name: 'Ada Quill', bio: 'Turns things around.', portrait: '<circle r="4"/>' })).toEqual([])
@@ -175,6 +168,10 @@ describe('data Collections', () => {
     expect(issues('comments', {
       campaign: 'mug',
       comments: [{ author: 'Bo', posted: '-2d', text: 'Nice.', replies: [{ author: 'Ada', posted: '-1d', text: 'Thanks.', inventor: true }] }],
+    })).toEqual([])
+    expect(issues('updates', {
+      campaign: 'mug',
+      updates: [{ title: 'Funded', published: '-3d', body: 'Thank you.\n\nNext: saucers.' }],
     })).toEqual([])
     expect(issues('promotions', { title: 'Launch week', description: 'A thank-you.', campaign: 'mug', discount: { amount: 5 }, start: '-1d', end: '+6d' })).toEqual([])
     expect(issues('promotions', { title: 'Shop-wide', code: 'TINKER10', discount: { percent: 10 }, start: '-1d' })).toEqual([])

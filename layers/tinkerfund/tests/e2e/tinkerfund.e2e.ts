@@ -170,11 +170,11 @@ export function registerTinkerfundE2E(): void {
         expect(await page('self-assembling-workbench')).toContain('3 of 3 left')
       })
 
-      it('renders an Update with breadcrumbs back to its Campaign', async () => {
-        const html = await $fetch('/t/tinkerfund/qa/campaigns/last-minute-lamp/updates/1')
-        expect(html).toMatch(/>Home<[\s\S]*>Desk<[\s\S]*href="\/t\/tinkerfund\/qa\/campaigns\/last-minute-lamp"[^>]*>Last-Minute Lamp<[\s\S]*aria-current="page"[^>]*>Update #1</)
-        expect(html).toMatch(/<h1[^>]*>Tooling is done<\/h1>/)
-        expect(html).toContain('<meta property="og:type" content="article">')
+      it('lists a Campaign’s Updates inline, newest first and only it open', async () => {
+        const html = main(await $fetch('/t/tinkerfund/qa/campaigns/last-minute-lamp'))
+        expect(html).toMatch(/<details id="update-2" open[^>]*><summary[^>]*>[\s\S]*?Funded, with a day to spare[\s\S]*?Update #2[\s\S]*?<p[^>]*>The lamp passed its goal overnight.<\/p><p[^>]*>A second paragraph/)
+        expect(html).toMatch(/<details id="update-1"(?! open)[^>]*><summary[^>]*>[\s\S]*?Tooling is done[\s\S]*?Update #1/)
+        expect(html.indexOf('id="update-2"')).toBeLessThan(html.indexOf('id="update-1"'))
       })
 
       // On any day, the Mug is the Live Campaign furthest past its goal, the
@@ -319,7 +319,7 @@ export function registerTinkerfundE2E(): void {
         expect(await page.evaluate(() => document.documentElement.dataset.tfTheme)).toBe('dark')
       })
 
-      flow('Campaign page: focus stays clear of sticky bars, the phone back bar and section nav, figures, an Upcoming reminder, an Update', async ({ page, visit }) => {
+      flow('Campaign page: focus stays clear of sticky bars, the phone back bar and section nav, figures, an Upcoming reminder, a linked Update', async ({ page, visit }) => {
         const sections = page.locator('nav[aria-label="Sections"]')
         const current = () => sections.locator('[aria-current]').textContent()
         await page.setViewportSize({ width: 390, height: 844 })
@@ -345,7 +345,7 @@ export function registerTinkerfundE2E(): void {
 
         // …nor under the sticky header and section nav, at either width.
         const shiftTabUp = async () => {
-          await page.locator('#updates a').first().focus()
+          await page.locator('#updates summary').first().focus()
           const seen = new Set<string>()
           for (let i = 0; i < 200; i++) {
             await page.keyboard.press('Shift+Tab')
@@ -384,11 +384,6 @@ export function registerTinkerfundE2E(): void {
         await sections.getByRole('link', { name: /Comments/ }).click()
         await expect.poll(current).toContain('Comments')
 
-        await page.getByRole('link', { name: /Tooling is done/ }).click()
-        await page.waitForURL('**/campaigns/last-minute-lamp/updates/1')
-        await page.getByRole('navigation', { name: 'Breadcrumb' }).getByRole('link', { name: 'Last-Minute Lamp' }).click()
-        await page.waitForURL('**/campaigns/last-minute-lamp')
-
         await page.setViewportSize({ width: 1280, height: 800 })
         await visit('/campaigns/unhurried-kettle')
         // The exact launch time is the visitor's own, so only the browser fills it in.
@@ -407,6 +402,12 @@ export function registerTinkerfundE2E(): void {
         expect(await notify.getAttribute('aria-pressed')).toBe('true')
         expect(await notify.textContent()).toContain('Notify me')
         expect(await page.getByRole('button', { name: 'Opens at launch' }).isDisabled()).toBe(true)
+
+        // A link to an older, closed Update opens it and brings it into view.
+        await visit('/campaigns/last-minute-lamp#update-1')
+        const linked = page.locator('#update-1')
+        await expect.poll(() => linked.evaluate((el: HTMLDetailsElement) => el.open)).toBe(true)
+        await expect.poll(() => linked.evaluate((el) => el.getBoundingClientRect().top >= 0 && el.getBoundingClientRect().top < innerHeight)).toBe(true)
       })
 
       flow('browse: the index table, Discover’s filters and sort in the URL, the phone drawer, Deals, into a Campaign', async ({ page, visit, reload }) => {
