@@ -469,6 +469,7 @@ export function registerTinkerfundE2E(): void {
         await page.waitForURL('**/qa/campaigns/one-button-keypad')
         await expect.poll(() => page.locator('.readout .big').textContent()).toBe('€1,018')
         expect(await readout()).toMatch(/Goal reached[\s\S]*Backers\s*31/)
+        expect(await page.locator('.goals li.yes').textContent()).toContain('The button in a second colour')
 
         await page.goBack()
         await page.waitForURL('**/qa/account/pledges/TF-P-9004')
@@ -477,8 +478,13 @@ export function registerTinkerfundE2E(): void {
         await dialog.getByRole('button', { name: 'Keep Pledge' }).click()
         await expect.poll(() => dialog.isVisible()).toBe(false)
         await page.getByRole('button', { name: 'Cancel Pledge' }).click()
+        // The status region is already in place, so its new text is announced (#1401 review).
+        const status = page.locator('.pledge-page [role="status"]')
+        expect(await status.textContent()).toBe('')
         await dialog.getByRole('button', { name: 'Yes, cancel it' }).click()
         await expect.poll(() => page.locator('.intro .chip').textContent()).toBe('Cancelled')
+        expect(await status.textContent()).toBe('Your Pledge is cancelled. Nothing will be charged.')
+        await expect.poll(() => page.evaluate(() => document.activeElement?.textContent)).toBe('Receipt')
         expect(await page.getByRole('button', { name: 'Change Pledge' }).count()).toBe(0)
 
         await page.goto(url('/t/tinkerfund/qa/campaigns/one-button-keypad'), { waitUntil: 'hydration' })

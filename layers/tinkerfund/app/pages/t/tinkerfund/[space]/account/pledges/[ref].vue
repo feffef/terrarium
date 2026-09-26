@@ -30,7 +30,9 @@ const proposal = ref<{ change: TinkerfundPledgeChange; receipt: ReturnType<typeo
 const refusal = ref<string>()
 const done = ref<string>()
 const heading = ref<HTMLElement>()
-watch(mode, () => nextTick(() => heading.value?.focus()))
+const focusHeading = () => nextTick(() => heading.value?.focus())
+watch(mode, focusHeading)
+const HEADINGS = { view: 'Receipt', edit: 'Change your Pledge', review: 'Review changes' }
 
 function edit() {
   proposal.value = undefined
@@ -53,7 +55,9 @@ function confirm() {
 }
 function withdraw() {
   refusal.value = cancel(current.value!.pledge)
-  if (!refusal.value) done.value = 'Your Pledge is cancelled. Nothing will be charged.'
+  if (refusal.value) return
+  done.value = 'Your Pledge is cancelled. Nothing will be charged.'
+  focusHeading()
 }
 
 const difference = computed(() => proposal.value && receipt.value ? tinkerfundCents(proposal.value.receipt.total - receipt.value.total) : 0)
@@ -74,47 +78,46 @@ useSeoMeta(tinkerfundSeo({ kind: 'private', space, title: `Pledge ${reference.va
         <NuxtLink class="tf-btn primary" :to="tinkerfundPath(space, '/account')">Back to your account</NuxtLink>
       </section>
 
-      <template v-else-if="mode === 'view'">
+      <template v-else>
         <header class="intro">
-          <p class="tf-label">{{ receipt.title }}</p>
-          <h1 ref="heading" tabindex="-1">Receipt</h1>
-          <TinkerfundPledgeState :state="current.state" />
+          <p class="tf-label">{{ mode === 'view' ? receipt.title : `Pledge ${current.pledge.ref} · ${receipt.title}` }}</p>
+          <h1 ref="heading" tabindex="-1">{{ HEADINGS[mode] }}</h1>
+          <TinkerfundPledgeState v-if="mode === 'view'" :state="current.state" />
         </header>
-        <p v-if="done" class="done" role="status">{{ done }}</p>
-        <dl class="facts tf-panel">
-          <div><dt>Placed</dt><dd><TinkerfundTime :at="current.pledge.placed" /></dd></div>
-          <div><dt>Paid with</dt><dd>{{ payment }}</dd></div>
-          <div><dt>Ships to</dt><dd>{{ zoneName }}</dd></div>
-        </dl>
-        <TinkerfundPledgeSummary
-          :space="space"
-          :pledge="receipt"
-          :zone="zoneName"
-          :reference="current.pledge.ref"
-          :ends-at="current.state === 'pending' ? current.endsAt : undefined"
-        />
-        <p v-if="current.state === 'cancelled'" class="status">Cancelled <TinkerfundTime :at="current.pledge.cancelled!" />. Nothing was charged.</p>
-        <p v-else-if="current.state === 'unfunded'" class="status">Not charged: the Campaign ended <TinkerfundTime :at="current.endsAt" /> short of its goal.</p>
-        <p v-else-if="current.state !== 'pending'" class="status">
-          Charged when the Campaign was funded, <TinkerfundTime :at="current.endsAt" />.{{ current.state === 'delivered' ? ' Delivered.' : '' }}
-        </p>
-        <p v-else-if="refusal" class="refusal" role="alert">{{ refusal }}</p>
-        <div class="actions tf-noprint">
-          <button type="button" class="tf-btn" @click="print">Print receipt</button>
-          <template v-if="!current.locked">
-            <button type="button" class="tf-btn primary" @click="edit">Change Pledge</button>
-            <TinkerfundCancelPledge :reference="current.pledge.ref" :title="receipt.title" @confirm="withdraw" />
-          </template>
-          <p v-else-if="current.state !== 'cancelled'" class="locked">Locked: its Campaign has ended.</p>
-        </div>
-      </template>
+        <!-- Kept in the DOM so a new message is announced (#1401 review). -->
+        <p class="done" :class="{ quiet: !done }" role="status">{{ done }}</p>
 
-      <template v-else-if="mode === 'edit'">
-        <header class="intro">
-          <p class="tf-label">Pledge {{ current.pledge.ref }} · {{ receipt.title }}</p>
-          <h1 ref="heading" tabindex="-1">Change your Pledge</h1>
-        </header>
+        <template v-if="mode === 'view'">
+          <dl class="facts tf-panel">
+            <div><dt>Placed</dt><dd><TinkerfundTime :at="current.pledge.placed" /></dd></div>
+            <div><dt>Paid with</dt><dd>{{ payment }}</dd></div>
+            <div><dt>Ships to</dt><dd>{{ zoneName }}</dd></div>
+          </dl>
+          <TinkerfundPledgeSummary
+            :space="space"
+            :pledge="receipt"
+            :zone="zoneName"
+            :reference="current.pledge.ref"
+            :ends-at="current.state === 'pending' ? current.endsAt : undefined"
+          />
+          <p v-if="current.state === 'cancelled'" class="status">Cancelled <TinkerfundTime :at="current.pledge.cancelled!" />. Nothing was charged.</p>
+          <p v-else-if="current.state === 'unfunded'" class="status">Not charged: the Campaign ended <TinkerfundTime :at="current.endsAt" /> short of its goal.</p>
+          <p v-else-if="current.state !== 'pending'" class="status">
+            Charged when the Campaign was funded, <TinkerfundTime :at="current.endsAt" />.{{ current.state === 'delivered' ? ' Delivered.' : '' }}
+          </p>
+          <p v-else-if="refusal" class="refusal" role="alert">{{ refusal }}</p>
+          <div class="actions tf-noprint">
+            <button type="button" class="tf-btn" @click="print">Print receipt</button>
+            <template v-if="!current.locked">
+              <button type="button" class="tf-btn primary" @click="edit">Change Pledge</button>
+              <TinkerfundCancelPledge :reference="current.pledge.ref" :title="receipt.title" @confirm="withdraw" />
+            </template>
+            <p v-else-if="current.state !== 'cancelled'" class="locked">Locked: its Campaign has ended.</p>
+          </div>
+        </template>
+
         <TinkerfundPledgeEditor
+          v-else-if="mode === 'edit'"
           :campaign="entry.campaign"
           :pledge="current.pledge"
           :start="proposal?.change"
@@ -123,25 +126,21 @@ useSeoMeta(tinkerfundSeo({ kind: 'private', space, title: `Pledge ${reference.va
           @review="review"
           @close="mode = 'view'"
         />
-      </template>
 
-      <template v-else-if="proposal">
-        <header class="intro">
-          <p class="tf-label">Pledge {{ current.pledge.ref }} · {{ receipt.title }}</p>
-          <h1 ref="heading" tabindex="-1">Review changes</h1>
-        </header>
-        <TinkerfundPledgeSummary :space="space" :pledge="proposal.receipt" :zone="zoneName" note="Your Pledge, once changed" />
-        <dl class="difference tf-panel">
-          <div><dt>Was</dt><dd>{{ money(receipt.total) }}</dd></div>
-          <div><dt>Now</dt><dd>{{ money(proposal.receipt.total) }}</dd></div>
-          <div class="total"><dt>Difference</dt><dd>{{ signed(difference) }}</dd></div>
-        </dl>
-        <p class="note">Still pending: you’re only charged if the Campaign is funded, when it ends on <TinkerfundTime :at="current.endsAt" />.</p>
-        <p v-if="refusal" class="refusal" role="alert">{{ refusal }}</p>
-        <p class="actions">
-          <button type="button" class="tf-btn" @click="mode = 'edit'">Back to changes</button>
-          <button type="button" class="tf-btn primary" @click="confirm">Confirm changes</button>
-        </p>
+        <template v-else-if="proposal">
+          <TinkerfundPledgeSummary :space="space" :pledge="proposal.receipt" :zone="zoneName" note="Your Pledge, once changed" />
+          <dl class="difference tf-panel">
+            <div><dt>Was</dt><dd>{{ money(receipt.total) }}</dd></div>
+            <div><dt>Now</dt><dd>{{ money(proposal.receipt.total) }}</dd></div>
+            <div class="total"><dt>Difference</dt><dd>{{ signed(difference) }}</dd></div>
+          </dl>
+          <p class="note">Still pending: you’re only charged if the Campaign is funded, when it ends on <TinkerfundTime :at="current.endsAt" />.</p>
+          <p v-if="refusal" class="refusal" role="alert">{{ refusal }}</p>
+          <p class="actions">
+            <button type="button" class="tf-btn" @click="mode = 'edit'">Back to changes</button>
+            <button type="button" class="tf-btn primary" @click="confirm">Confirm changes</button>
+          </p>
+        </template>
       </template>
     </div>
     <ContentLoadErrorDialog :status="status" :error="error" :context="route.path" />
@@ -164,6 +163,7 @@ dd { margin: 0; text-align: right; }
 .difference .total { padding-top: 8px; border-top: var(--tf-hairline); }
 .difference .total dt { color: var(--tf-ink); font-weight: 600; }
 .done { margin: 0; padding: 10px 14px; border-radius: var(--tf-radius); background: var(--tf-accent-soft); }
+.done.quiet { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip-path: inset(50%); }
 .status, .note, .locked { margin: 0; color: var(--tf-muted); }
 .refusal { margin: 0; color: var(--tf-bad); }
 .actions { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin: 0; }
