@@ -16,7 +16,8 @@ useSeoMeta(tinkerfundSeo({
 
 <template>
   <TinkerfundShell :space="space">
-    <section v-if="landing" class="hero tf-panel">
+    <TinkerfundGallery v-if="landing && space === 'qa'" :title="landing.title" :description="landing.description" />
+    <section v-else-if="landing" class="hero tf-panel">
       <div class="fig" aria-hidden="true">
         <span class="tf-label">FIG. 0 · TF-0000</span>
       </div>
