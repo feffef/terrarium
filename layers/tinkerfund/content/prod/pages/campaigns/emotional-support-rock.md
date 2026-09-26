@@ -69,8 +69,8 @@ campaign:
         <path d="M83.2 57L176.8 111L176.8 103L83.2 49Z" style="fill:var(--tf-line)" />
         <path d="M83.2 57L142.1 91L142.1 83L83.2 49Z" style="fill:var(--tf-accent)" />
         <path d="M83.2 43L176.8 97L176.8 81L83.2 27Z" style="fill:color-mix(in srgb, var(--tf-accent) 45%, var(--tf-surface))" />
-        <text transform="matrix(.866 .5 0 1 89 37)" style="fill:var(--tf-ink);font:600 9px var(--tf-mono)">ROCK · FIRMWARE 2.3</text>
-        <text transform="matrix(.866 .5 0 1 89 57)" style="fill:var(--tf-muted);font:500 8px var(--tf-mono)">INSTALLING · 62 %</text>
+        <text transform="matrix(.866 .5 0 1 89 37)" style="stroke:none;fill:var(--tf-ink);font:600 9px var(--tf-mono)">ROCK · FIRMWARE 2.3</text>
+        <text transform="matrix(.866 .5 0 1 89 57)" style="stroke:none;fill:var(--tf-muted);font:500 8px var(--tf-mono)">INSTALLING · 62 %</text>
         <path d="M80 138V164A16 9.2 0 0 0 96 173.2V147.2A16 9.2 0 0 1 80 138Z" style="fill:var(--tf-ink)" />
         <path d="M96 147.2V173.2A16 9.2 0 0 0 112 164V138A16 9.2 0 0 1 96 147.2Z" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" />
         <ellipse cx="96" cy="138" rx="16" ry="9.2" style="fill:color-mix(in srgb, var(--tf-ink) 45%, var(--tf-surface))" />
@@ -102,8 +102,8 @@ campaign:
         <path d="M290 248h6v6h-6z" style="stroke-width:.9" />
         <path d="M318 130Q342.5 128.5 356 108M166 120Q140 84.5 96 84M282 84Q312 71.5 320 40M296 250Q324.5 253 344 232M150 204Q113 203 90 232" style="stroke-width:.9" />
         </g>
-        <g style="fill:var(--tf-ink);font:500 12px var(--tf-mono)"><text x="360" y="112">10</text><text x="74" y="88">12</text><text x="324" y="44">14</text><text x="348" y="236">16</text><text x="62" y="236">18</text></g>
-        <g style="fill:var(--tf-ink);font:500 11px var(--tf-mono)"><text x="120" y="290">SECTION · ROCK UNMODIFIED</text></g>
+        <g style="stroke:none;fill:var(--tf-ink);font:500 12px var(--tf-mono)"><text x="360" y="112">10</text><text x="74" y="88">12</text><text x="324" y="44">14</text><text x="348" y="236">16</text><text x="62" y="236">18</text></g>
+        <g style="stroke:none;fill:var(--tf-ink);font:500 11px var(--tf-mono)"><text x="120" y="290">SECTION · ROCK UNMODIFIED</text></g>
     - style: patent
       caption: "Plan view of the dock (16): Qi coil (26), USB-C port (28), status light (30) and three feet (32). No moving parts."
       svg: |-
@@ -120,30 +120,30 @@ campaign:
         <path d="M296 162h10v4h-10zM364 162h10v4h-10zM331 162h8" style="stroke-width:.9" />
         <path d="M108 110Q94 78 60 70M205 122Q243 102.3 250 60M180 56Q210 58.5 230 36M174 232Q194.5 261 230 262M111 124Q79 124.3 60 150" style="stroke-width:.9" />
         </g>
-        <g style="fill:var(--tf-ink);font:500 12px var(--tf-mono)"><text x="44" y="68">16</text><text x="254" y="58">26</text><text x="234" y="34">28</text><text x="234" y="266">30</text><text x="40" y="154">32</text></g>
-        <g style="fill:var(--tf-ink);font:500 9px var(--tf-mono)"><text x="296" y="184">ELEVATION</text></g>
-        <g style="fill:var(--tf-ink);font:500 11px var(--tf-mono)"><text x="100" y="290">PLAN · DOCK · NO MOVING PARTS</text></g>
+        <g style="stroke:none;fill:var(--tf-ink);font:500 12px var(--tf-mono)"><text x="44" y="68">16</text><text x="254" y="58">26</text><text x="234" y="34">28</text><text x="234" y="266">30</text><text x="40" y="154">32</text></g>
+        <g style="stroke:none;fill:var(--tf-ink);font:500 9px var(--tf-mono)"><text x="296" y="184">ELEVATION</text></g>
+        <g style="stroke:none;fill:var(--tf-ink);font:500 11px var(--tf-mono)"><text x="100" y="290">PLAN · DOCK · NO MOVING PARTS</text></g>
     - style: patent
       caption: "Method of operation. Step 32 is repeated indefinitely; step 36 improves it in ways described in the release notes."
       svg: |-
         <g style="fill:none;stroke:var(--tf-ink);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round">
         <path d="M90 36h140v26H90z" />
-        <text x="160" y="53" style="fill:var(--tf-ink);font:500 10px var(--tf-mono);text-anchor:middle">PLACE ROCK ON DESK</text>
+        <text x="160" y="53" style="stroke:none;fill:var(--tf-ink);font:500 10px var(--tf-mono);text-anchor:middle">PLACE ROCK ON DESK</text>
         <path d="M90 78h140v26H90z" />
-        <text x="160" y="95" style="fill:var(--tf-ink);font:500 10px var(--tf-mono);text-anchor:middle">PROVIDE SUPPORT</text>
+        <text x="160" y="95" style="stroke:none;fill:var(--tf-ink);font:500 10px var(--tf-mono);text-anchor:middle">PROVIDE SUPPORT</text>
         <path d="M160 120L230 145L160 170L90 145Z" />
-        <text x="160" y="149" style="fill:var(--tf-ink);font:500 10px var(--tf-mono);text-anchor:middle">MONTH ELAPSED?</text>
+        <text x="160" y="149" style="stroke:none;fill:var(--tf-ink);font:500 10px var(--tf-mono);text-anchor:middle">MONTH ELAPSED?</text>
         <path d="M90 186h140v26H90z" />
-        <text x="160" y="203" style="fill:var(--tf-ink);font:500 10px var(--tf-mono);text-anchor:middle">DOWNLOAD FIRMWARE</text>
+        <text x="160" y="203" style="stroke:none;fill:var(--tf-ink);font:500 10px var(--tf-mono);text-anchor:middle">DOWNLOAD FIRMWARE</text>
         <path d="M90 228h140v26H90z" />
-        <text x="160" y="245" style="fill:var(--tf-ink);font:500 10px var(--tf-mono);text-anchor:middle">INSTALL · NO REBOOT</text>
+        <text x="160" y="245" style="stroke:none;fill:var(--tf-ink);font:500 10px var(--tf-mono);text-anchor:middle">INSTALL · NO REBOOT</text>
         <path d="M160 62V78M156 72l4 6 4-6M160 104V120M156 114l4 6 4-6M160 170V186M156 180l4 6 4-6M160 212V228M156 222l4 6 4-6" />
         <path d="M230 145H262V84H230M236 80l-6 4 6 4" />
         <path d="M160 254V268H30V98H90M84 94l6 4-6 4" />
         </g>
-        <g style="fill:var(--tf-ink);font:500 9px var(--tf-mono)"><text x="238" y="78">NO</text><text x="166" y="182">YES</text></g>
-        <g style="fill:var(--tf-ink);font:500 12px var(--tf-mono)"><text x="274" y="53">30</text><text x="274" y="95">32</text><text x="274" y="149">34</text><text x="274" y="203">36</text><text x="274" y="245">38</text></g>
-        <g style="fill:var(--tf-ink);font:500 11px var(--tf-mono)"><text x="96" y="290">METHOD OF OPERATION · STEP 32 REPEATS</text></g>
+        <g style="stroke:none;fill:var(--tf-ink);font:500 9px var(--tf-mono)"><text x="238" y="78">NO</text><text x="166" y="182">YES</text></g>
+        <g style="stroke:none;fill:var(--tf-ink);font:500 12px var(--tf-mono)"><text x="274" y="53">30</text><text x="274" y="95">32</text><text x="274" y="149">34</text><text x="274" y="203">36</text><text x="274" y="245">38</text></g>
+        <g style="stroke:none;fill:var(--tf-ink);font:500 11px var(--tf-mono)"><text x="96" y="290">METHOD OF OPERATION · STEP 32 REPEATS</text></g>
   rewards:
     - id: rock
       title: The Rock

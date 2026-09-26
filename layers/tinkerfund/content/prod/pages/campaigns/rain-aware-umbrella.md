@@ -68,8 +68,8 @@ campaign:
         <path d="M80.5 202.5L146.3 240.5L146.3 102.5L80.5 64.5Z" style="fill:var(--tf-surface)" />
         <path d="M82.2 103.5L144.6 139.5L144.6 107.5L82.2 71.5Z" style="fill:color-mix(in srgb, var(--tf-accent) 45%, var(--tf-surface))" />
         <path d="M84 100.5L86.6 102L86.6 78L84 76.5Z" style="fill:var(--tf-accent)" />
-        <text transform="matrix(.866 .5 0 1 84 82.5)" style="fill:var(--tf-ink);font:600 8px var(--tf-mono)">IT IS RAINING.</text>
-        <text transform="matrix(.866 .5 0 1 84 94.5)" style="fill:var(--tf-muted);font:500 6.5px var(--tf-mono)">UMBRELLA · NOW</text>
+        <text transform="matrix(.866 .5 0 1 84 82.5)" style="stroke:none;fill:var(--tf-ink);font:600 8px var(--tf-mono)">IT IS RAINING.</text>
+        <text transform="matrix(.866 .5 0 1 84 94.5)" style="stroke:none;fill:var(--tf-muted);font:500 6.5px var(--tf-mono)">UMBRELLA · NOW</text>
         <path d="M87.4 192.5L139.4 222.5L139.4 208.5L87.4 178.5Z" style="fill:var(--tf-line)" />
         <path d="M100.20577136594005 140.5q5 8 0 12q-5 -4 0 -12z" style="fill:var(--tf-link)" />
         <path d="M150 186q5 8 0 12q-5 -4 0 -12zM92 236q5 8 0 12q-5 -4 0 -12zM212 220q5 8 0 12q-5 -4 0 -12z" style="fill:var(--tf-link)" />
@@ -102,7 +102,7 @@ campaign:
         <path d="M290 118h4v15h-4z" style="fill:var(--tf-ink)" />
         <ellipse cx="290" cy="118" rx="4" ry="1.8" style="fill:var(--tf-muted)" />
         <path d="M302 108a10 10 0 0 1 0 14M308 103a17 17 0 0 1 0 24" style="fill:none;stroke:var(--tf-accent);stroke-width:2;stroke-linecap:round" />
-        <g style="fill:var(--tf-muted);font:600 10px var(--tf-mono);letter-spacing:.06em;text-anchor:middle"><text x="130" y="276">FULL SIZE · SIGNAL</text><text x="300" y="276">COMPACT · SLATE</text></g>
+        <g style="stroke:none;fill:var(--tf-muted);font:600 10px var(--tf-mono);letter-spacing:.06em;text-anchor:middle"><text x="130" y="276">FULL SIZE · SIGNAL</text><text x="300" y="276">COMPACT · SLATE</text></g>
     - style: patent
       caption: "Elevation, open, showing the rain sensor (14) and the paired phone (20)."
       svg: |-
@@ -124,8 +124,8 @@ campaign:
         <path d="M212 50Q330 60 318 168" style="stroke-width:1;stroke-dasharray:5 3.5" />
         <path d="M110 112Q94.5 88 66 86M252 96Q281 98 300 76M204 44Q184.5 28 160 34M203 200Q184 184.3 160 190M172 270Q154 253.5 130 258M348 230Q352 244.5 366 250M340 190Q358.5 185.5 366 168M280 52Q308 58.5 330 40" style="stroke-width:.9" />
         </g>
-        <g style="fill:var(--tf-ink);font:500 12px var(--tf-mono)"><text x="46" y="90">10</text><text x="304" y="80">12</text><text x="138" y="38">14</text><text x="138" y="194">16</text><text x="108" y="262">18</text><text x="370" y="254">20</text><text x="370" y="172">22</text><text x="334" y="44">24</text></g>
-        <g style="fill:var(--tf-ink);font:500 11px var(--tf-mono)"><text x="120" y="290">ELEVATION · OPEN · PAIRED</text></g>
+        <g style="stroke:none;fill:var(--tf-ink);font:500 12px var(--tf-mono)"><text x="46" y="90">10</text><text x="304" y="80">12</text><text x="138" y="38">14</text><text x="138" y="194">16</text><text x="108" y="262">18</text><text x="370" y="254">20</text><text x="370" y="172">22</text><text x="334" y="44">24</text></g>
+        <g style="stroke:none;fill:var(--tf-ink);font:500 11px var(--tf-mono)"><text x="120" y="290">ELEVATION · OPEN · PAIRED</text></g>
     - style: patent
       caption: "The umbrella furled, with detail A of the rain sensor."
       svg: |-
@@ -149,9 +149,9 @@ campaign:
         <path d="M248 132H296M254 129.5l-6 2.5 6 2.5M290 129.5l6 2.5-6 2.5" style="stroke-width:.9" /><text x="272" y="128" style="fill:var(--tf-ink);stroke:none;font:500 9px var(--tf-mono);text-anchor:middle">Ø 12</text>
         <path d="M262 190Q231.5 191 214 216M292 162Q319.5 162 336 140M276 126Q302.5 123 316 100M296 210Q309.5 233 336 236" style="stroke-width:.9" />
         </g>
-        <g style="fill:var(--tf-ink);font:500 11px var(--tf-mono)"><text x="92" y="34">A</text><text x="180" y="80">A</text></g>
-        <g style="fill:var(--tf-ink);font:500 12px var(--tf-mono)"><text x="190" y="220">14a</text><text x="340" y="144">14b</text><text x="320" y="104">26</text><text x="340" y="240">10</text></g>
-        <g style="fill:var(--tf-ink);font:500 11px var(--tf-mono)"><text x="120" y="290">FURLED · DETAIL A · 5:1</text></g>
+        <g style="stroke:none;fill:var(--tf-ink);font:500 11px var(--tf-mono)"><text x="92" y="34">A</text><text x="180" y="80">A</text></g>
+        <g style="stroke:none;fill:var(--tf-ink);font:500 12px var(--tf-mono)"><text x="190" y="220">14a</text><text x="340" y="144">14b</text><text x="320" y="104">26</text><text x="340" y="240">10</text></g>
+        <g style="stroke:none;fill:var(--tf-ink);font:500 11px var(--tf-mono)"><text x="120" y="290">FURLED · DETAIL A · 5:1</text></g>
     - style: patent
       caption: "The compact umbrella folded, with its three-stage telescoping shaft (16a–c) collapsed inside the canopy, and extended below. The tip (14) is the same."
       svg: |-
@@ -172,9 +172,9 @@ campaign:
         <path d="M328 210h50a10 10 0 0 1 0 20h-50z" />
         <path d="M50 116Q69 90.5 60 60M110 98Q115 80.5 104 66M100 224Q94 236 100 248M200 223Q193.8 235.5 200 248M288 222Q281.5 235 288 248M280 130Q282.5 150 300 160M346 110Q362.5 102 366 84" style="stroke-width:.9" />
         </g>
-        <g style="fill:var(--tf-ink);font:500 12px var(--tf-mono)"><text x="52" y="56">14</text><text x="96" y="62">10</text><text x="90" y="262">16a</text><text x="190" y="262">16b</text><text x="278" y="262">16c</text><text x="302" y="174">18</text><text x="368" y="80">34</text></g>
-        <g style="fill:var(--tf-ink);font:500 9px var(--tf-mono)"><text x="168" y="80">320</text><text x="60" y="206">EXTENDED</text></g>
-        <g style="fill:var(--tf-ink);font:500 11px var(--tf-mono)"><text x="70" y="290">COMPACT · FOLDED · 3-STAGE SHAFT (16)</text></g>
+        <g style="stroke:none;fill:var(--tf-ink);font:500 12px var(--tf-mono)"><text x="52" y="56">14</text><text x="96" y="62">10</text><text x="90" y="262">16a</text><text x="190" y="262">16b</text><text x="278" y="262">16c</text><text x="302" y="174">18</text><text x="368" y="80">34</text></g>
+        <g style="stroke:none;fill:var(--tf-ink);font:500 9px var(--tf-mono)"><text x="168" y="80">320</text><text x="60" y="206">EXTENDED</text></g>
+        <g style="stroke:none;fill:var(--tf-ink);font:500 11px var(--tf-mono)"><text x="70" y="290">COMPACT · FOLDED · 3-STAGE SHAFT (16)</text></g>
     - style: patent
       caption: "System diagram. Rain enters at the sensor tip (14) and leaves the phone (20) as a notification (44), in plain language."
       svg: |-
@@ -183,20 +183,20 @@ campaign:
         <path d="M70 22q5 8 0 12q-5-4 0-12zM90 14q5 8 0 12q-5-4 0-12zM110 26q5 8 0 12q-5-4 0-12z" />
         <path d="M90 40v18M86 52l4 6 4-6" />
         <path d="M56 66h70v30H56z" />
-        <text x="60" y="76" style="fill:var(--tf-ink);font:500 8px var(--tf-mono)">14</text>
-        <text x="91" y="88" style="fill:var(--tf-ink);font:500 9px var(--tf-mono);text-anchor:middle">SENSOR TIP</text>
+        <text x="60" y="76" style="stroke:none;fill:var(--tf-ink);font:500 8px var(--tf-mono)">14</text>
+        <text x="91" y="88" style="stroke:none;fill:var(--tf-ink);font:500 9px var(--tf-mono);text-anchor:middle">SENSOR TIP</text>
         <path d="M166 66h70v30H166z" />
-        <text x="170" y="76" style="fill:var(--tf-ink);font:500 8px var(--tf-mono)">40</text>
-        <text x="201" y="88" style="fill:var(--tf-ink);font:500 9px var(--tf-mono);text-anchor:middle">MCU</text>
+        <text x="170" y="76" style="stroke:none;fill:var(--tf-ink);font:500 8px var(--tf-mono)">40</text>
+        <text x="201" y="88" style="stroke:none;fill:var(--tf-ink);font:500 9px var(--tf-mono);text-anchor:middle">MCU</text>
         <path d="M276 66h70v30H276z" />
-        <text x="280" y="76" style="fill:var(--tf-ink);font:500 8px var(--tf-mono)">42</text>
-        <text x="311" y="88" style="fill:var(--tf-ink);font:500 9px var(--tf-mono);text-anchor:middle">BLE</text>
+        <text x="280" y="76" style="stroke:none;fill:var(--tf-ink);font:500 8px var(--tf-mono)">42</text>
+        <text x="311" y="88" style="stroke:none;fill:var(--tf-ink);font:500 9px var(--tf-mono);text-anchor:middle">BLE</text>
         <path d="M166 122h70v30H166z" />
-        <text x="170" y="132" style="fill:var(--tf-ink);font:500 8px var(--tf-mono)">46</text>
-        <text x="201" y="144" style="fill:var(--tf-ink);font:500 9px var(--tf-mono);text-anchor:middle">BATTERY</text>
+        <text x="170" y="132" style="stroke:none;fill:var(--tf-ink);font:500 8px var(--tf-mono)">46</text>
+        <text x="201" y="144" style="stroke:none;fill:var(--tf-ink);font:500 9px var(--tf-mono);text-anchor:middle">BATTERY</text>
         <path d="M276 122h70v30H276z" />
-        <text x="280" y="132" style="fill:var(--tf-ink);font:500 8px var(--tf-mono)">48</text>
-        <text x="311" y="144" style="fill:var(--tf-ink);font:500 9px var(--tf-mono);text-anchor:middle">USB-C</text>
+        <text x="280" y="132" style="stroke:none;fill:var(--tf-ink);font:500 8px var(--tf-mono)">48</text>
+        <text x="311" y="144" style="stroke:none;fill:var(--tf-ink);font:500 9px var(--tf-mono);text-anchor:middle">USB-C</text>
         <path d="M126 81h40M160 77l6 4-6 4M236 81h40M270 77l6 4-6 4M201 122v-26M197 102l4-6 4 6M276 137h-40M242 133l-6 4 6 4" />
         <path d="M311 96v54L288 214" style="stroke-width:1;stroke-dasharray:5 3.5" />
         <path d="M300 176a14 14 0 0 1 20 0M295 168a20 20 0 0 1 30 0" style="stroke-width:.9" />
@@ -204,11 +204,11 @@ campaign:
         <path d="M120 206h160v50H120z" style="stroke-width:.9" />
         <path d="M282 244Q307.5 265.5 340 258" style="stroke-width:.9" />
         </g>
-        <text x="200" y="240" style="fill:var(--tf-ink);font:600 11px var(--tf-mono);text-anchor:middle">IT IS RAINING.</text>
-        <text x="200" y="222" style="fill:var(--tf-muted);font:500 8px var(--tf-mono);text-anchor:middle">UMBRELLA · NOW</text>
-        <g style="fill:var(--tf-ink);font:500 9px var(--tf-mono)"><text x="262" y="42">10 · UMBRELLA</text><text x="112" y="194">20</text></g>
-        <g style="fill:var(--tf-ink);font:500 12px var(--tf-mono)"><text x="344" y="262">44</text></g>
-        <g style="fill:var(--tf-ink);font:500 11px var(--tf-mono)"><text x="70" y="290">SYSTEM · RAIN IN, NOTIFICATION OUT</text></g>
+        <text x="200" y="240" style="stroke:none;fill:var(--tf-ink);font:600 11px var(--tf-mono);text-anchor:middle">IT IS RAINING.</text>
+        <text x="200" y="222" style="stroke:none;fill:var(--tf-muted);font:500 8px var(--tf-mono);text-anchor:middle">UMBRELLA · NOW</text>
+        <g style="stroke:none;fill:var(--tf-ink);font:500 9px var(--tf-mono)"><text x="262" y="42">10 · UMBRELLA</text><text x="112" y="194">20</text></g>
+        <g style="stroke:none;fill:var(--tf-ink);font:500 12px var(--tf-mono)"><text x="344" y="262">44</text></g>
+        <g style="stroke:none;fill:var(--tf-ink);font:500 11px var(--tf-mono)"><text x="70" y="290">SYSTEM · RAIN IN, NOTIFICATION OUT</text></g>
   rewards:
     - id: compact
       title: Compact

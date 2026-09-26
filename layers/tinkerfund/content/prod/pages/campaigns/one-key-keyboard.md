@@ -98,7 +98,7 @@ campaign:
         <path d="M110.6 181.5L122.7 188.5L122.7 182.5L110.6 175.5Z" style="fill:var(--tf-ink)" />
         <path d="M134.9 181.5L122.7 188.5L122.7 182.5L134.9 175.5Z" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" />
         <circle cx="159.1" cy="221.5" r="2" style="fill:var(--tf-good)" />
-        <g style="fill:var(--tf-muted);font:600 11px var(--tf-mono);letter-spacing:.06em;text-anchor:end"><text x="392" y="284">TEAM PACK · 5 × ENTER</text></g>
+        <g style="stroke:none;fill:var(--tf-muted);font:600 11px var(--tf-mono);letter-spacing:.06em;text-anchor:end"><text x="392" y="284">TEAM PACK · 5 × ENTER</text></g>
     - style: patent
       caption: "Plan view of the complete layout. Remaining keys (30): none."
       svg: |-
@@ -117,8 +117,8 @@ campaign:
         <path d="M364 108V192M361.5 114l2.5-6 2.5 6M361.5 186l2.5 6 2.5-6" style="stroke-width:.9" /><text x="369" y="153" style="fill:var(--tf-ink);stroke:none;font:500 9px var(--tf-mono)">132</text>
         <path d="M150 120Q148 96.5 128 84M266 104Q288 102.5 300 84M300 160Q292.5 212.5 330 250" style="stroke-width:.9" />
         </g>
-        <g style="fill:var(--tf-ink);font:500 12px var(--tf-mono)"><text x="106" y="82">10</text><text x="304" y="82">32</text><text x="334" y="256">30</text></g>
-        <g style="fill:var(--tf-ink);font:500 11px var(--tf-mono)"><text x="120" y="290">PLAN · LAYOUT, COMPLETE</text></g>
+        <g style="stroke:none;fill:var(--tf-ink);font:500 12px var(--tf-mono)"><text x="106" y="82">10</text><text x="304" y="82">32</text><text x="334" y="256">30</text></g>
+        <g style="stroke:none;fill:var(--tf-ink);font:500 11px var(--tf-mono)"><text x="120" y="290">PLAN · LAYOUT, COMPLETE</text></g>
     - style: patent
       caption: "The key assembly, exploded: keycap (10), stem (12), spring (14), housing (16), plate (18) and board (20)."
       svg: |-
@@ -139,8 +139,8 @@ campaign:
         <path d="M184 216v34M216 216v34" style="stroke-width:.9" />
         <path d="M152 70Q130 49 100 54M206 110Q241.5 119 270 96M210 148Q242 159 270 140M228 196Q256.5 204 280 186M110 229Q93.8 211.5 70 214M300 245Q315.8 263.5 340 262" style="stroke-width:.9" />
         </g>
-        <g style="fill:var(--tf-ink);font:500 12px var(--tf-mono)"><text x="74" y="58">10</text><text x="274" y="100">12</text><text x="274" y="144">14</text><text x="284" y="190">16</text><text x="50" y="218">18</text><text x="344" y="266">20</text></g>
-        <g style="fill:var(--tf-ink);font:500 11px var(--tf-mono)"><text x="120" y="290">EXPLODED · ALL KEYS SHOWN</text></g>
+        <g style="stroke:none;fill:var(--tf-ink);font:500 12px var(--tf-mono)"><text x="74" y="58">10</text><text x="274" y="100">12</text><text x="274" y="144">14</text><text x="284" y="190">16</text><text x="50" y="218">18</text><text x="344" y="266">20</text></g>
+        <g style="stroke:none;fill:var(--tf-ink);font:500 11px var(--tf-mono)"><text x="120" y="290">EXPLODED · ALL KEYS SHOWN</text></g>
     - style: patent
       caption: "Section A–A through the key: keycap (10), stem (12), spring (14), housing (16), contacts (22), plate (18) and board (20). Travel 4 mm at 60 cN; pressed position dashed."
       svg: |-
@@ -161,9 +161,9 @@ campaign:
         <path d="M200 40V72M194 64l6 8 6-8" style="stroke-width:.9" />
         <path d="M150 96Q129.5 69.5 96 70M192 136Q155 120 120 140M188 191Q151.8 178.5 120 200M250 190Q282.5 212.5 320 200M234 176Q288.5 187 330 150M300 228Q314.5 249 340 250M310 242Q322 268 350 274" style="stroke-width:.9" />
         </g>
-        <g style="fill:var(--tf-ink);font:500 12px var(--tf-mono)"><text x="74" y="66">10</text><text x="100" y="144">12</text><text x="100" y="204">14</text><text x="324" y="204">16</text><text x="334" y="148">22</text><text x="344" y="254">18</text><text x="354" y="278">20</text></g>
-        <g style="fill:var(--tf-ink);font:500 11px var(--tf-mono)"><text x="310" y="144">4</text><text x="208" y="52">60 cN</text></g>
-        <g style="fill:var(--tf-ink);font:500 11px var(--tf-mono)"><text x="96" y="290">SECTION A–A · PRESSED, DASHED</text></g>
+        <g style="stroke:none;fill:var(--tf-ink);font:500 12px var(--tf-mono)"><text x="74" y="66">10</text><text x="100" y="144">12</text><text x="100" y="204">14</text><text x="324" y="204">16</text><text x="334" y="148">22</text><text x="344" y="254">18</text><text x="354" y="278">20</text></g>
+        <g style="stroke:none;fill:var(--tf-ink);font:500 11px var(--tf-mono)"><text x="310" y="144">4</text><text x="208" y="52">60 cN</text></g>
+        <g style="stroke:none;fill:var(--tf-ink);font:500 11px var(--tf-mono)"><text x="96" y="290">SECTION A–A · PRESSED, DASHED</text></g>
     - style: patent
       caption: "Force over travel for the two switch options, tactile (32a) with its bump (34), and linear (32b). Both end at Enter."
       svg: |-
@@ -172,14 +172,14 @@ campaign:
         <path d="M60 190C90 186 100 156 108 150C116 152 118 172 128 176C150 172 164 140 170 100" style="stroke-width:2.4" />
         <path d="M170 200v6M54 148h6" style="stroke-width:.9" />
         <path d="M60 148H180M170 200V100" style="stroke-width:1;stroke-dasharray:5 3.5" />
-        <g style="fill:var(--tf-ink);font:500 9px var(--tf-mono)"><text x="30" y="152">60</text><text x="166" y="218">4</text><text x="30" y="66">cN</text><text x="184" y="204">mm</text></g>
-        <g style="fill:var(--tf-ink);font:500 11px var(--tf-mono)"><text x="80" y="46">32a · TACTILE</text></g>
+        <g style="stroke:none;fill:var(--tf-ink);font:500 9px var(--tf-mono)"><text x="30" y="152">60</text><text x="166" y="218">4</text><text x="30" y="66">cN</text><text x="184" y="204">mm</text></g>
+        <g style="stroke:none;fill:var(--tf-ink);font:500 11px var(--tf-mono)"><text x="80" y="46">32a · TACTILE</text></g>
         <path d="M260 60V200H380" />
         <path d="M260 190L370 100" style="stroke-width:2.4" />
         <path d="M370 200v6M254 148h6" style="stroke-width:.9" />
         <path d="M260 148H380M370 200V100" style="stroke-width:1;stroke-dasharray:5 3.5" />
-        <g style="fill:var(--tf-ink);font:500 9px var(--tf-mono)"><text x="230" y="152">60</text><text x="366" y="218">4</text><text x="230" y="66">cN</text><text x="384" y="204">mm</text></g>
-        <g style="fill:var(--tf-ink);font:500 11px var(--tf-mono)"><text x="280" y="46">32b · LINEAR</text></g>
+        <g style="stroke:none;fill:var(--tf-ink);font:500 9px var(--tf-mono)"><text x="230" y="152">60</text><text x="366" y="218">4</text><text x="230" y="66">cN</text><text x="384" y="204">mm</text></g>
+        <g style="stroke:none;fill:var(--tf-ink);font:500 11px var(--tf-mono)"><text x="280" y="46">32b · LINEAR</text></g>
         <path d="M100 228h20v48h-20z" />
         <path d="M120 240l8 6-8 6" />
         <path d="M84 276h56" style="stroke-width:.9" />
@@ -188,8 +188,8 @@ campaign:
         <path d="M170 100l-5-8M370 100l-5-8" style="stroke-width:.9" />
         <path d="M108 148Q116 122 100 100M128 266Q142 265.5 150 254M328 266Q342 265.5 350 254" style="stroke-width:.9" />
         </g>
-        <g style="fill:var(--tf-ink);font:500 12px var(--tf-mono)"><text x="84" y="96">34</text><text x="154" y="258">36a</text><text x="354" y="258">36b</text><text x="176" y="104">↵</text><text x="376" y="104">↵</text></g>
-        <g style="fill:var(--tf-ink);font:500 11px var(--tf-mono)"><text x="80" y="290">FORCE OVER TRAVEL · EITHER WAY, ENTER</text></g>
+        <g style="stroke:none;fill:var(--tf-ink);font:500 12px var(--tf-mono)"><text x="84" y="96">34</text><text x="154" y="258">36a</text><text x="354" y="258">36b</text><text x="176" y="104">↵</text><text x="376" y="104">↵</text></g>
+        <g style="stroke:none;fill:var(--tf-ink);font:500 11px var(--tf-mono)"><text x="80" y="290">FORCE OVER TRAVEL · EITHER WAY, ENTER</text></g>
   rewards:
     - id: early-bird
       title: Early Bird
