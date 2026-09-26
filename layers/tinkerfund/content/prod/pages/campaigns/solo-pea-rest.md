@@ -110,7 +110,7 @@ campaign:
         <circle cx="200" cy="93" r="11" style="fill:var(--tf-good)" />
         <path d="M189 95a11 11 0 0 0 22 0a14 14 0 0 1 -22 0z" style="fill:color-mix(in srgb, var(--tf-good) 70%, var(--tf-ink))" />
         <circle cx="196" cy="89" r="2.6" style="fill:var(--tf-surface)" />
-        <g style="fill:var(--tf-muted);font:600 11px var(--tf-mono);letter-spacing:.06em;text-anchor:middle"><text x="200" y="262">STACKS · 3 SHOWN · 1 PEA</text></g>
+        <g style="stroke:none;fill:var(--tf-muted);font:600 11px var(--tf-mono);letter-spacing:.06em;text-anchor:middle"><text x="200" y="262">STACKS · 3 SHOWN · 1 PEA</text></g>
     - style: patent
       caption: "Elevation, sectioned, and plan. The pea (14) is shown for scale and is not included."
       svg: |-
@@ -134,8 +134,8 @@ campaign:
         <path d="M318 104V232M254 168H382" style="stroke-width:1;stroke-dasharray:5 3.5" />
         <path d="M70 175Q49.3 186.5 46 210M160 174Q168 203 196 214M161 154Q186.5 156.8 204 138M356 204Q358 225 376 236" style="stroke-width:.9" />
         </g>
-        <g style="fill:var(--tf-ink);font:500 12px var(--tf-mono)"><text x="30" y="214">10</text><text x="200" y="218">12</text><text x="208" y="142">14</text><text x="372" y="250">16</text></g>
-        <g style="fill:var(--tf-ink);font:500 11px var(--tf-mono)"><text x="96" y="290">ELEVATION, SECTIONED · PLAN</text></g>
+        <g style="stroke:none;fill:var(--tf-ink);font:500 12px var(--tf-mono)"><text x="30" y="214">10</text><text x="200" y="218">12</text><text x="208" y="142">14</text><text x="372" y="250">16</text></g>
+        <g style="stroke:none;fill:var(--tf-ink);font:500 11px var(--tf-mono)"><text x="96" y="290">ELEVATION, SECTIONED · PLAN</text></g>
     - style: patent
       caption: "Detail A, 4:1: the dimple (12), 9 mm across and 2.8 mm deep, under the glaze (18). The pea (14) is shown in position and is not included."
       svg: |-
@@ -149,9 +149,9 @@ campaign:
         <path d="M155 150V74M245 150V74M155 80H245M200 178H296M296 150V178M290 150h12" style="stroke-width:.9" />
         <path d="M180 172Q136.5 184 120 226M236 118Q282 106 300 62M110 156Q109.5 124.5 84 106M312 226Q312 256 336 274" style="stroke-width:.9" />
         </g>
-        <g style="fill:var(--tf-ink);font:500 12px var(--tf-mono)"><text x="102" y="240">12</text><text x="304" y="60">14</text><text x="66" y="104">18</text><text x="340" y="278">10</text></g>
-        <g style="fill:var(--tf-ink);font:500 11px var(--tf-mono)"><text x="186" y="74">Ø 9</text><text x="302" y="168">2.8</text></g>
-        <g style="fill:var(--tf-ink);font:500 11px var(--tf-mono)"><text x="84" y="290">DETAIL A · 4:1 · PEA NOT INCLUDED</text></g>
+        <g style="stroke:none;fill:var(--tf-ink);font:500 12px var(--tf-mono)"><text x="102" y="240">12</text><text x="304" y="60">14</text><text x="66" y="104">18</text><text x="340" y="278">10</text></g>
+        <g style="stroke:none;fill:var(--tf-ink);font:500 11px var(--tf-mono)"><text x="186" y="74">Ø 9</text><text x="302" y="168">2.8</text></g>
+        <g style="stroke:none;fill:var(--tf-ink);font:500 11px var(--tf-mono)"><text x="84" y="290">DETAIL A · 4:1 · PEA NOT INCLUDED</text></g>
     - style: patent
       caption: "Comparative example, not claimed: a rest for several peas. The peas (14) roll. The edge (32) does not stop them."
       svg: |-
@@ -168,9 +168,9 @@ campaign:
         <path d="M210 168a12 12 0 1 0 24 0a12 12 0 1 0 -24 0" style="stroke-width:1;stroke-dasharray:5 3.5" />
         <path d="M166 154Q156.5 115.5 120 100M240 181Q221.3 201 226 228M290 170Q312.5 150 310 120" style="stroke-width:.9" />
         </g>
-        <g style="fill:var(--tf-ink);font:500 12px var(--tf-mono)"><text x="210" y="242">30</text><text x="102" y="98">14</text><text x="314" y="116">32</text></g>
-        <g style="fill:var(--tf-ink);font:500 10px var(--tf-mono)"><text x="60" y="268">REJECTED · PEAS KEPT TOGETHER TEND TO ROLL</text></g>
-        <g style="fill:var(--tf-ink);font:500 11px var(--tf-mono)"><text x="96" y="290">COMPARATIVE EXAMPLE · NOT CLAIMED</text></g>
+        <g style="stroke:none;fill:var(--tf-ink);font:500 12px var(--tf-mono)"><text x="210" y="242">30</text><text x="102" y="98">14</text><text x="314" y="116">32</text></g>
+        <g style="stroke:none;fill:var(--tf-ink);font:500 10px var(--tf-mono)"><text x="60" y="268">REJECTED · PEAS KEPT TOGETHER TEND TO ROLL</text></g>
+        <g style="stroke:none;fill:var(--tf-ink);font:500 11px var(--tf-mono)"><text x="96" y="290">COMPARATIVE EXAMPLE · NOT CLAIMED</text></g>
   rewards:
     - id: one-rest
       title: One rest

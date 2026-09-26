@@ -93,8 +93,8 @@ campaign:
         <ellipse cx="320" cy="96" rx="40" ry="23" style="fill:color-mix(in srgb, var(--tf-line) 40%, var(--tf-surface))" />
         <ellipse cx="320" cy="97" rx="32.8" ry="18.9" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" />
         <path d="M344 93A28 15 0 0 0 296 93M302 89L296 93L297 86" style="fill:none;stroke:var(--tf-surface);stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round" />
-        <g style="fill:var(--tf-muted);font:600 11px var(--tf-mono);letter-spacing:.06em;text-anchor:middle"><text x="84" y="234">SLATE</text><text x="204" y="234">SIGNAL</text><text x="324" y="234">PORCELAIN</text></g>
-        <g style="fill:var(--tf-muted);font:500 11px var(--tf-mono);text-anchor:middle"><text x="204" y="262">ALL THREE STIR COUNTERCLOCKWISE</text></g>
+        <g style="stroke:none;fill:var(--tf-muted);font:600 11px var(--tf-mono);letter-spacing:.06em;text-anchor:middle"><text x="84" y="234">SLATE</text><text x="204" y="234">SIGNAL</text><text x="324" y="234">PORCELAIN</text></g>
+        <g style="stroke:none;fill:var(--tf-muted);font:500 11px var(--tf-mono);text-anchor:middle"><text x="204" y="262">ALL THREE STIR COUNTERCLOCKWISE</text></g>
     - style: patent
       caption: "Plan view. The direction selector (24) is omitted, as intended."
       svg: |-
@@ -111,9 +111,9 @@ campaign:
         <path d="M210.5 206.4A60 60 0 1 0 133.6 129.5M141.4 122.7L133.6 129.5L132 119.3" style="stroke-width:2.2" />
         <path d="M233 125Q261.3 104.8 262 70M190 90Q180 60 150 50M303 134Q326 121.8 330 96M121 208Q90 218.8 80 250" style="stroke-width:.9" />
         </g>
-        <g style="fill:var(--tf-ink);font:500 12px var(--tf-mono)"><text x="266" y="74">14</text><text x="130" y="54">22</text><text x="334" y="100">24</text><text x="60" y="254">10</text></g>
+        <g style="stroke:none;fill:var(--tf-ink);font:500 12px var(--tf-mono)"><text x="266" y="74">14</text><text x="130" y="54">22</text><text x="334" y="100">24</text><text x="60" y="254">10</text></g>
         <text x="226" y="240" style="fill:var(--tf-ink);stroke:none;font:500 9px var(--tf-mono)">40 RPM</text>
-        <g style="fill:var(--tf-ink);font:500 11px var(--tf-mono)"><text x="110" y="290">PLAN · ROTATION FIXED</text></g>
+        <g style="stroke:none;fill:var(--tf-ink);font:500 11px var(--tf-mono)"><text x="110" y="290">PLAN · ROTATION FIXED</text></g>
     - style: patent
       caption: "Section A–A through the base, showing the drive gear (12) and the stirring vane (14)."
       svg: |-
@@ -137,9 +137,9 @@ campaign:
         <path d="M122 130Q106 114.5 84 118M208 241Q213.8 264.5 236 274M226 193Q260.3 224.5 306 216M146 240Q113.5 242.5 96 270M330 140Q349 129.5 352 108M277 60Q293.5 55.8 300 40" style="stroke-width:.9" />
         </g>
         <text x="148" y="239" style="fill:var(--tf-ink);stroke:none;font:500 9px var(--tf-mono)">M</text>
-        <g style="fill:var(--tf-ink);font:500 12px var(--tf-mono)"><text x="64" y="122">10</text><text x="240" y="278">12</text><text x="310" y="220">14</text><text x="76" y="274">16</text><text x="356" y="112">18</text><text x="304" y="44">20</text></g>
-        <g style="fill:var(--tf-ink);font:500 11px var(--tf-mono)"><text x="88" y="60">A</text><text x="88" y="212">A</text></g>
-        <g style="fill:var(--tf-ink);font:500 11px var(--tf-mono)"><text x="150" y="290">SECTION A–A</text></g>
+        <g style="stroke:none;fill:var(--tf-ink);font:500 12px var(--tf-mono)"><text x="64" y="122">10</text><text x="240" y="278">12</text><text x="310" y="220">14</text><text x="76" y="274">16</text><text x="356" y="112">18</text><text x="304" y="44">20</text></g>
+        <g style="stroke:none;fill:var(--tf-ink);font:500 11px var(--tf-mono)"><text x="88" y="60">A</text><text x="88" y="212">A</text></g>
+        <g style="stroke:none;fill:var(--tf-ink);font:500 11px var(--tf-mono)"><text x="150" y="290">SECTION A–A</text></g>
     - style: patent
       caption: "Exploded elevation: vane (14) with its magnet (22), body (10), floor magnet (12), drive (16) and USB-C port (18). Drive removed, top rack."
       svg: |-
@@ -162,8 +162,8 @@ campaign:
         <path d="M150 236h100" style="stroke-width:1;stroke-dasharray:5 3.5" />
         <path d="M236 47Q269.8 59.5 300 40M184 65Q160.8 44 130 50M134 140Q114 117.5 84 120M266 140Q300.5 151 330 130M184 182Q151 180.5 130 206M148 226Q113.5 230 96 260M260 224Q283.5 252 320 250M184 176Q154.5 155 120 166" style="stroke-width:.9" />
         </g>
-        <g style="fill:var(--tf-ink);font:500 12px var(--tf-mono)"><text x="304" y="44">14</text><text x="110" y="54">22</text><text x="64" y="124">10</text><text x="334" y="134">20</text><text x="110" y="210">12</text><text x="76" y="264">16</text><text x="324" y="254">18</text><text x="100" y="170">24</text></g>
-        <g style="fill:var(--tf-ink);font:500 11px var(--tf-mono)"><text x="86" y="290">EXPLODED · DRIVE REMOVED, TOP RACK</text></g>
+        <g style="stroke:none;fill:var(--tf-ink);font:500 12px var(--tf-mono)"><text x="304" y="44">14</text><text x="110" y="54">22</text><text x="64" y="124">10</text><text x="334" y="134">20</text><text x="110" y="210">12</text><text x="76" y="264">16</text><text x="324" y="254">18</text><text x="100" y="170">24</text></g>
+        <g style="stroke:none;fill:var(--tf-ink);font:500 11px var(--tf-mono)"><text x="86" y="290">EXPLODED · DRIVE REMOVED, TOP RACK</text></g>
     - style: patent
       caption: "Detail C, 3:1: the vane (14) in plan, and the magnetic coupling in section through the stoneware floor (24) to the gear (26). Forty turns a minute."
       svg: |-
@@ -188,10 +188,10 @@ campaign:
         <path d="M260 140V100M304 140V100M260 104h44" style="stroke-width:1;stroke-dasharray:5 3.5" />
         <path d="M112 96Q140 87.5 150 60M304 146Q334.5 155 360 136M304 178Q316.5 198 340 200M230 172Q207 198 214 232M296 220Q310.5 246 340 250M244 250Q223.5 253.5 214 272" style="stroke-width:.9" />
         </g>
-        <g style="fill:var(--tf-ink);font:500 12px var(--tf-mono)"><text x="152" y="58">14</text><text x="364" y="140">22</text><text x="344" y="204">12</text><text x="196" y="236">24</text><text x="344" y="254">26</text><text x="186" y="276">28</text></g>
-        <g style="fill:var(--tf-ink);font:500 10px var(--tf-mono)"><text x="386" y="166">6</text><text x="268" y="98">Ø 15</text><text x="274" y="250">M</text></g>
-        <g style="fill:var(--tf-ink);font:500 10px var(--tf-mono)"><text x="40" y="258">40 RPM</text></g>
-        <g style="fill:var(--tf-ink);font:500 11px var(--tf-mono)"><text x="76" y="290">DETAIL C · 3:1 · MAGNETIC COUPLING</text></g>
+        <g style="stroke:none;fill:var(--tf-ink);font:500 12px var(--tf-mono)"><text x="152" y="58">14</text><text x="364" y="140">22</text><text x="344" y="204">12</text><text x="196" y="236">24</text><text x="344" y="254">26</text><text x="186" y="276">28</text></g>
+        <g style="stroke:none;fill:var(--tf-ink);font:500 10px var(--tf-mono)"><text x="386" y="166">6</text><text x="268" y="98">Ø 15</text><text x="274" y="250">M</text></g>
+        <g style="stroke:none;fill:var(--tf-ink);font:500 10px var(--tf-mono)"><text x="40" y="258">40 RPM</text></g>
+        <g style="stroke:none;fill:var(--tf-ink);font:500 11px var(--tf-mono)"><text x="76" y="290">DETAIL C · 3:1 · MAGNETIC COUPLING</text></g>
   rewards:
     - id: one-mug
       title: One mug

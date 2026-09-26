@@ -84,7 +84,7 @@ campaign:
         <path d="M232 164a58 33.5 0 1 0 116 0a58 33.5 0 1 0 -116 0" style="fill:none;stroke:var(--tf-ink);stroke-width:1.5" />
         <path d="M322 128L336 136L326 142L312 134Z" style="fill:var(--tf-ink)" />
         <g transform="translate(88 8)"><path d="M130.7 204L144.6 212L144.6 204L130.7 196Z" style="fill:var(--tf-ink)" /><path d="M151.5 208L144.6 212L144.6 204L151.5 200Z" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" /><path d="M137.6 192L151.5 200L144.6 204L130.7 196Z" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" /></g>
-        <g style="fill:var(--tf-muted);font:600 11px var(--tf-mono);letter-spacing:.06em;text-anchor:middle"><text x="106" y="248">BRASS</text><text x="290" y="262">GRAPHITE · SNOOZING</text></g>
+        <g style="stroke:none;fill:var(--tf-muted);font:600 11px var(--tf-mono);letter-spacing:.06em;text-anchor:middle"><text x="106" y="248">BRASS</text><text x="290" y="262">GRAPHITE · SNOOZING</text></g>
     - style: patent
       caption: "Plan view of the dial: gnomon (12), hour lines (14) and snooze button (16)."
       svg: |-
@@ -102,10 +102,10 @@ campaign:
         <path d="M270 76V58M266 62l4-4 4 4" style="stroke-width:.9" />
         <path d="M199 130Q226 122.3 236 96M250 142Q283 138.5 300 110M206 251Q223.3 271.5 250 270M132 222Q102 229.5 90 258M188 48Q171 34.5 150 40" style="stroke-width:.9" />
         </g>
-        <g style="fill:var(--tf-ink);font:500 8px var(--tf-mono)"><text x="132.1" y="185">6</text><text x="131.6" y="138.3">8</text><text x="155.9" y="105.2">10</text><text x="191.2" y="95">12</text><text x="228.9" y="105.2">2</text><text x="255.6" y="138.3">4</text><text x="255.1" y="185">6</text></g>
-        <g style="fill:var(--tf-ink);font:500 12px var(--tf-mono)"><text x="240" y="100">12</text><text x="304" y="114">14</text><text x="254" y="274">16</text><text x="66" y="262">10</text><text x="130" y="44">18</text></g>
-        <g style="fill:var(--tf-ink);font:500 9px var(--tf-mono)"><text x="276" y="66">N</text></g>
-        <g style="fill:var(--tf-ink);font:500 11px var(--tf-mono)"><text x="110" y="290">PLAN · DIAL · 50° NORTH</text></g>
+        <g style="stroke:none;fill:var(--tf-ink);font:500 8px var(--tf-mono)"><text x="132.1" y="185">6</text><text x="131.6" y="138.3">8</text><text x="155.9" y="105.2">10</text><text x="191.2" y="95">12</text><text x="228.9" y="105.2">2</text><text x="255.6" y="138.3">4</text><text x="255.1" y="185">6</text></g>
+        <g style="stroke:none;fill:var(--tf-ink);font:500 12px var(--tf-mono)"><text x="240" y="100">12</text><text x="304" y="114">14</text><text x="254" y="274">16</text><text x="66" y="262">10</text><text x="130" y="44">18</text></g>
+        <g style="stroke:none;fill:var(--tf-ink);font:500 9px var(--tf-mono)"><text x="276" y="66">N</text></g>
+        <g style="stroke:none;fill:var(--tf-ink);font:500 11px var(--tf-mono)"><text x="110" y="290">PLAN · DIAL · 50° NORTH</text></g>
     - style: patent
       caption: "Section C–C through the case (10): the snooze button (16) releases the latch (26); the escapement (28) returns the cover (20) by spring (24) after nine minutes."
       svg: |-
@@ -126,9 +126,9 @@ campaign:
         <path d="M200 162l-6-8h12z" />
         <path d="M36 174Q51.5 148 40 120M200 140Q225 127.5 230 100M332 142Q354 133 360 110M340 152Q346.5 179 372 190M114 160Q117 124 90 100M214 180Q214.5 224 250 250M340 207Q345.3 236.5 372 250" style="stroke-width:.9" />
         </g>
-        <g style="fill:var(--tf-ink);font:500 12px var(--tf-mono)"><text x="30" y="116">16</text><text x="232" y="96">20</text><text x="362" y="106">22</text><text x="374" y="196">24</text><text x="78" y="96">26</text><text x="252" y="266">28</text><text x="374" y="256">10</text></g>
-        <g style="fill:var(--tf-ink);font:500 9px var(--tf-mono)"><text x="248" y="172">9 MIN</text></g>
-        <g style="fill:var(--tf-ink);font:500 11px var(--tf-mono)"><text x="60" y="290">SECTION C–C · HINGE, LATCH, ESCAPEMENT</text></g>
+        <g style="stroke:none;fill:var(--tf-ink);font:500 12px var(--tf-mono)"><text x="30" y="116">16</text><text x="232" y="96">20</text><text x="362" y="106">22</text><text x="374" y="196">24</text><text x="78" y="96">26</text><text x="252" y="266">28</text><text x="374" y="256">10</text></g>
+        <g style="stroke:none;fill:var(--tf-ink);font:500 9px var(--tf-mono)"><text x="248" y="172">9 MIN</text></g>
+        <g style="stroke:none;fill:var(--tf-ink);font:500 11px var(--tf-mono)"><text x="60" y="290">SECTION C–C · HINGE, LATCH, ESCAPEMENT</text></g>
     - style: patent
       caption: "Detail B: the snooze cover (20) closes over the dial for nine minutes, returned by a spring (24)."
       svg: |-
@@ -147,8 +147,8 @@ campaign:
         <path d="M160 124Q148 98 120 92M172 190Q143.5 157 100 160M327 121Q344.8 124.3 358 112M324 132Q330.5 154 352 162M250 212Q260.5 241 290 250" style="stroke-width:.9" />
         </g>
         <text x="96" y="140" style="fill:var(--tf-ink);stroke:none;font:500 9px var(--tf-mono)">9 MIN</text>
-        <g style="fill:var(--tf-ink);font:500 12px var(--tf-mono)"><text x="96" y="88">20</text><text x="80" y="158">12</text><text x="362" y="116">22</text><text x="356" y="168">24</text><text x="294" y="256">10</text></g>
-        <g style="fill:var(--tf-ink);font:500 11px var(--tf-mono)"><text x="74" y="290">DETAIL B · COVER CLOSED (DASHED: OPEN)</text></g>
+        <g style="stroke:none;fill:var(--tf-ink);font:500 12px var(--tf-mono)"><text x="96" y="88">20</text><text x="80" y="158">12</text><text x="362" y="116">22</text><text x="356" y="168">24</text><text x="294" y="256">10</text></g>
+        <g style="stroke:none;fill:var(--tf-ink);font:500 11px var(--tf-mono)"><text x="74" y="290">DETAIL B · COVER CLOSED (DASHED: OPEN)</text></g>
     - style: patent
       caption: "The gnomon (12) pivots at (30) and is clamped (32) against the latitude scale (34), 35° to 60° north. Set once."
       svg: |-
@@ -170,10 +170,10 @@ campaign:
         <path d="M312 190v-16M308 178l4-4 4 4" style="stroke-width:.9" />
         <path d="M262 114Q287 111.5 300 90M136 204Q109 213 100 240M216 152Q226 174.5 250 180M234 136Q253.5 154.5 280 150" style="stroke-width:.9" />
         </g>
-        <g style="fill:var(--tf-ink);font:500 12px var(--tf-mono)"><text x="302" y="86">12</text><text x="86" y="256">30</text><text x="252" y="194">32</text><text x="282" y="164">34</text></g>
-        <g style="fill:var(--tf-ink);font:500 8px var(--tf-mono)"><text x="238.9" y="129.6">35</text><text x="224.5" y="112.5">45</text><text x="198" y="92.1">60</text></g>
-        <g style="fill:var(--tf-ink);font:500 9px var(--tf-mono)"><text x="204" y="182">35°</text><text x="148" y="158">60°</text><text x="340" y="74">SUN</text><text x="308" y="168">N</text></g>
-        <g style="fill:var(--tf-ink);font:500 11px var(--tf-mono)"><text x="70" y="290">GNOMON · SET ONCE FOR 35°–60° N</text></g>
+        <g style="stroke:none;fill:var(--tf-ink);font:500 12px var(--tf-mono)"><text x="302" y="86">12</text><text x="86" y="256">30</text><text x="252" y="194">32</text><text x="282" y="164">34</text></g>
+        <g style="stroke:none;fill:var(--tf-ink);font:500 8px var(--tf-mono)"><text x="238.9" y="129.6">35</text><text x="224.5" y="112.5">45</text><text x="198" y="92.1">60</text></g>
+        <g style="stroke:none;fill:var(--tf-ink);font:500 9px var(--tf-mono)"><text x="204" y="182">35°</text><text x="148" y="158">60°</text><text x="340" y="74">SUN</text><text x="308" y="168">N</text></g>
+        <g style="stroke:none;fill:var(--tf-ink);font:500 11px var(--tf-mono)"><text x="70" y="290">GNOMON · SET ONCE FOR 35°–60° N</text></g>
   rewards:
     - id: sundial
       title: Pocket Sundial
