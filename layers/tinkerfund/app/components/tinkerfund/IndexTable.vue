@@ -102,7 +102,8 @@ tbody tr:hover { background: var(--tf-accent-soft); }
   table { min-width: 0; }
   .wide, .inv svg, .funded .mini { display: none; }
   .state { width: 1%; }
-  .inv { min-width: 0; font-size: 15px; }
-  th, td { padding: 10px 8px; }
+  .inv { min-width: 0; font-size: 14px; }
+  th, td { padding: 10px 6px; }
+  thead th { letter-spacing: 0; }
 }
 </style>
