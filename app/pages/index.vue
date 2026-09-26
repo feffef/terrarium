@@ -76,11 +76,9 @@ const { data: spotlight } = await useAsyncData('atlas-spotlight', async () => {
   return pickOfTheDay(picks)
 })
 
-// "Start here" strip (visitor-loop feature, 2026-09-26): a hand-picked few
-// Blog posts, content-homed on the Journal's own Highlights page (`featured`
-// frontmatter, `pages` schema) rather than re-curated here — the Journal
-// already keeps the canonical "best of" list; this just surfaces a few of its
-// picks a click earlier than the Journal itself.
+// "Start here" strip (visitor-loop feature, 2026-09-26): reads the Journal's
+// own curated picks — see the `featured` field's doc comment on the `pages`
+// schema (layers/journal/tenant.config.ts) for what it is and why.
 const { data: featured } = await useAsyncData('home-featured', async () => {
   const r = resolveSpaceRoute('journal', 'current', undefined)
   if (!r) return []
@@ -144,9 +142,9 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
           :key="f.href"
           :to="f.href"
           class="starthere-card"
-          :style="{ '--sh-accent': personaMeta(f.persona.toLowerCase()).accent }"
+          :style="{ '--sh-accent': personaMeta(f.persona).accent }"
         >
-          <span class="starthere-persona">{{ f.persona }}</span>
+          <span class="starthere-persona">{{ personaMeta(f.persona).name }}</span>
           <span class="starthere-title">{{ f.title }}</span>
           <span class="starthere-blurb">{{ f.blurb }}</span>
         </NuxtLink>
@@ -451,8 +449,7 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
   border-top: 1px solid var(--root-line);
 }
 
-/* ── "Start here" strip — a few Blog posts picked out a click earlier than
-   the Journal's own Highlights page. ── */
+/* ── "Start here" strip ── */
 .starthere-grid {
   display: grid;
   grid-template-columns: minmax(0, 1fr);

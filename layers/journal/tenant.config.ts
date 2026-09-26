@@ -49,7 +49,10 @@ export default defineTenant({
         // populates it today, curating a few Blog posts out of its own
         // already-curated longer list — `href` may point anywhere in the
         // Platform, not just this Tenant, since a homepage strip is inherently
-        // cross-Tenant (unlike `onramp`, which stays in-Space).
+        // cross-Tenant (unlike `onramp`, which stays in-Space). `persona` is
+        // that Blog Persona's own slug (`layers/blog/app/utils/personas.ts`'s
+        // `PERSONAS` keys), not a display string — the homepage looks up both
+        // the display name and the accent colour from it via `personaMeta()`.
         featured: z
           .array(
             z.object({
