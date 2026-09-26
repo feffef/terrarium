@@ -28,11 +28,11 @@ function watchSections() {
   }
 }
 
-// The band moves when the nav or the page header above it changes size, so it is measured again.
+// The band moves when the nav or the sticky site header above it changes size, so it is measured again.
 onMounted(() => {
   resizes = new ResizeObserver(watchSections)
   resizes.observe(nav.value!)
-  const header = document.getElementById('tf-main')?.previousElementSibling
+  const header = document.querySelector('.tf-header')
   if (header) resizes.observe(header)
 })
 onUnmounted(() => {

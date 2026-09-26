@@ -1,6 +1,7 @@
 <script setup lang="ts">
 const { clock, cards, categories, promotions } = await useTinkerfundCatalog()
 const home = computed(() => tinkerfundHomeSections(cards.value, clock.value.now))
+const featuredLeft = computed(() => home.value.featured && tinkerfundTimeLeft(home.value.featured.status, clock.value.countdown))
 const deal = computed(() => groupTinkerfundPromotions(promotions.value, clock.value.now).active[0])
 const tiles = computed(() =>
   categories.value.map((c) => ({ ...c, count: cards.value.filter((card) => card.category === c.slug).length })),
@@ -28,9 +29,9 @@ const money = useTinkerfundMoney()
           <div><dt>Pledged</dt><dd>{{ money(home.featured.pledged) }}</dd></div>
           <div><dt>Goal</dt><dd>{{ money(home.featured.goal) }}</dd></div>
           <div><dt>Backers</dt><dd>{{ home.featured.backers.toLocaleString(locale) }}</dd></div>
-          <div>
-            <dt>Remaining</dt>
-            <dd><TinkerfundTime :at="tinkerfundDeadline(home.featured.status).at" :text="tinkerfundRemaining(home.featured.status, clock.countdown)" /></dd>
+          <div v-if="featuredLeft">
+            <dt>{{ featuredLeft.label }}</dt>
+            <dd><TinkerfundTime :at="featuredLeft.at" :text="featuredLeft.text" /></dd>
           </div>
         </dl>
         <p class="actions">

@@ -3,7 +3,7 @@
 // pinned now keeps every countdown and funded state still, and each browser
 // test costs the gate serial time, so they are few and wide (issue #1360).
 // prod is checked only through server-rendered HTML whose shape doesn't depend
-// on the minute (its clock: `shop.now` in tenant.config.ts).
+// on the minute (its clock: `shop.now` in schemas.ts).
 import type { Page } from 'playwright-core'
 import { describe, expect, it } from 'vitest'
 import { $fetch, createPage, fetch, url } from '@nuxt/test-utils/e2e'

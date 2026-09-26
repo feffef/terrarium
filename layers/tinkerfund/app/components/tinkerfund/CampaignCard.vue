@@ -5,7 +5,8 @@ const props = defineProps<{ card: TinkerfundCard; clock: TinkerfundClock }>()
 const { link } = useTinkerfundSpace()
 const money = useTinkerfundMoney()
 const upcoming = computed(() => props.card.status.state === 'upcoming')
-const time = computed(() => tinkerfundTimeTile(props.card.status, props.clock.countdown))
+const locale = useTinkerfundLocale()
+const left = computed(() => tinkerfundTimeLeft(props.card.status, props.clock.countdown))
 </script>
 
 <template>
@@ -32,10 +33,11 @@ const time = computed(() => tinkerfundTimeTile(props.card.status, props.clock.co
           <div><dt>Pledged</dt><dd>{{ money(card.pledged) }}</dd></div>
           <div><dt>Funded</dt><dd>{{ card.status.percent }}%</dd></div>
         </template>
-        <div>
-          <dt>{{ time.label }}</dt>
-          <dd><TinkerfundTime :at="time.at" :text="time.text" /></dd>
+        <div v-if="left">
+          <dt>{{ left.label }}</dt>
+          <dd><TinkerfundTime :at="left.at" :text="left.text" /></dd>
         </div>
+        <div v-else><dt>Backers</dt><dd>{{ card.backers.toLocaleString(locale) }}</dd></div>
       </dl>
     </div>
   </article>

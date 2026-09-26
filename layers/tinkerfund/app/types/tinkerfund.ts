@@ -1,4 +1,4 @@
-// Both Spaces share one schema (tenant.config.ts), so prod's generated item
+// Both Spaces share one schema (schemas.ts), so prod's generated item
 // types describe qa's documents too.
 import type {
   TinkerfundProdCommentsCollectionItem,

@@ -13,7 +13,7 @@ import {
   tinkerfundRemaining,
   tinkerfundDeadline,
   tinkerfundPriceBounds,
-  tinkerfundTimeTile,
+  tinkerfundTimeLeft,
 } from '../../app/utils/browse.ts'
 import { tinkerfundCount } from '../../app/utils/shop.ts'
 import { HOUR, NOW } from './support.ts'
@@ -199,11 +199,10 @@ describe('a listing’s status copy', () => {
     expect(tinkerfundRemaining(byTitle('ruler'), NOW)).toBe('Ended')
   })
 
-  it('gives a card’s time tile: the countdown to launch or end, or the outcome once Ended', () => {
-    expect(tinkerfundTimeTile(byTitle('kettle'), NOW)).toEqual({ label: 'Launches in', text: '3 days 0 hours', at: NOW + 72 * HOUR })
-    expect(tinkerfundTimeTile(byTitle('lamp'), NOW)).toEqual({ label: 'Remaining', text: '1 day 12 hours', at: NOW + 36 * HOUR })
-    expect(tinkerfundTimeTile(byTitle('hammock'), NOW)).toEqual({ label: 'Ended', text: 'Unfunded', at: NOW - HOUR })
-    expect(tinkerfundTimeTile(byTitle('ruler'), NOW).text).toBe('Funded')
+  it('labels the time left: to the launch while Upcoming, to the end while Live, none once Ended', () => {
+    expect(tinkerfundTimeLeft(byTitle('kettle'), NOW)).toEqual({ label: 'Launches in', text: '3 days 0 hours', at: NOW + 72 * HOUR })
+    expect(tinkerfundTimeLeft(byTitle('lamp'), NOW)).toEqual({ label: 'Remaining', text: '1 day 12 hours', at: NOW + 36 * HOUR })
+    expect(tinkerfundTimeLeft(byTitle('hammock'), NOW)).toBeUndefined()
   })
 
   it('dates the launch while Upcoming, else the end', () => {

@@ -7,7 +7,7 @@ const emit = defineEmits<{ change: [request: TinkerfundCartRequest] }>()
 const id = useId()
 const money = useTinkerfundMoney()
 const { campaignLink } = useTinkerfundSpace()
-const shippingRow = computed(() => tinkerfundShippingRow(props.group, props.zone, money))
+const shippingRows = computed(() => tinkerfundShippingRows([props.group], props.zone, money))
 
 function setBonus(event: Event) {
   const value = Math.floor(Number((event.target as HTMLInputElement).value))
@@ -70,7 +70,7 @@ function setBonus(event: Event) {
     </ul>
 
     <dl class="foot tf-summary-list compact">
-      <div><dt>{{ shippingRow.label }}</dt><dd>{{ shippingRow.amount }}</dd></div>
+      <div v-for="row in shippingRows" :key="row.label"><dt>{{ row.label }}</dt><dd>{{ row.amount }}</dd></div>
       <div><dt>Subtotal</dt><dd>{{ money(group.subtotal) }}</dd></div>
     </dl>
   </section>

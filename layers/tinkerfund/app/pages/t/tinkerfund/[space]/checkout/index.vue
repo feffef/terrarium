@@ -24,15 +24,17 @@ const payment = computed(() => (shop.value?.payments.some((p) => p.id === query(
 
 const quote = computed(() => quoteFor(query('code')))
 const stranded = computed(() => view.value.groups.some((g) => g.closed || g.unshipped.length || g.lines.some((l) => l.unavailable || !l.ships)))
-function addsTo({ existing, shipping, rezoned, replacedCode }: TinkerfundQuoteGroup) {
+function addsTo({ existing, shipping, rezoned, replacedCode, keptCode }: TinkerfundQuoteGroup) {
   if (!existing) return undefined
   const moves = rezoned
     ? `, which moves from ${zoneName(existing.zone)}: it ships for ${money(existing.shipping + shipping)} instead of ${money(existing.shipping)}`
     : ''
-  const code = replacedCode ? ` Code ${quote.value.code} replaces its earlier code ${replacedCode}: a Pledge holds one code.` : ''
+  const code = replacedCode
+    ? ` Code ${quote.value.code} replaces its earlier code ${replacedCode}: a Pledge holds one code.`
+    : keptCode ? ` ${tinkerfundKeptCodeNotice(keptCode)}.` : ''
   return `Adds to your Pledge ${existing.ref}${moves}.${code}`
 }
-const shippingRow = computed(() => tinkerfundShippingRow(quote.value, zoneName(zone.value), money))
+const shippingRows = computed(() => tinkerfundShippingRows(quote.value.groups, zoneName(zone.value), money))
 
 // A choice replaces the entry; a step pushes one, so Back returns to it.
 const choose = (change: Record<string, string | undefined>) => router.replace({ query: { ...route.query, ...change } })
@@ -148,7 +150,7 @@ useSeoMeta(tinkerfundSeo({ kind: 'private', space, title: 'Checkout' }))
           <dl class="tf-summary-list">
             <div><dt>Subtotal</dt><dd>{{ money(quote.subtotal) }}</dd></div>
             <div v-if="quote.discount"><dt>Discount</dt><dd>−{{ money(quote.discount) }}</dd></div>
-            <div><dt>{{ shippingRow.label }}</dt><dd>{{ shippingRow.amount }}</dd></div>
+            <div v-for="row in shippingRows" :key="row.label"><dt>{{ row.label }}</dt><dd>{{ row.amount }}</dd></div>
             <div class="total"><dt>Total</dt><dd>{{ money(quote.total) }}</dd></div>
           </dl>
           <ul v-if="quote.deals.length" class="deals">

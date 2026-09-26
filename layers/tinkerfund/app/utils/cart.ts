@@ -288,6 +288,11 @@ export interface TinkerfundCartLine {
   ships: boolean
 }
 
+/** Whether a Campaign's Add-ons can be had: a Reward is in its Cart or already in its Pledge (issue #1365). */
+export function tinkerfundRewarded(lines: Pick<TinkerfundCartLine, 'ref' | 'unavailable'>[], existing: TinkerfundPledge | undefined): boolean {
+  return !!existing?.lines.length || lines.some((l) => 'reward' in l.ref && !l.unavailable)
+}
+
 /** The request that brings `line` to `quantity`, measured from what is stored, not what is shown. */
 export function setTinkerfundLine(line: TinkerfundCartLine, quantity: number): TinkerfundCartRequest {
   return { ...line.ref, quantity: quantity - line.stored }
@@ -315,7 +320,6 @@ export interface TinkerfundCartView {
   count: number
   subtotal: number
   shipping: number
-  rezoned: boolean
   total: number
 }
 
@@ -342,7 +346,7 @@ export function resolveTinkerfundCart(state: TinkerfundBackerState, shop: Tinker
       const detail = tinkerfundOptionsLabel(reward, line.options)
       return [{ key: tinkerfundCartLineKey(ref), ref, detail, ships: tinkerfundShipsTo(reward, zone), ...lineOf(reward, line.quantity, closed, tinkerfundHeld(existing?.lines ?? [], reward.id)) }]
     })
-    const rewarded = !!existing?.lines.length || rewards.some((l) => !l.unavailable)
+    const rewarded = tinkerfundRewarded(rewards, existing)
     const addons = draft.addons.flatMap((line): TinkerfundCartLine[] => {
       const addon = campaign.addons?.find((a) => a.id === line.id)
       if (!addon) return []
@@ -368,5 +372,5 @@ export function resolveTinkerfundCart(state: TinkerfundBackerState, shop: Tinker
   const subtotal = tinkerfundSum(groups.map((g) => g.subtotal))
   const shipping = tinkerfundSum(groups.map((g) => g.shipping))
   const count = groups.reduce((n, g) => n + (g.lines.length ? g.lines.reduce((m, l) => m + l.quantity, 0) : 1), 0)
-  return { groups, count, subtotal, shipping, rezoned: groups.some((g) => g.rezoned), total: tinkerfundCents(subtotal + shipping) }
+  return { groups, count, subtotal, shipping, total: tinkerfundCents(subtotal + shipping) }
 }

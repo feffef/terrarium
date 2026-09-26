@@ -8,7 +8,7 @@ const { space, link } = useTinkerfundSpace()
 const money = useTinkerfundMoney()
 const chosen = ref<TinkerfundZone>()
 const [{ shop, zoneName, status, error }, { loaded, zone, view, change }] = await Promise.all([useTinkerfundShop(), useTinkerfundCart(chosen)])
-const shippingRow = computed(() => tinkerfundShippingRow(view.value, zoneName(zone.value), money))
+const shippingRows = computed(() => tinkerfundShippingRows(view.value.groups, zoneName(zone.value), money))
 const blocked = computed(() => view.value.groups.some((g) => g.lines.some((l) => l.unavailable)))
 
 useSeoMeta(tinkerfundSeo({ kind: 'private', space, title: 'Your Cart' }))
@@ -44,7 +44,7 @@ useSeoMeta(tinkerfundSeo({ kind: 'private', space, title: 'Your Cart' }))
           </select>
           <dl class="sums tf-summary-list">
             <div><dt>Subtotal</dt><dd>{{ money(view.subtotal) }}</dd></div>
-            <div><dt>{{ shippingRow.label }}</dt><dd>{{ shippingRow.amount }}</dd></div>
+            <div v-for="row in shippingRows" :key="row.label"><dt>{{ row.label }}</dt><dd>{{ row.amount }}</dd></div>
             <div class="total"><dt>Estimated total</dt><dd>{{ money(view.total) }}</dd></div>
           </dl>
           <p class="note">Discounts and codes apply at checkout. You’re only charged if a Campaign is funded.</p>

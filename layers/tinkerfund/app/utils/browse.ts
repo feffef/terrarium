@@ -144,17 +144,16 @@ export function tinkerfundDeadline(status: CampaignStatus): { label: (typeof DEA
 }
 
 /** `clock` may tick past the page's "now"; the state stays fixed (issue #1364). */
-export function tinkerfundRemaining(status: CampaignStatus, clock: number): string {
-  if (status.state === 'ended') return DEADLINE_LABELS.ended
-  const left = formatTinkerfundCountdown(tinkerfundCountdown(clock, tinkerfundDeadline(status).at))
-  return status.state === 'upcoming' ? `${COUNTDOWN_LABELS.upcoming} ${left}` : left
+export function tinkerfundTimeLeft(status: CampaignStatus, clock: number) {
+  if (status.state === 'ended') return undefined
+  const { at } = tinkerfundDeadline(status)
+  return { label: COUNTDOWN_LABELS[status.state], text: formatTinkerfundCountdown(tinkerfundCountdown(clock, at)), at }
 }
 
-/** A card's time tile (story #1381): the countdown while Upcoming or Live, the outcome once Ended. */
-export function tinkerfundTimeTile(status: CampaignStatus, clock: number): { label: string; text: string; at: number } {
-  const { at } = tinkerfundDeadline(status)
-  if (status.state === 'ended') return { label: DEADLINE_LABELS.ended, text: tinkerfundStateLabel(status), at }
-  return { label: COUNTDOWN_LABELS[status.state], text: formatTinkerfundCountdown(tinkerfundCountdown(clock, at)), at }
+export function tinkerfundRemaining(status: CampaignStatus, clock: number): string {
+  const left = tinkerfundTimeLeft(status, clock)
+  if (!left) return DEADLINE_LABELS.ended
+  return status.state === 'upcoming' ? `${left.label} ${left.text}` : left.text
 }
 
 const STATE_ORDER = { live: 0, upcoming: 1, ended: 2 } as const

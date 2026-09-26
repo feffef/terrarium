@@ -23,7 +23,7 @@ const props = defineProps<{
 const id = useId()
 const money = useTinkerfundMoney()
 const { campaignLink } = useTinkerfundSpace()
-const shippingRow = computed(() => tinkerfundShippingRow(props.pledge, props.zone, money))
+const shippingRows = computed(() => tinkerfundShippingRows([props.pledge], props.zone, money))
 </script>
 
 <template>
@@ -51,7 +51,7 @@ const shippingRow = computed(() => tinkerfundShippingRow(props.pledge, props.zon
     </ul>
     <dl class="sums tf-summary-list compact">
       <div v-if="pledge.discount"><dt>Discount</dt><dd>−{{ money(pledge.discount) }}</dd></div>
-      <div><dt>{{ shippingRow.label }}</dt><dd>{{ shippingRow.amount }}</dd></div>
+      <div v-for="row in shippingRows" :key="row.label"><dt>{{ row.label }}</dt><dd>{{ row.amount }}</dd></div>
       <div class="total"><dt>Total</dt><dd>{{ money(pledge.total) }}</dd></div>
     </dl>
     <p v-if="endsAt !== undefined" class="pending">

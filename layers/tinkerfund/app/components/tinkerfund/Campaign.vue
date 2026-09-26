@@ -39,7 +39,10 @@ const category = computed(() => categories.value.find((x) => x.slug === c.value.
 
 const drawer = useTemplateRef('drawer')
 const refusals = ref<Record<string, string>>({})
-const needsReward = computed(() => !tinkerfundPledgeFor(pledges.value, slug.value)?.lines.length && !cart.value.groups.some((g) => g.campaign === slug.value && g.lines.some((l) => 'reward' in l.ref && !l.unavailable)))
+const needsReward = computed(() => !tinkerfundRewarded(
+  cart.value.groups.find((g) => g.campaign === slug.value)?.lines ?? [],
+  tinkerfundPledgeFor(pledges.value, slug.value),
+))
 
 function addToCart(request: TinkerfundCartRequest) {
   const key = 'reward' in request ? `reward:${request.reward}` : 'addon' in request ? `addon:${request.addon}` : 'bonus'

@@ -34,6 +34,8 @@ export interface TinkerfundQuoteGroup extends TinkerfundCartGroup {
   promotions: string[]
   /** The code the Pledge held, which the entered one replaces. */
   replacedCode?: string
+  /** The code the Pledge holds, which saves more than the entered one. */
+  keptCode?: string
   discount: number
   total: number
 }
@@ -43,7 +45,6 @@ export interface TinkerfundQuote {
   subtotal: number
   discount: number
   shipping: number
-  rezoned: boolean
   total: number
   /** Titles of the Promotions that took something off. */
   deals: string[]
@@ -70,7 +71,8 @@ function findCode(promotions: TinkerfundPromotionTerms[], entered: string | unde
  * Automatic discounts plus at most one code per Pledge, off Rewards and
  * Add-ons only (issue #1365). Adding to a Pledge quotes the change in its
  * discount: the terms it already earned cover what is added, one earned again
- * adds nothing, and a code entered now replaces the code it held.
+ * adds nothing, and a code entered now replaces the code it held if it saves at
+ * least as much over the whole Pledge, so a top-up never costs more.
  */
 export function quoteTinkerfundCheckout(view: TinkerfundCartView, shop: TinkerfundShop, code: string | undefined): TinkerfundQuote {
   const entered = findCode(shop.promotions, code, view.groups.filter((g) => goodsOf(g) > 0).map((g) => g.campaign), shop.now)
@@ -78,43 +80,63 @@ export function quoteTinkerfundCheckout(view: TinkerfundCartView, shop: Tinkerfu
   const groups = view.groups.map((group): TinkerfundQuoteGroup => {
     const goods = goodsOf(group)
     const { existing } = group
-    const code = goods > 0 && entered.promotion && tinkerfundPromotionTargets(entered.promotion, group.campaign) ? entered.promotion : undefined
-    const replaced = code && shop.promotions.find((p) => p.code && p.stem !== code.stem && existing?.promotions.includes(p.stem))
-    const held = (existing?.promotions ?? []).filter((stem) => stem !== replaced?.stem)
-    const earned = goods > 0
-      ? [...tinkerfundAutomaticDeals(shop.promotions, group.campaign, shop.now), ...(code ? [code] : [])].filter((p) => !held.includes(p.stem))
-      : []
-    for (const p of earned) deals.add(p.title)
+    const held = existing?.promotions ?? []
     const campaign = shop.catalog[group.campaign]?.campaign
-    const heldGoods = existing && campaign ? tinkerfundGoods(existing, campaign) : 0
-    const terms = [...shop.promotions.filter((p) => held.includes(p.stem)), ...earned]
-    const discount = cents(tinkerfundDiscount(heldGoods + goods, terms) - (existing?.discount ?? 0))
+    const allGoods = (existing && campaign ? tinkerfundGoods(existing, campaign) : 0) + goods
+    const automatic = goods > 0 ? tinkerfundAutomaticDeals(shop.promotions, group.campaign, shop.now) : []
+    const settle = (kept: string[], code?: TinkerfundPromotionTerms) => {
+      const earned = [...automatic, ...(code ? [code] : [])].filter((p) => !kept.includes(p.stem))
+      const terms = [...shop.promotions.filter((p) => kept.includes(p.stem)), ...earned]
+      return { earned, stems: [...kept, ...earned.map((p) => p.stem)], discount: tinkerfundDiscount(allGoods, terms) }
+    }
+    const offered = goods > 0 && entered.promotion && tinkerfundPromotionTargets(entered.promotion, group.campaign) && !held.includes(entered.promotion.stem)
+      ? entered.promotion
+      : undefined
+    const earlier = offered && shop.promotions.find((p) => p.code && held.includes(p.stem))
+    const keep = settle(held)
+    const swap = offered ? settle(held.filter((stem) => stem !== earlier?.stem), offered) : undefined
+    const chosen = swap && swap.discount >= keep.discount ? swap : keep
+    for (const p of chosen.earned) deals.add(p.title)
+    const discount = cents(chosen.discount - (existing?.discount ?? 0))
     return {
       ...group,
-      promotions: [...held, ...earned.map((p) => p.stem)],
-      replacedCode: replaced?.code,
+      promotions: chosen.stems,
+      replacedCode: chosen === swap ? earlier?.code : undefined,
+      keptCode: swap && chosen === keep ? earlier?.code : undefined,
       discount,
       total: cents(group.subtotal - discount + group.shipping),
     }
   })
   const discount = sum(groups.map((g) => g.discount))
+  const enteredCode = entered.promotion?.code
+  const taken = groups.some((g) => entered.promotion && g.promotions.includes(entered.promotion.stem))
+  const kept = groups.find((g) => g.keptCode)?.keptCode
   return {
     groups,
     subtotal: view.subtotal,
     discount,
     shipping: view.shipping,
-    rezoned: view.rezoned,
     total: cents(view.total - discount),
     deals: [...deals],
-    code: entered.promotion?.code,
-    codeProblem: entered.problem,
+    code: taken ? enteredCode : undefined,
+    codeProblem: entered.problem ?? (enteredCode && !taken && kept ? tinkerfundKeptCodeNotice(kept) : undefined),
   }
 }
 
-/** A summary's shipping row: a Pledge moved to a cheaper zone (issue #1365) reads as a change, never as a negative "Shipping". */
-export function tinkerfundShippingRow({ shipping, rezoned }: { shipping: number; rezoned?: boolean }, zone: string, money: (amount: number) => string) {
-  if (!rezoned) return { label: `Shipping to ${zone}`, amount: shipping ? money(shipping) : '—' }
-  return { label: `Shipping change, now to ${zone}`, amount: formatTinkerfundChange(shipping, money) }
+export const tinkerfundKeptCodeNotice = (code: string) => `Your Pledge keeps code ${code}, which saves more`
+
+/**
+ * A summary's shipping rows: what new Pledges ship for, and apart from it the
+ * net change for Pledges moved to this zone, which can be negative (issue #1365).
+ */
+export function tinkerfundShippingRows(pledges: { shipping: number; rezoned?: boolean }[], zone: string, money: (amount: number) => string) {
+  const moved = pledges.filter((p) => p.rezoned)
+  const rest = pledges.filter((p) => !p.rezoned)
+  const shipping = sum(rest.map((p) => p.shipping))
+  const rows = rest.length || !moved.length ? [{ label: `Shipping to ${zone}`, amount: shipping ? money(shipping) : '—' }] : []
+  if (!moved.length) return rows
+  const label = moved.length === 1 ? `Shipping change, now to ${zone}` : 'Shipping change'
+  return [...rows, { label, amount: formatTinkerfundChange(sum(moved.map((p) => p.shipping)), money) }]
 }
 
 export function formatTinkerfundChange(amount: number, money: (amount: number) => string): string {

@@ -6,7 +6,7 @@ const menu = useTemplateRef('menu')
 </script>
 
 <template>
-  <header class="head tf-noprint">
+  <header class="head tf-header tf-noprint">
     <div class="tf-wrap row">
       <button type="button" class="icon-btn menu-btn" aria-label="Menu" @click="menu?.open()">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" /></svg>

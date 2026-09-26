@@ -15,15 +15,15 @@ import { placeTinkerfundPledges, quoteTinkerfundCheckout } from './checkout'
 import { resolveTinkerfundOffset } from './clock'
 import { TINKERFUND_KEY_PREFIX } from './demo'
 
-const ref = pledge.shape.ref
+const pledgeRef = pledge.shape.ref
 /** When the action was taken: it replays at that "now". */
 const at = z.number()
 
 const action = z.discriminatedUnion('type', [
   z.object({ type: z.literal('cart'), at, request: tinkerfundCartRequest }),
   z.object({ type: z.literal('place'), at, zone, payment: slug, code: z.string().optional() }),
-  z.object({ type: z.literal('change'), at, ref, change: tinkerfundPledgeContents }),
-  z.object({ type: z.literal('cancel'), at, ref }),
+  z.object({ type: z.literal('change'), at, ref: pledgeRef, change: tinkerfundPledgeContents }),
+  z.object({ type: z.literal('cancel'), at, ref: pledgeRef }),
 ])
 const actions = z.array(action)
 

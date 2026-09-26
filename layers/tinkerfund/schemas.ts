@@ -4,9 +4,9 @@ import { z } from 'zod'
 import { TINKERFUND_OFFSET, resolveTinkerfundOffset } from './app/utils/clock'
 
 export const slug = z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, 'must be a lowercase slug')
-export const offset = z.string().regex(TINKERFUND_OFFSET, 'must be an offset like "-12d" or "+36h"')
+const offset = z.string().regex(TINKERFUND_OFFSET, 'must be an offset like "-12d" or "+36h"')
 const money = z.number().positive()
-export const count = z.number().int().nonnegative()
+const count = z.number().int().nonnegative()
 const positiveCount = z.number().int().positive()
 export const zone = z.enum(['domestic', 'europe', 'world'])
 const TOKEN = String.raw`var\(--tf-[a-z-]+\)`
@@ -16,7 +16,7 @@ const COLOUR_VALUE = /\b(?:fill|stroke|color)\s*(?:=\s*["']?|:)\s*([^"';]+)/g
 /** Inner SVG markup, coloured only by theme tokens so it reads in both themes
  *  (issue #1363). No ids: the same figure can appear twice on one page. The
  *  byte budget is story #1378's. */
-export function svg(maxBytes: number) {
+function svg(maxBytes: number) {
   return z
     .string()
     .min(1)
@@ -126,7 +126,7 @@ export const campaign = z
     }
   })
 
-export const comment = z.object({ author: z.string(), posted: offset, text: z.string(), inventor: z.boolean().optional() }).strict()
+const comment = z.object({ author: z.string(), posted: offset, text: z.string(), inventor: z.boolean().optional() }).strict()
 
 export const promotion = z
   .object({
@@ -146,12 +146,51 @@ export const promotion = z
 
 export const pledge = z
   .object({
-    ref: z.string(),
+    ref: z.string().min(1),
     campaign: slug,
     placed: offset,
     zone,
     lines: z.array(z.object({ reward: slug, options: z.record(slug, slug).optional(), quantity: positiveCount }).strict()),
     addons: z.array(z.object({ id: slug, quantity: positiveCount }).strict()).optional(),
     bonus: money.optional(),
+  })
+  .strict()
+
+// Campaigns live at campaigns/<slug>.md, their Updates at
+// campaigns/<slug>/updates/<n>.md; other pages carry neither field.
+export const page = z.object({
+  campaign: campaign.optional(),
+  update: z.object({ published: offset }).strict().optional(),
+})
+
+export const inventor = z.object({ name: z.string(), bio: z.string(), portrait: svg(1024) }).strict()
+
+export const category = z.object({ name: z.string(), blurb: z.string(), icon: svg(1024), order: count }).strict()
+
+export const commentThread = z
+  .object({
+    campaign: slug,
+    comments: z.array(comment.extend({ replies: z.array(comment).optional() })),
+  })
+  .strict()
+
+export const backer = z
+  .object({
+    name: z.string(),
+    email: z.string().email(),
+    address: z
+      .object({ street: z.string(), city: z.string(), postcode: z.string(), country: z.string(), zone })
+      .strict(),
+    pledges: z.array(pledge),
+  })
+  .strict()
+
+export const shop = z
+  .object({
+    /** `qa` pins "now" here; `prod` leaves it out and follows real time (#1364). */
+    now: z.string().datetime().optional(),
+    currency: z.literal('EUR'),
+    zones: z.array(z.object({ id: zone, name: z.string() }).strict()),
+    payments: z.array(z.object({ id: slug, label: z.string() }).strict()),
   })
   .strict()
