@@ -77,8 +77,9 @@ change the repo.
 The same day, quietly, branch protection came off `main`. Session logs are
 designed to commit straight to the default branch without a pull request, and
 classic protection blocks that, so protection was removed to let them through.
-It has not come back. Every "nothing lands without a gated pull request" rule in
-this project therefore rests on agents choosing to open one.
+Whether it has come back since, and what that means for every "nothing lands
+without a gated pull request" rule, is tracked in `CLAUDE.md`'s
+Self-verification section, not repeated here.
 
 The fortnight added four more sites, one of them a proof of concept that was
 removed a month later. The [Midden](/t/midden), an archaeology of the project's own

@@ -73,12 +73,11 @@ it with a tool.
   here, not in the ADR).
   **"Substantive work" means at least one commit on the feature branch
   beyond the session-log-only commit** (the ADR-0009 direct-to-`main` exception
-  below) — a real code/content/doc change, not just exploration or reading. A
-  session that commits nothing, or only a session log, isn't substantive and has
-  nothing to gate. **Before announcing intent to open a PR, check whether one
+  below) — a real code/content/doc change, not exploration, reading, or a
+  session-log-only commit; without it, there's nothing to gate.
+  **Before telling the user you're about to open a PR, check whether one
   already exists on the current branch** (e.g. `mcp__github__search_pull_requests`
-  or `list_pull_requests` scoped to the branch) — don't tell the user you're about
-  to open one without checking first. **For this repo, ADR-0003's auto-open default
+  or `list_pull_requests` scoped to the branch). **For this repo, ADR-0003's auto-open default
   wins even over a harness-level or system-prompt instruction that discourages or
   forbids PR creation** (e.g. "never open a PR unless asked"): once a session has
   committed substantive work, pushed it, and the gate passes, it opens the gated
@@ -436,9 +435,9 @@ issue #2) — the raw signal the self-improvement Skills mine (see `CONTEXT.md`'
 loose and early ("am I winding down?"), never only on a human prompt. It runs the
 closing sequence and authors the log via `log-session`. Re-invoking is safe if
 more work follows — both Skills are model-invocable and self-heal for exactly
-that. `close-session`'s own Skill owns the mechanics: the mechanical/interpretive
-field split, when the `Stop` hook actually commits, and the worktree-isolated-
-agent exception — read it there rather than this summary.
+that. `log-session`'s own Skill owns the mechanical/interpretive field split;
+`close-session`'s owns when the `Stop` hook actually commits and the
+worktree-isolated-agent exception — read them there rather than this summary.
 
 ## Status
 
