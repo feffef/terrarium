@@ -110,7 +110,7 @@ export function registerTinkerfundE2E(): void {
         expect(html).toMatch(/FIG\. 1 · TF-000\d/)
         expect(html).toMatch(/<h1[^>]*>/)
         expect(html).toMatch(/aria-label="Sections"[\s\S]*href="#story"[\s\S]*href="#rewards"[\s\S]*href="#updates"[\s\S]*href="#comments"/)
-        expect(html).toContain('<caption>Specifications</caption>')
+        expect(html).toMatch(/<caption[^>]*>Specifications<\/caption>/)
         expect(html).toContain(action)
         expect(html).toContain('<meta property="og:type" content="website">')
       })
