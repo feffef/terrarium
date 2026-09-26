@@ -324,8 +324,8 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
 
 .hero {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(16rem, 21rem);
-  gap: 2rem 3rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 2rem 1.1rem;
 }
 @media (max-width: 56rem) {
   .hero {
