@@ -120,7 +120,7 @@ export function tinkerfundOptionsLabel(reward: CartReward, options: Record<strin
   return reward.options?.map((g) => `${g.name}: ${g.choices.find((c) => c.id === options[g.id])?.label}`).join(' · ') || undefined
 }
 
-const cents = (amount: number) => Math.round(amount * 100) / 100
+export const tinkerfundCents = (amount: number) => Math.round(amount * 100) / 100
 
 function closed(campaign: TinkerfundCartCampaign, now: number): string | undefined {
   const { state } = deriveCampaignStatus({ ...campaign, goal: 1 }, 0, now)
@@ -147,7 +147,7 @@ export function addToTinkerfundCart(
     : { campaign: request.campaign, lines: [], addons: [] }
 
   if ('bonus' in request) {
-    const bonus = cents((draft.bonus ?? 0) + request.bonus)
+    const bonus = tinkerfundCents((draft.bonus ?? 0) + request.bonus)
     if (bonus > 0) draft.bonus = bonus
     else delete draft.bonus
   } else if ('reward' in request) {
@@ -224,7 +224,7 @@ export interface TinkerfundCartView {
   total: number
 }
 
-const sum = (xs: number[]) => cents(xs.reduce((a, b) => a + b, 0))
+export const tinkerfundSum = (xs: number[]) => tinkerfundCents(xs.reduce((a, b) => a + b, 0))
 
 /** Unknown ids are dropped quietly; what is known but can't be had stays, flagged and unpriced (issue #1366). */
 export function resolveTinkerfundCart(
@@ -242,7 +242,7 @@ export function resolveTinkerfundCart(
       const max = tinkerfundMaxQuantity(item)
       const why = unavailable ?? (max === 0 ? 'Sold out' : undefined)
       const q = why ? quantity : Math.min(quantity, max)
-      return { title: item.title, price: item.price, quantity: q, stored: quantity, max, amount: why ? 0 : cents(item.price * q), unavailable: why }
+      return { title: item.title, price: item.price, quantity: q, stored: quantity, max, amount: why ? 0 : tinkerfundCents(item.price * q), unavailable: why }
     }
 
     let shipped = false
@@ -271,12 +271,12 @@ export function resolveTinkerfundCart(
       lines,
       bonus: draft.bonus,
       closed: shut,
-      subtotal: sum([...lines.map((l) => l.amount), shut ? 0 : draft.bonus ?? 0]),
+      subtotal: tinkerfundSum([...lines.map((l) => l.amount), shut ? 0 : draft.bonus ?? 0]),
       shipping: shipped ? campaign.shipping[zone] ?? 0 : 0,
     }]
   })
-  const subtotal = sum(groups.map((g) => g.subtotal))
-  const shipping = sum(groups.map((g) => g.shipping))
+  const subtotal = tinkerfundSum(groups.map((g) => g.subtotal))
+  const shipping = tinkerfundSum(groups.map((g) => g.shipping))
   const count = groups.reduce((n, g) => n + (g.lines.length ? g.lines.reduce((m, l) => m + l.quantity, 0) : 1), 0)
-  return { groups, count, subtotal, shipping, total: cents(subtotal + shipping) }
+  return { groups, count, subtotal, shipping, total: tinkerfundCents(subtotal + shipping) }
 }

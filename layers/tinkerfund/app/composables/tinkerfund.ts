@@ -24,13 +24,15 @@ export type TinkerfundCard = TinkerfundListing & { categoryName: string; invento
 
 /**
  * Every Campaign in the Space as a card or table row, plus the categories and
- * Promotions that browsing needs (story #1381). `clock` starts at the page's
- * "now" and, in `prod`, moves once a minute so countdowns follow (issue #1364).
+ * Promotions that browsing needs (story #1381). Totals count the visitor's
+ * Pledges once mounted (issue #1364). `clock` starts at the page's "now" and,
+ * in `prod`, moves once a minute so countdowns follow.
  */
 export async function useTinkerfundCatalog() {
   // Every composable runs before the first await: after it, Nuxt's context is gone.
   const { space, pagesKey, collections } = useSpace('tinkerfund')
   const clockReady = useTinkerfundClock()
+  const cartReady = useTinkerfundCart()
   const catalog = useAsyncData(`tinkerfund-catalog-${space}`, async () => {
     const [docs, promotions, categories, inventors] = await Promise.all([
       queryCollection(pagesKey).where('campaign', 'IS NOT NULL').select('path', 'title', 'description', 'campaign').all(),
@@ -48,7 +50,7 @@ export async function useTinkerfundCatalog() {
   })
   onUnmounted(() => clearInterval(timer))
 
-  const [{ now, ticking: ticks }, { data }] = await Promise.all([clockReady, catalog])
+  const [{ now, ticking: ticks }, { data }, { pledges, baked }] = await Promise.all([clockReady, catalog, cartReady])
   clock.value = now.value
   ticking = ticks
 
@@ -57,7 +59,9 @@ export async function useTinkerfundCatalog() {
     (data.value?.categories ?? []).map((c) => ({ slug: c.stem, name: c.name, blurb: c.blurb, icon: c.icon })),
   )
   const cards = computed<TinkerfundCard[]>(() => {
-    const docs = (data.value?.docs ?? []).flatMap((d) => (d.campaign ? [{ ...d, campaign: d.campaign }] : []))
+    const docs = (data.value?.docs ?? []).flatMap((d) => d.campaign
+      ? [{ ...d, campaign: withTinkerfundPledges(d.path.split('/').pop()!, d.campaign, pledges.value, baked.value) }]
+      : [])
     const inventors = new Map((data.value?.inventors ?? []).map((i) => [i.stem, i.name]))
     const categoryNames = new Map(categories.value.map((c) => [c.slug, c.name]))
     return tinkerfundListings(docs, promotions.value, now.value).map((l) => ({

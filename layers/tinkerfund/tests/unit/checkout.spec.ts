@@ -131,6 +131,17 @@ describe('confirming a checkout', () => {
     expect(place({ quote: quoteTinkerfundCheckout(resolveTinkerfundCart(cart, sold, NOW, 'domestic'), [], undefined, NOW) })).toEqual({ error: 'Mug: Mug is no longer available' })
   })
 
+  it('refuses a checkout with no payment method', () => {
+    expect(place({ payment: '' })).toEqual({ error: 'Choose how to pay' })
+  })
+
+  it('refuses to move a Pledge to a zone its earlier Rewards don’t ship to', () => {
+    const manual: TinkerfundDraft[] = [{ campaign: 'lamp', lines: [{ reward: 'manual', options: {}, quantity: 1 }], addons: [] }]
+    const europe = quoteTinkerfundCheckout(resolveTinkerfundCart(manual, catalog, NOW, 'europe'), [], undefined, NOW)
+    const baked = [{ ref: 'TF-P-9001', campaign: 'lamp', placed: '-5d', zone: 'domestic' as const, lines: [{ reward: 'lamp', quantity: 1 }] }]
+    expect(place({ overlay: { cart: manual, pledges: [] }, quote: europe, zone: 'europe', baked })).toEqual({ error: 'Lamp: One lamp doesn’t ship there' })
+  })
+
   it('adds to the Pledge a Campaign already has, keeping its reference and the per-Backer limit', () => {
     const baked = [{ ref: 'TF-P-9001', campaign: 'lamp', placed: '-5d', zone: 'domestic' as const, lines: [{ reward: 'manual', quantity: 1 }], bonus: 3 }]
     const result = place({ baked })

@@ -39,8 +39,12 @@ const adding = (campaign: string) => tinkerfundPledgeFor(campaign, pledges.value
 const choose = (change: Record<string, string | undefined>) => router.replace({ query: { ...route.query, ...change } })
 const toStep = (i: number) => ({ query: { ...route.query, step: STEPS[i] } })
 
+const heading = ref<HTMLElement>()
+watch(step, () => nextTick(() => heading.value?.focus()))
+
 const entered = ref(query('code') ?? '')
 const refusal = ref<string>()
+const placing = ref(false)
 function removeCode() {
   entered.value = ''
   choose({ code: undefined })
@@ -48,6 +52,7 @@ function removeCode() {
 async function confirm() {
   const { refs, error } = place({ quote: quote.value, zone: zone.value, payment: payment.value?.id ?? '' })
   refusal.value = error
+  placing.value = !!refs
   if (refs) await router.replace({ path: tinkerfundPath(space, '/checkout/done'), query: { refs: refs.join(',') } })
 }
 
@@ -61,10 +66,10 @@ useSeoMeta(tinkerfundSeo({ kind: 'private', space, title: 'Checkout' }))
     </template>
 
     <div class="checkout">
-      <h1>{{ LABELS[step] }}</h1>
+      <h1 ref="heading" tabindex="-1">{{ LABELS[step] }}</h1>
       <p class="banner" role="note"><b>Demo</b> — no payment is taken</p>
 
-      <p v-if="!loaded" class="empty tf-panel">Opening your checkout…</p>
+      <p v-if="!loaded || placing" class="empty tf-panel">{{ placing ? 'Placing your Pledge…' : 'Opening your checkout…' }}</p>
       <section v-else-if="!view.groups.length" class="empty tf-panel">
         <p>Your Cart is empty, so there is nothing to check out.</p>
         <NuxtLink class="tf-btn primary" :to="tinkerfundPath(space, '/cart')">Back to your Cart</NuxtLink>
@@ -127,7 +132,10 @@ useSeoMeta(tinkerfundSeo({ kind: 'private', space, title: 'Checkout' }))
               :note="adding(group.campaign) && `Adds to your Pledge ${adding(group.campaign)}`"
             />
             <p class="note">One Pledge per Campaign. You’re only charged if a Campaign is funded, when it ends.</p>
-            <p v-if="refusal" class="refusal" role="alert">{{ refusal }}</p>
+            <p v-if="stranded" class="refusal" role="alert">
+              Something here can’t be pledged to {{ zoneName }}. <NuxtLink :to="toStep(0)">Back to shipping</NuxtLink>
+            </p>
+            <p v-else-if="refusal" class="refusal" role="alert">{{ refusal }}</p>
             <p class="actions">
               <NuxtLink class="tf-btn" :to="toStep(1)">Back</NuxtLink>
               <button type="button" class="tf-btn primary" :disabled="stranded" @click="confirm">
@@ -176,7 +184,7 @@ useSeoMeta(tinkerfundSeo({ kind: 'private', space, title: 'Checkout' }))
 @media (min-width: 900px) { .layout { grid-template-columns: minmax(0, 1fr) 320px; } }
 .step { display: grid; gap: 14px; }
 .step > * { margin: 0; }
-h1 { margin: 0; font: 800 clamp(28px, 4vw, 38px)/1.05 var(--tf-font); font-stretch: 78%; }
+h1 { margin: 0; outline: none; font: 800 clamp(28px, 4vw, 38px)/1.05 var(--tf-font); font-stretch: 78%; }
 .lead, .note { color: var(--tf-muted); }
 .address { display: grid; gap: 6px; padding: 16px; }
 .address > * { margin: 0; }

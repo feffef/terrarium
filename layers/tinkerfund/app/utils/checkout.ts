@@ -1,6 +1,6 @@
 // Checkout (story #1384, Pledge flow #1365): Promotions over a Cart, then one
 // Pledge per Campaign, stored in the visitor's overlay.
-import { tinkerfundCartLineKey, tinkerfundOptionsLabel } from './cart'
+import { tinkerfundCartLineKey, tinkerfundCents as cents, tinkerfundOptionsLabel, tinkerfundSum as sum } from './cart'
 import type { TinkerfundCartCatalog, TinkerfundCartGroup, TinkerfundCartView, TinkerfundOverlay, TinkerfundPledge, TinkerfundZone } from './cart'
 import { resolveTinkerfundOffset } from './clock'
 import { derivePromotionState } from './status'
@@ -32,8 +32,6 @@ export interface TinkerfundQuote {
   codeProblem?: string
 }
 
-const cents = (amount: number) => Math.round(amount * 100) / 100
-const sum = (xs: number[]) => cents(xs.reduce((a, b) => a + b, 0))
 const targets = (p: TinkerfundPromotionTerms, campaign: string) => !p.campaign || p.campaign === campaign
 
 function findCode<P extends TinkerfundPromotionTerms>(promotions: P[], entered: string | undefined, campaigns: string[], now: number) {
@@ -106,7 +104,7 @@ interface Priced {
   claimed: number
 }
 
-type AnyPledge = Pick<TinkerfundBakedPledge, 'ref' | 'campaign' | 'lines' | 'addons' | 'bonus'> & { discount?: number }
+type CountedPledge = Pick<TinkerfundBakedPledge, 'ref' | 'campaign' | 'lines' | 'addons' | 'bonus'> & { discount?: number }
 
 /**
  * A Campaign's totals and stock with the visitor's Pledges counted (issue
@@ -122,13 +120,13 @@ export function withTinkerfundPledges<C extends { pledged: number; backers: numb
 ): C {
   const mine = pledges.filter((p) => p.campaign === slug)
   if (!mine.length) return campaign
-  const was = (p: TinkerfundPledge): AnyPledge | undefined => baked.find((b) => b.ref === p.ref)
-  const count = (p: AnyPledge | undefined, kind: 'reward' | 'addon', id: string) =>
+  const was = (p: TinkerfundPledge): CountedPledge | undefined => baked.find((b) => b.ref === p.ref)
+  const count = (p: CountedPledge | undefined, kind: 'reward' | 'addon', id: string) =>
     kind === 'reward'
       ? (p?.lines ?? []).filter((l) => l.reward === id).reduce((n, l) => n + l.quantity, 0)
       : (p?.addons ?? []).filter((a) => a.id === id).reduce((n, a) => n + a.quantity, 0)
   const taken = (kind: 'reward' | 'addon', id: string) => mine.reduce((n, p) => n + count(p, kind, id) - count(was(p), kind, id), 0)
-  const amount = (p: AnyPledge | undefined) =>
+  const amount = (p: CountedPledge | undefined) =>
     p
       ? campaign.rewards.reduce((n, r) => n + r.price * count(p, 'reward', r.id), 0) +
         (campaign.addons ?? []).reduce((n, a) => n + a.price * count(p, 'addon', a.id), 0) +
@@ -218,6 +216,7 @@ export interface TinkerfundPlaceInput {
 export function placeTinkerfundPledges(input: TinkerfundPlaceInput): { overlay?: TinkerfundOverlay; refs?: string[]; error?: string } {
   const { overlay, quote, zone, payment, catalog, baked, now } = input
   if (!quote.groups.length) return { error: 'Your Cart is empty' }
+  if (!payment) return { error: 'Choose how to pay' }
   const fresh = nextRefs([...baked, ...overlay.pledges].map((p) => p.ref), quote.groups.length)
   const placed: TinkerfundPledge[] = []
 
@@ -226,8 +225,6 @@ export function placeTinkerfundPledges(input: TinkerfundPlaceInput): { overlay?:
     if (group.closed) return refuse(group.closed)
     const gone = group.lines.find((l) => l.unavailable)
     if (gone) return refuse(`${gone.title} is no longer available`)
-    const stranded = group.lines.find((l) => !l.ships)
-    if (stranded) return refuse(`${stranded.title} doesn’t ship there`)
 
     const campaign = catalog[group.campaign]!.campaign
     const old = tinkerfundPledgeFor(group.campaign, overlay.pledges, baked)
@@ -238,6 +235,9 @@ export function placeTinkerfundPledges(input: TinkerfundPlaceInput): { overlay?:
     )
     for (const reward of campaign.rewards) {
       const held = lines.filter((l) => l.reward === reward.id).reduce((n, l) => n + l.quantity, 0)
+      if (!held) continue
+      // The merged Pledge moves to this zone, earlier Rewards included.
+      if (reward.shipsTo && !reward.shipsTo.includes(zone)) return refuse(`${reward.title} doesn’t ship there`)
       if (reward.limit !== undefined && held > reward.limit) return refuse(`Max ${reward.limit} per Backer`)
     }
     const addons = merge(

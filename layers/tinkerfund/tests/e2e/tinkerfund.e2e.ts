@@ -411,6 +411,11 @@ export function registerTinkerfundE2E(): void {
         expect(readout).toMatch(/Backers\s*31/)
         expect(await page.locator('.goals li.yes').textContent()).toContain('The button in a second colour')
         expect(await page.getByRole('article', { name: 'One keypad' }).textContent()).toContain('1 of 30 left')
+
+        // Browse counts the visitor's Pledges too, after a full reload.
+        await page.goto(url('/t/tinkerfund/qa/discover'), { waitUntil: 'hydration' })
+        const card = page.locator('.grid article').filter({ has: page.getByRole('link', { name: 'One-Button Keypad' }) })
+        await expect.poll(() => card.locator('.tiles').textContent()).toMatch(/Pledged\s*€1,002.50\s*Funded\s*100%/)
       } finally {
         await page.close()
       }
