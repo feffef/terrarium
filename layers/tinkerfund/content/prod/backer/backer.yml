@@ -6,4 +6,20 @@ address:
   postcode: "10115"
   country: Germany
   zone: domestic
-pledges: []
+pledges:
+  # Funded and delivered: its Rewards' delivery offsets are in the past.
+  - ref: TF-P-0412
+    campaign: pocket-sundial-with-snooze
+    placed: -128d
+    zone: domestic
+    lines:
+      - { reward: sundial, options: { finish: brass }, quantity: 1 }
+    addons:
+      - { id: chain, quantity: 1 }
+  - ref: TF-P-0587
+    campaign: solo-pea-rest
+    placed: -40d
+    zone: domestic
+    lines:
+      - { reward: one-rest, quantity: 2 }
+    bonus: 5
