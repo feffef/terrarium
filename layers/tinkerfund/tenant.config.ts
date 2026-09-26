@@ -5,7 +5,7 @@
 // cross-Document references are checked in scripts/validate-content-refs.ts.
 // Every Collection's schema lives in schemas.ts.
 import { defineTenant } from '../../shared/manifest'
-import { backer, category, commentThread, inventor, page, promotion, shop } from './schemas'
+import { backer, category, commentThread, inventor, page, promotion, shop, updateLog } from './schemas'
 
 export default defineTenant({
   name: 'tinkerfund',
@@ -15,6 +15,7 @@ export default defineTenant({
     inventors: { type: 'data', source: '*.yml', schema: inventor },
     categories: { type: 'data', source: '*.yml', schema: category },
     comments: { type: 'data', source: '*.yml', schema: commentThread },
+    updates: { type: 'data', source: '*.yml', schema: updateLog },
     promotions: { type: 'data', source: '*.yml', schema: promotion },
     backer: { type: 'data', source: '*.yml', schema: backer },
     shop: { type: 'data', source: '*.yml', schema: shop },

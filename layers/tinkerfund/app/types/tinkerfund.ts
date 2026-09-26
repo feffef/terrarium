@@ -4,6 +4,7 @@ import type {
   TinkerfundProdCommentsCollectionItem,
   TinkerfundProdPagesCollectionItem,
   TinkerfundProdPromotionsCollectionItem,
+  TinkerfundProdUpdatesCollectionItem,
 } from '@nuxt/content'
 
 export type TinkerfundPage = TinkerfundProdPagesCollectionItem
@@ -13,3 +14,4 @@ export type TinkerfundAddon = NonNullable<TinkerfundCampaign['addons']>[number]
 export type TinkerfundStretchGoal = NonNullable<TinkerfundCampaign['stretchGoals']>[number]
 export type TinkerfundComment = TinkerfundProdCommentsCollectionItem['comments'][number]
 export type TinkerfundPromotion = TinkerfundProdPromotionsCollectionItem
+export type TinkerfundUpdate = TinkerfundProdUpdatesCollectionItem['updates'][number]

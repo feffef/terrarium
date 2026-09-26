@@ -1,0 +1,12 @@
+campaign: last-minute-lamp
+updates:
+  - title: Tooling is done
+    published: -2d
+    body: |-
+      The mould for the switch is finished.
+  - title: Funded, with a day to spare
+    published: -12h
+    body: |-
+      The lamp passed its goal overnight.
+
+      A second paragraph, so the e2e sees paragraphs split at a blank line.
