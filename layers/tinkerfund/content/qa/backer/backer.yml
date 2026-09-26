@@ -16,3 +16,15 @@ pledges:
     addons:
       - { id: bulb, quantity: 2 }
     bonus: 3
+  - ref: TF-P-9002
+    campaign: retired-ruler
+    placed: -45d
+    zone: europe
+    lines:
+      - { reward: ruler, quantity: 2 }
+  - ref: TF-P-9003
+    campaign: indoor-hammock
+    placed: -20d
+    zone: domestic
+    lines:
+      - { reward: hammock, quantity: 1 }

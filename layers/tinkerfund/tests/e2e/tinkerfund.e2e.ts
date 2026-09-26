@@ -56,6 +56,41 @@ export function registerTinkerfundE2E(): void {
       expect(html).toMatch(/<time [^>]*datetime="2026-06-03T00:00:00.000Z"[^>]*>1 day 12 hours to go<\/time>/)
     })
 
+    // Worked out by hand from each fixture's offsets against qa's pinned now.
+    it('shows every qa Campaign’s status in the component gallery', async () => {
+      const html = await $fetch('/t/tinkerfund/qa')
+      expect(html).toMatch(/<h1[^>]*>Component gallery<\/h1>/)
+      expect(html).toMatch(/<time datetime="2026-06-01T12:00:00.000Z"[^>]*>2026-06-01 12:00 UTC<\/time>/)
+      const status = (registry: string) => html.match(new RegExp(`${registry}</span>([\\s\\S]*?)</div>`))?.[1] ?? ''
+      expect(status('TF-9001')).toMatch(/Live<[\s\S]*Ending soon[\s\S]*Goal reached[\s\S]*125% funded[\s\S]*1 day 12 hours to go/)
+      expect(status('TF-9002')).toMatch(/Live<[\s\S]*Goal reached[\s\S]*100% funded[\s\S]*21 days 0 hours to go/)
+      expect(status('TF-9003')).toMatch(/Upcoming<[\s\S]*0% funded[\s\S]*Launches in 3 days 0 hours/)
+      expect(status('TF-9004')).toMatch(/Live<[\s\S]*0% funded[\s\S]*28 days 0 hours to go/)
+      expect(status('TF-9005')).toMatch(/Ended<[\s\S]*>Funded<[\s\S]*12480% funded/)
+      expect(status('TF-9006')).toMatch(/Ended<[\s\S]*>Unfunded<[\s\S]*23% funded/)
+      expect(await $fetch('/t/tinkerfund/prod')).not.toContain('Component gallery')
+    })
+
+    for (const [colorScheme, surface, ink] of [
+      ['light', 'rgb(255, 255, 255)', 'rgb(17, 23, 27)'],
+      ['dark', 'rgb(19, 25, 29)', 'rgb(225, 231, 234)'],
+    ] as const) {
+      it(`renders the gallery in the ${colorScheme} theme`, async () => {
+        const page = await createPage()
+        try {
+          await page.emulateMedia({ colorScheme })
+          await page.goto(url('/t/tinkerfund/qa'), { waitUntil: 'hydration' })
+          const specimen = await page.locator('.specimen').first().evaluate((el) => {
+            const s = getComputedStyle(el)
+            return { surface: s.backgroundColor, ink: s.color }
+          })
+          expect(specimen).toEqual({ surface, ink })
+        } finally {
+          await page.close()
+        }
+      })
+    }
+
     it('hydrates a Campaign page cleanly', async () => {
       await expectCleanHydration('/t/tinkerfund/qa/campaigns/last-minute-lamp')
     })

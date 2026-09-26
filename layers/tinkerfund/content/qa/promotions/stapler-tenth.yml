@@ -1,0 +1,4 @@
+title: A tenth off the stapler (active, automatic)
+campaign: goal-exact-stapler
+discount: { percent: 10 }
+start: -1d
