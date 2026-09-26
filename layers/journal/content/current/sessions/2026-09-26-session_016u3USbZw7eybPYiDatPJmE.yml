@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_016u3USbZw7eybPYiDatPJmE
 startedAt: 2026-09-26T13:14:36Z
-endedAt: 2026-09-26T13:37:52Z
+endedAt: 2026-09-26T13:41:30Z
 kind: autonomous
 goal: Run the scheduled /prune-trial routine
-status: in-review
-outcome: "Judged 1 trial (holds), opened 1 new trial, PR #1400 open"
-summary: "Fully autonomous scheduled run, no human prompt at any point. Judged the judgeable open trial (CLAUDE.md's run_in_background bullet) via prune-trial-window.ts, session-frictions.ts, and a dedicated GitHub issue search — no recurrence since landing, prune holds, entry deleted. For a new trial, a full-corpus criterion-1 search (dispatched subagent) surfaced only territory two prior trials already validated holding; manual review of every other sizable untrialed doc found dense, non-redundant reference content, not restated prose. Per the repo's owner-directed fallback (no problem clears the bar -> rewrite one whole file), rewrote docs/agents/domain.md in plainer words (671->578 words, every rule and worked example kept), ran the full gate green, and verified comprehension via a Sonnet probe in an isolated worktree before shipping. Opened and subscribed to PR #1400."
+status: completed
+outcome: "Judged 1 trial (holds), opened 1 new trial, PR #1400 merged"
+summary: "Fully autonomous scheduled run, no human prompt at any point. Judged the judgeable open trial (CLAUDE.md's run_in_background bullet) via prune-trial-window.ts, session-frictions.ts, and a dedicated GitHub issue search — no recurrence since landing, prune holds, entry deleted. For a new trial, a full-corpus criterion-1 search (dispatched subagent) surfaced only territory two prior trials already validated holding; manual review of every other sizable untrialed doc found dense, non-redundant reference content, not restated prose. Per the repo's owner-directed fallback (no problem clears the bar -> rewrite one whole file), rewrote docs/agents/domain.md in plainer words (671->578 words, every rule and worked example kept), ran the full gate green, and verified comprehension via a Sonnet probe in an isolated worktree before shipping. Opened, subscribed to, verdict-commented on, and merged PR #1400 via merge-pr.ts (prune-trial's merge-on-green-gate-alone tier)."
 prs:
   - "1400"
 docsRead:
@@ -31,6 +31,8 @@ docsRead:
   - path: docs/agents/domain.md
     reason: (read before editing)
   - path: scripts/provenance-header.ts
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
     reason: (no reason given)
   - path: docs/research/rulebook-migration-table.md
     reason: (no reason given)
@@ -58,22 +60,25 @@ frictions:
   - description: First pass at the domain.md "simplify the language" rewrite only reformatted sentences (671->668 words, effectively flat) rather than cutting real content, because I judged it by read-through impression instead of a word count.
     solution: Compare `wc -w` before/after immediately after any language- simplification rewrite, before treating it as done -- a rewrite that merely re-flows prose isn't a prune.
     severity: minor
-durationSec: 1396
+durationSec: 1614
 models:
-  claude-sonnet-5: 284
+  claude-sonnet-5: 325
 toolCounts:
-  Bash: 91
-  Read: 18
+  Bash: 98
+  Read: 19
   Agent: 6
-  ReadNotifications: 2
-  ToolSearch: 3
+  ReadNotifications: 4
+  ToolSearch: 6
   mcp__github__search_issues: 2
-  Edit: 4
+  Edit: 5
   Write: 2
   Skill: 3
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
+  mcp__github__pull_request_read: 5
+  mcp__github__add_issue_comment: 1
+  mcp__github__unsubscribe_pr_activity: 1
 filesEdited:
   - .agents/prune-trials.yml
   - docs/agents/domain.md
