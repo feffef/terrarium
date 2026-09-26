@@ -4,7 +4,6 @@ defineProps<{ to: string }>()
 
 <template>
   <NuxtLink :to="to" class="wordmark" aria-label="Tinkerfund home">
-    <!-- The gauge mark: a crosshair with one quarter filled, like a funding gauge (issue #1362). -->
     <svg viewBox="0 0 26 26" aria-hidden="true">
       <rect x="1" y="1" width="24" height="24" rx="6" fill="var(--tf-ink)" />
       <path d="M13 13V6.5A6.5 6.5 0 0 1 19.5 13z" fill="var(--tf-accent)" />

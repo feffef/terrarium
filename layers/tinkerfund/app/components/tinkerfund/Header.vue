@@ -31,13 +31,7 @@ const closeOnBackdrop = (e: MouseEvent) => {
         <NuxtLink :to="link('/deals')">Deals</NuxtLink>
       </nav>
 
-      <form class="search" role="search" :action="link('/search')" method="get">
-        <label>
-          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7" /><path d="m20 20-4-4" /></svg>
-          <span class="tf-sr">Search Campaigns</span>
-          <input name="q" type="search" placeholder="Search Campaigns" autocomplete="off">
-        </label>
-      </form>
+      <TinkerfundSearchField class="field" :action="link('/search')" />
 
       <div class="tools">
         <NuxtLink class="icon-btn search-icon" :to="link('/search')" aria-label="Search">
@@ -61,13 +55,7 @@ const closeOnBackdrop = (e: MouseEvent) => {
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18" /></svg>
           </button>
         </div>
-        <form class="search" role="search" :action="link('/search')" method="get">
-          <label>
-            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7" /><path d="m20 20-4-4" /></svg>
-            <span class="tf-sr">Search Campaigns</span>
-            <input name="q" type="search" placeholder="Search Campaigns" autocomplete="off">
-          </label>
-        </form>
+        <TinkerfundSearchField :action="link('/search')" />
         <nav aria-label="Menu" @click="menu?.close()">
           <NuxtLink :to="link('/discover')">Discover</NuxtLink>
           <p class="tf-label">Categories</p>
@@ -140,19 +128,7 @@ svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width:
 .cats a:hover { background: var(--tf-bg); }
 .cats a:last-child { border-top: var(--tf-hairline); margin-top: 4px; font-family: var(--tf-mono); font-size: 13px; }
 
-.search { flex: 1; min-width: 180px; }
-.search label {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-  padding: 7px 10px;
-  border: 1px solid var(--tf-muted);
-  border-radius: var(--tf-radius);
-  background: var(--tf-bg);
-  color: var(--tf-muted);
-}
-.search input { width: 100%; border: 0; background: none; outline: none; color: var(--tf-ink); }
-.search label:focus-within { outline: 2px solid var(--tf-link); outline-offset: 2px; }
+.field { flex: 1; min-width: 180px; }
 
 .tools { display: flex; gap: 8px; align-items: center; margin-left: auto; }
 .icon-btn {
@@ -189,7 +165,7 @@ svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width:
 .menu-btn, .search-icon { display: none; }
 @media (max-width: 859px) {
   .row { gap: 8px; }
-  .nav, .row > .search { display: none; }
+  .nav, .field { display: none; }
   .menu-btn, .search-icon { display: inline-grid; }
 }
 
