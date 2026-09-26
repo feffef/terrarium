@@ -1,25 +1,26 @@
 schemaVersion: 1
 session: session_01Bwzp9LzTsRFbM7AGRc1nGS
 startedAt: 2026-09-26T20:28:18Z
-endedAt: 2026-09-26T21:04:57Z
+endedAt: 2026-09-26T21:36:51Z
 kind: interactive
 goal: Visitor-loop run scoped to Tinkerfund
-status: in-review
-outcome: Fix PR open; feature PR next
-summary: "Human-instructed: the owner ran /visitor-loop \"on tinkerfund only\" and, when asked, set the scope: visitors enter via / then stay in /t/tinkerfund/prod, and fixes stay in layers/tinkerfund/. Three blind visitors (sonnet, fable, opus) reported. Five findings reached consensus. I fixed three (the mobile index table, \"Notify me\" feedback, a backed-Campaign line), dropped moving deadlines as the owner's #1364 design, and marked the homepage signposting out of remit. The fixes have rendered-DOM before/after evidence and a green gate; PR 1415 is open. The Rock firmware-notes feature, chosen by me from the visitors' ideas, follows after merge."
+status: completed
+outcome: Fix and feature PRs merged
+summary: "Human-instructed: the owner ran /visitor-loop \"on tinkerfund only\" and, when asked, set the scope: visitors enter via / then stay in /t/tinkerfund/prod, and fixes stay in layers/tinkerfund/. Three blind visitors reported. Five findings reached consensus. PR 1415 fixed three (the mobile index table, \"Notify me\" confirmation, a \"You backed this Campaign\" line); review caught a double live-region announcement, which I fixed. Moving deadlines were dropped as the owner's #1364 design, and the homepage signposting went to issue 1416. Agent-chosen feature, PR 1417: the Rock's firmware release notes in its Story, since the validator bars Updates on an Upcoming Campaign. Both merged."
 prs:
   - "1415"
+  - "1417"
 docsRead:
   - path: layers/tinkerfund/app/components/tinkerfund/Campaign.vue
     reason: (no reason given)
 skillsUsed:
   - name: visitor-loop
     reason: the run itself
+  - name: code-review
+    reason: reviewed both PRs; caught a duplicated live region and a firmware-version contradiction
   - name: close-session
     reason: (no reason given)
   - name: log-session
-    reason: (no reason given)
-  - name: code-review
     reason: (no reason given)
 frictions:
   - description: The table fix took four build/probe rounds. Each column-width guess needed a full ~2-minute pnpm build before the DOM could be measured.
@@ -31,23 +32,43 @@ frictions:
   - description: The visitor-brief says to send it verbatim, but a scoped run ('tinkerfund only') has to edit its start instruction. The Skill has no scoped-run provision.
     solution: Asked the owner and edited only the brief's first paragraph. If scoped runs recur, visitor-loop could name how a scope rides into the brief.
     severity: nit
-durationSec: 2200
+  - description: I chained a push after a background gate with ';' instead of making it depend on the result. So a090bf6a was pushed while the local gate was red (one Journal accordion e2e test outside the diff; CI then passed it).
+    solution: Gate the push on the exit code (grep GATE_EXIT=0 && git push), as I did afterwards. Never chain a state-changing push after a check with ';'.
+    severity: moderate
+  - description: The local gate failed journal.e2e.ts:373 (accordion aria-expanded poll) once, on a diff that doesn't touch the Journal. It passed in two earlier runs and in CI. No tracking issue exists.
+    solution: "If it recurs, file it as an intermittent e2e issue, as #750 was for scroll anchoring, with the poll timeout and container load noted."
+    severity: minor
+  - description: The Stop hook demanded a commit/push each time a turn ended mid-build, which fragmented one fix into six commits and nagged repeatedly while I held pushes for a gate.
+    solution: Commit once when evidence is complete. The hook could recognise a running gate:scoped as a reason to wait.
+    severity: nit
+  - description: The visitor brief says to send it verbatim, but a scoped run ('tinkerfund only') has to edit its start instruction. The Skill has no scoped-run provision.
+    solution: Asked the owner and edited only the brief's first paragraph. If scoped runs recur, visitor-loop could name how a scope rides into the brief.
+    severity: nit
+  - description: The chosen feature was built on the Updates Collection's name before I checked that validate-content-refs forbids Updates on an Upcoming Campaign. I found out only while implementing.
+    solution: At tally time, check a feature against the Tenant's content validators before choosing it.
+    severity: nit
+durationSec: 4113
 models:
-  claude-opus-5-5: 183
+  claude-opus-5-5: 294
 toolCounts:
-  Bash: 61
+  Bash: 87
   AskUserQuestion: 1
-  ToolSearch: 2
+  ToolSearch: 3
   mcp__github__search_pull_requests: 1
   mcp__github__pull_request_read: 6
-  Agent: 7
-  Read: 4
-  mcp__github__search_issues: 2
-  mcp__github__issue_read: 2
+  Agent: 9
+  Read: 5
+  mcp__github__search_issues: 4
+  mcp__github__issue_read: 3
   Write: 2
-  mcp__github__create_pull_request: 1
-  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  mcp__github__create_pull_request: 2
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 2
   Skill: 3
+  ReadNotifications: 8
+  mcp__github__add_issue_comment: 2
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  mcp__github__issue_write: 1
+  mcp__github__update_pull_request: 1
 filesEdited:
   - .probe-visitor.ts
 docsReadViaShell:
@@ -57,6 +78,7 @@ docsReadViaShell:
   - docs/agents/verifying-ui-changes.md
   - docs/agents/pr-workflow.md
   - CONTEXT.md
+  - docs/agents/mdc-when-to-use.md
 subagents:
   - type: general-purpose
     task: Visitor 1 (sonnet)
@@ -75,7 +97,13 @@ subagents:
     task: Standards review of PR 1415
   - type: general-purpose
     task: Spec review of PR 1415
+  - type: general-purpose
+    task: Standards review of PR 1417
+  - type: general-purpose
+    task: Spec review of PR 1417
 gitBranch: claude/visitor-loop-tinkerfund-2ynnw3
 entrypoint: remote_mobile
 cliVersion: 2.1.283
+learnings:
+  - Tinkerfund's prod clock deliberately resolves offsets from each request's real time (#1364), so deadlines shifting between page views is by design, not a bug.
 landedBy: Stop
