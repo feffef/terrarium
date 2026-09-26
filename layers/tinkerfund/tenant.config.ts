@@ -11,6 +11,7 @@ const slug = z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, 'must be a lowercase
 const offset = z.string().regex(TINKERFUND_OFFSET, 'must be an offset like "-12d" or "+36h"')
 const money = z.number().positive()
 const count = z.number().int().nonnegative()
+const positiveCount = z.number().int().positive()
 const zone = z.enum(['domestic', 'europe', 'world'])
 const TOKEN = String.raw`var\(--tf-[a-z-]+\)`
 const THEME_COLOUR = new RegExp(String.raw`^(?:none|currentColor|${TOKEN}|color-mix\(in srgb, *${TOKEN}(?: \d+%)?, *${TOKEN}(?: \d+%)?\))$`)
@@ -18,8 +19,7 @@ const COLOUR_VALUE = /\b(?:fill|stroke|color)\s*(?:=\s*["']?|:)\s*([^"';]+)/g
 
 /** Inner SVG markup, coloured only by theme tokens so it reads in both themes
  *  (issue #1363). No ids: the same figure can appear twice on one page. The
- *  byte budget is story #1378's. Figures draw on a 400×300 viewBox, portraits
- *  on 100×100, icons on 24×24. */
+ *  byte budget is story #1378's. */
 function svg(maxBytes: number) {
   return z
     .string()
@@ -35,7 +35,10 @@ function svg(maxBytes: number) {
     })
 }
 
-// Stored browser actions point at these ids, so each must name one thing (#1366).
+// Stored browser actions point at these ids, so each must name one thing (#1366):
+// Rewards, Add-ons and Stretch goals within their Campaign, option groups within
+// their Reward, choices within their group. Narrower than #1366's Campaign-wide
+// option ids on purpose: a Pledge line names its options by Reward.
 function flagDuplicateIds(ctx: z.RefinementCtx, lists: Record<string, { id: string }[] | undefined>): void {
   const seen = new Set<string>()
   for (const [key, items] of Object.entries(lists)) {
@@ -62,28 +65,6 @@ const optionGroup = z
   .strict()
   .superRefine((group, ctx) => flagDuplicateIds(ctx, { choices: group.choices }))
 
-const reward = z
-  .object({
-    id: slug,
-    title: z.string(),
-    description: z.string().optional(),
-    price: money,
-    claimed: count,
-    stock: z.number().int().positive().optional(),
-    limit: z.number().int().positive().optional(),
-    options: z.array(optionGroup).max(2).optional(),
-    digital: z.literal(true).optional(),
-    shipsTo: z.array(zone).nonempty().optional(),
-    delivery: offset,
-  })
-  .strict()
-  .superRefine((r, ctx) => {
-    if (!r.digital === !r.shipsTo) {
-      ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'a Reward is either digital: true or has shipsTo, never both or neither' })
-    }
-    flagDuplicateIds(ctx, { options: r.options })
-  })
-
 const addon = z
   .object({
     id: slug,
@@ -91,11 +72,26 @@ const addon = z
     description: z.string().optional(),
     price: money,
     claimed: count,
-    stock: z.number().int().positive().optional(),
+    stock: positiveCount.optional(),
   })
   .strict()
 
-const campaign = z
+const reward = addon
+  .extend({
+    limit: positiveCount.optional(),
+    options: z.array(optionGroup).max(2).optional(),
+    digital: z.literal(true).optional(),
+    shipsTo: z.array(zone).nonempty().optional(),
+    delivery: offset,
+  })
+  .superRefine((r, ctx) => {
+    if (!r.digital === !r.shipsTo) {
+      ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'a Reward is either digital: true or has shipsTo, never both or neither' })
+    }
+    flagDuplicateIds(ctx, { options: r.options })
+  })
+
+export const campaign = z
   .object({
     registry: z.string().regex(/^TF-\d{4}$/, 'must be a registry number like "TF-0001"'),
     inventor: slug,
@@ -134,7 +130,19 @@ const campaign = z
     }
   })
 
-const reply = z.object({ author: z.string(), posted: offset, text: z.string(), inventor: z.boolean().optional() }).strict()
+const comment = z.object({ author: z.string(), posted: offset, text: z.string(), inventor: z.boolean().optional() }).strict()
+
+export const pledge = z
+  .object({
+    ref: z.string(),
+    campaign: slug,
+    placed: offset,
+    zone,
+    lines: z.array(z.object({ reward: slug, options: z.record(slug, slug).optional(), quantity: positiveCount }).strict()),
+    addons: z.array(z.object({ id: slug, quantity: positiveCount }).strict()).optional(),
+    bonus: money.optional(),
+  })
+  .strict()
 
 export default defineTenant({
   name: 'tinkerfund',
@@ -166,7 +174,7 @@ export default defineTenant({
       schema: z
         .object({
           campaign: slug,
-          comments: z.array(reply.extend({ replies: z.array(reply).optional() })),
+          comments: z.array(comment.extend({ replies: z.array(comment).optional() })),
         })
         .strict(),
     },
@@ -176,6 +184,7 @@ export default defineTenant({
       schema: z
         .object({
           title: z.string(),
+          description: z.string().optional(),
           code: z.string().regex(/^[A-Z0-9]+$/, 'must be upper-case letters and digits').optional(),
           campaign: slug.optional(),
           discount: z.union([
@@ -198,21 +207,7 @@ export default defineTenant({
           address: z
             .object({ street: z.string(), city: z.string(), postcode: z.string(), country: z.string(), zone })
             .strict(),
-          pledges: z.array(
-            z
-              .object({
-                ref: z.string(),
-                campaign: slug,
-                placed: offset,
-                zone,
-                lines: z.array(
-                  z.object({ reward: slug, options: z.record(slug, slug).optional(), quantity: z.number().int().positive() }).strict(),
-                ),
-                addons: z.array(z.object({ id: slug, quantity: z.number().int().positive() }).strict()).optional(),
-                bonus: money.optional(),
-              })
-              .strict(),
-          ),
+          pledges: z.array(pledge),
         })
         .strict(),
     },
