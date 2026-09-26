@@ -1,0 +1,388 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Tinkerfund Illustration Studies</title>
+<!--
+  PROTOTYPE, throwaway. Wayfinder ticket "Tinkerfund: illustration style" (feffef/terrarium#1363).
+  Three art directions for Campaign illustrations — P Patent drawing, R Risograph (two inks), I Flat isometric —
+  each drawn for one invention (TF-0006 Rain-Aware Umbrella): FIG. 1 hero + FIG. 2 gallery shot.
+  Shown inside the chosen "Instrument" identity (variant G of #1362): Campaign gallery + readout, Home index row,
+  a card, and both themes side by side. Switch with the floating bar or ← / →.
+  All art is inline SVG coloured by the theme's CSS tokens (one file serves light and dark).
+  Fonts load from Google Fonts only because this is a standalone preview.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+.t-light,body{
+  --bg:#F2F4F3;--surface:#FFFFFF;--ink:#11171B;--muted:#56636B;--line:#D6DDE1;--accent:#C2410C;--accent-ink:#FFFFFF;--accent-soft:#FBE9DF;
+  --link:#1F5FBF;--good:#13794A;--warn:#A15C00;--bad:#B3261E;--grid:#E6EBEE;--mark:#FFD60A;--blend:multiply;color-scheme:light;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) body{
+  --bg:#0C1013;--surface:#13191D;--ink:#E1E7EA;--muted:#8F9CA4;--line:#273137;--accent:#FF8A4C;--accent-ink:#140A04;--accent-soft:#2E1C12;
+  --link:#8AB4FF;--good:#5BD68F;--warn:#F0B94B;--bad:#FF8577;--grid:#1A2227;--blend:screen;color-scheme:dark}}
+:root[data-theme="dark"] body,body .t-dark{
+  --bg:#0C1013;--surface:#13191D;--ink:#E1E7EA;--muted:#8F9CA4;--line:#273137;--accent:#FF8A4C;--accent-ink:#140A04;--accent-soft:#2E1C12;
+  --link:#8AB4FF;--good:#5BD68F;--warn:#F0B94B;--bad:#FF8577;--grid:#1A2227;--blend:screen;color-scheme:dark}
+body .t-light{color-scheme:light}
+:root{--font-display:'Archivo',system-ui,sans-serif;--font-mono:'IBM Plex Mono',ui-monospace,monospace;--dur:160ms;--ease:cubic-bezier(.3,.7,.2,1);
+  --paper:linear-gradient(var(--grid) 1px,transparent 1px) 0 0/16px 16px,linear-gradient(90deg,var(--grid) 1px,transparent 1px) 0 0/16px 16px}
+@media (prefers-reduced-motion: reduce){:root{--dur:1ms}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 var(--font-display);padding-bottom:120px;-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit}
+h1,h2,h3,p{margin:0}
+.wrap{max-width:1180px;margin:0 auto;padding-inline:16px}
+@media (min-width:720px){.wrap{padding-inline:28px}}
+.lbl{font:500 11px/1.2 var(--font-mono);text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+
+/* header */
+.head{background:var(--surface);border-bottom:1px solid var(--line)}
+.head .wrap{display:flex;align-items:center;gap:14px;padding-block:10px}
+.logo{display:inline-flex;align-items:center;gap:9px}
+.logo svg{width:26px;height:26px}
+.logo b{font:800 24px/1 var(--font-display);font-stretch:82%}
+
+/* note */
+.note{margin-block:20px 0;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px 18px;display:grid;gap:8px}
+.note h2{font:800 22px/1 var(--font-display);font-stretch:80%}
+.note p{color:var(--muted);max-width:80ch}
+.note dl{display:flex;flex-wrap:wrap;gap:6px 22px;margin:4px 0 0;font:500 12px/1.3 var(--font-mono)}
+.note dt{color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.note dd{margin:0}
+
+.sec-h{font:800 20px/1 var(--font-display);font-stretch:80%;margin:32px 0 12px;display:flex;gap:12px;align-items:baseline;flex-wrap:wrap}
+
+/* campaign: gallery + readout */
+.pdp{display:grid;gap:16px}
+@media (min-width:860px){.pdp{grid-template-columns:1.25fr 1fr;align-items:start}}
+.gal{display:grid;gap:10px}
+.fig{position:relative;background:var(--paper),var(--surface);border:1px solid var(--line);border-radius:12px;padding:40px 28px 28px;aspect-ratio:4/3}
+.fig .cap{position:absolute;left:12px;top:10px}
+.fig .dim{position:absolute;right:12px;bottom:10px;font:500 11px/1 var(--font-mono);color:var(--link)}
+.thumbs{display:flex;gap:8px}
+.thumbs button{width:96px;aspect-ratio:4/3;padding:6px;background:var(--paper),var(--surface);border:1px solid var(--line);border-radius:8px;cursor:pointer}
+.thumbs button[aria-pressed="true"]{border:2px solid var(--ink)}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:22px;display:grid;gap:14px;box-shadow:0 1px 2px rgb(17 23 27 / .05),0 10px 28px -16px rgb(17 23 27 / .22)}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.id{font:600 12px/1 var(--font-mono);background:var(--ink);color:var(--surface);padding:5px 8px;border-radius:5px;letter-spacing:.04em}
+.chip{font:500 11px/1 var(--font-mono);text-transform:uppercase;letter-spacing:.05em;padding:4px 7px;border-radius:5px;border:1px solid currentColor}
+.chip.live{color:var(--good)}.chip.deal{color:var(--accent-ink);background:var(--accent);border-color:transparent}
+.panel h1{font:800 clamp(30px,4vw,44px)/1 var(--font-display);font-stretch:78%}
+.tag{color:var(--muted)}
+.big{font:600 clamp(40px,5vw,54px)/1 var(--font-mono);letter-spacing:-.04em}
+.big small{font-size:.5em;color:var(--muted);letter-spacing:0}
+.seg{display:grid;grid-template-columns:repeat(25,1fr);gap:3px;height:12px}
+.seg i{background:var(--line);border-radius:2px}.seg i.on{background:var(--accent)}
+.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.tiles div{background:var(--surface);padding:10px 12px;display:grid;gap:3px}
+.tiles span{font:500 10px/1.2 var(--font-mono);text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
+.tiles b{font:600 17px/1.2 var(--font-mono)}
+.btn{border:0;border-radius:8px;padding:11px 18px;font-weight:600;background:var(--accent);color:var(--accent-ink);cursor:pointer}
+.kv{display:grid;grid-template-columns:auto 1fr;font:500 13px/1.2 var(--font-mono);margin:0}
+.kv dt,.kv dd{margin:0;padding:7px 0;border-bottom:1px solid var(--line)}
+.kv dt{color:var(--muted);text-transform:uppercase;letter-spacing:.06em;padding-right:16px}
+.kv dd{text-align:right}
+
+/* home: index row + card */
+.home{display:grid;gap:16px}
+@media (min-width:860px){.home{grid-template-columns:2fr 1fr;align-items:start}}
+.tw{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:14px}
+table{width:100%;border-collapse:collapse;font:500 13px/1.3 var(--font-mono);min-width:560px}
+th{text-align:left;font-weight:500;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-size:11px;padding:10px 12px;border-bottom:1px solid var(--line)}
+td{padding:12px;border-bottom:1px solid var(--line);vertical-align:middle}
+tr:last-child td{border-bottom:0}
+.inv{font:700 16px/1.15 var(--font-display);font-stretch:85%;display:flex;gap:10px;align-items:center}
+.inv .ic{width:52px;height:39px;flex:none;border-radius:4px;background:var(--paper),var(--bg);border:1px solid var(--line);padding:2px}
+.mini{display:inline-grid;grid-template-columns:repeat(10,6px);gap:1px;vertical-align:middle;margin-right:8px}
+.mini i{height:10px;background:var(--line);border-radius:1px}.mini i.on{background:var(--accent)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.card .cf{position:relative;aspect-ratio:16/10;background:var(--paper),var(--bg);border-bottom:1px solid var(--line);padding:6% 12%}
+.card .cf .lbl{position:absolute;left:10px;top:10px}
+.card .cb{padding:14px 16px 16px;display:grid;gap:6px}
+.card h3{font:700 20px/1.1 var(--font-display);font-stretch:85%}
+
+/* both themes */
+.duo{display:grid;gap:16px}
+@media (min-width:860px){.duo{grid-template-columns:1fr 1fr}}
+.duo > div{background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:14px;padding:14px;display:grid;gap:10px}
+.duo .pair{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.duo .fig{padding:28px 12px 12px}
+
+/* ============ the art ============ */
+svg.art{display:block;width:100%;height:100%;overflow:visible}
+.fig svg.art{max-height:100%}
+
+/* P · patent drawing: ink line only, hatching for shade, numbered leaders, dashed hidden lines */
+.P .l{fill:none;stroke:var(--ink);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.P .t{stroke-width:.9}
+.P .h{stroke-dasharray:5 3.5;stroke-width:1}
+.P .k{stroke-width:2.4}
+.P .n{font:500 12px/1 var(--font-mono);fill:var(--ink)}
+.P .bg{fill:var(--surface)}
+.P .hat line{stroke:var(--ink);stroke-width:.8}
+
+/* R · risograph: two flat inks (accent + link), overprinted, a touch of misregistration, halftone shade */
+.R .i1{fill:var(--accent)}
+.R .i2{fill:var(--link)}
+.R .s2{fill:none;stroke:var(--link);stroke-linecap:round;stroke-linejoin:round}
+.R .s1{fill:none;stroke:var(--accent);stroke-linecap:round;stroke-linejoin:round}
+.R .ly{mix-blend-mode:var(--blend);isolation:auto}
+.R .kn{fill:var(--surface)}
+.R .n{font:600 11px/1 var(--font-mono);fill:var(--link);letter-spacing:.08em}
+
+/* I · flat isometric: filled planes from the palette, no outlines, one ground shadow */
+.I .a1{fill:var(--accent)}
+.I .a2{fill:color-mix(in srgb,var(--accent) 72%,#000)}
+.I .a3{fill:color-mix(in srgb,var(--accent) 45%,var(--surface))}
+.I .k1{fill:var(--ink)}
+.I .k2{fill:color-mix(in srgb,var(--ink) 70%,var(--surface))}
+.I .sf{fill:var(--surface)}
+.I .ln{fill:var(--line)}
+.I .mu{fill:var(--muted)}
+.I .dr{fill:var(--link);opacity:.85}
+.I .sk{fill:none;stroke:var(--ink);stroke-width:7;stroke-linecap:round}
+.I .wv{fill:none;stroke:var(--accent);stroke-width:2;stroke-linecap:round}
+.I .n{font:600 11px/1 var(--font-mono);fill:var(--muted);letter-spacing:.06em}
+
+/* switcher (not part of the design) */
+.sw{position:fixed;left:50%;bottom:calc(12px + env(safe-area-inset-bottom,0px));translate:-50% 0;z-index:50;display:flex;gap:6px;align-items:center;
+  background:#161616;color:#f4f4f4;border:1px solid #3a3a3a;border-radius:12px;padding:6px;font:500 13px/1 system-ui,sans-serif;box-shadow:0 10px 30px rgb(0 0 0 / .4);max-width:calc(100% - 16px);flex-wrap:wrap;justify-content:center}
+.sw button{background:#262626;color:#f4f4f4;border:1px solid #3a3a3a;border-radius:8px;padding:7px 10px;cursor:pointer}
+.sw .cur{min-width:22ch;text-align:center}
+</style>
+
+<header class="head"><div class="wrap">
+  <span class="logo"><svg viewBox="0 0 26 26" aria-hidden="true"><rect x="1" y="1" width="24" height="24" rx="6" fill="var(--ink)"/><path d="M13 13V4a9 9 0 0 1 9 9z" fill="var(--accent)"/><path d="M13 5v16M5 13h16" stroke="var(--surface)" stroke-width="1.6"/></svg><b>Tinkerfund</b></span>
+  <span class="lbl" style="margin-left:auto">Illustration study · prototype</span>
+</div></header>
+
+<main class="wrap" id="app"></main>
+
+<nav class="sw" aria-label="Prototype controls">
+  <button id="prev" aria-label="Previous style">←</button>
+  <span class="cur" id="cur"></span>
+  <button id="next" aria-label="Next style">→</button>
+  <button id="theme">Theme: system</button>
+</nav>
+
+<script>
+let uid = 0; const u = () => ++uid;
+const drops = [[58,28],[96,16],[132,32],[250,20],[292,34],[340,18],[40,64],[362,66],[26,118],[374,112],[150,6],[312,4]];
+
+/* ---------- P · patent ---------- */
+const P = {
+hero(){ const id=u(); return `<svg class="art P" viewBox="0 0 400 300" role="img" aria-label="FIG. 1: Rain-Aware Umbrella, open, with paired phone">
+<defs><pattern id="h${id}" class="hat" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="5"/></pattern></defs>
+<g class="l t">${drops.map(([x,y])=>`<path d="M${x} ${y}l-3 9"/>`).join('')}</g>
+<path d="M200 58Q240 70 265 150Q297.5 138 330 150C320 90 250 58 200 58Z" fill="url(#h${id})"/>
+<path class="l k" d="M70 150C80 90 150 58 200 58S320 90 330 150Q297.5 138 265 150Q232.5 138 200 150Q167.5 138 135 150Q102.5 138 70 150Z"/>
+<path class="l" d="M200 58Q160 70 135 150M200 58V150M200 58Q240 70 265 150"/>
+<path class="l h" d="M203.5 60V150"/>
+<path class="l" d="M195 58V46h10v12M195 46a5 5 0 0 1 10 0"/><circle cx="200" cy="52" r="1.6" class="l"/>
+<path class="l t" d="M212 36a11 11 0 0 1 0 16M218 31a18 18 0 0 1 0 26"/>
+<path class="l" d="M197 150V252h6V150"/>
+<path class="l" d="M197 252v12a15 15 0 0 1-30 0v-5h6v5a9 9 0 0 0 18 0v-12" fill="url(#h${id})"/>
+<path class="l h" d="M222 44C300 40 336 100 318 166"/>
+<rect class="l" x="282" y="168" width="64" height="112" rx="9"/><rect class="l t" x="288" y="180" width="52" height="88" rx="3"/>
+<rect class="l t" x="292" y="190" width="44" height="24" rx="3"/><path class="l t" d="M297 199h30M297 206h20"/>
+<g class="l t">
+ <path d="M112 112Q86 96 60 88"/><path d="M234 106Q262 92 268 70"/><path d="M198 42Q176 30 164 22"/><path d="M198 206Q178 212 160 214"/>
+ <path d="M170 272Q150 282 138 284"/><path d="M346 244Q362 250 370 258"/><path d="M336 202Q356 196 370 186"/><path d="M308 64Q324 56 340 52"/>
+</g>
+<g class="n"><text x="42" y="88">10</text><text x="262" y="66">12</text><text x="146" y="22">14</text><text x="142" y="218">16</text>
+<text x="120" y="288">18</text><text x="372" y="266">20</text><text x="372" y="186">22</text><text x="342" y="54">24</text></g>
+</svg>`; },
+gallery(){ const id=u(); return `<svg class="art P" viewBox="0 0 400 300" role="img" aria-label="FIG. 2: Rain-Aware Umbrella, furled, with detail A of the rain sensor">
+<defs><pattern id="h${id}" class="hat" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="5"/></pattern>
+<clipPath id="c${id}"><circle cx="286" cy="132" r="94"/></clipPath></defs>
+<path class="l" d="M105 44V32h10v12M105 32a5 5 0 0 1 10 0"/>
+<path d="M110 44L116 44L124 190Q110 197 96 190Z" fill="url(#h${id})"/>
+<path class="l k" d="M104 44L96 190Q110 198 124 190L116 44Z"/>
+<path class="l t" d="M108 50L103 188M112 50L117 189"/>
+<rect class="l bg" x="98" y="118" width="24" height="10" rx="2"/><circle class="l t" cx="116" cy="123" r="2"/>
+<path class="l" d="M107 194V238h6V194"/>
+<path class="l" d="M107 238v12a14 14 0 0 1-28 0v-5h6v5a8 8 0 0 0 16 0v-12" fill="url(#h${id})"/>
+<path class="l t" d="M64 27H102M64 264H90M60 27V264M60 27l-3 8M60 27l3 8M60 264l-3-8M60 264l3-8"/>
+<text class="n" transform="translate(52 164) rotate(-90)">880</text>
+<circle class="l t" cx="110" cy="36" r="18"/><text class="n" x="84" y="16">A</text>
+<path class="l t" d="M127 30L196 76M121 51L214 208"/>
+<circle class="l bg" cx="286" cy="132" r="94"/>
+<g clip-path="url(#c${id})">
+ <path class="l k" d="M256 124V240M316 124V240"/><path class="l k" d="M256 124a30 30 0 0 1 60 0"/>
+ <path d="M286 124h30V240h-30z" fill="url(#h${id})"/>
+ ${[150,166,182].map(y=>[266,278,290,302].map(x=>`<circle class="l t bg" cx="${x}" cy="${y}" r="3"/>`).join('')).join('')}
+ <circle class="l" cx="286" cy="108" r="5"/><path class="l t" d="M286 96v-6M296 100l4-4M276 100l-4-4"/>
+ <path class="l" d="M320 88q6 10 0 14q-6-4 0-14z"/>
+ <path class="l" d="M226 232L256 206M346 232L316 206"/>
+</g>
+<g class="l t"><path d="M268 166Q246 176 234 176"/><path d="M290 108Q316 70 336 60"/><path d="M322 96Q346 100 362 110"/><path d="M300 222Q316 236 326 246"/></g>
+<g class="n"><text x="206" y="180">14a</text><text x="338" y="60">14b</text><text x="364" y="114">26</text><text x="328" y="254">10</text></g>
+<text class="n" x="250" y="292">DETAIL A · 5:1</text>
+</svg>`; },
+name:'Patent drawing',
+note:'Monochrome ink line with hatching for shade, numbered leader-line callouts and dashed hidden lines, as in a patent filing. It drops straight into the grid-paper FIG. frame. No colour at all: the accent stays for the UI.'
+};
+
+/* ---------- R · risograph (two inks, overprinted) ---------- */
+const R = {
+hero(){ const id=u(); return `<svg class="art R" viewBox="0 0 400 300" role="img" aria-label="FIG. 1: Rain-Aware Umbrella, open, with paired phone">
+<defs><pattern id="d${id}" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(30)"><circle cx="3" cy="3" r="1.5" class="i2"/></pattern>
+<pattern id="e${id}" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(15)"><circle cx="3" cy="3" r="1.1" class="i1"/></pattern></defs>
+<g class="ly">
+ <path class="i1" d="M70 150C80 90 150 58 200 58S320 90 330 150Q297.5 138 265 150Q232.5 138 200 150Q167.5 138 135 150Q102.5 138 70 150Z"/>
+ <rect class="i1" x="290" y="182" width="48" height="84" rx="3"/>
+ <circle class="i1" cx="200" cy="50" r="4"/>
+ <path class="s1" stroke-width="3" d="M212 36a11 11 0 0 1 0 16M218 31a18 18 0 0 1 0 26"/>
+ <ellipse cx="200" cy="272" rx="120" ry="14" fill="url(#e${id})"/>
+</g>
+<g class="ly" transform="translate(2.5 -2)">
+ <path d="M70 150C80 90 150 58 200 58Q160 70 135 150Q102.5 138 70 150Z" fill="url(#d${id})"/>
+ <path d="M200 58Q240 70 265 150Q232.5 138 200 150Z" fill="url(#d${id})"/>
+ <path class="s2" stroke-width="2.6" d="M200 58Q160 70 135 150M200 58V150M200 58Q240 70 265 150"/>
+ <rect class="i2" x="196" y="40" width="8" height="18" rx="2"/>
+ <rect class="i2" x="197" y="148" width="6" height="104"/>
+ <path class="s2" stroke-width="6.5" d="M200 252v12a12 12 0 0 1-24 0v-3"/>
+ <path class="i2" fill-rule="evenodd" d="M291 168h46a9 9 0 0 1 9 9v94a9 9 0 0 1-9 9h-46a9 9 0 0 1-9-9v-94a9 9 0 0 1 9-9zM294 182v84h42v-84z"/>
+ <rect class="i2" x="298" y="194" width="34" height="5" rx="2"/><rect class="i2" x="298" y="203" width="22" height="5" rx="2"/>
+ ${drops.map(([x,y])=>`<path class="i2" d="M${x} ${y}q4 7 0 10q-4-3 0-10z"/>`).join('')}
+</g>
+</svg>`; },
+gallery(){ const id=u(); return `<svg class="art R" viewBox="0 0 400 300" role="img" aria-label="FIG. 2: Rain-Aware Umbrella, furled, with a close-up of the rain sensor">
+<defs><pattern id="d${id}" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(30)"><circle cx="3" cy="3" r="1.5" class="i2"/></pattern>
+<pattern id="e${id}" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(15)"><circle cx="3.5" cy="3.5" r="1.4" class="i1"/></pattern>
+<clipPath id="c${id}"><circle cx="286" cy="132" r="94"/></clipPath></defs>
+<g class="ly">
+ <path class="i1" d="M104 44L96 190Q110 198 124 190L116 44Z"/>
+ <circle cx="286" cy="132" r="94" fill="url(#e${id})"/>
+ <circle class="i1" cx="286" cy="108" r="7"/>
+ <path class="s1" stroke-width="3" d="M286 94v-8M298 98l5-5M274 98l-5-5"/>
+</g>
+<g class="ly" transform="translate(2.5 -2)">
+ <path d="M110 44L116 44L124 190Q110 197 110 194Z" fill="url(#d${id})"/>
+ <rect class="i2" x="104" y="28" width="12" height="16" rx="3"/>
+ <rect class="i2" x="97" y="118" width="26" height="10" rx="2"/>
+ <rect class="i2" x="107" y="192" width="6" height="48"/>
+ <path class="s2" stroke-width="6" d="M110 238v12a11 11 0 0 1-22 0v-3"/>
+ <g clip-path="url(#c${id})">
+  <path class="i2" fill-rule="evenodd" d="M256 124a30 30 0 0 1 60 0V240h-60z${[150,166,182].map(y=>[266,278,290,302].map(x=>`M${x-3} ${y}a3 3 0 1 0 6 0a3 3 0 1 0-6 0z`).join('')).join('')}"/>
+ </g>
+ <path class="i2" d="M322 84q7 11 0 16q-7-5 0-16z"/>
+ <path class="s2" stroke-width="1.6" stroke-dasharray="2 4" d="M127 30L196 76M121 51L214 208"/>
+</g>
+<text class="n" x="222" y="292">SENSOR · CLOSE-UP</text>
+</svg>`; },
+name:'Risograph · two inks',
+note:'Two flat inks (signal orange and link blue) overprinted with slight misregistration and halftone dots for shade. Warmer and more poster-like. In dark mode the inks blend with screen instead of multiply.'
+};
+
+/* ---------- I · flat isometric ---------- */
+const rimPt = (k,cx=200,cy=142,rx=140,ry=46)=>{const a=k*Math.PI/4;return [cx+rx*Math.cos(a),cy+ry*Math.sin(a)];};
+const panel = (apex,k,cls)=>{const [x1,y1]=rimPt(k),[x2,y2]=rimPt(k+1),mx=(x1+x2)/2,my=(y1+y2)/2,cx=mx+(apex[0]-mx)*.12,cy=my+(apex[1]-my)*.12;
+  return `<path class="${cls}" d="M${apex[0]} ${apex[1]}L${x1.toFixed(1)} ${y1.toFixed(1)}Q${cx.toFixed(1)} ${cy.toFixed(1)} ${x2.toFixed(1)} ${y2.toFixed(1)}Z"/>`;};
+const I = {
+hero(){ const ap=[200,62]; return `<svg class="art I" viewBox="0 0 400 300" role="img" aria-label="FIG. 1: Rain-Aware Umbrella, open, with paired phone">
+<ellipse class="ln" cx="206" cy="262" rx="112" ry="22"/>
+<rect class="k2" x="197" y="180" width="3" height="70"/><rect class="k1" x="200" y="180" width="3" height="70"/>
+<path class="sk" d="M200 248v10a13 13 0 0 1-26 0v-3"/>
+${[4,5,6,7].map(k=>panel(ap,k,'a3')).join('')}
+${[0,1,2,3].map(k=>panel(ap,k,k%2?'a1':'a2')).join('')}
+<rect class="k2" x="196" y="48" width="4" height="15"/><rect class="k1" x="200" y="48" width="4" height="15"/><ellipse class="mu" cx="200" cy="48" rx="4" ry="1.8"/>
+<path class="wv" d="M212 38a10 10 0 0 1 0 14M218 33a17 17 0 0 1 0 24"/>
+${drops.map(([x,y])=>`<path class="dr" d="M${x} ${y}q5 8 0 12q-5-4 0-12z"/>`).join('')}
+<polygon class="k2" points="268,222 312,246 312,252 268,228"/><polygon class="k1" points="312,246 362,220 362,226 312,252"/>
+<polygon class="k1" points="268,222 318,196 362,220 312,246"/><polygon class="mu" points="277,222 318,201 353,220 312,241"/>
+<polygon class="sf" points="291,218 318,204 334,212 307,226"/><polygon class="a1" points="296,217 306,212 309,214 299,219"/>
+</svg>`; },
+gallery(){ return `<svg class="art I" viewBox="0 0 400 300" role="img" aria-label="FIG. 2: Rain-Aware Umbrella, furled, with a close-up of the rain sensor">
+<ellipse class="ln" cx="112" cy="262" rx="44" ry="10"/>
+<polygon class="a1" points="110,44 96,190 110,196"/><polygon class="a2" points="110,44 110,196 124,190"/>
+<polygon class="a3" points="97,118 110,121 123,118 123,127 110,130 97,127"/>
+<rect class="k2" x="107" y="194" width="3" height="46"/><rect class="k1" x="110" y="194" width="3" height="46"/>
+<path class="sk" style="stroke-width:6" d="M110 238v11a11 11 0 0 1-22 0v-3"/>
+<rect class="k2" x="106" y="30" width="4" height="15"/><rect class="k1" x="110" y="30" width="4" height="15"/><ellipse class="mu" cx="110" cy="30" rx="4" ry="1.8"/>
+<path d="M120 36L204 88" stroke="var(--muted)" stroke-width="1.2" stroke-dasharray="3 4"/>
+<circle class="sf" cx="286" cy="138" r="92"/><circle cx="286" cy="138" r="92" fill="none" stroke="var(--line)" stroke-width="2"/>
+<ellipse class="ln" cx="286" cy="222" rx="54" ry="12"/>
+<rect class="k2" x="256" y="112" width="30" height="104"/><rect class="k1" x="286" y="112" width="30" height="104"/>
+<ellipse class="mu" cx="286" cy="112" rx="30" ry="11"/>
+${[140,158,176].map(y=>[264,276].map(x=>`<ellipse class="mu" cx="${x}" cy="${y}" rx="3" ry="3.4"/>`).join('')+[296,308].map(x=>`<ellipse class="k2" cx="${x}" cy="${y}" rx="3" ry="3.4"/>`).join('')).join('')}
+<circle class="a1" cx="286" cy="110" r="6"/><circle cx="286" cy="110" r="12" fill="var(--accent)" opacity=".25"/>
+<path class="dr" d="M320 72q7 11 0 16q-7-5 0-16z"/>
+<text class="n" x="236" y="292">SENSOR · CLOSE-UP</text>
+</svg>`; },
+name:'Flat isometric',
+note:'Filled planes from the palette with no outlines: accent for the canopy, ink for hardware, a single ground shadow, seen at a raised three-quarter angle. More "product shop" than technical drawing.'
+};
+
+const STYLES = {P,R,I}, ORDER = ['P','R','I'];
+const st = {s:'P', fig:0, theme:'system'};
+try { const m = location.hash.match(/^#([pri])$/); if (m) st.s = m[1].toUpperCase(); } catch(e){}
+
+const seg = (pct,n=25)=>Array.from({length:n},(_,i)=>`<i class="${i < Math.round(pct/100*n)?'on':''}"></i>`).join('');
+const mini = pct=>Array.from({length:10},(_,i)=>`<i class="${i < Math.round(pct/10)?'on':''}"></i>`).join('');
+
+async function sizes(S){
+  const out=[];
+  for (const k of ['hero','gallery']){
+    const svg=S[k](), raw=new Blob([svg]).size; let gz='–';
+    try { const cs=new Blob([svg]).stream().pipeThrough(new CompressionStream('gzip')); gz=(await new Response(cs).blob()).size; } catch(e){}
+    out.push(`<dt>FIG. ${k==='hero'?1:2}</dt><dd>${(raw/1024).toFixed(1)} KB raw · ${typeof gz==='number'?(gz/1024).toFixed(1)+' KB gzip':gz}</dd>`);
+  }
+  return out.join('');
+}
+
+function render(){
+  const S = STYLES[st.s], figs=[S.hero,S.gallery], caps=['FIG. 1 · TF-0006','FIG. 2 · TF-0006'], dims=['Ø 1040 mm','L 880 mm'];
+  document.getElementById('app').innerHTML = `
+  <section class="note"><h2>${st.s} · ${S.name}</h2><p>${S.note}</p><dl id="sz"><dt>Size</dt><dd>measuring…</dd></dl></section>
+
+  <h2 class="sec-h">Campaign page <span class="lbl">gallery + readout</span></h2>
+  <div class="pdp">
+    <div class="gal">
+      <div class="fig"><span class="lbl cap">${caps[st.fig]}</span><span class="dim">${dims[st.fig]}</span>${figs[st.fig]()}</div>
+      <div class="thumbs" role="group" aria-label="Figures">${figs.map((f,i)=>`<button data-fig="${i}" aria-pressed="${i===st.fig}" aria-label="${caps[i]}">${f()}</button>`).join('')}</div>
+    </div>
+    <div class="panel">
+      <div class="row"><span class="id">TF-0006</span><span class="chip live">Live</span><span class="chip deal">−15%</span></div>
+      <h1>Rain-Aware Umbrella</h1><p class="tag">Tells you, via app, that it is raining.</p>
+      <div><div class="big">55<small>% funded</small></div><p class="tag" style="font-size:14px;margin-top:6px">€22,000 of €40,000 goal</p></div>
+      <div class="seg">${seg(55)}</div>
+      <div class="tiles"><div><span>Backers</span><b>486</b></div><div><span>Left</span><b>21 d</b></div><div><span>From</span><b>€49</b></div></div>
+      <button class="btn">Back this Campaign</button>
+      <dl class="kv"><dt>Canopy</dt><dd>Ø 1040 mm</dd><dt>Length, furled</dt><dd>880 mm</dd><dt>Sensor</dt><dd>Capacitive, tip-mounted</dd><dt>Battery</dt><dd>3 months, USB-C</dd></dl>
+    </div>
+  </div>
+
+  <h2 class="sec-h">Home <span class="lbl">index row (52 px) + card</span></h2>
+  <div class="home">
+    <div class="tw"><table><thead><tr><th>ID</th><th>Invention</th><th>Status</th><th>Funded</th><th>Backers</th></tr></thead><tbody>
+      <tr><td>TF-0006</td><td><span class="inv"><span class="ic">${S.hero()}</span>Rain-Aware Umbrella</span></td><td><span class="chip live">Live</span></td><td><span class="mini">${mini(55)}</span>55%</td><td>486</td></tr>
+      <tr><td>TF-0006</td><td><span class="inv"><span class="ic">${S.gallery()}</span>(FIG. 2 at the same size)</span></td><td></td><td></td><td></td></tr>
+    </tbody></table></div>
+    <article class="card"><div class="cf"><span class="lbl">FIG. 1 · TF-0006</span>${S.hero()}</div><div class="cb"><h3>Rain-Aware Umbrella</h3><span class="tag" style="font-size:14px">Mats Eberhardt · Bergen</span></div></article>
+  </div>
+
+  <h2 class="sec-h">Both themes <span class="lbl">same SVG, tokens only</span></h2>
+  <div class="duo">
+    ${['t-light','t-dark'].map(t=>`<div class="${t}"><span class="lbl">${t==='t-light'?'Light':'Dark'}</span><div class="pair">
+      <div class="fig"><span class="lbl cap">FIG. 1</span>${S.hero()}</div><div class="fig"><span class="lbl cap">FIG. 2</span>${S.gallery()}</div></div></div>`).join('')}
+  </div>`;
+  document.getElementById('cur').textContent = `${st.s} · ${S.name}  (${ORDER.indexOf(st.s)+1}/${ORDER.length})`;
+  document.querySelectorAll('[data-fig]').forEach(b=>b.onclick=()=>{st.fig=+b.dataset.fig;render();});
+  try { history.replaceState(null,'','#'+st.s.toLowerCase()); } catch(e){}
+  sizes(S).then(h=>{const el=document.getElementById('sz'); if (el) el.innerHTML=h;});
+}
+const step = d => { st.s = ORDER[(ORDER.indexOf(st.s)+d+ORDER.length)%ORDER.length]; render(); };
+document.getElementById('prev').onclick = ()=>step(-1);
+document.getElementById('next').onclick = ()=>step(1);
+document.addEventListener('keydown', e=>{ if (e.target.closest('input,textarea,[contenteditable]')) return;
+  if (e.key==='ArrowRight') step(1); if (e.key==='ArrowLeft') step(-1); });
+document.getElementById('theme').onclick = ()=>{
+  st.theme = {system:'light',light:'dark',dark:'system'}[st.theme];
+  if (st.theme==='system') delete document.documentElement.dataset.theme; else document.documentElement.dataset.theme = st.theme;
+  document.getElementById('theme').textContent = 'Theme: '+st.theme;
+};
+render();
+</script>
