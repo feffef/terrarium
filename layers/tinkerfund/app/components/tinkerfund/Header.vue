@@ -2,6 +2,7 @@
 const props = defineProps<{ space: string }>()
 const link = (path = '') => tinkerfundPath(props.space, path)
 const categories = useTinkerfundCategories()
+const { view: cart } = await useTinkerfundCart()
 const menu = useTemplateRef<HTMLDialogElement>('menu')
 const closeOnBackdrop = (e: MouseEvent) => {
   if (e.target === menu.value) menu.value?.close()
@@ -38,9 +39,9 @@ const closeOnBackdrop = (e: MouseEvent) => {
         <NuxtLink class="icon-btn search-icon" :to="link('/search')" aria-label="Search">
           <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7" /><path d="m20 20-4-4" /></svg>
         </NuxtLink>
-        <NuxtLink class="cart" :to="link('/cart')" aria-label="Cart, 0 items">
+        <NuxtLink class="cart" :to="link('/cart')" :aria-label="`Cart, ${formatTinkerfundItems(cart.count)}`">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h2.5l2.2 11h10.6L20.5 8H7" /><circle cx="9.5" cy="19.5" r="1.3" /><circle cx="16.5" cy="19.5" r="1.3" /></svg>
-          <span class="count">0</span>
+          <span class="count">{{ cart.count }}</span>
         </NuxtLink>
         <NuxtLink class="icon-btn avatar" :to="link('/account')" aria-label="Your account">
           <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="9" r="3.6" /><path d="M5 20c1.2-3.6 4-5.2 7-5.2s5.8 1.6 7 5.2" /></svg>
