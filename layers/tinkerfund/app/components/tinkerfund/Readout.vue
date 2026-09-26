@@ -10,10 +10,13 @@ const props = defineProps<{
   campaign: TinkerfundCampaign
   deals: TinkerfundPromotion[]
   clock: TinkerfundClock
+  /** The visitor's own Pledge on this Campaign, if any. */
+  pledge?: string
   /** The page's h1 by default; the qa gallery shows several at once. */
   heading?: 'h1' | 'h3'
 }>()
 
+const { link } = useTinkerfundSpace()
 const locale = useTinkerfundLocale()
 const money = useTinkerfundMoney()
 const status = computed(() => deriveCampaignStatus(props.campaign, props.campaign.pledged, props.clock.now))
@@ -41,6 +44,9 @@ const from = computed(() => campaignPriceFrom(props.campaign.rewards))
     <p v-for="deal in deals" :key="deal.stem" class="deals">
       <TinkerfundDealBadge :promotion="deal" />
     </p>
+    <p v-if="pledge" class="backed">
+      You backed this Campaign · <NuxtLink :to="link(`/account/pledges/${pledge}`)">Pledge {{ pledge }}</NuxtLink>
+    </p>
     <TinkerfundCampaignAction :slug="slug" :state="status.state" />
   </div>
 </template>
@@ -52,6 +58,8 @@ const from = computed(() => campaignPriceFrom(props.campaign.rewards))
 .lead { color: var(--tf-muted); }
 .date { color: var(--tf-muted); font: 500 12px/1.4 var(--tf-mono); }
 .by { font-size: 14px; }
+.backed { padding: 10px 12px; border-radius: var(--tf-radius); background: var(--tf-accent-soft); font-size: 14px; font-weight: 600; }
+.backed a { color: var(--tf-ink); font-family: var(--tf-mono); }
 .big { margin: 0; font: 600 34px/1 var(--tf-mono); font-variant-numeric: tabular-nums; }
 .sub { margin: 4px 0 0; color: var(--tf-muted); font-size: 14px; }
 .tiles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }

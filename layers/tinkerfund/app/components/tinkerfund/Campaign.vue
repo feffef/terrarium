@@ -70,6 +70,7 @@ const backing = computed<TinkerfundBacking>(() => ({ slug: slug.value, state: st
         :campaign="c"
         :deals="deals"
         :clock="clock"
+        :pledge="tinkerfundPledgeFor(pledges, slug)?.ref"
       />
     </div>
 

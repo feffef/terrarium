@@ -401,6 +401,7 @@ export function registerTinkerfundE2E(): void {
         await notify.click()
         expect(await notify.getAttribute('aria-pressed')).toBe('true')
         expect(await notify.textContent()).toContain('Notify me')
+        expect(await page.locator('.readout [role="status"]').textContent()).toBe('We will tell you when it launches.')
         expect(await page.getByRole('button', { name: 'Opens at launch' }).isDisabled()).toBe(true)
 
         // A link to an older, closed Update opens it and brings it into view.
@@ -408,6 +409,9 @@ export function registerTinkerfundE2E(): void {
         const linked = page.locator('#update-1')
         await expect.poll(() => linked.evaluate((el: HTMLDetailsElement) => el.open)).toBe(true)
         await expect.poll(() => linked.evaluate((el) => el.getBoundingClientRect().top >= 0 && el.getBoundingClientRect().top < innerHeight)).toBe(true)
+        // The demo Backer's own Pledge shows on the Campaign it backs.
+        await expect.poll(() => page.locator('div.readout .backed').textContent()).toMatch(/You backed this Campaign · Pledge TF-P-9001/)
+        expect(await page.locator('div.readout .backed a').getAttribute('href')).toMatch(/\/qa\/account\/pledges\/TF-P-9001$/)
       })
 
       flow('browse: the index table, Discover’s filters and sort in the URL, the phone drawer, Deals, into a Campaign', async ({ page, visit, reload }) => {
