@@ -1,0 +1,4 @@
+name: Kitchen
+blurb: Tools for cooking, eating and stirring, in one direction or another.
+icon: '<path d="M7 3v8a3 3 0 0 0 6 0V3M10 3v18M17 3c-1.5 2-2 4-2 7h3V3v18" />'
+order: 1

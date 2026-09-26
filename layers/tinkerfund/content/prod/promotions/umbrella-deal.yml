@@ -1,0 +1,5 @@
+title: 15% off the Rain-Aware Umbrella
+campaign: rain-aware-umbrella
+discount: { percent: 15 }
+start: -3d
+end: +4d

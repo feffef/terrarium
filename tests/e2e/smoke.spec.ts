@@ -41,6 +41,7 @@ import { registerAtlasE2E } from '../../layers/atlas/tests/e2e/atlas.e2e.ts'
 import { registerMiddenE2E } from '../../layers/midden/tests/e2e/midden.e2e.ts'
 import { registerMarqueeE2E } from '../../layers/marquee/tests/e2e/marquee.e2e.ts'
 import { registerCommonsE2E } from '../../layers/commons/tests/e2e/commons.e2e.ts'
+import { registerTinkerfundE2E } from '../../layers/tinkerfund/tests/e2e/tinkerfund.e2e.ts'
 
 const chromiumPath = findPreinstalledChromium() ?? findSystemChrome()
 
@@ -114,7 +115,27 @@ describe('L2 smoke render', async () => {
         const hrefs = await page.locator('.explore-grid a.title-link').evaluateAll((els) =>
           els.map((el) => el.getAttribute('href')),
         )
-        expect(hrefs).toEqual(['/t/blog', '/t/atlas', '/t/midden'])
+        expect(hrefs).toEqual(['/t/blog', '/t/midden', '/t/atlas', '/t/tinkerfund'])
+      } finally {
+        await page.close()
+      }
+    })
+
+    it('shows Tinkerfund’s aisles and a Campaign of the day in its own colours', async () => {
+      const page = await createPage()
+      try {
+        await page.goto(url('/'), { waitUntil: 'hydration' })
+        const tile = page.locator('.tile--tinkerfund')
+        const rooms = await tile.locator('a.room').evaluateAll((els) => els.map((el) => el.getAttribute('href')))
+        expect(rooms.at(-1)).toBe('/t/tinkerfund/prod/deals')
+        expect(rooms.slice(0, -1).length).toBeGreaterThan(0)
+        for (const href of rooms.slice(0, -1)) expect(href).toMatch(/^\/t\/tinkerfund\/prod\/category\/[a-z0-9-]+$/)
+        const campaign = tile.locator('a.campaign')
+        expect(await campaign.getAttribute('href')).toMatch(/^\/t\/tinkerfund\/prod\/campaigns\/[a-z0-9-]+$/)
+        expect(await campaign.textContent()).toMatch(/TF-\d{4}[\s\S]*\d+% funded/)
+        // The --tf-* tokens resolve inside the tile only (theme.css's `.tf-tokens`).
+        expect(await tile.evaluate((el) => getComputedStyle(el).getPropertyValue('--tf-accent'))).not.toBe('')
+        expect(await page.locator('.root').evaluate((el) => getComputedStyle(el).getPropertyValue('--tf-accent'))).toBe('')
       } finally {
         await page.close()
       }
@@ -158,4 +179,5 @@ describe('L2 smoke render', async () => {
   registerMiddenE2E()
   registerMarqueeE2E()
   registerCommonsE2E()
+  registerTinkerfundE2E()
 })

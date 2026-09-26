@@ -1,0 +1,4 @@
+title: Ten percent off everything
+code: TINKER10
+discount: { percent: 10 }
+start: -30d

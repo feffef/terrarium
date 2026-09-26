@@ -1,0 +1,7 @@
+name: Imogen Pryce
+bio: Product manager in Cardiff. Previously shipped a connected kettle. The rock is her second connected device and her first with no moving parts.
+portrait: |-
+  <path d="M28 40a22 22 0 0 1 44 0v26H28z" style="fill:var(--tf-ink)" />
+  <path d="M18 96c4-22 18-32 32-32s28 10 32 32z" style="fill:var(--tf-good)" />
+  <circle cx="50" cy="38" r="18" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" />
+  <path d="M32 36a18 18 0 0 1 36 0c-10-2-24-10-36 0z" style="fill:var(--tf-ink)" />

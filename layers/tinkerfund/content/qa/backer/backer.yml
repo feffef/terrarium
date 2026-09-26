@@ -1,0 +1,30 @@
+name: Test Backer
+email: backer@example.test
+address:
+  street: 1 Test Way
+  city: Testville
+  postcode: "00000"
+  country: Germany
+  zone: domestic
+pledges:
+  - ref: TF-P-9001
+    campaign: last-minute-lamp
+    placed: -5d
+    zone: domestic
+    lines:
+      - { reward: lamp, options: { colour: black }, quantity: 1 }
+    addons:
+      - { id: bulb, quantity: 2 }
+    bonus: 3
+  - ref: TF-P-9002
+    campaign: retired-ruler
+    placed: -45d
+    zone: europe
+    lines:
+      - { reward: ruler, quantity: 2 }
+  - ref: TF-P-9003
+    campaign: indoor-hammock
+    placed: -20d
+    zone: domestic
+    lines:
+      - { reward: hammock, quantity: 1 }

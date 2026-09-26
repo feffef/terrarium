@@ -1,0 +1,10 @@
+campaign: last-minute-lamp
+comments:
+  - author: Test Backer
+    posted: -26h
+    text: Will it arrive in time?
+    replies:
+      - author: Test Inventor
+        posted: -25h
+        text: It is the lamp that is running late, not the post.
+        inventor: true

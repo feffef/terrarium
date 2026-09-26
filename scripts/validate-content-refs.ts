@@ -24,12 +24,15 @@
 //     #521) naming no real Document in this (Tenant, Space)'s `artifacts`
 //     collection — otherwise silent until a human/agent views the rendered
 //     page and hits the runtime "Artifact not found" fallback (issue #773).
+//   - A Tinkerfund Campaign, Update, comment thread, Promotion or past Pledge
+//     naming a Campaign, Inventor, category, Reward, option or Add-on that
+//     isn't in its Space, or a Campaign/Update page off its path (issue #1366).
 //
 // Scope: this pass only fires on a (Tenant, Space) that actually has an
 // Atlas-shaped collection (a `pages` Document with `phenology`, alongside
-// `interactions`/`observations`) or a Midden-shaped `artifacts` collection —
-// it is a no-op for `journal`/`blog`, whose `pages` Documents never declare
-// `phenology` and never have an `artifacts` sibling.
+// `interactions`/`observations`), a Midden-shaped `artifacts` collection, or
+// a Tinkerfund-shaped one (a `pages` Document with `campaign`, or a `backer`
+// collection) — it is a no-op for `journal`/`blog`, which have none of these.
 //
 // Usage:  pnpm validate:content   (runs this after validate-content.ts;
 //         see package.json)       Exits 0 if every reference resolves and
@@ -39,8 +42,10 @@ import { execFileSync } from 'node:child_process'
 import { globSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { pathToFileURL } from 'node:url'
+import type { z } from 'zod'
 import { expand, loadManifests, root, type ExpandedCollection } from '../shared/expand.ts'
 import { DIG_SEASON_SLUGS, digSeasonOf, type DigSeason } from '../layers/midden/app/utils/strata.ts'
+import type { campaign, pledge } from '../layers/tinkerfund/schemas.ts'
 import { parseDocument, splitFrontmatter } from './validate-content.ts'
 
 export interface RefViolation {
@@ -527,6 +532,115 @@ function checkArtifacts(
   return { checked, slugs }
 }
 
+// ── Campaigns and Pledges (Tinkerfund, issue #1366) ─────────────────────────
+// validate-content.ts has already checked each Document's shape, so this
+// reads the fields it needs without re-checking their types.
+
+type TinkerfundCampaign = z.infer<typeof campaign>
+type TinkerfundPledge = z.infer<typeof pledge>
+
+type PageDoc = ReturnType<typeof splitFrontmatter> & { rel: string; file: string }
+
+const TF_CAMPAIGN_PAGE = /^campaigns\/([^/]+)\.md$/
+const TF_UPDATE_PAGE = /^campaigns\/([^/]+)\/updates\/[^/]+\.md$/
+
+function pledgeRefs(pledges: TinkerfundPledge[], campaigns: Map<string, TinkerfundCampaign>): string[] {
+  const msgs: string[] = []
+  pledges.forEach((pledge, i) => {
+    const at = `pledges.${i}`
+    const campaign = campaigns.get(pledge.campaign)
+    if (!campaign) {
+      msgs.push(`${at}.campaign: "${pledge.campaign}" is not a Campaign in this Space`)
+      return
+    }
+    pledge.lines.forEach((line, j) => {
+      const reward = campaign.rewards.find((r) => r.id === line.reward)
+      if (!reward) {
+        msgs.push(`${at}.lines.${j}.reward: "${line.reward}" is not a Reward of "${pledge.campaign}"`)
+        return
+      }
+      for (const [group, choice] of Object.entries(line.options ?? {})) {
+        if (!reward.options?.some((g) => g.id === group && g.choices.some((c) => c.id === choice))) {
+          msgs.push(`${at}.lines.${j}.options.${group}: "${choice}" is not an option of Reward "${reward.id}"`)
+        }
+      }
+    })
+    pledge.addons?.forEach((addon, j) => {
+      if (!campaign.addons?.some((a) => a.id === addon.id)) {
+        msgs.push(`${at}.addons.${j}.id: "${addon.id}" is not an Add-on of "${pledge.campaign}"`)
+      }
+    })
+  })
+  return msgs
+}
+
+/** Returns how many data Documents it checked; the caller counts the pages. */
+function checkCampaignsAndPledges(
+  pagesKey: string,
+  pages: PageDoc[],
+  groupCols: ExpandedCollection[],
+  projectRoot: string,
+  violations: RefViolation[],
+): number {
+  let checked = 0
+  const files = (collection: string) => {
+    const col = groupCols.find((c) => c.collection === collection)
+    return col ? globSync(col.include, { cwd: join(projectRoot, col.cwdRel) }).sort().map((rel) => ({ col, rel })) : []
+  }
+  const docs = (collection: string) =>
+    files(collection).map(({ col, rel }) => {
+      checked++
+      return { key: col.key, file: join(col.cwdRel, rel), data: parseDocument(join(projectRoot, col.cwdRel, rel)) }
+    })
+  const stems = (collection: string) => new Set(files(collection).map(({ rel }) => rel.replace(/\.yml$/, '')))
+  const report = (doc: { key: string; file: string }, messages: string[]) => {
+    if (messages.length) violations.push({ key: doc.key, file: doc.file, messages })
+  }
+
+  const inventors = stems('inventors')
+  const categories = stems('categories')
+  const pageCampaigns = pages.map((page) => ({
+    page,
+    slug: TF_CAMPAIGN_PAGE.exec(page.rel)?.[1],
+    campaign: page.frontmatter.campaign as TinkerfundCampaign | undefined,
+  }))
+  const campaigns = new Map<string, TinkerfundCampaign>()
+  for (const { slug, campaign } of pageCampaigns) if (slug && campaign) campaigns.set(slug, campaign)
+
+  const registries = new Map<string, string>()
+  for (const { page, slug, campaign } of pageCampaigns) {
+    const msgs: string[] = []
+    if (slug && !campaign) msgs.push('a page at campaigns/<slug>.md must carry campaign frontmatter')
+    if (campaign) {
+      if (!slug) msgs.push('campaign frontmatter belongs only on a page at campaigns/<slug>.md')
+      if (!inventors.has(campaign.inventor)) msgs.push(`campaign.inventor: "${campaign.inventor}" is not an Inventor in this Space`)
+      if (!categories.has(campaign.category)) msgs.push(`campaign.category: "${campaign.category}" is not a category in this Space`)
+      const holder = registries.get(campaign.registry)
+      if (holder) msgs.push(`campaign.registry: "${campaign.registry}" is already used by ${holder}`)
+      else registries.set(campaign.registry, slug ?? page.rel)
+    }
+    const updateOf = TF_UPDATE_PAGE.exec(page.rel)?.[1]
+    if (updateOf) {
+      if (!page.frontmatter.update) msgs.push('an Update page must carry update frontmatter')
+      if (!campaigns.has(updateOf)) msgs.push(`updates a Campaign "${updateOf}" that is not in this Space`)
+    } else if (page.frontmatter.update) {
+      msgs.push('update frontmatter belongs only on a page at campaigns/<slug>/updates/<n>.md')
+    }
+    report({ key: pagesKey, file: page.file }, msgs)
+  }
+
+  for (const doc of [...docs('comments'), ...docs('promotions')]) {
+    const campaign = doc.data.campaign
+    if (typeof campaign === 'string' && !campaigns.has(campaign)) {
+      report(doc, [`campaign: "${campaign}" is not a Campaign in this Space`])
+    }
+  }
+  for (const doc of docs('backer')) {
+    report(doc, pledgeRefs((doc.data.pledges ?? []) as TinkerfundPledge[], campaigns))
+  }
+  return checked
+}
+
 // ── Main pass ────────────────────────────────────────────────────────────────
 
 interface PhenologyFrontmatter {
@@ -562,18 +676,24 @@ export function validateReferences(cols: ExpandedCollection[], projectRoot = roo
     if (!pagesCol) continue // no routed guide in this Space — nothing to key Specimens off
 
     const pagesCwd = join(projectRoot, pagesCol.cwdRel)
-    const pageRelFiles = globSync(pagesCol.include, { cwd: pagesCwd }).sort()
+    const pages: PageDoc[] = globSync(pagesCol.include, { cwd: pagesCwd })
+      .sort()
+      .map((rel) => ({ rel, file: join(pagesCol.cwdRel, rel), ...splitFrontmatter(readFileSync(join(pagesCwd, rel), 'utf8')) }))
+    filesChecked += pages.length
+
+    if (pages.some((p) => p.frontmatter.campaign) || groupCols.some((c) => c.collection === 'backer')) {
+      groupsChecked++
+      filesChecked += checkCampaignsAndPledges(pagesCol.key, pages, groupCols, projectRoot, violations)
+      continue
+    }
 
     const specimenSlugs = new Set<string>()
-    const pageBodies = new Map<string, { file: string; frontmatter: Record<string, unknown>; body: string }>()
-    for (const rel of pageRelFiles) {
-      filesChecked++
-      const slug = rel.replace(/\.md$/, '')
+    const pageBodies = new Map<string, PageDoc>()
+    for (const page of pages) {
+      const slug = page.rel.replace(/\.md$/, '')
       if (slug === 'index') continue // the Biome landing page, not a Specimen
-      const raw = readFileSync(join(pagesCwd, rel), 'utf8')
-      const { frontmatter, body } = splitFrontmatter(raw)
       specimenSlugs.add(slug)
-      pageBodies.set(slug, { file: join(pagesCol.cwdRel, rel), frontmatter, body })
+      pageBodies.set(slug, page)
     }
 
     const interactionsCol = groupCols.find((c) => c.collection === 'interactions')
