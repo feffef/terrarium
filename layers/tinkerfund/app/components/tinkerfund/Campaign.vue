@@ -208,5 +208,9 @@ h3 { margin: 28px 0 10px; font: 800 18px/1.1 var(--tf-font); font-stretch: 82%; 
 .from { font-size: 14px; color: var(--tf-muted); }
 .from b { color: var(--tf-ink); font: 600 16px/1 var(--tf-mono); }
 @media (min-width: 720px) { .backbar { margin-inline: -28px; padding-inline: 28px; } }
-@media (min-width: 1000px) { .backbar { display: none; } }
+@media (max-width: 999px) { :global(html:has(.backbar)) { scroll-padding-bottom: 6rem; } }
+@media (min-width: 1000px) {
+  .backbar { display: none; }
+  .campaign :deep(.sections a[href='#rewards']) { display: none; }
+}
 </style>

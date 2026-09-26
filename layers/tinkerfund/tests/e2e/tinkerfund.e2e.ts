@@ -178,18 +178,50 @@ export function registerTinkerfundE2E(): void {
       }
     })
 
+    // WCAG 2.2 SC 2.4.11: a focused control must not sit wholly under the back bar.
+    it('keeps Tab-focused Reward controls above the phone back bar', async () => {
+      const page = await createPage()
+      try {
+        await page.setViewportSize({ width: 390, height: 844 })
+        await page.goto(url('/t/tinkerfund/prod/campaigns/counterclockwise-mug'), { waitUntil: 'hydration' })
+        const checked: string[] = []
+        for (let i = 0; i < 200; i++) {
+          await page.keyboard.press('Tab')
+          const focus = await page.evaluate(() => {
+            const el = document.activeElement!
+            if (!el.closest('#rewards')) return undefined
+            return { name: el.textContent?.trim() || el.getAttribute('aria-label') || el.tagName, bottom: el.getBoundingClientRect().bottom, barTop: document.querySelector('.backbar')!.getBoundingClientRect().top }
+          })
+          if (!focus) {
+            if (checked.length) break
+            continue
+          }
+          expect(focus.bottom, focus.name).toBeLessThanOrEqual(focus.barTop)
+          checked.push(focus.name)
+        }
+        expect(checked).toContain('Add to cart')
+      } finally {
+        await page.close()
+      }
+    })
+
     it('switches figures and sets an Upcoming reminder', async () => {
       const page = await createPage()
       try {
         await page.goto(url('/t/tinkerfund/qa/campaigns/unhurried-kettle'), { waitUntil: 'hydration' })
         // The exact launch time is the visitor's own, so only the browser fills it in.
         await expect.poll(() => page.locator('.readout time').first().getAttribute('title')).toMatch(/2026/)
+        expect(await page.locator('.readout .date').textContent()).toMatch(/Launches .*2026/)
+        // On desktop the Reward column is always in view, so the nav skips it.
+        await page.setViewportSize({ width: 1280, height: 800 })
+        expect(await page.locator('nav[aria-label="Sections"] a[href="#rewards"]').isVisible()).toBe(false)
         await page.getByRole('button', { name: /^Figure 2:/ }).click()
         expect(await page.locator('.hero .frame .cap').first().textContent()).toBe('FIG. 2 · TF-9003')
         const notify = page.locator('.readout button[aria-pressed]')
-        expect(await notify.textContent()).toContain('Notify me')
+        expect(await notify.getAttribute('aria-pressed')).toBe('false')
         await notify.click()
         expect(await notify.getAttribute('aria-pressed')).toBe('true')
+        expect(await notify.textContent()).toContain('Notify me')
         expect(await page.getByRole('button', { name: 'Opens at launch' }).isDisabled()).toBe(true)
       } finally {
         await page.close()
