@@ -56,7 +56,7 @@ defineExpose({ show })
       </div>
 
       <dl class="sum">
-        <dt>Subtotal <span>· {{ view.count }} {{ view.count === 1 ? 'item' : 'items' }}</span></dt>
+        <dt>Subtotal <span>· {{ formatTinkerfundItems(view.count) }}</span></dt>
         <dd>{{ money(view.subtotal) }}</dd>
       </dl>
       <p class="note">Shipping and discounts are worked out at checkout.</p>

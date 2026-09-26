@@ -24,7 +24,7 @@ useSeoMeta(tinkerfundSeo({ kind: 'private', space, title: 'Your Cart' }))
 <template>
   <TinkerfundShell :space="space">
     <div class="cart">
-      <h1>Your Cart <span v-if="loaded && view.count" class="count">{{ view.count }} {{ view.count === 1 ? 'item' : 'items' }}</span></h1>
+      <h1>Your Cart <span v-if="loaded && view.count" class="count">{{ formatTinkerfundItems(view.count) }}</span></h1>
 
       <p v-if="!loaded" class="empty tf-panel">Opening your Cart…</p>
       <section v-else-if="!view.groups.length" class="empty tf-panel">
