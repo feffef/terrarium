@@ -421,6 +421,109 @@ export function registerTinkerfundE2E(): void {
       }
     })
 
+    it('hydrates the account and a Pledge cleanly', async () => {
+      await expectCleanHydration('/t/tinkerfund/qa/account')
+      await expectCleanHydration('/t/tinkerfund/qa/account/pledges/TF-P-9001')
+    })
+
+    // The One-Button Keypad again: one keypad (€45) tips it over its €1,000
+    // goal; a change grows the Pledge; the cancel pulls it back below.
+    it('pledges, changes and cancels, and the Campaign’s totals follow back below its goal', async () => {
+      const page = await createPage()
+      const readout = () => page.locator('.readout.tf-panel').textContent()
+      try {
+        await page.goto(url('/t/tinkerfund/qa/campaigns/one-button-keypad'), { waitUntil: 'hydration' })
+        await page.getByRole('article', { name: 'One keypad' }).getByRole('button', { name: 'Add to cart' }).click()
+        await page.getByRole('dialog', { name: 'Added to your Cart' }).getByRole('link', { name: 'Checkout' }).click()
+        await page.getByRole('link', { name: 'Continue to payment' }).click()
+        await page.getByRole('link', { name: 'Review your Pledges' }).click()
+        await page.getByRole('button', { name: 'Confirm Pledge' }).click()
+        await page.waitForURL('**/qa/checkout/done?refs=TF-P-9004')
+
+        await page.locator('.head').getByRole('link', { name: 'Your account' }).click()
+        await page.waitForURL('**/qa/account')
+        const rows = page.locator('.list > li')
+        await expect.poll(() => rows.count()).toBe(4)
+        expect(await rows.allTextContents()).toEqual([
+          expect.stringMatching(/TF-P-9004\s*One-Button Keypad\s*Pending\s*Placed.*€49\s*$/),
+          expect.stringMatching(/TF-P-9001\s*Last-Minute Lamp\s*Pending\s*Placed.*€35\s*$/),
+          expect.stringMatching(/TF-P-9003\s*Indoor Hammock\s*Not charged\s*Placed.*€57\s*$/),
+          expect.stringMatching(/TF-P-9002\s*Retired Ruler\s*Delivered\s*Placed.*€66\s*$/),
+        ])
+        expect(await page.locator('address').textContent()).toContain('1 Test Way')
+
+        await page.getByRole('link', { name: 'One-Button Keypad' }).click()
+        await page.waitForURL('**/qa/account/pledges/TF-P-9004')
+        await page.getByRole('button', { name: 'Change Pledge' }).click()
+        await expect.poll(() => page.locator('h1').textContent()).toBe('Change your Pledge')
+        await page.getByLabel('Quantity of Spare keycap').fill('2')
+        await page.getByLabel('Amount (EUR), whole euros').fill('5')
+        await page.getByRole('button', { name: 'Review changes' }).click()
+        await expect.poll(() => page.locator('h1').textContent()).toBe('Review changes')
+        expect(await page.locator('.difference').textContent()).toMatch(/Was\s*€49\s*Now\s*€60\s*Difference\s*\+€11/)
+        await page.getByRole('button', { name: 'Confirm changes' }).click()
+        await expect.poll(() => page.locator('.done').textContent()).toBe('Your Pledge is changed.')
+        expect(await page.locator('.pledge').textContent()).toMatch(/2 × Spare keycap\s*€6[\s\S]*Bonus support\s*€5[\s\S]*Total\s*€60/)
+
+        await page.getByRole('link', { name: 'One-Button Keypad' }).click()
+        await page.waitForURL('**/qa/campaigns/one-button-keypad')
+        await expect.poll(() => page.locator('.readout .big').textContent()).toBe('€1,018')
+        expect(await readout()).toMatch(/Goal reached[\s\S]*Backers\s*31/)
+        expect(await page.locator('.goals li.yes').textContent()).toContain('The button in a second colour')
+
+        await page.goBack()
+        await page.waitForURL('**/qa/account/pledges/TF-P-9004')
+        await page.getByRole('button', { name: 'Cancel Pledge' }).click()
+        const dialog = page.getByRole('dialog', { name: 'Cancel Pledge TF-P-9004?' })
+        await dialog.getByRole('button', { name: 'Keep Pledge' }).click()
+        await expect.poll(() => dialog.isVisible()).toBe(false)
+        await page.getByRole('button', { name: 'Cancel Pledge' }).click()
+        // The status region is already in place, so its new text is announced (#1401 review).
+        const status = page.locator('.pledge-page [role="status"]')
+        expect(await status.textContent()).toBe('')
+        await dialog.getByRole('button', { name: 'Yes, cancel it' }).click()
+        await expect.poll(() => page.locator('.intro .chip').textContent()).toBe('Cancelled')
+        expect(await status.textContent()).toBe('Your Pledge is cancelled. Nothing will be charged.')
+        await expect.poll(() => page.evaluate(() => document.activeElement?.textContent)).toBe('Receipt')
+        expect(await page.getByRole('button', { name: 'Change Pledge' }).count()).toBe(0)
+
+        await page.goto(url('/t/tinkerfund/qa/campaigns/one-button-keypad'), { waitUntil: 'hydration' })
+        await expect.poll(() => page.locator('.readout .big').textContent()).toBe('€962')
+        expect(await readout()).not.toContain('Goal reached')
+        expect(await readout()).toMatch(/Backers\s*30/)
+        expect(await page.locator('.goals li.yes').count()).toBe(0)
+      } finally {
+        await page.close()
+      }
+    })
+
+    it('locks an Ended Campaign’s Pledge and prints its receipt without the shop around it', async () => {
+      const page = await createPage()
+      try {
+        await page.goto(url('/t/tinkerfund/qa/account/pledges/TF-P-9002'), { waitUntil: 'hydration' })
+        await expect.poll(() => page.locator('h1').textContent()).toBe('Receipt')
+        expect(await page.locator('.pledge').textContent()).toMatch(/Pledge TF-P-9002[\s\S]*2 × One ruler\s*€60[\s\S]*Shipping to Europe\s*€6\s*Total\s*€66/)
+        expect(await page.getByText('Locked: its Campaign has ended.').isVisible()).toBe(true)
+        expect(await page.getByRole('button', { name: 'Change Pledge' }).count()).toBe(0)
+
+        await page.emulateMedia({ media: 'print', colorScheme: 'dark' })
+        for (const hidden of ['.demo', '.head', '.foot', '.actions', '.back']) {
+          expect(await page.locator(hidden).first().isVisible(), hidden).toBe(false)
+        }
+        expect(await page.locator('.pledge').isVisible()).toBe(true)
+        expect(await page.evaluate(() => getComputedStyle(document.body).color)).toBe('rgb(17, 23, 27)')
+      } finally {
+        await page.close()
+      }
+    })
+
+    it('shows the account components in the gallery', async () => {
+      const html = await $fetch('/t/tinkerfund/qa')
+      for (const name of ['TinkerfundPledgeList', 'TinkerfundPledgeState', 'TinkerfundPledgeEditor', 'TinkerfundCancelPledge']) {
+        expect(html).toMatch(new RegExp(`<code[^>]*>${name}</code>`))
+      }
+    })
+
     it('404s an unknown Space', async () => {
       expect((await fetch('/t/tinkerfund/staging')).status).toBe(404)
     })

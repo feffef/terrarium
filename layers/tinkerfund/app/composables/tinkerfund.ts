@@ -1,7 +1,8 @@
 import type { Ref } from 'vue'
 import type { TinkerfundCartRequest } from '../types/tinkerfund'
 import type { TinkerfundListing } from '../utils/browse'
-import type { TinkerfundCartCatalog, TinkerfundOverlay, TinkerfundZone } from '../utils/cart'
+import type { TinkerfundAccountCatalog, TinkerfundPledgeChange } from '../utils/account'
+import type { TinkerfundOverlay, TinkerfundPledge, TinkerfundZone } from '../utils/cart'
 import type { TinkerfundBakedPledge, TinkerfundPlaceInput } from '../utils/checkout'
 import type { TinkerfundHit } from '../utils/search'
 
@@ -112,7 +113,7 @@ export async function useTinkerfundCart(zone: Ref<TinkerfundZone> = ref('domesti
       // The Cart needs prices and limits, not figures, in every page's payload.
       transform: (docs) =>
         Object.fromEntries(docs.flatMap(({ path, title, campaign: c }) => c
-          ? [[path.split('/').pop()!, { title, campaign: { launch: c.launch, end: c.end, pledged: c.pledged, backers: c.backers, rewards: c.rewards, addons: c.addons, shipping: c.shipping } }]]
+          ? [[path.split('/').pop()!, { title, campaign: { launch: c.launch, end: c.end, goal: c.goal, pledged: c.pledged, backers: c.backers, rewards: c.rewards, addons: c.addons, shipping: c.shipping } }]]
           : [])),
     },
   )
@@ -122,7 +123,7 @@ export async function useTinkerfundCart(zone: Ref<TinkerfundZone> = ref('domesti
 
   const pledges = computed(() => overlay.value.pledges)
   const baked = computed<TinkerfundBakedPledge[]>(() => bakedPledges.value ?? [])
-  const catalog = computed<TinkerfundCartCatalog>(() =>
+  const catalog = computed<TinkerfundAccountCatalog>(() =>
     Object.fromEntries(Object.entries(baseline.value ?? {}).map(([slug, entry]) =>
       [slug, { ...entry, campaign: withTinkerfundPledges(slug, entry.campaign, pledges.value, baked.value) }])))
 
@@ -148,8 +149,21 @@ export async function useTinkerfundCart(zone: Ref<TinkerfundZone> = ref('domesti
     return { refs, error }
   }
 
+  type Outcome = { pledge?: TinkerfundPledge; error?: string }
+  function keep(pledge: TinkerfundPledge, act: (entry: TinkerfundAccountCatalog[string]) => Outcome): string | undefined {
+    const entry = catalog.value[pledge.campaign]
+    if (!entry) return TINKERFUND_GONE
+    const { pledge: next, error } = act(entry)
+    if (next) save({ ...overlay.value, pledges: [...overlay.value.pledges.filter((p) => p.ref !== next.ref), next] })
+    return error
+  }
+  /** Changes or cancels a Pledge, baked or the visitor's own (story #1385); answers why not, if it refused. */
+  const revise = (pledge: TinkerfundPledge, change: TinkerfundPledgeChange) =>
+    keep(pledge, (entry) => reviseTinkerfundPledge(pledge, change, entry, now.value))
+  const cancel = (pledge: TinkerfundPledge) => keep(pledge, (entry) => cancelTinkerfundPledge(pledge, entry, now.value))
+
   const view = computed(() => resolveTinkerfundCart(overlay.value.cart, catalog.value, now.value, zone.value))
-  return { loaded, view, change, place, pledges, baked, catalog, now }
+  return { loaded, view, change, place, revise, cancel, pledges, baked, catalog, now }
 }
 
 export function useTinkerfundCategories(): Ref<{ slug: string; name: string }[]> {
