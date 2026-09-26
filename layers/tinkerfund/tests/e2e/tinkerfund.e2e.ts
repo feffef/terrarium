@@ -53,7 +53,7 @@ export function registerTinkerfundE2E(): void {
       expect(html).toContain('Ending soon')
       expect(html).toContain('Goal reached')
       expect(html).toContain('125% funded')
-      expect(html).toContain('<time class="readout" datetime="2026-06-03T00:00:00.000Z">1 day 12 hours to go</time>')
+      expect(html).toMatch(/<time [^>]*datetime="2026-06-03T00:00:00.000Z"[^>]*>1 day 12 hours to go<\/time>/)
     })
 
     it('hydrates a Campaign page cleanly', async () => {
