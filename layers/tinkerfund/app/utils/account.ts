@@ -5,14 +5,13 @@ import {
   TINKERFUND_NEEDS_REWARD,
   mergeTinkerfundAddons,
   mergeTinkerfundLines,
+  settleTinkerfundPledge,
   tinkerfundCents,
   tinkerfundCountedCatalog,
   tinkerfundDoesntShip,
   tinkerfundHeld,
-  tinkerfundShipping,
   tinkerfundShipsTo,
   tinkerfundShortfall,
-  tinkerfundSum,
   tinkerfundValidOptions,
 } from './cart'
 import type { TinkerfundBackerState, TinkerfundCatalogCampaign, TinkerfundPledge, TinkerfundPledgeContents, TinkerfundShop, TinkerfundStep } from './cart'
@@ -71,8 +70,7 @@ export type TinkerfundPledgeChange = TinkerfundPledgeContents
 /**
  * The Pledge with new lines, Add-ons and bonus, under the same rules as the
  * Cart (issue #1365). What it already holds counts as still available to it,
- * since the counted stock already holds it. The discount it earned at
- * checkout stays, never more than its new goods; shipping follows its lines.
+ * since the counted stock already holds it.
  */
 export function reviseTinkerfundPledge(
   state: TinkerfundBackerState,
@@ -93,12 +91,10 @@ export function reviseTinkerfundPledge(
   if (!lines.length && !addons.length && !bonus) return refuse('Nothing is left in this Pledge. To withdraw it, cancel it instead.')
   if (addons.length && !lines.length) return refuse(TINKERFUND_NEEDS_REWARD)
 
-  const goods: number[] = []
   for (const line of lines) {
     const reward = campaign.rewards.find((r) => r.id === line.reward)
     if (!reward || !tinkerfundValidOptions(reward, line.options)) return refuse(TINKERFUND_GONE)
     if (!tinkerfundShipsTo(reward, pledge.zone)) return refuse(tinkerfundDoesntShip(reward.title))
-    goods.push(reward.price * line.quantity)
   }
   for (const reward of campaign.rewards) {
     const wanted = tinkerfundHeld(lines, reward.id)
@@ -111,19 +107,9 @@ export function reviseTinkerfundPledge(
     const had = pledge.addons.find((a) => a.id === addon.id)?.quantity ?? 0
     const short = tinkerfundShortfall({ ...addon, claimed: addon.claimed - had }, line.quantity)
     if (short) return refuse(`${addon.title}: ${short}`)
-    goods.push(addon.price * line.quantity)
   }
 
-  const next: TinkerfundPledge = {
-    ...pledge,
-    lines,
-    addons,
-    discount: Math.min(pledge.discount, tinkerfundSum(goods)),
-    shipping: tinkerfundShipping(lines, campaign, pledge.zone),
-  }
-  if (bonus) next.bonus = bonus
-  else delete next.bonus
-  return { state: replace(state, next) }
+  return { state: replace(state, settleTinkerfundPledge({ ...pledge, lines, addons, bonus: bonus || undefined }, shop)) }
 }
 
 /** Every Pledge the Backer holds, newest first. */

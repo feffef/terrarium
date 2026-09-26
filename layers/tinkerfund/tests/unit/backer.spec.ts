@@ -43,7 +43,7 @@ describe('replaying the actions', () => {
     expect(state.cart).toEqual([])
     expect(state.pledges.at(-1)).toEqual({
       ref: 'TF-P-0006', campaign: 'mug', placed: NOW + HOUR, zone: 'europe', payment: 'handshake',
-      lines: [{ reward: 'mug', options: {}, quantity: 1 }], addons: [], discount: 0, shipping: 4,
+      lines: [{ reward: 'mug', options: {}, quantity: 1 }], addons: [], promotions: [], discount: 0, shipping: 4,
     })
     const cancelled = replay([addMug, { type: 'place', at: NOW, zone: 'domestic', payment: 'handshake' }, { type: 'cancel', at: NOW + HOUR, ref: 'TF-P-0006' }])
     expect(cancelled.pledges.at(-1)!.cancelled).toBe(NOW + HOUR)

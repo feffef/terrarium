@@ -6,8 +6,8 @@ import {
   addToTinkerfundCart,
   resolveTinkerfundCart,
   tinkerfundCartRequest,
+  settleTinkerfundPledge,
   tinkerfundPledgeContents,
-  tinkerfundShipping,
   tinkerfundZone,
 } from './cart'
 import type { TinkerfundBackerState, TinkerfundBakedPledge, TinkerfundPledge, TinkerfundShop, TinkerfundStep } from './cart'
@@ -47,21 +47,18 @@ export function writeTinkerfundActions(storage: Storage, space: string, list: Ti
 }
 
 function fromBaked(b: TinkerfundBakedPledge, shop: TinkerfundShop): TinkerfundPledge[] {
-  const campaign = shop.catalog[b.campaign]?.campaign
-  if (!campaign) return []
-  const lines = b.lines.map((l) => ({ reward: l.reward, options: l.options ?? {}, quantity: l.quantity }))
-  return [{
+  if (!shop.catalog[b.campaign]) return []
+  return [settleTinkerfundPledge({
     ref: b.ref,
     campaign: b.campaign,
     placed: resolveTinkerfundOffset(b.placed, shop.now),
     zone: b.zone,
     payment: shop.payment,
-    lines,
+    lines: b.lines.map((l) => ({ reward: l.reward, options: l.options ?? {}, quantity: l.quantity })),
     addons: b.addons ?? [],
     ...(b.bonus ? { bonus: b.bonus } : {}),
-    discount: 0,
-    shipping: tinkerfundShipping(lines, campaign, b.zone),
-  }]
+    promotions: [],
+  }, shop)]
 }
 
 export function applyTinkerfundAction(state: TinkerfundBackerState, act: TinkerfundAction, shop: TinkerfundShop): TinkerfundStep {

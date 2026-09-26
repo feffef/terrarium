@@ -70,7 +70,7 @@ describe('quoting a checkout', () => {
   it('charges a Pledge’s shipping once: adding to one that already ships quotes only the difference', () => {
     const mugs: TinkerfundPledge = {
       ref: 'TF-P-9001', campaign: 'mug', placed: NOW, zone: 'domestic', payment: 'demo-card',
-      lines: [{ reward: 'mug', options: {}, quantity: 1 }], addons: [], discount: 0, shipping: 2,
+      lines: [{ reward: 'mug', options: {}, quantity: 1 }], addons: [], promotions: [], discount: 0, shipping: 2,
     }
     const more = [{ campaign: 'mug', lines: [{ reward: 'mug', options: {}, quantity: 1 }], addons: [] }]
     expect(quote({ cart: more, pledges: [mugs] })).toMatchObject({ subtotal: 3, shipping: 0, total: 3 })
@@ -104,8 +104,8 @@ describe('confirming a checkout', () => {
       state: {
         cart: [],
         pledges: [
-          { ref: 'TF-P-0588', campaign: 'lamp', placed: NOW, zone: 'domestic', payment: 'demo-card', lines: [{ reward: 'lamp', options: black, quantity: 2 }], addons: [{ id: 'bulb', quantity: 1 }], bonus: 6, discount: 4.4, shipping: 5 },
-          { ref: 'TF-P-0589', campaign: 'mug', placed: NOW, zone: 'domestic', payment: 'demo-card', lines: [{ reward: 'mug', options: {}, quantity: 1 }], addons: [], discount: 0, shipping: 2 },
+          { ref: 'TF-P-0588', campaign: 'lamp', placed: NOW, zone: 'domestic', payment: 'demo-card', lines: [{ reward: 'lamp', options: black, quantity: 2 }], addons: [{ id: 'bulb', quantity: 1 }], bonus: 6, promotions: ['lamp-tenth'], discount: 4.4, shipping: 5 },
+          { ref: 'TF-P-0589', campaign: 'mug', placed: NOW, zone: 'domestic', payment: 'demo-card', lines: [{ reward: 'mug', options: {}, quantity: 1 }], addons: [], promotions: [], discount: 0, shipping: 2 },
         ],
       },
     })
@@ -126,7 +126,7 @@ describe('confirming a checkout', () => {
 
   const existing: TinkerfundPledge = {
     ref: 'TF-P-9001', campaign: 'lamp', placed: NOW - 5 * 86_400_000, zone: 'domestic', payment: 'handshake',
-    lines: [{ reward: 'manual', options: {}, quantity: 1 }], addons: [], bonus: 3, discount: 0, shipping: 0,
+    lines: [{ reward: 'manual', options: {}, quantity: 1 }], addons: [], bonus: 3, promotions: [], discount: 0, shipping: 0,
   }
 
   it('refuses to move a Pledge to a zone its earlier Rewards don’t ship to', () => {
@@ -142,7 +142,7 @@ describe('confirming a checkout', () => {
       ...existing,
       payment: 'demo-card',
       lines: [{ reward: 'manual', options: {}, quantity: 1 }, { reward: 'lamp', options: black, quantity: 2 }],
-      addons: [{ id: 'bulb', quantity: 1 }], bonus: 9, discount: 4.4, shipping: 5,
+      addons: [{ id: 'bulb', quantity: 1 }], bonus: 9, promotions: ['lamp-tenth'], discount: 4.9, shipping: 5,
     })
 
     expect(place({ state: { cart, pledges: result.state.pledges } }).error).toBe('Lamp: Max 3 per Backer')
@@ -156,7 +156,7 @@ describe('a Campaign’s totals with the Backer’s Pledges', () => {
     rewards: [{ id: 'lamp', price: 20, claimed: 30 }, { id: 'manual', price: 5, claimed: 0 }],
     addons: [{ id: 'bulb', price: 4, claimed: 0 }],
   }
-  const pledge: TinkerfundPledge = { ref: 'TF-P-0001', campaign: 'lamp', placed: NOW, zone: 'domestic', payment: 'demo-card', lines: [{ reward: 'lamp', options: {}, quantity: 2 }], addons: [{ id: 'bulb', quantity: 1 }], bonus: 6, discount: 4.4, shipping: 5 }
+  const pledge: TinkerfundPledge = { ref: 'TF-P-0001', campaign: 'lamp', placed: NOW, zone: 'domestic', payment: 'demo-card', lines: [{ reward: 'lamp', options: {}, quantity: 2 }], addons: [{ id: 'bulb', quantity: 1 }], bonus: 6, promotions: [], discount: 4.4, shipping: 5 }
 
   it('adds a new Pledge’s amount after discount, without shipping, one Backer, and the stock it took', () => {
     const other = { ...pledge, ref: 'TF-P-0002', campaign: 'mug' }
@@ -184,7 +184,7 @@ describe('reading a Pledge back as a receipt', () => {
     const pledge: TinkerfundPledge = {
       ref: 'TF-P-0001', campaign: 'lamp', placed: NOW, zone: 'domestic', payment: 'demo-card',
       lines: [{ reward: 'lamp', options: black, quantity: 2 }, { reward: 'gone-for-good', options: {}, quantity: 1 }],
-      addons: [{ id: 'bulb', quantity: 1 }], bonus: 6, discount: 4.4, shipping: 5,
+      addons: [{ id: 'bulb', quantity: 1 }], bonus: 6, promotions: [], discount: 4.4, shipping: 5,
     }
     const receipt = tinkerfundReceipt(pledge, catalog.lamp)
     expect(receipt.lines.map((l) => [l.title, l.quantity, l.price, l.amount])).toEqual([['One lamp', 2, 20, 40], ['Bulb', 1, 4, 4]])

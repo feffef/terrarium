@@ -5,14 +5,13 @@ import type { TinkerfundPromotionTerms } from './campaign'
 import {
   mergeTinkerfundAddons,
   mergeTinkerfundLines,
+  settleTinkerfundPledge,
   tinkerfundCartLineKey,
   tinkerfundCents as cents,
   tinkerfundDoesntShip,
   tinkerfundHeld,
   tinkerfundLimitNotice,
   tinkerfundOptionsLabel,
-  tinkerfundPledgeFor,
-  tinkerfundShipping,
   tinkerfundShipsTo,
   tinkerfundSum as sum,
 } from './cart'
@@ -29,6 +28,8 @@ import type {
 import { derivePromotionState } from './status'
 
 export interface TinkerfundQuoteGroup extends TinkerfundCartGroup {
+  /** The Promotions this checkout earns the Pledge. */
+  promotions: string[]
   discount: number
   total: number
 }
@@ -75,7 +76,7 @@ export function quoteTinkerfundCheckout(view: TinkerfundCartView, shop: Tinkerfu
       return 'percent' in p.discount ? (goods * p.discount.percent) / 100 : p.discount.amount
     })
     const discount = Math.min(goods, sum(off))
-    return { ...group, discount, total: cents(group.subtotal - discount + group.shipping) }
+    return { ...group, promotions: goods > 0 ? applied.map((p) => p.id) : [], discount, total: cents(group.subtotal - discount + group.shipping) }
   })
   const discount = sum(groups.map((g) => g.discount))
   return {
@@ -161,7 +162,7 @@ export function placeTinkerfundPledges({ state, quote, zone, payment, shop }: Ti
     if (gone) return refuseGroup(`${gone.title} is no longer available`)
 
     const campaign = shop.catalog[group.campaign]!.campaign
-    const old = tinkerfundPledgeFor(state.pledges, group.campaign)
+    const old = group.existing
     const lines = mergeTinkerfundLines(
       old?.lines ?? [],
       group.lines.flatMap((l) => ('reward' in l.ref ? [{ reward: l.ref.reward, options: l.ref.options, quantity: l.quantity }] : [])),
@@ -179,7 +180,7 @@ export function placeTinkerfundPledges({ state, quote, zone, payment, shop }: Ti
     )
     const bonus = cents((old?.bonus ?? 0) + (group.bonus ?? 0))
 
-    placed.push({
+    placed.push(settleTinkerfundPledge({
       ref: old?.ref ?? fresh.shift()!,
       campaign: group.campaign,
       placed: old?.placed ?? shop.now,
@@ -188,9 +189,8 @@ export function placeTinkerfundPledges({ state, quote, zone, payment, shop }: Ti
       lines,
       addons,
       ...(bonus > 0 ? { bonus } : {}),
-      discount: cents((old?.discount ?? 0) + group.discount),
-      shipping: tinkerfundShipping(lines, campaign, zone),
-    })
+      promotions: [...new Set([...old?.promotions ?? [], ...group.promotions])],
+    }, shop))
   }
 
   const kept = state.pledges.filter((p) => !placed.some((q) => q.ref === p.ref))

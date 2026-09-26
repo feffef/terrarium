@@ -37,6 +37,8 @@ export interface TinkerfundPledge extends TinkerfundDraft {
   placed: number
   zone: TinkerfundZone
   payment: string
+  /** The Promotions it earned at checkout: their terms, not an amount, so its discount follows what it holds. */
+  promotions: string[]
   discount: number
   shipping: number
   /** When the Backer cancelled it (story #1385): it stays on the account, counting for nothing. */
@@ -176,6 +178,27 @@ export const mergeTinkerfundAddons = (into: AddonLine[], add: AddonLine[]) => me
 /** A Pledge's flat shipping (issue #1365): the zone's rate once any of its Rewards ships. */
 export function tinkerfundShipping(lines: { reward: string }[], campaign: TinkerfundCatalogCampaign, zone: TinkerfundZone): number {
   return lines.some((l) => campaign.rewards.find((r) => r.id === l.reward)?.shipsTo) ? campaign.shipping[zone] ?? 0 : 0
+}
+
+/** Rewards and Add-ons at their prices: what discounts come off, never bonus support (issue #1365). */
+export function tinkerfundGoods(contents: Pick<TinkerfundPledgeContents, 'lines' | 'addons'>, campaign: TinkerfundCatalogCampaign): number {
+  return tinkerfundSum([
+    ...contents.lines.map((l) => (campaign.rewards.find((r) => r.id === l.reward)?.price ?? 0) * l.quantity),
+    ...contents.addons.map((a) => (campaign.addons?.find((x) => x.id === a.id)?.price ?? 0) * a.quantity),
+  ])
+}
+
+/** A fixed amount comes off once, a percentage off all the goods, and never more than the goods. */
+export function tinkerfundDiscount(goods: number, terms: Pick<TinkerfundPromotionTerms, 'discount'>[]): number {
+  return Math.min(goods, tinkerfundSum(terms.map(({ discount: d }) => ('percent' in d ? (goods * d.percent) / 100 : d.amount))))
+}
+
+/** The Pledge's discount and shipping, always worked out afresh from what it holds, its zone and the terms it earned. */
+export function settleTinkerfundPledge(pledge: Omit<TinkerfundPledge, 'discount' | 'shipping'>, shop: Pick<TinkerfundShop, 'catalog' | 'promotions'>): TinkerfundPledge {
+  const campaign = shop.catalog[pledge.campaign]?.campaign
+  if (!campaign) return { ...pledge, discount: 0, shipping: 0 }
+  const terms = shop.promotions.filter((p) => pledge.promotions.includes(p.id))
+  return { ...pledge, discount: tinkerfundDiscount(tinkerfundGoods(pledge, campaign), terms), shipping: tinkerfundShipping(pledge.lines, campaign, pledge.zone) }
 }
 
 export function tinkerfundClosedReason(campaign: Pick<TinkerfundCatalogCampaign, 'launch' | 'end'>, now: number): string | undefined {

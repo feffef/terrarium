@@ -63,7 +63,7 @@ const quoteSpecimen = computed(() => quoteTinkerfundCheckout(cartSpecimen.value,
 const receiptSpecimen = computed(() => {
   const stapler = campaigns.value.find((doc) => doc.slug === 'goal-exact-stapler')
   return stapler && tinkerfundReceipt(
-    { ref: 'TF-P-9004', campaign: stapler.slug, placed: now.value, zone: 'europe', payment: 'handshake', lines: [{ reward: 'stapler', options: {}, quantity: 2 }], addons: [{ id: 'staple', quantity: 3 }], bonus: 5, discount: 10.6, shipping: 8 },
+    { ref: 'TF-P-9004', campaign: stapler.slug, placed: now.value, zone: 'europe', payment: 'handshake', lines: [{ reward: 'stapler', options: {}, quantity: 2 }], addons: [{ id: 'staple', quantity: 3 }], bonus: 5, promotions: [], discount: 10.6, shipping: 8 },
     { title: stapler.title, campaign: stapler.campaign },
   )
 })
