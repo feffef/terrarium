@@ -1,0 +1,112 @@
+schemaVersion: 1
+session: session_016e82WsrXEZWeWUMze5jSPj
+startedAt: 2026-09-26T06:04:29Z
+endedAt: 2026-09-26T06:40:26Z
+kind: interactive
+goal: Chart a wayfinder map for the Tinkerfund Tenant
+status: completed
+outcome: Map charted, four research tickets resolved
+summary: "Human-instructed (/wayfinder): chart a map toward a build-ready spec for a new Kickstarter-like showcase Tenant. Grilled the user over four rounds (purpose, Spaces prod/qa, content vs. tab-lifetime browser state, SVG-only media, deadpan tone, pattern scope, name Tinkerfund). At the user's request, probed CDN reachability (blocked) and revised the library stance. With the user's go, created map issue 1357 plus 12 child tickets (Blocked-by body lines), and dispatched four research subagents (routing, browser state, e2e, UI libraries), each on its own research/tinkerfund-* branch as the user allowed; verified key claims, posted resolutions, closed them, and indexed them on the map. No code committed; no PR needed."
+prs: []
+docsRead:
+  - path: docs/agents/issue-tracker.md
+    reason: wayfinding operations for the map/tickets
+  - path: docs/agents/github-integration.md
+    reason: no MCP equivalent for native issue dependencies
+  - path: scripts/provenance-header.ts
+    reason: ADR-0017 header format for issue bodies
+  - path: CONTEXT-MAP.md
+    reason: multi-context layout before naming a new Tenant
+  - path: layers/journal/tests/e2e/journal.e2e.ts
+    reason: (no reason given)
+  - path: docs/agents/tenant-layers.md
+    reason: (no reason given)
+skillsUsed:
+  - name: grilling
+    reason: four rounds naming the destination and frontier
+  - name: domain-modeling
+    reason: "Tinkerfund vocabulary: Campaign, Pledge, Reward, unfunded"
+  - name: dispatch-subagents
+    reason: four worktree-isolated research agents
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: wayfinder
+    reason: (invoked as a slash command)
+  - name: research
+    reason: (no reason given)
+frictions:
+  - description: Ticket brief for the browser-state research cited ADR-0019's patched client DB loading as live; the ADR is Superseded (2026-07-16).
+    solution: Check an ADR's Status line before citing it in a dispatch brief or ticket body.
+    severity: minor
+  - description: Research-branch commits by worktree subagents landed without the provenance trailer; the commit-msg hook fails open when the fresh worktree has no node_modules.
+    solution: Have dispatch briefs run pnpm install before committing, or make the hook fall back to a dependency-free path.
+    severity: minor
+  - description: get_sub_issues on the map returned ~94K chars (full bodies) and overflowed to a file just to confirm 12 child numbers.
+    solution: Verify sub-issue linkage via the parent's sub_issues_summary count, or a minimal-output query.
+    severity: minor
+  - description: Native issue dependencies have no MCP tool, so wayfinder blocking fell back to Blocked-by body lines; the frontier isn't visible in GitHub's UI.
+    solution: Documented gap in github-integration.md; a small script parsing Blocked-by lines could compute the frontier.
+    severity: nit
+  - description: Research agents found nuxt.com, MDN, playwright.dev and reka-ui.com blocked by the proxy, not only JS CDNs; they fell back to GitHub source repos.
+    solution: Record doc-site blocking and the raw.githubusercontent.com fallback in docs/agents/environment-caveats.md if absent.
+    severity: minor
+durationSec: 2157
+models:
+  claude-opus-5-5: 124
+toolCounts:
+  Skill: 5
+  Bash: 17
+  mcp__Claude_Code_Remote__read_documentation: 1
+  ToolSearch: 2
+  mcp__github__get_me: 1
+  mcp__github__get_label: 5
+  mcp__github__search_issues: 1
+  mcp__github__issue_write: 29
+  mcp__github__issue_read: 3
+  Agent: 4
+  mcp__github__add_issue_comment: 4
+filesEdited:
+  - docs/research/tinkerfund-ui-libraries.md
+  - docs/research/tinkerfund-routing.md
+  - docs/research/tinkerfund-browser-state.md
+  - docs/research/tinkerfund-e2e.md
+docsReadViaShell:
+  - CONTEXT-MAP.md
+  - CONTEXT.md
+  - docs/agents/issue-tracker.md
+  - docs/adr/0001-single-container-baked-multitenancy.md
+  - layers/marquee/CONTEXT.md
+  - docs/adr/0017-provenance-footer-on-agent-authored-content.md
+  - docs/agents/github-integration.md
+  - docs/adr/0019-patched-nuxt-content-client-db-loading.md
+  - docs/agents/tenant-layers.md
+  - docs/research/mermaid-server-side-rendering.md
+  - docs/adr/0004-objective-safety-gate.md
+  - docs/adr/0018-tenant-layers-under-layers-directory.md
+  - docs/research/github-actions-public-vs-private-limits.md
+  - docs/adr/0006-runtime-routing-path-prefix.md
+  - docs/adr/0016-tenant-root-layer-routes.md
+  - docs/adr/0014-build-time-virtual-routing-module.md
+  - docs/agents/mdc-when-to-use.md
+  - docs/agents/verifying-ui-changes.md
+  - docs/research/nuxt-content-review-grounding.md
+subagents:
+  - type: general-purpose
+    task: Research Tinkerfund routing options
+  - type: general-purpose
+    task: Research Tinkerfund browser-state overlay
+  - type: general-purpose
+    task: Research Tinkerfund interactive e2e testing
+  - type: general-purpose
+    task: Research Tinkerfund UI library shortlist
+gitBranch: claude/ecommerce-crowdfunding-tenant-0amznc
+entrypoint: remote_mobile
+cliVersion: 2.1.283
+learnings:
+  - sessionStorage is shared across every Tenant and Space (one origin), and Nuxt keeps its chunk-reload guard there, so a per-Tenant Reset must remove only its own keys, never call clear().
+  - "A layers/<tenant>/package.json cannot scope a dependency to one Tenant here: no pnpm workspace, and even with one the module installs app-wide."
+ideas:
+  - "Add scripts/wayfinder-frontier.ts: given a map issue, list open sub-issues, parse each 'Blocked by:' line, and print the claimable frontier, since the MCP surface lacks native issue dependencies and every wayfinder session recomputes this by hand."
+landedBy: Stop
