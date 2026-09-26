@@ -186,6 +186,21 @@ described in the release notes.
 It has no screen, no speaker, no lights and no moving parts. The support is
 delivered entirely through its presence, as with a conventional rock.
 
+## Release notes
+
+Our test rocks have received every release since the first. The notes below
+are the ones they received.
+
+- **0.9.4** — Support is now slightly firmer.
+- **0.9.3** — Reduced the time between placing the rock on the desk and the
+  support beginning. It now begins at once.
+- **0.9.2** — Fixed an issue where the rock could appear to be an ordinary
+  rock. It remains a rock.
+- **0.9.1** — Improved stability. The rock was already very stable.
+- **0.9.0** — First release. Adds support.
+
+Known issues: none. Version 1.0 ships with every Rock.
+
 ## Launching soon
 
 The Campaign opens in a few days. Follow it to be told when it does.
