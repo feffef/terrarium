@@ -42,8 +42,7 @@ const pinned = computed(() => new Date(now.value).toISOString())
         <code>TinkerfundShell</code> frames this page: the demo bar with <code>TinkerfundResetDemo</code>,
         <code>TinkerfundHeader</code> with <code>TinkerfundWordmark</code> and <code>TinkerfundSearchField</code>,
         and <code>TinkerfundFooter</code> with <code>TinkerfundThemeSwitch</code>. Narrow the window for the menu
-        dialog; switch the theme to see every specimen in Light and Dark. The header's categories include one
-        too long for one line and one no Campaign is filed in.
+        dialog; switch the theme to see every specimen in Light and Dark.
       </p>
     </section>
   </div>

@@ -19,13 +19,13 @@ interface Campaign {
 const qa = fileURLToPath(new URL('../../content/qa/', import.meta.url))
 const now = Date.parse(String(parseDocument(`${qa}shop/shop.yml`).now))
 
-function stems(dir: string) {
+function documents(dir: string) {
   return readdirSync(`${qa}${dir}`)
     .filter((f) => /\.(md|yml)$/.test(f))
     .map((f) => ({ stem: f.replace(/\.\w+$/, ''), doc: parseDocument(`${qa}${dir}/${f}`) }))
 }
 
-const campaigns = stems('pages/campaigns').map(({ stem, doc }) => {
+const campaigns = documents('pages/campaigns').map(({ stem, doc }) => {
   const campaign = doc.campaign as Campaign
   return { slug: stem, title: String(doc.title), ...campaign, status: deriveCampaignStatus(campaign, campaign.pledged, now) }
 })
@@ -51,12 +51,12 @@ describe('qa edge cases', () => {
   })
 
   it('has a category no Campaign is filed in', () => {
-    const categories = stems('categories').map((s) => s.stem)
+    const categories = documents('categories').map((s) => s.stem)
     expect(categories.some((slug) => !campaigns.some((c) => c.category === slug))).toBe(true)
   })
 
   it('has a Promotion in every state', () => {
-    const states = new Set(stems('promotions').map(({ doc }) => derivePromotionState(doc as { start: string; end?: string }, now)))
+    const states = new Set(documents('promotions').map(({ doc }) => derivePromotionState(doc as { start: string; end?: string }, now)))
     expect([...states].sort()).toEqual(['active', 'expired', 'scheduled'])
   })
 
