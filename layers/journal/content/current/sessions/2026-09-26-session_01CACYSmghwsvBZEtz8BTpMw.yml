@@ -1,0 +1,50 @@
+schemaVersion: 1
+session: session_01CACYSmghwsvBZEtz8BTpMw
+startedAt: 2026-09-26T06:37:43Z
+endedAt: 2026-09-26T06:41:09Z
+kind: interactive
+goal: "Wayfinder: resolve Tinkerfund simulated-clock ticket"
+status: completed
+outcome: Timeline ticket resolved and indexed on map
+summary: 'Human-instructed: the user ran /wayfinder on the Tinkerfund map (issue 1357). Agent picked the first unclaimed frontier ticket, "Campaign timeline and the simulated clock", claimed it, and grilled the user in one round of eight questions; the user accepted every recommendation. Agent posted the resolution comment, closed the ticket, and appended a Decisions-so-far line to the map. No new tickets or fog graduated. No repo code changed, no PR.'
+prs: []
+docsRead:
+  - path: docs/agents/issue-tracker.md
+    reason: wayfinding operations
+skillsUsed:
+  - name: wayfinder
+    reason: work through the map
+  - name: grilling
+    reason: grilling-type ticket
+  - name: domain-modeling
+    reason: lifecycle vocabulary
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: wayfinder skill exists in .claude/skills but was absent from the harness's available-skills list; had to ls to confirm before invoking.
+    solution: Check why wayfinder is not surfaced (frontmatter / user-invocable flag).
+    severity: minor
+  - description: Map children show issue_dependencies_summary blocked_by 0 everywhere; real blocking lives in a 'Blocked by' body line, so the native frontier query misleads.
+    solution: Wire native GitHub dependencies when charting, or have the tracker doc say to check both.
+    severity: minor
+  - description: Updating the map body requires a full-body rewrite; the ADR-0017 guard forced replacing the charting session's provenance header, and a concurrent session had just edited the map (race risk).
+    solution: Re-read the map immediately before writing; consider keeping the decision index in comments or letting the guard accept a preserved original header.
+    severity: minor
+durationSec: 206
+models:
+  claude-opus-5-5: 46
+toolCounts:
+  Bash: 9
+  Skill: 5
+  ToolSearch: 3
+  mcp__github__issue_read: 5
+  mcp__github__issue_write: 4
+  mcp__github__add_issue_comment: 1
+docsReadViaShell:
+  - docs/agents/issue-tracker.md
+gitBranch: claude/wayfinder-issue-1357-uj2o5d
+entrypoint: remote_mobile
+cliVersion: 2.1.283
+landedBy: Stop
