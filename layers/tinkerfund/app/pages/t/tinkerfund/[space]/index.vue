@@ -2,7 +2,7 @@
 definePageMeta({ viewTransition: true })
 
 const route = useRoute()
-const { space, pagesKey } = useSpace('tinkerfund')
+const { space, pagesKey } = useTinkerfundSpace()
 
 const { data: landing, status, error } = await useAsyncData(route.path, () => queryCollection(pagesKey).path('/').first())
 

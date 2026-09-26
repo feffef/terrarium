@@ -91,7 +91,7 @@
 .tf-page a:where(:not(.tf-btn)) { color: var(--tf-link); }
 .tf-page :focus-visible { outline: 2px solid var(--tf-link); outline-offset: 2px; }
 .tf-page h1, .tf-page h2, .tf-page h3 { text-wrap: balance; font-stretch: 82%; }
-.tf-page button, .tf-page input, .tf-page select { font: inherit; color: inherit; }
+.tf-page :where(button, input, select) { font: inherit; color: inherit; }
 
 .tf-wrap { max-width: 1180px; margin-inline: auto; padding-inline: 16px; }
 @media (min-width: 720px) { .tf-wrap { padding-inline: 28px; } }
@@ -140,7 +140,6 @@
 .tf-page .tf-h1, .tf-prose h1 { margin: 0; font: 800 clamp(30px, 4vw, 44px)/1.04 var(--tf-font); font-stretch: 78%; overflow-wrap: anywhere; }
 .tf-h1[tabindex='-1'] { outline: none; }
 
-/* A button that reads as a link. */
 .tf-link { padding: 0; border: 0; background: none; color: var(--tf-link); font: inherit; text-decoration: underline; cursor: pointer; }
 
 .tf-stepper { display: inline-flex; border: var(--tf-hairline); border-radius: var(--tf-radius); overflow: hidden; }
@@ -148,7 +147,6 @@
 .tf-stepper button:disabled { color: var(--tf-muted); cursor: not-allowed; }
 .tf-stepper output { display: grid; place-items: center; min-width: 32px; border-inline: var(--tf-hairline); font: 600 14px/1 var(--tf-mono); }
 
-/* A money summary: label and amount per row, the total last. */
 .tf-sums { display: grid; gap: 6px; margin: 0; }
 .tf-sums div { display: flex; justify-content: space-between; gap: 12px; }
 .tf-sums dt { color: var(--tf-muted); }
