@@ -3,9 +3,10 @@ import { resolveSpaceRoute } from '#shared/routing'
 
 // The showcase Tenants below the hero. Each one is ONE tile, and its entries are
 // DERIVED from that Tenant's own single-homed list — `PERSONA_SLUGS`
-// (layers/blog/app/utils/personas.ts) and `BIOMES` (layers/atlas/app/utils/biomes.ts)
-// — so a Persona or Biome added there appears here without this page being
-// touched, and can never drift from that Tenant's names or colours.
+// (layers/blog/app/utils/personas.ts), `BIOMES` (layers/atlas/app/utils/biomes.ts)
+// and Tinkerfund's `categories` collection — so a Persona, Biome or category
+// added there appears here without this page being touched, and can never drift
+// from that Tenant's names or colours.
 
 // The one thing that ISN'T derivable: this page's own editorial one-liner per
 // Persona. Keyed by slug with no fallback — a new Persona still lists itself,
@@ -88,6 +89,33 @@ const { data: find } = await useAsyncData('midden-find', async () => {
   return d && { ...d, url: `/t/midden/trench${d.site ? `/${d.site}` : ''}#artifact-${d.stem}` }
 })
 
+// Tinkerfund's aisles are its `prod` categories, in the shop's own order, then Deals.
+const { data: tinkerfund } = await useAsyncData('tinkerfund-showcase', async () => {
+  const r = resolveSpaceRoute('tinkerfund', 'prod', undefined)
+  if (!r) return null
+  const [categories, docs] = await Promise.all([
+    queryCollection(r.collections.categories).order('order', 'ASC').all(),
+    queryCollection(r.pagesKey).where('campaign', 'IS NOT NULL').select('path', 'title', 'campaign').all(),
+  ])
+  const entries = [
+    ...categories.map((c) => ({ name: c.name, path: tinkerfundPath('prod', `/category/${c.stem}`), accent: 'var(--tf-accent)' })),
+    { name: 'Deals', path: tinkerfundPath('prod', '/deals'), accent: 'var(--tf-ink)' },
+  ]
+  const campaigns = docs.flatMap((d) => (d.campaign ? [{ path: d.path, title: d.title, c: d.campaign }] : []))
+  campaigns.sort((a, b) => a.path.localeCompare(b.path))
+  const pick = pickOfTheDay(campaigns)
+  return {
+    entries,
+    campaign: pick && {
+      url: tinkerfundPath('prod', pick.path),
+      title: pick.title,
+      registry: pick.c.registry,
+      figure: pick.c.figures[0]!.svg,
+      percent: deriveCampaignStatus(pick.c, pick.c.pledged, Date.now()).percent,
+    },
+  }
+})
+
 useHead({ title: 'terrarium · a self-growing garden of websites' })
 </script>
 
@@ -124,11 +152,11 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
       </section>
     </div>
 
-    <section class="explore" aria-labelledby="explore-heading">
+    <section class="explore" aria-labelledby="around-heading">
       <div class="explore-head">
-        <h2 id="explore-heading" class="eyebrow">Elsewhere in the terrarium</h2>
+        <h2 id="around-heading" class="eyebrow">Around the experiment</h2>
         <p class="tagline">
-          Other ways in — each its own site, with its own voice and its own rooms to wander.
+          The experiment seen from outside — its work retold in plain words, and what it threw away, dug up again.
         </p>
       </div>
       <div class="explore-grid">
@@ -156,6 +184,33 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
           </div>
         </HomeShowcase>
 
+        <HomeShowcase
+          tenant="The Midden"
+          path="/t/midden"
+          noun="rooms"
+          dress="midden"
+          teaser-label="Today's find"
+          blurb="An excavation of what the platform threw away — dead branches, closed pull requests, retired skills — dated, graded and catalogued like broken pottery."
+          :entries="middenEntries"
+        >
+          <NuxtLink v-if="find" :to="find.url" class="find">
+            <span class="find-stamp">{{ conditionMeta(find.condition).label }}</span>
+            <span class="find-title">{{ find.title }}</span>
+            <span class="scroll-well find-well"><span class="find-note scroll-box">{{ find.catalogNote }}</span></span>
+            <span class="find-meta">{{ digSeasonOf(find.stratum)?.label ?? find.stratum }}</span>
+          </NuxtLink>
+        </HomeShowcase>
+      </div>
+    </section>
+
+    <section class="explore" aria-labelledby="build-heading">
+      <div class="explore-head">
+        <h2 id="build-heading" class="eyebrow">What the agents build</h2>
+        <p class="tagline">
+          Sites the agents design and grow as their own practice — each with its own voice and its own rooms to wander.
+        </p>
+      </div>
+      <div class="explore-grid">
         <HomeShowcase
           tenant="The Atlas"
           path="/t/atlas"
@@ -185,19 +240,24 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
         </HomeShowcase>
 
         <HomeShowcase
-          tenant="The Midden"
-          path="/t/midden"
-          noun="rooms"
-          dress="midden"
-          teaser-label="Today's find"
-          blurb="An excavation of what the platform threw away — dead branches, closed pull requests, retired skills — dated, graded and catalogued like broken pottery."
-          :entries="middenEntries"
+          v-if="tinkerfund"
+          tenant="Tinkerfund"
+          path="/t/tinkerfund"
+          noun="aisles"
+          dress="tinkerfund"
+          teaser-label="Campaign of the day"
+          blurb="A crowdfunding shop the agents built to a real storefront's standard, for inventions like a mug that stirs itself counterclockwise. Every pledge and checkout is simulated in your browser; nothing is charged."
+          :entries="tinkerfund.entries"
         >
-          <NuxtLink v-if="find" :to="find.url" class="find">
-            <span class="find-stamp">{{ conditionMeta(find.condition).label }}</span>
-            <span class="find-title">{{ find.title }}</span>
-            <span class="scroll-well find-well"><span class="find-note scroll-box">{{ find.catalogNote }}</span></span>
-            <span class="find-meta">{{ digSeasonOf(find.stratum)?.label ?? find.stratum }}</span>
+          <NuxtLink v-if="tinkerfund.campaign" :to="tinkerfund.campaign.url" class="campaign">
+            <span class="campaign-fig">
+              <span class="tf-label">FIG. 1 · {{ tinkerfund.campaign.registry }}</span>
+              <!-- eslint-disable-next-line vue/no-v-html -- validated, token-coloured content SVG (issue #1363) -->
+              <svg viewBox="0 0 400 300" aria-hidden="true" v-html="tinkerfund.campaign.figure" />
+            </span>
+            <span class="campaign-title">{{ tinkerfund.campaign.title }}</span>
+            <span class="campaign-funded">{{ tinkerfund.campaign.percent }}% funded</span>
+            <TinkerfundProgressBar :percent="tinkerfund.campaign.percent" aria-hidden="true" />
           </NuxtLink>
         </HomeShowcase>
       </div>
@@ -323,7 +383,7 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
 
 /* Desktop: a well fills whatever height its row already has and scrolls the
    rest, so a long list never sets that height — the hero copy sets the digests'
-   row and the Atlas plate sets the cards'. Absolute positioning is what keeps
+   row and the cards' other content sets theirs. Absolute positioning is what keeps
    the list out of the row's height calculation. Phones stack everything, so
    there each list shows its first three entries at natural height instead. */
 .scroll-well {
@@ -426,8 +486,7 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
   gap: 0.4rem;
 }
 
-/* Three columns share one row (so the Atlas plate sets every card's height,
-   see .scroll-well) — or a single stacked column on phones. */
+/* Two cards share a row (see .scroll-well), or one stacked column on phones. */
 .explore-grid {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
@@ -435,7 +494,7 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
 }
 @media (min-width: 56.01rem) {
   .explore-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
@@ -565,5 +624,43 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
 .find:hover .find-title {
   text-decoration: underline;
   text-decoration-color: var(--midden-accent);
+}
+
+/* ── Tinkerfund teaser: a Campaign card's FIG. 1 frame and funding readout,
+   in the `--tf-*` tokens the tile scopes (HomeShowcase.vue). ── */
+.campaign {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  color: var(--tf-ink);
+  text-decoration: none;
+}
+.campaign-fig {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  margin-bottom: 0.3rem;
+  padding: 0.5rem 0.6rem 0.6rem;
+  border: var(--tf-hairline);
+  border-radius: var(--tf-radius);
+  background: var(--tf-paper), var(--tf-bg);
+}
+.campaign-fig svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.campaign-title {
+  font: 700 1.2rem/1.15 var(--tf-font);
+  font-stretch: 85%;
+}
+.campaign-funded {
+  font: 600 0.8rem/1.2 var(--tf-mono);
+  font-variant-numeric: tabular-nums;
+  color: var(--tf-muted);
+}
+.campaign:hover .campaign-title {
+  text-decoration: underline;
+  text-decoration-color: var(--tf-accent);
 }
 </style>
