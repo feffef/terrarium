@@ -150,7 +150,7 @@ const category = computed(() => categories.value.find((x) => x.slug === c.value.
 }
 
 .body { display: grid; gap: 36px; padding-top: 24px; }
-.body > section { scroll-margin-top: 120px; min-width: 0; }
+.body > section { min-width: 0; }
 @media (min-width: 1000px) {
   .body {
     grid-template-columns: minmax(0, 1fr) 360px;
@@ -208,6 +208,8 @@ h3 { margin: 28px 0 10px; font: 800 18px/1.1 var(--tf-font); font-stretch: 82%; 
 .from { font-size: 14px; color: var(--tf-muted); }
 .from b { color: var(--tf-ink); font: 600 16px/1 var(--tf-mono); }
 @media (min-width: 720px) { .backbar { margin-inline: -28px; padding-inline: 28px; } }
+/* WCAG 2.2 SC 2.4.11: keep focused controls and anchor targets clear of the sticky header, section nav and back bar. */
+:global(html:has(.campaign)) { scroll-padding-top: 7rem; }
 @media (max-width: 999px) { :global(html:has(.backbar)) { scroll-padding-bottom: 6rem; } }
 @media (min-width: 1000px) {
   .backbar { display: none; }

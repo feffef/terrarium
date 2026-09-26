@@ -4,9 +4,12 @@
 // Without `text`, the exact date is the visible text; with it, a hover title.
 const props = defineProps<{ at: number; text?: string }>()
 const locale = useTinkerfundLocale()
-const format = (timeZone?: string) => new Date(props.at).toLocaleString(locale.value, { dateStyle: 'long', timeStyle: 'short', timeZone })
-const exact = ref(`${format('UTC')} UTC`)
-onMounted(() => (exact.value = format()))
+const mounted = ref(false)
+onMounted(() => (mounted.value = true))
+const exact = computed(() => {
+  const date = new Date(props.at).toLocaleString(locale.value, { dateStyle: 'long', timeStyle: 'short', timeZone: mounted.value ? undefined : 'UTC' })
+  return mounted.value ? date : `${date} UTC`
+})
 </script>
 
 <template>

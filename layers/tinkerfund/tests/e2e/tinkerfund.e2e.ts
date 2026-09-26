@@ -205,6 +205,35 @@ export function registerTinkerfundE2E(): void {
       }
     })
 
+    // The same rule at the top edge, under the sticky header and section nav.
+    for (const [width, height] of [[390, 844], [1280, 800]] as const) {
+      it(`keeps Shift+Tab-focused controls below the section nav at ${width}px`, async () => {
+        const page = await createPage()
+        try {
+          await page.setViewportSize({ width, height })
+          await page.goto(url('/t/tinkerfund/prod/campaigns/counterclockwise-mug'), { waitUntil: 'hydration' })
+          await page.locator('#updates a').first().focus()
+          const checked = new Set<string>()
+          for (let i = 0; i < 200; i++) {
+            await page.keyboard.press('Shift+Tab')
+            const focus = await page.evaluate(() => {
+              const el = document.activeElement!
+              const section = el.closest('.body > section')
+              if (!section) return undefined
+              const name = el.textContent?.trim() || el.getAttribute('aria-label') || el.tagName
+              return { section: section.id, name, top: el.getBoundingClientRect().top, navBottom: document.querySelector('nav[aria-label="Sections"]')!.getBoundingClientRect().bottom }
+            })
+            if (!focus) break
+            expect(focus.top, `${focus.section}: ${focus.name}`).toBeGreaterThanOrEqual(focus.navBottom)
+            checked.add(focus.section)
+          }
+          expect([...checked]).toEqual(['rewards', 'story'])
+        } finally {
+          await page.close()
+        }
+      })
+    }
+
     it('switches figures and sets an Upcoming reminder', async () => {
       const page = await createPage()
       try {
