@@ -559,5 +559,90 @@ export function registerTinkerfundE2E(): void {
         expect(html).toMatch(new RegExp(`<code[^>]*>${name}</code>`))
       }
     })
+
+    const search = async (space: string, q: string) => main(await $fetch(`/t/tinkerfund/${space}/search?q=${encodeURIComponent(q)}`))
+
+    it('finds Campaigns by title and by their Inventor’s name', async () => {
+      const lamp = await search('qa', 'lamp')
+      expect(lamp).toContain('1 Campaign<')
+      expect(lamp).toMatch(/<h3[^>]*><a[^>]*href="\/t\/tinkerfund\/qa\/campaigns\/last-minute-lamp"/)
+      const byInventor = await search('qa', 'Test Inventor')
+      expect(byInventor).toContain('4 Campaigns<')
+      expect(byInventor).not.toContain('Unhurried Kettle')
+    })
+
+    // Story #1382's bar: a qa search can never return prod content.
+    it('keeps a qa search inside qa', async () => {
+      expect(await search('prod', 'mug')).toContain('Counterclockwise Mug')
+      for (const q of ['mug', 'Henrik', 'Lucía']) expect(await search('qa', q)).toContain(`No Campaign matches “${q}”`)
+      const everything = await search('qa', 'e')
+      expect(everything).toContain('6 Campaigns<')
+      expect(everything).not.toMatch(/TF-0\d{3}|\/t\/tinkerfund\/prod\//)
+    })
+
+    it('shows an empty state and survives LIKE wildcards and SQL comment markers', async () => {
+      expect(main(await $fetch('/t/tinkerfund/qa/search'))).toContain('Search the catalog')
+      expect(await search('qa', '%_%')).toContain('No Campaign matches')
+      // A refused query would also read as no results, so these must find something.
+      expect(await search('qa', 'goal--exact')).toContain('Goal-Exact Stapler')
+      expect(await search('qa', '%lamp_*')).toContain('Last-Minute Lamp')
+    })
+
+    it('hydrates the search page cleanly', async () => {
+      await expectCleanHydration('/t/tinkerfund/qa/search?q=lamp')
+    })
+
+    it('suggests as you type in the header, then opens the Campaign', async () => {
+      const page = await createPage()
+      try {
+        await page.setViewportSize({ width: 1280, height: 800 })
+        await page.goto(url('/t/tinkerfund/qa/how-it-works'), { waitUntil: 'hydration' })
+        const field = page.locator('.head').getByRole('combobox', { name: 'Search Campaigns' })
+        const suggestions = page.locator('.head').getByRole('listbox', { name: 'Suggestions' })
+
+        await field.pressSequentially('mug')
+        await expect.poll(() => page.locator('.head .field [role="status"]').textContent()).toBe('No Campaign matches “mug”.')
+
+        await field.fill('')
+        await field.pressSequentially('lamp')
+        await suggestions.waitFor()
+        expect(await suggestions.locator('.title').allTextContents()).toEqual(['Last-Minute Lamp', 'All results for “lamp”'])
+        expect(await field.getAttribute('aria-expanded')).toBe('true')
+        await field.press('ArrowDown')
+        expect(await suggestions.getByRole('option', { selected: true }).textContent()).toContain('Last-Minute Lamp')
+        await field.press('Enter')
+        await expect.poll(() => new URL(page.url()).pathname).toBe('/t/tinkerfund/qa/campaigns/last-minute-lamp')
+      } finally {
+        await page.close()
+      }
+    })
+
+    it('searches from the phone’s search icon: Enter lists results, a suggestion opens a Campaign', async () => {
+      const page = await createPage()
+      try {
+        await page.setViewportSize({ width: 390, height: 844 })
+        await page.goto(url('/t/tinkerfund/qa'), { waitUntil: 'hydration' })
+        await page.locator('.head').getByRole('link', { name: 'Search' }).click()
+        await expect.poll(() => new URL(page.url()).pathname).toBe('/t/tinkerfund/qa/search')
+        const field = page.locator('main').getByRole('combobox', { name: 'Search Campaigns' })
+        await expect.poll(() => field.evaluate((el) => el === document.activeElement)).toBe(true)
+
+        await field.pressSequentially('test inventor')
+        await field.press('Enter')
+        await expect.poll(() => new URL(page.url()).search).toBe('?q=test+inventor')
+        await expect.poll(() => page.locator('main .grid h3').count()).toBe(4)
+        expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(390)
+
+        await field.fill('kettle')
+        await page.locator('main').getByRole('option', { name: /Unhurried Kettle/ }).click()
+        await expect.poll(() => new URL(page.url()).pathname).toBe('/t/tinkerfund/qa/campaigns/unhurried-kettle')
+      } finally {
+        await page.close()
+      }
+    })
+
+    it('shows the search field in the gallery', async () => {
+      expect(await $fetch('/t/tinkerfund/qa')).toMatch(/<code[^>]*>TinkerfundSearchField<\/code>/)
+    })
   })
 }

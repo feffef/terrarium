@@ -33,7 +33,7 @@ const closeOnBackdrop = (e: MouseEvent) => {
         <NuxtLink :to="link('/deals')">Deals</NuxtLink>
       </nav>
 
-      <TinkerfundSearchField class="field" :action="link('/search')" />
+      <TinkerfundSearchField class="field" />
 
       <div class="tools">
         <NuxtLink class="icon-btn search-icon" :to="link('/search')" aria-label="Search">
@@ -57,7 +57,7 @@ const closeOnBackdrop = (e: MouseEvent) => {
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18" /></svg>
           </button>
         </div>
-        <TinkerfundSearchField :action="link('/search')" />
+        <TinkerfundSearchField />
         <nav aria-label="Site" @click="menu?.close()">
           <NuxtLink :to="link('/discover')">Discover</NuxtLink>
           <p class="tf-label">Categories</p>
