@@ -14,11 +14,12 @@ defineProps<{
   /** Where "See all Deals" goes; left out on Deals itself. */
   more?: string
 }>()
+const locale = useTinkerfundLocale()
 </script>
 
 <template>
   <div class="banner" :class="{ scheduled }">
-    <p class="tag">{{ scheduled ? 'Starting soon' : 'Deal' }} · {{ formatTinkerfundDiscount(promotion.discount) }}</p>
+    <p class="tag">{{ scheduled ? 'Starting soon' : 'Deal' }} · {{ formatTinkerfundDiscount(promotion.discount, locale) }}</p>
     <p class="title">{{ promotion.title }}</p>
     <p class="terms">
       <span v-if="promotion.code">Use code <code>{{ promotion.code }}</code> at checkout.</span>

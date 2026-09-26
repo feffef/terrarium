@@ -5,17 +5,37 @@ import type { TinkerfundBrowseQuery } from '../../utils/browse'
 
 defineProps<{ title: string; description?: string }>()
 
-const { space, pagesKey } = useSpace('tinkerfund')
+const { space, pagesKey, collections } = useSpace('tinkerfund')
 const { now, ticking } = await useTinkerfundClock()
 const { data: docs } = await useAsyncData(`tinkerfund-gallery-${space}`, () =>
   queryCollection(pagesKey).where('campaign', 'IS NOT NULL').all(),
 )
+const { data: extra } = await useAsyncData(`tinkerfund-gallery-extra-${space}`, async () => {
+  const [promotions, threads, shop] = await Promise.all([
+    queryCollection(collections.promotions).all(),
+    queryCollection(collections.comments).all(),
+    queryCollection(collections.shop).first(),
+  ])
+  return { promotions, threads, shop }
+})
 
 const campaigns = computed(() =>
   (docs.value ?? [])
-    .flatMap((doc) => (doc.campaign ? [{ ...doc, campaign: doc.campaign }] : []))
+    .flatMap((doc) => {
+      if (!doc.campaign) return []
+      const slug = doc.path.split('/').pop()!
+      return [{
+        ...doc,
+        slug,
+        campaign: doc.campaign,
+        state: deriveCampaignStatus(doc.campaign, doc.campaign.pledged, now.value).state,
+        deals: tinkerfundAutomaticDeals(extra.value?.promotions ?? [], slug, now.value),
+      }]
+    })
     .sort((a, b) => a.campaign.registry.localeCompare(b.campaign.registry)),
 )
+const zones = computed(() => Object.fromEntries((extra.value?.shop?.zones ?? []).map((z) => [z.id, z.name])))
+const thread = computed(() => extra.value?.threads[0])
 const pinned = computed(() => new Date(now.value).toISOString())
 
 const { clock, cards, categories, promotions } = await useTinkerfundCatalog()
@@ -82,6 +102,88 @@ const bounds = computed(() => tinkerfundPriceBounds(cards.value))
       </div>
     </section>
 
+    <section aria-labelledby="gallery-readout">
+      <h2 id="gallery-readout">Campaign readout <code>TinkerfundReadout</code></h2>
+      <p class="case">
+        With <code>TinkerfundProgressBar</code>, <code>TinkerfundDealBadge</code> and
+        <code>TinkerfundCampaignAction</code>: Back when Live, Notify me when Upcoming, a lock when Ended.
+      </p>
+      <ul class="specimens wide">
+        <li v-for="doc in campaigns" :key="doc.path">
+          <TinkerfundReadout
+            :slug="doc.slug"
+            :title="doc.title"
+            :campaign="doc.campaign"
+            :deals="doc.deals"
+            :now="now"
+            :ticking="ticking"
+            heading="h3"
+          />
+        </li>
+      </ul>
+    </section>
+
+    <section aria-labelledby="gallery-figures">
+      <h2 id="gallery-figures">Figures <code>TinkerfundFigureGallery</code></h2>
+      <div v-if="campaigns[0]" class="figures">
+        <TinkerfundFigureGallery :figures="campaigns[0].campaign.figures" :registry="campaigns[0].campaign.registry" />
+      </div>
+    </section>
+
+    <section aria-labelledby="gallery-rewards">
+      <h2 id="gallery-rewards">Reward cards <code>TinkerfundRewardCard</code></h2>
+      <p class="case">Every qa Reward in its Campaign’s state: options, stock, sold out, per-Backer limits, digital, long titles.</p>
+      <ul class="specimens">
+        <template v-for="doc in campaigns" :key="doc.path">
+          <li v-for="reward in doc.campaign.rewards" :key="`${doc.path}-${reward.id}`" class="stack">
+            <p class="case">{{ doc.campaign.registry }} · {{ doc.state }}</p>
+            <TinkerfundRewardCard :slug="doc.slug" :reward="reward" :state="doc.state" :zones="zones" :now="now" />
+          </li>
+        </template>
+      </ul>
+    </section>
+
+    <section aria-labelledby="gallery-addons">
+      <h2 id="gallery-addons">Add-ons, Stretch goals <code>TinkerfundAddonList</code> <code>TinkerfundStretchGoals</code></h2>
+      <ul class="specimens">
+        <template v-for="doc in campaigns" :key="doc.path">
+          <li v-if="doc.campaign.addons?.length" class="stack">
+            <p class="case">{{ doc.campaign.registry }} · {{ doc.state }}</p>
+            <TinkerfundAddonList :slug="doc.slug" :addons="doc.campaign.addons" :state="doc.state" />
+          </li>
+          <li v-if="doc.campaign.stretchGoals?.length" class="stack">
+            <p class="case">{{ doc.campaign.registry }} · pledged {{ doc.campaign.pledged }}</p>
+            <TinkerfundStretchGoals :goals="doc.campaign.stretchGoals" :pledged="doc.campaign.pledged" />
+          </li>
+        </template>
+      </ul>
+    </section>
+
+    <section aria-labelledby="gallery-comments">
+      <h2 id="gallery-comments">Comment thread <code>TinkerfundComments</code></h2>
+      <ul class="specimens">
+        <li v-if="thread" class="specimen tf-panel">
+          <p class="case">{{ thread.campaign }}: an Inventor reply, one level deep</p>
+          <TinkerfundComments :comments="thread.comments" :now="now" />
+        </li>
+        <li class="specimen tf-panel">
+          <p class="case">No comments</p>
+          <TinkerfundComments :comments="[]" :now="now" />
+        </li>
+      </ul>
+    </section>
+
+    <section aria-labelledby="gallery-nav">
+      <h2 id="gallery-nav">Breadcrumbs <code>TinkerfundBreadcrumbs</code></h2>
+      <TinkerfundBreadcrumbs
+        :items="[{ label: 'Home', to: tinkerfundPath(space) }, { label: 'Workshop' }, { label: campaigns.at(-1)?.title ?? 'Campaign' }]"
+      />
+      <p class="case">
+        <code>TinkerfundSectionNav</code> and the mobile “Back this Campaign” bar live on each Campaign page, since
+        they follow its scroll.
+      </p>
+    </section>
+
     <section aria-labelledby="gallery-frame">
       <h2 id="gallery-frame">Page frame</h2>
       <p class="case">
@@ -111,6 +213,9 @@ h2 code { color: var(--tf-muted); }
   padding: 0;
   list-style: none;
 }
+.specimens.wide { grid-template-columns: repeat(auto-fill, minmax(min(100%, 420px), 1fr)); }
+.stack { display: grid; gap: 6px; align-content: start; }
+.figures { max-width: 560px; }
 .specimen { display: grid; gap: 8px; align-content: start; padding: 16px; }
 .specimen > * { margin: 0; }
 .cards li { display: grid; }

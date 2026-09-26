@@ -3,10 +3,11 @@ import type { TinkerfundCard } from '../../composables/tinkerfund'
 
 const props = defineProps<{ card: TinkerfundCard; clock: number }>()
 const { space } = useSpace('tinkerfund')
+const locale = useTinkerfundLocale()
 const upcoming = computed(() => props.card.status.state === 'upcoming')
 const last = computed(() => {
   const { status, backers } = props.card
-  if (status.state === 'ended') return { label: 'Backers', value: backers.toLocaleString('en-IE') }
+  if (status.state === 'ended') return { label: 'Backers', value: backers.toLocaleString(locale.value) }
   if (status.state === 'live') return { label: 'Left', value: tinkerfundRemaining(status, props.clock) }
   return { label: 'Launches in', value: formatTinkerfundCountdown(tinkerfundCountdown(props.clock, status.launchAt)) }
 })
@@ -27,14 +28,14 @@ const last = computed(() => {
         <h3><NuxtLink :to="tinkerfundPath(space, card.path)">{{ card.title }}</NuxtLink></h3>
         <p class="by">{{ card.categoryName }} · {{ card.inventorName }}</p>
       </div>
-      <TinkerfundFundingBar v-if="!upcoming" :percent="card.status.percent" />
+      <TinkerfundProgressBar v-if="!upcoming" :percent="card.status.percent" />
       <dl class="tiles">
         <template v-if="upcoming">
-          <div><dt>Goal</dt><dd>{{ formatTinkerfundMoney(card.goal) }}</dd></div>
-          <div><dt>From</dt><dd>{{ formatTinkerfundMoney(Math.min(...card.prices)) }}</dd></div>
+          <div><dt>Goal</dt><dd>{{ formatTinkerfundMoney(card.goal, locale) }}</dd></div>
+          <div><dt>From</dt><dd>{{ formatTinkerfundMoney(Math.min(...card.prices), locale) }}</dd></div>
         </template>
         <template v-else>
-          <div><dt>Pledged</dt><dd>{{ formatTinkerfundMoney(card.pledged) }}</dd></div>
+          <div><dt>Pledged</dt><dd>{{ formatTinkerfundMoney(card.pledged, locale) }}</dd></div>
           <div><dt>Funded</dt><dd>{{ card.status.percent }}%</dd></div>
         </template>
         <div><dt>{{ last.label }}</dt><dd>{{ last.value }}</dd></div>

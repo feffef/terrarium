@@ -211,15 +211,3 @@ export function formatTinkerfundCampaignCount(n: number): string {
   return `${n} ${n === 1 ? 'Campaign' : 'Campaigns'}`
 }
 
-// A fixed locale, so server and browser render the same text.
-export function formatTinkerfundMoney(amount: number): string {
-  return new Intl.NumberFormat('en-IE', {
-    style: 'currency',
-    currency: 'EUR',
-    minimumFractionDigits: Number.isInteger(amount) ? 0 : 2,
-  }).format(amount)
-}
-
-export function formatTinkerfundDiscount(discount: { percent: number } | { amount: number }): string {
-  return 'percent' in discount ? `${discount.percent}% off` : `${formatTinkerfundMoney(discount.amount)} off`
-}

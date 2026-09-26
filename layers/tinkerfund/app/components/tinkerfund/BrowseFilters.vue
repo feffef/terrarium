@@ -11,6 +11,7 @@ const props = defineProps<{
 }>()
 const emit = defineEmits<{ update: [query: TinkerfundBrowseQuery] }>()
 const id = useId()
+const locale = useTinkerfundLocale()
 
 const STATES = [
   { value: undefined, label: 'Any' },
@@ -74,7 +75,7 @@ const active = computed(() => Object.keys(tinkerfundBrowseRouteQuery({ ...props.
     <fieldset>
       <legend class="tf-label">Reward price</legend>
       <label class="range">
-        <span>From <output :for="`${id}-min`">{{ formatTinkerfundMoney(low) }}</output></span>
+        <span>From <output :for="`${id}-min`">{{ formatTinkerfundMoney(low, locale) }}</output></span>
         <input
           :id="`${id}-min`"
           v-model.number="low"
@@ -85,7 +86,7 @@ const active = computed(() => Object.keys(tinkerfundBrowseRouteQuery({ ...props.
         >
       </label>
       <label class="range">
-        <span>Up to <output :for="`${id}-max`">{{ formatTinkerfundMoney(high) }}</output></span>
+        <span>Up to <output :for="`${id}-max`">{{ formatTinkerfundMoney(high, locale) }}</output></span>
         <input
           :id="`${id}-max`"
           v-model.number="high"

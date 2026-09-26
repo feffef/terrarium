@@ -10,7 +10,6 @@ import {
   tinkerfundHomeSections,
   groupTinkerfundPromotions,
   formatTinkerfundCampaignCount,
-  formatTinkerfundDiscount,
   tinkerfundStateLabel,
   tinkerfundRemaining,
   tinkerfundPriceBounds,
@@ -173,12 +172,6 @@ describe('Deals', () => {
     expect(deals.active[0]).toMatchObject({ startAt: NOW - 24 * HOUR, endAt: NOW + 24 * HOUR })
     expect(deals.active[2]!.endAt).toBeUndefined()
     expect(deals.scheduled.map((p) => p.title)).toEqual(['soon', 'later'])
-  })
-
-  it('names a discount the way the banner says it', () => {
-    expect(formatTinkerfundDiscount({ percent: 15 })).toBe('15% off')
-    expect(formatTinkerfundDiscount({ amount: 5 })).toBe('€5 off')
-    expect(formatTinkerfundDiscount({ amount: 2.5 })).toBe('€2.50 off')
   })
 
   it('counts Campaigns in the singular and plural', () => {

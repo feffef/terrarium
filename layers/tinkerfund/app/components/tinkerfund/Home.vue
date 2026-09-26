@@ -9,6 +9,7 @@ const tiles = computed(() =>
   categories.value.map((c) => ({ ...c, count: cards.value.filter((card) => card.category === c.slug).length })),
 )
 const link = (path = '') => tinkerfundPath(space, path)
+const locale = useTinkerfundLocale()
 </script>
 
 <template>
@@ -25,11 +26,11 @@ const link = (path = '') => tinkerfundPath(space, path)
         <h2 id="tf-featured">{{ home.featured.title }}</h2>
         <p class="tag">{{ home.featured.description }}</p>
         <p class="big">{{ home.featured.status.percent }}<small>% funded</small></p>
-        <TinkerfundFundingBar :percent="home.featured.status.percent" :segments="25" />
+        <TinkerfundProgressBar :percent="home.featured.status.percent" :segments="25" />
         <dl class="tiles">
-          <div><dt>Pledged</dt><dd>{{ formatTinkerfundMoney(home.featured.pledged) }}</dd></div>
-          <div><dt>Goal</dt><dd>{{ formatTinkerfundMoney(home.featured.goal) }}</dd></div>
-          <div><dt>Backers</dt><dd>{{ home.featured.backers.toLocaleString('en-IE') }}</dd></div>
+          <div><dt>Pledged</dt><dd>{{ formatTinkerfundMoney(home.featured.pledged, locale) }}</dd></div>
+          <div><dt>Goal</dt><dd>{{ formatTinkerfundMoney(home.featured.goal, locale) }}</dd></div>
+          <div><dt>Backers</dt><dd>{{ home.featured.backers.toLocaleString(locale) }}</dd></div>
           <div><dt>Remaining</dt><dd>{{ tinkerfundRemaining(home.featured.status, clock) }}</dd></div>
         </dl>
         <p class="actions">

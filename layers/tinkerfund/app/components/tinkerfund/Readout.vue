@@ -1,0 +1,64 @@
+<script setup lang="ts">
+import type { TinkerfundCampaign, TinkerfundPromotion } from '../../types/tinkerfund'
+
+const props = defineProps<{
+  slug: string
+  title: string
+  description?: string
+  inventor?: string
+  campaign: TinkerfundCampaign
+  deals: TinkerfundPromotion[]
+  now: number
+  ticking: boolean
+  /** The page's h1 by default; the qa gallery shows several at once. */
+  heading?: 'h1' | 'h3'
+}>()
+
+const locale = useTinkerfundLocale()
+const money = (amount: number) => formatTinkerfundMoney(amount, locale.value)
+const status = computed(() => deriveCampaignStatus(props.campaign, props.campaign.pledged, props.now))
+const from = computed(() => campaignPriceFrom(props.campaign.rewards))
+const DATE_LABEL = { upcoming: 'Launches', live: 'Ends', ended: 'Ended' } as const
+</script>
+
+<template>
+  <div class="readout tf-panel">
+    <TinkerfundCampaignStatus :campaign="campaign" :now="now" :ticking="ticking" />
+    <p class="date">
+      {{ DATE_LABEL[status.state] }} <TinkerfundTime :at="status.state === 'upcoming' ? status.launchAt : status.endAt" />
+    </p>
+    <component :is="heading ?? 'h1'" class="title">{{ title }}</component>
+    <p v-if="description" class="lead">{{ description }}</p>
+    <p v-if="inventor" class="by">by <b>{{ inventor }}</b></p>
+    <div>
+      <p class="big">{{ money(campaign.pledged) }}</p>
+      <p class="sub">pledged of {{ money(campaign.goal) }} goal</p>
+    </div>
+    <TinkerfundProgressBar :percent="status.percent" />
+    <dl class="tiles">
+      <div><dt>Backers</dt><dd>{{ campaign.backers.toLocaleString(locale) }}</dd></div>
+      <div><dt>Funded</dt><dd>{{ status.percent }}%</dd></div>
+      <div v-if="from !== undefined"><dt>From</dt><dd>{{ money(from) }}</dd></div>
+    </dl>
+    <p v-for="deal in deals" :key="deal.stem" class="deals">
+      <TinkerfundDealBadge :promotion="deal" />
+    </p>
+    <TinkerfundCampaignAction :slug="slug" :state="status.state" />
+  </div>
+</template>
+
+<style scoped>
+.readout { display: grid; gap: 14px; align-content: start; padding: 20px; box-shadow: var(--tf-shadow); }
+.readout > * { margin: 0; }
+.readout :deep(.status) { margin-bottom: 0; }
+.title { font: 800 clamp(30px, 4vw, 42px)/1.02 var(--tf-font); font-stretch: 78%; overflow-wrap: anywhere; }
+.lead { color: var(--tf-muted); }
+.date { color: var(--tf-muted); font: 500 12px/1.4 var(--tf-mono); }
+.by { font-size: 14px; }
+.big { margin: 0; font: 600 34px/1 var(--tf-mono); font-variant-numeric: tabular-nums; }
+.sub { margin: 4px 0 0; color: var(--tf-muted); font-size: 14px; }
+.tiles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.tiles div { padding: 10px 12px; border: var(--tf-hairline); border-radius: var(--tf-radius); }
+dt { font: 500 10px/1.2 var(--tf-mono); text-transform: uppercase; letter-spacing: 0.07em; color: var(--tf-muted); }
+dd { margin: 4px 0 0; font: 600 17px/1.2 var(--tf-mono); font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+</style>

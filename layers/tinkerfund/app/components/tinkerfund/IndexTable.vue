@@ -4,6 +4,7 @@ import type { TinkerfundCard } from '../../composables/tinkerfund'
 // The heading goes in the default slot, beside the category filter.
 const props = defineProps<{ cards: TinkerfundCard[]; categories: { slug: string; name: string }[]; clock: number }>()
 const { space } = useSpace('tinkerfund')
+const locale = useTinkerfundLocale()
 const category = ref<string>()
 const rows = computed(() => props.cards.filter((c) => !category.value || c.category === category.value))
 const label = useId()
@@ -52,9 +53,9 @@ const label = useId()
             <td>{{ c.categoryName }}</td>
             <td><TinkerfundStateChips :status="c.status" :promoted="c.promoted" /></td>
             <td v-if="c.status.state === 'upcoming'">—</td>
-            <td v-else class="funded"><TinkerfundFundingBar class="mini" :percent="c.status.percent" :segments="10" />{{ c.status.percent }}%</td>
-            <td class="r">{{ c.status.state === 'upcoming' ? '—' : formatTinkerfundMoney(c.pledged) }}</td>
-            <td class="r">{{ c.backers ? c.backers.toLocaleString('en-IE') : '—' }}</td>
+            <td v-else class="funded"><TinkerfundProgressBar class="mini" :percent="c.status.percent" :segments="10" />{{ c.status.percent }}%</td>
+            <td class="r">{{ c.status.state === 'upcoming' ? '—' : formatTinkerfundMoney(c.pledged, locale) }}</td>
+            <td class="r">{{ c.backers ? c.backers.toLocaleString(locale) : '—' }}</td>
             <td class="r">{{ tinkerfundRemaining(c.status, clock) }}</td>
           </tr>
           <tr v-if="!rows.length">
