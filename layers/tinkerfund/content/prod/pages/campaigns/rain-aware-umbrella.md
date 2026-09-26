@@ -19,67 +19,34 @@ campaign:
     - { label: Range, value: The umbrella’s own location }
   figures:
     - style: isometric
-      caption: The umbrella open in the rain, with its paired phone.
+      caption: "The umbrella open in the rain, with its paired phone."
       svg: |-
-        <ellipse cx="206" cy="262" rx="112" ry="22" style="fill:var(--tf-line)" />
-        <path d="M197 180h3v70h-3z" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" />
-        <path d="M200 180h3v70h-3z" style="fill:var(--tf-ink)" />
-        <path d="M200 248v10a13 13 0 0 1-26 0v-3" style="fill:none;stroke:var(--tf-ink);stroke-width:7;stroke-linecap:round" />
-        <path d="M200 62L60 142Q94.8 118.1 101 109.5Z" style="fill:color-mix(in srgb, var(--tf-accent) 45%, var(--tf-surface))" /><path d="M200 62L101 109.5Q156.4 97.8 200 96Z" style="fill:color-mix(in srgb, var(--tf-accent) 45%, var(--tf-surface))" /><path d="M200 62L200 96Q243.6 97.8 299 109.5Z" style="fill:color-mix(in srgb, var(--tf-accent) 45%, var(--tf-surface))" /><path d="M200 62L299 109.5Q305.2 118.1 340 142Z" style="fill:color-mix(in srgb, var(--tf-accent) 45%, var(--tf-surface))" />
-        <path d="M200 62L340 142Q305.2 146.7 299 174.5Z" style="fill:color-mix(in srgb, var(--tf-accent) 72%, var(--tf-ink))" /><path d="M200 62L299 174.5Q243.6 167 200 188Z" style="fill:var(--tf-accent)" /><path d="M200 62L200 188Q156.4 167 101 174.5Z" style="fill:color-mix(in srgb, var(--tf-accent) 72%, var(--tf-ink))" /><path d="M200 62L101 174.5Q94.8 146.7 60 142Z" style="fill:var(--tf-accent)" />
-        <path d="M196 48h4v15h-4z" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" />
-        <path d="M200 48h4v15h-4z" style="fill:var(--tf-ink)" />
-        <ellipse cx="200" cy="48" rx="4" ry="1.8" style="fill:var(--tf-muted)" />
-        <path d="M212 38a10 10 0 0 1 0 14M218 33a17 17 0 0 1 0 24" style="fill:none;stroke:var(--tf-accent);stroke-width:2;stroke-linecap:round" />
-        <g style="fill:var(--tf-link)"><path d="M58 28q5 8 0 12q-5-4 0-12z" /><path d="M96 16q5 8 0 12q-5-4 0-12z" /><path d="M132 32q5 8 0 12q-5-4 0-12z" /><path d="M250 20q5 8 0 12q-5-4 0-12z" /><path d="M292 34q5 8 0 12q-5-4 0-12z" /><path d="M340 18q5 8 0 12q-5-4 0-12z" /><path d="M40 64q5 8 0 12q-5-4 0-12z" /><path d="M362 66q5 8 0 12q-5-4 0-12z" /><path d="M26 118q5 8 0 12q-5-4 0-12z" /><path d="M374 112q5 8 0 12q-5-4 0-12z" /><path d="M150 6q5 8 0 12q-5-4 0-12z" /><path d="M312 4q5 8 0 12q-5-4 0-12z" /></g>
-        <path d="M268 222L312 246V252L268 228z" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" />
-        <path d="M312 246L362 220V226L312 252z" style="fill:var(--tf-ink)" />
-        <path d="M268 222L318 196L362 220L312 246z" style="fill:var(--tf-ink)" />
-        <path d="M277 222L318 201L353 220L312 241z" style="fill:var(--tf-muted)" />
-        <path d="M291 218L318 204L334 212L307 226z" style="fill:var(--tf-surface)" />
-        <path d="M296 217L306 212L309 214L299 219z" style="fill:var(--tf-accent)" />
-    - style: patent
-      caption: Elevation, open, showing the rain sensor (14) and the paired phone (20).
-      svg: |-
-        <g style="fill:none;stroke:var(--tf-ink);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round"><path d="M58 28l-3 9M96 16l-3 9M132 32l-3 9M250 20l-3 9M292 34l-3 9M340 18l-3 9M40 64l-3 9M362 66l-3 9M26 118l-3 9M374 112l-3 9M150 6l-3 9M312 4l-3 9" style="stroke-width:.9" />
-        <path d="M201.5 58.5L201.9 58.1M205.1 59.9L206.7 58.3M208.5 61.5L211.4 58.6M211.7 63.3L215.9 59.1M214.8 65.2L220.4 59.6M217.7 67.3L224.6 60.4M220.5 69.5L228.8 61.2M223.1 71.9L232.9 62.1M225.7 74.3L236.9 63.1M228.1 76.9L240.8 64.2M230.5 79.5L244.6 65.4M232.7 82.3L248.4 66.6M234.8 85.2L252.1 67.9M236.9 88.1L255.6 69.4M238.9 91.1L259.2 70.8M240.9 94.1L262.7 72.3M242.7 97.3L266 74M244.5 100.5L269.4 75.6M246.3 103.7L272.7 77.3M248 107L275.9 79.1M249.7 110.3L279 81M251.3 113.7L282.1 82.9M252.8 117.2L285.1 84.9M254.3 120.7L288.1 86.9M255.8 124.2L290.9 89.1M257.2 127.8L293.7 91.3M258.6 131.4L296.4 93.6M259.9 135.1L299.1 95.9M261.3 138.7L301.6 98.4M262.5 142.5L304.2 100.8M263.8 146.2L306.6 103.4M265 150L308.9 106.1M272.4 147.6L311.2 108.8M279 146L313.4 111.6M285.1 144.9L315.4 114.6M290.7 144.3L317.4 117.6M296 144L319.3 120.7M300.9 144.1L321 124M305.6 144.4L322.8 127.2M310.1 144.9L324.3 130.7M314.4 145.6L325.7 134.3M318.5 146.5L327 138M322.4 147.6L328.1 141.9M326.3 148.7L329.1 145.9" style="stroke-width:.8" />
-        <path d="M70 150C80 90 150 58 200 58S320 90 330 150Q297.5 138 265 150Q232.5 138 200 150Q167.5 138 135 150Q102.5 138 70 150Z" style="stroke-width:2.4" />
-        <path d="M200 58Q160 70 135 150M200 58V150M200 58Q240 70 265 150" />
-        <path d="M203.5 60V150" style="stroke-width:1;stroke-dasharray:5 3.5" />
-        <path d="M195 58V46h10v12M195 46a5 5 0 0 1 10 0" />
-        <path d="M212 36a11 11 0 0 1 0 16M218 31a18 18 0 0 1 0 26" style="stroke-width:.9" />
-        <path d="M197 150V252h6V150" />
-        <path d="M197 252v12a15 15 0 0 1-30 0v-5h6v5a9 9 0 0 0 18 0v-12" />
-        <path d="M222 44C300 40 336 100 318 166" style="stroke-width:1;stroke-dasharray:5 3.5" />
-        <path d="M291 168h46a9 9 0 0 1 9 9v94a9 9 0 0 1-9 9h-46a9 9 0 0 1-9-9v-94a9 9 0 0 1 9-9z" />
-        <path d="M291 180h46v88h-46zM295 190h38v24h-38zM299 199h28M299 206h18" style="stroke-width:.9" />
-        <path d="M112 112Q86 96 60 88M234 106Q262 92 268 70M198 42Q176 30 164 22M198 206Q178 212 160 214M170 272Q150 282 138 284M346 244Q362 250 370 258M336 202Q356 196 370 186M308 64Q324 56 340 52" style="stroke-width:.9" /></g>
-        <g style="fill:var(--tf-ink);font:500 12px var(--tf-mono)"><text x="42" y="88">10</text><text x="262" y="66">12</text><text x="146" y="22">14</text><text x="142" y="218">16</text><text x="120" y="288">18</text><text x="372" y="266">20</text><text x="372" y="186">22</text><text x="342" y="54">24</text></g>
-    - style: patent
-      caption: The umbrella furled, with detail A of the rain sensor.
-      svg: |-
-        <g style="fill:none;stroke:var(--tf-ink);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round"><path d="M105 44V32h10v12M105 32a5 5 0 0 1 10 0" />
-        <path d="M110 45L111 44M110 50L116 44M110 55L116.3 48.7M110 60L116.5 53.5M110 65L116.8 58.2M110 70L117 63M110 75L117.3 67.7M110 80L117.6 72.4M110 85L117.8 77.2M110 90L118.1 81.9M110 95L118.3 86.7M110 100L118.6 91.4M110 105L118.9 96.1M110 110L119.1 100.9M110 115L119.4 105.6M110 120L119.6 110.4M110 125L119.9 115.1M110 130L120.2 119.8M110 135L120.4 124.6M110 140L120.7 129.3M110 145L120.9 134.1M110 150L121.2 138.8M110 155L121.5 143.5M110 160L121.7 148.3M110 165L122 153M110 170L122.2 157.8M110 175L122.5 162.5M110 180L122.8 167.2M110 185L123 172M110 190L123.3 176.7M111.4 193.6L123.5 181.5M118.4 191.6L123.8 186.2" style="stroke-width:.8" />
-        <path d="M104 44L96 190Q110 198 124 190L116 44Z" style="stroke-width:2.4" />
-        <path d="M108 50L103 188M112 50L117 189" style="stroke-width:.9" />
-        <path d="M100 118h20a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2h-20a2 2 0 0 1-2-2v-6a2 2 0 0 1 2-2z" />
-        <path d="M114 123a2 2 0 1 0 4 0a2 2 0 1 0-4 0" style="stroke-width:.9" />
-        <path d="M107 194V238h6V194" />
-        <path d="M107 238v12a14 14 0 0 1-28 0v-5h6v5a8 8 0 0 0 16 0v-12" />
-        <path d="M64 27H102M64 264H90M60 27V264M60 27l-3 8M60 27l3 8M60 264l-3-8M60 264l3-8" style="stroke-width:.9" />
-        <path d="M92 36a18 18 0 1 0 36 0a18 18 0 1 0-36 0" style="stroke-width:.9" />
-        <path d="M127 30L196 76M121 51L214 208" style="stroke-width:.9" />
-        <path d="M192 132a94 94 0 1 0 188 0a94 94 0 1 0-188 0" />
-        <path d="M256 124V221M316 124V221M256 124a30 30 0 0 1 60 0" style="stroke-width:2.4" />
-        <path d="M286 129L291 124M286 134L296 124M286 139L301 124M286 144L306 124M286 149L311 124M286 154L316 124M286 159L316 129M286 164L316 134M286 169L316 139M286 174L316 144M286 179L316 149M286 184L316 154M286 189L316 159M286 194L316 164M286 199L316 169M286 204L316 174M286 209L316 179M286 214L316 184M286 219L316 189M286 224L316 194M289.3 225.7L316 199M294.7 225.3L316 204M300.1 224.9L316 209M307.2 222.8L316 214M314.5 220.5L316 219" style="stroke-width:.8" />
-        <path d="M263 150a3 3 0 1 0 6 0a3 3 0 1 0-6 0M275 150a3 3 0 1 0 6 0a3 3 0 1 0-6 0M287 150a3 3 0 1 0 6 0a3 3 0 1 0-6 0M299 150a3 3 0 1 0 6 0a3 3 0 1 0-6 0M263 166a3 3 0 1 0 6 0a3 3 0 1 0-6 0M275 166a3 3 0 1 0 6 0a3 3 0 1 0-6 0M287 166a3 3 0 1 0 6 0a3 3 0 1 0-6 0M299 166a3 3 0 1 0 6 0a3 3 0 1 0-6 0M263 182a3 3 0 1 0 6 0a3 3 0 1 0-6 0M275 182a3 3 0 1 0 6 0a3 3 0 1 0-6 0M287 182a3 3 0 1 0 6 0a3 3 0 1 0-6 0M299 182a3 3 0 1 0 6 0a3 3 0 1 0-6 0" style="stroke-width:.9;fill:var(--tf-surface)" />
-        <path d="M281 108a5 5 0 1 0 10 0a5 5 0 1 0-10 0" />
-        <path d="M286 96v-6M296 100l4-4M276 100l-4-4" style="stroke-width:.9" />
-        <path d="M320 88q6 10 0 14q-6-4 0-14z" />
-        <path d="M268 166Q246 176 234 176M290 108Q316 70 336 60M322 96Q346 100 362 110M300 212Q316 236 326 246" style="stroke-width:.9" /></g>
-        <text x="52" y="164" transform="rotate(-90 52 164)" style="fill:var(--tf-ink);font:500 12px var(--tf-mono)">880</text>
-        <g style="fill:var(--tf-ink);font:500 12px var(--tf-mono)"><text x="84" y="16">A</text><text x="206" y="180">14a</text><text x="338" y="60">14b</text><text x="364" y="114">26</text><text x="328" y="254">10</text></g>
-        <g style="fill:var(--tf-ink);font:500 11px var(--tf-mono)"><text x="250" y="292">DETAIL A · 5:1</text></g>
+        <ellipse cx="206" cy="270" rx="130" ry="18" style="fill:var(--tf-line)" />
+        <path d="M36 40q5 8 0 12q-5 -4 0 -12zM70 90q5 8 0 12q-5 -4 0 -12zM34 146q5 8 0 12q-5 -4 0 -12zM122 22q5 8 0 12q-5 -4 0 -12zM256 24q5 8 0 12q-5 -4 0 -12zM300 60q5 8 0 12q-5 -4 0 -12zM348 30q5 8 0 12q-5 -4 0 -12zM374 96q5 8 0 12q-5 -4 0 -12zM356 150q5 8 0 12q-5 -4 0 -12zM148 56q5 8 0 12q-5 -4 0 -12z" style="fill:var(--tf-link)" />
+        <path d="M197 150h3v104h-3z" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" />
+        <path d="M200 150h3v104h-3z" style="fill:var(--tf-ink)" />
+        <path d="M200 254v10a13 13 0 0 1-26 0v-4" style="fill:none;stroke:var(--tf-ink);stroke-width:7;stroke-linecap:round;stroke-linejoin:round" />
+        <path d="M200 60L145.7 96.4Q200 100.1 254.3 96.4Z" style="fill:color-mix(in srgb, var(--tf-accent) 45%, var(--tf-surface))" />
+        <path d="M200 60L254.3 96.4Q286.4 114.7 331.2 127.8Z" style="fill:color-mix(in srgb, var(--tf-accent) 45%, var(--tf-surface))" />
+        <path d="M200 60L331.2 127.8Q322.1 150 331.2 172.2Z" style="fill:color-mix(in srgb, var(--tf-accent) 72%, var(--tf-ink))" />
+        <path d="M200 60L331.2 172.2Q286.4 185.3 254.3 203.6Z" style="fill:var(--tf-accent)" />
+        <path d="M200 60L254.3 203.6Q200 199.9 145.7 203.6Z" style="fill:color-mix(in srgb, var(--tf-accent) 72%, var(--tf-ink))" />
+        <path d="M200 60L145.7 203.6Q113.6 185.3 68.8 172.2Z" style="fill:var(--tf-accent)" />
+        <path d="M200 60L68.8 172.2Q77.9 150 68.8 127.8Z" style="fill:color-mix(in srgb, var(--tf-accent) 45%, var(--tf-surface))" />
+        <path d="M200 60L68.8 127.8Q113.6 114.7 145.7 96.4Z" style="fill:color-mix(in srgb, var(--tf-accent) 45%, var(--tf-surface))" />
+        <path d="M200 60L145.7 96.4M200 60L254.3 96.4M200 60L331.2 127.8M200 60L331.2 172.2M200 60L254.3 203.6M200 60L145.7 203.6M200 60L68.8 172.2M200 60L68.8 127.8" style="fill:none;stroke:color-mix(in srgb, var(--tf-accent) 60%, var(--tf-ink));stroke-width:1.3;stroke-linecap:round;stroke-linejoin:round" />
+        <path d="M195 42V60A5 2.9 0 0 0 200 62.9V44.9A5 2.9 0 0 1 195 42Z" style="fill:var(--tf-ink)" />
+        <path d="M200 44.9V62.9A5 2.9 0 0 0 205 60V42A5 2.9 0 0 1 200 44.9Z" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" />
+        <ellipse cx="200" cy="42" rx="5" ry="2.9" style="fill:var(--tf-muted)" />
+        <path d="M212 34a10 10 0 0 1 0 14M218 29a17 17 0 0 1 0 24" style="fill:none;stroke:var(--tf-accent);stroke-width:2;stroke-linecap:round;stroke-linejoin:round" />
+        <path d="M318 218L352.6 238L288.6 275L253.9 255Z" style="fill:var(--tf-ink)" />
+        <path d="M253.9 259L288.6 279L288.6 275L253.9 255Z" style="fill:var(--tf-ink)" />
+        <path d="M352.6 242L288.6 279L288.6 275L352.6 238Z" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" />
+        <path d="M318 221L347.4 238L288.6 272L259.1 255Z" style="fill:var(--tf-surface)" />
+        <path d="M316.3 225L340.5 239L324.9 248L300.7 234Z" style="fill:color-mix(in srgb, var(--tf-accent) 45%, var(--tf-surface))" />
+        <path d="M316.3 225L318.9 226.5L303.3 235.5L300.7 234Z" style="fill:var(--tf-accent)" />
+        <path d="M318 230L333.6 239L331 240.5L315.4 231.5Z" style="fill:var(--tf-ink)" />
+        <path d="M311.9 233.5L324.1 240.5L321.5 242L309.3 235Z" style="fill:var(--tf-muted)" />
     - style: isometric
       caption: "The notification, as delivered. The umbrella is shown for context and was already aware."
       svg: |-
@@ -137,6 +104,78 @@ campaign:
         <path d="M302 108a10 10 0 0 1 0 14M308 103a17 17 0 0 1 0 24" style="fill:none;stroke:var(--tf-accent);stroke-width:2;stroke-linecap:round" />
         <g style="fill:var(--tf-muted);font:600 10px var(--tf-mono);letter-spacing:.06em;text-anchor:middle"><text x="130" y="276">FULL SIZE · SIGNAL</text><text x="300" y="276">COMPACT · SLATE</text></g>
     - style: patent
+      caption: "Elevation, open, showing the rain sensor (14) and the paired phone (20)."
+      svg: |-
+        <g style="fill:none;stroke:var(--tf-ink);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round">
+        <path d="M60 70l-6 10M90 40l-6 10M130 56l-6 10M40 120l-6 10M300 34l-6 10M340 60l-6 10M366 110l-6 10M350 150l-6 10" style="stroke-width:.9" />
+        <path d="M72 152Q100 76 200 64Q300 76 328 152" style="stroke-width:2.4" />
+        <path d="M200 64Q150 70 136 148M200 64Q250 70 264 150M200 64V152M200 64Q112 82 72 152M200 64Q288 82 328 152" />
+        <path d="M72 152q32-12 64-4q32-10 64 4q32-14 64 0q32-10 64 4" />
+        <path d="M219.4 67.4L254.2 102.2M210.2 65.3L258.1 113.2M202.2 64.3L262 124.1M200 69.2L262.6 131.8M200 76.3L263.2 139.4M200 83.3L263.8 147.1M200 90.4L257 147.4M200 97.5L246.3 143.8M200 104.5L238.2 142.8M200 111.6L230.6 142.2M200 118.7L224.3 143M200 125.8L218 143.8M200 132.8L212.8 145.6M200 139.9L208.1 148M200 147L203.4 150.3" style="stroke-width:.8" />
+        <path d="M200 130L150 104M200 130L250 104M200 152v-22" style="stroke-width:1;stroke-dasharray:5 3.5" />
+        <path d="M196 40h8v24h-8zM196 40a4 4 0 0 1 8 0" />
+        <path d="M176 26q5 8 0 12q-5 -4 0 -12zM224 22q5 8 0 12q-5 -4 0 -12zM160 52q5 8 0 12q-5 -4 0 -12zM244 46q5 8 0 12q-5 -4 0 -12z" />
+        <path d="M197 152v100M203 152v100" />
+        <path d="M203 252v10a16 16 0 0 1-32 0v-4M197 252v10a10 10 0 0 1-20 0v-4" />
+        <path d="M296 170h44a8 8 0 0 1 8 8v78a8 8 0 0 1-8 8h-44a8 8 0 0 1-8-8v-78a8 8 0 0 1 8-8z" />
+        <path d="M292 178h52v80h-52z" style="stroke-width:.9" />
+        <path d="M296 186h44v20h-44z" />
+        <path d="M300 192h20M300 198h30" style="stroke-width:.9" />
+        <path d="M212 50Q330 60 318 168" style="stroke-width:1;stroke-dasharray:5 3.5" />
+        <path d="M110 112Q94.5 88 66 86M252 96Q281 98 300 76M204 44Q184.5 28 160 34M203 200Q184 184.3 160 190M172 270Q154 253.5 130 258M348 230Q352 244.5 366 250M340 190Q358.5 185.5 366 168M280 52Q308 58.5 330 40" style="stroke-width:.9" />
+        </g>
+        <g style="fill:var(--tf-ink);font:500 12px var(--tf-mono)"><text x="46" y="90">10</text><text x="304" y="80">12</text><text x="138" y="38">14</text><text x="138" y="194">16</text><text x="108" y="262">18</text><text x="370" y="254">20</text><text x="370" y="172">22</text><text x="334" y="44">24</text></g>
+        <g style="fill:var(--tf-ink);font:500 11px var(--tf-mono)"><text x="120" y="290">ELEVATION · OPEN · PAIRED</text></g>
+    - style: patent
+      caption: "The umbrella furled, with detail A of the rain sensor."
+      svg: |-
+        <g style="fill:none;stroke:var(--tf-ink);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round">
+        <path d="M104 56L96 190h28L116 56z" style="stroke-width:2.4" />
+        <path d="M104 40h12v16h-12zM104 40a6 6 0 0 1 12 0" />
+        <path d="M102 80l22 16M100 110l24 16M98 140l26 16M97 170l26 12" style="stroke-width:.9" />
+        <path d="M92 118h36v12H92z" />
+        <path d="M107.5 124a2.5 2.5 0 1 0 5 0a2.5 2.5 0 1 0 -5 0" style="stroke-width:.9" />
+        <path d="M107 190v40M113 190v40" />
+        <path d="M113 230v12a13 13 0 0 1-26 0v-4M107 230v12a7 7 0 0 1-14 0v-4" />
+        <path d="M60 40V262M57.5 46l2.5-6 2.5 6M57.5 256l2.5 6 2.5-6" style="stroke-width:.9" /><text x="65" y="154" style="fill:var(--tf-ink);stroke:none;font:500 9px var(--tf-mono)">880</text>
+        <path d="M94 48a16 16 0 1 0 32 0a16 16 0 1 0 -32 0M124 40L184 88M124 56L184 212" style="stroke-width:.9" />
+        <path d="M180 150a92 92 0 1 0 184 0a92 92 0 1 0 -184 0" style="stroke-width:2.4" />
+        <path d="M248 232V150a24 24 0 0 1 48 0v82" />
+        <path d="M288.6 150L296 157.4M282.9 150L296 163.1M280 152.7L296 168.7M280 158.4L296 174.4M280 164L296 180M280 169.7L296 185.7M280 175.3L296 191.3M280 181L296 197M280 186.7L296 202.7M280 192.3L296 208.3M280 198L296 214M280 203.6L296 219.6M280 209.3L296 225.3M280 214.9L296 230.9M280 220.6L291.4 232M280 226.3L285.7 232" style="stroke-width:.8" />
+        <path d="M280 150v82" />
+        <path d="M253.8 166a2.2 2.2 0 1 0 4.4 0a2.2 2.2 0 1 0 -4.4 0M253.8 178a2.2 2.2 0 1 0 4.4 0a2.2 2.2 0 1 0 -4.4 0M253.8 190a2.2 2.2 0 1 0 4.4 0a2.2 2.2 0 1 0 -4.4 0M253.8 202a2.2 2.2 0 1 0 4.4 0a2.2 2.2 0 1 0 -4.4 0M253.8 214a2.2 2.2 0 1 0 4.4 0a2.2 2.2 0 1 0 -4.4 0M263.8 166a2.2 2.2 0 1 0 4.4 0a2.2 2.2 0 1 0 -4.4 0M263.8 178a2.2 2.2 0 1 0 4.4 0a2.2 2.2 0 1 0 -4.4 0M263.8 190a2.2 2.2 0 1 0 4.4 0a2.2 2.2 0 1 0 -4.4 0M263.8 202a2.2 2.2 0 1 0 4.4 0a2.2 2.2 0 1 0 -4.4 0M263.8 214a2.2 2.2 0 1 0 4.4 0a2.2 2.2 0 1 0 -4.4 0M273.8 166a2.2 2.2 0 1 0 4.4 0a2.2 2.2 0 1 0 -4.4 0M273.8 178a2.2 2.2 0 1 0 4.4 0a2.2 2.2 0 1 0 -4.4 0M273.8 190a2.2 2.2 0 1 0 4.4 0a2.2 2.2 0 1 0 -4.4 0M273.8 202a2.2 2.2 0 1 0 4.4 0a2.2 2.2 0 1 0 -4.4 0M273.8 214a2.2 2.2 0 1 0 4.4 0a2.2 2.2 0 1 0 -4.4 0" style="stroke-width:.9" />
+        <path d="M286 158h6v12h-6z" />
+        <path d="M289 170v58M286 232l3 6 3-6" style="stroke-width:1;stroke-dasharray:5 3.5" />
+        <path d="M248 132H296M254 129.5l-6 2.5 6 2.5M290 129.5l6 2.5-6 2.5" style="stroke-width:.9" /><text x="272" y="128" style="fill:var(--tf-ink);stroke:none;font:500 9px var(--tf-mono);text-anchor:middle">Ø 12</text>
+        <path d="M262 190Q231.5 191 214 216M292 162Q319.5 162 336 140M276 126Q302.5 123 316 100M296 210Q309.5 233 336 236" style="stroke-width:.9" />
+        </g>
+        <g style="fill:var(--tf-ink);font:500 11px var(--tf-mono)"><text x="92" y="34">A</text><text x="180" y="80">A</text></g>
+        <g style="fill:var(--tf-ink);font:500 12px var(--tf-mono)"><text x="190" y="220">14a</text><text x="340" y="144">14b</text><text x="320" y="104">26</text><text x="340" y="240">10</text></g>
+        <g style="fill:var(--tf-ink);font:500 11px var(--tf-mono)"><text x="120" y="290">FURLED · DETAIL A · 5:1</text></g>
+    - style: patent
+      caption: "The compact umbrella folded, with its three-stage telescoping shaft (16a–c) collapsed inside the canopy, and extended below. The tip (14) is the same."
+      svg: |-
+        <g style="fill:none;stroke:var(--tf-ink);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round">
+        <path d="M44 116h12v8H44z" />
+        <path d="M48 120a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" style="stroke-width:.9" />
+        <path d="M56 120C60 100 90 96 140 96S222 100 226 120S190 144 140 144S60 140 56 120Z" style="stroke-width:2.4" />
+        <path d="M70 108C110 104 180 104 214 110M70 132C110 136 180 136 214 130" style="stroke-width:.9" />
+        <path d="M70 114h150v12h-150zM80 116h140v8h-140zM90 118h130v4h-130z" style="stroke-width:1;stroke-dasharray:5 3.5" />
+        <path d="M226 116h20v8h-20z" />
+        <path d="M246 110h70a10 10 0 0 1 0 20h-70z" />
+        <path d="M299.5 110L306 116.5M293.8 110L306 122.2M288.2 110L306 127.8M282.5 110L302.5 130M276.9 110L296.9 130M271.2 110L291.2 130M265.6 110L285.6 130M259.9 110L279.9 130M256 111.8L274.2 130M256 117.4L268.6 130M256 123.1L262.9 130M256 128.7L257.3 130" style="stroke-width:.8" />
+        <path d="M326 120a10 10 0 1 0 20 0a10 10 0 1 0-20 0" style="stroke-width:.9" />
+        <path d="M44 84V110M316 84V104M44 88H316" style="stroke-width:.9" />
+        <path d="M44 216h12v8H44z" />
+        <path d="M56 220h60" style="stroke-width:1;stroke-dasharray:5 3.5" />
+        <path d="M56 216h96v8H56zM152 217h96v6h-96zM248 218h80v4h-80z" />
+        <path d="M328 210h50a10 10 0 0 1 0 20h-50z" />
+        <path d="M50 116Q69 90.5 60 60M110 98Q115 80.5 104 66M100 224Q94 236 100 248M200 223Q193.8 235.5 200 248M288 222Q281.5 235 288 248M280 130Q282.5 150 300 160M346 110Q362.5 102 366 84" style="stroke-width:.9" />
+        </g>
+        <g style="fill:var(--tf-ink);font:500 12px var(--tf-mono)"><text x="52" y="56">14</text><text x="96" y="62">10</text><text x="90" y="262">16a</text><text x="190" y="262">16b</text><text x="278" y="262">16c</text><text x="302" y="174">18</text><text x="368" y="80">34</text></g>
+        <g style="fill:var(--tf-ink);font:500 9px var(--tf-mono)"><text x="168" y="80">320</text><text x="60" y="206">EXTENDED</text></g>
+        <g style="fill:var(--tf-ink);font:500 11px var(--tf-mono)"><text x="70" y="290">COMPACT · FOLDED · 3-STAGE SHAFT (16)</text></g>
+    - style: patent
       caption: "System diagram. Rain enters at the sensor tip (14) and leaves the phone (20) as a notification (44), in plain language."
       svg: |-
         <g style="fill:none;stroke:var(--tf-ink);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round">
@@ -170,29 +209,6 @@ campaign:
         <g style="fill:var(--tf-ink);font:500 9px var(--tf-mono)"><text x="262" y="42">10 · UMBRELLA</text><text x="112" y="194">20</text></g>
         <g style="fill:var(--tf-ink);font:500 12px var(--tf-mono)"><text x="344" y="262">44</text></g>
         <g style="fill:var(--tf-ink);font:500 11px var(--tf-mono)"><text x="70" y="290">SYSTEM · RAIN IN, NOTIFICATION OUT</text></g>
-    - style: patent
-      caption: "The compact umbrella folded, with its three-stage telescoping shaft (16a–c) collapsed inside the canopy, and extended below. The tip (14) is the same."
-      svg: |-
-        <g style="fill:none;stroke:var(--tf-ink);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round">
-        <path d="M44 116h12v8H44z" />
-        <path d="M48 120a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" style="stroke-width:.9" />
-        <path d="M56 120C60 100 90 96 140 96S222 100 226 120S190 144 140 144S60 140 56 120Z" style="stroke-width:2.4" />
-        <path d="M70 108C110 104 180 104 214 110M70 132C110 136 180 136 214 130" style="stroke-width:.9" />
-        <path d="M70 114h150v12h-150zM80 116h140v8h-140zM90 118h130v4h-130z" style="stroke-width:1;stroke-dasharray:5 3.5" />
-        <path d="M226 116h20v8h-20z" />
-        <path d="M246 110h70a10 10 0 0 1 0 20h-70z" />
-        <path d="M299.5 110L306 116.5M293.8 110L306 122.2M288.2 110L306 127.8M282.5 110L302.5 130M276.9 110L296.9 130M271.2 110L291.2 130M265.6 110L285.6 130M259.9 110L279.9 130M256 111.8L274.2 130M256 117.4L268.6 130M256 123.1L262.9 130M256 128.7L257.3 130" style="stroke-width:.8" />
-        <path d="M326 120a10 10 0 1 0 20 0a10 10 0 1 0-20 0" style="stroke-width:.9" />
-        <path d="M44 84V110M316 84V104M44 88H316" style="stroke-width:.9" />
-        <path d="M44 216h12v8H44z" />
-        <path d="M56 220h60" style="stroke-width:1;stroke-dasharray:5 3.5" />
-        <path d="M56 216h96v8H56zM152 217h96v6h-96zM248 218h80v4h-80z" />
-        <path d="M328 210h50a10 10 0 0 1 0 20h-50z" />
-        <path d="M50 116Q69 90.5 60 60M110 98Q115 80.5 104 66M100 224Q94 236 100 248M200 223Q193.8 235.5 200 248M288 222Q281.5 235 288 248M280 130Q282.5 150 300 160M346 110Q362.5 102 366 84" style="stroke-width:.9" />
-        </g>
-        <g style="fill:var(--tf-ink);font:500 12px var(--tf-mono)"><text x="52" y="56">14</text><text x="96" y="62">10</text><text x="90" y="262">16a</text><text x="190" y="262">16b</text><text x="278" y="262">16c</text><text x="302" y="174">18</text><text x="368" y="80">34</text></g>
-        <g style="fill:var(--tf-ink);font:500 9px var(--tf-mono)"><text x="168" y="80">320</text><text x="60" y="206">EXTENDED</text></g>
-        <g style="fill:var(--tf-ink);font:500 11px var(--tf-mono)"><text x="70" y="290">COMPACT · FOLDED · 3-STAGE SHAFT (16)</text></g>
   rewards:
     - id: compact
       title: Compact
