@@ -228,6 +228,15 @@ const bounds = computed(() => tinkerfundPriceBounds(cards.value))
       </p>
     </section>
 
+    <section aria-labelledby="gallery-search">
+      <h2 id="gallery-search">Search field <code>TinkerfundSearchField</code></h2>
+      <p class="case">
+        Suggestions come from this Space only: “lamp” finds a Campaign, “test” an Inventor’s Campaigns, and “mug”,
+        a prod Campaign, nothing. Enter opens the results page.
+      </p>
+      <TinkerfundSearchField class="search" value="lamp" />
+    </section>
+
     <section aria-labelledby="gallery-frame">
       <h2 id="gallery-frame">Page frame</h2>
       <p class="case">
@@ -269,6 +278,7 @@ h2 code { color: var(--tf-muted); }
 .filters .tf-panel { padding: 18px; }
 .matches { margin: 0; padding: 0; list-style: none; font: 500 13px/1.8 var(--tf-mono); }
 .deals { display: grid; gap: 14px; }
+.search { max-width: 480px; }
 h3 { font-size: 18px; line-height: 1.25; overflow-wrap: anywhere; }
 .case { max-width: 68ch; margin: 0; color: var(--tf-muted); font-size: 14px; }
 </style>
