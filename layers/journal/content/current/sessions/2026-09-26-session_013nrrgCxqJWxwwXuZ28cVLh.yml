@@ -1,23 +1,20 @@
 schemaVersion: 1
 session: session_013nrrgCxqJWxwwXuZ28cVLh
 startedAt: 2026-09-26T16:47:45Z
-endedAt: 2026-09-26T17:15:12Z
+endedAt: 2026-09-26T17:34:43Z
 kind: autonomous
 goal: "Run scheduled visitor-loop: fix findings, ship a feature"
 status: in-review
-outcome: "Fix PR #1404 opened, gate green; feature PR next"
-summary: "Fully agent-initiated scheduled run of the visitor-loop Skill, no human prompt this session. Served a fresh production preview of origin/main, dispatched three blind first-time-visitor subagents (sonnet, fable, opus), and tallied their reports. Fixed the five findings at least two of three raised independently: a stat-card pluralization bug, the Journal Skills page's internal-jargon presentation, session cards' unscannable PR-chip soup, missing blog post bylines, and the Atlas Relations diagram reading as clipped at 390px despite yesterday's fade-only fix. Dropped one consensus finding (a second homepage CTA to Highlights) because decisions.md already rules out changing that button's routing; addressed its underlying complaint by fixing the overwhelming page instead, per the owner's own ruling. Verified every fix against the rendered DOM before and after, ran the full gate (1666 unit + 85 e2e, clean build), opened PR #1404 with the tally, and subscribed to it. The feature PR (a homepage \"best stories\" strip sourced from the Journal's existing Highlights content, picked from the visitors' ideas) is still pending, per the Skill's own step ordering — it starts once this fix PR lands."
+outcome: "Fix PR #1404 merged; feature PR #1405 opened, awaiting CI"
+summary: "Fully agent-initiated scheduled run of the visitor-loop Skill, no human prompt this session. Served a fresh production preview of origin/main, dispatched three blind first-time-visitor subagents (sonnet, fable, opus), and tallied their reports. Fixed the five findings at least two of three raised independently (PR #1404, merged): a stat-card pluralization bug, the Journal Skills page's internal-jargon presentation, session cards' unscannable PR-chip soup, missing blog post bylines, and the Atlas Relations diagram reading as clipped at 390px despite yesterday's fade-only fix. Dropped one consensus finding (a second homepage CTA to Highlights) because decisions.md already rules out changing that button's routing; addressed its underlying complaint by fixing the overwhelming page instead. Ran /code-review on the fix PR, fixed one real Standards violation it found (a drifted duplicate comment), then landed it on a green gate. Then built the feature PR (#1405, open): a homepage \"Start here\" strip of four Blog posts, content-homed on the Journal's existing Highlights page via a new optional `featured` field, picked because all three visitors independently proposed a variant of \"surface the Blog's best material higher up\" as their top idea. Both PRs proved every claim against the rendered DOM before/after and ran the full gate green."
 prs:
   - "1404"
+  - "1405"
 docsRead:
   - path: .claude/skills/visitor-loop/visitor-brief.md
-    reason: the exact brief to hand each blind visitor verbatim
+    reason: (no reason given)
   - path: .claude/skills/visitor-loop/decisions.md
-    reason: owner rulings a tally item must not contradict
-  - path: docs/adr/0003-agent-operating-model-and-governance.md
-    reason: visitor-loop's exact remit/ledger row and merge authority
-  - path: docs/agents/pr-workflow.md
-    reason: the land-a-gated-PR recipe and the chartered-run closing sequence
+    reason: (no reason given)
   - path: layers/journal/app/pages/t/journal/[space]/index.vue
     reason: (read before editing)
   - path: layers/atlas/app/components/atlas/RelationsWeb.vue
@@ -86,15 +83,19 @@ docsRead:
     reason: (read before editing)
   - path: layers/atlas/app/components/atlas/FoodWeb.vue
     reason: (read before editing)
+  - path: layers/journal/content/current/pages/highlights.md
+    reason: (read before editing)
+  - path: app/pages/index.vue
+    reason: (read before editing)
 skillsUsed:
-  - name: visitor-loop
-    reason: this run's own charter — brief, remit, and step ordering
   - name: close-session
-    reason: invoked at PR-open per its own trigger rule
+    reason: (no reason given)
   - name: log-session
-    reason: authoring this entry
+    reason: (no reason given)
   - name: code-review
     reason: (no reason given)
+  - name: visitor-loop
+    reason: (invoked as a slash command)
 frictions:
   - description: Called the TaskCreate tool with a guessed `tasks` array parameter instead of loading its real schema via ToolSearch first, as CLAUDE.md's working-conventions bullet requires for any deferred tool's first call this session — the guard rejected it with the correct fix.
     solution: Always run ToolSearch("select:<ToolName>") before a deferred tool's first call this session, even when the name looks self-explanatory.
@@ -108,25 +109,30 @@ frictions:
   - description: A `playwright-core` verification script placed under the scratchpad directory can't resolve `playwright-core` via Node's module resolution, since that walks up from the importing file's own path and never reaches the repo's node_modules from /tmp.
     solution: Write such a script temporarily at the repo root (never under `scripts/`, and delete it before staging/committing) so module resolution finds the repo's own node_modules; keep the *inputs* passed to it in the scratchpad.
     severity: nit
-durationSec: 1647
+  - description: Repeatedly issued no-op `sleep 1` Bash calls across both PRs' build/ gate/CI wait cycles instead of ending the turn with a status line and letting the completion notification arrive on its own — a recurring pattern across the whole session, not a one-off.
+    solution: When a background task or subscribed PR event is the only thing being waited on, end the turn with one status sentence and no tool call at all; never invent a filler Bash command to "pass time".
+    severity: minor
+durationSec: 2819
 models:
-  claude-sonnet-5: 289
+  claude-sonnet-5: 536
 toolCounts:
-  Bash: 58
-  Read: 40
-  ToolSearch: 3
+  Bash: 149
+  Read: 46
+  ToolSearch: 4
   mcp__github__search_pull_requests: 1
   mcp__github__list_pull_requests: 1
   mcp__github__pull_request_read: 4
-  Agent: 5
-  Grep: 20
+  Agent: 7
+  Grep: 21
   Glob: 3
-  Edit: 30
+  Edit: 36
   TaskCreate: 1
-  Write: 3
-  mcp__github__create_pull_request: 1
-  mcp__github__subscribe_pr_activity: 1
-  Skill: 3
+  Write: 4
+  mcp__github__create_pull_request: 2
+  mcp__github__subscribe_pr_activity: 2
+  Skill: 4
+  ReadNotifications: 6
+  mcp__github__add_issue_comment: 1
 filesEdited:
   - layers/journal/tenant.config.ts
   - layers/journal/app/types/journal.ts
@@ -157,6 +163,8 @@ filesEdited:
   - layers/atlas/app/components/atlas/RelationsWeb.vue
   - layers/atlas/app/assets/theme.css
   - scripts/tmp-verify-visitor-loop-fixes.ts
+  - layers/journal/content/current/pages/highlights.md
+  - app/pages/index.vue
 docsReadViaShell:
   - docs/agents/pr-workflow.md
 subagents:
@@ -173,10 +181,15 @@ subagents:
     task: Standards axis code review
   - type: general-purpose
     task: Spec axis code review
+  - type: general-purpose
+    task: Standards axis review of feature PR
+  - type: general-purpose
+    task: Spec axis review of feature PR
 gitBranch: claude/adoring-galileo-7qgtxm
 entrypoint: remote_trigger
 cliVersion: 2.1.283
 trigger: visitor-loop
 learnings:
   - "A pure CSS background-color fade at a scrollable diagram's edge is too subtle a scroll affordance on its own — two more independent first-time visitors still read the Atlas Relations diagram as \"clipped\" a full day after PR #1341 added exactly that fade for the same complaint. An explicit, visible text hint reads far more reliably than a color-only cue."
+  - "When two or three blind visitors independently propose different-worded variants of the same underlying fix (here: \"surface the Blog's best material higher on the homepage\"), picking the smallest/most content-homed variant — reusing an existing curated list via one new optional schema field, rather than authoring new content or a new route — keeps the feature PR proportionate to a single-session chartered run."
 landedBy: Stop
