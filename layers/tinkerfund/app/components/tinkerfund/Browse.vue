@@ -12,7 +12,11 @@ const props = defineProps<{
 }>()
 
 const route = useRoute()
-const query = computed(() => parseTinkerfundBrowseQuery(route.query))
+const router = useRouter()
+// A change made while the previous one is still navigating builds on it, not
+// on the route it hasn't reached yet (PR #1396).
+const pending = shallowRef<TinkerfundBrowseQuery>()
+const query = computed(() => pending.value ?? parseTinkerfundBrowseQuery(route.query))
 const results = computed(() =>
   browseTinkerfundListings(props.cards, props.category ? { ...query.value, category: props.category } : query.value),
 )
@@ -20,7 +24,11 @@ const bounds = computed(() => tinkerfundPriceBounds(props.cards))
 
 function update(next: TinkerfundBrowseQuery) {
   if (props.category) delete next.category
-  navigateTo({ query: tinkerfundBrowseRouteQuery(next) }, { replace: true })
+  pending.value = next
+  // Not navigateTo(): mid-navigation it returns the route instead of going there.
+  router.replace({ query: tinkerfundBrowseRouteQuery(next) }).finally(() => {
+    if (pending.value === next) pending.value = undefined
+  })
 }
 
 const drawer = useTemplateRef<HTMLDialogElement>('drawer')
