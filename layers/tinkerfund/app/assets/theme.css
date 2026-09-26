@@ -1,8 +1,10 @@
 /* Tinkerfund's "Instrument" identity (issue #1362, variant G). Tokens live on
    the body class every Tinkerfund page sets, so teleported dialogs inherit them
-   too. Colours are light-dark() pairs: the page follows the system unless the
-   theme switch pins `data-tf-theme` on <html>. WCAG AA of these pairs is
-   asserted in tests/unit/tokens-contrast.spec.ts. */
+   too; `.tf-tokens` carries them alone, without the page chrome, for a page
+   outside the shop (the Platform homepage's tile). Colours are light-dark()
+   pairs: the page follows the system unless the theme switch pins
+   `data-tf-theme` on <html>. WCAG AA of these pairs is asserted in
+   tests/unit/tokens-contrast.spec.ts. */
 
 @font-face {
   font-family: 'Archivo';
@@ -31,7 +33,8 @@
   src: url('./fonts/ibm-plex-mono-latin-600-normal.woff2') format('woff2');
 }
 
-.tf-page {
+.tf-page,
+.tf-tokens {
   --tf-bg: light-dark(#f2f4f3, #0c1013);
   --tf-surface: light-dark(#ffffff, #13191d);
   --tf-ink: light-dark(#11171b, #e1e7ea);
@@ -61,15 +64,18 @@
     linear-gradient(90deg, var(--tf-grid) 1px, transparent 1px) 0 0 / 16px 16px;
   --tf-dur: 160ms;
   --tf-ease: cubic-bezier(0.3, 0.7, 0.2, 1);
-
+}
+.tf-page {
   margin: 0;
   background: var(--tf-bg);
   color: var(--tf-ink);
   font: 400 16px/1.5 var(--tf-font);
   -webkit-font-smoothing: antialiased;
 }
-/* On <html>, so the page scrollbar and canvas follow the theme too. */
-:root:has(> .tf-page) { color-scheme: light dark; }
+/* light-dark() needs a color-scheme. On a shop page it sits on <html>, so the
+   scrollbar and canvas follow the theme too. */
+:root:has(> .tf-page),
+.tf-tokens { color-scheme: light dark; }
 :root[data-tf-theme='light']:has(> .tf-page) { color-scheme: light; }
 :root[data-tf-theme='dark']:has(> .tf-page) { color-scheme: dark; }
 
