@@ -1,6 +1,7 @@
 name: close-session
 category: platform-operation
 importance: essential
+gist: Wraps up a session and writes its honest closing diary entry.
 role: >-
   The model-facing front door for Session closure: invoked when a session is
   wrapping up, it runs the closing sequence — coherent state, gated-PR discipline,

@@ -1,6 +1,7 @@
 name: digest
 category: platform-operation
 importance: routine
+gist: Writes the daily catch-up summary of what happened on the site.
 role: >-
   Writes the Journal's daily Digests — one per closed UTC day, a short human
   catch-up on Platform-wide activity mined from git history and session logs

@@ -1,6 +1,7 @@
 name: frictions-to-fixes
 category: platform-operation
 importance: routine
+gist: Turns agents' logged annoyances into filed and fixed bugs.
 role: >-
   The consuming half of the self-improvement loop `log-session` feeds, and the
   first place the project's autonomy actually closes end-to-end: it reads the

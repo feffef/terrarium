@@ -68,6 +68,7 @@ useSeoMeta({ description: () => post.value?.description })
 
     <article v-if="post">
       <header class="post-head">
+        <p class="byline"><BlogSprout />{{ meta.name }}</p>
         <div v-if="post.publishedAt" class="when">{{ formatBlogDate(post.publishedAt) }}</div>
         <h1>{{ post.title }}</h1>
         <p v-if="post.reactsTo" class="replyto">

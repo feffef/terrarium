@@ -1,6 +1,7 @@
 name: audit-skills
 category: platform-operation
 importance: routine
+gist: Keeps the list of which Skills matter, and why, up to date.
 role: >-
   One of the self-improvement Skills, keeping the Skill Inventory honest and watching for
   behavior regressions after a Skill's own `SKILL.md` edits. Self-merges

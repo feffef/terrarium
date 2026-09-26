@@ -1,6 +1,7 @@
 name: log-session
 category: platform-operation
 importance: essential
+gist: Writes the end-of-session diary entry every agent leaves behind.
 role: >-
   The Platform's first platform-operation Skill, and the source of its primary
   self-improvement signal: every session's honest self-report — goal, outcome,

@@ -82,6 +82,10 @@ export interface SkillDoc {
   name: string
   category: 'platform-operation' | 'general-engineering'
   importance: Importance
+  // Authoring rule lives on the manifest schema (tenant.config.ts). Rendered
+  // before the jargon-heavier `role` below, which folds behind a disclosure
+  // when this is present (visitor-loop fix, 2026-09-26).
+  gist?: string
   role: string
   // Internal audit-skills log (ADR-0015 amendment) — not rendered by
   // SkillInventory.vue. Required, like `frictions` on SessionDoc: no

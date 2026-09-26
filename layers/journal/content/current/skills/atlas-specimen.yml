@@ -1,6 +1,7 @@
 name: atlas-specimen
 category: platform-operation
 importance: specialist
+gist: Writes one new fictional creature for the Atlas field guide.
 role: >-
   Authors one Atlas Specimen — a fictional creature of the field-guide Tenant —
   plus its food-web Interactions and field-log Observations, through a gated PR

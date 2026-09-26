@@ -1,6 +1,7 @@
 name: dispatch-subagents
 category: platform-operation
 importance: essential
+gist: Rules for safely handing work off to helper agents.
 role: >-
   Single-homes how this Platform spawns work: which worktree-isolation mechanism
   to use, the self-contained brief that survives this environment's sharp edges,

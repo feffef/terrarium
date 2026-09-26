@@ -1,6 +1,7 @@
 name: auto-triage
 category: platform-operation
 importance: specialist
+gist: Sorts the open-issue backlog automatically, without a human.
 role: >-
   The batch, unattended sibling of `triage`: one brave sweep over the issues that
   need attention, applying triage's per-issue rules autonomously and stamping

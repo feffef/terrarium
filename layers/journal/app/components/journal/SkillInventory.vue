@@ -26,7 +26,19 @@ defineProps<{
             <span v-if="s.category === 'platform-operation'" class="po">platform-op</span>
             <span v-if="uses" class="uses">used in {{ uses[s.name] ?? 0 }} sessions</span>
           </div>
-          <p class="role">
+          <p v-if="s.gist" class="gist">{{ s.gist }}</p>
+          <details v-if="s.gist" class="role-details">
+            <summary>Details</summary>
+            <p class="role">
+              <template v-for="(p, i) in skillRoleParts(s.role)" :key="i">
+                <code v-if="p.kind === 'code'">{{ p.text }}</code>
+                <em v-else-if="p.kind === 'em'">{{ p.text }}</em>
+                <strong v-else-if="p.kind === 'strong'">{{ p.text }}</strong>
+                <template v-else>{{ p.text }}</template>
+              </template>
+            </p>
+          </details>
+          <p v-else class="role">
             <template v-for="(p, i) in skillRoleParts(s.role)" :key="i">
               <code v-if="p.kind === 'code'">{{ p.text }}</code>
               <em v-else-if="p.kind === 'em'">{{ p.text }}</em>
@@ -77,6 +89,7 @@ defineProps<{
 }
 .uses { margin-left: auto; font-size: 0.7rem; color: var(--jd-faint); }
 .chip-uses { color: var(--jd-faint); }
+.gist { margin: 0.25rem 0 0; font-size: 0.83rem; color: var(--jd-ink); font-family: var(--jd-serif); }
 .role { margin: 0.25rem 0 0; font-size: 0.83rem; color: var(--jd-muted); font-family: var(--jd-serif); }
 .role code {
   font-family: var(--jd-mono);
@@ -85,6 +98,20 @@ defineProps<{
   padding: 0.05em 0.3em;
   border-radius: 4px;
 }
+.role-details { margin-top: 0.35rem; }
+.role-details > summary {
+  cursor: pointer;
+  list-style: none;
+  font-family: var(--jd-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--jd-faint);
+}
+.role-details > summary::-webkit-details-marker { display: none; }
+.role-details > summary::before { content: '▸ '; }
+.role-details[open] > summary::before { content: '▾ '; }
+.role-details > .role { margin-top: 0.35rem; }
 .chips-inline { display: flex; flex-wrap: wrap; gap: 0.4rem; }
 .chip {
   font-family: var(--jd-mono);
