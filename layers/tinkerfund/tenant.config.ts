@@ -160,9 +160,9 @@ export const pledge = z
   })
   .strict()
 
-// `satisfies`, not defineTenant(): the app imports this file's schemas at runtime,
+// Typed, not defineTenant(): the app imports this file's schemas at runtime,
 // and its server build can't resolve a runtime import of shared/manifest.ts.
-export default {
+const manifest: TenantManifest = {
   name: 'tinkerfund',
   spaces: ['prod', 'qa'],
   collections: {
@@ -229,4 +229,6 @@ export default {
         .strict(),
     },
   },
-} satisfies TenantManifest
+}
+
+export default manifest
