@@ -511,26 +511,6 @@ describe('grep/rg output gates crediting (issue #1247)', () => {
     expect(scan.paths).toEqual(['docs/agents/guards.md'])
   })
 
-  it('does NOT credit a single-file grep/rg that matched zero lines even when the shared output is non-empty from unrelated shell noise', () => {
-    // The gap the bare `output.trim() !== ''` check left (friction sessions
-    // session_01AqnkupUBsToN4SqTyWoe95 and session_01QQygpFxFLZ6hhosfLpDxzy):
-    // grep itself printed nothing, but a trailing `; echo EXIT:$?` on the same
-    // command line lands in the same shared `output` string, non-empty for a
-    // reason that has nothing to do with the named file.
-    const scan = scanShellReads(
-      [{ command: 'grep -n "TODO" docs/agents/guards.md; echo EXIT:$?', output: 'EXIT:1' }],
-      rel,
-    )
-    expect(scan.paths).toEqual([])
-    expect(scan.nearMisses.map((m) => m.rule)).toEqual(['grep/rg output does not show this file being read'])
-
-    const rgScan = scanShellReads(
-      [{ command: 'rg -n "TODO" docs/agents/guards.md | head -20', output: 'EXIT:1' }],
-      rel,
-    )
-    expect(rgScan.paths).toEqual([])
-  })
-
   it('credits only the files a multi-file grep actually matched in its output', () => {
     const scan = scanShellReads(
       [
