@@ -633,6 +633,13 @@ export function registerTinkerfundE2E(): void {
         await expect.poll(() => count.textContent()).toBe('5')
         // The Backer's actions are keyed by the Space they happened in (unit-tested in backer.spec.ts).
         expect(await page.evaluate(() => Object.keys(sessionStorage).filter((k) => k.startsWith('tinkerfund:')))).toEqual(['tinkerfund:qa:actions'])
+
+        // The Shipping step flags the existing Pledge too, not only the Cart.
+        await page.locator('main').getByRole('link', { name: 'Checkout' }).click()
+        await expect.poll(h1).toBe('Shipping')
+        await page.getByLabel('Europe').check()
+        await expect.poll(() => page.locator('.pledge', { hasText: 'Last-Minute Lamp' }).textContent())
+          .toContain('Your Pledge already holds One lamp, which doesn’t ship to Europe')
       })
 
       // The One-Button Keypad again: one keypad (€45) tips it over its €1,000
