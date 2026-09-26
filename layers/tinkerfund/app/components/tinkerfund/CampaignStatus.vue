@@ -18,8 +18,9 @@ const STATE_LABEL = { upcoming: 'Upcoming', live: 'Live', ended: 'Ended' } as co
 const countdown = computed(() => {
   const { state, launchAt, endAt } = status.value
   if (state === 'ended') return undefined
-  const left = formatTinkerfundCountdown(tinkerfundCountdown(clock.value, state === 'live' ? endAt : launchAt))
-  return { at: state === 'live' ? endAt : launchAt, text: state === 'live' ? `${left} to go` : `Launches in ${left}` }
+  const at = state === 'live' ? endAt : launchAt
+  const left = formatTinkerfundCountdown(tinkerfundCountdown(clock.value, at))
+  return { at, text: state === 'live' ? `${left} to go` : `Launches in ${left}` }
 })
 </script>
 

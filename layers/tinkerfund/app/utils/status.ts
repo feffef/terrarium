@@ -14,8 +14,6 @@ export interface CampaignStatus {
   endAt: number
 }
 
-const ENDING_SOON = 48 * 3_600_000
-
 export function deriveCampaignStatus(
   campaign: { launch: string; end: string; goal: number },
   pledged: number,
@@ -29,7 +27,7 @@ export function deriveCampaignStatus(
   return {
     state,
     outcome: state === 'ended' ? (funded ? 'funded' : 'unfunded') : undefined,
-    endingSoon: live && endAt - now <= ENDING_SOON,
+    endingSoon: live && endAt <= resolveTinkerfundOffset('+48h', now),
     goalReached: live && funded,
     percent: Math.floor((pledged / campaign.goal) * 100),
     launchAt,
