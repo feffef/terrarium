@@ -95,6 +95,105 @@ export function registerTinkerfundE2E(): void {
       await expectCleanHydration('/t/tinkerfund/qa/campaigns/last-minute-lamp')
     })
 
+    // Offsets are relative to real time, so prod's states hold on any day.
+    for (const [slug, action] of [
+      ['counterclockwise-mug', 'Back this Campaign'],
+      ['solo-pea-rest', 'Pledging has closed'],
+      ['one-key-keyboard', 'Back this Campaign'],
+      ['emotional-support-rock', 'Notify me'],
+      ['pocket-sundial-with-snooze', 'Pledging has closed'],
+      ['rain-aware-umbrella', 'Back this Campaign'],
+    ] as const) {
+      it(`renders the prod Campaign page for ${slug}`, async () => {
+        const html = await $fetch(`/t/tinkerfund/prod/campaigns/${slug}`)
+        expect(html).toMatch(/<nav[^>]*aria-label="Breadcrumb"[\s\S]*>Home<[\s\S]*category\/[\s\S]*aria-current="page"/)
+        expect(html).toMatch(/FIG\. 1 · TF-000\d/)
+        expect(html).toMatch(/<h1[^>]*>/)
+        expect(html).toMatch(/aria-label="Sections"[\s\S]*href="#story"[\s\S]*href="#rewards"[\s\S]*href="#updates"[\s\S]*href="#comments"/)
+        expect(html).toContain('<caption>Specifications</caption>')
+        expect(html).toContain(action)
+        expect(html).toContain('<meta property="og:type" content="website">')
+      })
+    }
+
+    it('shows each qa edge case on its Campaign page', async () => {
+      const page = (slug: string) => $fetch(`/t/tinkerfund/qa/campaigns/${slug}`)
+      const lamp = await page('last-minute-lamp')
+      expect(lamp).toContain('2 of 40 left')
+      expect(lamp).toContain('Max 1 per Backer')
+      expect(lamp).toContain('Digital, nothing ships')
+      expect(lamp).toContain('Est. delivery Jul 2026')
+      expect(lamp).toMatch(/Test Inventor<\/b><span[^>]*>Inventor</)
+      expect(lamp).toMatch(/Spare bulb[\s\S]*Sold out/)
+      expect(lamp).toMatch(/<li class="yes"[^>]*>[\s\S]*A dimmer/)
+
+      const stapler = await page('goal-exact-stapler')
+      expect(stapler).toContain('10% off, applied automatically')
+      expect(stapler).toMatch(/Early-bird stapler[\s\S]*?<fieldset disabled[\s\S]*?Sold out/)
+
+      expect(await page('unhurried-kettle')).toMatch(/Notify me[\s\S]*Opens at launch/)
+      expect(await page('indoor-hammock')).toMatch(/Unfunded[\s\S]*Pledging has closed[\s\S]*Closed/)
+      expect(await page('self-assembling-workbench')).toContain('3 of 3 left')
+    })
+
+    it('renders an Update with breadcrumbs back to its Campaign', async () => {
+      const html = await $fetch('/t/tinkerfund/qa/campaigns/last-minute-lamp/updates/1')
+      expect(html).toMatch(/>Home<[\s\S]*>Desk<[\s\S]*href="\/t\/tinkerfund\/qa\/campaigns\/last-minute-lamp"[^>]*>Last-Minute Lamp<[\s\S]*aria-current="page"[^>]*>Update #1</)
+      expect(html).toMatch(/<h1[^>]*>Tooling is done<\/h1>/)
+      expect(html).toContain('<meta property="og:type" content="article">')
+    })
+
+    it('hydrates a prod Campaign page cleanly', async () => {
+      await expectCleanHydration('/t/tinkerfund/prod/campaigns/counterclockwise-mug')
+    })
+
+    it('walks a Campaign on a phone: back bar, section nav, Reward options, an Update', async () => {
+      const page = await createPage()
+      try {
+        await page.setViewportSize({ width: 390, height: 844 })
+        await page.goto(url('/t/tinkerfund/qa/campaigns/last-minute-lamp'), { waitUntil: 'hydration' })
+        const current = () => page.locator('nav[aria-label="Sections"] [aria-current]').textContent()
+        expect(await current()).toContain('Story')
+
+        const bar = page.locator('.backbar')
+        expect((await bar.boundingBox())!.y + (await bar.boundingBox())!.height).toBeCloseTo(844, -1)
+        await bar.getByRole('link', { name: 'Back this Campaign' }).click()
+        await expect.poll(current).toContain('Rewards')
+
+        const lamp = page.getByRole('article', { name: 'One lamp' })
+        await lamp.getByText('White').click()
+        expect(await lamp.getByLabel('White').isChecked()).toBe(true)
+        expect(await lamp.getByRole('button', { name: 'More' }).count()).toBe(0)
+        expect(await lamp.getByRole('button', { name: 'Add to cart' }).isEnabled()).toBe(true)
+
+        await page.locator('nav[aria-label="Sections"]').getByRole('link', { name: /Comments/ }).click()
+        await expect.poll(current).toContain('Comments')
+
+        await page.getByRole('link', { name: /Tooling is done/ }).click()
+        await page.waitForURL('**/campaigns/last-minute-lamp/updates/1')
+        await page.getByRole('navigation', { name: 'Breadcrumb' }).getByRole('link', { name: 'Last-Minute Lamp' }).click()
+        await page.waitForURL('**/campaigns/last-minute-lamp')
+      } finally {
+        await page.close()
+      }
+    })
+
+    it('switches figures and sets an Upcoming reminder', async () => {
+      const page = await createPage()
+      try {
+        await page.goto(url('/t/tinkerfund/qa/campaigns/unhurried-kettle'), { waitUntil: 'hydration' })
+        await page.getByRole('button', { name: /^Figure 2:/ }).click()
+        expect(await page.locator('.hero .frame .cap').first().textContent()).toBe('FIG. 2 · TF-9003')
+        const notify = page.locator('.readout button[aria-pressed]')
+        expect(await notify.textContent()).toContain('Notify me')
+        await notify.click()
+        expect(await notify.getAttribute('aria-pressed')).toBe('true')
+        expect(await page.getByRole('button', { name: 'Opens at launch' }).isDisabled()).toBe(true)
+      } finally {
+        await page.close()
+      }
+    })
+
     it('404s an unknown Space', async () => {
       expect((await fetch('/t/tinkerfund/staging')).status).toBe(404)
     })
