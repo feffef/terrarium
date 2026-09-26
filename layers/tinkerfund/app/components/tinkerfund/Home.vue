@@ -86,7 +86,7 @@ const count = (n: number) => `${n} ${n === 1 ? 'Campaign' : 'Campaigns'}`
 </template>
 
 <style scoped>
-.home { display: grid; gap: 44px; }
+.home { display: grid; grid-template-columns: minmax(0, 1fr); gap: 44px; }
 h2 { margin: 0; font: 800 24px/1.1 var(--tf-font); font-stretch: 80%; }
 .head { display: flex; gap: 12px; align-items: baseline; justify-content: space-between; margin-bottom: 14px; }
 .head a { font: 500 13px/1 var(--tf-mono); }

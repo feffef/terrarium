@@ -23,10 +23,7 @@ const deals = computed(() => tinkerfundDeals(promotions.value, now.value))
 // The filters drive a local query here, so the gallery's URL stays put.
 const filterQuery = ref<TinkerfundBrowseQuery>({ sort: 'popular' })
 const filtered = computed(() => browseTinkerfundListings(cards.value, filterQuery.value))
-const bounds = computed(() => {
-  const prices = cards.value.flatMap((c) => c.prices)
-  return { min: Math.min(...prices), max: Math.max(...prices) }
-})
+const bounds = computed(() => tinkerfundPriceBounds(cards.value))
 </script>
 
 <template>
@@ -98,7 +95,7 @@ const bounds = computed(() => {
 </template>
 
 <style scoped>
-.gallery { display: grid; gap: 36px; }
+.gallery { display: grid; grid-template-columns: minmax(0, 1fr); gap: 36px; }
 .intro { display: grid; gap: 10px; }
 .intro > * { margin: 0; }
 h1 { font: 800 clamp(30px, 4vw, 42px)/1.05 var(--tf-font); font-stretch: 78%; }

@@ -105,8 +105,8 @@ const active = computed(() => Object.keys(tinkerfundBrowseRouteQuery({ ...props.
 .filters { display: grid; gap: 22px; align-content: start; }
 fieldset { display: grid; gap: 6px; margin: 0; padding: 0; border: 0; }
 legend { margin-bottom: 8px; padding: 0; }
-label { display: flex; gap: 8px; align-items: center; font-size: 15px; cursor: pointer; }
-input[type='radio'], input[type='checkbox'] { width: 16px; height: 16px; margin: 0; accent-color: var(--tf-accent); }
+label { display: flex; gap: 8px; align-items: flex-start; font-size: 15px; line-height: 1.4; cursor: pointer; }
+input[type='radio'], input[type='checkbox'] { flex: none; width: 16px; height: 16px; margin: 2px 0 0; accent-color: var(--tf-accent); }
 .range { display: grid; gap: 4px; }
 .range span { color: var(--tf-muted); font-size: 14px; }
 output { color: var(--tf-ink); font: 600 14px/1 var(--tf-mono); }

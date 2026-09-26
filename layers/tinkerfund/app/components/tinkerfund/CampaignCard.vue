@@ -15,8 +15,10 @@ const last = computed(() => {
 <template>
   <article class="card tf-panel">
     <div class="fig">
-      <span class="tf-label">FIG. 1 · {{ card.registry }}</span>
-      <TinkerfundStateChips class="chips" :status="card.status" :deal="card.deal" />
+      <div class="top">
+        <span class="tf-label">FIG. 1 · {{ card.registry }}</span>
+        <TinkerfundStateChips :status="card.status" :deal="card.deal" />
+      </div>
       <!-- eslint-disable-next-line vue/no-v-html -- validated, token-coloured content SVG (issue #1363) -->
       <svg viewBox="0 0 400 300" aria-hidden="true" v-html="card.figure" />
     </div>
@@ -51,10 +53,9 @@ const last = computed(() => {
 }
 .card:hover { border-color: var(--tf-ink); transform: translateY(-2px); }
 .card:focus-within { border-color: var(--tf-ink); }
-.fig { position: relative; aspect-ratio: 16 / 10; padding: 9% 14% 4%; background: var(--tf-paper), var(--tf-bg); border-bottom: var(--tf-hairline); }
-.fig .tf-label { position: absolute; left: 10px; top: 10px; }
-.chips { position: absolute; right: 10px; top: 8px; justify-content: end; max-width: 60%; }
-svg { display: block; width: 100%; height: 100%; }
+.fig { display: grid; grid-template-rows: auto 1fr; gap: 4px; aspect-ratio: 16 / 10; padding: 8px 10px 10px; background: var(--tf-paper), var(--tf-bg); border-bottom: var(--tf-hairline); }
+.top { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; justify-content: space-between; }
+svg { display: block; width: 80%; height: 100%; min-height: 0; margin-inline: auto; }
 .body { display: grid; gap: 10px; align-content: start; padding: 14px 16px 16px; }
 h3 { margin: 0; font: 700 20px/1.1 var(--tf-font); font-stretch: 85%; overflow-wrap: anywhere; }
 h3 a { color: var(--tf-ink); text-decoration: none; }

@@ -16,10 +16,7 @@ const query = computed(() => parseTinkerfundBrowseQuery(route.query))
 const results = computed(() =>
   browseTinkerfundListings(props.cards, props.category ? { ...query.value, category: props.category } : query.value),
 )
-const bounds = computed(() => {
-  const prices = props.cards.flatMap((c) => c.prices)
-  return { min: Math.floor(Math.min(...prices, 0)), max: Math.ceil(Math.max(...prices, 0)) }
-})
+const bounds = computed(() => tinkerfundPriceBounds(props.cards))
 
 function update(next: TinkerfundBrowseQuery) {
   if (props.category) delete next.category
@@ -89,10 +86,10 @@ select {
   font: 500 13px/1 var(--tf-mono);
 }
 .filters-btn { padding: 8px 14px; }
-.layout { display: grid; gap: 28px; }
+.layout { display: grid; grid-template-columns: minmax(0, 1fr); gap: 28px; }
 .side { display: none; }
 @media (min-width: 860px) {
-  .layout { grid-template-columns: 220px 1fr; }
+  .layout { grid-template-columns: 220px minmax(0, 1fr); }
   .side { display: block; }
   .filters-btn { display: none; }
 }

@@ -25,9 +25,10 @@ export type TinkerfundCard = TinkerfundListing & { categoryName: string; invento
  * "now" and, in `prod`, moves once a minute so countdowns follow (issue #1364).
  */
 export async function useTinkerfundCatalog() {
+  // Every composable runs before the first await: after it, Nuxt's context is gone.
   const { space, pagesKey, collections } = useSpace('tinkerfund')
-  const { now, ticking } = await useTinkerfundClock()
-  const { data } = await useAsyncData(`tinkerfund-catalog-${space}`, async () => {
+  const clockReady = useTinkerfundClock()
+  const catalog = useAsyncData(`tinkerfund-catalog-${space}`, async () => {
     const [docs, promotions, categories, inventors] = await Promise.all([
       queryCollection(pagesKey).where('campaign', 'IS NOT NULL').select('path', 'title', 'description', 'campaign').all(),
       queryCollection(collections.promotions).all(),
@@ -36,6 +37,17 @@ export async function useTinkerfundCatalog() {
     ])
     return { docs, promotions, categories, inventors }
   })
+  const clock = ref(0)
+  let ticking = false
+  let timer: ReturnType<typeof setInterval> | undefined
+  onMounted(() => {
+    if (ticking) timer = setInterval(() => (clock.value = Date.now()), 60_000)
+  })
+  onUnmounted(() => clearInterval(timer))
+
+  const [{ now, ticking: ticks }, { data }] = await Promise.all([clockReady, catalog])
+  clock.value = now.value
+  ticking = ticks
 
   const promotions = computed(() => (data.value?.promotions ?? []).map((p) => ({ ...p, slug: p.stem })))
   const categories = computed(() =>
@@ -51,13 +63,6 @@ export async function useTinkerfundCatalog() {
       inventorName: inventors.get(l.inventor) ?? l.inventor,
     }))
   })
-
-  const clock = ref(now.value)
-  let timer: ReturnType<typeof setInterval> | undefined
-  onMounted(() => {
-    if (ticking) timer = setInterval(() => (clock.value = Date.now()), 60_000)
-  })
-  onUnmounted(() => clearInterval(timer))
 
   return { space, now, clock, cards, categories, promotions }
 }

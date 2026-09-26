@@ -21,15 +21,15 @@ defineProps<{
     <p class="tag">{{ scheduled ? 'Starting soon' : 'Deal' }} · {{ formatTinkerfundDiscount(promotion.discount) }}</p>
     <p class="title">{{ promotion.title }}</p>
     <p class="terms">
-      <template v-if="promotion.code">Use code <code>{{ promotion.code }}</code> at checkout.</template>
-      <template v-else>Applied automatically.</template>
+      <span v-if="promotion.code">Use code <code>{{ promotion.code }}</code> at checkout.</span>
+      <span v-else>Applied automatically.</span>
       <time v-if="scheduled" :datetime="new Date(promotion.startAt).toISOString()">
         Starts in {{ formatTinkerfundCountdown(tinkerfundCountdown(clock, promotion.startAt)) }}.
       </time>
       <time v-else-if="promotion.endAt" :datetime="new Date(promotion.endAt).toISOString()">
         Ends in {{ formatTinkerfundCountdown(tinkerfundCountdown(clock, promotion.endAt)) }}.
       </time>
-      <template v-else>No end date.</template>
+      <span v-else>No end date.</span>
     </p>
     <NuxtLink v-if="more" class="tf-btn" :to="more">See all Deals</NuxtLink>
   </div>
@@ -54,7 +54,7 @@ p { margin: 0; }
 .tag { font: 600 12px/1.2 var(--tf-mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--tf-ink); }
 .scheduled .tag { color: var(--tf-muted); }
 .title { font: 800 22px/1.15 var(--tf-font); font-stretch: 82%; }
-.terms { color: var(--tf-muted); font-size: 14px; }
+.terms { display: flex; flex-wrap: wrap; gap: 0 0.3em; color: var(--tf-muted); font-size: 14px; }
 code { padding: 1px 6px; border-radius: 4px; background: var(--tf-ink); color: var(--tf-surface); font: 600 13px/1.4 var(--tf-mono); }
 .tf-btn { justify-self: start; background: var(--tf-surface); }
 </style>

@@ -5,6 +5,9 @@ import { describe, expect, it } from 'vitest'
 import { $fetch, createPage, fetch, url } from '@nuxt/test-utils/e2e'
 import { expectCleanHydration } from '../../../../tests/support/e2e.ts'
 
+// The rendered page only: the Nuxt payload after it carries the whole catalog.
+const main = (html: string) => html.slice(html.indexOf('<main'), html.indexOf('</main>'))
+
 export function registerTinkerfundE2E(): void {
   describe('tinkerfund Tenant', () => {
     it('redirects the Tenant root to prod', async () => {
@@ -181,9 +184,9 @@ export function registerTinkerfundE2E(): void {
     // the Mug is the Live Campaign furthest past its goal, the Keyboard ends
     // within 48h, and the Umbrella's Promotion ends soonest (story #1381).
     it('renders Home’s sections in order, the featured Campaign first', async () => {
-      const html = await $fetch('/t/tinkerfund/prod')
+      const html = main(await $fetch('/t/tinkerfund/prod'))
       expect(html).toMatch(/id="tf-featured"[^>]*>Counterclockwise Mug</)
-      expect(html).toMatch(/340<small>% funded/)
+      expect(html).toMatch(/340<small[^>]*>% funded/)
       const order = ['tf-featured', 'tf-ending', '15% off the Rain-Aware Umbrella', 'tf-categories-h', 'tf-popular', 'tf-launched']
       const at = order.map((marker) => html.indexOf(marker))
       expect(at.every((i) => i > 0), `missing: ${order.filter((_, i) => at[i]! < 0).join(', ')}`).toBe(true)
@@ -210,7 +213,7 @@ export function registerTinkerfundE2E(): void {
     })
 
     it('renders Discover straight from its URL query', async () => {
-      const html = await $fetch('/t/tinkerfund/qa/discover?category=workshop&state=live')
+      const html = main(await $fetch('/t/tinkerfund/qa/discover?category=workshop&state=live'))
       expect(html).toContain('1 Campaign<')
       expect(html).toContain('The Self-Assembling Workbench')
       expect(html).not.toContain('Unhurried Kettle')
@@ -236,7 +239,7 @@ export function registerTinkerfundE2E(): void {
         const live = ['The Self-Assembling Workbench That Has Been Assembling Itself Since the Previous Financial Year', 'Goal-Exact Stapler', 'Last-Minute Lamp']
         expect(await titles()).toEqual(live)
 
-        await page.reload({ waitUntil: 'hydration' })
+        await page.goto(page.url(), { waitUntil: 'hydration' })
         expect(await side.getByLabel('Live', { exact: true }).isChecked()).toBe(true)
         expect(await page.getByLabel('Sort').inputValue()).toBe('newest')
         expect(await titles()).toEqual(live)
@@ -266,6 +269,20 @@ export function registerTinkerfundE2E(): void {
       }
     })
 
+    // The index table is wider than a phone; it must scroll inside its own frame.
+    for (const route of ['/t/tinkerfund/prod', '/t/tinkerfund/qa/discover', '/t/tinkerfund/qa/deals', '/t/tinkerfund/qa']) {
+      it(`fits ${route} on a phone without sideways scrolling`, async () => {
+        const page = await createPage()
+        try {
+          await page.setViewportSize({ width: 390, height: 844 })
+          await page.goto(url(route), { waitUntil: 'hydration' })
+          expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(390)
+        } finally {
+          await page.close()
+        }
+      })
+    }
+
     it('shows the empty state when nothing matches', async () => {
       const html = await $fetch('/t/tinkerfund/qa/category/empty-shelf')
       expect(html).toMatch(/<h1[^>]*>Empty Shelf<\/h1>/)
@@ -280,7 +297,7 @@ export function registerTinkerfundE2E(): void {
     })
 
     it('lists Active Deals with their Campaign and Scheduled ones as starting soon', async () => {
-      const html = await $fetch('/t/tinkerfund/qa/deals')
+      const html = main(await $fetch('/t/tinkerfund/qa/deals'))
       expect(html).toMatch(/A tenth off the stapler \(active, automatic\)[\s\S]*Applied automatically\.[\s\S]*Goal-Exact Stapler/)
       expect(html).toMatch(/Starting soon[\s\S]*Lamp week \(scheduled\)[\s\S]*Starts in 2 days 0 hours/)
       expect(html).not.toContain('EXPIRED5')
@@ -295,7 +312,7 @@ export function registerTinkerfundE2E(): void {
     it('shows the browse components in the gallery', async () => {
       const html = await $fetch('/t/tinkerfund/qa')
       for (const name of ['TinkerfundCampaignCard', 'TinkerfundIndexTable', 'TinkerfundBrowseFilters', 'TinkerfundDealBanner']) {
-        expect(html).toContain(`<code>${name}</code>`)
+        expect(html).toMatch(new RegExp(`<code[^>]*>${name}</code>`))
       }
     })
   })

@@ -174,7 +174,12 @@ export function browseTinkerfundListings<T extends TinkerfundListing>(listings: 
     .sort((a, b) => COMPARE[query.sort](a, b) || a.registry.localeCompare(b.registry))
 }
 
-const JUST_LAUNCHED = resolveTinkerfundOffset('+14d', 0)
+export function tinkerfundPriceBounds(listings: TinkerfundListing[]): { min: number; max: number } {
+  const prices = listings.flatMap((l) => l.prices)
+  return prices.length ? { min: Math.min(...prices), max: Math.max(...prices) } : { min: 0, max: 0 }
+}
+
+const JUST_LAUNCHED =resolveTinkerfundOffset('+14d', 0)
 
 /** Home's lists, in page order (issue #1367); an empty one hides its section. */
 export function tinkerfundHomeSections<T extends TinkerfundListing>(listings: T[], now: number) {

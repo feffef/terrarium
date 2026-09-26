@@ -12,6 +12,7 @@ import {
   formatTinkerfundDiscount,
   tinkerfundStateLabel,
   tinkerfundRemaining,
+  tinkerfundPriceBounds,
 } from '../../app/utils/browse.ts'
 
 const NOW = Date.parse('2026-06-01T12:00:00Z')
@@ -124,6 +125,13 @@ describe('browsing Campaigns', () => {
     expect(titles({ sort: 'popular', min: 20, max: 29 })).toEqual(['stapler'])
     expect(titles({ sort: 'popular', min: 45 })).toEqual(['hammock', 'kettle'])
     expect(titles({ sort: 'popular', max: 5 })).toEqual(['stapler', 'lamp'])
+  })
+})
+
+describe('the Reward price range', () => {
+  it('spans the cheapest to the dearest Reward on offer', () => {
+    expect(tinkerfundPriceBounds(listings)).toEqual({ min: 1, max: 50 })
+    expect(tinkerfundPriceBounds([])).toEqual({ min: 0, max: 0 })
   })
 })
 
