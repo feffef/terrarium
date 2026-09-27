@@ -36,21 +36,26 @@ Done when you hold the scorecard.
 ## 2. Check behaviour — one subagent per Skill in `behaviourChecks`
 
 Dispatch one read-only Sonnet subagent (`model: sonnet`) per Skill, all in
-parallel. Each brief names
-the Skill's `SKILL.md`, the log files of the sessions in its `usedIn` (newest
-10), and its `observations`. For a `modelInvoked` Skill, the brief also lists
-every `window[]` session that did not use it, with its log `file`, `goal`
-and `skillsUsed`. The brief asks for this:
+parallel. Each brief names the Skill's `SKILL.md`, the log files of the
+sessions in its `usedIn` (newest 10), and its `observations`. For a
+`modelInvoked` Skill, the brief also lists every `window[]` session that did
+not use it, with its log `file`, `goal` and `skillsUsed`. The brief asks for
+this:
 
 > Work out from the `SKILL.md` what a run must deliver: its outcome and each
 > step's completion criterion. For each session, check against primary sources
 > whether it delivered. Start from the log's outcome, summary, `prs` and files
 > edited, then confirm on GitHub or in git that the PR, commit, issue or file
-> is really there and says what the Skill promised. A promise the runs keep
-> breaking, a step that silently never happens, or an outcome the log claims
-> but that never landed is a **silent failure**, whether or not anyone logged
-> a friction. Prior observations tell you what is already known, including
-> unverified findings this run's sessions may confirm.
+> is really there and says what the Skill promised. Then check it still
+> stands: search the last two weeks of `git log origin/main` for the Skill's
+> name, in commit messages (`-i --grep=<name>`) and in changed content
+> (`-i -G<name>`). A later revert or rewrite of what a run delivered is a
+> silent failure, and the reverting commit and its session log say why. A
+> promise the runs keep breaking, a step that silently never happens, or an
+> outcome the log claims but that never landed is a **silent failure** too,
+> whether or not anyone logged a friction. Prior observations tell you what
+> is already known, including unverified findings this run's sessions may
+> confirm.
 >
 > If you were given sessions that did not use the Skill, decide for each one
 > whether its work matches the case the Skill's `description` says it covers.
@@ -63,12 +68,13 @@ and `skillsUsed`. The brief asks for this:
 > checked.
 
 A subagent's report is hearsay until you have verified it (CLAUDE.md). Check
-each finding against the source it cites before you use it. A finding that
-holds up in part but not enough to act on is **unverified**: it goes into the
-Skill's `observations` (step 5), so a later run can build on it.
+each finding against the source it cites before you use it, and check one
+claim from every clean report too: "nothing found" is a claim like any other.
+A finding that holds up in part but not enough to act on is **unverified**: it
+goes into the Skill's `observations` (step 5), so a later run can build on it.
 
-Done when every subagent has reported and each finding is verified,
-unverified, or dropped.
+Done when every subagent has reported, each finding is verified, unverified,
+or dropped, and each clean report has had one claim checked.
 
 ## 3. Check closure completeness
 
