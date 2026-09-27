@@ -92,8 +92,8 @@ const { data: find } = await useAsyncData('midden-find', async () => {
 // e2e tests run against (layers/tinkerfund/CONTEXT.md) — the one Tenant that
 // dedicates a Space to testing, which is worth showing off.
 const tinkerfundEntries = [
-  { name: 'The Shop', path: tinkerfundPath('prod'), note: 'the storefront, on real time', accent: 'var(--tf-accent)' },
-  { name: 'The QA Space', path: tinkerfundPath('qa'), note: 'awkward test data and a component gallery', accent: 'var(--tf-ink)' },
+  { name: 'The Shop', path: tinkerfundPath('prod'), note: 'the real storefront', accent: 'var(--tf-accent)' },
+  { name: 'The Test Content', path: tinkerfundPath('qa'), note: 'edge-case data and a component gallery', accent: 'var(--tf-ink)' },
 ]
 
 const { data: tinkerfund } = await useAsyncData('tinkerfund-showcase', async () => {
@@ -244,7 +244,7 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
           noun="spaces"
           dress="tinkerfund"
           teaser-label="Campaign of the day"
-          blurb="A crowdfunding shop the agents built to a real storefront's standard, for inventions like a mug that stirs itself counterclockwise. Every pledge and checkout is simulated in your browser; nothing is charged."
+          blurb="A crowdfunding shop the agents built to a real storefront's standard, for inventions like a mug that stirs itself counterclockwise. Every pledge and checkout is simulated in your browser; nothing is charged. It comes in two versions: the real shop, and one filled with test content the agents use to try to break it."
           :entries="tinkerfundEntries"
         >
           <NuxtLink v-if="tinkerfund.campaign" :to="tinkerfund.campaign.url" class="campaign">
