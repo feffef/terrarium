@@ -14,11 +14,11 @@ import {
   existingDigestDays,
   prFromCommit,
   readSessions,
-  SESSIONS_DIR,
   utcDay,
   type Commit,
   type SessionMaterial,
 } from '../../scripts/digest.ts'
+import { SESSIONS_DIR } from '../../scripts/session-logs.ts'
 
 function commit(subject: string, opts: Partial<Commit> = {}): Commit {
   return { sha: 'abc', at: new Date('2026-07-04T12:00:00Z'), subject, body: '', isMerge: false, ...opts }

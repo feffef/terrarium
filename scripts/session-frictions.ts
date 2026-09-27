@@ -29,21 +29,19 @@
 // default, regardless of size — for a caller that wants the output at a
 // specific location (e.g. its own scratchpad, to avoid colliding with a
 // parallel run) rather than the shared default.
-import { existsSync, readFileSync, readdirSync, writeFileSync } from 'node:fs'
+import { writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
-import { parse as parseYaml } from 'yaml'
 import { isExternalSession } from '../shared/schemas/session.ts'
 import type { SubagentRef } from './session-trace.ts'
+import { readSessionLogs } from './session-logs.ts'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 
 /** The default recency window: the 20 newest session logs — matches the
  *  `frictions-to-fixes` Skill's survey step. */
 export const DEFAULT_WINDOW = 20
-
-export const SESSIONS_DIR = 'layers/journal/content/current/sessions'
 
 // ── Types ───────────────────────────────────────────────────────────────────
 
@@ -147,19 +145,12 @@ export function toCompactSession(s: TriageSession): CompactSession {
 // ── FS IO (thin shell) ────────────────────────────────────────────────────────
 
 function readSessions(cwd = root): TriageSession[] {
-  const dir = join(cwd, SESSIONS_DIR)
-  if (!existsSync(dir)) return []
-  const out: TriageSession[] = []
-  for (const f of readdirSync(dir).filter((f) => f.endsWith('.yml'))) {
-    const raw = parseYaml(readFileSync(join(dir, f), 'utf8')) as Record<string, unknown>
-    if (!raw || typeof raw !== 'object') continue
-    // An EXTERNAL log (ADR-0009 amendment) is excluded from the frictions-to-fixes
-    // corpus entirely: its frictions reflect a different harness/toolchain that our
-    // fixes don't touch, so mining them would chase non-generalizing signal.
-    if (isExternalSession(raw)) continue
-    out.push(toTriageSession(raw, `${SESSIONS_DIR}/${f}`))
-  }
-  return out
+  // An EXTERNAL log (ADR-0009 amendment) is excluded from the frictions-to-fixes
+  // corpus entirely: its frictions reflect a different harness/toolchain that our
+  // fixes don't touch, so mining them would chase non-generalizing signal.
+  return readSessionLogs(cwd, { archived: false })
+    .filter(({ data }) => !isExternalSession(data))
+    .map(({ file, data }) => toTriageSession(data, file))
 }
 
 // ── Command ─────────────────────────────────────────────────────────────────

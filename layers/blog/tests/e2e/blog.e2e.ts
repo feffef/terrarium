@@ -94,7 +94,7 @@ export function registerBlogE2E(): void {
         // — a client-side navigation, the only path that hits the client WASM
         // query (an initial load / reload renders via the server DB).
         await page.goto(url('/t/blog/karen'), { waitUntil: 'hydration' })
-        await page.locator('.net-links a', { hasText: 'David' }).click()
+        await page.locator('.net-cards a', { hasText: 'David' }).click()
         await page.waitForFunction(() => location.pathname.endsWith('/t/blog/david'))
 
         // The failure is surfaced as a modal — never a silent blank.
@@ -127,7 +127,7 @@ export function registerBlogE2E(): void {
 
         await page.goto(url('/t/blog/karen'), { waitUntil: 'hydration' })
         await plantReloadSentinel(page)
-        await page.locator('.net-links a', { hasText: 'David' }).click()
+        await page.locator('.net-cards a', { hasText: 'David' }).click()
         await page.waitForFunction(() => location.pathname.endsWith('/t/blog/david'))
 
         const dialog = page.locator('dialog.cle-dialog[open]')
@@ -160,7 +160,7 @@ export function registerBlogE2E(): void {
         await failContentChunkImport(page)
 
         await page.goto(url('/t/blog/karen'), { waitUntil: 'hydration' })
-        await page.locator('.net-links a', { hasText: 'David' }).click()
+        await page.locator('.net-cards a', { hasText: 'David' }).click()
 
         // No "Reload page" click: the recovery is the app's job. The reloaded
         // page renders the About from the SERVER DB during SSR, so the content
@@ -196,7 +196,7 @@ export function registerBlogE2E(): void {
 
         await page.goto(url('/t/blog/karen'), { waitUntil: 'hydration' })
         await plantReloadSentinel(page)
-        await page.locator('.net-links a', { hasText: 'David' }).click()
+        await page.locator('.net-cards a', { hasText: 'David' }).click()
 
         const dialog = page.locator('dialog.cle-dialog[open]')
         await expect.poll(async () => dialog.isVisible().catch(() => false), { timeout: 8000 }).toBe(true)

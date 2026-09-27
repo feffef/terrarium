@@ -19,16 +19,15 @@
 // dashboard that queries the digest pages directly — a new Digest appears with
 // no baking. See ADR-0010.)
 import { execFileSync } from 'node:child_process'
-import { existsSync, readFileSync, readdirSync } from 'node:fs'
+import { existsSync, readdirSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
-import { parse as parseYaml } from 'yaml'
+import { readSessionLogs } from './session-logs.ts'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 
 /** The Journal paths this helper reads. Digests are pages under a subfolder (ADR-0010). */
 export const DIGESTS_DIR = 'layers/journal/content/current/pages/digests'
-export const SESSIONS_DIR = 'layers/journal/content/current/sessions'
 /** Where the retention sweep (`archive-journal-content.ts`) moves aged-out Digests.
  *  `existingDigestDays` must check here too — otherwise an archived day looks
  *  undigested again and `list` re-offers it forever (issue found live, 2026-09-06). */
@@ -192,31 +191,23 @@ function readCommits(cwd = root): Commit[] {
 const list = (v: unknown): unknown[] => (Array.isArray(v) ? v : [])
 
 export function readSessions(cwd = root): { endedAt: Date; material: SessionMaterial }[] {
-  const dir = join(cwd, SESSIONS_DIR)
-  if (!existsSync(dir)) return []
-  const out: { endedAt: Date; material: SessionMaterial }[] = []
-  for (const f of readdirSync(dir).filter((f) => f.endsWith('.yml'))) {
-    const raw = parseYaml(readFileSync(join(dir, f), 'utf8')) as Record<string, unknown>
-    if (!raw || typeof raw !== 'object') continue
-    out.push({
-      endedAt: new Date(raw.endedAt as string | Date),
-      material: {
-        session: String(raw.session ?? ''),
-        kind: String(raw.kind ?? ''),
-        goal: String(raw.goal ?? ''),
-        outcome: String(raw.outcome ?? ''),
-        status: String(raw.status ?? ''),
-        prs: list(raw.prs).map((p) => Number(p)).filter((n) => !Number.isNaN(n)),
-        frictions: (list(raw.frictions) as Record<string, unknown>[]).map((fr) => ({
-          severity: String(fr.severity ?? ''),
-          description: String(fr.description ?? '').replace(/\s+/g, ' ').trim(),
-        })),
-        learnings: list(raw.learnings).map(String),
-        ideas: list(raw.ideas).map(String),
-      },
-    })
-  }
-  return out
+  return readSessionLogs(cwd, { archived: false }).map(({ data: raw }) => ({
+    endedAt: new Date(raw.endedAt as string | Date),
+    material: {
+      session: String(raw.session ?? ''),
+      kind: String(raw.kind ?? ''),
+      goal: String(raw.goal ?? ''),
+      outcome: String(raw.outcome ?? ''),
+      status: String(raw.status ?? ''),
+      prs: list(raw.prs).map((p) => Number(p)).filter((n) => !Number.isNaN(n)),
+      frictions: (list(raw.frictions) as Record<string, unknown>[]).map((fr) => ({
+        severity: String(fr.severity ?? ''),
+        description: String(fr.description ?? '').replace(/\s+/g, ' ').trim(),
+      })),
+      learnings: list(raw.learnings).map(String),
+      ideas: list(raw.ideas).map(String),
+    },
+  }))
 }
 
 function digestDaysIn(dir: string): string[] {

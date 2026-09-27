@@ -7,19 +7,12 @@
 //   `date` is the filename's (startedAt) date; `value` is the named top-level
 //   field, or the whole log without --field. Logs lacking the field are skipped.
 //   Pipe into `jq` for counts, e.g. `... --field ideas | jq -s 'map(.value | length) | add'`.
-import { existsSync, readFileSync, readdirSync } from 'node:fs'
-import { dirname, join, resolve } from 'node:path'
+import { dirname, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import { parseArgs } from 'node:util'
-import { parse as parseYaml } from 'yaml'
-import { ARCHIVED_SESSIONS_DIR, SESSIONS_DIR } from './audit-skills.ts'
+import { readSessionLogs, type SessionLog } from './session-logs.ts'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
-
-export interface SessionLog {
-  file: string
-  data: Record<string, unknown>
-}
 
 export interface CorpusQuery {
   since?: string
@@ -45,24 +38,11 @@ export function queryCorpus(logs: SessionLog[], { since, until, field }: CorpusQ
   return rows.sort((a, b) => a.date.localeCompare(b.date) || a.file.localeCompare(b.file))
 }
 
-/** Keyed by filename so a log amended back into `current` after archiving
- *  (scripts/archive-journal-content.ts) counts once, as its `current` copy. */
-function readLogs(cwd = root): SessionLog[] {
-  const byName = new Map<string, SessionLog>()
-  for (const dir of [ARCHIVED_SESSIONS_DIR, SESSIONS_DIR]) {
-    if (!existsSync(join(cwd, dir))) continue
-    for (const f of readdirSync(join(cwd, dir)).filter((f) => f.endsWith('.yml'))) {
-      byName.set(f, { file: join(dir, f), data: parseYaml(readFileSync(join(cwd, dir, f), 'utf8')) ?? {} })
-    }
-  }
-  return [...byName.values()]
-}
-
 function main(): void {
   const { values } = parseArgs({
     options: { since: { type: 'string' }, until: { type: 'string' }, field: { type: 'string' } },
   })
-  for (const row of queryCorpus(readLogs(), values)) process.stdout.write(JSON.stringify(row) + '\n')
+  for (const row of queryCorpus(readSessionLogs(root, { archived: true }), values)) process.stdout.write(JSON.stringify(row) + '\n')
 }
 
 if (import.meta.url === pathToFileURL(process.argv[1] ?? '').href) {

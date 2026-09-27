@@ -10,12 +10,10 @@
 // extraction, overlap scoring, clustering) behind a thin FS/CLI shell.
 //
 // Usage:  tsx scripts/ideas.ts gather [--threshold <n>]
-import { existsSync, readFileSync, readdirSync } from 'node:fs'
-import { dirname, join, resolve } from 'node:path'
+import { dirname, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
-import { parse as parseYaml } from 'yaml'
 import { isExternalSession } from '../shared/schemas/session.ts'
-import { SESSIONS_DIR } from './digest.ts'
+import { readSessionLogs } from './session-logs.ts'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 
@@ -173,15 +171,7 @@ export function readNoteMaterial(raw: Record<string, unknown>): SessionNoteMater
 // ── Git / FS IO (thin shell) ──────────────────────────────────────────────────
 
 function readSessionNoteMaterials(cwd = root): SessionNoteMaterial[] {
-  const dir = join(cwd, SESSIONS_DIR)
-  if (!existsSync(dir)) return []
-  const out: SessionNoteMaterial[] = []
-  for (const f of readdirSync(dir).filter((f) => f.endsWith('.yml'))) {
-    const raw = parseYaml(readFileSync(join(dir, f), 'utf8')) as Record<string, unknown>
-    if (!raw || typeof raw !== 'object') continue
-    const material = readNoteMaterial(raw)
-    if (material) out.push(material)
-  }
+  const out = readSessionLogs(cwd, { archived: false }).flatMap(({ data }) => readNoteMaterial(data) ?? [])
   // Deterministic regardless of readdirSync's FS-dependent iteration order.
   return out.sort((a, b) => a.endedAt.localeCompare(b.endedAt) || a.session.localeCompare(b.session))
 }

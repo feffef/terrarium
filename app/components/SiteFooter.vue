@@ -9,6 +9,7 @@ const SITES = [
   { name: 'Blog', to: '/t/blog' },
   { name: 'Midden', to: '/t/midden' },
   { name: 'Atlas', to: '/t/atlas' },
+  { name: 'Tinkerfund', to: '/t/tinkerfund' },
 ]
 </script>
 

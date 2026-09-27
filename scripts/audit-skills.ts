@@ -23,6 +23,7 @@ import {
   type FetchStrategy,
 } from './list-open-issues.ts'
 import { readProvenanceHeader } from './provenance-header.ts'
+import { ARCHIVED_SESSIONS_DIR, readSessionLogs, SESSIONS_DIR } from './session-logs.ts'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 
@@ -59,8 +60,6 @@ export const RESOLVED_ORPHANED_SESSIONS: ReadonlyMap<string, string> = new Map([
 ])
 
 /** Paths this helper reads. */
-export const SESSIONS_DIR = 'layers/journal/content/current/sessions'
-export const ARCHIVED_SESSIONS_DIR = 'layers/journal/content/archived/sessions'
 export const INVENTORY_DIR = 'layers/journal/content/current/skills'
 export const SKILLS_DIR = '.agents/skills'
 /** The external pack's lockfile — a Skill named here is not ours to edit (ADR-0015). */
@@ -585,33 +584,12 @@ export function findManuallyRescuedClosures(
 
 /** Every internal session log, current and archived. */
 function readSessions(cwd: string, skillNames: ReadonlySet<string>): Session[] {
-  const out: Session[] = []
-  for (const dir of [SESSIONS_DIR, ARCHIVED_SESSIONS_DIR]) {
-    const full = join(cwd, dir)
-    if (!existsSync(full)) continue
-    for (const f of readdirSync(full).filter((f) => f.endsWith('.yml'))) {
-      const raw = parseYaml(readFileSync(join(full, f), 'utf8')) as Record<string, unknown>
-      if (!raw || typeof raw !== 'object') continue
-      const s = toSession(raw, `${dir}/${f}`, skillNames)
-      if (s) out.push(s)
-    }
-  }
-  return out
+  return readSessionLogs(cwd, { archived: true }).flatMap(({ file, data }) => toSession(data, file, skillNames) ?? [])
 }
 
 /** An archived session is still a valid log, not an orphan. */
 function readKnownSessionIds(cwd = root): Set<string> {
-  const ids = new Set<string>()
-  for (const dir of [SESSIONS_DIR, ARCHIVED_SESSIONS_DIR]) {
-    const full = join(cwd, dir)
-    if (!existsSync(full)) continue
-    for (const f of readdirSync(full).filter((f) => f.endsWith('.yml'))) {
-      const raw = parseYaml(readFileSync(join(full, f), 'utf8')) as Record<string, unknown>
-      const id = raw && typeof raw === 'object' ? String(raw.session ?? '') : ''
-      if (id) ids.add(id)
-    }
-  }
-  return ids
+  return new Set(readSessionLogs(cwd, { archived: true }).map(({ data }) => String(data.session ?? '')).filter(Boolean))
 }
 
 /** Scoped to `origin/main` per CLAUDE.md's git-log guidance, not `--all`. Feeds
