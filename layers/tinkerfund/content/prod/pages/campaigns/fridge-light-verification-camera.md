@@ -197,10 +197,10 @@ checks, and files a report.
 
 ## Eleven years without data
 
-The Inventor spent eleven years assuming the light went off, the way everyone
-does, without ever confirming it. The Fridge Light Verification Camera ends
-the assumption. It clips to the upper shelf, watches the light through every
-closure, and reports back.
+The Inventor assumed the light went off, the way everyone does, without ever
+confirming it. The Fridge Light Verification Camera ends the assumption. It
+clips to the upper shelf, watches the light through every closure, and
+reports back.
 
 ## How it watches itself
 

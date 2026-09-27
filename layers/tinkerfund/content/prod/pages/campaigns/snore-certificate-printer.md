@@ -169,14 +169,14 @@ campaign:
       title: Standard printer
       description: One Snore Certificate Printer, the microphone unit, and one roll of 58 mm thermal paper good for 120 nights.
       price: 79
-      claimed: 80
+      claimed: 120
       shipsTo: [domestic, europe, world]
       delivery: +60d
     - id: dual
       title: Dispute pair
       description: Two Snore Certificate Printers on one shared certificate log, so both parties in the same room can print their own copy of the same night.
       price: 139
-      claimed: 20
+      claimed: 30
       shipsTo: [domestic, europe, world]
       delivery: +60d
   addons:
@@ -225,6 +225,6 @@ anyone's favour.
 
 ## Shipping
 
-The printer and one roll ship worldwide. Spare rolls ship in the same package
-as a full order and are not sold on their own to a new backer, since a roll
-needs a printer to read it.
+The printer and one roll ship worldwide. A spare roll only has a use once a
+printer is already in the house, so it ships alongside a Standard printer or
+Dispute pair pledge, never on its own to a new backer.

@@ -120,7 +120,7 @@ campaign:
         <g style="fill:var(--tf-ink);stroke:none;font:500 12px var(--tf-mono)"><text x="262" y="176">10</text><text x="74" y="218">12</text><text x="136" y="166">14</text><text x="74" y="254">16</text><text x="322" y="238">18</text><text x="304" y="218">20</text></g>
         <g style="fill:var(--tf-ink);stroke:none;font:500 11px var(--tf-mono)"><text x="78" y="290">SECTION A–A · DETAIL B, 14:1</text></g>
     - style: patent
-      caption: "Plan. Wall (10), flange (12), feet (16, under the flange, hidden) and the opening (22), which is the product."
+      caption: "Plan. Wall (10), flange (12), feet (16, under the flange, hidden) and the opening (22), which does the work."
       svg: |-
         <g style="fill:none;stroke:var(--tf-ink);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round">
         <path d="M82 64h236v167h-236z" style="stroke-width:2.4" />

@@ -1,23 +1,25 @@
 campaign: meal-invites-for-cats
 updates:
-  - title: Funded on day nine
+  - title: Nine days to goal
     published: -6d
     body: |-
-      We reached the goal nine days in. Thank you. The first stretch goal, a
-      second reminder five minutes before the meal, is next.
-  - title: The second reminder is unlocked
+      Backers got us to €15,000 nine days after launch. The next target is the
+      first stretch goal, a second reminder five minutes before the meal.
+  - title: Second reminder confirmed
     published: -3d
     body: |-
-      Passing €17,000 unlocked a second reminder, five minutes before the meal, on
-      top of the fifteen-minute one. Existing Pledges receive it automatically;
-      nothing to change.
+      €17,000 came in, and the second reminder — five minutes before the meal,
+      on top of the fifteen-minute one — is now part of the build. Pledges
+      already in place get it with no extra step on your end.
 
-      The next stretch goal gives each cat on a shared feeder its own calendar.
-      The prototype household has two cats and one feeder, which is the problem
-      this solves.
-  - title: On the prototype cat
+      Next up is the €22,000 goal: a separate calendar for each cat on a
+      shared feeder. The prototype household runs two cats through one
+      feeder, which is exactly the case this would fix.
+  - title: The 412-meal question
     published: -1d
     body: |-
-      Several backers have asked about the prototype cat's zero acceptances over
-      412 meals. We have reviewed the invitation copy and found nothing wrong
-      with it. The feeder continues to dispense on schedule either way.
+      A number of backers have asked about the prototype cat: 412 meals
+      attended, none recorded as accepted, each one arriving more than two
+      minutes late. We have gone over the invitation wording and changed
+      nothing, since it reads clearly to us. The feeder keeps dispensing on
+      schedule either way.

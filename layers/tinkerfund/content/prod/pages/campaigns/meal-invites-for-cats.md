@@ -234,9 +234,10 @@ grams per meal regardless of how the invitation was answered.
 
 ## The prototype cat
 
-The prototype cat has attended 412 meals and accepted none of the
-invitations. The Inventor attributes this to the inbox, not the cat, and is
-reviewing the subject line.
+The prototype cat has attended 412 meals, arriving more than two minutes
+after the scheduled time at every one, so none are recorded as accepted. The
+Inventor attributes this to the inbox, not the cat, and is reviewing the
+subject line.
 
 ## Shipping
 

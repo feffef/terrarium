@@ -21,14 +21,15 @@ comments:
         inventor: true
   - author: Camille R.
     posted: -105d
-    text: Two months in and our cat has not gone near it. Is that normal?
-  - author: Declan Murphy
-    posted: -104d
-    text: It matches the households reporting so far.
-    inventor: true
+    text: Two months in, is any test household's cat pressing it yet?
+    replies:
+      - author: Declan Murphy
+        posted: -104d
+        text: It matches the households reporting so far.
+        inventor: true
   - author: Petra V.
     posted: -101d
-    text: Ordered the green one for a spare. Our cat ignores new objects for about six weeks, so we are still in the waiting period.
+    text: Backed the green one for a spare. Our cat ignores new objects for about six weeks — did any test household report the same delay?
   - author: Owen B.
     posted: -96d
     text: A dog pressing it counts toward the total? That seems like it should be flagged separately.

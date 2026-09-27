@@ -209,8 +209,8 @@ campaign:
       delivery: +90d
     - id: desk-pair
       title: Desk pair
-      description: Two stands, for two monitors or two opinions.
-      price: 179
+      description: Two stands, in the finish of your choice.
+      price: 149
       claimed: 0
       options:
         - id: finish
@@ -237,15 +237,13 @@ note at a time.
 A time-of-flight sensor in the base measures the distance to your eyes and
 adjusts height, tilt and swivel to keep the note at eye level, sitting or
 standing. The range is 340 mm of height, 40 degrees of tilt and a full 180
-degrees of swivel, which covers every desk the Inventor tested it on and
-several he did not need to.
+degrees of swivel, which covers every desk the Inventor tested it on.
 
 ## Four presets
 
-The stand remembers four positions: sitting, standing, "leaning in to read a
-small note" and "leaning back from a note that says something you already
-know." A short press on the base cycles between them. A long press saves the
-current position over whichever preset you are least attached to.
+The stand remembers four positions: sitting, standing, close read and away.
+A short press on the base cycles between them. A long press saves the current
+position to the active preset.
 
 ## Rated for more than a note
 

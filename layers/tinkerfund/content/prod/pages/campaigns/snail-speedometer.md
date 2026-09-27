@@ -49,7 +49,7 @@ campaign:
         <circle cx="278.5" cy="233" r="14.3" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" />
         <path d="M278.5 224.8a8.3 8.3 0 1 1 -8.2 8.3a4.5 4.5 0 1 1 4.5 -4.5" style="fill:none;stroke:var(--tf-ink);stroke-width:1.9500000000000002;stroke-linecap:round;stroke-linejoin:round" />
     - style: isometric
-      caption: "The two stake lengths. The head, the radar and the reading are the same; the 600 mm stake is for longer lawns."
+      caption: "The two stake lengths. The head, the radar and the reading are the same; the 600 mm stake is for beds with tall planting."
       svg: |-
         <ellipse cx="118" cy="258" rx="46" ry="13" style="fill:var(--tf-line)" />
         <ellipse cx="284" cy="258" rx="46" ry="13" style="fill:var(--tf-line)" />
@@ -222,12 +222,12 @@ campaign:
           name: Stake length
           choices:
             - { id: standard, label: 300 mm stake }
-            - { id: long, label: "600 mm stake, for longer lawns" }
+            - { id: long, label: "600 mm stake, for beds with tall planting" }
       shipsTo: [domestic, europe, world]
       delivery: +75d
     - id: two-speedometers
       title: Two speedometers
-      description: Two units, for a garden with a front and back lawn, or a rivalry.
+      description: Two units, for a garden with a front and back bed to compare.
       price: 69
       claimed: 80
       options:
@@ -235,12 +235,12 @@ campaign:
           name: Stake length
           choices:
             - { id: standard, label: 300 mm stake }
-            - { id: long, label: "600 mm stake, for longer lawns" }
+            - { id: long, label: "600 mm stake, for beds with tall planting" }
       shipsTo: [domestic, europe, world]
       delivery: +75d
     - id: garden-set
       title: Garden set
-      description: Three speedometers sharing one leaderboard display, for a bed with several beds to compare.
+      description: Three speedometers sharing one leaderboard display, for a garden with several beds to compare.
       price: 129
       claimed: 20
       stock: 60
@@ -258,7 +258,7 @@ Most radar guns on the market read from 5 km/h upward, which is well above
 anything found in a garden. The Snail Speedometer starts at zero and reads in
 millimetres per minute.
 
-## The problem with garden radar
+## Logging every pass
 
 The unit uses a 60 GHz radar module with a resolution of 0.1 mm/min and a
 range of 2 m, mounted on a stake at the edge of the bed. Every pass is logged

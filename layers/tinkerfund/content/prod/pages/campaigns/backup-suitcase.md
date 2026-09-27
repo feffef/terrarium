@@ -9,7 +9,7 @@ campaign:
   launch: -18d
   end: +12d
   backers: 540
-  pledged: 58800
+  pledged: 66600
   specifications:
     - { label: Outer case, value: "55 × 40 × 20 cm, polycarbonate" }
     - { label: Inner case, value: "48 × 34 × 16 cm, polycarbonate" }
@@ -183,7 +183,7 @@ campaign:
       title: The Backup Suitcase
       description: One outer case and its nested, identical replica.
       price: 129
-      claimed: 130
+      claimed: 390
       options:
         - id: colour
           name: Shell colour
@@ -197,7 +197,7 @@ campaign:
       title: Spare inner case
       description: A second inner case, for travellers who already own the outer shell.
       price: 99
-      claimed: 390
+      claimed: 130
       shipsTo: [domestic, europe, world]
       delivery: +90d
     - id: founders-pair

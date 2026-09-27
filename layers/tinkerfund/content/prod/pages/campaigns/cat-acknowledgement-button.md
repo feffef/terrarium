@@ -5,11 +5,11 @@ campaign:
   registry: TF-0021
   inventor: declan-murphy
   category: pets
-  goal: 8000
+  goal: 40000
   launch: -120d
   end: -90d
-  backers: 24
-  pledged: 960
+  backers: 200
+  pledged: 8000
   specifications:
     - { label: Button diameter, value: "110 mm, felt-topped" }
     - { label: Counter mechanism, value: "Mechanical, incremental, non-resettable" }
@@ -170,7 +170,7 @@ campaign:
       title: Cat Acknowledgement Button
       description: One floor button with a felt top and a mechanical, non-resettable counter.
       price: 39
-      claimed: 24
+      claimed: 200
       options:
         - id: felt
           name: Felt colour

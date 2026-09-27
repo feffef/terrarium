@@ -13,7 +13,7 @@ comments:
     text: Backed for the front lawn. Curious how loud forty minutes of notifications actually feels.
   - author: Priti S.
     posted: -68d
-    text: Second sensor channel stretch goal unlocked! Does that mean two blades on one stake?
+    text: Second sensor channel stretch goal unlocked. Does that mean two blades on one stake?
     replies:
       - author: Gwen Ashdown
         posted: -67d
@@ -21,7 +21,7 @@ comments:
         inventor: true
   - author: Owen T.
     posted: -61d
-    text: The mowing detector went off while I was just trimming the edge, not the whole lawn.
+    text: The test-lawn update mentions two weeks of logging. Does the mowing detector trigger on a partial trim, like just the edge, or only a full mow?
     replies:
       - author: Gwen Ashdown
         posted: -60d

@@ -20,7 +20,7 @@ campaign:
     - { label: Power, value: "USB-C, 8 h on battery" }
   figures:
     - style: isometric
-      caption: "The counter clamped to a bedside table, projecting its line of sheep toward the ceiling. The total so far is shown on the front."
+      caption: "The counter on its base on a bedside table, projecting its line of sheep toward the ceiling. The total so far is shown on the front."
       svg: |-
         <ellipse cx="200" cy="266" rx="122" ry="24" style="fill:var(--tf-line)" />
         <path d="M188 155L295.4 217L217.5 262L110.1 200Z" style="fill:color-mix(in srgb, var(--tf-line) 35%, var(--tf-surface))" />
@@ -203,8 +203,13 @@ campaign:
       price: 49
       claimed: 70
       options:
-        - id: finish
-          name: Finish
+        - id: finish-1
+          name: Finish, unit 1
+          choices:
+            - { id: charcoal, label: Charcoal }
+            - { id: birch, label: Birch }
+        - id: finish-2
+          name: Finish, unit 2
           choices:
             - { id: charcoal, label: Charcoal }
             - { id: birch, label: Birch }
@@ -220,7 +225,7 @@ campaign:
       delivery: +40d
   addons:
     - { id: spare-lens, title: Spare projector lens, price: 12, claimed: 40 }
-    - { id: mounting-bracket, title: Bedside mounting bracket, price: 9, claimed: 30 }
+    - { id: headboard-bracket, title: Headboard mounting bracket, price: 9, claimed: 30 }
   shipping: { domestic: 5, europe: 9, world: 15 }
 ---
 

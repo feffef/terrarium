@@ -238,7 +238,7 @@ campaign:
     - { id: spare-blade-kit, title: "Spare marked-blade kit", description: "Replacement marking clips for the blade the sensor tracks.", price: 9, claimed: 45 }
     - { id: second-stake, title: "Second stake", description: "For repositioning without recalibrating the first.", price: 14, claimed: 35 }
   stretchGoals:
-    - { id: second-channel, amount: 24000, title: "A second sensor channel, for tracking a rival blade on the same stake" }
+    - { id: second-channel, amount: 24000, title: "A second sensor channel, for tracking a second blade on the same stake" }
     - { id: night-mode, amount: 30000, title: "A night mode that holds notifications until sunrise" }
   shipping: { domestic: 4, europe: 8, world: 14 }
 ---

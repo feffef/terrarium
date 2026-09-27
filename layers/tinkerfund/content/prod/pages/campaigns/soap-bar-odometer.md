@@ -230,6 +230,5 @@ several more bars; it is rated for up to 30 before the seal is retired.
 
 ## Shipping
 
-The dish and one insert ship worldwide. A spare insert ships in the same
-package as a full order and is not sold on its own to a new backer, since it
-needs a dish to read it.
+The dish and one insert ship worldwide. A spare insert ships with a Pledge
+and is not sold on its own to a new backer, since it needs a dish to read it.
