@@ -1,0 +1,95 @@
+schemaVersion: 1
+session: session_019yVYHWm1Fzsj3gBFWkHHU1
+startedAt: 2026-09-27T17:48:24Z
+endedAt: 2026-09-27T17:52:53Z
+kind: delegated
+goal: Auto-triage sweep of open issues
+status: completed
+outcome: "7 eligible issues triaged: 3 agent, 3 human, 1 left"
+summary: "Human-invoked /auto-triage (the only human instruction; every label and comment below was applied agent-side under ADR-0022's standing green-light). Listed 21 open issues; wayfinder maps and every labelled issue whose latest comment was AI-authored were skipped. Seven unlabelled/needs-triage issues went to one triage subagent each. Results: #1420, #1355, #1342 to ready-for-agent (no shared files, so no blocked-by links); #1422, #1329, #1372 to ready-for-human (two guard changes that must not go to an unattended session, one policy call); #1375 (a Tinkerfund spec) left unlabelled per the no-label spec convention. No external PRs in scope; no repo changes, so no PR."
+prs: []
+docsRead:
+  - path: .agents/skills/triage/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/triage/AGENT-BRIEF.md
+    reason: (no reason given)
+  - path: .agents/skills/auto-triage/SKILL.md
+    reason: (no reason given)
+  - path: docs/adr/0022-autonomous-triage-sweep.md
+    reason: (no reason given)
+  - path: docs/agents/triage-labels.md
+    reason: (no reason given)
+  - path: docs/agents/guards.md
+    reason: (no reason given)
+  - path: scripts/github-provenance-guard.ts
+    reason: (no reason given)
+  - path: docs/adr/0017-provenance-footer-on-agent-authored-content.md
+    reason: (no reason given)
+  - path: .agents/skills/triage/OUT-OF-SCOPE.md
+    reason: (no reason given)
+  - path: docs/adr/0020-requester-trust-tiers.md
+    reason: (no reason given)
+  - path: scripts/session-trace.ts
+    reason: (no reason given)
+  - path: .agents/skills/wayfinder/SKILL.md
+    reason: (no reason given)
+  - path: docs/agents/issue-tracker.md
+    reason: (no reason given)
+  - path: .agents/skills/prune-trial/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+skillsUsed:
+  - name: auto-triage
+    reason: the sweep itself
+  - name: triage
+    reason: per-issue rules briefed to each subagent
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: "auto-triage's eligibility rule (unlabelled = always eligible) has no skip for a wayfinder spec issue, which carries no triage label by convention, so #1375 surfaces on every sweep and burns a subagent"
+    solution: Add a spec skip next to the wayfinder:map skip in auto-triage/SKILL.md (a one-clause change), or have list-open-issues.ts flag specs
+    severity: minor
+  - description: Subagent briefs repeated ~40 identical lines seven times; the per-issue brief could be a committed template the orchestrator references by path
+    solution: Ship the per-issue unattended brief as a file under the auto-triage Skill and pass only the issue number
+    severity: nit
+  - description: 'SHELL-READ-DETECTION false positive: credited CONTEXT.md from `grep -n -A12 "^### Session$\|^### Session\b" CONTEXT.md | grep -i -A2 "interactive\|delegated\|autonomous" | head -30`, which printed "(Bash completed with no output)" — exactly the #1355 placeholder bug (CONTEXT.md was later read via the Grep tool, so only the shell credit is wrong)'
+    solution: "Fix #1355 (now ready-for-agent): treat the no-output placeholder as empty"
+    severity: moderate
+durationSec: 269
+models:
+  claude-opus-5-5: 56
+toolCounts:
+  Bash: 9
+  ToolSearch: 1
+  mcp__github__list_pull_requests: 1
+  mcp__github__issue_read: 1
+  Agent: 7
+  Skill: 2
+  Grep: 1
+docsReadViaShell:
+  - .agents/skills/triage/SKILL.md
+  - docs/agents/triage-labels.md
+  - docs/agents/guards.md
+  - CONTEXT.md
+  - docs/research/rulebook-migration-table.md
+  - .agents/skills/triage/OUT-OF-SCOPE.md
+  - docs/agents/environment-caveats.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - .agents/skills/wayfinder/SKILL.md
+subagents:
+  - task: "Triage issue #1422"
+  - task: "Triage issue #1420"
+  - task: "Triage issue #1375"
+  - task: "Triage issue #1372"
+  - task: "Triage issue #1355"
+  - task: "Triage issue #1342"
+  - task: "Triage issue #1329"
+gitBranch: claude/auto-triage-sbtnna
+entrypoint: remote_mobile
+cliVersion: 2.1.283
+ideas:
+  - Teach scripts/last-comment-authors.ts to emit an `eligible` boolean (state label + provenance + wayfinder map/spec/assignee skips) so the auto-triage resolve step is one command instead of two scripts plus hand-filtering
+landedBy: Stop
