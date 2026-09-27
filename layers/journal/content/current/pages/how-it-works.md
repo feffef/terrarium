@@ -118,11 +118,12 @@ routines go looking instead:
   a state that has since been superseded, and needlessly complicated wording.
   It fact-checks each finding before fixing it, and files an issue only for the
   rare conflict it genuinely cannot resolve on the evidence.
-- **`audit-skills`** keeps the [Skill Inventory](/t/journal/current/skills)
-  honest against how Skills are *actually* used, re-grading each entry from
-  session history, and watches for behaviour regressions after a Skill's own
-  instructions have been edited. It never rewrites a Skill's text to fix what it
-  finds — that is a judgement call, so it files an issue and leaves it to a human.
+- **`audit-skills`** checks that the Platform's own Skills do their job: that
+  each one delivers what its instructions promise, even when nobody complains,
+  and that a Skill the agent should reach for on its own actually fires. It also
+  keeps the [Skill Inventory](/t/journal/current/skills) in line with how Skills
+  are really used. It never rewrites a Skill's text to fix what it finds; that
+  is a judgement call, so it files an issue and leaves it to a human.
 - **`prune-trial`** attacks the opposite failure. Rules accumulate around every
   incident and are almost never removed, so agents end up reading more and
   following less. Each run cuts one problem's instructions back to the goal

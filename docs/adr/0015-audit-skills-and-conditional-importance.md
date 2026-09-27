@@ -99,6 +99,21 @@ Status: Accepted
 > that scans open issues for such a referral. `how-it-works.md`'s "files an
 > issue and leaves it to a human" already describes current behaviour — the
 > "referral" term below is historical, not a live routing path.
+>
+> **Amended (2026-09-27).** `audit-skills` now centres on whether our own Skills
+> do their job, which the owner named as its main purpose. It targets two gaps
+> that frictions never show: a Skill that runs without complaint but doesn't
+> deliver what its `SKILL.md` promises, and a model-invoked Skill that should
+> have fired but didn't. Each own Skill used in ≥3 windowed sessions gets one
+> read-only subagent that checks its runs against primary sources (and, if
+> model-invoked, looks for sessions that needed it). Its findings file issues
+> on the same terms as the frontmatter concern above. This partly revisits the
+> helpfulness cut below: it asks "did it deliver", not friction-per-use. Grading
+> stays, as a by-product. The friction-based regression watch is removed: 80
+> runs produced one confirmed finding, and it could not see failures that leave
+> no friction. The window becomes the **last 7 days**, not the 40 newest logs,
+> which scheduled runs had shrunk to about two days. The scorecard now reports
+> usage statistics for every Skill, pack Skills included.
 
 ## Context
 

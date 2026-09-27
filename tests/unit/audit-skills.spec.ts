@@ -1,622 +1,193 @@
-// Unit tests for the audit-skills helper's pure core (ADR-0015) — window
-// selection, usage tallying, and the three-source join where correctness bugs
-// would hide. The FS IO is a thin shell over these and is exercised by running
+// Unit tests for the audit-skills helper's pure core (ADR-0015) — the window,
+// the usage join, the behaviour-check pick, and the closure-completeness
+// signals. The FS/GitHub IO is a thin shell over these, exercised by running
 // the Skill.
 import { describe, expect, it } from 'vitest'
 import {
-  bracketSessions,
-  buildRegressionChecks,
-  buildSkillRows,
-  buildSkillSessionFileTotals,
   buildDocReadCounts,
-  buildDocsReadTotals,
-  capSessionDocsRead,
-  MAX_SESSION_DOCS_READ,
-  buildSkillSessionFiles,
-  filterSkillsUsed,
+  buildSkillRows,
   findHumanPromptedClosures,
   findManuallyRescuedClosures,
-  findMisclassifiedKind,
   findOrphanedSessions,
   groupSessionReferences,
   hasHumanPromptedClosure,
   HUMAN_PROMPTED_CLOSURE,
   isSessionLogPath,
+  lastUsed,
   parseCommitFileChanges,
   parseMergedPullRequests,
   parseSessionTrailers,
-  parseSkillEditLog,
-  pullRequestSessionRef,
+  pickBehaviourChecks,
   pickWindow,
+  pullRequestSessionRef,
   REC,
   RESCUED_GAP_HOURS,
   RESOLVED_ORPHANED_SESSIONS,
   resolvedMisfilePath,
   SEP,
   tallyUsage,
-  toSessionFile,
+  toSession,
   type CommitFileChange,
   type InventoryEntry,
-  type RawPullRequestApiRecord,
   type OnDiskSkill,
-  type SessionFile,
+  type RawPullRequestApiRecord,
+  type Session,
   type SessionTrailerRef,
-  type SkillEdit,
-  type UsageHit,
-  type WindowSession,
+  type SkillRow,
 } from '../../scripts/audit-skills.ts'
 
-function sess(over: Partial<WindowSession> = {}): WindowSession {
+function sess(over: Partial<Session> = {}): Session {
   return {
     session: 's',
+    file: 'f.yml',
     kind: 'interactive',
     goal: 'goal',
-    summary: 'summary',
     endedAt: '2026-07-05T10:00:00Z',
     skillsUsed: [],
-    frictions: [],
     humanPromptedClosure: false,
-    entrypoint: '',
     docsRead: [],
     ...over,
   }
 }
 
 describe('pickWindow()', () => {
-  it('keeps the newest n by endedAt, most-recent first', () => {
-    const sessions = [
-      sess({ session: 'a', endedAt: '2026-07-01T00:00:00Z' }),
-      sess({ session: 'b', endedAt: '2026-07-03T00:00:00Z' }),
-      sess({ session: 'c', endedAt: '2026-07-02T00:00:00Z' }),
-    ]
-    expect(pickWindow(sessions, 2).map((s) => s.session)).toEqual(['b', 'c'])
+  const sessions = [
+    sess({ session: 'a', endedAt: '2026-07-01T00:00:00Z' }),
+    sess({ session: 'b', endedAt: '2026-07-03T00:00:00Z' }),
+    sess({ session: 'c', endedAt: '2026-07-02T00:00:00Z' }),
+  ]
+
+  it('keeps sessions ending at or after `since`, newest first', () => {
+    expect(pickWindow(sessions, '2026-07-02T00:00:00Z').map((s) => s.session)).toEqual(['b', 'c'])
+  })
+
+  it('compares instants, not strings, across timezone offsets', () => {
+    expect(pickWindow(sessions, '2026-07-03T01:00:00+02:00').map((s) => s.session)).toEqual(['b'])
   })
 
   it('breaks endedAt ties by session id, deterministically', () => {
-    const sessions = [
-      sess({ session: 'a', endedAt: '2026-07-01T00:00:00Z' }),
-      sess({ session: 'c', endedAt: '2026-07-01T00:00:00Z' }),
-      sess({ session: 'b', endedAt: '2026-07-01T00:00:00Z' }),
-    ]
-    expect(pickWindow(sessions, 3).map((s) => s.session)).toEqual(['c', 'b', 'a'])
+    const tied = ['a', 'c', 'b'].map((session) => sess({ session, endedAt: '2026-07-01T00:00:00Z' }))
+    expect(pickWindow(tied, '2026-07-01T00:00:00Z').map((s) => s.session)).toEqual(['c', 'b', 'a'])
   })
 
   it('does not mutate its input', () => {
-    const sessions = [sess({ session: 'a' }), sess({ session: 'b' })]
     const before = sessions.map((s) => s.session)
-    pickWindow(sessions, 1)
+    pickWindow(sessions, '2026-07-02T00:00:00Z')
     expect(sessions.map((s) => s.session)).toEqual(before)
   })
 })
 
-describe('filterSkillsUsed() — issue #545', () => {
-  const validNames = new Set(['tdd', 'close-session'])
+describe('tallyUsage() / lastUsed()', () => {
+  const sessions = [
+    sess({ session: 's1', endedAt: '2026-07-01T00:00:00Z', skillsUsed: ['blog-post', 'blog-post'] }),
+    sess({ session: 's2', endedAt: '2026-07-03T00:00:00Z', skillsUsed: ['blog-post', 'tdd'] }),
+  ]
 
-  it('drops a skillsUsed entry naming something that is not a real Skill (e.g. "model")', () => {
-    const used = [{ name: 'model', reason: 'used the model' }]
-    expect(filterSkillsUsed(used, validNames)).toEqual([])
+  it('lists each using session once, even when a Skill is named twice in one log', () => {
+    expect(tallyUsage(sessions).get('blog-post')).toEqual(['s1', 's2'])
+    expect(tallyUsage(sessions).get('tdd')).toEqual(['s2'])
   })
 
-  it('keeps a skillsUsed entry naming a real Skill', () => {
-    const used = [{ name: 'tdd', reason: 'red-green-refactor' }]
-    expect(filterSkillsUsed(used, validNames)).toEqual([{ name: 'tdd', reason: 'red-green-refactor' }])
-  })
-
-  it('filters a mixed list down to only the real Skills, preserving order', () => {
-    const used = [
-      { name: 'tdd', reason: 'r1' },
-      { name: 'model', reason: 'r2' },
-      { name: 'close-session', reason: 'r3' },
-    ]
-    expect(filterSkillsUsed(used, validNames)).toEqual([
-      { name: 'tdd', reason: 'r1' },
-      { name: 'close-session', reason: 'r3' },
-    ])
-  })
-
-  it('drops everything against an empty valid-names set', () => {
-    expect(filterSkillsUsed([{ name: 'tdd', reason: 'r' }], new Set())).toEqual([])
-  })
-})
-
-describe('tallyUsage()', () => {
-  it('counts one hit per session that used a Skill, with its kind + goal', () => {
-    const window = [
-      sess({ session: 's1', goal: 'blog', skillsUsed: [{ name: 'blog-post', reason: 'r' }] }),
-      sess({ session: 's2', goal: 'blog again', skillsUsed: [{ name: 'blog-post', reason: 'r' }] }),
-    ]
-    const hits = tallyUsage(window).get('blog-post') as UsageHit[]
-    expect(hits).toHaveLength(2)
-    expect(hits.map((h) => h.session)).toEqual(['s1', 's2'])
-    expect(hits[0]).toEqual({ session: 's1', kind: 'interactive', goal: 'blog' })
-  })
-
-  it('de-dupes a Skill listed twice in the same session', () => {
-    const window = [
-      sess({ session: 's1', skillsUsed: [
-        { name: 'tdd', reason: 'red' },
-        { name: 'tdd', reason: 'green' },
-      ] }),
-    ]
-    expect(tallyUsage(window).get('tdd')).toHaveLength(1)
-  })
-
-  it('ignores empty skill names', () => {
-    const window = [sess({ skillsUsed: [{ name: '', reason: 'r' }] })]
-    expect(tallyUsage(window).size).toBe(0)
+  it('reports the newest endedAt per Skill', () => {
+    expect(lastUsed(sessions).get('blog-post')).toBe('2026-07-03T00:00:00Z')
   })
 })
 
 describe('buildSkillRows()', () => {
   const onDisk = new Map<string, OnDiskSkill>([
-    ['blog-post', { description: 'author a post' }],
-    ['ghost', { description: 'never inventoried' }],
+    ['blog-post', { description: 'author a post', modelInvoked: false }],
+    ['ghost', { description: 'never inventoried', modelInvoked: true }],
   ])
   const inventory = new Map<string, InventoryEntry>([
-    [
-      'blog-post',
-      {
-        category: 'platform-operation',
-        importance: 'specialist',
-        role: 'blogs',
-        observations: [{ date: '2026-07-05', note: 'promoted from supporting per usedIn' }],
-      },
-    ],
+    ['blog-post', { category: 'platform-operation', importance: 'routine', role: 'blogs', observations: [{ date: '2026-07-05', note: 'n' }] }],
     ['retired', { category: 'general-engineering', importance: 'peripheral', role: 'gone from disk', observations: [] }],
   ])
-  const usage = new Map<string, UsageHit[]>([
-    ['blog-post', [{ session: 's1', kind: 'interactive', goal: 'blog' }]],
-  ])
-  const external = new Set<string>(['ghost']) // ghost is a pack Skill
-  const rows = buildSkillRows(onDisk, inventory, usage, external)
+  const old = sess({ session: 'old', endedAt: '2026-06-01T00:00:00Z', skillsUsed: ['blog-post'] })
+  const recent = sess({ session: 'new', endedAt: '2026-07-05T00:00:00Z', skillsUsed: ['blog-post'] })
+  const rows = buildSkillRows(onDisk, inventory, [recent], [old, recent], new Set(['ghost']))
   const row = (n: string) => rows.find((r) => r.name === n)!
 
   it('unions every name across the sources, sorted', () => {
     expect(rows.map((r) => r.name)).toEqual(['blog-post', 'ghost', 'retired'])
   })
 
-  it('joins on-disk description, Inventory grade, and windowed usage', () => {
+  it('joins description, invocation mode, grade, windowed and all-time usage', () => {
     expect(row('blog-post')).toMatchObject({
-      onDisk: true, inventoried: true, importance: 'specialist',
-      description: 'author a post', useCount: 1, external: false,
+      onDisk: true, inventoried: true, external: false, modelInvoked: false, importance: 'routine',
+      description: 'author a post', useCount: 1, usedIn: ['new'], allTimeUses: 2, lastUsed: '2026-07-05T00:00:00Z',
+      observations: [{ date: '2026-07-05', note: 'n' }],
     })
   })
 
-  it('marks pack Skills external (frontmatter not ours to patch)', () => {
-    expect(row('ghost').external).toBe(true)
-    expect(row('blog-post').external).toBe(false)
+  it('flags an uninventoried pack Skill, unused', () => {
+    expect(row('ghost')).toMatchObject({
+      external: true, inventoried: false, modelInvoked: true, useCount: 0, allTimeUses: 0, lastUsed: null, observations: [],
+    })
   })
 
-  it('flags an on-disk Skill with no Inventory entry (coverage gap)', () => {
-    expect(row('ghost')).toMatchObject({ onDisk: true, inventoried: false, importance: null, useCount: 0 })
-  })
-
-  it('threads prior observations through, defaulting to [] when uninventoried', () => {
-    expect(row('blog-post').observations).toEqual([
-      { date: '2026-07-05', note: 'promoted from supporting per usedIn' },
-    ])
-    expect(row('ghost').observations).toEqual([])
-  })
-
-  it('flags an inventoried Skill gone from disk (stale entry)', () => {
+  it('flags an inventoried Skill gone from disk', () => {
     expect(row('retired')).toMatchObject({ onDisk: false, inventoried: true, description: null })
   })
 })
 
-describe('toSessionFile() — external exclusion (ADR-0009 amendment)', () => {
-  const skillNames = new Set(['tdd'])
+describe('pickBehaviourChecks()', () => {
+  const r = (name: string, useCount: number, over: Partial<SkillRow> = {}) =>
+    ({ name, useCount, external: false, onDisk: true, ...over }) as SkillRow
 
-  it('reduces an internal log to a SessionFile, keeping its skills/frictions', () => {
-    const raw = {
-      session: 'session_internal',
-      kind: 'interactive',
-      goal: 'do a thing',
-      summary: '  a   summary ',
-      endedAt: '2026-07-20T00:00:00Z',
-      skillsUsed: [{ name: 'tdd', reason: 'red-green' }],
-      frictions: [{ severity: 'minor', description: 'x' }],
-      entrypoint: 'remote',
-      docsRead: [{ path: 'CLAUDE.md', reason: 'conventions' }],
-    }
-    expect(toSessionFile(raw, 'f.yml', skillNames)).toEqual({
-      session: {
-        session: 'session_internal',
-        kind: 'interactive',
-        goal: 'do a thing',
-        summary: 'a summary',
-        endedAt: '2026-07-20T00:00:00Z',
-        skillsUsed: [{ name: 'tdd', reason: 'red-green' }],
-        frictions: ['minor'],
-        humanPromptedClosure: false,
-        entrypoint: 'remote',
-        docsRead: ['CLAUDE.md'], // paths only — the `reason` prose is dropped
-      },
-      file: 'f.yml',
-    })
-  })
-
-  it('tolerates a log with no docsRead at all (older logs predate the field)', () => {
-    const raw = { session: 's', kind: 'interactive', goal: 'g', endedAt: '2026-07-20T00:00:00Z' }
-    expect(toSessionFile(raw, 'f.yml', skillNames)?.session.docsRead).toEqual([])
-  })
-
-  it('returns null for an external log — excluded from the mining corpus entirely', () => {
-    const raw = {
-      session: 'session_external',
-      kind: 'delegated',
-      goal: 'external contribution',
-      endedAt: '2026-07-20T00:00:00Z',
-      external: true,
-      skillsUsed: [{ name: 'tdd', reason: 'r' }],
-      frictions: [{ severity: 'major', description: 'toolchain friction' }],
-    }
-    expect(toSessionFile(raw, 'f.yml', skillNames)).toBeNull()
-  })
-
-  it('treats external:false as internal (not excluded)', () => {
-    const raw = { session: 's', endedAt: '2026-07-20T00:00:00Z', external: false, skillsUsed: [], frictions: [] }
-    expect(toSessionFile(raw, 'f.yml', skillNames)).not.toBeNull()
-  })
-})
-
-describe('bracketSessions()', () => {
-  const used = (name: string) => [{ name, reason: 'r' }]
-  const sessions = [
-    sess({ session: 'a', endedAt: '2026-07-01T00:00:00Z', skillsUsed: used('our-skill') }),
-    sess({ session: 'b', endedAt: '2026-07-02T00:00:00Z', skillsUsed: used('our-skill') }),
-    sess({ session: 'c', endedAt: '2026-07-03T00:00:00Z', skillsUsed: used('our-skill') }),
-    sess({ session: 'd', endedAt: '2026-07-04T00:00:00Z', skillsUsed: used('our-skill') }),
-    sess({ session: 'e', endedAt: '2026-07-05T00:00:00Z', skillsUsed: used('our-skill') }),
-  ]
-
-  it('splits strictly-before vs at-or-after the edit date', () => {
-    const { before, after } = bracketSessions(sessions, '2026-07-03T00:00:00Z', 'our-skill', 10)
-    expect(before.map((s) => s.session)).toEqual(['a', 'b'])
-    expect(after.map((s) => s.session)).toEqual(['c', 'd', 'e'])
-  })
-
-  it('keeps only the n nearest sessions on each side', () => {
-    const { before, after } = bracketSessions(sessions, '2026-07-03T00:00:00Z', 'our-skill', 1)
-    expect(before.map((s) => s.session)).toEqual(['b'])
-    expect(after.map((s) => s.session)).toEqual(['c'])
-  })
-
-  it('returns empty brackets when the edit date falls outside all session dates', () => {
-    const { before, after } = bracketSessions(sessions, '2020-01-01T00:00:00Z', 'our-skill', 10)
-    expect(before).toEqual([])
-    expect(after.map((s) => s.session)).toEqual(['a', 'b', 'c', 'd', 'e'])
-  })
-
-  it('excludes the edit\'s own authoring session from its after bracket, but not an unrelated one at the same endedAt (issue #1214)', () => {
-    expect(bracketSessions(sessions, '2026-07-03T00:00:00Z', 'our-skill', 10, 'c').after.map((s) => s.session)).toEqual(['d', 'e'])
-    expect(bracketSessions(sessions, '2026-07-03T00:00:00Z', 'our-skill', 10, 'other').after.map((s) => s.session)).toEqual(['c', 'd', 'e'])
-  })
-
-  it('only brackets sessions whose skillsUsed actually names the edited Skill, not merely nearby ones (issue #1237)', () => {
-    const mixed = [
-      sess({ session: 'a', endedAt: '2026-07-01T00:00:00Z', skillsUsed: used('other-skill') }),
-      sess({ session: 'b', endedAt: '2026-07-02T00:00:00Z', skillsUsed: used('our-skill') }),
-      sess({ session: 'c', endedAt: '2026-07-04T00:00:00Z', skillsUsed: used('other-skill') }),
-      sess({ session: 'd', endedAt: '2026-07-05T00:00:00Z', skillsUsed: used('our-skill') }),
-    ]
-    const { before, after } = bracketSessions(mixed, '2026-07-03T00:00:00Z', 'our-skill', 10)
-    expect(before.map((s) => s.session)).toEqual(['b'])
-    expect(after.map((s) => s.session)).toEqual(['d'])
-  })
-
-  it('a `skillsUsed` entry naming a bare-string-like object without a matching `.name` never counts as a match', () => {
-    const s = sess({ session: 'a', endedAt: '2026-07-01T00:00:00Z', skillsUsed: [{ name: 'unrelated', reason: 'r' }] })
-    const { before } = bracketSessions([s], '2026-07-03T00:00:00Z', 'our-skill', 10)
-    expect(before).toEqual([])
-  })
-
-  it('reports a side genuinely short of domain-matching history as-is, rather than padding it with a chronologically-nearer mismatch (issue #1237)', () => {
-    const thin = [
-      sess({ session: 'far', endedAt: '2026-06-01T00:00:00Z', skillsUsed: used('our-skill') }),
-      sess({ session: 'near-mismatch', endedAt: '2026-07-02T23:00:00Z', skillsUsed: used('other-skill') }),
-    ]
-    const { before } = bracketSessions(thin, '2026-07-03T00:00:00Z', 'our-skill', 5)
-    expect(before.map((s) => s.session)).toEqual(['far'])
-  })
-
-  it('returns an empty side when no session in the entire corpus ever used the Skill on that side (issue #1237)', () => {
-    const noneMatch = [
-      sess({ session: 'a', endedAt: '2026-07-01T00:00:00Z', skillsUsed: used('other-skill') }),
-      sess({ session: 'b', endedAt: '2026-07-05T00:00:00Z', skillsUsed: used('other-skill') }),
-    ]
-    const { before, after } = bracketSessions(noneMatch, '2026-07-03T00:00:00Z', 'our-skill', 5)
-    expect(before).toEqual([])
-    expect(after).toEqual([])
-  })
-})
-
-describe('buildRegressionChecks()', () => {
-  const used = (name: string) => [{ name, reason: 'r' }]
-  const sessions = [
-    sess({ session: 'a', endedAt: '2026-07-01T00:00:00Z', skillsUsed: used('our-skill') }),
-    sess({ session: 'b', endedAt: '2026-07-05T00:00:00Z', skillsUsed: used('our-skill') }),
-  ]
-
-  it('skips external (pack) Skills even if edits are known', () => {
-    const edits = new Map<string, SkillEdit[]>([
-      ['pack-skill', [{ sha: 's1', date: '2026-07-03T00:00:00Z', subject: 'edit' }]],
-    ])
-    expect(buildRegressionChecks(sessions, edits, new Set(['pack-skill']))).toEqual({ checks: [], sessions: [] })
-  })
-
-  it('skips a Skill absent from the edits map entirely', () => {
-    expect(buildRegressionChecks(sessions, new Map(), new Set())).toEqual({ checks: [], sessions: [] })
-  })
-
-  it('skips an edit with no session data on either side (empty session history)', () => {
-    const edits = new Map<string, SkillEdit[]>([
-      ['our-skill', [{ sha: 's1', date: '2026-07-03T00:00:00Z', subject: 'edit' }]],
-    ])
-    expect(buildRegressionChecks([], edits, new Set())).toEqual({ checks: [], sessions: [] })
-  })
-
-  it('skips an edit whose Skill no session in the corpus ever used, even with plenty of chronologically-nearby sessions (issue #1237)', () => {
-    const unrelated = [
-      sess({ session: 'a', endedAt: '2026-07-01T00:00:00Z', skillsUsed: used('other-skill') }),
-      sess({ session: 'b', endedAt: '2026-07-05T00:00:00Z', skillsUsed: used('other-skill') }),
-    ]
-    const edits = new Map<string, SkillEdit[]>([
-      ['our-skill', [{ sha: 's1', date: '2026-07-03T00:00:00Z', subject: 'edit' }]],
-    ])
-    expect(buildRegressionChecks(unrelated, edits, new Set())).toEqual({ checks: [], sessions: [] })
-  })
-
-  it('brackets an own Skill edit that falls within the session history, referencing sessions by id', () => {
-    const edits = new Map<string, SkillEdit[]>([
-      ['our-skill', [{ sha: 's1', date: '2026-07-03T00:00:00Z', subject: 'edit' }]],
-    ])
-    const { checks, sessions: pool } = buildRegressionChecks(sessions, edits, new Set())
-    expect(checks).toHaveLength(1)
-    expect(checks[0]).toMatchObject({ skill: 'our-skill', edit: { sha: 's1' }, before: ['a'], after: ['b'] })
-    expect(pool.map((s) => s.session)).toEqual(['a', 'b'])
-  })
-
-  it('brackets only the domain-matching side when the other side has real but unrelated sessions nearby (issue #1237)', () => {
-    const mixed = [
-      sess({ session: 'a', endedAt: '2026-07-01T00:00:00Z', skillsUsed: used('our-skill') }),
-      sess({ session: 'x', endedAt: '2026-07-04T00:00:00Z', skillsUsed: used('other-skill') }),
-    ]
-    const edits = new Map<string, SkillEdit[]>([
-      ['our-skill', [{ sha: 's1', date: '2026-07-03T00:00:00Z', subject: 'edit' }]],
-    ])
-    const { checks, sessions: pool } = buildRegressionChecks(mixed, edits, new Set())
-    // 'x' never used our-skill, so the after bracket is honestly empty rather
-    // than padded with it — the check still fires because 'before' has data.
-    expect(checks[0]).toMatchObject({ before: ['a'], after: [] })
-    expect(pool.map((s) => s.session)).toEqual(['a'])
-  })
-
-  it('caps at the n most recent edits per Skill', () => {
-    const edits = new Map<string, SkillEdit[]>([
-      [
-        'our-skill',
-        [
-          { sha: 's1', date: '2026-07-02T00:00:00Z', subject: 'first' },
-          { sha: 's2', date: '2026-07-03T00:00:00Z', subject: 'second' },
-          { sha: 's3', date: '2026-07-04T00:00:00Z', subject: 'third' },
-        ],
-      ],
-    ])
-    const { checks } = buildRegressionChecks(sessions, edits, new Set(), 10, 2)
-    expect(checks.map((c) => c.edit.sha)).toEqual(['s3', 's2'])
-  })
-
-  it('excludes an edit\'s own authoring session from its after bracket, keeping an unrelated same-time session (issue #1214)', () => {
-    const withAuthor = [
-      sess({ session: 'a', endedAt: '2026-07-01T00:00:00Z', skillsUsed: used('our-skill') }),
-      sess({ session: 'b', endedAt: '2026-07-05T00:00:00Z', skillsUsed: used('our-skill') }),
-    ]
-    const edits = new Map<string, SkillEdit[]>([
-      ['our-skill', [{ sha: 's1', date: '2026-07-03T00:00:00Z', subject: 'edit', session: 'b' }]],
-    ])
-    const { checks } = buildRegressionChecks(withAuthor, edits, new Set())
-    expect(checks[0]).toMatchObject({ before: ['a'], after: [] })
-  })
-
-  it('dedupes a session referenced by more than one Skill\'s bracket into one pool entry', () => {
-    const bothSkills = [
-      sess({ session: 'a', endedAt: '2026-07-01T00:00:00Z', skillsUsed: [...used('skill-one'), ...used('skill-two')] }),
-      sess({ session: 'b', endedAt: '2026-07-05T00:00:00Z', skillsUsed: [...used('skill-one'), ...used('skill-two')] }),
-    ]
-    const edits = new Map<string, SkillEdit[]>([
-      ['skill-one', [{ sha: 's1', date: '2026-07-03T00:00:00Z', subject: 'edit' }]],
-      ['skill-two', [{ sha: 's2', date: '2026-07-04T00:00:00Z', subject: 'edit' }]],
-    ])
-    const { checks, sessions: pool } = buildRegressionChecks(bothSkills, edits, new Set())
-    expect(checks).toHaveLength(2)
-    // session 'b' brackets both edits (after s1, before s2) but appears once in the pool
-    expect(pool.filter((s) => s.session === 'b')).toHaveLength(1)
+  it('picks own, on-disk Skills at or above the threshold', () => {
+    const rows = [r('often', 3), r('rare', 2), r('pack', 9, { external: true }), r('gone', 9, { onDisk: false })]
+    expect(pickBehaviourChecks(rows, 3)).toEqual(['often'])
   })
 })
 
 describe('buildDocReadCounts()', () => {
   it('counts sessions per path, descending, and never a doc twice for one session', () => {
-    expect(
-      buildDocReadCounts([
-        sess({ docsRead: ['CLAUDE.md', 'docs/agents/pr-workflow.md', 'CLAUDE.md'] }),
-        sess({ docsRead: ['CLAUDE.md'] }),
-      ]),
-    ).toEqual({ 'CLAUDE.md': 2, 'docs/agents/pr-workflow.md': 1 })
-  })
-
-  it('omits a never-read doc rather than listing it as 0 — absence is the signal', () => {
-    expect(buildDocReadCounts([sess({ docsRead: ['CLAUDE.md'] })])).not.toHaveProperty('docs/agents/domain.md')
-  })
-})
-
-describe('capSessionDocsRead() / buildDocsReadTotals() — issue #426\'s cap, applied to docsRead', () => {
-  const many = Array.from({ length: MAX_SESSION_DOCS_READ + 5 }, (_, i) => `doc-${i}.md`)
-
-  it('trims an over-long list and records its true length', () => {
-    const window = [sess({ session: 'big', docsRead: many }), sess({ session: 'small', docsRead: ['a.md'] })]
-    const capped = capSessionDocsRead(window)
-    expect(capped[0]!.docsRead).toHaveLength(MAX_SESSION_DOCS_READ)
-    expect(capped[1]!.docsRead).toEqual(['a.md'])
-    expect(buildDocsReadTotals(window)).toEqual({ big: MAX_SESSION_DOCS_READ + 5 })
-  })
-
-  it('leaves an uncapped session out of the totals — absence means complete', () => {
-    expect(buildDocsReadTotals([sess({ session: 'small', docsRead: ['a.md'] })])).toEqual({})
-  })
-
-  it('does not mutate its input, so the tally can still see the uncapped list', () => {
-    const window = [sess({ session: 'big', docsRead: many })]
-    capSessionDocsRead(window)
-    expect(window[0]!.docsRead).toHaveLength(MAX_SESSION_DOCS_READ + 5)
-    expect(Object.keys(buildDocReadCounts(window))).toHaveLength(MAX_SESSION_DOCS_READ + 5)
-  })
-})
-
-describe('buildSkillSessionFiles()', () => {
-  function entry(file: string, over: Partial<WindowSession> = {}): SessionFile {
-    return { session: sess(over), file }
-  }
-
-  it('groups every session file by the Skills it used', () => {
-    const files = [
-      entry('a.yml', { session: 'a', skillsUsed: [{ name: 'tdd', reason: 'r' }] }),
-      entry('b.yml', { session: 'b', skillsUsed: [{ name: 'tdd', reason: 'r' }] }),
-      entry('c.yml', { session: 'c', skillsUsed: [{ name: 'digest', reason: 'r' }] }),
+    const sessions = [
+      sess({ session: 'a', docsRead: ['x.md', 'CLAUDE.md', 'CLAUDE.md'] }),
+      sess({ session: 'b', docsRead: ['CLAUDE.md'] }),
     ]
-    expect(buildSkillSessionFiles(files)).toEqual({
-      tdd: ['a.yml', 'b.yml'],
-      digest: ['c.yml'],
+    expect(Object.entries(buildDocReadCounts(sessions))).toEqual([['CLAUDE.md', 2], ['x.md', 1]])
+  })
+})
+
+describe('toSession() — external exclusion (ADR-0009 amendment)', () => {
+  const skillNames = new Set(['tdd'])
+
+  it('reduces an internal log to a Session: real Skill names only, docsRead paths only', () => {
+    const raw = {
+      session: 'session_internal',
+      kind: 'interactive',
+      goal: 'do a thing',
+      endedAt: '2026-07-20T00:00:00Z',
+      skillsUsed: [{ name: 'tdd', reason: 'red-green' }, { name: 'model', reason: 'not a Skill (issue #545)' }],
+      frictions: [{ severity: 'minor', description: `nudged — ${HUMAN_PROMPTED_CLOSURE}` }],
+      docsRead: [{ path: 'CLAUDE.md', reason: 'conventions' }],
+    }
+    expect(toSession(raw, 'f.yml', skillNames)).toEqual({
+      session: 'session_internal',
+      file: 'f.yml',
+      kind: 'interactive',
+      goal: 'do a thing',
+      endedAt: '2026-07-20T00:00:00Z',
+      skillsUsed: ['tdd'],
+      humanPromptedClosure: true,
+      docsRead: ['CLAUDE.md'],
     })
   })
 
-  it('de-dupes a Skill listed twice within the same session file', () => {
-    const files = [
-      entry('a.yml', {
-        skillsUsed: [
-          { name: 'tdd', reason: 'red' },
-          { name: 'tdd', reason: 'green' },
-        ],
-      }),
-    ]
-    expect(buildSkillSessionFiles(files)).toEqual({ tdd: ['a.yml'] })
+  it('tolerates a log with no docsRead at all (older logs predate the field)', () => {
+    const raw = { session: 's', kind: 'interactive', goal: 'g', endedAt: '2026-07-20T00:00:00Z' }
+    expect(toSession(raw, 'f.yml', skillNames)?.docsRead).toEqual([])
   })
 
-  it('is not bounded by any window — includes every entry passed in', () => {
-    const files = Array.from({ length: 5 }, (_, i) =>
-      entry(`s${i}.yml`, { session: `s${i}`, skillsUsed: [{ name: 'audit-skills', reason: 'r' }] }),
-    )
-    expect(buildSkillSessionFiles(files)['audit-skills']).toHaveLength(5)
+  it('returns null for an external log — excluded from the mining corpus entirely', () => {
+    const raw = { session: 'x', endedAt: '2026-07-20T00:00:00Z', external: true, skillsUsed: [{ name: 'tdd', reason: 'r' }] }
+    expect(toSession(raw, 'f.yml', skillNames)).toBeNull()
   })
 
-  it('caps a very-high-usage Skill at maxFiles, keeping the newest first (issue #426)', () => {
-    const files = Array.from({ length: 6 }, (_, i) =>
-      entry(`s${i}.yml`, {
-        session: `s${i}`,
-        endedAt: `2026-07-0${i + 1}T00:00:00Z`,
-        skillsUsed: [{ name: 'close-session', reason: 'r' }],
-      }),
-    )
-    expect(buildSkillSessionFiles(files, 3)['close-session']).toEqual(['s5.yml', 's4.yml', 's3.yml'])
-  })
-
-  it('does not cap a Skill below the threshold', () => {
-    const files = [
-      entry('a.yml', { session: 'a', endedAt: '2026-07-01T00:00:00Z', skillsUsed: [{ name: 'tdd', reason: 'r' }] }),
-      entry('b.yml', { session: 'b', endedAt: '2026-07-02T00:00:00Z', skillsUsed: [{ name: 'tdd', reason: 'r' }] }),
-    ]
-    expect(buildSkillSessionFiles(files, 3)['tdd']).toEqual(['b.yml', 'a.yml'])
-  })
-})
-
-describe('buildSkillSessionFileTotals()', () => {
-  function entry(file: string, over: Partial<WindowSession> = {}): SessionFile {
-    return { session: sess(over), file }
-  }
-
-  it('counts every hit, uncapped, unlike buildSkillSessionFiles', () => {
-    const files = Array.from({ length: 6 }, (_, i) =>
-      entry(`s${i}.yml`, { session: `s${i}`, skillsUsed: [{ name: 'close-session', reason: 'r' }] }),
-    )
-    expect(buildSkillSessionFileTotals(files)).toEqual({ 'close-session': 6 })
-    expect(buildSkillSessionFiles(files, 3)['close-session']).toHaveLength(3)
-  })
-
-  it('de-dupes a Skill listed twice within the same session file', () => {
-    const files = [
-      entry('a.yml', {
-        skillsUsed: [
-          { name: 'tdd', reason: 'red' },
-          { name: 'tdd', reason: 'green' },
-        ],
-      }),
-    ]
-    expect(buildSkillSessionFileTotals(files)).toEqual({ tdd: 1 })
-  })
-})
-
-describe('parseSkillEditLog()', () => {
-  // Mirrors `git log --name-only --pretty=format:REC%H SEP %P SEP %aI SEP %s SEP %b SEP`.
-  function commitBlock(
-    sha: string,
-    parents: string,
-    date: string,
-    subject: string,
-    paths: string[],
-    body = '',
-  ): string {
-    return `${REC}${sha}${SEP}${parents}${SEP}${date}${SEP}${subject}${SEP}${body}${SEP}\n${paths.join('\n')}`
-  }
-
-  it('attributes a normal (single-parent) commit to every Skill it touches', () => {
-    const raw = commitBlock('c1', 'p1', '2026-07-01T00:00:00Z', 'fix tdd', [
-      '.agents/skills/tdd/SKILL.md',
-      '.agents/skills/tdd/reference.md',
-    ])
-    const edits = parseSkillEditLog(raw)
-    expect(edits.get('tdd')).toEqual([{ sha: 'c1', date: '2026-07-01T00:00:00Z', subject: 'fix tdd' }])
-  })
-
-  it('skips a parentless commit — shallow-clone horizon or true repo root', () => {
-    const raw = commitBlock('boundary', '', '2026-07-01T00:00:00Z', 'grafted boundary', [
-      '.agents/skills/close-session/SKILL.md',
-      '.agents/skills/log-session/SKILL.md',
-    ])
-    expect(parseSkillEditLog(raw).size).toBe(0)
-  })
-
-  it('attributes a merge commit (more than one parent) exactly as before', () => {
-    const raw = commitBlock('m1', 'p1 p2', '2026-07-02T00:00:00Z', 'merge fix', [
-      '.agents/skills/digest/SKILL.md',
-    ])
-    expect(parseSkillEditLog(raw).get('digest')).toEqual([
-      { sha: 'm1', date: '2026-07-02T00:00:00Z', subject: 'merge fix' },
-    ])
-  })
-
-  it('drops only the parentless block, keeping real edits from other commits', () => {
-    const raw = [
-      commitBlock('boundary', '', '2026-07-01T00:00:00Z', 'grafted boundary', [
-        '.agents/skills/close-session/SKILL.md',
-      ]),
-      commitBlock('c2', 'p1', '2026-07-03T00:00:00Z', 'real edit', [
-        '.agents/skills/close-session/SKILL.md',
-      ]),
-    ].join('\n')
-    expect(parseSkillEditLog(raw).get('close-session')).toEqual([
-      { sha: 'c2', date: '2026-07-03T00:00:00Z', subject: 'real edit' },
-    ])
-  })
-
-  it('recovers the authoring session id from the body\'s provenance header or legacy trailer', () => {
-    const raw = [
-      commitBlock('c1', 'p1', '2026-07-01T00:00:00Z', 'fix tdd', ['.agents/skills/tdd/SKILL.md'],
-        '🤖 [Claude](https://claude.ai/code/session_01Abc)\n\nfixes tdd'),
-      commitBlock('c2', 'p1', '2026-07-02T00:00:00Z', 'fix digest', ['.agents/skills/digest/SKILL.md'],
-        'fixes digest\n\nClaude-Session: https://claude.ai/code/session_01Xyz'),
-    ].join('\n')
-    const edits = parseSkillEditLog(raw)
-    expect(edits.get('tdd')).toEqual([{ sha: 'c1', date: '2026-07-01T00:00:00Z', subject: 'fix tdd', session: 'session_01Abc' }])
-    expect(edits.get('digest')).toEqual([{ sha: 'c2', date: '2026-07-02T00:00:00Z', subject: 'fix digest', session: 'session_01Xyz' }])
+  it('treats external:false as internal (not excluded)', () => {
+    const raw = { session: 's', endedAt: '2026-07-20T00:00:00Z', external: false, skillsUsed: [], frictions: [] }
+    expect(toSession(raw, 'f.yml', skillNames)).not.toBeNull()
   })
 })
 
@@ -1119,24 +690,6 @@ describe('findHumanPromptedClosures()', () => {
       { session: 'b', endedAt: '2026-07-12T00:00:00Z' },
     ])
   })
-
-  it('suppresses a dismissed session id but still surfaces a non-dismissed keyword session (issue #540)', () => {
-    const sessions = [
-      sess({ session: 'tracked', endedAt: '2026-07-10T00:00:00Z', humanPromptedClosure: true }),
-      sess({ session: 'fresh', endedAt: '2026-07-12T00:00:00Z', humanPromptedClosure: true }),
-    ]
-    expect(findHumanPromptedClosures(sessions, new Set(['tracked']))).toEqual([
-      { session: 'fresh', endedAt: '2026-07-12T00:00:00Z' },
-    ])
-  })
-
-  it('defaults to DISMISSED_HUMAN_PROMPTED_CLOSURES, not an empty set', () => {
-    const sessions = [
-      sess({ session: 'session_015gQvuX4uBkjpzW9yovabVz', endedAt: '2026-07-14T11:17:23Z', humanPromptedClosure: true }),
-      sess({ session: 'session_01Y11Fou1pRvTW2ucEt1dhX8', endedAt: '2026-07-14T13:21:51Z', humanPromptedClosure: true }),
-    ]
-    expect(findHumanPromptedClosures(sessions)).toEqual([])
-  })
 })
 
 describe('findManuallyRescuedClosures()', () => {
@@ -1207,70 +760,5 @@ describe('findManuallyRescuedClosures()', () => {
     const sessions = [sess({ session: 's', endedAt: '2026-07-13T02:00:00Z' })] // 2h gap
     expect(findManuallyRescuedClosures(refs, sessions, RESCUED_GAP_HOURS)).toEqual([]) // below default 6h
     expect(findManuallyRescuedClosures(refs, sessions, 1)).toHaveLength(1) // above a 1h threshold
-  })
-
-  it('suppresses a dismissed session id — an already-tracked-and-fixed incident (issue #426)', () => {
-    const refs: SessionTrailerRef[] = [{ sha: 'a', date: '2026-07-13T00:00:00Z', session: 'session_fixed' }]
-    const sessions = [sess({ session: 'session_fixed', endedAt: '2026-07-14T00:00:00Z' })] // 24h gap — would flag
-    expect(
-      findManuallyRescuedClosures(refs, sessions, RESCUED_GAP_HOURS, new Set(['session_fixed'])),
-    ).toEqual([])
-  })
-
-  it('defaults to DISMISSED_MANUALLY_RESCUED_CLOSURES, not an empty set', () => {
-    const refs: SessionTrailerRef[] = [
-      { sha: 'a', date: '2026-07-12T18:32:27Z', session: 'session_019pNrzTQb3EV2SJBWXs1bXG' },
-    ]
-    const sessions = [sess({ session: 'session_019pNrzTQb3EV2SJBWXs1bXG', endedAt: '2026-07-13T17:19:05Z' })]
-    expect(findManuallyRescuedClosures(refs, sessions)).toEqual([])
-  })
-
-  it('annotates a resolved entry with resolvedBy, keeping it visible unlike dismissed (issue #447 item 4)', () => {
-    const refs: SessionTrailerRef[] = [{ sha: 'a', date: '2026-07-13T00:00:00Z', session: 'session_triaged' }]
-    const sessions = [sess({ session: 'session_triaged', endedAt: '2026-07-14T00:00:00Z' })] // 24h gap
-    const resolved = new Map([['session_triaged', '#650']])
-    expect(
-      findManuallyRescuedClosures(refs, sessions, RESCUED_GAP_HOURS, new Set(), resolved),
-    ).toEqual([
-      {
-        session: 'session_triaged',
-        endedAt: '2026-07-14T00:00:00Z',
-        lastWorkCommit: '2026-07-13T00:00:00Z',
-        gapHours: 24,
-        resolvedBy: '#650',
-      },
-    ])
-  })
-})
-
-describe('findMisclassifiedKind() — issue #449 Gap 2', () => {
-  it('flags a remote_trigger session authored as anything other than autonomous', () => {
-    const sessions = [
-      sess({ session: 'a', kind: 'interactive', entrypoint: 'remote_trigger', endedAt: '2026-07-13T00:00:00Z' }),
-    ]
-    expect(findMisclassifiedKind(sessions)).toEqual([
-      { session: 'a', kind: 'interactive', entrypoint: 'remote_trigger', endedAt: '2026-07-13T00:00:00Z' },
-    ])
-  })
-
-  it('does not flag a remote_trigger session correctly authored as autonomous', () => {
-    const sessions = [sess({ session: 'a', kind: 'autonomous', entrypoint: 'remote_trigger' })]
-    expect(findMisclassifiedKind(sessions)).toEqual([])
-  })
-
-  it('does not flag a legitimately interactive session that merely lacks remote_trigger', () => {
-    const sessions = [
-      sess({ session: 'a', kind: 'interactive', entrypoint: 'remote' }),
-      sess({ session: 'b', kind: 'interactive', entrypoint: '' }),
-    ]
-    expect(findMisclassifiedKind(sessions)).toEqual([])
-  })
-
-  it('sorts multiple misclassifications oldest-first', () => {
-    const sessions = [
-      sess({ session: 'newer', kind: 'delegated', entrypoint: 'remote_trigger', endedAt: '2026-07-14T00:00:00Z' }),
-      sess({ session: 'older', kind: 'interactive', entrypoint: 'remote_trigger', endedAt: '2026-07-10T00:00:00Z' }),
-    ]
-    expect(findMisclassifiedKind(sessions).map((m) => m.session)).toEqual(['older', 'newer'])
   })
 })

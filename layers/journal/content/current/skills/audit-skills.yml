@@ -3,11 +3,11 @@ category: platform-operation
 importance: routine
 gist: Keeps the list of which Skills matter, and why, up to date.
 role: >-
-  One of the self-improvement Skills, keeping the Skill Inventory honest and watching for
-  behavior regressions after a Skill's own `SKILL.md` edits. Self-merges
-  bright-line-evidenced Inventory changes (ADR-0004's low-risk tier); a
-  citable frontmatter concern gets a filed/commented issue, anything softer
-  becomes a learning/idea instead — never a direct edit (ADR-0015).
+  One of the self-improvement Skills. Checks that our own Skills fire when
+  they should and deliver what they promise, even without frictions, and files
+  what it finds as issues rather than editing a Skill. Keeps the Skill
+  Inventory's grades in line with usage as a by-product, self-merging those
+  edits (ADR-0015).
 observations:
   - date: 2026-07-19
     note: >-
@@ -34,3 +34,11 @@ observations:
       meaningful again under this cadence. Recorded as this run's idea too
       (session log), since implementing it is code work outside this
       Skill's own remit.
+  - date: 2026-09-27
+    note: >-
+      Rewritten at the owner's direction after a review of the 83 session logs
+      that used it (2026-07-06 to 2026-09-27): no grade change since
+      2026-07-27, one confirmed regression-watch finding (#1206), and most of
+      the issues it filed concerned its own tooling. The regression watch is gone; each own
+      Skill used in ≥3 sessions of a 7-day window now gets a behaviour-check
+      subagent. The 2026-09-13 bracketing idea above is superseded.
