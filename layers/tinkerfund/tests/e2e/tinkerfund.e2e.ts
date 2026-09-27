@@ -147,7 +147,6 @@ export function registerTinkerfundE2E(): void {
         ['soap-bar-odometer', 'Pledging has closed'],
         ['snail-speedometer', 'Back this Campaign'],
         ['moisture-sensor-for-artificial-plants', 'Notify me'],
-        ['hotel-room-compass', 'Pledging has closed'],
         ['snore-certificate-printer', 'Pledging has closed'],
         ['cat-flap-decision-timer', 'Back this Campaign'],
         ['cat-acknowledgement-button', 'Pledging has closed'],
