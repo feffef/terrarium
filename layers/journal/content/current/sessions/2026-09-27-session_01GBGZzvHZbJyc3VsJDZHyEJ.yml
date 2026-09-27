@@ -1,0 +1,71 @@
+schemaVersion: 1
+session: session_01GBGZzvHZbJyc3VsJDZHyEJ
+startedAt: 2026-09-27T14:28:32Z
+endedAt: 2026-09-27T14:37:47Z
+kind: delegated
+goal: Write and land one blog post
+status: in-review
+outcome: "Karen post on Tinkerfund review gaps, PR #1431"
+summary: "Kicked off by a bare /blog-post command (a single kickoff; from inside the session I cannot tell whether a person or a schedule sent it, so this is logged as delegated), with no further human input. Everything after that was agent-initiated, following the Skill. A0 rotation: last=kevin, eligible=david/eyra/karen. I drafted three candidates: Eyra on Tinkerfund opening, Karen on per-story reviews missing money bugs (PRs 1402/1406), and David on the three-model Campaign pipeline (PR 1429). A fresh Sonnet reader picked Karen. A Sonnet fact-check found 3 wrong claims out of 19; I cut the defineTenant paragraph and fixed a round count. gate:scoped passed (full, 136 e2e). I opened PR 1431 and posted the verdict comment."
+prs: []
+docsRead:
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-09-27-every-review-said-yes-the-discounts-disagreed.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-26-session_01648DQZcyo8J5TBnQCYMzMM.yml
+    reason: (no reason given)
+  - path: shared/expand.ts
+    reason: (no reason given)
+  - path: layers/tinkerfund/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/tinkerfund/content/prod/pages/how-it-works.md
+    reason: (no reason given)
+  - path: CONTEXT.md
+    reason: (no reason given)
+skillsUsed:
+  - name: blog-post
+    reason: the run itself
+  - name: close-session
+    reason: closure at PR-open
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: My Karen draft claimed deleting defineTenant() switched off manifest checks; defineTenant is an identity function and validation runs in expand(). The session log's own friction line ("silently opting a Tenant out of Platform manifest validation") says the same wrong thing, and I took it on trust.
+    solution: Caught by the step-7 fact-check and cut. Read the function before describing what it does; the 2026-09-26 session log's defineTenant friction is itself inaccurate.
+    severity: minor
+  - description: "Passed run_in_background: false to the Agent tool and it was blocked by the #835 guard; I relaunched without the flag."
+    solution: Guard worked as designed; omit the flag.
+    severity: nit
+  - description: I wrote 'checkout lives in one story, discounts in another' from memory; checkout and Promotions are one story (#1384). I caught it myself against PR 1402's story table.
+    solution: Map each story claim to PR 1402's table before writing.
+    severity: nit
+durationSec: 555
+models:
+  claude-opus-5-5: 82
+toolCounts:
+  Bash: 28
+  ToolSearch: 1
+  mcp__github__pull_request_read: 3
+  Agent: 3
+  Read: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  mcp__github__add_issue_comment: 1
+  Skill: 2
+  Grep: 2
+docsReadViaShell:
+  - layers/tinkerfund/CONTEXT.md
+  - CONTEXT.md
+  - docs/agents/pr-workflow.md
+subagents:
+  - task: Outside reader picks best draft
+    model: sonnet
+  - task: Outside reader picks best draft
+    model: sonnet
+  - task: Fact-check Karen's post
+    model: sonnet
+gitBranch: claude/blog-post-ls4hyx
+entrypoint: remote_mobile
+cliVersion: 2.1.283
+landedBy: Stop
