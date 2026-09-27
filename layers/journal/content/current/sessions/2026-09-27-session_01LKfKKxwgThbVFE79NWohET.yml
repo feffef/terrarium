@@ -1,0 +1,309 @@
+schemaVersion: 1
+session: session_01LKfKKxwgThbVFE79NWohET
+startedAt: 2026-09-27T06:56:11Z
+endedAt: 2026-09-27T12:28:38Z
+kind: interactive
+goal: Add twelve-plus Tinkerfund Campaigns via judged workflow
+status: in-review
+outcome: 19 Campaigns in PR 1429
+summary: "Human-instructed via /tinkerfund-campaign: coordinate at least twelve new Campaigns with a three-model (Sonnet/Opus/Fable) ideate, judge, write, illustrate, final-judge pipeline on the workflow engine; the user chose \"land all that pass\", Sonnet text / Fable figures, one combined PR, and later asked to parallelise drawings and then to stop redrawing and screenshotting near the usage limit. Agent-initiated within that brief: dropping Passport Tracker Tracker (0/3 passes), renumbering, a fix pass from judges' notes, seven targeted redraws, de-templating Snail Speedometer, and e2e updates. gate:scoped passed (138 e2e); PR 1429 opened."
+prs:
+  - "1429"
+docsRead:
+  - path: .claude/skills/tinkerfund-campaign/ILLUSTRATION.md
+    reason: (no reason given)
+  - path: .agents/skills/tinkerfund-campaign/tools/lib.mjs
+    reason: (no reason given)
+  - path: .claude/skills/tinkerfund-campaign/SKILL.md
+    reason: (no reason given)
+  - path: layers/tinkerfund/content/prod/pages/campaigns/sleep-confirmation-clock.md
+    reason: (read before editing)
+  - path: layers/tinkerfund/content/prod/comments/sleep-confirmation-clock.yml
+    reason: (read before editing)
+  - path: layers/tinkerfund/content/prod/updates/sleep-confirmation-clock.yml
+    reason: (no reason given)
+  - path: layers/tinkerfund/content/prod/pages/campaigns/automatic-sheep-counter.md
+    reason: (read before editing)
+  - path: layers/tinkerfund/content/prod/comments/automatic-sheep-counter.yml
+    reason: (read before editing)
+  - path: layers/tinkerfund/content/prod/pages/campaigns/delayed-mirror.md
+    reason: (read before editing)
+  - path: layers/tinkerfund/content/prod/comments/delayed-mirror.yml
+    reason: (read before editing)
+  - path: layers/tinkerfund/content/prod/updates/delayed-mirror.yml
+    reason: (read before editing)
+  - path: layers/tinkerfund/content/prod/pages/campaigns/snail-speedometer.md
+    reason: (read before editing)
+  - path: layers/tinkerfund/content/prod/comments/snail-speedometer.yml
+    reason: (read before editing)
+  - path: layers/tinkerfund/content/prod/updates/snail-speedometer.yml
+    reason: (read before editing)
+  - path: layers/tinkerfund/content/prod/pages/campaigns/grass-growth-notifier.md
+    reason: (read before editing)
+  - path: layers/tinkerfund/content/prod/comments/grass-growth-notifier.yml
+    reason: (read before editing)
+  - path: layers/tinkerfund/content/prod/updates/grass-growth-notifier.yml
+    reason: (read before editing)
+  - path: layers/tinkerfund/content/prod/inventors/gwen-ashdown.yml
+    reason: (no reason given)
+  - path: layers/tinkerfund/content/prod/pages/campaigns/hotel-room-compass.md
+    reason: (read before editing)
+  - path: .agents/skills/tinkerfund-campaign/tools/preview.mjs
+    reason: (no reason given)
+  - path: .agents/skills/tinkerfund-campaign/tools/apply.mjs
+    reason: (no reason given)
+  - path: layers/tinkerfund/content/prod/pages/campaigns/motorised-sticky-note-stand.md
+    reason: (read before editing)
+  - path: layers/tinkerfund/content/prod/pages/campaigns/occupied-sign-for-litter-boxes.md
+    reason: (no reason given)
+  - path: layers/tinkerfund/content/prod/pages/campaigns/snore-certificate-printer.md
+    reason: (read before editing)
+  - path: layers/tinkerfund/content/prod/comments/snore-certificate-printer.yml
+    reason: (read before editing)
+  - path: layers/tinkerfund/content/prod/updates/snore-certificate-printer.yml
+    reason: (read before editing)
+  - path: .agents/skills/tinkerfund-campaign/tools/crowd.mjs
+    reason: (no reason given)
+  - path: layers/tinkerfund/content/prod/pages/campaigns/soap-bar-odometer.md
+    reason: (read before editing)
+  - path: layers/tinkerfund/content/prod/comments/soap-bar-odometer.yml
+    reason: (read before editing)
+  - path: layers/tinkerfund/content/prod/updates/soap-bar-odometer.yml
+    reason: (read before editing)
+  - path: layers/tinkerfund/content/prod/inventors/annika-sorensen.yml
+    reason: (no reason given)
+  - path: layers/tinkerfund/content/prod/updates/automatic-sheep-counter.yml
+    reason: (no reason given)
+  - path: scripts/screenshot.ts
+    reason: (no reason given)
+  - path: layers/tinkerfund/content/prod/inventors/ines-cardoso.yml
+    reason: (no reason given)
+  - path: layers/tinkerfund/content/prod/updates/occupied-sign-for-litter-boxes.yml
+    reason: (read before editing)
+  - path: layers/tinkerfund/content/prod/comments/occupied-sign-for-litter-boxes.yml
+    reason: (read before editing)
+  - path: layers/tinkerfund/content/prod/pages/campaigns/cat-acknowledgement-button.md
+    reason: (read before editing)
+  - path: layers/tinkerfund/content/prod/comments/cat-acknowledgement-button.yml
+    reason: (read before editing)
+  - path: layers/tinkerfund/content/prod/updates/cat-acknowledgement-button.yml
+    reason: (read before editing)
+  - path: layers/tinkerfund/content/prod/pages/campaigns/backup-suitcase.md
+    reason: (read before editing)
+  - path: layers/tinkerfund/content/prod/comments/backup-suitcase.yml
+    reason: (read before editing)
+  - path: layers/tinkerfund/content/prod/updates/backup-suitcase.yml
+    reason: (no reason given)
+  - path: layers/tinkerfund/content/prod/inventors/priya-raman.yml
+    reason: (read before editing)
+  - path: layers/tinkerfund/content/prod/pages/campaigns/inbox-zero-tray.md
+    reason: (read before editing)
+  - path: layers/tinkerfund/content/prod/updates/inbox-zero-tray.yml
+    reason: (read before editing)
+  - path: layers/tinkerfund/content/prod/comments/inbox-zero-tray.yml
+    reason: (read before editing)
+  - path: layers/tinkerfund/content/prod/inventors/noor-haddad.yml
+    reason: (no reason given)
+  - path: layers/tinkerfund/schemas.ts
+    reason: (no reason given)
+  - path: layers/tinkerfund/content/prod/updates/cat-flap-decision-timer.yml
+    reason: (read before editing)
+  - path: layers/tinkerfund/content/prod/promotions/cat-flap-decision-timer.yml
+    reason: (no reason given)
+  - path: layers/tinkerfund/content/prod/pages/campaigns/cat-flap-decision-timer.md
+    reason: (read before editing)
+  - path: layers/tinkerfund/content/prod/pages/campaigns/meal-invites-for-cats.md
+    reason: (read before editing)
+  - path: layers/tinkerfund/content/prod/updates/meal-invites-for-cats.yml
+    reason: (read before editing)
+  - path: layers/tinkerfund/content/prod/comments/meal-invites-for-cats.yml
+    reason: (read before editing)
+  - path: layers/tinkerfund/content/prod/updates/goldfish-quarterly-review.yml
+    reason: (no reason given)
+  - path: layers/tinkerfund/content/prod/comments/goldfish-quarterly-review.yml
+    reason: (read before editing)
+  - path: layers/tinkerfund/content/prod/pages/campaigns/goldfish-quarterly-review.md
+    reason: (read before editing)
+  - path: layers/tinkerfund/content/prod/pages/campaigns/passport-tracker-tracker.md
+    reason: (no reason given)
+skillsUsed:
+  - name: tinkerfund-campaign
+    reason: the task's own Skill
+  - name: workflow-authoring
+    reason: user asked for the workflow engine
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Workflow engine caps concurrency at CPUs-2, which is 2 on this 4-CPU container, so 20 drawings queued two at a time
+    solution: Stopped the workflow and fanned drawings out as parallel Agent calls; note the cap in workflow-authoring or check nproc before choosing the engine for wide fan-outs
+    severity: moderate
+  - description: All ten parallel Fable illustrators died on a session usage limit (HTTP 429) mid-drawing; resumed after reset via SendMessage
+    solution: Budget model usage before fanning out many Fable agents; scratchpad banking of passes made resumption cheap
+    severity: moderate
+  - description: tinkerfund-campaign preview.mjs sizes sheet.png at 60+330px per figure but cards render ~430px, so figures past the second are cut off; five illustrators and I each worked around it
+    solution: Fix the sheet height in .agents/skills/tinkerfund-campaign/tools/preview.mjs (file an issue; tool is Tenant tooling)
+    severity: moderate
+  - description: My until-loop used pgrep -f preview.mjs, which matched its own shell command line and never exited
+    solution: Wait on a log completion marker instead of pgrep -f on a string present in the waiting command
+    severity: minor
+  - description: The stop hook demanded a commit after nearly every turn while agents were still writing, producing many WIP commits on the branch
+    solution: Accept WIP commits or squash on merge; nothing to fix in the repo
+    severity: nit
+  - description: Fix agents occasionally introduced banned words (a fixer wrote "Ordered") and judges disagreed on the dark-theme black/white swap convention
+    solution: Grep new content for order/product before landing; record the white-part dark-theme convention in ILLUSTRATION.md
+    severity: minor
+durationSec: 19947
+models:
+  claude-opus-5-5: 294
+  <synthetic>: 12
+toolCounts:
+  AskUserQuestion: 1
+  Skill: 3
+  Bash: 73
+  Read: 4
+  Workflow: 2
+  ToolSearch: 3
+  TaskStop: 2
+  Agent: 37
+  SendMessage: 11
+  Edit: 1
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 2
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+filesEdited:
+  - layers/tinkerfund/tests/e2e/tinkerfund.e2e.ts
+  - layers/tinkerfund/content/prod/pages/campaigns/sleep-confirmation-clock.md
+  - layers/tinkerfund/content/prod/comments/sleep-confirmation-clock.yml
+  - layers/tinkerfund/content/prod/pages/campaigns/delayed-mirror.md
+  - layers/tinkerfund/content/prod/comments/delayed-mirror.yml
+  - layers/tinkerfund/content/prod/updates/delayed-mirror.yml
+  - layers/tinkerfund/content/prod/pages/campaigns/snail-speedometer.md
+  - layers/tinkerfund/content/prod/updates/snail-speedometer.yml
+  - layers/tinkerfund/content/prod/comments/snail-speedometer.yml
+  - layers/tinkerfund/content/prod/pages/campaigns/motorised-sticky-note-stand.md
+  - layers/tinkerfund/content/prod/comments/fridge-light-verification-camera.yml
+  - layers/tinkerfund/content/prod/updates/fridge-light-verification-camera.yml
+  - layers/tinkerfund/content/prod/pages/campaigns/fridge-light-verification-camera.md
+  - layers/tinkerfund/content/prod/pages/campaigns/snore-certificate-printer.md
+  - layers/tinkerfund/content/prod/comments/snore-certificate-printer.yml
+  - layers/tinkerfund/content/prod/updates/snore-certificate-printer.yml
+  - layers/tinkerfund/content/prod/comments/automatic-sheep-counter.yml
+  - layers/tinkerfund/content/prod/pages/campaigns/automatic-sheep-counter.md
+  - layers/tinkerfund/content/prod/pages/campaigns/soap-bar-odometer.md
+  - layers/tinkerfund/content/prod/comments/soap-bar-odometer.yml
+  - layers/tinkerfund/content/prod/updates/soap-bar-odometer.yml
+  - layers/tinkerfund/content/prod/updates/occupied-sign-for-litter-boxes.yml
+  - layers/tinkerfund/content/prod/comments/occupied-sign-for-litter-boxes.yml
+  - layers/tinkerfund/content/prod/pages/campaigns/goldfish-quarterly-review.md
+  - layers/tinkerfund/content/prod/comments/goldfish-quarterly-review.yml
+  - layers/tinkerfund/content/prod/pages/campaigns/cat-acknowledgement-button.md
+  - layers/tinkerfund/content/prod/updates/cat-acknowledgement-button.yml
+  - layers/tinkerfund/content/prod/comments/cat-acknowledgement-button.yml
+  - layers/tinkerfund/content/prod/pages/campaigns/moisture-sensor-for-artificial-plants.md
+  - layers/tinkerfund/content/prod/comments/hotel-room-compass.yml
+  - layers/tinkerfund/content/prod/updates/hotel-room-compass.yml
+  - layers/tinkerfund/content/prod/pages/campaigns/hotel-room-compass.md
+  - layers/tinkerfund/content/prod/pages/campaigns/strand-count-pasta-measure.md
+  - layers/tinkerfund/content/prod/updates/strand-count-pasta-measure.yml
+  - layers/tinkerfund/content/prod/comments/strand-count-pasta-measure.yml
+  - layers/tinkerfund/content/prod/pages/campaigns/backup-suitcase.md
+  - layers/tinkerfund/content/prod/comments/backup-suitcase.yml
+  - layers/tinkerfund/content/prod/inventors/priya-raman.yml
+  - layers/tinkerfund/content/prod/pages/campaigns/inbox-zero-tray.md
+  - layers/tinkerfund/content/prod/comments/inbox-zero-tray.yml
+  - layers/tinkerfund/content/prod/updates/inbox-zero-tray.yml
+  - layers/tinkerfund/content/prod/pages/campaigns/grass-growth-notifier.md
+  - layers/tinkerfund/content/prod/comments/grass-growth-notifier.yml
+  - layers/tinkerfund/content/prod/updates/grass-growth-notifier.yml
+  - layers/tinkerfund/content/prod/pages/campaigns/cat-flap-decision-timer.md
+  - layers/tinkerfund/content/prod/updates/cat-flap-decision-timer.yml
+  - layers/tinkerfund/content/prod/pages/campaigns/meal-invites-for-cats.md
+  - layers/tinkerfund/content/prod/updates/meal-invites-for-cats.yml
+  - layers/tinkerfund/content/prod/comments/meal-invites-for-cats.yml
+docsReadViaShell:
+  - .agents/skills/tinkerfund-campaign/ILLUSTRATION.md
+  - .agents/skills/tinkerfund-campaign/SKILL.md
+  - layers/tinkerfund/CONTEXT.md
+subagents:
+  - task: Draw backup-suitcase figures
+    model: fable
+  - task: Draw cat-acknowledgement-button figures
+    model: fable
+  - task: Draw cat-flap-decision-timer figures
+    model: fable
+  - task: Draw grass-growth-notifier figures
+    model: fable
+  - task: Draw hotel-room-compass figures
+    model: fable
+  - task: Draw occupied-sign-for-litter-boxes figures
+    model: fable
+  - task: Draw passport-tracker-tracker figures
+    model: fable
+  - task: Draw sleep-confirmation-clock figures
+    model: fable
+  - task: Draw snail-speedometer figures
+    model: fable
+  - task: Draw snore-certificate-printer figures
+    model: fable
+  - task: Fix automatic-sheep-counter
+    model: sonnet
+  - task: Fix backup-suitcase
+    model: sonnet
+  - task: Fix cat-acknowledgement-button
+    model: sonnet
+  - task: Fix cat-flap-decision-timer
+    model: sonnet
+  - task: Fix delayed-mirror
+    model: sonnet
+  - task: Fix fridge-light-verification-camera
+    model: sonnet
+  - task: Fix goldfish-quarterly-review
+    model: sonnet
+  - task: Fix grass-growth-notifier
+    model: sonnet
+  - task: Fix hotel-room-compass
+    model: sonnet
+  - task: Fix inbox-zero-tray
+    model: sonnet
+  - task: Fix meal-invites-for-cats
+    model: sonnet
+  - task: Fix moisture-sensor Campaign
+    model: sonnet
+  - task: Fix motorised-sticky-note-stand
+    model: sonnet
+  - task: Fix occupied-sign-for-litter-boxes
+    model: sonnet
+  - task: Fix sleep-confirmation-clock
+    model: sonnet
+  - task: Fix snail-speedometer
+    model: sonnet
+  - task: Fix snore-certificate-printer
+    model: sonnet
+  - task: Fix soap-bar-odometer
+    model: sonnet
+  - task: Fix strand-count-pasta-measure
+    model: sonnet
+  - task: Redraw goldfish binder
+    model: fable
+  - task: Redraw sticky-note stand hero
+    model: fable
+  - task: Redraw fridge camera housings
+    model: fable
+  - task: Fix grass notifier labels
+    model: fable
+  - task: Redraw cat paw
+    model: fable
+  - task: Unify sleep clock ash tones
+    model: fable
+  - task: De-duplicate snail speedometer
+    model: sonnet
+  - task: Redraw cat flap in a door
+    model: fable
+gitBranch: claude/new-session-glbnnd
+entrypoint: remote_mobile
+cliVersion: 2.1.283
+ideas:
+  - Add a lint to validate:content (tinkerfund only) that flags "order"/"product" in Campaign copy, comments and Updates, since the Voice rule is repeatedly broken by writers and fixers and currently only human-checked
+landedBy: Stop
