@@ -272,8 +272,8 @@ body.bl-page {
   .bl.bl--front .net-tags--wide { display: none; }
   .bl.bl--front .net-tags--narrow { display: block; margin-top: 0.8rem; padding-top: 0.7rem; }
   .bl.bl--front .bl-network .net-label { margin-bottom: 0.6rem; }
-  .bl.bl--front .bl-network .net-links { flex-wrap: nowrap; gap: 0.3rem; }
-  .bl.bl--front .bl-network .net-links a { padding: 0.3rem 0.55rem; font-size: 0.76rem; gap: 0.3rem; }
+  .bl.bl--front .bl-network .net-cards { gap: 0.45rem; }
+  .bl.bl--front .bl-network .net-cards a { padding: 0.5rem 0.65rem; }
   .bl.bl--front .net-tags summary { cursor: pointer; margin: 0; }
   .bl.bl--front .net-tags[open] summary { margin-bottom: 0.6rem; }
 }
