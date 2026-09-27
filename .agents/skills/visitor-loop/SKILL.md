@@ -83,8 +83,10 @@ important finding left unfixed, and the PR is merged or escalated.
 ## 6. File the rest, then close
 
 For each consensus finding marked *out of remit*, open one issue
-(`needs-triage`) unless one already exists. Unbuilt ideas and single-visitor
-findings are not filed — tomorrow's visitors will raise them again if they
-matter. Done when every *out of remit* finding links to an issue.
+(`needs-triage`) unless one already exists. Every unbuilt idea and
+single-visitor finding that survived step 3's filters goes into the session
+log's `ideas` instead: one short line each, a finding paired with a proposed
+fix, readable without this run's context. Done when every *out of remit*
+finding links to an issue and the rest are in `ideas`.
 
 Then invoke `close-session`.
