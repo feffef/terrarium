@@ -2,7 +2,7 @@
 title: Soap Bar Odometer
 description: A soap dish that tracks the distance each bar of soap has travelled in your hands.
 campaign:
-  registry: TF-0015
+  registry: TF-0014
   inventor: ines-cardoso
   category: bathroom
   goal: 14000

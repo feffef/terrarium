@@ -2,7 +2,7 @@
 title: Goldfish Quarterly Review
 description: A tank camera that sends a weekly performance report on your goldfish against its quarterly objectives.
 campaign:
-  registry: TF-0013
+  registry: TF-0012
   inventor: clara-whitcombe
   category: pets
   goal: 10000

@@ -2,7 +2,7 @@
 title: Automatic Sheep Counter
 description: A bedside unit that counts sheep for you through the night and shows the total in the morning.
 campaign:
-  registry: TF-0011
+  registry: TF-0010
   inventor: tomasz-wrobel
   category: sleep
   goal: 16000

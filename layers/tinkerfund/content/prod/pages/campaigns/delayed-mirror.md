@@ -2,7 +2,7 @@
 title: Delayed Mirror
 description: A bathroom mirror that shows you as you were three seconds ago.
 campaign:
-  registry: TF-0012
+  registry: TF-0011
   inventor: ines-cardoso
   category: bathroom
   goal: 40000

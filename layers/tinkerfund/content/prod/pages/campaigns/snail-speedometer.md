@@ -2,7 +2,7 @@
 title: Snail Speedometer
 description: A garden radar gun calibrated for snails, reading in millimetres per minute.
 campaign:
-  registry: TF-0016
+  registry: TF-0015
   inventor: gwen-ashdown
   category: garden
   goal: 15500

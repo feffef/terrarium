@@ -2,7 +2,7 @@
 title: Backup Suitcase
 description: A cabin suitcase containing a smaller, identical suitcase, in case the first is lost.
 campaign:
-  registry: TF-0025
+  registry: TF-0023
   inventor: priya-raman
   category: travel
   goal: 35000

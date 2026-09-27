@@ -2,7 +2,7 @@
 title: Grass Growth Notifier
 description: A lawn stake that sends a push notification each time the grass grows a tenth of a millimetre.
 campaign:
-  registry: TF-0024
+  registry: TF-0022
   inventor: gwen-ashdown
   category: garden
   goal: 20000

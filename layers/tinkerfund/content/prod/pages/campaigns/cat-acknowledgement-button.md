@@ -2,7 +2,7 @@
 title: Cat Acknowledgement Button
 description: A floor button a cat can press to confirm it heard you.
 campaign:
-  registry: TF-0021
+  registry: TF-0019
   inventor: declan-murphy
   category: pets
   goal: 40000

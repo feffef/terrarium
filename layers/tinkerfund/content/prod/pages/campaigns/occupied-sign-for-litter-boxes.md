@@ -2,7 +2,7 @@
 title: Occupied Sign for Litter Boxes
 description: An illuminated OCCUPIED sign that lights above the litter box while a cat is inside.
 campaign:
-  registry: TF-0022
+  registry: TF-0020
   inventor: beatrix-hollis
   category: pets
   goal: 9000

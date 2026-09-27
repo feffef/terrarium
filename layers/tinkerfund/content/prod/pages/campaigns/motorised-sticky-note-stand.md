@@ -2,7 +2,7 @@
 title: Motorised Sticky Note Stand
 description: A height-adjustable, four-motor arm for one sticky note.
 campaign:
-  registry: TF-0014
+  registry: TF-0013
   inventor: oskar-lindgren
   category: desk
   goal: 30000

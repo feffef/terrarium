@@ -2,7 +2,7 @@
 title: Cat Flap Decision Timer
 description: A cat flap frame that records how long the cat took to decide.
 campaign:
-  registry: TF-0020
+  registry: TF-0018
   inventor: declan-murphy
   category: pets
   goal: 12000
@@ -75,13 +75,13 @@ campaign:
         <path d="M185.1 254.7V280.2A4.1 2.3 0 0 0 189.2 282.6V257A4.1 2.3 0 0 1 185.1 254.7Z" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" />
         <path d="M189.2 257V282.6A4.1 2.3 0 0 0 193.2 280.2V254.7A4.1 2.3 0 0 1 189.2 257Z" style="fill:var(--tf-ink)" />
         <ellipse cx="189.2" cy="254.7" rx="4.1" ry="2.3" style="fill:color-mix(in srgb, var(--tf-ink) 45%, var(--tf-surface))" />
-        <path d="M117.3 219L141.4 232.9" style="fill:none;stroke:var(--tf-link);stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:4 3" />
-        <ellipse cx="152.5" cy="264.5" rx="13.9" ry="4.6" style="fill:var(--tf-line)" />
-        <path d="M142.6 262.5q0 -20.9 9.9 -23.5q9.9 2.7 9.9 23.5z" style="fill:var(--tf-ink)" />
-        <path d="M160.6 258.5q11.6 -3.5 9.3 -16.2" style="fill:none;stroke:var(--tf-ink);stroke-width:2.32;stroke-linecap:round;stroke-linejoin:round;fill:none" />
-        <circle cx="152.5" cy="233.6" r="7.5" style="fill:var(--tf-ink)" />
-        <path d="M145.5 230.1L144.4 222L150.8 227.2Z" style="fill:var(--tf-ink)" />
-        <path d="M159.5 230.1L160.6 222L154.2 227.2Z" style="fill:var(--tf-ink)" />
+        <path d="M117.3 219L131.4 227.1" style="fill:none;stroke:var(--tf-link);stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:4 3" />
+        <ellipse cx="152.5" cy="264.5" rx="26.4" ry="8.8" style="fill:var(--tf-line)" />
+        <path d="M133.8 262.5q0 -39.6 18.7 -44.7q18.7 5.1 18.7 44.7z" style="fill:var(--tf-ink)" />
+        <path d="M167.9 254.9q22 -6.6 17.6 -30.9" style="fill:none;stroke:var(--tf-ink);stroke-width:4.4079999999999995;stroke-linecap:round;stroke-linejoin:round;fill:none" />
+        <circle cx="152.5" cy="207.6" r="14.3" style="fill:var(--tf-ink)" />
+        <path d="M139.3 200.9L137.1 185.5L149.2 195.4Z" style="fill:var(--tf-ink)" />
+        <path d="M165.7 200.9L167.9 185.5L155.8 195.4Z" style="fill:var(--tf-ink)" />
         <g style="stroke:none;fill:var(--tf-muted);font:600 10px var(--tf-mono);letter-spacing:.06em;text-anchor:middle"><text x="202.7" y="56.2">INDOORS · 03:41 · IN · DECIDING</text></g>
     - style: isometric
       caption: "The spare beam pair, for a second flap covered later, and the decision log export, which has no address."

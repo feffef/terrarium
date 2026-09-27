@@ -2,7 +2,7 @@
 title: Moisture Sensor for Artificial Plants
 description: A soil probe for plastic plants that confirms, every hour, that they do not need watering.
 campaign:
-  registry: TF-0017
+  registry: TF-0016
   inventor: hugo-vermeer
   category: garden
   goal: 8000

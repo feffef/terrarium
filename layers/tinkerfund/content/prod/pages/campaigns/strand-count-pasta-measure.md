@@ -2,7 +2,7 @@
 title: Strand-Count Pasta Measure
 description: A kitchen scale that weighs spaghetti in strands, to a resolution of one.
 campaign:
-  registry: TF-0010
+  registry: TF-0009
   inventor: henrik-aalto
   category: kitchen
   goal: 12000

@@ -2,7 +2,7 @@
 title: Snore Certificate Printer
 description: A bedside meter that prints a certificate of the night's loudest snore.
 campaign:
-  registry: TF-0019
+  registry: TF-0017
   inventor: annika-sorensen
   category: sleep
   goal: 33000
@@ -106,7 +106,7 @@ campaign:
         <text x="-25" y="-26" style="stroke:none;fill:var(--tf-muted);font:500 5px var(--tf-mono)">PEAK</text><text x="25" y="-26" style="stroke:none;fill:var(--tf-ink);font:600 7px var(--tf-mono);text-anchor:end">74.2 dB</text>
         <text x="-25" y="-13" style="stroke:none;fill:var(--tf-muted);font:500 5px var(--tf-mono)">AT</text><text x="25" y="-13" style="stroke:none;fill:var(--tf-ink);font:600 7px var(--tf-mono);text-anchor:end">03:12</text>
         <text x="-25" y="0" style="stroke:none;fill:var(--tf-muted);font:500 5px var(--tf-mono)">FOR</text><text x="25" y="0" style="stroke:none;fill:var(--tf-ink);font:600 7px var(--tf-mono);text-anchor:end">41 s</text>
-        <text x="-25" y="31" style="stroke:none;fill:var(--tf-muted);font:500 4.6px var(--tf-mono)">SIGNED · TF-0019</text>
+        <text x="-25" y="31" style="stroke:none;fill:var(--tf-muted);font:500 4.6px var(--tf-mono)">SIGNED · TF-0017</text>
         <path d="M-23 48c6 -14 10 6 16 -6s10 -6 14 2s8 -10 14 -2" style="fill:none;stroke:var(--tf-ink);stroke-width:1.2;stroke-linecap:round;stroke-linejoin:round" /></g></g>
         <text x="110" y="284" style="stroke:none;fill:var(--tf-muted);font:600 10px var(--tf-mono);letter-spacing:.06em;text-anchor:middle">ONE PER MORNING</text>
         <text x="300" y="284" style="stroke:none;fill:var(--tf-muted);font:600 10px var(--tf-mono);letter-spacing:.06em;text-anchor:middle">120 NIGHTS PER ROLL</text>
