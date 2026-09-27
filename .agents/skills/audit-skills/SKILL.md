@@ -48,7 +48,8 @@ and `skillsUsed`. The brief asks for this:
 > is really there and says what the Skill promised. A promise the runs keep
 > breaking, a step that silently never happens, or an outcome the log claims
 > but that never landed is a **silent failure**, whether or not anyone logged
-> a friction. Prior observations tell you what is already known.
+> a friction. Prior observations tell you what is already known, including
+> unverified findings this run's sessions may confirm.
 >
 > If you were given sessions that did not use the Skill, decide for each one
 > whether its work matches the case the Skill's `description` says it covers.
@@ -61,10 +62,12 @@ and `skillsUsed`. The brief asks for this:
 > checked.
 
 A subagent's report is hearsay until you have verified it (CLAUDE.md). Check
-each finding against the source it cites before you use it.
+each finding against the source it cites before you use it. A finding that
+holds up in part but not enough to act on is **unverified**: it goes into the
+Skill's `observations` (step 5), so a later run can build on it.
 
-Done when every subagent has reported and each finding is either verified or
-dropped.
+Done when every subagent has reported and each finding is verified,
+unverified, or dropped.
 
 ## 3. Check closure completeness
 
@@ -105,7 +108,9 @@ Done when every finding has an issue filed or commented on.
 
 ## 5. Tune the Inventory
 
-Grade each Skill by the definitions in `CONTEXT.md` (`### Importance`).
+Grade each Skill by the definitions in `CONTEXT.md` (`### Importance`), after
+reading its `observations`: earlier runs' evidence counts alongside this
+window's.
 
 - **A grade change needs ≥2 windowed sessions as evidence**, in either
   direction, and those session ids are cited.
@@ -115,8 +120,9 @@ Grade each Skill by the definitions in `CONTEXT.md` (`### Importance`).
 - **`role`** stays ≤ ~50 words and free of PR, issue or session ids. Refresh
   it when usage contradicts it.
 - **`observations`**: append `{ date: <today, UTC>, note: <citations> }` for
-  every grade or role change, verified finding, or idea. Never edit or drop an
-  earlier entry. A Skill with nothing new gets no entry.
+  every grade or role change, verified or unverified finding (say which), or
+  idea. Never edit or drop an earlier entry. A Skill with nothing new gets no
+  entry.
 - **Coverage gaps**: create an entry for a Skill that is used but not
   inventoried (`category` is `general-engineering` for a pack Skill,
   `platform-operation` for our own). Propose removing an entry whose Skill is
