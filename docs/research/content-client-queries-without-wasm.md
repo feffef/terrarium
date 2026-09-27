@@ -28,9 +28,19 @@ Short names used in the citations below:
 `content.nuxt.com` returns 403 through the proxy here. Doc quotes therefore
 come from the docs source in `nuxt/content`, under `docs/content/docs/…` on `main`.
 
-**Nothing here was verified end to end with a build.** Every conclusion comes
+**Nothing below was verified end to end with a build.** Every conclusion comes
 from reading the code, and the recommended option is followed by a
 verification recipe.
+
+**Outcome (2026-09-27): Avenue 2a was adopted, with changes (ADR-0028, #1447).**
+A build confirmed that navigation reads `_payload.json` and fetches no WASM or
+dumps. ADR-0028 holds the measurements and the final configuration. It departs
+from this note in three places:
+- It uses `cache: { maxAge: 60, swr: false }`, not `swr: true`, to bound stale
+  clocks.
+- It turns off visibility prefetch, which fetched every visible link's payload.
+- It varies Tinkerfund's cache on `accept-language`. A cached render sees no
+  request headers, a risk this note missed.
 
 ---
 
