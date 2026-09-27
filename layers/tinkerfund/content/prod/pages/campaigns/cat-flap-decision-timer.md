@@ -19,70 +19,70 @@ campaign:
     - { label: Battery, value: "4 AA cells, 6 months" }
   figures:
     - style: isometric
-      caption: "The frame, from the outdoor side: the flap beam across the flap, the approach beam between its two posts, and the display fitted to the top edge, indoor side."
+      caption: "The frame, set into the lower part of a door, from the outdoor side: the flap hinged in its opening, the flap beam across it, and the approach beam between its two posts. The display is on the indoor side."
       svg: |-
-        <ellipse cx="201" cy="225.8" rx="105.6" ry="46.4" style="fill:var(--tf-line)" />
-        <path d="M184.4 33.8L298.7 99.8L271 115.8L156.7 49.8Z" style="fill:color-mix(in srgb, var(--tf-accent) 45%, var(--tf-surface))" />
-        <path d="M156.7 185.8L271 251.8L271 115.8L156.7 49.8Z" style="fill:var(--tf-accent)" />
-        <path d="M298.7 235.8L271 251.8L271 115.8L298.7 99.8Z" style="fill:color-mix(in srgb, var(--tf-accent) 72%, var(--tf-ink))" />
-        <path d="M170.6 181.8L257.2 231.8L257.2 123.8L170.6 73.8Z" style="fill:color-mix(in srgb, var(--tf-accent) 72%, var(--tf-ink))" />
-        <path d="M169.2 76.2L258.5 127.8L258.5 123L169.2 71.4Z" style="fill:var(--tf-ink)" />
-        <path d="M170.6 133L176.1 136.2L176.1 129.8L170.6 126.6Z" style="fill:var(--tf-ink)" />
-        <path d="M251.6 179.8L257.2 183L257.2 176.6L251.6 173.4Z" style="fill:var(--tf-ink)" />
-        <path d="M176.1 133L251.6 176.6" style="fill:none;stroke:color-mix(in srgb, var(--tf-link) 45%, var(--tf-surface));stroke-width:1.2800000000000002;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:4 3" />
-        <path d="M156.7 181L167.8 187.4L109.6 221L98.5 214.6Z" style="fill:color-mix(in srgb, var(--tf-ink) 45%, var(--tf-surface))" />
-        <path d="M98.5 219.4L109.6 225.8L109.6 221L98.5 214.6Z" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" />
-        <path d="M167.8 192.2L109.6 225.8L109.6 221L167.8 187.4Z" style="fill:var(--tf-ink)" />
-        <path d="M259.9 240.6L271 247L212.8 280.6L201.7 274.2Z" style="fill:color-mix(in srgb, var(--tf-ink) 45%, var(--tf-surface))" />
-        <path d="M201.7 279L212.8 285.4L212.8 280.6L201.7 274.2Z" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" />
-        <path d="M271 251.8L212.8 285.4L212.8 280.6L271 247Z" style="fill:var(--tf-ink)" />
-        <path d="M104 179.4V214.6A5.6 3.2 0 0 0 109.6 217.8V182.6A5.6 3.2 0 0 1 104 179.4Z" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" />
-        <path d="M109.6 182.6V217.8A5.6 3.2 0 0 0 115.2 214.6V179.4A5.6 3.2 0 0 1 109.6 182.6Z" style="fill:var(--tf-ink)" />
-        <ellipse cx="109.6" cy="179.4" rx="5.6" ry="3.2" style="fill:color-mix(in srgb, var(--tf-ink) 45%, var(--tf-surface))" />
-        <path d="M207.2 239V274.2A5.6 3.2 0 0 0 212.8 277.4V242.2A5.6 3.2 0 0 1 207.2 239Z" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" />
-        <path d="M212.8 242.2V277.4A5.6 3.2 0 0 0 218.4 274.2V239A5.6 3.2 0 0 1 212.8 242.2Z" style="fill:var(--tf-ink)" />
-        <ellipse cx="212.8" cy="239" rx="5.6" ry="3.2" style="fill:color-mix(in srgb, var(--tf-ink) 45%, var(--tf-surface))" />
-        <path d="M113.7 189.8L208.7 244.6" style="fill:none;stroke:var(--tf-link);stroke-width:1.1199999999999999;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:4 3" />
-        <path d="M223.9 45.4L259.9 66.2L246.1 74.2L210 53.4Z" style="fill:color-mix(in srgb, var(--tf-link) 45%, var(--tf-surface))" />
-        <path d="M210 64.6L246.1 85.4L246.1 74.2L210 53.4Z" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" />
-        <path d="M259.9 77.4L246.1 85.4L246.1 74.2L259.9 66.2Z" style="fill:var(--tf-ink)" />
-        <circle cx="253" cy="66.2" r="2.2" style="fill:var(--tf-good)" />
+        <ellipse cx="184.6" cy="242.8" rx="104.4" ry="38.3" style="fill:var(--tf-line)" />
+        <path d="M136.4 14.3L289.6 102.7L269.5 114.3L116.3 25.9Z" style="fill:color-mix(in srgb, var(--tf-ink) 22%, var(--tf-surface))" />
+        <path d="M116.3 194.1L269.5 282.5L269.5 114.3L116.3 25.9Z" style="fill:color-mix(in srgb, var(--tf-ink) 32%, var(--tf-surface))" />
+        <path d="M289.6 270.9L269.5 282.5L269.5 114.3L289.6 102.7Z" style="fill:color-mix(in srgb, var(--tf-ink) 45%, var(--tf-surface))" />
+        <path d="M148.5 103.6L237.4 154.9L234.4 156.7L145.5 105.3Z" style="fill:color-mix(in srgb, var(--tf-accent) 45%, var(--tf-surface))" />
+        <path d="M145.5 210.9L234.4 262.2L234.4 156.7L145.5 105.3Z" style="fill:var(--tf-accent)" />
+        <path d="M237.4 260.5L234.4 262.2L234.4 156.7L237.4 154.9Z" style="fill:color-mix(in srgb, var(--tf-accent) 72%, var(--tf-ink))" />
+        <path d="M158.5 206.3L221.3 242.5L221.3 164.2L158.5 128Z" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" />
+        <path d="M160 205.4L219.8 239.9L219.8 165.7L160 131.1Z" style="fill:color-mix(in srgb, var(--tf-accent) 72%, var(--tf-ink))" />
+        <path d="M157 129.4L222.8 167.4L222.8 163.3L157 125.4Z" style="fill:var(--tf-ink)" />
+        <path d="M153.5 168L157.5 170.3L157.5 165.7L153.5 163.3Z" style="fill:var(--tf-ink)" />
+        <path d="M222.3 207.7L226.3 210L226.3 205.4L222.3 203.1Z" style="fill:var(--tf-ink)" />
+        <path d="M157.5 168L222.3 205.4" style="fill:none;stroke:color-mix(in srgb, var(--tf-link) 45%, var(--tf-surface));stroke-width:0.96;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:4 3" />
+        <path d="M148.5 212.6L156.5 217.3L114.3 241.6L106.3 237Z" style="fill:color-mix(in srgb, var(--tf-ink) 45%, var(--tf-surface))" />
+        <path d="M106.3 240.5L114.3 245.1L114.3 241.6L106.3 237Z" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" />
+        <path d="M156.5 220.8L114.3 245.1L114.3 241.6L156.5 217.3Z" style="fill:var(--tf-ink)" />
+        <path d="M223.3 255.9L231.4 260.5L189.2 284.8L181.1 280.2Z" style="fill:color-mix(in srgb, var(--tf-ink) 45%, var(--tf-surface))" />
+        <path d="M181.1 283.7L189.2 288.3L189.2 284.8L181.1 280.2Z" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" />
+        <path d="M231.4 264L189.2 288.3L189.2 284.8L231.4 260.5Z" style="fill:var(--tf-ink)" />
+        <path d="M110.3 211.5V237A4.1 2.3 0 0 0 114.3 239.3V213.8A4.1 2.3 0 0 1 110.3 211.5Z" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" />
+        <path d="M114.3 213.8V239.3A4.1 2.3 0 0 0 118.4 237V211.5A4.1 2.3 0 0 1 114.3 213.8Z" style="fill:var(--tf-ink)" />
+        <ellipse cx="114.3" cy="211.5" rx="4.1" ry="2.3" style="fill:color-mix(in srgb, var(--tf-ink) 45%, var(--tf-surface))" />
+        <path d="M185.1 254.7V280.2A4.1 2.3 0 0 0 189.2 282.6V257A4.1 2.3 0 0 1 185.1 254.7Z" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" />
+        <path d="M189.2 257V282.6A4.1 2.3 0 0 0 193.2 280.2V254.7A4.1 2.3 0 0 1 189.2 257Z" style="fill:var(--tf-ink)" />
+        <ellipse cx="189.2" cy="254.7" rx="4.1" ry="2.3" style="fill:color-mix(in srgb, var(--tf-ink) 45%, var(--tf-surface))" />
+        <path d="M117.3 219L186.1 258.8" style="fill:none;stroke:var(--tf-link);stroke-width:0.84;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:4 3" />
     - style: isometric
-      caption: "In use. The approach beam is broken; the flap beam is not. The display is counting."
+      caption: "In use. The approach beam is broken; the flap beam is not. Indoors, the display is counting."
       svg: |-
-        <ellipse cx="201" cy="225.8" rx="105.6" ry="46.4" style="fill:var(--tf-line)" />
-        <path d="M184.4 33.8L298.7 99.8L271 115.8L156.7 49.8Z" style="fill:color-mix(in srgb, var(--tf-accent) 45%, var(--tf-surface))" />
-        <path d="M156.7 185.8L271 251.8L271 115.8L156.7 49.8Z" style="fill:var(--tf-accent)" />
-        <path d="M298.7 235.8L271 251.8L271 115.8L298.7 99.8Z" style="fill:color-mix(in srgb, var(--tf-accent) 72%, var(--tf-ink))" />
-        <path d="M170.6 181.8L257.2 231.8L257.2 123.8L170.6 73.8Z" style="fill:color-mix(in srgb, var(--tf-accent) 72%, var(--tf-ink))" />
-        <path d="M169.2 76.2L258.5 127.8L258.5 123L169.2 71.4Z" style="fill:var(--tf-ink)" />
-        <path d="M170.6 133L176.1 136.2L176.1 129.8L170.6 126.6Z" style="fill:var(--tf-ink)" />
-        <path d="M251.6 179.8L257.2 183L257.2 176.6L251.6 173.4Z" style="fill:var(--tf-ink)" />
-        <path d="M176.1 133L251.6 176.6" style="fill:none;stroke:color-mix(in srgb, var(--tf-link) 45%, var(--tf-surface));stroke-width:1.2800000000000002;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:4 3" />
-        <path d="M156.7 181L167.8 187.4L109.6 221L98.5 214.6Z" style="fill:color-mix(in srgb, var(--tf-ink) 45%, var(--tf-surface))" />
-        <path d="M98.5 219.4L109.6 225.8L109.6 221L98.5 214.6Z" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" />
-        <path d="M167.8 192.2L109.6 225.8L109.6 221L167.8 187.4Z" style="fill:var(--tf-ink)" />
-        <path d="M259.9 240.6L271 247L212.8 280.6L201.7 274.2Z" style="fill:color-mix(in srgb, var(--tf-ink) 45%, var(--tf-surface))" />
-        <path d="M201.7 279L212.8 285.4L212.8 280.6L201.7 274.2Z" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" />
-        <path d="M271 251.8L212.8 285.4L212.8 280.6L271 247Z" style="fill:var(--tf-ink)" />
-        <path d="M104 179.4V214.6A5.6 3.2 0 0 0 109.6 217.8V182.6A5.6 3.2 0 0 1 104 179.4Z" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" />
-        <path d="M109.6 182.6V217.8A5.6 3.2 0 0 0 115.2 214.6V179.4A5.6 3.2 0 0 1 109.6 182.6Z" style="fill:var(--tf-ink)" />
-        <ellipse cx="109.6" cy="179.4" rx="5.6" ry="3.2" style="fill:color-mix(in srgb, var(--tf-ink) 45%, var(--tf-surface))" />
-        <path d="M207.2 239V274.2A5.6 3.2 0 0 0 212.8 277.4V242.2A5.6 3.2 0 0 1 207.2 239Z" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" />
-        <path d="M212.8 242.2V277.4A5.6 3.2 0 0 0 218.4 274.2V239A5.6 3.2 0 0 1 212.8 242.2Z" style="fill:var(--tf-ink)" />
-        <ellipse cx="212.8" cy="239" rx="5.6" ry="3.2" style="fill:color-mix(in srgb, var(--tf-ink) 45%, var(--tf-surface))" />
-        <path d="M113.7 189.8L147 209" style="fill:none;stroke:var(--tf-link);stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:4 3" />
-        <path d="M223.9 45.4L259.9 66.2L246.1 74.2L210 53.4Z" style="fill:color-mix(in srgb, var(--tf-link) 45%, var(--tf-surface))" />
-        <path d="M210 64.6L246.1 85.4L246.1 74.2L210 53.4Z" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" />
-        <path d="M259.9 77.4L246.1 85.4L246.1 74.2L259.9 66.2Z" style="fill:var(--tf-ink)" />
-        <circle cx="253" cy="66.2" r="2.2" style="fill:var(--tf-good)" />
-        <ellipse cx="162.2" cy="251.8" rx="19.2" ry="6.4" style="fill:var(--tf-line)" />
-        <path d="M148.6 249.8q0 -28.8 13.6 -32.5q13.6 3.7 13.6 32.5z" style="fill:var(--tf-ink)" />
-        <path d="M173.4 245.8q16 -4.8 12.8 -22.4" style="fill:none;stroke:var(--tf-ink);stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round;fill:none" />
-        <circle cx="162.2" cy="209.9" r="10.4" style="fill:var(--tf-ink)" />
-        <path d="M152.6 205.1L151 193.9L159.8 201.1Z" style="fill:var(--tf-ink)" />
-        <path d="M171.8 205.1L173.4 193.9L164.6 201.1Z" style="fill:var(--tf-ink)" />
-        <g style="stroke:none;fill:var(--tf-muted);font:600 10px var(--tf-mono);letter-spacing:.06em;text-anchor:middle"><text x="248.8" y="41.8">03:41 · IN · DECIDING</text></g>
+        <ellipse cx="184.6" cy="242.8" rx="104.4" ry="38.3" style="fill:var(--tf-line)" />
+        <path d="M136.4 14.3L289.6 102.7L269.5 114.3L116.3 25.9Z" style="fill:color-mix(in srgb, var(--tf-ink) 22%, var(--tf-surface))" />
+        <path d="M116.3 194.1L269.5 282.5L269.5 114.3L116.3 25.9Z" style="fill:color-mix(in srgb, var(--tf-ink) 32%, var(--tf-surface))" />
+        <path d="M289.6 270.9L269.5 282.5L269.5 114.3L289.6 102.7Z" style="fill:color-mix(in srgb, var(--tf-ink) 45%, var(--tf-surface))" />
+        <path d="M148.5 103.6L237.4 154.9L234.4 156.7L145.5 105.3Z" style="fill:color-mix(in srgb, var(--tf-accent) 45%, var(--tf-surface))" />
+        <path d="M145.5 210.9L234.4 262.2L234.4 156.7L145.5 105.3Z" style="fill:var(--tf-accent)" />
+        <path d="M237.4 260.5L234.4 262.2L234.4 156.7L237.4 154.9Z" style="fill:color-mix(in srgb, var(--tf-accent) 72%, var(--tf-ink))" />
+        <path d="M158.5 206.3L221.3 242.5L221.3 164.2L158.5 128Z" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" />
+        <path d="M160 205.4L219.8 239.9L219.8 165.7L160 131.1Z" style="fill:color-mix(in srgb, var(--tf-accent) 72%, var(--tf-ink))" />
+        <path d="M157 129.4L222.8 167.4L222.8 163.3L157 125.4Z" style="fill:var(--tf-ink)" />
+        <path d="M153.5 168L157.5 170.3L157.5 165.7L153.5 163.3Z" style="fill:var(--tf-ink)" />
+        <path d="M222.3 207.7L226.3 210L226.3 205.4L222.3 203.1Z" style="fill:var(--tf-ink)" />
+        <path d="M157.5 168L222.3 205.4" style="fill:none;stroke:color-mix(in srgb, var(--tf-link) 45%, var(--tf-surface));stroke-width:0.96;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:4 3" />
+        <path d="M148.5 212.6L156.5 217.3L114.3 241.6L106.3 237Z" style="fill:color-mix(in srgb, var(--tf-ink) 45%, var(--tf-surface))" />
+        <path d="M106.3 240.5L114.3 245.1L114.3 241.6L106.3 237Z" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" />
+        <path d="M156.5 220.8L114.3 245.1L114.3 241.6L156.5 217.3Z" style="fill:var(--tf-ink)" />
+        <path d="M223.3 255.9L231.4 260.5L189.2 284.8L181.1 280.2Z" style="fill:color-mix(in srgb, var(--tf-ink) 45%, var(--tf-surface))" />
+        <path d="M181.1 283.7L189.2 288.3L189.2 284.8L181.1 280.2Z" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" />
+        <path d="M231.4 264L189.2 288.3L189.2 284.8L231.4 260.5Z" style="fill:var(--tf-ink)" />
+        <path d="M110.3 211.5V237A4.1 2.3 0 0 0 114.3 239.3V213.8A4.1 2.3 0 0 1 110.3 211.5Z" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" />
+        <path d="M114.3 213.8V239.3A4.1 2.3 0 0 0 118.4 237V211.5A4.1 2.3 0 0 1 114.3 213.8Z" style="fill:var(--tf-ink)" />
+        <ellipse cx="114.3" cy="211.5" rx="4.1" ry="2.3" style="fill:color-mix(in srgb, var(--tf-ink) 45%, var(--tf-surface))" />
+        <path d="M185.1 254.7V280.2A4.1 2.3 0 0 0 189.2 282.6V257A4.1 2.3 0 0 1 185.1 254.7Z" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" />
+        <path d="M189.2 257V282.6A4.1 2.3 0 0 0 193.2 280.2V254.7A4.1 2.3 0 0 1 189.2 257Z" style="fill:var(--tf-ink)" />
+        <ellipse cx="189.2" cy="254.7" rx="4.1" ry="2.3" style="fill:color-mix(in srgb, var(--tf-ink) 45%, var(--tf-surface))" />
+        <path d="M117.3 219L141.4 232.9" style="fill:none;stroke:var(--tf-link);stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:4 3" />
+        <ellipse cx="152.5" cy="264.5" rx="13.9" ry="4.6" style="fill:var(--tf-line)" />
+        <path d="M142.6 262.5q0 -20.9 9.9 -23.5q9.9 2.7 9.9 23.5z" style="fill:var(--tf-ink)" />
+        <path d="M160.6 258.5q11.6 -3.5 9.3 -16.2" style="fill:none;stroke:var(--tf-ink);stroke-width:2.32;stroke-linecap:round;stroke-linejoin:round;fill:none" />
+        <circle cx="152.5" cy="233.6" r="7.5" style="fill:var(--tf-ink)" />
+        <path d="M145.5 230.1L144.4 222L150.8 227.2Z" style="fill:var(--tf-ink)" />
+        <path d="M159.5 230.1L160.6 222L154.2 227.2Z" style="fill:var(--tf-ink)" />
+        <g style="stroke:none;fill:var(--tf-muted);font:600 10px var(--tf-mono);letter-spacing:.06em;text-anchor:middle"><text x="202.7" y="56.2">INDOORS · 03:41 · IN · DECIDING</text></g>
     - style: isometric
       caption: "The spare beam pair, for a second flap covered later, and the decision log export, which has no address."
       svg: |-
