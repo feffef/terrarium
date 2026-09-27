@@ -35,7 +35,7 @@ import { existsSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import { parse as parseYaml } from 'yaml'
-import { ARCHIVED_SESSIONS_DIR, SESSIONS_DIR } from './audit-skills.ts'
+import { ARCHIVED_SESSIONS_DIR, SESSIONS_DIR } from './session-logs.ts'
 import { findTruncatedScalars, validateEntry } from './log-session.ts'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')

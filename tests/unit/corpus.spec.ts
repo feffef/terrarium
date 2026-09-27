@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import { SESSIONS_DIR } from '../../scripts/audit-skills.ts'
-import { queryCorpus, type SessionLog } from '../../scripts/corpus.ts'
+import { queryCorpus } from '../../scripts/corpus.ts'
+import { SESSIONS_DIR, type SessionLog } from '../../scripts/session-logs.ts'
 
 const log = (date: string, id: string, data: Record<string, unknown> = {}): SessionLog => ({
   file: `${SESSIONS_DIR}/${date}-${id}.yml`,

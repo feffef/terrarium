@@ -28,7 +28,7 @@ import { existsSync, mkdirSync, readdirSync, readFileSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import { parse as parseYaml } from 'yaml'
-import { ARCHIVED_SESSIONS_DIR, SESSIONS_DIR } from './audit-skills.ts'
+import { ARCHIVED_SESSIONS_DIR, SESSIONS_DIR } from './session-logs.ts'
 import { ARCHIVED_DIGESTS_DIR, DIGESTS_DIR } from './digest.ts'
 
 export { ARCHIVED_DIGESTS_DIR }

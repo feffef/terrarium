@@ -35,6 +35,7 @@ import { z } from 'zod'
 import { sessionSchema } from '../shared/schemas/session.ts'
 import { fetchOriginMain } from './git-helpers.ts'
 import { FALLBACK_MODEL, provenanceFooter } from './provenance-footer.ts'
+import { SESSIONS_DIR } from './session-logs.ts'
 import {
   findSessionIdMismatches,
   formatMismatchError,
@@ -61,9 +62,6 @@ import {
 } from './session-trace.ts'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
-
-/** The one directory session logs may live in — the whole of the ADR-0009 scope. */
-export const SESSIONS_DIR = 'layers/journal/content/current/sessions'
 
 /** The frozen `sessions` schema (ADR-0009) — the shared `session` collection kind,
  *  single-homed in shared/schemas/session.ts (ADR-0025). The Journal manifest now
