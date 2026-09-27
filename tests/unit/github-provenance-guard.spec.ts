@@ -272,6 +272,21 @@ describe('formatGuardMessage() — the rule\'s only teaching surface', () => {
     expect(msg).toMatch(/only the shape and position change/i)
     expect(msg).toContain('session_REAL')
   })
+
+  it('#1422: a body deny says the label is free text and names `Claude` as the non-model fallback', () => {
+    for (const kind of ['missing', 'malformed'] as const) {
+      const msg = formatGuardMessage({ kind, tool: COMMENT, surface: 'body', expected: 'session_REAL' })
+      expect(msg).toMatch(/label is free text/i)
+      expect(msg).toContain('`Claude`')
+    }
+    const commit = formatGuardMessage({ kind: 'missing', tool: 'mcp__github__push_files', surface: 'commit', expected: 'session_REAL' })
+    expect(commit).not.toMatch(/label is free text/i)
+  })
+
+  it('#1422: a header labelled plain `Claude` passes — the label is never checked', () => {
+    const body = `\u{1F916} [Claude](https://claude.ai/code/session_REAL)\n\nfix applied`
+    expect(checkGithubProvenance(COMMENT, { body }, 'session_REAL')).toBeNull()
+  })
 })
 
 describe('denyOutputFor() — the PreToolUse control object', () => {

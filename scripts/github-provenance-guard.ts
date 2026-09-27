@@ -229,7 +229,9 @@ export function checkGithubProvenance(
 function prescribedMarker(surface: ProvenanceSurface, url: string): string {
   return surface === 'commit'
     ? `${provenanceFooter('<your model name>', url)}\n\n...as the LAST lines of the commit message.`
-    : `${provenanceHeader('<your model name>', url)}\n\n...as the FIRST line of the body, its own paragraph.`
+    : `${provenanceHeader('<your model name>', url)}\n\n...as the FIRST line of the body, its own paragraph. ` +
+      `The bracketed label is free text — only the URL is checked — so write \`Claude\` there if ` +
+      `you must not name your model (#1422).`
 }
 
 /** The corrective message shown to the agent when the guard blocks. This is the
