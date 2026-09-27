@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_019yVYHWm1Fzsj3gBFWkHHU1
 startedAt: 2026-09-27T17:48:24Z
-endedAt: 2026-09-27T18:20:01Z
+endedAt: 2026-09-27T18:29:28Z
 kind: interactive
 goal: Triage, grill and implement the open backlog
-status: in-review
-outcome: 4 of 5 fixes merged; PR 1439 awaiting merge
-summary: 'Human-instructed throughout: /auto-triage (7 issues triaged agent-side under ADR-0022), then /implement "3 + #1248" (user picked scope), then /grill-with-docs on the three ready-for-human issues (user answered Q1 A, Q2 yes, Q3 Claude, Q4 A). Three worktree-isolated agents shipped PRs 1435 (#1420), 1436 (#1355), 1437 (#1342), all merged. #1248 needed no work (PR 1315 already ran its prune trial). #1372 closed not-planned per the owner. I implemented the two guard changes in this attended session: PR 1438 (#1422, merged) and PR 1439 (#1329, open, human-only merge), each live-probed.'
+status: completed
+outcome: "All 5 fix PRs merged; #1372 closed"
+summary: 'Human-instructed throughout: /auto-triage (7 issues triaged agent-side under ADR-0022), then /implement "3 + #1248" (user picked scope), then /grill-with-docs on the three ready-for-human issues (user answered Q1 A, Q2 yes, Q3 Claude, Q4 A). Three worktree-isolated agents shipped PRs 1435 (#1420), 1436 (#1355), 1437 (#1342), all merged. #1248 needed no work (PR 1315 already ran its prune trial). #1372 closed not-planned per the owner. I implemented the two guard changes in this attended session: PR 1438 (#1422, merged) and PR 1439 (#1329, merged), each live-probed.'
 prs:
   - "1435"
   - "1436"
@@ -24,6 +24,8 @@ docsRead:
     reason: (read before editing)
   - path: docs/agents/pr-workflow.md
     reason: (read before editing)
+  - path: docs/agents/guards.md
+    reason: (read before editing)
   - path: .agents/skills/triage/SKILL.md
     reason: (no reason given)
   - path: .agents/skills/triage/AGENT-BRIEF.md
@@ -33,8 +35,6 @@ docsRead:
   - path: docs/adr/0022-autonomous-triage-sweep.md
     reason: (no reason given)
   - path: docs/agents/triage-labels.md
-    reason: (no reason given)
-  - path: docs/agents/guards.md
     reason: (no reason given)
   - path: docs/adr/0017-provenance-footer-on-agent-authored-content.md
     reason: (no reason given)
@@ -92,12 +92,12 @@ frictions:
   - description: Classifier denied a sed that updated the tee verb list in guards.md, the .sh header and the spec header (Self-Modification), so PR 1439 ships with three stale comment/doc mentions
     solution: Use the Edit tool per file for guard-adjacent docs instead of one batched sed; the user can finish the three wording updates
     severity: minor
-durationSec: 1897
+durationSec: 2464
 models:
-  claude-opus-5-5: 199
+  claude-opus-5-5: 230
 toolCounts:
-  Bash: 36
-  ToolSearch: 3
+  Bash: 39
+  ToolSearch: 4
   mcp__github__list_pull_requests: 1
   mcp__github__issue_read: 5
   Agent: 10
@@ -106,13 +106,15 @@ toolCounts:
   AskUserQuestion: 1
   SendMessage: 3
   mcp__Claude_Code_Remote__subscribe_pr_activity: 5
-  ReadNotifications: 11
+  ReadNotifications: 17
   mcp__Claude_Code_Remote__send_later: 1
   mcp__github__add_issue_comment: 2
   mcp__github__issue_write: 1
-  Read: 6
-  Edit: 9
+  Read: 7
+  Edit: 12
   mcp__github__create_pull_request: 2
+  mcp__github__update_pull_request: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - tests/unit/github-provenance-guard.spec.ts
   - scripts/github-provenance-guard.ts
@@ -120,6 +122,7 @@ filesEdited:
   - tests/unit/tail-pipe-guard.spec.ts
   - scripts/tail-pipe-guard.ts
   - scripts/tail-pipe-guard.sh
+  - docs/agents/guards.md
   - tests/unit/session-trace.spec.ts
   - scripts/session-trace.ts
   - tests/unit/session-logs.spec.ts
