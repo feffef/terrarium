@@ -162,7 +162,7 @@ const bounds = computed(() => tinkerfundPriceBounds(cards.value))
     <section aria-labelledby="gallery-readout">
       <h2 id="gallery-readout">Campaign readout <code>TinkerfundCampaignReadout</code></h2>
       <p class="case">
-        With <code>TinkerfundUiProgressBar</code>, <code>TinkerfundCampaignDealBadge</code> and
+        With <code>TinkerfundProgressBar</code>, <code>TinkerfundCampaignDealBadge</code> and
         <code>TinkerfundCampaignAction</code>: Back when Live, Notify me when Upcoming, a lock when Ended.
       </p>
       <ul class="specimens wide">
@@ -246,10 +246,10 @@ const bounds = computed(() => tinkerfundPriceBounds(cards.value))
     </section>
 
     <section aria-labelledby="gallery-checkout">
-      <h2 id="gallery-checkout">Checkout <code>TinkerfundCartCheckoutHeader</code> <code>TinkerfundPledgeSummary</code></h2>
+      <h2 id="gallery-checkout">Checkout <code>TinkerfundCheckoutHeader</code> <code>TinkerfundPledgeSummary</code></h2>
       <p class="case">The focused header on its second step; the Cart above quoted with the {{ FIXTURE.code }} code, then a receipt.</p>
       <div class="checkout">
-        <TinkerfundCartCheckoutHeader :steps="['Shipping', 'Payment', 'Review']" :step="1" />
+        <TinkerfundCheckoutHeader :steps="['Shipping', 'Payment', 'Review']" :step="1" />
         <TinkerfundPledgeSummary v-for="group in quoteSpecimen.groups" :key="group.campaign" :pledge="group" zone="Europe" />
         <TinkerfundPledgeSummary
           v-if="receiptSpecimen"

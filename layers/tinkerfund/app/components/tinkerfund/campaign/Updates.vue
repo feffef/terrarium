@@ -23,7 +23,7 @@ onMounted(() => watch(() => route.hash, openLinked, { immediate: true }))
         <summary>
           <b>{{ u.title }}</b>{{ ' ' }}<span class="meta">
             <span>Update #{{ u.n }}</span> ·
-            <TinkerfundUiTime :at="u.at" :text="formatTinkerfundAgo(now, u.at)" />
+            <TinkerfundTime :at="u.at" :text="formatTinkerfundAgo(now, u.at)" />
           </span>
         </summary>
         <p v-for="(p, j) in u.paragraphs" :key="j">{{ p }}</p>

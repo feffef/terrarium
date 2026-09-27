@@ -11,7 +11,7 @@ const active = ref(0)
     <figure class="figure">
       <div class="frame">
         <span class="tf-label cap">FIG. {{ active + 1 }} · {{ registry }}</span>
-        <TinkerfundUiFigure :svg="figures[active]!.svg" :caption="figures[active]!.caption" />
+        <TinkerfundFigure :svg="figures[active]!.svg" :caption="figures[active]!.caption" />
       </div>
       <figcaption>{{ figures[active]!.caption }}</figcaption>
     </figure>
@@ -26,7 +26,7 @@ const active = ref(0)
       >
         <span class="frame small">
           <span class="tf-label cap">FIG. {{ i + 1 }}</span>
-          <TinkerfundUiFigure :svg="figure.svg" />
+          <TinkerfundFigure :svg="figure.svg" />
         </span>
       </button>
     </div>

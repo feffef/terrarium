@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { CampaignStatus } from '../../../utils/status'
+import type { CampaignStatus } from '../../utils/status'
 
 defineProps<{ status: CampaignStatus; promoted?: boolean }>()
 </script>

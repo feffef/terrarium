@@ -64,13 +64,13 @@ const drawer = useTemplateRef('drawer')
       </div>
     </div>
 
-    <TinkerfundUiDrawer ref="drawer" aria-label="Filters" close-label="Close filters">
+    <TinkerfundDrawer ref="drawer" aria-label="Filters" close-label="Close filters">
       <template #top><h2>Filters</h2></template>
       <template #default="{ close }">
         <TinkerfundBrowseFilters :query="query" :categories="category ? undefined : categories" :bounds="bounds" @update="update" />
         <button type="button" class="tf-btn primary" @click="close">Show {{ tinkerfundCount(results.length, 'Campaign') }}</button>
       </template>
-    </TinkerfundUiDrawer>
+    </TinkerfundDrawer>
   </div>
 </template>
 

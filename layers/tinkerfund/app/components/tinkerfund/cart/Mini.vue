@@ -26,7 +26,7 @@ defineExpose({ show })
 </script>
 
 <template>
-  <TinkerfundUiDrawer ref="drawer" :aria-labelledby="`${id}-h`">
+  <TinkerfundDrawer ref="drawer" :aria-labelledby="`${id}-h`">
     <template #top><h2 :id="`${id}-h`">Added to your Cart</h2></template>
     <template #default="{ close }">
       <div v-if="group" class="added tf-panel">
@@ -51,7 +51,7 @@ defineExpose({ show })
         <NuxtLink class="tf-btn primary" :to="link('/checkout')" @click="close">Checkout</NuxtLink>
       </div>
     </template>
-  </TinkerfundUiDrawer>
+  </TinkerfundDrawer>
 </template>
 
 <style scoped>

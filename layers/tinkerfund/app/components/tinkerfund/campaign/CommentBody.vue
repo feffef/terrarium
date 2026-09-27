@@ -10,7 +10,7 @@ const at = computed(() => resolveTinkerfundOffset(props.comment.posted, props.no
     <header>
       <b>{{ comment.author }}</b>
       <span v-if="comment.inventor" class="flag">Inventor</span>
-      <TinkerfundUiTime class="when" :at="at" :text="formatTinkerfundAgo(now, at)" />
+      <TinkerfundTime class="when" :at="at" :text="formatTinkerfundAgo(now, at)" />
     </header>
     <p>{{ comment.text }}</p>
   </article>

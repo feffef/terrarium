@@ -47,16 +47,16 @@ const label = useId()
           <tr v-for="c in rows" :key="c.path">
             <td class="wide">{{ c.registry }}</td>
             <th scope="row" class="inv">
-              <TinkerfundUiFigure :svg="c.figure" />
+              <TinkerfundFigure :svg="c.figure" />
               <NuxtLink :to="link(c.path)">{{ c.title }}</NuxtLink>
             </th>
             <td class="wide">{{ c.categoryName }}</td>
-            <td class="state"><TinkerfundUiStateChips :status="c.status" :promoted="c.promoted" /></td>
+            <td class="state"><TinkerfundStateChips :status="c.status" :promoted="c.promoted" /></td>
             <td v-if="c.status.state === 'upcoming'">—</td>
-            <td v-else class="funded"><TinkerfundUiProgressBar class="mini" :percent="c.status.percent" :segments="10" />{{ c.status.percent }}%</td>
+            <td v-else class="funded"><TinkerfundProgressBar class="mini" :percent="c.status.percent" :segments="10" />{{ c.status.percent }}%</td>
             <td class="r wide">{{ c.status.state === 'upcoming' ? '—' : money(c.pledged) }}</td>
             <td class="r wide">{{ c.backers ? c.backers.toLocaleString(locale) : '—' }}</td>
-            <td class="r"><TinkerfundUiTime :at="tinkerfundDeadline(c.status).at" :text="tinkerfundRemaining(c.status, clock.countdown)" /></td>
+            <td class="r"><TinkerfundTime :at="tinkerfundDeadline(c.status).at" :text="tinkerfundRemaining(c.status, clock.countdown)" /></td>
           </tr>
           <tr v-if="!rows.length">
             <td colspan="8" class="none">No Campaign in this category.</td>

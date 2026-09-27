@@ -16,22 +16,22 @@ const money = useTinkerfundMoney()
     <section v-if="home.featured" class="hero tf-panel" aria-labelledby="tf-featured">
       <div class="fig">
         <span class="tf-label">FIG. 1 · {{ home.featured.registry }}</span>
-        <TinkerfundUiFigure :svg="home.featured.figure" />
+        <TinkerfundFigure :svg="home.featured.figure" />
       </div>
       <div class="read">
-        <p class="row"><span class="id">{{ home.featured.registry }}</span><TinkerfundUiStateChips :status="home.featured.status" :promoted="home.featured.promoted" /></p>
+        <p class="row"><span class="id">{{ home.featured.registry }}</span><TinkerfundStateChips :status="home.featured.status" :promoted="home.featured.promoted" /></p>
         <p class="tf-label">Featured · {{ home.featured.categoryName }} · {{ home.featured.inventorName }}</p>
         <h2 id="tf-featured" class="tf-h1">{{ home.featured.title }}</h2>
         <p class="tag">{{ home.featured.description }}</p>
         <p class="big">{{ home.featured.status.percent }}<small>% funded</small></p>
-        <TinkerfundUiProgressBar :percent="home.featured.status.percent" :segments="25" />
+        <TinkerfundProgressBar :percent="home.featured.status.percent" :segments="25" />
         <dl class="tiles">
           <div><dt>Pledged</dt><dd>{{ money(home.featured.pledged) }}</dd></div>
           <div><dt>Goal</dt><dd>{{ money(home.featured.goal) }}</dd></div>
           <div><dt>Backers</dt><dd>{{ home.featured.backers.toLocaleString(locale) }}</dd></div>
           <div v-if="featuredLeft">
             <dt>{{ featuredLeft.label }}</dt>
-            <dd><TinkerfundUiTime :at="featuredLeft.at" :text="featuredLeft.text" /></dd>
+            <dd><TinkerfundTime :at="featuredLeft.at" :text="featuredLeft.text" /></dd>
           </div>
         </dl>
         <p class="actions">

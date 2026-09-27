@@ -45,7 +45,7 @@ const menu = useTemplateRef('menu')
       </div>
     </div>
 
-    <TinkerfundUiDrawer ref="menu" class="menu" side="left" aria-label="Menu" close-label="Close menu">
+    <TinkerfundDrawer ref="menu" class="menu" side="left" aria-label="Menu" close-label="Close menu">
       <template #top><TinkerfundShellWordmark :to="link()" /></template>
       <template #default="{ close }">
         <TinkerfundShellSearchField />
@@ -59,7 +59,7 @@ const menu = useTemplateRef('menu')
           <NuxtLink :to="link('/how-it-works')">How it works</NuxtLink>
         </nav>
       </template>
-    </TinkerfundUiDrawer>
+    </TinkerfundDrawer>
   </header>
 </template>
 

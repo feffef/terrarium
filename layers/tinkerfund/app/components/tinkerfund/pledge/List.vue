@@ -12,7 +12,7 @@ const money = useTinkerfundMoney()
       <p class="tf-label">Pledge <b class="ref">{{ pledge.ref }}</b></p>
       <h3><NuxtLink :to="link(`/account/pledges/${pledge.ref}`)">{{ receipt.title }}</NuxtLink></h3>
       <TinkerfundPledgeState class="state" :state="state" />
-      <p class="placed">Placed <TinkerfundUiTime :at="pledge.placed" /></p>
+      <p class="placed">Placed <TinkerfundTime :at="pledge.placed" /></p>
       <p class="total">{{ money(receipt.total) }}</p>
     </li>
   </ul>

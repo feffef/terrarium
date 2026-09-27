@@ -15,16 +15,16 @@ const left = computed(() => tinkerfundTimeLeft(props.card.status, props.clock.co
     <div class="fig">
       <div class="top">
         <span class="tf-label">FIG. 1 · {{ card.registry }}</span>
-        <TinkerfundUiStateChips :status="card.status" :promoted="card.promoted" />
+        <TinkerfundStateChips :status="card.status" :promoted="card.promoted" />
       </div>
-      <TinkerfundUiFigure :svg="card.figure" />
+      <TinkerfundFigure :svg="card.figure" />
     </div>
     <div class="body">
       <div>
         <h3><NuxtLink :to="link(card.path)">{{ card.title }}</NuxtLink></h3>
         <p class="by">{{ card.categoryName }} · {{ card.inventorName }}</p>
       </div>
-      <TinkerfundUiProgressBar v-if="!upcoming" :percent="card.status.percent" />
+      <TinkerfundProgressBar v-if="!upcoming" :percent="card.status.percent" />
       <dl class="tiles">
         <template v-if="upcoming">
           <div><dt>Goal</dt><dd>{{ money(card.goal) }}</dd></div>
@@ -36,7 +36,7 @@ const left = computed(() => tinkerfundTimeLeft(props.card.status, props.clock.co
         </template>
         <div v-if="left">
           <dt>{{ left.label }}</dt>
-          <dd><TinkerfundUiTime :at="left.at" :text="left.text" /></dd>
+          <dd><TinkerfundTime :at="left.at" :text="left.text" /></dd>
         </div>
         <div v-else><dt>Backers</dt><dd>{{ card.backers.toLocaleString(locale) }}</dd></div>
       </dl>

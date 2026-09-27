@@ -24,7 +24,7 @@ const when = computed(() => {
     <span v-if="status.endingSoon" class="badge soon">Ending soon</span>
     <span v-if="status.goalReached" class="badge">Goal reached</span>
     <span class="readout">{{ status.percent }}% funded</span>
-    <TinkerfundUiTime class="readout" :at="when.at" :text="when.text" />
+    <TinkerfundTime class="readout" :at="when.at" :text="when.text" />
   </div>
 </template>
 

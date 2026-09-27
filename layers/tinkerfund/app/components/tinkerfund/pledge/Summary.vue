@@ -55,7 +55,7 @@ const shippingRows = computed(() => tinkerfundShippingRows([props.pledge], props
       <div class="total"><dt>Total</dt><dd>{{ money(pledge.total) }}</dd></div>
     </dl>
     <p v-if="endsAt !== undefined" class="pending">
-      <b>Pending.</b> You’ll only be charged if this Campaign is funded, when it ends on <TinkerfundUiTime :at="endsAt" />.
+      <b>Pending.</b> You’ll only be charged if this Campaign is funded, when it ends on <TinkerfundTime :at="endsAt" />.
     </p>
   </section>
 </template>

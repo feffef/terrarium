@@ -27,7 +27,7 @@ const from = computed(() => campaignPriceFrom(props.campaign.rewards))
 <template>
   <div class="readout tf-panel">
     <TinkerfundCampaignStatus :campaign="campaign" :clock="clock" />
-    <p class="date">{{ deadline.label }} <TinkerfundUiTime :at="deadline.at" /></p>
+    <p class="date">{{ deadline.label }} <TinkerfundTime :at="deadline.at" /></p>
     <component :is="heading ?? 'h1'" class="tf-h1">{{ title }}</component>
     <p v-if="description" class="lead">{{ description }}</p>
     <p v-if="inventor" class="by">by <b>{{ inventor }}</b></p>
@@ -35,7 +35,7 @@ const from = computed(() => campaignPriceFrom(props.campaign.rewards))
       <p class="big">{{ money(campaign.pledged) }}</p>
       <p class="sub">pledged of {{ money(campaign.goal) }} goal</p>
     </div>
-    <TinkerfundUiProgressBar :percent="status.percent" />
+    <TinkerfundProgressBar :percent="status.percent" />
     <dl class="tiles">
       <div><dt>Backers</dt><dd>{{ campaign.backers.toLocaleString(locale) }}</dd></div>
       <div><dt>Funded</dt><dd>{{ status.percent }}%</dd></div>
