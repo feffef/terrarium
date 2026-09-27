@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01S5bzNzvg1DURebeNRDgVi5
 startedAt: 2026-09-27T13:13:43Z
-endedAt: 2026-09-27T13:33:21Z
+endedAt: 2026-09-27T13:38:22Z
 kind: autonomous
 goal: Run scheduled /prune-trial
-status: in-review
-outcome: One trial closed, one new language-simplification trial opened
-summary: "Scheduled, unattended /prune-trial run, no human prompt. Judged the one landed and judgeable open trial (pr-workflow.md's step-5 verdict-ordering bullet, opened 2026-09-23): holds — a friction shows merge-pr.ts correctly refusing a premature merge, and issue #1276 (the mechanism the trial anticipated) is closed via an unrelated PR #1311. Deleted the ledger entry and corrected pr-workflow.md's now-stale \"no mechanical check today\" claim. Also closed issue #1293 directly: its gating trial had already been judged \"holds\" on 2026-09-26 but the issue was never closed as that verdict's own comment said to do. Two dispatched full-corpus searches found no criterion-1/2 candidate for a new prune (one lead, #1293's bullet, looked live but turned out already-settled once checked against actual git history rather than the search agent's summary alone). Per standing owner direction, rewrote a whole untrialed file in plainer words instead: docs/agents/git-conventions.md, 1129 -> 971 words (-14%), verified against two inbound code-comment references before cutting anything. A Sonnet probe against a fresh worktree at the post-prune commit correctly answered all 8 comprehension questions from the compressed text alone. Opened PR #1430 with pnpm gate:scoped fully green."
+status: completed
+outcome: "PR #1430 merged - one trial closed, one new trial opened"
+summary: "Scheduled, unattended /prune-trial run, no human prompt. Judged the one landed and judgeable open trial (pr-workflow.md's step-5 verdict-ordering bullet, opened 2026-09-23): holds — a friction shows merge-pr.ts correctly refusing a premature merge, and issue #1276 (the mechanism the trial anticipated) is closed via an unrelated PR #1311. Deleted the ledger entry and corrected pr-workflow.md's now-stale \"no mechanical check today\" claim. Also closed issue #1293 directly: its gating trial had already been judged \"holds\" on 2026-09-26 but the issue was never closed as that verdict's own comment said to do. Two dispatched full-corpus searches found no criterion-1/2 candidate for a new prune (one lead, #1293's bullet, looked live but turned out already-settled once checked against actual git history rather than the search agent's summary alone). Per standing owner direction, rewrote a whole untrialed file in plainer words instead: docs/agents/git-conventions.md, 1129 -> 971 words (-14%), verified against two inbound code-comment references before cutting anything. A Sonnet probe against a fresh worktree at the post-prune commit correctly answered all 8 comprehension questions from the compressed text alone. Opened PR #1430 with pnpm gate:scoped fully green, posted the required verdict comment, and merged it via merge-pr.ts (prune-trial merges on a green gate alone per the per-tier authority list)."
 prs:
   - "1430"
 docsRead:
@@ -51,19 +51,19 @@ frictions:
   - description: First Agent tool dispatch for the §4 Sonnet probe mentioned isolation:'worktree' only in the prompt text, not as an actual tool parameter — the dispatch-subagents Skill explicitly warns this must be passed explicitly, not implied by prose.
     solution: Caught before the agent did any real work; stopped it via TaskStop and redispatched with the isolation parameter actually set. No work was lost.
     severity: nit
-durationSec: 1179
+durationSec: 1480
 models:
-  claude-sonnet-5: 182
+  claude-sonnet-5: 217
 toolCounts:
-  Bash: 42
+  Bash: 48
   Read: 7
   Agent: 7
   TaskCreate: 1
-  ReadNotifications: 8
-  Edit: 6
+  ReadNotifications: 10
+  Edit: 9
   Grep: 5
-  ToolSearch: 4
-  mcp__github__add_issue_comment: 1
+  ToolSearch: 6
+  mcp__github__add_issue_comment: 2
   mcp__github__issue_write: 1
   Write: 2
   Skill: 3
@@ -71,6 +71,8 @@ toolCounts:
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
+  mcp__github__pull_request_read: 4
+  mcp__github__unsubscribe_pr_activity: 1
 filesEdited:
   - .agents/prune-trials.yml
   - docs/agents/pr-workflow.md
