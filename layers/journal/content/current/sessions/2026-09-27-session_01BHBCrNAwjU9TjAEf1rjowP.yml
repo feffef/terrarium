@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01BHBCrNAwjU9TjAEf1rjowP
 startedAt: 2026-09-27T00:45:38Z
-endedAt: 2026-09-27T01:00:42Z
+endedAt: 2026-09-27T01:04:49Z
 kind: autonomous
 goal: Run the scheduled /audit-skills sweep
-status: in-review
-outcome: "PR #1419 opened: one observations entry, no grade changes"
-summary: "Fully autonomous scheduled run of /audit-skills, no human prompt beyond the schedule itself. Gathered the scorecard via scripts/audit-skills.ts (40 sessions, 41 Skills). Step 3 re-grade: no importance/role changes needed — every Skill's grade already matched this window's usage, mostly re-verified by yesterday's own audit-skills run. Step 4 regression watch: Phase A flagged 5 of 11 bracketed SKILL.md edits (digest, frictions-to-fixes, log-session, prune-trial, visitor-loop) for a coarser after-edit friction shift; dispatched one Phase-B deep-read subagent per flagged Skill to read every full session log skillSessionFiles listed. Four cleared as inconclusive (frictions traced to unrelated tooling/process footguns). prune-trial's plain-English-simplification-scope edit turned up one self-caught, same-session friction — suggestive but below step 5's bright-line bar — recorded as an observations entry on prune-trial.yml. Step 5: nothing filed (no signal cleared the bar; both orphanedSessions entries already carry resolvedBy cutoffs; humanPromptedClosures and manuallyRescuedClosures were empty). Step 6: no ideas this run. Cleared pnpm gate:scoped (full gate, since the change touches layers/ content), opened PR #1419 against main (diff limited to layers/journal/content/current/skills/prune-trial.yml), and subscribed to its activity."
+status: completed
+outcome: "PR #1419 merged: one observations entry, no grade changes"
+summary: "Fully autonomous scheduled run of /audit-skills, no human prompt beyond the schedule itself. Gathered the scorecard via scripts/audit-skills.ts (40 sessions, 41 Skills). Step 3 re-grade: no importance/role changes needed — every Skill's grade already matched this window's usage, mostly re-verified by yesterday's own audit-skills run. Step 4 regression watch: Phase A flagged 5 of 11 bracketed SKILL.md edits (digest, frictions-to-fixes, log-session, prune-trial, visitor-loop) for a coarser after-edit friction shift; dispatched one Phase-B deep-read subagent per flagged Skill to read every full session log skillSessionFiles listed. Four cleared as inconclusive (frictions traced to unrelated tooling/process footguns). prune-trial's plain-English-simplification-scope edit turned up one self-caught, same-session friction — suggestive but below step 5's bright-line bar — recorded as an observations entry on prune-trial.yml. Step 5: nothing filed (no signal cleared the bar; both orphanedSessions entries already carry resolvedBy cutoffs; humanPromptedClosures and manuallyRescuedClosures were empty). Step 6: no ideas this run. Cleared pnpm gate:scoped (full gate, since the change touches layers/ content), opened PR #1419 against main (diff limited to layers/journal/content/current/skills/prune-trial.yml), posted the required step-4 verdict comment, and self-merged via merge-pr.ts once CI's own gate went green (audit-skills's chartered merge-on-green-alone tier). Unsubscribed after the merge landed."
 prs:
   - "1419"
 docsRead:
@@ -126,7 +126,7 @@ skillsUsed:
   - name: close-session
     reason: PR-open closure point
   - name: log-session
-    reason: first log, status in-review
+    reason: in-review log at PR-open, then finalized to completed on merge
 frictions:
   - description: Started pnpm gate:scoped with run_in_background:true but also appended a trailing shell redirect construct that looked like it needed its own backgrounding; the double-background guard (#1208) caught a stray trailing intent before I actually stacked run_in_background with a literal `&`.
     solution: Pass run_in_background:true alone with a plain foreground command; never add a trailing & when the tool flag already backgrounds it.
@@ -134,13 +134,13 @@ frictions:
   - description: Hand-wrote the Co-Authored-By/Claude-Session commit trailer from the outer harness's attribution system-reminder; this repo's commit-trailer guard (#921) blocked it because the repo's own hook supplies and corrects that trailer automatically.
     solution: In this repo, write commit messages with no trailer at all — the harness template plus .githooks/commit-msg land it; verify after with git log -1 --format=%B.
     severity: nit
-durationSec: 904
+durationSec: 1150
 models:
-  claude-sonnet-5: 155
+  claude-sonnet-5: 174
 toolCounts:
-  Bash: 45
+  Bash: 49
   Agent: 5
-  ReadNotifications: 10
+  ReadNotifications: 12
   Read: 2
   Edit: 1
   ToolSearch: 3
@@ -148,9 +148,11 @@ toolCounts:
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
   Skill: 2
-  Write: 1
+  Write: 2
   mcp__github__pull_request_read: 1
   mcp__github__add_issue_comment: 1
+  mcp__github__unsubscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__send_later: 1
 filesEdited:
   - layers/journal/content/current/skills/prune-trial.yml
 docsReadViaShell:
