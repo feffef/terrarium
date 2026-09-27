@@ -62,15 +62,15 @@ campaign:
       caption: "The camera with its suction clip, the printed quarterly binder open at the latest report, and the desk nameplate. The glass is shown for context and is not included."
       svg: |-
         <ellipse cx="78" cy="214" rx="54" ry="18" style="fill:var(--tf-line)" />
-        <path d="M104 65L107.4 67L52 99L48.6 97Z" style="fill:color-mix(in srgb, var(--tf-line) 45%, var(--tf-surface))" />
-        <path d="M48.6 175L52 177L52 99L48.6 97Z" style="fill:color-mix(in srgb, var(--tf-line) 28%, var(--tf-surface))" />
-        <path d="M107.4 145L52 177L52 99L107.4 67Z" style="fill:color-mix(in srgb, var(--tf-line) 60%, var(--tf-surface))" />
-        <g transform="matrix(-.866 .5 0 -1 79.7 121)"><circle r="26" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" /><circle r="20" style="fill:var(--tf-ink)" /></g>
-        <path d="M95.3 98L114.4 109L83.2 127L64.1 116Z" style="fill:color-mix(in srgb, var(--tf-accent) 45%, var(--tf-surface))" />
-        <path d="M64.1 144L83.2 155L83.2 127L64.1 116Z" style="fill:var(--tf-accent)" />
-        <path d="M114.4 137L83.2 155L83.2 127L114.4 109Z" style="fill:color-mix(in srgb, var(--tf-accent) 72%, var(--tf-ink))" />
-        <g transform="matrix(-.866 .5 0 -1 98.8 138)"><rect x="-6" y="-2" width="12" height="4" rx="2" style="fill:var(--tf-ink)" /></g>
-        <circle cx="93.6" cy="104" r="2.6" style="fill:var(--tf-good)" />
+        <path d="M104 105L107.4 107L52 139L48.6 137Z" style="fill:color-mix(in srgb, var(--tf-line) 45%, var(--tf-surface))" />
+        <path d="M48.6 215L52 217L52 139L48.6 137Z" style="fill:color-mix(in srgb, var(--tf-line) 28%, var(--tf-surface))" />
+        <path d="M107.4 185L52 217L52 139L107.4 107Z" style="fill:color-mix(in srgb, var(--tf-line) 60%, var(--tf-surface))" />
+        <g transform="matrix(-.866 .5 0 -1 79.7 161)"><circle r="26" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" /><circle r="20" style="fill:var(--tf-ink)" /></g>
+        <path d="M95.3 138L114.4 149L83.2 167L64.1 156Z" style="fill:color-mix(in srgb, var(--tf-accent) 45%, var(--tf-surface))" />
+        <path d="M64.1 184L83.2 195L83.2 167L64.1 156Z" style="fill:var(--tf-accent)" />
+        <path d="M114.4 177L83.2 195L83.2 167L114.4 149Z" style="fill:color-mix(in srgb, var(--tf-accent) 72%, var(--tf-ink))" />
+        <g transform="matrix(-.866 .5 0 -1 98.8 178)"><rect x="-6" y="-2" width="12" height="4" rx="2" style="fill:var(--tf-ink)" /></g>
+        <circle cx="93.6" cy="144" r="2.6" style="fill:var(--tf-good)" />
         <ellipse cx="202" cy="210" rx="62" ry="20" style="fill:var(--tf-line)" />
         <path d="M153.8 196.6L156.3 198L146 147.6L143.5 147Z" style="fill:var(--tf-ink)" />
         <path d="M194.5 119.6L146 147.6L143.5 147L192 119Z" style="fill:color-mix(in srgb, var(--tf-ink) 45%, var(--tf-surface))" />
@@ -84,10 +84,10 @@ campaign:
         <g transform="matrix(.866 .5 -.866 .5 213.4 172)"><rect width="20" height="4" rx="1" style="fill:var(--tf-ink)" /><path d="M0 11h30M0 17h30M0 23h22M0 31h30M0 37h30M0 43h18" style="fill:none;stroke:var(--tf-line);stroke-width:1.6;stroke-linecap:round" /></g>
         <g transform="matrix(.866 .5 0 -1 184 173)"><path d="M8 16a8 8 0 1 0 16 0a8 8 0 1 0 -16 0M-8 0a8 8 0 1 0 16 0a8 8 0 1 0 -16 0M-24 -16a8 8 0 1 0 16 0a8 8 0 1 0 -16 0" style="fill:none;stroke:var(--tf-ink);stroke-width:4.6;stroke-linecap:round" /><path d="M8 16a8 8 0 1 0 16 0a8 8 0 1 0 -16 0M-8 0a8 8 0 1 0 16 0a8 8 0 1 0 -16 0M-24 -16a8 8 0 1 0 16 0a8 8 0 1 0 -16 0" style="fill:none;stroke:var(--tf-surface);stroke-width:2.2;stroke-linecap:round" /></g>
         <ellipse cx="318" cy="214" rx="54" ry="16" style="fill:var(--tf-line)" />
-        <path d="M296.1 125.5L353.2 158.5L339.9 166.1L282.8 133.1Z" style="fill:color-mix(in srgb, var(--tf-ink) 45%, var(--tf-surface))" />
-        <path d="M282.8 157.4L339.9 190.4L339.9 166.1L282.8 133.1Z" style="fill:var(--tf-ink)" />
-        <path d="M353.2 182.7L339.9 190.4L339.9 166.1L353.2 158.5Z" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" />
-        <g transform="matrix(.866 .5 0 -1 288.5 143.1)"><path d="M0 -1.6h52.8M0 -7.1h41.8M0 -12.1h33" style="fill:none;stroke:color-mix(in srgb, var(--tf-ink) 45%, var(--tf-surface));stroke-width:2.6;stroke-linecap:round" /></g>
+        <path d="M296.1 155.5L353.2 188.5L339.9 196.1L282.8 163.1Z" style="fill:color-mix(in srgb, var(--tf-ink) 45%, var(--tf-surface))" />
+        <path d="M282.8 187.4L339.9 220.4L339.9 196.1L282.8 163.1Z" style="fill:var(--tf-ink)" />
+        <path d="M353.2 212.7L339.9 220.4L339.9 196.1L353.2 188.5Z" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" />
+        <g transform="matrix(.866 .5 0 -1 288.5 173.1)"><path d="M0 -1.6h52.8M0 -7.1h41.8M0 -12.1h33" style="fill:none;stroke:color-mix(in srgb, var(--tf-ink) 45%, var(--tf-surface));stroke-width:2.6;stroke-linecap:round" /></g>
         <g style="stroke:none;fill:var(--tf-muted);font:600 11px var(--tf-mono);letter-spacing:.06em;text-anchor:middle"><text x="78" y="280">CAMERA</text><text x="200" y="280">PRINTED BINDER</text><text x="318" y="280">DESK NAMEPLATE</text></g>
     - style: patent
       caption: "Section A–A through the camera on the tank wall: housing (10), lens (12), suction cup (14) with its clear centre, glass (16), cell (18), USB-C port (20), board (22), fish (24)."
