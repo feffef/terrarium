@@ -63,36 +63,6 @@ campaign:
         <path d="M286 159L260 174L260 160L286 145Z" style="fill:var(--tf-ink)" />
         <g transform="matrix(.866 .5 -.866 .5 260 148)"><rect x="-10" y="-5.5" width="20" height="11" rx="1.5" style="fill:var(--tf-surface)" /></g>
         <path d="M260 132l-18 -12l-6 4" style="fill:none;stroke:var(--tf-ink);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round" />
-    - style: isometric
-      caption: "In use. The cat is shown pressing and is one of the two recorded presses. The other is not shown."
-      svg: |-
-        <ellipse cx="284" cy="218" rx="76" ry="42" style="fill:var(--tf-line)" />
-        <path d="M218.5 212.4V214A61.5 35.5 0 0 0 280 249.5V247.8A61.5 35.5 0 0 1 218.5 212.4Z" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" />
-        <path d="M280 247.8V249.5A61.5 35.5 0 0 0 341.5 214V212.4A61.5 35.5 0 0 1 280 247.8Z" style="fill:var(--tf-ink)" />
-        <ellipse cx="280" cy="212.4" rx="61.5" ry="35.5" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" />
-        <path d="M221.2 199.2V212.4A58.8 33.9 0 0 0 280 246.3V233.1A58.8 33.9 0 0 1 221.2 199.2Z" style="fill:var(--tf-accent)" />
-        <path d="M280 233.1V246.3A58.8 33.9 0 0 0 338.8 212.4V199.2A58.8 33.9 0 0 1 280 233.1Z" style="fill:color-mix(in srgb, var(--tf-accent) 72%, var(--tf-ink))" />
-        <ellipse cx="280" cy="199.2" rx="58.8" ry="33.9" style="fill:color-mix(in srgb, var(--tf-accent) 45%, var(--tf-surface))" />
-        <path d="M226.6 198.9V202.2A53.4 30.8 0 0 0 280 233V229.7A53.4 30.8 0 0 1 226.6 198.9Z" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" />
-        <path d="M280 229.7V233A53.4 30.8 0 0 0 333.4 202.2V198.9A53.4 30.8 0 0 1 280 229.7Z" style="fill:var(--tf-ink)" />
-        <ellipse cx="280" cy="198.9" rx="53.4" ry="30.8" style="fill:color-mix(in srgb, var(--tf-ink) 45%, var(--tf-surface))" />
-        <path d="M280 228.4L300 239.9L280 251.5L260 239.9Z" style="fill:color-mix(in srgb, var(--tf-ink) 45%, var(--tf-surface))" />
-        <path d="M260 250.9L280 262.5L280 251.5L260 239.9Z" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" />
-        <path d="M300 250.9L280 262.5L280 251.5L300 239.9Z" style="fill:var(--tf-ink)" />
-        <g transform="matrix(.866 .5 -.866 .5 280 242.7)"><rect x="-8.8" y="-4.7" width="17.6" height="9.4" rx="1.1" style="fill:var(--tf-ink)" /><rect x="-7.7" y="-3.6" width="15.4" height="7.2" rx="0.8" style="fill:var(--tf-surface)" /><g style="fill:var(--tf-ink);stroke:none;font:600 6.1px var(--tf-mono);text-anchor:middle"><text x="0" y="2.2">0001</text></g></g>
-        <ellipse cx="120" cy="254" rx="54" ry="13" style="fill:var(--tf-line)" />
-        <path d="M82 246c-34 -8 -40 -48 -10 -58" style="fill:none;stroke:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface));stroke-width:8;stroke-linecap:round;stroke-linejoin:round" />
-        <path d="M82 250c-6 -50 12 -100 44 -108c22 0 38 30 36 108z" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" />
-        <circle cx="136" cy="128" r="22" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" />
-        <path d="M116 114L120 92L132 110Z" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" />
-        <path d="M144 109L153 92L156 114Z" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" />
-        <circle cx="148" cy="125" r="2.6" style="fill:var(--tf-surface)" />
-        <circle cx="146" cy="159" r="7.5" style="fill:var(--tf-ink)" />
-        <path d="M140 155c30 0 70 16 102 32l2 10c-32 -12 -74 -20 -98 -28z" style="fill:var(--tf-ink)" />
-        <ellipse cx="251" cy="191" rx="12" ry="7.5" style="fill:var(--tf-ink)" />
-        <circle cx="260" cy="184.5" r="3.5" style="fill:var(--tf-ink)" />
-        <circle cx="263.5" cy="191" r="3.5" style="fill:var(--tf-ink)" />
-        <circle cx="260" cy="197.5" r="3.5" style="fill:var(--tf-ink)" />
     - style: patent
       caption: "Section A–A at rest: felt (10), cap (12), stem (14), return spring (16), housing (18), adhesive pad (20), pawl (22), counter housing (24), digit wheels (26) and window (28). The window faces up, for standing height."
       svg: |-
