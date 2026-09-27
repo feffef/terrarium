@@ -30,6 +30,22 @@ describe('checkTailPipe() — the pure predicate (issue #873)', () => {
     expect(checkTailPipe('Bash', { command: 'pnpm build > build.log 2>&1\ngit log --oneline | head -5' })).toBeNull()
   })
 
+  it('#1329: a trailing tee is treated like tail — `false | tee x` exits 0 too', () => {
+    expect(checkTailPipe('Bash', { command: 'pnpm gate:scoped 2>&1 | tee gate.log' })).toBe('long-runner')
+    expect(checkTailPipe('Bash', { command: 'git log | tee x', run_in_background: true })).toBe('backgrounded')
+    expect(checkTailPipe('Bash', { command: 'ls | tee x' })).toBeNull()
+    expect(checkTailPipe('Bash', { command: 'pnpm build > build.log 2>&1\nls | tee x' })).toBeNull()
+  })
+
+  it('#1329: the sh pre-filter passes a tee payload through to the TS guard', () => {
+    const out = execFileSync('sh', [join(root, 'scripts', 'tail-pipe-guard.sh')], {
+      cwd: root,
+      input: JSON.stringify({ tool_name: 'Bash', tool_input: { command: 'pnpm gate:scoped 2>&1 | tee gate.log' } }),
+      encoding: 'utf8',
+    }).trim()
+    expect(out ? JSON.parse(out).hookSpecificOutput.permissionDecision : null).toBe('deny')
+  })
+
   it('ALLOWS: no trailing pipe, and a non-Bash tool', () => {
     expect(checkTailPipe('Bash', { command: 'pnpm gate:scoped > log.txt 2>&1' })).toBeNull()
     expect(checkTailPipe('Edit', { command: 'pnpm gate | tail', run_in_background: true })).toBeNull()

@@ -5,5 +5,5 @@
 # false positive is harmless (the guard re-checks the parsed command and the
 # background/long-runner condition before denying).
 payload=$(cat)
-printf '%s' "$payload" | grep -qE '\|[[:space:]]*(tail|head|echo)\b' || exit 0
+printf '%s' "$payload" | grep -qE '\|[[:space:]]*(tail|head|echo|tee)\b' || exit 0
 printf '%s' "$payload" | pnpm exec tsx scripts/tail-pipe-guard.ts
