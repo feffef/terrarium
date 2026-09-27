@@ -1,0 +1,86 @@
+schemaVersion: 1
+session: session_01445jFXkqdujULnzcm6YPpz
+startedAt: 2026-09-27T02:03:44Z
+endedAt: 2026-09-27T02:16:08Z
+kind: autonomous
+goal: Turn logged session frictions into fixes
+status: in-review
+outcome: 3 issues filed, 3 fix PRs dispatched, none merged yet
+summary: "Scheduler-fired frictions-to-fixes run, no live human this turn. Dispatched a subagent to survey the latest 20 session logs and screen frictions against the tracker (§1-2), returning 9 ranked never-fixed candidates. Filed 3 issues: #1420 (a REGRESSION — the prune-trial §4 worktree probe still starts on a stale pre-prune HEAD even after #1330's structural fix, so it is not routed through ordinary dispatch per this Skill's regression rule), #1421 (a hard selection — per-story review misses cross-story integration bugs), and #1422 (a guard-touching fix that this Skill never dispatches regardless of size, filed only so it isn't lost). Dispatched 3 Sonnet worktree-isolated impl agents for the remaining selections: a 5-fix doc-only batch PR, a commit-msg-hook silent-failure code fix, and a whole-branch-review doc fix implementing #1421. All three are still running; nothing has been reviewed or merged yet — this in-review log is the §5 safety net before this session's own §6 review/merge pass."
+prs: []
+docsRead:
+  - path: CLAUDE.md
+    reason: Ground rules for the whole run (human-only surfaces, guard-touching bar, ADR-0017 header, PR-opening/babysitting discipline)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: brief-authoring mechanics before dispatching the 3 impl agents
+  - path: .agents/prune-trials.yml
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: /home/user/terrarium/docs/agents/pr-workflow.md
+    reason: (read before editing)
+  - path: /home/user/terrarium/.agents/skills/code-review/SKILL.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (read before editing)
+skillsUsed:
+  - name: dispatch-subagents
+    reason: (no reason given)
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: frictions-to-fixes
+    reason: (invoked as a slash command)
+frictions:
+  - description: Survey subagent hit Read's single-page cap on session-frictions.ts --window 20 output (33KB) and ~3 transient 403 rate-limit errors from mcp__github__search_issues mid-survey, with no clean way to wait out the rate limit (standalone sleep is guarded).
+    solution: Cost a few retries, no data loss; a documented backoff-friendly retry pattern for GitHub MCP 403s (distinct from the tail-piping/backgrounding guards) would remove the friction.
+    severity: minor
+  - description: "Had to independently re-verify the survey subagent's #1328/#1330 regression classification via issue_read/pull_request_read myself before filing #1420 as a regression, since a subagent's say-so on the highest-stakes classification isn't a settled fact per CLAUDE.md."
+    solution: No fix proposed here — the survey subagent already does tracker verification per this Skill's step 2; the orchestrator independently re-verifying the one regression-tier claim before filing seems like the right division of labor, worth naming explicitly in the Skill somewhere in a future pass.
+    severity: nit
+durationSec: 744
+models:
+  claude-sonnet-5: 47
+toolCounts:
+  Bash: 3
+  Agent: 5
+  ScheduleWakeup: 1
+  ToolSearch: 1
+  mcp__github__issue_read: 1
+  mcp__github__pull_request_read: 1
+  mcp__github__search_issues: 10
+  mcp__github__issue_write: 3
+  Skill: 3
+  Write: 1
+filesEdited:
+  - /home/user/terrarium/docs/agents/pr-workflow.md
+  - docs/agents/pr-workflow.md
+  - .githooks/commit-msg
+docsReadViaShell:
+  - docs/agents/github-integration.md
+  - docs/agents/guards.md
+  - docs/agents/issue-tracker.md
+  - .agents/skills/dispatch-subagents/SKILL.md
+  - docs/agents/pr-workflow.md
+  - docs/agents/git-conventions.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+subagents:
+  - type: general-purpose
+    task: Survey and screen session frictions
+  - type: general-purpose
+    task: Survey and screen session frictions
+  - type: general-purpose
+    task: Doc-only friction fixes batch PR
+    model: sonnet
+  - type: general-purpose
+    task: Commit-msg hook silent-fail fix PR
+    model: sonnet
+  - type: general-purpose
+    task: Cross-story integration review guidance PR
+    model: sonnet
+gitBranch: claude/eager-ptolemy-ucexfo
+entrypoint: remote_trigger
+cliVersion: 2.1.283
+trigger: frictions-to-fixes
+landedBy: Stop
