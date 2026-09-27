@@ -15,7 +15,7 @@ useSeoMeta(tinkerfundSeo(category.value
   <TinkerfundShell>
     <template v-if="category">
       <header class="intro">
-        <!-- eslint-disable-next-line vue/no-v-html -- validated, token-coloured content SVG (issue #1363) -->
+        <!-- eslint-disable-next-line vue/no-v-html -- schema-checked SVG (app/utils/svg.ts, issue #1363) -->
         <svg viewBox="0 0 24 24" aria-hidden="true" v-html="category.icon" />
         <p class="tf-label">Category</p>
         <h1 class="tf-h1">{{ category.name }}</h1>

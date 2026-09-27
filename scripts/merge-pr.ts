@@ -19,7 +19,8 @@
 // `envToken`) is single-homed in `list-open-issues.ts` and imported below.
 //
 // Usage:  tsx scripts/merge-pr.ts <pr-number> [--merge-method merge|squash|rebase] [--interval-ms N] [--timeout-ms N]
-//   Refuses up front unless this session's verdict is on the PR (issue #1276).
+//   Refuses up front for a fork or Public-authored PR, or unless this session's
+//   verdict is on the PR (issue #1276).
 //   Then polls the PR's head-commit check runs every `interval-ms` (default 15s)
 //   until they resolve or `timeout-ms` (default 20 minutes) elapses, then:
 //     - all green  → merges via the given method (default `merge`, matching
@@ -68,6 +69,7 @@ import {
 import { findTranscriptContents } from './provenance-footer.ts'
 import { hasAuthorshipMarker, readProvenanceHeader } from './provenance-header.ts'
 import { resolveGroundTruthFromTranscript } from './session-id-guard.ts'
+import { TRUSTED_ASSOCIATIONS } from './trust.ts'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 
@@ -95,8 +97,9 @@ export interface PollOptions {
 
 export interface MergeResult {
   pr: number
-  /** `no-verdict`: refused before polling — see `hasVerdictFromSession`. */
-  verdict: ChecksVerdict | 'no-verdict'
+  /** Refused before polling: `untrusted-origin` — see `prOriginRefusal`;
+   *  `no-verdict` — see `hasVerdictFromSession`. */
+  verdict: ChecksVerdict | 'untrusted-origin' | 'no-verdict'
   merged: boolean
   mergeCommitSha?: string
   message: string
@@ -134,22 +137,41 @@ export function failingCheckNames(runs: RawCheckRun[]): string[] {
   return runs.filter((r) => r.conclusion !== null && FAILING_CONCLUSIONS.has(r.conclusion)).map((r) => r.name)
 }
 
-/** The `gh pr merge`-style boolean flag for a merge method — pure mapping,
- *  kept separate from the `gh api` call below (which uses the equivalent
- *  `merge_method` REST field instead, see the header comment for why `gh api`
- *  over `gh pr`) so this stays independently testable. */
-export function mergeMethodFlag(method: MergeMethod): string {
-  return `--${method}`
+/** The merge PUT's fields, shared by the `gh api` and REST paths. `sha` pins
+ *  the polled head, so a push during polling fails the merge (409) instead of
+ *  landing an unchecked commit. */
+export function mergeRequestFields(method: MergeMethod, sha: string): { merge_method: MergeMethod; sha: string } {
+  return { merge_method: method, sha }
+}
+
+export interface VerdictBody {
+  body: string
+  authorAssociation: string
 }
 
 /** Whether any PR review/comment body is a verdict this session posted
  *  (`pr-workflow.md` step 4, issue #1276): an ADR-0017 marker, and — when the
  *  session is known — a header naming it. An unresolvable session accepts any
- *  marker rather than blocking a session whose environment lacks the id. */
-export function hasVerdictFromSession(bodies: string[], sessionId: string | null): boolean {
-  return bodies.some((b) =>
-    sessionId === null ? hasAuthorshipMarker(b) : readProvenanceHeader(b)?.sessionId === sessionId,
+ *  marker rather than blocking a session whose environment lacks the id.
+ *  Only Trusted authors count: the marker is forgeable by anyone (ADR-0020). */
+export function hasVerdictFromSession(bodies: VerdictBody[], sessionId: string | null): boolean {
+  return bodies.some(
+    ({ body: b, authorAssociation }) =>
+      TRUSTED_ASSOCIATIONS.has(authorAssociation) &&
+      (sessionId === null ? hasAuthorshipMarker(b) : readProvenanceHeader(b)?.sessionId === sessionId),
   )
+}
+
+/** Why this script must not merge the PR, or null: a fork or Public-authored
+ *  PR merges by human hand only (ADR-0020, `guest-contributions.md`). */
+export function prOriginRefusal(meta: PrMeta, owner: string, repo: string): string | null {
+  if (meta.headRepo?.toLowerCase() !== `${owner}/${repo}`.toLowerCase()) {
+    return `refused: head branch lives in ${meta.headRepo ?? 'a deleted repository'}, not ${owner}/${repo} — a fork PR is merged by a human`
+  }
+  if (!TRUSTED_ASSOCIATIONS.has(meta.authorAssociation)) {
+    return `refused: PR author is ${meta.authorAssociation} (Public, ADR-0020) — merged by a human`
+  }
+  return null
 }
 
 // ── Closing-keyword reconciliation (pure, issue #983) ────────────────────────
@@ -205,22 +227,31 @@ function readOriginUrl(cwd: string): string {
   return execFileSync('git', ['remote', 'get-url', 'origin'], { cwd, encoding: 'utf8' }).trim()
 }
 
-/** A PR's head SHA (for check-run polling) and body (for closing-keyword
- *  reconciliation, issue #983) — one GET, both fields, since both are read
- *  from the same `pulls/{number}` record. */
+/** The fields this script reads off one `pulls/{number}` GET: the head SHA
+ *  (polled, then pinned on the merge), the body (issue #983), and the origin
+ *  `prOriginRefusal` checks. */
 export interface PrMeta {
   sha: string
   body: string
+  headRepo: string | null
+  authorAssociation: string
 }
 
 function readPrMetaViaGh(owner: string, repo: string, prNumber: number, cwd: string): PrMeta {
   const raw = execFileSync(
     'gh',
-    ['api', '--method', 'GET', `repos/${owner}/${repo}/pulls/${prNumber}`, '--jq', '{sha: .head.sha, body: .body}'],
+    [
+      'api',
+      '--method',
+      'GET',
+      `repos/${owner}/${repo}/pulls/${prNumber}`,
+      '--jq',
+      '{sha: .head.sha, body: .body, headRepo: .head.repo.full_name, authorAssociation: .author_association}',
+    ],
     { cwd, encoding: 'utf8' },
   )
-  const parsed = JSON.parse(raw) as { sha: string; body: string | null }
-  return { sha: parsed.sha, body: parsed.body ?? '' }
+  const parsed = JSON.parse(raw) as Omit<PrMeta, 'body'> & { body: string | null }
+  return { ...parsed, body: parsed.body ?? '' }
 }
 
 function readCheckRunsViaGh(owner: string, repo: string, sha: string, cwd: string): RawCheckRun[] {
@@ -241,7 +272,7 @@ function readCheckRunsViaGh(owner: string, repo: string, sha: string, cwd: strin
   return JSON.parse(raw) as RawCheckRun[]
 }
 
-function mergePrViaGh(owner: string, repo: string, prNumber: number, mergeMethod: MergeMethod, cwd: string): string {
+function mergePrViaGh(owner: string, repo: string, prNumber: number, mergeMethod: MergeMethod, sha: string, cwd: string): string {
   return execFileSync(
     'gh',
     [
@@ -249,8 +280,7 @@ function mergePrViaGh(owner: string, repo: string, prNumber: number, mergeMethod
       '--method',
       'PUT',
       `repos/${owner}/${repo}/pulls/${prNumber}/merge`,
-      '-f',
-      `merge_method=${mergeMethod}`,
+      ...Object.entries(mergeRequestFields(mergeMethod, sha)).flatMap(([k, v]) => ['-f', `${k}=${v}`]),
       '--jq',
       '.sha',
     ],
@@ -305,10 +335,16 @@ function curlRequestJson(
 
 function readPrMetaViaRest(owner: string, repo: string, prNumber: number, token: string, cwd: string): PrMeta {
   const pr = curlRequestJson('GET', `https://api.github.com/repos/${owner}/${repo}/pulls/${prNumber}`, token, cwd) as {
-    head: { sha: string }
+    head: { sha: string; repo: { full_name: string } | null }
     body: string | null
+    author_association: string
   }
-  return { sha: pr.head.sha, body: pr.body ?? '' }
+  return {
+    sha: pr.head.sha,
+    body: pr.body ?? '',
+    headRepo: pr.head.repo?.full_name ?? null,
+    authorAssociation: pr.author_association,
+  }
 }
 
 function readCheckRunsViaRest(owner: string, repo: string, sha: string, token: string, cwd: string): RawCheckRun[] {
@@ -326,6 +362,7 @@ function mergePrViaRest(
   repo: string,
   prNumber: number,
   mergeMethod: MergeMethod,
+  sha: string,
   token: string,
   cwd: string,
 ): string {
@@ -334,7 +371,7 @@ function mergePrViaRest(
     `https://api.github.com/repos/${owner}/${repo}/pulls/${prNumber}/merge`,
     token,
     cwd,
-    { merge_method: mergeMethod },
+    mergeRequestFields(mergeMethod, sha),
   ) as { sha: string }
   return result.sha
 }
@@ -389,20 +426,20 @@ function readPrMeta(strategy: FetchStrategy, owner: string, repo: string, prNumb
   return readPrMetaViaRest(owner, repo, prNumber, envToken()!, cwd)
 }
 
+type RawVerdictBody = { body: string | null; author_association: string }
+
 /** The PR's review and conversation-comment bodies — one `per_page=100` page
  *  each, like the check runs. */
-function readVerdictBodies(strategy: FetchStrategy, owner: string, repo: string, prNumber: number, cwd: string): string[] {
+function readVerdictBodies(strategy: FetchStrategy, owner: string, repo: string, prNumber: number, cwd: string): VerdictBody[] {
   return [`pulls/${prNumber}/reviews`, `issues/${prNumber}/comments`].flatMap((path) => {
     const url = `repos/${owner}/${repo}/${path}`
     const items =
       strategy === 'gh'
         ? (JSON.parse(
             execFileSync('gh', ['api', '--method', 'GET', url, '-f', 'per_page=100'], { cwd, encoding: 'utf8' }),
-          ) as { body: string | null }[])
-        : (curlRequestJson('GET', `https://api.github.com/${url}?per_page=100`, envToken()!, cwd) as {
-            body: string | null
-          }[])
-    return items.map((i) => i.body ?? '')
+          ) as RawVerdictBody[])
+        : (curlRequestJson('GET', `https://api.github.com/${url}?per_page=100`, envToken()!, cwd) as RawVerdictBody[])
+    return items.map((i) => ({ body: i.body ?? '', authorAssociation: i.author_association }))
   })
 }
 
@@ -470,10 +507,11 @@ function mergePr(
   repo: string,
   prNumber: number,
   mergeMethod: MergeMethod,
+  sha: string,
   cwd: string,
 ): string {
-  if (strategy === 'gh') return mergePrViaGh(owner, repo, prNumber, mergeMethod, cwd)
-  return mergePrViaRest(owner, repo, prNumber, mergeMethod, envToken()!, cwd)
+  if (strategy === 'gh') return mergePrViaGh(owner, repo, prNumber, mergeMethod, sha, cwd)
+  return mergePrViaRest(owner, repo, prNumber, mergeMethod, sha, envToken()!, cwd)
 }
 
 // ── Command ──────────────────────────────────────────────────────────────────
@@ -494,6 +532,12 @@ export async function mergePrWhenGreen(
   }
   const { owner, repo } = ownerRepo
 
+  const meta = readPrMeta(strategy, owner, repo, prNumber, cwd)
+  const originRefusal = prOriginRefusal(meta, owner, repo)
+  if (originRefusal !== null) {
+    return { pr: prNumber, verdict: 'untrusted-origin', merged: false, message: originRefusal }
+  }
+
   const sessionId = resolveGroundTruthFromTranscript(findTranscriptContents(process.env) ?? '')
   if (!hasVerdictFromSession(readVerdictBodies(strategy, owner, repo, prNumber, cwd), sessionId)) {
     return {
@@ -507,7 +551,7 @@ export async function mergePrWhenGreen(
     }
   }
 
-  const { sha, body: prBody } = readPrMeta(strategy, owner, repo, prNumber, cwd)
+  const { sha, body: prBody } = meta
   const { verdict, runs } = await pollUntilResolved(
     async () => readCheckRuns(strategy, owner, repo, sha, cwd),
     opts,
@@ -532,7 +576,7 @@ export async function mergePrWhenGreen(
 
   let mergeCommitSha: string
   try {
-    mergeCommitSha = mergePr(strategy, owner, repo, prNumber, opts.mergeMethod, cwd)
+    mergeCommitSha = mergePr(strategy, owner, repo, prNumber, opts.mergeMethod, sha, cwd)
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err)
     return {

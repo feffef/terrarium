@@ -47,7 +47,9 @@ recent comment, or the body if there are none) and act only when it is
 **guest-authored**:
 
 - **A guest is a Public `authorAssociation`** (the ADR-0020 Public tier — see
-  `docs/agents/issue-tracker.md` for the exact enum values). This signal is
+  `docs/agents/issue-tracker.md` for the exact enum values) **writing on their
+  own issue**; a Public comment on anyone else's issue is ignored, since only
+  the filer's confirmation green-lights work (ADR-0023). This signal is
   reliable *for spotting guests* precisely because a guest cannot post as
   `OWNER`.
 - **Skip when the newest activity is the agent's own** — an `OWNER` comment

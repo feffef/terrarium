@@ -250,7 +250,7 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
           <NuxtLink v-if="tinkerfund.campaign" :to="tinkerfund.campaign.url" class="campaign">
             <span class="campaign-fig">
               <span class="tf-label">FIG. 1 · {{ tinkerfund.campaign.registry }}</span>
-              <!-- eslint-disable-next-line vue/no-v-html -- validated, token-coloured content SVG (issue #1363) -->
+              <!-- eslint-disable-next-line vue/no-v-html -- schema-checked SVG (app/utils/svg.ts, issue #1363) -->
               <svg viewBox="0 0 400 300" aria-hidden="true" v-html="tinkerfund.campaign.figure" />
             </span>
             <span class="campaign-title">{{ tinkerfund.campaign.title }}</span>

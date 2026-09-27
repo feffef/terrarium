@@ -315,7 +315,7 @@ illustration: |
     </g>
   </g>
 
-  <!-- ======== atmosphere & grain ======== -->
+  <!-- ======== atmosphere and grain ======== -->
   <ellipse cx="190" cy="430" rx="200" ry="160" fill="#e8934a" opacity="0.06" filter="url(#imx-blur10)"/>
   <ellipse cx="224" cy="416" rx="90" ry="70" fill="#7fd0de" opacity="0.05" filter="url(#imx-blur10)"/>
   <rect x="0" y="0" width="400" height="600" fill="#ffffff" opacity="0.05" filter="url(#imx-grain)"/>

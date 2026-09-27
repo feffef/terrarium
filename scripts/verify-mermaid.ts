@@ -3,12 +3,13 @@
 // `verify:skills-lock`. Mirrors that drift-check pattern: it re-derives each
 // diagram's content-hash key from the source and fails if the committed SVG is
 // missing (a diagram changed or was added but `pnpm render:mermaid` wasn't run),
-// empty, or orphaned (an SVG with no live source). It reads files ONLY — it
-// never launches a browser, so it is safe in CI and the prod container, neither
-// of which has Chromium (the hard constraint of #379).
-import { existsSync, statSync } from 'node:fs'
+// empty, orphaned (an SVG with no live source), or unsafe to v-html
+// (app/utils/svg.ts). It reads files ONLY — it never launches a browser, so it
+// is safe in CI and the prod container, neither of which has Chromium (#379).
+import { existsSync, readFileSync, statSync } from 'node:fs'
 import { join } from 'node:path'
 import { pathToFileURL } from 'node:url'
+import { svgHazard } from '../app/utils/svg.ts'
 import { committedSvgKeys, discoverDiagrams, root, svgPathFor } from './mermaid-lib.ts'
 
 export interface MermaidDrift {
@@ -34,7 +35,12 @@ export function diffMermaid(
 
 function main(): void {
   const diagrams = discoverDiagrams()
-  const drift = diffMermaid(diagrams, committedSvgKeys())
+  const onDisk = committedSvgKeys()
+  const drift = diffMermaid(diagrams, onDisk)
+  const unsafe = onDisk
+    .map(svgPathFor)
+    .map((file) => ({ file, hazard: svgHazard(readFileSync(join(root, file), 'utf8'), { html: true }) }))
+    .filter((u) => u.hazard)
 
   // A `missing` entry means no SVG for that key; separately guard a present-but-
   // zero-byte file (a botched write) that `missing` wouldn't catch.
@@ -42,7 +48,7 @@ function main(): void {
     .map((d) => svgPathFor(d.key))
     .filter((rel) => existsSync(join(root, rel)) && statSync(join(root, rel)).size === 0)
 
-  if (drift.missing.length === 0 && drift.orphaned.length === 0 && empty.length === 0) {
+  if (drift.missing.length === 0 && drift.orphaned.length === 0 && empty.length === 0 && unsafe.length === 0) {
     console.log(`verify-mermaid: PASS — ${diagrams.length} diagram(s) match their committed SVGs`)
     return
   }
@@ -50,6 +56,7 @@ function main(): void {
   console.error('\nverify-mermaid: FAIL — committed mermaid SVGs are out of sync (ADR-0024).')
   for (const m of drift.missing) console.error(`  MISSING   ${svgPathFor(m.key)} — for ${m.file}`)
   for (const f of empty) console.error(`  EMPTY     ${f} — committed SVG is zero bytes`)
+  for (const u of unsafe) console.error(`  UNSAFE    ${u.file} — ${u.hazard}`)
   for (const k of drift.orphaned) {
     console.error(`  ORPHANED  ${svgPathFor(k)} — no live \`\`\`mermaid source hashes to this SVG`)
   }
