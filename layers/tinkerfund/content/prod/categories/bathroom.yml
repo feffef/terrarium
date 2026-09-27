@@ -1,0 +1,4 @@
+name: Bathroom
+blurb: Fixtures for the start and end of the day, calibrated to the minute.
+icon: '<path d="M3 12h18v2a6 6 0 0 1-6 6H9a6 6 0 0 1-6-6zM6 12V5a2 2 0 0 1 4 0M8 20l-1 2M16 20l1 2" />'
+order: 4

@@ -1,0 +1,42 @@
+campaign: cat-acknowledgement-button
+comments:
+  - author: Fiona T.
+    posted: -119d
+    text: Does the counter distinguish between a paw press and a cat simply sitting on the button?
+    replies:
+      - author: Declan Murphy
+        posted: -118d
+        text: No. Weight on the button for any reason advances the counter by one.
+        inventor: true
+  - author: Marek S.
+    posted: -114d
+    text: Backed for the grey one. Curious what a baseline even looks like here.
+  - author: Yusuf A.
+    posted: -110d
+    text: Is there a way to tell which sentence the cat was responding to?
+    replies:
+      - author: Declan Murphy
+        posted: -109d
+        text: No. The button records that something was heard, not what.
+        inventor: true
+  - author: Camille R.
+    posted: -105d
+    text: Two months in and our cat has not gone near it. Is that normal?
+  - author: Declan Murphy
+    posted: -104d
+    text: It matches the households reporting so far.
+    inventor: true
+  - author: Petra V.
+    posted: -101d
+    text: Ordered the green one for a spare. Our cat ignores new objects for about six weeks, so we are still in the waiting period.
+  - author: Owen B.
+    posted: -96d
+    text: A dog pressing it counts toward the total? That seems like it should be flagged separately.
+    replies:
+      - author: Declan Murphy
+        posted: -95d
+        text: The button does not distinguish species. The counter records a press.
+        inventor: true
+  - author: Ingrid H.
+    posted: -91d
+    text: Sorry this one did not reach its goal. The two-press number was worth funding on its own.

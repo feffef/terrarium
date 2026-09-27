@@ -1,0 +1,15 @@
+campaign: delayed-mirror
+updates:
+  - title: Live, and past halfway on day one
+    published: -2d
+    body: |-
+      The Delayed Mirror launched three days ago and has already passed
+      halfway to its goal. The Founder's edition, limited to 40 units, is
+      more than three-quarters claimed.
+  - title: A note on the delay setting
+    published: -1d
+    body: |-
+      Several backers have written in asking which delay to choose. We
+      still recommend 3.0 seconds for most bathrooms. Anything under a
+      second reads as no delay at all; anything past six seconds tends to
+      surprise people who have already looked away twice.

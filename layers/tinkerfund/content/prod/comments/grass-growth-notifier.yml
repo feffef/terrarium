@@ -1,0 +1,41 @@
+campaign: grass-growth-notifier
+comments:
+  - author: Elin B.
+    posted: -78d
+    text: Does it distinguish growth from the blade just moving in the wind?
+    replies:
+      - author: Gwen Ashdown
+        posted: -77d
+        text: Wind moves the blade sideways. The sensor only reads height, so a gust does not register as growth.
+        inventor: true
+  - author: Marcus L.
+    posted: -73d
+    text: Backed for the front lawn. Curious how loud forty minutes of notifications actually feels.
+  - author: Priti S.
+    posted: -68d
+    text: Second sensor channel stretch goal unlocked! Does that mean two blades on one stake?
+    replies:
+      - author: Gwen Ashdown
+        posted: -67d
+        text: Two blades, one stake, one app view. The second channel is entirely independent of the first.
+        inventor: true
+  - author: Owen T.
+    posted: -61d
+    text: The mowing detector went off while I was just trimming the edge, not the whole lawn.
+    replies:
+      - author: Gwen Ashdown
+        posted: -60d
+        text: Any sudden drop in the marked blade's height counts as a cut, even a partial one. That is intended.
+        inventor: true
+  - author: Delphine R.
+    posted: -55d
+    text: Went with the tall stake for the back lawn, where the grass gets away from us in June.
+  - author: Sofia N.
+    posted: -52d
+    text: Funded well past goal with time to spare. Hope the night mode makes it in eventually.
+  - author: Callum B.
+    posted: -9d
+    text: Notifier arrived and is already logging. First message came about thirty-five minutes after calibration.
+  - author: Tobias K.
+    posted: -4d
+    text: Garden Set arrived, all three paired without trouble. The shared view makes the back patch look much slower than the front.

@@ -1,0 +1,24 @@
+campaign: soap-bar-odometer
+updates:
+  - title: A note on the first bar's number
+    published: -60d
+    body: |-
+      Several Backers have asked whether 1.9 kilometres over 41 days is a
+      typical bar. We have only tracked the one bar so far, so it is both the
+      typical figure and the entire dataset. A wider sample is planned once
+      more inserts are in circulation.
+  - title: Insert durability, an update
+    published: -46d
+    body: |-
+      The original insert has now been reused across four additional bars
+      without a change in reading accuracy. It remains rated for up to 30
+      bars before the seal is retired, and nothing so far suggests that
+      figure needs revising.
+  - title: The Campaign has ended
+    published: -39d
+    body: |-
+      The Soap Bar Odometer reached 31% of its goal. It will not be made this
+      time, and nobody will be charged.
+
+      Thank you to the 110 Backers who wanted to know their number. The
+      inserts are staying on the bench.

@@ -1,0 +1,7 @@
+name: Priya Raman
+bio: Logistics planner in Singapore. Fitted a tracker to her own passport after a delayed connection, then spent the next trip worrying about the tracker instead, which is how the second one got added.
+portrait: |-
+  <path d="M19 96c4-21 17-31 31-31s27 10 31 31z" style="fill:var(--tf-accent)" />
+  <circle cx="50" cy="38" r="17" style="fill:color-mix(in srgb, var(--tf-ink) 60%, var(--tf-surface))" />
+  <path d="M34 39c3 15 27 15 30 0c-4 5-7 7-15 7s-11-2-15-7z" style="fill:var(--tf-ink)" />
+  <path d="M30 27c7-10 32-10 39 0l2 6H28z" style="fill:var(--tf-ink)" />

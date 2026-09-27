@@ -1,0 +1,20 @@
+campaign: snail-speedometer
+updates:
+  - title: Logging began on schedule
+    published: -13d
+    body: |-
+      The first units off the bench have been logging test gardens for two weeks
+      with no missed passes. The daily leaderboard is holding up well, including
+      for the unidentified column.
+  - title: One alert, confirmed
+    published: -7d
+    body: |-
+      A top speed alert sounded during a resident test, at just over 50 mm/min. We
+      checked the log against the timestamped pass and the reading held. No
+      change to the threshold is planned.
+  - title: Approaching the goal
+    published: -1d
+    body: |-
+      We are close to fully funded, with three weeks left. The second radar
+      module and the leaderboard export are still open stretch goals; either
+      would need meaningfully more support to unlock.

@@ -1,0 +1,4 @@
+name: Garden
+blurb: Tools for growing things, and for confirming that they are growing.
+icon: '<path d="M12 21v-9M12 12c0-4 3-7 7-7 0 4-3 7-7 7zM12 15c0-3-2-5-5-5 0 3 2 5 5 5zM5 21h14" />'
+order: 5

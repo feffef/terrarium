@@ -1,0 +1,24 @@
+campaign: snore-certificate-printer
+updates:
+  - title: On the loudest-event rule
+    published: -42d
+    body: |-
+      Several backers have asked why the certificate reports only the single
+      loudest moment of the night rather than a full log. The full log is
+      recorded and kept on the device; the certificate exists to settle one
+      question, so it prints one number.
+  - title: A note on the second copy
+    published: -30d
+    body: |-
+      The second-copy feature prints a duplicate of the same recorded night,
+      not a fresh reading. Both copies will always agree, since they come
+      from the same log.
+  - title: The Campaign has ended
+    published: -20d
+    body: |-
+      The Snore Certificate Printer reached 44% of its goal. It will not be
+      made this time, and no printer has shipped.
+
+      Thank you to the 100 backers who wanted a number instead of an
+      argument. Nobody has been charged, and the units on the bench remain
+      prototypes.

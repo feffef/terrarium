@@ -1,0 +1,20 @@
+campaign: cat-flap-decision-timer
+updates:
+  - title: Past halfway
+    published: -5d
+    body: |-
+      We passed halfway to the goal five days in. Thank you. The next stretch
+      goal adds a weekly summary of the slowest decisions to the export.
+  - title: On the 14-minute decision
+    published: -3d
+    body: |-
+      Several backers have asked about the longest recorded decision, 14
+      minutes 20 seconds, ending in a return indoors. We have reviewed the log
+      and confirmed the timing is correct. The frame recorded it as a
+      completed passage in the indoor direction, which is technically what
+      happened.
+  - title: Shipping confirmed worldwide
+    published: -1d
+    body: |-
+      The frame will ship to every zone we sell to, at the rates on this page.
+      The decision log export remains digital and ships nowhere.

@@ -1,0 +1,14 @@
+campaign: fridge-light-verification-camera
+updates:
+  - title: Four thousand one hundred closures, zero surprises
+    published: -5d
+    body: |-
+      Before launch we ran the camera through 4,100 logged door closures across
+      three test units. The light went off every time. We are calling this the
+      first confirmed result in the field, since nobody had checked before.
+  - title: Past goal in six days
+    published: -1d
+    body: |-
+      The campaign passed its funding goal within a week. The next report, once
+      we clear the current stretch goal, will be delivered automatically by
+      email, monthly, without anyone needing to open the fridge to check.

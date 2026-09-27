@@ -1,0 +1,7 @@
+name: Beatrix Hollis
+bio: Keeps three cats and one litter box in Leeds, and considers a lit sign the least she can do for whichever one is using it.
+portrait: |-
+  <circle cx="50" cy="37" r="17" style="fill:color-mix(in srgb, var(--tf-ink) 68%, var(--tf-surface))" />
+  <path d="M19 96c4-21 17-31 31-31s27 10 31 31z" style="fill:var(--tf-accent)" />
+  <path d="M34 41c2 15 28 15 30 0c-4 5-7 7-15 7s-11-2-15-7z" style="fill:var(--tf-ink)" />
+  <path d="M30 26c5-9 30-9 35 0l2 5H28z" style="fill:var(--tf-ink)" />

@@ -1,0 +1,8 @@
+name: Declan Murphy
+bio: Electrician in Cork, who fitted the first frame after his cat spent whole minutes deciding at the door in winter. Wanted a number for it, not just an impression.
+portrait: |-
+  <path d="M18 96c4-22 18-32 32-32s28 10 32 32z" style="fill:var(--tf-muted)" />
+  <circle cx="50" cy="40" r="17" style="fill:color-mix(in srgb, var(--tf-ink) 65%, var(--tf-surface))" />
+  <path d="M35 40c3 15 27 15 30 0c-4 5-7 7-15 7s-11-2-15-7z" style="fill:var(--tf-ink)" />
+  <path d="M31 27c6-10 32-10 38 0l2 6H29z" style="fill:var(--tf-ink)" />
+  <path d="M29 31l-5 7M71 31l5 7" style="fill:none;stroke:var(--tf-ink);stroke-width:2;stroke-linecap:round" />

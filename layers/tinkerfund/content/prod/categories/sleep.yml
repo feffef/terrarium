@@ -1,0 +1,4 @@
+name: Sleep
+blurb: Equipment for the eight hours in which nothing is expected of you.
+icon: '<path d="M20 14A8 8 0 1 1 10 4a6 6 0 0 0 10 10zM15 3h4l-4 4h4" />'
+order: 7
