@@ -49,7 +49,9 @@ Merge the three reports into one tally in your scratchpad:
   `visitor-loop` PR since the last `decisions.md` entry; each rejected
   approach or standing preference becomes one new line there (committed with
   step 4's PR). Then drop anything [`decisions.md`](decisions.md) rules out,
-  and anything an open or closed issue/PR already covers (search first).
+  anything an open or closed issue/PR already covers (search first), and
+  anything already logged as an idea in the last week
+  (`pnpm exec tsx scripts/ideas.ts gather --days 7`).
 
 Done when every reported finding is in the tally, marked consensus or single;
 every consensus finding is marked *fix*, *dropped (why)*, or *out of remit*;

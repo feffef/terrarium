@@ -9,7 +9,7 @@
 // Mirrors `scripts/digest.ts`'s split: pure, unit-tested core (keyword
 // extraction, overlap scoring, clustering) behind a thin FS/CLI shell.
 //
-// Usage:  tsx scripts/ideas.ts gather [--threshold <n>]
+// Usage:  tsx scripts/ideas.ts gather [--threshold <n>] [--days <n>]
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import { isExternalSession } from '../shared/schemas/session.ts'
@@ -135,6 +135,12 @@ export function gatherNoteRecords(sessions: SessionNoteMaterial[]): NoteRecord[]
   return out
 }
 
+/** Only the ideas authored within the last `days` days before `now`. */
+export function recentIdeas(records: NoteRecord[], days: number, now = new Date()): NoteRecord[] {
+  const cutoff = now.getTime() - days * 86_400_000
+  return records.filter((r) => r.kind === 'idea' && Date.parse(r.date) >= cutoff)
+}
+
 /** Notes folded into clusters, biggest (most-recurring) first — the "what
  *  recurs" ordering (#440). Ties broken by label. */
 export function buildNoteClusters(records: NoteRecord[], threshold = CLUSTER_THRESHOLD): NoteCluster[] {
@@ -178,8 +184,9 @@ function readSessionNoteMaterials(cwd = root): SessionNoteMaterial[] {
 
 // ── Commands ──────────────────────────────────────────────────────────────────
 
-export function cmdGather(cwd = root, threshold = CLUSTER_THRESHOLD): { total: number; clusters: NoteCluster[] } {
-  const records = gatherNoteRecords(readSessionNoteMaterials(cwd))
+export function cmdGather(cwd = root, threshold = CLUSTER_THRESHOLD, days?: number): { total: number; clusters: NoteCluster[] } {
+  const all = gatherNoteRecords(readSessionNoteMaterials(cwd))
+  const records = days === undefined ? all : recentIdeas(all, days)
   return { total: records.length, clusters: buildNoteClusters(records, threshold) }
 }
 
@@ -195,11 +202,14 @@ function main(): void {
   const cmd = argv[0]
   const thresholdIdx = argv.indexOf('--threshold')
   const threshold = thresholdIdx >= 0 && argv[thresholdIdx + 1] ? Number(argv[thresholdIdx + 1]) : CLUSTER_THRESHOLD
+  const daysIdx = argv.indexOf('--days')
+  const days = daysIdx >= 0 ? Number(argv[daysIdx + 1]) : undefined
+  if (days !== undefined && !(days > 0)) fail('--days needs a positive number')
 
   if (cmd === 'gather') {
-    process.stdout.write(JSON.stringify(cmdGather(root, threshold), null, 2) + '\n')
+    process.stdout.write(JSON.stringify(cmdGather(root, threshold, days), null, 2) + '\n')
   } else {
-    fail(`unknown command "${cmd ?? ''}" — expected: gather [--threshold <n>]`)
+    fail(`unknown command "${cmd ?? ''}" — expected: gather [--threshold <n>] [--days <n>]`)
   }
 }
 

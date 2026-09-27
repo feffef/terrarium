@@ -9,6 +9,7 @@ import {
   gatherNoteRecords,
   keywordOverlap,
   readNoteMaterial,
+  recentIdeas,
   noteKeywords,
   type SessionNoteMaterial,
   type NoteRecord,
@@ -109,6 +110,18 @@ describe('gatherNoteRecords()', () => {
 
   it('is empty for a session with neither field', () => {
     expect(gatherNoteRecords([{ session: 's1', endedAt: '2026-07-07T00:00:00Z', ideas: [], learnings: [] }])).toEqual([])
+  })
+})
+
+describe('recentIdeas()', () => {
+  it('keeps only ideas dated within the window', () => {
+    const now = new Date('2026-07-10T00:00:00Z')
+    const records: NoteRecord[] = [
+      { note: 'old idea', kind: 'idea', session: 's1', date: '2026-07-02T00:00:00Z' },
+      { note: 'new idea', kind: 'idea', session: 's2', date: '2026-07-04T00:00:00Z' },
+      { note: 'new learning', kind: 'learning', session: 's2', date: '2026-07-04T00:00:00Z' },
+    ]
+    expect(recentIdeas(records, 7, now).map((r) => r.note)).toEqual(['new idea'])
   })
 })
 
