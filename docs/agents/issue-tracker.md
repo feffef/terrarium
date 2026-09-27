@@ -128,3 +128,4 @@ Used by `/wayfinder`. The **map** is a single issue with **child** issues as tic
 - **Frontier query**: list the map's open children (`gh issue list --state open`, scoped to the map's sub-issues / task list), drop any with an open blocker (`issue_dependencies_summary.blocked_by > 0`, or an open issue in the `Blocked by` line) or an assignee; first in map order wins.
 - **Claim**: `gh issue edit <n> --add-assignee @me` — the session's first write.
 - **Resolve**: `gh issue comment <n> --body "<answer>"`, then `gh issue close <n>`, then append a context pointer (gist + link) to the map's Decisions-so-far.
+- **Rewriting a map or spec body wholesale**: pasting in fresh content carries over the OLD session's ADR-0017 header line from the copy, which the provenance guard then reads as *this* session's write and rejects as stale. Before submitting, replace that header line with the current session's own marker — don't just paste the new body over the old one.

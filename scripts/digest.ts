@@ -10,6 +10,11 @@
 //   list [--now <iso>]     print closed UTC days that have activity but no digest
 //   gather <YYYY-MM-DD>     print one day's materials as JSON
 //
+// On a busy day, `gather`'s JSON can exceed Bash's inline-capture cap, the same
+// recurring shape session-frictions.ts documents (its own usage comment, issues
+// #811/#976) for its --window output — redirect gather's output to a file and
+// read that instead of trusting the inline preview.
+//
 // (The index overview needs no command: the Journal's Space landing is a live
 // dashboard that queries the digest pages directly — a new Digest appears with
 // no baking. See ADR-0010.)

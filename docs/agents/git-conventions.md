@@ -89,6 +89,19 @@ locally, and every step after the `&&` never runs, with no error pointing at
 it. Check existence first (e.g. `git rev-parse --verify <branch>`) and handle
 the already-exists case explicitly instead of chaining blindly.
 
+## Never chain a push right after starting a backgrounded check
+
+**Never chain `git push` (or any other state-changing git command) with `;`/`&&`
+right after starting a backgrounded gate/test run, without first waiting for and
+checking its actual exit code.** One session backgrounded `pnpm gate:scoped` and
+chained `git push` immediately after with `;` instead of waiting on it — the push
+went out while the gate was still red, since the chain never inspected the
+backgrounded run's result. This is the same "check first, don't silence a
+state-changing command" discipline as the branch-rename-chaining and
+`pkill`-chaining footguns above, generalized: start the long check with
+`run_in_background: true` and a log path, then wait for and read that log's
+actual completion/exit status before running anything that assumes it passed.
+
 ## Check `git status` before a destructive command, and never silence a state-changing command's output
 
 **Before `git reset --hard` (or any other command that discards uncommitted

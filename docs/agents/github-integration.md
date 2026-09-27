@@ -111,6 +111,12 @@ each recipe class to its MCP equivalent:
   chars observed)** — `Read`'s offset/limit pages by line, so it doesn't help
   here. Redirect the output to a file and slice it, or fetch a small tail
   first.
+- **`issue_read`'s `get_sub_issues` method returns full sub-issue bodies and
+  has overflowed (94K–131K chars observed) on a wayfinder map/spec issue with
+  many children.** When you only need the linkage or a count — not the
+  sub-issues' content — prefer `list_issues` with `fields` set to omit `body`,
+  or read the parent's own `sub_issues_summary.total_count` instead of calling
+  `get_sub_issues` at all.
 
 ## Script escapes — cheaper than the API for three common questions
 
