@@ -119,10 +119,12 @@ window's.
   grade is the lever.
 - **`role`** stays ≤ ~50 words and free of PR, issue or session ids. Refresh
   it when usage contradicts it.
-- **`observations`**: append `{ date: <today, UTC>, note: <citations> }` for
-  every grade or role change, verified or unverified finding (say which), or
-  idea. Never edit or drop an earlier entry. A Skill with nothing new gets no
-  entry.
+- **`observations`** hold 40 days of history. Append
+  `{ date: <today, UTC>, note: <citations> }` for every grade or role change,
+  verified or unverified finding (say which), or idea, but only when it cites
+  a session no remaining entry already cites. Remove every entry dated more
+  than 40 days before today; git keeps the history. Leave the other entries as
+  they are. If none remain, the field is `[]`.
 - **Coverage gaps**: create an entry for a Skill that is used but not
   inventoried (`category` is `general-engineering` for a pack Skill,
   `platform-operation` for our own). Propose removing an entry whose Skill is
@@ -137,9 +139,9 @@ Done when every entry's grade and `role` match the evidence.
 
 If step 5 changed nothing, there is no PR. Otherwise follow
 `docs/agents/pr-workflow.md`'s "Closing a self-merged chartered run". The
-diff touches only `layers/journal/content/current/skills/*.yml`, and every
-grade change cites its ≥2 sessions. Anything else in the diff means you
-leave the PR open for a human.
+diff touches only `layers/journal/content/current/skills/*.yml`, every grade
+change cites its ≥2 sessions, and every removed observation is past 40 days.
+Anything else in the diff means you leave the PR open for a human.
 
 Log the session per CLAUDE.md's "Logging your session", with the step 3
 results (`orphanScan` included) in its summary.

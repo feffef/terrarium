@@ -5,22 +5,4 @@ installedSha256: 7de372c13488f1ee96cc11cd8907b56b6809cc93eef776eeddd37de6b6cbe3f
 role: >-
   Stress-test a plan or design against the relevant documentation before
   building — useful ahead of a milestone or a structural ADR.
-observations:
-  - date: 2026-07-14
-    note: >-
-      Used in 5 of this window's 40 sessions, always ahead of a design/schema
-      change before building: session_01RqxwHH, session_019ojLY,
-      session_01LftL3mM, session_01TesnDHD, session_01Rervdd — matches role.
-  - date: 2026-07-16
-    note: >-
-      Prior citations mostly aged out; used in 3 of this window's 40 sessions,
-      again always ahead of a design/schema change: session_01B1PirL4vZnwR6VytVgfXut
-      (Observability naming interview), session_01NkLUMugs5s6QRRM8Wq7UUb
-      (designed the auto-triage skill + ADR-0022), session_01RqxwHHqJFDNBDjeqYVsTSC
-      (close-session/log-session closure-model design) — matches role.
-  - date: 2026-07-25
-    note: >-
-      Prior citations aged out; used in 2 of this window's 40 sessions, again
-      always ahead of building: session_01Nbh46E53P4eK7773mxcmdf (the
-      capture-static.ts idea) and session_01VsqSAkCvbaLvAVsySvXvdg (the journal
-      archival script's design) — matches role.
+observations: []

@@ -113,7 +113,13 @@ Status: Accepted
 > runs produced one confirmed finding, and it could not see failures that leave
 > no friction. The window becomes the **last 7 days**, not the 40 newest logs,
 > which scheduled runs had shrunk to about two days. The scorecard now reports
-> usage statistics for every Skill, pack Skills included.
+> usage statistics for every Skill, pack Skills included. **`observations` stop
+> being append-only**: they carry 40 days of history between runs, since
+> daily runs over overlapping windows would otherwise pile up repeats (as on
+> `implement`/`code-review` before 2026-09-25). A run removes entries older than
+> 40 days (git keeps them) and adds one only when it cites a session no
+> remaining entry cites. Findings that couldn't yet be verified are recorded
+> there too, marked unverified, so a later run can confirm them.
 
 ## Context
 

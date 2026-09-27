@@ -9,9 +9,4 @@ role: >-
   `ready-for-agent`. Essential whenever the guest pipeline is actually
   running — a bounded, owner-chosen demo window, not standing operation — so
   its rarity reflects the window's rarity, not the Skill's value within it.
-observations:
-  - date: 2026-07-18
-    note: >-
-      Newly observed on disk but uninventoried; created this entry from its
-      only windowed use, session_012KajpP5iqjGPQeVzx8wQVr ("Run guest-intake
-      demo loop; resist adversarial requests").
+observations: []

@@ -8,29 +8,4 @@ role: >-
   ready-for-agent under the ADR-0022 standing green-light. User-invoked; fired by
   hand or on an interval to keep the Trusted-authored backlog moving. Escalates
   genuine judgment calls and design uncertainty to a human.
-observations:
-  - date: 2026-07-14
-    note: >-
-      Authored via a grill-with-docs session (session_01NkLUMugs5s6QRRM8Wq7UUb)
-      after a manual brave-triage run moved 18 issues to ready-for-agent; the
-      standing-green-light governance was recorded as ADR-0022, and wayfinder
-      coexistence (respectful overlay) was chosen over separate-lanes/graduation.
-  - date: 2026-07-14
-    note: >-
-      Corrected category from general-engineering to platform-operation: this
-      is our own Skill (not in skills-lock.json's external pack), and every
-      other own Skill in the Inventory (atlas-specimen, audit-docs,
-      audit-skills, blog-post, close-session, digest, frictions-to-fixes,
-      log-session) is categorized platform-operation.
-  - date: 2026-07-27
-    note: >-
-      Promoted supporting → specialist: 2 sessions in this window's 40 are
-      dedicated auto-triage sweeps where the Skill is essential to the whole
-      session's purpose, not merely useful alongside other work —
-      session_01XmaZh9Dh2tvTwFYuDWSzqx ("Auto-triage sweep over open issues
-      and PRs") and session_01RW5ex9Dh93FU1gtGLLRZMX ("Autonomous auto-triage
-      sweep of the open backlog"), both fired as the standing ADR-0022
-      green-light sweep with no other path to the same batch outcome. Same
-      "essential within a specific kind of work" pattern already recognized
-      for digest/audit-docs/blog-post/audit-skills, which are graded
-      specialist for the same reason (their own dedicated scheduled runs).
+observations: []
