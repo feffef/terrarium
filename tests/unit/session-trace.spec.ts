@@ -492,6 +492,22 @@ describe('docsReadViaShell (issue #1074)', () => {
       expect(trace.docsReadViaShell.sort()).toEqual(['docs/agents/a.md', 'docs/agents/c.md'])
     })
 
+    // Issue #1355: the harness records an empty stdout as a placeholder text.
+    it('does not credit a zero-match single-file grep whose result is the empty-output placeholder', () => {
+      const scan = shellReadScanOf(records(bashWithResult(
+        'toolu_4', 'grep -n -i "branch-pin" docs/agents/guards.md | head -3', '(Bash completed with no output)',
+      )))
+      expect(scan.paths).toEqual([])
+      expect(scan.nearMisses.map((m) => [m.path, m.rule])).toEqual([
+        ['docs/agents/guards.md', 'grep/rg output does not show this file being read'],
+      ])
+    })
+
+    it('still credits a single-file grep with bare content output', () => {
+      const trace = extractTrace(records(bashWithResult('toolu_5', 'grep "TODO" docs/agents/guards.md', 'TODO fix this')))
+      expect(trace.docsReadViaShell).toEqual(['docs/agents/guards.md'])
+    })
+
     it('still credits an ordinary cat, unaffected by the grep gate', () => {
       const trace = extractTrace(records(bashWithResult('toolu_3', 'cat docs/agents/guards.md', '')))
       expect(trace.docsReadViaShell).toEqual(['docs/agents/guards.md'])

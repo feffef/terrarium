@@ -156,6 +156,9 @@ function toolResultText(content: unknown): string {
     .join('\n')
 }
 
+/** What the harness records in place of an empty stdout (issue #1355). */
+const EMPTY_BASH_OUTPUT = '(Bash completed with no output)'
+
 /** Every Bash command a transcript recorded, each paired with its own
  *  `tool_result` output text — `scanShellReads` needs the OUTPUT, not just the
  *  command, to gate a grep/rg's crediting on what it actually matched (issue
@@ -171,7 +174,8 @@ function bashCommandsOf(records: Record<string, unknown>[]): ShellCommand[] {
     for (const block of content) {
       const b = block as { type?: string; tool_use_id?: string; content?: unknown }
       if (b?.type === 'tool_result' && typeof b.tool_use_id === 'string') {
-        outputs.set(b.tool_use_id, toolResultText(b.content))
+        const text = toolResultText(b.content)
+        outputs.set(b.tool_use_id, text.trim() === EMPTY_BASH_OUTPUT ? '' : text)
       }
     }
   }
