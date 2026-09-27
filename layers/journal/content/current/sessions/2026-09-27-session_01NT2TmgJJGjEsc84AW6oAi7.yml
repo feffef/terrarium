@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01NT2TmgJJGjEsc84AW6oAi7
 startedAt: 2026-09-27T18:48:36Z
-endedAt: 2026-09-27T19:30:31Z
+endedAt: 2026-09-27T19:40:12Z
 kind: interactive
 goal: Whole-repo security review and fixes
-status: in-review
-outcome: "Seven findings fixed, PR #1443 open"
-summary: "Human-instructed: ran /security-review over the whole repo in seven parallel read-only subagent slices (CI/deploy, hooks, GitHub scripts, tooling, platform app, tenant layers, agent governance), verified each finding against the code, then on the human's \"fix them\" dispatched three worktree-isolated impl agents (SVG/XSS + mermaid, merge-pr/gate, triage/guest-intake trust), merged their work, ran /code-review (human-invoked), and on the human's \"fix first\" dispatched one follow-up agent that closed an entity-encoding bypass in the new SVG check with an element allowlist. Agent-initiated: opening PR #1443 per ADR-0003 and subscribing to it. Full gate green locally."
+status: completed
+outcome: "Seven findings fixed, PR #1443 merged"
+summary: "Human-instructed: ran /security-review over the whole repo in seven parallel read-only subagent slices (CI/deploy, hooks, GitHub scripts, tooling, platform app, tenant layers, agent governance), verified each finding against the code, then on the human's \"fix them\" dispatched three worktree-isolated impl agents (SVG/XSS + mermaid, merge-pr/gate, triage/guest-intake trust), merged their work, ran /code-review (human-invoked), and on the human's \"fix first\" dispatched one follow-up agent that closed an entity-encoding bypass in the new SVG check with an element allowlist. Agent-initiated: opening PR #1443 per ADR-0003 and subscribing to it. On the human's \"Merge\", merge-pr.ts was denied by the auto-mode Self-Approval classifier; the human merged it by hand."
 prs:
   - "1443"
 docsRead:
@@ -75,19 +75,26 @@ frictions:
   - description: verify:mermaid, now a security check, still isn't run by CI's gate.yml, so the mermaid SVG scan is local-only until proposal 879 is applied.
     solution: Human applies docs/proposals/879-gate-yml-thin-shell.md.
     severity: moderate
-durationSec: 2515
+  - description: "Human said Merge; merge-pr.ts was denied by the auto-mode Self-Approval classifier, so the human had to merge PR #1443 by hand."
+    solution: pr-workflow.md could note that a human-asked merge of an agent-opened PR may still be classifier-blocked; offer the UI merge up front.
+    severity: minor
+durationSec: 3096
 models:
-  claude-opus-5-5: 115
+  claude-opus-5-5: 144
 toolCounts:
-  Bash: 31
+  Bash: 37
   Agent: 13
   Skill: 3
-  ToolSearch: 1
+  ToolSearch: 3
   mcp__github__list_pull_requests: 1
   Write: 2
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
   mcp__Claude_Code_Remote__send_later: 1
+  ReadNotifications: 5
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - app/utils/svg.ts
   - tests/unit/svg.spec.ts
@@ -103,9 +110,9 @@ docsReadViaShell:
   - .agents/skills/auto-triage/SKILL.md
   - .agents/skills/triage/SKILL.md
   - docs/agents/issue-tracker.md
+  - docs/agents/pr-workflow.md
   - docs/agents/tenant-layers.md
   - docs/agents/guest-contributions.md
-  - docs/agents/pr-workflow.md
   - docs/adr/0020-requester-trust-tiers.md
   - docs/agents/triage-labels.md
   - docs/adr/0023-guest-driven-demo-pipeline.md
