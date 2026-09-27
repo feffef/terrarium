@@ -6,7 +6,8 @@ import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
-import { OUTPUT_FILE_PATH, pickRecencyWindow, resolveOutputTarget, SESSIONS_DIR, survey, toCompactSession, toTriageSession, type TriageSession } from '../../scripts/session-frictions.ts'
+import { SESSIONS_DIR } from '../../scripts/session-logs.ts'
+import { OUTPUT_FILE_PATH, pickRecencyWindow, resolveOutputTarget, survey, toCompactSession, toTriageSession, type TriageSession } from '../../scripts/session-frictions.ts'
 
 function session(id: string, startedAt: string, opts: Partial<TriageSession> = {}): TriageSession {
   return {

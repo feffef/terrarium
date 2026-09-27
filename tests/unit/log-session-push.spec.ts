@@ -11,7 +11,8 @@ import { existsSync, mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync
 import { tmpdir } from 'node:os'
 import { dirname, join } from 'node:path'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { authorMain, buildLogCommit, isLinkedWorktree, pushWithRetry, SESSIONS_DIR } from '../../scripts/log-session.ts'
+import { authorMain, buildLogCommit, isLinkedWorktree, pushWithRetry } from '../../scripts/log-session.ts'
+import { SESSIONS_DIR } from '../../scripts/session-logs.ts'
 
 /** git in a given repo, with a deterministic identity so commits are reproducible. */
 function git(cwd: string, args: string[]): string {

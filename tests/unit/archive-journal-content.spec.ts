@@ -17,7 +17,7 @@ import {
   planPart,
   RETAIN_DATES,
 } from '../../scripts/archive-journal-content.ts'
-import { ARCHIVED_SESSIONS_DIR, SESSIONS_DIR } from '../../scripts/audit-skills.ts'
+import { ARCHIVED_SESSIONS_DIR, SESSIONS_DIR } from '../../scripts/session-logs.ts'
 import { DIGESTS_DIR } from '../../scripts/digest.ts'
 
 describe('datesToRetain()', () => {

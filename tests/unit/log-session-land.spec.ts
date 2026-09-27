@@ -17,11 +17,11 @@ import {
   isAlreadyLanded,
   recoverDroppedScratch,
   scratchHashOf,
-  SESSIONS_DIR,
   SESSION_ID_MISMATCH_FRICTION,
   validateEntry,
   withSessionIdMismatchFriction,
 } from '../../scripts/log-session.ts'
+import { SESSIONS_DIR } from '../../scripts/session-logs.ts'
 import { extractTrace, parseTranscript, stitch, STAGING_DIR, type AuthoredScratch } from '../../scripts/session-trace.ts'
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '../..')

@@ -51,6 +51,7 @@ import {
   type FetchStrategy,
 } from './list-open-issues.ts'
 import { readProvenanceHeader } from './provenance-header.ts'
+import { ARCHIVED_SESSIONS_DIR, readSessionLogs, SESSIONS_DIR } from './session-logs.ts'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 
@@ -130,8 +131,6 @@ export const RESOLVED_ORPHANED_SESSIONS: ReadonlyMap<string, string> = new Map([
 export const MAX_SKILL_SESSION_FILES = 40
 
 /** Paths this helper reads. */
-export const SESSIONS_DIR = 'layers/journal/content/current/sessions'
-export const ARCHIVED_SESSIONS_DIR = 'layers/journal/content/archived/sessions'
 export const INVENTORY_DIR = 'layers/journal/content/current/skills'
 export const SKILLS_DIR = '.agents/skills'
 /** The lockfile of externally-sourced Skills (the pack). A Skill named here is
@@ -999,37 +998,14 @@ export function buildDocsReadTotals(window: readonly WindowSession[]): Record<st
 
 // ── FS IO (thin shell) ────────────────────────────────────────────────────────
 
-/** Reads every session log with its source file path attached (`SessionFile`),
- *  dropping EXTERNAL logs via `toSessionFile` (ADR-0009 amendment). `skillNames`
- *  cross-checks each `skillsUsed` entry against the real Skills on disk
- *  (`filterSkillsUsed`, issue #545) — defaults to a fresh `readSkillNames(cwd)`
- *  read, but `scorecard()` passes one in so the directory is only read once per run. */
+/** `scorecard()` passes `skillNames` in so the Skills dir is read once per run. */
 function readSessionFiles(cwd = root, skillNames: ReadonlySet<string> = readSkillNames(cwd)): SessionFile[] {
-  const dir = join(cwd, SESSIONS_DIR)
-  if (!existsSync(dir)) return []
-  const out: SessionFile[] = []
-  for (const f of readdirSync(dir).filter((f) => f.endsWith('.yml'))) {
-    const raw = parseYaml(readFileSync(join(dir, f), 'utf8')) as Record<string, unknown>
-    if (!raw || typeof raw !== 'object') continue
-    const entry = toSessionFile(raw, `${SESSIONS_DIR}/${f}`, skillNames)
-    if (entry) out.push(entry)
-  }
-  return out
+  return readSessionLogs(cwd, { archived: false }).flatMap(({ file, data }) => toSessionFile(data, file, skillNames) ?? [])
 }
 
 /** An archived session is still a valid log, not an orphan. */
 function readKnownSessionIds(cwd = root): Set<string> {
-  const ids = new Set<string>()
-  for (const dir of [SESSIONS_DIR, ARCHIVED_SESSIONS_DIR]) {
-    const full = join(cwd, dir)
-    if (!existsSync(full)) continue
-    for (const f of readdirSync(full).filter((f) => f.endsWith('.yml'))) {
-      const raw = parseYaml(readFileSync(join(full, f), 'utf8')) as Record<string, unknown>
-      const id = raw && typeof raw === 'object' ? String(raw.session ?? '') : ''
-      if (id) ids.add(id)
-    }
-  }
-  return ids
+  return new Set(readSessionLogs(cwd, { archived: true }).map(({ data }) => String(data.session ?? '')).filter(Boolean))
 }
 
 /** Scoped to `origin/main` per CLAUDE.md's git-log guidance, not `--all`. Feeds
