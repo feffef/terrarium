@@ -186,3 +186,61 @@ trials:
       correctly named the reading order, all three divergences, the rule of
       two's threshold with both worked examples, and the ADR-0006 check with
       issue #573 — so no hook ships with this rewrite.
+  - problem: >
+      No problem cleared the bar this run either. A full-corpus search (two
+      dispatched passes) for already-failed prose surfaced only territory
+      already settled: issue #1293's CLAUDE.md `run_in_background: true`-
+      from-the-outset bullet looked live at first (two recurrences cited) but
+      turned out to already be pruned to its goal-shaped minimum on
+      2026-09-22 and already validated holding by a 2026-09-26 verdict —
+      #1293 itself was still open only because that verdict's "then close
+      this issue" follow-through was never done; closed it now, no new
+      trial needed. Every other open-issue candidate the searches surfaced
+      (GI-01, IT-07/08, BP-05, CM-41) was already resolved by a prior trial
+      or a since-built mechanism, confirmed by reading the actual ledger
+      commits, not just titles. Per the 2026-09-25 owner direction, rewrote a
+      whole untrialed file in plainer words instead of ending the run:
+      `docs/agents/git-conventions.md` (1129 words, dense but confirmed by
+      `rulebook-migration-table.md`'s GC-01..15 rows to carry zero recorded
+      incidents on any of its rules — a language-only target, not a
+      criterion-1 one). Tightened every section's wording and cut restated
+      framing (e.g. "This is the same 'check first, don't silence' discipline
+      as the branch-rename-chaining and pkill-chaining footguns above,
+      generalized" folded into one sentence); kept every rule, every issue
+      citation, and the two worked examples (the `specimen.value?.slug`
+      rename, the shallow-merge-base revert-branch case) verbatim in
+      substance. Verified two inbound references before cutting anything —
+      `scripts/gate.ts` and `scripts/git-helpers.ts` both cite this file by
+      name as the canonical explanation of why a shallow clone is unsafe to
+      read history from (an archived session log records a near-miss where
+      an earlier `/prune-trial` almost gutted this exact section) — kept the
+      under-report/revert-branch substance intact, compressed only the
+      wording around it. Net: 1129 → 971 words (-14%), 140 → 124 lines.
+      Grepped the corpus for the renamed section headings and cut phrases:
+      no inbound references found.
+    territory:
+      paths:
+        - "docs/agents/git-conventions.md (whole-file language simplification)"
+      keywords:
+        - shallow merge-base can under-report
+        - specimen.value?.slug
+        - never chain a push right after starting a backgrounded check
+    opened: 2026-09-27
+    proven: true
+    check: >
+      Damage is a session that needs one of the cut framing asides — the
+      explicit "same discipline as the pkill-chaining footgun" cross-
+      reference, or any other restated justification — and can't get the
+      same operative rule from the rewritten text. NOT damage: a session
+      correctly fetching before trusting history, scoping a pickaxe search to
+      `origin/main`, treating a clean merge as unproven on a restructured
+      file, refusing to trust a shallow checkout's history, using `-F` for a
+      backtick-bearing commit message, not `&&`-chaining a branch
+      rename/backgrounded check into what follows it, checking `git status`
+      before a destructive command, or reading `git log origin/main..HEAD`
+      before acting on a Stop-hook "Unverified" flag — all from the rewritten
+      text alone. A Sonnet probe given only the rewritten file correctly
+      reconstructed every one of those rules, including the specific remedy
+      commands (`git fetch --unshallow`, `git rev-parse --verify <branch>`,
+      `git add -A` after a stash-pop-around-a-rename) and every cited issue
+      number — so no hook ships with this rewrite.
