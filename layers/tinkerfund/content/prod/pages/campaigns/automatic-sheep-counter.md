@@ -82,41 +82,6 @@ campaign:
         <ellipse cx="287.4" cy="161.7" rx="12.6" ry="7.3" style="fill:color-mix(in srgb, var(--tf-ink) 45%, var(--tf-surface))" />
         <ellipse cx="287.4" cy="161.7" rx="7.8" ry="4.5" style="fill:var(--tf-ink)" />
         <g transform="matrix(0.5 0.3 0 0.6 249.9 179.7)"><rect width="64" height="16" rx="1.5" style="fill:var(--tf-ink)" /><text x="4" y="12" style="fill:var(--tf-good);stroke:none;font:600 11px var(--tf-mono)">9 481</text></g>
-    - style: isometric
-      caption: "The Twin Unit: one in charcoal, one in birch, so that two sleepers can compare totals in the morning."
-      svg: |-
-        <ellipse cx="200" cy="256" rx="150" ry="26" style="fill:var(--tf-line)" />
-        <path d="M153.2 93L343.8 203L257.2 253L66.6 143Z" style="fill:color-mix(in srgb, var(--tf-line) 35%, var(--tf-surface))" />
-        <path d="M66.6 153L257.2 263L257.2 253L66.6 143Z" style="fill:color-mix(in srgb, var(--tf-line) 70%, var(--tf-surface))" />
-        <path d="M343.8 213L257.2 263L257.2 253L343.8 203Z" style="fill:var(--tf-line)" />
-        <path d="M112.6 209.3L131.6 220.2L114 230.3L95.1 219.4Z" style="fill:color-mix(in srgb, var(--tf-ink) 45%, var(--tf-surface))" />
-        <path d="M95.1 238.1L114 249.1L114 230.3L95.1 219.4Z" style="fill:var(--tf-ink)" />
-        <path d="M131.6 238.9L114 249.1L114 230.3L131.6 220.2Z" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" />
-        <path d="M107.9 219L114.7 222.9L114.7 182.4L107.9 178.5Z" style="fill:var(--tf-ink)" />
-        <path d="M121.4 219L114.7 222.9L114.7 182.4L121.4 178.5Z" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" />
-        <path d="M106.6 117.6L160.6 148.8L122.8 170.7L68.7 139.5Z" style="fill:color-mix(in srgb, var(--tf-ink) 45%, var(--tf-surface))" />
-        <path d="M68.7 169.1L122.8 200.3L122.8 170.7L68.7 139.5Z" style="fill:var(--tf-ink)" />
-        <path d="M160.6 178.5L122.8 200.3L122.8 170.7L160.6 148.8Z" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" />
-        <path d="M106.4 130.1V144.2A16.4 9.5 0 0 0 122.8 153.6V139.6A16.4 9.5 0 0 1 106.4 130.1Z" style="fill:var(--tf-ink)" />
-        <path d="M122.8 139.6V153.6A16.4 9.5 0 0 0 139.1 144.2V130.1A16.4 9.5 0 0 1 122.8 139.6Z" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" />
-        <ellipse cx="122.8" cy="130.1" rx="16.4" ry="9.5" style="fill:color-mix(in srgb, var(--tf-ink) 45%, var(--tf-surface))" />
-        <ellipse cx="122.8" cy="130.1" rx="10.1" ry="5.9" style="fill:var(--tf-ink)" />
-        <g transform="matrix(0.7 0.4 0 0.8 74.1 153.5)"><rect width="64" height="16" rx="1.5" style="fill:var(--tf-ink)" /><text x="4" y="12" style="fill:var(--tf-good);stroke:none;font:600 11px var(--tf-mono)">16 012</text></g>
-        <path d="M216.6 149.3L235.5 160.2L217.9 170.3L199 159.4Z" style="fill:color-mix(in srgb, var(--tf-ink) 45%, var(--tf-surface))" />
-        <path d="M199 178.1L217.9 189.1L217.9 170.3L199 159.4Z" style="fill:var(--tf-ink)" />
-        <path d="M235.5 178.9L217.9 189.1L217.9 170.3L235.5 160.2Z" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" />
-        <path d="M211.8 159L218.6 162.9L218.6 122.4L211.8 118.5Z" style="fill:var(--tf-ink)" />
-        <path d="M225.3 159L218.6 162.9L218.6 122.4L225.3 118.5Z" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" />
-        <path d="M210.5 57.6L264.5 88.8L226.7 110.7L172.6 79.5Z" style="fill:var(--tf-surface)" />
-        <path d="M172.6 109.1L226.7 140.3L226.7 110.7L172.6 79.5Z" style="fill:color-mix(in srgb, var(--tf-line) 45%, var(--tf-surface))" />
-        <path d="M264.5 118.5L226.7 140.3L226.7 110.7L264.5 88.8Z" style="fill:color-mix(in srgb, var(--tf-line) 75%, var(--tf-surface))" />
-        <path d="M210.5 57.6L264.5 88.8L226.7 110.7L172.6 79.5Z" style="fill:none;stroke:var(--tf-line);stroke-width:1" />
-        <path d="M210.3 70.1V84.2A16.4 9.5 0 0 0 226.7 93.6V79.6A16.4 9.5 0 0 1 210.3 70.1Z" style="fill:var(--tf-ink)" />
-        <path d="M226.7 79.6V93.6A16.4 9.5 0 0 0 243.1 84.2V70.1A16.4 9.5 0 0 1 226.7 79.6Z" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" />
-        <ellipse cx="226.7" cy="70.1" rx="16.4" ry="9.5" style="fill:color-mix(in srgb, var(--tf-ink) 45%, var(--tf-surface))" />
-        <ellipse cx="226.7" cy="70.1" rx="10.1" ry="5.9" style="fill:var(--tf-ink)" />
-        <g transform="matrix(0.7 0.4 0 0.8 178.1 93.5)"><rect width="64" height="16" rx="1.5" style="fill:var(--tf-ink)" /><text x="4" y="12" style="fill:var(--tf-good);stroke:none;font:600 11px var(--tf-mono)">9 481</text></g>
-        <g style="stroke:none;fill:var(--tf-muted);font:600 11px var(--tf-mono);letter-spacing:.06em;text-anchor:middle"><text x="118" y="290">CHARCOAL</text><text x="300" y="290">BIRCH</text></g>
     - style: patent
       caption: "Section A–A through the projector head: housing (10), projection lens (12), sheep disc (14) turned by the motor (16) at one sheep per 1.8 s, lamp (18), tally sensor (20), display board (22), USB-C (24) and the beam (26)."
       svg: |-
