@@ -90,26 +90,6 @@ campaign:
         <circle cx="60.8" cy="10.1" r="1.2" style="fill:var(--tf-good)" /></g>
         <text x="114" y="282" style="stroke:none;fill:var(--tf-muted);font:600 10px var(--tf-mono);letter-spacing:.06em;text-anchor:middle">UNIT A · 74.2 dB</text>
         <text x="296" y="282" style="stroke:none;fill:var(--tf-muted);font:600 10px var(--tf-mono);letter-spacing:.06em;text-anchor:middle">UNIT B · 74.2 dB</text>
-    - style: isometric
-      caption: "A certificate torn off and laid flat, with a spare 58 mm roll. One per morning; 120 nights per roll."
-      svg: |-
-        <ellipse cx="324.5" cy="205" rx="43.2" ry="25.6" style="fill:var(--tf-line)" />
-        <path d="M285.4 121V205A39.2 22.6 0 0 0 363.7 205V121" style="fill:var(--tf-surface);stroke:var(--tf-line);stroke-width:1" />
-        <ellipse cx="324.5" cy="121" rx="39.2" ry="22.6" style="fill:var(--tf-surface);stroke:var(--tf-line);stroke-width:1" />
-        <ellipse cx="324.5" cy="121" rx="12.2" ry="7.1" style="fill:color-mix(in srgb, var(--tf-ink) 45%, var(--tf-surface))" />
-        <ellipse cx="324.5" cy="121" rx="9.8" ry="5.7" style="fill:var(--tf-surface)" />
-        <path d="M285.4 143a39.2 22.6 0 0 0 78.4 0M285.4 167a39.2 22.6 0 0 0 78.4 0" style="fill:none;stroke:var(--tf-line);stroke-width:.8" />
-        <g transform="matrix(.866 .5 -.866 .5 160 150)"><g transform="scale(1.7)"><path d="M-29 -64h58v124l-2.9 3l-2.9 -3l-2.9 3l-2.9 -3l-2.9 3l-2.9 -3l-2.9 3l-2.9 -3l-2.9 3l-2.9 -3l-2.9 3z" style="fill:var(--tf-surface);stroke:var(--tf-line);stroke-width:1;stroke-linejoin:round" />
-        <text x="-25" y="-52" style="stroke:none;fill:var(--tf-ink);font:600 5.4px var(--tf-mono);letter-spacing:.02em">SNORE CERTIFICATE</text>
-        <text x="-25" y="-45" style="stroke:none;fill:var(--tf-muted);font:500 4.6px var(--tf-mono)">NIGHT OF 14 SEP</text>
-        <path d="M-25 -40h50M-25 22h50" style="fill:none;stroke:var(--tf-line);stroke-width:.8" />
-        <text x="-25" y="-26" style="stroke:none;fill:var(--tf-muted);font:500 5px var(--tf-mono)">PEAK</text><text x="25" y="-26" style="stroke:none;fill:var(--tf-ink);font:600 7px var(--tf-mono);text-anchor:end">74.2 dB</text>
-        <text x="-25" y="-13" style="stroke:none;fill:var(--tf-muted);font:500 5px var(--tf-mono)">AT</text><text x="25" y="-13" style="stroke:none;fill:var(--tf-ink);font:600 7px var(--tf-mono);text-anchor:end">03:12</text>
-        <text x="-25" y="0" style="stroke:none;fill:var(--tf-muted);font:500 5px var(--tf-mono)">FOR</text><text x="25" y="0" style="stroke:none;fill:var(--tf-ink);font:600 7px var(--tf-mono);text-anchor:end">41 s</text>
-        <text x="-25" y="31" style="stroke:none;fill:var(--tf-muted);font:500 4.6px var(--tf-mono)">SIGNED · TF-0017</text>
-        <path d="M-23 48c6 -14 10 6 16 -6s10 -6 14 2s8 -10 14 -2" style="fill:none;stroke:var(--tf-ink);stroke-width:1.2;stroke-linecap:round;stroke-linejoin:round" /></g></g>
-        <text x="110" y="284" style="stroke:none;fill:var(--tf-muted);font:600 10px var(--tf-mono);letter-spacing:.06em;text-anchor:middle">ONE PER MORNING</text>
-        <text x="300" y="284" style="stroke:none;fill:var(--tf-muted);font:600 10px var(--tf-mono);letter-spacing:.06em;text-anchor:middle">120 NIGHTS PER ROLL</text>
     - style: patent
       caption: "Section A–A through the housing (10): paper roll (12), platen (14), thermal head (16), slot (18), certificate (20), controller board (22), microphone socket (24), AC inlet (26), display (28)."
       svg: |-
