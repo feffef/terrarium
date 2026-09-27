@@ -99,8 +99,8 @@ export function changedPaths(cwd: string = root, quiet = false): string[] | null
       return null
     }
     if (!base) return null
-    const committed = lines(git(['diff', '--name-only', `${base}..HEAD`], cwd))
-    const tracked = lines(git(['diff', '--name-only', 'HEAD'], cwd))
+    const committed = lines(git(['diff', '--name-only', '--no-renames', `${base}..HEAD`], cwd))
+    const tracked = lines(git(['diff', '--name-only', '--no-renames', 'HEAD'], cwd))
     const untracked = lines(git(['ls-files', '--others', '--exclude-standard'], cwd))
     return [...new Set([...committed, ...tracked, ...untracked])]
   } catch {
@@ -122,7 +122,7 @@ export function changedPathsBetween(baseRef: string, headRef = 'HEAD'): string[]
     if (isShallowRepository(root)) return null
     const base = git(['merge-base', baseRef, headRef])
     if (!base) return null
-    return lines(git(['diff', '--name-only', `${base}..${headRef}`]))
+    return lines(git(['diff', '--name-only', '--no-renames', `${base}..${headRef}`]))
   } catch {
     return null
   }
