@@ -87,8 +87,7 @@ per-story findings.
    A COMMENT-event review records the same verdict in both cases (issue #301,
    recurred as #853).
 5. **Before calling `merge-pr.ts`: step 4's verdict comment must already be
-   posted** — it merges immediately on green with no wait for a review trace
-   (issue #1276 tracks a mechanical check for this).
+   posted** — `merge-pr.ts` refuses to merge without it (issue #1276).
 
    `scripts/merge-pr.ts <pr-number>` is the **sole merge path** for every PR —
    pending-check or already-green alike — per step 3; it already polls to
