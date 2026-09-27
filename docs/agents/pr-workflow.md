@@ -19,7 +19,7 @@ overflow traps — see [`github-integration.md`](./github-integration.md).
 
 **Every GitHub body you open or post here** (a PR description, an issue, a
 review comment) opens with the ADR-0017 provenance header as its own first
-line: `🤖 [<model name>](<session URL>)` — the session URL must come from your
+line: `🤖 [<free-text label>](<session URL>)` — the session URL must come from your
 own system-prompt attribution instructions, never predicted or reconstructed.
 ADR-0017 (and, if it fires, the provenance guard's own deny message) is the
 source of truth for the exact mechanism — this doc doesn't restate it.
