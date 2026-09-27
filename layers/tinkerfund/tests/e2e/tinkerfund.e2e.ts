@@ -121,9 +121,9 @@ export function registerTinkerfundE2E(): void {
         expect(status('TF-9005')).toMatch(/Ended<[\s\S]*>Funded<[\s\S]*12480% funded/)
         expect(status('TF-9006')).toMatch(/Ended<[\s\S]*>Unfunded<[\s\S]*23% funded/)
         for (const name of [
-          'TinkerfundPledgeList', 'TinkerfundPledgeState', 'TinkerfundPledgeEditor', 'TinkerfundCancelPledge',
-          'TinkerfundCampaignCard', 'TinkerfundIndexTable', 'TinkerfundBrowseFilters', 'TinkerfundDealBanner',
-          'TinkerfundSearchField',
+          'TinkerfundPledgeList', 'TinkerfundPledgeState', 'TinkerfundPledgeEditor', 'TinkerfundPledgeCancel',
+          'TinkerfundBrowseCampaignCard', 'TinkerfundBrowseIndexTable', 'TinkerfundBrowseFilters', 'TinkerfundBrowseDealBanner',
+          'TinkerfundShellSearchField',
         ]) {
           expect(html).toMatch(new RegExp(`<code[^>]*>${name}</code>`))
         }

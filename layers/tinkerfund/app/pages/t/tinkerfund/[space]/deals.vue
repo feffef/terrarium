@@ -28,9 +28,9 @@ useSeoMeta(tinkerfundSeo({ kind: 'listing', space, title: 'Deals', description: 
     <section v-for="group in groups" :key="group.id" :aria-labelledby="group.id" class="group">
       <h2 :id="group.id" :class="{ 'tf-sr': !group.scheduled }">{{ group.title }}</h2>
       <article v-for="p in group.list" :key="p.stem" class="deal">
-        <TinkerfundDealBanner :promotion="p" :clock="clock" :scheduled="group.scheduled" />
+        <TinkerfundBrowseDealBanner :promotion="p" :clock="clock" :scheduled="group.scheduled" />
         <div v-if="campaignOf(p.campaign)" class="campaign">
-          <TinkerfundCampaignCard :card="campaignOf(p.campaign)!" :clock="clock" />
+          <TinkerfundBrowseCampaignCard :card="campaignOf(p.campaign)!" :clock="clock" />
         </div>
         <p v-else-if="!p.campaign" class="all">
           Applies to every Campaign. <NuxtLink :to="link('/discover?state=live')">Browse Live Campaigns</NuxtLink>

@@ -24,7 +24,7 @@ useSeoMeta(tinkerfundSeo(category.value
       </header>
       <TinkerfundBrowse :cards="cards" :categories="categories" :clock="clock" :category="category.slug" />
     </template>
-    <TinkerfundNotFound v-else />
+    <TinkerfundShellNotFound v-else />
   </TinkerfundShell>
 </template>
 

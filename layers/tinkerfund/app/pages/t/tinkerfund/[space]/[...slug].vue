@@ -19,7 +19,7 @@ useSeoMeta(tinkerfundSeo(doc.value
       <ContentRenderer :value="doc" />
     </article>
 
-    <TinkerfundNotFound v-else-if="!error" />
+    <TinkerfundShellNotFound v-else-if="!error" />
 
     <ContentLoadErrorDialog :status="status" :error="error" :context="route.path" />
   </TinkerfundShell>

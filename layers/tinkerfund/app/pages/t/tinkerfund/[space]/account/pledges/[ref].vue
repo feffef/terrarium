@@ -100,7 +100,7 @@ useSeoMeta(tinkerfundSeo({ kind: 'private', space, title: `Pledge ${reference.va
             <button type="button" class="tf-btn" @click="print">Print receipt</button>
             <template v-if="!current.locked">
               <button type="button" class="tf-btn primary" @click="edit">Change Pledge</button>
-              <TinkerfundCancelPledge :reference="current.pledge.ref" :title="receipt.title" @confirm="withdraw" />
+              <TinkerfundPledgeCancel :reference="current.pledge.ref" :title="receipt.title" @confirm="withdraw" />
             </template>
             <p v-else-if="current.state !== 'cancelled'" class="locked">Locked: its Campaign has ended.</p>
           </div>
