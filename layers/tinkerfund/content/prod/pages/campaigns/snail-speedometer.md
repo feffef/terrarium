@@ -5,11 +5,11 @@ campaign:
   registry: TF-0016
   inventor: gwen-ashdown
   category: garden
-  goal: 18000
+  goal: 15500
   launch: -16d
   end: +14d
   backers: 330
-  pledged: 17460
+  pledged: 15035
   specifications:
     - { label: Radar module, value: "60 GHz, tip-mounted" }
     - { label: Resolution, value: 0.1 mm/min }
@@ -215,7 +215,7 @@ campaign:
     - id: one-speedometer
       title: One speedometer
       description: One Snail Speedometer on its stake, with the leaderboard display.
-      price: 39
+      price: 29
       claimed: 230
       options:
         - id: stake
@@ -228,7 +228,7 @@ campaign:
     - id: two-speedometers
       title: Two speedometers
       description: Two units, for a garden with a front and back bed to compare.
-      price: 69
+      price: 55
       claimed: 80
       options:
         - id: stake
@@ -241,13 +241,13 @@ campaign:
     - id: garden-set
       title: Garden set
       description: Three speedometers sharing one leaderboard display, for a garden with several beds to compare.
-      price: 129
+      price: 99
       claimed: 20
-      stock: 60
+      stock: 50
       shipsTo: [domestic, europe, world]
       delivery: +90d
   addons:
-    - { id: spare-stake, title: Spare stake, price: 9, claimed: 20 }
+    - { id: spare-stake, title: Spare stake, price: 12, claimed: 20 }
   stretchGoals:
     - { id: second-radar, amount: 20000, title: "A second radar module, for parallel races" }
     - { id: leaderboard-export, amount: 24000, title: "A weekly leaderboard export, emailed automatically" }

@@ -69,9 +69,9 @@ campaign:
       caption: "Ash and walnut. The Walnut Edition is shown displaying the other verdict, which either clock can reach."
       svg: |-
         <ellipse cx="112" cy="192" rx="65.6" ry="23.5" style="fill:var(--tf-line)" />
-        <path d="M102 57.8L161.8 92.3L122 115.3L62.2 80.8Z" style="fill:color-mix(in srgb, var(--tf-accent) 28%, var(--tf-surface))" />
-        <path d="M62.2 184.3L122 218.8L122 115.3L62.2 80.8Z" style="fill:color-mix(in srgb, var(--tf-accent) 45%, var(--tf-surface))" />
-        <path d="M161.8 195.8L122 218.8L122 115.3L161.8 92.3Z" style="fill:color-mix(in srgb, var(--tf-accent) 62%, var(--tf-surface))" />
+        <path d="M102 57.8L161.8 92.3L122 115.3L62.2 80.8Z" style="fill:color-mix(in srgb, var(--tf-accent) 45%, var(--tf-surface))" />
+        <path d="M62.2 184.3L122 218.8L122 115.3L62.2 80.8Z" style="fill:var(--tf-accent)" />
+        <path d="M161.8 195.8L122 218.8L122 115.3L161.8 92.3Z" style="fill:color-mix(in srgb, var(--tf-accent) 72%, var(--tf-ink))" />
         <path d="M62.2 184.3L122 218.8L161.8 195.8L161.8 92.3L102 57.8L62.2 80.8Z" style="fill:none;stroke:var(--tf-line);stroke-width:1;stroke-linecap:round;stroke-linejoin:round" />
         <g transform="matrix(.866 .5 -.866 .5 112 86.5)"><path d="M-30.5 -6.9q23 -3.4 34.5 0t26.5 0M-30.5 9.2q23 -3.4 34.5 0t26.5 0" style="fill:none;stroke:color-mix(in srgb, var(--tf-accent) 62%, var(--tf-surface));stroke-width:0.8;stroke-linecap:round;stroke-linejoin:round" /></g>
         <path d="M68.2 91.1L116 118.7L116 157.8L68.2 130.2Z" style="fill:var(--tf-surface)" />
@@ -80,10 +80,10 @@ campaign:
         <g transform="matrix(.866 .5 0 1 72.2 180.8)"><path d="M0 0h4M9.2 0h4M18.4 0h4M27.6 0h4M36.8 0h4" style="fill:none;stroke:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface));stroke-width:2.3;stroke-linecap:round" /></g>
         <g transform="matrix(-.866 .5 0 1 133.9 201.5)"><rect x="0" y="0" width="10.4" height="3.5" rx="1.7" style="fill:var(--tf-ink)" /></g>
         <ellipse cx="288" cy="192" rx="65.6" ry="23.5" style="fill:var(--tf-line)" />
-        <path d="M278 57.8L337.8 92.3L298 115.3L238.2 80.8Z" style="fill:var(--tf-accent)" />
-        <path d="M238.2 184.3L298 218.8L298 115.3L238.2 80.8Z" style="fill:color-mix(in srgb, var(--tf-accent) 72%, var(--tf-ink))" />
-        <path d="M337.8 195.8L298 218.8L298 115.3L337.8 92.3Z" style="fill:color-mix(in srgb, var(--tf-accent) 52%, var(--tf-ink))" />
-        <g transform="matrix(.866 .5 -.866 .5 288 86.5)"><path d="M-30.5 -6.9q23 -3.4 34.5 0t26.5 0M-30.5 9.2q23 -3.4 34.5 0t26.5 0" style="fill:none;stroke:color-mix(in srgb, var(--tf-accent) 52%, var(--tf-ink));stroke-width:0.8;stroke-linecap:round;stroke-linejoin:round" /></g>
+        <path d="M278 57.8L337.8 92.3L298 115.3L238.2 80.8Z" style="fill:color-mix(in srgb, var(--tf-accent) 72%, var(--tf-ink))" />
+        <path d="M238.2 184.3L298 218.8L298 115.3L238.2 80.8Z" style="fill:color-mix(in srgb, var(--tf-accent) 55%, var(--tf-ink))" />
+        <path d="M337.8 195.8L298 218.8L298 115.3L337.8 92.3Z" style="fill:color-mix(in srgb, var(--tf-accent) 38%, var(--tf-ink))" />
+        <g transform="matrix(.866 .5 -.866 .5 288 86.5)"><path d="M-30.5 -6.9q23 -3.4 34.5 0t26.5 0M-30.5 9.2q23 -3.4 34.5 0t26.5 0" style="fill:none;stroke:color-mix(in srgb, var(--tf-accent) 38%, var(--tf-ink));stroke-width:0.8;stroke-linecap:round;stroke-linejoin:round" /></g>
         <path d="M244.2 91.1L292 118.7L292 157.8L244.2 130.2Z" style="fill:var(--tf-surface)" />
         <path d="M244.2 91.1l47.8 27.6v39.1l-47.8 -27.6Z" style="fill:none;stroke:var(--tf-line);stroke-width:1;stroke-linecap:round;stroke-linejoin:round" />
         <g transform="matrix(.866 .5 0 1 244.2 91.1)"><text x="27.6" y="12.4" style="fill:var(--tf-ink);stroke:none;font:500 8.5px var(--tf-mono);text-anchor:middle">NOT</text><text x="27.6" y="24" style="fill:var(--tf-ink);stroke:none;font:500 8.5px var(--tf-mono);text-anchor:middle">ASLEEP</text><text x="27.6" y="34.4" style="fill:var(--tf-ink);stroke:none;font:500 7.5px var(--tf-mono);text-anchor:middle">0.0 H</text></g>

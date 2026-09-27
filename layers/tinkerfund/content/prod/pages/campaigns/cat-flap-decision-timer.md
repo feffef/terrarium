@@ -19,7 +19,7 @@ campaign:
     - { label: Battery, value: "4 AA cells, 6 months" }
   figures:
     - style: isometric
-      caption: "The frame, from the outdoor side: the flap beam across the flap, the approach beam between its two posts, and the display on the indoor rail."
+      caption: "The frame, from the outdoor side: the flap beam across the flap, the approach beam between its two posts, and the display fitted to the top edge, indoor side."
       svg: |-
         <ellipse cx="201" cy="225.8" rx="105.6" ry="46.4" style="fill:var(--tf-line)" />
         <path d="M184.4 33.8L298.7 99.8L271 115.8L156.7 49.8Z" style="fill:color-mix(in srgb, var(--tf-accent) 45%, var(--tf-surface))" />
