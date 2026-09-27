@@ -255,7 +255,7 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
             </span>
             <span class="campaign-title">{{ tinkerfund.campaign.title }}</span>
             <span class="campaign-funded">{{ tinkerfund.campaign.percent }}% funded</span>
-            <TinkerfundProgressBar :percent="tinkerfund.campaign.percent" aria-hidden="true" />
+            <TinkerfundUiProgressBar :percent="tinkerfund.campaign.percent" aria-hidden="true" />
           </NuxtLink>
         </HomeShowcase>
       </div>

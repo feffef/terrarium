@@ -63,7 +63,7 @@ useSeoMeta(tinkerfundSeo({ kind: 'private', space, title: 'Checkout' }))
 <template>
   <TinkerfundShell>
     <template #header>
-      <TinkerfundCheckoutHeader :steps="LABELS" :step="step" />
+      <TinkerfundCartCheckoutHeader :steps="LABELS" :step="step" />
     </template>
 
     <div class="checkout">

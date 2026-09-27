@@ -80,7 +80,7 @@ useSeoMeta(tinkerfundSeo({ kind: 'private', space, title: `Pledge ${reference.va
 
         <template v-if="mode === 'view'">
           <dl class="facts tf-summary-list text tf-panel">
-            <div><dt>Placed</dt><dd><TinkerfundTime :at="current.pledge.placed" /></dd></div>
+            <div><dt>Placed</dt><dd><TinkerfundUiTime :at="current.pledge.placed" /></dd></div>
             <div><dt>Paid with</dt><dd>{{ payment }}</dd></div>
             <div><dt>Ships to</dt><dd>{{ zoneName }}</dd></div>
           </dl>
@@ -90,17 +90,17 @@ useSeoMeta(tinkerfundSeo({ kind: 'private', space, title: `Pledge ${reference.va
             :reference="current.pledge.ref"
             :ends-at="current.state === 'pending' ? current.endsAt : undefined"
           />
-          <p v-if="current.state === 'cancelled'" class="status">Cancelled <TinkerfundTime :at="current.pledge.cancelled!" />. Nothing was charged.</p>
-          <p v-else-if="current.state === 'unfunded'" class="status">Not charged: the Campaign ended <TinkerfundTime :at="current.endsAt" /> short of its goal.</p>
+          <p v-if="current.state === 'cancelled'" class="status">Cancelled <TinkerfundUiTime :at="current.pledge.cancelled!" />. Nothing was charged.</p>
+          <p v-else-if="current.state === 'unfunded'" class="status">Not charged: the Campaign ended <TinkerfundUiTime :at="current.endsAt" /> short of its goal.</p>
           <p v-else-if="current.state !== 'pending'" class="status">
-            Charged when the Campaign was funded, <TinkerfundTime :at="current.endsAt" />.{{ current.state === 'delivered' ? ' Delivered.' : '' }}
+            Charged when the Campaign was funded, <TinkerfundUiTime :at="current.endsAt" />.{{ current.state === 'delivered' ? ' Delivered.' : '' }}
           </p>
           <p v-else-if="refusal" class="refusal" role="alert">{{ refusal }}</p>
           <div class="actions tf-noprint">
             <button type="button" class="tf-btn" @click="print">Print receipt</button>
             <template v-if="!current.locked">
               <button type="button" class="tf-btn primary" @click="edit">Change Pledge</button>
-              <TinkerfundCancelPledge :reference="current.pledge.ref" :title="receipt.title" @confirm="withdraw" />
+              <TinkerfundPledgeCancel :reference="current.pledge.ref" :title="receipt.title" @confirm="withdraw" />
             </template>
             <p v-else-if="current.state !== 'cancelled'" class="locked">Locked: its Campaign has ended.</p>
           </div>
@@ -124,7 +124,7 @@ useSeoMeta(tinkerfundSeo({ kind: 'private', space, title: `Pledge ${reference.va
             <div><dt>Now</dt><dd>{{ money(proposal.receipt.total) }}</dd></div>
             <div class="total"><dt>Difference</dt><dd>{{ formatTinkerfundChange(difference, money) }}</dd></div>
           </dl>
-          <p class="note">Still pending: you’re only charged if the Campaign is funded, when it ends on <TinkerfundTime :at="current.endsAt" />.</p>
+          <p class="note">Still pending: you’re only charged if the Campaign is funded, when it ends on <TinkerfundUiTime :at="current.endsAt" />.</p>
           <p v-if="refusal" class="refusal" role="alert">{{ refusal }}</p>
           <p class="actions">
             <button type="button" class="tf-btn" @click="mode = 'edit'">Back to changes</button>

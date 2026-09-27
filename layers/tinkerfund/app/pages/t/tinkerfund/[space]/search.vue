@@ -22,11 +22,11 @@ useSeoMeta(tinkerfundSeo({ kind: 'private', space, title: q ? `Search: ${q}` : '
     <header class="intro">
       <p class="tf-label">Search · {{ q ? tinkerfundCount(results.length, 'Campaign') : 'Campaigns and Inventors' }}</p>
       <h1 class="tf-h1">{{ q ? `Results for “${q}”` : 'Search' }}</h1>
-      <TinkerfundSearchField class="field" :value="q" :autofocus="!q" />
+      <TinkerfundShellSearchField class="field" :value="q" :autofocus="!q" />
     </header>
 
     <ul v-if="results.length" class="grid">
-      <li v-for="c in results" :key="c.path"><TinkerfundCampaignCard :card="c" :clock="clock" /></li>
+      <li v-for="c in results" :key="c.path"><TinkerfundBrowseCampaignCard :card="c" :clock="clock" /></li>
     </ul>
     <div v-else class="empty tf-panel">
       <template v-if="q">

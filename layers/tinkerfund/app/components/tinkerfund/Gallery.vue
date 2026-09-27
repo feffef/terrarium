@@ -1,7 +1,7 @@
 <script setup lang="ts">
 // qa's front page (issue #1375): each component in its states, against qa's
 // edge-case fixtures.
-import type { TinkerfundBacking } from '../../composables/tinkerfund'
+import type { TinkerfundBacking } from '../../composables/cart'
 import type { TinkerfundBrowseQuery } from '../../utils/browse'
 import type { TinkerfundShop } from '../../utils/cart'
 import type { CampaignState } from '../../utils/status'
@@ -123,19 +123,19 @@ const bounds = computed(() => tinkerfundPriceBounds(cards.value))
     </section>
 
     <section aria-labelledby="gallery-card">
-      <h2 id="gallery-card">Campaign card <code>TinkerfundCampaignCard</code></h2>
+      <h2 id="gallery-card">Campaign card <code>TinkerfundBrowseCampaignCard</code></h2>
       <p class="case">Every state, a zero-Backer Campaign, a title that wraps, and an On-Deal chip. Used by Home, Discover, Category and Deals.</p>
       <ul class="specimens cards">
-        <li v-for="c in cards" :key="c.path"><TinkerfundCampaignCard :card="c" :clock="clock" /></li>
+        <li v-for="c in cards" :key="c.path"><TinkerfundBrowseCampaignCard :card="c" :clock="clock" /></li>
       </ul>
     </section>
 
     <section aria-labelledby="gallery-index">
-      <h2 id="gallery-index">Index table <code>TinkerfundIndexTable</code></h2>
+      <h2 id="gallery-index">Index table <code>TinkerfundBrowseIndexTable</code></h2>
       <p class="case">Home's Popular now. Pick Empty Shelf for the empty row; scroll sideways on a phone.</p>
-      <TinkerfundIndexTable :cards="cards" :categories="categories" :clock="clock">
+      <TinkerfundBrowseIndexTable :cards="cards" :categories="categories" :clock="clock">
         <span class="tf-label">{{ tinkerfundCount(cards.length, 'Campaign') }}</span>
-      </TinkerfundIndexTable>
+      </TinkerfundBrowseIndexTable>
     </section>
 
     <section aria-labelledby="gallery-filters">
@@ -151,23 +151,23 @@ const bounds = computed(() => tinkerfundPriceBounds(cards.value))
     </section>
 
     <section aria-labelledby="gallery-deal">
-      <h2 id="gallery-deal">Deal banner <code>TinkerfundDealBanner</code></h2>
+      <h2 id="gallery-deal">Deal banner <code>TinkerfundBrowseDealBanner</code></h2>
       <p class="case">An Active Promotion applied automatically, and a Scheduled one; qa's expired code never shows.</p>
       <div class="deals">
-        <TinkerfundDealBanner v-for="p in deals.active" :key="p.stem" :promotion="p" :clock="clock" more="#gallery-deal" />
-        <TinkerfundDealBanner v-for="p in deals.scheduled" :key="p.stem" :promotion="p" :clock="clock" scheduled />
+        <TinkerfundBrowseDealBanner v-for="p in deals.active" :key="p.stem" :promotion="p" :clock="clock" more="#gallery-deal" />
+        <TinkerfundBrowseDealBanner v-for="p in deals.scheduled" :key="p.stem" :promotion="p" :clock="clock" scheduled />
       </div>
     </section>
 
     <section aria-labelledby="gallery-readout">
-      <h2 id="gallery-readout">Campaign readout <code>TinkerfundReadout</code></h2>
+      <h2 id="gallery-readout">Campaign readout <code>TinkerfundCampaignReadout</code></h2>
       <p class="case">
-        With <code>TinkerfundProgressBar</code>, <code>TinkerfundDealBadge</code> and
+        With <code>TinkerfundUiProgressBar</code>, <code>TinkerfundCampaignDealBadge</code> and
         <code>TinkerfundCampaignAction</code>: Back when Live, Notify me when Upcoming, a lock when Ended.
       </p>
       <ul class="specimens wide">
         <li v-for="doc in campaigns" :key="doc.path">
-          <TinkerfundReadout
+          <TinkerfundCampaignReadout
             :slug="doc.slug"
             :title="doc.title"
             :campaign="doc.campaign"
@@ -180,57 +180,57 @@ const bounds = computed(() => tinkerfundPriceBounds(cards.value))
     </section>
 
     <section aria-labelledby="gallery-figures">
-      <h2 id="gallery-figures">Figures <code>TinkerfundFigureGallery</code></h2>
+      <h2 id="gallery-figures">Figures <code>TinkerfundCampaignFigureGallery</code></h2>
       <div v-if="campaigns[0]" class="figures">
-        <TinkerfundFigureGallery :figures="campaigns[0].campaign.figures" :registry="campaigns[0].campaign.registry" />
+        <TinkerfundCampaignFigureGallery :figures="campaigns[0].campaign.figures" :registry="campaigns[0].campaign.registry" />
       </div>
     </section>
 
     <section aria-labelledby="gallery-rewards">
-      <h2 id="gallery-rewards">Reward cards <code>TinkerfundRewardCard</code></h2>
+      <h2 id="gallery-rewards">Reward cards <code>TinkerfundCampaignRewardCard</code></h2>
       <p class="case">Every qa Reward in its Campaign’s state: options, stock, sold out, per-Backer limits, digital, long titles.</p>
       <ul class="specimens">
         <template v-for="doc in campaigns" :key="doc.path">
           <li v-for="reward in doc.campaign.rewards" :key="`${doc.path}-${reward.id}`" class="stack">
             <p class="case">{{ doc.campaign.registry }} · {{ doc.state }}</p>
-            <TinkerfundRewardCard :reward="reward" :backing="backing(doc.slug, doc.state)" :now="now" :zone-name="zoneName" />
+            <TinkerfundCampaignRewardCard :reward="reward" :backing="backing(doc.slug, doc.state)" :now="now" :zone-name="zoneName" />
           </li>
         </template>
       </ul>
     </section>
 
     <section aria-labelledby="gallery-addons">
-      <h2 id="gallery-addons">Add-ons, Stretch goals <code>TinkerfundAddonList</code> <code>TinkerfundStretchGoals</code></h2>
+      <h2 id="gallery-addons">Add-ons, Stretch goals <code>TinkerfundCampaignAddonList</code> <code>TinkerfundCampaignStretchGoals</code></h2>
       <ul class="specimens">
         <template v-for="doc in campaigns" :key="doc.path">
           <li v-if="doc.campaign.addons?.length" class="stack">
             <p class="case">{{ doc.campaign.registry }} · {{ doc.state }}</p>
-            <TinkerfundAddonList :addons="doc.campaign.addons" :backing="backing(doc.slug, doc.state)" />
+            <TinkerfundCampaignAddonList :addons="doc.campaign.addons" :backing="backing(doc.slug, doc.state)" />
           </li>
           <li v-if="doc.campaign.stretchGoals?.length" class="stack">
             <p class="case">{{ doc.campaign.registry }} · pledged {{ doc.campaign.pledged }}</p>
-            <TinkerfundStretchGoals :goals="doc.campaign.stretchGoals" :pledged="doc.campaign.pledged" />
+            <TinkerfundCampaignStretchGoals :goals="doc.campaign.stretchGoals" :pledged="doc.campaign.pledged" />
           </li>
         </template>
       </ul>
     </section>
 
     <section aria-labelledby="gallery-support">
-      <h2 id="gallery-support">Bonus support <code>TinkerfundSupportCard</code></h2>
+      <h2 id="gallery-support">Bonus support <code>TinkerfundCampaignSupportCard</code></h2>
       <ul class="specimens">
         <li class="stack">
           <p class="case">Live</p>
-          <TinkerfundSupportCard :backing="backing(FIXTURE.lamp.slug, 'live')" />
+          <TinkerfundCampaignSupportCard :backing="backing(FIXTURE.lamp.slug, 'live')" />
         </li>
         <li class="stack">
           <p class="case">Ended, with a refusal</p>
-          <TinkerfundSupportCard :backing="backing(FIXTURE.hammock.slug, 'ended', { bonus: 'Pledging has closed' })" />
+          <TinkerfundCampaignSupportCard :backing="backing(FIXTURE.hammock.slug, 'ended', { bonus: 'Pledging has closed' })" />
         </li>
       </ul>
     </section>
 
     <section aria-labelledby="gallery-cart">
-      <h2 id="gallery-cart">Cart <code>TinkerfundCartGroup</code> <code>TinkerfundMiniCart</code></h2>
+      <h2 id="gallery-cart">Cart <code>TinkerfundCartGroup</code> <code>TinkerfundCartMini</code></h2>
       <p class="case">
         Shipped to Europe: a Reward that doesn’t ship there, sold-out lines, an Ended Campaign, and a no-Reward Pledge.
       </p>
@@ -242,14 +242,14 @@ const bounds = computed(() => tinkerfundPriceBounds(cards.value))
           Open the mini-cart
         </button>
       </p>
-      <TinkerfundMiniCart ref="miniCart" :view="cartSpecimen" />
+      <TinkerfundCartMini ref="miniCart" :view="cartSpecimen" />
     </section>
 
     <section aria-labelledby="gallery-checkout">
-      <h2 id="gallery-checkout">Checkout <code>TinkerfundCheckoutHeader</code> <code>TinkerfundPledgeSummary</code></h2>
+      <h2 id="gallery-checkout">Checkout <code>TinkerfundCartCheckoutHeader</code> <code>TinkerfundPledgeSummary</code></h2>
       <p class="case">The focused header on its second step; the Cart above quoted with the {{ FIXTURE.code }} code, then a receipt.</p>
       <div class="checkout">
-        <TinkerfundCheckoutHeader :steps="['Shipping', 'Payment', 'Review']" :step="1" />
+        <TinkerfundCartCheckoutHeader :steps="['Shipping', 'Payment', 'Review']" :step="1" />
         <TinkerfundPledgeSummary v-for="group in quoteSpecimen.groups" :key="group.campaign" :pledge="group" zone="Europe" />
         <TinkerfundPledgeSummary
           v-if="receiptSpecimen"
@@ -265,7 +265,7 @@ const bounds = computed(() => tinkerfundPriceBounds(cards.value))
     <section aria-labelledby="gallery-account">
       <h2 id="gallery-account">
         Account <code>TinkerfundPledgeList</code> <code>TinkerfundPledgeState</code> <code>TinkerfundPledgeEditor</code>
-        <code>TinkerfundCancelPledge</code>
+        <code>TinkerfundPledgeCancel</code>
       </h2>
       <p class="case">
         Every Pledge state; qa’s baked Pledges plus a cancelled one; the editor on the Lamp Pledge, with its per-Backer
@@ -280,64 +280,64 @@ const bounds = computed(() => tinkerfundPriceBounds(cards.value))
           :pledge="accountSpecimen.lamp"
           zone="Domestic"
         />
-        <div><TinkerfundCancelPledge :reference="FIXTURE.lamp.pledge" :title="FIXTURE.lamp.title" /></div>
+        <div><TinkerfundPledgeCancel :reference="FIXTURE.lamp.pledge" :title="FIXTURE.lamp.title" /></div>
       </div>
     </section>
 
     <section aria-labelledby="gallery-updates">
-      <h2 id="gallery-updates">Updates <code>TinkerfundUpdates</code></h2>
+      <h2 id="gallery-updates">Updates <code>TinkerfundCampaignUpdates</code></h2>
       <ul class="specimens">
         <li v-if="log" class="specimen tf-panel">
           <p class="case">{{ log.campaign }}: the newest Update open</p>
-          <TinkerfundUpdates :updates="log.updates" :now="now" />
+          <TinkerfundCampaignUpdates :updates="log.updates" :now="now" />
         </li>
         <li class="specimen tf-panel">
           <p class="case">No Updates</p>
-          <TinkerfundUpdates :updates="[]" :now="now" />
+          <TinkerfundCampaignUpdates :updates="[]" :now="now" />
         </li>
       </ul>
     </section>
 
     <section aria-labelledby="gallery-comments">
-      <h2 id="gallery-comments">Comment thread <code>TinkerfundComments</code></h2>
+      <h2 id="gallery-comments">Comment thread <code>TinkerfundCampaignComments</code></h2>
       <ul class="specimens">
         <li v-if="thread" class="specimen tf-panel">
           <p class="case">{{ thread.campaign }}: an Inventor reply, one level deep</p>
-          <TinkerfundComments :comments="thread.comments" :now="now" />
+          <TinkerfundCampaignComments :comments="thread.comments" :now="now" />
         </li>
         <li class="specimen tf-panel">
           <p class="case">No comments</p>
-          <TinkerfundComments :comments="[]" :now="now" />
+          <TinkerfundCampaignComments :comments="[]" :now="now" />
         </li>
       </ul>
     </section>
 
     <section aria-labelledby="gallery-nav">
-      <h2 id="gallery-nav">Breadcrumbs <code>TinkerfundBreadcrumbs</code></h2>
-      <TinkerfundBreadcrumbs
+      <h2 id="gallery-nav">Breadcrumbs <code>TinkerfundShellBreadcrumbs</code></h2>
+      <TinkerfundShellBreadcrumbs
         :items="[{ label: 'Home', to: link() }, { label: 'Workshop' }, { label: campaigns.at(-1)?.title ?? 'Campaign' }]"
       />
       <p class="case">
-        <code>TinkerfundSectionNav</code> and the mobile “Back this Campaign” bar live on each Campaign page, since
+        <code>TinkerfundCampaignSectionNav</code> and the mobile “Back this Campaign” bar live on each Campaign page, since
         they follow its scroll.
       </p>
     </section>
 
     <section aria-labelledby="gallery-search">
-      <h2 id="gallery-search">Search field <code>TinkerfundSearchField</code></h2>
+      <h2 id="gallery-search">Search field <code>TinkerfundShellSearchField</code></h2>
       <p class="case">
         Suggestions come from this Space only: “lamp” finds a Campaign, “test” an Inventor’s Campaigns, and “mug”,
         a prod Campaign, nothing. Enter opens the results page.
       </p>
-      <TinkerfundSearchField class="search" value="lamp" />
+      <TinkerfundShellSearchField class="search" value="lamp" />
     </section>
 
     <section aria-labelledby="gallery-frame">
       <h2 id="gallery-frame">Page frame</h2>
       <p class="case">
-        <code>TinkerfundShell</code> frames this page: the demo bar with <code>TinkerfundResetDemo</code>,
-        <code>TinkerfundHeader</code> with <code>TinkerfundWordmark</code> and <code>TinkerfundSearchField</code>,
-        and <code>TinkerfundFooter</code> with <code>TinkerfundThemeSwitch</code>. Narrow the window for the menu
+        <code>TinkerfundShell</code> frames this page: the demo bar with <code>TinkerfundShellResetDemo</code>,
+        <code>TinkerfundShellHeader</code> with <code>TinkerfundShellWordmark</code> and <code>TinkerfundShellSearchField</code>,
+        and <code>TinkerfundShellFooter</code> with <code>TinkerfundShellThemeSwitch</code>. Narrow the window for the menu
         dialog; switch the theme to see every specimen in Light and Dark.
       </p>
     </section>

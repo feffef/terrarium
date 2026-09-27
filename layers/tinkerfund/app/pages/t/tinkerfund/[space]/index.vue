@@ -19,7 +19,7 @@ useSeoMeta(tinkerfundSeo({
     <TinkerfundGallery v-if="landing && space === 'qa'" :title="landing.title" :description="landing.description" />
     <template v-else-if="landing">
       <h1 class="tf-sr">{{ landing.title }}</h1>
-      <TinkerfundHome />
+      <TinkerfundBrowseHome />
       <ContentRenderer :value="landing" class="tf-prose about" />
     </template>
     <ContentLoadErrorDialog :status="status" :error="error" :context="route.path" />
