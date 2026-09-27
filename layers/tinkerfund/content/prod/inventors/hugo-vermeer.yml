@@ -1,0 +1,7 @@
+name: Hugo Vermeer
+bio: Keeps eleven artificial plants in his apartment in Utrecht and wanted a way to confirm, without touching the soil, that none of them needed anything. This is his first Campaign.
+portrait: |-
+  <path d="M22 96c4-24 16-34 28-34s24 10 28 34z" style="fill:var(--tf-good)" />
+  <circle cx="50" cy="20" r="8" style="fill:var(--tf-ink)" />
+  <circle cx="50" cy="41" r="16" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" />
+  <path d="M35 39a15 15 0 0 1 30 0c-6-6-24-6-30 0z" style="fill:var(--tf-ink)" />

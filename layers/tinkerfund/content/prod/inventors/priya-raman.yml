@@ -1,0 +1,7 @@
+name: Priya Raman
+bio: Logistics planner in Singapore. Her suitcase missed a connection in Osaka in 2019, so she designed one that carries a spare of itself.
+portrait: |-
+  <path d="M19 96c4-21 17-31 31-31s27 10 31 31z" style="fill:var(--tf-accent)" />
+  <circle cx="50" cy="38" r="17" style="fill:color-mix(in srgb, var(--tf-ink) 60%, var(--tf-surface))" />
+  <path d="M34 39c3 15 27 15 30 0c-4 5-7 7-15 7s-11-2-15-7z" style="fill:var(--tf-ink)" />
+  <path d="M30 27c7-10 32-10 39 0l2 6H28z" style="fill:var(--tf-ink)" />

@@ -1,0 +1,20 @@
+campaign: grass-growth-notifier
+updates:
+  - title: Calibration is holding across test lawns
+    published: -70d
+    body: |-
+      The first units off the bench have been logging test blades for two weeks
+      with no missed thresholds. The 0.02 mm resolution has held steady through
+      a range of morning dew and afternoon heat.
+  - title: Second sensor channel confirmed
+    published: -67d
+    body: |-
+      At €24,000 the second sensor channel is confirmed. It reads a second marked
+      blade on the same stake, entirely independently of the first, and both
+      appear side by side in the app.
+  - title: Fully funded, and every unit has now shipped
+    published: -9d
+    body: |-
+      The campaign closed at 132% of goal. Every Pledge has shipped, including
+      the Garden Sets, each paired to its app account and tested against a blade
+      before packing. Night mode was not reached.

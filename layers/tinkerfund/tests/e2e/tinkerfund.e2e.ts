@@ -137,11 +137,28 @@ export function registerTinkerfundE2E(): void {
         ['emotional-support-rock', 'Notify me'],
         ['pocket-sundial-with-snooze', 'Pledging has closed'],
         ['rain-aware-umbrella', 'Back this Campaign'],
+        ['fridge-light-verification-camera', 'Back this Campaign'],
+        ['meal-invites-for-cats', 'Back this Campaign'],
+        ['strand-count-pasta-measure', 'Pledging has closed'],
+        ['automatic-sheep-counter', 'Back this Campaign'],
+        ['delayed-mirror', 'Back this Campaign'],
+        ['goldfish-quarterly-review', 'Back this Campaign'],
+        ['motorised-sticky-note-stand', 'Notify me'],
+        ['soap-bar-odometer', 'Pledging has closed'],
+        ['snail-speedometer', 'Back this Campaign'],
+        ['moisture-sensor-for-artificial-plants', 'Notify me'],
+        ['snore-certificate-printer', 'Pledging has closed'],
+        ['cat-flap-decision-timer', 'Back this Campaign'],
+        ['cat-acknowledgement-button', 'Pledging has closed'],
+        ['occupied-sign-for-litter-boxes', 'Pledging has closed'],
+        ['sleep-confirmation-clock', 'Back this Campaign'],
+        ['grass-growth-notifier', 'Pledging has closed'],
+        ['backup-suitcase', 'Back this Campaign'],
       ] as const) {
         it(`renders the prod Campaign page for ${slug}`, async () => {
           const html = await $fetch(`/t/tinkerfund/prod/campaigns/${slug}`)
           expect(html).toMatch(/<nav[^>]*aria-label="Breadcrumb"[\s\S]*>Home<[\s\S]*category\/[\s\S]*aria-current="page"/)
-          expect(html).toMatch(/FIG\. 1 · TF-000\d/)
+          expect(html).toMatch(/FIG\. 1 · TF-00\d\d/)
           expect(html).toMatch(/<h1[^>]*>/)
           expect(html).toMatch(/aria-label="Sections"[\s\S]*href="#story"[\s\S]*href="#rewards"[\s\S]*href="#updates"[\s\S]*href="#comments"/)
           expect(html).toMatch(/<caption[^>]*>Specifications<\/caption>/)

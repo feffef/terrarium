@@ -1,0 +1,6 @@
+title: "€5 off the Cat Flap Decision Timer"
+description: Five euros off any Pledge to the Cat Flap Decision Timer, for one week.
+campaign: cat-flap-decision-timer
+discount: { amount: 5 }
+start: +1d
+end: +8d

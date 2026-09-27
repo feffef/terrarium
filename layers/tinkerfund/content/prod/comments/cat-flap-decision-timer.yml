@@ -1,0 +1,41 @@
+campaign: cat-flap-decision-timer
+comments:
+  - author: Rosa M.
+    posted: -7d
+    text: Does it work with a flap already fitted, or only a new one?
+    replies:
+      - author: Declan Murphy
+        posted: -7d
+        text: It replaces the existing frame, not the flap. Most standard 165 x 170 mm flaps fit without changes.
+        inventor: true
+  - author: Tobias K.
+    posted: -6d
+    text: Backed for two frames. One cat, but two doors she considers hers.
+  - author: Ines B.
+    posted: -6d
+    text: What happens if the cat sits in the doorway without crossing either beam?
+    replies:
+      - author: Declan Murphy
+        posted: -5d
+        text: Nothing is logged until the approach beam is broken. Sitting just outside it leaves no record.
+        inventor: true
+  - author: Petra L.
+    posted: -5d
+    text: Fourteen minutes is a long time to stand at a door. Ours would be offended if we asked.
+  - author: Halvard S.
+    posted: -4d
+    text: Can the export be filtered to one direction only?
+    replies:
+      - author: Declan Murphy
+        posted: -3d
+        text: Not yet. The export lists every crossing in both directions, in order.
+        inventor: true
+  - author: Marguerite A.
+    posted: -3d
+    text: Backed the spare beam kit. We have a second flap this will eventually move to.
+  - author: Oskar V.
+    posted: -2d
+    text: Is the display readable in direct sunlight?
+  - author: Freya N.
+    posted: -1d
+    text: The no-passage log is the part that sold me. Ours changes its mind constantly.

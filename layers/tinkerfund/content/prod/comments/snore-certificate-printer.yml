@@ -1,0 +1,51 @@
+campaign: snore-certificate-printer
+comments:
+  - author: Bram H.
+    posted: -48d
+    text: Does it distinguish snoring from other bedroom sounds, or does everything get logged as a candidate?
+    replies:
+      - author: Annika Sørensen
+        posted: -47d
+        text: Everything above the noise floor is logged. Only the single loudest event of the night makes the certificate.
+        inventor: true
+  - author: Rosalind P.
+    posted: -44d
+    text: Backed the pair. We have been arguing about this for three years and a receipt seemed like the fastest way to end it.
+  - author: Yusuf T.
+    posted: -41d
+    text: What happens if the loudest sound of the night is not snoring at all, say a door or a dropped phone?
+    replies:
+      - author: Annika Sørensen
+        posted: -40d
+        text: The certificate reports the loudest sound pressure event of the night. It does not identify its source.
+        inventor: true
+  - author: Marte L.
+    posted: -36d
+    text: Is 0.1 dB resolution overkill for this?
+    replies:
+      - author: Annika Sørensen
+        posted: -35d
+        text: The first dispute was settled by less than a decibel. It is not overkill.
+        inventor: true
+  - author: Corentin B.
+    posted: -32d
+    text: Added a spare roll to my pledge. 120 nights felt short for how often this comes up in our house.
+  - author: Ingrid F.
+    posted: -28d
+    text: Can one printer serve two beds in the same room, or does each bed need its own unit?
+    replies:
+      - author: Annika Sørensen
+        posted: -27d
+        text: One microphone per printer. It cannot attribute a sound to a particular bed.
+        inventor: true
+  - author: Petra N.
+    posted: -23d
+    text: Hoping this reaches its goal. Checking the tracker every morning at this point.
+  - author: Halvard E.
+    posted: -20d
+    text: Sorry to see it end short. We could have used one of these for the guest room.
+    replies:
+      - author: Annika Sørensen
+        posted: -19d
+        text: Thank you to all 150 backers. Nobody has been charged, and the printers are staying right where they are, on the bench.
+        inventor: true

@@ -1,0 +1,7 @@
+name: Annika Sørensen
+bio: Acoustics technician in Aarhus. Built the first prototype to settle a dispute that no amount of talking had settled, and found that a printed number worked where an opinion had not.
+portrait: |-
+  <circle cx="50" cy="36" r="17" style="fill:color-mix(in srgb, var(--tf-ink) 65%, var(--tf-surface))" />
+  <path d="M20 96c4-20 16-30 30-30s26 10 30 30z" style="fill:var(--tf-accent)" />
+  <path d="M35 40c2 15 28 15 30 0c-4 5-7 6-15 6s-11-1-15-6z" style="fill:var(--tf-ink)" />
+  <path d="M31 29c6-9 32-9 38 0l3 3H28z" style="fill:var(--tf-ink)" />

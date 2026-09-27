@@ -1,0 +1,21 @@
+campaign: automatic-sheep-counter
+updates:
+  - title: Why 1.8 seconds
+    published: -20d
+    body: |-
+      Early prototypes projected one sheep per second, which counted faster than
+      most testers could stop paying attention to it. At 1.8 seconds the count
+      still climbs through the night without holding anyone's attention along
+      the way.
+  - title: The 30-night history
+    published: -9d
+    body: |-
+      The unit now keeps a rolling 30-night total, so a slow week is visible
+      against the nights around it rather than judged on its own. Existing
+      Backers will receive this as a firmware update at delivery, at no cost.
+  - title: Twenty hours left
+    published: -20h
+    body: |-
+      We are short of the goal with under a day remaining. If you have been
+      waiting to back this, now is the time. Thank you to everyone who already
+      has.

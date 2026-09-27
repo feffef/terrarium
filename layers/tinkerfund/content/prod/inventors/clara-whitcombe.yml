@@ -1,0 +1,8 @@
+name: Clara Whitcombe
+bio: Operations manager in Leeds, where meetings are scheduled a week out and attendance is tracked. Built the feeder after noticing her cat kept the same erratic hours her calendar did not allow for.
+portrait: |-
+  <path d="M18 96c4-22 18-32 32-32s28 10 32 32z" style="fill:var(--tf-muted)" />
+  <circle cx="50" cy="40" r="17" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" />
+  <path d="M35 42c3 16 27 16 30 0c-4 6-7 8-15 8s-11-2-15-8z" style="fill:var(--tf-ink)" />
+  <path d="M33 28c5-12 30-12 34 0l4 4H29z" style="fill:var(--tf-ink)" />
+  <path d="M30 30l-6 8M70 30l6 8" style="fill:none;stroke:var(--tf-ink);stroke-width:2;stroke-linecap:round" />

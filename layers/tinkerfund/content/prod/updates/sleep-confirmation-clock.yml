@@ -1,0 +1,15 @@
+campaign: sleep-confirmation-clock
+updates:
+  - title: Why three minutes
+    published: -30h
+    body: |-
+      Early prototypes counted any stillness at all, which meant a long pause
+      to check a phone sometimes registered as the start of a night. Three
+      minutes was the shortest threshold that stopped counting those pauses
+      without missing an actual, quick fall into sleep.
+  - title: Walnut supply confirmed
+    published: -6h
+    body: |-
+      Our supplier has confirmed enough walnut at the thickness we need for
+      150 units, which sets the limit on the Walnut Edition. No more will be
+      cut for this campaign.

@@ -1,0 +1,4 @@
+name: Travel
+blurb: Luggage and accessories for arriving, roughly as planned.
+icon: '<path d="M6 7h12v12H6zM9 7V4h6v3M9 7v12M15 7v12M8 19v2M16 19v2" />'
+order: 6
