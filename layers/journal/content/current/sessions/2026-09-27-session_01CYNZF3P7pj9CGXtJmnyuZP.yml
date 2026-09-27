@@ -1,0 +1,46 @@
+schemaVersion: 1
+session: session_01CYNZF3P7pj9CGXtJmnyuZP
+startedAt: 2026-09-27T18:45:14Z
+endedAt: 2026-09-27T18:50:01Z
+kind: interactive
+goal: Check README.md is current; fix it
+status: in-review
+outcome: README drift fixed and shortened
+summary: "Human asked to check whether README.md is up to date and update it if needed. Found three drifts: CONTEXT.md called glossary-only (repo is multi-context, ADR-0021, CONTEXT-MAP.md unmentioned), a stale three-kind Tenant enumeration (seven Tenants exist), and a Journal paragraph claiming it holds research (now docs/research/). Asked the human for scope; they said fix and shorten, and don't list Tenants. Rewrote README (-15 net lines), gate:scoped green, opened PR 1441 and subscribed to it. The PR itself was agent-initiated per ADR-0003's auto-open default."
+prs:
+  - "1441"
+docsRead:
+  - path: README.md
+    reason: the file under review
+  - path: CONTEXT.md
+    reason: verify Observability term and Tenants roster
+  - path: layers/journal/CONTEXT.md
+    reason: verify Journal contents claim
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: ADR-0017 provenance header wants a model name, while the harness forbids model identifiers in PR bodies; used 'Claude Code' as the link text.
+    solution: Let provenanceHeader accept a generic label, or note the tension in docs/agents/guards.md.
+    severity: minor
+durationSec: 287
+models:
+  claude-opus-5-5: 33
+toolCounts:
+  Bash: 10
+  Read: 1
+  ToolSearch: 1
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  Skill: 2
+  mcp__Claude_Code_Remote__send_later: 1
+docsReadViaShell:
+  - CONTEXT.md
+  - layers/journal/CONTEXT.md
+gitBranch: claude/readme-update-check-tspefh
+entrypoint: remote_mobile
+cliVersion: 2.1.283
+landedBy: Stop
