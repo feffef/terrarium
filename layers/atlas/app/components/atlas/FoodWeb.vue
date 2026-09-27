@@ -245,8 +245,7 @@ function strandClass(e: Edge) {
               <!-- the seat: a borderless page-coloured vignette that softens the
                    strands beneath the specimen, and the hover/click hit target -->
               <circle class="seat" :cx="n.x" :cy="n.y" :r="R" :fill="`url(#${uid}-seat)`" />
-              <!-- the engraved plate, drawn straight onto the page. v-html is safe: the
-                   illustration is agent-authored, repo-committed markup (see Plate). -->
+              <!-- the engraved plate, drawn straight onto the page (see Plate). -->
               <!-- eslint-disable-next-line vue/no-v-html -->
               <g v-if="n.s.illustration" class="figure" :transform="figTransform(n)" v-html="n.s.illustration" />
               <text v-else class="mk" :x="n.x" :y="n.y + 3.5" text-anchor="middle">{{ rarityMeta(n.s.rarity).mark }}</text>

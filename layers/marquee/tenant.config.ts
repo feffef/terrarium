@@ -11,6 +11,7 @@
 // Tenant's single-Space `poc` choice).
 import { z } from 'zod'
 import { defineTenant } from '../../shared/manifest'
+import { safeSvg } from '../../app/utils/svg'
 
 export default defineTenant({
   name: 'marquee',
@@ -37,7 +38,7 @@ export default defineTenant({
         // artwork — see the `MarqueePoster` component and layers/marquee/
         // CONTEXT.md for the art direction). Framed + captioned by the shared
         // Poster component, mirroring the Atlas's engraved-plate mechanism.
-        illustration: z.string().optional(),
+        illustration: safeSvg.optional(),
       }),
     },
   },

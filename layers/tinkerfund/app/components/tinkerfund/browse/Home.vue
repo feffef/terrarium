@@ -58,7 +58,7 @@ const money = useTinkerfundMoney()
       <ul class="cats">
         <li v-for="c in tiles" :key="c.slug">
           <NuxtLink class="cat tf-panel" :to="link(`/category/${c.slug}`)">
-            <!-- eslint-disable-next-line vue/no-v-html -- validated, token-coloured content SVG (issue #1363) -->
+            <!-- eslint-disable-next-line vue/no-v-html -- schema-checked SVG (app/utils/svg.ts, issue #1363) -->
             <svg viewBox="0 0 24 24" aria-hidden="true" v-html="c.icon" />
             <b>{{ c.name }}</b>
             <span class="blurb">{{ c.blurb }}</span>

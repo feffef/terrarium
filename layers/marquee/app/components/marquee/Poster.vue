@@ -2,8 +2,7 @@
 // The Marquee's Poster: frame, viewBox, caption, and a soft painterly grain
 // overlay; the authored inner SVG markup (a Chapter's original illustration)
 // is dropped in. Mirrors the Atlas's `SpecimenPlate` *mechanism*
-// (v-html of repo-committed, agent-authored SVG — never user input, so this
-// is safe) but its own visual language: muted, gradient-washed, Ghibli-
+// (v-html of authored SVG, kept script-free by app/utils/svg.ts) but its own visual language: muted, gradient-washed, Ghibli-
 // inspired rather than the Atlas's engraved-plate look
 // (layers/marquee/CONTEXT.md: Poster).
 defineProps<{

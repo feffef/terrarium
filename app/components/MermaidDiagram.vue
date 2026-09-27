@@ -1,6 +1,5 @@
 <template>
-  <!-- The SVG is our own build-time artifact (committed by scripts/render-mermaid.ts,
-       gate-checked by verify:mermaid), never user input — so v-html is safe here (ADR-0024). -->
+  <!-- Our own committed SVG (ADR-0024); verify:mermaid rejects script-capable markup (app/utils/svg.ts). -->
   <!-- eslint-disable-next-line vue/no-v-html -->
   <div v-if="svg" class="mermaid-diagram" v-html="svg" />
   <pre v-else class="mermaid-diagram-fallback">{{ code }}</pre>

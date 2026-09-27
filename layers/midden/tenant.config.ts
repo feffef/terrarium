@@ -59,13 +59,15 @@ const condition = z.enum(['fresh', 'intact', 'fragmentary', 'dissolved', 'never-
 //     own — it's catalogued by whichever concrete form it took: `file` for a
 //     `docs/proposals/*.md` file that never landed, `commit` for one that only
 //     ever lived as a session's committed work (e.g. `the-third-onramp.yml`).
+// Bound to :href, so only https — `.url()` alone admits `javascript:`.
+const httpsUrl = z.string().url().startsWith('https://')
 const provenance = z.discriminatedUnion('kind', [
-  z.object({ kind: z.literal('pr'), number: z.number().int().positive(), merged: z.boolean(), url: z.string().url().optional(), continuityCheck: z.string().optional() }).strict(),
-  z.object({ kind: z.literal('branch'), name: z.string(), url: z.string().url().optional(), continuityCheck: z.string().optional() }).strict(),
-  z.object({ kind: z.literal('commit'), hash: z.string(), path: z.string().optional(), url: z.string().url().optional(), continuityCheck: z.string().optional() }).strict(),
-  z.object({ kind: z.literal('file'), path: z.string(), url: z.string().url().optional(), continuityCheck: z.string().optional() }).strict(),
-  z.object({ kind: z.literal('dependency'), name: z.string(), url: z.string().url().optional(), continuityCheck: z.string().optional() }).strict(),
-  z.object({ kind: z.literal('skill'), name: z.string(), url: z.string().url().optional(), continuityCheck: z.string().optional() }).strict(),
+  z.object({ kind: z.literal('pr'), number: z.number().int().positive(), merged: z.boolean(), url: httpsUrl.optional(), continuityCheck: z.string().optional() }).strict(),
+  z.object({ kind: z.literal('branch'), name: z.string(), url: httpsUrl.optional(), continuityCheck: z.string().optional() }).strict(),
+  z.object({ kind: z.literal('commit'), hash: z.string(), path: z.string().optional(), url: httpsUrl.optional(), continuityCheck: z.string().optional() }).strict(),
+  z.object({ kind: z.literal('file'), path: z.string(), url: httpsUrl.optional(), continuityCheck: z.string().optional() }).strict(),
+  z.object({ kind: z.literal('dependency'), name: z.string(), url: httpsUrl.optional(), continuityCheck: z.string().optional() }).strict(),
+  z.object({ kind: z.literal('skill'), name: z.string(), url: httpsUrl.optional(), continuityCheck: z.string().optional() }).strict(),
 ])
 
 // The artifact's own words, quoted verbatim (#523's gravestone template expects
