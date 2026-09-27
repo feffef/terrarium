@@ -139,7 +139,6 @@ export function registerTinkerfundE2E(): void {
         ['rain-aware-umbrella', 'Back this Campaign'],
         ['fridge-light-verification-camera', 'Back this Campaign'],
         ['meal-invites-for-cats', 'Back this Campaign'],
-        ['inbox-zero-tray', 'Back this Campaign'],
         ['strand-count-pasta-measure', 'Pledging has closed'],
         ['automatic-sheep-counter', 'Back this Campaign'],
         ['delayed-mirror', 'Back this Campaign'],
