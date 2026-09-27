@@ -55,11 +55,11 @@ The subagent cannot see this session's context, so the brief is self-contained:
 - **Say `pnpm install` may be needed first.** A freshly provisioned mechanism-2
   worktree may not have dependencies installed, so `pnpm gate:scoped` — or any
   other pnpm script — won't actually work there.
-- **Verify HEAD before any commit.** Mechanism-2 worktrees have been observed
-  starting from a stale or unrelated HEAD instead of `origin/<default-branch>`,
-  hitting multiple parallel subagents in the same session. Don't assume the fresh
-  worktree is on top of it: check that the worktree branch's HEAD matches
-  `origin/<default-branch>`, and rebranch explicitly if it doesn't.
+- **Verify HEAD before reading or committing.** Mechanism-2 worktrees have been
+  observed starting from a stale or unrelated HEAD, hitting multiple parallel
+  subagents in the same session. Check that HEAD matches the SHA the brief pins
+  (fetch it first), or `origin/<default-branch>` when none is pinned, and
+  rebranch explicitly if it doesn't (issue #1420).
 - **A review subagent checking out a PR whose branch might already be checked
   out elsewhere (e.g. the implementer's own mechanism-2 worktree for that same
   PR) must check out the PR's commit SHA in detached HEAD, not the branch
