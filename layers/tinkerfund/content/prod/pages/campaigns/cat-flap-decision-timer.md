@@ -12,7 +12,7 @@ campaign:
   pledged: 8880
   specifications:
     - { label: Beams, value: "Two infrared beams, approach and flap" }
-    - { label: Frame size, value: "165 x 170 mm, standard flap opening" }
+    - { label: Frame size, value: "165 × 170 mm, standard flap opening" }
     - { label: Display, value: "Indoor side, elapsed time and outcome" }
     - { label: Logged fields, value: "Direction, elapsed time, outcome" }
     - { label: Longest recorded decision, value: "14 minutes 20 seconds, in testing" }
@@ -182,10 +182,10 @@ campaign:
       price: 19
       claimed: 50
       digital: true
-      delivery: +5d
+      delivery: +95d
     - id: frame
       title: Frame
-      description: One Decision Timer frame, fitted to a standard 165 x 170 mm flap opening, with the indoor display.
+      description: One Decision Timer frame, fitted to a standard 165 × 170 mm flap opening, with the indoor display.
       price: 39
       claimed: 120
       shipsTo: [domestic, europe, world]
@@ -213,7 +213,7 @@ recorded as such, not discarded.
 
 One infrared beam sits at the approach, the other at the flap itself. The
 frame times the interval between the two, in either direction, and logs it
-with the direction and the outcome. The frame fits standard 165 x 170 mm flap
+with the direction and the outcome. The frame fits standard 165 × 170 mm flap
 openings without modification to the door.
 
 ## No passage
