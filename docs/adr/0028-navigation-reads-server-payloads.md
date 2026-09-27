@@ -61,7 +61,7 @@ skills 579 → 144 KB; Tinkerfund page 578 → 19 KB; Commons Timeline about
   Tinkerfund's, or it serves the first visitor's version to everyone.
 - **The cache has no size bound.** Each distinct URL, query string included, is
   its own entry, and expired entries are only replaced, not evicted. Junk query
-  strings grow memory until the next deploy or restart clears it.
+  strings grow memory until the next deploy or restart clears it (#1446).
 - **A route's code downloads on hover, not on sight.** With visibility prefetch
   off, a touch device fetches it on tap.
 - Reverting means deleting `payloadExtraction`, the `nuxtLink.prefetchOn`
