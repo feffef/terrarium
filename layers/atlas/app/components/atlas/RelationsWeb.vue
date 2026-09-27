@@ -160,108 +160,110 @@ function spokeLeave() {
 
 <template>
   <div class="atlas-web atlas-relweb">
-    <svg
-      v-if="view.spokes.length"
-      :viewBox="`0 0 ${W} ${view.H}`"
-      role="group"
-      :aria-label="`${specimen.binomial}'s relations`"
-    >
-      <defs>
-        <marker
-          :id="`${uid}-arrow`"
-          viewBox="0 0 10 10"
-          refX="8"
-          refY="5"
-          markerWidth="6"
-          markerHeight="6"
-          orient="auto-start-reverse"
-        >
-          <path d="M0,1 L9,5 L0,9" fill="none" stroke="context-stroke" stroke-width="1.4" />
-        </marker>
-        <radialGradient :id="`${uid}-seat`">
-          <stop offset="52%" stop-color="var(--atlas-paper)" stop-opacity="1" />
-          <stop offset="100%" stop-color="var(--atlas-paper)" stop-opacity="0" />
-        </radialGradient>
-      </defs>
-
-      <!-- strands, each with a wide invisible hit-path so hovering the arrow
-           itself (not just its far node) also lights the matching row below -->
-      <g v-for="(st, i) in strands" :key="`s${i}`">
-        <path
-          class="strand-hit"
-          :d="st.d"
-          @mouseenter="spokeEnter(st.other.slug)"
-          @mouseleave="spokeLeave()"
-        />
-        <path
-          class="strand"
-          :class="st.r.kind"
-          :d="st.d"
-          :style="{ stroke: st.endStroke }"
-          :marker-end="`url(#${uid}-arrow)`"
-        />
-        <path :id="`${uid}-rail-${i}`" class="rail" :d="st.rail" />
-        <text class="rel-lbl" text-anchor="middle">
-          <textPath :href="`#${uid}-rail-${i}`" startOffset="50%">{{ st.r.label }}</textPath>
-        </text>
-      </g>
-
-      <!-- the focus, seated at the left — whose page this is -->
-      <g class="node is-focus" :style="figStyle(specimen)">
-        <circle class="focus-ring" :cx="FX" :cy="view.fy" :r="RF + 5" />
-        <circle class="seat" :cx="FX" :cy="view.fy" :r="RF" :fill="`url(#${uid}-seat)`" />
-        <!-- eslint-disable-next-line vue/no-v-html -->
-        <g v-if="specimen.illustration" class="figure" :transform="figTransform(FX, view.fy)" v-html="specimen.illustration" />
-        <text v-else class="mk" :x="FX" :y="view.fy + 4" text-anchor="middle">{{ rarityMeta(specimen.rarity).mark }}</text>
-        <text class="nm is-focus" :x="FX" :y="view.fy + RF + 21" text-anchor="middle">{{ specimen.binomial }}</text>
-        <line
-          class="sigrule"
-          :x1="FX - 12"
-          :x2="FX + 12"
-          :y1="view.fy + RF + 30"
-          :y2="view.fy + RF + 30"
-          :style="{ stroke: specimenAccent(specimen) }"
-        />
-      </g>
-
-      <!-- the specimens it relates to, one medallion per spoke, each named to
-           its right like a chart key — strands arrive from the left, so the
-           name's column stays clear of every line -->
-      <NuxtLink
-        v-for="sp in view.spokes"
-        :key="sp.other.slug"
-        v-slot="{ href, navigate }"
-        :to="`/t/atlas/${biome}/${sp.other.slug}`"
-        custom
+    <div class="atlas-web-scroll" :style="{ '--atlas-web-w': `${W}px` }">
+      <svg
+        v-if="view.spokes.length"
+        :viewBox="`0 0 ${W} ${view.H}`"
+        role="group"
+        :aria-label="`${specimen.binomial}'s relations`"
       >
-        <a
-          class="node-hit"
-          :href="href"
-          :aria-label="`${sp.other.binomial}, ${specimen.binomial} ${sp.rs.map((r) => r.label).join(' and ')} ${sp.other.binomial}`"
-          @click="navigate"
-          @mouseenter="spokeEnter(sp.other.slug)"
-          @mouseleave="spokeLeave()"
-          @focus="spokeEnter(sp.other.slug)"
-          @blur="spokeLeave()"
+        <defs>
+          <marker
+            :id="`${uid}-arrow`"
+            viewBox="0 0 10 10"
+            refX="8"
+            refY="5"
+            markerWidth="6"
+            markerHeight="6"
+            orient="auto-start-reverse"
+          >
+            <path d="M0,1 L9,5 L0,9" fill="none" stroke="context-stroke" stroke-width="1.4" />
+          </marker>
+          <radialGradient :id="`${uid}-seat`">
+            <stop offset="52%" stop-color="var(--atlas-paper)" stop-opacity="1" />
+            <stop offset="100%" stop-color="var(--atlas-paper)" stop-opacity="0" />
+          </radialGradient>
+        </defs>
+
+        <!-- strands, each with a wide invisible hit-path so hovering the arrow
+             itself (not just its far node) also lights the matching row below -->
+        <g v-for="(st, i) in strands" :key="`s${i}`">
+          <path
+            class="strand-hit"
+            :d="st.d"
+            @mouseenter="spokeEnter(st.other.slug)"
+            @mouseleave="spokeLeave()"
+          />
+          <path
+            class="strand"
+            :class="st.r.kind"
+            :d="st.d"
+            :style="{ stroke: st.endStroke }"
+            :marker-end="`url(#${uid}-arrow)`"
+          />
+          <path :id="`${uid}-rail-${i}`" class="rail" :d="st.rail" />
+          <text class="rel-lbl" text-anchor="middle">
+            <textPath :href="`#${uid}-rail-${i}`" startOffset="50%">{{ st.r.label }}</textPath>
+          </text>
+        </g>
+
+        <!-- the focus, seated at the left — whose page this is -->
+        <g class="node is-focus" :style="figStyle(specimen)">
+          <circle class="focus-ring" :cx="FX" :cy="view.fy" :r="RF + 5" />
+          <circle class="seat" :cx="FX" :cy="view.fy" :r="RF" :fill="`url(#${uid}-seat)`" />
+          <!-- eslint-disable-next-line vue/no-v-html -->
+          <g v-if="specimen.illustration" class="figure" :transform="figTransform(FX, view.fy)" v-html="specimen.illustration" />
+          <text v-else class="mk" :x="FX" :y="view.fy + 4" text-anchor="middle">{{ rarityMeta(specimen.rarity).mark }}</text>
+          <text class="nm is-focus" :x="FX" :y="view.fy + RF + 21" text-anchor="middle">{{ specimen.binomial }}</text>
+          <line
+            class="sigrule"
+            :x1="FX - 12"
+            :x2="FX + 12"
+            :y1="view.fy + RF + 30"
+            :y2="view.fy + RF + 30"
+            :style="{ stroke: specimenAccent(specimen) }"
+          />
+        </g>
+
+        <!-- the specimens it relates to, one medallion per spoke, each named to
+             its right like a chart key — strands arrive from the left, so the
+             name's column stays clear of every line -->
+        <NuxtLink
+          v-for="sp in view.spokes"
+          :key="sp.other.slug"
+          v-slot="{ href, navigate }"
+          :to="`/t/atlas/${biome}/${sp.other.slug}`"
+          custom
         >
-          <g class="node" :style="figStyle(sp.other)">
-            <circle class="seat" :cx="sp.x" :cy="sp.y" :r="R" :fill="`url(#${uid}-seat)`" />
-            <!-- eslint-disable-next-line vue/no-v-html -->
-            <g v-if="sp.other.illustration" class="figure" :transform="figTransform(sp.x, sp.y)" v-html="sp.other.illustration" />
-            <text v-else class="mk" :x="sp.x" :y="sp.y + 3.5" text-anchor="middle">{{ rarityMeta(sp.other.rarity).mark }}</text>
-            <text class="nm" :x="sp.x + R + 14" :y="sp.y + 3.5" text-anchor="start">{{ sp.other.binomial }}</text>
-            <line
-              class="sigrule"
-              :x1="sp.x + R + 14"
-              :x2="sp.x + R + 38"
-              :y1="sp.y + 13"
-              :y2="sp.y + 13"
-              :style="{ stroke: specimenAccent(sp.other) }"
-            />
-          </g>
-        </a>
-      </NuxtLink>
-    </svg>
+          <a
+            class="node-hit"
+            :href="href"
+            :aria-label="`${sp.other.binomial}, ${specimen.binomial} ${sp.rs.map((r) => r.label).join(' and ')} ${sp.other.binomial}`"
+            @click="navigate"
+            @mouseenter="spokeEnter(sp.other.slug)"
+            @mouseleave="spokeLeave()"
+            @focus="spokeEnter(sp.other.slug)"
+            @blur="spokeLeave()"
+          >
+            <g class="node" :style="figStyle(sp.other)">
+              <circle class="seat" :cx="sp.x" :cy="sp.y" :r="R" :fill="`url(#${uid}-seat)`" />
+              <!-- eslint-disable-next-line vue/no-v-html -->
+              <g v-if="sp.other.illustration" class="figure" :transform="figTransform(sp.x, sp.y)" v-html="sp.other.illustration" />
+              <text v-else class="mk" :x="sp.x" :y="sp.y + 3.5" text-anchor="middle">{{ rarityMeta(sp.other.rarity).mark }}</text>
+              <text class="nm" :x="sp.x + R + 14" :y="sp.y + 3.5" text-anchor="start">{{ sp.other.binomial }}</text>
+              <line
+                class="sigrule"
+                :x1="sp.x + R + 14"
+                :x2="sp.x + R + 38"
+                :y1="sp.y + 13"
+                :y2="sp.y + 13"
+                :style="{ stroke: specimenAccent(sp.other) }"
+              />
+            </g>
+          </a>
+        </NuxtLink>
+      </svg>
+    </div>
     <p v-if="view.spokes.length" class="atlas-web-hint" aria-hidden="true">↔ scroll to see the rest</p>
   </div>
 </template>

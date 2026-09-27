@@ -184,78 +184,80 @@ function strandClass(e: Edge) {
 
 <template>
   <div class="atlas-web">
-    <svg v-if="nodes.length" :viewBox="`0 0 ${W} ${H}`" role="group" aria-label="Food web of this biome">
-      <defs>
-        <marker
-          :id="`${uid}-arrow`"
-          viewBox="0 0 10 10"
-          refX="8"
-          refY="5"
-          markerWidth="6"
-          markerHeight="6"
-          orient="auto-start-reverse"
-        >
-          <path d="M0,1 L9,5 L0,9" fill="none" stroke="context-stroke" stroke-width="1.4" />
-        </marker>
-        <!-- A borderless seat in the page's own paper colour: solid at the centre,
-             fading to nothing at the rim. Invisible on empty paper; it only reveals
-             itself by quietly softening the strands that pass under a specimen. -->
-        <radialGradient :id="`${uid}-seat`">
-          <stop offset="52%" stop-color="var(--atlas-paper)" stop-opacity="1" />
-          <stop offset="100%" stop-color="var(--atlas-paper)" stop-opacity="0" />
-        </radialGradient>
-      </defs>
+    <div class="atlas-web-scroll" :style="{ '--atlas-web-w': `${W}px` }">
+      <svg v-if="nodes.length" :viewBox="`0 0 ${W} ${H}`" role="group" aria-label="Food web of this biome">
+        <defs>
+          <marker
+            :id="`${uid}-arrow`"
+            viewBox="0 0 10 10"
+            refX="8"
+            refY="5"
+            markerWidth="6"
+            markerHeight="6"
+            orient="auto-start-reverse"
+          >
+            <path d="M0,1 L9,5 L0,9" fill="none" stroke="context-stroke" stroke-width="1.4" />
+          </marker>
+          <!-- A borderless seat in the page's own paper colour: solid at the centre,
+               fading to nothing at the rim. Invisible on empty paper; it only reveals
+               itself by quietly softening the strands that pass under a specimen. -->
+          <radialGradient :id="`${uid}-seat`">
+            <stop offset="52%" stop-color="var(--atlas-paper)" stop-opacity="1" />
+            <stop offset="100%" stop-color="var(--atlas-paper)" stop-opacity="0" />
+          </radialGradient>
+        </defs>
 
-      <!-- strands first, under the nodes; each carries its verb phrase riding
-           its own rail, so the web reads without having to wander it first -->
-      <g v-for="(st, i) in strands" :key="`s${i}`">
-        <path
-          class="strand"
-          :class="strandClass(st.e)"
-          :d="st.d"
-          :style="{ stroke: st.endStroke }"
-          :marker-end="`url(#${uid}-arrow)`"
-        />
-        <path :id="`${uid}-rail-${i}`" class="rail" :d="st.rail" />
-        <text class="web-lbl" :class="strandClass(st.e)" text-anchor="middle">
-          <textPath :href="`#${uid}-rail-${i}`" :startOffset="st.off">{{ st.label }}</textPath>
-        </text>
-      </g>
+        <!-- strands first, under the nodes; each carries its verb phrase riding
+             its own rail, so the web reads without having to wander it first -->
+        <g v-for="(st, i) in strands" :key="`s${i}`">
+          <path
+            class="strand"
+            :class="strandClass(st.e)"
+            :d="st.d"
+            :style="{ stroke: st.endStroke }"
+            :marker-end="`url(#${uid}-arrow)`"
+          />
+          <path :id="`${uid}-rail-${i}`" class="rail" :d="st.rail" />
+          <text class="web-lbl" :class="strandClass(st.e)" text-anchor="middle">
+            <textPath :href="`#${uid}-rail-${i}`" :startOffset="st.off">{{ st.label }}</textPath>
+          </text>
+        </g>
 
-      <!-- nodes -->
-      <NuxtLink
-        v-for="n in nodes"
-        :key="n.s.slug"
-        v-slot="{ href, navigate }"
-        :to="`/t/atlas/${biome}/${n.s.slug}`"
-        custom
-      >
-        <a
-          class="node-hit"
-          :href="href"
-          :aria-label="`${n.s.binomial}, ${n.s.common} — ${rarityMeta(n.s.rarity).grade}`"
-          @click="navigate"
-          @mouseenter="hot = n.s.slug"
-          @mouseleave="hot = null"
-          @focus="hot = n.s.slug"
-          @blur="hot = null"
+        <!-- nodes -->
+        <NuxtLink
+          v-for="n in nodes"
+          :key="n.s.slug"
+          v-slot="{ href, navigate }"
+          :to="`/t/atlas/${biome}/${n.s.slug}`"
+          custom
         >
-          <g class="node" :class="nodeClass(n.s.slug)" :style="figStyle(n.s)">
-            <!-- the seat: a borderless page-coloured vignette that softens the
-                 strands beneath the specimen, and the hover/click hit target -->
-            <circle class="seat" :cx="n.x" :cy="n.y" :r="R" :fill="`url(#${uid}-seat)`" />
-            <!-- the engraved plate, drawn straight onto the page. v-html is safe: the
-                 illustration is agent-authored, repo-committed markup (see Plate). -->
-            <!-- eslint-disable-next-line vue/no-v-html -->
-            <g v-if="n.s.illustration" class="figure" :transform="figTransform(n)" v-html="n.s.illustration" />
-            <text v-else class="mk" :x="n.x" :y="n.y + 3.5" text-anchor="middle">{{ rarityMeta(n.s.rarity).mark }}</text>
-            <!-- the specimen's colour, carried as a short engraved rule under the name -->
-            <line class="sigrule" :x1="n.x - 13" :x2="n.x + 13" :y1="n.y + R + 22" :y2="n.y + R + 22" :style="{ stroke: specimenAccent(n.s) }" />
-            <text class="nm" :x="n.x" :y="n.y + R + 15" text-anchor="middle">{{ n.s.binomial }}</text>
-          </g>
-        </a>
-      </NuxtLink>
-    </svg>
+          <a
+            class="node-hit"
+            :href="href"
+            :aria-label="`${n.s.binomial}, ${n.s.common} — ${rarityMeta(n.s.rarity).grade}`"
+            @click="navigate"
+            @mouseenter="hot = n.s.slug"
+            @mouseleave="hot = null"
+            @focus="hot = n.s.slug"
+            @blur="hot = null"
+          >
+            <g class="node" :class="nodeClass(n.s.slug)" :style="figStyle(n.s)">
+              <!-- the seat: a borderless page-coloured vignette that softens the
+                   strands beneath the specimen, and the hover/click hit target -->
+              <circle class="seat" :cx="n.x" :cy="n.y" :r="R" :fill="`url(#${uid}-seat)`" />
+              <!-- the engraved plate, drawn straight onto the page. v-html is safe: the
+                   illustration is agent-authored, repo-committed markup (see Plate). -->
+              <!-- eslint-disable-next-line vue/no-v-html -->
+              <g v-if="n.s.illustration" class="figure" :transform="figTransform(n)" v-html="n.s.illustration" />
+              <text v-else class="mk" :x="n.x" :y="n.y + 3.5" text-anchor="middle">{{ rarityMeta(n.s.rarity).mark }}</text>
+              <!-- the specimen's colour, carried as a short engraved rule under the name -->
+              <line class="sigrule" :x1="n.x - 13" :x2="n.x + 13" :y1="n.y + R + 22" :y2="n.y + R + 22" :style="{ stroke: specimenAccent(n.s) }" />
+              <text class="nm" :x="n.x" :y="n.y + R + 15" text-anchor="middle">{{ n.s.binomial }}</text>
+            </g>
+          </a>
+        </NuxtLink>
+      </svg>
+    </div>
     <p v-if="nodes.length" class="atlas-web-hint" aria-hidden="true">↔ scroll to see the rest</p>
     <p v-else class="empty">An empty wing. The naturalists have not yet been.</p>
   </div>

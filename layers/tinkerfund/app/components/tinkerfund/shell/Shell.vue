@@ -13,6 +13,8 @@ useHead({
         <span>Demo shop — nothing here is real</span>
         <span aria-hidden="true">·</span>
         <TinkerfundShellResetDemo />
+        <span aria-hidden="true">·</span>
+        <NuxtLink to="/" class="tf-link">Part of the Terrarium ↗</NuxtLink>
       </div>
     </div>
     <!-- A page with its own header is a focused flow: no footer either (#1367). -->
