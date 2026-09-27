@@ -1,0 +1,67 @@
+schemaVersion: 1
+session: session_0158JckUL8YWJtVL7s9i7xRr
+startedAt: 2026-09-27T06:49:21Z
+endedAt: 2026-09-27T07:14:20Z
+kind: interactive
+goal: Regroup tinkerfund components and split composables
+status: in-review
+outcome: PR 1428 open, full gate green
+summary: "Human asked whether tinkerfund's flat 43-component folder should be grouped; I proposed an area split and asked four questions. Human approved the grouping, simplified names and splitting composables/tinkerfund.ts, and asked for a background implementation plus /code-review. A worktree subagent did the move (gate green); a two-axis review found no spec gaps and some naming judgement calls. Human then said \"reset and fix as you want\": I (agent-chosen) dissolved the ui/ folder back to the root and moved CheckoutHeader into checkout/, re-ran the full gate (green), pushed and opened PR 1428."
+prs:
+  - "1428"
+docsRead:
+  - path: docs/agents/tenant-layers.md
+    reason: auto-import naming from component paths
+  - path: layers/tinkerfund/app/composables/tinkerfund.ts
+    reason: (no reason given)
+skillsUsed:
+  - name: dispatch-subagents
+    reason: worktree-isolated implementation agent
+  - name: code-review
+    reason: standards + spec review of the refactor
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Worktree subagent pushed the same branch the primary checkout had checked out; the shared branch ref advanced under the primary, leaving 59 phantom reverse changes. Stop hook nagged to commit them (which would revert the work) and the reset was classifier-blocked until the human OKed it.
+    solution: "dispatch-subagents SKILL.md: have the impl agent push to its own branch name (or the orchestrator detach/switch the primary off the target branch) before dispatch."
+    severity: moderate
+  - description: Spec-review subagent asserted there is no utils/clock.ts; the file exists. Caught only because I had listed utils earlier.
+    solution: Treat subagent factual claims as candidates and spot-check them (already in dispatch-subagents).
+    severity: nit
+  - description: "First create_pull_request was denied by the ADR-0017 provenance guard: I put the session URL in a plain first line; the guard wants the model-name link shape, which the harness prompt discourages (no model id in PR bodies)."
+    solution: Deny message was clear; nothing to change beyond noting the prompt-vs-repo tension.
+    severity: nit
+  - description: 'SHELL-READ-DETECTION false positive (cwd ignored): command `cd /home/user/terrarium/layers/tinkerfund; grep -n "^\*\*\|^### \|^## " CONTEXT.md | head -40; ...` was credited as reading root CONTEXT.md; it actually read layers/tinkerfund/CONTEXT.md.'
+    solution: Resolve relative paths against a leading `cd <dir>` in the same command (scripts/session-trace.ts).
+    severity: moderate
+durationSec: 1499
+models:
+  claude-opus-5-5: 92
+toolCounts:
+  Bash: 26
+  Skill: 4
+  Agent: 3
+  ToolSearch: 1
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 2
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__send_later: 1
+docsReadViaShell:
+  - docs/agents/tenant-layers.md
+  - CONTEXT.md
+  - docs/agents/guards.md
+  - layers/tinkerfund/CONTEXT.md
+subagents:
+  - task: Regroup tinkerfund components
+  - type: Explore
+    task: Standards review of regroup
+  - type: Explore
+    task: Spec review of regroup
+gitBranch: claude/tinkerfund-folder-structure-7bdb9e
+entrypoint: remote_mobile
+cliVersion: 2.1.283
+learnings:
+  - Nuxt drops a leading folder segment repeated in the file name (campaign/Campaign.vue is TinkerfundCampaign), so file names can be chosen to keep component names stable
+landedBy: Stop
