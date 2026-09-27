@@ -10,7 +10,7 @@
 //
 // Fail-open by construction: a long-runner reached only through a variable, a
 // wrapper script or `xargs`, and a trailing stage other than `tail`/`head`/
-// `echo`, all pass — this reads a command string, not a shell AST.
+// `echo`/`tee` (#1329), all pass — this reads a command string, not a shell AST.
 //
 // Usage:
 //   sh scripts/tail-pipe-guard.sh                     # the installed hook entry
@@ -21,7 +21,7 @@ import { buildDenyOutput, denyUninspectable, printDryRunResult, readHookPayload,
 const LABEL = 'tail-pipe guard'
 const REF = 'issue #873'
 
-const TRAILING_PIPE = /\|\s*(?:tail|head|echo)\b[^|]*$/
+const TRAILING_PIPE = /\|\s*(?:tail|head|echo|tee)\b[^|]*$/
 export const LONG_RUNNER = /\bpnpm\s+(?:gate\b|test\b|build\b|exec\s+(?:vitest|playwright)\b)/
 
 /** What separates one statement from the next. Both regexes must hit the SAME
@@ -31,7 +31,7 @@ export const LONG_RUNNER = /\bpnpm\s+(?:gate\b|test\b|build\b|exec\s+(?:vitest|p
  *  for). */
 const STATEMENT = /[\n;]|&&|\|\|/
 
-/** `null` unless one statement pipes into a trailing `tail`/`head`/`echo` AND
+/** `null` unless one statement pipes into a trailing `tail`/`head`/`echo`/`tee` AND
  *  the call either backgrounds or that statement names a known long-runner.
  *  Never throws. */
 export function checkTailPipe(toolName: string, toolInput: unknown): 'backgrounded' | 'long-runner' | null {
@@ -47,7 +47,7 @@ export function checkTailPipe(toolName: string, toolInput: unknown): 'background
 
 export function formatGuardMessage(): string {
   return (
-    `Blocked by the ${LABEL} (${REF}): piping this command into a trailing \`tail\`/\`head\`/\`echo\` loses its ` +
+    `Blocked by the ${LABEL} (${REF}): piping this command into a trailing \`tail\`/\`head\`/\`echo\`/\`tee\` loses its ` +
     `real exit status and can truncate its output. Redirect the primary command to a file instead ` +
     `(\`cmd > log 2>&1\`), check \`$?\` directly, then read the file.`
   )

@@ -1,5 +1,5 @@
 // Coverage for the tail-pipe guard (issue #873; rationale and detection
-// contract in `scripts/tail-pipe-guard.ts`). Five tests: the pure core's
+// contract in `scripts/tail-pipe-guard.ts`). Seven tests: the pure core's
 // decisions, and a fail-closed check of the real script's stdin path.
 import { execFileSync } from 'node:child_process'
 import { dirname, join, resolve } from 'node:path'
@@ -28,6 +28,22 @@ describe('checkTailPipe() — the pure predicate (issue #873)', () => {
     // Multi-line Bash is routine here: the long-runner is a DIFFERENT statement
     // from the piped one, so matching the whole command would deny this.
     expect(checkTailPipe('Bash', { command: 'pnpm build > build.log 2>&1\ngit log --oneline | head -5' })).toBeNull()
+  })
+
+  it('#1329: a trailing tee is treated like tail — `false | tee x` exits 0 too', () => {
+    expect(checkTailPipe('Bash', { command: 'pnpm gate:scoped 2>&1 | tee gate.log' })).toBe('long-runner')
+    expect(checkTailPipe('Bash', { command: 'git log | tee x', run_in_background: true })).toBe('backgrounded')
+    expect(checkTailPipe('Bash', { command: 'ls | tee x' })).toBeNull()
+    expect(checkTailPipe('Bash', { command: 'pnpm build > build.log 2>&1\nls | tee x' })).toBeNull()
+  })
+
+  it('#1329: the sh pre-filter passes a tee payload through to the TS guard', () => {
+    const out = execFileSync('sh', [join(root, 'scripts', 'tail-pipe-guard.sh')], {
+      cwd: root,
+      input: JSON.stringify({ tool_name: 'Bash', tool_input: { command: 'pnpm gate:scoped 2>&1 | tee gate.log' } }),
+      encoding: 'utf8',
+    }).trim()
+    expect(out ? JSON.parse(out).hookSpecificOutput.permissionDecision : null).toBe('deny')
   })
 
   it('ALLOWS: no trailing pipe, and a non-Bash tool', () => {
