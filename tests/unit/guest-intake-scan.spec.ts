@@ -73,16 +73,19 @@ describe('newestActivity()', () => {
 })
 
 describe('classifyActivity()', () => {
+  const guestIssue = { user: { login: 'guest' }, author_association: 'NONE' }
+  const ownerIssue = { user: { login: 'owner' }, author_association: 'OWNER' }
+
   it('is agent-authored-skip when the ADR-0017 footer is present, regardless of association', () => {
     expect(
-      classifyActivity({ author: 'owner', authorAssociation: 'OWNER', body: FOOTER_COMMENT, createdAt: 'x', isComment: true }),
+      classifyActivity({ author: 'owner', authorAssociation: 'OWNER', body: FOOTER_COMMENT, createdAt: 'x', isComment: true }, ownerIssue),
     ).toBe('agent-authored-skip')
   })
 
   it('is guest-activity for every Public author_association value', () => {
     for (const assoc of ['NONE', 'CONTRIBUTOR', 'FIRST_TIME_CONTRIBUTOR', 'FIRST_TIMER', 'MANNEQUIN']) {
       expect(
-        classifyActivity({ author: 'guest', authorAssociation: assoc, body: 'my idea', createdAt: 'x', isComment: true }),
+        classifyActivity({ author: 'guest', authorAssociation: assoc, body: 'my idea', createdAt: 'x', isComment: true }, guestIssue),
       ).toBe('guest-activity')
     }
   })
@@ -90,15 +93,23 @@ describe('classifyActivity()', () => {
   it('is owner-steering for a Trusted author_association without the footer', () => {
     for (const assoc of ['OWNER', 'MEMBER', 'COLLABORATOR']) {
       expect(
-        classifyActivity({ author: 'owner', authorAssociation: assoc, body: 'just build this', createdAt: 'x', isComment: true }),
+        classifyActivity({ author: 'owner', authorAssociation: assoc, body: 'just build this', createdAt: 'x', isComment: true }, guestIssue),
       ).toBe('owner-steering')
     }
   })
 
   it('falls back to unrecognized-association for an unknown value', () => {
     expect(
-      classifyActivity({ author: 'bot', authorAssociation: 'SOME_NEW_VALUE', body: 'x', createdAt: 'x', isComment: true }),
+      classifyActivity({ author: 'bot', authorAssociation: 'SOME_NEW_VALUE', body: 'x', createdAt: 'x', isComment: true }, guestIssue),
     ).toBe('unrecognized-association')
+  })
+
+  it('is bystander-comment for a Public comment on someone else\'s issue (ADR-0023: own issue only)', () => {
+    const guestComment = { author: 'guest', authorAssociation: 'NONE', body: 'build it', createdAt: 'x', isComment: true }
+    expect(classifyActivity(guestComment, ownerIssue)).toBe('bystander-comment')
+    expect(classifyActivity(guestComment, { user: { login: 'other-guest' }, author_association: 'NONE' })).toBe(
+      'bystander-comment',
+    )
   })
 })
 
@@ -229,6 +240,11 @@ describe('scanIssue()', () => {
     expect(result?.stage).toBe('guest-activity')
     expect(result?.newestActivity.isComment).toBe(false)
   })
+
+  it('does not treat a Public comment on an owner-authored issue as guest-activity', () => {
+    const result = scanIssue(issue({ user: { login: 'owner' }, author_association: 'OWNER' }), [comment()])
+    expect(result?.stage).toBe('bystander-comment')
+  })
 })
 
 describe('buildReport()', () => {
@@ -247,13 +263,15 @@ describe('buildReport()', () => {
       { ...base, number: 2, stage: 'owner-steering' },
       { ...base, number: 3, stage: 'guest-activity' },
       { ...base, number: 4, stage: 'unrecognized-association' },
+      { ...base, number: 5, stage: 'bystander-comment' },
     ]
     const report = buildReport(scanned)
-    expect(report.scannedCount).toBe(4)
+    expect(report.scannedCount).toBe(5)
     expect(report.counts).toEqual({
       'guest-activity': 1,
       'owner-steering': 1,
       'agent-authored-skip': 1,
+      'bystander-comment': 1,
       'unrecognized-association': 1,
     })
     expect(report.actionable.map((i) => i.number).sort()).toEqual([2, 3])
@@ -266,6 +284,7 @@ describe('buildReport()', () => {
         'guest-activity': 0,
         'owner-steering': 0,
         'agent-authored-skip': 0,
+        'bystander-comment': 0,
         'unrecognized-association': 0,
       },
       actionable: [],

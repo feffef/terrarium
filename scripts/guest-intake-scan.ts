@@ -36,7 +36,7 @@
 // Usage:  tsx scripts/guest-intake-scan.ts [N]
 //   Scans up to N open issues (default 100) and prints a `ScanReport` JSON:
 //   { scannedCount, counts: {guest-activity, owner-steering,
-//   agent-authored-skip, unrecognized-association}, actionable: ScannedIssue[] }
+//   agent-authored-skip, bystander-comment, unrecognized-association}, actionable: ScannedIssue[] }
 //
 // Also skips an issue already carrying the `guest-in-flight` marker
 // (issue #570) whose age can't be shown stale — another session may be
@@ -109,7 +109,12 @@ export const TRUSTED_ASSOCIATIONS = new Set(['OWNER', 'MEMBER', 'COLLABORATOR'])
 
 /** The classification `guest-intake`'s authorship rules reduce every issue's
  *  newest activity to. */
-export type Stage = 'guest-activity' | 'owner-steering' | 'agent-authored-skip' | 'unrecognized-association'
+export type Stage =
+  | 'guest-activity'
+  | 'owner-steering'
+  | 'agent-authored-skip'
+  | 'bystander-comment'
+  | 'unrecognized-association'
 
 /** An issue's newest activity — its most recent comment, or its own body when
  *  it has no comments — with HTML entities already decoded. */
@@ -169,11 +174,15 @@ export function newestActivity(issue: RawIssueRecord, comments: RawCommentRecord
  *  always wins first (it marks this pipeline's own prior reply, regardless of
  *  the shared-connection `author_association` it lands under — see
  *  `check-triage-drift.ts`'s header for why the footer, not the association,
- *  is the authorship signal); otherwise Public is a guest, Trusted is the
- *  owner steering. */
-export function classifyActivity(activity: Activity): Stage {
+ *  is the authorship signal); otherwise Public is a guest only on their own
+ *  Public-authored issue (ADR-0023 — anyone else's Public comment is a
+ *  non-actionable `bystander-comment`), and Trusted is the owner steering. */
+export function classifyActivity(activity: Activity, issue: Pick<RawIssueRecord, 'user' | 'author_association'>): Stage {
   if (isAiAuthored(activity.body)) return 'agent-authored-skip'
-  if (PUBLIC_ASSOCIATIONS.has(activity.authorAssociation)) return 'guest-activity'
+  if (PUBLIC_ASSOCIATIONS.has(activity.authorAssociation)) {
+    const ownIssue = PUBLIC_ASSOCIATIONS.has(issue.author_association) && issue.user?.login === activity.author
+    return ownIssue ? 'guest-activity' : 'bystander-comment'
+  }
   if (TRUSTED_ASSOCIATIONS.has(activity.authorAssociation)) return 'owner-steering'
   return 'unrecognized-association'
 }
@@ -244,7 +253,7 @@ export function scanIssue(rawIssue: RawIssueRecord, rawComments: RawCommentRecor
     number: rawIssue.number,
     title: issue.title,
     labels: rawIssue.labels.map((label) => (typeof label === 'string' ? label : label.name)),
-    stage: classifyActivity(activity),
+    stage: classifyActivity(activity, rawIssue),
     newestActivity: activity,
     priorAgentCommentCount: comments.filter((c) => isAiAuthored(c.body)).length,
   }
@@ -258,6 +267,7 @@ export function buildReport(scanned: ScannedIssue[]): ScanReport {
     'guest-activity': 0,
     'owner-steering': 0,
     'agent-authored-skip': 0,
+    'bystander-comment': 0,
     'unrecognized-association': 0,
   }
   for (const issue of scanned) counts[issue.stage]++
