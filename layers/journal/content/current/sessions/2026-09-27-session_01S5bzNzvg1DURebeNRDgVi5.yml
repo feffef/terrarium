@@ -1,0 +1,99 @@
+schemaVersion: 1
+session: session_01S5bzNzvg1DURebeNRDgVi5
+startedAt: 2026-09-27T13:13:43Z
+endedAt: 2026-09-27T13:33:21Z
+kind: autonomous
+goal: Run scheduled /prune-trial
+status: in-review
+outcome: One trial closed, one new language-simplification trial opened
+summary: "Scheduled, unattended /prune-trial run, no human prompt. Judged the one landed and judgeable open trial (pr-workflow.md's step-5 verdict-ordering bullet, opened 2026-09-23): holds — a friction shows merge-pr.ts correctly refusing a premature merge, and issue #1276 (the mechanism the trial anticipated) is closed via an unrelated PR #1311. Deleted the ledger entry and corrected pr-workflow.md's now-stale \"no mechanical check today\" claim. Also closed issue #1293 directly: its gating trial had already been judged \"holds\" on 2026-09-26 but the issue was never closed as that verdict's own comment said to do. Two dispatched full-corpus searches found no criterion-1/2 candidate for a new prune (one lead, #1293's bullet, looked live but turned out already-settled once checked against actual git history rather than the search agent's summary alone). Per standing owner direction, rewrote a whole untrialed file in plainer words instead: docs/agents/git-conventions.md, 1129 -> 971 words (-14%), verified against two inbound code-comment references before cutting anything. A Sonnet probe against a fresh worktree at the post-prune commit correctly answered all 8 comprehension questions from the compressed text alone. Opened PR #1430 with pnpm gate:scoped fully green."
+prs:
+  - "1430"
+docsRead:
+  - path: .agents/prune-trials.yml
+    reason: the open-trials ledger this run judges and edits
+  - path: docs/agents/pr-workflow.md
+    reason: the trial's own territory
+  - path: docs/agents/git-conventions.md
+    reason: chosen whole-file rewrite target
+  - path: docs/research/rulebook-migration-table.md
+    reason: confirmed git-conventions.md's GC-01..15 rows carry zero incidents, ruling out criterion 1
+  - path: scripts/gate.ts
+    reason: verified its inbound reference to git-conventions.md's shallow-clone rationale before cutting that section
+  - path: scripts/git-helpers.ts
+    reason: same inbound-reference check
+  - path: .agents/skills/prune-trial/SKILL.md
+    reason: this run's own procedure
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: isolation mechanism for the probe subagent
+  - path: CLAUDE.md
+    reason: (no reason given)
+  - path: docs/agents/environment-caveats.md
+    reason: (no reason given)
+  - path: docs/agents/guest-contributions.md
+    reason: (no reason given)
+skillsUsed:
+  - name: prune-trial
+    reason: this run's charter
+  - name: dispatch-subagents
+    reason: isolated-worktree probe for the §4 Sonnet check
+  - name: close-session
+    reason: standard closure at PR-open
+  - name: log-session
+    reason: this log
+frictions:
+  - description: "A dispatched corpus-search subagent recommended re-pruning CLAUDE.md's run_in_background-from-the-outset bullet (issue #1293) based on two cited recurrences, but those recurrences predated an already-landed 2026-09-22 prune of that exact bullet, whose pruned form a 2026-09-26 verdict had already validated holding — the subagent's report read the issue history but didn't check the ledger's actual git commits first."
+    solution: Cross-checked the candidate against git log --oneline -- .agents/prune-trials.yml and the actual commit diffs myself before acting, per CLAUDE.md's 'verify fresh, don't recall a subagent's report as settled' rule; caught it before any wrong prune shipped. A second dispatched search, explicitly instructed to check historical trial commits first, avoided the same mistake.
+    severity: moderate
+  - description: While inspecting a completed probe subagent's worktree for check-worktrees.ts's false 'unpushed' flag (a detached-HEAD probe worktree at the feature branch's own tip, which check-worktrees.ts compares against origin/main rather than the feature branch), ran `cd <worktree> && ...` from the orchestrator's own persistent shell, which silently changed this session's own working directory into the subagent's worktree — exactly the footgun dispatch-subagents/SKILL.md section 5 names by name.
+    solution: "Recognized the environment-update notice and cd'd back to the repo root immediately, then re-verified git status there before trusting it. Worth restating dispatch-subagents/SKILL.md's own warning even more concretely: any `cd` into a linked worktree from the orchestrator's Bash tool persists across calls exactly like any other cd, with no automatic return."
+    severity: minor
+  - description: First Agent tool dispatch for the §4 Sonnet probe mentioned isolation:'worktree' only in the prompt text, not as an actual tool parameter — the dispatch-subagents Skill explicitly warns this must be passed explicitly, not implied by prose.
+    solution: Caught before the agent did any real work; stopped it via TaskStop and redispatched with the isolation parameter actually set. No work was lost.
+    severity: nit
+durationSec: 1179
+models:
+  claude-sonnet-5: 182
+toolCounts:
+  Bash: 42
+  Read: 7
+  Agent: 7
+  TaskCreate: 1
+  ReadNotifications: 8
+  Edit: 6
+  Grep: 5
+  ToolSearch: 4
+  mcp__github__add_issue_comment: 1
+  mcp__github__issue_write: 1
+  Write: 2
+  Skill: 3
+  TaskStop: 1
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+filesEdited:
+  - .agents/prune-trials.yml
+  - docs/agents/pr-workflow.md
+  - docs/agents/git-conventions.md
+docsReadViaShell:
+  - docs/adr/0017-provenance-footer-on-agent-authored-content.md
+  - docs/research/rulebook-migration-table.md
+  - docs/agents/git-conventions.md
+  - docs/agents/pr-workflow.md
+  - docs/agents/issue-tracker.md
+  - docs/agents/github-integration.md
+  - .agents/skills/blog-post/SKILL.md
+  - docs/agents/guards.md
+subagents:
+  - task: "Check issue #1276 status and related regressions"
+  - task: Search corpus for already-failed prose
+  - task: Search corpus for already-failed prose
+  - task: "Check issue #1293 current status"
+  - task: Search corpus for fresh already-failed prose, round 2
+  - task: Probe git-conventions.md rewrite for information loss
+  - task: Probe git-conventions.md rewrite for information loss
+gitBranch: claude/practical-rubin-mc32ir
+entrypoint: remote_trigger
+cliVersion: 2.1.283
+trigger: prune-trial
+landedBy: Stop
