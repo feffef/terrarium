@@ -87,7 +87,12 @@ campaign:
         <path d="M116 114L120 92L132 110Z" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" />
         <path d="M144 109L153 92L156 114Z" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" />
         <circle cx="148" cy="125" r="2.6" style="fill:var(--tf-surface)" />
-        <path d="M138 146c10 12 40 24 92 40" style="fill:none;stroke:var(--tf-ink);stroke-width:9;stroke-linecap:round;stroke-linejoin:round" />
+        <circle cx="146" cy="159" r="7.5" style="fill:var(--tf-ink)" />
+        <path d="M140 155c30 0 70 16 102 32l2 10c-32 -12 -74 -20 -98 -28z" style="fill:var(--tf-ink)" />
+        <ellipse cx="251" cy="191" rx="12" ry="7.5" style="fill:var(--tf-ink)" />
+        <circle cx="260" cy="184.5" r="3.5" style="fill:var(--tf-ink)" />
+        <circle cx="263.5" cy="191" r="3.5" style="fill:var(--tf-ink)" />
+        <circle cx="260" cy="197.5" r="3.5" style="fill:var(--tf-ink)" />
     - style: patent
       caption: "Section A–A at rest: felt (10), cap (12), stem (14), return spring (16), housing (18), adhesive pad (20), pawl (22), counter housing (24), digit wheels (26) and window (28). The window faces up, for standing height."
       svg: |-

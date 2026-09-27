@@ -94,9 +94,9 @@ campaign:
         <path d="M236.3 135L316 181L295.2 193L215.5 147Z" style="fill:color-mix(in srgb, var(--tf-line) 35%, var(--tf-surface))" />
         <path d="M215.5 155L295.2 201L295.2 193L215.5 147Z" style="fill:color-mix(in srgb, var(--tf-line) 70%, var(--tf-surface))" />
         <path d="M316 189L295.2 201L295.2 193L316 181Z" style="fill:var(--tf-line)" />
-        <path d="M262.3 113.2L317.7 145.2L283.1 165.2L227.6 133.2Z" style="fill:color-mix(in srgb, var(--tf-ink) 45%, var(--tf-surface))" />
-        <path d="M227.6 154L283.1 186L283.1 165.2L227.6 133.2Z" style="fill:var(--tf-ink)" />
-        <path d="M317.7 166L283.1 186L283.1 165.2L317.7 145.2Z" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" />
+        <path d="M262.3 113.2L317.7 145.2L283.1 165.2L227.6 133.2Z" style="fill:color-mix(in srgb, var(--tf-ink) 30%, var(--tf-surface))" />
+        <path d="M227.6 154L283.1 186L283.1 165.2L227.6 133.2Z" style="fill:color-mix(in srgb, var(--tf-ink) 65%, var(--tf-surface))" />
+        <path d="M317.7 166L283.1 186L283.1 165.2L317.7 145.2Z" style="fill:color-mix(in srgb, var(--tf-ink) 50%, var(--tf-surface))" />
         <path d="M234.6 148.4L276.1 172.4L272.7 174.4L231.1 150.4Z" style="fill:color-mix(in srgb, var(--tf-ink) 45%, var(--tf-surface))" />
         <path d="M231.1 171.2L272.7 195.2L272.7 174.4L231.1 150.4Z" style="fill:var(--tf-ink)" />
         <path d="M276.1 193.2L272.7 195.2L272.7 174.4L276.1 172.4Z" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" />
