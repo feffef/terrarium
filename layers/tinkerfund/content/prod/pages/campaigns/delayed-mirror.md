@@ -158,7 +158,7 @@ campaign:
   rewards:
     - id: standard
       title: Standard
-      description: One 600 × 800 mm Delayed Mirror with wall bracket and power adapter.
+      description: One 600 × 800 mm Delayed Mirror with wall bracket, hardwired to household power.
       price: 99
       claimed: 185
       options:

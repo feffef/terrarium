@@ -157,7 +157,7 @@ campaign:
   addons:
     - { id: printed-binder, title: Printed quarterly binder, description: "A4 binder that collects each quarter's reports as they print.", price: 12, claimed: 120 }
     - { id: second-fish-licence, title: Second-fish tracking licence, description: "Extends objective tracking to a second fish sharing the same tank as the first.", price: 8, claimed: 150 }
-    - { id: desk-nameplate, title: Desk nameplate, description: "An engraved nameplate carrying the fish's name and current objectives, for the desk nearest the tank.", price: 35, claimed: 25, stock: 25 }
+    - { id: desk-nameplate, title: Desk nameplate, description: "An engraved nameplate carrying the fish's name and current objectives, for the desk nearest the tank.", price: 15, claimed: 25, stock: 25 }
   stretchGoals:
     - id: annual-summary
       amount: 15000

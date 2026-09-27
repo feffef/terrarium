@@ -12,11 +12,12 @@ campaign:
   pledged: 0
   specifications:
     - { label: Sensors, value: "Capacitive moisture, ambient light, temperature" }
-    - { label: Probe depth, value: "40 mm into the decorative base" }
+    - { label: Insertion depth, value: "40 mm into the decorative base" }
+    - { label: Stem length, value: "60 mm or 120 mm, matched to base diameter" }
     - { label: Dust sensor, value: "Optical, suggested wipe interval 30 days" }
     - { label: Reporting interval, value: "Hourly" }
     - { label: Connectivity, value: "Bluetooth LE 5.0" }
-    - { label: Plants per home, value: "16, via the app" }
+    - { label: Plants per home, value: "16" }
     - { label: Battery, value: "CR2032, 14 months typical" }
     - { label: Housing rating, value: "IP54" }
     - { label: Base fit, value: "Pots 80–220 mm diameter" }
@@ -253,7 +254,7 @@ campaign:
       delivery: +75d
   addons:
     - { id: dust-wipes, title: "Dust wipes, pack of 30", description: "One wipe per probe per suggested interval.", price: 9, claimed: 0 }
-    - { id: base-clip, title: "Spare base clip", description: "For a decorative base narrower than 80 mm.", price: 12, claimed: 0 }
+    - { id: base-clip, title: "Spare base clip", description: "For an extra decorative base, within the standard 80–220 mm range.", price: 12, claimed: 0 }
   stretchGoals:
     - { id: csv-export, amount: 12000, title: "CSV export of every plant's hourly readings" }
     - { id: trend-graphs, amount: 16000, title: "90-day humidity and light trend graphs" }

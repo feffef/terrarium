@@ -5,20 +5,20 @@ campaign:
   registry: TF-0019
   inventor: annika-sorensen
   category: sleep
-  goal: 22000
+  goal: 33000
   launch: -50d
   end: -20d
-  backers: 100
-  pledged: 9680
+  backers: 150
+  pledged: 14520
   specifications:
-    - { label: Microphone, value: "Calibrated condenser, logs sound pressure continuously through the night" }
+    - { label: Microphone, value: "Calibrated condenser, continuous logging through the night" }
     - { label: Resolution, value: "0.1 dB" }
     - { label: Power, value: "Mains, AC adapter included" }
     - { label: Certificate, value: "58 mm thermal paper, one per morning" }
     - { label: Roll capacity, value: "120 nights per roll" }
     - { label: Certificate contents, value: "Peak decibel level, time of peak, duration of the event" }
-    - { label: Authentication, value: "Certificate is signed by the device, printed in a fixed typeface" }
-    - { label: Second copy, value: "Prints a duplicate certificate for the other party, on request" }
+    - { label: Authentication, value: "Signed by device, fixed typeface" }
+    - { label: Second copy, value: "Duplicate certificate for the other party, on request" }
   figures:
     - style: isometric
       caption: "The printer at the bedside with the night's certificate out. The microphone unit stands where it can hear both parties."

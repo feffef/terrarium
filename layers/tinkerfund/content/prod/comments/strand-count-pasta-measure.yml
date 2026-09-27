@@ -25,10 +25,11 @@ comments:
   - author: Priya L.
     posted: -74d
     text: Brushed copper is a good look for a scale. Glad it made the stretch goal.
-  - author: Henrik Aalto
-    posted: -73d
-    text: Thank you. The finish reads to the same 0.01 g resolution as steel.
-    inventor: true
+    replies:
+      - author: Henrik Aalto
+        posted: -73d
+        text: Thank you. The finish reads to the same 0.01 g resolution as steel.
+        inventor: true
   - author: Sanne V.
     posted: -60d
     text: Does the calibration card cover bucatini specifically? Mine is thicker than the others.

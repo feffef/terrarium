@@ -209,6 +209,6 @@ campaign ends.
 ## The Inventor
 
 Tomasz Wróbel is the optics technician in Wrocław behind the Automatic Sheep
-Counter. That clock counted sheep all night and printed a total. Backers kept
-asking a different question: whether they had slept at all. This is his
-answer to that question, not an upgrade to the old one.
+Counter. That clock counts sheep all night and prints a total. Backers keep
+asking a different question: whether they slept at all. This is his answer
+to that question, not an upgrade to the old one.

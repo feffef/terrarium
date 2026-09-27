@@ -226,8 +226,8 @@ The measure ships in steel. Passing €15,000 unlocked a second finish, brushed
 copper, on the Measure and stand Reward. Either finish reads to the same
 resolution.
 
-## Timeline
+## Shipping
 
-The first units shipped five days before the Campaign closed its books. Two
-factory runs cleared calibration on all fourteen shapes without a strand-count
-outside tolerance.
+The first units shipped roughly two months after the Campaign closed its
+books, once two factory runs cleared calibration on all fourteen shapes
+without a strand-count outside tolerance.

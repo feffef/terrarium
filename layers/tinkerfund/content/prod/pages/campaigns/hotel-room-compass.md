@@ -138,7 +138,7 @@ campaign:
         <g style="fill:var(--tf-ink);stroke:none;font:500 12px var(--tf-mono)"><text x="26" y="180">10</text><text x="30" y="58">32</text><text x="264" y="60">22</text><text x="364" y="114">34</text><text x="132" y="64">12</text><text x="216" y="66">16</text><text x="200" y="236">26</text><text x="126" y="236">36</text><text x="80" y="234">28</text><text x="26" y="126">20</text><text x="296" y="236">30</text></g>
         <g style="fill:var(--tf-ink);stroke:none;font:500 11px var(--tf-mono)"><text x="60" y="290">SECTION A–A · BEARING LOCK · 96 g · NO BATTERY</text></g>
     - style: patent
-      caption: "Calibration in plan: the compass (10) is held by its contact bezel (32) against the door (40) for ten seconds; from any point in the room the needle (12) then points at the door. Hinge (42), wall (44). North is shown struck out."
+      caption: "Calibration in plan: the compass (10) is held by its contact bezel (32) against the door (40) for ten seconds; from any point in the room the needle (12) then points at the door. Hinge (42), wall (44). North (N) is marked for reference only."
       svg: |-
         <g style="fill:none;stroke:var(--tf-ink);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round">
         <path d="M30 40H150V52H30zM250 40H370V52H250z" style="stroke-width:2.4" />
