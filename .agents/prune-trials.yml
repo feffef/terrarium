@@ -24,71 +24,6 @@
 #            topic's tools correctly.
 trials:
   - problem: >
-      `docs/agents/pr-workflow.md`'s step 5 ("Before calling `merge-pr.ts`:
-      step 4's verdict comment must already be posted") already failed twice:
-      first as issue #1113, fixed by PR #1115 (merged 2026-09-03) which pulled
-      the ordering requirement into an explicit bolded precondition — then
-      regressed 15 days later as issue #1276 (filed 2026-09-19, still open),
-      where a session's own `docsRead` confirms it opened this exact doc that
-      session and still called `merge-pr.ts` on PR #1274 before posting the
-      verdict, merging before the session caught it. #1276 explicitly declines
-      a second doc-only wording pass ("not recommended given it already didn't
-      hold once") and instead flags a mechanical pre-merge check in
-      `merge-pr.ts` for human review — so, like the currently-open
-      run_in_background trial, this is criterion 1 with nothing built yet to
-      hold the behaviour (`merge-pr.ts` has no review/comment check today,
-      confirmed by reading the script). Distinguished this from the closely
-      related, and explicitly declined, CLAUDE.md "count over a set" bullet
-      (issue #933): that one was deliberately closed `wontfix` after a
-      dedicated research pass (`rulebook-migration-table.md`'s CM-32 row)
-      classified it "judgment-keep" and said re-narrowing the wording is the
-      wrong move — a considered, final verdict this Skill shouldn't relitigate.
-      #1276 carries no such closure; it's an open, unresolved flag, and the cut
-      here is compression (removing a redundant restatement), not the kind of
-      additional-warning wording pass #1276 argues against. Only the bolded
-      rule's trailing clause was restatement — "if step 4 hasn't run yet, the
-      merge happens with nothing posted" says nothing the bold sentence
-      doesn't already say — so kept the actual rule and the one piece of new
-      mechanism info (merges immediately on green, no wait), cut the
-      restatement, added an #1276 pointer in its place. Grepped the corpus for
-      other homes (frictions-to-fixes, issue-tracker.md, digest/audit-docs/
-      audit-skills/blog-post SKILL.md) — all point at step 4 or the general
-      recipe, none restate step 5's content, nothing else to touch. Net -1
-      line, one file — this corpus is thin after six prior trials; a dispatched
-      full-corpus search's other two candidates (the CLAUDE.md count bullet,
-      ruled out above; `blog-post/SKILL.md`'s causal-attribution rules, issue
-      #1168) were both already-tight text with a human-flagged mechanism
-      question, not prunable mass. Probed the compressed bullet alone on a
-      fresh Sonnet subagent before shipping: given only the surviving text plus
-      a one-line paraphrase of step 4's content, it correctly said to post the
-      verdict comment before calling `merge-pr.ts`, correctly said the PR
-      merges with no verdict trace if called first, and correctly said nothing
-      today enforces the ordering mechanically.
-    territory:
-      paths:
-        - "`docs/agents/pr-workflow.md`: step 5's \"Before calling `merge-pr.ts`: step 4's verdict comment must already be posted\" bullet"
-      keywords:
-        - verdict comment must already be posted
-        - merge-pr.ts merges immediately on green
-        - issue #1276
-    opened: 2026-09-23
-    proven: true
-    check: >
-      Damage is a session that lands a gated PR through this recipe and calls
-      `merge-pr.ts` to merge it before step 4's verdict comment/review is
-      already posted on the PR — the merge going through with no review trace.
-      NOT damage: a session that already posts the verdict before merging (the
-      intended, and only, order — nothing mechanically enforces it either way),
-      one that never lands a PR through this recipe this run, or a recurrence
-      identical in shape to the one #1276 already names (that issue's open
-      mechanical-check recommendation is the tracked response, not new evidence
-      for this trial). A Sonnet probe given only the compressed bullet (plus a
-      one-line paraphrase of step 4, since step 5 refers to it) correctly named
-      posting the verdict comment as the required next action before calling
-      `merge-pr.ts`, correctly said the PR merges with nothing posted if called
-      out of order, and correctly said no mechanical check exists today — the
-      ordering rests entirely on the agent following the bolded sentence.
-  - problem: >
       CLAUDE.md's "Dispatching a subagent is a procedure, not a tool call —
       invoke the `dispatch-subagents` Skill before spawning one" bullet
       (Working conventions) already failed as issue #1248: a session read the
@@ -251,3 +186,61 @@ trials:
       correctly named the reading order, all three divergences, the rule of
       two's threshold with both worked examples, and the ADR-0006 check with
       issue #573 — so no hook ships with this rewrite.
+  - problem: >
+      No problem cleared the bar this run either. A full-corpus search (two
+      dispatched passes) for already-failed prose surfaced only territory
+      already settled: issue #1293's CLAUDE.md `run_in_background: true`-
+      from-the-outset bullet looked live at first (two recurrences cited) but
+      turned out to already be pruned to its goal-shaped minimum on
+      2026-09-22 and already validated holding by a 2026-09-26 verdict —
+      #1293 itself was still open only because that verdict's "then close
+      this issue" follow-through was never done; closed it now, no new
+      trial needed. Every other open-issue candidate the searches surfaced
+      (GI-01, IT-07/08, BP-05, CM-41) was already resolved by a prior trial
+      or a since-built mechanism, confirmed by reading the actual ledger
+      commits, not just titles. Per the 2026-09-25 owner direction, rewrote a
+      whole untrialed file in plainer words instead of ending the run:
+      `docs/agents/git-conventions.md` (1129 words, dense but confirmed by
+      `rulebook-migration-table.md`'s GC-01..15 rows to carry zero recorded
+      incidents on any of its rules — a language-only target, not a
+      criterion-1 one). Tightened every section's wording and cut restated
+      framing (e.g. "This is the same 'check first, don't silence' discipline
+      as the branch-rename-chaining and pkill-chaining footguns above,
+      generalized" folded into one sentence); kept every rule, every issue
+      citation, and the two worked examples (the `specimen.value?.slug`
+      rename, the shallow-merge-base revert-branch case) verbatim in
+      substance. Verified two inbound references before cutting anything —
+      `scripts/gate.ts` and `scripts/git-helpers.ts` both cite this file by
+      name as the canonical explanation of why a shallow clone is unsafe to
+      read history from (an archived session log records a near-miss where
+      an earlier `/prune-trial` almost gutted this exact section) — kept the
+      under-report/revert-branch substance intact, compressed only the
+      wording around it. Net: 1129 → 971 words (-14%), 140 → 124 lines.
+      Grepped the corpus for the renamed section headings and cut phrases:
+      no inbound references found.
+    territory:
+      paths:
+        - "docs/agents/git-conventions.md (whole-file language simplification)"
+      keywords:
+        - shallow merge-base can under-report
+        - specimen.value?.slug
+        - never chain a push right after starting a backgrounded check
+    opened: 2026-09-27
+    proven: true
+    check: >
+      Damage is a session that needs one of the cut framing asides — the
+      explicit "same discipline as the pkill-chaining footgun" cross-
+      reference, or any other restated justification — and can't get the
+      same operative rule from the rewritten text. NOT damage: a session
+      correctly fetching before trusting history, scoping a pickaxe search to
+      `origin/main`, treating a clean merge as unproven on a restructured
+      file, refusing to trust a shallow checkout's history, using `-F` for a
+      backtick-bearing commit message, not `&&`-chaining a branch
+      rename/backgrounded check into what follows it, checking `git status`
+      before a destructive command, or reading `git log origin/main..HEAD`
+      before acting on a Stop-hook "Unverified" flag — all from the rewritten
+      text alone. A Sonnet probe given only the rewritten file correctly
+      reconstructed every one of those rules, including the specific remedy
+      commands (`git fetch --unshallow`, `git rev-parse --verify <branch>`,
+      `git add -A` after a stash-pop-around-a-rename) and every cited issue
+      number — so no hook ships with this rewrite.
