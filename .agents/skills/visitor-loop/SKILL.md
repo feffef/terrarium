@@ -49,7 +49,9 @@ Merge the three reports into one tally in your scratchpad:
   `visitor-loop` PR since the last `decisions.md` entry; each rejected
   approach or standing preference becomes one new line there (committed with
   step 4's PR). Then drop anything [`decisions.md`](decisions.md) rules out,
-  and anything an open or closed issue/PR already covers (search first).
+  anything an open or closed issue/PR already covers (search first), and
+  anything already logged as an idea in the last week
+  (`pnpm exec tsx scripts/ideas.ts gather --days 7`).
 
 Done when every reported finding is in the tally, marked consensus or single;
 every consensus finding is marked *fix*, *dropped (why)*, or *out of remit*;
@@ -83,8 +85,10 @@ important finding left unfixed, and the PR is merged or escalated.
 ## 6. File the rest, then close
 
 For each consensus finding marked *out of remit*, open one issue
-(`needs-triage`) unless one already exists. Unbuilt ideas and single-visitor
-findings are not filed — tomorrow's visitors will raise them again if they
-matter. Done when every *out of remit* finding links to an issue.
+(`needs-triage`) unless one already exists. Every unbuilt idea and
+single-visitor finding that survived step 3's filters goes into the session
+log's `ideas` instead: one short line each, a finding paired with a proposed
+fix, readable without this run's context. Done when every *out of remit*
+finding links to an issue and the rest are in `ideas`.
 
 Then invoke `close-session`.
