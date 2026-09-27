@@ -9,4 +9,11 @@ role: >-
   self-judged "invoke at closure" rule reliably fire; its invocation rate is the
   measurable signal behind ADR-0009's choice of a skill affordance over an
   automatic safety net.
-observations: []
+observations:
+  - date: 2026-09-27
+    note: >-
+      Verified silent failure (audit-skills behaviour check), one session:
+      session_01TMgZyrN42pwudxkUdHLKwP's log stayed `in-review` ("#1344 in
+      review") although PR #1344 merged at 2026-09-25T18:01Z, 26 minutes after
+      the session ended; the log was never finalized to `completed`. The only
+      stale log in the 2026-09-20..27 window.

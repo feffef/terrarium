@@ -94,9 +94,15 @@ An entry carrying `resolvedBy` is already tracked there, so leave it alone.
 
 Done when every signal is either a finding or cleared.
 
-## 4. File or comment on issues
+## 4. Escalate what matters
 
-Handle each verified finding from step 2 and each finding from step 3 this way:
+A verified finding becomes an issue only when the misbehaviour is
+**significant** (it did real damage) or **repeated** (an earlier observation
+already records the same thing). Every other finding is an observation
+(step 5), which is how a later run sees it repeat. A closure finding belongs
+to `close-session`'s observations.
+
+For each finding that clears that bar:
 
 - Search open issues first: the session id for a closure finding,
   `audit-skills <skill>` for a Skill finding.
@@ -111,7 +117,8 @@ Handle each verified finding from step 2 and each finding from step 3 this way:
 Pack Skills get no issues. Their `SKILL.md` is not ours (ADR-0015), so their
 only lever is the Inventory entry.
 
-Done when every finding has an issue filed or commented on.
+Done when every finding is either an issue (filed or commented on) or headed
+for step 5 as an observation.
 
 ## 5. Tune the Inventory
 

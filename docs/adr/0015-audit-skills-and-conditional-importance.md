@@ -106,8 +106,9 @@ Status: Accepted
 > deliver what its `SKILL.md` promises, and a model-invoked Skill that should
 > have fired but didn't. Each own Skill used in ≥3 windowed sessions gets one
 > read-only subagent that checks its runs against primary sources (and, if
-> model-invoked, looks for sessions that needed it). Its findings file issues
-> on the same terms as the frontmatter concern above. This partly revisits the
+> model-invoked, looks for sessions that needed it). A finding becomes an issue
+> only when the misbehaviour is significant or repeated (owner's rule); otherwise
+> it is an observation, which lets a later run see it repeat. This partly revisits the
 > helpfulness cut below: it asks "did it deliver", not friction-per-use. Grading
 > stays, as a by-product. The friction-based regression watch is removed: 80
 > runs produced one confirmed finding, and it could not see failures that leave

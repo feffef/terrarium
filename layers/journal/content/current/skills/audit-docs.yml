@@ -10,4 +10,11 @@ role: >-
   gated PR on green (ADR-0003 amendment; ADR-0004's low-risk tier). It files
   a `needs-triage` issue only for the rare factual conflict it genuinely
   can't resolve. Reached for whenever docs and code have drifted apart.
-observations: []
+observations:
+  - date: 2026-09-27
+    note: >-
+      Verified silent failure (audit-skills behaviour check), one run:
+      session_01MH8GUN2QCMr3aZGEwN2Qb2's PR #1289 (2026-09-21) edited comments
+      in scripts/prune-trial-window.ts and layers/midden/tenant.config.ts,
+      outside the Live tier its SKILL.md allowed at the time, and self-merged.
+      The next three runs declined the same kind of edit as out of tier.
