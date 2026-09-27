@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01LKfKKxwgThbVFE79NWohET
 startedAt: 2026-09-27T06:56:11Z
-endedAt: 2026-09-27T12:28:38Z
+endedAt: 2026-09-27T12:50:47Z
 kind: interactive
 goal: Add twelve-plus Tinkerfund Campaigns via judged workflow
-status: in-review
-outcome: 19 Campaigns in PR 1429
-summary: "Human-instructed via /tinkerfund-campaign: coordinate at least twelve new Campaigns with a three-model (Sonnet/Opus/Fable) ideate, judge, write, illustrate, final-judge pipeline on the workflow engine; the user chose \"land all that pass\", Sonnet text / Fable figures, one combined PR, and later asked to parallelise drawings and then to stop redrawing and screenshotting near the usage limit. Agent-initiated within that brief: dropping Passport Tracker Tracker (0/3 passes), renumbering, a fix pass from judges' notes, seven targeted redraws, de-templating Snail Speedometer, and e2e updates. gate:scoped passed (138 e2e); PR 1429 opened."
+status: completed
+outcome: 17 Campaigns merged in PR 1429
+summary: "Human-instructed via /tinkerfund-campaign: coordinate at least twelve new Campaigns with a three-model (Sonnet/Opus/Fable) ideate, judge, write, illustrate, final-judge pipeline on the workflow engine; the user chose \"land all that pass\", Sonnet text / Fable figures, one combined PR, and later asked to parallelise drawings and then to stop redrawing and screenshotting near the usage limit. Agent-initiated within that brief: dropping Passport Tracker Tracker (0/3 passes), renumbering, a fix pass from judges' notes, seven targeted redraws, de-templating Snail Speedometer, and e2e updates. gate:scoped passed (138 e2e); PR 1429 opened. On review the user had Inbox Zero Tray and Hotel Room Compass deleted, three FIG. 3s removed and the Cat Flap cat enlarged (Sonnet); registry renumbered; PR 1429 merged with 17 Campaigns."
 prs:
   - "1429"
 docsRead:
@@ -154,24 +154,28 @@ frictions:
   - description: Fix agents occasionally introduced banned words (a fixer wrote "Ordered") and judges disagreed on the dark-theme black/white swap convention
     solution: Grep new content for order/product before landing; record the white-part dark-theme convention in ILLUSTRATION.md
     severity: minor
-durationSec: 19947
+durationSec: 21276
 models:
-  claude-opus-5-5: 294
+  claude-opus-5-5: 371
   <synthetic>: 12
 toolCounts:
   AskUserQuestion: 1
   Skill: 3
-  Bash: 73
+  Bash: 87
   Read: 4
   Workflow: 2
-  ToolSearch: 3
+  ToolSearch: 4
   TaskStop: 2
-  Agent: 37
+  Agent: 39
   SendMessage: 11
   Edit: 1
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 2
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  ReadNotifications: 15
+  mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__update_pull_request: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - layers/tinkerfund/tests/e2e/tinkerfund.e2e.ts
   - layers/tinkerfund/content/prod/pages/campaigns/sleep-confirmation-clock.md
@@ -301,6 +305,10 @@ subagents:
     model: sonnet
   - task: Redraw cat flap in a door
     model: fable
+  - task: Enlarge cat in cat-flap FIG. 2
+    model: sonnet
+  - task: Enlarge cat in cat-flap FIG. 2
+    model: sonnet
 gitBranch: claude/new-session-glbnnd
 entrypoint: remote_mobile
 cliVersion: 2.1.283
