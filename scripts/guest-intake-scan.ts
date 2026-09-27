@@ -62,6 +62,7 @@ import {
   type FetchStrategy,
 } from './list-open-issues.ts'
 import { hasMarker, isMarkerFresh, type RawLabelEventRecord } from './guest-marker.ts'
+import { PUBLIC_ASSOCIATIONS, TRUSTED_ASSOCIATIONS } from './trust.ts'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 
@@ -92,20 +93,6 @@ export interface RawCommentRecord {
   author_association: string
   created_at: string
 }
-
-/** The Public `author_association` values — a guest, per ADR-0020 (mirrored
- *  from `docs/agents/issue-tracker.md`'s Trusted/Public split; not imported
- *  since neither existing script exports it). */
-export const PUBLIC_ASSOCIATIONS = new Set([
-  'NONE',
-  'CONTRIBUTOR',
-  'FIRST_TIME_CONTRIBUTOR',
-  'FIRST_TIMER',
-  'MANNEQUIN',
-])
-
-/** The Trusted `author_association` values (owner/collaborator). */
-export const TRUSTED_ASSOCIATIONS = new Set(['OWNER', 'MEMBER', 'COLLABORATOR'])
 
 /** The classification `guest-intake`'s authorship rules reduce every issue's
  *  newest activity to. */

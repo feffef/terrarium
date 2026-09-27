@@ -38,7 +38,8 @@ function main(): void {
   const onDisk = committedSvgKeys()
   const drift = diffMermaid(diagrams, onDisk)
   const unsafe = onDisk
-    .map((k) => ({ file: svgPathFor(k), hazard: svgHazard(readFileSync(join(root, svgPathFor(k)), 'utf8'), { html: true }) }))
+    .map(svgPathFor)
+    .map((file) => ({ file, hazard: svgHazard(readFileSync(join(root, file), 'utf8'), { html: true }) }))
     .filter((u) => u.hazard)
 
   // A `missing` entry means no SVG for that key; separately guard a present-but-

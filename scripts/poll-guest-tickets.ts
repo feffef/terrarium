@@ -53,22 +53,13 @@ import {
   type RawIssueApiRecord,
 } from './list-open-issues.ts'
 import { hasMarker, isMarkerFresh } from './guest-marker.ts'
+import { PUBLIC_ASSOCIATIONS } from './trust.ts'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 
 const READY_FOR_AGENT_LABEL = 'ready-for-agent'
 
 // ── Types ───────────────────────────────────────────────────────────────────
-
-/** The five Public `authorAssociation` values (ADR-0020) — everyone who is
- *  not `OWNER`/`MEMBER`/`COLLABORATOR`. */
-const PUBLIC_AUTHOR_ASSOCIATIONS = new Set([
-  'CONTRIBUTOR',
-  'FIRST_TIME_CONTRIBUTOR',
-  'FIRST_TIMER',
-  'MANNEQUIN',
-  'NONE',
-])
 
 /** One raw issue record, extended with the `author_association` field the
  *  plain `list-open-issues.ts` shape doesn't need. */
@@ -108,7 +99,7 @@ export interface RawTimelineEventRecord {
 
 /** True when `authorAssociation` is one of ADR-0020's Public values. */
 export function isPublicAuthor(authorAssociation: string): boolean {
-  return PUBLIC_AUTHOR_ASSOCIATIONS.has(authorAssociation)
+  return PUBLIC_ASSOCIATIONS.has(authorAssociation)
 }
 
 /** Turn one raw REST record into a `GuestReadyIssue`, or `null` if it's

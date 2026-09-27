@@ -67,9 +67,9 @@ import {
   type FetchStrategy,
 } from './list-open-issues.ts'
 import { findTranscriptContents } from './provenance-footer.ts'
-import { TRUSTED_ASSOCIATIONS } from './guest-intake-scan.ts'
 import { hasAuthorshipMarker, readProvenanceHeader } from './provenance-header.ts'
 import { resolveGroundTruthFromTranscript } from './session-id-guard.ts'
+import { TRUSTED_ASSOCIATIONS } from './trust.ts'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 
@@ -146,7 +146,7 @@ export function mergeRequestFields(method: MergeMethod, sha: string): { merge_me
 
 export interface VerdictBody {
   body: string
-  author_association: string
+  authorAssociation: string
 }
 
 /** Whether any PR review/comment body is a verdict this session posted
@@ -156,8 +156,8 @@ export interface VerdictBody {
  *  Only Trusted authors count: the marker is forgeable by anyone (ADR-0020). */
 export function hasVerdictFromSession(bodies: VerdictBody[], sessionId: string | null): boolean {
   return bodies.some(
-    ({ body: b, author_association }) =>
-      TRUSTED_ASSOCIATIONS.has(author_association) &&
+    ({ body: b, authorAssociation }) =>
+      TRUSTED_ASSOCIATIONS.has(authorAssociation) &&
       (sessionId === null ? hasAuthorshipMarker(b) : readProvenanceHeader(b)?.sessionId === sessionId),
   )
 }
@@ -426,7 +426,7 @@ function readPrMeta(strategy: FetchStrategy, owner: string, repo: string, prNumb
   return readPrMetaViaRest(owner, repo, prNumber, envToken()!, cwd)
 }
 
-type RawVerdictBody = Omit<VerdictBody, 'body'> & { body: string | null }
+type RawVerdictBody = { body: string | null; author_association: string }
 
 /** The PR's review and conversation-comment bodies — one `per_page=100` page
  *  each, like the check runs. */
@@ -439,7 +439,7 @@ function readVerdictBodies(strategy: FetchStrategy, owner: string, repo: string,
             execFileSync('gh', ['api', '--method', 'GET', url, '-f', 'per_page=100'], { cwd, encoding: 'utf8' }),
           ) as RawVerdictBody[])
         : (curlRequestJson('GET', `https://api.github.com/${url}?per_page=100`, envToken()!, cwd) as RawVerdictBody[])
-    return items.map((i) => ({ body: i.body ?? '', author_association: i.author_association }))
+    return items.map((i) => ({ body: i.body ?? '', authorAssociation: i.author_association }))
   })
 }
 
