@@ -12,6 +12,17 @@ export default defineNuxtConfig({
   // collections (that stays in the root content.config.ts).
   modules: ['./modules/routing', '@nuxt/content', '@nuxt/eslint'],
 
+  // In-app navigation reads a server-rendered `_payload.json` instead of
+  // querying Content in the browser (ADR-0028).
+  experimental: {
+    payloadExtraction: 'client',
+    defaults: { nuxtLink: { prefetchOn: { visibility: false, interaction: true } } },
+  },
+  routeRules: {
+    '/t/**': { cache: { maxAge: 60, swr: false } },
+    '/t/tinkerfund/*/search': { cache: false },
+  },
+
   content: {
     // Native node:sqlite (Node >= 22.5) — no better-sqlite3 native build in CI.
     experimental: { sqliteConnector: 'native' },

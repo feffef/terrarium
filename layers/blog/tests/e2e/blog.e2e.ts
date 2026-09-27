@@ -17,6 +17,10 @@
 // reloads itself (ADR-0019 amendment, 2026-08-04), so its tests assert the
 // content comes back with no click — and that a failure surviving that one
 // attempt settles on the dialog instead of reloading again.
+//
+// Navigation normally reads a server-rendered payload and never touches the
+// client DB (ADR-0028). Each test therefore also fails that payload fetch,
+// which is the fallback where the client DB still loads.
 import { describe, expect, it } from 'vitest'
 import { createPage, url } from '@nuxt/test-utils/e2e'
 import type { Page } from 'playwright-core'
@@ -39,6 +43,11 @@ async function failContentChunkImport(page: Page): Promise<void> {
       ? route.fulfill({ status: 500, contentType: 'application/javascript', body: '' })
       : route.fulfill({ response, body })
   })
+}
+
+/** Fail David's navigation payload so the page falls back to the client DB (ADR-0028). */
+async function failDavidPayload(page: Page): Promise<void> {
+  await page.route('**/t/blog/david/_payload.json*', (route) => route.abort('failed'))
 }
 
 /** True while no full page load has happened since the sentinel was planted. */
@@ -74,6 +83,27 @@ export function registerBlogE2E(): void {
       await expectCleanHydration('/t/blog?tag=governance')
     })
 
+    it('navigates client-side from the server payload, without the client DB (ADR-0028)', async () => {
+      const page = await createPage()
+      try {
+        await page.goto(url('/t/blog/karen'), { waitUntil: 'hydration' })
+        const requests: string[] = []
+        page.on('request', (request) => requests.push(request.url()))
+        await plantReloadSentinel(page)
+        await page.locator('.net-cards a', { hasText: 'David' }).click()
+
+        const about = page.locator('.about-prose')
+        await expect
+          .poll(async () => (await about.textContent().catch(() => '') ?? '').trim().slice(0, 9), { timeout: 8000 })
+          .toBe("I'm David")
+        expect(await noReloadHappened(page)).toBe(true)
+        expect(requests.some((u) => u.includes('/t/blog/david/_payload.json'))).toBe(true)
+        expect(requests.filter((u) => u.includes('.wasm') || u.includes('sql_dump.txt'))).toEqual([])
+      } finally {
+        await page.close()
+      }
+    })
+
     // A failed client-side content-DB load must never present as a silent,
     // permanent blank (issue #236). With no dependency patch, @nuxt/content's
     // stock client DB poisons its own module state on a failed load — so the
@@ -88,6 +118,7 @@ export function registerBlogE2E(): void {
         // Fail every request for David's pages dump — a client navigation whose
         // lazy dump fetch never lands. Stock @nuxt/content caches the rejected
         // load and the collection can't load again for the life of the page.
+        await failDavidPayload(page)
         await page.route('**/blog_david_pages/sql_dump.txt*', (route) => route.abort('failed'))
 
         // Land on a sibling Persona (SSR), then follow the in-page link to David
@@ -121,6 +152,7 @@ export function registerBlogE2E(): void {
         // A 200 whose body is not a valid gzip dump (a proxy/portal serving
         // non-gzip content, a truncated CDN body) — $fetch does not retry a 200,
         // decompression throws. The dialog must still surface the real cause.
+        await failDavidPayload(page)
         await page.route('**/blog_david_pages/sql_dump.txt*', (route) =>
           route.fulfill({ status: 200, contentType: 'text/plain', body: 'not-a-valid-gzip-dump' }),
         )
@@ -157,6 +189,7 @@ export function registerBlogE2E(): void {
     it('auto-recovers from a failed content-chunk import on a client navigation', async () => {
       const page = await createPage()
       try {
+        await failDavidPayload(page)
         await failContentChunkImport(page)
 
         await page.goto(url('/t/blog/karen'), { waitUntil: 'hydration' })
@@ -180,6 +213,7 @@ export function registerBlogE2E(): void {
     it('falls back to the dialog instead of reloading again when the chunk keeps failing', async () => {
       const page = await createPage()
       try {
+        await failDavidPayload(page)
         await failContentChunkImport(page)
         // The exact state `reloadNuxtApp` leaves behind for a path it has just
         // reloaded (its sessionStorage guard, still inside its TTL — see
