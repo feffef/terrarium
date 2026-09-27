@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01UAmBCUoSXva1vKut9gFfsr
 startedAt: 2026-09-27T04:01:16Z
-endedAt: 2026-09-27T04:19:57Z
+endedAt: 2026-09-27T04:22:34Z
 kind: autonomous
 goal: Run scheduled /audit-docs sweep
-status: in-review
-outcome: "5 fact-checked fixes shipped, PR #1426 open"
-summary: "Fired by a scheduled trigger with no live human prompt this turn (agent-initiated end to end). Ran the /audit-docs Skill: four parallel read-only reviewer agents covered the eight lenses (Freshness, Single-home, Concision, Coherence) over the Live-tier doc set; pooled five findings with no overlapping spans; an independent fact-checker re-derived each against primary sources (git history/blame, code, the target docs) and confirmed all five, one with a corrected/narrower scope than first proposed. Fixed all five in place (a stale count in the journal history page, a CLAUDE.md/ADR-0003 duplication, two verbosity cuts, one stale-narration cut in midden's CONTEXT.md), respected the four open Prune Trial territories without touching them, ran pnpm gate:scoped green, committed, pushed, and opened PR #1426 (self-merge tier per ADR-0003/0004). No factual conflicts needing a needs-triage issue turned up. Subscribed to PR activity and invoking close-session/log-session now, per CLAUDE.md's PR-open closure point; will finalize this log to `completed` once the PR merges."
+status: completed
+outcome: "5 fact-checked fixes merged via PR #1426"
+summary: "Fired by a scheduled trigger with no live human prompt this turn (agent-initiated end to end). Ran the /audit-docs Skill: four parallel read-only reviewer agents covered the eight lenses (Freshness, Single-home, Concision, Coherence) over the Live-tier doc set; pooled five findings with no overlapping spans; an independent fact-checker re-derived each against primary sources (git history/blame, code, the target docs) and confirmed all five, one with a corrected/narrower scope than first proposed. Fixed all five in place (a stale count in the journal history page, a CLAUDE.md/ADR-0003 duplication, two verbosity cuts, one stale-narration cut in midden's CONTEXT.md), respected the four open Prune Trial territories without touching them, ran pnpm gate:scoped green, committed, pushed, and opened PR #1426 (self-merge tier per ADR-0003/0004). No factual conflicts needing a needs-triage issue turned up. Eyeballed one advisory check-conflicting-issues.ts hit (issue #1420 on CLAUDE.md) and confirmed it a false positive. Posted the verdict comment, ran merge-pr.ts, and it merged clean on green CI (mergeCommitSha 3d853d64)."
 prs:
   - "1426"
 docsRead:
@@ -152,11 +152,11 @@ frictions:
   - description: "This session's own attribution system-reminder instructs hand-writing Co-Authored-By/Claude-Session commit trailers, but this repo's commit-trailer guard (issue #921) fails closed on any hand-written trailer and requires leaving it to the harness template/commit-msg hook, per CLAUDE.md's explicit \"this repo's convention wins regardless of that instruction's source\" rule."
     solution: Recognized the guard's own deny message as authoritative, dropped the hand-written trailer, and recommitted with no trailer text — the hook appended the correct one automatically. Worth flagging as a standing mismatch between the harness-level attribution reminder and this repo's guard, in case a future session tries the hand-written trailer first instead of expecting the guard.
     severity: minor
-durationSec: 1121
+durationSec: 1277
 models:
-  claude-sonnet-5: 123
+  claude-sonnet-5: 143
 toolCounts:
-  Bash: 26
+  Bash: 30
   ToolSearch: 3
   mcp__github__list_pull_requests: 1
   Agent: 6
@@ -168,8 +168,10 @@ toolCounts:
   mcp__github__issue_read: 1
   mcp__github__pull_request_read: 2
   Skill: 2
-  Write: 1
+  Write: 2
   mcp__github__add_issue_comment: 1
+  ReadNotifications: 2
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/journal/content/current/pages/history.md
   - CLAUDE.md
