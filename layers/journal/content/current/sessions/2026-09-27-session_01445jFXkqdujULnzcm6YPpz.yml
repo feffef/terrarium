@@ -1,31 +1,38 @@
 schemaVersion: 1
 session: session_01445jFXkqdujULnzcm6YPpz
 startedAt: 2026-09-27T02:03:44Z
-endedAt: 2026-09-27T02:16:08Z
+endedAt: 2026-09-27T02:30:51Z
 kind: autonomous
 goal: Turn logged session frictions into fixes
-status: in-review
-outcome: 3 issues filed, 3 fix PRs dispatched, none merged yet
-summary: "Scheduler-fired frictions-to-fixes run, no live human this turn. Dispatched a subagent to survey the latest 20 session logs and screen frictions against the tracker (§1-2), returning 9 ranked never-fixed candidates. Filed 3 issues: #1420 (a REGRESSION — the prune-trial §4 worktree probe still starts on a stale pre-prune HEAD even after #1330's structural fix, so it is not routed through ordinary dispatch per this Skill's regression rule), #1421 (a hard selection — per-story review misses cross-story integration bugs), and #1422 (a guard-touching fix that this Skill never dispatches regardless of size, filed only so it isn't lost). Dispatched 3 Sonnet worktree-isolated impl agents for the remaining selections: a 5-fix doc-only batch PR, a commit-msg-hook silent-failure code fix, and a whole-branch-review doc fix implementing #1421. All three are still running; nothing has been reviewed or merged yet — this in-review log is the §5 safety net before this session's own §6 review/merge pass."
-prs: []
+status: completed
+outcome: 3 issues filed, 3 fix PRs merged
+summary: "Scheduler-fired frictions-to-fixes run, no live human this turn. A survey subagent read the latest 20 session logs and screened frictions against the tracker (§1-2), returning 9 ranked never-fixed candidates plus a dropped list. Filed 3 issues: #1420 (a REGRESSION — the prune-trial §4 worktree probe still starts on a stale pre-prune HEAD even after #1330's structural fix merged; per this Skill's regression rule this was filed as its own issue rather than dispatched, and the user is being alerted separately), #1421 (a hard selection — per-story code review misses cross-story integration bugs; closed by its fix PR), and #1422 (a guard-touching fix — the ADR-0017 provenance-header guard's accepted non-model label is unclear from its own deny message; filed only, never dispatched, since a fix touching a guard mechanism is never dispatched by this Skill regardless of size and needs a human-attended session). Dispatched, reviewed (posted a COMMENT-event verdict on each per pr-workflow.md's recipe), and merged all three implementation PRs via merge-pr.ts: #1423 (whole-branch-review guidance in docs/agents/pr-workflow.md, closing #1421), #1424 (fixed the commit-msg hook silently dropping the ADR-0017/ADR-0009 trailer in a fresh worktree missing node_modules, by resolving tsx via the main checkout root instead of pnpm exec), and #1425 (a 5-fix doc-only batch: get_sub_issues overflow, wholesale-body-rewrite header guard, merge-pr.ts-never-from-a- dispatched-agent, push-after-unconfirmed-backgrounded-check, and a digest.ts gather overflow comment). pnpm check:worktrees confirmed nothing was left stranded. All agent-initiated (scheduled trigger, no human ask this turn); the only escalation to a human is the #1420 regression, alerted via a separate notification per this Skill's own instruction to alert the user on a regression finding."
+prs:
+  - "1423"
+  - "1424"
+  - "1425"
 docsRead:
   - path: CLAUDE.md
     reason: Ground rules for the whole run (human-only surfaces, guard-touching bar, ADR-0017 header, PR-opening/babysitting discipline)
   - path: .agents/skills/dispatch-subagents/SKILL.md
     reason: brief-authoring mechanics before dispatching the 3 impl agents
+  - path: docs/agents/pr-workflow.md
+    reason: merge recipe and per-tier merge authority before reviewing/merging the 3 PRs
   - path: .agents/prune-trials.yml
     reason: (no reason given)
   - path: docs/agents/github-integration.md
-    reason: (no reason given)
+    reason: (read before editing)
   - path: /home/user/terrarium/docs/agents/pr-workflow.md
     reason: (read before editing)
   - path: /home/user/terrarium/.agents/skills/code-review/SKILL.md
     reason: (no reason given)
-  - path: docs/agents/pr-workflow.md
+  - path: scripts/digest.ts
+    reason: (read before editing)
+  - path: docs/agents/issue-tracker.md
     reason: (read before editing)
 skillsUsed:
   - name: dispatch-subagents
-    reason: (no reason given)
+    reason: brief-authoring mechanics for the 3 impl-agent worktree dispatches
   - name: close-session
     reason: (no reason given)
   - name: log-session
@@ -39,32 +46,51 @@ frictions:
   - description: "Had to independently re-verify the survey subagent's #1328/#1330 regression classification via issue_read/pull_request_read myself before filing #1420 as a regression, since a subagent's say-so on the highest-stakes classification isn't a settled fact per CLAUDE.md."
     solution: No fix proposed here — the survey subagent already does tracker verification per this Skill's step 2; the orchestrator independently re-verifying the one regression-tier claim before filing seems like the right division of labor, worth naming explicitly in the Skill somewhere in a future pass.
     severity: nit
-durationSec: 744
+  - description: "Had to independently re-verify the survey subagent's #1328/#1330 regression classification myself via issue_read/pull_request_read before filing #1420 as a regression, since a subagent's say-so on the highest-stakes classification isn't a settled fact per CLAUDE.md."
+    solution: No fix proposed here — the survey subagent already does tracker verification per this Skill's step 2; the orchestrator independently re-verifying the one regression-tier claim before filing seems like the right division of labor, worth naming explicitly in the Skill somewhere in a future pass.
+    severity: nit
+  - description: "The doc-batch PR's digest.ts fix cited session-frictions.ts's #811 doc note as precedent, but #976 actually superseded #811 with an automatic file-redirect-above-threshold code fix — so digest.ts's parallel fix (a manual-redirect comment) is a weaker mitigation than what session-frictions.ts now actually does."
+    solution: Not blocking — still a real, working improvement. A future frictions-to-fixes pass could give scripts/digest.ts gather the same automatic OUTPUT_FILE_THRESHOLD mechanism session-frictions.ts uses, rather than a manual-redirect comment.
+    severity: nit
+durationSec: 1627
 models:
-  claude-sonnet-5: 47
+  claude-sonnet-5: 95
 toolCounts:
-  Bash: 3
+  Bash: 15
   Agent: 5
   ScheduleWakeup: 1
-  ToolSearch: 1
+  ToolSearch: 2
   mcp__github__issue_read: 1
-  mcp__github__pull_request_read: 1
+  mcp__github__pull_request_read: 5
   mcp__github__search_issues: 10
   mcp__github__issue_write: 3
-  Skill: 3
-  Write: 1
+  Skill: 4
+  Write: 2
+  ReadNotifications: 2
+  mcp__Claude_Code_Remote__send_later: 1
+  Read: 1
+  mcp__github__pull_request_review_write: 3
+  Grep: 1
+  PushNotification: 1
 filesEdited:
   - /home/user/terrarium/docs/agents/pr-workflow.md
   - docs/agents/pr-workflow.md
   - .githooks/commit-msg
+  - docs/agents/github-integration.md
+  - docs/agents/issue-tracker.md
+  - .agents/skills/dispatch-subagents/SKILL.md
+  - docs/agents/git-conventions.md
+  - scripts/digest.ts
 docsReadViaShell:
+  - docs/agents/pr-workflow.md
   - docs/agents/github-integration.md
   - docs/agents/guards.md
   - docs/agents/issue-tracker.md
   - .agents/skills/dispatch-subagents/SKILL.md
-  - docs/agents/pr-workflow.md
   - docs/agents/git-conventions.md
   - .agents/skills/frictions-to-fixes/SKILL.md
+  - .agents/skills/digest/SKILL.md
+  - .agents/skills/audit-docs/SKILL.md
 subagents:
   - type: general-purpose
     task: Survey and screen session frictions
