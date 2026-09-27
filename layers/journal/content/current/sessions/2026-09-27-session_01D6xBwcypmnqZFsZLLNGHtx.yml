@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01D6xBwcypmnqZFsZLLNGHtx
 startedAt: 2026-09-27T00:15:57Z
-endedAt: 2026-09-27T00:29:42Z
+endedAt: 2026-09-27T00:34:13Z
 kind: autonomous
 goal: Run the scheduled /digest sweep
-status: in-review
-outcome: "PR #1418 opened, gate green"
-summary: "Scheduled, unprompted /digest run (no human turn this session). Found one backfill day (2026-09-26) via scripts/digest.ts list, gathered its data, and authored a Digest covering the Tinkerfund crowdfunding-showcase phase-1 launch, two rounds of visitor-loop fixes, homepage updates, and the day's other shipped work, with a problems-noted tally drawn from the day's session logs. Ran the retention sweep (archived the 2026-09-19 digest and its 5 session logs). pnpm gate:scoped ran the full gate (the sweep touched non-inert content paths) and passed clean. Committed, pushed, and opened PR #1418 against main; subscribed to its activity and am now polling toward a self-merge on green, per the digest tier's merge authority."
+status: completed
+outcome: "PR #1418 merged (gate green)"
+summary: "Scheduled, unprompted /digest run (no human turn this session). Found one backfill day (2026-09-26) via scripts/digest.ts list, gathered its data, and authored a Digest covering the Tinkerfund crowdfunding-showcase phase-1 launch, two rounds of visitor-loop fixes, homepage updates, and the day's other shipped work, with a problems-noted tally drawn from the day's session logs. Ran the retention sweep (archived the 2026-09-19 digest and its 5 session logs). pnpm gate:scoped ran the full gate (the sweep touched non-inert content paths) and passed clean. Committed, pushed, and opened PR #1418 against main; subscribed to its activity, posted the required step-4 verdict comment, and self-merged via merge-pr.ts once CI's own gate went green, per the digest tier's merge authority. Unsubscribed after the merge landed."
 prs:
   - "1418"
 docsRead:
@@ -31,14 +31,17 @@ frictions:
   - description: scripts/digest.ts gather 2026-09-26's JSON output (~43KB) exceeded the Bash tool's inline preview cap, requiring a second full Read of the saved output file to get every session's frictions/learnings/ideas — same recurring shape as the 2026-09-25 digest run's friction.
     solution: digest.ts could accept an --out <path> flag to write straight to a file, skipping the truncated inline preview entirely on a busy day.
     severity: nit
-durationSec: 825
+  - description: Called scripts/merge-pr.ts before posting the required step-4 verdict comment (docs/agents/pr-workflow.md), even though that doc states the ordering explicitly; the tool correctly refused with "no review or comment ... carries this session's provenance header" instead of merging silently.
+    solution: Post the verdict comment first, every time, before the first merge-pr.ts call rather than treating it as a step to catch up on after a refusal.
+    severity: minor
+durationSec: 1096
 models:
-  claude-sonnet-5: 96
+  claude-sonnet-5: 114
 toolCounts:
-  Bash: 27
-  Read: 4
+  Bash: 30
+  Read: 5
   Write: 2
-  ToolSearch: 4
+  ToolSearch: 5
   Monitor: 1
   TaskStop: 1
   mcp__github__search_pull_requests: 1
@@ -48,8 +51,10 @@ toolCounts:
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
   Skill: 2
-  Edit: 1
+  Edit: 3
   mcp__github__add_issue_comment: 1
+  ReadNotifications: 2
+  mcp__github__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/journal/content/current/pages/digests/2026-09-26.md
 docsReadViaShell:
