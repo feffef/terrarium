@@ -193,3 +193,11 @@ demonstrably restores the content — and it is bounded to that class precisely 
 the modal remains the answer everywhere a reload would just repeat. This
 amendment is governance, and it changes global runtime error/reload behaviour,
 so it too stays human-only to merge (ADR-0004).
+
+## Amendment (2026-09-27): navigation mostly skips the client DB
+
+ADR-0028 makes in-app navigation read a server-rendered payload, so the client
+DB, and with it every funnel above, now loads only where a query runs outside a
+payload: Tinkerfund search, re-queries after mount, or a failed payload fetch.
+The recovery above is unchanged. Its blog e2e tests fail the payload first to
+reach it.

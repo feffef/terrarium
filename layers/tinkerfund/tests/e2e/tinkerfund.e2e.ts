@@ -61,6 +61,15 @@ export function registerTinkerfundE2E(): void {
         expect(res.headers.get('location')).toBe('/t/tinkerfund/prod')
       })
 
+      // The page cache (ADR-0028) must not hand one visitor's locale to the next (#1365).
+      it('renders each visitor in their own locale', async () => {
+        const as = (locale: string) => $fetch<string>('/t/tinkerfund/prod/discover', { headers: { 'accept-language': locale } })
+        expect(await as('de-DE')).toContain('"de-DE"')
+        const english = await as('en-US')
+        expect(english).toContain('"en-US"')
+        expect(english).not.toContain('"de-DE"')
+      })
+
       for (const space of ['prod', 'qa']) {
         it(`renders the shell in ${space}`, async () => {
           const html = await $fetch(`/t/tinkerfund/${space}`)
