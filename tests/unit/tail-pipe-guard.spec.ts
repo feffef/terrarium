@@ -1,5 +1,5 @@
 // Coverage for the tail-pipe guard (issue #873; rationale and detection
-// contract in `scripts/tail-pipe-guard.ts`). Five tests: the pure core's
+// contract in `scripts/tail-pipe-guard.ts`). Seven tests: the pure core's
 // decisions, and a fail-closed check of the real script's stdin path.
 import { execFileSync } from 'node:child_process'
 import { dirname, join, resolve } from 'node:path'
