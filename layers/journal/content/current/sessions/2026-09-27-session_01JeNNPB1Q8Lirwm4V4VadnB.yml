@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01JeNNPB1Q8Lirwm4V4VadnB
 startedAt: 2026-09-27T16:39:33Z
-endedAt: 2026-09-27T17:22:56Z
+endedAt: 2026-09-27T17:28:07Z
 kind: interactive
 goal: Review and rewrite the audit-skills Skill
 status: in-review
 outcome: "audit-skills rewrite opened as PR #1433"
-summary: "Human asked for a review of audit-skills' session logs and history. I analysed all 83 logs that used it: grading had stalled since late July, the regression watch yielded one confirmed finding, and neither of the owner's two target gaps (silent failure, missed invocation) was covered beyond close-session. The human then directed a from-scratch rewrite: a 7-day window, usage statistics for all Skills, regression watch dropped, one behaviour-check subagent per own Skill with at least 3 uses. Implemented the script, tests, SKILL.md (about 3,900 to 1,100 words), and an ADR-0015 amendment. The full gate passed; the PR was opened automatically per ADR-0003 and needs a human merge."
+summary: "Human asked for a review of audit-skills' session logs and history. I analysed all 83 logs that used it: grading had stalled since late July, the regression watch yielded one confirmed finding, and neither of the owner's two target gaps (silent failure, missed invocation) was covered beyond close-session. The human then directed a from-scratch rewrite: a 7-day window, usage statistics for all Skills, no regression watch, one behaviour-check subagent per own Skill with at least 3 uses. At the human's request I then reviewed the new SKILL.md against writing-for-agents and applied all seven fixes. The PR was opened automatically per ADR-0003; CI is green and it needs a human merge."
 prs:
   - "1433"
 docsRead:
@@ -37,21 +37,25 @@ frictions:
   - description: The harness system prompt forbids model identifiers in PR bodies, while ADR-0017's header example carries a model name; I used a 'Claude Code' label in the header and the guard accepted it.
     solution: ADR-0017 could state whether the header label must name the model, so the two instructions stop conflicting.
     severity: nit
-durationSec: 2603
+durationSec: 2914
 models:
-  claude-opus-5-5: 156
+  claude-opus-5-5: 202
 toolCounts:
-  Bash: 54
-  ToolSearch: 3
+  Bash: 63
+  ToolSearch: 6
   mcp__github__search_issues: 1
   Skill: 3
   AskUserQuestion: 1
-  Read: 8
+  Read: 9
   Edit: 3
-  Write: 4
+  Write: 6
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 2
+  mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__update_pull_request: 1
 filesEdited:
   - scripts/audit-skills.ts
   - .agents/skills/audit-skills/SKILL.md
