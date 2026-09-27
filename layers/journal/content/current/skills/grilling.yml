@@ -6,35 +6,4 @@ role: >-
   The one-question-at-a-time interrogation that stress-tests a plan or design
   before building — used standalone or as the engine inside `grill-with-docs`.
   Reach for it to pressure-test a design tree branch by branch.
-observations:
-  - date: 2026-07-14
-    note: >-
-      Used in 5 of this window's 40 sessions, every time via grill-with-docs:
-      session_01RqxwHH (close-session/log-session split design), session_019ojLY
-      (Skill Inventory role/observations split), session_01LftL3mM (Atlas
-      relations-graph redesign), session_01TesnDHD (blog sibling-citing design),
-      session_01Rervdd (curated blog-tag system design). Prior window's cited
-      examples (the schema-refinement session; the digest and audit-skills
-      builds) have since aged out.
-  - date: 2026-07-16
-    note: >-
-      Prior citations aged out; used in 2 of this window's 40 sessions, both
-      via grill-with-docs: session_01B1PirL4vZnwR6VytVgfXut (Observability
-      naming design) and session_01RqxwHHqJFDNBDjeqYVsTSC (close-session/
-      log-session closure-model stress-test) — matches role.
-  - date: 2026-07-19
-    note: >-
-      Prior citations aged out; used in 2 of this window's 40 sessions:
-      session_01NHUJ3Ka96UkF5ntXRLHDCw (auto-triage round-2 owner decisions,
-      invoked standalone rather than via grill-with-docs — the first windowed
-      example of that path in recent runs) and session_017dzPLRmeEMHeMswznBR9N4
-      (stress-tested a ready-for-agent implementation plan via grill-with-docs,
-      catching two brief mis-scopes before coding) — both still match role.
-  - date: 2026-07-25
-    note: >-
-      Prior citations aged out; used in 2 of this window's 40 sessions, both
-      via grill-with-docs: session_01Nbh46E53P4eK7773mxcmdf (grill-refined the
-      capture-static.ts idea before building it) and
-      session_01VsqSAkCvbaLvAVsySvXvdg (stress-tested the journal archival
-      script's design — cutoff basis, git-mv mechanics, dry-run default —
-      before building) — both still match role.
+observations: []

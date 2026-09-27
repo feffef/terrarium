@@ -28,3 +28,11 @@ observations:
       session; the one relevant friction was minor and self-resolved).
       Grade/role unchanged. Recorded so a future run's Phase A has this if a
       second instance turns up.
+  - date: 2026-09-27
+    note: >-
+      Verified silent failure (audit-skills behaviour check): §1 asks the
+      verdict commit to quote prune-trial-window.ts's `landed:`/`judgeable
+      from:` lines verbatim; no verdict commit in the window does. Runs
+      paraphrase the dates instead (c8ba0f6a, session_01S5bzNzvg1DURebeNRDgVi5;
+      f9cdbe80, 475edc78, 92f53fff). The substance of the check is done; the
+      letter is not.

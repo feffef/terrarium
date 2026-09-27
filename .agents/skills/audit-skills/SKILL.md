@@ -1,422 +1,161 @@
 ---
 name: audit-skills
-description: Tune the Skill Inventory to match real usage and watch for behavior regressions (usage AND friction-severity signals) after a Skill's SKILL.md changes — re-grade importance/role from session history, self-merging bright-line-evidenced Inventory edits. A suspected regression gets a full-log deep-read before a regression issue is filed/commented (step 3's bright-line grading signal is exempt, filing directly); a suspected frontmatter/description miscalibration is that same step-3 bright-line signal (≥2 windowed sessions absent from work clearly in its domain, ADR-0015) and files directly too — never a direct edit to the Skill itself.
+description: Check that our own Skills fire when they should and deliver what they promise, collect usage statistics for every Skill, and keep the Skill Inventory in line with that evidence.
 disable-model-invocation: true
 ---
 
 # Audit Skills
 
-Keep the **Skill Inventory** (`layers/journal/content/current/skills/`) honest
-against how Skills are *actually used*, and watch whether a Skill's own recent
-`SKILL.md` edits (yours, another human's, or `audit-docs`'s) actually changed
-behavior for the better. This is a self-improvement maintenance Skill (sibling of
-`digest`/`audit-docs`, ADR-0003/0015). A thin, tested helper
-(`scripts/audit-skills.ts`) does the deterministic gathering; **you make every
-judgement.**
+The goal is to know whether the Platform's own Skills are doing their job. It
+aims at two gaps that frictions never reveal:
 
-> Runs via a scheduled Routine, same as `digest` — also runnable on demand.
+- **Silent failure**: a Skill runs, nothing complains, and it still does not
+  deliver what its `SKILL.md` promises.
+- **Missed invocation**: a model-invoked Skill (such as `close-session`) was
+  needed but never fired.
 
-> **Simplify first** (CLAUDE.md) governs every edit this run makes.
+Keeping the **Skill Inventory** (`layers/journal/content/current/skills/`) in
+line with real usage is a by-product of the same evidence.
 
-Every run produces up to four things, only the first of which is ever a code
-change:
-- an **Inventory PR** — `importance`/`role` edits that cite the bright-line
-  evidence rule (step 3) — **self-merged on a green gate** (step 8, ADR-0004's
-  low-risk content tier, ADR-0015);
-- a **filed or commented `needs-triage` issue** — for step 3's bright-line
-  signal (≥2 sessions, citable evidence), or for a step 4 regression that
-  survived a full-log deep-read — search first, comment on a match instead of
-  re-filing (step 5);
-- a **learning**, when the regression watch's initial screen (step 4) is
-  suggestive but the deep-read didn't turn up enough to act on;
-- an **idea**, when the evidence suggests a new Skill, or splitting/retiring an
-  existing one (step 6) — concrete enough to become an issue, but not one you
-  open yourself.
+This Skill writes only Inventory `.yml` entries and GitHub issues. Changing a
+Skill's text is a judgement call, so a finding becomes an issue for a human
+(ADR-0015).
 
-**Never edit `.agents/skills/` or any other doc for a semantic change** — a
-Skill's description, role, or behavior. This Skill writes *only* Inventory
-`.yml` entries and, per step 5's evidence bar, issues; a semantic edit is
-`audit-docs`'s (drift/contradiction) and `frictions-to-fixes`'s
-(friction-driven) surface, gated by human judgement. **Narrow exception — a
-purely mechanical fix** (invalid YAML/frontmatter, a broken markdown fence, a
-stale link, a zero-ambiguity typo) **may be proposed as a small,
-clearly-labeled inline patch suggestion for direct human approval**, instead
-of the full issue → later-session → branch → gate → PR round trip. Anything
-carrying the slightest semantic ambiguity is not mechanical — file it per
-step 5 instead. **When the same mechanical fix recurs across ≥2 Skills**
-(e.g. the same `pnpm gate` → `pnpm gate:scoped` one-liner in every Skill's
-gate step), **propose one collapsed suggestion naming every affected Skill**,
-not one near-duplicate entry per Skill — this is the same narrow-exception
-patch above, just batched by fix rather than by Skill.
-
-## 1. Get on a working branch
-
-CLAUDE.md's branch-off rule.
-
-## 2. Gather the scorecard
+## 1. Gather the scorecard
 
 ```
 pnpm exec tsx scripts/audit-skills.ts
 ```
 
-It reads GitHub for the orphan check's candidate set (`gh` when present,
-otherwise `GH_TOKEN`/`GITHUB_TOKEN`), so it takes a few seconds and needs
-network. Losing that access degrades **only** that one signal, and says so
-via `orphanScan` below — every other signal is local and unaffected.
-
-It prints JSON:
-- the **window** (the 40 newest sessions by `endedAt`, each with
-  `kind`/`goal`/`summary`/`skillsUsed`, `docsRead` — the paths that session
-  opened, without their `reason` prose — and `frictions`, that session's
-  friction **severities only**, e.g. `["minor","blocker"]`, not the full
-  description/solution text) and, per Skill, `onDisk`, `inventoried`,
-  `external`, current `importance`/`role`/`observations` (prior runs' own
-  citable findings — read them before judging; this step only ever appends to
-  them, never edits or drops one), its SKILL.md `description`, and `usedIn`
-  (every windowed session that invoked it). Pass `--window N` to widen/narrow.
-- **`regressionChecks`** — for each of our own (non-external) Skills' single
-  most recent `SKILL.md` edit commit, the ids of the nearest sessions whose
-  `skillsUsed` actually names that Skill, before and after that commit's date
-  (independent of the primary window above — an edit can be older than the
-  newest 40 sessions, and the search itself is unbounded, not limited to that
-  window; issue #1237). A side shorter than the bracket size — including
-  empty — means that really is all the domain-matching history there is on
-  that side, not a narrow search: it's never padded with unrelated,
-  merely-nearby sessions. Resolve ids against **`regressionSessions`** — a
-  deduped pool, since the same session commonly brackets more than one Skill's
-  edit.
-- **`orphanedSessions`** — every session recorded as the origin of a **merged
-  pull request** (its ADR-0017 header, or the legacy `Claude-Session:` footer)
-  with **no** matching file anywhere in the sessions Collection (current or
-  archived). Each entry carries the merge commit sha(s) and merge date — a
-  session that never invoked `close-session`/`log-session` at all (ADR-0009).
-  **No time window bounds this at all** (issue #738): a session that shipped a
-  merged PR at any point in the project's history and never logged still
-  surfaces. It is deliberately independent of the primary window above — the
-  point is catching **zero**-log sessions, not recent ones. Two known
-  incompletenesses, neither silent: a merged PR whose body carries no session
-  marker (bodies predating #737's fix) contributes no candidate, and a session
-  that shipped no merged PR is out of this check's reach by construction.
-  A session id in `RESOLVED_ORPHANED_SESSIONS` still appears, but carries a
-  `resolvedBy` cutoff naming the issue/PR that already tracked it (issue #447
-  item 4) — see step 5 for how to treat that entry.
-- **`orphanScan`** — whether the candidate source above could be read at all.
-  **Read it before reading an empty `orphanedSessions` as a clean sweep**
-  (issue #738): `{"scanned": true, …}` carries `mergedPullRequests` and
-  `withSession` counts and means the list is trustworthy; `{"scanned": false,
-  "reason": …}` means GitHub could not be reached and **nothing was looked
-  at** — report that as an inconclusive run, not as zero orphans, and say so
-  in this run's summary.
-- **`orphanSuppressionLog`** — the audit trail for the above: every orphan
-  candidate a suppression lever acted on, so a suppression can be checked
-  rather than taken on trust (issue #754). `[]` is the healthy state. Each
-  entry carries the session id, its commit sha(s), date, and a `reason`. The
-  two reasons are **asymmetric** — an entry here does not by itself mean the
-  candidate was dropped: `misfile-cleanup` (a resolved same-run mis-file, issue
-  #574 — `path` names the added-then-removed session log that triggered it;
-  this candidate is **removed from** `orphanedSessions`) or
-  `resolved-annotation` (a `RESOLVED_ORPHANED_SESSIONS` entry — that candidate
-  is **still listed** in `orphanedSessions` above, annotated with its
-  `resolvedBy`). Step 5 says what to do with the log.
-- **`humanPromptedClosures`** and **`manuallyRescuedClosures`** — the two
-  *manual-nudge-closure* signals, the counterpart to `orphanedSessions` for
-  sessions that DID log but only because a human nudged them (so the orphan
-  check, which keys on a missing log file, can't see them). The first lists
-  sessions whose own log flagged the `HUMAN-PROMPTED-CLOSURE` friction keyword
-  (`close-session` mandates it when a human, not self-judgement, triggered the
-  close). Two entries already recorded on that standing thread (#483) are
-  suppressed via `DISMISSED_HUMAN_PROMPTED_CLOSURES` (issue #540), so a healthy
-  future run won't re-show them — a genuinely new human-prompted closure still
-  surfaces. The second catches the same regression from *timing* alone — a
-  session whose closure (`endedAt`) landed more than `RESCUED_GAP_HOURS` after
-  its last work commit on `origin/main` (`gapHours` is that delay) — the shape
-  of the motivating orphan (session_019pNrz, #397; see
-  `scripts/audit-skills.ts`'s `RESCUED_GAP_HOURS` comment for the timing this
-  was tuned against) that idled before a human rescued its log. That exact
-  session is now suppressed from this signal via
-  `DISMISSED_MANUALLY_RESCUED_CLOSURES` once its fix (#411) landed, so a
-  healthy future run won't show it — a genuinely new rescue will surface the
-  same way. A session can appear in both, one, or neither. A less drastic
-  alternative to full suppression: a session id in
-  `RESOLVED_MANUALLY_RESCUED_CLOSURES` stays visible but carries a
-  `resolvedBy` cutoff, same as `orphanedSessions` above (issue #447 item 4).
-- **`misclassifiedKind`** — sessions whose authored `kind` contradicts the
-  `entrypoint: 'remote_trigger'` derived signal (a Routine-fired session
-  implies `kind: autonomous` per CONTEXT.md's Session definitions — issue
-  #449 Gap 2; this checks `entrypoint`, not `/loop` — a `/loop` session is
-  kicked off by a human and is ordinarily `delegated`, not `autonomous`).
-  Per #449's own spec this is a reporting/flagging finding,
-  **not an auto-correction** — informational only, unlike the four signals in
-  step 5 below. Note any flagged session in this run's own summary for
-  awareness; no issue-filing is expected for it.
-- **`skillSessionFiles`** — Skill name → session log file paths that named it,
-  across **all** history (not windowed, not bracketed), capped per Skill at the
-  newest `MAX_SKILL_SESSION_FILES` (40) for a very-high-usage Skill (issue
-  #426) — cross-check `skillSessionFileTotals[name]` against this list's length
-  to tell a capped list from an exhaustive one. Paths only. This is step 4's
-  deep-read entry point, not something to read wholesale now.
-- **`docReadCounts`** — path → how many windowed sessions opened it, the
-  window's `docsRead` already tallied for you (never re-count it by eye).
-  Its use here is **reach of a Skill's pointers**: a doc a SKILL.md tells you
-  to read that sits at 0, or far below the Skill's own `useCount`, says the
-  pointer isn't landing. It **corroborates a finding, never carries one alone**
-  — the field's own docstring in `scripts/audit-skills.ts` is the single home
-  for the three reasons why, and is required reading before you cite a count.
-  Companion: **`docsReadTotals`** — session id → true `docsRead` length for the
-  sessions `MAX_SESSION_DOCS_READ` trimmed; an id appearing there means that
-  session's `docsRead` in the window is partial.
+It prints JSON for the last 7 days of session logs (`--days N` widens or
+narrows that). The `Scorecard` type in `scripts/audit-skills.ts` documents
+every field.
 
 Done when you hold the scorecard.
 
-## 3. Re-grade importance and refresh role
+## 2. Check behaviour — one subagent per Skill in `behaviourChecks`
 
-`importance` is **conditional essentialness** — *never* raw frequency. The five
-grades (`essential | routine | specialist | supporting | peripheral`) are defined
-in `CONTEXT.md` (the single home) — read them there. For each Skill, read `usedIn`
-**and the `goal`/`summary`/`kind` of the sessions that used it** (and the sessions
-that plausibly *should* have), then set the grade per those definitions.
+Dispatch one read-only Sonnet subagent (`model: sonnet`) per Skill, all in
+parallel. Each brief names the Skill's `SKILL.md`, the log files of the
+sessions in its `usedIn` (newest 10), and its `observations`. For a
+`modelInvoked` Skill, the brief also lists every `window[]` session that did
+not use it, with its log `file`, `goal` and `skillsUsed`. The brief asks for
+this:
 
-**Rules:**
-- **Rarity alone never lowers a grade.** A Skill unused only because *its kind of
-  session did not occur* keeps its grade — frequency lives in the `role` prose, not
-  the grade.
-- **`routine` is decided before the other four**, and on different evidence: it
-  asks the observable question "do scheduled, unattended sessions run this
-  Skill?", not the conditional-essentialness question. Windowed sessions whose
-  `kind` is `autonomous` and whose `goal` reads as running that Skill are the
-  citation. When the answer flips — a Skill's Routine is retired, or a Skill
-  gains one — re-grade it, and grade it on the other four scales again if it
-  leaves `routine`.
-- **The bright-line evidence rule — symmetric for promote and demote:** a grade
-  change is only ever justified by **≥2 windowed sessions of the kind the Skill
-  serves where it was absent** (a demotion signal, also step 5's signal) or **≥2
-  windowed sessions that clearly show it earning a higher grade** (a promotion
-  signal) — cite the session ids either way. A `role` refresh is justified by
-  plainly matching `usedIn`. **This citation is also what makes a change
-  self-merge-eligible (step 8)** — a change you can't point at ≥2 session ids
-  for doesn't belong in this PR (see step 4 instead).
-  - **On an absence signal, check what those sessions read** (their `docsRead`).
-    A session that opened the doc pointing at the Skill and *still* didn't
-    invoke it is evidence about the **Skill** — its description or frontmatter
-    isn't matching the work, which is the miscalibration step 5 files. A
-    session that never opened it is evidence about the **pointer**, and demotes
-    nothing: the Skill was never offered. Say which one the absence is when you
-    cite it.
-- **Every grade change or `role` refresh gets an `observations` entry** —
-  `{ date: <today, UTC>, note: <the citation — session ids, PR/issue numbers,
-  usage counts> }`, appended (never overwriting an earlier entry, required on
-  every entry — `[]` when there's nothing to cite yet). A run with nothing
-  citable for a Skill (no change, regression, or idea) adds no entry (ADR-0015). This is where the
-  evidence for the change actually lives; `role` states the conclusion,
-  `observations` carries the receipts. The rest of this doc's "append an
-  observations entry" instructions (steps 4 and 6) reuse this same shape.
-- **Create a missing entry** for any `onDisk && !inventoried` Skill you observed in
-  use: `name` is the Skill's directory name; `category` is `general-engineering`
-  when `external`, else `platform-operation`; write the `role` + grade from what the
-  sessions show, plus an `observations` entry citing that evidence. Leave
-  *never-observed* un-inventoried Skills alone (that coverage is other
-  maintenance work).
-- **The mirror case — `inventoried && !onDisk`** (a phantom entry: the Inventory
-  points at a Skill directory that no longer exists). If the entry maps to a
-  built-in CLI Skill invisible to the on-disk scan, **leave it and flag it**
-  (note the mismatch in your run summary, don't touch the entry); otherwise
-  **propose removing** the stale entry.
-- **External (`external: true`) Skills are tuned too.** Their Inventory grade + role
-  record their *fit to this project*, which drifts like any other — grading a pack
-  Skill's importance-here is not *evolving the Skill*, so "used, not evolved here"
-  holds. (Steps 4 and 5 differ for them — see there.)
-- Refresh `role` when usage contradicts it. **Keep `role` ≤ ~50 words** (schema
-  guideline): role + importance-to-project, not a copy of the Skill's own
-  description. **`role` stays reference-free** — no PR/issue/session ids
-  (ADR-0015 amendment); a citation belongs in `observations` instead (above).
+> Work out from the `SKILL.md` what a run must deliver: its outcome and each
+> step's completion criterion. For each session, check against primary sources
+> whether it delivered. Start from the log's outcome, summary, `prs` and files
+> edited, then confirm on GitHub or in git that the PR, commit, issue or file
+> is really there and says what the Skill promised. Then check it still
+> stands: search the last two weeks of `git log origin/main` for the Skill's
+> name, in commit messages (`-i --grep=<name>`) and in changed content
+> (`-i -G<name>`). A later revert or rewrite of what a run delivered is a
+> silent failure, and the reverting commit and its session log say why. A
+> promise the runs keep breaking, a step that silently never happens, or an
+> outcome the log claims but that never landed is a **silent failure** too,
+> whether or not anyone logged a friction. Prior observations tell you what
+> is already known, including unverified findings this run's sessions may
+> confirm.
+>
+> If you were given sessions that did not use the Skill, decide for each one
+> whether its work matches the case the Skill's `description` says it covers.
+> Judge from the goal first, then open the log. Each match is a **missed
+> invocation**. You are done when every listed session is ruled in or out.
+>
+> Report every finding labelled silent failure or missed invocation, with its
+> session ids, quoted evidence, what the Skill promised against what happened,
+> and your best guess at why. If there are none, say how many sessions you
+> checked.
 
-Edit the `.yml` files in place. Done when every entry's grade + role matches the
-evidence, and observed-but-un-inventoried Skills have entries.
+A subagent's report is hearsay until you have verified it (CLAUDE.md). Check
+each finding against the source it cites before you use it, and check one
+claim from every clean report too: "nothing found" is a claim like any other.
+A finding that holds up in part but not enough to act on is **unverified**: it
+goes into the Skill's `observations` (step 5), so a later run can build on it.
 
-## 4. Watch for behavior regressions after a Skill's own edits
+Done when every subagent has reported, each finding is verified, unverified,
+or dropped, and each clean report has had one claim checked.
 
-**`skillsUsed` entries are `{name, reason}` objects, not bare strings** — any
-ad-hoc membership/comparison check against them (here or anywhere else in this
-run) must extract `.name` first, or it silently evaluates false.
+## 3. Check closure completeness
 
-**Phase A — cheap screen.** Read `regressionChecks`, resolving `before`/`after`
-ids against `regressionSessions` — each already used the edited Skill
-(`bracketSessions` selects by `skillsUsed`, issue #1237), so there's no
-separate "did the Skill fire" check to make; a check exists at all only when
-at least one side has domain-matching history. For each bracketed edit,
-compare the `before`/`after` sessions: **did friction severity/count look
-worse after** (more entries, or a shift toward `moderate`/`major`/`blocker`)?
-This screen only catches *usage-rate* and *coarse friction-count* shifts — it
-can't tell you the frictions were actually about this Skill's edited guidance
-rather than something unrelated, because it only has severities, not content.
-Treat a signal here as **suspected, not confirmed**, and weigh a side shorter
-than the full bracket (including empty) as thinner evidence rather than a
-missing comparison to chase down — it's already the true count, not a
-narrowed search. The split is `endedAt` vs. the edit commit date, excluding
-the edit's own authoring session from its `after` bracket (issue #1214) — so a
-session whose `endedAt` lands close to that boundary can still be bracketed on
-the wrong side of its actual work — when that's plausible, check the
-session's real invocation/work timing against the edit's exact timestamp
-before trusting which side it fell on.
+These mechanical signals cover `close-session`'s missed invocations:
 
-**Phase B — deep-read, only for a suspected Skill.** Before judging anything,
-`Read` every file `skillSessionFiles[name]` lists — as much of that Skill's
-usage history as the (possibly `MAX_SKILL_SESSION_FILES`-capped, see step 2)
-list holds, not just the 5-session bracket — for the fullest record available:
-full friction `description`/`solution` text, `outcome`, `status`, `summary`. This is what actually tells you whether the frictions are about
-this Skill, and whether the edit plausibly caused them. Never skip straight
-from Phase A's coarse signal to a judgement.
+- `orphanedSessions`: sessions that shipped a merged PR but never logged.
+  Read `orphanScan` first. `scanned: false` means nothing was looked at, so
+  report the orphan check as inconclusive with its `reason`, not as zero
+  orphans.
+- `orphanSuppressionLog`: every orphan candidate a suppression acted on. `[]`
+  is healthy. A `misfile-cleanup` whose `path` is not plausibly that
+  session's own log is a finding.
+- `humanPromptedClosures` and `manuallyRescuedClosures`: sessions that logged
+  only after a human nudged them.
 
-**Judging is a guideline, not a formula** — unlike step 3's bright-line rule,
-there is no fixed session-count threshold here. Weigh what the deep-read
-showed: do the post-edit frictions specifically implicate this Skill (not
-coincidental, unrelated pain in the same sessions)? Is the pattern more than
-one session's bad luck? Use judgement, but **always cite the specific evidence**
-(session ids, quoted friction text) for whatever you conclude — a citation-free
-"feels regressed" is not enough to act on, at any confidence level.
+An entry carrying `resolvedBy` is already tracked there, so leave it alone.
 
-- **Confirmed enough to act on** → this Skill is a step-5 candidate, on equal
-  footing with step 3's signal (see step 5). Also append an `observations`
-  entry (step 3's shape) citing the edit, the sessions, and the quoted
-  evidence — this is a citable finding same as a grade change, and it's what
-  lets a *future* run's Phase A see this one without re-reading the full
-  history.
-- **Suggestive but not enough** → record it as this run's own `learnings` entry
-  (CONTEXT.md → Session glossary) naming the edit, the sessions, and why you
-  stopped short — a note for a future reader (or a future run's Phase A, which
-  may catch the same Skill again with more evidence by then). Append the same
-  note as an `observations` entry too, so it's not only in this run's own
-  session log.
-- **Inconclusive** → write nothing; most will land here, and that's fine.
+Done when every signal is either a finding or cleared.
 
-Done when every Phase-A signal has gone through Phase B and landed in one of
-the three buckets above.
+## 4. Escalate what matters
 
-## 5. File — or comment on — an issue
+A verified finding becomes an issue only when the misbehaviour is
+**significant** (it did real damage) or **repeated** (an earlier observation
+already records the same thing). Every other finding is an observation
+(step 5), which is how a later run sees it repeat. A closure finding belongs
+to `close-session`'s observations.
 
-Four signals may originate a `needs-triage` issue, all requiring citable
-evidence: **step 3's bright-line rule** (≥2 windowed sessions, absent from work
-clearly in its domain — mechanical, objective), **step 4's regression watch,
-after its Phase B deep-read** (judgement-based, but grounded in quoted evidence
-from the full logs, not the Phase A screen alone), **step 2's
-`orphanedSessions`** (mechanical, objective — a referenced session id with no
-matching log file is itself the evidence; no further screen needed), and **step
-2's closure-nudge signals `humanPromptedClosures` + `manuallyRescuedClosures`**
-(mechanical, objective — the flagged session id, its keyword or its `gapHours`,
-is itself the evidence). Phase A's regression screen on its own never reaches
-this step — it must clear Phase B first; the step-2 signals have no such gate.
-**`misclassifiedKind` (step 2) is not a fifth signal here** — per #449's own
-spec it's informational only; a flagged session belongs in this run's summary
-for awareness, not a filed issue.
+For each finding that clears that bar:
 
-**Step 3 and step 4 are for our own (`external: false`) Skills only.** A pack
-Skill's SKILL.md is not ours to patch (ADR-0015) — for an under-used *external*
-Skill, the only lever we own is its Inventory `role` (step 3).
-`orphanedSessions` and the closure-nudge signals are not about any one Skill
-(own or external) — they're closure/journal-completeness gaps, so this scoping
-doesn't apply to them.
+- Search open issues first: the session id for a closure finding,
+  `audit-skills <skill>` for a Skill finding.
+- **Match found**: comment with only the evidence the thread does not
+  already cite. A concern that recurs across runs belongs on one thread.
+- **No match**: file one `needs-triage` issue naming the Skill (or session),
+  whether it is a silent failure or a missed invocation, the session ids, the
+  quoted evidence, promised against delivered, and your hypothesis.
+- **Human-nudged closures** go on one standing thread per trend, never one
+  issue per session.
 
-**An entry carrying a `resolvedBy` cutoff (`orphanedSessions` or
-`manuallyRescuedClosures`, via `RESOLVED_ORPHANED_SESSIONS` /
-`RESOLVED_MANUALLY_RESCUED_CLOSURES`) is not re-filed or re-commented on** —
-it stayed visible in the scorecard on purpose (so the incident isn't lost),
-but its cutoff means it's already tracked at the reference it names; treat it
-as read-only history, same as a fully `DISMISSED_*` entry.
+Pack Skills get no issues. Their `SKILL.md` is not ours (ADR-0015), so their
+only lever is the Inventory entry.
 
-**Report `orphanScan` in this run's summary too — every run.** A
-`scanned: false` run has an empty `orphanedSessions` because it looked at
-nothing; say the orphan check was **inconclusive** and name the `reason`,
-rather than reporting zero orphans. Treating an unreadable source as a clean
-sweep is the exact failure issue #738 removed, and re-introducing it in the
-write-up would undo the fix.
+Done when every finding is either an issue (filed or commented on) or headed
+for step 5 as an observation.
 
-**Report `orphanSuppressionLog` in this run's summary alongside the
-orphans you did surface — every run, including an empty one** (`[]` is the
-healthy state, and saying so is what makes the suppression checkable rather
-than assumed). A suppressed candidate is an audit line, not by itself an issue
-to file. It becomes one — mechanical and objective, like the orphans — when a
-`misfile-cleanup` entry's `path` isn't plausibly that session's own mis-filed
-log: that's an over-broad rule silently shrinking ADR-0009's denominator
-(issue #747's shape, issue #754).
+## 5. Tune the Inventory
 
-For each own Skill flagged by step 3 or 4, and for each `orphanedSessions` entry:
-- **Search first** (`search_issues`, `is:issue is:open audit-skills <name>` for
-  a Skill finding, or the session id for an orphan).
-- **Found** — before posting, check the target issue's recent comments for a
-  citation of the same session id already on that thread — don't duplicate a
-  citation that's already there. Otherwise add a comment citing this run's fresh
-  evidence. A concern that keeps recurring across runs is itself the strongest
-  evidence it's real; that history belongs on one thread, not a pile of
-  near-duplicate issues.
-- **Not found** — file one `needs-triage` issue. For a Skill finding, name the
-  session ids (and, for a step-4 finding, the quoted friction evidence) plus
-  your best-guess hypothesis. For an orphan, name the session id, its
-  commit(s), and date. `triage` picks up any issue regardless of source; you're
-  not filing into a void.
+Grade each Skill by the definitions in `CONTEXT.md` (`### Importance`), after
+reading its `observations`: earlier runs' evidence counts alongside this
+window's.
 
-**For the closure-nudge signals, track the trend on one thread, not one issue
-per session.** They measure a *recurring* regression (agents not self-closing),
-so a fresh session appearing is evidence to add to the standing thread, not a
-reason to open a new issue each run: search for the open manual-nudge-closure
-issue and comment this run's counts (which sessions carried the keyword, which
-were rescued and by what `gapHours`); open one `needs-triage` issue only if none
-is open. A run with empty `humanPromptedClosures` and `manuallyRescuedClosures`
-files nothing — that's the healthy state.
+- **A grade change needs ≥2 windowed sessions as evidence**, in either
+  direction, and those session ids are cited.
+- **A missed invocation of an own Skill is a trigger problem**: step 4's
+  issue, not a demotion. For a pack Skill, whose trigger we cannot fix, the
+  grade is the lever.
+- **`role`** stays ≤ ~50 words and free of PR, issue or session ids. Refresh
+  it when usage contradicts it.
+- **`observations`** hold 40 days of history. Append
+  `{ date: <today, UTC>, note: <citations> }` for every grade or role change,
+  verified or unverified finding (say which), or idea, but only when it cites
+  a session no remaining entry already cites. Remove every entry dated more
+  than 40 days before today; git keeps the history. Leave the other entries as
+  they are. If none remain, the field is `[]`.
+- **Coverage gaps**: create an entry for a Skill that is used but not
+  inventoried (`category` is `general-engineering` for a pack Skill,
+  `platform-operation` for our own). Propose removing an entry whose Skill is
+  gone from disk, unless it is a built-in CLI Skill, which you flag instead.
+- **Ideas**: when the evidence suggests a new Skill, a split or a
+  retirement, record it as this run's session-log `ideas` entry and never act
+  on it (ADR-0003).
 
-Never patch `.agents/skills/` or any other doc yourself for a semantic
-concern — file per above (the narrow mechanical-fix exception is at the top
-of this doc, and doesn't apply here — a step-4 regression is never purely
-mechanical).
+Done when every entry's grade and `role` match the evidence.
 
-Done when every step-3-, step-4-, `orphanedSessions`-, or closure-nudge-flagged
-item has an issue filed or commented on.
+## 6. Land the Inventory PR
 
-## 6. Suggest new Skills or Skill splits/cuts, as ideas
+If step 5 changed nothing, there is no PR. Otherwise follow
+`docs/agents/pr-workflow.md`'s "Closing a self-merged chartered run". The
+diff touches only `layers/journal/content/current/skills/*.yml`, every grade
+change cites its ≥2 sessions, and every removed observation is past 40 days.
+Anything else in the diff means you leave the PR open for a human.
 
-When steps 3-5's evidence (or the shape of an existing Skill — grown large,
-covering several distinct jobs, or genuinely no longer earning its keep) suggests
-a new Skill would help, or an existing one should split or retire, **record it
-as this run's own `ideas` entry** (CONTEXT.md → Session glossary — "ambitious,
-concrete... specific enough that a later reader could turn it straight into a
-GitHub issue, not a vague hunch"). Name the evidence, not just the hunch.
-
-This Skill never creates, splits, or retires a Skill itself — that is net-new /
-creative work and stays human-green-lit (ADR-0003's two-tier autonomy split).
-`ideas` are read by future self-improvement Skills — this is a distinct
-signal from step 5's issue, not a duplicate of it. When the idea concerns an
-existing (`onDisk`) Skill, also append an `observations` entry on its `.yml`
-naming the same evidence, so a future run sees it without re-reading this
-run's session log.
-
-Done when every credible new/split/retire signal from this run is captured as
-an idea (most runs will have none — that's fine).
-
-## 7. Clear the safety gate
-
-Run `pnpm gate:scoped` — step 1 of `docs/agents/pr-workflow.md`'s "Closing a
-self-merged chartered run" sequence. Done when it's green.
-
-## 8. Commit, push, open the gated PR — self-merge Inventory-only changes on green
-
-- **The PR must touch only `layers/journal/content/current/skills/*.yml`** —
-  confirm with `git diff --stat` before pushing. Step 5's issue and steps 4/6's
-  learnings/ideas never ride in this PR's diff (an issue is on the tracker, not
-  this repo; learnings/ideas belong in the session log) — keeping them apart is
-  what makes the self-merge check a trivial file-list comparison.
-- **Every grade/role change in the diff must cite the step-3 bright-line rule**
-  (≥2 session ids, either direction, or a plain `usedIn` match for a role
-  refresh). A change riding on step 4's regression signal alone does not belong
-  in this PR.
-- Commit (one run rides one commit/PR), push with retry, and open **one gated
-  PR** citing the evidence per entry, then follow
-  `docs/agents/pr-workflow.md`'s "Closing a self-merged chartered run"
-  sequence — this Skill is the third name on its low-risk-content exemption
-  list (ADR-0004/0003/0015). Leave a one-line PR comment citing the evidence
-  per change (pr-workflow.md step 4 says why).
-- **Escalate instead — leave the PR open for a human** — if the diff touches
-  anything beyond Inventory YAML (a human-only surface, or step 4-6 output
-  that slipped in by mistake).
-
-Done when the gate is green and the PR is merged (by you), or open and honestly escalated.
-
-Log the session per CLAUDE.md's "Logging your session" section.
+Log the session per CLAUDE.md's "Logging your session", with the step 3
+results (`orphanScan` included) in its summary.

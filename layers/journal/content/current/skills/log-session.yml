@@ -60,3 +60,11 @@ observations:
       same way a bare `cat`/`grep` path is. Added as a comment on #1206
       rather than a new issue, per that thread's own "recurring problem is
       evidence it's real" framing. Grade/role unchanged.
+  - date: 2026-09-27
+    note: >-
+      Verified silent failure (audit-skills behaviour check): the summary
+      word limit (≤ 100) is not holding. 17 of the 25 logs from 2026-09-26/27
+      exceed it, up to 262 words (session_013nrrgCxqJWxwwXuZ28cVLh,
+      session_01445jFXkqdujULnzcm6YPpz, session_01Uotb5QwVukQYaxBA7ZGK8z), and
+      several outcomes exceed 8 words (session_016u3USbZw7eybPYiDatPJmE,
+      session_01S5bzNzvg1DURebeNRDgVi5). No log flags it as a friction.

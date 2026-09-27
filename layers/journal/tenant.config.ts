@@ -79,10 +79,10 @@ export default defineTenant({
           installedSha256: z.string().optional(),
           // A purely internal, `audit-skills`-owned log — NOT rendered in the
           // journal blog (ADR-0015 amendment, 2026-07-13). Each entry is one
-          // run's citable finding (a role/grade change, a regression note, a
+          // run's citable finding (a role/grade change, a behaviour finding, a
           // new/split/retire idea) — PR/issue/session ids belong here, not in
-          // `role`. Append-only: a run adds an entry, it never rewrites or
-          // drops an earlier one.
+          // `role`. Kept for 40 days: a run drops older entries (ADR-0015
+          // amendment, 2026-09-27).
           observations: z.array(
             z.object({
               date: utcDate,

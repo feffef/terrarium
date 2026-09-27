@@ -1,30 +1,11 @@
-// Unit tests for the shared git-log helpers — the parentless-boundary-commit
-// guard (#292) and the fetch-timeout degrade path (#451), where every
+// Unit tests for the shared git-log helpers — the fetch-timeout degrade path (#451), where every
 // git-log-based script's correctness bugs would otherwise be re-derived.
 import { chmodSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { afterEach, describe, expect, it } from 'vitest'
-import { fetchOriginMain, FETCH_TIMEOUT_MS, isFetchTimeout, isParentlessBoundaryCommit, isShallowRepository, unshallow, UNSHALLOW_TIMEOUT_MS } from '../../scripts/git-helpers.ts'
+import { fetchOriginMain, FETCH_TIMEOUT_MS, isFetchTimeout, isShallowRepository, unshallow, UNSHALLOW_TIMEOUT_MS } from '../../scripts/git-helpers.ts'
 import { commitFile, createGitFixture, git, shallowClone } from '../support/git-fixture.ts'
-
-describe('isParentlessBoundaryCommit()', () => {
-  it('is true for an empty %P — a shallow-clone graft or the true repo root', () => {
-    expect(isParentlessBoundaryCommit('')).toBe(true)
-  })
-
-  it('is false for whitespace — %P is never whitespace-only in real git output', () => {
-    expect(isParentlessBoundaryCommit('   ')).toBe(false)
-  })
-
-  it('is false for a normal single-parent commit', () => {
-    expect(isParentlessBoundaryCommit('p1')).toBe(false)
-  })
-
-  it('is false for a merge commit (more than one parent)', () => {
-    expect(isParentlessBoundaryCommit('p1 p2')).toBe(false)
-  })
-})
 
 describe('isFetchTimeout()', () => {
   it('is true for an execFileSync timeout error (code: ETIMEDOUT)', () => {

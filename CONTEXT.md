@@ -174,9 +174,9 @@ is the authoritative "use these Skills" list (CLAUDE.md), kept current by the
 current-state readouts that are refreshed in place rather than appended to
 (contrast the append-only Digest, defined in the Journal context). Today the
 Skill Inventory is the only Inventory; a Tenant/Space/Collection and CI/drift
-inventory is planned. Each entry also accrues an internal, append-only
-`observations` log — `audit-skills`' own citable findings over time (role/grade
-changes, regression notes) — kept separate from `role` and not rendered in the
+inventory is planned. Each entry also keeps an internal `observations` log —
+`audit-skills`' own citable findings from the last 40 days (role/grade
+changes, behaviour findings) — kept separate from `role` and not rendered in the
 "use these" list (ADR-0015 amendment).
 
 ### Importance (of a Skill)

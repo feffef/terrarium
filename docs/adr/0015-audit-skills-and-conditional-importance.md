@@ -99,6 +99,28 @@ Status: Accepted
 > that scans open issues for such a referral. `how-it-works.md`'s "files an
 > issue and leaves it to a human" already describes current behaviour — the
 > "referral" term below is historical, not a live routing path.
+>
+> **Amended (2026-09-27).** `audit-skills` now centres on whether our own Skills
+> do their job, which the owner named as its main purpose. It targets two gaps
+> that frictions never show: a Skill that runs without complaint but doesn't
+> deliver what its `SKILL.md` promises, and a model-invoked Skill that should
+> have fired but didn't. Each own Skill used in ≥3 windowed sessions gets one
+> read-only subagent that checks its runs against primary sources (and, if
+> model-invoked, looks for sessions that needed it). A finding becomes an issue
+> only when the misbehaviour is significant or repeated (owner's rule); otherwise
+> it is an observation, which lets a later run see it repeat. This partly revisits the
+> helpfulness cut below: it asks "did it deliver", not friction-per-use. Grading
+> stays, as a by-product. The friction-based regression watch is removed: 80
+> runs produced one confirmed finding, and it could not see failures that leave
+> no friction. The window becomes the **last 7 days**, not the 40 newest logs,
+> which scheduled runs had shrunk to about two days. The scorecard now reports
+> usage statistics for every Skill, pack Skills included. **`observations` stop
+> being append-only**: they carry 40 days of history between runs, since
+> daily runs over overlapping windows would otherwise pile up repeats (as on
+> `implement`/`code-review` before 2026-09-25). A run removes entries older than
+> 40 days (git keeps them) and adds one only when it cites a session no
+> remaining entry cites. Findings that couldn't yet be verified are recorded
+> there too, marked unverified, so a later run can confirm them.
 
 ## Context
 

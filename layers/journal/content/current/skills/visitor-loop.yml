@@ -9,4 +9,16 @@ role: >-
   `code-review`, and self-merges them on a green
   gate within its ADR-0003 remit. It remembers the owner's review rulings, so a
   rejected idea stays rejected.
-observations: []
+observations:
+  - date: 2026-09-27
+    note: >-
+      Verified silent failure (audit-skills behaviour check): PR #1405, the
+      homepage "Start here" strip from session_013nrrgCxqJWxwwXuZ28cVLh, was
+      reverted by the owner the same day via PR #1410
+      (session_01DzHgca9LCRrZmGZLohwWKM) as "a poor choice of highlights that
+      broke the layout". decisions.md never recorded that ruling: the
+      owner-memory step reads only review comments on visitor-loop PRs, so a
+      rejection made by revert elsewhere never reaches it. The next run
+      (session_01FjbeYkD522QKGpNQq5WVNR) added two decisions.md lines but none
+      for #1405. Recorded as an observation, not an issue, at the owner's
+      direction.

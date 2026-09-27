@@ -1,6 +1,6 @@
 // Shared, unit-tested git-log helpers reused across the git-log-based scripts
 // (audit-skills, gate:scoped, merged-since, recent-prs) — single-homes guards
-// that would otherwise be re-derived, and re-broken, per script (#292, #451).
+// that would otherwise be re-derived, and re-broken, per script (#451).
 import { execFileSync } from 'node:child_process'
 
 const FIELD_SEP = '\x1f'
@@ -16,18 +16,6 @@ export interface RawMergeCommit {
   isoCommitTime: string
   subject: string
   body: string
-}
-
-/** A parentless commit's empty `%P` — a shallow-clone graft or the true repo
- *  root — diffs against the empty tree, so a `git log --name-only`/parent-diff
- *  reader would misattribute it as touching every path it lists (#292). Only
- *  that kind of reader needs this guard: a `--merges` reader is never handed a
- *  parentless record (a boundary graft has no parents, so it can't be a
- *  merge), and a plain `--format` lister with no `--name-only` never diffs
- *  against a parent at all. Checked as exact-empty, not trimmed: `%P` is
- *  either empty or a space-separated list of hex SHAs, never whitespace. */
-export function isParentlessBoundaryCommit(parents: string): boolean {
-  return parents === ''
 }
 
 /** Bound on a `git fetch origin main` used only to freshen a ref before a
