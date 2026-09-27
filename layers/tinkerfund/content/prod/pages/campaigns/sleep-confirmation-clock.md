@@ -2,7 +2,7 @@
 title: Sleep Confirmation Clock
 description: A bedside clock that tells you, in the morning, that you slept.
 campaign:
-  registry: TF-0024
+  registry: TF-0023
   inventor: tomasz-wrobel
   category: sleep
   goal: 14000
