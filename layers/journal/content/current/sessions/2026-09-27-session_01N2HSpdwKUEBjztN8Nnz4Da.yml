@@ -1,19 +1,22 @@
 schemaVersion: 1
 session: session_01N2HSpdwKUEBjztN8Nnz4Da
 startedAt: 2026-09-27T19:34:39Z
-endedAt: 2026-09-27T20:02:40Z
+endedAt: 2026-09-27T21:42:15Z
 kind: interactive
 goal: Refine and file the browser-side Content DB issue
 status: in-review
-outcome: "#1444 closed as-is; research PR #1445 open"
-summary: "Human-instructed throughout. Via /grill-with-docs the agent refined an idea from session 01CACYSm, measured the browser-side Content DB load (about 1.05 MB fixed: 856,447 B of WASM plus a 193 KB JS chunk with sqlite3 code; Commons Timeline 2.9 MB) and filed #1444. The user then ran /implement and picked option 4. The agent found @nuxt/content 3.15.0 has no switch to route browser queries to the server, proposed full page loads for /t/** routes, and flagged the costs: Tinkerfund view transitions and ADR-0019's e2e tests. After an ELI5, the owner chose to keep the current behaviour. The agent recorded the decision on #1444 and closed it as not planned. The user then ran /research on keeping browser-side building without the WASM. A background agent wrote docs/research/content-client-queries-without-wasm.md (recommends Nuxt payload extraction); the agent added a stale-server-clock caveat after checking the source and opened docs-only PR #1445."
+outcome: "Payload-extraction PR #1447 open; research PR #1445"
+summary: "Human-instructed throughout. Refined an idea via /grill-with-docs, measured the browser Content DB load and filed #1444, which the owner closed as-is. /research (a background agent) then found Nuxt payload extraction; the agent added a stale-clock caveat and opened docs PR #1445. On \"give it a try\" the agent trialled it locally (no WASM on navigation, 6-144 KB gzipped vs ~0.5-1.85 MB), and on the owner's go made it real in PR #1447 with ADR-0028. The full e2e run showed ADR-0019's blog tests break, so they were moved onto the payload-failure fallback. /code-review found the cache broke Tinkerfund's locale (#1365); fixed test-first with varies. Filed #1446 for the unbounded cache."
 prs:
   - "1445"
+  - "1447"
 docsRead:
   - path: docs/adr/0019-patched-nuxt-content-client-db-loading.md
     reason: client-DB failure history (#236)
   - path: app/pages/t/[tenant]/[space]/[...slug].vue
     reason: the page the idea named
+  - path: layers/blog/tests/e2e/blog.e2e.ts
+    reason: (read before editing)
 skillsUsed:
   - name: grilling
     reason: rounds of decisions with the user
@@ -22,6 +25,8 @@ skillsUsed:
   - name: close-session
     reason: (no reason given)
   - name: log-session
+    reason: (no reason given)
+  - name: code-review
     reason: (no reason given)
   - name: grill-with-docs
     reason: (invoked as a slash command)
@@ -36,34 +41,58 @@ frictions:
   - description: The user asked for /implement and /code-review; /implement isn't a skill here, and code-review had no diff because the deliverable was an issue.
     solution: Read /implement as filing the issue; told the user that code-review had no code to review
     severity: nit
-durationSec: 1681
+  - description: "My first trial config would have shipped a locale bug: a Nitro cached render drops request headers not in varies, and 137 e2e tests did not catch it."
+    solution: Caught by the /code-review spec agent; now guarded by a two-locale e2e test. Anything that caches SSR should grep for useRequestHeaders/cookies first.
+    severity: moderate
+  - description: The research agent's note missed the stale server clock that a page cache causes; I only found it by spot-checking the source.
+    solution: Research briefs should ask 'what server-computed state does this freeze?' when a cache is involved.
+    severity: minor
+durationSec: 7656
 models:
-  claude-opus-5-5: 128
+  claude-opus-5-5: 328
 toolCounts:
-  Skill: 4
-  Bash: 44
+  Skill: 5
+  Bash: 102
   mcp__github__search_issues: 1
-  Write: 1
-  ToolSearch: 3
-  mcp__github__issue_write: 2
+  Write: 2
+  ToolSearch: 5
+  mcp__github__issue_write: 3
   mcp__github__add_issue_comment: 1
-  Agent: 1
-  Edit: 1
+  Agent: 3
+  Edit: 7
   mcp__github__list_pull_requests: 1
-  mcp__github__create_pull_request: 1
-  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
-  mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__create_pull_request: 2
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 2
+  mcp__Claude_Code_Remote__send_later: 2
+  ReadNotifications: 4
+  mcp__github__pull_request_read: 3
+  Read: 2
+  mcp__github__update_pull_request: 1
+  mcp__Claude_Code_Remote__update_trigger: 1
 filesEdited:
   - docs/research/content-client-queries-without-wasm.md
+  - nuxt.config.ts
+  - docs/adr/0028-navigation-reads-server-payloads.md
+  - layers/blog/tests/e2e/blog.e2e.ts
+  - layers/tinkerfund/tests/e2e/tinkerfund.e2e.ts
+  - layers/tinkerfund/nuxt.config.ts
 docsReadViaShell:
   - docs/adr/0019-patched-nuxt-content-client-db-loading.md
   - CONTEXT.md
   - docs/agents/triage-labels.md
   - docs/research/content-client-queries-without-wasm.md
+  - .agents/skills/domain-modeling/ADR-FORMAT.md
+  - docs/adr/0027-prune-trials.md
+  - docs/agents/domain.md
   - .agents/skills/research/SKILL.md
+  - docs/agents/verifying-ui-changes.md
 subagents:
   - type: general-purpose
     task: Research avoiding Content WASM
+  - type: general-purpose
+    task: Standards review of diff
+  - type: general-purpose
+    task: Spec review of diff
 gitBranch: claude/catchall-content-queries-q5944u
 entrypoint: remote_mobile
 cliVersion: 2.1.283
