@@ -82,7 +82,7 @@ campaign:
       caption: "The two stake lengths: 200 mm, and 350 mm for longer grass. Both track one blade to 0.02 mm."
       svg: |-
         <ellipse cx="112" cy="236" rx="62" ry="24" style="fill:var(--tf-line)" />
-        <ellipse cx="294" cy="256" rx="70" ry="26" style="fill:var(--tf-line)" />
+        <ellipse cx="294" cy="246" rx="70" ry="26" style="fill:var(--tf-line)" />
         <path d="M59 226V231.6A49 28.3 0 0 0 108 259.9V254.3A49 28.3 0 0 1 59 226Z" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" />
         <path d="M108 254.3V259.9A49 28.3 0 0 0 157 231.6V226A49 28.3 0 0 1 108 254.3Z" style="fill:var(--tf-ink)" />
         <ellipse cx="108" cy="226" rx="49" ry="28.3" style="fill:color-mix(in srgb, var(--tf-ink) 45%, var(--tf-surface))" />
@@ -97,20 +97,20 @@ campaign:
         <path d="M130.1 238.8q0 -18 0 -30" style="fill:none;stroke:var(--tf-ink);stroke-width:2.8899999999999997;stroke-linecap:round;stroke-linejoin:round" />
         <ellipse cx="130.1" cy="220.2" rx="3.4" ry="2" style="fill:var(--tf-accent)" />
         <circle cx="130.1" cy="208.8" r="1.9" style="fill:var(--tf-link)" />
-        <path d="M231.7 246V257.2A56.3 32.5 0 0 0 288 289.7V278.5A56.3 32.5 0 0 1 231.7 246Z" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" />
-        <path d="M288 278.5V289.7A56.3 32.5 0 0 0 344.3 257.2V246A56.3 32.5 0 0 1 288 278.5Z" style="fill:var(--tf-ink)" />
-        <ellipse cx="288" cy="246" rx="56.3" ry="32.5" style="fill:color-mix(in srgb, var(--tf-ink) 45%, var(--tf-surface))" />
-        <path d="M267.7 232.1q0 -17.3 0 -28.8M303.8 224.3q1.2 -21.1 8 -35.2M315.9 244.7q-1.2 -25 -8 -41.6M241.4 250.8q-1.2 -13.4 -8 -22.4M311.2 264.1q0 -13.4 0 -22.4M270.4 272.2q1.2 -17.3 8 -28.8" style="fill:none;stroke:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface));stroke-width:3.84;stroke-linecap:round;stroke-linejoin:round" />
-        <path d="M288 48.1L298.3 54L288 59.9L277.7 54Z" style="fill:color-mix(in srgb, var(--tf-accent) 45%, var(--tf-surface))" />
-        <path d="M277.7 246L288 252L288 59.9L277.7 54Z" style="fill:var(--tf-accent)" />
-        <path d="M298.3 246L288 252L288 59.9L298.3 54Z" style="fill:color-mix(in srgb, var(--tf-accent) 72%, var(--tf-ink))" />
-        <path d="M290.9 30.2L326.3 50.6L307.1 61.7L271.8 41.3Z" style="fill:color-mix(in srgb, var(--tf-accent) 45%, var(--tf-surface))" />
-        <path d="M271.8 55.7L307.1 76.1L307.1 61.7L271.8 41.3Z" style="fill:var(--tf-accent)" />
-        <path d="M326.3 65.1L307.1 76.1L307.1 61.7L326.3 50.6Z" style="fill:color-mix(in srgb, var(--tf-accent) 72%, var(--tf-ink))" />
-        <path d="M310.1 66.8L310.1 172.8" style="fill:none;stroke:var(--tf-link);stroke-width:1.105;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:3 2.5" />
-        <path d="M310.1 258.8q0 -51.6 0 -86" style="fill:none;stroke:var(--tf-ink);stroke-width:2.8899999999999997;stroke-linecap:round;stroke-linejoin:round" />
-        <ellipse cx="310.1" cy="205.4" rx="3.4" ry="2" style="fill:var(--tf-accent)" />
-        <circle cx="310.1" cy="172.8" r="1.9" style="fill:var(--tf-link)" />
+        <path d="M231.7 236V245.8A56.3 32.5 0 0 0 288 278.3V268.5A56.3 32.5 0 0 1 231.7 236Z" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" />
+        <path d="M288 268.5V278.3A56.3 32.5 0 0 0 344.3 245.8V236A56.3 32.5 0 0 1 288 268.5Z" style="fill:var(--tf-ink)" />
+        <ellipse cx="288" cy="236" rx="56.3" ry="32.5" style="fill:color-mix(in srgb, var(--tf-ink) 45%, var(--tf-surface))" />
+        <path d="M267.7 222.1q0 -15.1 0 -25.2M303.8 214.3q1.1 -18.5 7 -30.8M315.9 234.7q-1 -21.8 -7 -36.4M241.4 240.8q-1 -11.8 -7 -19.6M311.2 254.1q0 -11.8 0 -19.6M270.4 262.2q1.1 -15.1 7 -25.2" style="fill:none;stroke:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface));stroke-width:3.36;stroke-linecap:round;stroke-linejoin:round" />
+        <path d="M288 38.1L298.3 44L288 49.9L277.7 44Z" style="fill:color-mix(in srgb, var(--tf-accent) 45%, var(--tf-surface))" />
+        <path d="M277.7 236L288 242L288 49.9L277.7 44Z" style="fill:var(--tf-accent)" />
+        <path d="M298.3 236L288 242L288 49.9L298.3 44Z" style="fill:color-mix(in srgb, var(--tf-accent) 72%, var(--tf-ink))" />
+        <path d="M290.9 20.2L326.3 40.6L307.1 51.7L271.8 31.3Z" style="fill:color-mix(in srgb, var(--tf-accent) 45%, var(--tf-surface))" />
+        <path d="M271.8 45.7L307.1 66.1L307.1 51.7L271.8 31.3Z" style="fill:var(--tf-accent)" />
+        <path d="M326.3 55.1L307.1 66.1L307.1 51.7L326.3 40.6Z" style="fill:color-mix(in srgb, var(--tf-accent) 72%, var(--tf-ink))" />
+        <path d="M310.1 56.8L310.1 162.8" style="fill:none;stroke:var(--tf-link);stroke-width:1.105;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:3 2.5" />
+        <path d="M310.1 248.8q0 -51.6 0 -86" style="fill:none;stroke:var(--tf-ink);stroke-width:2.8899999999999997;stroke-linecap:round;stroke-linejoin:round" />
+        <ellipse cx="310.1" cy="195.4" rx="3.4" ry="2" style="fill:var(--tf-accent)" />
+        <circle cx="310.1" cy="162.8" r="1.9" style="fill:var(--tf-link)" />
         <g style="stroke:none;fill:var(--tf-muted);font:600 11px var(--tf-mono);letter-spacing:.06em;text-anchor:middle"><text x="104" y="282">200 MM</text><text x="292" y="294">350 MM · LONGER GRASS</text></g>
     - style: patent
       caption: "Elevation, in the lawn: stake (10), sensor head (12), beam (14), marked blade (16), marking clip (18), LED (20), USB-C port (22), spike (24), the rest of the lawn (26) and the lens window (28). The stake stands 200 mm above the turf."
@@ -137,7 +137,7 @@ campaign:
         <path d="M92 116Q141 143 192 120M118 60Q151.5 68 178 46M304 130Q278 115.8 251 128M296 200Q273.5 188.8 251 200M214 214Q230.8 219.3 245 209M150 90Q180 80 190 50M316 70Q296.5 46.5 266 48M128 260Q162.5 271 192 250M330 252Q318 238.5 300 240M232 24Q230 41.8 243 54" style="stroke-width:.9" />
         </g>
         <g style="fill:var(--tf-ink);stroke:none;font:500 12px var(--tf-mono)"><text x="76" y="120">10</text><text x="102" y="62">12</text><text x="308" y="134">14</text><text x="300" y="204">16</text><text x="218" y="218">18</text><text x="134" y="92">20</text><text x="320" y="74">22</text><text x="112" y="264">24</text><text x="334" y="256">26</text><text x="236" y="26">28</text></g>
-        <text x="176" y="24" style="fill:var(--tf-ink);stroke:none;font:500 9px var(--tf-mono)">BLE</text>
+        <text x="154" y="40" style="fill:var(--tf-ink);stroke:none;font:500 9px var(--tf-mono);text-anchor:end">BLE</text>
         <g style="fill:var(--tf-ink);stroke:none;font:500 11px var(--tf-mono)"><text x="104" y="290">ELEVATION · STAKE IN LAWN · 200 MM</text></g>
     - style: patent
       caption: "Detail B, section through the head: laser emitter (30), receiver (32), window (34), battery (36), Bluetooth module (38) and USB-C port (22). The marked blade (16) with its clip (18) is shown before and, dashed, after 0.1 mm of growth, measured on the height axis (40). Growth exaggerated ×400."
