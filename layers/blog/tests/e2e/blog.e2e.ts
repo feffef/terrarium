@@ -10,21 +10,31 @@
 // life of the page. We do NOT patch the dependency (ADR-0019 amendment,
 // 2026-07-16) — instead the Space pages surface the failure as a modal
 // (ContentLoadErrorDialog) that a reload recovers from, since the reloaded page
-// renders from the server DB. These tests inject a failed dump load on a client
-// navigation and assert the dialog shows and a reload restores the content.
+// renders from the server DB. Navigation normally reads a server payload and
+// skips the client DB (ADR-0028), so these tests fail that payload too, then a
+// dump load, and assert the dialog shows and a reload restores the content.
 //
 // One funnel is the exception: a failed dynamic *import* of a build chunk
 // reloads itself (ADR-0019 amendment, 2026-08-04), so its tests assert the
 // content comes back with no click — and that a failure surviving that one
 // attempt settles on the dialog instead of reloading again.
-//
-// Navigation normally reads a server-rendered payload and never touches the
-// client DB (ADR-0028). Each test therefore also fails that payload fetch,
-// which is the fallback where the client DB still loads.
 import { describe, expect, it } from 'vitest'
 import { createPage, url } from '@nuxt/test-utils/e2e'
-import type { Page } from 'playwright-core'
+import type { Page, Route } from 'playwright-core'
 import { expectCleanHydration } from '../../../../tests/support/e2e.ts'
+
+const DAVID_PAYLOAD = '/t/blog/david/_payload.json'
+
+/** Fail David's navigation payload, so the page falls back to the client DB (ADR-0028). */
+async function failDavidPayload(page: Page): Promise<void> {
+  await page.route(`**${DAVID_PAYLOAD}*`, (route) => route.abort('failed'))
+}
+
+/** Answer David's pages dump with `fail`, on the client-DB fallback. */
+async function failDavidDump(page: Page, fail: (route: Route) => Promise<void>): Promise<void> {
+  await failDavidPayload(page)
+  await page.route('**/blog_david_pages/sql_dump.txt*', fail)
+}
 
 /**
  * Serve a 500 for the build chunk @nuxt/content dynamically imports on its first
@@ -35,6 +45,7 @@ import { expectCleanHydration } from '../../../../tests/support/e2e.ts'
  * an already-fetched chunk still reaches this handler.
  */
 async function failContentChunkImport(page: Page): Promise<void> {
+  await failDavidPayload(page)
   await page.route('**/_nuxt/*.js', async (route) => {
     const response = await route.fetch()
     const body = await response.text()
@@ -45,11 +56,6 @@ async function failContentChunkImport(page: Page): Promise<void> {
   })
 }
 
-/** Fail David's navigation payload so the page falls back to the client DB (ADR-0028). */
-async function failDavidPayload(page: Page): Promise<void> {
-  await page.route('**/t/blog/david/_payload.json*', (route) => route.abort('failed'))
-}
-
 /** True while no full page load has happened since the sentinel was planted. */
 async function plantReloadSentinel(page: Page): Promise<void> {
   await page.evaluate(() => {
@@ -58,6 +64,14 @@ async function plantReloadSentinel(page: Page): Promise<void> {
 }
 async function noReloadHappened(page: Page): Promise<boolean> {
   return page.evaluate(() => (window as unknown as { __noReloadSince?: boolean }).__noReloadSince === true)
+}
+
+/** Wait until David's About renders. */
+async function expectDavidAbout(page: Page, timeout: number): Promise<void> {
+  const about = page.locator('.about-prose')
+  await expect
+    .poll(async () => ((await about.textContent().catch(() => '')) ?? '').trim().startsWith("I'm David"), { timeout })
+    .toBe(true)
 }
 
 /** Register the blog Tenant's L2 assertions under the caller's active suite. */
@@ -92,12 +106,9 @@ export function registerBlogE2E(): void {
         await plantReloadSentinel(page)
         await page.locator('.net-cards a', { hasText: 'David' }).click()
 
-        const about = page.locator('.about-prose')
-        await expect
-          .poll(async () => (await about.textContent().catch(() => '') ?? '').trim().slice(0, 9), { timeout: 8000 })
-          .toBe("I'm David")
+        await expectDavidAbout(page, 8000)
         expect(await noReloadHappened(page)).toBe(true)
-        expect(requests.some((u) => u.includes('/t/blog/david/_payload.json'))).toBe(true)
+        expect(requests.some((u) => u.includes(DAVID_PAYLOAD))).toBe(true)
         expect(requests.filter((u) => u.includes('.wasm') || u.includes('sql_dump.txt'))).toEqual([])
       } finally {
         await page.close()
@@ -118,12 +129,11 @@ export function registerBlogE2E(): void {
         // Fail every request for David's pages dump — a client navigation whose
         // lazy dump fetch never lands. Stock @nuxt/content caches the rejected
         // load and the collection can't load again for the life of the page.
-        await failDavidPayload(page)
-        await page.route('**/blog_david_pages/sql_dump.txt*', (route) => route.abort('failed'))
+        await failDavidDump(page, (route) => route.abort('failed'))
 
         // Land on a sibling Persona (SSR), then follow the in-page link to David
-        // — a client-side navigation, the only path that hits the client WASM
-        // query (an initial load / reload renders via the server DB).
+        // — a client-side navigation, which with its payload failed falls back
+        // to the client WASM query (an initial load / reload renders via the server DB).
         await page.goto(url('/t/blog/karen'), { waitUntil: 'hydration' })
         await page.locator('.net-cards a', { hasText: 'David' }).click()
         await page.waitForFunction(() => location.pathname.endsWith('/t/blog/david'))
@@ -135,12 +145,7 @@ export function registerBlogE2E(): void {
 
         // Reloading renders the About from the server DB — the reliable recovery.
         await dialog.getByText('Reload page').click()
-        const about = page.locator('.about-prose')
-        await expect
-          .poll(async () => (await about.textContent().catch(() => '') ?? '').trim().slice(0, 9), {
-            timeout: 12000,
-          })
-          .toBe("I'm David")
+        await expectDavidAbout(page, 12000)
       } finally {
         await page.close()
       }
@@ -152,8 +157,7 @@ export function registerBlogE2E(): void {
         // A 200 whose body is not a valid gzip dump (a proxy/portal serving
         // non-gzip content, a truncated CDN body) — $fetch does not retry a 200,
         // decompression throws. The dialog must still surface the real cause.
-        await failDavidPayload(page)
-        await page.route('**/blog_david_pages/sql_dump.txt*', (route) =>
+        await failDavidDump(page, (route) =>
           route.fulfill({ status: 200, contentType: 'text/plain', body: 'not-a-valid-gzip-dump' }),
         )
 
@@ -189,7 +193,6 @@ export function registerBlogE2E(): void {
     it('auto-recovers from a failed content-chunk import on a client navigation', async () => {
       const page = await createPage()
       try {
-        await failDavidPayload(page)
         await failContentChunkImport(page)
 
         await page.goto(url('/t/blog/karen'), { waitUntil: 'hydration' })
@@ -198,12 +201,7 @@ export function registerBlogE2E(): void {
         // No "Reload page" click: the recovery is the app's job. The reloaded
         // page renders the About from the SERVER DB during SSR, so the content
         // arrives even while the chunk keeps 500-ing.
-        const about = page.locator('.about-prose')
-        await expect
-          .poll(async () => (await about.textContent().catch(() => '') ?? '').trim().slice(0, 9), {
-            timeout: 20000,
-          })
-          .toBe("I'm David")
+        await expectDavidAbout(page, 20000)
         expect(await page.locator('dialog.cle-dialog[open]').count()).toBe(0)
       } finally {
         await page.close()
@@ -213,7 +211,6 @@ export function registerBlogE2E(): void {
     it('falls back to the dialog instead of reloading again when the chunk keeps failing', async () => {
       const page = await createPage()
       try {
-        await failDavidPayload(page)
         await failContentChunkImport(page)
         // The exact state `reloadNuxtApp` leaves behind for a path it has just
         // reloaded (its sessionStorage guard, still inside its TTL — see

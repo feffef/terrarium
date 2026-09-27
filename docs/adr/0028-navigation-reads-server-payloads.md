@@ -30,12 +30,16 @@ Use Nuxt payload extraction (`nuxt.config.ts`):
   `useAsyncData` takes its data from that file and never runs the query in the
   browser.
 - `routeRules['/t/**'].cache = { maxAge: 60, swr: false }`: Nuxt only extracts
-  payloads for cached (or prerendered) routes. A 60-second lifetime without
-  stale serving bounds how old a server-computed "now" can be. Atlas uses
-  `useGlassToday` and Tinkerfund uses `useTinkerfundClock`, and both are
-  computed during server rendering.
-- `/t/tinkerfund/*/search` is uncached. It keys by `?q=`, which would grow the
-  cache without bound, and it keeps its deliberate in-browser search.
+  payloads for cached (or prerendered) routes. A short lifetime without stale
+  serving bounds how old a first page load's server-computed "now" can be:
+  Atlas's `useGlassToday` and Tinkerfund's `useTinkerfundClock`. On navigation
+  both recompute in the browser, because Nuxt merges only a payload's `data`,
+  not its state. The response also carries `max-age=60`, so a browser may reuse
+  it for another minute. That makes the worst case about two minutes.
+- Tinkerfund's own layer config adds two rules. Its pages vary the cache on
+  `accept-language`, because its money and dates follow the visitor's locale
+  (#1365) and a cached render otherwise sees no request headers. Its search
+  route is uncached and keeps its deliberate in-browser search.
 - NuxtLink prefetches on interaction, not visibility. Visibility prefetch
   fetched the payload of every visible link, and some pages carry about 550 KB
   payloads, so navigations ended up heavier than before.
@@ -52,8 +56,14 @@ skills 579 → 144 KB; Tinkerfund page 578 → 19 KB; Commons Timeline about
   recovery (`ContentLoadErrorDialog`, the chunk-error auto-reload) therefore
   stays.
 - **The server now caches rendered `/t/**` pages in memory for 60 s.** Content
-  is baked per deploy (ADR-0001), so that is safe. Anything else server-rendered
-  that varies faster than 60 s would need its own rule.
+  is baked per deploy (ADR-0001), so that is safe. A page that reads anything
+  else from the request, such as a header or cookie, needs `varies` like
+  Tinkerfund's, or it serves the first visitor's version to everyone.
+- **The cache has no size bound.** Each distinct URL, query string included, is
+  its own entry, and expired entries are only replaced, not evicted. Junk query
+  strings grow memory until the next deploy or restart clears it.
 - **A route's code downloads on hover, not on sight.** With visibility prefetch
   off, a touch device fetches it on tap.
-- Reverting means deleting the three settings. Nothing else depends on them.
+- Reverting means deleting `payloadExtraction`, the `nuxtLink.prefetchOn`
+  default and the `routeRules` in `nuxt.config.ts` and
+  `layers/tinkerfund/nuxt.config.ts`. Nothing else depends on them.

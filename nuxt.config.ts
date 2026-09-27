@@ -18,10 +18,7 @@ export default defineNuxtConfig({
     payloadExtraction: 'client',
     defaults: { nuxtLink: { prefetchOn: { visibility: false, interaction: true } } },
   },
-  routeRules: {
-    '/t/**': { cache: { maxAge: 60, swr: false } },
-    '/t/tinkerfund/*/search': { cache: false },
-  },
+  routeRules: { '/t/**': { cache: { maxAge: 60, swr: false } } },
 
   content: {
     // Native node:sqlite (Node >= 22.5) — no better-sqlite3 native build in CI.

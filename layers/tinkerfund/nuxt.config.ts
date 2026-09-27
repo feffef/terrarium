@@ -7,4 +7,9 @@ export default defineNuxtConfig({
   // Nuxt reads a page's viewTransition meta only with this flag on; the app default stays off, pages opt in (#1376).
   experimental: { viewTransition: true },
   app: { viewTransition: false },
+  // Page cache (ADR-0028): money and dates follow the visitor's locale (#1365); search stays in the browser.
+  routeRules: {
+    '/t/tinkerfund/**': { cache: { varies: ['accept-language'] } },
+    '/t/tinkerfund/*/search': { cache: false },
+  },
 })
