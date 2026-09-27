@@ -8,4 +8,23 @@ role: >-
   the cut standing as a trial, letting later sessions' frictions decide whether
   the prose was load-bearing. Charters its own merge tier and may prune ADR
   prose.
-observations: []
+observations:
+  - date: "2026-09-27"
+    note: >-
+      Regression watch on the bfd8adfb392 edit (2026-09-25T17:54:17Z, "allow
+      plain-English language simplification of any in-scope Markdown file as
+      a trial", session_01TMgZyrN42pwudxkUdHLKwP): Phase A flagged a coarser
+      after-edit friction shift (before, 6 sessions 2026-09-20..09-25: max 1
+      moderate + 1 minor per session; after, the only post-edit session in
+      window, session_016u3USbZw7eybPYiDatPJmE on 2026-09-26: 4 frictions,
+      two moderate). Phase B deep-read found 3 of those 4 are generic/
+      unrelated to the new scope (backgrounding, stale worktree HEAD, an
+      oversized ledger diff). One is plausibly tied to the new scope: "First
+      pass at the domain.md 'simplify the language' rewrite only reformatted
+      sentences (671->668 words, effectively flat) rather than cutting real
+      content, because I judged it by read-through impression instead of a
+      word count" -- self-caught and fixed same session, not escalated, no
+      disputed trial. Suggestive but not enough to act on (n=1 post-edit
+      session; the one relevant friction was minor and self-resolved).
+      Grade/role unchanged. Recorded so a future run's Phase A has this if a
+      second instance turns up.
