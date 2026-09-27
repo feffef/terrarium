@@ -1,0 +1,162 @@
+schemaVersion: 1
+session: session_01NT2TmgJJGjEsc84AW6oAi7
+startedAt: 2026-09-27T18:48:36Z
+endedAt: 2026-09-27T19:30:31Z
+kind: interactive
+goal: Whole-repo security review and fixes
+status: in-review
+outcome: "Seven findings fixed, PR #1443 open"
+summary: "Human-instructed: ran /security-review over the whole repo in seven parallel read-only subagent slices (CI/deploy, hooks, GitHub scripts, tooling, platform app, tenant layers, agent governance), verified each finding against the code, then on the human's \"fix them\" dispatched three worktree-isolated impl agents (SVG/XSS + mermaid, merge-pr/gate, triage/guest-intake trust), merged their work, ran /code-review (human-invoked), and on the human's \"fix first\" dispatched one follow-up agent that closed an entity-encoding bypass in the new SVG check with an element allowlist. Agent-initiated: opening PR #1443 per ADR-0003 and subscribing to it. Full gate green locally."
+prs:
+  - "1443"
+docsRead:
+  - path: tests/unit/svg.spec.ts
+    reason: (read before editing)
+  - path: .claude/settings.json
+    reason: (no reason given)
+  - path: scripts/guard-wrap.sh
+    reason: (no reason given)
+  - path: scripts/guard-io.ts
+    reason: (no reason given)
+  - path: scripts/workflow-edit-guard.sh
+    reason: (no reason given)
+  - path: scripts/workflow-edit-guard.ts
+    reason: (no reason given)
+  - path: scripts/provenance-footer.ts
+    reason: (no reason given)
+  - path: scripts/session-id-guard.ts
+    reason: (no reason given)
+  - path: scripts/unshallow-on-start.ts
+    reason: (no reason given)
+  - path: scripts/shell-reads.ts
+    reason: (no reason given)
+  - path: scripts/verify-mermaid.ts
+    reason: (read before editing)
+  - path: scripts/guest-intake-scan.ts
+    reason: (no reason given)
+  - path: tests/unit/guest-intake-scan.spec.ts
+    reason: (no reason given)
+  - path: layers/journal/tenant.config.ts
+    reason: (no reason given)
+  - path: layers/tinkerfund/schemas.ts
+    reason: (no reason given)
+  - path: scripts/merge-pr.ts
+    reason: (read before editing)
+  - path: tests/unit/merge-pr.spec.ts
+    reason: (read before editing)
+  - path: scripts/guest-marker.ts
+    reason: (no reason given)
+  - path: scripts/poll-guest-tickets.ts
+    reason: (no reason given)
+skillsUsed:
+  - name: dispatch-subagents
+    reason: worktree-isolated parallel impl agents
+  - name: code-review
+    reason: two-axis review of the fix branch
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: security-review
+    reason: (invoked as a slash command)
+frictions:
+  - description: /security-review's embedded `git diff origin/HEAD...` failed because origin/HEAD is unset in this clone, so the skill had no diff scope.
+    solution: Fall back to origin/main when origin/HEAD is missing, or have the SessionStart setup run `git remote set-head origin -a`.
+    severity: minor
+  - description: First-pass SVG safety check was a regex denylist that entity-encoded attributes bypassed; only the Spec code-review caught it, costing a second agent round.
+    solution: Brief security fixes to prefer allowlists and to include adversarial bypass tests (entities, escapes) up front.
+    severity: moderate
+  - description: "Harness system prompt says never open a PR unless asked; CLAUDE.md/ADR-0003 says auto-open. Followed the repo rule and opened PR #1443."
+    solution: Known tension documented in CLAUDE.md (#592); no change needed, noted for the record.
+    severity: nit
+  - description: An impl agent saw skill-inline-guard and workflow-edit-guard specs fail under parallel load, then pass on rerun — likely a fixed /tmp path shared across agents.
+    solution: Give those specs a per-run temp dir (mkdtemp) instead of a fixed /tmp path.
+    severity: minor
+  - description: verify:mermaid, now a security check, still isn't run by CI's gate.yml, so the mermaid SVG scan is local-only until proposal 879 is applied.
+    solution: Human applies docs/proposals/879-gate-yml-thin-shell.md.
+    severity: moderate
+durationSec: 2515
+models:
+  claude-opus-5-5: 115
+toolCounts:
+  Bash: 31
+  Agent: 13
+  Skill: 3
+  ToolSearch: 1
+  mcp__github__list_pull_requests: 1
+  Write: 2
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - app/utils/svg.ts
+  - tests/unit/svg.spec.ts
+  - scripts/verify-mermaid.ts
+  - scripts/trust.ts
+  - shared/svg.ts
+  - layers/midden/tests/unit/provenance-url.spec.ts
+  - .agents/skills/guest-intake/SKILL.md
+  - scripts/merge-pr.ts
+  - tests/unit/merge-pr.spec.ts
+  - tests/unit/gate-renames.spec.ts
+docsReadViaShell:
+  - .agents/skills/auto-triage/SKILL.md
+  - .agents/skills/triage/SKILL.md
+  - docs/agents/issue-tracker.md
+  - docs/agents/tenant-layers.md
+  - docs/agents/guest-contributions.md
+  - docs/agents/pr-workflow.md
+  - docs/adr/0020-requester-trust-tiers.md
+  - docs/agents/triage-labels.md
+  - docs/adr/0023-guest-driven-demo-pipeline.md
+  - docs/adr/0022-autonomous-triage-sweep.md
+  - .agents/skills/visitor-loop/SKILL.md
+  - docs/adr/0003-agent-operating-model-and-governance.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - .agents/skills/guest-intake/SKILL.md
+  - .agents/skills/guest-build/SKILL.md
+  - CONTEXT.md
+  - .agents/skills/visitor-loop/decisions.md
+  - .agents/skills/blog-post/SKILL.md
+  - .agents/skills/digest/SKILL.md
+  - .agents/skills/audit-docs/SKILL.md
+  - .agents/skills/audit-skills/SKILL.md
+  - .agents/skills/prune-trial/SKILL.md
+  - docs/adr/0024-build-time-mermaid-prerender.md
+  - .agents/skills/writing-for-agents/SKILL.md
+subagents:
+  - type: general-purpose
+    task: "Security review: CI & deploy"
+  - type: general-purpose
+    task: "Security review: agent guard hooks"
+  - type: general-purpose
+    task: "Security review: GitHub/untrusted-input scripts"
+  - type: general-purpose
+    task: "Security review: tooling scripts"
+  - type: general-purpose
+    task: "Security review: platform app code"
+  - type: general-purpose
+    task: "Security review: tenant layers"
+  - type: general-purpose
+    task: "Security review: agent instructions trust"
+  - type: general-purpose
+    task: "Fix XSS: content SVG + mermaid"
+  - type: general-purpose
+    task: Fix merge-pr.ts and gate renames
+  - type: general-purpose
+    task: Fix triage/guest-intake trust gaps
+  - type: general-purpose
+    task: "Code review: standards axis"
+  - type: general-purpose
+    task: "Code review: spec axis"
+  - type: general-purpose
+    task: Fix SVG bypass + review cleanups
+gitBranch: claude/security-review-subagents-trvnzb
+entrypoint: remote_mobile
+cliVersion: 2.1.283
+learnings:
+  - "z.string().url() accepts javascript: URLs; use startsWith('https://') for anything bound to href."
+  - git diff --name-only reports only a rename's new path; classifiers need --no-renames.
+ideas:
+  - Add a lint rule (eslint vue/no-v-html allowlist) that fails any new v-html whose source isn't typed through the shared safeSvg schema, so future content sinks can't skip the check.
+landedBy: Stop
