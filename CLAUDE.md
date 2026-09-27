@@ -73,8 +73,8 @@ it with a tool.
   here, not in the ADR).
   **"Substantive work" means at least one commit on the feature branch
   beyond the session-log-only commit** (the ADR-0009 direct-to-`main` exception
-  below) — a real code/content/doc change, not exploration, reading, or a
-  session-log-only commit; without it, there's nothing to gate.
+  below): a real code/content/doc change, not mere exploration or reading.
+  Without it, there's nothing to gate.
   **Before telling the user you're about to open a PR, check whether one
   already exists on the current branch** (e.g. `mcp__github__search_pull_requests`
   or `list_pull_requests` scoped to the branch). **For this repo, ADR-0003's auto-open default
@@ -252,14 +252,15 @@ it with a tool.
   nit: reviewers gate on it.
 - **Pushing is not landing.** A PR is finished only when it is **merged** or
   **abandoned/escalated** — not at push time; review, CI, and merge are all still
-  queued. Babysit the PR you opened through to that terminal state — **subscribe
-  to its activity automatically when you open it, don't ask first**. (This is a
+  queued. Babysit the PR you opened through to that terminal state —
+  subscribing to its activity on open, with no asking, is ADR-0003's default
+  (2026-07-07 amendment). (This is a
   PR-completion discipline, distinct from *session logging*, which now fires at
   self-judged closure and records an in-review PR honestly — see "Logging your
   session".) The land-a-gated-PR recipe, the per-tier merge authority list, and
   the `merge-pr.ts`-as-sole-merge-path mechanics now live in
   `docs/agents/pr-workflow.md` — read that before landing a PR.
-- **Opening the PR is a closure point — invoke `close-session` right then.**
+- **Opening the PR is also a closure point (ADR-0003) — invoke `close-session` right then.**
   More commits and a re-fired log can follow; re-invoking is safe. A dispatched
   worktree-isolated impl agent must **not** self-invoke it — see
   `close-session/SKILL.md` for why and its mechanical enforcement, and

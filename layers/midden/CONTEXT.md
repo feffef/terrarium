@@ -157,9 +157,8 @@ for prose still asserting the old state, and fix it in the same pass.
 - **`layers/midden/app/components/midden/ConditionKey.vue`** — the condition
   key: a slim sticky sidebar on each dig-report/stores page listing only the
   grades present in that report's finds and their one-line definitions
-  (owner-directed final design; it replaced the landing's condition legend,
-  #527). Shared by the dig-report page and the stores register (see
-  Condition above).
+  (owner-directed final design, #527). Shared by the dig-report page and
+  the stores register (see Condition above).
 - **`layers/midden/app/components/midden/StoresLanding.vue`** — the stores
   register: every find held off display, grouped by Dig season. Deliberately
   not the trench's specimen slip — same fields, quieter presentation (see The
