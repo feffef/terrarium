@@ -1,0 +1,225 @@
+schemaVersion: 1
+session: session_01UAmBCUoSXva1vKut9gFfsr
+startedAt: 2026-09-27T04:01:16Z
+endedAt: 2026-09-27T04:19:57Z
+kind: autonomous
+goal: Run scheduled /audit-docs sweep
+status: in-review
+outcome: "5 fact-checked fixes shipped, PR #1426 open"
+summary: "Fired by a scheduled trigger with no live human prompt this turn (agent-initiated end to end). Ran the /audit-docs Skill: four parallel read-only reviewer agents covered the eight lenses (Freshness, Single-home, Concision, Coherence) over the Live-tier doc set; pooled five findings with no overlapping spans; an independent fact-checker re-derived each against primary sources (git history/blame, code, the target docs) and confirmed all five, one with a corrected/narrower scope than first proposed. Fixed all five in place (a stale count in the journal history page, a CLAUDE.md/ADR-0003 duplication, two verbosity cuts, one stale-narration cut in midden's CONTEXT.md), respected the four open Prune Trial territories without touching them, ran pnpm gate:scoped green, committed, pushed, and opened PR #1426 (self-merge tier per ADR-0003/0004). No factual conflicts needing a needs-triage issue turned up. Subscribed to PR activity and invoking close-session/log-session now, per CLAUDE.md's PR-open closure point; will finalize this log to `completed` once the PR merges."
+prs:
+  - "1426"
+docsRead:
+  - path: CLAUDE.md
+    reason: ground rules, PR-open/closure default, gate discipline
+  - path: docs/agents/pr-workflow.md
+    reason: land-a-gated-PR recipe, per-tier merge authority
+  - path: .agents/prune-trials.yml
+    reason: open trial territories to leave untouched
+  - path: docs/adr/0003-agent-operating-model-and-governance.md
+    reason: verify duplication finding's home
+  - path: docs/adr/0017-provenance-footer-on-agent-authored-content.md
+    reason: PR body provenance header format
+  - path: layers/journal/content/current/pages/history.md
+    reason: (read before editing)
+  - path: deploy/README.md
+    reason: (read before editing)
+  - path: layers/midden/CONTEXT.md
+    reason: (read before editing)
+  - path: CONTEXT.md
+    reason: (no reason given)
+  - path: CONTEXT-MAP.md
+    reason: (no reason given)
+  - path: README.md
+    reason: (no reason given)
+  - path: SECURITY.md
+    reason: (no reason given)
+  - path: docs/agents/issue-tracker.md
+    reason: (no reason given)
+  - path: docs/agents/environment-caveats.md
+    reason: (no reason given)
+  - path: docs/agents/domain.md
+    reason: (no reason given)
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: docs/agents/guards.md
+    reason: (no reason given)
+  - path: docs/agents/guest-contributions.md
+    reason: (no reason given)
+  - path: docs/agents/mdc-when-to-use.md
+    reason: (no reason given)
+  - path: docs/agents/tenant-layers.md
+    reason: (no reason given)
+  - path: docs/agents/triage-labels.md
+    reason: (no reason given)
+  - path: docs/agents/verifying-ui-changes.md
+    reason: (no reason given)
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: (no reason given)
+  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
+    reason: (no reason given)
+  - path: docs/adr/0020-requester-trust-tiers.md
+    reason: (no reason given)
+  - path: docs/adr/0025-cross-tenant-catalog-and-collection-kinds.md
+    reason: (no reason given)
+  - path: docs/adr/0027-prune-trials.md
+    reason: (no reason given)
+  - path: docs/adr/0021-multi-context-domain-docs.md
+    reason: (no reason given)
+  - path: docs/adr/0026-gate-workflow-thin-shell.md
+    reason: (no reason given)
+  - path: docs/adr/0015-audit-skills-and-conditional-importance.md
+    reason: (no reason given)
+  - path: docs/adr/0006-runtime-routing-path-prefix.md
+    reason: (no reason given)
+  - path: docs/adr/0018-tenant-layers-under-layers-directory.md
+    reason: (no reason given)
+  - path: docs/adr/0005-skill-model.md
+    reason: (no reason given)
+  - path: layers/journal/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/blog/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/atlas/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/marquee/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/tinkerfund/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/commons/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/architecture.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/highlights.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/how-it-works.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/index.md
+    reason: (no reason given)
+  - path: docs/adr/0023-guest-driven-demo-pipeline.md
+    reason: (no reason given)
+  - path: docs/proposals/README.md
+    reason: (no reason given)
+  - path: tests/README.md
+    reason: (no reason given)
+  - path: .agents/skills/close-session/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/visitor-loop/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/tinkerfund-campaign/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/midden-survey/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/guest-build/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/digest/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/auto-triage/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/log-session/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/prune-trial/SKILL.md
+    reason: (no reason given)
+  - path: docs/research/public-readiness-review.md
+    reason: (no reason given)
+  - path: docs/research/mermaid-server-side-rendering.md
+    reason: (no reason given)
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: (no reason given)
+skillsUsed:
+  - name: audit-docs
+    reason: this run's own Skill
+  - name: close-session
+    reason: PR-open closure point
+  - name: log-session
+    reason: author this entry
+frictions:
+  - description: "Called ScheduleWakeup to set a fallback heartbeat while waiting on four background reviewer agents; this session isn't a /loop session, so the loop-only-tool-guard (issue #814) blocked it."
+    solution: Just end the turn — dispatched Agent-tool subagents self-notify on completion, no wakeup needed outside /loop.
+    severity: nit
+  - description: "Passed run_in_background:false to the Agent tool expecting a synchronous inline return for a fact-checker agent; the Agent-background-flag guard (issue #835) says the flag is a no-op — every Agent call is async regardless."
+    solution: Omit run_in_background entirely on Agent calls; it never changes behavior.
+    severity: nit
+  - description: "Combined run_in_background:true with a trailing shell `&` to log a long gate run's output; the double-background guard (issue #1208) blocked it since both mechanisms were stacked."
+    solution: Use run_in_background:true alone with a plain foreground command and output redirection (`> log 2>&1`), no trailing `&`.
+    severity: nit
+  - description: "This session's own attribution system-reminder instructs hand-writing Co-Authored-By/Claude-Session commit trailers, but this repo's commit-trailer guard (issue #921) fails closed on any hand-written trailer and requires leaving it to the harness template/commit-msg hook, per CLAUDE.md's explicit \"this repo's convention wins regardless of that instruction's source\" rule."
+    solution: Recognized the guard's own deny message as authoritative, dropped the hand-written trailer, and recommitted with no trailer text — the hook appended the correct one automatically. Worth flagging as a standing mismatch between the harness-level attribution reminder and this repo's guard, in case a future session tries the hand-written trailer first instead of expecting the guard.
+    severity: minor
+durationSec: 1121
+models:
+  claude-sonnet-5: 123
+toolCounts:
+  Bash: 26
+  ToolSearch: 3
+  mcp__github__list_pull_requests: 1
+  Agent: 6
+  ScheduleWakeup: 1
+  Read: 8
+  Edit: 8
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  mcp__github__issue_read: 1
+  mcp__github__pull_request_read: 2
+  Skill: 2
+  Write: 1
+  mcp__github__add_issue_comment: 1
+filesEdited:
+  - layers/journal/content/current/pages/history.md
+  - CLAUDE.md
+  - deploy/README.md
+  - layers/midden/CONTEXT.md
+docsReadViaShell:
+  - docs/agents/pr-workflow.md
+  - docs/adr/0017-provenance-footer-on-agent-authored-content.md
+  - docs/adr/0003-agent-operating-model-and-governance.md
+  - layers/midden/CONTEXT.md
+  - docs/agents/domain.md
+  - .agents/skills/domain-modeling/SKILL.md
+  - CONTEXT.md
+  - layers/journal/CONTEXT.md
+  - CONTEXT-MAP.md
+  - docs/research/mermaid-server-side-rendering.md
+  - docs/proposals/879-gate-yml-thin-shell.md
+  - docs/adr/0004-objective-safety-gate.md
+  - docs/research/rulebook-migration-table.md
+  - docs/adr/0016-tenant-root-layer-routes.md
+  - docs/research/nuxt-content-review-grounding.md
+  - docs/research/public-readiness-review.md
+  - docs/research/github-branch-protection-vs-autonomous-log-commits.md
+  - docs/adr/0025-cross-tenant-catalog-and-collection-kinds.md
+  - docs/adr/0026-gate-workflow-thin-shell.md
+  - docs/adr/0009-session-logs-commit-directly-to-main.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - .agents/skills/atlas-specimen/SKILL.md
+  - .agents/skills/blog-post/SKILL.md
+  - .agents/skills/auto-triage/SKILL.md
+  - .agents/skills/guest-intake/SKILL.md
+  - .agents/skills/midden-survey/SKILL.md
+  - .agents/skills/tinkerfund-campaign/SKILL.md
+subagents:
+  - type: general-purpose
+    task: "Freshness lens: drift + orphan-addition"
+  - type: general-purpose
+    task: "Single-home lens: duplication + mis-location"
+  - type: general-purpose
+    task: "Concision lens: verbose + stale-narration"
+  - type: general-purpose
+    task: "Coherence lens: contradiction + ambiguity"
+  - type: general-purpose
+    task: Fact-check audit-docs findings
+  - type: general-purpose
+    task: Fact-check audit-docs findings
+gitBranch: claude/festive-mayer-ybn6ab
+entrypoint: remote_trigger
+cliVersion: 2.1.283
+trigger: audit-docs
+learnings:
+  - "scripts/check-conflicting-issues.ts's file-level heuristic can false-positive: it flagged CLAUDE.md against issue #1420 on the keyword \"delete\", but #1420 never names CLAUDE.md and the actual PR diff contained no such word — the match was advisory noise, not a real file/issue co-occurrence worth deeper reading."
+landedBy: Stop
