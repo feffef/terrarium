@@ -1,8 +1,8 @@
 <script setup lang="ts">
 // The engraved plate (#67/#74): the Atlas's signature element. Supplies the
 // frame, viewBox, caption, and signature tint; the authored inner SVG markup
-// (line + hatch, one tinted feature) is dropped in. v-html is safe here — the
-// illustration is agent-authored, repo-committed content, never user input.
+// (line + hatch, one tinted feature) is dropped in via v-html, which the
+// schema's shared/svg.ts check keeps script-free.
 defineProps<{
   illustration?: string
   number?: string

@@ -2,6 +2,7 @@
 // can import them at runtime without pulling in shared/manifest.ts.
 import { z } from 'zod'
 import { TINKERFUND_OFFSET, resolveTinkerfundOffset } from './app/utils/clock'
+import { flagSvgHazard } from '../../shared/svg'
 
 export const slug = z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, 'must be a lowercase slug')
 const offset = z.string().regex(TINKERFUND_OFFSET, 'must be an offset like "-12d" or "+36h"')
@@ -21,6 +22,7 @@ function svg(maxBytes: number) {
     .string()
     .min(1)
     .superRefine((markup, ctx) => {
+      flagSvgHazard(markup, ctx)
       for (const [, value] of markup.matchAll(COLOUR_VALUE)) {
         const colour = value!.trim()
         if (!THEME_COLOUR.test(colour)) ctx.addIssue({ code: z.ZodIssueCode.custom, message: `colour "${colour}" is not a theme token` })

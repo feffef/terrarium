@@ -23,6 +23,7 @@
 //                   (#72). Append-only in spirit; the world's heartbeat.
 import { z } from 'zod'
 import { defineTenant } from '../../shared/manifest'
+import { safeSvg } from '../../shared/svg'
 
 // The rarity ladder (#69), abundant → mythic. Ordered least-to-most precious;
 // the layer maps each grade to its mark, dots, and legend gloss.
@@ -115,7 +116,7 @@ export default defineTenant({
             conjectural: z.boolean().optional(),
           })
           .optional(),
-        illustration: z.string().optional(), // inner SVG markup (viewBox 0 0 400 300)
+        illustration: safeSvg.optional(), // inner SVG markup (viewBox 0 0 400 300)
       }),
     },
     // Food-web edges (#70/#71). One directed edge per file, same-biome only.

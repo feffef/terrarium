@@ -120,7 +120,7 @@ async function renderOne(page: import('playwright-core').Page, diagram: Diagram)
         startOnLoad: false,
         theme: 'base',
         themeVariables,
-        securityLevel: 'loose',
+        securityLevel: 'strict',
         look: 'classic',
         handDrawnSeed: 1,
       })
