@@ -35,7 +35,8 @@ Done when you hold the scorecard.
 
 ## 2. Check behaviour — one subagent per Skill in `behaviourChecks`
 
-Dispatch one read-only subagent per Skill, all in parallel. Each brief names
+Dispatch one read-only Sonnet subagent (`model: sonnet`) per Skill, all in
+parallel. Each brief names
 the Skill's `SKILL.md`, the log files of the sessions in its `usedIn` (newest
 10), and its `observations`. For a `modelInvoked` Skill, the brief also lists
 every `window[]` session that did not use it, with its log `file`, `goal`
