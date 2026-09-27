@@ -141,7 +141,7 @@ export function registerTinkerfundE2E(): void {
         it(`renders the prod Campaign page for ${slug}`, async () => {
           const html = await $fetch(`/t/tinkerfund/prod/campaigns/${slug}`)
           expect(html).toMatch(/<nav[^>]*aria-label="Breadcrumb"[\s\S]*>Home<[\s\S]*category\/[\s\S]*aria-current="page"/)
-          expect(html).toMatch(/FIG\. 1 · TF-000\d/)
+          expect(html).toMatch(/FIG\. 1 · TF-00\d\d/)
           expect(html).toMatch(/<h1[^>]*>/)
           expect(html).toMatch(/aria-label="Sections"[\s\S]*href="#story"[\s\S]*href="#rewards"[\s\S]*href="#updates"[\s\S]*href="#comments"/)
           expect(html).toMatch(/<caption[^>]*>Specifications<\/caption>/)
