@@ -24,6 +24,20 @@ own system-prompt attribution instructions, never predicted or reconstructed.
 ADR-0017 (and, if it fires, the provenance guard's own deny message) is the
 source of truth for the exact mechanism — this doc doesn't restate it.
 
+## Assembling several stories into one integration PR
+
+When a branch stacks several independently-reviewed stories (each already
+passed its own `/code-review`) into one integration PR, run **one additional
+whole-branch two-axis review** — [`code-review`](../../.agents/skills/code-review/SKILL.md)
+scoped to the full integration diff (fixed point: the branch's base, not any
+single story's start) — before opening that PR. Per-story review is scoped to
+one story's diff and structurally can't see how two independently-correct
+stories interact (e.g. two stories that each ship correctly alone but
+double-ship together, or stack discounts meant to be mutually exclusive) —
+only a review of the assembled whole catches that (issue #1421). This is one
+extra pass, not a re-review of each story: don't restate or duplicate the
+per-story findings.
+
 ## The recipe
 
 1. Run the safety gate (ADR-0004) and wait for it to finish — a red gate
