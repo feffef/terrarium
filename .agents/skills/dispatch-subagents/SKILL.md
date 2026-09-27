@@ -135,6 +135,14 @@ The subagent cannot see this session's context, so the brief is self-contained:
 - **A dispatched worktree-isolated impl agent must not self-invoke
   `close-session`/`log-session`** — see `close-session/SKILL.md` for why, and its
   mechanical enforcement.
+- **A dispatched impl agent must never call `merge-pr.ts` (or otherwise attempt
+  the merge) itself, no matter what merge pre-authorization the brief carries.**
+  Auto-mode's "Merge Without Review" classifier evaluates the *orchestrating*
+  session's own context, not the dispatched agent's — pre-authorization language
+  in the brief doesn't change which session the classifier is looking at, and has
+  blocked merges this way more than once. Merging happens only from the
+  orchestrating session, after the dispatched agent hands back a pushed, green PR;
+  see `docs/agents/pr-workflow.md` for the merge recipe itself.
 - **Name a rough size ceiling for a "simple" fix brief instead of relying on
   "keep it small" alone** — e.g. "under ~50 lines / one new test" — and tell the
   impl agent to flag back to the orchestrator rather than silently exceeding it.
