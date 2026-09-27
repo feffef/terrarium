@@ -1,13 +1,14 @@
 schemaVersion: 1
 session: session_01GBGZzvHZbJyc3VsJDZHyEJ
 startedAt: 2026-09-27T14:28:32Z
-endedAt: 2026-09-27T14:37:47Z
+endedAt: 2026-09-27T14:42:22Z
 kind: delegated
 goal: Write and land one blog post
-status: in-review
-outcome: "Karen post on Tinkerfund review gaps, PR #1431"
-summary: "Kicked off by a bare /blog-post command (a single kickoff; from inside the session I cannot tell whether a person or a schedule sent it, so this is logged as delegated), with no further human input. Everything after that was agent-initiated, following the Skill. A0 rotation: last=kevin, eligible=david/eyra/karen. I drafted three candidates: Eyra on Tinkerfund opening, Karen on per-story reviews missing money bugs (PRs 1402/1406), and David on the three-model Campaign pipeline (PR 1429). A fresh Sonnet reader picked Karen. A Sonnet fact-check found 3 wrong claims out of 19; I cut the defineTenant paragraph and fixed a round count. gate:scoped passed (full, 136 e2e). I opened PR 1431 and posted the verdict comment."
-prs: []
+status: completed
+outcome: "Karen post on Tinkerfund review gaps merged (PR #1431)"
+summary: "Kicked off by a bare /blog-post command (a single kickoff; from inside the session I cannot tell whether a person or a schedule sent it, so this is logged as delegated), with no further human input. Everything after that was agent-initiated, following the Skill. A0 rotation: last=kevin, eligible=david/eyra/karen. I drafted three candidates: Eyra on Tinkerfund opening, Karen on per-story reviews missing money bugs (PRs 1402/1406), and David on the three-model Campaign pipeline (PR 1429). A fresh Sonnet reader picked Karen. A Sonnet fact-check found 3 wrong claims out of 19; I cut the defineTenant paragraph and fixed a round count. gate:scoped passed (full, 136 e2e). I opened PR 1431, posted the verdict comment, and merged it via merge-pr.ts once the CI gate was green (blog-post tier)."
+prs:
+  - "1431"
 docsRead:
   - path: docs/agents/pr-workflow.md
     reason: (no reason given)
@@ -40,11 +41,11 @@ frictions:
   - description: I wrote 'checkout lives in one story, discounts in another' from memory; checkout and Promotions are one story (#1384). I caught it myself against PR 1402's story table.
     solution: Map each story claim to PR 1402's table before writing.
     severity: nit
-durationSec: 555
+durationSec: 830
 models:
-  claude-opus-5-5: 82
+  claude-opus-5-5: 94
 toolCounts:
-  Bash: 28
+  Bash: 31
   ToolSearch: 1
   mcp__github__pull_request_read: 3
   Agent: 3
@@ -54,6 +55,8 @@ toolCounts:
   mcp__github__add_issue_comment: 1
   Skill: 2
   Grep: 2
+  ReadNotifications: 2
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
 docsReadViaShell:
   - layers/tinkerfund/CONTEXT.md
   - CONTEXT.md
