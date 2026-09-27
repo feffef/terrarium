@@ -1,0 +1,173 @@
+schemaVersion: 1
+session: session_01BHBCrNAwjU9TjAEf1rjowP
+startedAt: 2026-09-27T00:45:38Z
+endedAt: 2026-09-27T01:00:42Z
+kind: autonomous
+goal: Run the scheduled /audit-skills sweep
+status: in-review
+outcome: "PR #1419 opened: one observations entry, no grade changes"
+summary: "Fully autonomous scheduled run of /audit-skills, no human prompt beyond the schedule itself. Gathered the scorecard via scripts/audit-skills.ts (40 sessions, 41 Skills). Step 3 re-grade: no importance/role changes needed — every Skill's grade already matched this window's usage, mostly re-verified by yesterday's own audit-skills run. Step 4 regression watch: Phase A flagged 5 of 11 bracketed SKILL.md edits (digest, frictions-to-fixes, log-session, prune-trial, visitor-loop) for a coarser after-edit friction shift; dispatched one Phase-B deep-read subagent per flagged Skill to read every full session log skillSessionFiles listed. Four cleared as inconclusive (frictions traced to unrelated tooling/process footguns). prune-trial's plain-English-simplification-scope edit turned up one self-caught, same-session friction — suggestive but below step 5's bright-line bar — recorded as an observations entry on prune-trial.yml. Step 5: nothing filed (no signal cleared the bar; both orphanedSessions entries already carry resolvedBy cutoffs; humanPromptedClosures and manuallyRescuedClosures were empty). Step 6: no ideas this run. Cleared pnpm gate:scoped (full gate, since the change touches layers/ content), opened PR #1419 against main (diff limited to layers/journal/content/current/skills/prune-trial.yml), and subscribed to its activity."
+prs:
+  - "1419"
+docsRead:
+  - path: docs/agents/pr-workflow.md
+    reason: land-a-gated-PR recipe and the self-merge closing sequence
+  - path: docs/adr/0017-provenance-footer-on-agent-authored-content.md
+    reason: exact PR-body provenance header format
+  - path: layers/journal/content/current/skills/prune-trial.yml
+    reason: (read before editing)
+  - path: layers/journal/content/current/sessions/2026-09-27-session_01D6xBwcypmnqZFsZLLNGHtx.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-26-session_01Bwzp9LzTsRFbM7AGRc1nGS.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-26-session_01648DQZcyo8J5TBnQCYMzMM.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-26-session_01DzHgca9LCRrZmGZLohwWKM.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-26-session_013nrrgCxqJWxwwXuZ28cVLh.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-26-session_016u3USbZw7eybPYiDatPJmE.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-26-session_01F64JH7wNaFf7yeRAYngBMG.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-26-session_01YLyuERFxLd9uHeHkZpHVgy.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-26-session_01JEsiC6bYBivxyfMEYbSL4i.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-26-session_01BbEjurzYKwq5fqdJB6DMJ6.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-26-session_01EdwL8ccXPLBheopdW5vWJr.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-26-session_01CACYSmghwsvBZEtz8BTpMw.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-26-session_016e82WsrXEZWeWUMze5jSPj.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-26-session_01EJbTDDTwGJttwa6Sj8LLNH.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-26-session_01MmNdzqLC3H8AwTkEbS8QTt.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-26-session_01Uotb5QwVukQYaxBA7ZGK8z.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-26-session_01NL3vPZxXP8LsPfj55LKrpt.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-25-session_01D67MxXweo1aWxEb3GhuEWk.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-25-session_012xpPWzbsvqfVve5JC2NdxD.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-25-session_01QQygpFxFLZ6hhosfLpDxzy.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-25-session_01X3GnBV8wPH4zeb4suiktD1.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-25-session_01TMgZyrN42pwudxkUdHLKwP.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-25-session_01AqnkupUBsToN4SqTyWoe95.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-25-session_01MEnm7jvdH6UPpUjPfUraJW.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-25-session_018e1NDAjcwQky6b3QVxoG4i.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-25-session_015eWJwr7PgaoTcnsWdDVGzG.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-25-session_0124zf3t3BvcZNqDV68zr5pv.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-25-session_01758bqHEsb6P5mXAHymjmsy.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-25-session_016NfQMqoynB3ewNFrGcRCUu.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-24-session_01Uur4mTZ7XYruzKvepmvh5G.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-25-session_016SjLTk43Z85kdFZShsccd1.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-24-session_01Lm5nzVoByigqhQ1YxFggTk.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-24-session_01XUBxUBN9Nhn9ZmYhgPTF7d.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-24-session_01TgYzP52EJ4TkR38M19FAR3.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-24-session_01JZUXjjsa8NFaVy7dRoeG2k.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-24-session_0198W2yA7utj1k3WEi5fWw35.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-24-session_01JoJbvtqQS2mYndK9DN7VXQ.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-24-session_01JBuSpgdh8v1Uq5Mu8wmVxB.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-24-session_01WhfrnVZvwKmVNNBx1bm3hC.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-24-session_01Phgz9xALxnQ1bJQ5ApAzBV.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-23-session_01JqR5jokjAkPvVa6LCE7EAR.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-22-session_01US9eNn2FWXen9Vxt7aQGsy.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-21-session_01SumbeFYWet9pZhbadhERox.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-20-session_01KRQR8qkiDkiMH1oQJqozVH.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-20-session_014A2MWzW6xjVc9ZdqguJFhz.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-21-session_01G4V3Af1dHCHLyLEmKNY9K1.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-22-session_015n42X8PJWPrThzfgm7cUYF.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-23-session_01CqzQC6fpFdf6vpjQ8N1LnM.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-20-session_01TVRWbJ12aLmvu44UDfiDFz.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-21-session_01RSk2EQUjwhrZ3zLUsnSMDU.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-22-session_017p22GBvyCixua5EXU8Ynad.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-23-session_01MV9KVLFSUoe6D9AKdrcc2q.yml
+    reason: (no reason given)
+skillsUsed:
+  - name: audit-skills
+    reason: invoked as a slash command by the scheduled routine
+  - name: close-session
+    reason: PR-open closure point
+  - name: log-session
+    reason: first log, status in-review
+frictions:
+  - description: Started pnpm gate:scoped with run_in_background:true but also appended a trailing shell redirect construct that looked like it needed its own backgrounding; the double-background guard (#1208) caught a stray trailing intent before I actually stacked run_in_background with a literal `&`.
+    solution: Pass run_in_background:true alone with a plain foreground command; never add a trailing & when the tool flag already backgrounds it.
+    severity: nit
+  - description: Hand-wrote the Co-Authored-By/Claude-Session commit trailer from the outer harness's attribution system-reminder; this repo's commit-trailer guard (#921) blocked it because the repo's own hook supplies and corrects that trailer automatically.
+    solution: In this repo, write commit messages with no trailer at all — the harness template plus .githooks/commit-msg land it; verify after with git log -1 --format=%B.
+    severity: nit
+durationSec: 904
+models:
+  claude-sonnet-5: 155
+toolCounts:
+  Bash: 45
+  Agent: 5
+  ReadNotifications: 10
+  Read: 2
+  Edit: 1
+  ToolSearch: 3
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  Skill: 2
+  Write: 1
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 1
+filesEdited:
+  - layers/journal/content/current/skills/prune-trial.yml
+docsReadViaShell:
+  - docs/agents/pr-workflow.md
+subagents:
+  - type: general-purpose
+    task: Deep-read digest skill session logs
+  - type: general-purpose
+    task: Deep-read frictions-to-fixes skill session logs
+  - type: general-purpose
+    task: Deep-read log-session skill session logs
+  - type: general-purpose
+    task: Deep-read prune-trial skill session logs
+  - type: general-purpose
+    task: Deep-read visitor-loop skill session logs
+gitBranch: claude/upbeat-sagan-o4g31a
+entrypoint: remote_trigger
+cliVersion: 2.1.283
+trigger: audit-skills
+landedBy: Stop
