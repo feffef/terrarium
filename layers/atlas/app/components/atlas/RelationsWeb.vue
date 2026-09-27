@@ -160,6 +160,7 @@ function spokeLeave() {
 
 <template>
   <div class="atlas-web atlas-relweb">
+    <div class="atlas-web-scroll" :style="{ '--atlas-web-w': `${W}px` }">
     <svg
       v-if="view.spokes.length"
       :viewBox="`0 0 ${W} ${view.H}`"
@@ -262,6 +263,7 @@ function spokeLeave() {
         </a>
       </NuxtLink>
     </svg>
+    </div>
     <p v-if="view.spokes.length" class="atlas-web-hint" aria-hidden="true">↔ scroll to see the rest</p>
   </div>
 </template>

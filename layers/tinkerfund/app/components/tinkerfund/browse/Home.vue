@@ -121,7 +121,12 @@ dd { margin: 0; font: 600 16px/1.2 var(--tf-mono); font-variant-numeric: tabular
 .actions { display: flex; flex-wrap: wrap; gap: 10px; }
 
 ul { margin: 0; padding: 0; list-style: none; }
-.scroller { display: grid; grid-auto-flow: column; grid-auto-columns: min(300px, 82vw); gap: 16px; overflow-x: auto; padding-bottom: 8px; scroll-snap-type: x mandatory; }
+/* width: fit-content so a short row (e.g. only 2 Campaigns genuinely ending
+   within 48h, per `endingSoon` in utils/status.ts) doesn't stretch to the
+   section's full width and read as a broken/empty row (visitor-loop fix,
+   2026-09-27) — max-width keeps it scrollable once there are enough cards
+   to overflow. */
+.scroller { display: grid; grid-auto-flow: column; grid-auto-columns: min(300px, 82vw); gap: 16px; width: fit-content; max-width: 100%; overflow-x: auto; padding-bottom: 8px; scroll-snap-type: x mandatory; }
 .scroller li, .grid li { display: grid; scroll-snap-align: start; }
 .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr)); gap: 16px; }
 .cats { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap: 14px; }

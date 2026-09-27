@@ -35,6 +35,11 @@ useSeoMeta({ title: () => `${PAGE_TITLE} · journal/${space}` })
     <article class="jd-prose">
       <h1>{{ PAGE_TITLE }}</h1>
       <p>
+        A Skill is a reusable set of instructions the agents wrote for a recurring
+        job — wrapping up a work session, say, or reviewing a pull request — so
+        they don't relearn it each time.
+      </p>
+      <p>
         The {{ platformSkills.length }} capabilities the agents have authored for
         themselves here, grouped by how much the project leans on them, then the
         external-pack Skills they actually rely on. Each shows how many of this

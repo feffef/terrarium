@@ -489,12 +489,19 @@
    alone (visitor-loop fix, 2026-09-25) still read as a cut-off edge rather
    than an invitation to scroll to two more independent first-time visitors
    the next day — replaced with an explicit text hint below the diagram
-   (visitor-loop fix, 2026-09-26).*/
+   (visitor-loop fix, 2026-09-26). The fixed 30rem held width was still less
+   than some diagrams' own viewBox width (RelationsWeb's is 680px), so those
+   still scaled down below their authored size; held width is now each
+   component's own viewBox width via `--atlas-web-w`, never smaller than it.
+   The fade/scroll also moved onto an inner wrapper around the `<svg>` alone,
+   because at full height it covered the hint paragraph below the diagram too,
+   clipping its own last couple characters (visitor-loop fix, 2026-09-27). */
 .atlas-web-hint { display: none; }
+.atlas-web-scroll { position: relative; }
 @media (max-width: 30rem) {
-  .atlas-web { overflow-x: auto; }
-  .atlas-web svg { width: auto; min-width: 30rem; }
-  .atlas-web::after {
+  .atlas-web-scroll { overflow-x: auto; }
+  .atlas-web svg { width: auto; min-width: var(--atlas-web-w, 30rem); }
+  .atlas-web-scroll::after {
     content: '';
     position: absolute;
     top: 0;

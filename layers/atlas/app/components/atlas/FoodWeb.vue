@@ -184,6 +184,7 @@ function strandClass(e: Edge) {
 
 <template>
   <div class="atlas-web">
+    <div class="atlas-web-scroll" :style="{ '--atlas-web-w': `${W}px` }">
     <svg v-if="nodes.length" :viewBox="`0 0 ${W} ${H}`" role="group" aria-label="Food web of this biome">
       <defs>
         <marker
@@ -256,6 +257,7 @@ function strandClass(e: Edge) {
         </a>
       </NuxtLink>
     </svg>
+    </div>
     <p v-if="nodes.length" class="atlas-web-hint" aria-hidden="true">↔ scroll to see the rest</p>
     <p v-else class="empty">An empty wing. The naturalists have not yet been.</p>
   </div>
