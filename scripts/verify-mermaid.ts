@@ -3,13 +3,13 @@
 // `verify:skills-lock`. Mirrors that drift-check pattern: it re-derives each
 // diagram's content-hash key from the source and fails if the committed SVG is
 // missing (a diagram changed or was added but `pnpm render:mermaid` wasn't run),
-// empty, orphaned (an SVG with no live source), or unsafe to v-html (shared/svg.ts). It reads files ONLY — it
-// never launches a browser, so it is safe in CI and the prod container, neither
-// of which has Chromium (the hard constraint of #379).
+// empty, orphaned (an SVG with no live source), or unsafe to v-html
+// (app/utils/svg.ts). It reads files ONLY — it never launches a browser, so it
+// is safe in CI and the prod container, neither of which has Chromium (#379).
 import { existsSync, readFileSync, statSync } from 'node:fs'
 import { join } from 'node:path'
 import { pathToFileURL } from 'node:url'
-import { svgHazard } from '../shared/svg.ts'
+import { svgHazard } from '../app/utils/svg.ts'
 import { committedSvgKeys, discoverDiagrams, root, svgPathFor } from './mermaid-lib.ts'
 
 export interface MermaidDrift {

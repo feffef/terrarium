@@ -2,7 +2,7 @@
 // The engraved plate (#67/#74): the Atlas's signature element. Supplies the
 // frame, viewBox, caption, and signature tint; the authored inner SVG markup
 // (line + hatch, one tinted feature) is dropped in via v-html, which the
-// schema's shared/svg.ts check keeps script-free.
+// schema's app/utils/svg.ts check keeps script-free.
 defineProps<{
   illustration?: string
   number?: string

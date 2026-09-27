@@ -11,7 +11,7 @@
 // Tenant's single-Space `poc` choice).
 import { z } from 'zod'
 import { defineTenant } from '../../shared/manifest'
-import { safeSvg } from '../../shared/svg'
+import { safeSvg } from '../../app/utils/svg'
 
 export default defineTenant({
   name: 'marquee',

@@ -1,5 +1,5 @@
 <template>
-  <!-- Our own committed SVG (ADR-0024); verify:mermaid rejects script-capable markup (shared/svg.ts). -->
+  <!-- Our own committed SVG (ADR-0024); verify:mermaid rejects script-capable markup (app/utils/svg.ts). -->
   <!-- eslint-disable-next-line vue/no-v-html -->
   <div v-if="svg" class="mermaid-diagram" v-html="svg" />
   <pre v-else class="mermaid-diagram-fallback">{{ code }}</pre>

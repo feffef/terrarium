@@ -2,7 +2,7 @@
 // can import them at runtime without pulling in shared/manifest.ts.
 import { z } from 'zod'
 import { TINKERFUND_OFFSET, resolveTinkerfundOffset } from './app/utils/clock'
-import { flagSvgHazard } from '../../shared/svg'
+import { flagSvgHazard } from '../../app/utils/svg'
 
 export const slug = z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, 'must be a lowercase slug')
 const offset = z.string().regex(TINKERFUND_OFFSET, 'must be an offset like "-12d" or "+36h"')

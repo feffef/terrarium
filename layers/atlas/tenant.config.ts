@@ -23,7 +23,7 @@
 //                   (#72). Append-only in spirit; the world's heartbeat.
 import { z } from 'zod'
 import { defineTenant } from '../../shared/manifest'
-import { safeSvg } from '../../shared/svg'
+import { safeSvg } from '../../app/utils/svg'
 
 // The rarity ladder (#69), abundant → mythic. Ordered least-to-most precious;
 // the layer maps each grade to its mark, dots, and legend gloss.

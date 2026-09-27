@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { safeSvg, svgHazard } from '../../shared/svg'
+import { safeSvg, svgHazard } from '../../app/utils/svg'
 
 describe('svgHazard', () => {
   it.each([
