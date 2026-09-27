@@ -129,20 +129,19 @@ written unattended. Hardening it to block is a later trial.
 
 ## 4. Prove it on Sonnet
 
-Before shipping, dispatch a Sonnet subagent (`dispatch-subagents`) **against a
-worktree with the prune already committed** — never the orchestrator's own
-working copy, where the deleted prose is still reachable (git history, an
-uncommitted diff, or just the live file before the commit lands). A checkout
-at the post-prune commit has no copy of the deleted text left for the probe to
-find. Give it that checkout's surviving text only, plus a real situation the
-pruned scaffolding covered, and ask what it would do. A wrong answer means the
-goal isn't clear enough yet, or the behaviour needs the hook. Never ship a
-prune Sonnet can't execute.
+Before shipping, commit and push the prune, then dispatch a Sonnet subagent
+(`dispatch-subagents`) pinned to **that exact post-prune SHA** — never the
+orchestrator's own working copy, where the deleted prose is still reachable.
+The probe checks out that SHA before reading anything and reports the SHA it
+read at. Give it the surviving text only, plus a real situation the pruned
+scaffolding covered, and ask what it would do. A wrong answer means the goal
+isn't clear enough yet, or the behaviour needs the hook. Never ship a prune
+Sonnet can't execute.
 
-A dispatched implementer has no `Agent` tool, so it cannot run this probe
-itself — the orchestrator runs it. That's only safe because the orchestrator
-runs it against the post-prune checkout above, never its own pre-commit
-working copy. If no subagent tool is available at all, say so in the PR
+An answer whose reported SHA is missing or differs from the pinned one doesn't
+count — a stale worktree may have fed it the deleted text (issue #1420); re-run
+the probe. A dispatched implementer has no `Agent` tool, so the orchestrator
+runs the probe. If no subagent tool is available at all, say so in the PR
 **and set `proven: false` on the ledger entry** — the PR body is read once, the
 entry is what the verdict reads later. Never treat the step as satisfied.
 
