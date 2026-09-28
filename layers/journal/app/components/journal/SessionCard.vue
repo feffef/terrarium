@@ -53,8 +53,6 @@ const foldedFieldLabels = new Intl.ListFormat('en', { style: 'long', type: 'conj
           <span v-if="prParts.rest" class="chip">+{{ prParts.rest }} more</span>
           <span v-if="card.model" class="chip model" title="Model(s) that drove this session">{{ card.model }}</span>
           <JournalFrictionStrata :counts="card.frictionCounts" :total="card.frictionTotal" />
-          <span v-if="card.skills.length" class="skills">{{ card.skills.join(' · ') }}</span>
-          <span class="sid">{{ card.sid }}</span>
           <span class="caret" aria-hidden="true">{{ expanded ? '▾' : '▸' }}</span>
         </div>
       </JournalDisclosure>
@@ -151,6 +149,8 @@ const foldedFieldLabels = new Intl.ListFormat('en', { style: 'long', type: 'conj
               </div>
             </details>
           </div>
+
+          <p class="sid">Session {{ card.sid }}</p>
         </div>
       </div>
     </Transition>
@@ -260,14 +260,13 @@ const foldedFieldLabels = new Intl.ListFormat('en', { style: 'long', type: 'conj
   margin-right: 0.4rem;
   vertical-align: middle;
 }
-.skills { font-family: var(--jd-mono); font-size: 0.7rem; color: var(--jd-faint); }
 .sid {
-  margin-left: auto;
+  margin: 0.9rem 0 0;
   font-family: var(--jd-mono);
   font-size: 0.7rem;
   color: var(--jd-faint);
 }
-.caret { color: var(--jd-faint); font-size: 0.78rem; }
+.caret { margin-left: auto; color: var(--jd-faint); font-size: 0.78rem; }
 
 /* The clip wrapper is what expandOnEnter/expandOnLeave (utils/expandTransition.ts)
    animate `height` on — it carries none of `.detail`'s own margin/padding/border,
@@ -361,7 +360,4 @@ const foldedFieldLabels = new Intl.ListFormat('en', { style: 'long', type: 'conj
   color: var(--jd-muted);
 }
 .tool .tcount { color: var(--jd-faint); font-variant-numeric: tabular-nums; }
-@media (max-width: 460px) {
-  .sid { display: none; }
-}
 </style>

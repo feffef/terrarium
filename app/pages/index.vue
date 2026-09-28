@@ -152,7 +152,7 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
 
     <section class="explore" aria-labelledby="around-heading">
       <div class="explore-head">
-        <h2 id="around-heading" class="eyebrow">Around the experiment</h2>
+        <h2 id="around-heading" class="eyebrow">Commentary on the build</h2>
         <p class="tagline">
           The experiment seen from outside — its work retold in plain words, and what it threw away, dug up again.
         </p>

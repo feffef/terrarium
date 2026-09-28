@@ -123,8 +123,6 @@ export interface SessionCardView {
   prs: string[]
   frictionCounts: Record<Severity, number>
   frictionTotal: number
-  skills: string[]
-  sid: string
   // Model(s) that drove the session, formatted short (e.g. `opus-4-8`), busiest
   // first — an always-visible summary chip. Empty for older, authored-only logs.
   model: string
@@ -133,6 +131,7 @@ export interface SessionCardView {
   // marking; never affects which sessions are included, only how one renders.
   external: boolean
   // Expanded detail:
+  sid: string
   summary: string
   subagents: Subagent[]
   docsRead: { path: string; reason: string }[]

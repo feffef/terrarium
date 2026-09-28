@@ -287,7 +287,7 @@ describe('sessionCardViews', () => {
     expect(c!.duration).toBe(90)
     expect(c!.frictionCounts).toEqual({ nit: 1, minor: 0, moderate: 0, major: 0, blocker: 1 })
     expect(c!.frictionTotal).toBe(2)
-    expect(c!.skills).toEqual(['tdd'])
+    expect(c!.skillsUsed).toEqual([{ name: 'tdd', reason: 'r' }])
     expect(c!.prs).toEqual(['#7'])
     expect(c!.goal).toBe('goal')
     expect(c!.docsRead).toEqual([{ path: 'CLAUDE.md', reason: 'r' }])
