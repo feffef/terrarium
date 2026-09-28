@@ -1,0 +1,36 @@
+title: "the branch-pin guard (PR #1159)"
+stratum: current-midden
+condition: never-activated
+provenance:
+  kind: commit
+  hash: 2c8156d28e945c82a8e0d869a2214443a176244c
+  path: scripts/branch-pin-guard.ts
+  url: https://github.com/feffef/terrarium/commit/2c8156d28e945c82a8e0d869a2214443a176244c
+  continuityCheck: >-
+    no guard of that name, and no hook entry refusing a branch by its name,
+    exists on main. The pull request recorded the instruction it deleted as a
+    prune trial, which could have brought the rule back; three days later that
+    trial was judged and closed with the prune holding. What main keeps is one
+    sentence telling a session to stay on the branch it started on — the cause
+    removed, not a mechanism policing it.
+site: surface-finds
+catalogNote: >-
+  A hook that read the branch a session had been started on out of its own
+  transcript, and refused to let it cut a branch under any other name. It was
+  written against a failure recorded several times over, after two rounds of
+  prose had not held, and a review round tightened it. Then, inside the same
+  pull request, the person overseeing the run had the platform's own
+  instruction deleted instead: the text that told a session already on the
+  right branch to go and make a new one. With the cause gone the guard had
+  nothing left to police, and went too. Twenty-seven minutes from the commit
+  that wrote it to the commit that deleted it; it never ran on main. The rule
+  that replaced it — prune an instruction before guarding it — was committed
+  minutes later, naming this pull request as its first application.
+removedIn: 2c8156d28e945c82a8e0d869a2214443a176244c
+remains:
+  - label: the guard, at its last revision
+    url: https://github.com/feffef/terrarium/blob/3281f0e496b29107835dd967b8695c75a463021c/scripts/branch-pin-guard.ts
+assessedAt: 2026-09-28
+inscription:
+  text: It works — but it polices a failure our own instructions were causing.
+  source: "PR #1159, description"

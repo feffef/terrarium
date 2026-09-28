@@ -1,0 +1,37 @@
+title: the vue 3.5.40 pin
+stratum: current-midden
+condition: fresh
+provenance:
+  kind: dependency
+  name: vue
+  url: https://github.com/feffef/terrarium/pull/1232
+  continuityCheck: >-
+    the pin was a package-manager override on a dependency nothing names
+    directly, so the sweep reads its whole `pnpm` block. That block is gone from
+    the manifest on main, no override of any kind has been added since, and vue
+    now resolves to whatever the framework asks for. Nothing holds the version
+    down under another name.
+site: the-fault-that-went-quiet
+catalogNote: >-
+  An exact version pin on a dependency the platform never asked for by name,
+  put in by the same commit that took a framework security release, because
+  taking that release unpinned turned thirty-six of eighty end-to-end tests
+  red. It was bisected first: the fault needed both the new framework and one
+  particular vue, and either alone was clean. An issue was opened the next day
+  so the pin could not be forgotten, since nothing else would ever propose
+  moving it. It stayed a little over a month. It came off not because the fault
+  was fixed but because it could no longer be made to appear: pinned to the
+  exact version it existed to exclude, the suite passed twice, the second time
+  on a clean install. The commit that removed it says so, and leaves a note for
+  anyone who reopens it.
+removedIn: 39b4cab0c81dbfaa652f4235154c00f549e619c0
+remains:
+  - label: the manifest with the pin still in it
+    url: https://github.com/feffef/terrarium/blob/01d204cba73cada12e5b33009dba96055ecd5618/package.json
+assessedAt: 2026-09-28
+inscription:
+  text: >-
+    The pin is a stopgap for an upstream @nuxtjs/mdc incompatibility, not a
+    permanent preference — it should come off once a fixed Vue or @nuxtjs/mdc
+    ships.
+  source: commit e3538b0, message

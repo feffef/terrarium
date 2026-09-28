@@ -1,5 +1,5 @@
 title: "the rehearsed prune (PR #1022)"
-stratum: current-midden
+stratum: wire-cut
 condition: never-activated
 provenance:
   kind: pr

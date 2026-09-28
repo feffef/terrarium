@@ -1,0 +1,34 @@
+title: "the issue-search script (PR #1149)"
+stratum: current-midden
+condition: intact
+provenance:
+  kind: commit
+  hash: b1d4cd378f768ab56439af7bc37eecf80fc5adf8
+  path: scripts/search-issues.ts
+  url: https://github.com/feffef/terrarium/commit/b1d4cd378f768ab56439af7bc37eecf80fc5adf8
+  continuityCheck: >-
+    nothing on main searches issues with retries. The listing script it
+    borrowed its helpers from is still there, but it lists and does not search,
+    and it was there before this script was written. The guidance that replaced
+    it says in so many words that a script cannot do this job here, and tells a
+    session to list and filter instead, or to wait a minute and retry once by
+    hand.
+site: surface-finds
+catalogNote: >-
+  Two hundred and eleven lines and a spec, written to replace a sentence that
+  had told sessions how long to wait after the search tools refused them — a
+  number two sessions had since found wanting. The script would do the waiting itself,
+  retrying on a growing delay. A probe in review found that it could never run:
+  the environment's proxy refuses the search endpoint to scripts outright, and
+  the command-line tool it could fall back to is not installed in these
+  sessions. Both of its ways in were closed. It was deleted thirteen minutes
+  after it was committed, before the pull request carrying it merged, and the
+  sentence it was meant to replace was rewritten instead.
+removedIn: b1d4cd378f768ab56439af7bc37eecf80fc5adf8
+remains:
+  - label: the script, as written
+    url: https://github.com/feffef/terrarium/blob/1b1ab1011aca93ccf4ed303c4523943fa6b95a29/scripts/search-issues.ts
+assessedAt: 2026-09-28
+inscription:
+  text: Prose asks an agent to self-apply a number; this retries for real instead.
+  source: scripts/search-issues.ts, its header comment
