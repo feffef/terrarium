@@ -1,0 +1,49 @@
+schemaVersion: 1
+session: session_01WAgYyu3eEBk8yJztzVy53e
+startedAt: 2026-09-28T07:01:51Z
+endedAt: 2026-09-28T07:05:20Z
+kind: interactive
+goal: Replace CLAUDE.md shrink-only rule
+status: in-review
+outcome: '"Keep it short" section in PR 1467'
+summary: "Human-instructed: the user asked to drop CLAUDE.md's rule that every Platform change must shrink it, since Skills like visitor-loop now extend the Platform, and to require new features and instructions be written as short as possible. Ran /grill-with-docs; one round of four questions, all recommendations accepted by the user: also drop the \"growth waits\" paragraph, keep goals-over-instructions and prune-first, rename the section \"Keep it short\" and update the four Skill pointers, no ADR or glossary change. gate:scoped green; opened PR 1467 (governance, human merge) and subscribed. PR opening was agent-initiated per ADR-0003."
+prs:
+  - "1467"
+docsRead: []
+skillsUsed:
+  - name: grill-with-docs
+    reason: user invoked it to settle wording and scope
+  - name: grilling
+    reason: (no reason given)
+  - name: domain-modeling
+    reason: (no reason given)
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: grill-with-docs is a slash-only Skill (disable-model-invocation) so the Skill tool could not load it; had to read it and invoke grilling + domain-modeling by hand.
+    solution: None needed; its body is just the two Skill calls.
+    severity: nit
+durationSec: 208
+models:
+  claude-opus-5-5: 28
+toolCounts:
+  Bash: 9
+  Skill: 4
+  ToolSearch: 1
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+docsReadViaShell:
+  - .agents/skills/grill-with-docs/SKILL.md
+  - .agents/skills/audit-docs/SKILL.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - .agents/skills/digest/SKILL.md
+  - .agents/skills/blog-post/SKILL.md
+  - .agents/skills/visitor-loop/SKILL.md
+  - .agents/skills/triage/SKILL.md
+gitBranch: claude/claude-md-shrinking-rule-dry69f
+entrypoint: remote_mobile
+cliVersion: 2.1.283
+landedBy: Stop
