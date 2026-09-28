@@ -40,18 +40,15 @@ mechanics: same §13). This repo's journal layer keeps its components under a
 
 ## The validation caveat (important in this repo)
 
-**Body MDC bypasses the collection's Zod schema entirely.** Only a `.md` file's
-**frontmatter** is `safeParse`d (by this repo's own `scripts/validate-content.ts`);
-the body "isn't part of the authored schema." Why that's true at the Nuxt
-Content level — what a collection `schema` is (and isn't) used for at build —
-is single-homed in `docs/research/nuxt-content-review-grounding.md` §2, with
-the primary-source line citations; not re-derived here.
-
-Consequence: data authored **in the body** (as MDC props) gets **zero gate
-validation** — a typo'd key or a missing field surfaces only at render, if at
-all. Data authored in **frontmatter** *is* schema-validated (via
-`pnpm validate:content`). In a repo where "schemas are contracts" and agents
-write nearly everything, that difference is a real trade-off, not a detail.
+**Body MDC skips the collection's Zod schema entirely — only a `.md` file's
+frontmatter is `safeParse`d** (by `scripts/validate-content.ts`); the body
+"isn't part of the authored schema" (why, and what a collection `schema` is/isn't
+used for at build: `docs/research/nuxt-content-review-grounding.md` §2, not
+re-derived here). Consequence: a typo'd key or missing field in body-authored
+MDC props surfaces only at render, if at all — while the same problem in
+frontmatter is caught by `pnpm validate:content`. In a repo where "schemas are
+contracts" and agents write nearly everything, that gap is a real trade-off,
+not a detail.
 
 ## When MDC is a good fit
 

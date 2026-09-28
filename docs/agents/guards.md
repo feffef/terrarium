@@ -94,10 +94,9 @@ case to `tests/unit/<guard>.spec.ts` too.
 
 - A textual pre-filter fails **open** if the harness renames or re-serializes a
   payload key.
-- A crashing or missing `pnpm`/`tsx` used to fail every guard open (bare
-  `|| true`); every fail-closed guard now runs through `scripts/guard-wrap.sh`,
-  which synthesizes a deny when the wrapped guard exits nonzero with empty
-  stdout (issue #1223) — the one deliberate exception is `deferred-tool-guard.ts`,
+- Every fail-closed guard runs through `scripts/guard-wrap.sh`, which
+  synthesizes a deny when the wrapped guard exits nonzero with empty stdout
+  (issue #1223) — the one deliberate exception is `deferred-tool-guard.ts`,
   which stays wired with a bare `|| true` because it is meant to fail open.
 - `subagent-background-guard`'s command-text scan is not a full shell parser:
   a `&` reached only through command substitution, a here-doc, or ANSI-C

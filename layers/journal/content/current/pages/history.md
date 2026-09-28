@@ -184,7 +184,8 @@ wired to exactly two. It was accurate when written — the sentence disclosing t
 narrow scope was deleted the same day by a tidying pass whose commit message
 reads "drop the restated matcher scope… single-home." A rule about not
 duplicating documentation removed that detail from the one file every session is
-told to read first, and it has stood ever since.
+told to read first — until a later sweep restored it; both CLAUDE.md and
+`docs/agents/guards.md` disclose the narrow scope again today.
 
 The same is true one level up. The list of files that must never be merged
 without a human is enforced by no mechanism at all: there is no `CODEOWNERS`

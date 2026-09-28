@@ -12,7 +12,7 @@ Tenant's (`layers/tinkerfund/CONTEXT.md`): Campaign, Inventor, Backer, Pledge,
 Reward, Add-on, Stretch goal, Promotion. The shop never says "product" or
 "order" — not in copy, captions, comments or commit messages.
 
-The schema (`layers/tinkerfund/tenant.config.ts`) is the authority on fields and
+The schema (`layers/tinkerfund/schemas.ts`) is the authority on fields and
 `pnpm validate:content` enforces it plus the cross-references. This skill holds
 what neither can check: the **voice**, the **crowd numbers**, the **figures**, and
 the tests a new Campaign disturbs.

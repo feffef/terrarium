@@ -67,14 +67,16 @@ the isolation logic that keeps one Space from ever reading another's data, CI
 itself, and the governance documents that define all of the above. A pull
 request touching any of them escalates to a person, as does one that adds a
 dependency or changes behaviour the tests can't reach. Ordinary feature work is
-human-merged too.
+human-merged too — with one narrow, reversible exception: a **prune trial** may
+rewrite an ADR itself, as long as it keeps what the ADR decided.
 
 What remains is a deliberately narrow charter: a handful of scheduled jobs with
 a known, bounded shape may merge on a green gate alone, because what they are
-able to produce is bounded before they start — documentation, page content, or
-their own inventory entries. One rule holds even inside that charter: in the
-friction-fixing loop below, the session that merges a change is never the
-session that wrote it.
+able to produce is bounded before they start — documentation, page content,
+their own inventory entries, or (for one visitor-facing job) a small feature
+confined to an existing Tenant's own layer. One rule holds even inside that
+charter: in the friction-fixing loop below, the session that merges a change is
+never the session that wrote it.
 
 ```mermaid
 graph TB
