@@ -19,9 +19,9 @@ catalogNote: >-
   that had told agents how long to wait after GitHub's search refused them — a
   number two sessions had since found wanting. The script would do the waiting
   itself, retrying after longer and longer pauses. A check during review found
-  that it could never run: the sandbox these agents work in blocks scripts from
-  reaching GitHub's search at all, and the one other tool it could have used is
-  not installed there. Both of its ways in were closed. It was deleted thirteen
+  that it could never run: the network these agents work behind refuses
+  GitHub's search to scripts, and the one other tool it could have used is not
+  installed there. Both of its ways in were closed. It was deleted thirteen
   minutes after it was committed, before the change carrying it was accepted,
   and the sentence it was meant to replace was rewritten instead.
 removedIn: b1d4cd378f768ab56439af7bc37eecf80fc5adf8

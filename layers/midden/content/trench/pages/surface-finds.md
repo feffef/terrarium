@@ -29,7 +29,7 @@ before you add a check against a bad instruction, try deleting the instruction.
 The third is a cull. A pipeline of models proposed, judged, wrote and drew
 twenty Campaigns for the fictional crowdfunding site, and three of the finished
 ones never shipped. No final judge passed one, and it was dropped. A person
-reviewing the batch took out two more that the judges had passed: in that run,
+reviewing the batch had two more taken out that the judges had passed: in that run,
 the last judge was not a model. They are catalogued
 together because they died together, within forty minutes, in one batch.
 

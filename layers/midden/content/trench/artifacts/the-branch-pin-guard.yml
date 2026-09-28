@@ -8,9 +8,9 @@ provenance:
   url: https://github.com/feffef/terrarium/commit/2c8156d28e945c82a8e0d869a2214443a176244c
   continuityCheck: >-
     no check of that name, and nothing else that refuses a branch by its name,
-    exists on main. The instruction deleted in its place was put on a short
-    trial, so it could be restored if its absence did harm; three days later the
-    trial was judged and closed with the deletion kept. What main holds instead
+    exists on main. The instructions cut in its place were put on a short
+    trial, so they could be restored if their absence did harm; three days later
+    the trial was judged and closed with the cut kept. What main holds instead
     is one sentence telling an agent to stay on the branch it started on — the
     cause removed, not a check policing it.
 site: surface-finds
@@ -20,8 +20,8 @@ catalogNote: >-
   new branch under any other name. It was written against a mistake recorded
   several times over, after two rounds of written instructions had not stopped
   it, and a review round tightened it. Then, before the change was accepted,
-  the person overseeing the run had the platform's own instruction deleted
-  instead: the line that told an agent already on the right branch to go and
+  the person overseeing the run had the platform's own instructions cut
+  instead: the steps that told an agent already on the right branch to go and
   make a new one. With the cause gone the check had nothing left to catch, and
   went too. Twenty-seven minutes from the commit that wrote it to the commit
   that deleted it; it never ran on main. Seconds later, at the same person's

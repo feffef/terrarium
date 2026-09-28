@@ -11,9 +11,9 @@ exact version the pin had been built to keep out.
 
 A pin like this one is easy to lose track of. It held down a piece of software
 the platform never asked for by name, only through the framework that needs it,
-so nothing that proposes upgrades would ever have proposed moving it. And an
-exact pin on something that quiet has a cost that shows only later: it would
-also hold back that software's next security fix. That is why an issue was
+and the repository runs no scheduled upgrade bot, so nothing would ever have
+proposed moving it. And an exact pin on something that quiet has a cost that
+shows only later: it would also hold back a future security fix. That is why an issue was
 opened to make sure it came off.
 
 The pin was not retired by a fix. It was retired by an absence, and the record
