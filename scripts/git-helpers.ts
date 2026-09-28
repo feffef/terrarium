@@ -76,6 +76,27 @@ export function unshallow(cwd: string, timeoutMs = UNSHALLOW_TIMEOUT_MS, quiet =
   })
 }
 
+/** True when `<remote>/HEAD` is already a symbolic ref pointing at the
+ *  remote's default branch. Some environments hand out checkouts where this
+ *  was never set, breaking anything that reads `origin/HEAD` (e.g.
+ *  `/security-review`'s `git diff origin/HEAD...`). Callers should check this
+ *  before `setOriginHead` so the common (already-set) case does no extra work. */
+export function hasOriginHead(cwd: string, remote = 'origin'): boolean {
+  try {
+    execFileSync('git', ['symbolic-ref', '-q', `refs/remotes/${remote}/HEAD`], { cwd, stdio: 'ignore' })
+    return true
+  } catch {
+    return false
+  }
+}
+
+/** Auto-detect and set `<remote>/HEAD` from the remote itself. Gate this on
+ *  `!hasOriginHead` first — see its doc comment for why the ref can be
+ *  missing at all. */
+export function setOriginHead(cwd: string, remote = 'origin'): void {
+  execFileSync('git', ['remote', 'set-head', remote, '-a'], { cwd, stdio: 'ignore' })
+}
+
 /** Bring the local `<remote>/main` ref up to date before it's read. Without
  *  this, a stale local ref silently returns an empty, wrong, or truncated
  *  result that reads identically to "genuinely nothing new" (issue #246) —
