@@ -16,6 +16,25 @@ Your **remit** — what this run may change and self-merge — is ADR-0003's
 `visitor-loop` ledger row. Read it before step 3; anything outside it lands as
 an ordinary gated PR for a human, or as an issue.
 
+## Today's focus
+
+Each run looks hard at one part of the Platform, so all three visitors see the
+same thing and their findings can agree. A focus given as the Skill's argument
+wins; otherwise take row `$(( ($(date -u +%s)/86400 - $(date -u -d 2026-09-29 +%s)/86400) % 7 ))`:
+
+| # | Focus | Entry | Note |
+|---|-------|-------|------|
+| 0 | atlas | `/t/atlas` | |
+| 1 | blog | `/t/blog` | |
+| 2 | journal | `/t/journal/current` | |
+| 3 | midden | `/t/midden` | |
+| 4 | tinkerfund | `/t/tinkerfund` | |
+| 5 | mobile | `/` | Browse the whole visit at 390px width. |
+| 6 | homepage | `/` | |
+
+The focus names both PR titles (`visitor-loop (<focus>): …`), heads the tally,
+and goes in the session log's summary.
+
 ## 1. Serve the site
 
 On a fresh `origin/main`: `pnpm install`, `pnpm build`, then `pnpm exec tsx scripts/preview.ts start` (production
@@ -27,7 +46,8 @@ printed `URL=` returns 200 for `/`.
 Dispatch three read-only subagents **in one message**, one per model —
 `sonnet`, `fable`, `opus` (the Agent tool's `model` parameter) — so consensus
 means two *different* models agreeing, not one model echoing itself. Each gets
-[`visitor-brief.md`](visitor-brief.md) verbatim, with the URL and a scratch
+[`visitor-brief.md`](visitor-brief.md) verbatim, with the URL, the focus's entry
+path and note (blank if none), and a scratch
 directory unique to that visitor filled in. They get no repo context, no hints,
 no list of past findings — a primed visitor is not a first-time visitor.
 Done when all three reports are in; resume a stalled visitor with
@@ -44,7 +64,8 @@ Merge the three reports into one tally in your scratchpad:
   with the reason.
 - **Feature.** Ideas need no consensus. Weigh every visitor's ideas and pick
   the **one** you judge best: the most visible payoff for a first-time
-  visitor that fits the remit and a single PR.
+  visitor that fits the remit, a single PR and today's focus (on `mobile`, a
+  narrow-screen improvement anywhere). Consensus fixes may land anywhere.
 - **Owner memory.** First read the owner's review comments on every
   `visitor-loop` PR since the last `decisions.md` entry; each rejected
   approach or standing preference becomes one new line there (committed with
