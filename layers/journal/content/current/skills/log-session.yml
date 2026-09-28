@@ -68,3 +68,14 @@ observations:
       session_01445jFXkqdujULnzcm6YPpz, session_01Uotb5QwVukQYaxBA7ZGK8z), and
       several outcomes exceed 8 words (session_016u3USbZw7eybPYiDatPJmE,
       session_01S5bzNzvg1DURebeNRDgVi5). No log flags it as a friction.
+  - date: 2026-09-28
+    note: >-
+      Confirmed still recurring and escalated as issue #1450: checked the 10
+      newest sessions (a disjoint sample), 8/10 summaries still exceed the
+      100-word cap (up to 204 words, session_01S5bzNzvg1DURebeNRDgVi5,
+      independently re-counted), 2/10 outcomes exceed 8 words. No SKILL.md
+      edit has addressed this since 2026-09-05. Separately, issue #1206
+      (SHELL-READ-DETECTION) is now closed (fixed via PR #1241); one follow-on
+      facet (#1355, an empty-output placeholder gap) surfaced 2026-09-26 and
+      was fixed same-session by session_019yVYHWm1Fzsj3gBFWkHHU1 (PR #1436) —
+      that mechanism is being actively maintained, unlike the word limit.

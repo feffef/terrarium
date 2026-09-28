@@ -17,3 +17,16 @@ observations:
       review") although PR #1344 merged at 2026-09-25T18:01Z, 26 minutes after
       the session ended; the log was never finalized to `completed`. The only
       stale log in the 2026-09-20..27 window.
+  - date: 2026-09-28
+    note: >-
+      Re-checked (audit-skills behaviour check): session_01TMgZyrN42pwudxkUdHLKwP's
+      log is still stale today, unfixed — remains n=1, not recurring. Checked
+      the 10 newest close-session invocations (session_016PiKSCYGfiAj26Ze7NpkD1
+      through session_01S5bzNzvg1DURebeNRDgVi5) against live PR state: 0/10
+      stale; the one "in-review" status found (session_01N2HSpdwKUEBjztN8Nnz4Da)
+      honestly reflects a genuinely-still-open PR. Structural gap identified:
+      nothing re-verifies a log's status after the authoring turn ends except
+      the agent's own memory to come back — a session whose PR merges right
+      after teardown will always risk this. Not escalated as an issue (a
+      closure finding stays an observation per this Skill's own convention);
+      worth a fix if a second instance turns up.

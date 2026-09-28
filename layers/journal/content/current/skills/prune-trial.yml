@@ -36,3 +36,14 @@ observations:
       paraphrase the dates instead (c8ba0f6a, session_01S5bzNzvg1DURebeNRDgVi5;
       f9cdbe80, 475edc78, 92f53fff). The substance of the check is done; the
       letter is not.
+  - date: 2026-09-28
+    note: >-
+      Confirmed universal across every checked commit and escalated as issue
+      #1451: 3 further non-compliant verdict commits found beyond the 4
+      already on record — 122d598a (session_01JqR5jokjAkPvVa6LCE7EAR, 09-23),
+      9930a8b4 (session_01US9eNn2FWXen9Vxt7aQGsy, 09-22), 1c36ebab
+      (session_01SumbeFYWet9pZhbadhERox, 09-21). Verified scripts/prune-trial-window.ts's
+      formatWindow() does print exactly the two lines §1 asks to quote —
+      not a tooling gap, purely a letter-of-instruction compliance gap.
+      Ledger consistency otherwise fine: no trial sitting judgeable-but-unjudged
+      past its window as of this run.

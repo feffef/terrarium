@@ -22,3 +22,16 @@ observations:
       (session_01FjbeYkD522QKGpNQq5WVNR) added two decisions.md lines but none
       for #1405. Recorded as an observation, not an issue, at the owner's
       direction.
+  - date: 2026-09-28
+    note: >-
+      Upgraded to pattern and escalated as issue #1452: found a second,
+      earlier instance of the identical root cause. PR #1346 (2026-09-25, an
+      owner-directed interactive session, not a visitor-loop PR) superseded
+      visitor-loop's own #1326/#1343 feature builds; because it wasn't a
+      visitor-loop PR, decisions.md's review-comment-only owner-memory step
+      never saw it, and the design lock wasn't captured until PR #1432 two
+      days later. In that gap, the very next visitor-loop run (09-26) built
+      #1405 — the strip the owner then rejected. decisions.md still has zero
+      mention of #1405/#1410 as of this check. All 5 newest runs otherwise
+      clean: correct 3-model visitor dispatch, ≥2-visitor consensus, code-review
+      on both PRs, all 11 checked PRs merged.

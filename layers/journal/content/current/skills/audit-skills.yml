@@ -36,3 +36,14 @@ observations:
       the issues it filed concerned its own tooling. The regression watch is gone; each own
       Skill used in ≥3 sessions of a 7-day window now gets a behaviour-check
       subagent. The 2026-09-13 bracketing idea above is superseded.
+  - date: 2026-09-28
+    note: >-
+      Self-check, verified: this is the first real scheduled run under the
+      2026-09-27 rewrite (session_01JeNNPB1Q8Lirwm4V4VadnB was the rewrite
+      itself, not a scheduled fire). Dispatched one real behaviour-check
+      subagent per qualifying Skill (10), verified each report's central
+      claims against primary sources, filed 4 needs-triage issues (#1449
+      guard-merge violation on frictions-to-fixes, #1450 log-session word
+      limit, #1451 prune-trial verbatim-quote gap, #1452 visitor-loop
+      decisions.md gap) for findings that cleared the significant/repeated
+      bar, and recorded the rest as observations. Process held up end to end.
