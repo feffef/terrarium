@@ -81,7 +81,7 @@ trials:
         - issue #483
         - issue #411
     opened: 2026-09-28
-    proven: false
+    proven: true
     check: >
       Damage is a session that needs one of the cut restatements — the
       worktree-isolation exception's "why" spelled out a second or third
