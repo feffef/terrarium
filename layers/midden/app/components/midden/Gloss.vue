@@ -1,7 +1,7 @@
 <script setup lang="ts">
-// One glossed term (issue #1463). In `components/content/` so the `midden-gloss`
-// tag that middenGlossBody() writes into a Site body resolves to it. A button,
-// not a hover title, so it works by tap and keyboard.
+// One glossed term (issue #1463). A button, not a hover title, so it works by
+// tap and keyboard. The dig-report page passes it to ContentRenderer by hand:
+// @nuxt/content's built manifest only lists components the content itself uses.
 const props = defineProps<{ term: string }>()
 const open = ref(false)
 const gloss = computed(() => middenGlossFor(props.term))

@@ -17,6 +17,7 @@
 // was folded away in the simplification — the page's derived data (the compact
 // meta line, the present-grade list) is computed straight from this same-Space load.
 import { CONDITION_ORDER, type Grade } from '../../../../utils/condition'
+import GlossTerm from '../../../../components/midden/Gloss.vue'
 
 const route = useRoute()
 const { space, path, pagesKey, collections } = useSpace('midden')
@@ -72,6 +73,7 @@ const glossed = computed(() => {
   return { site: { ...site.value, body: { ...body, value: nodes } }, notes }
 })
 provide(MIDDEN_GLOSSED_NOTES, computed(() => glossed.value?.notes ?? {}))
+const glossComponents = { 'midden-gloss': GlossTerm }
 
 if (!site.value && !error.value) setResponseStatus(404)
 
@@ -100,7 +102,7 @@ useHead({ title: () => `${site.value?.title ?? 'Not found'} · The Midden` })
       <MiddenConditionKey v-if="presentGrades.length" :grades="presentGrades" class="midden-report__key" />
 
       <div class="midden-report__prose">
-        <ContentRenderer :value="glossed?.site ?? site" />
+        <ContentRenderer :value="glossed?.site ?? site" :components="glossComponents" />
       </div>
     </article>
 
