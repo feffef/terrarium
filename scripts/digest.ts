@@ -11,15 +11,17 @@
 //   gather <YYYY-MM-DD>     print one day's materials as JSON
 //
 // On a busy day, `gather`'s JSON can exceed Bash's inline-capture cap, the same
-// recurring shape session-frictions.ts documents (its own usage comment, issues
-// #811/#976) for its --window output — redirect gather's output to a file and
-// read that instead of trusting the inline preview.
+// recurring shape session-frictions.ts hit for its --window output (issues
+// #811/#976, fixed in PR #1150) — so `gather` mirrors that fix: above
+// OUTPUT_FILE_THRESHOLD it writes the JSON to a file and prints a one-line
+// pointer instead, automatically (--out PATH picks the location explicitly).
 //
 // (The index overview needs no command: the Journal's Space landing is a live
 // dashboard that queries the digest pages directly — a new Digest appears with
 // no baking. See ADR-0010.)
 import { execFileSync } from 'node:child_process'
-import { existsSync, readdirSync } from 'node:fs'
+import { existsSync, readdirSync, writeFileSync } from 'node:fs'
+import { tmpdir } from 'node:os'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import { readSessionLogs } from './session-logs.ts'
@@ -243,6 +245,22 @@ export function cmdGather(date: string, cwd = root): DayMaterials {
 
 // ── CLI ───────────────────────────────────────────────────────────────────────
 
+// Mirrors session-frictions.ts's OUTPUT_FILE_THRESHOLD/PATH (issue #976): below
+// common inline-capture caps, with margin for the cap varying by caller.
+export const OUTPUT_FILE_THRESHOLD = 20_000
+export const OUTPUT_FILE_PATH = join(tmpdir(), 'digest-gather-output.json')
+
+/** Where to send `gather`'s JSON output: `--out PATH` always writes there;
+ *  otherwise falls back to the shared tmpdir default only once `jsonLength`
+ *  exceeds the inline-capture threshold. `null` means stdout. Mirrors
+ *  session-frictions.ts's resolveOutputTarget(). */
+export function resolveOutputTarget(argv: string[], jsonLength: number): string | null {
+  const idx = argv.indexOf('--out')
+  const out = idx >= 0 ? argv[idx + 1] : undefined
+  if (out) return out
+  return jsonLength > OUTPUT_FILE_THRESHOLD ? OUTPUT_FILE_PATH : null
+}
+
 function fail(msg: string): never {
   console.error(`digest: ${msg}`)
   process.exit(1)
@@ -259,7 +277,14 @@ function main(): void {
   } else if (cmd === 'gather') {
     const date = argv[1]
     if (!date || !/^\d{4}-\d{2}-\d{2}$/.test(date)) fail('gather requires a YYYY-MM-DD date')
-    process.stdout.write(JSON.stringify(cmdGather(date), null, 2) + '\n')
+    const json = JSON.stringify(cmdGather(date), null, 2)
+    const target = resolveOutputTarget(argv, json.length)
+    if (target) {
+      writeFileSync(target, json + '\n')
+      process.stdout.write(`digest: ${json.length} bytes, written to ${target}\n`)
+    } else {
+      process.stdout.write(json + '\n')
+    }
   } else {
     fail(`unknown command "${cmd ?? ''}" — expected: list | gather <date>`)
   }
