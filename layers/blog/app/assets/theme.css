@@ -164,6 +164,14 @@ body.bl-page {
   .bl .post-nav-spacer { display: none; }
 }
 
+.bl .post-nav-back {
+  margin: 0.9rem 0 0;
+  font-family: var(--bl-mono);
+  font-size: 0.78rem;
+}
+.bl .post-nav-back a { color: var(--bl-muted); text-decoration: none; }
+.bl .post-nav-back a:hover { color: var(--bl-accent); }
+
 /* Post feed on the landing */
 .bl .feed { list-style: none; margin: 1.6rem 0 0; padding: 0; }
 .bl .feed > li { border-top: 1px solid var(--bl-line); }

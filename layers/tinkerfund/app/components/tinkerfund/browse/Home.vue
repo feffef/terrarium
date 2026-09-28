@@ -41,7 +41,7 @@ const money = useTinkerfundMoney()
       </div>
     </section>
 
-    <section v-if="home.endingSoon.length" aria-labelledby="tf-ending">
+    <section v-if="home.endingSoon.length" class="soon" aria-labelledby="tf-ending">
       <div class="head">
         <h2 id="tf-ending">Ending soon</h2>
         <NuxtLink :to="link('/discover?soon=1&sort=ending')">See all</NuxtLink>
@@ -121,11 +121,10 @@ dd { margin: 0; font: 600 16px/1.2 var(--tf-mono); font-variant-numeric: tabular
 .actions { display: flex; flex-wrap: wrap; gap: 10px; }
 
 ul { margin: 0; padding: 0; list-style: none; }
-/* width: fit-content so a short row (e.g. only 2 Campaigns genuinely ending
-   within 48h, per `endingSoon` in utils/status.ts) doesn't stretch to the
-   section's full width and read as a broken/empty row (visitor-loop fix,
-   2026-09-27) — max-width keeps it scrollable once there are enough cards
-   to overflow. */
+/* Shrink the whole section, not just `.scroller` below — a full-width `.head`
+   over a short card row still read as broken/empty (visitor-loop fix,
+   2026-09-27 then 2026-09-28). */
+.soon { width: fit-content; max-width: 100%; }
 .scroller { display: grid; grid-auto-flow: column; grid-auto-columns: min(300px, 82vw); gap: 16px; width: fit-content; max-width: 100%; overflow-x: auto; padding-bottom: 8px; scroll-snap-type: x mandatory; }
 .scroller li, .grid li { display: grid; scroll-snap-align: start; }
 .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr)); gap: 16px; }

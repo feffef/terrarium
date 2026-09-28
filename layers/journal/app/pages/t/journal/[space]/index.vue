@@ -91,6 +91,7 @@ const SESSIONS_VISIBLE = 10
 const showAllSessions = ref(false)
 const frictionSeverityTotals = computed(() => frictionTotals(sessions.value))
 const totalFrictions = computed(() => frictionCount(sessions.value))
+const otherFrictions = computed(() => frictionOtherCount(frictionSeverityTotals.value))
 const sessionKindCounts = computed(() => kindCounts(sessions.value))
 const referencedPrs = computed(() => prRefs(sessions.value))
 const referencedPrParts = computed(() => prRefsParts(referencedPrs.value))
@@ -240,7 +241,8 @@ useSeoMeta({
         <template #sub>
           <JournalFrictionStrata :counts="frictionSeverityTotals" :total="totalFrictions">
             {{ frictionSeverityTotals.blocker }} blocker{{ frictionSeverityTotals.blocker === 1 ? '' : 's' }} ·
-            {{ frictionSeverityTotals.major }} major
+            {{ frictionSeverityTotals.major }} major{{ frictionSeverityTotals.major === 1 ? '' : 's' }}
+            <template v-if="otherFrictions"> · {{ otherFrictions }} other</template>
           </JournalFrictionStrata>
         </template>
       </JournalStatTile>
