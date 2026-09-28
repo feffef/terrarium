@@ -5,7 +5,7 @@
 // reviewability bar the sibling guards' specs set for an unattended hook
 // (ADR-0004).
 import { execFileSync } from 'node:child_process'
-import { readFileSync, rmSync, writeFileSync } from 'node:fs'
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -244,14 +244,15 @@ describe('the --dry-run path (ADR-0004: an unattended hook needs a way to be exe
   // A denying Bash `--input` cannot be passed inline: that probe is itself the
   // shape the guard blocks. `--input-file` is the reachable path.
   it('reads the input from --input-file, the way to probe a denying Bash input from a shell', () => {
-    const file = join(tmpdir(), 'workflow-edit-guard-dryrun.json')
+    const dir = mkdtempSync(join(tmpdir(), 'workflow-edit-guard-'))
+    const file = join(dir, 'dryrun.json')
     writeFileSync(file, JSON.stringify({ command: "cat > .github/workflows/gate.yml <<'EOF'\nx\nEOF" }))
     try {
       const out = dryRun(['--tool', 'Bash', '--input-file', file])
       expect(out.decision).toBe('deny')
       expect(out.via).toBe('command')
     } finally {
-      rmSync(file, { force: true })
+      rmSync(dir, { recursive: true, force: true })
     }
   })
 
