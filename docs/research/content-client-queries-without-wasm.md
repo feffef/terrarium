@@ -28,19 +28,11 @@ Short names used in the citations below:
 `content.nuxt.com` returns 403 through the proxy here. Doc quotes therefore
 come from the docs source in `nuxt/content`, under `docs/content/docs/…` on `main`.
 
-**Nothing below was verified end to end with a build.** Every conclusion comes
-from reading the code, and the recommended option is followed by a
-verification recipe.
-
-**Outcome (2026-09-27): Avenue 2a was adopted, with changes (ADR-0028, #1447).**
-A build confirmed that navigation reads `_payload.json` and fetches no WASM or
-dumps. ADR-0028 holds the measurements and the final configuration. It departs
-from this note in three places:
-- It uses `cache: { maxAge: 60, swr: false }`, not `swr: true`, to bound stale
-  clocks.
-- It turns off visibility prefetch, which fetched every visible link's payload.
-- It varies Tinkerfund's cache on `accept-language`. A cached render sees no
-  request headers, a risk this note missed.
+**Status: Avenue 2a was built and adopted (ADR-0028, #1447, 2026-09-27).**
+Claims marked **(measured)** were confirmed against a production build, with
+Playwright and the e2e suite. Everything else comes from reading the source.
+ADR-0028 is the home for the final configuration and the byte measurements;
+this note keeps the reasoning and the rejected avenues.
 
 ---
 
@@ -160,7 +152,7 @@ compatibility version 5). `true` would add a separate `_payload.json` request
 on first load (`renderer.mjs:159`; `nitro-server/index.mjs:446-447`), so
 `'client'` is the setting to use.
 
-**State of this build.** The client half is already switched on here, as a
+**State of the build before ADR-0028.** The client half is already switched on here, as a
 side effect. Content adds `prerender: true` rules for every
 `sql_dump.txt` (`content/module.mjs:3179-3184`). That makes Nuxt's client
 `payloadExtraction` flag true (`nuxt/index.mjs:3278`). The built client bundle
@@ -168,13 +160,34 @@ confirms it: `loadPayload` has no `!payloadExtraction` early return. Only the
 server half is off: `.output/server/chunks/routes/renderer.mjs` contains
 `NUXT_RUNTIME_PAYLOAD_EXTRACTION = false`.
 
-### Variant 2a: a runtime rule on page routes (`swr`/`cache`)
+### Variant 2a: a runtime `cache` rule on page routes (adopted)
+
+The adopted shape. ADR-0028 and the two `nuxt.config.ts` files are the source of
+truth; this is a summary:
 
 ```ts
-// nuxt.config.ts: sketch only, not applied
-experimental: { payloadExtraction: 'client' },
-routeRules: { '/t/**': { swr: true } },   // or cache: { maxAge: … }
+// nuxt.config.ts
+experimental: {
+  payloadExtraction: 'client',
+  defaults: { nuxtLink: { prefetchOn: { visibility: false, interaction: true } } },
+},
+routeRules: { '/t/**': { cache: { maxAge: 60, swr: false } } },
+// layers/tinkerfund/nuxt.config.ts
+routeRules: {
+  '/t/tinkerfund/**': { cache: { varies: ['accept-language'] } },
+  '/t/tinkerfund/*/search': { cache: false },
+},
 ```
+
+**What it does (measured)**
+
+- A client navigation between `/t/**` pages fetches the target's
+  `_payload.json`. It requests no `sqlite3*.wasm` and no `sql_dump.txt`, and
+  it does not reload the page. The e2e test "navigates client-side from the
+  server payload" in `layers/blog/tests/e2e/blog.e2e.ts` holds this.
+- Nitro merges overlapping rules with `defu`, most specific first
+  (`nitropack/runtime/internal/route-rules.mjs:78`). So Tinkerfund pages get
+  `{ varies, maxAge: 60, swr: false }`, and `cache: false` on search wins.
 
 **What it costs**
 
@@ -182,26 +195,48 @@ routeRules: { '/t/**': { swr: true } },   // or cache: { maxAge: … }
   copy of the renderer (`nitropack/rollup/index.mjs:1077-1105`;
   `runtime/internal/app.mjs:126-133`). Content is baked at build time
   (ADR-0001), so a per-deploy cache is semantically safe.
-- **The cache key includes the full URL, query string included**
-  (`nitropack/runtime/internal/cache.mjs:127-145`). Arbitrary `?q=` values
-  therefore grow the cache without bound. Scope the rule, or exclude search
-  routes.
+- **A cached render sees only the request headers listed in `varies`.** Nitro
+  renders through a request proxy whose headers are just the `varies` list
+  (`nitropack/runtime/internal/cache.mjs:128, 167-175`). Without
+  `varies: ['accept-language']`, every Tinkerfund page rendered in `en`, even
+  on the very first request (#1365). **(measured)**: the e2e test "renders each
+  visitor in their own locale" failed before the fix and passes after it. Any
+  page that reads a header or cookie on the server needs the same treatment.
+- **The cache has no size bound.** The key includes the full URL, query string
+  included (`cache.mjs:127-145`), so this is not only a search problem: blog
+  `?tag=`, Atlas `?day=`, Tinkerfund filters and junk query strings each add an
+  entry. Nitro writes entries with a `ttl` (`cache.mjs:70-73`), but unstorage's
+  memory driver ignores it, and the cache sits on the default in-memory mount.
+  Memory therefore grows until the next deploy or restart. Tracked in #1446.
 - **Each uncached navigation costs a full server render.** Only the payload is
   returned.
-- **Cached HTML freezes the time it was rendered at.** Two Tenants compute a
-  server-side "now" and send it to the browser in the payload for hydration.
-  Atlas uses `useGlassToday()` (`layers/atlas/app/composables/almanac.ts:170-172`),
-  and Tinkerfund uses `useTinkerfundClock()` (`layers/tinkerfund/app/composables/clock.ts:12-16`).
-  A cached page served on a later day hydrates with the render-time value, not
-  today's. Both need a rule that excludes their routes, or a `maxAge` shorter
-  than the staleness they can tolerate. (Checked in the source, not measured.)
+- **Server-computed "now" can be up to about 2 minutes old on a first load.**
+  Atlas's `useGlassToday()` (`layers/atlas/app/composables/almanac.ts:170-172`)
+  and Tinkerfund's `useTinkerfundClock()` (`layers/tinkerfund/app/composables/clock.ts:12-16`)
+  compute "now" during the server render.
+  - With `swr: false`, an expired entry is cleared and re-rendered synchronously
+    (`cache.mjs:44-53`), so the server copy is at most 60 s old.
+  - The response also carries `cache-control: max-age=60` (`cache.mjs:268-285`),
+    and `loadPayload` fetches with `cache: "default"` (`nuxt/app/composables/payload.js:16`),
+    so a browser can add up to another minute.
+  - On client navigation the plugin merges only `payload.data`, not state, so
+    both clocks are recomputed in the browser there.
+  - This is why `swr: true` was rejected: it would serve an arbitrarily old copy
+    once after an idle period.
+- **Visibility prefetch backfires. (measured)** NuxtLink's default prefetches
+  every visible link's `_payload.json`. Some pages carry payloads of about
+  550 KB, and the Commons Timeline navigation fetched the journal's payload seven
+  times. That made three of four measured navigations heavier than the WASM
+  baseline. Prefetch on interaction removes the problem. The cost is that a
+  route's JS chunk now also loads on hover or tap rather than on sight.
 
 **What it keeps**
 
 - Navigation is still a client router navigation (`beforeResolve`), so
   in-memory state such as Tinkerfund's cart survives. The plugin merges only
   `payload.data`.
-- The interaction with view-transition timing was **not verified**.
+- The interaction with view-transition timing was **not verified**, visually or
+  otherwise.
 
 **Key matching.** Pages key `useAsyncData` by `route.path` or by static,
 Space-derived strings (e.g.
@@ -214,20 +249,23 @@ and client, so the payload keys match.
 - Queries outside `useAsyncData`.
 - Keys that depend on client-only state.
 - Reactive re-queries after mount.
-- A failed payload fetch. `_importPayload` returns `null` on non-OK
-  (`payload.js:87-108`), and the handler then runs in the browser as today.
+- Routes without a payload rule, such as Tinkerfund search.
+- A failed payload fetch. `_importPayload` returns `null` on non-OK or on a
+  thrown fetch (`payload.js:87-108`), and the handler then runs in the browser as
+  before. **(measured)**: ADR-0019's blog failure tests reach the client-DB path
+  only by first aborting David's `_payload.json`, and then the dialog appears.
 
 **Search pages**
 
 - Commons Search loads its corpus through `useAsyncData` and filters it in JS
-  (`layers/commons/app/components/commons/Search.vue:7-25`). The corpus would
-  come from the payload, with no WASM.
-- Tinkerfund search remounts per `fullPath` and keys by `q`
-  (`layers/tinkerfund/app/pages/t/tinkerfund/[space]/search.vue:3,9`). A cached
-  payload route is query-aware, so its results would be server-rendered into
-  the payload. In effect the search SQL would run on the server, with no new
-  server code. If the owner wants that search to stay in the browser, exclude
-  the route.
+  (`layers/commons/app/components/commons/Search.vue:7-25`). The corpus comes
+  from the payload, with no WASM.
+- Tinkerfund search keys by `?q=`
+  (`layers/tinkerfund/app/pages/t/tinkerfund/[space]/search.vue:3,9`). With a
+  cache rule it would be server-rendered per query and would grow the cache. It
+  is excluded (`cache: false`), which the client route-rule matcher turns into
+  `payload: false`. So no `_payload.json` is fetched, and the search stays in
+  the browser as the owner chose.
 
 ### Variant 2b: `isr: true` instead of `swr`/`cache`
 
@@ -337,18 +375,15 @@ interactivity.
 
 ## Ranked recommendation
 
-1. **Avenue 2a: runtime payload extraction.** Set
-   `experimental.payloadExtraction: 'client'` plus an `swr`/`cache` rule on the
-   page routes, and leave search routes uncached or unruled. It uses documented
-   Nuxt config, needs no Content internals and no server code, and survives
-   Content upgrades. Unmatched cases fall back to today's WASM behaviour.
-   `nuxt.config.ts` is human-only (ADR-0018), and this changes global runtime
-   behaviour, so a human merges it (ADR-0004).
-   **Verify before adopting:**
-   - Build, then `router.push` between two `/t/**` pages in Playwright.
-   - Assert that a `_payload.json` request happens and that no `sqlite3*.wasm`
-     or `sql_dump.txt` request does.
-   - Confirm Tinkerfund view transitions still animate.
+1. **Avenue 2a: runtime payload extraction. Adopted (ADR-0028).** It uses
+   documented Nuxt config, needs no Content internals and no server code, and
+   survives Content upgrades. Unmatched cases fall back to the WASM path. Its
+   real costs are the server-side cache's: request headers need `varies`, and
+   the cache has no size bound (#1446). `nuxt.config.ts` is human-only
+   (ADR-0018), and so is this global runtime change (ADR-0004). The
+   verification recipe that stood here is now two e2e tests in
+   `layers/blog/tests/e2e/blog.e2e.ts` and `layers/tinkerfund/tests/e2e/tinkerfund.e2e.ts`.
+   Only the view-transition check is still open.
 2. **Avenue 2c: prerender the page routes.** This has the same client benefit
    with no runtime cache, at the cost of build time and the work of listing
    the routes.
