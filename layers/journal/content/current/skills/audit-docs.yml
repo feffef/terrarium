@@ -18,3 +18,15 @@ observations:
       in scripts/prune-trial-window.ts and layers/midden/tenant.config.ts,
       outside the Live tier its SKILL.md allowed at the time, and self-merged.
       The next three runs declined the same kind of edit as out of tier.
+  - date: 2026-09-28
+    note: >-
+      Re-verified (audit-skills behaviour check): the #1289 tier violation has
+      not recurred. session_01S3vBH6Vqxa26Gr35CHwgsz (PR #1294, 09-22),
+      session_011Bc6anpFPFoyyRCizp9Zx3 (PR #1300, 09-23), and
+      session_01JoJbvtqQS2mYndK9DN7VXQ (PR #1307, 09-24) each re-flagged the
+      same out-of-tier scripts/loop-only-tool-guard.ts drift and correctly
+      left it as a friction rather than fixing it. That drift was eventually
+      escalated and fixed properly through a different Skill
+      (frictions-to-fixes filed it as issue #1304), not by audit-docs itself —
+      arguably correct, since a `.ts` file is outside this Skill's doc-tiers
+      charter. No reverts found on any of the 7 sessions checked.

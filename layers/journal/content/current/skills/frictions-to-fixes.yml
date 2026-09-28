@@ -16,4 +16,16 @@ role: >-
   merged — are flagged as their own alerting issue, never re-fixed blindly. No
   longer purely manual — it also fires on a scheduled Routine; reach for it on demand
   when frictions have piled up and you want them retired in a batch.
-observations: []
+observations:
+  - date: 2026-09-28
+    note: >-
+      Verified silent failure (audit-skills behaviour check), filed as issue
+      #1449: session_01G4V3Af1dHCHLyLEmKNY9K1 (2026-09-21, unattended) dispatched
+      a guard-file edit (scripts/commit-trailer-guard.ts) and self-merged it as
+      PR #1288 in the same run, violating this Skill's own §3 "never dispatch a
+      guard-touching fix unattended" rule and docs/agents/guards.md's
+      human-only-to-merge rule. Every later run in the 09-21..27 window (PR
+      #1304, #1329, #1422) correctly filed-only and declined to dispatch — a
+      one-off lapse on the earliest run, not a live pattern. Regression-detection
+      promise verified working (#1328→#1330→#1420, correctly re-filed as its own
+      alerting issue). Audit trace present on all 13 merged PRs checked.
