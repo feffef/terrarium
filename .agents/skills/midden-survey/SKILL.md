@@ -1,6 +1,6 @@
 ---
 name: midden-survey
-description: Sweep the Platform's recent history for Midden candidates — deleted files, dropped dependencies, closed-unmerged PRs, dormant branches — apply the two-gate inclusion test, and file one survey-report issue for the curator to grade. Discovery only; it never authors artifacts or grades condition.
+description: Sweep the Platform's recent history for Midden candidates — deleted files, dropped dependencies, closed-unmerged PRs, dormant branches — apply the two-gate inclusion test, and file one survey-report issue for `midden-catalogue` to work from. Discovery only; it never authors artifacts or grades condition.
 disable-model-invocation: true
 ---
 
@@ -10,10 +10,8 @@ The field-walk that precedes an excavation: find what the Platform has
 discarded since the last survey, screen it against the Midden's **inclusion
 bar** (the two-gate test — `layers/midden/CONTEXT.md` is its single home), and
 hand the survivors to the curator as **one survey-report issue**. This Skill
-mechanizes *discovery only*. Grading `condition`, naming a `stratum`, writing
-the `catalogNote`, and deciding what actually enters the trench are
-curator work and stay out of scope here — cataloguing happens in a separate,
-green-lit session (ADR-0003), not in this one.
+mechanizes *discovery only*; grading, placing and narrating the finds is
+`midden-catalogue`'s job, run once a human green-lights it (ADR-0003).
 
 Run it when asked (frontmatter deliberately disables self-invocation — if you
 notice the trench falling behind mid-session, propose a run rather than
@@ -117,10 +115,11 @@ survey gets a comment, not a duplicate). For each surviving candidate:
   term);
 - one line on why it passes both gates.
 
-State plainly in the issue that `condition`, `stratum`, `site`, and the
-`catalogNote` are the curator's to author — never proposed here (the
-`layers/midden/CONTEXT.md` Condition term's "100% curator-authored" rule). Label the issue
-`needs-triage`, list any Gate-B exclusions from §3 at the end, and
-carry the ADR-0017 provenance header. Filing the issue is where this Skill
-stops — implementing any accepted candidate is a later, separately green-lit
-session's work.
+Leave `condition`, `stratum`, `site` and the `catalogNote` out of the issue —
+the catalogue run authors them from the primary sources, not from this
+report. Label the issue `needs-triage`, list any Gate-B exclusions from §3 at
+the end, and carry the ADR-0017 provenance header.
+
+Filing the issue is where this Skill stops. When any candidate survived,
+end by telling the user so and suggesting `/midden-catalogue` on the issue as
+the next step.

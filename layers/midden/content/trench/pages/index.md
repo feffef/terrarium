@@ -12,10 +12,12 @@ never grew into them.
 
 The floor is young. The Platform's first commit dates only to the summer of 2026, so
 these strata are thin and the finds are close to the surface; nothing here has had time
-to truly fossilise, and the branches still cooling in the repository have not yet
+to truly fossilise, and most branches still cooling in the repository have not yet
 been dead long enough to catalogue. A thing earns its place in the catalogue only
 once it is unambiguously over — closed and unmerged, removed with no successor,
-retired with nothing living grown back in its place. What was merely renamed, or
+retired with nothing living grown back in its place. Some never reached the main
+line at all, written and removed inside a single pull request; those are
+catalogued too, as [surface finds](/t/midden/trench/surface-finds). What was merely renamed, or
 carried forward under a new shape, belongs to a different dig. Here we keep only
 the corpses, dated and graded, and quote them wherever anything survives to quote.
 

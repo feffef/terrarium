@@ -7,7 +7,7 @@ This cut was the open one when it was dug, and the finds in it are graded *fresh
 not because they are unfinished — most are as complete as anything deeper down —
 but because, at the moment they were assessed, they had been discarded so recently
 that they read as if they might yet be picked back up. Their season has since been
-named and closed as the Plainer Cut, with two more opened over the top, and a grade
+named and closed as the Plainer Cut, with three more opened over the top, and a grade
 is never re-derived once set. Read them, then, as they were: barely cold.
 
 The first is a finished feature pull request closed without merging: a small

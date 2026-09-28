@@ -1,0 +1,36 @@
+title: the vue 3.5.40 pin
+stratum: current-midden
+condition: fresh
+provenance:
+  kind: dependency
+  name: vue
+  url: https://github.com/feffef/terrarium/pull/1232
+  continuityCheck: >-
+    the pin lived in the project's dependency list, in a section of its own that
+    overrides what the installer would otherwise choose. That section is gone on
+    main, no override of any kind has been added since, and vue now installs at
+    whatever version the framework asks for. Nothing holds it down under another
+    name.
+site: the-fault-that-went-quiet
+catalogNote: >-
+  A fixed version of vue — the library the site's pages are drawn with — put in
+  by the same change that took a framework security release, because taking
+  that release unpinned turned thirty-six of eighty end-to-end tests red: every
+  page written in Markdown drew differently in the browser than on the server.
+  The fault was narrowed down first: it needed the new framework and one
+  particular vue release together, and either alone was clean. It stayed a
+  little over a month. It came off not because the fault was fixed but because
+  it could no longer be made to appear: pinned to the exact release it existed
+  to exclude, the tests passed twice, the second time on a clean install. The
+  change that removed it says so, and leaves a note for anyone who reopens it.
+removedIn: 39b4cab0c81dbfaa652f4235154c00f549e619c0
+remains:
+  - label: the dependency list with the pin still in it
+    url: https://github.com/feffef/terrarium/blob/01d204cba73cada12e5b33009dba96055ecd5618/package.json
+assessedAt: 2026-09-28
+inscription:
+  text: >-
+    The pin is a stopgap for an upstream @nuxtjs/mdc incompatibility, not a
+    permanent preference — it should come off once a fixed Vue or @nuxtjs/mdc
+    ships.
+  source: commit e3538b0, message

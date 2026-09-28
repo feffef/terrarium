@@ -27,7 +27,7 @@ export interface DigSeason {
  *
  * `current-midden` is a ROLE slug, not a fixed period: it always names whichever
  * cut is still open. Closing the open season therefore renames it to what it
- * turned out to be (2026-08-25: `current-midden` → `plainer-cut`) and re-opens
+ * turned out to be (2026-08-25 → `plainer-cut`, 2026-09-28 → `wire-cut`) and re-opens
  * `current-midden` on whichever cut is open at the time, repointing the closed
  * season's artifacts.
  * A diff that moves the slug is that handover, not history being edited. */
@@ -86,11 +86,25 @@ export const DIG_SEASONS: DigSeason[] = [
     end: '2026-08-12',
   },
   {
-    // The open cut. A whole Tenant lifted out on the day it turned thirty, and
-    // the rehearsal prunes closed green and unmerged by charter.
+    // Closed and named when the third survey's finds (issue #1468) were
+    // catalogued, after 46 days open.
+    // The season opens on the one Tenant that ever read at runtime — a wire
+    // running out of the building — being cut out on the day it turned
+    // thirty; the rehearsal prunes closed green and unmerged by charter lie
+    // over it.
+    slug: 'wire-cut',
+    label: 'the Wire Cut',
+    start: '2026-08-13',
+    end: '2026-09-04',
+  },
+  {
+    // The open cut. Mostly things that never reached main at all — a guard and
+    // a script each built and deleted inside their own pull request, three
+    // finished Campaigns culled before landing — and a pin lifted once the
+    // fault it held off could no longer be made to appear.
     slug: 'current-midden',
     label: 'the Current Midden',
-    start: '2026-08-13',
+    start: '2026-09-05',
     end: null,
   },
 ]

@@ -1,0 +1,39 @@
+title: "three culled Campaigns (PR #1429)"
+stratum: current-midden
+condition: never-activated
+provenance:
+  kind: pr
+  number: 1429
+  merged: true
+  url: https://github.com/feffef/terrarium/pull/1429
+  continuityCheck: >-
+    none of the seven deleted files has come back, and a search of all the
+    site's content on main for the three names finds only the session log that
+    records their removal. No published Campaign carries any of the three ideas
+    under another title, and the catalogue numbers were closed up after them,
+    so none stands empty in their place.
+site: surface-finds
+catalogNote: >-
+  The pull request merged without them. Three finished Campaigns for the
+  fictional crowdfunding site — each with its pitch, specifications and five
+  to seven drawn figures — written by one model, drawn by another, and never
+  published. They came from a batch of twenty, picked from the ideas three
+  model judges scored highest. The Passport Tracker Tracker, a passport cover
+  with a second tracker to find the first, was the one finished Campaign that
+  no final judge passed, and it was dropped. The Inbox Zero Tray and the Hotel
+  Room Compass passed judging and were deleted on human review shortly before
+  the pull request merged, within two minutes of each other. The record gives
+  no reason for either.
+assessedAt: 2026-09-28
+remains:
+  - label: the Passport Tracker Tracker, as judged
+    url: https://github.com/feffef/terrarium/blob/bc4f662a5e7a5cfd78fc234878a41d5d62035db2/layers/tinkerfund/content/prod/pages/campaigns/passport-tracker-tracker.md
+  - label: the Inbox Zero Tray, as reviewed
+    url: https://github.com/feffef/terrarium/blob/0ff77bdcb6a826816c04e9f53abc560a3ef95f36/layers/tinkerfund/content/prod/pages/campaigns/inbox-zero-tray.md
+  - label: the Hotel Room Compass, as reviewed
+    url: https://github.com/feffef/terrarium/blob/198e3c4605939de4daaa1a8bb8fd75ec5ebc5973/layers/tinkerfund/content/prod/pages/campaigns/hotel-room-compass.md
+inscription:
+  text: >-
+    The Inventor's answer was that a single dot is a claim, and two independent
+    confirmations of it are a measurement.
+  source: passport-tracker-tracker.md, under "The map"
