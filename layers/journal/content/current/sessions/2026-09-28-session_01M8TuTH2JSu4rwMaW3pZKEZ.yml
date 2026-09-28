@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01M8TuTH2JSu4rwMaW3pZKEZ
 startedAt: 2026-09-28T06:51:31Z
-endedAt: 2026-09-28T07:00:58Z
+endedAt: 2026-09-28T07:06:26Z
 kind: interactive
 goal: Link source repo from homepage and footer
-status: in-review
-outcome: "PR #1466 open, full gate green"
-summary: "Human-instructed: the user ran /grill-with-docs on an idea to add a 'Source on GitHub' link to SiteFooter. Grilling found the homepage doesn't render SiteFooter, so the plan the user approved (all my recommendations, no Q5 issues filed) was: link \"in the open\" in the hero, render SiteFooter on the homepage, add a separate footer source link, and move REPO_URL from the journal layer to app/utils/repo.ts. On the user's \"go\" I implemented it; gate:scoped ran the full gate green and preview screenshots confirmed the render. Opened PR #1466 per ADR-0003's auto-open default."
+status: completed
+outcome: "PR #1466 merged, full gate green"
+summary: "Human-instructed: the user ran /grill-with-docs on an idea to add a 'Source on GitHub' link to SiteFooter. Grilling found the homepage doesn't render SiteFooter, so the plan the user approved (all my recommendations, no Q5 issues filed) was: link \"in the open\" in the hero, render SiteFooter on the homepage, add a separate footer source link, and move REPO_URL from the journal layer to app/utils/repo.ts. On the user's \"go\" I implemented it; gate:scoped ran the full gate green and preview screenshots confirmed the render. Opened PR #1466 per ADR-0003's auto-open default; CI went green and a human merged it. The user then asked where the PR body's three Claude Code attributions come from; I traced them (repo provenance header, the harness PR-attribution template, the server-appended footer) and put the dedup choice to the user."
 prs:
   - "1466"
 docsRead:
@@ -32,18 +32,24 @@ frictions:
   - description: First PR create was denied by the ADR-0017 provenance guard because the marker shape was wrong; resubmitted with the prescribed first line.
     solution: Guard deny message taught the shape as designed; no change needed.
     severity: nit
-durationSec: 567
+  - description: "PR #1466's body carried three Claude Code attributions: the ADR-0017 header, the harness PR-attribution template I typed, and a server-appended footer. The user noticed the noise."
+    solution: The harness template defers to CLAUDE.md, so one CLAUDE.md line (or reworded ADR-0017 bullet) can drop the redundant middle one. Put to the user.
+    severity: minor
+durationSec: 894
 models:
-  claude-opus-5-5: 58
+  claude-opus-5-5: 76
 toolCounts:
   Skill: 4
-  Bash: 20
+  Bash: 22
   Read: 2
-  ToolSearch: 1
+  ToolSearch: 2
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 2
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
   mcp__Claude_Code_Remote__send_later: 1
+  ReadNotifications: 3
+  mcp__github__pull_request_read: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 docsReadViaShell:
   - CONTEXT.md
   - docs/agents/guards.md
