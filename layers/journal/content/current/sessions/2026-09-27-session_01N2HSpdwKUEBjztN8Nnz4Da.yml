@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01N2HSpdwKUEBjztN8Nnz4Da
 startedAt: 2026-09-27T19:34:39Z
-endedAt: 2026-09-27T21:50:44Z
+endedAt: 2026-09-28T06:13:13Z
 kind: interactive
 goal: Refine and file the browser-side Content DB issue
-status: in-review
-outcome: "PR #1447 (ADR-0028) merged; research PR #1445 open"
-summary: "Human-instructed throughout. Refined an idea via /grill-with-docs, measured the browser Content DB load and filed #1444, which the owner closed as-is. /research (a background agent) then found Nuxt payload extraction; the agent added a stale-clock caveat and opened docs PR #1445. On \"give it a try\" the agent trialled it locally (no WASM on navigation, 6-144 KB gzipped vs ~0.5-1.85 MB), and on the owner's go made it real in PR #1447 with ADR-0028. The full e2e run showed ADR-0019's blog tests break, so they were moved onto the payload-failure fallback. /code-review found the cache broke Tinkerfund's locale (#1365); fixed test-first with varies. Filed #1446 for the unbounded cache. The owner merged #1447."
+status: completed
+outcome: ADR-0028 payload extraction and research note merged
+summary: "Human-instructed throughout. Refined an idea via /grill-with-docs, measured the browser Content DB load and filed #1444, which the owner closed as-is. /research (a background agent) then found Nuxt payload extraction; the agent added a stale-clock caveat and opened docs PR #1445. On \"give it a try\" the agent trialled it locally (no WASM on navigation, 6-144 KB gzipped vs ~0.5-1.85 MB), and on the owner's go made it real in PR #1447 with ADR-0028. The full e2e run showed ADR-0019's blog tests break, so they were moved onto the payload-failure fallback. /code-review found the cache broke Tinkerfund's locale (#1365); fixed test-first with varies. Filed #1446 for the unbounded cache. The owner merged #1447; at the owner's request the agent folded the verified findings into the research note, and #1445 merged too."
 prs:
   - "1445"
   - "1447"
@@ -16,6 +16,8 @@ docsRead:
   - path: app/pages/t/[tenant]/[space]/[...slug].vue
     reason: the page the idea named
   - path: layers/blog/tests/e2e/blog.e2e.ts
+    reason: (read before editing)
+  - path: docs/research/content-client-queries-without-wasm.md
     reason: (read before editing)
 skillsUsed:
   - name: grilling
@@ -47,28 +49,29 @@ frictions:
   - description: The research agent's note missed the stale server clock that a page cache causes; I only found it by spot-checking the source.
     solution: Research briefs should ask 'what server-computed state does this freeze?' when a cache is involved.
     severity: minor
-durationSec: 8165
+durationSec: 38313
 models:
-  claude-opus-5-5: 339
+  claude-opus-5-5: 386
 toolCounts:
   Skill: 5
-  Bash: 103
+  Bash: 110
   mcp__github__search_issues: 1
   Write: 2
   ToolSearch: 5
   mcp__github__issue_write: 3
   mcp__github__add_issue_comment: 1
   Agent: 3
-  Edit: 7
+  Edit: 8
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 2
   mcp__Claude_Code_Remote__subscribe_pr_activity: 2
-  mcp__Claude_Code_Remote__send_later: 2
-  ReadNotifications: 8
-  mcp__github__pull_request_read: 3
-  Read: 2
-  mcp__github__update_pull_request: 1
+  mcp__Claude_Code_Remote__send_later: 6
+  ReadNotifications: 14
+  mcp__github__pull_request_read: 7
+  Read: 4
+  mcp__github__update_pull_request: 3
   mcp__Claude_Code_Remote__update_trigger: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - docs/research/content-client-queries-without-wasm.md
   - nuxt.config.ts
