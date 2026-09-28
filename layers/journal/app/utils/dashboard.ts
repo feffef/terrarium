@@ -22,6 +22,7 @@
 // for its part, never relies on auto-import itself: it stays dependency-free
 // and explicit.
 import type { Friction, Importance, SessionCardView, SessionDoc, Severity, SkillDoc, NoteItem } from '../types/journal'
+import { REPO_URL } from '../../../../app/utils/repo'
 
 // ── Formatting helpers ───────────────────────────────────
 // Module-private: too generically named to put in the global auto-import
@@ -94,10 +95,6 @@ export function prRefs(sessions: SessionDoc[]): string[] {
   for (const s of sessions) for (const pr of s.prs ?? []) seen.add(pr.replace(/^#/, ''))
   return [...seen].sort((a, b) => Number(a) - Number(b))
 }
-
-// Single home for the repo the Journal's PR references point at — every PR
-// number the dashboard renders links through prUrl().
-export const REPO_URL = 'https://github.com/feffef/terrarium'
 
 export function prUrl(pr: string): string {
   return `${REPO_URL}/pull/${pr.replace(/^#/, '')}`

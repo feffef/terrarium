@@ -14,7 +14,7 @@ const SITES = [
 </script>
 
 <template>
-  <footer class="site-footer" aria-label="Other sites in the terrarium">
+  <footer class="site-footer" aria-label="Other sites in the terrarium, and its source">
     <span class="site-footer-label">Elsewhere:</span>
     <span class="site-footer-links">
       <template v-for="(s, i) in SITES" :key="s.to">
@@ -22,6 +22,7 @@ const SITES = [
         <NuxtLink :to="s.to">{{ s.name }}</NuxtLink>
       </template>
     </span>
+    <a class="site-footer-source" :href="REPO_URL">Source on GitHub</a>
   </footer>
 </template>
 
@@ -47,5 +48,6 @@ const SITES = [
   text-decoration-color: color-mix(in srgb, currentColor 30%, transparent);
   text-underline-offset: 2px;
 }
+.site-footer-source { margin-left: auto; }
 .site-footer a:hover { color: currentColor; text-decoration-color: currentColor; }
 </style>

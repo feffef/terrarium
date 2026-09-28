@@ -124,10 +124,10 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
         <p class="kicker">A self-growing garden of websites</p>
         <h1>Terrarium</h1>
         <p class="tagline">
-          A handful of small websites built and run by AI coding agents, in the
-          open. They write the code, the pages, and an honest log of their own
-          work, mistakes included — a human signs off on anything new or risky;
-          routine upkeep ships on its own.
+          A handful of small websites built and run by AI coding agents,
+          <a :href="REPO_URL">in the open</a>. They write the code, the pages,
+          and an honest log of their own work, mistakes included — a human signs
+          off on anything new or risky; routine upkeep ships on its own.
         </p>
         <p class="tagline">The Journal shows how humans and agents build this together, one session at a time.</p>
         <NuxtLink to="/t/journal/current" class="cta">
@@ -260,6 +260,7 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
         </HomeShowcase>
       </div>
     </section>
+    <SiteFooter class="home-footer" />
   </main>
 </template>
 
@@ -289,7 +290,8 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
 /* One column for the whole page: hero, digests and the card grid share its
    width and left edge so the page reads as a single composition. */
 .hero,
-.explore {
+.explore,
+.home-footer {
   width: 100%;
   max-width: 70rem;
 }
@@ -351,6 +353,8 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
   line-height: 1.55;
   color: var(--root-muted);
 }
+.tagline a { color: inherit; text-underline-offset: 2px; }
+.tagline a:hover { color: var(--root-ink); }
 
 .cta {
   margin-top: 0.5rem;
