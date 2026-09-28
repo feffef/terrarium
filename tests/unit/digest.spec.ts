@@ -12,8 +12,10 @@ import {
   dayIsClosed,
   DIGESTS_DIR,
   existingDigestDays,
+  OUTPUT_FILE_PATH,
   prFromCommit,
   readSessions,
+  resolveOutputTarget,
   utcDay,
   type Commit,
   type SessionMaterial,
@@ -136,6 +138,17 @@ describe('existingDigestDays()', () => {
     // A day whose Digest has already been swept to `archived` must not look
     // undigested again — it fell off the `current`-only scan before this fix.
     expect(existingDigestDays(dir)).toEqual(new Set(['2026-08-30', '2026-07-15']))
+  })
+})
+
+describe('resolveOutputTarget() — --out CLI flag', () => {
+  it('keeps default behavior unchanged when --out is omitted', () => {
+    expect(resolveOutputTarget([], 10)).toBeNull()
+    expect(resolveOutputTarget([], 30_000)).toBe(OUTPUT_FILE_PATH)
+  })
+  it('lands the output at the given path when --out is provided, regardless of size', () => {
+    expect(resolveOutputTarget(['--out', '/scratch/out.json'], 10)).toBe('/scratch/out.json')
+    expect(resolveOutputTarget(['--date', '2026-07-04', '--out', '/scratch/out.json'], 30_000)).toBe('/scratch/out.json')
   })
 })
 
