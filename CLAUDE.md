@@ -237,6 +237,14 @@ it with a tool.
   build, an e2e run) with `run_in_background: true` from the outset**, logging
   to the scratchpad directory — a foreground run can silently auto-background
   at the 2-minute timeout with a wrong status (issue #1293).
+- **Waiting on a backgrounded long-running command with nothing else currently
+  actionable? End the turn instead of issuing filler/no-op Bash calls (repeated
+  `true`, repeated status polling) while you wait** — the harness resumes the
+  session through its own completion/notification mechanism, so a filler call
+  burns turns without doing anything. Observed recurring: one session burned a
+  large share of its turns on pure waiting, and a second session relapsed into
+  the identical habit a second time in the same session after already
+  self-catching it once.
 - **Git mechanics — staleness, history archaeology, commit hygiene, and the
   git-specific chaining/output-discarding footguns (the same "check first"/
   "never silence a state-changing command" discipline as the pkill/tail-piping

@@ -35,6 +35,12 @@ specific session cite it.
   change under test. A PR once asserted a failing assertion was pre-existing
   on exactly this kind of invalid repro, and CI then failed for real on the
   same assertion (issue #907).
+- **For the common case of checking one already-serving in-page value** (a
+  computed style, a bounding rect, any other value read via `page.evaluate`),
+  reach for `scripts/probe.ts` before writing an ad-hoc script — it already
+  handles the gotchas below:
+  `pnpm exec tsx scripts/probe.ts <url> "<js-expression>"`, e.g.
+  `pnpm exec tsx scripts/probe.ts http://localhost:3000/t/journal/current "getComputedStyle(document.querySelector('.foo')).color"`.
 - **To verify a click/interaction, not just a static render**, write a small
   ad-hoc `playwright-core` script against the same pre-installed Chromium
   `scripts/screenshot.ts` uses — import `resolveChromiumPath()` from
