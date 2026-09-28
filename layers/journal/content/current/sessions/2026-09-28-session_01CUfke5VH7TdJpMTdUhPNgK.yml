@@ -1,53 +1,107 @@
 schemaVersion: 1
 session: session_01CUfke5VH7TdJpMTdUhPNgK
 startedAt: 2026-09-28T07:39:58Z
-endedAt: 2026-09-28T07:44:22Z
+endedAt: 2026-09-28T08:05:27Z
 kind: interactive
-goal: Run the third Midden survey since 2026-08-25
-status: completed
-outcome: "Survey-report issue #1468 filed, 4 candidates"
-summary: "Human-instructed via /midden-survey. Bounded the sweep at the previous survey (#1043, 2026-08-25), ran scripts/midden-survey.ts, swept closed-unmerged PRs (none in window) and dormant branches (fetched all 222 refs locally; nothing new past the 30-day floor), deduped against trench/stores, and judged every candidate against both gates. Filed issue #1468 with four candidates (the vue 3.5.40 pin, branch-pin-guard, search-issues.ts, three culled Tinkerfund Campaigns) plus a Gate-B exclusion table and a note that three of the four died inside their own PR. No code changes, no PR; cataloguing is left to a later green-lit session."
-prs: []
+goal: Survey the Midden, then catalogue its finds
+status: in-review
+outcome: "Survey #1468 filed; four finds in PR #1470"
+summary: "Human-instructed throughout. /midden-survey bounded at #1043 filed #1468 (four candidates). The user then asked for a reconstruction of how past catalogue sessions worked, and then to catalogue all four and create a Skill via /writing-for-agents. After four clarifying questions the user ruled: in-PR corpses count (with a dedicated section), the agent authors curatorial fields and a human reviews, placement is my call, and fact-check plus voice review before the PR. Agent-initiated within that brief: closing the 46-day season as the Wire Cut, the Surface Finds and Fault That Went Quiet reports, and CONTEXT.md rulings. The user added a plain-language rule mid-run. Three review rounds (voice, full fact-check, diff-scoped fact-check) found 15 issues, all fixed. PR #1470 opened and subscribed."
+prs:
+  - "1470"
 docsRead:
   - path: layers/midden/CONTEXT.md
-    reason: inclusion bar, artifact shape
-  - path: layers/midden/tenant.config.ts
-    reason: provenance schema for draft blocks
+    reason: inclusion bar, discipline, stores
+  - path: layers/midden/app/utils/condition.ts
+    reason: grade definitions
+  - path: layers/midden/app/utils/strata.ts
+    reason: seasons to close and reopen
+  - path: .agents/skills/writing-for-agents/SKILL.md
+    reason: authoring the new Skill
+  - path: .agents/skills/midden-survey/SKILL.md
+    reason: (read before editing)
 skillsUsed:
   - name: midden-survey
-    reason: the requested run
+    reason: the survey run
+  - name: writing-for-agents
+    reason: writing midden-catalogue
   - name: close-session
     reason: (no reason given)
   - name: log-session
     reason: (no reason given)
 frictions:
+  - description: My first draft of the branch-pin guard's note credited the session with deciding to drop it; the session log showed the human made that call.
+    solution: Read the session log's summary for who-decided-what before writing any attribution; now step 2 of midden-catalogue.
+    severity: minor
+  - description: Even working from primary sources, two fact-check rounds found 10 defects, mostly paraphrase drift introduced by the plain-language rewrite (seconds became minutes, one line vs several passages, network-level block vs refusal).
+    solution: Fact-check after every rewrite, diff-scoped; plain-language paraphrase is a rewrite and needs its own check. Encoded in midden-catalogue step 4.
+    severity: moderate
+  - description: the-current-cut.md says the content-engine patch lasted until upstream made it unnecessary; its own artifact says it was given up rather than fork a vendor build. Pre-existing doc contradiction.
+    solution: "Re-read ADR-0019 and the removing commit, then fix whichever of the two is wrong. Flagged in PR #1470, not fixed there."
+    severity: moderate
+  - description: gate:scoped ran before the last prose-only review fixes; only validate:content re-ran on the final tree.
+    solution: Acceptable for prose-only edits, but start the gate after the final review round when time allows.
+    severity: nit
   - description: Plain `git log --diff-filter=AD -- path` returned nothing for files added and deleted within one PR; history simplification hid them until --full-history.
     solution: Note in midden-survey SKILL.md that manual follow-up of intra-PR corpses needs `git log --full-history`.
     severity: minor
-  - description: "My ad-hoc `--ancestry-path --first-parent` landing-merge lookup returned empty for the Tinkerfund commits; had to fall back to reading PR #1429 directly."
-    solution: A small helper in midden-survey.ts reporting the landing PR per deleting commit would save this step.
-    severity: nit
-durationSec: 265
+durationSec: 1530
 models:
-  claude-opus-5-5: 62
+  claude-opus-5-5: 258
 toolCounts:
-  Bash: 20
-  ToolSearch: 3
+  Bash: 69
+  ToolSearch: 5
   mcp__github__search_pull_requests: 1
   mcp__github__search_issues: 1
-  mcp__github__issue_read: 1
+  mcp__github__issue_read: 2
   mcp__github__list_branches: 1
-  mcp__github__pull_request_read: 2
+  mcp__github__pull_request_read: 4
   mcp__github__issue_write: 1
-  Skill: 2
+  Skill: 4
+  AskUserQuestion: 1
+  Agent: 4
+  Read: 6
+  Edit: 19
+  Write: 13
+  Grep: 1
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - layers/midden/app/utils/strata.ts
+  - layers/midden/content/trench/artifacts/the-vue-pin.yml
+  - layers/midden/content/trench/artifacts/the-branch-pin-guard.yml
+  - layers/midden/content/trench/artifacts/the-search-script.yml
+  - layers/midden/content/trench/artifacts/the-culled-campaigns.yml
+  - layers/midden/content/trench/pages/surface-finds.md
+  - layers/midden/content/trench/pages/the-fault-that-went-quiet.md
+  - layers/midden/content/trench/pages/index.md
+  - layers/midden/CONTEXT.md
+  - .agents/skills/midden-catalogue/SKILL.md
+  - .agents/skills/midden-survey/SKILL.md
 docsReadViaShell:
   - layers/midden/CONTEXT.md
   - docs/agents/github-integration.md
+  - docs/adr/0005-skill-model.md
+  - docs/adr/0015-audit-skills-and-conditional-importance.md
+  - CONTEXT.md
+  - .agents/skills/writing-for-agents/SKILL-MECHANICS.md
+  - .agents/skills/midden-survey/SKILL.md
+subagents:
+  - type: Explore
+    task: Read all ADRs for constraints
+  - type: Explore
+    task: Fact-check new Midden content
+  - type: Explore
+    task: Voice/domain review of Midden content
+  - type: Explore
+    task: Diff-scoped fact-check of fixes
 gitBranch: claude/midden-survey-8pb7am
 entrypoint: remote_mobile
 cliVersion: 2.1.283
 learnings:
-  - A deleted-file sweep over full history also surfaces things that died inside their own PR and never reached main alive; earlier surveys never proposed that shape.
+  - "CLAUDE.md's prune-first rule was born from PR #1159: the branch-pin guard was deleted seconds before the rule was committed, naming that PR as its first application."
 ideas:
-  - Have scripts/midden-survey.ts tag each candidate with whether its path was ever alive on main's first-parent line (landed-then-died vs died-in-PR), so the curator can rule on intra-PR corpses once and the survey can filter by that ruling.
+  - Have scripts/midden-survey.ts tag each candidate as died-in-PR vs landed-then-died (was the path ever alive on main's first-parent line), now that CONTEXT.md counts both, so the survey report can group surface finds without hand-tracing each one.
 landedBy: Stop
