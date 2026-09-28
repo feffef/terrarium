@@ -1,0 +1,58 @@
+schemaVersion: 1
+session: session_016PiKSCYGfiAj26Ze7NpkD1
+startedAt: 2026-09-28T00:17:09Z
+endedAt: 2026-09-28T00:26:08Z
+kind: autonomous
+goal: Run the scheduled /digest sweep
+status: in-review
+outcome: "PR #1448 opened, gate green"
+summary: "Fully agent-initiated: a scheduled Routine fired /digest with no human present. Followed the digest Skill end to end — scripts/digest.ts list found one backfilled day (2026-09-27), gathered its PRs/commits/sessions/rollup, and authored a ~190-word Digest covering the whole-repo security fixes (PR #1443), the ADR-0028 navigation rework and its near-miss locale-cache bug, and the crowdfunding showcase's 17 new campaigns. Ran the archive-journal-content retention sweep (moved 1 digest + 6 session logs to archived), ran pnpm gate:scoped (forced full gate by the non-inert archive paths; all steps green including 138/138 e2e), committed, pushed, and opened PR #1448 scoped to the digest+sweep diff. Subscribed to its activity and am babysitting it to merge per the digest tier's green-gate self-merge authority."
+prs:
+  - "1448"
+docsRead:
+  - path: docs/agents/pr-workflow.md
+    reason: self-merge tier + closing-sequence recipe for the digest chartered run
+  - path: docs/adr/0028-navigation-reads-server-payloads.md
+    reason: verify the digest's own description of the payload-extraction change and its locale-cache near-miss
+  - path: layers/journal/content/current/pages/digests/2026-09-26.md
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: digest
+    reason: (invoked as a slash command)
+frictions:
+  - description: Issued two throwaway no-op `true` Bash calls just to have something to point at while waiting on a backgrounded gate run, instead of just ending the turn and waiting for the completion notification.
+    solution: When a background command is already running and nothing else is actionable, end the turn with a status message and no tool call rather than a filler Bash invocation.
+    severity: nit
+  - description: First attempt to background pnpm gate:scoped combined run_in_background:true with a trailing shell `&`; the double-background guard (#1208) correctly blocked it before anything ran.
+    solution: Drop the trailing `&` when also passing run_in_background:true.
+    severity: nit
+  - description: scripts/digest.ts gather 2026-09-27's JSON output (~32.6KB) exceeded the Bash tool's inline preview cap, requiring a second full Read of the saved output file to see every session's frictions — same recurring shape noted in the 2026-09-25/26 digest runs' own logs.
+    solution: No new fix found this run either; still worth a dedicated fix (e.g. a --compact or per-session-file gather mode) if it keeps recurring.
+    severity: nit
+durationSec: 539
+models:
+  claude-sonnet-5: 87
+toolCounts:
+  Bash: 27
+  Read: 2
+  Write: 2
+  ToolSearch: 3
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  Skill: 2
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 1
+filesEdited:
+  - layers/journal/content/current/pages/digests/2026-09-27.md
+docsReadViaShell:
+  - layers/tinkerfund/CONTEXT.md
+  - docs/agents/pr-workflow.md
+gitBranch: claude/compassionate-lovelace-j2hvpr
+entrypoint: remote_trigger
+cliVersion: 2.1.283
+trigger: digest
+landedBy: Stop
