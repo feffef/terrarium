@@ -64,6 +64,9 @@ useHead({ title: 'The Atlas of the Terrarium' })
         <h1 class="cover-title">The Atlas<br>of the Terrarium</h1>
         <p class="cover-sub">being a faithful account of the flora &amp; fauna observed under glass</p>
         <p class="cover-wings">a guide in three wings — <em>canopy · floor · pool</em></p>
+        <p v-if="specimens.length" class="at-random">
+          <NuxtLink :to="specimens[0]" @click="openAtRandom">or open the guide at random →</NuxtLink>
+        </p>
         <p class="cover-orn" aria-hidden="true">~ · ~ · ~ · ~ · ~</p>
       </header>
 
@@ -110,10 +113,6 @@ useHead({ title: 'The Atlas of the Terrarium' })
         </NuxtLink>
       </nav>
 
-      <p v-if="specimens.length" class="at-random">
-        <NuxtLink :to="specimens[0]" @click="openAtRandom">Or open the guide at random →</NuxtLink>
-      </p>
-
       <footer class="colophon">
         <p>Compiled by the resident naturalists · Edition MMXXVI</p>
         <p v-if="lastObservation">Last observation recorded {{ lastObservation }}</p>
@@ -150,6 +149,10 @@ useHead({ title: 'The Atlas of the Terrarium' })
 }
 .cover-wings { font-family: var(--atlas-label); font-size: 0.8rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--atlas-faint); margin: 0 0 0.4rem; }
 .cover-wings em { font-style: normal; color: var(--biome-accent); }
+.at-random { font-family: var(--atlas-display); font-style: italic; font-size: 1.1rem; margin: 0.9rem 0 0.4rem; }
+.at-random a { color: var(--atlas-ink); text-decoration-color: var(--atlas-rule); text-underline-offset: 0.2em; }
+.at-random a:hover { text-decoration-color: currentColor; }
+.at-random a:focus-visible { outline: 2px solid var(--biome-accent); outline-offset: 3px; border-radius: 2px; }
 
 .foreword { max-width: 34rem; margin: 0 auto 3rem; font-size: 1.06rem; }
 .foreword .drop::first-letter {
@@ -194,10 +197,6 @@ useHead({ title: 'The Atlas of the Terrarium' })
 .wing-foot { grid-area: foot; display: flex; align-items: center; gap: 0.5rem; margin-top: 0.9rem; }
 .wing-foot .swatch { width: 14px; height: 14px; border-radius: 3px; box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.18); }
 .wing-count { font-family: var(--atlas-data); font-size: 0.72rem; color: var(--atlas-faint); margin-left: 0.3rem; }
-
-.at-random { margin: 1.6rem 0 0; text-align: center; font-family: var(--atlas-display); font-style: italic; font-size: 1.1rem; }
-.at-random a { color: var(--atlas-muted); text-decoration-color: var(--atlas-rule); text-underline-offset: 0.2em; }
-.at-random a:hover { color: var(--atlas-ink); text-decoration-color: currentColor; }
 
 .colophon { margin-top: 3rem; text-align: center; font-family: var(--atlas-data); font-size: 0.72rem; color: var(--atlas-faint); line-height: 1.7; }
 .colophon p { margin: 0; }
