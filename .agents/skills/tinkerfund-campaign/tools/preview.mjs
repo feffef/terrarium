@@ -48,7 +48,7 @@ mkdirSync(outDir, { recursive: true })
 const sheet = resolve(outDir, 'sheet.html')
 writeFileSync(sheet, html)
 const width = before.length ? 1760 : 940
-const height = 60 + figures.length * 330
+const height = 40 + figures.length * 450
 execFileSync('pnpm', ['exec', 'tsx', 'scripts/screenshot.ts', pathToFileURL(sheet).href, resolve(outDir, 'sheet.png'), `${width}x${height}`], { stdio: 'inherit' })
 for (const [i, fig] of figures.entries()) {
   const { bytes, problems } = check(fig.svg)
