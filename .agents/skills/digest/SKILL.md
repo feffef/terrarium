@@ -24,7 +24,7 @@ rendered page). The PR is **eligible to self-merge as soon as the gate is green*
 (ADR-0003 amendment, activating ADR-0004's content-only low-risk tier) — see step 7
 for the boundary and the merge mechanics.
 
-> **Simplify first** (CLAUDE.md) governs it if this run touches the Platform or
+> **Keep it short** (CLAUDE.md) governs it if this run touches the Platform or
 > its agent instructions.
 
 ## 1. Get on a working branch

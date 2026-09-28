@@ -5,18 +5,15 @@ Guidance for Claude Code agents working in this repo. Terrarium is developed
 This file is the entry point for every session: it holds the conventions, the
 repo layout, and how to self-verify. `README.md` is only a primer for humans.
 
-## Simplify first
+## Keep it short
 
-For now, every change to the Platform or its agent instructions must **shrink**
-it: less code, less documentation, same behaviour. Cut bravely — delete, merge,
-shorten — and write what is left in the plainest words that stay exact.
+Write every new feature and instruction as short as it can be: the least code
+and the fewest words that stay exact, in the plainest language. Edits to what
+exists should leave it no longer than it needs to be.
 
 Prefer **goals over instructions**: say what a good outcome is and let the agent
 find the means. Spell out concrete steps only where getting them wrong is
 expensive or irreversible.
-
-Work that would grow the Platform waits: file it as an issue instead, unless a
-human asks for it outright.
 
 When a problem traces back to the Platform's own instructions, **prune first**:
 cut the instruction in a prune trial (ADR-0027) before extending it or guarding

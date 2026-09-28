@@ -18,7 +18,7 @@ without touching a human-only surface — but keep the hard ones rare (§3).
 Run it when asked (a Routine also fires it on a schedule), or after a batch of
 sessions has piled up unaddressed friction.
 
-> **Simplify first** (CLAUDE.md) governs every fix this run ships. Prefer the
+> **Keep it short** (CLAUDE.md) governs every fix this run ships. Prefer the
 > friction a deletion retires over the one a new mechanism would.
 
 ## 1. Survey & screen the frictions — in a subagent
