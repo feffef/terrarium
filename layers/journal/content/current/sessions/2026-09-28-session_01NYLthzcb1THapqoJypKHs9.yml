@@ -1,0 +1,134 @@
+schemaVersion: 1
+session: session_01NYLthzcb1THapqoJypKHs9
+startedAt: 2026-09-28T02:03:55Z
+endedAt: 2026-09-28T02:45:26Z
+kind: autonomous
+goal: Run frictions-to-fixes sweep
+status: completed
+outcome: 5 PRs merged, 2 issues filed
+summary: "Scheduled Routine fire of `frictions-to-fixes` — no live human prompt this session. Dispatched a survey subagent over the latest 20 session logs, screened candidates against the tracker, selected 5 simple fixes (dispatched as 5 parallel Sonnet impl agents in isolated worktrees: tinkerfund preview.mjs height, session-trace.ts cd-prefix resolution closing \"issue #1454\", a digest.ts auto-redirect mirroring session-frictions.ts, an origin/HEAD best-effort fix in the SessionStart hook, and a grouped CLAUDE.md/ verifying-ui-changes.md doc PR) and 2 guard-adjacent hard candidates filed as issues only (\"#1454\" dispatched after verifying it doesn't touch actual guard logic; \"#1455\" left undispatched per CLAUDE.md's guard rule since it edits a guard's own required unit-test files). Reviewed and merged all 5 PRs myself as the ADR-0003 reviewer-agent. PR \"#1459\"'s CI failed on first push (a git-version-dependent test fixture assumption); root-caused and pushed the fix myself rather than re-dispatching, then merged once green. All work beyond the initial Skill invocation was agent-initiated per the Skill's own autonomous-run default (ADR-0003) — no human checked in mid-run."
+prs:
+  - "1456"
+  - "1457"
+  - "1458"
+  - "1459"
+  - "1460"
+docsRead:
+  - path: CLAUDE.md
+    reason: guard rules, PR/merge conventions, gate:scoped classification
+  - path: .claude/skills/frictions-to-fixes/SKILL.md
+    reason: the run's own procedure
+  - path: .claude/skills/dispatch-subagents/SKILL.md
+    reason: worktree isolation + brief checklist for 5 parallel impl agents
+  - path: docs/agents/guards.md
+    reason: decide whether 2 hard candidates actually touched guard surface
+  - path: docs/agents/pr-workflow.md
+    reason: the review-then-merge-pr.ts recipe
+  - path: .agents/prune-trials.yml
+    reason: screen candidates against open prune trials
+  - path: docs/agents/verifying-ui-changes.md
+    reason: (read before editing)
+  - path: scripts/session-frictions.ts
+    reason: (no reason given)
+  - path: scripts/probe.ts
+    reason: (no reason given)
+  - path: scripts/chromium-path.ts
+    reason: (no reason given)
+  - path: .agents/skills/tinkerfund-campaign/tools/preview.mjs
+    reason: (read before editing)
+  - path: scripts/unshallow-on-start.ts
+    reason: (read before editing)
+  - path: scripts/git-helpers.ts
+    reason: (read before editing)
+  - path: tests/unit/git-helpers.spec.ts
+    reason: (read before editing)
+  - path: tests/support/git-fixture.ts
+    reason: (no reason given)
+  - path: scripts/digest.ts
+    reason: (read before editing)
+  - path: tests/unit/session-frictions.spec.ts
+    reason: (no reason given)
+  - path: tests/unit/digest.spec.ts
+    reason: (read before editing)
+  - path: scripts/session-trace.ts
+    reason: (read before editing)
+  - path: scripts/shell-reads.ts
+    reason: (no reason given)
+  - path: tests/unit/session-trace.spec.ts
+    reason: (read before editing)
+skillsUsed:
+  - name: dispatch-subagents
+    reason: (no reason given)
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: frictions-to-fixes
+    reason: (invoked as a slash command)
+frictions:
+  - description: "PR #1459's impl agent wrote a fixture test asserting `git init`+`remote add`+`fetch` never sets origin/HEAD, verified true on this dev container's git (2.43.0) but false on the GitHub Actions runner's git (2.55.0), which sets it on fetch when the remote advertises it. Passed locally, failed CI on first push."
+    solution: "Root-caused from the CI log and pushed a fix myself (delete the ref unconditionally after fetch so the test's precondition holds on either git version) rather than re-dispatching. Worth a line in docs/agents/environment-caveats.md: this dev container's git version can diverge from CI's, and a fixture that depends on git-version-specific behavior should force its precondition rather than assume it."
+    severity: moderate
+  - description: Deciding whether a "hard" candidate touching session-trace.ts counted as "touching a guard" (CLAUDE.md's never-dispatch rule) required manually tracing session-id-guard.ts's import graph, since guards.md's roster describes guards by name/file, not by which of a shared file's exports each guard actually imports.
+    solution: frictions-to-fixes/SKILL.md or guards.md could note explicitly that "touches a guard" is assessed by import graph (does the guard import the changed export), not by file identity — a shared utility file can host both guard-critical and ordinary exports.
+    severity: minor
+durationSec: 2490
+models:
+  claude-sonnet-5: 187
+toolCounts:
+  Bash: 47
+  Agent: 6
+  ToolSearch: 3
+  mcp__github__issue_write: 2
+  Skill: 3
+  Read: 4
+  Grep: 1
+  ReadNotifications: 8
+  mcp__github__pull_request_read: 22
+  mcp__github__pull_request_review_write: 5
+  mcp__github__get_check_run: 1
+  mcp__github__get_job_logs: 1
+  Edit: 1
+  Write: 1
+filesEdited:
+  - CLAUDE.md
+  - docs/agents/verifying-ui-changes.md
+  - .agents/skills/tinkerfund-campaign/tools/preview.mjs
+  - scripts/git-helpers.ts
+  - scripts/unshallow-on-start.ts
+  - tests/unit/git-helpers.spec.ts
+  - scripts/digest.ts
+  - tests/unit/digest.spec.ts
+  - scripts/session-trace.ts
+  - tests/unit/session-trace.spec.ts
+docsReadViaShell:
+  - docs/agents/guards.md
+  - docs/agents/verifying-ui-changes.md
+  - docs/agents/pr-workflow.md
+  - .agents/skills/tinkerfund-campaign/SKILL.md
+  - .agents/skills/tinkerfund-campaign/ILLUSTRATION.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - docs/agents/git-conventions.md
+subagents:
+  - type: general-purpose
+    task: Survey and screen session frictions
+  - type: general-purpose
+    task: Fix tinkerfund preview.mjs sheet height
+    model: sonnet
+  - type: general-purpose
+    task: Fix session-trace.ts cd-prefix resolution
+    model: sonnet
+  - type: general-purpose
+    task: Add digest.ts auto-redirect for large output
+    model: sonnet
+  - type: general-purpose
+    task: Fix origin/HEAD unset in unshallow hook
+    model: sonnet
+  - type: general-purpose
+    task: "Doc fixes: filler waits and probe.ts gap"
+    model: sonnet
+gitBranch: claude/eager-ptolemy-2jmudh
+entrypoint: remote_trigger
+cliVersion: 2.1.283
+trigger: frictions-to-fixes
+landedBy: Stop
