@@ -121,7 +121,7 @@ export const dimH = (x1, x2, y, label, size = 9) => T9(`M${f(x1)} ${f(y)}H${f(x2
 export const dimV = (y1, y2, x, label, size = 9) => T9(`M${f(x)} ${f(y1)}V${f(y2)}M${f(x - 2.5)} ${f(y1 + 6)}l2.5-6 2.5 6M${f(x - 2.5)} ${f(y2 - 6)}l2.5 6 2.5-6`) + (label ? `<text x="${f(x + 5)}" y="${f((y1 + y2) / 2 + 3)}" style="fill:var(--tf-ink);stroke:none;font:500 ${size}px var(--tf-mono)">${label}</text>` : '')
 export const txt = (x, y, t, size = 9, extra = '') => `<text x="${f(x)}" y="${f(y)}" style="fill:var(--tf-ink);stroke:none;font:500 ${size}px var(--tf-mono)${extra}">${t}</text>`
 
-// ---- the schema's svg() rule in tenant.config.ts (validate:content is the authority), plus a lettering check ----
+// ---- the schema's svg() rule in schemas.ts (validate:content is the authority), plus a lettering check ----
 const TOKEN = String.raw`var\(--tf-[a-z-]+\)`
 const THEME_COLOUR = new RegExp(String.raw`^(?:none|currentColor|${TOKEN}|color-mix\(in srgb, *${TOKEN}(?: \d+%)?, *${TOKEN}(?: \d+%)?\))$`)
 const COLOUR_VALUE = /\b(?:fill|stroke|color)\s*(?:=\s*["']?|:)\s*([^"';]+)/g

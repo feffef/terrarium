@@ -143,12 +143,11 @@ layer's pages.
 A same-named file under any layer's `components/content/` directory overrides
 the matching bundled `@nuxtjs/mdc` prose component — Nuxt flattens every
 layer's component registry into one, so this is override *priority*, not
-per-Tenant scoping (there is no way to override a prose component for one
-Tenant only). The root Platform's `app/components/content/ProsePre.vue`
+per-Tenant scoping: there's no way to override a prose component for just one
+Tenant. That's why the root Platform's `app/components/content/ProsePre.vue`
 (issue #364 — Mermaid diagram rendering for ` ```mermaid ` fenced blocks)
-lives at the app root rather than in a Tenant's `layers/` directory precisely
-because the override is global: placing it in a Tenant layer would suggest a
-scoping that doesn't exist.
+lives at the app root, not in a Tenant's `layers/` directory — placing it in a
+layer would wrongly imply a per-Tenant scoping that doesn't exist.
 
 ## 5. Verify a routing claim against the layer's actual `pages/` tree, not prose search
 

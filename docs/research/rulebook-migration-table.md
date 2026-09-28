@@ -43,16 +43,17 @@ In scope, per the ticket:
 | --- | --- | --- |
 | Root agent-instructions file (`CLAUDE.md`) | 1 | 659 lines |
 | Per-topic agent docs (`docs/agents/*.md`) | 12 | 1,462 lines |
-| **Repo-authored** Skills (`.agents/skills/*/SKILL.md`) | 14 | 3,115 lines |
+| **Repo-authored** Skills (`.agents/skills/*/SKILL.md`) | 16 | 3,115 lines |
 
 Out of scope: the **external-pack** Skills. `skills-lock.json` is the
 authoritative discriminator and was read programmatically rather than by
 eyeballing the directory — the two sets are interleaved in one directory and the
-pack set is the larger. It keys **22** names; `.agents/skills/` holds **36**
-directories; the repo-authored remainder is therefore **14**:
+pack set is the larger. It keys **25** names; `.agents/skills/` holds **41**
+directories; the repo-authored remainder is therefore **16**:
 `atlas-specimen`, `audit-docs`, `audit-skills`, `auto-triage`, `blog-post`,
 `close-session`, `digest`, `dispatch-subagents`, `frictions-to-fixes`,
-`guest-build`, `guest-intake`, `log-session`, `midden-survey`, `prune-trial`.
+`guest-build`, `guest-intake`, `log-session`, `midden-survey`, `prune-trial`,
+`tinkerfund-campaign`, `visitor-loop`.
 ADR-0015 makes the
 pack set read-only to us, so proposing a mechanism for a rule they own is a
 non-starter.
