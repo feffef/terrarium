@@ -25,7 +25,7 @@ rigor applies to **every** draft this Skill produces, including the two a run
 always ends up discarding — a rejected draft is still a real document a reviewer
 read and judged; it doesn't get a lower bar because it might not ship.
 
-> **Simplify first** (CLAUDE.md) governs it if this run touches the Platform or
+> **Keep it short** (CLAUDE.md) governs it if this run touches the Platform or
 > its agent instructions.
 
 ## 0. Read the argument, then run the candidate process

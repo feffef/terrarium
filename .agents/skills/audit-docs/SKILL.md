@@ -17,7 +17,7 @@ conflicting facts is true.
 > human-only surface (ADR-0004's low-risk content tier). It edits only *Live*
 > docs — never a historical decision, never a pack template.
 
-> **Simplify first** (CLAUDE.md) governs every edit this run makes.
+> **Keep it short** (CLAUDE.md) governs every edit this run makes.
 
 > **Command-only.** Invoked as `/audit-docs`; `disable-model-invocation` keeps
 > the Skill tool from invoking it, even when the slash command preloads it.
