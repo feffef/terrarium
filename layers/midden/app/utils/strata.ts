@@ -65,8 +65,8 @@ export const DIG_SEASONS: DigSeason[] = [
     // the Platform spent trusting its plainer instincts: the Midden's own
     // reading instruments dug back out when a simpler presentation won, a
     // retired root-index listing, a copy-link affordance, and the
-    // @nuxt/content client-DB patch dropped once upstream no longer needed it
-    // (ADR-0019). It held the open-ended "Current Midden" name for 42 days
+    // @nuxt/content client-DB patch dropped for an error dialog and a reload
+    // (ADR-0019, superseded). It held the open-ended "Current Midden" name for 42 days
     // before there was enough in it to say what it was.
     slug: 'plainer-cut',
     label: 'the Plainer Cut',
