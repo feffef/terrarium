@@ -299,6 +299,7 @@ trials:
         - Size the summary to the session
         - Don't retell the diff
     opened: 2026-09-28
+    proven: true
     check: >
       Damage is a summary that mostly restates commit or PR titles instead of
       the knowledge history can't give (why a direction was chosen, what was
@@ -321,6 +322,7 @@ trials:
         - quote verbatim in the verdict commit
         - "landed:/judgeable from: lines"
     opened: 2026-09-28
+    proven: true
     check: >
       Damage is a verdict commit that judges a trial before the script's
       `judgeable from:` floor, or against a landing date or commit that
