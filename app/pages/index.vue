@@ -87,6 +87,7 @@ const { data: find } = await useAsyncData('midden-find', async () => {
   const d = pickOfTheDay(finds)
   return d && { ...d, url: `/t/midden/trench${d.site ? `/${d.site}` : ''}#artifact-${d.stem}` }
 })
+const stampOpen = ref(false)
 
 // Tinkerfund's rooms are its two Spaces: the shop, and the edge-case data its own
 // e2e tests run against (layers/tinkerfund/CONTEXT.md) — the one Tenant that
@@ -191,12 +192,16 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
           blurb="An excavation of what the platform threw away — dead branches, closed pull requests, retired skills — dated, graded and catalogued like broken pottery."
           :entries="middenEntries"
         >
-          <NuxtLink v-if="find" :to="find.url" class="find">
-            <span class="find-stamp">{{ conditionMeta(find.condition).label }}</span>
-            <span class="find-title">{{ find.title }}</span>
-            <span class="scroll-well find-well"><span class="find-note scroll-box">{{ find.catalogNote }}</span></span>
+          <!-- Not one link: the stamp and glosses are buttons, which can't nest in one. -->
+          <div v-if="find" class="find">
+            <button type="button" class="find-stamp" :aria-expanded="stampOpen" @click="stampOpen = !stampOpen">
+              {{ conditionMeta(find.condition).label }}
+            </button>
+            <span v-show="stampOpen" role="note" class="find-stamp-def">{{ conditionMeta(find.condition).definition }}</span>
+            <NuxtLink :to="find.url" class="find-title">{{ find.title }}</NuxtLink>
+            <span class="scroll-well find-well"><span class="find-note scroll-box"><MiddenGlossedText :text="find.catalogNote" /></span></span>
             <span class="find-meta">{{ digSeasonOf(find.stratum)?.label ?? find.stratum }}</span>
-          </NuxtLink>
+          </div>
         </HomeShowcase>
       </div>
     </section>
@@ -591,13 +596,27 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--midden-accent);
+  background: none;
+  cursor: help;
   transform: rotate(-4deg);
+}
+.find-stamp:focus-visible {
+  outline: 2px solid var(--midden-accent);
+  outline-offset: 2px;
+}
+.find-stamp-def {
+  font-family: var(--midden-serif);
+  font-style: italic;
+  font-size: 0.85rem;
+  color: var(--midden-muted);
 }
 .find-title {
   font-family: var(--midden-mono);
   font-size: 0.92rem;
   font-weight: 600;
   overflow-wrap: anywhere;
+  color: inherit;
+  text-decoration: none;
 }
 .find-note {
   font-family: var(--midden-serif);
@@ -623,7 +642,7 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
   text-transform: uppercase;
   color: var(--midden-faint);
 }
-.find:hover .find-title {
+.find-title:hover {
   text-decoration: underline;
   text-decoration-color: var(--midden-accent);
 }

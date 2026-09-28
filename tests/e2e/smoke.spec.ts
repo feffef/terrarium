@@ -39,6 +39,7 @@ import { registerJournalE2E } from '../../layers/journal/tests/e2e/journal.e2e.t
 import { registerBlogE2E } from '../../layers/blog/tests/e2e/blog.e2e.ts'
 import { registerAtlasE2E } from '../../layers/atlas/tests/e2e/atlas.e2e.ts'
 import { registerMiddenE2E } from '../../layers/midden/tests/e2e/midden.e2e.ts'
+import { CONDITION_GRADES } from '../../layers/midden/app/utils/condition.ts'
 import { registerMarqueeE2E } from '../../layers/marquee/tests/e2e/marquee.e2e.ts'
 import { registerCommonsE2E } from '../../layers/commons/tests/e2e/commons.e2e.ts'
 import { registerTinkerfundE2E } from '../../layers/tinkerfund/tests/e2e/tinkerfund.e2e.ts'
@@ -134,6 +135,24 @@ describe('L2 smoke render', async () => {
         // The --tf-* tokens resolve inside the tile only (theme.css's `.tf-tokens`).
         expect(await tile.evaluate((el) => getComputedStyle(el).getPropertyValue('--tf-accent'))).not.toBe('')
         expect(await page.locator('.root').evaluate((el) => getComputedStyle(el).getPropertyValue('--tf-accent'))).toBe('')
+      } finally {
+        await page.close()
+      }
+    })
+
+    it('explains the Midden find’s condition stamp by tap, from the condition table (#1464)', async () => {
+      const page = await createPage()
+      try {
+        await page.goto(url('/'), { waitUntil: 'hydration' })
+        const find = page.locator('.tile--midden .find')
+        const stamp = find.locator('button.find-stamp')
+        const label = (await stamp.textContent())!.trim()
+        const grade = CONDITION_GRADES.find((c) => c.label === label)!
+        expect(await find.locator('.find-stamp-def').isVisible()).toBe(false)
+        await stamp.click()
+        expect(await stamp.getAttribute('aria-expanded')).toBe('true')
+        expect(await find.locator('.find-stamp-def').textContent()).toBe(grade.definition)
+        expect(await find.locator('a.find-title').getAttribute('href')).toMatch(/^\/t\/midden\/trench.*#artifact-/)
       } finally {
         await page.close()
       }
