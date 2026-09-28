@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01E7nzKhxh1riVDMpn8YytKM
 startedAt: 2026-09-28T04:01:38Z
-endedAt: 2026-09-28T04:21:32Z
+endedAt: 2026-09-28T04:27:17Z
 kind: autonomous
 goal: Run scheduled /audit-docs sweep
-status: in-review
-outcome: 8 fixes fact-checked and shipped in one PR
-summary: "Scheduled, autonomous run of /audit-docs (no human prompt this session). Dispatched four parallel read-only reviewer agents, one per lens pair (Freshness: drift/orphan-addition; Single-home: duplication/mis-location; Concision: verbose/stale-narration; Coherence: contradiction/ambiguity), each respecting the open Prune Trial territories in .agents/prune-trials.yml. Pooled 8 findings (Single-home returned none), fact-checked every one against a primary source myself (code, ADRs, skills-lock.json, git history) before touching anything, and fixed all 8: two stale tenant.config.ts-vs-schemas.ts pointers in the tinkerfund-campaign Skill, stale Skill/pack counts in rulebook-migration-table.md, two verbosity cuts, one stale-narration cut in guards.md, and two journal facing-page contradictions (how-it-works.md missing the prune-trial/visitor-loop merge-authority exceptions; history.md wrongly claiming a guard-scope disclosure is still missing from CLAUDE.md/guards.md when it was restored). Left one ambiguity finding (CLAUDE.md's \"isolation logic\" catch-all) alone: an honestly disclosed, already-tracked open gap (issue #864), not a defect. No human-only surface touched. `pnpm gate:scoped` ran the full gate (a non-.md Skill file was in the diff) and went green. Opened PR #1461, subscribed to it, posted the one-line audit comment, and am babysitting it to self-merge on green per ADR-0003's audit-docs charter."
+status: completed
+outcome: 8 fixes fact-checked, shipped, merged
+summary: "Scheduled, autonomous run of /audit-docs (no human prompt this session). Dispatched four parallel read-only reviewer agents, one per lens pair (Freshness: drift/orphan-addition; Single-home: duplication/mis-location; Concision: verbose/stale-narration; Coherence: contradiction/ambiguity), each respecting the open Prune Trial territories in .agents/prune-trials.yml. Pooled 8 findings (Single-home returned none), fact-checked every one against a primary source myself (code, ADRs, skills-lock.json, git history) before touching anything, and fixed all 8: two stale tenant.config.ts-vs-schemas.ts pointers in the tinkerfund-campaign Skill, stale Skill/pack counts in rulebook-migration-table.md, two verbosity cuts, one stale-narration cut in guards.md, and two journal facing-page contradictions (how-it-works.md missing the prune-trial/visitor-loop merge-authority exceptions; history.md wrongly claiming a guard-scope disclosure is still missing from CLAUDE.md/guards.md when it was restored). Left one ambiguity finding (CLAUDE.md's \"isolation logic\" catch-all) alone: an honestly disclosed, already-tracked open gap (issue #864), not a defect. No human-only surface touched. `pnpm gate:scoped` ran the full gate (a non-.md Skill file was in the diff) and went green. Opened PR #1461, subscribed, posted the audit comment and, once CI's gate check went green with a clean mergeable_state and no conflicting open issues, posted the merge verdict comment and merged it via scripts/merge-pr.ts per ADR-0003's audit-docs charter. Unsubscribed and cancelled the standing check-in once merged."
 prs:
   - "1461"
 docsRead:
@@ -142,23 +142,28 @@ skillsUsed:
   - name: close-session
     reason: closure at PR-open
   - name: log-session
-    reason: author this log
+    reason: author this log, twice (in-review, then completed)
 frictions: []
-durationSec: 1194
+durationSec: 1539
 models:
-  claude-sonnet-5: 133
+  claude-sonnet-5: 176
 toolCounts:
-  Bash: 38
+  Bash: 45
   Agent: 4
   ScheduleWakeup: 1
-  Read: 6
-  Edit: 8
+  Read: 7
+  Edit: 12
   ToolSearch: 1
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
-  mcp__github__add_issue_comment: 1
+  mcp__github__add_issue_comment: 2
   Skill: 2
   Write: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 5
+  mcp__Claude_Code_Remote__send_later: 2
+  mcp__Claude_Code_Remote__delete_trigger: 1
+  mcp__github__unsubscribe_pr_activity: 1
 filesEdited:
   - .agents/skills/tinkerfund-campaign/SKILL.md
   - .agents/skills/tinkerfund-campaign/tools/lib.mjs
