@@ -4,7 +4,7 @@ import { chmodSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { afterEach, describe, expect, it } from 'vitest'
-import { fetchOriginMain, FETCH_TIMEOUT_MS, isFetchTimeout, isShallowRepository, unshallow, UNSHALLOW_TIMEOUT_MS } from '../../scripts/git-helpers.ts'
+import { fetchOriginMain, FETCH_TIMEOUT_MS, hasOriginHead, isFetchTimeout, isShallowRepository, setOriginHead, unshallow, UNSHALLOW_TIMEOUT_MS } from '../../scripts/git-helpers.ts'
 import { commitFile, createGitFixture, git, shallowClone } from '../support/git-fixture.ts'
 
 describe('isFetchTimeout()', () => {
@@ -56,6 +56,30 @@ describe('isShallowRepository()', () => {
       expect(isShallowRepository(clone)).toBe(true)
       unshallow(clone)
       expect(isShallowRepository(clone)).toBe(false)
+    } finally {
+      rmSync(fixture.dir, { recursive: true, force: true })
+    }
+  })
+})
+
+describe('hasOriginHead() / setOriginHead()', () => {
+  it('is false for a checkout built by fetch rather than clone, true once set', () => {
+    const fixture = createGitFixture('git-helpers-origin-head')
+    try {
+      commitFile(fixture.work, '1.txt', '1', 'c1')
+      git(fixture.work, ['push', '-q', 'origin', 'main'])
+
+      // `git init` + `remote add` + `fetch` never sets origin/HEAD — unlike
+      // `git clone`, which is why this repro needs to avoid it (mirrors the
+      // no-origin/HEAD checkouts this environment hands out).
+      const clone = join(fixture.dir, 'clone')
+      git(fixture.dir, ['init', '-q', '-b', 'main', 'clone'])
+      git(clone, ['remote', 'add', 'origin', fixture.origin])
+      git(clone, ['fetch', '-q', 'origin'])
+
+      expect(hasOriginHead(clone)).toBe(false)
+      setOriginHead(clone)
+      expect(hasOriginHead(clone)).toBe(true)
     } finally {
       rmSync(fixture.dir, { recursive: true, force: true })
     }
