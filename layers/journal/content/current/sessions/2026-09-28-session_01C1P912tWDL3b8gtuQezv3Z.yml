@@ -1,14 +1,23 @@
 schemaVersion: 1
 session: session_01C1P912tWDL3b8gtuQezv3Z
 startedAt: 2026-09-28T09:27:29Z
-endedAt: 2026-09-28T18:25:31Z
+endedAt: 2026-09-28T20:06:26Z
 kind: interactive
-goal: Auto-triage sweep, then grill escalated issues
-status: completed
-outcome: 7 issues agent-ready, 1 closed, 1 spec parked
-summary: "Human-instructed throughout. /auto-triage: 9 of 22 open issues eligible; one read-only subagent each; #1455/#1452/#1451 went ready-for-agent, six to ready-for-human. The owner then ran /grill-with-docs over the escalations and decided each: #1446 LRU page cache capped at 200 entries; #1450 becomes a prune trial dropping all session-log word limits for size guidance that prizes knowledge git and PRs can't hold (the owner's own framing); #1463/#1464 fixed presentationally via a Midden gloss layer, no record edits, #1464 blocked by #1463; #1449 closed not-planned as a data point on #864; spec #1375 left alone. I added #1451 blocked-by #1450 (both touch the prune-trials ledger)."
-prs: []
-docsRead: []
+goal: Triage, grill and implement the new issue backlog
+status: in-review
+outcome: Seven issues implemented in one PR, awaiting review
+summary: "All human-instructed: /auto-triage, then /grill-with-docs, then /implement \"all in background agents\" with the owner choosing one branch and one PR over per-issue PRs. Triage sent 3 of 9 issues to ready-for-agent; grilling settled the 5 escalations (LRU cap 200; word caps pruned in favour of non-derivable-knowledge guidance; Midden gloss without record edits; #1449 folded into #864). Seven worktree agents committed locally only, and I merged each --no-ff so the single PR stays reviewable per issue; blockers (#1463 before #1464, #1450 before #1451) were serialized. Surprises: #1446's lru-cache dependency was unnecessary (unstorage already depends on it), and @nuxt/content's component manifest ignores components the content never names, so the gloss is passed through ContentRenderer. Both prune trials passed Sonnet probes. Open: code-review, CI."
+prs:
+  - "1477"
+docsRead:
+  - path: .agents/skills/log-session/SKILL.md
+    reason: (read before editing)
+  - path: .agents/skills/prune-trial/SKILL.md
+    reason: (read before editing)
+  - path: .agents/prune-trials.yml
+    reason: (no reason given)
+  - path: docs/agents/tenant-layers.md
+    reason: (no reason given)
 skillsUsed:
   - name: close-session
     reason: (no reason given)
@@ -18,10 +27,18 @@ skillsUsed:
     reason: (no reason given)
   - name: domain-modeling
     reason: (no reason given)
+  - name: dispatch-subagents
+    reason: (no reason given)
+  - name: code-review
+    reason: (no reason given)
   - name: auto-triage
     reason: (invoked as a slash command)
   - name: grill-with-docs
     reason: (invoked as a slash command)
+  - name: implement
+    reason: (invoked as a slash command)
+  - name: writing-for-agents
+    reason: (no reason given)
 frictions:
   - description: gh is absent; ad-hoc curl for assignees, native blockers and open PRs, since list-open-issues.ts omits assignees
     solution: Have list-open-issues.ts or last-comment-authors.ts emit assignees and open native blocked_by so the wayfinder skip is one call
@@ -41,27 +58,62 @@ frictions:
   - description: Native-dependency POST via curl failed first with no Content-Type header; the proxy demands application/json
     solution: Note the Content-Type requirement next to issue-tracker.md's Blocking recipe or in github-integration.md's gh-less fallback
     severity: nit
-durationSec: 32281
+  - description: Every impl agent hit the worktree-isolation guard refusing chained git commands or heredocs; each rediscovered splitting them
+    solution: Say in dispatch-subagents' brief checklist to issue git commands one per Bash call in worktrees, or have the guard's deny message say so
+    severity: minor
+  - description: check:worktrees flags every local-only impl branch as unpushed even when already merged into the pushed orchestrator branch
+    solution: Have check-worktrees treat a branch contained in any pushed ref as rescued
+    severity: minor
+  - description: "My filter for the latest Agent Brief dropped #1446 because its body mentioned ready-for-human in its opening; caught by a (none found) count"
+    solution: Select the last Agent Brief comment by position, not by body text
+    severity: nit
+durationSec: 38337
 models:
-  claude-opus-5-5: 97
+  claude-opus-5-5: 183
 toolCounts:
-  Bash: 23
-  Agent: 9
-  Skill: 4
-  ToolSearch: 1
+  Bash: 48
+  Agent: 20
+  Skill: 6
+  ToolSearch: 2
   mcp__github__add_issue_comment: 6
   mcp__github__issue_write: 5
+  AskUserQuestion: 1
+  Read: 2
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+filesEdited:
+  - .agents/skills/log-session/SKILL.md
+  - shared/schemas/session.ts
+  - scripts/sweep-truncated-sessions.ts
+  - .agents/skills/visitor-loop/SKILL.md
+  - layers/midden/tests/unit/gloss.spec.ts
+  - layers/midden/app/utils/gloss.ts
+  - layers/midden/app/components/content/MiddenGloss.vue
+  - layers/midden/app/components/midden/GlossedText.vue
+  - layers/midden/app/components/content/MiddenArtifact.vue
+  - layers/midden/app/pages/t/midden/[space]/[...slug].vue
+  - layers/midden/tests/e2e/midden.e2e.ts
+  - scripts/.probe-1463.ts
+  - layers/midden/app/components/midden/Gloss.vue
+  - app/pages/index.vue
+  - .agents/skills/prune-trial/SKILL.md
+  - tests/unit/page-cache.spec.ts
+  - nuxt.config.ts
+  - docs/adr/0028-navigation-reads-server-payloads.md
 docsReadViaShell:
   - .agents/skills/triage/SKILL.md
   - docs/agents/issue-tracker.md
   - .agents/skills/triage/AGENT-BRIEF.md
   - docs/adr/0022-autonomous-triage-sweep.md
   - CONTEXT.md
+  - .agents/skills/prune-trial/SKILL.md
+  - docs/agents/pr-workflow.md
   - docs/agents/triage-labels.md
   - .agents/skills/visitor-loop/decisions.md
   - .agents/skills/visitor-loop/SKILL.md
   - docs/research/rulebook-migration-table.md
-  - .agents/skills/prune-trial/SKILL.md
+  - docs/agents/tenant-layers.md
   - .agents/skills/log-session/SKILL.md
   - docs/agents/guards.md
   - .agents/skills/frictions-to-fixes/SKILL.md
@@ -88,6 +140,30 @@ subagents:
     task: "Triage issue #1446"
   - type: general-purpose
     task: "Triage issue #1375"
+  - type: general-purpose
+    task: "Implement #1446 LRU page cache"
+  - type: general-purpose
+    task: "Implement #1450 word-limit prune trial"
+  - type: general-purpose
+    task: "Implement #1463 Midden gloss layer"
+  - type: general-purpose
+    task: "Implement #1455 guard spec tmp names"
+  - type: general-purpose
+    task: "Implement #1452 visitor-loop decisions"
+  - type: general-purpose
+    task: "Sonnet probe for #1450 prune"
+    model: sonnet
+  - type: general-purpose
+    task: "Implement #1451 prune verbatim clause"
+  - type: general-purpose
+    task: "Sonnet probe for #1451 prune"
+    model: sonnet
+  - type: general-purpose
+    task: "Implement #1464 homepage find gloss"
+  - type: general-purpose
+    task: Standards review of branch
+  - type: general-purpose
+    task: Spec review of branch
 gitBranch: claude/auto-triage-njju5l
 entrypoint: remote_mobile
 cliVersion: 2.1.283
