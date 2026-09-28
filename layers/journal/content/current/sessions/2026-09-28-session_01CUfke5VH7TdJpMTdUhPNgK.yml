@@ -1,0 +1,53 @@
+schemaVersion: 1
+session: session_01CUfke5VH7TdJpMTdUhPNgK
+startedAt: 2026-09-28T07:39:58Z
+endedAt: 2026-09-28T07:44:22Z
+kind: interactive
+goal: Run the third Midden survey since 2026-08-25
+status: completed
+outcome: "Survey-report issue #1468 filed, 4 candidates"
+summary: "Human-instructed via /midden-survey. Bounded the sweep at the previous survey (#1043, 2026-08-25), ran scripts/midden-survey.ts, swept closed-unmerged PRs (none in window) and dormant branches (fetched all 222 refs locally; nothing new past the 30-day floor), deduped against trench/stores, and judged every candidate against both gates. Filed issue #1468 with four candidates (the vue 3.5.40 pin, branch-pin-guard, search-issues.ts, three culled Tinkerfund Campaigns) plus a Gate-B exclusion table and a note that three of the four died inside their own PR. No code changes, no PR; cataloguing is left to a later green-lit session."
+prs: []
+docsRead:
+  - path: layers/midden/CONTEXT.md
+    reason: inclusion bar, artifact shape
+  - path: layers/midden/tenant.config.ts
+    reason: provenance schema for draft blocks
+skillsUsed:
+  - name: midden-survey
+    reason: the requested run
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Plain `git log --diff-filter=AD -- path` returned nothing for files added and deleted within one PR; history simplification hid them until --full-history.
+    solution: Note in midden-survey SKILL.md that manual follow-up of intra-PR corpses needs `git log --full-history`.
+    severity: minor
+  - description: "My ad-hoc `--ancestry-path --first-parent` landing-merge lookup returned empty for the Tinkerfund commits; had to fall back to reading PR #1429 directly."
+    solution: A small helper in midden-survey.ts reporting the landing PR per deleting commit would save this step.
+    severity: nit
+durationSec: 265
+models:
+  claude-opus-5-5: 62
+toolCounts:
+  Bash: 20
+  ToolSearch: 3
+  mcp__github__search_pull_requests: 1
+  mcp__github__search_issues: 1
+  mcp__github__issue_read: 1
+  mcp__github__list_branches: 1
+  mcp__github__pull_request_read: 2
+  mcp__github__issue_write: 1
+  Skill: 2
+docsReadViaShell:
+  - layers/midden/CONTEXT.md
+  - docs/agents/github-integration.md
+gitBranch: claude/midden-survey-8pb7am
+entrypoint: remote_mobile
+cliVersion: 2.1.283
+learnings:
+  - A deleted-file sweep over full history also surfaces things that died inside their own PR and never reached main alive; earlier surveys never proposed that shape.
+ideas:
+  - Have scripts/midden-survey.ts tag each candidate with whether its path was ever alive on main's first-parent line (landed-then-died vs died-in-PR), so the curator can rule on intra-PR corpses once and the survey can filter by that ruling.
+landedBy: Stop
