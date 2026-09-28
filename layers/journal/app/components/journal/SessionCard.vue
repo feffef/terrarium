@@ -150,7 +150,7 @@ const foldedFieldLabels = new Intl.ListFormat('en', { style: 'long', type: 'conj
             </details>
           </div>
 
-          <p class="sid">Session <span class="mono">{{ card.sid }}</span></p>
+          <p class="sid">Session {{ card.sid }}</p>
         </div>
       </div>
     </Transition>
@@ -262,6 +262,7 @@ const foldedFieldLabels = new Intl.ListFormat('en', { style: 'long', type: 'conj
 }
 .sid {
   margin: 0.9rem 0 0;
+  font-family: var(--jd-mono);
   font-size: 0.7rem;
   color: var(--jd-faint);
 }
