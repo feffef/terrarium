@@ -1,0 +1,55 @@
+schemaVersion: 1
+session: session_01M8TuTH2JSu4rwMaW3pZKEZ
+startedAt: 2026-09-28T06:51:31Z
+endedAt: 2026-09-28T07:00:58Z
+kind: interactive
+goal: Link source repo from homepage and footer
+status: in-review
+outcome: "PR #1466 open, full gate green"
+summary: "Human-instructed: the user ran /grill-with-docs on an idea to add a 'Source on GitHub' link to SiteFooter. Grilling found the homepage doesn't render SiteFooter, so the plan the user approved (all my recommendations, no Q5 issues filed) was: link \"in the open\" in the hero, render SiteFooter on the homepage, add a separate footer source link, and move REPO_URL from the journal layer to app/utils/repo.ts. On the user's \"go\" I implemented it; gate:scoped ran the full gate green and preview screenshots confirmed the render. Opened PR #1466 per ADR-0003's auto-open default."
+prs:
+  - "1466"
+docsRead:
+  - path: app/components/SiteFooter.vue
+    reason: the component the idea targeted
+  - path: app/pages/index.vue
+    reason: where the 'in the open' claim lives
+skillsUsed:
+  - name: grilling
+    reason: refine the idea into a settled plan
+  - name: domain-modeling
+    reason: check for glossary/ADR impact (none)
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: grill-with-docs
+    reason: (invoked as a slash command)
+frictions:
+  - description: "The idea's premise (a SiteFooter link reaches the front door) was false: the homepage never rendered SiteFooter. Caught only by grepping usages."
+    solution: Grilling's fact-finding pass caught it; ideas captured in logs should name the file they'd touch after checking it.
+    severity: minor
+  - description: First PR create was denied by the ADR-0017 provenance guard because the marker shape was wrong; resubmitted with the prescribed first line.
+    solution: Guard deny message taught the shape as designed; no change needed.
+    severity: nit
+durationSec: 567
+models:
+  claude-opus-5-5: 58
+toolCounts:
+  Skill: 4
+  Bash: 20
+  Read: 2
+  ToolSearch: 1
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 2
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__send_later: 1
+docsReadViaShell:
+  - CONTEXT.md
+  - docs/agents/guards.md
+gitBranch: claude/github-link-footer-2umokk
+entrypoint: remote_mobile
+cliVersion: 2.1.283
+learnings:
+  - Journal utils that unit tests import directly can't rely on auto-import, so a Platform util moved to app/utils needs an explicit relative import there.
+landedBy: Stop
