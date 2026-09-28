@@ -58,8 +58,7 @@ const inscriptionForDisplay = computed(() =>
 const remainsForDisplay = computed(() => (isLost.value ? undefined : artifact.value?.remains))
 
 // `removedIn` is a bare hash (tenant.config.ts): the commit link is derived
-// here against REPO_URL (single-homed in layers/journal/app/utils/dashboard.ts,
-// auto-imported cross-layer like every app/utils export).
+// here against REPO_URL (app/utils/repo.ts, auto-imported).
 const removedInUrl = computed(() =>
   artifact.value?.removedIn ? `${REPO_URL}/commit/${artifact.value.removedIn}` : undefined,
 )
