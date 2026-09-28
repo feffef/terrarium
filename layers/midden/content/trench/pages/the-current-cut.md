@@ -19,8 +19,10 @@ forty-two on the local gate, three accordion tests down across two CI runs. The
 second came out
 with its own shadow attached: a local patch to the content engine's
 client-side database loading, carried against a pinned version for eight days.
-It had not stopped the empty page it was written for, and the owner had it
-removed rather than keep a private copy of someone else's code; a message asking
+It had not stopped the empty page it was written for: it caught loads that
+failed outright, but some arrived broken and were marked done anyway, and those
+it never saw. The owner had it removed rather than keep a private copy of
+someone else's code; a message asking
 the reader to reload took its place. It was lifted out together with the one-line
 workspace file that had existed only to declare it.
 
