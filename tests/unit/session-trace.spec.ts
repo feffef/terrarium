@@ -453,6 +453,28 @@ describe('docsReadViaShell (issue #1074)', () => {
     expect(scan.nearMisses.map((m) => m.path)).toEqual(['docs/agents/guards.md'])
   })
 
+  describe('cd-prefix resolution (issue #1454)', () => {
+    it('leaves an ordinary command with no cd prefix unchanged', () => {
+      const scan = shellReadScanOf(withCwd('cat CONTEXT.md'))
+      expect(scan.paths).toEqual(['CONTEXT.md'])
+    })
+
+    it('resolves a `cd <dir>;`-prefixed relative path against that directory, not session cwd', () => {
+      const scan = shellReadScanOf(withCwd('cd /repo/layers/tinkerfund; cat CONTEXT.md'))
+      expect(scan.paths).toEqual(['layers/tinkerfund/CONTEXT.md'])
+    })
+
+    it('resolves a `cd <dir> &&`-prefixed relative path against that directory', () => {
+      const scan = shellReadScanOf(withCwd('cd /repo/layers/tinkerfund && cat CONTEXT.md'))
+      expect(scan.paths).toEqual(['layers/tinkerfund/CONTEXT.md'])
+    })
+
+    it('falls back to unchanged behavior when cd is not a leading prefix (no false positive)', () => {
+      const scan = shellReadScanOf(withCwd('ls && cd /repo/layers/tinkerfund; cat CONTEXT.md'))
+      expect(scan.paths).toEqual(['CONTEXT.md'])
+    })
+  })
+
   // Issue #1247: `bashCommandsOf` pairs a Bash tool_use with its own
   // tool_result by `tool_use_id`, and `scanShellReads` uses that output to
   // gate a grep/rg's crediting — exercised here end-to-end through
