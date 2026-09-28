@@ -185,7 +185,6 @@ export function sessionCardViews(sessions: SessionDoc[]): (SessionCardView & { k
     prs: s.prs ?? [],
     frictionCounts: countFrictions(s.frictions),
     frictionTotal: s.frictions.length,
-    skills: (s.skillsUsed ?? []).map((x) => x.name),
     sid: sessionShortId(s.session),
     model: sessionModelsLabel(s.models),
     external: s.external === true,
