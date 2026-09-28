@@ -80,6 +80,13 @@ export function frictionCount(sessions: SessionDoc[]): number {
   return sessions.reduce((n, s) => n + s.frictions.length, 0)
 }
 
+// Everything below blocker/major — the stat tile calls the worst two out by
+// name and folds the rest into this one term, rather than leaving them out
+// of the visible caption entirely (visitor-loop finding, 2026-09-28).
+export function frictionOtherCount(totals: Record<Severity, number>): number {
+  return totals.nit + totals.minor + totals.moderate
+}
+
 export function kindCounts(sessions: SessionDoc[]): { interactive: number; delegated: number; autonomous: number } {
   const counts = { interactive: 0, delegated: 0, autonomous: 0 }
   for (const s of sessions) counts[s.kind]++

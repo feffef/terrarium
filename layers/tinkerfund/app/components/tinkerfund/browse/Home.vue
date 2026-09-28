@@ -121,13 +121,9 @@ dd { margin: 0; font: 600 16px/1.2 var(--tf-mono); font-variant-numeric: tabular
 .actions { display: flex; flex-wrap: wrap; gap: 10px; }
 
 ul { margin: 0; padding: 0; list-style: none; }
-/* width: fit-content on the whole section, not just the card row: with only
-   2 Campaigns genuinely ending within 48h (`endingSoon` in utils/status.ts),
-   a full-width `.head` sitting over a half-width `.scroller` still read as a
-   broken/empty row even after the row itself stopped stretching (visitor-loop
-   fix, 2026-09-27 then 2026-09-28) — this keeps the heading and "See all"
-   link hugging the actual card width too, growing back to full width once
-   there are enough cards to fill it. */
+/* Shrink the whole section, not just `.scroller` below — a full-width `.head`
+   over a short card row still read as broken/empty (visitor-loop fix,
+   2026-09-27 then 2026-09-28). */
 .soon { width: fit-content; max-width: 100%; }
 .scroller { display: grid; grid-auto-flow: column; grid-auto-columns: min(300px, 82vw); gap: 16px; width: fit-content; max-width: 100%; overflow-x: auto; padding-bottom: 8px; scroll-snap-type: x mandatory; }
 .scroller li, .grid li { display: grid; scroll-snap-align: start; }

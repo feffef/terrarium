@@ -21,6 +21,7 @@ import {
   sessionWhen,
   sessionModelsLabel,
   frictionCount,
+  frictionOtherCount,
   frictionTotals,
   kindCounts,
   ownSkills,
@@ -128,6 +129,13 @@ describe('frictionTotals / frictionCount', () => {
     expect(frictionTotals(sessions)).toEqual({ nit: 2, minor: 0, moderate: 0, major: 1, blocker: 1 })
     // frictionCount counts every friction, including unknown severities
     expect(frictionCount(sessions)).toBe(5)
+  })
+})
+
+describe('frictionOtherCount', () => {
+  it('sums everything but blocker and major', () => {
+    expect(frictionOtherCount({ nit: 2, minor: 3, moderate: 1, major: 1, blocker: 1 })).toBe(6)
+    expect(frictionOtherCount({ nit: 0, minor: 0, moderate: 0, major: 1, blocker: 1 })).toBe(0)
   })
 })
 
