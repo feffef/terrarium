@@ -27,14 +27,14 @@ export const sessionSchema = z
     // Autonomy spectrum, judged by who prompted — canonical definitions:
     // CONTEXT.md → Session.
     kind: z.enum(['interactive', 'delegated', 'autonomous']),
-    goal: z.string(), // ≤ 8 words — what the session set out to do
+    goal: z.string(), // one-liner — what the session set out to do
     // `in-review` is the honest state of a session that opened a gated PR but
     // hasn't seen it merged — the norm at closure (ADR-0003/0009), not
     // `completed`, which is reserved for work that actually landed (or needed no
     // PR). A later session flips it to `completed` on merge.
     status: z.enum(['completed', 'in-review', 'partial', 'blocked', 'abandoned']),
-    outcome: z.string(), // ≤ 8 words — prose nuance on `status`
-    summary: z.string(), // ≤ 100 words — the fuller narrative
+    outcome: z.string(), // one-liner — prose nuance on `status`
+    summary: z.string(), // the fuller narrative; sizing guidance: log-session Skill
     prs: z.array(z.string()).default([]), // 0..N already-landed work-PR refs
     // docsRead/skillsUsed are a *merged* field (ADR-0009 amendment): the agent's
     // curated entries plus transcript-observed reads the SessionEnd extractor
