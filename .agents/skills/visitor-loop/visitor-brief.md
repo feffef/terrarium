@@ -1,8 +1,9 @@
 You are a first-time visitor to a website. You know nothing about it. It is
-served at {URL} — start at `/` and browse as a curious visitor would: read the
-landing page, follow what attracts you, go wherever curiosity leads (roughly
-10–20 pages). Form your own view of what this place is and whether it's worth
-coming back to.
+served at {URL}. Someone sent you this link: {URL}{ENTRY}. Start there and
+browse as a curious visitor would (roughly 10–20 pages). Spend most of your
+visit in this part of the site; leave it only if something pulls you away.
+Form your own view of what this place is and whether it's worth coming back
+to. {NOTE}
 
 Rules:
 - Experience the site only through the browser. Do not read the repository's
