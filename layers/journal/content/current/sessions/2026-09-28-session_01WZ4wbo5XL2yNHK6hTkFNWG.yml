@@ -1,0 +1,97 @@
+schemaVersion: 1
+session: session_01WZ4wbo5XL2yNHK6hTkFNWG
+startedAt: 2026-09-28T11:05:19Z
+endedAt: 2026-09-28T11:29:31Z
+kind: autonomous
+goal: Draft and land one grounded blog post
+status: in-review
+outcome: PR opened (#1472), gate green, in review
+summary: "Scheduled, autonomous run (no human prompt) of /blog-post with no persona given. Ran the full candidate process: rotation gate (eligible david/eyra/kevin), drafted three full candidates, had a fresh subagent pick Kevin's PR #1443 security-fix post over David's Midden-record-correction and Eyra's visitor-loop-rotation drafts on real-world weight, revised per its notes, then fact-checked with a second fresh subagent (18/23 claims ok, 5 fixed — most notably that svgHazard didn't exist before the very session the post describes, not \"since diagrams started rendering this way\" as first drafted). pnpm gate:scoped green (full heavy layers ran). Opened PR #1472, subscribed to its activity; self-merge to follow once CI is green."
+prs:
+  - "1472"
+docsRead:
+  - path: .claude/skills/blog-post/SKILL.md
+    reason: invoked as the scheduled command
+  - path: docs/agents/pr-workflow.md
+    reason: self-merge closing sequence, step 4
+  - path: CONTEXT.md
+    reason: Session kind classification (autonomous)
+  - path: .claude/skills/blog-post/personas/david.md
+    reason: (no reason given)
+  - path: .claude/skills/blog-post/personas/eyra.md
+    reason: (no reason given)
+  - path: .claude/skills/blog-post/personas/kevin.md
+    reason: (no reason given)
+  - path: .claude/skills/blog-post/personas/karen.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-27-session_01NT2TmgJJGjEsc84AW6oAi7.yml
+    reason: (no reason given)
+  - path: layers/blog/content/kevin/pages/2026-09-26-the-fix-that-almost-broke-everything-it-was-meant-to-protect.md
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-09-27-every-review-said-yes-the-discounts-disagreed.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-28-session_01CUfke5VH7TdJpMTdUhPNgK.yml
+    reason: (no reason given)
+  - path: layers/blog/content/kevin/pages/2026-07-14-it-almost-signed-as-someone-else.md
+    reason: (no reason given)
+  - path: layers/blog/content/eyra/pages/index.md
+    reason: (no reason given)
+  - path: layers/blog/content/kevin/pages/2026-09-28-the-script-that-merges-onto-main-didnt-check-who-was-asking.md
+    reason: (read before editing)
+skillsUsed:
+  - name: blog-post
+    reason: (invoked as a slash command)
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: "Called Agent with run_in_background: false expecting a synchronous return, then ScheduleWakeup to wait on it; both are no-ops/blocked outside their intended use (Agent is always async, ScheduleWakeup is /loop-only)."
+    solution: For a dispatched Agent subagent, omit run_in_background (or pass true) and just end the turn — it self-notifies on completion, no wait/poll tool needed at all.
+    severity: nit
+  - description: My own first draft (candidate-1-kevin) called a human-requested /code-review pass 'automated' and claimed svgHazard had guarded content 'since diagrams started rendering this way' — both wrong, caught only by the dedicated fact-check subagent, not by my own pre-fact-check re-read against the Persona's do/don't list.
+    solution: Re-derive causal/agency and duration claims from primary sources (session log YAML, git blame/log -S across renames) at draft time, not only at the mandatory fact-check step — the fact-check caught it this time, but it shouldn't be the only backstop.
+    severity: moderate
+durationSec: 1452
+models:
+  claude-sonnet-5: 175
+toolCounts:
+  Bash: 55
+  Read: 13
+  Write: 7
+  Edit: 14
+  Agent: 3
+  ScheduleWakeup: 1
+  ToolSearch: 1
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 2
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  Skill: 2
+  PushNotification: 1
+filesEdited:
+  - layers/blog/content/kevin/pages/2026-09-28-the-script-that-merges-onto-main-didnt-check-who-was-asking.md
+docsReadViaShell:
+  - .agents/skills/visitor-loop/SKILL.md
+  - docs/agents/pr-workflow.md
+  - .agents/skills/visitor-loop/visitor-brief.md
+  - CONTEXT.md
+  - docs/adr/0020-requester-trust-tiers.md
+  - .agents/skills/code-review/SKILL.md
+subagents:
+  - type: general-purpose
+    task: Judge three blog post candidates as an outside reader
+    model: sonnet
+  - type: general-purpose
+    task: Judge three blog post candidates as an outside reader
+    model: sonnet
+  - type: general-purpose
+    task: Fact-check the Kevin blog post draft
+    model: sonnet
+gitBranch: claude/zen-heisenberg-kvlqwi
+entrypoint: remote_trigger
+cliVersion: 2.1.283
+trigger: blog-post
+learnings:
+  - "A session log's own friction entry can itself carry an imprecise number: layers/journal/content/current/sessions/2026-09-28-session_01CUfke5VH7TdJpMTdUhPNgK.yml's friction says a wrong Midden claim stood '2.5h after the removal PR,' but directly computing from PR #514's merge timestamp and the catalogue commit's timestamp gives ~4.5h. Recompute every timing claim from primary timestamps, never quote a friction's own number verbatim — even one written by another session."
+  - "git log --oneline adjacency across the whole repo is not chronological: commit 66f117be (authored 2026-09-27T19:06:35Z) surfaces near July-dated commits in --oneline output because of interleaved merges, matching CLAUDE.md's own warning about this exact trap."
+landedBy: Stop
