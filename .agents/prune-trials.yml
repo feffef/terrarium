@@ -306,3 +306,24 @@ trials:
       session's summary sprawling past ~400 words. NOT damage: a long summary
       on a session that ran a multi-PR workflow, or any summary over the old
       100-word cap that still spends its words on non-derivable knowledge.
+  - problem: >
+      The prune-trial Skill's §1 asked the verdict commit to quote
+      `scripts/prune-trial-window.ts`'s `landed:`/`judgeable from:` lines
+      verbatim. No checked verdict commit ever did (issue #1451: c8ba0f6a,
+      122d598a, 9930a8b4, 1c36ebab, among others) — yet they took the landing
+      and floor from the script all the same. Cut the quoting clause; kept
+      "take the window from the script, never hand-derive it", the
+      floor-not-deadline wording, and the `NOT FOUND` rule.
+    territory:
+      paths:
+        - ".agents/skills/prune-trial/SKILL.md: §1's window-script paragraph (the verbatim-quote clause)"
+      keywords:
+        - quote verbatim in the verdict commit
+        - "landed:/judgeable from: lines"
+    opened: 2026-09-28
+    check: >
+      Damage is a verdict commit that judges a trial before the script's
+      `judgeable from:` floor, or against a landing date or commit that
+      differs from the script's output or doesn't exist (the PR #1061 /
+      #1069 / #1285 failure mode). NOT damage: a verdict that paraphrases
+      correct script-derived values instead of quoting them.
