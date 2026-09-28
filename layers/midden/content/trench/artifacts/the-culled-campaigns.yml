@@ -7,23 +7,23 @@ provenance:
   merged: true
   url: https://github.com/feffef/terrarium/pull/1429
   continuityCheck: >-
-    none of the seven deleted files has come back at its path, and a search of
-    every Tenant's content on main for the three names finds only the session
-    log that records their removal. No surviving Campaign carries any of the
-    three ideas under another title, and the registry was renumbered without
-    gaps, so no number stands empty for them either.
+    none of the seven deleted files has come back, and a search of all the
+    site's content on main for the three names finds only the session log that
+    records their removal. No published Campaign carries any of the three ideas
+    under another title, and the catalogue numbers were closed up after them,
+    so none stands empty in their place.
 site: surface-finds
 catalogNote: >-
-  Three finished Campaigns for the fictional crowdfunding Tenant — each with its
-  pitch, specifications and five to seven drawn figures — written by one
-  model, drawn by another, and never published. They came from a batch of
-  twenty, picked from the ideas three model judges scored highest. The
-  Passport Tracker Tracker, a passport cover with a second tracker to find the
-  first, was the one finished Campaign that no final judge passed, and the
-  session dropped it. The Inbox Zero Tray and the Hotel Room Compass passed
-  judging and were deleted on human review shortly before the pull request
-  merged, within two minutes of each other. The record gives no reason for
-  either.
+  The pull request merged without them. Three finished Campaigns for the
+  fictional crowdfunding site — each with its pitch, specifications and five
+  to seven drawn figures — written by one model, drawn by another, and never
+  published. They came from a batch of twenty, picked from the ideas three
+  model judges scored highest. The Passport Tracker Tracker, a passport cover
+  with a second tracker to find the first, was the one finished Campaign that
+  no final judge passed, and it was dropped. The Inbox Zero Tray and the Hotel
+  Room Compass passed judging and were deleted on human review shortly before
+  the pull request merged, within two minutes of each other. The record gives
+  no reason for either.
 assessedAt: 2026-09-28
 remains:
   - label: the Passport Tracker Tracker, as judged

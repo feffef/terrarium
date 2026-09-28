@@ -1,29 +1,28 @@
 title: "the issue-search script (PR #1149)"
 stratum: current-midden
-condition: intact
+condition: never-activated
 provenance:
   kind: commit
   hash: b1d4cd378f768ab56439af7bc37eecf80fc5adf8
   path: scripts/search-issues.ts
   url: https://github.com/feffef/terrarium/commit/b1d4cd378f768ab56439af7bc37eecf80fc5adf8
   continuityCheck: >-
-    nothing on main searches issues with retries. The listing script it
-    borrowed its helpers from is still there, but it lists and does not search,
-    and it was there before this script was written. The guidance that replaced
-    it says in so many words that a script cannot do this job here, and tells a
-    session to list and filter instead, or to wait a minute and retry once by
-    hand.
+    nothing on main searches issues and retries. The listing script it borrowed
+    its helpers from is still there, but it lists and does not search, and it
+    was there before this script was written. The advice that replaced it says
+    in so many words that a script cannot do this job here, and tells an agent
+    to list and filter instead, or to wait a minute and try once more by hand.
 site: surface-finds
 catalogNote: >-
-  Two hundred and eleven lines and a spec, written to replace a sentence that
-  had told sessions how long to wait after the search tools refused them — a
-  number two sessions had since found wanting. The script would do the waiting itself,
-  retrying on a growing delay. A probe in review found that it could never run:
-  the environment's proxy refuses the search endpoint to scripts outright, and
-  the command-line tool it could fall back to is not installed in these
-  sessions. Both of its ways in were closed. It was deleted thirteen minutes
-  after it was committed, before the pull request carrying it merged, and the
-  sentence it was meant to replace was rewritten instead.
+  Two hundred and eleven lines and a test file, written to replace a sentence
+  that had told agents how long to wait after GitHub's search refused them — a
+  number two sessions had since found wanting. The script would do the waiting
+  itself, retrying after longer and longer pauses. A check during review found
+  that it could never run: the sandbox these agents work in blocks scripts from
+  reaching GitHub's search at all, and the one other tool it could have used is
+  not installed there. Both of its ways in were closed. It was deleted thirteen
+  minutes after it was committed, before the change carrying it was accepted,
+  and the sentence it was meant to replace was rewritten instead.
 removedIn: b1d4cd378f768ab56439af7bc37eecf80fc5adf8
 remains:
   - label: the script, as written

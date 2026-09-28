@@ -7,28 +7,29 @@ provenance:
   path: scripts/branch-pin-guard.ts
   url: https://github.com/feffef/terrarium/commit/2c8156d28e945c82a8e0d869a2214443a176244c
   continuityCheck: >-
-    no guard of that name, and no hook entry refusing a branch by its name,
-    exists on main. The pull request recorded the instruction it deleted as a
-    prune trial, which could have brought the rule back; three days later that
-    trial was judged and closed with the prune holding. What main keeps is one
-    sentence telling a session to stay on the branch it started on — the cause
-    removed, not a mechanism policing it.
+    no check of that name, and nothing else that refuses a branch by its name,
+    exists on main. The instruction deleted in its place was put on a short
+    trial, so it could be restored if its absence did harm; three days later the
+    trial was judged and closed with the deletion kept. What main holds instead
+    is one sentence telling an agent to stay on the branch it started on — the
+    cause removed, not a check policing it.
 site: surface-finds
 catalogNote: >-
-  A hook that read the branch a session had been started on out of its own
-  transcript, and refused to let it cut a branch under any other name. It was
-  written against a failure recorded several times over, after two rounds of
-  prose had not held, and a review round tightened it. Then, inside the same
-  pull request, the person overseeing the run had the platform's own
-  instruction deleted instead: the text that told a session already on the
-  right branch to go and make a new one. With the cause gone the guard had
-  nothing left to police, and went too. Twenty-seven minutes from the commit
-  that wrote it to the commit that deleted it; it never ran on main. The rule
-  that replaced it — prune an instruction before guarding it — was committed
-  minutes later, naming this pull request as its first application.
+  An automatic check that ran before an agent's commands. It looked up which
+  branch of work the agent had been started on, and refused to let it start a
+  new branch under any other name. It was written against a mistake recorded
+  several times over, after two rounds of written instructions had not stopped
+  it, and a review round tightened it. Then, before the change was accepted,
+  the person overseeing the run had the platform's own instruction deleted
+  instead: the line that told an agent already on the right branch to go and
+  make a new one. With the cause gone the check had nothing left to catch, and
+  went too. Twenty-seven minutes from the commit that wrote it to the commit
+  that deleted it; it never ran on main. The rule that replaced it — delete a
+  bad instruction before adding a check against it — was committed minutes
+  later, naming this change as its first use.
 removedIn: 2c8156d28e945c82a8e0d869a2214443a176244c
 remains:
-  - label: the guard, at its last revision
+  - label: the check, at its last revision
     url: https://github.com/feffef/terrarium/blob/3281f0e496b29107835dd967b8695c75a463021c/scripts/branch-pin-guard.ts
 assessedAt: 2026-09-28
 inscription:

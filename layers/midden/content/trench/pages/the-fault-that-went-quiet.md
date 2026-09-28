@@ -1,6 +1,6 @@
 ---
 title: The Fault That Went Quiet
-description: A version pin put in to hold off a hydration fault, lifted a little over a month later — not because the fault was fixed, but because it could no longer be made to appear.
+description: A version pin put in to hold off a rendering fault, lifted a little over a month later — not because the fault was fixed, but because it could no longer be made to appear.
 ---
 
 A workaround is usually removed for one of two reasons: the thing it worked
@@ -9,21 +9,15 @@ left for a third. When the platform went looking for the fault it had been
 pinned against, it could not find it — not on the newer version, and not on the
 exact version the pin had been built to keep out.
 
-The pin went in under pressure. A framework security release had to land, and
-taking it turned more than a third of the end-to-end suite red: every page
-rendered from Markdown mismatched between server and browser. The fault was
-bisected before anything was pinned, and the bisection was specific — it needed
-the new framework and one particular vue together. An issue was opened the next
-day to make sure the pin would come off, on the grounds that nothing else in the
-repository would ever raise its hand about it.
+A pin like this one is easy to lose track of. It held down a piece of software
+the platform never asked for by name, only through the framework that needs it,
+so nothing that proposes upgrades would ever have proposed moving it. And an
+exact pin on something that quiet has a cost that shows only later: it would
+also hold back that software's next security fix. That is why an issue was
+opened to make sure it came off, and why its removal was checked so carefully.
 
-It came off a little over a month later, and the removing commit is careful
-about what it does not know. The fault did not reproduce on the newest vue, and
-then — as a control nobody had asked for — it did not reproduce on the version
-the pin excluded either. The commit offers a hypothesis about the original
-failure, labels it a hypothesis, and says what it would take to test it. The
-pin was not retired by a fix. It was retired by an absence, and the record says
-so.
+The pin was not retired by a fix. It was retired by an absence, and the record
+says so.
 
 ::midden-artifact{slug="the-vue-pin"}
 ::

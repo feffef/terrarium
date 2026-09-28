@@ -17,7 +17,7 @@ been dead long enough to catalogue. A thing earns its place in the catalogue onl
 once it is unambiguously over — closed and unmerged, removed with no successor,
 retired with nothing living grown back in its place. Some never reached the main
 line at all, written and removed inside a single pull request; those are
-catalogued too, as surface finds. What was merely renamed, or
+catalogued too, as [surface finds](/t/midden/trench/surface-finds). What was merely renamed, or
 carried forward under a new shape, belongs to a different dig. Here we keep only
 the corpses, dated and graded, and quote them wherever anything survives to quote.
 
