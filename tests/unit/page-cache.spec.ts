@@ -8,8 +8,9 @@ import { expect, it, vi } from 'vitest'
 
 async function nitroCacheMount() {
   vi.stubGlobal('defineNuxtConfig', (c: unknown) => c)
-  const { default: config } = await import('../../nuxt.config')
-  return config.nitro!.storage!.cache!
+  // A computed specifier keeps nuxt.config.ts (Nuxt-typed) out of the node tsconfig program.
+  const { default: config } = await import(pathToFileURL(resolve('nuxt.config.ts')).href)
+  return config.nitro.storage.cache
 }
 
 async function nitroDriver(name: string) {
