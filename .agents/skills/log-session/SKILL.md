@@ -70,10 +70,10 @@ is ignored at best and rejected at worst.
 ```yaml
 session: session_01H…              # this session's canonical id (see "Recovering the id")
 kind: interactive                  # interactive | delegated | autonomous — see below
-goal: Rethink session logs         # ≤ 8 words — what the session set out to do
+goal: Rethink session logs         # one-liner — what the session set out to do
 status: in-review                  # completed | in-review | partial | blocked | abandoned
-outcome: Mechanism built and tested # ≤ 8 words — nuance on status
-summary: >-                        # ≤ 100 words — the fuller narrative
+outcome: Mechanism built and tested # one-liner — nuance on status
+summary: >-                        # the fuller narrative — sized to the session, see below
   What you set out to do and what actually happened.
 prs: ["42"]                        # work-PR refs (in-review is fine); [] if none
 docsRead:                          # OPTIONAL, curated — the docs that MATTERED, with why.
@@ -138,8 +138,13 @@ ideas:                             # OPTIONAL — omit unless something sparked
   The `#` case (a bare `PR #354` truncating to `PR`) is now caught: the `--author`
   step below rejects an unquoted-`#` truncation loudly and prints the value to
   quote — but quote up front and you never see it.
-- Word limits are intent, not enforced — you hold them. Write `goal`/`outcome` for a
-  stranger (name the thing, not "the issue"): they are the public dashboard's copy.
+- `goal` and `outcome` are each a one-liner, written for a stranger (name the
+  thing, not "the issue"): they are the public dashboard's copy.
+- **Size the `summary` to the session:** a few sentences for a single task,
+  longer for a session that runs a whole workflow (e.g. building a Tenant across
+  many PRs). Spend the words on what git history and PR descriptions can't tell a
+  later reader: why a direction was chosen, what was tried and dropped, what
+  surprised you, what's still open. Don't retell the diff.
 
 **Recovering the id:** read the canonical `session_01…` id from your **own
 system-prompt instructions** — the commit-footer template (`… Claude-Session:

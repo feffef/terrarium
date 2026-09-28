@@ -5,7 +5,7 @@
 // the CLI's stdin→deny-JSON path and `--dry-run`, exercised end to end against
 // the real script (ADR-0004's reviewability bar for an unattended hook).
 import { execFileSync } from 'node:child_process'
-import { rmSync, writeFileSync } from 'node:fs'
+import { mkdtempSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -122,24 +122,26 @@ describe('the CLI as the PreToolUse hook would invoke it (stdin JSON → stdout 
   }
 
   it('END TO END: denies a skill named this session\'s inlined `<command-name>` block', () => {
-    const file = join(tmpdir(), 'skill-inline-guard-transcript-deny.jsonl')
+    const dir = mkdtempSync(join(tmpdir(), 'skill-inline-guard-'))
+    const file = join(dir, 'transcript-deny.jsonl')
     writeFileSync(file, `${JSON.stringify(commandTurn('digest'))}\n`)
     try {
       const deny = runHook(payload('digest', file))
       expect(deny?.hookSpecificOutput.permissionDecision).toBe('deny')
       expect(deny?.hookSpecificOutput.permissionDecisionReason).toContain('issue #1018')
     } finally {
-      rmSync(file, { force: true })
+      rmSync(dir, { recursive: true, force: true })
     }
   })
 
   it('END TO END: stays silent for a skill never inlined this session', () => {
-    const file = join(tmpdir(), 'skill-inline-guard-transcript-allow.jsonl')
+    const dir = mkdtempSync(join(tmpdir(), 'skill-inline-guard-'))
+    const file = join(dir, 'transcript-allow.jsonl')
     writeFileSync(file, `${JSON.stringify(commandTurn('digest'))}\n`)
     try {
       expect(runHook(payload('domain-modeling', file))).toBeNull()
     } finally {
-      rmSync(file, { force: true })
+      rmSync(dir, { recursive: true, force: true })
     }
   })
 
@@ -170,13 +172,14 @@ describe('the --dry-run path (ADR-0004: an unattended hook needs a way to be exe
   })
 
   it('reports allow for a skill not present in a real transcript file', () => {
-    const file = join(tmpdir(), 'skill-inline-guard-dryrun.jsonl')
+    const dir = mkdtempSync(join(tmpdir(), 'skill-inline-guard-'))
+    const file = join(dir, 'dryrun.jsonl')
     writeFileSync(file, `${JSON.stringify(commandTurn('digest'))}\n`)
     try {
       expect(dryRun(['--tool', 'Skill', '--transcript', file, '--input', '{"skill":"domain-modeling"}']).decision).toBe('allow')
       expect(dryRun(['--tool', 'Skill', '--transcript', file, '--input', '{"skill":"digest"}']).decision).toBe('deny')
     } finally {
-      rmSync(file, { force: true })
+      rmSync(dir, { recursive: true, force: true })
     }
   })
 })

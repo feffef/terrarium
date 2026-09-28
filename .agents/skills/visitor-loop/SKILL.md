@@ -66,8 +66,10 @@ Merge the three reports into one tally in your scratchpad:
   the **one** you judge best: the most visible payoff for a first-time
   visitor that fits the remit, a single PR and today's focus (on `mobile`, a
   narrow-screen improvement anywhere). Consensus fixes may land anywhere.
-- **Owner memory.** First read the owner's review comments on every
-  `visitor-loop` PR since the last `decisions.md` entry; each rejected
+- **Owner memory.** First gather the owner's corrections since the last
+  `decisions.md` entry: review comments on `visitor-loop` PRs, merged PRs
+  that revert a `visitor-loop` PR or rework what one built (e.g. touch the
+  same files), and owner comments on issues about its output. Each rejected
   approach or standing preference becomes one new line there (committed with
   step 4's PR). Then drop anything [`decisions.md`](decisions.md) rules out,
   anything an open or closed issue/PR already covers (search first), and

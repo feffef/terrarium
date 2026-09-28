@@ -30,10 +30,9 @@ is earlier and is never the window's start. Run
 commit, timestamp, and window-close time — from `git log -S`, not a date to
 derive or recall by hand (a hand-derived one is how PR #1061 judged a
 trial a day early against a landing commit that turned out not to exist).
-Quote its `landed:`/`judgeable from:` lines verbatim in the verdict commit —
-the latter is a floor, not a deadline: judging any time at or after it is
-fine (nothing guarantees this Skill runs at a precise time), only judging
-before it is the failure. A `NOT FOUND` result means silence is not evidence:
+Its `judgeable from:` time is a floor, not a deadline: judging any time at or
+after it is fine (nothing guarantees this Skill runs at a precise time), only
+judging before it is the failure. A `NOT FOUND` result means silence is not evidence:
 leave the entry alone and judge nothing.
 
 For each trial that has landed and is past its window: **apply** its `check`

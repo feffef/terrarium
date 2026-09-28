@@ -47,7 +47,7 @@ export interface TruncationVerdict {
 }
 
 /** The LOST-shape fallback: an anomalously bare `outcome` (the schema wants
- *  ~8 words of prose) corroborated against the log's own `prs` list. Only
+ *  a one-liner of prose) corroborated against the log's own `prs` list. Only
  *  called once `findTruncatedScalars` on the raw file found nothing — i.e.
  *  the value in the file is already "clean", with no dropped tail left to
  *  recover byte-for-byte. Pure — the testable core; never fabricates a repair

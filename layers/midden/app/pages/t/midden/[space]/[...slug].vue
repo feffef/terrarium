@@ -64,6 +64,17 @@ const presentGrades = computed<Grade[]>(() => {
   return CONDITION_ORDER.filter((g) => present.has(g))
 })
 
+// First-use glosses across prose and the embedded finds' notes (issue #1463).
+const glossed = computed(() => {
+  const body = site.value?.body as { type?: string; value?: Parameters<typeof middenGlossBody>[0] } | undefined
+  if (!site.value || body?.type !== 'minimark' || !body.value) return null
+  const { nodes, notes } = middenGlossBody(body.value, Object.fromEntries(siteArtifacts.value.map((a) => [a.stem, a.catalogNote])))
+  return { site: { ...site.value, body: { ...body, value: nodes } }, notes }
+})
+provide(MIDDEN_GLOSSED_NOTES, computed(() => glossed.value?.notes ?? {}))
+// Passed by hand: @nuxt/content's built manifest only lists components the content itself names.
+const glossComponents = { 'midden-gloss': resolveComponent('MiddenGloss') }
+
 if (!site.value && !error.value) setResponseStatus(404)
 
 useHead({ title: () => `${site.value?.title ?? 'Not found'} · The Midden` })
@@ -91,7 +102,7 @@ useHead({ title: () => `${site.value?.title ?? 'Not found'} · The Midden` })
       <MiddenConditionKey v-if="presentGrades.length" :grades="presentGrades" class="midden-report__key" />
 
       <div class="midden-report__prose">
-        <ContentRenderer :value="site" />
+        <ContentRenderer :value="glossed?.site ?? site" :components="glossComponents" />
       </div>
     </article>
 

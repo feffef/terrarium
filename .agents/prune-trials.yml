@@ -281,3 +281,51 @@ trials:
       commands (`git fetch --unshallow`, `git rev-parse --verify <branch>`,
       `git add -A` after a stash-pop-around-a-rename) and every cited issue
       number — so no hook ships with this rewrite.
+  - problem: >
+      The session log's numeric word caps (`goal`/`outcome` ≤ 8 words,
+      `summary` ≤ 100) were unenforced and routinely ignored — 30 of the 40
+      newest summaries ran past 100 words with no visible harm (issue #1450).
+      Owner decision on #1450: drop every numeric cap and the "not enforced —
+      you hold them" line; describe `goal`/`outcome` as one-liners, and size
+      the `summary` to the session, spending it on what git history and PR
+      descriptions can't tell a later reader. No length check ships.
+    territory:
+      paths:
+        - ".agents/skills/log-session/SKILL.md: the authored-YAML field comments and the goal/outcome/summary sizing bullets"
+        - "shared/schemas/session.ts: the goal/outcome/summary field comments"
+      keywords:
+        - word limit
+        - one-liner
+        - Size the summary to the session
+        - Don't retell the diff
+    opened: 2026-09-28
+    proven: true
+    check: >
+      Damage is a summary that mostly restates commit or PR titles instead of
+      the knowledge history can't give (why a direction was chosen, what was
+      tried and dropped, what surprised, what's still open), or a single-task
+      session's summary sprawling past ~400 words. NOT damage: a long summary
+      on a session that ran a multi-PR workflow, or any summary over the old
+      100-word cap that still spends its words on non-derivable knowledge.
+  - problem: >
+      The prune-trial Skill's §1 asked the verdict commit to quote
+      `scripts/prune-trial-window.ts`'s `landed:`/`judgeable from:` lines
+      verbatim. No checked verdict commit ever did (issue #1451: c8ba0f6a,
+      122d598a, 9930a8b4, 1c36ebab, among others) — yet they took the landing
+      and floor from the script all the same. Cut the quoting clause; kept
+      "take the window from the script, never hand-derive it", the
+      floor-not-deadline wording, and the `NOT FOUND` rule.
+    territory:
+      paths:
+        - ".agents/skills/prune-trial/SKILL.md: §1's window-script paragraph (the verbatim-quote clause)"
+      keywords:
+        - quote verbatim in the verdict commit
+        - "landed:/judgeable from: lines"
+    opened: 2026-09-28
+    proven: true
+    check: >
+      Damage is a verdict commit that judges a trial before the script's
+      `judgeable from:` floor, or against a landing date or commit that
+      differs from the script's output or doesn't exist (the PR #1061 /
+      #1069 / #1285 failure mode). NOT damage: a verdict that paraphrases
+      correct script-derived values instead of quoting them.

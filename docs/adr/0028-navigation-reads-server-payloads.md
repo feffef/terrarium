@@ -62,6 +62,14 @@ skills 579 → 144 KB; Tinkerfund page 578 → 19 KB; Commons Timeline about
 - **The cache has no size bound.** Each distinct URL, query string included, is
   its own entry, and expired entries are only replaced, not evicted. Junk query
   strings grow memory until the next deploy or restart clears it (#1446).
+
+  > **Amended (2026-09-28, #1446):** the cache is now bounded. In production,
+  > Nitro's `cache` storage uses unstorage's `lru-cache` driver, capped by the
+  > `max` set in `nuxt.config.ts`, so it evicts the least recently used entry
+  > once full. Each URL and each `varies` variant still counts as its
+  > own entry. Freshness is unchanged: Nitro checks `maxAge` on every read, so
+  > early eviction only costs a re-render. Dev keeps Nitro's default on-disk
+  > cache.
 - **A route's code downloads on hover, not on sight.** With visibility prefetch
   off, a touch device fetches it on tap.
 - Reverting means deleting `payloadExtraction`, the `nuxtLink.prefetchOn`
