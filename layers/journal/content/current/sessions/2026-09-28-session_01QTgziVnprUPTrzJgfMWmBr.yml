@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01QTgziVnprUPTrzJgfMWmBr
 startedAt: 2026-09-28T00:45:54Z
-endedAt: 2026-09-28T01:07:40Z
+endedAt: 2026-09-28T01:12:53Z
 kind: autonomous
 goal: Run the scheduled /audit-skills sweep
-status: in-review
-outcome: "PR #1453 in review; 4 issues filed"
-summary: "Gathered the audit-skills scorecard, then dispatched one read-only behaviour-check subagent per Skill used >=3 times in the last 7 days (10 Skills), all in parallel. Verified each subagent's central claims against git/GitHub before acting. Filed 4 needs-triage issues for findings that cleared the significant/repeated bar: #1449 (frictions-to-fixes dispatched+self-merged a guard-touching fix unattended), #1450 (log-session word-limit drift, confirmed still recurring), #1451 (prune-trial verdict commits never quote required lines verbatim, confirmed universal), #1452 (visitor-loop decisions.md misses an owner correction delivered outside review comments, upgraded to a pattern). Recorded remaining findings (re-confirmations, new self-caught dispatch-subagents incidents) as Inventory observations. Opened PR #1453 (Inventory-only, 8 files), gate green, subscribed to activity. No grade changes this run."
+status: completed
+outcome: "PR #1453 merged; 4 issues filed"
+summary: "Gathered the audit-skills scorecard, then dispatched one read-only behaviour-check subagent per Skill used >=3 times in the last 7 days (10 Skills), all in parallel. Verified each subagent's central claims against git/GitHub before acting. Filed 4 needs-triage issues for findings that cleared the significant/repeated bar: #1449 (frictions-to-fixes dispatched+self-merged a guard-touching fix unattended), #1450 (log-session word-limit drift, confirmed still recurring), #1451 (prune-trial verdict commits never quote required lines verbatim, confirmed universal), #1452 (visitor-loop decisions.md misses an owner correction delivered outside review comments, upgraded to a pattern). Recorded remaining findings (re-confirmations, new self-caught dispatch-subagents incidents) as Inventory observations. Opened PR #1453 (Inventory-only, 8 files), gate green, and merged it via merge-pr.ts (commit e10cd8f4). No grade changes this run. All autonomous, no human prompt at any point."
 prs:
   - "1453"
 docsRead:
@@ -171,11 +171,11 @@ frictions:
   - description: mcp__github__search_issues's semantic matching returned mostly old, unrelated closed issues for targeted duplicate-checks (e.g. searching for the log-session word-limit finding surfaced unrelated audit-skills bracketing bugs from July), forcing a fallback to list_issues with a label filter to get a trustworthy "is this already filed" answer.
     solution: For a narrow "does an open issue already cover X" check, prefer list_issues with state:OPEN and a label filter over search_issues's semantic matching, which is tuned for broad recall not precise duplicate detection.
     severity: minor
-durationSec: 1306
+durationSec: 1619
 models:
-  claude-sonnet-5: 188
+  claude-sonnet-5: 209
 toolCounts:
-  Bash: 48
+  Bash: 53
   Agent: 10
   ScheduleWakeup: 1
   ToolSearch: 5
@@ -188,9 +188,12 @@ toolCounts:
   Monitor: 2
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
-  Skill: 2
-  Write: 1
+  Skill: 3
+  Write: 2
   mcp__github__add_issue_comment: 1
+  ReadNotifications: 2
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  PushNotification: 1
 filesEdited:
   - layers/journal/content/current/skills/audit-docs.yml
   - layers/journal/content/current/skills/audit-skills.yml
