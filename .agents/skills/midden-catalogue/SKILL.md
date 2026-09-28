@@ -54,7 +54,10 @@ write has a source you have read this session. What the record doesn't say
 - **Stratum** — the season holding the terminal commit's date. When the open
   season has run long enough to say what it was, name and close it and open a
   new one; repoint its finds.
-- **Prose** — write the **weakest true phrasing**: the claim the evidence
+- **Prose** — write for a visitor who has never seen this repository, in
+  **plain words**: say what a thing did ("a check that refused the wrong
+  branch name"), not what the project calls it (guard, gate, Routine, Space,
+  prune trial). Keep the weakest true phrasing: the claim the evidence
   supports, not the sharpest one it permits. Each rewrite tends to overstate
   by one notch ("same day" becomes "that morning").
 
@@ -70,7 +73,7 @@ against its season), then `pnpm gate:scoped`.
 Dispatch two read-only reviewers in parallel (`dispatch-subagents`): an
 adversarial **fact-check** of every claim against primary sources, and a
 **voice and domain** review against CONTEXT.md, `condition.ts` and the house
-voice. Fix every finding, then grep for each phrase you fixed: seeing new text
+voice, flagging every word a visitor would need the repository to understand. Fix every finding, then grep for each phrase you fixed: seeing new text
 in a diff does not prove the old text is gone. Repeat the fact-check on the
 fixes until it comes back clean.
 
