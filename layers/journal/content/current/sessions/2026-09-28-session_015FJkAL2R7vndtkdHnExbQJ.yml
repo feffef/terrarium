@@ -1,14 +1,15 @@
 schemaVersion: 1
 session: session_015FJkAL2R7vndtkdHnExbQJ
 startedAt: 2026-09-28T16:47:45Z
-endedAt: 2026-09-28T17:30:50Z
+endedAt: 2026-09-28T17:49:14Z
 kind: autonomous
 goal: Run today's scheduled /visitor-loop (homepage focus)
 status: completed
-outcome: "Fix PR #1474 merged; feature PR still pending"
-summary: "Fully agent-initiated scheduled routine (no human prompt this run). Served a fresh production build, sent three blind first-time-visitor subagents (sonnet, fable, opus) through the homepage with no repo context, and tallied their independent reports. Three consensus findings (raised by >=2 visitors) were fixed and merged in PR #1474: the Journal \"Frictions surfaced\" stat tile's caption named only blocker+major counts, leaving the rest of the total unaccounted for on the page; the Tinkerfund homepage \"Ending soon\" section header spanned full width over a short, already-shrink-to-fit card row, reading as broken/empty; and a blog post's bottom nav only moved within one persona with no nearby way back to the blog index. A fourth reported finding (Atlas relations diagram \"cropped\" at 390px) was verified against source and a live render and dropped as already fixed by an earlier visitor-loop run. Ran /code-review against the tally as spec: Spec axis clean (one harmless pre-existing pluralization inconsistency left as-is), Standards axis had two judgement calls, both fixed in a follow-up commit (moved inline friction arithmetic into dashboard.ts's pure module with a unit test; trimmed an overlong CSS comment). pnpm gate:scoped green on both commits. Checked five prior visitor-loop PRs' review comments since the last decisions.md entry; found no new owner rulings to record. Feature PR (step 5 of the visitor-loop Skill) is still pending in this same session."
+outcome: "Both PRs merged: consensus fixes (#1474) and feature (#1475)"
+summary: "Fully agent-initiated scheduled routine (no human prompt this run). Served a fresh production build, sent three blind first-time-visitor subagents (sonnet, fable, opus) through the homepage with no repo context, and tallied their independent reports. Three consensus findings (raised by >=2 visitors) were fixed and merged in PR #1474: the Journal \"Frictions surfaced\" stat tile's caption named only blocker+major counts, leaving the rest of the total unaccounted for on the page; the Tinkerfund homepage \"Ending soon\" section header spanned full width over a short, already-shrink-to-fit card row, reading as broken/empty; and a blog post's bottom nav only moved within one persona with no nearby way back to the blog index. A fourth reported finding (Atlas relations diagram \"cropped\" at 390px) was verified against source and a live render and dropped as already fixed by an earlier visitor-loop run. All three visitors independently proposed some form of a \"start here\"/real-vs-invented onramp; picked as this run's one feature (step 5) since it needed no consensus and was the highest-reach idea across all three reports. Built as a fifth \"New here?\" onramp card on the Journal's existing landing page (a new content file only, no homepage/manifest touch, since the homepage hero itself is off-limits per an owner ruling recorded in decisions.md), merged in PR #1475. Ran /code-review against the tally (fix PR) and the chosen idea (feature PR) as spec for each: both rounds found real, verifiable issues, all fixed before merge — moved inline friction arithmetic into dashboard.ts's pure module with a unit test and trimmed an overlong CSS comment (fix PR); corrected a \"five sites\" claim that contradicted root CONTEXT.md's seven-Tenant roster, and softened an overstated \"Blog is equally authoritative as the Journal\" classification that contradicted both Tenants' own CONTEXT.md files (feature PR). pnpm gate:scoped green on every commit across both PRs. Checked five prior visitor-loop PRs' review comments since the last decisions.md entry; found no new owner rulings to record there. Both PRs merged via merge-pr.ts under the visitor-loop auto-merge tier (ADR-0003); no issues needed filing (no consensus finding was out of remit this run)."
 prs:
   - "1474"
+  - "1475"
 docsRead:
   - path: .claude/skills/visitor-loop/visitor-brief.md
     reason: (no reason given)
@@ -40,6 +41,16 @@ docsRead:
     reason: (no reason given)
   - path: layers/journal/content/current/pages/highlights.md
     reason: (no reason given)
+  - path: CONTEXT.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/real-and-invented.md
+    reason: (read before editing)
+  - path: layers/journal/content/current/pages/architecture.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/how-it-works.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/history.md
+    reason: (no reason given)
   - path: layers/atlas/app/pages/t/atlas/[space]/[...slug].vue
     reason: (no reason given)
   - path: layers/atlas/app/components/atlas/RelationsWeb.vue
@@ -68,26 +79,29 @@ frictions:
   - description: Three visitors independently proposed a "Start here"/real-vs-fiction onramp for the homepage, a recurring visitor-loop idea, but the homepage hero is off-limits per an owner ruling (#1416) that forecloses a competing orientation strip there.
     solution: Shape the idea differently next time (e.g. a dedicated linked page, not a homepage layout change) instead of re-proposing the same homepage-hero shape each run.
     severity: nit
-durationSec: 2585
+  - description: Three visitors independently proposed a "Start here"/real-vs-fiction onramp for the homepage, a recurring visitor-loop idea, but the homepage hero is off-limits per an owner ruling (#1416) that forecloses a competing orientation strip there. Building it required finding a different host page (the Journal's existing onramp system) rather than the obvious homepage location, and building it there surfaced a pre-existing cross-file fact inconsistency (five vs six vs seven sites) that a homepage-hosted version likely would not have touched at all.
+    solution: Worked out this run by hosting the feature on the Journal's onramp instead of the homepage; no further action needed, but future visitor-loop runs should keep checking decisions.md before assuming a homepage-adjacent idea can be built where a visitor proposed it.
+    severity: nit
+durationSec: 3689
 models:
-  claude-sonnet-5: 305
+  claude-sonnet-5: 425
 toolCounts:
-  Bash: 68
-  Read: 29
+  Bash: 102
+  Read: 36
   Grep: 10
   ScheduleWakeup: 1
-  Agent: 6
-  Edit: 12
+  Agent: 8
+  Edit: 13
   ToolSearch: 4
-  mcp__github__search_pull_requests: 2
-  mcp__github__create_pull_request: 2
+  mcp__github__search_pull_requests: 3
+  mcp__github__create_pull_request: 3
   mcp__github__pull_request_read: 8
-  Skill: 3
-  mcp__github__subscribe_pr_activity: 1
-  ReadNotifications: 6
-  mcp__github__add_issue_comment: 1
+  Skill: 5
+  mcp__github__subscribe_pr_activity: 2
+  ReadNotifications: 13
+  mcp__github__add_issue_comment: 2
   mcp__github__unsubscribe_pr_activity: 1
-  Write: 2
+  Write: 3
 filesEdited:
   - layers/blog/app/pages/t/blog/[space]/[...slug].vue
   - layers/blog/app/assets/theme.css
@@ -98,9 +112,12 @@ filesEdited:
   - layers/journal/content/current/pages/real-and-invented.md
 docsReadViaShell:
   - docs/adr/0003-agent-operating-model-and-governance.md
+  - CONTEXT.md
   - layers/journal/CONTEXT.md
-  - layers/tinkerfund/CONTEXT.md
   - layers/blog/CONTEXT.md
+  - layers/tinkerfund/CONTEXT.md
+  - layers/midden/CONTEXT.md
+  - layers/atlas/CONTEXT.md
 subagents:
   - type: general-purpose
     task: First-time visitor (sonnet model)
@@ -117,10 +134,16 @@ subagents:
     task: Standards axis review
   - type: general-purpose
     task: Spec axis review
+  - type: general-purpose
+    task: Standards axis review of feature PR
+  - type: general-purpose
+    task: Spec axis review of feature PR
 gitBranch: claude/adoring-galileo-nzc88e
 entrypoint: remote_trigger
 cliVersion: 2.1.283
 trigger: visitor-loop
+learnings:
+  - The Journal's existing onramp-card system (onramp/onrampLabel/onrampBlurb frontmatter, auto-discovered by layers/journal/app/pages/t/journal/[space]/index.vue's onrampCards computed) is a reusable host for a visitor-loop feature that can't touch the homepage hero directly — worth checking before assuming an idea needs a new page or a homepage edit.
 ideas:
   - "Homepage/onramp: three visitors independently proposed a \"Start here\" guided path or real-vs-fiction signposting; the homepage hero is off-limits per owner ruling #1416, so this needs a different shape (e.g. a dedicated page linked from an existing card's copy) — unbuilt."
   - "Journal: a hover-independent glossary/tooltip for jargon terms (Friction, ADR, prune-trial, gated PR) beyond the one stat-tile fix landed this run — unbuilt (Fable)."
@@ -129,4 +152,5 @@ ideas:
   - 'Tinkerfund: mobile campaign countdown timer formatting/timezone is inconsistent ("12 days 0 hours" vs "0 days 20 hours", no timezone shown) — unbuilt (Fable).'
   - 'Tinkerfund: let a visitor "back" a demo campaign and see the funded bar move for their own session, with a "you are backer #541" receipt — unbuilt feature idea (Fable).'
   - 'Blog: a weekly "What broke this week" roundup (RSS/email) pulling one blocker/major friction plus its blog post link — unbuilt (Opus, Fable both proposed variants).'
+  - "Journal: a hover-independent glossary/tooltip for jargon terms (Friction, ADR, prune-trial, gated PR) beyond the one stat-tile fix and the new real-vs-invented page landed this run — unbuilt (Fable)."
 landedBy: Stop
