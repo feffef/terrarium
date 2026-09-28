@@ -24,45 +24,82 @@
 #            topic's tools correctly.
 trials:
   - problem: >
-      CLAUDE.md's "Dispatching a subagent is a procedure, not a tool call —
-      invoke the `dispatch-subagents` Skill before spawning one" bullet
-      (Working conventions) already failed as issue #1248: a session read the
-      Skill's text (its log lists `dispatch-subagents/SKILL.md` under
-      `docsReadViaShell`) and still dispatched without invoking it — criterion
-      1, prose read and not followed. Nothing was damaged: that run used
-      `isolation: "worktree"`, merged both PRs and cleaned up. The harmful
-      outcomes of skipping the Skill are already partly held by
-      `agent-background-flag-guard.ts` and `subagent-background-guard.ts`, and
-      the Skill's own description triggers on "about to spawn one". Cut the
-      ~8-line bullet (a restated list of the Skill's contents plus a "paid for
-      by a session that lost work" justification) to one goal line — don't
-      strand work or race a shared checkout; the Skill is how; the read-only
-      exemption (#1226) kept — with an #1248 pointer. No guard built
-      (#1248's triage brief; rulebook-migration-table CM-42 wants warn-only
-      if ever). Grepped the corpus for the cut wording: no inbound references.
-      Net -5 lines, one file. The §4 Sonnet probe could not run — the
-      dispatched implementing agent had no subagent tool.
+      The closure-invocation rule — self-judge closure and invoke
+      `close-session` yourself, including at PR-open, and a dispatched
+      worktree-isolated impl agent must never self-invoke it — already failed
+      as pure prose once: issue #397 (an orphaned session that never logged
+      at all) and issue #483 (a "manual-nudge-closure" trend of two more
+      sessions deferring self-judged closure until a human prompted it) both
+      predate PR #411, which redesigned the mechanism in direct response
+      (split closure into `close-session` at PR-open plus a final
+      `log-session`, and introduced the `HUMAN-PROMPTED-CLOSURE` friction
+      keyword as the self-report signal). rulebook-migration-table.md's
+      CM-41/CM-50 rows confirm current status: only post-hoc detection exists
+      (`audit-skills`' closure-nudge signals) — "the refusal shape doesn't
+      exist (there is no 'session is ending' tool call to deny)" — so that
+      part of the rule still needs its own prose and was left untouched.
+      But the *worktree-isolation* sub-rule (CS-01, "a dispatched
+      worktree-isolated impl agent must not self-invoke close-session") is
+      fully guard-enforced today (H refusal): `log-session.ts --author`
+      refuses to run from inside a linked git worktree unless
+      `--allow-worktree` is passed, and the refusal message itself explains
+      why and names the escape hatch — confirmed by reading
+      `scripts/log-session.ts`'s `fail(...)` call directly. Despite that,
+      this sub-rule was independently restated in full across four places —
+      CLAUDE.md's "Opening the PR is also a closure point" Ground-rules
+      bullet, CLAUDE.md's "Logging your session" section, `dispatch-subagents/
+      SKILL.md`, and `close-session/SKILL.md` itself — the same "guard's own
+      deny message is the rule's teaching surface" pattern already applied to
+      the ADR-0017 provenance guard by an earlier trial. Single-homed:
+      CLAUDE.md's Ground-rules bullet now points at "Logging your session"
+      instead of restating re-invocation-safety and the worktree exception a
+      second time; "Logging your session" absorbs the PR-open example as the
+      one place stating self-judge-closure; `dispatch-subagents/SKILL.md` and
+      `close-session/SKILL.md` trim their worktree-exception prose to a
+      pointer plus the guard fact. Left the "three conditions for done" and
+      the `HUMAN-PROMPTED-CLOSURE` paragraph in `close-session/SKILL.md`
+      untouched — those are the actual self-report mechanism (CM-41/CM-50
+      have no hard refusal yet), not restated incident history, so cutting
+      them would remove the only signal that exists. Grepped the corpus for
+      the cut phrasing ("for why and its mechanical enforcement", "for why,
+      and its"): no other inbound references. Net -10 lines across three
+      files (CLAUDE.md, `.agents/skills/close-session/SKILL.md`,
+      `.agents/skills/dispatch-subagents/SKILL.md`) — smaller than the
+      ~100-line target because the retirable mass here was genuinely this
+      size once the operative CM-41/CM-50 instructions were correctly left
+      standing.
     territory:
       paths:
-        - "CLAUDE.md: the \"A subagent that touches git or needs a worktree must not strand work or race a shared checkout\" bullet (Working conventions)"
+        - "CLAUDE.md: the \"Opening the PR is also a closure point\" bullet and the \"Logging your session\" section"
+        - ".agents/skills/close-session/SKILL.md: the worktree-isolation-exception paragraph"
+        - ".agents/skills/dispatch-subagents/SKILL.md: the worktree-isolation-exception bullet"
       keywords:
-        - procedure, not a tool call
-        - invoke the `dispatch-subagents` Skill before spawning
-        - strand work or race a shared checkout
-        - issue #1248
-    opened: 2026-09-24
-    proven: false
+        - self-judge closure
+        - worktree-isolated impl agent must not self-invoke
+        - HUMAN-PROMPTED-CLOSURE
+        - issue #397
+        - issue #483
+        - issue #411
+    opened: 2026-09-28
+    proven: true
     check: >
-      Damage is a git-touching subagent dispatch that strands uncommitted work
-      (the subagent stops without committing/pushing and the work is lost or
-      has to be recovered by hand), races a shared checkout (parallel agents
-      editing one working tree without `isolation: 'worktree'`, clobbering or
-      mixing each other's changes), or loses a stopped subagent's work (no
-      resume, no recovery). NOT damage: a session that skips invoking the
-      `dispatch-subagents` Skill but dispatches correctly anyway — worktree
-      isolation, commit-before-stop, work landed (the #1248 case itself); a
-      read-only dispatch made directly; or a background/Monitor misuse the
-      existing guards already deny. Count only harm, not the missed Skill call.
+      Damage is a session that needs one of the cut restatements — the
+      worktree-isolation exception's "why" spelled out a second or third
+      time, or the re-invocation-safety note duplicated in the Ground-rules
+      bullet — and can't get the same outcome from the single remaining home
+      or from the guard's own refusal message when it actually fires. NOT
+      damage: a session correctly self-judging closure at PR-open without
+      being prompted, correctly not self-invoking `close-session` from a
+      dispatched worktree-isolated agent (whether because it read the
+      surviving pointer or because `log-session.ts --author` refused and
+      explained why), or a session that still needs to self-report a
+      `HUMAN-PROMPTED-CLOSURE` friction — that instruction was not touched.
+      A Sonnet probe given only the pruned text in all three files correctly
+      reconstructed: self-judge closure applies at every closure point
+      including PR-open; a dispatched worktree-isolated impl agent must not
+      self-invoke `close-session`/`log-session`; and that this is
+      guard-enforced by `log-session.ts --author`'s refusal from a linked
+      worktree — so no hook ships with this prune.
   - problem: >
       `docs/adr/0017-provenance-footer-on-agent-authored-content.md`'s
       amendment blockquote opened with its own incident-history narration —

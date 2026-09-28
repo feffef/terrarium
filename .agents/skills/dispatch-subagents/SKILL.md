@@ -133,8 +133,7 @@ The subagent cannot see this session's context, so the brief is self-contained:
   what order) against the primary source it cites before it ships, not just its
   verbatim quotes (issue #1137).
 - **A dispatched worktree-isolated impl agent must not self-invoke
-  `close-session`/`log-session`** — see `close-session/SKILL.md` for why, and its
-  mechanical enforcement.
+  `close-session`/`log-session`** — guard-enforced (`close-session/SKILL.md`).
 - **A dispatched impl agent must never call `merge-pr.ts` (or otherwise attempt
   the merge) itself, no matter what merge pre-authorization the brief carries.**
   Auto-mode's "Merge Without Review" classifier evaluates the *orchestrating*
