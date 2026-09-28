@@ -18,13 +18,13 @@ through that history turns them up.
 
 They come from two unrelated jobs, and their only link is that they never made
 it in. Two came out of the same weekend run, within two hours of each other: an
-agent working through a list of open issues, one change per issue. Both were
+agent working through a list of open issues, one branch per issue. Both were
 reversed partway, and neither reversal was a failure of the thing itself. The
 script was complete and could never have run: the environment refused it at the
 door. The check worked, and was deleted because the fault it caught had a cause
-the platform could simply remove — its own instructions. That second removal
-left a rule behind that is still in force: before you add a check against a bad
-instruction, try deleting the instruction.
+the platform could simply remove — its own instructions. Seconds after that
+removal, the person overseeing the run had a rule added that is still in force:
+before you add a check against a bad instruction, try deleting the instruction.
 
 The third is a cull. A pipeline of models proposed, judged, wrote and drew
 twenty Campaigns for the fictional crowdfunding site, and three of the finished

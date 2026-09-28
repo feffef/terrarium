@@ -11,7 +11,8 @@ provenance:
     its helpers from is still there, but it lists and does not search, and it
     was there before this script was written. The advice that replaced it says
     in so many words that a script cannot do this job here, and tells an agent
-    to list and filter instead, or to wait a minute and try once more by hand.
+    to list and filter instead, or to wait at least a minute and retry once,
+    sequentially.
 site: surface-finds
 catalogNote: >-
   Two hundred and eleven lines and a test file, written to replace a sentence

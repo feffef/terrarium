@@ -24,9 +24,9 @@ catalogNote: >-
   instead: the line that told an agent already on the right branch to go and
   make a new one. With the cause gone the check had nothing left to catch, and
   went too. Twenty-seven minutes from the commit that wrote it to the commit
-  that deleted it; it never ran on main. The rule that replaced it — delete a
-  bad instruction before adding a check against it — was committed minutes
-  later, naming this change as its first use.
+  that deleted it; it never ran on main. Seconds later, at the same person's
+  request, a standing rule was committed — delete a bad instruction before
+  adding a check against it — naming this change as its first use.
 removedIn: 2c8156d28e945c82a8e0d869a2214443a176244c
 remains:
   - label: the check, at its last revision

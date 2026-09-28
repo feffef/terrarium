@@ -86,7 +86,8 @@ export const DIG_SEASONS: DigSeason[] = [
     end: '2026-08-12',
   },
   {
-    // Named and closed by the third survey (issue #1468), after 46 days open.
+    // Closed and named when the third survey's finds (issue #1468) were
+    // catalogued, after 46 days open.
     // The season opens on the one Tenant that ever read at runtime — a wire
     // running out of the building — being cut out on the day it turned
     // thirty; the rehearsal prunes closed green and unmerged by charter lie
