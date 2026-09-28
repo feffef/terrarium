@@ -1,0 +1,81 @@
+schemaVersion: 1
+session: session_01C1P912tWDL3b8gtuQezv3Z
+startedAt: 2026-09-28T09:27:29Z
+endedAt: 2026-09-28T09:31:40Z
+kind: delegated
+goal: Auto-triage sweep of open issues
+status: completed
+outcome: "9 issues triaged: 3 agent, 6 human"
+summary: "Human-instructed: the user invoked /auto-triage (no full-sweep). Scanned 22 open issues; 9 eligible (unlabeled or needs-triage), the rest had AI-last activity or were wayfinder maps. No external PRs, none claimed or blocked. Dispatched one read-only triage subagent per issue. ready-for-agent: #1455, #1452, #1451 (no shared files, so no blocking). ready-for-human: #1464, #1463, #1446, #1449, #1450, #1375. No repo commits; all actions were labels plus one comment per issue."
+prs: []
+docsRead: []
+skillsUsed:
+  - name: auto-triage
+    reason: the sweep itself
+  - name: triage
+    reason: per-issue rules briefed to subagents
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: gh is absent; ad-hoc curl for assignees, native blockers and open PRs, since list-open-issues.ts omits assignees
+    solution: Have list-open-issues.ts or last-comment-authors.ts emit assignees and open native blocked_by so the wayfinder skip is one call
+    severity: minor
+  - description: "Spec issue #1375 had no convention for an active (non-held) spec: unlabeled specs resurface every sweep, labeling contradicts issue-tracker.md Specs"
+    solution: "Settle active-spec labeling in docs/agents/issue-tracker.md, or have auto-triage skip issues titled Spec:"
+    severity: minor
+  - description: "#1451 subagent posted its comment without the harness footer and edited it in place; #1451 also skipped the open-duplicate search"
+    solution: Brief subagents with a pasteable full comment skeleton and an explicit duplicate-search step
+    severity: nit
+  - description: "SHELL-READ-DETECTION false positive: command `cd /home/user/terrarium/.claude/skills/triage && cat SKILL.md AGENT-BRIEF.md; cat /home/user/terrarium/docs/agents/triage-labels.md` (subagent Triage issue #1455) credited nonexistent path .claude/skills/triage/docs/agents/triage-labels.md; expected docs/agents/triage-labels.md"
+    solution: Shell-read detector should not rebase an absolute path onto the preceding cd directory
+    severity: moderate
+durationSec: 251
+models:
+  claude-opus-5-5: 58
+toolCounts:
+  Bash: 15
+  Agent: 9
+  Skill: 2
+docsReadViaShell:
+  - .agents/skills/triage/SKILL.md
+  - docs/agents/issue-tracker.md
+  - .agents/skills/triage/AGENT-BRIEF.md
+  - docs/adr/0022-autonomous-triage-sweep.md
+  - CONTEXT.md
+  - docs/agents/triage-labels.md
+  - .agents/skills/visitor-loop/decisions.md
+  - .agents/skills/visitor-loop/SKILL.md
+  - docs/research/rulebook-migration-table.md
+  - .agents/skills/prune-trial/SKILL.md
+  - .agents/skills/log-session/SKILL.md
+  - docs/agents/guards.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - layers/midden/CONTEXT.md
+  - .agents/skills/wayfinder/SKILL.md
+  - .agents/skills/auto-triage/SKILL.md
+  - docs/adr/0028-navigation-reads-server-payloads.md
+subagents:
+  - type: general-purpose
+    task: "Triage issue #1464"
+  - type: general-purpose
+    task: "Triage issue #1463"
+  - type: general-purpose
+    task: "Triage issue #1455"
+  - type: general-purpose
+    task: "Triage issue #1452"
+  - type: general-purpose
+    task: "Triage issue #1451"
+  - type: general-purpose
+    task: "Triage issue #1450"
+  - type: general-purpose
+    task: "Triage issue #1449"
+  - type: general-purpose
+    task: "Triage issue #1446"
+  - type: general-purpose
+    task: "Triage issue #1375"
+gitBranch: claude/auto-triage-njju5l
+entrypoint: remote_mobile
+cliVersion: 2.1.283
+landedBy: Stop
