@@ -90,5 +90,18 @@ export function registerAtlasE2E(): void {
       expect(html).toContain('The Floor')
       expect(html).toContain('The Pool')
     })
+
+    // The at-random link must land on a real specimen plate, whichever it picks.
+    it('opens the guide at a random specimen', async () => {
+      const { page, errors } = await renderAndCollectErrors('/t/atlas')
+      try {
+        await page.getByRole('link', { name: /open the guide at random/i }).click()
+        await page.waitForURL(/\/t\/atlas\/(canopy|floor|pool)\/[^/]+$/)
+        await page.locator('.plate-caption').first().waitFor()
+        expect(errors).toEqual([])
+      } finally {
+        await page.close()
+      }
+    })
   })
 }
