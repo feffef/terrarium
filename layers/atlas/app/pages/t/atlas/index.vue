@@ -3,7 +3,8 @@
 // foreword, and the biome directory. A layer route at the Tenant root (not a
 // Space), so it doesn't touch the isolation-critical resolver; it reads each
 // biome's keyed collections through the SAME shared resolver the wings use, only
-// to count specimens and find the last observation for the colophon. (`BIOMES`
+// to list specimens (counts, and the at-random link) and find the last
+// observation for the colophon. (`BIOMES`
 // arrives via the utils auto-import; useSpace doesn't apply here — this route
 // has no `space` param.)
 import { resolveSpaceRoute } from '#shared/routing'
@@ -12,23 +13,34 @@ interface WingStat { count: number; lastObs: string | null }
 
 const { data } = await useAsyncData('atlas-front', async () => {
   const stats: Record<string, WingStat> = {}
+  const specimens: string[] = []
   for (const b of BIOMES) {
     const r = resolveSpaceRoute('atlas', b.slug, undefined)
     if (!r) {
       stats[b.slug] = { count: 0, lastObs: null }
       continue
     }
-    // Counted/ordered in SQL: specimens are every page but the wing landing;
-    // the colophon needs only the newest observation date.
-    const count = await queryCollection(r.pagesKey).where('path', '<>', '/').count()
+    // Specimens are every page but the wing landing; the colophon needs only
+    // the newest observation date.
+    const paths = await queryCollection(r.pagesKey).where('path', '<>', '/').select('path').all()
+    for (const p of paths) specimens.push(`/t/atlas/${b.slug}${p.path}`)
     const lastObs =
       (await queryCollection(r.collections.observations).order('date', 'DESC').first())?.date ?? null
-    stats[b.slug] = { count, lastObs }
+    stats[b.slug] = { count: paths.length, lastObs }
   }
-  return stats
+  return { stats, specimens: specimens.sort() }
 })
 
-const stats = computed(() => data.value ?? {})
+const stats = computed(() => data.value?.stats ?? {})
+const specimens = computed(() => data.value?.specimens ?? [])
+
+// The page is prerendered, so the pick happens on click: the href stays a
+// stable specimen for no-JS visitors and modified clicks (new tab).
+function openAtRandom(e: MouseEvent) {
+  if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return
+  e.preventDefault()
+  navigateTo(specimens.value[Math.floor(Math.random() * specimens.value.length)])
+}
 const lastObservation = computed(() => {
   const dates = Object.values(stats.value)
     .map((s) => s.lastObs)
@@ -52,6 +64,9 @@ useHead({ title: 'The Atlas of the Terrarium' })
         <h1 class="cover-title">The Atlas<br>of the Terrarium</h1>
         <p class="cover-sub">being a faithful account of the flora &amp; fauna observed under glass</p>
         <p class="cover-wings">a guide in three wings — <em>canopy · floor · pool</em></p>
+        <p v-if="specimens.length" class="at-random">
+          <NuxtLink :to="specimens[0]" @click="openAtRandom">or open the guide at random →</NuxtLink>
+        </p>
         <p class="cover-orn" aria-hidden="true">~ · ~ · ~ · ~ · ~</p>
       </header>
 
@@ -134,6 +149,10 @@ useHead({ title: 'The Atlas of the Terrarium' })
 }
 .cover-wings { font-family: var(--atlas-label); font-size: 0.8rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--atlas-faint); margin: 0 0 0.4rem; }
 .cover-wings em { font-style: normal; color: var(--biome-accent); }
+.at-random { font-family: var(--atlas-display); font-style: italic; font-size: 1.1rem; margin: 0.9rem 0 0.4rem; }
+.at-random a { color: var(--atlas-ink); text-decoration-color: var(--atlas-rule); text-underline-offset: 0.2em; }
+.at-random a:hover { text-decoration-color: currentColor; }
+.at-random a:focus-visible { outline: 2px solid var(--biome-accent); outline-offset: 3px; border-radius: 2px; }
 
 .foreword { max-width: 34rem; margin: 0 auto 3rem; font-size: 1.06rem; }
 .foreword .drop::first-letter {

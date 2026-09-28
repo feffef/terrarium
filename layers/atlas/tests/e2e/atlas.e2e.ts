@@ -90,5 +90,23 @@ export function registerAtlasE2E(): void {
       expect(html).toContain('The Floor')
       expect(html).toContain('The Pool')
     })
+
+    // The at-random link must land on a real specimen plate. Math.random is
+    // pinned high so the pick can't coincide with the href's first-specimen
+    // fallback — proving the click handler, not the plain link, navigated.
+    it('opens the guide at a random specimen', async () => {
+      const { page, errors } = await renderAndCollectErrors('/t/atlas')
+      try {
+        const link = page.getByRole('link', { name: /open the guide at random/i })
+        const fallback = await link.getAttribute('href')
+        await page.evaluate(() => { Math.random = () => 0.999 })
+        await link.click()
+        await page.waitForURL((u) => /^\/t\/atlas\/[^/]+\/[^/]+$/.test(u.pathname) && u.pathname !== fallback)
+        await page.locator('.plate-caption').first().waitFor()
+        expect(errors).toEqual([])
+      } finally {
+        await page.close()
+      }
+    })
   })
 }
