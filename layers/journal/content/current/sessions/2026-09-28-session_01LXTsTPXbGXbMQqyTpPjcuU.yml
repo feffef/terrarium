@@ -1,0 +1,61 @@
+schemaVersion: 1
+session: session_01LXTsTPXbGXbMQqyTpPjcuU
+startedAt: 2026-09-28T07:26:50Z
+endedAt: 2026-09-28T07:45:41Z
+kind: interactive
+goal: Give visitor-loop a rotating daily focus
+status: in-review
+outcome: "Seven-focus rotation in PR #1469"
+summary: "Human-instructed: the owner asked, via /grill-with-docs, for visitor-loop to rotate its focus daily instead of drifting to the homepage. Two grill rounds settled the design with the owner (all decisions theirs): seven foci (five content Tenants, mobile, homepage), a date-derived rotation with a hand override, visitors starting at the focus's entry page with a light mission, and the one feature confined to the focus. Implemented in SKILL.md, visitor-brief.md and the Skill Inventory entry; full gate passed; PR opened."
+prs:
+  - "1469"
+docsRead:
+  - path: .agents/skills/visitor-loop/SKILL.md
+    reason: the Skill being changed
+  - path: docs/adr/0003-agent-operating-model-and-governance.md
+    reason: visitor-loop remit row
+skillsUsed:
+  - name: grill-with-docs
+    reason: owner invoked it to settle the design
+  - name: grilling
+    reason: design-tree rounds
+  - name: domain-modeling
+    reason: decided no CONTEXT.md term, no ADR
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Owner said 'five main tenants' but the Platform has seven; took a grill question to resolve which five.
+    solution: None needed; the grill caught it. decisions.md already records Marquee/Commons as off the homepage.
+    severity: nit
+  - description: First PR open was denied by the ADR-0017 provenance guard; the marker was only in the footer, not the first line.
+    solution: The guard's deny message named the exact shape; recall it before the first GitHub write.
+    severity: nit
+  - description: Told the owner the focus list would be a separate file, then put it as a table in SKILL.md because that is shorter.
+    solution: Say so in the reply; per 'Keep it short' the inline table is the better home.
+    severity: nit
+  - description: 'SHELL-READ-DETECTION miss: command `grep -n -A15 "visitor-loop" docs/adr/0003*` showed docs/adr/0003-agent-operating-model-and-governance.md but was not credited (glob path).'
+    solution: Expand shell globs against the repo when matching shell-read candidates.
+    severity: moderate
+durationSec: 1131
+models:
+  claude-opus-5-5: 49
+toolCounts:
+  Skill: 5
+  Bash: 13
+  Read: 1
+  ToolSearch: 1
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 2
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__send_later: 1
+docsReadViaShell:
+  - .agents/skills/visitor-loop/SKILL.md
+  - CONTEXT.md
+  - .agents/skills/visitor-loop/visitor-brief.md
+  - .agents/skills/visitor-loop/decisions.md
+gitBranch: claude/daily-platform-focus-schedule-d6whzg
+entrypoint: remote_mobile
+cliVersion: 2.1.283
+landedBy: Stop
