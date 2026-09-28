@@ -1,23 +1,27 @@
 schemaVersion: 1
 session: session_01C1P912tWDL3b8gtuQezv3Z
 startedAt: 2026-09-28T09:27:29Z
-endedAt: 2026-09-28T09:31:40Z
-kind: delegated
-goal: Auto-triage sweep of open issues
+endedAt: 2026-09-28T18:25:31Z
+kind: interactive
+goal: Auto-triage sweep, then grill escalated issues
 status: completed
-outcome: "9 issues triaged: 3 agent, 6 human"
-summary: "Human-instructed: the user invoked /auto-triage (no full-sweep). Scanned 22 open issues; 9 eligible (unlabeled or needs-triage), the rest had AI-last activity or were wayfinder maps. No external PRs, none claimed or blocked. Dispatched one read-only triage subagent per issue. ready-for-agent: #1455, #1452, #1451 (no shared files, so no blocking). ready-for-human: #1464, #1463, #1446, #1449, #1450, #1375. No repo commits; all actions were labels plus one comment per issue."
+outcome: 7 issues agent-ready, 1 closed, 1 spec parked
+summary: "Human-instructed throughout. /auto-triage: 9 of 22 open issues eligible; one read-only subagent each; #1455/#1452/#1451 went ready-for-agent, six to ready-for-human. The owner then ran /grill-with-docs over the escalations and decided each: #1446 LRU page cache capped at 200 entries; #1450 becomes a prune trial dropping all session-log word limits for size guidance that prizes knowledge git and PRs can't hold (the owner's own framing); #1463/#1464 fixed presentationally via a Midden gloss layer, no record edits, #1464 blocked by #1463; #1449 closed not-planned as a data point on #864; spec #1375 left alone. I added #1451 blocked-by #1450 (both touch the prune-trials ledger)."
 prs: []
 docsRead: []
 skillsUsed:
-  - name: auto-triage
-    reason: the sweep itself
-  - name: triage
-    reason: per-issue rules briefed to subagents
   - name: close-session
     reason: (no reason given)
   - name: log-session
     reason: (no reason given)
+  - name: grilling
+    reason: (no reason given)
+  - name: domain-modeling
+    reason: (no reason given)
+  - name: auto-triage
+    reason: (invoked as a slash command)
+  - name: grill-with-docs
+    reason: (invoked as a slash command)
 frictions:
   - description: gh is absent; ad-hoc curl for assignees, native blockers and open PRs, since list-open-issues.ts omits assignees
     solution: Have list-open-issues.ts or last-comment-authors.ts emit assignees and open native blocked_by so the wayfinder skip is one call
@@ -31,13 +35,22 @@ frictions:
   - description: "SHELL-READ-DETECTION false positive: command `cd /home/user/terrarium/.claude/skills/triage && cat SKILL.md AGENT-BRIEF.md; cat /home/user/terrarium/docs/agents/triage-labels.md` (subagent Triage issue #1455) credited nonexistent path .claude/skills/triage/docs/agents/triage-labels.md; expected docs/agents/triage-labels.md"
     solution: Shell-read detector should not rebase an absolute path onto the preceding cd directory
     severity: moderate
-durationSec: 251
+  - description: "Grilling question numbering drifted: user's '9 a' answered Q10's option, costing a clarification round-trip"
+    solution: "Give every question in a round letter options, or ask the user to answer as 'Qn: choice'"
+    severity: nit
+  - description: Native-dependency POST via curl failed first with no Content-Type header; the proxy demands application/json
+    solution: Note the Content-Type requirement next to issue-tracker.md's Blocking recipe or in github-integration.md's gh-less fallback
+    severity: nit
+durationSec: 32281
 models:
-  claude-opus-5-5: 58
+  claude-opus-5-5: 97
 toolCounts:
-  Bash: 15
+  Bash: 23
   Agent: 9
-  Skill: 2
+  Skill: 4
+  ToolSearch: 1
+  mcp__github__add_issue_comment: 6
+  mcp__github__issue_write: 5
 docsReadViaShell:
   - .agents/skills/triage/SKILL.md
   - docs/agents/issue-tracker.md
