@@ -12,7 +12,7 @@
 // assertion below is self-contained via `$fetch`/`renderAndCollectErrors`, so
 // there's nothing from the caller's suite this module needs threaded in.
 import { describe, expect, it } from 'vitest'
-import { $fetch, fetch } from '@nuxt/test-utils/e2e'
+import { $fetch, createPage, fetch, url } from '@nuxt/test-utils/e2e'
 import { expectCleanHydration } from '../../../../tests/support/e2e.ts'
 
 /** Register the midden Tenant's L2 assertions under the caller's active suite. */
@@ -92,6 +92,24 @@ export function registerMiddenE2E(): void {
       expect(html).toContain('pnpm gen')
       expect(html).toContain('Condition key')
       expect(html).not.toContain('midden-find__stamp')
+    })
+
+    // Jargon glosses (issue #1463): first use only, shared across the prose and
+    // the finds' notes, opened by a real click in the rendered DOM.
+    it('glosses first uses of Platform jargon on a dig report', async () => {
+      const page = await createPage()
+      try {
+        await page.goto(url('/t/midden/trench/the-buried'), { waitUntil: 'hydration' })
+        const terms = page.locator('.midden-gloss__term')
+        expect(await terms.allTextContents()).toEqual(expect.arrayContaining(['Tenant', 'Space', 'isolation', 'sync', 'ADR-0008']))
+        expect(await page.locator('.midden-gloss__term', { hasText: /^Tenant$/ }).count()).toBe(1)
+        const tenant = page.locator('.midden-gloss', { hasText: /^Tenant/ })
+        await expect.poll(() => tenant.locator('.midden-gloss__def').isVisible()).toBe(false)
+        await tenant.locator('button').click()
+        await expect.poll(() => tenant.locator('.midden-gloss__def').isVisible()).toBe(true)
+      } finally {
+        await page.close()
+      }
     })
 
     it('links the trench landing to the stores', async () => {
