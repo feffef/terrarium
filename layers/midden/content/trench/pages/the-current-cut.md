@@ -1,6 +1,6 @@
 ---
 title: The Current Cut
-description: The finds that were freshest when this cut was dug — a complete feature PR closed when its own CI went unstable, and the dependency patch lifted out the morning upstream made it unnecessary.
+description: The finds that were freshest when this cut was dug — a complete feature PR closed when its own CI went unstable, and a patch to a dependency, removed at the owner's request when it had not stopped the fault it was written for.
 ---
 
 This cut was the open one when it was dug, and the finds in it are graded *fresh*
@@ -16,11 +16,13 @@ and complete, closed when its own CI went unstable — and worth reading for the
 mechanism, the `.stop` modifiers that kept the button from toggling its parent
 disclosure quietly swallowing the very click that opened the card: forty-two of
 forty-two on the local gate, three accordion tests down across two CI runs. The
-second came out one
-morning with its own shadow attached: a local patch to the content engine's
-client-side database loading, carried against a pinned version until upstream
-finally made it unnecessary, and lifted out together with the one-line workspace
-file that had existed only to declare it.
+second came out
+with its own shadow attached: a local patch to the content engine's
+client-side database loading, carried against a pinned version for eight days.
+It had not stopped the empty page it was written for, and the owner had it
+removed rather than keep a private copy of someone else's code; a message asking
+the reader to reload took its place. It was lifted out together with the one-line
+workspace file that had existed only to declare it.
 
 A third find from this season, a gate closed twenty seconds after it went green,
 is catalogued a layer over in [Built and Never Fired](/t/midden/trench/built-never-fired),

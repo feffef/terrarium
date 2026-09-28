@@ -6,10 +6,13 @@ provenance:
   hash: b23e8d3
   path: patches/@nuxt__content@3.15.0.patch
   url: https://github.com/feffef/terrarium/commit/b23e8d3
-  continuityCheck: the patched behaviour was resolved upstream at the pinned
-    version; the patch was dropped (ADR-0019) with nothing needed in its place,
-    and the workspace file that existed only to declare it went out in the same
-    commit — a single-repo tree needs no workspace manifest
+  continuityCheck: >-
+    upstream had not fixed the flaw — the removing commit says it is back. What
+    died is the patch's own answer to it, the quiet retry that let a page heal
+    without the reader noticing; nothing on main retries that load. What stands
+    in its place is a different answer to the same fault: an error dialog that
+    shows the failure and offers a reload, still live on main. The workspace
+    file that existed only to declare the patch went out in the same commit.
 site: the-current-cut
 catalogNote: >-
   One hundred and seven lines patched into a dependency's compiled dist: retry
