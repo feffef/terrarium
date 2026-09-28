@@ -21,8 +21,13 @@
 import { conditionMeta } from '../../utils/condition'
 import { digSeasonOf } from '../../utils/strata'
 import { formatMiddenDate, middenProvenanceLine, type MiddenArtifactDoc } from '../../utils/find'
+import type { MiddenGlossPart } from '../../utils/gloss'
 
 const props = defineProps<{ slug: string }>()
+
+// The dig report's page-wide first-use split for this find's note (issue #1463).
+const glossedNotes = inject<Ref<Record<string, MiddenGlossPart[]>>>(MIDDEN_GLOSSED_NOTES)
+const noteParts = computed(() => glossedNotes?.value[props.slug])
 
 const { collections } = useSpace('midden')
 
@@ -100,7 +105,7 @@ const removedInShort = computed(() => artifact.value?.removedIn?.slice(0, 7))
       </p>
     </header>
 
-    <p class="midden-find__note">{{ artifact.catalogNote }}</p>
+    <p class="midden-find__note"><MiddenGlossedText :text="artifact.catalogNote" :parts="noteParts" /></p>
 
     <blockquote v-if="inscriptionForDisplay" class="midden-find__inscription">
       <span class="midden-find__quote">&ldquo;{{ inscriptionForDisplay.text }}&rdquo;</span>

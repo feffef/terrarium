@@ -17,6 +17,7 @@
 // was folded away in the simplification — the page's derived data (the compact
 // meta line, the present-grade list) is computed straight from this same-Space load.
 import { CONDITION_ORDER, type Grade } from '../../../../utils/condition'
+import GlossTerm from '../../../../components/midden/Gloss.vue'
 
 const route = useRoute()
 const { space, path, pagesKey, collections } = useSpace('midden')
@@ -64,6 +65,16 @@ const presentGrades = computed<Grade[]>(() => {
   return CONDITION_ORDER.filter((g) => present.has(g))
 })
 
+// First-use glosses across prose and the embedded finds' notes (issue #1463).
+const glossed = computed(() => {
+  const body = site.value?.body as { type?: string; value?: Parameters<typeof middenGlossBody>[0] } | undefined
+  if (!site.value || body?.type !== 'minimark' || !body.value) return null
+  const { nodes, notes } = middenGlossBody(body.value, Object.fromEntries(siteArtifacts.value.map((a) => [a.stem, a.catalogNote])))
+  return { site: { ...site.value, body: { ...body, value: nodes } }, notes }
+})
+provide(MIDDEN_GLOSSED_NOTES, computed(() => glossed.value?.notes ?? {}))
+const glossComponents = { 'midden-gloss': GlossTerm }
+
 if (!site.value && !error.value) setResponseStatus(404)
 
 useHead({ title: () => `${site.value?.title ?? 'Not found'} · The Midden` })
@@ -91,7 +102,7 @@ useHead({ title: () => `${site.value?.title ?? 'Not found'} · The Midden` })
       <MiddenConditionKey v-if="presentGrades.length" :grades="presentGrades" class="midden-report__key" />
 
       <div class="midden-report__prose">
-        <ContentRenderer :value="site" />
+        <ContentRenderer :value="glossed?.site ?? site" :components="glossComponents" />
       </div>
     </article>
 
