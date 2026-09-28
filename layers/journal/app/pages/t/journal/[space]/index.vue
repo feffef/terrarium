@@ -91,6 +91,12 @@ const SESSIONS_VISIBLE = 10
 const showAllSessions = ref(false)
 const frictionSeverityTotals = computed(() => frictionTotals(sessions.value))
 const totalFrictions = computed(() => frictionCount(sessions.value))
+// The tile's caption used to name only blocker+major, leaving the rest of the
+// total unaccounted for on the page itself (visitor-loop finding, 2026-09-28) —
+// the full breakdown was only ever visible in the strata bar's hover title.
+const otherFrictions = computed(
+  () => totalFrictions.value - frictionSeverityTotals.value.blocker - frictionSeverityTotals.value.major,
+)
 const sessionKindCounts = computed(() => kindCounts(sessions.value))
 const referencedPrs = computed(() => prRefs(sessions.value))
 const referencedPrParts = computed(() => prRefsParts(referencedPrs.value))
@@ -240,7 +246,8 @@ useSeoMeta({
         <template #sub>
           <JournalFrictionStrata :counts="frictionSeverityTotals" :total="totalFrictions">
             {{ frictionSeverityTotals.blocker }} blocker{{ frictionSeverityTotals.blocker === 1 ? '' : 's' }} ·
-            {{ frictionSeverityTotals.major }} major
+            {{ frictionSeverityTotals.major }} major{{ frictionSeverityTotals.major === 1 ? '' : 's' }}
+            <template v-if="otherFrictions"> · {{ otherFrictions }} other</template>
           </JournalFrictionStrata>
         </template>
       </JournalStatTile>

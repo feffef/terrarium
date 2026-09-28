@@ -110,6 +110,11 @@ useSeoMeta({ description: () => post.value?.description })
         </NuxtLink>
       </nav>
 
+      <!-- Always-present way back to the index, next to Older/Newer rather than
+           only in the breadcrumb far above (visitor-loop finding, 2026-09-28:
+           the older/newer pair alone stays within one persona). -->
+      <p class="post-nav-back"><NuxtLink to="/t/blog">← Back to the Blog</NuxtLink></p>
+
       <section v-if="pingbacks.length" class="pingbacks">
         <h2>Reactions from other personas</h2>
         <ul>
