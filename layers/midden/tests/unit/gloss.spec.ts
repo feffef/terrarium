@@ -1,6 +1,6 @@
 // Unit tests for the Midden's first-use gloss matching (layers/midden/app/utils/gloss.ts, issue #1463).
 import { describe, expect, it } from 'vitest'
-import { middenGlossBody, middenGlossFor, middenGlossParts } from '../../app/utils/gloss.ts'
+import { middenGlossBody, middenGlossParts, type MiddenGlossKey } from '../../app/utils/gloss.ts'
 
 describe('middenGlossParts', () => {
   it('marks only the first use of each term, keeping the authored text exact', () => {
@@ -14,7 +14,7 @@ describe('middenGlossParts', () => {
   })
 
   it('skips terms already seen and records the ones it marks', () => {
-    const seen = new Set(['tenant'])
+    const seen = new Set<MiddenGlossKey>(['tenant'])
     expect(middenGlossParts('Tenants keep isolation.', seen)).toEqual([
       'Tenants keep ', { key: 'isolation', text: 'isolation' }, '.',
     ])
@@ -23,12 +23,6 @@ describe('middenGlossParts', () => {
 
   it('leaves ordinary lowercase words alone', () => {
     expect(middenGlossParts('a space in the platform', new Set())).toEqual(['a space in the platform'])
-  })
-
-  it('has a gloss for every key it can emit', () => {
-    for (const key of ['platform', 'tenant', 'space', 'collection', 'manifest', 'isolation', 'adr', 'skill', 'job']) {
-      expect(middenGlossFor(key)).toBeTruthy()
-    }
   })
 })
 

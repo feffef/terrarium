@@ -1,8 +1,8 @@
 <script setup lang="ts">
-// One glossed term (issue #1463). A button, not a hover title, so it works by
-// tap and keyboard. The dig-report page passes it to ContentRenderer by hand:
-// @nuxt/content's built manifest only lists components the content itself uses.
-const props = defineProps<{ term: string }>()
+// A button, not a hover title, so the gloss works by tap and keyboard (issue #1463).
+import type { MiddenGlossKey } from '../../utils/gloss'
+
+const props = defineProps<{ term: MiddenGlossKey }>()
 const open = ref(false)
 const gloss = computed(() => middenGlossFor(props.term))
 </script>

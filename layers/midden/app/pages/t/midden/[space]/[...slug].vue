@@ -17,7 +17,6 @@
 // was folded away in the simplification — the page's derived data (the compact
 // meta line, the present-grade list) is computed straight from this same-Space load.
 import { CONDITION_ORDER, type Grade } from '../../../../utils/condition'
-import GlossTerm from '../../../../components/midden/Gloss.vue'
 
 const route = useRoute()
 const { space, path, pagesKey, collections } = useSpace('midden')
@@ -73,7 +72,8 @@ const glossed = computed(() => {
   return { site: { ...site.value, body: { ...body, value: nodes } }, notes }
 })
 provide(MIDDEN_GLOSSED_NOTES, computed(() => glossed.value?.notes ?? {}))
-const glossComponents = { 'midden-gloss': GlossTerm }
+// Passed by hand: @nuxt/content's built manifest only lists components the content itself names.
+const glossComponents = { 'midden-gloss': resolveComponent('MiddenGloss') }
 
 if (!site.value && !error.value) setResponseStatus(404)
 

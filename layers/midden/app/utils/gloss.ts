@@ -2,7 +2,7 @@
 // only, applied at render time so authored Sites and Artifacts stay untouched.
 // Nuxt-free so the first-use matching is unit-testable.
 
-const GLOSSARY: readonly { key: string; pattern: RegExp; gloss: string }[] = [
+const GLOSSARY = [
   { key: 'platform', pattern: /\bPlatform\b/, gloss: 'the site itself, and the machinery every wing of it stands on' },
   { key: 'tenant', pattern: /\bTenants?\b/, gloss: 'one of the site’s self-contained wings — the Midden is one' },
   { key: 'space', pattern: /\bSpaces?\b/, gloss: 'a walled room inside a wing; nothing crosses from one room to another' },
@@ -12,22 +12,23 @@ const GLOSSARY: readonly { key: string; pattern: RegExp; gloss: string }[] = [
   { key: 'adr', pattern: /\bADR-\d{4}\b/, gloss: 'a numbered decision record — the site’s dated ruling on how it is built' },
   { key: 'skill', pattern: /\bSkills?\b/, gloss: 'a written procedure the site’s agent builders follow for one kind of task' },
   { key: 'job', pattern: /\b(?:sync|consolidate|codify)\b/, gloss: 'the name of a self-improvement job — work the site was to run on itself' },
-]
+] as const satisfies readonly { key: string; pattern: RegExp; gloss: string }[]
 
-export type MiddenGlossPart = string | { key: string; text: string }
+export type MiddenGlossKey = (typeof GLOSSARY)[number]['key']
+
+export type MiddenGlossPart = string | { key: MiddenGlossKey; text: string }
 
 export const MIDDEN_GLOSSED_NOTES = 'midden-glossed-notes'
 
-export function middenGlossFor(key: string): string | undefined {
-  return GLOSSARY.find((g) => g.key === key)?.gloss
+export function middenGlossFor(key: MiddenGlossKey): string {
+  return GLOSSARY.find((g) => g.key === key)!.gloss
 }
 
-/** Split `text` around the first use of each glossary term not yet in `seen`, adding each marked term to `seen`. */
-export function middenGlossParts(text: string, seen: Set<string>): MiddenGlossPart[] {
+export function middenGlossParts(text: string, seen: Set<MiddenGlossKey>): MiddenGlossPart[] {
   const parts: MiddenGlossPart[] = []
   let rest = text
   for (;;) {
-    let hit: { key: string; index: number; text: string } | undefined
+    let hit: { key: MiddenGlossKey; index: number; text: string } | undefined
     for (const { key, pattern } of GLOSSARY) {
       if (seen.has(key)) continue
       const m = pattern.exec(rest)
@@ -45,13 +46,9 @@ export function middenGlossParts(text: string, seen: Set<string>): MiddenGlossPa
 
 type MinimarkNode = string | [string, Record<string, unknown>, ...MinimarkNode[]]
 
-/**
- * Gloss a Site's minimark body, first use per page: prose and each embedded
- * find's note (by slug, from `notes`) share one `seen` set in document order.
- * Links are left whole — a button can't nest inside one.
- */
+// Links are left whole: a button can't nest inside one.
 export function middenGlossBody(nodes: MinimarkNode[], notes: Record<string, string>) {
-  const seen = new Set<string>()
+  const seen = new Set<MiddenGlossKey>()
   const glossedNotes: Record<string, MiddenGlossPart[]> = {}
   const walk = (node: MinimarkNode): MinimarkNode[] => {
     if (typeof node === 'string') {

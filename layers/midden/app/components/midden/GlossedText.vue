@@ -1,7 +1,4 @@
 <script setup lang="ts">
-// A plain string with its jargon glossed (issue #1463). Given `parts`, renders
-// a page-level first-use split; alone, glosses every term's first use in `text`
-// — the form a lone catalogNote outside a dig report uses (#1464).
 import type { MiddenGlossPart } from '../../utils/gloss'
 
 const props = defineProps<{ text: string; parts?: MiddenGlossPart[] }>()
