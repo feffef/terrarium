@@ -243,6 +243,28 @@ function resolveGlobAgainstTree(repoRoot: string): (token: string) => string | u
  *  the tree there (issue #1246) — the advisory runs at author time, with the
  *  session's own repo checkout on disk, so a real resolution is sound here in a
  *  way it would not be for a trace re-derived later against a since-changed tree. */
+/** An exact leading `cd <dir> &&`/`cd <dir>;` (or `cd <dir> ; `) prefix at the
+ *  very start of a command — deliberately narrow (issue #1454): a quoted dir
+ *  is unwrapped, but a `||`, a subshell, or a `cd` that isn't the command's
+ *  first word all fall outside this shape and are left to resolve against the
+ *  session's default cwd unchanged, same as before this fix. */
+const CD_PREFIX_RE = /^cd\s+"?([^"'\s;&]+)"?\s*(?:&&|;)\s*/
+
+/** `p` was credited from `command`: when it matches `CD_PREFIX_RE`, resolve it
+ *  against that `cd`'s own target directory instead of the session's default
+ *  cwd (issue #1454) — `scanShellReads` has no notion of a per-command cwd, so
+ *  a relative argument following `cd <dir>` was being credited as if the
+ *  command still ran from the session root. `dir` is repo-relativized the
+ *  same way an absolute tool path is; a `cd` outside the repo (no shared
+ *  prefix, or one that walks back out via `..`) leaves `p` unchanged rather
+ *  than guessing. */
+function resolveAgainstCdDir(p: string, command: string, rel: (s: string) => string): string {
+  const m = CD_PREFIX_RE.exec(command)
+  if (!m) return p
+  const dir = rel(m[1]!.replace(/\/$/, ''))
+  return dir && !dir.startsWith('/') && !dir.startsWith('..') ? `${dir}/${p}` : p
+}
+
 export function shellReadScanOf(
   records: Record<string, unknown>[],
   subagents: LabelledRecords[] = [],
@@ -250,10 +272,16 @@ export function shellReadScanOf(
 ): FoldedShellReadScan {
   const resolveGlob = repoRoot !== undefined ? resolveGlobAgainstTree(repoRoot) : undefined
   const scans = [{ label: 'this session', records }, ...subagents.map((s) => ({ ...s, label: `subagent: ${s.label}` }))]
-    .map(({ label, records: rs }) => ({ label, ...scanShellReads(bashCommandsOf(rs), relativizer(rs), resolveGlob) }))
+    .map(({ label, records: rs }) => {
+      const rel = relativizer(rs)
+      return { label, rel, ...scanShellReads(bashCommandsOf(rs), rel, resolveGlob) }
+    })
   const provenance: FoldedShellReadScan['provenance'] = new Map()
   for (const s of scans) {
-    for (const [p, command] of s.creditedBy) if (!provenance.has(p)) provenance.set(p, { command, source: s.label })
+    for (const [p, command] of s.creditedBy) {
+      const resolved = resolveAgainstCdDir(p, command, s.rel)
+      if (!provenance.has(resolved)) provenance.set(resolved, { command, source: s.label })
+    }
   }
   return {
     paths: [...provenance.keys()],
