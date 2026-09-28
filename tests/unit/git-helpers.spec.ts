@@ -69,13 +69,21 @@ describe('hasOriginHead() / setOriginHead()', () => {
       commitFile(fixture.work, '1.txt', '1', 'c1')
       git(fixture.work, ['push', '-q', 'origin', 'main'])
 
-      // `git init` + `remote add` + `fetch` never sets origin/HEAD — unlike
-      // `git clone`, which is why this repro needs to avoid it (mirrors the
-      // no-origin/HEAD checkouts this environment hands out).
+      // `git init` + `remote add` + `fetch` mirrors the no-origin/HEAD
+      // checkouts this environment hands out, unlike `git clone` (which sets
+      // it). Some git versions set it on `fetch` too when the remote
+      // advertises it (observed live: unset on git 2.43, set on git 2.55) —
+      // delete it unconditionally afterward so the "missing" precondition
+      // this test needs holds regardless of the git version running it.
       const clone = join(fixture.dir, 'clone')
       git(fixture.dir, ['init', '-q', '-b', 'main', 'clone'])
       git(clone, ['remote', 'add', 'origin', fixture.origin])
       git(clone, ['fetch', '-q', 'origin'])
+      try {
+        git(clone, ['symbolic-ref', '--delete', 'refs/remotes/origin/HEAD'])
+      } catch {
+        // Already unset on this git version — the case this test used to rely on.
+      }
 
       expect(hasOriginHead(clone)).toBe(false)
       setOriginHead(clone)
