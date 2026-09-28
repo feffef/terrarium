@@ -1,0 +1,49 @@
+schemaVersion: 1
+session: session_01A1iy52RckGYBTdfuhuxwCf
+startedAt: 2026-09-28T18:10:07Z
+endedAt: 2026-09-28T18:17:49Z
+kind: interactive
+goal: Pin Atlas diagram scroll fade on mobile
+status: in-review
+outcome: "Fade now a mask; PR #1476 open"
+summary: "The user reported, with a phone screenshot, that the scroll-hint fade on the Atlas relations SVG moved when swiped (human-instructed fix). The cause: the fade was an absolutely positioned ::after inside the overflow-x scroller. I replaced it with a mask-image gradient on .atlas-web-scroll, which fixes both RelationsWeb and FoodWeb. Checked with a Playwright probe at 360px (mask applied, fade stays at the edge after scrolling), and the full gate:scoped passed. Opening PR 1476 was agent-initiated per ADR-0003's default."
+prs:
+  - "1476"
+docsRead:
+  - path: layers/atlas/app/assets/theme.css
+    reason: (read before editing)
+skillsUsed:
+  - name: close-session
+    reason: closure at PR open
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: "First ad-hoc Playwright probe from the scratchpad failed: playwright-core cannot be resolved outside the repo, and I guessed the chromium path"
+    solution: Put the probe temporarily under scripts/ and use resolveChromiumPath(), as verifying-ui-changes.md says
+    severity: nit
+  - description: Wrote the PR body before checking the provenance-header format, then had to grep scripts/provenance-header.ts for it
+    solution: Read scripts/provenance-header.ts, or rely on the guard's deny message, before drafting a GitHub body
+    severity: nit
+durationSec: 461
+models:
+  claude-opus-5-5: 42
+toolCounts:
+  Grep: 1
+  Bash: 14
+  Read: 3
+  Edit: 2
+  ToolSearch: 1
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  Skill: 2
+filesEdited:
+  - layers/atlas/app/assets/theme.css
+docsReadViaShell:
+  - docs/agents/guards.md
+gitBranch: claude/svg-relations-scroll-border-afwhlg
+entrypoint: remote_mobile
+cliVersion: 2.1.283
+learnings:
+  - An absolutely positioned child of an overflow scroller scrolls with the content; mask-image on the scroller stays fixed to its box
+landedBy: Stop
