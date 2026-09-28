@@ -42,18 +42,12 @@ hooks commit one at all.)
 **If a human had to prompt this closure, that is the regression itself — log it.**
 If you are running `close-session` because the user asked in conversation, rather
 than because you self-judged closure, *and* a PR had already been opened or merged,
-then you failed to log at PR-open as you should have — a degraded outcome, which
-is CONTEXT.md's own bar for `major` (graded by this instance's actual cost, not
-by how notorious the failure class is). Record it as a **`major`** friction whose
-`description` contains the exact keyword **`HUMAN-PROMPTED-CLOSURE`**, so the
-self-improvement Skills can also grep it. Self-judged closure at PR-open needs no
-such friction.
+then you failed to log at PR-open as you should have — CONTEXT.md's `major`
+bar. Record it as a **`major`** friction whose `description` contains the exact
+keyword **`HUMAN-PROMPTED-CLOSURE`**, so the self-improvement Skills can also
+grep it. Self-judged closure at PR-open needs no such friction.
 
-**Dispatched worktree-isolated impl agents must NOT self-invoke this Skill.**
-They share the parent session id with the orchestrator, and this Skill writes
-to a single shared per-session scratch file — a second invocation would
-clobber the orchestrating session's own log. The orchestrating session is the
-sole log author for the run; a dispatched impl agent just implements, pushes,
-and hands back the PR. Mechanically enforced: `log-session.ts --author`
-refuses to run from inside a linked git worktree unless `--allow-worktree` is
-passed explicitly.
+**Dispatched worktree-isolated impl agents must not self-invoke this Skill** —
+they'd clobber the orchestrator's shared log. Guard-enforced: `log-session.ts
+--author` refuses from a linked worktree (`--allow-worktree` escapes the
+legitimate `EnterWorktree` case); the refusal message explains why.

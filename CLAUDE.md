@@ -265,11 +265,8 @@ it with a tool.
   session".) The land-a-gated-PR recipe, the per-tier merge authority list, and
   the `merge-pr.ts`-as-sole-merge-path mechanics now live in
   `docs/agents/pr-workflow.md` — read that before landing a PR.
-- **Opening the PR is also a closure point (ADR-0003) — invoke `close-session` right then.**
-  More commits and a re-fired log can follow; re-invoking is safe. A dispatched
-  worktree-isolated impl agent must **not** self-invoke it — see
-  `close-session/SKILL.md` for why and its mechanical enforcement, and
-  "Logging your session" below for the rest.
+- **Opening the PR is also a closure point (ADR-0003)** — self-judge closure
+  applies here too; see "Logging your session" below.
 - **A subagent that touches git or needs a worktree must not strand work or race
   a shared checkout — the `dispatch-subagents` Skill is how** (issue #1248).
   A read-only one that touches neither may be dispatched directly.
@@ -438,8 +435,8 @@ issue #2) — the raw signal the self-improvement Skills mine (see `CONTEXT.md`'
 **Friction** term for which, and why).
 
 **Self-judge closure — invoke `close-session` yourself while you can still act**,
-loose and early ("am I winding down?"), never only on a human prompt. It runs the
-closing sequence and authors the log via `log-session`. Re-invoking is safe if
+loose and early ("am I winding down?"), at every closure point (e.g. opening a
+gated PR, per ADR-0003) — never only on a human prompt. Re-invoking is safe if
 more work follows — both Skills are model-invocable and self-heal for exactly
 that. `log-session`'s own Skill owns the mechanical/interpretive field split;
 `close-session`'s owns when the `Stop` hook actually commits and the
