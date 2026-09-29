@@ -1,0 +1,60 @@
+schemaVersion: 1
+session: session_01JFdzvuah2DATTv7ixCAPJg
+startedAt: 2026-09-29T07:38:48Z
+endedAt: 2026-09-29T07:57:08Z
+kind: interactive
+goal: Add a fact-check step to the daily digest Skill
+status: in-review
+outcome: "Fact-check step and 2026-09-28 digest fix in PR #1488"
+summary: "Human-instructed throughout. The owner asked whether the daily digest reads only session logs and suggested it also read git logs, PRs and issues. I showed it reads git (PR numbers and titles from merge commits) plus session logs, with GitHub issues optional. The owner then named the concrete error: the 2026-09-28 digest said \"the homepage gained a map of what is real and what is invented\", but PR #1475 added that page to the Journal. Tracing it showed the input data already had the right facts (the PR title says \"to the Journal onramp\", and the diff is one Journal file); the writer read the visitor-loop's \"(homepage)\" focus label as a location. More sources alone would not have caught it. I proposed adding changed file paths to gather; the owner instead chose a separate review step that fact-checks the generated Digest, leaving generation unchanged. The owner decided: fall back to git alone when GitHub is unavailable, keep unverifiable claims but don't self-merge, and fix the 2026-09-28 digest in the same PR. Modelled the step on blog-post's existing fact-check stage. PR #1488 opened by repo default."
+prs:
+  - "1488"
+docsRead:
+  - path: .agents/skills/digest/SKILL.md
+    reason: the Skill being changed
+  - path: scripts/digest.ts
+    reason: what gather actually reads
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: existing fact-check stage to mirror
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: My first grep for the wrong claim hit the 2026-09-24 digest, whose homepage claim was correct, so I asked the owner for the date instead of checking the newest digest first.
+    solution: When a user reports a recent wrong summary, check the most recent digests on a freshly fetched main first.
+    severity: nit
+  - description: Running `git checkout -q origin/main --` to read main left the checkout on a detached HEAD; caught before committing.
+    solution: Read main's files with `git show origin/main:<path>` or a worktree, never by checking out.
+    severity: minor
+  - description: Hand-wrote the commit trailer and the PR provenance line in the wrong shape; both guards denied, costing two retries.
+    solution: Let the commit hook add the trailer, and put the provenance line first in GitHub bodies as the guard describes.
+    severity: nit
+durationSec: 1100
+models:
+  claude-opus-5-5: 70
+toolCounts:
+  Bash: 24
+  Read: 2
+  Edit: 4
+  ToolSearch: 1
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 2
+  mcp__github__subscribe_pr_activity: 1
+  Skill: 2
+  Write: 1
+filesEdited:
+  - .agents/skills/digest/SKILL.md
+  - layers/journal/content/current/pages/digests/2026-09-28.md
+docsReadViaShell:
+  - .agents/skills/blog-post/SKILL.md
+  - docs/agents/git-conventions.md
+  - .agents/skills/digest/SKILL.md
+  - docs/agents/guards.md
+gitBranch: ccr-576a1221-wsrm7l
+entrypoint: remote_mobile
+cliVersion: 2.1.284
+learnings:
+  - "A digest error can come from misreading good input, not from missing sources: a Skill's focus label in a PR title, e.g. \"(homepage)\", reads like a location."
+landedBy: Stop
