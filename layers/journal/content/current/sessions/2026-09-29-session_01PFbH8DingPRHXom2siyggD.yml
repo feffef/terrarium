@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01PFbH8DingPRHXom2siyggD
 startedAt: 2026-09-29T13:41:22Z
-endedAt: 2026-09-29T22:41:40Z
+endedAt: 2026-09-29T22:54:30Z
 kind: interactive
 goal: "Add two Tinkerfund Campaigns: the Passport Presence Monitor (TF-0024) and the Jet Lag Rehearsal Lamp (TF-0025)"
-status: in-review
-outcome: TF-0024 merged via PR 1491; TF-0025 built, gate green, PR 1496 open
-summary: "The session opened with a bare \"Ok\", so I asked what to do. The user then invoked /tinkerfund-campaign twice. Both times, following their preference to be asked first, I surveyed the catalog with crowd.mjs and asked them to choose the invention, state and Inventor. For TF-0024 they picked the Passport Presence Monitor (Live, just funded, reuse an Inventor); I chose Priya Raman. PR 1491 was merged by a human. For TF-0025 the user rejected my first four invention ideas with \"Try harder\". The second set, each with a sample line of page copy, landed: they chose the Jet Lag Rehearsal Lamp, ending soon and already funded (a state the catalog lacked), by an existing Inventor. I picked Lucía Ferrer, a clockmaker. I extended the Home e2e assertion on purpose to expect the Lamp in Ending soon, after checking that Home's Ending soon section has no cap. Each time a Fable subagent in a worktree drew the figures; I reviewed its sheets before merging, and corrected one caption that named the wrong shade. Both runs passed the full gate and I checked screenshots in both themes. PR 1496 opened automatically per ADR-0003."
+status: completed
+outcome: TF-0024 and TF-0025 both live in prod; PRs 1491 and 1496 merged by a human
+summary: "The session opened with a bare \"Ok\", so I asked what to do. The user then invoked /tinkerfund-campaign twice. Both times, following their preference to be asked first, I surveyed the catalog with crowd.mjs and asked them to choose the invention, state and Inventor. For TF-0024 they picked the Passport Presence Monitor (Live, just funded, reuse an Inventor); I chose Priya Raman. PR 1491 was merged by a human. For TF-0025 the user rejected my first four invention ideas with \"Try harder\". The second set, each with a sample line of page copy, landed: they chose the Jet Lag Rehearsal Lamp, ending soon and already funded (a state the catalog lacked), by an existing Inventor. I picked Lucía Ferrer, a clockmaker. I extended the Home e2e assertion on purpose to expect the Lamp in Ending soon, after checking that Home's Ending soon section has no cap. Each time a Fable subagent in a worktree drew the figures; I reviewed its sheets before merging, and corrected one caption that named the wrong shade. Both runs passed the full gate and I checked screenshots in both themes. PR 1496 opened automatically per ADR-0003, and a human merged it."
 prs:
   - "1491"
   - "1496"
@@ -49,11 +49,11 @@ frictions:
   - description: The illustrator captioned the hero 'linen white' while drawing the shade in the orange accent; caught on sheet review
     solution: ILLUSTRATION.md could note that a caption must not name an option colour the figure doesn't show
     severity: nit
-durationSec: 32418
+durationSec: 33188
 models:
-  claude-opus-5-5: 180
+  claude-opus-5-5: 193
 toolCounts:
-  Bash: 43
+  Bash: 45
   AskUserQuestion: 3
   Write: 2
   Agent: 2
@@ -63,10 +63,10 @@ toolCounts:
   mcp__github__create_pull_request: 2
   mcp__github__subscribe_pr_activity: 2
   Skill: 2
-  ReadNotifications: 9
+  ReadNotifications: 13
   mcp__github__pull_request_read: 8
   mcp__Claude_Code_Remote__send_later: 7
-  mcp__Claude_Code_Remote__delete_trigger: 1
+  mcp__Claude_Code_Remote__delete_trigger: 2
   Grep: 2
 filesEdited:
   - layers/tinkerfund/content/prod/pages/campaigns/passport-presence-monitor.md
