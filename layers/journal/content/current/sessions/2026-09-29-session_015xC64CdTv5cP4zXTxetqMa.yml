@@ -1,0 +1,49 @@
+schemaVersion: 1
+session: session_015xC64CdTv5cP4zXTxetqMa
+startedAt: 2026-09-29T05:29:01Z
+endedAt: 2026-09-29T05:36:38Z
+kind: interactive
+goal: Remove the platform-op pill from the Journal Skill Inventory page
+status: in-review
+outcome: "Pill and its style removed in PR #1487; question on supporting grades answered, awaiting human choice"
+summary: "Human-instructed: the owner said the platform-op pill on the Skills page is ugly and adds no value, so I removed the span and its .po style from SkillInventory.vue (no other references); gate:scoped passed in full and PR 1487 was opened per ADR-0003. The owner then asked why frequently used pack Skills still show as supporting. I answered from CONTEXT.md's Importance term: grades are conditional essentialness, never raw frequency, and only audit-skills changes them on at least 2 sessions of evidence. I offered three options (explain on page, change the grading rule, re-grade specific Skills) and made no change pending the owner's pick."
+prs:
+  - "1487"
+docsRead:
+  - path: CONTEXT.md
+    reason: Importance grade definitions
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: how grades change
+  - path: layers/journal/app/components/journal/SkillInventory.vue
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: First commit attempt hand-wrote the Co-Authored-By/Claude-Session trailer because the harness system-reminder asked for it; the commit-trailer guard denied it.
+    solution: Guard worked as intended; commit without trailers in this repo.
+    severity: nit
+  - description: Stop hook demanded commit and push while gate:scoped was still running, so I pushed before the heavy layers finished.
+    solution: Harmless here (gate passed); PR opened only after the gate went green.
+    severity: nit
+durationSec: 457
+models:
+  claude-opus-5-5: 40
+toolCounts:
+  Grep: 1
+  Read: 1
+  Bash: 15
+  ToolSearch: 1
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  Skill: 2
+docsReadViaShell:
+  - .agents/skills/audit-skills/SKILL.md
+  - CONTEXT.md
+gitBranch: ccr-c6c0c477-zwi0f2
+entrypoint: remote_mobile
+cliVersion: 2.1.284
+landedBy: Stop
