@@ -6,4 +6,10 @@ role: >-
   The one-question-at-a-time interrogation that stress-tests a plan or design
   before building — used standalone or as the engine inside `grill-with-docs`.
   Reach for it to pressure-test a design tree branch by branch.
-observations: []
+observations:
+  - date: 2026-09-29
+    note: >-
+      Held at supporting on the owner's call: all 8 grill-with-docs sessions
+      also logged it as that Skill's engine, so the credit is grill-with-docs'.
+      Only 2 standalone uses (session_016e82WsrXEZWeWUMze5jSPj,
+      session_01CACYSmghwsvBZEtz8BTpMw).

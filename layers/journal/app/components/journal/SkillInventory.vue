@@ -23,7 +23,6 @@ defineProps<{
         <div v-for="s in g.skills" :key="s.name" class="skill">
           <div class="name">
             {{ s.name }}
-            <span v-if="s.category === 'platform-operation'" class="po">platform-op</span>
             <span v-if="uses" class="uses">used in {{ uses[s.name] ?? 0 }} sessions</span>
           </div>
           <p v-if="s.gist" class="gist">{{ s.gist }}</p>
@@ -77,15 +76,6 @@ defineProps<{
   display: flex;
   align-items: center;
   gap: 0.5rem;
-}
-.name .po {
-  font-size: 0.6rem;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--jd-accent);
-  border: 1px solid color-mix(in oklab, var(--jd-accent) 35%, transparent);
-  border-radius: 4px;
-  padding: 0 0.3rem;
 }
 .uses { margin-left: auto; font-size: 0.7rem; color: var(--jd-faint); }
 .chip-uses { color: var(--jd-faint); }

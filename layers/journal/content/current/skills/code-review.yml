@@ -1,12 +1,13 @@
 name: code-review
 category: general-engineering
-importance: supporting
+importance: essential
 installedSha256: 47f4e52c21694def9c7c11cbfbf891ca35eac7a93e395797515be3c8a409ae50
+gist: Checks a change against the repo's rules and the original ask before it lands.
 role: >-
-  Review the working diff (Standards+Spec) before the gated PR (ADR-0003/0004).
-  Adoption is inconsistent, not universal — used in some code-landing sessions
-  but skipped in others. Prescribes `gh` CLI, absent on remote sessions — use
-  `mcp__github__*` instead. A spec-reviewer subagent has cited a fabricated
+  Review the working diff (Standards+Spec) before every code-landing gated PR
+  (ADR-0003/0004) — it routinely catches real bugs self-review missed.
+  Prescribes `gh` CLI, absent on remote sessions — use `mcp__github__*`
+  instead. A spec-reviewer subagent has cited a fabricated
   line number — when dispatching this Skill's review subagents, explicitly
   restate CLAUDE.md's never-reconstruct-an-identifier-from-memory rule in the
   subagent brief, and require a fresh Read before each cited line/finding is
@@ -16,6 +17,16 @@ role: >-
   adaptation (e.g. treating the full tree as the diff, or running the Skill
   per-directory).
 observations:
+  - date: 2026-09-29
+    note: >-
+      Promoted supporting → essential on the owner's call, backed by the
+      session logs: used in 15 of 86 logged sessions, and in 6 it caught real
+      defects self-review missed (session_01TMgZyrN42pwudxkUdHLKwP,
+      session_01X3GnBV8wPH4zeb4suiktD1, session_01N2HSpdwKUEBjztN8Nnz4Da,
+      session_01NT2TmgJJGjEsc84AW6oAi7, session_01BWLBKCE8jBVrfvxzMu87hJ,
+      session_01Bwzp9LzTsRFbM7AGRc1nGS). Skipping it cost a major friction in
+      session_01Lm5nzVoByigqhQ1YxFggTk: four impl PRs opened unreviewed, and a
+      later review found an ADR-0016 violation.
   - date: 2026-09-25
     note: >-
       Collapsed from eight held-as-is runs, 2026-07-13 to 2026-08-17 (ADR-0015

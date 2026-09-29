@@ -1,8 +1,17 @@
 name: grill-with-docs
 category: general-engineering
-importance: supporting
+importance: essential
 installedSha256: 7de372c13488f1ee96cc11cd8907b56b6809cc93eef776eeddd37de6b6cbe3fe
+gist: Stress-tests a plan against the project's docs and vocabulary before building.
 role: >-
   Stress-test a plan or design against the relevant documentation before
   building — useful ahead of a milestone or a structural ADR.
-observations: []
+observations:
+  - date: 2026-09-29
+    note: >-
+      Promoted supporting → essential on the owner's call. Owner-invoked as a
+      slash command in 8 of 86 logged sessions to settle design before
+      building (e.g. session_01D67MxXweo1aWxEb3GhuEWk,
+      session_01N2HSpdwKUEBjztN8Nnz4Da, session_01LXTsTPXbGXbMQqyTpPjcuU,
+      session_01WAgYyu3eEBk8yJztzVy53e). Every one of those sessions also
+      logged `grilling`, which it runs as its engine.
