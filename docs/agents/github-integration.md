@@ -6,9 +6,6 @@ two workflow docs sit on top of it and own their own recipes:
 [`issue-tracker.md`](./issue-tracker.md) (issues, specs, triage) and
 [`pr-workflow.md`](./pr-workflow.md) (landing a gated PR).
 
-Re-homed from `issue-tracker.md` and `pr-workflow.md`, which had each grown a
-piece of this surface.
-
 Every GitHub body an agent writes must open with the ADR-0017 provenance header
 (CLAUDE.md's Working Conventions). It is enforced mechanically rather than by
 convention — `scripts/github-provenance-guard.ts` is both the registry of which
@@ -153,20 +150,20 @@ each recipe class to its MCP equivalent:
 - **Check a PR's gate status** → `pull_request_read` with method `get_check_runs`,
   *not* `get_status`: the combined-status API reports `total_count: 0` /
   pending for Actions-based gates and misleads you into thinking the gate
-  hasn't run. **Gate completion is not webhook-delivered** — there's no event
-  to wait on, so to babysit a PR to green you must poll `get_check_runs`
-  yourself (e.g. re-poll at agent-completion checkpoints, or `send_later` a
-  wake when no agent is running to re-poll). **`ScheduleWakeup` isn't the tool
-  for this** — CLAUDE.md owns that rule and the `send_later` mechanism
-  (`docs/agents/guards.md` has the guard, issue #814).
+  hasn't run. **CI success is not delivered natively** — a green gate wakes a
+  subscribed session only through its doorbell comment (none on a fork PR), so
+  poll `get_check_runs` when you can't rely on it (re-poll at agent-completion
+  checkpoints, or `send_later` a wake when no agent is running; cadence in
+  [`pr-workflow.md`](./pr-workflow.md)). **`ScheduleWakeup` isn't the tool for
+  this** — it is `/loop`-only (CLAUDE.md; guard in `docs/agents/guards.md`,
+  issue #814).
 - **Re-running an old/existing workflow run does not recompute the merge
   ref.** It re-checks-out that run's original `refs/pull/N/merge` snapshot —
   so a re-run can still report red after the real fix has already merged.
   Only a fresh push/branch-update recomputes `refs/pull/N/merge` and gets a
   true re-check.
 - **This polling advice is scoped to non-webhook-delivered state like CI —
-  it does not apply to a dispatched Agent-tool subagent.** See CLAUDE.md's
-  `ScheduleWakeup` rule for why.
+  it does not apply to a dispatched Agent-tool subagent.**
 - **This polling recipe depends on `mcp__Claude_Code_Remote__*` and
   `AskUserQuestion` calls, which can both fail transiently** — see
   [`environment-caveats.md`](./environment-caveats.md) for the "permission

@@ -63,5 +63,5 @@ transition) needs its timeout raised per-call —
   `layers/*/tests/unit/**`.
 - `pnpm test:e2e` — the single L2 smoke build.
 
-Both are part of the safety gate (ADR-0004); CI (`.github/workflows/gate.yml`)
-runs the same set, cheapest-first.
+Both are part of the safety gate (ADR-0004); the steps live in `package.json`'s
+`gate` script.

@@ -67,8 +67,9 @@ and its diff.
   (`layers/journal/content/current/skills/<name>.yml`) can corroborate a
   finding; it is optional context.
 - **Orphan-addition** — something added in the last 48h that lacks the
-  reference it needs. Only two cases: (1) a new `docs/agents/*` or
-  `docs/research/*` doc not linked from `CLAUDE.md`'s index — add the link;
+  reference it needs. Only two cases: (1) a new `docs/agents/*` doc not
+  linked from `CLAUDE.md`'s index (`docs/research/` is deliberately unindexed) —
+  add the link;
   (2) a new ADR that amends or supersedes another without the amendment banner
   or Status-line pointer on the old one (ADR-0018) — that is an ADR edit, so it
   escalates (step 8). Never add a hand-kept ADR list to `CLAUDE.md`. Older

@@ -54,6 +54,9 @@ pnpm exec tsx scripts/digest.ts gather <date>
 
 The JSON gives you `prs` (merged/referenced), `otherCommits` (direct-to-main
 work), `sessions` (goal/outcome/status, frictions, learnings, ideas), and a `rollup`.
+Above ~20,000 characters `gather` writes the JSON to a file instead (default
+`digest-gather-output.json` in the temp dir; `--out PATH` overrides) and prints
+its path; Read that file.
 **A dry run must call `gather` for its numbers too** — never re-derive a day's
 session set by reading session-log files and filtering on the filename's date.
 `gather` cuts each day by a session's own UTC `endedAt`, which can silently

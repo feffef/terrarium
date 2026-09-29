@@ -327,8 +327,7 @@ Sessions record side-effects rather than restoring the pruned prose.
 An intended change that an agent cannot push itself, written down for a human to
 apply by hand. A Proposal records *pending* intent, so it is deleted once
 applied; one left behind is a claim about the world that is no longer true. The
-class is deliberately shrinking (ADR-0026). See `CLAUDE.md` for where Proposals
-live and what one must contain.
+class is deliberately shrinking (ADR-0026). See `docs/proposals/README.md` for the format.
 
 ## Tenants
 

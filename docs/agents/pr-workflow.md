@@ -1,12 +1,10 @@
 # Landing a gated PR
 
-The single home for the "land a low-risk gated PR" recipe — moved out of
-`CLAUDE.md` (issue #448) so that file could stay an index rather than restate
-this. `CLAUDE.md`'s "Pushing is not landing" bullet keeps the principle and
+The single home for the "land a low-risk gated PR" recipe. `CLAUDE.md`'s "Pushing is not landing" bullet keeps the principle and
 points here for the mechanics; the per-Skill merge sections point here too.
 
 This doc doesn't restate *why* a tier gets to merge on green (that's ADR-0003's
-governance call) or what counts as high-risk (ADR-0004's high-risk set) — it
+governance call) or what counts as high-risk (CLAUDE.md's Ground rules, ADR-0004) — it
 references both rather than re-deriving them. For `main`'s current
 branch-protection state, see
 `docs/research/github-branch-protection-vs-autonomous-log-commits.md`
@@ -19,10 +17,8 @@ overflow traps — see [`github-integration.md`](./github-integration.md).
 
 **Every GitHub body you open or post here** (a PR description, an issue, a
 review comment) opens with the ADR-0017 provenance header as its own first
-line: `🤖 [<free-text label>](<session URL>)` — the session URL must come from your
-own system-prompt attribution instructions, never predicted or reconstructed.
-ADR-0017 (and, if it fires, the provenance guard's own deny message) is the
-source of truth for the exact mechanism — this doc doesn't restate it.
+line. It is guard-enforced; ADR-0017 and the guard's deny message name the exact
+marker (see [`github-integration.md`](./github-integration.md)).
 
 ## Assembling several stories into one integration PR
 
@@ -89,8 +85,9 @@ per-story findings.
 5. **Before calling `merge-pr.ts`: step 4's verdict comment must already be
    posted** — `merge-pr.ts` refuses to merge without it (issue #1276).
 
-   `scripts/merge-pr.ts <pr-number>` is the **sole merge path** for every PR —
-   pending-check or already-green alike — per step 3; it already polls to
+   `scripts/merge-pr.ts <pr-number>` is the **sole merge path** for every PR this
+   toolchain lands (it refuses fork and Public-authored PRs; a human merges
+   those, ADR-0020) — pending-check or already-green alike — per step 3; it already polls to
    resolution and merges on green. **Never call `enable_pr_auto_merge`
    directly in this repo.** That tool is documented as being for arming ahead
    of a still-pending check, but in practice calling it — on a pending *or*
@@ -103,8 +100,8 @@ per-story findings.
    unavailable, fall back to hand-polling `get_check_runs` and calling
    `merge_pull_request` directly on green, still never `enable_pr_auto_merge`.
 6. Escalate a genuinely high-risk or out-of-scope PR to a human instead of
-   merging it — see ADR-0004's high-risk set (also indexed in CLAUDE.md's
-   Ground rules) for what counts.
+   merging it — see CLAUDE.md's Ground rules (human-only set; ADR-0004) for
+   what counts.
 
 **GitHub can silently leave some `Closes #N`/`Fixes #N`-named issues open on a
 multi-issue PR, even a well-formed body** — an intermittent limit in GitHub's
@@ -162,5 +159,5 @@ when something rides outside that scope):
    human instead of merging — never force a self-merge past scope or a red
    gate.
 
-Log the session per CLAUDE.md's "Logging your session" section once the PR is
-merged or honestly left open.
+Once the PR is merged or honestly left open, re-invoke `close-session` to update
+that log (CLAUDE.md, "Logging your session").
