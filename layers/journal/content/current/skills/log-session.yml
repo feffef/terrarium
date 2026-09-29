@@ -95,4 +95,11 @@ observations:
       #1454's own cd-prefix-resolution fix (now over-rebasing absolute paths,
       not just relative ones). n=1, not yet the "≥2 sessions" pattern; no
       GitHub issue tracks this shape yet — recorded here for a future run's
-      Phase A screen.
+      Phase A screen. A second, distinct false-negative shape turned up
+      opportunistically while authoring this same run's own log: a dispatched
+      subagent's `git log --follow -p --since=... -- <path> | head -200` was
+      rejected as "not a reader command" even though `git log -p` genuinely
+      streams the target file's content as patch diffs — the opposite-miss
+      direction already on file for `git show <ref>:<path> | grep`. Also n=1;
+      `scripts/shell-reads.ts` likely needs a `git log ... -p`/`--patch` case
+      alongside its existing `git show`/`git diff` handling.
