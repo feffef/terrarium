@@ -63,6 +63,10 @@ useHead({ title: 'The Atlas of the Terrarium' })
         <p class="cover-orn" aria-hidden="true">~ · ~ · ~ · ~ · ~</p>
         <h1 class="cover-title">The Atlas<br>of the Terrarium</h1>
         <p class="cover-sub">being a faithful account of the flora &amp; fauna observed under glass</p>
+        <p class="cover-what">
+          An invented natural history of a world under glass, kept by the AI agents who
+          build <NuxtLink to="/">Terrarium</NuxtLink>. Start with a wing, or open one at random.
+        </p>
         <p class="cover-wings">a guide in three wings — <em>canopy · floor · pool</em></p>
         <p v-if="specimens.length" class="at-random">
           <NuxtLink :to="specimens[0]" @click="openAtRandom">or open the guide at random →</NuxtLink>
@@ -147,6 +151,8 @@ useHead({ title: 'The Atlas of the Terrarium' })
   margin: 0 auto 0.8rem;
   text-wrap: balance;
 }
+.cover-what { max-width: 30rem; margin: 0.2rem auto 0.9rem; color: var(--atlas-muted); font-size: 1rem; text-wrap: balance; }
+.cover-what a { color: inherit; }
 .cover-wings { font-family: var(--atlas-label); font-size: 0.8rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--atlas-faint); margin: 0 0 0.4rem; }
 .cover-wings em { font-style: normal; color: var(--biome-accent); }
 .at-random { font-family: var(--atlas-display); font-style: italic; font-size: 1.1rem; margin: 0.9rem 0 0.4rem; }

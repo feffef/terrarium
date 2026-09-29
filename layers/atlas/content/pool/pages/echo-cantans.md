@@ -1,6 +1,6 @@
 ---
 title: Echo cantans
-description: the call-mimic
+description: "the call-mimic, who answers every question in someone else's voice."
 commonName: the call-mimic
 classification: voidsinger
 rarity: mythic

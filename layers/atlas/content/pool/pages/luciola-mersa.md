@@ -1,6 +1,6 @@
 ---
 title: Luciola mersa
-description: the drowned star
+description: "the drowned star, which glows for no one above the waterline."
 commonName: the drowned star
 classification: deepglow
 rarity: uncommon
