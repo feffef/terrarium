@@ -171,7 +171,7 @@ const neighbours = computed<Record<string, Set<string>>>(() => {
 
 const hot = ref<string | null>(null)
 
-// Phone-width stand-in for the diagram (see theme.css, `.atlas-web-scroll`).
+// The words of the diagram at phone width, where its own text hides (see theme.css, `.atlas-web-list`).
 const bySlug = computed(() => Object.fromEntries(props.specimens.map((s) => [s.slug, s])))
 const pairs = computed(() =>
   props.edges.flatMap((e) => {

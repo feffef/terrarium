@@ -480,14 +480,13 @@
 /* ── Food web (#70): the wanderable diagram ────────────────────────────────*/
 .atlas-web { position: relative; }
 .atlas-web svg { width: 100%; height: auto; display: block; overflow: visible; font-family: var(--atlas-data); }
-/* Phone width: the diagrams would either shrink to illegible labels or scroll
-   sideways past the fold, so
-   the food web swaps to a plain list and the relations web hides — its list sits
-   right below it. */
+/* Phone width: at the scale the diagram shrinks to, its text would be illegible,
+   so it stays as an overview of medallions and arrows and the words move to
+   the list below it (visitor-loop, #1492). */
 .atlas-web-list { display: none; }
 @media (max-width: 30rem) {
-  .atlas-web-scroll { display: none; }
-  .atlas-web-list { display: grid; gap: 0.5rem; list-style: none; margin: 0; padding: 0; font-size: 0.95rem; }
+  .atlas-web svg text:not(.mk) { display: none; }
+  .atlas-web-list { display: grid; gap: 0.5rem; list-style: none; margin: 1rem 0 0; padding: 0; font-size: 0.95rem; }
   .atlas-web-list a { font-family: var(--atlas-display); font-style: italic; color: var(--atlas-ink); }
 }
 .atlas-web .strand { stroke: var(--atlas-rule); fill: none; stroke-width: 1.25; transition: stroke 0.15s ease, stroke-width 0.15s ease; }
