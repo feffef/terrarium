@@ -75,3 +75,8 @@ lives in the cited issue, not here.
   time re-diagnosing it as a fresh problem. (sessions
   session_0174Bf4itHjWjJ3yMKmRd1KM, 2026-09-15, and
   session_019QghEUG36tGWuhPUdM4t5Q, 2026-09-16)
+- **The container's git (2.43) can differ from CI's (~2.55), so a git-based
+  test fixture can pass here and fail in CI.** Force the precondition (e.g.
+  delete the ref) instead of relying on default behavior — `init` + `remote
+  add` + `fetch` left `origin/HEAD` unset locally but not in CI. (commit
+  2b85df96)
