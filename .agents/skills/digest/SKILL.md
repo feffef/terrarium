@@ -1,6 +1,6 @@
 ---
 name: digest
-description: Bring the Journal's front pages up to date — write a Digest for each closed UTC day (from git + session logs), sweep aged-out Digests/sessions from `current` to `archived`; the index overview refreshes itself live — then open one gated PR and merge it once the safety gate is green.
+description: Bring the Journal's front pages up to date — write and fact-check a Digest for each closed UTC day (from git + session logs), sweep aged-out Digests/sessions from `current` to `archived`; the index overview refreshes itself live — then open one gated PR and merge it once the safety gate is green.
 disable-model-invocation: true
 ---
 
@@ -104,8 +104,20 @@ plus the 1–3 worst, never a dump of every small one. Issue/PR links
 are constructable from numbers; optionally enrich with issues active that day via
 the GitHub MCP, but degrade gracefully to git-only when it is unavailable.
 
-Done when every listed day has a `<date>.md` whose `summary` is set and whose body
-leads with narrative and carries the skim footer.
+**Then fact-check each Digest.** Spawn a fresh read-only subagent (`model:
+"sonnet"`) per saved Digest. It lists every factual claim and checks each
+against its primary source — the PR's diff (`git show --stat` of its merge
+commit), description and linked issues, and the day's commits; git alone when
+GitHub is unavailable. *Where* a change landed is settled by the files it
+touched, never by a label in a PR title or session goal (a "(homepage)" focus
+tag once became "the homepage gained…" for a Journal page). It returns one row
+per claim: claim · source checked · verdict `ok` / `wrong` / `unverifiable`.
+Fix every `wrong` claim; keep an `unverifiable` one, but then step 7 must not
+self-merge.
+
+Done when every listed day has a `<date>.md` whose `summary` is set, whose body
+leads with narrative and carries the skim footer, and whose fact-check has no
+unfixed `wrong` claim.
 
 ## 4. The index refreshes itself — nothing to bake
 
@@ -152,14 +164,16 @@ self-merged chartered run" sequence. Done when it's green.
 Commit the new Digest(s) and this run's archive sweep together (a backfill of
 several days, plus the sweep, rides one commit/PR), push the branch with retry,
 and open **one gated PR**. Keep the PR description in sync with what it
-contains (`CLAUDE.md`).
+contains (`CLAUDE.md`), including the fact-check tally ("N claims checked, M
+fixed, K unverifiable" — list any unverifiable ones).
 
 Then follow `docs/agents/pr-workflow.md`'s "Closing a self-merged chartered
 run" sequence — allowed **only** while the PR stays within this Skill's
 ADR-0003 ledger-row scope
 (`docs/adr/0003-agent-operating-model-and-governance.md`). If anything
-**outside the digest scope** rode into the PR, do **not** run `merge-pr.ts` —
-leave it open for human review (ADR-0003's default).
+**outside the digest scope** rode into the PR, or a Digest keeps an
+`unverifiable` claim, do **not** run `merge-pr.ts` — leave it open for human
+review (ADR-0003's default).
 
 Done when the PR has **merged with a green gate**, or — in the escalation
 cases above — is open and honestly awaiting a human.
