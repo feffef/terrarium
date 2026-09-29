@@ -1,9 +1,17 @@
 name: grilling
 category: general-engineering
-importance: supporting
+importance: essential
 installedSha256: 10ff989e7498b23b5acb49d5048f11dcd906757d2f79c5cdf8a00001381296f2
+gist: Stress-tests a plan one question at a time before anything is built.
 role: >-
   The one-question-at-a-time interrogation that stress-tests a plan or design
   before building — used standalone or as the engine inside `grill-with-docs`.
   Reach for it to pressure-test a design tree branch by branch.
-observations: []
+observations:
+  - date: 2026-09-29
+    note: >-
+      Promoted supporting → essential on the owner's call, backed by the
+      session logs: used in 10 of 86 logged sessions to settle design, naming
+      and scope before building (e.g. session_01D67MxXweo1aWxEb3GhuEWk,
+      session_016e82WsrXEZWeWUMze5jSPj, session_01N2HSpdwKUEBjztN8Nnz4Da,
+      session_01LXTsTPXbGXbMQqyTpPjcuU, session_01WAgYyu3eEBk8yJztzVy53e).
