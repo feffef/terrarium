@@ -164,6 +164,7 @@ export function registerTinkerfundE2E(): void {
         ['grass-growth-notifier', 'Pledging has closed'],
         ['backup-suitcase', 'Back this Campaign'],
         ['passport-presence-monitor', 'Back this Campaign'],
+        ['jet-lag-rehearsal-lamp', 'Back this Campaign'],
       ] as const) {
         it(`renders the prod Campaign page for ${slug}`, async () => {
           const html = await $fetch(`/t/tinkerfund/prod/campaigns/${slug}`)
@@ -205,7 +206,7 @@ export function registerTinkerfundE2E(): void {
       })
 
       // On any day, the Mug is the Live Campaign furthest past its goal, the
-      // Keyboard ends within 48h, and the Umbrella's Promotion ends soonest (story #1381).
+      // Keyboard and the Lamp end within 48h, and the Umbrella's Promotion ends soonest (story #1381).
       it('renders Home’s sections in order, the featured Campaign first', async () => {
         const html = main(await $fetch('/t/tinkerfund/prod'))
         expect(html).toMatch(/id="tf-featured"[^>]*>Counterclockwise Mug</)
@@ -216,6 +217,7 @@ export function registerTinkerfundE2E(): void {
         expect(at).toEqual([...at].sort((a, b) => a - b))
         const ending = html.slice(at[1], at[2])
         expect(ending).toContain('One-Key Keyboard')
+        expect(ending).toContain('Jet Lag Rehearsal Lamp')
         expect(ending).not.toContain('Counterclockwise Mug')
         const popular = html.slice(at[4], at[5])
         expect(popular).toMatch(/TF-0001[\s\S]*TF-0006[\s\S]*TF-0003[\s\S]*TF-0004/)
