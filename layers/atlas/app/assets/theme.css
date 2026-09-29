@@ -495,22 +495,16 @@
    component's own viewBox width via `--atlas-web-w`, never smaller than it.
    The fade/scroll also moved onto an inner wrapper around the `<svg>` alone,
    because at full height it covered the hint paragraph below the diagram too,
-   clipping its own last couple characters (visitor-loop fix, 2026-09-27). */
+   clipping its own last couple characters (visitor-loop fix, 2026-09-27).
+   The fade is a mask, not an absolutely positioned `::after`, because a child
+   of the scroller scrolled away with the content (2026-09-28). */
 .atlas-web-hint { display: none; }
-.atlas-web-scroll { position: relative; }
 @media (max-width: 30rem) {
-  .atlas-web-scroll { overflow-x: auto; }
-  .atlas-web svg { width: auto; min-width: var(--atlas-web-w, 30rem); }
-  .atlas-web-scroll::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    width: 1.75rem;
-    background: linear-gradient(to right, transparent, var(--atlas-paper));
-    pointer-events: none;
+  .atlas-web-scroll {
+    overflow-x: auto;
+    mask-image: linear-gradient(to right, #000 calc(100% - 1.75rem), transparent);
   }
+  .atlas-web svg { width: auto; min-width: var(--atlas-web-w, 30rem); }
   .atlas-web-hint {
     display: block;
     margin: 0.4rem 0 0;
