@@ -1,0 +1,96 @@
+schemaVersion: 1
+session: session_01DNo53zg7vsVjGYX6xb7VZN
+startedAt: 2026-09-29T16:47:54Z
+endedAt: 2026-09-29T17:14:40Z
+kind: autonomous
+goal: "Run the visitor-loop on the Atlas: three blind visitors, fix consensus findings, build the best idea"
+status: completed
+outcome: Fix PR 1492 and feature PR 1493 both merged
+summary: "Scheduled visitor-loop run (agent-initiated, no human prompt), focus atlas. Served a production preview, sent sonnet, fable and opus visitors through /t/atlas. Consensus (all three or two of three): no orientation on the landing, phone-width food/relations web unusable, wing dial explainer repeated, wrapped phase spans read as typos, specimen pages dead-end, bare Pool taglines, unlinked Plate I. All fixed in PR 1492, verified in the rendered DOM at 390px and desktop, reviewed by two subagents, merged. The chosen feature, a Today under the glass panel on the front door (all three visitors proposed it), shipped in PR 1493; review caught that the panel said now on a prerendered page and an e2e assertion that depended on the build date, both fixed before merge. Owner-correction memory for decisions.md was not gathered this run; no out-of-remit consensus findings needed issues."
+prs:
+  - "1492"
+  - "1493"
+docsRead:
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: layers/atlas/app/pages/t/atlas/index.vue
+    reason: (no reason given)
+  - path: layers/atlas/app/pages/t/atlas/[space]/index.vue
+    reason: (no reason given)
+  - path: layers/atlas/app/pages/t/atlas/[space]/[...slug].vue
+    reason: (no reason given)
+  - path: layers/atlas/app/components/atlas/FoodWeb.vue
+    reason: (no reason given)
+  - path: scripts/chromium-path.ts
+    reason: (no reason given)
+skillsUsed:
+  - name: code-review
+    reason: (no reason given)
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: visitor-loop
+    reason: (invoked as a slash command)
+frictions:
+  - description: gate:scoped was started before review-fix edits landed, so it ran on a mid-edit tree; CI covered the final head.
+    solution: Start the gate only after the last edit, or re-run it on the final head before merging.
+    severity: minor
+  - description: The commit-trailer and ADR-0017 provenance guards denied my first hand-written commit and PR body, costing a retry each.
+    solution: The skill and harness reminder could say up front not to write the trailer and to lead PR bodies with the session URL line.
+    severity: nit
+  - description: Owner-correction memory for decisions.md was not gathered this run, so no new lines were added.
+    solution: Budget a step for scanning visitor-loop PR review comments and reverts before the tally.
+    severity: minor
+durationSec: 1606
+models:
+  claude-sonnet-5-5: 142
+toolCounts:
+  Bash: 53
+  Read: 5
+  Monitor: 1
+  Agent: 6
+  mcp__github__search_issues: 1
+  mcp__github__create_pull_request: 3
+  Skill: 3
+  mcp__github__add_issue_comment: 2
+  Write: 1
+docsReadViaShell:
+  - .agents/skills/visitor-loop/visitor-brief.md
+  - .agents/skills/visitor-loop/decisions.md
+  - layers/atlas/CONTEXT.md
+subagents:
+  - type: general-purpose
+    task: Visitor sonnet
+    model: sonnet
+  - type: general-purpose
+    task: Visitor fable
+    model: fable
+  - type: general-purpose
+    task: Visitor opus
+    model: opus
+  - type: general-purpose
+    task: Standards review
+    model: sonnet
+  - type: general-purpose
+    task: Spec review
+    model: sonnet
+  - type: general-purpose
+    task: Review feature PR
+    model: sonnet
+gitBranch: claude/adoring-galileo-ofa330
+entrypoint: remote_trigger
+cliVersion: 2.1.284
+trigger: visitor-loop
+ideas:
+  - "Atlas field log at 390px gives entry text about 3 words per line: stack the date and time above the entry on phones."
+  - "Atlas pages show an ~8px white frame around the parchment on mobile: give html the page background or zero the body margin."
+  - "Wing dial arrow keys step one day: add PageUp/PageDown or rim-label click to jump a whole season."
+  - Add a cross-wing specimen index or plates gallery at /t/atlas/plates; all three visitors wanted a cabinet view.
+  - Opt-in what-this-creature-really-is note per creature page linking the fiction to the agents' own processes.
+  - A How this guide is kept colophon page linking to the Journal session that built each plate.
+  - Make the wing field log respond to the dial season, and let Show all sightings collapse again.
+  - Hide the Recent sightings heading on a specimen page with no sightings (vitrea-placida renders it empty).
+  - Put a rarity and colour legend directly above the wing catalogue rows, and split the 190-word accounted-months paragraph on umbra-vacans.
+  - echo-cantans says the plate overleaf but the plate is above; reword.
+landedBy: Stop
