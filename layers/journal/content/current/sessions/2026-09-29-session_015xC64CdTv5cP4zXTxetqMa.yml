@@ -1,21 +1,23 @@
 schemaVersion: 1
 session: session_015xC64CdTv5cP4zXTxetqMa
 startedAt: 2026-09-29T05:29:01Z
-endedAt: 2026-09-29T05:36:38Z
+endedAt: 2026-09-29T05:57:57Z
 kind: interactive
-goal: Remove the platform-op pill from the Journal Skill Inventory page
+goal: Clean up the Journal Skill Inventory page and fix how audit-skills grades Skills
 status: in-review
-outcome: "Pill and its style removed in PR #1487; question on supporting grades answered, awaiting human choice"
-summary: "Human-instructed: the owner said the platform-op pill on the Skills page is ugly and adds no value, so I removed the span and its .po style from SkillInventory.vue (no other references); gate:scoped passed in full and PR 1487 was opened per ADR-0003. The owner then asked why frequently used pack Skills still show as supporting. I answered from CONTEXT.md's Importance term: grades are conditional essentialness, never raw frequency, and only audit-skills changes them on at least 2 sessions of evidence. I offered three options (explain on page, change the grading rule, re-grade specific Skills) and made no change pending the owner's pick."
+outcome: "PR #1487 green: pill removed, code-review and grill-with-docs essential, audit-skills grades on felt absence"
+summary: "All human-instructed. (1) Removed the platform-op pill from SkillInventory.vue. (2) The owner asked why frequently used pack Skills show as supporting; I explained CONTEXT.md's conditional-essentialness definition, then on the owner's call re-read the session logs: code-review caught real defects in 6 sessions and skipping it cost a major friction, so it went essential; grill-with-docs (owner-invoked in 8) went essential; grilling, first promoted, was reverted to supporting once the logs showed all 8 grill-with-docs sessions also logged it as the engine. (3) The owner asked how audit-skills should read logs smarter; I diagnosed four causes (pack Skills never get logs read, frictions naming a Skill are ignored, composite and human-invoked use are indistinguishable, stale role text is never rechecked) and, on the owner's green light, added mentionedIn/humanInvokedIn to scripts/audit-skills.ts (unit-tested) and rewrote step 5 of the audit-skills Skill. A 30-day dry run gave the expected signals, with generic names like research over-matching, so the Skill says to read, not count."
 prs:
   - "1487"
 docsRead:
   - path: CONTEXT.md
     reason: Importance grade definitions
   - path: .agents/skills/audit-skills/SKILL.md
-    reason: how grades change
+    reason: how grades change; then edited
   - path: layers/journal/app/components/journal/SkillInventory.vue
     reason: (no reason given)
+  - path: layers/journal/content/current/skills/code-review.yml
+    reason: (read before editing)
 skillsUsed:
   - name: close-session
     reason: (no reason given)
@@ -28,22 +30,45 @@ frictions:
   - description: Stop hook demanded commit and push while gate:scoped was still running, so I pushed before the heavy layers finished.
     solution: Harmless here (gate passed); PR opened only after the gate went green.
     severity: nit
-durationSec: 457
+  - description: Stop hook demanded commit and push while gate:scoped was still running, so I pushed twice before the heavy layers finished.
+    solution: Harmless here (both gates passed); PR opened only after the first gate went green.
+    severity: nit
+  - description: Checking out origin/main's sessions dir into the branch to count Skill mentions staged my own session log into the index; had to unstage and delete it.
+    solution: Use git archive into the scratchpad (which I then did) instead of git checkout <ref> -- <path>.
+    severity: minor
+  - description: Piped vitest into tail and the tail-pipe guard denied the whole chained call, including the preceding test-file edit.
+    solution: Redirect to a log file and grep it; keep edits out of a chain that runs a guarded command.
+    severity: nit
+  - description: The audit-skills Inventory had graded code-review supporting on stale July-August role text; the owner had to spot it from the rendered page.
+    solution: "Fixed in PR 1487: step 5 now re-reads every role each run and grades on mentionedIn/humanInvokedIn evidence."
+    severity: moderate
+durationSec: 1736
 models:
-  claude-opus-5-5: 40
+  claude-opus-5-5: 145
 toolCounts:
   Grep: 1
-  Read: 1
-  Bash: 15
-  ToolSearch: 1
+  Read: 2
+  Bash: 50
+  ToolSearch: 2
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
   Skill: 2
+  ReadNotifications: 9
+  mcp__Claude_Code_Remote__send_later: 1
+  Edit: 3
+  mcp__github__update_pull_request: 2
+filesEdited:
+  - layers/journal/content/current/skills/code-review.yml
+  - .agents/skills/audit-skills/SKILL.md
 docsReadViaShell:
   - .agents/skills/audit-skills/SKILL.md
   - CONTEXT.md
 gitBranch: ccr-c6c0c477-zwi0f2
 entrypoint: remote_mobile
 cliVersion: 2.1.284
+learnings:
+  - A composite Skill (grill-with-docs) logs its engine (grilling) too, so raw use counts double-credit the engine.
+ideas:
+  - Make namesSkill in scripts/audit-skills.ts require a backtick, slash or hyphenated name for single-common-word Skills (research, triage, implement) so mentionedIn stops matching paths like docs/research/.
 landedBy: Stop
