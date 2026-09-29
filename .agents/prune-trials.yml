@@ -275,9 +275,10 @@ trials:
         - fully-qualified name
         - total_count: 0
     opened: 2026-09-29
-    proven: false
+    proven: true
     check: >
       Damage is a session that trips a listed trap (search overflow, 403
       rate limit, PR close via `issue_write`, bare `select:` name, `get_status`
       instead of `get_check_runs`) that the old text warned about and the
-      rewrite fails to. NOT damage: sessions following these correctly.
+      rewrite fails to. NOT damage: sessions following these correctly. A
+      Sonnet probe on the pinned post-prune SHA answered all six traps right.
