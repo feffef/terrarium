@@ -1,0 +1,53 @@
+schemaVersion: 1
+session: session_01HadeEKKUnDKgqMsoZB2m66
+startedAt: 2026-09-29T13:18:30Z
+endedAt: 2026-09-29T13:25:36Z
+kind: autonomous
+goal: "Run the scheduled prune-trial: judge ripe trials, open one new"
+status: in-review
+outcome: ADR-0017 trial judged (holds); github-integration.md simplified, PR open
+summary: "Scheduled /prune-trial run, fully agent-initiated. Only the ADR-0017 narration trial was judgeable; frictions since showed guard denials working and none needing the cut history, so it was deleted as holding. Nothing cleared the prose-mass bar and every strong candidate sat in an open trial's territory, so per the standing owner direction I rewrote docs/agents/github-integration.md in plainer words (1821 to 1490 words), keeping every rule and issue cite. A Sonnet probe pinned to the post-prune SHA answered all six trap questions correctly, so proven is true and no hook ships. gate:scoped green. PR 1490 is open and subscribed; CI and merge are still pending. Open: the other five trials become judgeable 2026-09-29 to 2026-10-01."
+prs:
+  - "1490"
+docsRead: []
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: prune-trial
+    reason: (invoked as a slash command)
+frictions:
+  - description: Hand-wrote the Co-Authored-By trailer because the harness reminder said to; the commit-trailer guard denied it and I re-ran the add+commit.
+    solution: Guard worked; the attribution reminder could omit the trailer for this repo.
+    severity: nit
+  - description: Passed run_in_background false on an Agent call; the Agent-background-flag guard denied it.
+    solution: Omit the flag; subagents always run async.
+    severity: nit
+durationSec: 427
+models:
+  claude-sonnet-5-5: 39
+toolCounts:
+  Bash: 13
+  mcp__github__search_issues: 1
+  Write: 1
+  Agent: 2
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  Skill: 2
+filesEdited:
+  - docs/agents/github-integration.md
+docsReadViaShell:
+  - docs/agents/github-integration.md
+  - docs/agents/pr-workflow.md
+subagents:
+  - task: Sonnet probe of rewritten doc
+    model: sonnet
+  - task: Sonnet probe of rewritten doc
+    model: sonnet
+gitBranch: claude/practical-rubin-myqoeq
+entrypoint: remote_trigger
+cliVersion: 2.1.284
+trigger: prune-trial
+landedBy: Stop
