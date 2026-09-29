@@ -11,8 +11,7 @@
 //   Exits non-zero iff any LINKED (non-primary) worktree has uncommitted
 //   changes (staged, unstaged, or untracked — any `git status --porcelain`
 //   output) or unpushed commits (commits on its HEAD absent from its upstream;
-//   for a branch with no upstream, every commit beyond its merge-base with
-//   `origin/main`). The primary worktree's own in-progress edits are reported
+//   for a branch with no upstream, commits on no remote-tracking ref). The primary worktree's own in-progress edits are reported
 //   for visibility but never fail the sweep — the orchestrator manages its own
 //   tree directly. Same for a linked worktree whose HEAD is already merged
 //   into `origin/main` (issue #1169): its work has already landed, so a
@@ -51,8 +50,8 @@ export interface WorktreeState {
    *  dirty, so this is always `false` for one). */
   dirty: boolean
   /** Commits reachable from this worktree's HEAD absent from its remote — via
-   *  its upstream when one is configured, else via its merge-base with
-   *  `origin/main` (never-pushed branch). `null` when undeterminable (e.g. no
+   *  its upstream when one is configured, else absent from every
+   *  remote-tracking ref. `null` when undeterminable (e.g. no
    *  `origin/main` to compare against) — treated as "can't say," not a pass. */
   unpushedCount: number | null
   /** True when this worktree's HEAD commit is already reachable from
@@ -173,13 +172,11 @@ function isDirty(path: string): boolean {
 }
 
 /** Commits on this worktree's HEAD not yet on its remote. Prefers the
- *  branch's configured upstream (`@{upstream}`); falls back to the merge-base
- *  with `origin/main` when there is none (a never-pushed branch) — every
- *  commit beyond that merge-base counts as unpushed, per the issue #427
- *  brief. `null` only when neither comparison is possible (e.g. no
- *  `origin/main` ref at all in this worktree, which shares refs with every
- *  other worktree via the common dir, so this is expected to be rare). */
-function unpushedCount(path: string): number | null {
+ *  branch's configured upstream (`@{upstream}`); with none, counts commits on
+ *  no remote-tracking ref, so a local-only branch or detached HEAD already
+ *  contained in a pushed branch is rescued. `null` when there is no
+ *  `origin/main` to compare against. */
+export function unpushedCount(path: string): number | null {
   const upstream = tryGit(['rev-parse', '--abbrev-ref', '@{upstream}'], path)
   if (upstream !== null) {
     const count = tryGit(['rev-list', '--count', `${upstream}..HEAD`], path)
@@ -187,7 +184,7 @@ function unpushedCount(path: string): number | null {
   }
   const mergeBase = tryGit(['merge-base', 'origin/main', 'HEAD'], path)
   if (mergeBase === null) return null
-  const count = tryGit(['rev-list', '--count', `${mergeBase}..HEAD`], path)
+  const count = tryGit(['rev-list', '--count', 'HEAD', '--not', '--remotes'], path)
   return count === null ? null : Number.parseInt(count, 10)
 }
 
