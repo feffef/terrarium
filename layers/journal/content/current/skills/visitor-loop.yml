@@ -36,3 +36,17 @@ observations:
       mention of #1405/#1410 as of this check. All 5 newest runs otherwise
       clean: correct 3-model visitor dispatch, ≥2-visitor consensus, code-review
       on both PRs, all 11 checked PRs merged.
+  - date: 2026-09-29
+    note: >-
+      Issue #1452's gap is fixed: commit 886f26de (merged via PR #1477,
+      2026-09-28T21:30:54Z, session_01C1P912tWDL3b8gtuQezv3Z) rewrote the
+      owner-memory step to also gather merged PRs that revert or rework a
+      visitor-loop PR's output, plus owner comments on issues about its
+      output — not just review comments — and backfilled decisions.md with
+      the #1405/#1410 and #1346 cases already on file here. The fix landed
+      after all 7 sessions checked this window ended, so it's unverified in
+      live use yet; worth confirming next run that a fresh revert actually
+      reaches decisions.md through the new path. All 7 sessions otherwise
+      re-confirmed clean (3-model dispatch, ≥2-visitor consensus, code-review
+      on both PRs, all 14 PRs merged); no new revert beyond the already-known
+      #1405/#1410 case found in the Skill's full history to date.

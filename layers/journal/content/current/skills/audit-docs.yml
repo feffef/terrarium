@@ -30,3 +30,18 @@ observations:
       (frictions-to-fixes filed it as issue #1304), not by audit-docs itself —
       arguably correct, since a `.ts` file is outside this Skill's doc-tiers
       charter. No reverts found on any of the 7 sessions checked.
+  - date: 2026-09-29
+    note: >-
+      Re-verified (audit-skills behaviour check), 4 newly-checked sessions
+      beyond the 09-28 set: session_01E7nzKhxh1riVDMpn8YytKM (PR #1461),
+      session_01UAmBCUoSXva1vKut9gFfsr (#1426),
+      session_01EJbTDDTwGJttwa6Sj8LLNH (#1356), and
+      session_01758bqHEsb6P5mXAHymjmsy (#1334) — all merged, one commit each,
+      diffs match each log's claimed fix list, no human-only surface touched,
+      no reverts. Correction to the 2026-09-28 entry above: its claim that the
+      loop-only-tool-guard.ts drift "was eventually escalated and fixed
+      properly through a different Skill" is wrong on the second half —
+      issue #1304 is still open and unfixed as of today; only "escalated"
+      holds. audit-docs itself is not at fault (a `.ts` file is outside its
+      doc-tiers charter) — this corrects the Inventory record, not
+      audit-docs's own behavior.

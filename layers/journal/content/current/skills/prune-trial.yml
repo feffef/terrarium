@@ -47,3 +47,17 @@ observations:
       not a tooling gap, purely a letter-of-instruction compliance gap.
       Ledger consistency otherwise fine: no trial sitting judgeable-but-unjudged
       past its window as of this run.
+  - date: 2026-09-29
+    note: >-
+      Issue #1451 is resolved, but again by pruning rather than enforcing:
+      commit 46e8b611 (2026-09-28T19:50:31Z, via the issue-#1451 implement
+      workflow, session_01C1P912tWDL3b8gtuQezv3Z) removed the verbatim-quote
+      clause from SKILL.md §1 itself, consistent with this Skill's own
+      "prune the prose, not the behavior" philosophy. Confirmed no such
+      clause remains. That fix is itself now a new, unjudged trial in
+      .agents/prune-trials.yml (floor 2026-10-01). Separately, a minor
+      ledger-health gap: the ADR-0017 provenance-narration trial (opened
+      09-25, judgeable from 2026-09-28T13:24:40Z) is judgeable but unjudged
+      as of today — the 09-28 run's window check narrowly missed the floor
+      and no run has occurred since; likely just awaiting the next scheduled
+      fire, not a real drop. No reverts found.
