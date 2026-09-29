@@ -1,11 +1,11 @@
 schemaVersion: 1
 session: session_013FJgdc6i8gFLSfTPCEVysi
 startedAt: 2026-09-29T21:58:28Z
-endedAt: 2026-09-29T22:02:39Z
+endedAt: 2026-09-29T22:07:53Z
 kind: interactive
 goal: Instruct agents to reply to external fork PRs in a friendly, encouraging tone with concrete fix hints
-status: in-review
-outcome: "Rule plus example reply added to guest-contributions.md, CLAUDE.md index pointer updated; PR #1495 open"
+status: completed
+outcome: "Rule plus example reply added to guest-contributions.md, CLAUDE.md index pointer updated; PR #1495 merged"
 summary: "Human-instructed: the user asked for a CLAUDE.md instruction making replies to external PRs friendlier, with hints and examples for unmet rules. Following the user's preference to ask before assuming, I asked three questions (location, scope, specificity). The user chose to single-home it in docs/agents/guest-contributions.md with only a pointer in CLAUDE.md, to cover all Public fork PRs (human or agent), and to use a goal plus one short example reply. gate:scoped passed (inert docs-only). Opening PR #1495 was agent-initiated per ADR-0003's auto-open default; it is human-only to merge."
 prs:
   - "1495"
@@ -24,20 +24,24 @@ frictions:
   - description: First create_pull_request was denied by the ADR-0017 provenance guard because the header wasn't the first line.
     solution: Put the provenance line first in every GitHub body; the guard's deny message gave the exact shape.
     severity: nit
-durationSec: 251
+durationSec: 565
 models:
-  claude-opus-5-5: 28
+  claude-opus-5-5: 47
 toolCounts:
-  Bash: 6
+  Bash: 7
   Read: 1
   AskUserQuestion: 1
   Edit: 2
-  ToolSearch: 1
+  ToolSearch: 2
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 2
   mcp__github__subscribe_pr_activity: 1
   Skill: 2
   Write: 1
+  ReadNotifications: 3
+  mcp__github__pull_request_read: 3
+  mcp__Claude_Code_Remote__send_later: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - docs/agents/guest-contributions.md
   - CLAUDE.md
