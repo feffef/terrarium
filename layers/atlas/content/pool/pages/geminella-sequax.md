@@ -1,6 +1,6 @@
 ---
 title: Geminella sequax
-description: the tandem mote
+description: "the tandem mote, which is never seen alone and never seen to lead."
 commonName: the tandem mote
 classification: twinskim
 rarity: abundant

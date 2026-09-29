@@ -40,6 +40,12 @@ const relations = computed(() =>
 const sightings = computed(() =>
   observations.value.filter((o) => o.specimen === entry.value?.specimen.slug),
 )
+// The wing in catalogue order, for the entry's own previous/next.
+const neighbours = computed(() => {
+  const all = Object.values(specimensBySlug.value).sort((a, b) => a.binomial.localeCompare(b.binomial))
+  const i = all.findIndex((s) => s.slug === entry.value?.specimen.slug)
+  return i < 0 ? null : { prev: all[i - 1], next: all[i + 1] }
+})
 const sigStyle = computed(() => signatureVars(entry.value?.specimen.signature?.colors))
 
 // The Relations web's spokes drive this — hovering/focusing a spoke or its
@@ -148,6 +154,12 @@ useSeoMeta({
           <div class="atlas-sechead"><span class="atlas-eyebrow">Recent sightings</span></div>
           <AtlasFieldLog :observations="sightings" :specimens-by-slug="specimensBySlug" :biome="space" />
         </section>
+
+        <nav v-if="neighbours" class="specimen-nav" :aria-label="`More from ${meta.name}`">
+          <NuxtLink v-if="neighbours.prev" :to="`/t/atlas/${space}/${neighbours.prev.slug}`">← {{ neighbours.prev.binomial }}</NuxtLink>
+          <NuxtLink :to="`/t/atlas/${space}`">all of {{ meta.name }}</NuxtLink>
+          <NuxtLink v-if="neighbours.next" :to="`/t/atlas/${space}/${neighbours.next.slug}`">{{ neighbours.next.binomial }} →</NuxtLink>
+        </nav>
       </article>
 
       <div v-else class="atlas-prose not-found">
@@ -164,5 +176,8 @@ useSeoMeta({
 <style scoped>
 .entry-section { margin-top: 0.5rem; }
 .entry-section .atlas-web + .atlas-relations { margin-top: 1.4rem; }
+.specimen-nav { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.5rem 1.5rem; margin-top: 2.5rem; padding-top: 1rem; border-top: 1px solid var(--atlas-rule); font-family: var(--atlas-display); font-style: italic; }
+.specimen-nav a { color: var(--atlas-ink); }
+.specimen-nav a:hover { color: var(--biome-accent); }
 .not-found h1 { font-family: var(--atlas-display); font-size: 2rem; margin: 0 0 0.6rem; }
 </style>

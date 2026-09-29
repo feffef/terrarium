@@ -495,7 +495,7 @@ function commitDayToUrl() {
       </p>
       <p class="wread wseason-row">
         <span class="wlabel">season</span>
-        <span class="wval"><span class="wseason">{{ season.label }}</span><span class="wday">d. {{ day }}</span></span>
+        <span class="wval"><span class="wseason">{{ season.label }}</span><span class="wday">day {{ day }}</span></span>
       </p>
       <slot name="caption" />
     </figcaption>

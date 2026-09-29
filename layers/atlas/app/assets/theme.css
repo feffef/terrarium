@@ -480,39 +480,15 @@
 /* ── Food web (#70): the wanderable diagram ────────────────────────────────*/
 .atlas-web { position: relative; }
 .atlas-web svg { width: 100%; height: auto; display: block; overflow: visible; font-family: var(--atlas-data); }
-/* Below ~480px the diagram (and the relations web below it) would shrink its
-   10-13px labels to illegible sub-6px text, since the fixed viewBox scales
-   down with the container (visitor-loop fix, 2026-09-24). Hold the SVG at a
-   legible width and let the wrapper scroll sideways instead of shrinking
-   it further. The held width now routinely exceeds a phone viewport, so the
-   far side (an unlabeled node, in the worst case) sits past the fold. A fade
-   alone (visitor-loop fix, 2026-09-25) still read as a cut-off edge rather
-   than an invitation to scroll to two more independent first-time visitors
-   the next day — replaced with an explicit text hint below the diagram
-   (visitor-loop fix, 2026-09-26). The fixed 30rem held width was still less
-   than some diagrams' own viewBox width (RelationsWeb's is 680px), so those
-   still scaled down below their authored size; held width is now each
-   component's own viewBox width via `--atlas-web-w`, never smaller than it.
-   The fade/scroll also moved onto an inner wrapper around the `<svg>` alone,
-   because at full height it covered the hint paragraph below the diagram too,
-   clipping its own last couple characters (visitor-loop fix, 2026-09-27).
-   The fade is a mask, not an absolutely positioned `::after`, because a child
-   of the scroller scrolled away with the content (2026-09-28). */
-.atlas-web-hint { display: none; }
+/* Phone width: the diagrams would either shrink to illegible labels or scroll
+   sideways past the fold (tried 2026-09-24…28, three visitors still lost), so
+   the food web swaps to a plain list and the relations web hides — its list sits
+   right below it. */
+.atlas-web-list { display: none; }
 @media (max-width: 30rem) {
-  .atlas-web-scroll {
-    overflow-x: auto;
-    mask-image: linear-gradient(to right, #000 calc(100% - 1.75rem), transparent);
-  }
-  .atlas-web svg { width: auto; min-width: var(--atlas-web-w, 30rem); }
-  .atlas-web-hint {
-    display: block;
-    margin: 0.4rem 0 0;
-    font-family: var(--atlas-data);
-    font-size: 0.7rem;
-    color: var(--atlas-muted);
-    text-align: right;
-  }
+  .atlas-web-scroll { display: none; }
+  .atlas-web-list { display: grid; gap: 0.5rem; list-style: none; margin: 0; padding: 0; font-size: 0.95rem; }
+  .atlas-web-list a { font-family: var(--atlas-display); font-style: italic; color: var(--atlas-ink); }
 }
 .atlas-web .strand { stroke: var(--atlas-rule); fill: none; stroke-width: 1.25; transition: stroke 0.15s ease, stroke-width 0.15s ease; }
 .atlas-web .strand.mimics { stroke-dasharray: 2 4; }

@@ -1,6 +1,6 @@
 ---
 title: Vitrea placida
-description: the glass snail
+description: "the glass snail, which cleans the pane more slowly than we can watch."
 commonName: the glass snail
 classification: clearshell
 rarity: common

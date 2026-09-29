@@ -171,6 +171,16 @@ const neighbours = computed<Record<string, Set<string>>>(() => {
 
 const hot = ref<string | null>(null)
 
+// Phone-width stand-in for the diagram (see theme.css, `.atlas-web-scroll`).
+const bySlug = computed(() => Object.fromEntries(props.specimens.map((s) => [s.slug, s])))
+const pairs = computed(() =>
+  props.edges.flatMap((e) => {
+    const a = bySlug.value[e.from]
+    const b = bySlug.value[e.to]
+    return a && b ? [{ e, a, b, verb: relationLabel(e.kind, 'out') }] : []
+  }),
+)
+
 function nodeClass(slug: string) {
   if (!hot.value) return {}
   const connected = hot.value === slug || neighbours.value[hot.value]?.has(slug)
@@ -184,7 +194,7 @@ function strandClass(e: Edge) {
 
 <template>
   <div class="atlas-web">
-    <div class="atlas-web-scroll" :style="{ '--atlas-web-w': `${W}px` }">
+    <div class="atlas-web-scroll">
       <svg v-if="nodes.length" :viewBox="`0 0 ${W} ${H}`" role="group" aria-label="Food web of this biome">
         <defs>
           <marker
@@ -257,7 +267,13 @@ function strandClass(e: Edge) {
         </NuxtLink>
       </svg>
     </div>
-    <p v-if="nodes.length" class="atlas-web-hint" aria-hidden="true">↔ scroll to see the rest</p>
+    <ul v-if="nodes.length" class="atlas-web-list" aria-label="Food web, as a list">
+      <li v-for="(p, i) in pairs" :key="i">
+        <NuxtLink :to="`/t/atlas/${biome}/${p.a.slug}`">{{ p.a.binomial }}</NuxtLink>
+        {{ p.verb }}
+        <NuxtLink :to="`/t/atlas/${biome}/${p.b.slug}`">{{ p.b.binomial }}</NuxtLink>
+      </li>
+    </ul>
     <p v-else class="empty">An empty wing. The naturalists have not yet been.</p>
   </div>
 </template>

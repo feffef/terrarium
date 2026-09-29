@@ -1,6 +1,6 @@
 ---
 title: Nocturna brevis
-description: the dusk-chronicler
+description: "the dusk-chronicler, who keeps the hours the rest of the pool sleeps through."
 commonName: the dusk-chronicler
 classification: duskwing
 rarity: rare
