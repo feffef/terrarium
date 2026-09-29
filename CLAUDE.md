@@ -494,7 +494,7 @@ The land-a-gated-PR recipe (gate → green check → merge) and the per-tier mer
 
 ### Guest & external contributions
 
-How contributions from outside our own Claude Code toolchain are handled — the guest-driven demo pipeline (our agents build for invited Public issue-filers) versus external-agent fork PRs (a different harness submits its own PR + session log). The trust boundary, the `external` session-log marking, in-PR session-log delivery, and merge rules. See `docs/agents/guest-contributions.md`.
+How contributions from outside our own Claude Code toolchain are handled — the guest-driven demo pipeline (our agents build for invited Public issue-filers) versus external-agent fork PRs (a different harness submits its own PR + session log). The trust boundary, the `external` session-log marking, in-PR session-log delivery, merge rules, and how to reply to a Public fork PR (friendly, with concrete fixes for any unmet rule). See `docs/agents/guest-contributions.md`.
 
 ### Other research notes
 

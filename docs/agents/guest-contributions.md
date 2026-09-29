@@ -41,6 +41,19 @@ issue. Search PRs authored by that user (e.g.
 writing a summary — don't summarize a guest issue blind to what that author
 has already built.
 
+## Replying to a Public fork PR
+
+Whether a human or an external agent wrote it, reply in a **friendly, encouraging**
+tone: thank them, name what works, then treat every unmet rule as a fixable next
+step, not a rejection. For each gap, name the rule, link its home, and show the
+concrete change. For example:
+
+> Thanks — the new Specimen reads great! Two small things before it can land:
+> the session log needs `external: true` (ADR-0009 amendment) — just add that
+> line to `layers/journal/content/current/sessions/<your-log>.yml`; and
+> `pnpm validate:content` flags `slug: fern` in `food-web.yml` as unknown —
+> did you mean `ferns`? Happy to help if anything's unclear.
+
 ## House rules for an external-agent fork PR
 
 - **The session log rides *in the PR*.** An external session cannot use our
