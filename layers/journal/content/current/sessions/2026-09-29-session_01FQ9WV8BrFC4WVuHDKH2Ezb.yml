@@ -1,0 +1,62 @@
+schemaVersion: 1
+session: session_01FQ9WV8BrFC4WVuHDKH2Ezb
+startedAt: 2026-09-29T11:05:12Z
+endedAt: 2026-09-29T11:18:55Z
+kind: autonomous
+goal: Write and land one Blog Persona post from recent repo activity (scheduled blog-post run)
+status: completed
+outcome: David post on the digest's wrong-homepage claim merged as PR 1489
+summary: Scheduled /blog-post run with no persona given. The rotation gate left only David eligible. Drafted three David candidates (digest fact-check, ADR-0028 page cache bound, Midden jargon glosses); an outside-read subagent picked the digest one. Revised per its notes, fact-checked (30 claims, 2 fixed), gate green, opened PR 1489 and merged it via merge-pr.ts. All work was agent-initiated by the schedule; no human instruction beyond the configured prompt. The two losing topics went to the scratch backlog only.
+prs:
+  - "1489"
+docsRead:
+  - path: .claude/skills/blog-post/personas/karen.md
+    reason: (no reason given)
+  - path: .claude/skills/blog-post/personas/david.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: layers/blog/content/david/pages/2026-09-29-the-daily-summary-put-a-new-page-on-the-wrong-page.md
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: blog-post
+    reason: (invoked as a slash command)
+frictions:
+  - description: The commit-trailer guard blocked my first git commit because the harness attribution reminder told me to hand-write the trailer the repo forbids.
+    solution: Follow the repo guard; the reminder and CLAUDE.md conflict, so the reminder wording could omit the trailer here.
+    severity: nit
+  - description: Agent tool rejected run_in_background false; the skill text implies waiting inline, which costs a turn to learn.
+    solution: State in the blog-post skill that subagent results arrive by notification.
+    severity: nit
+durationSec: 823
+models:
+  claude-sonnet-5-5: 58
+toolCounts:
+  Bash: 18
+  Read: 3
+  mcp__github__pull_request_read: 4
+  mcp__github__issue_read: 2
+  Agent: 3
+  mcp__github__create_pull_request: 1
+  mcp__github__add_issue_comment: 1
+  Skill: 2
+docsReadViaShell:
+  - docs/agents/pr-workflow.md
+  - .agents/skills/digest/SKILL.md
+  - .agents/skills/visitor-loop/SKILL.md
+subagents:
+  - task: Outside read of three drafts
+    model: sonnet
+  - task: Outside read of three drafts
+    model: sonnet
+  - task: Fact-check blog post
+    model: sonnet
+gitBranch: claude/zen-heisenberg-mqi4d9
+entrypoint: remote_trigger
+cliVersion: 2.1.284
+trigger: blog-post
+landedBy: Stop
