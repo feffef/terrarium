@@ -10,10 +10,17 @@
 import { resolveSpaceRoute } from '#shared/routing'
 
 interface WingStat { count: number; lastObs: string | null }
+interface Sighting { date: string; note?: string; name?: string; to?: string }
+
+// "Today under the glass" reads the same shared Glass day the wing dials park at.
+const day = useGlassToday()
+const season = seasonOf(day)
 
 const { data } = await useAsyncData('atlas-front', async () => {
   const stats: Record<string, WingStat> = {}
   const specimens: string[] = []
+  const abroad: { to: string; label: string }[] = []
+  let latest: Sighting | null = null
   for (const b of BIOMES) {
     const r = resolveSpaceRoute('atlas', b.slug, undefined)
     if (!r) {
@@ -22,17 +29,31 @@ const { data } = await useAsyncData('atlas-front', async () => {
     }
     // Specimens are every page but the wing landing; the colophon needs only
     // the newest observation date.
-    const paths = await queryCollection(r.pagesKey).where('path', '<>', '/').select('path').all()
-    for (const p of paths) specimens.push(`/t/atlas/${b.slug}${p.path}`)
-    const lastObs =
-      (await queryCollection(r.collections.observations).order('date', 'DESC').first())?.date ?? null
-    stats[b.slug] = { count: paths.length, lastObs }
+    const docs = (
+      await queryCollection(r.pagesKey)
+        .where('path', '<>', '/')
+        .select('path', 'title', 'commonName', 'description', 'phenology')
+        .all()
+    ).map(toSpecimenView)
+    for (const s of docs) {
+      specimens.push(`/t/atlas/${b.slug}${s.path}`)
+      if (s.phenology?.phases.some((p) => !p.quiet && inSpan(day, p.span)))
+        abroad.push({ to: `/t/atlas/${b.slug}${s.path}`, label: s.binomial })
+    }
+    const last = await queryCollection(r.collections.observations).order('date', 'DESC').first()
+    if (last && (!latest || last.date > latest.date)) {
+      const s = docs.find((d) => d.slug === last.specimen)
+      latest = { date: last.date, note: last.note, name: s?.binomial, to: s && `/t/atlas/${b.slug}${s.path}` }
+    }
+    stats[b.slug] = { count: docs.length, lastObs: last?.date ?? null }
   }
-  return { stats, specimens: specimens.sort() }
+  return { stats, specimens: specimens.sort(), abroad, latest }
 })
 
 const stats = computed(() => data.value?.stats ?? {})
 const specimens = computed(() => data.value?.specimens ?? [])
+const abroad = computed(() => data.value?.abroad ?? [])
+const latest = computed(() => data.value?.latest ?? null)
 
 // The page is prerendered, so the pick happens on click: the href stays a
 // stable specimen for no-JS visitors and modified clicks (new tab).
@@ -92,6 +113,22 @@ useHead({ title: 'The Atlas of the Terrarium' })
           its own hours within it, a private round of waking and waning that answers
           the season in its own way. We have drawn the year as a dial in every wing;
           turn it, and the guide keeps pace. Choose a wing, and go quietly.
+        </p>
+      </section>
+
+      <section class="today" aria-labelledby="today-h">
+        <h2 id="today-h" class="atlas-eyebrow">Today under the glass</h2>
+        <p>Day {{ day }} of the Glass Year — {{ season.label }}<template v-if="season.gloss">, {{ season.gloss }}</template>.</p>
+        <p v-if="abroad.length" class="today-abroad">
+          Abroad now:
+          <template v-for="(a, i) in abroad.slice(0, 5)" :key="a.to"
+            >{{ i ? ', ' : ' ' }}<NuxtLink :to="a.to">{{ a.label }}</NuxtLink></template
+          ><template v-if="abroad.length > 5"> and {{ abroad.length - 5 }} more</template>.
+        </p>
+        <p v-else class="today-abroad">Nothing is abroad; the glass keeps to itself.</p>
+        <p v-if="latest" class="today-latest">
+          Latest sighting, {{ latest.date }}<template v-if="latest.name"> — <NuxtLink :to="latest.to!">{{ latest.name }}</NuxtLink></template
+          ><template v-if="latest.note">: {{ latest.note }}</template>
         </p>
       </section>
 
@@ -169,6 +206,13 @@ useHead({ title: 'The Atlas of the Terrarium' })
   padding: 0.25rem 0.45rem 0 0;
   color: var(--atlas-muted);
 }
+
+.today { max-width: 34rem; margin: 0 auto 2.5rem; padding: 1rem 1.2rem; border: 1px solid var(--atlas-rule); background: var(--atlas-paper-2); font-size: 0.98rem; }
+.today h2 { margin: 0 0 0.5rem; }
+.today p { margin: 0 0 0.45rem; }
+.today p:last-child { margin-bottom: 0; }
+.today a { color: var(--atlas-ink); font-style: italic; }
+.today-latest { color: var(--atlas-muted); }
 
 /* Directory — three wings, each a card that wears its own palette. */
 .directory { display: grid; gap: 1rem; }

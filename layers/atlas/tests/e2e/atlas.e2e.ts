@@ -23,6 +23,19 @@ import { expectCleanHydration, renderAndCollectErrors } from '../../../../tests/
 /** Register the atlas Tenant's L2 assertions under the caller's active suite. */
 export function registerAtlasE2E(): void {
   describe('atlas Tenant', () => {
+    it('shows today under the glass on the front door', async () => {
+      const { page, errors } = await renderAndCollectErrors('/t/atlas')
+      try {
+        expect(errors).toEqual([])
+        const today = await page.locator('.today').textContent()
+        expect(today).toMatch(/Day \d+ of the Glass Year/)
+        expect(today).toContain('Latest sighting')
+        expect(await page.locator('.today a').count()).toBeGreaterThan(1)
+      } finally {
+        await page.close()
+      }
+    })
+
     it('hydrates a specimen entry with no unresolved components', async () => {
       await expectCleanHydration('/t/atlas/canopy/mycora-susurrans')
     })
