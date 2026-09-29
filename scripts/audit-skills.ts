@@ -81,13 +81,17 @@ export interface Session {
   endedAt: string
   /** Skill names only, filtered to real Skills on disk (issue #545). */
   skillsUsed: string[]
+  /** Skills a friction or learning names — where a Skill's absence is felt. */
+  mentioned: string[]
+  /** `skillsUsed` entries a human reached for (a slash command or a direct ask). */
+  humanInvoked: string[]
   /** A friction `description` carries `HUMAN_PROMPTED_CLOSURE` (`close-session`). */
   humanPromptedClosure: boolean
   /** `docsRead` paths, feeding `docReadCounts`. */
   docsRead: string[]
 }
 /** A windowed session as printed — what the Skill judges "kind of work" from. */
-export type WindowSession = Omit<Session, 'humanPromptedClosure' | 'docsRead'>
+export type WindowSession = Omit<Session, 'humanPromptedClosure' | 'docsRead' | 'mentioned' | 'humanInvoked'>
 export interface OnDiskSkill {
   description: string
   /** False when its frontmatter sets `disable-model-invocation: true`. */
@@ -119,6 +123,10 @@ export interface SkillRow {
   /** Windowed sessions that used it, and their ids (resolve against `window`). */
   useCount: number
   usedIn: string[]
+  /** Windowed sessions whose frictions or learnings name it — candidates to read, not a count. */
+  mentionedIn: string[]
+  /** Windowed sessions where a human invoked it. */
+  humanInvokedIn: string[]
   /** Across every session log on record, current and archived. */
   allTimeUses: number
   lastUsed: string | null
@@ -215,11 +223,15 @@ export function pickWindow(sessions: readonly Session[], since: string): Session
     .sort((a, b) => b.endedAt.localeCompare(a.endedAt) || b.session.localeCompare(a.session))
 }
 
-/** Skill name → the ids of the sessions that used it, in the given order. */
-export function tallyUsage(sessions: readonly Session[]): Map<string, string[]> {
+/** Skill name → the ids of the sessions that used it (or, via `field`, named or
+ *  human-invoked it), in the given order. */
+export function tallyUsage(
+  sessions: readonly Session[],
+  field: 'skillsUsed' | 'mentioned' | 'humanInvoked' = 'skillsUsed',
+): Map<string, string[]> {
   const byName = new Map<string, string[]>()
   for (const s of sessions) {
-    for (const name of new Set(s.skillsUsed)) byName.set(name, [...(byName.get(name) ?? []), s.session])
+    for (const name of new Set(s[field])) byName.set(name, [...(byName.get(name) ?? []), s.session])
   }
   return byName
 }
@@ -246,6 +258,8 @@ export function buildSkillRows(
   external: ReadonlySet<string>,
 ): SkillRow[] {
   const windowed = tallyUsage(windowSessions)
+  const mentioned = tallyUsage(windowSessions, 'mentioned')
+  const humanInvoked = tallyUsage(windowSessions, 'humanInvoked')
   const allTime = tallyUsage(allSessions)
   const last = lastUsed(allSessions)
   const names = new Set<string>([...onDisk.keys(), ...inventory.keys(), ...allTime.keys()])
@@ -265,6 +279,8 @@ export function buildSkillRows(
       description: onDisk.get(name)?.description ?? null,
       useCount: usedIn.length,
       usedIn,
+      mentionedIn: mentioned.get(name) ?? [],
+      humanInvokedIn: humanInvoked.get(name) ?? [],
       allTimeUses: allTime.get(name)?.length ?? 0,
       lastUsed: last.get(name) ?? null,
     }
@@ -285,20 +301,39 @@ export function buildDocReadCounts(sessions: readonly Session[]): Record<string,
   return Object.fromEntries([...counts].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0])))
 }
 
+/** A `skillsUsed` reason saying a human, not the agent, reached for the Skill. */
+const HUMAN_INVOKED = /slash command|\b(?:user|owner|human)\b.{0,20}\b(?:ask|asked|invoked|requested)\b/i
+
+/** Whether `text` names `skill` as a whole token — `grilling` never matches inside
+ *  `grill-with-docs`, and `/code-review` matches. */
+export function namesSkill(text: string, skill: string): boolean {
+  return new RegExp(`(?<![\\w-])${skill.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(?![\\w-])`, 'i').test(text)
+}
+
 /** One parsed log as a `Session`, or `null` for an EXTERNAL log — excluded from
  *  the self-improvement corpus entirely (ADR-0009 amendment). `skillNames` drops
  *  a `skillsUsed` entry that isn't a real Skill, e.g. "model" (issue #545). */
 export function toSession(raw: Record<string, unknown>, file: string, skillNames: ReadonlySet<string>): Session | null {
   if (isExternalSession(raw)) return null
-  const used = Array.isArray(raw.skillsUsed) ? raw.skillsUsed : []
+  const used = (Array.isArray(raw.skillsUsed) ? raw.skillsUsed : [])
+    .filter((u: Record<string, unknown>) => skillNames.has(String(u.name ?? '')))
   const frictions = Array.isArray(raw.frictions) ? raw.frictions : []
+  const learnings = Array.isArray(raw.learnings) ? raw.learnings : []
+  const prose = [
+    ...frictions.flatMap((fr: Record<string, unknown>) => [fr.description, fr.solution]),
+    ...learnings,
+  ].map((t) => String(t ?? '')).join('\n')
   return {
     session: String(raw.session ?? ''),
     file,
     kind: String(raw.kind ?? ''),
     goal: String(raw.goal ?? ''),
     endedAt: String(raw.endedAt ?? ''),
-    skillsUsed: used.map((u: Record<string, unknown>) => String(u.name ?? '')).filter((n) => skillNames.has(n)),
+    skillsUsed: used.map((u: Record<string, unknown>) => String(u.name)),
+    mentioned: [...skillNames].filter((n) => namesSkill(prose, n)),
+    humanInvoked: used
+      .filter((u: Record<string, unknown>) => HUMAN_INVOKED.test(String(u.reason ?? '')))
+      .map((u: Record<string, unknown>) => String(u.name)),
     humanPromptedClosure: hasHumanPromptedClosure(frictions.map((fr: Record<string, unknown>) => String(fr.description ?? ''))),
     // session-trace.ts's noise rule, reapplied on read to clean older logs.
     docsRead: (Array.isArray(raw.docsRead) ? raw.docsRead : [])

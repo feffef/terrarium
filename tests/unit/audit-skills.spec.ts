@@ -44,6 +44,8 @@ function sess(over: Partial<Session> = {}): Session {
     goal: 'goal',
     endedAt: '2026-07-05T10:00:00Z',
     skillsUsed: [],
+    mentioned: [],
+    humanInvoked: [],
     humanPromptedClosure: false,
     docsRead: [],
     ...over,
@@ -119,6 +121,12 @@ describe('buildSkillRows()', () => {
     })
   })
 
+  it('lists windowed sessions that named or human-invoked a Skill', () => {
+    const named = sess({ session: 'named', endedAt: '2026-07-06T00:00:00Z', mentioned: ['blog-post'], humanInvoked: ['blog-post'] })
+    const r = buildSkillRows(onDisk, inventory, [named], [named], new Set()).find((x) => x.name === 'blog-post')!
+    expect(r).toMatchObject({ mentionedIn: ['named'], humanInvokedIn: ['named'], useCount: 0 })
+  })
+
   it('flags an uninventoried pack Skill, unused', () => {
     expect(row('ghost')).toMatchObject({
       external: true, inventoried: false, modelInvoked: true, useCount: 0, allTimeUses: 0, lastUsed: null, observations: [],
@@ -170,9 +178,29 @@ describe('toSession() — external exclusion (ADR-0009 amendment)', () => {
       goal: 'do a thing',
       endedAt: '2026-07-20T00:00:00Z',
       skillsUsed: ['tdd'],
+      mentioned: [],
+      humanInvoked: [],
       humanPromptedClosure: true,
       docsRead: ['CLAUDE.md'],
     })
+  })
+
+  it('finds Skills named in frictions and learnings, and the ones a human invoked', () => {
+    const names = new Set(['code-review', 'grilling', 'grill-with-docs', 'tdd'])
+    const raw = {
+      session: 's',
+      endedAt: '2026-07-20T00:00:00Z',
+      skillsUsed: [
+        { name: 'grill-with-docs', reason: '(invoked as a slash command)' },
+        { name: 'grilling', reason: 'its engine' },
+        { name: 'tdd', reason: 'owner asked for it' },
+      ],
+      frictions: [{ severity: 'major', description: 'bug caught only by /code-review', solution: 'run grill-with-docs first' }],
+      learnings: ['tdd pays off'],
+    }
+    const s = toSession(raw, 'f.yml', names)!
+    expect(s.mentioned.sort()).toEqual(['code-review', 'grill-with-docs', 'tdd'])
+    expect(s.humanInvoked).toEqual(['grill-with-docs', 'tdd'])
   })
 
   it('tolerates a log with no docsRead at all (older logs predate the field)', () => {

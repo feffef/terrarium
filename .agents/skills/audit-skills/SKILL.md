@@ -126,13 +126,20 @@ Grade each Skill by the definitions in `CONTEXT.md` (`### Importance`), after
 reading its `observations`: earlier runs' evidence counts alongside this
 window's.
 
+- **Grade on felt absence, not counts.** Read each Skill's `mentionedIn`
+  logs for where it **caught** something or where **skipping it cost**
+  something; `humanInvokedIn` is a human reaching for it. These are the
+  evidence, pack Skills included.
 - **A grade change needs ≥2 windowed sessions as evidence**, in either
   direction, and those session ids are cited.
+- **A Skill that runs another takes the credit** (`grill-with-docs` runs
+  `grilling`); grade the inner Skill on its standalone uses.
 - **A missed invocation of an own Skill is a trigger problem**: step 4's
   issue, not a demotion. For a pack Skill, whose trigger we cannot fix, the
   grade is the lever.
-- **`role`** stays ≤ ~50 words and free of PR, issue or session ids. Refresh
-  it when usage contradicts it.
+- **`role`** stays ≤ ~50 words and free of PR, issue or session ids. Re-read it
+  every run, grade changed or not, and rewrite any claim the evidence
+  contradicts.
 - **`observations`** hold 40 days of history. Append
   `{ date: <today, UTC>, note: <citations> }` for every grade or role change,
   verified or unverified finding (say which), or idea, but only when it cites
