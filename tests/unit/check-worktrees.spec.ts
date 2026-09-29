@@ -5,8 +5,12 @@
 // by running the script directly against the real tree
 // (`tsx scripts/check-worktrees.ts`) rather than against fixtures here, since
 // it needs no real worktrees provisioned to be trusted.
+import { execFileSync } from 'node:child_process'
+import { mkdtempSync, rmSync } from 'node:fs'
+import { tmpdir } from 'node:os'
+import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
-import { parseWorktreeList, primaryWorktreePath, sweep, type WorktreeState } from '../../scripts/check-worktrees.ts'
+import { parseWorktreeList, primaryWorktreePath, sweep, unpushedCount, type WorktreeState } from '../../scripts/check-worktrees.ts'
 
 describe('parseWorktreeList()', () => {
   it('parses the primary worktree (no locked/prunable, branch present)', () => {
@@ -151,5 +155,29 @@ describe('sweep()', () => {
   it('still flags a dirty linked worktree whose HEAD is NOT merged into origin/main', () => {
     const { failures } = sweep([state({ dirty: true, headMergedToMain: false })])
     expect(failures).toHaveLength(1)
+  })
+})
+
+describe('unpushedCount() with no upstream', () => {
+  it('counts only commits on no remote-tracking ref (a HEAD contained in a pushed branch is rescued)', () => {
+    const dir = mkdtempSync(join(tmpdir(), 'check-worktrees-'))
+    try {
+      const run = (...args: string[]) =>
+        execFileSync('git', ['-c', 'user.name=t', '-c', 'user.email=t@t', '-c', 'commit.gpgsign=false', ...args], { cwd: dir, encoding: 'utf8' })
+      run('init', '-q', '-b', 'main')
+      run('commit', '-q', '--allow-empty', '-m', 'base')
+      run('update-ref', 'refs/remotes/origin/main', 'HEAD')
+      run('checkout', '-q', '-b', 'pushed')
+      run('commit', '-q', '--allow-empty', '-m', 'pushed work')
+      run('update-ref', 'refs/remotes/origin/pushed', 'HEAD')
+      run('checkout', '-q', '-b', 'local-only')
+      expect(unpushedCount(dir)).toBe(0)
+      run('checkout', '-q', '--detach')
+      expect(unpushedCount(dir)).toBe(0)
+      run('commit', '-q', '--allow-empty', '-m', 'unpushed work')
+      expect(unpushedCount(dir)).toBe(1)
+    } finally {
+      rmSync(dir, { recursive: true, force: true })
+    }
   })
 })
