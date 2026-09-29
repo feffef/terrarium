@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01A1iy52RckGYBTdfuhuxwCf
 startedAt: 2026-09-28T18:10:07Z
-endedAt: 2026-09-28T18:17:49Z
+endedAt: 2026-09-29T09:53:33Z
 kind: interactive
 goal: Pin Atlas diagram scroll fade on mobile
-status: in-review
-outcome: "Fade now a mask; PR #1476 open"
-summary: "The user reported, with a phone screenshot, that the scroll-hint fade on the Atlas relations SVG moved when swiped (human-instructed fix). The cause: the fade was an absolutely positioned ::after inside the overflow-x scroller. I replaced it with a mask-image gradient on .atlas-web-scroll, which fixes both RelationsWeb and FoodWeb. Checked with a Playwright probe at 360px (mask applied, fade stays at the edge after scrolling), and the full gate:scoped passed. Opening PR 1476 was agent-initiated per ADR-0003's default."
+status: completed
+outcome: "Fade now a mask; PR #1476 merged"
+summary: "The user reported, with a phone screenshot, that the scroll-hint fade on the Atlas relations SVG moved when swiped (human-instructed fix). The cause: the fade was an absolutely positioned ::after inside the overflow-x scroller. I replaced it with a mask-image gradient on .atlas-web-scroll, which fixes both RelationsWeb and FoodWeb. Checked with a Playwright probe at 360px (mask applied, fade stays at the edge after scrolling), and the full gate:scoped passed. Opening PR 1476 was agent-initiated per ADR-0003 default; a human merged it."
 prs:
   - "1476"
 docsRead:
@@ -24,19 +24,22 @@ frictions:
   - description: Wrote the PR body before checking the provenance-header format, then had to grep scripts/provenance-header.ts for it
     solution: Read scripts/provenance-header.ts, or rely on the guard's deny message, before drafting a GitHub body
     severity: nit
-durationSec: 461
+durationSec: 56606
 models:
-  claude-opus-5-5: 42
+  claude-opus-5-5: 66
 toolCounts:
   Grep: 1
-  Bash: 14
+  Bash: 17
   Read: 3
   Edit: 2
-  ToolSearch: 1
+  ToolSearch: 2
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
   Skill: 2
+  ReadNotifications: 5
+  mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__pull_request_read: 2
 filesEdited:
   - layers/atlas/app/assets/theme.css
 docsReadViaShell:
