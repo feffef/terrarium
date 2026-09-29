@@ -1,13 +1,14 @@
 schemaVersion: 1
 session: session_01SYbiQQHsX8HmeXJTtxAPwp
 startedAt: 2026-09-29T00:47:12Z
-endedAt: 2026-09-29T01:11:41Z
+endedAt: 2026-09-29T01:22:38Z
 kind: autonomous
 goal: Run the scheduled /audit-skills sweep
-status: in-review
-outcome: "PR #1481 open: 2 issues filed, Inventory updated"
-summary: "Fully agent-initiated scheduled run (no live human input this session). Ran scripts/audit-skills.ts for the 7-day scorecard, then dispatched one read-only Sonnet behaviour-check subagent per Skill with >=3 window sessions (11 total: audit-docs, audit-skills, auto-triage, blog-post, close-session, digest, dispatch-subagents, frictions-to-fixes, log-session, prune-trial, visitor-loop), all in parallel. Verified each subagent's central claims against GitHub/git before acting on them, and caught one subagent report (auto-triage's, re: issue #1248) that did not hold up on verification -- the cited issue was unrelated to what the subagent described, so it was dropped rather than escalated. Two findings cleared the significant/repeated escalation bar and were filed as new needs-triage issues: #1479 (blog-post's mandatory step-7 fact-check subagent silently skipped in 2/7 runs, no friction logged) and #1480 (dispatch-subagents' orchestrator-cd-into-worktree footgun recurring on two consecutive days despite already being recorded once). Updated 7 Skill Inventory entries: corrected a stale audit-docs observation that wrongly claimed issue #1304 was fixed (it is still open), recorded that issues #1450 (log-session word cap) and #1451 (prune-trial verbatim-quote clause) were both resolved by a prune trial deleting the rule rather than by enforcing it, and recorded that #1452 (visitor-loop's decisions.md gap) is now genuinely fixed via PR #1477. Closure-completeness check (orphan scan, suppression log, human-prompted/manually-rescued closures) came back clean, no new findings. Ran pnpm gate:scoped green before pushing, opened gated PR #1481 scoped to the Inventory YAML diff only, and subscribed to its activity."
-prs: []
+status: completed
+outcome: "PR #1481 merged: 2 issues filed, Inventory updated"
+summary: "Fully agent-initiated scheduled run (no live human input this session). Ran scripts/audit-skills.ts for the 7-day scorecard, then dispatched one read-only Sonnet behaviour-check subagent per Skill with >=3 window sessions (11 total: audit-docs, audit-skills, auto-triage, blog-post, close-session, digest, dispatch-subagents, frictions-to-fixes, log-session, prune-trial, visitor-loop), all in parallel. Verified each subagent's central claims against GitHub/git before acting on them, and caught one subagent report (auto-triage's, re: issue #1248) that did not hold up on verification -- the cited issue was unrelated to what the subagent described, so it was dropped rather than escalated. Two findings cleared the significant/repeated escalation bar and were filed as new needs-triage issues: #1479 (blog-post's mandatory step-7 fact-check subagent silently skipped in 2/7 runs, no friction logged) and #1480 (dispatch-subagents' orchestrator-cd-into-worktree footgun recurring on two consecutive days despite already being recorded once). Updated 7 Skill Inventory entries: corrected a stale audit-docs observation that wrongly claimed issue #1304 was fixed (it is still open), recorded that issues #1450 (log-session word cap) and #1451 (prune-trial verbatim-quote clause) were both resolved by a prune trial deleting the rule rather than by enforcing it, and recorded that #1452 (visitor-loop's decisions.md gap) is now genuinely fixed via PR #1477. Closure-completeness check (orphan scan, suppression log, human-prompted/manually-rescued closures) came back clean, no new findings. Ran pnpm gate:scoped green before pushing, opened gated PR #1481 scoped to the Inventory YAML diff only, subscribed to its activity, pushed one small addendum after finding a second shell-read-detection miss shape while authoring this log, then merged #1481 via merge-pr.ts once CI was green and mergeable_state was clean, and unsubscribed."
+prs:
+  - "1481"
 docsRead:
   - path: .agents/skills/audit-skills/SKILL.md
     reason: this run's own instructions
@@ -186,26 +187,30 @@ frictions:
   - description: "SHELL-READ-DETECTION: a dispatched subagent's `git log --follow -p --since=\"2026-09-26\" -- .agents/skills/visitor-loop/decisions.md | head -200` was rejected as \"not a reader command\" and not folded into docsReadViaShell, but `git log -p` output genuinely streams the file's content (as patch diffs) the same way a `cat`/`grep` would. Direction: a real read, not credited (the opposite-miss shape already on file for `git show <ref>:<path> | grep`)."
     solution: Recorded in log-session's Skill Inventory observations for a future audit-skills run's Phase A screen; the detector's reader-shape rules (scripts/shell-reads.ts) likely need a `git log ... -p` / `--patch` case alongside the existing `git show`/`git diff` ones.
     severity: moderate
-durationSec: 1469
+durationSec: 2126
 models:
-  claude-sonnet-5: 157
+  claude-sonnet-5: 210
 toolCounts:
-  Bash: 18
-  Read: 17
+  Bash: 26
+  Read: 18
   Grep: 3
   Agent: 11
-  ScheduleWakeup: 1
+  ScheduleWakeup: 2
   TaskCreate: 1
-  ToolSearch: 3
+  ToolSearch: 5
   mcp__github__issue_read: 2
   mcp__github__search_issues: 2
   mcp__github__issue_write: 2
-  Edit: 10
+  Edit: 12
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
   Skill: 2
   Write: 1
+  ReadNotifications: 4
+  mcp__github__pull_request_read: 2
+  mcp__github__add_issue_comment: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/journal/content/current/skills/audit-docs.yml
   - layers/journal/content/current/skills/audit-skills.yml
