@@ -12,7 +12,7 @@ import { resolveSpaceRoute } from '#shared/routing'
 interface WingStat { count: number; lastObs: string | null }
 interface Sighting { date: string; note?: string; name?: string; to?: string }
 
-// "Today under the glass" reads the same shared Glass day the wing dials park at.
+// Prerendered, so "today" is the build day — same as the wing dials.
 const day = useGlassToday()
 const season = seasonOf(day)
 
@@ -120,7 +120,7 @@ useHead({ title: 'The Atlas of the Terrarium' })
         <h2 id="today-h" class="atlas-eyebrow">Today under the glass</h2>
         <p>Day {{ day }} of the Glass Year — {{ season.label }}<template v-if="season.gloss">, {{ season.gloss }}</template>.</p>
         <p v-if="abroad.length" class="today-abroad">
-          Abroad now:
+          Abroad this season:
           <template v-for="(a, i) in abroad.slice(0, 5)" :key="a.to"
             >{{ i ? ', ' : ' ' }}<NuxtLink :to="a.to">{{ a.label }}</NuxtLink></template
           ><template v-if="abroad.length > 5"> and {{ abroad.length - 5 }} more</template>.

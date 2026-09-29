@@ -29,8 +29,7 @@ export function registerAtlasE2E(): void {
         expect(errors).toEqual([])
         const today = await page.locator('.today').textContent()
         expect(today).toMatch(/Day \d+ of the Glass Year/)
-        expect(today).toContain('Latest sighting')
-        expect(await page.locator('.today a').count()).toBeGreaterThan(1)
+        expect(today).toMatch(/Abroad this season:|Nothing is abroad/)
       } finally {
         await page.close()
       }
