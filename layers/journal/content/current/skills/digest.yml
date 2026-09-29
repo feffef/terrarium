@@ -8,7 +8,7 @@ role: >-
   (ADR-0010). A thin, tested helper (`scripts/digest.ts`) does the deterministic
   gathering; the Skill writes the prose, has a separate pass fact-check it
   against the PRs' diffs, and opens one gated PR (ADR-0003) that auto-merges
-  once the safety gate is green unless a claim stayed unverifiable, never the `log-session`
+  once the safety gate is green, never the `log-session`
   direct-to-main path. The Journal's Space landing is a live
   dashboard that surfaces new Digests automatically. Fired by a scheduled
   Routine, this Skill is the first of the self-improvement Skills to go live
