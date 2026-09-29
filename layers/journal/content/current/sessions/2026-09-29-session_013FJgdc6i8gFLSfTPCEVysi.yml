@@ -1,0 +1,49 @@
+schemaVersion: 1
+session: session_013FJgdc6i8gFLSfTPCEVysi
+startedAt: 2026-09-29T21:58:28Z
+endedAt: 2026-09-29T22:02:39Z
+kind: interactive
+goal: Instruct agents to reply to external fork PRs in a friendly, encouraging tone with concrete fix hints
+status: in-review
+outcome: "Rule plus example reply added to guest-contributions.md, CLAUDE.md index pointer updated; PR #1495 open"
+summary: "Human-instructed: the user asked for a CLAUDE.md instruction making replies to external PRs friendlier, with hints and examples for unmet rules. Following the user's preference to ask before assuming, I asked three questions (location, scope, specificity). The user chose to single-home it in docs/agents/guest-contributions.md with only a pointer in CLAUDE.md, to cover all Public fork PRs (human or agent), and to use a goal plus one short example reply. gate:scoped passed (inert docs-only). Opening PR #1495 was agent-initiated per ADR-0003's auto-open default; it is human-only to merge."
+prs:
+  - "1495"
+docsRead:
+  - path: docs/agents/guest-contributions.md
+    reason: existing single home for external-PR house rules
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: First gate:scoped call piped into tail and was denied by the tail-pipe guard; I had to rerun it with redirection.
+    solution: Redirect gate output to a scratch log from the start, as CLAUDE.md already says.
+    severity: nit
+  - description: First create_pull_request was denied by the ADR-0017 provenance guard because the header wasn't the first line.
+    solution: Put the provenance line first in every GitHub body; the guard's deny message gave the exact shape.
+    severity: nit
+durationSec: 251
+models:
+  claude-opus-5-5: 28
+toolCounts:
+  Bash: 6
+  Read: 1
+  AskUserQuestion: 1
+  Edit: 2
+  ToolSearch: 1
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 2
+  mcp__github__subscribe_pr_activity: 1
+  Skill: 2
+  Write: 1
+filesEdited:
+  - docs/agents/guest-contributions.md
+  - CLAUDE.md
+docsReadViaShell:
+  - docs/agents/guest-contributions.md
+gitBranch: ccr-6ff679d8-4mtx9p
+entrypoint: remote_mobile
+cliVersion: 2.1.285
+landedBy: Stop
