@@ -1,0 +1,43 @@
+campaign: passport-presence-monitor
+comments:
+  - author: Henrike S.
+    posted: -4d
+    text: Will it tell me if I leave my passport at the hotel?
+    replies:
+      - author: Priya Raman
+        posted: -4d
+        text: It will stop confirming that you have it. Most testers noticed within eleven minutes.
+        inventor: true
+  - author: Tomás V.
+    posted: -3d
+    text: Early-bird gone before I finished my coffee. Backed the regular one in sand.
+  - author: Wen L.
+    posted: -3d
+    text: Does it work through a leather jacket?
+    replies:
+      - author: Priya Raman
+        posted: -2d
+        text: Yes, up to 4 mm of leather. We tested it with a motorcycle jacket, which was the thickest we could borrow.
+        inventor: true
+  - author: Rosalind P.
+    posted: -2d
+    text: I touch my pocket about as often as the Inventor does. Backing the Family set so the whole household can stop.
+  - author: Kofi A.
+    posted: -40h
+    text: Can I change the interval to 60 seconds?
+    replies:
+      - author: Priya Raman
+        posted: -36h
+        text: No. We tested 60 seconds and testers began waiting for the next one. At 90 seconds they forget it is there until it confirms.
+        inventor: true
+  - author: Maren D.
+    posted: -20h
+    text: Funded. Hoping for the boarding pass tag next.
+  - author: Luca B.
+    posted: -6h
+    text: Does the vibration go off at security when the passport is in the tray?
+    replies:
+      - author: Priya Raman
+        posted: -4h
+        text: It does not. The passport is not in your pocket, so there is nothing to confirm.
+        inventor: true

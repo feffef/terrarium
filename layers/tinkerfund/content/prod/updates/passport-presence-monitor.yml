@@ -1,0 +1,17 @@
+campaign: passport-presence-monitor
+updates:
+  - title: Early-bird monitors sold out
+    published: -3d
+    body: |-
+      All 100 Early-bird monitors were claimed within the first day. Thank
+      you. The standard Reward is the same monitor and tag, in the same two
+      finishes, at €49.
+  - title: Funded
+    published: -20h
+    body: |-
+      We passed €18,000 last night, on day four. Tooling for the aluminium
+      body is booked, and the first 50 passport tags have been cut and read
+      11,000 times each without a miss.
+
+      The next stretch goal, at €22,000, adds a second tag for the boarding
+      pass. The monitor will confirm each of them every three minutes.
