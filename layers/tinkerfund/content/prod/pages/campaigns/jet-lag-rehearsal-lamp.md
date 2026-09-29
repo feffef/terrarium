@@ -22,7 +22,7 @@ campaign:
     - { label: Weight, value: 1.4 kg }
   figures:
     - style: isometric
-      caption: "The Jet Lag Rehearsal Lamp, linen white. It is shown at the destination's sunrise. The destination is not shown."
+      caption: "The Jet Lag Rehearsal Lamp. It is shown at the destination's sunrise. The destination is not shown."
       svg: |-
         <ellipse cx="204" cy="243" rx="78.8" ry="40.9" style="fill:var(--tf-line)" />
         <ellipse cx="200" cy="241" rx="91.9" ry="42.4" style="fill:color-mix(in srgb, var(--tf-accent) 22%, var(--tf-surface))" />
