@@ -1,51 +1,43 @@
 # GitHub integration: the `mcp__github__*` tool surface
 
-How to actually drive GitHub from a session — tool→operation mapping, the
-overflow and precision traps, and the polling rules. This is the *surface*;
-two workflow docs sit on top of it and own their own recipes:
+How to drive GitHub from a session: which tool does what, what overflows, and
+how to poll. Two workflow docs sit on top of this one and own their recipes:
 [`issue-tracker.md`](./issue-tracker.md) (issues, specs, triage) and
 [`pr-workflow.md`](./pr-workflow.md) (landing a gated PR).
 
 Every GitHub body an agent writes must open with the ADR-0017 provenance header
-(CLAUDE.md's Working Conventions). It is enforced mechanically rather than by
-convention — `scripts/github-provenance-guard.ts` is both the registry of which
-tools are guarded and the rule's operative statement.
+(CLAUDE.md's Working Conventions). A guard enforces it:
+`scripts/github-provenance-guard.ts` lists the guarded tools and states the rule.
 
 ## Bare angle brackets vanish from a rendered title or body
 
-**GitHub silently strips bare `<...>` text in a rendered issue/PR title or
-body as HTML markup, no error shown.** Wrap it in a fenced code block — a
-single backtick wrap does not hold. `scripts/github-provenance-guard.ts`
-denies a write carrying one before it posts (issue #886).
+GitHub silently strips bare `<...>` text from a rendered issue/PR title or body,
+treating it as HTML. No error shows. Wrap it in a fenced code block; a single
+backtick wrap is not enough. The provenance guard denies a write that carries
+one (issue #886).
 
 ## Transient failures — retry before escalating
 
-**`mcp__github__*` calls (`create_pull_request`, `merge_pull_request`,
-`add_issue_comment`, `issue_read`, `issue_write`, etc.) can intermittently
-return a transient 503** ("no server currently available") that succeeds on
-retry — retry once or twice with a short pause before treating it as a real
-failure, not a genuine error to escalate. When `issue_read` itself is the one
-flaking, `search_issues` scoped to the issue number is a viable fallback
-(issue #611).
+`mcp__github__*` calls (`create_pull_request`, `merge_pull_request`,
+`add_issue_comment`, `issue_read`, `issue_write`, …) sometimes return a
+transient 503 ("no server currently available"). Retry once or twice after a
+short pause before calling it a real failure. If `issue_read` keeps flaking,
+`search_issues` scoped to the issue number works as a fallback (issue #611).
 
 ## No `gh`? Remote sessions use the MCP tools
 
-Remote/managed agent sessions have **no `gh` binary** — GitHub access goes
-through the GitHub MCP tools (`mcp__github__*`). Recipes in the workflow docs
-stay written as `gh` commands (the canonical form); when `gh` is absent, map
-each recipe class to its MCP equivalent:
+Remote sessions have **no `gh` binary**; use the MCP tools. The workflow docs
+write recipes as `gh` commands. Map them like this:
 
-- **Create / edit / label / close an issue** → `issue_write` (labeling a *PR*
-  also goes through `issue_write` — issues and PRs share one number space —
-  but **closing/reopening a PR does not**: `issue_write` rejects a call
-  setting `state`/`state_reason` on a PR number, even though a labels-only
-  update on that same number succeeds via the same tool. Use
-  `update_pull_request` for PR state instead. When both labels and state need
-  to change on a PR, that's two calls: labels via `issue_write`, state via
-  `update_pull_request`.)
-- **Comment on an issue or PR** → `add_issue_comment` — never `issue_write`
-  with `method: update` and a `body`, which *overwrites the issue/PR
-  description* with no confirmation and no diff shown (issue #723)
+- **Create / edit / label / close an issue** → `issue_write`.
+  - Labeling a *PR* also goes through `issue_write` (issues and PRs share one
+    number space).
+  - Closing or reopening a PR does **not**: `issue_write` rejects `state` /
+    `state_reason` on a PR number. Use `update_pull_request`.
+  - A PR that needs labels and a state change takes two calls.
+- **Comment on an issue or PR** → `add_issue_comment`. Never use `issue_write`
+  with `method: update` and a `body` for this: it *overwrites the description*
+  with no confirmation and no diff (issue #723).
 - **Read an issue, its comments, or sub-issues** → `issue_read`
 - **Read a PR or its diff** → `pull_request_read`
 - **List / search PRs** → `list_pull_requests` / `search_pull_requests`
@@ -53,154 +45,128 @@ each recipe class to its MCP equivalent:
 
 ## Overflow and precision traps
 
-- **`list_issues` and `list_pull_requests` have no `minimal_output` param** —
-  they always return full bodies, so even a paginated call can overflow the
-  tool-result limit. Prefer `search_issues` / `search_pull_requests` with a
-  targeted query for a narrow lookup; when a full list is genuinely unavoidable,
-  use a small `perPage` (5–10) and page through it, expecting to slice the
-  persisted file by hand for large sets. Page both open and closed/merged.
-  **A broad `search_*` query overflows the same way** — a wide
-  `search_issues`/`search_pull_requests` query is not a free escape from the
-  `list_*` overflow; always scope the query narrowly (state/label/keyword) or
-  expect to slice the persisted file by hand just as you would for a full list.
-- **`search_issues`/`search_pull_requests` don't support the server-advertised
-  `minimal_output` param** — confirmed against the loaded tool schema, it has
-  no effect on these two tools. Use `fields: [...]` instead: an array of field
-  names to keep, letting you omit `body`/`labels`/`reactions` — the largest
-  per-result data — when only counts/titles/numbers are needed.
-- **Scoping the query narrowly doesn't buy precision.** Even a narrowly scoped,
-  quoted, multi-term `search_issues`/`search_pull_requests` query still does
-  fuzzy term-matching under the hood, not exact-phrase matching — it surfaces
-  loosely-relevant, noisy hits alongside genuine ones. Eyeball every result for
-  actual relevance; don't trust hit count or ranking/order as a precision signal.
-- **A `total_count: 0` from `search_issues`/`search_pull_requests` is not proof
-  nothing matches** — the search index can miss a genuine match the same query
-  phrased differently would find. Before asserting "nothing exists," cross-check
-  with a `list_issues`/`list_pull_requests` scan (narrow state/label filters to
-  dodge the overflow above) rather than trusting a zero-result search alone.
-- **For an identifier lookup — a session id, an issue/PR number as text, an
-  exact error string — wrap the `search_issues`/`search_pull_requests` query
-  in quotes for an exact-string match.** An unquoted natural-language query for
-  the same target can still hit the oversized-result trap above; a quoted
-  exact-string query reliably returns a small, precise result set instead
+- **`list_issues` and `list_pull_requests` have no `minimal_output`.** They
+  always return full bodies, so even a paginated call can overflow the
+  tool-result limit. For a narrow lookup, use `search_issues` /
+  `search_pull_requests` with a targeted query. If you must list, use a small
+  `perPage` (5–10), page through it, and expect to slice the saved file by hand.
+  Page both open and closed/merged. A broad `search_*` query overflows the same
+  way, so always scope it (state, label, keyword).
+- **`search_issues` / `search_pull_requests` ignore `minimal_output`**, though
+  the server advertises it. Pass `fields: [...]` instead and leave out
+  `body`, `labels` and `reactions` (the biggest parts) when you only need
+  titles, numbers or counts.
+- **A narrow query is not a precise one.** Even a quoted, multi-term search does
+  fuzzy matching, not exact-phrase matching, and returns loosely related hits
+  next to real ones. Read every result. Hit count and ranking say nothing about
+  precision.
+- **`total_count: 0` does not prove nothing matches.** The index can miss a real
+  hit. Before you assert "nothing exists," cross-check with a
+  `list_issues` / `list_pull_requests` scan (narrow filters, to dodge the
+  overflow above).
+- **For an identifier — a session id, an issue/PR number as text, an exact error
+  string — wrap the search query in quotes.** An unquoted natural-language query
+  can hit the oversized-result trap; a quoted one returns a small, exact set
   (issue #932).
-- **Searching is the fragile path — prefer a repo-scoped listing.** GitHub's
-  `search/issues` endpoint is blocked for scripts here (the proxy binds a
-  session to repository-scoped endpoints, `repos/{owner}/{repo}/…`), so a
-  script escape can't do this; and the `search_issues`/`search_pull_requests`
-  MCP tools rate-limit with a 403 even after a few sequential calls — issue
-  #952's "~2 concurrent / ~49s backoff" numbers didn't hold (issue #1092). Use
-  `list_issues`/`list_pull_requests` or `pnpm exec tsx scripts/list-open-issues.ts` and
-  filter locally. If a search call is unavoidable and returns a 403, wait at
-  least a minute and retry it once, sequentially.
-- **`search_pull_requests` requires explicit `owner`/`repo` parameters** —
-  unlike `search_issues`, it does not scope to the current repo implicitly.
-  Omitting them searches across all of GitHub, returning cross-repo noise
-  (`total_count` in the hundreds or thousands) and risking an oversized result.
-- **`issue_read`/`pull_request_read` bodies come back HTML-entity-encoded.**
-  `&`, `"`, `'`, `<`, `>` arrive as `&amp;`, `&#34;`, `&#39;`, `&lt;`, `&gt;` —
-  decode before quoting the text elsewhere (a comment, a commit message) or
-  parsing it (e.g. extracting a `Closes #N` line).
-- `actions_list` has no `minimal_output` and returns full run objects (~300KB),
-  which overflow the tool-result limit — for an "is main green" check, slice the
-  persisted file or query by SHA instead of pulling the full list.
-- **`get_job_logs` can return its output as a single very long line (84k+
-  chars observed)** — `Read`'s offset/limit pages by line, so it doesn't help
-  here. Redirect the output to a file and slice it, or fetch a small tail
-  first.
-- **`issue_read`'s `get_sub_issues` method returns full sub-issue bodies and
-  has overflowed (94K–131K chars observed) on a wayfinder map/spec issue with
-  many children.** When you only need the linkage or a count — not the
-  sub-issues' content — prefer `list_issues` with `fields` set to omit `body`,
-  or read the parent's own `sub_issues_summary.total_count` instead of calling
-  `get_sub_issues` at all.
+- **Searching is the fragile path; prefer a repo-scoped listing.** The proxy
+  blocks GitHub's `search/issues` endpoint for scripts (it binds a session to
+  `repos/{owner}/{repo}/…` endpoints). The `search_*` MCP tools return a 403
+  rate limit after only a few sequential calls; issue #952's "~2 concurrent /
+  ~49s backoff" numbers did not hold (issue #1092). Use `list_issues`,
+  `list_pull_requests` or `pnpm exec tsx scripts/list-open-issues.ts` and filter
+  locally. If a search is unavoidable and returns 403, wait at least a minute
+  and retry once, sequentially.
+- **`search_pull_requests` needs explicit `owner` and `repo`.** Unlike
+  `search_issues`, it does not scope to this repo. Without them it searches all
+  of GitHub: hundreds or thousands of hits, and a likely overflow.
+- **`issue_read` / `pull_request_read` bodies come back HTML-entity-encoded**
+  (`&amp;`, `&#34;`, `&#39;`, `&lt;`, `&gt;`). Decode before you quote the text
+  or parse it (for example to pull out a `Closes #N` line).
+- **`actions_list` has no `minimal_output`** and returns full run objects
+  (~300KB), which overflow. To check "is main green," slice the saved file or
+  query by SHA.
+- **`get_job_logs` can return one enormous line (84k+ chars seen).** `Read`'s
+  offset/limit pages by line, so it does not help. Redirect the output to a file
+  and slice it, or fetch a small tail first.
+- **`issue_read`'s `get_sub_issues` returns full sub-issue bodies** and has
+  overflowed (94K–131K chars) on a wayfinder map/spec issue with many children.
+  If you only need linkage or a count, use `list_issues` with `fields` that omit
+  `body`, or read the parent's `sub_issues_summary.total_count`.
 
 ## Script escapes — cheaper than the API for three common questions
 
-- **"Which PRs merged recently, in what order, when" doesn't need
-  `list_pull_requests`/`search_issues` at all** — `pnpm exec tsx scripts/recent-prs.ts [N]`
-  answers it straight from `git log origin/main` (number/title/merge-time only;
-  `author`/`merged_by` are out of scope, since those need the API) with no
-  overflow risk (issue #319).
-- **"What open issues exist right now" doesn't need `list_issues`/`search_issues`
-  either** — `pnpm exec tsx scripts/list-open-issues.ts [N]` answers it via `gh api` against
-  the REST `issues` endpoint (number/title/labels/updated-time only; body/comments/
-  author are out of scope, same reasoning as `recent-prs.ts`) with no overflow risk
-  (issue #494). It shells out to REST rather than `gh issue list` because the
-  latter goes through GraphQL, which this environment's proxy can reject outside a
-  pinned PR-review operation set. **It also works in a `gh`-less remote session**:
-  when the `gh` binary is absent but `GH_TOKEN`/`GITHUB_TOKEN` is set in the
-  environment, it falls back to the same compact listing via a direct
-  authenticated REST call (`curl`) — only when neither `gh` nor a token is
-  available does it hand you back to the MCP tools above (issue #505).
-- **An issue's newest AI comment can claim a triage-label transition its live
-  labels never actually picked up** (e.g. issue #325's comment claimed `moved
-  to ready-for-agent` while the issue stayed `ready-for-human`) — nothing
-  catches that mismatch automatically. `pnpm exec tsx scripts/check-triage-drift.ts [N]`
-  cross-checks each open issue's most recent AI-authored comment (detected via
-  an ADR-0017 authorship marker, not `author_association` — see the script's
-  header comment for why that field can't be trusted here) against a small
-  phrase list for the five canonical labels, and prints the mismatches as JSON
-  (issue #507). It is a standalone check today, not yet wired into any
-  periodic sweep. Like `list-open-issues.ts`, it shares the same `gh`-less
-  `GH_TOKEN`/`GITHUB_TOKEN` REST fallback (issue #505).
+- **Which PRs merged recently, in what order, when?** Run
+  `pnpm exec tsx scripts/recent-prs.ts [N]`. It reads `git log origin/main`
+  (number, title, merge time only; `author` and `merged_by` need the API) and
+  cannot overflow (issue #319).
+- **Which issues are open right now?** Run
+  `pnpm exec tsx scripts/list-open-issues.ts [N]`. It calls the REST `issues`
+  endpoint through `gh api` (number, title, labels, updated time only) and cannot
+  overflow (issue #494). It avoids `gh issue list` because that uses GraphQL,
+  which this environment's proxy can reject outside a pinned PR-review operation
+  set. With no `gh` binary but `GH_TOKEN` / `GITHUB_TOKEN` set, it falls back to
+  a direct REST call with `curl`. With neither, use the MCP tools above
+  (issue #505).
+- **Did an AI comment claim a triage-label change the issue never got?** This
+  happens (issue #325's comment said `moved to ready-for-agent` while the issue
+  stayed `ready-for-human`) and nothing else catches it. Run
+  `pnpm exec tsx scripts/check-triage-drift.ts [N]`. For each open issue it
+  compares the newest AI-authored comment (found by its ADR-0017 marker, because
+  `author_association` can't be trusted here; see the script's header comment)
+  against a phrase list for the five canonical labels, and prints mismatches as
+  JSON (issue #507). It is standalone, not part of any periodic sweep, and has
+  the same `gh`-less token fallback (issue #505).
 
 ## Polling: gate status is not webhook-delivered
 
-- **Check a PR's gate status** → `pull_request_read` with method `get_check_runs`,
-  *not* `get_status`: the combined-status API reports `total_count: 0` /
-  pending for Actions-based gates and misleads you into thinking the gate
-  hasn't run. **CI success is not delivered natively** — a green gate wakes a
-  subscribed session only through its doorbell comment (none on a fork PR), so
-  poll `get_check_runs` when you can't rely on it (re-poll at agent-completion
-  checkpoints, or `send_later` a wake when no agent is running; cadence in
-  [`pr-workflow.md`](./pr-workflow.md)). **`ScheduleWakeup` isn't the tool for
-  this** — it is `/loop`-only (CLAUDE.md; guard in `docs/agents/guards.md`,
-  issue #814).
-- **Re-running an old/existing workflow run does not recompute the merge
-  ref.** It re-checks-out that run's original `refs/pull/N/merge` snapshot —
-  so a re-run can still report red after the real fix has already merged.
-  Only a fresh push/branch-update recomputes `refs/pull/N/merge` and gets a
-  true re-check.
-- **This polling advice is scoped to non-webhook-delivered state like CI —
-  it does not apply to a dispatched Agent-tool subagent.**
-- **This polling recipe depends on `mcp__Claude_Code_Remote__*` and
-  `AskUserQuestion` calls, which can both fail transiently** — see
+- **Check a PR's gate with `pull_request_read` method `get_check_runs`, not
+  `get_status`.** The combined-status API reports `total_count: 0` / pending for
+  Actions-based gates, which wrongly suggests the gate has not run.
+- **CI success is not delivered natively.** A green gate wakes a subscribed
+  session only through its doorbell comment (none on a fork PR). Poll
+  `get_check_runs` when you can't rely on that: at agent-completion checkpoints,
+  or with `send_later` when no agent is running. Cadence lives in
+  [`pr-workflow.md`](./pr-workflow.md). `ScheduleWakeup` is not for this; it is
+  `/loop`-only (CLAUDE.md; guard in `docs/agents/guards.md`, issue #814).
+- **Re-running an old workflow run does not recompute the merge ref.** It
+  re-checks-out that run's original `refs/pull/N/merge` snapshot, so it can stay
+  red after the fix has merged. Only a fresh push or branch update recomputes
+  the ref and gives a true re-check.
+- **This polling advice is for state that webhooks don't deliver, like CI. It
+  does not apply to a dispatched Agent-tool subagent.**
+- **The polling recipe relies on `mcp__Claude_Code_Remote__*` and
+  `AskUserQuestion` calls, which can fail transiently.** See
   [`environment-caveats.md`](./environment-caveats.md) for the "permission
-  stream closed" caveat and its fallback (issue #145/#229/#359).
+  stream closed" caveat and its fallback (issues #145, #229, #359).
 
 ## Resolving deferred tool names
 
-Deferred MCP tools resolve only by **fully-qualified name** — `ToolSearch
-select:` needs `mcp__github__<name>` (e.g. `mcp__github__list_issues`); a bare
-name like `list_issues` won't resolve. This is host tooling (Claude Code's
-deferred-tool/`ToolSearch` mechanism), not something this repo controls, so
-documenting the failure modes precisely is the most this repo can do.
+Deferred MCP tools resolve only by **fully-qualified name**. `ToolSearch select:`
+needs `mcp__github__<name>` (for example `mcp__github__list_issues`); a bare
+`list_issues` fails. This is host behaviour this repo can't change.
 
-**Verified query forms:** `select:` + fully-qualified name resolves (comma-separated
-names too). `select:` + a bare or typo'd name fails with `No matching deferred
-tools found`. ⚠️ **Mixing a valid and a bare name in one `select:` call
-silently partial-succeeds** — it returns only the valid tool, no error about the
-dropped one. A bare name used as a plain keyword query (no `select:` prefix)
-resolves fine via semantic match — that's the recovery path when a `select:`
-guess fails.
+**Query forms:**
+- `select:` plus a fully-qualified name resolves, comma-separated lists too.
+- `select:` plus a bare or misspelled name fails with `No matching deferred
+  tools found`.
+- ⚠️ Mixing a valid and a bare name in one `select:` **silently partial-succeeds**:
+  you get only the valid tool and no error about the dropped one.
+- A bare name as a plain keyword query (no `select:`) resolves by semantic match.
+  That is the recovery when a `select:` guess fails. If it still comes back
+  empty, broaden it into a phrase.
 
-**The bad-name trap:** calling a tool directly by an unrecognized name — bare or
-a fully-qualified typo — gives the same generic `Error: No such tool available:
-<name>` either way, with no "did you mean" and no hint to retry via `ToolSearch`.
-That's the moment a plausible bare name gets wrongly abandoned as unsupported
-instead of retried as a keyword query.
-
-**Recovery tip:** if the retry above still comes back empty, broaden the
-string into a phrase rather than a bare name.
+**The bad-name trap:** calling a tool directly by an unknown name, bare or a
+misspelled full name, gives the same `Error: No such tool available: <name>`. It
+offers no "did you mean" and no hint to try `ToolSearch`. That is when a
+plausible bare name gets wrongly written off as unsupported instead of retried
+as a keyword query.
 
 **No MCP tool for issue dependencies** (wayfinding *Blocking*): `curl` the same
 REST endpoint with `$GH_TOKEN` and `Content-Type: application/json` (the proxy
 answers 415 without it). A summary read right after a write can be stale
 (issue #1373).
 
-**Known gap:** there is **no GitHub API to attach a file or image directly to
-an issue or issue comment** — neither REST nor GraphQL exposes an attachment
-endpoint for them. The available paths: (a) the GitHub web UI (needs a
-human), (b) commit the image to the repo and hotlink it in the issue/comment
-body, or (c) attach it as a release asset (issue #872).
+**Known gap:** no GitHub API attaches a file or image to an issue or issue
+comment (neither REST nor GraphQL). Your options: (a) the web UI (needs a
+human), (b) commit the image to the repo and hotlink it, or (c) attach it as a
+release asset (issue #872).
