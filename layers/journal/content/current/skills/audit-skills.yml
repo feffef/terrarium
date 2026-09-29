@@ -47,3 +47,27 @@ observations:
       limit, #1451 prune-trial verbatim-quote gap, #1452 visitor-loop
       decisions.md gap) for findings that cleared the significant/repeated
       bar, and recorded the rest as observations. Process held up end to end.
+  - date: 2026-09-29
+    note: >-
+      Self-check, independently re-verified: all 8 usedIn sessions
+      (2026-09-22 to 2026-09-28) hold up against GitHub/git — PR #1453
+      (Inventory-only, 8 files), issues #1449-#1452 all filed as claimed and
+      later closed via merged PR #1477 (normal lifecycle, not a
+      contradiction), PR #1433 (the 09-27 rewrite) correctly human-merged
+      since it touched ADR-0015, and the six pre-rewrite "clean sweep" runs'
+      internal claims (orphan-scan counts, resolvedBy citations) match
+      primary sources. Today's own run dispatched a fresh behaviour-check
+      subagent per qualifying Skill (11, since visitor-loop newly crossed the
+      ≥3-session bar), found two new silent failures (blog-post's step-7
+      fact-check dispatch silently skipped in 2/7 runs; dispatch-subagents'
+      cd-into-worktree footgun recurring 2 days running) and filed them as
+      #1479/#1480; the rest — audit-docs, audit-skills (self), auto-triage,
+      close-session, digest, frictions-to-fixes, log-session, prune-trial,
+      visitor-loop — came back clean, or the prior finding turned out to
+      already be resolved (log-session's word cap and prune-trial's
+      verbatim-quote gap were both retired by pruning the rule itself rather
+      than fixed; visitor-loop's decisions.md gap was actually fixed).
+      Closure completeness (step 3): orphan scan ran (917 merged PRs, 771
+      with a session), both orphan candidates already resolved-by-annotation,
+      no new orphans, and no human-prompted or manually-rescued closures this
+      window.

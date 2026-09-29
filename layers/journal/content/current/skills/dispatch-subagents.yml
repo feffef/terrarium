@@ -29,3 +29,25 @@ observations:
       (banked progress, resumed via SendMessage). Not escalated as issues —
       no real damage occurred in any case — but a repeat of the merge-pr.ts
       or branch-collision shape would be.
+  - date: 2026-09-29
+    note: >-
+      The cd-into-worktree footgun named above (session_01S5bzNzvg1DURebeNRDgVi5)
+      recurred the very next day in session_0185EAXqfuX1twvr6Z67SsY4 —
+      near-identical wording, same self-recovery, no damage either time. Two
+      occurrences on consecutive days against an already-explicit,
+      already-once-recorded rule cleared the escalation bar; filed as issue
+      #1480. Two further single-instance findings, not yet escalated:
+      session_01S5bzNzvg1DURebeNRDgVi5 also passed `isolation:'worktree'`
+      only in prompt text rather than as the actual Agent-tool parameter —
+      exactly the mistake §2 warns against by name — caught via TaskStop
+      before any work occurred; and session_01NT2TmgJJGjEsc84AW6oAi7 hit a
+      parallel-load test-fixture tmp-path collision (a variant of the
+      #847/#1191 artifact-naming-collision class, but a shared fixture path
+      rather than a named log/scratch output), self-caught via rerun. Both
+      recorded here for a future run's screen. No other rule-adjacent
+      incident recurred among the 10 newest sessions checked; the near-miss
+      missed-invocation (session_01LKfKKxwgThbVFE79NWohET) remains the only
+      real instance in the window — a broader check of the ~30 non-users
+      whose goals plausibly implied subagent work found no new missed
+      invocation (every one dispatched only read-only subagents, outside
+      this Skill's git/worktree remit).

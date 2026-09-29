@@ -79,3 +79,27 @@ observations:
       facet (#1355, an empty-output placeholder gap) surfaced 2026-09-26 and
       was fixed same-session by session_019yVYHWm1Fzsj3gBFWkHHU1 (PR #1436) —
       that mechanism is being actively maintained, unlike the word limit.
+  - date: 2026-09-29
+    note: >-
+      Issue #1450 is closed, but not via enforcement: merged PR #1477 is an
+      ADR-0027 prune trial that deleted the numeric word caps from SKILL.md
+      outright (goal/outcome are now open-ended "one-liners", summary "sized
+      to the session", `proven: true`). Confirmed the caps no longer appear
+      in SKILL.md. Going forward there is no 100-word cap to violate — future
+      runs should judge summary length by the new goal-based wording, not the
+      retired numeric cap. Separately, a new single-instance
+      SHELL-READ-DETECTION false positive turned up in
+      session_01C1P912tWDL3b8gtuQezv3Z (09-28, after #1454's fix merged): an
+      absolute-path `cat` following a `cd` was wrongly rebased onto the `cd`
+      target, crediting a nonexistent path — looks like a regression in
+      #1454's own cd-prefix-resolution fix (now over-rebasing absolute paths,
+      not just relative ones). n=1, not yet the "≥2 sessions" pattern; no
+      GitHub issue tracks this shape yet — recorded here for a future run's
+      Phase A screen. A second, distinct false-negative shape turned up
+      opportunistically while authoring this same run's own log: a dispatched
+      subagent's `git log --follow -p --since=... -- <path> | head -200` was
+      rejected as "not a reader command" even though `git log -p` genuinely
+      streams the target file's content as patch diffs — the opposite-miss
+      direction already on file for `git show <ref>:<path> | grep`. Also n=1;
+      `scripts/shell-reads.ts` likely needs a `git log ... -p`/`--patch` case
+      alongside its existing `git show`/`git diff` handling.
