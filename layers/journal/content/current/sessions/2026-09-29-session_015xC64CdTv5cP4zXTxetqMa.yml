@@ -1,11 +1,11 @@
 schemaVersion: 1
 session: session_015xC64CdTv5cP4zXTxetqMa
 startedAt: 2026-09-29T05:29:01Z
-endedAt: 2026-09-29T05:57:57Z
+endedAt: 2026-09-29T07:33:47Z
 kind: interactive
 goal: Clean up the Journal Skill Inventory page and fix how audit-skills grades Skills
-status: in-review
-outcome: "PR #1487 green: pill removed, code-review and grill-with-docs essential, audit-skills grades on felt absence"
+status: completed
+outcome: "PR #1487 merged: pill removed, code-review and grill-with-docs essential, audit-skills grades on felt absence"
 summary: "All human-instructed. (1) Removed the platform-op pill from SkillInventory.vue. (2) The owner asked why frequently used pack Skills show as supporting; I explained CONTEXT.md's conditional-essentialness definition, then on the owner's call re-read the session logs: code-review caught real defects in 6 sessions and skipping it cost a major friction, so it went essential; grill-with-docs (owner-invoked in 8) went essential; grilling, first promoted, was reverted to supporting once the logs showed all 8 grill-with-docs sessions also logged it as the engine. (3) The owner asked how audit-skills should read logs smarter; I diagnosed four causes (pack Skills never get logs read, frictions naming a Skill are ignored, composite and human-invoked use are indistinguishable, stale role text is never rechecked) and, on the owner's green light, added mentionedIn/humanInvokedIn to scripts/audit-skills.ts (unit-tested) and rewrote step 5 of the audit-skills Skill. A 30-day dry run gave the expected signals, with generic names like research over-matching, so the Skill says to read, not count."
 prs:
   - "1487"
@@ -42,22 +42,24 @@ frictions:
   - description: The audit-skills Inventory had graded code-review supporting on stale July-August role text; the owner had to spot it from the rendered page.
     solution: "Fixed in PR 1487: step 5 now re-reads every role each run and grades on mentionedIn/humanInvokedIn evidence."
     severity: moderate
-durationSec: 1736
+durationSec: 7486
 models:
-  claude-opus-5-5: 145
+  claude-opus-5-5: 159
 toolCounts:
   Grep: 1
   Read: 2
-  Bash: 50
-  ToolSearch: 2
+  Bash: 52
+  ToolSearch: 3
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
   Skill: 2
-  ReadNotifications: 9
-  mcp__Claude_Code_Remote__send_later: 1
+  ReadNotifications: 11
+  mcp__Claude_Code_Remote__send_later: 2
   Edit: 3
   mcp__github__update_pull_request: 2
+  mcp__github__pull_request_read: 3
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - layers/journal/content/current/skills/code-review.yml
   - .agents/skills/audit-skills/SKILL.md
