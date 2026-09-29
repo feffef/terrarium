@@ -170,8 +170,9 @@ const neighbours = computed<Record<string, Set<string>>>(() => {
 })
 
 const hot = ref<string | null>(null)
+const viewBox = useWebViewBox(() => ({ w: W, h: H }), () => nodes.value.map((n) => ({ x: n.x, y: n.y, r: R })))
 
-// Phone-width stand-in for the diagram (see theme.css, `.atlas-web-scroll`).
+// The words of the diagram at phone width, where its own text hides (see theme.css, `.atlas-web-list`).
 const bySlug = computed(() => Object.fromEntries(props.specimens.map((s) => [s.slug, s])))
 const pairs = computed(() =>
   props.edges.flatMap((e) => {
@@ -195,7 +196,7 @@ function strandClass(e: Edge) {
 <template>
   <div class="atlas-web">
     <div class="atlas-web-scroll">
-      <svg v-if="nodes.length" :viewBox="`0 0 ${W} ${H}`" role="group" aria-label="Food web of this biome">
+      <svg v-if="nodes.length" :viewBox="viewBox" role="group" aria-label="Food web of this biome">
         <defs>
           <marker
             :id="`${uid}-arrow`"

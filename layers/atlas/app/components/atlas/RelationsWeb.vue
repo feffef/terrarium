@@ -80,6 +80,11 @@ const view = computed(() => {
   return { spokes, fy, H }
 })
 
+const viewBox = useWebViewBox(
+  () => ({ w: W, h: view.value.H }),
+  () => [{ x: FX, y: view.value.fy, r: RF + 6 }, ...view.value.spokes.map((sp) => ({ x: sp.x, y: sp.y, r: R }))],
+)
+
 function figTransform(x: number, y: number): string {
   return `translate(${x.toFixed(1)} ${y.toFixed(1)}) scale(${FIG_SCALE}) translate(${-FIG_CX} ${-FIG_CY})`
 }
@@ -163,7 +168,7 @@ function spokeLeave() {
     <div class="atlas-web-scroll">
       <svg
         v-if="view.spokes.length"
-        :viewBox="`0 0 ${W} ${view.H}`"
+        :viewBox="viewBox"
         role="group"
         :aria-label="`${specimen.binomial}'s relations`"
       >
