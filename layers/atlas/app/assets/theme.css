@@ -481,7 +481,7 @@
 .atlas-web { position: relative; }
 .atlas-web svg { width: 100%; height: auto; display: block; overflow: visible; font-family: var(--atlas-data); }
 /* Phone width: the diagrams would either shrink to illegible labels or scroll
-   sideways past the fold (tried 2026-09-24…28, three visitors still lost), so
+   sideways past the fold, so
    the food web swaps to a plain list and the relations web hides — its list sits
    right below it. */
 .atlas-web-list { display: none; }

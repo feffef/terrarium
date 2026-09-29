@@ -267,7 +267,7 @@ function strandClass(e: Edge) {
         </NuxtLink>
       </svg>
     </div>
-    <ul v-if="nodes.length" class="atlas-web-list" aria-label="Food web, as a list">
+    <ul v-if="pairs.length" class="atlas-web-list" role="list" aria-label="Food web, as a list">
       <li v-for="(p, i) in pairs" :key="i">
         <NuxtLink :to="`/t/atlas/${biome}/${p.a.slug}`">{{ p.a.binomial }}</NuxtLink>
         {{ p.verb }}

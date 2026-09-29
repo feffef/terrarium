@@ -41,7 +41,7 @@ const sightings = computed(() =>
   observations.value.filter((o) => o.specimen === entry.value?.specimen.slug),
 )
 // The wing in catalogue order, for the entry's own previous/next.
-const neighbours = computed(() => {
+const siblings = computed(() => {
   const all = Object.values(specimensBySlug.value).sort((a, b) => a.binomial.localeCompare(b.binomial))
   const i = all.findIndex((s) => s.slug === entry.value?.specimen.slug)
   return i < 0 ? null : { prev: all[i - 1], next: all[i + 1] }
@@ -155,10 +155,10 @@ useSeoMeta({
           <AtlasFieldLog :observations="sightings" :specimens-by-slug="specimensBySlug" :biome="space" />
         </section>
 
-        <nav v-if="neighbours" class="specimen-nav" :aria-label="`More from ${meta.name}`">
-          <NuxtLink v-if="neighbours.prev" :to="`/t/atlas/${space}/${neighbours.prev.slug}`">← {{ neighbours.prev.binomial }}</NuxtLink>
+        <nav v-if="siblings" class="specimen-nav" :aria-label="`More from ${meta.name}`">
+          <NuxtLink v-if="siblings.prev" :to="`/t/atlas/${space}/${siblings.prev.slug}`"><span aria-hidden="true">← </span>{{ siblings.prev.binomial }}</NuxtLink>
           <NuxtLink :to="`/t/atlas/${space}`">all of {{ meta.name }}</NuxtLink>
-          <NuxtLink v-if="neighbours.next" :to="`/t/atlas/${space}/${neighbours.next.slug}`">{{ neighbours.next.binomial }} →</NuxtLink>
+          <NuxtLink v-if="siblings.next" :to="`/t/atlas/${space}/${siblings.next.slug}`">{{ siblings.next.binomial }}<span aria-hidden="true"> →</span></NuxtLink>
         </nav>
       </article>
 
