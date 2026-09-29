@@ -153,8 +153,7 @@ because its container ref was null in `onMounted`.)
 
 - **How to verify a UI change actually works**: drive the affected flow
   yourself and observe behavior before committing — this doc is the
-  browser/UI-specific reference for that (no repo-wide `verify` Skill
-  currently exists).
+  browser/UI-specific reference for that.
 - CLAUDE.md's self-verification section (the capture tooling's home, see
   above) — also has the DevTools-overlay caveat for `--dev` shots.
 - `docs/agents/tenant-layers.md` — Nuxt-layer render gotchas (auto-imports,

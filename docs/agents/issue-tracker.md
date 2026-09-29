@@ -2,10 +2,8 @@
 
 *Seeded from `.agents/skills/setup-matt-pocock-skills/issue-tracker-github.md`'s
 generic template and customized for this repo (the conventions, spec and
-wayfinding sections below are repo-specific, not part of the pack; the
-remote-session MCP-tool surface now lives in `github-integration.md`). Don't
-re-sync the two —
-this file is the live, repo-authoritative one; the pack template stays generic
+wayfinding sections below are repo-specific, not part of the pack). Don't
+re-sync the two — this file is the live, repo-authoritative one; the pack template stays generic
 and reinstallable (ADR-0005).*
 
 Issues and specs for this repo live as GitHub issues. Use the `gh` CLI for all operations.
@@ -28,12 +26,10 @@ tool surface.
   otherwise.
 - **`/triage`'s redundancy check applies to every open issue, no exemptions.**
   "Search for an existing implementation before actioning this issue" is not
-  optional for issues that read as *not yet actionable by design* — e.g. a
-  governance proposal intentionally sitting on a human greenlight.
-  Unactionable-by-design and unimplemented are two independent facts, not one:
-  a proposal can quietly ship anyway (via a different issue or PR) while it's
-  still open and unlabeled, and the redundancy check is exactly what catches
-  that. Check both, every time, even when an issue looks obviously pending.
+  optional even for issues that read as *not yet actionable by design* — e.g. a
+  governance proposal awaiting a human greenlight. Unactionable and
+  unimplemented are independent: such a proposal can quietly ship via another
+  issue or PR while it stays open and unlabeled.
 - **Before implementing a `ready-for-agent` issue, check for supersession —
   not just that the issue's named target artifact doesn't already exist.**
   Search for a merged PR or commit that already addressed the issue a

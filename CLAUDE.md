@@ -65,12 +65,11 @@ it with a tool.
   landing" below). Autonomy may *propose* freely but *implements* net-new only on human
   green-light (ADR-0003). **Opening that PR is automatic — don't ask** once a
   session has committed **substantive work** (ADR-0003's 2026-07-07 amendment
-  established this default and the closure/babysitting rules that follow from
-  it — read it there for that; the operational specifics below are maintained
-  here, not in the ADR).
+  sets this default and the closure/babysitting rules; the operational
+  specifics below live here, not there).
   **"Substantive work" means at least one commit on the feature branch
-  beyond the session-log-only commit** (the ADR-0009 direct-to-`main` exception
-  below): a real code/content/doc change, not mere exploration or reading.
+  beyond the session-log-only commit** (session logs commit directly to
+  `main`, ADR-0009): a real code/content/doc change, not mere exploration or reading.
   Without it, there's nothing to gate.
   **Before telling the user you're about to open a PR, check whether one
   already exists on the current branch** (e.g. `mcp__github__search_pull_requests`
@@ -94,24 +93,18 @@ it with a tool.
   behaviour — see ADR-0004's 2026-07-06 amendment for the exact axes); the sole
   exception is a `prune-trial` rewrite of an ADR that keeps what it decided (ADR-0027).
   The pinned eight above are the manifest-expansion/routing/catalog family
-  specifically (ADR-0004/ADR-0025 — its 2026-09-05 amendment folds
-  `shared/schemas/` into this same family, directory-scoped), not an
-  exhaustive list of every human-only file in the repo — "isolation logic" is
-  a deliberately unpinned catch-all that also covers e.g. `shared/manifest.ts`
-  (ADR-0025: defines the `tenant_space_collection` key it calls "the unit of
-  isolation") and the root `nuxt.config.ts` (ADR-0018 treats it as a
-  human-only surface), and `.github/actions/gate/action.yml`, which will hold
-  the Gate's own steps once the `gate.yml` shell swap is hand-applied — until
-  then `gate.yml`'s own inline steps still run (ADR-0026). Deciding whether a
-  *novel* file belongs in this catch-all is a standing judgement call, not yet
-  mechanized — closing that
-  gap needs issue #864's policy-as-data work first (tracked as CM-14/PR-11 in
-  `docs/research/rulebook-migration-table.md`).
+  (ADR-0004/0025; its 2026-09-05 amendment folds in `shared/schemas/`,
+  directory-scoped), not the whole human-only set: "isolation logic" is an
+  unpinned catch-all that also covers `shared/manifest.ts` (ADR-0025: defines
+  the `tenant_space_collection` key, "the unit of isolation"), the root
+  `nuxt.config.ts` (ADR-0018), and `.github/actions/gate/action.yml` (the
+  Gate's steps once the `gate.yml` shell swap is hand-applied; until then
+  `gate.yml`'s inline steps run, ADR-0026). Whether a *novel* file belongs in
+  the catch-all is a standing judgement call; mechanizing it needs issue #864's
+  policy-as-data work (CM-14/PR-11 in `docs/research/rulebook-migration-table.md`).
   Human-only constrains merging, not editing (`CONTEXT.md`'s `### Human-only`
   glossary term owns the rule) — e.g. `content.config.ts` is hand-editable
   (below), but a PR touching it still needs a human to merge.
-  `.github/actions/gate/action.yml` is the sharpest case — agents *can* push
-  it, unlike `.github/workflows/*`, and still must not merge it.
 - **Skills** are generic, repo-committed, and first-class (ADR-0005). The
   **external pack Skills** — keyed in `skills-lock.json` — are **off limits to
   edit**: a re-install clobbers any local change, so a genuine improvement
@@ -231,7 +224,8 @@ it with a tool.
   silently reports the wrong status and can truncate output. Guarded; the
   deny message names the fix (`docs/agents/guards.md`, issue #873).
 - **Start a command expected to run long (the full gate, `gate:scoped`, a
-  build, an e2e run) with `run_in_background: true` from the outset**, logging
+  build, an e2e run) with `run_in_background: true` from the outset** (main session only; a
+  dispatched subagent runs it foreground), logging
   to the scratchpad directory — a foreground run can silently auto-background
   at the 2-minute timeout with a wrong status (issue #1293).
 - **Waiting on a backgrounded long-running command with nothing else currently
@@ -334,10 +328,8 @@ every PR** (`.github/workflows/gate.yml`) — the run that must go green to merg
 without a gated PR" rule rests on agents choosing to open one. See
 `docs/research/github-branch-protection-vs-autonomous-log-commits.md` for the
 full history, and re-verify before relying on it — it's a dated snapshot, not
-a live check), so you don't run the full gate locally yourself. **Known gap:** `gate.yml` currently runs a stale subset of
-`pnpm gate` — see `docs/proposals/879-gate-yml-thin-shell.md` (which supersedes
-the earlier `630-add-verify-mermaid-to-gate-workflow.md`) for the fix and why,
-pending a human to apply it. Both the keyed collections
+a live check), so you don't run the full gate locally yourself. **Known gap:** `gate.yml` runs a stale subset of
+`pnpm gate`; the fix awaits a human, see `docs/proposals/879-gate-yml-thin-shell.md`. Both the keyed collections
 (Ground rules above) and the routing map derive from the manifests at build
 time — no regenerate step needed.
 
@@ -411,10 +403,6 @@ download) — it's the lower-level capture that `preview.ts shot` uses under the
 sharp edges that make "it looked fine" or "the test passed" untrustworthy — is
 single-homed in `docs/agents/verifying-ui-changes.md`.** Read it before
 eyeballing a render, debugging a layout bug, or asserting a style took effect.
-The headline rules: SSR HTML isn't proof (verify the rendered DOM); a screenshot
-confirms a render happened, not that a *specific* style applied (probe computed
-style); reach for a debug marker before cache-busting theories; drive real
-interactions with an ad-hoc `playwright-core` script via `resolveChromiumPath()`.
 The *how-to-capture* tooling (`scripts/preview.ts`, `scripts/screenshot.ts`)
 stays above.
 
@@ -507,10 +495,6 @@ The land-a-gated-PR recipe (gate → green check → merge) and the per-tier mer
 ### Guest & external contributions
 
 How contributions from outside our own Claude Code toolchain are handled — the guest-driven demo pipeline (our agents build for invited Public issue-filers) versus external-agent fork PRs (a different harness submits its own PR + session log). The trust boundary, the `external` session-log marking, in-PR session-log delivery, and merge rules. See `docs/agents/guest-contributions.md`.
-
-### Verifying UI changes
-
-See the "Verifying UI changes" subsection under Self-verification above for the headline rules, and `docs/agents/verifying-ui-changes.md` for the full methodology.
 
 ### Other research notes
 

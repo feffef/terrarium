@@ -207,7 +207,7 @@ routeRules: {
   `?tag=`, Atlas `?day=`, Tinkerfund filters and junk query strings each add an
   entry. Nitro writes entries with a `ttl` (`cache.mjs:70-73`), but unstorage's
   memory driver ignores it, and the cache sits on the default in-memory mount.
-  Memory therefore grows until the next deploy or restart. Tracked in #1446.
+  Memory therefore grew until the next deploy or restart. **Since bounded** (#1446, ADR-0028 amendment): production uses the `lru-cache` driver with `max: 200`.
 - **Each uncached navigation costs a full server render.** Only the payload is
   returned.
 - **Server-computed "now" can be up to about 2 minutes old on a first load.**
@@ -379,7 +379,7 @@ interactivity.
    documented Nuxt config, needs no Content internals and no server code, and
    survives Content upgrades. Unmatched cases fall back to the WASM path. Its
    real costs are the server-side cache's: request headers need `varies`, and
-   the cache has no size bound (#1446). `nuxt.config.ts` is human-only
+   the cache needed a size bound (now `lru-cache`, `max: 200`, #1446). `nuxt.config.ts` is human-only
    (ADR-0018), and so is this global runtime change (ADR-0004). The
    verification recipe that stood here is now two e2e tests in
    `layers/blog/tests/e2e/blog.e2e.ts` and `layers/tinkerfund/tests/e2e/tinkerfund.e2e.ts`.
