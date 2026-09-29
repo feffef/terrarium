@@ -1,0 +1,66 @@
+schemaVersion: 1
+session: session_01PFbH8DingPRHXom2siyggD
+startedAt: 2026-09-29T13:41:22Z
+endedAt: 2026-09-29T14:05:58Z
+kind: interactive
+goal: "Add one Tinkerfund Campaign: the Passport Presence Monitor (TF-0024)"
+status: in-review
+outcome: Campaign page, chatter, figures and e2e entry built; full gate green; PR 1491 open
+summary: "The session's first prompt was a bare \"Ok\", so I stopped and asked what to do, per CLAUDE.md. The user then invoked /tinkerfund-campaign. Following their preference to be asked before I assume, I ran crowd.mjs over the catalog and asked three questions. The user chose the invention (Passport Presence Monitor, from four ideas I offered), the state (Live and just funded, a pattern the catalog lacked) and to reuse an existing Inventor. I picked Priya Raman because she already makes Travel equipment. Everything else followed the Skill: page, numbers (103% funded, launched 4 days ago), 7 comments, 2 Updates and one e2e list entry. Home's assertions held unchanged because the Mug stays featured and the Keyboard stays in Ending soon. A Fable subagent in a worktree drew four figures and pushed them to a side branch, and I fast-forwarded them in after reviewing its preview sheet. The full gate passed and I looked at light and dark screenshots of the page, Home and Discover. PR 1491 opened automatically per ADR-0003."
+prs:
+  - "1491"
+docsRead:
+  - path: .agents/skills/tinkerfund-campaign/ILLUSTRATION.md
+    reason: (no reason given)
+  - path: layers/tinkerfund/content/prod/pages/campaigns/passport-presence-monitor.md
+    reason: (read before editing)
+  - path: .agents/skills/tinkerfund-campaign/tools/lib.mjs
+    reason: (no reason given)
+  - path: .agents/skills/tinkerfund-campaign/tools/preview.mjs
+    reason: (no reason given)
+  - path: .agents/skills/tinkerfund-campaign/tools/apply.mjs
+    reason: (no reason given)
+skillsUsed:
+  - name: tinkerfund-campaign
+    reason: user-invoked; the whole procedure
+  - name: dispatch-subagents
+    reason: brief for the illustrator subagent
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: preview.ts and screenshot.ts have no dark-theme option, yet the Skill's step 7 asks for screenshots in both themes; I hand-rolled a throwaway playwright-core script (first try imported 'playwright', not installed)
+    solution: Add a --dark (colorScheme) flag to scripts/screenshot.ts and preview.ts shot
+    severity: minor
+  - description: The Stop hook flagged an unpushed commit while my backgrounded push+gate command was still running; I pushed again and got a no-op
+    solution: Push in its own foreground call before backgrounding the gate
+    severity: nit
+durationSec: 1475
+models:
+  claude-opus-5-5: 78
+toolCounts:
+  Bash: 29
+  AskUserQuestion: 1
+  Write: 1
+  Agent: 1
+  Read: 5
+  ToolSearch: 1
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  Skill: 2
+filesEdited:
+  - layers/tinkerfund/content/prod/pages/campaigns/passport-presence-monitor.md
+docsReadViaShell:
+  - .agents/skills/tinkerfund-campaign/ILLUSTRATION.md
+  - .agents/skills/dispatch-subagents/SKILL.md
+subagents:
+  - task: Draw Passport Monitor figures
+    model: fable
+gitBranch: ccr-ce8564b3-7r6hta
+entrypoint: remote_mobile
+cliVersion: 2.1.284
+ideas:
+  - Give scripts/screenshot.ts a --theme dark|light flag (Playwright colorScheme), so Skills that require both-theme screenshots (tinkerfund-campaign step 7) stop needing ad-hoc scripts
+landedBy: Stop
