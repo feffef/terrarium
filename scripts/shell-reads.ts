@@ -132,9 +132,14 @@ function extractGitShowPath(tokens: Token[]): string | undefined {
  *  instruction docs and went uncredited — neither #1206/PR #1241 (the colon
  *  form) nor #1247/PR #1250 (grep/rg output-gating) covers it. */
 function extractGitShowDiffPaths(tokens: Token[]): string[] | undefined {
-  if (tokens.length < 2 || tokens[1]!.quoted || tokens[1]!.text !== 'show') return undefined
+  if (tokens.length < 2 || tokens[1]!.quoted) return undefined
   const sepIdx = tokens.findIndex((t) => !t.quoted && t.text === '--')
   if (sepIdx < 2) return undefined
+  // `git log` streams file content only with a patch flag (`-p`, `--patch`, or a combined short flag).
+  const isPatchLog =
+    tokens[1]!.text === 'log' &&
+    tokens.slice(2, sepIdx).some((t) => !t.quoted && /^(--patch|-[a-z]*p[a-z]*)$/.test(t.text))
+  if (tokens[1]!.text !== 'show' && !isPatchLog) return undefined
   const rest = tokens.slice(sepIdx + 1).map((t) => t.text)
   return rest.length > 0 ? rest : undefined
 }
@@ -190,7 +195,9 @@ export function isInstructionDoc(path: string): boolean {
  *  reported as a near-miss so an unresolvable read is visible rather than silent. */
 function isGlobbedInstructionDoc(path: string): boolean {
   if (!GLOB_OR_VAR.test(path)) return false
-  return isInstructionDoc(path.replace(new RegExp(GLOB_OR_VAR.source, 'g'), 'x'))
+  const literal = path.replace(new RegExp(GLOB_OR_VAR.source, 'g'), 'x')
+  // An extensionless glob (`docs/adr/0003*`) can still resolve to a `.md` doc.
+  return isInstructionDoc(literal) || isInstructionDoc(`${literal}.md`)
 }
 
 /** `quoted` is load-bearing, not bookkeeping: every flag rule below must ignore a

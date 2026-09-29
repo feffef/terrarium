@@ -150,6 +150,15 @@ describe('git show <ref> -- <path> — the diff form the colon-form miss (#1206)
     ])
   })
 
+  it('counts `git log -p -- <path>` when the output shows a diff, but not a patch-less `git log -- <path>`', () => {
+    const output = 'diff --git a/docs/agents/guards.md b/docs/agents/guards.md\n--- a/docs/agents/guards.md'
+    const scan = (command: string) => scanShellReads([{ command, output }], rel).paths
+    expect(scan('git log --follow -p --since=2026-09-01 -- docs/agents/guards.md | head -200')).toEqual([
+      'docs/agents/guards.md',
+    ])
+    expect(scan('git log --oneline -- docs/agents/guards.md')).toEqual([])
+  })
+
   it('still falls through for a plain `git show <sha>` with no `--` and no colon', () => {
     expect(paths('git show HEAD~1')).toEqual([])
     expect(rules('git show HEAD~1')).toEqual([])
@@ -295,6 +304,10 @@ describe('resolveGlob — resolving a glob against the real tree (issue #1246)',
   it('credits a single-match glob — the exact miss #1246 reported', () => {
     expect(paths('sed -n 30,70p docs/adr/0017-*.md', fakeResolveGlob)).toEqual(['docs/adr/0017-one-thing.md'])
     expect(rules('sed -n 30,70p docs/adr/0017-*.md', fakeResolveGlob)).toEqual([])
+  })
+
+  it('credits an extensionless single-match glob — `docs/adr/0017*` names one .md doc', () => {
+    expect(paths('grep -n "x" docs/adr/0017*', fakeResolveGlob)).toEqual(['docs/adr/0017-one-thing.md'])
   })
 
   it('keeps the existing near-miss for a zero-match glob — never invents a file', () => {
