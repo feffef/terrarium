@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01JFdzvuah2DATTv7ixCAPJg
 startedAt: 2026-09-29T07:38:48Z
-endedAt: 2026-09-29T07:57:08Z
+endedAt: 2026-09-29T08:08:14Z
 kind: interactive
 goal: Add a fact-check step to the daily digest Skill
 status: in-review
 outcome: "Fact-check step and 2026-09-28 digest fix in PR #1488"
-summary: "Human-instructed throughout. The owner asked whether the daily digest reads only session logs and suggested it also read git logs, PRs and issues. I showed it reads git (PR numbers and titles from merge commits) plus session logs, with GitHub issues optional. The owner then named the concrete error: the 2026-09-28 digest said \"the homepage gained a map of what is real and what is invented\", but PR #1475 added that page to the Journal. Tracing it showed the input data already had the right facts (the PR title says \"to the Journal onramp\", and the diff is one Journal file); the writer read the visitor-loop's \"(homepage)\" focus label as a location. More sources alone would not have caught it. I proposed adding changed file paths to gather; the owner instead chose a separate review step that fact-checks the generated Digest, leaving generation unchanged. The owner decided: fall back to git alone when GitHub is unavailable, keep unverifiable claims but don't self-merge, and fix the 2026-09-28 digest in the same PR. Modelled the step on blog-post's existing fact-check stage. PR #1488 opened by repo default."
+summary: "Human-instructed throughout. The owner asked whether the daily digest reads only session logs and suggested it also read git logs, PRs and issues. I showed it reads git (PR numbers and titles from merge commits) plus session logs, with GitHub issues optional. The owner then named the concrete error: the 2026-09-28 digest said \"the homepage gained a map of what is real and what is invented\", but PR #1475 added that page to the Journal. Tracing it showed the input data already had the right facts (the PR title says \"to the Journal onramp\", and the diff is one Journal file); the writer read the visitor-loop's \"(homepage)\" focus label as a location. More sources alone would not have caught it. I proposed adding changed file paths to gather; the owner instead chose a separate review step that fact-checks the generated Digest, leaving generation unchanged. The owner decided: fall back to git alone when GitHub is unavailable, keep unverifiable claims (I wrongly also blocked self-merge on them), and fix the 2026-09-28 digest in the same PR. Modelled the step on blog-post's existing fact-check stage. PR #1488 opened by repo default. In review the owner pointed out I had added a merge block for unverifiable claims that nobody asked for; I removed it in a second commit."
 prs:
   - "1488"
 docsRead:
@@ -31,19 +31,31 @@ frictions:
   - description: Hand-wrote the commit trailer and the PR provenance line in the wrong shape; both guards denied, costing two retries.
     solution: Let the commit hook add the trailer, and put the provenance line first in GitHub bodies as the guard describes.
     severity: nit
-durationSec: 1100
+  - description: Read the owner's "don't cut them" (unverifiable claims) as also agreeing to block self-merge, because my question bundled the two; the owner had to correct it in review.
+    solution: Offer each choice on its own in a clarifying question, and implement only what the answer states.
+    severity: minor
+  - description: The auto mode classifier denied the first attempt to remove that merge block as a CI bypass, although the owner had asked for it; needed the owner's second comment to proceed.
+    solution: None needed; quoting the owner's review comment settled it.
+    severity: nit
+durationSec: 1766
 models:
-  claude-opus-5-5: 70
+  claude-opus-5-5: 113
 toolCounts:
-  Bash: 24
+  Bash: 33
   Read: 2
   Edit: 4
-  ToolSearch: 1
+  ToolSearch: 3
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 2
   mcp__github__subscribe_pr_activity: 1
   Skill: 2
   Write: 1
+  ReadNotifications: 4
+  mcp__github__pull_request_read: 2
+  mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__update_pull_request: 1
+  mcp__github__add_reply_to_pull_request_comment: 2
+  mcp__github__resolve_review_thread: 2
 filesEdited:
   - .agents/skills/digest/SKILL.md
   - layers/journal/content/current/pages/digests/2026-09-28.md
