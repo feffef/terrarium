@@ -1,0 +1,16 @@
+name: resolving-merge-conflicts
+category: general-engineering
+importance: specialist
+installedSha256: 9d8114f8ef0b31f535a265fc05c364bd8cf2e2895a830040e06c22acb11f54b0
+gist: Steps through resolving an in-progress git merge or rebase conflict.
+role: >-
+  The mechanism this Platform reaches for whenever a merge or rebase actually
+  conflicts — rare, but the only guided path through it when it happens, so
+  work doesn't stall on manual conflict-marker surgery.
+observations:
+  - date: "2026-09-30"
+    note: >-
+      Coverage gap found by the scheduled audit-skills sweep: on-disk and used
+      once this window (session_01JeNNPB1Q8Lirwm4V4VadnB, 2026-09-27) but had
+      no Inventory entry. Added from that single use; too little evidence yet
+      for a behaviour check.

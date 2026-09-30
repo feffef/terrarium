@@ -50,3 +50,17 @@ observations:
       re-confirmed clean (3-model dispatch, ≥2-visitor consensus, code-review
       on both PRs, all 14 PRs merged); no new revert beyond the already-known
       #1405/#1410 case found in the Skill's full history to date.
+  - date: "2026-09-30"
+    note: >-
+      Re-checked (audit-skills behaviour check): the newest run since #1452's
+      fix, session_01DNo53zg7vsVjGYX6xb7VZN (2026-09-29, atlas focus),
+      dispatched 3-model visitors correctly and merged both PRs (#1492,
+      #1493) with confirmed ≥2-visitor consensus — but its own log reports
+      the owner-memory step "was not gathered this run, so no new lines were
+      added," logged as a self-caught minor friction. n=1 outright skip, not
+      yet a pattern. Separately, a real live test of the #1452 fix is now
+      pending: PR #1494 (owner-authored, merged 2026-09-29T22:16:46Z, after
+      #1492) explicitly reworks what #1492 built, but no visitor-loop run has
+      fired since #1494 merged, so decisions.md hasn't had the chance to pick
+      it up yet. Worth checking next run's decisions.md diff for both the
+      #1492/#1494 case and whether the owner-memory step runs at all.

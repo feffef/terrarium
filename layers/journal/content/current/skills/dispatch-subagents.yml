@@ -51,3 +51,15 @@ observations:
       whose goals plausibly implied subagent work found no new missed
       invocation (every one dispatched only read-only subagents, outside
       this Skill's git/worktree remit).
+  - date: "2026-09-30"
+    note: >-
+      Re-checked (audit-skills behaviour check), 10 newest sessions (09-27
+      through 09-29): no stranded work, no merge-pr.ts dispatched to a
+      subagent, no new branch/worktree collision. Issue #1480
+      (cd-into-worktree) is still open/unassigned/unfixed but has not
+      recurred a third time in this batch. Screened all 62 nonUsers by goal,
+      opened 16 of the plausible ones: every dispatch found was strictly
+      read-only (behaviour-check/review/fact-check/visitor/research agents);
+      no new missed invocation. The prior window's near-miss
+      (session_01LKfKKxwgThbVFE79NWohET) remains the only real instance to
+      date.

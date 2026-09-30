@@ -14,4 +14,20 @@ role: >-
   Routine, this Skill is the first of the self-improvement Skills to go live
   (ADR-0003/0015) — no longer a deferred job. Reach for it manually to catch
   the Journal up after a run of activity the schedule hasn't covered yet.
-observations: []
+observations:
+  - date: "2026-09-30"
+    note: >-
+      First audit-skills behaviour check, 7 usedIn sessions (Digests for
+      2026-09-23 through 09-29). 6/7 clean (files, PRs, retention sweeps all
+      verified). 1 silent failure: session_01D6NdBrbYTiiCPZwkP3L98b (2026-09-29
+      log, PR #1478, the 2026-09-28 Digest) shipped a factually wrong claim —
+      "the homepage gained a map of what is real and what is invented" — when
+      PR #1475 actually added that page to the Journal, not the homepage. It
+      stood live on main for ~7h until a human caught it; a different session
+      (session_01JFdzvuah2DATTv7ixCAPJg) fixed the wording and, in the same
+      commit (98ece44f), added SKILL.md's fact-check step that would have
+      caught this class of error. At the time session_01D6NdBrbYTiiCPZwkP3L98b
+      ran, no fact-check step existed yet, so it didn't violate its own
+      instructions — but it still shipped an unverified wrong claim. Not
+      escalated as an issue: the gap that caused it is already closed by the
+      fix commit itself, so there is no open action item left for a human.

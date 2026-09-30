@@ -36,3 +36,15 @@ observations:
       tally. Rotation gate (never same Persona twice, forced if missing from
       last 4) verified clean across the full merge sequence; all 7 PRs
       merged as claimed; no reverts found.
+  - date: "2026-09-30"
+    note: >-
+      Re-verified (audit-skills behaviour check), same 7 sessions: #1479's
+      finding does not hold at 2/7 — a third instance turned up.
+      session_01YWMTQ7ZdjaYab177AJNWXx (PR #1301, Karen, 09-23), previously
+      cleared by the 09-29 check as a genuine fact-check run, in fact shows
+      the identical gap (2 Agent dispatches only, no fact-check tally,
+      self-verification language in the PR body). Recurrence is 3/7, not
+      narrowing; commented the correction onto #1479 rather than filing a
+      new issue. The other 5 sessions (#1336, #1394, #1431, #1472, #1489)
+      still show genuine independent fact-check dispatches with explicit
+      tallies.

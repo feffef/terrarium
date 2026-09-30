@@ -61,3 +61,16 @@ observations:
       as of today — the 09-28 run's window check narrowly missed the floor
       and no run has occurred since; likely just awaiting the next scheduled
       fire, not a real drop. No reverts found.
+  - date: "2026-09-30"
+    note: >-
+      Re-checked (audit-skills behaviour check), 7 newest sessions: SKILL.md's
+      verbatim-quote clause confirmed gone. The ADR-0017 provenance trial is
+      now judged ("holds", commit 62b5a45d, 2026-09-29) — the ledger gap
+      resolved itself as expected. All 7 sessions deliver clean against the
+      current contract; ledger parses cleanly (6 open trials, no malformed
+      entries); no reverts found. New near-miss, same narrow-margin shape as
+      the ADR-0017 case: the docs/agents/domain.md whole-file-rewrite trial
+      became judgeable at 2026-09-29T13:36:01Z and the day's run (started
+      13:18:30Z) missed it by ~17 minutes — as of this check it's ~11-24h
+      past floor with no run since. Likely just awaiting today's scheduled
+      fire; worth confirming it clears after that run.

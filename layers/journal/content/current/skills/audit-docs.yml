@@ -45,3 +45,11 @@ observations:
       holds. audit-docs itself is not at fault (a `.ts` file is outside its
       doc-tiers charter) — this corrects the Inventory record, not
       audit-docs's own behavior.
+  - date: "2026-09-30"
+    note: >-
+      Re-verified (audit-skills behaviour check), one newly-checked session:
+      session_01SMWeh3VabxWtpXBdoMbpqF (PR #1486, 2026-09-29) merged one
+      commit across CLAUDE.md, docs/agents/*, three Skill files, and a
+      research note, matching its log's claimed fix list line-for-line; no
+      ADR/CI/routing/human-only surface touched, no issue filed. The
+      #1266→#1486 commit chain shows no revert. Still clean.
