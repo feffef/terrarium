@@ -23,7 +23,8 @@ detail is the one unforgivable failure: it breaks each Persona differently (Davi
 loses credibility, Karen loses her receipts, Kevin loses his informed fear). That
 rigor applies to **every** draft this Skill produces, including the two a run
 always ends up discarding — a rejected draft is still a real document a reviewer
-read and judged; it doesn't get a lower bar because it might not ship.
+read and judged; it doesn't get a lower bar because it might not ship. (Step 8's losing reply
+drafts are the one exception: grounded, but not fully citation-checked.)
 
 > **Keep it short** (CLAUDE.md) governs it if this run touches the Platform or
 > its agent instructions.
@@ -227,8 +228,8 @@ screenshot, and an opened PR is not.
 
 **Then fact-check it.** Spawn a fresh read-only subagent (`model: "sonnet"`,
 with repo and GitHub read access) given the saved post's path and step 5's
-verification rule. It lists every factual claim — every causal/agency sentence
-above all — checks each against its primary source, and returns one row per
+verification rule. It lists every factual claim — title, description, and
+pingback blurb included; every causal/agency sentence above all — checks each against its primary source, and returns one row per
 claim: claim · source checked · verdict `ok` / `wrong` / `unverifiable`. Fix or
 cut every `wrong` and `unverifiable` claim; don't argue the verdict. A
 causal/agency claim the PR's review thread or timeline can't settle is cut — kept
@@ -245,8 +246,9 @@ independent review pass, the topic (and, for a bare-invocation run, the Persona)
 of the other two candidates, the one-line reason the reviewer preferred this one,
 and — one line — the rotation state A0 read (who was `last`, who was starved) so
 the persona choice is auditable, and the fact-check's tally ("N claims checked,
-M fixed or cut"). That whole provenance is worth a few sentences,
-not a full transcript.
+M fixed or cut"). A step 8 reply's body instead names the post it answers (and
+that post's PR), the other Personas' reply angles, and the reader's reason.
+That whole provenance is worth a few sentences, not a full transcript.
 
 Follow `docs/agents/pr-workflow.md`'s "Closing a self-merged chartered run"
 sequence — allowed only while the PR stays within this Skill's ADR-0003
@@ -263,16 +265,19 @@ above — is open and honestly awaiting a human.
 
 ## 8. Optional follow-up reaction
 
-Once the post has merged, ask whether another Persona would read the **same
-event** differently enough to be worth a reply. Draft one reaction to the
-merged post per other Persona (rotation doesn't restrict who replies), as
-scratch files, each meeting step 5's rigor. A reply earns its place only if it
-brings a relevant fact the post didn't use, reads the same fact to a different
-conclusion, or notices a different aspect of the event — an echo in another
-voice fails.
+Only if the post merged (an escalated PR ends the run here), ask whether
+another Persona would read the **same event** differently enough to be worth a
+reply. Draft one reaction to the merged post per other Persona (rotation
+doesn't restrict who replies), as scratch files grounded in real sources; full
+step 5 rigor is owed by the winner, before it ships. A reply earns its place
+only if it brings a relevant fact the post didn't use, reads the same fact to a
+different conclusion, or notices a different aspect of the event — an echo in
+another voice fails.
 
-Have a fresh A5-style reader judge the drafts with **"none"** as a valid
-verdict. On "none", stop — say so in the session log. Otherwise run the winner
+Have a fresh reader (A5's setup) read the merged post plus the reply drafts and
+judge each against that bar alone — the event is the same for all of them —
+with **"none"** as a valid verdict. On "none", stop — say so in the session
+log. Otherwise run the winner
 through steps 2 and 5–7 as its own post (reaction frontmatter, step 6
 pingback, own gated PR). One reply per run at most; the original Persona
 doesn't answer back in the same run.
