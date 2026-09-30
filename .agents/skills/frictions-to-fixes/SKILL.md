@@ -39,7 +39,9 @@ Its brief:
   history; save the deep archaeology for candidates with no in-window
   resolution. Count recurrence from the **unresolved** occurrences only.
 - **Read the latest 20 session logs** via `pnpm exec tsx scripts/session-frictions.ts`
-  (`--window N` to change the count; bare `tsx` isn't on PATH). This is a **recency window, not a
+  (`--window N` to change the count; bare `tsx` isn't on PATH). Large output goes to
+  `/tmp/session-frictions-output.json` and stdout gets only a notice — read the file, or
+  pass `--out PATH`; don't parse stdout. This is a **recency window, not a
   sample** — read every session in it, don't chase frictions from older,
   likely-gone sessions. Each record's `id`/`file` point back to the full log —
   re-read it directly when a candidate needs more context than the triage

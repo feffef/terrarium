@@ -31,6 +31,10 @@ sessions likely edit. The same applies before *starting* work a Trusted user
 just directed: fetch first (`git fetch origin <branch>` + inspect the latest
 commits) — a concurrent session may already have pushed that exact change.
 
+**To read a file from main, use `git show origin/main:<path>`** — never
+`git checkout <ref> -- <path>` (stages it into the index) or
+`git checkout origin/main` (detaches HEAD).
+
 ## A clean merge is not proof of correctness
 
 Git only flags a conflict where both sides touched overlapping lines. A
