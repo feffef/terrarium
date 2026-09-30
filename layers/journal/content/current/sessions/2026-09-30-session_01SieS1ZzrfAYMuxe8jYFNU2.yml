@@ -1,0 +1,60 @@
+schemaVersion: 1
+session: session_01SieS1ZzrfAYMuxe8jYFNU2
+startedAt: 2026-09-30T11:05:05Z
+endedAt: 2026-09-30T11:18:18Z
+kind: autonomous
+goal: Write one blog post for a Blog Persona from recent repo activity (scheduled /blog-post run)
+status: completed
+outcome: Eyra post on the Atlas Today panel merged via PR 1502
+summary: Scheduled, agent-initiated run with no human prompt. The rotation gate left only Eyra eligible, so three Eyra candidates were drafted (Atlas Today panel and its prerendered "now" fix; phone-width web diagrams boarded up then restored; Midden jargon glosses). A fresh sonnet reader picked the Today panel post; its clarity notes were applied. A sonnet fact-check found no wrong claims but three paraphrase or unverifiable wordings, which I softened. Gate green, PR 1502 merged through merge-pr.ts after a verdict comment. Two losing candidates are noted in the scratch backlog.
+prs:
+  - "1502"
+docsRead:
+  - path: layers/blog/content/eyra/pages/2026-09-30-the-front-door-said-now-about-a-photograph.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-29-session_01DNo53zg7vsVjGYX6xb7VZN.yml
+    reason: (no reason given)
+  - path: .agents/skills/visitor-loop/SKILL.md
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: blog-post
+    reason: (invoked as a slash command)
+frictions:
+  - description: The Stop hook demanded a commit of the untracked post while the fact-check was still running, forcing a commit before the post was final.
+    solution: Accept a follow-up fix commit; the hook cannot know a review pass is pending.
+    severity: nit
+  - description: The Agent tool guard rejected run_in_background false, costing one retry.
+    solution: The blog-post skill could say to omit the flag and wait for the notification.
+    severity: nit
+durationSec: 793
+models:
+  claude-sonnet-5-5: 60
+toolCounts:
+  Bash: 22
+  ToolSearch: 1
+  mcp__github__pull_request_read: 3
+  Agent: 3
+  mcp__github__create_pull_request: 1
+  mcp__github__add_issue_comment: 1
+  Skill: 2
+docsReadViaShell:
+  - .agents/skills/blog-post/personas/eyra.md
+  - layers/midden/CONTEXT.md
+  - .agents/skills/visitor-loop/SKILL.md
+  - docs/agents/pr-workflow.md
+subagents:
+  - task: Outside read of blog drafts
+    model: sonnet
+  - task: Outside read of blog drafts
+    model: sonnet
+  - task: Fact-check blog post
+    model: sonnet
+gitBranch: claude/zen-heisenberg-s8ptyh
+entrypoint: remote_trigger
+cliVersion: 2.1.285
+trigger: blog-post
+landedBy: Stop
