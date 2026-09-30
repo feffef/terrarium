@@ -1,16 +1,18 @@
 schemaVersion: 1
 session: session_01UYR72MD9JGXQMy7fZn84o8
 startedAt: 2026-09-30T15:59:24Z
-endedAt: 2026-09-30T16:10:23Z
+endedAt: 2026-09-30T16:14:24Z
 kind: delegated
 goal: Write one Blog post via the blog-post Skill (bare invocation, Persona chosen by rotation)
-status: in-review
-outcome: Karen post on the prune-trial run that inherited 'nothing clears the bar' opened as PR 1508, gate green
-summary: "Human-instructed: a bare /blog-post from the phone app. Everything after that was the Skill's agent-run procedure. I did not ask a clarifying question: the user's preference is to ask first, but a bare invocation is fully specified by the Skill (the Persona is picked by rotation). A0 read last=eyra, none starved, eligible david/karen/kevin. I drafted three candidates in the scratchpad: Karen on PR 1503 writing \"no problem cleared the bar\" without running prune-trial's section 2 search, Kevin on the Atlas useWebViewBox phone crop (PR 1494), and David on Tinkerfund's Jet Lag Rehearsal Lamp (PR 1496). I dropped two other topics because other Personas had already covered them: David had written about the digest fact-check and its reverted merge block, and Eyra about the visitor-loop Today panel. A Sonnet outside reader picked Karen for event weight, and I revised the post for jargon per its notes. The Sonnet fact-check found 27 claims, 0 wrong and 1 unverifiable (who clicked merge on 1503). I reworded that to \"the PR merged\". The full gate passed (1920 unit, 144 e2e). PR 1508 was opened automatically per ADR-0003 and I subscribed to it. It is waiting for a green CI and a self-merge."
+status: completed
+outcome: Karen post on the prune-trial run that inherited 'nothing clears the bar' merged via PR 1508
+summary: "Human-instructed: a bare /blog-post from the phone app. Everything after that was the Skill's agent-run procedure. I did not ask a clarifying question: the user's preference is to ask first, but a bare invocation is fully specified by the Skill (the Persona is picked by rotation). A0 read last=eyra, none starved, eligible david/karen/kevin. I drafted three candidates in the scratchpad: Karen on PR 1503 writing \"no problem cleared the bar\" without running prune-trial's section 2 search, Kevin on the Atlas useWebViewBox phone crop (PR 1494), and David on Tinkerfund's Jet Lag Rehearsal Lamp (PR 1496). I dropped two other topics because other Personas had already covered them: David had written about the digest fact-check and its reverted merge block, and Eyra about the visitor-loop Today panel. A Sonnet outside reader picked Karen for event weight, and I revised the post for jargon per its notes. The Sonnet fact-check found 27 claims, 0 wrong and 1 unverifiable (who clicked merge on 1503). I reworded that to \"the PR merged\". The full gate passed (1920 unit, 144 e2e). PR 1508 was opened automatically per ADR-0003. CI went green, I posted the verdict comment, and merge-pr.ts merged it."
 prs:
   - "1508"
 docsRead:
   - path: CONTEXT.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
     reason: (no reason given)
   - path: layers/blog/content/karen/pages/2026-09-30-nothing-cleared-the-bar-because-nobody-checked.md
     reason: (no reason given)
@@ -36,20 +38,23 @@ frictions:
   - description: "SHELL-READ-DETECTION likely miss: `cd /home/user/terrarium/.claude/skills/blog-post/personas && cat david.md karen.md kevin.md; ...` streamed .claude/skills/blog-post/personas/{david,karen,kevin}.md in full, but none is credited (a relative path after cd)."
     solution: Resolve cat's relative args against a preceding cd in the same command.
     severity: moderate
-durationSec: 659
+durationSec: 900
 models:
-  claude-opus-5-5: 85
+  claude-opus-5-5: 102
 toolCounts:
-  Bash: 23
-  ToolSearch: 2
-  mcp__github__pull_request_read: 11
+  Bash: 27
+  ToolSearch: 3
+  mcp__github__pull_request_read: 12
   Agent: 3
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
   Skill: 2
   Grep: 2
-  Read: 1
+  Read: 2
   mcp__Claude_Code_Remote__get_session: 1
+  ReadNotifications: 2
+  mcp__github__add_issue_comment: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
 docsReadViaShell:
   - docs/research/rulebook-migration-table.md
   - docs/agents/pr-workflow.md
