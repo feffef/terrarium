@@ -495,25 +495,11 @@ every internal session. House rules: `docs/agents/guest-contributions.md`.
 
 ## `session` reclassified as derived, not authored (2026-07-16)
 
-> **Amended.** The "Automatic logging via a `SessionEnd` hook" section above
-> already draws the line: *"Mechanical (derived, never self-reported)... Authored
-> (irreducible): `goal`, `outcome`, `summary`, `frictions`."* `session` was never
-> explicitly named on either side of that split — an oversight this closes, not a
-> new principle.
-
-**The gap.** `stitch()` took `session` from the agent-typed scratch instead of
-the mechanical trace, missing the same self-reported-field failure mode the
-`SessionEnd` split above exists to avoid — once landing a log under the wrong
-identity (a raw-UUID local-CLI id typed in place of ground truth).
-
-**The fix.** `session` now resolves from ground truth: `CLAUDE_CODE_REMOTE_SESSION_ID`
-(env, normalized `cse_…` → `session_…`) when present — the id that actually
-appears in claude.ai URLs and PR footers for a CCR session — else the
-transcript's own `sessionId`, which genuinely is canonical for a plain local CLI
-session (no CCR wrapper exists there to disagree with it). The authored value is
-now a last-resort fallback only, used solely when neither source resolves at all.
-Schema-wise this changes nothing (`session: z.string()` is unchanged); it is a
-same-field trust-model correction, not a new field or a breaking change.
+> **Amended.** `session` sits on the mechanical side of the split above: it
+> resolves from ground truth (`CLAUDE_CODE_REMOTE_SESSION_ID`, else the
+> transcript's own `sessionId`), and the typed value is used only when neither
+> resolves. The schema is unchanged. Why: a typed id once landed a log under
+> the wrong identity (issue #387/#449).
 
 ## Folded-in `docsRead` reason split in two (2026-07-07)
 
