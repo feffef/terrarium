@@ -1,0 +1,59 @@
+schemaVersion: 1
+session: session_01JJjnpQCtu8pinf5RioLwgZ
+startedAt: 2026-09-30T16:57:25Z
+endedAt: 2026-09-30T17:16:39Z
+kind: interactive
+goal: Make the Blog less repetitive and get the Personas interacting
+status: in-review
+outcome: "blog-post Skill and Persona files revised after a grilling session; PR #1510 open"
+summary: "Human-instructed throughout: the owner asked me to read the last 30 blog posts and then run /grill-with-docs on how to improve the blog-post Skill and Personas. I read all 30 (Sept 2-30) and reported: all 7 Eyra posts leaned on the house/door metaphor (her persona file and the Blog CONTEXT.md mandated it), only 5 of 30 were reactions and those were day-later monologues, Kevin/David had stock closers, and most topics were agent machinery. Two grilling rounds (15 questions) settled: an optional post-merge follow-up reaction step (one candidate per other Persona, reader may pick \"none\", must add a fact/conclusion/aspect, one reply max, rotation doesn't gate the replier); Eyra re-lensed to how things look and feel with a fresh image per post (masthead intro rewritten, the human-contributed Frieren postcard kept); topic ranking by weight or surprise with machinery as the main seam; per-Persona palettes checked against the last three posts; Karen may swear sparingly; a light humour line for David and Kevin. The owner accepted every recommendation. No new glossary term or ADR - the reply is just a reaction, and the change is easy to reverse. Gate green locally (full, 144/144 e2e); PR #1510 opened and subscribed."
+prs:
+  - "1510"
+docsRead: []
+skillsUsed:
+  - name: grilling
+    reason: grill-with-docs = grilling + domain-modeling
+  - name: domain-modeling
+    reason: Blog CONTEXT.md Eyra stance update
+  - name: writing-for-agents
+    reason: editing the blog-post Skill and persona files
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: ADR-0017's provenance header wants a model name in brackets, but the harness forbids model identifiers in PR bodies; used 'Claude Code' as the bracket text.
+    solution: Have provenance-header.ts / guards.md name a harness-neutral bracket label so the two rules don't collide.
+    severity: minor
+  - description: Stop hook demanded commit+push while the scoped gate was still running in the background, so I pushed before the gate result was known.
+    solution: Acceptable here (gate passed), but the stop-hook git check could tolerate a pending background gate.
+    severity: nit
+  - description: Dumping 30 posts with cat overflowed tool output twice; had to route through a scratch file and Read.
+    solution: Write bulk reads to the scratchpad first and Read them.
+    severity: nit
+  - description: "SHELL-READ-DETECTION miss: `for f in .agents/skills/blog-post/personas/*.md; do echo \"==== $f\"; cat $f; done` did print all four persona files (expected .agents/skills/blog-post/personas/{david,eyra,karen,kevin}.md) but was rejected as 'not a reader command'."
+    solution: Teach shell-reads.ts to expand a for-loop glob whose body cats the loop variable.
+    severity: moderate
+durationSec: 1154
+models:
+  claude-opus-5-5: 73
+toolCounts:
+  Bash: 27
+  Read: 2
+  Skill: 5
+  Write: 1
+  ToolSearch: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+filesEdited:
+  - .agents/skills/blog-post/personas/eyra.md
+docsReadViaShell:
+  - .agents/skills/grill-with-docs/SKILL.md
+  - .agents/skills/blog-post/SKILL.md
+  - layers/blog/CONTEXT.md
+  - CONTEXT.md
+  - docs/agents/pr-workflow.md
+gitBranch: ccr-0cfa5e2c-vjjx1n
+entrypoint: remote_mobile
+cliVersion: 2.1.285
+landedBy: Stop
