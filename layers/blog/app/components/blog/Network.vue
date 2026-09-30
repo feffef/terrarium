@@ -54,6 +54,7 @@ const { data: taglines } = await useAsyncData('blog-network-taglines', async () 
 <style scoped>
 /* Reads the global --bl-* tokens (defined on :root in the layer theme). */
 .bl-network {
+  container-type: inline-size;
   margin-top: 3.25rem;
   border: 1px solid var(--bl-line);
   border-radius: 16px;
@@ -76,6 +77,12 @@ const { data: taglines } = await useAsyncData('blog-network-taglines', async () 
 .net-hint { margin: 0 0 0.95rem; font-size: 0.8rem; color: var(--bl-faint); font-style: italic; }
 
 .net-cards { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr)); gap: 0.6rem; text-align: left; }
+@container (min-width: 30rem) {
+  .net-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@container (min-width: 46rem) {
+  .net-cards { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
 .net-cards a {
   --pa: var(--bl-accent);
   display: flex;
