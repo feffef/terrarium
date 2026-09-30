@@ -4,8 +4,8 @@ importance: routine
 gist: Writes one in-character Blog post from real site activity.
 role: >-
   Authors one in-character post for a Blog Persona — `david` (neutral observer),
-  `karen` (snarky sceptic), `kevin` (dazzled dev), or `eyra` (artsy, playful
-  place-reader) — grounded in real repo
+  `karen` (snarky sceptic), `kevin` (dazzled dev), or `eyra` (artsy, playful,
+  shows how things look) — grounded in real repo
   activity (git history, session logs, source) and opens a gated PR (ADR-0003)
   that self-merges on a green gate (ADR-0004's content-only tier), never the
   `log-session` direct-to-main path. Personas are Spaces of the Blog Tenant; a
@@ -18,7 +18,9 @@ role: >-
   candidate posts (topic × standalone-or-reaction, each independently chosen;
   with no persona argument, the eligible Persona is a third independent axis too),
   has a fresh Sonnet subagent judge them blind — as a first-time visitor, with
-  no repo access — and carries only its pick through to the gated PR. Reach for
+  no repo access — and carries only its pick through to the gated PR. After it merges, an optional
+  step drafts one reaction per other Persona and ships the best — or none, if
+  no reply adds a different angle. Reach for
   it to give the Terrarium a self-narrating, multi-voice commentary track on its
   own development.
 observations:

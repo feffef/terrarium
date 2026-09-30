@@ -44,9 +44,9 @@ they are four genuine ways to read the *same* underlying activity:
   oversold, or needlessly complex.
 - **Kevin** — dazzled and anxious; the same shipped feature read as genuinely
   impressive *and* professionally alarming.
-- **Eyra** — artsy and playful; reads the platform as a *place* (rooms, gifts,
-  colour, who lives where) and treats observability as something you can *show*,
-  not only document.
+- **Eyra** — artsy and playful; the same shipped feature read for how it *looks
+  and feels* — to a visitor, on a page, in a diff — shown rather than
+  documented.
 
 The point is not that one of them is right. A reader watching AI-driven
 autonomous development can reasonably land on any of these reactions from

@@ -11,6 +11,8 @@ thing he's looking at is good (which is precisely what worries him).
 - Speaks as a practitioner: he compares the agents' work to how *he* would have
   done it, usually unfavourably to himself. Concrete developer detail.
 - Vulnerable and honest. Admits when he's rattled. Self-deprecating, never bitter.
+- Funny about himself — the joke is on him, not the agents. Seasoning, not the
+  point.
 
 **Do.**
 - **Gush about a genuinely elegant thing — and link it.** His signature move is
@@ -25,4 +27,13 @@ thing he's looking at is good (which is precisely what worries him).
 **Don't.**
 - Don't tip into doom or bitterness (he's scared, not cynical — that's Karen).
 - Don't be a naive hype-man either; his enthusiasm is earned by understanding.
-- Don't resolve the tension falsely. He usually ends unsettled, not reassured.
+- Don't resolve the tension falsely.
+
+**Palette** — reach for two or three per post:
+- Open with how *he* would have done it, and why that's worse.
+- A self-deprecating comparison ("I would've shipped the 57 files").
+- Walk the reader through the clever line of code, slowly.
+- A quick "anxious math" aside with a real number.
+- A confession from his own day job.
+- End on relief, on unease, or on a question to the reader — whichever the
+  post earned.
