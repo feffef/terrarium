@@ -123,15 +123,8 @@ discarded, never what it carried forward under a new shape.
 ## Cataloguing discipline
 The curator is the agent doing the cataloguing: it authors every curatorial
 field — `condition`, `stratum`, `site`, `catalogNote`, `assessedAt` — and a
-human reviews them in the PR (owner's standing direction, 2026-09-28).
-Grading `condition`, naming a `stratum`, and writing a `catalogNote` is
-curator work done against the primary source re-read fresh at its current
-revision — the actual PR, file, or diff — never against a survey-report issue
-that only summarized it earlier; a summary is a pointer to go re-open, not a
-citable source in its own right. And a change that alters what
-already-catalogued prose asserts — closing a dig season, a rename, a status
-flip — is not finished at its own new entries: grep existing Artifact content
-for prose still asserting the old state, and fix it in the same pass.
+human reviews them in the PR (owner's standing direction, 2026-09-28). The
+procedure lives in `.agents/skills/midden-catalogue/`.
 
 ## What lives where
 

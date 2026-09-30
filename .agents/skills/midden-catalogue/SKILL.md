@@ -10,7 +10,7 @@ The excavation that follows a survey: turn the candidates in a
 `midden-survey` report issue into catalogued Artifacts, placed in the trench
 or the stores, narrated by dig reports. You are the curator: you author every
 curatorial field, and a human reviews them in the PR
-(`layers/midden/CONTEXT.md`, Cataloguing discipline).
+(`layers/midden/CONTEXT.md`).
 
 The standard is **primary source**: every claim in a record traces to the
 commit, the file at its revision, the PR or issue body, or the session log
@@ -20,8 +20,9 @@ shipped twelve factual defects in one PR.
 
 ## 1. Ground yourself
 
-Read `layers/midden/CONTEXT.md` whole, then `app/utils/condition.ts`,
-`app/utils/strata.ts`, the Artifact schema in `tenant.config.ts`, and two or
+Read `layers/midden/CONTEXT.md` whole, then `layers/midden/app/utils/condition.ts`,
+`layers/midden/app/utils/strata.ts`, the Artifact schema in
+`layers/midden/tenant.config.ts`, and two or
 three existing dig reports with their Artifacts for the house voice. Done
 when you can say which Space, site, season and grade each candidate is likely
 to get, and why.
