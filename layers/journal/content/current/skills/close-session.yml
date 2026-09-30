@@ -30,3 +30,14 @@ observations:
       after teardown will always risk this. Not escalated as an issue (a
       closure finding stays an observation per this Skill's own convention);
       worth a fix if a second instance turns up.
+  - date: "2026-09-30"
+    note: >-
+      Re-checked (audit-skills behaviour check), 10 newest invocations
+      (session_01NbSN3foQRduNSW6jJyZD5F through session_01Y3crLd89xfsR4dLTETwm17,
+      covering 12 merged PRs): 0/10 stale. Every log's `endedAt` falls within
+      seconds of its PR's `merged_at`, including one overnight
+      human-review-wait session (session_01A1iy52RckGYBTdfuhuxwCf, ~15.7h,
+      finalized 42s after merge). session_01TMgZyrN42pwudxkUdHLKwP remains
+      n=1 — no second instance found across two independent 10-session
+      checks (20 checks total, some overlap possible). The structural gap
+      named 2026-09-28 still exists but has not manifested again.

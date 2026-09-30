@@ -71,3 +71,34 @@ observations:
       with a session), both orphan candidates already resolved-by-annotation,
       no new orphans, and no human-prompted or manually-rescued closures this
       window.
+  - date: "2026-09-30"
+    note: >-
+      Self-check, independently re-verified: audit-docs's newest session
+      (session_01SMWeh3VabxWtpXBdoMbpqF, PR #1486) confirmed clean; all 8
+      previously-cited audit-skills usedIn sessions re-checked hold up. This
+      run dispatched a fresh behaviour-check subagent per qualifying Skill
+      (11), and this time found that the 2026-09-29 blog-post clearance was
+      itself wrong on one session: PR #1301 (session_01YWMTQ7ZdjaYab177AJNWXx)
+      was miscategorized as a genuine fact-check run when it in fact skipped
+      step 7 like #1295/#1308 — corrected on issue #1479 rather than
+      re-filed, since #1479 covers the same gap. New findings this run:
+      digest shipped a factually wrong claim to production for ~7h in a
+      2026-09-28 run (session_01D6NdBrbYTiiCPZwkP3L98b, PR #1478), caught
+      only by a human, but the fact-check step that would have caught it
+      was added in the very fix commit — recorded as an observation, not
+      escalated, since the gap is already closed. visitor-loop's
+      owner-memory step (the #1452 fix) was skipped outright in its first
+      post-fix run (self-caught, logged as a friction) and has not yet had a
+      chance to prove itself against a real rework case (#1492→#1494)
+      sitting unprocessed. prune-trial's ADR-0017 ledger gap resolved itself
+      as expected; a near-identical near-miss now applies to a second trial
+      (docs/agents/domain.md), likely to clear on today's scheduled fire.
+      dispatch-subagents' #1480 (cd-into-worktree) has not recurred a third
+      time. The rest — audit-docs, auto-triage, close-session,
+      frictions-to-fixes, log-session — came back clean, matching or
+      extending prior observations. Closure completeness (step 3): orphan
+      scan ran (934 merged PRs, 788 with a session), both orphan candidates
+      already resolved-by-annotation, no new orphans, no human-prompted or
+      manually-rescued closures this window. Coverage gap found and added:
+      `resolving-merge-conflicts` (external, used once this window, no
+      Inventory entry).

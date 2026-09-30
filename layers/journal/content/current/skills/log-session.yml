@@ -103,3 +103,17 @@ observations:
       direction already on file for `git show <ref>:<path> | grep`. Also n=1;
       `scripts/shell-reads.ts` likely needs a `git log ... -p`/`--patch` case
       alongside its existing `git show`/`git diff` handling.
+  - date: "2026-09-30"
+    note: >-
+      Re-checked (audit-skills behaviour check), 10 newest sessions under the
+      rewritten (numeric-cap-free) SKILL.md: field-split and wording clean,
+      no violations. The `git log -p` false-negative lead is now fixed
+      upstream (commit 64facc5d, merged before this batch ran) and did not
+      recur. The cd-prefix absolute-path over-rebasing lead remains open and
+      unfixed in `resolveAgainstCdDir` but did not manifest again in this
+      batch — still n=1. One soft, unconfirmed anomaly noted for a future
+      screen: session_01FQ9WV8BrFC4WVuHDKH2Ezb's docsReadViaShell credits
+      `.agents/skills/visitor-loop/SKILL.md`, a path not mentioned anywhere
+      in its own summary/frictions and not quoted in any doc it read —
+      plausibly a genuine background read, not confirmed as a new
+      false-positive shape.

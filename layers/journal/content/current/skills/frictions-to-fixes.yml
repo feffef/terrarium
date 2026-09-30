@@ -29,3 +29,14 @@ observations:
       one-off lapse on the earliest run, not a live pattern. Regression-detection
       promise verified working (#1328→#1330→#1420, correctly re-filed as its own
       alerting issue). Audit trace present on all 13 merged PRs checked.
+  - date: "2026-09-30"
+    note: >-
+      Re-checked (audit-skills behaviour check), 7 newest sessions (09-23
+      through 09-29, 20 merged PRs, 11 filed issues): all clean. Every merge
+      claim confirmed via `pull_request_read`, every PR carries a posted
+      audit-trace review verdict before merge, and the guard-touching lapse
+      (session_01G4V3Af1dHCHLyLEmKNY9K1) has not recurred — every
+      guard-adjacent candidate since (#1304, #1329, #1422, #1454/#1460) was
+      correctly filed-only or verified non-guard-touching before dispatch.
+      Two new regressions (#1420, #1482) were both filed as their own
+      alerting issue rather than silently re-fixed, per the rule.

@@ -8,4 +8,14 @@ role: >-
   ready-for-agent under the ADR-0022 standing green-light. User-invoked; fired by
   hand or on an interval to keep the Trusted-authored backlog moving. Escalates
   genuine judgment calls and design uncertainty to a human.
-observations: []
+observations:
+  - date: "2026-09-30"
+    note: >-
+      First audit-skills behaviour check, 3 usedIn sessions
+      (session_01C1P912tWDL3b8gtuQezv3Z 09-28, session_019yVYHWm1Fzsj3gBFWkHHU1
+      09-27, session_01TgYzP52EJ4TkR38M19FAR3 09-24). All clean: every
+      labeled/closed claim confirmed against GitHub, every merged PR really
+      merged and closing the issues claimed, escalations followed the
+      brave/judgment-call and auto-close-wontfix rules, wayfinder:* overlay
+      labels preserved. No revert of the Skill's own text in the last two
+      weeks.
