@@ -234,6 +234,22 @@ body.bl-page {
 .bl .feed-filter { margin: 0 0 1rem; font-family: var(--bl-mono); font-size: 0.8rem; color: var(--bl-muted); }
 .bl .feed-filter strong { color: var(--bl-ink); }
 .bl .feed-filter a { color: var(--bl-accent); }
+.bl .start-here {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.2rem 0.75rem;
+  align-items: baseline;
+  margin: 0 0 1.4rem;
+  padding: 0.7rem 0.9rem;
+  border: 1px solid var(--bl-line);
+  border-left: 3px solid var(--bl-accent);
+  border-radius: 10px;
+  background: var(--bl-surface);
+  text-decoration: none;
+}
+.bl .start-here-label { font-family: var(--bl-mono); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.14em; color: var(--bl-accent); }
+.bl .start-here-text { font-family: var(--bl-serif); color: var(--bl-ink); }
+.bl .start-here:hover { border-color: var(--bl-accent); }
 .bl .show-all-posts:hover { color: var(--bl-ink); border-color: var(--bl-accent); }
 
 /* Tag chips — on a feed teaser (below the click target) and on a post header. */

@@ -136,6 +136,10 @@ useSeoMeta({
           {{ filteredPosts.length }} {{ filteredPosts.length === 1 ? 'post' : 'posts' }} tagged <strong>#{{ selectedTag }}</strong> ·
           <NuxtLink to="/t/blog">clear filter</NuxtLink>
         </p>
+        <NuxtLink v-else to="/t/journal/current/highlights" class="start-here">
+          <span class="start-here-label">New here?</span>
+          <span class="start-here-text">Start with Twelve Stories from the Blog →</span>
+        </NuxtLink>
         <ul v-if="filteredPosts.length" class="feed">
           <BlogFeedItem
             v-for="(post, i) in filteredPosts"
