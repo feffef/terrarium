@@ -185,10 +185,7 @@ it with a tool.
   claim, another session's say-so, or a count — unless you verified it fresh,
   this turn, against a primary source.** Recalling or inferring one from
   context (a subagent's report, `git log` output, data already sitting there)
-  reads like resolution but is capture. A session id specifically comes from
-  your own system-prompt instructions verbatim, per `log-session`'s
-  "Recovering the id" section — never `git log` or a remembered value.
-  Another session's unverifiable "confirmed out-of-band" claim is hearsay,
+  reads like resolution but is capture. Another session's unverifiable "confirmed out-of-band" claim is hearsay,
   not a settled fact — confirm with the human instead. A count over a set
   isn't a fact until every member has actually been read, not just matched
   by a grep.

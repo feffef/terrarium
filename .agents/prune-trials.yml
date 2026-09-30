@@ -202,3 +202,46 @@ trials:
       following these correctly. A Sonnet probe on the pinned post-prune SHA
       answered all five of its situations right (the four above plus the
       supersession check).
+  - problem: >
+      Recovering the session id (rulebook row LS-03). The prose rule "take the
+      id from your own system-prompt template, never `git log`" failed four
+      times on the tracker (#99, #387, #628, #723 — "keeps recurring despite 4
+      prior fixing rounds"). Each round ended in a mechanism: `stitch()` in
+      `scripts/session-trace.ts` now overwrites the typed `session:` with the
+      ground-truth id (`resolveGroundTruthSessionId`, tested in
+      `tests/unit/session-trace.spec.ts`); GitHub bodies and commit trailers
+      are held by `github-provenance-guard.ts` and `commit-trailer-guard.ts`;
+      `session-id-guard.ts` reports mismatches post-hoc. Yet the rule was
+      still spelled out in three places. Cut log-session's two "Recovering the
+      id" paragraphs (the `CLAUDE_CODE_SESSION_ID` CCR-vs-local explanation and
+      the fallback narrative) to four lines; dropped CLAUDE.md's session-id
+      clause from the "Don't state anything as settled" bullet; folded
+      ADR-0009's "`session` reclassified as derived" gap/fix narrative into one
+      short amendment note, decision unchanged. Repointed guards.md's
+      session-id-guard "Rule homed in" cell from CLAUDE.md to log-session. The
+      search subagent covered the instruction corpus, the rulebook table
+      (excluded list included), guards.md, and the tracker (all 18 open
+      issues, 141 closed since 2026-08-20). Net about -30 lines; the problem
+      is retired whole, so no padding.
+    territory:
+      paths:
+        - ".agents/skills/log-session/SKILL.md: the \"Recovering the id\" paragraph and the template's session comment"
+        - "CLAUDE.md: the \"Don't state anything as settled\" bullet's session-id clause"
+        - "docs/adr/0009-session-logs-commit-directly-to-main.md: the \"`session` reclassified as derived\" amendment"
+        - "docs/agents/guards.md: the session-id-guard row"
+      keywords:
+        - Recovering the id
+        - CLAUDE_CODE_SESSION_ID
+        - session id from git log
+        - resolveGroundTruthSessionId
+    opened: 2026-09-30
+    proven: true
+    check: >
+      Damage is a session log landing under the wrong session id, a
+      `session-id-guard` report of a wrong id on a session's commits, or a
+      GitHub body or trailer the guards have to deny for a wrong id more often
+      than before — where the session took the id from `git log`, a
+      remembered value, or `CLAUDE_CODE_SESSION_ID` in a cloud session. NOT
+      damage: a typed `session:` that the lander silently corrected, or a
+      guard denial for a missing marker that the session fixed from the
+      deny message.
