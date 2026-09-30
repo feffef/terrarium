@@ -223,8 +223,7 @@ useHead({ title: 'The Atlas of the Terrarium' })
   gap: 0.2rem 1rem;
   text-decoration: none;
   color: var(--atlas-ink);
-  background: var(--atlas-paper-2);
-  background-image: linear-gradient(var(--biome-tint), var(--biome-tint));
+  background: color-mix(in srgb, var(--biome-tint) var(--biome-tint-amount), var(--atlas-paper-2));
   border: 1px solid var(--atlas-rule);
   border-left: 3px solid var(--biome-accent);
   padding: 1.3rem 1.4rem;
