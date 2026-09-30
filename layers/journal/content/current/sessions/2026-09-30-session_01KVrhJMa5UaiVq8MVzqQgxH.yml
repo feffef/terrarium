@@ -1,11 +1,11 @@
 schemaVersion: 1
 session: session_01KVrhJMa5UaiVq8MVzqQgxH
 startedAt: 2026-09-30T00:45:45Z
-endedAt: 2026-09-30T01:08:41Z
+endedAt: 2026-09-30T01:13:08Z
 kind: autonomous
 goal: Run the scheduled audit-skills sweep over the last 7 days of session logs
-status: in-review
-outcome: "PR #1498 opened with Inventory updates, gate green, awaiting merge"
+status: completed
+outcome: "PR #1498 merged with Inventory updates from this window's behaviour checks"
 summary: "Fully agent-initiated, fired by a scheduled Routine with no human prompt this session. Ran scripts/audit-skills.ts for the 2026-09-23..09-29 window (87 sessions), dispatched one read-only behaviour-check subagent per qualifying Skill (11: audit-docs, audit-skills, auto-triage, blog-post, close-session, digest, dispatch-subagents, frictions-to-fixes, log-session, prune-trial, visitor-loop), and verified each report's central claims against GitHub/git myself rather than trusting the subagent's word. Findings: blog-post's known step-7 fact-check-dispatch gap (issue #1479) recurs a third time — PR #1301 was mischaracterized as clean by the prior run's own audit; corrected via a comment on #1479 rather than a new issue, since the thread already covers the gap. digest shipped a factually wrong claim to production for ~7h in a 2026-09-28 run, caught only by a human, but the fact-check step that would have caught it was added in the same fix commit — recorded as an observation, no open action item remains. visitor-loop's owner-memory step (the #1452 fix) was skipped outright in its first post-fix run (self-caught, logged as a friction, n=1), and a real rework case (#1492→#1494) is sitting unprocessed pending the next run. prune-trial's ADR-0017 ledger gap resolved itself as expected; a near-identical near-miss now applies to a second trial. dispatch-subagents' issue #1480 has not recurred a third time; all 62 non-users were screened, no new missed invocation. The remaining Skills (audit-docs, audit-skills self-check, auto-triage, close-session, frictions-to-fixes, log-session) came back clean. Step 3 (closure completeness): orphan scan ran clean (934 merged PRs, 788 with a session, both existing orphan candidates already resolved-by-annotation, no new orphans, no human-prompted or manually-rescued closures). Step 5: added one coverage-gap Inventory entry (resolving-merge-conflicts, a pack Skill used once this window but never inventoried) and appended dated observations to all 11 checked Skills; no grade changed (no finding cleared the ≥2-session bar in either direction). Ran pnpm validate:content and the full pnpm gate:scoped (triggered by the non-inert content diff) — both green — then committed, pushed, and opened PR #1498, which self-merges on a green gate under this Skill's own chartered tier."
 prs:
   - "1498"
@@ -165,11 +165,11 @@ frictions:
   - description: "ScheduleWakeup is blocked outside /loop sessions (issue #814's guard), and repeated no-op Bash `true` calls to wait on background subagents are themselves discouraged by CLAUDE.md — there's a real gap for \"I have nothing to do but wait on several in-flight background subagents in a non-loop session\" with no sanctioned filler-free way to end the turn cleanly each time one lands."
     solution: Either relax the filler-call guidance to explicitly bless a single no-op turn-end while background agents are outstanding, or give non-loop sessions a lightweight "wait for next background completion" primitive.
     severity: minor
-durationSec: 1376
+durationSec: 1643
 models:
-  claude-sonnet-5: 204
+  claude-sonnet-5: 228
 toolCounts:
-  Bash: 56
+  Bash: 64
   Read: 12
   Agent: 11
   ScheduleWakeup: 1
@@ -177,12 +177,13 @@ toolCounts:
   mcp__github__issue_read: 1
   mcp__github__add_issue_comment: 2
   Write: 2
-  Edit: 11
+  Edit: 12
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
   Skill: 2
   mcp__github__pull_request_read: 1
+  ReadNotifications: 2
 filesEdited:
   - layers/journal/content/current/skills/resolving-merge-conflicts.yml
   - layers/journal/content/current/skills/audit-docs.yml
