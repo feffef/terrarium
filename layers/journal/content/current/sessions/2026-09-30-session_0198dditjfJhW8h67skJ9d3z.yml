@@ -1,0 +1,92 @@
+schemaVersion: 1
+session: session_0198dditjfJhW8h67skJ9d3z
+startedAt: 2026-09-30T14:12:20Z
+endedAt: 2026-09-30T14:26:26Z
+kind: delegated
+goal: "Run /prune-trial: judge due trials, prune one problem"
+status: in-review
+outcome: "git-conventions trial held; session-id prose pruned in PR #1505"
+summary: "The whole run was the /prune-trial Skill, kicked off by a single /prune-trial prompt; every choice after that was agent-made under the Skill's charter, with no human steering. The one due trial (the git-conventions.md rewrite) held: 40 sessions since its landing logged only minor git frictions, none needing the cut framing. For the new trial, a criterion-1 subagent search found that about 30 earlier trials have already squeezed most guard-backed prose, so the best remaining candidate is small. It was session-id recovery (LS-03), whose prose failed four times and which stitch() now overrides from ground truth; it yields about -30 lines, well short of the ~100 target, and I did not pad. The runners-up were PR-06 verdict-before-merge (about 10 lines) and CM-36's Agent background-flag (about 4). The Sonnet probe on the pinned SHA answered correctly. It flagged the section as \"not retired\" by misreading the commit subject, since the section was cut down, not removed. Open: PR #1505 awaits CI and landing."
+prs:
+  - "1505"
+docsRead:
+  - path: .agents/prune-trials.yml
+    reason: (no reason given)
+  - path: .agents/skills/prune-trial/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/log-session/SKILL.md
+    reason: (read before editing)
+  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
+    reason: (read before editing)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+  - path: docs/agents/guards.md
+    reason: (no reason given)
+skillsUsed:
+  - name: prune-trial
+    reason: the run itself
+  - name: dispatch-subagents
+    reason: worktree-isolated, SHA-pinned Sonnet probe
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: "Passed run_in_background: false on the first Agent call; the agent-background-flag guard denied it and I retried without it."
+    solution: None needed — the guard's deny message taught the fix in one retry.
+    severity: nit
+  - description: "The criterion-1 bar is nearly exhausted: most guard-backed prose is already pruned, so a whole retired problem now yields about 30 lines, not 100."
+    solution: Expect language-simplification runs, or retune the prune-trial Skill's ~100-line aim, as the guard-backed stock runs out.
+    severity: minor
+  - description: "Could not verify whether the /prune-trial kickoff came from a human or a Routine, so kind: delegated is a best guess."
+    solution: Have Routine-fired prompts carry a visible marker the session can read.
+    severity: nit
+durationSec: 846
+models:
+  claude-opus-5-5: 82
+toolCounts:
+  Bash: 21
+  Agent: 3
+  Read: 5
+  Edit: 3
+  ToolSearch: 1
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  Skill: 2
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - .agents/skills/log-session/SKILL.md
+  - CLAUDE.md
+  - docs/adr/0009-session-logs-commit-directly-to-main.md
+docsReadViaShell:
+  - docs/agents/guards.md
+  - docs/adr/0017-provenance-footer-on-agent-authored-content.md
+  - .agents/skills/dispatch-subagents/SKILL.md
+  - docs/agents/pr-workflow.md
+  - CONTEXT.md
+  - docs/research/rulebook-migration-table.md
+  - .agents/skills/log-session/SKILL.md
+  - docs/adr/0009-session-logs-commit-directly-to-main.md
+  - .agents/skills/guest-build/SKILL.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - .agents/skills/audit-docs/SKILL.md
+  - .agents/skills/prune-trial/SKILL.md
+  - .agents/skills/blog-post/SKILL.md
+  - .agents/skills/digest/SKILL.md
+  - .agents/skills/auto-triage/SKILL.md
+  - .agents/skills/midden-survey/SKILL.md
+subagents:
+  - type: general-purpose
+    task: Search for already-failed prose
+  - type: general-purpose
+    task: Search for already-failed prose
+  - type: general-purpose
+    task: Sonnet probe of pruned text
+    model: sonnet
+gitBranch: ccr-46e46395-50wpe0
+entrypoint: remote_mobile
+cliVersion: 2.1.285
+ideas:
+  - "midden-survey.ts's assertNotShallow refusal still points at a CLAUDE.md shallow-clone rule deleted under #772; repoint it to git-conventions.md so the deny message lands on a live home."
+landedBy: Stop
