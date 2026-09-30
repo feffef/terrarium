@@ -18,7 +18,7 @@ overflow traps — see [`github-integration.md`](./github-integration.md).
 **Every GitHub body you open or post here** (a PR description, an issue, a
 review comment) opens with the ADR-0017 provenance header as its own first
 line. It is guard-enforced; ADR-0017 and the guard's deny message name the exact
-marker (see [`github-integration.md`](./github-integration.md)).
+marker (CLAUDE.md, Working conventions).
 
 ## Assembling several stories into one integration PR
 
