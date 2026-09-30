@@ -232,11 +232,16 @@ trials:
       rewrite fails to. NOT damage: sessions following these correctly. A
       Sonnet probe on the pinned post-prune SHA answered all six traps right.
   - problem: >
-      No problem cleared the bar this run, so rewrote a whole file in plainer
-      words per the 2026-09-25 owner direction: `docs/agents/issue-tracker.md`
-      (only whole-file inbound pointers found; its rules carry no recorded
-      failures). Shortened sentences, merged repeated framing. Kept every rule,
-      command, issue citation and worked example.
+      Rewrote a whole file in plainer words: `docs/agents/issue-tracker.md`.
+      The §2 search for already-failed prose did NOT run this run, so "no
+      problem cleared the bar" was never established; the file was picked by
+      word count, and the fallback was copied from earlier ledger entries
+      (which cite a 2026-09-25 owner direction this run did not open). The file
+      is not failure-free: rulebook-migration-table.md's IT-05 (#301, #853) and
+      IT-07 (#326, #213) record incidents on it, and `auto-triage/SKILL.md`
+      cites its "Wayfinding operations" and "Blocking" sections by name (kept
+      unchanged). Shortened sentences, merged repeated framing. Kept every
+      rule, command, issue citation and worked example.
     territory:
       paths:
         - "docs/agents/issue-tracker.md (whole-file language simplification)"
@@ -253,4 +258,5 @@ trials:
       `delete_pending` on a pending-review error, a blocked wayfinder ticket
       picked up, a spec sub-issue missing its hold line). NOT damage: sessions
       following these correctly. A Sonnet probe on the pinned post-prune SHA
-      answered all four right.
+      answered all five of its situations right (the four above plus the
+      supersession check).
