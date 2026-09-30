@@ -79,6 +79,14 @@ It must not touch the territory of any trial that was open at the **start** of
 this run — including one you just judged and deleted — or no verdict can be
 attributed.
 
+**"Nothing clears the bar" is a result you earn, not one you inherit.** Say it
+only after criterion 1's subagent search ran this run, and name what it
+searched in the ledger. Earlier ledger entries saying the same prove nothing
+about today: the tracker and the logs have moved. The same goes for every other
+claim you write in the ledger or PR (a file has no recorded failures, only
+whole-file inbound pointers): read it from a source this run, or leave it out.
+Read files with the Read tool, so the log shows what you actually read.
+
 ## 3. Prune it to the goal
 
 Read every place the problem is legislated — it is usually smeared across
