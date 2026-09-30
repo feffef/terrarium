@@ -1,0 +1,79 @@
+schemaVersion: 1
+session: session_01GoNR7LgfGTcJfKqZ8gUDSx
+startedAt: 2026-09-30T16:47:56Z
+endedAt: 2026-09-30T17:29:43Z
+kind: autonomous
+goal: "Run the visitor-loop (focus: blog) — three blind visitors, fix consensus problems, build the best idea"
+status: completed
+outcome: "Fix PR #1509 and feature PR #1511 merged; one out-of-remit issue (#1512) filed"
+summary: "Scheduled visitor-loop run, entirely agent-executed with no human instruction beyond the schedule. Focus was the blog. Sonnet, fable and opus visitors agreed on six problems on /t/blog and the persona/post pages (no lede, no filter indicator, unpaginated persona pages, unlabelled per-persona prev/next, orphaned network grid, blank gap on short tag pages); all six were fixed and DOM-verified in #1509. The mobile panel-order complaint was dropped per the owner ruling in decisions.md (#1312). The feature chosen was a \"New here?\" link to the existing highlights page (#1511), picked over a threads view because it was the smallest payoff-visible change and avoids the reverted homepage highlights strip. The slug/date mismatch on Eyra's post was out of remit (authored history) and filed as #1512. No owner corrections had accrued, so decisions.md was not changed. A container query replaced a failed :global() override in Network.vue."
+prs:
+  - "1509"
+  - "1511"
+docsRead:
+  - path: layers/blog/app/assets/theme.css
+    reason: (no reason given)
+  - path: layers/blog/app/pages/t/blog/index.vue
+    reason: (no reason given)
+  - path: scripts/chromium-path.ts
+    reason: (no reason given)
+skillsUsed:
+  - name: code-review
+    reason: (no reason given)
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: visitor-loop
+    reason: (invoked as a slash command)
+frictions:
+  - description: A scoped-style :global(.about) override compiled away silently, leaving 4 sidebar columns; only found by measuring computed grid columns in the rendered page.
+    solution: Prefer container queries over cross-scope selectors in layer components; verify computed styles, not source.
+    severity: nit
+  - description: Hand-written commit trailer and a wrong-shaped PR provenance header were each blocked by guards, costing a retry apiece.
+    solution: "Have the visitor-loop skill note: no trailer in commit messages; PR body line one is the bracketed robot link."
+    severity: nit
+durationSec: 2507
+models:
+  claude-sonnet-5-5: 94
+toolCounts:
+  Bash: 35
+  Agent: 7
+  mcp__github__search_issues: 2
+  mcp__github__create_pull_request: 3
+  Skill: 3
+  mcp__github__add_issue_comment: 2
+  Read: 1
+  mcp__github__issue_write: 1
+docsReadViaShell:
+  - .agents/skills/visitor-loop/visitor-brief.md
+  - .agents/skills/visitor-loop/decisions.md
+  - layers/blog/CONTEXT.md
+  - docs/agents/pr-workflow.md
+  - docs/agents/tenant-layers.md
+subagents:
+  - task: Visitor (sonnet)
+    model: sonnet
+  - task: Visitor (fable)
+    model: fable
+  - task: Visitor (opus)
+    model: opus
+  - task: Standards review
+    model: sonnet
+  - task: Spec review
+    model: opus
+  - task: Review feature PR
+    model: sonnet
+  - task: Review feature PR
+    model: sonnet
+gitBranch: claude/adoring-galileo-hjogxq
+entrypoint: remote_trigger
+cliVersion: 2.1.285
+trigger: visitor-loop
+ideas:
+  - "Blog: group a post with its replies and reactions into a Threads view (/t/blog?view=threads) with a 'Part of a 3-post thread' badge on feed cards; the cross-persona argument is the best feature but is only discovered one link at a time."
+  - "Blog post page: a 'Same day, other voices' list of other personas' posts within two days, to deliver the 'same events read differently' promise."
+  - "Blog: one-line plain-English gloss (title attribute or popover) on jargon tag chips such as slop, self-merge, provenance."
+  - Long technical blog posts (e.g. Kevin's) lack a plain lead; add a two-sentence 'In short:' to new posts in the blog-post skill (authored history, needs owner call).
+  - "Front-door sidebar persona cards overlap borders slightly at desktop width (single visitor): add gap or stacking fix in layers/blog Network.vue."
+landedBy: Stop
