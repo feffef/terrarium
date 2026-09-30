@@ -1,0 +1,66 @@
+schemaVersion: 1
+session: session_01RA14XShYErE96EXs3TMX3c
+startedAt: 2026-09-30T04:01:01Z
+endedAt: 2026-09-30T04:09:53Z
+kind: autonomous
+goal: Run the scheduled audit-docs sweep over the last 48h of doc changes
+status: in-review
+outcome: Four small doc fixes in one gated PR (#1501), awaiting CI and merge
+summary: "Scheduled run, no human instruction beyond the stored /audit-docs prompt; all work was agent-initiated within that charter. Four reviewer agents (freshness, single-home, concision, coherence) reported. Freshness found no drift or orphan additions. I fact-checked findings myself against the files rather than dispatching a separate checker, and fixed the ones that held: Midden cataloguing discipline now defers its procedure to the midden-catalogue Skill, stale paths and a stale survey hand-off were corrected, and a pointer chain in pr-workflow was shortened. Dropped as low value or trial territory: most CLAUDE.md concision rewrites, the history.md word count, and a missing Skill Inventory entry for midden-catalogue (needs a new file, left for a later run). Gate passed as inert."
+prs:
+  - "1501"
+docsRead: []
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: audit-docs
+    reason: (invoked as a slash command)
+frictions:
+  - description: Hand-typed commit trailer and PR provenance header were each denied by guards once, costing a retry each.
+    solution: The system-reminder attribution text conflicts with the repo guards; the guards' messages already teach the fix.
+    severity: nit
+durationSec: 533
+models:
+  claude-sonnet-5-5: 43
+toolCounts:
+  Bash: 15
+  Agent: 4
+  ToolSearch: 1
+  mcp__github__create_pull_request: 2
+  mcp__github__subscribe_pr_activity: 1
+  Skill: 2
+docsReadViaShell:
+  - layers/midden/CONTEXT.md
+  - .agents/skills/midden-catalogue/SKILL.md
+  - docs/agents/pr-workflow.md
+  - docs/agents/guards.md
+  - docs/agents/github-integration.md
+  - .agents/skills/midden-survey/SKILL.md
+  - CONTEXT.md
+  - .agents/skills/audit-docs/SKILL.md
+  - docs/agents/environment-caveats.md
+  - docs/agents/git-conventions.md
+  - docs/agents/guest-contributions.md
+  - docs/agents/issue-tracker.md
+  - docs/agents/verifying-ui-changes.md
+  - .agents/skills/log-session/SKILL.md
+  - docs/proposals/README.md
+  - .agents/skills/close-session/SKILL.md
+  - .agents/skills/dispatch-subagents/SKILL.md
+  - CONTEXT-MAP.md
+subagents:
+  - type: general-purpose
+    task: Audit A freshness
+  - type: general-purpose
+    task: Audit B single-home
+  - type: general-purpose
+    task: Audit C concision
+  - type: general-purpose
+    task: Audit D coherence
+gitBranch: claude/festive-mayer-gc9xx5
+entrypoint: remote_trigger
+cliVersion: 2.1.285
+trigger: audit-docs
+landedBy: Stop
