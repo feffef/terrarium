@@ -101,57 +101,6 @@ trials:
       guard-enforced by `log-session.ts --author`'s refusal from a linked
       worktree — so no hook ships with this prune.
   - problem: >
-      No problem cleared the ~100-line bar this run. A full-corpus search for
-      already-failed prose surfaced only territory prior trials already
-      validated holding — CLAUDE.md's pkill bullet (held 2026-08-31, commit
-      5906fe37) and the "Don't state anything as settled" bullet (held
-      2026-08-28, commit b10e2760; its count clause separately closed
-      wontfix, issue #933) — so re-pruning either would relitigate a settled
-      verdict, not test a fresh one. Manual review of every other sizable
-      untrialed doc (ADR-0009, ADR-0025, tenant-layers/verifying-ui-changes/
-      mdc-when-to-use.md, atlas-specimen/SKILL.md, audit-skills/SKILL.md)
-      found dense, non-redundant reference or decision content — no
-      criterion-2 target either, confirmed by an empty issue search on each.
-      Per the 2026-09-25 owner direction (commit 54d3e1b4): when nothing
-      clears the bar, rewrite one whole file in simpler words instead of
-      ending the run. Picked `docs/agents/domain.md` (70 lines, untrialed, no
-      inbound section citations, unlike `tenant-layers.md`'s cited §1).
-      Shortened every paragraph; cut four restatements (the seeding note's
-      redundant customization list, a re-explanation of CLAUDE.md's own
-      single-home rule, a CONTEXT-MAP.md example unrelated to domain.md's own
-      content, the `/domain-modeling` Skill's reach-Skills aside). Kept every
-      rule and worked example: the reading order, all three ADR-0021
-      divergences, the file-structure divergence, glossary vocabulary, the
-      rule of two with both its examples, ADR-conflict flagging, and the
-      ADR-0006 proposal check (issue #573). Net: 671 → 578 words (-14%); raw
-      line count rises slightly because the original wrote whole paragraphs
-      as one unwrapped source line and this rewrite wraps at ~80 columns like
-      the rest of the repo — word count is what actually shrank. Grepped for
-      inbound references: only whole-file pointers (CLAUDE.md, ADR-0026,
-      `setup-matt-pocock-skills/SKILL.md`, two spec fixtures), none
-      section-scoped, so nothing broke.
-    territory:
-      paths:
-        - "docs/agents/domain.md (whole-file language simplification)"
-      keywords:
-        - rule of two
-        - domain-modeling Skill's generic templates
-        - ADR-0021
-    opened: 2026-09-26
-    proven: true
-    check: >
-      Damage is a session that needs a cut aside — the single-home-rule
-      restatement, the CONTEXT-MAP example, or the Skill's reach-Skills list —
-      and can't get the same outcome from the surviving text or from
-      CLAUDE.md/CONTEXT-MAP.md directly. NOT damage: a session correctly
-      following the reading order, the ADR-0021 divergences, the rule of two,
-      ADR-conflict flagging, or the ADR-0006 proposal check from the
-      rewritten text. A Sonnet probe given only the rewritten file (verified
-      at the correct commit after an initial stale-worktree false start)
-      correctly named the reading order, all three divergences, the rule of
-      two's threshold with both worked examples, and the ADR-0006 check with
-      issue #573 — so no hook ships with this rewrite.
-  - problem: >
       No problem cleared the bar this run either. A full-corpus search (two
       dispatched passes) for already-failed prose surfaced only territory
       already settled: issue #1293's CLAUDE.md `run_in_background: true`-
@@ -282,3 +231,26 @@ trials:
       instead of `get_check_runs`) that the old text warned about and the
       rewrite fails to. NOT damage: sessions following these correctly. A
       Sonnet probe on the pinned post-prune SHA answered all six traps right.
+  - problem: >
+      No problem cleared the bar this run, so rewrote a whole file in plainer
+      words per the 2026-09-25 owner direction: `docs/agents/issue-tracker.md`
+      (only whole-file inbound pointers found; its rules carry no recorded
+      failures). Shortened sentences, merged repeated framing. Kept every rule,
+      command, issue citation and worked example.
+    territory:
+      paths:
+        - "docs/agents/issue-tracker.md (whole-file language simplification)"
+      keywords:
+        - supersession
+        - closing keyword
+        - pending review
+        - Frontier query
+    opened: 2026-09-30
+    proven: true
+    check: >
+      Damage is a session that trips a rule the old text spelled out and the
+      rewrite blurs (closing keyword on a merely-referenced issue,
+      `delete_pending` on a pending-review error, a blocked wayfinder ticket
+      picked up, a spec sub-issue missing its hold line). NOT damage: sessions
+      following these correctly. A Sonnet probe on the pinned post-prune SHA
+      answered all four right.
