@@ -34,7 +34,7 @@ const meta = personaMeta(space)
 const landing = computed(() => data.value?.landing ?? null)
 const posts = computed(() => data.value?.posts ?? [])
 
-// Same 20 + "Show all" cap as the front door: a persona's archive runs to 40 posts.
+// Same 20 + "Show all" cap as the front door.
 const POSTS_VISIBLE = 20
 const showAllPosts = ref(false)
 
