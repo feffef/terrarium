@@ -1,0 +1,61 @@
+schemaVersion: 1
+session: session_016xwHemy6X6LmFrzBs4mgad
+startedAt: 2026-09-30T02:03:54Z
+endedAt: 2026-09-30T02:08:21Z
+kind: autonomous
+goal: "Run frictions-to-fixes: retire recurring session frictions"
+status: in-review
+outcome: One grouped doc PR open (1500); one regression issue filed (1499)
+summary: Scheduled run, no human prompt. A survey subagent screened the latest 20 session logs. Two simple doc fixes were selected (session-frictions output file note; git show for reading main) and dispatched to one Sonnet agent as grouped PR 1500, gate green, awaiting my review and merge. Two recurrences of earlier fixes (worktree-isolation guard, waiting on background work) were filed as regression issue 1499 for a human rather than dispatched. Guard and hook-wiring frictions (commit trailer, Stop hook) were left as human-only.
+prs:
+  - "1500"
+docsRead:
+  - path: docs/adr/0017-provenance-footer-on-agent-authored-external-interactions.md
+    reason: (no reason given)
+  - path: .claude/skills/frictions-to-fixes/SKILL.md
+    reason: (read before editing)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: frictions-to-fixes
+    reason: (invoked as a slash command)
+frictions:
+  - description: Survey subagent captured a 91-byte notice from session-frictions.ts because large output goes to a fixed /tmp file; brief did not say so.
+    solution: PR 1500 adds a clause to the frictions-to-fixes Skill.
+    severity: nit
+durationSec: 267
+models:
+  claude-sonnet-5-5: 27
+toolCounts:
+  Bash: 4
+  ToolSearch: 1
+  Agent: 2
+  Read: 1
+  mcp__github__issue_write: 1
+  ReadNotifications: 1
+  mcp__github__pull_request_read: 3
+  Skill: 2
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - .claude/skills/frictions-to-fixes/SKILL.md
+  - docs/agents/git-conventions.md
+docsReadViaShell:
+  - .agents/skills/dispatch-subagents/SKILL.md
+  - docs/agents/environment-caveats.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - docs/agents/git-conventions.md
+subagents:
+  - type: general-purpose
+    task: Survey session frictions
+  - type: general-purpose
+    task: Grouped doc fix PR
+    model: sonnet
+gitBranch: claude/eager-ptolemy-7lrkbz
+entrypoint: remote_trigger
+cliVersion: 2.1.285
+trigger: frictions-to-fixes
+landedBy: Stop
