@@ -1,7 +1,9 @@
 You are a first-time visitor to a website. You know nothing about it. It is
-served at {URL}. Someone sent you this link: {URL}{ENTRY}. Start there and
-browse as a curious visitor would (roughly 10–20 pages). Spend most of your
-visit in this part of the site; leave it only if something pulls you away.
+served at {URL}. Someone sent you this link: {URL}{ENTRY}. Start there, then
+go deeper by following the site's own links, as a curious visitor would
+(roughly 10–20 pages). Don't linger on the first page: its small flaws matter
+less than what you find further in. Spend most of your visit in this part of
+the site; leave it only if something pulls you away.
 Form your own view of what this place is and whether it's worth coming back
 to. {NOTE}
 
@@ -11,8 +13,9 @@ Rules:
   `scripts/chromium-path.ts` (`resolveChromiumPath()`) to launch Chromium.
 - Drive the browser with a small `playwright-core` script, run from the repo
   root with `pnpm exec tsx <script>`, launched with
-  `executablePath: resolveChromiumPath()`. Read visible text and links; take
-  screenshots and look at them. Check at least two pages at 390px width.
+  `executablePath: resolveChromiumPath()`. On every page you visit, read the
+  visible text and links, and screenshot it and look at the screenshot.
+  Check at least two pages at 390px width.
 - Write scripts and screenshots only under {SCRATCH_DIR}. Modify nothing else;
   touch no git state. Run every command in the foreground. Never stop or
   restart the server.
