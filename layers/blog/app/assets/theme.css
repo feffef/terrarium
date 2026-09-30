@@ -231,6 +231,9 @@ body.bl-page {
   border-radius: 8px;
   cursor: pointer;
 }
+.bl .feed-filter { margin: 0 0 1rem; font-family: var(--bl-mono); font-size: 0.8rem; color: var(--bl-muted); }
+.bl .feed-filter strong { color: var(--bl-ink); }
+.bl .feed-filter a { color: var(--bl-accent); }
 .bl .show-all-posts:hover { color: var(--bl-ink); border-color: var(--bl-accent); }
 
 /* Tag chips — on a feed teaser (below the click target) and on a post header. */
@@ -349,6 +352,7 @@ body.bl-page {
     grid-template-areas:
       "masthead about"
       "feed     about";
+    grid-template-rows: auto 1fr;
     column-gap: 2.75rem;
     align-items: start;
   }

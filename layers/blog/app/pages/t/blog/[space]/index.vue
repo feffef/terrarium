@@ -34,6 +34,10 @@ const meta = personaMeta(space)
 const landing = computed(() => data.value?.landing ?? null)
 const posts = computed(() => data.value?.posts ?? [])
 
+// Same 20 + "Show all" cap as the front door.
+const POSTS_VISIBLE = 20
+const showAllPosts = ref(false)
+
 const title = computed(() => landing.value?.title ?? `${meta.name}'s blog`)
 const tagline = computed(() => landing.value?.description ?? '')
 
@@ -73,9 +77,23 @@ useSeoMeta({ description: () => tagline.value })
 
       <div class="landing-feed">
         <ul v-if="posts.length" class="feed">
-          <BlogFeedItem v-for="post in posts" :key="post.path" :post="post" :link-prefix="space" />
+          <BlogFeedItem
+            v-for="(post, i) in posts"
+            v-show="showAllPosts || i < POSTS_VISIBLE"
+            :key="post.path"
+            :post="post"
+            :link-prefix="space"
+          />
         </ul>
         <p v-else class="empty">No posts here yet.</p>
+        <button
+          v-if="posts.length > POSTS_VISIBLE && !showAllPosts"
+          type="button"
+          class="show-all-posts"
+          @click="showAllPosts = true"
+        >
+          Show all {{ posts.length }} posts
+        </button>
       </div>
     </div>
 

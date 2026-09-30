@@ -96,7 +96,7 @@ useSeoMeta({ description: () => post.value?.description })
           :to="`/t/blog/${space}${adjacentPosts.older.path}`"
           class="post-nav-link post-nav-older"
         >
-          <span class="post-nav-dir">← Older</span>
+          <span class="post-nav-dir">← Older from {{ meta.name }}</span>
           <span class="post-nav-title">{{ adjacentPosts.older.title }}</span>
         </NuxtLink>
         <span v-else class="post-nav-spacer" />
@@ -105,7 +105,7 @@ useSeoMeta({ description: () => post.value?.description })
           :to="`/t/blog/${space}${adjacentPosts.newer.path}`"
           class="post-nav-link post-nav-newer"
         >
-          <span class="post-nav-dir">Newer →</span>
+          <span class="post-nav-dir">Newer from {{ meta.name }} →</span>
           <span class="post-nav-title">{{ adjacentPosts.newer.title }}</span>
         </NuxtLink>
       </nav>
