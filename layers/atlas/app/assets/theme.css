@@ -38,7 +38,8 @@
      ancestor still renders in-palette rather than transparent. */
   --biome-accent: #6f6656;
   --biome-accent-2: #9a927e;
-  --biome-tint: rgba(0, 0, 0, 0.03);
+  --biome-tint: #000;
+  --biome-tint-amount: 3%;
   --sig-1: var(--biome-accent);
   --sig-2: var(--biome-accent-2);
   --sig-3: var(--biome-accent);
@@ -65,21 +66,24 @@
   --atlas-paper-2: #eff0dd;
   --biome-accent: #3f6b3e; /* leaf */
   --biome-accent-2: #b8952f; /* dapple gold */
-  --biome-tint: rgba(63, 107, 62, 0.05);
+  --biome-tint: rgb(63, 107, 62);
+  --biome-tint-amount: 5%;
 }
 .atlas--floor {
   --atlas-paper: #e7ddc8;
   --atlas-paper-2: #f0e8d6;
   --biome-accent: #8a4f26; /* umber */
   --biome-accent-2: #a85a2c; /* rust */
-  --biome-tint: rgba(138, 79, 38, 0.06);
+  --biome-tint: rgb(138, 79, 38);
+  --biome-tint-amount: 6%;
 }
 .atlas--pool {
   --atlas-paper: #dfe6e3;
   --atlas-paper-2: #ecf1ee;
   --biome-accent: #356f7e; /* pondlight */
   --biome-accent-2: #5f97a1; /* glass */
-  --biome-tint: rgba(63, 127, 143, 0.05);
+  --biome-tint: rgb(63, 127, 143);
+  --biome-tint-amount: 5%;
 }
 @media (prefers-color-scheme: dark) {
   .atlas--canopy {
@@ -105,11 +109,13 @@
 /* ── Shell ──────────────────────────────────────────────────────────────── */
 .atlas {
   color: var(--atlas-ink);
-  background-color: var(--atlas-paper);
-  /* A whisper of the biome tint over the paper, plus a faint laid-paper grain. */
-  background-image:
-    linear-gradient(var(--biome-tint), var(--biome-tint)),
-    repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.012) 0 1px, transparent 1px 4px);
+  /* A whisper of the biome tint over the paper, plus a faint laid-paper grain —
+     mixed to opaque colours, not layered translucently: Chrome on a Mali GPU
+     re-stacks translucent background layers on partial raster, painting darker
+     bands (moto g06 / Mali-G52, 2026-09). */
+  --atlas-ground: color-mix(in srgb, var(--biome-tint) var(--biome-tint-amount), var(--atlas-paper));
+  background-color: var(--atlas-ground);
+  background-image: repeating-linear-gradient(0deg, color-mix(in srgb, #000 1.2%, var(--atlas-ground)) 0 1px, var(--atlas-ground) 1px 4px);
   font-family: var(--atlas-text);
   line-height: 1.62;
   min-height: 100vh;
