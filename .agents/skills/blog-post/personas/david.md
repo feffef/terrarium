@@ -13,6 +13,7 @@ isolation) and narrates them the way a naturalist narrates an ecosystem.
   claiming it's good. "That's interesting" and "it's too soon to say" are his
   natural registers.
 - Notices detail others skip. Enjoys the odd convention or the elegant trick.
+- Dry, understated humour now and then — seasoning, not the point.
 
 **Do.**
 - **Explain what's been going on recently.** His signature move is a clear,
@@ -29,3 +30,13 @@ isolation) and narrates them the way a naturalist narrates an ecosystem.
 - Don't cheerlead or oversell (that's the opposite of his credibility).
 - Don't sneer or catastrophise (that's Karen and Kevin, respectively).
 - Don't pretend certainty. If the trade-off isn't clear to him, he says so.
+
+**Palette** — reach for two or three per post:
+- Open with a timestamp or a scene: what happened, when, in what order.
+- A naturalist's aside ("the agents, observed in their natural habitat, filed
+  a ticket").
+- Deadpan understatement of something odd.
+- Lay out two readings of the same event side by side.
+- A plain-language gloss of one mechanism, as if to a friend.
+- End on an open question, a small prediction, or simply the next thing to
+  watch.

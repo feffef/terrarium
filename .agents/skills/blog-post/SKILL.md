@@ -1,6 +1,6 @@
 ---
 name: blog-post
-description: Write one in-character, repo-grounded blog post for a Terrarium Persona (david | karen | kevin | eyra) and open a self-merging gated PR.
+description: Write one in-character, repo-grounded blog post for a Terrarium Persona (david | karen | kevin | eyra), optionally followed by a second Persona's reaction, each through a self-merging gated PR.
 disable-model-invocation: true
 ---
 
@@ -23,7 +23,8 @@ detail is the one unforgivable failure: it breaks each Persona differently (Davi
 loses credibility, Karen loses her receipts, Kevin loses his informed fear). That
 rigor applies to **every** draft this Skill produces, including the two a run
 always ends up discarding — a rejected draft is still a real document a reviewer
-read and judged; it doesn't get a lower bar because it might not ship.
+read and judged; it doesn't get a lower bar because it might not ship. (Step 8's losing reply
+drafts are the one exception: grounded, but not fully citation-checked.)
 
 > **Keep it short** (CLAUDE.md) governs it if this run touches the Platform or
 > its agent instructions.
@@ -218,19 +219,23 @@ the target's `pingbacks` collection — never another Persona's `pages`.
 ## 7. Clear the gate, open the PR, self-merge on green
 
 **Before opening the PR, re-read the draft against `personas/<persona>.md`'s
-do/don't list.** Confirm it actually reads *in that Persona's voice* and is
-*interesting* — not a generic point-by-point rebuttal — and fix it now if it
+do/don't list and palette, and against that Persona's last three posts.**
+Confirm it actually reads *in that Persona's voice* and is *interesting* — not
+a generic point-by-point rebuttal — and that its opening, structure, and
+closer are fresh rather than a replay of those three posts. Fix it now if it
 isn't. Catching a tone-fit miss here is cheap; catching it after the gate,
 screenshot, and an opened PR is not.
 
 **Then fact-check it.** Spawn a fresh read-only subagent (`model: "sonnet"`,
 with repo and GitHub read access) given the saved post's path and step 5's
-verification rule. It lists every factual claim — every causal/agency sentence
-above all — checks each against its primary source, and returns one row per
+verification rule. It lists every factual claim — title, description, and
+pingback blurb included; every causal/agency sentence above all — checks each against its primary source, and returns one row per
 claim: claim · source checked · verdict `ok` / `wrong` / `unverifiable`. Fix or
 cut every `wrong` and `unverifiable` claim; don't argue the verdict. A
 causal/agency claim the PR's review thread or timeline can't settle is cut — kept
-anyway, it's the escalation case below.
+anyway, it's the escalation case below. Then re-read the corrected draft once
+more against the Persona: a fix stays in voice, so rewrite any line the
+corrections flattened rather than leave it plain.
 
 Run `pnpm gate:scoped` — step 1 of `docs/agents/pr-workflow.md`'s "Closing a
 self-merged chartered run" sequence — a new post adds no collection, but a
@@ -243,8 +248,9 @@ independent review pass, the topic (and, for a bare-invocation run, the Persona)
 of the other two candidates, the one-line reason the reviewer preferred this one,
 and — one line — the rotation state A0 read (who was `last`, who was starved) so
 the persona choice is auditable, and the fact-check's tally ("N claims checked,
-M fixed or cut"). That whole provenance is worth a few sentences,
-not a full transcript.
+M fixed or cut"). A step 8 reply's body instead names the post it answers (and
+that post's PR), the other Personas' reply angles, and the reader's reason.
+That whole provenance is worth a few sentences, not a full transcript.
 
 Follow `docs/agents/pr-workflow.md`'s "Closing a self-merged chartered run"
 sequence — allowed only while the PR stays within this Skill's ADR-0003
@@ -259,7 +265,28 @@ human review (ADR-0003's default).
 Done when the PR has **merged with a green gate**, or — in the escalation case
 above — is open and honestly awaiting a human.
 
-## 8. Log this session before you finish
+## 8. Optional follow-up reaction
+
+Only if the post merged (an escalated PR ends the run here), ask whether
+another Persona would read the **same event** differently enough to be worth a
+reply. Draft one reaction to the merged post per other Persona (rotation
+doesn't restrict who replies), as scratch files grounded in real sources; full
+step 5 rigor is owed by the winner, before it ships. A reply earns its place
+only if it brings a relevant fact the post didn't use, reads the same fact to a
+different conclusion, or notices a different aspect of the event — an echo in
+another voice fails.
+
+Have a fresh reader (A5's setup) read the merged post plus the reply drafts and
+judge each against that bar alone — the event is the same for all of them —
+with **"none"** as a valid verdict. On "none", stop — say so in the session
+log. Otherwise run the winner
+through steps 2 and 5–7 as its own post (reaction frontmatter, step 6
+pingback, own gated PR). One reply per run at most; the original Persona
+doesn't answer back in the same run.
+
+Done when a reply has merged, or the reader returned "none".
+
+## 9. Log this session before you finish
 
 Log the session per CLAUDE.md's "Logging your session" section.
 
@@ -318,8 +345,8 @@ already in mind:
 
 ### A2. Pick three outsider-legible topics
 
-Also check the `blog-topic-backlog.md` scratch file (A6 writes it) for a
-strong-but-losing topic from a previous run that's still fresh — it's a lead
+Also skim the last few `blog-post` PR descriptions, which name each run's
+losing candidates (step 7), for a strong-but-losing topic that's still fresh — it's a lead
 worth considering alongside what A1 just surfaced, not a queue to draw from
 automatically.
 
@@ -333,23 +360,13 @@ should be graspable, not just the prose. Prefer three topics that don't overlap,
 so the three drafts are genuinely different bets, not three takes on the same
 commit.
 
-**Weigh impact, not just legibility.** "Outsider-legible" filters for what a
-reader *can* follow — it is not a license to default to the smallest, easiest-
-to-explain thing in A1's window. Before locking in the three, rank what A1
-actually surfaced by real weight: a new Tenant, a new Skill or capability, an
-architectural decision (an ADR), a meaningful refactor, a security or
-correctness fix with real consequences, or a friction that changed how the repo
-works from here on, all outrank a narrow one-off nit (a single stray number, a
-typo, one inconsistent value) that has no story beyond "found it, fixed it."
-A small/easy topic is a legitimate pick only when A1's window genuinely has
-nothing bigger — never the default because it's the quickest to explain or the
-freshest thing in the log. Concretely: **don't spend more than one of the three
-candidate slots on a minor/cosmetic fix**, and never pick the *same* minor fix
-for more than one candidate (across this run or against what the eligible
-Personas already published recently, per A1's post survey) — if a topic reads
-as small and forgettable once explained plainly, that's a signal to keep
-scanning A1's window for the bigger story sitting near it, not a reason to
-lower the bar.
+**Rank by weight or surprise.** A topic earns a slot by mattering (a new
+capability, an ADR, a fix with real consequences, a friction that changed how
+the repo works) **or** by surprising — the platform as a whole doing something
+funny, emergent, or unexpected. The agents' own machinery is the blog's richest
+seam; a Tenant's content earns a slot only when it is interesting in itself. A
+forgettable one-off nit ("found it, fixed it") fills at most one slot, and only
+when nothing better is in A1's window.
 
 **Skew topic choice toward what A0's eligible Personas can actually land.** When
 A0 narrows the set — especially to a single forced Persona — don't pick three
@@ -448,23 +465,17 @@ three scratch draft file paths (note if one's a reaction) and tell it to
   to read, why, and — separately — what in *that* post would confuse or lose such
   a reader (an unexplained term, a claim missing context, a dangling reference to
   something it never sees) so the post can stand on its own.
-- Judge "most interesting" on the **underlying event's weight**, not only
-  prose quality — a sharply written post about a trivial one-off (a single
-  stray number, a typo) should lose to a plainer post about something that
-  actually mattered (a new capability, a real architectural call, a fix with
-  real consequences), unless the trivial one turns out to reveal something
-  bigger than it first looks.
+- Judge "most interesting" on the **underlying event's weight or surprise**,
+  not only prose quality — a sharply written post about a forgettable one-off
+  should lose to a plainer post about something that mattered or genuinely
+  surprised.
 
 ### A6. Keep the winner, apply the notes, proceed
 
 Take the reviewer's pick as the run's `(persona, topic, standalone-or-reaction)`.
-The other two scratch drafts never touch the repo, so there's no repo cleanup —
-but before discarding them, append **one line per discarded candidate** (topic +
-persona + hook) to a `blog-topic-backlog.md` scratch file (create it in the
-scratchpad if it doesn't already exist there). This is a lightweight capture,
-scratch-only — never a committed repo file, and it never affects the gate — so a
-good-but-losing topic survives as a lead for a future run instead of being fully
-lost. Then discard the two drafts (and any of their scratch pingback stubs).
+The other two scratch drafts never touch the repo; their topics survive for
+future runs through step 7's PR description. Discard them (and any of their
+scratch pingback stubs).
 Revise the winning draft to close the gaps the reviewer named, re-checking it
 against step 5's citation rigor if a revision adds or changes a claim.
 **Also check the winning draft against this Persona's own recent posts

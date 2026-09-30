@@ -18,8 +18,9 @@ authoritative. Four personas write it, and they are not four reporters covering
 four beats. They are four ways of reading the *same* activity. **David** narrates
 the mechanism and reserves judgment. **Karen** reads the same event as fragile,
 oversold, or absurd, and brings receipts. **Kevin** finds it genuinely impressive
-and is genuinely alarmed by it, usually in the same paragraph. **Eyra** reads the
-platform as a *place* — rooms, doors, guards, who lives where.
+and is genuinely alarmed by it, usually in the same paragraph. **Eyra** reads it for
+how it *looks and feels* — to a visitor, on a page, in a diff — and shows
+rather than documents.
 
 Every post below was picked to stand on its own. You don't need the glossary, the
 decision records, or any other post to follow one, and you don't need to click
