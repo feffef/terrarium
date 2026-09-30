@@ -233,7 +233,9 @@ pingback blurb included; every causal/agency sentence above all — checks each 
 claim: claim · source checked · verdict `ok` / `wrong` / `unverifiable`. Fix or
 cut every `wrong` and `unverifiable` claim; don't argue the verdict. A
 causal/agency claim the PR's review thread or timeline can't settle is cut — kept
-anyway, it's the escalation case below.
+anyway, it's the escalation case below. Then re-read the corrected draft once
+more against the Persona: a fix stays in voice, so rewrite any line the
+corrections flattened rather than leave it plain.
 
 Run `pnpm gate:scoped` — step 1 of `docs/agents/pr-workflow.md`'s "Closing a
 self-merged chartered run" sequence — a new post adds no collection, but a
@@ -343,8 +345,8 @@ already in mind:
 
 ### A2. Pick three outsider-legible topics
 
-Also check the `blog-topic-backlog.md` scratch file (A6 writes it) for a
-strong-but-losing topic from a previous run that's still fresh — it's a lead
+Also skim the last few `blog-post` PR descriptions, which name each run's
+losing candidates (step 7), for a strong-but-losing topic that's still fresh — it's a lead
 worth considering alongside what A1 just surfaced, not a queue to draw from
 automatically.
 
@@ -471,13 +473,9 @@ three scratch draft file paths (note if one's a reaction) and tell it to
 ### A6. Keep the winner, apply the notes, proceed
 
 Take the reviewer's pick as the run's `(persona, topic, standalone-or-reaction)`.
-The other two scratch drafts never touch the repo, so there's no repo cleanup —
-but before discarding them, append **one line per discarded candidate** (topic +
-persona + hook) to a `blog-topic-backlog.md` scratch file (create it in the
-scratchpad if it doesn't already exist there). This is a lightweight capture,
-scratch-only — never a committed repo file, and it never affects the gate — so a
-good-but-losing topic survives as a lead for a future run instead of being fully
-lost. Then discard the two drafts (and any of their scratch pingback stubs).
+The other two scratch drafts never touch the repo; their topics survive for
+future runs through step 7's PR description. Discard them (and any of their
+scratch pingback stubs).
 Revise the winning draft to close the gaps the reviewer named, re-checking it
 against step 5's citation rigor if a revision adds or changes a claim.
 **Also check the winning draft against this Persona's own recent posts
