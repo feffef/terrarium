@@ -7,7 +7,7 @@
 
 The Commons is the Platform's shared, cross-Tenant space — the home for
 **Aggregator** views that read *across* every Tenant (ADR-0025, issue #642). It is
-not a demo/content Tenant: where the Journal, Blog, Atlas, Midden, and Marquee
+not a demo/content Tenant: where the Journal, Blog, Atlas, Midden, Marquee, and Tinkerfund
 each author and own their own isolated content, the Commons owns almost none. Each
 of its Spaces is one cross-Tenant view over the other Tenants' opted-in content.
 

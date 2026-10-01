@@ -49,7 +49,10 @@ context listed above; pointers to them may live wherever they help a reader.
   real like the Journal and the Midden (the films and their in-universe
   order are genuine facts, not invented), but — like the Atlas — it claims
   nothing about the Terrarium itself; it is plain content about something
-  else entirely.
+  else entirely. **Tinkerfund** is fiction too: a simulated shop of invented
+  products that claims nothing about the Terrarium. The **Commons** owns almost
+  no content; it re-presents the other Tenants' opted-in content through the
+  Catalog and makes no claims of its own.
 - **Same-Space derivation vs. cross-Space denormalization.** The Atlas's
   **Interaction** is a same-Space edge whose reverse is *derived*; the Blog's
   **Pingback** denormalizes a *cross-Space* reaction, copying the reference into

@@ -32,7 +32,7 @@ Classify every surface **before** editing.
   `layers/<tenant>/CONTEXT.md`, our own Skills (not keyed in
   `skills-lock.json`) with their sibling files, and the current journal's
   facing pages,
-  `layers/journal/content/current/pages/{architecture,highlights,history,how-it-works,index}.md`.
+  `layers/journal/content/current/pages/{architecture,highlights,history,how-it-works,index,real-and-invented}.md`.
   Audit the source `.md`, not the render (the dashboard renders only part of
   `index.md`; its source still counts).
 - **Historical** — the append-only record: `docs/adr/*`, journal digests

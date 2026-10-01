@@ -40,7 +40,7 @@ function, then add one import + one call in `tests/e2e/smoke.spec.ts`.
 
 ## Playwright scroll/visibility gotchas
 
-Single-homed in `docs/agents/verifying-ui-changes.md`'s "Sharp edges" section
+Single-homed in `docs/agents/verifying-ui-changes.md`'s "The sharp edges" section
 ("Visibility is not in-viewport" and "`locator.click()` scrolls the element
 into view first") — read that doc, not a copy here.
 
