@@ -253,9 +253,10 @@ export function sessionNotes(sessions: SessionDoc[]): { ideas: NoteItem[]; learn
   const learnings: NoteItem[] = []
   for (const s of sessions) {
     const anchor = sessionAnchor(s.session)
-    for (const note of s.ideas ?? []) ideas.push({ note, kind: 'idea', session: s.session, anchor })
+    const date = s.endedAt.slice(0, 10)
+    for (const note of s.ideas ?? []) ideas.push({ note, kind: 'idea', session: s.session, date, anchor })
     if (s.external === true) continue
-    for (const note of s.learnings ?? []) learnings.push({ note, kind: 'learning', session: s.session, anchor })
+    for (const note of s.learnings ?? []) learnings.push({ note, kind: 'learning', session: s.session, date, anchor })
   }
   return { ideas, learnings }
 }

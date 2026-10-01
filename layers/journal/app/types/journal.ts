@@ -155,5 +155,6 @@ export interface NoteItem {
   note: string
   kind: 'idea' | 'learning'
   session: string
+  date: string
   anchor: string
 }
