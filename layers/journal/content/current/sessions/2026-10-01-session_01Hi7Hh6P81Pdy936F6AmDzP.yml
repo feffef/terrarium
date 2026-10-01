@@ -1,0 +1,147 @@
+schemaVersion: 1
+session: session_01Hi7Hh6P81Pdy936F6AmDzP
+startedAt: 2026-10-01T04:00:50Z
+endedAt: 2026-10-01T04:15:20Z
+kind: autonomous
+goal: Scheduled audit-docs sweep of the repo's Live docs for drift, duplication, verbosity and contradiction
+status: in-review
+outcome: One gated PR (#1517) of fact-checked doc fixes opened and gate green; merge via merge-pr.ts pending CI
+summary: Entirely schedule-initiated (the stored /audit-docs prompt); no human instruction beyond that. Four parallel read-only reviewers (freshness, single-home, concision, coherence) produced ~45 findings; one independent checker re-derived 22 shortlisted ones and rejected four as WRONG (midden Cataloguing-discipline pointer still resolves, history.md counts are a dated snapshot, domain.md does not restate ADR-0006, guard-io paragraph already tight) and advised skipping the CLAUDE.md inert-set pointer rewrite as a net loss. I applied the confirmed ones (pointer/heading fixes, Tinkerfund and Commons classification, third-altitude wording, concision trims in pr-workflow, git-conventions, guards, guest-contributions, CLAUDE.md), skipped the rest deliberately (larger moves such as relocating git mechanics out of pr-workflow, trimming CONTEXT.md implementation detail, and the Mermaid authoring rule were left as unfiled judgement calls rather than rushed), and left everything in open prune-trial territory alone, noting a real contradiction there (github-integration.md says remote sessions have no gh binary; the container has one). No issue filed; no ADR or human-only surface touched. gate:scoped ran full (journal page edit is non-inert) and passed.
+prs:
+  - "1517"
+docsRead:
+  - path: .claude/skills/audit-docs/SKILL.md
+    reason: (no reason given)
+  - path: .agents/prune-trials.yml
+    reason: (no reason given)
+  - path: CONTEXT.md
+    reason: (no reason given)
+  - path: README.md
+    reason: (no reason given)
+  - path: docs/agents/environment-caveats.md
+    reason: (no reason given)
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: docs/agents/guards.md
+    reason: (no reason given)
+  - path: CONTEXT-MAP.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: docs/agents/domain.md
+    reason: (no reason given)
+  - path: docs/agents/tenant-layers.md
+    reason: (no reason given)
+  - path: tests/README.md
+    reason: (no reason given)
+  - path: SECURITY.md
+    reason: (no reason given)
+  - path: docs/agents/verifying-ui-changes.md
+    reason: (no reason given)
+  - path: docs/agents/guest-contributions.md
+    reason: (no reason given)
+  - path: docs/agents/issue-tracker.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: docs/agents/triage-labels.md
+    reason: (no reason given)
+  - path: deploy/README.md
+    reason: (no reason given)
+  - path: layers/journal/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/commons/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/midden/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/blog/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/atlas/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/tinkerfund/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/marquee/CONTEXT.md
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: audit-docs
+    reason: (invoked as a slash command)
+frictions:
+  - description: Harness attribution reminder says to hand-write Co-Authored-By and Claude-Session trailers, but the commit-trailer guard denied the whole commit chain for doing so.
+    solution: Reconcile the harness template with the guard, or have CLAUDE.md say the trailer is auto-added; first commit attempt wasted a turn.
+    severity: nit
+  - description: The first PR body used the harness-supplied footer shape; the ADR-0017 provenance guard wanted a robot-link as the first line and denied it.
+    solution: Mention the exact first-line marker shape in CLAUDE.md or pr-workflow, not only in the deny message.
+    severity: nit
+  - description: Reviewer agents disagreed on which docs are in prune-trial territory (one skipped whole files the ledger lists only by keyword), so trial scoping needed re-checking by the checker.
+    solution: Give reviewers the ledger's paths and keywords verbatim in the dispatch brief.
+    severity: nit
+  - description: Findings in the single-home lens (e.g. relocating git mechanics, CONTEXT.md implementation detail) are larger than a fact-checked in-place fix and had no home in this run, so they were dropped.
+    solution: Let audit-docs record unadopted-but-confirmed findings somewhere durable (an issue label or research note) so the next sweep does not re-derive them.
+    severity: minor
+durationSec: 870
+models:
+  claude-sonnet-5-5: 52
+toolCounts:
+  Bash: 12
+  Agent: 5
+  ToolSearch: 2
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 2
+  mcp__github__subscribe_pr_activity: 1
+  mcp__github__add_issue_comment: 1
+  ReadNotifications: 1
+  Skill: 2
+docsReadViaShell:
+  - docs/agents/pr-workflow.md
+  - docs/agents/git-conventions.md
+  - docs/agents/guards.md
+  - docs/agents/guest-contributions.md
+  - CONTEXT-MAP.md
+  - layers/commons/CONTEXT.md
+  - .agents/skills/digest/SKILL.md
+  - .agents/skills/blog-post/SKILL.md
+  - docs/research/github-branch-protection-vs-autonomous-log-commits.md
+  - docs/agents/mdc-when-to-use.md
+  - .agents/skills/audit-skills/SKILL.md
+  - CONTEXT.md
+  - docs/agents/verifying-ui-changes.md
+  - layers/midden/CONTEXT.md
+  - layers/blog/CONTEXT.md
+  - .agents/skills/midden-catalogue/SKILL.md
+  - .agents/skills/dispatch-subagents/SKILL.md
+  - layers/tinkerfund/CONTEXT.md
+  - .agents/skills/audit-docs/SKILL.md
+  - docs/agents/domain.md
+  - docs/research/rulebook-migration-table.md
+  - docs/agents/environment-caveats.md
+  - docs/agents/issue-tracker.md
+  - docs/agents/triage-labels.md
+  - docs/agents/tenant-layers.md
+  - docs/agents/github-integration.md
+  - docs/research/public-readiness-review.md
+  - docs/adr/0003-agent-operating-model-and-governance.md
+  - layers/journal/CONTEXT.md
+  - docs/proposals/README.md
+  - docs/proposals/879-gate-yml-thin-shell.md
+  - docs/research/nuxt-content-review-grounding.md
+  - docs/adr/0004-objective-safety-gate.md
+subagents:
+  - type: general-purpose
+    task: "Audit A: freshness"
+  - type: general-purpose
+    task: "Audit B: single-home"
+  - type: general-purpose
+    task: "Audit C: concision"
+  - type: general-purpose
+    task: "Audit D: coherence"
+  - type: general-purpose
+    task: Fact-check audit findings
+gitBranch: claude/festive-mayer-2hedip
+entrypoint: remote_trigger
+cliVersion: 2.1.286
+trigger: audit-docs
+landedBy: Stop
