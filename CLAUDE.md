@@ -204,22 +204,13 @@ it with a tool.
   commonly reports exit code 144 (`SIGTERM`) — that confirms the kill worked, it
   isn't itself a failure signal. Recurred three times before the fix became a
   tool instead of more prose (#102 → #183 → #240).
-- **Never append a trailing shell `&` to a Bash command already passed with
-  `run_in_background: true`** — it backgrounds the *inner* shell a second
-  time, so "completed" stops meaning the real process finished. Use
-  `Monitor`/`ps` plus a log completion marker instead. Guarded, for any
-  caller (`docs/agents/guards.md`, issue #1208). To log a backgrounded run,
-  just redirect — `pnpm gate:scoped > <scratch>/gate.log 2>&1` with
-  `run_in_background: true` is enough; no `&`/`nohup` needed.
-- **A dispatched subagent must never background a Bash command at all, or call
-  `Monitor` to wait on one** — no wake mechanism ever resumes a stopped
-  subagent. Guarded (`docs/agents/guards.md`, issue #694/#995); the mechanics
-  (foreground-and-wait, a log completion marker, a `SendMessage` resume on
-  stall) are single-homed in `dispatch-subagents/SKILL.md`.
-- **Never pipe a backgrounded or long-running command through a trailing
-  `tail`/`head`/`echo` when its exit status or full output matters** — it
-  silently reports the wrong status and can truncate output. Guarded; the
-  deny message names the fix (`docs/agents/guards.md`, issue #873).
+- **A backgrounded command's reported status must be its real status.** Don't add
+  a trailing `&`/`nohup` to a `run_in_background: true` call, and don't pipe a
+  long-running command through `tail`/`head`/`echo` when its exit status or full
+  output matters — just redirect: `pnpm gate:scoped > <scratch>/gate.log 2>&1`.
+  A dispatched subagent never backgrounds Bash or calls `Monitor` (nothing wakes
+  it); it runs in the foreground — see `dispatch-subagents/SKILL.md`. Guards
+  deny these shapes and say the fix (`docs/agents/guards.md`; #873, #1208, #995).
 - **Start a command expected to run long (the full gate, `gate:scoped`, a
   build, an e2e run) with `run_in_background: true` from the outset** (main session only; a
   dispatched subagent runs it foreground), logging
