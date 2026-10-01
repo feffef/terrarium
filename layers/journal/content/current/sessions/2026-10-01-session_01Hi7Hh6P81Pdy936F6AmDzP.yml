@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01Hi7Hh6P81Pdy936F6AmDzP
 startedAt: 2026-10-01T04:00:50Z
-endedAt: 2026-10-01T04:15:20Z
+endedAt: 2026-10-01T04:19:26Z
 kind: autonomous
 goal: Scheduled audit-docs sweep of the repo's Live docs for drift, duplication, verbosity and contradiction
-status: in-review
-outcome: One gated PR (#1517) of fact-checked doc fixes opened and gate green; merge via merge-pr.ts pending CI
-summary: Entirely schedule-initiated (the stored /audit-docs prompt); no human instruction beyond that. Four parallel read-only reviewers (freshness, single-home, concision, coherence) produced ~45 findings; one independent checker re-derived 22 shortlisted ones and rejected four as WRONG (midden Cataloguing-discipline pointer still resolves, history.md counts are a dated snapshot, domain.md does not restate ADR-0006, guard-io paragraph already tight) and advised skipping the CLAUDE.md inert-set pointer rewrite as a net loss. I applied the confirmed ones (pointer/heading fixes, Tinkerfund and Commons classification, third-altitude wording, concision trims in pr-workflow, git-conventions, guards, guest-contributions, CLAUDE.md), skipped the rest deliberately (larger moves such as relocating git mechanics out of pr-workflow, trimming CONTEXT.md implementation detail, and the Mermaid authoring rule were left as unfiled judgement calls rather than rushed), and left everything in open prune-trial territory alone, noting a real contradiction there (github-integration.md says remote sessions have no gh binary; the container has one). No issue filed; no ADR or human-only surface touched. gate:scoped ran full (journal page edit is non-inert) and passed.
+status: completed
+outcome: "PR #1517 of fact-checked doc fixes merged green via merge-pr.ts"
+summary: Entirely schedule-initiated (the stored /audit-docs prompt); no human instruction beyond that. Four parallel read-only reviewers (freshness, single-home, concision, coherence) produced ~45 findings; one independent checker re-derived 22 shortlisted ones and rejected four as WRONG (midden Cataloguing-discipline pointer still resolves, history.md counts are a dated snapshot, domain.md does not restate ADR-0006, guard-io paragraph already tight) and advised skipping the CLAUDE.md inert-set pointer rewrite as a net loss. I applied the confirmed ones (pointer/heading fixes, Tinkerfund and Commons classification, third-altitude wording, concision trims in pr-workflow, git-conventions, guards, guest-contributions, CLAUDE.md), skipped the rest deliberately (larger moves such as relocating git mechanics out of pr-workflow, trimming CONTEXT.md implementation detail, and the Mermaid authoring rule were left as unfiled judgement calls rather than rushed), and left everything in open prune-trial territory alone, noting a real contradiction there (github-integration.md says remote sessions have no gh binary; the container has one). No issue filed; no ADR or human-only surface touched. gate:scoped ran full (journal page edit is non-inert) and passed; PR merged on green CI.
 prs:
   - "1517"
 docsRead:
@@ -82,18 +82,18 @@ frictions:
   - description: Findings in the single-home lens (e.g. relocating git mechanics, CONTEXT.md implementation detail) are larger than a fact-checked in-place fix and had no home in this run, so they were dropped.
     solution: Let audit-docs record unadopted-but-confirmed findings somewhere durable (an issue label or research note) so the next sweep does not re-derive them.
     severity: minor
-durationSec: 870
+durationSec: 1115
 models:
-  claude-sonnet-5-5: 52
+  claude-sonnet-5-5: 58
 toolCounts:
-  Bash: 12
+  Bash: 14
   Agent: 5
   ToolSearch: 2
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 2
   mcp__github__subscribe_pr_activity: 1
   mcp__github__add_issue_comment: 1
-  ReadNotifications: 1
+  ReadNotifications: 2
   Skill: 2
 docsReadViaShell:
   - docs/agents/pr-workflow.md
