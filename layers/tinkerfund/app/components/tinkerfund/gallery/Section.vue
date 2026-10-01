@@ -36,7 +36,7 @@ const bounds = computed(() => tinkerfundPriceBounds(cards.value))
     <span class="tf-label">{{ tinkerfundCount(cards.length, 'Campaign') }}</span>
   </TinkerfundBrowseIndexTable>
 
-  <div v-else-if="id === 'filters'" class="filters">
+  <div v-else-if="id === 'filters'" class="filtering">
     <TinkerfundBrowseFilters class="tf-panel" :query="filterQuery" :categories="categories" :bounds="bounds" @update="filterQuery = $event" />
     <ul class="matches">
       <li v-for="c in filtered" :key="c.path">{{ c.registry }} · {{ c.title }}</li>
@@ -178,9 +178,9 @@ const bounds = computed(() => tinkerfundPriceBounds(cards.value))
 .specimen { display: grid; gap: 8px; align-content: start; padding: 16px; }
 .specimen > * { margin: 0; }
 .cards li { display: grid; }
-.filters { display: grid; gap: 18px; }
-@media (min-width: 720px) { .filters { grid-template-columns: 260px 1fr; } }
-.filters .tf-panel { padding: 18px; }
+.filtering { display: grid; gap: 18px; }
+@media (min-width: 720px) { .filtering { grid-template-columns: 260px 1fr; } }
+.filtering .tf-panel { padding: 18px; }
 .matches { margin: 0; padding: 0; list-style: none; font: 500 13px/1.8 var(--tf-mono); }
 .search { max-width: 480px; }
 .chips { display: flex; flex-wrap: wrap; gap: 6px; }
