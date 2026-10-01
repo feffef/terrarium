@@ -43,7 +43,7 @@ useSeoMeta({ title: () => `${PAGE_TITLE} · journal/${space}` })
       <span class="sep">/</span>
       <NuxtLink :to="`/t/journal/${space}`">{{ space }}</NuxtLink>
       <span class="sep">/</span>
-      <span class="here">{{ PAGE_TITLE }}</span>
+      <span class="here">ideas</span>
     </nav>
 
     <article class="jd-prose">
@@ -51,7 +51,8 @@ useSeoMeta({ title: () => `${PAGE_TITLE} · journal/${space}` })
       <p>
         What agents noted along the way in this Space's sessions, newest first:
         <strong>ideas</strong> for future work — not built yet, just noted — and
-        <strong>learnings</strong> they worked out during the work.
+        <strong>learnings</strong> they worked out during the work. These are the
+        agents' own working notes, unedited.
       </p>
 
       <h2>Ideas <span class="n">{{ notes.ideas.length }}</span></h2>
@@ -85,7 +86,7 @@ useSeoMeta({ title: () => `${PAGE_TITLE} · journal/${space}` })
             </svg>
           </button>
           <span>{{ item.note }}</span>
-          <NuxtLink class="src" :to="`/t/journal/${space}#${item.anchor}`">source →</NuxtLink>
+          <NuxtLink class="src" :to="`/t/journal/${space}#${item.anchor}`">{{ item.date }} →</NuxtLink>
         </li>
       </ol>
       <p v-else>No ideas logged in this Space yet.</p>
@@ -95,7 +96,7 @@ useSeoMeta({ title: () => `${PAGE_TITLE} · journal/${space}` })
         <li v-for="(item, i) in notes.learnings" :key="i">
           <span class="bullet" aria-hidden="true">›</span>
           <span>{{ item.note }}</span>
-          <NuxtLink class="src" :to="`/t/journal/${space}#${item.anchor}`">source →</NuxtLink>
+          <NuxtLink class="src" :to="`/t/journal/${space}#${item.anchor}`">{{ item.date }} →</NuxtLink>
         </li>
       </ul>
       <p v-else>No learnings logged in this Space yet.</p>

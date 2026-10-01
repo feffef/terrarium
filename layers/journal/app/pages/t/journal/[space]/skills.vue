@@ -29,7 +29,7 @@ useSeoMeta({ title: () => `${PAGE_TITLE} · journal/${space}` })
       <span class="sep">/</span>
       <NuxtLink :to="`/t/journal/${space}`">{{ space }}</NuxtLink>
       <span class="sep">/</span>
-      <span class="here">{{ PAGE_TITLE }}</span>
+      <span class="here">skills</span>
     </nav>
 
     <article class="jd-prose">

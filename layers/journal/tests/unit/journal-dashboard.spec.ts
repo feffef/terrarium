@@ -374,6 +374,7 @@ describe('sessionNotes', () => {
       note: 'idea three',
       kind: 'idea',
       session: 's3',
+      date: '2026-07-05',
       anchor: sessionAnchor('s3'),
     })
   })

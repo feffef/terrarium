@@ -242,7 +242,7 @@ useSeoMeta({
           <JournalFrictionStrata :counts="frictionSeverityTotals" :total="totalFrictions">
             {{ frictionSeverityTotals.blocker }} blocker{{ frictionSeverityTotals.blocker === 1 ? '' : 's' }} ·
             {{ frictionSeverityTotals.major }} major{{ frictionSeverityTotals.major === 1 ? '' : 's' }}
-            <template v-if="otherFrictions"> · {{ otherFrictions }} other</template>
+            <template v-if="otherFrictions"> · {{ otherFrictions }} lesser</template>
           </JournalFrictionStrata>
         </template>
       </JournalStatTile>
@@ -539,6 +539,12 @@ h1 {
   box-shadow: var(--jd-shadow);
 }
 
+@media (max-width: 560px) {
+  .drow { grid-template-columns: 1fr max-content; grid-template-areas: 'date caret' 'summary summary'; }
+  .drow .digest-date { grid-area: date; }
+  .drow .digest-summary { grid-area: summary; }
+  .drow .caret { grid-area: caret; }
+}
 @media (max-width: 900px) {
   .tiles { grid-template-columns: repeat(2, 1fr); }
   .masthead { grid-template-columns: 1fr; }
