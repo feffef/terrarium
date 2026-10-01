@@ -245,3 +245,36 @@ trials:
       damage: a typed `session:` that the lander silently corrected, or a
       guard denial for a missing marker that the session fixed from the
       deny message.
+  - problem: >
+      The backgrounding / pipe-to-tail cluster. Three CLAUDE.md bullets (no
+      trailing `&` on a `run_in_background` call; a subagent never backgrounds
+      or uses `Monitor`; no trailing `tail`/`head`/`echo` pipe) each failed as
+      prose first — #873 (two prose fixes "did not hold", per
+      `scripts/tail-pipe-guard.ts`'s header), #1208 (two recurrences, per
+      `double-background-guard.ts`), #694/#995 — and are now held by
+      `tail-pipe-guard.ts`, `double-background-guard.ts` and
+      `subagent-background-guard.ts`, whose deny messages name the fix. Merged
+      the three into one goal-shaped bullet (kept the `> log 2>&1` hint and
+      the guards.md pointer) and trimmed the dispatch-subagents verification
+      bullet to the rule, the log-marker signal and the `SendMessage` resume.
+      The search subagent covered the instruction corpus, the rulebook table
+      (excluded list included), guards.md and the guard script headers; it
+      could not read issue threads (GraphQL 403), so issue evidence is from
+      the guard headers. Net about -11 lines; the mass here was small.
+    territory:
+      paths:
+        - "CLAUDE.md: the three backgrounding / trailing-`&` / tail-pipe bullets"
+        - ".agents/skills/dispatch-subagents/SKILL.md: the \"Run verification ... in the foreground\" bullet"
+      keywords:
+        - trailing shell `&`
+        - double-background
+        - trailing `tail`
+    opened: 2026-10-01
+    proven: true
+    check: >
+      Damage is a `tail-pipe-guard`, `double-background-guard` or
+      `subagent-background-guard` denial (or a log line showing the shape got
+      through) for a session that didn't know the rule and whose deny message
+      didn't fix it in one retry, or a subagent whose backgrounded command
+      stranded work. NOT damage: a guard denial the session fixed from the
+      deny message.

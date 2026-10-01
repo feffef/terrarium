@@ -78,13 +78,11 @@ The subagent cannot see this session's context, so the brief is self-contained:
   `gate.log` collides silently (no error; one agent just quotes another's run
   as its own), so a collision needs PID-based re-verification to catch
   (issues #847, #1191).
-- **Run verification (`pnpm gate:scoped`, and any other check) in the foreground
-  and wait** — a `PreToolUse` guard denies backgrounding it outright; its own
-  deny message covers why and the foreground/split/`preview.ts` alternatives
-  (`docs/agents/guards.md`, issue #694). When a check might outrun one foreground
-  call anyway, name a concrete completion signal — a log-file marker, never
-  `Monitor` (guard-denied too, issue #995) — and resume a still-running one with
-  `SendMessage`, pasting the log's actual tail (issue #602).
+- **Run verification (`pnpm gate:scoped`, any check) in the foreground and wait**;
+  a guard denies backgrounding it (`docs/agents/guards.md`). If a check might
+  outrun one call, name a log-file marker as the completion signal (never
+  `Monitor`) and resume a still-running one with `SendMessage`, pasting the
+  log's actual tail (issue #602).
 - **The Agent tool ignores `run_in_background: false`.** Every Agent-tool call
   launches as a background async task regardless of the `run_in_background`
   parameter passed — plan to wait on the automatic task-notification for the
