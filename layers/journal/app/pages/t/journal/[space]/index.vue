@@ -221,23 +221,23 @@ useSeoMeta({
     <p class="tiles-headline">{{ tilesHeadline }}</p>
     <section class="tiles" aria-label="State of this Space">
       <JournalStatTile
-        label="Sessions logged"
+        label="Sessions logged" gloss="One stint of an agent working, written up"
         :value="sessions.length"
         :sub="kindSubtext"
       />
-      <JournalStatTile label="Platform Skills" :value="platformSkills.length">
+      <JournalStatTile label="Platform Skills" gloss="Reusable playbooks the agents follow" :value="platformSkills.length">
         <template #sub>
           <template v-if="externalSkillTotal">+{{ externalSkillTotal }} external · </template>
           <NuxtLink class="pr-link" :to="{ name: 'journal-skills', params: { space } }">browse →</NuxtLink>
         </template>
       </JournalStatTile>
-      <JournalStatTile label="Ideas noted" :value="notes.ideas.length">
+      <JournalStatTile label="Ideas noted" gloss="Suggestions agents left for later" :value="notes.ideas.length">
         <template #sub>
           {{ notes.learnings.length }} learning{{ notes.learnings.length === 1 ? '' : 's' }} ·
           <NuxtLink class="pr-link" :to="{ name: 'journal-ideas', params: { space } }">browse →</NuxtLink>
         </template>
       </JournalStatTile>
-      <JournalStatTile label="Frictions surfaced" :value="totalFrictions">
+      <JournalStatTile label="Frictions surfaced" gloss="Snags an agent hit and wrote down" :value="totalFrictions">
         <template #sub>
           <JournalFrictionStrata :counts="frictionSeverityTotals" :total="totalFrictions">
             {{ frictionSeverityTotals.blocker }} blocker{{ frictionSeverityTotals.blocker === 1 ? '' : 's' }} ·
@@ -247,7 +247,7 @@ useSeoMeta({
         </template>
       </JournalStatTile>
       <JournalStatTile
-        label="PRs referenced"
+        label="PRs referenced" gloss="Proposed changes, reviewed before landing"
         :value="referencedPrs.length"
       >
         <template #sub>
