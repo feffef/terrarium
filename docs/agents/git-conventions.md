@@ -1,8 +1,7 @@
 # Git conventions
 
 How to use git here without losing work or drawing a wrong conclusion from
-history. Moved out of `CLAUDE.md` so that file could stay an index (the same
-treatment `pr-workflow.md` got in #448).
+history.
 
 Scope: local git mechanics only.
 [`github-integration.md`](./github-integration.md) covers the adjacent
@@ -46,15 +45,13 @@ read both sides **in full** before trusting the merge.
 
 ## If a checkout is still shallow
 
-A `SessionStart` hook (`scripts/unshallow-on-start.ts`) unshallows before a
-session's first turn, so ordinary work should never meet a shallow one (issue
-#772). If it's ever still shallow (offline, the hook's fetch failed), don't
-trust history off it — a shallow `merge-base` can **under-report** a diff,
-not just over-report it (a revert branch is the common case where that
-bites). Run `git fetch --unshallow` and verify before
-trusting any history-based conclusion; refuse to answer rather than classify
-off the truncated graph. `scripts/gate.ts` enforces the same rule in code
-(issue #849).
+A `SessionStart` hook (`scripts/unshallow-on-start.ts`, issue #772) unshallows
+before a session's first turn, so a shallow checkout means the hook's fetch
+failed (e.g. offline). Don't trust history off it — a shallow `merge-base` can
+**under-report** a diff, not just over-report it (a revert branch is the common
+case). Run `git fetch --unshallow` and verify before trusting any history-based
+conclusion; refuse to answer rather than classify off the truncated graph.
+`scripts/gate.ts` enforces the same in code (issue #849).
 
 ## Commit hygiene
 
@@ -89,9 +86,9 @@ The same discipline applies to a backgrounded check: **never chain
 after starting a backgrounded gate/test run**, without first waiting for and
 checking its actual exit code — one session backgrounded `pnpm gate:scoped`
 and chained `git push` immediately after, so the push went out while the
-gate was still red. Start the long check with `run_in_background: true` and
-a log path, then read that log's actual completion/exit status before
-running anything that assumes it passed.
+gate was still red. Start it per CLAUDE.md's long-command bullet, then read
+that log's actual completion/exit status before running anything that assumes
+it passed.
 
 ## Check `git status` before a destructive command, and never silence one's output
 

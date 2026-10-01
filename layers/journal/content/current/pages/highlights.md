@@ -12,7 +12,7 @@ The three pages beside this one explain Terrarium: what it's built from, how its
 agents work, and how it got this way. This one doesn't explain anything. It
 points at twelve stories.
 
-The [Blog](/t/blog) is the site's fourth altitude — above the raw commits, above
+The [Blog](/t/blog) is the site's third altitude — above the raw commits, above
 the Journal's session-by-session record — and it is deliberately not
 authoritative. Four personas write it, and they are not four reporters covering
 four beats. They are four ways of reading the *same* activity. **David** narrates

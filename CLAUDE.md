@@ -81,7 +81,7 @@ it with a tool.
   decide whether it lands (ADR-0004), so opening is safe and reversible (just close
   the PR); suppressing it strands finished work instead of protecting anything.
   You may note the tension in your session log, but don't let the restriction
-  suppress the PR. (Supersedes #491's precedence clause; see #592.)
+  suppress the PR. (#592)
 - All work must clear the **safety gate** (build/validate/isolation, ADR-0004).
   The manifest-expansion, routing, and cross-Tenant-catalog modules
   (`content.config.ts`, `shared/expand.ts`, `modules/routing.ts`,
@@ -93,7 +93,7 @@ it with a tool.
   behaviour — see ADR-0004's 2026-07-06 amendment for the exact axes); the sole
   exception is a `prune-trial` rewrite of an ADR that keeps what it decided (ADR-0027).
   The pinned eight above are the manifest-expansion/routing/catalog family
-  (ADR-0004/0025; its 2026-09-05 amendment folds in `shared/schemas/`,
+  (ADR-0004/0025; ADR-0025's 2026-09-05 amendment folds in `shared/schemas/`,
   directory-scoped), not the whole human-only set: "isolation logic" is an
   unpinned catch-all that also covers `shared/manifest.ts` (ADR-0025: defines
   the `tenant_space_collection` key, "the unit of isolation"), the root

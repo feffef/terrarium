@@ -57,14 +57,12 @@ issue below rather than rephrasing the call until it passes.
   scheduled run — a routine that finds a guard-touching fix files the issue
   with the recommended fix and stops there; a human-attended session
   implements it.
-- **A unit test must assert the underlying property, not a handful of
-  hand-picked substring fixtures.** A regex built on a negated character class
-  can match across newlines, letting an unrelated verb on one line accidentally
-  deny an unrelated action on the next — 26 passing tests gave no signal
-  because every one of them asserted against single-line substrings, never the
-  multi-line property actually at risk. Cover multi-line and adversarial
-  inputs, and live-probe the real deny path once before trusting the suite as
-  sufficient — the "Human-only to merge" bullet above is exactly why a test
+- **A unit test must assert the underlying property, not hand-picked substring
+  fixtures.** A regex on a negated character class can match across newlines, so
+  an unrelated verb on one line denies an unrelated action on the next — 26
+  passing tests missed this because every one asserted single-line substrings.
+  Cover multi-line and adversarial inputs, and live-probe the real deny path once
+  before trusting the suite; the "Human-only to merge" bullet above is why a test
   alone can't be the whole story.
 
 ## Extending one

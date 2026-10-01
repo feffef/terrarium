@@ -1,15 +1,12 @@
 # Landing a gated PR
 
-The single home for the "land a low-risk gated PR" recipe. `CLAUDE.md`'s "Pushing is not landing" bullet keeps the principle and
-points here for the mechanics; the per-Skill merge sections point here too.
+The single home for the "land a low-risk gated PR" recipe. `CLAUDE.md`'s
+"Pushing is not landing" bullet and the per-Skill merge sections point here for
+the mechanics.
 
-This doc doesn't restate *why* a tier gets to merge on green (that's ADR-0003's
-governance call) or what counts as high-risk (CLAUDE.md's Ground rules, ADR-0004) — it
-references both rather than re-deriving them. For `main`'s current
-branch-protection state, see
-`docs/research/github-branch-protection-vs-autonomous-log-commits.md`
-(issue #348) rather than assuming this doc's own description of that state
-hasn't drifted.
+Why a tier merges on green: ADR-0003. What counts as high-risk: CLAUDE.md's
+Ground rules, ADR-0004. `main`'s branch-protection state:
+`docs/research/github-branch-protection-vs-autonomous-log-commits.md` (issue #348).
 
 For the `mcp__github__*` tool surface this recipe runs on — transient 503s and
 when to retry, `get_check_runs` vs `get_status`, the `list_*`/`search_*`
@@ -36,14 +33,13 @@ per-story findings.
 
 ## The recipe
 
-1. Run the safety gate (ADR-0004) and wait for it to finish — a red gate
+1. Run `pnpm gate:scoped` (ADR-0004) and wait for it to finish — a red gate
    never merges, no exception.
 2. Run `pnpm exec tsx scripts/check-conflicting-issues.ts --pr <number>` (or `<base>
    <head>` for a locally-resolvable diff) and eyeball any hits — it flags an
    *open* issue whose body names one of the PR's changed files alongside
    deletion-language ("delete", "remove", "unused", …), the mechanical
-   cross-check issue #798 added after PR #789 was caught mid-review only
-   because a human happened to read the full issue history. File-level
+   cross-check added by issue #798. File-level
    heuristic, advisory only — a hit is a prompt to go read that issue, not
    proof of a real conflict, and this step never blocks the gate.
 3. Poll `get_check_runs` for green. A check reporting `in_progress` is not
@@ -69,9 +65,8 @@ per-story findings.
    schedule each time (issue #929).
 4. **Post the verdict as a PR review or comment before merging — every time,
    even on a clean "merging as-is" verdict.** The merge must never be the
-   only trace: an unreviewed-looking merge and a genuinely-reviewed one must
-   stay distinguishable on the PR itself, or `get_reviews`/`get_comments`
-   return empty and a real review reads as none having happened.
+   only trace: otherwise `get_reviews`/`get_comments` return empty and a real
+   review reads as none having happened.
 
    **Never post it as an APPROVE-event review** — use `event=COMMENT`, or
    `add_issue_comment`. On a PR this toolchain opened it simply fails: under
@@ -143,7 +138,8 @@ treat it as the already-merged restart case above instead of pushing.
 
 ## Closing a self-merged chartered run
 
-Every chartered Skill in the tier list above closes the same way once its own
+Every Skill in the tier list above that merges its own PR (not `guest-build` or
+an ordinary work PR) closes the same way once its own
 scope-specific work is staged — each Skill's own SKILL.md states only its
 delta from this sequence (what its diff must be limited to, and what to do
 when something rides outside that scope):
