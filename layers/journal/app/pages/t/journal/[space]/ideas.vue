@@ -86,7 +86,7 @@ useSeoMeta({ title: () => `${PAGE_TITLE} · journal/${space}` })
             </svg>
           </button>
           <span>{{ item.note }}</span>
-          <NuxtLink class="src" :to="`/t/journal/${space}#${item.anchor}`">{{ item.date }} →</NuxtLink>
+          <NuxtLink class="src" :to="`/t/journal/${space}#${item.anchor}`" :aria-label="`Source session, ${item.date}`">{{ item.date }} →</NuxtLink>
         </li>
       </ol>
       <p v-else>No ideas logged in this Space yet.</p>
@@ -96,7 +96,7 @@ useSeoMeta({ title: () => `${PAGE_TITLE} · journal/${space}` })
         <li v-for="(item, i) in notes.learnings" :key="i">
           <span class="bullet" aria-hidden="true">›</span>
           <span>{{ item.note }}</span>
-          <NuxtLink class="src" :to="`/t/journal/${space}#${item.anchor}`">{{ item.date }} →</NuxtLink>
+          <NuxtLink class="src" :to="`/t/journal/${space}#${item.anchor}`" :aria-label="`Source session, ${item.date}`">{{ item.date }} →</NuxtLink>
         </li>
       </ul>
       <p v-else>No learnings logged in this Space yet.</p>
