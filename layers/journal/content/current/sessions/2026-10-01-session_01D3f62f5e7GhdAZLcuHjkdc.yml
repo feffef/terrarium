@@ -1,0 +1,61 @@
+schemaVersion: 1
+session: session_01D3f62f5e7GhdAZLcuHjkdc
+startedAt: 2026-10-01T00:16:20Z
+endedAt: 2026-10-01T00:21:36Z
+kind: autonomous
+goal: Write the 2026-09-30 Digest and run the Journal retention sweep
+status: in-review
+outcome: "PR #1513 open with the Digest and sweep; local gate green, fact-check found no wrong claims"
+summary: "A scheduled /digest run, so all work was Routine-instructed with no live human ask. Gathered the one closed day (2026-09-30), wrote its Digest, ran the retention sweep (1 digest and 6 session logs archived), and had a fresh subagent fact-check it (22 claims, none wrong; two optional wording tweaks applied). pnpm gate:scoped passed locally. Opened PR #1513 and subscribed; it stays open until the gate on CI is green and it merges via the self-merge path."
+prs:
+  - "1513"
+docsRead:
+  - path: layers/journal/content/current/pages/digests/2026-09-30.md
+    reason: (read before editing)
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: digest
+    reason: (invoked as a slash command)
+frictions:
+  - description: The Stop hook demanded commit and push while the fact-check and gate were still running, so I committed before the fact-check finished and needed a follow-up commit.
+    solution: Let the Stop hook wait for in-flight background work, or note in the digest Skill that the follow-up commit is expected.
+    severity: nit
+  - description: Passed run_in_background false on the Agent call; the agent-background-flag guard denied it and cost one retry.
+    solution: The digest Skill's fact-check step could say to omit the flag.
+    severity: nit
+  - description: ADR-0017's provenance header shows a model name, which conflicts with the harness rule against model identifiers in PR bodies; I used Claude Code as the bracket text.
+    solution: Amend ADR-0017's header shape to allow a model-free form.
+    severity: minor
+durationSec: 316
+models:
+  claude-sonnet-5-5: 36
+toolCounts:
+  Bash: 11
+  Read: 1
+  Write: 1
+  Agent: 2
+  ToolSearch: 1
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  Skill: 2
+filesEdited:
+  - layers/journal/content/current/pages/digests/2026-09-30.md
+docsReadViaShell:
+  - docs/agents/pr-workflow.md
+  - docs/agents/guards.md
+subagents:
+  - type: general-purpose
+    task: Fact-check digest
+    model: sonnet
+  - type: general-purpose
+    task: Fact-check digest
+    model: sonnet
+gitBranch: claude/compassionate-lovelace-6pebat
+entrypoint: remote_trigger
+cliVersion: 2.1.286
+trigger: digest
+landedBy: Stop
