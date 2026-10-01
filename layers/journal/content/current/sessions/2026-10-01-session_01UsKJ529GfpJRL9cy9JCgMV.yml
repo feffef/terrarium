@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01UsKJ529GfpJRL9cy9JCgMV
 startedAt: 2026-10-01T11:05:10Z
-endedAt: 2026-10-01T11:16:09Z
+endedAt: 2026-10-01T11:21:10Z
 kind: autonomous
 goal: Write one blog post for a Blog Persona via the scheduled blog-post Skill
-status: in-review
-outcome: Eyra post on the phone-banding Atlas bug opened as PR 1518, gate green locally, awaiting CI and merge
-summary: "Scheduled /blog-post run with no human input and no persona argument; everything was agent-initiated under the Skill's charter. The rotation gate left david, eyra and kevin eligible. I drafted three candidates (Eyra on the phantom-crop Atlas bug, Kevin on the audit-docs sweep with its skeptic checker, David on the retired house metaphor), and a fresh Sonnet reader picked Eyra's. I revised per its notes, a second Sonnet fact-checked 27 claims and I fixed seven (wrong line anchor, wrong diagram description, teal not green, agency of the owner-directed hunt, evening-before, branch-only log link). pnpm gate:scoped passed, and I opened PR 1518 and subscribed. Still to do: verdict comment and merge-pr.ts once CI is green."
+status: completed
+outcome: Eyra post on the phone-banding Atlas bug merged via PR 1518 with a green gate; step 8 follow-up reaction not run
+summary: Scheduled /blog-post run with no human input and no persona argument; everything was agent-initiated under the Skill's charter. The rotation gate left david, eyra and kevin eligible. I drafted three candidates (Eyra on the phantom-crop Atlas bug, Kevin on the audit-docs sweep with its skeptic checker, David on the retired house metaphor), and a fresh Sonnet reader picked Eyra's. I revised per its notes, a second Sonnet fact-checked 27 claims and I fixed seven (wrong line anchor, wrong diagram description, teal not green, agency of the owner-directed hunt, evening-before, branch-only log link). pnpm gate:scoped passed, and I opened PR 1518 and subscribed. PR 1518 merged on green CI via merge-pr.ts. I did not run the optional step 8 follow-up reaction (time/cost); no reply was drafted.
 prs:
   - "1518"
 docsRead:
@@ -34,11 +34,11 @@ frictions:
   - description: Agent call with run_in_background false was denied by a guard
     solution: Omit the flag; the Skill's A5 wording could say so
     severity: nit
-durationSec: 659
+durationSec: 960
 models:
-  claude-sonnet-5-5: 62
+  claude-sonnet-5-5: 71
 toolCounts:
-  Bash: 22
+  Bash: 24
   Read: 3
   mcp__github__pull_request_read: 2
   Agent: 3
@@ -48,6 +48,8 @@ toolCounts:
   mcp__github__subscribe_pr_activity: 1
   Skill: 2
   mcp__github__add_issue_comment: 1
+  ReadNotifications: 2
+  mcp__github__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/blog/content/eyra/pages/2026-10-01-the-medallion-wasnt-cropped-the-wall-behind-it-was-striped.md
 docsReadViaShell:
