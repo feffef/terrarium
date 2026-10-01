@@ -31,3 +31,19 @@ observations:
       instructions — but it still shipped an unverified wrong claim. Not
       escalated as an issue: the gap that caused it is already closed by the
       fix commit itself, so there is no open action item left for a human.
+  - date: "2026-10-01"
+    note: >-
+      Re-verified (audit-skills behaviour check): the PR #1478 case
+      re-confirmed directly (PR #1475's own body says "why it isn't a
+      homepage change"; the wrong claim was corrected by commit 98ece44f,
+      which also added the fact-check step in the same commit). Spot-checked
+      9 claims across the other 6 digests (#1443, #1506, #1402, #1322,
+      #1504, #1447, #1346, #1496, #1309) against live PR bodies/diffs — all
+      matched, no second factual error found. Confirmed the fact-check step
+      is genuinely running post-fix, not silently skipped like blog-post's
+      step 7 was: session_01NbSN3foQRduNSW6jJyZD5F (PR #1497) and
+      session_01D3f62f5e7GhdAZLcuHjkdc (PR #1513) both show an explicit
+      dispatched fact-check subagent with a claim tally (28 and 22 claims
+      respectively, none wrong). Retention sweep matches spec
+      (`RETAIN_DATES = 7`): PR #1513's diff moves exactly one digest and six
+      session logs from `current/` to `archived/`. Grade/role unchanged.

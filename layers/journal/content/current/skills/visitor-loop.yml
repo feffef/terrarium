@@ -8,8 +8,10 @@ role: >-
   part of the Platform, in rotation); the run fixes what at least two of them
   flag, builds the best feature idea they raised, reviews both PRs with
   `code-review`, and self-merges them on a green
-  gate within its ADR-0003 remit. It remembers the owner's review rulings, so a
-  rejected idea stays rejected.
+  gate within its ADR-0003 remit. It aims to remember the owner's review
+  rulings via `decisions.md`, so a rejected idea stays rejected — though that
+  memory step has missed two real cases since its latest fix (see
+  observations).
 observations:
   - date: 2026-09-27
     note: >-
@@ -64,3 +66,24 @@ observations:
       fired since #1494 merged, so decisions.md hasn't had the chance to pick
       it up yet. Worth checking next run's decisions.md diff for both the
       #1492/#1494 case and whether the owner-memory step runs at all.
+  - date: "2026-10-01"
+    note: >-
+      Escalated as issue #1515 (audit-skills behaviour check): the
+      #1452 fix (commit 886f26de) has now failed both times it's been
+      tested. A run fired since #1494 merged —
+      session_01GoNR7LgfGTcJfKqZ8gUDSx (2026-09-30) — and its log states
+      "No owner corrections had accrued, so decisions.md was not changed."
+      That's false: PR #1494 explicitly says "Follow-up to #1492" and
+      touches the exact same files #1492 did, the precise case 886f26de was
+      written to catch. decisions.md's only commits remain the original 4;
+      nothing since the fix landed. Worse than the pre-fix state: this
+      skip wasn't even self-caught as a friction (unlike the first,
+      2026-09-29 skip) — it was asserted as a checked-and-clean result
+      while an unambiguous rework sat unrecorded, and the session's own
+      toolCounts show no PR-search call was made at all. Otherwise clean:
+      3-model dispatch, ≥2-visitor consensus, and code-review-before-merge
+      all independently re-confirmed (not just trusted from the logs)
+      across all 9 usedIn sessions. Role's "remembers the owner's review
+      rulings" claim softened to reflect this — see role field.
+      Grade/importance unchanged (still routine); this is a reliability
+      finding, not a breadth/scheduling one.

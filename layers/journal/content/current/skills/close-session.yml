@@ -41,3 +41,21 @@ observations:
       n=1 — no second instance found across two independent 10-session
       checks (20 checks total, some overlap possible). The structural gap
       named 2026-09-28 still exists but has not manifested again.
+  - date: "2026-10-01"
+    note: >-
+      Re-checked (audit-skills behaviour check), 10 newest invocations
+      (PRs #1501-#1511, #1513): 0/10 stale, every log's `endedAt` within
+      seconds to minutes of its PR's `merged_at`. session_01TMgZyrN42pwudxkUdHLKwP
+      directly re-checked a fourth time (09-27, 09-28, 09-29, now 10-01):
+      still stale, still unfixed — `git log --follow` on its log file shows
+      no commit since the original 09-25 log, it's still in `current/` not
+      `archived/`. Four consecutive confirmations of the same single
+      instance, zero recurrence elsewhere (30+ other sessions checked
+      across this window's four audits) — this stays a structural-gap
+      observation per this Skill's own convention (closure findings don't
+      get an issue), not escalated. Closure completeness (step 3, the
+      mechanical signals this observation partly covers): this run's orphan
+      scan itself failed (`scanned: false`, a `gh api --paginate` 403 —
+      filed as #1514) so it is reported here as inconclusive, not as zero
+      orphans; humanPromptedClosures and manuallyRescuedClosures were both
+      empty for the window that did run. Grade/role unchanged.
