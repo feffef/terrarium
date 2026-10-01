@@ -1,0 +1,68 @@
+schemaVersion: 1
+session: session_01UsKJ529GfpJRL9cy9JCgMV
+startedAt: 2026-10-01T11:05:10Z
+endedAt: 2026-10-01T11:16:09Z
+kind: autonomous
+goal: Write one blog post for a Blog Persona via the scheduled blog-post Skill
+status: in-review
+outcome: Eyra post on the phone-banding Atlas bug opened as PR 1518, gate green locally, awaiting CI and merge
+summary: "Scheduled /blog-post run with no human input and no persona argument; everything was agent-initiated under the Skill's charter. The rotation gate left david, eyra and kevin eligible. I drafted three candidates (Eyra on the phantom-crop Atlas bug, Kevin on the audit-docs sweep with its skeptic checker, David on the retired house metaphor), and a fresh Sonnet reader picked Eyra's. I revised per its notes, a second Sonnet fact-checked 27 claims and I fixed seven (wrong line anchor, wrong diagram description, teal not green, agency of the owner-directed hunt, evening-before, branch-only log link). pnpm gate:scoped passed, and I opened PR 1518 and subscribed. Still to do: verdict comment and merge-pr.ts once CI is green."
+prs:
+  - "1518"
+docsRead:
+  - path: .claude/skills/blog-post/personas/david.md
+    reason: (no reason given)
+  - path: .claude/skills/blog-post/personas/kevin.md
+    reason: (no reason given)
+  - path: .claude/skills/blog-post/personas/eyra.md
+    reason: (no reason given)
+  - path: layers/blog/content/eyra/pages/2026-10-01-the-medallion-wasnt-cropped-the-wall-behind-it-was-striped.md
+    reason: (read before editing)
+  - path: layers/journal/content/current/sessions/2026-09-30-session_012G6YRvBigrXTRr4QHFQsfm.yml
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: blog-post
+    reason: (invoked as a slash command)
+frictions:
+  - description: Hand-typed commit trailer from the harness reminder was denied by the commit-trailer guard, costing one retry
+    solution: Follow the repo rule first; the guard message already says to omit the trailer
+    severity: nit
+  - description: Agent call with run_in_background false was denied by a guard
+    solution: Omit the flag; the Skill's A5 wording could say so
+    severity: nit
+durationSec: 659
+models:
+  claude-sonnet-5-5: 62
+toolCounts:
+  Bash: 22
+  Read: 3
+  mcp__github__pull_request_read: 2
+  Agent: 3
+  Write: 1
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  Skill: 2
+  mcp__github__add_issue_comment: 1
+filesEdited:
+  - layers/blog/content/eyra/pages/2026-10-01-the-medallion-wasnt-cropped-the-wall-behind-it-was-striped.md
+docsReadViaShell:
+  - .agents/skills/blog-post/personas/eyra.md
+  - docs/agents/guards.md
+  - docs/agents/pr-workflow.md
+subagents:
+  - task: Outside read of three drafts
+    model: sonnet
+  - task: Outside read of three drafts
+    model: sonnet
+  - task: Fact-check blog post
+    model: sonnet
+gitBranch: claude/zen-heisenberg-g8bdo3
+entrypoint: remote_trigger
+cliVersion: 2.1.286
+trigger: blog-post
+landedBy: Stop
