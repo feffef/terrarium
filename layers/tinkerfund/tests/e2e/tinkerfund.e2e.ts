@@ -8,6 +8,7 @@ import type { Page } from 'playwright-core'
 import { describe, expect, it } from 'vitest'
 import { $fetch, createPage, fetch, url } from '@nuxt/test-utils/e2e'
 import { collectUnknownElementTags } from '../../../../tests/support/e2e.ts'
+import { TINKERFUND_GALLERY } from '../../app/utils/gallery'
 
 // The rendered page only: the Nuxt payload after it carries the whole catalog.
 const main = (html: string) => html.slice(html.indexOf('<main'), html.indexOf('</main>'))
@@ -118,9 +119,8 @@ export function registerTinkerfundE2E(): void {
       })
 
       // Worked out by hand from each fixture's offsets against qa's pinned now.
-      it('shows every qa Campaign’s status and every component in the gallery', async () => {
-        const html = await $fetch('/t/tinkerfund/qa')
-        expect(html).toMatch(/<h1[^>]*>Component gallery<\/h1>/)
+      it('shows every qa Campaign’s status in the gallery', async () => {
+        const html = await $fetch('/t/tinkerfund/qa/gallery/status')
         expect(html).toMatch(/<time datetime="2026-06-01T12:00:00.000Z"[^>]*>2026-06-01 12:00 UTC<\/time>/)
         const status = (registry: string) => html.match(new RegExp(`${registry}</span>([\\s\\S]*?)</div>`))?.[1] ?? ''
         expect(status('TF-9001')).toMatch(/Live<[\s\S]*Ending soon[\s\S]*Goal reached[\s\S]*125% funded[\s\S]*1 day 12 hours to go/)
@@ -129,14 +129,26 @@ export function registerTinkerfundE2E(): void {
         expect(status('TF-9004')).toMatch(/Live<[\s\S]*0% funded[\s\S]*28 days 0 hours to go/)
         expect(status('TF-9005')).toMatch(/Ended<[\s\S]*>Funded<[\s\S]*12480% funded/)
         expect(status('TF-9006')).toMatch(/Ended<[\s\S]*>Unfunded<[\s\S]*23% funded/)
-        for (const name of [
-          'TinkerfundPledgeList', 'TinkerfundPledgeState', 'TinkerfundPledgeEditor', 'TinkerfundPledgeCancel',
-          'TinkerfundBrowseCampaignCard', 'TinkerfundBrowseIndexTable', 'TinkerfundBrowseFilters', 'TinkerfundBrowseDealBanner',
-          'TinkerfundShellSearchField',
-        ]) {
-          expect(html).toMatch(new RegExp(`<code[^>]*>${name}</code>`))
+      })
+
+      it('indexes the gallery’s sections on qa’s front page, each its own page', async () => {
+        const home = await $fetch('/t/tinkerfund/qa')
+        expect(home).toMatch(/<h1[^>]*>Component gallery<\/h1>/)
+        for (const [i, section] of TINKERFUND_GALLERY.entries()) {
+          const path = `/t/tinkerfund/qa/gallery/${section.id}`
+          expect(home).toContain(`href="${path}"`)
+          const html = main(await $fetch(path))
+          expect(html, path).toMatch(new RegExp(`<h1[^>]*>${section.title}</h1>`))
+          expect(html, path).toMatch(/aria-label="Breadcrumb"[\s\S]*href="\/t\/tinkerfund\/qa"/)
+          for (const name of section.components) expect(html, path).toMatch(new RegExp(`<code[^>]*>${name}</code>`))
+          const prev = TINKERFUND_GALLERY[i - 1]
+          const next = TINKERFUND_GALLERY[i + 1]
+          if (prev) expect(html, path).toContain(`href="/t/tinkerfund/qa/gallery/${prev.id}"`)
+          if (next) expect(html, path).toContain(`href="/t/tinkerfund/qa/gallery/${next.id}"`)
         }
         expect(await $fetch('/t/tinkerfund/prod')).not.toContain('Component gallery')
+        const prod = await fetch('/t/tinkerfund/prod/gallery/status', { headers: { accept: 'text/html' } })
+        expect(prod.status).toBe(404)
       })
 
       for (const [slug, action] of [
@@ -281,12 +293,13 @@ export function registerTinkerfundE2E(): void {
           return { surface: s.backgroundColor, ink: s.color }
         })
         await page.emulateMedia({ colorScheme: 'light' })
-        await visit('')
+        await visit('/gallery/status')
         await expect.poll(specimen).toEqual({ surface: 'rgb(255, 255, 255)', ink: 'rgb(17, 23, 27)' })
         await page.emulateMedia({ colorScheme: 'dark' })
         await expect.poll(specimen).toEqual({ surface: 'rgb(19, 25, 29)', ink: 'rgb(225, 231, 234)' })
 
         // The index table is wider than a phone; it must scroll inside its own frame.
+        await visit('/gallery/index-table')
         await page.setViewportSize({ width: 390, height: 844 })
         expect(await scrollWidth(page)).toBeLessThanOrEqual(390)
         await page.setViewportSize({ width: 1280, height: 800 })
@@ -445,7 +458,7 @@ export function registerTinkerfundE2E(): void {
 
       flow('browse: the index table, Discover’s filters and sort in the URL, the phone drawer, Deals, into a Campaign', async ({ page, visit, reload }) => {
         await page.setViewportSize({ width: 1280, height: 900 })
-        await visit('')
+        await visit('/gallery/index-table')
         const table = page.locator('.index')
         const workshop = table.getByRole('button', { name: /^Workshop/ })
         await workshop.click()
