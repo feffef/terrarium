@@ -49,7 +49,7 @@ const slots = useSlots()
 }
 .gloss {
   color: var(--jd-muted);
-  font-size: 0.74rem;
+  font-size: 0.78rem;
   margin-top: 0.2rem;
 }
 .num {

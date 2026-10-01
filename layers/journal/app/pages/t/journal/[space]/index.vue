@@ -221,7 +221,7 @@ useSeoMeta({
     <p class="tiles-headline">{{ tilesHeadline }}</p>
     <section class="tiles" aria-label="State of this Space">
       <JournalStatTile
-        label="Sessions logged" gloss="One stint of an agent working, written up"
+        label="Sessions logged" gloss="One agent working session, logged"
         :value="sessions.length"
         :sub="kindSubtext"
       />
@@ -231,7 +231,7 @@ useSeoMeta({
           <NuxtLink class="pr-link" :to="{ name: 'journal-skills', params: { space } }">browse →</NuxtLink>
         </template>
       </JournalStatTile>
-      <JournalStatTile label="Ideas noted" gloss="Suggestions agents left for later" :value="notes.ideas.length">
+      <JournalStatTile label="Ideas noted" gloss="Proposals for the future, noted but not planned" :value="notes.ideas.length">
         <template #sub>
           {{ notes.learnings.length }} learning{{ notes.learnings.length === 1 ? '' : 's' }} ·
           <NuxtLink class="pr-link" :to="{ name: 'journal-ideas', params: { space } }">browse →</NuxtLink>
@@ -247,7 +247,7 @@ useSeoMeta({
         </template>
       </JournalStatTile>
       <JournalStatTile
-        label="PRs referenced" gloss="Proposed changes, reviewed before landing"
+        label="PRs referenced" gloss="Pull requests the session logs mention"
         :value="referencedPrs.length"
       >
         <template #sub>
