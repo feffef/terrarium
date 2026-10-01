@@ -1,0 +1,52 @@
+schemaVersion: 1
+session: session_01RaNuVUJDVSaHNESWNNawAR
+startedAt: 2026-10-01T02:03:40Z
+endedAt: 2026-10-01T02:06:14Z
+kind: autonomous
+goal: "Scheduled frictions-to-fixes run: survey recent session frictions and ship fixes"
+status: completed
+outcome: Survey done; no candidate cleared the bar, so no issues or PRs were opened
+summary: "Scheduled run (agent-initiated by the Routine, no human instruction). A survey subagent read the latest 20 session logs and screened them. It found one hard n=1 shell-read-detector gap (a deliberate deferral under #1305), two already-open issues (#1482, #1514), a doc-only fix aimed at docs the affected sessions never opened, a minor n=1 screenshot dark-theme option, and a handful of nits the guards already handle. I judged none worth a dispatch, so no fixes were made and nothing was filed."
+prs: []
+docsRead:
+  - path: .claude/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: .claude/skills/frictions-to-fixes/SKILL.md
+    reason: (no reason given)
+  - path: .agents/prune-trials.yml
+    reason: (no reason given)
+  - path: scripts/shell-reads.ts
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: frictions-to-fixes
+    reason: (invoked as a slash command)
+frictions:
+  - description: session-frictions.ts output exceeded the Read cap because docsRead arrays for audit-type sessions list hundreds of session log files.
+    solution: Cap or omit docsRead entries under the session-log directory in scripts/session-frictions.ts.
+    severity: nit
+durationSec: 155
+models:
+  claude-sonnet-5-5: 11
+toolCounts:
+  Bash: 2
+  Read: 1
+  Agent: 1
+  Skill: 2
+docsReadViaShell:
+  - .agents/skills/tinkerfund-campaign/SKILL.md
+  - docs/agents/guards.md
+  - .agents/skills/blog-post/SKILL.md
+subagents:
+  - type: general-purpose
+    task: Survey frictions report
+gitBranch: claude/eager-ptolemy-8eiiiu
+entrypoint: remote_trigger
+cliVersion: 2.1.286
+trigger: frictions-to-fixes
+landedBy: Stop
