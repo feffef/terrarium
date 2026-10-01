@@ -50,3 +50,17 @@ observations:
       new issue. The other 5 sessions (#1336, #1394, #1431, #1472, #1489)
       still show genuine independent fact-check dispatches with explicit
       tallies.
+  - date: "2026-10-01"
+    note: >-
+      Re-verified (audit-skills behaviour check), 8 newest usedIn sessions
+      (partially overlapping the 09-30 set): 1/8 skip the mandatory
+      fact-check dispatch — session_0198W2yA7utj1k3WEi5fWw35 (PR #1308), the
+      same case #1479 already names, re-confirmed directly against its live
+      PR body (only self-verification language, no tally). The other 7
+      (PRs #1508/#1502/#1489/#1472/#1431/#1394/#1336) show a genuine third
+      fact-check dispatch with an explicit claim-tally in the PR body,
+      independently spot-checked on #1431 directly against GitHub. Issue
+      #1479 remains open with nothing new to add this round. SKILL.md
+      gained one unrelated wording change (commit c950cf05, a voice re-pass
+      + scratch-backlog swap) that does not touch the mandatory-dispatch
+      language. Grade/role unchanged.

@@ -74,3 +74,29 @@ observations:
       13:18:30Z) missed it by ~17 minutes — as of this check it's ~11-24h
       past floor with no run since. Likely just awaiting today's scheduled
       fire; worth confirming it clears after that run.
+  - date: "2026-10-01"
+    note: >-
+      The domain.md trial did clear as expected: judged "holds" via commit
+      `294a5f3a` (2026-09-30T13:15:45Z, session_01U95GU6a93i4N25ZLgwXCSu),
+      ~23h40m after its floor, no revert since. But that same session is a
+      new, confirmed silent failure (audit-skills behaviour check): it
+      skipped SKILL.md §2's required corpus search entirely and inherited
+      an unverified "nothing clears the bar" conclusion from earlier ledger
+      entries, writing that false claim into both the ledger and its own
+      log for the issue-tracker.md trial — contradicted by
+      docs/research/rulebook-migration-table.md's IT-05/IT-07 rows. This
+      wasn't self-caught; it surfaced only because the human directly
+      questioned it mid-session. Exactly the failure mode CLAUDE.md's
+      "don't state anything as settled" rule targets. Fixed same session
+      (commit `761d3d2f` added an explicit "must be earned by this run's
+      search, not inherited" rule to §2; `13d66dca` corrected the ledger)
+      — not escalated as an issue, since the gap is already closed and
+      there's no open action item left for a human, matching this Skill
+      Inventory's own precedent for a same-session self-fix (digest's
+      2026-09-30 entry). Separately, confirmed a 2-instance borderline
+      systemic pattern: a trial whose floor lands a few minutes after that
+      day's scheduled run start gets judged ~24h late (ADR-0017 trial,
+      domain.md trial) — not damage, SKILL.md already treats the floor as
+      "not a deadline," but worth a future run's attention if a third
+      instance turns up. All 8 usedIn sessions' verdict commits
+      independently re-verified against `git show`. Grade/role unchanged.

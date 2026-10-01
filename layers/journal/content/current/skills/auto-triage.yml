@@ -19,3 +19,14 @@ observations:
       brave/judgment-call and auto-close-wontfix rules, wayfinder:* overlay
       labels preserved. No revert of the Skill's own text in the last two
       weeks.
+  - date: "2026-10-01"
+    note: >-
+      Re-verified (audit-skills behaviour check), same 3 usedIn sessions,
+      independently re-checked rather than trusting the 09-30 entry above:
+      every "Closes #N" claim confirmed closed with the right
+      `closed_by_pull_requests`/PR state, both `not_planned` closures
+      (#1449, #1372) carry an explicit owner-decision comment matching the
+      log, every `wayfinder:*`-labeled issue checked still carries its
+      overlay label unstripped, and the two "await human merge" PRs flagged
+      at one session's end were confirmed later merged with no discrepancy.
+      Still clean; grade/role unchanged.

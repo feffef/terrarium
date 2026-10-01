@@ -102,3 +102,21 @@ observations:
       manually-rescued closures this window. Coverage gap found and added:
       `resolving-merge-conflicts` (external, used once this window, no
       Inventory entry).
+  - date: "2026-10-01"
+    note: >-
+      Self-check, independently re-verified: all 8 usedIn sessions
+      (2026-09-24 to 09-30, PRs #1419/#1433/#1453/#1481/#1498) re-confirmed —
+      every merge real, every issue filed as claimed, no revert of any
+      Inventory-edit PR's content. Specifically re-checked the 09-30 run's
+      own self-correction of the 09-29 blog-post clearance (PR #1301 did
+      genuinely skip the fact-check dispatch) and its digest PR #1478 fix
+      citation (commit 98ece44f) — both hold up independently, confirming
+      this Skill's self-correction chain is itself accurate rather than
+      compounding an error. Dispatched 11 behaviour-check subagents this run;
+      filed 2 new issues (#1514 orphan-scan gh-pagination 403, #1515
+      visitor-loop's #1452 fix failing 2/2) and one comment with new evidence
+      onto an existing open issue (#1482). Closure completeness (step 3):
+      orphan scan failed outright this run (`scanned: false`, a `gh api
+      --paginate` 403 against the pulls endpoint — filed as #1514, not
+      reported as zero orphans); humanPromptedClosures and
+      manuallyRescuedClosures both empty. Grade/role unchanged.

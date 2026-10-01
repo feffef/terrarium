@@ -40,3 +40,15 @@ observations:
       correctly filed-only or verified non-guard-touching before dispatch.
       Two new regressions (#1420, #1482) were both filed as their own
       alerting issue rather than silently re-fixed, per the rule.
+  - date: "2026-10-01"
+    note: >-
+      Re-checked (audit-skills behaviour check), 7 newest sessions, 20
+      merged PRs and 8 filed issues independently re-verified: every PR
+      carries a posted audit-trace verdict (review or issue comment)
+      strictly before its merge timestamp (sampled #1306, #1424, #1459,
+      #1483-#1485, #1500 with exact timestamps), no guard-roster file
+      touched by any dispatched-and-merged PR in this batch, three
+      guard-adjacent candidates (#1304, #1329, #1422) correctly left
+      filed-only. #1420 confirmed closed via its own standalone fix PR
+      #1435; #1482 confirmed still open as its own standalone issue, not
+      silently patched. Grade/role unchanged.

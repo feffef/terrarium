@@ -117,3 +117,24 @@ observations:
       in its own summary/frictions and not quoted in any doc it read —
       plausibly a genuine background read, not confirmed as a new
       false-positive shape.
+  - date: "2026-10-01"
+    note: >-
+      Verified silent failure, confirmed in code (audit-skills behaviour
+      check): the `resolveAgainstCdDir` absolute-path lead from 2026-09-29
+      is not just an n=1 log anomaly — the function (introduced by
+      `4dd7d0ff` on 2026-09-28, the only commit to touch
+      `scripts/session-trace.ts` since) still never checks whether its
+      path argument is already absolute before prepending the `cd` dir, and
+      no fix has landed. This matches open issue #1482 exactly; commented
+      the live-code confirmation onto it rather than filing a duplicate.
+      Also found a second, distinct miss in the same family while checking:
+      session_01UYR72MD9JGXQMy7fZn84o8's `cd <dir> && cat david.md karen.md
+      kevin.md` (multiple relative arguments after one `cd`) credited none
+      of the three paths at all — added as new evidence on #1482 too, since
+      it's plausibly the same fix opportunity. Confirmed the numeric
+      goal/outcome/summary word caps stay gone (commit 5ac3c614) and no
+      field-split/leakage problem across the 10 newest sessions checked.
+      The visitor-loop/SKILL.md phantom-credit lead (session_01FQ9WV8BrFC4WVuHDKH2Ezb)
+      remains unconfirmed — no narrative hook found in the log, circumstantial
+      evidence leans toward false positive but the raw transcript isn't
+      available to prove it. Grade/role unchanged.

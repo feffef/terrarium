@@ -53,3 +53,14 @@ observations:
       research note, matching its log's claimed fix list line-for-line; no
       ADR/CI/routing/human-only surface touched, no issue filed. The
       #1266→#1486 commit chain shows no revert. Still clean.
+  - date: "2026-10-01"
+    note: >-
+      Re-verified (audit-skills behaviour check), 7 newest sessions
+      (2026-09-24 through 09-30, PRs #1307/#1334/#1356/#1426/#1461/#1486/#1501):
+      all merged, each diff matching its log's claimed fix list, no human-only
+      surface touched, no revert found in the unbroken #1266→#1501 PR chain.
+      session_01E7nzKhxh1riVDMpn8YytKM (#1461)'s two highest-risk claims
+      (a guards.md stale-narration cut, a history.md factual correction) both
+      independently confirmed in-scope rather than a hidden tier violation.
+      Seventh consecutive clean check since the one 2026-09-27 lapse; grade
+      unchanged.

@@ -63,3 +63,17 @@ observations:
       no new missed invocation. The prior window's near-miss
       (session_01LKfKKxwgThbVFE79NWohET) remains the only real instance to
       date.
+  - date: "2026-10-01"
+    note: >-
+      Re-checked (audit-skills behaviour check), 10 newest sessions
+      (09-27..09-30): no stranded work, no merge-pr.ts dispatched to a
+      subagent, no new branch/worktree collision. The cd-into-worktree
+      instance re-found in session_0185EAXqfuX1twvr6Z67SsY4 is the same
+      09-28 occurrence issue #1480 was already filed over, not a new third
+      one — confirmed #1480 is still open, unassigned, unfixed, with no
+      comments since filing. Screened all 67 nonusers by goal, opened 24
+      plausible ones (visitor-loop, audit-docs/audit-skills, Tinkerfund
+      wayfinder, prune-trial, blog-post judge subagents, the already-known
+      39-subagent session_01LKfKKxwgThbVFE79NWohET): 0 new missed
+      invocations, every dispatch found was either strictly read-only or
+      rule-compliant. Grade/role unchanged.
