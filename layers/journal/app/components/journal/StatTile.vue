@@ -6,6 +6,7 @@ defineProps<{
   label: string
   value: number | string
   sub?: string
+  gloss?: string
 }>()
 const slots = useSlots()
 </script>
@@ -13,6 +14,7 @@ const slots = useSlots()
 <template>
   <div class="tile">
     <div class="label">{{ label }}</div>
+    <div v-if="gloss" class="gloss">{{ gloss }}</div>
     <div class="num">{{ value }}</div>
     <div v-if="sub || slots.sub" class="sub"><slot name="sub">{{ sub }}</slot></div>
   </div>
@@ -44,6 +46,11 @@ const slots = useSlots()
   letter-spacing: 0.11em;
   text-transform: uppercase;
   color: var(--jd-faint);
+}
+.gloss {
+  color: var(--jd-muted);
+  font-size: 0.78rem;
+  margin-top: 0.2rem;
 }
 .num {
   font-family: var(--jd-mono);
