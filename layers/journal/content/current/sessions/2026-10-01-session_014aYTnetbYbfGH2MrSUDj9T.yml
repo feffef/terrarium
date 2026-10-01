@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_014aYTnetbYbfGH2MrSUDj9T
 startedAt: 2026-10-01T00:45:48Z
-endedAt: 2026-10-01T01:15:41Z
+endedAt: 2026-10-01T01:19:23Z
 kind: autonomous
 goal: Run the scheduled /audit-skills sweep
-status: in-review
-outcome: "PR #1516 opened, awaiting gate/merge; 2 new issues filed (#1514, #1515), 1 comment with new evidence on an existing issue (#1482)"
-summary: "Fully autonomous run, fired by a schedule with no human in the loop. Gathered the scorecard via scripts/audit-skills.ts (7-day window, 2026-09-24 to 09-30, 11 Skills crossed the >=3-session behaviour-check bar). Dispatched 11 read-only Sonnet subagents in parallel, one per Skill, each briefed with its SKILL.md, its usedIn session logs, and prior observations as leads to confirm or refute rather than trust. Independently verified every report's central claims against GitHub (mcp__github__ tools) and git history before acting on any of them — including checking whether each report's own \"nothing found\" claim held up, per this Skill's own instruction that a clean report is a claim like any other. Eight of the eleven Skills (audit-docs, audit-skills itself, auto-triage, blog-post, close-session, digest, dispatch-subagents, frictions-to-fixes) came back clean or reconfirmed an already-tracked, already-open finding with no new evidence needed. Three turned up real new findings, all independently re-verified before acting: log-session's resolveAgainstCdDir absolute-path bug is confirmed still live in code with a second distinct miss found (commented onto the already-open #1482, not filed separately); prune-trial's session_01U95GU6a93i4N25ZLgwXCSu skipped its required corpus search and wrote an unverified \"nothing clears the bar\" claim into the ledger, caught only by the human mid-session and already self-fixed same session (recorded as an observation, not escalated, per this Inventory's existing same-session-self-fix precedent); visitor-loop's #1452 owner-memory fix has now failed both times it's been tested, the second time without even being self-caught (escalated as #1515). Also filed #1514: this run's own orphan scan (step 3, closure completeness) failed outright on a gh-pagination 403 against the pulls endpoint — the same proxy quirk #848 already fixed in a sibling script two months ago, never ported to audit-skills.ts's own reader, which already has the correct REST/curl fallback sitting unused. Closure completeness otherwise: humanPromptedClosures and manuallyRescuedClosures both empty; the one known close-session stale-log case (session_01TMgZyrN42pwudxkUdHLKwP) was independently re-confirmed still stale a fourth time, left as an observation per this Skill's own convention that closure findings don't get an issue. No coverage gaps, no grade changes (no evidence this window shifted any Skill's scheduled-Routine-ness or breadth), no observations past the 40-day retention window. Landed all 11 Inventory edits as one PR (#1516), diff limited to layers/journal/content/current/skills/*.yml; pnpm validate:content and pnpm gate:scoped both green before pushing. All of this work — the dispatch plan, the verification, the escalation calls, the Inventory edits — is agent-initiated per this Skill's own standing charter (ADR-0015); no human instruction occurred this session."
+status: completed
+outcome: "PR #1516 merged (715ca0f0); 2 new issues filed (#1514, #1515), 1 comment with new evidence on an existing issue (#1482)"
+summary: "Fully autonomous run, fired by a schedule with no human in the loop. Gathered the scorecard via scripts/audit-skills.ts (7-day window, 2026-09-24 to 09-30, 11 Skills crossed the >=3-session behaviour-check bar). Dispatched 11 read-only Sonnet subagents in parallel, one per Skill, each briefed with its SKILL.md, its usedIn session logs, and prior observations as leads to confirm or refute rather than trust. Independently verified every report's central claims against GitHub (mcp__github__ tools) and git history before acting on any of them — including checking whether each report's own \"nothing found\" claim held up, per this Skill's own instruction that a clean report is a claim like any other. Eight of the eleven Skills (audit-docs, audit-skills itself, auto-triage, blog-post, close-session, digest, dispatch-subagents, frictions-to-fixes) came back clean or reconfirmed an already-tracked, already-open finding with no new evidence needed. Three turned up real new findings, all independently re-verified before acting: log-session's resolveAgainstCdDir absolute-path bug is confirmed still live in code with a second distinct miss found (commented onto the already-open #1482, not filed separately); prune-trial's session_01U95GU6a93i4N25ZLgwXCSu skipped its required corpus search and wrote an unverified \"nothing clears the bar\" claim into the ledger, caught only by the human mid-session and already self-fixed same session (recorded as an observation, not escalated, per this Inventory's existing same-session-self-fix precedent); visitor-loop's #1452 owner-memory fix has now failed both times it's been tested, the second time without even being self-caught (escalated as #1515). Also filed #1514: this run's own orphan scan (step 3, closure completeness) failed outright on a gh-pagination 403 against the pulls endpoint — the same proxy quirk #848 already fixed in a sibling script two months ago, never ported to audit-skills.ts's own reader, which already has the correct REST/curl fallback sitting unused. Closure completeness otherwise: humanPromptedClosures and manuallyRescuedClosures both empty; the one known close-session stale-log case (session_01TMgZyrN42pwudxkUdHLKwP) was independently re-confirmed still stale a fourth time, left as an observation per this Skill's own convention that closure findings don't get an issue. No coverage gaps, no grade changes (no evidence this window shifted any Skill's scheduled-Routine-ness or breadth), no observations past the 40-day retention window. Landed all 11 Inventory edits as one PR (#1516): gate green, posted a COMMENT-event review verdict, merged via scripts/merge-pr.ts (mergeCommitSha 715ca0f0). All of this work — the dispatch plan, the verification, the escalation calls, the Inventory edits — is agent-initiated per this Skill's own standing charter (ADR-0015); no human instruction occurred this session."
 prs:
   - "1516"
 docsRead:
@@ -184,15 +184,15 @@ frictions:
   - description: "SHELL-READ-DETECTION: docsReadViaShell did not credit /home/user/terrarium/.agents/skills/audit-docs/SKILL.md, direction miss (read-but-not-credited). The dispatched 'Behaviour check: audit-docs' subagent ran `cat /home/user/terrarium/.agents/skills/audit-docs/SKILL.md 2>/dev/null || cat /home/user/terrarium/...` as its first instructed step and its report summarizes that file's content, so one side of the || genuinely read it — the detector rejected the whole command as ambiguous ('stderr suppressed, output may belong to the other side') rather than crediting either branch."
     solution: A new facet of the already-tracked SHELL-READ-DETECTION mechanism gaps in scripts/shell-reads.ts (see log-session's Inventory observations) — a `cmd1 2>/dev/null || cmd2` fallback should credit cmd1's target when cmd1 is the more specific/likely-to-succeed path, not reject the pair outright. Recording here for a future run's screen rather than filing, since it's n=1.
     severity: moderate
-durationSec: 1793
+durationSec: 2016
 models:
-  claude-sonnet-5: 200
+  claude-sonnet-5: 225
 toolCounts:
-  Bash: 43
+  Bash: 46
   Read: 6
   Agent: 11
-  Grep: 13
-  ToolSearch: 1
+  Grep: 14
+  ToolSearch: 3
   mcp__github__search_issues: 7
   mcp__github__issue_read: 4
   mcp__github__issue_write: 2
@@ -202,7 +202,11 @@ toolCounts:
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
   Skill: 2
-  Write: 3
+  Write: 4
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 2
+  mcp__github__pull_request_review_write: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/journal/content/current/skills/audit-docs.yml
   - layers/journal/content/current/skills/audit-skills.yml
