@@ -8,7 +8,6 @@ defineProps<{
   groups: { importance: Importance; skills: SkillDoc[] }[]
   uses?: Record<string, number>
 }>()
-const { repoSkills } = useAppConfig().journal
 </script>
 
 <template>
@@ -23,8 +22,7 @@ const { repoSkills } = useAppConfig().journal
       <template v-if="g.importance !== 'supporting' && g.importance !== 'peripheral'">
         <div v-for="s in g.skills" :key="s.name" class="skill">
           <div class="name">
-            <a v-if="skillUrl(s.name, repoSkills)" :href="skillUrl(s.name, repoSkills)">{{ s.name }}</a>
-            <template v-else>{{ s.name }}</template>
+            <JournalSkillName :name="s.name" />
             <span v-if="uses" class="uses">used in {{ uses[s.name] ?? 0 }} sessions</span>
           </div>
           <p v-if="s.gist" class="gist">{{ s.gist }}</p>
@@ -51,7 +49,7 @@ const { repoSkills } = useAppConfig().journal
       </template>
 
       <div v-else class="chips-inline">
-        <span v-for="s in g.skills" :key="s.name" class="chip"><a v-if="skillUrl(s.name, repoSkills)" :href="skillUrl(s.name, repoSkills)">{{ s.name }}</a><template v-else>{{ s.name }}</template><span v-if="uses" class="chip-uses" :title="`used in ${uses[s.name] ?? 0} sessions`"> · {{ uses[s.name] ?? 0 }}</span></span>
+        <span v-for="s in g.skills" :key="s.name" class="chip"><JournalSkillName :name="s.name" /><span v-if="uses" class="chip-uses" :title="`used in ${uses[s.name] ?? 0} sessions`"> · {{ uses[s.name] ?? 0 }}</span></span>
       </div>
     </div>
   </div>
@@ -79,8 +77,6 @@ const { repoSkills } = useAppConfig().journal
   align-items: center;
   gap: 0.5rem;
 }
-.name a, .chip a { color: inherit; text-decoration: underline dotted; text-underline-offset: 2px; }
-.name a:hover, .chip a:hover { color: var(--jd-accent); }
 .uses { margin-left: auto; font-size: 0.7rem; color: var(--jd-faint); }
 .chip-uses { color: var(--jd-faint); }
 .gist { margin: 0.25rem 0 0; font-size: 0.83rem; color: var(--jd-ink); font-family: var(--jd-serif); }
