@@ -3,7 +3,6 @@ import type { TinkerfundZone } from '../../../../utils/cart'
 
 definePageMeta({ viewTransition: true })
 
-const route = useRoute()
 const { space, link } = useTinkerfundSpace()
 const money = useTinkerfundMoney()
 const chosen = ref<TinkerfundZone>()
@@ -53,7 +52,7 @@ useSeoMeta(tinkerfundSeo({ kind: 'private', space, title: 'Your Cart' }))
         </aside>
       </div>
     </div>
-    <ContentLoadErrorDialog :status="status" :error="error" :context="route.path" />
+    <ContentLoadErrorDialog :status="status" :error="error" />
   </TinkerfundShell>
 </template>
 

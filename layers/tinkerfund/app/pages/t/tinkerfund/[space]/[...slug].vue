@@ -21,7 +21,7 @@ useSeoMeta(tinkerfundSeo(doc.value
 
     <TinkerfundShellNotFound v-else-if="!error" />
 
-    <ContentLoadErrorDialog :status="status" :error="error" :context="route.path" />
+    <ContentLoadErrorDialog :status="status" :error="error" />
   </TinkerfundShell>
 </template>
 

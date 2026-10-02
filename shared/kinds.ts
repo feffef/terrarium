@@ -68,16 +68,3 @@ export const KINDS = {
 } satisfies Record<string, KindDef>
 
 export type KindName = keyof typeof KINDS
-
-/**
- * Resolve a kind name to its definition, or throw. `registry` is injectable for
- * the L3 unit tests (mirroring `resolveSpaceRoute`'s injectable `map`), so the
- * resolution path can be exercised without minting a real, permanent
- * platform-wide contract in `KINDS`.
- */
-export function resolveKind(kind: string, registry: Record<string, KindDef> = KINDS): KindDef {
-  if (!Object.hasOwn(registry, kind)) {
-    throw new Error(`unknown collection kind "${kind}" — add it to KINDS in shared/kinds.ts`)
-  }
-  return registry[kind]!
-}

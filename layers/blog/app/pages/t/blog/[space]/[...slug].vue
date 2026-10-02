@@ -136,7 +136,7 @@ useSeoMeta({ description: () => post.value?.description })
 
     <!-- A failed client-side content load raises a modal (message / technical
          details / reload) instead of a silent "Not found" (issue #236). -->
-    <ContentLoadErrorDialog :status="status" :error="error" :accent="meta.accent" :context="route.path" />
+    <ContentLoadErrorDialog :status="status" :error="error" :accent="meta.accent" />
 
     <BlogNetwork :current="space" />
     <SiteFooter />

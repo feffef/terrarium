@@ -1,17 +1,17 @@
 // Build-time virtual routing module (ADR-0014). Derives the runtime routing map
-// and the L2 entry-route list from the same expand(loadManifests()) used by
+// from the same expand(loadManifests()) used by
 // content.config.ts — so a manifest edit is picked up with no regenerate step
 // for anything.
 import { join } from 'node:path'
 import { addTemplate, addTypeTemplate, defineNuxtModule } from '@nuxt/kit'
-import { entryRoutesFrom, expand, loadManifests, root, type ExpandedCollection } from '../shared/expand'
+import { expand, loadManifests, root } from '../shared/expand'
 
 export default defineNuxtModule({
   meta: { name: 'terrarium:routing' },
 
   setup(_options, nuxt) {
     const manifests = loadManifests()
-    const cols: ExpandedCollection[] = expand(manifests)
+    const cols = expand(manifests)
 
     const map: Record<string, Record<string, Record<string, string>>> = {}
     for (const c of cols) {
@@ -19,8 +19,6 @@ export default defineNuxtModule({
       const collections = (spaces[c.space] ??= {})
       collections[c.collection] = c.key
     }
-
-    const entryRoutes = entryRoutesFrom(cols)
 
     // One JSON literal serves as BOTH the runtime data (routing.mjs) and the
     // precise declared type (routing.d.ts): every leaf is a string literal, so
@@ -38,8 +36,6 @@ export default defineNuxtModule({
           '// Derived from tenant manifests via expand(). Do not edit — change the manifests.',
           '',
           `export const routingMap = ${mapJson}`,
-          '',
-          `export const entryRoutes = ${JSON.stringify(entryRoutes, null, 2)}`,
           '',
         ].join('\n'),
     })
@@ -61,7 +57,6 @@ export default defineNuxtModule({
       getContents: () =>
         [
           `export declare const routingMap: ${mapJson}`,
-          'export declare const entryRoutes: string[]',
           '',
         ].join('\n'),
     })

@@ -55,6 +55,6 @@ useSeoMeta({ description: () => chapter.value?.description })
     <!-- A failed client-side content load raises a modal (message /
          technical details / reload) instead of a silent "Not found"
          (issue #236). -->
-    <ContentLoadErrorDialog :status="status" :error="error" :context="route.path" />
+    <ContentLoadErrorDialog :status="status" :error="error" />
   </main>
 </template>

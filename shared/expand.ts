@@ -13,7 +13,7 @@ import { fileURLToPath } from 'node:url'
 import { createJiti } from 'jiti'
 import type { ZodObject, ZodRawShape } from 'zod'
 import { collectionKey, validateManifest, type TenantManifest } from './manifest'
-import { resolveKind, type KindName } from './kinds'
+import { KINDS, type KindName } from './kinds'
 
 export const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 // The Tenant manifests live one per layer under `layers/` (Nuxt's conventional
@@ -61,7 +61,8 @@ export type ExpandedCollection =
  * `content.config.ts` — so the manifests (which carry live Zod schema objects)
  * can be imported *synchronously* at config-evaluation time, with no build step.
  * The loader is created lazily so merely importing this module (e.g. the L3 unit
- * test, which builds `LoadedManifest`s by hand) never constructs one.
+ * test, which builds `LoadedManifest`s by hand) never constructs one; nested use
+ * inside Nuxt Content's own jiti is safe.
  */
 export function loadManifests(): LoadedManifest[] {
   const dirs = readdirSync(layersDir)
@@ -74,11 +75,11 @@ export function loadManifests(): LoadedManifest[] {
     })
     .sort()
 
-  const load = createLoader()
+  const jiti = createJiti(import.meta.url)
   const loaded: LoadedManifest[] = []
   for (const dir of dirs) {
     const file = join(layersDir, dir, 'tenant.config.ts')
-    const mod = load(file)
+    const mod = jiti(file) as TenantManifest & { default?: TenantManifest }
     const manifest: TenantManifest = mod.default ?? mod
     if (manifest?.name !== dir) {
       throw new Error(`tenant folder "${dir}" does not match manifest name "${manifest?.name}"`)
@@ -86,14 +87,6 @@ export function loadManifests(): LoadedManifest[] {
     loaded.push({ dir, manifest })
   }
   return loaded
-}
-
-/** A synchronous TypeScript module loader (jiti). Created lazily so merely importing
- *  this module (e.g. the L3 unit test) never constructs one. jiti is the same loader
- *  Nuxt Content uses to evaluate `content.config.ts`, so nested use is safe. */
-function createLoader(): (id: string) => TenantManifest & { default?: TenantManifest } {
-  const jiti = createJiti(import.meta.url)
-  return (id: string) => jiti(id) as TenantManifest & { default?: TenantManifest }
 }
 
 /** A collection's *effective* schema: the kind's minimum contract merged with
@@ -113,7 +106,7 @@ function effectiveSchema(
   local: ZodObject<ZodRawShape> | undefined,
 ): ZodObject<ZodRawShape> | undefined {
   if (!kind) return local
-  const contract = resolveKind(kind).contract
+  const contract = KINDS[kind].contract
   if (!local) return contract
   const additions = Object.fromEntries(
     Object.entries(contract.shape).filter(([field]) => !(field in local.shape)),

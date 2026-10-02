@@ -57,7 +57,7 @@ const results = computed(() => {
     </ul>
     <p v-if="!results.length" class="empty">Nothing matches “{{ q }}”.</p>
 
-    <ContentLoadErrorDialog :status="status" :error="error" context="/t/commons/search" />
+    <ContentLoadErrorDialog :status="status" :error="error" />
   </div>
 </template>
 

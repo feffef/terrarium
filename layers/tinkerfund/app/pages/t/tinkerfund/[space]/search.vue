@@ -40,7 +40,7 @@ useSeoMeta(tinkerfundSeo({ kind: 'private', space, title: q ? `Search: ${q}` : '
       </template>
       <NuxtLink class="tf-btn" :to="link('/discover')">Discover Campaigns</NuxtLink>
     </div>
-    <ContentLoadErrorDialog :status="status" :error="error" :context="route.path" />
+    <ContentLoadErrorDialog :status="status" :error="error" />
   </TinkerfundShell>
 </template>
 

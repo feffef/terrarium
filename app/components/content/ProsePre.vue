@@ -1,5 +1,5 @@
 <template>
-  <MermaidDiagram v-if="isMermaidLanguage(language)" :code="code" />
+  <MermaidDiagram v-if="language === 'mermaid'" :code="code" />
   <pre v-else :class="$props.class"><slot /></pre>
 </template>
 
@@ -7,8 +7,7 @@
 // Overrides @nuxtjs/mdc's bundled ProsePre.vue for ```mermaid fenced blocks
 // (issue #364); every other language falls through to the stock markup
 // unchanged. Lives at the Platform app root because the override is global,
-// not per-Tenant — see docs/agents/tenant-layers.md §5 for why. `isMermaidLanguage`
-// and `MermaidDiagram` resolve via Nuxt auto-import — no import needed (§1).
+// not per-Tenant — see docs/agents/tenant-layers.md §5 for why.
 const { code, language } = withDefaults(
   defineProps<{
     code?: string

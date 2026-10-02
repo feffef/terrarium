@@ -49,7 +49,7 @@ useSeoMeta({ description: () => landing.value?.description })
     <!-- A failed client-side load of the landing itself must never present as a
          silent blank (issue #236). Each view component raises its own for its
          cross-Tenant read. -->
-    <ContentLoadErrorDialog :status="status" :error="error" :context="route.path" />
+    <ContentLoadErrorDialog :status="status" :error="error" />
   </main>
 </template>
 

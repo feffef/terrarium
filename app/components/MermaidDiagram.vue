@@ -28,14 +28,7 @@ const bakedSvgs = import.meta.glob('../assets/mermaid/*.svg', {
   eager: true,
 }) as Record<string, string>
 
-const svgByKey: Record<string, string> = Object.fromEntries(
-  Object.entries(bakedSvgs).map(([path, content]) => [
-    path.replace(/^.*\/(.+)\.svg$/, '$1'),
-    content,
-  ]),
-)
-
-const svg = computed(() => svgByKey[mermaidKey(props.code)])
+const svg = computed(() => bakedSvgs[`../assets/mermaid/${mermaidKey(props.code)}.svg`])
 </script>
 
 <style scoped>

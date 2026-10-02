@@ -43,7 +43,7 @@ function calendarDate(iso: string): string {
     </ol>
     <p v-if="!entries.length" class="empty">No timestamped content yet.</p>
 
-    <ContentLoadErrorDialog :status="status" :error="error" context="/t/commons/timeline" />
+    <ContentLoadErrorDialog :status="status" :error="error" />
   </div>
 </template>
 
