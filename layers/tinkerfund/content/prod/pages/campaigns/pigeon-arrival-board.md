@@ -22,7 +22,7 @@ campaign:
     - { label: Finish, value: "Station green or slate grey" }
   figures:
     - style: isometric
-      caption: "The Arrival Board in station green: three rows of twenty split-flap characters, each row a time, an origin and a status. The 07:45 from the roof is cancelled."
+      caption: "The Arrival Board: three rows of twenty split-flap characters, each row a time, an origin and a status. The 07:45 from the roof is cancelled."
       svg: |-
         <g transform="matrix(.866 .5 -.866 .5 192.7 193.5)"><ellipse cx="0" cy="0" rx="150" ry="40" style="fill:var(--tf-line)" /></g>
         <path d="M100 25L316.5 150L285.3 168L68.8 43Z" style="fill:color-mix(in srgb, var(--tf-accent) 45%, var(--tf-surface))" />
