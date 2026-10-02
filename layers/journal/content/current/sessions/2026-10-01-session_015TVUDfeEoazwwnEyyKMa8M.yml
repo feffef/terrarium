@@ -1,21 +1,31 @@
 schemaVersion: 1
 session: session_015TVUDfeEoazwwnEyyKMa8M
 startedAt: 2026-10-01T21:03:42Z
-endedAt: 2026-10-01T21:31:22Z
+endedAt: 2026-10-02T05:35:52Z
 kind: interactive
 goal: Split Tinkerfund's qa component gallery into one page per section
 status: in-review
 outcome: "qa front page is now an index of 17 section pages with breadcrumbs and prev/next; PR #1522 open, gate green"
-summary: "Human-instructed throughout. The user asked to rewrite the qa Space's single-page component gallery into per-component subpages and asked for reasons against; I raised trade-offs and questions first (per the user's ask-first preference), then explained benefits on request. The user green-lit \"per section, with breadcrumbs and prev/next\". Home layout and folding the prose-only \"Page frame\" section into the home intro were my defaults. I chose a layer Vue route (gallery/[section].vue, 404 outside qa) over Markdown pages, so the section list lives once in app/utils/gallery.ts and drives the index, the pager and the e2e loop. Shared fixtures moved into a useTinkerfundGallery() composable. Specimens stay in one Section.vue with a v-if per section; the user asked whether separate per-section files would be better and agreed to keep one file. The user then asked to \"plan and implement in parallel sonnet agents\" after the work was already pushed. Their answer to my clarifying question was \"no preference\", so I used three read-only Sonnet agents for parallel visual review. They found one real defect, which was pre-existing: a scoped .filters class collided with the Filters component's root form. The agent's guessed cause (a multi-root fragment) was wrong. I fixed it, the full gate:scoped passed (unit and e2e), and I opened PR #1522."
+summary: "Human-instructed throughout. The user asked to rewrite the qa Space's single-page component gallery into per-component subpages and asked for reasons against; I raised trade-offs and questions first (per the user's ask-first preference), then explained benefits on request. The user green-lit \"per section, with breadcrumbs and prev/next\". Home layout and folding the prose-only \"Page frame\" section into the home intro were my defaults. I chose a layer Vue route (gallery/[section].vue, 404 outside qa) over Markdown pages, so the section list lives once in app/utils/gallery.ts and drives the index, the pager and the e2e loop. Shared fixtures moved into a useTinkerfundGallery() composable. Specimens stay in one Section.vue with a v-if per section; the user asked whether separate per-section files would be better and agreed to keep one file. The user then asked to \"plan and implement in parallel sonnet agents\" after the work was already pushed. Their answer to my clarifying question was \"no preference\", so I used three read-only Sonnet agents for parallel visual review. They found one real defect, which was pre-existing: a scoped .filters class collided with the Filters component's root form. The agent's guessed cause (a multi-root fragment) was wrong. I fixed it, the full gate:scoped passed (unit and e2e), and I opened PR #1522. Next day, on the user's ask, I merged main into the branch (clean, no tinkerfund overlap) and ran /code-review. It found no defects, only small findings: a misleading comment pointer, a constant exported from composables/, duplicated component-name markup, an alias, and an untested unknown-section 404. The user said to follow my recommendations, so I fixed those. I also added an e2e assertion that each section page renders specimens, which guards the registry/v-if pairing without splitting the file the user chose to keep. Gate green again; PR description updated."
 prs:
   - "1522"
 docsRead:
   - path: layers/tinkerfund/tests/e2e/tinkerfund.e2e.ts
     reason: gallery assertions and flows that visit qa's front page
+  - path: layers/tinkerfund/app/composables/gallery.ts
+    reason: (read before editing)
+  - path: layers/tinkerfund/app/components/tinkerfund/gallery/Section.vue
+    reason: (read before editing)
+  - path: layers/tinkerfund/app/pages/t/tinkerfund/[space]/gallery/[section].vue
+    reason: (read before editing)
+  - path: layers/tinkerfund/app/components/tinkerfund/Gallery.vue
+    reason: (read before editing)
 skillsUsed:
   - name: close-session
     reason: closure at PR-open
   - name: log-session
+    reason: (no reason given)
+  - name: code-review
     reason: (no reason given)
 frictions:
   - description: Issued a filler `sleep 1` Bash call while waiting on a background build, against CLAUDE.md's end-the-turn rule.
@@ -30,20 +40,27 @@ frictions:
   - description: First PR body failed the ADR-0017 provenance guard (footer-style marker instead of a first-line 🤖 link).
     solution: The guard's deny message taught the shape; it worked as designed.
     severity: nit
-durationSec: 1660
+  - description: While moving a constant I wrote a doc comment claiming qa-fixtures.spec.ts keeps the fixtures true, which was unverified and false; I caught it right after writing and removed it.
+    solution: Only cite a test or doc in a comment after reading that it actually covers the claim.
+    severity: minor
+durationSec: 30730
 models:
-  claude-opus-5-5: 118
+  claude-opus-5-5: 192
 toolCounts:
-  Bash: 34
-  Write: 7
-  Read: 3
+  Bash: 50
+  Write: 8
+  Read: 7
   AskUserQuestion: 1
-  Agent: 3
-  ToolSearch: 1
+  Agent: 5
+  ToolSearch: 3
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 2
   mcp__claude-code-remote__subscribe_pr_activity: 1
-  Skill: 2
+  Skill: 3
+  ReadNotifications: 6
+  mcp__github__pull_request_read: 4
+  mcp__claude-code-remote__send_later: 1
+  mcp__github__update_pull_request: 1
 filesEdited:
   - layers/tinkerfund/app/utils/gallery.ts
   - layers/tinkerfund/app/composables/gallery.ts
@@ -51,9 +68,12 @@ filesEdited:
   - layers/tinkerfund/app/components/tinkerfund/Gallery.vue
   - layers/tinkerfund/app/components/tinkerfund/gallery/Intro.vue
   - layers/tinkerfund/app/pages/t/tinkerfund/[space]/gallery/[section].vue
+  - layers/tinkerfund/app/components/tinkerfund/gallery/Codes.vue
 docsReadViaShell:
   - layers/tinkerfund/CONTEXT.md
   - docs/agents/guards.md
+  - .agents/skills/tinkerfund-campaign/SKILL.md
+  - docs/agents/tenant-layers.md
 subagents:
   - task: Review gallery batch A
     model: sonnet
@@ -61,6 +81,10 @@ subagents:
     model: sonnet
   - task: Review gallery batch C
     model: sonnet
+  - type: general-purpose
+    task: Standards review of PR 1522
+  - type: general-purpose
+    task: Spec review of PR 1522
 gitBranch: ccr-cd4a11b9-394lle
 entrypoint: remote_mobile
 cliVersion: 2.1.287
