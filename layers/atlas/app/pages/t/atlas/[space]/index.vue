@@ -17,19 +17,13 @@ import type { SpecimenView } from '../../../../utils/atlas'
 
 const route = useRoute()
 const { space, pagesKey, collections } = useSpace('atlas')
-const { pages, edges, observations, specimensBySlug } = await useAtlasWingData(route.path, {
+const { pages, edges, observations, specimens, specimensBySlug } = await useAtlasWingData(route.path, {
   pagesKey,
   collections,
 })
 
 const meta = biomeMeta(space)
 const landing = computed(() => pages.value.find((p) => p.path === '/') ?? null)
-const specimens = computed<SpecimenView[]>(() =>
-  pages.value
-    .filter((p) => p.path !== '/')
-    .map(toSpecimenView)
-    .sort((a, b) => a.binomial.localeCompare(b.binomial)),
-)
 const withRhythm = computed(() => specimens.value.filter((s) => s.activity))
 
 // The wing's season dial (feedback rework, replacing the #285 composite): ONE

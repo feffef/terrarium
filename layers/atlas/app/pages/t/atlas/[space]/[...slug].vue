@@ -10,17 +10,13 @@
 // and sightings are same-Space reads — the food-web edges were authored
 // in-biome (mirrors ADR-0012), so nothing queries a sibling. `biomeMeta`, the
 // utils and the Atlas* components arrive via Nuxt's layer-wide auto-imports;
-// only the types still import relatively — `PhenologyPhase` types the almanac's
-// phase list below, `AlmanacObservation` the ledger the essay's `::sighting`
-// quotes; `entry`'s shape (below) is otherwise left to inference. The
-// three-`queryCollection` load itself is single-homed in the `useAtlasWingData`
-// composable — the sibling `[space]/index.vue` landing needs the exact same load.
-import type { AlmanacObservation } from '../../../../utils/almanacState'
-import type { PhenologyPhase } from '../../../../utils/atlas'
+// `entry`'s shape (below) is left to inference. The three-`queryCollection`
+// load itself is single-homed in the `useAtlasWingData` composable — the
+// sibling `[space]/index.vue` landing needs the exact same load.
 
 const route = useRoute()
 const { space, path, pagesKey, collections } = useSpace('atlas')
-const { data, error, edges, observations, specimensBySlug } = await useAtlasWingData(route.path, {
+const { pages, error, edges, observations, specimens, specimensBySlug } = await useAtlasWingData(route.path, {
   pagesKey,
   collections,
 })
@@ -31,7 +27,7 @@ const meta = biomeMeta(space)
 // is left to inference so `doc` keeps the exact generated `pages` item shape
 // `ContentRenderer` expects.
 const entry = computed(() => {
-  const doc = data.value?.pages.find((p) => p.path === path) ?? null
+  const doc = pages.value.find((p) => p.path === path) ?? null
   return doc ? { doc, specimen: toSpecimenView(doc) } : null
 })
 const relations = computed(() =>
@@ -42,7 +38,7 @@ const sightings = computed(() =>
 )
 // The wing in catalogue order, for the entry's own previous/next.
 const siblings = computed(() => {
-  const all = Object.values(specimensBySlug.value).sort((a, b) => a.binomial.localeCompare(b.binomial))
+  const all = specimens.value
   const i = all.findIndex((s) => s.slug === entry.value?.specimen.slug)
   return i < 0 ? null : { prev: all[i - 1], next: all[i + 1] }
 })
@@ -57,16 +53,15 @@ const hoveredRelation = ref<string | null>(null)
 // dial-driven MDC components inside the essay (#283). Provided here — the page
 // owns the state; the wheel and any descendant inject it. The needle parks at
 // today unless a `?day=` param says otherwise (see composables/almanac.ts).
-const phenologyPhases = computed<PhenologyPhase[]>(() => entry.value?.specimen.phenology?.phases ?? [])
 // The `::almanac` dial in the essay and the whole biome's ledger of rim ticks
 // both read this provided state (map #279): the `observations` here are the
 // dated ledger the dial marks and a `::sighting{date}` quotes — same-Space reads
 // only, this biome's keyed collection.
 provideAlmanac({
-  phases: phenologyPhases,
+  phases: () => entry.value?.specimen.phenology?.phases,
   specimenLabel: () => entry.value?.specimen.binomial,
   initialDay: parseAlmanacDayParam(route.query.day),
-  observations: () => (data.value?.observations ?? []) as AlmanacObservation[],
+  observations,
   specimen: () => entry.value?.specimen.slug,
 })
 
