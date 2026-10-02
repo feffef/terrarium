@@ -121,10 +121,9 @@ A screenshot captures whatever frame exists *now*. Two ways the frame is empty:
 
 - **Async client-only content** (e.g. any Nuxt Content body that loads
   post-hydration) may not have rendered yet. `scripts/preview.ts
-  shot` defaults to a 2s `--virtual-time-budget` wait and supports
+  shot` defaults to a 2s wait (`--wait <ms>`) and supports
   `--wait-for <selector>`; use the selector wait when you know the element you're
-  waiting on. Chromium's `--virtual-time-budget=<ms>` is the headless-native
-  "advance timers up to N ms, then capture" primitive underneath.
+  waiting on.
 - **A cold `--dev` server** compiles routes on demand, so the first shot of a
   route can catch a half-built page and read as a false-positive layout bug.
   Prefer built `preview` mode (or a selector wait) before trusting a `--dev`

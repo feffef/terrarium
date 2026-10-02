@@ -21,7 +21,7 @@ How the test suite is laid out, and the one non-obvious rule about e2e. The
     (see below).
 
 This keeps "which tests belong to which Tenant vs. which are global" obvious,
-and lets the suite grow additively: spawning a Tenant that needs tests adds a
+and lets the suite grow additively: adding a Tenant that needs tests adds a
 `layers/<tenant>/tests/` folder — nothing here changes.
 
 ## The e2e gate is ONE build — do not split it

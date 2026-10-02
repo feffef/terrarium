@@ -126,8 +126,8 @@ it with a tool.
 - **Requester trust is drawn at write access (ADR-0020).** See `CONTEXT.md`'s
   **Trusted**/**Public** terms for what each may and may not do. ADR-0020 is the
   single home for what follows from that split (the implementation gate, the
-  auto-merge bar, the autofix-loop escalation); `docs/agents/issue-tracker.md`
-  carries the `authorAssociation` mechanics.
+  auto-merge bar, the autofix-loop escalation); ADR-0020 lists the
+  `authorAssociation` values.
 
 ## Working conventions
 
