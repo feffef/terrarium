@@ -1,0 +1,70 @@
+schemaVersion: 1
+session: session_01BXoQpiEuaGZJVRQB7XpsFi
+startedAt: 2026-10-02T17:38:14Z
+endedAt: 2026-10-02T17:53:25Z
+kind: interactive
+goal: Read all ADRs and give the owner a verdict on their content and decisions
+status: in-review
+outcome: "ADR review discussed; PR #1536 adds the self-growing-experiment thesis to CLAUDE.md and fixes how-it-works.md"
+summary: "The owner asked me to read all 28 ADRs, then for a verdict, then for my view of the content and decisions. I praised ADR-0020/0025/0026 and the 0002-0014 derivation path, and raised four concerns: autonomy creeping through ledger exceptions, ADR-0027 letting agents self-merge ADR rewrites, governance resting on convention because main has no branch protection, and ADR-0009's weight as an over-patched \"logging subsystem\". The owner corrected three framings. Agent limits still protect against a misguided agent even when the requester is Trusted (ADR-0020's \"security theatre\" line only rules out tiering humans; its wording invites the misreading). Widening autonomy is the intended direction. Session logs are the point of the experiment, not a subsystem. Checking showed the thesis lives in README.md, how-it-works.md and layers/journal/CONTEXT.md but not in CLAUDE.md, the only file every session loads. That is likely why I misjudged it. The owner explicitly asked for both fixes in one PR: one thesis line in CLAUDE.md, and replacing how-it-works.md's stale \"A human still decides what gets built\". The full gate was green before opening the PR (human-merge: CLAUDE.md is governance). Not acted on, only offered: an ADR-0020 clarifying sentence, a branch-protection issue, an ADR-0003 amendment saying autonomy grows by evidence."
+prs:
+  - "1536"
+docsRead:
+  - path: docs/adr/
+    reason: owner asked to fully read all ADRs
+  - path: README.md
+    reason: check where the project thesis is stated
+  - path: layers/journal/CONTEXT.md
+    reason: check where the project thesis is stated
+  - path: layers/journal/content/current/pages/how-it-works.md
+    reason: thesis wording and stale autonomy claim
+  - path: CLAUDE.md
+    reason: (read before editing)
+skillsUsed:
+  - name: close-session
+    reason: closure at PR open
+  - name: log-session
+    reason: author this log
+  - name: context
+    reason: (invoked as a slash command)
+frictions:
+  - description: Without the project thesis in CLAUDE.md I judged the ADRs as a conventional app, calling intended autonomy growth 'creep' and the logs a 'subsystem'; the owner had to correct both
+    solution: "PR #1536 adds a one-line thesis to CLAUDE.md so every session knows logs and self-growth are the point"
+    severity: moderate
+  - description: Reading all 28 ADRs as CLAUDE.md requires cost about 100k tokens; Bash output overflowed to persisted files and needed six paged Reads
+    solution: Consider making 'read all ADRs' read Status and Decision by default, full text only where a change touches the ADR; or prune-trial the heaviest ADRs (0009, 0019, 0004, 0015)
+    severity: minor
+  - description: Piped gate:scoped --dry into tail and was denied by the tail-pipe guard despite CLAUDE.md stating the rule
+    solution: Redirect to a scratch log first; the guard message already says how
+    severity: nit
+  - description: "SHELL-READ-DETECTION miss: command 'cd /home/user/terrarium/docs/adr && for f in 000*.md; do echo \"=== $f\"; cat \"$f\"; done' (and 001*, 002*) streamed every docs/adr/00NN-*.md ADR, but none appear as detected or rejected"
+    solution: Teach the extractor to resolve a for-loop glob fed to cat relative to the cd target; note the output was also read back via Read on a tool-results file, which credits no ADR path either
+    severity: moderate
+durationSec: 911
+models:
+  claude-opus-5-5: 63
+toolCounts:
+  Bash: 16
+  Read: 8
+  Edit: 2
+  ToolSearch: 1
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+  Skill: 2
+  Write: 1
+filesEdited:
+  - CLAUDE.md
+  - layers/journal/content/current/pages/how-it-works.md
+docsReadViaShell:
+  - layers/journal/CONTEXT.md
+  - CONTEXT.md
+gitBranch: claude/kind-mayer-xavj0d
+entrypoint: remote
+cliVersion: 2.1.287
+learnings:
+  - ADR-0020's 'security theatre' argument only rejects tiering humans; agent limits remain justified against agent error, independent of requester trust
+ideas:
+  - Add one clarifying sentence to ADR-0020 that its write-access argument rules out tiering humans, not constraining agents; ADR-0003/0004's limits catch agent error a Trusted requester does not prevent
+  - Amend ADR-0003's founding principle 'agents tend; humans decide what should exist' to say autonomy widens by evidence, since the ledger (visitor-loop, prune-trial) already overrides it and agents act on the stated text
+landedBy: Stop
