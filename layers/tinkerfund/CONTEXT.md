@@ -30,7 +30,7 @@ surface — and anyone who wants to back a counterclockwise mug.
 
 - **`prod`** — realistic simulated content.
 - **`qa`** — deliberately awkward edge-case data. The e2e tests run against
-  it, and its front page is a component gallery.
+  it, and its front page indexes a component gallery, one page per section.
 
 ## Glossary
 

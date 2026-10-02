@@ -13,7 +13,7 @@ const props = defineProps<{
   /** The visitor's own Pledge on this Campaign, if any. */
   pledgeRef?: string
   /** The page's h1 by default; the qa gallery shows several at once. */
-  heading?: 'h1' | 'h3'
+  heading?: 'h1' | 'h2'
 }>()
 
 const { link } = useTinkerfundSpace()
