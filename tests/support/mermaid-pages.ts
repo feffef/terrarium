@@ -5,14 +5,8 @@
 // manifests `entryRoutesFrom` uses (shared/expand.ts) — never hard-coded.
 import { globSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
+import { extractMermaidBlocks } from '../../app/utils/mermaid.ts'
 import { root, type ExpandedCollection } from '../../shared/expand.ts'
-
-const MERMAID_FENCE = /^```mermaid\s*$/m
-
-/** True when `body` (a Markdown Document's raw source) contains a fenced ```mermaid block. */
-export function hasMermaidFence(body: string): boolean {
-  return MERMAID_FENCE.test(body)
-}
 
 /**
  * The route for a `page`-collection Document at `relPath` (posix, relative to its
@@ -37,7 +31,7 @@ export function mermaidRoutes(cols: ExpandedCollection[]): string[] {
     if (c.type !== 'page') continue
     const dir = join(root, c.cwdRel)
     for (const relPath of globSync(c.include, { cwd: dir })) {
-      if (hasMermaidFence(readFileSync(join(dir, relPath), 'utf-8'))) {
+      if (extractMermaidBlocks(readFileSync(join(dir, relPath), 'utf-8')).length) {
         routes.add(mermaidPageRoute(c.tenant, c.space, relPath))
       }
     }

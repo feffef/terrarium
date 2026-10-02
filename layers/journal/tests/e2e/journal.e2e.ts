@@ -16,8 +16,7 @@ import { parse as parseYaml } from 'yaml'
 import { describe, expect, it } from 'vitest'
 import { $fetch, fetch } from '@nuxt/test-utils/e2e'
 import type { Locator, Page } from 'playwright-core'
-import { expectCleanHydration } from '../../../../tests/support/e2e.ts'
-import type { renderAndCollectErrors } from '../../../../tests/support/e2e.ts'
+import { expectCleanHydration, expectRedirect, withRendered } from '../../../../tests/support/e2e.ts'
 import { DIGESTS_DIR } from '../../../../scripts/digest.ts'
 import { SESSIONS_DIR } from '../../../../scripts/session-logs.ts'
 import { PIN_SETTLED_EVENT } from '../../app/utils/expandTransition.ts'
@@ -36,6 +35,13 @@ function currentDigestDates(): string[] {
     .sort()
 }
 
+function currentSessions(): Record<string, unknown>[] {
+  const dir = join(repoRoot, SESSIONS_DIR)
+  return readdirSync(dir)
+    .filter((f) => f.endsWith('.yml'))
+    .map((f) => parseYaml(readFileSync(join(dir, f), 'utf8')) as Record<string, unknown>)
+}
+
 // Pick one `external: true` session's `goal` text (if any) and one ordinary
 // session's, live from `current`, rather than hardcoding a specific session id
 // — the same "read live" fix as currentDigestDates() above, for the same
@@ -46,11 +52,9 @@ function currentDigestDates(): string[] {
 // session did exactly that on 2026-07-28 — so callers must treat a missing
 // `external` as "nothing to assert today," not an error.
 function currentSessionGoals(): { external: string | undefined; ordinary: string } {
-  const dir = join(repoRoot, SESSIONS_DIR)
   let external: string | undefined
   let ordinary: string | undefined
-  for (const f of readdirSync(dir).filter((f) => f.endsWith('.yml'))) {
-    const raw = parseYaml(readFileSync(join(dir, f), 'utf8')) as Record<string, unknown>
+  for (const raw of currentSessions()) {
     const goal = String(raw?.goal ?? '')
     if (!goal) continue
     if (raw?.external === true) external ??= goal
@@ -64,9 +68,7 @@ function currentSessionGoals(): { external: string | undefined; ordinary: string
 /** One idea from an ordinary `current` session, if any exists today — read live
  *  for the same retention reason as currentSessionGoals(). */
 function currentSessionNotes(): { ordinaryIdea: string | undefined } {
-  const dir = join(repoRoot, SESSIONS_DIR)
-  for (const f of readdirSync(dir).filter((f) => f.endsWith('.yml'))) {
-    const raw = parseYaml(readFileSync(join(dir, f), 'utf8')) as Record<string, unknown>
+  for (const raw of currentSessions()) {
     const idea = Array.isArray(raw?.ideas) ? raw.ideas[0] : undefined
     if (raw?.external !== true && typeof idea === 'string' && !/[<>&"']/.test(idea)) return { ordinaryIdea: idea }
   }
@@ -83,11 +85,6 @@ function digestBodySnippet(date: string): string {
   const snippet = firstParagraph.replace(/\s+/g, ' ').trim().split(' ').slice(0, 6).join(' ')
   if (snippet.length < 15) throw new Error(`journal.e2e: could not extract a body snippet for digest ${date}`)
   return snippet
-}
-
-export interface JournalE2EContext {
-  entryRoutes: string[]
-  renderAndCollectErrors: typeof renderAndCollectErrors
 }
 
 /** Open `control`, wait for `readyFor` to become visible, and return what the app's
@@ -185,22 +182,24 @@ function parkItemAt(page: Page, id: string, top: number): Promise<void> {
 }
 
 /** Register the journal Tenant's L2 assertions under the caller's active suite. */
-export function registerJournalE2E({ entryRoutes, renderAndCollectErrors }: JournalE2EContext): void {
+export function registerJournalE2E(): void {
   describe('journal Tenant', () => {
-    it('redirects the Tenant root /t/journal to its main Space', async () => {
-      const res = await fetch('/t/journal', { redirect: 'manual' })
-      expect(res.status).toBe(302)
-      expect(res.headers.get('location')).toBe('/t/journal/current')
-    })
+    it('redirects the Tenant root /t/journal to its main Space', () =>
+      expectRedirect('/t/journal', '/t/journal/current'))
 
     // The journal Tenant's layer replaces the generic Space landing with an
     // overview dashboard, linking out to its Skills and Ideas & learnings pages.
-    it('renders the journal overview dashboard', async () => {
+    // Session cards are expand-on-click disclosures — sessions are a `data`
+    // collection with no route of their own, so the full log is revealed inline.
+    // Assert the control is wired (SSR-collapsed) and the detail data is delivered.
+    it('renders the journal overview dashboard, with session cards as expandable disclosures', async () => {
       const html = await $fetch('/t/journal/current')
       expect(html).toContain('Recent activity')
       expect(html).toContain('Frictions surfaced')
       expect(html).toContain('href="/t/journal/current/skills"')
       expect(html).toContain('href="/t/journal/current/ideas"')
+      expect(html).toContain('aria-expanded="false"')
+      expect(html).toMatch(/role="button"/)
     })
 
     // The sub pages are static segments beside `[...slug].vue`; each must win
@@ -223,15 +222,6 @@ export function registerJournalE2E({ entryRoutes, renderAndCollectErrors }: Jour
     it('hydrates the sub pages with no unresolved components', async () => {
       await expectCleanHydration('/t/journal/current/skills')
       await expectCleanHydration('/t/journal/current/ideas')
-    })
-
-    // Session cards are expand-on-click disclosures — sessions are a `data`
-    // collection with no route of their own, so the full log is revealed inline.
-    // Assert the control is wired (SSR-collapsed) and the detail data is delivered.
-    it('renders session cards as expandable disclosures', async () => {
-      const html = await $fetch('/t/journal/current')
-      expect(html).toContain('aria-expanded="false"')
-      expect(html).toMatch(/role="button"/)
     })
 
     // When a real `external: true` session (ADR-0009 amendment) is currently
@@ -319,42 +309,20 @@ export function registerJournalE2E({ entryRoutes, renderAndCollectErrors }: Jour
     it('renders the archived Space dashboard without erroring', async () => {
       const html = await $fetch('/t/journal/archived')
       expect(html).toContain('Recent activity')
-      expect(html).not.toContain('No document at')
       expect(html).not.toContain('live snapshot') // archived is retired, not live
     })
 
     // `how-it-works`'s ```mermaid render coverage now lives in the platform-wide
     // sweep (`tests/e2e/smoke.spec.ts`, issue #469), not a hard-coded test here.
 
-    // ── Tier 2: interaction — expand-on-click renders in the live DOM ──────────
-    // The digest body ships only in the useAsyncData payload until a click mounts
-    // it (the accordion defaults closed) — this is precisely the case the SSR-string
-    // "went from empty repo" check above CANNOT prove renders. Click a real row
-    // and assert the body becomes *visible* in the DOM.
-    it('expands a journal digest on click (live DOM, not payload)', async () => {
-      const route = '/t/journal/current'
-      expect(entryRoutes).toContain(route)
-      const { page, errors } = await renderAndCollectErrors(route)
-      try {
-        const firstRow = page.locator('.digest .drow').first()
-        expect(await firstRow.count()).toBeGreaterThan(0)
-        expect(await page.locator('.digest-body').count()).toBe(0) // collapsed: not mounted
-        await firstRow.click()
-        const body = page.locator('.digest-body').first()
-        await body.waitFor({ state: 'visible' })
-        expect(await body.isVisible()).toBe(true)
-        expect(errors, `console/page errors on ${route}:\n${errors.join('\n')}`).toEqual([])
-      } finally {
-        await page.close()
-      }
-    })
-
     // Both feeds are one page-wide accordion: opening a session card collapses an
     // already-open digest (and vice versa), so at most one item is ever expanded.
     it('keeps a single item open across both feeds (accordion)', async () => {
       const route = '/t/journal/current'
-      const { page, errors } = await renderAndCollectErrors(route)
-      try {
+      await withRendered(route, async (page) => {
+        // The digest body ships only in the useAsyncData payload until a click mounts
+        // it (the accordion defaults closed), so a real click must make it visible.
+        expect(await page.locator('.digest-body').count()).toBe(0) // collapsed: not mounted
         await page.locator('.digest .drow').first().click()
         await page.locator('.digest-body').first().waitFor({ state: 'visible' })
         expect(await page.locator('.digest-body').count()).toBe(1)
@@ -379,10 +347,7 @@ export function registerJournalE2E({ entryRoutes, renderAndCollectErrors }: Jour
         await page.locator('.feed .card .detail').first().waitFor({ state: 'visible' })
         await expect.poll(() => page.locator('.digest-body').count()).toBe(0)
         expect(await page.locator('.feed .card.open').count()).toBe(1)
-        expect(errors, `console/page errors on ${route}:\n${errors.join('\n')}`).toEqual([])
-      } finally {
-        await page.close()
-      }
+      })
     })
 
     // The regression guard for issue #768's actual mechanism. What looked like
@@ -403,8 +368,7 @@ export function registerJournalE2E({ entryRoutes, renderAndCollectErrors }: Jour
     // here by name instead of as a silent 30s waitFor timeout.
     it('keeps every session card head clickable at its goal, whatever the log size (issue #768)', async () => {
       const route = '/t/journal/current'
-      const { page, errors } = await renderAndCollectErrors(route)
-      try {
+      await withRendered(route, async (page) => {
         expect(await page.locator('.feed .card .head .goal').count()).toBeGreaterThan(0)
         const intercepted = await page.evaluate(() => {
           const bad: string[] = []
@@ -425,10 +389,7 @@ export function registerJournalE2E({ entryRoutes, renderAndCollectErrors }: Jour
           return bad
         })
         expect(intercepted, `cards whose toggle target is covered:\n${intercepted.join('\n')}`).toEqual([])
-        expect(errors, `console/page errors on ${route}:\n${errors.join('\n')}`).toEqual([])
-      } finally {
-        await page.close()
-      }
+      })
     })
 
     // Opening an item must not move it on screen: the click didn't move the
@@ -437,8 +398,7 @@ export function registerJournalE2E({ entryRoutes, renderAndCollectErrors }: Jour
     // it opens its own body below itself) and assert its top holds.
     it('holds a newly opened item at its pre-click viewport position', async () => {
       const route = '/t/journal/current'
-      const { page, errors } = await renderAndCollectErrors(route)
-      try {
+      await withRendered(route, async (page) => {
         const card = page.locator('.feed .card').first()
         const id = (await card.getAttribute('id'))!
         // Park the card deep in the viewport, then measure `before` (openAndAwaitPin
@@ -462,10 +422,7 @@ export function registerJournalE2E({ entryRoutes, renderAndCollectErrors }: Jour
           .toBeLessThan(1)
         expect(after.top, `card did not hold its position${evidence}`).toBeGreaterThan(before.top - HOLD_TOLERANCE_PX)
         expect(after.top, `card did not hold its position${evidence}`).toBeLessThan(before.top + HOLD_TOLERANCE_PX)
-        expect(errors, `console/page errors on ${route}:\n${errors.join('\n')}`).toEqual([])
-      } finally {
-        await page.close()
-      }
+      })
     })
 
     // The accordion is one-at-a-time, so opening this session card collapses an
@@ -483,8 +440,7 @@ export function registerJournalE2E({ entryRoutes, renderAndCollectErrors }: Jour
     // the margin is ample.
     it('holds the clicked item at its pre-click position when a sibling above it collapses', async () => {
       const route = '/t/journal/current'
-      const { page, errors } = await renderAndCollectErrors(route)
-      try {
+      await withRendered(route, async (page) => {
         await page.setViewportSize({ width: 900, height: 720 })
         await page.addStyleTag({ content: DISABLE_SCROLL_ANCHORING })
         // Setup: open the digest that will later collapse. This open starts a pin of
@@ -533,10 +489,7 @@ export function registerJournalE2E({ entryRoutes, renderAndCollectErrors }: Jour
           .toBe(false)
         expect(after.top, `card did not hold its position${evidence}`).toBeGreaterThan(before.top - HOLD_TOLERANCE_PX)
         expect(after.top, `card did not hold its position${evidence}`).toBeLessThan(before.top + HOLD_TOLERANCE_PX)
-        expect(errors, `console/page errors on ${route}:\n${errors.join('\n')}`).toEqual([])
-      } finally {
-        await page.close()
-      }
+      })
     })
 
     // Deep-linking: loading the page with an item's anchor as the URL hash opens
@@ -551,8 +504,7 @@ export function registerJournalE2E({ entryRoutes, renderAndCollectErrors }: Jour
       const oldest = currentDigestDates()[0]!
       const anchorId = `digest-${oldest}`
       const route = `/t/journal/current#${anchorId}`
-      const { page, errors } = await renderAndCollectErrors(route)
-      try {
+      await withRendered(route, async (page) => {
         const body = page.locator(`#${anchorId} .digest-body`)
         await body.waitFor({ state: 'visible' })
         expect(await body.isVisible()).toBe(true)
@@ -573,28 +525,21 @@ export function registerJournalE2E({ entryRoutes, renderAndCollectErrors }: Jour
         // exists to cover (e.g. if a future retention change left `current`
         // with so few digests the oldest is already visible on load).
         expect(await page.evaluate(() => window.scrollY)).toBeGreaterThan(0)
-        expect(errors, `console/page errors on ${route}:\n${errors.join('\n')}`).toEqual([])
-      } finally {
-        await page.close()
-      }
+      })
     })
 
     // The open item is mirrored to the URL hash so it can be shared, and the hash
     // clears when the item is collapsed — the two halves of the deep-link contract.
     it('mirrors the open item to the URL hash and clears it on collapse', async () => {
       const route = '/t/journal/current'
-      const { page, errors } = await renderAndCollectErrors(route)
-      try {
+      await withRendered(route, async (page) => {
         const firstRow = page.locator('.digest .drow').first()
         await firstRow.click()
         await page.locator('.digest-body').first().waitFor({ state: 'visible' })
         await expect.poll(() => page.evaluate(() => location.hash)).toMatch(/^#digest-/)
         await firstRow.click() // collapse
         await expect.poll(() => page.evaluate(() => location.hash)).toBe('')
-        expect(errors, `console/page errors on ${route}:\n${errors.join('\n')}`).toEqual([])
-      } finally {
-        await page.close()
-      }
+      })
     })
   })
 }

@@ -18,45 +18,35 @@
 // style the other Tenant-specific checks in this file use.
 import { describe, expect, it } from 'vitest'
 import { $fetch } from '@nuxt/test-utils/e2e'
-import { expectCleanHydration, renderAndCollectErrors } from '../../../../tests/support/e2e.ts'
+import { expectHydrated, withRendered } from '../../../../tests/support/e2e.ts'
 
 /** Register the atlas Tenant's L2 assertions under the caller's active suite. */
 export function registerAtlasE2E(): void {
   describe('atlas Tenant', () => {
     it('shows today under the glass on the front door', async () => {
-      const { page, errors } = await renderAndCollectErrors('/t/atlas')
-      try {
-        expect(errors).toEqual([])
+      await withRendered('/t/atlas', async (page) => {
         const today = await page.locator('.today').textContent()
         expect(today).toMatch(/Day \d+ of the Glass Year/)
         expect(today).toMatch(/Abroad this season:|Nothing is abroad/)
-      } finally {
-        await page.close()
-      }
-    })
-
-    it('hydrates a specimen entry with no unresolved components', async () => {
-      await expectCleanHydration('/t/atlas/canopy/mycora-susurrans')
+      })
     })
 
     // issue #355: a body MDC block component with a dropped closing `::`
-    // degrades silently to plain prose — no hydration/console error, so the
-    // clean-hydration check above can't catch it. Assert the route's
+    // degrades silently to plain prose — no hydration/console error, so a
+    // clean-hydration check alone can't catch it. Assert the route's
     // structured, content-driven output actually rendered, not just that
     // nothing errored.
     it('renders the mycora-susurrans field note and its relations structurally', async () => {
-      const { page, errors } = await renderAndCollectErrors('/t/atlas/canopy/mycora-susurrans')
-      try {
-        expect(errors).toEqual([])
+      const route = '/t/atlas/canopy/mycora-susurrans'
+      await withRendered(route, async (page) => {
+        await expectHydrated(page, route)
         const fieldnote = await page.locator('.atlas-fieldnote').textContent()
         expect(fieldnote).toContain('a company of pale sage caps standing shoulder to shoulder')
         const relations = await page.locator('.atlas-relations').textContent()
         expect(relations).toContain('Umbra vacans')
         expect(relations).toContain('Lumina fabulae')
         expect(relations).toContain('Folium mendax')
-      } finally {
-        await page.close()
-      }
+      })
     })
 
     // issue #342: the checks above assert prose text, which an unclosed
@@ -64,32 +54,24 @@ export function registerAtlasE2E(): void {
     // degrades it to plain paragraphs — no console error either way. Assert
     // each MDC component's own rendered DOM marker instead, so a silent
     // degrade-to-prose fails the count. Table-driven: mycora-susurrans and
-    // lumina-fabulae differ only by route and expected counts.
+    // lumina-fabulae differ only by route and expected counts. lumina-fabulae
+    // weaves ::almanac / ::phase-note / ::sighting into its field note — an
+    // unresolved MDC tag, or a hydration mismatch in the phase-note collapse or
+    // the ::sighting registration protocol, surfaces as a console error/unknown tag.
     for (const { route, almanac, phaseNote, sighting } of [
       { route: '/t/atlas/canopy/mycora-susurrans', almanac: 1, phaseNote: 4, sighting: 3 },
       { route: '/t/atlas/canopy/lumina-fabulae', almanac: 1, phaseNote: 3, sighting: 2 },
     ]) {
       const slug = route.split('/').pop()
       it(`renders the ${slug} almanac, phase notes, and sightings structurally`, async () => {
-        const { page, errors } = await renderAndCollectErrors(route)
-        try {
-          expect(errors).toEqual([])
+        await withRendered(route, async (page) => {
+          await expectHydrated(page, route)
           expect(await page.locator('.entry-almanac').count()).toBe(almanac)
           expect(await page.locator('.atlas-phase-note').count()).toBe(phaseNote)
           expect(await page.locator('.atlas-sighting').count()).toBe(sighting)
-        } finally {
-          await page.close()
-        }
+        })
       })
     }
-
-    it('hydrates the essay that carries the dial-driven MDC components', async () => {
-      // lumina-fabulae weaves ::almanac / ::phase-note / ::sighting into its
-      // field note — an unresolved MDC tag, or a hydration mismatch in the
-      // phase-note collapse or the ::sighting registration protocol, surfaces
-      // here as a console error/unknown tag.
-      await expectCleanHydration('/t/atlas/canopy/lumina-fabulae')
-    })
 
     // 200 + stable front-door content: the cover title and all three wing names
     // (biomes.ts's `name` fields), so a broken front door or a wing dropped from
@@ -107,18 +89,14 @@ export function registerAtlasE2E(): void {
     // pinned high so the pick can't coincide with the href's first-specimen
     // fallback — proving the click handler, not the plain link, navigated.
     it('opens the guide at a random specimen', async () => {
-      const { page, errors } = await renderAndCollectErrors('/t/atlas')
-      try {
+      await withRendered('/t/atlas', async (page) => {
         const link = page.getByRole('link', { name: /open the guide at random/i })
         const fallback = await link.getAttribute('href')
         await page.evaluate(() => { Math.random = () => 0.999 })
         await link.click()
         await page.waitForURL((u) => /^\/t\/atlas\/[^/]+\/[^/]+$/.test(u.pathname) && u.pathname !== fallback)
         await page.locator('.plate-caption').first().waitFor()
-        expect(errors).toEqual([])
-      } finally {
-        await page.close()
-      }
+      })
     })
   })
 }
