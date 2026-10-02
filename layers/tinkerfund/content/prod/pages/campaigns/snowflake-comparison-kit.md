@@ -19,7 +19,7 @@ campaign:
     - { label: "Working time, per pair", value: "About 40 seconds at −5 °C" }
     - { label: Collecting tray, value: "30 × 20 cm, black, folds flat (Field kit)" }
     - { label: Thermometer, value: "−30 to +10 °C, 0.5 °C divisions (Field kit)" }
-  figures: []
+  figures:
   rewards:
     - id: kit
       title: The Comparison Kit

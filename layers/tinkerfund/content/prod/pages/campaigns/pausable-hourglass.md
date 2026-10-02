@@ -19,7 +19,7 @@ campaign:
     - { label: Accuracy, value: "±2 s per 10 minutes running, paused time excluded" }
     - { label: Pause tested, value: "1,400 hours closed, no grain passed" }
     - { label: Frame, value: "Walnut or oak, brass fittings" }
-  figures: []
+  figures:
   rewards:
     - id: hourglass
       title: The Pausable Hourglass
