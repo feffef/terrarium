@@ -1,0 +1,81 @@
+schemaVersion: 1
+session: session_01WepvCFoUP9g2RgJaVdWKHe
+startedAt: 2026-10-02T13:15:42Z
+endedAt: 2026-10-02T13:23:08Z
+kind: autonomous
+goal: "Scheduled prune-trial run: judge open trials, prune one more problem"
+status: in-review
+outcome: 3 trials judged (all hold); ADR-0017 rewrite -83 lines in PR 1531, gate green
+summary: "Scheduled run, no human instruction; everything here was agent-initiated per the prune-trial Skill. Three trials past their window (closure rule, log-session word caps, window-quote clause) were judged against frictions since landing and the tracker; none showed damage, so their entries were deleted. The criterion-1 search subagent ranked ADR-0017's provenance rule first: it failed as prose repeatedly, is now guard-held, and the ADR still carried a stale \"convention only\" Decision beside its own amendment. Rewrote the ADR whole with the decision unchanged and cut two restatements. The other two candidates (guarded tool-misuse bullets, shallow-clone prose) were left for a later run. The Sonnet probe at the pinned SHA passed, though it read the CLAUDE.md bullet from its own context rather than the checkout. PR 1531 is open, gate green, awaiting a human merge because it touches an ADR."
+prs:
+  - "1531"
+docsRead:
+  - path: docs/adr/0017-provenance-footer-on-agent-authored-content.md
+    reason: (read before editing)
+  - path: CLAUDE.md
+    reason: (read before editing)
+  - path: docs/agents/git-conventions.md
+    reason: (read before editing)
+  - path: docs/research/rulebook-migration-table.md
+    reason: (no reason given)
+  - path: docs/agents/environment-caveats.md
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: prune-trial
+    reason: (invoked as a slash command)
+frictions:
+  - description: Subagent search and probe could not read issue threads (GraphQL 403), so failure evidence came from guard headers and rulebook rows rather than the issues.
+    solution: Port the REST fallback used elsewhere so Explore subagents can read issues.
+    severity: minor
+  - description: The probe subagent reported reading the CLAUDE.md bullet from its in-context copy, not the pinned checkout, weakening the SHA-pinned proof for that part.
+    solution: Probe brief should require Read of every named file at the pinned SHA.
+    severity: nit
+  - description: Hand-writing the commit trailer and a placeholder session id were each denied by guards; the deny messages fixed both in one retry.
+    solution: None needed; guards worked as designed.
+    severity: nit
+durationSec: 447
+models:
+  claude-sonnet-5-5: 58
+toolCounts:
+  Bash: 12
+  Agent: 3
+  ToolSearch: 2
+  mcp__github__search_issues: 1
+  Read: 3
+  Grep: 1
+  Write: 1
+  Edit: 2
+  mcp__github__create_pull_request: 2
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+  PushNotification: 1
+  ReadNotifications: 2
+  Skill: 2
+filesEdited:
+  - docs/adr/0017-provenance-footer-on-agent-authored-content.md
+  - CLAUDE.md
+  - docs/agents/git-conventions.md
+docsReadViaShell:
+  - docs/agents/guards.md
+  - docs/agents/git-conventions.md
+  - docs/agents/environment-caveats.md
+  - .agents/skills/dispatch-subagents/SKILL.md
+  - .agents/skills/log-session/SKILL.md
+  - docs/agents/guest-contributions.md
+subagents:
+  - type: Explore
+    task: Find already-failed prose
+  - type: general-purpose
+    task: Sonnet probe on pinned SHA
+    model: sonnet
+  - type: general-purpose
+    task: Sonnet probe on pinned SHA
+    model: sonnet
+gitBranch: claude/practical-rubin-16oeje
+entrypoint: remote_trigger
+cliVersion: 2.1.287
+trigger: prune-trial
+landedBy: Stop
