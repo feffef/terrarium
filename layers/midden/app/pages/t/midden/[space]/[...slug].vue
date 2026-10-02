@@ -16,8 +16,6 @@
 // Space's own keyed pages/artifacts. The former `useMiddenTrenchData` composable
 // was folded away in the simplification — the page's derived data (the compact
 // meta line, the present-grade list) is computed straight from this same-Space load.
-import { CONDITION_ORDER, type Grade } from '../../../../utils/condition'
-
 const route = useRoute()
 const { space, path, pagesKey, collections } = useSpace('midden')
 const siteSlug = computed(() => path.replace(/^\//, ''))
@@ -41,12 +39,6 @@ const siteArtifacts = computed(() => data.value?.artifacts ?? [])
 
 // Compact dig-report meta line: which season(s) it spans, the find count, and the
 // assessed-date span — all derived from the REAL artifact data.
-const MONTH_ABBR = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-function formatDate(iso: string): string {
-  const [year, month, day] = iso.split('-')
-  return `${Number(day)} ${MONTH_ABBR[Number(month) - 1]} ${year}`
-}
-
 const touchedSeasons = computed(() => {
   const strata = new Set(siteArtifacts.value.map((a) => a.stratum))
   return DIG_SEASONS.filter((s) => strata.has(s.slug))
@@ -58,8 +50,8 @@ const seasonSummary = computed(() => {
 const assessedSpan = computed(() => {
   const dates = siteArtifacts.value.map((a) => a.assessedAt).sort()
   if (dates.length === 0) return ''
-  const lo = formatDate(dates[0]!)
-  const hi = formatDate(dates[dates.length - 1]!)
+  const lo = formatMiddenDate(dates[0]!)
+  const hi = formatMiddenDate(dates[dates.length - 1]!)
   return lo === hi ? lo : `${lo} – ${hi}`
 })
 
@@ -87,7 +79,7 @@ useHead({ title: () => `${site.value?.title ?? 'Not found'} · The Midden` })
 </script>
 
 <template>
-  <main class="midden" :class="`midden--${space}`">
+  <main class="midden">
     <article v-if="site" class="midden-page midden-report">
       <header class="midden-report__head">
         <nav class="tech midden-crumb" aria-label="Breadcrumb">

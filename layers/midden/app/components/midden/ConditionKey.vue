@@ -6,7 +6,6 @@
 // NOT the removed scroll-synced stratigraphy gauge: no observers, no scroll
 // state. The dig-report page places it (sticky positioning included) via its
 // own grid; this component only renders the rows.
-import { CONDITION_GRADES, type Grade } from '../../utils/condition'
 
 const props = defineProps<{ grades: Grade[] }>()
 

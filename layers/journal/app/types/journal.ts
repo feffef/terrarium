@@ -1,113 +1,16 @@
-// Content-shape types for the journal Tenant's UI layer, mirroring the manifest's
-// `sessions` and `skills` collection schemas (layers/journal/tenant.config.ts).
-// Kept in one place so the layer's page and components can't drift on them.
-//
-// Deliberately NOT aliases of `@nuxt/content`'s generated `Collections[...]`
-// item types: `dashboard.ts`'s own header comment (and the layer's
-// tests/unit/journal-dashboard.spec.ts) call out that this module is pure and unit-tested outside
-// the Nuxt app, via `tsc -p tsconfig.node.json` / vitest — neither program
-// includes `.nuxt/content/types.d.ts`, so `Collections` resolves with no
-// journal keys there and any alias built from it collapses to `never`. Instead
-// these stay hand-maintained, but shaped to match the *generated* item type
-// field-for-field (down to which fields are optional, per each Collection's
-// `.default(...)` in the manifest) — so a plain, uncast assignment from
-// `queryCollection(...)`'s real result in `[space]/index.vue` either
-// typechecks (shapes agree) or fails loudly, with no `as unknown
-// as` escape hatch erasing the check either way.
-export type Severity = 'nit' | 'minor' | 'moderate' | 'major' | 'blocker'
-export type Importance = 'essential' | 'routine' | 'specialist' | 'supporting' | 'peripheral'
-export type Status = 'completed' | 'in-review' | 'partial' | 'blocked' | 'abandoned'
+import type { z } from 'zod'
+import type { sessionSchema } from '../../../../shared/schemas/session'
+import type { skillSchema } from '../../tenant.config'
 
-export interface Friction {
-  description: string
-  solution: string
-  severity: Severity
-}
-
-export interface SessionDoc {
-  session: string
-  startedAt: string
-  endedAt: string
-  kind: 'interactive' | 'delegated' | 'autonomous'
-  goal: string
-  status: Status
-  outcome: string
-  summary: string
-  // Optional: the manifest's `z.array(...).default([])` (tenant.config.ts)
-  // makes these optional on the generated collection item type — always
-  // populated by the time content is queried, but not guaranteed by the type,
-  // so readers must fall back (`?? []`) rather than assume.
-  prs?: string[]
-  // Merged reads/skills (ADR-0009 amendment): the agent's curated entries plus
-  // transcript-observed ones the SessionEnd extractor folds in with a derived
-  // placeholder reason — `(read before editing)` for a docsRead path also
-  // edited, `(no reason given)` otherwise.
-  docsRead?: { path: string; reason: string }[]
-  skillsUsed?: { name: string; reason: string }[]
-  // Mechanical trace — derived from the transcript (ADR-0009 amendment), never
-  // self-reported. All optional: absent ⇒ an older, authored-only log.
-  durationSec?: number
-  models?: Record<string, number>
-  toolCounts?: Record<string, number>
-  filesEdited?: string[]
-  // Agent-instruction docs a shell command streamed into the session (#1074) —
-  // the shell half of "what it read". Derived only; see shared/schemas/session.ts.
-  docsReadViaShell?: string[]
-  subagents?: Subagent[]
-  gitBranch?: string
-  entrypoint?: string
-  cliVersion?: string
-  // Set only on a log authored by an EXTERNAL harness (ADR-0009 amendment) — a
-  // different agent/toolchain. Absent ⇒ internal. The dashboard still renders an
-  // external session's record (and its ideas on the Ideas & learnings page); only the
-  // self-improvement mining excludes it (scripts/audit-skills.ts, ideas.ts).
-  external?: boolean
-  // Required: no `.default()` on `frictions` — the manifest forces every
-  // session log to state its frictions explicitly (may be `[]`, not omitted).
-  frictions: Friction[]
-  // Optional authored note fields (tenant.config.ts): knowledge the session
-  // inferred (`learnings`) and rough future-work ideas (`ideas`). Absent unless
-  // the session actually noted one — never padded to `[]`.
-  learnings?: string[]
-  ideas?: string[]
-}
-
-export interface Subagent {
-  type?: string
-  task?: string
-  model?: string
-}
-
-export interface SkillDoc {
-  name: string
-  category: 'platform-operation' | 'general-engineering'
-  importance: Importance
-  // Authoring rule lives on the manifest schema (tenant.config.ts). Rendered
-  // before the jargon-heavier `role` below, which folds behind a disclosure
-  // when this is present (visitor-loop fix, 2026-09-26).
-  gist?: string
-  role: string
-  // Internal audit-skills log (ADR-0015 amendment) — not rendered by
-  // SkillInventory.vue. Required, like `frictions` on SessionDoc: no
-  // `.default()` in the manifest, so every entry states it explicitly
-  // (`[]` when there's nothing notable yet).
-  observations: { date: string; note: string }[]
-}
-
-export interface PageDoc {
-  path?: string
-  title?: string
-  description?: string
-  badge?: string
-  lead?: string
-  summary?: string
-  // Dashboard on-ramp opt-in (mirrors the `pages` schema): a page becomes a
-  // "New here?" card by setting `onramp` to its sort order, with `onrampLabel`/
-  // `onrampBlurb` as the card's teaser copy. Optional — ordinary pages omit them.
-  onramp?: number
-  onrampLabel?: string
-  onrampBlurb?: string
-}
+// `z.input`, not `z.infer`: the schemas' `.default([])` fields are optional on the
+// generated content type, which only the input type matches.
+export type SessionDoc = z.input<typeof sessionSchema>
+export type SkillDoc = z.input<typeof skillSchema>
+export type Friction = SessionDoc['frictions'][number]
+export type Severity = Friction['severity']
+export type Status = SessionDoc['status']
+export type Subagent = NonNullable<SessionDoc['subagents']>[number]
+export type Importance = SkillDoc['importance']
 
 // A session prepared for display in the recent-activity feed — the page derives
 // this from a SessionDoc (formats dates, counts frictions) so the card component

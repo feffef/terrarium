@@ -214,7 +214,7 @@ export function sessionCardViews(sessions: SessionDoc[]): (SessionCardView & { k
 // Digests share the `pages` collection under a `/digests/` path (ADR-0010), so
 // they are surfaced by filtering the pages by path, newest-first, with the
 // day's headline falling back `summary → description → ''`.
-export interface DigestEntry<T> {
+interface DigestEntry<T> {
   date: string
   summary: string
   doc: T

@@ -1,9 +1,6 @@
 // `provenance.url` is bound to :href, so the schema must refuse script URLs.
 import { describe, expect, it } from 'vitest'
-import type { z } from 'zod'
-import manifest from '../../tenant.config.ts'
-
-const provenance = (manifest.collections.artifacts!.schema as z.AnyZodObject).shape.provenance as z.ZodTypeAny
+import { provenance } from '../../tenant.config.ts'
 
 describe('provenance.url', () => {
   it.each(['https://github.com/feffef/terrarium/pull/1', undefined])('accepts %s', (url) => {

@@ -7,47 +7,14 @@
 // auto-imports every `app/utils` export globally across ALL layers — the same
 // collision hazard strata.ts documents for `digSeasonOf`, and the convention the
 // Blog and Marquee layers already follow with `formatBlogDate`/`formatMarqueeDate`.
+import type { z } from 'zod'
+import type { artifactSchema } from '../../tenant.config'
 
-/** An Artifact's own words, quoted verbatim (tenant.config.ts's `inscription`). */
-export interface MiddenInscription {
-  text: string
-  source: string
-}
+/** One raw `artifacts` Document. The filename (`stem`) IS the slug; the schema
+ *  carries no `slug` field of its own. */
+export type MiddenArtifactDoc = z.input<typeof artifactSchema> & { stem: string }
 
-/** One curator-curated link to the artifact's preserved original state
- *  (tenant.config.ts's `remainEntry` — SHA-pinned, immutable). */
-export interface MiddenRemain {
-  label: string
-  url: string
-}
-
-/** The discriminated provenance union (tenant.config.ts's `provenance`), mirrored
- *  as a plain TS type — the manifest exports only the zod schema, not its
- *  inferred type. */
-export type MiddenProvenance =
-  | { kind: 'pr'; number: number; merged: boolean; url?: string; continuityCheck?: string }
-  | { kind: 'branch'; name: string; url?: string; continuityCheck?: string }
-  | { kind: 'commit'; hash: string; path?: string; url?: string; continuityCheck?: string }
-  | { kind: 'file'; path: string; url?: string; continuityCheck?: string }
-  | { kind: 'dependency'; name: string; url?: string; continuityCheck?: string }
-  | { kind: 'skill'; name: string; url?: string; continuityCheck?: string }
-
-/** One raw `artifacts` Document, narrowed to the fields a find renders. The
- *  filename (`stem`) IS the slug; the schema carries no `slug` field of its own.
- *  `site` is absent on a stored find — see tenant.config.ts's `site` comment. */
-export interface MiddenArtifactDoc {
-  stem: string
-  title: string
-  stratum: string
-  condition: import('./condition').Grade
-  provenance: MiddenProvenance
-  catalogNote: string
-  assessedAt: string
-  site?: string
-  removedIn?: string
-  remains?: MiddenRemain[]
-  inscription?: MiddenInscription
-}
+export type MiddenProvenance = MiddenArtifactDoc['provenance']
 
 // Deterministic, locale-independent date prose (no `toLocaleDateString`, whose
 // SSR/client locale mismatch causes hydration errors). #526 asks only that

@@ -42,14 +42,6 @@
      provenance). System stack, no external font (see FONT SUBSTITUTION above). */
   --midden-serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, "Times New Roman", serif;
 
-  /* Legacy aliases: scoped component styles authored before the redesign still
-     reference these names — kept pointing at the three real stacks above so
-     nothing drifts. New markup should prefer the utility classes below. */
-  --midden-data: var(--midden-mono);
-  --midden-text: var(--midden-mono);
-  --midden-display: var(--midden-hand);
-  --midden-label: var(--midden-typewriter);
-
   /* Ground — warm cream / parchment find-tray paper; sepia-brown catalogue ink.
      Values from the redesign handoff's :root, --midden-* prefixed. */
   --midden-paper: #ece2ca;
@@ -66,7 +58,6 @@
   --midden-accent: #b4552d;
   --midden-accent-2: #8f3f20;
   --midden-accent-soft: rgba(180, 85, 45, 0.12);
-  --midden-accent-ink: #fbf3e6;
 
   /* Muted slate — reserved for the stratigraphic depth-gauge (#524): a cool
      section drawing against the warm find tray. */
@@ -74,10 +65,6 @@
   --midden-slate-2: #5c6a74;
   --midden-slate-line: #b6bcc0;
   --midden-slate-wash: rgba(68, 81, 91, 0.055);
-  --midden-slate-ink: #eceef0;
-
-  /* Back-compat alias for the pre-redesign name. */
-  --midden-slate-muted: var(--midden-slate-2);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -98,13 +85,11 @@
     --midden-accent: #d4753f;
     --midden-accent-2: #e0895a;
     --midden-accent-soft: rgba(212, 117, 63, 0.15);
-    --midden-accent-ink: #241206;
 
     --midden-slate: #9aa6b2;
     --midden-slate-2: #808c98;
     --midden-slate-line: #3a4149;
     --midden-slate-wash: rgba(154, 166, 178, 0.06);
-    --midden-slate-ink: #1b2126;
   }
 }
 
@@ -112,7 +97,7 @@
    Real global classes any Midden component may use, mirroring the mockup's
    `.mono`/`.sc`/`.hand`/`.doctitle`/`.tech`/`.stamp` helpers, with the system
    font substitutions applied. */
-.mono {
+:where(.midden) .mono {
   font-family: var(--midden-mono);
   font-weight: 400;
   font-size: 0.78rem;
@@ -120,19 +105,19 @@
   letter-spacing: 0;
   text-transform: none;
 }
-.sc {
+:where(.midden) .sc {
   font-family: var(--midden-typewriter);
   text-transform: uppercase;
   letter-spacing: 0.06em;
   font-weight: 400;
 }
-.hand {
+:where(.midden) .hand {
   font-family: var(--midden-hand);
   text-transform: none;
   letter-spacing: 0.01em;
   font-weight: 400;
 }
-.doctitle {
+:where(.midden) .doctitle {
   /* Serif, title-case — the composed catalogue title (owner pick). Was the
      handwriting stack + uppercase, which degraded to the OS generic `cursive`
      face wherever Architects Daughter's substitutes were absent, so the headline
@@ -142,7 +127,7 @@
   letter-spacing: 0;
   font-weight: 400;
 }
-.tech {
+:where(.midden) .tech {
   font-family: var(--midden-mono);
   font-size: 0.72rem;
   font-weight: 400;
