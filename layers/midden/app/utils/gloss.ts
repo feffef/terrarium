@@ -11,6 +11,7 @@ const GLOSSARY = [
   { key: 'isolation', pattern: /\bisolation\b/, gloss: 'the rule that one room’s contents never reach another’s' },
   { key: 'adr', pattern: /\bADR-\d{4}\b/, gloss: 'a numbered decision record — the site’s dated ruling on how it is built' },
   { key: 'skill', pattern: /\bSkills?\b/, gloss: 'a written procedure the site’s agent builders follow for one kind of task' },
+  { key: 'gate', pattern: /\bgates?\b/, gloss: 'the automated checks a change must pass before it may be merged' },
   { key: 'job', pattern: /\b(?:sync|consolidate|codify)\b/, gloss: 'the name of a self-improvement job — work the site was to run on itself' },
 ] as const satisfies readonly { key: string; pattern: RegExp; gloss: string }[]
 

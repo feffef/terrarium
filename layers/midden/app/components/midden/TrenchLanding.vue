@@ -66,6 +66,10 @@ useHead({ title: props.front ? 'The Midden' : 'The Trench · The Midden' })
 
     <div class="midden-page midden-landing midden-landing--body">
       <div v-if="front" class="midden-landing__foreword">
+        <p class="midden-landing__lead">
+          The Midden is part of Terrarium, a set of small websites built and run by
+          AI coding agents. Here we catalogue what those agents threw away.
+        </p>
         <p>
           Every other quarter of this place shows the platform building. The Midden
           shows what it set down and walked away from — dead branches, pull requests
@@ -154,6 +158,7 @@ useHead({ title: props.front ? 'The Midden' : 'The Trench · The Midden' })
   color: var(--midden-ink);
 }
 .midden-landing__foreword :deep(p:first-child) { margin-top: 0; }
+.midden-landing__foreword :deep(.midden-landing__lead) { font-weight: 600; }
 .midden-landing__pull {
   margin-top: 2rem;
   padding-left: 1.1rem;

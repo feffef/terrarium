@@ -72,7 +72,7 @@ useHead({ title: 'The Stores · The Midden' })
 
         <div v-if="finds.length" class="tech midden-stores__meta">
           <span>{{ finds.length }} finds in store</span><span class="midden-stores__dot">·</span>
-          <span>{{ seasonCount }} {{ seasonCount === 1 ? 'season' : 'seasons' }}</span>
+          <span>{{ seasonCount }} of {{ DIG_SEASONS.length }} seasons</span>
         </div>
       </header>
 

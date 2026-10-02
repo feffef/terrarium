@@ -11,13 +11,17 @@ const SITES = [
   { name: 'Atlas', to: '/t/atlas' },
   { name: 'Tinkerfund', to: '/t/tinkerfund' },
 ]
+
+const route = useRoute()
+// Linking a visitor to the wing they are already in is a dead link.
+const sites = computed(() => SITES.filter((s) => s.to.split('/')[2] !== route.path.split('/')[2]))
 </script>
 
 <template>
   <footer class="site-footer" aria-label="Other sites in the terrarium, and its source">
     <span class="site-footer-label">Elsewhere:</span>
     <span class="site-footer-links">
-      <template v-for="(s, i) in SITES" :key="s.to">
+      <template v-for="(s, i) in sites" :key="s.to">
         <span v-if="i" class="site-footer-sep" aria-hidden="true">·</span>
         <NuxtLink :to="s.to">{{ s.name }}</NuxtLink>
       </template>
