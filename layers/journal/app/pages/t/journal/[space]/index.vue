@@ -82,7 +82,8 @@ const sessions = computed<SessionDoc[]>(() => data.value?.sessions ?? [])
 // ── Derived dashboard data — thin wrappers over the pure module ──
 // The wrapped functions (sessionCardViews, frictionTotals, …) are dashboard.ts
 // exports arriving via auto-import; each local name is distinct.
-const sessionCards = computed(() => sessionCardViews(sessions.value))
+const { repoSkills } = useAppConfig().journal
+const sessionCards = computed(() => sessionCardViews(sessions.value, repoSkills))
 // Recent activity defaults to the newest 10 cards (visitor-loop fix,
 // 2026-09-24). `v-show`, not a sliced list: every card still ships in the
 // SSR HTML (just hidden), so a deep-linked or test-asserted older session's

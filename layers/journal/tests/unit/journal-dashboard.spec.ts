@@ -10,6 +10,7 @@
 import { describe, expect, it } from 'vitest'
 import {
   sessionCardViews,
+  skillUrl,
   countFrictions,
   digestAnchor,
   digestList,
@@ -277,7 +278,20 @@ describe('sessionToolEntries', () => {
   })
 })
 
+describe('skillUrl', () => {
+  it("links a repo Skill's SKILL.md on main, and nothing for an unknown name", () => {
+    expect(skillUrl('tdd', ['tdd'])).toBe('https://github.com/feffef/terrarium/blob/main/.agents/skills/tdd/SKILL.md')
+    expect(skillUrl('simplify', ['tdd'])).toBeUndefined()
+  })
+})
+
 describe('sessionCardViews', () => {
+  it('links only the used Skills the repo has', () => {
+    const s = session({ skillsUsed: [{ name: 'tdd', reason: 'r' }, { name: 'simplify', reason: 'r' }] })
+    const [c] = sessionCardViews([s], ['tdd'])
+    expect(c!.skillsUsed.map((x) => x.url)).toEqual([skillUrl('tdd', ['tdd']), undefined])
+  })
+
   it('maps a SessionDoc to its display view, including sessionShortId truncation', () => {
     const s = session({
       session: 'session_0123456789abcdefXYZW',
