@@ -286,11 +286,6 @@ describe('skillUrl', () => {
 })
 
 describe('sessionCardViews', () => {
-  it('links only the used Skills the repo has', () => {
-    const s = session({ skillsUsed: [{ name: 'tdd', reason: 'r' }, { name: 'simplify', reason: 'r' }] })
-    const [c] = sessionCardViews([s], ['tdd'])
-    expect(c!.skillsUsed.map((x) => x.url)).toEqual([skillUrl('tdd', ['tdd']), undefined])
-  })
 
   it('maps a SessionDoc to its display view, including sessionShortId truncation', () => {
     const s = session({

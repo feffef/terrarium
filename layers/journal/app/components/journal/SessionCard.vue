@@ -83,7 +83,7 @@ const foldedFieldLabels = new Intl.ListFormat('en', { style: 'long', type: 'conj
           <div v-if="card.skillsUsed.length" class="block">
             <h4>Skills used</h4>
             <ul>
-              <li v-for="s in card.skillsUsed" :key="s.name"><a v-if="s.url" class="mono" :href="s.url">{{ s.name }}</a><span v-else class="mono">{{ s.name }}</span> — {{ s.reason }}</li>
+              <li v-for="s in card.skillsUsed" :key="s.name"><JournalSkillName :name="s.name" class="mono" /> — {{ s.reason }}</li>
             </ul>
           </div>
 
@@ -292,8 +292,6 @@ const foldedFieldLabels = new Intl.ListFormat('en', { style: 'long', type: 'conj
 .block ul { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 0.4rem; }
 .block li { font-size: 0.88rem; color: var(--jd-muted); line-height: 1.5; }
 .block code, .mono { font-family: var(--jd-mono); font-size: 0.82em; color: var(--jd-ink); }
-a.mono { text-decoration: underline dotted; text-underline-offset: 2px; }
-a.mono:hover { color: var(--jd-accent); }
 .frictions li { display: grid; grid-template-columns: max-content 1fr; gap: 0.6rem; align-items: baseline; }
 .notes li { display: grid; grid-template-columns: max-content 1fr; gap: 0.55rem; align-items: baseline; }
 .notes li::before { content: '›'; color: var(--jd-accent); font-weight: 600; }
