@@ -1,11 +1,11 @@
 schemaVersion: 1
 session: session_01BXoQpiEuaGZJVRQB7XpsFi
 startedAt: 2026-10-02T17:38:14Z
-endedAt: 2026-10-02T17:53:25Z
+endedAt: 2026-10-02T17:56:16Z
 kind: interactive
 goal: Read all ADRs and give the owner a verdict on their content and decisions
-status: in-review
-outcome: "ADR review discussed; PR #1536 adds the self-growing-experiment thesis to CLAUDE.md and fixes how-it-works.md"
+status: completed
+outcome: "ADR review discussed; PR #1536 merged, adding the self-growing-experiment thesis to CLAUDE.md and fixing how-it-works.md"
 summary: "The owner asked me to read all 28 ADRs, then for a verdict, then for my view of the content and decisions. I praised ADR-0020/0025/0026 and the 0002-0014 derivation path, and raised four concerns: autonomy creeping through ledger exceptions, ADR-0027 letting agents self-merge ADR rewrites, governance resting on convention because main has no branch protection, and ADR-0009's weight as an over-patched \"logging subsystem\". The owner corrected three framings. Agent limits still protect against a misguided agent even when the requester is Trusted (ADR-0020's \"security theatre\" line only rules out tiering humans; its wording invites the misreading). Widening autonomy is the intended direction. Session logs are the point of the experiment, not a subsystem. Checking showed the thesis lives in README.md, how-it-works.md and layers/journal/CONTEXT.md but not in CLAUDE.md, the only file every session loads. That is likely why I misjudged it. The owner explicitly asked for both fixes in one PR: one thesis line in CLAUDE.md, and replacing how-it-works.md's stale \"A human still decides what gets built\". The full gate was green before opening the PR (human-merge: CLAUDE.md is governance). Not acted on, only offered: an ADR-0020 clarifying sentence, a branch-protection issue, an ADR-0003 amendment saying autonomy grows by evidence."
 prs:
   - "1536"
@@ -40,19 +40,23 @@ frictions:
   - description: "SHELL-READ-DETECTION miss: command 'cd /home/user/terrarium/docs/adr && for f in 000*.md; do echo \"=== $f\"; cat \"$f\"; done' (and 001*, 002*) streamed every docs/adr/00NN-*.md ADR, but none appear as detected or rejected"
     solution: Teach the extractor to resolve a for-loop glob fed to cat relative to the cd target; note the output was also read back via Read on a tool-results file, which credits no ADR path either
     severity: moderate
-durationSec: 911
+durationSec: 1083
 models:
-  claude-opus-5-5: 63
+  claude-opus-5-5: 77
 toolCounts:
-  Bash: 16
+  Bash: 17
   Read: 8
   Edit: 2
-  ToolSearch: 1
+  ToolSearch: 2
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
   Skill: 2
   Write: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 2
+  mcp__claude-code-remote__send_later: 1
+  mcp__claude-code-remote__delete_trigger: 1
 filesEdited:
   - CLAUDE.md
   - layers/journal/content/current/pages/how-it-works.md
