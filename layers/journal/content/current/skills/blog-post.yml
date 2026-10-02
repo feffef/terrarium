@@ -64,3 +64,15 @@ observations:
       gained one unrelated wording change (commit c950cf05, a voice re-pass
       + scratch-backlog swap) that does not touch the mandatory-dispatch
       language. Grade/role unchanged.
+  - date: "2026-10-02"
+    note: >-
+      Re-verified (audit-skills behaviour check), 8 usedIn sessions
+      (non-overlapping with the 09-30/10-01 samples above): 8/8 genuine
+      fact-check dispatches, each PR (#1336/#1394/#1431/#1472/#1489/#1502/
+      #1508/#1518) carrying an explicit claim tally and a distinct
+      fix-check commit, independently spot-checked against GitHub. Persona
+      rotation verified clean across the full chained sequence
+      (eyra→kevin→karen→kevin→david→eyra→karen→eyra). This sample doesn't
+      refute or add to #1479 (its 3 known instances aren't in this window's
+      set) — the skip still reads as isolated to those three rather than
+      worsening. Grade/role unchanged.

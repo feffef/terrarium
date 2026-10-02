@@ -138,3 +138,14 @@ observations:
       remains unconfirmed — no narrative hook found in the log, circumstantial
       evidence leans toward false positive but the raw transcript isn't
       available to prove it. Grade/role unchanged.
+  - date: "2026-10-02"
+    note: >-
+      Re-checked (audit-skills behaviour check), 10 newest sessions: clean
+      field-split under the current (numeric-cap-free) rules, no shell-read
+      mis-credits found. Issue #1482's `resolveAgainstCdDir` bug
+      re-confirmed still unfixed in live code (`scripts/session-trace.ts`
+      lines 261-266 unchanged since `4dd7d0ff`) — no new comment needed,
+      this just re-confirms the 2026-10-01 entry. Spot-checked 3 of 10
+      logs for genuine invocation: all show real `Skill: 2` tool counts
+      and `landedBy: Stop`, usedIn=91/91 count looks correct, not inflated.
+      Grade/role unchanged.

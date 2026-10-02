@@ -120,3 +120,24 @@ observations:
       --paginate` 403 against the pulls endpoint — filed as #1514, not
       reported as zero orphans); humanPromptedClosures and
       manuallyRescuedClosures both empty. Grade/role unchanged.
+  - date: "2026-10-02"
+    note: >-
+      Self-check, independently re-verified: all 8 usedIn sessions
+      (2026-09-25 to 10-01) re-confirmed against GitHub/git — all 6 claimed
+      PRs real and merged (#1419/#1433/#1453/#1481/#1498/#1516), all 8 claimed
+      issues exist with matching bodies, #1482's comment present verbatim, no
+      revert of any Inventory-edit PR's content. One unverified, not-escalated
+      note: session_01KVrhJMa5UaiVq8MVzqQgxH's log omits the `model: sonnet`
+      field other runs carry for the same dispatch — likely a logging gap
+      (the session's own `models` tally shows only `claude-sonnet-5`), not a
+      model-choice deviation, worth a spot-check if it recurs. This run
+      dispatched 10 behaviour-check subagents (auto-triage dropped below the
+      ≥3-session bar this window) and verified each: all 10 came back clean
+      except visitor-loop, which turned up a confirmed third consecutive
+      failure of its owner-memory step since the #1452 fix (0/3 successes) —
+      commented the new evidence onto the already-open #1515 rather than
+      filing a duplicate. Orphan scan failed again this run for the same
+      reason as #1514 (still open, unfixed, no PR) — this is the recurrence
+      that issue's own body predicted ("every scheduled run... loses this
+      signal"), not new evidence, so not re-commented. humanPromptedClosures
+      and manuallyRescuedClosures both empty. Grade/role unchanged.
