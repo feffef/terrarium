@@ -155,3 +155,19 @@ else), check the layer's actual `layers/<tenant>/…/pages/` directory directly
 (ADR-0016 tenant-root routes) — don't grep Markdown/Vue prose for the path
 string instead. Text search can miss or misreport an actual route; the pages
 tree is the real source of truth for what routes exist.
+
+## 6. What leaks across Tenants
+
+A layer is not a sandbox. Beyond §1 and §4, these reach every Tenant:
+
+- **`css:` in a layer's `nuxt.config.ts`** loads on every page. Scope its
+  rules under the Tenant's wrapper class (§2).
+- **Plugins and `nuxt.config` flags** apply app-wide. Keep them inert outside
+  the Tenant's own opt-in (Tinkerfund's `experimental.viewTransition` and
+  `view-transitions.client.ts`, #1376).
+- **Dependencies**: a `layers/<tenant>/package.json` cannot scope one to a
+  Tenant (no pnpm workspace). A new dependency is Platform-wide and escalates
+  (ADR-0004).
+- **`sessionStorage`/`localStorage`** is one origin shared by every Tenant, and
+  Nuxt keeps its chunk-reload guard there. Prefix your keys and delete only
+  your own; never call `clear()` (Tinkerfund's Reset demo, #1383).

@@ -25,7 +25,7 @@ useSeoMeta({ title: () => `${PAGE_TITLE} · journal/${space}` })
     <nav class="breadcrumb" aria-label="Breadcrumb">
       <NuxtLink to="/">terrarium</NuxtLink>
       <span class="sep">/</span>
-      <span>journal</span>
+      <NuxtLink to="/t/journal/current">journal</NuxtLink>
       <span class="sep">/</span>
       <NuxtLink :to="`/t/journal/${space}`">{{ space }}</NuxtLink>
       <span class="sep">/</span>

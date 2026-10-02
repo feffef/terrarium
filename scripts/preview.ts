@@ -31,7 +31,7 @@
 //     screenshot path has no teardown step for a shell to drop at all.
 //
 // Usage:
-//   pnpm exec tsx scripts/preview.ts shot <route> <out.png> [WxH] [--dev]
+//   pnpm exec tsx scripts/preview.ts shot <route> <out.png> [WxH] [--scheme light|dark] [--dev]
 //   pnpm exec tsx scripts/preview.ts start [--dev]     # prints PID= and URL=
 //   pnpm exec tsx scripts/preview.ts stop <pid>        # always exits 0
 //
@@ -47,7 +47,7 @@ import { existsSync, openSync, closeSync, readFileSync, realpathSync, rmSync } f
 import { join } from 'node:path'
 import { tmpdir } from 'node:os'
 import { fileURLToPath } from 'node:url'
-import { captureScreenshot, captureScreenshotWaitingFor } from './screenshot'
+import { captureScreenshot, captureScreenshotWaitingFor, parseScheme } from './screenshot'
 
 const HOST = '127.0.0.1'
 const READY_TIMEOUT_MS = 45_000
@@ -57,7 +57,7 @@ const SERVER_ENTRY = '.output/server/index.mjs'
 
 const USAGE =
   'Usage:\n' +
-  '  pnpm exec tsx scripts/preview.ts shot <route> <out.png> [WxH] [--wait <ms>] [--wait-for <selector>] [--dev]\n' +
+  '  pnpm exec tsx scripts/preview.ts shot <route> <out.png> [WxH] [--wait <ms>] [--wait-for <selector>] [--scheme light|dark] [--dev]\n' +
   '  pnpm exec tsx scripts/preview.ts start [--dev]\n' +
   '  pnpm exec tsx scripts/preview.ts stop <pid>\n' +
   '  <route>            a path on the site, e.g. /t/journal/current\n' +
@@ -66,6 +66,7 @@ const USAGE =
   '                     Ignored when --wait-for is given\n' +
   '  --wait-for <sel>   wait until <sel> attaches to the DOM instead of a fixed\n' +
   "                     wait (e.g. '.mermaid-diagram svg' for an async diagram)\n" +
+  "  --scheme <s>       light or dark: emulate the visitor's colour scheme\n" +
   '  --dev              use `nuxt dev` instead of a built `preview` server (fast, but\n' +
   '                     the DevTools overlay makes it unfit for a trusted screenshot)'
 
@@ -283,14 +284,16 @@ export async function stopPreview(pid: number): Promise<void> {
   await killGroup(pid)
 }
 
-interface ShotWait {
+interface ShotOptions {
   /** Raw `--wait` value (ms), still a string; validated here. */
   waitMs?: string
   /** Raw `--wait-for` value: a CSS selector to await before capturing. */
   waitForSelector?: string
+  /** Raw `--scheme` value; validated here. */
+  scheme?: string
 }
 
-async function doShot(args: string[], dev: boolean, wait: ShotWait): Promise<number> {
+async function doShot(args: string[], dev: boolean, wait: ShotOptions): Promise<number> {
   const [route, out, sizeArg] = args
   if (!route || !out) {
     console.error(USAGE)
@@ -310,6 +313,11 @@ async function doShot(args: string[], dev: boolean, wait: ShotWait): Promise<num
     }
     waitMs = parsed
   }
+  const colorScheme = wait.scheme === undefined ? undefined : parseScheme(wait.scheme)
+  if (wait.scheme !== undefined && !colorScheme) {
+    console.error(`Invalid --scheme "${wait.scheme}" — expected light or dark.`)
+    return 1
+  }
 
   let server: PreviewServer
   try {
@@ -322,10 +330,10 @@ async function doShot(args: string[], dev: boolean, wait: ShotWait): Promise<num
   const url = `${server.url}${path}`
   try {
     if (wait.waitForSelector) {
-      await captureScreenshotWaitingFor(url, out, wait.waitForSelector, windowSize)
+      await captureScreenshotWaitingFor(url, out, wait.waitForSelector, windowSize, undefined, colorScheme)
     }
     else {
-      await captureScreenshot(url, out, windowSize, waitMs)
+      await captureScreenshot(url, out, windowSize, waitMs, colorScheme)
     }
     console.log(`Wrote ${out} (${url})`)
     return 0
@@ -375,10 +383,11 @@ async function main(): Promise<number> {
   const withoutDev = rest.filter((arg) => arg !== '--dev')
   const waitFor = extractFlag(withoutDev, '--wait-for')
   const waitMs = extractFlag(waitFor.rest, '--wait')
-  const args = waitMs.rest
+  const scheme = extractFlag(waitMs.rest, '--scheme')
+  const args = scheme.rest
   switch (verb) {
     case 'shot':
-      return doShot(args, dev, { waitMs: waitMs.value, waitForSelector: waitFor.value })
+      return doShot(args, dev, { waitMs: waitMs.value, waitForSelector: waitFor.value, scheme: scheme.value })
     case 'start':
       return doStart(dev)
     case 'stop':

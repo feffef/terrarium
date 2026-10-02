@@ -66,6 +66,9 @@ Merge the three reports into one tally in your scratchpad:
   the **one** you judge best: the most visible payoff for a first-time
   visitor that fits the remit, a single PR and today's focus (on `mobile`, a
   narrow-screen improvement anywhere). Consensus fixes may land anywhere.
+  A newcomer-orientation feature that can't touch the homepage hero can go on
+  a Journal page with `onramp` frontmatter, which lists it in the "New here?"
+  cards with no code change (#1475).
 - **Owner memory.** First gather the owner's corrections since the last
   `decisions.md` entry: review comments on `visitor-loop` PRs, merged PRs
   that revert a `visitor-loop` PR or rework what one built (e.g. touch the

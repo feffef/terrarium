@@ -375,6 +375,7 @@ against `nuxt dev` — but the dev server injects a Nuxt DevTools overlay badge
 (e.g. a small "26 ms" timing pill) that can overlap real content and read as a
 UI bug, so prefer preview for a shot you're trusting. The optional `WxH` (e.g.
 `1280x1600`) sets the window size — use it to reach below-the-fold content.
+`--scheme light|dark` emulates the visitor's colour scheme, for checking both themes.
 The `<route>` argument also accepts a `#anchor` fragment (e.g. `/t/journal/current#some-id`)
 to scroll directly to a specific element — often simpler than guessing a tall
 `WxH` when the target content is below the fold.

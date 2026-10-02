@@ -128,7 +128,7 @@ useSeoMeta({
     <nav class="breadcrumb" aria-label="Breadcrumb">
       <NuxtLink to="/">terrarium</NuxtLink>
       <span class="sep">/</span>
-      <span>journal</span>
+      <NuxtLink to="/t/journal/current">journal</NuxtLink>
       <span class="sep">/</span>
       <span class="here">{{ space }}</span>
     </nav>

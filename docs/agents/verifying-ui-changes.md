@@ -148,6 +148,25 @@ therefore reads `null`. Drive the render from
 actually attaches. (Session `…pm7Vkb` — a Mermaid diagram that rendered blank
 because its container ref was null in `onMounted`.)
 
+## CSS sharp edges
+
+Each cost a session at least one extra fix-and-check round.
+
+- **Media-query order:** an equal-specificity rule inside `@media` loses to a
+  later base rule. Put the override after it (#1312).
+- **Overrides live elsewhere:** a component's narrow-screen rules may sit in
+  the layer's `theme.css`, not its own `<style>`. Grep repo-wide before
+  renaming a class (#1434).
+- **Scoped classes reach child roots:** a parent's scoped `.filters` also
+  styles a child component whose root has class `filters` (#1522).
+- **Scroll fades:** an absolutely positioned fade inside a scroller scrolls
+  away with the content; put `mask-image` on the scroller instead (#1476).
+- **SVG `viewBox`:** CSS can hide SVG parts at a breakpoint but can't change
+  the `viewBox`; crop it from JS with `matchMedia` (#1494).
+- **GPU-only bugs:** a translucent full-page background can band on some phone
+  GPUs, and headless Chromium can't reproduce driver bugs. Prefer opaque page
+  backgrounds (#1506).
+
 ## See also
 
 - **How to verify a UI change actually works**: drive the affected flow

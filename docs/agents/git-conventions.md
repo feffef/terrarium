@@ -53,6 +53,12 @@ case). Run `git fetch --unshallow` and verify before trusting any history-based
 conclusion; refuse to answer rather than classify off the truncated graph.
 `scripts/gate.ts` enforces the same in code (issue #849).
 
+## A file list that feeds a decision needs `--no-renames`
+
+`git diff --name-only` reports only a rename's new path, so a path classifier
+misses the old one (#1443). The GitHub PR-files API has the same gap: read
+`previous_filename` too.
+
 ## Commit hygiene
 
 - **A commit message containing backticks or `$(...)` must go through
