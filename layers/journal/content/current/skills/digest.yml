@@ -47,3 +47,15 @@ observations:
       respectively, none wrong). Retention sweep matches spec
       (`RETAIN_DATES = 7`): PR #1513's diff moves exactly one digest and six
       session logs from `current/` to `archived/`. Grade/role unchanged.
+  - date: "2026-10-02"
+    note: >-
+      Re-verified (audit-skills behaviour check), 4 freshly-checked sessions
+      (PRs #1352/#1418/#1448/#1523, the rest already covered above). PR
+      #1523's fact-check dispatch confirmed genuine (explicit subagent entry
+      in the mechanical trace, matching a separate 3-line wording-fix
+      commit). 6 further factual claims spot-checked across digests #1443/
+      #1514/#1516-#1519 against live PR/issue bodies — all accurate,
+      including the "~2 months ago" framing on issue #1514 (the original
+      fix it references dates to 2026-08-03, #848). All 4 retention sweeps
+      verified against `RETAIN_DATES = 7`. No reverts found. Grade/role
+      unchanged.
