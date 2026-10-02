@@ -21,20 +21,21 @@ export async function useTinkerfundCatalog() {
   })
   const [{ data }, { clock, pledges, baked, promotions }] = await Promise.all([catalog, cartReady])
 
+  const docs = computed(() => data.value?.docs ?? [])
   const cards = computed<TinkerfundCard[]>(() => {
-    const docs = (data.value?.docs ?? []).flatMap((d) => d.campaign
+    const withPledges = docs.value.flatMap((d) => d.campaign
       ? [{ ...d, campaign: withTinkerfundPledges(tinkerfundSlug(d.path), d.campaign, pledges.value, baked.value) }]
       : [])
     const inventors = new Map((data.value?.inventors ?? []).map((i) => [i.stem, i.name]))
     const categoryNames = new Map(categories.value.map((c) => [c.slug, c.name]))
-    return tinkerfundListings(docs, promotions.value, clock.value.now).map((l) => ({
+    return tinkerfundListings(withPledges, promotions.value, clock.value.now).map((l) => ({
       ...l,
       categoryName: categoryNames.get(l.category) ?? l.category,
       inventorName: inventors.get(l.inventor) ?? l.inventor,
     }))
   })
 
-  return { clock, cards, categories, promotions }
+  return { clock, docs, cards, categories, promotions, baked }
 }
 
 export function useTinkerfundCategories() {

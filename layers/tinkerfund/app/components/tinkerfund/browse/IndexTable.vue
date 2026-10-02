@@ -1,7 +1,4 @@
 <script setup lang="ts">
-import type { TinkerfundCard } from '../../../composables/browse'
-import type { TinkerfundClock } from '../../../composables/clock'
-
 const props = defineProps<{ cards: TinkerfundCard[]; categories: { slug: string; name: string }[]; clock: TinkerfundClock }>()
 const { link } = useTinkerfundSpace()
 const locale = useTinkerfundLocale()
@@ -103,7 +100,7 @@ tbody tr:hover { background: var(--tf-accent-soft); }
   table { min-width: 0; }
   .wide, .inv svg, .funded .mini { display: none; }
   .state { width: 1%; }
-  .state :deep(.chip) { white-space: normal; }
+  .state :deep(.tf-chip) { white-space: normal; }
   .inv { min-width: 0; font-size: 13px; }
   th, td { padding: 10px 6px; }
   thead th { letter-spacing: 0; }

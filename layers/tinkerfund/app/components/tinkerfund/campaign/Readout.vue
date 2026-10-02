@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import type { TinkerfundClock } from '../../../composables/clock'
 import type { TinkerfundCampaign, TinkerfundPromotion } from '../../../types/tinkerfund'
 
 const props = defineProps<{

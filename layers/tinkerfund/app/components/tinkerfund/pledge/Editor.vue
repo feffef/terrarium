@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import type { TinkerfundCatalogCampaign, TinkerfundPledge, TinkerfundPledgeContents } from '../../../utils/cart'
-
 const props = defineProps<{
   campaign: TinkerfundCatalogCampaign
   /** What the Pledge holds now: stock it holds stays available to it. */

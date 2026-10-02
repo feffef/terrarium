@@ -27,7 +27,7 @@ export function deriveCampaignStatus(
   const launchAt = resolveTinkerfundOffset(campaign.launch, now)
   const endAt = resolveTinkerfundOffset(campaign.end, now)
   const funded = pledged >= campaign.goal
-  const state = deriveCampaignState(campaign, now)
+  const state = now < launchAt ? 'upcoming' : now < endAt ? 'live' : 'ended'
   const live = state === 'live'
   return {
     state,
@@ -40,7 +40,7 @@ export function deriveCampaignStatus(
   }
 }
 
-export type PromotionState = 'scheduled' | 'active' | 'expired'
+type PromotionState = 'scheduled' | 'active' | 'expired'
 
 export function derivePromotionState(promotion: { start: string; end?: string }, now: number): PromotionState {
   if (now < resolveTinkerfundOffset(promotion.start, now)) return 'scheduled'

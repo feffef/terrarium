@@ -155,7 +155,7 @@ export const mergeTinkerfundLines = (into: Line[], add: Line[]) => merge(into, a
 export const mergeTinkerfundAddons = (into: AddonLine[], add: AddonLine[]) => merge(into, add, (a) => a.id)
 
 /** A Pledge's flat shipping (issue #1365): the zone's rate once any of its Rewards ships. */
-export function tinkerfundShipping(lines: { reward: string }[], campaign: TinkerfundCatalogCampaign, zone: TinkerfundZone): number {
+function tinkerfundShipping(lines: { reward: string }[], campaign: TinkerfundCatalogCampaign, zone: TinkerfundZone): number {
   return lines.some((l) => campaign.rewards.find((r) => r.id === l.reward)?.shipsTo) ? campaign.shipping[zone] ?? 0 : 0
 }
 
@@ -180,7 +180,7 @@ export function settleTinkerfundPledge(pledge: Omit<TinkerfundPledge, 'discount'
   return { ...pledge, discount: tinkerfundDiscount(tinkerfundGoods(pledge, campaign), terms), shipping: tinkerfundShipping(pledge.lines, campaign, pledge.zone) }
 }
 
-export function tinkerfundClosedReason(campaign: Pick<TinkerfundCatalogCampaign, 'launch' | 'end'>, now: number): string | undefined {
+function tinkerfundClosedReason(campaign: Pick<TinkerfundCatalogCampaign, 'launch' | 'end'>, now: number): string | undefined {
   const state = deriveCampaignState(campaign, now)
   if (state === 'upcoming') return 'Opens at launch'
   if (state === 'ended') return 'Pledging has closed'
@@ -273,7 +273,7 @@ export function addToTinkerfundCart(state: TinkerfundBackerState, request: Tinke
   return { state: { ...state, cart } }
 }
 
-export interface TinkerfundCartLine {
+interface TinkerfundCartLine {
   key: string
   ref: LineRef
   title: string

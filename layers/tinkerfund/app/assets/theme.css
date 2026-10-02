@@ -143,6 +143,22 @@
   border-radius: var(--tf-radius-panel);
 }
 
+.tf-chip {
+  padding: 4px 7px;
+  border: 1px solid currentColor;
+  border-radius: 5px;
+  background: var(--tf-surface);
+  font: 500 11px/1 var(--tf-mono);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.tf-empty { display: grid; gap: 14px; justify-items: start; margin: 0; padding: 22px; }
+.tf-empty > * { margin: 0; }
+.tf-empty.paper { gap: 10px; padding: 28px; background: var(--tf-paper), var(--tf-surface); }
+.tf-empty.paper h2 { font: 800 26px/1.1 var(--tf-font); font-stretch: 80%; }
+
 .tf-page .tf-h1, .tf-prose h1 { margin: 0; font: 800 clamp(30px, 4vw, 44px)/1.04 var(--tf-font); font-stretch: 78%; overflow-wrap: anywhere; }
 .tf-h1[tabindex='-1'] { outline: none; }
 

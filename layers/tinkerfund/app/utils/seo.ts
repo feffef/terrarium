@@ -2,9 +2,9 @@
 // once here (story #1376) and spread into useSeoMeta() by each page. There is
 // no og:image: Tinkerfund's media is inline SVG, which link previews ignore.
 
-export type TinkerfundPageKind = 'home' | 'campaign' | 'listing' | 'page' | 'private' | 'not-found'
+type TinkerfundPageKind = 'home' | 'page' | 'private' | 'not-found'
 
-export interface TinkerfundSeoInput {
+interface TinkerfundSeoInput {
   kind: TinkerfundPageKind
   space: string
   title?: string

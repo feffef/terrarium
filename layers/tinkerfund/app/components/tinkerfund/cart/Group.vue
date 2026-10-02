@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import type { TinkerfundCartGroup, TinkerfundCartRequest } from '../../../utils/cart'
-
 const props = defineProps<{ group: TinkerfundCartGroup; zone: string }>()
 const emit = defineEmits<{ change: [request: TinkerfundCartRequest] }>()
 

@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import type { TinkerfundAccountPledge } from '../../../utils/account'
-
 defineProps<{ pledges: TinkerfundAccountPledge[] }>()
 const { link } = useTinkerfundSpace()
 const money = useTinkerfundMoney()

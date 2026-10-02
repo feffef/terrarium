@@ -1,13 +1,11 @@
 <script setup lang="ts">
-import type { TinkerfundZone } from '../../../../utils/cart'
-
 definePageMeta({ viewTransition: true })
 
 const route = useRoute()
 const { space, link } = useTinkerfundSpace()
 const money = useTinkerfundMoney()
 const chosen = ref<TinkerfundZone>()
-const [{ shop, zoneName, status, error }, { loaded, zone, view, change }] = await Promise.all([useTinkerfundShop(), useTinkerfundCart(chosen)])
+const { shop, zoneName, status, error, loaded, zone, view, change } = await useTinkerfundCart(chosen)
 const shippingRows = computed(() => tinkerfundShippingRows(view.value.groups, zoneName(zone.value), money))
 const blocked = computed(() => view.value.groups.some((g) => g.lines.some((l) => l.unavailable)))
 
@@ -19,8 +17,8 @@ useSeoMeta(tinkerfundSeo({ kind: 'private', space, title: 'Your Cart' }))
     <div class="cart">
       <h1 class="tf-h1">Your Cart <span v-if="loaded && view.count" class="count">{{ tinkerfundCount(view.count, 'item') }}</span></h1>
 
-      <p v-if="!loaded" class="empty tf-panel">Opening your Cart…</p>
-      <section v-else-if="!view.groups.length" class="empty tf-panel">
+      <p v-if="!loaded" class="tf-empty tf-panel">Opening your Cart…</p>
+      <section v-else-if="!view.groups.length" class="tf-empty tf-panel">
         <p>Your Cart is empty. Every Reward you add waits here until you close the tab.</p>
         <NuxtLink class="tf-btn primary" :to="link('/discover')">Discover Campaigns</NuxtLink>
       </section>
@@ -61,8 +59,6 @@ useSeoMeta(tinkerfundSeo({ kind: 'private', space, title: 'Your Cart' }))
 .cart { display: grid; gap: 20px; }
 h1 { display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: baseline; }
 .count { color: var(--tf-muted); font: 500 14px/1 var(--tf-mono); }
-.empty { display: grid; gap: 14px; justify-items: start; margin: 0; padding: 22px; }
-.empty p { margin: 0; }
 .layout { display: grid; gap: 20px; align-items: start; }
 @media (min-width: 900px) { .layout { grid-template-columns: minmax(0, 1fr) 320px; } }
 .groups { display: grid; gap: 14px; }

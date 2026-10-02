@@ -1,8 +1,4 @@
 <script setup lang="ts">
-import type { TinkerfundCard } from '../../../composables/browse'
-import type { TinkerfundClock } from '../../../composables/clock'
-import type { TinkerfundBrowseQuery, TinkerfundSort } from '../../../utils/browse'
-
 // Discover, or a Category page when `category` is set. Every filter and the
 // sort live in the URL query (issue #1367).
 const props = defineProps<{
@@ -56,7 +52,7 @@ const drawer = useTemplateRef('drawer')
       <ul v-if="results.length" class="grid">
         <li v-for="c in results" :key="c.path"><TinkerfundBrowseCampaignCard :card="c" :clock="clock" /></li>
       </ul>
-      <div v-else class="empty tf-panel">
+      <div v-else class="tf-empty paper tf-panel">
         <p class="tf-label">0 results</p>
         <h2>No Campaigns match these filters</h2>
         <p>Try a wider price range or fewer filters.</p>
@@ -103,7 +99,5 @@ select {
   align-content: start;
 }
 .grid li { display: grid; }
-.empty { display: grid; gap: 10px; justify-items: start; align-content: start; padding: 28px; background: var(--tf-paper), var(--tf-surface); }
-.empty > * { margin: 0; }
-.empty h2 { font: 800 26px/1.1 var(--tf-font); font-stretch: 80%; }
+.tf-empty { align-content: start; }
 </style>

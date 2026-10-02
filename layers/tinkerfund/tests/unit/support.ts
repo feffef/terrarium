@@ -1,7 +1,7 @@
 // Shared unit-test fixtures: a Storage that refuses clear(), and one small
 // shop every Backer step is tested against.
 import type { TinkerfundPromotionTerms } from '../../app/utils/campaign.ts'
-import type { TinkerfundBakedPledge, TinkerfundCatalog, TinkerfundShop } from '../../app/utils/cart.ts'
+import type { TinkerfundBakedPledge, TinkerfundCatalog, TinkerfundPledge, TinkerfundShop } from '../../app/utils/cart.ts'
 import { TINKERFUND_HOUR } from '../../app/utils/clock.ts'
 
 export const NOW = Date.parse('2026-06-01T12:00:00Z')
@@ -89,6 +89,14 @@ export const baked: TinkerfundBakedPledge[] = [
   { ref: 'TF-P-0004', campaign: 'kettle', placed: '-50d', zone: 'domestic', lines: [{ reward: 'kettle', quantity: 1 }] },
   { ref: 'TF-P-0005', campaign: 'gone', placed: '-9d', zone: 'domestic', lines: [] },
 ]
+
+/** The catalog with the lamp's Campaign an hour past its end. */
+export const endedLamp = { ...catalog, lamp: { ...catalog.lamp, campaign: { ...catalog.lamp.campaign, end: '-1h' } } }
+
+export const pledge = (over: Partial<TinkerfundPledge> = {}): TinkerfundPledge => ({
+  ref: 'TF-P-9001', campaign: 'lamp', placed: NOW, zone: 'domestic', payment: 'demo-card',
+  lines: [], addons: [], promotions: [], discount: 0, shipping: 0, ...over,
+})
 
 export const promotion = (p: Omit<TinkerfundPromotionTerms, 'stem' | 'start'> & { start?: string }): TinkerfundPromotionTerms =>
   ({ stem: p.title.toLowerCase().replace(/\W+/g, '-'), start: '-1d', ...p })
