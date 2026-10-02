@@ -207,7 +207,7 @@ function spokeLeave() {
             :marker-end="`url(#${uid}-arrow)`"
           />
           <path :id="`${uid}-rail-${i}`" class="rail" :d="st.rail" />
-          <text class="rel-lbl" text-anchor="middle">
+          <text class="web-lbl" text-anchor="middle">
             <textPath :href="`#${uid}-rail-${i}`" startOffset="50%">{{ st.r.label }}</textPath>
           </text>
         </g>

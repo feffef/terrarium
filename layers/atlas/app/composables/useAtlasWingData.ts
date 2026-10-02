@@ -39,18 +39,17 @@ export async function useAtlasWingData(
   // check the plain assignment gets for free.
   const edges = computed<Edge[]>(() => data.value?.interactions ?? [])
   const observations = computed(() => data.value?.observations ?? [])
-  // Every Specimen — the biome landing intro (`path === '/'`) excluded — keyed by
-  // slug. Content-identical regardless of source ordering, so the landing page's
-  // sorted `specimens` and the entry page's unsorted pages both produce the same
-  // map; one construction now serves both.
+  // Every Specimen — the biome landing intro (`path === '/'`) excluded — in
+  // catalogue (binomial) order.
+  const specimens = computed<SpecimenView[]>(() =>
+    pages.value
+      .filter((p) => p.path !== '/')
+      .map(toSpecimenView)
+      .sort((a, b) => a.binomial.localeCompare(b.binomial)),
+  )
   const specimensBySlug = computed<Record<string, SpecimenView>>(() =>
-    Object.fromEntries(
-      pages.value
-        .filter((p) => p.path !== '/')
-        .map(toSpecimenView)
-        .map((s) => [s.slug, s]),
-    ),
+    Object.fromEntries(specimens.value.map((s) => [s.slug, s])),
   )
 
-  return { data, error, pages, edges, observations, specimensBySlug }
+  return { data, error, pages, edges, observations, specimens, specimensBySlug }
 }

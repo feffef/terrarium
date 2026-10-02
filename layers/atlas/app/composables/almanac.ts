@@ -104,9 +104,6 @@ export interface ProvideAlmanacOptions {
   phases?: MaybeRefOrGetter<PhenologyPhase[] | undefined>
   /** The specimen's display name, for the dial's phase-vs-season legend. */
   specimenLabel?: MaybeRefOrGetter<string | undefined>
-  /** Override the real current day (0..364) — for tests; defaults to
-   *  `useGlassToday()`. */
-  today?: number
   /** Where the needle parks initially — a parsed `?day=` param when present.
    *  `null`/`undefined` mean "no override": park at today. */
   initialDay?: number | null
@@ -118,14 +115,12 @@ export interface ProvideAlmanacOptions {
   specimen?: MaybeRefOrGetter<string | undefined>
 }
 
-/** The provide/inject key — exported for tests; app code should use
- *  `provideAlmanac()`/`useAlmanac()` instead of touching it. */
-export const almanacInjectionKey: InjectionKey<Almanac> = Symbol('atlas-almanac')
+const almanacInjectionKey: InjectionKey<Almanac> = Symbol('atlas-almanac')
 
 /** Create the Almanac state, `provide()` it to descendants, and return it.
  *  Call once from the owning page's setup. */
 export function provideAlmanac(options: ProvideAlmanacOptions = {}): Almanac {
-  const today = normalizeDay(Math.round(options.today ?? useGlassToday()))
+  const today = normalizeDay(Math.round(useGlassToday()))
   const day = ref(normalizeDay(Math.round(options.initialDay ?? today)))
   const markList = ref<AlmanacMark[]>([])
   const focusPulse = ref(0)

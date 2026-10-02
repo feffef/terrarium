@@ -164,7 +164,7 @@ export interface SpecimenView {
 /** Specimen document path → slug: '/lumina-fabulae' → 'lumina-fabulae'; the Space
  *  root is ''. Named with Specimen vocabulary, not generic `slugOf` — same
  *  collision-risk reasoning as `specimenActiveAt` above (tenant-layers.md §1). */
-export function specimenSlugOf(path: string): string {
+function specimenSlugOf(path: string): string {
   return path.replace(/^\//, '')
 }
 

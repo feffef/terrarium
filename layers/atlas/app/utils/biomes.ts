@@ -57,9 +57,6 @@ export const BIOMES: BiomeMeta[] = [
 
 const BY_SLUG: Record<string, BiomeMeta> = Object.fromEntries(BIOMES.map((b) => [b.slug, b]))
 
-/** Biome slugs in the guide's presentation order (matches the manifest's Spaces). */
-export const BIOME_SLUGS = BIOMES.map((b) => b.slug)
-
 export function biomeMeta(slug: string): BiomeMeta {
   return (
     BY_SLUG[slug] ?? {

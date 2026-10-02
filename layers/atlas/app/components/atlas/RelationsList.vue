@@ -35,7 +35,7 @@ defineProps<{
         >
           <span
             class="dot"
-            :style="{ background: specimensBySlug[r.other]?.signature?.colors?.[0]?.hex || 'var(--biome-accent)' }"
+            :style="{ background: specimenAccent(specimensBySlug[r.other]) }"
           />{{ specimensBySlug[r.other]?.binomial }}</NuxtLink>
         <span v-else class="who">{{ r.other }}</span>
         <span class="rel-note"> — {{ r.note }}</span>
