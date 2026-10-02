@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01WepvCFoUP9g2RgJaVdWKHe
 startedAt: 2026-10-02T13:15:42Z
-endedAt: 2026-10-02T13:23:08Z
+endedAt: 2026-10-02T17:36:10Z
 kind: autonomous
 goal: "Scheduled prune-trial run: judge open trials, prune one more problem"
-status: in-review
-outcome: 3 trials judged (all hold); ADR-0017 rewrite -83 lines in PR 1531, gate green
-summary: "Scheduled run, no human instruction; everything here was agent-initiated per the prune-trial Skill. Three trials past their window (closure rule, log-session word caps, window-quote clause) were judged against frictions since landing and the tracker; none showed damage, so their entries were deleted. The criterion-1 search subagent ranked ADR-0017's provenance rule first: it failed as prose repeatedly, is now guard-held, and the ADR still carried a stale \"convention only\" Decision beside its own amendment. Rewrote the ADR whole with the decision unchanged and cut two restatements. The other two candidates (guarded tool-misuse bullets, shallow-clone prose) were left for a later run. The Sonnet probe at the pinned SHA passed, though it read the CLAUDE.md bullet from its own context rather than the checkout. PR 1531 is open, gate green, awaiting a human merge because it touches an ADR."
+status: completed
+outcome: 3 trials judged (all hold); ADR-0017 rewrite -83 lines merged via PR 1531
+summary: "Scheduled run, no human instruction; everything here was agent-initiated per the prune-trial Skill. Three trials past their window (closure rule, log-session word caps, window-quote clause) were judged against frictions since landing and the tracker; none showed damage, so their entries were deleted. The criterion-1 search subagent ranked ADR-0017's provenance rule first: it failed as prose repeatedly, is now guard-held, and the ADR still carried a stale \"convention only\" Decision beside its own amendment. Rewrote the ADR whole with the decision unchanged and cut two restatements. The other two candidates (guarded tool-misuse bullets, shallow-clone prose) were left for a later run. The Sonnet probe at the pinned SHA passed, though it read the CLAUDE.md bullet from its own context rather than the checkout. PR 1531 passed the gate and was merged by a human (it touches an ADR)."
 prs:
   - "1531"
 docsRead:
@@ -37,13 +37,13 @@ frictions:
   - description: Hand-writing the commit trailer and a placeholder session id were each denied by guards; the deny messages fixed both in one retry.
     solution: None needed; guards worked as designed.
     severity: nit
-durationSec: 447
+durationSec: 15628
 models:
-  claude-sonnet-5-5: 58
+  claude-sonnet-5-5: 67
 toolCounts:
-  Bash: 12
+  Bash: 13
   Agent: 3
-  ToolSearch: 2
+  ToolSearch: 3
   mcp__github__search_issues: 1
   Read: 3
   Grep: 1
@@ -52,8 +52,9 @@ toolCounts:
   mcp__github__create_pull_request: 2
   mcp__claude-code-remote__subscribe_pr_activity: 1
   PushNotification: 1
-  ReadNotifications: 2
+  ReadNotifications: 4
   Skill: 2
+  mcp__github__pull_request_read: 1
 filesEdited:
   - docs/adr/0017-provenance-footer-on-agent-authored-content.md
   - CLAUDE.md
