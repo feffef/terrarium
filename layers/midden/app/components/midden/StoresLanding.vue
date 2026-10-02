@@ -14,16 +14,12 @@
 // this component is mounted from a space-index route that already fixed the Space.
 // The read is same-Space only — this Space's own `artifacts`.
 import { resolveSpaceRoute } from '#shared/routing'
-import { CONDITION_ORDER, conditionMeta, type Grade } from '../../utils/condition'
-import { formatMiddenDate, middenProvenanceLine, type MiddenArtifactDoc } from '../../utils/find'
-import { DIG_SEASONS } from '../../utils/strata'
 
 const resolved = resolveSpaceRoute('midden', 'stores', undefined)
 
 const { data } = await useAsyncData('midden-stores', async () => {
   if (!resolved) return { finds: [] as MiddenArtifactDoc[] }
-  const finds = await queryCollection(resolved.collections.artifacts).all()
-  return { finds: finds as unknown as MiddenArtifactDoc[] }
+  return { finds: await queryCollection(resolved.collections.artifacts).all() }
 })
 
 const finds = computed(() => data.value?.finds ?? [])
@@ -60,7 +56,7 @@ useHead({ title: 'The Stores · The Midden' })
 </script>
 
 <template>
-  <main class="midden midden--stores">
+  <main class="midden">
     <div class="midden-page midden-stores">
       <header class="midden-stores__head">
         <nav class="tech midden-crumb" aria-label="Breadcrumb">

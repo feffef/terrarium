@@ -107,9 +107,9 @@ const externalSkillTotal = computed(() => externalSkillCount(skills.value))
 // so the tiles' scope tracks which Space is showing, not an explicit filter.
 // Zero kinds are dropped so the breakdown fits a fifth of the strip.
 const kindSubtext = computed(() =>
-  (['interactive', 'delegated', 'autonomous'] as const)
-    .filter((k) => sessionKindCounts.value[k])
-    .map((k) => `${sessionKindCounts.value[k]} ${k}`)
+  Object.entries(sessionKindCounts.value)
+    .filter(([, n]) => n)
+    .map(([k, n]) => `${n} ${k}`)
     .join(' · '),
 )
 const tilesHeadline = computed(() => (space === 'archived' ? 'Excluding the last week' : 'From the last week'))
@@ -172,7 +172,7 @@ useSeoMeta({
     </section>
 
     <!-- Free-form editorial intro — the root page's Markdown body -->
-    <section v-if="rootDoc" class="intro">
+    <section v-if="rootDoc" class="intro jd-prose">
       <ContentRenderer :value="rootDoc" />
     </section>
 
@@ -295,7 +295,7 @@ useSeoMeta({
 </template>
 
 <style scoped>
-/* The `.jd` tokens + base layout, `.mono`, and the breadcrumb live in the shared
+/* The `.jd` tokens + base layout and the breadcrumb live in the shared
    theme (layers/journal/app/assets/theme.css, registered globally in the layer's
    nuxt.config). This block holds only the landing-page-specific styling. */
 .masthead {
@@ -317,28 +317,11 @@ h1 {
 }
 .lede { margin: 0; max-width: 54ch; color: var(--jd-muted); font-size: 1.02rem; }
 
-.intro { margin: 1.6rem 0 0; max-width: 68ch; font-size: 1.04rem; }
+.intro { margin: 1.6rem 0 0; }
 .intro-lead { margin: 1.6rem 0 0; max-width: 68ch; font-size: 1.08rem; color: var(--jd-ink); }
-.intro :deep(p) { margin: 0 0 0.8rem; color: var(--jd-muted); }
+.intro :deep(p) { margin-bottom: 0.8rem; }
 .intro :deep(p:last-child) { margin-bottom: 0; }
-.intro :deep(a) { color: var(--jd-accent); text-decoration: underline; text-underline-offset: 2px; }
-.intro :deep(a:hover) { color: var(--jd-accent-bright); }
-.intro :deep(strong) { color: var(--jd-ink); font-weight: 600; }
-.intro :deep(code) {
-  font-family: var(--jd-mono);
-  font-size: 0.88em;
-  background: var(--jd-surface-2);
-  padding: 0.1em 0.35em;
-  border-radius: 4px;
-}
-.intro :deep(h2) {
-  font-family: var(--jd-mono);
-  font-size: 0.88rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--jd-ink);
-  margin: 1.3rem 0 0.5rem;
-}
+.intro :deep(h2) { margin: 1.3rem 0 0.5rem; }
 
 .onramp { margin: 1.6rem 0 0; }
 .onramp-lead {

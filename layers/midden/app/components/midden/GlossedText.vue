@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import type { MiddenGlossPart } from '../../utils/gloss'
-
 const props = defineProps<{ text: string; parts?: MiddenGlossPart[] }>()
 const shown = computed(() => props.parts ?? middenGlossParts(props.text, new Set()))
 </script>

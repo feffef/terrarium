@@ -15,6 +15,44 @@ const utcDate = z
     'must be a UTC date, e.g. 2026-07-05',
   )
 
+export const skillSchema = z
+  .object({
+    name: z.string(),
+    category: z.enum(['platform-operation', 'general-engineering']),
+    importance: z.enum(['essential', 'routine', 'specialist', 'supporting', 'peripheral']),
+    // ≤ 12 words, plain language, no ADR/PR/session references — what a
+    // first-time visitor reads before (optionally) opening `role` below.
+    // Authored for `essential`/`routine`/`specialist` Skills, the ones
+    // the Inventory page shows in full; `supporting`/`peripheral` skip it
+    // (visitor-loop fix, 2026-09-26).
+    gist: z.string().optional(),
+    // ≤ ~50 words — a tight paragraph on the Skill's role + importance to
+    // this project, NOT a copy of its own description; deeper detail lives
+    // in the Skill's own docs. ~80 is the outer limit; beyond that, trim.
+    // Reference-free: no concrete PR/issue/session ids — those belong in
+    // `observations` below (ADR-0015 amendment, 2026-07-13).
+    role: z.string(),
+    // Integrity pin for EXTERNAL pack Skills only (those keyed in
+    // skills-lock.json): sha256 of the installed `SKILL.md`, verified by
+    // `pnpm verify:skills-lock` so a pack Skill can't be silently edited
+    // (ADR-0015). Machine-managed — do NOT hand-edit; regenerate with
+    // `pnpm verify:skills-lock --write`. Absent on our own Skills.
+    installedSha256: z.string().optional(),
+    // A purely internal, `audit-skills`-owned log — NOT rendered in the
+    // journal blog (ADR-0015 amendment, 2026-07-13). Each entry is one
+    // run's citable finding (a role/grade change, a behaviour finding, a
+    // new/split/retire idea) — PR/issue/session ids belong here, not in
+    // `role`. Kept for 40 days: a run drops older entries (ADR-0015
+    // amendment, 2026-09-27).
+    observations: z.array(
+      z.object({
+        date: utcDate,
+        note: z.string(),
+      }),
+    ),
+  })
+  .strict()
+
 export default defineTenant({
   name: 'journal',
   // Two Spaces so the isolation invariant (ADR-0004 L3) is actually exercised:
@@ -54,43 +92,7 @@ export default defineTenant({
     skills: {
       type: 'data',
       source: '**/*.yml',
-      schema: z
-        .object({
-          name: z.string(),
-          category: z.enum(['platform-operation', 'general-engineering']),
-          importance: z.enum(['essential', 'routine', 'specialist', 'supporting', 'peripheral']),
-          // ≤ 12 words, plain language, no ADR/PR/session references — what a
-          // first-time visitor reads before (optionally) opening `role` below.
-          // Authored for `essential`/`routine`/`specialist` Skills, the ones
-          // the Inventory page shows in full; `supporting`/`peripheral` skip it
-          // (visitor-loop fix, 2026-09-26).
-          gist: z.string().optional(),
-          // ≤ ~50 words — a tight paragraph on the Skill's role + importance to
-          // this project, NOT a copy of its own description; deeper detail lives
-          // in the Skill's own docs. ~80 is the outer limit; beyond that, trim.
-          // Reference-free: no concrete PR/issue/session ids — those belong in
-          // `observations` below (ADR-0015 amendment, 2026-07-13).
-          role: z.string(),
-          // Integrity pin for EXTERNAL pack Skills only (those keyed in
-          // skills-lock.json): sha256 of the installed `SKILL.md`, verified by
-          // `pnpm verify:skills-lock` so a pack Skill can't be silently edited
-          // (ADR-0015). Machine-managed — do NOT hand-edit; regenerate with
-          // `pnpm verify:skills-lock --write`. Absent on our own Skills.
-          installedSha256: z.string().optional(),
-          // A purely internal, `audit-skills`-owned log — NOT rendered in the
-          // journal blog (ADR-0015 amendment, 2026-07-13). Each entry is one
-          // run's citable finding (a role/grade change, a behaviour finding, a
-          // new/split/retire idea) — PR/issue/session ids belong here, not in
-          // `role`. Kept for 40 days: a run drops older entries (ADR-0015
-          // amendment, 2026-09-27).
-          observations: z.array(
-            z.object({
-              date: utcDate,
-              note: z.string(),
-            }),
-          ),
-        })
-        .strict(),
+      schema: skillSchema,
     },
     // Session logs — one append-only, honest self-report per Claude session
     // (ADR-0009). The shape is now the shared **`session` collection kind**

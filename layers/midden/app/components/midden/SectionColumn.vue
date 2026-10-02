@@ -19,7 +19,6 @@
 // the viewBox and lands at roughly 5px on a phone. The season facts are therefore
 // authored ONCE as a real HTML list, which is the drawing's accessible form at every
 // width and the visible legend below the narrow one.
-import { DIG_SEASONS } from '../../utils/strata'
 
 const props = defineProps<{
   /** Find count per dig-season slug. Every season, including those holding none. */
