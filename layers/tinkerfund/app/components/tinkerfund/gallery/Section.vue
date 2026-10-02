@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import type { TinkerfundBrowseQuery } from '../../../utils/browse'
-import type { TinkerfundGallerySectionId } from '../../../utils/gallery'
+import { TINKERFUND_GALLERY_FIXTURE as FIXTURE, type TinkerfundGallerySectionId } from '../../../utils/gallery'
 
 defineProps<{ id: TinkerfundGallerySectionId }>()
 
-const FIXTURE = TINKERFUND_GALLERY_FIXTURE
 const PLEDGE_STATES = ['pending', 'charged', 'delivered', 'unfunded', 'cancelled'] as const
 
 const { link } = useTinkerfundSpace()

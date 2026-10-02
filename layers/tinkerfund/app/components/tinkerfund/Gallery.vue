@@ -8,7 +8,7 @@ const { link } = useTinkerfundSpace()
 <template>
   <div class="gallery">
     <TinkerfundGalleryIntro :title="title" :lead="description" />
-    <p class="lead">
+    <p class="note">
       Each section below shows its components in their states, against qa’s edge-case fixtures. <code>TinkerfundShell</code>
       frames every page: the demo bar with <code>TinkerfundShellResetDemo</code>, <code>TinkerfundShellHeader</code> with
       <code>TinkerfundShellWordmark</code> and <code>TinkerfundShellSearchField</code>, and <code>TinkerfundShellFooter</code>
@@ -18,8 +18,8 @@ const { link } = useTinkerfundSpace()
     <ol class="sections">
       <li v-for="section in TINKERFUND_GALLERY" :key="section.id" class="tf-panel">
         <h2><NuxtLink :to="link(`/gallery/${section.id}`)">{{ section.title }}</NuxtLink></h2>
-        <p class="codes"><code v-for="name in section.components" :key="name">{{ name }}</code></p>
-        <p class="lead">{{ section.summary }}</p>
+        <TinkerfundGalleryCodes :names="section.components" />
+        <p class="note">{{ section.summary }}</p>
       </li>
     </ol>
   </div>
@@ -27,7 +27,7 @@ const { link } = useTinkerfundSpace()
 
 <style scoped>
 .gallery { display: grid; grid-template-columns: minmax(0, 1fr); gap: 28px; }
-.lead { max-width: 68ch; margin: 0; color: var(--tf-muted); }
+.note { max-width: 68ch; margin: 0; color: var(--tf-muted); }
 code { font: 500 13px/1.4 var(--tf-mono); overflow-wrap: anywhere; }
 .sections {
   display: grid;
@@ -40,6 +40,5 @@ code { font: 500 13px/1.4 var(--tf-mono); overflow-wrap: anywhere; }
 .sections li { display: grid; gap: 8px; align-content: start; padding: 16px; }
 .sections li > * { margin: 0; }
 h2 { font-size: 20px; line-height: 1.25; }
-.codes { display: flex; flex-wrap: wrap; gap: 4px 10px; color: var(--tf-muted); }
-.sections .lead { font-size: 14px; }
+.sections .note { font-size: 14px; }
 </style>

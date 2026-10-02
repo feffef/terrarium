@@ -107,3 +107,16 @@ export const TINKERFUND_GALLERY = [
 
 export type TinkerfundGallerySection = (typeof TINKERFUND_GALLERY)[number]
 export type TinkerfundGallerySectionId = TinkerfundGallerySection['id']
+
+export const TINKERFUND_GALLERY_FIXTURE = {
+  lamp: { slug: 'last-minute-lamp', title: 'Last-Minute Lamp', reward: 'lamp', addon: 'bulb', pledge: 'TF-P-9001' },
+  stapler: { slug: 'goal-exact-stapler', rewards: ['early-bird', 'stapler'], addon: 'staple' },
+  hammock: { slug: 'indoor-hammock', reward: 'hammock' },
+  workbench: 'self-assembling-workbench',
+  code: 'TINKER10',
+  zone: 'europe',
+  payment: 'handshake',
+  /** Refs no qa Pledge uses, for the specimens' own Pledges. */
+  receipt: 'TF-P-9004',
+  cancelled: 'TF-P-9009',
+} as const

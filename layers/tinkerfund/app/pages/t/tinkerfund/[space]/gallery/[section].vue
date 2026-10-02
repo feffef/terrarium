@@ -19,10 +19,10 @@ useSeoMeta(tinkerfundSeo(section
       <div>
         <TinkerfundShellBreadcrumbs :items="[{ label: 'Component gallery', to: link() }, { label: section.title }]" />
         <TinkerfundGalleryIntro :title="section.title" :lead="section.summary">
-          <p class="codes"><code v-for="name in section.components" :key="name">{{ name }}</code></p>
+          <TinkerfundGalleryCodes :names="section.components" />
         </TinkerfundGalleryIntro>
       </div>
-      <TinkerfundGallerySection :id="section.id" />
+      <div data-specimens><TinkerfundGallerySection :id="section.id" /></div>
       <nav class="pager" aria-label="Gallery sections">
         <NuxtLink v-if="prev" rel="prev" :to="link(`/gallery/${prev.id}`)">← {{ prev.title }}</NuxtLink>
         <NuxtLink v-if="next" rel="next" class="next" :to="link(`/gallery/${next.id}`)">{{ next.title }} →</NuxtLink>
@@ -34,8 +34,6 @@ useSeoMeta(tinkerfundSeo(section
 
 <style scoped>
 .page { display: grid; grid-template-columns: minmax(0, 1fr); gap: 36px; }
-.codes { display: flex; flex-wrap: wrap; gap: 4px 12px; color: var(--tf-muted); font: 500 13px/1.4 var(--tf-mono); }
-code { font: inherit; overflow-wrap: anywhere; }
 .pager { display: flex; flex-wrap: wrap; gap: 12px; justify-content: space-between; padding-top: 18px; border-top: 1px solid var(--tf-line); font: 500 14px/1.4 var(--tf-mono); }
 .next { margin-inline-start: auto; }
 </style>

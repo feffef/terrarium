@@ -141,14 +141,17 @@ export function registerTinkerfundE2E(): void {
           expect(html, path).toMatch(new RegExp(`<h1[^>]*>${section.title}</h1>`))
           expect(html, path).toMatch(/aria-label="Breadcrumb"[\s\S]*href="\/t\/tinkerfund\/qa"/)
           for (const name of section.components) expect(html, path).toMatch(new RegExp(`<code[^>]*>${name}</code>`))
+          // A section with no branch in Section.vue renders only a v-if comment.
+          expect(html, path).toMatch(/<div data-specimens[^>]*>\s*<(?!!--)/)
           const prev = TINKERFUND_GALLERY[i - 1]
           const next = TINKERFUND_GALLERY[i + 1]
           if (prev) expect(html, path).toContain(`href="/t/tinkerfund/qa/gallery/${prev.id}"`)
           if (next) expect(html, path).toContain(`href="/t/tinkerfund/qa/gallery/${next.id}"`)
         }
         expect(await $fetch('/t/tinkerfund/prod')).not.toContain('Component gallery')
-        const prod = await fetch('/t/tinkerfund/prod/gallery/status', { headers: { accept: 'text/html' } })
-        expect(prod.status).toBe(404)
+        for (const path of ['/t/tinkerfund/prod/gallery/status', '/t/tinkerfund/qa/gallery/no-such-section']) {
+          expect((await fetch(path, { headers: { accept: 'text/html' } })).status, path).toBe(404)
+        }
       })
 
       for (const [slug, action] of [

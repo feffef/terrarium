@@ -1,24 +1,9 @@
-// The qa gallery's shared specimens (app/utils/gallery.ts): qa's edge-case
-// fixtures, and the Cart, quote, receipt and account built from them.
 import type { TinkerfundBacking } from './cart'
 import type { TinkerfundShop } from '../utils/cart'
+import { TINKERFUND_GALLERY_FIXTURE as FIXTURE } from '../utils/gallery'
 import type { CampaignState } from '../utils/status'
 
-export const TINKERFUND_GALLERY_FIXTURE = {
-  lamp: { slug: 'last-minute-lamp', title: 'Last-Minute Lamp', reward: 'lamp', addon: 'bulb', pledge: 'TF-P-9001' },
-  stapler: { slug: 'goal-exact-stapler', rewards: ['early-bird', 'stapler'], addon: 'staple' },
-  hammock: { slug: 'indoor-hammock', reward: 'hammock' },
-  workbench: 'self-assembling-workbench',
-  code: 'TINKER10',
-  zone: 'europe',
-  payment: 'handshake',
-  /** Refs no qa Pledge uses, for the specimens' own Pledges. */
-  receipt: 'TF-P-9004',
-  cancelled: 'TF-P-9009',
-} as const
-
 export async function useTinkerfundGallery() {
-  const FIXTURE = TINKERFUND_GALLERY_FIXTURE
   // Every composable runs before the first await: after it, Nuxt's context is gone.
   const { space, pagesKey, collections } = useTinkerfundSpace()
   const ready = Promise.all([useTinkerfundCatalog(), useTinkerfundShop()])
