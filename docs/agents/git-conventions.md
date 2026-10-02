@@ -58,11 +58,9 @@ conclusion; refuse to answer rather than classify off the truncated graph.
 - **A commit message containing backticks or `$(...)` must go through
   `git commit -F <file>`** (or a quoted heredoc), never `-m` — inside a
   double-quoted `-m` argument the shell runs the backtick/`$()` span as a
-  command and mangles the body. `.githooks/commit-msg`
-  (`scripts/provenance-footer.ts`) backstops the ADR-0017 trailer either way,
-  appending it when absent and correcting it when it names the wrong
-  session — but it can no-op silently if pnpm/tsx is off PATH, so glance that
-  the footer actually landed.
+  command and mangles the body. The ADR-0017 trailer is backstopped by
+  `.githooks/commit-msg`, which can no-op silently if pnpm/tsx is off PATH, so
+  glance that it landed.
 - **Keep session-log-only commits content-only.** Never let substantive work
   ride along inside a commit titled as a session-log commit — title the
   commit for the work it actually contains.

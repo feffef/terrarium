@@ -3,151 +3,73 @@
 Date: 2026-07-07
 Status: Accepted
 
-> **Amended 2026-07-13 through 2026-08-01** (issues #346, #710, #723, #737,
-> #784 — git history on this file holds the narrative). The guard below is
-> the rule's agent-facing home, not this prose.
->
-> **GitHub bodies** (issues, PR descriptions, comments, inline review
-> comments) carry a one-line **header** as the body's first line, not the
-> two-line trailer below:
->
-> ```
-> 🤖 [Claude Opus 5](https://claude.ai/code/session_019hdkXjoebyR8etKVNyjn7S)
-> ```
->
-> `scripts/github-provenance-guard.ts` enforces it **fail-closed** — it
-> blocks a call whose body is missing the header, carries it in a different
-> shape, or contains a bare `<...>` span GitHub would silently strip
-> (`docs/agents/github-integration.md`). A reader still recognizes the
-> legacy two-line trailer on GitHub bodies written before 2026-08-01 —
-> historical comments are immutable — but writing one there is now blocked.
->
-> **Commits** keep the two-line trailer (a commit message renders no
-> markdown, so there's no header-vs-footer conflict to resolve):
->
-> ```
-> Co-Authored-By: <model name> <noreply@anthropic.com>
-> Claude-Session: <session URL>
-> ```
->
-> The interactive harness template supplies it on an ordinary `git commit`,
-> backstopped by `.githooks/commit-msg` → `scripts/provenance-footer.ts`
-> (appends it if absent, corrects it if the session URL is wrong —
-> `docs/agents/git-conventions.md`). The ADR-0009 direct-to-`main` log commit
-> and the MCP-API write tools (`create_or_update_file`/`push_files`)
-> construct the same trailer in repo-side code instead, since neither goes
-> through the interactive harness.
->
-> **Bot identity stays deferred** (#124) — this ADR fixes only the
-> content-recoverable half. Nothing before 2026-07-07 is backfilled (see
-> Consequences).
->
-> See CLAUDE.md's Working Conventions for the rule as agents apply it, and
-> `docs/agents/guards.md`'s `github-provenance-guard.ts` row for what the
-> guard actually checks.
+> Amended 2026-07-13 through 2026-08-01 (issues #346, #710, #723, #737, #784),
+> then rewritten whole under ADR-0027 with the decision unchanged. Git history
+> holds the earlier wording.
 
 ## Context
 
-Human vs. agent authorship is unrecoverable from this repo's own GitHub
-records: agent-created issues show `user: feffef` (the repo owner), and
-agent-merged PRs show `merged_by: feffef` — both because the agent's GitHub
-API calls run under the owner's own authorized connection, not a distinct
-identity. Content-reasoning agents get this wrong (issue #124: *"Two of my
-three wrong rants misread who did what because of it."*). #132 forced the gap
-into the open — the reviewing agent could not self-approve its own sibling's
-PR under the shared identity, and had to name the gap explicitly in a review
-comment instead of the review UI reflecting it.
+Human vs. agent authorship is unrecoverable from this repo's GitHub records:
+agent-created issues show `user: feffef` and agent-merged PRs show
+`merged_by: feffef`, because the agent's API calls run under the owner's own
+authorized connection. Agents misread who did what because of it (issue #124),
+and #132 hit it when a reviewing agent could not self-approve its sibling's PR.
 
-Two independent fixes were considered:
+Two fixes were considered:
 
-- **Fix the GitHub actor fields at the source** — a distinct bot identity (a
-  machine-user PAT or a registered GitHub App), authorized separately from the
-  owner's account, so `user`/`merged_by`/comment-author honestly read as the
-  agent.
-- **Annotate content so attribution is machine-recoverable**, without
-  touching the actor fields at all — a mandatory footer naming the model and
-  session, appended to everything an agent authors.
+- **A distinct bot identity** (machine-user PAT or GitHub App). Set aside, not
+  rejected: the session's GitHub access is a managed connector outside this
+  repo, and a local CLI, this remote connector and any future autonomous
+  session would each need re-pointing. Tracked on #124.
+- **Annotating content** so attribution is machine-recoverable without touching
+  the actor fields. Chosen.
 
-The bot-identity route was investigated and set aside for now, not rejected
-outright. Provisioning a PAT or a GitHub App is cheap in isolation, but the
-actual blocker is environmental: this session's GitHub access is a managed
-connector already authorized as the owner's own account, and swapping that is
-a connector/environment configuration change made outside this repo — no
-gated PR implements it. It is also not a single switch: a local CLI session
-(`gh auth login`), this remote environment's connector, and any future
-autonomous session are three separate plumbing points that would each need
-re-pointing. That makes bot identity a genuinely separate, larger,
-environment-governance decision, tracked on #124 as a follow-up rather than
-bundled into this one.
-
-Commits already carry a partial version of the content-annotation idea,
-unremarked: the harness's own commit template appends
-
-```
-Co-Authored-By: <model name> <noreply@anthropic.com>
-Claude-Session: <session URL>
-```
-
-to every commit, and `log-session` already reads the session id back out of
-that trailer (ADR-0009). It was never a deliberate *repo* convention — just an
-environment default nobody had written down or extended anywhere else.
-Issues, PR bodies, and comments, created via the GitHub API, carry no such
-thing: a couple of this repo's own comments stamp a generic "_Generated by
-Claude Code_" line, with no model or session, added ad hoc by whichever agent
-thought to. The same opacity applies to any *other* external system an agent
-might act through (chat, email, a third-party API) — none exist for this
-Platform today, but the underlying cause (the call runs under a shared/human
-credential) is not GitHub-specific, so neither is the fix.
+Commits already carried a trailer from the harness's commit template, and
+`log-session` reads the session id from it (ADR-0009). Issues, PR bodies and
+comments carried nothing, or an ad hoc "Generated by Claude Code" line.
 
 ## Decision
 
 **Every agent-authored interaction with GitHub, or with any other external
-system, carries the same two-line footer, with no exemptions:**
+system, carries machine-recoverable provenance naming the model and session,
+with no exemptions** — no "top-level only" or "GitHub only" carve-out, since a
+narrower rule is just another gap to remember.
 
-```
-Co-Authored-By: <model name> <noreply@anthropic.com>
-Claude-Session: <session URL>
-```
+- **GitHub bodies** (issues, PR descriptions, comments, inline review
+  comments) open with a one-line **header** as the body's first line:
 
-- **Commits** already get this from the harness template today — no
-  repo-side change; this ADR documents it as a fact the Platform now
-  deliberately relies on, rather than an unremarked accident.
-- **Every other externally-visible artifact an agent creates** — issues, PR
-  descriptions, PR/issue comments (top-level *and* inline review comments),
-  and anything posted to a future non-GitHub integration — appends the same
-  two lines as the last lines of the body. There is no "top-level only" or
-  "GitHub only" carve-out: the point is that *any* interaction with a system
-  outside this repo's own git history is recoverable the same way, and a
-  narrower rule just becomes another gap someone has to remember.
-- **Convention only, not gate-enforced.** External-system content isn't part
-  of the build the safety gate checks, and even for commits the decision is
-  to document-and-rely-on the existing harness behavior rather than add a
-  repo-side check. A regression (the harness drops the trailer, or an agent
-  forgets the footer) degrades gracefully back to today's status quo — it is
-  not caught mechanically.
-- **Bot identity is deferred**, tracked separately on #124. This ADR resolves
-  only the content-recoverable half of the provenance problem.
+  ```
+  🤖 [Claude Opus 5](https://claude.ai/code/session_<id>)
+  ```
 
-See CLAUDE.md's Working Conventions for the footer as agents actually apply
-it.
+  `scripts/github-provenance-guard.ts` enforces it fail-closed. The legacy
+  two-line trailer on GitHub bodies written before 2026-08-01 stays readable
+  (historical comments are immutable); writing one now is blocked.
+- **Commits** carry a two-line trailer (a commit message renders no markdown):
+
+  ```
+  Co-Authored-By: <model name> <noreply@anthropic.com>
+  Claude-Session: <session URL>
+  ```
+
+  The harness template supplies it; `.githooks/commit-msg`
+  (`scripts/provenance-footer.ts`) appends or corrects it as a backstop, and
+  `scripts/commit-trailer-guard.ts` denies a hand-typed one. The ADR-0009 log
+  commit and the MCP-API write tools build the same trailer in repo-side code.
+- **The guards' deny messages are the agent-facing teaching surface**, naming
+  the exact marker to use; `docs/agents/guards.md` lists them. CLAUDE.md states
+  the rule agents apply.
+- **Bot identity stays deferred** (#124). This ADR fixes only the
+  content-recoverable half.
 
 ## Consequences
 
-- A reader — human or agent — can recover who/what really authored a piece of
-  content from the content itself, without needing GitHub's (or any other
-  system's) actor fields to be honest. Closes the gap #124 and #132 both hit.
-- **Noisier GitHub threads**: a multi-comment review now repeats the same two
-  lines on every inline comment, not just once per review. Accepted in favor
-  of a rule with no exceptions to misremember.
-- **Asymmetric history**: content authored before this ADR carries no
-  footer, and nothing is backfilled. Attribution before 2026-07-07 stays as
-  unrecoverable as it was.
-- `user`/`merged_by`/comment-author still show the human owner for
-  agent-driven GitHub actions — this ADR does not fix that, by design.
-  Conflating the two would have re-opened the bot-identity scope this
-  decision deliberately set aside.
-- Low reversal cost: the footer is freeform text, not a schema. Changing the
-  format later just means old and new content look slightly different — no
-  migration, no build break (contrast the `sessions`/`pingbacks`
-  schema-evolution policy in ADR-0009, which exists because *that* content is
-  machine-validated).
+- Authorship is recoverable from the content itself, closing the gap #124 and
+  #132 hit.
+- Threads are noisier: every inline review comment repeats the header.
+  Accepted for a rule with no exceptions to misremember.
+- Nothing before 2026-07-07 is backfilled.
+- `user`/`merged_by`/comment-author still show the owner for agent-driven
+  actions, by design.
+- Low reversal cost: the marker is freeform text, not a schema (contrast the
+  machine-validated `sessions` schema in ADR-0009).
