@@ -1,6 +1,6 @@
 ---
 name: visitor-loop
-description: Daily self-growth run — three blind first-time visitors (three different models) browse a live Terrarium; the run fixes what at least two of them flag, builds the best feature idea they raised, and self-merges both PRs on a green gate.
+description: Self-growth run — three blind first-time visitors (three different models) browse a live Terrarium; the run fixes what at least two of them flag, builds the best feature idea they raised, and self-merges both PRs on a green gate.
 disable-model-invocation: true
 ---
 

@@ -335,8 +335,8 @@ review-agent, not a bystander waiting for a human. For each PR:
      high-risk, and **alert the user**. A **hard** selection (§3) usually lands
      here — that is expected.
 
-Autonomy is the default; escalation is the exception, reserved for the three cases
-above. A PR is finished only when **merged** (by you) or **escalated/abandoned** —
+Autonomy is the default; escalation is the exception, reserved for genuinely high-risk
+changes. A PR is finished only when **merged** (by you) or **escalated/abandoned** —
 not at push time (`CLAUDE.md`: pushing is not landing).
 
 Done when every dispatched PR carries a posted review comment and is merged or

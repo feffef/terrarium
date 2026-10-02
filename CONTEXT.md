@@ -113,9 +113,7 @@ kind.
 An optional note in a **session log**: an ambitious, concrete proposal for the
 Platform's or a Tenant's future — creative and specific enough that a later
 reader could turn it straight into a GitHub issue, not a vague hunch. An idea is
-not yet planned work, just noted. Ideas were previously titled "Sparks": where
-older digests and session logs say "Sparks", they mean ideas (early on,
-learnings too).
+not yet planned work, just noted.
 
 ### Session closure
 The point at which a **Session**'s active work is **complete and in a coherent,
@@ -379,6 +377,8 @@ are left untouched as the historical record (ADR-0021).
   there.
 - **`Spawn`** — was glossary shorthand for adding a Tenant/Space; never really
   used, and overloaded with "spawn a sub-agent." Just say "add a Tenant/Space."
+- **Sparks** — the old name for **ideas** (early on, learnings too); older
+  digests and session logs still say it.
 - **Journal entry** — an umbrella term for the Journal's primary append-only
   records; retired in favour of the concrete "session log" (and "research
   write-up").
