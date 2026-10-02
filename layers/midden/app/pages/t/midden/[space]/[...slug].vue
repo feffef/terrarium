@@ -27,10 +27,16 @@ const { data, error } = await useAsyncData(route.path, async () => {
   const site = pages.find((p) => p.path === path) ?? null
   // Only this site's own finds are needed — for the compact meta line below.
   const artifacts = await queryCollection(collections.artifacts).where('site', '=', siteSlug.value).all()
-  return { site, artifacts }
+  // Same order as the trench landing's list (TrenchLanding.vue).
+  const order = pages.filter((p) => p.path !== '/')
+  const at = order.findIndex((p) => p.path === path)
+  const link = (p?: (typeof pages)[number]) => (p ? { title: p.title ?? p.path.slice(1), href: `/t/midden/${space}${p.path}` } : null)
+  return { site, artifacts, prev: at > 0 ? link(order[at - 1]) : null, next: at >= 0 ? link(order[at + 1]) : null }
 })
 
 const site = computed(() => data.value?.site ?? null)
+const prev = computed(() => data.value?.prev ?? null)
+const next = computed(() => data.value?.next ?? null)
 const siteArtifacts = computed(() => data.value?.artifacts ?? [])
 
 // Compact dig-report meta line: which season(s) it spans, the find count, and the
@@ -104,6 +110,12 @@ useHead({ title: () => `${site.value?.title ?? 'Not found'} · The Midden` })
       <div class="midden-report__prose">
         <ContentRenderer :value="glossed?.site ?? site" :components="glossComponents" />
       </div>
+
+      <nav class="tech midden-report__pager" aria-label="Dig reports">
+        <NuxtLink v-if="prev" :to="prev.href" rel="prev">← {{ prev.title }}</NuxtLink>
+        <NuxtLink :to="`/t/midden/${space}`">all dig reports</NuxtLink>
+        <NuxtLink v-if="next" :to="next.href" rel="next">{{ next.title }} →</NuxtLink>
+      </nav>
     </article>
 
     <div v-else class="midden-page">
@@ -130,7 +142,7 @@ useHead({ title: () => `${site.value?.title ?? 'Not found'} · The Midden` })
 .midden-report {
   display: grid;
   grid-template-columns: minmax(0, 44rem) 13.5rem;
-  grid-template-rows: auto auto;
+  grid-template-rows: auto auto auto;
   column-gap: 3.4rem;
   justify-content: center;
   max-width: 64rem;
@@ -146,6 +158,17 @@ useHead({ title: () => `${site.value?.title ?? 'Not found'} · The Midden` })
   margin-top: 2.8rem;
 }
 .midden-report__prose { grid-column: 1; grid-row: 2; }
+.midden-report__pager {
+  grid-column: 1;
+  grid-row: 3;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.6rem 1.2rem;
+  margin-top: 3rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--midden-rule);
+}
 
 @media (max-width: 44rem) {
   .midden-report { display: block; }
