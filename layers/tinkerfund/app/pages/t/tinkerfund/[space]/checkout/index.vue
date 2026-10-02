@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { zone as zoneSchema } from '../../../../../../schemas'
-import type { TinkerfundQuoteGroup } from '../../../../../utils/checkout'
 
 // The focused checkout (story #1384, Pledge flow #1365). Every choice lives in
 // the URL query, so browser Back walks the steps and a reload keeps them.
@@ -16,8 +15,7 @@ const money = useTinkerfundMoney()
 const query = (key: string) => (typeof route.query[key] === 'string' ? route.query[key] : undefined)
 
 const chosen = computed(() => zoneSchema.safeParse(query('zone')).data)
-const [{ shop, zoneName, paymentLabel, status, error }, { loaded, zone, view, quote: quoteFor, place, backer }] =
-  await Promise.all([useTinkerfundShop(), useTinkerfundCart(chosen)])
+const { shop, zoneName, paymentLabel, status, error, loaded, zone, view, quote: quoteFor, place, backer } = await useTinkerfundCart(chosen)
 
 const step = computed(() => Math.max(0, STEPS.indexOf(query('step') as (typeof STEPS)[number])))
 const payment = computed(() => (shop.value?.payments.some((p) => p.id === query('pay')) ? query('pay') : shop.value?.payments[0]?.id) ?? '')
@@ -70,8 +68,8 @@ useSeoMeta(tinkerfundSeo({ kind: 'private', space, title: 'Checkout' }))
       <h1 ref="heading" class="tf-h1" tabindex="-1">{{ LABELS[step] }}</h1>
       <p class="banner" role="note"><b>Demo</b> — no payment is taken</p>
 
-      <p v-if="!loaded || placing" class="empty tf-panel">{{ placing ? 'Placing your Pledge…' : 'Opening your checkout…' }}</p>
-      <section v-else-if="!view.groups.length" class="empty tf-panel">
+      <p v-if="!loaded || placing" class="tf-empty tf-panel">{{ placing ? 'Placing your Pledge…' : 'Opening your checkout…' }}</p>
+      <section v-else-if="!view.groups.length" class="tf-empty tf-panel">
         <p>Your Cart is empty, so there is nothing to check out.</p>
         <NuxtLink class="tf-btn primary" :to="link('/cart')">Back to your Cart</NuxtLink>
       </section>
@@ -178,8 +176,6 @@ useSeoMeta(tinkerfundSeo({ kind: 'private', space, title: 'Checkout' }))
 <style scoped>
 .checkout { display: grid; gap: 18px; }
 .banner { margin: 0; padding: 10px 14px; border-radius: var(--tf-radius); background: var(--tf-mark); color: var(--tf-mark-ink); font: 500 14px/1.3 var(--tf-mono); text-align: center; }
-.empty { display: grid; gap: 14px; justify-items: start; margin: 0; padding: 22px; }
-.empty p { margin: 0; }
 .layout { display: grid; gap: 20px; align-items: start; }
 @media (min-width: 900px) { .layout { grid-template-columns: minmax(0, 1fr) 320px; } }
 .step { display: grid; gap: 14px; }

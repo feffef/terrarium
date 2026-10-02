@@ -7,7 +7,7 @@ const { clock, cards, categories } = await useTinkerfundCatalog()
 const category = computed(() => categories.value.find((c) => c.slug === route.params.category))
 
 useSeoMeta(tinkerfundSeo(category.value
-  ? { kind: 'listing', space, title: category.value.name, description: category.value.blurb }
+  ? { kind: 'page', space, title: category.value.name, description: category.value.blurb }
   : { kind: 'not-found', space }))
 </script>
 

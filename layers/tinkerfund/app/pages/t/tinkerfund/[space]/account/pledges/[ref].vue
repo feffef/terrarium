@@ -1,13 +1,10 @@
 <script setup lang="ts">
-import type { TinkerfundPledgeContents } from '../../../../../../utils/cart'
-
 definePageMeta({ viewTransition: true })
 
 const route = useRoute()
 const { space, link } = useTinkerfundSpace()
 const money = useTinkerfundMoney()
-const [{ zoneName: nameOf, paymentLabel, status, error }, { loaded, account, catalog, preview, revise, cancel }] =
-  await Promise.all([useTinkerfundShop(), useTinkerfundCart()])
+const { zoneName: nameOf, paymentLabel, status, error, loaded, account, catalog, preview, revise, cancel } = await useTinkerfundCart()
 
 const reference = computed(() => String(route.params.ref))
 const current = computed(() => account.value.find((a) => a.pledge.ref === reference.value))
@@ -63,7 +60,7 @@ useSeoMeta(tinkerfundSeo({ kind: 'private', space, title: `Pledge ${reference.va
     <div class="pledge-page">
       <p class="back tf-noprint"><NuxtLink :to="link('/account')">← Your account</NuxtLink></p>
       <h1 v-if="!loaded" class="tf-h1">Opening your Pledge…</h1>
-      <section v-else-if="!current || !receipt || !entry" class="empty tf-panel">
+      <section v-else-if="!current || !receipt || !entry" class="tf-empty tf-panel">
         <h1 class="tf-h1">No Pledge to show</h1>
         <p>Pledge {{ reference }} belongs to a tab that has since closed, or to a demo that was reset.</p>
         <NuxtLink class="tf-btn primary" :to="link('/account')">Back to your account</NuxtLink>
@@ -140,8 +137,6 @@ useSeoMeta(tinkerfundSeo({ kind: 'private', space, title: `Pledge ${reference.va
 <style scoped>
 .pledge-page { display: grid; gap: 16px; max-width: 760px; }
 .back { margin: 0; font-size: 14px; }
-.empty { display: grid; gap: 14px; justify-items: start; margin: 0; padding: 22px; }
-.empty > * { margin: 0; }
 .intro { display: grid; gap: 8px; }
 .intro > * { margin: 0; }
 .facts, .difference { padding: 14px 16px; }

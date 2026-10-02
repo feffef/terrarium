@@ -5,15 +5,12 @@ import { cancelTinkerfundPledge, reviseTinkerfundPledge, tinkerfundAccountPledge
 import { reduceTinkerfundActions } from '../../app/utils/backer.ts'
 import { tinkerfundPledgeFor, withTinkerfundPledges } from '../../app/utils/cart.ts'
 import type { TinkerfundBackerState, TinkerfundPledge, TinkerfundShop } from '../../app/utils/cart.ts'
-import { baked, catalog, DAY, HOUR, NOW, promotion, shop } from './support.ts'
+import { baked, catalog, DAY, endedLamp, HOUR, NOW, pledge, promotion, shop } from './support.ts'
 
 const bakedShop = shop({ baked })
 const start = reduceTinkerfundActions([], bakedShop)
 
-const mine: TinkerfundPledge = {
-  ref: 'TF-P-0006', campaign: 'mug', placed: NOW - DAY / 2, zone: 'domestic', payment: 'handshake',
-  lines: [{ reward: 'mug', options: {}, quantity: 2 }], addons: [], bonus: 3, promotions: [], discount: 0, shipping: 2,
-}
+const mine = pledge({ ref: 'TF-P-0006', campaign: 'mug', placed: NOW - DAY / 2, payment: 'handshake', lines: [{ reward: 'mug', options: {}, quantity: 2 }], bonus: 3, shipping: 2 })
 const withMine = (pledges: TinkerfundPledge[]): TinkerfundBackerState => ({ cart: [], pledges: [...start.pledges, ...pledges] })
 
 describe('the account’s Pledges', () => {
@@ -50,11 +47,11 @@ describe('the account’s Pledges', () => {
 describe('changing a Pledge', () => {
   const black = { colour: 'black' }
   const white = { colour: 'white' }
-  const lamps: TinkerfundPledge = {
-    ref: 'TF-P-0007', campaign: 'lamp', placed: NOW - DAY / 2, zone: 'domestic', payment: 'handshake',
+  const lamps = pledge({
+    ref: 'TF-P-0007', placed: NOW - DAY / 2, payment: 'handshake',
     lines: [{ reward: 'lamp', options: black, quantity: 2 }], addons: [{ id: 'bulb', quantity: 1 }], bonus: 3,
     promotions: ['lamp-tenth'], discount: 4.4, shipping: 5,
-  }
+  })
   const lampTenth = promotion({ title: 'Lamp tenth', campaign: 'lamp', discount: { percent: 10 }, end: '-1h' })
   const revise = (change: Parameters<typeof reviseTinkerfundPledge>[2], pledge = lamps, at: TinkerfundShop = shop({ promotions: [lampTenth] })) => {
     const { state, error } = reviseTinkerfundPledge({ cart: [], pledges: [pledge] }, pledge.ref, change, at)
@@ -110,8 +107,7 @@ describe('changing a Pledge', () => {
   })
 
   it('refuses once the Campaign has ended', () => {
-    const ended = { ...catalog, lamp: { ...catalog.lamp, campaign: { ...catalog.lamp.campaign, end: '-1h' } } }
-    expect(revise({ lines: lamps.lines, addons: [] }, lamps, shop({ catalog: ended })).error).toBe('This Pledge is locked: its Campaign has ended')
+    expect(revise({ lines: lamps.lines, addons: [] }, lamps, shop({ catalog: endedLamp })).error).toBe('This Pledge is locked: its Campaign has ended')
   })
 })
 

@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import type { TinkerfundClock } from '../../../composables/clock'
-
 const props = defineProps<{
   campaign: { registry: string; launch: string; end: string; goal: number; pledged: number }
   clock: TinkerfundClock

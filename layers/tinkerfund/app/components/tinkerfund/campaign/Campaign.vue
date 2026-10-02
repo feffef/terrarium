@@ -1,7 +1,5 @@
 <script setup lang="ts">
-import type { TinkerfundBacking } from '../../../composables/cart'
 import type { TinkerfundCampaign, TinkerfundPage } from '../../../types/tinkerfund'
-import type { TinkerfundCartRequest } from '../../../utils/cart'
 
 const props = defineProps<{ doc: TinkerfundPage & { campaign: TinkerfundCampaign } }>()
 
@@ -10,7 +8,7 @@ const money = useTinkerfundMoney()
 const categories = useTinkerfundCategories()
 
 const slug = computed(() => tinkerfundSlug(props.doc.path))
-const [{ view: cart, change: changeCart, pledges, baked, clock }, { zoneName }] = await Promise.all([useTinkerfundCart(), useTinkerfundShop()])
+const { view: cart, change: changeCart, pledges, baked, clock, zoneName } = await useTinkerfundCart()
 const now = computed(() => clock.value.now)
 // Totals, Stretch goals and stock count the visitor's own Pledges (story #1384).
 const c = computed(() => withTinkerfundPledges(slug.value, props.doc.campaign, pledges.value, baked.value))

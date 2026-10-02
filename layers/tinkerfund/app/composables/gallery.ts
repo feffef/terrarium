@@ -5,25 +5,21 @@ import type { CampaignState } from '../utils/status'
 
 export async function useTinkerfundGallery() {
   // Every composable runs before the first await: after it, Nuxt's context is gone.
-  const { space, pagesKey, collections } = useTinkerfundSpace()
+  const { space, collections } = useTinkerfundSpace()
   const ready = Promise.all([useTinkerfundCatalog(), useTinkerfundShop()])
-  const docsData = useAsyncData(`tinkerfund-gallery-${space}`, () =>
-    queryCollection(pagesKey).where('campaign', 'IS NOT NULL').all(),
-  )
   const extraData = useAsyncData(`tinkerfund-gallery-extra-${space}`, async () => {
-    const [threads, logs, backer] = await Promise.all([
+    const [threads, logs] = await Promise.all([
       queryCollection(collections.comments).all(),
       queryCollection(collections.updates).all(),
-      queryCollection(collections.backer).first(),
     ])
-    return { threads, logs, backer }
+    return { threads, logs }
   })
-  const [[catalog, { zoneName }], { data: docs }, { data: extra }] = await Promise.all([ready, docsData, extraData])
-  const { clock, promotions } = catalog
+  const [[catalog, { zoneName }], { data: extra }] = await Promise.all([ready, extraData])
+  const { clock, promotions, baked } = catalog
   const now = computed(() => clock.value.now)
 
   const campaigns = computed(() =>
-    (docs.value ?? [])
+    catalog.docs.value
       .flatMap((doc) => {
         if (!doc.campaign) return []
         const slug = tinkerfundSlug(doc.path)
@@ -42,7 +38,7 @@ export async function useTinkerfundGallery() {
 
   const specimenShop = computed<TinkerfundShop>(() => ({
     catalog: Object.fromEntries(campaigns.value.map((doc) => [doc.slug, { title: doc.title, campaign: doc.campaign }])),
-    baked: extra.value?.backer?.pledges ?? [],
+    baked: baked.value,
     promotions: promotions.value,
     payment: FIXTURE.payment,
     now: now.value,

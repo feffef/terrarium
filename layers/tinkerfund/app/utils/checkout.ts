@@ -40,7 +40,7 @@ export interface TinkerfundQuoteGroup extends TinkerfundCartGroup {
   total: number
 }
 
-export interface TinkerfundQuote {
+interface TinkerfundQuote {
   groups: TinkerfundQuoteGroup[]
   subtotal: number
   discount: number
@@ -187,7 +187,7 @@ function nextRefs(taken: string[], count: number): string[] {
   return Array.from({ length: count }, (_, i) => `TF-P-${String(last + 1 + i).padStart(4, '0')}`)
 }
 
-export interface TinkerfundPlaceInput {
+interface TinkerfundPlaceInput {
   state: TinkerfundBackerState
   quote: TinkerfundQuote
   zone: TinkerfundZone

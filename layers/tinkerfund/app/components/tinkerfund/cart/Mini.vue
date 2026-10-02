@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import type { TinkerfundCartRequest, TinkerfundCartView } from '../../../utils/cart'
-
 const props = defineProps<{ view: TinkerfundCartView }>()
 
 const id = useId()

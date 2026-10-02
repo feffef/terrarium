@@ -71,7 +71,7 @@ export function tinkerfundBrowseRouteQuery(query: TinkerfundBrowseQuery): Record
 
 type Campaign = z.infer<typeof campaign>
 
-export interface TinkerfundCampaignDoc {
+interface TinkerfundCampaignDoc {
   path: string
   title: string
   description?: string

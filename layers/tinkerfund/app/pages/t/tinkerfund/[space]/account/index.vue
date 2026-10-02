@@ -2,7 +2,7 @@
 definePageMeta({ viewTransition: true })
 
 const { space, link } = useTinkerfundSpace()
-const [{ zoneName, status, error }, { loaded, backer, account }] = await Promise.all([useTinkerfundShop(), useTinkerfundCart()])
+const { zoneName, status, error, loaded, backer, account } = await useTinkerfundCart()
 
 useSeoMeta(tinkerfundSeo({ kind: 'private', space, title: 'Your account' }))
 </script>

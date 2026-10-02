@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import type { TinkerfundHit } from '../../../utils/search'
-
 // The WAI-ARIA combobox pattern with native elements, so no library (issue #1361).
 // Without JavaScript it is a plain GET form to the results page.
 const props = defineProps<{ value?: string; autofocus?: boolean }>()
