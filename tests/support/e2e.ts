@@ -4,9 +4,9 @@
 // suffix) so vitest never collects it standalone — it only runs under the one
 // `setup()`/build the smoke spec owns (see tests/README.md and ADR-0004's
 // amendment: the L2 gate stays a single Nuxt build as Tenants multiply).
-import type { Page } from 'playwright-core'
+import type { Locator, Page } from 'playwright-core'
 import { expect } from 'vitest'
-import { createPage, url } from '@nuxt/test-utils/e2e'
+import { createPage, fetch, url } from '@nuxt/test-utils/e2e'
 import { entryRoutesFrom, expand, loadManifests } from '../../shared/expand.ts'
 import { mermaidRoutes } from './mermaid-pages.ts'
 
@@ -74,19 +74,43 @@ export async function collectUnknownElementTags(page: Page): Promise<string[]> {
 }
 
 /**
- * Navigates to `route`, then asserts (a) an `<h1>` exists in the rendered
- * DOM, (b) no console/page error fired, and (c) no unresolved auto-import
- * component rendered as an `HTMLUnknownElement` (issue #212). Closes the page
- * itself (success or failure) so call sites don't each repeat the try/finally.
+ * Renders `route` and runs `fn` against the page, then asserts no console/page
+ * error fired (also the requests seen, for #379's zero-mermaid-JS guarantee).
+ * Closes the page itself (success or failure) so call sites don't each repeat
+ * the try/finally.
  */
-export async function expectCleanHydration(route: string): Promise<void> {
-  const { page, errors } = await renderAndCollectErrors(route)
+export async function withRendered(
+  route: string,
+  fn: (page: Page, requests: string[]) => Promise<void>,
+): Promise<void> {
+  const { page, errors, requests } = await renderAndCollectErrors(route)
   try {
-    expect(await page.locator('h1').count()).toBeGreaterThan(0)
+    await fn(page, requests)
     expect(errors, `console/page errors on ${route}:\n${errors.join('\n')}`).toEqual([])
-    const unknownTags = await collectUnknownElementTags(page)
-    expect(unknownTags, `unresolved components on ${route}: ${unknownTags.join(', ')}`).toEqual([])
   } finally {
     await page.close()
   }
 }
+
+/** Asserts (a) an `<h1>` exists in the rendered DOM and (b) no unresolved
+ *  auto-import component rendered as an `HTMLUnknownElement` (issue #212). */
+export async function expectHydrated(page: Page, route: string): Promise<void> {
+  expect(await page.locator('h1').count()).toBeGreaterThan(0)
+  const unknownTags = await collectUnknownElementTags(page)
+  expect(unknownTags, `unresolved components on ${route}: ${unknownTags.join(', ')}`).toEqual([])
+}
+
+/** `withRendered` + `expectHydrated` for a route that needs no other assertion. */
+export const expectCleanHydration = (route: string): Promise<void> =>
+  withRendered(route, (page) => expectHydrated(page, route))
+
+/** Asserts `from` answers a 302 to `to` (no redirect followed). */
+export async function expectRedirect(from: string, to: string): Promise<void> {
+  const res = await fetch(from, { redirect: 'manual' })
+  expect(res.status).toBe(302)
+  expect(res.headers.get('location')).toBe(to)
+}
+
+/** The `name` attribute of every element `loc` matches, '' when absent. */
+export const attrs = (loc: Locator, name: string): Promise<string[]> =>
+  loc.evaluateAll((els, n) => els.map((el) => el.getAttribute(n) ?? ''), name)

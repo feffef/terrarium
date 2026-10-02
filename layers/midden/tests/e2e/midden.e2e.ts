@@ -8,12 +8,10 @@
 // Stores"), plus the Tenant-root `/t/midden` foreword page (issue #515). Assertions
 // here target ROUTES, not files on disk — mirroring
 // `layers/atlas/tests/e2e/atlas.e2e.ts`'s no-context shape (a plain
-// `register…(): void`, not `journal.e2e.ts`'s `ctx`-taking variant): every
-// assertion below is self-contained via `$fetch`/`renderAndCollectErrors`, so
-// there's nothing from the caller's suite this module needs threaded in.
+// `register…(): void`): every assertion below is self-contained via `$fetch`
+// or its own page, so there's nothing from the caller's suite to thread in.
 import { describe, expect, it } from 'vitest'
 import { $fetch, createPage, fetch, url } from '@nuxt/test-utils/e2e'
-import { expectCleanHydration } from '../../../../tests/support/e2e.ts'
 
 /** Register the midden Tenant's L2 assertions under the caller's active suite. */
 export function registerMiddenE2E(): void {
@@ -44,6 +42,7 @@ export function registerMiddenE2E(): void {
       const trench = await $fetch('/t/midden/trench')
       expect(trench).toContain('The Trench')
       expect(trench).toContain('The Generated Map')
+      expect(trench).toContain('/t/midden/stores')
       for (const html of [front, trench]) {
         expect(html).not.toContain('Condition key')
         // A definition string from utils/condition.ts's single-homed table.
@@ -116,19 +115,6 @@ export function registerMiddenE2E(): void {
       } finally {
         await page.close()
       }
-    })
-
-    it('links the trench landing to the stores', async () => {
-      const html = await $fetch('/t/midden/trench')
-      expect(html).toContain('/t/midden/stores')
-    })
-
-    it('hydrates the trench landing with no unresolved components', async () => {
-      await expectCleanHydration('/t/midden/trench')
-    })
-
-    it('hydrates the stores register with no unresolved components', async () => {
-      await expectCleanHydration('/t/midden/stores')
     })
   })
 }
