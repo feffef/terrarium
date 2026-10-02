@@ -10,8 +10,9 @@ onrampBlurb: The loop — from a prompt to a reviewed, gated PR, to agents fixin
 
 Terrarium is a website whose code, content, and most of its own documentation
 are written by AI coding agents — Claude Code sessions — rather than by people.
-A human still decides what gets built, and for anything that matters, still
-decides what gets merged. What makes it an experiment rather than a novelty is
+A human sets the direction and, for anything that matters, still decides what
+gets merged; within that, scheduled agents increasingly pick and build work on
+their own, and their autonomy widens as it proves itself. What makes it an experiment rather than a novelty is
 the other half: the project keeps a public record of every session, including
 where the agents struggled, and then spends its own time turning that record
 into better instructions for the sessions that follow.
