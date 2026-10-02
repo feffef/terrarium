@@ -9,10 +9,6 @@
 // construction (ADR-0020).
 import { documentUrl } from '#shared/routing'
 
-/** The timeline "genre" of an entry — post (a dated page), digest (a daily
- *  Journal summary), or session (a session log). Drives a small label in the UI. */
-export type TimelineGenre = 'post' | 'digest' | 'session'
-
 /** One entry in the cross-Tenant **Timeline**: a timestamped piece of content,
  *  reduced to a one-line summary and a link to its real public route (ADR-0025). */
 export interface TimelineEntry {
@@ -24,7 +20,8 @@ export interface TimelineEntry {
   url: string
   tenant: string
   space: string
-  genre: TimelineGenre
+  /** post (a dated page), digest (a daily Journal summary) or session (a session log); drives a small label in the UI. */
+  genre: 'post' | 'digest' | 'session'
 }
 
 // Journal deep-link fragment format, owned by layers/journal/app/utils/dashboard.ts
@@ -32,9 +29,6 @@ export interface TimelineEntry {
 // page route — they render on the Journal dashboard, opened by this fragment — so
 // the Timeline links to `<space-landing>#<anchor>`. The coupling to the Journal's
 // scheme is this aggregator's own, deliberate choice, owned here in its layer.
-const sessionAnchor = (id: string) => `session-${id}`
-const digestAnchor = (date: string) => `digest-${date}`
-
 // A daily digest is a *Journal* page under `/digests/<YYYY-MM-DD>` (ADR-0010, a
 // Journal-scoped path convention) — the tenant guard below keeps it that way, so
 // another Tenant publishing a page at `/digests/<date>` is treated as an ordinary
@@ -74,7 +68,7 @@ export async function queryTimeline(): Promise<TimelineEntry[]> {
         // summarizes in the newest-first feed.
         when: `${digest[1]}T23:59:59Z`,
         summary: p.summary ?? p.description ?? p.title ?? p.url,
-        url: `${documentUrl(p.tenant, p.space, '/')}#${digestAnchor(digest[1]!)}`,
+        url: `${documentUrl(p.tenant, p.space, '/')}#digest-${digest[1]}`,
         tenant: p.tenant,
         space: p.space,
         genre: 'digest',
@@ -95,7 +89,7 @@ export async function queryTimeline(): Promise<TimelineEntry[]> {
     entries.push({
       when: s.endedAt,
       summary: s.goal,
-      url: `${documentUrl(s.tenant, s.space, '/')}#${sessionAnchor(s.session)}`,
+      url: `${documentUrl(s.tenant, s.space, '/')}#session-${s.session}`,
       tenant: s.tenant,
       space: s.space,
       genre: 'session',

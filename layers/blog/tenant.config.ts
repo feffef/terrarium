@@ -17,9 +17,7 @@ import { defineTenant } from '../../shared/manifest'
 import { utcTimestamp } from '../../shared/schemas/timestamp'
 
 // The Persona set, doubling as the Space slugs. Single-homed here so the zod
-// enum below and `spaces:` can't drift apart (manifest is self-contained — no
-// import from the layer's `app/` presentation code, which has its own,
-// deliberately separate copy; see `app/utils/personas.ts`).
+// enum below and `spaces:` can't drift apart.
 const personaSlugs = ['david', 'karen', 'kevin', 'eyra'] as const
 
 // Used to type the ends of a Pingback so a reaction can only name a Persona

@@ -27,17 +27,15 @@ const results = computed(() => {
 
 <template>
   <div class="se">
-    <label class="box">
-      <span class="visually-hidden">Search page titles, summaries and site names</span>
-      <input
-        v-model="q"
-        class="se-box"
-        type="search"
-        placeholder="Search titles, summaries and sites…"
-        autocomplete="off"
-        spellcheck="false"
-      >
-    </label>
+    <input
+      v-model="q"
+      class="se-box"
+      type="search"
+      aria-label="Search page titles, summaries and site names"
+      placeholder="Search titles, summaries and sites…"
+      autocomplete="off"
+      spellcheck="false"
+    >
 
     <p class="count">
       {{ results.length }}
@@ -62,9 +60,6 @@ const results = computed(() => {
 </template>
 
 <style scoped>
-.box {
-  display: block;
-}
 .se-box {
   width: 100%;
   box-sizing: border-box;
@@ -110,15 +105,6 @@ const results = computed(() => {
   border-color: var(--co-accent);
   transform: translateY(-1px);
 }
-.prov {
-  font-size: 0.72rem;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--co-accent);
-}
-.prov .dot {
-  opacity: 0.5;
-}
 .hit-title {
   font-weight: 600;
   font-size: 1.02rem;
@@ -127,17 +113,5 @@ const results = computed(() => {
   font-size: 0.88rem;
   color: var(--co-muted);
   line-height: 1.45;
-}
-.empty {
-  margin: 1rem 0 0;
-  color: var(--co-muted);
-}
-.visually-hidden {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  clip: rect(0 0 0 0);
-  white-space: nowrap;
 }
 </style>

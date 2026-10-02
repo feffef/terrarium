@@ -22,7 +22,7 @@ const { data, status, error } = await useAsyncData(route.path, async () => {
   const chapters = await queryCollection(pagesKey)
     .where('order', 'IS NOT NULL')
     .order('order', 'ASC')
-    .select('path', 'title', 'description', 'order', 'publishedAt')
+    .select('path', 'title', 'description', 'order')
     .all()
   return { landing, chapters }
 })

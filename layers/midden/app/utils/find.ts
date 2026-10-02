@@ -6,7 +6,7 @@
 // Exports are layer-prefixed (`formatMiddenDate`, not `formatDate`) because Nuxt
 // auto-imports every `app/utils` export globally across ALL layers — the same
 // collision hazard strata.ts documents for `digSeasonOf`, and the convention the
-// Blog and Marquee layers already follow with `formatBlogDate`/`formatMarqueeDate`.
+// Blog layer already follows with `formatBlogDate`.
 
 /** An Artifact's own words, quoted verbatim (tenant.config.ts's `inscription`). */
 export interface MiddenInscription {
