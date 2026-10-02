@@ -135,7 +135,7 @@ export interface SessionCardView {
   summary: string
   subagents: Subagent[]
   docsRead: { path: string; reason: string }[]
-  skillsUsed: { name: string; reason: string }[]
+  skillsUsed: { name: string; reason: string; url?: string }[]
   frictions: Friction[]
   // Authored note fields — normalized to arrays (empty ⇒ the card hides them).
   learnings: string[]

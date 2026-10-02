@@ -143,6 +143,11 @@ export function skillUseCounts(sessions: SessionDoc[]): Record<string, number> {
   return counts
 }
 
+// The Skill's SKILL.md on main, or undefined when the repo has no such Skill.
+export function skillUrl(name: string, repoSkills: readonly string[]): string | undefined {
+  return repoSkills.includes(name) ? `${REPO_URL}/blob/main/.agents/skills/${name}/SKILL.md` : undefined
+}
+
 export function externalSkillCount(skills: SkillDoc[]): number {
   return skills.length - ownSkills(skills).length
 }
@@ -178,7 +183,10 @@ export function skillRoleParts(role: string): { kind: 'text' | 'code' | 'em' | '
 // Maps each SessionDoc to the display view the session card renders (formats
 // dates, counts frictions, truncates the session id), so the card stays a dumb
 // renderer. `key` is the stable session id for the v-for.
-export function sessionCardViews(sessions: SessionDoc[]): (SessionCardView & { key: string })[] {
+export function sessionCardViews(
+  sessions: SessionDoc[],
+  repoSkills: readonly string[] = [],
+): (SessionCardView & { key: string })[] {
   return sessions.map((s) => ({
     key: s.session,
     when: sessionWhen(s.endedAt),
@@ -196,7 +204,7 @@ export function sessionCardViews(sessions: SessionDoc[]): (SessionCardView & { k
     summary: s.summary,
     subagents: s.subagents ?? [],
     docsRead: s.docsRead ?? [],
-    skillsUsed: s.skillsUsed ?? [],
+    skillsUsed: (s.skillsUsed ?? []).map((x) => ({ ...x, url: skillUrl(x.name, repoSkills) })),
     frictions: s.frictions,
     learnings: s.learnings ?? [],
     ideas: s.ideas ?? [],
