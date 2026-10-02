@@ -8,16 +8,28 @@
 // Presentation-only (ADR-0004): resolves the trench Space through the SAME shared
 // `resolveSpaceRoute`, hardcoded because `/t/midden` carries no `space` param.
 import { resolveSpaceRoute } from '#shared/routing'
+import { conditionMeta } from '../../utils/condition'
+import { formatMiddenDate, type MiddenArtifactDoc } from '../../utils/find'
 
 const props = defineProps<{ front?: boolean }>()
 
 const resolved = resolveSpaceRoute('midden', 'trench', undefined)
 
 const { data } = await useAsyncData(`midden-landing-${props.front ? 'front' : 'trench'}`, async () => {
-  if (!resolved) return { intro: null, count: 0, sites: [] }
+  if (!resolved) return { intro: null, count: 0, sites: [], latest: [] }
   if (props.front) {
     const count = await queryCollection(resolved.pagesKey).where('path', '<>', '/').count()
-    return { intro: null, count, sites: [] }
+    const artifacts = (await queryCollection(resolved.collections.artifacts).all()) as unknown as MiddenArtifactDoc[]
+    const latest = artifacts
+      .sort((a, b) => b.assessedAt.localeCompare(a.assessedAt) || a.stem.localeCompare(b.stem))
+      .slice(0, 3)
+      .map((a) => ({
+        href: `/t/midden/trench/${a.site}#artifact-${a.stem}`,
+        title: a.title.replaceAll('`', ''),
+        grade: conditionMeta(a.condition).label,
+        assessed: formatMiddenDate(a.assessedAt),
+      }))
+    return { intro: null, count, sites: [], latest }
   }
   const pages = await queryCollection(resolved.pagesKey).all()
   const sites = pages
@@ -28,7 +40,7 @@ const { data } = await useAsyncData(`midden-landing-${props.front ? 'front' : 't
       description: p.description as string | undefined,
       href: `/t/midden/trench${p.path}`,
     }))
-  return { intro: pages.find((p) => p.path === '/') ?? null, count: sites.length, sites }
+  return { intro: pages.find((p) => p.path === '/') ?? null, count: sites.length, sites, latest: [] }
 })
 
 const count = computed(() => data.value?.count ?? 0)
@@ -109,6 +121,21 @@ useHead({ title: props.front ? 'The Midden' : 'The Trench · The Midden' })
           </li>
         </ol>
         <p v-else class="midden-empty">No sites catalogued yet.</p>
+
+        <template v-if="front && data?.latest.length">
+          <div class="midden-sechead midden-landing__latest-head">
+            <span id="midden-latest-head" class="hand midden-sechead__title">Latest finds</span>
+            <span class="midden-sechead__rule" />
+          </div>
+          <ul class="midden-latest" aria-labelledby="midden-latest-head">
+            <li v-for="f in data.latest" :key="f.href">
+              <NuxtLink :to="f.href" class="midden-latest__link">
+                <span class="midden-latest__title">{{ f.title }}</span>
+                <span class="tech midden-latest__meta">{{ f.grade }} · assessed {{ f.assessed }}</span>
+              </NuxtLink>
+            </li>
+          </ul>
+        </template>
 
         <p v-if="!front" class="tech midden-landing__stores">
           <NuxtLink to="/t/midden/stores">The stores — finds held off display →</NuxtLink>
@@ -220,6 +247,19 @@ useHead({ title: props.front ? 'The Midden' : 'The Trench · The Midden' })
   color: var(--midden-accent);
   transform: translateX(3px);
 }
+
+.midden-landing__latest-head { margin-top: 2.4rem; }
+.midden-latest { list-style: none; margin: 0; padding: 0; }
+.midden-latest__link {
+  display: block;
+  padding: 0.9rem 0 1rem;
+  border-top: 1px solid var(--midden-rule);
+  color: inherit;
+}
+.midden-latest li:last-child .midden-latest__link { border-bottom: 1px solid var(--midden-rule); }
+.midden-latest__title { display: block; font-size: 1.08rem; color: var(--midden-accent); }
+.midden-latest__meta { display: block; margin-top: 0.25rem; color: var(--midden-faint); }
+.midden-latest__link:hover .midden-latest__title { color: var(--midden-accent-2); }
 
 .midden-empty {
   color: var(--midden-faint);

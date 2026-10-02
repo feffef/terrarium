@@ -59,6 +59,12 @@ export function registerMiddenE2E(): void {
       expect(await $fetch('/t/midden')).toContain(`the open excavation — ${listed} dig report${listed === 1 ? '' : 's'}`)
     })
 
+    it('shows three latest finds, each deep-linked to its card', async () => {
+      const html = (await $fetch('/t/midden')) as string
+      expect(html.match(/class="[^"]*midden-latest__link/g)?.length).toBe(3)
+      expect(html).toMatch(/href="\/t\/midden\/trench\/[a-z0-9-]+#artifact-[a-z0-9-]+"/)
+    })
+
     it('404s an unknown Midden Space', async () => {
       expect((await fetch('/t/midden/no-such-space')).status).toBe(404)
     })
