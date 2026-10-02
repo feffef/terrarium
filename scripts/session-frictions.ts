@@ -99,6 +99,17 @@ export function pickRecencyWindow(sessions: TriageSession[], n: number): TriageS
     .slice(-n)
 }
 
+const SESSION_LOG_DIR = 'layers/journal/content/current/sessions/'
+
+/** Audit sessions read hundreds of session logs; listing each blows the output
+ *  cap, so they collapse into one "N session logs" entry. */
+function collapseSessionLogReads(docsRead: Record<string, unknown>[]): TriageDocRead[] {
+  const reads = docsRead.map((d) => ({ path: String(d.path ?? ''), reason: String(d.reason ?? '') }))
+  const kept = reads.filter((d) => !d.path.startsWith(SESSION_LOG_DIR))
+  const n = reads.length - kept.length
+  return n ? [...kept, { path: `${n} session logs`, reason: '' }] : kept
+}
+
 /** Reduce one parsed session-log record to its triage-essential fields. */
 export function toTriageSession(raw: Record<string, unknown>, file: string): TriageSession {
   const frictions = Array.isArray(raw.frictions) ? raw.frictions : []
@@ -112,10 +123,7 @@ export function toTriageSession(raw: Record<string, unknown>, file: string): Tri
     goal: String(raw.goal ?? ''),
     outcome: String(raw.outcome ?? ''),
     prs: prs.map((p) => String(p)),
-    docsRead: docsRead.map((d: Record<string, unknown>) => ({
-      path: String(d.path ?? ''),
-      reason: String(d.reason ?? ''),
-    })),
+    docsRead: collapseSessionLogReads(docsRead),
     subagents: subagents.map((s: Record<string, unknown>) => {
       const ref: SubagentRef = {}
       if (typeof s.type === 'string') ref.type = s.type

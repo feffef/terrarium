@@ -79,6 +79,20 @@ describe('toTriageSession()', () => {
       frictions: [{ description: 'a stale claim', solution: 'fix it', severity: 'minor' }],
     })
   })
+  it('collapses session-log docsRead entries into one count', () => {
+    const dir = 'layers/journal/content/current/sessions/'
+    const raw = {
+      docsRead: [
+        { path: `${dir}a.yml`, reason: 'audit' },
+        { path: 'docs/adr/0009-session-logs.md', reason: 'schema' },
+        { path: `${dir}b.yml`, reason: 'audit' },
+      ],
+    }
+    expect(toTriageSession(raw, 'f.yml').docsRead).toEqual([
+      { path: 'docs/adr/0009-session-logs.md', reason: 'schema' },
+      { path: '2 session logs', reason: '' },
+    ])
+  })
   it('defaults missing fields instead of throwing', () => {
     expect(toTriageSession({}, 'f.yml')).toEqual({
       id: '',
