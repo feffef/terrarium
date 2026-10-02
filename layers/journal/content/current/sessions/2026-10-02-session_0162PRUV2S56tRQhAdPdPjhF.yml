@@ -1,0 +1,86 @@
+schemaVersion: 1
+session: session_0162PRUV2S56tRQhAdPdPjhF
+startedAt: 2026-10-02T16:48:15Z
+endedAt: 2026-10-02T17:23:04Z
+kind: autonomous
+goal: "visitor-loop (midden): three blind visitors tour the Midden, fix consensus problems, build the best idea"
+status: completed
+outcome: Five consensus fixes (#1532) and a Latest finds strip (#1533) merged; one out-of-remit issue filed (#1534)
+summary: "Scheduled visitor-loop run, focus midden (agent-initiated, no human prompt). Built and served production preview, sent sonnet, fable and opus visitors blind. Consensus fixes landed in #1532: plain lead on the Midden front door (3 of 3), Elsewhere footer skips the current wing (2 of 3), Stores header now says 3 of 7 seasons (2 of 3), prev and next pager on dig reports (2 of 3), gate glossed (3 of 3). Consensus finding on over-long trench intro and report openings is authored Midden prose, so out of remit and filed as #1534. Feature chosen, Latest finds on the front door (all three proposed it), landed in #1533. Both PRs were gated, reviewed by code-review subagents with no important findings, and merged via merge-pr.ts. The owner-memory gathering step was skipped, so decisions.md got no new lines."
+prs:
+  - "1532"
+  - "1533"
+docsRead:
+  - path: scripts/chromium-path.ts
+    reason: (no reason given)
+skillsUsed:
+  - name: code-review
+    reason: (no reason given)
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: visitor-loop
+    reason: (invoked as a slash command)
+frictions:
+  - description: Agent tool guard rejects run_in_background false, yet the skill and brief imply foreground dispatch; first visitor dispatch failed and was retried.
+    solution: Have the visitor-loop skill say to omit the flag and wait for the task notification.
+    severity: nit
+  - description: A scratch playwright script outside the repo cannot resolve playwright-core, so the DOM check failed once before copying it into the repo root temporarily.
+    solution: Document in verifying-ui-changes.md that ad-hoc probes must run from inside the repo tree.
+    severity: nit
+  - description: Owner-memory gathering step (review comments, reverts of visitor-loop PRs) was skipped this run, so decisions.md was not refreshed.
+    solution: Add a script that lists owner comments on visitor-loop PRs since the last decisions.md entry.
+    severity: minor
+durationSec: 2089
+models:
+  claude-sonnet-5-5: 101
+toolCounts:
+  Bash: 34
+  Agent: 9
+  ToolSearch: 1
+  mcp__github__create_pull_request: 3
+  Skill: 3
+  mcp__github__add_issue_comment: 2
+  Read: 1
+  mcp__github__search_issues: 1
+  mcp__github__issue_write: 1
+  PushNotification: 1
+docsReadViaShell:
+  - .agents/skills/visitor-loop/visitor-brief.md
+  - .agents/skills/visitor-loop/decisions.md
+  - docs/agents/pr-workflow.md
+  - docs/agents/tenant-layers.md
+subagents:
+  - task: Visitor sonnet
+    model: sonnet
+  - task: Visitor fable
+    model: fable
+  - task: Visitor opus
+    model: opus
+  - task: Visitor sonnet
+    model: sonnet
+  - task: Visitor fable
+    model: fable
+  - task: Visitor opus
+    model: opus
+  - type: Explore
+    task: "Review: standards axis"
+  - type: Explore
+    task: "Review: spec axis"
+  - type: Explore
+    task: Review feature PR
+gitBranch: claude/adoring-galileo-uboano
+entrypoint: remote_trigger
+cliVersion: 2.1.287
+trigger: visitor-loop
+ideas:
+  - Add /t/midden/seasons defining each dig season (name, dates, finds in trench vs store), linked from every card's season label; season names are the most evocative and least explained thing on the Midden (fable).
+  - Add a Succeeded by line to each find's REMAINS block linking its living successor, so dead ends become trails into other wings (fable, opus).
+  - Add a Random find button on /t/midden that opens one find card, a shareable hook (opus, sonnet).
+  - Rename the Stores diagram's sterile label to nothing in store; those seasons do have finds in the trench, so sterile misleads (fable).
+  - Show the dig report title instead of the raw slug in the breadcrumb; the slug wraps badly at 390px (opus).
+  - Trench list numbers 01 to 13 are alphabetical, not by season; order by season or drop the numerals (fable).
+  - Dig report meta wraps the session-log filename at 390px; label it session log, 29 Jul 2026 and keep the filename in the link title (fable).
+  - Midden 404 uses the platform style; add a link back to The Midden (fable).
+landedBy: Stop
