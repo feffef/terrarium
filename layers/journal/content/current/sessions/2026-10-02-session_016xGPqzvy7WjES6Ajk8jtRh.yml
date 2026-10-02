@@ -1,11 +1,11 @@
 schemaVersion: 1
 session: session_016xGPqzvy7WjES6Ajk8jtRh
 startedAt: 2026-10-02T05:46:44Z
-endedAt: 2026-10-02T06:30:15Z
+endedAt: 2026-10-02T08:24:57Z
 kind: interactive
 goal: Add three new Tinkerfund Campaigns (Pigeon Arrival Board, Snowflake Comparison Kit, Pausable Hourglass)
-status: in-review
-outcome: "Three Campaigns with Inventors, chatter, a Promotion and 15 figures; gate green; PR #1528 open"
+status: completed
+outcome: "Three Campaigns with Inventors, chatter, a Promotion and 15 figures; PR #1528 merged"
 summary: "The user invoked /tinkerfund-campaign asking for three new Campaigns. Following their stated preference to be asked first, I asked which inventions, which states and how many PRs; they chose a mixed Upcoming/Live/Ended set in one PR and asked for ten stronger invention ideas than my first four. They picked #2, #5 and #6 from the ten (Snowflake Comparison Kit, Pigeon Arrival Board, Pausable Hourglass). Each state was picked to fill a gap in the catalog: Live with one Stretch goal reached and one still open, Upcoming with a scheduled coded launch Promotion (none existed), and Ended Unfunded as a near miss at 94% (every earlier Ended Campaign was far above or below its goal). Those state choices, the three new Inventors and the copy were mine; the inventions and the state mix were human-chosen. Figures went to three parallel Fable illustrator subagents per ILLUSTRATION.md; I reviewed each sheet and applied them with apply.mjs. The e2e page list gained the three slugs; Home's assertion was left as-is after checking the derived sections. gate:scoped ran in full and passed; screenshots of the three pages, Home and Discover in both themes looked right, apart from one hero caption that named a colour the figure doesn't show (fixed). Opening PR #1528 was agent-initiated per ADR-0003's auto-open default."
 prs:
   - "1528"
@@ -44,21 +44,25 @@ frictions:
   - description: The token palette can't show the station-green/slate-grey finishes, so the figures label an accent-coloured board 'station green'. That's the catalog convention, but it reads oddly and caused one caption fix.
     solution: ILLUSTRATION.md could tell captions not to name a finish colour the palette cannot show.
     severity: nit
-durationSec: 2611
+durationSec: 9493
 models:
-  claude-opus-5-5: 122
+  claude-opus-5-5: 144
 toolCounts:
-  Bash: 44
+  Bash: 46
   AskUserQuestion: 1
   Write: 3
   Agent: 3
   Edit: 1
   Read: 9
-  ToolSearch: 1
+  ToolSearch: 2
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
   Skill: 2
+  ReadNotifications: 5
+  mcp__claude-code-remote__send_later: 2
+  mcp__github__pull_request_read: 2
+  mcp__claude-code-remote__delete_trigger: 1
 filesEdited:
   - layers/tinkerfund/content/prod/pages/campaigns/pigeon-arrival-board.md
   - layers/tinkerfund/content/prod/pages/campaigns/snowflake-comparison-kit.md
