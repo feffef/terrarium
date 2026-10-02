@@ -1,0 +1,7 @@
+name: Edmund Clegg
+bio: Retired railway timetable planner in York. Kept six years of arrivals at his garden feeder in a notebook, and saw no reason they should not be displayed.
+portrait: |-
+  <path d="M18 96c4-22 18-32 32-32s28 10 32 32z" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" />
+  <circle cx="50" cy="39" r="17" style="fill:color-mix(in srgb, var(--tf-ink) 45%, var(--tf-surface))" />
+  <path d="M29 27h42l-4-9H33z" style="fill:var(--tf-ink)" />
+  <path d="M24 28h52v4H24z" style="fill:var(--tf-accent)" />

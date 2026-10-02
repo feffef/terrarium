@@ -1,0 +1,43 @@
+campaign: pigeon-arrival-board
+comments:
+  - author: Rosalind M.
+    posted: -21d
+    text: How does it know a pigeon has arrived?
+    replies:
+      - author: Edmund Clegg
+        posted: -21d
+        text: It does not. It knows when one is due. Whether it arrives is the pigeon's part.
+        inventor: true
+  - author: Tobias K.
+    posted: -19d
+    text: Backed in station green. Our feeder is already on a post, so I added the bracket.
+  - author: Aoife N.
+    posted: -16d
+    text: We get mostly sparrows. Is there a timetable for those?
+    replies:
+      - author: Edmund Clegg
+        posted: -15d
+        text: Not yet. The regional timetables cover pigeons only. A sparrow arriving at a scheduled time will be shown as the pigeon that was due.
+        inventor: true
+  - author: Henrike S.
+    posted: -12d
+    text: Our 07:45 from the church tower has been on time four days running.
+  - author: Malik A.
+    posted: -9d
+    text: Is the flap noise adjustable? The board will be outside a bedroom window.
+    replies:
+      - author: Edmund Clegg
+        posted: -8d
+        text: There is a night setting that holds the board between 22:00 and 06:00. No arrivals are scheduled in those hours, so nothing is missed.
+        inventor: true
+  - author: Jeanne P.
+    posted: -5d
+    text: Departures mode unlocked. Switching it on the moment mine arrives.
+  - author: Wiktor B.
+    posted: -3d
+    text: What happens to the timetable when the clocks change?
+    replies:
+      - author: Edmund Clegg
+        posted: -2d
+        text: The timetable is kept in local time. The pigeons adjust within about a week; the board adjusts at once.
+        inventor: true

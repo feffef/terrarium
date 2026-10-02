@@ -1,0 +1,19 @@
+campaign: pigeon-arrival-board
+updates:
+  - title: Funded in nine days
+    published: -13d
+    body: |-
+      We passed €24,000 on day nine. Thank you. The flap modules are ordered
+      from the same supplier that fitted the prototype, so tooling is not on
+      the critical path.
+
+      The next stretch goal, at €30,000, is a Departures mode.
+  - title: Departures mode unlocked
+    published: -5d
+    body: |-
+      Passing €30,000 unlocked Departures mode. A switch on the back of the
+      board changes the header from Arrivals to Departures and offsets each
+      scheduled time by the average stay of 11 minutes. Every board ships with
+      it; nothing needs to change in your Pledge.
+
+      The next stretch goal is a two-tone chime at €40,000.

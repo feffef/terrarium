@@ -1,0 +1,7 @@
+title: 10% off the Snowflake Comparison Kit in launch week
+description: Ten percent off any Pledge to the Snowflake Comparison Kit, for its first week.
+code: FIRSTSNOW
+campaign: snowflake-comparison-kit
+discount: { percent: 10 }
+start: +10d
+end: +17d
