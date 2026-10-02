@@ -5,6 +5,11 @@ Guidance for Claude Code agents working in this repo. Terrarium is developed
 This file is the entry point for every session: it holds the conventions, the
 repo layout, and how to self-verify. `README.md` is only a primer for humans.
 
+Terrarium is an experiment in a platform that grows itself. Session logs are as
+much the product as the code: they are the honest record the self-improvement
+Skills turn into better instructions, so a candid Friction beats a polished
+summary.
+
 ## Keep it short
 
 Write every new feature and instruction as short as it can be: the least code
