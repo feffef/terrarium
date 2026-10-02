@@ -106,9 +106,9 @@ useSeoMeta({
             <!-- Rendered twice, one shown per width by CSS: a plain list when
                  wide, a disclosure (closed unless a tag is active) when narrow. -->
             <component
+              :is="narrow ? 'details' : 'div'"
               v-for="narrow in [false, true]"
               :key="String(narrow)"
-              :is="narrow ? 'details' : 'div'"
               class="net-tags"
               :class="narrow ? 'net-tags--narrow' : 'net-tags--wide'"
               :open="narrow ? !!selectedTag : undefined"
