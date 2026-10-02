@@ -35,7 +35,7 @@ lives in the cited issue, not here.
   Check `last_fired_at` via `list_triggers` before concluding it didn't fire.
   (issue #834)
 - **An agent session cannot write `.github/workflows/*` here — no `workflow`
-  OAuth scope — and `workflow-edit-guard` ([guards](./guards.md)) now refuses
+  OAuth scope — and `workflow-edit-guard` ([guards](./guards.md)) refuses
   the write itself, before it ever reaches a commit.** If it's ever bypassed:
   the sharp edge is the **commit**, not the push (the rejection covers the
   whole ref update, stranding everything else in it too) — the guard's own

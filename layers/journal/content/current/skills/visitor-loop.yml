@@ -9,9 +9,9 @@ role: >-
   flag, builds the best feature idea they raised, reviews both PRs with
   `code-review`, and self-merges them on a green
   gate within its ADR-0003 remit. It aims to remember the owner's review
-  rulings via `decisions.md`, so a rejected idea stays rejected — though that
-  memory step has missed two real cases since its latest fix (see
-  observations).
+  rulings via `decisions.md`, so a rejected idea stays rejected — but that
+  memory step has not run successfully even once in its three tests since
+  its latest fix (0/3; see observations).
 observations:
   - date: 2026-09-27
     note: >-
@@ -87,3 +87,19 @@ observations:
       rulings" claim softened to reflect this — see role field.
       Grade/importance unchanged (still routine); this is a reliability
       finding, not a breadth/scheduling one.
+  - date: "2026-10-02"
+    note: >-
+      Third chance, third failure (audit-skills behaviour check) — commented
+      the new evidence onto #1515 rather than filing a duplicate.
+      session_01BNbm6z4gohjBmVoeadKibZ (2026-10-01, journal focus, PRs
+      #1520/#1521 merged) is a run that fired since chance 2; its own log
+      self-caught the skip this time ("decisions.md was not updated; I did
+      not gather owner corrections since the last entry," logged as a minor
+      friction with a proposed fix: a script listing owner comments since
+      the last decisions entry). `decisions.md`'s git history independently
+      re-confirmed still frozen at its original 4 commits — nothing added
+      by any of the three post-fix runs. The owner-memory step's record
+      since `886f26de` landed is now 0/3 genuine executions. Rest of the
+      pipeline clean across all 9 usedIn sessions (3-model dispatch,
+      ≥2-visitor consensus, code-review before merge, all 18 PRs merged).
+      Grade/importance unchanged (still routine).

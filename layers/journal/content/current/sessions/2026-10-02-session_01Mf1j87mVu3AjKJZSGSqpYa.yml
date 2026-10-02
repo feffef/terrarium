@@ -1,0 +1,63 @@
+schemaVersion: 1
+session: session_01Mf1j87mVu3AjKJZSGSqpYa
+startedAt: 2026-10-02T02:03:46Z
+endedAt: 2026-10-02T02:16:00Z
+kind: autonomous
+goal: Turn recent session frictions into merged fixes (scheduled frictions-to-fixes run)
+status: completed
+outcome: One simple fix merged (PR 1525); other candidates surfaced, not dispatched
+summary: "Scheduled run, no human prompt. A survey subagent screened 20 sessions; the previous run was session_01RaNuVUJDVSaHNESWNNawAR. Only one candidate was clearly simple and ripe: capping docsRead in the session-frictions survey output. A Sonnet impl agent shipped it as PR 1525; I reviewed, commented, and merged it via merge-pr.ts after the gate went green. Not dispatched: shell-read glob/for-loop detection gaps (hard, unverified possible regression of 1454), Stop hook vs background work and provenance-trailer conflicts (guard/hook surfaces, human-attended), and open issues 1515, 1514, 1499. All agent-initiated per the Skill's standing charter."
+prs:
+  - "1525"
+docsRead:
+  - path: .claude/skills/frictions-to-fixes/SKILL.md
+    reason: (no reason given)
+  - path: scripts/session-frictions.ts
+    reason: (read before editing)
+  - path: tests/unit/session-frictions.spec.ts
+    reason: (read before editing)
+skillsUsed:
+  - name: dispatch-subagents
+    reason: (no reason given)
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: frictions-to-fixes
+    reason: (invoked as a slash command)
+frictions:
+  - description: Agent run_in_background false was denied by the guard on my first survey dispatch, costing a retry.
+    solution: The frictions-to-fixes Skill brief wording should say to omit the flag (see issue 1499 family).
+    severity: nit
+  - description: Impl agent hand-wrote the commit trailer and PR header, both denied by guards, costing retries despite the system attribution reminder.
+    solution: Harness attribution reminder conflicts with repo guards; dispatch brief should name the guard-compatible shapes.
+    severity: nit
+durationSec: 735
+models:
+  claude-sonnet-5-5: 34
+toolCounts:
+  Bash: 6
+  Agent: 3
+  Skill: 3
+  ReadNotifications: 3
+  ToolSearch: 1
+  mcp__github__pull_request_read: 2
+  mcp__github__add_issue_comment: 1
+  PushNotification: 1
+filesEdited:
+  - tests/unit/session-frictions.spec.ts
+  - scripts/session-frictions.ts
+docsReadViaShell:
+  - docs/agents/pr-workflow.md
+subagents:
+  - type: general-purpose
+    task: Survey frictions report
+  - type: general-purpose
+    task: Survey frictions report
+  - task: Cap docsRead in survey output
+    model: sonnet
+gitBranch: claude/eager-ptolemy-u64r1a
+entrypoint: remote_trigger
+cliVersion: 2.1.287
+trigger: frictions-to-fixes
+landedBy: Stop

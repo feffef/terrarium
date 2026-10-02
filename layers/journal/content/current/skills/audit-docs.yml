@@ -64,3 +64,14 @@ observations:
       independently confirmed in-scope rather than a hidden tier violation.
       Seventh consecutive clean check since the one 2026-09-27 lapse; grade
       unchanged.
+  - date: "2026-10-02"
+    note: >-
+      Re-verified (audit-skills behaviour check), 7 usedIn sessions
+      (2026-09-25 through 2026-10-01, PRs #1334/#1356/#1426/#1461/#1486/#1501/
+      #1517). The newest, PR #1517, was independently fact-checked rather than
+      trusted from its log: its "fourth altitude → third altitude" fix in
+      highlights.md confirmed against `layers/blog/CONTEXT.md` and `CONTEXT.md`,
+      and its tests/README.md heading-case fix confirmed against
+      `docs/agents/verifying-ui-changes.md` — both correct. No human-only
+      surface touched in any of the 7, no revert found in the unbroken PR
+      chain. Eighth consecutive clean check. Grade unchanged.

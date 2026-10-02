@@ -109,9 +109,9 @@ blurb follows the shelf-label pattern — a plain scope, then one dry qualifier:
 
 | Category | Blurb | Inventions it invites |
 |---|---|---|
-| Kitchen (live) | Tools for cooking, eating and stirring, in one direction or another. | over-specified utensils |
-| Desk (live) | Instruments for the working day, each with fewer features than expected. | reductions to one function |
-| Outdoors (live) | Equipment for weather, daylight and the space between them. | sensors for the obvious |
+| Kitchen | Tools for cooking, eating and stirring, in one direction or another. | over-specified utensils |
+| Desk | Instruments for the working day, each with fewer features than expected. | reductions to one function |
+| Outdoors | Equipment for weather, daylight and the space between them. | sensors for the obvious |
 | Bathroom | Fixtures for the start and end of the day, calibrated to the minute. | timers, meters, soap telemetry |
 | Garden | Tools for growing things, and for confirming that they are growing. | monitors for slow events |
 | Travel | Luggage and accessories for arriving, roughly as planned. | redundancy for the reliable |

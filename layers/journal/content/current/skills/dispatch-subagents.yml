@@ -77,3 +77,17 @@ observations:
       39-subagent session_01LKfKKxwgThbVFE79NWohET): 0 new missed
       invocations, every dispatch found was either strictly read-only or
       rule-compliant. Grade/role unchanged.
+  - date: "2026-10-02"
+    note: >-
+      Re-checked (audit-skills behaviour check), 10 newest sessions: no
+      stranded work, no merge-pr.ts dispatched to a subagent, no new
+      branch/worktree collision; the only rule-adjacent incident found is
+      the already-known #1480 occurrence (session_0185EAXqfuX1twvr6Z67SsY4),
+      not a new one. Screened all 68 nonusers by goal, opened 14 plausible
+      candidates: one new single-instance, not-yet-escalated note —
+      session_016xwHemy6X6LmFrzBs4mgad dispatched one git-touching doc-fix
+      subagent without recording this Skill in `skillsUsed`, but it
+      completed cleanly (gate green, reviewed, merged, no collision) — a
+      logging-hygiene gap, not an incident. Issue #1480 still open,
+      unassigned, zero comments, unchanged since filing. Grade/role
+      unchanged.

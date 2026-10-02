@@ -65,8 +65,7 @@ in) the root app instead. Two ways layer code deals with this:
   This is unambiguous regardless of how layer aliases resolve, because it
   never goes through the alias system at all.
 
-Main-app modules that a layer page genuinely needs to import (rare now that
-`useSpace()` covers routing) use the root aliases correctly — e.g.
+A layer page importing a main-app module uses the root aliases — e.g.
 `#shared/routing` (Nuxt's own alias for the root `shared/` directory) is right
 precisely *because* `shared/routing.ts` lives in the main app, not the layer.
 The rule is "which app root does the target file actually live under," not

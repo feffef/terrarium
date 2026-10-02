@@ -100,3 +100,17 @@ observations:
       "not a deadline," but worth a future run's attention if a third
       instance turns up. All 8 usedIn sessions' verdict commits
       independently re-verified against `git show`. Grade/role unchanged.
+  - date: "2026-10-02"
+    note: >-
+      Re-checked (audit-skills behaviour check), 8 usedIn sessions: all
+      clean, verdict reasoning genuinely searched rather than copy-pasted
+      (spot-checked two commits' citations against `prune-trial-window.ts`'s
+      actual output). Independently re-ran `prune-trial-window.ts` and
+      confirmed 3 of 7 open trials are judgeable-but-unjudged as of now
+      (closure-invocation rule, session-log word-cap trial, prune-trial §1
+      verbatim-quote trial — all opened 2026-09-28, floors 2026-10-01). No
+      `/prune-trial` run has fired since 2026-10-01T18:24:44Z. SKILL.md
+      treats the floor as "not a deadline," so this reads as pending the
+      next scheduled fire, consistent with the twice-already-observed
+      narrow-margin pattern (ADR-0017 trial, domain.md trial) rather than a
+      new failure — not escalated. No reverts found. Grade/role unchanged.

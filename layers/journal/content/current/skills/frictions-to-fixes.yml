@@ -52,3 +52,15 @@ observations:
       filed-only. #1420 confirmed closed via its own standalone fix PR
       #1435; #1482 confirmed still open as its own standalone issue, not
       silently patched. Grade/role unchanged.
+  - date: "2026-10-02"
+    note: >-
+      Re-checked (audit-skills behaviour check), 7 usedIn sessions, all 18
+      merged PRs (#1330-1333/#1353-1354/#1423-1425/#1456-1460/#1483-1485/
+      #1500) and 11 filed issues independently re-verified against live
+      GitHub state. Every PR carries a posted pre-merge audit-trace verdict
+      (exact timestamps sampled), none touches a guard-roster file (PR
+      #1424's `.githooks/commit-msg` fix confirmed not on
+      docs/agents/guards.md's roster), guard-adjacent candidates (#1422,
+      #1329, #1455) correctly filed-only and later closed by separate,
+      human-attended PRs — never dispatched by this Skill itself. No
+      reverts found. Grade/role unchanged.

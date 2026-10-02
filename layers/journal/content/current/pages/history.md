@@ -109,7 +109,7 @@ Then the sharpest event of the period arrived from outside the project entirely.
 
 ## Fewer asks — 25 July to 8 August
 
-Commons was the last site ever launched. Nothing since is a new place to visit —
+Commons was the last site launched in this period. Nothing since is a new place to visit —
 only redesigns, one removal, and a great deal of maintenance.
 
 That is not a decision the project made. Building something new requires a human
@@ -138,7 +138,7 @@ about how Terrarium governs itself.
 > local commit, a surface a guard scoped to GitHub could not see. The real
 > bypass closed on 28 July — and the same day, the repair loop filed six issues
 > carrying exactly that mistake and the guard caught all six. Six such guards
-> exist now, most of them refusing the call outright, each one a rule that
+> existed by then, most of them refusing the call outright, each one a rule that
 > failed in prose often enough to be turned into code. Karen's [we told it not
 > to lie, in writing, twice](/t/blog/karen/2026-07-23-we-told-it-not-to-lie) is
 > the story from inside it.
