@@ -153,3 +153,38 @@ trials:
       didn't fix it in one retry, or a subagent whose backgrounded command
       stranded work. NOT damage: a guard denial the session fixed from the
       deny message.
+  - problem: >
+      The ADR-0017 provenance rule (GitHub-body header, commit trailer) failed
+      as prose repeatedly — ADR-0017's old amendment banner lists #346, #710,
+      #723, #737, #784; rulebook rows CM-43 (#387/#605/#628/#723) and CM-44
+      (#921) are marked Built — and is now held by `github-provenance-guard.ts`,
+      `commit-trailer-guard.ts` and `.githooks/commit-msg`, whose deny messages
+      name the fix. Yet the ADR still carried a stale Decision ("convention
+      only, not gate-enforced") beside its own amendment, and CLAUDE.md and
+      git-conventions.md restated the guard mechanics. Rewrote ADR-0017 whole
+      (decision unchanged: provenance on every agent-authored external
+      interaction, header on GitHub bodies, trailer on commits, bot identity
+      deferred), folded the amendments in, and trimmed the CLAUDE.md bullet and
+      the git-conventions commit-hygiene bullet to the rule plus a pointer. The
+      search subagent covered the instruction corpus, guards.md, the rulebook
+      table (excluded list included) and guard script headers; it could not
+      read issue threads, so issue evidence is from those headers and rows.
+      Code comments in `scripts/*provenance*` still cite "ADR-0017's 2026-08-01
+      amendment" by name; left as is. Net about -90 lines.
+    territory:
+      paths:
+        - "docs/adr/0017-provenance-footer-on-agent-authored-content.md (whole-file rewrite)"
+        - "CLAUDE.md: the \"Open every GitHub body\" bullet"
+        - "docs/agents/git-conventions.md: the commit-hygiene `commit-msg` backstop sentence"
+      keywords:
+        - ADR-0017 provenance header
+        - commit-msg backstop
+        - hand-write the commit trailer
+    opened: 2026-10-02
+    proven: false
+    check: >
+      Damage is a session that writes a GitHub body without the header, or a
+      commit with a hand-typed or missing trailer, and the guard's deny message
+      did not fix it in one retry; or a session misreading the rewritten ADR
+      (e.g. believing the footer is convention-only). NOT damage: a guard
+      denial the session fixed from the deny message.
