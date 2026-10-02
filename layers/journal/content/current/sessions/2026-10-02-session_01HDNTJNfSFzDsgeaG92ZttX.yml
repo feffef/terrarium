@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01HDNTJNfSFzDsgeaG92ZttX
 startedAt: 2026-10-02T00:17:17Z
-endedAt: 2026-10-02T00:23:41Z
+endedAt: 2026-10-02T00:27:34Z
 kind: autonomous
 goal: Write the 2026-10-01 Digest and run the Journal retention sweep
-status: in-review
-outcome: PR 1523 opened with the Digest and sweep; gate green locally, merge-pr polling CI
-summary: Scheduled /digest run, fully agent-executed with no human input. One closed day (2026-10-01) was listed; I gathered it, authored the Digest, fact-checked it with a sonnet subagent (19 claims, none wrong, 3 loosely worded and fixed), ran the retention sweep (1 digest and 8 sessions archived), ran gate:scoped green, opened PR 1523 and posted the verdict comment, then started merge-pr.ts.
+status: completed
+outcome: PR 1523 merged with a green gate - the 2026-10-01 Digest and retention sweep landed
+summary: Scheduled /digest run, fully agent-executed with no human input. One closed day (2026-10-01) was listed; I gathered it, authored the Digest, fact-checked it with a sonnet subagent (19 claims, none wrong, 3 loosely worded and fixed), ran the retention sweep (1 digest and 8 sessions archived), ran gate:scoped green, opened PR 1523 and posted the verdict comment, then landed it via merge-pr.ts (merged green).
 prs:
   - "1523"
 docsRead:
@@ -30,11 +30,11 @@ frictions:
   - description: First PR body used the model-name provenance shape and was denied by the ADR-0017 guard; one retry needed.
     solution: Skill text could show the exact marker shape.
     severity: nit
-durationSec: 385
+durationSec: 617
 models:
-  claude-sonnet-5-5: 34
+  claude-sonnet-5-5: 38
 toolCounts:
-  Bash: 11
+  Bash: 13
   Read: 2
   Write: 1
   Agent: 1
