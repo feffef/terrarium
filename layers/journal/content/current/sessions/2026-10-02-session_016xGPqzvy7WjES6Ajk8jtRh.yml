@@ -1,0 +1,82 @@
+schemaVersion: 1
+session: session_016xGPqzvy7WjES6Ajk8jtRh
+startedAt: 2026-10-02T05:46:44Z
+endedAt: 2026-10-02T06:30:15Z
+kind: interactive
+goal: Add three new Tinkerfund Campaigns (Pigeon Arrival Board, Snowflake Comparison Kit, Pausable Hourglass)
+status: in-review
+outcome: "Three Campaigns with Inventors, chatter, a Promotion and 15 figures; gate green; PR #1528 open"
+summary: "The user invoked /tinkerfund-campaign asking for three new Campaigns. Following their stated preference to be asked first, I asked which inventions, which states and how many PRs; they chose a mixed Upcoming/Live/Ended set in one PR and asked for ten stronger invention ideas than my first four. They picked #2, #5 and #6 from the ten (Snowflake Comparison Kit, Pigeon Arrival Board, Pausable Hourglass). Each state was picked to fill a gap in the catalog: Live with one Stretch goal reached and one still open, Upcoming with a scheduled coded launch Promotion (none existed), and Ended Unfunded as a near miss at 94% (every earlier Ended Campaign was far above or below its goal). Those state choices, the three new Inventors and the copy were mine; the inventions and the state mix were human-chosen. Figures went to three parallel Fable illustrator subagents per ILLUSTRATION.md; I reviewed each sheet and applied them with apply.mjs. The e2e page list gained the three slugs; Home's assertion was left as-is after checking the derived sections. gate:scoped ran in full and passed; screenshots of the three pages, Home and Discover in both themes looked right, apart from one hero caption that named a colour the figure doesn't show (fixed). Opening PR #1528 was agent-initiated per ADR-0003's auto-open default."
+prs:
+  - "1528"
+docsRead:
+  - path: /home/user/terrarium/.agents/skills/tinkerfund-campaign/ILLUSTRATION.md
+    reason: (no reason given)
+  - path: /home/user/terrarium/layers/tinkerfund/content/prod/pages/campaigns/pigeon-arrival-board.md
+    reason: (no reason given)
+  - path: /home/user/terrarium/.agents/skills/tinkerfund-campaign/tools/lib.mjs
+    reason: (no reason given)
+  - path: /home/user/terrarium/.agents/skills/tinkerfund-campaign/tools/preview.mjs
+    reason: (no reason given)
+  - path: /home/user/terrarium/layers/tinkerfund/content/prod/pages/campaigns/snowflake-comparison-kit.md
+    reason: (no reason given)
+  - path: /home/user/terrarium/layers/tinkerfund/content/prod/pages/campaigns/pausable-hourglass.md
+    reason: (no reason given)
+skillsUsed:
+  - name: tinkerfund-campaign
+    reason: the user's invocation; the whole procedure
+  - name: dispatch-subagents
+    reason: brief rules for the three illustrator subagents
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: "apply.mjs refuses `figures: []` (it looks for a bare `figures:` line) and the error does not say so; I had to read the source."
+    solution: "Mention in SKILL.md step 2 to leave a bare `figures:` placeholder, or let apply.mjs also match `figures: []`."
+    severity: minor
+  - description: There is no theme switch in preview.ts or screenshot.ts, so for the both-themes screenshots step I wrote a throwaway Playwright script with colorScheme.
+    solution: Add a --dark (colorScheme) flag to scripts/preview.ts shot / screenshot.ts.
+    severity: minor
+  - description: Illustrators reported that worktree-isolated subagents have no node_modules, so preview.mjs only runs from the main checkout; they worked around it.
+    solution: ILLUSTRATION.md could say to run the tools from the main checkout and write only to the scratchpad, which is what worked here.
+    severity: nit
+  - description: The token palette can't show the station-green/slate-grey finishes, so the figures label an accent-coloured board 'station green'. That's the catalog convention, but it reads oddly and caused one caption fix.
+    solution: ILLUSTRATION.md could tell captions not to name a finish colour the palette cannot show.
+    severity: nit
+durationSec: 2611
+models:
+  claude-opus-5-5: 122
+toolCounts:
+  Bash: 44
+  AskUserQuestion: 1
+  Write: 3
+  Agent: 3
+  Edit: 1
+  Read: 9
+  ToolSearch: 1
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+  Skill: 2
+filesEdited:
+  - layers/tinkerfund/content/prod/pages/campaigns/pigeon-arrival-board.md
+  - layers/tinkerfund/content/prod/pages/campaigns/snowflake-comparison-kit.md
+  - layers/tinkerfund/content/prod/pages/campaigns/pausable-hourglass.md
+  - layers/tinkerfund/tests/e2e/tinkerfund.e2e.ts
+docsReadViaShell:
+  - .agents/skills/tinkerfund-campaign/ILLUSTRATION.md
+  - .agents/skills/dispatch-subagents/SKILL.md
+subagents:
+  - task: Draw Pigeon Arrival Board figures
+    model: fable
+  - task: Draw Snowflake Kit figures
+    model: fable
+  - task: Draw Pausable Hourglass figures
+    model: fable
+gitBranch: ccr-ed2945ee-twbnkf
+entrypoint: remote_mobile
+cliVersion: 2.1.287
+ideas:
+  - Give scripts/preview.ts shot a --scheme light|dark flag (Playwright colorScheme), since tinkerfund-campaign step 7 requires both themes and every session otherwise rolls its own script.
+landedBy: Stop
