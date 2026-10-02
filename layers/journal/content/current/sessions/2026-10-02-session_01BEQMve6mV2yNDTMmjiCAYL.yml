@@ -1,0 +1,143 @@
+schemaVersion: 1
+session: session_01BEQMve6mV2yNDTMmjiCAYL
+startedAt: 2026-10-02T04:00:50Z
+endedAt: 2026-10-02T04:27:11Z
+kind: autonomous
+goal: "Run the scheduled audit-docs sweep: fact-check Live docs against code and fix drift"
+status: completed
+outcome: 13 doc-only fixes merged in PR 1527; one true conflict filed as issue 1526
+summary: "Scheduled /audit-docs run, no human prompt. Dispatched four read-only reviewer agents (freshness, single-home, concision, coherence) plus one independent fact-checker; all work was agent-initiated under the Skill's charter. Freshness found nothing; the others yielded about 25 candidates, of which 13 survived the fact-check (one claim was wrong about the mechanism and was corrected, one pointer finding was narrowed to the real errors). Skipped open prune-trial territory and larger rewrites that would risk dropping rules. Filed #1526 for the prune-trial vs guards.md unattended-hook conflict, which no primary source settles. Gate green, PR 1527 self-merged via merge-pr.ts. Left unfixed on purpose - stale research-note snapshots, the duplication findings in CLAUDE.md and CONTEXT.md rosters, and a few stale counts - as low-confidence or judgement calls."
+prs:
+  - "1527"
+docsRead:
+  - path: CLAUDE.md
+    reason: (no reason given)
+  - path: CONTEXT.md
+    reason: (no reason given)
+  - path: docs/agents/environment-caveats.md
+    reason: (no reason given)
+  - path: deploy/README.md
+    reason: (no reason given)
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: docs/agents/guards.md
+    reason: (no reason given)
+  - path: docs/agents/tenant-layers.md
+    reason: (no reason given)
+  - path: docs/agents/verifying-ui-changes.md
+    reason: (no reason given)
+  - path: docs/agents/guest-contributions.md
+    reason: (no reason given)
+  - path: docs/agents/domain.md
+    reason: (no reason given)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/how-it-works.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/architecture.md
+    reason: (no reason given)
+  - path: tests/README.md
+    reason: (no reason given)
+  - path: docs/proposals/README.md
+    reason: (no reason given)
+  - path: SECURITY.md
+    reason: (no reason given)
+  - path: .agents/prune-trials.yml
+    reason: (no reason given)
+  - path: docs/adr/0020-requester-trust-tiers.md
+    reason: (no reason given)
+  - path: .agents/skills/guest-intake/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/tinkerfund-campaign/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/history.md
+    reason: (no reason given)
+  - path: CONTEXT-MAP.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: docs/agents/issue-tracker.md
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: audit-docs
+    reason: (invoked as a slash command)
+frictions:
+  - description: Hand-writing the commit trailer from the harness reminder was denied by the commit-trailer guard, costing one retry.
+    solution: The harness attribution reminder and the repo guard disagree; the reminder should defer to the repo convention.
+    severity: nit
+  - description: The first GitHub issue call was denied for a missing provenance header; the skill text does not name the exact marker.
+    solution: Have audit-docs point at the guard's deny message or show the header shape.
+    severity: nit
+durationSec: 1581
+models:
+  claude-sonnet-5-5: 49
+toolCounts:
+  Bash: 13
+  Agent: 5
+  ToolSearch: 1
+  mcp__github__search_issues: 1
+  mcp__github__issue_write: 2
+  mcp__github__create_pull_request: 1
+  mcp__github__add_issue_comment: 1
+  Skill: 2
+docsReadViaShell:
+  - docs/agents/pr-workflow.md
+  - docs/agents/verifying-ui-changes.md
+  - .agents/skills/guest-intake/SKILL.md
+  - .agents/skills/tinkerfund-campaign/SKILL.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - layers/journal/CONTEXT.md
+  - CONTEXT.md
+  - docs/agents/guards.md
+  - docs/agents/environment-caveats.md
+  - CONTEXT-MAP.md
+  - layers/commons/CONTEXT.md
+  - layers/midden/CONTEXT.md
+  - layers/blog/CONTEXT.md
+  - layers/tinkerfund/CONTEXT.md
+  - docs/proposals/README.md
+  - docs/agents/tenant-layers.md
+  - .agents/skills/visitor-loop/SKILL.md
+  - docs/agents/git-conventions.md
+  - docs/proposals/879-gate-yml-thin-shell.md
+  - docs/agents/issue-tracker.md
+  - docs/agents/guest-contributions.md
+  - docs/agents/triage-labels.md
+  - docs/agents/domain.md
+  - docs/agents/github-integration.md
+  - docs/research/nuxt-content-review-grounding.md
+  - docs/agents/mdc-when-to-use.md
+  - layers/atlas/CONTEXT.md
+  - layers/marquee/CONTEXT.md
+  - .agents/skills/dispatch-subagents/SKILL.md
+  - docs/research/rulebook-migration-table.md
+  - docs/research/mermaid-server-side-rendering.md
+  - .agents/skills/prune-trial/SKILL.md
+  - .agents/skills/close-session/SKILL.md
+  - .agents/skills/audit-docs/SKILL.md
+  - .agents/skills/blog-post/SKILL.md
+  - .agents/skills/digest/SKILL.md
+subagents:
+  - type: general-purpose
+    task: "Audit A: freshness"
+  - type: general-purpose
+    task: "Audit B: single-home"
+  - type: general-purpose
+    task: "Audit C: concision"
+  - type: general-purpose
+    task: "Audit D: coherence"
+  - type: general-purpose
+    task: Fact-check audit findings
+gitBranch: claude/festive-mayer-289y6j
+entrypoint: remote_trigger
+cliVersion: 2.1.287
+trigger: audit-docs
+landedBy: Stop
