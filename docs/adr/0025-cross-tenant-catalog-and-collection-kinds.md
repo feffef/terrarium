@@ -13,6 +13,10 @@ Status: Accepted
 > kind's `utcTimestamp` refinement — so a PR could otherwise widen or narrow a
 > kind's contract without touching `shared/kinds.ts` itself.
 
+> **Factual correction (2026-10-02, PR #1539).** The `vitest.config.ts` alias for
+> `#catalog` mentioned under Decision §2 is gone: no spec imports the catalog
+> composable or module, so only the nuxt alias and `tsconfig.node.json` wire it.
+
 ## Context
 
 Tenant collections are isolated, and that is a feature: each

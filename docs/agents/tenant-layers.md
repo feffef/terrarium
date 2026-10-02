@@ -40,7 +40,7 @@ in) the root app instead. Two ways layer code deals with this:
 
   ```ts
   // layers/journal/app/pages/t/journal/[space]/index.vue
-  import type { PageDoc, SessionDoc, SkillDoc } from '../../../../types/journal'
+  import type { SessionDoc, SkillDoc } from '../../../../types/journal'
   ```
 
   That resolves to `layers/journal/app/types/journal.ts` — a layer-local file

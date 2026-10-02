@@ -26,6 +26,11 @@ Status: Accepted — supersedes both halves of ADR-0007; amends ADR-0013
 > `shared/routing.generated.ts` half). **Amends ADR-0013** (which retained the
 > committed routing map; that retained decision is now superseded here).
 
+> **Factual correction (2026-10-02, PR #1539).** `#routing` no longer exports
+> `entryRoutes`: nothing imported it from the virtual module, and the e2e sweep
+> derives the list from `entryRoutesFrom(expand(loadManifests()))` directly (see
+> Consequences). The Decision text below is left as written.
+
 ## Context
 
 ADR-0013 made `content.config.ts` a dynamic module that builds the keyed collections

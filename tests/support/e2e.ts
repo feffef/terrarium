@@ -30,7 +30,7 @@ export const mermaidPageRoutes = mermaidRoutes(expandedCollections)
  * and every request URL (so a test can assert what did — or, for #379's
  * zero-mermaid-JS guarantee, did NOT — get fetched).
  */
-export async function renderAndCollectErrors(
+async function renderAndCollectErrors(
   route: string,
 ): Promise<{ page: Page; errors: string[]; requests: string[] }> {
   const errors: string[] = []
