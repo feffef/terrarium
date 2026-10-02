@@ -123,19 +123,6 @@ function calendarDate(iso: string): string {
     background: #8fa2d8;
   }
 }
-.prov {
-  font-size: 0.72rem;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--co-accent);
-}
-.prov .dot {
-  opacity: 0.5;
-}
-.empty {
-  margin: 1rem 0 0;
-  color: var(--co-muted);
-}
 @media (max-width: 30rem) {
   .row {
     grid-template-columns: minmax(0, 1fr);

@@ -10,6 +10,7 @@
 // collection.
 const route = useRoute()
 const { path, pagesKey } = useSpace('marquee')
+const POSTED = new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' })
 
 // `status`/`error` surface a failed client-side load through the
 // ContentLoadErrorDialog rather than a silent "Not found" (issue #236) — an
@@ -20,8 +21,7 @@ const chapter = computed(() => data.value ?? null)
 
 if (!chapter.value && !error.value) setResponseStatus(404)
 
-const title = computed(() => chapter.value?.title ?? 'Not found')
-useHead(() => ({ title: `${title.value} · marquee`, bodyAttrs: { class: 'mq-page' } }))
+useHead(() => ({ title: `${chapter.value?.title ?? 'Not found'} · marquee`, bodyAttrs: { class: 'mq-page' } }))
 useSeoMeta({ description: () => chapter.value?.description })
 </script>
 
@@ -38,7 +38,7 @@ useSeoMeta({ description: () => chapter.value?.description })
       <header class="post-head">
         <p v-if="chapter.order" class="chapter-no">Chapter {{ chapter.order }} · in-universe watch order</p>
         <h1>{{ chapter.title }}</h1>
-        <p v-if="chapter.publishedAt" class="when">Posted {{ formatMarqueeDate(chapter.publishedAt) }}</p>
+        <p v-if="chapter.publishedAt" class="when">Posted {{ POSTED.format(new Date(chapter.publishedAt)) }}</p>
       </header>
 
       <div class="prose">

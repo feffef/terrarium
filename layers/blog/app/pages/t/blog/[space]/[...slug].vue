@@ -47,12 +47,11 @@ const adjacentPosts = computed(() => {
 
 if (!post.value && !error.value) setResponseStatus(404)
 
-const title = computed(() => post.value?.title ?? 'Not found')
 // The .bl-page body class scopes the blog canvas (full-bleed background +
 // accent wash) to blog routes only; the accent on <body> lets that wash tint
 // itself per Persona before the page root even renders.
 useHead(() => ({
-  title: `${title.value} · blog/${space}`,
+  title: `${post.value?.title ?? 'Not found'} · blog/${space}`,
   bodyAttrs: { class: 'bl-page', style: `--bl-accent: ${meta.accent}` },
 }))
 useSeoMeta({ description: () => post.value?.description })

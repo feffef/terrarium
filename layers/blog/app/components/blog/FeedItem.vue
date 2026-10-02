@@ -31,11 +31,10 @@ defineProps<{
 <template>
   <li>
     <NuxtLink class="post-link" :to="`/t/blog/${linkPrefix}${post.path}`">
-      <div v-if="persona" class="when">
+      <div class="when">
         {{ formatBlogDate(post.publishedAt) }}
-        <span class="who" :style="{ color: personaMeta(persona).accent }">{{ personaMeta(persona).name }}</span>
+        <span v-if="persona" class="who" :style="{ color: personaMeta(persona).accent }">{{ personaMeta(persona).name }}</span>
       </div>
-      <div v-else class="when">{{ formatBlogDate(post.publishedAt) }}</div>
       <h2>{{ post.title }}</h2>
       <p v-if="post.reactsTo" class="reply">↳ in reply to {{ post.reactsTo.persona }}</p>
       <p v-if="post.description" class="excerpt">{{ post.description }}</p>
