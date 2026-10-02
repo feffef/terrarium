@@ -212,7 +212,7 @@ function readOriginUrl(cwd: string): string {
 /** Changed files between two refs, resolved entirely locally — no GitHub call
  *  at all, mirroring how `merged-since.ts` stays git-only where it can. */
 export function changedFilesFromGitDiff(base: string, head: string, cwd = root): string[] {
-  const raw = execFileSync('git', ['diff', '--name-only', `${base}...${head}`], { cwd, encoding: 'utf8' })
+  const raw = execFileSync('git', ['diff', '--name-only', '--no-renames', `${base}...${head}`], { cwd, encoding: 'utf8' })
   return parseChangedFileList(raw)
 }
 
@@ -228,7 +228,7 @@ function readPrFilesViaGh(owner: string, repo: string, prNumber: number, cwd: st
       'per_page=100',
       '--paginate',
       '--jq',
-      '.[].filename',
+      '.[] | .filename, (.previous_filename // empty)',
     ],
     { cwd, encoding: 'utf8' },
   )
@@ -361,6 +361,7 @@ export function walkPagesByNumber<T>(
 
 interface RawPrFile {
   filename: string
+  previous_filename?: string
 }
 
 function readPrFilesViaRest(owner: string, repo: string, prNumber: number, token: string, cwd: string): string[] {
@@ -368,7 +369,7 @@ function readPrFilesViaRest(owner: string, repo: string, prNumber: number, token
     (page) => `https://api.github.com/repos/${owner}/${repo}/pulls/${prNumber}/files?per_page=100&page=${page}`,
     (url) => curlGetPage(url, token, cwd),
   )
-  return files.map((f) => f.filename)
+  return files.flatMap((f) => (f.previous_filename ? [f.filename, f.previous_filename] : [f.filename]))
 }
 
 function readOpenIssuesViaRest(owner: string, repo: string, token: string, cwd: string): RawConflictIssue[] {

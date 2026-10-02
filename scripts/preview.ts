@@ -31,7 +31,7 @@
 //     screenshot path has no teardown step for a shell to drop at all.
 //
 // Usage:
-//   pnpm exec tsx scripts/preview.ts shot <route> <out.png> [WxH] [--dev]
+//   pnpm exec tsx scripts/preview.ts shot <route> <out.png> [WxH] [--scheme light|dark] [--dev]
 //   pnpm exec tsx scripts/preview.ts start [--dev]     # prints PID= and URL=
 //   pnpm exec tsx scripts/preview.ts stop <pid>        # always exits 0
 //
@@ -47,7 +47,7 @@ import { existsSync, openSync, closeSync, readFileSync, realpathSync, rmSync } f
 import { join } from 'node:path'
 import { tmpdir } from 'node:os'
 import { fileURLToPath } from 'node:url'
-import { captureScreenshot, captureScreenshotWaitingFor } from './screenshot'
+import { captureScreenshot, captureScreenshotWaitingFor, extractFlag, parseScheme, parseSize } from './screenshot'
 
 const HOST = '127.0.0.1'
 const READY_TIMEOUT_MS = 45_000
@@ -57,7 +57,7 @@ const SERVER_ENTRY = '.output/server/index.mjs'
 
 const USAGE =
   'Usage:\n' +
-  '  pnpm exec tsx scripts/preview.ts shot <route> <out.png> [WxH] [--wait <ms>] [--wait-for <selector>] [--dev]\n' +
+  '  pnpm exec tsx scripts/preview.ts shot <route> <out.png> [WxH] [--wait <ms>] [--wait-for <selector>] [--scheme light|dark] [--dev]\n' +
   '  pnpm exec tsx scripts/preview.ts start [--dev]\n' +
   '  pnpm exec tsx scripts/preview.ts stop <pid>\n' +
   '  <route>            a path on the site, e.g. /t/journal/current\n' +
@@ -66,37 +66,11 @@ const USAGE =
   '                     Ignored when --wait-for is given\n' +
   '  --wait-for <sel>   wait until <sel> attaches to the DOM instead of a fixed\n' +
   "                     wait (e.g. '.mermaid-diagram svg' for an async diagram)\n" +
+  "  --scheme <s>       light or dark: emulate the visitor's colour scheme\n" +
   '  --dev              use `nuxt dev` instead of a built `preview` server (fast, but\n' +
   '                     the DevTools overlay makes it unfit for a trusted screenshot)'
 
 const sleep = (ms: number): Promise<void> => new Promise((resolve) => setTimeout(resolve, ms))
-
-/** Pull a `--flag value` pair out of `args`, returning the value (last wins if
- *  repeated) and the args with every occurrence removed. Keeps the positional
- *  `<route> <out> [WxH]` parsing downstream unaware of the value-taking flags.
- *  Exported for unit testing (tests/unit/preview-flags.spec.ts). */
-export function extractFlag(args: string[], flag: string): { value: string | undefined; rest: string[] } {
-  const rest: string[] = []
-  let value: string | undefined
-  for (let i = 0; i < args.length; i++) {
-    const arg = args[i]
-    if (arg === flag) {
-      value = args[i + 1] // may be undefined if the flag is trailing; validated by the caller
-      i++ // consume the value too
-    }
-    else if (arg !== undefined) {
-      rest.push(arg)
-    }
-  }
-  return { value, rest }
-}
-
-/** Parse an optional `WxH` size argument into `W,H`, or `undefined` if invalid. */
-function parseSize(size: string): string | undefined {
-  const match = /^(\d+)x(\d+)$/.exec(size)
-  if (!match) return undefined
-  return `${Number(match[1])},${Number(match[2])}`
-}
 
 /** Ask the OS for a free port by binding `0`, then release it. Each instance
  *  gets its own port so concurrent agents in one container never collide. */
@@ -283,14 +257,15 @@ export async function stopPreview(pid: number): Promise<void> {
   await killGroup(pid)
 }
 
-interface ShotWait {
-  /** Raw `--wait` value (ms), still a string; validated here. */
+/** `shot`'s raw flag values, still strings; validated in `doShot`. */
+interface ShotOptions {
   waitMs?: string
-  /** Raw `--wait-for` value: a CSS selector to await before capturing. */
+  /** A CSS selector to await before capturing. */
   waitForSelector?: string
+  scheme?: string
 }
 
-async function doShot(args: string[], dev: boolean, wait: ShotWait): Promise<number> {
+async function doShot(args: string[], dev: boolean, opts: ShotOptions): Promise<number> {
   const [route, out, sizeArg] = args
   if (!route || !out) {
     console.error(USAGE)
@@ -302,13 +277,20 @@ async function doShot(args: string[], dev: boolean, wait: ShotWait): Promise<num
     return 1
   }
   let waitMs = 2000
-  if (wait.waitMs !== undefined) {
-    const parsed = Number(wait.waitMs)
+  if (opts.waitMs !== undefined) {
+    const parsed = Number(opts.waitMs)
     if (!Number.isInteger(parsed) || parsed < 0) {
-      console.error(`Invalid --wait "${wait.waitMs}" — expected a non-negative integer (ms).`)
+      console.error(`Invalid --wait "${opts.waitMs}" — expected a non-negative integer (ms).`)
       return 1
     }
     waitMs = parsed
+  }
+  let colorScheme
+  try {
+    colorScheme = parseScheme(opts.scheme)
+  } catch (err) {
+    console.error((err as Error).message)
+    return 1
   }
 
   let server: PreviewServer
@@ -321,11 +303,11 @@ async function doShot(args: string[], dev: boolean, wait: ShotWait): Promise<num
   const path = route.startsWith('/') ? route : `/${route}`
   const url = `${server.url}${path}`
   try {
-    if (wait.waitForSelector) {
-      await captureScreenshotWaitingFor(url, out, wait.waitForSelector, windowSize)
+    if (opts.waitForSelector) {
+      await captureScreenshotWaitingFor(url, out, opts.waitForSelector, { windowSize, colorScheme })
     }
     else {
-      await captureScreenshot(url, out, windowSize, waitMs)
+      await captureScreenshot(url, out, { windowSize, waitMs, colorScheme })
     }
     console.log(`Wrote ${out} (${url})`)
     return 0
@@ -375,10 +357,11 @@ async function main(): Promise<number> {
   const withoutDev = rest.filter((arg) => arg !== '--dev')
   const waitFor = extractFlag(withoutDev, '--wait-for')
   const waitMs = extractFlag(waitFor.rest, '--wait')
-  const args = waitMs.rest
+  const scheme = extractFlag(waitMs.rest, '--scheme')
+  const args = scheme.rest
   switch (verb) {
     case 'shot':
-      return doShot(args, dev, { waitMs: waitMs.value, waitForSelector: waitFor.value })
+      return doShot(args, dev, { waitMs: waitMs.value, waitForSelector: waitFor.value, scheme: scheme.value })
     case 'start':
       return doStart(dev)
     case 'stop':

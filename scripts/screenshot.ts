@@ -2,10 +2,11 @@
 // pre-installed Chromium — no new npm dependency, no browser download.
 //
 // Usage:
-//   pnpm exec tsx scripts/screenshot.ts <url> <out.png> [WxH]
+//   pnpm exec tsx scripts/screenshot.ts <url> <out.png> [WxH] [--scheme light|dark]
 //
 // The optional third argument sets the capture size (e.g. `1280x1600` to
-// reach below-the-fold content); it defaults to `1280x800`.
+// reach below-the-fold content); it defaults to `1280x800`. `--scheme` emulates
+// the visitor's `prefers-color-scheme`; omitted, Chromium's default (light) applies.
 // Both capture paths drive the pre-installed Chromium through playwright-core
 // (a resolvable devDependency, added for the L2 browser-tier e2e gate — see
 // `package.json` / commit d7bf21f) and set the page's viewport directly via
@@ -30,12 +31,40 @@ import { resolveChromiumPath } from './chromium-path'
 const DEFAULT_WAIT_MS = 2000
 
 const USAGE =
-  'Usage: pnpm exec tsx scripts/screenshot.ts <url> <out.png> [WxH]\n' +
+  'Usage: pnpm exec tsx scripts/screenshot.ts <url> <out.png> [WxH] [--scheme light|dark]\n' +
   '  [WxH]  optional capture size, two positive integers (e.g. 1280x1600); ' +
-  'defaults to 1280x800.'
+  'defaults to 1280x800.\n' +
+  "  --scheme light|dark  emulate the visitor's colour scheme."
+
+export type ColorScheme = 'light' | 'dark'
+
+/** Pull a `--flag value` pair out of `args`, returning the value (last wins if
+ *  repeated) and the args with every occurrence removed. Keeps the positional
+ *  parsing downstream unaware of the value-taking flags. */
+export function extractFlag(args: string[], flag: string): { value: string | undefined; rest: string[] } {
+  const rest: string[] = []
+  let value: string | undefined
+  for (let i = 0; i < args.length; i++) {
+    const arg = args[i]
+    if (arg === flag) {
+      value = args[i + 1] // may be undefined if the flag is trailing; validated by the caller
+      i++ // consume the value too
+    }
+    else if (arg !== undefined) {
+      rest.push(arg)
+    }
+  }
+  return { value, rest }
+}
+
+/** An absent `--scheme` leaves Chromium's default; a bad one throws a usage message. */
+export function parseScheme(value: string | undefined): ColorScheme | undefined {
+  if (value === undefined || value === 'light' || value === 'dark') return value
+  throw new Error(`Invalid --scheme "${value}" — expected light or dark.`)
+}
 
 /** Parse an optional `WxH` size argument into `W,H`. */
-function parseSize(size: string): string | undefined {
+export function parseSize(size: string): string | undefined {
   const match = /^(\d+)x(\d+)$/.exec(size)
   if (!match) return undefined
   const [width, height] = [Number(match[1]), Number(match[2])]
@@ -55,7 +84,7 @@ function parseWindowSize(windowSize: string): [width: number, height: number] {
  * it, then always close the browser — shared by both capture paths below so
  * the launch args and viewport handling stay single-homed.
  */
-async function withPage<T>(width: number, height: number, fn: (page: Page) => Promise<T>): Promise<T> {
+async function withPage<T>(width: number, height: number, colorScheme: ColorScheme | undefined, fn: (page: Page) => Promise<T>): Promise<T> {
   const browser = await chromium.launch({
     executablePath: resolveChromiumPath(),
     // --hide-scrollbars: the raw-binary invocation this replaced always
@@ -63,7 +92,7 @@ async function withPage<T>(width: number, height: number, fn: (page: Page) => Pr
     args: ['--no-sandbox', '--disable-gpu', '--hide-scrollbars'],
   })
   try {
-    const page = await browser.newPage({ viewport: { width, height } })
+    const page = await browser.newPage({ viewport: { width, height }, colorScheme })
     return await fn(page)
   }
   finally {
@@ -80,10 +109,14 @@ async function withPage<T>(width: number, height: number, fn: (page: Page) => Pr
  * can reuse the exact same capture path instead of re-deriving it (issue
  * #240).
  */
-export async function captureScreenshot(url: string, out: string, windowSize = '1280,800', waitMs = DEFAULT_WAIT_MS): Promise<void> {
+export async function captureScreenshot(
+  url: string,
+  out: string,
+  { windowSize = '1280,800', waitMs = DEFAULT_WAIT_MS, colorScheme }: { windowSize?: string; waitMs?: number; colorScheme?: ColorScheme } = {},
+): Promise<void> {
   const [width, height] = parseWindowSize(windowSize)
   const anchor = new URL(url).hash.slice(1)
-  await withPage(width, height, async (page) => {
+  await withPage(width, height, colorScheme, async (page) => {
     await page.goto(url)
     if (waitMs > 0) await page.waitForTimeout(waitMs)
     // The browser's native anchor-scroll fires once, at navigation time —
@@ -106,11 +139,10 @@ export async function captureScreenshotWaitingFor(
   url: string,
   out: string,
   selector: string,
-  windowSize = '1280,800',
-  timeoutMs = 15_000,
+  { windowSize = '1280,800', timeoutMs = 15_000, colorScheme }: { windowSize?: string; timeoutMs?: number; colorScheme?: ColorScheme } = {},
 ): Promise<void> {
   const [width, height] = parseWindowSize(windowSize)
-  await withPage(width, height, async (page) => {
+  await withPage(width, height, colorScheme, async (page) => {
     await page.goto(url, { waitUntil: 'networkidle' })
     await page.locator(selector).first().waitFor({ state: 'attached', timeout: timeoutMs })
     await page.screenshot({ path: out })
@@ -118,7 +150,8 @@ export async function captureScreenshotWaitingFor(
 }
 
 async function main(): Promise<void> {
-  const [url, out, size] = process.argv.slice(2)
+  const { value: scheme, rest } = extractFlag(process.argv.slice(2), '--scheme')
+  const [url, out, size] = rest
   if (!url || !out) {
     console.error(USAGE)
     process.exit(1)
@@ -132,7 +165,7 @@ async function main(): Promise<void> {
   }
 
   try {
-    await captureScreenshot(url, out, windowSize)
+    await captureScreenshot(url, out, { windowSize, colorScheme: parseScheme(scheme) })
   } catch (err) {
     console.error(err instanceof Error ? err.message : String(err))
     process.exit(1)

@@ -125,13 +125,7 @@ useSeoMeta({
 
 <template>
   <main class="jd">
-    <nav class="breadcrumb" aria-label="Breadcrumb">
-      <NuxtLink to="/">terrarium</NuxtLink>
-      <span class="sep">/</span>
-      <span>journal</span>
-      <span class="sep">/</span>
-      <span class="here">{{ space }}</span>
-    </nav>
+    <JournalBreadcrumb :space="space" />
 
     <header class="masthead">
       <div>

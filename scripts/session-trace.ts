@@ -32,10 +32,10 @@
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs'
 import { basename, dirname, join } from 'node:path'
 import { pathToFileURL } from 'node:url'
-import { FOLDED_TRACE_FIELDS } from '../shared/trace-fields.ts'
+import { DERIVED_REASON, FOLDED_TRACE_FIELDS } from '../shared/trace-fields.ts'
 import { scanShellReads, type ShellCommand, type ShellReadScan } from './shell-reads.ts'
 
-export { FOLDED_TRACE_FIELDS } from '../shared/trace-fields.ts'
+export { DERIVED_REASON, FOLDED_TRACE_FIELDS } from '../shared/trace-fields.ts'
 
 /** The one authored-scratch file per container (one session per container in the
  *  remote model). Gitignored — its home is `main`, written by the `--author` mode
@@ -592,11 +592,6 @@ export function foldSubagentTrace(
 }
 
 // ── Stitch ────────────────────────────────────────────────────────────────
-
-/** The reason a transcript-observed read/skill carries when the agent never
- *  annotated it — the lightweight marker of a mechanically-folded-in entry
- *  (ADR-0009). */
-export const DERIVED_REASON = '(no reason given)'
 
 /** The reason for a folded-in `docsRead` entry whose path also appears in
  *  `filesEdited`. The Edit tool (and Write-on-an-existing-file) refuses to run

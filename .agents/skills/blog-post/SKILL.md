@@ -358,7 +358,8 @@ only lands if the reader already knows the manifest, config, and gate machinery
 cold; that's what step 5's plain-language framing is for, but the *topic* itself
 should be graspable, not just the prose. Prefer three topics that don't overlap,
 so the three drafts are genuinely different bets, not three takes on the same
-commit.
+commit. Skip a story that hasn't ended yet (its PRs still open or unmerged —
+check before drafting); it's not yet a story with an ending.
 
 **Rank by weight or surprise.** A topic earns a slot by mattering (a new
 capability, an ADR, a fix with real consequences, a friction that changed how

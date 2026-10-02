@@ -40,17 +40,7 @@ useSeoMeta({
 
 <template>
   <main class="jd">
-    <nav class="breadcrumb" aria-label="Breadcrumb">
-      <NuxtLink to="/">terrarium</NuxtLink>
-      <span class="sep">/</span>
-      <span>journal</span>
-      <span class="sep">/</span>
-      <NuxtLink :to="`/t/journal/${space}`">{{ space }}</NuxtLink>
-      <template v-for="(c, i) in crumbs" :key="i">
-        <span class="sep">/</span>
-        <span :class="{ here: i === crumbs.length - 1 }">{{ c }}</span>
-      </template>
-    </nav>
+    <JournalBreadcrumb :space="space" :trail="crumbs" />
 
     <article v-if="page" class="jd-prose">
       <ContentRenderer :value="page" :components="{ table: JournalScrollTable }" />
