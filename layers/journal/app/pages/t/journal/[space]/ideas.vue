@@ -36,15 +36,7 @@ useSeoMeta({ title: () => `${PAGE_TITLE} · journal/${space}` })
 
 <template>
   <main class="jd">
-    <nav class="breadcrumb" aria-label="Breadcrumb">
-      <NuxtLink to="/">terrarium</NuxtLink>
-      <span class="sep">/</span>
-      <NuxtLink to="/t/journal/current">journal</NuxtLink>
-      <span class="sep">/</span>
-      <NuxtLink :to="`/t/journal/${space}`">{{ space }}</NuxtLink>
-      <span class="sep">/</span>
-      <span class="here">ideas</span>
-    </nav>
+    <JournalBreadcrumb :space="space" :trail="['ideas']" />
 
     <article class="jd-prose">
       <h1>{{ PAGE_TITLE }}</h1>

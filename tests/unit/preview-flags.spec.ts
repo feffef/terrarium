@@ -1,9 +1,9 @@
-// L3 — pure arg-parsing seam for `scripts/preview.ts shot`'s value-taking flags
-// (`--wait`, `--wait-for`, issue #364). Keeps the positional `<route> <out>
-// [WxH]` parsing unaware of the flags, so this is where the extraction contract
-// is pinned.
+// L3 — pure arg-parsing seam for the value-taking flags of `scripts/preview.ts shot`
+// and `scripts/screenshot.ts` (`--wait`, `--wait-for`, issue #364; `--scheme`).
+// Keeps the positional `<route> <out> [WxH]` parsing unaware of the flags, so
+// this is where the extraction contract is pinned.
 import { describe, expect, it } from 'vitest'
-import { extractFlag } from '../../scripts/preview.ts'
+import { extractFlag, parseScheme } from '../../scripts/screenshot.ts'
 
 describe('extractFlag()', () => {
   it('pulls a flag and its value out, leaving the positionals', () => {
@@ -42,5 +42,17 @@ describe('extractFlag()', () => {
     const { value, rest } = extractFlag(['/r', 'out.png', '--wait'], '--wait')
     expect(value).toBeUndefined()
     expect(rest).toEqual(['/r', 'out.png'])
+  })
+})
+
+describe('parseScheme()', () => {
+  it('passes light, dark and an absent flag through', () => {
+    expect(parseScheme('light')).toBe('light')
+    expect(parseScheme('dark')).toBe('dark')
+    expect(parseScheme(undefined)).toBeUndefined()
+  })
+
+  it('throws a usage message for anything else', () => {
+    expect(() => parseScheme('Dark')).toThrow('Invalid --scheme "Dark"')
   })
 })

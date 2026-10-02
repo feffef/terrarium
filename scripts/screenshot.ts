@@ -38,13 +38,33 @@ const USAGE =
 
 export type ColorScheme = 'light' | 'dark'
 
-/** Validate a raw `--scheme` value. */
-export function parseScheme(value: string): ColorScheme | undefined {
-  return value === 'light' || value === 'dark' ? value : undefined
+/** Pull a `--flag value` pair out of `args`, returning the value (last wins if
+ *  repeated) and the args with every occurrence removed. Keeps the positional
+ *  parsing downstream unaware of the value-taking flags. */
+export function extractFlag(args: string[], flag: string): { value: string | undefined; rest: string[] } {
+  const rest: string[] = []
+  let value: string | undefined
+  for (let i = 0; i < args.length; i++) {
+    const arg = args[i]
+    if (arg === flag) {
+      value = args[i + 1] // may be undefined if the flag is trailing; validated by the caller
+      i++ // consume the value too
+    }
+    else if (arg !== undefined) {
+      rest.push(arg)
+    }
+  }
+  return { value, rest }
+}
+
+/** An absent `--scheme` leaves Chromium's default; a bad one throws a usage message. */
+export function parseScheme(value: string | undefined): ColorScheme | undefined {
+  if (value === undefined || value === 'light' || value === 'dark') return value
+  throw new Error(`Invalid --scheme "${value}" — expected light or dark.`)
 }
 
 /** Parse an optional `WxH` size argument into `W,H`. */
-function parseSize(size: string): string | undefined {
+export function parseSize(size: string): string | undefined {
   const match = /^(\d+)x(\d+)$/.exec(size)
   if (!match) return undefined
   const [width, height] = [Number(match[1]), Number(match[2])]
@@ -92,9 +112,7 @@ async function withPage<T>(width: number, height: number, colorScheme: ColorSche
 export async function captureScreenshot(
   url: string,
   out: string,
-  windowSize = '1280,800',
-  waitMs = DEFAULT_WAIT_MS,
-  colorScheme?: ColorScheme,
+  { windowSize = '1280,800', waitMs = DEFAULT_WAIT_MS, colorScheme }: { windowSize?: string; waitMs?: number; colorScheme?: ColorScheme } = {},
 ): Promise<void> {
   const [width, height] = parseWindowSize(windowSize)
   const anchor = new URL(url).hash.slice(1)
@@ -121,9 +139,7 @@ export async function captureScreenshotWaitingFor(
   url: string,
   out: string,
   selector: string,
-  windowSize = '1280,800',
-  timeoutMs = 15_000,
-  colorScheme?: ColorScheme,
+  { windowSize = '1280,800', timeoutMs = 15_000, colorScheme }: { windowSize?: string; timeoutMs?: number; colorScheme?: ColorScheme } = {},
 ): Promise<void> {
   const [width, height] = parseWindowSize(windowSize)
   await withPage(width, height, colorScheme, async (page) => {
@@ -134,17 +150,10 @@ export async function captureScreenshotWaitingFor(
 }
 
 async function main(): Promise<void> {
-  const args = process.argv.slice(2)
-  const schemeAt = args.indexOf('--scheme')
-  const schemeArg = schemeAt === -1 ? undefined : (args.splice(schemeAt, 2)[1] ?? '')
-  const [url, out, size] = args
+  const { value: scheme, rest } = extractFlag(process.argv.slice(2), '--scheme')
+  const [url, out, size] = rest
   if (!url || !out) {
     console.error(USAGE)
-    process.exit(1)
-  }
-  const colorScheme = schemeArg === undefined ? undefined : parseScheme(schemeArg)
-  if (schemeArg !== undefined && !colorScheme) {
-    console.error(`Invalid --scheme "${schemeArg}" — expected light or dark.`)
     process.exit(1)
   }
 
@@ -156,7 +165,7 @@ async function main(): Promise<void> {
   }
 
   try {
-    await captureScreenshot(url, out, windowSize, DEFAULT_WAIT_MS, colorScheme)
+    await captureScreenshot(url, out, { windowSize, colorScheme: parseScheme(scheme) })
   } catch (err) {
     console.error(err instanceof Error ? err.message : String(err))
     process.exit(1)

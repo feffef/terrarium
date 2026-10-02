@@ -13,3 +13,8 @@ export const FOLDED_TRACE_FIELDS: { field: FoldedTraceField; label: string }[] =
   { field: 'skillsUsed', label: 'Skills used' },
   { field: 'docsReadViaShell', label: 'docs read via shell' },
 ]
+
+/** The reason a transcript-observed read/skill carries when the agent never
+ *  annotated it — the lightweight marker of a mechanically-folded-in entry
+ *  (ADR-0009). Shared so SessionCard.vue can hide it. */
+export const DERIVED_REASON = '(no reason given)'

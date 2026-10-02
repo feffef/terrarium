@@ -56,8 +56,9 @@ the tests a new Campaign disturbs.
    purpose. Done when those checks describe the catalog as it now is.
 7. **Verify.** `pnpm validate:content`, `crowd.mjs`, then `pnpm gate:scoped`.
    Screenshot the Campaign page, Home and Discover in both themes
-   (`pnpm exec tsx scripts/preview.ts shot /t/tinkerfund/prod/campaigns/<slug> <out.png> 1280x1800 --scheme dark`,
-   and again with `--scheme light`, after `pnpm build`) and look at them. Done when all are green and the page
+   (`pnpm exec tsx scripts/preview.ts shot /t/tinkerfund/prod/campaigns/<slug> <out.png> 1280x1800`
+   with `--scheme light` and `--scheme dark`, after `pnpm build`) and look at
+   them. Done when all are green and the page
    reads as intended.
 8. **Land** through a gated PR (CLAUDE.md). Figures are content the schema
    checks; they need no code review of their own.

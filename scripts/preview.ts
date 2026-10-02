@@ -47,7 +47,7 @@ import { existsSync, openSync, closeSync, readFileSync, realpathSync, rmSync } f
 import { join } from 'node:path'
 import { tmpdir } from 'node:os'
 import { fileURLToPath } from 'node:url'
-import { captureScreenshot, captureScreenshotWaitingFor, parseScheme } from './screenshot'
+import { captureScreenshot, captureScreenshotWaitingFor, extractFlag, parseScheme, parseSize } from './screenshot'
 
 const HOST = '127.0.0.1'
 const READY_TIMEOUT_MS = 45_000
@@ -71,33 +71,6 @@ const USAGE =
   '                     the DevTools overlay makes it unfit for a trusted screenshot)'
 
 const sleep = (ms: number): Promise<void> => new Promise((resolve) => setTimeout(resolve, ms))
-
-/** Pull a `--flag value` pair out of `args`, returning the value (last wins if
- *  repeated) and the args with every occurrence removed. Keeps the positional
- *  `<route> <out> [WxH]` parsing downstream unaware of the value-taking flags.
- *  Exported for unit testing (tests/unit/preview-flags.spec.ts). */
-export function extractFlag(args: string[], flag: string): { value: string | undefined; rest: string[] } {
-  const rest: string[] = []
-  let value: string | undefined
-  for (let i = 0; i < args.length; i++) {
-    const arg = args[i]
-    if (arg === flag) {
-      value = args[i + 1] // may be undefined if the flag is trailing; validated by the caller
-      i++ // consume the value too
-    }
-    else if (arg !== undefined) {
-      rest.push(arg)
-    }
-  }
-  return { value, rest }
-}
-
-/** Parse an optional `WxH` size argument into `W,H`, or `undefined` if invalid. */
-function parseSize(size: string): string | undefined {
-  const match = /^(\d+)x(\d+)$/.exec(size)
-  if (!match) return undefined
-  return `${Number(match[1])},${Number(match[2])}`
-}
 
 /** Ask the OS for a free port by binding `0`, then release it. Each instance
  *  gets its own port so concurrent agents in one container never collide. */
@@ -284,16 +257,15 @@ export async function stopPreview(pid: number): Promise<void> {
   await killGroup(pid)
 }
 
+/** `shot`'s raw flag values, still strings; validated in `doShot`. */
 interface ShotOptions {
-  /** Raw `--wait` value (ms), still a string; validated here. */
   waitMs?: string
-  /** Raw `--wait-for` value: a CSS selector to await before capturing. */
+  /** A CSS selector to await before capturing. */
   waitForSelector?: string
-  /** Raw `--scheme` value; validated here. */
   scheme?: string
 }
 
-async function doShot(args: string[], dev: boolean, wait: ShotOptions): Promise<number> {
+async function doShot(args: string[], dev: boolean, opts: ShotOptions): Promise<number> {
   const [route, out, sizeArg] = args
   if (!route || !out) {
     console.error(USAGE)
@@ -305,17 +277,19 @@ async function doShot(args: string[], dev: boolean, wait: ShotOptions): Promise<
     return 1
   }
   let waitMs = 2000
-  if (wait.waitMs !== undefined) {
-    const parsed = Number(wait.waitMs)
+  if (opts.waitMs !== undefined) {
+    const parsed = Number(opts.waitMs)
     if (!Number.isInteger(parsed) || parsed < 0) {
-      console.error(`Invalid --wait "${wait.waitMs}" — expected a non-negative integer (ms).`)
+      console.error(`Invalid --wait "${opts.waitMs}" — expected a non-negative integer (ms).`)
       return 1
     }
     waitMs = parsed
   }
-  const colorScheme = wait.scheme === undefined ? undefined : parseScheme(wait.scheme)
-  if (wait.scheme !== undefined && !colorScheme) {
-    console.error(`Invalid --scheme "${wait.scheme}" — expected light or dark.`)
+  let colorScheme
+  try {
+    colorScheme = parseScheme(opts.scheme)
+  } catch (err) {
+    console.error((err as Error).message)
     return 1
   }
 
@@ -329,11 +303,11 @@ async function doShot(args: string[], dev: boolean, wait: ShotOptions): Promise<
   const path = route.startsWith('/') ? route : `/${route}`
   const url = `${server.url}${path}`
   try {
-    if (wait.waitForSelector) {
-      await captureScreenshotWaitingFor(url, out, wait.waitForSelector, windowSize, undefined, colorScheme)
+    if (opts.waitForSelector) {
+      await captureScreenshotWaitingFor(url, out, opts.waitForSelector, { windowSize, colorScheme })
     }
     else {
-      await captureScreenshot(url, out, windowSize, waitMs, colorScheme)
+      await captureScreenshot(url, out, { windowSize, waitMs, colorScheme })
     }
     console.log(`Wrote ${out} (${url})`)
     return 0

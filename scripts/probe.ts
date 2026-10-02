@@ -17,7 +17,7 @@
 //     "getComputedStyle(document.querySelector('.foo')).color"
 import { chromium } from 'playwright-core'
 import { resolveChromiumPath } from './chromium-path'
-import { extractFlag } from './preview'
+import { extractFlag } from './screenshot'
 
 const DEFAULT_WAIT_MS = 300
 

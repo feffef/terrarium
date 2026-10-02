@@ -15,7 +15,7 @@
 // it reports clicks via `toggle` and renders whatever `expanded` the page passes.
 // `anchor` is the card's deep-link fragment id, bound onto the root so the page
 // can scroll it into view.
-import { FOLDED_TRACE_FIELDS } from '#shared/trace-fields'
+import { DERIVED_REASON, FOLDED_TRACE_FIELDS } from '#shared/trace-fields'
 import type { SessionCardView } from '../../types/journal'
 
 const { card, expanded, anchor } = defineProps<{ card: SessionCardView; expanded: boolean; anchor: string }>()
@@ -29,9 +29,6 @@ const prParts = computed(() => ({
   shown: card.prs.slice(0, PR_SUB_MAX),
   rest: Math.max(0, card.prs.length - PR_SUB_MAX),
 }))
-// The placeholder an un-annotated read/skill carries (`DERIVED_REASON` in
-// scripts/session-trace.ts) says nothing to a visitor, so it isn't shown.
-const NO_REASON = '(no reason given)'
 const foldedFieldLabels = new Intl.ListFormat('en', { style: 'long', type: 'conjunction' }).format(
   FOLDED_TRACE_FIELDS.map((f) => f.label),
 )
@@ -86,7 +83,7 @@ const foldedFieldLabels = new Intl.ListFormat('en', { style: 'long', type: 'conj
           <div v-if="card.skillsUsed.length" class="block">
             <h4>Skills used</h4>
             <ul>
-              <li v-for="s in card.skillsUsed" :key="s.name"><JournalSkillName :name="s.name" class="mono" /><template v-if="s.reason !== NO_REASON"> — {{ s.reason }}</template></li>
+              <li v-for="s in card.skillsUsed" :key="s.name"><JournalSkillName :name="s.name" class="mono" /><template v-if="s.reason !== DERIVED_REASON"> — {{ s.reason }}</template></li>
             </ul>
           </div>
 
@@ -123,7 +120,7 @@ const foldedFieldLabels = new Intl.ListFormat('en', { style: 'long', type: 'conj
             <details v-if="card.docsRead.length" class="trace">
               <summary>Files read <span class="n">{{ card.docsRead.length }}</span></summary>
               <ul>
-                <li v-for="d in card.docsRead" :key="d.path"><code>{{ d.path }}</code><template v-if="d.reason !== NO_REASON"> — {{ d.reason }}</template></li>
+                <li v-for="d in card.docsRead" :key="d.path"><code>{{ d.path }}</code><template v-if="d.reason !== DERIVED_REASON"> — {{ d.reason }}</template></li>
               </ul>
             </details>
             <details v-if="card.docsReadViaShell.length" class="trace">
