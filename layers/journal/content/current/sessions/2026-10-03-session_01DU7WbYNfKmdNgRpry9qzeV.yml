@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01DU7WbYNfKmdNgRpry9qzeV
 startedAt: 2026-10-03T17:51:31Z
-endedAt: 2026-10-03T18:02:07Z
+endedAt: 2026-10-03T18:05:12Z
 kind: interactive
 goal: Explain and fix the narrow, white-bordered Journal document layout on desktop
 status: in-review
-outcome: "Journal ground now spans the window, the narrow card and 68ch prose cap are gone; PR #1576 open"
-summary: "The owner asked why Journal pages had become a narrow card with white borders. History showed two causes: the white margins have existed since #25 (only .jd is themed, the body is not, and .jd was a centred 1120px box), but they only became prominent today when bd394111 (via #1563, a visitor-loop session) capped document pages at 44rem. On direct owner instruction I reverted that cap, made .jd span the window with padding centring the 1120px column (plus body margin 0), and then, again on explicit owner choice among three offered options, dropped the 68ch prose cap entirely. Screenshots in dark, light and 390px were shared. Nothing was agent-initiated beyond the auto-opened PR. Local gate:scoped failed 2 journal e2e tests caused by a session log already on main whose id lacks the session_ prefix; noted in the PR, not fixed here."
+outcome: "Journal ground now spans the window, the narrow card is gone, prose widened from 68ch to 82ch; PR #1576 open"
+summary: "The owner asked why Journal pages had become a narrow card with white borders. History showed two causes: the white margins have existed since #25 (only .jd is themed, the body is not, and .jd was a centred 1120px box), but they only became prominent today when bd394111 (via #1563, a visitor-loop session) capped document pages at 44rem. On direct owner instruction I reverted that cap, made .jd span the window with padding centring the 1120px column (plus body margin 0), and then, again on explicit owner choice, first dropped the 68ch prose cap entirely, then (owner changed their mind after seeing it) set it to about 90-100 characters per line: 88ch measured 100-106 characters in the screenshot, so I tuned it to 82ch. Screenshots in dark, light and 390px were shared. Nothing was agent-initiated beyond the auto-opened PR. Local gate:scoped failed 2 journal e2e tests caused by a session log already on main whose id lacks the session_ prefix; noted in the PR, not fixed here."
 prs:
   - "1576"
 docsRead: []
@@ -28,19 +28,25 @@ frictions:
   - description: Owner had to ask three rounds (undo narrowing, why off-centre, why not wider) before the real ask, full width, surfaced; the 68ch cap was the root cause I did not name in the first answer.
     solution: When explaining a layout, name every width constraint in the stack up front.
     severity: minor
-durationSec: 636
+  - description: Chose 88ch from an estimate, then had to measure the screenshot and rebuild at 82ch; each rebuild costs minutes.
+    solution: Measure characters per ch from an existing screenshot before picking the value.
+    severity: nit
+durationSec: 821
 models:
-  claude-opus-5-5: 84
+  claude-opus-5-5: 111
 toolCounts:
-  Bash: 33
-  Read: 3
-  SendUserFile: 2
-  ToolSearch: 1
+  Bash: 40
+  Read: 5
+  SendUserFile: 3
+  ToolSearch: 2
   mcp__github__list_pull_requests: 1
   Grep: 1
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
   Skill: 2
+  ReadNotifications: 1
+  mcp__claude-code-remote__send_later: 1
+  mcp__github__update_pull_request: 2
 docsReadViaShell:
   - docs/adr/0017-provenance-footer-on-agent-authored-content.md
 gitBranch: claude/relaxed-rubin-7wt4i9
