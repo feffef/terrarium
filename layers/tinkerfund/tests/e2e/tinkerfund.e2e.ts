@@ -459,6 +459,11 @@ export function registerTinkerfundE2E(): void {
         await shiftTabUp()
         await page.setViewportSize({ width: 1280, height: 800 })
         await shiftTabUp()
+        // With Recently backed under it, a sticky Readout would slide over the list (story #1386).
+        await page.evaluate(() => window.scrollTo(0, 400))
+        const gap = await page.evaluate(() =>
+          document.querySelector('.recent')!.getBoundingClientRect().top - document.querySelector('.readout')!.getBoundingClientRect().bottom)
+        expect(gap).toBeGreaterThanOrEqual(0)
 
         await page.setViewportSize({ width: 390, height: 844 })
         await visit('/campaigns/last-minute-lamp')
