@@ -163,6 +163,24 @@
   border-left: 2px solid var(--jd-line);
   color: var(--jd-muted);
 }
-/* JournalScrollTable's wrapper: a wide table scrolls instead of widening the page. */
-.jd-prose .jd-table-scroll { overflow-x: auto; }
+/* JournalScrollTable's wrapper: a wide table scrolls instead of widening the page.
+   The edge shadows show only while there is more to scroll to (the `local` covers hide them at each end). */
+.jd-prose .jd-table-scroll {
+  overflow-x: auto;
+  margin: 0 0 1rem;
+  --jd-edge: color-mix(in srgb, var(--jd-ink) 14%, transparent);
+  background:
+    linear-gradient(to left, transparent, var(--jd-ground) 70%) left / 1.5rem 100% no-repeat local,
+    linear-gradient(to right, transparent, var(--jd-ground) 70%) right / 1.5rem 100% no-repeat local,
+    linear-gradient(to right, var(--jd-edge), transparent) left / 0.6rem 100% no-repeat scroll,
+    linear-gradient(to left, var(--jd-edge), transparent) right / 0.6rem 100% no-repeat scroll;
+}
+.jd-prose table { border-collapse: collapse; font-size: 0.92rem; line-height: 1.35; }
+.jd-prose th, .jd-prose td { padding: 0.4rem 0.6rem; border-bottom: 1px solid var(--jd-line); text-align: left; vertical-align: top; }
+.jd-prose th { font-size: 0.8rem; color: var(--jd-muted); font-weight: 600; white-space: nowrap; }
+.jd-prose td:first-child { min-width: 9rem; }
+@media (max-width: 600px) {
+  .jd-prose table { font-size: 0.82rem; }
+  .jd-prose th, .jd-prose td { padding: 0.35rem 0.45rem; }
+}
 .jd-prose hr { border: 0; border-top: 1px solid var(--jd-line); margin: 1.8rem 0; }
