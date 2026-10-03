@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01WhVjfShqpBDDjMPkTrpvZH
 startedAt: 2026-10-03T08:47:42Z
-endedAt: 2026-10-03T10:10:31Z
+endedAt: 2026-10-03T11:28:49Z
 kind: interactive
 goal: Make the journal history page's table readable on mobile
-status: in-review
-outcome: "Owner picked CSS-only table styling with scroll-edge shadows from three screenshotted variants; PR #1556 open"
-summary: "The owner reported, with a phone screenshot, that the table on /t/journal/current/history was unreadable on mobile. I found the cause (unstyled table in the existing JournalScrollTable wrapper: labels wrap word by word, last columns cut off with no scroll cue) and, per the owner's ask-first preference, offered three approaches instead of picking one. The owner asked to try all three with screenshots: content rewrite of the table, CSS for all journal tables, and stacked mobile cards (prototyped with client-side data-label injection, which has an SSR/no-JS gap). The owner asked how many other tables exist (only this one in journal content), then chose option 2. I generalised the scroll cue to all widths, tinted it from --jd-ink for dark mode, checked light/dark/desktop screenshots, ran gate:scoped (passed), and opened PR #1556. All work was human-instructed; opening the PR is ADR-0003's default."
+status: completed
+outcome: "Owner picked CSS-only table styling with scroll-edge shadows from three screenshotted variants; PR #1556 merged"
+summary: "The owner reported, with a phone screenshot, that the table on /t/journal/current/history was unreadable on mobile. I found the cause (unstyled table in the existing JournalScrollTable wrapper: labels wrap word by word, last columns cut off with no scroll cue) and, per the owner's ask-first preference, offered three approaches instead of picking one. The owner asked to try all three with screenshots: content rewrite of the table, CSS for all journal tables, and stacked mobile cards (prototyped with client-side data-label injection, which has an SSR/no-JS gap). The owner asked how many other tables exist (only this one in journal content), then chose option 2. I generalised the scroll cue to all widths, tinted it from --jd-ink for dark mode, checked light/dark/desktop screenshots, ran gate:scoped (passed), and opened PR #1556, which the owner merged. All work was human-instructed; opening the PR is ADR-0003's default."
 prs:
   - "1556"
 docsRead: []
@@ -25,18 +25,21 @@ frictions:
   - description: ADR-0017 header names the model, but the harness forbids model ids in PR bodies; I used a generic 'Claude' header, which the guard accepted
     solution: ADR-0017 should say whether a generic name is acceptable, so the two rules stop conflicting
     severity: nit
-durationSec: 4969
+durationSec: 9667
 models:
-  claude-opus-5-5: 86
+  claude-opus-5-5: 110
 toolCounts:
-  Bash: 28
+  Bash: 30
   Read: 10
   SendUserFile: 2
-  ToolSearch: 1
+  ToolSearch: 2
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
   Skill: 2
+  ReadNotifications: 5
+  mcp__github__pull_request_read: 3
+  mcp__claude-code-remote__send_later: 1
 docsReadViaShell:
   - docs/agents/guards.md
   - docs/adr/0017-provenance-footer-on-agent-authored-content.md
