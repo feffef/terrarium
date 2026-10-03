@@ -524,7 +524,7 @@ export function registerTinkerfundE2E(): void {
           await field.pressSequentially(q)
         }
 
-        await typeIn('o')
+        await typeIn('one')
         await suggestions.waitFor()
         const links = await suggestions.getByRole('option').evaluateAll((els) => els.map((el) => el.getAttribute('href') ?? ''))
         expect(links.length).toBeGreaterThan(1)
