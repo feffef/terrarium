@@ -741,8 +741,9 @@ export function registerTinkerfundE2E(): void {
         // The Shipping step flags the existing Pledge too, not only the Cart.
         await page.locator('main').getByRole('link', { name: 'Checkout' }).click()
         await expect.poll(h1).toBe('Shipping')
-        // The bundle's 5% off both goods adds to the Stapler's own 10%: 15% of €76, and 5% of the Lamp's €5 top-up.
-        await expect.poll(() => page.locator('.summary').textContent()).toMatch(/Subtotal\s*€86\s*Discount\s*−€11.65\s*Shipping to Domestic\s*€4\s*Total\s*€78.35/)
+        // The bundle's 5% adds to the Stapler's own 10%: 15% of €76. The Lamp's Pledge earns it
+        // by the €5 top-up, and like any term a Pledge holds it covers all its goods: 5% of €32.
+        await expect.poll(() => page.locator('.summary').textContent()).toMatch(/Subtotal\s*€86\s*Discount\s*−€13\s*Shipping to Domestic\s*€4\s*Total\s*€77/)
         expect(await page.locator('.summary .deals li').allTextContents()).toEqual(['A tenth off the stapler (active, automatic)', 'Stapler and lamp together (active bundle)'])
         await page.getByLabel('Europe').check()
         await expect.poll(() => page.locator('.pledge', { hasText: 'Last-Minute Lamp' }).textContent())
