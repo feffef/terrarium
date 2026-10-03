@@ -10,6 +10,11 @@ campaign:
   end: +27d
   backers: 220
   pledged: 24800
+  recent:
+    - { name: Ola N., city: Bergen, at: -2h }
+    - { name: Priya D., city: Utrecht, at: -6h }
+    - { name: Wilma K., city: Kassel, at: -11h }
+    - { name: Dorin V., city: Cluj-Napoca, at: -1d }
   specifications:
     - { label: Display, value: "600 × 800 mm, half-silvered glass" }
     - { label: Delay, value: "3.0 s (1–10 s, 0.5 s steps)" }

@@ -10,6 +10,10 @@ campaign:
   end: +21d
   backers: 306
   pledged: 22000
+  recent:
+    - { name: Nadia S., city: Vienna, at: -1h }
+    - { name: Bram de V., city: Ghent, at: -4h }
+    - { name: Ute K., city: Bonn, at: -9h }
   specifications:
     - { label: Canopy, value: Ø 1040 mm }
     - { label: "Length, furled", value: 880 mm }

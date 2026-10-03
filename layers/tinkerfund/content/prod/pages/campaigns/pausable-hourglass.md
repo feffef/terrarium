@@ -10,6 +10,10 @@ campaign:
   end: -18d
   backers: 192
   pledged: 15040
+  recent:
+    - { name: Gareth W., city: Cardiff, at: -18d }
+    - { name: Mei L., city: Singapore, at: -19d }
+    - { name: Hannelore B., city: Jena, at: -20d }
   specifications:
     - { label: Glass, value: "Borosilicate 3.3, hand-blown, 1.2 mm wall" }
     - { label: Height, value: "18 cm (3 min), 22 cm (10 min), 28 cm (30 min)" }

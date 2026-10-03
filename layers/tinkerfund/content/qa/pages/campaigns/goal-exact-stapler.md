@@ -10,6 +10,10 @@ campaign:
   end: +21d
   backers: 110
   pledged: 2500
+  recent:
+    - { name: Eva J., city: Graz, at: -2h }
+    - { name: Finn K., city: Bremen, at: -1d }
+    - { name: Gia L., city: Porto, at: -4d }
   specifications:
     - { label: Capacity, value: 1 staple }
   figures:

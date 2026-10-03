@@ -10,6 +10,12 @@ campaign:
   end: +24d
   backers: 480
   pledged: 29000
+  recent:
+    - { name: Rosa M., city: Bologna, at: -1h }
+    - { name: Callan P., city: Cork, at: -5h }
+    - { name: Theo H., city: Freiburg, at: -12h }
+    - { name: Sanne K., city: Rotterdam, at: -1d }
+    - { name: Marcus E., city: Toronto, at: -2d }
   specifications:
     - { label: Module, value: "12 mm, shelf-clip or door-frame mount" }
     - { label: Illumination, value: "Infrared, self-contained" }

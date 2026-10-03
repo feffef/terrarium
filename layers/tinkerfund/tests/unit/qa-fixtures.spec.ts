@@ -15,6 +15,7 @@ interface Campaign {
   backers: number
   pledged: number
   rewards: { price: number; claimed: number; stock?: number }[]
+  recent?: { name: string; at: string }[]
 }
 
 const qa = fileURLToPath(new URL('../../content/qa/', import.meta.url))
@@ -82,5 +83,18 @@ describe('qa edge cases', () => {
     expect(pledged.some((s) => s?.state === 'live')).toBe(true)
     expect(pledged.some((s) => s?.outcome === 'funded')).toBe(true)
     expect(pledged.some((s) => s?.outcome === 'unfunded')).toBe(true)
+  })
+
+  it('names a Live Campaign’s Backers, one exactly at launch and one long enough to wrap', () => {
+    expect(campaigns.some((c) => c.status.state === 'live'
+      && c.recent?.some((r) => r.at === c.launch) && c.recent.some((r) => r.name.length > 40))).toBe(true)
+  })
+
+  it('names a Backer exactly at an Ended Campaign’s end', () => {
+    expect(campaigns.some((c) => c.status.state === 'ended' && c.recent?.some((r) => r.at === c.end))).toBe(true)
+  })
+
+  it('has a Live Campaign with Backers but none named', () => {
+    expect(campaigns.some((c) => c.status.state === 'live' && c.backers > 0 && !c.recent)).toBe(true)
   })
 })

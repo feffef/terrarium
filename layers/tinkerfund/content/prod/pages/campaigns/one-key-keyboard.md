@@ -10,6 +10,11 @@ campaign:
   end: +36h
   backers: 158
   pledged: 7420
+  recent:
+    - { name: Amira K., city: Rabat, at: -2h }
+    - { name: Pieter V., city: Antwerp, at: -5h }
+    - { name: Ruth B., city: Dresden, at: -9h }
+    - { name: Grace O., city: Melbourne, at: -1d }
   specifications:
     - { label: Keys, value: "1" }
     - { label: Layout, value: Universal }

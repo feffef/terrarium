@@ -10,6 +10,10 @@ campaign:
   end: +22d
   backers: 210
   pledged: 8880
+  recent:
+    - { name: Oskar V., city: Tallinn, at: -4h }
+    - { name: Freya N., city: Aarhus, at: -9h }
+    - { name: Lotte B., city: Münster, at: -1d }
   specifications:
     - { label: Beams, value: "Two infrared beams, approach and flap" }
     - { label: Frame size, value: "165 × 170 mm, standard flap opening" }

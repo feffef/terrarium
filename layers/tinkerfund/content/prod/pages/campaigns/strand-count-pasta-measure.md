@@ -10,6 +10,11 @@ campaign:
   end: -65d
   backers: 440
   pledged: 21120
+  recent:
+    - { name: Sanne V., city: Eindhoven, at: -65d }
+    - { name: Priya L., city: Leicester, at: -66d }
+    - { name: Federica M., city: Parma, at: -67d }
+    - { name: Jürgen T., city: Stuttgart, at: -68d }
   specifications:
     - { label: Load cell resolution, value: 0.01 g }
     - { label: Calibrated shapes, value: "14" }

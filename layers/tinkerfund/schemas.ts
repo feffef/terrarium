@@ -54,6 +54,19 @@ function isAfter(later: string, earlier: string): boolean {
   return resolveTinkerfundOffset(later, 0) > resolveTinkerfundOffset(earlier, 0)
 }
 
+// Offsets resolve against 0, so "now" is 0 and the checks hold at any real now.
+function flagRecentBackers(ctx: z.RefinementCtx, c: { launch: string; end: string; backers: number; recent?: { at: string }[] }): void {
+  if (!c.recent) return
+  const at = (o: string) => (TINKERFUND_OFFSET.test(o) ? resolveTinkerfundOffset(o, 0) : Number.NaN)
+  const issue = (path: (string | number)[], message: string) => ctx.addIssue({ code: z.ZodIssueCode.custom, path, message })
+  if (at(c.launch) > 0) issue(['recent'], 'an Upcoming Campaign has no Backers to name')
+  if (c.recent.length > c.backers) issue(['recent'], `names ${c.recent.length} Backers but the Campaign has ${c.backers}`)
+  c.recent.forEach((r, i) => {
+    if (at(r.at) < at(c.launch)) issue(['recent', i, 'at'], 'is before launch')
+    if (at(r.at) > Math.min(at(c.end), 0)) issue(['recent', i, 'at'], 'is after the Campaign ended, or in the future')
+  })
+}
+
 const optionGroup = z
   .object({
     id: slug,
@@ -99,6 +112,8 @@ export const campaign = z
     end: offset,
     backers: count,
     pledged: z.number().nonnegative(),
+    /** A few named Backers, shown as social proof (issue #1386). */
+    recent: z.array(z.object({ name: z.string(), city: z.string(), at: offset }).strict()).min(3).max(5).optional(),
     specifications: z.array(z.object({ label: z.string(), value: z.string() }).strict()).min(1),
     figures: z
       .array(z.object({ style: z.enum(['isometric', 'patent']), caption: z.string(), svg: svg(4096) }).strict())
@@ -121,6 +136,7 @@ export const campaign = z
       ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['figures'], message: 'at least one figure must be patent' })
     }
     flagDuplicateIds(ctx, { rewards: c.rewards, addons: c.addons, stretchGoals: c.stretchGoals })
+    flagRecentBackers(ctx, c)
     for (const where of new Set(c.rewards.flatMap((r) => r.shipsTo ?? []))) {
       if (c.shipping[where] === undefined) {
         ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['shipping', where], message: 'a Reward ships here, so it needs a rate' })

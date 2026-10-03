@@ -10,6 +10,11 @@ campaign:
   end: +20h
   backers: 290
   pledged: 12160
+  recent:
+    - { name: Casimir W., city: Wrocław, at: -1h }
+    - { name: Freya L., city: Edinburgh, at: -3h }
+    - { name: Jun O., city: Osaka, at: -7h }
+    - { name: Marisol A., city: Valencia, at: -16h }
   specifications:
     - { label: Projection rate, value: "1 sheep every 1.8 s" }
     - { label: Typical night, value: "16,000 sheep" }

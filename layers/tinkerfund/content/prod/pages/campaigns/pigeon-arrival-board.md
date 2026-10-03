@@ -10,6 +10,12 @@ campaign:
   end: +8d
   backers: 380
   pledged: 35800
+  recent:
+    - { name: Wiktor B., city: Gdańsk, at: -2h }
+    - { name: Jeanne P., city: Lyon, at: -5h }
+    - { name: Malik A., city: Marseille, at: -10h }
+    - { name: Heiko S., city: Hanover, at: -1d }
+    - { name: Aoife N., city: Galway, at: -2d }
   specifications:
     - { label: Display, value: "3 rows × 20 split-flap characters" }
     - { label: Flap height, value: 38 mm }

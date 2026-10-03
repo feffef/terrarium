@@ -12,6 +12,12 @@ campaign:
   end: +36h
   backers: 40
   pledged: 1250
+  recent:
+    - { name: Ada E., city: Hamburg, at: -1h }
+    - { name: Maximiliane-Theodora von Hohenzollern-Sigmaringen, city: Castrop-Rauxel, at: -3h }
+    - { name: Ben F., city: Lyon, at: -20h }
+    - { name: Cleo G., city: Osaka, at: -2d }
+    - { name: Dan H., city: Leipzig, at: -12d }
   specifications:
     - { label: Brightness, value: 1 lumen }
   figures:

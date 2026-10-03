@@ -10,6 +10,10 @@ campaign:
   end: -40d
   backers: 110
   pledged: 4340
+  recent:
+    - { name: Dov L., city: Haifa, at: -40d }
+    - { name: Greta S., city: Halle, at: -41d }
+    - { name: Alva R., city: Gothenburg, at: -43d }
   specifications:
     - { label: Sensor, value: "6-axis IMU, accelerometer and gyroscope" }
     - { label: Insert, value: "Silicone, food-grade, reusable for up to 30 bars" }

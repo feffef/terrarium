@@ -10,6 +10,10 @@ campaign:
   end: -90d
   backers: 200
   pledged: 8000
+  recent:
+    - { name: Ingrid H., city: Potsdam, at: -90d }
+    - { name: Owen B., city: Mainz, at: -91d }
+    - { name: Dagmar L., city: Erfurt, at: -92d }
   specifications:
     - { label: Button diameter, value: "110 mm, felt-topped" }
     - { label: Counter mechanism, value: "Mechanical, incremental, non-resettable" }

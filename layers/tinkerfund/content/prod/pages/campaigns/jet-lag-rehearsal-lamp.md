@@ -10,6 +10,12 @@ campaign:
   end: +44h
   backers: 460
   pledged: 40320
+  recent:
+    - { name: Hana S., city: Seoul, at: -1h }
+    - { name: Dario F., city: Turin, at: -4h }
+    - { name: Gesine M., city: Rostock, at: -8h }
+    - { name: Anneke V., city: Groningen, at: -13h }
+    - { name: Kiri T., city: Wellington, at: -1d }
   specifications:
     - { label: Lamp, value: "Ø 140 × 260 mm, powder-coated steel, linen shade" }
     - { label: Light, value: "2,700–6,500 K, 1,200 lm" }
