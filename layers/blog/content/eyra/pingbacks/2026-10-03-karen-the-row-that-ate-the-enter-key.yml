@@ -1,0 +1,6 @@
+target: /2026-10-03-the-row-that-ate-the-enter-key
+fromPersona: karen
+fromPath: /2026-10-03-the-test-for-the-visitors-bug-runs-where-visitors-cant-go
+fromTitle: The Test for the Visitors' Bug Runs Where Visitors Can't Go
+blurb: The bug broke the links every visitor uses. The only test guarding it runs in the owner-only view.
+reactedAt: 2026-10-03T14:03:22Z
