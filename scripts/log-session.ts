@@ -49,6 +49,7 @@ import {
   findLatestTranscript,
   foldSubagentTrace,
   formatModelId,
+  loadDocLineIndex,
   parseTranscript,
   readSubagentJsonls,
   stitch,
@@ -60,6 +61,7 @@ import {
   type MechanicalTrace,
   type SessionIdEnv,
 } from './session-trace.ts'
+import type { DocLineIndex } from './shell-reads.ts'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 
@@ -508,6 +510,8 @@ export interface LandOpts {
   mainVersionFn?: (relPath: string, remote: string) => string | null
   env?: SessionIdEnv
   subagentJsonls?: string[]
+  /** The doc-line index `docsReadViaShell` is derived against; built from `root` when absent. */
+  docIndex?: DocLineIndex
 }
 
 /** The landing gate (#148). The derived trace grows every turn (durationSec,
@@ -650,8 +654,9 @@ function withoutLandedBy(yaml: string): string {
  *  and Skill invocations folded in — `subagentJsonls` is passed by `landMain`
  *  from disk and by tests inline, so neither entry point can drift from the other. */
 function traceOf(transcriptJsonl: string, opts: LandOpts): MechanicalTrace {
-  const trace = extractTrace(parseTranscript(transcriptJsonl), opts.env)
-  return foldSubagentTrace(trace, (opts.subagentJsonls ?? []).map(parseTranscript), opts.env)
+  const docIndex = opts.docIndex ?? loadDocLineIndex(root)
+  const trace = extractTrace(parseTranscript(transcriptJsonl), opts.env, docIndex)
+  return foldSubagentTrace(trace, (opts.subagentJsonls ?? []).map(parseTranscript), opts.env, docIndex)
 }
 
 /** Recovery path for the "authored-then-dropped" case (issue #449 Gap 3),
@@ -728,7 +733,7 @@ const NEAR_MISS_LIMIT = 5
  *  against the session it just lived through (#1074's loop). Prints nothing when
  *  there is nothing to check — including when the transcript can't be found,
  *  which is a degraded report, never a failure to author. */
-export function reportShellReads(cwd: string, log: (line: string) => void = console.log): void {
+export function reportShellReads(cwd: string, log: (line: string) => void = console.log, repoRoot: string = root): void {
   let scan
   try {
     const transcriptPath = findLatestTranscript(cwd, process.env.HOME)
@@ -736,7 +741,7 @@ export function reportShellReads(cwd: string, log: (line: string) => void = cons
     scan = shellReadScanOf(
       parseTranscript(readFileSync(transcriptPath, 'utf8')),
       readSubagentJsonls(transcriptPath).map((s) => ({ label: s.label, records: parseTranscript(s.jsonl) })),
-      cwd,
+      { repoRoot },
     )
   } catch {
     // Locating and reading the transcript is best-effort: a report that can't be

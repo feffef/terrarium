@@ -11,6 +11,7 @@ import {
   deriveTrigger,
   extractTrace,
   findLatestTranscript,
+  loadDocLineIndex,
   foldSubagentTrace,
   normalizeRemoteSessionId,
   parseTranscript,
@@ -22,7 +23,8 @@ import {
   type AuthoredScratch,
 } from '../../scripts/session-trace.ts'
 import { validateEntry } from '../../scripts/log-session.ts'
-import { mkdtempSync, mkdirSync, writeFileSync } from 'node:fs'
+import { mkdtempSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
+import { buildDocLineIndex } from '../../scripts/shell-reads.ts'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 
@@ -347,192 +349,139 @@ describe('stitch()', () => {
   })
 })
 
-describe('docsReadViaShell (issue #1074)', () => {
-  const bashTurn = (command: string) => ({
-    type: 'assistant',
-    timestamp: '2026-08-29T10:00:00.000Z',
-    message: { model: 'claude-opus-5', content: [{ type: 'tool_use', name: 'Bash', input: { command } }] },
-  })
-  const withCwd = (...commands: string[]) => [
+describe('docsReadViaShell (issues #1074, #1545)', () => {
+  // Derived from what each Bash command's OUTPUT shows, never from the command
+  // text: an injected doc-line index is the whole universe of what can be
+  // credited (docs/research/shell-reads-by-output-matching.md).
+  const GUARDS = ['# Guards', '', 'The mechanical PreToolUse guards that hold rules prose stopped holding.'].join('\n')
+  const DOMAIN = ['# Domain', '', 'Multi-context vocabulary conventions for the Platform and its Tenants.'].join('\n')
+  const CONTEXT = ['# Platform context', '', 'The terms every agent needs regardless of task, and the Tenants roster.'].join('\n')
+  const index = buildDocLineIndex([
+    { path: 'docs/agents/guards.md', text: GUARDS },
+    { path: 'docs/agents/domain.md', text: DOMAIN },
+    { path: 'CONTEXT.md', text: CONTEXT },
+  ])
+  let n = 0
+  const bash = (command: string, output = ''): Record<string, unknown>[] => {
+    const id = `toolu_${++n}`
+    return [
+      { type: 'assistant', timestamp: '2026-08-29T10:00:00.000Z', message: { model: 'claude-opus-5', content: [{ type: 'tool_use', id, name: 'Bash', input: { command } }] } },
+      { type: 'user', timestamp: '2026-08-29T10:00:01.000Z', message: { content: [{ type: 'tool_result', tool_use_id: id, content: output }] } },
+    ]
+  }
+  const withCwd = (...turns: Record<string, unknown>[][]): Record<string, unknown>[] => [
     { type: 'user', sessionId: 'session_01SH', cwd: '/repo', timestamp: '2026-08-29T09:59:00Z', message: { content: 'go' } },
-    ...commands.map(bashTurn),
+    ...turns.flat(),
   ]
-  const sub = (...commands: string[]) => ({ label: 'Triage #1', records: withCwd(...commands) })
+  const sub = (...turns: Record<string, unknown>[][]) => ({ label: 'Triage #1', records: withCwd(...turns) })
 
-  it('derives instruction docs from Bash commands, relativized like filesRead', () => {
-    const trace = extractTrace(withCwd('sed -n "1,40p" /repo/docs/agents/guards.md'))
+  it('credits a doc from the lines its output shows, whatever the command looked like', () => {
+    const trace = extractTrace(withCwd(bash('cd /repo/docs/agents && for f in *.md; do cat "$f"; done', GUARDS)), process.env, index)
     expect(trace.docsReadViaShell).toEqual(['docs/agents/guards.md'])
-    // The Read-tool half is untouched — the two are independent records.
     expect(trace.filesRead).toEqual([])
   })
 
+  it('credits nothing without an index: the pure callers (guards, provenance) never see the field populated', () => {
+    expect(extractTrace(withCwd(bash('cat docs/agents/guards.md', GUARDS))).docsReadViaShell).toEqual([])
+  })
+
+  it('credits nothing from a command whose output shows no line of the doc it named', () => {
+    const trace = extractTrace(withCwd(bash('cat docs/agents/guards.md 2>/dev/null | head', '(Bash completed with no output)')), process.env, index)
+    expect(trace.docsReadViaShell).toEqual([])
+  })
+
   it('does NOT dedup against a Read of the same doc: both mechanisms are true', () => {
-    const records = withCwd('cat docs/agents/guards.md')
+    const records = withCwd(bash('cat docs/agents/guards.md', GUARDS))
     records.push({
       type: 'assistant',
       timestamp: '2026-08-29T10:01:00.000Z',
       message: { model: 'claude-opus-5', content: [{ type: 'tool_use', name: 'Read', input: { file_path: '/repo/docs/agents/guards.md' } }] },
-    } as never)
-    const trace = extractTrace(records)
+    })
+    const trace = extractTrace(records, process.env, index)
     expect(trace.filesRead).toEqual(['docs/agents/guards.md'])
     expect(trace.docsReadViaShell).toEqual(['docs/agents/guards.md'])
   })
 
   it("folds a subagent's shell reads in, as #796 did for filesRead", () => {
-    const parent = extractTrace(withCwd('cat CONTEXT.md'))
-    const folded = foldSubagentTrace(parent, [withCwd('cat docs/agents/domain.md')])
+    const parent = extractTrace(withCwd(bash('cat CONTEXT.md', CONTEXT)), process.env, index)
+    const folded = foldSubagentTrace(parent, [withCwd(bash('cat docs/agents/domain.md', DOMAIN))], process.env, index)
     expect(folded.docsReadViaShell.sort()).toEqual(['CONTEXT.md', 'docs/agents/domain.md'])
   })
 
   it('stitches in only when non-empty, and only from the trace', () => {
-    const authored: AuthoredScratch = {
-      session: 'session_01SH',
-      goal: 'g',
-      status: 'completed',
-      outcome: 'o',
-      summary: 's',
-      frictions: [],
-    }
-    const withReads = stitch(authored, extractTrace(withCwd('cat CONTEXT.md')))
+    const authored: AuthoredScratch = { session: 'session_01SH', goal: 'g', status: 'completed', outcome: 'o', summary: 's', frictions: [] }
+    const withReads = stitch(authored, extractTrace(withCwd(bash('cat CONTEXT.md', CONTEXT)), process.env, index))
     expect(withReads.docsReadViaShell).toEqual(['CONTEXT.md'])
     expect(validateEntry(withReads).ok).toBe(true)
-
-    const without = stitch(authored, extractTrace(withCwd('ls docs/')))
+    const without = stitch(authored, extractTrace(withCwd(bash('ls docs/', 'agents\nadr')), process.env, index))
     expect('docsReadViaShell' in without).toBe(false)
   })
 
-  it('reports near-misses for the author-time check, without persisting them', () => {
-    const scan = shellReadScanOf(withCwd('cat foo.txt > docs/agents/new.md'))
-    expect(scan.paths).toEqual([])
-    expect(scan.nearMisses.map((m) => m.rule)).toEqual(['redirect target: written, not read'])
-  })
-
-  it("scans subagent transcripts too, so the advisory matches what is committed", () => {
-    // The landed value folds subagents in (FOLDED_TRACE_FIELDS). An advisory
-    // over the parent alone would ask the agent to verify a strict subset of
-    // its own log — and the unverifiable entries would be exactly the ones an
-    // orchestrator is least able to judge.
-    const scan = shellReadScanOf(withCwd('cat CONTEXT.md'), [sub('cat docs/agents/domain.md')])
-    expect(scan.paths.sort()).toEqual(['CONTEXT.md', 'docs/agents/domain.md'])
-  })
-
-  // Issues #1206/#1244: the advisory needs each path's evidence, not just the union.
-  it('credits each path to the command and transcript that read it', () => {
-    const scan = shellReadScanOf(withCwd('cat CONTEXT.md'), [sub('cat docs/agents/domain.md')])
-    expect([...scan.provenance]).toEqual([
-      ['CONTEXT.md', { command: 'cat CONTEXT.md', source: 'this session' }],
-      ['docs/agents/domain.md', { command: 'cat docs/agents/domain.md', source: 'subagent: Triage #1' }],
-    ])
-  })
-
-  it('attributes a path the session itself ran to the session, even when a subagent ran it first', () => {
-    const scan = shellReadScanOf(withCwd('head CONTEXT.md'), [sub('cat CONTEXT.md')])
-    expect(scan.paths).toEqual(['CONTEXT.md'])
-    expect(scan.provenance.get('CONTEXT.md')).toEqual({ command: 'head CONTEXT.md', source: 'this session' })
-  })
-
-  it('does not call a path a near-miss when another record set counted it under a different spelling', () => {
-    // `scanShellReads` already gets this right within one scan by comparing
-    // canonicalized paths; merging scans compared a RAW token against
-    // canonicalized paths, so an alternate spelling slipped back into the report.
-    const scan = shellReadScanOf(withCwd('cat docs/agents/guards.md'), [sub('echo ./docs/agents/guards.md')])
-    expect(scan.paths).toEqual(['docs/agents/guards.md'])
-    expect(scan.nearMisses).toEqual([])
-  })
-
-  it('…and likewise across the .claude/skills ↔ .agents/skills pair', () => {
-    const scan = shellReadScanOf(withCwd('cat .agents/skills/tdd/SKILL.md'), [
-      sub('ls .claude/skills/tdd/SKILL.md'),
-    ])
-    expect(scan.paths).toEqual(['.agents/skills/tdd/SKILL.md'])
-    expect(scan.nearMisses).toEqual([])
-  })
-
-  it('still reports a near-miss nothing counted anywhere', () => {
-    const scan = shellReadScanOf(withCwd('cat CONTEXT.md'), [sub('ls docs/agents/guards.md')])
-    expect(scan.nearMisses.map((m) => m.path)).toEqual(['docs/agents/guards.md'])
-  })
-
-  describe('cd-prefix resolution (issue #1454)', () => {
-    it('leaves an ordinary command with no cd prefix unchanged', () => {
-      const scan = shellReadScanOf(withCwd('cat CONTEXT.md'))
-      expect(scan.paths).toEqual(['CONTEXT.md'])
+  describe('the author-time advisory (shellReadScanOf)', () => {
+    it('credits each path to the command and transcript whose output showed it, the session before a subagent', () => {
+      const scan = shellReadScanOf(withCwd(bash('head CONTEXT.md', CONTEXT)), [sub(bash('cat CONTEXT.md', CONTEXT), bash('cat docs/agents/domain.md', DOMAIN))], { docIndex: index })
+      expect([...scan.provenance]).toEqual([
+        ['CONTEXT.md', { command: 'head CONTEXT.md', source: 'this session' }],
+        ['docs/agents/domain.md', { command: 'cat docs/agents/domain.md', source: 'subagent: Triage #1' }],
+      ])
+      expect(scan.paths).toEqual(['CONTEXT.md', 'docs/agents/domain.md'])
     })
 
-    it('resolves a `cd <dir>;`-prefixed relative path against that directory, not session cwd', () => {
-      const scan = shellReadScanOf(withCwd('cd /repo/layers/tinkerfund; cat CONTEXT.md'))
-      expect(scan.paths).toEqual(['layers/tinkerfund/CONTEXT.md'])
-    })
-
-    it('resolves a `cd <dir> &&`-prefixed relative path against that directory', () => {
-      const scan = shellReadScanOf(withCwd('cd /repo/layers/tinkerfund && cat CONTEXT.md'))
-      expect(scan.paths).toEqual(['layers/tinkerfund/CONTEXT.md'])
-    })
-
-    it('falls back to unchanged behavior when cd is not a leading prefix (no false positive)', () => {
-      const scan = shellReadScanOf(withCwd('ls && cd /repo/layers/tinkerfund; cat CONTEXT.md'))
-      expect(scan.paths).toEqual(['CONTEXT.md'])
-    })
-  })
-
-  // Issue #1247: `bashCommandsOf` pairs a Bash tool_use with its own
-  // tool_result by `tool_use_id`, and `scanShellReads` uses that output to
-  // gate a grep/rg's crediting — exercised here end-to-end through
-  // `extractTrace`, not just at `scanShellReads` (covered directly in
-  // tests/unit/shell-reads.spec.ts).
-  describe('grep output gating threads through the real transcript shape', () => {
-    const bashWithResult = (id: string, command: string, output: string): Record<string, unknown>[] => [
-      { type: 'assistant', timestamp: '2026-09-14T10:00:00.000Z', message: { model: 'claude-opus-5', content: [
-        { type: 'tool_use', id, name: 'Bash', input: { command } },
-      ] } },
-      { type: 'user', timestamp: '2026-09-14T10:00:01.000Z', message: { content: [
-        { type: 'tool_result', tool_use_id: id, content: output },
-      ] } },
-    ]
-    const records = (...turns: Record<string, unknown>[][]): Record<string, unknown>[] => [
-      { type: 'user', sessionId: 'session_01SH', cwd: '/repo', timestamp: '2026-09-14T09:59:00Z', message: { content: 'go' } },
-      ...turns.flat(),
-    ]
-
-    it('does not credit a zero-match single-file grep (session 17\'s first shape)', () => {
-      const trace = extractTrace(
-        records(bashWithResult('toolu_1', 'grep -n "TODO" docs/agents/guards.md', '')),
-      )
-      expect(trace.docsReadViaShell).toEqual([])
-    })
-
-    it('credits only the files a multi-file grep actually matched (session 17\'s second shape)', () => {
-      const trace = extractTrace(
-        records(
-          bashWithResult(
-            'toolu_2',
-            'grep -rn "TODO" docs/agents/a.md docs/agents/b.md docs/agents/c.md',
-            ['docs/agents/a.md:3:TODO one', 'docs/agents/c.md:9:TODO two'].join('\n'),
-          ),
-        ),
-      )
-      expect(trace.docsReadViaShell.sort()).toEqual(['docs/agents/a.md', 'docs/agents/c.md'])
-    })
-
-    // Issue #1355: the harness records an empty stdout as a placeholder text.
-    it('does not credit a zero-match single-file grep whose result is the empty-output placeholder', () => {
-      const scan = shellReadScanOf(records(bashWithResult(
-        'toolu_4', 'grep -n -i "branch-pin" docs/agents/guards.md | head -3', '(Bash completed with no output)',
-      )))
+    it('explains, from the command text, why a doc a command named was not credited', () => {
+      const scan = shellReadScanOf(withCwd(
+        bash('cat foo.txt > docs/agents/new.md'),
+        bash('ls docs/agents/guards.md', 'docs/agents/guards.md'),
+        bash('sed -n 1,5p docs/agents/domain.md 2>/dev/null | head', '(Bash completed with no output)'),
+      ), [], { docIndex: index })
       expect(scan.paths).toEqual([])
       expect(scan.nearMisses.map((m) => [m.path, m.rule])).toEqual([
-        ['docs/agents/guards.md', 'grep/rg output does not show this file being read'],
+        ['docs/agents/domain.md', 'named by the command, but its output shows no line of this doc'],
+        ['docs/agents/new.md', 'redirect target: written, not read'],
+        ['docs/agents/guards.md', 'not a reader command'],
       ])
     })
 
-    it('still credits a single-file grep with bare content output', () => {
-      const trace = extractTrace(records(bashWithResult('toolu_5', 'grep "TODO" docs/agents/guards.md', 'TODO fix this')))
-      expect(trace.docsReadViaShell).toEqual(['docs/agents/guards.md'])
+    it('does not explain a glob or loop away when the output credited the command: those are never why a doc is missing', () => {
+      const scan = shellReadScanOf(withCwd(bash('for f in docs/agents/*.md; do cat "$f"; done', GUARDS)), [], { docIndex: index })
+      expect(scan.paths).toEqual(['docs/agents/guards.md'])
+      expect(scan.nearMisses).toEqual([])
     })
 
-    it('still credits an ordinary cat, unaffected by the grep gate', () => {
-      const trace = extractTrace(records(bashWithResult('toolu_3', 'cat docs/agents/guards.md', '')))
-      expect(trace.docsReadViaShell).toEqual(['docs/agents/guards.md'])
+    it('never calls a credited path a near-miss, under any spelling and from any record set', () => {
+      const scan = shellReadScanOf(withCwd(bash('cat docs/agents/guards.md', GUARDS)), [sub(bash('echo ./docs/agents/guards.md', './docs/agents/guards.md'))], { docIndex: index })
+      expect(scan.paths).toEqual(['docs/agents/guards.md'])
+      expect(scan.nearMisses).toEqual([])
+    })
+
+    it('names the cd-resolved path in a near-miss, so the agent recognizes which file went unshown (#1454)', () => {
+      const scan = shellReadScanOf(withCwd(bash('cd /repo/layers/tinkerfund; cat CONTEXT.md', '(Bash completed with no output)')), [], { docIndex: index })
+      expect(scan.paths).toEqual([])
+      expect(scan.nearMisses.map((m) => m.path)).toEqual(['layers/tinkerfund/CONTEXT.md'])
+    })
+  })
+
+  describe('the filesystem index (loadDocLineIndex)', () => {
+    it('indexes this repo\'s instruction docs and never a sink', () => {
+      const repoRoot = join(import.meta.dirname, '../..')
+      const idx = loadDocLineIndex(repoRoot)
+      const docs = new Set(idx.byLine.values())
+      expect(docs.has('CONTEXT.md')).toBe(true)
+      expect(docs.has('docs/agents/guards.md')).toBe(true)
+      expect(docs.has('.agents/skills/log-session/SKILL.md')).toBe(true)
+      expect([...docs].some((d) => d.startsWith('.claude/') || d.endsWith('CLAUDE.md') || d === 'README.md')).toBe(false)
+      const real = extractTrace(withCwd(bash('cat CONTEXT.md', readFileSync(join(repoRoot, 'CONTEXT.md'), 'utf8'))), process.env, idx)
+      expect(real.docsReadViaShell).toEqual(['CONTEXT.md'])
+    })
+
+    it('treats every other file in the checkout as a sink, so a code line a doc quotes never credits the doc', () => {
+      // `export default defineNuxtConfig({` is quoted in docs/agents/tenant-layers.md;
+      // a Skill Inventory entry's `name:` line matches its SKILL.md frontmatter.
+      const repoRoot = join(import.meta.dirname, '../..')
+      const idx = loadDocLineIndex(repoRoot)
+      for (const file of ['nuxt.config.ts', 'layers/journal/content/current/skills/resolving-merge-conflicts.yml']) {
+        const trace = extractTrace(withCwd(bash(`cat ${file}`, readFileSync(join(repoRoot, file), 'utf8'))), process.env, idx)
+        expect(trace.docsReadViaShell, file).toEqual([])
+      }
     })
   })
 })

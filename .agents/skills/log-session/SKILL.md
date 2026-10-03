@@ -169,27 +169,28 @@ is a normal PR.
 
 ## 3. Check the shell-read report
 
-`--author` prints what the shell-read detector found: the instruction docs a
-`cat`/`sed`/`grep` command streamed into this session's work (`docsReadViaShell`),
-each with the command that credited it and where it ran (this session or a named
-subagent — folded in by design, issue #796), and the candidates it *rejected* with
-the rule that rejected each. Check both lists against that evidence, not memory: a
-rejected command that really did show the file is a **miss**. (ADR-0009's
-shell-read amendment says why the rejects are printed at all.)
+`--author` prints what the shell-read detector found: the instruction docs whose
+own lines appeared in a Bash command's output in this session's work
+(`docsReadViaShell`), each with the command that showed it and where it ran
+(this session or a named subagent — folded in by design, issue #796), and the
+docs a command *named* without showing, with the rule that explains each.
+Credit comes from the output, never the command (ADR-0009's output-matching
+amendment). The two reads that amendment leaves invisible by design — a doc
+read from git history, a read too short to be distinctive — are expected, not
+frictions. Check both lists against that evidence, not memory.
 
 **You cannot correct the field** — it is derived, and an authored
 `docsReadViaShell` is refused by name. A wrong result is reported as a Friction
-instead, and the extractor is young enough that this is expected rather than
-exceptional:
+instead:
 
 - `severity` **at least `moderate`** — a deliberate floor, not a cost judgement
   (ADR-0009's shell-read amendment says why).
 - `description` contains the marker **`SHELL-READ-DETECTION`**, plus the
   **command verbatim**, the **path** expected, and the **direction** — a miss or
   a false positive. A Friction saying "detection looked off" can't drive a fix.
-- A **false positive** means no command in this session *or in any subagent it
-  dispatched* showed that file. A folded path you didn't personally read is not
-  one, and reporting it buries the real signal.
+- A **false positive** means no command's output in this session *or in any
+  subagent it dispatched* showed a line of that file. A folded path you didn't
+  personally read is not one, and reporting it buries the real signal.
 
 Nothing to report when both lists are right, and nothing prints when both are
 empty.
