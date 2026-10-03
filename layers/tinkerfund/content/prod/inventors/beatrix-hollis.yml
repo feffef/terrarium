@@ -1,7 +1,19 @@
 name: Beatrix Hollis
 bio: Keeps three cats and one litter box in Leeds, and considers a lit sign the least she can do for whichever one is using it.
 portrait: |-
-  <circle cx="50" cy="37" r="17" style="fill:color-mix(in srgb, var(--tf-ink) 68%, var(--tf-surface))" />
-  <path d="M19 96c4-21 17-31 31-31s27 10 31 31z" style="fill:var(--tf-accent)" />
-  <path d="M34 41c2 15 28 15 30 0c-4 5-7 7-15 7s-11-2-15-7z" style="fill:var(--tf-ink)" />
-  <path d="M30 26c5-9 30-9 35 0l2 5H28z" style="fill:var(--tf-ink)" />
+  <path d="M44 50h12v20H44z" style="fill:color-mix(in srgb, var(--tf-ink) 58%, var(--tf-surface))" />
+  <path d="M14 100c1-15 9-25 24-30l12-3 12 3c15 5 23 15 24 30z" style="fill:var(--tf-link)" />
+  <path d="M39 69l11 12 11-12-3-2-8 8-8-8z" style="fill:color-mix(in srgb, var(--tf-surface) 85%, var(--tf-ink))" />
+  <ellipse cx="32" cy="43" rx="3" ry="4" style="fill:color-mix(in srgb, var(--tf-ink) 58%, var(--tf-surface))" />
+  <ellipse cx="68" cy="43" rx="3" ry="4" style="fill:color-mix(in srgb, var(--tf-ink) 58%, var(--tf-surface))" />
+  <path d="M50 22c-11 0-18 8-18 19c0 9 4 15 9 18c3 2 6 3 9 3s6-1 9-3c5-3 9-9 9-18c0-11-7-19-18-19z" style="fill:color-mix(in srgb, var(--tf-ink) 58%, var(--tf-surface))" />
+  <path d="M27 46c-5-3-6-12-1-15c-3-7 4-13 10-11c2-6 10-8 14-4c5-4 13-1 13 5c6 0 9 7 5 12c5 3 5 11-1 14c-1-6-4-11-8-14c-9 3-18 3-26 0c-4 3-6 8-6 13z" style="fill:var(--tf-ink)" />
+  <path d="M24 46c-1 6 1 12 5 14c-2-6-1-10 1-14z M76 46c1 6-1 12-5 14c2-6 1-10-1-14z" style="fill:var(--tf-ink)" />
+  <ellipse cx="43" cy="42" rx="1.8" ry="2.2" style="fill:var(--tf-ink)" />
+  <ellipse cx="57" cy="42" rx="1.8" ry="2.2" style="fill:var(--tf-ink)" />
+  <path d="M38 42a5 5 0 1 0 10 0a5 5 0 1 0-10 0z M52 42a5 5 0 1 0 10 0a5 5 0 1 0-10 0z M48 42h4" style="fill:none;stroke:var(--tf-ink);stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round" />
+  <path d="M39 35c3-1 6-1 8 0 M53 35c3-1 6-1 8 0" style="fill:none;stroke:var(--tf-ink);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round" />
+  <path d="M50 44c-2 3-2 5 1 6" style="fill:none;stroke:var(--tf-ink);stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round" />
+  <path d="M43 51c3 5 11 5 14 0" style="fill:none;stroke:var(--tf-ink);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round" />
+  <path d="M38 76c0-3 2-5 4-5s4 2 4 5-2 3-4 3-4 0-4-3z" style="fill:var(--tf-warn)" />
+  <path d="M40 80h4" style="fill:none;stroke:var(--tf-ink);stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round" />
