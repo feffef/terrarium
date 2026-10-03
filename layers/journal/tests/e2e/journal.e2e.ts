@@ -22,8 +22,8 @@ import { SESSIONS_DIR } from '../../../../scripts/session-logs.ts'
 import { PIN_SETTLED_EVENT } from '../../app/utils/expandTransition.ts'
 import type { PinRecord } from '../../app/utils/expandTransition.ts'
 
-// `sessionUrl()`'s shape for either id form: cloud `session_…` or a local CLI's bare UUID.
-const SESSION_URL = /^https:\/\/claude\.ai\/code\/[\w-]+$/
+// Only a cloud `session_…` id gets a link; a local CLI's bare UUID has no claude.ai page.
+const SESSION_URL = /^https:\/\/claude\.ai\/code\/session_/
 
 // The `current` Space's Digest dates, oldest first — read live rather than
 // hardcoded so these assertions stay valid regardless of which dates
@@ -240,7 +240,7 @@ export function registerJournalE2E(): void {
     it('lets Enter on the Claude Code chip follow the link without toggling the card', async () => {
       await withRendered('/t/journal/current?maintainer', async (page) => {
         await page.route('https://claude.ai/**', (r) => r.fulfill({ status: 200, body: 'stub' }))
-        const card = page.locator('.feed .card').first()
+        const card = page.locator('.feed .card').filter({ has: page.locator('.chip.session') }).first()
         await card.locator('.chip.session').waitFor()
         await card.locator('.chip.session').focus()
         expect(await card.locator('.head').getAttribute('aria-expanded')).toBe('false')

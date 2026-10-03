@@ -199,7 +199,8 @@ export function sessionCardViews(sessions: SessionDoc[]): (SessionCardView & { k
       sid: sessionShortId(s.session),
       model: sessionModelsLabel(s.models),
       external,
-      url: external ? null : sessionUrl(s.session),
+      // A local CLI session's bare-UUID id has no claude.ai page.
+      url: external || !s.session.startsWith('session_') ? null : sessionUrl(s.session),
       // Expanded detail — the full log, revealed on click (no route of its own).
       summary: s.summary,
       subagents: s.subagents ?? [],
