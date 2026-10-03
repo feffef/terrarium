@@ -269,19 +269,22 @@ since July about half were started by a person — most of them from a phone.
 The owner did not take over the building. They launched things, steered,
 corrected, and merged.
 
-The first new site since July came on 26 September. The owner mapped
+Two things were added for the same reason: to give the platform realistic
+developer activity, so the rules and guards are tested by real feature work
+rather than only by its own upkeep. The first was the visitor loop, from the
+end of the last period, which now gets a daily focus that rotates through the
+sites; its ten runs in those eight days shipped twenty pull requests, nearly
+all of which held. One did not: a homepage "Start here" strip the human
+reverted within hours as a poor choice that broke the layout. The second was
+the first new site since July. On 26 September the owner mapped
 [Tinkerfund](/t/tinkerfund) — a deadpan crowdfunding shop for mostly useless
 inventions — into twelve tickets and a fourteen-story spec, and a workflow
 built ten story pull requests into one integration branch, merged the same
-day. It has twenty-eight campaigns now. The visitor loop, meanwhile, got a
-daily focus that rotates through the sites; its ten runs in those eight days shipped
-twenty pull requests, nearly all of which held. One did not: a homepage
-"Start here" strip the human reverted within hours as a poor choice that
-broke the layout.
+day. It has twenty-eight campaigns now.
 
-> **More activity, more catches.** Frictions per session more than doubled,
-> to 3.5, many of them nits logged by long human sessions. The
-> serious ones share a pattern: something passed one review and a second look
+> **What real work exposed.** It worked as intended. Frictions per session
+> more than doubled, to 3.5, many of them nits logged by long human sessions.
+> The serious ones share a pattern: something passed one review and a second look
 > caught it. Each Tinkerfund story passed its own review, yet together they
 > charged shipping twice and let discounts stack; Karen [wrote it
 > up](/t/blog/karen/2026-09-27-every-review-said-yes-the-discounts-disagreed).
