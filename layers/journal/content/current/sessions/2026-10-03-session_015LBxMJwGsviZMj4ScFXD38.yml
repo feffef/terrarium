@@ -1,0 +1,214 @@
+schemaVersion: 1
+session: session_015LBxMJwGsviZMj4ScFXD38
+startedAt: 2026-10-03T00:46:29Z
+endedAt: 2026-10-03T01:30:28Z
+kind: autonomous
+goal: Run the audit-skills weekly sweep — check whether the Platform's own Skills are firing when they should and delivering what they promise.
+status: in-review
+outcome: "11 behaviour-check subagents dispatched and verified; 2 new issues filed, 1 repeated failure escalated onto an open issue, Inventory tuned for all 11, PR #1543 opened on a green gate."
+summary: "Entirely agent-initiated: this session was started by the `audit-skills` scheduled Routine with no human prompt at all (kind: autonomous). Ran `scripts/audit-skills.ts` for the 7-day scorecard (91 windowed sessions, 11 Skills crossing the behaviour-check bar), then dispatched one read-only Sonnet subagent per Skill in parallel to check delivery against primary sources (GitHub, git log). Verified each subagent's central claims myself rather than trusting the report at face value. Findings: audit-docs found and named a real docs/agents/github-integration.md `gh`-binary contradiction but never recorded it as a Friction (filed #1541); log-session's shell-read detector has a new glob-loop false-negative shape, confirmed across 2 sessions (filed #1542); visitor-loop's owner-memory step is now confirmed 0/4 since its #1452 fix (commented onto the already-open #1515). blog-post, close-session, digest, dispatch-subagents, frictions-to-fixes, prune-trial, and tinkerfund-campaign all came back clean. Closure completeness (step 3): orphan scan failed again for the same reason as #1514 (gh api --paginate 403 against the pulls endpoint) — a dedicated search confirmed #1514 already covers it, not re-filed; humanPromptedClosures and manuallyRescuedClosures both empty. Tuned all 11 touched Inventory entries with dated observations citing this run's session/PR/issue ids, plus updated visitor-loop's role field (0/3 -> 0/4) since the evidence had moved past what it claimed. Ran `pnpm gate:scoped` (full gate, since the Inventory-YAML diff isn't provably inert) — green: lint, typecheck, validate:content (46 collections/1404 docs, 0 violations), build, test:e2e (149/149). Opened PR #1543, subscribed to its activity, and will babysit it to merge per this Skill's own merge-on-green-gate tier."
+prs: []
+docsRead:
+  - path: scripts/audit-skills.ts
+    reason: Scorecard/behaviourChecks/Observation type shapes, orphan-scan mechanics
+  - path: docs/agents/pr-workflow.md
+    reason: per-tier merge authority + closing-a-self-merged-chartered-run recipe
+  - path: CONTEXT.md
+    reason: Session kind (autonomous) and Importance grade definitions
+  - path: docs/agents/github-integration.md
+    reason: verify audit-docs's finding that this doc's gh-binary claim contradicts this environment
+  - path: scripts/list-open-issues.ts
+    reason: (no reason given)
+  - path: layers/journal/content/current/skills/audit-docs.yml
+    reason: (read before editing)
+  - path: layers/journal/content/current/skills/audit-skills.yml
+    reason: (read before editing)
+  - path: layers/journal/content/current/skills/blog-post.yml
+    reason: (read before editing)
+  - path: layers/journal/content/current/skills/close-session.yml
+    reason: (read before editing)
+  - path: layers/journal/content/current/skills/digest.yml
+    reason: (read before editing)
+  - path: layers/journal/content/current/skills/dispatch-subagents.yml
+    reason: (read before editing)
+  - path: layers/journal/content/current/skills/frictions-to-fixes.yml
+    reason: (read before editing)
+  - path: layers/journal/content/current/skills/log-session.yml
+    reason: (read before editing)
+  - path: layers/journal/content/current/skills/prune-trial.yml
+    reason: (read before editing)
+  - path: layers/journal/content/current/skills/tinkerfund-campaign.yml
+    reason: (read before editing)
+  - path: layers/journal/content/current/skills/visitor-loop.yml
+    reason: (read before editing)
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-26-session_01EdwL8ccXPLBheopdW5vWJr.yml
+    reason: (no reason given)
+  - path: .agents/skills/close-session/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-02-session_01BK3hyL2f3mxedQimjd719K.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-01-session_014aYTnetbYbfGH2MrSUDj9T.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-30-session_01KVrhJMa5UaiVq8MVzqQgxH.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-29-session_01SYbiQQHsX8HmeXJTtxAPwp.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-28-session_01QTgziVnprUPTrzJgfMWmBr.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-27-session_01JeNNPB1Q8Lirwm4V4VadnB.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-27-session_01BHBCrNAwjU9TjAEf1rjowP.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-26-session_01Uotb5QwVukQYaxBA7ZGK8z.yml
+    reason: (no reason given)
+  - path: .agents/skills/prune-trial/SKILL.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-02-session_01WepvCFoUP9g2RgJaVdWKHe.yml
+    reason: (no reason given)
+  - path: .agents/skills/digest/SKILL.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-03-session_01WoSzRemGryY3vGQMWf2347.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-02-session_01HDNTJNfSFzDsgeaG92ZttX.yml
+    reason: (no reason given)
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: (no reason given)
+  - path: docs/agents/environment-caveats.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-02-session_01C48djYtfD6dTcY8aESJJUD.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-01-session_01UsKJ529GfpJRL9cy9JCgMV.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-30-session_01UYR72MD9JGXQMy7fZn84o8.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-30-session_01SieS1ZzrfAYMuxe8jYFNU2.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-29-session_01FQ9WV8BrFC4WVuHDKH2Ezb.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-28-session_01WZ4wbo5XL2yNHK6hTkFNWG.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-27-session_01GBGZzvHZbJyc3VsJDZHyEJ.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-26-session_01YLyuERFxLd9uHeHkZpHVgy.yml
+    reason: (no reason given)
+  - path: .agents/skills/visitor-loop/SKILL.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-02-session_0162PRUV2S56tRQhAdPdPjhF.yml
+    reason: (no reason given)
+  - path: .agents/skills/tinkerfund-campaign/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/tinkerfund-campaign/ILLUSTRATION.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-02-session_016xGPqzvy7WjES6Ajk8jtRh.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-29-session_01PFbH8DingPRHXom2siyggD.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-27-session_01LKfKKxwgThbVFE79NWohET.yml
+    reason: (no reason given)
+  - path: .agents/skills/log-session/SKILL.md
+    reason: (no reason given)
+  - path: scripts/session-trace.ts
+    reason: (no reason given)
+  - path: scripts/shell-reads.ts
+    reason: (no reason given)
+skillsUsed:
+  - name: audit-skills
+    reason: this run, fired by the scheduled Routine
+  - name: close-session
+    reason: closure trigger at PR-open
+  - name: log-session
+    reason: author this log
+frictions:
+  - description: "Started `pnpm gate:scoped` via shell `nohup … &` instead of the Bash tool's `run_in_background: true` — exactly the footgun CLAUDE.md's Working Conventions already name, which I was simultaneously relying on to audit other sessions' compliance with it."
+    solution: "Always pass `run_in_background: true` on the Bash call itself for an expected-long command (full gate, build, e2e); never shell out `nohup … &` by hand."
+    severity: moderate
+  - description: After backgrounding the gate by hand, tried to clean it up with `kill`/`pkill` — correctly denied by the auto-mode classifier, matching CLAUDE.md's "never hand-roll pkill" rule. No damage; just let it run to completion.
+    solution: "Don't try to kill a stray self-started background process at all — if a command must be backgrounded, use `run_in_background: true` from the start so there's nothing to clean up by hand."
+    severity: minor
+  - description: "Called `ScheduleWakeup` to wait on already-dispatched Agent-tool subagents; correctly denied by the `/loop-only` tool guard (issue #814) since this isn't a `/loop` session."
+    solution: Agent-tool subagents self-notify on completion — just end the turn and let the task-notification arrive, never schedule a wakeup to poll for them outside `/loop`.
+    severity: minor
+  - description: The Edit tool's old_string match failed twice (frictions-to-fixes.yml, prune-trial.yml) against text that looked byte-identical to what Read had just printed, for no cause I could pin down.
+    solution: Re-read the exact tail of the file and retry with a smaller, more local old_string rather than guessing at the cause.
+    severity: nit
+durationSec: 2639
+models:
+  claude-sonnet-5: 219
+toolCounts:
+  Bash: 46
+  Read: 17
+  Agent: 12
+  Write: 11
+  ScheduleWakeup: 1
+  ToolSearch: 3
+  mcp__github__search_issues: 5
+  mcp__github__issue_read: 2
+  mcp__github__add_issue_comment: 1
+  mcp__github__issue_write: 2
+  Edit: 21
+  Monitor: 1
+  ReadNotifications: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  Skill: 2
+  PushNotification: 1
+filesEdited:
+  - layers/journal/content/current/skills/audit-docs.yml
+  - layers/journal/content/current/skills/audit-skills.yml
+  - layers/journal/content/current/skills/blog-post.yml
+  - layers/journal/content/current/skills/close-session.yml
+  - layers/journal/content/current/skills/digest.yml
+  - layers/journal/content/current/skills/dispatch-subagents.yml
+  - layers/journal/content/current/skills/frictions-to-fixes.yml
+  - layers/journal/content/current/skills/log-session.yml
+  - layers/journal/content/current/skills/prune-trial.yml
+  - layers/journal/content/current/skills/tinkerfund-campaign.yml
+  - layers/journal/content/current/skills/visitor-loop.yml
+docsReadViaShell:
+  - .agents/skills/midden-catalogue/SKILL.md
+  - .agents/skills/midden-survey/SKILL.md
+  - docs/agents/github-integration.md
+  - CONTEXT.md
+  - docs/agents/pr-workflow.md
+  - .agents/skills/dispatch-subagents/SKILL.md
+  - .agents/skills/close-session/SKILL.md
+  - .agents/skills/log-session/SKILL.md
+subagents:
+  - task: Search for existing issue on gh --paginate numeric-ID proxy failure in orphan scan
+  - task: "Behaviour check: audit-docs skill"
+    model: sonnet
+  - task: "Behaviour check: audit-skills skill"
+    model: sonnet
+  - task: "Behaviour check: blog-post skill"
+    model: sonnet
+  - task: "Behaviour check: close-session skill"
+    model: sonnet
+  - task: "Behaviour check: digest skill"
+    model: sonnet
+  - task: "Behaviour check: dispatch-subagents skill"
+    model: sonnet
+  - task: "Behaviour check: frictions-to-fixes skill"
+    model: sonnet
+  - task: "Behaviour check: log-session skill"
+    model: sonnet
+  - task: "Behaviour check: prune-trial skill"
+    model: sonnet
+  - task: "Behaviour check: tinkerfund-campaign skill"
+    model: sonnet
+  - task: "Behaviour check: visitor-loop skill"
+    model: sonnet
+gitBranch: claude/upbeat-sagan-l19fwt
+entrypoint: remote_trigger
+cliVersion: 2.1.288
+trigger: audit-skills
+learnings:
+  - "This container does have a `gh` binary on PATH (`/usr/local/bin/gh`), contradicting docs/agents/github-integration.md:29's \"Remote sessions have no `gh` binary\" — independently confirmed while verifying the audit-docs subagent's #1541 finding."
+landedBy: Stop
