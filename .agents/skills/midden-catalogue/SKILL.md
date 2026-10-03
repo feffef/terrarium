@@ -60,7 +60,8 @@ write has a source you have read this session. What the record doesn't say
   branch name"), not what the project calls it (guard, gate, Routine, Space,
   prune trial). Keep the weakest true phrasing: the claim the evidence
   supports, not the sharpest one it permits. Each rewrite tends to overstate
-  by one notch ("same day" becomes "that morning").
+  by one notch ("same day" becomes "that morning"). Open a report with one
+  short paragraph on what binds its finds; let the finds carry the rest.
 
 Then grep `layers/midden/` for prose your change makes false — season
 descriptions, counts in the e2e header comment, the trench index — and fix it

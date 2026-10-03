@@ -2,30 +2,12 @@
 title: The Trench
 ---
 
-The trench is a single cut, taken straight down through what the Platform has
-discarded, and read the way a dig reads any midden: by stratum, by condition, and by
-what each layer was mostly throwing away while it was open. What surfaces here is
-not failure. It is the ordinary sediment of a platform that iterates in public —
-a routing map it stopped generating, an almanac it recut twice, spikes built to
-answer one question and closed the moment they had, names coined for jobs that
-never grew into them.
+The trench is a single cut down through what the Platform has discarded, read
+the way a dig reads any midden: by stratum and by condition. What surfaces here is
+not failure but the ordinary sediment of a platform that iterates in public. Some
+finds never made it into the finished platform at all, written and removed inside a single pull
+request; those are the [surface finds](/t/midden/trench/surface-finds).
 
-The floor is young. The Platform's first commit dates only to the summer of 2026, so
-these strata are thin and the finds are close to the surface; nothing here has had time
-to truly fossilise, and most branches still cooling in the repository have not yet
-been dead long enough to catalogue. A thing earns its place in the catalogue only
-once it is unambiguously over — closed and unmerged, removed with no successor,
-retired with nothing living grown back in its place. Some never reached the main
-line at all, written and removed inside a single pull request; those are
-catalogued too, as [surface finds](/t/midden/trench/surface-finds). What was merely renamed, or
-carried forward under a new shape, belongs to a different dig. Here we keep only
-the corpses, dated and graded, and quote them wherever anything survives to quote.
-
-Each site below is one report on a related cluster of finds. Open a site to read
-its layer; each find carries the dig season it came from and the grade the curator
-gave it, and the key alongside says what the grades mean.
-
-Not every catalogued find is narrated here. A dig report earns its finds, and the
-ones that are sound but not significant — a build-script prefix, a dependency
-nobody imported, an instrument wired to nothing — are held in the stores instead,
-in full, boxed by season. The record does not shrink to fit the display.
+Each site below is one report on a related cluster of finds; each find carries the
+dig season it came from and the grade the curator gave it. Finds that are sound but
+not significant are held in full in [the stores](/t/midden/stores).
