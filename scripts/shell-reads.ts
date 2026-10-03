@@ -92,8 +92,8 @@ export interface NearMiss {
 
 export interface ShellReadScan {
   paths: string[]
-  /** Each counted path's first crediting command, so the advisory can show its
-   *  evidence instead of leaving a surprising entry to be guessed at (issue #1244). */
+  /** Each path the command text names as read, with the first such command —
+   *  since #1545 only the advisory's "named, but unshown" rule consumes it. */
   creditedBy: Map<string, string>
   nearMisses: NearMiss[]
 }
@@ -735,10 +735,9 @@ export interface OutputScan {
   creditedBy: Map<string, string>
 }
 
-/** The ways a reader command wraps a doc line: `grep -n`'s `12:`, context's
- *  `12-`, multi-file grep's `path:12:` and its context `path-12-`, `cat -n`'s
- *  `  12<tab>`, unified diff's `+`/`-`, plain diff's `> `/`< `. Each is tried
- *  as its own candidate; the raw line is always one of them. */
+/** What `grep -n`, multi-file grep, `cat -n`, unified diff and plain `diff`
+ *  put in front of a line. Each is tried as its own candidate; the raw line is
+ *  always one of them. */
 const LINE_PREFIXES = [/^[+-]/, /^[<>] ?/, /^\d+[:-]/, /^[^:\s]+[:-]\d+[:-]/, /^\s*\d+\t/]
 
 function unwrappedCandidates(raw: string): string[] {

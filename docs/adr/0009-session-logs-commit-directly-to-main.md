@@ -554,11 +554,11 @@ rule, and the Journal kept logging new ones. The field is now derived by
 **matching the command's `tool_result` text against the lines of the
 instruction docs themselves**: an index of every instruction doc's trimmed
 lines of at least `MIN_DISTINCTIVE_LINE` characters (`scripts/shell-reads.ts`)
-that are unique across docs and absent from `CLAUDE.md`/`README.md`, matched
-after stripping the prefixes `grep -n`,
-multi-file grep, `cat -n` and diff add; a doc whose own path prefixes an output
-line (`path:12:`) is credited too. A command that printed nothing can never be
-credited. Measured against the logged frictions in
+that appear in no other file of the checkout (every non-doc file is a sink, so
+a line of code a doc quotes never credits the doc), matched after stripping the
+line prefixes reader commands add (`LINE_PREFIXES`); a doc whose own path
+prefixes an output line (`path:12:`) is credited too. A command that printed
+nothing can never be credited. Measured against the logged frictions in
 `docs/research/shell-reads-by-output-matching.md`.
 
 Two consequences the earlier wording did not allow for:

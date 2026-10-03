@@ -173,13 +173,11 @@ is a normal PR.
 own lines appeared in a Bash command's output in this session's work
 (`docsReadViaShell`), each with the command that showed it and where it ran
 (this session or a named subagent — folded in by design, issue #796), and the
-docs a command *named* without showing, with the rule that explains each. The
-credit comes from the output, not the command (ADR-0009's output-matching
-amendment), so a glob, loop, `cd`, pipe or git form is never why a doc is
-missing: only its lines not reaching the session is. The two reads it cannot
-see by design (a doc read from git history, a read too short to be
-distinctive) are defined in that amendment. Check both lists against that
-evidence, not memory.
+docs a command *named* without showing, with the rule that explains each.
+Credit comes from the output, never the command (ADR-0009's output-matching
+amendment). The two reads that amendment leaves invisible by design — a doc
+read from git history, a read too short to be distinctive — are expected, not
+frictions. Check both lists against that evidence, not memory.
 
 **You cannot correct the field** — it is derived, and an authored
 `docsReadViaShell` is refused by name. A wrong result is reported as a Friction
@@ -190,9 +188,9 @@ instead:
 - `description` contains the marker **`SHELL-READ-DETECTION`**, plus the
   **command verbatim**, the **path** expected, and the **direction** — a miss or
   a false positive. A Friction saying "detection looked off" can't drive a fix.
-- A **false positive** means no command in this session *or in any subagent it
-  dispatched* showed that file. A folded path you didn't personally read is not
-  one, and reporting it buries the real signal.
+- A **false positive** means no command's output in this session *or in any
+  subagent it dispatched* showed a line of that file. A folded path you didn't
+  personally read is not one, and reporting it buries the real signal.
 
 Nothing to report when both lists are right, and nothing prints when both are
 empty.

@@ -234,26 +234,29 @@ describe('reportShellReads (the author-time verification report)', () => {
   // Builds a fake harness transcript store so the report can be driven end to
   // end — it is the agent-facing half of #1074's loop, and its silence rules
   // matter as much as its output.
-  // The docs a fixture command can show, written to a real root so the
-  // output matcher's index (issue #1545) has something to credit against.
+  // The docs a fixture can show, written to a real root so the output
+  // matcher's index (issue #1545) has something to credit against. A command
+  // is a bare string (no output) or a `[command, output]` pair: what the
+  // result showed is stated per case, never inferred from the command text.
   const FIXTURE_DOCS: Record<string, string> = {
     'docs/agents/guards.md': 'The mechanical PreToolUse guards that hold rules prose stopped holding.',
     'CONTEXT.md': 'The terms every agent needs regardless of task, and the Tenants roster.',
   }
+  type Cmd = string | [command: string, output: string]
   let n = 0
-  const bash = (command: string): Record<string, unknown>[] => {
+  const bash = (entry: Cmd): Record<string, unknown>[] => {
+    const [command, output] = typeof entry === 'string' ? [entry, ''] : entry
     const id = `toolu_${++n}`
-    const shown = Object.keys(FIXTURE_DOCS).find((d) => command.startsWith('cat') && command.includes(d))
     return [
       { type: 'assistant', message: { content: [{ type: 'tool_use', id, name: 'Bash', input: { command } }] } },
-      { type: 'user', message: { content: [{ type: 'tool_result', tool_use_id: id, content: shown ? FIXTURE_DOCS[shown] : '' }] } },
+      { type: 'user', message: { content: [{ type: 'tool_result', tool_use_id: id, content: output }] } },
     ]
   }
-  const jsonl = (cwd: string, commands: string[]): string =>
+  const jsonl = (cwd: string, commands: Cmd[]): string =>
     [{ type: 'user', cwd, message: { content: 'go' } }, ...commands.flatMap(bash)]
       .map((r) => JSON.stringify(r))
       .join('\n')
-  function store(commands: string[], subagentCommands?: string[], meta?: string): { home: string; root: string } {
+  function store(commands: Cmd[], subagentCommands?: Cmd[], meta?: string): { home: string; root: string } {
     const root = mkdtempSync(join(tmpdir(), 'shellread-root-'))
     for (const [rel, text] of Object.entries(FIXTURE_DOCS)) {
       mkdirSync(dirname(join(root, rel)), { recursive: true })
@@ -283,7 +286,7 @@ describe('reportShellReads (the author-time verification report)', () => {
   }
 
   it('lists the detected paths and the rule that rejected each near-miss', () => {
-    const fixture = store(['cat docs/agents/guards.md', 'ls docs/adr/0001-x.md'])
+    const fixture = store([['cat docs/agents/guards.md', FIXTURE_DOCS['docs/agents/guards.md']!], 'ls docs/adr/0001-x.md'])
     const out = run(fixture).join('\n')
     expect(out).toContain('docs/agents/guards.md')
     expect(out).toContain('not a reader command')
@@ -300,21 +303,22 @@ describe('reportShellReads (the author-time verification report)', () => {
 
   // Issue #1244: each detected path shows its crediting command and where it ran.
   it("shows the session's own crediting command", () => {
-    const out = run(store(['cat   docs/agents/guards.md'], ['echo hi']))
+    const out = run(store([['cat   docs/agents/guards.md', FIXTURE_DOCS['docs/agents/guards.md']!]], ['echo hi']))
     expect(out).toContain('    docs/agents/guards.md')
     expect(out).toContain('      [this session] cat docs/agents/guards.md')
   })
 
   it("names the subagent by its meta.json description, else its agent id", () => {
     const meta = JSON.stringify({ description: 'Triage issue #869' })
-    const named = run(store(['git status'], ['cat docs/agents/guards.md'], meta))
+    const guards: Cmd = ['cat docs/agents/guards.md', FIXTURE_DOCS['docs/agents/guards.md']!]
+    const named = run(store(['git status'], [guards], meta))
     expect(named).toContain('      [subagent: Triage issue #869] cat docs/agents/guards.md')
-    const bare = run(store(['git status'], ['cat docs/agents/guards.md'], '{not json'))
+    const bare = run(store(['git status'], [guards], '{not json'))
     expect(bare).toContain('      [subagent: a1] cat docs/agents/guards.md')
   })
 
   it('does not ask for a friction about a path a subagent legitimately read', () => {
-    const out = run(store(['cat CONTEXT.md'], ['cat docs/agents/guards.md'])).join('\n')
+    const out = run(store([['cat CONTEXT.md', FIXTURE_DOCS['CONTEXT.md']!]], [['cat docs/agents/guards.md', FIXTURE_DOCS['docs/agents/guards.md']!]])).join('\n')
     // The old text — "check both lists against what you actually ran … if it
     // listed one you never read, log a Friction" — is exactly what manufactured
     // the false reports; a folded path is not something the reader ran.

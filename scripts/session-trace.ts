@@ -30,8 +30,8 @@
 // Usage:  tsx scripts/session-trace.ts <transcript.jsonl>
 //   Prints the derived trace as JSON.
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs'
-import { basename, dirname, join } from 'node:path'
-import { pathToFileURL } from 'node:url'
+import { basename, dirname, join, resolve } from 'node:path'
+import { fileURLToPath, pathToFileURL } from 'node:url'
 import { DERIVED_REASON, FOLDED_TRACE_FIELDS } from '../shared/trace-fields.ts'
 import {
   buildDocLineIndex,
@@ -240,36 +240,36 @@ function resolveGlobAgainstTree(repoRoot: string): (token: string) => string | u
   }
 }
 
-/** The instruction docs under `repoRoot`, as `isInstructionDoc` scopes them,
- *  plus the sinks whose lines disqualify a doc line from being distinctive —
- *  the one filesystem read behind `docsReadViaShell` (issue #1545; ADR-0009's
- *  output-matching amendment). `.claude/skills` is a symlink tree over
- *  `.agents/skills`, so only the latter is walked. */
+/** Files whose bytes are never prose, so reading them as sink text is waste. */
+const BINARY_EXT = /\.(png|jpe?g|gif|webp|ico|woff2?|ttf|otf|pdf|zip|gz|wasm|mp4|mp3)$/i
+const MAX_SINK_BYTES = 1 << 20
+
+/** The doc-line index behind `docsReadViaShell` (ADR-0009's output-matching
+ *  amendment, issue #1545), the one filesystem read it needs: every file in the
+ *  checkout, the instruction docs (`isInstructionDoc`) as docs and all the rest
+ *  as sinks — a doc that quotes a line of code or config must not be credited
+ *  when the agent reads that code. `.claude/skills` is a symlink tree over
+ *  `.agents/skills`, so it is skipped with the build and dependency trees. */
 export function loadDocLineIndex(repoRoot: string): DocLineIndex {
-  const files: string[] = []
+  const docs: DocText[] = []
+  const sinks: DocText[] = []
+  const skip = new Set(['node_modules', '.git', '.nuxt', '.output', '.claude'])
   const walk = (dir: string): void => {
     for (const name of readdirSync(dir)) {
-      if (name === 'node_modules' || name === '.git' || name === '.nuxt' || name === '.output') continue
+      if (skip.has(name)) continue
       const abs = join(dir, name)
       const st = statSync(abs, { throwIfNoEntry: false })
       if (!st) continue
-      if (st.isDirectory()) walk(abs)
-      else files.push(abs.slice(repoRoot.length + 1))
+      if (st.isDirectory()) {
+        walk(abs)
+        continue
+      }
+      const rel = abs.slice(repoRoot.length + 1)
+      if (isInstructionDoc(rel)) docs.push({ path: rel, text: readFileSync(abs, 'utf8') })
+      else if (!BINARY_EXT.test(name) && st.size <= MAX_SINK_BYTES) sinks.push({ path: rel, text: readFileSync(abs, 'utf8') })
     }
   }
-  for (const top of ['docs', '.agents']) {
-    if (existsSync(join(repoRoot, top))) walk(join(repoRoot, top))
-  }
-  // Of `layers/`, only each Tenant's own `CONTEXT.md` is instruction (ADR-0021).
-  const layers = join(repoRoot, 'layers')
-  if (existsSync(layers)) for (const t of readdirSync(layers)) files.push(`layers/${t}/CONTEXT.md`)
-  files.push('CONTEXT.md', 'CONTEXT-MAP.md')
-  const read = (rel: string): DocText | undefined => {
-    const abs = join(repoRoot, rel)
-    return existsSync(abs) ? { path: rel, text: readFileSync(abs, 'utf8') } : undefined
-  }
-  const docs = files.filter(isInstructionDoc).map(read).filter((d): d is DocText => d !== undefined)
-  const sinks = ['CLAUDE.md', 'README.md'].map(read).filter((d): d is DocText => d !== undefined)
+  walk(repoRoot.replace(/\/$/, ''))
   return buildDocLineIndex(docs, sinks)
 }
 
@@ -744,7 +744,7 @@ function main(): void {
     console.error('usage: tsx scripts/session-trace.ts <transcript.jsonl>')
     process.exit(1)
   }
-  const docIndex = loadDocLineIndex(process.cwd())
+  const docIndex = loadDocLineIndex(resolve(dirname(fileURLToPath(import.meta.url)), '..'))
   const trace = extractTrace(parseTranscript(readFileSync(path, 'utf8')), process.env, docIndex)
   const folded = foldSubagentTrace(trace, readSubagentJsonls(path).map((s) => parseTranscript(s.jsonl)), process.env, docIndex)
   console.log(JSON.stringify(folded, null, 2))
