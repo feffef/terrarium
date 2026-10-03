@@ -11,7 +11,8 @@ export function useTinkerfundSearch() {
     const term = tinkerfundSearchTerm(raw)
     if (!term) return []
     const like = `%${term}%`
-    const inventors = await queryCollection(collections.inventors).where('name', 'LIKE', like).select('stem').all()
+    const named = await queryCollection(collections.inventors).where('name', 'LIKE', like).select('stem', 'name').all()
+    const inventors = named.filter(({ name }) => startsAWord(name, term))
     const hits = await queryCollection(pagesKey)
       .where('campaign', 'IS NOT NULL')
       .orWhere((q) => {
@@ -20,8 +21,10 @@ export function useTinkerfundSearch() {
         for (const { stem } of inventors) q.where('campaign', 'LIKE', `%"inventor":"${stem}"%`)
         return q
       })
-      .select('path', 'title', 'description')
+      .select('path', 'title', 'description', 'campaign')
       .all()
-    return rankTinkerfundHits(hits, term).slice(0, limit)
+    const byInventor = new Set(inventors.map(({ stem }) => stem))
+    const matching = hits.filter((h) => startsAWord(h.title, term) || startsAWord(h.description, term) || byInventor.has(h.campaign?.inventor))
+    return rankTinkerfundHits(matching, term).slice(0, limit)
   }
 }

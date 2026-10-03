@@ -31,6 +31,11 @@ useHead({
 .main { flex: 1; width: 100%; box-sizing: border-box; padding-top: 28px; }
 .demo { border-bottom: var(--tf-hairline); background: var(--tf-bg); color: var(--tf-muted); font-size: 13px; }
 .demo .tf-wrap { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: center; padding-block: 5px; }
+@media (max-width: 520px) {
+  .demo .tf-wrap { gap: 2px 14px; }
+  .demo .tf-wrap span[aria-hidden] { display: none; }
+  .demo .tf-wrap > span:first-child { flex-basis: 100%; text-align: center; }
+}
 .skip {
   position: absolute;
   left: 8px;

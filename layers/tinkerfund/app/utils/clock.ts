@@ -21,5 +21,6 @@ export function tinkerfundCountdown(now: number, until: number): { days: number;
 }
 
 export function formatTinkerfundCountdown({ days, hours }: { days: number; hours: number }): string {
-  return `${tinkerfundCount(days, 'day')} ${tinkerfundCount(hours, 'hour')}`
+  const parts = [days && tinkerfundCount(days, 'day'), (hours || !days) && tinkerfundCount(hours, 'hour')]
+  return parts.filter(Boolean).join(' ')
 }
