@@ -26,11 +26,6 @@ Status: Accepted — supersedes both halves of ADR-0007; amends ADR-0013
 > `shared/routing.generated.ts` half). **Amends ADR-0013** (which retained the
 > committed routing map; that retained decision is now superseded here).
 
-> **Factual correction (2026-10-02, PR #1539).** `#routing` no longer exports
-> `entryRoutes`: nothing imported it from the virtual module, and the e2e sweep
-> derives the list from `entryRoutesFrom(expand(loadManifests()))` directly (see
-> Consequences). The Decision text below is left as written.
-
 ## Context
 
 ADR-0013 made `content.config.ts` a dynamic module that builds the keyed collections
@@ -57,8 +52,8 @@ static import, no Nuxt composable required — so the isolation-critical
 Nuxt module (`modules/routing.ts`) that computes and registers `#routing`.**
 
 - `modules/routing.ts` runs `expand(loadManifests())` at module setup time (same
-  as `content.config.ts`), builds `routingMap` and `entryRoutes` from the result, and
-  calls `addTemplate` + `nuxt.options.alias['#routing']` to expose them as the
+  as `content.config.ts`), builds `routingMap` from the result, and
+  calls `addTemplate` + `nuxt.options.alias['#routing']` to expose it as the
   `#routing` virtual module. The template is written as **plain JavaScript**
   (`.nuxt/routing.mjs`) because Nitro's Rollup bundler cannot parse TypeScript syntax.
   A companion `.nuxt/routing.d.ts` carries the type declarations for `tsc`/`vue-tsc`.

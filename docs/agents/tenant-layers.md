@@ -45,7 +45,8 @@ in) the root app instead. Two ways layer code deals with this:
 
   That resolves to `layers/journal/app/types/journal.ts` — a layer-local file
   — via plain relative traversal, sidestepping alias resolution entirely.
-  (Types are *not* auto-imported; only values from the scanned dirs are.)
+  (`app/types/` is not a scanned dir; a type exported from `app/utils/` or
+  `app/composables/` IS auto-imported, as a global, alongside the values.)
 
 - **Layer-local asset paths in `nuxt.config.ts` → `fileURLToPath` from the
   config's own URL.** Registering the layer's CSS by aliased path (e.g.

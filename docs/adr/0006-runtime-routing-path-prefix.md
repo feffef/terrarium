@@ -6,9 +6,10 @@ Status: Accepted — routing-map delivery amended by ADR-0014
 > **Amended by [ADR-0014](0014-build-time-virtual-routing-module.md) (2026-07-05).**
 > The path-prefix decision and the isolation model below stand unchanged, but the
 > routing map's delivery has moved since this was written: it is no longer a
-> committed `shared/routing.generated.ts` produced by a generator — the map and the
-> `entryRoutes` list are derived from the manifests at build time by
-> `modules/routing.ts` and imported as the `#routing` virtual module. Read the
+> committed `shared/routing.generated.ts` produced by a generator — the map is
+> derived from the manifests at build time by `modules/routing.ts` and imported
+> as the `#routing` virtual module, and the e2e sweep derives its entry-route
+> list from the same expansion (`entryRoutesFrom`, `shared/expand.ts`). Read the
 > mechanism references below as historical.
 
 ## Context
@@ -34,7 +35,7 @@ For now, route by **path prefix**: `/t/<tenant>/<space>/<slug>`.
   collision — they are different SQLite tables. Isolation is therefore a direct
   consequence of resolving to the correct key; a query can only ever see one
   Space's table.
-- An unknown Tenant/Space yields a 404. The generated `entryRoutes` list drives
+- An unknown Tenant/Space yields a 404. The derived entry-route list drives
   the L2 smoke gate so new Spaces are covered automatically.
 
 ## Consequences

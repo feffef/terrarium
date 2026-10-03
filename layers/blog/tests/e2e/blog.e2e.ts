@@ -169,9 +169,8 @@ export function registerBlogE2E(): void {
         const dialog = page.locator('dialog.cle-dialog[open]')
         await expect.poll(async () => dialog.isVisible().catch(() => false), { timeout: 8000 }).toBe(true)
 
-        // The technical-detail disclosure carries a non-empty diagnostic — the
-        // decompress failure funnel writes no __content_db_errors entry, so this
-        // proves the dialog reads the useAsyncData error object directly.
+        // The technical-detail disclosure carries a non-empty diagnostic read
+        // from the useAsyncData error object.
         await dialog.locator('.cle-details summary').click()
         expect((await dialog.locator('.cle-pre').textContent())?.trim().length).toBeGreaterThan(0)
 

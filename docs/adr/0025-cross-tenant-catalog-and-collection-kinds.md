@@ -13,10 +13,6 @@ Status: Accepted
 > kind's `utcTimestamp` refinement — so a PR could otherwise widen or narrow a
 > kind's contract without touching `shared/kinds.ts` itself.
 
-> **Factual correction (2026-10-02, PR #1539).** The `vitest.config.ts` alias for
-> `#catalog` mentioned under Decision §2 is gone: no spec imports the catalog
-> composable or module, so only the nuxt alias and `tsconfig.node.json` wire it.
-
 ## Context
 
 Tenant collections are isolated, and that is a feature: each
@@ -100,8 +96,8 @@ exposes `#catalog`: `catalogByKind('page') → [{ key, tenant, space, collection
 kind }, …]`. **Derived, not hand-written** (`catalogFrom()` in `shared/expand.ts`,
 L3-tested): a new Tenant with a `kind`-tagged collection appears automatically; a
 removed one drops. Written to `.nuxt/catalog.mjs` as plain data + a companion
-`.d.ts`, wired exactly as `#routing` is (nuxt alias, `vitest.config.ts`,
-`tsconfig.node.json`).
+`.d.ts`, wired as `#routing` is (nuxt alias, `tsconfig.node.json`; no
+`vitest.config.ts` alias, since no spec imports it).
 
 ### 3. `queryAcrossTenants(kind)` + a first-class **aggregator** role
 
