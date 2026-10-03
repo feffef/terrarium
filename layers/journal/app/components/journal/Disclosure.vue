@@ -21,7 +21,7 @@
 //
 // The key handlers take `.self`: a link inside the row (a PR chip, the Claude
 // Code chip) keeps its own Enter — a bubbled `.prevent` would cancel the
-// navigation and toggle the row instead. Clicks on those links `.stop` themselves.
+// navigation and toggle the row instead.
 const { expanded, controls = undefined } = defineProps<{ expanded: boolean; controls?: string }>()
 const emit = defineEmits<{ toggle: [] }>()
 </script>

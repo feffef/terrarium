@@ -205,12 +205,17 @@ export function registerJournalE2E(): void {
     // The Claude Code session link is maintainer-only: absent for a visitor,
     // revealed by `?maintainer`, kept for the tab in sessionStorage, cleared by
     // `?maintainer=0`. SSR never ships it, so hydration has nothing to mismatch.
-    it('shows the Claude Code session link only in the maintainer view', async () => {
+    // The flag is read where a session card mounts, i.e. the Space landing.
+    it('hides the Claude Code session link from a visitor, in the server HTML and once hydrated', async () => {
       const route = '/t/journal/current'
       expect(await $fetch(route)).not.toContain('chip session')
       await withRendered(route, async (page) => {
         expect(await page.locator('.feed .card .chip.session').count()).toBe(0)
       })
+    })
+
+    it('reveals the Claude Code session link with ?maintainer, keeps it for the tab, and clears it with ?maintainer=0', async () => {
+      const route = '/t/journal/current'
       await withRendered(`${route}?maintainer`, async (page) => {
         const chip = page.locator('.feed .card .chip.session').first()
         await chip.waitFor()

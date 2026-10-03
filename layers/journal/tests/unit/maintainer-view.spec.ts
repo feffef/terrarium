@@ -1,3 +1,5 @@
+// The maintainer view's flag logic (layers/journal/app/utils/maintainerView.ts),
+// driven with a fake storage so no browser is needed.
 import { describe, expect, it } from 'vitest'
 import { resolveMaintainerView } from '../../app/utils/maintainerView.ts'
 

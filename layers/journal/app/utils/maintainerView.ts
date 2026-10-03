@@ -8,7 +8,9 @@
 const PARAM = 'maintainer'
 const KEY = 'terrarium:maintainer'
 
-// Structural, so `Storage` fits without pulling the DOM lib into the node typecheck.
+// `storage` is a getter because merely reading `sessionStorage` can throw when it
+// is blocked, and that read must sit inside the try below. The interface is
+// structural so `Storage` fits without pulling the DOM lib into the node typecheck.
 interface MaintainerStorage {
   getItem(key: string): string | null
   setItem(key: string, value: string): void
