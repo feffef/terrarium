@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_015LBxMJwGsviZMj4ScFXD38
 startedAt: 2026-10-03T00:46:29Z
-endedAt: 2026-10-03T01:30:28Z
+endedAt: 2026-10-03T01:33:07Z
 kind: autonomous
 goal: Run the audit-skills weekly sweep — check whether the Platform's own Skills are firing when they should and delivering what they promise.
-status: in-review
-outcome: "11 behaviour-check subagents dispatched and verified; 2 new issues filed, 1 repeated failure escalated onto an open issue, Inventory tuned for all 11, PR #1543 opened on a green gate."
-summary: "Entirely agent-initiated: this session was started by the `audit-skills` scheduled Routine with no human prompt at all (kind: autonomous). Ran `scripts/audit-skills.ts` for the 7-day scorecard (91 windowed sessions, 11 Skills crossing the behaviour-check bar), then dispatched one read-only Sonnet subagent per Skill in parallel to check delivery against primary sources (GitHub, git log). Verified each subagent's central claims myself rather than trusting the report at face value. Findings: audit-docs found and named a real docs/agents/github-integration.md `gh`-binary contradiction but never recorded it as a Friction (filed #1541); log-session's shell-read detector has a new glob-loop false-negative shape, confirmed across 2 sessions (filed #1542); visitor-loop's owner-memory step is now confirmed 0/4 since its #1452 fix (commented onto the already-open #1515). blog-post, close-session, digest, dispatch-subagents, frictions-to-fixes, prune-trial, and tinkerfund-campaign all came back clean. Closure completeness (step 3): orphan scan failed again for the same reason as #1514 (gh api --paginate 403 against the pulls endpoint) — a dedicated search confirmed #1514 already covers it, not re-filed; humanPromptedClosures and manuallyRescuedClosures both empty. Tuned all 11 touched Inventory entries with dated observations citing this run's session/PR/issue ids, plus updated visitor-loop's role field (0/3 -> 0/4) since the evidence had moved past what it claimed. Ran `pnpm gate:scoped` (full gate, since the Inventory-YAML diff isn't provably inert) — green: lint, typecheck, validate:content (46 collections/1404 docs, 0 violations), build, test:e2e (149/149). Opened PR #1543, subscribed to its activity, and will babysit it to merge per this Skill's own merge-on-green-gate tier."
+status: completed
+outcome: "11 behaviour-check subagents dispatched and verified; 2 new issues filed, 1 repeated failure escalated onto an open issue, Inventory tuned for all 11, PR #1543 merged on a green gate."
+summary: "Entirely agent-initiated: this session was started by the `audit-skills` scheduled Routine with no human prompt at all (kind: autonomous). Ran `scripts/audit-skills.ts` for the 7-day scorecard (91 windowed sessions, 11 Skills crossing the behaviour-check bar), then dispatched one read-only Sonnet subagent per Skill in parallel to check delivery against primary sources (GitHub, git log). Verified each subagent's central claims myself rather than trusting the report at face value. Findings: audit-docs found and named a real docs/agents/github-integration.md `gh`-binary contradiction but never recorded it as a Friction (filed #1541); log-session's shell-read detector has a new glob-loop false-negative shape, confirmed across 2 sessions (filed #1542); visitor-loop's owner-memory step is now confirmed 0/4 since its #1452 fix (commented onto the already-open #1515). blog-post, close-session, digest, dispatch-subagents, frictions-to-fixes, prune-trial, and tinkerfund-campaign all came back clean. Closure completeness (step 3): orphan scan failed again for the same reason as #1514 (gh api --paginate 403 against the pulls endpoint) — a dedicated search confirmed #1514 already covers it, not re-filed; humanPromptedClosures and manuallyRescuedClosures both empty. Tuned all 11 touched Inventory entries with dated observations citing this run's session/PR/issue ids, plus updated visitor-loop's role field (0/3 -> 0/4) since the evidence had moved past what it claimed. Ran `pnpm gate:scoped` (full gate, since the Inventory-YAML diff isn't provably inert) — green: lint, typecheck, validate:content (46 collections/1404 docs, 0 violations), build, test:e2e (149/149). Opened PR #1543, subscribed to its activity, posted a verdict comment, and merged it via `scripts/merge-pr.ts` once the gate came back green — per this Skill's own merge-on-green-gate tier (docs/agents/pr-workflow.md). Merge commit 4a943102."
 prs: []
 docsRead:
   - path: scripts/audit-skills.ts
@@ -139,27 +139,29 @@ frictions:
   - description: The Edit tool's old_string match failed twice (frictions-to-fixes.yml, prune-trial.yml) against text that looked byte-identical to what Read had just printed, for no cause I could pin down.
     solution: Re-read the exact tail of the file and retry with a smaller, more local old_string rather than guessing at the cause.
     severity: nit
-durationSec: 2639
+durationSec: 2799
 models:
-  claude-sonnet-5: 219
+  claude-sonnet-5: 251
 toolCounts:
-  Bash: 46
+  Bash: 52
   Read: 17
   Agent: 12
   Write: 11
   ScheduleWakeup: 1
-  ToolSearch: 3
+  ToolSearch: 4
   mcp__github__search_issues: 5
   mcp__github__issue_read: 2
-  mcp__github__add_issue_comment: 1
+  mcp__github__add_issue_comment: 2
   mcp__github__issue_write: 2
-  Edit: 21
+  Edit: 23
   Monitor: 1
-  ReadNotifications: 1
+  ReadNotifications: 4
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
   Skill: 2
   PushNotification: 1
+  mcp__github__pull_request_read: 3
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/journal/content/current/skills/audit-docs.yml
   - layers/journal/content/current/skills/audit-skills.yml
