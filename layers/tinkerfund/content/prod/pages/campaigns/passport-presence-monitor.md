@@ -10,6 +10,12 @@ campaign:
   end: +26d
   backers: 310
   pledged: 18540
+  alsoBacked: [fridge-light-verification-camera, backup-suitcase]
+  recent:
+    - { name: Luca B., city: Milan, at: -1h }
+    - { name: Maren D., city: Bielefeld, at: -6h }
+    - { name: Kofi A., city: Kumasi, at: -11h }
+    - { name: Tomás V., city: Brno, at: -20h }
   specifications:
     - { label: Monitor, value: "42 × 28 × 9 mm, anodised aluminium" }
     - { label: Passport tag, value: "88 × 125 × 0.4 mm, fits inside the back cover" }

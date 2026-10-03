@@ -10,6 +10,10 @@ campaign:
   end: -30d
   backers: 2080
   pledged: 62400
+  recent:
+    - { name: Kai P., city: Bonn, at: -30d }
+    - { name: Lea Q., city: Malmö, at: -31d }
+    - { name: Cleo G., city: Leipzig, at: -40d }
   specifications:
     - { label: Length, value: 29.9 cm }
   figures:

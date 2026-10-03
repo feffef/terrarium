@@ -10,6 +10,11 @@ campaign:
   end: +15d
   backers: 260
   pledged: 17700
+  alsoBacked: [solo-pea-rest, cat-flap-decision-timer]
+  recent:
+    - { name: Aurelio P., city: Naples, at: -3h }
+    - { name: Sofia L., city: Malmö, at: -7h }
+    - { name: Bettina F., city: Augsburg, at: -1d }
   specifications:
     - { label: Portion size, value: "5–80 g, per meal" }
     - { label: Invitation lead time, value: 15 minutes }

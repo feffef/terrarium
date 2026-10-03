@@ -2,7 +2,7 @@
 // Deals, all derived from baked content at the page's "now" (issue #1364).
 import type { z } from 'zod'
 import type { campaign } from '../../schemas'
-import type { TinkerfundPromotionTerms } from './campaign'
+import { tinkerfundBundleReachable, tinkerfundNamedCampaigns, tinkerfundRecentBackers, type TinkerfundPromotionTerms } from './campaign'
 import { formatTinkerfundCountdown, resolveTinkerfundOffset, tinkerfundCountdown } from './clock'
 import { tinkerfundSlug } from './shop'
 import { campaignPriceFrom, deriveCampaignStatus, derivePromotionState, type CampaignState, type CampaignStatus } from './status'
@@ -71,17 +71,31 @@ export function tinkerfundBrowseRouteQuery(query: TinkerfundBrowseQuery): Record
 
 type Campaign = z.infer<typeof campaign>
 
+type Stock = Pick<Campaign['rewards'][number], 'id' | 'price' | 'claimed'>
+const stock = ({ id, price, claimed }: Stock): Stock => ({ id, price, claimed })
+
+/** What a card or table row reads of a Campaign, counting the Backer's Pledges included. */
+export function tinkerfundBrowseCampaign(c: Campaign) {
+  const { registry, inventor, category, goal, launch, end, backers, pledged, recent, alsoBacked } = c
+  return {
+    registry, inventor, category, goal, launch, end, backers, pledged, recent, alsoBacked,
+    figures: c.figures.slice(0, 1).map(({ svg }) => ({ svg })),
+    rewards: c.rewards.map(stock),
+    addons: c.addons?.map(stock),
+  }
+}
+
 interface TinkerfundCampaignDoc {
   path: string
   title: string
   description?: string
-  campaign: Pick<Campaign, 'registry' | 'inventor' | 'category' | 'goal' | 'launch' | 'end' | 'backers' | 'pledged'> & {
+  campaign: Pick<Campaign, 'registry' | 'inventor' | 'category' | 'goal' | 'launch' | 'end' | 'backers' | 'pledged' | 'recent' | 'alsoBacked'> & {
     figures: Pick<Campaign['figures'][number], 'svg'>[]
     rewards: Pick<Campaign['rewards'][number], 'price'>[]
   }
 }
 
-type PromotionTiming = Pick<TinkerfundPromotionTerms, 'campaign' | 'start' | 'end'>
+type PromotionTiming = Pick<TinkerfundPromotionTerms, 'campaign' | 'bundle' | 'start' | 'end'>
 
 /** What a Campaign card or an index-table row shows. */
 export interface TinkerfundListing {
@@ -96,10 +110,13 @@ export interface TinkerfundListing {
   goal: number
   pledged: number
   backers: number
+  /** Named Backers, newest first. */
+  named: string[]
+  alsoBacked?: string[]
   prices: number[]
   priceFrom?: number
   status: CampaignStatus
-  /** An Active Promotion names this Campaign; the shop calls it a Deal. */
+  /** An Active Promotion names this Campaign, a bundle in its list while reachable; the shop calls it a Deal. */
   promoted: boolean
 }
 
@@ -108,10 +125,7 @@ export function tinkerfundListings(
   promotions: PromotionTiming[],
   now: number,
 ): TinkerfundListing[] {
-  const promoted = new Set(
-    promotions.filter((p) => p.campaign && derivePromotionState(p, now) === 'active').map((p) => p.campaign),
-  )
-  return docs.map(({ path, title, description, campaign: c }) => ({
+  const listings = docs.map(({ path, title, description, campaign: c }) => ({
     path,
     title,
     description,
@@ -122,12 +136,24 @@ export function tinkerfundListings(
     goal: c.goal,
     pledged: c.pledged,
     backers: c.backers,
+    named: tinkerfundRecentBackers(c.recent, now).map((r) => r.name),
+    alsoBacked: c.alsoBacked,
     prices: c.rewards.map((r) => r.price),
     priceFrom: campaignPriceFrom(c.rewards),
     status: deriveCampaignStatus(c, c.pledged, now),
-    promoted: promoted.has(tinkerfundSlug(path)),
+    promoted: false,
   }))
+  const live = tinkerfundLive(listings)
+  const promoted = new Set(promotions
+    .filter((p) => derivePromotionState(p, now) === 'active' && (!p.bundle || tinkerfundBundleReachable(p, live)))
+    .flatMap(tinkerfundNamedCampaigns))
+  for (const l of listings) l.promoted = promoted.has(tinkerfundSlug(l.path))
+  return listings
 }
+
+/** The slugs of the Live Campaigns among these listings. */
+export const tinkerfundLive = (listings: Pick<TinkerfundListing, 'path' | 'status'>[]) =>
+  listings.filter((l) => l.status.state === 'live').map((l) => tinkerfundSlug(l.path))
 
 export const TINKERFUND_STATE_LABELS = { upcoming: 'Upcoming', live: 'Live', ended: 'Ended', funded: 'Funded', unfunded: 'Unfunded' } as const
 
@@ -220,3 +246,40 @@ export function groupTinkerfundPromotions<T extends PromotionTiming>(promotions:
   }
 }
 
+export const TINKERFUND_RECOMMENDATIONS = {
+  also: 'Backers also backed',
+  more: 'More from this category',
+  similar: 'More like this',
+} as const
+
+const RECOMMENDED = 4
+
+/** Live and Upcoming first, then Ended; at most a row's worth (issue #1387). */
+function recommend<T extends TinkerfundListing>(listings: T[]): T[] {
+  return browseTinkerfundListings(listings, { sort: 'ending' }).slice(0, RECOMMENDED)
+}
+
+export function tinkerfundBySlug<T extends TinkerfundListing>(listings: T[], slugs: Iterable<string>): T[] {
+  const index = new Map(listings.map((l) => [tinkerfundSlug(l.path), l]))
+  return [...new Set(slugs)].flatMap((s) => index.get(s) ?? [])
+}
+
+/** A Campaign page's "Backers also backed", then "More from this category"
+ *  without the Campaigns the first already shows. */
+export function tinkerfundRecommendations<T extends TinkerfundListing>(listings: T[], slug: string) {
+  const self = tinkerfundBySlug(listings, [slug])[0]
+  const also = tinkerfundBySlug(listings, self?.alsoBacked ?? []).slice(0, RECOMMENDED)
+  const shown = new Set([self, ...also])
+  return { also, more: recommend(listings.filter((l) => l.category === self?.category && !shown.has(l))) }
+}
+
+/** The Cart's one row: what its Campaigns' Backers also backed, else more
+ *  from their categories; never what the Cart already holds. */
+export function tinkerfundCartRecommendations<T extends TinkerfundListing>(listings: T[], inCart: string[]) {
+  const held = tinkerfundBySlug(listings, inCart)
+  const fresh = (l: T) => !held.includes(l)
+  const also = tinkerfundBySlug(listings, held.flatMap((l) => l.alsoBacked ?? [])).filter(fresh).slice(0, RECOMMENDED)
+  if (also.length) return { title: TINKERFUND_RECOMMENDATIONS.also, cards: also }
+  const categories = new Set(held.map((l) => l.category))
+  return { title: TINKERFUND_RECOMMENDATIONS.similar, cards: recommend(listings.filter((l) => categories.has(l.category) && fresh(l))) }
+}

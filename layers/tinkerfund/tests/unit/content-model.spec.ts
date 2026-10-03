@@ -124,6 +124,29 @@ describe('Campaign pages', () => {
   })
 })
 
+describe('recent Backers', () => {
+  const named = (...at: string[]) => at.map((a, i) => ({ name: `Backer ${i}`, city: 'Berlin', at: a }))
+  const recent = (campaign: object, ...at: string[]) => issues('pages', { campaign: { ...validCampaign(), ...campaign, recent: named(...at) } })
+
+  it('accepts names between launch and now, or the end once Ended', () => {
+    expect(recent({}, '-12d', '-1h', '-0h')).toEqual([])
+    expect(recent({ launch: '-30d', end: '-2d' }, '-3d', '-2d', '-20d')).toEqual([])
+  })
+
+  it('rejects a name dated before launch, after the end, or in the future', () => {
+    expect(recent({}, '-13d', '-1h', '+1h')).toEqual([
+      expect.stringMatching(/^campaign\.recent\.0\.at: .*before launch/),
+      expect.stringMatching(/^campaign\.recent\.2\.at: .*future/),
+    ])
+    expect(recent({ launch: '-30d', end: '-2d' }, '-3d', '-1d', '-20d')).toEqual([expect.stringMatching(/^campaign\.recent\.1\.at: .*ended/)])
+  })
+
+  it('rejects names on an Upcoming Campaign, and more names than Backers', () => {
+    expect(recent({ launch: '+1d', end: '+30d' }, '-1h', '-2h', '-3h')).toEqual([expect.stringMatching(/^campaign\.recent: .*Upcoming/)])
+    expect(recent({ backers: 2 }, '-1h', '-2h', '-3h')).toEqual([expect.stringMatching(/^campaign\.recent: .*3 Backers.*has 2/)])
+  })
+})
+
 describe('SVG markup', () => {
   const figure = (svg: string) => ({ campaign: { ...validCampaign(), figures: [{ style: 'isometric', caption: 'x', svg }, validCampaign().figures[1]] } })
 

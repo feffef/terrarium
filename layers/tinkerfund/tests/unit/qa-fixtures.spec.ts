@@ -8,12 +8,15 @@ import { deriveCampaignStatus, derivePromotionState } from '../../app/utils/stat
 
 interface Campaign {
   category: string
+  inventor: string
   goal: number
   launch: string
   end: string
   backers: number
   pledged: number
   rewards: { price: number; claimed: number; stock?: number }[]
+  recent?: { name: string; at: string }[]
+  alsoBacked?: string[]
 }
 
 const qa = fileURLToPath(new URL('../../content/qa/', import.meta.url))
@@ -61,6 +64,10 @@ describe('qa edge cases', () => {
     expect(derivePromotionState(promotions.find((p) => p.code === 'TINKER10')!, now)).toBe('active')
   })
 
+  it('has an Inventor with no Campaigns', () => {
+    expect(documents('inventors').some(({ stem }) => !campaigns.some((c) => c.inventor === stem))).toBe(true)
+  })
+
   it('has a category no Campaign is filed in', () => {
     const categories = documents('categories').map((s) => s.stem)
     expect(categories.some((slug) => !campaigns.some((c) => c.category === slug))).toBe(true)
@@ -77,5 +84,50 @@ describe('qa edge cases', () => {
     expect(pledged.some((s) => s?.state === 'live')).toBe(true)
     expect(pledged.some((s) => s?.outcome === 'funded')).toBe(true)
     expect(pledged.some((s) => s?.outcome === 'unfunded')).toBe(true)
+  })
+
+  it('names a Live Campaign’s Backers, one exactly at launch and one long enough to wrap', () => {
+    expect(campaigns.some((c) => c.status.state === 'live'
+      && c.recent?.some((r) => r.at === c.launch) && c.recent.some((r) => r.name.length > 40))).toBe(true)
+  })
+
+  it('names a Backer exactly at an Ended Campaign’s end', () => {
+    expect(campaigns.some((c) => c.status.state === 'ended' && c.recent?.some((r) => r.at === c.end))).toBe(true)
+  })
+
+  it('has a Live Campaign with Backers but none named', () => {
+    expect(campaigns.some((c) => c.status.state === 'live' && c.backers > 0 && !c.recent)).toBe(true)
+  })
+
+  const bundles = documents('promotions').flatMap(({ doc }) => {
+    const p = doc as { start: string; end?: string; bundle?: { min: number; campaigns?: string[] } }
+    return p.bundle ? [{ ...p.bundle, state: derivePromotionState(p, now) }] : []
+  })
+
+  // The Cart e2e backs the Stapler and then tops up the Lamp's Pledge to meet it.
+  it('has an Active bundle listing two Live Campaigns, one the demo Backer already pledged to', () => {
+    const pledged = (parseDocument(`${qa}backer/backer.yml`).pledges as { campaign: string }[]).map((p) => p.campaign)
+    expect(bundles.some((b) => b.state === 'active' && b.min === 2 && b.campaigns?.length === 2
+      && b.campaigns.every((s) => campaigns.find((c) => c.slug === s)?.status.state === 'live')
+      && b.campaigns.some((s) => pledged.includes(s)))).toBe(true)
+  })
+
+  it('has a Scheduled shop-wide bundle', () => {
+    expect(bundles.some((b) => b.state === 'scheduled' && !b.campaigns)).toBe(true)
+  })
+
+  const categoryOf = (slug: string) => campaigns.find((c) => c.slug === slug)?.category
+
+  it('has a Live Campaign whose Backers also backed Campaigns in other categories', () => {
+    expect(campaigns.some((c) => c.status.state === 'live' && c.alsoBacked?.every((s) => categoryOf(s) !== c.category))).toBe(true)
+  })
+
+  it('has a Campaign whose Backers also backed the rest of its category, leaving no more to show', () => {
+    expect(campaigns.some((c) => c.alsoBacked && campaigns.every((o) => o === c || o.category !== c.category || c.alsoBacked?.includes(o.slug)))).toBe(true)
+  })
+
+  it('has a Live Campaign without alsoBacked that has more in its category', () => {
+    expect(campaigns.some((c) => c.status.state === 'live' && !c.alsoBacked
+      && campaigns.some((o) => o !== c && o.category === c.category))).toBe(true)
   })
 })

@@ -95,6 +95,14 @@ time, so a Campaign holds its state forever: pick offsets for the state, not a d
   `claimed` never exceeds `stock`. `crowd.mjs` checks all three.
 - Funded or Unfunded is `pledged` against `goal` at `end`; an Upcoming Campaign
   has 0 Backers and 0 pledged.
+- Live or Ended: `recent` names 3–5 Backers, "Priya N."-style, each with a city
+  in a zone the Rewards ship to (mostly Domestic, i.e. Germany, and Europe) and an
+  `at` between launch and now, or the end once Ended — a Live one's within hours
+  or days. Comment authors may reappear. The schema checks the dates and count.
+- `alsoBacked` hand-picks 2–4 other Campaigns in the Space for "Backers also
+  backed": one way, not mirrored. Pair on a shared premise across categories
+  (the Mug with the Pausable Hourglass); the category shelf covers the rest.
+  `validate:content` checks the count and the slugs.
 - Stretch goals sit above the goal; a Reward option unlocked by one (like the
   Mug's porcelain white) says so in the Stretch goal's title.
 - Every zone a Reward `shipsTo` needs a `shipping` rate; a `digital: true`
@@ -123,3 +131,9 @@ A Promotion (`promotions/<slug>.yml`) targets one Campaign or the whole shop, as
 a percentage or a fixed EUR amount, from `start` to an optional `end`; a `code`
 is upper-case, and at most one code applies per checkout. Its title and
 `description` read like a real shop's offer.
+
+A `bundle: { min, campaigns? }` Promotion takes its percentage off each Pledge
+once `min` Campaigns get Rewards or Add-ons in one checkout. It has no `code` and
+no `campaign`; `campaigns` limits it to the ones listed (at least `min`), which
+then carry a Deal badge while enough of them are Live. `validate:content` checks
+these rules. Keep prod to one shop-wide bundle.

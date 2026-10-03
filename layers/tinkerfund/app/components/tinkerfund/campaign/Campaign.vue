@@ -8,23 +8,26 @@ const money = useTinkerfundMoney()
 const categories = useTinkerfundCategories()
 
 const slug = computed(() => tinkerfundSlug(props.doc.path))
-const { view: cart, change: changeCart, pledges, baked, clock, zoneName } = await useTinkerfundCart()
-const now = computed(() => clock.value.now)
-// Totals, Stretch goals and stock count the visitor's own Pledges (story #1384).
-const c = computed(() => withTinkerfundPledges(slug.value, props.doc.campaign, pledges.value, baked.value))
-
-const { data } = await useAsyncData(`tinkerfund-campaign-${space}-${props.doc.path}`, async () => {
+const cartReady = useTinkerfundCart()
+const catalogReady = useTinkerfundCatalog()
+const ownReady = useAsyncData(`tinkerfund-campaign-${space}-${props.doc.path}`, async () => {
   const [inventor, thread, log, promotions] = await Promise.all([
-    queryCollection(collections.inventors).where('stem', '=', c.value.inventor).first(),
+    queryCollection(collections.inventors).where('stem', '=', props.doc.campaign.inventor).first(),
     queryCollection(collections.comments).where('campaign', '=', slug.value).first(),
     queryCollection(collections.updates).where('campaign', '=', slug.value).first(),
     queryCollection(collections.promotions).all(),
   ])
   return { inventor, comments: thread?.comments ?? [], updates: log?.updates ?? [], promotions }
 })
+const [{ view: cart, change: changeCart, pledges, baked, clock, zoneName }, { cards }, { data }] =
+  await Promise.all([cartReady, catalogReady, ownReady])
+const recommended = computed(() => tinkerfundRecommendations(cards.value, slug.value))
+const now = computed(() => clock.value.now)
+// Totals, Stretch goals and stock count the visitor's own Pledges (story #1384).
+const c = computed(() => withTinkerfundPledges(slug.value, props.doc.campaign, pledges.value, baked.value))
 
 const status = computed(() => deriveCampaignStatus(c.value, c.value.pledged, now.value))
-const deals = computed(() => tinkerfundAutomaticDeals(data.value?.promotions ?? [], slug.value, now.value))
+const deals = computed(() => tinkerfundCampaignDeals(data.value?.promotions ?? [], slug.value, now.value, tinkerfundLive(cards.value)))
 const updates = computed(() => data.value?.updates ?? [])
 const comments = computed(() => data.value?.comments ?? [])
 const commentCount = computed(() => comments.value.reduce((n, t) => n + 1 + (t.replies?.length ?? 0), 0))
@@ -71,6 +74,13 @@ const backing = computed<TinkerfundBacking>(() => ({ slug: slug.value, state: st
         :deals="deals"
         :clock="clock"
         :pledge-ref="pledge?.ref"
+      />
+      <TinkerfundCampaignRecentBackers
+        v-if="status.state === 'live' && (c.recent || pledge)"
+        class="recent"
+        :recent="c.recent"
+        :now="now"
+        :you="pledge?.placed"
       />
     </div>
 
@@ -122,8 +132,13 @@ const backing = computed<TinkerfundBacking>(() => ({ slug: slug.value, state: st
 
       <section id="comments" aria-labelledby="comments-h">
         <h2 id="comments-h">Comments</h2>
-        <TinkerfundCampaignComments :comments="comments" :now="now" />
+        <TinkerfundCampaignComments :comments="comments" :now="now" :inventor-slug="c.inventor" />
       </section>
+    </div>
+
+    <div class="more" data-recommendations>
+      <TinkerfundBrowseRecommendations :title="TINKERFUND_RECOMMENDATIONS.also" :cards="recommended.also" :clock="clock" />
+      <TinkerfundBrowseRecommendations :title="TINKERFUND_RECOMMENDATIONS.more" :cards="recommended.more" :clock="clock" />
     </div>
 
     <div class="tf-backbar">
@@ -139,10 +154,16 @@ const backing = computed<TinkerfundBacking>(() => ({ slug: slug.value, state: st
 @media (min-width: 860px) {
   .hero { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); align-items: start; }
   .readout { position: sticky; top: 76px; }
+  /* Recently backed sits under the Readout in its column, so the Readout no longer sticks (#1386). */
+  .hero:has(> .recent) { grid-template-rows: auto 1fr; }
+  .hero:has(> .recent) > :first-child { grid-row: 1 / span 2; }
+  .recent { grid-column: 2; align-self: start; }
 }
 
 .body { display: grid; gap: 36px; padding-top: 24px; }
 .body > section { min-width: 0; }
+.more { display: grid; gap: 36px; padding-top: 36px; }
+.more:empty { display: none; }
 @media (min-width: 1000px) {
   .body {
     grid-template-columns: minmax(0, 1fr) 360px;

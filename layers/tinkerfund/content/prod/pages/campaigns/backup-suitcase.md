@@ -10,6 +10,13 @@ campaign:
   end: +12d
   backers: 540
   pledged: 66600
+  alsoBacked: [passport-presence-monitor, emotional-support-rock]
+  recent:
+    - { name: Jonas W., city: Hamburg, at: -3h }
+    - { name: Femi O., city: Lagos, at: -10h }
+    - { name: Ines T., city: Lisbon, at: -20h }
+    - { name: Agnes R., city: Graz, at: -1d }
+    - { name: Callum D., city: Glasgow, at: -2d }
   specifications:
     - { label: Outer case, value: "55 × 40 × 20 cm, polycarbonate" }
     - { label: Inner case, value: "48 × 34 × 16 cm, polycarbonate" }

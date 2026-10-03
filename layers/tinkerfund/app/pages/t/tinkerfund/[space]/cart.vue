@@ -4,8 +4,11 @@ definePageMeta({ viewTransition: true })
 const { space, link } = useTinkerfundSpace()
 const money = useTinkerfundMoney()
 const chosen = ref<TinkerfundZone>()
-const { shop, zoneName, status, error, loaded, zone, view, change } = await useTinkerfundCart(chosen)
+const [{ shop, zoneName, status, error, loaded, zone, view, change, promotions }, { cards, clock }] =
+  await Promise.all([useTinkerfundCart(chosen), useTinkerfundCatalog()])
 const shippingRows = computed(() => tinkerfundShippingRows(view.value.groups, zoneName(zone.value), money))
+const recommended = computed(() => tinkerfundCartRecommendations(cards.value, view.value.groups.map((g) => g.campaign)))
+const nudge = computed(() => tinkerfundBundleNudge(promotions.value, view.value, clock.value.now, tinkerfundLive(cards.value)))
 const blocked = computed(() => view.value.groups.some((g) => g.lines.some((l) => l.unavailable)))
 
 useSeoMeta(tinkerfundSeo({ kind: 'private', space, title: 'Your Cart' }))
@@ -44,11 +47,16 @@ useSeoMeta(tinkerfundSeo({ kind: 'private', space, title: 'Your Cart' }))
             <div v-for="row in shippingRows" :key="row.label"><dt>{{ row.label }}</dt><dd>{{ row.amount }}</dd></div>
             <div class="total"><dt>Estimated total</dt><dd>{{ money(view.total) }}</dd></div>
           </dl>
+          <p v-if="nudge" class="nudge">
+            {{ nudge.text }}<template v-if="nudge.listed">: <NuxtLink :to="link('/deals')">see the Campaigns in this Deal</NuxtLink></template>
+          </p>
           <p class="note">Discounts and codes apply at checkout. You’re only charged if a Campaign is funded.</p>
           <p v-if="blocked" class="blocked">Remove what is no longer available to check out.</p>
           <NuxtLink v-else class="tf-btn primary" :to="link('/checkout')">Checkout</NuxtLink>
         </aside>
       </div>
+
+      <TinkerfundBrowseRecommendations v-if="loaded" :title="recommended.title" :cards="recommended.cards" :clock="clock" />
     </div>
     <ContentLoadErrorDialog :status="status" :error="error" />
   </TinkerfundShell>
@@ -67,5 +75,6 @@ h1 { display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: baseline; }
 select { padding: 8px 10px; border: 1px solid var(--tf-muted); border-radius: var(--tf-radius); background: var(--tf-surface); color: var(--tf-ink); font: inherit; }
 .sums { margin-top: 4px; }
 .note { margin: 0; color: var(--tf-muted); font-size: 14px; }
+.nudge { margin: 0; padding: 8px 12px; border-radius: var(--tf-radius); background: var(--tf-accent-soft); font-size: 14px; }
 .blocked { margin: 0; color: var(--tf-bad); font-size: 14px; }
 </style>

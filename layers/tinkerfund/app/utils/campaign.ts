@@ -20,6 +20,20 @@ export function formatTinkerfundAgo(now: number, at: number): string {
   return `${hours < 24 ? tinkerfundCount(hours, 'hour') : tinkerfundCount(Math.floor(hours / 24), 'day')} ago`
 }
 
+/** A Campaign's named Backers, newest first (issue #1386). */
+export function tinkerfundRecentBackers(recent: { name: string; city: string; at: string }[] | undefined, now: number) {
+  return (recent ?? []).map((r) => ({ ...r, at: resolveTinkerfundOffset(r.at, now) })).sort((a, b) => b.at - a.at)
+}
+
+/** "Backed by Priya N., Tomasz K. and 610 others", or nothing without a name. */
+export function formatTinkerfundBackedBy(names: string[], backers: number, locale: string): string | undefined {
+  if (!names.length) return undefined
+  const others = backers - names.length
+  const parts = others > 0 ? [...names, tinkerfundCount(others, 'other', locale)] : names
+  const last = parts.pop()
+  return `Backed by ${parts.length ? `${parts.join(', ')} and ${last}` : last}`
+}
+
 type TinkerfundUpdateTerms = z.infer<typeof updateLog>['updates'][number]
 
 /** Newest first; `n` counts from the oldest, so an Update keeps its number and anchor. */
@@ -41,13 +55,35 @@ export function tinkerfundPromotionTargets(promotion: Targeted, campaign: string
   return !promotion.campaign || promotion.campaign === campaign
 }
 
-/** A code is entered at checkout; the rest apply by themselves (issue #1365). */
-export function tinkerfundAutomaticDeals<P extends Targeted & Pick<TinkerfundPromotionTerms, 'code' | 'start' | 'end'>>(
-  promotions: P[],
-  campaign: string,
-  now: number,
-): P[] {
-  return promotions.filter((p) => !p.code && tinkerfundPromotionTargets(p, campaign) && derivePromotionState(p, now) === 'active')
+type Dealt = Targeted & Pick<TinkerfundPromotionTerms, 'code' | 'start' | 'end' | 'bundle'>
+
+/** A code is entered at checkout; the rest apply by themselves (issue #1365). A bundle applies only to Campaigns backed together. */
+export function tinkerfundAutomaticDeals<P extends Dealt>(promotions: P[], campaign: string, now: number): P[] {
+  return promotions.filter((p) => !p.code && !p.bundle && tinkerfundPromotionTargets(p, campaign) && derivePromotionState(p, now) === 'active')
+}
+
+type Bundled = Targeted & Pick<TinkerfundPromotionTerms, 'bundle'>
+
+/** The Campaigns a Promotion names: a bundle's list, or the one it targets; a shop-wide one names none. */
+export function tinkerfundNamedCampaigns(promotion: Bundled): string[] {
+  return promotion.bundle?.campaigns ?? (promotion.campaign ? [promotion.campaign] : [])
+}
+
+/** A bundle counts, and takes something off, only the Campaigns it lists, or any if it lists none (issue #1389). */
+export function tinkerfundBundleCovers(promotion: Bundled, campaign: string): boolean {
+  return !!promotion.bundle && (!promotion.bundle.campaigns || tinkerfundNamedCampaigns(promotion).includes(campaign))
+}
+
+/** Enough Campaigns a bundle covers are still Live to meet it, so it promises nothing out of reach (issue #1389). */
+export function tinkerfundBundleReachable(promotion: Bundled, live: string[]): boolean {
+  return !!promotion.bundle && live.filter((c) => tinkerfundBundleCovers(promotion, c)).length >= promotion.bundle.min
+}
+
+/** The Deals a Campaign page shows: a bundle only where it names the Campaign, as a shop-wide one marks none (issue #1389). */
+export function tinkerfundCampaignDeals<P extends Dealt>(promotions: P[], campaign: string, now: number, live: string[]): P[] {
+  const listing = promotions.filter((p) => p.bundle && tinkerfundNamedCampaigns(p).includes(campaign)
+    && derivePromotionState(p, now) === 'active' && tinkerfundBundleReachable(p, live))
+  return [...tinkerfundAutomaticDeals(promotions, campaign, now), ...listing]
 }
 
 export function formatTinkerfundMoney(amount: number, locale: string): string {
@@ -72,6 +108,11 @@ export function tinkerfundLocale(preferred: string | undefined): string {
 export function currentTinkerfundSection(sections: { id: string; inView: boolean; sticky: boolean }[]): string | undefined {
   const seen = sections.filter((s) => s.inView)
   return (seen.find((s) => !s.sticky) ?? seen[0])?.id
+}
+
+/** "Back any 2 Campaigns together · 10% off each". */
+export function formatTinkerfundBundle(bundle: NonNullable<TinkerfundPromotionTerms['bundle']>, discount: { percent: number } | { amount: number }, locale: string): string {
+  return `Back ${bundle.campaigns ? `${bundle.min} listed` : `any ${bundle.min}`} Campaigns together · ${formatTinkerfundDiscount(discount, locale)} each`
 }
 
 export function formatTinkerfundDiscount(discount: { percent: number } | { amount: number }, locale: string): string {

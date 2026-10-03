@@ -1,16 +1,16 @@
 <script setup lang="ts">
 import type { TinkerfundComment } from '../../../types/tinkerfund'
 
-defineProps<{ comments: TinkerfundComment[]; now: number }>()
+defineProps<{ comments: TinkerfundComment[]; now: number; inventorSlug?: string }>()
 </script>
 
 <template>
   <ol v-if="comments.length" class="thread">
     <li v-for="(comment, i) in comments" :key="i">
-      <TinkerfundCampaignCommentBody :comment="comment" :now="now" />
+      <TinkerfundCampaignCommentBody :comment="comment" :now="now" :inventor-slug="inventorSlug" />
       <ol v-if="comment.replies?.length" class="replies">
         <li v-for="(reply, j) in comment.replies" :key="j">
-          <TinkerfundCampaignCommentBody :comment="reply" :now="now" />
+          <TinkerfundCampaignCommentBody :comment="reply" :now="now" :inventor-slug="inventorSlug" />
         </li>
       </ol>
     </li>

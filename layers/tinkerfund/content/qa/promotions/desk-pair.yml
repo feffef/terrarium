@@ -1,0 +1,4 @@
+title: Stapler and lamp together (active bundle)
+discount: { percent: 5 }
+bundle: { min: 2, campaigns: [goal-exact-stapler, last-minute-lamp] }
+start: -2d

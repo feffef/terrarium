@@ -1,13 +1,15 @@
 <script setup lang="ts">
 import type { TinkerfundPromotion } from '../../../types/tinkerfund'
 
-defineProps<{ promotion: Pick<TinkerfundPromotion, 'title' | 'discount'> }>()
+defineProps<{ promotion: Pick<TinkerfundPromotion, 'title' | 'discount' | 'bundle'> }>()
 const locale = useTinkerfundLocale()
 </script>
 
 <template>
   <span class="deal" :title="promotion.title">
-    <b>Deal</b> {{ formatTinkerfundDiscount(promotion.discount, locale) }}, applied automatically
+    <b>Deal</b>
+    <template v-if="promotion.bundle">{{ formatTinkerfundDiscount(promotion.discount, locale) }} when backed with {{ tinkerfundCount(promotion.bundle.min - 1, 'more Campaign') }} in this Deal</template>
+    <template v-else>{{ formatTinkerfundDiscount(promotion.discount, locale) }}, applied automatically</template>
   </span>
 </template>
 

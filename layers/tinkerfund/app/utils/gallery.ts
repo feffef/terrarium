@@ -29,13 +29,25 @@ export const TINKERFUND_GALLERY = [
     id: 'deal-banner',
     title: 'Deal banner',
     components: ['TinkerfundBrowseDealBanner'],
-    summary: 'An Active Promotion applied automatically, and a Scheduled one; qa’s expired code never shows.',
+    summary: 'Active and Scheduled Promotions, qa’s two bundles included; qa’s expired code never shows.',
   },
   {
     id: 'readout',
     title: 'Campaign readout',
     components: ['TinkerfundCampaignReadout', 'TinkerfundProgressBar', 'TinkerfundCampaignDealBadge', 'TinkerfundCampaignAction'],
-    summary: 'Back when Live, Notify me when Upcoming, a lock when Ended.',
+    summary: 'Back when Live, Notify me when Upcoming, a lock when Ended; the Stapler and Lamp carry their listed bundle’s Deal badge.',
+  },
+  {
+    id: 'recent',
+    title: 'Recently backed',
+    components: ['TinkerfundCampaignRecentBackers'],
+    summary: 'Every Live qa Campaign that names Backers, then the Lamp with the visitor’s own Pledge on top. The “Backed by” line shows in the Readout and Card sections: Live and Ended only, Cards Live only.',
+  },
+  {
+    id: 'recommendations',
+    title: 'Recommendations',
+    components: ['TinkerfundBrowseRecommendations'],
+    summary: 'A Campaign page’s two recommendation rows: the Lamp’s picks from another category, the Stapler with no picks, the Hammock whose picks leave Workshop with nothing more. Then the Cart specimen’s row, and a Stapler-only Cart falling back to its category. A sideways row on a phone.',
   },
   {
     id: 'figures',
@@ -90,6 +102,12 @@ export const TINKERFUND_GALLERY = [
     title: 'Comment thread',
     components: ['TinkerfundCampaignComments'],
     summary: 'An Inventor reply one level deep, and no comments.',
+  },
+  {
+    id: 'inventor',
+    title: 'Inventor',
+    components: ['TinkerfundInventorProfile'],
+    summary: 'Every qa Inventor’s page body: many Campaigns, a name long enough to wrap, and none yet.',
   },
   {
     id: 'breadcrumbs',

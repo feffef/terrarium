@@ -10,6 +10,7 @@ campaign:
   end: +37d
   backers: 0
   pledged: 0
+  alsoBacked: [one-key-keyboard, goldfish-quarterly-review]
   specifications:
     - { label: Height adjustment, value: "340 mm" }
     - { label: Tilt, value: "40°, single plane" }

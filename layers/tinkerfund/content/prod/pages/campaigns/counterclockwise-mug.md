@@ -10,6 +10,13 @@ campaign:
   end: +18d
   backers: 612
   pledged: 27200
+  alsoBacked: [pausable-hourglass, delayed-mirror, jet-lag-rehearsal-lamp]
+  recent:
+    - { name: Priya N., city: Leipzig, at: -2h }
+    - { name: Tomasz K., city: Kraków, at: -5h }
+    - { name: Akosua B., city: Accra, at: -9h }
+    - { name: Henrike W., city: Bremen, at: -14h }
+    - { name: Rafael T., city: Porto, at: -1d }
   specifications:
     - { label: Capacity, value: 330 ml }
     - { label: Stir rate, value: 40 rpm }

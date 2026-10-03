@@ -10,6 +10,12 @@ campaign:
   end: +10d
   backers: 410
   pledged: 20500
+  alsoBacked: [motorised-sticky-note-stand, one-key-keyboard]
+  recent:
+    - { name: Wiebke L., city: Kiel, at: -2h }
+    - { name: Ines B., city: Bilbao, at: -6h }
+    - { name: Tomoko A., city: Sapporo, at: -15h }
+    - { name: Desmond A., city: Dublin, at: -1d }
   specifications:
     - { label: Tracking method, value: "Colour recognition, up to 2 fish per tank" }
     - { label: Metrics recorded, value: "Laps, depth, surface time, meals attended" }

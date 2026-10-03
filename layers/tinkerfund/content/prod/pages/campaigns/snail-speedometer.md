@@ -10,6 +10,12 @@ campaign:
   end: +14d
   backers: 330
   pledged: 15035
+  alsoBacked: [grass-growth-notifier, pigeon-arrival-board]
+  recent:
+    - { name: Klara D., city: Ljubljana, at: -2h }
+    - { name: Youssef B., city: Casablanca, at: -6h }
+    - { name: Esben M., city: Odense, at: -14h }
+    - { name: Renate P., city: Nuremberg, at: -1d }
   specifications:
     - { label: Radar module, value: "60 GHz, tip-mounted" }
     - { label: Resolution, value: 0.1 mm/min }

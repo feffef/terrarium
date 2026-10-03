@@ -10,6 +10,12 @@ campaign:
   end: +28d
   backers: 120
   pledged: 7140
+  alsoBacked: [fridge-light-verification-camera, snore-certificate-printer]
+  recent:
+    - { name: Nadia F., city: Lille, at: -1h }
+    - { name: Kacper D., city: Poznań, at: -3h }
+    - { name: Selma R., city: Uppsala, at: -7h }
+    - { name: Iwo K., city: Łódź, at: -12h }
   specifications:
     - { label: Sensors, value: "Accelerometer under the mattress plate, condenser microphone in the base" }
     - { label: Verdict, value: "Asleep or Not Asleep, shown at the alarm" }

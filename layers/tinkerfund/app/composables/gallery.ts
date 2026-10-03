@@ -5,21 +5,24 @@ import type { CampaignState } from '../utils/status'
 
 export async function useTinkerfundGallery() {
   // Every composable runs before the first await: after it, Nuxt's context is gone.
-  const { space, collections } = useTinkerfundSpace()
+  const { space, pagesKey, collections } = useTinkerfundSpace()
   const ready = Promise.all([useTinkerfundCatalog(), useTinkerfundShop()])
   const extraData = useAsyncData(`tinkerfund-gallery-extra-${space}`, async () => {
-    const [threads, logs] = await Promise.all([
+    const [docs, threads, logs, inventors] = await Promise.all([
+      queryCollection(pagesKey).where('campaign', 'IS NOT NULL').select('path', 'title', 'description', 'campaign').all(),
       queryCollection(collections.comments).all(),
       queryCollection(collections.updates).all(),
+      queryCollection(collections.inventors).all(),
     ])
-    return { threads, logs }
+    return { docs, threads, logs, inventors }
   })
   const [[catalog, { zoneName }], { data: extra }] = await Promise.all([ready, extraData])
   const { clock, promotions, baked } = catalog
   const now = computed(() => clock.value.now)
 
+  const live = computed(() => tinkerfundLive(catalog.cards.value))
   const campaigns = computed(() =>
-    catalog.docs.value
+    (extra.value?.docs ?? [])
       .flatMap((doc) => {
         if (!doc.campaign) return []
         const slug = tinkerfundSlug(doc.path)
@@ -28,7 +31,7 @@ export async function useTinkerfundGallery() {
           slug,
           campaign: doc.campaign,
           state: deriveCampaignState(doc.campaign, now.value),
-          deals: tinkerfundAutomaticDeals(promotions.value, slug, now.value),
+          deals: tinkerfundCampaignDeals(promotions.value, slug, now.value, live.value),
         }]
       })
       .sort((a, b) => a.campaign.registry.localeCompare(b.campaign.registry)),
@@ -83,7 +86,11 @@ export async function useTinkerfundGallery() {
     quote,
     receipt,
     account,
-    thread: computed(() => extra.value?.threads[0]),
+    thread: computed(() => {
+      const thread = extra.value?.threads[0]
+      return thread && { ...thread, inventor: campaigns.value.find((c) => c.slug === thread.campaign)?.campaign.inventor }
+    }),
     log: computed(() => extra.value?.logs[0]),
+    inventors: computed(() => extra.value?.inventors ?? []),
   }
 }

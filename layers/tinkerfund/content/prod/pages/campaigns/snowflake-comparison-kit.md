@@ -10,6 +10,7 @@ campaign:
   end: +40d
   backers: 0
   pledged: 0
+  alsoBacked: [rain-aware-umbrella, strand-count-pasta-measure]
   specifications:
     - { label: Comparison card, value: "15 × 10 cm, black flocked aluminium, two marked fields" }
     - { label: Loupe, value: "10× achromatic, 21 mm lens (20× at stretch goal)" }

@@ -18,14 +18,18 @@ export async function useTinkerfundCatalog() {
       queryCollection(collections.inventors).select('stem', 'name').all(),
     ])
     return { docs, inventors }
+  }, {
+    // Most pages' payloads carry this, so it keeps what a card reads (ADR-0028).
+    transform: ({ docs, inventors }) => ({
+      docs: docs.flatMap(({ campaign, ...doc }) => campaign ? [{ ...doc, campaign: tinkerfundBrowseCampaign(campaign) }] : []),
+      inventors,
+    }),
   })
   const [{ data }, { clock, pledges, baked, promotions }] = await Promise.all([catalog, cartReady])
 
-  const docs = computed(() => data.value?.docs ?? [])
   const cards = computed<TinkerfundCard[]>(() => {
-    const withPledges = docs.value.flatMap((d) => d.campaign
-      ? [{ ...d, campaign: withTinkerfundPledges(tinkerfundSlug(d.path), d.campaign, pledges.value, baked.value) }]
-      : [])
+    const withPledges = (data.value?.docs ?? []).map((d) =>
+      ({ ...d, campaign: withTinkerfundPledges(tinkerfundSlug(d.path), d.campaign, pledges.value, baked.value) }))
     const inventors = new Map((data.value?.inventors ?? []).map((i) => [i.stem, i.name]))
     const categoryNames = new Map(categories.value.map((c) => [c.slug, c.name]))
     return tinkerfundListings(withPledges, promotions.value, clock.value.now).map((l) => ({
@@ -35,7 +39,7 @@ export async function useTinkerfundCatalog() {
     }))
   })
 
-  return { clock, docs, cards, categories, promotions, baked }
+  return { clock, cards, categories, promotions, baked }
 }
 
 export function useTinkerfundCategories() {

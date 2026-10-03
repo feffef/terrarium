@@ -2,12 +2,14 @@
 import { describe, expect, it } from 'vitest'
 import {
   formatTinkerfundAgo,
+  formatTinkerfundBackedBy,
   formatTinkerfundDiscount,
   formatTinkerfundMoney,
   formatTinkerfundMonth,
   currentTinkerfundSection,
   tinkerfundAutomaticDeals,
   tinkerfundLocale,
+  tinkerfundRecentBackers,
   tinkerfundStock,
   tinkerfundUpdates,
 } from '../../app/utils/campaign.ts'
@@ -60,6 +62,21 @@ describe('formatTinkerfundAgo', () => {
 
   it('says just now inside the hour', () => {
     expect(formatTinkerfundAgo(NOW, NOW - HOUR / 2)).toBe('just now')
+  })
+})
+
+describe('recent Backers', () => {
+  it('lists the named Backers newest first, whatever the file order', () => {
+    const recent = [{ name: 'A', city: 'x', at: '-2d' }, { name: 'B', city: 'y', at: '-1h' }]
+    expect(tinkerfundRecentBackers(recent, NOW)).toEqual([{ name: 'B', city: 'y', at: NOW - HOUR }, { name: 'A', city: 'x', at: NOW - 48 * HOUR }])
+    expect(tinkerfundRecentBackers(undefined, NOW)).toEqual([])
+  })
+
+  it('names who backed it, then counts the rest', () => {
+    expect(formatTinkerfundBackedBy(['Priya N.', 'Tomasz K.'], 1612, 'en')).toBe('Backed by Priya N., Tomasz K. and 1,610 others')
+    expect(formatTinkerfundBackedBy(['Priya N.'], 2, 'en')).toBe('Backed by Priya N. and 1 other')
+    expect(formatTinkerfundBackedBy(['Priya N.', 'Tomasz K.'], 2, 'en')).toBe('Backed by Priya N. and Tomasz K.')
+    expect(formatTinkerfundBackedBy([], 40, 'en')).toBeUndefined()
   })
 })
 

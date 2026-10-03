@@ -10,6 +10,12 @@ campaign:
   end: -50d
   backers: 320
   pledged: 26400
+  alsoBacked: [snail-speedometer, soap-bar-odometer]
+  recent:
+    - { name: Sofia N., city: Turku, at: -50d }
+    - { name: Delphine R., city: Nantes, at: -51d }
+    - { name: Arjun M., city: Pune, at: -52d }
+    - { name: Volker G., city: Darmstadt, at: -53d }
   specifications:
     - { label: Sensor, value: "Laser displacement, single marked blade" }
     - { label: Resolution, value: 0.02 mm }

@@ -6,7 +6,7 @@ defineProps<{ id: TinkerfundGallerySectionId }>()
 const PLEDGE_STATES = ['pending', 'charged', 'delivered', 'unfunded', 'cancelled'] as const
 
 const { link } = useTinkerfundSpace()
-const { clock, cards, categories, promotions, zoneName, now, campaigns, backing, cart, quote, receipt, account, thread, log } =
+const { clock, cards, categories, promotions, zoneName, now, campaigns, backing, cart, quote, receipt, account, thread, log, inventors } =
   await useTinkerfundGallery()
 const miniCart = useTemplateRef('miniCart')
 
@@ -15,6 +15,13 @@ const deals = computed(() => groupTinkerfundPromotions(promotions.value, now.val
 const filterQuery = ref<TinkerfundBrowseQuery>({ sort: 'popular' })
 const filtered = computed(() => browseTinkerfundListings(cards.value, filterQuery.value))
 const bounds = computed(() => tinkerfundPriceBounds(cards.value))
+const lamp = computed(() => campaigns.value.find((d) => d.slug === FIXTURE.lamp.slug))
+const recommendationPages = computed(() =>
+  [FIXTURE.lamp.slug, FIXTURE.stapler.slug, FIXTURE.hammock.slug].map((slug) => ({ slug, ...tinkerfundRecommendations(cards.value, slug) })))
+const cartRecommendations = computed(() => [
+  { case: 'The Cart specimen', ...tinkerfundCartRecommendations(cards.value, cart.value.groups.map((g) => g.campaign)) },
+  { case: 'A Cart holding only the Stapler', ...tinkerfundCartRecommendations(cards.value, [FIXTURE.stapler.slug]) },
+])
 </script>
 
 <template>
@@ -59,6 +66,31 @@ const bounds = computed(() => tinkerfundPriceBounds(cards.value))
       />
     </li>
   </ul>
+
+  <ul v-else-if="id === 'recent'" class="specimens">
+    <template v-for="doc in campaigns" :key="doc.path">
+      <li v-if="doc.state === 'live' && doc.campaign.recent" class="stack">
+        <p class="case">{{ doc.campaign.registry }} · {{ tinkerfundCount(doc.campaign.backers, 'Backer') }}</p>
+        <TinkerfundCampaignRecentBackers :recent="doc.campaign.recent" :now="now" />
+      </li>
+    </template>
+    <li class="stack">
+      <p class="case">{{ FIXTURE.lamp.title }} · the visitor’s own Pledge, just placed</p>
+      <TinkerfundCampaignRecentBackers :recent="lamp?.campaign.recent" :now="now" :you="now" />
+    </li>
+  </ul>
+
+  <div v-else-if="id === 'recommendations'" class="stack">
+    <template v-for="page in recommendationPages" :key="page.slug">
+      <p class="case">The {{ campaigns.find((d) => d.slug === page.slug)?.title }} page</p>
+      <TinkerfundBrowseRecommendations :title="TINKERFUND_RECOMMENDATIONS.also" :cards="page.also" :clock="clock" />
+      <TinkerfundBrowseRecommendations :title="TINKERFUND_RECOMMENDATIONS.more" :cards="page.more" :clock="clock" />
+    </template>
+    <template v-for="c in cartRecommendations" :key="c.case">
+      <p class="case">{{ c.case }}</p>
+      <TinkerfundBrowseRecommendations :title="c.title" :cards="c.cards" :clock="clock" />
+    </template>
+  </div>
 
   <div v-else-if="id === 'figures' && campaigns[0]" class="figures">
     <TinkerfundCampaignFigureGallery :figures="campaigns[0].campaign.figures" :registry="campaigns[0].campaign.registry" />
@@ -142,13 +174,30 @@ const bounds = computed(() => tinkerfundPriceBounds(cards.value))
   <ul v-else-if="id === 'comments'" class="specimens">
     <li v-if="thread" class="specimen tf-panel">
       <p class="case">{{ thread.campaign }}: an Inventor reply, one level deep</p>
-      <TinkerfundCampaignComments :comments="thread.comments" :now="now" />
+      <TinkerfundCampaignComments
+        :comments="thread.comments"
+        :now="now"
+        :inventor-slug="thread.inventor"
+      />
     </li>
     <li class="specimen tf-panel">
       <p class="case">No comments</p>
       <TinkerfundCampaignComments :comments="[]" :now="now" />
     </li>
   </ul>
+
+  <div v-else-if="id === 'inventor'" class="stack">
+    <template v-for="inventor in inventors" :key="inventor.stem">
+      <p class="case">{{ inventor.stem }}: {{ cards.some((c) => c.inventor === inventor.stem) ? 'with Campaigns' : 'no Campaigns yet' }}</p>
+      <TinkerfundInventorProfile
+        class="specimen tf-panel"
+        :inventor="inventor"
+        :cards="cards.filter((c) => c.inventor === inventor.stem)"
+        :clock="clock"
+        heading="h2"
+      />
+    </template>
+  </div>
 
   <TinkerfundShellBreadcrumbs
     v-else-if="id === 'breadcrumbs'"

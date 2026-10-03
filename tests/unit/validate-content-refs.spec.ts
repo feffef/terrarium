@@ -542,7 +542,7 @@ function write(rel: string, text: string): void {
   writeFileSync(join(dir, rel), text)
 }
 
-function campaignPage(opts: { registry?: string; inventor?: string; category?: string; launch?: string } = {}): string {
+function campaignPage(opts: { registry?: string; inventor?: string; category?: string; launch?: string; alsoBacked?: string[] } = {}): string {
   return [
     '---',
     'title: Counterclockwise Mug',
@@ -551,6 +551,7 @@ function campaignPage(opts: { registry?: string; inventor?: string; category?: s
     `  inventor: ${opts.inventor ?? 'ada'}`,
     `  category: ${opts.category ?? 'kitchen'}`,
     `  launch: "${opts.launch ?? '-10d'}"`,
+    ...(opts.alsoBacked ? [`  alsoBacked: [${opts.alsoBacked.join(', ')}]`] : []),
     '  rewards:',
     '    - id: mug',
     '      options:',
@@ -608,6 +609,17 @@ describe('validateReferences() — Tinkerfund-shaped Space', () => {
     ])
   })
 
+  it('rejects an alsoBacked slug that is unknown, the Campaign itself, or repeated', () => {
+    writeValidShop()
+    write('pages/campaigns/rock.md', campaignPage({ registry: 'TF-0002' }))
+    write('pages/campaigns/mug.md', campaignPage({ alsoBacked: ['rock', 'pebble', 'mug', 'rock'] }))
+    expect(shopViolations()).toEqual([
+      expect.stringMatching(/campaigns\/mug\.md: campaign\.alsoBacked\.1: "pebble" is not a Campaign/),
+      expect.stringMatching(/campaigns\/mug\.md: campaign\.alsoBacked\.2: "mug" is this Campaign itself/),
+      expect.stringMatching(/campaigns\/mug\.md: campaign\.alsoBacked\.3: "rock" is listed twice/),
+    ])
+  })
+
   it('rejects a registry number two Campaigns share', () => {
     writeValidShop()
     write('pages/campaigns/rock.md', campaignPage())
@@ -653,6 +665,23 @@ describe('validateReferences() — Tinkerfund-shaped Space', () => {
       expect.stringMatching(/comments\/mug\.yml: campaign: "rock"/),
       expect.stringMatching(/promotions\/launch\.yml: campaign: "rock"/),
     ])
+  })
+
+  it('accepts a bundle, and rejects one breaking its rules or listing unknown or repeated Campaigns (issue #1389)', () => {
+    writeValidShop()
+    write('pages/campaigns/rock.md', campaignPage({ registry: 'TF-0002' }))
+    write('promotions/pair.yml', 'title: Pair\ndiscount: { percent: 10 }\nbundle: { min: 2, campaigns: [mug, rock] }\n')
+    expect(shopViolations()).toEqual([])
+    write('promotions/pair.yml', 'title: Pair\ncode: PAIR\ncampaign: mug\ndiscount: { amount: 5 }\nbundle: { min: 3, campaigns: [mug, pebble, mug] }\n')
+    expect(shopViolations()).toEqual([
+      'promotions/pair.yml: discount: a bundle takes a percentage off',
+      'promotions/pair.yml: code: a bundle applies by itself, never by code',
+      'promotions/pair.yml: campaign: a bundle names its Campaigns in bundle.campaigns',
+      'promotions/pair.yml: bundle.campaigns.1: "pebble" is not a Campaign in this Space',
+      'promotions/pair.yml: bundle.campaigns.2: "mug" is listed twice',
+    ])
+    write('promotions/pair.yml', 'title: Pair\ndiscount: { percent: 10 }\nbundle: { min: 3, campaigns: [mug, rock] }\n')
+    expect(shopViolations()).toEqual(['promotions/pair.yml: bundle.campaigns: lists fewer than its min of 3'])
   })
 
   it('rejects a past Pledge naming an unknown Campaign, Reward, option or Add-on', () => {

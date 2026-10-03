@@ -1,6 +1,6 @@
 // Checkout (story #1384, Pledge flow #1365): Promotions over a Cart, then one
 // Pledge per Campaign.
-import { tinkerfundAutomaticDeals, tinkerfundPromotionTargets } from './campaign'
+import { tinkerfundAutomaticDeals, tinkerfundBundleCovers, tinkerfundBundleReachable, tinkerfundPromotionTargets } from './campaign'
 import type { TinkerfundPromotionTerms } from './campaign'
 import {
   mergeTinkerfundAddons,
@@ -27,6 +27,7 @@ import type {
   TinkerfundStep,
   TinkerfundZone,
 } from './cart'
+import { tinkerfundCount } from './shop'
 import { derivePromotionState } from './status'
 
 export interface TinkerfundQuoteGroup extends TinkerfundCartGroup {
@@ -55,6 +56,37 @@ interface TinkerfundQuote {
 
 const goodsOf = (group: TinkerfundCartGroup) => sum(group.lines.map((l) => l.amount))
 
+/** The Campaigns a checkout brings Rewards or Add-ons to: a top-up too, bonus alone never. */
+const backedIn = (view: Pick<TinkerfundCartView, 'groups'>) => view.groups.filter((g) => goodsOf(g) > 0).map((g) => g.campaign)
+
+/** Each Active bundle, the Campaigns a checkout counts toward it, and how many more it needs (issue #1389). */
+export function tinkerfundBundles<P extends TinkerfundPromotionTerms>(promotions: P[], view: Pick<TinkerfundCartView, 'groups'>, now: number) {
+  const backed = backedIn(view)
+  return promotions
+    .filter((p) => p.bundle && derivePromotionState(p, now) === 'active')
+    .map((promotion) => {
+      const counted = backed.filter((c) => tinkerfundBundleCovers(promotion, c))
+      return { promotion, counted, needed: Math.max(0, promotion.bundle!.min - counted.length) }
+    })
+}
+
+/** The Cart's nudge: the reachable bundle closest to being met that the Cart already counts toward. */
+export function tinkerfundBundleNudge(promotions: TinkerfundPromotionTerms[], view: Pick<TinkerfundCartView, 'groups'>, now: number, live: string[]) {
+  const open = tinkerfundBundles(promotions, view, now).filter((b) => b.needed && b.counted.length && tinkerfundBundleReachable(b.promotion, live))
+  const best = open.sort((a, b) => a.needed - b.needed)[0]
+  if (!best || !('percent' in best.promotion.discount)) return undefined
+  return { text: `Add a Reward from ${tinkerfundCount(best.needed, 'more Campaign')} to save ${best.promotion.discount.percent}%`, listed: !!best.promotion.bundle!.campaigns }
+}
+
+/** A Pledge's bundle discount, while it has goods to take it off: it keeps the terms it earned (D11, issue #1389). */
+export function tinkerfundBundleNote(pledge: TinkerfundPledge, promotions: TinkerfundPromotionTerms[]): string | undefined {
+  if (pledge.cancelled !== undefined || (!pledge.lines.length && !pledge.addons.length)) return undefined
+  const bundle = promotions.find((p) => p.bundle && pledge.promotions.includes(p.stem))
+  return bundle && 'percent' in bundle.discount
+    ? `Bundle discount: ${bundle.discount.percent}% for backing ${bundle.bundle!.min} Campaigns together`
+    : undefined
+}
+
 function findCode(promotions: TinkerfundPromotionTerms[], entered: string | undefined, campaigns: string[], now: number) {
   const code = entered?.trim().toUpperCase()
   if (!code) return {}
@@ -70,20 +102,24 @@ function findCode(promotions: TinkerfundPromotionTerms[], entered: string | unde
 /**
  * Automatic discounts plus at most one code per Pledge, off Rewards and
  * Add-ons only (issue #1365). Adding to a Pledge quotes the change in its
- * discount: the terms it already earned cover what is added, one earned again
- * adds nothing, and a code entered now replaces the code it held if it saves at
- * least as much over the whole Pledge, so a top-up never costs more.
+ * discount over all its goods (D11): the terms it already earned cover what is
+ * added, one earned now (a bundle a top-up completes, say) covers what it held
+ * too (issue #1389), one earned again adds nothing, and a code entered now
+ * replaces the code it held if it saves at least as much over the whole Pledge,
+ * so a top-up never costs more.
  */
 export function quoteTinkerfundCheckout(view: TinkerfundCartView, shop: TinkerfundShop, code: string | undefined): TinkerfundQuote {
-  const entered = findCode(shop.promotions, code, view.groups.filter((g) => goodsOf(g) > 0).map((g) => g.campaign), shop.now)
+  const entered = findCode(shop.promotions, code, backedIn(view), shop.now)
   const deals = new Set<string>()
+  const bundles = tinkerfundBundles(shop.promotions, view, shop.now).filter((b) => !b.needed)
   const groups = view.groups.map((group): TinkerfundQuoteGroup => {
     const goods = goodsOf(group)
     const { existing } = group
     const held = existing?.promotions ?? []
     const campaign = shop.catalog[group.campaign]?.campaign
     const allGoods = (existing && campaign ? tinkerfundGoods(existing, campaign) : 0) + goods
-    const automatic = goods > 0 ? tinkerfundAutomaticDeals(shop.promotions, group.campaign, shop.now) : []
+    const bundled = bundles.filter((b) => b.counted.includes(group.campaign)).map((b) => b.promotion)
+    const automatic = goods > 0 ? [...tinkerfundAutomaticDeals(shop.promotions, group.campaign, shop.now), ...bundled] : []
     const settle = (kept: string[], code?: TinkerfundPromotionTerms) => {
       const earned = [...automatic, ...(code ? [code] : [])].filter((p) => !kept.includes(p.stem))
       const terms = [...shop.promotions.filter((p) => kept.includes(p.stem)), ...earned]

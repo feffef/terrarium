@@ -10,6 +10,11 @@ campaign:
   end: -20d
   backers: 150
   pledged: 14520
+  alsoBacked: [sleep-confirmation-clock, fridge-light-verification-camera]
+  recent:
+    - { name: Halvard E., city: Trondheim, at: -20d }
+    - { name: Petra N., city: Plzeň, at: -21d }
+    - { name: Gunnar W., city: Saarbrücken, at: -22d }
   specifications:
     - { label: Microphone, value: "Calibrated condenser, continuous logging through the night" }
     - { label: Resolution, value: "0.1 dB" }

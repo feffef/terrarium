@@ -589,6 +589,17 @@ function updateRefs(slug: string, campaign: TinkerfundCampaign, updates: Tinkerf
   })
 }
 
+/** A bundle is a percentage, automatic, and names its Campaigns only in its own list (issue #1389). */
+function bundleRules(p: Record<string, unknown>): string[] {
+  const bundle = p.bundle as { min: number; campaigns?: string[] }
+  return [
+    ...(p.discount && typeof p.discount === 'object' && 'percent' in p.discount ? [] : ['discount: a bundle takes a percentage off']),
+    ...(p.code ? ['code: a bundle applies by itself, never by code'] : []),
+    ...(p.campaign ? ['campaign: a bundle names its Campaigns in bundle.campaigns'] : []),
+    ...(bundle.campaigns && bundle.campaigns.length < bundle.min ? [`bundle.campaigns: lists fewer than its min of ${bundle.min}`] : []),
+  ]
+}
+
 /** Returns how many data Documents it checked; the caller counts the pages. */
 function checkCampaignsAndPledges(
   pagesKey: string,
@@ -630,6 +641,12 @@ function checkCampaignsAndPledges(
       if (!slug) msgs.push('campaign frontmatter belongs only on a page at campaigns/<slug>.md')
       if (!inventors.has(campaign.inventor)) msgs.push(`campaign.inventor: "${campaign.inventor}" is not an Inventor in this Space`)
       if (!categories.has(campaign.category)) msgs.push(`campaign.category: "${campaign.category}" is not a category in this Space`)
+      campaign.alsoBacked?.forEach((other, i) => {
+        const at = `campaign.alsoBacked.${i}: "${other}"`
+        if (other === slug) msgs.push(`${at} is this Campaign itself`)
+        else if (!campaigns.has(other)) msgs.push(`${at} is not a Campaign in this Space`)
+        else if (campaign.alsoBacked!.indexOf(other) < i) msgs.push(`${at} is listed twice`)
+      })
       const holder = registries.get(campaign.registry)
       if (holder) msgs.push(`campaign.registry: "${campaign.registry}" is already used by ${holder}`)
       else registries.set(campaign.registry, slug ?? page.rel)
@@ -646,9 +663,17 @@ function checkCampaignsAndPledges(
   }
   for (const doc of [...docs('comments'), ...docs('promotions')]) {
     const campaign = doc.data.campaign
-    if (typeof campaign === 'string' && !campaigns.has(campaign)) {
-      report(doc, [`campaign: "${campaign}" is not a Campaign in this Space`])
-    }
+    const bundle = doc.data.bundle as { min?: number; campaigns?: string[] } | undefined
+    const listed = bundle?.campaigns ?? []
+    report(doc, [
+      ...(typeof campaign === 'string' && !campaigns.has(campaign) ? [`campaign: "${campaign}" is not a Campaign in this Space`] : []),
+      ...(bundle ? bundleRules(doc.data) : []),
+      ...listed.flatMap((slug, i) => {
+        const at = `bundle.campaigns.${i}: "${slug}"`
+        if (!campaigns.has(slug)) return [`${at} is not a Campaign in this Space`]
+        return listed.indexOf(slug) < i ? [`${at} is listed twice`] : []
+      }),
+    ])
   }
   for (const doc of docs('backer')) {
     report(doc, pledgeRefs((doc.data.pledges ?? []) as TinkerfundPledge[], campaigns))

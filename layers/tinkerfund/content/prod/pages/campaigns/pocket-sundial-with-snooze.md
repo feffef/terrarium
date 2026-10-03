@@ -10,6 +10,12 @@ campaign:
   end: -110d
   backers: 1020
   pledged: 37800
+  alsoBacked: [pausable-hourglass, automatic-sheep-counter]
+  recent:
+    - { name: Elena R., city: Seville, at: -110d }
+    - { name: Bastian K., city: Lübeck, at: -111d }
+    - { name: Marcus J., city: Leeds, at: -112d }
+    - { name: Nomvula D., city: Durban, at: -113d }
   specifications:
     - { label: Diameter, value: 52 mm }
     - { label: Accuracy, value: "±15 minutes, in sunlight" }
