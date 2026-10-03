@@ -1,0 +1,49 @@
+schemaVersion: 1
+session: session_01DU7WbYNfKmdNgRpry9qzeV
+startedAt: 2026-10-03T17:51:31Z
+endedAt: 2026-10-03T18:02:07Z
+kind: interactive
+goal: Explain and fix the narrow, white-bordered Journal document layout on desktop
+status: in-review
+outcome: "Journal ground now spans the window, the narrow card and 68ch prose cap are gone; PR #1576 open"
+summary: "The owner asked why Journal pages had become a narrow card with white borders. History showed two causes: the white margins have existed since #25 (only .jd is themed, the body is not, and .jd was a centred 1120px box), but they only became prominent today when bd394111 (via #1563, a visitor-loop session) capped document pages at 44rem. On direct owner instruction I reverted that cap, made .jd span the window with padding centring the 1120px column (plus body margin 0), and then, again on explicit owner choice among three offered options, dropped the 68ch prose cap entirely. Screenshots in dark, light and 390px were shared. Nothing was agent-initiated beyond the auto-opened PR. Local gate:scoped failed 2 journal e2e tests caused by a session log already on main whose id lacks the session_ prefix; noted in the PR, not fixed here."
+prs:
+  - "1576"
+docsRead: []
+skillsUsed:
+  - name: close-session
+    reason: closure at PR open
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: I ran the screenshot step while pnpm build was still running in the background, so preview.ts found no .output and the shots failed.
+    solution: Wait for the background build notification before any step that consumes .output.
+    severity: minor
+  - description: First commit attempt hand-wrote the Co-Authored-By and Claude-Session trailer because the system reminder said to; the commit-trailer guard denied it.
+    solution: Already guarded; the CLAUDE.md rule and guard deny message cover it.
+    severity: nit
+  - description: "Local gate:scoped fails on main content: a session log (2026-10-03-a1af4e46…) has a non-session_ id, breaking two journal e2e chip tests unrelated to this PR."
+    solution: The lander or schema should reject or normalise non-session_ ids; or the e2e test should pick a card with a session_ link.
+    severity: moderate
+  - description: Owner had to ask three rounds (undo narrowing, why off-centre, why not wider) before the real ask, full width, surfaced; the 68ch cap was the root cause I did not name in the first answer.
+    solution: When explaining a layout, name every width constraint in the stack up front.
+    severity: minor
+durationSec: 636
+models:
+  claude-opus-5-5: 84
+toolCounts:
+  Bash: 33
+  Read: 3
+  SendUserFile: 2
+  ToolSearch: 1
+  mcp__github__list_pull_requests: 1
+  Grep: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+  Skill: 2
+docsReadViaShell:
+  - docs/adr/0017-provenance-footer-on-agent-authored-content.md
+gitBranch: claude/relaxed-rubin-7wt4i9
+entrypoint: remote
+cliVersion: 2.1.288
+landedBy: Stop
