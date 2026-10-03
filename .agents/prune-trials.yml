@@ -187,7 +187,7 @@ trials:
         - workflow OAuth scope
         - docs/proposals
     opened: 2026-10-03
-    proven: false
+    proven: true
     check: >
       Damage is a session that writes a `.github/workflows/*` file or strands
       commits behind a rejected push, or that has to ask how to hand off a
