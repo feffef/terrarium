@@ -24,10 +24,21 @@ transient 503 ("no server currently available"). Retry once or twice after a
 short pause before calling it a real failure. If `issue_read` keeps flaking,
 `search_issues` scoped to the issue number works as a fallback (issue #611).
 
-## No `gh`? Remote sessions use the MCP tools
+## Local CLI vs cloud session: which tool works
 
-Remote sessions have **no `gh` binary**; use the MCP tools. The workflow docs
-write recipes as `gh` commands. Map them like this:
+| | Local CLI | Cloud session |
+|---|---|---|
+| GraphQL-backed `gh` subcommands (`gh issue view`, `gh pr list`, …) | yes | no: 403, GraphQL is blocked |
+| `gh api` and REST-backed subcommands (`gh run list`) | yes | yes, though `gh auth status` reports a bad token |
+| `mcp__github__*` tools | only if configured | yes |
+| **Default** | `gh` | the MCP tools; `gh api` for REST a tool lacks |
+
+Why MCP for writes in the cloud, not `gh api`: the provenance guard
+(`scripts/github-provenance-guard.ts`) checks only `mcp__github__*` calls, so a
+body posted through `gh api` skips it. `gh api` suits bulk reads in scripts,
+where the MCP list tools overflow. Some cloud sessions lack `gh`; check with
+`which gh`. In a cloud session, map the workflow docs' `gh` recipes
+like this:
 
 - **Create / edit / label / close an issue** → `issue_write`.
   - Labeling a *PR* also goes through `issue_write` (issues and PRs share one
@@ -102,11 +113,9 @@ write recipes as `gh` commands. Map them like this:
 - **Which issues are open right now?** Run
   `pnpm exec tsx scripts/list-open-issues.ts [N]`. It calls the REST `issues`
   endpoint through `gh api` (number, title, labels, updated time only) and cannot
-  overflow (issue #494). It avoids `gh issue list` because that uses GraphQL,
-  which this environment's proxy can reject outside a pinned PR-review operation
-  set. With no `gh` binary but `GH_TOKEN` / `GITHUB_TOKEN` set, it falls back to
-  a direct REST call with `curl`. With neither, use the MCP tools above
-  (issue #505).
+  overflow (issue #494). With no `gh` binary but `GH_TOKEN` / `GITHUB_TOKEN`
+  set, it falls back to a direct REST call with `curl`. With neither, use the
+  MCP tools above (issue #505).
 - **Did an AI comment claim a triage-label change the issue never got?** This
   happens (issue #325's comment said `moved to ready-for-agent` while the issue
   stayed `ready-for-human`) and nothing else catches it. Run
