@@ -1,0 +1,23 @@
+#!/usr/bin/env sh
+# ADR-0017 provenance-footer backstop (issue #346). The harness's commit-message
+# template does not reliably inject the two-line footer on cloud `git commit -m`;
+# this hook appends it when absent, reconstructing the values repo-side (see
+# scripts/provenance-footer.ts). Installed via `core.hooksPath .githooks`, set in
+# package.json's `postinstall` (which runs on every `pnpm install`).
+#
+# FAILS OPEN: any error — no tsx binary resolvable, a script bug, a missing
+# transcript — leaves the message untouched and the commit proceeds (`|| exit 0`).
+# A guard bug must never wedge a commit; the worst case degrades to the prior
+# status quo.
+#
+# SCOPE: only a local `git commit` runs this. MCP-API commits
+# (create_or_update_file / push_files) bypass local git and are NOT covered.
+root=$(git rev-parse --show-toplevel 2>/dev/null) || exit 0
+# A `git worktree add` checkout has no node_modules of its own (pnpm resolves
+# deps relative to the main checkout), so resolve tsx there instead of via
+# `pnpm exec`, which only looks relative to $PWD (issue: fresh-worktree commits
+# silently lost the trailer, hit twice in one day).
+common_dir=$(git rev-parse --git-common-dir 2>/dev/null) || exit 0
+main_root=$(cd "$(dirname "$common_dir")" && pwd) || exit 0
+"$main_root/node_modules/.bin/tsx" "$root/scripts/provenance-footer.ts" "$1" >/dev/null 2>&1 || exit 0
+exit 0

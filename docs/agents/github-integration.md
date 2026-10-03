@@ -5,11 +5,16 @@ how to poll. Two workflow docs sit on top of this one and own their recipes:
 [`issue-tracker.md`](./issue-tracker.md) (issues, specs, triage) and
 [`pr-workflow.md`](./pr-workflow.md) (landing a gated PR).
 
+Every GitHub body an agent writes must open with the ADR-0017 provenance header
+(CLAUDE.md's Working Conventions). A guard enforces it:
+`scripts/github-provenance-guard.ts` lists the guarded tools and states the rule.
+
 ## Bare angle brackets vanish from a rendered title or body
 
 GitHub silently strips bare `<...>` text from a rendered issue/PR title or body,
 treating it as HTML. No error shows. Wrap it in a fenced code block; a single
-backtick wrap is not enough.
+backtick wrap is not enough. The provenance guard denies a write that carries
+one (issue #886).
 
 ## Transient failures — retry before escalating
 
