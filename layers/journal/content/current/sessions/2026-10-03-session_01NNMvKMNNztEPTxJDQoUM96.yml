@@ -1,0 +1,58 @@
+schemaVersion: 1
+session: session_01NNMvKMNNztEPTxJDQoUM96
+startedAt: 2026-10-03T15:03:09Z
+endedAt: 2026-10-03T15:16:52Z
+kind: interactive
+goal: Measure what provenance the harness and GitHub MCP add on their own, to see if ADR-0017 machinery can go
+status: abandoned
+outcome: Probe done; harness covers only PR descriptions with a session link, so the human chose to keep ADR-0017 as is
+summary: "Human-instructed throughout. The human asked to remove every provenance rule and guard on a feature branch, then have a subagent make commits, an issue, a PR and comments to observe what the harness/MCP add. After clarifying questions (scope: provenance only; throwaway issue/PR, closed afterwards; report before any real PR), I removed github-provenance-guard, commit-trailer-guard, the commit-msg backstop, their hook wiring and the CLAUDE.md/doc rules, and dispatched a probe agent with BARE vs INSTRUCTED variants per surface. Findings, verified by reading back: the MCP server appends a footer with the session URL to PR descriptions, a generic footer (no session id, not deduped against other attribution) to issue/PR comments, and nothing to issue bodies or commits (local or MCP); no surface gets a header. The PR description's three lines are the repo header + the system-reminder footer + the server footer. merge-pr.ts relies on a session id in a verdict comment, which the server no longer supplies. The human decided to keep the machinery as a hedge against harness changes; I reverted the removal (branch net-zero vs its base, pushed) and closed probe issue #1561 and PR #1562 unmerged."
+prs: []
+docsRead: []
+skillsUsed:
+  - name: close-session
+    reason: closure
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: git revert -q is not a valid flag; the chained commit --amend then reworded the removal commit instead of a revert
+    solution: Never chain a state-changing git command after one whose failure isn't checked; push rejection caught it, reset to origin and redid it
+    severity: minor
+  - description: Git proxy returns 403 on deleting the probe branch probe/provenance-check; it is left on the remote
+    solution: Human deletes it on GitHub; probes could reuse the session's own designated branch to avoid stray branches
+    severity: minor
+  - description: agent-background-flag-guard denied run_in_background false on Agent; I passed it out of habit
+    solution: Guard worked as intended; omit the flag
+    severity: nit
+  - description: Probe agent used the PR-description footer for INSTRUCTED comments, so the system prompt's claim that the server dedupes its own comment footer stayed untested
+    solution: Brief the probe to send the exact prescribed comment footer as a third variant
+    severity: nit
+durationSec: 823
+models:
+  claude-opus-5-5: 60
+toolCounts:
+  Bash: 18
+  AskUserQuestion: 1
+  Agent: 2
+  ToolSearch: 1
+  mcp__github__pull_request_read: 2
+  mcp__github__issue_read: 1
+  mcp__github__update_pull_request: 1
+  mcp__github__issue_write: 1
+  Skill: 2
+docsReadViaShell:
+  - docs/agents/guards.md
+  - docs/agents/github-integration.md
+  - docs/research/rulebook-migration-table.md
+  - docs/adr/0017-provenance-footer-on-agent-authored-content.md
+subagents:
+  - type: general-purpose
+    task: Probe harness provenance additions
+  - type: general-purpose
+    task: Probe harness provenance additions
+gitBranch: ccr-dbf7ee88-frd3ef
+entrypoint: remote_mobile
+cliVersion: 2.1.288
+learnings:
+  - GitHub MCP appends a session-linked footer only to PR descriptions; comments get a generic one, issue bodies and commits nothing (2026-10-03)
+landedBy: Stop
