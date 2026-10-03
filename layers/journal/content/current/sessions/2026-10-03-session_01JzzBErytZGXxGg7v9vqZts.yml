@@ -1,0 +1,61 @@
+schemaVersion: 1
+session: session_01JzzBErytZGXxGg7v9vqZts
+startedAt: 2026-10-03T11:04:27Z
+endedAt: 2026-10-03T11:17:23Z
+kind: autonomous
+goal: Write and land one Blog Persona post from recent repo activity (scheduled blog-post run)
+status: completed
+outcome: David post on the ADR-review thesis gap merged as PR 1557 on a green gate; step 8 reply not run
+summary: Scheduled /blog-post run with no persona given and no human input; everything was agent-initiated under the Skill's charter. The rotation gate left only David eligible, so I drafted three David candidates (the ADR-review session that flagged autonomy creep because CLAUDE.md lacked the thesis, the output-matching rewrite of the shell-read detector, and the 128-file simplification PR). A fresh Sonnet reader picked the thesis story and listed confusing jargon, which I closed in the revision. A Sonnet fact-checker found no wrong claims but flagged that the owner's correction rests only on the agent's own log (PR 1536's timeline holds no owner comment), so I reattributed it to the log, removed an unverifiable quote and dropped a gloss. gate:scoped green, PR 1557 opened, verdict comment posted, merged via merge-pr.ts. Skipped the optional step 8 follow-up reply to bound cost.
+prs:
+  - "1557"
+docsRead:
+  - path: layers/blog/tenant.config.ts
+    reason: (no reason given)
+  - path: layers/blog/content/david/pages/2026-10-03-the-reviewer-called-the-projects-goal-a-bug.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-02-session_01BXoQpiEuaGZJVRQB7XpsFi.yml
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: blog-post
+    reason: (invoked as a slash command)
+frictions:
+  - description: The Stop hook flagged the untracked post as uncommitted while the fact-check subagent was still running, before the commit was due.
+    solution: The hook cannot know a subagent is pending; waiting then committing was correct. A hook note about pending background agents would remove the nag.
+    severity: nit
+  - description: First commit attempt hand-wrote the attribution trailer from the system reminder and the commit-trailer guard denied it, because the repo forbids hand-written trailers.
+    solution: The harness attribution reminder and CLAUDE.md conflict; the blog-post Skill could say commit with no trailer.
+    severity: minor
+durationSec: 775
+models:
+  claude-sonnet-5-5: 56
+toolCounts:
+  Bash: 19
+  Read: 1
+  ToolSearch: 1
+  mcp__github__pull_request_read: 3
+  Agent: 3
+  mcp__github__create_pull_request: 1
+  mcp__github__add_issue_comment: 1
+  Skill: 2
+docsReadViaShell:
+  - .agents/skills/blog-post/personas/david.md
+  - docs/research/shell-reads-by-output-matching.md
+  - docs/agents/pr-workflow.md
+  - docs/adr/0003-agent-operating-model-and-governance.md
+subagents:
+  - task: Outside read of 3 drafts
+    model: sonnet
+  - task: Outside read of 3 drafts
+    model: sonnet
+  - task: Fact-check blog post
+    model: sonnet
+gitBranch: claude/zen-heisenberg-fjpe7y
+entrypoint: remote_trigger
+cliVersion: 2.1.288
+trigger: blog-post
+landedBy: Stop
