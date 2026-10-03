@@ -13,3 +13,4 @@ here is dropped. One line each, newest last, citing the PR where it was made.
 - Tinkerfund's homepage teaser keeps the `prod`/`qa` terms on its room links (not "The Shop"/"The QA Space" or other plain-language renames) — deliberately chosen over the visitors' proposed softer wording; the blurb's "prod and qa" phrasing stays too (owner, via #1416/#1427, 2026-09-27).
 - No featured-highlights / "Start here" strip of posts on the homepage — a poor choice of highlights that broke the layout, and not a good idea in general (owner, reverting #1405 in #1410, 2026-09-26).
 - Tinkerfund's `prod` deadlines move with real time by design (only `qa` pins its clock); deadlines shifting between visits is not a finding (owner, via #1364, 2026-09-26).
+- On phones the Atlas food and relations webs stay visible as cropped, text-free overviews with their lists below — never hidden or replaced by the list alone (owner, reworking #1492 in #1494, 2026-09-29).

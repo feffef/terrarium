@@ -69,19 +69,22 @@ Merge the three reports into one tally in your scratchpad:
   A newcomer-orientation feature that can't touch the homepage hero can go on
   a Journal page with `onramp` frontmatter, which lists it in the "New here?"
   cards with no code change (#1475).
-- **Owner memory.** First gather the owner's corrections since the last
-  `decisions.md` entry: review comments on `visitor-loop` PRs, merged PRs
-  that revert a `visitor-loop` PR or rework what one built (e.g. touch the
-  same files), and owner comments on issues about its output. Each rejected
-  approach or standing preference becomes one new line there (committed with
-  step 4's PR). Then drop anything [`decisions.md`](decisions.md) rules out,
+- **Owner memory.** First run `pnpm exec tsx scripts/owner-corrections.ts`:
+  it prints every candidate owner correction since the last `decisions.md`
+  commit (human reviews of `visitor-loop` PRs, merged PRs that revert or
+  rework one, human issue comments about one). Read each candidate and
+  resolve it in the tally: a rejected approach or standing preference becomes
+  one new line in `decisions.md` (committed with step 4's PR); anything else
+  is marked *not a ruling (why)*. Then drop anything [`decisions.md`](decisions.md) rules out,
   anything an open or closed issue/PR already covers (search first), and
   anything already logged as an idea in the last week
   (`pnpm exec tsx scripts/ideas.ts gather --days 7`).
 
-Done when every reported finding is in the tally, marked consensus or single;
-every consensus finding is marked *fix*, *dropped (why)*, or *out of remit*;
-and exactly one feature is chosen, with a line on why it beat the others.
+Done when every candidate the script printed has a `decisions.md` line or a
+*not a ruling (why)* (an empty `[]` is the only "no corrections"); every
+reported finding is in the tally, marked consensus or single; every consensus
+finding is marked *fix*, *dropped (why)*, or *out of remit*; and exactly one
+feature is chosen, with a line on why it beat the others.
 
 ## 4. Fix PR
 
