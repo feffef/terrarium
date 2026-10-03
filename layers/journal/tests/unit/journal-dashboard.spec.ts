@@ -351,6 +351,11 @@ describe('sessionCardViews', () => {
     const [explicitFalse] = sessionCardViews([session({ external: false })])
     expect(explicitFalse!.external).toBe(false)
   })
+
+  it('links only a session_ id: a local CLI session logs a bare UUID that claude.ai cannot open', () => {
+    const [local] = sessionCardViews([session({ session: 'a1af4e46-8293-4f33-bf41-c956bd7f6306' })])
+    expect(local!.url).toBeNull()
+  })
 })
 
 describe('deep-link anchors', () => {
