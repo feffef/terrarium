@@ -76,3 +76,13 @@ observations:
       refute or add to #1479 (its 3 known instances aren't in this window's
       set) — the skip still reads as isolated to those three rather than
       worsening. Grade/role unchanged.
+  - date: "2026-10-03"
+    note: >-
+      Re-verified (audit-skills behaviour check), 8 usedIn sessions (PRs
+      #1394/#1431/#1472/#1489/#1502/#1508/#1518/#1530): 0/8 skip the
+      fact-check dispatch, each PR body carrying a specific, named claim
+      tally (not boilerplate). Extends the clean streak to 9 consecutive
+      runs since the last skip (#1308, 09-24). Issue #1479 stays open with
+      nothing new; sample size still too small to close it outright. Persona
+      rotation verified clean (no repeat, forced-if-missing holds). No
+      reverts in the 2-week git-log sweep. Grade/role unchanged.

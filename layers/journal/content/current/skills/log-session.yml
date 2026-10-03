@@ -149,3 +149,14 @@ observations:
       logs for genuine invocation: all show real `Skill: 2` tool counts
       and `landedBy: Stop`, usedIn=91/91 count looks correct, not inflated.
       Grade/role unchanged.
+  - date: "2026-10-03"
+    note: >-
+      Re-checked (audit-skills behaviour check), 10 newest usedIn sessions:
+      clean field-split, `landedBy: Stop` on all 10, every claimed PR/issue
+      outcome verified against GitHub. New SHELL-READ-DETECTION false-negative
+      shape found and filed as issue #1542: a `for f in <glob-pattern-list>;
+      do cat "$f"; done` loop goes uncredited (2 sessions, 2026-10-02:
+      session_01VC6tZCm3HYs9BsJ7JrQQ5Z, session_01BXoQpiEuaGZJVRQB7XpsFi),
+      distinct from the already-filed #1482 (`resolveAgainstCdDir`
+      absolute-path bug), which was independently re-confirmed still open
+      and unfixed in live code. Grade/role unchanged.

@@ -10,8 +10,8 @@ role: >-
   `code-review`, and self-merges them on a green
   gate within its ADR-0003 remit. It aims to remember the owner's review
   rulings via `decisions.md`, so a rejected idea stays rejected — but that
-  memory step has not run successfully even once in its three tests since
-  its latest fix (0/3; see observations).
+  memory step has not run successfully even once in its four tests since
+  its latest fix (0/4; see observations).
 observations:
   - date: 2026-09-27
     note: >-
@@ -103,3 +103,19 @@ observations:
       pipeline clean across all 9 usedIn sessions (3-model dispatch,
       ≥2-visitor consensus, code-review before merge, all 18 PRs merged).
       Grade/importance unchanged (still routine).
+  - date: "2026-10-03"
+    note: >-
+      Fourth chance, fourth failure (audit-skills behaviour check) —
+      commented the new evidence onto #1515 rather than filing a duplicate.
+      session_0162PRUV2S56tRQhAdPdPjhF (2026-10-02, midden focus, PRs
+      #1532/#1533 merged) self-caught the skip again ("the owner-memory
+      gathering step was skipped, so decisions.md got no new lines"),
+      proposing substantially the fix chance 3 already proposed.
+      decisions.md's git history independently re-confirmed still frozen at
+      its original 4 commits — nothing added by any of the four post-fix
+      runs. The owner-memory step's record since `886f26de` landed is now
+      0/4. Rest of the pipeline clean across all 9 usedIn sessions (3-model
+      dispatch, ≥2-visitor consensus, code-review before merge). Role's
+      "0/3" updated to "0/4" to match. Grade/importance unchanged (still
+      routine) — the failure is confined to one sub-step, not the Skill's
+      core delivery.

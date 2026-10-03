@@ -75,3 +75,16 @@ observations:
       `docs/agents/verifying-ui-changes.md` — both correct. No human-only
       surface touched in any of the 7, no revert found in the unbroken PR
       chain. Eighth consecutive clean check. Grade unchanged.
+  - date: "2026-10-03"
+    note: >-
+      Verified silent failure (audit-skills behaviour check), filed as issue
+      #1541: session_01Hi7Hh6P81Pdy936F6AmDzP (2026-10-01, PR #1517) correctly
+      left docs/agents/github-integration.md un-edited (it's under an open
+      Prune Trial) but found and named, in its own log `summary`, a real
+      contradiction there (the doc says remote sessions have no `gh` binary;
+      this container has one) — then never recorded it as a Friction, despite
+      the Skill's explicit mandate to do so. The contradiction is still live
+      (independently re-confirmed: github-integration.md:29 unchanged, `gh`
+      binary present). 6 other usedIn sessions checked clean, no reverts in
+      the 2-week git-log sweep. Grade unchanged — single instance, but real
+      information loss, so escalated rather than just observed.

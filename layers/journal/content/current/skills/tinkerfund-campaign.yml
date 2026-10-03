@@ -13,3 +13,10 @@ observations:
       Written from the phase 1 build (#1375): the voice from the launch catalog
       (#1368), the figure process from the two Fable illustrator runs (#1403,
       #1407).
+  - date: "2026-10-03"
+    note: >-
+      First audit-skills behaviour check: 3/3 usedIn sessions checked, no
+      silent failures. PR #1528 (3 Campaigns), PRs #1491/#1496 (2 Campaigns),
+      and PR #1429 (17 Campaigns + 5 categories) all confirmed merged, all
+      campaign files and e2e slugs present on main, no reverts in the 2-week
+      git-log sweep. Grade/role unchanged.
