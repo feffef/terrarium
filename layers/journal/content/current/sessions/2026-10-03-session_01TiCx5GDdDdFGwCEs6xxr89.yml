@@ -1,27 +1,46 @@
 schemaVersion: 1
 session: session_01TiCx5GDdDdFGwCEs6xxr89
 startedAt: 2026-10-03T15:22:32Z
-endedAt: 2026-10-03T18:20:00Z
+endedAt: 2026-10-03T22:05:44Z
 kind: interactive
-goal: Grill the owner on the four remaining later-phase Tinkerfund stories before implementation
-status: completed
-outcome: "Decisions posted on #1386, #1387, #1388 and #1389; visitor-loop overlap filed as #1578"
-summary: "Human-instructed throughout. The owner first asked what is required to start the remaining Tinkerfund issues (answer: nothing blocks them; all phase-1 blockers are closed), then invoked grill-with-docs. An Explore subagent mapped the Tenant's code, decision tickets and phase-1 PRs; it surfaced heavy drift from the issue wording (28 Campaigns not 6, Updates now a data Collection, Inventor comment badge and \"You backed this\" already built). Mid-grilling the owner asked to read today's visitor loop, which turned out to have built the Inventor page (#1573) without referencing open story #1388, so the tree was recomputed. Two rounds settled every branch: baked per-Campaign recent-Backer list shown statically (no ticker, WCAG 2.2.2); hand-picked one-way alsoBacked links; a percentage-only automatic bundle Promotion counted per checkout and kept after a sibling cancel; #1388 kept open for a small follow-up. The owner took every recommendation except choosing to keep #1388 open. Decisions were posted as issue comments (the single home for a content Tenant's decisions, ADR-0021) and the visitor-loop slip was filed as #1578. No code or CONTEXT.md change: \"Bundle\" waits for a second instance (rule of two)."
-prs: []
+goal: Grill and then implement the four later-phase Tinkerfund stories via subagents
+status: in-review
+outcome: "Integration PR #1581 closes #1386 #1387 #1388 #1389; per-story and whole-branch reviews applied; gate green"
+summary: "All human-instructed. Phase 1: the owner asked what blocks the remaining Tinkerfund issues, then ran grill-with-docs; an Explore subagent mapped code and decision tickets, today's visitor loop turned out to have built #1388 (#1573) unannounced, and two grilling rounds settled every branch (decisions posted on the four issues, visitor-loop slip filed as #1578). Phase 2: the owner asked for subagent implementation; I asked how to land (owner picked one integration PR on the session branch) and the owner asked for a background /code-review per story plus a final whole-branch review. Stories ran serially on one branch (shared files: schemas.ts, gallery, validate-content-refs, e2e): #1388 follow-up, #1386, #1387, #1389, each followed by a review agent in parallel with the next implementation, and review fixes landed as their own commits before the next story. Reviews caught real issues: a corrupted qa Backer fixture, the full catalog shipped in every Campaign/Cart payload (689 KB to 175 KB after a transform), a bundle note shown on a zero-discount Pledge, and a card Deal chip disagreeing with the page badge. Two product questions went back to the owner mid-way (top-up bundles discount the whole Pledge: keep; bundle note on every bundle Pledge). Agent-initiated within scope: accepting the non-sticky Readout on Live pages (recorded in the PR), accepting the #1389 partial refusal (collection schemas must be plain ZodObject, verified at shared/manifest.ts:35), and a final rename to tinkerfundBySlug. PR #1581 opened and subscribed; human merge pending."
+prs:
+  - "1581"
 docsRead:
-  - path: layers/tinkerfund/CONTEXT.md
-    reason: Tinkerfund vocabulary for the grilling
-  - path: .agents/skills/visitor-loop/SKILL.md
-    reason: "check whether the loop should have skipped #1388"
-  - path: docs/agents/domain.md
-    reason: rule of two for coining Bundle
-  - path: layers/tinkerfund/schemas.ts
-    reason: (no reason given)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: dispatch procedure for impl and review agents
+  - path: docs/agents/pr-workflow.md
+    reason: merge authority and the integration-PR whole-branch review
+  - path: .agents/skills/code-review/SKILL.md
+    reason: brief for per-story review agents
   - path: layers/tinkerfund/app/utils/checkout.ts
+    reason: (read before editing)
+  - path: layers/tinkerfund/app/utils/campaign.ts
+    reason: (read before editing)
+  - path: layers/tinkerfund/app/components/tinkerfund/browse/DealBanner.vue
+    reason: (read before editing)
+  - path: .agents/skills/tinkerfund-campaign/SKILL.md
+    reason: (read before editing)
+  - path: layers/tinkerfund/app/utils/browse.ts
+    reason: (read before editing)
+  - path: layers/tinkerfund/app/pages/t/tinkerfund/[space]/cart.vue
+    reason: (read before editing)
+  - path: layers/tinkerfund/app/pages/t/tinkerfund/[space]/checkout/done.vue
+    reason: (read before editing)
+  - path: layers/tinkerfund/app/pages/t/tinkerfund/[space]/account/pledges/[ref].vue
+    reason: (read before editing)
+  - path: layers/tinkerfund/app/composables/gallery.ts
+    reason: (read before editing)
+  - path: layers/tinkerfund/app/pages/t/tinkerfund/[space]/deals.vue
+    reason: (read before editing)
+  - path: layers/tinkerfund/schemas.ts
+    reason: (read before editing)
+  - path: layers/tinkerfund/CONTEXT.md
     reason: (no reason given)
   - path: layers/tinkerfund/app/utils/cart.ts
-    reason: (no reason given)
-  - path: layers/tinkerfund/app/utils/campaign.ts
     reason: (no reason given)
   - path: layers/tinkerfund/app/utils/backer.ts
     reason: (no reason given)
@@ -32,7 +51,7 @@ docsRead:
   - path: layers/tinkerfund/app/utils/status.ts
     reason: (no reason given)
   - path: layers/tinkerfund/app/components/tinkerfund/campaign/Campaign.vue
-    reason: (no reason given)
+    reason: (read before editing)
   - path: layers/tinkerfund/app/components/tinkerfund/campaign/Readout.vue
     reason: (no reason given)
   - path: layers/tinkerfund/app/components/tinkerfund/browse/CampaignCard.vue
@@ -41,8 +60,6 @@ docsRead:
     reason: (no reason given)
   - path: layers/tinkerfund/app/components/tinkerfund/campaign/CommentBody.vue
     reason: (no reason given)
-  - path: layers/tinkerfund/app/utils/browse.ts
-    reason: (no reason given)
   - path: layers/tinkerfund/app/composables/browse.ts
     reason: (no reason given)
   - path: layers/tinkerfund/app/composables/shop.ts
@@ -50,19 +67,35 @@ docsRead:
   - path: layers/tinkerfund/app/composables/clock.ts
     reason: (no reason given)
   - path: layers/tinkerfund/app/utils/gallery.ts
-    reason: (no reason given)
-  - path: .agents/skills/tinkerfund-campaign/SKILL.md
-    reason: (no reason given)
+    reason: (read before editing)
+  - path: layers/tinkerfund/tests/unit/browse.spec.ts
+    reason: (read before editing)
+  - path: layers/tinkerfund/content/qa/pages/campaigns/last-minute-lamp.md
+    reason: (read before editing)
+  - path: layers/tinkerfund/content/qa/pages/campaigns/indoor-hammock.md
+    reason: (read before editing)
+  - path: layers/tinkerfund/tests/e2e/tinkerfund.e2e.ts
+    reason: (read before editing)
+  - path: layers/tinkerfund/content/prod/pages/campaigns/snore-certificate-printer.md
+    reason: (read before editing)
+  - path: layers/tinkerfund/app/pages/t/tinkerfund/[space]/inventors/[inventor].vue
+    reason: (read before editing)
 skillsUsed:
+  - name: dispatch-subagents
+    reason: serial worktree-isolated impl agents plus parallel read-only reviewers
+  - name: code-review
+    reason: per-story and whole-branch two-axis reviews
   - name: grilling
-    reason: design tree over the four stories
+    reason: (no reason given)
   - name: domain-modeling
-    reason: glossary challenge and rule-of-two call on Bundle
+    reason: (no reason given)
   - name: close-session
-    reason: closure after posting decisions
+    reason: (no reason given)
   - name: log-session
     reason: (no reason given)
   - name: grill-with-docs
+    reason: (invoked as a slash command)
+  - name: context
     reason: (invoked as a slash command)
 frictions:
   - description: "The visitor loop built open story #1388 as #1573 without referencing it, despite its own 'search open issues first' rule; found only by reading the merged PR"
@@ -74,37 +107,130 @@ frictions:
   - description: Agent tool guard rejected run_in_background false on the first Explore dispatch; cost one retry
     solution: Omit the flag; the guard message was clear
     severity: nit
-durationSec: 10648
+  - description: An impl agent's `git checkout -B <session-branch>` in its worktree moved the branch my primary checkout had checked out, leaving my tree looking like a reversed diff of its commits
+    solution: Detach the orchestrator checkout before dispatching agents that push the same branch; worth a line in dispatch-subagents for single-branch serial integration
+    severity: moderate
+  - description: My `git reset --hard HEAD` to resync that stale checkout was denied as destructive; worked around by detaching at the old commit after proving the tree matched it
+    solution: Detach first (above) so the situation never arises
+    severity: minor
+  - description: check:worktrees flagged six agent worktrees as uncommitted; all were false positives from the same shared-branch-ref effect, verified tree-by-tree against each pushed SHA
+    solution: check-worktrees could compare a worktree's tree to any commit on its upstream before calling it unrescued
+    severity: minor
+  - description: Container restart dropped two agent hand-backs; recovered from the pushed commits and the agent's gate log in the scratchpad
+    solution: Agents banking reports to scratchpad files made recovery cheap; keep requiring it
+    severity: minor
+  - description: Review agents could not spawn the code-review Skill's two sub-agents and ran both axes sequentially themselves
+    solution: Brief already allowed the fallback; the Skill could document it for nested dispatch
+    severity: nit
+  - description: Per-story implementers repeatedly reintroduced small duplicates (pluralisers, slug lookups, Live filters) that only the whole-branch review caught
+    solution: Tell impl briefs to grep app/utils for an existing helper before adding one
+    severity: minor
+durationSec: 24192
 models:
-  claude-opus-5-5: 76
+  claude-opus-5-5: 209
 toolCounts:
-  Bash: 13
-  ToolSearch: 4
+  Bash: 43
+  ToolSearch: 5
   mcp__github__search_issues: 3
   mcp__github__issue_read: 7
   mcp__github__search_pull_requests: 1
-  Skill: 4
-  Agent: 2
+  Skill: 5
+  Agent: 15
   mcp__github__pull_request_read: 3
   mcp__github__add_issue_comment: 4
   mcp__github__issue_write: 1
-  Write: 1
+  Write: 5
+  AskUserQuestion: 2
+  Read: 2
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+  mcp__claude-code-remote__send_later: 1
+filesEdited:
+  - scripts/validate-content-refs.ts
+  - layers/tinkerfund/schemas.ts
+  - tests/unit/validate-content-refs.spec.ts
+  - layers/tinkerfund/app/utils/checkout.ts
+  - layers/tinkerfund/app/utils/browse.ts
+  - layers/tinkerfund/app/components/tinkerfund/campaign/DealBadge.vue
+  - layers/tinkerfund/app/components/tinkerfund/browse/DealBanner.vue
+  - layers/tinkerfund/app/utils/campaign.ts
+  - layers/tinkerfund/app/pages/t/tinkerfund/[space]/deals.vue
+  - layers/tinkerfund/app/pages/t/tinkerfund/[space]/cart.vue
+  - layers/tinkerfund/app/pages/t/tinkerfund/[space]/checkout/done.vue
+  - layers/tinkerfund/app/pages/t/tinkerfund/[space]/account/pledges/[ref].vue
+  - layers/tinkerfund/content/prod/promotions/back-two.yml
+  - layers/tinkerfund/content/qa/promotions/desk-pair.yml
+  - layers/tinkerfund/content/qa/promotions/trio-soon.yml
+  - layers/tinkerfund/tests/unit/qa-fixtures.spec.ts
+  - layers/tinkerfund/tests/unit/bundle.spec.ts
+  - .agents/skills/tinkerfund-campaign/SKILL.md
+  - layers/tinkerfund/tests/e2e/tinkerfund.e2e.ts
+  - layers/tinkerfund/app/components/tinkerfund/campaign/Campaign.vue
+  - layers/tinkerfund/app/composables/gallery.ts
+  - layers/tinkerfund/tests/unit/browse.spec.ts
+  - layers/tinkerfund/app/components/tinkerfund/browse/Shelf.vue
+  - layers/tinkerfund/content/qa/pages/campaigns/last-minute-lamp.md
+  - layers/tinkerfund/content/qa/pages/campaigns/indoor-hammock.md
+  - layers/tinkerfund/app/utils/gallery.ts
+  - layers/tinkerfund/app/components/tinkerfund/gallery/Section.vue
+  - layers/tinkerfund/content/prod/pages/campaigns/snore-certificate-printer.md
+  - dump.tmp.mts
+  - layers/tinkerfund/tests/unit/content-model.spec.ts
+  - layers/tinkerfund/app/components/tinkerfund/campaign/RecentBackers.vue
+  - layers/tinkerfund/app/components/tinkerfund/inventor/Profile.vue
+  - layers/tinkerfund/app/pages/t/tinkerfund/[space]/inventors/[inventor].vue
+  - layers/tinkerfund/content/qa/inventors/new-inventor.yml
 docsReadViaShell:
   - layers/tinkerfund/CONTEXT.md
   - .agents/skills/visitor-loop/SKILL.md
   - docs/agents/domain.md
   - docs/adr/0017-provenance-footer-on-agent-authored-content.md
   - docs/agents/guards.md
+  - docs/agents/pr-workflow.md
+  - .agents/skills/code-review/SKILL.md
+  - .agents/skills/tinkerfund-campaign/SKILL.md
+  - docs/agents/verifying-ui-changes.md
+  - docs/agents/tenant-layers.md
+  - .agents/skills/tdd/mocking.md
   - .agents/skills/visitor-loop/decisions.md
   - docs/adr/0028-navigation-reads-server-payloads.md
+  - CONTEXT.md
 subagents:
   - type: Explore
     task: Map Tinkerfund code and issues
   - type: Explore
     task: Map Tinkerfund code and issues
+  - type: general-purpose
+    task: "Implement #1388 Inventor follow-up"
+  - type: general-purpose
+    task: "Review #1388 follow-up"
+  - type: general-purpose
+    task: "Implement #1386 social proof"
+  - type: general-purpose
+    task: "Review #1386 social proof"
+  - type: general-purpose
+    task: "Fix #1388 review findings"
+  - type: general-purpose
+    task: "Implement #1387 + #1386 fixes"
+  - type: general-purpose
+    task: "Review #1387 recommendations"
+  - type: general-purpose
+    task: "Implement #1389 bundles"
+  - type: general-purpose
+    task: "Review #1389 bundles"
+  - type: general-purpose
+    task: "Fix #1387 review findings"
+  - type: general-purpose
+    task: "Fix #1389 review findings"
+  - type: general-purpose
+    task: Whole-branch integration review
+  - type: general-purpose
+    task: Fix integration review findings
 gitBranch: ccr-22eb4939-shdqx0
 entrypoint: remote_mobile
 cliVersion: 2.1.288
 ideas:
   - When a visitor-loop feature PR matches an open ready-for-agent story, have the run comment on that issue and either close it or list leftovers, so story tracking never silently diverges from main
+  - "Add a single-branch serial-integration recipe to dispatch-subagents: orchestrator detaches its checkout, each impl agent starts from origin/<branch>, check:worktrees treats a tree equal to an upstream commit as rescued"
 landedBy: Stop
