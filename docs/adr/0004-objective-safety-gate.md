@@ -20,15 +20,10 @@ Prune Trials by ADR-0027
 > **Amended (2026-10-03).** *CI skips the Heavy tier on a provably Inert
 > changeset.* The Decision's "every PR must clear it" still governs what the
 > Gate *covers*; this narrows only what it *executes*. When every changed path
-> in a PR is Inert by `scripts/gate.ts`'s `isInert` — a `.md` outside
-> `layers/`, or a `.claude/skills/` entry — CI runs the Floor
-> (`verify:skills-lock`, `verify:mermaid`, `lint`, `typecheck`,
-> `validate:content`) and skips L3 (`test`), L0's `build`, and L2 (`test:e2e`).
-> The safety argument is the Inert-set proof in issues #350 and #544: no
-> skipped step reads those paths, so running them could only re-confirm the
-> previous run. CI asks `scripts/gate.ts --decide` for the decision instead of
-> restating the predicate in YAML, so the local and CI classifications cannot
-> diverge (ADR-0026 moved that invocation into the composite action). The
+> in a PR passes `scripts/gate.ts`'s `isInert`, CI runs its `FLOOR` and skips
+> its `HEAVY` steps. The safety argument is the Inert-set proof in issues #350
+> and #544: no skipped step reads those paths. CI asks `scripts/gate.ts
+> --decide`, so local and CI classification cannot diverge (ADR-0026). The
 > relaxation is one-directional — an undeterminable diff base, a shallow
 > checkout, a failed decision step, an empty changeset, or a `push: main` event
 > each run the Full gate, so the skip is only ever reached on a
