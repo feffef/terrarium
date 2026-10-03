@@ -1,0 +1,58 @@
+schemaVersion: 1
+session: session_0183i5YW166iUcn15nrNz3bC
+startedAt: 2026-10-03T18:35:09Z
+endedAt: 2026-10-03T18:44:06Z
+kind: interactive
+goal: Assess Nuxt directory-scan auto-imports in Tenant layers and whether to turn them off
+status: completed
+outcome: "Measured imports.scan:false (626 typecheck errors, 163 names, 100 files) and filed issue #1580 with a draft ADR-0029"
+summary: "Human-instructed throughout. The owner first asked whether the \"42 redundant relative import type lines across tinkerfund and midden\" were already addressed: PR #1539 (merged today) removed them, and 13 ambient-type import lines remain in tinkerfund's composables/utils (verified against .nuxt/types/imports.d.ts). The owner then asked whether auto-import is helpful at all, since they find it confusing. I laid out pros and cons and, on request, explored `imports: { scan: false }`. I confirmed the option in @nuxt/schema 4.5.2, applied it locally, and ran `pnpm typecheck`: 626 errors in 105 files, 163 distinct names in 356 file-name pairs, Tinkerfund the bulk. A cross-layer check found no Tenant-to-Tenant use, only Platform homepage to Tenants and Tenants to Platform (useSpace, queryPages). I reverted the config change, so nothing was committed. Asked for my opinion, I recommended doing it, gated by an ADR first. At the owner's explicit request I opened issue #1580 holding the numbers and a draft ADR-0029 (Proposed). It keeps framework, module and component auto-imports. No PR: the migration waits on human green-light, and the root nuxt.config.ts is human-only."
+prs: []
+docsRead:
+  - path: docs/agents/tenant-layers.md
+    reason: existing auto-import namespace rules and app/types caveat
+  - path: nuxt.config.ts
+    reason: root config the scan:false trial edits (human-only)
+  - path: docs/agents/issue-tracker.md
+    reason: issue labelling conventions
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Told the owner the global auto-import namespace was a real Tenant-isolation risk before checking; measurement then showed zero Tenant-to-Tenant uses.
+    solution: "Run the cross-layer check before arguing from it, per the verify-before-stating rule; issue #1580 states the measured fact."
+    severity: minor
+  - description: First described scan:false as risky at runtime because typecheck only checks types, forgetting that vue-tsc covers .vue templates; corrected one turn later.
+    solution: Remember that vue-tsc template checking makes typecheck a near-complete list of what breaks at runtime when auto-imports are removed.
+    severity: nit
+durationSec: 536
+models:
+  claude-opus-5-5: 55
+toolCounts:
+  Bash: 16
+  ToolSearch: 3
+  Read: 1
+  mcp__github__search_issues: 1
+  mcp__github__search_pull_requests: 1
+  mcp__github__pull_request_read: 1
+  Edit: 1
+  mcp__github__issue_write: 1
+  Skill: 2
+filesEdited:
+  - nuxt.config.ts
+docsReadViaShell:
+  - docs/agents/tenant-layers.md
+  - docs/agents/guards.md
+  - docs/adr/0028-navigation-reads-server-payloads.md
+  - docs/adr/0027-prune-trials.md
+  - docs/agents/issue-tracker.md
+gitBranch: claude/focused-carson-no3ywa
+entrypoint: remote
+cliVersion: 2.1.288
+learnings:
+  - imports.scan:false in the root config also disables scanning of the root app's own app/composables and app/utils, not just the layers' (useSpace, queryPages break too)
+ideas:
+  - "Generate the scan:false migration mechanically: parse TS2304 'Cannot find name' errors from pnpm typecheck, resolve each name to its exporting file, and emit relative imports, so the 100-file PR is reproducible rather than hand-written."
+landedBy: Stop
