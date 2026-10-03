@@ -714,7 +714,7 @@ export function registerTinkerfundE2E(): void {
 
         // qa's bundle lists the Stapler and the Lamp (issue #1389): the Cart nudges until both are in it.
         await visit('/cart')
-        await expect.poll(() => page.locator('.summary .nudge').textContent()).toMatch(/^\s*Add a Reward from one more Campaign to save 5%: see which\s*$/)
+        await expect.poll(() => page.locator('.summary .nudge').textContent()).toMatch(/^\s*Add a Reward from 1 more Campaign to save 5%: see the Campaigns in this Deal\s*$/)
 
         await visit('/campaigns/last-minute-lamp')
         expect(await page.locator('.readout .deals').textContent()).toContain('5% off when backed with 1 more Campaign in this Deal')

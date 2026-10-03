@@ -4,7 +4,7 @@ definePageMeta({ viewTransition: true })
 const route = useRoute()
 const { space, link } = useTinkerfundSpace()
 const money = useTinkerfundMoney()
-const { zoneName: nameOf, paymentLabel, status, error, loaded, account, catalog, preview, revise, cancel, pledges, promotions } = await useTinkerfundCart()
+const { zoneName: nameOf, paymentLabel, status, error, loaded, account, catalog, preview, revise, cancel, promotions } = await useTinkerfundCart()
 
 const reference = computed(() => String(route.params.ref))
 const current = computed(() => account.value.find((a) => a.pledge.ref === reference.value))
@@ -12,7 +12,7 @@ const entry = computed(() => current.value && catalog.value[current.value.pledge
 const receipt = computed(() => current.value?.receipt)
 const zoneName = computed(() => nameOf(current.value?.pledge.zone))
 const payment = computed(() => paymentLabel(current.value?.pledge.payment))
-const kept = computed(() => current.value && tinkerfundBundleKept(current.value.pledge, pledges.value, promotions.value) ? TINKERFUND_BUNDLE_KEPT : undefined)
+const bundleNote = computed(() => current.value && tinkerfundBundleNote(current.value.pledge, promotions.value))
 
 const mode = ref<'view' | 'edit' | 'review'>('view')
 const proposal = ref<{ change: TinkerfundPledgeContents; receipt: ReturnType<typeof tinkerfundReceipt> }>()
@@ -87,7 +87,7 @@ useSeoMeta(tinkerfundSeo({ kind: 'private', space, title: `Pledge ${reference.va
             :zone="zoneName"
             :reference="current.pledge.ref"
             :ends-at="current.state === 'pending' ? current.endsAt : undefined"
-            :note="kept"
+            :note="bundleNote"
           />
           <p v-if="current.state === 'cancelled'" class="status">Cancelled <TinkerfundTime :at="current.pledge.cancelled!" />. Nothing was charged.</p>
           <p v-else-if="current.state === 'unfunded'" class="status">Not charged: the Campaign ended <TinkerfundTime :at="current.endsAt" /> short of its goal.</p>

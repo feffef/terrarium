@@ -8,7 +8,7 @@ const { shop, zoneName, status, error, loaded, zone, view, change, promotions } 
 const shippingRows = computed(() => tinkerfundShippingRows(view.value.groups, zoneName(zone.value), money))
 const { cards, clock } = await useTinkerfundCatalog()
 const recommended = computed(() => tinkerfundCartRecommendations(cards.value, view.value.groups.map((g) => g.campaign)))
-const nudge = computed(() => tinkerfundBundleNudge(promotions.value, view.value, clock.value.now))
+const nudge = computed(() => tinkerfundBundleNudge(promotions.value, view.value, clock.value.now, tinkerfundLive(cards.value)))
 const blocked = computed(() => view.value.groups.some((g) => g.lines.some((l) => l.unavailable)))
 
 useSeoMeta(tinkerfundSeo({ kind: 'private', space, title: 'Your Cart' }))
@@ -48,7 +48,7 @@ useSeoMeta(tinkerfundSeo({ kind: 'private', space, title: 'Your Cart' }))
             <div class="total"><dt>Estimated total</dt><dd>{{ money(view.total) }}</dd></div>
           </dl>
           <p v-if="nudge" class="nudge">
-            {{ nudge.text }}<template v-if="nudge.listed">: <NuxtLink :to="link('/deals')">see which</NuxtLink></template>
+            {{ nudge.text }}<template v-if="nudge.listed">: <NuxtLink :to="link('/deals')">see the Campaigns in this Deal</NuxtLink></template>
           </p>
           <p class="note">Discounts and codes apply at checkout. You’re only charged if a Campaign is funded.</p>
           <p v-if="blocked" class="blocked">Remove what is no longer available to check out.</p>

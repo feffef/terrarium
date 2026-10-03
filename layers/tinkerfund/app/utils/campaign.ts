@@ -62,14 +62,27 @@ export function tinkerfundAutomaticDeals<P extends Dealt>(promotions: P[], campa
   return promotions.filter((p) => !p.code && !p.bundle && tinkerfundPromotionTargets(p, campaign) && derivePromotionState(p, now) === 'active')
 }
 
+type Bundled = Targeted & Pick<TinkerfundPromotionTerms, 'bundle'>
+
+/** The Campaigns a Promotion names: a bundle's list, or the one it targets; a shop-wide one names none. */
+export function tinkerfundNamedCampaigns(promotion: Bundled): string[] {
+  return promotion.bundle?.campaigns ?? (promotion.campaign ? [promotion.campaign] : [])
+}
+
 /** A bundle counts, and takes something off, only the Campaigns it lists, or any if it lists none (issue #1389). */
-export function tinkerfundBundleCovers(promotion: Pick<TinkerfundPromotionTerms, 'bundle'>, campaign: string): boolean {
-  return !!promotion.bundle && (!promotion.bundle.campaigns || promotion.bundle.campaigns.includes(campaign))
+export function tinkerfundBundleCovers(promotion: Bundled, campaign: string): boolean {
+  return !!promotion.bundle && (!promotion.bundle.campaigns || tinkerfundNamedCampaigns(promotion).includes(campaign))
+}
+
+/** Enough Campaigns a bundle covers are still Live to meet it, so it promises nothing out of reach (issue #1389). */
+export function tinkerfundBundleReachable(promotion: Bundled, live: string[]): boolean {
+  return !!promotion.bundle && live.filter((c) => tinkerfundBundleCovers(promotion, c)).length >= promotion.bundle.min
 }
 
 /** The Deals a Campaign page shows: a bundle only where it names the Campaign, as a shop-wide one marks none (issue #1389). */
-export function tinkerfundCampaignDeals<P extends Dealt>(promotions: P[], campaign: string, now: number): P[] {
-  const listing = promotions.filter((p) => p.bundle?.campaigns?.includes(campaign) && derivePromotionState(p, now) === 'active')
+export function tinkerfundCampaignDeals<P extends Dealt>(promotions: P[], campaign: string, now: number, live: string[]): P[] {
+  const listing = promotions.filter((p) => p.bundle && tinkerfundNamedCampaigns(p).includes(campaign)
+    && derivePromotionState(p, now) === 'active' && tinkerfundBundleReachable(p, live))
   return [...tinkerfundAutomaticDeals(promotions, campaign, now), ...listing]
 }
 

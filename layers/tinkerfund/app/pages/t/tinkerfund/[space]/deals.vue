@@ -4,7 +4,8 @@ definePageMeta({ viewTransition: true })
 const { space, link } = useTinkerfundSpace()
 const { clock, cards, promotions } = await useTinkerfundCatalog()
 const deals = computed(() => groupTinkerfundPromotions(promotions.value, clock.value.now))
-const campaignOf = (slug?: string) => slug === undefined ? undefined : cards.value.find((c) => tinkerfundSlug(c.path) === slug)
+const cardsOf = (p: Parameters<typeof tinkerfundNamedCampaigns>[0]) =>
+  tinkerfundNamedCampaigns(p).flatMap((slug) => cards.value.find((c) => tinkerfundSlug(c.path) === slug) ?? [])
 const groups = computed(() => [
   { id: 'tf-deals-now', title: 'Running now', list: deals.value.active, scheduled: false },
   { id: 'tf-deals-soon', title: 'Starting soon', list: deals.value.scheduled, scheduled: true },
@@ -29,11 +30,8 @@ useSeoMeta(tinkerfundSeo({ kind: 'page', space, title: 'Deals', description: 'Pr
       <h2 :id="group.id" :class="{ 'tf-sr': !group.scheduled }">{{ group.title }}</h2>
       <article v-for="p in group.list" :key="p.stem" class="deal">
         <TinkerfundBrowseDealBanner :promotion="p" :clock="clock" :scheduled="group.scheduled" />
-        <div v-if="p.bundle?.campaigns" class="campaigns">
-          <TinkerfundBrowseCampaignCard v-for="card in p.bundle.campaigns.flatMap((s) => campaignOf(s) ?? [])" :key="card.path" :card="card" :clock="clock" />
-        </div>
-        <div v-else-if="campaignOf(p.campaign)" class="campaign">
-          <TinkerfundBrowseCampaignCard :card="campaignOf(p.campaign)!" :clock="clock" />
+        <div v-if="cardsOf(p).length" :class="p.bundle ? 'campaigns' : 'campaign'">
+          <TinkerfundBrowseCampaignCard v-for="card in cardsOf(p)" :key="card.path" :card="card" :clock="clock" />
         </div>
         <p v-else-if="!p.campaign" class="all">
           Applies to every Campaign. <NuxtLink :to="link('/discover?state=live')">Browse Live Campaigns</NuxtLink>

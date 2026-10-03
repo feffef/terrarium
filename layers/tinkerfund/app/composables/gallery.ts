@@ -20,6 +20,7 @@ export async function useTinkerfundGallery() {
   const { clock, promotions, baked } = catalog
   const now = computed(() => clock.value.now)
 
+  const live = computed(() => tinkerfundLive(catalog.cards.value))
   const campaigns = computed(() =>
     (extra.value?.docs ?? [])
       .flatMap((doc) => {
@@ -30,7 +31,7 @@ export async function useTinkerfundGallery() {
           slug,
           campaign: doc.campaign,
           state: deriveCampaignState(doc.campaign, now.value),
-          deals: tinkerfundCampaignDeals(promotions.value, slug, now.value),
+          deals: tinkerfundCampaignDeals(promotions.value, slug, now.value, live.value),
         }]
       })
       .sort((a, b) => a.campaign.registry.localeCompare(b.campaign.registry)),

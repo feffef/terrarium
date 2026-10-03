@@ -7,7 +7,7 @@ import { tinkerfundCampaignDeals } from '../../app/utils/campaign.ts'
 import type { TinkerfundPromotionTerms } from '../../app/utils/campaign.ts'
 import { resolveTinkerfundCart } from '../../app/utils/cart.ts'
 import type { TinkerfundDraft, TinkerfundPledge } from '../../app/utils/cart.ts'
-import { quoteTinkerfundCheckout, tinkerfundBundleKept, tinkerfundBundleNudge } from '../../app/utils/checkout.ts'
+import { quoteTinkerfundCheckout, tinkerfundBundleNote, tinkerfundBundleNudge } from '../../app/utils/checkout.ts'
 import { catalog, HOUR, NOW, pledge, promotion, shop } from './support.ts'
 
 const any2 = promotion({ title: 'Any two', discount: { percent: 10 }, bundle: { min: 2 } })
@@ -59,14 +59,23 @@ describe('a bundle at checkout', () => {
 })
 
 describe('where a bundle shows', () => {
+  const live = ['lamp', 'mug']
+  const lampAndMug = promotion({ title: 'Lamp and mug', discount: { percent: 10 }, bundle: { min: 2, campaigns: ['lamp', 'mug'] } })
+
   it('marks only the Campaigns a bundle lists, and no Campaign for a shop-wide one', () => {
-    expect(tinkerfundCampaignDeals([any2, pair], 'lamp', NOW)).toEqual([pair])
-    expect(tinkerfundCampaignDeals([any2, pair], 'mug', NOW)).toEqual([])
+    expect(tinkerfundCampaignDeals([any2, lampAndMug], 'lamp', NOW, live)).toEqual([lampAndMug])
+    expect(tinkerfundCampaignDeals([any2, lampAndMug], 'clock', NOW, live)).toEqual([])
+  })
+
+  it('promises nothing once too few of its Campaigns are Live to meet it', () => {
+    expect(tinkerfundCampaignDeals([pair], 'lamp', NOW, live)).toEqual([])
+    expect(tinkerfundBundleNudge([pair], quote([lamp], [pair]).view, NOW, live)).toBeUndefined()
+    expect(tinkerfundBundleNudge([any2], quote([lamp], [any2]).view, NOW, ['lamp'])).toBeUndefined()
   })
 
   it('nudges the Cart while an Active bundle it counts toward is not yet met', () => {
-    const nudge = (cart: TinkerfundDraft[], promotions = [any2]) => tinkerfundBundleNudge(promotions, quote(cart, promotions).view, NOW)
-    expect(nudge([lamp])).toEqual({ text: 'Add a Reward from one more Campaign to save 10%', listed: false })
+    const nudge = (cart: TinkerfundDraft[], promotions = [any2]) => tinkerfundBundleNudge(promotions, quote(cart, promotions).view, NOW, [...live, 'clock'])
+    expect(nudge([lamp])).toEqual({ text: 'Add a Reward from 1 more Campaign to save 10%', listed: false })
     expect(nudge([lamp], [{ ...any2, bundle: { min: 3 } }])?.text).toBe('Add a Reward from 2 more Campaigns to save 10%')
     expect(nudge([lamp, mug])).toBeUndefined()
     expect(nudge([mug], [pair])).toBeUndefined()
@@ -88,14 +97,17 @@ describe('after checkout', () => {
     ])
     const kept = pledges.find((p) => p.ref === mugRef)!
     expect(kept).toMatchObject({ promotions: ['any-two'], discount: 0.6 })
-    expect(tinkerfundBundleKept(kept, pledges, [any2])).toBe(true)
-    expect(tinkerfundBundleKept(pledges.find((p) => p.ref === lampRef)!, pledges, [any2])).toBe(false)
+    expect(tinkerfundBundleNote(kept, [any2])).toBe('Bundle discount: 10% for backing 2 Campaigns together')
+    expect(tinkerfundBundleNote(pledges.find((p) => p.ref === lampRef)!, [any2])).toBeUndefined()
   })
 
-  it('keeps it on both when one is changed, and says nothing while both still share it', () => {
+  it('keeps it on both when one is changed, and notes it only while a Pledge has goods for it', () => {
     const pledges = replay([{ type: 'change', at: NOW + HOUR, ref: lampRef, change: { lines: [{ reward: 'manual', options: {}, quantity: 1 }], addons: [] } }])
     expect(pledges.map((p) => [p.ref, p.promotions, p.discount])).toEqual([[lampRef, ['any-two'], 0.5], [mugRef, ['any-two'], 0.3]])
-    expect(pledges.some((p) => tinkerfundBundleKept(p, pledges, [any2]))).toBe(false)
+    expect(pledges.every((p) => tinkerfundBundleNote(p, [any2]))).toBe(true)
+    const bonusOnly = replay([{ type: 'change', at: NOW + HOUR, ref: mugRef, change: { lines: [], addons: [], bonus: 5 } }]).find((p) => p.ref === mugRef)!
+    expect(bonusOnly).toMatchObject({ promotions: ['any-two'], discount: 0 })
+    expect(tinkerfundBundleNote(bonusOnly, [any2])).toBeUndefined()
   })
 
   it('keeps it on a Pledge topped up alone later, without counting it twice', () => {

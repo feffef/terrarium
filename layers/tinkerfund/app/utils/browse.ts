@@ -2,7 +2,7 @@
 // Deals, all derived from baked content at the page's "now" (issue #1364).
 import type { z } from 'zod'
 import type { campaign } from '../../schemas'
-import { tinkerfundRecentBackers, type TinkerfundPromotionTerms } from './campaign'
+import { tinkerfundNamedCampaigns, tinkerfundRecentBackers, type TinkerfundPromotionTerms } from './campaign'
 import { formatTinkerfundCountdown, resolveTinkerfundOffset, tinkerfundCountdown } from './clock'
 import { tinkerfundSlug } from './shop'
 import { campaignPriceFrom, deriveCampaignStatus, derivePromotionState, type CampaignState, type CampaignStatus } from './status'
@@ -126,7 +126,7 @@ export function tinkerfundListings(
   now: number,
 ): TinkerfundListing[] {
   const promoted = new Set(
-    promotions.filter((p) => derivePromotionState(p, now) === 'active').flatMap((p) => p.bundle?.campaigns ?? (p.campaign ? [p.campaign] : [])),
+    promotions.filter((p) => derivePromotionState(p, now) === 'active').flatMap(tinkerfundNamedCampaigns),
   )
   return docs.map(({ path, title, description, campaign: c }) => ({
     path,
@@ -147,6 +147,10 @@ export function tinkerfundListings(
     promoted: promoted.has(tinkerfundSlug(path)),
   }))
 }
+
+/** The slugs of the Live Campaigns among these listings. */
+export const tinkerfundLive = (listings: Pick<TinkerfundListing, 'path' | 'status'>[]) =>
+  listings.filter((l) => l.status.state === 'live').map((l) => tinkerfundSlug(l.path))
 
 export const TINKERFUND_STATE_LABELS = { upcoming: 'Upcoming', live: 'Live', ended: 'Ended', funded: 'Funded', unfunded: 'Unfunded' } as const
 

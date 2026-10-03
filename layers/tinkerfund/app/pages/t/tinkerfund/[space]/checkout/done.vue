@@ -17,7 +17,7 @@ const receipts = computed(() =>
       zone: zoneName(pledge.zone),
       payment: paymentLabel(pledge.payment),
       endsAt: resolveTinkerfundOffset(entry.campaign.end, clock.value.now),
-      note: tinkerfundBundleKept(pledge, pledges.value, promotions.value) ? TINKERFUND_BUNDLE_KEPT : undefined,
+      note: tinkerfundBundleNote(pledge, promotions.value),
     }]
   }))
 const total = computed(() => tinkerfundSum(receipts.value.map((r) => r.total)))
