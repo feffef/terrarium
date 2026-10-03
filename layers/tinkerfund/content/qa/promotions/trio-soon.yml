@@ -1,0 +1,5 @@
+title: Any three Campaigns (scheduled bundle)
+discount: { percent: 15 }
+bundle: { min: 3 }
+start: +3d
+end: +10d

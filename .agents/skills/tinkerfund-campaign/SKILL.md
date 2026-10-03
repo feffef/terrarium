@@ -130,3 +130,8 @@ A Promotion (`promotions/<slug>.yml`) targets one Campaign or the whole shop, as
 a percentage or a fixed EUR amount, from `start` to an optional `end`; a `code`
 is upper-case, and at most one code applies per checkout. Its title and
 `description` read like a real shop's offer.
+
+A `bundle: { min, campaigns? }` Promotion takes its percentage off each Pledge
+once `min` Campaigns get Rewards or Add-ons in one checkout. It has no `code` and
+no `campaign`; `campaigns` limits it to the ones listed (at least `min`), which
+then carry a Deal badge. Keep prod to one shop-wide bundle.

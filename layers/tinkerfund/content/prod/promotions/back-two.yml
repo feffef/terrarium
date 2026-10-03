@@ -1,0 +1,6 @@
+title: Back any two Campaigns together, save 10% on each
+description: Pledge Rewards from two or more Campaigns in one checkout and each of those Pledges is ten percent lighter. Bonus support stays full price.
+discount: { percent: 10 }
+bundle: { min: 2 }
+start: -5d
+end: +30d

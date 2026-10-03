@@ -99,6 +99,23 @@ describe('qa edge cases', () => {
     expect(campaigns.some((c) => c.status.state === 'live' && c.backers > 0 && !c.recent)).toBe(true)
   })
 
+  const bundles = documents('promotions').flatMap(({ doc }) => {
+    const p = doc as { start: string; end?: string; bundle?: { min: number; campaigns?: string[] } }
+    return p.bundle ? [{ ...p.bundle, state: derivePromotionState(p, now) }] : []
+  })
+
+  // The Cart e2e backs the Stapler and then tops up the Lamp's Pledge to meet it.
+  it('has an Active bundle listing two Live Campaigns, one the demo Backer already pledged to', () => {
+    const pledged = (parseDocument(`${qa}backer/backer.yml`).pledges as { campaign: string }[]).map((p) => p.campaign)
+    expect(bundles.some((b) => b.state === 'active' && b.min === 2 && b.campaigns?.length === 2
+      && b.campaigns.every((s) => campaigns.find((c) => c.slug === s)?.status.state === 'live')
+      && b.campaigns.some((s) => pledged.includes(s)))).toBe(true)
+  })
+
+  it('has a Scheduled shop-wide bundle', () => {
+    expect(bundles.some((b) => b.state === 'scheduled' && !b.campaigns)).toBe(true)
+  })
+
   const categoryOf = (slug: string) => campaigns.find((c) => c.slug === slug)?.category
 
   it('has a Live Campaign whose Backers also backed Campaigns in other categories', () => {

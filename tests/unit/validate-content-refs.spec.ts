@@ -667,6 +667,23 @@ describe('validateReferences() — Tinkerfund-shaped Space', () => {
     ])
   })
 
+  it('accepts a bundle, and rejects one breaking its rules or listing unknown or repeated Campaigns (issue #1389)', () => {
+    writeValidShop()
+    write('pages/campaigns/rock.md', campaignPage({ registry: 'TF-0002' }))
+    write('promotions/pair.yml', 'title: Pair\ndiscount: { percent: 10 }\nbundle: { min: 2, campaigns: [mug, rock] }\n')
+    expect(shopViolations()).toEqual([])
+    write('promotions/pair.yml', 'title: Pair\ncode: PAIR\ncampaign: mug\ndiscount: { amount: 5 }\nbundle: { min: 3, campaigns: [mug, pebble, mug] }\n')
+    expect(shopViolations()).toEqual([
+      'promotions/pair.yml: discount: a bundle takes a percentage off',
+      'promotions/pair.yml: code: a bundle applies by itself, never by code',
+      'promotions/pair.yml: campaign: a bundle names its Campaigns in bundle.campaigns',
+      'promotions/pair.yml: bundle.campaigns.1: "pebble" is not a Campaign in this Space',
+      'promotions/pair.yml: bundle.campaigns.2: "mug" is listed twice',
+    ])
+    write('promotions/pair.yml', 'title: Pair\ndiscount: { percent: 10 }\nbundle: { min: 3, campaigns: [mug, rock] }\n')
+    expect(shopViolations()).toEqual(['promotions/pair.yml: bundle.campaigns: lists fewer than its min of 3'])
+  })
+
   it('rejects a past Pledge naming an unknown Campaign, Reward, option or Add-on', () => {
     writeValidShop()
     write('backer/backer.yml', [

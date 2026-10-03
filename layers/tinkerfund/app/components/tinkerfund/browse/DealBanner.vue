@@ -5,6 +5,7 @@ defineProps<{
     description?: string
     code?: string
     discount: { percent: number } | { amount: number }
+    bundle?: { min: number; campaigns?: string[] }
     startAt: number
     endAt?: number
   }
@@ -19,7 +20,7 @@ const locale = useTinkerfundLocale()
 
 <template>
   <div class="banner" :class="{ scheduled }">
-    <p class="tag">{{ scheduled ? 'Starting soon' : 'Deal' }} · {{ formatTinkerfundDiscount(promotion.discount, locale) }}</p>
+    <p class="tag">{{ scheduled ? 'Starting soon' : 'Deal' }} · {{ promotion.bundle ? formatTinkerfundBundle(promotion.bundle, promotion.discount, locale) : formatTinkerfundDiscount(promotion.discount, locale) }}</p>
     <p class="title">{{ promotion.title }}</p>
     <p v-if="promotion.description" class="desc">{{ promotion.description }}</p>
     <p class="terms">

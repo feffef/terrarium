@@ -81,7 +81,7 @@ interface TinkerfundCampaignDoc {
   }
 }
 
-type PromotionTiming = Pick<TinkerfundPromotionTerms, 'campaign' | 'start' | 'end'>
+type PromotionTiming = Pick<TinkerfundPromotionTerms, 'campaign' | 'bundle' | 'start' | 'end'>
 
 /** What a Campaign card or an index-table row shows. */
 export interface TinkerfundListing {
@@ -102,7 +102,7 @@ export interface TinkerfundListing {
   prices: number[]
   priceFrom?: number
   status: CampaignStatus
-  /** An Active Promotion names this Campaign; the shop calls it a Deal. */
+  /** An Active Promotion names this Campaign, a bundle in its list; the shop calls it a Deal. */
   promoted: boolean
 }
 
@@ -112,7 +112,7 @@ export function tinkerfundListings(
   now: number,
 ): TinkerfundListing[] {
   const promoted = new Set(
-    promotions.filter((p) => p.campaign && derivePromotionState(p, now) === 'active').map((p) => p.campaign),
+    promotions.filter((p) => derivePromotionState(p, now) === 'active').flatMap((p) => p.bundle?.campaigns ?? (p.campaign ? [p.campaign] : [])),
   )
   return docs.map(({ path, title, description, campaign: c }) => ({
     path,

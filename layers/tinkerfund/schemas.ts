@@ -161,6 +161,9 @@ export const promotion = z
     start: offset,
     /** Left out, the Promotion never expires. */
     end: offset.optional(),
+    /** Off each Campaign backed together in one checkout, once `min` of them are (issue #1389).
+     *  A collection schema must stay a plain object, so validate-content-refs checks a bundle's rules. */
+    bundle: z.object({ min: z.number().int().min(2), campaigns: z.array(slug).min(2).optional() }).strict().optional(),
   })
   .strict()
 

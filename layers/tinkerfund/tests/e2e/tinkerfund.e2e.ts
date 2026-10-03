@@ -300,6 +300,9 @@ export function registerTinkerfundE2E(): void {
         expect(html).toMatch(/A tenth off the stapler \(active, automatic\)[\s\S]*Applied automatically\.[\s\S]*Goal-Exact Stapler/)
         expect(html).toMatch(/Starting soon[\s\S]*Lamp week \(scheduled\)[\s\S]*Starts in 2 days/)
         expect(html).not.toContain('EXPIRED5')
+        // Bundles (issue #1389): a listed one shows its Campaigns; a Scheduled one waits with the rest.
+        expect(html).toMatch(/Deal · Back 2 listed Campaigns together · 5% off each[\s\S]*Stapler and lamp together[\s\S]*Goal-Exact Stapler[\s\S]*Last-Minute Lamp[\s\S]*Starting soon/)
+        expect(html).toMatch(/Starting soon[\s\S]*Starting soon · Back any 3 Campaigns together · 15% off each[\s\S]*Any three Campaigns \(scheduled bundle\)/)
       })
 
       const search = async (space: string, q: string) => main(await $fetch(`/t/tinkerfund/${space}/search?q=${encodeURIComponent(q)}`))
@@ -546,9 +549,10 @@ export function registerTinkerfundE2E(): void {
         const drawer = page.getByRole('dialog', { name: 'Filters' })
         await drawer.getByLabel('On Deal').check()
         await expect.poll(() => new URL(page.url()).search).toBe('?deal=1')
-        await drawer.getByRole('button', { name: 'Show 1 Campaign' }).click()
+        // The Stapler's own Promotion, and the qa bundle that lists it and the Lamp (issue #1389).
+        await drawer.getByRole('button', { name: 'Show 2 Campaigns' }).click()
         await expect.poll(() => drawer.isVisible()).toBe(false)
-        expect(await titles()).toEqual(['Goal-Exact Stapler'])
+        expect((await titles()).sort()).toEqual(['Goal-Exact Stapler', 'Last-Minute Lamp'])
       })
 
       // Story #1382's bar again: qa's header never suggests prod content.
@@ -702,7 +706,12 @@ export function registerTinkerfundE2E(): void {
         expect(await count.textContent()).toBe('3')
         expect(await pledged()).toBe(before)
 
+        // qa's bundle lists the Stapler and the Lamp (issue #1389): the Cart nudges until both are in it.
+        await visit('/cart')
+        await expect.poll(() => page.locator('.summary .nudge').textContent()).toMatch(/^\s*Add a Reward from one more Campaign to save 5%: see which\s*$/)
+
         await visit('/campaigns/last-minute-lamp')
+        expect(await page.locator('.readout .deals').textContent()).toContain('5% off when backed with 1 more Campaign in this Deal')
         // The demo Backer's baked Pledge already holds the one lamp they may have.
         const lamp = page.getByRole('article', { name: 'One lamp' })
         await lamp.getByRole('button', { name: 'Add to cart' }).click()
@@ -719,6 +728,7 @@ export function registerTinkerfundE2E(): void {
         await page.getByRole('button', { name: 'More One stapler' }).click()
         // The Lamp's Pledge already pays for domestic shipping, so only the Stapler adds any.
         await expect.poll(() => page.locator('.summary').textContent()).toMatch(/Subtotal\s*€86\s*Shipping to Domestic\s*€4\s*Estimated total\s*€90/)
+        expect(await page.locator('.summary .nudge').count()).toBe(0)
         await page.getByLabel('Estimate shipping to').selectOption('europe')
         await expect.poll(() => page.locator('.group', { hasText: 'Last-Minute Lamp' }).textContent())
           .toContain('Your Pledge already holds One lamp, which doesn’t ship to Europe')
@@ -731,6 +741,9 @@ export function registerTinkerfundE2E(): void {
         // The Shipping step flags the existing Pledge too, not only the Cart.
         await page.locator('main').getByRole('link', { name: 'Checkout' }).click()
         await expect.poll(h1).toBe('Shipping')
+        // The bundle's 5% off both goods adds to the Stapler's own 10%: 15% of €76, and 5% of the Lamp's €5 top-up.
+        await expect.poll(() => page.locator('.summary').textContent()).toMatch(/Subtotal\s*€86\s*Discount\s*−€11.65\s*Shipping to Domestic\s*€4\s*Total\s*€78.35/)
+        expect(await page.locator('.summary .deals li').allTextContents()).toEqual(['A tenth off the stapler (active, automatic)', 'Stapler and lamp together (active bundle)'])
         await page.getByLabel('Europe').check()
         await expect.poll(() => page.locator('.pledge', { hasText: 'Last-Minute Lamp' }).textContent())
           .toContain('Your Pledge already holds One lamp, which doesn’t ship to Europe')

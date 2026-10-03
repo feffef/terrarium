@@ -55,13 +55,22 @@ export function tinkerfundPromotionTargets(promotion: Targeted, campaign: string
   return !promotion.campaign || promotion.campaign === campaign
 }
 
-/** A code is entered at checkout; the rest apply by themselves (issue #1365). */
-export function tinkerfundAutomaticDeals<P extends Targeted & Pick<TinkerfundPromotionTerms, 'code' | 'start' | 'end'>>(
-  promotions: P[],
-  campaign: string,
-  now: number,
-): P[] {
-  return promotions.filter((p) => !p.code && tinkerfundPromotionTargets(p, campaign) && derivePromotionState(p, now) === 'active')
+type Dealt = Targeted & Pick<TinkerfundPromotionTerms, 'code' | 'start' | 'end' | 'bundle'>
+
+/** A code is entered at checkout; the rest apply by themselves (issue #1365). A bundle applies only to Campaigns backed together. */
+export function tinkerfundAutomaticDeals<P extends Dealt>(promotions: P[], campaign: string, now: number): P[] {
+  return promotions.filter((p) => !p.code && !p.bundle && tinkerfundPromotionTargets(p, campaign) && derivePromotionState(p, now) === 'active')
+}
+
+/** A bundle counts, and takes something off, only the Campaigns it lists, or any if it lists none (issue #1389). */
+export function tinkerfundBundleCovers(promotion: Pick<TinkerfundPromotionTerms, 'bundle'>, campaign: string): boolean {
+  return !!promotion.bundle && (!promotion.bundle.campaigns || promotion.bundle.campaigns.includes(campaign))
+}
+
+/** The Deals a Campaign page shows: a bundle only where it names the Campaign, as a shop-wide one marks none (issue #1389). */
+export function tinkerfundCampaignDeals<P extends Dealt>(promotions: P[], campaign: string, now: number): P[] {
+  const listing = promotions.filter((p) => p.bundle?.campaigns?.includes(campaign) && derivePromotionState(p, now) === 'active')
+  return [...tinkerfundAutomaticDeals(promotions, campaign, now), ...listing]
 }
 
 export function formatTinkerfundMoney(amount: number, locale: string): string {
@@ -86,6 +95,11 @@ export function tinkerfundLocale(preferred: string | undefined): string {
 export function currentTinkerfundSection(sections: { id: string; inView: boolean; sticky: boolean }[]): string | undefined {
   const seen = sections.filter((s) => s.inView)
   return (seen.find((s) => !s.sticky) ?? seen[0])?.id
+}
+
+/** "Back any 2 Campaigns together · 10% off each". */
+export function formatTinkerfundBundle(bundle: NonNullable<TinkerfundPromotionTerms['bundle']>, discount: { percent: number } | { amount: number }, locale: string): string {
+  return `Back ${bundle.campaigns ? `${bundle.min} listed` : `any ${bundle.min}`} Campaigns together · ${formatTinkerfundDiscount(discount, locale)} each`
 }
 
 export function formatTinkerfundDiscount(discount: { percent: number } | { amount: number }, locale: string): string {

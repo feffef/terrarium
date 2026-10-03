@@ -4,7 +4,7 @@ definePageMeta({ viewTransition: true })
 const route = useRoute()
 const { space, link, campaignLink } = useTinkerfundSpace()
 const money = useTinkerfundMoney()
-const { zoneName, paymentLabel, status, error, loaded, pledges, catalog, clock } = await useTinkerfundCart()
+const { zoneName, paymentLabel, status, error, loaded, pledges, catalog, clock, promotions } = await useTinkerfundCart()
 
 const refs = computed(() => String(route.query.refs ?? '').split(',').filter(Boolean))
 const receipts = computed(() =>
@@ -17,6 +17,7 @@ const receipts = computed(() =>
       zone: zoneName(pledge.zone),
       payment: paymentLabel(pledge.payment),
       endsAt: resolveTinkerfundOffset(entry.campaign.end, clock.value.now),
+      note: tinkerfundBundleKept(pledge, pledges.value, promotions.value) ? TINKERFUND_BUNDLE_KEPT : undefined,
     }]
   }))
 const total = computed(() => tinkerfundSum(receipts.value.map((r) => r.total)))
@@ -47,6 +48,7 @@ useSeoMeta(tinkerfundSeo({ kind: 'private', space, title: 'Pledge confirmed' }))
           :zone="r.zone"
           :reference="r.ref"
           :ends-at="r.endsAt"
+          :note="r.note"
         />
         <p v-if="receipts.length > 1" class="grand">Total across your Pledges <b>{{ money(total) }}</b></p>
         <p class="actions">

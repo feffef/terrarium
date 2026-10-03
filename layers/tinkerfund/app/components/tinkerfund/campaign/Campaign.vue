@@ -26,7 +26,7 @@ const { data } = await useAsyncData(`tinkerfund-campaign-${space}-${props.doc.pa
 })
 
 const status = computed(() => deriveCampaignStatus(c.value, c.value.pledged, now.value))
-const deals = computed(() => tinkerfundAutomaticDeals(data.value?.promotions ?? [], slug.value, now.value))
+const deals = computed(() => tinkerfundCampaignDeals(data.value?.promotions ?? [], slug.value, now.value))
 const updates = computed(() => data.value?.updates ?? [])
 const comments = computed(() => data.value?.comments ?? [])
 const commentCount = computed(() => comments.value.reduce((n, t) => n + 1 + (t.replies?.length ?? 0), 0))

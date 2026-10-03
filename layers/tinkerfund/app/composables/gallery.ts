@@ -29,7 +29,7 @@ export async function useTinkerfundGallery() {
           slug,
           campaign: doc.campaign,
           state: deriveCampaignState(doc.campaign, now.value),
-          deals: tinkerfundAutomaticDeals(promotions.value, slug, now.value),
+          deals: tinkerfundCampaignDeals(promotions.value, slug, now.value),
         }]
       })
       .sort((a, b) => a.campaign.registry.localeCompare(b.campaign.registry)),
