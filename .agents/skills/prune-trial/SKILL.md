@@ -124,15 +124,13 @@ decision; cut the rest. Be brave: restructure the file, merge its sections,
 reword all of it. The file is the trial's territory. It gets the same ledger
 entry and §4 probe as a prune.
 
-Write a hook **only when §4's probe fails, or when a landed trial's verdict in
-§1 showed real damage** — the two moments the behaviour has proven it needs
-holding. One shipped beside a passing prune
-holds the very behaviour the trial is testing, so no verdict can form (ADR-0027);
-and a guard here runs to a few hundred lines, which a prune can't absorb — so it
-lands as its own PR. Keep it the smallest thing that fires on the wrong shape,
-with one unit test. It warns and exits 0, never blocking, not even when it
-crashes — deliberately unlike the repo's fail-closed guards, because this one is
-written unattended. Hardening it to block is a later trial.
+When §4's probe fails, or a landed trial's verdict in §1 showed real damage,
+the behaviour has proven it needs a hook. **File an issue proposing it**; a
+session with a human present builds it, because a scheduled run can't wire
+`.claude/settings.json` (`docs/agents/guards.md`). The issue names the
+behaviour, the trial or verdict that proved it, the wrong shape to fire on, and
+one unit test. The hook must warn and exit 0, even when it crashes
+(ADR-0027).
 
 ## 4. Prove it on Sonnet
 
@@ -142,8 +140,9 @@ orchestrator's own working copy, where the deleted prose is still reachable.
 The probe checks out that SHA before reading anything and reports the SHA it
 read at. Give it the surviving text only, plus a real situation the pruned
 scaffolding covered, and ask what it would do. A wrong answer means the goal
-isn't clear enough yet, or the behaviour needs the hook. Never ship a prune
-Sonnet can't execute.
+isn't clear enough yet: rewrite it and re-probe. Never ship a prune Sonnet can't
+execute — if it still fails, drop the prune, open no trial this run, and file
+the hook issue (§3).
 
 An answer whose reported SHA is missing or differs from the pinned one doesn't
 count — a stale worktree may have fed it the deleted text (issue #1420); re-run
@@ -178,5 +177,5 @@ Two exceptions and one refusal:
 - **Retiring a Skill or a Routine, including your own** — file a `needs-triage`
   issue, never act; `audit-skills` records the same class of signal as an
   `ideas` entry, so look for one and cite it rather than filing twice. Nothing breaks when a Skill stops running, so no verdict could tell you
-  it was a mistake. Two runs in a row that open no trial is the signal to file
-  yours.
+  it was a mistake. Two runs in a row that open no trial (a failed probe aside) is the
+  signal to file yours.
