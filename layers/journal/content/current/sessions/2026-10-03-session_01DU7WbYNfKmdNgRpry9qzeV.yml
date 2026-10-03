@@ -1,7 +1,7 @@
 schemaVersion: 1
 session: session_01DU7WbYNfKmdNgRpry9qzeV
 startedAt: 2026-10-03T17:51:31Z
-endedAt: 2026-10-03T18:21:56Z
+endedAt: 2026-10-03T18:32:48Z
 kind: interactive
 goal: Explain and fix the narrow, white-bordered Journal document layout on desktop
 status: in-review
@@ -35,25 +35,31 @@ frictions:
   - description: Centred only the Document route and did not check the other single-column Journal pages (Skills, Ideas); the owner found Skills still off-centre after merge.
     solution: When changing a shared layout rule, screenshot every page that uses it before opening the PR.
     severity: minor
-durationSec: 1824
+  - description: 'Opened PR #1579 without running gate:scoped; CI then failed on an e2e test asserting the exact class="jd" string, which a local gate would have caught.'
+    solution: Run gate:scoped before opening every PR, even a two-line class change.
+    severity: moderate
+  - description: Launched a second gate:scoped while the first (pre-merge) one was still running, both writing the same log file; a dirty-tree merge had silently failed inside the first command.
+    solution: Check merge exit status before chaining a gate; never run two gates concurrently.
+    severity: minor
+durationSec: 2477
 models:
-  claude-opus-5-5: 186
+  claude-opus-5-5: 226
 toolCounts:
-  Bash: 56
+  Bash: 69
   Read: 9
   SendUserFile: 5
-  ToolSearch: 4
+  ToolSearch: 5
   mcp__github__list_pull_requests: 1
   Grep: 1
   mcp__github__create_pull_request: 2
   mcp__claude-code-remote__subscribe_pr_activity: 2
   Skill: 2
-  ReadNotifications: 8
-  mcp__claude-code-remote__send_later: 1
-  mcp__github__update_pull_request: 4
-  mcp__github__get_job_logs: 1
+  ReadNotifications: 12
+  mcp__claude-code-remote__send_later: 2
+  mcp__github__update_pull_request: 5
+  mcp__github__get_job_logs: 2
   mcp__github__search_pull_requests: 1
-  mcp__github__pull_request_read: 4
+  mcp__github__pull_request_read: 7
   mcp__github__add_issue_comment: 1
   mcp__claude-code-remote__delete_trigger: 1
 docsReadViaShell:
