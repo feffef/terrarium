@@ -19,7 +19,12 @@ catalogNote: >-
   the SQL dump fetch four times, and evict the cached load promise in a
   finally so one rejected fetch could no longer leave a collection blank for
   the life of the page. Carried eight days, then given up rather than fork a
-  vendor's build. It did not go alone: pnpm-workspace.yaml, which never listed
+  vendor's build. Empty sections kept appearing with it in place, and the owner
+  asked for it to be dropped rather than carried; a message asking the reader to
+  reload took its place. Three days later the first real capture showed that
+  the failure the owner had been hitting was a different one — a piece of the
+  site's own code failing to load, not the fetch the patch was written to
+  retry. It did not go alone: pnpm-workspace.yaml, which never listed
   a package or a workspace member — one key, patchedDependencies, mapping
   @nuxt/content@3.15.0 to the file beside it — was created in the patch's first
   commit and deleted in the patch's last, having served exactly one dependency
