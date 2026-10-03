@@ -43,6 +43,7 @@ function comment(over: Partial<Comment>): Comment {
     createdAt: '2026-09-30T12:00:00Z',
     threadNumber: 1492,
     threadText: '',
+    isBot: false,
     ...over,
   }
 }
@@ -101,6 +102,11 @@ describe('findCandidates', () => {
     expect(findCandidates('2026-09-29T20:00:00Z', [VL_1492], [human, ai])).toEqual([
       { kind: 'review', url: human.url, relatesTo: 1492, excerpt: 'Please keep the web on phones.' },
     ])
+  })
+
+  it('drops a bot account’s comment even without provenance', () => {
+    const ci = comment({ body: '✅ safety-gate green', isBot: true })
+    expect(findCandidates('2026-09-29T20:00:00Z', [VL_1492], [ci])).toEqual([])
   })
 
   it('drops comments from before the cutoff and empty review bodies', () => {

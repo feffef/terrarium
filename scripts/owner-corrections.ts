@@ -10,7 +10,9 @@
 //                    PR (#N or its URL), or that touches files one touched in
 //                    the 3 days before it merged (`files` = the overlap);
 //   - issue-comment: a human comment on a thread that references one.
-//   "Human" = no ADR-0017 provenance (`isAiAuthored`), never the author field.
+//   "Human": bot accounts are excluded by account type; among the rest,
+//   ADR-0017 provenance (`isAiAuthored`) separates agent writes, which land
+//   under the owner's login, from the owner's own.
 import { execFileSync } from 'node:child_process'
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
@@ -46,6 +48,7 @@ export interface Comment {
   createdAt: string
   threadNumber: number
   threadText: string
+  isBot: boolean
 }
 
 export interface Candidate {
@@ -65,8 +68,8 @@ export function mentions(text: string): number[] {
   return [...new Set([...refs].map((m) => Number(m[1])))]
 }
 
-function isHuman(body: string): boolean {
-  return body.trim() !== '' && !isAiAuthored(body)
+function isHuman(c: Pick<Comment, 'body' | 'isBot'>): boolean {
+  return !c.isBot && c.body.trim() !== '' && !isAiAuthored(c.body)
 }
 
 function excerpt(text: string): string {
@@ -103,7 +106,7 @@ export function findCandidates(since: string, prs: Pr[], comments: Comment[]): C
   }
 
   for (const c of comments) {
-    if (Date.parse(c.createdAt) <= sinceMs || !isHuman(c.body)) continue
+    if (Date.parse(c.createdAt) <= sinceMs || !isHuman(c)) continue
     if (visitorNumbers.has(c.threadNumber)) {
       out.push({ kind: 'review', url: c.url, relatesTo: c.threadNumber, excerpt: excerpt(c.body) })
       continue
@@ -133,6 +136,7 @@ interface RawComment {
   body: string | null
   created_at?: string
   submitted_at?: string
+  user: { login: string; type?: string } | null
   issue_url?: string
   pull_request_url?: string
 }
@@ -176,6 +180,10 @@ function toPr(p: RawPull, cwd: string): Pr {
   }
 }
 
+function isBotAccount(user: RawComment['user']): boolean {
+  return user?.type ? user.type === 'Bot' : (user?.login ?? '').endsWith('[bot]')
+}
+
 function threadNumber(apiUrl: string): number {
   return Number(apiUrl.slice(apiUrl.lastIndexOf('/') + 1))
 }
@@ -216,13 +224,17 @@ export function ownerCorrections(since: string | undefined, cwd = root): Candida
     }
     return threadTexts.get(c.thread)!
   }
-  const comments: Comment[] = raw.filter((c) => isHuman(c.body ?? '')).map((c) => ({
-    url: c.html_url,
-    body: c.body ?? '',
-    createdAt: c.submitted_at ?? c.created_at ?? '',
-    threadNumber: c.thread,
-    threadText: threadText(c),
-  }))
+  const comments: Comment[] = raw
+    .map((c) => ({ c, body: c.body ?? '', isBot: isBotAccount(c.user) }))
+    .filter(isHuman)
+    .map(({ c, body, isBot }) => ({
+      url: c.html_url,
+      body,
+      createdAt: c.submitted_at ?? c.created_at ?? '',
+      threadNumber: c.thread,
+      threadText: threadText(c),
+      isBot,
+    }))
 
   // A revert, follow-up or human comment can name a visitor-loop PR older than the listing.
   const sinceMs = Date.parse(cutoff)
