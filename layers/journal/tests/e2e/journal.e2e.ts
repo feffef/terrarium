@@ -22,6 +22,9 @@ import { SESSIONS_DIR } from '../../../../scripts/session-logs.ts'
 import { PIN_SETTLED_EVENT } from '../../app/utils/expandTransition.ts'
 import type { PinRecord } from '../../app/utils/expandTransition.ts'
 
+// `sessionUrl()`'s shape for either id form: cloud `session_…` or a local CLI's bare UUID.
+const SESSION_URL = /^https:\/\/claude\.ai\/code\/[\w-]+$/
+
 // The `current` Space's Digest dates, oldest first — read live rather than
 // hardcoded so these assertions stay valid regardless of which dates
 // scripts/archive-journal-content.ts has moved out to `archived` (issue: the
@@ -219,7 +222,7 @@ export function registerJournalE2E(): void {
       await withRendered(`${route}?maintainer`, async (page) => {
         const chip = page.locator('.feed .card .chip.session').first()
         await chip.waitFor()
-        expect(await chip.getAttribute('href')).toMatch(/^https:\/\/claude\.ai\/code\/session_/)
+        expect(await chip.getAttribute('href')).toMatch(SESSION_URL)
         // The flag outlives the URL: a plain load in the same tab keeps the view.
         await page.goto(url(route), { waitUntil: 'hydration' })
         await page.locator('.feed .card .chip.session').first().waitFor()
@@ -242,7 +245,7 @@ export function registerJournalE2E(): void {
         await card.locator('.chip.session').focus()
         expect(await card.locator('.head').getAttribute('aria-expanded')).toBe('false')
         await page.keyboard.press('Enter')
-        await page.waitForURL(/^https:\/\/claude\.ai\/code\/session_/)
+        await page.waitForURL(SESSION_URL)
       })
     })
 
