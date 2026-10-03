@@ -440,7 +440,7 @@ Per-repo configuration for Matt Pocock's engineering skills lives in `docs/agent
 
 ### Issue tracker
 
-Issues and specs are tracked as GitHub issues in `feffef/terrarium` (via the `gh` CLI, or the GitHub MCP tools when `gh` is absent); external PRs are also pulled into the triage queue. See `docs/agents/issue-tracker.md`.
+Issues and specs are tracked as GitHub issues in `feffef/terrarium` (via the `gh` CLI locally, or the GitHub MCP tools in a cloud session — see `docs/agents/github-integration.md`); external PRs are also pulled into the triage queue. See `docs/agents/issue-tracker.md`.
 
 ### GitHub integration
 

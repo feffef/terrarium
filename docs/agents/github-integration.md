@@ -28,16 +28,16 @@ short pause before calling it a real failure. If `issue_read` keeps flaking,
 
 | | Local CLI | Cloud session |
 |---|---|---|
-| `gh` subcommands (`gh issue view`, `gh pr list`, …) | ✅ | ❌ 403: GraphQL is blocked |
-| `gh api` (REST) | ✅ | ✅, even though `gh auth status` reports a bad token |
-| `mcp__github__*` tools | only if configured | ✅ |
+| GraphQL-backed `gh` subcommands (`gh issue view`, `gh pr list`, …) | yes | no: 403, GraphQL is blocked |
+| `gh api` and REST-backed subcommands (`gh run list`) | yes | yes, though `gh auth status` reports a bad token |
+| `mcp__github__*` tools | only if configured | yes |
 | **Default** | `gh` | the MCP tools; `gh api` for REST a tool lacks |
 
 Why MCP for writes in the cloud, not `gh api`: the provenance guard
 (`scripts/github-provenance-guard.ts`) checks only `mcp__github__*` calls, so a
 body posted through `gh api` skips it. `gh api` suits bulk reads in scripts,
-where the MCP list tools overflow. Older cloud sessions had no `gh` at all;
-check with `which gh`. In a cloud session, map the workflow docs' `gh` recipes
+where the MCP list tools overflow. Some cloud sessions lack `gh`; check with
+`which gh`. In a cloud session, map the workflow docs' `gh` recipes
 like this:
 
 - **Create / edit / label / close an issue** → `issue_write`.

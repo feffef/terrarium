@@ -10,8 +10,8 @@ Issues and specs live as GitHub issues. Use the `gh` CLI for all operations.
 ## Cloud session? See `github-integration.md`
 
 The recipes below are written as `gh` commands. For the MCP-tool equivalents
-in a cloud session, where `gh` subcommands 403, plus the overflow traps, polling rules and `ToolSearch`
-name resolution, see [`github-integration.md`](./github-integration.md).
+in a cloud session, where GraphQL-backed `gh` subcommands 403, plus the overflow
+traps, polling rules and `ToolSearch` name resolution, see [`github-integration.md`](./github-integration.md).
 
 ## Conventions
 
@@ -125,7 +125,7 @@ Used by `/wayfinder`. The **map** is one issue; its **children** are tickets.
 - **Map**: an issue labelled `wayfinder:map` with a Notes / Decisions-so-far / Fog body. `gh issue create --label wayfinder:map`.
 - **Child ticket**: an issue linked to the map as a GitHub sub-issue (`gh api` on the sub-issues endpoint). Where sub-issues aren't enabled, add it to a task list in the map body and put `Part of #<map>` at the top of the child body. Labels: `wayfinder:<type>` (`research`/`prototype`/`grilling`/`task`). Once claimed, it is assigned to the driving dev.
 - **Label provenance**: the `wayfinder:*` labels aren't in the curated set (`docs/agents/triage-labels.md`). Their `#ededed`/empty-description look just means they were created without a color. GitHub errors on a missing label instead of creating it, so the unstyled default is expected.
-- **Blocking**: GitHub's **native issue dependencies**, the canonical, UI-visible form. Add an edge with `gh api --method POST repos/<owner>/<repo>/issues/<child>/dependencies/blocked_by -F issue_id=<blocker-db-id>`. `<blocker-db-id>` is the blocker's numeric **database id** (`gh api repos/<owner>/<repo>/issues/<n> --jq .id`), not the `#number` or `node_id`. No `gh`? See [`github-integration.md`](./github-integration.md). `issue_dependencies_summary.blocked_by` counts open blockers only and is the live gate. Where dependencies aren't available, put a `Blocked by: #<n>, #<n>` line at the top of the child body. A ticket is unblocked when every blocker is closed.
+- **Blocking**: GitHub's **native issue dependencies**, the canonical, UI-visible form. Add an edge with `gh api --method POST repos/<owner>/<repo>/issues/<child>/dependencies/blocked_by -F issue_id=<blocker-db-id>`. `<blocker-db-id>` is the blocker's numeric **database id** (`gh api repos/<owner>/<repo>/issues/<n> --jq .id`), not the `#number` or `node_id`. No `gh`, or in a cloud session? See [`github-integration.md`](./github-integration.md). `issue_dependencies_summary.blocked_by` counts open blockers only and is the live gate. Where dependencies aren't available, put a `Blocked by: #<n>, #<n>` line at the top of the child body. A ticket is unblocked when every blocker is closed.
 - **Frontier query**: list the map's open children (`gh issue list --state open`, scoped to its sub-issues / task list). Drop any with an open blocker (`blocked_by > 0`, or an open issue in the `Blocked by` line) or an assignee. First in map order wins.
 - **Claim**: `gh issue edit <n> --add-assignee @me`, the session's first write.
 - **Resolve**: `gh issue comment <n> --body "<answer>"`, then `gh issue close <n>`, then append a context pointer (gist + link) to the map's Decisions-so-far.
