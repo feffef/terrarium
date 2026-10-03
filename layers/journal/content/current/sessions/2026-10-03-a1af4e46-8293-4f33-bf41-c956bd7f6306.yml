@@ -1,15 +1,16 @@
 schemaVersion: 1
 session: a1af4e46-8293-4f33-bf41-c956bd7f6306
 startedAt: 2026-10-03T17:18:47Z
-endedAt: 2026-10-03T17:38:09Z
+endedAt: 2026-10-03T18:04:58Z
 kind: interactive
 goal: "Finish issue #445 by applying the gate.yml thin shell over the Gate composite action"
 status: in-review
-outcome: "PR #1572 merged and live; inert PR #1574 showed CI skipping the Heavy tier; #1574 awaits human merge to close #445"
-summary: "Human-instructed throughout. The user asked what was left on #445; I read the issue thread and verified against origin/main that only the hand-apply of docs/proposals/879 remained. The user then said \"do what's to be done\". My first attempt to write .github/workflows/gate.yml was denied by the workflow-edit guard (#897), and the auto-mode classifier then denied a gh scope check and a YAML-extraction step as CI bypass. I stopped and offered options. The user invoked /wizard, so I made the prose companion edits myself (CLAUDE.md Known-gap sentence, ADR-0004 2026-10-03 amendment, ADR-0026 status, checkProvenance docstring, a dangling research-doc link) and authored a scratchpad wizard. The user ran it to write gate.yml from the proposal, delete the four proposals, commit and push. I opened PR #1572 (\"Refs\", not \"Closes\", since #445's acceptance needs a later inert PR to show the skip) and watched CI. It went green. The log shows the Scope step correctly chose the full gate (gate.yml is non-inert), verify:mermaid running in CI for the first time, and the doorbell firing. A user-requested /code-review found no hard violations or spec gaps; the main judgement call is that the ADR-0004 amendment (verbatim from the proposal) restates FLOOR and isInert instead of pointing at them. Local typecheck fails on two atlas Vue files that CI passes; this is unexplained and was left alone as unrelated. After the user merged #1572, I opened #1574 (agent-initiated, framed as the review follow-up) to shorten the amendment to point at FLOOR/HEAVY/isInert. As a single .md it doubles as the inert-PR acceptance test: CI logged every changed path is inert, ran only the Floor and finished in 41s vs 4m49s for the full run. The push:main run for the merge commit ran the full gate with no Scope decision. #1574 carries Closes #445 and awaits human merge."
+outcome: "#1572 and #1574 merged, #445 acceptance shown in CI; this session's own log then turned main red, fixed by green PR #1575 awaiting merge"
+summary: "Human-instructed throughout. The user asked what was left on #445; I read the issue thread and verified against origin/main that only the hand-apply of docs/proposals/879 remained. The user then said \"do what's to be done\". My first attempt to write .github/workflows/gate.yml was denied by the workflow-edit guard (#897), and the auto-mode classifier then denied a gh scope check and a YAML-extraction step as CI bypass. I stopped and offered options. The user invoked /wizard, so I made the prose companion edits myself (CLAUDE.md Known-gap sentence, ADR-0004 2026-10-03 amendment, ADR-0026 status, checkProvenance docstring, a dangling research-doc link) and authored a scratchpad wizard. The user ran it to write gate.yml from the proposal, delete the four proposals, commit and push. I opened PR #1572 (\"Refs\", not \"Closes\", since #445's acceptance needs a later inert PR to show the skip) and watched CI. It went green. The log shows the Scope step correctly chose the full gate (gate.yml is non-inert), verify:mermaid running in CI for the first time, and the doorbell firing. A user-requested /code-review found no hard violations or spec gaps; the main judgement call is that the ADR-0004 amendment (verbatim from the proposal) restates FLOOR and isInert instead of pointing at them. Local typecheck fails on two atlas Vue files that CI passes; this is unexplained and was left alone as unrelated. After the user merged #1572, I opened #1574 (agent-initiated, framed as the review follow-up) to shorten the amendment to point at FLOOR/HEAVY/isInert. As a single .md it doubles as the inert-PR acceptance test: CI logged every changed path is inert, ran only the Floor and finished in 41s vs 4m49s for the full run. The push:main run for the merge commit ran the full gate with no Scope decision. #1574 carries Closes #445 and was merged by the user. The user then asked whether main's gate had failed. It had: this session's own log, recorded with a local-CLI bare-UUID id, became the newest journal card. Two journal e2e tests require the first card's link to match claude.ai/code/session_, so main alternated red and green depending on which log was newest. I opened #1575 (agent-initiated fix for a red main) to make the tests accept either id form; its CI is green, with 144/144 e2e."
 prs:
   - "1572"
   - "1574"
+  - "1575"
 docsRead:
   - path: docs/proposals/879-gate-yml-thin-shell.md
     reason: the exact shell YAML and companion-change list
@@ -20,6 +21,8 @@ docsRead:
   - path: .claude/skills/wizard/template.sh
     reason: (no reason given)
   - path: docs/adr/0004-objective-safety-gate.md
+    reason: (read before editing)
+  - path: layers/journal/tests/e2e/journal.e2e.ts
     reason: (read before editing)
 skillsUsed:
   - name: wizard
@@ -49,17 +52,23 @@ frictions:
   - description: "SHELL-READ-DETECTION miss. Command: git switch -c claude/445-apply-gate-shell origin/main && cat docs/proposals/879-gate-yml-thin-shell.md && cat docs/proposals/README.md. Expected path: docs/proposals/879-gate-yml-thin-shell.md, reported 'named but output shows no line'. Its full text was printed (README after it was credited). Possibly because the file was deleted from the working tree later in the session."
     solution: Have the detector match output against the file's content at read time (or from git HEAD) when the path no longer exists on disk.
     severity: moderate
-durationSec: 1162
+  - description: This session's own log (local CLI, bare-UUID id) turned main's gate red. Two journal e2e tests assumed the newest card's session id starts with session_. I did not notice until the user asked, about 20 minutes after the log landed.
+    solution: "After the Stop hook lands a log, check the next main gate run. Make tests that read the newest real Document data-independent (done in #1575)."
+    severity: major
+  - description: "Local e2e cannot run: playwright-core 1.63's chromium_headless_shell-1243 is not installed on this Mac, so all 144 tests skip."
+    solution: Note in docs/agents/environment-caveats.md, or have preview/e2e tooling report the missing browser up front.
+    severity: minor
+durationSec: 2771
 models:
-  claude-opus-5-5: 148
+  claude-opus-5-5: 188
   <synthetic>: 2
 toolCounts:
-  Bash: 45
+  Bash: 61
   ToolSearch: 1
   WebFetch: 1
-  Write: 4
-  Read: 3
-  Edit: 10
+  Write: 5
+  Read: 4
+  Edit: 11
   Agent: 2
   Skill: 2
 filesEdited:
@@ -69,6 +78,7 @@ filesEdited:
   - docs/adr/0004-objective-safety-gate.md
   - docs/adr/0026-gate-workflow-thin-shell.md
   - docs/research/public-readiness-review.md
+  - layers/journal/tests/e2e/journal.e2e.ts
 docsReadViaShell:
   - .agents/skills/triage/SKILL.md
   - docs/adr/0004-objective-safety-gate.md
