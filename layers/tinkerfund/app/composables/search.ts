@@ -24,7 +24,7 @@ export function useTinkerfundSearch() {
       .select('path', 'title', 'description', 'campaign')
       .all()
     const byInventor = new Set(inventors.map(({ stem }) => stem))
-    const matching = hits.filter((h) => startsAWord(h.title, term) || startsAWord(h.description, term) || byInventor.has(h.campaign?.inventor))
+    const matching = hits.filter((h) => startsAWord(h.title, term) || startsAWord(h.description, term) || byInventor.has(h.campaign?.inventor ?? ''))
     return rankTinkerfundHits(matching, term).slice(0, limit)
   }
 }
