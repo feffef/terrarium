@@ -74,3 +74,13 @@ observations:
       403, still open, unfixed) — reported here as inconclusive again, not
       as zero orphans. humanPromptedClosures and manuallyRescuedClosures
       both empty. Grade/role unchanged.
+  - date: "2026-10-03"
+    note: >-
+      Re-checked (audit-skills behaviour check), 10 newest invocations (PRs
+      #1528-1540, issue #1534): 0/10 stale, status matches live GitHub state
+      in every case including one honest in-review PR (#1539, still open,
+      correctly pending human merge for touching human-only modules). All 10
+      session-log commits verified present on origin/main. No modelInvoked
+      missed-invocation gap this window (91/91 window sessions used it).
+      session_01TMgZyrN42pwudxkUdHLKwP remains n=1, no second instance.
+      Grade/role unchanged.

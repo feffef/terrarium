@@ -91,3 +91,14 @@ observations:
       logging-hygiene gap, not an incident. Issue #1480 still open,
       unassigned, zero comments, unchanged since filing. Grade/role
       unchanged.
+  - date: "2026-10-03"
+    note: >-
+      Re-checked (audit-skills behaviour check), 10 newest usedIn sessions:
+      no stranded work, no merge-pr.ts dispatched to a subagent, no new
+      branch/worktree collision. Issue #1480 (cd-into-worktree) has not
+      recurred a third time; `git worktree list` clean. Screened all 69
+      nonUsers by goal (deep-dived ~20 ambiguous ones): every dispatch found
+      was strictly read-only, within the Skill's own carve-out — 0 new
+      missed invocations. The one known historical near-miss
+      (session_01LKfKKxwgThbVFE79NWohET) remains the only real instance.
+      Grade/role unchanged.

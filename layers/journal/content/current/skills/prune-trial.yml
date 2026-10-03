@@ -114,3 +114,18 @@ observations:
       next scheduled fire, consistent with the twice-already-observed
       narrow-margin pattern (ADR-0017 trial, domain.md trial) rather than a
       new failure — not escalated. No reverts found. Grade/role unchanged.
+  - date: "2026-10-03"
+    note: >-
+      Re-checked (audit-skills behaviour check), 8 usedIn sessions: no new
+      silent failures, no reverts in the 2-week git-log sweep. The
+      2026-10-01-flagged corpus-search skip (session_01U95GU6a93i4N25ZLgwXCSu)
+      is fully resolved: self-logged as a major friction, fixed same-session
+      via commit 761d3d2f ("nothing clears the bar" must be earned, not
+      inherited) + 13d66dca (corrected ledger entry), and every run since has
+      run a real search — independently corroborated by a separate
+      audit-skills sweep (commit 797b1211) reaching the same verdict. Note
+      for context: the docs/agents/github-integration.md Prune Trial (opened
+      09-29) became judgeable 2026-10-02T13:19:42Z and is still unjudged —
+      the same doc where this run's audit-docs check (#1541) found a dropped
+      Friction about a real gh-binary contradiction; worth keeping in mind
+      when that trial is judged. Grade/role unchanged.

@@ -59,3 +59,13 @@ observations:
       fix it references dates to 2026-08-03, #848). All 4 retention sweeps
       verified against `RETAIN_DATES = 7`. No reverts found. Grade/role
       unchanged.
+  - date: "2026-10-03"
+    note: >-
+      Re-verified (audit-skills behaviour check), 7 usedIn sessions (PRs
+      #1352/#1418/#1448/#1478/#1497/#1513/#1523/#1540): no new silent
+      failures. session_01WoSzRemGryY3vGQMWf2347 (PR #1540, 2026-10-02)
+      freshly verified end-to-end against GitHub — genuine fact-check
+      dispatch, retention sweep moved exactly 1 digest + 15 session logs
+      per `RETAIN_DATES = 7`, gate green, merged. No revert of any digest
+      content in the 2-week git-log sweep; only forward fact-check wording
+      fixes (the mechanism working as designed). Grade/role unchanged.

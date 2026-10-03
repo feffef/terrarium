@@ -141,3 +141,22 @@ observations:
       that issue's own body predicted ("every scheduled run... loses this
       signal"), not new evidence, so not re-commented. humanPromptedClosures
       and manuallyRescuedClosures both empty. Grade/role unchanged.
+  - date: "2026-10-03"
+    note: >-
+      Self-check: dispatched 11 behaviour-check subagents this run, verified
+      each report's central claims against primary sources. Two new silent
+      failures found and filed (#1541 audit-docs dropped a found Friction;
+      #1542 a new SHELL-READ-DETECTION glob-loop-variable false-negative
+      shape, 2 sessions), one 4th-occurrence confirmation commented onto the
+      already-open #1515 (visitor-loop owner-memory, now 0/4). The rest —
+      blog-post, close-session, digest, dispatch-subagents,
+      frictions-to-fixes, prune-trial, tinkerfund-campaign — came back
+      clean. One minor n=1 compliance miss found in audit-skills' own prior
+      delivery (session_01QTgziVnprUPTrzJgfMWmBr, PR #1453, omitted step-3
+      results from the log summary) — below the escalation bar, just noted
+      here for a future run to watch. Closure completeness (step 3): orphan
+      scan failed again for the
+      same reason as #1514 (`gh api --paginate` 403 against the pulls
+      endpoint) — independently confirmed still open/unfixed via a dedicated
+      search before relying on it, not re-filed; humanPromptedClosures and
+      manuallyRescuedClosures both empty. Grade/role unchanged.
