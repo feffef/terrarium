@@ -6,7 +6,7 @@ defineProps<{ id: TinkerfundGallerySectionId }>()
 const PLEDGE_STATES = ['pending', 'charged', 'delivered', 'unfunded', 'cancelled'] as const
 
 const { link } = useTinkerfundSpace()
-const { clock, cards, categories, promotions, zoneName, now, campaigns, backing, cart, quote, receipt, account, thread, log } =
+const { clock, cards, categories, promotions, zoneName, now, campaigns, backing, cart, quote, receipt, account, thread, log, inventors } =
   await useTinkerfundGallery()
 const miniCart = useTemplateRef('miniCart')
 
@@ -142,13 +142,29 @@ const bounds = computed(() => tinkerfundPriceBounds(cards.value))
   <ul v-else-if="id === 'comments'" class="specimens">
     <li v-if="thread" class="specimen tf-panel">
       <p class="case">{{ thread.campaign }}: an Inventor reply, one level deep</p>
-      <TinkerfundCampaignComments :comments="thread.comments" :now="now" />
+      <TinkerfundCampaignComments
+        :comments="thread.comments"
+        :now="now"
+        :inventor-slug="campaigns.find((c) => c.slug === thread?.campaign)?.campaign.inventor"
+      />
     </li>
     <li class="specimen tf-panel">
       <p class="case">No comments</p>
       <TinkerfundCampaignComments :comments="[]" :now="now" />
     </li>
   </ul>
+
+  <div v-else-if="id === 'inventor'" class="stack">
+    <TinkerfundInventorProfile
+      v-for="inventor in inventors"
+      :key="inventor.stem"
+      class="specimen tf-panel"
+      :inventor="inventor"
+      :cards="cards.filter((c) => c.inventor === inventor.stem)"
+      :clock="clock"
+      heading="h2"
+    />
+  </div>
 
   <TinkerfundShellBreadcrumbs
     v-else-if="id === 'breadcrumbs'"

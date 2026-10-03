@@ -92,6 +92,12 @@ export const TINKERFUND_GALLERY = [
     summary: 'An Inventor reply one level deep, and no comments.',
   },
   {
+    id: 'inventor',
+    title: 'Inventor',
+    components: ['TinkerfundInventorProfile'],
+    summary: 'Every qa Inventor’s page body: many Campaigns, a name long enough to wrap, and none yet.',
+  },
+  {
     id: 'breadcrumbs',
     title: 'Breadcrumbs',
     components: ['TinkerfundShellBreadcrumbs'],

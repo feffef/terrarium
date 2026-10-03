@@ -159,9 +159,12 @@ export function registerTinkerfundE2E(): void {
       it('links a Campaign’s Inventor to a page listing their Campaigns', async () => {
         expect(await $fetch('/t/tinkerfund/prod/campaigns/counterclockwise-mug')).toContain('href="/t/tinkerfund/prod/inventors/henrik-aalto"')
         const html = await $fetch('/t/tinkerfund/prod/inventors/henrik-aalto')
-        expect(html).toMatch(/Inventor · 3 Campaigns/)
+        expect(html).toMatch(/Inventor · 3 Campaigns · .+ raised · [\d,.]+ Backers</)
         for (const title of ['Counterclockwise Mug', 'Solo Pea Rest']) expect(html).toContain(title)
         expect((await fetch('/t/tinkerfund/prod/inventors/nobody', { headers: { accept: 'text/html' } })).status).toBe(404)
+        const idle = main(await $fetch('/t/tinkerfund/qa/inventors/new-inventor'))
+        expect(idle).toContain('Inventor · 0 Campaigns<')
+        expect(idle).toContain('No Campaigns yet.')
       })
 
       for (const [slug, action] of [
@@ -213,7 +216,7 @@ export function registerTinkerfundE2E(): void {
         expect(lamp).toContain('Max 1 per Backer')
         expect(lamp).toContain('Digital, nothing ships')
         expect(lamp).toContain('Est. delivery Jul 2026')
-        expect(lamp).toMatch(/Test Inventor<\/b><span[^>]*>Inventor</)
+        expect(lamp).toMatch(/href="\/t\/tinkerfund\/qa\/inventors\/test-inventor"[^>]*><b>Test Inventor<\/b><\/a><span[^>]*>Inventor</)
         expect(lamp).toMatch(/Spare bulb[\s\S]*Sold out/)
         expect(lamp).toMatch(/<li class="yes"[^>]*>[\s\S]*A dimmer/)
 

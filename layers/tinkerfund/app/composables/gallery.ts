@@ -8,11 +8,12 @@ export async function useTinkerfundGallery() {
   const { space, collections } = useTinkerfundSpace()
   const ready = Promise.all([useTinkerfundCatalog(), useTinkerfundShop()])
   const extraData = useAsyncData(`tinkerfund-gallery-extra-${space}`, async () => {
-    const [threads, logs] = await Promise.all([
+    const [threads, logs, inventors] = await Promise.all([
       queryCollection(collections.comments).all(),
       queryCollection(collections.updates).all(),
+      queryCollection(collections.inventors).all(),
     ])
-    return { threads, logs }
+    return { threads, logs, inventors }
   })
   const [[catalog, { zoneName }], { data: extra }] = await Promise.all([ready, extraData])
   const { clock, promotions, baked } = catalog
@@ -85,5 +86,6 @@ export async function useTinkerfundGallery() {
     account,
     thread: computed(() => extra.value?.threads[0]),
     log: computed(() => extra.value?.logs[0]),
+    inventors: computed(() => extra.value?.inventors ?? []),
   }
 }

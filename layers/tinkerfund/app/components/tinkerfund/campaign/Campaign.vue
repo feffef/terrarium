@@ -122,7 +122,7 @@ const backing = computed<TinkerfundBacking>(() => ({ slug: slug.value, state: st
 
       <section id="comments" aria-labelledby="comments-h">
         <h2 id="comments-h">Comments</h2>
-        <TinkerfundCampaignComments :comments="comments" :now="now" />
+        <TinkerfundCampaignComments :comments="comments" :now="now" :inventor-slug="c.inventor" />
       </section>
     </div>
 

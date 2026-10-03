@@ -8,6 +8,7 @@ import { deriveCampaignStatus, derivePromotionState } from '../../app/utils/stat
 
 interface Campaign {
   category: string
+  inventor: string
   goal: number
   launch: string
   end: string
@@ -59,6 +60,10 @@ describe('qa edge cases', () => {
     expect(keypad.pledged + price * 0.9).toBeGreaterThanOrEqual(keypad.goal)
     const promotions = documents('promotions').map(({ doc }) => doc as { code?: string; start: string; end?: string })
     expect(derivePromotionState(promotions.find((p) => p.code === 'TINKER10')!, now)).toBe('active')
+  })
+
+  it('has an Inventor with no Campaigns', () => {
+    expect(documents('inventors').some(({ stem }) => !campaigns.some((c) => c.inventor === stem))).toBe(true)
   })
 
   it('has a category no Campaign is filed in', () => {
