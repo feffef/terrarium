@@ -103,8 +103,7 @@ it with a tool.
   unpinned catch-all that also covers `shared/manifest.ts` (ADR-0025: defines
   the `tenant_space_collection` key, "the unit of isolation"), the root
   `nuxt.config.ts` (ADR-0018), and `.github/actions/gate/action.yml` (the
-  Gate's steps once the `gate.yml` shell swap is hand-applied; until then
-  `gate.yml`'s inline steps run, ADR-0026). Whether a *novel* file belongs in
+  Gate's steps, ADR-0026). Whether a *novel* file belongs in
   the catch-all is a standing judgement call; mechanizing it needs issue #864's
   policy-as-data work (CM-14/PR-11 in `docs/research/rulebook-migration-table.md`).
   Human-only constrains merging, not editing (`CONTEXT.md`'s `### Human-only`
@@ -294,7 +293,7 @@ tests/support/ , tests/README.md    # shared e2e helpers + the test-homing conve
 .github/workflows/gate.yml          # the safety gate (installed & live); human-only to
                                     #   merge — a PR touching it never auto-merges (ADR-0004)
 .github/actions/gate/action.yml     # the Gate's steps, agent-PUSHABLE but still human-only
-                                    #   to merge (ADR-0026); goes live on the gate.yml shell swap
+                                    #   to merge (ADR-0026)
 .agents/skills/ , .claude/skills/   # committed Skills (general + platform-operation)
 ```
 

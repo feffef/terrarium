@@ -76,8 +76,8 @@ a known, bounded shape may merge on a green gate alone, because what they are
 able to produce is bounded before they start — documentation, page content,
 their own inventory entries, or (for one visitor-facing job) a small feature
 confined to an existing Tenant's own layer. One rule holds even inside that
-charter: in the friction-fixing loop below, the session that merges a change is
-never the session that wrote it.
+charter: in the friction-fixing loop below, a dispatched agent writes each change and
+a separate session reviews and merges it.
 
 ```mermaid
 graph TB

@@ -23,12 +23,11 @@ or review:
   is a fully unrelated root, not just stale — resetting onto it blindly would
   destroy real history.
 
-This isn't only a pre-diff step. Re-fetch and rebase onto `origin/main`
-periodically during a long session too, not just before a final push —
-especially before landing a PR that touches a doc or list other concurrent
-sessions likely edit. The same applies before *starting* work a Trusted user
-just directed: fetch first (`git fetch origin <branch>` + inspect the latest
-commits) — a concurrent session may already have pushed that exact change.
+Also re-fetch and rebase onto `origin/main` periodically in a long session, not
+just before a final push, especially before landing a PR touching a doc or list
+other sessions likely edit. Fetch before *starting* work a Trusted user just
+directed (`git fetch origin <branch>`, inspect the latest commits): a concurrent
+session may already have pushed it.
 
 **To read a file from main, use `git show origin/main:<path>`** — never
 `git checkout <ref> -- <path>` (stages it into the index) or

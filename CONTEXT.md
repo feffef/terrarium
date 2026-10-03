@@ -170,12 +170,7 @@ one's **role** and **importance** to this Platform. It
 is the authoritative "use these Skills" list (CLAUDE.md), kept current by the
 `audit-skills` Skill. It is one **Inventory** — the general category of derived,
 current-state readouts that are refreshed in place rather than appended to
-(contrast the append-only Digest, defined in the Journal context). Today the
-Skill Inventory is the only Inventory; a Tenant/Space/Collection and CI/drift
-inventory is planned. Each entry also keeps an internal `observations` log —
-`audit-skills`' own citable findings from the last 40 days (role/grade
-changes, behaviour findings) — kept separate from `role` and not rendered in the
-"use these" list (ADR-0015 amendment).
+(contrast the append-only Digest, defined in the Journal context).
 
 ### Importance (of a Skill)
 A Skill Inventory entry's grade for how much a Skill matters to the Platform — a
@@ -329,7 +324,7 @@ class is deliberately shrinking (ADR-0026). See `docs/proposals/README.md` for t
 
 ## Tenants
 
-The Platform currently hosts seven Tenants. Each has its own **context**
+The Platform hosts these Tenants. Each has its own **context**
 (vocabulary + reason-to-exist) co-located with its code; this roster is the
 pointer into them (see `CONTEXT-MAP.md`).
 

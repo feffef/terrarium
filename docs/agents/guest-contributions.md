@@ -92,4 +92,4 @@ concrete change. For example:
   Skills.
 - **ADR-0017** — provenance header/trailer on agent-authored content.
 - `docs/agents/issue-tracker.md` — how external PRs enter the triage queue
-  (`authorAssociation` mechanics).
+  (the `gh pr list` filter; ADR-0020 lists the `authorAssociation` values).
