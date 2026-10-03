@@ -1,7 +1,19 @@
 name: Hugo Vermeer
 bio: Keeps eleven artificial plants in his apartment in Utrecht and wanted a way to confirm, without touching the soil, that none of them needed anything. This is his first Campaign.
 portrait: |-
-  <path d="M22 96c4-24 16-34 28-34s24 10 28 34z" style="fill:var(--tf-good)" />
-  <circle cx="50" cy="20" r="8" style="fill:var(--tf-ink)" />
-  <circle cx="50" cy="41" r="16" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" />
-  <path d="M35 39a15 15 0 0 1 30 0c-6-6-24-6-30 0z" style="fill:var(--tf-ink)" />
+  <path d="M14 100c2-16 11-25 25-28l11-1 11 1c14 3 23 12 25 28z" style="fill:var(--tf-link)" />
+  <path d="M44 56h12v18H44z" style="fill:color-mix(in srgb, var(--tf-ink) 52%, var(--tf-surface))" />
+  <path d="M39 72l11 10 11-10-11-2z" style="fill:color-mix(in srgb, var(--tf-surface) 85%, var(--tf-ink))" />
+  <ellipse cx="34" cy="44" rx="2.6" ry="3.6" style="fill:color-mix(in srgb, var(--tf-ink) 45%, var(--tf-surface))" />
+  <ellipse cx="66" cy="44" rx="2.6" ry="3.6" style="fill:color-mix(in srgb, var(--tf-ink) 45%, var(--tf-surface))" />
+  <path d="M35 41c0-10 7-17 15-17s15 7 15 17v4c0 10-6 17-15 17s-15-7-15-17z" style="fill:color-mix(in srgb, var(--tf-ink) 45%, var(--tf-surface))" />
+  <path d="M34 42c-3-14 5-22 16-22 10 0 18 6 17 19l-3-4-3 5-4-5-4 4-4-5-4 5-4-4-3 4-2-4z" style="fill:var(--tf-ink)" />
+  <rect x="37.5" y="40" width="10" height="7.5" rx="2" style="fill:none;stroke:var(--tf-ink);stroke-width:1.6" />
+  <rect x="52.5" y="40" width="10" height="7.5" rx="2" style="fill:none;stroke:var(--tf-ink);stroke-width:1.6" />
+  <path d="M47.5 43.5h5" style="fill:none;stroke:var(--tf-ink);stroke-width:1.6" />
+  <circle cx="43" cy="44" r="1.5" style="fill:var(--tf-ink)" />
+  <circle cx="57" cy="44" r="1.5" style="fill:var(--tf-ink)" />
+  <path d="M38 37q4-2 8 0M54 36q4-1 8 1" style="fill:none;stroke:var(--tf-ink);stroke-width:1.5;stroke-linecap:round" />
+  <path d="M50 46c-1 2-1 4 1 5M45 54c3 3 8 3 11-1" style="fill:none;stroke:var(--tf-ink);stroke-width:1.4;stroke-linecap:round" />
+  <path d="M30 86c0-6 5-9 10-8-1 6-5 9-10 8z" style="fill:var(--tf-good)" />
+  <path d="M31 86c3-3 5-5 8-7" style="fill:none;stroke:var(--tf-link);stroke-width:0.9" />
