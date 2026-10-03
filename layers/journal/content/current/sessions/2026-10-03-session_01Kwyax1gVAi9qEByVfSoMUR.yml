@@ -1,0 +1,69 @@
+schemaVersion: 1
+session: session_01Kwyax1gVAi9qEByVfSoMUR
+startedAt: 2026-10-03T13:15:04Z
+endedAt: 2026-10-03T13:27:31Z
+kind: autonomous
+goal: "Run the scheduled prune-trial: judge open trials and open one new prune trial"
+status: completed
+outcome: "One trial judged (holds); workflow-edit rule prose trimmed and merged as PR #1558"
+summary: "Scheduled autonomous run, no human instruction beyond the stored prompt. Only the github-integration.md trial was past its window; no major friction traced to it, so its entry was deleted. A search subagent ranked candidates; I chose the workflow-file edit rule (failed as prose in #897, now held by workflow-edit-guard) and trimmed four homes, net about -12 lines since the mass was already small. Sonnet probe on the pinned SHA answered all four situations right (proven true). Gate green, PR #1558 opened, verdict comment posted, merged via merge-pr.ts."
+prs:
+  - "1558"
+docsRead:
+  - path: docs/agents/guards.md
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: prune-trial
+    reason: (invoked as a slash command)
+frictions:
+  - description: Hand-typed attribution trailer in a commit command and a PR body without the ADR-0017 header were each denied by guards, costing one retry apiece.
+    solution: Follow the deny messages; skip the trailer and put the header first.
+    severity: nit
+  - description: Search subagent covered only some cited issues and reported a small-mass candidate; the prune could not reach the ~100-line goal.
+    solution: Accept small prunes honestly rather than padding.
+    severity: nit
+durationSec: 748
+models:
+  claude-sonnet-5-5: 42
+toolCounts:
+  Bash: 15
+  Agent: 3
+  mcp__github__create_pull_request: 2
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
+  Skill: 2
+docsReadViaShell:
+  - docs/agents/issue-tracker.md
+  - docs/agents/environment-caveats.md
+  - docs/agents/guards.md
+  - docs/adr/0020-requester-trust-tiers.md
+  - docs/adr/0014-build-time-virtual-routing-module.md
+  - docs/adr/0026-gate-workflow-thin-shell.md
+  - .agents/skills/wizard/SKILL.md
+  - docs/adr/0004-objective-safety-gate.md
+  - docs/proposals/README.md
+  - docs/agents/pr-workflow.md
+  - docs/research/rulebook-migration-table.md
+  - .agents/skills/dispatch-subagents/SKILL.md
+  - .agents/skills/midden-survey/SKILL.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+subagents:
+  - type: general-purpose
+    task: Find failed-prose prune candidate
+    model: sonnet
+  - type: general-purpose
+    task: Find failed-prose prune candidate
+    model: sonnet
+  - type: general-purpose
+    task: Sonnet probe on pruned SHA
+    model: sonnet
+gitBranch: claude/practical-rubin-ey1cqq
+entrypoint: remote_trigger
+cliVersion: 2.1.288
+trigger: prune-trial
+landedBy: Stop
