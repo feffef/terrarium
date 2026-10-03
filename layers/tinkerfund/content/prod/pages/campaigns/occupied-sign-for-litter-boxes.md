@@ -10,6 +10,7 @@ campaign:
   end: -130d
   backers: 330
   pledged: 16740
+  alsoBacked: [delayed-mirror, cat-acknowledgement-button]
   recent:
     - { name: Odette V., city: Brussels, at: -130d }
     - { name: Leopold F., city: Linz, at: -131d }

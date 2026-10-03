@@ -10,6 +10,7 @@ campaign:
   end: +33d
   backers: 0
   pledged: 0
+  alsoBacked: [fridge-light-verification-camera, emotional-support-rock]
   specifications:
     - { label: Sensors, value: "Capacitive moisture, ambient light, temperature" }
     - { label: Insertion depth, value: "40 mm into the decorative base" }

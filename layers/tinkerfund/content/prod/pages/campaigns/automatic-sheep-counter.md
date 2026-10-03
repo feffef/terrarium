@@ -10,6 +10,7 @@ campaign:
   end: +20h
   backers: 290
   pledged: 12160
+  alsoBacked: [snore-certificate-printer, pausable-hourglass, snail-speedometer]
   recent:
     - { name: Casimir W., city: Wrocław, at: -1h }
     - { name: Freya L., city: Edinburgh, at: -3h }

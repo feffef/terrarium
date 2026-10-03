@@ -52,6 +52,9 @@ function flow(name: string, run: (flow: Flow) => Promise<void>): void {
   })
 }
 
+// A Campaign page without its recommendation shelves, whose cards carry their own lines (story #1387).
+const campaignOnly = (html: string) => html.slice(0, html.indexOf('class="more"'))
+
 const scrollWidth = (page: Page) => page.evaluate(() => document.documentElement.scrollWidth)
 
 export function registerTinkerfundE2E(): void {
@@ -208,8 +211,9 @@ export function registerTinkerfundE2E(): void {
           expect(html).toContain(action)
           expect(html).toContain('<meta property="og:type" content="website">')
           // Story #1386: names on Live and Ended, the list on Live only.
-          expect(html.includes('Backed by ')).toBe(action !== 'Notify me')
-          expect(html.includes('Recently backed')).toBe(action === 'Back this Campaign')
+          expect(campaignOnly(html).includes('Backed by ')).toBe(action !== 'Notify me')
+          expect(campaignOnly(html).includes('Recently backed')).toBe(action === 'Back this Campaign')
+          expect(html).toMatch(/Backers also backed[\s\S]*More from this category[\s\S]*class="tf-backbar/)
         })
       }
 
@@ -236,7 +240,16 @@ export function registerTinkerfundE2E(): void {
         const hammock = await page('indoor-hammock')
         expect(hammock).toContain('Backed by Hugo M., Ida N. and 90 others')
         expect(hammock).not.toContain('Recently backed')
-        expect(await page('one-button-keypad')).not.toMatch(/Backed by |Recently backed/)
+        expect(campaignOnly(await page('one-button-keypad'))).not.toMatch(/Backed by |Recently backed/)
+
+        // Story #1387: hand-picked shelf first, then the category's rest, Live and Upcoming before Ended.
+        const shelf = (html: string, title: string) => html.match(new RegExp(`>${title}</h2>[\\s\\S]*?</ul>`))?.[0].match(/<h3[^>]*><a[^>]*>[^<]+/g)?.map((h) => h.replace(/.*>/, ''))
+        expect(shelf(lamp, 'Backers also backed')).toEqual(['Unhurried Kettle', 'Indoor Hammock'])
+        expect(shelf(lamp, 'More from this category')).toEqual(['One-Button Keypad', 'Goal-Exact Stapler', 'Retired Ruler'])
+        expect(shelf(stapler, 'Backers also backed')).toBeUndefined()
+        expect(shelf(stapler, 'More from this category')).toContain('Last-Minute Lamp')
+        expect(shelf(hammock, 'Backers also backed')).toEqual(['The Self-Assembling Workbench That Has Been Assembling Itself Since the Previous Financial Year', 'Unhurried Kettle'])
+        expect(hammock).not.toContain('More from this category')
         const discover = await $fetch('/t/tinkerfund/qa/discover')
         expect(discover).toContain('Backed by Ada E. and 39 others')
         expect(discover).not.toContain('Backed by Hugo M.')
@@ -596,6 +609,7 @@ export function registerTinkerfundE2E(): void {
         await visit('/cart')
         expect(await page.locator('.tf-empty').textContent()).toContain('Your Cart is empty')
         expect(await count.textContent()).toBe('0')
+        expect(await page.locator('.shelf').count()).toBe(0)
         await visit('/checkout')
 
         await visit('/campaigns/one-button-keypad')
@@ -700,6 +714,8 @@ export function registerTinkerfundE2E(): void {
         await page.waitForURL('**/qa/cart')
         await expect.poll(h1).toMatch(/Your Cart\s*4 items/)
         expect(await page.locator('.group h2').allTextContents()).toEqual(['Goal-Exact Stapler', 'Last-Minute Lamp'])
+        // Story #1387: the Lamp's hand-picked Campaigns; the Stapler has none.
+        expect(await page.getByRole('list', { name: 'Backers also backed' }).locator('h3').allTextContents()).toEqual(['Unhurried Kettle', 'Indoor Hammock'])
         await page.getByRole('button', { name: 'More One stapler' }).click()
         // The Lamp's Pledge already pays for domestic shipping, so only the Stapler adds any.
         await expect.poll(() => page.locator('.summary').textContent()).toMatch(/Subtotal\s*€86\s*Shipping to Domestic\s*€4\s*Estimated total\s*€90/)

@@ -10,6 +10,7 @@ campaign:
   end: +26d
   backers: 310
   pledged: 18540
+  alsoBacked: [fridge-light-verification-camera, backup-suitcase]
   recent:
     - { name: Luca B., city: Milan, at: -1h }
     - { name: Maren D., city: Bielefeld, at: -6h }

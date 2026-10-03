@@ -10,6 +10,7 @@ campaign:
   end: +15d
   backers: 260
   pledged: 17700
+  alsoBacked: [solo-pea-rest, cat-flap-decision-timer]
   recent:
     - { name: Aurelio P., city: Naples, at: -3h }
     - { name: Sofia L., city: Malmö, at: -7h }

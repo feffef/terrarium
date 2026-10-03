@@ -75,7 +75,7 @@ interface TinkerfundCampaignDoc {
   path: string
   title: string
   description?: string
-  campaign: Pick<Campaign, 'registry' | 'inventor' | 'category' | 'goal' | 'launch' | 'end' | 'backers' | 'pledged' | 'recent'> & {
+  campaign: Pick<Campaign, 'registry' | 'inventor' | 'category' | 'goal' | 'launch' | 'end' | 'backers' | 'pledged' | 'recent' | 'alsoBacked'> & {
     figures: Pick<Campaign['figures'][number], 'svg'>[]
     rewards: Pick<Campaign['rewards'][number], 'price'>[]
   }
@@ -98,6 +98,7 @@ export interface TinkerfundListing {
   backers: number
   /** Named Backers, newest first. */
   named: string[]
+  alsoBacked?: string[]
   prices: number[]
   priceFrom?: number
   status: CampaignStatus
@@ -125,6 +126,7 @@ export function tinkerfundListings(
     pledged: c.pledged,
     backers: c.backers,
     named: tinkerfundRecentBackers(c.recent, now).map((r) => r.name),
+    alsoBacked: c.alsoBacked,
     prices: c.rewards.map((r) => r.price),
     priceFrom: campaignPriceFrom(c.rewards),
     status: deriveCampaignStatus(c, c.pledged, now),
@@ -223,3 +225,35 @@ export function groupTinkerfundPromotions<T extends PromotionTiming>(promotions:
   }
 }
 
+
+const SHELF = 4
+
+/** Live and Upcoming first, then Ended; at most a shelf's worth (issue #1387). */
+function shelf<T extends TinkerfundListing>(listings: T[]): T[] {
+  return browseTinkerfundListings(listings, { sort: 'ending' }).slice(0, SHELF)
+}
+
+function bySlug<T extends TinkerfundListing>(listings: T[], slugs: Iterable<string>): T[] {
+  const index = new Map(listings.map((l) => [tinkerfundSlug(l.path), l]))
+  return [...new Set(slugs)].flatMap((s) => index.get(s) ?? [])
+}
+
+/** A Campaign page's "Backers also backed", then "More from this category"
+ *  without the Campaigns the first already shows. */
+export function tinkerfundRecommendations<T extends TinkerfundListing>(listings: T[], slug: string) {
+  const self = bySlug(listings, [slug])[0]
+  const also = bySlug(listings, self?.alsoBacked ?? []).slice(0, SHELF)
+  const shown = new Set([self, ...also])
+  return { also, more: shelf(listings.filter((l) => l.category === self?.category && !shown.has(l))) }
+}
+
+/** The Cart's one shelf: what its Campaigns' Backers also backed, else more
+ *  from their categories; never what the Cart already holds. */
+export function tinkerfundCartRecommendations<T extends TinkerfundListing>(listings: T[], inCart: string[]) {
+  const held = bySlug(listings, inCart)
+  const fresh = (l: T) => !held.includes(l)
+  const also = bySlug(listings, held.flatMap((l) => l.alsoBacked ?? [])).filter(fresh).slice(0, SHELF)
+  if (also.length) return { also: true, cards: also }
+  const categories = new Set(held.map((l) => l.category))
+  return { also: false, cards: shelf(listings.filter((l) => categories.has(l.category) && fresh(l))) }
+}

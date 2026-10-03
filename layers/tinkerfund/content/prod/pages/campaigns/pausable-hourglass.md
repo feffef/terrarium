@@ -10,6 +10,7 @@ campaign:
   end: -18d
   backers: 192
   pledged: 15040
+  alsoBacked: [pocket-sundial-with-snooze, counterclockwise-mug]
   recent:
     - { name: Gareth W., city: Cardiff, at: -18d }
     - { name: Mei L., city: Singapore, at: -19d }

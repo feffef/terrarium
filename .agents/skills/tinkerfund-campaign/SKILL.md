@@ -99,6 +99,9 @@ time, so a Campaign holds its state forever: pick offsets for the state, not a d
   in a zone the Rewards ship to (mostly Domestic, i.e. Germany, and Europe) and an
   `at` between launch and now, or the end once Ended — a Live one's within hours
   or days. Comment authors may reappear. The schema checks the dates and count.
+- `alsoBacked` hand-picks 2–4 other Campaigns in the Space for "Backers also
+  backed": one way, not mirrored. Pair on a shared premise across categories
+  (the Mug with the Pausable Hourglass); the category shelf covers the rest.
 - Stretch goals sit above the goal; a Reward option unlocked by one (like the
   Mug's porcelain white) says so in the Stretch goal's title.
 - Every zone a Reward `shipsTo` needs a `shipping` rate; a `digital: true`

@@ -630,6 +630,12 @@ function checkCampaignsAndPledges(
       if (!slug) msgs.push('campaign frontmatter belongs only on a page at campaigns/<slug>.md')
       if (!inventors.has(campaign.inventor)) msgs.push(`campaign.inventor: "${campaign.inventor}" is not an Inventor in this Space`)
       if (!categories.has(campaign.category)) msgs.push(`campaign.category: "${campaign.category}" is not a category in this Space`)
+      campaign.alsoBacked?.forEach((other, i) => {
+        const at = `campaign.alsoBacked.${i}: "${other}"`
+        if (other === slug) msgs.push(`${at} is this Campaign itself`)
+        else if (!campaigns.has(other)) msgs.push(`${at} is not a Campaign in this Space`)
+        else if (campaign.alsoBacked!.indexOf(other) < i) msgs.push(`${at} is listed twice`)
+      })
       const holder = registries.get(campaign.registry)
       if (holder) msgs.push(`campaign.registry: "${campaign.registry}" is already used by ${holder}`)
       else registries.set(campaign.registry, slug ?? page.rel)

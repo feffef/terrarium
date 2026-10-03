@@ -10,6 +10,7 @@ campaign:
   end: -90d
   backers: 200
   pledged: 8000
+  alsoBacked: [meal-invites-for-cats, one-key-keyboard]
   recent:
     - { name: Ingrid H., city: Potsdam, at: -90d }
     - { name: Owen B., city: Mainz, at: -91d }

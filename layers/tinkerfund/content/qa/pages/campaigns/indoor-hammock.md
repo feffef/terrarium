@@ -10,6 +10,7 @@ campaign:
   end: -1h
   backers: 92
   pledged: 4600
+  alsoBacked: [self-assembling-workbench, unhurried-kettle]
   recent:
     - { name: Hugo M., city: Kassel, at: -1h }
     - { name: Ida N., city: Ghent, at: -3d }

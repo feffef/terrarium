@@ -14,11 +14,13 @@ import {
   tinkerfundDeadline,
   tinkerfundPriceBounds,
   tinkerfundTimeLeft,
+  tinkerfundRecommendations,
+  tinkerfundCartRecommendations,
 } from '../../app/utils/browse.ts'
 import { tinkerfundCount } from '../../app/utils/shop.ts'
 import { HOUR, NOW } from './support.ts'
 
-function doc(slug: string, fields: { category?: string; launch: string; end: string; goal?: number; pledged?: number; backers?: number; prices?: number[] }) {
+function doc(slug: string, fields: { category?: string; launch: string; end: string; goal?: number; pledged?: number; backers?: number; prices?: number[]; alsoBacked?: string[] }) {
   return {
     path: `/campaigns/${slug}`,
     title: slug,
@@ -34,6 +36,7 @@ function doc(slug: string, fields: { category?: string; launch: string; end: str
       pledged: fields.pledged ?? 0,
       figures: [{ svg: `<path d="${slug}" />` }],
       rewards: (fields.prices ?? [20]).map((price) => ({ price })),
+      alsoBacked: fields.alsoBacked,
     },
   }
 }
@@ -161,6 +164,43 @@ describe('Home', () => {
     expect(quiet.endingSoon).toEqual([])
     expect(quiet.justLaunched).toEqual([])
     expect(tinkerfundHomeSections([], NOW)).toEqual({ featured: undefined, endingSoon: [], popular: [], justLaunched: [] })
+  })
+})
+
+describe('recommendations (issue #1387)', () => {
+  const shelf = tinkerfundListings([
+    doc('mug', { category: 'kitchen', launch: '-5d', end: '+5d', alsoBacked: ['rock', 'pea'] }),
+    doc('rock', { category: 'desk', launch: '-5d', end: '+5d' }),
+    doc('pea', { category: 'kitchen', launch: '-50d', end: '-20d' }),
+    doc('spoon', { category: 'kitchen', launch: '-60d', end: '-30d' }),
+    doc('fork', { category: 'kitchen', launch: '+2d', end: '+30d' }),
+    doc('knife', { category: 'kitchen', launch: '-5d', end: '+9d' }),
+    doc('plate', { category: 'kitchen', launch: '-5d', end: '+3d' }),
+    doc('bowl', { category: 'kitchen', launch: '-70d', end: '-40d' }),
+    doc('cup', { category: 'kitchen', launch: '-3d', end: '+20d', alsoBacked: ['fork', 'knife'] }),
+    doc('lonely', { category: 'garden', launch: '-3d', end: '+20d' }),
+  ], [], NOW)
+  const titles = (cards: { title: string }[]) => cards.map((c) => c.title)
+
+  it('shows the hand-picked Campaigns, then up to 4 more from the category, Live and Upcoming before Ended, without repeats', () => {
+    const { also, more } = tinkerfundRecommendations(shelf, 'mug')
+    expect(titles(also)).toEqual(['rock', 'pea'])
+    expect(titles(more)).toEqual(['plate', 'knife', 'cup', 'fork'])
+  })
+
+  it('shows only the category without alsoBacked, and nothing when the category holds nothing else', () => {
+    expect(titles(tinkerfundRecommendations(shelf, 'knife').also)).toEqual([])
+    expect(titles(tinkerfundRecommendations(shelf, 'lonely').more)).toEqual([])
+  })
+
+  it('fills the Cart’s shelf from its Campaigns’ alsoBacked minus the Cart, else from their categories', () => {
+    const picked = tinkerfundCartRecommendations(shelf, ['mug', 'cup', 'fork'])
+    expect(picked.also).toBe(true)
+    expect(titles(picked.cards)).toEqual(['rock', 'pea', 'knife'])
+    const fallback = tinkerfundCartRecommendations(shelf, ['rock', 'pea', 'lonely'])
+    expect(fallback.also).toBe(false)
+    expect(titles(fallback.cards)).toEqual(['plate', 'mug', 'knife', 'cup'])
+    expect(tinkerfundCartRecommendations(shelf, []).cards).toEqual([])
   })
 })
 

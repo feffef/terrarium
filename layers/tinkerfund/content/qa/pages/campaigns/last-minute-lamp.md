@@ -12,6 +12,7 @@ campaign:
   end: +36h
   backers: 40
   pledged: 1250
+  alsoBacked: [unhurried-kettle, indoor-hammock]
   recent:
     - { name: Ada E., city: Hamburg, at: -1h }
     - { name: Maximiliane-Theodora von Hohenzollern-Sigmaringen, city: Castrop-Rauxel, at: -3h }

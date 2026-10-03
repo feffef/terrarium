@@ -10,6 +10,7 @@ campaign:
   end: +44h
   backers: 460
   pledged: 40320
+  alsoBacked: [sleep-confirmation-clock, backup-suitcase]
   recent:
     - { name: Hana S., city: Seoul, at: -1h }
     - { name: Dario F., city: Turin, at: -4h }

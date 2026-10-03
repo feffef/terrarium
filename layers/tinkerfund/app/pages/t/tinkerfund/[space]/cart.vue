@@ -6,6 +6,8 @@ const money = useTinkerfundMoney()
 const chosen = ref<TinkerfundZone>()
 const { shop, zoneName, status, error, loaded, zone, view, change } = await useTinkerfundCart(chosen)
 const shippingRows = computed(() => tinkerfundShippingRows(view.value.groups, zoneName(zone.value), money))
+const { cards, clock } = await useTinkerfundCatalog()
+const recommended = computed(() => tinkerfundCartRecommendations(cards.value, view.value.groups.map((g) => g.campaign)))
 const blocked = computed(() => view.value.groups.some((g) => g.lines.some((l) => l.unavailable)))
 
 useSeoMeta(tinkerfundSeo({ kind: 'private', space, title: 'Your Cart' }))
@@ -49,6 +51,13 @@ useSeoMeta(tinkerfundSeo({ kind: 'private', space, title: 'Your Cart' }))
           <NuxtLink v-else class="tf-btn primary" :to="link('/checkout')">Checkout</NuxtLink>
         </aside>
       </div>
+
+      <TinkerfundBrowseShelf
+        v-if="loaded"
+        :title="recommended.also ? 'Backers also backed' : 'More like this'"
+        :cards="recommended.cards"
+        :clock="clock"
+      />
     </div>
     <ContentLoadErrorDialog :status="status" :error="error" />
   </TinkerfundShell>

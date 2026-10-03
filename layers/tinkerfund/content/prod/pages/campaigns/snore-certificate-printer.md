@@ -10,6 +10,7 @@ campaign:
   end: -20d
   backers: 150
   pledged: 14520
+  alsoBacked: [sleep-confirmation-clock, automatic-sheep-counter]
   recent:
     - { name: Halvard E., city: Trondheim, at: -20d }
     - { name: Petra N., city: Plzeň, at: -21d }

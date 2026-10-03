@@ -10,6 +10,7 @@ campaign:
   end: +27d
   backers: 220
   pledged: 24800
+  alsoBacked: [counterclockwise-mug, jet-lag-rehearsal-lamp]
   recent:
     - { name: Ola N., city: Bergen, at: -2h }
     - { name: Priya D., city: Utrecht, at: -6h }

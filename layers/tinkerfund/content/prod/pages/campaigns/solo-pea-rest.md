@@ -10,6 +10,7 @@ campaign:
   end: -28d
   backers: 151
   pledged: 3290
+  alsoBacked: [strand-count-pasta-measure, emotional-support-rock]
   recent:
     - { name: Kofi D., city: Accra, at: -28d }
     - { name: Beatriz A., city: Coimbra, at: -30d }

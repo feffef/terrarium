@@ -10,6 +10,7 @@ campaign:
   end: -40d
   backers: 110
   pledged: 4340
+  alsoBacked: [strand-count-pasta-measure, snail-speedometer]
   recent:
     - { name: Dov L., city: Haifa, at: -40d }
     - { name: Greta S., city: Halle, at: -41d }

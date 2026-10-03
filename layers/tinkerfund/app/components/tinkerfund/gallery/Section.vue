@@ -74,6 +74,18 @@ const lamp = computed(() => campaigns.value.find((d) => d.slug === FIXTURE.lamp.
     </li>
   </ul>
 
+  <div v-else-if="id === 'recommendations'" class="stack">
+    <template v-for="slug in [FIXTURE.lamp.slug, FIXTURE.stapler.slug, FIXTURE.hammock.slug]" :key="slug">
+      <p class="case">The {{ campaigns.find((d) => d.slug === slug)?.title }} page</p>
+      <TinkerfundBrowseShelf title="Backers also backed" :cards="tinkerfundRecommendations(cards, slug).also" :clock="clock" />
+      <TinkerfundBrowseShelf title="More from this category" :cards="tinkerfundRecommendations(cards, slug).more" :clock="clock" />
+    </template>
+    <p class="case">The Cart specimen</p>
+    <TinkerfundBrowseShelf title="Backers also backed" :cards="tinkerfundCartRecommendations(cards, cart.groups.map((g) => g.campaign)).cards" :clock="clock" />
+    <p class="case">A Cart holding only the Stapler</p>
+    <TinkerfundBrowseShelf title="More like this" :cards="tinkerfundCartRecommendations(cards, [FIXTURE.stapler.slug]).cards" :clock="clock" />
+  </div>
+
   <div v-else-if="id === 'figures' && campaigns[0]" class="figures">
     <TinkerfundCampaignFigureGallery :figures="campaigns[0].campaign.figures" :registry="campaigns[0].campaign.registry" />
   </div>

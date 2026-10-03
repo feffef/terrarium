@@ -10,6 +10,7 @@ campaign:
   end: +18d
   backers: 612
   pledged: 27200
+  alsoBacked: [pausable-hourglass, delayed-mirror, jet-lag-rehearsal-lamp]
   recent:
     - { name: Priya N., city: Leipzig, at: -2h }
     - { name: Tomasz K., city: Kraków, at: -5h }

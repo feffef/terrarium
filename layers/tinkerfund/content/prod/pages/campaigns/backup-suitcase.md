@@ -10,6 +10,7 @@ campaign:
   end: +12d
   backers: 540
   pledged: 66600
+  alsoBacked: [passport-presence-monitor, emotional-support-rock]
   recent:
     - { name: Jonas W., city: Hamburg, at: -3h }
     - { name: Femi O., city: Lagos, at: -10h }

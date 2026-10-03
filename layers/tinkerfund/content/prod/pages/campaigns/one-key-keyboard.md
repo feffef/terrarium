@@ -10,6 +10,7 @@ campaign:
   end: +36h
   backers: 158
   pledged: 7420
+  alsoBacked: [cat-acknowledgement-button, motorised-sticky-note-stand]
   recent:
     - { name: Amira K., city: Rabat, at: -2h }
     - { name: Pieter V., city: Antwerp, at: -5h }

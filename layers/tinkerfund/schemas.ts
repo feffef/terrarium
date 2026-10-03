@@ -114,6 +114,8 @@ export const campaign = z
     pledged: z.number().nonnegative(),
     /** A few named Backers, shown as social proof (issue #1386). */
     recent: z.array(z.object({ name: z.string(), city: z.string(), at: offset }).strict()).min(3).max(5).optional(),
+    /** Hand-picked, one-way "Backers also backed" (issue #1387); validate-content-refs resolves them. */
+    alsoBacked: z.array(slug).min(2).max(4).optional(),
     specifications: z.array(z.object({ label: z.string(), value: z.string() }).strict()).min(1),
     figures: z
       .array(z.object({ style: z.enum(['isometric', 'patent']), caption: z.string(), svg: svg(4096) }).strict())

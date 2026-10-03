@@ -44,6 +44,12 @@ export const TINKERFUND_GALLERY = [
     summary: 'Every Live qa Campaign that names Backers, then the Lamp with the visitor’s own Pledge on top. The “Backed by” line shows in the Readout and Card sections: Live and Ended only, Cards Live only.',
   },
   {
+    id: 'recommendations',
+    title: 'Recommendations',
+    components: ['TinkerfundBrowseShelf'],
+    summary: 'A Campaign page’s two shelves: the Lamp’s picks from another category, the Stapler with no picks, the Hammock whose picks leave Workshop with nothing more. Then the Cart specimen’s shelf, and a Stapler-only Cart falling back to its category. A sideways row on a phone.',
+  },
+  {
     id: 'figures',
     title: 'Figures',
     components: ['TinkerfundCampaignFigureGallery'],

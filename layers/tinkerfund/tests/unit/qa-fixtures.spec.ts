@@ -16,6 +16,7 @@ interface Campaign {
   pledged: number
   rewards: { price: number; claimed: number; stock?: number }[]
   recent?: { name: string; at: string }[]
+  alsoBacked?: string[]
 }
 
 const qa = fileURLToPath(new URL('../../content/qa/', import.meta.url))
@@ -96,5 +97,20 @@ describe('qa edge cases', () => {
 
   it('has a Live Campaign with Backers but none named', () => {
     expect(campaigns.some((c) => c.status.state === 'live' && c.backers > 0 && !c.recent)).toBe(true)
+  })
+
+  const categoryOf = (slug: string) => campaigns.find((c) => c.slug === slug)?.category
+
+  it('has a Live Campaign whose Backers also backed Campaigns in other categories', () => {
+    expect(campaigns.some((c) => c.status.state === 'live' && c.alsoBacked?.every((s) => categoryOf(s) !== c.category))).toBe(true)
+  })
+
+  it('has a Campaign whose Backers also backed the rest of its category, leaving no more to show', () => {
+    expect(campaigns.some((c) => c.alsoBacked && campaigns.every((o) => o === c || o.category !== c.category || c.alsoBacked?.includes(o.slug)))).toBe(true)
+  })
+
+  it('has a Live Campaign without alsoBacked that has more in its category', () => {
+    expect(campaigns.some((c) => c.status.state === 'live' && !c.alsoBacked
+      && campaigns.some((o) => o !== c && o.category === c.category))).toBe(true)
   })
 })

@@ -10,6 +10,7 @@ campaign:
   end: -110d
   backers: 1020
   pledged: 37800
+  alsoBacked: [pausable-hourglass, automatic-sheep-counter]
   recent:
     - { name: Elena R., city: Seville, at: -110d }
     - { name: Bastian K., city: Lübeck, at: -111d }

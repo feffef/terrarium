@@ -542,7 +542,7 @@ function write(rel: string, text: string): void {
   writeFileSync(join(dir, rel), text)
 }
 
-function campaignPage(opts: { registry?: string; inventor?: string; category?: string; launch?: string } = {}): string {
+function campaignPage(opts: { registry?: string; inventor?: string; category?: string; launch?: string; alsoBacked?: string[] } = {}): string {
   return [
     '---',
     'title: Counterclockwise Mug',
@@ -551,6 +551,7 @@ function campaignPage(opts: { registry?: string; inventor?: string; category?: s
     `  inventor: ${opts.inventor ?? 'ada'}`,
     `  category: ${opts.category ?? 'kitchen'}`,
     `  launch: "${opts.launch ?? '-10d'}"`,
+    ...(opts.alsoBacked ? [`  alsoBacked: [${opts.alsoBacked.join(', ')}]`] : []),
     '  rewards:',
     '    - id: mug',
     '      options:',
@@ -605,6 +606,17 @@ describe('validateReferences() — Tinkerfund-shaped Space', () => {
     expect(shopViolations()).toEqual([
       expect.stringMatching(/campaigns\/mug\.md: campaign\.inventor: "nobody"/),
       expect.stringMatching(/campaigns\/mug\.md: campaign\.category: "garage"/),
+    ])
+  })
+
+  it('rejects an alsoBacked slug that is unknown, the Campaign itself, or repeated', () => {
+    writeValidShop()
+    write('pages/campaigns/rock.md', campaignPage({ registry: 'TF-0002' }))
+    write('pages/campaigns/mug.md', campaignPage({ alsoBacked: ['rock', 'pebble', 'mug', 'rock'] }))
+    expect(shopViolations()).toEqual([
+      expect.stringMatching(/campaigns\/mug\.md: campaign\.alsoBacked\.1: "pebble" is not a Campaign/),
+      expect.stringMatching(/campaigns\/mug\.md: campaign\.alsoBacked\.2: "mug" is this Campaign itself/),
+      expect.stringMatching(/campaigns\/mug\.md: campaign\.alsoBacked\.3: "rock" is listed twice/),
     ])
   })
 

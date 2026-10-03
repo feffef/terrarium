@@ -10,6 +10,7 @@ campaign:
   end: -50d
   backers: 320
   pledged: 26400
+  alsoBacked: [snail-speedometer, soap-bar-odometer]
   recent:
     - { name: Sofia N., city: Turku, at: -50d }
     - { name: Delphine R., city: Nantes, at: -51d }

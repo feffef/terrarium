@@ -9,6 +9,8 @@ const categories = useTinkerfundCategories()
 
 const slug = computed(() => tinkerfundSlug(props.doc.path))
 const { view: cart, change: changeCart, pledges, baked, clock, zoneName } = await useTinkerfundCart()
+const { cards } = await useTinkerfundCatalog()
+const recommended = computed(() => tinkerfundRecommendations(cards.value, slug.value))
 const now = computed(() => clock.value.now)
 // Totals, Stretch goals and stock count the visitor's own Pledges (story #1384).
 const c = computed(() => withTinkerfundPledges(slug.value, props.doc.campaign, pledges.value, baked.value))
@@ -133,6 +135,11 @@ const backing = computed<TinkerfundBacking>(() => ({ slug: slug.value, state: st
       </section>
     </div>
 
+    <div class="more">
+      <TinkerfundBrowseShelf title="Backers also backed" :cards="recommended.also" :clock="clock" />
+      <TinkerfundBrowseShelf title="More from this category" :cards="recommended.more" :clock="clock" />
+    </div>
+
     <div class="tf-backbar">
       <span v-if="from !== undefined" class="from">From <b>{{ money(from) }}</b></span>
       <TinkerfundCampaignAction :slug="slug" :state="status.state" quiet />
@@ -154,6 +161,8 @@ const backing = computed<TinkerfundBacking>(() => ({ slug: slug.value, state: st
 
 .body { display: grid; gap: 36px; padding-top: 24px; }
 .body > section { min-width: 0; }
+.more { display: grid; gap: 36px; padding-top: 36px; }
+.more:empty { display: none; }
 @media (min-width: 1000px) {
   .body {
     grid-template-columns: minmax(0, 1fr) 360px;

@@ -10,6 +10,7 @@ campaign:
   end: +8d
   backers: 380
   pledged: 35800
+  alsoBacked: [rain-aware-umbrella, snail-speedometer]
   recent:
     - { name: Wiktor B., city: Gdańsk, at: -2h }
     - { name: Jeanne P., city: Lyon, at: -5h }

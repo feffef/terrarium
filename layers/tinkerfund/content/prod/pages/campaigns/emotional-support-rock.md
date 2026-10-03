@@ -10,6 +10,7 @@ campaign:
   end: +35d
   backers: 0
   pledged: 0
+  alsoBacked: [goldfish-quarterly-review, moisture-sensor-for-artificial-plants]
   specifications:
     - { label: Material, value: "Granite, locally sourced" }
     - { label: Mass, value: 410 g }

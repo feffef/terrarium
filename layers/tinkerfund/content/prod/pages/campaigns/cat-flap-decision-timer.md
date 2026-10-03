@@ -10,6 +10,7 @@ campaign:
   end: +22d
   backers: 210
   pledged: 8880
+  alsoBacked: [pausable-hourglass, cat-acknowledgement-button]
   recent:
     - { name: Oskar V., city: Tallinn, at: -4h }
     - { name: Freya N., city: Aarhus, at: -9h }

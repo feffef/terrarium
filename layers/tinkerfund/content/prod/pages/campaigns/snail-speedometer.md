@@ -10,6 +10,7 @@ campaign:
   end: +14d
   backers: 330
   pledged: 15035
+  alsoBacked: [grass-growth-notifier, pigeon-arrival-board]
   recent:
     - { name: Klara D., city: Ljubljana, at: -2h }
     - { name: Youssef B., city: Casablanca, at: -6h }

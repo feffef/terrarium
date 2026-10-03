@@ -10,6 +10,7 @@ campaign:
   end: +24d
   backers: 480
   pledged: 29000
+  alsoBacked: [sleep-confirmation-clock, passport-presence-monitor, grass-growth-notifier]
   recent:
     - { name: Rosa M., city: Bologna, at: -1h }
     - { name: Callan P., city: Cork, at: -5h }

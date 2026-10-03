@@ -10,6 +10,7 @@ campaign:
   end: +10d
   backers: 410
   pledged: 20500
+  alsoBacked: [motorised-sticky-note-stand, one-key-keyboard]
   recent:
     - { name: Wiebke L., city: Kiel, at: -2h }
     - { name: Ines B., city: Bilbao, at: -6h }

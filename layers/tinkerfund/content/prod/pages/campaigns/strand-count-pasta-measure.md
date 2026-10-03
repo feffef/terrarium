@@ -10,6 +10,7 @@ campaign:
   end: -65d
   backers: 440
   pledged: 21120
+  alsoBacked: [snowflake-comparison-kit, solo-pea-rest, soap-bar-odometer]
   recent:
     - { name: Sanne V., city: Eindhoven, at: -65d }
     - { name: Priya L., city: Leicester, at: -66d }
