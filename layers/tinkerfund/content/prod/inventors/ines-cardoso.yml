@@ -1,7 +1,14 @@
 name: Inês Cardoso
 bio: Optics technician in Porto. Wanted to know what she looked like when she was not looking at herself, and could not find a mirror willing to tell her.
 portrait: |-
-  <circle cx="50" cy="37" r="17" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" />
-  <path d="M20 96c4-20 16-30 30-30s26 10 30 30z" style="fill:var(--tf-link)" />
-  <path d="M35 41c2 16 28 16 30 0c-4 5-7 7-15 7s-11-2-15-7z" style="fill:var(--tf-ink)" />
-  <path d="M31 30c6-10 32-10 38 0l4 3H27z" style="fill:var(--tf-ink)" />
+  <path d="M33 40c-5 12-6 28-3 46h12c-4-14-5-28-1-42zM67 40c5 12 6 28 3 46H58c4-14 5-28 1-42z" style="fill:var(--tf-ink)"/>
+  <path d="M43 54h14v24l-7 6l-7-6z" style="fill:color-mix(in srgb, var(--tf-ink) 65%, var(--tf-surface))"/>
+  <path d="M14 100c1-15 10-24 24-28l12 11l12-11c14 4 23 13 24 28z" style="fill:var(--tf-link)"/>
+  <path d="M31 44c-4-22 8-32 19-32s23 10 19 32c-2-8-6-13-12-15c-5 5-9 5-14 0c-6 2-10 7-12 15z" style="fill:var(--tf-ink)"/>
+  <path d="M35 39c0-12 7-19 15-19s15 7 15 19c0 8-3 13-6 16c-3 3-6 4-9 4s-6-1-9-4c-3-3-6-8-6-16z" style="fill:color-mix(in srgb, var(--tf-ink) 55%, var(--tf-surface))"/>
+  <path d="M36 38c-3-1-4 2-4 4s2 5 4 4zM64 38c3-1 4 2 4 4s-2 5-4 4z" style="fill:color-mix(in srgb, var(--tf-ink) 63%, var(--tf-surface))"/>
+  <path d="M50 42c-1 3-2 4-.5 6" style="fill:none;stroke:color-mix(in srgb, var(--tf-ink) 85%, var(--tf-surface));stroke-width:1.3;stroke-linecap:round"/>
+  <path d="M44 41a1.6 2 0 1 0 .1 0zM56 41a1.6 2 0 1 0 .1 0z" style="fill:var(--tf-ink)"/>
+  <path d="M40 33c2-2 6-2 8-.5M52 32c3-1 6 0 8 2" style="fill:none;stroke:var(--tf-ink);stroke-width:1.6;stroke-linecap:round"/>
+  <path d="M45 50c2 3 8 3 10 0" style="fill:none;stroke:var(--tf-ink);stroke-width:1.6;stroke-linecap:round"/>
+  <path d="M44 41.5a5 5 0 1 0 .1 0zM56 41.5a5 5 0 1 0 .1 0zM49 41h2M39 40.5l-3-1M61 40.5l3-1" style="fill:none;stroke:var(--tf-ink);stroke-width:1.3;stroke-linecap:round"/>

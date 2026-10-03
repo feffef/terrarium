@@ -1,7 +1,19 @@
 name: Konrad Fiebig
 bio: Scientific glassblower in Jena. Has made hourglasses for thirty years and has not once been able to stop one.
 portrait: |-
-  <path d="M18 96c4-22 18-32 32-32s28 10 32 32z" style="fill:var(--tf-accent)" />
-  <circle cx="50" cy="38" r="18" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" />
-  <path d="M34 44c4 12 28 12 32 0c-5 4-10 5-16 5s-11-1-16-5z" style="fill:var(--tf-ink)" />
-  <path d="M38 34h9M53 34h9" style="stroke:var(--tf-ink);stroke-width:3" />
+  <path d="M43 54h14v24l-7 6l-7-6z" style="fill:color-mix(in srgb, var(--tf-ink) 45%, var(--tf-surface))"/>
+  <path d="M14 100c1-15 10-24 24-28l12 11l12-11c14 4 23 13 24 28z" style="fill:var(--tf-accent)"/>
+  <path d="M38 72l12 11l12-11l-4-2l-8 9l-8-9z" style="fill:color-mix(in srgb, var(--tf-ink) 12%, var(--tf-surface))"/>
+  <path d="M14 100c1-12 6-20 14-25l4 25zM86 100c-1-12-6-20-14-25l-4 25z" style="fill:color-mix(in srgb, var(--tf-accent) 70%, var(--tf-ink))"/>
+  <path d="M35 39c0-12 7-19 15-19s15 7 15 19c0 8-3 13-6 16c-3 3-6 4-9 4s-6-1-9-4c-3-3-6-8-6-16z" style="fill:color-mix(in srgb, var(--tf-ink) 35%, var(--tf-surface))"/>
+  <path d="M36 38c-3-1-4 2-4 4s2 5 4 4zM64 38c3-1 4 2 4 4s-2 5-4 4z" style="fill:color-mix(in srgb, var(--tf-ink) 43%, var(--tf-surface))"/>
+  <path d="M35 40c-2-7-1-14 4-18c-1 6-1 12 0 18zM65 40c2-7 1-14-4-18c1 6 1 12 0 18z" style="fill:color-mix(in srgb, var(--tf-ink) 60%, var(--tf-surface))"/>
+  <path d="M35 44c-1 12 5 22 15 23s16-11 15-23c-2 5-4 8-7 10c-5 3-11 3-16 0c-3-2-5-5-7-10z" style="fill:color-mix(in srgb, var(--tf-ink) 60%, var(--tf-surface))"/>
+  <path d="M46 52c2 2 6 2 8 0" style="fill:none;stroke:var(--tf-ink);stroke-width:1.6;stroke-linecap:round"/>
+  <path d="M44 41a2 2.3 0 1 0 .1 0zM56 41a2 2.3 0 1 0 .1 0z" style="fill:var(--tf-ink)"/>
+  <path d="M50 42c-1 3-2 4-.5 6" style="fill:none;stroke:color-mix(in srgb, var(--tf-ink) 65%, var(--tf-surface));stroke-width:1.3;stroke-linecap:round"/>
+  <path d="M39 35c3-3 7-3 10-1M51 34c3-2 7-2 10 1" style="fill:none;stroke:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface));stroke-width:2.6;stroke-linecap:round"/>
+  <path d="M50 14c-9 0-16 6-16 12c3-2 7-3 10-3s4 1 6 1s3-1 6-1s7 1 10 3c0-6-7-12-16-12z" style="fill:color-mix(in srgb, var(--tf-ink) 60%, var(--tf-surface))"/>
+  <path d="M44 24a4.5 4 0 1 0 .1 0zM56 24a4.5 4 0 1 0 .1 0zM48.5 24h3M39.5 23c-3 1-5 3-6 6M60.5 23c3 1 5 3 6 6" style="fill:none;stroke:var(--tf-ink);stroke-width:1.6;stroke-linecap:round"/>
+  <path d="M44 24a4.5 4 0 1 0 .1 0zM56 24a4.5 4 0 1 0 .1 0z" style="fill:color-mix(in srgb, var(--tf-link) 25%, var(--tf-surface))"/>
+  <path d="M66 84h8l-3 4l3 4h-8l3-4z" style="fill:var(--tf-surface);stroke:var(--tf-ink);stroke-width:1;stroke-linejoin:round"/>
