@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01CbWrei9SvmrH9vjNx2MB2f
 startedAt: 2026-10-03T04:00:53Z
-endedAt: 2026-10-03T04:20:22Z
+endedAt: 2026-10-03T04:24:34Z
 kind: autonomous
 goal: Scheduled audit-docs sweep of the repo's Live docs
-status: in-review
-outcome: Fact-checked fixes in gated PR 1544, gate green, merge-pr.ts polling CI
-summary: Scheduled /audit-docs run, no human prompt. Four read-only reviewer agents covered freshness, single-home, concision and coherence; one checker agent re-derived every finding. Applied 17 CONFIRMED(-BUT) fixes across 14 Live docs (pointer drift, a tripled gate.yml status, glossary status detail, a false Skill-to-CONTEXT cross-reference, an inaccurate how-it-works claim, three verbose paragraphs). Deliberately skipped two pr-workflow rewrites whose text overlaps open Prune Trial keywords, a version-snapshot edit that needs re-verification, and research-snapshot staleness. No ADR edit, no issue filed. pnpm gate:scoped green; PR 1544 opened with verdict comment, subscribed, and merge-pr.ts started. All work was agent-initiated under the schedule's charter.
+status: completed
+outcome: Fact-checked doc fixes merged green via PR 1544
+summary: Scheduled /audit-docs run, no human prompt. Four read-only reviewer agents covered freshness, single-home, concision and coherence; one checker agent re-derived every finding. Applied 17 CONFIRMED(-BUT) fixes across 14 Live docs (pointer drift, a tripled gate.yml status, glossary status detail, a false Skill-to-CONTEXT cross-reference, an inaccurate how-it-works claim, three verbose paragraphs). Deliberately skipped two pr-workflow rewrites whose text overlaps open Prune Trial keywords, a version-snapshot edit that needs re-verification, and research-snapshot staleness. No ADR edit, no issue filed. pnpm gate:scoped green; PR 1544 opened with verdict comment, subscribed, and merged by merge-pr.ts on green. All work was agent-initiated under the schedule's charter.
 prs:
   - "1544"
 docsRead:
@@ -111,11 +111,11 @@ frictions:
   - description: Stop hook demanded commit and push while the gate was still running, pressuring against the recipe's green-before-commit order.
     solution: Have the stop hook skip while a backgrounded gate log is unfinished.
     severity: nit
-durationSec: 1169
+durationSec: 1421
 models:
-  claude-sonnet-5-5: 54
+  claude-sonnet-5-5: 67
 toolCounts:
-  Bash: 14
+  Bash: 18
   Read: 2
   Agent: 5
   Grep: 1
@@ -124,6 +124,8 @@ toolCounts:
   mcp__github__add_issue_comment: 1
   mcp__github__subscribe_pr_activity: 1
   Skill: 2
+  ReadNotifications: 2
+  mcp__github__unsubscribe_pr_activity: 1
 docsReadViaShell:
   - docs/agents/guest-contributions.md
   - CONTEXT.md
