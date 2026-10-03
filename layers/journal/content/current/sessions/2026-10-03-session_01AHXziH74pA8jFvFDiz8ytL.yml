@@ -1,0 +1,119 @@
+schemaVersion: 1
+session: session_01AHXziH74pA8jFvFDiz8ytL
+startedAt: 2026-10-03T14:43:46Z
+endedAt: 2026-10-03T15:15:13Z
+kind: interactive
+goal: visitor-loop run focused on the Journal's five 'New here?' onramp pages, plus a fact-check of their claims
+status: in-review
+outcome: "Consensus fixes and accuracy corrections open as PR #1563; the 'Read next' tour feature PR follows once it lands"
+summary: "The owner invoked /visitor-loop with a custom focus: only the five pages behind the Journal's \"New here? Start with the short version:\" cards. Following the owner's standing preference to ask first, the session asked four scoping questions; the owner chose: visitors read only those five pages, findings cover text and presentation, a content-shaped feature PR still follows, and the session also fact-checks the pages' claims against the repo (owner-instructed, beyond the Skill's normal remit). Three blind visitors (sonnet, fable, opus) read the pages; a separate read-only agent fact-checked them. Consensus: the pages miscount each other, Twelve Stories dates only four of twelve entries, History names the Blog personas before introducing them, What's Real skips Commons and Marquee and offers no starting page per site, History's table loses two columns at 390px, Architecture's diagrams shrink labels to ~9px on phones, and document pages leave half the desktop card empty. The accuracy pass added stale claims (visitor-loop missing from the routine list, transcripts \"unreadable\", every change \"a PR\", first commit \"four prose files\", \"none reversed\", \"nothing since is a new site\", SVG location). All were fixed agent-side within the visitor-loop remit (Journal layer content, theme.css, the Journal doc page, its e2e test); breadcrumb and \"posts not linked\" findings were dropped after verification. The chosen feature (agent-picked from visitor ideas) is a \"Read next · n of 5\" tour footer across the five pages. Work went on the harness-designated session branch rather than the Skill's claude/visitor-loop-fixes-<date> name."
+prs:
+  - "1563"
+docsRead:
+  - path: layers/journal/content/current/pages/history.md
+    reason: (no reason given)
+skillsUsed:
+  - name: visitor-loop
+    reason: owner-invoked run with a custom focus
+  - name: code-review
+    reason: "two-axis review of PR #1563 against the tally"
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: visitor-brief.md says follow links across 10-20 pages, contradicting an owner focus of exactly five pages; had to override it via the NOTE slot
+    solution: Let visitor-brief.md's page-count and roaming sentences yield to the focus note when a Skill argument narrows the scope
+    severity: minor
+  - description: visitor-loop names its branches claude/visitor-loop-fixes-<date>, but the cloud harness pins one designated session branch and forbids others without permission
+    solution: Say in visitor-loop SKILL.md that a harness-designated branch wins for the fix PR; the feature PR then needs owner OK for a second branch
+    severity: minor
+  - description: "History table fix took three build cycles: the in-browser trial swapped header text, so I missed that 'Sessions/week' cannot wrap, then desktop overflowed after renaming headers"
+    solution: Trial a layout fix with the exact content you will ship, at both 390 and 1280, before editing
+    severity: minor
+  - description: gate:scoped e2e failed because journal.e2e.ts asserts the exact string class="jd", so adding a modifier class broke two tests
+    solution: Assert the themed wrapper with a class-token match rather than an exact attribute string
+    severity: minor
+  - description: A playwright probe in the scratchpad could not import playwright-core (resolution is relative to the script dir, outside the repo); needed an absolute node_modules path
+    solution: Note in verifying-ui-changes.md that scratch probes must import playwright-core by absolute repo path or live under the repo
+    severity: nit
+  - description: One probe run reported 0 rendered width for all desktop diagrams; a re-run showed correct widths, so a measurement can silently read before layout settles
+    solution: Wait for networkidle or the diagram's layout before measuring
+    severity: nit
+  - description: The sonnet visitor reported that Twelve Stories links none of its posts, but all twelve titles are links; a blind finding that would have been a wrong fix without verification
+    solution: Keep verifying every finding against the rendered DOM, as the Skill requires
+    severity: nit
+durationSec: 1886
+models:
+  claude-opus-5-5: 210
+toolCounts:
+  Bash: 72
+  AskUserQuestion: 1
+  Agent: 6
+  ToolSearch: 2
+  mcp__github__search_pull_requests: 1
+  mcp__github__pull_request_read: 1
+  Read: 12
+  Write: 3
+  mcp__claude-code-remote__get_session: 1
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+  Skill: 3
+filesEdited:
+  - layers/journal/content/current/pages/real-and-invented.md
+docsReadViaShell:
+  - .agents/skills/visitor-loop/visitor-brief.md
+  - .agents/skills/visitor-loop/decisions.md
+  - docs/adr/0003-agent-operating-model-and-governance.md
+  - docs/adr/0007-generated-config-committed-drift-checked.md
+  - CONTEXT.md
+  - docs/agents/pr-workflow.md
+  - docs/adr/0017-provenance-footer-on-agent-authored-content.md
+  - .agents/skills/auto-triage/SKILL.md
+  - docs/adr/0022-autonomous-triage-sweep.md
+  - layers/midden/CONTEXT.md
+  - docs/adr/0024-build-time-mermaid-prerender.md
+  - docs/agents/guards.md
+  - layers/marquee/CONTEXT.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - .agents/skills/audit-skills/SKILL.md
+  - .agents/skills/audit-docs/SKILL.md
+  - docs/adr/0004-objective-safety-gate.md
+  - docs/adr/0006-runtime-routing-path-prefix.md
+  - .agents/skills/visitor-loop/SKILL.md
+  - docs/adr/0001-single-container-baked-multitenancy.md
+  - docs/adr/0002-manifest-driven-config-generation.md
+  - docs/adr/0005-skill-model.md
+  - docs/adr/0008-self-documentation-tenant-is-a-journal.md
+  - docs/adr/0009-session-logs-commit-directly-to-main.md
+subagents:
+  - type: general-purpose
+    task: Fact-check five Journal pages
+    model: opus
+  - type: general-purpose
+    task: Visitor (sonnet)
+    model: sonnet
+  - type: general-purpose
+    task: Visitor (fable)
+    model: fable
+  - type: general-purpose
+    task: Visitor (opus)
+    model: opus
+  - type: general-purpose
+    task: Standards review
+    model: opus
+  - type: general-purpose
+    task: Spec review
+    model: opus
+gitBranch: ccr-7b24c32f-0nzqez
+entrypoint: remote_mobile
+cliVersion: 2.1.288
+ideas:
+  - "History page: replace pointers to repo files visitors can't open (CLAUDE.md's Self-verification section, docs/agents/guards.md) with one plain sentence stating the current state"
+  - "History page: add a short in-page contents list of its six periods, and turn the bold run-in lead-ins into real subheads so phone readers can skim"
+  - "Architecture page: make one column of the Tenant/Space/Collection diagram the Journal itself (current -> pages/sessions), since the reader is standing in it"
+  - "Journal onramp: consider putting What's Real, What's Invented first in the 'New here?' order - one visitor found it the best orientation"
+  - A glossary hover/drawer for in-house terms (Tenant, Space, Friction, gate, prune trial) shared across Journal pages
+  - "Twelve Stories: show each post's opening line inline so a visitor tastes each voice before leaving the Journal"
+landedBy: Stop
