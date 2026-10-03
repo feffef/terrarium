@@ -13,7 +13,7 @@ campaign:
   recent:
     - { name: Kai P., city: Bonn, at: -30d }
     - { name: Lea Q., city: Malmö, at: -31d }
-    - { name: Cleo G.teen, city: Toronto, at: -40d }
+    - { name: Cleo G., city: Leipzig, at: -40d }
   specifications:
     - { label: Length, value: 29.9 cm }
   figures:

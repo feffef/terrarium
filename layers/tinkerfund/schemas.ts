@@ -59,7 +59,7 @@ function flagRecentBackers(ctx: z.RefinementCtx, c: { launch: string; end: strin
   if (!c.recent) return
   const at = (o: string) => (TINKERFUND_OFFSET.test(o) ? resolveTinkerfundOffset(o, 0) : Number.NaN)
   const issue = (path: (string | number)[], message: string) => ctx.addIssue({ code: z.ZodIssueCode.custom, path, message })
-  if (at(c.launch) > 0) issue(['recent'], 'an Upcoming Campaign has no Backers to name')
+  if (at(c.launch) > 0) return issue(['recent'], 'an Upcoming Campaign has no Backers to name')
   if (c.recent.length > c.backers) issue(['recent'], `names ${c.recent.length} Backers but the Campaign has ${c.backers}`)
   c.recent.forEach((r, i) => {
     if (at(r.at) < at(c.launch)) issue(['recent', i, 'at'], 'is before launch')

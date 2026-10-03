@@ -46,12 +46,14 @@ const backedBy = computed(() => formatTinkerfundBackedBy(
         <p class="sub">pledged of {{ money(campaign.goal) }} goal</p>
       </div>
       <TinkerfundProgressBar :percent="status.percent" />
-      <dl class="tiles">
-        <div><dt>Backers</dt><dd>{{ campaign.backers.toLocaleString(locale) }}</dd></div>
-        <div><dt>Funded</dt><dd>{{ status.percent }}%</dd></div>
-        <div v-if="from !== undefined"><dt>From</dt><dd>{{ money(from) }}</dd></div>
-      </dl>
-      <p v-if="backedBy" class="backed-by">{{ backedBy }}</p>
+      <div>
+        <dl class="tiles">
+          <div><dt>Backers</dt><dd>{{ campaign.backers.toLocaleString(locale) }}</dd></div>
+          <div><dt>Funded</dt><dd>{{ status.percent }}%</dd></div>
+          <div v-if="from !== undefined"><dt>From</dt><dd>{{ money(from) }}</dd></div>
+        </dl>
+        <p v-if="backedBy" class="backed-by">{{ backedBy }}</p>
+      </div>
     </template>
     <p v-for="deal in deals" :key="deal.stem" class="deals">
       <TinkerfundCampaignDealBadge :promotion="deal" />
@@ -70,7 +72,8 @@ const backedBy = computed(() => formatTinkerfundBackedBy(
 .lead { color: var(--tf-muted); }
 .date { color: var(--tf-muted); font: 500 12px/1.4 var(--tf-mono); }
 .by, .backed-by { font-size: 14px; }
-.backed-by { margin-top: -6px; color: var(--tf-muted); }
+.tiles { margin: 0; }
+.backed-by { margin: 8px 0 0; color: var(--tf-muted); }
 .backed { padding: 10px 12px; border-radius: var(--tf-radius); background: var(--tf-accent-soft); font-size: 14px; font-weight: 600; }
 .backed a { color: var(--tf-ink); font-family: var(--tf-mono); }
 .big { margin: 0; font: 600 34px/1 var(--tf-mono); font-variant-numeric: tabular-nums; }

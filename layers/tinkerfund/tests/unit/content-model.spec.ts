@@ -142,7 +142,7 @@ describe('recent Backers', () => {
   })
 
   it('rejects names on an Upcoming Campaign, and more names than Backers', () => {
-    expect(recent({ launch: '+1d', end: '+30d' }, '-1h', '-2h', '-3h')).toContainEqual(expect.stringMatching(/^campaign\.recent: .*Upcoming/))
+    expect(recent({ launch: '+1d', end: '+30d' }, '-1h', '-2h', '-3h')).toEqual([expect.stringMatching(/^campaign\.recent: .*Upcoming/)])
     expect(recent({ backers: 2 }, '-1h', '-2h', '-3h')).toEqual([expect.stringMatching(/^campaign\.recent: .*3 Backers.*has 2/)])
   })
 })
