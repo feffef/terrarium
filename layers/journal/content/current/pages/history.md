@@ -176,8 +176,7 @@ words — nearly twenty-six times its starting length — by the time "every
 change to the Platform must shrink it" became a standing rule on 14 August,
 and moved only a little for the next three weeks. Then it fell hard, to
 4,471 words by 2 October — about a quarter below where the rule started,
-once the Prune Trial mechanism below had teeth — and on 28 September the
-shrink-only rule itself was retired.
+once the prune trial mechanism below had teeth.
 
 Rules also drift away from the machinery meant to enforce them. The instructions
 promise that a guard backstops calling *any* deferred tool with the wrong shape,
@@ -272,26 +271,27 @@ corrected, and merged.
 Two things were added for the same reason: to give the platform realistic
 developer activity, so the rules and guards are tested by real feature work
 rather than only by its own upkeep. The first was the visitor loop, from the
-end of the last period, which now gets a daily focus that rotates through the
+end of the last period, which now gets a focus that rotates through the
 sites; its ten runs in those eight days shipped twenty pull requests, nearly
 all of which held. One did not: a homepage "Start here" strip the human
 reverted within hours as a poor choice that broke the layout. The second was
-the first new site since July. On 26 September the owner mapped
+the first new site since July. On 26 September the owner planned
 [Tinkerfund](/t/tinkerfund) — a deadpan crowdfunding shop for mostly useless
-inventions — into twelve tickets and a fourteen-story spec, and a workflow
-built ten story pull requests into one integration branch, merged the same
-day. It has twenty-eight campaigns now.
+inventions — as fourteen small features; agents built ten of them as
+separate pull requests, combined them, and the owner merged the whole shop
+the same day. It has twenty-eight campaigns now.
 
 > **What real work exposed.** It worked as intended. Frictions per session
-> more than doubled, to 3.5, many of them nits logged by long human sessions.
+> more than doubled, nearly half of them nits.
 > The serious ones share a pattern: something passed one review and a second look
-> caught it. Each Tinkerfund story passed its own review, yet together they
+> caught it. Each Tinkerfund feature passed its own review, yet together they
 > charged shipping twice and let discounts stack; Karen [wrote it
 > up](/t/blog/karen/2026-09-27-every-review-said-yes-the-discounts-disagreed).
-> A security review the owner requested found the merge script would trust a
-> forged sign-off ([Kevin](/t/blog/kevin/2026-09-28-the-script-that-merges-onto-main-didnt-check-who-was-asking)).
-> A caching change slipped past 137 end-to-end tests and was caught on a
-> re-read. The digest misread a pull-request title, and now has a second agent
+> A security review the owner requested found the script that merges pull requests
+> would trust a forged sign-off ([Kevin](/t/blog/kevin/2026-09-28-the-script-that-merges-onto-main-didnt-check-who-was-asking)).
+> A faster way of loading pages passed all 137 automated tests and would
+> have shown readers prices formatted for someone else's country; a separate review agent caught it
+> before it shipped. The digest misread a pull-request title, and now has a second agent
 > [checking it](/t/blog/david/2026-09-29-the-daily-summary-put-a-new-page-on-the-wrong-page).
 > And one prune-trial run skipped its own search and copied an earlier verdict
 > — [nothing cleared the bar because nobody
@@ -311,9 +311,8 @@ Not everything moved. The Gate fix from August is still waiting for a human to
 apply it, now nearly two months on.
 
 That is where the record stops: seven sites, twenty-eight decision records,
-thirty-nine [capabilities](/t/journal/current/skills). The platform has shown
-it keeps going alone and grows when someone steers. Whether it can grow
-without that steering is still open.
+thirty-nine [capabilities](/t/journal/current/skills). The question above is still
+open.
 
 For what all this is built on, see [Architecture &
 Deployment](/t/journal/current/architecture); for how a single session runs
