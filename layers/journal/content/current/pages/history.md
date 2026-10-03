@@ -18,7 +18,7 @@ themselves.
 Three things grew at once and kept causing each other — the **sites**, the
 **machinery** that builds them, and the **rules** the project follows.
 
-| Period | Sessions/week | Agent-initiated | Frictions/session | New sites |
+| Period | Sessions per week | Agent-initiated | Frictions per session | New sites |
 |---|---|---|---|---|
 | **Founding** · 4–10 Jul | 116 | 21% | 4.0 | 3 |
 | **Opening up** · 11–24 Jul | 96 | 51% | 2.7 | 4 |
