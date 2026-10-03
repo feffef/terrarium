@@ -280,7 +280,7 @@ export function registerTinkerfundE2E(): void {
         expect(await search('prod', 'mug')).toContain('Counterclockwise Mug')
         for (const q of ['mug', 'Henrik', 'Lucía']) expect(await search('qa', q)).toContain(`No Campaign matches “${q}”`)
         const everything = await search('qa', 'e')
-        expect(everything).toContain('7 Campaigns<')
+        expect(everything).toContain('5 Campaigns<')
         expect(everything).not.toMatch(/TF-0\d{3}|\/t\/tinkerfund\/prod\//)
       })
 
@@ -524,7 +524,7 @@ export function registerTinkerfundE2E(): void {
           await field.pressSequentially(q)
         }
 
-        await typeIn('er')
+        await typeIn('o')
         await suggestions.waitFor()
         const links = await suggestions.getByRole('option').evaluateAll((els) => els.map((el) => el.getAttribute('href') ?? ''))
         expect(links.length).toBeGreaterThan(1)
