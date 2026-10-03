@@ -1,0 +1,147 @@
+schemaVersion: 1
+session: session_01SWRyFbuNXxVWi47tGB8GX6
+startedAt: 2026-10-03T05:33:26Z
+endedAt: 2026-10-03T05:48:38Z
+kind: interactive
+goal: Scan every SHELL-READ-DETECTION friction and decide whether parsing shell commands can ever find all shell reads
+status: in-review
+outcome: Measured an output-matching alternative at 39/40 vs 24/40 for the landed scan; research note in PR 1546, proposal in issue 1545
+summary: "The user asked for a scan of all SHELL-READ-DETECTION frictions and an honest answer to whether the shell-read detector can be fixed shape by shape or whether parsing commands is a dead end. I extracted all 39 frictions from 42 session logs, grouped them into about ten command shapes, and checked each against the live code and the GitHub issues: most are fixed, three are open (issues 1482 and 1542 plus an unfiled empty-output cat false positive), and two findings were new. First, the committed docsReadViaShell comes from extractTrace, which gets neither the glob resolver nor the cd handling the --author advisory has, so the fixes for issues 1246 and 1454 never reached the Journal. Second, the cd fix runs after the instruction-doc shape test, so a bare relative filename after cd is dropped before the prefix is applied. I offered three directions and the user chose to prototype the alternative: index each instruction doc's distinctive lines and credit a doc when they appear in a Bash tool_result, independent of the command. The prototype replayed one verbatim command per friction shape plus ten decoys and scored the landed scan, the advisory scan, and the matcher. The matcher with a path-prefix signal passed 39 of 40, the advisory 33, the landed scan 24, and no decoy credited any doc. A live check over this session's own transcript agreed. The residual miss is a read from git history whose lines no longer exist in the checkout. Human-instructed: the scan, the assessment, and the choice to prototype. Agent-initiated: committing the prototype then reverting it so the note can cite the commit (ADR-0026's precedent), the research note, issue 1545 proposing adoption, and the PR, which the repo's rules open automatically. The implementation itself is net-new and waits on a human green-light."
+prs:
+  - "1546"
+docsRead:
+  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
+    reason: the shell-read amendment that defines what docsReadViaShell claims and who may consume it
+  - path: .agents/skills/log-session/SKILL.md
+    reason: the shell-read report section and the friction marker contract
+  - path: docs/agents/git-conventions.md
+    reason: fetch-before-trust and commit -F rules before committing
+  - path: docs/agents/issue-tracker.md
+    reason: research note vs issue split, which decided where the findings went
+  - path: docs/adr/0017-provenance-footer-on-agent-authored-content.md
+    reason: the header line every GitHub body must open with
+  - path: scripts/shell-reads.ts
+    reason: (no reason given)
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: (no reason given)
+  - path: docs/adr/0003-agent-operating-model-and-governance.md
+    reason: (no reason given)
+  - path: docs/adr/0027-prune-trials.md
+    reason: (no reason given)
+  - path: docs/adr/0026-gate-workflow-thin-shell.md
+    reason: (no reason given)
+  - path: docs/adr/0025-cross-tenant-catalog-and-collection-kinds.md
+    reason: (no reason given)
+  - path: docs/adr/0001-single-container-baked-multitenancy.md
+    reason: (no reason given)
+  - path: docs/adr/0002-manifest-driven-config-generation.md
+    reason: (no reason given)
+  - path: docs/adr/0005-skill-model.md
+    reason: (no reason given)
+  - path: docs/adr/0006-runtime-routing-path-prefix.md
+    reason: (no reason given)
+  - path: docs/adr/0007-generated-config-committed-drift-checked.md
+    reason: (no reason given)
+  - path: docs/adr/0008-self-documentation-tenant-is-a-journal.md
+    reason: (no reason given)
+  - path: docs/adr/0010-digests-derived-append-only-journal-pages.md
+    reason: (no reason given)
+  - path: docs/adr/0011-poc-self-updating-deploy-container.md
+    reason: (no reason given)
+  - path: docs/adr/0012-cross-persona-pingbacks-via-authored-denormalization.md
+    reason: (no reason given)
+  - path: docs/adr/0013-dynamic-content-config-committed-routing-map.md
+    reason: (no reason given)
+  - path: docs/adr/0014-build-time-virtual-routing-module.md
+    reason: (no reason given)
+  - path: docs/adr/0015-audit-skills-and-conditional-importance.md
+    reason: (no reason given)
+  - path: docs/adr/0016-tenant-root-layer-routes.md
+    reason: (no reason given)
+  - path: docs/adr/0018-tenant-layers-under-layers-directory.md
+    reason: (no reason given)
+  - path: docs/adr/0019-patched-nuxt-content-client-db-loading.md
+    reason: (no reason given)
+  - path: docs/adr/0020-requester-trust-tiers.md
+    reason: (no reason given)
+  - path: docs/adr/0021-multi-context-domain-docs.md
+    reason: (no reason given)
+  - path: docs/adr/0022-autonomous-triage-sweep.md
+    reason: (no reason given)
+  - path: docs/adr/0023-guest-driven-demo-pipeline.md
+    reason: (no reason given)
+  - path: docs/adr/0024-build-time-mermaid-prerender.md
+    reason: (no reason given)
+  - path: docs/adr/0028-navigation-reads-server-payloads.md
+    reason: (no reason given)
+  - path: CLAUDE.md
+    reason: (no reason given)
+skillsUsed:
+  - name: prototype
+    reason: a throwaway measurement script, adapted since neither of its two branches fits a measurement
+  - name: close-session
+    reason: closure at PR-open
+  - name: log-session
+    reason: this log
+frictions:
+  - description: "SHELL-READ-DETECTION false positive: `diff .agents/skills/setup-matt-pocock-skills/triage-labels.md docs/agents/triage-labels.md` credited .agents/skills/setup-matt-pocock-skills/triage-labels.md, but the output held only `>` add-hunks from the right-hand file, so no line of the left-hand file was ever shown."
+    solution: diff credits both positionals unconditionally; credit only the side whose lines appear in the output (`<` for left, `>` for right), or adopt the output-matching derivation measured in docs/research/shell-reads-by-output-matching.md, which gets this case right.
+    severity: moderate
+  - description: The prototype Skill offers only an HTML logic demo or UI variants; a measurement prototype (replay a corpus, score methods) fits neither branch, so I adapted its rules by hand.
+    solution: "Add a third branch to .agents/skills/prototype/SKILL.md for a measurement prototype: a single script, one command to run, prints a per-case scorecard, committed then reverted per rule 6."
+    severity: minor
+  - description: Scratch scripts cannot import the repo's packages or its scripts from the scratchpad directory (yaml, ./session-trace), so every probe had to be copied under scripts/ with a temporary name and deleted again.
+    solution: Document in environment-caveats.md that a probe needing repo imports must live inside the repo tree, or point at a sanctioned scratch location under the repo that is gitignored.
+    severity: nit
+  - description: A probe that inspects this session's own transcript in the same turn as another Bash call sees that call's tool_use but not its tool_result yet, which first looked like a matcher miss and was only a race.
+    solution: When grounding a claim in the live transcript, run the probe in a later turn than the commands it inspects.
+    severity: nit
+  - description: I wrote an unverified count (41 session logs) into issue 1545 before the grep that gave 42 had run, and had to update the body; CLAUDE.md's rule against stating an unverified count as settled was exactly right.
+    solution: Verify the number in the same turn before it goes into any GitHub body, not after.
+    severity: minor
+  - description: The prototype Skill says to commit a prototype to a throwaway branch out of main, while the harness forbids pushing to any branch but the designated one.
+    solution: "Resolved by ADR-0026's precedent: commit the prototype on the designated branch, revert it in the next commit, cite the SHA from the note. Worth naming in the prototype Skill so the next session does not re-derive it."
+    severity: minor
+durationSec: 912
+models:
+  claude-fable-5-1: 100
+toolCounts:
+  Bash: 29
+  Read: 1
+  ToolSearch: 2
+  mcp__github__search_issues: 1
+  mcp__github__issue_read: 3
+  Skill: 3
+  Agent: 1
+  Write: 3
+  mcp__github__list_pull_requests: 1
+  mcp__github__issue_write: 2
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+  mcp__claude-code-remote__send_later: 1
+filesEdited:
+  - scripts/shell-reads-by-output.prototype.ts
+  - docs/research/shell-reads-by-output-matching.md
+docsReadViaShell:
+  - .agents/skills/log-session/SKILL.md
+  - docs/adr/0009-session-logs-commit-directly-to-main.md
+  - docs/agents/git-conventions.md
+  - docs/agents/pr-workflow.md
+  - .agents/skills/setup-matt-pocock-skills/triage-labels.md
+  - docs/agents/triage-labels.md
+  - docs/agents/issue-tracker.md
+  - docs/research/content-client-queries-without-wasm.md
+  - docs/adr/0017-provenance-footer-on-agent-authored-content.md
+  - docs/research/shell-reads-by-output-matching.md
+subagents:
+  - type: Explore
+    task: Extract ADR constraints for trace change
+gitBranch: claude/peaceful-carson-5c24am
+entrypoint: remote
+cliVersion: 2.1.288
+learnings:
+  - The committed docsReadViaShell and the --author advisory are derived by different calls; a fix applied to shellReadScanOf alone never changes what lands in the Journal.
+  - Plain diff output uses `< `/`> ` line prefixes, not unified `+`/`-`; anything matching doc lines in output has to strip both.
+ideas:
+  - Pin the output-matching index to the session's start commit (git show <sha>:<doc>) so a re-derivation of the same session cannot change its docsReadViaShell when a doc was edited in between; it also recovers reads from history when the session's own start commit still carried the old lines.
+landedBy: Stop
