@@ -109,7 +109,7 @@ body:has(.jd) { margin: 0; }
 /* ── Prose ──────────────────────────────────────────────────
    A reusable wrapper for rendered Document bodies (ContentRenderer output).
    Global, so it styles the un-scoped Markdown DOM without `:deep`. */
-.jd-prose { max-width: 68ch; font-size: 1.04rem; color: var(--jd-ink); }
+.jd-prose { font-size: 1.04rem; color: var(--jd-ink); }
 .jd-prose > :first-child { margin-top: 0; }
 .jd-prose > :last-child { margin-bottom: 0; }
 .jd-prose h1 {
