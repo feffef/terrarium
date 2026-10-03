@@ -1,0 +1,45 @@
+schemaVersion: 1
+session: session_0136FKZXeV7YZggeK5ScVmkP
+startedAt: 2026-10-03T02:03:43Z
+endedAt: 2026-10-03T02:05:59Z
+kind: autonomous
+goal: "Scheduled frictions-to-fixes run: survey the latest 20 session logs and ship fixes for worthwhile frictions"
+status: completed
+outcome: Survey found only nits and already-tracked items; nothing met the bar to dispatch, so no PRs opened
+summary: "Scheduled run (no human prompt). Dispatched one survey subagent over the latest 20 logs. It found nothing at moderate severity or above that was never-fixed and dispatchable. Candidates were a 2/20 nit (ad-hoc Playwright script outside the repo cannot resolve playwright-core; the doc already exists, a discoverability failure) and a 1/20 minor (apply.mjs rejects an empty figures list). Both are low value and a pointer line adds prose, so I judged neither worth a PR and dispatched nothing. Open-already: #1542 (shell-read detection of globs and loops), #1515 (visitor-loop owner-memory step). The most recurrent item, the Stop hook demanding commit/push while the gate runs (about 7/20), needs .claude/settings.json hook wiring, which is human-only and not dispatchable. All work was agent-initiated per the schedule; no PRs."
+prs: []
+docsRead: []
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: frictions-to-fixes
+    reason: (invoked as a slash command)
+frictions:
+  - description: Agent run_in_background:false denied by guard on first survey dispatch; one retry needed (recurring across many sessions).
+    solution: Skill briefs could say agents run in background and to omit the flag; guard already works.
+    severity: nit
+  - description: Survey subagent hit a 403 secondary rate limit running parallel search_issues calls, weakening two tracker classifications.
+    solution: "Brief should tell the survey to run tracker searches sequentially (see #952)."
+    severity: minor
+durationSec: 136
+models:
+  claude-sonnet-5-5: 11
+toolCounts:
+  Agent: 2
+  Skill: 2
+  Bash: 1
+  PushNotification: 1
+docsReadViaShell:
+  - docs/agents/verifying-ui-changes.md
+subagents:
+  - type: general-purpose
+    task: Survey session frictions
+  - type: general-purpose
+    task: Survey session frictions
+gitBranch: claude/eager-ptolemy-zk5oam
+entrypoint: remote_trigger
+cliVersion: 2.1.288
+trigger: frictions-to-fixes
+landedBy: Stop
