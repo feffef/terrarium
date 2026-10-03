@@ -2,14 +2,9 @@
 
 ## Purpose
 
-This directory is the handoff for a `.github/workflows/*` change an agent
-can't push itself (`docs/agents/environment-caveats.md` single-homes why — no
-`workflow` OAuth scope, ADR-0004). Without a defined handoff, such a
-change would sit as unstructured prose in a PR or issue body, with no
-consistent place for a human to find "what workflow edit is pending." An agent
-writes the intended change here instead; a human reads it and applies it by
-hand. (CLAUDE.md's "Working conventions" carries the one-line rule that routes
-agents here; this README is the home for the format and the discipline below.)
+The handoff for a `.github/workflows/*` change an agent can't push itself (why:
+`docs/agents/environment-caveats.md`). An agent writes the intended change here;
+a human applies it by hand. This README owns the format and discipline below.
 
 ## File format
 

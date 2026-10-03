@@ -35,13 +35,10 @@ lives in the cited issue, not here.
   Check `last_fired_at` via `list_triggers` before concluding it didn't fire.
   (issue #834)
 - **An agent session cannot write `.github/workflows/*` here — no `workflow`
-  OAuth scope — and `workflow-edit-guard` ([guards](./guards.md)) refuses
-  the write itself, before it ever reaches a commit.** If it's ever bypassed:
-  the sharp edge is the **commit**, not the push (the rejection covers the
-  whole ref update, stranding everything else in it too) — the guard's own
-  deny message is the teaching surface for that, read it rather than
-  re-deriving it. `docs/proposals/` ([README](../proposals/README.md)) is the
-  handoff convention for the edit itself (issue #659, #897).
+  OAuth scope.** `workflow-edit-guard` ([guards](./guards.md)) denies the write;
+  its deny message says what to do. A commit that gets past it is rejected at
+  push, stranding every other commit in that push. The edit itself goes in
+  `docs/proposals/` ([README](../proposals/README.md)). (issues #659, #897)
 - **A local-only typecheck/build failure is usually stale install state, not a
   repo bug.** Before asserting "X is broken on main" from a local repro, reset
   the *full* install state (`rm -rf node_modules .nuxt && pnpm install

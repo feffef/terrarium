@@ -160,10 +160,9 @@ it with a tool.
   keeps, reverts, or earns a hook.
 - **Don't restate a Routine's schedule in a committed doc** — it lives outside
   git and can change without a commit. Say a Skill *is* scheduled; never say *when*.
-- **Hitting a needed `.github/workflows/*` edit? You can't push it** (agent
-  sessions lack the `workflow` OAuth scope, ADR-0004) — the OAuth-scope detail,
-  the `workflow-edit-guard` mechanism, and the `docs/proposals/` handoff are
-  single-homed in `docs/agents/environment-caveats.md`; read it there.
+- **You can't write `.github/workflows/*`** (no `workflow` OAuth scope,
+  ADR-0004): `workflow-edit-guard` denies it. Put the intended change in
+  `docs/proposals/` for a human to apply (`docs/agents/environment-caveats.md`).
 - **In TS/Vue code, an inline comment explains WHY, never WHAT — default to no
   comment at all, and when the why isn't obvious, point at the existing doc
   that owns it rather than restating the reasoning.** Well-named code already

@@ -99,8 +99,5 @@ case to `tests/unit/<guard>.spec.ts` too.
 - `subagent-background-guard`'s command-text scan is not a full shell parser:
   a `&` reached only through command substitution, a here-doc, or ANSI-C
   quoting is outside its model (#964's accepted trade-off).
-- `workflow-edit-guard`'s Bash arm has the same limit, and it is a *matcher* of
-  paths: a command naming no workflow path has nothing to match — a path reached
-  through a variable or `xargs`, `git commit -a` after an out-of-band
-  modification, and `git add .`/`-A`, which are the common forms of the `git add`
-  it does catch. The push rejection stays the backstop there.
+- `workflow-edit-guard`'s Bash arm matches paths only, so a command that names
+  none passes (its script header lists them); the push rejection is the backstop.
