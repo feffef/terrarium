@@ -169,7 +169,8 @@ function specimenSlugOf(path: string): string {
 
 /** A number pair as the generated item type sees it: @nuxt/content's zod 4 →
  *  JSON Schema step drops tuple lengths, so `[]`/`[number]` type-check there
- *  though the schema rejects them (issue #1549). */
+ *  though the schema rejects them, and an array of pairs comes out as
+ *  `[] | [number] | [number, number][]` — hence `bands` below (issue #1549). */
 type GeneratedPair = readonly number[]
 
 /** The subset of a queried `pages` Document the view is built from — a structural
