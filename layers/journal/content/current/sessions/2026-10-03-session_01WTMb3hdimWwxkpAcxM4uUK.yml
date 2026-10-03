@@ -1,0 +1,37 @@
+schemaVersion: 1
+session: session_01WTMb3hdimWwxkpAcxM4uUK
+startedAt: 2026-10-03T19:04:26Z
+endedAt: 2026-10-03T19:06:45Z
+kind: interactive
+goal: Measure how widespread issue 1248 (subagent dispatch skipping the dispatch-subagents Skill) is in recent session logs
+status: completed
+outcome: Scan found 1 real skip of the Skill on a git-touching dispatch since 2026-09-24, and it caused no damage; dispatch frictions come from the Skill's content
+summary: 'Human-instructed: the user asked me to check issue 1248 and scan recent session logs to see how widespread it is. That was research only, so nothing was committed and no PR was opened. I read the issue and its triage comment. The prune trial it asked for landed on 2026-09-24 (6fc603d6) and was judged "holds" on 2026-09-28 (ece30c81), but the issue is still open. A throwaway Python scan covered 135 logs since 2026-09-24 and 279 since 2026-09-01. It compared which subagents each log lists against skillsUsed and docsRead, and it collected frictions about dispatch, worktrees and subagents. Since the prune, 22 sessions dispatched a subagent likely to touch git. 18 of them invoked the Skill. Of the rest, 3 were read-only searches the task wording misclassified and 1 was a Workflow run. That leaves 1 real skip: the frictions-to-fixes doc-fix agent in session_016xwHemy6X6LmFrzBs4mgad, which read the Skill without invoking it and still landed PR 1500 cleanly. The moderate dispatch frictions (a shared branch ref pushed under the primary checkout, worktrees starting on a stale HEAD, a stopped impl agent) all happened in sessions that DID invoke the Skill.'
+prs: []
+docsRead: []
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Session logs don't record the Agent call's isolation parameter, so whether a dispatch touched git can only be guessed from task wording, which is noisy.
+    solution: Have the trace extractor record isolation (and the background flag) for each subagent entry.
+    severity: minor
+  - description: Some subagent entries have no type field, which my first scan pass silently dropped and so undercounted.
+    solution: The extractor should always emit type, defaulting to general-purpose.
+    severity: nit
+durationSec: 138
+models:
+  claude-opus-5-5: 30
+toolCounts:
+  ToolSearch: 1
+  mcp__github__issue_read: 2
+  Bash: 10
+  Skill: 2
+gitBranch: claude/dreamy-heisenberg-eg5w6a
+entrypoint: remote
+cliVersion: 2.1.288
+ideas:
+  - Record each subagent's isolation param in the derived session trace, so prune-trial and frictions-to-fixes can measure dispatch rules exactly instead of guessing git-touching from task wording.
+landedBy: Stop
