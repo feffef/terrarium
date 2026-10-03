@@ -25,7 +25,7 @@ useSeoMeta(tinkerfundSeo(inventor.value
     <template v-if="inventor">
       <header class="intro">
         <!-- eslint-disable-next-line vue/no-v-html -- schema-checked SVG (app/utils/svg.ts, issue #1363) -->
-        <svg viewBox="0 0 400 300" role="img" :aria-label="`Portrait of ${inventor.name}`" v-html="inventor.portrait" />
+        <svg viewBox="0 0 100 100" role="img" :aria-label="`Portrait of ${inventor.name}`" v-html="inventor.portrait" />
         <p class="tf-label">Inventor · {{ record }}</p>
         <h1 class="tf-h1">{{ inventor.name }}</h1>
         <p class="bio">{{ inventor.bio }}</p>
@@ -42,7 +42,7 @@ useSeoMeta(tinkerfundSeo(inventor.value
 <style scoped>
 .intro { display: grid; gap: 6px; justify-items: start; margin-bottom: 22px; }
 .intro > * { margin: 0; }
-svg { width: 160px; height: 120px; margin-bottom: 8px; border: var(--tf-hairline); border-radius: var(--tf-radius); background: var(--tf-surface); }
+svg { width: 96px; height: 96px; margin-bottom: 8px; border: var(--tf-hairline); border-radius: var(--tf-radius); background: var(--tf-surface); }
 .bio { max-width: 60ch; color: var(--tf-muted); }
 .intro a { font: 500 13px/1 var(--tf-mono); }
 .grid {
