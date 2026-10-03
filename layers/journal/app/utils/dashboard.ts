@@ -23,6 +23,7 @@
 // and explicit.
 import type { Friction, Importance, SessionCardView, SessionDoc, Severity, SkillDoc, NoteItem } from '../types/journal'
 import { REPO_URL } from '../../../../app/utils/repo'
+import { sessionUrl } from '../../../../shared/session-url'
 
 // ── Formatting helpers ───────────────────────────────────
 // Module-private: too generically named to put in the global auto-import
@@ -196,6 +197,7 @@ export function sessionCardViews(sessions: SessionDoc[]): (SessionCardView & { k
     sid: sessionShortId(s.session),
     model: sessionModelsLabel(s.models),
     external: s.external === true,
+    url: s.external === true ? null : sessionUrl(s.session),
     // Expanded detail — the full log, revealed on click (no route of its own).
     summary: s.summary,
     subagents: s.subagents ?? [],

@@ -53,6 +53,7 @@
 // Usage (normally invoked by the PreToolUse hook with the payload on stdin):
 //   tsx scripts/github-provenance-guard.ts
 import { readFileSync } from 'node:fs'
+import { sessionUrl } from '../shared/session-url.ts'
 import { SESSION_TRAILER } from './git-helpers.ts'
 import { buildDenyOutput, denyUninspectable, readHookPayload, runIfMain, type DenyOutput } from './guard-io.ts'
 import { provenanceFooter } from './provenance-footer.ts'
@@ -256,7 +257,7 @@ export function formatGuardMessage(f: ProvenanceFinding): string {
   // environment that resolved no ground truth. Never interpolate `undefined`
   // into a URL an agent is being told to paste verbatim — a literal
   // `.../undefined` is exactly the fabricated-identifier class this guards.
-  const url = f.expected ? `https://claude.ai/code/${f.expected}` : '<the session URL resolved from your system prompt>'
+  const url = f.expected ? sessionUrl(f.expected) : '<the session URL resolved from your system prompt>'
   const paste = prescribedMarker(f.surface, url)
   const verbatim = f.expected
     ? `Use ${url} verbatim — this hook already resolved it from ground truth; never predict or ` +

@@ -52,6 +52,7 @@ const foldedFieldLabels = new Intl.ListFormat('en', { style: 'long', type: 'conj
           <a v-for="pr in prParts.shown" :key="pr" class="chip pr" :href="prUrl(pr)" @click.stop>PR {{ pr.startsWith('#') ? pr : '#' + pr }}</a>
           <span v-if="prParts.rest" class="chip">+{{ prParts.rest }} more</span>
           <span v-if="card.model" class="chip model" title="Model(s) that drove this session">{{ card.model }}</span>
+          <a v-if="card.url" class="chip session" :href="card.url" target="_blank" rel="noopener" title="Open this session in Claude Code" @click.stop>Claude Code ↗</a>
           <JournalFrictionStrata :counts="card.frictionCounts" :total="card.frictionTotal" />
           <span class="caret" aria-hidden="true">{{ expanded ? '▾' : '▸' }}</span>
         </div>
@@ -150,7 +151,9 @@ const foldedFieldLabels = new Intl.ListFormat('en', { style: 'long', type: 'conj
             </details>
           </div>
 
-          <p class="sid">Session {{ card.sid }}</p>
+          <p class="sid">
+            Session <a v-if="card.url" :href="card.url" target="_blank" rel="noopener">{{ card.sid }}</a><template v-else>{{ card.sid }}</template>
+          </p>
         </div>
       </div>
     </Transition>
@@ -250,6 +253,8 @@ const foldedFieldLabels = new Intl.ListFormat('en', { style: 'long', type: 'conj
 .chip.pr { color: var(--jd-accent); text-decoration: none; }
 .chip.pr:hover { border-color: var(--jd-accent); text-decoration: underline; }
 .chip.model { color: var(--jd-ink); }
+.chip.session { color: var(--jd-accent); text-decoration: none; }
+.chip.session:hover { border-color: var(--jd-accent); text-decoration: underline; }
 .chip.model::before {
   content: '';
   display: inline-block;
@@ -266,6 +271,8 @@ const foldedFieldLabels = new Intl.ListFormat('en', { style: 'long', type: 'conj
   font-size: 0.7rem;
   color: var(--jd-faint);
 }
+.sid a { color: inherit; }
+.sid a:hover { color: var(--jd-accent); }
 .caret { margin-left: auto; color: var(--jd-faint); font-size: 0.78rem; }
 
 /* The clip wrapper is what expandOnEnter/expandOnLeave (utils/expandTransition.ts)

@@ -33,6 +33,9 @@ export interface SessionCardView {
   // absent/false ⇒ our own Claude Code harness. Drives the card's "external"
   // marking; never affects which sessions are included, only how one renders.
   external: boolean
+  // The session's Claude Code web-UI page; null for an external harness's log,
+  // which has no such page.
+  url: string | null
   // Expanded detail:
   sid: string
   summary: string

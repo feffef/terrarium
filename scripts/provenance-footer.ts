@@ -51,6 +51,7 @@ import { existsSync, readFileSync, readdirSync, writeFileSync } from 'node:fs'
 import { homedir } from 'node:os'
 import { join } from 'node:path'
 import { pathToFileURL } from 'node:url'
+import { sessionUrl } from '../shared/session-url.ts'
 import { SESSION_TRAILER } from './git-helpers.ts'
 import {
   busiestModelId,
@@ -240,7 +241,7 @@ export function computeFooterAction(
 }
 
 export function sessionUrlFor(sessionId: string | null | undefined): string | null {
-  return sessionId ? `https://claude.ai/code/${sessionId}` : null
+  return sessionId ? sessionUrl(sessionId) : null
 }
 
 /** Session URL from the environment alone (no transcript): the normalized
