@@ -1,6 +1,8 @@
-# Objective safety gate (ADR-0004). Layered, cheapest-first; every PR must clear it.
-# The manifest-expansion set, routing, isolation logic, and this workflow are
-# human-only — see ADR-0004's current high-risk-set definition.
+# Objective safety gate (ADR-0004). The Gate's layered steps live in
+# .github/actions/gate/action.yml, where agents can push them (ADR-0026) — the
+# `workflow` OAuth scope is fenced at .github/workflows/ only. This file is the
+# shell: triggers, permissions, checkout, and the doorbell token. Both files are
+# human-only to merge (ADR-0004's high-risk set).
 
 name: safety-gate
 
@@ -15,71 +17,17 @@ jobs:
     permissions:
       contents: read
       pull-requests: write
-    # Pin the L2 browser to a Playwright-managed Chromium instead of tracking the
-    # runner image's system Chrome. The install step below writes here; the smoke
-    # spec reads PLAYWRIGHT_BROWSERS_PATH to find it (falling back to system Chrome
-    # if absent). A workspace path — not /opt/pw-browsers — so no sudo is needed.
-    env:
-      PLAYWRIGHT_BROWSERS_PATH: ${{ github.workspace }}/.pw-browsers
     steps:
       - uses: actions/checkout@v7
-
-      - uses: pnpm/action-setup@v6
-
-      - uses: actions/setup-node@v6
         with:
-          node-version: 22
-          cache: pnpm
+          # The composite's Scope step needs the PR's base commit and a real
+          # merge-base. A shallow checkout has neither, and scripts/gate.ts then
+          # refuses to classify at all — which costs a Full gate, not a wrong
+          # one. See ADR-0026.
+          fetch-depth: 0
 
-      - name: Install
-        run: pnpm install --frozen-lockfile
-
-      # Pins each external pack Skill's installed SKILL.md hash against its
-      # Skill Inventory entry (ADR-0015 amendment) — a governance/provenance
-      # check, arguably its own layer rather than one of L0-L3, but the
-      # cheapest check available, so it runs first, mirroring `pnpm gate`'s order.
-      - name: 'L0 · skills-lock integrity'
-        run: pnpm verify:skills-lock
-
-      - name: 'L0 · lint'
-        run: pnpm lint
-
-      - name: 'L0 · typecheck'
-        run: pnpm typecheck
-
-      # L1 — content validates against strict Collection schemas via Zod
-      # .safeParse() (scripts/validate-content.ts). Nuxt Content 3 never
-      # validates content at build time (docs/research/nuxt-content-review-grounding.md
-      # §2) — this script is what actually enforces L1; see the ADR-0004
-      # amendment in this PR.
-      - name: 'L1 · content validation'
-        run: pnpm validate:content
-
-      # L3 — isolation invariant: unique, correctly-scoped collection keys.
-      - name: 'L3 · isolation'
-        run: pnpm test
-
-      # L0 — build succeeds. Does NOT validate content against schemas — Nuxt
-      # Content 3 has no safeParse in its parse/insert pipeline; schemas only
-      # derive SQL column types (docs/research/nuxt-content-review-grounding.md §2).
-      - name: 'L0 · build'
-        run: pnpm build
-
-      # L2 — every (Tenant, Space) entry route renders 200 with content.
-      - name: Install Chromium for the L2 browser smoke gate
-        run: pnpm exec playwright-core install --with-deps chromium
-      - name: 'L2 · smoke render'
-        run: pnpm test:e2e
-
-      # Doorbell — CI success is not delivered to subscribed sessions (only comments
-      # and CI failures are), so post a fresh comment on green to wake a session
-      # waiting to act on the gate. New comment each run, not a sticky edit (edits
-      # may not fire a webhook). See issue #278.
-      - name: 'Doorbell · comment on green so a subscribed session wakes'
-        if: success() && github.event_name == 'pull_request'
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          gh pr comment ${{ github.event.pull_request.number }} \
-            -R ${{ github.repository }} \
-            --body "✅ safety-gate green on ${{ github.sha }}"
+      # Everything the Gate actually does. `secrets` is unreachable inside a
+      # composite action, so the doorbell's token is passed in here.
+      - uses: ./.github/actions/gate
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}

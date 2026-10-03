@@ -365,11 +365,9 @@ function checkPath(field: string, path: string): string[] {
  * Provenance existence check (issue #520). The goal is catching a TYPO'd
  * provenance reference, not proving the referent is still live — a
  * `dissolved`/`lost` Artifact's referent is EXPECTED to be gone (that's the
- * whole point of cataloguing it). And CI checks out with `actions/checkout@v7`
- * and no `fetch-depth` override (`.github/workflows/gate.yml`), so CI's own
- * clone is SHALLOW — it can prove a hash is malformed, but it can never prove
- * a well-formed hash's commit doesn't exist (only that it isn't reachable from
- * the shallow tip). So this check is deliberately soft:
+ * whole point of cataloguing it). And a local clone may be shallow, where a
+ * well-formed hash's commit can be unreachable without being a typo. So this
+ * check is deliberately soft:
  *   - `commit`: format-validate `hash` (hex, 7-40 chars) — a malformed hash is
  *     always a violation. A well-formed hash gets a best-effort
  *     `git cat-file -e` confirmation attempt, but a failed lookup is NEVER
@@ -384,8 +382,8 @@ function checkPath(field: string, path: string): string[] {
  *   - `dependency`/`skill`: validate `name` is non-empty.
  *   - `pr`: nothing to add — `number` is already `z.number().int().positive()`
  *     in the Zod schema.
- * Don't "fix" this into a deep-history dependency — the shallow-clone
- * constraint above is the point, not a gap.
+ * Don't "fix" this into a deep-history dependency — an expected-gone referent
+ * is the point, not a gap.
  */
 export function checkProvenance(provenance: unknown, projectRoot: string): string[] {
   const p = provenance && typeof provenance === 'object' ? (provenance as Record<string, unknown>) : {}

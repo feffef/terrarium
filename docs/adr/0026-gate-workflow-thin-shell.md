@@ -1,8 +1,8 @@
 # 26. The Gate workflow is a thin shell over an agent-pushable composite action
 
 Date: 2026-08-06
-Status: Accepted — the composite lands with this ADR; CI runs it only once the
-`gate.yml` shell swap is hand-applied (`docs/proposals/879-gate-yml-thin-shell.md`)
+Status: Accepted — the `gate.yml` shell swap was hand-applied on 2026-10-03
+(#445), so CI now runs the composite
 
 > Green-lit by a human in a `/grill-with-docs` session (ADR-0003). Issue #879
 > holds the session's findings; this ADR is the Decision half. Supersedes the

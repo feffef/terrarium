@@ -321,8 +321,8 @@ every PR** (`.github/workflows/gate.yml`) — the run that must go green to merg
 without a gated PR" rule rests on agents choosing to open one. See
 `docs/research/github-branch-protection-vs-autonomous-log-commits.md` for the
 full history, and re-verify before relying on it — it's a dated snapshot, not
-a live check), so you don't run the full gate locally yourself. **Known gap:** `gate.yml` runs a stale subset of
-`pnpm gate`; the fix awaits a human, see `docs/proposals/879-gate-yml-thin-shell.md`. Both the keyed collections
+a live check), so you don't run the full gate locally yourself. CI skips the heavy layers on the same inert
+changesets `gate:scoped` does (ADR-0004's 2026-10-03 amendment). Both the keyed collections
 (Ground rules above) and the routing map derive from the manifests at build
 time — no regenerate step needed.
 
