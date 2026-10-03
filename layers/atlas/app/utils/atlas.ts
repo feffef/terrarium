@@ -167,6 +167,11 @@ function specimenSlugOf(path: string): string {
   return path.replace(/^\//, '')
 }
 
+/** A number pair as the generated item type sees it: @nuxt/content's zod 4 →
+ *  JSON Schema step drops tuple lengths, so `[]`/`[number]` type-check there
+ *  though the schema rejects them (issue #1549). */
+type GeneratedPair = readonly number[]
+
 /** The subset of a queried `pages` Document the view is built from — a structural
  *  type so the pure mapper stays Nuxt-free while accepting the generated item. */
 export interface RawSpecimenDoc {
@@ -178,8 +183,8 @@ export interface RawSpecimenDoc {
   rarity?: Rarity
   size?: string
   diet?: string
-  activity?: { label: string; bands: Band[] }
-  phenology?: { phases: PhenologyPhase[] }
+  activity?: { label: string; bands: readonly (number | GeneratedPair)[] }
+  phenology?: { phases: (Omit<PhenologyPhase, 'span'> & { span: GeneratedPair })[] }
   signature?: { colors: SignatureColor[]; gloss: string }
   plate?: { number: string; conjectural?: boolean }
   illustration?: string
@@ -197,8 +202,8 @@ export function toSpecimenView(d: RawSpecimenDoc): SpecimenView {
     rarity: d.rarity,
     size: d.size,
     diet: d.diet,
-    activity: d.activity,
-    phenology: d.phenology,
+    activity: d.activity as SpecimenView['activity'],
+    phenology: d.phenology as SpecimenView['phenology'],
     signature: d.signature,
     plate: d.plate,
     illustration: d.illustration,

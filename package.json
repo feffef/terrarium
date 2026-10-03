@@ -27,7 +27,7 @@
   "dependencies": {
     "@nuxt/content": "^3.16.1",
     "nuxt": "^4.5.2",
-    "zod": "^3.25.76"
+    "zod": "^4.6.5"
   },
   "devDependencies": {
     "@nuxt/eslint": "^1.17.0",

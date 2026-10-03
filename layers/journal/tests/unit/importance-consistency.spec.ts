@@ -23,7 +23,7 @@ if (!(importanceField instanceof z.ZodEnum)) {
   throw new Error('skills schema\'s "importance" field is no longer a z.enum(...) — update this drift-guard test to match its new shape')
 }
 
-const zodImportanceOptions: string[] = importanceField.options
+const zodImportanceOptions: string[] = importanceField.options.map(String)
 
 describe('Importance grade set drift guard (issue #807)', () => {
   it('has exactly 5 grades with no duplicates (so a silent Zod-enum edit fails loudly)', () => {
