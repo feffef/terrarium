@@ -29,8 +29,8 @@ Three things grew at once and kept causing each other — the **sites**, the
 Read that table carefully, because the obvious reading is wrong. Activity did
 not fall because the project turned inward or lost its way. It fell because this
 is a repository with one human in it, and that human ran out of hours. The
-interesting part is what kept happening anyway — and the last row, when the
-hours came back.
+interesting part is what kept happening anyway, and what changed in the
+last row, once the human had time again.
 
 This account stops at 2 October. The daily digests go on from there: the
 most recent week on the [current Journal](/t/journal/current), earlier days in
