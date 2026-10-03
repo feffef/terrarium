@@ -24,11 +24,17 @@ transient 503 ("no server currently available"). Retry once or twice after a
 short pause before calling it a real failure. If `issue_read` keeps flaking,
 `search_issues` scoped to the issue number works as a fallback (issue #611).
 
-## No `gh`, or a GraphQL 403? Use the MCP tools
+## Local CLI vs cloud session: which tool works
 
-Some remote sessions lack `gh`. Where present, `gh api` REST calls work despite
-a bad-token `gh auth status`; GraphQL-backed subcommands (`gh issue view`,
-`gh pr view`) get a 403. Map the workflow docs' `gh` recipes like this:
+| | Local CLI | Cloud session |
+|---|---|---|
+| `gh` subcommands (`gh issue view`, `gh pr list`, …) | ✅ | ❌ 403: GraphQL is blocked |
+| `gh api` (REST) | ✅ | ✅, even though `gh auth status` reports a bad token |
+| `mcp__github__*` tools | only if configured | ✅ |
+| **Default** | `gh` | the MCP tools; `gh api` for REST a tool lacks |
+
+Older cloud sessions had no `gh` at all; check with `which gh`. In a cloud
+session, map the workflow docs' `gh` recipes like this:
 
 - **Create / edit / label / close an issue** → `issue_write`.
   - Labeling a *PR* also goes through `issue_write` (issues and PRs share one

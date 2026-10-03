@@ -7,10 +7,10 @@ template stays generic and reinstallable (ADR-0005).*
 
 Issues and specs live as GitHub issues. Use the `gh` CLI for all operations.
 
-## No `gh`? See `github-integration.md`
+## Cloud session? See `github-integration.md`
 
 The recipes below are written as `gh` commands. For the MCP-tool equivalents
-when `gh` is absent or 403s, plus the overflow traps, polling rules and `ToolSearch`
+in a cloud session, where `gh` subcommands 403, plus the overflow traps, polling rules and `ToolSearch`
 name resolution, see [`github-integration.md`](./github-integration.md).
 
 ## Conventions
