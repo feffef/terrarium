@@ -24,10 +24,11 @@ transient 503 ("no server currently available"). Retry once or twice after a
 short pause before calling it a real failure. If `issue_read` keeps flaking,
 `search_issues` scoped to the issue number works as a fallback (issue #611).
 
-## No `gh`? Remote sessions use the MCP tools
+## No `gh`, or a GraphQL 403? Use the MCP tools
 
-Remote sessions have **no `gh` binary**; use the MCP tools. The workflow docs
-write recipes as `gh` commands. Map them like this:
+Some remote sessions lack `gh`. Where present, `gh api` REST calls work despite
+a bad-token `gh auth status`; GraphQL-backed subcommands (`gh issue view`,
+`gh pr view`) get a 403. Map the workflow docs' `gh` recipes like this:
 
 - **Create / edit / label / close an issue** → `issue_write`.
   - Labeling a *PR* also goes through `issue_write` (issues and PRs share one
@@ -102,11 +103,9 @@ write recipes as `gh` commands. Map them like this:
 - **Which issues are open right now?** Run
   `pnpm exec tsx scripts/list-open-issues.ts [N]`. It calls the REST `issues`
   endpoint through `gh api` (number, title, labels, updated time only) and cannot
-  overflow (issue #494). It avoids `gh issue list` because that uses GraphQL,
-  which this environment's proxy can reject outside a pinned PR-review operation
-  set. With no `gh` binary but `GH_TOKEN` / `GITHUB_TOKEN` set, it falls back to
-  a direct REST call with `curl`. With neither, use the MCP tools above
-  (issue #505).
+  overflow (issue #494). With no `gh` binary but `GH_TOKEN` / `GITHUB_TOKEN`
+  set, it falls back to a direct REST call with `curl`. With neither, use the
+  MCP tools above (issue #505).
 - **Did an AI comment claim a triage-label change the issue never got?** This
   happens (issue #325's comment said `moved to ready-for-agent` while the issue
   stayed `ready-for-human`) and nothing else catches it. Run
