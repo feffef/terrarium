@@ -155,6 +155,15 @@ export function registerTinkerfundE2E(): void {
         }
       })
 
+      // Visitors asked for the people behind the Campaigns (visitor-loop, 2026-10-03).
+      it('links a Campaign’s Inventor to a page listing their Campaigns', async () => {
+        expect(await $fetch('/t/tinkerfund/prod/campaigns/counterclockwise-mug')).toContain('href="/t/tinkerfund/prod/inventors/henrik-aalto"')
+        const html = await $fetch('/t/tinkerfund/prod/inventors/henrik-aalto')
+        expect(html).toMatch(/Inventor · 3 Campaigns/)
+        for (const title of ['Counterclockwise Mug', 'Solo Pea Rest']) expect(html).toContain(title)
+        expect((await fetch('/t/tinkerfund/prod/inventors/nobody', { headers: { accept: 'text/html' } })).status).toBe(404)
+      })
+
       for (const [slug, action] of [
         ['counterclockwise-mug', 'Back this Campaign'],
         ['solo-pea-rest', 'Pledging has closed'],

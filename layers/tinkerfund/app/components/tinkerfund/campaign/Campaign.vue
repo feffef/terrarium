@@ -66,6 +66,7 @@ const backing = computed<TinkerfundBacking>(() => ({ slug: slug.value, state: st
         :title="doc.title"
         :description="doc.description"
         :inventor="data?.inventor?.name"
+        :inventor-slug="c.inventor"
         :campaign="c"
         :deals="deals"
         :clock="clock"

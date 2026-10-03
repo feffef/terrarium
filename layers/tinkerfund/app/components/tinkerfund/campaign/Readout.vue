@@ -6,6 +6,7 @@ const props = defineProps<{
   title: string
   description?: string
   inventor?: string
+  inventorSlug?: string
   campaign: TinkerfundCampaign
   deals: TinkerfundPromotion[]
   clock: TinkerfundClock
@@ -29,7 +30,7 @@ const from = computed(() => campaignPriceFrom(props.campaign.rewards))
     <p class="date">{{ deadline.label }} <TinkerfundTime :at="deadline.at" /></p>
     <component :is="heading ?? 'h1'" class="tf-h1">{{ title }}</component>
     <p v-if="description" class="lead">{{ description }}</p>
-    <p v-if="inventor" class="by">by <b>{{ inventor }}</b></p>
+    <p v-if="inventor" class="by">by <NuxtLink v-if="inventorSlug" :to="link(`/inventors/${inventorSlug}`)"><b>{{ inventor }}</b></NuxtLink><b v-else>{{ inventor }}</b></p>
     <div v-if="status.state === 'upcoming'">
       <p class="big">{{ money(campaign.goal) }}</p>
       <p class="sub">goal{{ from !== undefined ? ` · rewards from ${money(from)}` : '' }}</p>
