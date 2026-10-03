@@ -64,6 +64,8 @@
   padding: clamp(1.5rem, 4vw, 3rem) clamp(1rem, 4vw, 2.25rem) 3rem;
   margin-inline: auto;
 }
+/* A single Document reads as one column; the full-width card left half of it empty. */
+.jd.jd-doc { max-width: 44rem; }
 
 @media (prefers-color-scheme: dark) {
   .jd {
@@ -165,7 +167,8 @@
 }
 /* JournalScrollTable's wrapper: a wide table scrolls instead of widening the page.
    The edge shadows show only while there is more to scroll to (the `local` covers hide them at each end). */
-.jd-prose .jd-table-scroll {
+.jd-prose .jd-table-scroll,
+.jd-prose .mermaid-diagram {
   overflow-x: auto;
   margin: 0 0 1rem;
   --jd-edge: color-mix(in srgb, var(--jd-ink) 14%, transparent);
@@ -182,5 +185,10 @@
 @media (max-width: 600px) {
   .jd-prose table { font-size: 0.82rem; }
   .jd-prose th, .jd-prose td { padding: 0.35rem 0.45rem; }
+  .jd-prose th { white-space: normal; }
+  .jd-prose td:first-child { min-width: 6.5rem; }
+  /* Shrunk to phone width a wide diagram's labels fall below 10px; hold a readable
+     width (each SVG's inline max-width still caps the narrow ones) and scroll instead. */
+  .jd-prose .mermaid-diagram svg { width: 32rem; }
 }
 .jd-prose hr { border: 0; border-top: 1px solid var(--jd-line); margin: 1.8rem 0; }

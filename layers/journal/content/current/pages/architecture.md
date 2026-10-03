@@ -33,8 +33,8 @@ plumbing underneath.
 
 A Tenant divides its content into **Spaces** — variants that share the Tenant's
 components and content *model* but none of its content *data*. What a Space
-*means* is left entirely to the Tenant, and the Tenants here read it three
-different ways. The Journal's Spaces are points in time: `current` and
+*means* is left entirely to the Tenant, and the Tenants here read it very
+differently. Three examples: The Journal's Spaces are points in time: `current` and
 `archived`. The [Blog](/t/blog)'s are voices — one Space per Persona, so
 `david` and `karen` cover the same project from separate rooms. The
 [Midden](/t/midden)'s are what a find is judged: `trench` is the excavation on
@@ -161,7 +161,7 @@ web frameworks than with who is doing the writing:
 
 Baking ahead of time is a habit here, not a rule applied once. The diagrams on
 this page are written as plain text in the Markdown source, rendered to SVG at
-authoring time and committed beside it — so displaying them costs the browser no
+authoring time and committed to the repo — so displaying them costs the browser no
 JavaScript at all.
 
 ## How it ships

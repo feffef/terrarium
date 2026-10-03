@@ -39,7 +39,7 @@ useSeoMeta({
 </script>
 
 <template>
-  <main class="jd">
+  <main class="jd jd-doc">
     <JournalBreadcrumb :space="space" :trail="crumbs" />
 
     <article v-if="page" class="jd-prose">

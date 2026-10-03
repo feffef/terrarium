@@ -8,8 +8,9 @@ onrampBlurb: The story in order, up to early October — what got built, what th
 
 # How Terrarium Grew
 
-The two pages beside this one describe Terrarium as it stands. Neither says how
-it got that way. This page does, in order, from the first commit onward.
+[Architecture & Deployment](/t/journal/current/architecture) and [How Humans &
+Agents Work](/t/journal/current/how-it-works) describe Terrarium as it stands.
+Neither says how it got that way. This page does, in order, from the first commit onward.
 
 The period runs from 4 July to 2 October 2026: ninety-one days, 4,013
 commits, 803 recorded sessions, 2,062 frictions the agents logged against
@@ -17,7 +18,7 @@ themselves.
 Three things grew at once and kept causing each other — the **sites**, the
 **machinery** that builds them, and the **rules** the project follows.
 
-| | Sessions/week | Agent-initiated | Frictions/session | New sites |
+| Period | Sessions/week | Agent-initiated | Frictions/session | New sites |
 |---|---|---|---|---|
 | **Founding** · 4–10 Jul | 116 | 21% | 4.0 | 3 |
 | **Opening up** · 11–24 Jul | 96 | 51% | 2.7 | 4 |
@@ -38,17 +39,18 @@ the [archive](/t/journal/archived).
 
 ## Founding — 4 to 10 July
 
-Terrarium began with documents rather than code. The very first commit is four
+Terrarium began with documents rather than code. The very first commit is three
 prose files and five Architecture Decision Records — no application at all. Four
 more decisions were written before the day was out, settling the shape of
 everything since: one container, everything decided at build time, every change
 through a gated pull request, a human merging all of it. Almost all nine have
-been amended since; none has been reversed.
+been amended since; only one — the routing table below — has been reversed.
 
 The sites arrived roughly one a day. The **Journal** — this site — came hours
 later in the second commit, under a different name, and was renamed before
 midnight. The [Blog](/t/blog) followed on 5 July, launching fully formed with three
-opposed personas, each its own isolated Space, arguing about the same commits.
+opposed AI personas — David, Karen and Kevin — each its own isolated Space,
+arguing about the same commits.
 The [Atlas](/t/atlas), a fictional field guide to an ecosystem under glass, merged
 complete on 7 July: three biomes, twelve specimens, a food web, and hand-drawn
 plates.
@@ -111,8 +113,8 @@ Then the sharpest event of the period arrived from outside the project entirely.
 
 ## Fewer asks — 25 July to 8 August
 
-Commons was the last site launched in this period. Nothing since is a new place to visit —
-only redesigns, one removal, and a great deal of maintenance.
+Commons was the last site launched in this period. No new site would follow
+for two months — only redesigns, one removal, and a great deal of maintenance.
 
 That is not a decision the project made. Building something new requires a human
 to green-light it, by rule; when the asking slowed, new construction stopped
@@ -311,7 +313,7 @@ Not everything moved. The Gate fix from August is still waiting for a human to
 apply it, now nearly two months on.
 
 That is where the record stops: seven sites, twenty-eight decision records,
-thirty-nine [capabilities](/t/journal/current/skills). The question above is still
+thirty-nine catalogued [Skills](/t/journal/current/skills). The question above is still
 open.
 
 For what all this is built on, see [Architecture &

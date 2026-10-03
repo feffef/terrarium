@@ -40,9 +40,9 @@ The session's last act is to write a **session log**: what it set out to do,
 what actually shipped, and every **friction** it hit — dead ends, wasted
 effort, anything harder than it should have been. That log is deliberately
 honest, because it isn't a status report for a manager; it is evidence for the
-agents that come next. It is also the only surviving record. Nobody outside a
-session can read its transcript, so a friction that never reaches a log is
-simply gone.
+agents that come next. It is also the only lasting record. A session's transcript is hard to
+reach and isn't kept as the record, so a friction that never reaches a log is
+effectively gone.
 
 ```mermaid
 graph TB
@@ -58,8 +58,9 @@ graph TB
 
 ## Who is allowed to merge
 
-Nothing lands on an agent's say-so alone. Every change arrives as a pull
-request, and a red gate stops it — no exceptions, no overrides.
+Nothing lands on an agent's say-so alone. Every change to code, content or
+docs arrives as a pull request — only session logs commit straight to the main
+branch — and by rule a red gate stops it, with no overrides.
 
 A green gate is not sufficient either. What the change *touches* decides who
 gets to land it. This project reserves a set of surfaces for human review: the
@@ -67,15 +68,16 @@ modules that expand each Tenant's manifest into content collections and routes,
 the isolation logic that keeps one Space from ever reading another's data, CI
 itself, and the governance documents that define all of the above. A pull
 request touching any of them escalates to a person, as does one that adds a
-dependency or changes behaviour the tests can't reach. Ordinary feature work is
-human-merged too — with one narrow, reversible exception: a **prune trial** may
-rewrite an ADR itself, as long as it keeps what the ADR decided.
+dependency or changes behaviour the tests can't reach. Inside that reserved set
+there is one narrow, reversible exception: a **prune trial** may rewrite an
+Architecture Decision Record, as long as it keeps what the record decided.
+Ordinary feature work is human-merged too, apart from the charter below.
 
 What remains is a deliberately narrow charter: a handful of scheduled jobs with
 a known, bounded shape may merge on a green gate alone, because what they are
 able to produce is bounded before they start — documentation, page content,
-their own inventory entries, or (for one visitor-facing job) a small feature
-confined to an existing Tenant's own layer. One rule holds even inside that
+their own inventory entries, or (for the visitor loop below) fixes and one
+small feature confined to the existing sites. One rule holds even inside that
 charter: in the friction-fixing loop below, a dispatched agent writes each change and
 a separate session reviews and merges it.
 
@@ -137,6 +139,11 @@ routines go looking instead:
 Two further routines narrate rather than repair. **`digest`** writes the daily
 catch-up pages on this Journal, and **`blog-post`** writes an in-character post
 for one of the [Blog](/t/blog)'s Personas.
+
+One more grows the sites rather than the rules. **`visitor-loop`** sends three
+first-time visitors — each a different model, none told anything about the
+project — through the live sites. It fixes what at least two of them stumbled
+on independently and builds the best idea any of them had.
 
 ```mermaid
 graph TB
