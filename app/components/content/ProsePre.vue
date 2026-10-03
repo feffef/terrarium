@@ -8,24 +8,14 @@
 // (issue #364); every other language falls through to the stock markup
 // unchanged. Lives at the Platform app root because the override is global,
 // not per-Tenant — see docs/agents/tenant-layers.md §5 for why.
-const { code, language } = withDefaults(
-  defineProps<{
-    code?: string
-    language?: string | null
-    filename?: string | null
-    highlights?: unknown[]
-    meta?: string | null
-    class?: string | null
-  }>(),
-  {
-    code: '',
-    language: null,
-    filename: null,
-    highlights: () => [],
-    meta: null,
-    class: null,
-  },
-)
+const { code = '', language = null } = defineProps<{
+  code?: string
+  language?: string | null
+  filename?: string | null
+  highlights?: unknown[]
+  meta?: string | null
+  class?: string | null
+}>()
 </script>
 
 <style>
