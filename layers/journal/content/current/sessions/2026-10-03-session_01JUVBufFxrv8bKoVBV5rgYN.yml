@@ -1,0 +1,74 @@
+schemaVersion: 1
+session: session_01JUVBufFxrv8bKoVBV5rgYN
+startedAt: 2026-10-03T13:48:48Z
+endedAt: 2026-10-03T13:57:50Z
+kind: delegated
+goal: Write and land one Blog Persona post from recent repo activity (bare /blog-post)
+status: in-review
+outcome: "Eyra post on the Journal's keyboard-unfollowable PR chips opened as PR #1559, merge-pr.ts polling CI"
+summary: "One kickoff (bare /blog-post), no further human input; persona, topics, drafting, PR and self-merge were all agent-initiated under the Skill's charter. Rotation left eyra/karen/kevin eligible (david last). I drafted one candidate per Persona: Kevin on the eight-major dependency triage (PR 1554), Karen on the August drift-guard test that watched a hand-copied type list until PR 1539 inferred the types from the schema, and Eyra on the Journal session-card chips that couldn't be followed by Enter until PR 1548's review caught it. A fresh Sonnet reader picked Eyra (a user-facing bug, found by accident) and listed jargon, which I closed; I also swapped a door image because Eyra's 2026-09-25 post leaned on doors. The Sonnet fact-checker caught a real error: I had dated the bug from 78a22d3b (July 11, when the handler moved into Disclosure.vue), but the Enter handler dates from 460ff7c3 (July 5) and the chips became links in 44b81f20 (July 7), so \"twelve weeks\" became \"almost three months\"; it also narrowed my over-specific review attribution. gate:scoped full gate green, PR 1559 opened, verdict comment posted, merge-pr.ts running. Step 8 follow-up reply not yet decided."
+prs:
+  - "1559"
+docsRead:
+  - path: layers/blog/content/eyra/pages/2026-10-03-the-row-that-ate-the-enter-key.md
+    reason: (read before editing)
+skillsUsed:
+  - name: blog-post
+    reason: the run itself
+  - name: close-session
+    reason: closure at PR-open
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: I dated the bug from the commit that extracted the handler (git log -S on the current file path), not from when the bug actually began. The fact-checker caught it.
+    solution: When dating a bug's origin, follow history across file moves (git log --follow, or -S on the whole tree) and check when both halves of the interaction first coexisted.
+    severity: minor
+  - description: Passed run_in_background false to Agent and was denied by the Agent-background-flag guard. Wasted one call.
+    solution: The guard works as intended. Never pass that flag.
+    severity: nit
+  - description: Hand-wrote the commit trailer from the system-reminder's attribution instruction and was denied by the commit-trailer guard. The harness reminder and the repo convention conflict.
+    solution: "Follow the repo guard: never hand-write trailers, whatever the harness reminder says."
+    severity: nit
+  - description: The Stop hook demanded a commit and push twice while the fact-check and gate were still running, forcing two commits on a single-post PR.
+    solution: Already tracked as a recurrent friction (Stop hook vs a running gate). It needs the human-only settings.json hook change.
+    severity: minor
+durationSec: 542
+models:
+  claude-opus-5-5: 99
+toolCounts:
+  Bash: 39
+  ToolSearch: 1
+  mcp__github__pull_request_read: 3
+  mcp__github__issue_read: 1
+  Agent: 3
+  Edit: 1
+  mcp__github__create_pull_request: 2
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+  mcp__github__add_issue_comment: 1
+  Skill: 2
+filesEdited:
+  - layers/blog/content/eyra/pages/2026-10-03-the-row-that-ate-the-enter-key.md
+docsReadViaShell:
+  - .agents/skills/blog-post/personas/eyra.md
+  - .agents/skills/blog-post/personas/karen.md
+  - .agents/skills/blog-post/personas/kevin.md
+  - docs/agents/pr-workflow.md
+  - docs/agents/guards.md
+  - CONTEXT.md
+  - layers/journal/CONTEXT.md
+subagents:
+  - type: general-purpose
+    task: Outside reader picks best draft
+    model: sonnet
+  - type: general-purpose
+    task: Outside reader picks best draft
+    model: sonnet
+  - type: general-purpose
+    task: Fact-check Eyra blog post
+    model: sonnet
+gitBranch: ccr-9ad02463-002fp3
+entrypoint: remote_mobile
+cliVersion: 2.1.288
+learnings:
+  - Vue's .self key modifier is the minimal fix for a link nested inside a role=button row whose keydown.prevent cancels the link's own Enter.
+landedBy: Stop
