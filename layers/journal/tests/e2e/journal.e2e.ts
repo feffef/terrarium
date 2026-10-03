@@ -321,6 +321,18 @@ export function registerJournalE2E(): void {
       }
     })
 
+    // The on-ramp pages chain into a short tour in the landing's card order.
+    it('ends each on-ramp page with a numbered Read-next step', async () => {
+      const first = await $fetch('/t/journal/current/architecture')
+      expect(first).toContain('Start here · 1 of 5')
+      expect(first).toMatch(/<a[^>]*href="\/t\/journal\/current\/how-it-works"[^>]*rel="next"|<a[^>]*rel="next"[^>]*href="\/t\/journal\/current\/how-it-works"/)
+      const last = await $fetch('/t/journal/current/real-and-invented')
+      expect(last).toContain('Start here · 5 of 5')
+      expect(last).toContain('back to the Journal')
+      const digest = await $fetch(`/t/journal/current/digests/${currentDigestDates().at(-1)!}`)
+      expect(digest).not.toContain('Start here ·')
+    })
+
     // The entry-route sweep in `tests/e2e/smoke.spec.ts` only reaches the Space
     // landing (`/t/journal/<space>`) — a standalone Document is a deeper route
     // the sweep never visits. Cover one representative Document here so a

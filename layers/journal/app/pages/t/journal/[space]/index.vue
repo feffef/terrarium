@@ -52,15 +52,12 @@ const digests = computed(() => digestList(allPages.value))
 // from THIS Space's own `pages`, so a page must exist in-Space to surface — the
 // archived Space, lacking these pages, shows none.
 const onrampCards = computed(() =>
-  allPages.value
-    .filter((p) => p.onramp != null && p.onrampLabel && p.path)
-    .sort((a, b) => (a.onramp ?? 0) - (b.onramp ?? 0))
-    .map((p) => ({
-      key: p.path as string,
-      title: p.onrampLabel as string,
-      blurb: p.onrampBlurb,
-      to: `/t/${tenant}/${space}${p.path}`,
-    })),
+  onrampSteps(allPages.value).map((s) => ({
+    key: s.path,
+    title: s.label,
+    blurb: s.blurb,
+    to: `/t/${tenant}/${space}${s.path}`,
+  })),
 )
 
 // Page-wide accordion: a single item — one session card OR one digest — is open
