@@ -1,14 +1,15 @@
 schemaVersion: 1
 session: session_01TiCx5GDdDdFGwCEs6xxr89
 startedAt: 2026-10-03T15:22:32Z
-endedAt: 2026-10-03T22:11:47Z
+endedAt: 2026-10-03T22:39:17Z
 kind: interactive
 goal: Grill and then implement the four later-phase Tinkerfund stories via subagents
-status: completed
-outcome: "Integration PR #1581 merged; closes #1386 #1387 #1388 #1389; per-story and whole-branch reviews applied"
-summary: "All human-instructed. Phase 1: the owner asked what blocks the remaining Tinkerfund issues, then ran grill-with-docs; an Explore subagent mapped code and decision tickets, today's visitor loop turned out to have built #1388 (#1573) unannounced, and two grilling rounds settled every branch (decisions posted on the four issues, visitor-loop slip filed as #1578). Phase 2: the owner asked for subagent implementation; I asked how to land (owner picked one integration PR on the session branch) and the owner asked for a background /code-review per story plus a final whole-branch review. Stories ran serially on one branch (shared files: schemas.ts, gallery, validate-content-refs, e2e): #1388 follow-up, #1386, #1387, #1389, each followed by a review agent in parallel with the next implementation, and review fixes landed as their own commits before the next story. Reviews caught real issues: a corrupted qa Backer fixture, the full catalog shipped in every Campaign/Cart payload (689 KB to 175 KB after a transform), a bundle note shown on a zero-discount Pledge, and a card Deal chip disagreeing with the page badge. Two product questions went back to the owner mid-way (top-up bundles discount the whole Pledge: keep; bundle note on every bundle Pledge). Agent-initiated within scope: accepting the non-sticky Readout on Live pages (recorded in the PR), accepting the #1389 partial refusal (collection schemas must be plain ZodObject, verified at shared/manifest.ts:35), and a final rename to tinkerfundBySlug. PR #1581 opened, CI green, merged by the owner."
+status: in-review
+outcome: "PR #1581 merged (closes #1386 #1387 #1388 #1389); follow-up fix PR #1582 for a Readout overlap the owner found"
+summary: "All human-instructed. Phase 1: the owner asked what blocks the remaining Tinkerfund issues, then ran grill-with-docs; an Explore subagent mapped code and decision tickets, today's visitor loop turned out to have built #1388 (#1573) unannounced, and two grilling rounds settled every branch (decisions posted on the four issues, visitor-loop slip filed as #1578). Phase 2: the owner asked for subagent implementation; I asked how to land (owner picked one integration PR on the session branch) and the owner asked for a background /code-review per story plus a final whole-branch review. Stories ran serially on one branch (shared files: schemas.ts, gallery, validate-content-refs, e2e): #1388 follow-up, #1386, #1387, #1389, each followed by a review agent in parallel with the next implementation, and review fixes landed as their own commits before the next story. Reviews caught real issues: a corrupted qa Backer fixture, the full catalog shipped in every Campaign/Cart payload (689 KB to 175 KB after a transform), a bundle note shown on a zero-discount Pledge, and a card Deal chip disagreeing with the page badge. Two product questions went back to the owner mid-way (top-up bundles discount the whole Pledge: keep; bundle note on every bundle Pledge). Agent-initiated within scope: accepting the non-sticky Readout on Live pages (recorded in the PR), accepting the #1389 partial refusal (collection schemas must be plain ZodObject, verified at shared/manifest.ts:35), and a final rename to tinkerfundBySlug. PR #1581 opened, CI green, merged by the owner. The owner then reported the sticky Readout sliding over Recently backed on scroll; I reproduced it with a scroll probe (194px overlap), fixed it with one CSS rule plus an e2e scroll check, and opened #1582."
 prs:
   - "1581"
+  - "1582"
 docsRead:
   - path: .agents/skills/dispatch-subagents/SKILL.md
     reason: dispatch procedure for impl and review agents
@@ -16,6 +17,8 @@ docsRead:
     reason: merge authority and the integration-PR whole-branch review
   - path: .agents/skills/code-review/SKILL.md
     reason: brief for per-story review agents
+  - path: layers/tinkerfund/tests/e2e/tinkerfund.e2e.ts
+    reason: (read before editing)
   - path: layers/tinkerfund/app/utils/checkout.ts
     reason: (read before editing)
   - path: layers/tinkerfund/app/utils/campaign.ts
@@ -74,8 +77,6 @@ docsRead:
     reason: (read before editing)
   - path: layers/tinkerfund/content/qa/pages/campaigns/indoor-hammock.md
     reason: (read before editing)
-  - path: layers/tinkerfund/tests/e2e/tinkerfund.e2e.ts
-    reason: (read before editing)
   - path: layers/tinkerfund/content/prod/pages/campaigns/snore-certificate-printer.md
     reason: (read before editing)
   - path: layers/tinkerfund/app/pages/t/tinkerfund/[space]/inventors/[inventor].vue
@@ -125,11 +126,14 @@ frictions:
   - description: Per-story implementers repeatedly reintroduced small duplicates (pluralisers, slug lookups, Live filters) that only the whole-branch review caught
     solution: Tell impl briefs to grep app/utils for an existing helper before adding one
     severity: minor
-durationSec: 24555
+  - description: "Shipped a visible bug in merged #1581: the Readout stayed sticky and slid over Recently backed on scroll. The implementer wrongly assumed sticky is bounded by its grid row; the per-story review endorsed that reasoning, and every screenshot was static so none scrolled"
+    solution: For sticky or scroll-dependent layout, verify with a scrolled measurement (bounding boxes after scrollTo), not a static screenshot; worth a line in docs/agents/verifying-ui-changes.md
+    severity: major
+durationSec: 26205
 models:
-  claude-opus-5-5: 228
+  claude-opus-5-5: 282
 toolCounts:
-  Bash: 45
+  Bash: 62
   ToolSearch: 6
   mcp__github__search_issues: 4
   mcp__github__issue_read: 7
@@ -139,16 +143,20 @@ toolCounts:
   mcp__github__pull_request_read: 5
   mcp__github__add_issue_comment: 4
   mcp__github__issue_write: 1
-  Write: 5
+  Write: 6
   AskUserQuestion: 2
-  Read: 2
+  Read: 4
   mcp__github__list_pull_requests: 1
-  mcp__github__create_pull_request: 1
-  mcp__claude-code-remote__subscribe_pr_activity: 1
+  mcp__github__create_pull_request: 2
+  mcp__claude-code-remote__subscribe_pr_activity: 2
   mcp__claude-code-remote__send_later: 1
   ReadNotifications: 3
   mcp__claude-code-remote__delete_trigger: 1
+  Edit: 2
 filesEdited:
+  - scripts/.tmp-sticky-probe.ts
+  - layers/tinkerfund/app/components/tinkerfund/campaign/Campaign.vue
+  - layers/tinkerfund/tests/e2e/tinkerfund.e2e.ts
   - scripts/validate-content-refs.ts
   - layers/tinkerfund/schemas.ts
   - tests/unit/validate-content-refs.spec.ts
@@ -167,8 +175,6 @@ filesEdited:
   - layers/tinkerfund/tests/unit/qa-fixtures.spec.ts
   - layers/tinkerfund/tests/unit/bundle.spec.ts
   - .agents/skills/tinkerfund-campaign/SKILL.md
-  - layers/tinkerfund/tests/e2e/tinkerfund.e2e.ts
-  - layers/tinkerfund/app/components/tinkerfund/campaign/Campaign.vue
   - layers/tinkerfund/app/composables/gallery.ts
   - layers/tinkerfund/tests/unit/browse.spec.ts
   - layers/tinkerfund/app/components/tinkerfund/browse/Shelf.vue
