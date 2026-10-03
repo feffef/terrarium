@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01SWRyFbuNXxVWi47tGB8GX6
 startedAt: 2026-10-03T05:33:26Z
-endedAt: 2026-10-03T05:48:38Z
+endedAt: 2026-10-03T05:56:26Z
 kind: interactive
 goal: Scan every SHELL-READ-DETECTION friction and decide whether parsing shell commands can ever find all shell reads
 status: in-review
 outcome: Measured an output-matching alternative at 39/40 vs 24/40 for the landed scan; research note in PR 1546, proposal in issue 1545
-summary: "The user asked for a scan of all SHELL-READ-DETECTION frictions and an honest answer to whether the shell-read detector can be fixed shape by shape or whether parsing commands is a dead end. I extracted all 39 frictions from 42 session logs, grouped them into about ten command shapes, and checked each against the live code and the GitHub issues: most are fixed, three are open (issues 1482 and 1542 plus an unfiled empty-output cat false positive), and two findings were new. First, the committed docsReadViaShell comes from extractTrace, which gets neither the glob resolver nor the cd handling the --author advisory has, so the fixes for issues 1246 and 1454 never reached the Journal. Second, the cd fix runs after the instruction-doc shape test, so a bare relative filename after cd is dropped before the prefix is applied. I offered three directions and the user chose to prototype the alternative: index each instruction doc's distinctive lines and credit a doc when they appear in a Bash tool_result, independent of the command. The prototype replayed one verbatim command per friction shape plus ten decoys and scored the landed scan, the advisory scan, and the matcher. The matcher with a path-prefix signal passed 39 of 40, the advisory 33, the landed scan 24, and no decoy credited any doc. A live check over this session's own transcript agreed. The residual miss is a read from git history whose lines no longer exist in the checkout. Human-instructed: the scan, the assessment, and the choice to prototype. Agent-initiated: committing the prototype then reverting it so the note can cite the commit (ADR-0026's precedent), the research note, issue 1545 proposing adoption, and the PR, which the repo's rules open automatically. The implementation itself is net-new and waits on a human green-light."
+summary: "The user asked for a scan of all SHELL-READ-DETECTION frictions and an honest answer to whether the shell-read detector can be fixed shape by shape or whether parsing commands is a dead end. I extracted all 39 frictions from 42 session logs, grouped them into about ten command shapes, and checked each against the live code and the GitHub issues: most are fixed, three are open (issues 1482 and 1542 plus an unfiled empty-output cat false positive), and two findings were new. First, the committed docsReadViaShell comes from extractTrace, which gets neither the glob resolver nor the cd handling the --author advisory has, so the fixes for issues 1246 and 1454 never reached the Journal. Second, the cd fix runs after the instruction-doc shape test, so a bare relative filename after cd is dropped before the prefix is applied. I offered three directions and the user chose to prototype the alternative: index each instruction doc's distinctive lines and credit a doc when they appear in a Bash tool_result, independent of the command. The prototype replayed one verbatim command per friction shape plus ten decoys and scored the landed scan, the advisory scan, and the matcher. The matcher with a path-prefix signal passed 39 of 40, the advisory 33, the landed scan 24, and no decoy credited any doc. A live check over this session's own transcript agreed. The residual miss is a read from git history whose lines no longer exist in the checkout. Human-instructed: the scan, the assessment, and the choice to prototype. Agent-initiated: committing the prototype then reverting it so the note can cite the commit (ADR-0026's precedent), the research note, issue 1545 proposing adoption, and the PR, which the repo's rules open automatically. The implementation itself is net-new and waits on a human green-light. The user then asked for a two-axis code review of the branch; it found claims in the note the committed prototype could not reproduce (a stale table row, an off-by-one case count, a wrong failure cell) and a missing friction-to-case mapping. On the user's instruction those fixes went out as one further commit."
 prs:
   - "1546"
 docsRead:
@@ -22,6 +22,8 @@ docsRead:
     reason: the header line every GitHub body must open with
   - path: scripts/shell-reads.ts
     reason: (no reason given)
+  - path: docs/research/shell-reads-by-output-matching.md
+    reason: (read before editing)
   - path: docs/adr/0004-objective-safety-gate.md
     reason: (no reason given)
   - path: docs/adr/0003-agent-operating-model-and-governance.md
@@ -76,6 +78,10 @@ docsRead:
     reason: (no reason given)
   - path: CLAUDE.md
     reason: (no reason given)
+  - path: .agents/skills/prototype/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/writing-for-agents/SKILL.md
+    reason: (no reason given)
 skillsUsed:
   - name: prototype
     reason: a throwaway measurement script, adapted since neither of its two branches fits a measurement
@@ -83,6 +89,8 @@ skillsUsed:
     reason: closure at PR-open
   - name: log-session
     reason: this log
+  - name: code-review
+    reason: (invoked as a slash command)
 frictions:
   - description: "SHELL-READ-DETECTION false positive: `diff .agents/skills/setup-matt-pocock-skills/triage-labels.md docs/agents/triage-labels.md` credited .agents/skills/setup-matt-pocock-skills/triage-labels.md, but the output held only `>` add-hunks from the right-hand file, so no line of the left-hand file was ever shown."
     solution: diff credits both positionals unconditionally; credit only the side whose lines appear in the output (`<` for left, `>` for right), or adopt the output-matching derivation measured in docs/research/shell-reads-by-output-matching.md, which gets this case right.
@@ -102,23 +110,30 @@ frictions:
   - description: The prototype Skill says to commit a prototype to a throwaway branch out of main, while the harness forbids pushing to any branch but the designated one.
     solution: "Resolved by ADR-0026's precedent: commit the prototype on the designated branch, revert it in the next commit, cite the SHA from the note. Worth naming in the prototype Skill so the next session does not re-derive it."
     severity: minor
-durationSec: 912
+  - description: "Code review found five claims in my research note that the committed prototype could not back: a table row from a variant removed before aa86e131 was committed, 29 cases where the script holds 30, a wrong advisory failure cell, and two counts over logs presented as run output."
+    solution: Commit the prototype first, then write the note from its printed output using the script's own config names as row labels; never retype a number from an earlier run.
+    severity: moderate
+durationSec: 1380
 models:
-  claude-fable-5-1: 100
+  claude-fable-5-1: 143
 toolCounts:
-  Bash: 29
-  Read: 1
-  ToolSearch: 2
+  Bash: 34
+  Read: 2
+  ToolSearch: 4
   mcp__github__search_issues: 1
   mcp__github__issue_read: 3
   Skill: 3
-  Agent: 1
-  Write: 3
+  Agent: 3
+  Write: 4
   mcp__github__list_pull_requests: 1
-  mcp__github__issue_write: 2
+  mcp__github__issue_write: 3
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
   mcp__claude-code-remote__send_later: 1
+  ReadNotifications: 3
+  mcp__github__pull_request_read: 3
+  Edit: 1
+  mcp__github__update_pull_request: 1
 filesEdited:
   - scripts/shell-reads-by-output.prototype.ts
   - docs/research/shell-reads-by-output-matching.md
@@ -133,9 +148,14 @@ docsReadViaShell:
   - docs/research/content-client-queries-without-wasm.md
   - docs/adr/0017-provenance-footer-on-agent-authored-content.md
   - docs/research/shell-reads-by-output-matching.md
+  - docs/research/mermaid-server-side-rendering.md
 subagents:
   - type: Explore
     task: Extract ADR constraints for trace change
+  - type: Explore
+    task: Standards review of research note
+  - type: Explore
+    task: Spec review of research note
 gitBranch: claude/peaceful-carson-5c24am
 entrypoint: remote
 cliVersion: 2.1.288
