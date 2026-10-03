@@ -254,7 +254,7 @@ export function registerJournalE2E(): void {
     it('serves the Skills and Ideas & learnings pages in both Spaces', async () => {
       for (const space of ['current', 'archived']) {
         const skills = await $fetch(`/t/journal/${space}/skills`)
-        expect(skills).toContain('class="jd"')
+        expect(skills).toMatch(/class="jd[\s"]/)
         expect(skills).toContain('Platform Skills')
         expect(skills).not.toContain('No document at')
         const ideas = await $fetch(`/t/journal/${space}/ideas`)
