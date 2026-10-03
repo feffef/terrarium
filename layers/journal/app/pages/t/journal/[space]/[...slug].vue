@@ -31,6 +31,17 @@ const crumbs = computed(() =>
 
 if (!page.value && !error.value) setResponseStatus(404)
 
+const { data: tour } = await useAsyncData(`${route.path}:onramp`, async () =>
+  page.value?.onramp == null
+    ? []
+    : onrampSteps(
+        await queryCollection(pagesKey)
+          .where('onramp', 'IS NOT NULL')
+          .select('path', 'onramp', 'onrampLabel', 'onrampBlurb')
+          .all(),
+      ),
+)
+
 const title = computed(() => page.value?.title ?? 'Not found')
 useSeoMeta({
   title: () => `${title.value} · journal/${space}`,
@@ -44,6 +55,7 @@ useSeoMeta({
 
     <article v-if="page" class="jd-prose">
       <ContentRenderer :value="page" :components="{ table: JournalScrollTable }" />
+      <JournalOnrampTour v-if="tour?.length" :steps="tour" :current="path" :base="`/t/journal/${space}`" />
     </article>
     <div v-else class="jd-prose">
       <h1>Not found</h1>
