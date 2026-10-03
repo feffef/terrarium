@@ -312,9 +312,7 @@ review-agent, not a bystander waiting for a human. For each PR:
    doc PR). Check it implements the issue's recommended option, matches repo
    conventions, and confines itself to a safe surface. **For a doc PR, also
    confirm it clears `audit-docs`' house rules** (§5): a fix that would itself be
-   a future audit-docs finding — new duplication instead of a single-home
-   pointer, stale-narration, an unlinked new doc, a rewritten Historical
-   decision — is amended or bounced back, not merged.
+   a future audit-docs finding is amended or bounced back, not merged.
    **Always post the review result as a PR comment before merging, with no
    exception** — see `docs/agents/pr-workflow.md`'s recipe (step 4) for the
    rule and why it matters.

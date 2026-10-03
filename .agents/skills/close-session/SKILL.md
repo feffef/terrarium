@@ -42,8 +42,8 @@ hooks commit one at all.)
 **If a human had to prompt this closure, that is the regression itself — log it.**
 If you are running `close-session` because the user asked in conversation, rather
 than because you self-judged closure, *and* a PR had already been opened or merged,
-then you failed to log at PR-open as you should have — CONTEXT.md's `major`
-bar. Record it as a **`major`** friction whose `description` contains the exact
+then you failed to log at PR-open as you should have. Record it as a **`major`** friction (a fixed grade here, not
+CONTEXT.md's cost-based one) whose `description` contains the exact
 keyword **`HUMAN-PROMPTED-CLOSURE`**, so the self-improvement Skills can also
 grep it. Self-judged closure at PR-open needs no such friction.
 

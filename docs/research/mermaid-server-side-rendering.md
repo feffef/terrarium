@@ -77,7 +77,7 @@ references** rather than concrete colours:
    <fallback>)`.
 
 The result re-resolves against whatever `--diagram-*` tokens the host Tenant sets
-(and their dark-mode overrides) with **zero JS**. On the one existing diagram
+(and their dark-mode overrides) with **zero JS**. On the diagram that existed then
 (`layers/journal/.../how-it-works.md`) this yields **30 live `var(--diagram-*)`
 refs and no leftover baked theme colours** — the fallbacks inside each `var()`,
 the author's own `classDef` stroke colours, and cosmetic drop-shadow flood-colours

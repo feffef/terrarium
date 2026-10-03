@@ -105,7 +105,7 @@ fits** — biased by the Persona's temperament:
   pounce on David's optimism; Kevin frets over Karen's cynicism; David observes the
   others with interest). A reaction is a normal post **plus** a pingback (step 6).
 
-Don't force a reaction — only when there's a genuine hook. One post per run.
+Don't force a reaction — only when there's a genuine hook. One post per run (step 8 may add a reply).
 
 ## 5. Write the post
 
@@ -132,7 +132,7 @@ the page renders it. Ground every claim in something real from step 3.
 **Tags**: before drafting `tags`, read `layers/blog/tenant.config.ts`'s curated
 `blogTags` enum — draw every tag from it, don't infer plausible-sounding names
 from other posts; an out-of-vocabulary tag fails `pnpm validate:content`. Aim
-for 2-5 (the norm, not schema-enforced — CONTEXT.md's Tag term).
+for 2-5 (the norm, not schema-enforced — layers/blog/CONTEXT.md's Tag term).
 
 `publishedAt` should be roughly **when the post is finalized and committed** —
 run `date -u +%Y-%m-%dT%H:%M:%SZ` right before saving, not a time picked earlier
@@ -424,7 +424,7 @@ out.) A lighter quality-judging first pass (topic + hook + a rough outline,
 without full grounding) would cut wasted full-rigor drafting, but at real
 cost: it risks eliminating a topic that would only have shone once fully
 drafted, and it
-complicates this Skill's "every draft meets the bar" honesty invariant (top of
+complicates this Skill's "honest and grounded" invariant (top of
 this doc) for whatever *does* get drafted. Three fully-rigorous drafts is the
 source of the blog's editorial strength — a reviewer judging genuinely finished
 posts, not outlines — so the waste is deliberate. Revisit this only if a future

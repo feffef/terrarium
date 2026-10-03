@@ -26,7 +26,7 @@ reviewable: the whole of what ships is visible in a diff.
 
 Everything you can reach here — this Journal, the [Blog](/t/blog), the
 [Atlas](/t/atlas) field guide, the [Midden](/t/midden)'s catalogue of discarded
-work — is served by one Nuxt application out of one repository. Each is a
+work, and the other Tenants — is served by one Nuxt application out of one repository. Each is a
 **Tenant**: a logically distinct site with its own Vue components, its own
 design, and its own content model, sharing nothing with its neighbours but the
 plumbing underneath.

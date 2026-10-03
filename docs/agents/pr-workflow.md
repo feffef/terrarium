@@ -19,17 +19,13 @@ marker (CLAUDE.md, Working conventions).
 
 ## Assembling several stories into one integration PR
 
-When a branch stacks several independently-reviewed stories (each already
-passed its own `/code-review`) into one integration PR, run **one additional
-whole-branch two-axis review** — [`code-review`](../../.agents/skills/code-review/SKILL.md)
-scoped to the full integration diff (fixed point: the branch's base, not any
-single story's start) — before opening that PR. Per-story review is scoped to
-one story's diff and structurally can't see how two independently-correct
-stories interact (e.g. two stories that each ship correctly alone but
-double-ship together, or stack discounts meant to be mutually exclusive) —
-only a review of the assembled whole catches that (issue #1421). This is one
-extra pass, not a re-review of each story: don't restate or duplicate the
-per-story findings.
+When a branch stacks several already-reviewed stories into one integration PR,
+run **one more whole-branch two-axis review** — [`code-review`](../../.agents/skills/code-review/SKILL.md)
+scoped to the full integration diff (fixed point: the branch's base, not a
+single story's start) — before opening it. Per-story review can't see how
+independently-correct stories interact (e.g. both ship the same thing, or stack
+discounts meant to be mutually exclusive) (issue #1421). One extra pass; don't
+re-review each story or repeat its findings.
 
 ## The recipe
 
@@ -57,12 +53,9 @@ per-story findings.
    its misleading-error round-trip and manually re-checking. Reach for it
    instead of hand-rolling steps 3 and 5 yourself.
 
-   **A long CI/merge wait needs a standard check-in cadence, not an ad hoc
-   one.** When babysitting a PR across a wait that's expected to span many
-   hours, schedule `mcp__Claude_Code_Remote__send_later` check-ins on an
-   escalating cadence — roughly **2h, then 6h, then 12h**, capping at ~12h
-   between check-ins for any wait beyond that — instead of improvising a
-   schedule each time (issue #929).
+   When babysitting a PR across a wait expected to span many hours, schedule
+   `mcp__Claude_Code_Remote__send_later` check-ins at roughly **2h, then 6h,
+   then every ~12h** (issue #929).
 4. **Post the verdict as a PR review or comment before merging — every time,
    even on a clean "merging as-is" verdict.** The merge must never be the
    only trace: otherwise `get_reviews`/`get_comments` return empty and a real
