@@ -216,7 +216,7 @@ export function registerTinkerfundE2E(): void {
         expect(lamp).toContain('Max 1 per Backer')
         expect(lamp).toContain('Digital, nothing ships')
         expect(lamp).toContain('Est. delivery Jul 2026')
-        expect(lamp).toMatch(/href="\/t\/tinkerfund\/qa\/inventors\/test-inventor"[^>]*><b>Test Inventor<\/b><\/a><span[^>]*>Inventor</)
+        expect(lamp).toMatch(/href="\/t\/tinkerfund\/qa\/inventors\/test-inventor"[^>]*><b[^>]*>Test Inventor<\/b><\/a><span[^>]*>Inventor</)
         expect(lamp).toMatch(/Spare bulb[\s\S]*Sold out/)
         expect(lamp).toMatch(/<li class="yes"[^>]*>[\s\S]*A dimmer/)
 
