@@ -28,8 +28,8 @@ useSeoMeta(tinkerfundSeo({ kind: 'page', space, title: 'Deals', description: 'Pr
       <h2 :id="group.id" :class="{ 'tf-sr': !group.scheduled }">{{ group.title }}</h2>
       <article v-for="p in group.list" :key="p.stem" class="deal">
         <TinkerfundBrowseDealBanner :promotion="p" :clock="clock" :scheduled="group.scheduled" />
-        <div v-if="bySlug(cards, tinkerfundNamedCampaigns(p)).length" :class="p.bundle ? 'campaigns' : 'campaign'">
-          <TinkerfundBrowseCampaignCard v-for="card in bySlug(cards, tinkerfundNamedCampaigns(p))" :key="card.path" :card="card" :clock="clock" />
+        <div v-if="tinkerfundBySlug(cards, tinkerfundNamedCampaigns(p)).length" :class="p.bundle ? 'campaigns' : 'campaign'">
+          <TinkerfundBrowseCampaignCard v-for="card in tinkerfundBySlug(cards, tinkerfundNamedCampaigns(p))" :key="card.path" :card="card" :clock="clock" />
         </div>
         <p v-else-if="!p.campaign" class="all">
           Applies to every Campaign. <NuxtLink :to="link('/discover?state=live')">Browse Live Campaigns</NuxtLink>

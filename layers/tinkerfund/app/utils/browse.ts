@@ -259,7 +259,7 @@ function recommend<T extends TinkerfundListing>(listings: T[]): T[] {
   return browseTinkerfundListings(listings, { sort: 'ending' }).slice(0, RECOMMENDED)
 }
 
-export function bySlug<T extends TinkerfundListing>(listings: T[], slugs: Iterable<string>): T[] {
+export function tinkerfundBySlug<T extends TinkerfundListing>(listings: T[], slugs: Iterable<string>): T[] {
   const index = new Map(listings.map((l) => [tinkerfundSlug(l.path), l]))
   return [...new Set(slugs)].flatMap((s) => index.get(s) ?? [])
 }
@@ -267,8 +267,8 @@ export function bySlug<T extends TinkerfundListing>(listings: T[], slugs: Iterab
 /** A Campaign page's "Backers also backed", then "More from this category"
  *  without the Campaigns the first already shows. */
 export function tinkerfundRecommendations<T extends TinkerfundListing>(listings: T[], slug: string) {
-  const self = bySlug(listings, [slug])[0]
-  const also = bySlug(listings, self?.alsoBacked ?? []).slice(0, RECOMMENDED)
+  const self = tinkerfundBySlug(listings, [slug])[0]
+  const also = tinkerfundBySlug(listings, self?.alsoBacked ?? []).slice(0, RECOMMENDED)
   const shown = new Set([self, ...also])
   return { also, more: recommend(listings.filter((l) => l.category === self?.category && !shown.has(l))) }
 }
@@ -276,9 +276,9 @@ export function tinkerfundRecommendations<T extends TinkerfundListing>(listings:
 /** The Cart's one row: what its Campaigns' Backers also backed, else more
  *  from their categories; never what the Cart already holds. */
 export function tinkerfundCartRecommendations<T extends TinkerfundListing>(listings: T[], inCart: string[]) {
-  const held = bySlug(listings, inCart)
+  const held = tinkerfundBySlug(listings, inCart)
   const fresh = (l: T) => !held.includes(l)
-  const also = bySlug(listings, held.flatMap((l) => l.alsoBacked ?? [])).filter(fresh).slice(0, RECOMMENDED)
+  const also = tinkerfundBySlug(listings, held.flatMap((l) => l.alsoBacked ?? [])).filter(fresh).slice(0, RECOMMENDED)
   if (also.length) return { title: TINKERFUND_RECOMMENDATIONS.also, cards: also }
   const categories = new Set(held.map((l) => l.category))
   return { title: TINKERFUND_RECOMMENDATIONS.similar, cards: recommend(listings.filter((l) => categories.has(l.category) && fresh(l))) }
