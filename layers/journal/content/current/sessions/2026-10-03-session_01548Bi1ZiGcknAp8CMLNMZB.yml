@@ -1,0 +1,103 @@
+schemaVersion: 1
+session: session_01548Bi1ZiGcknAp8CMLNMZB
+startedAt: 2026-10-03T15:21:51Z
+endedAt: 2026-10-03T15:25:49Z
+kind: delegated
+goal: Run one /auto-triage sweep over the open terrarium backlog
+status: completed
+outcome: "14 eligible issues triaged: 6 ready-for-agent, 6 ready-for-human, 2 closed as already-fixed"
+summary: "Human-instructed: the user invoked /auto-triage (no args, not full-sweep). Every open issue's latest comment carried AI provenance, so eligibility came only from the \"no state label or needs-triage is always eligible\" rule: 14 issues (13 needs-triage + unlabeled #1499). No open external PRs. One general-purpose subagent per issue, all dispatched in parallel from a shared scratchpad brief; each verified claims, posted one provenance-headed comment, and set labels. ready-for-agent: #1549 (zod 4), #1534 (Midden prose trim), #1514 (audit-skills pagination 403), #1526 (prune-trial hook step), #1515 (visitor-loop owner-memory script), #1541 (github-integration doc contradiction). No two share a file, so no blocking edges were added. ready-for-human: #1551, #1550, #1552, #1499, #1480, #1512. Closed completed: #1542 (fixed by #1545), #1479 (flagged skips predate the fact-check rule) — the latter is a stretch of \"already-implemented\" (the claim was really false), flagged to the user. No code changed; no PR."
+prs: []
+docsRead: []
+skillsUsed:
+  - name: auto-triage
+    reason: the sweep itself
+  - name: triage
+    reason: per-issue rules handed to each subagent
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: auto-triage's 'needs-triage is always eligible' rule re-surfaces tickets whose last activity is already AI's own; all 14 eligible here had AI-last comments, so the idempotency skip never applied to them
+    solution: Fine for genuinely untriaged tickets, but worth confirming in auto-triage SKILL.md that this is intended and not a loop-cost leak
+    severity: nit
+  - description: "#1479 agent closed as 'already-implemented' when the issue's claim was actually false (pre-rule runs); the skill only allows already-implemented/duplicate autonomous closes, so the fit is loose"
+    solution: auto-triage/ADR-0022 could name 'claim disproven by primary evidence' explicitly, or route it to ready-for-human
+    severity: minor
+  - description: "#1480 subagent cited 'a guard is human-only to merge' as an escalation reason, though human-only constrains merge not implementation"
+    solution: State in the subagent brief that human-only merge is never itself a ready-for-human reason (it was stated; one agent still leaned on it)
+    severity: nit
+durationSec: 238
+models:
+  claude-opus-5-5: 58
+toolCounts:
+  Bash: 12
+  ToolSearch: 1
+  mcp__github__list_pull_requests: 1
+  Agent: 14
+  Skill: 2
+docsReadViaShell:
+  - .agents/skills/triage/SKILL.md
+  - docs/agents/issue-tracker.md
+  - docs/adr/0017-provenance-footer-on-agent-authored-content.md
+  - docs/agents/guards.md
+  - .agents/skills/triage/AGENT-BRIEF.md
+  - CONTEXT.md
+  - .agents/skills/blog-post/SKILL.md
+  - docs/research/rulebook-migration-table.md
+  - .agents/skills/audit-docs/SKILL.md
+  - docs/agents/github-integration.md
+  - docs/agents/environment-caveats.md
+  - docs/proposals/445-ci-reuse-gate-scoped-classifier.md
+  - .agents/skills/dispatch-subagents/SKILL.md
+  - .agents/skills/visitor-loop/SKILL.md
+  - .agents/skills/visitor-loop/decisions.md
+  - docs/adr/0015-audit-skills-and-conditional-importance.md
+  - docs/adr/0024-build-time-mermaid-prerender.md
+  - layers/blog/CONTEXT.md
+  - docs/adr/0001-single-container-baked-multitenancy.md
+  - docs/adr/0003-agent-operating-model-and-governance.md
+  - docs/adr/0008-self-documentation-tenant-is-a-journal.md
+  - docs/adr/0009-session-logs-commit-directly-to-main.md
+  - docs/adr/0010-digests-derived-append-only-journal-pages.md
+  - docs/adr/0011-poc-self-updating-deploy-container.md
+  - docs/adr/0012-cross-persona-pingbacks-via-authored-denormalization.md
+  - layers/midden/CONTEXT.md
+  - .agents/skills/midden-catalogue/SKILL.md
+  - .agents/skills/prune-trial/SKILL.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - docs/adr/0027-prune-trials.md
+subagents:
+  - type: general-purpose
+    task: "Triage #1552"
+  - type: general-purpose
+    task: "Triage #1551"
+  - type: general-purpose
+    task: "Triage #1550"
+  - type: general-purpose
+    task: "Triage #1549"
+  - type: general-purpose
+    task: "Triage #1542"
+  - type: general-purpose
+    task: "Triage #1541"
+  - type: general-purpose
+    task: "Triage #1515"
+  - type: general-purpose
+    task: "Triage #1534"
+  - type: general-purpose
+    task: "Triage #1526"
+  - type: general-purpose
+    task: "Triage #1514"
+  - type: general-purpose
+    task: "Triage #1512"
+  - type: general-purpose
+    task: "Triage #1499"
+  - type: general-purpose
+    task: "Triage #1479"
+  - type: general-purpose
+    task: "Triage #1480"
+gitBranch: ccr-f6ecc0fc-xcgbu1
+entrypoint: remote_mobile
+cliVersion: 2.1.288
+landedBy: Stop
