@@ -17,7 +17,6 @@ import { SESSION_TRAILER } from './git-helpers.ts'
 import {
   envToken,
   hasGhBinary,
-  parseNextLink,
   parseOwnerRepo,
   pickFetchStrategy,
   type FetchStrategy,
@@ -745,32 +744,50 @@ function readLock(cwd = root): Set<string> {
 // every judgement is made by the pure `parseMergedPullRequests`/
 // `findOrphanedSessions` pair, so the comparison stays testable with no network.
 //
-// The `gh`/`rest` strategy switch (`pickFetchStrategy`, `parseNextLink`,
-// `hasGhBinary`, `envToken`, `parseOwnerRepo`) is single-homed in
+// The `gh`/`rest` strategy switch (`pickFetchStrategy`, `hasGhBinary`, `envToken`, `parseOwnerRepo`) is single-homed in
 // `list-open-issues.ts` (issue #505) and imported at the top of this file.
 
 function readOriginUrl(cwd: string): string {
   return execFileSync('git', ['remote', 'get-url', 'origin'], { cwd, encoding: 'utf8' }).trim()
 }
 
-function readClosedPullRequestsViaGh(owner: string, repo: string, cwd: string): RawPullRequestApiRecord[] {
-  const raw = execFileSync(
-    'gh',
-    ['api', '--method', 'GET', `repos/${owner}/${repo}/pulls`, '-f', 'state=closed', '-f', 'per_page=100', '--paginate', '--jq', '.[]'],
-    { cwd, encoding: 'utf8', maxBuffer: 256 * 1024 * 1024 },
-  )
-  return raw
-    .split('\n')
-    .filter((line) => line.length > 0)
-    .map((line) => JSON.parse(line) as RawPullRequestApiRecord)
+const PULLS_PER_PAGE = 100
+
+/** Walks pages by NUMBER on our own `repos/{owner}/{repo}` URL and stops on the
+ *  first page shorter than `perPage` — it never follows GitHub's `Link` URL.
+ *  For `pulls`, `rel="next"` points at the numeric `repositories/{id}/pulls`
+ *  form, which this environment's agent proxy 403s; `gh api --paginate`
+ *  follows it verbatim (issue #1514). Throws on any mid-walk failure rather
+ *  than returning the pages already read: a partial scan that reads as
+ *  complete is exactly the failure issue #738 exists to remove. */
+export function walkClosedPullRequestPages<T>(
+  pageUrl: (page: number) => string,
+  fetchPage: (url: string) => T[],
+  perPage = PULLS_PER_PAGE,
+): T[] {
+  const out: T[] = []
+  for (let page = 1; ; page++) {
+    let records: T[]
+    try {
+      records = fetchPage(pageUrl(page))
+    } catch (err) {
+      const cause = err instanceof Error ? err.message : String(err)
+      throw new Error(`closed-PR listing INCOMPLETE at page ${page} after ${out.length} record(s): ${cause}`, { cause: err })
+    }
+    out.push(...records)
+    if (records.length < perPage) return out
+  }
+}
+
+function ghGetPage(path: string, cwd: string): RawPullRequestApiRecord[] {
+  const raw = execFileSync('gh', ['api', '--method', 'GET', path], { cwd, encoding: 'utf8', maxBuffer: 256 * 1024 * 1024 })
+  return JSON.parse(raw) as RawPullRequestApiRecord[]
 }
 
 // See `poll-guest-tickets.ts`'s `curlGetPage` for why `curl` over `fetch` here
-// (issue #567) — mirrored, down to the header/body temp-file split that makes
-// `Link`-header pagination readable.
-function curlGetPage(url: string, token: string, cwd: string): { status: string; body: string; linkHeader: string | null } {
+// (issue #567).
+function curlGetPage(url: string, token: string, cwd: string): RawPullRequestApiRecord[] {
   const dir = mkdtempSync(join(tmpdir(), 'audit-skills-'))
-  const headerFile = join(dir, 'headers')
   const bodyFile = join(dir, 'body')
   try {
     const status = execFileSync(
@@ -779,8 +796,6 @@ function curlGetPage(url: string, token: string, cwd: string): { status: string;
         '-sS',
         '-o',
         bodyFile,
-        '-D',
-        headerFile,
         '-w',
         '%{http_code}',
         '-H',
@@ -793,46 +808,19 @@ function curlGetPage(url: string, token: string, cwd: string): { status: string;
       ],
       { cwd, encoding: 'utf8' },
     ).trim()
-    const headers = readFileSync(headerFile, 'utf8')
-    const linkLine = headers.split(/\r?\n/).find((l) => /^link:/i.test(l))
-    return {
-      status,
-      body: readFileSync(bodyFile, 'utf8'),
-      linkHeader: linkLine ? linkLine.slice(linkLine.indexOf(':') + 1).trim() : null,
-    }
+    if (status[0] !== '2') throw new Error(`GitHub REST API request to ${url} failed: HTTP ${status}`)
+    return JSON.parse(readFileSync(bodyFile, 'utf8')) as RawPullRequestApiRecord[]
   } finally {
     rmSync(dir, { recursive: true, force: true })
   }
 }
 
-/** Walks pages by NUMBER on our own `repos/{owner}/{repo}` URL, using the `Link`
- *  header only as the "is there another page" signal rather than following its
- *  URL. GitHub answers this endpoint with `rel="next"` pointing at the numeric
- *  `repositories/{id}/pulls` form, which this environment's agent proxy rejects
- *  outright ("Numeric-ID repository paths … are not supported through this
- *  proxy"), so following it verbatim 403s on page 2 — and a partial scan that
- *  reads as complete is exactly the failure issue #738 exists to remove. */
-function readClosedPullRequestsViaRest(
-  owner: string,
-  repo: string,
-  token: string,
-  cwd: string,
-): RawPullRequestApiRecord[] {
-  const out: RawPullRequestApiRecord[] = []
-  for (let page = 1; ; page++) {
-    const url = `https://api.github.com/repos/${owner}/${repo}/pulls?state=closed&per_page=100&page=${page}`
-    const { status, body, linkHeader } = curlGetPage(url, token, cwd)
-    if (status[0] !== '2') throw new Error(`GitHub REST API request to ${url} failed: HTTP ${status}`)
-    out.push(...(JSON.parse(body) as RawPullRequestApiRecord[]))
-    if (parseNextLink(linkHeader) === null) return out
-  }
-}
-
 function readClosedPullRequests(strategy: FetchStrategy, owner: string, repo: string, cwd: string): RawPullRequestApiRecord[] {
-  if (strategy === 'gh') return readClosedPullRequestsViaGh(owner, repo, cwd)
+  const path = (page: number) => `repos/${owner}/${repo}/pulls?state=closed&per_page=${PULLS_PER_PAGE}&page=${page}`
+  if (strategy === 'gh') return walkClosedPullRequestPages(path, (p) => ghGetPage(p, cwd))
   const token = envToken()
   if (!token) throw new Error('rest strategy chosen with no GH_TOKEN/GITHUB_TOKEN set')
-  return readClosedPullRequestsViaRest(owner, repo, token, cwd)
+  return walkClosedPullRequestPages((page) => `https://api.github.com/${path(page)}`, (url) => curlGetPage(url, token, cwd))
 }
 
 /** Every merged pull request's originating session — the orphan check's whole
