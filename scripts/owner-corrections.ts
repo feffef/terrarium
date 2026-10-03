@@ -205,20 +205,6 @@ export function ownerCorrections(since: string | undefined, cwd = root): Candida
   ).filter((p) => Date.parse(p.updated_at) >= floorMs)
   const prs = rawPulls.map((p) => toPr(p, cwd))
   const prByNumber = new Map(rawPulls.map((p) => [p.number, p]))
-  // A revert or follow-up can name a visitor-loop PR older than the listing.
-  const sinceMs = Date.parse(cutoff)
-  const named = prs
-    .filter((p) => p.mergedAt !== null && Date.parse(p.mergedAt) > sinceMs)
-    .flatMap(reworkedNumbers)
-  for (const n of new Set(named)) {
-    if (prByNumber.has(n)) continue
-    try {
-      const p = getJson<RawPull>(`${repo}/pulls/${n}`, cwd)
-      if (VISITOR_LOOP_BRANCH.test(p.head.ref)) prs.push(toPr(p, cwd))
-    } catch {
-      // #n is an issue, not a PR
-    }
-  }
 
   const sinceQuery = `since=${encodeURIComponent(cutoff)}`
   const raw: Array<RawComment & { thread: number }> = [
@@ -229,8 +215,7 @@ export function ownerCorrections(since: string | undefined, cwd = root): Candida
       .flatMap((p) => allPages<RawComment>(`${repo}/pulls/${p.number}/reviews?`, cwd).map((r) => ({ ...r, thread: p.number }))),
   ]
 
-  // Thread text is only needed for a human comment off a visitor-loop PR, so
-  // the per-thread fetch stays rare.
+  // Thread text is only needed for a human comment, so the per-thread fetch stays rare.
   const threadTexts = new Map<number, string>()
   const threadText = (c: RawComment & { thread: number }): string => {
     if (!c.body?.trim() || isAiAuthored(c.body)) return ''
@@ -250,6 +235,24 @@ export function ownerCorrections(since: string | undefined, cwd = root): Candida
     threadNumber: c.thread,
     threadText: threadText(c),
   }))
+
+  // A revert, follow-up or human comment can name a visitor-loop PR older than the listing.
+  const sinceMs = Date.parse(cutoff)
+  const named = [
+    ...prs.filter((p) => p.mergedAt !== null && Date.parse(p.mergedAt) > sinceMs).flatMap((p) => reworkedNumbers(p)),
+    ...comments.filter((c) => c.threadText).flatMap((c) => [...`${c.threadText}\n${c.body}`.matchAll(/#(\d+)/g)].map((m) => Number(m[1]))),
+  ]
+  for (const n of new Set(named)) {
+    if (prByNumber.has(n)) continue
+    let p: RawPull
+    try {
+      p = getJson<RawPull>(`${repo}/pulls/${n}`, cwd)
+    } catch (err) {
+      if (/HTTP 404|Not Found/.test(String(err))) continue // #n is an issue, not a PR
+      throw err
+    }
+    if (VISITOR_LOOP_BRANCH.test(p.head.ref)) prs.push(toPr(p, cwd))
+  }
   return findCandidates(cutoff, prs, comments)
 }
 
