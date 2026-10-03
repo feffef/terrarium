@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01WoSzRemGryY3vGQMWf2347
 startedAt: 2026-10-03T00:16:26Z
-endedAt: 2026-10-03T00:23:11Z
+endedAt: 2026-10-03T00:27:54Z
 kind: autonomous
 goal: Write the 2026-10-02 Digest and run the Journal retention sweep
-status: in-review
-outcome: PR 1540 opened with the 2026-10-02 Digest and retention sweep, gate green, awaiting merge
-summary: Scheduled digest run (agent-initiated by the schedule, no human instruction). Gathered 2026-10-02 (15 PRs, 14 sessions), wrote the Digest, fact-checked it with a read-only subagent (15 claims, 2 wording fixes, 2 unverifiable kept), ran the retention sweep (1 digest and 15 session logs archived), cleared gate:scoped, and opened PR 1540. Merge is still pending.
+status: completed
+outcome: PR 1540 merged on a green gate with the 2026-10-02 Digest and retention sweep
+summary: Scheduled digest run (agent-initiated by the schedule, no human instruction). Gathered 2026-10-02 (15 PRs, 14 sessions), wrote the Digest, fact-checked it with a read-only subagent (15 claims, 2 wording fixes, 2 unverifiable kept), ran the retention sweep (1 digest and 15 session logs archived), cleared gate:scoped, and opened PR 1540. PR 1540 merged on a green gate.
 prs:
   - "1540"
 docsRead:
@@ -31,11 +31,11 @@ frictions:
   - description: First PR body used the footer-style marker and was denied by the ADR-0017 guard; the Skill does not name the required first-line shape.
     solution: Name the exact marker shape in pr-workflow.md.
     severity: nit
-durationSec: 405
+durationSec: 689
 models:
-  claude-sonnet-5-5: 38
+  claude-sonnet-5-5: 49
 toolCounts:
-  Bash: 10
+  Bash: 12
   Read: 3
   Write: 1
   Agent: 2
@@ -43,6 +43,8 @@ toolCounts:
   mcp__github__create_pull_request: 2
   Skill: 2
   mcp__github__subscribe_pr_activity: 1
+  ReadNotifications: 3
+  mcp__github__add_issue_comment: 1
 filesEdited:
   - layers/journal/content/current/pages/digests/2026-10-02.md
 subagents:
