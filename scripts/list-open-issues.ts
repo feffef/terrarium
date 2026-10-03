@@ -267,6 +267,27 @@ function curlGetPage(
   }
 }
 
+/** One GET of a repo-scoped REST `path` (e.g. `repos/o/r/pulls?page=2`),
+ *  parsed — via `gh` or the REST fallback, whichever is usable. For a helper
+ *  that pages by hand (`&page=N`) and so needs no `Link` walking. */
+export function getJson<T>(path: string, cwd: string): T {
+  const strategy = pickFetchStrategy(hasGhBinary(cwd), Boolean(envToken()))
+  if (strategy === null) throw new Error(NO_ACCESS_PATH_MESSAGE)
+  if (strategy === 'gh') {
+    const raw = execFileSync('gh', ['api', '--method', 'GET', path], {
+      cwd,
+      encoding: 'utf8',
+      maxBuffer: 64 * 1024 * 1024,
+      stdio: ['ignore', 'pipe', 'pipe'], // a failure's stderr rides on the thrown error
+    })
+    return JSON.parse(raw) as T
+  }
+  const url = `https://api.github.com/${path}`
+  const { status, body } = curlGetPage(url, envToken()!, cwd)
+  if (status[0] !== '2') throw new Error(`GitHub REST API request to ${url} failed: HTTP ${status}`)
+  return JSON.parse(body) as T
+}
+
 function readOpenIssueRecordsViaRest(owner: string, repo: string, token: string, cwd: string): RawIssueApiRecord[] {
   const out: RawIssueApiRecord[] = []
   let url: string | null = `https://api.github.com/repos/${owner}/${repo}/issues?state=open&per_page=100`
