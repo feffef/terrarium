@@ -157,6 +157,7 @@ const backing = computed<TinkerfundBacking>(() => ({ slug: slug.value, state: st
   /* Recently backed sits under the Readout in its column, so the Readout no longer sticks (#1386). */
   .hero:has(> .recent) { grid-template-rows: auto 1fr; }
   .hero:has(> .recent) > :first-child { grid-row: 1 / span 2; }
+  .hero:has(> .recent) > .readout { position: static; }
   .recent { grid-column: 2; align-self: start; }
 }
 
