@@ -550,11 +550,12 @@ beyond the trace, stitch, authoring loop and Journal card; a unit test enforces 
 The command parser (`scripts/shell-reads.ts`'s `scanShellReads`) read a shell
 string that was never executed, so every new command shape — a glob, a `for`
 loop, a `cd`, a `git show`/`diff`/`log -p`, a `||` fallback — needed its own
-rule, and the Journal logged a new shape roughly weekly. The field is now
-derived by **matching the command's `tool_result` text against the lines of
-the instruction docs themselves**: an index of every instruction doc's trimmed
-lines of at least 30 characters that are unique across docs and absent from
-`CLAUDE.md`/`README.md`, matched after stripping the prefixes `grep -n`,
+rule, and the Journal kept logging new ones. The field is now derived by
+**matching the command's `tool_result` text against the lines of the
+instruction docs themselves**: an index of every instruction doc's trimmed
+lines of at least `MIN_DISTINCTIVE_LINE` characters (`scripts/shell-reads.ts`)
+that are unique across docs and absent from `CLAUDE.md`/`README.md`, matched
+after stripping the prefixes `grep -n`,
 multi-file grep, `cat -n` and diff add; a doc whose own path prefixes an output
 line (`path:12:`) is credited too. A command that printed nothing can never be
 credited. Measured against the logged frictions in
@@ -562,12 +563,12 @@ credited. Measured against the logged frictions in
 
 Two consequences the earlier wording did not allow for:
 
-- **The trace reads tool results and the checkout.** The field is no longer
-  "derived from `tool_use` calls, not results": `extractTrace` takes an
-  optional doc-line index, built from the working tree by `loadDocLineIndex`
-  at derivation time (the same author-time injection the glob resolver of
-  #1246 already used); without one the field is empty, which is what the
-  guard and provenance callers see. A doc edited between two derivations of
+- **The trace reads the checkout, not only the transcript.** It already read
+  tool results for this field since #1247's grep gate; now `extractTrace`
+  also takes an optional doc-line index, built from the working tree by
+  `loadDocLineIndex` at derivation time (the same author-time injection the
+  glob resolver of #1246 already used). Without one the field is empty, which
+  is what the guard and provenance callers see. A doc edited between two derivations of
   the same session can therefore change the re-derived value, which the
   superset premise of the idempotent re-derive does not cover — an accepted
   limit, the alternative being a `git show` per doc against a start commit the
@@ -578,6 +579,7 @@ Two consequences the earlier wording did not allow for:
   and the advisory now derive one value, where before the glob and `cd` fixes
   (#1246, #1454) reached only the advisory.
 
-Two reads stay invisible by design and are stated in the `log-session` Skill:
-a doc read from git history whose lines no longer exist in the checkout, and a
-read that showed fewer than 30 characters of the doc. The schema is unchanged.
+Two reads stay invisible by design (the `log-session` Skill points here): a
+doc read from git history whose lines no longer exist in the checkout, and a
+read that showed less than `MIN_DISTINCTIVE_LINE` of the doc. The schema is
+unchanged.

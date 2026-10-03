@@ -419,7 +419,7 @@ describe('docsReadViaShell (issues #1074, #1545)', () => {
 
   describe('the author-time advisory (shellReadScanOf)', () => {
     it('credits each path to the command and transcript whose output showed it, the session before a subagent', () => {
-      const scan = shellReadScanOf(withCwd(bash('head CONTEXT.md', CONTEXT)), [sub(bash('cat CONTEXT.md', CONTEXT), bash('cat docs/agents/domain.md', DOMAIN))], { index })
+      const scan = shellReadScanOf(withCwd(bash('head CONTEXT.md', CONTEXT)), [sub(bash('cat CONTEXT.md', CONTEXT), bash('cat docs/agents/domain.md', DOMAIN))], { docIndex: index })
       expect([...scan.provenance]).toEqual([
         ['CONTEXT.md', { command: 'head CONTEXT.md', source: 'this session' }],
         ['docs/agents/domain.md', { command: 'cat docs/agents/domain.md', source: 'subagent: Triage #1' }],
@@ -432,7 +432,7 @@ describe('docsReadViaShell (issues #1074, #1545)', () => {
         bash('cat foo.txt > docs/agents/new.md'),
         bash('ls docs/agents/guards.md', 'docs/agents/guards.md'),
         bash('sed -n 1,5p docs/agents/domain.md 2>/dev/null | head', '(Bash completed with no output)'),
-      ), [], { index })
+      ), [], { docIndex: index })
       expect(scan.paths).toEqual([])
       expect(scan.nearMisses.map((m) => [m.path, m.rule])).toEqual([
         ['docs/agents/domain.md', 'named by the command, but its output shows no line of this doc'],
@@ -441,14 +441,20 @@ describe('docsReadViaShell (issues #1074, #1545)', () => {
       ])
     })
 
+    it('does not explain a glob or loop away when the output credited the command: those are never why a doc is missing', () => {
+      const scan = shellReadScanOf(withCwd(bash('for f in docs/agents/*.md; do cat "$f"; done', GUARDS)), [], { docIndex: index })
+      expect(scan.paths).toEqual(['docs/agents/guards.md'])
+      expect(scan.nearMisses).toEqual([])
+    })
+
     it('never calls a credited path a near-miss, under any spelling and from any record set', () => {
-      const scan = shellReadScanOf(withCwd(bash('cat docs/agents/guards.md', GUARDS)), [sub(bash('echo ./docs/agents/guards.md', './docs/agents/guards.md'))], { index })
+      const scan = shellReadScanOf(withCwd(bash('cat docs/agents/guards.md', GUARDS)), [sub(bash('echo ./docs/agents/guards.md', './docs/agents/guards.md'))], { docIndex: index })
       expect(scan.paths).toEqual(['docs/agents/guards.md'])
       expect(scan.nearMisses).toEqual([])
     })
 
     it('names the cd-resolved path in a near-miss, so the agent recognizes which file went unshown (#1454)', () => {
-      const scan = shellReadScanOf(withCwd(bash('cd /repo/layers/tinkerfund; cat CONTEXT.md', '(Bash completed with no output)')), [], { index })
+      const scan = shellReadScanOf(withCwd(bash('cd /repo/layers/tinkerfund; cat CONTEXT.md', '(Bash completed with no output)')), [], { docIndex: index })
       expect(scan.paths).toEqual([])
       expect(scan.nearMisses.map((m) => m.path)).toEqual(['layers/tinkerfund/CONTEXT.md'])
     })

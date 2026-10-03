@@ -82,6 +82,17 @@ describe('the path-prefix signal', () => {
     expect(scan.paths).toEqual(['docs/agents/pr-workflow.md'])
   })
 
+  it('sees through a multi-file grep CONTEXT line (`path-12-`), not only a match line', () => {
+    const line = 'Each guard denies with the fix in its message, so the agent can act on it.'
+    const scan = scanShellReadsByOutput([{ command: 'grep -rn -A2 x docs/agents/*.md', output: `docs/agents/other.md-4-${line}` }], index(), rel)
+    expect(scan.paths).toEqual(['docs/agents/other.md', 'docs/agents/guards.md'])
+  })
+
+  it('does not take a linter-shaped `path:line:col message` line as a read', () => {
+    const scan = scanShellReadsByOutput([{ command: 'markdownlint docs/agents/guards.md', output: 'docs/agents/guards.md:12:1 MD013/line-length Line length' }], index(), rel)
+    expect(scan.paths).toEqual([])
+  })
+
   it('relativizes an absolute prefix and ignores one that is not an instruction doc', () => {
     const out = ['/repo/.claude/skills/tdd/SKILL.md:3:short', 'scripts/gate.ts:9:short', 'layers/journal/content/current/pages/x.md:1:short'].join('\n')
     expect(scanShellReadsByOutput([{ command: 'x', output: out }], index(), rel).paths).toEqual(['.agents/skills/tdd/SKILL.md'])

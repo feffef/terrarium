@@ -10,13 +10,10 @@
 // wrong entry is an extractor bug, not a different kind of evidence. Its output
 // is a floor, exactly as `filesRead` already is (see session-trace.ts's header).
 //
-// Two halves (ADR-0009's output-matching amendment, issue #1545):
-// `scanShellReadsByOutput` CREDITS, from what the command's output shows;
-// `scanShellReads` parses the command text only to EXPLAIN a near-miss in the
-// author-time advisory, since "why was this doc not credited" needs the
-// command and crediting never does. Its scope test stays a PATH-SHAPE test
-// (`isInstructionDoc`), not a needle set, so a doc added after any scan is
-// still in scope.
+// Credit comes from the command's OUTPUT (`scanShellReadsByOutput`); the
+// command parser (`scanShellReads`) only explains a near-miss in the advisory
+// — ADR-0009's output-matching amendment (issue #1545) says why. Scope stays a
+// PATH-SHAPE test (`isInstructionDoc`), so a doc added later is still in scope.
 
 /** Argv-0s that stream a file's CONTENTS into the session. `find`/`ls`/`wc` are
  *  deliberately absent: they report *about* a file without showing it.
@@ -690,12 +687,7 @@ export function scanShellReads(
   return { paths: [...creditedBy.keys()], creditedBy, nearMisses: missed }
 }
 
-// ── Crediting from OUTPUT, not from the command (issue #1545) ────────────────
-// The parser above reads a shell string that was never executed, so every new
-// command shape needed its own rule. The matcher below reads what actually
-// reached the session — the tool_result text — against the lines of the docs
-// themselves, so globs, loops, `cd`, git forms, pipes and fallbacks stop being
-// cases. Measured in docs/research/shell-reads-by-output-matching.md.
+// ── Crediting from OUTPUT (ADR-0009's output-matching amendment, #1545) ──────
 
 export interface DocText {
   path: string
@@ -709,28 +701,30 @@ export interface DocLineIndex {
   byLine: Map<string, string>
 }
 
-/** Below this, a line is too common to tell one doc from another. */
-const MIN_DISTINCTIVE_LINE = 30
+/** Below this, a line is too common to tell one doc from another — the single
+ *  home of the limit the ADR-0009 amendment and the log-session Skill refer to. */
+export const MIN_DISTINCTIVE_LINE = 30
+
+function distinctiveLines(text: string): string[] {
+  return text.split('\n').map((l) => l.trim()).filter((l) => l.length >= MIN_DISTINCTIVE_LINE)
+}
 
 /** `sinks` are files whose lines are never credited but still disqualify a
  *  doc line from being distinctive (`CLAUDE.md`, `README.md`). */
 export function buildDocLineIndex(docs: DocText[], sinks: DocText[] = []): DocLineIndex {
   const owners = new Map<string, Set<string>>()
-  const add = (path: string, text: string): void => {
-    for (const raw of text.split('\n')) {
-      const line = raw.trim()
-      if (line.length < MIN_DISTINCTIVE_LINE) continue
+  for (const d of docs) {
+    const path = canonicalizeInstructionPath(d.path)
+    for (const line of distinctiveLines(d.text)) {
       const set = owners.get(line) ?? new Set<string>()
       set.add(path)
       owners.set(line, set)
     }
   }
-  for (const d of docs) add(canonicalizeInstructionPath(d.path), d.text)
-  const sinkMark = '\u0000sink'
-  for (const s of sinks) add(sinkMark, s.text)
+  const sunk = new Set(sinks.flatMap((s) => distinctiveLines(s.text)))
   const byLine = new Map<string, string>()
   for (const [line, set] of owners) {
-    if (set.size === 1 && !set.has(sinkMark)) byLine.set(line, [...set][0]!)
+    if (set.size === 1 && !sunk.has(line)) byLine.set(line, [...set][0]!)
   }
   return { byLine }
 }
@@ -742,10 +736,10 @@ export interface OutputScan {
 }
 
 /** The ways a reader command wraps a doc line: `grep -n`'s `12:`, context's
- *  `12-`, multi-file grep's `path:12:`, `cat -n`'s `  12<tab>`, unified diff's
- *  `+`/`-`, plain diff's `> `/`< `. Each is tried as its own candidate; the
- *  raw line is always one of them. */
-const LINE_PREFIXES = [/^[+-]/, /^[<>] ?/, /^\d+[:-]/, /^[^:\s]+:\d+[:-]/, /^\s*\d+\t/]
+ *  `12-`, multi-file grep's `path:12:` and its context `path-12-`, `cat -n`'s
+ *  `  12<tab>`, unified diff's `+`/`-`, plain diff's `> `/`< `. Each is tried
+ *  as its own candidate; the raw line is always one of them. */
+const LINE_PREFIXES = [/^[+-]/, /^[<>] ?/, /^\d+[:-]/, /^[^:\s]+[:-]\d+[:-]/, /^\s*\d+\t/]
 
 function unwrappedCandidates(raw: string): string[] {
   const line = raw.replace(/\r$/, '')
@@ -755,10 +749,12 @@ function unwrappedCandidates(raw: string): string[] {
   return [...out]
 }
 
-/** Multi-file grep/rg prints `<path>:<line>:` before each hit: the doc's own
- *  path in the OUTPUT, so still output-only evidence — and the only evidence
- *  when the hit itself is too short to be distinctive. */
-const PATH_PREFIX = /^([^:\s]+\.md):\d+[:-]/
+/** Multi-file grep/rg prints `<path>:<line>:` before each hit (`-<line>-` on a
+ *  context line): the doc's own path in the OUTPUT, so still output-only
+ *  evidence — and the only evidence when the hit itself is too short to be
+ *  distinctive. A linter prints the same prefix followed by a column
+ *  (`x.md:12:1 MD013 …`) without showing the doc, so a column is excluded. */
+const PATH_PREFIX = /^([^:\s]+\.md)[:-]\d+[:-](?!\d+[: ])/
 
 /** `rel` relativizes an absolute path the way the trace does, so a prefix from
  *  `grep -rn … /repo/docs/x.md` lands on the same key as `docs/x.md`. */

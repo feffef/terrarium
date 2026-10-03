@@ -275,7 +275,7 @@ describe('reportShellReads (the author-time verification report)', () => {
     const lines: string[] = []
     vi.stubEnv('HOME', home)
     try {
-      reportShellReads(root, (l) => lines.push(l))
+      reportShellReads(root, (l) => lines.push(l), root)
     } finally {
       vi.unstubAllEnvs()
     }
@@ -283,8 +283,8 @@ describe('reportShellReads (the author-time verification report)', () => {
   }
 
   it('lists the detected paths and the rule that rejected each near-miss', () => {
-    const home = store(['cat docs/agents/guards.md', 'ls docs/adr/0001-x.md'])
-    const out = run(home).join('\n')
+    const fixture = store(['cat docs/agents/guards.md', 'ls docs/adr/0001-x.md'])
+    const out = run(fixture).join('\n')
     expect(out).toContain('docs/agents/guards.md')
     expect(out).toContain('not a reader command')
     expect(out).toContain('SHELL-READ-DETECTION')

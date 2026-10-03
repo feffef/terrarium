@@ -176,10 +176,10 @@ own lines appeared in a Bash command's output in this session's work
 docs a command *named* without showing, with the rule that explains each. The
 credit comes from the output, not the command (ADR-0009's output-matching
 amendment), so a glob, loop, `cd`, pipe or git form is never why a doc is
-missing: only its lines not reaching the session is. Two reads it cannot see,
-by design: a doc read from git history whose lines no longer exist in the
-checkout, and a read that showed fewer than 30 characters of the doc. Check
-both lists against that evidence, not memory.
+missing: only its lines not reaching the session is. The two reads it cannot
+see by design (a doc read from git history, a read too short to be
+distinctive) are defined in that amendment. Check both lists against that
+evidence, not memory.
 
 **You cannot correct the field** — it is derived, and an authored
 `docsReadViaShell` is refused by name. A wrong result is reported as a Friction

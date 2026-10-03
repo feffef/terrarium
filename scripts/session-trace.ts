@@ -6,11 +6,11 @@
 // frictions) cannot provide, and the SessionEnd handler stitches the two.
 //
 // The extraction is a pure function over parsed records (unit-tested); the file
-// IO is a thin shell. Read-tool paths are the only source of `filesRead`; a
-// `cat`/`grep` inspection of an agent-instruction doc is picked up separately as
-// `docsReadViaShell` (shell-reads.ts, issue #1074). Both remain a floor rather
-// than a complete count — a path reached via glob, variable or `xargs` appears
-// in neither.
+// IO is a thin shell. Read-tool paths are the only source of `filesRead`; what a
+// `cat`/`grep` inspection of an agent-instruction doc actually showed is picked
+// up separately as `docsReadViaShell` (shell-reads.ts, issues #1074/#1545): the
+// command's output matched against an injected doc-line index, so the command's
+// own shape never matters. Both remain a floor rather than a complete count.
 //
 // A dispatched subagent's tool calls are NOT inlined into the parent transcript
 // (it carries no sidechain records at all); the harness writes each one its own
@@ -257,9 +257,12 @@ export function loadDocLineIndex(repoRoot: string): DocLineIndex {
       else files.push(abs.slice(repoRoot.length + 1))
     }
   }
-  for (const top of ['docs', '.agents', 'layers']) {
+  for (const top of ['docs', '.agents']) {
     if (existsSync(join(repoRoot, top))) walk(join(repoRoot, top))
   }
+  // Of `layers/`, only each Tenant's own `CONTEXT.md` is instruction (ADR-0021).
+  const layers = join(repoRoot, 'layers')
+  if (existsSync(layers)) for (const t of readdirSync(layers)) files.push(`layers/${t}/CONTEXT.md`)
   files.push('CONTEXT.md', 'CONTEXT-MAP.md')
   const read = (rel: string): DocText | undefined => {
     const abs = join(repoRoot, rel)
@@ -290,21 +293,21 @@ function resolveAgainstCdDir(p: string, command: string, rel: (s: string) => str
 }
 
 /** The shell-read scan WITH its near-misses, for the author-time advisory the
- *  `log-session` Skill prints (#1074's verification loop). Credit comes from the
- *  output matcher, the same derivation `extractTrace` lands; the command
- *  parser contributes only the near-misses — why a doc a command named was not
- *  credited — which the matcher cannot explain on its own. Subagent transcripts
- *  belong here for the same reason `docsReadViaShell` is in
- *  `FOLDED_TRACE_FIELDS`: the value that LANDS folds them in.
+ *  `log-session` Skill prints (#1074's loop): credit from the same output
+ *  matcher `extractTrace` lands, explanations from the command parser (ADR-0009's
+ *  output-matching amendment). A parser note on a command whose output DID
+ *  credit a doc is dropped: an unresolved glob or loop token there is a doc
+ *  the matcher already saw, not a miss. Subagent transcripts belong here for
+ *  the same reason `docsReadViaShell` is in `FOLDED_TRACE_FIELDS`.
  *
  *  `repoRoot` builds the index from the checkout and resolves single-match
- *  globs for the near-miss side (#1246); tests inject `index` directly. */
+ *  globs for the near-miss side (#1246); tests inject `docIndex` directly. */
 export function shellReadScanOf(
   records: Record<string, unknown>[],
   subagents: LabelledRecords[] = [],
-  opts: { repoRoot?: string; index?: DocLineIndex } = {},
+  opts: { repoRoot?: string; docIndex?: DocLineIndex } = {},
 ): FoldedShellReadScan {
-  const index = opts.index ?? (opts.repoRoot !== undefined ? loadDocLineIndex(opts.repoRoot) : buildDocLineIndex([]))
+  const docIndex = opts.docIndex ?? (opts.repoRoot !== undefined ? loadDocLineIndex(opts.repoRoot) : buildDocLineIndex([]))
   const resolveGlob = opts.repoRoot !== undefined ? resolveGlobAgainstTree(opts.repoRoot) : undefined
   const sets = [{ label: 'this session', records }, ...subagents.map((s) => ({ ...s, label: `subagent: ${s.label}` }))]
   const provenance: FoldedShellReadScan['provenance'] = new Map()
@@ -313,15 +316,17 @@ export function shellReadScanOf(
   for (const { label, records: rs } of sets) {
     const rel = relativizer(rs)
     const commands = bashCommandsOf(rs)
-    for (const [p, command] of scanShellReadsByOutput(commands, index, rel).creditedBy) {
+    const matched = scanShellReadsByOutput(commands, docIndex, rel)
+    for (const [p, command] of matched.creditedBy) {
       if (!provenance.has(p)) provenance.set(p, { command, source: label })
     }
+    const crediting = new Set(matched.creditedBy.values())
     const parser = scanShellReads(commands, rel, resolveGlob)
     for (const [p, command] of parser.creditedBy) {
       const path = resolveAgainstCdDir(p, command, rel)
       unshown.push({ command, token: p, path, rule: 'named by the command, but its output shows no line of this doc' })
     }
-    parsed.push(...parser.nearMisses)
+    parsed.push(...parser.nearMisses.filter((m) => !crediting.has(m.command)))
   }
   const seen = new Set<string>()
   const nearMisses = [...unshown, ...parsed].filter((m) => {
@@ -476,7 +481,11 @@ export function findLatestTranscript(cwd: string, home: string | undefined): str
 }
 
 /** Derive the mechanical trace from parsed transcript records. Pure — the
- *  testable core. `env` is injectable (defaults to `process.env`). */
+ *  testable core. `env` is injectable (defaults to `process.env`). `docIndex`
+ *  is what `docsReadViaShell` is credited against (ADR-0009's output-matching
+ *  amendment): the lander and the advisory pass `loadDocLineIndex(root)`;
+ *  without one the field is simply empty, which is all the guard and
+ *  provenance callers need. */
 export function extractTrace(
   records: Record<string, unknown>[],
   env: SessionIdEnv = process.env,

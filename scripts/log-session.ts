@@ -733,7 +733,7 @@ const NEAR_MISS_LIMIT = 5
  *  against the session it just lived through (#1074's loop). Prints nothing when
  *  there is nothing to check — including when the transcript can't be found,
  *  which is a degraded report, never a failure to author. */
-export function reportShellReads(cwd: string, log: (line: string) => void = console.log): void {
+export function reportShellReads(cwd: string, log: (line: string) => void = console.log, repoRoot: string = root): void {
   let scan
   try {
     const transcriptPath = findLatestTranscript(cwd, process.env.HOME)
@@ -741,7 +741,7 @@ export function reportShellReads(cwd: string, log: (line: string) => void = cons
     scan = shellReadScanOf(
       parseTranscript(readFileSync(transcriptPath, 'utf8')),
       readSubagentJsonls(transcriptPath).map((s) => ({ label: s.label, records: parseTranscript(s.jsonl) })),
-      { repoRoot: cwd },
+      { repoRoot },
     )
   } catch {
     // Locating and reading the transcript is best-effort: a report that can't be
