@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01WTMb3hdimWwxkpAcxM4uUK
 startedAt: 2026-10-03T19:04:26Z
-endedAt: 2026-10-03T19:06:45Z
+endedAt: 2026-10-03T19:09:05Z
 kind: interactive
 goal: Measure how widespread issue 1248 (subagent dispatch skipping the dispatch-subagents Skill) is in recent session logs
 status: completed
-outcome: Scan found 1 real skip of the Skill on a git-touching dispatch since 2026-09-24, and it caused no damage; dispatch frictions come from the Skill's content
-summary: 'Human-instructed: the user asked me to check issue 1248 and scan recent session logs to see how widespread it is. That was research only, so nothing was committed and no PR was opened. I read the issue and its triage comment. The prune trial it asked for landed on 2026-09-24 (6fc603d6) and was judged "holds" on 2026-09-28 (ece30c81), but the issue is still open. A throwaway Python scan covered 135 logs since 2026-09-24 and 279 since 2026-09-01. It compared which subagents each log lists against skillsUsed and docsRead, and it collected frictions about dispatch, worktrees and subagents. Since the prune, 22 sessions dispatched a subagent likely to touch git. 18 of them invoked the Skill. Of the rest, 3 were read-only searches the task wording misclassified and 1 was a Workflow run. That leaves 1 real skip: the frictions-to-fixes doc-fix agent in session_016xwHemy6X6LmFrzBs4mgad, which read the Skill without invoking it and still landed PR 1500 cleanly. The moderate dispatch frictions (a shared branch ref pushed under the primary checkout, worktrees starting on a stale HEAD, a stopped impl agent) all happened in sessions that DID invoke the Skill.'
+outcome: Issue 1248 scan found 1 harmless skip since the prune; posted the numbers on 1248 and found 3 of 4 dispatch gaps already fixed
+summary: "Human-instructed: the user asked me to check issue 1248 and scan recent session logs to see how widespread it is. That was research only, so nothing was committed and no PR was opened. I read the issue and its triage comment. The prune trial it asked for landed on 2026-09-24 (6fc603d6) and was judged \"holds\" on 2026-09-28 (ece30c81), but the issue is still open. A throwaway Python scan covered 135 logs since 2026-09-24 and 279 since 2026-09-01. It compared which subagents each log lists against skillsUsed and docsRead, and it collected frictions about dispatch, worktrees and subagents. Since the prune, 22 sessions dispatched a subagent likely to touch git. 18 of them invoked the Skill. Of the rest, 3 were read-only searches the task wording misclassified and 1 was a Workflow run. That leaves 1 real skip: the frictions-to-fixes doc-fix agent in session_016xwHemy6X6LmFrzBs4mgad, which read the Skill without invoking it and still landed PR 1500 cleanly. The moderate dispatch frictions (a shared branch ref pushed under the primary checkout, worktrees starting on a stale HEAD, a stopped impl agent) all happened in sessions that DID invoke the Skill. Second human-instructed turn: the user asked me to (1) comment the findings on 1248, which I did with a recommendation to close it, and (2) search for existing issues covering the Skill-content gaps. Three gaps are already fixed: stale HEAD (#1420 plus the Skill's verify-HEAD bullet), work stranded by a stopped agent (the commit-before-stopping and bank-progress bullets), and the commit-msg hook in worktrees without node_modules (2e41583f, 2026-09-27). The fourth gap has no issue and isn't in the Skill: a worktree impl agent pushing the very branch the primary checkout has open. It is a single occurrence, so I asked the user before filing it."
 prs: []
 docsRead: []
 skillsUsed:
@@ -21,14 +21,22 @@ frictions:
   - description: Some subagent entries have no type field, which my first scan pass silently dropped and so undercounted.
     solution: The extractor should always emit type, defaulting to general-purpose.
     severity: nit
-durationSec: 138
+  - description: search_issues semantic search returned the same 6 loosely related issues for 3 different queries, so deciding coverage needed a grep of the Skill and git log as well.
+    solution: For a "does an issue exist?" check, also grep the owning doc and its git log rather than trusting the search ranking.
+    severity: nit
+durationSec: 279
 models:
-  claude-opus-5-5: 30
+  claude-opus-5-5: 50
 toolCounts:
-  ToolSearch: 1
+  ToolSearch: 2
   mcp__github__issue_read: 2
-  Bash: 10
+  Bash: 15
   Skill: 2
+  mcp__github__add_issue_comment: 1
+  mcp__github__search_issues: 5
+docsReadViaShell:
+  - docs/adr/0017-provenance-footer-on-agent-authored-content.md
+  - .agents/skills/dispatch-subagents/SKILL.md
 gitBranch: claude/dreamy-heisenberg-eg5w6a
 entrypoint: remote
 cliVersion: 2.1.288
