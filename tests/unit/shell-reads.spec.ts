@@ -699,6 +699,7 @@ describe('no other consumer acts on the field', () => {
     'layers/journal/app/utils/dashboard.ts',
     'layers/journal/app/components/journal/SessionCard.vue',
     'tests/unit/shell-reads.spec.ts',
+    'tests/unit/shell-reads-output.spec.ts',
     'tests/unit/session-trace.spec.ts',
     'tests/unit/log-session.spec.ts',
   ])

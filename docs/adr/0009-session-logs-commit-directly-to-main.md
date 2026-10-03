@@ -541,3 +541,43 @@ ran rather than that the agent attended, so a wrong entry is an extractor bug.
 lowest `frictions-to-fixes` never drops; marker `SHELL-READ-DETECTION`) rather
 than editing it back into a self-report. **No consumer** may act on its presence
 beyond the trace, stitch, authoring loop and Journal card; a unit test enforces it.
+
+## `docsReadViaShell` is derived from command output, not command text (2026-10-03, issue #1545)
+
+> **Amended.** The shell-read amendment above still defines what the field
+> claims; this changes how the claim is established.
+
+The command parser (`scripts/shell-reads.ts`'s `scanShellReads`) read a shell
+string that was never executed, so every new command shape — a glob, a `for`
+loop, a `cd`, a `git show`/`diff`/`log -p`, a `||` fallback — needed its own
+rule, and the Journal logged a new shape roughly weekly. The field is now
+derived by **matching the command's `tool_result` text against the lines of
+the instruction docs themselves**: an index of every instruction doc's trimmed
+lines of at least 30 characters that are unique across docs and absent from
+`CLAUDE.md`/`README.md`, matched after stripping the prefixes `grep -n`,
+multi-file grep, `cat -n` and diff add; a doc whose own path prefixes an output
+line (`path:12:`) is credited too. A command that printed nothing can never be
+credited. Measured against the logged frictions in
+`docs/research/shell-reads-by-output-matching.md`.
+
+Two consequences the earlier wording did not allow for:
+
+- **The trace reads tool results and the checkout.** The field is no longer
+  "derived from `tool_use` calls, not results": `extractTrace` takes an
+  optional doc-line index, built from the working tree by `loadDocLineIndex`
+  at derivation time (the same author-time injection the glob resolver of
+  #1246 already used); without one the field is empty, which is what the
+  guard and provenance callers see. A doc edited between two derivations of
+  the same session can therefore change the re-derived value, which the
+  superset premise of the idempotent re-derive does not cover — an accepted
+  limit, the alternative being a `git show` per doc against a start commit the
+  transcript does not record.
+- **The parser survives only as the advisory's explanation.** `--author`'s
+  near-miss list still comes from `scanShellReads`, because "why was this doc
+  not credited" needs the command text; crediting never does. The landed value
+  and the advisory now derive one value, where before the glob and `cd` fixes
+  (#1246, #1454) reached only the advisory.
+
+Two reads stay invisible by design and are stated in the `log-session` Skill:
+a doc read from git history whose lines no longer exist in the checkout, and a
+read that showed fewer than 30 characters of the doc. The schema is unchanged.

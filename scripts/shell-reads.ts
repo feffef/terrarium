@@ -7,18 +7,16 @@
 // One detected path claims exactly this: A COMMAND RAN THAT STREAMED THIS DOC'S
 // CONTENTS INTO THE SESSION. That is a claim about the command, not about the
 // agent's attention — which makes it checkable against the transcript, so a
-// wrong entry is an extractor bug, not a different kind of evidence. The
-// extractor is young and its output is a floor, exactly as `filesRead` already
-// is (see session-trace.ts's header); `scanShellReads` reports its near-misses
-// so the authoring agent can drive it toward correctness (#1074's loop, and
-// log-session/SKILL.md for the friction that carries a correction).
+// wrong entry is an extractor bug, not a different kind of evidence. Its output
+// is a floor, exactly as `filesRead` already is (see session-trace.ts's header).
 //
-// Detection is a PATH-SHAPE test, not a membership test against a filesystem
-// scan of the repo. #1074's prototype matched a scanned 118-path needle set;
-// `extractTrace` is a pure function over transcript records with no filesystem
-// access, and a shape test additionally survives a doc added after any scan.
-// The decoys that motivated the needle set are rejected here by the segment and
-// verb rules instead.
+// Two halves (ADR-0009's output-matching amendment, issue #1545):
+// `scanShellReadsByOutput` CREDITS, from what the command's output shows;
+// `scanShellReads` parses the command text only to EXPLAIN a near-miss in the
+// author-time advisory, since "why was this doc not credited" needs the
+// command and crediting never does. Its scope test stays a PATH-SHAPE test
+// (`isInstructionDoc`), not a needle set, so a doc added after any scan is
+// still in scope.
 
 /** Argv-0s that stream a file's CONTENTS into the session. `find`/`ls`/`wc` are
  *  deliberately absent: they report *about* a file without showing it.
@@ -83,6 +81,7 @@ export type SkipRule =
   | 'grep/rg output does not show this file being read'
   | '|| fallback: stderr suppressed, output may belong to the other side'
   | 'git show diff does not touch this path'
+  | 'named by the command, but its output shows no line of this doc'
 
 export interface NearMiss {
   command: string
@@ -689,4 +688,103 @@ export function scanShellReads(
     return true
   })
   return { paths: [...creditedBy.keys()], creditedBy, nearMisses: missed }
+}
+
+// ── Crediting from OUTPUT, not from the command (issue #1545) ────────────────
+// The parser above reads a shell string that was never executed, so every new
+// command shape needed its own rule. The matcher below reads what actually
+// reached the session — the tool_result text — against the lines of the docs
+// themselves, so globs, loops, `cd`, git forms, pipes and fallbacks stop being
+// cases. Measured in docs/research/shell-reads-by-output-matching.md.
+
+export interface DocText {
+  path: string
+  text: string
+}
+
+/** Distinctive line → the one instruction doc it belongs to. Built from doc
+ *  text, never from a filesystem, so it stays pure; `loadDocLineIndex` in
+ *  session-trace.ts is the fs-backed builder. */
+export interface DocLineIndex {
+  byLine: Map<string, string>
+}
+
+/** Below this, a line is too common to tell one doc from another. */
+const MIN_DISTINCTIVE_LINE = 30
+
+/** `sinks` are files whose lines are never credited but still disqualify a
+ *  doc line from being distinctive (`CLAUDE.md`, `README.md`). */
+export function buildDocLineIndex(docs: DocText[], sinks: DocText[] = []): DocLineIndex {
+  const owners = new Map<string, Set<string>>()
+  const add = (path: string, text: string): void => {
+    for (const raw of text.split('\n')) {
+      const line = raw.trim()
+      if (line.length < MIN_DISTINCTIVE_LINE) continue
+      const set = owners.get(line) ?? new Set<string>()
+      set.add(path)
+      owners.set(line, set)
+    }
+  }
+  for (const d of docs) add(canonicalizeInstructionPath(d.path), d.text)
+  const sinkMark = '\u0000sink'
+  for (const s of sinks) add(sinkMark, s.text)
+  const byLine = new Map<string, string>()
+  for (const [line, set] of owners) {
+    if (set.size === 1 && !set.has(sinkMark)) byLine.set(line, [...set][0]!)
+  }
+  return { byLine }
+}
+
+export interface OutputScan {
+  paths: string[]
+  /** Each credited path's first crediting command, for the advisory's evidence line. */
+  creditedBy: Map<string, string>
+}
+
+/** The ways a reader command wraps a doc line: `grep -n`'s `12:`, context's
+ *  `12-`, multi-file grep's `path:12:`, `cat -n`'s `  12<tab>`, unified diff's
+ *  `+`/`-`, plain diff's `> `/`< `. Each is tried as its own candidate; the
+ *  raw line is always one of them. */
+const LINE_PREFIXES = [/^[+-]/, /^[<>] ?/, /^\d+[:-]/, /^[^:\s]+:\d+[:-]/, /^\s*\d+\t/]
+
+function unwrappedCandidates(raw: string): string[] {
+  const line = raw.replace(/\r$/, '')
+  const out = new Set<string>([line.trim()])
+  for (const re of LINE_PREFIXES) out.add(line.replace(re, '').trim())
+  out.delete('')
+  return [...out]
+}
+
+/** Multi-file grep/rg prints `<path>:<line>:` before each hit: the doc's own
+ *  path in the OUTPUT, so still output-only evidence — and the only evidence
+ *  when the hit itself is too short to be distinctive. */
+const PATH_PREFIX = /^([^:\s]+\.md):\d+[:-]/
+
+/** `rel` relativizes an absolute path the way the trace does, so a prefix from
+ *  `grep -rn … /repo/docs/x.md` lands on the same key as `docs/x.md`. */
+export function scanShellReadsByOutput(
+  commands: ShellCommand[],
+  index: DocLineIndex,
+  rel: (p: string) => string = (p) => p,
+): OutputScan {
+  const creditedBy = new Map<string, string>()
+  for (const entry of commands) {
+    const { command, output } = normalizeShellCommand(entry)
+    if (output === undefined) continue
+    const credit = (doc: string): void => {
+      if (!creditedBy.has(doc)) creditedBy.set(doc, command)
+    }
+    for (const raw of output.split('\n')) {
+      const prefixed = PATH_PREFIX.exec(raw)
+      if (prefixed) {
+        const doc = canonicalizeInstructionPath(rel(prefixed[1]!))
+        if (isInstructionDoc(doc)) credit(doc)
+      }
+      for (const candidate of unwrappedCandidates(raw)) {
+        const doc = index.byLine.get(candidate)
+        if (doc !== undefined) credit(doc)
+      }
+    }
+  }
+  return { paths: [...creditedBy.keys()], creditedBy }
 }

@@ -4,7 +4,7 @@
 // schema validation (the L1 stand-in) and the canonical `<date>-<session>.yml` filename.
 import { existsSync, mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
-import { join } from 'node:path'
+import { dirname, join } from 'node:path'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import {
   CURRENT_SESSIONS_SCHEMA_VERSION,
@@ -234,32 +234,48 @@ describe('reportShellReads (the author-time verification report)', () => {
   // Builds a fake harness transcript store so the report can be driven end to
   // end — it is the agent-facing half of #1074's loop, and its silence rules
   // matter as much as its output.
-  const bash = (command: string) => ({
-    type: 'assistant',
-    message: { content: [{ type: 'tool_use', name: 'Bash', input: { command } }] },
-  })
+  // The docs a fixture command can show, written to a real root so the
+  // output matcher's index (issue #1545) has something to credit against.
+  const FIXTURE_DOCS: Record<string, string> = {
+    'docs/agents/guards.md': 'The mechanical PreToolUse guards that hold rules prose stopped holding.',
+    'CONTEXT.md': 'The terms every agent needs regardless of task, and the Tenants roster.',
+  }
+  let n = 0
+  const bash = (command: string): Record<string, unknown>[] => {
+    const id = `toolu_${++n}`
+    const shown = Object.keys(FIXTURE_DOCS).find((d) => command.startsWith('cat') && command.includes(d))
+    return [
+      { type: 'assistant', message: { content: [{ type: 'tool_use', id, name: 'Bash', input: { command } }] } },
+      { type: 'user', message: { content: [{ type: 'tool_result', tool_use_id: id, content: shown ? FIXTURE_DOCS[shown] : '' }] } },
+    ]
+  }
   const jsonl = (cwd: string, commands: string[]): string =>
-    [{ type: 'user', cwd, message: { content: 'go' } }, ...commands.map(bash)]
+    [{ type: 'user', cwd, message: { content: 'go' } }, ...commands.flatMap(bash)]
       .map((r) => JSON.stringify(r))
       .join('\n')
-  function store(cwd: string, commands: string[], subagentCommands?: string[], meta?: string): string {
+  function store(commands: string[], subagentCommands?: string[], meta?: string): { home: string; root: string } {
+    const root = mkdtempSync(join(tmpdir(), 'shellread-root-'))
+    for (const [rel, text] of Object.entries(FIXTURE_DOCS)) {
+      mkdirSync(dirname(join(root, rel)), { recursive: true })
+      writeFileSync(join(root, rel), `# heading\n\n${text}\n`)
+    }
     const home = mkdtempSync(join(tmpdir(), 'shellread-home-'))
-    const dir = join(home, '.claude', 'projects', cwd.replace(/[/.]/g, '-'))
+    const dir = join(home, '.claude', 'projects', root.replace(/[/.]/g, '-'))
     mkdirSync(dir, { recursive: true })
-    writeFileSync(join(dir, 'session.jsonl'), jsonl(cwd, commands))
+    writeFileSync(join(dir, 'session.jsonl'), jsonl(root, commands))
     if (subagentCommands) {
       const subs = join(dir, 'session', 'subagents')
       mkdirSync(subs, { recursive: true })
-      writeFileSync(join(subs, 'agent-a1.jsonl'), jsonl(cwd, subagentCommands))
+      writeFileSync(join(subs, 'agent-a1.jsonl'), jsonl(root, subagentCommands))
       if (meta !== undefined) writeFileSync(join(subs, 'agent-a1.meta.json'), meta)
     }
-    return home
+    return { home, root }
   }
-  const run = (cwd: string, home: string): string[] => {
+  const run = ({ home, root }: { home: string; root: string }): string[] => {
     const lines: string[] = []
     vi.stubEnv('HOME', home)
     try {
-      reportShellReads(cwd, (l) => lines.push(l))
+      reportShellReads(root, (l) => lines.push(l))
     } finally {
       vi.unstubAllEnvs()
     }
@@ -267,38 +283,38 @@ describe('reportShellReads (the author-time verification report)', () => {
   }
 
   it('lists the detected paths and the rule that rejected each near-miss', () => {
-    const home = store('/repo', ['cat docs/agents/guards.md', 'ls docs/adr/0001-x.md'])
-    const out = run('/repo', home).join('\n')
+    const home = store(['cat docs/agents/guards.md', 'ls docs/adr/0001-x.md'])
+    const out = run(home).join('\n')
     expect(out).toContain('docs/agents/guards.md')
     expect(out).toContain('not a reader command')
     expect(out).toContain('SHELL-READ-DETECTION')
   })
 
   it('says nothing at all when there is nothing to check', () => {
-    expect(run('/repo', store('/repo', ['echo hello', 'git status']))).toEqual([])
+    expect(run(store(['echo hello', 'git status']))).toEqual([])
   })
 
   it('degrades to silence when the transcript store is missing', () => {
-    expect(run('/repo', mkdtempSync(join(tmpdir(), 'shellread-empty-')))).toEqual([])
+    expect(run({ home: mkdtempSync(join(tmpdir(), 'shellread-empty-')), root: mkdtempSync(join(tmpdir(), 'shellread-noroot-')) })).toEqual([])
   })
 
   // Issue #1244: each detected path shows its crediting command and where it ran.
   it("shows the session's own crediting command", () => {
-    const out = run('/repo', store('/repo', ['cat   docs/agents/guards.md'], ['echo hi']))
+    const out = run(store(['cat   docs/agents/guards.md'], ['echo hi']))
     expect(out).toContain('    docs/agents/guards.md')
     expect(out).toContain('      [this session] cat docs/agents/guards.md')
   })
 
   it("names the subagent by its meta.json description, else its agent id", () => {
     const meta = JSON.stringify({ description: 'Triage issue #869' })
-    const named = run('/repo', store('/repo', ['git status'], ['cat docs/agents/guards.md'], meta))
+    const named = run(store(['git status'], ['cat docs/agents/guards.md'], meta))
     expect(named).toContain('      [subagent: Triage issue #869] cat docs/agents/guards.md')
-    const bare = run('/repo', store('/repo', ['git status'], ['cat docs/agents/guards.md'], '{not json'))
+    const bare = run(store(['git status'], ['cat docs/agents/guards.md'], '{not json'))
     expect(bare).toContain('      [subagent: a1] cat docs/agents/guards.md')
   })
 
   it('does not ask for a friction about a path a subagent legitimately read', () => {
-    const out = run('/repo', store('/repo', ['cat CONTEXT.md'], ['cat docs/agents/guards.md'])).join('\n')
+    const out = run(store(['cat CONTEXT.md'], ['cat docs/agents/guards.md'])).join('\n')
     // The old text — "check both lists against what you actually ran … if it
     // listed one you never read, log a Friction" — is exactly what manufactured
     // the false reports; a folded path is not something the reader ran.
@@ -311,7 +327,7 @@ describe('reportShellReads (the author-time verification report)', () => {
 
   it('caps the near-miss list rather than burying the detected paths', () => {
     const many = Array.from({ length: 9 }, (_, i) => `echo docs/agents/d${i}.md`)
-    const out = run('/repo', store('/repo', many)).join('\n')
+    const out = run(store(many)).join('\n')
     expect(out).toContain('Not counted (9)')
     expect(out).toContain('…and 4 more')
     // One rule line per rendered near-miss (each also echoes its command).
