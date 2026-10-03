@@ -96,8 +96,8 @@ exposes `#catalog`: `catalogByKind('page') → [{ key, tenant, space, collection
 kind }, …]`. **Derived, not hand-written** (`catalogFrom()` in `shared/expand.ts`,
 L3-tested): a new Tenant with a `kind`-tagged collection appears automatically; a
 removed one drops. Written to `.nuxt/catalog.mjs` as plain data + a companion
-`.d.ts`, wired exactly as `#routing` is (nuxt alias, `vitest.config.ts`,
-`tsconfig.node.json`).
+`.d.ts`, wired as `#routing` is (nuxt alias, `tsconfig.node.json`; no
+`vitest.config.ts` alias, since no spec imports it).
 
 ### 3. `queryAcrossTenants(kind)` + a first-class **aggregator** role
 

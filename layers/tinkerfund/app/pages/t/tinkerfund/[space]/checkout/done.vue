@@ -4,7 +4,7 @@ definePageMeta({ viewTransition: true })
 const route = useRoute()
 const { space, link, campaignLink } = useTinkerfundSpace()
 const money = useTinkerfundMoney()
-const [{ zoneName, paymentLabel, status, error }, { loaded, pledges, catalog, clock }] = await Promise.all([useTinkerfundShop(), useTinkerfundCart()])
+const { zoneName, paymentLabel, status, error, loaded, pledges, catalog, clock } = await useTinkerfundCart()
 
 const refs = computed(() => String(route.query.refs ?? '').split(',').filter(Boolean))
 const receipts = computed(() =>
@@ -28,7 +28,7 @@ useSeoMeta(tinkerfundSeo({ kind: 'private', space, title: 'Pledge confirmed' }))
   <TinkerfundShell>
     <div class="done">
       <h1 v-if="!loaded" class="tf-h1">Opening your receipt…</h1>
-      <section v-else-if="!receipts.length" class="empty tf-panel">
+      <section v-else-if="!receipts.length" class="tf-empty tf-panel">
         <h1 class="tf-h1">No Pledge to show</h1>
         <p>This receipt belongs to a tab that has since closed, or to a demo that was reset.</p>
         <NuxtLink class="tf-btn primary" :to="link()">Back to the shop</NuxtLink>
@@ -55,14 +55,12 @@ useSeoMeta(tinkerfundSeo({ kind: 'private', space, title: 'Pledge confirmed' }))
         </p>
       </template>
     </div>
-    <ContentLoadErrorDialog :status="status" :error="error" :context="route.path" />
+    <ContentLoadErrorDialog :status="status" :error="error" />
   </TinkerfundShell>
 </template>
 
 <style scoped>
 .done { display: grid; gap: 16px; max-width: 760px; }
-.empty { display: grid; gap: 14px; justify-items: start; margin: 0; padding: 22px; }
-.empty > * { margin: 0; }
 .intro { display: grid; gap: 8px; }
 .intro > * { margin: 0; }
 .lead { color: var(--tf-muted); }

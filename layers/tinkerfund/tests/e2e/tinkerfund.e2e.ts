@@ -18,6 +18,7 @@ interface Flow {
   /** A full load of a qa path, so it hydrates. */
   visit: (path: string) => Promise<void>
   reload: () => Promise<void>
+  h1: () => Promise<string | null>
 }
 
 // Errors are collected for the whole flow, so every full load in it doubles as
@@ -43,7 +44,7 @@ function flow(name: string, run: (flow: Flow) => Promise<void>): void {
       expect(await collectUnknownElementTags(page), to).toEqual([])
     }
     try {
-      await run({ page, visit: (path) => load(url(`/t/tinkerfund/qa${path}`)), reload: () => load(page.url()) })
+      await run({ page, visit: (path) => load(url(`/t/tinkerfund/qa${path}`)), reload: () => load(page.url()), h1: () => page.locator('h1').textContent() })
       expect(errors).toEqual([])
     } finally {
       await page.close()
@@ -563,13 +564,12 @@ export function registerTinkerfundE2E(): void {
 
       // The One-Button Keypad is €38 short of its goal; one keypad at TINKER10's
       // 10% off (€40.50) tips it over and past its €1,001 Stretch goal.
-      flow('Cart and checkout: a code tips a Campaign over its goal; the Cart spans Campaigns, counting existing Pledges', async ({ page, visit, reload }) => {
+      flow('Cart and checkout: a code tips a Campaign over its goal; the Cart spans Campaigns, counting existing Pledges', async ({ page, visit, reload, h1 }) => {
         const count = page.locator('.head .cart .count')
         const drawer = page.getByRole('dialog', { name: 'Added to your Cart' })
-        const h1 = () => page.locator('h1').textContent()
 
         await visit('/cart')
-        expect(await page.locator('.empty').textContent()).toContain('Your Cart is empty')
+        expect(await page.locator('.tf-empty').textContent()).toContain('Your Cart is empty')
         expect(await count.textContent()).toBe('0')
         await visit('/checkout')
 
@@ -694,16 +694,15 @@ export function registerTinkerfundE2E(): void {
 
         // None of it reaches prod's Cart (issue #1383).
         await page.goto(url('/t/tinkerfund/prod/cart'), { waitUntil: 'hydration' })
-        await expect.poll(() => page.locator('.empty').textContent()).toContain('Your Cart is empty')
+        await expect.poll(() => page.locator('.tf-empty').textContent()).toContain('Your Cart is empty')
         expect(await count.textContent()).toBe('0')
         expect(await page.evaluate(() => Object.keys(sessionStorage).filter((k) => k.startsWith('tinkerfund:prod:')))).toEqual([])
       })
 
       // The One-Button Keypad again: one keypad (€45) tips it over its €1,000
       // goal; a change grows the Pledge; the cancel pulls it back below.
-      flow('account: pledge, change and cancel with the Campaign’s totals following; a locked receipt prints bare', async ({ page, visit, reload }) => {
+      flow('account: pledge, change and cancel with the Campaign’s totals following; a locked receipt prints bare', async ({ page, visit, reload, h1 }) => {
         const readout = () => page.locator('.readout.tf-panel').textContent()
-        const h1 = () => page.locator('h1').textContent()
         await visit('/campaigns/one-button-keypad')
         await page.getByRole('article', { name: 'One keypad' }).getByRole('button', { name: 'Add to cart' }).click()
         await page.getByRole('dialog', { name: 'Added to your Cart' }).getByRole('link', { name: 'Checkout' }).click()
@@ -758,7 +757,7 @@ export function registerTinkerfundE2E(): void {
         const status = page.locator('.pledge-page [role="status"]')
         expect(await status.textContent()).toBe('')
         await dialog.getByRole('button', { name: 'Yes, cancel it' }).click()
-        await expect.poll(() => page.locator('.intro .chip').textContent()).toBe('Cancelled')
+        await expect.poll(() => page.locator('.intro .tf-chip').textContent()).toBe('Cancelled')
         expect(await status.textContent()).toBe('Your Pledge is cancelled. Nothing will be charged.')
         await expect.poll(() => page.evaluate(() => document.activeElement?.textContent)).toBe('Receipt')
         expect(await page.getByRole('button', { name: 'Change Pledge' }).count()).toBe(0)

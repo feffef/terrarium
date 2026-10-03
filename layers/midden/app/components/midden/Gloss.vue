@@ -1,6 +1,5 @@
 <script setup lang="ts">
 // A button, not a hover title, so the gloss works by tap and keyboard (issue #1463).
-import type { MiddenGlossKey } from '../../utils/gloss'
 
 const props = defineProps<{ term: MiddenGlossKey }>()
 const open = ref(false)

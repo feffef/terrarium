@@ -43,7 +43,7 @@ function calendarDate(iso: string): string {
     </ol>
     <p v-if="!entries.length" class="empty">No timestamped content yet.</p>
 
-    <ContentLoadErrorDialog :status="status" :error="error" context="/t/commons/timeline" />
+    <ContentLoadErrorDialog :status="status" :error="error" />
   </div>
 </template>
 
@@ -122,19 +122,6 @@ function calendarDate(iso: string): string {
   .genre-session {
     background: #8fa2d8;
   }
-}
-.prov {
-  font-size: 0.72rem;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--co-accent);
-}
-.prov .dot {
-  opacity: 0.5;
-}
-.empty {
-  margin: 1rem 0 0;
-  color: var(--co-muted);
 }
 @media (max-width: 30rem) {
   .row {

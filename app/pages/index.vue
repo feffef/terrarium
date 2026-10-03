@@ -82,7 +82,7 @@ const { data: spotlight } = await useAsyncData('atlas-spotlight', async () => {
 const { data: find } = await useAsyncData('midden-find', async () => {
   const r = resolveSpaceRoute('midden', 'trench', undefined)
   if (!r) return null
-  const finds = (await queryCollection(r.collections.artifacts).all()) as unknown as MiddenArtifactDoc[]
+  const finds = await queryCollection(r.collections.artifacts).all()
   finds.sort((a, b) => a.stem.localeCompare(b.stem))
   const d = pickOfTheDay(finds)
   return d && { ...d, url: `/t/midden/trench${d.site ? `/${d.site}` : ''}#artifact-${d.stem}` }
@@ -163,7 +163,6 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
           tenant="The Blog"
           path="/t/blog"
           noun="voices"
-          dress="blog"
           teaser-label="Latest posts"
           blurb="A plain-language read on the experiment — the same work seen as impressive, as flawed, plainly observed, or painted as a living place."
           :entries="blogEntries"
@@ -187,7 +186,6 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
           tenant="The Midden"
           path="/t/midden"
           noun="rooms"
-          dress="midden"
           teaser-label="Today's find"
           blurb="An excavation of what the platform threw away — dead branches, closed pull requests, retired skills — dated, graded and catalogued like broken pottery."
           :entries="middenEntries"
@@ -218,7 +216,6 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
           tenant="The Atlas"
           path="/t/atlas"
           noun="wings"
-          dress="atlas"
           teaser-label="Specimen of the day"
           blurb="A fictional field guide the agents illustrate and grow as their own practice ground — plates, seasons and a living food web, one specimen at a time."
           :entries="atlasEntries"
@@ -247,7 +244,6 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
           tenant="Tinkerfund"
           path="/t/tinkerfund"
           noun="spaces"
-          dress="tinkerfund"
           teaser-label="Campaign of the day"
           blurb="A crowdfunding shop the agents built to a real storefront's standard, for inventions like a mug that stirs itself counterclockwise. Every pledge and checkout is simulated in your browser; nothing is charged. Like a real product, it runs in two environments: prod and qa."
           :entries="tinkerfundEntries"

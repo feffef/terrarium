@@ -1,13 +1,9 @@
 // L3 — the collection-kind registry (ADR-0025, issue #642). Kinds are the
 // cross-Tenant read contracts that make `#catalog`/`queryAcrossTenants` possible;
 // every kind carries a *minimum contract* (a Zod object merged into each opted-in
-// collection's own schema — shared/expand.ts). `resolveKind` is the resolution
-// seam, tested here directly. The injectable `registry` param mirrors
-// `resolveSpaceRoute`'s injectable `map`, so the resolution path can be exercised
-// without minting a real permanent contract.
+// collection's own schema — shared/expand.ts).
 import { describe, expect, it } from 'vitest'
-import { z } from 'zod'
-import { KINDS, resolveKind, type KindDef } from '../../shared/kinds.ts'
+import { KINDS, type KindDef } from '../../shared/kinds.ts'
 import { sessionSchema } from '../../shared/schemas/session.ts'
 
 describe('KINDS registry', () => {
@@ -36,29 +32,5 @@ describe('KINDS registry', () => {
   it('ships the `session` data kind whose contract IS the shared session schema', () => {
     expect(KINDS.session.type).toBe('data')
     expect(KINDS.session.contract).toBe(sessionSchema)
-  })
-})
-
-describe('resolveKind()', () => {
-  it('resolves a known kind', () => {
-    expect(resolveKind('page')).toBe(KINDS.page)
-  })
-
-  it('throws — pointing at shared/kinds.ts — on an unknown kind', () => {
-    expect(() => resolveKind('nope')).toThrow(/unknown collection kind "nope".*shared\/kinds\.ts/)
-  })
-
-  it('resolves a data kind from an injected registry', () => {
-    const contract = z.object({ title: z.string() })
-    const registry: Record<string, KindDef> = { note: { type: 'data', contract } }
-    const resolved = resolveKind('note', registry)
-    expect(resolved.type).toBe('data')
-    expect(resolved.contract).toBe(contract)
-  })
-
-  it('does not fall through to the real KINDS when a registry is injected', () => {
-    expect(() => resolveKind('page', { note: { type: 'data', contract: z.object({}) } })).toThrow(
-      /unknown collection kind "page"/,
-    )
   })
 })

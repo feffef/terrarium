@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import type { TinkerfundBrowseQuery } from '../../../utils/browse'
-
 // Rendered twice on Discover (side column and mobile drawer), so every name
 // and id comes from useId().
 const props = defineProps<{

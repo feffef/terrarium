@@ -7,7 +7,7 @@ const { space, path, pagesKey } = useTinkerfundSpace()
 const { data: doc, status, error } = await useAsyncData(route.path, () => queryCollection(pagesKey).path(path).first())
 
 useSeoMeta(tinkerfundSeo(doc.value
-  ? { kind: doc.value.campaign ? 'campaign' : 'page', space, title: doc.value.title, description: doc.value.description }
+  ? { kind: 'page', space, title: doc.value.title, description: doc.value.description }
   : { kind: 'not-found', space }))
 </script>
 
@@ -21,7 +21,7 @@ useSeoMeta(tinkerfundSeo(doc.value
 
     <TinkerfundShellNotFound v-else-if="!error" />
 
-    <ContentLoadErrorDialog :status="status" :error="error" :context="route.path" />
+    <ContentLoadErrorDialog :status="status" :error="error" />
   </TinkerfundShell>
 </template>
 

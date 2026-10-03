@@ -6,7 +6,7 @@ const open = () => {
   if (!dialog.value?.open) dialog.value?.showModal()
 }
 const close = () => dialog.value?.close()
-defineExpose({ open, close })
+defineExpose({ open })
 </script>
 
 <template>

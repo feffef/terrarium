@@ -18,11 +18,6 @@
 //
 // A broken `slug` reference isn't caught at build/CI time (issue #740) — the
 // `v-else` fallback below is load-bearing, not a rare-case backstop.
-import { conditionMeta } from '../../utils/condition'
-import { digSeasonOf } from '../../utils/strata'
-import { formatMiddenDate, middenProvenanceLine, type MiddenArtifactDoc } from '../../utils/find'
-import type { MiddenGlossPart } from '../../utils/gloss'
-
 const props = defineProps<{ slug: string }>()
 
 // The dig report's page-wide first-use split for this find's note (issue #1463).
@@ -31,14 +26,9 @@ const noteParts = computed(() => glossedNotes?.value[props.slug])
 
 const { collections } = useSpace('midden')
 
-const { data: artifact } = await useAsyncData(`midden-artifact-${props.slug}`, async () => {
-  const doc = await queryCollection(collections.artifacts).where('stem', '=', props.slug).first()
-  return doc ? (doc as unknown as MiddenArtifactDoc) : null
-})
-
-const isLost = computed(() => artifact.value?.condition === 'lost')
-const label = computed(() => conditionMeta(artifact.value?.condition).label)
-const seasonLabel = computed(() => (artifact.value ? digSeasonOf(artifact.value.stratum)?.label : undefined))
+const { data: artifact } = await useAsyncData(`midden-artifact-${props.slug}`, () =>
+  queryCollection(collections.artifacts).where('stem', '=', props.slug).first(),
+)
 
 // Condition restored as a slug-angled corner STAMP (earlier revisions had it; owner
 // asked for it back). The tilt is derived from the slug so it is SSR-stable —
@@ -51,23 +41,6 @@ const stampStyle = computed(() => {
   for (const ch of props.slug) h = (h * 31 + ch.charCodeAt(0)) >>> 0
   return `transform: rotate(${STAMP_ANGLES[h % STAMP_ANGLES.length]}deg);`
 })
-
-// Structural omission, not a rendering-empty accident (#523): the `lost` grade's
-// silence is deliberate — even a document that carries an `inscription` shows none.
-const inscriptionForDisplay = computed(() =>
-  isLost.value ? undefined : artifact.value?.inscription,
-)
-
-// `remains` follows the same lost-grade silence convention as `inscription`
-// (tenant.config.ts's `remains` comment): nothing survives to view.
-const remainsForDisplay = computed(() => (isLost.value ? undefined : artifact.value?.remains))
-
-// `removedIn` is a bare hash (tenant.config.ts): the commit link is derived
-// here against REPO_URL (app/utils/repo.ts, auto-imported).
-const removedInUrl = computed(() =>
-  artifact.value?.removedIn ? `${REPO_URL}/commit/${artifact.value.removedIn}` : undefined,
-)
-const removedInShort = computed(() => artifact.value?.removedIn?.slice(0, 7))
 </script>
 
 <template>
@@ -75,16 +48,16 @@ const removedInShort = computed(() => artifact.value?.removedIn?.slice(0, 7))
     v-if="artifact"
     :id="`artifact-${slug}`"
     class="midden-find"
-    :class="{ 'midden-find--lost': isLost }"
+    :class="{ 'midden-find--lost': artifact.condition === 'lost' }"
   >
     <span
       class="midden-find__stamp"
-      :class="{ 'midden-find__stamp--lost': isLost }"
+      :class="{ 'midden-find__stamp--lost': artifact.condition === 'lost' }"
       :style="stampStyle"
-    >{{ label }}</span>
+    >{{ conditionMeta(artifact.condition).label }}</span>
 
     <header class="midden-find__head">
-      <p v-if="seasonLabel" class="midden-find__season">{{ seasonLabel }}</p>
+      <p v-if="digSeasonOf(artifact.stratum)" class="midden-find__season">{{ digSeasonOf(artifact.stratum)?.label }}</p>
 
       <h3 class="mono midden-find__title">{{ artifact.title }}</h3>
 
@@ -96,9 +69,9 @@ const removedInShort = computed(() => artifact.value?.removedIn?.slice(0, 7))
           rel="noopener noreferrer"
         >{{ middenProvenanceLine(artifact.provenance) }}</a>
         <span v-else>{{ middenProvenanceLine(artifact.provenance) }}</span>
-        <template v-if="removedInUrl">
+        <template v-if="artifact.removedIn">
           <span class="midden-find__dot" aria-hidden="true">·</span>
-          <a :href="removedInUrl" target="_blank" rel="noopener noreferrer">removed in {{ removedInShort }}</a>
+          <a :href="`${REPO_URL}/commit/${artifact.removedIn}`" target="_blank" rel="noopener noreferrer">removed in {{ artifact.removedIn.slice(0, 7) }}</a>
         </template>
         <span class="midden-find__dot" aria-hidden="true">·</span>
         <span class="midden-find__assessed">assessed {{ formatMiddenDate(artifact.assessedAt) }}</span>
@@ -107,18 +80,20 @@ const removedInShort = computed(() => artifact.value?.removedIn?.slice(0, 7))
 
     <p class="midden-find__note"><MiddenGlossedText :text="artifact.catalogNote" :parts="noteParts" /></p>
 
-    <blockquote v-if="inscriptionForDisplay" class="midden-find__inscription">
-      <span class="midden-find__quote">&ldquo;{{ inscriptionForDisplay.text }}&rdquo;</span>
-      <span class="mono midden-find__source">{{ inscriptionForDisplay.source }}</span>
+    <!-- The `lost` grade's silence is deliberate (#523): even a document carrying an
+         `inscription` or `remains` shows none. -->
+    <blockquote v-if="artifact.condition !== 'lost' && artifact.inscription" class="midden-find__inscription">
+      <span class="midden-find__quote">&ldquo;{{ artifact.inscription.text }}&rdquo;</span>
+      <span class="mono midden-find__source">{{ artifact.inscription.source }}</span>
     </blockquote>
-    <p v-else-if="isLost" class="midden-find__silent">
+    <p v-else-if="artifact.condition === 'lost'" class="midden-find__silent">
       no inscription survives — nothing is left to quote.
     </p>
 
-    <p v-if="remainsForDisplay?.length" class="tech midden-find__remains">
+    <p v-if="artifact.condition !== 'lost' && artifact.remains?.length" class="tech midden-find__remains">
       <span class="midden-find__remains-label">remains</span>
       <a
-        v-for="remain in remainsForDisplay"
+        v-for="remain in artifact.remains"
         :key="remain.url"
         :href="remain.url"
         target="_blank"

@@ -9,7 +9,6 @@
 // has no `space` param.)
 import { resolveSpaceRoute } from '#shared/routing'
 
-interface WingStat { count: number; lastObs: string | null }
 interface Sighting { date: string; note?: string; name?: string; to?: string }
 
 // Prerendered, so "today" is the build day — same as the wing dials.
@@ -17,14 +16,14 @@ const day = useGlassToday()
 const season = seasonOf(day)
 
 const { data } = await useAsyncData('atlas-front', async () => {
-  const stats: Record<string, WingStat> = {}
+  const stats: Record<string, number> = {}
   const specimens: string[] = []
   const abroad: { to: string; label: string }[] = []
   let latest: Sighting | null = null
   for (const b of BIOMES) {
     const r = resolveSpaceRoute('atlas', b.slug, undefined)
     if (!r) {
-      stats[b.slug] = { count: 0, lastObs: null }
+      stats[b.slug] = 0
       continue
     }
     // Specimens are every page but the wing landing; the colophon needs only
@@ -45,7 +44,7 @@ const { data } = await useAsyncData('atlas-front', async () => {
       const s = docs.find((d) => d.slug === last.specimen)
       latest = { date: last.date, note: last.note, name: s?.binomial, to: s && `/t/atlas/${b.slug}${s.path}` }
     }
-    stats[b.slug] = { count: docs.length, lastObs: last?.date ?? null }
+    stats[b.slug] = docs.length
   }
   return { stats, specimens: specimens.sort(), abroad, latest }
 })
@@ -62,13 +61,6 @@ function openAtRandom(e: MouseEvent) {
   e.preventDefault()
   navigateTo(specimens.value[Math.floor(Math.random() * specimens.value.length)])
 }
-const lastObservation = computed(() => {
-  const dates = Object.values(stats.value)
-    .map((s) => s.lastObs)
-    .filter((d): d is string => Boolean(d))
-    .sort()
-  return dates.at(-1) ?? null
-})
 
 useHead({ title: 'The Atlas of the Terrarium' })
 </script>
@@ -149,14 +141,14 @@ useHead({ title: 'The Atlas of the Terrarium' })
           <span class="wing-foot">
             <span class="swatch" :style="{ background: b.accent }" />
             <span class="swatch" :style="{ background: b.accent2 }" />
-            <span class="wing-count">{{ stats[b.slug]?.count ?? 0 }} catalogued</span>
+            <span class="wing-count">{{ stats[b.slug] ?? 0 }} catalogued</span>
           </span>
         </NuxtLink>
       </nav>
 
       <footer class="colophon">
         <p>Compiled by the resident naturalists · Edition MMXXVI</p>
-        <p v-if="lastObservation">Last observation recorded {{ lastObservation }}</p>
+        <p v-if="latest">Last observation recorded {{ latest.date }}</p>
       </footer>
 
       <SiteFooter />

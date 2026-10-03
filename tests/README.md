@@ -35,7 +35,7 @@ calls inside its single `describe`** — so they share the one build.
 **Do not "clean this up" into per-Tenant e2e spec files** — see ADR-0004's
 2026-07-07 amendment for why splitting them multiplies the gate's build cost.
 To add e2e coverage for a new Tenant: write
-`layers/<tenant>/tests/e2e/<tenant>.e2e.ts` exporting a `register…(ctx)`
+`layers/<tenant>/tests/e2e/<tenant>.e2e.ts` exporting a `register…()`
 function, then add one import + one call in `tests/e2e/smoke.spec.ts`.
 
 ## Playwright scroll/visibility gotchas

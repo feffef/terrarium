@@ -4,12 +4,6 @@
 // (`scripts/verify-mermaid.ts`), and `app/components/MermaidDiagram.vue` can
 // import the SAME contract — no forked second copy (single-home, CLAUDE.md).
 
-/** Seam so ProsePre.vue's mermaid branch is testable as pure TS, without a full
- *  Nuxt/@vue/test-utils mount (issue #364). */
-export function isMermaidLanguage(language: string | null | undefined): boolean {
-  return language === 'mermaid'
-}
-
 // The `--diagram-*` theming contract (issue #364): mermaid `themeVariables` name
 // → the CSS custom property a Tenant maps its own token to. This is the SINGLE
 // home of the contract — the author-time renderer sets each of these to a

@@ -2,15 +2,12 @@
 // the baked catalog.
 import { describe, expect, it } from 'vitest'
 import { addToTinkerfundCart, resolveTinkerfundCart, setTinkerfundLine } from '../../app/utils/cart.ts'
-import type { TinkerfundBackerState, TinkerfundCartRequest, TinkerfundDraft, TinkerfundPledge, TinkerfundZone } from '../../app/utils/cart.ts'
-import { NOW, shop } from './support.ts'
+import type { TinkerfundBackerState, TinkerfundCartRequest, TinkerfundDraft, TinkerfundZone } from '../../app/utils/cart.ts'
+import { pledge, shop } from './support.ts'
 
 const black = { campaign: 'lamp', reward: 'lamp', options: { colour: 'black' } }
 const empty: TinkerfundBackerState = { cart: [], pledges: [] }
-const pledgedLamps = (quantity: number): TinkerfundPledge => ({
-  ref: 'TF-P-9001', campaign: 'lamp', placed: NOW, zone: 'domestic', payment: 'demo-card',
-  lines: [{ reward: 'lamp', options: { colour: 'black' }, quantity }], addons: [], promotions: [], discount: 0, shipping: 5,
-})
+const pledgedLamps = (quantity: number) => pledge({ lines: [{ reward: 'lamp', options: { colour: 'black' }, quantity }], shipping: 5 })
 
 function add(cart: TinkerfundDraft[], request: TinkerfundCartRequest) {
   const { state, error } = addToTinkerfundCart({ ...empty, cart }, request, shop())

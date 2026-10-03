@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import type { TinkerfundTheme } from '../../../utils/demo'
-
 const OPTIONS: { value: TinkerfundTheme; label: string }[] = [
   { value: 'system', label: 'System' },
   { value: 'light', label: 'Light' },

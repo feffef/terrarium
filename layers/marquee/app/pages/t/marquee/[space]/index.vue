@@ -22,7 +22,7 @@ const { data, status, error } = await useAsyncData(route.path, async () => {
   const chapters = await queryCollection(pagesKey)
     .where('order', 'IS NOT NULL')
     .order('order', 'ASC')
-    .select('path', 'title', 'description', 'order', 'publishedAt')
+    .select('path', 'title', 'description', 'order')
     .all()
   return { landing, chapters }
 })
@@ -72,6 +72,6 @@ useSeoMeta({ description: () => tagline.value })
     <!-- A failed client-side content load must never present as a silent
          blank (issue #236) — raise a modal with a message, technical
          details, reload. -->
-    <ContentLoadErrorDialog :status="status" :error="error" :context="route.path" />
+    <ContentLoadErrorDialog :status="status" :error="error" />
   </main>
 </template>

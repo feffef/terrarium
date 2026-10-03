@@ -61,7 +61,7 @@ const condition = z.enum(['fresh', 'intact', 'fragmentary', 'dissolved', 'never-
 //     ever lived as a session's committed work (e.g. `the-third-onramp.yml`).
 // Bound to :href, so only https — `.url()` alone admits `javascript:`.
 const httpsUrl = z.string().url().startsWith('https://')
-const provenance = z.discriminatedUnion('kind', [
+export const provenance = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('pr'), number: z.number().int().positive(), merged: z.boolean(), url: httpsUrl.optional(), continuityCheck: z.string().optional() }).strict(),
   z.object({ kind: z.literal('branch'), name: z.string(), url: httpsUrl.optional(), continuityCheck: z.string().optional() }).strict(),
   z.object({ kind: z.literal('commit'), hash: z.string(), path: z.string().optional(), url: httpsUrl.optional(), continuityCheck: z.string().optional() }).strict(),
@@ -94,6 +94,46 @@ const remainEntry = z
   })
   .strict()
 
+// One catalogued discarded thing per file (#518/#525/#526).
+export const artifactSchema = z
+  .object({
+    title: z.string(), // the artifact's own name
+    stratum: z.string(), // dig-season slug — validated against utils/strata.ts by scripts/validate-content-refs.ts
+    condition,
+    provenance,
+    // Back-reference to the `pages` (site) Document slug that narrates it.
+    // Optional at the SCHEMA level because the policy is per-Space and a
+    // schema is declared Tenant-wide: required-and-resolving in a Space
+    // that has dig reports, forbidden in one that has none (the stores).
+    // `scripts/validate-content-refs.ts` enforces the real rule.
+    site: z.string().optional(),
+    // Curator's voice — small-caps register (theme.css). Terse; contrast
+    // the more generous latitude the `lost` gravestone epitaph gets, which
+    // still uses this same field (there's no separate epitaph field).
+    catalogNote: z.string(),
+    // REQUIRED (#526): condition is never re-derived from this — it's
+    // rendered directly beside the grade+glyph, "fresh — as of 2026-05-01".
+    assessedAt: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'assessedAt must be YYYY-MM-DD'),
+    // The terminal event: the commit that actually removed the thing —
+    // distinct from the per-variant provenance `url` (a link to the
+    // referent itself). Bare hash, not a URL: every artifact is about
+    // this repo, so the renderer derives the commit link. Optional
+    // because not every terminal event is a commit (a closed-unmerged
+    // PR dies by closing). `validate-content-refs.ts` corroborates its
+    // commit date against the artifact's `stratum` where history allows.
+    removedIn: z.string().regex(/^[0-9a-f]{7,40}$/, 'removedIn must be a lowercase git commit hash').optional(),
+    // The preserved original state, viewable in situ — see `remainEntry`
+    // above. Like `inscription`, expected structurally ABSENT on a
+    // `lost` artifact (nothing survives to view) — the same authoring
+    // convention, renderer-suppressed, not schema-enforced.
+    remains: z.array(remainEntry).nonempty().optional(),
+    // The artifact's own words, quoted verbatim. Expected omitted on a
+    // `lost` artifact (nothing survives to quote) — see the field's own
+    // comment above.
+    inscription: inscription.optional(),
+  })
+  .strict()
+
 export default defineTenant({
   name: 'midden',
   spaces: ['trench', 'stores'],
@@ -117,44 +157,7 @@ export default defineTenant({
     artifacts: {
       type: 'data',
       source: '**/*.yml',
-      schema: z
-        .object({
-          title: z.string(), // the artifact's own name
-          stratum: z.string(), // dig-season slug — validated against utils/strata.ts by scripts/validate-content-refs.ts
-          condition,
-          provenance,
-          // Back-reference to the `pages` (site) Document slug that narrates it.
-          // Optional at the SCHEMA level because the policy is per-Space and a
-          // schema is declared Tenant-wide: required-and-resolving in a Space
-          // that has dig reports, forbidden in one that has none (the stores).
-          // `scripts/validate-content-refs.ts` enforces the real rule.
-          site: z.string().optional(),
-          // Curator's voice — small-caps register (theme.css). Terse; contrast
-          // the more generous latitude the `lost` gravestone epitaph gets, which
-          // still uses this same field (there's no separate epitaph field).
-          catalogNote: z.string(),
-          // REQUIRED (#526): condition is never re-derived from this — it's
-          // rendered directly beside the grade+glyph, "fresh — as of 2026-05-01".
-          assessedAt: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'assessedAt must be YYYY-MM-DD'),
-          // The terminal event: the commit that actually removed the thing —
-          // distinct from the per-variant provenance `url` (a link to the
-          // referent itself). Bare hash, not a URL: every artifact is about
-          // this repo, so the renderer derives the commit link. Optional
-          // because not every terminal event is a commit (a closed-unmerged
-          // PR dies by closing). `validate-content-refs.ts` corroborates its
-          // commit date against the artifact's `stratum` where history allows.
-          removedIn: z.string().regex(/^[0-9a-f]{7,40}$/, 'removedIn must be a lowercase git commit hash').optional(),
-          // The preserved original state, viewable in situ — see `remainEntry`
-          // above. Like `inscription`, expected structurally ABSENT on a
-          // `lost` artifact (nothing survives to view) — the same authoring
-          // convention, renderer-suppressed, not schema-enforced.
-          remains: z.array(remainEntry).nonempty().optional(),
-          // The artifact's own words, quoted verbatim. Expected omitted on a
-          // `lost` artifact (nothing survives to quote) — see the field's own
-          // comment above.
-          inscription: inscription.optional(),
-        })
-        .strict(),
+      schema: artifactSchema,
     },
     // Declared tenant-wide (#516) but left EMPTY in `trench` for v1 — `labels`
     // is a `gallery` concept (#522: gallery out of scope for this MVP) and its

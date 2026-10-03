@@ -22,9 +22,6 @@ export default defineConfig({
       // a fixture) resolve it here so vitest can find it without the Nuxt alias layer.
       // fileURLToPath+URL keeps resolution correct regardless of invocation cwd.
       { find: '#routing', replacement: fileURLToPath(new URL('.nuxt/routing.mjs', import.meta.url)) },
-      // Same wiring for the cross-Tenant catalog (ADR-0025) so a test that reads
-      // the real `#catalog` resolves it without the Nuxt alias layer.
-      { find: '#catalog', replacement: fileURLToPath(new URL('.nuxt/catalog.mjs', import.meta.url)) },
       { find: /^vue$/, replacement: vuePackage },
     ],
   },
@@ -37,6 +34,5 @@ export default defineConfig({
     // e2e (L2) builds the app and is slow; unit (L0/L1/L3) is fast.
     // `pnpm test` runs unit only; `pnpm test:e2e` runs the smoke render.
     testTimeout: 120_000,
-    hookTimeout: 240_000,
   },
 })

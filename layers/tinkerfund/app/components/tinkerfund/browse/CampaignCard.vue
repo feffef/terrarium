@@ -1,7 +1,4 @@
 <script setup lang="ts">
-import type { TinkerfundCard } from '../../../composables/browse'
-import type { TinkerfundClock } from '../../../composables/clock'
-
 const props = defineProps<{ card: TinkerfundCard; clock: TinkerfundClock }>()
 const { link } = useTinkerfundSpace()
 const money = useTinkerfundMoney()

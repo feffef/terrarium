@@ -1,9 +1,8 @@
 <script setup lang="ts">
 definePageMeta({ viewTransition: true })
 
-const route = useRoute()
 const { space, link } = useTinkerfundSpace()
-const [{ zoneName, status, error }, { loaded, backer, account }] = await Promise.all([useTinkerfundShop(), useTinkerfundCart()])
+const { zoneName, status, error, loaded, backer, account } = await useTinkerfundCart()
 
 useSeoMeta(tinkerfundSeo({ kind: 'private', space, title: 'Your account' }))
 </script>
@@ -41,7 +40,7 @@ useSeoMeta(tinkerfundSeo({ kind: 'private', space, title: 'Your account' }))
         <TinkerfundPledgeList v-else :pledges="account" />
       </section>
     </div>
-    <ContentLoadErrorDialog :status="status" :error="error" :context="route.path" />
+    <ContentLoadErrorDialog :status="status" :error="error" />
   </TinkerfundShell>
 </template>
 

@@ -28,7 +28,7 @@ useSeoMeta(tinkerfundSeo({ kind: 'private', space, title: q ? `Search: ${q}` : '
     <ul v-if="results.length" class="grid">
       <li v-for="c in results" :key="c.path"><TinkerfundBrowseCampaignCard :card="c" :clock="clock" /></li>
     </ul>
-    <div v-else class="empty tf-panel">
+    <div v-else class="tf-empty paper tf-panel">
       <template v-if="q">
         <p class="tf-label">0 results</p>
         <h2>No Campaign matches “{{ q }}”</h2>
@@ -40,7 +40,7 @@ useSeoMeta(tinkerfundSeo({ kind: 'private', space, title: q ? `Search: ${q}` : '
       </template>
       <NuxtLink class="tf-btn" :to="link('/discover')">Discover Campaigns</NuxtLink>
     </div>
-    <ContentLoadErrorDialog :status="status" :error="error" :context="route.path" />
+    <ContentLoadErrorDialog :status="status" :error="error" />
   </TinkerfundShell>
 </template>
 
@@ -57,7 +57,5 @@ useSeoMeta(tinkerfundSeo({ kind: 'private', space, title: q ? `Search: ${q}` : '
   list-style: none;
 }
 .grid li { display: grid; }
-.empty { display: grid; gap: 10px; justify-items: start; padding: 28px; background: var(--tf-paper), var(--tf-surface); }
-.empty > * { margin: 0; }
-.empty h2 { font: 800 26px/1.1 var(--tf-font); font-stretch: 80%; overflow-wrap: anywhere; }
+.tf-empty h2 { overflow-wrap: anywhere; }
 </style>

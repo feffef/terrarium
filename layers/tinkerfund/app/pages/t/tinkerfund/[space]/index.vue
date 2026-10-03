@@ -22,7 +22,7 @@ useSeoMeta(tinkerfundSeo({
       <TinkerfundBrowseHome />
       <ContentRenderer :value="landing" class="tf-prose about" />
     </template>
-    <ContentLoadErrorDialog :status="status" :error="error" :context="route.path" />
+    <ContentLoadErrorDialog :status="status" :error="error" />
   </TinkerfundShell>
 </template>
 

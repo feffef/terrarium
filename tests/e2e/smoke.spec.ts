@@ -33,7 +33,7 @@
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
 import { $fetch, createPage, fetch, setup, url } from '@nuxt/test-utils/e2e'
-import { entryRoutes, expectCleanHydration, mermaidPageRoutes, renderAndCollectErrors } from '../support/e2e.ts'
+import { attrs, entryRoutes, expectCleanHydration, mermaidPageRoutes, withRendered } from '../support/e2e.ts'
 import { findPreinstalledChromium, findSystemChrome } from '../../scripts/chromium-path.ts'
 import { registerJournalE2E } from '../../layers/journal/tests/e2e/journal.e2e.ts'
 import { registerBlogE2E } from '../../layers/blog/tests/e2e/blog.e2e.ts'
@@ -113,9 +113,7 @@ describe('L2 smoke render', async () => {
       const page = await createPage()
       try {
         await page.goto(url('/'), { waitUntil: 'hydration' })
-        const hrefs = await page.locator('.explore-grid a.title-link').evaluateAll((els) =>
-          els.map((el) => el.getAttribute('href')),
-        )
+        const hrefs = await attrs(page.locator('.explore-grid a.title-link'), 'href')
         expect(hrefs).toEqual(['/t/blog', '/t/midden', '/t/atlas', '/t/tinkerfund'])
       } finally {
         await page.close()
@@ -127,7 +125,7 @@ describe('L2 smoke render', async () => {
       try {
         await page.goto(url('/'), { waitUntil: 'hydration' })
         const tile = page.locator('.tile--tinkerfund')
-        const rooms = await tile.locator('a.room').evaluateAll((els) => els.map((el) => el.getAttribute('href')))
+        const rooms = await attrs(tile.locator('a.room'), 'href')
         expect(rooms).toEqual(['/t/tinkerfund/prod', '/t/tinkerfund/qa'])
         const campaign = tile.locator('a.campaign')
         expect(await campaign.getAttribute('href')).toMatch(/^\/t\/tinkerfund\/prod\/campaigns\/[a-z0-9-]+$/)
@@ -173,24 +171,20 @@ describe('L2 smoke render', async () => {
 
     for (const route of mermaidPageRoutes) {
       it(`renders a pre-rendered mermaid SVG and ships no mermaid JS on ${route}`, async () => {
-        const { page, errors, requests } = await renderAndCollectErrors(route)
-        try {
+        await withRendered(route, async (page, requests) => {
           await page.locator('.mermaid-diagram svg').first().waitFor({ state: 'attached', timeout: 10_000 })
           expect(await page.locator('.mermaid-diagram svg').count()).toBeGreaterThan(0)
           // The whole point of #379: the ~600 KB mermaid renderer must never be
           // fetched. No requested URL may name mermaid.
           const mermaidRequests = requests.filter((u) => /mermaid/i.test(u))
           expect(mermaidRequests, `mermaid JS was fetched on ${route}:\n${mermaidRequests.join('\n')}`).toEqual([])
-          expect(errors, `console/page errors on ${route}:\n${errors.join('\n')}`).toEqual([])
-        } finally {
-          await page.close()
-        }
+        })
       })
     }
   })
 
   // ── Per-Tenant assertions, homed in each layer, sharing this one build ───────
-  registerJournalE2E({ entryRoutes, renderAndCollectErrors })
+  registerJournalE2E()
   registerBlogE2E()
   registerAtlasE2E()
   registerMiddenE2E()

@@ -52,8 +52,8 @@ static import, no Nuxt composable required — so the isolation-critical
 Nuxt module (`modules/routing.ts`) that computes and registers `#routing`.**
 
 - `modules/routing.ts` runs `expand(loadManifests())` at module setup time (same
-  as `content.config.ts`), builds `routingMap` and `entryRoutes` from the result, and
-  calls `addTemplate` + `nuxt.options.alias['#routing']` to expose them as the
+  as `content.config.ts`), builds `routingMap` from the result, and
+  calls `addTemplate` + `nuxt.options.alias['#routing']` to expose it as the
   `#routing` virtual module. The template is written as **plain JavaScript**
   (`.nuxt/routing.mjs`) because Nitro's Rollup bundler cannot parse TypeScript syntax.
   A companion `.nuxt/routing.d.ts` carries the type declarations for `tsc`/`vue-tsc`.

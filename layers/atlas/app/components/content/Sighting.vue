@@ -46,12 +46,11 @@ if (import.meta.dev) {
   }
 }
 
-/** '2026-06-20' → '20 June 2026' — the attribution's spoken form. The parse
- *  lives in almanac.ts's formatIsoDate (dateToDay's single home for the
- *  'YYYY-MM-DD' shape); an unparseable date falls back to the raw string. */
+/** '2026-06-20' → '20 June 2026' — the attribution's spoken form; an
+ *  unparseable date falls back to the raw string. */
 const prettyDate = computed(() => {
   if (!props.date) return ''
-  return formatIsoDate(props.date) ?? props.date
+  return sightingDay.value === null ? props.date : (formatIsoDate(props.date) ?? props.date)
 })
 
 // The dial's distinguished tick — registered in setup (idempotent by id),

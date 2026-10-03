@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import type { TinkerfundBacking } from '../../../composables/cart'
 import type { TinkerfundReward } from '../../../types/tinkerfund'
 
 const props = defineProps<{ reward: TinkerfundReward; backing: TinkerfundBacking; now: number; zoneName: (id: string) => string }>()

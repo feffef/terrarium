@@ -10,7 +10,7 @@ const groups = computed(() => [
   { id: 'tf-deals-soon', title: 'Starting soon', list: deals.value.scheduled, scheduled: true },
 ].filter((g) => g.list.length))
 
-useSeoMeta(tinkerfundSeo({ kind: 'listing', space, title: 'Deals', description: 'Promotions running now on Tinkerfund, and the ones starting soon.' }))
+useSeoMeta(tinkerfundSeo({ kind: 'page', space, title: 'Deals', description: 'Promotions running now on Tinkerfund, and the ones starting soon.' }))
 </script>
 
 <template>

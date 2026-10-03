@@ -26,3 +26,17 @@
     --co-card: #1b1e16;
   }
 }
+
+.commons-page .prov {
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--co-accent);
+}
+.commons-page .prov .dot {
+  opacity: 0.5;
+}
+.commons-page .empty {
+  margin: 1rem 0 0;
+  color: var(--co-muted);
+}

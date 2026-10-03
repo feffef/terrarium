@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import type { TinkerfundReceiptLine } from '../../../utils/checkout'
-
 const props = defineProps<{
   pledge: {
     campaign: string

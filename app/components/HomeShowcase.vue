@@ -1,24 +1,28 @@
 <script setup lang="ts">
 // One Tenant's tile on the root index: header, that Tenant's rooms (the main way
 // in), then a teaser (the default slot, supplied by the page).
-// `dress` names the Tenant whose own global tokens tint the tile (each layer's
-// theme.css registers them on :root, or — Tinkerfund — on `.tf-tokens`, which
-// the tile then carries), so the tile tracks the Tenant's palette and
-// light/dark pairs without copying a colour.
-import type { ShowcaseEntry } from '~/utils/showcase'
-
+// The Tenant's own global tokens tint the tile (each layer's theme.css registers
+// them on :root, or — Tinkerfund — on `.tf-tokens`, which the tile then
+// carries), so the tile tracks the Tenant's palette and light/dark pairs
+// without copying a colour.
 const props = defineProps<{
   tenant: string
   path: string
   /** Plural noun for the entry count, e.g. "voices" — the number is derived. */
   noun: string
   blurb: string
-  entries: ShowcaseEntry[]
-  dress: 'blog' | 'atlas' | 'midden' | 'tinkerfund'
+  /** `accent` is any CSS colour — including a `var()` reference to a Tenant's own token. */
+  entries: { name: string; path: string; note?: string; accent: string }[]
   teaserLabel: string
 }>()
 
-const { listed, overflow } = listEntries(props.entries)
+const dress = props.path.split('/')[2]
+
+// A card lists at most six entries and defers the rest to the Tenant's own front
+// door. Without a cap an entry-rich Tenant sets the height of every card sharing
+// its grid row, hollowing them out — verified at 12 entries.
+const listed = props.entries.slice(0, 6)
+const overflow = props.entries.length - listed.length
 </script>
 
 <template>

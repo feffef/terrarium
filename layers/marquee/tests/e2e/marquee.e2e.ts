@@ -11,30 +11,21 @@
 // component on that page can't ship silently (mirrors atlas.e2e.ts/
 // blog.e2e.ts's shape).
 import { describe, expect, it } from 'vitest'
-import { $fetch, fetch } from '@nuxt/test-utils/e2e'
-import { expectCleanHydration, renderAndCollectErrors } from '../../../../tests/support/e2e.ts'
+import { $fetch } from '@nuxt/test-utils/e2e'
+import { expectHydrated, expectRedirect, withRendered } from '../../../../tests/support/e2e.ts'
 
 /** Register the marquee Tenant's L2 assertions under the caller's active suite. */
 export function registerMarqueeE2E(): void {
   describe('marquee Tenant', () => {
-    it('redirects the Tenant root /t/marquee to its main Space', async () => {
-      const res = await fetch('/t/marquee', { redirect: 'manual' })
-      expect(res.status).toBe(302)
-      expect(res.headers.get('location')).toBe('/t/marquee/reel')
-    })
+    it('redirects the Tenant root /t/marquee to its main Space', () =>
+      expectRedirect('/t/marquee', '/t/marquee/reel'))
 
-    it('hydrates a chapter with no unresolved components', async () => {
-      await expectCleanHydration('/t/marquee/reel/captain-america-the-first-avenger')
-    })
-
-    it('renders the chapter poster illustration as an inline SVG', async () => {
-      const { page, errors } = await renderAndCollectErrors('/t/marquee/reel/captain-america-the-first-avenger')
-      try {
-        expect(errors).toEqual([])
+    it('hydrates a chapter with no unresolved components and renders its poster illustration as an inline SVG', async () => {
+      const route = '/t/marquee/reel/captain-america-the-first-avenger'
+      await withRendered(route, async (page) => {
+        await expectHydrated(page, route)
         expect(await page.locator('.mq-poster svg').count()).toBe(1)
-      } finally {
-        await page.close()
-      }
+      })
     })
 
     // The landing lists the five opening chapters in in-universe story order

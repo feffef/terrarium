@@ -27,18 +27,16 @@ interface FrontPost {
 const route = useRoute()
 
 const { data } = await useAsyncData('blog-front', async () => {
-  const posts: FrontPost[] = []
-  for (const persona of PERSONA_SLUGS) {
+  const perPersona = await Promise.all(PERSONA_SLUGS.map(async (persona): Promise<FrontPost[]> => {
     const resolved = resolveSpaceRoute('blog', persona, undefined)
-    if (!resolved) continue
+    if (!resolved) return []
     const rows = await queryCollection(resolved.pagesKey)
       .where('publishedAt', 'IS NOT NULL')
       .select('path', 'title', 'description', 'publishedAt', 'reactsTo', 'tags')
       .all()
-    posts.push(...rows.map((r) => ({ ...r, persona })))
-  }
-  posts.sort((a, b) => (b.publishedAt ?? '').localeCompare(a.publishedAt ?? ''))
-  return posts
+    return rows.map((r) => ({ ...r, persona }))
+  }))
+  return perPersona.flat().sort((a, b) => (b.publishedAt ?? '').localeCompare(a.publishedAt ?? ''))
 })
 
 const posts = computed(() => data.value ?? [])

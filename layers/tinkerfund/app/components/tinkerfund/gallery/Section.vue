@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import type { TinkerfundBrowseQuery } from '../../../utils/browse'
 import { TINKERFUND_GALLERY_FIXTURE as FIXTURE, type TinkerfundGallerySectionId } from '../../../utils/gallery'
 
 defineProps<{ id: TinkerfundGallerySectionId }>()

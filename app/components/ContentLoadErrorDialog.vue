@@ -3,8 +3,7 @@
 // A Space page's `useAsyncData` query against @nuxt/content's client WASM SQLite
 // DB can fail on a client-side navigation and used to render as a *silent*
 // permanent blank. This raises a native <dialog> instead: a plain "something
-// went wrong" message, a disclosure with the technical detail (the error, plus
-// the __content_db_errors ring buffer if any tool wrote one), and a reload —
+// went wrong" message, a disclosure with the technical detail, and a reload —
 // the only reliable recovery, since @nuxt/content poisons its own client DB
 // state on a failed load and only a fresh page (server-DB render) recovers.
 //
@@ -23,10 +22,11 @@ const props = withDefaults(
     status: 'idle' | 'pending' | 'success' | 'error'
     error?: unknown
     accent?: string
-    context?: string
   }>(),
-  { error: undefined, accent: undefined, context: undefined },
+  { error: undefined, accent: undefined },
 )
+
+const route = useRoute()
 
 const dialog = ref<HTMLDialogElement | null>(null)
 
@@ -44,28 +44,17 @@ onMounted(sync)
 onBeforeUnmount(() => dialog.value?.open && dialog.value.close())
 
 const details = computed(() => {
-  const lines: string[] = []
-  if (props.context) lines.push(`route: ${props.context}`)
+  const lines = [`route: ${route.path}`]
   const err = props.error as { statusCode?: number; statusMessage?: string; message?: string } | undefined
   if (err) {
     lines.push(`error: ${err.statusMessage || err.message || String(err)}`)
     if (err.statusCode) lines.push(`status: ${err.statusCode}`)
   }
-  if (import.meta.client) {
-    try {
-      const log = JSON.parse(window.localStorage.getItem('__content_db_errors') || '[]')
-      if (Array.isArray(log) && log.length) {
-        lines.push('recent content-db errors:', JSON.stringify(log.slice(-5), null, 2))
-      }
-    } catch {
-      /* details are best-effort */
-    }
-  }
-  return lines.join('\n') || 'No additional detail was captured.'
+  return lines.join('\n')
 })
 
 function reload() {
-  if (import.meta.client) window.location.reload()
+  window.location.reload()
 }
 </script>
 
@@ -127,7 +116,6 @@ function reload() {
   background: var(--cle-accent);
   color: #fff;
 }
-.cle-btn:disabled { cursor: default; opacity: 0.6; }
 .cle-btn:focus-visible { outline: 2px solid var(--cle-accent); outline-offset: 2px; }
 .cle-details { margin-top: 1.1rem; }
 .cle-details summary { cursor: pointer; opacity: 0.8; font-size: 0.9rem; }

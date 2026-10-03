@@ -25,7 +25,7 @@ describe('tinkerfundSeo', () => {
   })
 
   it('falls back to the site description when a page has none', () => {
-    expect(tinkerfundSeo({ kind: 'listing', space: 'prod', title: 'Discover' }).description)
+    expect(tinkerfundSeo({ kind: 'page', space: 'prod', title: 'Discover' }).description)
       .toBe('Back independent inventors and their inventions before they reach anyone else.')
   })
 

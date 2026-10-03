@@ -8,8 +8,6 @@
 // Presentation-only (ADR-0004): resolves the trench Space through the SAME shared
 // `resolveSpaceRoute`, hardcoded because `/t/midden` carries no `space` param.
 import { resolveSpaceRoute } from '#shared/routing'
-import { conditionMeta } from '../../utils/condition'
-import { formatMiddenDate, type MiddenArtifactDoc } from '../../utils/find'
 
 const props = defineProps<{ front?: boolean }>()
 
@@ -19,7 +17,7 @@ const { data } = await useAsyncData(`midden-landing-${props.front ? 'front' : 't
   if (!resolved) return { intro: null, count: 0, sites: [], latest: [] }
   if (props.front) {
     const count = await queryCollection(resolved.pagesKey).where('path', '<>', '/').count()
-    const artifacts = (await queryCollection(resolved.collections.artifacts).all()) as unknown as MiddenArtifactDoc[]
+    const artifacts = await queryCollection(resolved.collections.artifacts).all()
     const latest = artifacts
       .sort((a, b) => b.assessedAt.localeCompare(a.assessedAt) || a.stem.localeCompare(b.stem))
       .slice(0, 3)

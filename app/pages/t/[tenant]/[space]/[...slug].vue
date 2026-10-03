@@ -52,7 +52,7 @@ function fields(item: object): [string, unknown][] {
 
     <!-- A failed client-side content load raises a modal (message / technical
          details / reload) instead of a silent "Not found" (issue #236). -->
-    <ContentLoadErrorDialog :status="status" :error="error" :context="route.path" />
+    <ContentLoadErrorDialog :status="status" :error="error" />
 
     <section v-for="c in data?.collections" :key="c.name" style="margin-top: 2rem;">
       <h2 style="text-transform: capitalize;">{{ c.name }}</h2>

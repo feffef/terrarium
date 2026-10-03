@@ -99,7 +99,7 @@ useSeoMeta({ description: () => tagline.value })
 
     <!-- A failed client-side content load must never present as a silent blank
          (issue #236) — raise a modal with a message, technical details, reload. -->
-    <ContentLoadErrorDialog :status="status" :error="error" :accent="meta.accent" :context="route.path" />
+    <ContentLoadErrorDialog :status="status" :error="error" :accent="meta.accent" />
 
     <BlogNetwork :current="space" />
     <SiteFooter />

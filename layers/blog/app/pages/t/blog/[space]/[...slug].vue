@@ -47,12 +47,11 @@ const adjacentPosts = computed(() => {
 
 if (!post.value && !error.value) setResponseStatus(404)
 
-const title = computed(() => post.value?.title ?? 'Not found')
 // The .bl-page body class scopes the blog canvas (full-bleed background +
 // accent wash) to blog routes only; the accent on <body> lets that wash tint
 // itself per Persona before the page root even renders.
 useHead(() => ({
-  title: `${title.value} · blog/${space}`,
+  title: `${post.value?.title ?? 'Not found'} · blog/${space}`,
   bodyAttrs: { class: 'bl-page', style: `--bl-accent: ${meta.accent}` },
 }))
 useSeoMeta({ description: () => post.value?.description })
@@ -136,7 +135,7 @@ useSeoMeta({ description: () => post.value?.description })
 
     <!-- A failed client-side content load raises a modal (message / technical
          details / reload) instead of a silent "Not found" (issue #236). -->
-    <ContentLoadErrorDialog :status="status" :error="error" :accent="meta.accent" :context="route.path" />
+    <ContentLoadErrorDialog :status="status" :error="error" :accent="meta.accent" />
 
     <BlogNetwork :current="space" />
     <SiteFooter />

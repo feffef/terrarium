@@ -214,34 +214,6 @@ export function arcPath(span: Span, r0: number, r1: number): string {
     .join(' ')
 }
 
-/** SVG path for a span drawn as an OPEN stroked arc along radius `r` — the
- *  miniature arc-glyph the dial-driven prose components wear (#283: a faint
- *  year-circle with the span's arc emphasized). Origin-centred like `arcPath`.
- *  A wrapped span needs no split here: endpoints are periodic, so one arc
- *  whose sweep crosses the New Year draws correctly. A full-year span ([a, a])
- *  yields two half-circle arcs (a single 360° arc degenerates — its start and
- *  end coincide). */
-export function ringArcPath(span: Span, r: number): string {
-  const [a] = span
-  const pieces: Array<[number, number]> =
-    span[0] === span[1]
-      ? [
-          [a, a + DAYS_PER_YEAR / 2],
-          [a + DAYS_PER_YEAR / 2, a + DAYS_PER_YEAR],
-        ]
-      : [[a, a + spanLength(span)]]
-  return pieces
-    .map(([d0, d1]) => {
-      const a0 = dayToAngle(d0)
-      const a1 = dayToAngle(d1)
-      const large = a1 - a0 > 180 ? 1 : 0
-      const p0 = pointAt(a0, r)
-      const p1 = pointAt(a1, r)
-      return `M ${fmt(p0.x)} ${fmt(p0.y)} A ${fmt(r)} ${fmt(r)} 0 ${large} 1 ${fmt(p1.x)} ${fmt(p1.y)}`
-    })
-    .join(' ')
-}
-
 /** Cumulative days before each month (fixed non-leap year), Jan..Dec. */
 const DAYS_BEFORE_MONTH = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334]
 const DAYS_IN_MONTH = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
@@ -279,17 +251,11 @@ const MONTH_NAMES = [
 
 /** Real ISO date ('YYYY-MM-DD') → its spoken form, e.g. '20 June 2026' — the
  *  Sighting citation's display string. Shares `parseIsoDate` with `dateToDay`
- *  and defers to `dateToDay` for acceptance, so a date this formats is always
- *  exactly the set `dateToDay` also accepts. Unlike `dateToDay`, the day
- *  printed is the one written, not clamped (29 February prints as 29): this
- *  is for display, not wheel placement. Null on anything `dateToDay` rejects. */
+ *  but does not validate the month/day: callers gate on `dateToDay` first. The
+ *  day printed is the one written, not clamped (29 February prints as 29): this
+ *  is for display, not wheel placement. Null when the shape doesn't fit. */
 export function formatIsoDate(iso: string): string | null {
   const parsed = parseIsoDate(iso)
   if (!parsed) return null
-  try {
-    dateToDay(iso)
-  } catch {
-    return null
-  }
   return `${parsed.day} ${MONTH_NAMES[parsed.month - 1]} ${parsed.year}`
 }

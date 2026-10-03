@@ -16,14 +16,14 @@
 // (ADR-0020) is untouched.
 import { join } from 'node:path'
 import { addTemplate, addTypeTemplate, defineNuxtModule } from '@nuxt/kit'
-import { catalogFrom, expand, loadManifests, root, type ExpandedCollection } from '../shared/expand'
+import { catalogFrom, expand, loadManifests, root } from '../shared/expand'
 
 export default defineNuxtModule({
   meta: { name: 'terrarium:catalog' },
 
   setup(_options, nuxt) {
     const manifests = loadManifests()
-    const cols: ExpandedCollection[] = expand(manifests)
+    const cols = expand(manifests)
     const catalog = catalogFrom(cols)
     const catalogJson = JSON.stringify(catalog, null, 2)
 

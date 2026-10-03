@@ -4,7 +4,7 @@ import { describe, expect, it } from 'vitest'
 import { resolveTinkerfundCart, withTinkerfundPledges } from '../../app/utils/cart.ts'
 import type { TinkerfundBackerState, TinkerfundDraft, TinkerfundPledge, TinkerfundShop, TinkerfundZone } from '../../app/utils/cart.ts'
 import { placeTinkerfundPledges, quoteTinkerfundCheckout, tinkerfundReceipt, tinkerfundShippingRows } from '../../app/utils/checkout.ts'
-import { catalog, DAY, NOW, promotion, shop } from './support.ts'
+import { catalog, DAY, endedLamp, NOW, pledge, promotion, shop } from './support.ts'
 
 const black = { colour: 'black' }
 const cart: TinkerfundDraft[] = [
@@ -68,10 +68,7 @@ describe('quoting a checkout', () => {
   })
 
   it('charges a Pledge’s shipping once: adding to one that already ships quotes only the difference', () => {
-    const mugs: TinkerfundPledge = {
-      ref: 'TF-P-9001', campaign: 'mug', placed: NOW, zone: 'domestic', payment: 'demo-card',
-      lines: [{ reward: 'mug', options: {}, quantity: 1 }], addons: [], promotions: [], discount: 0, shipping: 2,
-    }
+    const mugs = pledge({ campaign: 'mug', lines: [{ reward: 'mug', options: {}, quantity: 1 }], shipping: 2 })
     const more = [{ campaign: 'mug', lines: [{ reward: 'mug', options: {}, quantity: 1 }], addons: [] }]
     expect(quote({ cart: more, pledges: [mugs] })).toMatchObject({ subtotal: 3, shipping: 0, total: 3 })
     // Moving it to Europe re-rates the whole Pledge: €4 instead of the €2 it paid.
@@ -79,10 +76,7 @@ describe('quoting a checkout', () => {
   })
 
   it('shows a cheaper zone for a Pledge as a shipping change naming the new zone, never a bare negative shipping', () => {
-    const mugs: TinkerfundPledge = {
-      ref: 'TF-P-9001', campaign: 'mug', placed: NOW, zone: 'europe', payment: 'demo-card',
-      lines: [{ reward: 'mug', options: {}, quantity: 1 }], addons: [], promotions: [], discount: 0, shipping: 4,
-    }
+    const mugs = pledge({ campaign: 'mug', zone: 'europe', lines: [{ reward: 'mug', options: {}, quantity: 1 }], shipping: 4 })
     const more = [{ campaign: 'mug', lines: [{ reward: 'mug', options: {}, quantity: 1 }], addons: [] }]
     const moved = quote({ cart: more, pledges: [mugs], zone: 'domestic' })
     expect(moved).toMatchObject({ subtotal: 3, shipping: -2, total: 1 })
@@ -102,10 +96,7 @@ describe('quoting a checkout', () => {
   })
 
   describe('adding to a Pledge that earned a Promotion', () => {
-    const lamp: TinkerfundPledge = {
-      ref: 'TF-P-9001', campaign: 'lamp', placed: NOW, zone: 'domestic', payment: 'demo-card',
-      lines: [{ reward: 'lamp', options: black, quantity: 1 }], addons: [], promotions: [], discount: 0, shipping: 5,
-    }
+    const lamp = pledge({ lines: [{ reward: 'lamp', options: black, quantity: 1 }], shipping: 5 })
     const oneMore = [{ campaign: 'lamp', lines: [{ reward: 'lamp', options: { colour: 'white' }, quantity: 1 }], addons: [] }]
 
     it('takes a fixed amount off once per Pledge, never again on a merge', () => {
@@ -200,8 +191,7 @@ describe('confirming a checkout', () => {
 
   it('refuses an empty Cart, a Campaign that is not Live, and a line that cannot be had', () => {
     expect(place({ state: { cart: [], pledges: [] } }).error).toBe('Your Cart is empty')
-    const late = { ...catalog, lamp: { ...catalog.lamp, campaign: { ...catalog.lamp.campaign, end: '-1h' } } }
-    expect(place({ at: { catalog: late } }).error).toBe('Lamp: Pledging has closed')
+    expect(place({ at: { catalog: endedLamp } }).error).toBe('Lamp: Pledging has closed')
     expect(place({ zone: 'europe' }).error).toBe('Lamp: One lamp doesn’t ship there')
     const sold = { ...catalog, mug: { ...catalog.mug, campaign: { ...catalog.mug.campaign, rewards: [{ ...catalog.mug.campaign.rewards[0]!, stock: 1, claimed: 1 }] } } }
     expect(place({ at: { catalog: sold } }).error).toBe('Mug: Mug is no longer available')
@@ -211,10 +201,7 @@ describe('confirming a checkout', () => {
     expect(place({ payment: '' }).error).toBe('Choose how to pay')
   })
 
-  const existing: TinkerfundPledge = {
-    ref: 'TF-P-9001', campaign: 'lamp', placed: NOW - 5 * DAY, zone: 'domestic', payment: 'handshake',
-    lines: [{ reward: 'manual', options: {}, quantity: 1 }], addons: [], bonus: 3, promotions: [], discount: 0, shipping: 0,
-  }
+  const existing = pledge({ placed: NOW - 5 * DAY, payment: 'handshake', lines: [{ reward: 'manual', options: {}, quantity: 1 }], bonus: 3 })
 
   it('refuses to move a Pledge to a zone its earlier Rewards don’t ship to', () => {
     const lamps = { ...existing, lines: [{ reward: 'lamp', options: black, quantity: 1 }], shipping: 5 }
@@ -246,11 +233,11 @@ describe('a Campaign’s totals with the Backer’s Pledges', () => {
     rewards: [{ id: 'lamp', price: 20, claimed: 30 }, { id: 'manual', price: 5, claimed: 0 }],
     addons: [{ id: 'bulb', price: 4, claimed: 0 }],
   }
-  const pledge: TinkerfundPledge = { ref: 'TF-P-0001', campaign: 'lamp', placed: NOW, zone: 'domestic', payment: 'demo-card', lines: [{ reward: 'lamp', options: {}, quantity: 2 }], addons: [{ id: 'bulb', quantity: 1 }], bonus: 6, promotions: [], discount: 4.4, shipping: 5 }
+  const lampPledge = pledge({ ref: 'TF-P-0001', lines: [{ reward: 'lamp', options: {}, quantity: 2 }], addons: [{ id: 'bulb', quantity: 1 }], bonus: 6, discount: 4.4, shipping: 5 })
 
   it('adds a new Pledge’s amount after discount, without shipping, one Backer, and the stock it took', () => {
-    const other = { ...pledge, ref: 'TF-P-0002', campaign: 'mug' }
-    expect(withTinkerfundPledges('lamp', lamp, [pledge, other], [])).toEqual({
+    const other = { ...lampPledge, ref: 'TF-P-0002', campaign: 'mug' }
+    expect(withTinkerfundPledges('lamp', lamp, [lampPledge, other], [])).toEqual({
       pledged: 145.6,
       backers: 11,
       rewards: [{ id: 'lamp', price: 20, claimed: 32 }, { id: 'manual', price: 5, claimed: 0 }],
@@ -260,7 +247,7 @@ describe('a Campaign’s totals with the Backer’s Pledges', () => {
 
   it('counts only the difference when the Pledge replaces a baked one', () => {
     const baked = [{ ref: 'TF-P-0001', campaign: 'lamp', placed: '-5d', zone: 'domestic' as const, lines: [{ reward: 'manual', quantity: 1 }], bonus: 3 }]
-    const grown = { ...pledge, lines: [...pledge.lines, { reward: 'manual', options: {}, quantity: 1 }], bonus: 9 }
+    const grown = { ...lampPledge, lines: [...lampPledge.lines, { reward: 'manual', options: {}, quantity: 1 }], bonus: 9 }
     expect(withTinkerfundPledges('lamp', lamp, [grown], baked)).toMatchObject({
       pledged: 145.6,
       backers: 10,
@@ -271,12 +258,12 @@ describe('a Campaign’s totals with the Backer’s Pledges', () => {
 
 describe('reading a Pledge back as a receipt', () => {
   it('prices each line from the catalog and settles the total, dropping ids it no longer knows', () => {
-    const pledge: TinkerfundPledge = {
-      ref: 'TF-P-0001', campaign: 'lamp', placed: NOW, zone: 'domestic', payment: 'demo-card',
+    const stored = pledge({
+      ref: 'TF-P-0001',
       lines: [{ reward: 'lamp', options: black, quantity: 2 }, { reward: 'gone-for-good', options: {}, quantity: 1 }],
-      addons: [{ id: 'bulb', quantity: 1 }], bonus: 6, promotions: [], discount: 4.4, shipping: 5,
-    }
-    const receipt = tinkerfundReceipt(pledge, catalog.lamp)
+      addons: [{ id: 'bulb', quantity: 1 }], bonus: 6, discount: 4.4, shipping: 5,
+    })
+    const receipt = tinkerfundReceipt(stored, catalog.lamp)
     expect(receipt.lines.map((l) => [l.title, l.quantity, l.price, l.amount])).toEqual([['One lamp', 2, 20, 40], ['Bulb', 1, 4, 4]])
     expect(receipt).toMatchObject({ ref: 'TF-P-0001', title: 'Lamp', goods: 44, bonus: 6, discount: 4.4, shipping: 5, total: 50.6 })
   })

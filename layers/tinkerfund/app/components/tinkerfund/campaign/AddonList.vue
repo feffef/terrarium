@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import type { TinkerfundBacking } from '../../../composables/cart'
 import type { TinkerfundAddon } from '../../../types/tinkerfund'
 
 const props = defineProps<{
