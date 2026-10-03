@@ -329,11 +329,10 @@ function incompleteScanMessage(url: string, cause: string, recordsSoFar: number,
 
 /** Walks pages by NUMBER on our own `repos/{owner}/{repo}` URL, using the
  *  `Link` header only as the "is there another page" signal rather than
- *  following its URL — the approach `audit-skills.ts` already proved against
- *  the same endpoint (issue #738), applied here per issue #848: GitHub answers
- *  `pulls` with a `rel="next"` pointing at the numeric `repositories/{id}/pulls`
- *  form, which this environment's agent proxy rejects outright, so following it
- *  verbatim 403s on page 2.
+ *  following its URL (issue #848): GitHub answers `pulls` with a `rel="next"`
+ *  pointing at the numeric `repositories/{id}/pulls` form, which this
+ *  environment's agent proxy rejects outright, so following it verbatim 403s
+ *  on page 2.
  *
  *  Throws on any mid-walk failure rather than returning the pages already
  *  read — see `incompleteScanMessage`. */
