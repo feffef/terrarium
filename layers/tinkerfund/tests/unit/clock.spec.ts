@@ -40,6 +40,8 @@ describe('tinkerfundCountdown', () => {
   it('reads as days and hours', () => {
     expect(formatTinkerfundCountdown({ days: 1, hours: 12 })).toBe('1 day 12 hours')
     expect(formatTinkerfundCountdown({ days: 18, hours: 1 })).toBe('18 days 1 hour')
-    expect(formatTinkerfundCountdown({ days: 0, hours: 0 })).toBe('0 days 0 hours')
+    expect(formatTinkerfundCountdown({ days: 18, hours: 0 })).toBe('18 days')
+    expect(formatTinkerfundCountdown({ days: 0, hours: 20 })).toBe('20 hours')
+    expect(formatTinkerfundCountdown({ days: 0, hours: 0 })).toBe('0 hours')
   })
 })

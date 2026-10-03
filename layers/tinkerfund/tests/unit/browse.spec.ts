@@ -152,7 +152,7 @@ describe('Home', () => {
     const home = tinkerfundHomeSections(listings, NOW)
     expect(titles(home.endingSoon)).toEqual(['lamp'])
     expect(titles(home.popular)).toEqual(['stapler', 'lamp', 'kettle'])
-    expect(titles(home.justLaunched)).toEqual(['stapler', 'lamp'])
+    expect(titles(home.justLaunched)).toEqual(['stapler'])
   })
 
   it('leaves a section empty when nothing fits, so it can hide', () => {
@@ -194,13 +194,13 @@ describe('a listing’s status copy', () => {
 
   it('counts down to the end, or to the launch, at the given clock', () => {
     expect(tinkerfundRemaining(byTitle('lamp'), NOW)).toBe('1 day 12 hours')
-    expect(tinkerfundRemaining(byTitle('lamp'), NOW + 13 * HOUR)).toBe('0 days 23 hours')
-    expect(tinkerfundRemaining(byTitle('kettle'), NOW)).toBe('Launches in 3 days 0 hours')
+    expect(tinkerfundRemaining(byTitle('lamp'), NOW + 13 * HOUR)).toBe('23 hours')
+    expect(tinkerfundRemaining(byTitle('kettle'), NOW)).toBe('Launches in 3 days')
     expect(tinkerfundRemaining(byTitle('ruler'), NOW)).toBe('Ended')
   })
 
   it('labels the time left: to the launch while Upcoming, to the end while Live, none once Ended', () => {
-    expect(tinkerfundTimeLeft(byTitle('kettle'), NOW)).toEqual({ label: 'Launches in', text: '3 days 0 hours', at: NOW + 72 * HOUR })
+    expect(tinkerfundTimeLeft(byTitle('kettle'), NOW)).toEqual({ label: 'Launches in', text: '3 days', at: NOW + 72 * HOUR })
     expect(tinkerfundTimeLeft(byTitle('lamp'), NOW)).toEqual({ label: 'Remaining', text: '1 day 12 hours', at: NOW + 36 * HOUR })
     expect(tinkerfundTimeLeft(byTitle('hammock'), NOW)).toBeUndefined()
   })

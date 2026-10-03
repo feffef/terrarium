@@ -30,16 +30,22 @@ const from = computed(() => campaignPriceFrom(props.campaign.rewards))
     <component :is="heading ?? 'h1'" class="tf-h1">{{ title }}</component>
     <p v-if="description" class="lead">{{ description }}</p>
     <p v-if="inventor" class="by">by <b>{{ inventor }}</b></p>
-    <div>
-      <p class="big">{{ money(campaign.pledged) }}</p>
-      <p class="sub">pledged of {{ money(campaign.goal) }} goal</p>
+    <div v-if="status.state === 'upcoming'">
+      <p class="big">{{ money(campaign.goal) }}</p>
+      <p class="sub">goal{{ from !== undefined ? ` · rewards from ${money(from)}` : '' }}</p>
     </div>
-    <TinkerfundProgressBar :percent="status.percent" />
-    <dl class="tiles">
-      <div><dt>Backers</dt><dd>{{ campaign.backers.toLocaleString(locale) }}</dd></div>
-      <div><dt>Funded</dt><dd>{{ status.percent }}%</dd></div>
-      <div v-if="from !== undefined"><dt>From</dt><dd>{{ money(from) }}</dd></div>
-    </dl>
+    <template v-else>
+      <div>
+        <p class="big">{{ money(campaign.pledged) }}</p>
+        <p class="sub">pledged of {{ money(campaign.goal) }} goal</p>
+      </div>
+      <TinkerfundProgressBar :percent="status.percent" />
+      <dl class="tiles">
+        <div><dt>Backers</dt><dd>{{ campaign.backers.toLocaleString(locale) }}</dd></div>
+        <div><dt>Funded</dt><dd>{{ status.percent }}%</dd></div>
+        <div v-if="from !== undefined"><dt>From</dt><dd>{{ money(from) }}</dd></div>
+      </dl>
+    </template>
     <p v-for="deal in deals" :key="deal.stem" class="deals">
       <TinkerfundCampaignDealBadge :promotion="deal" />
     </p>

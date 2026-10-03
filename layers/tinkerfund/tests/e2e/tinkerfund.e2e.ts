@@ -125,9 +125,9 @@ export function registerTinkerfundE2E(): void {
         expect(html).toMatch(/<time datetime="2026-06-01T12:00:00.000Z"[^>]*>2026-06-01 12:00 UTC<\/time>/)
         const status = (registry: string) => html.match(new RegExp(`${registry}</span>([\\s\\S]*?)</div>`))?.[1] ?? ''
         expect(status('TF-9001')).toMatch(/Live<[\s\S]*Ending soon[\s\S]*Goal reached[\s\S]*125% funded[\s\S]*1 day 12 hours to go/)
-        expect(status('TF-9002')).toMatch(/Live<[\s\S]*Goal reached[\s\S]*100% funded[\s\S]*21 days 0 hours to go/)
-        expect(status('TF-9003')).toMatch(/Upcoming<[\s\S]*0% funded[\s\S]*Launches in 3 days 0 hours/)
-        expect(status('TF-9004')).toMatch(/Live<[\s\S]*0% funded[\s\S]*28 days 0 hours to go/)
+        expect(status('TF-9002')).toMatch(/Live<[\s\S]*Goal reached[\s\S]*100% funded[\s\S]*21 days to go/)
+        expect(status('TF-9003')).toMatch(/Upcoming<[\s\S]*Launches in 3 days/)
+        expect(status('TF-9004')).toMatch(/Live<[\s\S]*0% funded[\s\S]*28 days to go/)
         expect(status('TF-9005')).toMatch(/Ended<[\s\S]*>Funded<[\s\S]*12480% funded/)
         expect(status('TF-9006')).toMatch(/Ended<[\s\S]*>Unfunded<[\s\S]*23% funded/)
       })
@@ -260,7 +260,7 @@ export function registerTinkerfundE2E(): void {
       it('lists Active Deals with their Campaign and Scheduled ones as starting soon', async () => {
         const html = main(await $fetch('/t/tinkerfund/qa/deals'))
         expect(html).toMatch(/A tenth off the stapler \(active, automatic\)[\s\S]*Applied automatically\.[\s\S]*Goal-Exact Stapler/)
-        expect(html).toMatch(/Starting soon[\s\S]*Lamp week \(scheduled\)[\s\S]*Starts in 2 days 0 hours/)
+        expect(html).toMatch(/Starting soon[\s\S]*Lamp week \(scheduled\)[\s\S]*Starts in 2 days/)
         expect(html).not.toContain('EXPIRED5')
       })
 
@@ -280,7 +280,7 @@ export function registerTinkerfundE2E(): void {
         expect(await search('prod', 'mug')).toContain('Counterclockwise Mug')
         for (const q of ['mug', 'Henrik', 'Lucía']) expect(await search('qa', q)).toContain(`No Campaign matches “${q}”`)
         const everything = await search('qa', 'e')
-        expect(everything).toContain('7 Campaigns<')
+        expect(everything).toContain('5 Campaigns<')
         expect(everything).not.toMatch(/TF-0\d{3}|\/t\/tinkerfund\/prod\//)
       })
 
@@ -524,7 +524,7 @@ export function registerTinkerfundE2E(): void {
           await field.pressSequentially(q)
         }
 
-        await typeIn('er')
+        await typeIn('one')
         await suggestions.waitFor()
         const links = await suggestions.getByRole('option').evaluateAll((els) => els.map((el) => el.getAttribute('href') ?? ''))
         expect(links.length).toBeGreaterThan(1)

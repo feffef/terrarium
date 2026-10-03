@@ -13,6 +13,12 @@ export interface TinkerfundHit {
   description?: string
 }
 
+/** The term starts a word: "cat" finds "Cat Button", not "Verification". */
+export function startsAWord(text: string | undefined, term: string): boolean {
+  const escaped = term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+  return !!text && new RegExp(`(^|[^\\p{L}\\p{N}])${escaped}`, 'iu').test(text)
+}
+
 function rank(title: string, term: string): number {
   const t = title.toLowerCase()
   if (t.startsWith(term)) return 0

@@ -1,7 +1,7 @@
 // Search (story #1382): the visitor's words become a safe `LIKE` term, and the
 // Space's matching Campaigns come back best match first.
 import { describe, expect, it } from 'vitest'
-import { rankTinkerfundHits, tinkerfundSearchTerm } from '../../app/utils/search.ts'
+import { rankTinkerfundHits, startsAWord, tinkerfundSearchTerm } from '../../app/utils/search.ts'
 
 describe('tinkerfundSearchTerm', () => {
   it('trims and collapses whitespace, including line breaks from the URL', () => {
@@ -24,5 +24,14 @@ describe('rankTinkerfundHits', () => {
   it('puts a title that starts with the term first, then a title word, then anywhere in the title, then the rest', () => {
     const hits = ['Rock', 'Clamp', 'Solar Lamp Stand', 'Anti-Lamp', 'Lamp Oil', 'Book'].map(hit)
     expect(rankTinkerfundHits(hits, 'LAMP').map((h) => h.title)).toEqual(['Lamp Oil', 'Anti-Lamp', 'Solar Lamp Stand', 'Clamp', 'Book', 'Rock'])
+  })
+})
+
+describe('startsAWord', () => {
+  it('matches the start of a word, not the middle of one', () => {
+    expect(startsAWord('Cat Acknowledgement Button', 'cat')).toBe(true)
+    expect(startsAWord('Rain-aware umbrella', 'AWARE')).toBe(true)
+    expect(startsAWord('Fridge Light Verification Camera', 'cat')).toBe(false)
+    expect(startsAWord(undefined, 'cat')).toBe(false)
   })
 })

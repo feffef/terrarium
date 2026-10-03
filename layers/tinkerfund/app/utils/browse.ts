@@ -196,11 +196,12 @@ const JUST_LAUNCHED = resolveTinkerfundOffset('+14d', 0)
 /** Home's lists, in page order (issue #1367); an empty one hides its section. */
 export function tinkerfundHomeSections<T extends TinkerfundListing>(listings: T[], now: number) {
   const live = listings.filter((l) => l.status.state === 'live')
+  const featured = browseTinkerfundListings(live, { sort: 'funded' })[0]
   return {
-    featured: browseTinkerfundListings(live, { sort: 'funded' })[0],
+    featured,
     endingSoon: browseTinkerfundListings(live, { sort: 'ending', soon: true }),
     popular: browseTinkerfundListings(listings.filter((l) => l.status.state !== 'ended'), { sort: 'popular' }),
-    justLaunched: browseTinkerfundListings(live.filter((l) => l.status.launchAt > now - JUST_LAUNCHED), { sort: 'newest' }),
+    justLaunched: browseTinkerfundListings(live.filter((l) => l !== featured && l.status.launchAt > now - JUST_LAUNCHED), { sort: 'newest' }),
   }
 }
 
