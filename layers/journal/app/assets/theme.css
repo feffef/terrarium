@@ -60,12 +60,13 @@
   color: var(--jd-ink);
   font-family: var(--jd-serif);
   line-height: 1.5;
-  max-width: 1120px;
-  padding: clamp(1.5rem, 4vw, 3rem) clamp(1rem, 4vw, 2.25rem) 3rem;
-  margin-inline: auto;
+  /* The ground spans the window; padding centres the content column. */
+  --jd-column: 1120px;
+  padding: clamp(1.5rem, 4vw, 3rem) max(clamp(1rem, 4vw, 2.25rem), calc((100% - var(--jd-column)) / 2)) 3rem;
 }
-/* A single Document reads as one column; the full-width card left half of it empty. */
-.jd.jd-doc { max-width: 44rem; }
+/* A Document page's column is its prose width, so the text sits centred. */
+.jd.jd-doc { --jd-column: calc(82ch * 1.04); }
+body:has(.jd) { margin: 0; }
 
 @media (prefers-color-scheme: dark) {
   .jd {
@@ -111,7 +112,7 @@
 /* ── Prose ──────────────────────────────────────────────────
    A reusable wrapper for rendered Document bodies (ContentRenderer output).
    Global, so it styles the un-scoped Markdown DOM without `:deep`. */
-.jd-prose { max-width: 68ch; font-size: 1.04rem; color: var(--jd-ink); }
+.jd-prose { max-width: 82ch; font-size: 1.04rem; color: var(--jd-ink); }
 .jd-prose > :first-child { margin-top: 0; }
 .jd-prose > :last-child { margin-bottom: 0; }
 .jd-prose h1 {
