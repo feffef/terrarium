@@ -1,7 +1,17 @@
 name: Oskar Lindgren
 bio: Mechanical engineer in Malmö. Noticed that the sticky note on his monitor was never at the right height and treated this as an ergonomics problem rather than a two-second fix.
 portrait: |-
-  <path d="M20 96c4-24 16-34 30-34s26 10 30 34z" style="fill:var(--tf-link)" />
-  <circle cx="50" cy="18" r="9" style="fill:var(--tf-ink)" />
-  <circle cx="50" cy="40" r="17" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" />
-  <path d="M33 38a17 17 0 0 1 34 0c-7-7-27-7-34 0z" style="fill:var(--tf-ink)" />
+  <path d="M14 100c1-14 9-22 22-26l14-4 14 4c13 4 21 12 22 26z" style="fill:var(--tf-link)" />
+  <path d="M41 71l9 13 9-13z" style="fill:color-mix(in srgb, var(--tf-surface) 85%, var(--tf-ink))" />
+  <path d="M44 54h12v18H44z" style="fill:color-mix(in srgb, var(--tf-ink) 30%, var(--tf-surface))" />
+  <ellipse cx="33" cy="43" rx="3" ry="4" style="fill:color-mix(in srgb, var(--tf-ink) 30%, var(--tf-surface))" />
+  <ellipse cx="67" cy="43" rx="3" ry="4" style="fill:color-mix(in srgb, var(--tf-ink) 30%, var(--tf-surface))" />
+  <path d="M68 38l6-12 3 1-6 12z" style="fill:var(--tf-warn)" />
+  <path d="M74 26l3 1 1-3z" style="fill:var(--tf-ink)" />
+  <path d="M50 23c-10 0-16 7-16 17v3c0 8 6 14 12 16h8c6-2 12-8 12-16v-3c0-10-6-17-16-17z" style="fill:color-mix(in srgb, var(--tf-ink) 30%, var(--tf-surface))" />
+  <path d="M36 47c2 8 7 13 14 13s12-5 14-13c-3 5-8 8-14 8s-11-3-14-8z" style="fill:color-mix(in srgb, var(--tf-ink) 42%, var(--tf-surface))" />
+  <path d="M34 42c-2-12 5-21 16-21 10 0 17 7 16 18l-2 2c-2-6-6-10-13-10-6 1-12 4-17 11z" style="fill:var(--tf-ink)" />
+  <path d="M64 41c2-4 2-8 1-10 1 1 2 3 2 5z" style="fill:var(--tf-ink)" />
+  <circle cx="43" cy="42" r="1.8" style="fill:var(--tf-ink)" />
+  <circle cx="57" cy="42" r="1.8" style="fill:var(--tf-ink)" />
+  <path d="M39 37c2-2 6-2 8 0M53 37c2-2 6-2 8 0M49 43c0 3 0 5 2 6M45 52c3 3 7 3 10 0" style="fill:none;stroke:var(--tf-ink);stroke-width:1.6;stroke-linecap:round" />
