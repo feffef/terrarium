@@ -31,7 +31,7 @@
 // This module is also the single home for the `gh`/`rest` strategy switch's
 // pure helpers (`pickFetchStrategy`, `parseNextLink`, `FetchStrategy`), shared
 // by the sibling issue-tracker scripts (`check-triage-drift.ts`,
-// `poll-guest-tickets.ts`, `guest-intake-scan.ts`) — it is the base module they
+// `poll-guest-tickets.ts`, `guest-intake-scan.ts`, `owner-corrections.ts`) — it is the base module they
 // all already import from, so homing them here avoids the import cycle that
 // homing them in a sibling would create.
 //

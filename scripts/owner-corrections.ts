@@ -6,9 +6,9 @@
 //   Default cutoff: the last commit touching visitor-loop's decisions.md.
 //   Prints a JSON array of { kind, url, relatesTo, files?, excerpt }:
 //   - review:        a human comment or review on a visitor-loop PR;
-//   - rework:        a merged PR that names a visitor-loop PR (revert,
-//                    "follow-up to #N") or touches files one touched shortly
-//                    before (`files` = the overlap);
+//   - rework:        a merged PR whose title or body references a visitor-loop
+//                    PR (#N or its URL), or that touches files one touched in
+//                    the 3 days before it merged (`files` = the overlap);
 //   - issue-comment: a human comment on a thread that references one.
 //   "Human" = no ADR-0017 provenance (`isAiAuthored`), never the author field.
 import { execFileSync } from 'node:child_process'
@@ -44,7 +44,6 @@ export interface Comment {
   url: string
   body: string
   createdAt: string
-  login: string
   threadNumber: number
   threadText: string
 }
@@ -59,19 +58,15 @@ export interface Candidate {
 
 // ── Pure core (unit-tested) ─────────────────────────────────────────────────
 
-function mentions(text: string, n: number): boolean {
-  return new RegExp(`#${n}(?!\\d)`).test(text)
+/** Every issue/PR number `text` references, as `#N` or as a GitHub
+ *  `/pull/N` or `/issues/N` URL. */
+export function mentions(text: string): number[] {
+  const refs = text.matchAll(/(?:#|github\.com\/[^/\s]+\/[^/\s]+\/(?:pull|issues)\/)(\d+)(?!\d)/g)
+  return [...new Set([...refs].map((m) => Number(m[1])))]
 }
 
-/** The numbers a PR names as something it reverts or follows up: any #N in
- *  its title, or one after a revert/follow-up verb in its body. A bare
- *  citation (a blog post or audit quoting the PR) is not a rework. */
-export function reworkedNumbers(pr: Pick<Pr, 'title' | 'body'>): number[] {
-  const refs = [
-    ...pr.title.matchAll(/#(\d+)/g),
-    ...pr.body.matchAll(/(?:revert|follow[- ]?up|rework|undo|restor|replac)[^\n#]{0,40}#(\d+)/gi),
-  ]
-  return [...new Set(refs.map((m) => Number(m[1])))]
+function isHuman(body: string): boolean {
+  return body.trim() !== '' && !isAiAuthored(body)
 }
 
 function excerpt(text: string): string {
@@ -99,7 +94,7 @@ export function findCandidates(since: string, prs: Pr[], comments: Comment[]): C
       if (vl && mergedMs - Date.parse(vl.mergedAt!) <= OVERLAP_WINDOW_MS) owner.set(f, vl)
     }
     for (const vl of earlier) {
-      const named = reworkedNumbers(pr).includes(vl.number)
+      const named = mentions(`${pr.title}\n${pr.body}`).includes(vl.number)
       const files = pr.files.filter((f) => owner.get(f) === vl)
       if (named || files.length > 0) {
         out.push({ kind: 'rework', url: pr.url, relatesTo: vl.number, files, excerpt: excerpt(pr.title) })
@@ -108,17 +103,13 @@ export function findCandidates(since: string, prs: Pr[], comments: Comment[]): C
   }
 
   for (const c of comments) {
-    if (Date.parse(c.createdAt) <= sinceMs || !c.body.trim() || c.login.endsWith('[bot]') || isAiAuthored(c.body)) {
-      continue
-    }
+    if (Date.parse(c.createdAt) <= sinceMs || !isHuman(c.body)) continue
     if (visitorNumbers.has(c.threadNumber)) {
       out.push({ kind: 'review', url: c.url, relatesTo: c.threadNumber, excerpt: excerpt(c.body) })
       continue
     }
-    for (const n of visitorNumbers) {
-      if (mentions(`${c.threadText}\n${c.body}`, n)) {
-        out.push({ kind: 'issue-comment', url: c.url, relatesTo: n, excerpt: excerpt(c.body) })
-      }
+    for (const n of mentions(`${c.threadText}\n${c.body}`)) {
+      if (visitorNumbers.has(n)) out.push({ kind: 'issue-comment', url: c.url, relatesTo: n, excerpt: excerpt(c.body) })
     }
   }
   return out
@@ -142,7 +133,6 @@ interface RawComment {
   body: string | null
   created_at?: string
   submitted_at?: string
-  user: { login: string } | null
   issue_url?: string
   pull_request_url?: string
 }
@@ -170,7 +160,7 @@ function mergeFiles(sha: string | null, cwd: string): string[] {
     const raw = execFileSync('git', ['diff', '--no-renames', '--name-only', `${sha}^1`, sha], { cwd, encoding: 'utf8' })
     return raw.split('\n').filter(Boolean)
   } catch {
-    return [] // squash/rebase merges or a sha not on main: no first-parent diff to read
+    return [] // a sha not on main; a rebase merge's sha is only its last commit, so it undercounts instead
   }
 }
 
@@ -215,10 +205,9 @@ export function ownerCorrections(since: string | undefined, cwd = root): Candida
       .flatMap((p) => allPages<RawComment>(`${repo}/pulls/${p.number}/reviews?`, cwd).map((r) => ({ ...r, thread: p.number }))),
   ]
 
-  // Thread text is only needed for a human comment, so the per-thread fetch stays rare.
+  // Only human comments matter, which keeps the per-thread fetch rare.
   const threadTexts = new Map<number, string>()
   const threadText = (c: RawComment & { thread: number }): string => {
-    if (!c.body?.trim() || isAiAuthored(c.body)) return ''
     const pr = prByNumber.get(c.thread)
     if (pr) return `${pr.title}\n${pr.body ?? ''}`
     if (!threadTexts.has(c.thread)) {
@@ -227,11 +216,10 @@ export function ownerCorrections(since: string | undefined, cwd = root): Candida
     }
     return threadTexts.get(c.thread)!
   }
-  const comments: Comment[] = raw.map((c) => ({
+  const comments: Comment[] = raw.filter((c) => isHuman(c.body ?? '')).map((c) => ({
     url: c.html_url,
     body: c.body ?? '',
     createdAt: c.submitted_at ?? c.created_at ?? '',
-    login: c.user?.login ?? '',
     threadNumber: c.thread,
     threadText: threadText(c),
   }))
@@ -239,8 +227,8 @@ export function ownerCorrections(since: string | undefined, cwd = root): Candida
   // A revert, follow-up or human comment can name a visitor-loop PR older than the listing.
   const sinceMs = Date.parse(cutoff)
   const named = [
-    ...prs.filter((p) => p.mergedAt !== null && Date.parse(p.mergedAt) > sinceMs).flatMap((p) => reworkedNumbers(p)),
-    ...comments.filter((c) => c.threadText).flatMap((c) => [...`${c.threadText}\n${c.body}`.matchAll(/#(\d+)/g)].map((m) => Number(m[1]))),
+    ...prs.filter((p) => p.mergedAt !== null && Date.parse(p.mergedAt) > sinceMs).flatMap((p) => mentions(`${p.title}\n${p.body}`)),
+    ...comments.flatMap((c) => mentions(`${c.threadText}\n${c.body}`)),
   ]
   for (const n of new Set(named)) {
     if (prByNumber.has(n)) continue

@@ -41,7 +41,6 @@ function comment(over: Partial<Comment>): Comment {
     url: 'https://github.com/feffef/terrarium/pull/1492#issuecomment-1',
     body: 'Please keep the web on phones.',
     createdAt: '2026-09-30T12:00:00Z',
-    login: 'feffef',
     threadNumber: 1492,
     threadText: '',
     ...over,
@@ -69,11 +68,14 @@ describe('findCandidates', () => {
     expect(out[0]).toMatchObject({ kind: 'rework', relatesTo: 1492, files: [] })
   })
 
-  it('lists a body "Follow-up to #N" but not a bare citation of #N', () => {
-    const followUp: Pr = { ...UNRELATED, number: 1501, url: 'https://github.com/feffef/terrarium/pull/1501', body: 'Follow-up to #1492, which hid the web.' }
-    const citation: Pr = { ...UNRELATED, number: 1502, url: 'https://github.com/feffef/terrarium/pull/1502', body: 'This post quotes the fix in #1492.' }
-    const out = findCandidates('2026-09-29T20:00:00Z', [VL_1492, followUp, citation], [])
-    expect(out.map((c) => c.url)).toEqual([followUp.url])
+  it('lists any body reference to a visitor-loop PR, by #N or by URL, not only after a verb', () => {
+    const supersedes: Pr = { ...UNRELATED, number: 1501, url: 'https://github.com/feffef/terrarium/pull/1501', body: 'Supersedes #1492.' }
+    const byUrl: Pr = { ...UNRELATED, number: 1502, url: 'https://github.com/feffef/terrarium/pull/1502', body: 'Fixes the layout https://github.com/feffef/terrarium/pull/1492 introduced.' }
+    const out = findCandidates('2026-09-29T20:00:00Z', [VL_1492, supersedes, byUrl], [])
+    expect(out.map((c) => [c.url, c.relatesTo])).toEqual([
+      [supersedes.url, 1492],
+      [byUrl.url, 1492],
+    ])
   })
 
   it('lists a revert of a visitor-loop PR however long ago it merged', () => {
@@ -101,11 +103,15 @@ describe('findCandidates', () => {
     ])
   })
 
-  it('drops comments from before the cutoff, empty review bodies and bots', () => {
+  it('drops comments from before the cutoff and empty review bodies', () => {
     const old = comment({ createdAt: '2026-09-29T00:00:00Z' })
     const empty = comment({ body: '  ' })
-    const bot = comment({ login: 'github-actions[bot]' })
-    expect(findCandidates('2026-09-29T20:00:00Z', [VL_1492], [old, empty, bot])).toEqual([])
+    expect(findCandidates('2026-09-29T20:00:00Z', [VL_1492], [old, empty])).toEqual([])
+  })
+
+  it('keeps a human issue comment that links a visitor-loop PR by URL', () => {
+    const linked = comment({ url: 'https://github.com/feffef/terrarium/issues/1602#issuecomment-5', threadNumber: 1602, body: 'Undo https://github.com/feffef/terrarium/pull/1492 please' })
+    expect(findCandidates('2026-09-29T20:00:00Z', [VL_1492], [linked])).toMatchObject([{ kind: 'issue-comment', relatesTo: 1492 }])
   })
 
   it('keeps a human issue comment whose thread references a visitor-loop PR, and skips one that does not', () => {
