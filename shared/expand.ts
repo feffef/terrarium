@@ -94,13 +94,12 @@ export function loadManifests(): LoadedManifest[] {
  *  (ADR-0025). No `kind` ⇒ the local schema alone (possibly undefined, for a
  *  bare page collection); no local schema ⇒ the contract alone.
  *
- *  Built via `local.extend(<contract fields local doesn't declare>)`, NOT
- *  `contract.merge(local)`: the manifests are loaded by `loadManifests()`'s own
- *  jiti instance, so a local schema's zod and the contract's zod can be two
- *  module instances — `.merge()` adopts the *other* instance's catchall, whose
- *  `instanceof ZodNever` strip-check then fails and silently turns
- *  strip-unknown-keys into reject-as-never. Extending keeps the local schema's
- *  own class and unknown-keys policy. */
+ *  Built via `local.extend(<contract fields local doesn't declare>)`, which
+ *  keeps the local schema's own class, unknown-keys policy and refinements.
+ *  `loadManifests()`'s own jiti can make the local schema's zod and the
+ *  contract's zod two module instances; under zod 4 that is harmless, since
+ *  its `instanceof` and strip/strict checks read the `_zod` traits and def,
+ *  not class identity (issue #1549). */
 function effectiveSchema(
   kind: KindName | undefined,
   local: ZodObject<ZodRawShape> | undefined,
