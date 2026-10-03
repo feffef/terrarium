@@ -1,0 +1,92 @@
+schemaVersion: 1
+session: session_014weUowmS8AnzoS1SBQswzm
+startedAt: 2026-10-03T16:48:00Z
+endedAt: 2026-10-03T17:34:26Z
+kind: autonomous
+goal: "Run the visitor-loop on Tinkerfund: three blind visitors, fix consensus findings, build one feature"
+status: completed
+outcome: "Fix PR #1571 and Inventor-page feature PR #1573 both merged; no out-of-remit findings"
+summary: 'Scheduled visitor-loop run (agent-initiated, no human prompt), focus tinkerfund. Served a production preview and sent sonnet, fable and opus visitors through /t/tinkerfund. Consensus findings fixed in #1571: mid-word search matches, "N days 0 hours" countdowns, dead support box on ended campaigns, zero-filled readout on upcoming campaigns, hero repeated in Just launched, stray separator on the mobile demo strip. Dropped with reasons: clock minute shifting (owner decision), duplicate Discover count, aria-hidden claim (already hidden), Terrarium link (footer explains), mobile table (countdown fix covers it). The first gate run failed typecheck, then two e2e expectations that assumed substring search; fixed and re-gated. Feature chosen, built and merged in #1573: an Inventor page linked from each Campaign (asked for by two visitors). Both PRs were reviewed by subagents with no important finding and landed via merge-pr.ts. I did not gather owner corrections for decisions.md this run, so no new line was added there.'
+prs:
+  - "1571"
+  - "1573"
+docsRead:
+  - path: scripts/chromium-path.ts
+    reason: (no reason given)
+skillsUsed:
+  - name: code-review
+    reason: (no reason given)
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: visitor-loop
+    reason: (invoked as a slash command)
+frictions:
+  - description: Agent calls with run_in_background false were denied by a guard; three visitor dispatches had to be redone, and the skill text does not warn about it.
+    solution: visitor-loop SKILL.md should say to omit run_in_background on Agent dispatches.
+    severity: nit
+  - description: Scoped gate caught a typecheck error and two e2e failures only after full 2-minute runs; I edited a test query blindly ('o') and needed a third gate run.
+    solution: Check what the typeahead minimum query length is before changing e2e queries, or run the single e2e flow first.
+    severity: minor
+  - description: An Edit via python replace silently did nothing for Shell.vue because the anchor text differed; I only noticed from a missing CSS rule in the build.
+    solution: Use the Edit tool or assert the replacement happened in the script.
+    severity: nit
+  - description: Provenance and tail-pipe guards denied several calls (PR body header shape, angle-bracket text, piped commands); each cost a retry.
+    solution: Skill could state the PR body first-line shape and the no-pipe rule up front.
+    severity: nit
+durationSec: 2786
+models:
+  claude-sonnet-5-5: 164
+toolCounts:
+  Bash: 71
+  Agent: 9
+  Edit: 2
+  Read: 3
+  ToolSearch: 2
+  mcp__github__create_pull_request: 4
+  Skill: 3
+  mcp__github__add_issue_comment: 2
+filesEdited:
+  - layers/tinkerfund/app/utils/search.ts
+  - layers/tinkerfund/app/components/tinkerfund/shell/Shell.vue
+docsReadViaShell:
+  - .agents/skills/visitor-loop/visitor-brief.md
+  - .agents/skills/visitor-loop/decisions.md
+  - docs/adr/0003-agent-operating-model-and-governance.md
+  - layers/tinkerfund/CONTEXT.md
+  - docs/agents/guards.md
+  - docs/agents/pr-workflow.md
+  - CONTEXT.md
+subagents:
+  - task: Visitor sonnet
+    model: sonnet
+  - task: Visitor fable
+    model: fable
+  - task: Visitor opus
+    model: opus
+  - task: Visitor sonnet
+    model: sonnet
+  - task: Visitor fable
+    model: fable
+  - task: Visitor opus
+    model: opus
+  - type: general-purpose
+    task: Review standards axis
+  - type: general-purpose
+    task: Review spec axis
+  - type: general-purpose
+    task: Review feature PR
+gitBranch: claude/adoring-galileo-259aqz
+entrypoint: remote_trigger
+cliVersion: 2.1.288
+trigger: visitor-loop
+ideas:
+  - "Tinkerfund: add a Surprise me link (random Campaign) beside Discover all in the header and hero; two visitors would stumble through the 28 jokes more."
+  - "Tinkerfund: guided pledge tour banner on the home page that leads into backing the Rain-Aware Umbrella with code TINKER10, ending on the account page, since deals, add-ons and bonus support are hidden."
+  - "Tinkerfund: Honest failures row on the home page using the last update of Unfunded Campaigns (Cat Acknowledgement Button, Solo Pea Rest), the funniest writing on the site."
+  - "Tinkerfund: Following list on the account page for Notify me, with launch countdowns, so the bell button pays off."
+  - "Tinkerfund campaign page on phones: put title and progress bar above the 7-thumbnail gallery; single visitor finding."
+  - "Tinkerfund desktop campaign page: the sticky Rewards column scrolls inside itself and hides add-ons; make only the Back box sticky. Single visitor finding."
+  - "Tinkerfund cart: Subtotal line ignores the Shipping line above it; rename to Pledge total or reorder. Single visitor finding."
+landedBy: Stop
