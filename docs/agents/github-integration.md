@@ -33,8 +33,12 @@ short pause before calling it a real failure. If `issue_read` keeps flaking,
 | `mcp__github__*` tools | only if configured | ✅ |
 | **Default** | `gh` | the MCP tools; `gh api` for REST a tool lacks |
 
-Older cloud sessions had no `gh` at all; check with `which gh`. In a cloud
-session, map the workflow docs' `gh` recipes like this:
+Why MCP for writes in the cloud, not `gh api`: the provenance guard
+(`scripts/github-provenance-guard.ts`) checks only `mcp__github__*` calls, so a
+body posted through `gh api` skips it. `gh api` suits bulk reads in scripts,
+where the MCP list tools overflow. Older cloud sessions had no `gh` at all;
+check with `which gh`. In a cloud session, map the workflow docs' `gh` recipes
+like this:
 
 - **Create / edit / label / close an issue** → `issue_write`.
   - Labeling a *PR* also goes through `issue_write` (issues and PRs share one
