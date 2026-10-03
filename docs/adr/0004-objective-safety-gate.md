@@ -11,14 +11,30 @@ Prune Trials by ADR-0027
 > no other Skill gains ADR reach.
 
 > **Amended by [ADR-0026](0026-gate-workflow-thin-shell.md) (2026-08-06).**
-> `.github/actions/gate/action.yml` — the composite action that will hold the
+> `.github/actions/gate/action.yml` — the composite action that holds the
 > Gate's steps — **joins the high-risk set below**: Human-only to *merge*, never
-> auto-merged, exactly as `content.config.ts` is. That much binds now, because
-> the file exists now. The steps themselves still run from
-> `.github/workflows/gate.yml` until the shell swap in
-> `docs/proposals/879-gate-yml-thin-shell.md` is hand-applied. ADR-0026 records
-> the decision, and why removing the push barrier removes no protection the
-> merge barrier was not already providing.
+> auto-merged, exactly as `content.config.ts` is. ADR-0026 records the decision,
+> and why removing the push barrier removes no protection the merge barrier was
+> not already providing.
+
+> **Amended (2026-10-03).** *CI skips the Heavy tier on a provably Inert
+> changeset.* The Decision's "every PR must clear it" still governs what the
+> Gate *covers*; this narrows only what it *executes*. When every changed path
+> in a PR is Inert by `scripts/gate.ts`'s `isInert` — a `.md` outside
+> `layers/`, or a `.claude/skills/` entry — CI runs the Floor
+> (`verify:skills-lock`, `verify:mermaid`, `lint`, `typecheck`,
+> `validate:content`) and skips L3 (`test`), L0's `build`, and L2 (`test:e2e`).
+> The safety argument is the Inert-set proof in issues #350 and #544: no
+> skipped step reads those paths, so running them could only re-confirm the
+> previous run. CI asks `scripts/gate.ts --decide` for the decision instead of
+> restating the predicate in YAML, so the local and CI classifications cannot
+> diverge (ADR-0026 moved that invocation into the composite action). The
+> relaxation is one-directional — an undeterminable diff base, a shallow
+> checkout, a failed decision step, an empty changeset, or a `push: main` event
+> each run the Full gate, so the skip is only ever reached on a
+> positively-proven Inert set (issues #445, #879). If CI ever goes green on an
+> Inert-classified PR that a Full gate would have caught, the classifier is
+> wrong: that is the signal that tightens `isInert` or retires this amendment.
 
 > **Amended (2026-07-06).** The high-risk (always human-only) set is extended
 > beyond the path-based blast-radius to two axes a path classifier can't see: a PR
