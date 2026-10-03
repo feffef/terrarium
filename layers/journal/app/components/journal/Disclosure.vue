@@ -18,6 +18,10 @@
 // (`useId()`) to point `aria-controls` at, but the digest rows' panel does
 // not — passing `undefined` simply omits the attribute, matching the digest
 // row's previous behavior exactly.
+//
+// The key handlers take `.self`: a link inside the row (a PR chip, the Claude
+// Code chip) keeps its own Enter — a bubbled `.prevent` would cancel the
+// navigation and toggle the row instead.
 const { expanded, controls = undefined } = defineProps<{ expanded: boolean; controls?: string }>()
 const emit = defineEmits<{ toggle: [] }>()
 </script>
@@ -29,8 +33,8 @@ const emit = defineEmits<{ toggle: [] }>()
     :aria-expanded="expanded"
     :aria-controls="controls"
     @click="emit('toggle')"
-    @keydown.enter.prevent="emit('toggle')"
-    @keydown.space.prevent="emit('toggle')"
+    @keydown.enter.self.prevent="emit('toggle')"
+    @keydown.space.self.prevent="emit('toggle')"
   >
     <slot />
   </div>

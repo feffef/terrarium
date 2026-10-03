@@ -33,6 +33,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url'
 import { isPair, isScalar, parse as parseYaml, parseDocument, stringify as stringifyYaml, visit } from 'yaml'
 import { z } from 'zod'
 import { sessionSchema } from '../shared/schemas/session.ts'
+import { sessionUrl } from '../shared/session-url.ts'
 import { fetchOriginMain } from './git-helpers.ts'
 import { FALLBACK_MODEL, provenanceFooter } from './provenance-footer.ts'
 import { SESSIONS_DIR } from './session-logs.ts'
@@ -381,7 +382,7 @@ export function buildLogCommit(
     // `provenance-footer.ts` (issue #346), shared with the commit-msg guard.
     const trailer = provenanceFooter(
       deriveModelName(absPath),
-      `https://claude.ai/code/${sessionIdFromRelPath(relPath)}`,
+      sessionUrl(sessionIdFromRelPath(relPath)),
     )
     const commit = git(['commit-tree', tree, '-p', base, '-m', subject, '-m', trailer], { env, cwd })
 

@@ -21,6 +21,9 @@ import type { SessionCardView } from '../../types/journal'
 const { card, expanded, anchor } = defineProps<{ card: SessionCardView; expanded: boolean; anchor: string }>()
 const emit = defineEmits<{ toggle: [] }>()
 const detailId = useId()
+// Claude Code links render only in the maintainer view (../../utils/maintainerView.ts).
+const maintainerView = useMaintainerView()
+const sessionHref = computed(() => (maintainerView.value ? card.url : null))
 // A session touching a double-digit run of PRs (a workflow-built batch of
 // Tenant pages, say) turned the foot row into unscannable chip soup — cap the
 // same way the "PRs referenced" stat tile already does (visitor-loop fix,
@@ -52,6 +55,7 @@ const foldedFieldLabels = new Intl.ListFormat('en', { style: 'long', type: 'conj
           <a v-for="pr in prParts.shown" :key="pr" class="chip pr" :href="prUrl(pr)" @click.stop>PR {{ pr.startsWith('#') ? pr : '#' + pr }}</a>
           <span v-if="prParts.rest" class="chip">+{{ prParts.rest }} more</span>
           <span v-if="card.model" class="chip model" title="Model(s) that drove this session">{{ card.model }}</span>
+          <a v-if="sessionHref" class="chip session" :href="sessionHref" title="Open this session in Claude Code" @click.stop>Claude Code ↗</a>
           <JournalFrictionStrata :counts="card.frictionCounts" :total="card.frictionTotal" />
           <span class="caret" aria-hidden="true">{{ expanded ? '▾' : '▸' }}</span>
         </div>
@@ -150,7 +154,9 @@ const foldedFieldLabels = new Intl.ListFormat('en', { style: 'long', type: 'conj
             </details>
           </div>
 
-          <p class="sid">Session {{ card.sid }}</p>
+          <p class="sid">
+            Session <a v-if="sessionHref" :href="sessionHref">{{ card.sid }}</a><template v-else>{{ card.sid }}</template>
+          </p>
         </div>
       </div>
     </Transition>
@@ -247,8 +253,8 @@ const foldedFieldLabels = new Intl.ListFormat('en', { style: 'long', type: 'conj
   padding: 0.16rem 0.5rem;
   border-radius: 6px;
 }
-.chip.pr { color: var(--jd-accent); text-decoration: none; }
-.chip.pr:hover { border-color: var(--jd-accent); text-decoration: underline; }
+.chip.pr, .chip.session { color: var(--jd-accent); text-decoration: none; }
+.chip.pr:hover, .chip.session:hover { border-color: var(--jd-accent); text-decoration: underline; }
 .chip.model { color: var(--jd-ink); }
 .chip.model::before {
   content: '';
@@ -266,6 +272,8 @@ const foldedFieldLabels = new Intl.ListFormat('en', { style: 'long', type: 'conj
   font-size: 0.7rem;
   color: var(--jd-faint);
 }
+.sid a { color: inherit; }
+.sid a:hover { color: var(--jd-accent); }
 .caret { margin-left: auto; color: var(--jd-faint); font-size: 0.78rem; }
 
 /* The clip wrapper is what expandOnEnter/expandOnLeave (utils/expandTransition.ts)

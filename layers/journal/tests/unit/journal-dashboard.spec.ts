@@ -300,6 +300,7 @@ describe('sessionCardViews', () => {
     const [c] = sessionCardViews([s])
     expect(c!.key).toBe('session_0123456789abcdefXYZW')
     expect(c!.sid).toBe('session_01234…XYZW')
+    expect(c!.url).toBe('https://claude.ai/code/session_0123456789abcdefXYZW')
     expect(c!.when).toBe('Jul 5 · 11:30 UTC')
     expect(c!.duration).toBe(90)
     expect(c!.frictionCounts).toEqual({ nit: 1, minor: 0, moderate: 0, major: 0, blocker: 1 })
@@ -344,6 +345,7 @@ describe('sessionCardViews', () => {
   it('normalizes `external` to a boolean, defaulting to false when absent (ADR-0009 amendment)', () => {
     const [marked] = sessionCardViews([session({ external: true })])
     expect(marked!.external).toBe(true)
+    expect(marked!.url).toBeNull()
     const [unmarked] = sessionCardViews([session()])
     expect(unmarked!.external).toBe(false)
     const [explicitFalse] = sessionCardViews([session({ external: false })])

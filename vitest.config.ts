@@ -22,6 +22,8 @@ export default defineConfig({
       // a fixture) resolve it here so vitest can find it without the Nuxt alias layer.
       // fileURLToPath+URL keeps resolution correct regardless of invocation cwd.
       { find: '#routing', replacement: fileURLToPath(new URL('.nuxt/routing.mjs', import.meta.url)) },
+      // Nuxt's own alias for the root `shared/` dir; app modules under test import through it.
+      { find: /^#shared\//, replacement: fileURLToPath(new URL('shared/', import.meta.url)) },
       { find: /^vue$/, replacement: vuePackage },
     ],
   },

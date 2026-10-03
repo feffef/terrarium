@@ -23,6 +23,7 @@
 // and explicit.
 import type { Friction, Importance, SessionCardView, SessionDoc, Severity, SkillDoc, NoteItem } from '../types/journal'
 import { REPO_URL } from '../../../../app/utils/repo'
+import { sessionUrl } from '#shared/session-url'
 
 // ── Formatting helpers ───────────────────────────────────
 // Module-private: too generically named to put in the global auto-import
@@ -183,31 +184,35 @@ export function skillRoleParts(role: string): { kind: 'text' | 'code' | 'em' | '
 // dates, counts frictions, truncates the session id), so the card stays a dumb
 // renderer. `key` is the stable session id for the v-for.
 export function sessionCardViews(sessions: SessionDoc[]): (SessionCardView & { key: string })[] {
-  return sessions.map((s) => ({
-    key: s.session,
-    when: sessionWhen(s.endedAt),
-    duration: sessionDurationMin(s.startedAt, s.endedAt),
-    goal: s.goal,
-    status: s.status,
-    outcome: s.outcome,
-    prs: s.prs ?? [],
-    frictionCounts: countFrictions(s.frictions),
-    frictionTotal: s.frictions.length,
-    sid: sessionShortId(s.session),
-    model: sessionModelsLabel(s.models),
-    external: s.external === true,
-    // Expanded detail — the full log, revealed on click (no route of its own).
-    summary: s.summary,
-    subagents: s.subagents ?? [],
-    docsRead: s.docsRead ?? [],
-    skillsUsed: s.skillsUsed ?? [],
-    frictions: s.frictions,
-    learnings: s.learnings ?? [],
-    ideas: s.ideas ?? [],
-    filesEdited: s.filesEdited ?? [],
-    docsReadViaShell: s.docsReadViaShell ?? [],
-    tools: sessionToolEntries(s.toolCounts),
-  }))
+  return sessions.map((s) => {
+    const external = s.external === true
+    return {
+      key: s.session,
+      when: sessionWhen(s.endedAt),
+      duration: sessionDurationMin(s.startedAt, s.endedAt),
+      goal: s.goal,
+      status: s.status,
+      outcome: s.outcome,
+      prs: s.prs ?? [],
+      frictionCounts: countFrictions(s.frictions),
+      frictionTotal: s.frictions.length,
+      sid: sessionShortId(s.session),
+      model: sessionModelsLabel(s.models),
+      external,
+      url: external ? null : sessionUrl(s.session),
+      // Expanded detail — the full log, revealed on click (no route of its own).
+      summary: s.summary,
+      subagents: s.subagents ?? [],
+      docsRead: s.docsRead ?? [],
+      skillsUsed: s.skillsUsed ?? [],
+      frictions: s.frictions,
+      learnings: s.learnings ?? [],
+      ideas: s.ideas ?? [],
+      filesEdited: s.filesEdited ?? [],
+      docsReadViaShell: s.docsReadViaShell ?? [],
+      tools: sessionToolEntries(s.toolCounts),
+    }
+  })
 }
 
 // ── Daily digests ────────────────────────────────────────

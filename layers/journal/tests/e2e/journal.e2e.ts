@@ -14,7 +14,7 @@ import { join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { parse as parseYaml } from 'yaml'
 import { describe, expect, it } from 'vitest'
-import { $fetch, fetch } from '@nuxt/test-utils/e2e'
+import { $fetch, fetch, url } from '@nuxt/test-utils/e2e'
 import type { Locator, Page } from 'playwright-core'
 import { expectCleanHydration, expectRedirect, withRendered } from '../../../../tests/support/e2e.ts'
 import { DIGESTS_DIR } from '../../../../scripts/digest.ts'
@@ -200,6 +200,50 @@ export function registerJournalE2E(): void {
       expect(html).toContain('href="/t/journal/current/ideas"')
       expect(html).toContain('aria-expanded="false"')
       expect(html).toMatch(/role="button"/)
+    })
+
+    // The Claude Code session link is maintainer-only: absent for a visitor,
+    // revealed by `?maintainer`, kept for the tab in sessionStorage, cleared by
+    // `?maintainer=0`. SSR never ships it, so hydration has nothing to mismatch.
+    // The flag is read where a session card mounts, i.e. the Space landing.
+    it('hides the Claude Code session link from a visitor, in the server HTML and once hydrated', async () => {
+      const route = '/t/journal/current'
+      expect(await $fetch(route)).not.toContain('chip session')
+      await withRendered(route, async (page) => {
+        expect(await page.locator('.feed .card .chip.session').count()).toBe(0)
+      })
+    })
+
+    it('reveals the Claude Code session link with ?maintainer, keeps it for the tab, and clears it with ?maintainer=0', async () => {
+      const route = '/t/journal/current'
+      await withRendered(`${route}?maintainer`, async (page) => {
+        const chip = page.locator('.feed .card .chip.session').first()
+        await chip.waitFor()
+        expect(await chip.getAttribute('href')).toMatch(/^https:\/\/claude\.ai\/code\/session_/)
+        // The flag outlives the URL: a plain load in the same tab keeps the view.
+        await page.goto(url(route), { waitUntil: 'hydration' })
+        await page.locator('.feed .card .chip.session').first().waitFor()
+        await page.goto(url(`${route}?maintainer=0`), { waitUntil: 'hydration' })
+        await page.waitForLoadState('networkidle')
+        expect(await page.locator('.feed .card .chip.session').count()).toBe(0)
+        await page.goto(url(route), { waitUntil: 'hydration' })
+        await page.waitForLoadState('networkidle')
+        expect(await page.locator('.feed .card .chip.session').count()).toBe(0)
+      })
+    })
+
+    // A link inside the role="button" head must follow its own Enter instead of
+    // toggling the card (the row's key handlers act only on the row itself).
+    it('lets Enter on the Claude Code chip follow the link without toggling the card', async () => {
+      await withRendered('/t/journal/current?maintainer', async (page) => {
+        await page.route('https://claude.ai/**', (r) => r.fulfill({ status: 200, body: 'stub' }))
+        const card = page.locator('.feed .card').first()
+        await card.locator('.chip.session').waitFor()
+        await card.locator('.chip.session').focus()
+        expect(await card.locator('.head').getAttribute('aria-expanded')).toBe('false')
+        await page.keyboard.press('Enter')
+        await page.waitForURL(/^https:\/\/claude\.ai\/code\/session_/)
+      })
     })
 
     // The sub pages are static segments beside `[...slug].vue`; each must win
