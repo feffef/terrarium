@@ -5,22 +5,23 @@ import type { CampaignState } from '../utils/status'
 
 export async function useTinkerfundGallery() {
   // Every composable runs before the first await: after it, Nuxt's context is gone.
-  const { space, collections } = useTinkerfundSpace()
+  const { space, pagesKey, collections } = useTinkerfundSpace()
   const ready = Promise.all([useTinkerfundCatalog(), useTinkerfundShop()])
   const extraData = useAsyncData(`tinkerfund-gallery-extra-${space}`, async () => {
-    const [threads, logs, inventors] = await Promise.all([
+    const [docs, threads, logs, inventors] = await Promise.all([
+      queryCollection(pagesKey).where('campaign', 'IS NOT NULL').select('path', 'title', 'description', 'campaign').all(),
       queryCollection(collections.comments).all(),
       queryCollection(collections.updates).all(),
       queryCollection(collections.inventors).all(),
     ])
-    return { threads, logs, inventors }
+    return { docs, threads, logs, inventors }
   })
   const [[catalog, { zoneName }], { data: extra }] = await Promise.all([ready, extraData])
   const { clock, promotions, baked } = catalog
   const now = computed(() => clock.value.now)
 
   const campaigns = computed(() =>
-    catalog.docs.value
+    (extra.value?.docs ?? [])
       .flatMap((doc) => {
         if (!doc.campaign) return []
         const slug = tinkerfundSlug(doc.path)

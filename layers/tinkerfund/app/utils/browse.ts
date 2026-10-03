@@ -71,6 +71,20 @@ export function tinkerfundBrowseRouteQuery(query: TinkerfundBrowseQuery): Record
 
 type Campaign = z.infer<typeof campaign>
 
+type Stock = Pick<Campaign['rewards'][number], 'id' | 'price' | 'claimed'>
+const stock = ({ id, price, claimed }: Stock): Stock => ({ id, price, claimed })
+
+/** What a card or table row reads of a Campaign, counting the Backer's Pledges included. */
+export function tinkerfundBrowseCampaign(c: Campaign) {
+  const { registry, inventor, category, goal, launch, end, backers, pledged, recent, alsoBacked } = c
+  return {
+    registry, inventor, category, goal, launch, end, backers, pledged, recent, alsoBacked,
+    figures: c.figures.slice(0, 1).map(({ svg }) => ({ svg })),
+    rewards: c.rewards.map(stock),
+    addons: c.addons?.map(stock),
+  }
+}
+
 interface TinkerfundCampaignDoc {
   path: string
   title: string
