@@ -1,0 +1,59 @@
+schemaVersion: 1
+session: session_019e8Gy8cuUFcMzNkEYLfuP4
+startedAt: 2026-10-02T17:53:25Z
+endedAt: 2026-10-03T05:50:29Z
+kind: interactive
+goal: Read another cloud session's transcript and document the capability in CLAUDE.md
+status: in-review
+outcome: "Transcript read via list_events; one-bullet CLAUDE.md note opened as PR #1547"
+summary: "Human-instructed throughout. The user asked whether I could read session 01THQSrDDRRLKHVMDaXPjAdk (an ideas/learnings review); I read it via the claude-code-remote get_session/list_events tools and summarized it. Asked when this became possible, a claude-code-guide subagent found no mention of the claude-code-remote server in the public changelog or docs (only the separate ListAgents/SendMessage cross-session messaging feature). The user asked for my opinion on platform usefulness (ad hoc yes, a Skill/Routine no: undocumented, token-heavy, cloud-only, untrusted content), then asked for a very short CLAUDE.md line capturing it, which I added as one Working-conventions bullet and opened as a gated PR per ADR-0003's auto-open default."
+prs:
+  - "1547"
+docsRead:
+  - path: CLAUDE.md
+    reason: (read before editing)
+  - path: docs/adr/0017-provenance-footer-on-agent-authored-content.md
+    reason: (no reason given)
+skillsUsed:
+  - name: writing-for-agents
+    reason: editing CLAUDE.md
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: list_events returned 165k chars for 29 events; text lives under internal_anthropic_catchall.message, took three parse attempts to extract
+    solution: Pass kinds filter and parse e[kind].internal_anthropic_catchall.message.content directly
+    severity: minor
+  - description: Hand-wrote the commit trailer because the harness system-reminder asked for it; the commit-trailer guard denied the call
+    solution: Guard worked as designed; the repo convention already wins over that reminder
+    severity: nit
+durationSec: 43025
+models:
+  claude-opus-5-5: 54
+  <synthetic>: 1
+toolCounts:
+  mcp__claude-code-remote__get_session: 1
+  mcp__claude-code-remote__list_events: 2
+  Bash: 11
+  Grep: 3
+  Agent: 1
+  Skill: 3
+  Read: 2
+  Edit: 1
+  ToolSearch: 1
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+  Write: 1
+filesEdited:
+  - CLAUDE.md
+subagents:
+  - type: claude-code-guide
+    task: Find when list_events was introduced
+gitBranch: claude/funny-mccarthy-68szc7
+entrypoint: remote
+cliVersion: 2.1.287
+learnings:
+  - claude-code-remote list_events can read any of the account's cloud session transcripts, but the tool is absent from the public Claude Code changelog and docs
+landedBy: Stop
