@@ -95,6 +95,10 @@ time, so a Campaign holds its state forever: pick offsets for the state, not a d
   `claimed` never exceeds `stock`. `crowd.mjs` checks all three.
 - Funded or Unfunded is `pledged` against `goal` at `end`; an Upcoming Campaign
   has 0 Backers and 0 pledged.
+- Live or Ended: `recent` names 3–5 Backers, "Priya N."-style, each with a city
+  in a zone the Rewards ship to (mostly Domestic, i.e. Germany, and Europe) and an
+  `at` between launch and now, or the end once Ended — a Live one's within hours
+  or days. Comment authors may reappear. The schema checks the dates and count.
 - Stretch goals sit above the goal; a Reward option unlocked by one (like the
   Mug's porcelain white) says so in the Stretch goal's title.
 - Every zone a Reward `shipsTo` needs a `shipping` rate; a `digital: true`

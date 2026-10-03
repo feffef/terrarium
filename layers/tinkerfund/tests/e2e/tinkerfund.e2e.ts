@@ -206,6 +206,9 @@ export function registerTinkerfundE2E(): void {
           expect(html).toMatch(/<caption[^>]*>Specifications<\/caption>/)
           expect(html).toContain(action)
           expect(html).toContain('<meta property="og:type" content="website">')
+          // Story #1386: names on Live and Ended, the list on Live only.
+          expect(html.includes('Backed by ')).toBe(action !== 'Notify me')
+          expect(html.includes('Recently backed')).toBe(action === 'Back this Campaign')
         })
       }
 
@@ -227,6 +230,15 @@ export function registerTinkerfundE2E(): void {
         expect(await page('unhurried-kettle')).toMatch(/Notify me[\s\S]*Opens at launch/)
         expect(await page('indoor-hammock')).toMatch(/Unfunded[\s\S]*Ended 1 hour ago[\s\S]*Pledging has closed[\s\S]*Closed/)
         expect(await page('self-assembling-workbench')).toContain('3 of 3 left')
+
+        expect(lamp).toMatch(/Backed by Ada E\., Maximiliane-Theodora von Hohenzollern-Sigmaringen and 38 others[\s\S]*Recently backed[\s\S]*Ada E\.<\/b> · Hamburg · <time[^>]*>1 hour ago/)
+        const hammock = await page('indoor-hammock')
+        expect(hammock).toContain('Backed by Hugo M., Ida N. and 90 others')
+        expect(hammock).not.toContain('Recently backed')
+        expect(await page('one-button-keypad')).not.toMatch(/Backed by |Recently backed/)
+        const discover = await $fetch('/t/tinkerfund/qa/discover')
+        expect(discover).toContain('Backed by Ada E. and 39 others')
+        expect(discover).not.toContain('Backed by Hugo M.')
       })
 
       it('lists a Campaign’s Updates inline, newest first and only it open', async () => {
@@ -646,6 +658,8 @@ export function registerTinkerfundE2E(): void {
         expect(readout).toMatch(/Backers\s*31/)
         expect(await page.locator('.goals li.yes').textContent()).toContain('The button in a second colour')
         expect(await page.getByRole('article', { name: 'One keypad' }).textContent()).toContain('1 of 30 left')
+        // The keypad names no Backers, so the list appears with the visitor alone (story #1386).
+        expect(await page.locator('.recent li').allTextContents()).toEqual([expect.stringMatching(/^\s*You · just now\s*$/)])
 
         // Browse counts the visitor's Pledges too, after a full reload.
         await visit('/discover')

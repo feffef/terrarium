@@ -2,7 +2,7 @@
 // Deals, all derived from baked content at the page's "now" (issue #1364).
 import type { z } from 'zod'
 import type { campaign } from '../../schemas'
-import type { TinkerfundPromotionTerms } from './campaign'
+import { tinkerfundRecentBackers, type TinkerfundPromotionTerms } from './campaign'
 import { formatTinkerfundCountdown, resolveTinkerfundOffset, tinkerfundCountdown } from './clock'
 import { tinkerfundSlug } from './shop'
 import { campaignPriceFrom, deriveCampaignStatus, derivePromotionState, type CampaignState, type CampaignStatus } from './status'
@@ -75,7 +75,7 @@ interface TinkerfundCampaignDoc {
   path: string
   title: string
   description?: string
-  campaign: Pick<Campaign, 'registry' | 'inventor' | 'category' | 'goal' | 'launch' | 'end' | 'backers' | 'pledged'> & {
+  campaign: Pick<Campaign, 'registry' | 'inventor' | 'category' | 'goal' | 'launch' | 'end' | 'backers' | 'pledged' | 'recent'> & {
     figures: Pick<Campaign['figures'][number], 'svg'>[]
     rewards: Pick<Campaign['rewards'][number], 'price'>[]
   }
@@ -96,6 +96,8 @@ export interface TinkerfundListing {
   goal: number
   pledged: number
   backers: number
+  /** Named Backers, newest first. */
+  named: string[]
   prices: number[]
   priceFrom?: number
   status: CampaignStatus
@@ -122,6 +124,7 @@ export function tinkerfundListings(
     goal: c.goal,
     pledged: c.pledged,
     backers: c.backers,
+    named: tinkerfundRecentBackers(c.recent, now).map((r) => r.name),
     prices: c.rewards.map((r) => r.price),
     priceFrom: campaignPriceFrom(c.rewards),
     status: deriveCampaignStatus(c, c.pledged, now),

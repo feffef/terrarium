@@ -38,6 +38,12 @@ export const TINKERFUND_GALLERY = [
     summary: 'Back when Live, Notify me when Upcoming, a lock when Ended.',
   },
   {
+    id: 'recent',
+    title: 'Recently backed',
+    components: ['TinkerfundCampaignRecentBackers'],
+    summary: 'Every Live qa Campaign that names Backers, then the Lamp with the visitor’s own Pledge on top. The “Backed by” line shows in the Readout and Card sections: Live and Ended only, Cards Live only.',
+  },
+  {
     id: 'figures',
     title: 'Figures',
     components: ['TinkerfundCampaignFigureGallery'],

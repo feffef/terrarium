@@ -72,6 +72,13 @@ const backing = computed<TinkerfundBacking>(() => ({ slug: slug.value, state: st
         :clock="clock"
         :pledge-ref="pledge?.ref"
       />
+      <TinkerfundCampaignRecentBackers
+        v-if="status.state === 'live' && (c.recent || pledge)"
+        class="recent"
+        :recent="c.recent"
+        :now="now"
+        :you="pledge?.placed"
+      />
     </div>
 
     <TinkerfundCampaignSectionNav
@@ -139,6 +146,10 @@ const backing = computed<TinkerfundBacking>(() => ({ slug: slug.value, state: st
 @media (min-width: 860px) {
   .hero { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); align-items: start; }
   .readout { position: sticky; top: 76px; }
+  /* Recently backed sits under the Readout in its column, so the Readout no longer sticks (#1386). */
+  .hero:has(> .recent) { grid-template-rows: auto 1fr; }
+  .hero:has(> .recent) > :first-child { grid-row: 1 / span 2; }
+  .recent { grid-column: 2; align-self: start; }
 }
 
 .body { display: grid; gap: 36px; padding-top: 24px; }

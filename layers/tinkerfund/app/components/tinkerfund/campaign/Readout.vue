@@ -22,6 +22,11 @@ const money = useTinkerfundMoney()
 const status = computed(() => deriveCampaignStatus(props.campaign, props.campaign.pledged, props.clock.now))
 const deadline = computed(() => tinkerfundDeadline(status.value))
 const from = computed(() => campaignPriceFrom(props.campaign.rewards))
+const backedBy = computed(() => formatTinkerfundBackedBy(
+  tinkerfundRecentBackers(props.campaign.recent, props.clock.now).slice(0, 2).map((r) => r.name),
+  props.campaign.backers,
+  locale.value,
+))
 </script>
 
 <template>
@@ -46,6 +51,7 @@ const from = computed(() => campaignPriceFrom(props.campaign.rewards))
         <div><dt>Funded</dt><dd>{{ status.percent }}%</dd></div>
         <div v-if="from !== undefined"><dt>From</dt><dd>{{ money(from) }}</dd></div>
       </dl>
+      <p v-if="backedBy" class="backed-by">{{ backedBy }}</p>
     </template>
     <p v-for="deal in deals" :key="deal.stem" class="deals">
       <TinkerfundCampaignDealBadge :promotion="deal" />
@@ -63,7 +69,8 @@ const from = computed(() => campaignPriceFrom(props.campaign.rewards))
 .readout :deep(.status) { margin-bottom: 0; }
 .lead { color: var(--tf-muted); }
 .date { color: var(--tf-muted); font: 500 12px/1.4 var(--tf-mono); }
-.by { font-size: 14px; }
+.by, .backed-by { font-size: 14px; }
+.backed-by { margin-top: -6px; color: var(--tf-muted); }
 .backed { padding: 10px 12px; border-radius: var(--tf-radius); background: var(--tf-accent-soft); font-size: 14px; font-weight: 600; }
 .backed a { color: var(--tf-ink); font-family: var(--tf-mono); }
 .big { margin: 0; font: 600 34px/1 var(--tf-mono); font-variant-numeric: tabular-nums; }

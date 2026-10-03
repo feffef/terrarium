@@ -20,6 +20,20 @@ export function formatTinkerfundAgo(now: number, at: number): string {
   return `${hours < 24 ? tinkerfundCount(hours, 'hour') : tinkerfundCount(Math.floor(hours / 24), 'day')} ago`
 }
 
+/** A Campaign's named Backers, newest first (issue #1386). */
+export function tinkerfundRecentBackers(recent: { name: string; city: string; at: string }[] | undefined, now: number) {
+  return (recent ?? []).map((r) => ({ ...r, at: resolveTinkerfundOffset(r.at, now) })).sort((a, b) => b.at - a.at)
+}
+
+/** "Backed by Priya N., Tomasz K. and 610 others", or nothing without a name. */
+export function formatTinkerfundBackedBy(names: string[], backers: number, locale: string): string | undefined {
+  if (!names.length) return undefined
+  const others = backers - names.length
+  const parts = others > 0 ? [...names, `${others.toLocaleString(locale)} other${others === 1 ? '' : 's'}`] : names
+  const last = parts.pop()
+  return `Backed by ${parts.length ? `${parts.join(', ')} and ${last}` : last}`
+}
+
 type TinkerfundUpdateTerms = z.infer<typeof updateLog>['updates'][number]
 
 /** Newest first; `n` counts from the oldest, so an Update keeps its number and anchor. */

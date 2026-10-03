@@ -60,6 +60,19 @@ const bounds = computed(() => tinkerfundPriceBounds(cards.value))
     </li>
   </ul>
 
+  <ul v-else-if="id === 'recent'" class="specimens">
+    <template v-for="doc in campaigns" :key="doc.path">
+      <li v-if="doc.state === 'live' && doc.campaign.recent" class="stack">
+        <p class="case">{{ doc.campaign.registry }} · {{ tinkerfundCount(doc.campaign.backers, 'Backer') }}</p>
+        <TinkerfundCampaignRecentBackers :recent="doc.campaign.recent" :now="now" />
+      </li>
+    </template>
+    <li class="stack">
+      <p class="case">{{ FIXTURE.lamp.title }} · the visitor’s own Pledge, just placed</p>
+      <TinkerfundCampaignRecentBackers :recent="campaigns.find((d) => d.slug === FIXTURE.lamp.slug)?.campaign.recent" :now="now" :you="now" />
+    </li>
+  </ul>
+
   <div v-else-if="id === 'figures' && campaigns[0]" class="figures">
     <TinkerfundCampaignFigureGallery :figures="campaigns[0].campaign.figures" :registry="campaigns[0].campaign.registry" />
   </div>

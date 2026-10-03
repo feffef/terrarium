@@ -5,6 +5,7 @@ const money = useTinkerfundMoney()
 const upcoming = computed(() => props.card.status.state === 'upcoming')
 const locale = useTinkerfundLocale()
 const left = computed(() => tinkerfundTimeLeft(props.card.status, props.clock.countdown))
+const backedBy = computed(() => props.card.status.state === 'live' ? formatTinkerfundBackedBy(props.card.named.slice(0, 1), props.card.backers, locale.value) : undefined)
 </script>
 
 <template>
@@ -20,6 +21,7 @@ const left = computed(() => tinkerfundTimeLeft(props.card.status, props.clock.co
       <div>
         <h3><NuxtLink :to="link(card.path)">{{ card.title }}</NuxtLink></h3>
         <p class="by">{{ card.categoryName }} · {{ card.inventorName }}</p>
+        <p v-if="backedBy" class="by">{{ backedBy }}</p>
       </div>
       <TinkerfundProgressBar v-if="!upcoming" :percent="card.status.percent" />
       <dl class="tiles">
