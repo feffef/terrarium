@@ -85,6 +85,13 @@ describe('a Campaign listing', () => {
     ]
     expect(tinkerfundListings(docs, promotions, NOW).map((l) => [l.title, l.promoted])).toEqual([['a', true], ['b', false], ['c', false]])
   })
+
+  it('is on a listed bundle\'s Deal only while enough of its Campaigns are Live', () => {
+    const docs = [doc('a', { launch: '-1d', end: '+9d' }), doc('b', { launch: '-9d', end: '-1d' })]
+    const bundle = { start: '-1d', bundle: { min: 2, campaigns: ['a', 'b'] } }
+    expect(tinkerfundListings(docs, [bundle], NOW).map((l) => l.promoted)).toEqual([false, false])
+    expect(tinkerfundListings([docs[0]!, doc('b', { launch: '-1d', end: '+9d' })], [bundle], NOW).map((l) => l.promoted)).toEqual([true, true])
+  })
 })
 
 // Worked by hand against NOW: lamp ends in 36h, kettle launches in 3 days,

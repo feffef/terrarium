@@ -8,22 +8,23 @@ const money = useTinkerfundMoney()
 const categories = useTinkerfundCategories()
 
 const slug = computed(() => tinkerfundSlug(props.doc.path))
-const { view: cart, change: changeCart, pledges, baked, clock, zoneName } = await useTinkerfundCart()
-const { cards } = await useTinkerfundCatalog()
-const recommended = computed(() => tinkerfundRecommendations(cards.value, slug.value))
-const now = computed(() => clock.value.now)
-// Totals, Stretch goals and stock count the visitor's own Pledges (story #1384).
-const c = computed(() => withTinkerfundPledges(slug.value, props.doc.campaign, pledges.value, baked.value))
-
-const { data } = await useAsyncData(`tinkerfund-campaign-${space}-${props.doc.path}`, async () => {
+const cartReady = useTinkerfundCart()
+const catalogReady = useTinkerfundCatalog()
+const ownReady = useAsyncData(`tinkerfund-campaign-${space}-${props.doc.path}`, async () => {
   const [inventor, thread, log, promotions] = await Promise.all([
-    queryCollection(collections.inventors).where('stem', '=', c.value.inventor).first(),
+    queryCollection(collections.inventors).where('stem', '=', props.doc.campaign.inventor).first(),
     queryCollection(collections.comments).where('campaign', '=', slug.value).first(),
     queryCollection(collections.updates).where('campaign', '=', slug.value).first(),
     queryCollection(collections.promotions).all(),
   ])
   return { inventor, comments: thread?.comments ?? [], updates: log?.updates ?? [], promotions }
 })
+const [{ view: cart, change: changeCart, pledges, baked, clock, zoneName }, { cards }, { data }] =
+  await Promise.all([cartReady, catalogReady, ownReady])
+const recommended = computed(() => tinkerfundRecommendations(cards.value, slug.value))
+const now = computed(() => clock.value.now)
+// Totals, Stretch goals and stock count the visitor's own Pledges (story #1384).
+const c = computed(() => withTinkerfundPledges(slug.value, props.doc.campaign, pledges.value, baked.value))
 
 const status = computed(() => deriveCampaignStatus(c.value, c.value.pledged, now.value))
 const deals = computed(() => tinkerfundCampaignDeals(data.value?.promotions ?? [], slug.value, now.value, tinkerfundLive(cards.value)))

@@ -29,7 +29,7 @@ export function tinkerfundRecentBackers(recent: { name: string; city: string; at
 export function formatTinkerfundBackedBy(names: string[], backers: number, locale: string): string | undefined {
   if (!names.length) return undefined
   const others = backers - names.length
-  const parts = others > 0 ? [...names, `${others.toLocaleString(locale)} other${others === 1 ? '' : 's'}`] : names
+  const parts = others > 0 ? [...names, tinkerfundCount(others, 'other', locale)] : names
   const last = parts.pop()
   return `Backed by ${parts.length ? `${parts.join(', ')} and ${last}` : last}`
 }

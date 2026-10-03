@@ -29,13 +29,13 @@ export const TINKERFUND_GALLERY = [
     id: 'deal-banner',
     title: 'Deal banner',
     components: ['TinkerfundBrowseDealBanner'],
-    summary: 'An Active Promotion applied automatically, and a Scheduled one; qa’s expired code never shows.',
+    summary: 'Active and Scheduled Promotions, qa’s two bundles included; qa’s expired code never shows.',
   },
   {
     id: 'readout',
     title: 'Campaign readout',
     components: ['TinkerfundCampaignReadout', 'TinkerfundProgressBar', 'TinkerfundCampaignDealBadge', 'TinkerfundCampaignAction'],
-    summary: 'Back when Live, Notify me when Upcoming, a lock when Ended.',
+    summary: 'Back when Live, Notify me when Upcoming, a lock when Ended; the Stapler and Lamp carry their listed bundle’s Deal badge.',
   },
   {
     id: 'recent',

@@ -2,7 +2,7 @@
 // Deals, all derived from baked content at the page's "now" (issue #1364).
 import type { z } from 'zod'
 import type { campaign } from '../../schemas'
-import { tinkerfundNamedCampaigns, tinkerfundRecentBackers, type TinkerfundPromotionTerms } from './campaign'
+import { tinkerfundBundleReachable, tinkerfundNamedCampaigns, tinkerfundRecentBackers, type TinkerfundPromotionTerms } from './campaign'
 import { formatTinkerfundCountdown, resolveTinkerfundOffset, tinkerfundCountdown } from './clock'
 import { tinkerfundSlug } from './shop'
 import { campaignPriceFrom, deriveCampaignStatus, derivePromotionState, type CampaignState, type CampaignStatus } from './status'
@@ -116,7 +116,7 @@ export interface TinkerfundListing {
   prices: number[]
   priceFrom?: number
   status: CampaignStatus
-  /** An Active Promotion names this Campaign, a bundle in its list; the shop calls it a Deal. */
+  /** An Active Promotion names this Campaign, a bundle in its list while reachable; the shop calls it a Deal. */
   promoted: boolean
 }
 
@@ -125,10 +125,7 @@ export function tinkerfundListings(
   promotions: PromotionTiming[],
   now: number,
 ): TinkerfundListing[] {
-  const promoted = new Set(
-    promotions.filter((p) => derivePromotionState(p, now) === 'active').flatMap(tinkerfundNamedCampaigns),
-  )
-  return docs.map(({ path, title, description, campaign: c }) => ({
+  const listings = docs.map(({ path, title, description, campaign: c }) => ({
     path,
     title,
     description,
@@ -144,8 +141,14 @@ export function tinkerfundListings(
     prices: c.rewards.map((r) => r.price),
     priceFrom: campaignPriceFrom(c.rewards),
     status: deriveCampaignStatus(c, c.pledged, now),
-    promoted: promoted.has(tinkerfundSlug(path)),
+    promoted: false,
   }))
+  const live = tinkerfundLive(listings)
+  const promoted = new Set(promotions
+    .filter((p) => derivePromotionState(p, now) === 'active' && (!p.bundle || tinkerfundBundleReachable(p, live)))
+    .flatMap(tinkerfundNamedCampaigns))
+  for (const l of listings) l.promoted = promoted.has(tinkerfundSlug(l.path))
+  return listings
 }
 
 /** The slugs of the Live Campaigns among these listings. */
@@ -256,7 +259,7 @@ function recommend<T extends TinkerfundListing>(listings: T[]): T[] {
   return browseTinkerfundListings(listings, { sort: 'ending' }).slice(0, RECOMMENDED)
 }
 
-function bySlug<T extends TinkerfundListing>(listings: T[], slugs: Iterable<string>): T[] {
+export function bySlug<T extends TinkerfundListing>(listings: T[], slugs: Iterable<string>): T[] {
   const index = new Map(listings.map((l) => [tinkerfundSlug(l.path), l]))
   return [...new Set(slugs)].flatMap((s) => index.get(s) ?? [])
 }
