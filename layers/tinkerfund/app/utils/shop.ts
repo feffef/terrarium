@@ -10,6 +10,6 @@ export function tinkerfundSlug(path: string): string {
   return path.slice(path.lastIndexOf('/') + 1)
 }
 
-export function tinkerfundCount(n: number, noun: string): string {
-  return `${n} ${noun}${n === 1 ? '' : 's'}`
+export function tinkerfundCount(n: number, noun: string, locale?: string): string {
+  return `${locale ? n.toLocaleString(locale) : n} ${noun}${n === 1 ? '' : 's'}`
 }

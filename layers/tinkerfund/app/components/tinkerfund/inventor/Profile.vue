@@ -17,7 +17,7 @@ const record = computed(() => {
     tinkerfundCount(props.cards.length, 'Campaign'),
     ended.length && `${funded} funded, ${ended.length - funded} unfunded`,
     props.cards.length && `${money(raised)} raised`,
-    props.cards.length && `${backers.toLocaleString(locale.value)} Backer${backers === 1 ? '' : 's'}`,
+    props.cards.length && tinkerfundCount(backers, 'Backer', locale.value),
   ].filter(Boolean).join(' · ')
 })
 </script>

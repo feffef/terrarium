@@ -84,7 +84,10 @@ export async function useTinkerfundGallery() {
     quote,
     receipt,
     account,
-    thread: computed(() => extra.value?.threads[0]),
+    thread: computed(() => {
+      const thread = extra.value?.threads[0]
+      return thread && { ...thread, inventor: campaigns.value.find((c) => c.slug === thread.campaign)?.campaign.inventor }
+    }),
     log: computed(() => extra.value?.logs[0]),
     inventors: computed(() => extra.value?.inventors ?? []),
   }

@@ -165,6 +165,7 @@ export function registerTinkerfundE2E(): void {
         const idle = main(await $fetch('/t/tinkerfund/qa/inventors/new-inventor'))
         expect(idle).toContain('Inventor · 0 Campaigns<')
         expect(idle).toContain('No Campaigns yet.')
+        expect(idle).not.toContain('class="grid"')
       })
 
       for (const [slug, action] of [

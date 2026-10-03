@@ -159,7 +159,7 @@ const lamp = computed(() => campaigns.value.find((d) => d.slug === FIXTURE.lamp.
       <TinkerfundCampaignComments
         :comments="thread.comments"
         :now="now"
-        :inventor-slug="campaigns.find((c) => c.slug === thread?.campaign)?.campaign.inventor"
+        :inventor-slug="thread.inventor"
       />
     </li>
     <li class="specimen tf-panel">
@@ -169,15 +169,16 @@ const lamp = computed(() => campaigns.value.find((d) => d.slug === FIXTURE.lamp.
   </ul>
 
   <div v-else-if="id === 'inventor'" class="stack">
-    <TinkerfundInventorProfile
-      v-for="inventor in inventors"
-      :key="inventor.stem"
-      class="specimen tf-panel"
-      :inventor="inventor"
-      :cards="cards.filter((c) => c.inventor === inventor.stem)"
-      :clock="clock"
-      heading="h2"
-    />
+    <template v-for="inventor in inventors" :key="inventor.stem">
+      <p class="case">{{ inventor.stem }}: {{ cards.some((c) => c.inventor === inventor.stem) ? 'with Campaigns' : 'no Campaigns yet' }}</p>
+      <TinkerfundInventorProfile
+        class="specimen tf-panel"
+        :inventor="inventor"
+        :cards="cards.filter((c) => c.inventor === inventor.stem)"
+        :clock="clock"
+        heading="h2"
+      />
+    </template>
   </div>
 
   <TinkerfundShellBreadcrumbs
