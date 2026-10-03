@@ -35,7 +35,7 @@ useSeoMeta({ title: () => `${PAGE_TITLE} · journal/${space}` })
 </script>
 
 <template>
-  <main class="jd">
+  <main class="jd jd-doc">
     <JournalBreadcrumb :space="space" :trail="['ideas']" />
 
     <article class="jd-prose">
