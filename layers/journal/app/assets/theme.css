@@ -180,12 +180,11 @@
 }
 .jd-prose table { border-collapse: collapse; font-size: 0.92rem; line-height: 1.35; }
 .jd-prose th, .jd-prose td { padding: 0.4rem 0.6rem; border-bottom: 1px solid var(--jd-line); text-align: left; vertical-align: top; }
-.jd-prose th { font-size: 0.8rem; color: var(--jd-muted); font-weight: 600; white-space: nowrap; }
+.jd-prose th { font-size: 0.8rem; color: var(--jd-muted); font-weight: 600; }
 .jd-prose td:first-child { min-width: 9rem; }
 @media (max-width: 600px) {
   .jd-prose table { font-size: 0.82rem; }
   .jd-prose th, .jd-prose td { padding: 0.35rem 0.45rem; }
-  .jd-prose th { white-space: normal; }
   .jd-prose td:first-child { min-width: 6.5rem; }
   /* Shrunk to phone width a wide diagram's labels fall below 10px; hold a readable
      width (each SVG's inline max-width still caps the narrow ones) and scroll instead. */
