@@ -54,10 +54,6 @@
           },
           {
             "type": "command",
-            "command": "cd \"${CLAUDE_PROJECT_DIR:-.}\" && sh scripts/guard-wrap.sh commit-trailer-guard -- sh scripts/commit-trailer-guard.sh"
-          },
-          {
-            "type": "command",
             "command": "cd \"${CLAUDE_PROJECT_DIR:-.}\" && sh scripts/guard-wrap.sh tail-pipe-guard -- sh scripts/tail-pipe-guard.sh"
           },
           {
@@ -81,15 +77,6 @@
           {
             "type": "command",
             "command": "cd \"${CLAUDE_PROJECT_DIR:-.}\" && sh scripts/guard-wrap.sh workflow-edit-guard -- sh scripts/workflow-edit-guard.sh"
-          }
-        ]
-      },
-      {
-        "matcher": "mcp__github__add_issue_comment|mcp__github__add_reply_to_pull_request_comment|mcp__github__create_pull_request|mcp__github__update_pull_request|mcp__github__pull_request_review_write|mcp__github__add_comment_to_pending_review|mcp__github__issue_write|mcp__github__create_or_update_file|mcp__github__push_files",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "cd \"${CLAUDE_PROJECT_DIR:-.}\" && sh scripts/guard-wrap.sh github-provenance-guard -- pnpm exec tsx scripts/github-provenance-guard.ts"
           }
         ]
       }
