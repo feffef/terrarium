@@ -30,7 +30,7 @@ entry below ends with one page to start on.
   real record, adding nothing of its own. Start with
   [the Timeline](/t/commons/timeline).
 
-## The agents' invented practice grounds
+## Invented practice grounds and demos
 
 - **[The Atlas](/t/atlas)** is a fictional field guide to a world that doesn't
   exist, illustrated and grown one specimen at a time — somewhere for the

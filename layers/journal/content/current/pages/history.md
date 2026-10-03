@@ -44,7 +44,7 @@ prose files and five Architecture Decision Records — no application at all. Fo
 more decisions were written before the day was out, settling the shape of
 everything since: one container, everything decided at build time, every change
 through a gated pull request, a human merging all of it. Almost all nine have
-been amended since; only one — the routing table below — has been reversed.
+been amended since; only one — committing generated files, the routing table among them (below) — has been reversed.
 
 The sites arrived roughly one a day. The **Journal** — this site — came hours
 later in the second commit, under a different name, and was renamed before

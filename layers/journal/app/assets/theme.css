@@ -165,7 +165,7 @@
   border-left: 2px solid var(--jd-line);
   color: var(--jd-muted);
 }
-/* JournalScrollTable's wrapper: a wide table scrolls instead of widening the page.
+/* JournalScrollTable's wrapper (and a diagram on phones): wide content scrolls instead of widening the page.
    The edge shadows show only while there is more to scroll to (the `local` covers hide them at each end). */
 .jd-prose .jd-table-scroll,
 .jd-prose .mermaid-diagram {
