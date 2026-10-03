@@ -52,7 +52,7 @@ const foldedFieldLabels = new Intl.ListFormat('en', { style: 'long', type: 'conj
           <a v-for="pr in prParts.shown" :key="pr" class="chip pr" :href="prUrl(pr)" @click.stop>PR {{ pr.startsWith('#') ? pr : '#' + pr }}</a>
           <span v-if="prParts.rest" class="chip">+{{ prParts.rest }} more</span>
           <span v-if="card.model" class="chip model" title="Model(s) that drove this session">{{ card.model }}</span>
-          <a v-if="card.url" class="chip session" :href="card.url" target="_blank" rel="noopener" title="Open this session in Claude Code" @click.stop>Claude Code ↗</a>
+          <a v-if="card.url" class="chip session" :href="card.url" title="Open this session in Claude Code" @click.stop>Claude Code ↗</a>
           <JournalFrictionStrata :counts="card.frictionCounts" :total="card.frictionTotal" />
           <span class="caret" aria-hidden="true">{{ expanded ? '▾' : '▸' }}</span>
         </div>
@@ -152,7 +152,7 @@ const foldedFieldLabels = new Intl.ListFormat('en', { style: 'long', type: 'conj
           </div>
 
           <p class="sid">
-            Session <a v-if="card.url" :href="card.url" target="_blank" rel="noopener">{{ card.sid }}</a><template v-else>{{ card.sid }}</template>
+            Session <a v-if="card.url" :href="card.url">{{ card.sid }}</a><template v-else>{{ card.sid }}</template>
           </p>
         </div>
       </div>
@@ -250,11 +250,9 @@ const foldedFieldLabels = new Intl.ListFormat('en', { style: 'long', type: 'conj
   padding: 0.16rem 0.5rem;
   border-radius: 6px;
 }
-.chip.pr { color: var(--jd-accent); text-decoration: none; }
-.chip.pr:hover { border-color: var(--jd-accent); text-decoration: underline; }
+.chip.pr, .chip.session { color: var(--jd-accent); text-decoration: none; }
+.chip.pr:hover, .chip.session:hover { border-color: var(--jd-accent); text-decoration: underline; }
 .chip.model { color: var(--jd-ink); }
-.chip.session { color: var(--jd-accent); text-decoration: none; }
-.chip.session:hover { border-color: var(--jd-accent); text-decoration: underline; }
 .chip.model::before {
   content: '';
   display: inline-block;
