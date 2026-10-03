@@ -15,6 +15,7 @@ const deals = computed(() => groupTinkerfundPromotions(promotions.value, now.val
 const filterQuery = ref<TinkerfundBrowseQuery>({ sort: 'popular' })
 const filtered = computed(() => browseTinkerfundListings(cards.value, filterQuery.value))
 const bounds = computed(() => tinkerfundPriceBounds(cards.value))
+const lamp = computed(() => campaigns.value.find((d) => d.slug === FIXTURE.lamp.slug))
 </script>
 
 <template>
@@ -69,7 +70,7 @@ const bounds = computed(() => tinkerfundPriceBounds(cards.value))
     </template>
     <li class="stack">
       <p class="case">{{ FIXTURE.lamp.title }} · the visitor’s own Pledge, just placed</p>
-      <TinkerfundCampaignRecentBackers :recent="campaigns.find((d) => d.slug === FIXTURE.lamp.slug)?.campaign.recent" :now="now" :you="now" />
+      <TinkerfundCampaignRecentBackers :recent="lamp?.campaign.recent" :now="now" :you="now" />
     </li>
   </ul>
 
