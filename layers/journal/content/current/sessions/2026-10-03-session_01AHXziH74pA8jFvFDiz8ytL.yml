@@ -1,16 +1,21 @@
 schemaVersion: 1
 session: session_01AHXziH74pA8jFvFDiz8ytL
 startedAt: 2026-10-03T14:43:46Z
-endedAt: 2026-10-03T15:15:13Z
+endedAt: 2026-10-03T15:38:16Z
 kind: interactive
 goal: visitor-loop run focused on the Journal's five 'New here?' onramp pages, plus a fact-check of their claims
-status: in-review
-outcome: "Consensus fixes and accuracy corrections open as PR #1563; the 'Read next' tour feature PR follows once it lands"
-summary: "The owner invoked /visitor-loop with a custom focus: only the five pages behind the Journal's \"New here? Start with the short version:\" cards. Following the owner's standing preference to ask first, the session asked four scoping questions; the owner chose: visitors read only those five pages, findings cover text and presentation, a content-shaped feature PR still follows, and the session also fact-checks the pages' claims against the repo (owner-instructed, beyond the Skill's normal remit). Three blind visitors (sonnet, fable, opus) read the pages; a separate read-only agent fact-checked them. Consensus: the pages miscount each other, Twelve Stories dates only four of twelve entries, History names the Blog personas before introducing them, What's Real skips Commons and Marquee and offers no starting page per site, History's table loses two columns at 390px, Architecture's diagrams shrink labels to ~9px on phones, and document pages leave half the desktop card empty. The accuracy pass added stale claims (visitor-loop missing from the routine list, transcripts \"unreadable\", every change \"a PR\", first commit \"four prose files\", \"none reversed\", \"nothing since is a new site\", SVG location). All were fixed agent-side within the visitor-loop remit (Journal layer content, theme.css, the Journal doc page, its e2e test); breadcrumb and \"posts not linked\" findings were dropped after verification. The chosen feature (agent-picked from visitor ideas) is a \"Read next · n of 5\" tour footer across the five pages. Work went on the harness-designated session branch rather than the Skill's claude/visitor-loop-fixes-<date> name."
+status: completed
+outcome: "Consensus fixes and accuracy corrections merged as PR #1563; a 'Read next · n of 5' tour footer across the five pages merged as PR #1564"
+summary: "The owner invoked /visitor-loop with a custom focus: only the five pages behind the Journal's \"New here? Start with the short version:\" cards. Following the owner's standing preference to ask first, the session asked four scoping questions; the owner chose: visitors read only those five pages, findings cover text and presentation, a content-shaped feature PR still follows, and the session also fact-checks the pages' claims against the repo (owner-instructed, beyond the Skill's normal remit). Three blind visitors (sonnet, fable, opus) read the pages; a separate read-only agent fact-checked them. Consensus: the pages miscount each other, Twelve Stories dates only four of twelve entries, History names the Blog personas before introducing them, What's Real skips Commons and Marquee and offers no starting page per site, History's table loses two columns at 390px, Architecture's diagrams shrink labels to ~9px on phones, and document pages leave half the desktop card empty. The accuracy pass added stale claims (visitor-loop missing from the routine list, transcripts \"unreadable\", every change \"a PR\", first commit \"four prose files\", \"none reversed\", \"nothing since is a new site\", SVG location). All were fixed agent-side within the visitor-loop remit (Journal layer content, theme.css, the Journal doc page, its e2e test); breadcrumb and \"posts not linked\" findings were dropped after verification. The chosen feature (agent-picked from visitor ideas) is a \"Read next · n of 5\" tour footer across the five pages. The owner merged #1563 by hand before the session posted its review verdict; the verdict was posted afterwards. The feature PR #1564 (shared onrampSteps helper, OnrampTour component, unit and e2e tests) was reviewed, fixed, and self-merged through merge-pr.ts on green. Both PRs used the harness-designated session branch (restarted from main after #1563 merged) rather than the Skill's claude/visitor-loop-*-<date> names. No consensus finding was out of remit, so no issues were filed."
 prs:
   - "1563"
+  - "1564"
 docsRead:
   - path: layers/journal/content/current/pages/history.md
+    reason: (no reason given)
+  - path: layers/journal/app/pages/t/journal/[space]/index.vue
+    reason: (no reason given)
+  - path: layers/journal/app/pages/t/journal/[space]/[...slug].vue
     reason: (no reason given)
 skillsUsed:
   - name: visitor-loop
@@ -43,25 +48,32 @@ frictions:
   - description: The sonnet visitor reported that Twelve Stories links none of its posts, but all twelve titles are links; a blind finding that would have been a wrong fix without verification
     solution: Keep verifying every finding against the rendered DOM, as the Skill requires
     severity: nit
-durationSec: 1886
+  - description: "PR #1563 was merged by the owner about six minutes after opening, before the review verdict comment the recipe requires was posted; the verdict landed after the merge"
+    solution: Run /code-review before opening the PR (or open as draft) so the verdict is on the PR by the time a human might merge it
+    severity: minor
+durationSec: 3269
 models:
-  claude-opus-5-5: 210
+  claude-opus-5-5: 313
 toolCounts:
-  Bash: 72
+  Bash: 98
   AskUserQuestion: 1
-  Agent: 6
+  Agent: 7
   ToolSearch: 2
   mcp__github__search_pull_requests: 1
-  mcp__github__pull_request_read: 1
-  Read: 12
-  Write: 3
+  mcp__github__pull_request_read: 2
+  Read: 16
+  Write: 5
   mcp__claude-code-remote__get_session: 1
   mcp__github__list_pull_requests: 1
-  mcp__github__create_pull_request: 1
-  mcp__claude-code-remote__subscribe_pr_activity: 1
+  mcp__github__create_pull_request: 2
+  mcp__claude-code-remote__subscribe_pr_activity: 2
   Skill: 3
+  ReadNotifications: 11
+  mcp__github__add_issue_comment: 2
 filesEdited:
   - layers/journal/content/current/pages/real-and-invented.md
+  - layers/journal/app/utils/onramp.ts
+  - layers/journal/app/components/journal/OnrampTour.vue
 docsReadViaShell:
   - .agents/skills/visitor-loop/visitor-brief.md
   - .agents/skills/visitor-loop/decisions.md
@@ -82,11 +94,16 @@ docsReadViaShell:
   - docs/adr/0004-objective-safety-gate.md
   - docs/adr/0006-runtime-routing-path-prefix.md
   - .agents/skills/visitor-loop/SKILL.md
+  - layers/blog/CONTEXT.md
+  - layers/commons/CONTEXT.md
   - docs/adr/0001-single-container-baked-multitenancy.md
   - docs/adr/0002-manifest-driven-config-generation.md
   - docs/adr/0005-skill-model.md
   - docs/adr/0008-self-documentation-tenant-is-a-journal.md
   - docs/adr/0009-session-logs-commit-directly-to-main.md
+  - docs/adr/0010-digests-derived-append-only-journal-pages.md
+  - docs/adr/0012-cross-persona-pingbacks-via-authored-denormalization.md
+  - docs/adr/0015-audit-skills-and-conditional-importance.md
 subagents:
   - type: general-purpose
     task: Fact-check five Journal pages
@@ -105,6 +122,9 @@ subagents:
     model: opus
   - type: general-purpose
     task: Spec review
+    model: opus
+  - type: general-purpose
+    task: Review feature PR
     model: opus
 gitBranch: ccr-7b24c32f-0nzqez
 entrypoint: remote_mobile
