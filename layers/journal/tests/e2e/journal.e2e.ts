@@ -314,7 +314,7 @@ export function registerJournalE2E(): void {
       const newest = currentDigestDates().at(-1)!
       for (const url of ['/t/journal/current/architecture', `/t/journal/current/digests/${newest}`]) {
         const html = await $fetch(url)
-        expect(html).toContain('class="jd"') // themed wrapper, not system-ui catch-all
+        expect(html).toMatch(/class="jd[\s"]/) // themed wrapper, not system-ui catch-all
         expect(html).toContain('aria-label="Breadcrumb"')
         expect(html).toContain('jd-prose')
         expect(html).not.toContain('No document at')
@@ -338,7 +338,7 @@ export function registerJournalE2E(): void {
       const res = await fetch('/t/journal/archived/architecture')
       expect(res.status).toBe(404)
       const html = await res.text()
-      expect(html).toContain('class="jd"') // themed override reaches archived
+      expect(html).toMatch(/class="jd[\s"]/) // themed override reaches archived
       expect(html).toContain('aria-label="Breadcrumb"')
       expect(html).toContain('No document at') // no such doc in archived
       expect(html).not.toContain('Nuxt Content fits this experiment') // did NOT leak current/architecture
