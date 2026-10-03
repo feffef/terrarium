@@ -56,12 +56,7 @@ useSeoMeta(tinkerfundSeo({ kind: 'private', space, title: 'Your Cart' }))
         </aside>
       </div>
 
-      <TinkerfundBrowseShelf
-        v-if="loaded"
-        :title="recommended.also ? 'Backers also backed' : 'More like this'"
-        :cards="recommended.cards"
-        :clock="clock"
-      />
+      <TinkerfundBrowseRecommendations v-if="loaded" :title="recommended.title" :cards="recommended.cards" :clock="clock" />
     </div>
     <ContentLoadErrorDialog :status="status" :error="error" />
   </TinkerfundShell>

@@ -168,7 +168,7 @@ describe('Home', () => {
 })
 
 describe('recommendations (issue #1387)', () => {
-  const shelf = tinkerfundListings([
+  const listings = tinkerfundListings([
     doc('mug', { category: 'kitchen', launch: '-5d', end: '+5d', alsoBacked: ['rock', 'pea'] }),
     doc('rock', { category: 'desk', launch: '-5d', end: '+5d' }),
     doc('pea', { category: 'kitchen', launch: '-50d', end: '-20d' }),
@@ -183,24 +183,24 @@ describe('recommendations (issue #1387)', () => {
   const titles = (cards: { title: string }[]) => cards.map((c) => c.title)
 
   it('shows the hand-picked Campaigns, then up to 4 more from the category, Live and Upcoming before Ended, without repeats', () => {
-    const { also, more } = tinkerfundRecommendations(shelf, 'mug')
+    const { also, more } = tinkerfundRecommendations(listings, 'mug')
     expect(titles(also)).toEqual(['rock', 'pea'])
     expect(titles(more)).toEqual(['plate', 'knife', 'cup', 'fork'])
   })
 
   it('shows only the category without alsoBacked, and nothing when the category holds nothing else', () => {
-    expect(titles(tinkerfundRecommendations(shelf, 'knife').also)).toEqual([])
-    expect(titles(tinkerfundRecommendations(shelf, 'lonely').more)).toEqual([])
+    expect(titles(tinkerfundRecommendations(listings, 'knife').also)).toEqual([])
+    expect(titles(tinkerfundRecommendations(listings, 'lonely').more)).toEqual([])
   })
 
-  it('fills the Cart’s shelf from its Campaigns’ alsoBacked minus the Cart, else from their categories', () => {
-    const picked = tinkerfundCartRecommendations(shelf, ['mug', 'cup', 'fork'])
-    expect(picked.also).toBe(true)
+  it('fills the Cart’s row from its Campaigns’ alsoBacked minus the Cart, else from their categories', () => {
+    const picked = tinkerfundCartRecommendations(listings, ['mug', 'cup', 'fork'])
+    expect(picked.title).toBe('Backers also backed')
     expect(titles(picked.cards)).toEqual(['rock', 'pea', 'knife'])
-    const fallback = tinkerfundCartRecommendations(shelf, ['rock', 'pea', 'lonely'])
-    expect(fallback.also).toBe(false)
+    const fallback = tinkerfundCartRecommendations(listings, ['rock', 'pea', 'lonely'])
+    expect(fallback.title).toBe('More like this')
     expect(titles(fallback.cards)).toEqual(['plate', 'mug', 'knife', 'cup'])
-    expect(tinkerfundCartRecommendations(shelf, []).cards).toEqual([])
+    expect(tinkerfundCartRecommendations(listings, []).cards).toEqual([])
   })
 })
 

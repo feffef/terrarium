@@ -46,8 +46,8 @@ export const TINKERFUND_GALLERY = [
   {
     id: 'recommendations',
     title: 'Recommendations',
-    components: ['TinkerfundBrowseShelf'],
-    summary: 'A Campaign page’s two shelves: the Lamp’s picks from another category, the Stapler with no picks, the Hammock whose picks leave Workshop with nothing more. Then the Cart specimen’s shelf, and a Stapler-only Cart falling back to its category. A sideways row on a phone.',
+    components: ['TinkerfundBrowseRecommendations'],
+    summary: 'A Campaign page’s two recommendation rows: the Lamp’s picks from another category, the Stapler with no picks, the Hammock whose picks leave Workshop with nothing more. Then the Cart specimen’s row, and a Stapler-only Cart falling back to its category. A sideways row on a phone.',
   },
   {
     id: 'figures',

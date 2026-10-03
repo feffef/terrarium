@@ -16,6 +16,12 @@ const filterQuery = ref<TinkerfundBrowseQuery>({ sort: 'popular' })
 const filtered = computed(() => browseTinkerfundListings(cards.value, filterQuery.value))
 const bounds = computed(() => tinkerfundPriceBounds(cards.value))
 const lamp = computed(() => campaigns.value.find((d) => d.slug === FIXTURE.lamp.slug))
+const recommendationPages = computed(() =>
+  [FIXTURE.lamp.slug, FIXTURE.stapler.slug, FIXTURE.hammock.slug].map((slug) => ({ slug, ...tinkerfundRecommendations(cards.value, slug) })))
+const cartRecommendations = computed(() => [
+  { case: 'The Cart specimen', ...tinkerfundCartRecommendations(cards.value, cart.value.groups.map((g) => g.campaign)) },
+  { case: 'A Cart holding only the Stapler', ...tinkerfundCartRecommendations(cards.value, [FIXTURE.stapler.slug]) },
+])
 </script>
 
 <template>
@@ -75,15 +81,15 @@ const lamp = computed(() => campaigns.value.find((d) => d.slug === FIXTURE.lamp.
   </ul>
 
   <div v-else-if="id === 'recommendations'" class="stack">
-    <template v-for="slug in [FIXTURE.lamp.slug, FIXTURE.stapler.slug, FIXTURE.hammock.slug]" :key="slug">
-      <p class="case">The {{ campaigns.find((d) => d.slug === slug)?.title }} page</p>
-      <TinkerfundBrowseShelf title="Backers also backed" :cards="tinkerfundRecommendations(cards, slug).also" :clock="clock" />
-      <TinkerfundBrowseShelf title="More from this category" :cards="tinkerfundRecommendations(cards, slug).more" :clock="clock" />
+    <template v-for="page in recommendationPages" :key="page.slug">
+      <p class="case">The {{ campaigns.find((d) => d.slug === page.slug)?.title }} page</p>
+      <TinkerfundBrowseRecommendations :title="TINKERFUND_RECOMMENDATIONS.also" :cards="page.also" :clock="clock" />
+      <TinkerfundBrowseRecommendations :title="TINKERFUND_RECOMMENDATIONS.more" :cards="page.more" :clock="clock" />
     </template>
-    <p class="case">The Cart specimen</p>
-    <TinkerfundBrowseShelf title="Backers also backed" :cards="tinkerfundCartRecommendations(cards, cart.groups.map((g) => g.campaign)).cards" :clock="clock" />
-    <p class="case">A Cart holding only the Stapler</p>
-    <TinkerfundBrowseShelf title="More like this" :cards="tinkerfundCartRecommendations(cards, [FIXTURE.stapler.slug]).cards" :clock="clock" />
+    <template v-for="c in cartRecommendations" :key="c.case">
+      <p class="case">{{ c.case }}</p>
+      <TinkerfundBrowseRecommendations :title="c.title" :cards="c.cards" :clock="clock" />
+    </template>
   </div>
 
   <div v-else-if="id === 'figures' && campaigns[0]" class="figures">

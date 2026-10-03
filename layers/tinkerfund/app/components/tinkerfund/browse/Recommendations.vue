@@ -4,7 +4,7 @@ const id = useId()
 </script>
 
 <template>
-  <section v-if="cards.length" class="shelf" :aria-labelledby="id">
+  <section v-if="cards.length" class="recommendations">
     <h2 :id="id">{{ title }}</h2>
     <ul :aria-labelledby="id">
       <li v-for="c in cards" :key="c.path"><TinkerfundBrowseCampaignCard :card="c" :clock="clock" /></li>
@@ -13,7 +13,7 @@ const id = useId()
 </template>
 
 <style scoped>
-.shelf { min-width: 0; }
+.recommendations { min-width: 0; }
 h2 { margin: 0 0 14px; padding-bottom: 10px; border-bottom: var(--tf-hairline); font: 800 22px/1 var(--tf-font); font-stretch: 80%; }
 /* A sideways row on phones; the padding keeps the cards' hover lift and focus ring unclipped. */
 ul {

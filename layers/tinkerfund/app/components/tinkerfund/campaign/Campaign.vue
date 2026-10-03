@@ -135,9 +135,9 @@ const backing = computed<TinkerfundBacking>(() => ({ slug: slug.value, state: st
       </section>
     </div>
 
-    <div class="more">
-      <TinkerfundBrowseShelf title="Backers also backed" :cards="recommended.also" :clock="clock" />
-      <TinkerfundBrowseShelf title="More from this category" :cards="recommended.more" :clock="clock" />
+    <div class="more" data-recommendations>
+      <TinkerfundBrowseRecommendations :title="TINKERFUND_RECOMMENDATIONS.also" :cards="recommended.also" :clock="clock" />
+      <TinkerfundBrowseRecommendations :title="TINKERFUND_RECOMMENDATIONS.more" :cards="recommended.more" :clock="clock" />
     </div>
 
     <div class="tf-backbar">
