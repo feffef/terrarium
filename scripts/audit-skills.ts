@@ -744,8 +744,9 @@ function readLock(cwd = root): Set<string> {
 // every judgement is made by the pure `parseMergedPullRequests`/
 // `findOrphanedSessions` pair, so the comparison stays testable with no network.
 //
-// The `gh`/`rest` strategy switch (`pickFetchStrategy`, `hasGhBinary`, `envToken`, `parseOwnerRepo`) is single-homed in
-// `list-open-issues.ts` (issue #505) and imported at the top of this file.
+// The `gh`/`rest` strategy switch (`pickFetchStrategy`, `hasGhBinary`,
+// `envToken`, `parseOwnerRepo`) is single-homed in `list-open-issues.ts`
+// (issue #505) and imported at the top of this file.
 
 function readOriginUrl(cwd: string): string {
   return execFileSync('git', ['remote', 'get-url', 'origin'], { cwd, encoding: 'utf8' }).trim()
@@ -753,14 +754,15 @@ function readOriginUrl(cwd: string): string {
 
 const PULLS_PER_PAGE = 100
 
-/** Walks pages by NUMBER on our own `repos/{owner}/{repo}` URL and stops on the
- *  first page shorter than `perPage` — it never follows GitHub's `Link` URL.
- *  For `pulls`, `rel="next"` points at the numeric `repositories/{id}/pulls`
- *  form, which this environment's agent proxy 403s; `gh api --paginate`
- *  follows it verbatim (issue #1514). Throws on any mid-walk failure rather
- *  than returning the pages already read: a partial scan that reads as
- *  complete is exactly the failure issue #738 exists to remove. */
-export function walkClosedPullRequestPages<T>(
+/** Walks pages by NUMBER and stops on the first page shorter than `perPage` —
+ *  it never follows GitHub's `Link` URL. For `pulls`, `rel="next"` points at
+ *  the numeric `repositories/{id}/pulls` form, which this environment's agent
+ *  proxy 403s; `gh api --paginate` follows it verbatim (issue #1514). A short
+ *  page, not `Link`, is the stop signal because `gh api` without `--include`
+ *  returns no headers. Throws on any mid-walk failure rather than returning
+ *  the pages already read: a partial scan that reads as complete is exactly
+ *  the failure issue #738 exists to remove. */
+export function walkPagesUntilShort<T>(
   pageUrl: (page: number) => string,
   fetchPage: (url: string) => T[],
   perPage = PULLS_PER_PAGE,
@@ -772,7 +774,7 @@ export function walkClosedPullRequestPages<T>(
       records = fetchPage(pageUrl(page))
     } catch (err) {
       const cause = err instanceof Error ? err.message : String(err)
-      throw new Error(`closed-PR listing INCOMPLETE at page ${page} after ${out.length} record(s): ${cause}`, { cause: err })
+      throw new Error(`paged listing INCOMPLETE at page ${page} after ${out.length} record(s): ${cause}`, { cause: err })
     }
     out.push(...records)
     if (records.length < perPage) return out
@@ -817,10 +819,10 @@ function curlGetPage(url: string, token: string, cwd: string): RawPullRequestApi
 
 function readClosedPullRequests(strategy: FetchStrategy, owner: string, repo: string, cwd: string): RawPullRequestApiRecord[] {
   const path = (page: number) => `repos/${owner}/${repo}/pulls?state=closed&per_page=${PULLS_PER_PAGE}&page=${page}`
-  if (strategy === 'gh') return walkClosedPullRequestPages(path, (p) => ghGetPage(p, cwd))
+  if (strategy === 'gh') return walkPagesUntilShort(path, (p) => ghGetPage(p, cwd))
   const token = envToken()
   if (!token) throw new Error('rest strategy chosen with no GH_TOKEN/GITHUB_TOKEN set')
-  return walkClosedPullRequestPages((page) => `https://api.github.com/${path(page)}`, (url) => curlGetPage(url, token, cwd))
+  return walkPagesUntilShort((page) => `https://api.github.com/${path(page)}`, (url) => curlGetPage(url, token, cwd))
 }
 
 /** Every merged pull request's originating session — the orphan check's whole

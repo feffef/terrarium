@@ -27,7 +27,7 @@ import {
   SEP,
   tallyUsage,
   toSession,
-  walkClosedPullRequestPages,
+  walkPagesUntilShort,
   type CommitFileChange,
   type InventoryEntry,
   type OnDiskSkill,
@@ -792,7 +792,7 @@ describe('findManuallyRescuedClosures()', () => {
   })
 })
 
-describe('walkClosedPullRequestPages() — paging by number, never following Link (issue #1514)', () => {
+describe('walkPagesUntilShort() — paging by number, never following Link (issue #1514)', () => {
   const pageUrl = (page: number) => `repos/o/r/pulls?state=closed&per_page=2&page=${page}`
 
   function fetcher(pages: number[][]) {
@@ -806,13 +806,13 @@ describe('walkClosedPullRequestPages() — paging by number, never following Lin
 
   it('requests page 1, 2, … on our own repos/{owner}/{repo} URL and stops on the first short page', () => {
     const { requested, fetchPage } = fetcher([[1, 2], [3, 4], [5]])
-    expect(walkClosedPullRequestPages<number>(pageUrl, fetchPage, 2)).toEqual([1, 2, 3, 4, 5])
+    expect(walkPagesUntilShort<number>(pageUrl, fetchPage, 2)).toEqual([1, 2, 3, 4, 5])
     expect(requested).toEqual([pageUrl(1), pageUrl(2), pageUrl(3)])
   })
 
   it('stops on an empty page when the last full page was exactly per_page long', () => {
     const { requested, fetchPage } = fetcher([[1, 2]])
-    expect(walkClosedPullRequestPages<number>(pageUrl, fetchPage, 2)).toEqual([1, 2])
+    expect(walkPagesUntilShort<number>(pageUrl, fetchPage, 2)).toEqual([1, 2])
     expect(requested).toEqual([pageUrl(1), pageUrl(2)])
   })
 
@@ -821,7 +821,7 @@ describe('walkClosedPullRequestPages() — paging by number, never following Lin
       if (url === pageUrl(1)) return [1, 2]
       throw new Error('HTTP 403')
     }
-    expect(() => walkClosedPullRequestPages<number>(pageUrl, fetchPage, 2)).toThrow(
+    expect(() => walkPagesUntilShort<number>(pageUrl, fetchPage, 2)).toThrow(
       /INCOMPLETE at page 2 after 2 record\(s\).*HTTP 403/,
     )
   })
