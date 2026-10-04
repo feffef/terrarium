@@ -140,3 +140,11 @@ observations:
       subagents dispatched, not an inherited verdict. Ledger diff matches
       both the log and PR #1558's body. No silent reversal of any judged
       trial found in the 2-week git-log sweep. Grade/role unchanged.
+  - date: "2026-10-04"
+    note: >-
+      Verified, minor (second audit-skills check today):
+      session_01Wq2y2VeAoAECMxpBwReDEt (10-01) logged cutting the prune onto its
+      own branch name though the session designated one, and a reset/delete
+      command was denied. origin/prune/backgrounding-cluster still exists on the
+      remote (git ls-remote), so a stray branch awaits a human. The Skill gives no
+      instruction on the session branch. Not escalated; one run. Grade unchanged.

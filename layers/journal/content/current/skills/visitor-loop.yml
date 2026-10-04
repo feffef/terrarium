@@ -136,3 +136,13 @@ observations:
       is fixed in audit-skills by PR #1591. Rest of the pipeline re-confirmed
       clean across all 9 usedIn sessions (3-model dispatch, ≥2-visitor
       consensus, code-review before merge). Grade unchanged (routine).
+  - date: "2026-10-04"
+    note: >-
+      Verified, ties to #1515 (second audit-skills check today): session_01DU7WbYNfKmdNgRpry9qzeV
+      reverted #1563's 44rem Journal document cap (bd394111) in 41e6f9b9 "on direct
+      owner instruction"; decisions.md has no line for it. Running
+      scripts/owner-corrections.ts --since 2026-10-03T15:48:00Z printed 7
+      candidates and none ties #1576 to #1563 — #1563 merged from the
+      harness-pinned branch ccr-7b24c32f-0nzqez, which the script's
+      claude/visitor-loop-* branch match does not recognise (read from code, not
+      tested). Commented on #1515. Grade unchanged.

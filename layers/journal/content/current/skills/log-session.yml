@@ -170,3 +170,10 @@ observations:
       bug), and `landedBy: Stop` on every one. No reverts or regressions
       touching this Skill's authoring/field-split/commit mechanics in the
       2-week git-log sweep. Grade/role unchanged.
+  - date: "2026-10-04"
+    note: >-
+      Watch-only (second audit-skills check today): session a1af4e46-8293-4f33-bf41-c956bd7f6306
+      logged a SHELL-READ-DETECTION miss after the output-matching rewrite (a doc
+      "named but output shows no line"; its own guess: the file was deleted from the
+      tree later). n=1 among ~25 later sessions, no filed issue. Grade/role
+      unchanged.

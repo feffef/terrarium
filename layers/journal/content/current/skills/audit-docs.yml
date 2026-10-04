@@ -103,3 +103,14 @@ observations:
       cloud-session `gh`), #1526 fixed via merged PR #1565 (prune-trial now
       files a hook issue instead of writing one unattended). No reverts in
       the 2-week git-log sweep. Grade unchanged.
+  - date: "2026-10-04"
+    note: >-
+      Verified, minor (second audit-skills check today): (1) the concision lens is
+      thinly covered — session_01JrdPvboL7hEVfdfvTyfSCb (10-04) logged "Concision
+      reviewer only covered a few docs; Skills and journal pages unreviewed" and
+      session_01CbWrei9SvmrH9vjNx2MB2f (10-03) logged the same shape, so every
+      fix still lands but "every live doc and Skill" is not read by that lens.
+      (2) session_01RA14XShYErE96EXs3TMX3c (#1501, 09-30) logged that it
+      "fact-checked findings myself ... rather than dispatching a separate
+      checker"; later runs dispatched one. No damage seen. Both below the
+      escalation bar. Grade unchanged.

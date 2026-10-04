@@ -134,3 +134,12 @@ observations:
       (cd-into-worktree) not recurred a third time. Grade/role unchanged
       (still essential) — both findings are freshly escalated, not yet
       reliability patterns against the Skill's core delivery.
+  - date: "2026-10-04"
+    note: >-
+      Verified in two logs (second audit-skills check today): the "bank progress"
+      rule collides with the harness refusing subagent report-file writes —
+      session_01EJtsivwdFPNVqFpwaA62af ("progress was invisible and the user
+      thought it stuck") and session_01VC6tZCm3HYs9BsJ7JrQQ5Z (four of eight
+      review reports came back only as text). The Skill ("Bank progress before
+      continuing") gives no fallback. A third run reportedly banked to scratch
+      files without trouble (unverified). Not escalated. Grade unchanged.

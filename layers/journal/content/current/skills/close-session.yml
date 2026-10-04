@@ -96,3 +96,12 @@ observations:
       audits. Structural gap unchanged: nothing re-verifies a log's status
       after the authoring turn ends. Window's own 98 sessions all used
       close-session (0 missed invocations). Grade/role unchanged.
+  - date: "2026-10-04"
+    note: >-
+      Verified quotes (second audit-skills check today): two runs after the closure-rule prune
+      (178da739) logged closing late — session_01P7a2zqJxuariDNfYqWQRHs ("Didn't
+      log the session at PR-open ... only closed after the final user-requested
+      tune") and session a1af4e46-8293-4f33-bf41-c956bd7f6306 ("authored after CI
+      finished rather than at PR-open"). Both closed with a correct final status,
+      neither is a HUMAN-PROMPTED-CLOSURE, so no finding; recorded as evidence for
+      the closure-rule trial. Grade/role unchanged.

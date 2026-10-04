@@ -100,3 +100,16 @@ observations:
       streak now extends through #1557/#1559/#1560; issue #1479's 3
       historical skips remain the only known instances. Grade/role
       unchanged.
+  - date: "2026-10-04"
+    note: >-
+      Verified silent failure (second audit-skills check today): step 8's reader pass
+      was skipped in 3 of the 4 runs that started after it landed (62511eda,
+      2026-09-30) — session_01UsKJ529GfpJRL9cy9JCgMV (PR #1518),
+      session_01C48djYtfD6dTcY8aESJJUD (#1530), session_01JzzBErytZGXxGg7v9vqZts
+      (#1557). Each log says so openly ("to bound cost"), but the step's Done-when
+      ("a reply has merged, or the reader returned 'none'") is then met by neither,
+      and the heading "Optional follow-up reaction" reads as permission to skip.
+      session_01JUVBufFxrv8bKoVBV5rgYN (#1559/#1560) ran it and shipped the Karen reply.
+      Not escalated: no earlier observation records it and nothing was damaged; a
+      fourth skip would clear the repeated bar. Idea: say whether the step is
+      optional or owed.
