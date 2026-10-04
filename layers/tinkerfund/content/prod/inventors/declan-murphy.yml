@@ -2,17 +2,22 @@ name: Declan Murphy
 bio: Electrician in Cork, who fitted the first frame after his cat spent whole minutes deciding at the door in winter. Wanted a number for it, not just an impression.
 portrait: |-
   <path d="M44 50h12v20H44z" style="fill:var(--tf-surface);stroke:var(--tf-ink);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round" />
-  <path d="M14 100c1-15 9-25 24-30l12-3 12 3c15 5 23 15 24 30" style="fill:var(--tf-accent);stroke:var(--tf-ink);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round" />
+  <path d="M14 100c1-15 9-25 24-30l12-3 12 3c15 5 23 15 24 30" style="fill:var(--tf-surface);stroke:var(--tf-ink);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round" />
   <path d="M39 69l11 12 11-12-3-2-8 8-8-8z" style="fill:var(--tf-surface);stroke:var(--tf-ink);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round" />
-  <path d="M29 43c0-2 1-4 3-4s3 2 3 4-1 4-3 4-3-2-3-4z" style="fill:var(--tf-surface);stroke:var(--tf-ink);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round" />
-  <path d="M65 43c0-2 1-4 3-4s3 2 3 4-1 4-3 4-3-2-3-4z" style="fill:var(--tf-surface);stroke:var(--tf-ink);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round" />
-  <path d="M50 22c-11 0-18 8-18 19c0 9 4 15 9 18c3 2 6 3 9 3s6-1 9-3c5-3 9-9 9-18c0-11-7-19-18-19z" style="fill:var(--tf-surface);stroke:var(--tf-ink);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round" />
+  <path d="M38 76l-6-8 M62 76l6-8" style="fill:none;stroke:var(--tf-ink);stroke-width:6;stroke-linejoin:round;stroke-linecap:round" />
+  <path d="M38 76l-6-8 M62 76l6-8" style="fill:none;stroke:var(--tf-accent);stroke-width:3;stroke-linejoin:round;stroke-linecap:round" />
+  <path d="M36 100V80l4-4h20l4 4v20" style="fill:var(--tf-accent);stroke:var(--tf-ink);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round" />
+  <path d="M39.4 80c0-0.96 0.8-1.6 1.6-1.6s1.6 0.64 1.6 1.6-0.8 1.6-1.6 1.6-1.6-0.64-1.6-1.6z" style="fill:var(--tf-ink);stroke:none" />
+  <path d="M57.4 80c0-0.96 0.8-1.6 1.6-1.6s1.6 0.64 1.6 1.6-0.8 1.6-1.6 1.6-1.6-0.64-1.6-1.6z" style="fill:var(--tf-ink);stroke:none" />
+  <path d="M29 44c0-2 1-4 3-4s3 2 3 4-1 4-3 4-3-2-3-4z" style="fill:var(--tf-surface);stroke:var(--tf-ink);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round" />
+  <path d="M65 44c0-2 1-4 3-4s3 2 3 4-1 4-3 4-3-2-3-4z" style="fill:var(--tf-surface);stroke:var(--tf-ink);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round" />
+  <path d="M50 22c-11 0-18 7-18 18v12c0 6 5 10 10 10h16c5 0 10-4 10-10V40c0-11-7-18-18-18z" style="fill:var(--tf-surface);stroke:var(--tf-ink);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round" />
   <path d="M67 38l11-9 2 3-11 9z" style="fill:var(--tf-accent);stroke:var(--tf-ink);stroke-width:1.6;stroke-linejoin:round;stroke-linecap:round" />
   <path d="M78 29l2 3 3-4z" style="fill:var(--tf-ink);stroke:none" />
   <path d="M32 42c-2-13 6-20 18-20s20 7 18 20c-3-7-9-10-18-10s-15 3-18 10z" style="fill:var(--tf-ink);stroke:none" />
   <path d="M32 44c0 11 8 20 18 20s18-9 18-20c-3 7-6 10-9 11h-18c-3-1-6-4-9-11z" style="fill:var(--tf-ink);stroke:none" />
-  <path d="M41 42c0-1.5 1-2.5 2-2.5s2 1 2 2.5-1 2.5-2 2.5-2-1-2-2.5z" style="fill:var(--tf-ink);stroke:none" />
-  <path d="M55 42c0-1.5 1-2.5 2-2.5s2 1 2 2.5-1 2.5-2 2.5-2-1-2-2.5z" style="fill:var(--tf-ink);stroke:none" />
+  <path d="M41 42c0-1.2 1-2 2-2s2 0.8 2 2-1 2-2 2-2-0.8-2-2z" style="fill:var(--tf-ink);stroke:none" />
+  <path d="M55 42c0-1.2 1-2 2-2s2 0.8 2 2-1 2-2 2-2-0.8-2-2z" style="fill:var(--tf-ink);stroke:none" />
   <path d="M38 36c3-2 7-2 10-1 M52 35c3-1 7-1 10 1" style="fill:none;stroke:var(--tf-ink);stroke-width:2.6;stroke-linejoin:round;stroke-linecap:round" />
-  <path d="M50 44c-2 3-2 5 1 6" style="fill:none;stroke:var(--tf-ink);stroke-width:1.8;stroke-linejoin:round;stroke-linecap:round" />
-  <path d="M43 52c3 4 11 4 14 0" style="fill:none;stroke:var(--tf-surface);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round" />
+  <path d="M49 44c-2 2-1 4 2 4" style="fill:none;stroke:var(--tf-ink);stroke-width:1.8;stroke-linejoin:round;stroke-linecap:round" />
+  <path d="M43 52c3 5 11 5 14 0z" style="fill:var(--tf-surface);stroke:none" />

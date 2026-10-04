@@ -3,17 +3,19 @@ bio: Operations manager in Leeds, where meetings are scheduled a week out and at
 portrait: |-
   <path d="M44 50h12v20H44z" style="fill:var(--tf-surface);stroke:var(--tf-ink);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round" />
   <path d="M14 100c1-15 9-25 24-30l12-3 12 3c15 5 23 15 24 30" style="fill:var(--tf-accent);stroke:var(--tf-ink);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round" />
+  <path d="M14 100c1-15 9-25 24-30l6 20-6 10z M86 100c-1-15-9-25-24-30l-6 20 6 10z" style="fill:var(--tf-ink);stroke:var(--tf-ink);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round" />
+  <path d="M42 67l8 14 8-14-8 4z" style="fill:var(--tf-surface);stroke:var(--tf-ink);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round" />
   <path d="M29 43c0-2 1-4 3-4s3 2 3 4-1 4-3 4-3-2-3-4z" style="fill:var(--tf-surface);stroke:var(--tf-ink);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round" />
   <path d="M65 43c0-2 1-4 3-4s3 2 3 4-1 4-3 4-3-2-3-4z" style="fill:var(--tf-surface);stroke:var(--tf-ink);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round" />
-  <path d="M50 22c-11 0-18 8-18 19c0 9 4 15 9 18c3 2 6 3 9 3s6-1 9-3c5-3 9-9 9-18c0-11-7-19-18-19z" style="fill:var(--tf-surface);stroke:var(--tf-ink);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round" />
-  <path d="M42 68l8 20 8-20-8 3z" style="fill:var(--tf-surface);stroke:var(--tf-ink);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round" />
-  <path d="M38 69l12 18 4-11-4-5z M62 69l-12 18-4-11 4-5z" style="fill:var(--tf-accent);stroke:var(--tf-ink);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round" />
-  <path d="M63 84l4 8" style="fill:none;stroke:var(--tf-ink);stroke-width:2.6;stroke-linejoin:round;stroke-linecap:round" />
-  <path d="M64 86l2 5" style="fill:none;stroke:var(--tf-surface);stroke-width:1.4;stroke-linejoin:round;stroke-linecap:round" />
-  <path d="M42 19c0-4 4-7 8-7s8 3 8 7-4 7-8 7-8-3-8-7z" style="fill:var(--tf-ink);stroke:none" />
-  <path d="M31 44c-2-14 5-22 19-22s21 8 19 22c-2-7-5-12-9-15c-5 2-10 2-14 1c-3 0-5 0-7-1c-4 3-7 8-8 15z" style="fill:var(--tf-ink);stroke:none" />
-  <path d="M41 42c0-1.5 1-2.5 2-2.5s2 1 2 2.5-1 2.5-2 2.5-2-1-2-2.5z" style="fill:var(--tf-ink);stroke:none" />
-  <path d="M55 42c0-1.5 1-2.5 2-2.5s2 1 2 2.5-1 2.5-2 2.5-2-1-2-2.5z" style="fill:var(--tf-ink);stroke:none" />
+  <path d="M50 20c-10 0-16 8-16 20c0 11 4 17 8 20c3 2 5 3 8 3s5-1 8-3c4-3 8-9 8-20c0-12-6-20-16-20z" style="fill:var(--tf-surface);stroke:var(--tf-ink);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round" />
+  <path d="M42 18c0-4 4-7 8-7s8 3 8 7-4 7-8 7-8-3-8-7z" style="fill:var(--tf-ink);stroke:none" />
+  <path d="M33 43c-2-14 4-23 17-23s19 9 17 23c-2-7-5-12-9-15c-5 2-10 2-14 1c-3 0-5 0-7-1c-3 3-3 8-4 15z" style="fill:var(--tf-ink);stroke:none" />
+  <path d="M66 38h7v10h-7z" style="fill:var(--tf-accent);stroke:var(--tf-ink);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round" />
+  <path d="M68 48c-2 6-6 8-10 8" style="fill:none;stroke:var(--tf-ink);stroke-width:2;stroke-linejoin:round;stroke-linecap:round" />
+  <path d="M55 54h4v3h-4z" style="fill:var(--tf-accent);stroke:var(--tf-ink);stroke-width:1.5;stroke-linejoin:round;stroke-linecap:round" />
+  <path d="M41 43c0-1.2 1-2 2-2s2 0.8 2 2-1 2-2 2-2-0.8-2-2z" style="fill:var(--tf-ink);stroke:none" />
+  <path d="M55 43c0-1.2 1-2 2-2s2 0.8 2 2-1 2-2 2-2-0.8-2-2z" style="fill:var(--tf-ink);stroke:none" />
+  <path d="M40 41h6 M54 41h6" style="fill:none;stroke:var(--tf-ink);stroke-width:1.6;stroke-linejoin:round;stroke-linecap:round" />
   <path d="M39 36h8 M53 36h8" style="fill:none;stroke:var(--tf-ink);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round" />
-  <path d="M50 44c-2 3-2 5 1 6" style="fill:none;stroke:var(--tf-ink);stroke-width:1.8;stroke-linejoin:round;stroke-linecap:round" />
-  <path d="M45 52c2 2 8 2 10 0" style="fill:none;stroke:var(--tf-ink);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round" />
+  <path d="M51 40l-2 9h3" style="fill:none;stroke:var(--tf-ink);stroke-width:1.8;stroke-linejoin:round;stroke-linecap:round" />
+  <path d="M45 54c3 1 7 1 10-2" style="fill:none;stroke:var(--tf-ink);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round" />
