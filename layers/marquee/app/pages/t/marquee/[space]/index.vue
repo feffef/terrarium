@@ -73,5 +73,6 @@ useSeoMeta({ description: () => tagline.value })
          blank (issue #236) — raise a modal with a message, technical
          details, reload. -->
     <ContentLoadErrorDialog :status="status" :error="error" />
+    <SiteFooter />
   </main>
 </template>

@@ -94,4 +94,7 @@ function go(event: MouseEvent, id: string) {
 .sections a:hover { color: var(--tf-ink); }
 .sections a[aria-current] { border-bottom-color: var(--tf-accent); color: var(--tf-ink); }
 small { font: inherit; color: var(--tf-muted); }
+@media (max-width: 480px) {
+  .sections a { padding-inline: 9px; }
+}
 </style>

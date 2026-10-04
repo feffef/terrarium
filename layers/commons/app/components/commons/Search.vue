@@ -23,6 +23,12 @@ const results = computed(() => {
     [r.title, r.description, r.tenant, r.space].some((f) => f?.toLowerCase().includes(needle)),
   )
 })
+
+// The whole corpus is hundreds of rows, a very long scroll on a phone.
+const PAGE = 30
+const limit = ref(PAGE)
+watch(q, () => { limit.value = PAGE })
+const shown = computed(() => results.value.slice(0, limit.value))
 </script>
 
 <template>
@@ -45,7 +51,7 @@ const results = computed(() => {
     </p>
 
     <ul class="hits">
-      <li v-for="r in results" :key="r.url" class="se-result">
+      <li v-for="r in shown" :key="r.url" class="se-result">
         <NuxtLink :to="r.url" class="hit">
           <span class="prov">{{ r.tenant }} <span class="dot">·</span> {{ r.space }}</span>
           <span class="hit-title">{{ r.title ?? r.url }}</span>
@@ -53,6 +59,9 @@ const results = computed(() => {
         </NuxtLink>
       </li>
     </ul>
+    <button v-if="results.length > shown.length" type="button" class="more" @click="limit += PAGE">
+      Show {{ Math.min(PAGE, results.length - shown.length) }} more
+    </button>
     <p v-if="!results.length" class="empty">Nothing matches “{{ q }}”.</p>
 
     <ContentLoadErrorDialog :status="status" :error="error" />
@@ -89,6 +98,17 @@ const results = computed(() => {
   flex-direction: column;
   gap: 0.5rem;
 }
+.more {
+  margin-top: 0.8rem;
+  padding: 0.6rem 1rem;
+  font: inherit;
+  color: var(--co-ink);
+  background: var(--co-card);
+  border: 1px solid var(--co-line);
+  border-radius: 10px;
+  cursor: pointer;
+}
+.more:hover { border-color: var(--co-accent); }
 .hit {
   display: flex;
   flex-direction: column;

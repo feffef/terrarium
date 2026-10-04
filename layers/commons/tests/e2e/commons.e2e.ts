@@ -49,6 +49,9 @@ export function registerCommonsE2E(): void {
     // ── Timeline Space ────────────────────────────────────────────────────────
     it('timeline: renders a reverse-chronological feed across Tenants, linking to real routes, with session logs and daily digests deep-linked into the Journal', async () => {
       await withRendered('/t/commons/timeline', async (page) => {
+        // The feed pages itself; expand it all so the assertions cover every entry.
+        const more = page.locator('.more')
+        while (await more.count()) await more.click()
         const entries = page.locator('.tl-entry')
         const count = await entries.count()
         expect(count).toBeGreaterThan(1)
