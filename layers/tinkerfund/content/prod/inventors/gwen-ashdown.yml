@@ -2,17 +2,21 @@ name: Gwen Ashdown
 bio: Garden instrumentation engineer in Bristol, who first pointed a handheld radar gun at a snail and got a reading of zero for four minutes.
 portrait: |-
   <path d="M14 100c2-16 11-25 25-28l11-1 11 1c14 3 23 12 25 28z" style="fill:var(--tf-accent);stroke:var(--tf-ink);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round" />
+  <path d="M31 78h38l4 5H27zM22 89h56l4 5H18z" style="fill:var(--tf-surface);stroke:none" />
+  <path d="M14 100c2-16 11-25 25-28l11-1 11 1c14 3 23 12 25 28" style="fill:none;stroke:var(--tf-ink);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round" />
   <path d="M43 54h14v18c-4 2-10 2-14 0z" style="fill:var(--tf-surface);stroke:var(--tf-ink);stroke-width:2;stroke-linejoin:round;stroke-linecap:round" />
   <path d="M30 44c-5-6-4-14 2-18 0-6 6-10 12-9 3-4 9-4 12 0 6-1 12 3 12 9 6 4 7 12 2 18-2-6-8-10-20-10s-18 4-20 10z" style="fill:var(--tf-ink);stroke:var(--tf-ink);stroke-width:2;stroke-linejoin:round;stroke-linecap:round" />
-  <ellipse cx="34" cy="45" rx="2.8" ry="3.8" style="fill:var(--tf-surface);stroke:var(--tf-ink);stroke-width:2;stroke-linejoin:round;stroke-linecap:round" /><ellipse cx="66" cy="45" rx="2.8" ry="3.8" style="fill:var(--tf-surface);stroke:var(--tf-ink);stroke-width:2;stroke-linejoin:round;stroke-linecap:round" />
-  <path d="M35 42c0-10 7-17 15-17s15 7 15 17v4c0 10-6 17-15 17s-15-7-15-17z" style="fill:var(--tf-surface);stroke:var(--tf-ink);stroke-width:2.3;stroke-linejoin:round;stroke-linecap:round" />
-  <path d="M34 44c0-13 7-20 16-20s16 7 16 20c-3-6-9-9-16-9s-13 3-16 9z" style="fill:var(--tf-ink);stroke:none" />
+  <ellipse cx="33" cy="45" rx="2.8" ry="3.8" style="fill:var(--tf-surface);stroke:var(--tf-ink);stroke-width:2;stroke-linejoin:round;stroke-linecap:round" /><ellipse cx="67" cy="45" rx="2.8" ry="3.8" style="fill:var(--tf-surface);stroke:var(--tf-ink);stroke-width:2;stroke-linejoin:round;stroke-linecap:round" />
+  <path d="M33 42c0-11 8-18 17-18s17 7 17 18v3c0 11-7 19-17 19s-17-8-17-19z" style="fill:var(--tf-surface);stroke:var(--tf-ink);stroke-width:2.3;stroke-linejoin:round;stroke-linecap:round" />
+  <path d="M33 44c0-13 8-20 17-20s17 7 17 20c-3-6-9-9-17-9s-14 3-17 9z" style="fill:var(--tf-ink);stroke:none" />
   <circle cx="44" cy="45" r="5.3" style="fill:none;stroke:var(--tf-ink);stroke-width:1.9;stroke-linejoin:round;stroke-linecap:round" />
   <circle cx="56" cy="45" r="5.3" style="fill:none;stroke:var(--tf-ink);stroke-width:1.9;stroke-linejoin:round;stroke-linecap:round" />
   <path d="M49.3 45h1.4" style="fill:none;stroke:var(--tf-ink);stroke-width:1.9;stroke-linejoin:round;stroke-linecap:round" />
   <circle cx="44.5" cy="45.5" r="1.7" style="fill:var(--tf-ink);stroke:none" />
   <circle cx="56.5" cy="45.5" r="1.7" style="fill:var(--tf-ink);stroke:none" />
-  <path d="M49.5 47c-1 2-1 4 1 5M44 55q6 5 12 0" style="fill:none;stroke:var(--tf-ink);stroke-width:1.7;stroke-linejoin:round;stroke-linecap:round" />
+  <path d="M48 50q2 2 4 0" style="fill:none;stroke:var(--tf-ink);stroke-width:1.6;stroke-linejoin:round;stroke-linecap:round" />
+  <path d="M43 55q7 9 14 0z" style="fill:var(--tf-ink);stroke:none" />
+  <path d="M45.5 55.5h9v2q-4.5 1-9 0z" style="fill:var(--tf-surface);stroke:none" />
   <path d="M13 91c4-6 14-8 23-5l2 5H14z" style="fill:var(--tf-accent);stroke:var(--tf-ink);stroke-width:1.8;stroke-linejoin:round;stroke-linecap:round" />
   <circle cx="23" cy="81" r="7.5" style="fill:var(--tf-accent);stroke:var(--tf-ink);stroke-width:2;stroke-linejoin:round;stroke-linecap:round" />
   <path d="M27 81c0-4-4-5-6-2s1 6 3 3" style="fill:none;stroke:var(--tf-ink);stroke-width:1.6;stroke-linejoin:round;stroke-linecap:round" />
