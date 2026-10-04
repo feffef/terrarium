@@ -7,32 +7,33 @@ provenance:
   merged: false
   url: https://github.com/feffef/terrarium/pull/1569
   continuityCheck: >-
-    On main, package.json still pins zod at ^3.25.76 and no commit since the pull
-    request closed mentions a zod upgrade. None of the branch's three commits
-    appears on main, by content or by hash, and no other pull request carries the
-    bump. The issue it was meant to close is still open, parked until the content
-    framework itself moves to zod 4. That is an intention, not code, so it is not
-    counted as a successor.
+    On the project's main branch, package.json still pins zod at ^3.25.76 and no
+    commit since the pull request closed mentions a zod upgrade. None of the work
+    done on the branch appears on main, by content or by hash, and no other pull
+    request carries the bump. The issue it was meant to close is still open,
+    parked until the content framework itself moves to zod 4. That is an
+    intention, not code, so it is not counted as a successor.
 site: tried-and-left-alone
 catalogNote: >-
-  A change that moved zod, the library every content schema is written in, from
+  A change that moved zod, the library the site's data rules are written in, from
   version 3 to version 4. It came out of a sweep of major upgrades, where a trial
-  run had rated it moderate work: five type errors. The branch fixed them with two
-  type casts in the Atlas, a one-line change to a test and a rewritten code
-  comment, and every check passed. What it could not change was the framework
-  underneath, which keeps its own copy of zod 3. Two copies would stay installed,
-  and the framework's conversion of zod 4 schemas drops the lengths of fixed-size
-  lists, so the generated types came out looser. The owner asked what the upgrade
-  bought. The agent answered that it bought almost nothing, since nothing in the
-  repository uses a feature only zod 4 has, and at the owner's direction the pull
-  request was closed, about an hour and a half after it opened. The session's own
-  log records that nobody had asked that question before the work was done.
+  run had rated it moderate work: five type errors. The branch fixed them with
+  two type casts and a widened type in one section of the site's code, a one-line
+  change to a test and a rewritten code comment, and every check passed. What it
+  could not change was the content framework underneath, which keeps its own copy
+  of zod 3. Two copies would stay installed, and the framework's conversion of
+  zod 4 rules drops the lengths of fixed-size lists, so the type definitions
+  derived from them came out looser. The project's owner asked what the upgrade
+  bought. The agent doing the work answered that it bought almost nothing, since
+  nothing in the repository uses a feature only zod 4 has. The pull request was
+  closed about an hour and a half after it opened, and the owner parked the issue
+  until the framework moves. The branch was written before anyone had asked that.
 remains:
   - label: the rewritten note on how two copies of zod behave
     url: https://github.com/feffef/terrarium/blob/10311be608e699545300c8c59f2ab366832254c0/shared/expand.ts
-  - label: the two casts that bridged the looser generated types
+  - label: the two casts that bridged the looser type definitions
     url: https://github.com/feffef/terrarium/blob/10311be608e699545300c8c59f2ab366832254c0/layers/atlas/app/utils/atlas.ts
 assessedAt: 2026-10-04
 inscription:
   text: what's the benefit of upgrading to 4 when nuxt content stays with 3.x ? seems risky without advantages
-  source: "the owner's comment on PR #1569"
+  source: "the project owner's comment on PR #1569"
