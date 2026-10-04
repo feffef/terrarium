@@ -65,6 +65,8 @@ export interface TriageSession {
   startedAt: string
   goal: string
   outcome: string
+  summary: string
+  trigger: string
   prs: string[]
   docsRead: TriageDocRead[]
   subagents: SubagentRef[]
@@ -76,7 +78,7 @@ export interface CompactFriction {
   severity: string
 }
 /** The `--compact` reduction of a TriageSession: drops the prose fields
- *  (goal/outcome/solution) that make the default output exceed the Bash
+ *  (goal/outcome/summary/solution) that make the default output exceed the Bash
  *  tool's inline-capture cap at the default window (issue #951). `id`/`file`
  *  are kept so a candidate can still be traced back to its full log. */
 export interface CompactSession {
@@ -123,6 +125,8 @@ export function toTriageSession(raw: Record<string, unknown>, file: string): Tri
     startedAt: String(raw.startedAt ?? ''),
     goal: String(raw.goal ?? ''),
     outcome: String(raw.outcome ?? ''),
+    summary: String(raw.summary ?? ''),
+    trigger: String(raw.trigger ?? ''),
     prs: prs.map((p) => String(p)),
     docsRead: collapseSessionLogReads(docsRead),
     subagents: subagents.map((s: Record<string, unknown>) => {
