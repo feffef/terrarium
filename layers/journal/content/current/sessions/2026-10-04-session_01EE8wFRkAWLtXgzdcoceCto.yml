@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01EE8wFRkAWLtXgzdcoceCto
 startedAt: 2026-10-04T09:37:57Z
-endedAt: 2026-10-04T09:59:51Z
+endedAt: 2026-10-04T10:11:36Z
 kind: interactive
 goal: Survey the Midden for newly discarded work and catalogue the survivors as dig-report finds
-status: in-review
-outcome: "Survey issue #1592 filed with two candidates; both catalogued in one new dig report, gated PR #1594 open and subscribed"
-summary: "Human-instructed throughout. The user invoked /midden-survey; I ran the script sweep plus the PR and branch sweep, screened out the rest on Gate B, and filed survey issue #1592 with two candidates (PR #1569, the zod 4 upgrade closed unmerged, and PR #1562, a provenance probe). The user then asked which were worth a story; I said only #1569 was, with the risk that it is parked not dead, and the probe thin. The user said to follow my recommendations, after one clarifying question set (catalogue #1569 now, #1562 to the stores, post a decision comment), which I did; the comment is on #1592. The user then ran /midden-catalogue themselves, since I cannot invoke it. Reading the probe session's log showed my survey claim that the probe left no recorded finding was wrong (the log records what the tools add and the decision to keep the rules). I asked the user again, and they chose to move #1562 into the trench alongside #1569. I wrote two Artifacts and one new dig report, Tried and Left Alone, updated the e2e header counts, validated, ran the full scoped gate (1970 unit, 144 e2e, passed; started before the last wording-only edits), and ran two read-only reviewers plus a re-check. Findings fixed: loose commit count, missing widened type, an unsupported attribution, jargon, an overclaiming page opening (it claimed a shared decision pattern; now says only that both closed unmerged on 3 October with no other link), and a probe continuity line implying the decision record was removed. Agent-initiated: the ADR-0003 auto-open of PR #1594 and subscribing to it, the reviewer dispatches, and all wording choices. Open: the PR awaits human review and CI; the season stays open at 29 days; if the zod upgrade later lands, the find needs reconsidering."
+status: completed
+outcome: "Survey issue #1592 filed with two candidates; both catalogued in one new dig report and merged via PR #1594"
+summary: "Human-instructed throughout. The user invoked /midden-survey; I ran the script sweep plus the PR and branch sweep, screened out the rest on Gate B, and filed survey issue #1592 with two candidates (PR #1569, the zod 4 upgrade closed unmerged, and PR #1562, a provenance probe). The user then asked which were worth a story; I said only #1569 was, with the risk that it is parked not dead, and the probe thin. The user said to follow my recommendations, after one clarifying question set (catalogue #1569 now, #1562 to the stores, post a decision comment), which I did; the comment is on #1592. The user then ran /midden-catalogue themselves, since I cannot invoke it. Reading the probe session's log showed my survey claim that the probe left no recorded finding was wrong (the log records what the tools add and the decision to keep the rules). I asked the user again, and they chose to move #1562 into the trench alongside #1569. I wrote two Artifacts and one new dig report, Tried and Left Alone, updated the e2e header counts, validated, ran the full scoped gate (1970 unit, 144 e2e, passed; started before the last wording-only edits), and ran two read-only reviewers plus a re-check. Findings fixed: loose commit count, missing widened type, an unsupported attribution, jargon, an overclaiming page opening (it claimed a shared decision pattern; now says only that both closed unmerged on 3 October with no other link), and a probe continuity line implying the decision record was removed. Agent-initiated: the ADR-0003 auto-open of PR #1594 and subscribing to it, the reviewer dispatches, and all wording choices. PR #1594 was merged by the owner after CI went green. The season stays open at 29 days. The user noted that the open zod ticket does not change that the PR was discarded, and I updated the PR description to say so."
 prs:
   - "1594"
 docsRead:
@@ -57,13 +57,13 @@ frictions:
   - description: The session worker restarted mid-run, after the survey but before cataloguing; I had to re-establish state from git and the session logs.
     solution: None for the repo; the committed branch state and survey issue made recovery cheap.
     severity: nit
-durationSec: 1314
+durationSec: 2020
 models:
-  claude-sonnet-5-5: 123
+  claude-sonnet-5-5: 144
 toolCounts:
   Read: 3
-  Bash: 30
-  ToolSearch: 2
+  Bash: 32
+  ToolSearch: 3
   mcp__github__search_issues: 1
   mcp__github__search_pull_requests: 1
   mcp__github__list_branches: 2
@@ -78,6 +78,10 @@ toolCounts:
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 4
+  mcp__claude-code-remote__send_later: 1
+  mcp__github__update_pull_request: 1
+  mcp__claude-code-remote__delete_trigger: 1
 filesEdited:
   - layers/midden/content/trench/artifacts/the-zod-upgrade.yml
   - layers/midden/content/trench/artifacts/the-provenance-probe.yml
