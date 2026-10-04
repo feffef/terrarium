@@ -23,7 +23,7 @@ sessions has piled up unaddressed friction.
 
 ## 1. Survey & screen the frictions — in a subagent
 
-Reading 20 logs and surveying the whole tracker is context-heavy (the tracker JSON
+Reading a window of logs and surveying the whole tracker is context-heavy (the tracker JSON
 alone overflows the tool-result limit), so **delegate steps 1–2 to a single
 subagent** (`general-purpose`, so it can run `tsx` and the GitHub MCP tools). It
 surveys, screens, and returns a **distilled, ranked report**; the main session
@@ -38,8 +38,8 @@ Its brief:
   way, screen it out fast — it's a §2 `drop` — rather than re-deriving its full
   history; save the deep archaeology for candidates with no in-window
   resolution. Count recurrence from the **unresolved** occurrences only.
-- **Read the latest 20 session logs** via `pnpm exec tsx scripts/session-frictions.ts`
-  (`--window N` to change the count; bare `tsx` isn't on PATH). Large output goes to
+- **Read the last 3 days of session logs** via `pnpm exec tsx scripts/session-frictions.ts`
+  (`--days N` to change the window; bare `tsx` isn't on PATH). Large output goes to
   `/tmp/session-frictions-output.json` and stdout gets only a notice — read the file, or
   pass `--out PATH`; don't parse stdout. This is a **recency window, not a
   sample** — read every session in it, don't chase frictions from older,
@@ -85,18 +85,13 @@ Its brief:
   fix** should still be addressed — cheap, repeated papercuts add up and are worth
   retiring. What gets dropped is the lone, low-severity one-off (a single `nit`
   with a non-trivial fix), not every `nit`.
-- **The window often straddles the previous run.** The recency window commonly
-  reaches back before the last `frictions-to-fixes` run's own start, so a
-  sizeable chunk of its candidates are already resolved by an in-window fixing
-  session or PR — exactly the case the first bullet above tells you to screen
-  out fast. Anchor that screening on the previous run's approximate start time
-  rather than treating the whole window uniformly: find the most recent session
-  log with `trigger: frictions-to-fixes` (or, absent that, the most recent
-  merged PR matching this Skill's fix pattern via `merged-since.ts`) and treat
-  frictions from sessions before it as the likeliest already-resolved
-  candidates — a filed tracker issue is a weaker fallback signal, since a
-  "simple" selection (the common case, §4) files none.
 - **Screen against the tracker** — apply the §2 rules to every candidate.
+- **Last, check the window's own `frictions-to-fixes` runs.** The records with
+  `trigger: frictions-to-fixes` carry a `summary`, `outcome` and `prs` saying what
+  earlier runs fixed, escalated or dropped. Read them in full after ranking, and
+  `drop` or relabel any candidate they cover (§2), citing the run or PR. A run's
+  summary can be wrong or partial: verify against the PR or `main` before dropping.
+  A tracker issue is the weaker signal — a "simple" selection (§4) files none.
 - **GitHub-MCP hygiene** (these are themselves recurring frictions — heed them):
   call the tools by their **fully-qualified `mcp__github__*` names** (bare names
   don't resolve via ToolSearch). Call `ToolSearch` for the `mcp__github__*` tools
@@ -115,7 +110,7 @@ session's log too, §6). Don't let the survey's frictions evaporate just because
 ran in a subagent.
 
 Done when the subagent returns a structured report: **(a) ranked actionable
-candidates** — each with title, severity, recurrence (N/20), sessions, tracker
+candidates** — each with title, severity, recurrence (N of the window's sessions), sessions, tracker
 classification (never-fixed / open-already #N / regression of #N), fix type
 (doc/code/config), human-only-surface flag, difficulty (simple/hard), a one-line
 recommended fix, and evidence quotes; **(b) a dropped list** with one-line reasons;

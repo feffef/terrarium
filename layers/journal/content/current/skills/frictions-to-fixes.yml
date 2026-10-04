@@ -5,7 +5,7 @@ gist: Turns agents' logged annoyances into filed and fixed bugs.
 role: >-
   The consuming half of the self-improvement loop `log-session` feeds, and the
   first place the project's autonomy actually closes end-to-end: it reads the
-  latest 20 session logs, screens out already-fixed frictions, and turns the rest
+  last 3 days of session logs, screens out already-fixed frictions, and turns the rest
   into up to 10 issues (at most 2 hard) — grouping related frictions where it
   helps. It dispatches Sonnet impl agents to open gated PRs, then acts as the
   ADR-0003 mid-term review-agent: it code-reviews each sibling-authored PR against

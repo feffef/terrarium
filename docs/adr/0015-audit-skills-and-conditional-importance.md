@@ -95,7 +95,8 @@ Status: Accepted
 > *referral to `frictions-to-fixes`*" framing (below) no longer matches
 > implementation: `audit-skills/SKILL.md` step 5 files a plain `needs-triage`
 > issue, with no hand-off mechanism naming `frictions-to-fixes`; that Skill's
-> own intake mines the 20 newest session-log frictions only and has no step
+> own intake mines the last 3 days of session-log frictions only (the 20 newest
+> until 2026-10-04) and has no step
 > that scans open issues for such a referral. `how-it-works.md`'s "files an
 > issue and leaves it to a human" already describes current behaviour — the
 > "referral" term below is historical, not a live routing path.

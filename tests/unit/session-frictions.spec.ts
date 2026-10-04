@@ -16,6 +16,8 @@ function session(id: string, startedAt: string, opts: Partial<TriageSession> = {
     startedAt,
     goal: 'g',
     outcome: 'o',
+    summary: 's',
+    trigger: '',
     prs: [],
     docsRead: [],
     subagents: [],
@@ -25,31 +27,28 @@ function session(id: string, startedAt: string, opts: Partial<TriageSession> = {
 }
 
 describe('pickRecencyWindow()', () => {
-  it('keeps the newest n by startedAt, oldest-of-the-window first', () => {
+  const now = Date.parse('2026-07-10T00:00:00Z')
+  it('keeps sessions within the last n days, oldest first', () => {
     const sessions = [
-      session('a', '2026-07-01T00:00:00Z'),
-      session('b', '2026-07-03T00:00:00Z'),
-      session('c', '2026-07-02T00:00:00Z'),
+      session('old', '2026-07-06T23:59:59Z'),
+      session('b', '2026-07-09T00:00:00Z'),
+      session('a', '2026-07-07T00:00:00Z'),
     ]
-    expect(pickRecencyWindow(sessions, 2).map((s) => s.id)).toEqual(['c', 'b'])
+    expect(pickRecencyWindow(sessions, 3, now).map((s) => s.id)).toEqual(['a', 'b'])
   })
   it('is not fooled by filename/id order — sorts purely on startedAt', () => {
     const sessions = [
-      session('z-earlier', '2026-07-01T00:00:00Z'),
-      session('a-later', '2026-07-02T00:00:00Z'),
+      session('a-later', '2026-07-09T00:00:00Z'),
+      session('z-earlier', '2026-07-08T00:00:00Z'),
     ]
-    expect(pickRecencyWindow(sessions, 1).map((s) => s.id)).toEqual(['a-later'])
+    expect(pickRecencyWindow(sessions, 3, now).map((s) => s.id)).toEqual(['z-earlier', 'a-later'])
   })
   it('breaks ties on id for a stable, deterministic order', () => {
     const sessions = [
-      session('b', '2026-07-01T00:00:00Z'),
-      session('a', '2026-07-01T00:00:00Z'),
+      session('b', '2026-07-09T00:00:00Z'),
+      session('a', '2026-07-09T00:00:00Z'),
     ]
-    expect(pickRecencyWindow(sessions, 2).map((s) => s.id)).toEqual(['a', 'b'])
-  })
-  it('returns everything, in order, when n exceeds the count', () => {
-    const sessions = [session('a', '2026-07-01T00:00:00Z')]
-    expect(pickRecencyWindow(sessions, 20).map((s) => s.id)).toEqual(['a'])
+    expect(pickRecencyWindow(sessions, 3, now).map((s) => s.id)).toEqual(['a', 'b'])
   })
 })
 
@@ -60,6 +59,8 @@ describe('toTriageSession()', () => {
       startedAt: '2026-07-04T12:00:00Z',
       goal: 'fix the thing',
       outcome: 'PR',
+      summary: 'ran the thing',
+      trigger: 'frictions-to-fixes',
       prs: [187],
       docsRead: [{ path: 'docs/adr/0009-session-logs.md', reason: 'checked the schema' }],
       subagents: [{ type: 'general-purpose', task: 'Survey frictions', model: 'sonnet' }],
@@ -73,6 +74,8 @@ describe('toTriageSession()', () => {
       startedAt: '2026-07-04T12:00:00Z',
       goal: 'fix the thing',
       outcome: 'PR',
+      summary: 'ran the thing',
+      trigger: 'frictions-to-fixes',
       prs: ['187'],
       docsRead: [{ path: 'docs/adr/0009-session-logs.md', reason: 'checked the schema' }],
       subagents: [{ type: 'general-purpose', task: 'Survey frictions', model: 'sonnet' }],
@@ -100,6 +103,8 @@ describe('toTriageSession()', () => {
       startedAt: '',
       goal: '',
       outcome: '',
+      summary: '',
+      trigger: '',
       prs: [],
       docsRead: [],
       subagents: [],
@@ -113,6 +118,8 @@ describe('toCompactSession()', () => {
     const s = session('session_abc', '2026-07-04T12:00:00Z', {
       goal: 'fix the thing',
       outcome: 'PR',
+      summary: 'ran the thing',
+      trigger: 'frictions-to-fixes',
       prs: ['187'],
       frictions: [{ description: 'a stale claim', solution: 'fix it', severity: 'minor' }],
     })
@@ -133,7 +140,7 @@ describe('resolveOutputTarget() — --out CLI flag', () => {
   })
   it('lands the output at the given path when --out is provided, regardless of size', () => {
     expect(resolveOutputTarget(['--out', '/scratch/out.json'], 10)).toBe('/scratch/out.json')
-    expect(resolveOutputTarget(['--window', '5', '--out', '/scratch/out.json'], 30_000)).toBe('/scratch/out.json')
+    expect(resolveOutputTarget(['--days', '5', '--out', '/scratch/out.json'], 30_000)).toBe('/scratch/out.json')
   })
 })
 
@@ -162,7 +169,7 @@ describe('survey() — external exclusion (ADR-0009 amendment)', () => {
       'session: session_external\nstartedAt: 2026-07-21T00:00:00Z\nexternal: true\ngoal: external work\noutcome: done\nfrictions:\n  - description: a toolchain friction\n    solution: n/a\n    severity: blocker\n',
     )
 
-    const ids = survey(20, dir).map((s) => s.id)
+    const ids = survey(3, dir, Date.parse('2026-07-22T00:00:00Z')).map((s) => s.id)
     expect(ids).toEqual(['session_internal'])
   })
 })
