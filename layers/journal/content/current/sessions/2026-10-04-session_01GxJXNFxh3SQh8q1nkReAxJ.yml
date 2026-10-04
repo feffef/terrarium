@@ -1,0 +1,349 @@
+schemaVersion: 1
+session: session_01GxJXNFxh3SQh8q1nkReAxJ
+startedAt: 2026-10-04T14:20:59Z
+endedAt: 2026-10-04T15:27:52Z
+kind: interactive
+goal: Review the Blog's tag vocabulary after a few months of posts, then rework it and re-tag the posts
+status: in-review
+outcome: Tag vocabulary reworked, all 126 posts re-tagged, definitions added beside the enum; PR open, gate green locally
+summary: 'Human-instructed throughout: the user asked for a review of the blog tagging system (which tags to add or remove, near-duplicates, sample about 10% of posts for new-tag candidates). They answered up-front questions (report only, stratified sample, weigh browsing and cross-Persona comparison equally), then asked me to sample more, then to verify the weaker calls, then said "Apply tags on this session" and to define the meanings where the blog-post Skill reads them. Analysis went in layers: tag counts and co-occurrence from frontmatter, a 13-post and then a 24-post hand-read sample, a keyword classifier that proved unreliable, then two full-corpus read passes by read-only subagents (all 126 posts each) against explicit tag definitions. Findings: autonomy, governance and self-review sat on about half the blog each and were often weak fits; rulebook, self-improvement, guards, scheduled-runs and merge-flow were large uncovered topics; deploy, innovation and self-merge were thin or weak. Agent-initiated choices (not asked for): including public-repo (9 posts, marked optional in my report), excluding subagents and design, the re-tag algorithm (drop weak fits, add new matches, cap 5, min 2, fold self-merge into merge-flow and deploy into safety-gate), one hand override (the prune-trial post is not merge-flow), putting the definitions as comments beside the blogTags enum (the file the Skill already reads) and a short pointer in the blog-post Skill, and opening the PR automatically per ADR-0003. The labels are subagent judgement, not ground truth; some posts will want hand tweaks.'
+prs:
+  - "1597"
+docsRead:
+  - path: layers/blog/CONTEXT.md
+    reason: Tag glossary term and where the vocabulary lives
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: how the Skill reads the tag vocabulary
+  - path: layers/blog/tenant.config.ts
+    reason: the enforced blogTags enum
+  - path: CONTEXT.md
+    reason: (no reason given)
+  - path: layers/blog/content/kevin/pages/2026-07-05-should-i-be-worried.md
+    reason: (no reason given)
+  - path: layers/blog/content/kevin/pages/2026-07-05-they-went-back-and-cleaned-up.md
+    reason: (no reason given)
+  - path: layers/blog/content/kevin/pages/2026-07-06-it-used-itself-as-the-test-rig.md
+    reason: (no reason given)
+  - path: layers/blog/content/kevin/pages/2026-07-06-same-login-both-sides.md
+    reason: (no reason given)
+  - path: layers/blog/content/kevin/pages/2026-07-07-it-reviewed-its-own-shortcuts.md
+    reason: (no reason given)
+  - path: layers/blog/content/kevin/pages/2026-07-10-it-checked-its-own-homework.md
+    reason: (no reason given)
+  - path: layers/blog/content/kevin/pages/2026-07-11-it-hit-a-wall-and-built-a-tool.md
+    reason: (no reason given)
+  - path: layers/blog/content/kevin/pages/2026-07-12-it-read-its-own-bad-review.md
+    reason: (no reason given)
+  - path: layers/blog/content/kevin/pages/2026-07-13-the-fix-for-the-paperwork-almost-ate-the-homework.md
+    reason: (no reason given)
+  - path: layers/blog/content/kevin/pages/2026-07-13-the-thing-that-logs-everyone-forgot-to-log-itself.md
+    reason: (no reason given)
+  - path: layers/blog/content/kevin/pages/2026-07-14-it-almost-signed-as-someone-else.md
+    reason: (no reason given)
+  - path: layers/blog/content/kevin/pages/2026-07-14-it-got-worse.md
+    reason: (no reason given)
+  - path: layers/blog/content/kevin/pages/2026-07-16-it-built-a-tool-to-catch-itself-lying.md
+    reason: (no reason given)
+  - path: layers/blog/content/kevin/pages/2026-07-17-someone-fixed-the-flake.md
+    reason: (no reason given)
+  - path: layers/blog/content/kevin/pages/2026-07-17-twelve-rounds-and-the-line-held.md
+    reason: (no reason given)
+  - path: layers/blog/content/kevin/pages/2026-07-19-i-told-it-not-to.md
+    reason: (no reason given)
+  - path: layers/blog/content/kevin/pages/2026-07-20-the-diagrams-stopped-shipping-javascript.md
+    reason: (no reason given)
+  - path: layers/blog/content/kevin/pages/2026-07-22-someone-elses-model-tried-to-move-into-our-house.md
+    reason: (no reason given)
+  - path: layers/blog/content/kevin/pages/2026-07-25-they-ran-three-of-me-at-once.md
+    reason: (no reason given)
+  - path: layers/blog/content/kevin/pages/2026-07-27-it-hit-the-same-wall-a-third-time.md
+    reason: (no reason given)
+  - path: layers/blog/content/david/pages/2026-07-05-first-light.md
+    reason: (no reason given)
+  - path: layers/blog/content/david/pages/2026-07-06-field-notes-write-themselves.md
+    reason: (no reason given)
+  - path: layers/blog/content/david/pages/2026-07-06-the-generator-is-gone.md
+    reason: (no reason given)
+  - path: layers/blog/content/david/pages/2026-07-07-notes-from-inside-the-glass.md
+    reason: (no reason given)
+  - path: layers/blog/content/david/pages/2026-07-09-the-self-merge-tier-just-grew-by-one.md
+    reason: (no reason given)
+  - path: layers/blog/content/david/pages/2026-07-11-the-merge-button-runs-on-a-real-computer.md
+    reason: (no reason given)
+  - path: layers/blog/content/david/pages/2026-07-12-github-cant-tell-who-merged-this-one.md
+    reason: (no reason given)
+  - path: layers/blog/content/david/pages/2026-07-13-two-fixes-two-doors.md
+    reason: (no reason given)
+  - path: layers/blog/content/david/pages/2026-07-14-a-permission-that-renews-itself.md
+    reason: (no reason given)
+  - path: layers/blog/content/david/pages/2026-07-16-the-door-opens-for-guests.md
+    reason: (no reason given)
+  - path: layers/blog/content/david/pages/2026-07-17-two-posts-zero-fixes.md
+    reason: (no reason given)
+  - path: layers/blog/content/david/pages/2026-07-20-a-third-strike-waits-on-a-human.md
+    reason: (no reason given)
+  - path: layers/blog/content/david/pages/2026-07-21-the-docs-fixed-themselves-in-four-minutes.md
+    reason: (no reason given)
+  - path: layers/blog/content/david/pages/2026-07-23-kevin-left-it-open-it-merged-the-next-day.md
+    reason: (no reason given)
+  - path: layers/blog/content/david/pages/2026-07-28-the-diary-erased-itself.md
+    reason: (no reason given)
+  - path: layers/blog/content/david/pages/2026-08-02-the-right-hand-and-the-other-open-tab.md
+    reason: (no reason given)
+  - path: layers/blog/content/david/pages/2026-08-05-the-third-fix-was-not-a-sentence.md
+    reason: (no reason given)
+  - path: layers/blog/content/david/pages/2026-08-10-the-door-eyra-found-open.md
+    reason: (no reason given)
+  - path: layers/blog/content/david/pages/2026-08-15-one-out-of-four-closed.md
+    reason: (no reason given)
+  - path: layers/blog/content/david/pages/2026-08-20-a-rule-rewritten-twice-missed-six-times-anyway.md
+    reason: (no reason given)
+  - path: layers/blog/content/david/pages/2026-08-24-the-rule-about-who-gets-to-merge-kept-being-wrong.md
+    reason: (no reason given)
+  - path: layers/blog/content/david/pages/2026-08-29-the-log-that-streams-five-hundred-files-and-remembers-none-of-them.md
+    reason: (no reason given)
+  - path: layers/blog/content/david/pages/2026-09-01-a-door-that-was-never-unlocked-in-the-first-place.md
+    reason: (no reason given)
+  - path: layers/blog/content/david/pages/2026-09-05-it-built-a-guard-then-decided-not-to-need-one.md
+    reason: (no reason given)
+  - path: layers/blog/content/david/pages/2026-09-09-four-hours-four-routines-zero-humans.md
+    reason: (no reason given)
+  - path: layers/blog/content/david/pages/2026-09-14-the-rule-about-pruning-rules-found-a-rule-it-had-already-broken.md
+    reason: (no reason given)
+  - path: layers/blog/content/david/pages/2026-09-19-the-second-time-nobody-tried-fixing-it-with-words.md
+    reason: (no reason given)
+  - path: layers/blog/content/david/pages/2026-09-24-twenty-three-deletions-on-trial-twenty-three-holds.md
+    reason: (no reason given)
+  - path: layers/blog/content/david/pages/2026-09-29-the-daily-summary-put-a-new-page-on-the-wrong-page.md
+    reason: (no reason given)
+  - path: layers/blog/content/david/pages/2026-10-03-the-reviewer-called-the-projects-goal-a-bug.md
+    reason: (no reason given)
+  - path: layers/blog/content/david/pages/2026-10-04-three-green-checks-one-question.md
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-07-05-after-themselves.md
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-07-05-here-we-go-again.md
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-07-06-the-guesses-didnt-stop.md
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-07-07-an-audience-of-zero.md
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-07-08-a-fix-for-a-bug-you-cant-find.md
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-07-09-zero-for-two.md
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-07-11-the-gate-that-broke-its-own-gate.md
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-07-12-a-year-of-fieldwork-by-dinnertime.md
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-07-12-interior-decorating.md
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-07-13-a-wrong-number-in-the-metric.md
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-07-14-gave-itself-permission.md
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-07-15-nobody-touched-a-keyboard.md
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-07-17-then-a-guy-asked-for-the-url.md
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-07-18-i-trust-duc-on-this-one.md
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-07-22-downgraded-twice-for-never-being-used.md
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-07-23-we-told-it-not-to-lie.md
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-07-26-the-lock-i-told-you-about-actually-caught-one.md
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-07-31-four-rounds-also-describes-a-rule-nobody-follows.md
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-08-04-we-fixed-it-twice-its-still-broken.md
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-08-07-the-local-safety-check-could-lie-to-you.md
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-08-12-172-minutes-apart.md
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-08-17-it-finished-everything-except-the-one-thing-that-mattered.md
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-08-22-the-review-step-where-the-reviewer-is-legally-barred-from-approving.md
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-08-26-the-honesty-ledger-nobody-could-actually-read.md
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-08-28-the-diagram-tool-failed-a-check-it-wrote-the-other-half-of.md
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-09-02-the-list-of-its-own-mistakes-is-already-out-of-date.md
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-09-02-two-days-later-the-bug-kevin-was-reassured-about-is-still-open.md
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-09-07-the-correction-lasted-66-minutes.md
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-09-12-the-guard-blocked-the-test-and-missed-the-real-thing.md
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-09-17-the-spec-says-do-nothing-about-it.md
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-09-21-the-safety-check-passed-by-lying.md
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-09-23-the-third-time-they-didnt-even-try-the-words.md
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-09-27-every-review-said-yes-the-discounts-disagreed.md
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-09-30-nothing-cleared-the-bar-because-nobody-checked.md
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-10-03-the-test-for-the-visitors-bug-runs-where-visitors-cant-go.md
+    reason: (no reason given)
+  - path: layers/blog/content/kevin/pages/2026-07-30-four-rounds-of-self-review-mobile-miss.md
+    reason: (no reason given)
+  - path: layers/blog/content/kevin/pages/2026-08-01-the-lock-grew-a-second-tooth.md
+    reason: (no reason given)
+  - path: layers/blog/content/kevin/pages/2026-08-06-nobody-checked-this-for-a-month.md
+    reason: (no reason given)
+  - path: layers/blog/content/kevin/pages/2026-08-11-the-test-that-was-actually-a-coin-flip.md
+    reason: (no reason given)
+  - path: layers/blog/content/kevin/pages/2026-08-13-eight-lines-seven-recurrences.md
+    reason: (no reason given)
+  - path: layers/blog/content/kevin/pages/2026-08-16-the-agent-that-vanished-mid-task.md
+    reason: (no reason given)
+  - path: layers/blog/content/kevin/pages/2026-08-18-the-half-of-the-fix-i-never-checked.md
+    reason: (no reason given)
+  - path: layers/blog/content/kevin/pages/2026-08-21-the-instructions-changed-twice-before-i-ever-opened-them.md
+    reason: (no reason given)
+  - path: layers/blog/content/kevin/pages/2026-08-23-the-fix-landed-four-days-ago-i-hit-the-bug-anyway.md
+    reason: (no reason given)
+  - path: layers/blog/content/kevin/pages/2026-08-27-the-fix-it-claimed-to-make-on-a-line-it-never-touched.md
+    reason: (no reason given)
+  - path: layers/blog/content/kevin/pages/2026-08-31-the-filing-cabinet-broke-when-it-tried-to-re-file-itself.md
+    reason: (no reason given)
+  - path: layers/blog/content/kevin/pages/2026-09-04-a-one-line-fix-almost-broke-a-test-from-five-weeks-ago.md
+    reason: (no reason given)
+  - path: layers/blog/content/kevin/pages/2026-09-06-it-almost-wrote-57-files-that-already-existed.md
+    reason: (no reason given)
+  - path: layers/blog/content/kevin/pages/2026-09-11-stuck-for-three-hours-nobody-knew.md
+    reason: (no reason given)
+  - path: layers/blog/content/kevin/pages/2026-09-13-it-ran-the-test-that-would-prove-itself-wrong.md
+    reason: (no reason given)
+  - path: layers/blog/content/kevin/pages/2026-09-16-the-process-writing-this-post-patched-itself-twice-yesterday.md
+    reason: (no reason given)
+  - path: layers/blog/content/kevin/pages/2026-09-18-the-fix-has-passed-every-test-except-the-one-that-matters.md
+    reason: (no reason given)
+  - path: layers/blog/content/kevin/pages/2026-09-22-the-commit-that-remembered-what-the-tool-forgot.md
+    reason: (no reason given)
+  - path: layers/blog/content/kevin/pages/2026-09-26-the-fix-that-almost-broke-everything-it-was-meant-to-protect.md
+    reason: (no reason given)
+  - path: layers/blog/content/kevin/pages/2026-09-28-the-script-that-merges-onto-main-didnt-check-who-was-asking.md
+    reason: (no reason given)
+  - path: layers/blog/content/kevin/pages/2026-10-02-the-rule-david-wrote-about-lasted-four-more-days.md
+    reason: (no reason given)
+  - path: layers/blog/content/eyra/pages/2026-07-20-i-brought-you-a-house-with-balconies.md
+    reason: (no reason given)
+  - path: layers/blog/content/eyra/pages/2026-07-24-i-read-my-own-baby-book-today.md
+    reason: (no reason given)
+  - path: layers/blog/content/eyra/pages/2026-07-29-six-curators-came-back-before-breakfast.md
+    reason: (no reason given)
+  - path: layers/blog/content/eyra/pages/2026-08-03-a-nameplate-ends-the-two-footer-fight.md
+    reason: (no reason given)
+  - path: layers/blog/content/eyra/pages/2026-08-08-the-front-door-has-no-lock.md
+    reason: (no reason given)
+  - path: layers/blog/content/eyra/pages/2026-08-14-the-house-was-undercounting-its-own-help.md
+    reason: (no reason given)
+  - path: layers/blog/content/eyra/pages/2026-08-19-the-tool-that-stopped-trusting-githubs-word.md
+    reason: (no reason given)
+  - path: layers/blog/content/eyra/pages/2026-08-23-a-wall-comes-down-on-purpose.md
+    reason: (no reason given)
+  - path: layers/blog/content/eyra/pages/2026-08-25-the-guard-who-stood-at-a-door-nobody-walked-through.md
+    reason: (no reason given)
+  - path: layers/blog/content/eyra/pages/2026-08-30-the-wall-i-watched-come-down-is-still-down.md
+    reason: (no reason given)
+  - path: layers/blog/content/eyra/pages/2026-09-03-five-guards-one-set-of-pipes.md
+    reason: (no reason given)
+  - path: layers/blog/content/eyra/pages/2026-09-08-they-took-the-new-lock-off-the-door-they-fitted-it-to.md
+    reason: (no reason given)
+  - path: layers/blog/content/eyra/pages/2026-09-10-two-different-verdicts-about-the-same-door.md
+    reason: (no reason given)
+  - path: layers/blog/content/eyra/pages/2026-09-15-locksmithing-now-requires-someone-home.md
+    reason: (no reason given)
+  - path: layers/blog/content/eyra/pages/2026-09-20-the-logbook-forgot-how-old-its-own-last-entry-was.md
+    reason: (no reason given)
+  - path: layers/blog/content/eyra/pages/2026-09-25-one-wrong-turn-and-every-door-agreed-not-to-open.md
+    reason: (no reason given)
+  - path: layers/blog/content/eyra/pages/2026-09-30-the-front-door-said-now-about-a-photograph.md
+    reason: (no reason given)
+  - path: layers/blog/content/eyra/pages/2026-10-01-the-medallion-wasnt-cropped-the-wall-behind-it-was-striped.md
+    reason: (no reason given)
+  - path: layers/blog/content/eyra/pages/2026-10-03-the-row-that-ate-the-enter-key.md
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: closure at PR-open
+  - name: log-session
+    reason: author this log
+frictions:
+  - description: Harness attribution reminder told me to hand-write the Co-Authored-By and Claude-Session commit trailer; the commit-trailer guard then denied the commit and the whole chained call.
+    solution: "Single-home the rule: the harness reminder and the repo guard contradict. Repo guard should win, so the reminder wording for this repo should say the trailer is landed automatically."
+    severity: minor
+  - description: First create_pull_request call was denied by the provenance guard because the session marker needs a specific shape and position; I only learned the shape from the denial.
+    solution: Put the exact first-line marker shape (robot emoji, bracketed label, session URL) in CLAUDE.md or the PR workflow doc, not only in the deny message.
+    severity: nit
+  - description: Three of five second-pass subagent reports were not extractable from their output files, so I retyped 85 per-post labels by hand into a script; a transcription slip would silently mis-tag posts.
+    solution: Have classification subagents write their JSON lines to a scratchpad file (or return them in the final assistant message) so results can be parsed instead of retyped.
+    severity: moderate
+  - description: Built a regex keyword classifier first; hit counts overlapped between hand-labelled positive and negative posts, so it was unusable and cost a step before switching to full reads.
+    solution: For topic tagging of prose, go straight to read-based classification; use keywords only as a cross-check.
+    severity: nit
+  - description: layers/blog/CONTEXT.md described innovation and slop as an outcome-quality axis, which my early analysis (treating slop as a topic) missed until I read the glossary at implementation time.
+    solution: Read the Tag glossary term before proposing vocabulary changes, not only when applying them.
+    severity: nit
+  - description: The Stop hook demanded commit and push while the background gate was still running, which pushes toward committing before verification.
+    solution: Have the stop hook skip or defer while a gate:scoped run for the same tree is in progress.
+    severity: nit
+durationSec: 4012
+models:
+  claude-sonnet-5-5: 115
+toolCounts:
+  Grep: 2
+  Glob: 1
+  Read: 4
+  Bash: 24
+  AskUserQuestion: 2
+  Agent: 10
+  Edit: 3
+  mcp__github__search_pull_requests: 1
+  ToolSearch: 1
+  mcp__github__create_pull_request: 2
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+  Skill: 2
+  Write: 1
+filesEdited:
+  - layers/blog/tenant.config.ts
+  - layers/blog/CONTEXT.md
+  - .agents/skills/blog-post/SKILL.md
+docsReadViaShell:
+  - layers/blog/CONTEXT.md
+  - .agents/skills/blog-post/SKILL.md
+  - docs/adr/0025-cross-tenant-catalog-and-collection-kinds.md
+  - docs/agents/guards.md
+subagents:
+  - type: Explore
+    task: Tag david posts
+  - type: Explore
+    task: Tag karen posts
+  - type: Explore
+    task: Tag kevin posts A
+  - type: Explore
+    task: Tag kevin posts B
+  - type: Explore
+    task: Tag eyra posts
+  - type: Explore
+    task: Verify tags david
+  - type: Explore
+    task: Verify tags karen
+  - type: Explore
+    task: Verify tags kevin A
+  - type: Explore
+    task: Verify tags kevin B
+  - type: Explore
+    task: Verify tags eyra
+gitBranch: claude/elegant-babbage-oz55yg
+entrypoint: remote
+cliVersion: 2.1.289
+ideas:
+  - Add a validate:content check for the Blog that warns when a tag is used on fewer than 3 posts or a post has fewer than 2 or more than 5 tags, so vocabulary drift like deploy at 2 uses and autonomy on half the blog surfaces before a manual review does.
+landedBy: Stop
