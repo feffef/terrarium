@@ -102,7 +102,9 @@ The subagent cannot see this session's context, so the brief is self-contained:
 - **Bank progress before continuing.** A long-running subagent persists each
   iteration's artifacts to disk before starting the next step. A transient API
   failure mid-run kills it with no warning, taking everything unbanked — not just
-  the in-flight step.
+  the in-flight step. The harness refuses a subagent's Write of report/findings
+  files, so bank to per-step logs or artifacts it may write, and have it return
+  structured results in its final message for you to save.
 - **Pin an explicit SHA when subagents share one checkout** (concurrent dispatch
   *without* `isolation: 'worktree'`) — never have them independently resolve
   `FETCH_HEAD`/`HEAD`. A sibling's fetch moves the shared ref out from under
