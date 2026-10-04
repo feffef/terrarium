@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01GxJXNFxh3SQh8q1nkReAxJ
 startedAt: 2026-10-04T14:20:59Z
-endedAt: 2026-10-04T15:27:52Z
+endedAt: 2026-10-04T15:31:37Z
 kind: interactive
 goal: Review the Blog's tag vocabulary after a few months of posts, then rework it and re-tag the posts
-status: in-review
-outcome: Tag vocabulary reworked, all 126 posts re-tagged, definitions added beside the enum; PR open, gate green locally
-summary: 'Human-instructed throughout: the user asked for a review of the blog tagging system (which tags to add or remove, near-duplicates, sample about 10% of posts for new-tag candidates). They answered up-front questions (report only, stratified sample, weigh browsing and cross-Persona comparison equally), then asked me to sample more, then to verify the weaker calls, then said "Apply tags on this session" and to define the meanings where the blog-post Skill reads them. Analysis went in layers: tag counts and co-occurrence from frontmatter, a 13-post and then a 24-post hand-read sample, a keyword classifier that proved unreliable, then two full-corpus read passes by read-only subagents (all 126 posts each) against explicit tag definitions. Findings: autonomy, governance and self-review sat on about half the blog each and were often weak fits; rulebook, self-improvement, guards, scheduled-runs and merge-flow were large uncovered topics; deploy, innovation and self-merge were thin or weak. Agent-initiated choices (not asked for): including public-repo (9 posts, marked optional in my report), excluding subagents and design, the re-tag algorithm (drop weak fits, add new matches, cap 5, min 2, fold self-merge into merge-flow and deploy into safety-gate), one hand override (the prune-trial post is not merge-flow), putting the definitions as comments beside the blogTags enum (the file the Skill already reads) and a short pointer in the blog-post Skill, and opening the PR automatically per ADR-0003. The labels are subagent judgement, not ground truth; some posts will want hand tweaks.'
+status: completed
+outcome: Tag vocabulary reworked, all 126 posts re-tagged, definitions added beside the enum; PR 1597 merged after green gate
+summary: 'Human-instructed throughout: the user asked for a review of the blog tagging system (which tags to add or remove, near-duplicates, sample about 10% of posts for new-tag candidates). They answered up-front questions (report only, stratified sample, weigh browsing and cross-Persona comparison equally), then asked me to sample more, then to verify the weaker calls, then said "Apply tags on this session" and to define the meanings where the blog-post Skill reads them. Analysis went in layers: tag counts and co-occurrence from frontmatter, a 13-post and then a 24-post hand-read sample, a keyword classifier that proved unreliable, then two full-corpus read passes by read-only subagents (all 126 posts each) against explicit tag definitions. Findings: autonomy, governance and self-review sat on about half the blog each and were often weak fits; rulebook, self-improvement, guards, scheduled-runs and merge-flow were large uncovered topics; deploy, innovation and self-merge were thin or weak. Agent-initiated choices (not asked for): including public-repo (9 posts, marked optional in my report), excluding subagents and design, the re-tag algorithm (drop weak fits, add new matches, cap 5, min 2, fold self-merge into merge-flow and deploy into safety-gate), one hand override (the prune-trial post is not merge-flow), putting the definitions as comments beside the blogTags enum (the file the Skill already reads) and a short pointer in the blog-post Skill, and opening the PR automatically per ADR-0003. The PR merged shortly after the gate went green. The labels are subagent judgement, not ground truth; some posts will want hand tweaks.'
 prs:
   - "1597"
 docsRead:
@@ -294,23 +294,25 @@ frictions:
   - description: The Stop hook demanded commit and push while the background gate was still running, which pushes toward committing before verification.
     solution: Have the stop hook skip or defer while a gate:scoped run for the same tree is in progress.
     severity: nit
-durationSec: 4012
+durationSec: 4237
 models:
-  claude-sonnet-5-5: 115
+  claude-sonnet-5-5: 129
 toolCounts:
   Grep: 2
   Glob: 1
   Read: 4
-  Bash: 24
+  Bash: 25
   AskUserQuestion: 2
   Agent: 10
   Edit: 3
   mcp__github__search_pull_requests: 1
-  ToolSearch: 1
+  ToolSearch: 2
   mcp__github__create_pull_request: 2
   mcp__claude-code-remote__subscribe_pr_activity: 1
   Skill: 2
   Write: 1
+  ReadNotifications: 3
+  mcp__github__pull_request_read: 2
 filesEdited:
   - layers/blog/tenant.config.ts
   - layers/blog/CONTEXT.md
