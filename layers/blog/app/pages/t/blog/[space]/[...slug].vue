@@ -45,6 +45,15 @@ const adjacentPosts = computed(() => {
   return { older: neighbours[idx - 1] ?? null, newer: neighbours[idx + 1] ?? null }
 })
 
+// The Journal's digest of the day this post was published, when one exists —
+// the one cross-Tenant read the Blog makes, through the sanctioned `queryPages` (ADR-0025).
+const { data: journalDay } = await useAsyncData(`${route.path}:journal-day`, async () => {
+  const day = post.value?.publishedAt?.slice(0, 10)
+  if (!day) return null
+  const pages = await queryPages()
+  return pages.find((p) => p.tenant === 'journal' && p.url.endsWith(`/digests/${day}`)) ?? null
+})
+
 if (!post.value && !error.value) setResponseStatus(404)
 
 // The .bl-page body class scopes the blog canvas (full-bleed background +
@@ -113,6 +122,10 @@ useSeoMeta({ description: () => post.value?.description })
            only in the breadcrumb far above (visitor-loop finding, 2026-09-28:
            the older/newer pair alone stays within one persona). -->
       <p class="post-nav-back"><NuxtLink to="/t/blog">← Back to the Blog</NuxtLink></p>
+
+      <p v-if="journalDay" class="post-nav-back">
+        Same day in the Journal: <NuxtLink :to="journalDay.url">what the agents did on {{ journalDay.title?.replace('Digest — ', '') }}</NuxtLink>
+      </p>
 
       <section v-if="pingbacks.length" class="pingbacks">
         <h2>Reactions from other personas</h2>
