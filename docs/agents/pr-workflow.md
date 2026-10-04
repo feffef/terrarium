@@ -46,47 +46,23 @@ re-review each story or repeat its findings.
    moved since it was opened, re-read those cited docs before judging a
    rebase unnecessary; new commits on `main` can invalidate the cited
    reasoning without ever touching a file the PR itself changed (issue #889).
-   **`scripts/merge-pr.ts <pr-number>` automates exactly this poll-then-merge
-   step** (issue #667) — it polls the PR's check runs on a short interval
-   until they resolve (green/red/timeout) and, on green, merges directly via
-   `gh api`/REST, skipping `enable_pr_auto_merge` entirely rather than hitting
-   its misleading-error round-trip and manually re-checking. Reach for it
-   instead of hand-rolling steps 3 and 5 yourself.
+   `scripts/merge-pr.ts <pr-number>` does this poll and, on green, the merge
+   (issue #667); use it instead of hand-rolling steps 3 and 5.
 
    When babysitting a PR across a wait expected to span many hours, schedule
    `mcp__Claude_Code_Remote__send_later` check-ins at roughly **2h, then 6h,
    then every ~12h** (issue #929).
-4. **Post the verdict as a PR review or comment before merging — every time,
-   even on a clean "merging as-is" verdict.** The merge must never be the
-   only trace: otherwise `get_reviews`/`get_comments` return empty and a real
-   review reads as none having happened.
-
-   **Never post it as an APPROVE-event review** — use `event=COMMENT`, or
-   `add_issue_comment`. On a PR this toolchain opened it simply fails: under
-   the shared GitHub connection the agent's identity *is* the repo owner, and
-   GitHub blocks a PR author from approving their own pull request. On an
-   external fork PR it would succeed, which is worse — a green "Approved" from
-   the owner account fakes a merge-authority signal that
-   [`guest-contributions.md`](./guest-contributions.md) reserves for the human.
-   A COMMENT-event review records the same verdict in both cases (issue #301,
-   recurred as #853).
-5. **Before calling `merge-pr.ts`: step 4's verdict comment must already be
-   posted** — `merge-pr.ts` refuses to merge without it (issue #1276).
-
-   `scripts/merge-pr.ts <pr-number>` is the **sole merge path** for every PR this
-   toolchain lands (it refuses fork and Public-authored PRs; a human merges
-   those, ADR-0020) — pending-check or already-green alike — per step 3; it already polls to
-   resolution and merges on green. **Never call `enable_pr_auto_merge`
-   directly in this repo.** That tool is documented as being for arming ahead
-   of a still-pending check, but in practice calling it — on a pending *or*
-   already-green PR — can throw a misleading error (e.g. "protected branch
-   rules not configured" or "checks are failing" firing while a check is
-   merely `in_progress`), forcing a manual `pull_request_read` round-trip to
-   confirm the real check state. `merge-pr.ts` exists precisely to skip that
-   round-trip; keep this rationale as context for *why* it exists, not as
-   licence to try `enable_pr_auto_merge` first. If `merge-pr.ts` is ever
-   unavailable, fall back to hand-polling `get_check_runs` and calling
-   `merge_pull_request` directly on green, still never `enable_pr_auto_merge`.
+4. **Post your verdict as a PR review or comment before merging — every time,
+   even a clean "merging as-is"** — the merge must never be the only trace.
+   Never as an APPROVE-event review: use `event=COMMENT` or `add_issue_comment`.
+   The agent's identity is the repo owner, so APPROVE fails on our own PRs and,
+   on a fork PR, would fake the human merge authority
+   [`guest-contributions.md`](./guest-contributions.md) reserves (#301, #853).
+5. **Land through `scripts/merge-pr.ts <pr-number>`** — the sole merge path. It
+   refuses without step 4's verdict (#1276) and refuses fork and Public-authored
+   PRs, which a human merges (ADR-0020). Never call `enable_pr_auto_merge`: it
+   throws misleading errors on pending or green PRs (#385). If the script is
+   unavailable, hand-poll `get_check_runs` and call `merge_pull_request` on green.
 6. Escalate a genuinely high-risk or out-of-scope PR to a human instead of
    merging it — see CLAUDE.md's Ground rules (human-only set; ADR-0004) for
    what counts.
