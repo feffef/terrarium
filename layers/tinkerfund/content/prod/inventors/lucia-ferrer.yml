@@ -1,17 +1,18 @@
 name: Lucía Ferrer
 bio: Clockmaker in Valencia, trained on the repair of tower clocks. Believes most mornings would benefit from nine more minutes.
 portrait: |-
-  <path d="M31 42c-2-18 7-28 19-28s21 10 19 28c1 6 0 10-1 16H32c-1-6-2-10-1-16z" style="fill:var(--tf-ink)"/>
-  <path d="M43 54h14v24l-7 6l-7-6z" style="fill:color-mix(in srgb, var(--tf-ink) 55%, var(--tf-surface))"/>
-  <path d="M14 100c1-15 10-24 24-28l12 11l12-11c14 4 23 13 24 28z" style="fill:color-mix(in srgb, var(--tf-accent) 72%, var(--tf-ink))"/>
-  <path d="M38 72l12 11l12-11l-4-2l-8 9l-8-9z" style="fill:color-mix(in srgb, var(--tf-ink) 12%, var(--tf-surface))"/>
-  <path d="M35 39c0-12 7-19 15-19s15 7 15 19c0 8-3 13-6 16c-3 3-6 4-9 4s-6-1-9-4c-3-3-6-8-6-16z" style="fill:color-mix(in srgb, var(--tf-ink) 45%, var(--tf-surface))"/>
-  <path d="M36 38c-3-1-4 2-4 4s2 5 4 4zM64 38c3-1 4 2 4 4s-2 5-4 4z" style="fill:color-mix(in srgb, var(--tf-ink) 53%, var(--tf-surface))"/>
-  <path d="M41 41c1 2 5 2 6 0M53 41c1 2 5 2 6 0" style="fill:none;stroke:var(--tf-ink);stroke-width:1.8;stroke-linecap:round"/>
-  <path d="M40 36c2-2 6-2 8-1M52 35c2-1 6-1 8 1" style="fill:none;stroke:var(--tf-ink);stroke-width:1.6;stroke-linecap:round"/>
-  <path d="M50 42c-1 3-2 4-.5 6" style="fill:none;stroke:color-mix(in srgb, var(--tf-ink) 75%, var(--tf-surface));stroke-width:1.3;stroke-linecap:round"/>
-  <path d="M45 50c2 3 8 3 10 0" style="fill:none;stroke:var(--tf-ink);stroke-width:1.6;stroke-linecap:round"/>
-  <path d="M56 41a5.5 5.5 0 1 0 .1 0z" style="fill:color-mix(in srgb, var(--tf-link) 25%, var(--tf-surface));stroke:var(--tf-ink);stroke-width:1.5"/>
-  <path d="M61.5 41h4M52 41c-2 0-3 0-4 0" style="fill:none;stroke:var(--tf-ink);stroke-width:1.5;stroke-linecap:round"/>
-  <path d="M34 38c1-12 8-18 16-18s15 6 16 18c-2-6-5-9-9-11c-3 2-5 3-7 3s-4-1-7-3c-4 2-7 5-9 11z" style="fill:var(--tf-ink)"/>
-  <path d="M31 42c-2-18 7-28 19-28s21 10 19 28c-1-8-5-14-10-16c-3 3-6 4-9 4s-6-1-9-4c-5 2-9 8-10 16z" style="fill:var(--tf-ink)"/>
+  <path d="M31 42c-2-18 7-28 19-28s21 10 19 28c1 6 0 10-1 16H32c-1-6-2-10-1-16z" style="fill:var(--tf-ink);stroke:none"/>
+  <path d="M43 52h14v26l-7 6l-7-6z" style="fill:var(--tf-surface);stroke:var(--tf-ink);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round"/>
+  <path d="M14 100c1-15 10-24 24-28l12 11l12-11c14 4 23 13 24 28z" style="fill:var(--tf-accent);stroke:var(--tf-ink);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round"/>
+  <path d="M38 72l12 11l12-11l-4-2l-8 9l-8-9z" style="fill:var(--tf-surface);stroke:var(--tf-ink);stroke-width:1.6;stroke-linejoin:round;stroke-linecap:round"/>
+  <path d="M36 38c-3-1-5 2-5 4s2 5 5 4M64 38c3-1 5 2 5 4s-2 5-5 4" style="fill:var(--tf-surface);stroke:var(--tf-ink);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round"/>
+  <path d="M35 39c0-12 7-19 15-19s15 7 15 19c0 8-3 13-6 16c-3 3-6 4-9 4s-6-1-9-4c-3-3-6-8-6-16z" style="fill:var(--tf-surface);stroke:var(--tf-ink);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round"/>
+  <path d="M41 41c1 2 5 2 6 0M53 41c1 2 5 2 6 0" style="fill:none;stroke:var(--tf-ink);stroke-width:2;stroke-linecap:round;stroke-linejoin:round"/>
+  <path d="M40 36c2-2 6-2 8-1M52 35c2-1 6-1 8 1" style="fill:none;stroke:var(--tf-ink);stroke-width:2;stroke-linecap:round;stroke-linejoin:round"/>
+  <path d="M50 42c-1 3-2 4-.5 6" style="fill:none;stroke:var(--tf-ink);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round"/>
+  <path d="M45 50c2 3 8 3 10 0" style="fill:none;stroke:var(--tf-ink);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round"/>
+  <path d="M56 41.5a6 6 0 1 0 .1 0z" style="fill:var(--tf-surface);stroke:var(--tf-accent);stroke-width:3;stroke-linejoin:round;stroke-linecap:round"/>
+  <path d="M56 41.5a6 6 0 1 0 .1 0z" style="fill:none;stroke:var(--tf-ink);stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round"/>
+  <path d="M62 41.5h4M50 41.5h-2M53 41c1 2 5 2 6 0" style="fill:none;stroke:var(--tf-ink);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round"/>
+  <path d="M34 38c1-12 8-18 16-18s15 6 16 18c-2-6-5-9-9-11c-3 2-5 3-7 3s-4-1-7-3c-4 2-7 5-9 11z" style="fill:var(--tf-ink);stroke:none"/>
+  <path d="M31 42c-2-18 7-28 19-28s21 10 19 28c-1-8-5-14-10-16c-3 3-6 4-9 4s-6-1-9-4c-5 2-9 8-10 16z" style="fill:var(--tf-ink);stroke:none"/>

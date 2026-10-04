@@ -1,18 +1,18 @@
 name: Noor Haddad
 bio: Firmware engineer in Rotterdam. Spent four years reducing a full-size keyboard to the one key she actually used, and has not looked back.
 portrait: |-
-  <path d="M43 54h14v24l-7 6l-7-6z" style="fill:color-mix(in srgb, var(--tf-ink) 75%, var(--tf-surface))"/>
-  <path d="M14 100c1-15 10-24 24-28l12 11l12-11c14 4 23 13 24 28z" style="fill:var(--tf-link)"/>
-  <path d="M32 76c4-5 9-8 18-8s14 3 18 8l-6 2c-3-3-7-5-12-5s-9 2-12 5z" style="fill:color-mix(in srgb, var(--tf-link) 70%, var(--tf-ink))"/>
-  <path d="M43 13c0-7 14-7 14 0c0 4-3 7-7 7s-7-3-7-7z" style="fill:var(--tf-ink)"/>
-  <path d="M34 40c-3-17 6-25 16-25s19 8 16 25c-2-7-7-11-16-11s-14 4-16 11z" style="fill:var(--tf-ink)"/>
-  <path d="M35 39c0-12 7-19 15-19s15 7 15 19c0 8-3 13-6 16c-3 3-6 4-9 4s-6-1-9-4c-3-3-6-8-6-16z" style="fill:color-mix(in srgb, var(--tf-ink) 65%, var(--tf-surface))"/>
-  <path d="M36 38c-3-1-4 2-4 4s2 5 4 4zM64 38c3-1 4 2 4 4s-2 5-4 4z" style="fill:color-mix(in srgb, var(--tf-ink) 73%, var(--tf-surface))"/>
-  <path d="M44 41a2 2.3 0 1 0 .1 0zM56 41a2 2.3 0 1 0 .1 0z" style="fill:var(--tf-ink)"/>
-  <path d="M50 42c-1 3-2 4-.5 6" style="fill:none;stroke:color-mix(in srgb, var(--tf-ink) 95%, var(--tf-surface));stroke-width:1.3;stroke-linecap:round"/>
-  <path d="M40 35c2-3 6-3 8-1M52 37c2-1 6-1 8 0" style="fill:none;stroke:var(--tf-ink);stroke-width:1.6;stroke-linecap:round"/>
-  <path d="M45 50c3 3 8 2 10-1" style="fill:none;stroke:var(--tf-ink);stroke-width:1.6;stroke-linecap:round"/>
-  <path d="M34 46a2.5 2.5 0 1 0 .1 0zM66 46a2.5 2.5 0 1 0 .1 0z" style="fill:none;stroke:var(--tf-accent);stroke-width:1.5;stroke-linecap:round"/>
-  <path d="M35 38c0-11 7-17 15-17s15 6 15 17c-4-5-9-8-15-8s-11 3-15 8z" style="fill:var(--tf-ink)"/>
-  <path d="M63 85h8a1.5 1.5 0 0 1 1.5 1.5v6a1.5 1.5 0 0 1-1.5 1.5h-8a1.5 1.5 0 0 1-1.5-1.5v-6a1.5 1.5 0 0 1 1.5-1.5z" style="fill:var(--tf-surface);stroke:var(--tf-ink);stroke-width:1"/>
-  <path d="M66 89.5h2" style="fill:none;stroke:var(--tf-ink);stroke-width:1.3;stroke-linecap:round"/>
+  <path d="M43 52h14v26l-7 6l-7-6z" style="fill:var(--tf-surface);stroke:var(--tf-ink);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round"/>
+  <path d="M14 100c1-15 10-24 24-28l12 11l12-11c14 4 23 13 24 28z" style="fill:var(--tf-accent);stroke:var(--tf-ink);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round"/>
+  <path d="M32 76c4-5 9-8 18-8s14 3 18 8l-6 2c-3-3-7-5-12-5s-9 2-12 5z" style="fill:var(--tf-accent);stroke:var(--tf-ink);stroke-width:1.8;stroke-linejoin:round;stroke-linecap:round"/>
+  <path d="M43 13c0-7 14-7 14 0c0 4-3 7-7 7s-7-3-7-7z" style="fill:var(--tf-ink);stroke:none"/>
+  <path d="M34 40c-3-17 6-25 16-25s19 8 16 25c-2-7-7-11-16-11s-14 4-16 11z" style="fill:var(--tf-ink);stroke:none"/>
+  <path d="M36 38c-3-1-5 2-5 4s2 5 5 4M64 38c3-1 5 2 5 4s-2 5-5 4" style="fill:var(--tf-surface);stroke:var(--tf-ink);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round"/>
+  <path d="M35 39c0-12 7-19 15-19s15 7 15 19c0 8-3 13-6 16c-3 3-6 4-9 4s-6-1-9-4c-3-3-6-8-6-16z" style="fill:var(--tf-surface);stroke:var(--tf-ink);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round"/>
+  <path d="M44 41a2 2.3 0 1 0 .1 0zM56 41a2 2.3 0 1 0 .1 0z" style="fill:var(--tf-ink);stroke:none"/>
+  <path d="M50 42c-1 3-2 4-.5 6" style="fill:none;stroke:var(--tf-ink);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round"/>
+  <path d="M40 35c2-3 6-3 8-1M52 37c2-1 6-1 8 0" style="fill:none;stroke:var(--tf-ink);stroke-width:2;stroke-linecap:round;stroke-linejoin:round"/>
+  <path d="M45 50c3 3 8 2 10-1" style="fill:none;stroke:var(--tf-ink);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round"/>
+  <path d="M34 47a3 3 0 1 0 .1 0zM66 47a3 3 0 1 0 .1 0z" style="fill:none;stroke:var(--tf-accent);stroke-width:2;stroke-linecap:round;stroke-linejoin:round"/>
+  <path d="M35 38c0-11 7-17 15-17s15 6 15 17c-4-5-9-8-15-8s-11 3-15 8z" style="fill:var(--tf-ink);stroke:none"/>
+  <path d="M63 85h8a1.5 1.5 0 0 1 1.5 1.5v6a1.5 1.5 0 0 1-1.5 1.5h-8a1.5 1.5 0 0 1-1.5-1.5v-6a1.5 1.5 0 0 1 1.5-1.5z" style="fill:var(--tf-surface);stroke:var(--tf-ink);stroke-width:1.5;stroke-linejoin:round;stroke-linecap:round"/>
+  <path d="M66 89.5h2" style="fill:none;stroke:var(--tf-ink);stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round"/>

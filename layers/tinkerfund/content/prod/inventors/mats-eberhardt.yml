@@ -1,17 +1,18 @@
 name: Mats Eberhardt
 bio: Sensor engineer in Bergen, where it rains on about two hundred days a year. Built the first prototype to settle an argument about whether it was raining.
 portrait: |-
-  <path d="M43 54h14v24l-7 6l-7-6z" style="fill:color-mix(in srgb, var(--tf-ink) 38%, var(--tf-surface))"/>
-  <path d="M14 100c1-15 10-24 24-28l12 11l12-11c14 4 23 13 24 28z" style="fill:var(--tf-link)"/>
-  <path d="M14 100c1-15 10-24 24-28l12 11l12-11c14 4 23 13 24 28h-8c-2-10-8-17-16-21l-12 10l-12-10c-8 4-14 11-16 21z" style="fill:color-mix(in srgb, var(--tf-link) 75%, var(--tf-ink))"/>
-  <path d="M35 39c0-12 7-19 15-19s15 7 15 19c0 8-3 13-6 16c-3 3-6 4-9 4s-6-1-9-4c-3-3-6-8-6-16z" style="fill:color-mix(in srgb, var(--tf-ink) 28%, var(--tf-surface))"/>
-  <path d="M36 38c-3-1-4 2-4 4s2 5 4 4zM64 38c3-1 4 2 4 4s-2 5-4 4z" style="fill:color-mix(in srgb, var(--tf-ink) 36%, var(--tf-surface))"/>
-  <path d="M36 44c-1 11 5 20 14 21s15-10 14-21c-2 5-4 8-7 10c-4 3-10 3-14 0c-3-2-5-5-7-10z" style="fill:color-mix(in srgb, var(--tf-ink) 55%, var(--tf-accent))"/>
-  <path d="M44 50c3 5 9 5 12 0z" style="fill:var(--tf-surface);stroke:var(--tf-ink);stroke-width:1.3;stroke-linejoin:round"/>
-  <path d="M44 41a2 2.3 0 1 0 .1 0zM56 41a2 2.3 0 1 0 .1 0z" style="fill:var(--tf-ink)"/>
-  <path d="M50 42c-1 3-2 4-.5 6" style="fill:none;stroke:color-mix(in srgb, var(--tf-ink) 58%, var(--tf-surface));stroke-width:1.3;stroke-linecap:round"/>
-  <path d="M40 44h.1M43 46h.1M57 46h.1M60 44h.1" style="fill:none;stroke:color-mix(in srgb, var(--tf-ink) 55%, var(--tf-surface));stroke-width:1.6;stroke-linecap:round"/>
-  <path d="M40 36c2-2 6-2 8-1M52 35c2-1 6-1 8 1" style="fill:none;stroke:var(--tf-ink);stroke-width:1.6;stroke-linecap:round"/>
-  <path d="M29 29c4-12 11-18 21-18s17 6 21 18c3 2 4 5 3 8c-8-4-16-6-24-6s-16 2-24 6c-1-3 0-6 3-8z" style="fill:var(--tf-warn)"/>
-  <path d="M33 30c5-2 11-3 17-3s12 1 17 3" style="fill:none;stroke:color-mix(in srgb, var(--tf-warn) 60%, var(--tf-ink));stroke-width:1.5;stroke-linecap:round"/>
-  <path d="M22 12c-2 3-2 5 0 5s2-2 0-5zM78 18c-2 3-2 5 0 5s2-2 0-5zM16 32c-2 3-2 5 0 5s2-2 0-5z" style="fill:var(--tf-link)"/>
+  <path d="M43 52h14v26l-7 6l-7-6z" style="fill:var(--tf-surface);stroke:var(--tf-ink);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round"/>
+  <path d="M14 100c1-15 10-24 24-28l12 11l12-11c14 4 23 13 24 28z" style="fill:var(--tf-accent);stroke:var(--tf-ink);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round"/>
+  <path d="M38 72l12 11l12-11" style="fill:none;stroke:var(--tf-ink);stroke-width:2;stroke-linecap:round;stroke-linejoin:round"/>
+  <path d="M32 74c4-5 10-8 18-8s14 3 18 8" style="fill:none;stroke:var(--tf-ink);stroke-width:2;stroke-linecap:round;stroke-linejoin:round"/>
+  <path d="M36 38c-3-1-5 2-5 4s2 5 5 4M64 38c3-1 5 2 5 4s-2 5-5 4" style="fill:var(--tf-surface);stroke:var(--tf-ink);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round"/>
+  <path d="M35 39c0-12 7-19 15-19s15 7 15 19c0 8-3 13-6 16c-3 3-6 4-9 4s-6-1-9-4c-3-3-6-8-6-16z" style="fill:var(--tf-surface);stroke:var(--tf-ink);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round"/>
+  <path d="M36 44c-1 11 5 20 14 21s15-10 14-21c-2 5-4 8-7 10c-4 3-10 3-14 0c-3-2-5-5-7-10z" style="fill:var(--tf-ink);stroke:none"/>
+  <path d="M44 50c3 5 9 5 12 0z" style="fill:var(--tf-surface);stroke:var(--tf-ink);stroke-width:1.5;stroke-linejoin:round;stroke-linecap:round"/>
+  <path d="M44 41a2 2.3 0 1 0 .1 0zM56 41a2 2.3 0 1 0 .1 0z" style="fill:var(--tf-ink);stroke:none"/>
+  <path d="M50 42c-1 3-2 4-.5 6" style="fill:none;stroke:var(--tf-ink);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round"/>
+  <path d="M40 44h.1M43 46h.1M57 46h.1M60 44h.1" style="fill:none;stroke:var(--tf-ink);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round"/>
+  <path d="M40 36c2-2 6-2 8-1M52 35c2-1 6-1 8 1" style="fill:none;stroke:var(--tf-ink);stroke-width:2;stroke-linecap:round;stroke-linejoin:round"/>
+  <path d="M29 29c4-12 11-18 21-18s17 6 21 18c3 2 4 5 3 8c-8-4-16-6-24-6s-16 2-24 6c-1-3 0-6 3-8z" style="fill:var(--tf-accent);stroke:var(--tf-ink);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round"/>
+  <path d="M33 30c5-2 11-3 17-3s12 1 17 3" style="fill:none;stroke:var(--tf-ink);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round"/>
+  <path d="M21 11c-2 3-3 6 0 6s2-3 0-6zM79 17c-2 3-3 6 0 6s2-3 0-6zM15 31c-2 3-3 6 0 6s2-3 0-6z" style="fill:var(--tf-surface);stroke:var(--tf-ink);stroke-width:1.5;stroke-linejoin:round;stroke-linecap:round"/>
