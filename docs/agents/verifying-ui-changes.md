@@ -166,6 +166,8 @@ Each cost a session at least one extra fix-and-check round.
 - **GPU-only bugs:** a translucent full-page background can band on some phone
   GPUs, and headless Chromium can't reproduce driver bugs. Prefer opaque page
   backgrounds (#1506).
+- **Sticky/scroll-dependent layouts:** a static shot hid a broken one. Scroll,
+  then assert bounding boxes after `scrollTo`.
 
 ## See also
 

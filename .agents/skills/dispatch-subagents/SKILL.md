@@ -152,6 +152,11 @@ The subagent cannot see this session's context, so the brief is self-contained:
   skip that step entirely unless the brief itself names the ADR; one that didn't
   let an agent add a Platform catch-all route contradicting ADR-0016, caught only
   by a later standards review.
+- **Subagents cannot spawn subagents.** Route `/code-review` and any nested
+  dispatch back to the orchestrator; never report a self-review as `/code-review`.
+- **Cap concurrent full gates in one container at 2 (or serialize).** Five in
+  parallel exhausted memory: `test:e2e` died with a setup-hook timeout or worker
+  SIGKILL while every other step passed. Rerun it alone before diagnosing.
 
 Done when every applicable line above appears **in the brief text** — not merely
 true in your head.
