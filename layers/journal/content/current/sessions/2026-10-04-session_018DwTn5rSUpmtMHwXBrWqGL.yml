@@ -1,0 +1,72 @@
+schemaVersion: 1
+session: session_018DwTn5rSUpmtMHwXBrWqGL
+startedAt: 2026-10-04T21:03:56Z
+endedAt: 2026-10-04T21:15:58Z
+kind: interactive
+goal: Write one blog post in a Persona's voice from recent repo activity via the /blog-post Skill, and land it through a gated PR
+status: in-review
+outcome: "Kevin post The Last Hand-Edit (gate.yml thin shell applied) opened as PR #1604, gate green locally, awaiting CI before self-merge"
+summary: "Human-instructed: the user typed /blog-post with no Persona; every step after that was the Skill's own sequence, nothing was agent-initiated beyond it. The user's standing preference to ask clarifying questions first was not exercised, because the Skill's inputs were fully specified. Rotation gate allowed only Kevin (last david, starved kevin), so all three candidates were Kevin. Candidates: the audit-skills grader that blamed a visitor-loop run for ignoring a fix merged 29 minutes after the run began (#1591, #1515, #1479); the gate.yml thin shell finally applied (#1572, #1574, #445); the Midden trench trim measured in pixels (#1568, #1534). A blind Sonnet read picked the gate post for weight; its confusions (undefined Gate, CLAUDE.md, guard, composite action, wizard script, 666 deletions mostly proposals) were all closed in the revision. The independent fact-check returned no wrong claims, two soft ones (nearly three months, a PR-vs-session-log attribution), both fixed. After the check I noticed Kevin's 2026-09-18 post already covers the same fence and composite action (\"never once run\"), so I recast the post as its explicit sequel (58 days after the composite landed it ran) and re-derived the new day count myself instead of re-dispatching the fact-check. Gate:scoped ran the full gate green, post committed and pushed on the designated branch, PR #1604 opened, subscribed. Open: CI on the PR, then merge via scripts/merge-pr.ts, then step 12's reply decision."
+prs:
+  - "1604"
+docsRead:
+  - path: layers/blog/content/kevin/pages/2026-10-04-the-last-hand-edit.md
+    reason: (no reason given)
+skillsUsed:
+  - name: blog-post
+    reason: the whole run
+  - name: dispatch-subagents
+    reason: blind read and fact-check dispatched read-only
+  - name: close-session
+    reason: self-judged closure at PR-open
+  - name: log-session
+    reason: invoked by close-session
+frictions:
+  - description: Drafted a link with a made-up commit SHA in a candidate post; caught on my own re-read before anything shipped, but only because I re-read.
+    solution: Never type a SHA; always paste from git rev-parse output. blog-post's citation reference could say so next to the 40-char rule.
+    severity: moderate
+  - description: Step 4's same-Persona overlap skim missed Kevin's 2026-09-18 post on the same gate fence; found only after the blind read and fact-check, forcing a rewrite and an unchecked-by-subagent edit.
+    solution: Grep the Persona's posts for the topic's key terms (file names, PR numbers) at step 4, not just skim titles; step 6 then checks a real overlap.
+    severity: minor
+  - description: The harness attribution reminder told me to hand-write commit trailers; the commit-trailer guard denied the whole chained git add and commit and I had to rerun.
+    solution: The harness template and the repo guard disagree; drop the trailer instruction from the reminder for this repo, or the guard should allow what the reminder emits.
+    severity: minor
+  - description: Agent call with run_in_background false was denied by the guard because the flag is a no-op; the blind-read dispatch cost a retry. The blog-post Skill says to wait, which invites that flag.
+    solution: Reword step 6 to say dispatch and wait for the completion notification; no flag.
+    severity: nit
+  - description: Stop hook asked twice to commit untracked files while the post was still awaiting fact-check and the gate, so committing then would have been premature.
+    solution: Let the stop-hook git check skip when a background command is still running, or accept it as noise.
+    severity: nit
+durationSec: 721
+models:
+  claude-sonnet-5-5: 104
+toolCounts:
+  Bash: 33
+  ToolSearch: 2
+  mcp__github__pull_request_read: 9
+  mcp__github__issue_read: 5
+  Agent: 3
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+  Skill: 2
+docsReadViaShell:
+  - .agents/skills/blog-post/personas/kevin.md
+  - docs/adr/0017-provenance-footer-on-agent-authored-content.md
+  - docs/agents/pr-workflow.md
+subagents:
+  - type: general-purpose
+    task: Blind read of three candidate posts
+    model: sonnet
+  - type: general-purpose
+    task: Blind read of three candidate posts
+    model: sonnet
+  - type: general-purpose
+    task: Fact-check Kevin gate post
+    model: sonnet
+gitBranch: ccr-bc70fdcf-kcp7aq
+entrypoint: remote_mobile
+cliVersion: 2.1.289
+learnings:
+  - "gate.yml is 85 lines before PR #1572 and 33 after; 578 of its 666 deleted lines are the four proposal files."
+landedBy: Stop
