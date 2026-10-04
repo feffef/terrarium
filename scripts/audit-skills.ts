@@ -77,6 +77,9 @@ export interface Session {
   file: string
   kind: string
   goal: string
+  /** Brackets the run against `SkillRow.changes`: a change landed after this
+   *  instant is one the run never saw. */
+  startedAt: string
   endedAt: string
   /** Skill names only, filtered to real Skills on disk (issue #545). */
   skillsUsed: string[]
@@ -95,6 +98,16 @@ export interface OnDiskSkill {
   description: string
   /** False when its frontmatter sets `disable-model-invocation: true`. */
   modelInvoked: boolean
+  /** `scripts/*.ts` paths its SKILL.md names — its resources, watched for
+   *  changes alongside its own folder. */
+  scripts: string[]
+}
+/** One first-parent `origin/main` commit and the paths it touched; `landedAt`
+ *  is its committer date in UTC — when runs started seeing the change. */
+export interface Landing {
+  sha: string
+  landedAt: string
+  paths: string[]
 }
 /** One `observations` entry (ADR-0015 amendment, 2026-07-13). */
 export interface Observation {
@@ -129,6 +142,13 @@ export interface SkillRow {
   /** Across every session log on record, current and archived. */
   allTimeUses: number
   lastUsed: string | null
+  /** What landed touching this Skill's folder or a script it names since the
+   *  earliest `usedIn` run started, newest first. Empty: every run is graded
+   *  against the files on disk. Otherwise a run whose `startedAt` precedes a
+   *  landing answers to the text before it (`git show <sha>^:<path>`) —
+   *  untested by it, not broken (#1479, #1515). The CLI warns on stderr for
+   *  each behaviour-checked Skill this is non-empty for. */
+  changes: Landing[]
 }
 
 /** issue #349's orphaned-session signal. */
@@ -255,6 +275,7 @@ export function buildSkillRows(
   windowSessions: readonly Session[],
   allSessions: readonly Session[],
   external: ReadonlySet<string>,
+  landings: readonly Landing[] = [],
 ): SkillRow[] {
   const windowed = tallyUsage(windowSessions)
   const mentioned = tallyUsage(windowSessions, 'mentioned')
@@ -282,7 +303,45 @@ export function buildSkillRows(
       humanInvokedIn: humanInvoked.get(name) ?? [],
       allTimeUses: allTime.get(name)?.length ?? 0,
       lastUsed: last.get(name) ?? null,
+      changes: pickSkillChanges(landings, name, onDisk.get(name)?.scripts ?? [], earliestStart(windowSessions, usedIn)),
     }
+  })
+}
+
+/** The `scripts/*.ts` paths a SKILL.md names, deduplicated, in order of first mention. */
+export function scriptsNamedIn(skillMd: string): string[] {
+  return [...new Set(skillMd.match(/\bscripts\/[\w.-]+\.ts\b/g) ?? [])]
+}
+
+/** Expects `readLandings`' `git log --name-only` format: a header line (`sha`
+ *  SEP `committer date`) then one path per line. Dates are normalised to UTC so
+ *  they compare against a log's `startedAt` as plain strings. */
+export function parseLandings(raw: string): Landing[] {
+  const out: Landing[] = []
+  for (const block of raw.split(REC).map((b) => b.trim()).filter(Boolean)) {
+    const [header, ...paths] = block.split('\n')
+    const [sha, date] = (header ?? '').split(SEP)
+    const epoch = Date.parse(date ?? '')
+    if (!sha || !Number.isFinite(epoch)) continue
+    out.push({ sha, landedAt: new Date(epoch).toISOString(), paths: paths.map((p) => p.trim()).filter(Boolean) })
+  }
+  return out
+}
+
+/** The earliest `startedAt` among `ids`' sessions, or `null` when none started. */
+export function earliestStart(sessions: readonly Session[], ids: readonly string[]): string | null {
+  const starts = sessions.filter((s) => ids.includes(s.session) && s.startedAt).map((s) => s.startedAt)
+  return starts.length ? starts.reduce((a, b) => (a < b ? a : b)) : null
+}
+
+/** The landings since `from` that touched `.agents/skills/<name>/` or one of
+ *  `scripts`, each narrowed to those paths; none when no run started. */
+export function pickSkillChanges(landings: readonly Landing[], name: string, scripts: readonly string[], from: string | null): Landing[] {
+  if (from === null) return []
+  const own = `${SKILLS_DIR}/${name}/`
+  return landings.flatMap((l) => {
+    const paths = l.paths.filter((p) => p.startsWith(own) || scripts.includes(p))
+    return paths.length && l.landedAt >= from ? [{ ...l, paths }] : []
   })
 }
 
@@ -327,6 +386,7 @@ export function toSession(raw: Record<string, unknown>, file: string, skillNames
     file,
     kind: String(raw.kind ?? ''),
     goal: String(raw.goal ?? ''),
+    startedAt: String(raw.startedAt ?? ''),
     endedAt: String(raw.endedAt ?? ''),
     skillsUsed: used.map((u: Record<string, unknown>) => String(u.name)),
     mentioned: [...skillNames].filter((n) => namesSkill(prose, n)),
@@ -662,6 +722,23 @@ export function readCommitFileChanges(cwd = root): CommitFileChange[] {
   return parseCommitFileChanges(raw)
 }
 
+/** Along `origin/main`'s first-parent line, so a change's date is when it
+ *  landed, not when its branch commit was authored. Scoped to `origin/main`, not
+ *  `--all`, per CLAUDE.md's git-log guidance. */
+export function readLandings(cwd = root, since: string): Landing[] {
+  let raw: string
+  try {
+    raw = execFileSync(
+      'git',
+      ['log', 'origin/main', '--first-parent', `--since=${since}`, '--name-only', `--pretty=format:${REC}%H${SEP}%cI`, '--', SKILLS_DIR, 'scripts'],
+      { cwd, encoding: 'utf8' },
+    )
+  } catch {
+    return []
+  }
+  return parseLandings(raw)
+}
+
 /** Parse a SKILL.md's YAML frontmatter (between the first two `---` fences). A
  *  single malformed frontmatter (e.g. an unquoted `key: value` colon inside a
  *  plain-scalar `description`) warns to stderr and degrades to `{}` rather than
@@ -698,10 +775,12 @@ function readSkillNames(cwd = root): Set<string> {
 function readOnDiskSkills(cwd: string, skillNames: ReadonlySet<string>): Map<string, OnDiskSkill> {
   const out = new Map<string, OnDiskSkill>()
   for (const name of skillNames) {
-    const fm = readFrontmatter(readFileSync(join(cwd, SKILLS_DIR, name, 'SKILL.md'), 'utf8'), name)
+    const text = readFileSync(join(cwd, SKILLS_DIR, name, 'SKILL.md'), 'utf8')
+    const fm = readFrontmatter(text, name)
     out.set(name, {
       description: String(fm.description ?? '').replace(/\s+/g, ' ').trim(),
       modelInvoked: fm['disable-model-invocation'] !== true,
+      scripts: scriptsNamedIn(text),
     })
   }
   return out
@@ -863,13 +942,13 @@ export function scorecard(windowDays = DEFAULT_WINDOW_DAYS, cwd = root, now = Da
   const all = readSessions(cwd, skillNames)
   const since = new Date(now - windowDays * 86_400_000).toISOString()
   const window = pickWindow(all, since)
-  const skills = buildSkillRows(readOnDiskSkills(cwd, skillNames), readInventory(cwd), window, all, readLock(cwd))
+  const skills = buildSkillRows(readOnDiskSkills(cwd, skillNames), readInventory(cwd), window, all, readLock(cwd), readLandings(cwd, since))
   const scan = readPullRequestSessionRefs(cwd)
   const orphans = findOrphanedSessions(scan.refs, readKnownSessionIds(cwd), readCommitFileChanges(cwd))
   return {
     windowDays,
     since,
-    window: window.map(({ session, file, kind, goal, endedAt, skillsUsed }) => ({ session, file, kind, goal, endedAt, skillsUsed })),
+    window: window.map(({ session, file, kind, goal, startedAt, endedAt, skillsUsed }) => ({ session, file, kind, goal, startedAt, endedAt, skillsUsed })),
     skills,
     behaviourChecks: pickBehaviourChecks(skills),
     orphanedSessions: orphans.orphaned,
@@ -893,7 +972,13 @@ function main(): void {
   const i = argv.indexOf('--days')
   const days = i >= 0 && argv[i + 1] ? Number(argv[i + 1]) : DEFAULT_WINDOW_DAYS
   if (!Number.isInteger(days) || days <= 0) fail('--days must be a positive integer')
-  process.stdout.write(JSON.stringify(scorecard(days), null, 2) + '\n')
+  const card = scorecard(days)
+  for (const row of card.skills) {
+    if (card.behaviourChecks.includes(row.name) && row.changes.length) {
+      console.error(`audit-skills: warning: ${row.name} changed while its runs were happening (${row.changes.length} landing(s), see its \`changes\`) — a run that started before one is graded against the earlier text`)
+    }
+  }
+  process.stdout.write(JSON.stringify(card, null, 2) + '\n')
 }
 
 // Only run when executed directly (not when imported by the unit test).

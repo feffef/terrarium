@@ -10,8 +10,8 @@ role: >-
   `code-review`, and self-merges them on a green
   gate within its ADR-0003 remit. It aims to remember the owner's review
   rulings via `decisions.md`, so a rejected idea stays rejected — but that
-  memory step has not run successfully even once in five tests across two
-  successive fixes (0/5; see observations).
+  memory step was skipped in every run under its first, prose-only fix, and
+  its stronger script-backed fix has not yet had a live run (see observations).
 observations:
   - date: 2026-09-27
     note: >-
@@ -121,22 +121,18 @@ observations:
       core delivery.
   - date: "2026-10-04"
     note: >-
-      Fifth chance, fifth failure (audit-skills behaviour check) — and the
-      first test of the stronger #1515 fix (PR #1570, `scripts/
-      owner-corrections.ts` + an explicit Done-when), which failed
-      immediately. session_014weUowmS8AnzoS1SBQswzm (2026-10-03, tinkerfund
-      focus, PRs #1571/#1573) ran with #1570's SKILL.md in hand (`e32aeade`
-      is an ancestor of #1571's base) and skipped the step outright: "I did
-      not gather owner corrections for decisions.md this run" — not even
-      logged as a friction this time, just a summary aside. The script was
-      never invoked (absent from toolCounts). decisions.md's git history is
-      still frozen at `e32aeade` (the #1570 backfill). Reopened #1515
-      (closed `completed` by #1570) and commented the new evidence, since a
-      fix that fails its first live test isn't resolved. Proposed next step:
-      move the check from prose to a mechanical gate (assert the script ran
-      before the fix PR can open), not a stronger Done-when sentence alone.
-      Rest of the pipeline independently re-confirmed clean across all 9
-      usedIn sessions (3-model dispatch, ≥2-visitor consensus, code-review
-      before merge). Grade/importance unchanged (still routine) — same
-      reasoning as prior rounds; this is a reliability finding confined to
-      one sub-step.
+      Fifth skip of the owner-memory step (audit-skills behaviour check):
+      session_014weUowmS8AnzoS1SBQswzm (2026-10-03, tinkerfund focus, PRs
+      #1571/#1573) wrote "I did not gather owner corrections for
+      decisions.md this run" as a summary aside, with no friction. The run
+      reopened #1515 calling this the first failed test of PR #1570's
+      script-plus-Done-when fix. Corrected the same day by
+      session_01HSTMSUy4WCqqRtVVakyZm3 (owner-directed): the run started
+      16:48Z and its branch forked from `4b594dbf`, which predates #1570's
+      merge (17:17Z) and holds the older SKILL.md without
+      `scripts/owner-corrections.ts` — so it was a fifth test of the #1452
+      prose, and #1570 is still untested live. The grading error (judging a
+      run against a Skill version that landed after it started, as in #1479)
+      is fixed in audit-skills by PR #1591. Rest of the pipeline re-confirmed
+      clean across all 9 usedIn sessions (3-model dispatch, ≥2-visitor
+      consensus, code-review before merge). Grade unchanged (routine).

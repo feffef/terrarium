@@ -15,21 +15,25 @@ import {
   isSessionLogPath,
   lastUsed,
   parseCommitFileChanges,
+  parseLandings,
   parseMergedPullRequests,
   parseSessionTrailers,
   pickBehaviourChecks,
+  pickSkillChanges,
   pickWindow,
   pullRequestSessionRef,
   REC,
   RESCUED_GAP_HOURS,
   RESOLVED_ORPHANED_SESSIONS,
   resolvedMisfilePath,
+  scriptsNamedIn,
   SEP,
   tallyUsage,
   toSession,
   walkPagesUntilShort,
   type CommitFileChange,
   type InventoryEntry,
+  type Landing,
   type OnDiskSkill,
   type RawPullRequestApiRecord,
   type Session,
@@ -43,6 +47,7 @@ function sess(over: Partial<Session> = {}): Session {
     file: 'f.yml',
     kind: 'interactive',
     goal: 'goal',
+    startedAt: '2026-07-05T09:00:00Z',
     endedAt: '2026-07-05T10:00:00Z',
     skillsUsed: [],
     mentioned: [],
@@ -98,8 +103,8 @@ describe('tallyUsage() / lastUsed()', () => {
 
 describe('buildSkillRows()', () => {
   const onDisk = new Map<string, OnDiskSkill>([
-    ['blog-post', { description: 'author a post', modelInvoked: false }],
-    ['ghost', { description: 'never inventoried', modelInvoked: true }],
+    ['blog-post', { description: 'author a post', modelInvoked: false, scripts: ['scripts/blog.ts'] }],
+    ['ghost', { description: 'never inventoried', modelInvoked: true, scripts: [] }],
   ])
   const inventory = new Map<string, InventoryEntry>([
     ['blog-post', { category: 'platform-operation', importance: 'routine', role: 'blogs', observations: [{ date: '2026-07-05', note: 'n' }] }],
@@ -137,6 +142,51 @@ describe('buildSkillRows()', () => {
   it('flags an inventoried Skill gone from disk', () => {
     expect(row('retired')).toMatchObject({ onDisk: false, inventoried: true, description: null })
   })
+
+  it('lists what landed on a Skill\'s folder or scripts since its earliest windowed run started', () => {
+    const landings: Landing[] = [
+      { sha: 'l3', landedAt: '2026-07-04T23:00:00.000Z', paths: ['scripts/blog.ts', 'scripts/other.ts'] },
+      { sha: 'l2', landedAt: '2026-07-04T12:00:00.000Z', paths: ['.agents/skills/blog-post/SKILL.md', 'CLAUDE.md'] },
+      { sha: 'l1', landedAt: '2026-07-03T12:00:00.000Z', paths: ['.agents/skills/blog-post/SKILL.md'] },
+    ]
+    const early = sess({ session: 'early', startedAt: '2026-07-04T00:00:00Z', endedAt: '2026-07-04T01:00:00Z', skillsUsed: ['blog-post'] })
+    const r = buildSkillRows(onDisk, inventory, [recent, early], [recent, early], new Set(), landings)
+    expect(r.find((x) => x.name === 'blog-post')?.changes).toEqual([
+      { sha: 'l3', landedAt: '2026-07-04T23:00:00.000Z', paths: ['scripts/blog.ts'] },
+      { sha: 'l2', landedAt: '2026-07-04T12:00:00.000Z', paths: ['.agents/skills/blog-post/SKILL.md'] },
+    ])
+    expect(r.find((x) => x.name === 'ghost')?.changes).toEqual([])
+  })
+})
+
+describe('scriptsNamedIn() / parseLandings() / pickSkillChanges() — a run answers to the Skill in effect when it started', () => {
+  it('finds the scripts a SKILL.md names, once each', () => {
+    const md = 'Run `pnpm exec tsx scripts/owner-corrections.ts` then `scripts/ideas.ts gather`; `scripts/owner-corrections.ts` again. Not scripts/notes.md.'
+    expect(scriptsNamedIn(md)).toEqual(['scripts/owner-corrections.ts', 'scripts/ideas.ts'])
+  })
+
+  // Mirrors `git log --first-parent --name-only --pretty=format:REC%H SEP %cI`.
+  const raw = [
+    `${REC}m2${SEP}2026-10-03T19:17:03+02:00\n.agents/skills/visitor-loop/SKILL.md\nscripts/owner-corrections.ts\n`,
+    `${REC}m1${SEP}2026-10-02T06:26:46+02:00\n.agents/skills/blog-post/SKILL.md`,
+    `${REC}bad${SEP}\n.agents/skills/blog-post/SKILL.md`,
+  ].join('\n')
+
+  it('parses each landing with its paths and a UTC date, skipping a dateless header', () => {
+    expect(parseLandings(raw)).toEqual([
+      { sha: 'm2', landedAt: '2026-10-03T17:17:03.000Z', paths: ['.agents/skills/visitor-loop/SKILL.md', 'scripts/owner-corrections.ts'] },
+      { sha: 'm1', landedAt: '2026-10-02T04:26:46.000Z', paths: ['.agents/skills/blog-post/SKILL.md'] },
+    ])
+  })
+
+  it('keeps only the landings, and paths, that belong to the Skill and postdate the first run', () => {
+    const landings = parseLandings(raw)
+    const from = '2026-10-01T00:00:00Z'
+    expect(pickSkillChanges(landings, 'visitor-loop', ['scripts/owner-corrections.ts'], from).map((l) => l.sha)).toEqual(['m2'])
+    expect(pickSkillChanges(landings, 'visitor-loop', [], from).map((l) => l.paths)).toEqual([['.agents/skills/visitor-loop/SKILL.md']])
+    expect(pickSkillChanges(landings, 'blog-post', [], '2026-10-03T00:00:00Z')).toEqual([])
+    expect(pickSkillChanges(landings, 'visitor-loop', [], null)).toEqual([])
+  })
 })
 
 describe('pickBehaviourChecks()', () => {
@@ -167,6 +217,7 @@ describe('toSession() — external exclusion (ADR-0009 amendment)', () => {
       session: 'session_internal',
       kind: 'interactive',
       goal: 'do a thing',
+      startedAt: '2026-07-19T23:00:00Z',
       endedAt: '2026-07-20T00:00:00Z',
       skillsUsed: [{ name: 'tdd', reason: 'red-green' }, { name: 'model', reason: 'not a Skill (issue #545)' }],
       frictions: [{ severity: 'minor', description: `nudged — ${HUMAN_PROMPTED_CLOSURE}` }],
@@ -177,6 +228,7 @@ describe('toSession() — external exclusion (ADR-0009 amendment)', () => {
       file: 'f.yml',
       kind: 'interactive',
       goal: 'do a thing',
+      startedAt: '2026-07-19T23:00:00Z',
       endedAt: '2026-07-20T00:00:00Z',
       skillsUsed: ['tdd'],
       mentioned: [],
