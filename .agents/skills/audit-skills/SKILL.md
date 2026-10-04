@@ -35,6 +35,15 @@ Done when you hold the scorecard.
 
 ## 2. Check behaviour — one subagent per Skill in `behaviourChecks`
 
+A run answers to the Skill as it was when the run started, and Skills rarely
+change, so one `git log` per Skill settles it:
+`git log --first-parent origin/main --since=<since> --format='%h %cI %s' --
+.agents/skills/<skill> <the scripts its SKILL.md names>`. Nothing landed:
+every run is graded against the files on disk. Something landed: the brief
+says when, and a run that started before that instant is graded against the
+earlier text (`git show <sha>^:<path>`) — a fix a run never saw is untested by
+it, not broken (#1479, #1515).
+
 Dispatch one read-only Sonnet subagent (`model: sonnet`) per Skill, all in
 parallel. Each brief names the Skill's `SKILL.md`, the log files of the
 sessions in its `usedIn` (newest 10), and its `observations`. For a
@@ -42,7 +51,8 @@ sessions in its `usedIn` (newest 10), and its `observations`. For a
 not use it, with its log `file`, `goal` and `skillsUsed`. The brief asks for
 this:
 
-> Work out from the `SKILL.md` what a run must deliver: its outcome and each
+> Work out from the `SKILL.md` in effect when each run started (the brief says
+> if and when it changed) what a run must deliver: its outcome and each
 > step's completion criterion. For each session, check against primary sources
 > whether it delivered. Start from the log's outcome, summary, `prs` and files
 > edited, then confirm on GitHub or in git that the PR, commit, issue or file
