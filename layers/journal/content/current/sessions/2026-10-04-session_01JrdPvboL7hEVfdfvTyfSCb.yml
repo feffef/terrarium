@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01JrdPvboL7hEVfdfvTyfSCb
 startedAt: 2026-10-04T04:01:42Z
-endedAt: 2026-10-04T04:19:18Z
+endedAt: 2026-10-04T04:24:04Z
 kind: autonomous
 goal: Run the scheduled audit-docs sweep over the repo's live docs
-status: in-review
-outcome: One gated PR (#1589) with fact-checked doc fixes opened; awaiting green CI to self-merge
-summary: "Scheduled /audit-docs run, no human prompt: all work agent-initiated under the Skill's charter. Four read-only reviewer agents (freshness, single-home, concision, coherence) plus one fact-checker; only CONFIRMED(-BUT) findings were applied. Freshness found nothing. Applied concision rewrites in git-conventions, environment-caveats, guards; stale playwright version; history.md Gate-fix tense; github-integration search/list tension; pr-workflow chartered-run scope; close-session action count; CLAUDE.md branch-protection clause and layout annotations. Deliberately left larger moves (moving screenshot how-to, Tenant roster consolidation, tests/README expect.poll) and anything in open Prune Trial territory. Gate green, PR 1589 opened and subscribed; merge via merge-pr.ts still pending."
+status: completed
+outcome: "PR #1589 with fact-checked doc fixes merged on green CI"
+summary: "Scheduled /audit-docs run, no human prompt: all work agent-initiated under the Skill's charter. Four read-only reviewer agents (freshness, single-home, concision, coherence) plus one fact-checker; only CONFIRMED(-BUT) findings were applied. Freshness found nothing. Applied concision rewrites in git-conventions, environment-caveats, guards; stale playwright version; history.md Gate-fix tense; github-integration search/list tension; pr-workflow chartered-run scope; close-session action count; CLAUDE.md branch-protection clause and layout annotations. Deliberately left larger moves (moving screenshot how-to, Tenant roster consolidation, tests/README expect.poll) and anything in open Prune Trial territory. Gate green, PR 1589 merged via merge-pr.ts on green CI."
 prs:
   - "1589"
 docsRead:
@@ -38,11 +38,11 @@ frictions:
   - description: Passed run_in_background false to Agent and a tail pipe to Bash; both guards denied and cost a retry each.
     solution: Skill/CLAUDE.md already say this; just omit the flag and redirect to a file.
     severity: nit
-durationSec: 1056
+durationSec: 1342
 models:
-  claude-sonnet-5-5: 80
+  claude-sonnet-5-5: 92
 toolCounts:
-  Bash: 11
+  Bash: 13
   Read: 6
   Agent: 6
   Edit: 22
@@ -51,6 +51,9 @@ toolCounts:
   mcp__github__subscribe_pr_activity: 1
   Skill: 2
   mcp__github__add_issue_comment: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 1
+  mcp__github__unsubscribe_pr_activity: 1
 filesEdited:
   - docs/agents/git-conventions.md
   - docs/agents/guards.md
