@@ -1,0 +1,70 @@
+schemaVersion: 1
+session: session_01WTye1srGoMxeqDp8bCMHT6
+startedAt: 2026-10-04T13:14:26Z
+endedAt: 2026-10-04T13:20:57Z
+kind: autonomous
+goal: "Run the scheduled prune-trial: judge open trials, prune one problem, probe on Sonnet, ship"
+status: in-review
+outcome: "Two trials judged and deleted; pr-workflow steps 3-5 pruned (-24 lines), PR #1596 open"
+summary: "Scheduled run, no human prompt; every step was agent-initiated per the Skill. Judged the issue-tracker and session-id trials (both landed 2026-09-30, past window) against Frictions since landing: nothing traced to either prune, the one major (non-session_ id breaking journal e2e tests) was a test assumption. Deleted both. Three other trials were not yet judgeable. A search subagent ranked failed-prose candidates; I took pr-workflow.md's verdict/merge-path narrative (#301, #853, #1276, #385, enforced by merge-pr.ts) and left its closing-keyword paragraph because it overlaps the just-judged trial's keywords. Net -24 lines, small because territory limits left little mass. Pinned-SHA Sonnet probe answered all four situations right. PR #1596 opened and subscribed; gate:scoped was started in the background and not yet read."
+prs:
+  - "1596"
+docsRead:
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: docs/agents/guards.md
+    reason: (no reason given)
+  - path: docs/research/rulebook-migration-table.md
+    reason: (no reason given)
+  - path: .agents/prune-trials.yml
+    reason: (no reason given)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: prune-trial
+    reason: (invoked as a slash command)
+frictions:
+  - description: Tried Agent with run_in_background false for the probe; the guard denied it as a no-op, costing a retry.
+    solution: None needed; the prune-trial Skill could say Agent calls are always async.
+    severity: nit
+  - description: First PR body used the wrong provenance header shape and the guard denied it; the deny message fixed it in one retry.
+    solution: None needed; guard worked as designed.
+    severity: nit
+  - description: Ran gate:scoped in the foreground chained after other commands, so it auto-backgrounded at the 2-minute timeout, the very case CLAUDE.md warns about.
+    solution: Start gate:scoped with run_in_background true from the outset.
+    severity: minor
+durationSec: 391
+models:
+  claude-sonnet-5-5: 38
+toolCounts:
+  Bash: 11
+  Agent: 3
+  Read: 1
+  ToolSearch: 1
+  mcp__github__create_pull_request: 2
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+  Skill: 2
+docsReadViaShell:
+  - docs/agents/pr-workflow.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - docs/research/rulebook-migration-table.md
+subagents:
+  - type: general-purpose
+    task: Find already-failed prose to prune
+  - type: general-purpose
+    task: Sonnet probe of pruned pr-workflow
+    model: sonnet
+  - type: general-purpose
+    task: Sonnet probe of pruned pr-workflow
+    model: sonnet
+gitBranch: claude/practical-rubin-1nwqu5
+entrypoint: remote_trigger
+cliVersion: 2.1.289
+trigger: prune-trial
+landedBy: Stop
