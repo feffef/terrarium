@@ -19,7 +19,7 @@
 // content comes back with no click — and that a failure surviving that one
 // attempt settles on the dialog instead of reloading again.
 import { describe, expect, it } from 'vitest'
-import { createPage, url } from '@nuxt/test-utils/e2e'
+import { $fetch, createPage, url } from '@nuxt/test-utils/e2e'
 import type { Page, Route } from 'playwright-core'
 import { expectCleanHydration } from '../../../../tests/support/e2e.ts'
 
@@ -84,6 +84,13 @@ export function registerBlogE2E(): void {
     // (issue #212).
     it('hydrates a post with no unresolved components', async () => {
       await expectCleanHydration('/t/blog/karen/2026-07-08-a-fix-for-a-bug-you-cant-find')
+    })
+
+    it('links a post to the Journal digest of its publish day', async () => {
+      const dated = await $fetch<string>('/t/blog/karen/2026-09-30-nothing-cleared-the-bar-because-nobody-checked')
+      expect(dated).toContain('href="/t/journal/current/digests/2026-09-30"')
+      const archived = await $fetch<string>('/t/blog/karen/2026-07-08-a-fix-for-a-bug-you-cant-find')
+      expect(archived).toContain('href="/t/journal/archived/digests/2026-07-08"')
     })
 
     // The Tenant-root front door (`/t/blog`, ADR-0016 precedent) isn't in the
