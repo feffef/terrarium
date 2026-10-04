@@ -42,7 +42,8 @@ const record = computed(() => {
 <style scoped>
 .intro { display: grid; gap: 6px; justify-items: start; margin-bottom: 22px; }
 .intro > * { margin: 0; }
-svg { width: 96px; height: 96px; margin-bottom: 8px; border: var(--tf-hairline); border-radius: var(--tf-radius); background: var(--tf-surface); }
+/* Portraits are drawn for the light scheme; inverted they lose their faces. */
+svg { width: 96px; height: 96px; margin-bottom: 8px; border: var(--tf-hairline); border-radius: var(--tf-radius); background: var(--tf-surface); color-scheme: light; }
 .bio { max-width: 60ch; color: var(--tf-muted); }
 .intro a { font: 500 13px/1 var(--tf-mono); }
 .grid {
