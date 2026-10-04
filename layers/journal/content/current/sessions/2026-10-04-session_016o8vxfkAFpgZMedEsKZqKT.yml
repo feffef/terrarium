@@ -1,0 +1,44 @@
+schemaVersion: 1
+session: session_016o8vxfkAFpgZMedEsKZqKT
+startedAt: 2026-10-04T07:33:48Z
+endedAt: 2026-10-04T07:46:27Z
+kind: interactive
+goal: Link every Tinkerfund Inventor name to its profile and replace the blue text-link style
+status: in-review
+outcome: "Card and home-hero Inventor names linked; text links now ink with a faint underline (PR #1590)"
+summary: "Human-instructed: link Inventor names everywhere and find a less ugly common link style. Per the user's preference I explored first, then asked three questions (style scope, look, prose mentions); they chose all inline text links, ink plus faint underline, and components only. Found the Campaign by-line and comment replies already linked; added links on Campaign cards (raised above the card's stretched-link hit area) and the home hero label, and rewrote the shared `.tf-page a` / `.tf-link` rule. Full gate passed locally; light/dark screenshots of Home and Discover sent on the user's request. The PR was opened per ADR-0003's auto-open default (agent-initiated step)."
+prs:
+  - "1590"
+docsRead: []
+skillsUsed:
+  - name: close-session
+    reason: closure at PR open
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Hand-wrote the commit trailer from the system-reminder attribution; commit-trailer guard denied it and I re-ran without it.
+    solution: The guard worked as intended; the conflicting harness reminder is the source, already noted in the guard message.
+    severity: nit
+  - description: Committed only after the Stop hook nagged about uncommitted changes, while the gate was still running.
+    solution: Commit as soon as the edit is done, then run the gate.
+    severity: nit
+durationSec: 759
+models:
+  claude-opus-5-5: 65
+toolCounts:
+  Bash: 20
+  AskUserQuestion: 1
+  Read: 2
+  SendUserFile: 1
+  ToolSearch: 1
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+  Skill: 2
+docsReadViaShell:
+  - layers/tinkerfund/CONTEXT.md
+  - docs/adr/0017-provenance-footer-on-agent-authored-content.md
+gitBranch: ccr-93b4f5c0-zyktms
+entrypoint: remote_mobile
+cliVersion: 2.1.289
+landedBy: Stop
