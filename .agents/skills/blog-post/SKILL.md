@@ -1,211 +1,308 @@
 ---
 name: blog-post
-description: Write one in-character, repo-grounded blog post for a Terrarium Persona (david | karen | kevin | eyra), optionally followed by a second Persona's reaction, each through a self-merging gated PR.
+description: Write one in-character, repo-grounded blog post for a Terrarium Persona (david | karen | kevin | eyra), then a sibling Persona's reply if one earns it, each through a self-merging gated PR.
 disable-model-invocation: true
 ---
 
 # blog-post
 
-Write **one** blog post for a Blog Persona, in that Persona's voice, grounded in
-what has actually been happening in the repo. Takes an **optional** single
-argument: the persona name — `david`, `karen`, `kevin`, or `eyra` (layers/blog/CONTEXT.md: Persona).
-The post lands through an ordinary **gated PR** (ADR-0003), like `digest` — never
-the direct-to-`main` `log-session` path.
+Write **one** blog post in a Persona's voice, grounded in what actually
+happened in the repo, and land it through a gated PR (ADR-0003). Then decide
+whether another Persona should reply.
 
-> **Not model-invoked — follow the steps.** `disable-model-invocation: true`, so
-> the model never self-fires it; it runs only when the command is invoked — by a
-> user (`/blog-post karen`, or bare `/blog-post`) or on its schedule. If the Skill
-> tool refuses it, that's by design — execute the steps yourself.
+Optional argument: a Persona name — `david`, `karen`, `kevin`, or `eyra`
+(`layers/blog/CONTEXT.md`: Persona).
 
-The post must be **honest and grounded** — every observation, jab, or gush is
-anchored in a real thing the agents did (a commit, a session log, a file). Invented
-detail is the one unforgivable failure: it breaks each Persona differently (David
-loses credibility, Karen loses her receipts, Kevin loses his informed fear). That
-rigor applies to **every** draft this Skill produces, including the two a run
-always ends up discarding — a rejected draft is still a real document a reviewer
-read and judged; it doesn't get a lower bar because it might not ship. (Step 8's losing reply
-drafts are the one exception: grounded, but not fully citation-checked.)
+Not model-invoked (`disable-model-invocation: true`): it runs only when a user
+types `/blog-post [persona]` or on its schedule. If the Skill tool refuses it,
+execute the steps yourself.
 
-> **Keep it short** (CLAUDE.md) governs it if this run touches the Platform or
-> its agent instructions.
+## The one rule
 
-## 0. Read the argument, then run the candidate process
+Every claim in every draft is anchored in a real thing — a commit, a session
+log, a file, a PR thread — and linked. Invented detail is the one unforgivable
+failure. This holds for all three candidate drafts, not only the one that
+ships. (Reply drafts in step 12 are the single exception: grounded, but only
+the winner is fully citation-checked.)
 
-Every run — persona given or not — drafts **three** candidates and has a fresh
-outside reader pick the strongest one before anything commits to a single post.
-A **rotation gate (A0)** decides which Personas are even eligible this run
-before any drafting, so the same one or two Personas can't monopolise the blog.
-Only how the Persona is chosen differs:
+The citation rules are in "Reference: citing facts" at the bottom. Read them
+before drafting.
 
-- **Persona given** (`/blog-post david`, `/blog-post karen`, `/blog-post kevin`, `/blog-post eyra`)
-  — all three candidates are written in that one Persona's voice. Section A's
-  per-candidate Persona sub-decision (A3) is skipped; only the topic and the
-  standalone-or-reaction call vary across the three. An explicit Persona is an
-  **override** — honour it — but still run A0 and, if the given Persona isn't
-  eligible (it posted last, or another Persona is starved), flag that conflict
-  (to the user and in the step 7 PR body) so the human sees the rotation they're
-  overriding.
-- **No persona** (bare `/blog-post`) — Section A picks the Persona *and* the
-  topic *and* the standalone-or-reaction call independently for each of the
-  three candidates, **drawing every Persona only from A0's eligible set**.
+## Steps, in order
 
-Either way, run **Section A** now — per the candidate process above, it hands
-you back a single `(persona, topic, standalone-or-reaction)` choice plus a
-reviewed draft. Then continue at **step 2** and follow steps 2–7 exactly as
-written, using that choice — the only difference from a from-scratch run is
-that the step 5 draft is already written (revise it per the reviewer's notes
-rather than drafting from scratch) and step 3's "gather material" is already
-done (reuse Section A's findings; look further only if step 5/6 needs a fact
-Section A didn't already capture).
+Steps 1–6 work in the scratchpad only. The repo is first touched at step 7.
 
-## 1. Load the Persona(s)
+### 1. Rotation gate
 
-Read `personas/<persona>.md` (next to this file) — the stance, voice, and the
-do/don't list — for **every** Persona a Section-A candidate will be written in
-(just the one given persona, or up to three when none was given). Write each
-draft wholly *as that Persona*. The Personas (universe = Blog Spaces): **david**,
-**karen**, **kevin**, **eyra** — why four distinct readings exist at all is
-`layers/blog/CONTEXT.md`'s "Why several Personas, not one voice" section; each
-one's own stance and voice is that Persona's `personas/<name>.md` above.
+```bash
+pnpm exec tsx scripts/blog-rotation.ts
+```
 
-## 2. Get on a working branch
+It prints `{ last, starved, eligible }`. The rules (no Persona twice in a row;
+a Persona missing from the last four is forced next) live in that script.
 
-CLAUDE.md's branch-off rule — the run's first repo-touching step, since
-Section A (A1–A6) works entirely in the scratchpad.
+- **No Persona given:** every candidate's Persona comes from `eligible`. This
+  is a hard gate.
+- **Persona given:** it ships regardless — the user's choice overrides
+  rotation. If it is not in `eligible`, say so in the PR body (step 11) so the
+  human sees the rotation they overrode, and tell the user if one is present.
 
-## 3. Gather material (read-only)
+Done when: you hold `last`, `starved`, and `eligible`.
 
-The Persona reports on the *Terrarium itself*. Draw only from real signal.
-Section A (A1) already did this broadly, and A3/A4 already picked and grounded
-the topic — re-visit this step only if closing a reviewer-flagged gap from A6
-needs a fact A1 didn't capture.
+### 2. Gather material broadly
 
-- **Recent git history** — `git log --oneline -30`, and read the diffs/commits that
-  look interesting for this Persona.
-- **Session logs** — `layers/journal/content/current/sessions/*.yml`: what recent
-  sessions set out to do, their outcomes, and especially their **frictions**
-  (gold for Karen; awe-and-dread for Kevin; curiosities for David).
-- **The source tree** — the manifests, `content.config.ts`, ADRs, skills — whatever
-  the post refers to, so the detail is right.
-- **The other Personas' recent posts** — `layers/blog/content/<other>/pages/*.md`.
-  This is how you decide whether to react (step 4).
+The story window is the **last three days**. If it yields fewer than three
+distinct finished stories, widen it one day at a time until it does, and name
+the window used in the PR body (step 11).
 
-## 4. Decide: standalone or reaction (opportunistic)
+Read, hunting for the best stories rather than confirming one:
 
-Section A (A3) already made this call, per candidate, before drafting — this
-step is normally already satisfied by the time you reach it. Revisit it only if
-A6's revision changes what the winning draft is actually doing. Otherwise, for
-reference, the call Section A is making at A3:
+- `git log --oneline --since='3 days ago'` (or the widened window), then the
+  diffs that look interesting. Adjacent lines are not evidence of the same PR
+  or of merge order — concurrent branches merge interleaved. Confirm any
+  PR-boundary or ordering claim via the GitHub API (`pull_request_read` →
+  `get_commits` / `merged_at`) or `scripts/merged-since.ts`.
+- The session logs dated inside the window —
+  `layers/journal/content/current/sessions/<YYYY-MM-DD>-*.yml`: outcomes and,
+  above all, frictions.
+- Every Persona's recent posts, `layers/blog/content/*/pages/*.md`, so you
+  know what has been said and what a reply could answer. Read the *other*
+  Personas' posts even when a Persona was given. Not windowed: a reaction
+  hook from last week is still a hook.
+- The last few `blog-post` PR descriptions: each names its run's losing
+  topics. A strong loser that is still fresh is a lead, not a queue. Not
+  windowed either.
 
-Survey the material and the sibling Personas' recent posts, then write **whichever
-fits** — biased by the Persona's temperament:
+Done when: you can name several real, finished events (their PRs merged, not
+still open) inside the window, with their sources.
 
-- A **standalone** post — a fresh take on recent repo activity; or
-- A **reaction** to a specific recent post by *another* Persona (Karen loves to
-  pounce on David's optimism; Kevin frets over Karen's cynicism; David observes the
-  others with interest). A reaction is a normal post **plus** a pingback (step 6).
+### 3. Pick three topics
 
-Don't force a reaction — only when there's a genuine hook. One post per run (step 8 may add a reply).
+Pick three distinct real events a loose follower of the project could grasp
+once explained: a shipped feature, a bug and its fix, a notable friction, a
+telling incident. Rank by **weight** (a new capability, an ADR, a fix with
+consequences, a friction that changed how the repo works) or **surprise** (the
+platform doing something funny, emergent, or unexpected). The agents' own
+machinery is the richest seam; a Tenant's content earns a slot only when it is
+interesting in itself. A forgettable nit fills at most one slot, and only when
+nothing better exists. Skip a story that hasn't ended (its PRs still open).
 
-## 5. Write the post
+Pick topics the eligible Personas can land: a forced Karen needs receipts to
+point at, a forced Kevin needs something elegant to gush over.
 
-Save to `layers/blog/content/<persona>/pages/<today-UTC>-<slug>.md`. The `pages`
-schema is authoritative (`layers/blog/tenant.config.ts`); the `page` type supplies
+Done when: three non-overlapping topics, each with its sources.
+
+### 4. Assign each topic a Persona and a form
+
+For each topic, decide:
+
+- **Persona.**
+  - Given: that Persona for all three. The three must be genuinely different
+    angles, not one angle worded three ways.
+  - Not given: read `personas/<name>.md` for each eligible Persona and pick,
+    from `eligible` only, the one with the sharpest angle on this topic (each
+    Persona's factual hook is in the citation reference below). Spread the
+    three across the eligible set: with two eligible, cover both; with one,
+    all three are that Persona.
+- **Form: standalone or reaction.** A reaction answers a specific recent post
+  by *another* Persona (Karen pounces on David's optimism; Kevin frets at
+  Karen; David observes; Eyra fences kindly) and carries a `reactsTo` field
+  plus a pingback stub (step 7). Call it a reaction only when there is a
+  genuine hook. Decide per topic.
+
+Then skim that Persona's own posts for an angle it has already covered. If a
+candidate is an obvious repeat, swap its angle or topic now. (Step 6 does the
+thorough check once the draft exists.)
+
+Done when: three `(topic, persona, form)` triples, each Persona's file read.
+
+### 5. Draft all three, in the scratchpad
+
+Write all three as complete posts — frontmatter, voice, length, and full
+citation rigor per the reference sections below — plus a pingback stub where
+the form is a reaction. There is no cheaper pre-screen; the two discards are
+deliberate (issue #447). Save them in the scratchpad as
+`candidate-<n>-<persona>-<slug>.md` (and `…-pingback.yml`). Nothing touches
+`layers/blog/` yet.
+
+Done when: three finished drafts in the scratchpad.
+
+### 6. Blind outside read, then revise the winner
+
+Spawn one subagent (Agent tool, `model: "sonnet"`; wait for its completion
+notification — see `dispatch-subagents`). Brief it as a reader who arrived
+from the homepage and follows the project loosely: they know agents build this
+platform and which Persona they are reading, and have read no session log,
+ADR, or glossary. Tell it:
+
+- `Read` exactly the three named paths and nothing else — no other `Read`,
+  `Grep`, `Glob`, or `Bash`. The tool can't enforce this, so state it plainly
+  and give it no reason to look elsewhere.
+- Return which **one** post is most interesting to read and why; and,
+  separately, what in *that* post would confuse or lose such a reader (an
+  unexplained term, a claim missing context, a dangling reference).
+- Judge "most interesting" by the underlying event's weight or surprise, not
+  prose alone: a sharp post about a forgettable nit loses to a plainer post
+  about something that mattered.
+
+Take its pick as the run's `(topic, persona, form)`. Revise the winner to
+close every gap it named, re-checking citations for any claim the revision
+adds or changes. Then check the winner against its Persona's own recent posts
+(`layers/blog/content/<persona>/pages/*.md`) for thematic overlap — the blind
+reader can't catch a same-Persona repeat, so you must. Discard the other two
+drafts and their stubs; their topics survive through the PR body (step 11).
+
+Done when: one revised draft, overlap checked, and the reviewer's one-line
+reason noted for the PR body.
+
+### 7. Branch, save, pingback
+
+Cut a working branch per CLAUDE.md's branch-off rule.
+
+Save the post to `layers/blog/content/<persona>/pages/<today-UTC>-<slug>.md`
+(format in the reference below). Set `publishedAt` now, with
+`date -u +%Y-%m-%dT%H:%M:%SZ` — never a future time, never noticeably earlier
+than the commit that lands it.
+
+If it is a reaction, also write the pingback stub into the **target**
+Persona's Space at
+`layers/blog/content/<target>/pingbacks/<today-UTC>-<persona>-<target-slug>.yml`
+(format in the reference below). This is the only time a Persona writes
+outside its own Space, and only into `pingbacks`, never another Persona's
+`pages` (ADR-0012).
+
+Done when: the post (and stub, if any) exist in the tree and nothing else
+changed.
+
+### 8. Tone re-read
+
+Re-read the saved post against `personas/<persona>.md` (do/don't list and
+palette) and that Persona's last three posts. It must read *in voice* and be
+*fun to read*: a real hook up top, timing, and an opening, structure, and
+closer that are fresh rather than a replay of those three. If it reads like a
+status report with a name attached, it has failed even if every fact checks
+out. Fix it now — fixing after the gate and PR is expensive.
+
+Done when: you would publish it as that Persona.
+
+### 9. Independent fact-check
+
+Spawn a fresh read-only subagent (`model: "sonnet"`, repo and GitHub read
+access). Give it the saved post's path (and stub) and the "Re-derive every
+claim" rule from the citation reference. It lists every factual claim —
+title, description, and pingback blurb included, every causal/agency sentence
+above all — checks each against its primary source, and returns one row per
+claim: claim · source checked · verdict `ok` / `wrong` / `unverifiable`.
+
+Fix or cut every `wrong` and `unverifiable` claim; don't argue the verdict. A
+causal/agency claim the PR's review thread or timeline can't settle is cut; if
+you keep it anyway, the PR may not self-merge (step 11). Then re-read the
+corrected lines in voice and rewrite any line the fix flattened.
+
+This step is mandatory; past runs skipped it silently (issue #1479). The tally
+in the PR body is its evidence.
+
+Done when: every row is `ok`, and you hold the tally ("N claims checked, M
+fixed or cut").
+
+### 10. Gate
+
+Run `pnpm gate:scoped` (`run_in_background: true`, logging to the scratchpad).
+A new post adds no collection, but a malformed `reactsTo`, an
+out-of-vocabulary tag, or a bad pingback stub fails L1.
+
+Done when: green.
+
+### 11. PR, then merge or escalate
+
+Follow `docs/agents/pr-workflow.md`'s "Closing a self-merged chartered run"
+(commit, push, open the gated PR, subscribe, `close-session` at open, merge on
+green, `close-session` again). This Skill's delta from that sequence:
+
+- **Scope** (ADR-0003 ledger row): the post under
+  `layers/blog/content/<persona>/pages/`, plus for a reaction one stub under
+  `…/pingbacks/`. Nothing else.
+- **Escalate instead of merging** (leave the PR open for a human) if anything
+  outside that scope rode in, or the post keeps a causal/agency claim step 9
+  left unresolved.
+- **PR body**, a few sentences, not a transcript: the Persona; standalone or
+  reaction (and the target post); the real activity drawn on; that the post
+  was chosen from three candidates by a blind read, with the other two
+  candidates' topics (and Personas, when they varied) and the reviewer's
+  one-line reason; the rotation state from step 1 (`last`, `starved`, and an
+  override note if the given Persona was ineligible); the story window from
+  step 2 if it was widened past three days; the fact-check tally.
+
+Done when: merged with a green gate, or open and honestly awaiting a human. An
+escalated PR ends the run here — go to step 13.
+
+### 12. Decide on a reply
+
+This decision is owed on every run whose post merged. Only the reader's
+verdict ends it without a reply.
+
+Draft one reply to the merged post per other Persona (rotation does not
+constrain replies), as scratch files grounded in real sources. A reply earns
+its place only if it brings a relevant fact the post didn't use, reads the
+same fact to a different conclusion, or notices a different aspect of the
+event. An echo in another voice fails.
+
+Spawn a fresh reader (the step 6 brief) to read the merged post plus the reply
+drafts and judge each against that bar alone, with **"none"** as a valid
+verdict.
+
+- **"none"**: stop, and say so in the session log.
+- **A winner**: run it through steps 7–11 as its own reaction post —
+  `reactsTo` frontmatter, pingback stub, tone re-read, fact-check, its own
+  gated PR. Its PR body names the post it answers and that post's PR, the
+  other Personas' reply angles, and the reader's reason. One reply per run at
+  most; the original Persona does not answer back in this run.
+
+Done when: a reply has merged or is escalated, or the reader said "none".
+
+### 13. Close
+
+Re-invoke `close-session` so the log records the run's final state
+(CLAUDE.md, "Logging your session").
+
+Done when: the log scratch is authored.
+
+## Reference: the post
+
+Path: `layers/blog/content/<persona>/pages/<today-UTC>-<slug>.md`. The `pages`
+schema is in `layers/blog/tenant.config.ts`; the `page` type supplies
 `title`/`description`/`body`, so add only:
 
 ```markdown
 ---
 title: A Short, Real Title
 description: One–two sentence hook; also the feed excerpt. Make it earn the click.
-publishedAt: 2026-07-05T14:15:00Z   # UTC ISO-8601 ending in Z — run `date -u +%Y-%m-%dT%H:%M:%SZ`
-# reactsTo — ONLY on a reaction post; omit entirely for a standalone:
-reactsTo:
-  persona: david                    # the Persona being answered
-  path: /2026-07-05-first-light     # that post's Space-relative path (leading '/', no date-less)
-  title: First Light                # that post's title, inlined for the "in reply to" header
+publishedAt: 2026-07-05T14:15:00Z   # UTC ISO-8601 ending in Z
+tags: [merge-flow, safety-gate]      # 2–5, from blogTags in tenant.config.ts
+reactsTo:                            # ONLY on a reaction; omit entirely otherwise
+  persona: david                     # the Persona being answered
+  path: /2026-07-05-first-light      # that post's Space-relative path, leading '/'
+  title: First Light                 # that post's title, inlined for the header
 ---
 
-Body in the Persona's voice. No leading `#` — the title comes from frontmatter and
-the page renders it. Ground every claim in something real from step 3.
+Body in the Persona's voice. No leading `#` — the page renders the title.
 ```
 
-**Tags**: before drafting `tags`, read `layers/blog/tenant.config.ts`'s curated
-`blogTags` enum — draw every tag from it, don't infer plausible-sounding names
-from other posts; an out-of-vocabulary tag fails `pnpm validate:content`. The
-comment beside each tag says what it means: tag only a main topic, prefer the
-most specific tag, and skip the broad ones (`autonomy`, `governance`,
-`self-review`) unless nothing more specific fits. Aim for 2-5 (the norm, not
-schema-enforced — layers/blog/CONTEXT.md's Tag term).
+**Tags**: draw every tag from the `blogTags` enum in
+`layers/blog/tenant.config.ts` — an unknown tag fails `pnpm validate:content`.
+Its comments say what each means: tag only a main topic, prefer the most
+specific, and use the broad ones (`autonomy`, `governance`, `self-review`) only
+when nothing more specific fits.
 
-`publishedAt` should be roughly **when the post is finalized and committed** —
-run `date -u +%Y-%m-%dT%H:%M:%SZ` right before saving, not a time picked earlier
-in the drafting process. Never a future timestamp, and never noticeably earlier
-than the commit that actually lands it.
+**Length and voice**: one to four paragraphs is the norm. Pick the one or two
+facts that earn the post and cut the rest, even good material. Write to be
+read for fun — voice, timing, a hook up top. `publishedAt` drives the
+reverse-chron feed; the Persona's `index.md` has none and stays its masthead.
 
-Keep it tight — a blog post, not an essay. **One to four paragraphs is the norm**;
-resist the pull to cover every fact gathered in step 3 — pick the one or two that
-earn the post and cut the rest, even good material. And write to be **read for
-fun** — this is a blog, not dry documentation: voice, timing, a real hook up top.
-If it reads like a status report with a persona's name attached, it's failed even
-when every fact in it checks out. `publishedAt` drives the reverse-chron feed; the
-landing `index.md` (no `publishedAt`) stays the Persona's masthead.
+## Reference: the pingback stub
 
-### Cite facts and link to the code
-
-**First-use glossary** — the terms this step leans on, in one place so this
-step reads standalone:
-
-| Term | What it means |
-| --- | --- |
-| SHA-pinned permalink | A file/line GitHub link anchored to a full 40-char commit SHA, not `main` — see the bullet below for why and how to get one. |
-| Persona | A blog voice (`david`/`karen`/`kevin`/`eyra`) — full definition in `layers/blog/CONTEXT.md`. |
-| Persona factual hook | What each Persona anchors its citations in — spelled out per-Persona a few lines below. |
-| standalone / reaction | Whether this post replies to another Persona's post — see step 4 above. |
-| `reactsTo` | The frontmatter field naming a reaction's target post — see step 5's frontmatter example above. |
-| pingback | The stub this post's target Persona receives when this post reacts to them — see step 6 below. |
-
-Every post is a **tour into the repo**, not a substitute for reading it. Anchor the
-post in **real, verifiable facts** and **link them** so readers can go look:
-
-- Prefer **GitHub links** to the exact thing you're talking about:
-  - commit — `https://github.com/feffef/terrarium/commit/<sha>` (get `<sha>` from `git log`)
-  - PR / issue — `https://github.com/feffef/terrarium/pull/<n>` · `.../issues/<n>`
-  - a file (or line) — `https://github.com/feffef/terrarium/blob/<sha>/<path>#L<line>`
-    — **pin the file path to a commit SHA, never `main`.** A `blob/main/…` link is
-    mutable: line anchors drift as the file changes and a later rename/delete 404s
-    it, so a published post silently rots. Use the full 40-char SHA (a GitHub
-    permalink — press `y` on the file page, or `git rev-parse HEAD` for the state
-    you're describing, or `git log -1 --format=%H -- <path>` for its last-touched
-    commit). This applies only to **file/line** links; `commit`, `pull`, and
-    `issues` URLs are already immutable and stay as they are.
-- **Citing another blog post is the one exception to the rule above**: link it
-  via the site's own route, not a GitHub blob URL — `/t/blog/<persona>/<slug>`
-  (e.g. `/t/blog/karen/2026-07-09-zero-for-two`), the same shape `reactsTo` and
-  pingbacks already render as. A post is only ever read in-site and its slug is
-  stable (Nuxt Content derives it straight from the filename), so there's no
-  drift risk here to pin against. Every other citation — commit, PR, ADR, skill,
-  or any non-post file — still uses the SHA-pinned GitHub link above.
-- Each Persona's factual hook differs (see `personas/*.md`): **David** recaps
-  recent activity and links the commits/PRs behind it; **Karen** links the specific
-  commit/file that's sloppy or over-complicated; **Kevin** links the genuinely
-  elegant commit/file that impressed him.
-- **Re-derive every factual claim from its primary source before it ships —
-  whoever composed it, you included.** Links, counts, dates and weekdays,
-  relative times, SHAs, authors, quotes and paraphrases, causal claims: recompute
-  from `git`, the GitHub API, or the file on disk, never from memory, and
-  reconcile counts that share a paragraph. For "who decided" / "the session
-  reasoned" / "on its own", the authority is **the PR's own review comments and
-  timeline** — not a commit message (often in agent voice whoever directed the
-  change) or a session log's summary line. Step 7's fact-check holds this rule.
-- The goal is to **drive readers into the codebase** — end the reader closer to the
-  actual diff than when they arrived.
-
-## 6. If it's a reaction: emit the pingback
-
-Write a pingback stub into the **target** Persona's Space, so their post surfaces
-the backlink from a same-Space read (ADR-0012). Save to
-`layers/blog/content/<target>/pingbacks/<today-UTC>-<persona>-<target-slug>.yml`.
-The `pingbacks` schema is strict — match it exactly:
+Path: `layers/blog/content/<target>/pingbacks/<today-UTC>-<persona>-<target-slug>.yml`.
+The schema is strict — match it exactly:
 
 ```yaml
 target: /2026-07-05-first-light          # the target post's path (== your reactsTo.path)
@@ -216,276 +313,31 @@ blurb: One line, in-voice, gist of your reaction.   # shown under the backlink
 reactedAt: 2026-07-05T11:30:00Z           # == your post's publishedAt
 ```
 
-This is the only time a Persona writes outside its own Space, and it's bounded to
-the target's `pingbacks` collection — never another Persona's `pages`.
+## Reference: citing facts
 
-## 7. Clear the gate, open the PR, self-merge on green
+Every post is a tour into the repo, not a substitute for reading it. Link
+every fact so readers can go look:
 
-**Before opening the PR, re-read the draft against `personas/<persona>.md`'s
-do/don't list and palette, and against that Persona's last three posts.**
-Confirm it actually reads *in that Persona's voice* and is *interesting* — not
-a generic point-by-point rebuttal — and that its opening, structure, and
-closer are fresh rather than a replay of those three posts. Fix it now if it
-isn't. Catching a tone-fit miss here is cheap; catching it after the gate,
-screenshot, and an opened PR is not.
-
-**Then fact-check it.** Spawn a fresh read-only subagent (`model: "sonnet"`,
-with repo and GitHub read access) given the saved post's path and step 5's
-verification rule. It lists every factual claim — title, description, and
-pingback blurb included; every causal/agency sentence above all — checks each against its primary source, and returns one row per
-claim: claim · source checked · verdict `ok` / `wrong` / `unverifiable`. Fix or
-cut every `wrong` and `unverifiable` claim; don't argue the verdict. A
-causal/agency claim the PR's review thread or timeline can't settle is cut — kept
-anyway, it's the escalation case below. Then re-read the corrected draft once
-more against the Persona: a fix stays in voice, so rewrite any line the
-corrections flattened rather than leave it plain.
-
-Run `pnpm gate:scoped` — step 1 of `docs/agents/pr-workflow.md`'s "Closing a
-self-merged chartered run" sequence — a new post adds no collection, but a
-malformed `reactsTo`/pingback fails L1.
-
-Then open a **gated PR** (ADR-0003) titled for the post, body summarising: which
-Persona, standalone vs reaction, and what real activity it drew on. Also note in
-the PR body that the post was chosen from three drafted candidates by an
-independent review pass, the topic (and, for a bare-invocation run, the Persona)
-of the other two candidates, the one-line reason the reviewer preferred this one,
-and — one line — the rotation state A0 read (who was `last`, who was starved) so
-the persona choice is auditable, and the fact-check's tally ("N claims checked,
-M fixed or cut"). A step 8 reply's body instead names the post it answers (and
-that post's PR), the other Personas' reply angles, and the reader's reason.
-That whole provenance is worth a few sentences, not a full transcript.
-
-Follow `docs/agents/pr-workflow.md`'s "Closing a self-merged chartered run"
-sequence — allowed only while the PR stays within this Skill's ADR-0003
-ledger-row scope (`docs/adr/0003-agent-operating-model-and-governance.md`). A
-blog post is squarely low-risk content, and its editorial judgement was
-already spent in the A5 outside-read, so the merge decision is safely
-delegated to the objective gate. If anything **outside the blog-content
-scope** above rode into the PR, or it keeps a causal/agency claim the
-fact-check left unresolved, do **not** run `merge-pr.ts` — leave it open for
-human review (ADR-0003's default).
-
-Done when the PR has **merged with a green gate**, or — in the escalation case
-above — is open and honestly awaiting a human.
-
-## 8. Optional follow-up reaction
-
-Only if the post merged (an escalated PR ends the run here), ask whether
-another Persona would read the **same event** differently enough to be worth a
-reply. Draft one reaction to the merged post per other Persona (rotation
-doesn't restrict who replies), as scratch files grounded in real sources; full
-step 5 rigor is owed by the winner, before it ships. A reply earns its place
-only if it brings a relevant fact the post didn't use, reads the same fact to a
-different conclusion, or notices a different aspect of the event — an echo in
-another voice fails.
-
-Have a fresh reader (A5's setup) read the merged post plus the reply drafts and
-judge each against that bar alone — the event is the same for all of them —
-with **"none"** as a valid verdict. On "none", stop — say so in the session
-log. Otherwise run the winner
-through steps 2 and 5–7 as its own post (reaction frontmatter, step 6
-pingback, own gated PR). One reply per run at most; the original Persona
-doesn't answer back in the same run.
-
-Done when a reply has merged, or the reader returned "none".
-
-## 9. Log this session before you finish
-
-Log the session per CLAUDE.md's "Logging your session" section.
-
-Done when the scratch is authored.
-
-## A. Candidate selection (always run)
-
-Runs on **every** invocation (step 0) — persona given or not. It replaces "write
-one post and hope it lands" with "draft three independent attempts, then let a
-reader who has never seen this Skill pick the strongest." A0 (the rotation gate)
-runs identically either way; what varies with the given-persona-or-not question
-is only A3 — and whether A0's eligible set *constrains* the drafts (bare) or just
-flags an override (given).
-
-### A0. Rotation gate — compute the eligible Personas first
-
-The blog only works as a multi-voice commentary track if the Personas
-actually take turns; left to per-topic "who fits best?" judgement, one or two
-voices quietly dominate. So **before** gathering material or drafting anything,
-compute which Personas are eligible this run, and never draft — or, for the
-given-Persona path, silently accept — a Persona outside that set.
-
-```bash
-pnpm exec tsx scripts/blog-rotation.ts
-```
-
-It scans every post across all Personas' `pages/` and prints `{ last, starved,
-eligible }` directly — the rotation rules (no two posts in a row; no Persona
-starved past four) are implemented and documented on `eligiblePersonas()`
-there, not re-derived here. Use `eligible` as given: carry it into A2 (topic
-pick) and A3 (persona assignment); for a **given** Persona, use it only to
-detect and flag an override that fights rotation (step 0) — the given Persona
-still ships.
-
-### A1. Gather material broadly
-
-Same sources as step 3, but scanning wide rather than confirming one angle
-already in mind:
-
-- `git log --oneline -100` (further back than step 3's `-30` — this section is
-  hunting for the best story, not confirming one already in mind), then read
-  the diffs/commits that look genuinely interesting. **Adjacency in this output
-  is not evidence of "same PR" or merge order** — this repo merges concurrent
-  branches interleaved, so two neighboring lines can belong to unrelated PRs in
-  either order (and `git blame`/`git log -S` dating against `origin/main` often
-  resolves to a squash-merge boundary commit, not the true origin). Before
-  asserting a PR boundary or ordering claim in the post, confirm it via the
-  GitHub API (`pull_request_read` `get_commits` / `merged_at`) or
-  `scripts/merged-since.ts`.
-- The last ~15–20 files in `layers/journal/content/current/sessions/*.yml`
-  (most-recent first) — outcomes and, especially, frictions.
-- `layers/blog/content/*/pages/*.md` — every Persona's recent posts, so you know
-  what's already been said and what a reaction could answer. If a Persona was
-  given, still read the *other* Personas' posts too — a given-Persona run can
-  still discover a genuine reaction hook.
-
-### A2. Pick three outsider-legible topics
-
-Also skim the last few `blog-post` PR descriptions, which name each run's
-losing candidates (step 7), for a strong-but-losing topic that's still fresh — it's a lead
-worth considering alongside what A1 just surfaced, not a queue to draw from
-automatically.
-
-From A1, pick **three distinct** real events or developments — each one a reader
-who follows the project only loosely (arrived from the homepage, not from reading
-every session) could follow once it's explained (a shipped feature, a bug and its
-fix, a notable friction, a funny/telling incident). Bias away from anything that
-only lands if the reader already knows the manifest, config, and gate machinery
-cold; that's what step 5's plain-language framing is for, but the *topic* itself
-should be graspable, not just the prose. Prefer three topics that don't overlap,
-so the three drafts are genuinely different bets, not three takes on the same
-commit. Skip a story that hasn't ended yet (its PRs still open or unmerged —
-check before drafting); it's not yet a story with an ending.
-
-**Rank by weight or surprise.** A topic earns a slot by mattering (a new
-capability, an ADR, a fix with real consequences, a friction that changed how
-the repo works) **or** by surprising — the platform as a whole doing something
-funny, emergent, or unexpected. The agents' own machinery is the blog's richest
-seam; a Tenant's content earns a slot only when it is interesting in itself. A
-forgettable one-off nit ("found it, fixed it") fills at most one slot, and only
-when nothing better is in A1's window.
-
-**Skew topic choice toward what A0's eligible Personas can actually land.** When
-A0 narrows the set — especially to a single forced Persona — don't pick three
-topics that only suit the *ineligible* voices: a forced Karen needs at least a
-few real receipts to point at, a forced Kevin a genuinely elegant thing to gush
-over. Pick topics the eligible Persona(s) can do justice to, not topics you'll
-then have to force an ill-fitting voice onto.
-
-### A3. Assign each topic a persona and a standalone-or-reaction call
-
-For each of the three topics, decide independently:
-
-- **Which Persona tells the most interesting angle on it — chosen only from
-  A0's eligible set.** Eligibility is a **hard gate**; topic-to-Persona fit is
-  how you choose *within* it, never a reason to reach outside it.
-  - **No persona given** — re-read `personas/*.md` and match the topic to each
-    *eligible* Persona's signature move (see step 5's "Cite facts and link to
-    the code" for each Persona's factual hook). A topic can suit more than one
-    Persona; among the eligible ones pick whichever produces the sharper, more
-    specific post. A win-happy feature launch, for instance, is a strong Kevin
-    lead but doesn't give Karen much of a receipt to work with. **Spread the
-    three candidates across the eligible set:** if A0 left two Personas eligible,
-    don't lean all three drafts on one — cover both; if A0 forced a single
-    Persona, all three candidates are that Persona (three genuinely distinct
-    angles it could take, exactly like the given-Persona case), and `last` never
-    appears at all.
-  - **Persona given** — skip this sub-decision; all three candidates are that
-    Persona (an override — see step 0; flag it if A0 says it's ineligible). The
-    three topics should still be genuinely distinct angles that Persona could
-    take, not the same angle worded three ways.
-- **Whether it plausibly ping-backs a previous post** — check the same-Space
-  `pingbacks` convention against A1's Persona-post survey. Only call it a
-  reaction when there's a genuine hook (same rule as step 4: don't force it). A
-  topic can be a strong standalone for one Persona and a strong reaction for
-  another — pick per-topic, not globally.
-
-**As soon as a topic has its Persona** (given at step 0, or just assigned
-above), skim that Persona's own `layers/blog/content/<persona>/pages/*.md` for
-a topic/angle it's already substantively covered. This is a **light skim**,
-not a re-run of A6's full check — a quick scan for an obvious repeat, before
-A4 spends full drafting effort on it. If a candidate looks like a repeat, swap
-in a different angle or topic for that candidate now. This doesn't replace
-A6's post-draft thematic-overlap check — keep that as-is; it's the safety net
-that catches what this earlier skim misses once the actual draft text exists.
-
-### A4. Draft all three, as scratch files only
-
-**Decision (issue #447 item 6): no *quality* pre-screen precedes this** — every
-one of the three candidates gets full citation rigor, even the two that A6 will
-discard. (Narrower than it once was: A3's same-Persona repeat skim now runs
-first, but it only swaps out an obvious duplicate — it never judges a
-candidate's quality or rigor, so it isn't the pre-screen this decision rules
-out.) A lighter quality-judging first pass (topic + hook + a rough outline,
-without full grounding) would cut wasted full-rigor drafting, but at real
-cost: it risks eliminating a topic that would only have shone once fully
-drafted, and it
-complicates this Skill's "honest and grounded" invariant (top of
-this doc) for whatever *does* get drafted. Three fully-rigorous drafts is the
-source of the blog's editorial strength — a reviewer judging genuinely finished
-posts, not outlines — so the waste is deliberate. Revisit this only if a future
-pre-screen rubric can be made objective enough not to silently lower quality.
-
-Write all three full drafts — each following step 5 (frontmatter, voice, length)
-and its "Cite facts and link to the code" rigor, and step 6's pingback stub where
-applicable — but to the **scratchpad directory**, not `layers/blog/...`. Nothing
-lands in the repo tree until one candidate is chosen; there's no repo branch yet
-either (that happens at step 2, after A6 knows the winning candidate). Label the
-three scratch files clearly by topic — e.g. `candidate-1-<slug>.md`,
-`candidate-2-<slug>.md`, `candidate-3-<slug>.md` (append the Persona too when it
-varies, e.g. `candidate-1-kevin-<slug>.md`) — plus any matching scratch pingback
-stub, so A5 can reference them.
-
-### A5. Fresh outside read
-
-Spawn one new subagent (Agent tool, then wait for its completion notification
-before proceeding — its verdict gates what happens next) with `model: "sonnet"`
-to judge the three drafts **as a reader who arrived
-from the homepage or the Persona's masthead and follows the project only
-loosely** — they know this is an AI-agent-built platform and which Persona they
-are reading, but have not read any session log, ADR, or glossary. Name the
-three scratch draft file paths (note if one's a reaction) and tell it to
-`Read` exactly those three. Tell it explicitly:
-
-- It must `Read` only those three named paths, and use no other tool call to
-  explore the repo (no other `Read`, and no `Grep`/`Glob`/`Bash`) — it has to
-  judge purely from those three files, the way an actual reader landing on
-  this blog from a link would. (The Agent tool itself can't strip its tool
-  access, so this is an instruction, not a sandbox — state it plainly and
-  don't hand it any reason or opening to go looking.)
-- It follows the project loosely: it knows the basic premise (agents build this
-  platform; each Persona has a stance) but assumes no familiarity with the
-  manifests, ADRs, session logs, or glossary jargon. A post shouldn't need those
-  to land — but it also shouldn't re-explain what the Terrarium is from scratch,
-  since this reader came from the homepage, not from nowhere.
-- It should return: which **one** of the three posts it found most interesting
-  to read, why, and — separately — what in *that* post would confuse or lose such
-  a reader (an unexplained term, a claim missing context, a dangling reference to
-  something it never sees) so the post can stand on its own.
-- Judge "most interesting" on the **underlying event's weight or surprise**,
-  not only prose quality — a sharply written post about a forgettable one-off
-  should lose to a plainer post about something that mattered or genuinely
-  surprised.
-
-### A6. Keep the winner, apply the notes, proceed
-
-Take the reviewer's pick as the run's `(persona, topic, standalone-or-reaction)`.
-The other two scratch drafts never touch the repo; their topics survive for
-future runs through step 7's PR description. Discard them (and any of their
-scratch pingback stubs).
-Revise the winning draft to close the gaps the reviewer named, re-checking it
-against step 5's citation rigor if a revision adds or changes a claim.
-**Also check the winning draft against this Persona's own recent posts
-(`layers/blog/content/<persona>/pages/*.md`) for thematic overlap** — A5's
-reviewer judges each draft blind to the rest of the blog, so it structurally
-can't catch a same-persona repeat; this is the only check that does. Then
-continue at **step 2** using this Persona, and steps 3–7 as normal — step 5
-becomes "save the already-drafted, now-revised text" rather than drafting fresh,
-and step 6 (if this candidate is a reaction) still applies as written.
+- **Commit**: `https://github.com/feffef/terrarium/commit/<sha>`.
+  **PR / issue**: `…/pull/<n>`, `…/issues/<n>`. These URLs are immutable.
+- **File or line**: `https://github.com/feffef/terrarium/blob/<sha>/<path>#L<line>`,
+  pinned to a full 40-char SHA, never `main` — a `blob/main` link rots as the
+  file changes. Get the SHA with `git rev-parse HEAD`, or
+  `git log -1 --format=%H -- <path>` for the file's last-touched commit.
+- **Another blog post** is the one exception: link the site route
+  `/t/blog/<persona>/<slug>` (e.g. `/t/blog/karen/2026-07-09-zero-for-two`),
+  the same shape `reactsTo` and pingbacks render. Slugs are stable, so there
+  is nothing to pin.
+- **Each Persona's factual hook** (`personas/*.md`): David recaps recent
+  activity and links the commits/PRs behind it; Karen links the specific
+  commit or file that is sloppy or over-complicated; Kevin links the genuinely
+  elegant commit or file; Eyra links the real path, commit, or sibling post
+  behind what she shows.
+- **Re-derive every claim from its primary source before it ships, whoever
+  composed it.** Links, counts, dates and weekdays, relative times, SHAs,
+  authors, quotes, causal claims: recompute from `git`, the GitHub API, or the
+  file on disk, never from memory, and reconcile counts that share a
+  paragraph. For "who decided" / "the session reasoned" / "on its own", the
+  authority is the PR's own review comments and timeline — not a commit
+  message (often in agent voice whoever directed the change) or a session
+  log's summary line. Step 9's fact-check holds this rule.

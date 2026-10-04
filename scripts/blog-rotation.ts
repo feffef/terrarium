@@ -1,5 +1,5 @@
-// The blog-rotation helper: computes the blog-post Skill's A0 rotation gate
-// (`.agents/skills/blog-post/SKILL.md`, "A0. Rotation gate") as a script
+// The blog-rotation helper: computes the blog-post Skill's rotation gate
+// (`.agents/skills/blog-post/SKILL.md`, "1. Rotation gate") as a script
 // instead of a hand-run shell pipeline + manual reading of the two rules —
 // so a run picks the eligible Persona set the same way every time (#448).
 //
@@ -15,13 +15,13 @@ const BLOG_CONTENT_DIR = 'layers/blog/content'
 
 // ── Types ───────────────────────────────────────────────────────────────────
 
-/** One published post, reduced to the two fields A0 needs. */
+/** One published post, reduced to the two fields the rotation gate needs. */
 export interface RotationPost {
   publishedAt: string
   persona: string
 }
 
-/** A0's result: `last` is the newest post's Persona (`null` with zero posts);
+/** The gate's result: `last` is the newest post's Persona (`null` with zero posts);
  *  `starved` lists any Persona that has sat out the four newest posts (rule
  *  2 — empty unless that rule fires); `eligible` is the set a draft/pick may
  *  actually use this run. */
@@ -33,7 +33,7 @@ export interface RotationState {
 
 // ── Pure core (unit-tested) ───────────────────────────────────────────────────
 
-/** A0, verbatim (SKILL.md "A0. Rotation gate"):
+/** The rotation rules, verbatim (SKILL.md "1. Rotation gate"):
  *
  *  1. Sort posts newest-first.
  *  2. `last` = the newest post's Persona, or `null` with no posts.
@@ -73,7 +73,7 @@ export function eligiblePersonas(posts: RotationPost[], personaUniverse: string[
 
 // ── fs shell (thin) ─────────────────────────────────────────────────────────
 
-/** Every Persona is a `content/<persona>/` directory (A0's own
+/** Every Persona is a `content/<persona>/` directory (the gate's own
  *  `layers/blog/content/<persona>/pages/<slug>.md` glob and its
  *  `content/([^/]+)/` persona extraction — every such directory name is a
  *  Persona). */
@@ -85,7 +85,7 @@ function personaUniverse(cwd = root): string[] {
 }
 
 /** `publishedAt:`'s value, read straight off the frontmatter line — a full
- *  YAML parse is more than this single-field read needs (mirrors A0's own
+ *  YAML parse is more than this single-field read needs (mirrors the gate's own
  *  `grep -m1 '^publishedAt:'`). */
 function readPublishedAt(path: string): string | null {
   const text = readFileSync(path, 'utf8')
