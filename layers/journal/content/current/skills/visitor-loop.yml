@@ -10,8 +10,8 @@ role: >-
   `code-review`, and self-merges them on a green
   gate within its ADR-0003 remit. It aims to remember the owner's review
   rulings via `decisions.md`, so a rejected idea stays rejected — but that
-  memory step has not run successfully even once in its four tests since
-  its latest fix (0/4; see observations).
+  memory step has not run successfully even once in five tests across two
+  successive fixes (0/5; see observations).
 observations:
   - date: 2026-09-27
     note: >-
@@ -119,3 +119,24 @@ observations:
       "0/3" updated to "0/4" to match. Grade/importance unchanged (still
       routine) — the failure is confined to one sub-step, not the Skill's
       core delivery.
+  - date: "2026-10-04"
+    note: >-
+      Fifth chance, fifth failure (audit-skills behaviour check) — and the
+      first test of the stronger #1515 fix (PR #1570, `scripts/
+      owner-corrections.ts` + an explicit Done-when), which failed
+      immediately. session_014weUowmS8AnzoS1SBQswzm (2026-10-03, tinkerfund
+      focus, PRs #1571/#1573) ran with #1570's SKILL.md in hand (`e32aeade`
+      is an ancestor of #1571's base) and skipped the step outright: "I did
+      not gather owner corrections for decisions.md this run" — not even
+      logged as a friction this time, just a summary aside. The script was
+      never invoked (absent from toolCounts). decisions.md's git history is
+      still frozen at `e32aeade` (the #1570 backfill). Reopened #1515
+      (closed `completed` by #1570) and commented the new evidence, since a
+      fix that fails its first live test isn't resolved. Proposed next step:
+      move the check from prose to a mechanical gate (assert the script ran
+      before the fix PR can open), not a stronger Done-when sentence alone.
+      Rest of the pipeline independently re-confirmed clean across all 9
+      usedIn sessions (3-model dispatch, ≥2-visitor consensus, code-review
+      before merge). Grade/importance unchanged (still routine) — same
+      reasoning as prior rounds; this is a reliability finding confined to
+      one sub-step.
