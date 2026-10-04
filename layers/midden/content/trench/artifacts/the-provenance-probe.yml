@@ -1,0 +1,33 @@
+title: the authorship-marking probe
+stratum: current-midden
+condition: intact
+provenance:
+  kind: pr
+  number: 1562
+  merged: false
+  url: https://github.com/feffef/terrarium/pull/1562
+  continuityCheck: >-
+    Every rule and check the branch removed is still on the project's main
+    branch: the two checking scripts and the script that runs when changes are
+    saved. The written design decision behind them was never touched. Nothing
+    replaced them. The removal and the probe's own changes were never applied to main and
+    still sit only on the probe branch.
+site: tried-and-left-alone
+catalogNote: >-
+  A throwaway branch that deleted the project's rules and automatic checks for
+  recording who or what wrote each piece of work (two checks, a script that runs
+  when changes are saved, their tests and the lines in the instruction files that
+  named them) to see whether the project still needed them. An agent then made
+  commits, an issue, a pull request and comments, each with and without
+  instructions, to see what the tools added by themselves. A link back to the
+  agent's session appears only on a pull request's description. Comments get a
+  generic line, and issue text and commits get nothing. The person running the
+  session kept the rules anyway, as a hedge in case the tools change. The pull
+  request was open for about a minute and closed unmerged.
+remains:
+  - label: the list of checks as the probe left it, with the two authorship checks' rows removed
+    url: https://github.com/feffef/terrarium/blob/87fa6ca43c4aa957051141864b47c1ff1887558a/docs/agents/guards.md
+assessedAt: 2026-10-04
+inscription:
+  text: Measuring what provenance text gets added automatically. This PR will be closed, not merged.
+  source: "PR #1562 description"
