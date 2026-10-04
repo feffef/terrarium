@@ -30,6 +30,9 @@ export function registerCommonsE2E(): void {
 
     it('search: does not index the Commons itself (opt-in isolation default), and filters the corpus live as the user types', async () => {
       await withRendered('/t/commons/search', async (page) => {
+        // The list pages itself; expand it all so the isolation check covers the whole corpus.
+        const more = page.locator('.more')
+        while (await more.count()) await more.click()
         const hrefs = await attrs(page.locator('.se-result a'), 'href')
         expect(hrefs.length).toBeGreaterThan(0)
         expect(hrefs.some((h) => h.startsWith('/t/commons'))).toBe(false)
@@ -51,6 +54,8 @@ export function registerCommonsE2E(): void {
       await withRendered('/t/commons/timeline', async (page) => {
         // The feed pages itself; expand it all so the assertions cover every entry.
         const more = page.locator('.more')
+        expect(await page.locator('.tl-entry').count()).toBe(50)
+        expect(await more.count()).toBe(1)
         while (await more.count()) await more.click()
         const entries = page.locator('.tl-entry')
         const count = await entries.count()

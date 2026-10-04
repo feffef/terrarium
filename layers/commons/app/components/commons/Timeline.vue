@@ -10,6 +10,14 @@ const entries = computed(() => data.value ?? [])
 const PAGE = 50
 const limit = ref(PAGE)
 const shown = computed(() => entries.value.slice(0, limit.value))
+const list = useTemplateRef<HTMLElement>('list')
+// The button vanishes after the last page; keep keyboard focus on the new rows.
+async function showMore() {
+  const first = shown.value.length
+  limit.value += PAGE
+  await nextTick()
+  list.value?.children[first]?.querySelector('a')?.focus()
+}
 const tenantCount = computed(() => new Set(entries.value.map((e) => e.tenant)).size)
 
 // Format the UTC calendar date straight from the ISO string parts — zone-stable,
@@ -30,7 +38,7 @@ function calendarDate(iso: string): string {
       across {{ tenantCount }} {{ tenantCount === 1 ? 'site' : 'sites' }}
     </p>
 
-    <ol class="feed">
+    <ol ref="list" class="feed">
       <li v-for="e in shown" :key="e.url + e.when" class="tl-entry">
         <NuxtLink :to="e.url" class="row">
           <time class="when" :datetime="e.when">{{ calendarDate(e.when) }}</time>
@@ -44,7 +52,7 @@ function calendarDate(iso: string): string {
         </NuxtLink>
       </li>
     </ol>
-    <button v-if="entries.length > shown.length" type="button" class="more" @click="limit += PAGE">
+    <button v-if="entries.length > shown.length" type="button" class="more" @click="showMore">
       Show {{ Math.min(PAGE, entries.length - shown.length) }} older
     </button>
     <p v-if="!entries.length" class="empty">No timestamped content yet.</p>
