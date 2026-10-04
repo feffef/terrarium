@@ -6,6 +6,10 @@ export function tinkerfundCampaignPath(space: string, slug: string): string {
   return tinkerfundPath(space, `/campaigns/${slug}`)
 }
 
+export function tinkerfundInventorPath(space: string, slug: string): string {
+  return tinkerfundPath(space, `/inventors/${slug}`)
+}
+
 export function tinkerfundSlug(path: string): string {
   return path.slice(path.lastIndexOf('/') + 1)
 }

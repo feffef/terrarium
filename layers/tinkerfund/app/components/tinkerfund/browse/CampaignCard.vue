@@ -1,6 +1,8 @@
 <script setup lang="ts">
 const props = defineProps<{ card: TinkerfundCard; clock: TinkerfundClock }>()
-const { link } = useTinkerfundSpace()
+const { link, inventorLink } = useTinkerfundSpace()
+const route = useRoute()
+const inventorPath = computed(() => inventorLink(props.card.inventor))
 const money = useTinkerfundMoney()
 const upcoming = computed(() => props.card.status.state === 'upcoming')
 const locale = useTinkerfundLocale()
@@ -20,7 +22,7 @@ const backedBy = computed(() => props.card.status.state === 'live' ? formatTinke
     <div class="body">
       <div>
         <h3><NuxtLink :to="link(card.path)">{{ card.title }}</NuxtLink></h3>
-        <p class="by">{{ card.categoryName }} · {{ card.inventorName }}</p>
+        <p class="by">{{ card.categoryName }} · <NuxtLink v-if="inventorPath !== route.path" class="inventor" :to="inventorPath">{{ card.inventorName }}</NuxtLink><template v-else>{{ card.inventorName }}</template></p>
         <p v-if="backedBy" class="by">{{ backedBy }}</p>
       </div>
       <TinkerfundProgressBar v-if="!upcoming" :percent="card.status.percent" />
@@ -64,6 +66,8 @@ h3 a::after { content: ''; position: absolute; inset: 0; }
 h3 a:focus-visible { outline: none; }
 .card:has(h3 a:focus-visible) { outline: 2px solid var(--tf-link); outline-offset: 2px; }
 .by { margin: 4px 0 0; color: var(--tf-muted); font-size: 14px; }
+/* Sits above the card-wide link's hit area. */
+.inventor { position: relative; z-index: 1; }
 .tiles {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));

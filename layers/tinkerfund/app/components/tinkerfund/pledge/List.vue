@@ -34,10 +34,10 @@ const money = useTinkerfundMoney()
 .tf-label { grid-area: ref; }
 .ref { color: var(--tf-ink); font-weight: 600; }
 h3 { grid-area: title; font: 800 18px/1.2 var(--tf-font); font-stretch: 82%; overflow-wrap: anywhere; }
-h3 a { color: var(--tf-ink); text-decoration: none; }
+h3 a { color: var(--tf-ink); text-decoration-color: transparent; }
 /* The whole row opens the receipt; the link stays the one accessible target. */
 h3 a::after { content: ''; position: absolute; inset: 0; border-radius: var(--tf-radius-panel); }
-.row:hover h3 a { text-decoration: underline; }
+.row:hover h3 a { text-decoration-color: currentColor; }
 .state { grid-area: state; justify-self: end; }
 .placed { grid-area: placed; color: var(--tf-muted); font-size: 14px; }
 .total { grid-area: total; justify-self: end; font: 600 15px/1 var(--tf-mono); font-variant-numeric: tabular-nums; }

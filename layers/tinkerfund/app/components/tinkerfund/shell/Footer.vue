@@ -38,8 +38,7 @@ const categories = useTinkerfundCategories()
 }
 .brand p { margin: 10px 0 0; color: var(--tf-muted); }
 nav { display: grid; gap: 6px; align-content: start; justify-items: start; }
-nav a { color: var(--tf-ink); text-decoration: none; }
-nav a:hover { text-decoration: underline; }
+nav a { color: var(--tf-ink); text-decoration-color: transparent; }
 .tf-label { margin: 0 0 4px; }
 .legal { padding-block: 16px; border-top: var(--tf-hairline); color: var(--tf-muted); font-size: 13px; }
 .legal p { margin: 0; }

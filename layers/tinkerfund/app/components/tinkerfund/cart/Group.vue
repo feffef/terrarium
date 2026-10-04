@@ -78,8 +78,7 @@ function setBonus(event: Event) {
 .group { display: grid; gap: 4px; padding: 16px; }
 .head { display: grid; gap: 4px; }
 h2 { margin: 0; font: 800 20px/1.15 var(--tf-font); font-stretch: 82%; overflow-wrap: anywhere; }
-h2 a { color: var(--tf-ink); text-decoration: none; }
-h2 a:hover { text-decoration: underline; }
+h2 a { color: var(--tf-ink); text-decoration-color: transparent; }
 .notice { margin: 0; color: var(--tf-bad); font-size: 14px; }
 .lines { display: grid; margin: 0; padding: 0; list-style: none; }
 li { display: grid; grid-template-columns: 1fr auto; grid-template-areas: 'what what' 'qty amount' 'remove amount'; gap: 8px 12px; align-items: center; padding: 12px 0; border-bottom: var(--tf-hairline); }

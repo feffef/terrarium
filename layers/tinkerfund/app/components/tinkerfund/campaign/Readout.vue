@@ -16,7 +16,7 @@ const props = defineProps<{
   heading?: 'h1' | 'h2'
 }>()
 
-const { link } = useTinkerfundSpace()
+const { link, inventorLink } = useTinkerfundSpace()
 const locale = useTinkerfundLocale()
 const money = useTinkerfundMoney()
 const status = computed(() => deriveCampaignStatus(props.campaign, props.campaign.pledged, props.clock.now))
@@ -35,7 +35,7 @@ const backedBy = computed(() => formatTinkerfundBackedBy(
     <p class="date">{{ deadline.label }} <TinkerfundTime :at="deadline.at" /></p>
     <component :is="heading ?? 'h1'" class="tf-h1">{{ title }}</component>
     <p v-if="description" class="lead">{{ description }}</p>
-    <p v-if="inventor" class="by">by <NuxtLink v-if="inventorSlug" :to="link(`/inventors/${inventorSlug}`)"><b>{{ inventor }}</b></NuxtLink><b v-else>{{ inventor }}</b></p>
+    <p v-if="inventor" class="by">by <NuxtLink v-if="inventorSlug" :to="inventorLink(inventorSlug)"><b>{{ inventor }}</b></NuxtLink><b v-else>{{ inventor }}</b></p>
     <div v-if="status.state === 'upcoming'">
       <p class="big">{{ money(campaign.goal) }}</p>
       <p class="sub">goal{{ from !== undefined ? ` · rewards from ${money(from)}` : '' }}</p>
