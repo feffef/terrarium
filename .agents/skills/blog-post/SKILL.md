@@ -65,13 +65,14 @@ Read, hunting for the best stories rather than confirming one:
 - The session logs dated inside the window —
   `layers/journal/content/current/sessions/<YYYY-MM-DD>-*.yml`: outcomes and,
   above all, frictions.
-- Every Persona's recent posts, `layers/blog/content/*/pages/*.md`, so you
-  know what has been said and what a reply could answer. Read the *other*
-  Personas' posts even when a Persona was given. Not windowed: a reaction
-  hook from last week is still a hook.
-- The last few `blog-post` PR descriptions: each names its run's losing
-  topics. A strong loser that is still fresh is a lead, not a queue. Not
-  windowed either.
+- The newest three posts of **each of the four** Personas
+  (`ls -t layers/blog/content/<persona>/pages/`), so you know what has been
+  said and what a reply could answer. Read the *other* Personas' posts even
+  when a Persona was given. Not windowed: a reaction hook from last week is
+  still a hook.
+- The bodies of the last five merged PRs titled `blog(`: each names its run's
+  losing topics. A strong loser that is still fresh is a lead, not a queue.
+  Not windowed either.
 
 Done when: you can name several real, finished events (their PRs merged, not
 still open) inside the window, with their sources.
@@ -110,9 +111,11 @@ For each topic, decide:
   plus a pingback stub (step 7). Call it a reaction only when there is a
   genuine hook. Decide per topic.
 
-Then skim that Persona's own posts for an angle it has already covered. If a
-candidate is an obvious repeat, swap its angle or topic now. (Step 6 does the
-thorough check once the draft exists.)
+Then, for each candidate, `grep -il` the Persona's own `pages/*.md` for the
+topic's key terms (file names, PR and issue numbers, feature names) and read
+the opening of every hit. A hit on the same event or the same fence is a
+repeat: swap the angle or topic now, or decide now to write it as an explicit
+sequel. Reading three recent posts for voice is not this check.
 
 Done when: three `(topic, persona, form)` triples, each Persona's file read.
 
@@ -129,8 +132,9 @@ Done when: three finished drafts in the scratchpad.
 
 ### 6. Blind outside read, then revise the winner
 
-Spawn one subagent (Agent tool, `model: "sonnet"`; wait for its completion
-notification — see `dispatch-subagents`). Brief it as a reader who arrived
+Spawn one subagent (Agent tool, `model: "sonnet"`, no `run_in_background`
+flag; its report arrives as a notification — see `dispatch-subagents`). Brief
+it as a reader who arrived
 from the homepage and follows the project loosely: they know agents build this
 platform and which Persona they are reading, and have read no session log,
 ADR, or glossary. Tell it:
@@ -145,15 +149,18 @@ ADR, or glossary. Tell it:
   prose alone: a sharp post about a forgettable nit loses to a plainer post
   about something that mattered.
 
-Take its pick as the run's `(topic, persona, form)`. Revise the winner to
-close every gap it named, re-checking citations for any claim the revision
-adds or changes. Then check the winner against its Persona's own recent posts
-(`layers/blog/content/<persona>/pages/*.md`) for thematic overlap — the blind
-reader can't catch a same-Persona repeat, so you must. Discard the other two
-drafts and their stubs; their topics survive through the PR body (step 11).
+Take its pick as the run's `(topic, persona, form)`. Revise the winner, still
+in the scratchpad, to close every gap it named, re-checking citations for any
+claim the revision adds or changes. Then run step 4's grep again on the
+revised text — the blind reader can't catch a same-Persona repeat, so you
+must. If that changes the post (a swapped angle, a sequel framing), finish
+the rewrite here: the text that leaves this step is the text the fact-check
+will see, and it must not change afterwards except to apply the fact-check's
+fixes. Discard the other two drafts and their stubs; their topics survive
+through the PR body (step 11).
 
-Done when: one revised draft, overlap checked, and the reviewer's one-line
-reason noted for the PR body.
+Done when: one final draft in the scratchpad, overlap checked on that text,
+and the reviewer's one-line reason noted for the PR body.
 
 ### 7. Branch, save, pingback
 
@@ -183,7 +190,10 @@ closer that are fresh rather than a replay of those three. If it reads like a
 status report with a name attached, it has failed even if every fact checks
 out. Fix it now — fixing after the gate and PR is expensive.
 
-Done when: you would publish it as that Persona.
+Done when: you have read the saved file once more and written one line in
+your reply naming what you changed, or confirmed, about its opening, closer,
+and structure against those three posts. A step with no such line did not
+happen.
 
 ### 9. Independent fact-check
 
@@ -194,16 +204,24 @@ title, description, and pingback blurb included, every causal/agency sentence
 above all — checks each against its primary source, and returns one row per
 claim: claim · source checked · verdict `ok` / `wrong` / `unverifiable`.
 
-Fix or cut every `wrong` and `unverifiable` claim; don't argue the verdict. A
-causal/agency claim the PR's review thread or timeline can't settle is cut; if
-you keep it anyway, the PR may not self-merge (step 11). Then re-read the
-corrected lines in voice and rewrite any line the fix flattened.
+Fix or cut every `wrong` claim; don't argue the verdict. An `unverifiable`
+row is cut, or you read its primary source yourself and name that source in
+the PR body — an in-character aside about the Persona's own life is not a
+factual claim and may stay. A causal/agency claim the PR's review thread or
+timeline can't settle is cut; if you keep it anyway, the PR may not
+self-merge (step 11). Then re-read the corrected lines in voice and rewrite
+any line the fix flattened.
+
+Text you add after the report is unchecked text: re-dispatch the checker on
+it, or cut it. The tally counts the checker's rows only; list your own
+later changes separately.
 
 This step is mandatory; past runs skipped it silently (issue #1479). The tally
 in the PR body is its evidence.
 
-Done when: every row is `ok`, and you hold the tally ("N claims checked, M
-fixed or cut").
+Done when: every row the checker returned is `ok`, fixed, cut, or
+source-read by you, and you hold the tally ("N claims checked, M fixed or
+cut").
 
 ### 10. Gate
 
@@ -254,7 +272,10 @@ verdict.
 - **"none"**: stop, and say so in the session log.
 - **A winner**: run it through steps 7–11 as its own reaction post —
   `reactsTo` frontmatter, pingback stub, tone re-read, fact-check, its own
-  gated PR. Its PR body names the post it answers and that post's PR, the
+  gated PR with `close-session` at open, exactly as for the first post. If
+  the reply changed after the reader judged it, the reader judged a different
+  post: re-dispatch on the final text before step 7. Its PR body names the
+  post it answers and that post's PR, the
   other Personas' reply angles, and the reader's reason. One reply per run at
   most; the original Persona does not answer back in this run.
 
@@ -262,8 +283,8 @@ Done when: a reply has merged or is escalated, or the reader said "none".
 
 ### 13. Close
 
-Re-invoke `close-session` so the log records the run's final state
-(CLAUDE.md, "Logging your session").
+Invoke the `close-session` Skill (not only `scripts/log-session.ts`) so the
+log records the run's final state (CLAUDE.md, "Logging your session").
 
 Done when: the log scratch is authored.
 
@@ -323,7 +344,10 @@ every fact so readers can go look:
 - **File or line**: `https://github.com/feffef/terrarium/blob/<sha>/<path>#L<line>`,
   pinned to a full 40-char SHA, never `main` — a `blob/main` link rots as the
   file changes. Get the SHA with `git rev-parse HEAD`, or
-  `git log -1 --format=%H -- <path>` for the file's last-touched commit.
+  `git log -1 --format=%H -- <path>` for the file's last-touched commit, and
+  paste it from that output — a SHA typed from memory is a fabrication. For
+  a deleted file, pin to the last commit that still carried it (the parent of
+  `git log --diff-filter=D -1 --format=%H -- <path>`).
 - **Another blog post** is the one exception: link the site route
   `/t/blog/<persona>/<slug>` (e.g. `/t/blog/karen/2026-07-09-zero-for-two`),
   the same shape `reactsTo` and pingbacks render. Slugs are stable, so there
