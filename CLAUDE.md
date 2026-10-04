@@ -279,16 +279,16 @@ layers/<tenant>/content/<space>/<collection>/…   # Documents, isolated per Spa
                                     #   (Tenant layers live under Nuxt's `layers/` — see docs/agents/tenant-layers.md)
 layers/<tenant>/tests/              # this Tenant's OWN tests (unit + e2e module) — see tests/README.md
 shared/manifest.ts                  # manifest types + defineTenant() + validation
-shared/kinds.ts                     # collection-kind registry: shared cross-Tenant minimum contracts (human-only, ADR-0025)
-shared/schemas/                     # shared cross-consumer Zod schemas: a shared kind's schema when it has one (human-only, ADR-0025)
+shared/kinds.ts                     # collection-kind registry: shared cross-Tenant minimum contracts
+shared/schemas/                     # shared cross-consumer Zod schemas: a shared kind's schema when it has one
                                     #   (session kind contract, utcTimestamp; e.g. session.ts — the session-log shape, ADR-0009/0025)
 shared/expand.ts                    # pure manifest→keyed-collection expansion + catalogFrom() (expand(), L3-tested)
-shared/routing.ts                   # runtime route resolution: request → keyed collections (human-only, ADR-0006)
+shared/routing.ts                   # runtime route resolution: request → keyed collections
 modules/routing.ts                  # build-time Nuxt module: manifests → #routing virtual module (ADR-0014)
-modules/catalog.ts                  # build-time Nuxt module: manifests → #catalog cross-Tenant projection (human-only, ADR-0025)
+modules/catalog.ts                  # build-time Nuxt module: manifests → #catalog cross-Tenant projection
 content.config.ts                   # ordinary module — builds keyed collections dynamically (ADR-0013)
 app/composables/space.ts            # useSpace(): route → keyed collections or 404 (auto-imported wrapper)
-app/composables/catalog.ts          # queryAcrossTenants(kind, project)/queryPages(): the sanctioned cross-Tenant read primitive (human-only, ADR-0025);
+app/composables/catalog.ts          # queryAcrossTenants(kind, project)/queryPages(): the sanctioned cross-Tenant read primitive;
                                     #   aggregator views normalize on top in their own layer (e.g. layers/commons/.../timeline.ts)
 app/pages/t/[tenant]/[space]/[...slug].vue   # runtime routing + ContentRenderer
 tests/unit/                         # PLATFORM unit tests (L3 isolation, shared/, scripts/)
@@ -316,12 +316,12 @@ so this doc can't drift.
 
 **The authoritative gate is CI, which is *meant* to run the full `pnpm gate` on
 every PR** (`.github/workflows/gate.yml`) — the run that must go green to merge
-(ADR-0004 convention; GitHub does not currently enforce that mechanically —
-`main` carries no branch protection or ruleset, so every "nothing lands
-without a gated PR" rule rests on agents choosing to open one. See
-`docs/research/github-branch-protection-vs-autonomous-log-commits.md` for the
-full history, and re-verify before relying on it — it's a dated snapshot, not
-a live check), so you don't run the full gate locally yourself. CI skips the heavy layers on the same inert
+(ADR-0004 convention; GitHub doesn't enforce it — `main` carries no branch
+protection or ruleset, so every "nothing lands without a gated PR" rule rests on
+agents opening one. History is in
+`docs/research/github-branch-protection-vs-autonomous-log-commits.md`, a dated
+snapshot: re-verify before relying on it), so you don't run the full gate locally
+yourself. CI skips the heavy layers on the same inert
 changesets `gate:scoped` does (ADR-0004's 2026-10-03 amendment). Both the keyed collections
 (Ground rules above) and the routing map derive from the manifests at build
 time — no regenerate step needed.
@@ -342,9 +342,9 @@ catches what a per-document schema
 can't see — cross-Document referential integrity (e.g. a food-web edge naming a slug
 that isn't a real Specimen) and Atlas MDC structural invariants (unclosed containers,
 phase-note/almanac cardinality — issue #446); the third flags a Skill Inventory entry
-that restates a Routine's schedule cadence (e.g. "runs daily") next to the word
-"Routine" — the "say a Skill *is* scheduled; never say *when*" convention above,
-previously unenforced (issue #813); the fourth strictly YAML-parses
+that states a Routine's cadence (e.g. "runs daily") next to the word "Routine",
+enforcing the "say a Skill *is* scheduled; never say *when*" convention above
+(issue #813); the fourth strictly YAML-parses
 `.agents/prune-trials.yml` and fails on a malformed ledger (e.g. duplicate keys from
 a missing `- problem:` boundary, issue #1222). `validate:content` checks every Tenant's content in
 ~1-2s, without paying for `nuxt build` or `pnpm test:e2e`. It is the tightest inner loop

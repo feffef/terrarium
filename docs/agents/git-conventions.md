@@ -9,9 +9,8 @@ Scope: local git mechanics only.
 
 ## Fetch before you trust history
 
-`origin/main` in this environment's pre-cloned checkout is often stale, which
-can inflate a diff to 100+ unrelated files. Before any since-last-merge diff
-or review:
+The pre-cloned `origin/main` is often stale and can inflate a diff to 100+
+unrelated files. Before any since-last-merge diff or review:
 
 - Run `git fetch origin main` and anchor on the merge-base
   (`git merge-base origin/main HEAD`) or the commit under review (`HEAD~1`).
@@ -23,11 +22,11 @@ or review:
   is a fully unrelated root, not just stale — resetting onto it blindly would
   destroy real history.
 
-Also re-fetch and rebase onto `origin/main` periodically in a long session, not
-just before a final push, especially before landing a PR touching a doc or list
-other sessions likely edit. Fetch before *starting* work a Trusted user just
-directed (`git fetch origin <branch>`, inspect the latest commits): a concurrent
-session may already have pushed it.
+In a long session, re-fetch and rebase onto `origin/main` periodically, not just
+before the final push — especially before landing a PR touching a doc or list
+other sessions likely edit. Before *starting* work a Trusted user just directed,
+`git fetch origin <branch>` and inspect the latest commits: a concurrent session
+may already have pushed it.
 
 **To read a file from main, use `git show origin/main:<path>`** — never
 `git checkout <ref> -- <path>` (stages it into the index) or
@@ -78,28 +77,23 @@ read `previous_filename` too.
 
 ## Don't chain a git command past a step that can fail silently
 
-**Never `&&`-chain a branch rename/creation with the commit/push steps that
-follow it** — `git branch -m ... && git commit ... && git push` (or
-`checkout -b`) fails at the rename/create when the branch already exists
-locally, and every step after the `&&` never runs, with no error pointing at
-it. Check existence first (`git rev-parse --verify <branch>`) and handle the
-already-exists case explicitly instead of chaining blindly.
+**Never `&&`-chain a branch rename or create with the commit/push after it.**
+`git branch -m … && git commit … && git push` (or `checkout -b`) fails at the
+rename when the branch already exists, and the later steps silently never run.
+Check first (`git rev-parse --verify <branch>`) and handle the exists case.
 
-The same discipline applies to a backgrounded check: **never chain
-`git push` (or any other state-changing git command) with `;`/`&&` right
-after starting a backgrounded gate/test run**, without first waiting for and
-checking its actual exit code — one session backgrounded `pnpm gate:scoped`
-and chained `git push` immediately after, so the push went out while the
-gate was still red. Start it per CLAUDE.md's long-command bullet, then read
-that log's actual completion/exit status before running anything that assumes
-it passed.
+**Never chain `git push` (or any state-changing git command) with `;`/`&&` after
+starting a backgrounded gate/test run.** One session chained `git push` right
+after backgrounding `pnpm gate:scoped`, and the push went out while the gate was
+red. Start the run per CLAUDE.md's long-command bullet, then read its exit
+status before anything that assumes it passed.
 
 ## Check `git status` before a destructive command, and never silence one's output
 
 **Before `git reset --hard` (or any other command that discards uncommitted
 work), run `git status` first** and stash or commit anything it finds (a
 `git reset --hard HEAD~1` mid-teardown once discarded uncommitted edits to 5
-tracked files, recovered only because this was caught).
+tracked files).
 
 **`git stash`/`git stash pop` around already-staged `git mv` renames splits
 each rename into a staged add + an unstaged delete on pop**, instead of
@@ -107,11 +101,9 @@ preserving it as a rename. Run `git add -A` afterward to re-consolidate
 before gating/committing.
 
 **Never redirect a state-changing git command's output to `/dev/null`** (or
-otherwise discard it). A `git stash pop` piped to `/dev/null` once failed
-silently, leaving the stash un-popped while a later comparison looked clean
-but was silently re-testing the base tree. Keep the exit code and stderr
-observable and check it — don't discard the one signal that would have
-caught the failure.
+otherwise discard it). A `git stash pop` so redirected once failed silently,
+leaving the stash un-popped while a later comparison silently re-tested the base
+tree. Keep the exit code and stderr observable and check them.
 
 ## A Stop-hook "Unverified" flag isn't automatically yours to fix
 
