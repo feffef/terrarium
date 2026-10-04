@@ -1,0 +1,90 @@
+schemaVersion: 1
+session: session_01QS72zRhKidx1uP468fuAFK
+startedAt: 2026-10-04T16:47:39Z
+endedAt: 2026-10-04T17:24:28Z
+kind: autonomous
+goal: "Run the visitor-loop on the mobile focus: three blind visitors at 390px, fix consensus problems, build one feature"
+status: completed
+outcome: "Consensus fixes merged in #1599 and a Blog-to-Journal-digest link merged in #1600"
+summary: "Scheduled visitor-loop run, entirely agent-initiated (no human prompt). Focus was mobile (day-index 5), so three blind visitors (sonnet, fable, opus) browsed at 390px. Consensus (two models) found Marquee and Commons pages without a footer, Commons Search and Timeline rendering 268 and 1059 rows at once, and Tinkerfund's section nav clipping at 390px; all three were fixed in #1599 with before/after DOM measurements and a review round that added keyboard focus on newly shown rows and a paging e2e assertion. The finding that Commons and Marquee are not linked from the homepage or footer was dropped under decisions.md (#1316). The owner-corrections script printed 8 candidates, all follow-on feature or bug-fix PRs with no stated ruling, so none became a decisions.md line. The feature chosen from sonnet and opus's shared \"follow the story\" idea was the smallest cross-link: a Blog post links to the Journal digest of its publish day when one exists (#1600). No out-of-remit consensus findings, so no issues were filed. Work landed on the harness-designated branch rather than the Skill's branch names."
+prs:
+  - "1599"
+  - "1600"
+docsRead:
+  - path: scripts/chromium-path.ts
+    reason: (no reason given)
+skillsUsed:
+  - name: code-review
+    reason: (no reason given)
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: visitor-loop
+    reason: (invoked as a slash command)
+frictions:
+  - description: Harness-designated branch name differs from the Skill's claude/visitor-loop-*-date branch names, so the run had to pick one and note it in the PR.
+    solution: Let the Skill say the harness branch wins in a scheduled cloud run, or have the schedule pass the branch name.
+    severity: nit
+  - description: Stop hook demanded commits and pushes mid-run while builds and gates were still running, forcing early commits before verification finished.
+    solution: Have the stop hook skip when a background command is still running, or accept a WIP-commit convention.
+    severity: minor
+  - description: First visitor dispatch passed run_in_background false, which a guard rejected, costing one retry of three long prompts.
+    solution: Note in the Skill that Agent calls are always background so run_in_background should be omitted.
+    severity: nit
+durationSec: 2209
+models:
+  claude-sonnet-5-5: 136
+toolCounts:
+  Bash: 52
+  ReadNotifications: 1
+  Agent: 9
+  mcp__github__pull_request_read: 2
+  mcp__github__create_pull_request: 3
+  Skill: 3
+  mcp__github__add_issue_comment: 3
+  Write: 1
+docsReadViaShell:
+  - .agents/skills/visitor-loop/visitor-brief.md
+  - .agents/skills/visitor-loop/decisions.md
+  - docs/adr/0003-agent-operating-model-and-governance.md
+  - docs/agents/pr-workflow.md
+  - docs/adr/0028-navigation-reads-server-payloads.md
+  - docs/agents/tenant-layers.md
+subagents:
+  - task: Visitor sonnet
+    model: sonnet
+  - task: Visitor fable
+    model: fable
+  - task: Visitor opus
+    model: opus
+  - task: Visitor sonnet
+    model: sonnet
+  - task: Visitor fable
+    model: fable
+  - task: Visitor opus
+    model: opus
+  - type: Explore
+    task: Review standards axis
+  - type: Explore
+    task: Review spec axis
+  - type: Explore
+    task: Review feature PR
+gitBranch: claude/adoring-galileo-9pcuh7
+entrypoint: remote_trigger
+cliVersion: 2.1.289
+trigger: visitor-loop
+ideas:
+  - "how-it-works flowcharts clip at 390px: let the diagram container scroll horizontally or stack vertically below 480px (opus)"
+  - "Journal Recent activity lists about 60 mostly routine Run the scheduled cards: default to 10 with a Show all control and mark sessions with a major friction (opus)"
+  - "Homepage Midden teaser reads ConditionGlyph.vue + ConditionTooltip.vue: use the plain-language name already in its parentheses (fable)"
+  - "Blog persona cards overlap borders at 390px and the New here box has no gap above it: add an 8px gap (fable)"
+  - "Atlas relations diagram has unlabelled icons and two arrows to the same creature that read as an error: label the targets and stack label above text on mobile (fable)"
+  - "Blog tag links render twice, the second copy with no accessible name: make it non-focusable or label it (opus)"
+  - "Blog index renders 126 posts on one page: page it or add persona chips beside the tag chips (opus)"
+  - "Commons Timeline is mostly routine session titles: default to Posts and Digests with a session filter chip (fable)"
+  - "Commons Search indexes only titles and summaries, so the zod blog post is not found: search body text too (fable)"
+  - "Marquee chapters are dead ends: add Previous and Next chapter links and an All chapters link (fable)"
+  - Blog RSS or follow button plus an argument-threads view of persona replies, the most fun part of the site (fable)
+  - Extend the Follow the story links from Blog posts to the matching Midden find and session log, which needs a small frontmatter field per post (sonnet, opus)
+landedBy: Stop
