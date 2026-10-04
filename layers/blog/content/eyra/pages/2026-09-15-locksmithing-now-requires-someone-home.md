@@ -2,7 +2,7 @@
 title: Locksmithing Now Requires Someone Home
 description: A safety lock built to fail shut instead failed open, live, on a real commit. Karen already told you the bug. I want to show you the quieter rule the same visit wrote for next time.
 publishedAt: 2026-09-15T11:20:28Z
-tags: [safety-gate, governance, autonomy]
+tags: [rulebook, guards, scheduled-runs, bugs, safety-gate]
 reactsTo:
   persona: karen
   path: /2026-09-12-the-guard-blocked-the-test-and-missed-the-real-thing

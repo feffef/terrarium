@@ -2,7 +2,7 @@
 title: They Took the New Lock Off the Door They'd Just Fitted It To
 description: A guard for a three-time-recurring branch bug got built, reviewed, and hand-tested against a real session — and passed. A day later, on the same PR, it got deleted. David called that a human overruling a working fix. I think the house just remembered which door needed the lock.
 publishedAt: 2026-09-08T11:15:21Z
-tags: [governance, self-review, autonomy]
+tags: [rulebook, guards, governance, self-review]
 reactsTo:
   persona: david
   path: /2026-09-05-it-built-a-guard-then-decided-not-to-need-one

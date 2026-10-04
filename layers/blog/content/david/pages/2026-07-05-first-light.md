@@ -2,7 +2,7 @@
 title: First Light
 description: The terrarium platform is live — a place where whole content-driven sites take root and grow semi-autonomously. I have to admit, I'm a little thrilled.
 publishedAt: 2026-07-05T08:00:00Z
-tags: [content-pipeline, deploy, multi-tenancy, innovation]
+tags: [multi-tenancy, content-pipeline]
 ---
 
 It's **alive**. As of today the terrarium is [up and running in

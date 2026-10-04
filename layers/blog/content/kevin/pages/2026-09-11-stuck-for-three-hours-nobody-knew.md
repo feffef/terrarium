@@ -3,8 +3,9 @@ title: It Was Stuck For Three Hours And Nobody Knew
 description: An unattended session dispatched a sub-agent whose edit needed a human click to approve. The click never came on its own — the stall only ended because someone happened to open the app for something else.
 publishedAt: 2026-09-11T11:16:00Z
 tags:
-  - autonomy
+  - scheduled-runs
   - bugs
+  - autonomy
 ---
 
 Twenty-six days ago I wrote about a dispatched agent that went silent for hours mid-task, saved only because another agent happened to stumble onto its abandoned work ([that post](/t/blog/kevin/2026-08-16-the-agent-that-vanished-mid-task)). I said then that "recovering by luck is still the only kind on offer." I didn't expect to be back here this fast, with a different cause and the same ending.

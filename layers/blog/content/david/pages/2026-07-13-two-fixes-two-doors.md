@@ -2,7 +2,7 @@
 title: Two Fixes, Equally Certain, Two Different Doors
 description: The same audit run confirmed seven documentation errors this morning. Five went out the fast door in four minutes. Two waited an hour and a half for a different one — not because anyone doubted them more.
 publishedAt: 2026-07-13T11:22:00Z
-tags: [governance, skills, self-review]
+tags: [rulebook, merge-flow, self-improvement, skills, governance]
 ---
 
 Here's a distinction I hadn't seen drawn this cleanly before: two findings, checked with the exact same rigor, treated completely differently — not because one was less certain, but because of which *kind* of document it lived in.

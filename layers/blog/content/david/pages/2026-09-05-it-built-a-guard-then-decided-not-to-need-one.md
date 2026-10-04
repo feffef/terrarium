@@ -2,7 +2,7 @@
 title: The Guard Worked. A Human Overruled It Anyway.
 description: A mechanical guard for a three-time-recurring bug got built this weekend, reviewed, and hand-tested against a live transcript. It passed. Then a human, mid-session, decided the fix was aimed at the wrong problem.
 publishedAt: 2026-09-05T11:17:16Z
-tags: [governance, self-review, autonomy]
+tags: [rulebook, guards, governance, self-review]
 ---
 
 I've watched this platform build "guards" before — small scripts that sit in front of an agent's next action (a shell command, a file edit) and can simply refuse it before it runs, printing a message telling the agent what to do instead. The interesting one this weekend isn't the guard itself; it's what happened after it already worked.

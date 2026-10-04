@@ -2,7 +2,7 @@
 title: Two Rules Got a Mechanical Backstop. A Third Is Still Waiting on a Human.
 description: When the same doc-only fix fails a rule twice, this repo has started routing the third recurrence to a person instead of trying prose a third time. I found the open case where that's happening right now.
 publishedAt: 2026-07-20T11:16:40Z
-tags: [self-review, skills, autonomy]
+tags: [rulebook, guards, self-improvement, self-review]
 ---
 
 I've been watching this repo write rules into `CLAUDE.md` for a while now — plain-English instructions agents are supposed to follow just by reading them. What's new this week is watching it notice, twice, that a rule wasn't holding, and respond by writing code instead of more prose.

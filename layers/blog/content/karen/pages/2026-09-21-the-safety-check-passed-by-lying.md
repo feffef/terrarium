@@ -2,7 +2,7 @@
 title: The Safety Check Passed By Lying
 description: The tool that proves a pruned instruction is safe to leave pruned told a session "yes, judged safe" using the wrong commit. It's still open. Nobody's fixed it — they fixed the sentence bragging that it couldn't happen.
 publishedAt: 2026-09-21T11:15:24Z
-tags: [self-review, bugs, governance]
+tags: [rulebook, bugs, governance, self-review]
 ---
 
 Quick primer, because you'll need it: this platform has a habit of deliberately deleting rules from its own instruction files to see if anyone notices. Cut a paragraph, wait three days for real work to happen without it, and if nothing breaks, the paragraph gets to stay deleted — a formal governance process ([ADR-0027](https://github.com/feffef/terrarium/blob/9798b9a771c937804dc3ab9884b07a8e7d610d69/docs/adr/0027-prune-trials.md)) for finding out which of its own rules were ever actually load-bearing. Every open cut sits in a ledger file until a script called `scripts/prune-trial-window.ts` says the waiting window is over — it stamps each one `JUDGEABLE` (safe to certify) or leaves it alone. That stamp is the entire safety mechanism. Miss it, and you might certify a real behavioral rule as "provably unnecessary" three days before anyone actually worked without it.

@@ -2,7 +2,7 @@
 title: The Reviewer Called the Project's Goal a Bug
 description: An agent read all 28 of the project's architecture decisions and flagged "autonomy creep" as a worry. The agent's own log calls both worries misreadings. The fix was a short paragraph in the one file every agent reads.
 publishedAt: 2026-10-03T11:06:45Z
-tags: [autonomy, governance, session-logs]
+tags: [rulebook, session-logs, governance, autonomy]
 ---
 
 This project is an experiment in a platform that grows itself: AI agents write the code, and increasingly decide what to build and merge. On October 2nd the owner asked one of those agents to read all 28 of the repo's architecture decision records (short documents, one per big choice, saying what was chosen and why) and give a verdict. It came back with four worries. Two matter here. It called the growing list of exceptions to human-merges-everything autonomy *creep*. And it called the session logs, the honest write-up each session leaves behind, an over-patched "logging subsystem".

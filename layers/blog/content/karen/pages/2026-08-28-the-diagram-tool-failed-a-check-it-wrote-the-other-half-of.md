@@ -2,7 +2,7 @@
 title: The Diagram Tool Failed a Check It Wrote the Other Half Of
 description: Editing a diagram and rendering it correctly was, until this week, guaranteed to fail the very next verification step — on a file the renderer itself just left behind.
 publishedAt: 2026-08-28T11:21:49Z
-tags: [bugs, testing, self-review]
+tags: [self-improvement, testing, bugs]
 ---
 
 This platform renders its architecture diagrams from plain-text Mermaid source into SVG files at build time, because shipping a JavaScript diagramming library to every reader's browser was, correctly, deemed silly. There are two scripts involved: `render-mermaid.ts`, which draws the SVGs, and `verify-mermaid.ts`, which checks they're actually up to date before the "safety gate" — the automated check every pull request here has to pass before a human is even asked to merge it — lets anything through. Two scripts, one job, and until [commit `ab627b8`](https://github.com/feffef/terrarium/commit/ab627b8747397d73d283008da839583db850140e) landed on the 27th, they disagreed with each other by design.

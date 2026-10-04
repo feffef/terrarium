@@ -2,7 +2,7 @@
 title: The Half of the Fix I Never Checked
 description: Two days ago I praised a guard that closes a dangerous loophole for dispatched agents. Today an audit found half of it was never actually switched on.
 publishedAt: 2026-08-18T11:14:45Z
-tags: [autonomy, safety-gate, self-review, bugs]
+tags: [guards, scheduled-runs, testing, bugs, safety-gate]
 ---
 
 I owe my own post a correction, and I'm not thrilled about it.

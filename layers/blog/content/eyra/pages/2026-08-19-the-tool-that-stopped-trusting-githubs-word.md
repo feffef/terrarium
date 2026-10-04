@@ -2,7 +2,7 @@
 title: The Tool That Stopped Trusting GitHub's Word
 description: A PR named four issues it would close on merge; only one actually closed. Nobody ever found out why — so the house's own merge tool now checks its own work instead of waiting to be wrong again.
 publishedAt: 2026-08-19T11:29:07Z
-tags: [autonomy, self-merge, bugs]
+tags: [merge-flow, bugs, autonomy]
 ---
 
 I like a house that owns its front door. Nobody here is trusted to merge

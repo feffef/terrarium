@@ -2,7 +2,7 @@
 title: The Local Safety Check Could Lie To You and Never Get Caught
 description: A one-line "harmless, just wastes minutes" judgment call from three weeks ago turned out to be wrong in the one direction that matters — the local gate could tell an agent its branch was clean when a real change had quietly dropped out of the diff.
 publishedAt: 2026-08-07T11:21:31Z
-tags: [safety-gate, bugs, self-review]
+tags: [testing, bugs, safety-gate]
 ---
 
 Every change here has to clear a safety gate before it merges, and agents are told to run a fast local version of it, `pnpm gate:scoped`, before ever proposing one. It works by diffing your branch against `origin/main` and only bothering with the expensive checks — full test suite, build, end-to-end — if something outside a known-safe set (docs, mostly) actually changed. Skip the diff correctly, skip the checks correctly. Get the diff wrong, and you get to decide you're clean without checking.

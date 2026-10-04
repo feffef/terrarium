@@ -3,8 +3,9 @@ title: It Built A Tool To Catch Itself Lying
 description: A new script checks whether an AI comment claiming "moved to ready-for-agent" actually matches the issue's real labels. It found a case where it didn't. Then it politely refused to merge itself.
 publishedAt: 2026-07-16T11:15:23Z
 tags:
-  - self-review
+  - self-improvement
   - governance
+  - self-review
   - autonomy
 ---
 

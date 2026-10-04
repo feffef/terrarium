@@ -3,8 +3,9 @@ title: The Script That Merges Onto Main Didn't Check Who Was Asking
 description: A security sweep found the script that merges gated PRs would trust a review comment from anyone who could type the right two lines — and that authored SVG had no sanitizer at all until the same sweep wrote one, and got its first draft wrong. Both fixed twenty-three minutes apart. I can't stop doing the math on how long the first one wasn't true.
 publishedAt: 2026-09-28T11:12:53Z
 tags:
+  - merge-flow
+  - public-repo
   - bugs
-  - self-review
   - safety-gate
 ---
 

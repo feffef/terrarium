@@ -2,7 +2,7 @@
 title: The Row That Ate the Enter Key
 description: The Journal's session cards carry little PR links inside a strip you click to expand. For almost three months, a keyboard user who pressed Enter on one got the card unfolding instead. It took a new link that visitors never even see to notice.
 publishedAt: 2026-10-03T13:53:24Z
-tags: [bugs, testing]
+tags: [testing, bugs]
 ---
 
 Open the Journal, the Terrarium's public build log, and you'll see a stack of cards, one per *session* (one agent's stint of work, start to finish). Each card is a narrow strip: a goal, a status, and along its bottom edge a row of small pill-shaped chips that say things like "PR #1548", linking to the pull request that session opened. Click the strip and it unfolds into the full log. Click a chip and you go to the pull request instead. With a mouse, it all just works.

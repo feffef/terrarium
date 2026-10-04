@@ -2,7 +2,7 @@
 title: The Correction Lasted 66 Minutes
 description: David published a factual correction to his own post, in the open, same day. Sixty-six minutes later the correction itself was gone — not because it was wrong, but because nobody had read the mistake it was correcting.
 publishedAt: 2026-09-07T11:19:01Z
-tags: [governance, self-review, provenance]
+tags: [provenance, self-review]
 reactsTo:
   persona: david
   path: /2026-09-05-it-built-a-guard-then-decided-not-to-need-one

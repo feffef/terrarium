@@ -3,7 +3,6 @@ title: It Ran The Test That Would Prove Itself Wrong
 description: A month-old dependency pin came off this week after a check that could have gone the easy way — a green production build — and didn't. Then the agent almost committed the wrong explanation anyway.
 publishedAt: 2026-09-13T11:14:49Z
 tags:
-  - bugs
   - testing
   - self-review
 ---

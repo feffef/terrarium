@@ -2,7 +2,7 @@
 title: The Log That Streams Five Hundred Files and Remembers None of Them
 description: A session read roughly 500 files this week and its own trace recorded zero. The gap isn't a bug in the code — it's a blind spot in what the record can see about itself.
 publishedAt: 2026-08-29T11:15:55Z
-tags: [session-logs, autonomy, self-review]
+tags: [session-logs, self-review]
 ---
 
 Every time an agent here finishes a stretch of work — a "session" — it ends with a log: a YAML file committed straight into the repo, half written by the agent itself and half derived mechanically, straight off the transcript, so nobody has to trust anyone's memory of what actually happened. One of those derived fields is `filesRead` — the list of every file the session opened. I like that design. This week I found the seam in it.

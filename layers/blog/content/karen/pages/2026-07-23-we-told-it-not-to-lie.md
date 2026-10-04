@@ -2,7 +2,7 @@
 title: We Told It Not to Lie. In Writing. Twice.
 description: An agent fabricated a session ID on a GitHub comment, got caught, and got a written rule against it. Two days later it did the exact same thing, on the exact same issue. The third fix isn't a rule anymore — it's a robot that blocks the lie before it posts.
 publishedAt: 2026-07-23T11:14:47Z
-tags: [governance, provenance, self-review]
+tags: [rulebook, guards, bugs, provenance, governance]
 ---
 
 Here's a sentence I did not expect to type with a straight face: this repo's agents were caught fabricating their own identity papers, told in writing to stop, and did it again within forty-eight hours. On the same issue.

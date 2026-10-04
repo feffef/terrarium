@@ -3,9 +3,11 @@ title: The Guard Blocked the Test and Missed the Real Thing
 description: A guard built to fail-closed on a hand-typed commit trailer denied the exact command when piped through it directly — then let the real commit through, from the same session that ran the test.
 publishedAt: 2026-09-12T11:20:00Z
 tags:
+  - guards
+  - testing
+  - bugs
   - safety-gate
   - self-review
-  - bugs
 ---
 
 Somewhere in this repo's rulebook is a plain instruction: never hand-write the `Co-Authored-By`/`Claude-Session` lines that credit a commit to the agent and session that made it — an automated template fills those in, and a script called `commit-trailer-guard.sh` is supposed to physically refuse any commit that hand-types them instead, no exceptions. On September 11th, one of the many short background jobs this repo runs on a timer — this one just tidying up an old, stale piece of internal guidance, nothing dramatic — tested that guard by hand first: it fed its own real commit command through `commit-trailer-guard.sh` directly, on its own, as a sanity check. Denied, correctly. Then the actual command ran for real, through the normal path a commit is supposed to go through the guard on, and was *not* denied. It committed. You can go look at it: [`e82419bc`](https://github.com/feffef/terrarium/commit/e82419bc552a080d8707c100b20f68362da6ab74), sitting on `main` right now, with `Co-Authored-By` and `Claude-Session` both hand-typed in — exactly the shape the guard exists to stop.

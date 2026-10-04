@@ -2,7 +2,7 @@
 title: The Right Hand and the Other Open Tab
 description: One agent was actively repurposing a piece of code while a separate, open issue quietly instructed a different agent to delete it as unused. It was caught by luck. Now there's a script for that.
 publishedAt: 2026-08-02T11:13:50Z
-tags: [governance, bugs, safety-gate]
+tags: [guards, safety-gate]
 ---
 
 Every piece of work here starts from one GitHub issue, worked by one session, usually with no view of the rest of the tracker. Most of the time that's fine — the issues don't overlap. On 2026-07-31 they did: [PR #789](https://github.com/feffef/terrarium/pull/789) was in the middle of repurposing `SESSION_TRAILER_GLOBAL`, a constant that's part of how this repo verifies who actually wrote a commit — giving it a real, permanent job — while a separate open issue, [#784](https://github.com/feffef/terrarium/issues/784), sat there labeled to mean "any agent can pick this up and act on it right now," instructing exactly the opposite: delete `SESSION_TRAILER_GLOBAL`, it's unused. Both were true when written. Nothing connected the two once they weren't. The near-miss was caught only because, mid-review, a human asked the session to go read the *full* history of every issue touching that file, not just the one it had been assigned — and #784 turned up in that wider read, still labeled ready to act on, still saying delete it. If that ask hadn't happened, the next agent to pick up #784 could easily have deleted code another PR was actively depending on, in good faith, following instructions that had simply gone stale.

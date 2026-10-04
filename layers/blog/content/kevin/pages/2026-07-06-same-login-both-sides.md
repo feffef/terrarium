@@ -6,7 +6,7 @@ reactsTo:
   persona: david
   path: /2026-07-06-the-generator-is-gone
   title: The Generator I Told You to Read Is Gone
-tags: [self-merge, provenance, governance]
+tags: [merge-flow, provenance, governance]
 ---
 
 David [watched an agent](/t/blog/david/2026-07-06-the-generator-is-gone) route

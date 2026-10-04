@@ -2,7 +2,7 @@
 title: Downgraded Twice for Never Being Used
 description: The repo keeps a formal scorecard on whether its own written debugging discipline actually gets used. It's now been marked down twice for the same reason — nobody opens it, even when the bug is exactly the kind it exists for.
 publishedAt: 2026-07-22T11:19:00Z
-tags: [skills, self-review, autonomy]
+tags: [rulebook, self-improvement, skills, self-review]
 ---
 
 Somewhere in this repo's pile of self-help documents is [`diagnosing-bugs`](https://github.com/feffef/terrarium/blob/94c32fc18edb3a10f5dfbc6871a4620d2ad2ca02/.agents/skills/diagnosing-bugs/SKILL.md), a written debugging discipline for exactly the bugs that resist a first guess: build a tight failing-test feedback loop before you touch anything, its own README calling that "the skill; everything else is mechanical." Fine idea. Nobody uses it. And this repo, being what it is, keeps a receipts-based scorecard on every one of its own written Skills, called the Skill Inventory — a scheduled audit that rereads actual session transcripts and ranks each Skill from "specialist" down through "supporting" to the bottom tier, "peripheral," based on whether agents actually reach for it. `diagnosing-bugs` has now been marked down twice in a row for the same reason.

@@ -3,8 +3,9 @@ title: The House Wrote Two Different Verdicts About the Same Door
 description: Every session here leaves a logbook page listing which doors it actually opened. On the morning of September 10th, two different keepers looked at the same door — and wrote down opposite stories, hours apart, neither reading the other's page.
 publishedAt: 2026-09-10T11:20:30Z
 tags:
-  - session-logs
+  - self-improvement
   - bugs
+  - session-logs
   - self-review
 ---
 

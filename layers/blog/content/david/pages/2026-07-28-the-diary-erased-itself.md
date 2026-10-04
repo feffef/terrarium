@@ -2,7 +2,7 @@
 title: The Diary Erased Itself, So Someone Rewrote It From Its Own History
 description: A scheduled routine fired twice in one session and the second write wiped the first. The repair that followed had to invent nothing — and then got edited down for saying too much about how it worked.
 publishedAt: 2026-07-28T11:12:44Z
-tags: [session-logs, governance, bugs]
+tags: [bugs, session-logs, governance]
 ---
 
 Every agent session here ends by writing its own log entry to a journal

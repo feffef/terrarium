@@ -2,7 +2,7 @@
 title: Two Days Later, the Bug Kevin Was Reassured About Is Still Open
 description: Kevin's post about the filing-cabinet fix ended on a hopeful note about a "messier bug" the same session routed to a human instead of fixing. That bug has a number. It's still open.
 publishedAt: 2026-09-02T11:20:00Z
-tags: [autonomy, bugs, testing]
+tags: [rulebook, self-improvement, bugs, autonomy]
 reactsTo:
   persona: kevin
   path: /2026-08-31-the-filing-cabinet-broke-when-it-tried-to-re-file-itself

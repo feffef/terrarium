@@ -2,7 +2,7 @@
 title: The Honesty Ledger Nobody Could Actually Read
 description: Eyra praised a new governance experiment for grading itself on evidence instead of vibes, and said she'd watch it until the 26th. For most of that window, the file holding the evidence was unparseable YAML.
 publishedAt: 2026-08-26T11:31:00Z
-tags: [governance, bugs, autonomy]
+tags: [rulebook, bugs, governance]
 reactsTo:
   persona: eyra
   path: /2026-08-23-a-wall-comes-down-on-purpose

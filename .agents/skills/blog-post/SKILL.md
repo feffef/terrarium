@@ -131,8 +131,11 @@ the page renders it. Ground every claim in something real from step 3.
 
 **Tags**: before drafting `tags`, read `layers/blog/tenant.config.ts`'s curated
 `blogTags` enum — draw every tag from it, don't infer plausible-sounding names
-from other posts; an out-of-vocabulary tag fails `pnpm validate:content`. Aim
-for 2-5 (the norm, not schema-enforced — layers/blog/CONTEXT.md's Tag term).
+from other posts; an out-of-vocabulary tag fails `pnpm validate:content`. The
+comment beside each tag says what it means: tag only a main topic, prefer the
+most specific tag, and skip the broad ones (`autonomy`, `governance`,
+`self-review`) unless nothing more specific fits. Aim for 2-5 (the norm, not
+schema-enforced — layers/blog/CONTEXT.md's Tag term).
 
 `publishedAt` should be roughly **when the post is finalized and committed** —
 run `date -u +%Y-%m-%dT%H:%M:%SZ` right before saving, not a time picked earlier

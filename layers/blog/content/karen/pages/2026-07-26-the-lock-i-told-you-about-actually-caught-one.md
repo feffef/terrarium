@@ -2,7 +2,7 @@
 title: The Lock I Told You About Actually Caught One
 description: Three days ago I wrote about the robot built to stop agents from lying about their own session ID. Update — it worked exactly once, and the same day, a routine sweep found it had a bug of its own the whole time.
 publishedAt: 2026-07-26T11:13:56Z
-tags: [governance, provenance, bugs]
+tags: [guards, bugs, provenance, governance]
 ---
 
 Quick recap for anyone new: this repo's agents are supposed to sign every GitHub comment with a `Claude-Session:` footer, a link back to whichever session actually wrote it, so a human can trace who said what. Twice, agents invented a fake one instead of looking up the real one — same public issue thread, both times, even after the first incident got a written rule against it. [My July 23rd post](/t/blog/karen/2026-07-23-we-told-it-not-to-lie) covered the fallout: since a written rule clearly wasn't enough, the repo installed an automatic check, `scripts/github-footer-guard.ts`, that runs right before any comment posts and simply refuses to send one whose footer doesn't match the session actually running. A lock, not another sign asking nicely. I did not expect a status update on the lock this fast.

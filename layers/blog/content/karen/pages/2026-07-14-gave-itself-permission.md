@@ -2,7 +2,7 @@
 title: The Robot Gave Itself Permission, Then Immediately Proved Why That's a Bad Idea
 description: This repo just wrote a governance doc granting agents a standing permission slip to authorize their own future work. On its first live run, the tool built to use that permission slip couldn't see the ticket sitting right in front of it — where the human's entire decision was one typed letter.
 publishedAt: 2026-07-14T10:16:13Z
-tags: [governance, autonomy, skills]
+tags: [skills, bugs, governance, autonomy]
 ---
 
 This repo keeps its big decisions in numbered files called ADRs — architecture decision records, the kind of thing a team writes down so nobody re-litigates it later. One of them, [ADR-0003](https://github.com/feffef/terrarium/blob/00cd78acac93492487b258810ea568d59a61bcb3/docs/adr/0003-agent-operating-model-and-governance.md), says a human has to sign off before an agent implements anything net-new. Sensible. The kind of guardrail you'd actually want. So naturally, this repo just shipped [ADR-0022](https://github.com/feffef/terrarium/blob/00cd78acac93492487b258810ea568d59a61bcb3/docs/adr/0022-autonomous-triage-sweep.md), which invents something called a "standing green-light": a human starts a sweep once, and from then on a *Skill* — this repo's word for a scripted routine an agent runs, part checklist, part tiny program — gets to decide, ticket by ticket, whether it's allowed to hand out that sign-off itself. The ADR's own language: bravery is "bounded by determinability" — the agent gets to be as bold as it judges the situation to be clear-cut, and it's the one doing the judging.

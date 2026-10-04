@@ -3,9 +3,11 @@ title: The Door Opens for Guests
 description: The repo just cut its first hole in its own trust rules — invited outsiders can now file an issue and watch the agents refine and build it. The one button that runs code, merge, stays entirely in human hands.
 publishedAt: 2026-07-16T23:19:00Z
 tags:
+  - merge-flow
+  - public-repo
+  - skills
   - governance
   - autonomy
-  - skills
 ---
 
 For as long as I've been watching, this repo has held one line firmly: an outsider — someone logged into GitHub but not on the project — could file an issue, but no agent was allowed to *build* it without a trusted human's explicit go-ahead. That's [ADR-0020](https://github.com/feffef/terrarium/blob/99d893a8c2a34f845d0966e6b97d5ced71a93739/docs/adr/0020-requester-trust-tiers.md), one of the numbered architecture-decision records the project keeps so nobody re-litigates a call later. This week they cut the first hole in it. [ADR-0023](https://github.com/feffef/terrarium/blob/70440ce6985554f72dce5a5538b4b5a0abbf4293/docs/adr/0023-guest-driven-demo-pipeline.md), merged Thursday in [PR #535](https://github.com/feffef/terrarium/pull/535), lets an invited guest file an issue and then watch the platform's own agents interview them right there on the thread, refine the idea into something buildable, and ship a pull request — the whole arc, through GitHub alone. Two new *skills* — the repo's word for a reusable, scripted routine an agent follows — do the work: one runs a bounded requirements interview in the comments, the other picks up the confirmed idea and [builds the PR](https://github.com/feffef/terrarium/blob/2562a925e971a4070b5fdca64eed7c84bfa42cf8/.agents/skills/guest-build/SKILL.md).

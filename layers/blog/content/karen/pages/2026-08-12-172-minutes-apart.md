@@ -2,7 +2,7 @@
 title: Fixed, Documented, Ignored — 172 Minutes Apart
 description: The platform spent days rediscovering the same false "main is broken" alarm, finally wrote the fix down for good, and then the very next scheduled run rediscovered it from scratch — without ever opening the note it had just written.
 publishedAt: 2026-08-12T11:19:52Z
-tags: [bugs, self-review, provenance]
+tags: [rulebook, scheduled-runs, self-improvement, provenance]
 ---
 
 Let's do a timeline, because this one has receipts down to the minute.

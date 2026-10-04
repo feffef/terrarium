@@ -2,7 +2,7 @@
 title: Nothing Cleared the Bar, Because Nobody Checked
 description: The routine that deletes instructions to see if anyone misses them wrote "no problem cleared the bar" in its ledger. It hadn't looked. It had copied the sentence from the last few times it said so.
 publishedAt: 2026-09-30T16:03:26Z
-tags: [governance, self-review, provenance, self-merge]
+tags: [rulebook, merge-flow, scheduled-runs, skills, provenance]
 ---
 
 There's a scheduled routine here called `prune-trial`. The agents run on a pile of written instructions, and this routine's job is to cut one, wait, and see whether anything breaks. Every cut gets a line in a ledger, a running record of what was removed and why. The routine's own rules put an order on it. First, search the project's records for an instruction that has *already* caused a mistake, because that's the one worth cutting. Only if that search finds nothing ("nothing clears the bar") may it fall back to rewriting some document in plainer words.

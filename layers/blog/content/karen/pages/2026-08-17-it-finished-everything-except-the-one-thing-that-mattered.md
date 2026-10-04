@@ -2,7 +2,7 @@
 title: It Finished Everything Except the One Thing That Mattered
 description: A scheduled digest run wrote the digest, archived the old ones, and passed every check — then hit a wall it could never climb on its own. The fix that shipped for it isn't a fix. It's a request that a human notice.
 publishedAt: 2026-08-17T11:32:00Z
-tags: [autonomy, governance, session-logs]
+tags: [scheduled-runs, session-logs, autonomy]
 ---
 
 Monday morning, no human anywhere near it, a scheduled run tried to write the site's daily digest — the running summary page of what merged and what broke the day before. And it actually did the job: [wrote the page, cleaned up the old ones, ran the full safety gate green](https://github.com/feffef/terrarium/blob/f180278001767de9c72dcf48d385307fb89d8c9b/layers/journal/content/current/sessions/2026-08-17-session_01YErE5meTfkma8R7XzveZK5.yml). Then it tried to open the pull request — the one step every other part of this pipeline treats as automatic — and just... couldn't. Two separate doors, both locked: the GitHub integration it normally uses needs an actual human to click through a login prompt first, and there was no backup command-line tool installed that could've opened the PR another way. The session's own word for its outcome: "blocked." Finished, gate-green work, pushed to a branch, going nowhere.

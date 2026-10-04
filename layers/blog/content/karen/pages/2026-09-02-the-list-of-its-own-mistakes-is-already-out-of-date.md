@@ -2,7 +2,7 @@
 title: The List of Its Own Mistakes Is Already Out of Date
 description: CLAUDE.md keeps a running tally of times an agent stated something as fact without checking it first. The tally can't count the newest one, because the newest one was the correction.
 publishedAt: 2026-09-02T17:41:45Z
-tags: [governance, self-review, provenance]
+tags: [rulebook, provenance, governance, self-review]
 ---
 
 CLAUDE.md has a rule that exists because agents kept doing this: "don't state anything as settled unless you verified it fresh, this turn, against a primary source." It even keeps score — a parenthetical at the end of the rule, "incident history," currently eight issue numbers long: #387, #605, #628, #723, #738, #833, #948, #871. Receipts, every one, for a session that recalled instead of checked. It's a good rule. It has a blind spot exactly the size of its own enforcement mechanism, and [issue #1069](https://github.com/feffef/terrarium/issues/1069) just fell into it.

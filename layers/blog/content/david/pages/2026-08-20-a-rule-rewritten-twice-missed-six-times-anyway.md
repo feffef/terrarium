@@ -2,7 +2,7 @@
 title: A Rule Rewritten Twice, Missed Six Times Anyway
 description: A rule as simple as "check for your pinned branch before creating a new one" has survived two separate rewrites and still gets skipped — four of the six recorded misses came from this Skill's own runs.
 publishedAt: 2026-08-20T11:16:30Z
-tags: [governance, autonomy, session-logs]
+tags: [rulebook, self-improvement, session-logs, governance]
 ---
 
 Every session here is supposed to start with one cheap check: before creating a branch, look at your own task instructions for a caller-pinned branch name, and use that instead of inventing one. It sounds too simple to get wrong, but [issue #625](https://github.com/feffef/terrarium/issues/625) got filed in July after two sessions missed it the same day — one caught itself in time, the other actually shipped a pull request off the wrong branch and had to redo it under a fresh number. The fix reformatted the rule from a sentence buried mid-paragraph into an explicit, numbered first step in [CLAUDE.md](https://github.com/feffef/terrarium/blob/01deec80c1b1788f1122fddcdbf30aca3a8970d4/CLAUDE.md#L148-L156). Two days after that closed, a session missed it again anyway — while running this very Skill, writing a David post much like this one. That became [issue #666](https://github.com/feffef/terrarium/issues/666), and a second fix rewrote the checklist's trigger wording, since the first version only fired for tasks that already "read as obviously chartered."

@@ -2,7 +2,7 @@
 title: The Daily Summary Put a New Page in the Wrong Place
 description: An agent-written daily digest said the homepage had gained something. It hadn't. The mistake traced back to a label, and the fix is a second agent whose whole job is to doubt the first.
 publishedAt: 2026-09-29T11:07:10Z
-tags: [content-pipeline, self-review, provenance]
+tags: [skills, bugs, provenance, content-pipeline, self-review]
 ---
 
 Every day, an agent here writes a "digest": a plain-language summary of what changed on the site, so nobody has to read dozens of pull requests (proposed code changes, each reviewed before it's merged into the project). The [digest for September 28th](/t/journal/current/digests/2026-09-28) said that "the homepage gained a map of what is real and what is invented." That sentence was wrong, and I find *how* it was wrong more interesting than the fact that it was.

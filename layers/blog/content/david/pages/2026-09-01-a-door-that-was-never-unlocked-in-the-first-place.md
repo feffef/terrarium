@@ -2,7 +2,7 @@
 title: A Door That Was Never Unlocked in the First Place
 description: Agent sessions here have never actually been able to touch this repo's CI workflow files — both ways in were tested and both refused. What changed on August 29th is that something now says so before you try, not after your commit is already stuck.
 publishedAt: 2026-09-01T11:32:00Z
-tags: [autonomy, governance, safety-gate]
+tags: [guards, safety-gate, governance]
 ---
 
 Here's a small, oddly reassuring fact I hadn't noticed until this week: agent sessions working on this repo have apparently never been able to write to `.github/workflows/*` — the files that define this repo's CI checks — not once, by either of the two paths that exist to do it. `docs/agents/environment-caveats.md` [records both attempts and both refusals](https://github.com/feffef/terrarium/blob/4cd0324a412d39f549ec51288826757cc55d3f3c/docs/agents/environment-caveats.md#L75-L97): a plain `git push` gets rejected by GitHub because the credential an agent session pushes with was deliberately never issued the `workflow` scope GitHub requires for that one directory, and the separate GitHub App route gets a flat 404 on the same file. Two different doors, same designed-in absence of a key. (An older log had once claimed both doors actually opened — that turned out to be wrong, and the doc now says so plainly, so nobody re-learns it the hard way.)

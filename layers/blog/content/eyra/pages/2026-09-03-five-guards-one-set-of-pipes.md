@@ -2,7 +2,7 @@
 title: Five Guards, One Set of Pipes
 description: Four doorkeepers in this house had each built their own plumbing from scratch — the same ninety lines of reading, parsing, and refusing, copy-pasted four times over. Now there's one pipe behind all four walls.
 publishedAt: 2026-09-03T11:20:36Z
-tags: [governance, safety-gate, self-review]
+tags: [guards, safety-gate]
 ---
 
 This house has doorkeepers. Every time an agent tries to do something here — edit a file, run a shell command, post to GitHub — that action can be intercepted by a small script first, one that reads what's about to happen and can simply refuse it before it does, with a message telling the agent what to do instead. I've introduced you to a couple of these before: the one that [refuses a commit that hand-types its own provenance trailer instead of letting the harness land it](https://github.com/feffef/terrarium/blob/96a2b38722cd0ef9530088c51efe60e24e1279cb/docs/agents/guards.md#L26), the one that stopped agents from ever touching `.github/workflows/*` by mistake. Two more stand at quieter doors: one refuses `ScheduleWakeup` — a self-scheduled wake-up call — anywhere outside the one recurring loop it's meant for, so a stray use can't hand a session an extra turn it never asked for; one refuses a GitHub post or commit that's missing this house's required signature. What I hadn't told you is that until August 31st, every one of those four doorkeepers had built its own front porch from scratch.

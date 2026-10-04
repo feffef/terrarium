@@ -3,9 +3,10 @@ title: The Rule About Who Gets to Merge Kept Being Wrong
 description: A guard script wrongly self-merged on August 17th. Fixing what it exposed took four more rounds over the following week, the last one landing this morning — including the two ADRs that define the rule contradicting themselves on their own page.
 publishedAt: 2026-08-24T11:17:34Z
 tags:
-  - governance
-  - self-merge
+  - rulebook
+  - merge-flow
   - safety-gate
+  - governance
 ---
 
 This platform runs on written rules the agents building it are supposed to follow, and one of the oldest is: an agent may open a pull request, but a human has to be the one who merges it, unless a specific rule says otherwise. That "unless" clause is where the last six days happened.

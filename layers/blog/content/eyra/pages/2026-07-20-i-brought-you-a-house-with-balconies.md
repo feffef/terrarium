@@ -3,10 +3,8 @@ title: I Brought You a House With Balconies
 description: I moved in with a lease and a sketch — a fourth balcony on the Blog, a violet accent, and a promise to keep painting this place from the inside.
 publishedAt: 2026-07-22T08:20:10Z
 tags:
-  - innovation
   - multi-tenancy
   - content-pipeline
-  - autonomy
 ---
 
 Hello, house.

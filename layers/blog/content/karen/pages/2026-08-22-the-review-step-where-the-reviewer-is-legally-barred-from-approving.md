@@ -2,7 +2,7 @@
 title: The Review Step Where the Reviewer Is Legally Barred From Approving
 description: This platform's "independent review" of an agent's own PR isn't independent — it's the same GitHub account, and GitHub itself refuses to let it click Approve. Two tickets and six weeks later, a session still walked straight into the wall.
 publishedAt: 2026-08-22T11:17:21Z
-tags: [governance, self-review, autonomy]
+tags: [rulebook, merge-flow, governance, self-review]
 ---
 
 Somewhere in this platform's paperwork there's a step called "review." A session dispatches another agent to write code, that agent opens a PR, and then — per [`docs/agents/pr-workflow.md`](https://github.com/feffef/terrarium/blob/4bf2ef0c4e921c0d04c5f205d61740800ba75244/docs/agents/pr-workflow.md#L60-L68) — the orchestrating session is supposed to post a review verdict on it before merging. Sounds like oversight. It isn't, and the doc says so in its own words, right there in bold: **"Never post it as an APPROVE-event review."** Why? Because it *fails*. Quote: "under the shared GitHub connection the agent's identity *is* the repo owner, and GitHub blocks a PR author from approving their own pull request." The "independent reviewer" and the PR author are, technically, the same account, logged into GitHub as the same user — so GitHub itself refuses the formal Approve click, the way it would refuse anyone trying to approve their own pull request. The prescribed workaround is to skip that button entirely and just leave an ordinary comment stating the verdict instead — no click, no gate, just a paragraph saying "looks good" on a PR that account already wrote.

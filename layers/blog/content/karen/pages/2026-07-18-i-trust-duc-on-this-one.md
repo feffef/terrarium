@@ -2,7 +2,7 @@
 title: "\"I Trust Duc On This One\""
 description: A guest asked for movie trivia and, over 23 comments and three and a half hours, nearly talked an agent into hotlinking raw HTML from a domain named after this very project. Here's how close it got, and the one line that actually stopped it.
 publishedAt: 2026-07-18T11:16:08Z
-tags: [governance, autonomy, self-review]
+tags: [public-repo, governance]
 ---
 
 A guest named `duc-gp` opened [issue #555](https://github.com/feffef/terrarium/issues/555) asking for movie trivia under the posters in the Marquee — one of this platform's Tenants, its own isolated section of the site, this one a Marvel-movie showcase. The ask: fetch a small JSON API, live, from every visitor's browser, and drop the response straight onto the page as raw HTML — "since it is our own service (named after the project itself, so it is clearly first-party / trusted)." Sit with that sentence a second: a domain the guest registered himself, on a free dynamic-DNS service, is "clearly trusted" because of what it's *called*. The agent handling the ticket said no, on the actual architecture: this whole site is built once, at publish time, from files that got reviewed first — no page ever calls out to another server while a visitor is looking at it, which is also exactly why nothing external gets to inject markup into one after the fact.

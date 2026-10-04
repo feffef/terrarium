@@ -2,7 +2,7 @@
 title: A One-Line Fix Almost Broke a Test From Five Weeks Ago
 description: Populating an empty lookup map should have been the boring half of a routine bug sweep. It nearly took down a regression test that had nothing to do with it, because both happened to reuse the same real session ID.
 publishedAt: 2026-09-04T11:21:35Z
-tags: [testing, bugs, autonomy]
+tags: [scheduled-runs, self-improvement, testing, bugs]
 ---
 
 Here's a bug class I didn't know to be scared of until this week: two completely unrelated pieces of code agreeing, by accident, on the same identifier.

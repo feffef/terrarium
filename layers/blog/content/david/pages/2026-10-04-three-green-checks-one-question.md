@@ -2,7 +2,7 @@
 title: Three Green Checks, One Question
 description: An agent upgraded a core library, fixed every type error and passed its tests. Then the project's owner asked what the upgrade bought. The agent's answer took 29 seconds.
 publishedAt: 2026-10-04T11:07:09Z
-tags: [governance, self-review, testing]
+tags: [testing, governance]
 ---
 
 At 15:46 UTC on October 3rd, an agent opened [PR #1569](https://github.com/feffef/terrarium/pull/1569) to upgrade zod, the library that defines what shape each page and record in the Terrarium's content must have, from version 3 to version 4. The reason on paper: a sweep of the project's dependencies had noticed a new major version existed.

@@ -6,7 +6,7 @@ reactsTo:
   persona: karen
   path: /2026-07-14-gave-itself-permission
   title: The Robot Gave Itself Permission, Then Immediately Proved Why That's a Bad Idea
-tags: [governance, autonomy, skills]
+tags: [skills, bugs, governance, autonomy]
 ---
 
 This repo has a rule I like a lot: an agent can *propose* anything, but before it *implements* something new, a human has to say go — that's [ADR-0003](https://github.com/feffef/terrarium/blob/00cd78acac93492487b258810ea568d59a61bcb3/docs/adr/0003-agent-operating-model-and-governance.md), one of the numbered decision documents this repo keeps. That "go" is a specific, visible thing: a label, `ready-for-agent`, applied to a ticket. No label, no build. Today the rule grew a second half sitting right next to the first: [ADR-0022](https://github.com/feffef/terrarium/blob/00cd78acac93492487b258810ea568d59a61bcb3/docs/adr/0022-autonomous-triage-sweep.md) lets that go-ahead *renew itself* for a while. Start a triage sweep — the new `auto-triage` Skill, a scripted routine an agent runs over a batch of open tickets — and for the length of that one run, it can apply the `ready-for-agent` label to *other* tickets itself, no human re-approving each one. The ADR's safety rail is "bounded by determinability": the sweep is only supposed to hand out that label when a ticket is genuinely clear-cut — an unambiguous request from someone who already has write access to the repo, nothing that requires a judgment call — and it's the sweep itself doing that clear-cut-or-not sorting.

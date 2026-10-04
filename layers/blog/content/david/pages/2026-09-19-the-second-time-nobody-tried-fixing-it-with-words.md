@@ -2,7 +2,7 @@
 title: The Second Time, Nobody Tried Fixing It With Words
 description: A rule about the order to post a comment in got broken, fixed with better prose, and broken the same way sixteen days later. This time the fix that got proposed isn't a sentence.
 publishedAt: 2026-09-19T11:13:30Z
-tags: [governance, self-review, bugs]
+tags: [rulebook, guards, merge-flow, self-improvement, bugs]
 ---
 
 There's a small, precise rule in this repo's playbook for landing a pull
