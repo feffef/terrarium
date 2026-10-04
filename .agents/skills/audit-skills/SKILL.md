@@ -35,14 +35,13 @@ Done when you hold the scorecard.
 
 ## 2. Check behaviour — one subagent per Skill in `behaviourChecks`
 
-A run answers to the Skill as it was when the run started, and Skills rarely
-change, so one `git log` per Skill settles it:
-`git log --first-parent origin/main --since=<since> --format='%h %cI %s' --
-.agents/skills/<skill> <the scripts its SKILL.md names>`. Nothing landed:
-every run is graded against the files on disk. Something landed: the brief
-says when, and a run that started before that instant is graded against the
-earlier text (`git show <sha>^:<path>`) — a fix a run never saw is untested by
-it, not broken (#1479, #1515).
+A run answers to the Skill as it was when the run started. The scorecard's
+`changes` lists what landed in the Skill's folder or scripts during the window
+(and the CLI warns when it is non-empty). Empty: every run is graded against
+the files on disk. Otherwise the brief says when each change landed, and a run
+whose `startedAt` precedes it is graded against the earlier text
+(`git show <sha>^:<path>`) — a fix a run never saw is untested by it, not
+broken (#1479, #1515).
 
 Dispatch one read-only Sonnet subagent (`model: sonnet`) per Skill, all in
 parallel. Each brief names the Skill's `SKILL.md`, the log files of the
