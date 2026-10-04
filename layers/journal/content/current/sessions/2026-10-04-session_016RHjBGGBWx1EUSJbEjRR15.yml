@@ -1,0 +1,83 @@
+schemaVersion: 1
+session: session_016RHjBGGBWx1EUSJbEjRR15
+startedAt: 2026-10-04T16:23:55Z
+endedAt: 2026-10-04T18:09:35Z
+kind: interactive
+goal: Replace the hard 20-session window of the frictions-to-fixes survey with a 3-day window
+status: completed
+outcome: "PR 1598 merged by the owner: 3-day window, ADR-0015 note, survey now screens against earlier runs"
+summary: Human-instructed throughout. The user asked to remove the hard 20-session limit and asked what period I would recommend; I measured session volume (about 12-14 logs a day), recommended 3 days, and the user chose a fixed three-day window. I replaced --window N with --days N in session-frictions.ts, rewrote its tests, and updated SKILL.md and the Skill Inventory entry. The user then asked me to update the ADR and search for other descriptions of the window; I amended ADR-0015's note in place, fixed a stale --window mention in digest.ts and a test, and deliberately left historical mentions (ADR-0009, list-open-issues.ts comment, archived digests). The user then proposed that the survey read the window's own frictions-to-fixes runs last; I added summary and trigger to the triage record and a final SKILL.md step that screens candidates against those runs and verifies before dropping (replacing the manual previous-run-anchor bullet). Opening the PR was agent-initiated per CLAUDE.md's auto-open default. At the user's request a read-only subagent audited a later frictions-to-fixes session that used the new version; it found the run as expected with minor deviations (regression candidate not filed, survey subagent frictions missing from that log), which I reported without changing anything. I also answered questions about run_in_background in the repo. The user merged the PR. I did not log at PR-open as the Skill asks, only after the merge.
+prs:
+  - "1598"
+docsRead:
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: (no reason given)
+  - path: scripts/session-frictions.ts
+    reason: (no reason given)
+  - path: docs/adr/0017-provenance-footer-on-agent-authored-content.md
+    reason: (no reason given)
+  - path: docs/adr/0015-audit-skills-and-conditional-importance.md
+    reason: (no reason given)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Did not invoke close-session at PR-open, only after the user reported the merge, so no in-review log existed for hours
+    solution: Self-judge closure when the PR opens; the CLAUDE.md rule exists but I only remembered it at the end
+    severity: minor
+  - description: System-reminder told me to end commits with attribution trailers; the commit-trailer guard then denied the whole commit command for hand-writing them
+    solution: Harness attribution reminder and repo guard contradict; the repo guard should be named in the reminder or the reminder should be dropped for this repo
+    severity: minor
+  - description: Passed run_in_background false to the Agent tool and was denied by the guard; that rule lives only in dispatch-subagents SKILL, which I had not opened
+    solution: Surface the one-line rule where Agent calls are decided, or prune the habit; the guard costs one retry
+    severity: nit
+  - description: Piped test and typecheck output into tail in one Bash call and the tail-pipe guard denied the whole command, including the python edit chained before it
+    solution: Redirect to a log file from the start, as CLAUDE.md says
+    severity: nit
+  - description: Called mcp__github__search_pull_requests before loading its schema via ToolSearch, against the CLAUDE.md rule; it errored on a missing query
+    solution: Load deferred GitHub tools with ToolSearch first
+    severity: nit
+  - description: Grep glob with nested alternate braces was rejected by ripgrep, costing one wasted search
+    solution: Use flat brace lists or separate calls
+    severity: nit
+durationSec: 6341
+models:
+  claude-sonnet-5-5: 89
+toolCounts:
+  Grep: 9
+  Glob: 2
+  Read: 5
+  Bash: 21
+  mcp__github__search_pull_requests: 2
+  ToolSearch: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__update_pull_request: 2
+  Agent: 2
+  mcp__github__pull_request_read: 1
+  Skill: 2
+docsReadViaShell:
+  - docs/adr/0015-audit-skills-and-conditional-importance.md
+  - docs/adr/0009-session-logs-commit-directly-to-main.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - .agents/skills/close-session/SKILL.md
+  - .agents/skills/log-session/SKILL.md
+  - docs/agents/pr-workflow.md
+  - docs/adr/0017-provenance-footer-on-agent-authored-content.md
+  - .agents/skills/dispatch-subagents/SKILL.md
+  - docs/agents/github-integration.md
+  - .agents/skills/audit-docs/SKILL.md
+subagents:
+  - type: general-purpose
+    task: Audit session transcript
+  - type: general-purpose
+    task: Audit session transcript
+gitBranch: ccr-dc1010f5-wro0z0
+entrypoint: remote_mobile
+cliVersion: 2.1.289
+ideas:
+  - Have session-frictions.ts emit a previousRuns section (start, summary, outcome, prs of trigger frictions-to-fixes sessions) so the subagent does not hand-pick them; skipped now as it duplicates the triage records
+landedBy: Stop
