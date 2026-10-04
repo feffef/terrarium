@@ -86,3 +86,17 @@ observations:
       nothing new; sample size still too small to close it outright. Persona
       rotation verified clean (no repeat, forced-if-missing holds). No
       reverts in the 2-week git-log sweep. Grade/role unchanged.
+  - date: "2026-10-04"
+    note: >-
+      Re-verified (audit-skills behaviour check), 9 usedIn sessions. Three
+      freshly-checked, previously-unverified: PR #1557 (David, standalone)
+      and PR #1559 (Eyra, standalone) plus its step-8 reply PR #1560 (Karen)
+      — all merged, each body carries rotation state and an explicit
+      fact-check tally, content matches each persona's voice with
+      SHA-pinned permalinks, rotation gate holds across the sequence. The 6
+      older usedIn sessions re-confirmed clean from prior observations. No
+      reverts or post-merge content fixes outside the Skill's own in-PR
+      fact-check-correction step found in the 2-week git-log sweep. Clean
+      streak now extends through #1557/#1559/#1560; issue #1479's 3
+      historical skips remain the only known instances. Grade/role
+      unchanged.

@@ -160,3 +160,20 @@ observations:
       endpoint) — independently confirmed still open/unfixed via a dedicated
       search before relying on it, not re-filed; humanPromptedClosures and
       manuallyRescuedClosures both empty. Grade/role unchanged.
+  - date: "2026-10-04"
+    note: >-
+      Self-check: dispatched 12 behaviour-check subagents this run (one per
+      behaviourChecks entry), all 12 reports verified against primary
+      sources. Confirmed issue #1514 (the recurring gh-pagination 403
+      cited above) is now genuinely fixed: commit 550b32c1/86695376, merged
+      via PR #1567. Two new findings from dispatch-subagents escalated as
+      fresh issues (#1585, a repeat branch-collision shape; #1586, a
+      missed-invocation regression against the just-closed #1248) rather
+      than comments, since neither had a standing open-issue home. One
+      visitor-loop finding (owner-memory's 5th consecutive skip, the first
+      under its own stronger #1515 fix) led to reopening #1515 and
+      commenting the new evidence. Step 3 closure completeness: orphan scan
+      ran clean this time (`scanned: true`, 1002 merged PRs, 852 with a
+      session — the #1514 403 that dogged prior runs is fixed), both
+      orphan candidates already carry `resolvedBy`, humanPromptedClosures
+      and manuallyRescuedClosures both empty. Grade/role unchanged.

@@ -102,3 +102,35 @@ observations:
       missed invocations. The one known historical near-miss
       (session_01LKfKKxwgThbVFE79NWohET) remains the only real instance.
       Grade/role unchanged.
+  - date: "2026-10-04"
+    note: >-
+      Audit-skills behaviour check, 10 newest usedIn plus ~24 of 78 nonUsers
+      opened in full. Two findings, both escalated (filed, not just noted —
+      each clears this Skill's own prior escalation bar).
+
+      Silent failure: the 2026-09-28 branch-collision shape
+      (session_0158JckUL8YWJtVL7s9i7xRr, human rescue needed) recurred in
+      session_01TiCx5GDdDdFGwCEs6xxr89 (2026-10-03, serial Tinkerfund
+      implementation) — an impl agent's `git checkout -B` again moved the
+      orchestrator's primary-checkout branch. Self-caught and self-recovered
+      this time (no human rescue, `check:worktrees` false-positived but was
+      verified tree-by-tree), but the identical mechanism. Never filed as
+      its own issue the first time (only mentioned in passing inside #1248's
+      thread); filed now as issue #1585, since the 09-28 entry above already
+      said a repeat would be.
+
+      Missed invocation: session_01P7a2zqJxuariDNfYqWQRHs (2026-10-03/04,
+      portrait redraw) dispatched 4 parallel content-editing Fable agents on
+      prod inventor files without `dispatch-subagents` in `skillsUsed` and,
+      by its own friction, without worktree isolation ("I could have
+      dispatched agents into worktrees"). No damage — contained only by the
+      Stop hook's unrelated nagging, not by isolation. This lands the same
+      day #1248 closed as "completed... holds" on exactly this
+      skipped-invocation pattern; filed as issue #1586, framed as a
+      regression against #1248 rather than a comment on the now-closed
+      thread, since it undercuts that closure's rate claim.
+
+      Rest of the window clean: no merge-pr.ts dispatch, issue #1480
+      (cd-into-worktree) not recurred a third time. Grade/role unchanged
+      (still essential) — both findings are freshly escalated, not yet
+      reliability patterns against the Skill's core delivery.

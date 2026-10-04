@@ -30,3 +30,16 @@ observations:
       overlay label unstripped, and the two "await human merge" PRs flagged
       at one session's end were confirmed later merged with no discrepancy.
       Still clean; grade/role unchanged.
+  - date: "2026-10-04"
+    note: >-
+      Re-verified (audit-skills behaviour check), newest session
+      session_01548Bi1ZiGcknAp8CMLNMZB (2026-10-03, 14 issues triaged): all 6
+      `ready-for-agent` closures confirmed merged-and-closing (one, #1549,
+      correctly reverted to `ready-for-human` after its PR #1569 closed
+      without merging, matching the log exactly); both `wontfix`/completed
+      auto-closes (#1542, #1479) carry a triage comment that names and
+      reproduces the implementing commit/PR, meeting ADR-0022's
+      objective-and-repo-verifiable bar; all 6 `ready-for-human` issues are
+      genuine judgment/human-merge cases, none self-green-lit. The two
+      older usedIn sessions re-spot-checked clean, no reverts in the 2-week
+      git-log sweep. Grade/role unchanged.

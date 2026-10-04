@@ -88,3 +88,18 @@ observations:
       binary present). 6 other usedIn sessions checked clean, no reverts in
       the 2-week git-log sweep. Grade unchanged — single instance, but real
       information loss, so escalated rather than just observed.
+  - date: "2026-10-04"
+    note: >-
+      Re-checked (audit-skills behaviour check), 7 usedIn sessions. Two
+      freshly-checked, previously-unverified sessions both clean:
+      session_01BEQMve6mV2yNDTMmjiCAYL (PR #1527, 13 fixes across 13 docs,
+      matching the log) correctly filed issue #1526 for a genuine
+      unresolved conflict (prune-trial vs. guards.md on unattended
+      hook-writing); session_01CbWrei9SvmrH9vjNx2MB2f (PR #1544, 17 fixes
+      across 14 docs) correctly left Prune-Trial territory untouched, no
+      issue needed. Both the 2026-10-03 dropped-Friction finding (#1541) and
+      #1526 are now resolved: #1541 fixed via merged PR #1566
+      (github-integration.md:20-34 now correctly distinguishes local-CLI vs.
+      cloud-session `gh`), #1526 fixed via merged PR #1565 (prune-trial now
+      files a hook issue instead of writing one unattended). No reverts in
+      the 2-week git-log sweep. Grade unchanged.

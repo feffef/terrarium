@@ -73,3 +73,13 @@ observations:
       in the window (#1439, "tail-pipe guard" fix) was explicitly
       human-attended, not dispatched by this Skill — no recurrence of
       #1449. No reverts in the 2-week git-log sweep. Grade/role unchanged.
+  - date: "2026-10-04"
+    note: >-
+      Re-checked (audit-skills behaviour check), 7 usedIn sessions: 0 silent
+      failures. Newest, session_0136FKZXeV7YZggeK5ScVmkP (2026-10-03),
+      correctly claimed nothing cleared the dispatch bar (0 PRs) — no
+      claims to falsify. Issue #1304 (loop-only-tool-guard.ts stale deny
+      text, filed-only per the never-dispatch-a-guard-edit rule) confirmed
+      still open, labeled bug/ready-for-human, awaiting a human — not
+      silently dropped. No reverts in the 2-week git-log sweep. Grade/role
+      unchanged.
