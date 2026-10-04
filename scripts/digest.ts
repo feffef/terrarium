@@ -11,7 +11,7 @@
 //   gather <YYYY-MM-DD>     print one day's materials as JSON
 //
 // On a busy day, `gather`'s JSON can exceed Bash's inline-capture cap, the same
-// recurring shape session-frictions.ts hit for its --window output (issues
+// recurring shape session-frictions.ts hit for its window output (issues
 // #811/#976, fixed in PR #1150) — so `gather` mirrors that fix: above
 // OUTPUT_FILE_THRESHOLD it writes the JSON to a file and prints a one-line
 // pointer instead, automatically (--out PATH picks the location explicitly).

@@ -130,7 +130,7 @@ describe('resolveOutputTarget() — --out CLI flag', () => {
   })
   it('lands the output at the given path when --out is provided, regardless of size', () => {
     expect(resolveOutputTarget(['--out', '/scratch/out.json'], 10)).toBe('/scratch/out.json')
-    expect(resolveOutputTarget(['--window', '5', '--out', '/scratch/out.json'], 30_000)).toBe('/scratch/out.json')
+    expect(resolveOutputTarget(['--days', '5', '--out', '/scratch/out.json'], 30_000)).toBe('/scratch/out.json')
   })
 })
 
