@@ -1,0 +1,82 @@
+schemaVersion: 1
+session: session_01RW5WnnVvnyuUbrqVZvdZNc
+startedAt: 2026-10-04T02:03:29Z
+endedAt: 2026-10-04T02:11:08Z
+kind: autonomous
+goal: "Scheduled frictions-to-fixes run: survey the last 20 session logs and ship fixes for recurring frictions"
+status: completed
+outcome: One grouped doc PR (#1588, four small fixes) reviewed and merged; no hard items filed
+summary: "Scheduled routine, so everything was agent-initiated under the Skill's standing instructions; no live human input. A survey subagent screened the 20-session window against merged fixes and the tracker and returned four never-fixed, simple, doc-only candidates (Stop-nag caveat, subagents cannot spawn subagents, cap concurrent full gates, sticky/scroll layouts need scroll-then-measure). A Sonnet impl agent in a worktree batched them into one 11-line PR (#1588). I reviewed the diff, posted the verdict comment, and landed it with merge-pr.ts after CI went green. Dropped by the survey: ADR-0017 header/trailer conflicts (inside an open prune trial), the run_in_background:false guard denials (guard works), and items already fixed by merged PRs. No regressions found and no hard issues were filed. Open for a human: whether the guard should simply accept the no-op run_in_background:false flag."
+prs:
+  - "1588"
+docsRead:
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: docs/adr/0017-agent-authored-github-bodies-carry-a-provenance-header.md
+    reason: (no reason given)
+  - path: .claude/skills/frictions-to-fixes/SKILL.md
+    reason: (no reason given)
+  - path: docs/agents/environment-caveats.md
+    reason: (no reason given)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+  - path: docs/agents/verifying-ui-changes.md
+    reason: (no reason given)
+  - path: docs/adr/0017-github-provenance-header.md
+    reason: (no reason given)
+skillsUsed:
+  - name: dispatch-subagents
+    reason: (no reason given)
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: frictions-to-fixes
+    reason: (invoked as a slash command)
+frictions:
+  - description: Agent call with run_in_background:false was denied by the guard on my first dispatch; cost one retry.
+    solution: Already documented in dispatch-subagents; optionally let the guard accept the no-op flag (human-attended guard edit).
+    severity: nit
+  - description: ADR-0017 header names the model, but the system prompt forbids model identifiers in pushed artifacts; I had to guess a header form and used a model-less one.
+    solution: Reconcile ADR-0017 header wording with the harness rule, inside the ADR-0017 prune trial.
+    severity: nit
+  - description: Survey subagent hit a GitHub 403 secondary rate limit after about 9 searches in under a minute and had to retry parallel calls.
+    solution: github-integration.md could cap parallel search batches at about 4.
+    severity: nit
+durationSec: 459
+models:
+  claude-sonnet-5-5: 38
+toolCounts:
+  Agent: 3
+  Skill: 3
+  ReadNotifications: 2
+  ToolSearch: 1
+  Read: 2
+  mcp__github__pull_request_read: 2
+  Grep: 1
+  Bash: 5
+  mcp__github__add_issue_comment: 1
+docsReadViaShell:
+  - docs/adr/0017-provenance-footer-on-agent-authored-content.md
+  - docs/agents/verifying-ui-changes.md
+  - docs/agents/environment-caveats.md
+  - .agents/skills/code-review/SKILL.md
+  - docs/agents/git-conventions.md
+  - .agents/skills/dispatch-subagents/SKILL.md
+  - .agents/skills/visitor-loop/SKILL.md
+  - docs/agents/guards.md
+subagents:
+  - type: general-purpose
+    task: Survey session frictions
+  - type: general-purpose
+    task: Survey session frictions
+  - type: general-purpose
+    task: Grouped doc-fix PR
+    model: sonnet
+gitBranch: claude/eager-ptolemy-fl68l0
+entrypoint: remote_trigger
+cliVersion: 2.1.289
+trigger: frictions-to-fixes
+learnings:
+  - The survey's per-record docsRead mixes docs and code files, so doc-only filtering needs a path-prefix step.
+landedBy: Stop
