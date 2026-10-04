@@ -129,3 +129,14 @@ observations:
       the same doc where this run's audit-docs check (#1541) found a dropped
       Friction about a real gh-binary contradiction; worth keeping in mind
       when that trial is judged. Grade/role unchanged.
+  - date: "2026-10-04"
+    note: >-
+      Re-checked (audit-skills behaviour check), 8 usedIn sessions. Newest,
+      session_01Kwyax1gVAi9qEByVfSoMUR (PR #1558, 2026-10-03): judged the
+      github-integration.md whole-file-rewrite trial "holds" and deleted it
+      (no major/blocker friction traced to it), opened a new trial
+      (workflow-file edit rule, #897, already held by workflow-edit-guard.ts)
+      with `proven: true` after a genuine Sonnet probe — two search
+      subagents dispatched, not an inherited verdict. Ledger diff matches
+      both the log and PR #1558's body. No silent reversal of any judged
+      trial found in the 2-week git-log sweep. Grade/role unchanged.

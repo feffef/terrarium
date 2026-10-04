@@ -160,3 +160,13 @@ observations:
       distinct from the already-filed #1482 (`resolveAgainstCdDir`
       absolute-path bug), which was independently re-confirmed still open
       and unfixed in live code. Grade/role unchanged.
+  - date: "2026-10-04"
+    note: >-
+      Re-checked (audit-skills behaviour check), 10 newest usedIn sessions
+      (PRs #1563-1584, windowSessionsNotUsing empty — every windowed session
+      used it): all 10 confirmed committed to origin/main with a correct
+      field split (authored vs. derived), honest frictions including two
+      self-reported major ones (a main-red regression, a shipped visible
+      bug), and `landedBy: Stop` on every one. No reverts or regressions
+      touching this Skill's authoring/field-split/commit mechanics in the
+      2-week git-log sweep. Grade/role unchanged.

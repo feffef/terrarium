@@ -69,3 +69,15 @@ observations:
       per `RETAIN_DATES = 7`, gate green, merged. No revert of any digest
       content in the 2-week git-log sweep; only forward fact-check wording
       fixes (the mechanism working as designed). Grade/role unchanged.
+  - date: "2026-10-04"
+    note: >-
+      Re-verified (audit-skills behaviour check), 7 usedIn sessions. Newest,
+      previously-unverified: session_01XMzcTEcNXy3sKiUWtEKGLW (PR #1584,
+      the 2026-10-03 digest) — content cross-checked against primary
+      sources (PR #1581/#1582 Tinkerfund work, PR #1575 main-red fix) all
+      accurate; PR body states "26 claims checked, 2 reworded, 0
+      unverifiable," matching an explicit fact-check subagent in the
+      mechanical trace; retention sweep moved exactly 1 digest + 16 session
+      logs per `RETAIN_DATES = 7`. 6 older usedIn sessions re-confirmed
+      clean from prior observations. No reverts in the 2-week git-log
+      sweep. Grade/role unchanged.

@@ -84,3 +84,15 @@ observations:
       missed-invocation gap this window (91/91 window sessions used it).
       session_01TMgZyrN42pwudxkUdHLKwP remains n=1, no second instance.
       Grade/role unchanged.
+  - date: "2026-10-04"
+    note: >-
+      Re-checked (audit-skills behaviour check), 10 newest invocations (PRs
+      #1563-1584, plus #1569 closed-not-merged and #1583 honestly left
+      in-review): 0/10 new stale logs, every status/outcome matches live
+      GitHub state. session_01TMgZyrN42pwudxkUdHLKwP re-checked a 6th
+      consecutive time — still frozen at `in-review`/"#1344 in review"
+      despite #1344 merging 2026-09-25T18:01Z, now archived in that stale
+      state; remains n=1 across 50+ sessions checked over six consecutive
+      audits. Structural gap unchanged: nothing re-verifies a log's status
+      after the authoring turn ends. Window's own 98 sessions all used
+      close-session (0 missed invocations). Grade/role unchanged.

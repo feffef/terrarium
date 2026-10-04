@@ -1,0 +1,26 @@
+name: wizard
+category: general-engineering
+importance: specialist
+installedSha256: bdf31d48211ea559878f95a4f344aeabf8d85897488ba564382bab0b000daac1
+gist: Generates an interactive bash wizard for steps only a human can run.
+role: >-
+  The hand-off point when an agent hits a step it genuinely cannot perform
+  itself — a workflow-file edit, a credential, a third-party dashboard, a
+  one-off cutover — rather than working around the restriction. Produces a
+  script the human runs themselves, with the agent doing every surrounding
+  step (prose edits, PR, review) it is allowed to do. Essential whenever a
+  guard correctly blocks an agent action and a human must finish it by hand.
+observations:
+  - date: "2026-10-04"
+    note: >-
+      Coverage gap (audit-skills scorecard): used once this window, not yet
+      inventoried. session_a1af4e46-8293-4f33-bf41-c956bd7f6306 (2026-10-03,
+      gate.yml thin-shell apply for issue #445) hit the workflow-edit guard
+      on `.github/workflows/gate.yml`, correctly stopped rather than routing
+      around it, and the user invoked `/wizard` for the human-run apply step
+      while the agent did every other step itself (prose companion edits,
+      PR, review). Worked as intended; first use, so no grade-change
+      evidence yet. The session's own idea — ship a ready-for-human CI
+      hand-apply as a committed one-shot wizard script next to its proposal,
+      instead of re-deriving the steps live — is worth a future run's
+      attention.
