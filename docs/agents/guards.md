@@ -59,11 +59,10 @@ issue below rather than rephrasing the call until it passes.
   implements it.
 - **A unit test must assert the underlying property, not hand-picked substring
   fixtures.** A regex on a negated character class can match across newlines, so
-  an unrelated verb on one line denies an unrelated action on the next — 26
-  passing tests missed this because every one asserted single-line substrings.
-  Cover multi-line and adversarial inputs, and live-probe the real deny path once
-  before trusting the suite; the "Human-only to merge" bullet above is why a test
-  alone can't be the whole story.
+  a verb on one line denied an unrelated action on the next; 26 passing tests
+  missed it because all asserted single-line substrings. Cover multi-line and
+  adversarial inputs, and live-probe the real deny path once before trusting the
+  suite (see "Human-only to merge" above).
 
 ## Extending one
 

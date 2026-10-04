@@ -1,9 +1,7 @@
 # Environment caveats
 
-Platform/environment limitations observed in this remote execution environment
-— not repo bugs. Each was previously diagnosed once and re-surfaced later as if
-new; don't re-diagnose any of these as a fresh problem. Full incident detail
-lives in the cited issue, not here.
+Platform limitations of this remote execution environment, not repo bugs; don't
+re-diagnose them as new. Incident detail lives in the cited issue.
 
 - **A `Claude_Code_Remote` `permissions.allow` entry is dead code — don't add
   one.** A cloud session starts untrusted and drops the whole `permissions.allow`
@@ -24,13 +22,12 @@ lives in the cited issue, not here.
   each is still registered/alive/intact after a resume rather than assuming it
   survived. (issues #571, #794, #891)
 - **Any `mcp__Claude_Code_Remote__*` call, and `AskUserQuestion`, can fail with
-  a transient "permission stream closed" error.** Retry once; on a second
-  failure, route around it rather than retry-looping — for `AskUserQuestion`,
-  fall back to the safer default option and say so in the output; for
-  `send_later` specifically, `create_trigger` with `run_once_at` is the
-  capability-equivalent fallback. Never route around it via `ScheduleWakeup` — a
-  `PreToolUse` guard refuses that misuse outright (CLAUDE.md owns the rule,
-  `docs/agents/guards.md` the mechanism). (issues #145, #229, #359, #814)
+  a transient "permission stream closed" error.** Retry once; if it fails
+  again, don't retry-loop. For `AskUserQuestion`, take the safer default option
+  and say so in the output. For `send_later`, use `create_trigger` with
+  `run_once_at`. Never use `ScheduleWakeup`: a `PreToolUse` guard refuses it
+  (CLAUDE.md owns the rule, `docs/agents/guards.md` the mechanism). (issues
+  #145, #229, #359, #814)
 - **A fired self-bind Routine's output may not surface as a visible turn.**
   Check `last_fired_at` via `list_triggers` before concluding it didn't fire.
   (issue #834)
@@ -57,19 +54,17 @@ lives in the cited issue, not here.
   access this run") so it doesn't read as ordinary completion. (issue #982)
 - **A dispatched subagent's tool call needing human permission approval blocks
   indefinitely in an unattended run, with no signal to the orchestrating
-  session** — `PreToolUse` hooks do fire for a subagent's own calls, but a
-  permission-approval prompt waits on an actual human UI click, a different
-  mechanism entirely, and no proactive wake-on-pending-approval signal is
-  known to exist. Treat prolonged subagent silence as possibly stuck, not
-  merely slow. (issue #1215; `docs/agents/guards.md` covers the narrower fix
-  of never autonomously dispatching a guard/settings-touching edit at all)
+  session** — `PreToolUse` hooks do fire for a subagent's own calls, but
+  approval waits on a human UI click, and no wake-on-pending-approval signal is
+  known. Treat prolonged subagent silence as possibly stuck, not slow. (issue
+  #1215; `docs/agents/guards.md` covers the narrower fix of never autonomously
+  dispatching a guard/settings-touching edit)
 - **The harness's instruction-shaped-content scanner can false-positive on
   ordinary technical discussion that merely mentions "settings.json" /
   "settings-json"** — e.g. a subagent's report discussing `.claude/settings.json`
-  hook wiring, or discussing that string itself. When a tool result comes back
-  flagged this way, inspect the actual content: if it's benign discussion, not a
-  real injection attempt, treat it as this known scanner quirk and don't spend
-  time re-diagnosing it as a fresh problem. (sessions
+  hook wiring. When a tool result is flagged this way, inspect the content: if
+  it's benign discussion, not a real injection attempt, treat it as this scanner
+  quirk. (sessions
   session_0174Bf4itHjWjJ3yMKmRd1KM, 2026-09-15, and
   session_019QghEUG36tGWuhPUdM4t5Q, 2026-09-16)
 - **The container's git (2.43) can differ from CI's (~2.55), so a git-based

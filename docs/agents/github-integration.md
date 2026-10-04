@@ -58,8 +58,9 @@ like this:
 
 - **`list_issues` and `list_pull_requests` have no `minimal_output`.** They
   always return full bodies, so even a paginated call can overflow the
-  tool-result limit. For a narrow lookup, use `search_issues` /
-  `search_pull_requests` with a targeted query. If you must list, use a small
+  tool-result limit. For a narrow lookup, a targeted
+  `search_issues` / `search_pull_requests` query avoids the overflow but is
+  rate-limited (see "Searching is the fragile path" below). If you must list, use a small
   `perPage` (5–10), page through it, and expect to slice the saved file by hand.
   Page both open and closed/merged. A broad `search_*` query overflows the same
   way, so always scope it (state, label, keyword).

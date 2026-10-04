@@ -309,8 +309,8 @@ records and called the growing autonomy "creep", the owner wrote the
 project's purpose into the root instructions: Terrarium is an experiment in a
 platform that grows itself.
 
-Not everything moved. The Gate fix from August is still waiting for a human to
-apply it, now nearly two months on.
+Not everything moved. The Gate fix from August was still waiting for a human to
+apply it on 2 October, nearly two months on.
 
 That is where the record stops: seven sites, twenty-eight decision records,
 thirty-nine catalogued [Skills](/t/journal/current/skills). The question above is still

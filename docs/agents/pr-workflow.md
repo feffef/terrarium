@@ -131,8 +131,8 @@ treat it as the already-merged restart case above instead of pushing.
 
 ## Closing a self-merged chartered run
 
-Every Skill in the tier list above that merges its own PR (not `guest-build` or
-an ordinary work PR) closes the same way once its own
+Every Skill in the tier list above except `reviewer-agent` (`frictions-to-fixes`,
+many PRs per run), `guest-build` and an ordinary work PR closes the same way once its own
 scope-specific work is staged — each Skill's own SKILL.md states only its
 delta from this sequence (what its diff must be limited to, and what to do
 when something rides outside that scope):
