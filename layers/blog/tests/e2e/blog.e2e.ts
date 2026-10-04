@@ -86,11 +86,11 @@ export function registerBlogE2E(): void {
       await expectCleanHydration('/t/blog/karen/2026-07-08-a-fix-for-a-bug-you-cant-find')
     })
 
-    it('links a post to the Journal digest of its publish day, when one exists', async () => {
+    it('links a post to the Journal digest of its publish day', async () => {
       const dated = await $fetch<string>('/t/blog/karen/2026-09-30-nothing-cleared-the-bar-because-nobody-checked')
       expect(dated).toContain('href="/t/journal/current/digests/2026-09-30"')
-      const undated = await $fetch<string>('/t/blog/karen/2026-07-08-a-fix-for-a-bug-you-cant-find')
-      expect(undated).not.toContain('Same day in the Journal')
+      const archived = await $fetch<string>('/t/blog/karen/2026-07-08-a-fix-for-a-bug-you-cant-find')
+      expect(archived).toContain('href="/t/journal/archived/digests/2026-07-08"')
     })
 
     // The Tenant-root front door (`/t/blog`, ADR-0016 precedent) isn't in the
