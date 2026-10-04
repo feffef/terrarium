@@ -1,0 +1,144 @@
+schemaVersion: 1
+session: session_01JrdPvboL7hEVfdfvTyfSCb
+startedAt: 2026-10-04T04:01:42Z
+endedAt: 2026-10-04T04:19:18Z
+kind: autonomous
+goal: Run the scheduled audit-docs sweep over the repo's live docs
+status: in-review
+outcome: One gated PR (#1589) with fact-checked doc fixes opened; awaiting green CI to self-merge
+summary: "Scheduled /audit-docs run, no human prompt: all work agent-initiated under the Skill's charter. Four read-only reviewer agents (freshness, single-home, concision, coherence) plus one fact-checker; only CONFIRMED(-BUT) findings were applied. Freshness found nothing. Applied concision rewrites in git-conventions, environment-caveats, guards; stale playwright version; history.md Gate-fix tense; github-integration search/list tension; pr-workflow chartered-run scope; close-session action count; CLAUDE.md branch-protection clause and layout annotations. Deliberately left larger moves (moving screenshot how-to, Tenant roster consolidation, tests/README expect.poll) and anything in open Prune Trial territory. Gate green, PR 1589 opened and subscribed; merge via merge-pr.ts still pending."
+prs:
+  - "1589"
+docsRead:
+  - path: docs/agents/pr-workflow.md
+    reason: (read before editing)
+  - path: docs/agents/git-conventions.md
+    reason: (read before editing)
+  - path: docs/agents/environment-caveats.md
+    reason: (read before editing)
+  - path: docs/agents/guards.md
+    reason: (read before editing)
+  - path: docs/agents/github-integration.md
+    reason: (read before editing)
+  - path: .agents/skills/close-session/SKILL.md
+    reason: (read before editing)
+  - path: CLAUDE.md
+    reason: (read before editing)
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: audit-docs
+    reason: (invoked as a slash command)
+frictions:
+  - description: Concision reviewer only covered a few docs; Skills and journal pages unreviewed, so coverage is uneven across the eight lenses.
+    solution: Brief concision agent with an explicit file list or split it per doc family.
+    severity: minor
+  - description: Passed run_in_background false to Agent and a tail pipe to Bash; both guards denied and cost a retry each.
+    solution: Skill/CLAUDE.md already say this; just omit the flag and redirect to a file.
+    severity: nit
+durationSec: 1056
+models:
+  claude-sonnet-5-5: 80
+toolCounts:
+  Bash: 11
+  Read: 6
+  Agent: 6
+  Edit: 22
+  Grep: 3
+  mcp__github__create_pull_request: 2
+  mcp__github__subscribe_pr_activity: 1
+  Skill: 2
+  mcp__github__add_issue_comment: 1
+filesEdited:
+  - docs/agents/git-conventions.md
+  - docs/agents/guards.md
+  - docs/agents/environment-caveats.md
+  - CLAUDE.md
+  - layers/journal/content/current/pages/history.md
+  - docs/agents/verifying-ui-changes.md
+  - docs/agents/github-integration.md
+  - .agents/skills/close-session/SKILL.md
+  - docs/agents/pr-workflow.md
+docsReadViaShell:
+  - docs/agents/git-conventions.md
+  - docs/agents/domain.md
+  - docs/agents/environment-caveats.md
+  - docs/agents/github-integration.md
+  - docs/agents/guards.md
+  - docs/agents/guest-contributions.md
+  - docs/agents/issue-tracker.md
+  - docs/agents/mdc-when-to-use.md
+  - docs/agents/pr-workflow.md
+  - docs/agents/verifying-ui-changes.md
+  - CONTEXT.md
+  - .agents/skills/audit-docs/SKILL.md
+  - .agents/skills/auto-triage/SKILL.md
+  - .agents/skills/blog-post/SKILL.md
+  - .agents/skills/guest-build/SKILL.md
+  - .agents/skills/guest-intake/SKILL.md
+  - .agents/skills/log-session/SKILL.md
+  - .agents/skills/midden-survey/SKILL.md
+  - CONTEXT-MAP.md
+  - .agents/skills/atlas-specimen/SKILL.md
+  - .agents/skills/digest/SKILL.md
+  - .agents/skills/dispatch-subagents/SKILL.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - .agents/skills/midden-catalogue/SKILL.md
+  - .agents/skills/prune-trial/SKILL.md
+  - .agents/skills/tinkerfund-campaign/SKILL.md
+  - docs/agents/tenant-layers.md
+  - docs/proposals/README.md
+  - layers/atlas/CONTEXT.md
+  - layers/blog/CONTEXT.md
+  - layers/commons/CONTEXT.md
+  - layers/journal/CONTEXT.md
+  - layers/marquee/CONTEXT.md
+  - layers/midden/CONTEXT.md
+  - layers/tinkerfund/CONTEXT.md
+  - docs/research/shell-reads-by-output-matching.md
+  - .agents/skills/audit-skills/SKILL.md
+  - .agents/skills/visitor-loop/SKILL.md
+  - docs/adr/0003-agent-operating-model-and-governance.md
+  - .agents/skills/close-session/SKILL.md
+  - docs/research/nuxt-content-review-grounding.md
+  - docs/adr/0004-objective-safety-gate.md
+  - docs/adr/0009-session-logs-commit-directly-to-main.md
+  - docs/adr/0015-audit-skills-and-conditional-importance.md
+  - .agents/skills/setup-matt-pocock-skills/SKILL.md
+  - .agents/skills/code-review/SKILL.md
+  - .agents/skills/triage/SKILL.md
+  - .agents/skills/wayfinder/SKILL.md
+  - .agents/skills/setup-matt-pocock-skills/issue-tracker-github.md
+  - .agents/skills/setup-matt-pocock-skills/issue-tracker-local.md
+  - .agents/skills/setup-matt-pocock-skills/issue-tracker-gitlab.md
+  - docs/agents/triage-labels.md
+  - docs/research/public-readiness-review.md
+  - .agents/skills/tinkerfund-campaign/ILLUSTRATION.md
+  - docs/research/making-repo-public.md
+  - docs/research/github-branch-protection-vs-autonomous-log-commits.md
+  - docs/research/rulebook-migration-table.md
+  - docs/research/content-client-queries-without-wasm.md
+  - .agents/skills/wizard/SKILL.md
+  - docs/adr/0014-build-time-virtual-routing-module.md
+  - .agents/skills/diagnosing-bugs/SKILL.md
+  - .agents/skills/improve-codebase-architecture/HTML-REPORT.md
+subagents:
+  - type: general-purpose
+    task: "Audit: freshness (drift, orphans)"
+  - type: general-purpose
+    task: "Audit: single-home (dup, mislocation)"
+  - type: general-purpose
+    task: "Audit: concision (verbose, narration)"
+  - type: general-purpose
+    task: "Audit: coherence (contradiction, ambiguity)"
+  - type: general-purpose
+    task: Fact-check audit findings
+  - type: general-purpose
+    task: Fact-check audit findings
+gitBranch: claude/festive-mayer-yyanp7
+entrypoint: remote_trigger
+cliVersion: 2.1.289
+trigger: audit-docs
+landedBy: Stop
