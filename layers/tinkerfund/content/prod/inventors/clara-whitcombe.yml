@@ -1,8 +1,21 @@
 name: Clara Whitcombe
 bio: Operations manager in Leeds, where meetings are scheduled a week out and attendance is tracked. Built the feeder after noticing her cat kept the same erratic hours her calendar did not allow for.
 portrait: |-
-  <path d="M18 96c4-22 18-32 32-32s28 10 32 32z" style="fill:var(--tf-muted)" />
-  <circle cx="50" cy="40" r="17" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" />
-  <path d="M35 42c3 16 27 16 30 0c-4 6-7 8-15 8s-11-2-15-8z" style="fill:var(--tf-ink)" />
-  <path d="M33 28c5-12 30-12 34 0l4 4H29z" style="fill:var(--tf-ink)" />
-  <path d="M30 30l-6 8M70 30l6 8" style="fill:none;stroke:var(--tf-ink);stroke-width:2;stroke-linecap:round" />
+  <path d="M44 50h12v20H44z" style="fill:var(--tf-surface);stroke:var(--tf-ink);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round" />
+  <path d="M14 100c1-15 9-25 24-30l12-3 12 3c15 5 23 15 24 30" style="fill:var(--tf-accent);stroke:var(--tf-ink);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round" />
+  <path d="M14 100c1-15 9-25 24-30l6 20-6 10z M86 100c-1-15-9-25-24-30l-6 20 6 10z" style="fill:var(--tf-ink);stroke:var(--tf-ink);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round" />
+  <path d="M42 67l8 14 8-14-8 4z" style="fill:var(--tf-surface);stroke:var(--tf-ink);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round" />
+  <path d="M29 43c0-2 1-4 3-4s3 2 3 4-1 4-3 4-3-2-3-4z" style="fill:var(--tf-surface);stroke:var(--tf-ink);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round" />
+  <path d="M65 43c0-2 1-4 3-4s3 2 3 4-1 4-3 4-3-2-3-4z" style="fill:var(--tf-surface);stroke:var(--tf-ink);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round" />
+  <path d="M50 20c-10 0-16 8-16 20c0 11 4 17 8 20c3 2 5 3 8 3s5-1 8-3c4-3 8-9 8-20c0-12-6-20-16-20z" style="fill:var(--tf-surface);stroke:var(--tf-ink);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round" />
+  <path d="M42 18c0-4 4-7 8-7s8 3 8 7-4 7-8 7-8-3-8-7z" style="fill:var(--tf-ink);stroke:none" />
+  <path d="M33 43c-2-14 4-23 17-23s19 9 17 23c-2-7-5-12-9-15c-5 2-10 2-14 1c-3 0-5 0-7-1c-3 3-3 8-4 15z" style="fill:var(--tf-ink);stroke:none" />
+  <path d="M66 38h7v10h-7z" style="fill:var(--tf-accent);stroke:var(--tf-ink);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round" />
+  <path d="M68 48c-2 6-6 8-10 8" style="fill:none;stroke:var(--tf-ink);stroke-width:2;stroke-linejoin:round;stroke-linecap:round" />
+  <path d="M55 54h4v3h-4z" style="fill:var(--tf-accent);stroke:var(--tf-ink);stroke-width:1.5;stroke-linejoin:round;stroke-linecap:round" />
+  <path d="M41 43c0-1.2 1-2 2-2s2 0.8 2 2-1 2-2 2-2-0.8-2-2z" style="fill:var(--tf-ink);stroke:none" />
+  <path d="M55 43c0-1.2 1-2 2-2s2 0.8 2 2-1 2-2 2-2-0.8-2-2z" style="fill:var(--tf-ink);stroke:none" />
+  <path d="M40 41h6 M54 41h6" style="fill:none;stroke:var(--tf-ink);stroke-width:1.6;stroke-linejoin:round;stroke-linecap:round" />
+  <path d="M39 36h8 M53 36h8" style="fill:none;stroke:var(--tf-ink);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round" />
+  <path d="M51 40l-2 9h3" style="fill:none;stroke:var(--tf-ink);stroke-width:1.8;stroke-linejoin:round;stroke-linecap:round" />
+  <path d="M45 54c3 1 7 1 10-2" style="fill:none;stroke:var(--tf-ink);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round" />

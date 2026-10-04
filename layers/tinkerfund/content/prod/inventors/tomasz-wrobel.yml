@@ -1,7 +1,31 @@
 name: Tomasz Wróbel
 bio: Optics technician in Wrocław who once tried to fall asleep by counting sheep and lost count on the fourth night. Built a machine to keep the count for him.
 portrait: |-
-  <path d="M18 96c4-22 18-32 32-32s28 10 32 32z" style="fill:var(--tf-muted)" />
-  <circle cx="50" cy="40" r="17" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" />
-  <path d="M35 44c2 16 28 16 30 0c-4 6-8 8-15 8s-11-2-15-8z" style="fill:var(--tf-ink)" />
-  <path d="M32 30c4-12 32-12 36 2l4 2H28z" style="fill:var(--tf-ink)" />
+  <g style="fill:var(--tf-accent);stroke:var(--tf-ink);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round">
+  <path d="M14 100c1-14 9-22 22-26l14-4 14 4c13 4 21 12 22 26" />
+  </g>
+  <g style="fill:none;stroke:var(--tf-surface);stroke-width:4">
+  <path d="M24 86h52M18 94h64" />
+  </g>
+  <g style="fill:var(--tf-ink);stroke:var(--tf-ink);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round">
+  <path d="M35 73c4 5 26 5 30 0l-3-5H38z" />
+  </g>
+  <g style="fill:var(--tf-surface);stroke:var(--tf-ink);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round">
+  <path d="M44 54h12v16H44z" />
+  <ellipse cx="33" cy="43" rx="3" ry="4" />
+  <ellipse cx="67" cy="43" rx="3" ry="4" />
+  <path d="M50 23c-10 0-16 7-16 17v3c0 8 6 14 12 16h8c6-2 12-8 12-16v-3c0-10-6-17-16-17z" />
+  </g>
+  <g style="fill:var(--tf-ink);stroke:var(--tf-ink);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round">
+  <path d="M34 44c-1 13 6 22 16 22s17-9 16-22c-2 8-7 13-16 13s-14-5-16-13z" />
+  <path d="M33 41c-4-4-2-10 3-10-2-5 3-10 8-8 2-5 8-6 12-2 4-3 10-1 10 5 5 0 7 6 3 10-3-6-9-10-15-10s-13 4-16 10z" />
+  <circle cx="43" cy="42" r="1.9" style="stroke:none" />
+  <circle cx="57" cy="42" r="1.9" style="stroke:none" />
+  </g>
+  <path d="M45 56c3 2 7 1 10-2" style="fill:none;stroke:var(--tf-surface);stroke-width:1.8;stroke-linecap:round" />
+  <g style="fill:none;stroke:var(--tf-ink);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round">
+  <path d="M39 36c2-1 6-1 8 1M53 36c2-2 6-3 9-2M50 41c-2 3-2 6 1 8" />
+  <circle cx="43" cy="42" r="6" />
+  <circle cx="57" cy="42" r="6" />
+  <path d="M49 42h2M37 41l-4 1M63 41l4 1" />
+  </g>
