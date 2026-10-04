@@ -20,7 +20,7 @@ const money = useTinkerfundMoney()
       </div>
       <div class="read">
         <p class="row"><span class="id">{{ home.featured.registry }}</span><TinkerfundStateChips :status="home.featured.status" :promoted="home.featured.promoted" /></p>
-        <p class="tf-label">Featured · {{ home.featured.categoryName }} · {{ home.featured.inventorName }}</p>
+        <p class="tf-label">Featured · {{ home.featured.categoryName }} · <NuxtLink :to="link(`/inventors/${home.featured.inventor}`)">{{ home.featured.inventorName }}</NuxtLink></p>
         <h2 id="tf-featured" class="tf-h1">{{ home.featured.title }}</h2>
         <p class="tag">{{ home.featured.description }}</p>
         <p class="big">{{ home.featured.status.percent }}<small>% funded</small></p>

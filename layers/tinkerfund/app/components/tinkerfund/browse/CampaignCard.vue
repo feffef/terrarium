@@ -20,7 +20,7 @@ const backedBy = computed(() => props.card.status.state === 'live' ? formatTinke
     <div class="body">
       <div>
         <h3><NuxtLink :to="link(card.path)">{{ card.title }}</NuxtLink></h3>
-        <p class="by">{{ card.categoryName }} · {{ card.inventorName }}</p>
+        <p class="by">{{ card.categoryName }} · <NuxtLink class="inventor" :to="link(`/inventors/${card.inventor}`)">{{ card.inventorName }}</NuxtLink></p>
         <p v-if="backedBy" class="by">{{ backedBy }}</p>
       </div>
       <TinkerfundProgressBar v-if="!upcoming" :percent="card.status.percent" />
@@ -64,6 +64,8 @@ h3 a::after { content: ''; position: absolute; inset: 0; }
 h3 a:focus-visible { outline: none; }
 .card:has(h3 a:focus-visible) { outline: 2px solid var(--tf-link); outline-offset: 2px; }
 .by { margin: 4px 0 0; color: var(--tf-muted); font-size: 14px; }
+/* Sits above the card-wide link's hit area. */
+.inventor { position: relative; z-index: 1; }
 .tiles {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
