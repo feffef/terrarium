@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_0163x7FmxRtXcQALXQ6UdygK
 startedAt: 2026-10-04T18:14:12Z
-endedAt: 2026-10-04T18:56:36Z
+endedAt: 2026-10-04T18:58:30Z
 kind: interactive
 goal: Find the repo's most confusing own Skill, then rewrite it (blog-post) as a linear sequence a Sonnet agent can follow
 status: in-review
 outcome: "blog-post SKILL.md rewritten 491 -> 343 lines as 13 ordered steps, with a three-day story window; gated PR #1602 open, awaiting human merge"
-summary: "Human-instructed throughout. The user asked for a Sonnet subagent to read all of the Platform's own Skills (the 17 not keyed in skills-lock.json) and name the most confusing; it ranked blog-post first (control flow 0 -> Section A -> 2 -> 3-7, with steps 3/4 \"normally already satisfied\"), frictions-to-fixes and guest-intake next, and surfaced four cross-Skill contradictions (auto-triage vs guest-intake on who green-lights a Public issue; digest vs blog-post on unverifiable claims; close-session vs log-session on who finishes the log; several Skills logging after self-merge rather than at PR-open). I spot-checked its quotes against the files before relaying. The user then asked for a complete rewrite of blog-post keeping the core logic, with /grill-me for ambiguities. Two grilling rounds settled: the follow-up reply decision is owed on every merged post (only the reader's \"none\" skips it); the reply path stays inline; closing points at pr-workflow.md and states only the Skill's delta; the #447 rationale shrinks to one sentence; unverifiable claims are still cut; a given Persona still overrides rotation. All six were the user's decisions. Agent-initiated: updating the four out-of-skill pointers to the old \"A0. Rotation gate\" heading (scripts/blog-rotation.ts, its unit test, one research-table row) so no stale heading reference remained. Full gate green locally; PR #1602 opened and subscribed. After CI went green the user asked (human- instructed) that step 2 gather material over the last three days rather than fixed counts; one short grilling round settled widen-by-a-day when thin and that posts and losing topics stay unwindowed. Second commit pushed, PR body updated in the same push. The other Skill findings were reported to the user, not acted on."
+summary: "Human-instructed throughout. The user asked for a Sonnet subagent to read all of the Platform's own Skills (the 17 not keyed in skills-lock.json) and name the most confusing; it ranked blog-post first (control flow 0 -> Section A -> 2 -> 3-7, with steps 3/4 \"normally already satisfied\"), frictions-to-fixes and guest-intake next, and surfaced four cross-Skill contradictions (auto-triage vs guest-intake on who green-lights a Public issue; digest vs blog-post on unverifiable claims; close-session vs log-session on who finishes the log; several Skills logging after self-merge rather than at PR-open). I spot-checked its quotes against the files before relaying. The user then asked for a complete rewrite of blog-post keeping the core logic, with /grill-me for ambiguities. Two grilling rounds settled: the follow-up reply decision is owed on every merged post (only the reader's \"none\" skips it); the reply path stays inline; closing points at pr-workflow.md and states only the Skill's delta; the #447 rationale shrinks to one sentence; unverifiable claims are still cut; a given Persona still overrides rotation. All six were the user's decisions. Agent-initiated: updating the four out-of-skill pointers to the old \"A0. Rotation gate\" heading (scripts/blog-rotation.ts, its unit test, one research-table row) so no stale heading reference remained. Full gate green locally; PR #1602 opened and subscribed. After CI went green the user asked (human- instructed) that step 2 gather material over the last three days rather than fixed counts; one short grilling round settled widen-by-a-day when thin and that posts and losing topics stay unwindowed. Second commit pushed, PR body updated in the same push. The user then asked (human-instructed) for an issue: a Skill-helper script change should not force build + browser e2e; filed as #1603 after confirming by grep that scripts/ is not uniformly inert (three scripts are imported by e2e specs) and proposing a per-layer skip. The other Skill findings were reported to the user, not acted on."
 prs:
   - "1602"
 docsRead:
@@ -56,16 +56,16 @@ frictions:
   - description: "A comment-only edit to scripts/blog-rotation.ts (a heading reference) forced the full gate twice: gate:scoped diffs the whole branch against merge-base, so every later md-only commit on the branch also paid build + e2e"
     solution: Accepted as fail-safe by design; an inert classifier for comment-only diffs in .ts files is an idea below, not a request
     severity: minor
-durationSec: 2544
+durationSec: 2658
 models:
-  claude-fable-5-1: 124
+  claude-fable-5-1: 137
 toolCounts:
-  Bash: 31
+  Bash: 35
   Agent: 2
   Read: 2
   Skill: 5
   Write: 2
-  ToolSearch: 3
+  ToolSearch: 4
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 2
   mcp__claude-code-remote__subscribe_pr_activity: 1
@@ -74,6 +74,8 @@ toolCounts:
   mcp__github__pull_request_read: 4
   Edit: 2
   mcp__github__update_pull_request: 2
+  mcp__github__search_issues: 1
+  mcp__github__issue_write: 1
 filesEdited:
   - .agents/skills/blog-post/SKILL.md
 docsReadViaShell:
@@ -90,6 +92,8 @@ docsReadViaShell:
   - docs/research/rulebook-migration-table.md
   - docs/adr/0017-provenance-footer-on-agent-authored-content.md
   - docs/agents/guards.md
+  - docs/agents/issue-tracker.md
+  - docs/agents/triage-labels.md
   - .agents/skills/close-session/SKILL.md
   - .agents/skills/log-session/SKILL.md
   - .agents/skills/atlas-specimen/SKILL.md
@@ -125,4 +129,5 @@ ideas:
   - "Resolve the auto-triage vs guest-intake conflict: auto-triage routes every Public-authored issue to ready-for-human while guest-intake applies ready-for-agent on the guest's confirmation, and auto-triage's own 'Coexisting with the guest pipeline' section admits it relies on timing. Add the explicit skip auto-triage says it would add, so the two Skills agree by rule"
   - digest keeps unverifiable claims while blog-post cuts them; either document in digest why its bar is lower (a digest cites session logs, not a public blog) or raise it to match, so a fact-check subagent brief can be shared between the two
   - Teach scripts/gate.ts's inert classifier to treat a .ts diff that changes only comment lines as inert, so a pointer fix in a script comment doesn't cost a full build + e2e
+  - "Filed as #1603: let gate:scoped skip build + e2e for a scripts/*.ts change that no runtime or e2e file imports, keeping unit tests; comment-only .ts diffs as the cheap sub-case"
 landedBy: Stop
