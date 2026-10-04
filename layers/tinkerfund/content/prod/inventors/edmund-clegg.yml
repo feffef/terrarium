@@ -1,20 +1,20 @@
 name: Edmund Clegg
 bio: Retired railway timetable planner in York. Kept six years of arrivals at his garden feeder in a notebook, and saw no reason they should not be displayed.
 portrait: |-
-  <path d="M44 50h12v20H44z" style="fill:color-mix(in srgb, var(--tf-ink) 48%, var(--tf-surface))" />
-  <path d="M14 100c1-15 9-25 24-30l12-3 12 3c15 5 23 15 24 30z" style="fill:var(--tf-link)" />
-  <ellipse cx="32" cy="43" rx="3" ry="4" style="fill:color-mix(in srgb, var(--tf-ink) 48%, var(--tf-surface))" />
-  <ellipse cx="68" cy="43" rx="3" ry="4" style="fill:color-mix(in srgb, var(--tf-ink) 48%, var(--tf-surface))" />
-  <path d="M50 22c-11 0-18 8-18 19c0 9 4 15 9 18c3 2 6 3 9 3s6-1 9-3c5-3 9-9 9-18c0-11-7-19-18-19z" style="fill:color-mix(in srgb, var(--tf-ink) 48%, var(--tf-surface))" />
-  <path d="M40 68l10 14 10-14-10 3z" style="fill:color-mix(in srgb, var(--tf-surface) 85%, var(--tf-ink))" />
-  <path d="M48 72h4l1 4-3 10-3-10z" style="fill:var(--tf-accent)" />
-  <path d="M31 32c-1 5-1 10 0 14h4c-1-5-1-10 0-14z M69 32c1 5 1 10 0 14h-4c1-5 1-10 0-14z" style="fill:color-mix(in srgb, var(--tf-ink) 28%, var(--tf-surface))" />
-  <path d="M29 31c3-12 39-12 42 0c-7-3-35-3-42 0z" style="fill:var(--tf-ink)" />
-  <path d="M25 31c8-4 42-4 50 0l-2 3c-9-3-37-3-46 0z" style="fill:color-mix(in srgb, var(--tf-ink) 85%, var(--tf-surface))" />
-  <path d="M41 49c3-3 15-3 18 0c-3 3-15 3-18 0z" style="fill:color-mix(in srgb, var(--tf-ink) 28%, var(--tf-surface))" />
-  <ellipse cx="43" cy="42" rx="1.8" ry="2.2" style="fill:var(--tf-ink)" />
-  <ellipse cx="57" cy="42" rx="1.8" ry="2.2" style="fill:var(--tf-ink)" />
-  <path d="M38 42a5 5 0 1 0 10 0a5 5 0 1 0-10 0z M52 42a5 5 0 1 0 10 0a5 5 0 1 0-10 0z M48 42h4" style="fill:none;stroke:var(--tf-ink);stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round" />
-  <path d="M39 36c3-1 6-1 8 0 M53 36c3-1 6-1 8 0" style="fill:none;stroke:var(--tf-ink);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round" />
-  <path d="M50 44c-2 3-2 5 1 6" style="fill:none;stroke:var(--tf-ink);stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round" />
-  <path d="M45 54c2 2 8 2 10 0" style="fill:none;stroke:var(--tf-ink);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round" />
+  <path d="M44 50h12v20H44z" style="fill:var(--tf-surface);stroke:var(--tf-ink);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round" />
+  <path d="M14 100c1-15 9-25 24-30l12-3 12 3c15 5 23 15 24 30" style="fill:var(--tf-accent);stroke:var(--tf-ink);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round" />
+  <path d="M29 43c0-2 1-4 3-4s3 2 3 4-1 4-3 4-3-2-3-4z" style="fill:var(--tf-surface);stroke:var(--tf-ink);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round" />
+  <path d="M65 43c0-2 1-4 3-4s3 2 3 4-1 4-3 4-3-2-3-4z" style="fill:var(--tf-surface);stroke:var(--tf-ink);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round" />
+  <path d="M50 22c-11 0-18 8-18 19c0 9 4 15 9 18c3 2 6 3 9 3s6-1 9-3c5-3 9-9 9-18c0-11-7-19-18-19z" style="fill:var(--tf-surface);stroke:var(--tf-ink);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round" />
+  <path d="M40 68l10 14 10-14-10 3z" style="fill:var(--tf-surface);stroke:var(--tf-ink);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round" />
+  <path d="M48 72h4l1 4-3 10-3-10z" style="fill:var(--tf-ink);stroke:var(--tf-ink);stroke-width:1;stroke-linejoin:round;stroke-linecap:round" />
+  <path d="M31 32c-1 5-1 10 0 14h4c-1-5-1-10 0-14z M69 32c1 5 1 10 0 14h-4c1-5 1-10 0-14z" style="fill:var(--tf-surface);stroke:var(--tf-ink);stroke-width:1.8;stroke-linejoin:round;stroke-linecap:round" />
+  <path d="M29 31c3-12 39-12 42 0c-7-3-35-3-42 0z" style="fill:var(--tf-accent);stroke:var(--tf-ink);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round" />
+  <path d="M25 31c8-4 42-4 50 0l-2 3c-9-3-37-3-46 0z" style="fill:var(--tf-ink);stroke:var(--tf-ink);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round" />
+  <path d="M41 49c3-3 15-3 18 0c-3 3-15 3-18 0z" style="fill:var(--tf-surface);stroke:var(--tf-ink);stroke-width:1.8;stroke-linejoin:round;stroke-linecap:round" />
+  <path d="M41 42c0-1.5 1-2.5 2-2.5s2 1 2 2.5-1 2.5-2 2.5-2-1-2-2.5z" style="fill:var(--tf-ink);stroke:none" />
+  <path d="M55 42c0-1.5 1-2.5 2-2.5s2 1 2 2.5-1 2.5-2 2.5-2-1-2-2.5z" style="fill:var(--tf-ink);stroke:none" />
+  <path d="M38 42a5 5 0 1 0 10 0a5 5 0 1 0-10 0z M52 42a5 5 0 1 0 10 0a5 5 0 1 0-10 0z M48 42h4" style="fill:none;stroke:var(--tf-ink);stroke-width:1.8;stroke-linejoin:round;stroke-linecap:round" />
+  <path d="M39 36c3-1 6-1 8 0 M53 36c3-1 6-1 8 0" style="fill:none;stroke:var(--tf-ink);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round" />
+  <path d="M50 44c-2 3-2 5 1 6" style="fill:none;stroke:var(--tf-ink);stroke-width:1.8;stroke-linejoin:round;stroke-linecap:round" />
+  <path d="M45 54c2 2 8 2 10 0" style="fill:none;stroke:var(--tf-ink);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round" />

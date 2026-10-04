@@ -1,18 +1,26 @@
 name: Petra Lindqvist
 bio: Home cook in Malmö. Spent eleven years assuming the fridge light turned off between closing the door and opening it again, and built a camera to stop assuming.
 portrait: |-
-  <path d="M14 100c1-14 9-22 22-26l14-4 14 4c13 4 21 12 22 26z" style="fill:var(--tf-accent)" />
-  <path d="M40 100V82c0-4 20-4 20 0v18z" style="fill:color-mix(in srgb, var(--tf-surface) 80%, var(--tf-ink))" />
-  <path d="M41 84l-5-10M59 84l5-10" style="fill:none;stroke:color-mix(in srgb, var(--tf-surface) 80%, var(--tf-ink));stroke-width:2;stroke-linecap:round" />
-  <path d="M44 54h12v18H44z" style="fill:color-mix(in srgb, var(--tf-ink) 45%, var(--tf-surface))" />
-  <ellipse cx="33" cy="43" rx="3" ry="4" style="fill:color-mix(in srgb, var(--tf-ink) 45%, var(--tf-surface))" />
-  <ellipse cx="67" cy="43" rx="3" ry="4" style="fill:color-mix(in srgb, var(--tf-ink) 45%, var(--tf-surface))" />
-  <circle cx="33" cy="48" r="1.6" style="fill:var(--tf-mark)" />
-  <circle cx="67" cy="48" r="1.6" style="fill:var(--tf-mark)" />
-  <path d="M50 23c-10 0-16 7-16 17v3c0 8 6 14 12 16h8c6-2 12-8 12-16v-3c0-10-6-17-16-17z" style="fill:color-mix(in srgb, var(--tf-ink) 45%, var(--tf-surface))" />
-  <path d="M34 42c-3-13 5-22 16-22s19 9 16 22c-1-8-6-12-16-12s-15 4-16 12z" style="fill:var(--tf-ink)" />
-  <path d="M44 20c-2-7 3-12 9-12s10 5 7 12c-3-3-11-4-16 0z" style="fill:var(--tf-ink)" />
-  <path d="M35 38c-2 3-3 7-2 11M66 36c2 3 2 7 1 10" style="fill:none;stroke:var(--tf-ink);stroke-width:1.6;stroke-linecap:round" />
-  <circle cx="43" cy="42" r="1.8" style="fill:var(--tf-ink)" />
-  <circle cx="57" cy="42" r="1.8" style="fill:var(--tf-ink)" />
-  <path d="M39 37c2-2 6-2 8 0M53 37c2-2 6-2 8 0M49 43c0 3 0 5 2 6M44 51c3 5 9 5 12 0" style="fill:none;stroke:var(--tf-ink);stroke-width:1.6;stroke-linecap:round" />
+  <g style="fill:var(--tf-accent);stroke:var(--tf-ink);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round">
+  <path d="M14 100c1-14 9-22 22-26l14-4 14 4c13 4 21 12 22 26" />
+  </g>
+  <g style="fill:var(--tf-surface);stroke:var(--tf-ink);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round">
+  <path d="M40 100V82c0-4 20-4 20 0v18" />
+  <path d="M41 84l-5-10M59 84l5-10" />
+  <path d="M44 54h12v18H44z" />
+  <ellipse cx="33" cy="43" rx="3" ry="4" />
+  <ellipse cx="67" cy="43" rx="3" ry="4" />
+  <path d="M50 23c-10 0-16 7-16 17v3c0 8 6 14 12 16h8c6-2 12-8 12-16v-3c0-10-6-17-16-17z" />
+  </g>
+  <g style="fill:var(--tf-ink);stroke:var(--tf-ink);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round">
+  <path d="M34 42c-3-13 5-22 16-22s19 9 16 22c-1-8-6-12-16-12s-15 4-16 12z" />
+  <path d="M44 20c-2-7 3-12 9-12s10 5 7 12c-3-3-11-4-16 0z" />
+  <circle cx="43" cy="42" r="1.9" style="stroke:none" />
+  <circle cx="57" cy="42" r="1.9" style="stroke:none" />
+  </g>
+  <circle cx="33" cy="49" r="2" style="fill:var(--tf-accent);stroke:var(--tf-ink);stroke-width:1.2" />
+  <circle cx="67" cy="49" r="2" style="fill:var(--tf-accent);stroke:var(--tf-ink);stroke-width:1.2" />
+  <g style="fill:none;stroke:var(--tf-ink);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round">
+  <path d="M35 38c-2 3-3 7-2 11M66 36c2 3 2 7 1 10" />
+  <path d="M39 37c2-2 6-2 8 0M53 37c2-2 6-2 8 0M49 43c0 3 0 5 2 6M44 51c3 5 9 5 12 0" />
+  </g>
