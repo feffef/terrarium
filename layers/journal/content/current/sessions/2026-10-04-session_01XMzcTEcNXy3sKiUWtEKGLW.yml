@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01XMzcTEcNXy3sKiUWtEKGLW
 startedAt: 2026-10-04T00:16:00Z
-endedAt: 2026-10-04T00:23:54Z
+endedAt: 2026-10-04T00:28:49Z
 kind: autonomous
 goal: Write the 2026-10-03 Digest and run the Journal retention sweep
-status: in-review
-outcome: PR 1584 opened with the Digest and sweep, gate green; awaiting CI and merge
-summary: Scheduled /digest run, so all work was agent-executed per the Skill. One closed day (2026-10-03, 23 sessions) needed a Digest; I wrote it from gather output, ran a sonnet fact-check subagent (no wrong claims; two wordings tightened, including the main-red duration), ran the retention sweep (1 digest, 16 sessions archived), passed gate:scoped, and opened PR 1584 with a verdict comment and subscription. Merge via merge-pr.ts is still pending.
+status: completed
+outcome: PR 1584 merged on a green gate with the 2026-10-03 Digest and retention sweep
+summary: Scheduled /digest run, so all work was agent-executed per the Skill. One closed day (2026-10-03, 23 sessions) needed a Digest; I wrote it from gather output, ran a sonnet fact-check subagent (no wrong claims; two wordings tightened, including the main-red duration), ran the retention sweep (1 digest, 16 sessions archived), passed gate:scoped, and opened PR 1584 with a verdict comment and subscription. PR 1584 then merged via merge-pr.ts on a green gate.
 prs:
   - "1584"
 docsRead:
@@ -29,11 +29,11 @@ frictions:
   - description: I went idle waiting on the gate and subagent, drawing two stop-hook nags about uncommitted changes.
     solution: Commit the digest to the branch before the gate, then amend-free follow-up commit for fact-check fixes.
     severity: nit
-durationSec: 474
+durationSec: 768
 models:
-  claude-sonnet-5-5: 46
+  claude-sonnet-5-5: 55
 toolCounts:
-  Bash: 13
+  Bash: 15
   Agent: 1
   mcp__github__search_pull_requests: 1
   Grep: 4
@@ -42,6 +42,7 @@ toolCounts:
   mcp__github__subscribe_pr_activity: 1
   mcp__github__add_issue_comment: 1
   Skill: 2
+  ReadNotifications: 2
 subagents:
   - type: Explore
     task: Fact-check digest
