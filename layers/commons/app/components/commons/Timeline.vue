@@ -7,6 +7,17 @@
 // feed is build-time/committed content (ADR-0001), never a live feed.
 const { data, status, error } = await useAsyncData('commons-timeline', () => queryTimeline())
 const entries = computed(() => data.value ?? [])
+const PAGE = 50
+const limit = ref(PAGE)
+const shown = computed(() => entries.value.slice(0, limit.value))
+const list = useTemplateRef<HTMLElement>('list')
+// The button vanishes after the last page; keep keyboard focus on the new rows.
+async function showMore() {
+  const first = shown.value.length
+  limit.value += PAGE
+  await nextTick()
+  list.value?.children[first]?.querySelector('a')?.focus()
+}
 const tenantCount = computed(() => new Set(entries.value.map((e) => e.tenant)).size)
 
 // Format the UTC calendar date straight from the ISO string parts — zone-stable,
@@ -27,8 +38,8 @@ function calendarDate(iso: string): string {
       across {{ tenantCount }} {{ tenantCount === 1 ? 'site' : 'sites' }}
     </p>
 
-    <ol class="feed">
-      <li v-for="e in entries" :key="e.url + e.when" class="tl-entry">
+    <ol ref="list" class="feed">
+      <li v-for="e in shown" :key="e.url + e.when" class="tl-entry">
         <NuxtLink :to="e.url" class="row">
           <time class="when" :datetime="e.when">{{ calendarDate(e.when) }}</time>
           <span class="body">
@@ -41,6 +52,9 @@ function calendarDate(iso: string): string {
         </NuxtLink>
       </li>
     </ol>
+    <button v-if="entries.length > shown.length" type="button" class="more" @click="showMore">
+      Show {{ Math.min(PAGE, entries.length - shown.length) }} older
+    </button>
     <p v-if="!entries.length" class="empty">No timestamped content yet.</p>
 
     <ContentLoadErrorDialog :status="status" :error="error" />
@@ -60,6 +74,17 @@ function calendarDate(iso: string): string {
   display: flex;
   flex-direction: column;
 }
+.more {
+  margin-top: 0.8rem;
+  padding: 0.6rem 1rem;
+  font: inherit;
+  color: var(--co-ink);
+  background: var(--co-card);
+  border: 1px solid var(--co-line);
+  border-radius: 10px;
+  cursor: pointer;
+}
+.more:hover { border-color: var(--co-accent); }
 .tl-entry + .tl-entry {
   border-top: 1px solid var(--co-line);
 }

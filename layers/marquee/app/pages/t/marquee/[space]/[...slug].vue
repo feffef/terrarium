@@ -56,5 +56,6 @@ useSeoMeta({ description: () => chapter.value?.description })
          technical details / reload) instead of a silent "Not found"
          (issue #236). -->
     <ContentLoadErrorDialog :status="status" :error="error" />
+    <SiteFooter />
   </main>
 </template>

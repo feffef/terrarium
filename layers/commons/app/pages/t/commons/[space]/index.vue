@@ -50,6 +50,7 @@ useSeoMeta({ description: () => landing.value?.description })
          silent blank (issue #236). Each view component raises its own for its
          cross-Tenant read. -->
     <ContentLoadErrorDialog :status="status" :error="error" />
+    <SiteFooter />
   </main>
 </template>
 
