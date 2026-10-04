@@ -23,7 +23,7 @@ sessions has piled up unaddressed friction.
 
 ## 1. Survey & screen the frictions — in a subagent
 
-Reading 20 logs and surveying the whole tracker is context-heavy (the tracker JSON
+Reading a window of logs and surveying the whole tracker is context-heavy (the tracker JSON
 alone overflows the tool-result limit), so **delegate steps 1–2 to a single
 subagent** (`general-purpose`, so it can run `tsx` and the GitHub MCP tools). It
 surveys, screens, and returns a **distilled, ranked report**; the main session
@@ -38,8 +38,8 @@ Its brief:
   way, screen it out fast — it's a §2 `drop` — rather than re-deriving its full
   history; save the deep archaeology for candidates with no in-window
   resolution. Count recurrence from the **unresolved** occurrences only.
-- **Read the latest 20 session logs** via `pnpm exec tsx scripts/session-frictions.ts`
-  (`--window N` to change the count; bare `tsx` isn't on PATH). Large output goes to
+- **Read the last 3 days of session logs** via `pnpm exec tsx scripts/session-frictions.ts`
+  (`--days N` to change the window; bare `tsx` isn't on PATH). Large output goes to
   `/tmp/session-frictions-output.json` and stdout gets only a notice — read the file, or
   pass `--out PATH`; don't parse stdout. This is a **recency window, not a
   sample** — read every session in it, don't chase frictions from older,
@@ -115,7 +115,7 @@ session's log too, §6). Don't let the survey's frictions evaporate just because
 ran in a subagent.
 
 Done when the subagent returns a structured report: **(a) ranked actionable
-candidates** — each with title, severity, recurrence (N/20), sessions, tracker
+candidates** — each with title, severity, recurrence (N of the window's sessions), sessions, tracker
 classification (never-fixed / open-already #N / regression of #N), fix type
 (doc/code/config), human-only-surface flag, difficulty (simple/hard), a one-line
 recommended fix, and evidence quotes; **(b) a dropped list** with one-line reasons;

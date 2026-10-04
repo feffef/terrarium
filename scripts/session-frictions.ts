@@ -1,7 +1,7 @@
 // The session-frictions helper: the deterministic half of the `frictions-to-fixes`
 // Skill's survey step. It does ONLY the mechanical gathering — parse every session
 // log, sort by `startedAt` (a filename/`ls` sort is not reliably chronological,
-// §1 of the Skill), and pick the newest-N recency window — and emits each
+// §1 of the Skill), and pick the last-N-days recency window — and emits each
 // session's *triage-essential* fields as compact JSON. Screening, grouping, and
 // ranking are judgement calls the Skill's subagent makes from this JSON; keeping
 // that judgement out of here is the point (predictable process, low token cost,
@@ -11,13 +11,13 @@
 // dropped at this stage (summary, docsRead, learnings, …) can still be read in
 // full later — this is a triage extract, not a replacement for the source log.
 //
-// Usage:  tsx scripts/session-frictions.ts [--window N] [--compact] [--out PATH]
-//   Prints the N most-recent sessions (by startedAt, oldest of the window first)
+// Usage:  tsx scripts/session-frictions.ts [--days N] [--compact] [--out PATH]
+//   Prints the sessions started in the last N days (oldest first)
 //   as JSON: id, file, startedAt, goal, outcome, prs, and every friction's
 //   description/solution/severity.
 //
 // Output above OUTPUT_FILE_THRESHOLD is written to a file instead of stdout
-// (see main()), so a large --window can no longer blow a caller's inline-capture
+// (see main()), so a large --days can no longer blow a caller's inline-capture
 // cap (issue #976) — no caller-side redirect or --compact is required for safety.
 //
 // --compact drops the prose fields (goal/outcome/solution) that make the
@@ -39,9 +39,9 @@ import { readSessionLogs } from './session-logs.ts'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 
-/** The default recency window: the 20 newest session logs — matches the
+/** The default recency window: sessions from the last 3 days — matches the
  *  `frictions-to-fixes` Skill's survey step. */
-export const DEFAULT_WINDOW = 20
+export const DEFAULT_WINDOW_DAYS = 3
 
 // ── Types ───────────────────────────────────────────────────────────────────
 
@@ -89,14 +89,15 @@ export interface CompactSession {
 
 // ── Pure core (unit-tested) ───────────────────────────────────────────────────
 
-/** The newest `n` sessions by `startedAt` (ISO), returned oldest-of-the-window
- *  first — the order the Skill reads them in. Ties broken by `id` for a
+/** Sessions with `startedAt` (ISO) within the last `days` days of `now`,
+ *  oldest first — the order the Skill reads them in. Ties broken by `id` for a
  *  stable, deterministic order across runs. A filename sort is NOT a
  *  substitute for this: same-day sessions can have an unordered id suffix. */
-export function pickRecencyWindow(sessions: TriageSession[], n: number): TriageSession[] {
-  return [...sessions]
+export function pickRecencyWindow(sessions: TriageSession[], days: number, now = Date.now()): TriageSession[] {
+  const cutoff = now - days * 86_400_000
+  return sessions
+    .filter((s) => Date.parse(s.startedAt) >= cutoff)
     .sort((a, b) => a.startedAt.localeCompare(b.startedAt) || a.id.localeCompare(b.id))
-    .slice(-n)
 }
 
 const SESSION_LOG_DIR = 'layers/journal/content/current/sessions/'
@@ -163,8 +164,8 @@ function readSessions(cwd = root): TriageSession[] {
 
 // ── Command ─────────────────────────────────────────────────────────────────
 
-export function survey(windowSize = DEFAULT_WINDOW, cwd = root): TriageSession[] {
-  return pickRecencyWindow(readSessions(cwd), windowSize)
+export function survey(days = DEFAULT_WINDOW_DAYS, cwd = root, now = Date.now()): TriageSession[] {
+  return pickRecencyWindow(readSessions(cwd), days, now)
 }
 
 // ── CLI ───────────────────────────────────────────────────────────────────────
@@ -193,10 +194,10 @@ function fail(msg: string): never {
 
 function main(): void {
   const argv = process.argv.slice(2)
-  const wIdx = argv.indexOf('--window')
-  const windowSize = wIdx >= 0 && argv[wIdx + 1] ? Number(argv[wIdx + 1]) : DEFAULT_WINDOW
-  if (!Number.isInteger(windowSize) || windowSize <= 0) fail('--window must be a positive integer')
-  const sessions = survey(windowSize)
+  const dIdx = argv.indexOf('--days')
+  const days = dIdx >= 0 && argv[dIdx + 1] ? Number(argv[dIdx + 1]) : DEFAULT_WINDOW_DAYS
+  if (!(days > 0)) fail('--days must be a positive number')
+  const sessions = survey(days)
   const output = argv.includes('--compact') ? sessions.map(toCompactSession) : sessions
   const json = JSON.stringify(output, null, 2)
   const target = resolveOutputTarget(argv, json.length)
