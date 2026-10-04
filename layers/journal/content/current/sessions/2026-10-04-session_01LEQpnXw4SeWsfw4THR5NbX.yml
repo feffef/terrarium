@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01LEQpnXw4SeWsfw4THR5NbX
 startedAt: 2026-10-04T09:27:54Z
-endedAt: 2026-10-04T09:42:26Z
+endedAt: 2026-10-04T09:46:46Z
 kind: delegated
 goal: Audit the Platform's own Skills for silent failures and missed invocations, and tune the Skill Inventory
-status: in-review
-outcome: "12 behaviour checks verified, one #1515 comment, Inventory observations in PR #1593 awaiting merge"
-summary: "The human typed /audit-skills as the single kickoff prompt; everything after was agent-initiated within that Skill's charter (later notices were machinery, not a human). I ran the scorecard, dispatched one read-only Sonnet subagent for each of the 12 behaviourChecks Skills, and verified their reports against git, GitHub and the session logs before using them. Step 3 was clear: the orphan scan ran (1008 merged PRs, 858 with a session), both orphan candidates already carry resolvedBy (#736, #1063), and there were no human-prompted or manually rescued closures. Verified and recorded as observations: blog-post's step 8 reader pass was skipped in 3 of 4 runs since it landed, audit-docs' concision lens is thinly covered, prune-trial left a stray remote branch, dispatch-subagents' bank-progress rule collides with the harness's report-file refusal, and close-session and log-session got small notes. No grade or role changed. No new issue was filed: #1585 and #1586 already cover the dispatch-subagents findings. The one real escalation was a comment on the open #1515: scripts/owner-corrections.ts does not list the 44rem revert (#1576 of #1563), most likely because #1563 merged from a harness-pinned branch the script's claude/visitor-loop-* match misses. I ran the script myself to check; the cause is read from the code, not tested. The comment first carried one sentence resting on an unverified subagent claim, and I edited it out once I noticed. The Inventory-only PR #1593 passed the full scoped gate and is open; landing it and finalising this log remain."
+status: completed
+outcome: "12 behaviour checks verified, one #1515 comment, Inventory observations merged in PR #1593"
+summary: "The human typed /audit-skills as the single kickoff prompt; everything after was agent-initiated within that Skill's charter (later notices were machinery, not a human). I ran the scorecard, dispatched one read-only Sonnet subagent for each of the 12 behaviourChecks Skills, and verified their reports against git, GitHub and the session logs before using them. Step 3 was clear: the orphan scan ran (1008 merged PRs, 858 with a session), both orphan candidates already carry resolvedBy (#736, #1063), and there were no human-prompted or manually rescued closures. Verified and recorded as observations: blog-post's step 8 reader pass was skipped in 3 of 4 runs since it landed, audit-docs' concision lens is thinly covered, prune-trial left a stray remote branch, dispatch-subagents' bank-progress rule collides with the harness's report-file refusal, and close-session and log-session got small notes. No grade or role changed. No new issue was filed: #1585 and #1586 already cover the dispatch-subagents findings. The one real escalation was a comment on the open #1515: scripts/owner-corrections.ts does not list the 44rem revert (#1576 of #1563), most likely because #1563 merged from a harness-pinned branch the script's claude/visitor-loop-* match misses. I ran the script myself to check; the cause is read from the code, not tested. The comment first carried one sentence resting on an unverified subagent claim, and I edited it out once I noticed. The Inventory-only PR #1593 passed the full scoped gate, I posted the verdict comment first, and merge-pr.ts merged it on green (merge commit 4dfe2341). This log was first written as in-review at PR-open and is now final."
 prs:
   - "1593"
 docsRead:
@@ -56,17 +56,17 @@ frictions:
   - description: "SHELL-READ-DETECTION miss: command `grep -n -i -E \"44rem|narrow|owner-correct|owner correct\" .agents/skills/visitor-loop/decisions.md | head` printed line 8 of that file (\"On narrow screens the Blog's persona/tag panel stays above the posts...\"), yet the report lists .agents/skills/visitor-loop/decisions.md as named but showing no line (the command it cites is a different one, so which command was matched is unclear)."
     solution: Check whether grep -n output with its line-number prefix is matched against the doc, and whether the report picks the first command that names a path rather than the one that showed it.
     severity: moderate
-durationSec: 872
+durationSec: 1132
 models:
-  claude-sonnet-5-5: 125
+  claude-sonnet-5-5: 156
 toolCounts:
-  Bash: 27
+  Bash: 32
   Agent: 12
   ToolSearch: 2
   mcp__github__issue_read: 5
-  mcp__github__pull_request_read: 2
+  mcp__github__pull_request_read: 4
   mcp__github__search_issues: 2
-  mcp__github__add_issue_comment: 1
+  mcp__github__add_issue_comment: 2
   mcp__github__update_issue_comment: 1
   Grep: 2
   mcp__github__list_pull_requests: 1
@@ -74,6 +74,10 @@ toolCounts:
   mcp__claude-code-remote__subscribe_pr_activity: 1
   Skill: 2
   Write: 1
+  ReadNotifications: 3
+  Read: 2
+  Edit: 2
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 docsReadViaShell:
   - .agents/skills/auto-triage/SKILL.md
   - .agents/skills/blog-post/SKILL.md
