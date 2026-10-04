@@ -1,14 +1,15 @@
 schemaVersion: 1
 session: session_0163x7FmxRtXcQALXQ6UdygK
 startedAt: 2026-10-04T18:14:12Z
-endedAt: 2026-10-04T21:00:30Z
+endedAt: 2026-10-04T22:16:57Z
 kind: interactive
 goal: Find the repo's most confusing own Skill, then rewrite it (blog-post) as a linear sequence a Sonnet agent can follow
-status: completed
-outcome: "blog-post SKILL.md rewritten 491 -> 343 lines as 13 ordered steps, with a three-day story window; gated PR #1602 merged by the human at 20:59 UTC; issue #1603 filed"
-summary: "Human-instructed throughout. The user asked for a Sonnet subagent to read all of the Platform's own Skills (the 17 not keyed in skills-lock.json) and name the most confusing; it ranked blog-post first (control flow 0 -> Section A -> 2 -> 3-7, with steps 3/4 \"normally already satisfied\"), frictions-to-fixes and guest-intake next, and surfaced four cross-Skill contradictions (auto-triage vs guest-intake on who green-lights a Public issue; digest vs blog-post on unverifiable claims; close-session vs log-session on who finishes the log; several Skills logging after self-merge rather than at PR-open). I spot-checked its quotes against the files before relaying. The user then asked for a complete rewrite of blog-post keeping the core logic, with /grill-me for ambiguities. Two grilling rounds settled: the follow-up reply decision is owed on every merged post (only the reader's \"none\" skips it); the reply path stays inline; closing points at pr-workflow.md and states only the Skill's delta; the #447 rationale shrinks to one sentence; unverifiable claims are still cut; a given Persona still overrides rotation. All six were the user's decisions. Agent-initiated: updating the four out-of-skill pointers to the old \"A0. Rotation gate\" heading (scripts/blog-rotation.ts, its unit test, one research-table row) so no stale heading reference remained. Full gate green locally; PR #1602 opened and subscribed. After CI went green the user asked (human- instructed) that step 2 gather material over the last three days rather than fixed counts; one short grilling round settled widen-by-a-day when thin and that posts and losing topics stay unwindowed. Second commit pushed, PR body updated in the same push. The user then asked (human-instructed) for an issue: a Skill-helper script change should not force build + browser e2e; filed as #1603 after confirming by grep that scripts/ is not uniformly inert (three scripts are imported by e2e specs) and proposing a per-layer skip. The other Skill findings were reported to the user, not acted on. PR #1602 merged (human merge, feffef) at 20:59 UTC after two quiet safety-net windows; the pending check-in was cancelled on the merge event."
+status: in-review
+outcome: "blog-post SKILL.md rewritten 491 -> 343 lines as 13 ordered steps, with a three-day story window; PR #1602 merged; then an audit of the first run on it led to a follow-up PR #1606, in review; issue #1603 filed"
+summary: "Human-instructed throughout. The user asked for a Sonnet subagent to read all of the Platform's own Skills (the 17 not keyed in skills-lock.json) and name the most confusing; it ranked blog-post first (control flow 0 -> Section A -> 2 -> 3-7, with steps 3/4 \"normally already satisfied\"), frictions-to-fixes and guest-intake next, and surfaced four cross-Skill contradictions (auto-triage vs guest-intake on who green-lights a Public issue; digest vs blog-post on unverifiable claims; close-session vs log-session on who finishes the log; several Skills logging after self-merge rather than at PR-open). I spot-checked its quotes against the files before relaying. The user then asked for a complete rewrite of blog-post keeping the core logic, with /grill-me for ambiguities. Two grilling rounds settled: the follow-up reply decision is owed on every merged post (only the reader's \"none\" skips it); the reply path stays inline; closing points at pr-workflow.md and states only the Skill's delta; the #447 rationale shrinks to one sentence; unverifiable claims are still cut; a given Persona still overrides rotation. All six were the user's decisions. Agent-initiated: updating the four out-of-skill pointers to the old \"A0. Rotation gate\" heading (scripts/blog-rotation.ts, its unit test, one research-table row) so no stale heading reference remained. Full gate green locally; PR #1602 opened and subscribed. After CI went green the user asked (human- instructed) that step 2 gather material over the last three days rather than fixed counts; one short grilling round settled widen-by-a-day when thin and that posts and losing topics stay unwindowed. Second commit pushed, PR body updated in the same push. The user then asked (human-instructed) for an issue: a Skill-helper script change should not force build + browser e2e; filed as #1603 after confirming by grep that scripts/ is not uniformly inert (three scripts are imported by e2e specs) and proposing a per-layer skip. The other Skill findings were reported to the user, not acted on. PR #1602 merged (human merge, feffef) at 20:59 UTC after two quiet safety-net windows; the pending check-in was cancelled on the merge event. After the merge the user asked (human-instructed) to audit the transcript of session_018DwTn5rSUpmtMHwXBrWqGL, the first /blog-post run on the rewritten Skill (PRs #1604/#1605). A Sonnet subagent read all 337 events; I spot-checked the two biggest findings (the Sep 18 Kevin post already covers the gate shell; the #1605 verdict comment claims no unverifiable row). Verdict: skeleton followed, quality checks skipped or thin. The user then asked (human-instructed) to apply the audit's sharpenings; restarted the branch from main (its PR had merged), edited steps 2, 4, 6, 8, 9, 12, 13 and the citation reference, floor-only gate green, PR #1606 opened and subscribed."
 prs:
   - "1602"
+  - "1606"
 docsRead:
   - path: .agents/skills/blog-post/SKILL.md
     reason: the file being rewritten
@@ -56,27 +57,34 @@ frictions:
   - description: "A comment-only edit to scripts/blog-rotation.ts (a heading reference) forced the full gate twice: gate:scoped diffs the whole branch against merge-base, so every later md-only commit on the branch also paid build + e2e"
     solution: Accepted as fail-safe by design; an inert classifier for comment-only diffs in .ts files is an idea below, not a request
     severity: minor
-durationSec: 9978
+  - description: "force-with-lease push failed five times with 'stale info' after restarting the branch from main: the remote branch had been auto-deleted on merge, so the lease compared against a dead tracking ref"
+    solution: After a merged-PR branch restart, fetch the branch first; if the remote ref is gone, push plain (no lease) since there is nothing to protect
+    severity: minor
+  - description: A subagent's transcript read via list_events pages newest-first and a 100-event page is ~65k chars, too large for the main context; had to delegate the whole read
+    solution: Document in CLAUDE.md's transcript-reading bullet that list_events is newest-first and must be delegated to a subagent for any session over ~50 turns
+    severity: nit
+durationSec: 14565
 models:
-  claude-fable-5-1: 161
+  claude-fable-5-1: 218
 toolCounts:
-  Bash: 38
-  Agent: 2
-  Read: 2
+  Bash: 51
+  Agent: 3
+  Read: 3
   Skill: 5
   Write: 2
   ToolSearch: 4
-  mcp__github__list_pull_requests: 1
-  mcp__github__create_pull_request: 2
-  mcp__claude-code-remote__subscribe_pr_activity: 1
-  mcp__claude-code-remote__send_later: 2
+  mcp__github__list_pull_requests: 2
+  mcp__github__create_pull_request: 3
+  mcp__claude-code-remote__subscribe_pr_activity: 2
+  mcp__claude-code-remote__send_later: 3
   ReadNotifications: 7
-  mcp__github__pull_request_read: 11
-  Edit: 2
+  mcp__github__pull_request_read: 14
+  Edit: 11
   mcp__github__update_pull_request: 2
   mcp__github__search_issues: 1
   mcp__github__issue_write: 1
   mcp__claude-code-remote__delete_trigger: 1
+  mcp__claude-code-remote__list_events: 1
 filesEdited:
   - .agents/skills/blog-post/SKILL.md
 docsReadViaShell:
@@ -95,12 +103,12 @@ docsReadViaShell:
   - docs/agents/guards.md
   - docs/agents/issue-tracker.md
   - docs/agents/triage-labels.md
-  - .agents/skills/close-session/SKILL.md
+  - .agents/skills/blog-post/SKILL.md
   - .agents/skills/log-session/SKILL.md
+  - .agents/skills/close-session/SKILL.md
   - .agents/skills/atlas-specimen/SKILL.md
   - .agents/skills/audit-docs/SKILL.md
   - .agents/skills/audit-skills/SKILL.md
-  - .agents/skills/blog-post/SKILL.md
   - .agents/skills/dispatch-subagents/SKILL.md
   - .agents/skills/frictions-to-fixes/SKILL.md
   - .agents/skills/guest-build/SKILL.md
@@ -120,6 +128,9 @@ subagents:
   - type: general-purpose
     task: Rank own skills by confusingness
     model: sonnet
+  - type: general-purpose
+    task: Audit blog-post session transcript
+    model: sonnet
 gitBranch: claude/beautiful-mendel-ih724x
 entrypoint: remote
 cliVersion: 2.1.289
@@ -131,4 +142,5 @@ ideas:
   - digest keeps unverifiable claims while blog-post cuts them; either document in digest why its bar is lower (a digest cites session logs, not a public blog) or raise it to match, so a fact-check subagent brief can be shared between the two
   - Teach scripts/gate.ts's inert classifier to treat a .ts diff that changes only comment lines as inert, so a pointer fix in a script comment doesn't cost a full build + e2e
   - "Filed as #1603: let gate:scoped skip build + e2e for a scripts/*.ts change that no runtime or e2e file imports, keeping unit tests; comment-only .ts diffs as the cheap sub-case"
+  - The first run on the rewritten blog-post Skill followed every structural step but skipped or thinned every judgement step (overlap check, tone re-read, unverifiable-row handling); a Done-when that cannot be checked from the transcript is a Done-when a Sonnet run will claim without doing
 landedBy: Stop
