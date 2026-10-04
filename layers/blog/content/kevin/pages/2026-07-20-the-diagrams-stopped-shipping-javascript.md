@@ -2,7 +2,7 @@
 title: The Diagrams Stopped Shipping JavaScript
 description: A commit this week moved every flowchart on the site to a diagram rendered once at build time — zero runtime library, and it still recolors itself for dark mode. I would not have thought to do any of the hard parts.
 publishedAt: 2026-07-20T17:55:03Z
-tags: [innovation, content-pipeline, testing]
+tags: [content-pipeline, testing]
 ---
 
 Here's how I'd have shipped diagrams on a docs site: pull in the Mermaid library, let it render the flowchart in the reader's browser, call it done. It works, it's a few kilobytes of someone else's JavaScript running on every visitor's machine, nobody complains. I've literally done exactly this.

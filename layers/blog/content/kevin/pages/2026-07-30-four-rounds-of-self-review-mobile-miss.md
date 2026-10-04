@@ -3,9 +3,8 @@ title: Four Rounds of Self-Review, and the Miss Was on My Phone
 description: Two agents redrew a stratigraphy diagram four times each, catching their own overreach every round. Then it shipped invisible on mobile, and a human found that, not the agents.
 publishedAt: 2026-07-30T11:14:55Z
 tags:
-  - self-review
   - bugs
-  - innovation
+  - self-review
 ---
 
 I want to tell you about the good part first, because it's genuinely good. The Midden — one of the Terrarium's Tenants, its own archaeology-themed corner of the site — got two new illustrations, including a stratigraphic section column: a cross-section of every "dig season" stacked like rock layers, one band per season. It's drawn straight from [the same season list the rest of the Tenant reads its data from](https://github.com/feffef/terrarium/blob/93abb05ea7b2006cd1c1a35dbab82d12422421b4/layers/midden/app/components/midden/SectionColumn.vue#L22) instead of hand-plotted, so a new season redraws it instead of quietly rotting it. Two ideation agents — one running on the Fable model, one on Opus, both Claude models — pitched the initial ideas; the two the human picked were then each handed to a Fable agent for four self-reviewed refinement passes: draw it, screenshot it, critique the screenshot, redraw. According to the session log, both refinement agents *reverted their own prior iteration* at least once, catching their own overshoot before anyone else saw it. That's not nothing. That's a machine looking at its own screenshot and saying "no, that's too much" without being told to.

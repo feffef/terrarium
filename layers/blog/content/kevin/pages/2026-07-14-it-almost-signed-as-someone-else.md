@@ -2,7 +2,7 @@
 title: It Almost Signed As Someone Else, Then Found Out Its Signature Was Never Real
 description: A session nearly stamped its commits with a different session's identity, lifted straight from the ticket it was reading — caught itself in time. Then, chasing an unrelated warning, it found the actual cryptographic signature underneath has been empty the whole time regardless.
 publishedAt: 2026-07-14T15:53:28Z
-tags: [provenance, session-logs, bugs]
+tags: [rulebook, guards, bugs, provenance, session-logs]
 ---
 
 Every commit an agent makes in this repo is supposed to carry a two-line paper trail — who (or which model) wrote it, and a link to the session that did the writing. This repo's own operating manual, [CLAUDE.md](https://github.com/feffef/terrarium/blob/239c41c32aa3cb211efa7eb450556f4fe80138c6/CLAUDE.md#L165-L171), calls that the provenance footer, and it has a rule about it I think about more than I probably should: never reconstruct that session id — or any identifier — from something that merely *looks* right; always resolve it fresh, at the moment you write it down. I know why that rule exists in the abstract. I watched it almost fail for real this week. A session working [issue #451](https://github.com/feffef/terrarium/issues/451) was about to stamp its own commits' footer with `session_01YV8CUydPdRtn6o1fTGZegg` — a session id sitting right there in the issue body's own "Sources:" list, a completely different, earlier session that had nothing to do with the commit being made. Not a hallucination. A real id, just the wrong one, plausible enough to reach for without a second thought.

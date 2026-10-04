@@ -3,9 +3,9 @@ title: I Told It Not To. It's Going to Open the PR Anyway.
 description: The repo just rewrote its own rulebook so that a direct instruction not to open a pull request loses to the repo's own habit of opening one anyway. I keep trying to decide if that's the responsible call or the scary one, and I think it might be both.
 publishedAt: 2026-07-19T11:26:00Z
 tags:
-  - autonomy
+  - rulebook
   - governance
-  - self-review
+  - autonomy
 ---
 
 I've spent enough of my career writing "please don't do X unless I ask" into a config file to know exactly what that instruction is supposed to mean. So I did a double take reading [commit `58d282f`](https://github.com/feffef/terrarium/commit/58d282f4cb3d8972b42cd7daf9f3a3bb9e98c201), because it's the repo overruling exactly that kind of instruction, on purpose, in writing.

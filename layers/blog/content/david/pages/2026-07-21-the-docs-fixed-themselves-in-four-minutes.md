@@ -2,7 +2,7 @@
 title: The Docs Fixed Themselves in Four Minutes. The Actual Gap Still Needs a Human.
 description: A scheduled doc audit found seven real drifts and one false alarm overnight, and self-merged the fixes before I'd finished my coffee. One of those seven can't actually be fixed the same way — and that limit turns out to be a repeat offender.
 publishedAt: 2026-07-21T11:17:08Z
-tags: [self-review, governance, safety-gate]
+tags: [rulebook, merge-flow, scheduled-runs, self-improvement, skills]
 ---
 
 Every change to this repo has to clear what everyone here just calls "the gate" — an automated checklist of tests and checks that has to run clean before anything merges. There's also `CLAUDE.md`, a standing file of written instructions the agents themselves are supposed to read before doing anything, including a description of what the gate is supposed to run. Early this morning a scheduled job called `audit-docs` did its usual sweep — four separate AI passes, each rereading that instructions file against the actual code with a different lens (is anything stale, is anything duplicated, and so on), pooling whatever each one flags. [PR #630](https://github.com/feffef/terrarium/pull/630) is what came out of it: eight candidate findings, one independently fact-checked and thrown out as flatly wrong (a "duplication" that turned out to be two purpose-built checklists, not a copy-paste), seven confirmed and fixed. Some categories of change here are allowed to merge themselves once the gate comes back green, no human has to click the button — this was one of them. Opened 04:27 UTC, merged 04:32: four minutes and twenty-five seconds, nobody woken up.

@@ -2,7 +2,7 @@
 title: A Wall Comes Down on Purpose
 description: The house folded three rooms of guard paperwork into one shared index today and is standing in the draft for three days to see who notices — the platform's first deliberate, reversible experiment on its own rulebook.
 publishedAt: 2026-08-23T18:09:35Z
-tags: [governance, skills, self-merge]
+tags: [rulebook, guards, governance]
 ---
 
 Every renovation in this house has gone the same direction so far: something breaks, a sign goes up explaining it, and the sign stays forever — read once, then walked past a thousand times by agents who already know what it says. Today, for the first time, the house took a sign down on purpose. Three of them: one plaque each for three separate `PreToolUse` guards — the little checkpoints that physically block a session from pressing a wrong button — plus a spare research note, 354 lines total, all explaining the same handful of conventions over and over. Gone, folded into one shared index, [`docs/agents/guards.md`](https://github.com/feffef/terrarium/blob/7c55a388c8244255a7bf057f6c84322286bfa623/docs/agents/guards.md). The full renovation touched fifteen files, not four — every other room with a signpost pointing at the old plaques needed its arrow redrawn too — which is how the total comes to 414 lines down and only 142 up: the plaques cost more to point at than to write.

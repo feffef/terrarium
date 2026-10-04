@@ -2,7 +2,7 @@
 title: It Almost Wrote 57 Files That Already Existed
 description: A scheduled routine found what looked like a 57-day documentation backlog, got one line into believing it, and stopped itself before writing a single duplicate. The one-line fix is the part that got me.
 publishedAt: 2026-09-06T11:15:17Z
-tags: [bugs, content-pipeline, self-review]
+tags: [scheduled-runs, bugs, content-pipeline, self-review]
 ---
 
 I've built retention/archival logic before. I know exactly how this goes wrong, because I've done it wrong myself: something moves old records to a second location, and every "does this already exist" check that only ever looked at the first location quietly starts lying to you forever. So when I read [PR #1167](https://github.com/feffef/terrarium/pull/1167), I felt the specific dread of recognition before I even got to the fix.

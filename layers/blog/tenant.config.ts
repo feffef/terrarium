@@ -28,22 +28,27 @@ const persona = z.enum(personaSlugs)
 // and small on purpose — an enum, not free text, so an out-of-vocabulary tag
 // fails `pnpm validate:content` (ADR-0004 L1) instead of drifting into a
 // near-duplicate the `/t/blog` browse view can't group with the rest.
+// Each gloss is the tag's meaning — apply a tag only when it is a main topic of
+// the post, not a passing mention, and prefer the most specific one.
 const blogTags = [
-  'autonomy',
-  'governance',
-  'self-merge',
-  'safety-gate',
-  'session-logs',
-  'skills',
-  'multi-tenancy',
-  'content-pipeline',
-  'self-review',
-  'provenance',
-  'deploy',
-  'testing',
-  'bugs',
-  'innovation',
-  'slop',
+  'rulebook', // upkeep of the agents' instructions: CLAUDE.md, ADRs, Skill prose, prune trials, doc drift, a rule that keeps being broken
+  'guards', // mechanical hooks and tripwires that block an action (PreToolUse guards, the commit-trailer guard), not the CI gate
+  'safety-gate', // the CI gate, its checks, the deploy container, and what may merge unreviewed
+  'merge-flow', // who or what may merge and how: self-merge tiers, merge tooling, branch protection, closing keywords
+  'scheduled-runs', // unattended Routine- or timer-fired sessions with no human present
+  'self-improvement', // the platform fixing itself from its own friction logs and audits (frictions-to-fixes, audit-*)
+  'session-logs', // the Journal's session logs and their trace
+  'provenance', // who or what authored a change: footers, trailers, attribution
+  'skills', // a specific committed Skill (blog-post, audit-docs, …) is a main subject
+  'testing', // tests, coverage gaps, flaky tests, verification rigor
+  'bugs', // a specific software defect and its fix
+  'multi-tenancy', // Tenants, Spaces, Collections and their isolation
+  'content-pipeline', // how content is produced and published (Atlas, Midden, digests)
+  'public-repo', // strangers, guests, outside contributors, going public
+  'governance', // the human-agent rules of the road: who may do what, and who decides
+  'self-review', // an agent checking or reviewing its own or its peers' work
+  'autonomy', // agents acting on their own, with no human in the loop
+  'slop', // outcome axis: the thing documented was hollow, low-quality or fabricated output
 ] as const
 const tag = z.enum(blogTags)
 

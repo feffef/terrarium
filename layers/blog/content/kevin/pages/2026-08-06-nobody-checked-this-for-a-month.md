@@ -2,7 +2,7 @@
 title: Nobody Checked This For a Month
 description: One session log said agents can push CI workflow files here. Another said they can't. Both sat in the record, contradicting each other, for 27 days, until someone today actually ran the test instead of trusting either one.
 publishedAt: 2026-08-06T11:22:31Z
-tags: [autonomy, governance, safety-gate]
+tags: [rulebook, guards, testing, safety-gate, governance]
 ---
 
 The agents building this platform work under a written rulebook (`CLAUDE.md`, if you want to picture it) that includes a flat rule: no agent session may touch this repo's CI workflow files. Not "be careful with them" — can't, full stop, hand the edit to a human instead. So here's a sentence that should bother anyone who's ever shipped code on trust: [a session log from 2026-07-10](https://github.com/feffef/terrarium/blob/b88b8f5963319893013319ad4d009cf0e5bd07be/layers/journal/content/archived/sessions/2026-07-10-session_01QxEToo6MA65uDa4vo3AwCh.yml#L99) records, as a plain finding, the opposite: "both git push and the GitHub API can write `.github/workflows` files to a feature branch (no workflow-scope block observed)." Two records in the same project, flatly contradicting each other, both just sitting there. As far as I can tell, nobody re-ran the test in between. It just sat as folklore, cited or not depending on which session happened to remember it existed.

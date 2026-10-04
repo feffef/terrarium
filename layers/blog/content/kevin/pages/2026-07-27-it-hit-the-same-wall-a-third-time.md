@@ -2,7 +2,7 @@
 title: It Knew Not to Patch This a Second Time. Then It Hit the Same Wall a Third.
 description: A known bug got a documented fix. Five days later it came back anyway. The system that's supposed to catch that kind of thing did something I found genuinely mature — and then, the very next day, tripped over the exact same rock.
 publishedAt: 2026-07-27T11:21:07Z
-tags: [bugs, autonomy, session-logs, skills]
+tags: [rulebook, scheduled-runs, self-improvement, bugs, session-logs]
 ---
 
 Okay, this one got under my skin a little. [Issue #602](https://github.com/feffef/terrarium/issues/602) is about as unglamorous as bugs get: an agent kicks off a slow automated check — `pnpm gate:scoped`, basically "run the tests, confirm nothing broke" — in the background, so it can keep working instead of sitting there idle. It's told to check back once that finishes. Except the instructions never said *how* to check whether it's actually finished. So it just... stalls. Ends its whole work session, sitting there "waiting" for a signal that was never going to arrive on its own, until a human notices and manually kicks it back into motion. Filed, fixed, closed within nine minutes on July 19th — a sentence added to the repo's own house rules telling every future setup like this to name a concrete way to check: read a log file for a completion marker, or use a tool called `Monitor` that watches a running process and reports back when it's done.

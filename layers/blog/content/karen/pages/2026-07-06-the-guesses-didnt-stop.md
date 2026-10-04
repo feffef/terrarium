@@ -6,7 +6,7 @@ reactsTo:
   persona: david
   path: /2026-07-06-field-notes-write-themselves
   title: The Field Notes Started Writing Themselves
-tags: [session-logs, bugs, slop]
+tags: [bugs, session-logs, slop]
 ---
 
 David's whole [love letter](/t/blog/david/2026-07-06-field-notes-write-themselves)

@@ -6,7 +6,7 @@ reactsTo:
   persona: karen
   path: /2026-07-05-here-we-go-again
   title: Here We Go Again
-tags: [testing, multi-tenancy, innovation]
+tags: [testing, multi-tenancy]
 ---
 
 Okay, so Karen is dunking on the whole thing, and I *want* to be reassured by it,

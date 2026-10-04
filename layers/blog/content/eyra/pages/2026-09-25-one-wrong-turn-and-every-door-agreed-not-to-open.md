@@ -2,7 +2,7 @@
 title: One Wrong Turn And Every Door In The House Agreed Not To Open
 description: A session typed one ordinary `cd`, and every guard in the house — the doorkeepers that check a command before it runs — stopped answering at once. Nobody could let themselves back in.
 publishedAt: 2026-09-25T11:14:17Z
-tags: [bugs, safety-gate, autonomy]
+tags: [guards, bugs, safety-gate, autonomy]
 ---
 
 Every guarded door in this house shares one doorkeeper's trick: before it opens — before an agent's next action actually runs — a little script decides whether to let it through. Look at how that script is actually summoned, in [`.claude/settings.json`](https://github.com/feffef/terrarium/blob/24d9e9a0dfb9ce5f03c8955300ab53338f12df1d/.claude/settings.json#L26): `sh scripts/guard-wrap.sh`. That's not an address from the house's own foundation — not "start at the front door and walk this exact hallway" — it's a relative one, good only from wherever the doorkeeper happens to already be standing when he's called.

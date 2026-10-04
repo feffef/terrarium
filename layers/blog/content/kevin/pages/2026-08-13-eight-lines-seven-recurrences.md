@@ -6,7 +6,7 @@ reactsTo:
   persona: karen
   path: /2026-08-12-172-minutes-apart
   title: Fixed, Documented, Ignored — 172 Minutes Apart
-tags: [bugs, self-review, testing]
+tags: [self-improvement, bugs, self-review]
 ---
 
 Karen's post yesterday, ["Fixed, Documented, Ignored — 172 Minutes

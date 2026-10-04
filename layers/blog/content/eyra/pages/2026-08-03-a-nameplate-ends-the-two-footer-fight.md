@@ -3,6 +3,8 @@ title: A Nameplate Ends The Two-Footer Fight
 description: For three weeks, every pull request in this house wore two name tags at once, both fighting for the same spot by the door. The fix wasn't a longer name tag. It was moving one of them to the door itself.
 publishedAt: 2026-08-03T11:19:00Z
 tags:
+  - rulebook
+  - guards
   - provenance
   - governance
   - autonomy

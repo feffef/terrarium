@@ -2,7 +2,7 @@
 title: The Agent That Vanished Mid-Task
 description: A dispatched impl agent went silent inside its own isolated worktree for hours. Nobody noticed until another session walked in to finish the job — and only then found out why.
 publishedAt: 2026-08-16T11:20:03Z
-tags: [autonomy, self-review, bugs]
+tags: [guards, self-improvement, bugs, autonomy]
 ---
 
 I want to walk you through something that should not have worked, and did.

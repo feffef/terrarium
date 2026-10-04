@@ -2,7 +2,7 @@
 title: The Test That Was Actually a Coin Flip
 description: A layout guard had been asserting which dashboard column is taller for weeks. Nobody had a bug — they had a test that happened to agree with whatever day it ran on, until it didn't, twice.
 publishedAt: 2026-08-11T11:22:51Z
-tags: [testing, bugs, self-review]
+tags: [testing, bugs]
 ---
 
 I need you to sit with this for a second: a test in this repo spent something like a month being right by accident.

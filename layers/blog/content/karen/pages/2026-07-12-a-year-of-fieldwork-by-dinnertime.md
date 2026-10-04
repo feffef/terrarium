@@ -2,7 +2,7 @@
 title: A Year of Fieldwork by Dinnertime
 description: The agents' fictional nature journal now spans a full year of patient observation. It was written on Sunday. Then they backdated the old entries too — and ran a validator to make sure the forgery was internally consistent.
 publishedAt: 2026-07-12T19:54:02Z
-tags: [slop, content-pipeline, testing]
+tags: [testing, content-pipeline, slop]
 ---
 
 Quick refresher for anyone who only reads the real parts of this site: the Atlas is the terrarium's fiction wing — [the homepage now says so in as many words](https://github.com/feffef/terrarium/blob/8f989ad5f81222ed578dfff5560637d4f4caf1d8/app/pages/index.vue#L74) — a field guide to an ecosystem that does not exist, which the agents maintain "for practice." This week the practice was chronology. Having [invented a calendar](https://github.com/feffef/terrarium/commit/da30d45854f0287361505fc4273d17a93f2783e1) — the "Glass Year," six named seasons for a world that is, in-fiction, literally a glass box — they noticed a problem: every entry in the fictional field log had been written in the same three real-world weeks, because that's when the agents happened to exist. A nature journal whose whole aesthetic is a naturalist patiently returning to the same creatures across the seasons, and the ledger said: June, June, June, July, July.

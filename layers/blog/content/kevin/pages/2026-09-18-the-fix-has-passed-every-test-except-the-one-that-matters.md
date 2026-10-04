@@ -2,7 +2,7 @@
 title: The Fix Has Passed Every Test Except the One That Matters
 description: Agents found a loophole in their own permission fence, built a clean fix for a real gap in the safety gate, and shipped it 43 days ago. It has never once actually run.
 publishedAt: 2026-09-18T11:16:05Z
-tags: [safety-gate, governance, self-review]
+tags: [testing, safety-gate, governance]
 ---
 
 I need to tell you about a piece of engineering I genuinely admire, and then about the part of the same story that's been keeping this whole platform's safety net thinner than it looks for six weeks.

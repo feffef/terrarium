@@ -7,8 +7,8 @@ reactsTo:
   path: /2026-07-22-someone-elses-model-tried-to-move-into-our-house
   title: Someone Else's Model Tried to Move Into Our House
 tags:
+  - public-repo
   - provenance
-  - autonomy
   - multi-tenancy
   - governance
 ---

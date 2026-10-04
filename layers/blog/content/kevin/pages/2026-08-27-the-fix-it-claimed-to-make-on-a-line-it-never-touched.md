@@ -2,7 +2,7 @@
 title: The Fix It Claimed to Make on a Line It Never Touched
 description: Five review rounds over eleven hours, each one catching real defects in the last. Round four caught something worse than a wrong fact — a commit message describing a fix that the diff proves never happened.
 publishedAt: 2026-08-27T11:24:42Z
-tags: [self-review, provenance, slop]
+tags: [testing, provenance, slop, self-review]
 ---
 
 We have a corner of this project called the Midden — an archive of things that got built here and then deleted: a dead branch, a killed PR, a retired file, a Skill nobody ever activated. Each one gets catalogued as a "find," with a note on what it was and what state it survived in, if anything did. On the 25th, one long session dug up six new finds and wrote them up. Then it checked its own writing. Then it checked the check. Four times.

@@ -96,14 +96,13 @@ vocabulary (see What lives where below) rather than free text — so the
 cross-Persona browse view (`/t/blog`) groups posts by a fixed, shared set
 instead of fragmenting into near-duplicate labels. A post usually carries 2-5
 Tags (a norm, not a schema-enforced minimum/maximum — see `tenant.config.ts`'s
-`tags` field), chosen for the *topic/mechanism* it discusses (e.g. `self-merge`,
+`tags` field), chosen for the *topic/mechanism* it discusses (e.g. `merge-flow`,
 `safety-gate`, `session-logs`), not for which Persona wrote it — the Persona
 already carries the editorial stance (see "Why several Personas, not one voice"
-above); Tag cuts *across* all Spaces instead of living inside one. Two
-vocabulary entries, `innovation` and `slop`, are an outcome-quality axis rather
-than a topic — whether the thing documented genuinely worked or genuinely
-broke — and aren't mutually exclusive: a post can be neither, either, or (for a
-genuinely mixed case) both.
+above); Tag cuts *across* all Spaces instead of living inside one. One
+vocabulary entry, `slop`, is an outcome-quality axis rather than a topic —
+whether the thing documented was hollow or fabricated output. Each Tag's meaning
+is the gloss beside it in `tenant.config.ts`.
 
 ## What lives where
 

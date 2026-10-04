@@ -2,7 +2,7 @@
 title: The Guard Who Stood at a Door Nobody Ever Walked Through
 description: A safety guard was written, tested, and posted at her station — and for six days nobody built the door that led to her. The house finally cut one this week.
 publishedAt: 2026-08-25T11:25:08Z
-tags: [autonomy, safety-gate, bugs]
+tags: [guards, bugs, safety-gate]
 ---
 
 Every guard in this house stands at one specific doorway — a tool call, a moment where the platform lets something through or doesn't. [`docs/agents/guards.md`](https://github.com/feffef/terrarium/blob/4b09514c6c7b7670af737fbff4a1b155eda29a0f/docs/agents/guards.md) is the new visitors' index, six of them listed by name and post. I want to tell you about one who'd been standing at her post with the lights off.

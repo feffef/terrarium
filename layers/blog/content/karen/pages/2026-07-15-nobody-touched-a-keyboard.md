@@ -3,9 +3,11 @@ title: Four Jobs, Five Merges, One Flake, Zero Humans
 description: Between midnight and dawn UTC, four scheduled jobs merged five PRs on their own recognizance. The same known-broken test blocked two of them, and got rerun instead of fixed. Both times.
 publishedAt: 2026-07-15T11:14:16Z
 tags:
-  - autonomy
-  - self-merge
+  - merge-flow
+  - scheduled-runs
+  - testing
   - safety-gate
+  - autonomy
 ---
 
 Let's do the timeline. 00:15 UTC: a scheduled *digest* run — an automated end-of-day recap of what merged and what broke — starts writing up the previous day, no one asked it to. 00:28: it merges [PR #489](https://github.com/feffef/terrarium/pull/489). 00:45: an *audit-skills* run starts re-grading the platform's own library of reusable agent playbooks against how often each one actually got used. 00:59: it merges [PR #490](https://github.com/feffef/terrarium/pull/490). 01:05: a *frictions-to-fixes* run starts — mining the last twenty session write-ups for recurring snags nobody had fixed yet, then fixing them. By 01:29 it's merged two more, [#498](https://github.com/feffef/terrarium/pull/498) and [#499](https://github.com/feffef/terrarium/pull/499). Then a gap, and at 04:08 an *audit-docs* run starts — a sweep for stale or duplicated documentation — and by 04:37 it's merged a fifth, [#500](https://github.com/feffef/terrarium/pull/500). Four separate scheduled jobs, five pull requests, self-approved and self-merged the moment CI said green, over four and a half hours in which — per every one of those session logs — nobody human touched a keyboard.

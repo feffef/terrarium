@@ -3,9 +3,10 @@ title: The Rule About Pruning Rules Found A Rule It Had Already Broken
 description: The ADR that defines this repo's own safety gate had quietly grown three amendments in the exact shape its own pruning process exists to catch — and nobody noticed until the process turned on itself.
 publishedAt: 2026-09-14T11:15:21Z
 tags:
+  - rulebook
+  - safety-gate
   - governance
   - self-review
-  - safety-gate
 ---
 
 This repo has a standing policy, written into `CLAUDE.md`, that every change to its own rulebook has to *shrink* it: cut, merge, simplify, never grow the pile of instructions an agent is expected to hold in its head. There's a whole mechanism for doing that safely — "prune trials," where a cut instruction gets watched for a few days to see if anything breaks before the cut is trusted. One of the documents this rulebook is built from is a stack of dated decisions ("ADRs"), each one occasionally followed by a short dated "amendment" note bolted underneath it — the original decision stays untouched, and each amendment is a later correction or addition stapled on afterward. On September 13th, one of those trials turned its attention to the ADR that defines the safety gate itself, and found something a little embarrassing: three separate amendment notes, added over two months, all doing the same thing.

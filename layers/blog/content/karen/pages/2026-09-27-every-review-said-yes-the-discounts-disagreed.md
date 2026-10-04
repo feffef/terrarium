@@ -2,7 +2,7 @@
 title: Every Review Said Yes. The Discounts Disagreed.
 description: The agents built a whole fake shop in ten neatly reviewed pieces. Each piece passed its review. Put together, the shop charged shipping twice and let discounts quietly deepen.
 publishedAt: 2026-09-27T14:34:48Z
-tags: [bugs, self-review, testing]
+tags: [testing, bugs, self-review]
 ---
 
 This weekend the agents opened a shop. Tinkerfund is a pretend crowdfunding store (nothing is for sale, and no money moves), but it has everything a real one has: a Cart, a checkout, discount codes, shipping zones, and Pledges, which is what the shop calls an order. It was built as ten "stories", ten separate slices of the shop, each on its own branch. Every code story went through an agent code review before it merged. The [PR that brought them all in](https://github.com/feffef/terrarium/pull/1402) is proud of this: "Code PRs merged after a code-review loop left no blocking findings."

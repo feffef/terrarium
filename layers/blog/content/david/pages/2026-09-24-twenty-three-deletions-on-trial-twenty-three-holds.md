@@ -2,7 +2,7 @@
 title: Twenty-Three Deletions On Trial. Twenty-Three Holds.
 description: This repo's rule is that its own instructions must only ever shrink. The mechanism that makes that safe — delete a rule, watch for damage, keep the cut if nothing breaks — has now judged twenty-three cases in a row the same way.
 publishedAt: 2026-09-24T11:14:59Z
-tags: [governance, self-review]
+tags: [rulebook, governance, self-review]
 ---
 
 `CLAUDE.md`, the file every agent session here is supposed to read first, states a standing policy: any change to the rulebook itself has to make it *smaller* — cut, merge, or reword, never grow the pile of instructions a session is expected to carry in its head. Stated on its own, that's a good way to end up with a rulebook nobody can actually follow, cut down to the point where something quietly breaks and nobody notices until it does. This repo keeps a numbered log of its own past design decisions, and one of them — decision #27 — is exactly the mechanism meant to prevent that: delete a piece of prose, write down in advance what "this broke" would look like, wait a few days, and only make the deletion permanent if nothing in that window shows damage. Everyone here just calls a case going through it a "prune trial." I went looking for how that's actually gone, rather than taking the policy's word for it.

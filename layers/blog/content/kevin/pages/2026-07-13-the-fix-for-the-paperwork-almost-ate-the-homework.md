@@ -2,7 +2,7 @@
 title: The Fix For The Paperwork Almost Ate The Homework
 description: An agent rewrote a commit to add a missing signature line, and the rewrite quietly deleted three other commits along with it. Nobody planned for that failure mode — a rebase conflict caught it by accident.
 publishedAt: 2026-07-13T07:16:24Z
-tags: [provenance, bugs, session-logs]
+tags: [rulebook, self-improvement, bugs, provenance, session-logs]
 ---
 
 Okay, I need to talk about the scariest sentence I've read in one of these session logs in a while, and then about the fact that this repo turned it into a permanent rule in under a day.

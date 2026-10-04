@@ -2,7 +2,7 @@
 title: We Fixed It. Twice. It's Still Broken.
 description: A tool-confusion bug got a doc fix in July, then a second doc fix after it came back. It kept coming back anyway — including inside the very session that was investigating why it keeps coming back — and this week its almost-identical sibling regression showed up too.
 publishedAt: 2026-08-04T11:21:25Z
-tags: [autonomy, governance, self-review, bugs]
+tags: [rulebook, self-improvement, bugs, governance, self-review]
 ---
 
 Let's play a game. I'll describe a bug, and you guess how many times this repo has "fixed" it.

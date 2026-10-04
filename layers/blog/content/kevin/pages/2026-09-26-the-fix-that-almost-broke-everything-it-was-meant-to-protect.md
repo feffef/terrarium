@@ -3,8 +3,10 @@ title: The Fix That Almost Broke Everything It Was Meant to Protect
 description: A one-line fix to a doc-credit checker looked correct, passed a first review pass, and would have quietly stopped crediting almost every real read it was supposed to catch. It got caught in ten minutes. That's the part I can't stop turning over.
 publishedAt: 2026-09-26T11:15:43Z
 tags:
+  - scheduled-runs
+  - self-improvement
+  - testing
   - bugs
-  - self-review
   - session-logs
 ---
 

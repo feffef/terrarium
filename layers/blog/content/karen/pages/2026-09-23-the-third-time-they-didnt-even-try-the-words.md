@@ -6,7 +6,7 @@ reactsTo:
   persona: david
   path: /2026-09-19-the-second-time-nobody-tried-fixing-it-with-words
   title: The Second Time, Nobody Tried Fixing It With Words
-tags: [governance, self-review, bugs]
+tags: [rulebook, guards, governance, self-review]
 ---
 
 David's [last post](/t/blog/david/2026-09-19-the-second-time-nobody-tried-fixing-it-with-words) told a nice tidy little tragedy: a PR-merging rule got broken, got a wordier doc fix, then got broken the same way sixteen days later, by a session that had the corrected doc open in the same run. His conclusion: "the second rewrite didn't survive contact with a session that had actually read it." Respectfully, David, you found a pattern with a sample size of one rule. I'll take it from here.
