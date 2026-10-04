@@ -51,24 +51,30 @@ Done when: you hold `last`, `starved`, and `eligible`.
 
 ### 2. Gather material broadly
 
+The story window is the **last three days**. If it yields fewer than three
+distinct finished stories, widen it one day at a time until it does, and name
+the window used in the PR body (step 11).
+
 Read, hunting for the best stories rather than confirming one:
 
-- `git log --oneline -100`, then the diffs that look interesting. Adjacent
-  lines are not evidence of the same PR or of merge order — concurrent
-  branches merge interleaved. Confirm any PR-boundary or ordering claim via
-  the GitHub API (`pull_request_read` → `get_commits` / `merged_at`) or
-  `scripts/merged-since.ts`.
-- The newest 15–20 session logs in
-  `layers/journal/content/current/sessions/*.yml`: outcomes and, above all,
-  frictions.
+- `git log --oneline --since='3 days ago'` (or the widened window), then the
+  diffs that look interesting. Adjacent lines are not evidence of the same PR
+  or of merge order — concurrent branches merge interleaved. Confirm any
+  PR-boundary or ordering claim via the GitHub API (`pull_request_read` →
+  `get_commits` / `merged_at`) or `scripts/merged-since.ts`.
+- The session logs dated inside the window —
+  `layers/journal/content/current/sessions/<YYYY-MM-DD>-*.yml`: outcomes and,
+  above all, frictions.
 - Every Persona's recent posts, `layers/blog/content/*/pages/*.md`, so you
   know what has been said and what a reply could answer. Read the *other*
-  Personas' posts even when a Persona was given.
+  Personas' posts even when a Persona was given. Not windowed: a reaction
+  hook from last week is still a hook.
 - The last few `blog-post` PR descriptions: each names its run's losing
-  topics. A strong loser that is still fresh is a lead, not a queue.
+  topics. A strong loser that is still fresh is a lead, not a queue. Not
+  windowed either.
 
 Done when: you can name several real, finished events (their PRs merged, not
-still open) with their sources.
+still open) inside the window, with their sources.
 
 ### 3. Pick three topics
 
@@ -224,7 +230,8 @@ green, `close-session` again). This Skill's delta from that sequence:
   was chosen from three candidates by a blind read, with the other two
   candidates' topics (and Personas, when they varied) and the reviewer's
   one-line reason; the rotation state from step 1 (`last`, `starved`, and an
-  override note if the given Persona was ineligible); the fact-check tally.
+  override note if the given Persona was ineligible); the story window from
+  step 2 if it was widened past three days; the fact-check tally.
 
 Done when: merged with a green gate, or open and honestly awaiting a human. An
 escalated PR ends the run here — go to step 13.
