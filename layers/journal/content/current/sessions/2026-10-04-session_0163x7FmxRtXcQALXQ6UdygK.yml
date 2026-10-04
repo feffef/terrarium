@@ -1,0 +1,121 @@
+schemaVersion: 1
+session: session_0163x7FmxRtXcQALXQ6UdygK
+startedAt: 2026-10-04T18:14:12Z
+endedAt: 2026-10-04T18:40:11Z
+kind: interactive
+goal: Find the repo's most confusing own Skill, then rewrite it (blog-post) as a linear sequence a Sonnet agent can follow
+status: in-review
+outcome: "blog-post SKILL.md rewritten 491 -> 336 lines as 13 ordered steps; gated PR #1602 open, awaiting human merge"
+summary: "Human-instructed throughout. The user asked for a Sonnet subagent to read all of the Platform's own Skills (the 17 not keyed in skills-lock.json) and name the most confusing; it ranked blog-post first (control flow 0 -> Section A -> 2 -> 3-7, with steps 3/4 \"normally already satisfied\"), frictions-to-fixes and guest-intake next, and surfaced four cross-Skill contradictions (auto-triage vs guest-intake on who green-lights a Public issue; digest vs blog-post on unverifiable claims; close-session vs log-session on who finishes the log; several Skills logging after self-merge rather than at PR-open). I spot-checked its quotes against the files before relaying. The user then asked for a complete rewrite of blog-post keeping the core logic, with /grill-me for ambiguities. Two grilling rounds settled: the follow-up reply decision is owed on every merged post (only the reader's \"none\" skips it); the reply path stays inline; closing points at pr-workflow.md and states only the Skill's delta; the #447 rationale shrinks to one sentence; unverifiable claims are still cut; a given Persona still overrides rotation. All six were the user's decisions. Agent-initiated: updating the four out-of-skill pointers to the old \"A0. Rotation gate\" heading (scripts/blog-rotation.ts, its unit test, one research-table row) so no stale heading reference remained. Full gate green locally; PR #1602 opened and subscribed. The other Skill findings were reported to the user, not acted on."
+prs:
+  - "1602"
+docsRead:
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: the file being rewritten
+  - path: .agents/skills/blog-post/personas/david.md
+    reason: persona hooks for the citation reference
+  - path: layers/blog/CONTEXT.md
+    reason: why citation rigor is the experiment, not hygiene
+  - path: docs/agents/pr-workflow.md
+    reason: the closing sequence the Skill now points at
+  - path: docs/adr/0003-agent-operating-model-and-governance.md
+    reason: blog-post ledger-row scope
+  - path: layers/blog/tenant.config.ts
+    reason: pages/pingbacks schema and blogTags
+  - path: .claude/skills/writing-for-agents/SKILL.md
+    reason: steps-with-completion-criteria shape
+  - path: .claude/skills/writing-for-agents/SKILL-MECHANICS.md
+    reason: (no reason given)
+skillsUsed:
+  - name: grilling
+    reason: user asked for /grill-me on ambiguities; two rounds, six decisions
+  - name: writing-for-agents
+    reason: invoked before editing a Skill
+  - name: close-session
+    reason: closure at PR-open
+  - name: log-session
+    reason: this log
+  - name: grill-me
+    reason: (no reason given)
+frictions:
+  - description: Provenance header built from the repo's own helpers (provenanceHeader + sessionUrl(CLAUDE_CODE_REMOTE_SESSION_ID)) rendered a cse_ URL; the ADR-0017 guard rejected it and demanded the session_ shape
+    solution: Make shared/session-url.ts and the guard agree on one id prefix, or have sessionUrl normalise cse_ to session_; until then the guard's deny text is the only reliable source of the header
+    severity: moderate
+  - description: "A comment-only edit to scripts/blog-rotation.ts (a heading reference) forced the full gate: build + e2e for a change with no runtime effect"
+    solution: Accepted as fail-safe by design; an inert classifier for comment-only diffs in .ts files is an idea below, not a request
+    severity: minor
+  - description: Harness system-reminder said to end the commit message with Co-Authored-By/Claude-Session lines; the repo's commit-trailer guard denied the commit for exactly that
+    solution: Known tension, guard message was clear and the retry without a trailer landed both lines; nothing to change in the repo
+    severity: nit
+  - description: "Agent tool call with run_in_background: false denied by the Agent-background-flag guard; harness guidance suggests the flag, repo guard forbids it"
+    solution: Guard message named the fix; omitted the flag and waited for the notification
+    severity: nit
+  - description: close-session says the same session finalizes the log to completed after merge; log-session says a later session flips it on merge. Read both this session and had to pick
+    solution: Single-home who flips in-review to completed in close-session and have log-session point at it
+    severity: minor
+durationSec: 1559
+models:
+  claude-fable-5-1: 80
+toolCounts:
+  Bash: 21
+  Agent: 2
+  Read: 2
+  Skill: 5
+  Write: 2
+  ToolSearch: 1
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 2
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+  mcp__claude-code-remote__send_later: 1
+filesEdited:
+  - .agents/skills/blog-post/SKILL.md
+docsReadViaShell:
+  - .agents/skills/auto-triage/SKILL.md
+  - .agents/skills/digest/SKILL.md
+  - docs/adr/0003-agent-operating-model-and-governance.md
+  - docs/agents/pr-workflow.md
+  - .agents/skills/blog-post/personas/david.md
+  - .agents/skills/blog-post/personas/karen.md
+  - .agents/skills/blog-post/personas/kevin.md
+  - .agents/skills/blog-post/personas/eyra.md
+  - layers/blog/CONTEXT.md
+  - docs/agents/git-conventions.md
+  - docs/research/rulebook-migration-table.md
+  - docs/adr/0017-provenance-footer-on-agent-authored-content.md
+  - docs/agents/guards.md
+  - .agents/skills/close-session/SKILL.md
+  - .agents/skills/log-session/SKILL.md
+  - .agents/skills/atlas-specimen/SKILL.md
+  - .agents/skills/audit-docs/SKILL.md
+  - .agents/skills/audit-skills/SKILL.md
+  - .agents/skills/blog-post/SKILL.md
+  - .agents/skills/dispatch-subagents/SKILL.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - .agents/skills/guest-build/SKILL.md
+  - .agents/skills/guest-intake/SKILL.md
+  - .agents/skills/midden-catalogue/SKILL.md
+  - .agents/skills/midden-survey/SKILL.md
+  - .agents/skills/prune-trial/SKILL.md
+  - .agents/skills/tinkerfund-campaign/SKILL.md
+  - .agents/skills/tinkerfund-campaign/ILLUSTRATION.md
+  - .agents/skills/visitor-loop/SKILL.md
+  - .agents/skills/visitor-loop/decisions.md
+  - .agents/skills/visitor-loop/visitor-brief.md
+subagents:
+  - type: general-purpose
+    task: Rank own skills by confusingness
+    model: sonnet
+  - type: general-purpose
+    task: Rank own skills by confusingness
+    model: sonnet
+gitBranch: claude/beautiful-mendel-ih724x
+entrypoint: remote
+cliVersion: 2.1.289
+learnings:
+  - "A Skill's section heading can be load-bearing outside the Skill: 'A0. Rotation gate' was cited in a script comment, a unit test comment, and a research table, so renumbering steps is a four-file change"
+  - Sonnet read 17 Skills plus support files in about 110 seconds and 155k tokens; its quotes were exact on every spot-check, so a cross-Skill confusion audit is cheap enough to repeat
+ideas:
+  - "Resolve the auto-triage vs guest-intake conflict: auto-triage routes every Public-authored issue to ready-for-human while guest-intake applies ready-for-agent on the guest's confirmation, and auto-triage's own 'Coexisting with the guest pipeline' section admits it relies on timing. Add the explicit skip auto-triage says it would add, so the two Skills agree by rule"
+  - digest keeps unverifiable claims while blog-post cuts them; either document in digest why its bar is lower (a digest cites session logs, not a public blog) or raise it to match, so a fact-check subagent brief can be shared between the two
+  - Teach scripts/gate.ts's inert classifier to treat a .ts diff that changes only comment lines as inert, so a pointer fix in a script comment doesn't cost a full build + e2e
+landedBy: Stop
