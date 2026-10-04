@@ -64,8 +64,7 @@ const shippingRows = computed(() => tinkerfundShippingRows([props.pledge], props
 .top > * { margin: 0; }
 .ref { color: var(--tf-ink); font-weight: 600; }
 h2 { font: 800 19px/1.15 var(--tf-font); font-stretch: 82%; overflow-wrap: anywhere; }
-h2 a { color: var(--tf-ink); text-decoration: none; }
-h2 a:hover { text-decoration: underline; }
+h2 a { color: var(--tf-ink); text-decoration-color: transparent; }
 .note { color: var(--tf-muted); font-size: 14px; }
 .lines { display: grid; margin: 0; padding: 0; list-style: none; }
 li { display: flex; justify-content: space-between; gap: 12px; padding: 8px 0; border-bottom: var(--tf-hairline); }

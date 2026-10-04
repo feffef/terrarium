@@ -95,8 +95,8 @@
 @keyframes tf-in { from { opacity: 0; transform: translateY(8px); } }
 
 .tf-page a:where(:not(.tf-btn)), .tf-link {
-  color: inherit;
-  text-decoration: underline 1px color-mix(in srgb, currentColor 35%, transparent);
+  color: color-mix(in srgb, var(--tf-link) 60%, currentColor);
+  text-decoration: underline 1px color-mix(in srgb, currentColor 45%, transparent);
   text-underline-offset: 0.2em;
   transition: text-decoration-color var(--tf-dur) var(--tf-ease);
 }

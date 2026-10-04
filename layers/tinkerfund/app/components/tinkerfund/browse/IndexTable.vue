@@ -90,8 +90,7 @@ tbody tr:hover { background: var(--tf-accent-soft); }
 .r { text-align: right; }
 .inv { display: flex; gap: 10px; align-items: center; min-width: 220px; font: 700 16px/1.15 var(--tf-font); font-stretch: 85%; }
 .inv svg { width: 48px; height: 36px; flex: none; }
-.inv a { color: var(--tf-ink); text-decoration: none; }
-.inv a:hover { text-decoration: underline; }
+.inv a { color: var(--tf-ink); text-decoration-color: transparent; }
 .funded { white-space: nowrap; }
 .funded .mini { display: inline-grid; width: 70px; height: 10px; margin-right: 8px; vertical-align: middle; gap: 1px; }
 .none { color: var(--tf-muted); text-align: center; }

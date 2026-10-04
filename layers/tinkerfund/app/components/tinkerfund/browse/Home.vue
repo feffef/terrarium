@@ -6,7 +6,7 @@ const deal = computed(() => groupTinkerfundPromotions(promotions.value, clock.va
 const tiles = computed(() =>
   categories.value.map((c) => ({ ...c, count: cards.value.filter((card) => card.category === c.slug).length })),
 )
-const { link } = useTinkerfundSpace()
+const { link, inventorLink } = useTinkerfundSpace()
 const locale = useTinkerfundLocale()
 const money = useTinkerfundMoney()
 </script>
@@ -20,7 +20,7 @@ const money = useTinkerfundMoney()
       </div>
       <div class="read">
         <p class="row"><span class="id">{{ home.featured.registry }}</span><TinkerfundStateChips :status="home.featured.status" :promoted="home.featured.promoted" /></p>
-        <p class="tf-label">Featured · {{ home.featured.categoryName }} · <NuxtLink :to="link(`/inventors/${home.featured.inventor}`)">{{ home.featured.inventorName }}</NuxtLink></p>
+        <p class="tf-label">Featured · {{ home.featured.categoryName }} · <NuxtLink :to="inventorLink(home.featured.inventor)">{{ home.featured.inventorName }}</NuxtLink></p>
         <h2 id="tf-featured" class="tf-h1">{{ home.featured.title }}</h2>
         <p class="tag">{{ home.featured.description }}</p>
         <p class="big">{{ home.featured.status.percent }}<small>% funded</small></p>

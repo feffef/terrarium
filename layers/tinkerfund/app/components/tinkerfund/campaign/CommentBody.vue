@@ -2,14 +2,14 @@
 import type { TinkerfundComment } from '../../../types/tinkerfund'
 
 const props = defineProps<{ comment: Omit<TinkerfundComment, 'replies'>; now: number; inventorSlug?: string }>()
-const { link } = useTinkerfundSpace()
+const { inventorLink } = useTinkerfundSpace()
 const at = computed(() => resolveTinkerfundOffset(props.comment.posted, props.now))
 </script>
 
 <template>
   <article class="comment">
     <header>
-      <NuxtLink v-if="comment.inventor && inventorSlug" :to="link(`/inventors/${inventorSlug}`)"><b>{{ comment.author }}</b></NuxtLink>
+      <NuxtLink v-if="comment.inventor && inventorSlug" :to="inventorLink(inventorSlug)"><b>{{ comment.author }}</b></NuxtLink>
       <b v-else>{{ comment.author }}</b>
       <span v-if="comment.inventor" class="flag">Inventor</span>
       <TinkerfundTime class="when" :at="at" :text="formatTinkerfundAgo(now, at)" />

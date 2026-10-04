@@ -5,6 +5,7 @@ export function useTinkerfundSpace() {
     ...found,
     link: (path = '') => tinkerfundPath(found.space, path),
     campaignLink: (slug: string) => tinkerfundCampaignPath(found.space, slug),
+    inventorLink: (slug: string) => tinkerfundInventorPath(found.space, slug),
   }
 }
 

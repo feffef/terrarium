@@ -1,6 +1,8 @@
 <script setup lang="ts">
 const props = defineProps<{ card: TinkerfundCard; clock: TinkerfundClock }>()
-const { link } = useTinkerfundSpace()
+const { link, inventorLink } = useTinkerfundSpace()
+const route = useRoute()
+const inventorPath = computed(() => inventorLink(props.card.inventor))
 const money = useTinkerfundMoney()
 const upcoming = computed(() => props.card.status.state === 'upcoming')
 const locale = useTinkerfundLocale()
@@ -20,7 +22,7 @@ const backedBy = computed(() => props.card.status.state === 'live' ? formatTinke
     <div class="body">
       <div>
         <h3><NuxtLink :to="link(card.path)">{{ card.title }}</NuxtLink></h3>
-        <p class="by">{{ card.categoryName }} · <NuxtLink class="inventor" :to="link(`/inventors/${card.inventor}`)">{{ card.inventorName }}</NuxtLink></p>
+        <p class="by">{{ card.categoryName }} · <NuxtLink v-if="inventorPath !== route.path" class="inventor" :to="inventorPath">{{ card.inventorName }}</NuxtLink><template v-else>{{ card.inventorName }}</template></p>
         <p v-if="backedBy" class="by">{{ backedBy }}</p>
       </div>
       <TinkerfundProgressBar v-if="!upcoming" :percent="card.status.percent" />
