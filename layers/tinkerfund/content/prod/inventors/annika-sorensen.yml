@@ -3,7 +3,8 @@ bio: Acoustics technician in Aarhus. Built the first prototype to settle a dispu
 portrait: |-
   <path d="M44 50h12v20H44z" style="fill:var(--tf-surface);stroke:var(--tf-ink);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round" />
   <path d="M14 100c1-15 9-25 24-30l12-3 12 3c15 5 23 15 24 30" style="fill:var(--tf-ink);stroke:var(--tf-surface);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round" />
-  <path d="M40 57c0-2 20-2 20 0v13c0 2-20 2-20 0z" style="fill:var(--tf-ink);stroke:var(--tf-surface);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round" />
+  <path d="M41 64c0-2 18-2 18 0v8c0 2-18 2-18 0z" style="fill:var(--tf-ink);stroke:var(--tf-surface);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round" />
+  <path d="M41 68c3 1 15 1 18 0" style="fill:none;stroke:var(--tf-surface);stroke-width:1.6;stroke-linejoin:round;stroke-linecap:round" />
   <path d="M29 43c0-2 1-4 3-4s3 2 3 4-1 4-3 4-3-2-3-4z" style="fill:var(--tf-surface);stroke:var(--tf-ink);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round" />
   <path d="M65 43c0-2 1-4 3-4s3 2 3 4-1 4-3 4-3-2-3-4z" style="fill:var(--tf-surface);stroke:var(--tf-ink);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round" />
   <path d="M50 22c-11 0-18 8-18 19c0 9 4 15 9 18c3 2 6 3 9 3s6-1 9-3c5-3 9-9 9-18c0-11-7-19-18-19z" style="fill:var(--tf-surface);stroke:var(--tf-ink);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round" />

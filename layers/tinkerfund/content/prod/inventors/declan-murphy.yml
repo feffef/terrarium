@@ -9,11 +9,10 @@ portrait: |-
   <path d="M36 100V80l4-4h20l4 4v20" style="fill:var(--tf-accent);stroke:var(--tf-ink);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round" />
   <path d="M39.4 80c0-0.96 0.8-1.6 1.6-1.6s1.6 0.64 1.6 1.6-0.8 1.6-1.6 1.6-1.6-0.64-1.6-1.6z" style="fill:var(--tf-ink);stroke:none" />
   <path d="M57.4 80c0-0.96 0.8-1.6 1.6-1.6s1.6 0.64 1.6 1.6-0.8 1.6-1.6 1.6-1.6-0.64-1.6-1.6z" style="fill:var(--tf-ink);stroke:none" />
+  <path d="M52 84l-6 8h4l-2 7 7-9h-4z" style="fill:var(--tf-ink);stroke:var(--tf-ink);stroke-width:1;stroke-linejoin:round;stroke-linecap:round" />
   <path d="M29 44c0-2 1-4 3-4s3 2 3 4-1 4-3 4-3-2-3-4z" style="fill:var(--tf-surface);stroke:var(--tf-ink);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round" />
   <path d="M65 44c0-2 1-4 3-4s3 2 3 4-1 4-3 4-3-2-3-4z" style="fill:var(--tf-surface);stroke:var(--tf-ink);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round" />
   <path d="M50 22c-11 0-18 7-18 18v12c0 6 5 10 10 10h16c5 0 10-4 10-10V40c0-11-7-18-18-18z" style="fill:var(--tf-surface);stroke:var(--tf-ink);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round" />
-  <path d="M67 38l11-9 2 3-11 9z" style="fill:var(--tf-accent);stroke:var(--tf-ink);stroke-width:1.6;stroke-linejoin:round;stroke-linecap:round" />
-  <path d="M78 29l2 3 3-4z" style="fill:var(--tf-ink);stroke:none" />
   <path d="M32 42c-2-13 6-20 18-20s20 7 18 20c-3-7-9-10-18-10s-15 3-18 10z" style="fill:var(--tf-ink);stroke:none" />
   <path d="M32 44c0 11 8 20 18 20s18-9 18-20c-3 7-6 10-9 11h-18c-3-1-6-4-9-11z" style="fill:var(--tf-ink);stroke:none" />
   <path d="M41 42c0-1.2 1-2 2-2s2 0.8 2 2-1 2-2 2-2-0.8-2-2z" style="fill:var(--tf-ink);stroke:none" />
