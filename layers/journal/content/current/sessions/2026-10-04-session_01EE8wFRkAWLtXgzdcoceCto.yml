@@ -1,0 +1,105 @@
+schemaVersion: 1
+session: session_01EE8wFRkAWLtXgzdcoceCto
+startedAt: 2026-10-04T09:37:57Z
+endedAt: 2026-10-04T09:59:51Z
+kind: interactive
+goal: Survey the Midden for newly discarded work and catalogue the survivors as dig-report finds
+status: in-review
+outcome: "Survey issue #1592 filed with two candidates; both catalogued in one new dig report, gated PR #1594 open and subscribed"
+summary: "Human-instructed throughout. The user invoked /midden-survey; I ran the script sweep plus the PR and branch sweep, screened out the rest on Gate B, and filed survey issue #1592 with two candidates (PR #1569, the zod 4 upgrade closed unmerged, and PR #1562, a provenance probe). The user then asked which were worth a story; I said only #1569 was, with the risk that it is parked not dead, and the probe thin. The user said to follow my recommendations, after one clarifying question set (catalogue #1569 now, #1562 to the stores, post a decision comment), which I did; the comment is on #1592. The user then ran /midden-catalogue themselves, since I cannot invoke it. Reading the probe session's log showed my survey claim that the probe left no recorded finding was wrong (the log records what the tools add and the decision to keep the rules). I asked the user again, and they chose to move #1562 into the trench alongside #1569. I wrote two Artifacts and one new dig report, Tried and Left Alone, updated the e2e header counts, validated, ran the full scoped gate (1970 unit, 144 e2e, passed; started before the last wording-only edits), and ran two read-only reviewers plus a re-check. Findings fixed: loose commit count, missing widened type, an unsupported attribution, jargon, an overclaiming page opening (it claimed a shared decision pattern; now says only that both closed unmerged on 3 October with no other link), and a probe continuity line implying the decision record was removed. Agent-initiated: the ADR-0003 auto-open of PR #1594 and subscribing to it, the reviewer dispatches, and all wording choices. Open: the PR awaits human review and CI; the season stays open at 29 days; if the zod upgrade later lands, the find needs reconsidering."
+prs:
+  - "1594"
+docsRead:
+  - path: layers/midden/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/midden/tenant.config.ts
+    reason: (no reason given)
+  - path: layers/midden/content/trench/artifacts/the-zod-upgrade.yml
+    reason: (read before editing)
+  - path: layers/midden/content/trench/artifacts/the-provenance-probe.yml
+    reason: (read before editing)
+  - path: layers/midden/content/trench/pages/tried-and-left-alone.md
+    reason: (read before editing)
+  - path: layers/midden/app/utils/condition.ts
+    reason: (no reason given)
+  - path: layers/midden/app/utils/strata.ts
+    reason: (no reason given)
+  - path: layers/midden/content/trench/artifacts/the-vue-pin.yml
+    reason: (no reason given)
+  - path: layers/midden/content/trench/artifacts/the-doorbell-spike.yml
+    reason: (no reason given)
+  - path: layers/midden/content/trench/pages/the-fault-that-went-quiet.md
+    reason: (no reason given)
+  - path: layers/midden/content/trench/pages/surface-finds.md
+    reason: (no reason given)
+skillsUsed:
+  - name: midden-survey
+    reason: the user invoked it; mechanical sweep and survey issue
+  - name: midden-catalogue
+    reason: the user invoked it; two Artifacts and a dig report
+  - name: close-session
+    reason: self-judged closure at PR open
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: My survey said the probe PR left no recorded finding, but its session log recorded one; I had not read the session logs at survey time, so placement had to be reopened with the user after they had decided.
+    solution: midden-survey step 3 should say to read the session log of each PR candidate before judging significance or suggesting a placement.
+    severity: moderate
+  - description: The Skill tool refused midden-catalogue (disable-model-invocation) even after the user green-lit it in words, so the user had to retype it as a slash command.
+    solution: midden-survey's closing line should tell the user to run /midden-catalogue and note the model cannot, so an approval in chat is not mistaken for a start.
+    severity: minor
+  - description: The probe session's log says its removal was reverted and the branch left net-zero, but the remote branch still carries the removal (13 files, 1422 deletions); the log contradicts the primary source.
+    solution: midden-catalogue step 2 already says primary sources win; a reminder that session logs can be wrong about git state would help.
+    severity: minor
+  - description: Agent calls with run_in_background false were denied twice by the background-flag guard; I passed it out of habit.
+    solution: None needed beyond the guard; omit the flag.
+    severity: nit
+  - description: The session worker restarted mid-run, after the survey but before cataloguing; I had to re-establish state from git and the session logs.
+    solution: None for the repo; the committed branch state and survey issue made recovery cheap.
+    severity: nit
+durationSec: 1314
+models:
+  claude-sonnet-5-5: 123
+toolCounts:
+  Read: 3
+  Bash: 30
+  ToolSearch: 2
+  mcp__github__search_issues: 1
+  mcp__github__search_pull_requests: 1
+  mcp__github__list_branches: 2
+  mcp__github__issue_read: 5
+  mcp__github__pull_request_read: 2
+  mcp__github__issue_write: 1
+  AskUserQuestion: 2
+  Skill: 3
+  mcp__github__add_issue_comment: 1
+  Write: 5
+  Agent: 5
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+filesEdited:
+  - layers/midden/content/trench/artifacts/the-zod-upgrade.yml
+  - layers/midden/content/trench/artifacts/the-provenance-probe.yml
+  - layers/midden/content/trench/pages/tried-and-left-alone.md
+docsReadViaShell:
+  - docs/adr/0017-provenance-footer-on-agent-authored-content.md
+  - docs/agents/guards.md
+  - docs/agents/github-integration.md
+subagents:
+  - type: general-purpose
+    task: Fact-check Midden records
+  - type: general-purpose
+    task: Voice and domain review
+  - type: general-purpose
+    task: Fact-check Midden records
+  - type: general-purpose
+    task: Voice and domain review
+  - type: general-purpose
+    task: Re-check fixed Midden records
+gitBranch: ccr-015f37b9-ago846
+entrypoint: remote_mobile
+cliVersion: 2.1.289
+learnings:
+  - "A survey's significance judgement should come from the primary session log, not the PR body: PR #1562 looked empty but its session log recorded the finding."
+landedBy: Stop
