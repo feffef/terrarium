@@ -6,8 +6,8 @@ portrait: |-
   <path d="M41 72l9 9 9-9" style="fill:none;stroke:var(--tf-ink);stroke-width:1.8;stroke-linejoin:round;stroke-linecap:round" />
   <path d="M47 78l-7-3v7zM53 78l7-3v7z" style="fill:var(--tf-accent);stroke:var(--tf-ink);stroke-width:1.5;stroke-linejoin:round;stroke-linecap:round" />
   <circle cx="50" cy="78" r="2" style="fill:var(--tf-accent);stroke:var(--tf-ink);stroke-width:1.5;stroke-linejoin:round;stroke-linecap:round" />
-  <path d="M24 92c-4-7-2-12 2-15 4 3 6 8 2 15zM24 92c-6-2-10-6-9-11 5 0 9 5 9 11zM24 92c6-2 10-6 9-11-5 0-9 5-9 11z" style="fill:var(--tf-ink);stroke:var(--tf-ink);stroke-width:1.4;stroke-linejoin:round;stroke-linecap:round" />
-  <path d="M17 92h14l-2 8H19z" style="fill:var(--tf-accent);stroke:var(--tf-ink);stroke-width:1.8;stroke-linejoin:round;stroke-linecap:round" />
+  <path d="M30 93c-3-6-1.5-10 1.5-12 3 2 4.5 7 1.5 12zM30 93c-5-2-8-5-7-9 4 0 7 4 7 9zM30 93c5-2 8-5 7-9-4 0-7 4-7 9z" style="fill:var(--tf-ink);stroke:var(--tf-ink);stroke-width:1.4;stroke-linejoin:round;stroke-linecap:round" />
+  <path d="M24.5 93h11l-1.5 7h-8z" style="fill:var(--tf-accent);stroke:var(--tf-ink);stroke-width:1.8;stroke-linejoin:round;stroke-linecap:round" />
   <ellipse cx="35" cy="45" rx="2.8" ry="3.8" style="fill:var(--tf-surface);stroke:var(--tf-ink);stroke-width:2;stroke-linejoin:round;stroke-linecap:round" /><ellipse cx="65" cy="45" rx="2.8" ry="3.8" style="fill:var(--tf-surface);stroke:var(--tf-ink);stroke-width:2;stroke-linejoin:round;stroke-linecap:round" />
   <path d="M36 40c0-11 6-18 14-18s14 7 14 18v7c0 10-5 17-14 17s-14-7-14-17z" style="fill:var(--tf-surface);stroke:var(--tf-ink);stroke-width:2.3;stroke-linejoin:round;stroke-linecap:round" />
   <path d="M35 43c-3-15 5-23 15-23 10 0 17 7 16 20l-3-4-3 5-4-5-4 4-4-5-4 5-4-4-3 4-2-4z" style="fill:var(--tf-ink);stroke:none" />
