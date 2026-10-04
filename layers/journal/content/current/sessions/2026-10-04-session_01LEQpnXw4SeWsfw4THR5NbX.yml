@@ -1,0 +1,138 @@
+schemaVersion: 1
+session: session_01LEQpnXw4SeWsfw4THR5NbX
+startedAt: 2026-10-04T09:27:54Z
+endedAt: 2026-10-04T09:42:26Z
+kind: delegated
+goal: Audit the Platform's own Skills for silent failures and missed invocations, and tune the Skill Inventory
+status: in-review
+outcome: "12 behaviour checks verified, one #1515 comment, Inventory observations in PR #1593 awaiting merge"
+summary: "The human typed /audit-skills as the single kickoff prompt; everything after was agent-initiated within that Skill's charter (later notices were machinery, not a human). I ran the scorecard, dispatched one read-only Sonnet subagent for each of the 12 behaviourChecks Skills, and verified their reports against git, GitHub and the session logs before using them. Step 3 was clear: the orphan scan ran (1008 merged PRs, 858 with a session), both orphan candidates already carry resolvedBy (#736, #1063), and there were no human-prompted or manually rescued closures. Verified and recorded as observations: blog-post's step 8 reader pass was skipped in 3 of 4 runs since it landed, audit-docs' concision lens is thinly covered, prune-trial left a stray remote branch, dispatch-subagents' bank-progress rule collides with the harness's report-file refusal, and close-session and log-session got small notes. No grade or role changed. No new issue was filed: #1585 and #1586 already cover the dispatch-subagents findings. The one real escalation was a comment on the open #1515: scripts/owner-corrections.ts does not list the 44rem revert (#1576 of #1563), most likely because #1563 merged from a harness-pinned branch the script's claude/visitor-loop-* match misses. I ran the script myself to check; the cause is read from the code, not tested. The comment first carried one sentence resting on an unverified subagent claim, and I edited it out once I noticed. The Inventory-only PR #1593 passed the full scoped gate and is open; landing it and finalising this log remain."
+prs:
+  - "1593"
+docsRead:
+  - path: docs/agents/pr-workflow.md
+    reason: the self-merged chartered run closing sequence
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: to judge whether step 8 is owed or optional
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/tinkerfund-campaign/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/log-session/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/close-session/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/prune-trial/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/visitor-loop/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/digest/SKILL.md
+    reason: (no reason given)
+skillsUsed:
+  - name: audit-skills
+    reason: the whole run
+  - name: close-session
+    reason: closure at PR-open
+  - name: log-session
+    reason: this log
+frictions:
+  - description: The audit-skills subagent brief tells agents to grade against the SKILL.md in effect at each run's start, but two subagents (dispatch-subagents, tinkerfund-campaign) still read the current text and said so, weakening those reports.
+    solution: The brief could name the exact git show command per run, or the scorecard could print each run's governing commit.
+    severity: minor
+  - description: I posted a GitHub comment containing a sentence taken from an unverified subagent report and had to edit the comment afterwards.
+    solution: Re-read a comment draft for claims not checked in this session before posting; a short checklist line in the Skill's escalation step would help.
+    severity: minor
+  - description: A Bash call that cd'd into the Skill Inventory folder moved the shell's working directory, so later relative paths failed and cost several wasted calls.
+    solution: Use absolute paths, or a subshell for any cd, in multi-step audits.
+    severity: nit
+  - description: The Stop hook demanded an unpushed-commit push while the gate was still running and before the PR existed, so I pushed ahead of the gate.
+    solution: The hook could tolerate a commit whose gate is running in the background, as an earlier session also suggested.
+    severity: nit
+  - description: This was a second human-invoked audit the same day as a scheduled one that had already recorded most of the same observations, so much of the dispatch work re-confirmed existing entries.
+    solution: The Skill could say to read today's observations first and dispatch only for Skills with new sessions since.
+    severity: minor
+  - description: "SHELL-READ-DETECTION miss: command `grep -n -i -E \"44rem|narrow|owner-correct|owner correct\" .agents/skills/visitor-loop/decisions.md | head` printed line 8 of that file (\"On narrow screens the Blog's persona/tag panel stays above the posts...\"), yet the report lists .agents/skills/visitor-loop/decisions.md as named but showing no line (the command it cites is a different one, so which command was matched is unclear)."
+    solution: Check whether grep -n output with its line-number prefix is matched against the doc, and whether the report picks the first command that names a path rather than the one that showed it.
+    severity: moderate
+durationSec: 872
+models:
+  claude-sonnet-5-5: 125
+toolCounts:
+  Bash: 27
+  Agent: 12
+  ToolSearch: 2
+  mcp__github__issue_read: 5
+  mcp__github__pull_request_read: 2
+  mcp__github__search_issues: 2
+  mcp__github__add_issue_comment: 1
+  mcp__github__update_issue_comment: 1
+  Grep: 2
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+  Skill: 2
+  Write: 1
+docsReadViaShell:
+  - .agents/skills/auto-triage/SKILL.md
+  - .agents/skills/blog-post/SKILL.md
+  - .agents/skills/visitor-loop/decisions.md
+  - CONTEXT.md
+  - .agents/skills/dispatch-subagents/SKILL.md
+  - .agents/skills/audit-docs/SKILL.md
+  - docs/agents/environment-caveats.md
+  - docs/agents/git-conventions.md
+  - docs/agents/guards.md
+  - .agents/skills/audit-skills/SKILL.md
+  - .agents/skills/triage/SKILL.md
+  - .agents/skills/log-session/SKILL.md
+  - .agents/skills/close-session/SKILL.md
+  - docs/agents/verifying-ui-changes.md
+subagents:
+  - type: general-purpose
+    task: Audit audit-docs
+    model: sonnet
+  - type: general-purpose
+    task: Audit audit-skills
+    model: sonnet
+  - type: general-purpose
+    task: Audit auto-triage
+    model: sonnet
+  - type: general-purpose
+    task: Audit blog-post
+    model: sonnet
+  - type: general-purpose
+    task: Audit close-session
+    model: sonnet
+  - type: general-purpose
+    task: Audit digest
+    model: sonnet
+  - type: general-purpose
+    task: Audit dispatch-subagents
+    model: sonnet
+  - type: general-purpose
+    task: Audit frictions-to-fixes
+    model: sonnet
+  - type: general-purpose
+    task: Audit log-session
+    model: sonnet
+  - type: general-purpose
+    task: Audit prune-trial
+    model: sonnet
+  - type: general-purpose
+    task: Audit tinkerfund-campaign
+    model: sonnet
+  - type: general-purpose
+    task: Audit visitor-loop
+    model: sonnet
+gitBranch: ccr-f208e009-ep801m
+entrypoint: remote_mobile
+cliVersion: 2.1.289
+learnings:
+  - The owner-corrections script matches visitor-loop PRs only by a claude/visitor-loop-* branch name, so any run landing on the harness-pinned branch is invisible to its rework scan.
+ideas:
+  - Give midden-catalogue an Inventory entry (platform-operation, specialist) so the Inventory covers every on-disk own Skill; audit-skills only adds entries for Skills seen in use, so an unused sibling of midden-survey stays uncatalogued.
+  - Make blog-post step 8 unambiguous, either owed (reader pass always runs, "none" is logged) or genuinely optional (drop its Done-when), because three of four runs skipped it while its Done-when reads as an obligation.
+  - Teach scripts/owner-corrections.ts to recognise a visitor-loop PR by its session-log or PR-body provenance as well as its branch name, so a run landing on the harness-pinned branch still has its rework scan.
+landedBy: Stop
