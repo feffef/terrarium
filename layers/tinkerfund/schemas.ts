@@ -182,7 +182,7 @@ export const pledge = z
 // Campaigns live at campaigns/<slug>.md; other pages carry no campaign.
 export const page = z.object({ campaign: campaign.optional() })
 
-export const inventor = z.object({ name: z.string(), bio: z.string(), portrait: svg(1024) }).strict()
+export const inventor = z.object({ name: z.string(), bio: z.string(), portrait: svg(4096) }).strict()
 
 export const category = z.object({ name: z.string(), blurb: z.string(), icon: svg(1024), order: count }).strict()
 

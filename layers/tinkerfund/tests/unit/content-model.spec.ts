@@ -167,13 +167,13 @@ describe('SVG markup', () => {
     expect(issues('pages', figure(svg))).toEqual([expect.stringMatching(/^campaign\.figures\.0\.svg: .*theme token/)])
   })
 
-  it('holds a figure to 4 KiB and a portrait or icon to 1 KiB', () => {
+  it('holds a figure or portrait to 4 KiB and an icon to 1 KiB', () => {
     const markup = (bytes: number) => `<g>${' '.repeat(bytes - 7)}</g>`
     expect(markup(4096)).toHaveLength(4096)
     expect(issues('pages', figure(markup(4096)))).toEqual([])
     expect(issues('pages', figure(markup(4097)))).toEqual([expect.stringMatching(/^campaign\.figures\.0\.svg: .*4096 bytes/)])
-    expect(issues('inventors', { name: 'Ada', bio: 'x', portrait: markup(1024) })).toEqual([])
-    expect(issues('inventors', { name: 'Ada', bio: 'x', portrait: markup(1025) })).toEqual([expect.stringMatching(/^portrait: .*1024 bytes/)])
+    expect(issues('inventors', { name: 'Ada', bio: 'x', portrait: markup(4096) })).toEqual([])
+    expect(issues('inventors', { name: 'Ada', bio: 'x', portrait: markup(4097) })).toEqual([expect.stringMatching(/^portrait: .*4096 bytes/)])
     expect(issues('categories', { name: 'Desk', blurb: 'x', icon: markup(1025), order: 1 })).toEqual([expect.stringMatching(/^icon: .*1024 bytes/)])
   })
 

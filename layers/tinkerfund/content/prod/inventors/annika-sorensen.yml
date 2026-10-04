@@ -1,7 +1,20 @@
 name: Annika Sørensen
 bio: Acoustics technician in Aarhus. Built the first prototype to settle a dispute that no amount of talking had settled, and found that a printed number worked where an opinion had not.
 portrait: |-
-  <circle cx="50" cy="36" r="17" style="fill:color-mix(in srgb, var(--tf-ink) 65%, var(--tf-surface))" />
-  <path d="M20 96c4-20 16-30 30-30s26 10 30 30z" style="fill:var(--tf-accent)" />
-  <path d="M35 40c2 15 28 15 30 0c-4 5-7 6-15 6s-11-1-15-6z" style="fill:var(--tf-ink)" />
-  <path d="M31 29c6-9 32-9 38 0l3 3H28z" style="fill:var(--tf-ink)" />
+  <path d="M44 50h12v20H44z" style="fill:var(--tf-surface);stroke:var(--tf-ink);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round" />
+  <path d="M14 100c1-15 9-25 24-30l12-3 12 3c15 5 23 15 24 30" style="fill:var(--tf-ink);stroke:var(--tf-surface);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round" />
+  <path d="M41 64c0-2 18-2 18 0v8c0 2-18 2-18 0z" style="fill:var(--tf-ink);stroke:var(--tf-surface);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round" />
+  <path d="M41 68c3 1 15 1 18 0" style="fill:none;stroke:var(--tf-surface);stroke-width:1.6;stroke-linejoin:round;stroke-linecap:round" />
+  <path d="M29 43c0-2 1-4 3-4s3 2 3 4-1 4-3 4-3-2-3-4z" style="fill:var(--tf-surface);stroke:var(--tf-ink);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round" />
+  <path d="M65 43c0-2 1-4 3-4s3 2 3 4-1 4-3 4-3-2-3-4z" style="fill:var(--tf-surface);stroke:var(--tf-ink);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round" />
+  <path d="M50 22c-11 0-18 8-18 19c0 9 4 15 9 18c3 2 6 3 9 3s6-1 9-3c5-3 9-9 9-18c0-11-7-19-18-19z" style="fill:var(--tf-surface);stroke:var(--tf-ink);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round" />
+  <path d="M30 58c-3-12-3-26 4-32c7-6 25-6 32 0c7 6 7 20 4 32l-5-1c2-8 1-16-2-21c-9 3-17 3-26 0c-3 5-4 13-2 21z" style="fill:var(--tf-ink);stroke:none" />
+  <path d="M30 40c-2-14 6-24 20-24s22 10 20 24" style="fill:none;stroke:var(--tf-ink);stroke-width:6;stroke-linejoin:round;stroke-linecap:round" />
+  <path d="M30 40c-2-14 6-24 20-24s22 10 20 24" style="fill:none;stroke:var(--tf-accent);stroke-width:2.6;stroke-linejoin:round;stroke-linecap:round" />
+  <path d="M25 36h8v14h-8z" style="fill:var(--tf-accent);stroke:var(--tf-ink);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round" />
+  <path d="M67 36h8v14h-8z" style="fill:var(--tf-accent);stroke:var(--tf-ink);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round" />
+  <path d="M40 42c1-2 4-2 5 0" style="fill:none;stroke:var(--tf-ink);stroke-width:2;stroke-linejoin:round;stroke-linecap:round" />
+  <path d="M55 42c0-1.2 1-2 2-2s2 0.8 2 2-1 2-2 2-2-0.8-2-2z" style="fill:var(--tf-ink);stroke:none" />
+  <path d="M39 37l8-1 M53 36c3-2 6-2 8 0" style="fill:none;stroke:var(--tf-ink);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round" />
+  <path d="M48 47c1 2 3 2 4 0" style="fill:none;stroke:var(--tf-ink);stroke-width:1.8;stroke-linejoin:round;stroke-linecap:round" />
+  <path d="M44 52c3 3 9 3 12 0" style="fill:none;stroke:var(--tf-ink);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round" />

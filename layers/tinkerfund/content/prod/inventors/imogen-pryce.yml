@@ -1,7 +1,18 @@
 name: Imogen Pryce
 bio: Product manager in Cardiff. Previously shipped a connected kettle. The rock is her second connected device and her first with no moving parts.
 portrait: |-
-  <path d="M28 40a22 22 0 0 1 44 0v26H28z" style="fill:var(--tf-ink)" />
-  <path d="M18 96c4-22 18-32 32-32s28 10 32 32z" style="fill:var(--tf-good)" />
-  <circle cx="50" cy="38" r="18" style="fill:color-mix(in srgb, var(--tf-ink) 70%, var(--tf-surface))" />
-  <path d="M32 36a18 18 0 0 1 36 0c-10-2-24-10-36 0z" style="fill:var(--tf-ink)" />
+  <path d="M31 46c-3-16 6-26 19-26s22 10 19 26l-1 14H32z" style="fill:var(--tf-ink);stroke:var(--tf-ink);stroke-width:2;stroke-linejoin:round;stroke-linecap:round" />
+  <path d="M14 100c2-16 11-25 25-28l11-1 11 1c14 3 23 12 25 28z" style="fill:var(--tf-ink);stroke:var(--tf-ink);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round" />
+  <path d="M39 71l11 16 11-16-11-3z" style="fill:var(--tf-accent);stroke:var(--tf-ink);stroke-width:1.6;stroke-linejoin:round;stroke-linecap:round" />
+  <path d="M39 71l-5 10M61 71l5 10" style="fill:none;stroke:var(--tf-surface);stroke-width:1.8;stroke-linejoin:round;stroke-linecap:round" />
+  <path d="M43 54h14v18c-4 2-10 2-14 0z" style="fill:var(--tf-surface);stroke:var(--tf-ink);stroke-width:2;stroke-linejoin:round;stroke-linecap:round" />
+  <path d="M19 98c0-7 4.5-11 10-11s10 4 10 11v2H19zM38 93l6-7 2.5 2-6 6z" style="fill:var(--tf-accent);stroke:var(--tf-ink);stroke-width:1.6;stroke-linejoin:round;stroke-linecap:round" />
+  <path d="M24 87h10M25 86q4-8 8 0M31 85v-2" style="fill:none;stroke:var(--tf-surface);stroke-width:1.7;stroke-linejoin:round;stroke-linecap:round" />
+  <ellipse cx="34" cy="45" rx="2.8" ry="3.8" style="fill:var(--tf-surface);stroke:var(--tf-ink);stroke-width:2;stroke-linejoin:round;stroke-linecap:round" /><ellipse cx="66" cy="45" rx="2.8" ry="3.8" style="fill:var(--tf-surface);stroke:var(--tf-ink);stroke-width:2;stroke-linejoin:round;stroke-linecap:round" />
+  <circle cx="34" cy="51" r="2" style="fill:var(--tf-accent);stroke:var(--tf-ink);stroke-width:1.6;stroke-linejoin:round;stroke-linecap:round" />
+  <circle cx="66" cy="51" r="2" style="fill:var(--tf-accent);stroke:var(--tf-ink);stroke-width:1.6;stroke-linejoin:round;stroke-linecap:round" />
+  <path d="M35 42c0-10 7-17 15-17s15 7 15 17v4c0 10-6 17-15 17s-15-7-15-17z" style="fill:var(--tf-surface);stroke:var(--tf-ink);stroke-width:2.3;stroke-linejoin:round;stroke-linecap:round" />
+  <path d="M34 40c1-11 7-18 16-18s15 7 16 18c-2-5-5-7-8-7l-3 3c-3-3-9-4-14-2-3 1-5 3-7 6z" style="fill:var(--tf-ink);stroke:none" />
+  <path d="M41 45q3-3.5 6 0M53 45q3-3.5 6 0" style="fill:none;stroke:var(--tf-ink);stroke-width:1.9;stroke-linejoin:round;stroke-linecap:round" />
+  <path d="M51 46l-1 6h2" style="fill:none;stroke:var(--tf-ink);stroke-width:1.5;stroke-linejoin:round;stroke-linecap:round" />
+  <path d="M43 55q7 6 14 0M57.5 54l1.5-2" style="fill:none;stroke:var(--tf-ink);stroke-width:1.6;stroke-linejoin:round;stroke-linecap:round" />

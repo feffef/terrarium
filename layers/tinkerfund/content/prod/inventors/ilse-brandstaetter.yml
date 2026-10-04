@@ -1,7 +1,23 @@
 name: Ilse Brandstätter
 bio: Atmospheric physicist in Innsbruck. Has read that no two snowflakes are alike in eleven textbooks and found the supporting data in none of them.
 portrait: |-
-  <path d="M18 96c4-22 18-32 32-32s28 10 32 32z" style="fill:var(--tf-link)" />
-  <circle cx="50" cy="40" r="17" style="fill:color-mix(in srgb, var(--tf-ink) 60%, var(--tf-surface))" />
-  <path d="M31 36c0-14 38-14 38 0l-3-12c-6-9-26-9-32 0z" style="fill:var(--tf-accent)" />
-  <circle cx="50" cy="14" r="6" style="fill:var(--tf-accent)" />
+  <path d="M14 100c2-16 11-25 25-28l11-1 11 1c14 3 23 12 25 28z" style="fill:var(--tf-surface);stroke:var(--tf-ink);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round" />
+  <path d="M28 86q22 7 44 0M20 95q30 7 60 0" style="fill:none;stroke:var(--tf-ink);stroke-width:1.4;stroke-linejoin:round;stroke-linecap:round" />
+  <path d="M34 42c-3 12-5 22-7 34l12 1c-1-12 0-22-1-35zM66 42c3 12 5 22 7 34l-12 1c1-12 0-22 1-35z" style="fill:var(--tf-ink);stroke:var(--tf-ink);stroke-width:2;stroke-linejoin:round;stroke-linecap:round" />
+  <path d="M43 54h14v18c-4 2-10 2-14 0z" style="fill:var(--tf-surface);stroke:var(--tf-ink);stroke-width:2;stroke-linejoin:round;stroke-linecap:round" />
+  <path d="M36 64c5 4 23 4 28 0l2 7c-6 4-26 4-32 0z" style="fill:var(--tf-accent);stroke:var(--tf-ink);stroke-width:1.8;stroke-linejoin:round;stroke-linecap:round" />
+  <path d="M37 71h7v9c-2 2-5 2-7 0z" style="fill:var(--tf-accent);stroke:var(--tf-ink);stroke-width:1.8;stroke-linejoin:round;stroke-linecap:round" />
+  <path d="M38 76h5M38 80v3M40.5 80v3M43 80v3" style="fill:none;stroke:var(--tf-surface);stroke-width:1.2;stroke-linejoin:round;stroke-linecap:round" />
+  <ellipse cx="34" cy="46" rx="2.8" ry="3.8" style="fill:var(--tf-surface);stroke:var(--tf-ink);stroke-width:2;stroke-linejoin:round;stroke-linecap:round" /><ellipse cx="66" cy="46" rx="2.8" ry="3.8" style="fill:var(--tf-surface);stroke:var(--tf-ink);stroke-width:2;stroke-linejoin:round;stroke-linecap:round" />
+  <path d="M35 42c0-10 7-17 15-17s15 7 15 17v4c0 10-6 17-15 17s-15-7-15-17z" style="fill:var(--tf-surface);stroke:var(--tf-ink);stroke-width:2.3;stroke-linejoin:round;stroke-linecap:round" />
+  <path d="M33 41c-1-13 7-21 17-21s18 8 17 21c-4-5-10-8-17-8s-13 3-17 8z" style="fill:var(--tf-accent);stroke:var(--tf-ink);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round" />
+  <path d="M32 39c3-2 33-2 36 0 1 2 1 4 0 6-4-2-32-2-36 0-1-2-1-4 0-6z" style="fill:var(--tf-accent);stroke:var(--tf-ink);stroke-width:2;stroke-linejoin:round;stroke-linecap:round" />
+  <path d="M40 39v5M50 39v5M60 39v5" style="fill:none;stroke:var(--tf-ink);stroke-width:1.2;stroke-linejoin:round;stroke-linecap:round" />
+  <circle cx="50" cy="21" r="4.5" style="fill:var(--tf-surface);stroke:var(--tf-ink);stroke-width:2;stroke-linejoin:round;stroke-linecap:round" />
+  <path d="M50 26v8M46.5 28l7 4M53.5 28l-7 4" style="fill:none;stroke:var(--tf-ink);stroke-width:1.4;stroke-linejoin:round;stroke-linecap:round" />
+  <circle cx="44" cy="46" r="1.7" style="fill:var(--tf-ink);stroke:none" />
+  <circle cx="56" cy="46" r="1.7" style="fill:var(--tf-ink);stroke:none" />
+  <path d="M52.5 45h7" style="fill:none;stroke:var(--tf-ink);stroke-width:1.7;stroke-linejoin:round;stroke-linecap:round" />
+  <path d="M40 42q4-2 8 0M52 39q4-1 8 1" style="fill:none;stroke:var(--tf-ink);stroke-width:1.8;stroke-linejoin:round;stroke-linecap:round" />
+  <path d="M50 48c1 2 2 4-1 5" style="fill:none;stroke:var(--tf-ink);stroke-width:1.5;stroke-linejoin:round;stroke-linecap:round" />
+  <path d="M45 56q5 2 9-2" style="fill:none;stroke:var(--tf-ink);stroke-width:1.6;stroke-linejoin:round;stroke-linecap:round" />
