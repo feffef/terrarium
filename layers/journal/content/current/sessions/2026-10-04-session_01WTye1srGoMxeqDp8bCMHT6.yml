@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01WTye1srGoMxeqDp8bCMHT6
 startedAt: 2026-10-04T13:14:26Z
-endedAt: 2026-10-04T13:20:57Z
+endedAt: 2026-10-04T13:25:21Z
 kind: autonomous
 goal: "Run the scheduled prune-trial: judge open trials, prune one problem, probe on Sonnet, ship"
-status: in-review
-outcome: "Two trials judged and deleted; pr-workflow steps 3-5 pruned (-24 lines), PR #1596 open"
-summary: "Scheduled run, no human prompt; every step was agent-initiated per the Skill. Judged the issue-tracker and session-id trials (both landed 2026-09-30, past window) against Frictions since landing: nothing traced to either prune, the one major (non-session_ id breaking journal e2e tests) was a test assumption. Deleted both. Three other trials were not yet judgeable. A search subagent ranked failed-prose candidates; I took pr-workflow.md's verdict/merge-path narrative (#301, #853, #1276, #385, enforced by merge-pr.ts) and left its closing-keyword paragraph because it overlaps the just-judged trial's keywords. Net -24 lines, small because territory limits left little mass. Pinned-SHA Sonnet probe answered all four situations right. PR #1596 opened and subscribed; gate:scoped was started in the background and not yet read."
+status: completed
+outcome: "Two trials judged and deleted; pr-workflow steps 3-5 pruned (-24 lines), PR #1596 merged"
+summary: "Scheduled run, no human prompt; every step was agent-initiated per the Skill. Judged the issue-tracker and session-id trials (both landed 2026-09-30, past window) against Frictions since landing: nothing traced to either prune, the one major (non-session_ id breaking journal e2e tests) was a test assumption. Deleted both. Three other trials were not yet judgeable. A search subagent ranked failed-prose candidates; I took pr-workflow.md's verdict/merge-path narrative (#301, #853, #1276, #385, enforced by merge-pr.ts) and left its closing-keyword paragraph because it overlaps the just-judged trial's keywords. Net -24 lines, small because territory limits left little mass. Pinned-SHA Sonnet probe answered all four situations right. PR #1596 opened , gate:scoped and CI went green, and merge-pr.ts merged it."
 prs:
   - "1596"
 docsRead:
@@ -39,17 +39,20 @@ frictions:
   - description: Ran gate:scoped in the foreground chained after other commands, so it auto-backgrounded at the 2-minute timeout, the very case CLAUDE.md warns about.
     solution: Start gate:scoped with run_in_background true from the outset.
     severity: minor
-durationSec: 391
+durationSec: 655
 models:
-  claude-sonnet-5-5: 38
+  claude-sonnet-5-5: 58
 toolCounts:
-  Bash: 11
+  Bash: 16
   Agent: 3
   Read: 1
   ToolSearch: 1
   mcp__github__create_pull_request: 2
   mcp__claude-code-remote__subscribe_pr_activity: 1
   Skill: 2
+  ReadNotifications: 3
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 docsReadViaShell:
   - docs/agents/pr-workflow.md
   - .agents/skills/frictions-to-fixes/SKILL.md
