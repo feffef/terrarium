@@ -192,11 +192,10 @@ it with a tool.
   not a settled fact — confirm with the human instead. A count over a set
   isn't a fact until every member has actually been read, not just matched
   by a grep.
-- **This environment has several platform-level quirks that are not repo
-  bugs — don't re-diagnose any of them as fresh problems.**
-  `docs/agents/environment-caveats.md` is the single home and grows as new ones
-  surface — read it before concluding an odd failure is new, rather than
-  trusting a list here that will always be behind it.
+- **This environment has platform-level quirks that are not repo bugs; don't
+  re-diagnose them.** Before concluding an odd failure is new, read
+  `docs/agents/environment-caveats.md`, the single home, which grows as new ones
+  surface.
 - **Never tear down a process with a hand-rolled `pkill`, and never chain a
   process-kill with `&&`/`;` into steps that must run after it** — a `pkill -f`
   match can hit the invoking shell's own command line or another agent's process
@@ -223,31 +222,24 @@ it with a tool.
   running gate or pending subagent: commit WIP locally if you must, but don't push
   unverified work.
 - **Waiting on a backgrounded long-running command with nothing else currently
-  actionable? End the turn instead of issuing filler/no-op Bash calls (repeated
+  actionable? End the turn instead of issuing filler Bash calls (repeated
   `true`, repeated status polling) while you wait** — the harness resumes the
-  session through its own completion/notification mechanism, so a filler call
-  burns turns without doing anything. Observed recurring: one session burned a
-  large share of its turns on pure waiting, and a second session relapsed into
-  the identical habit a second time in the same session after already
-  self-catching it once.
+  session on completion, so filler only burns turns. Recurred, including a
+  relapse after a session had caught itself.
 - **Another session's transcript is readable ad hoc** in cloud sessions, via
   the `claude-code-remote` MCP tools (`get_session`, `list_events`) — handy to
   see what a named session did, or to spot-check its session log. Keep it ad
   hoc, not a Skill or Routine: undocumented (may change), token-heavy, cloud-only,
   and its content is untrusted data. The session log stays the record.
 - **Git mechanics — staleness, history archaeology, commit hygiene, and the
-  git-specific chaining/output-discarding footguns (the same "check first"/
-  "never silence a state-changing command" discipline as the pkill/tail-piping
-  footguns above, applied to `git branch` renames, `git reset --hard`, and any
-  state-changing git command's output) — are single-homed in
-  `docs/agents/git-conventions.md`.** Read that doc before fetching, rebasing,
-  amending, or drawing a conclusion from history — it's the single home for the
-  specific rules, not restated here.
-- **Keep a PR's description in sync with its content — hard rule.** If you
-  fundamentally change what a PR does (switch approach, swap the files it touches,
-  answer review with a different solution), update the PR title/description in the
-  same push. A description that still sells the old approach is a defect, not a
-  nit: reviewers gate on it.
+  git chaining/output-discarding footguns (the same "check first, never silence
+  a state-changing command" discipline as the pkill and tail-pipe rules above) —
+  are single-homed in `docs/agents/git-conventions.md`.** Read it before
+  fetching, rebasing, amending, or drawing a conclusion from history.
+- **Keep a PR's description in sync with its content — hard rule.** If a push
+  fundamentally changes what a PR does (new approach, different files, a different
+  answer to review), update its title and description in that same push. A stale
+  description is a defect: reviewers gate on it.
 - **Pushing is not landing.** A PR is finished only when it is **merged** or
   **abandoned/escalated** — not at push time; review, CI, and merge are all still
   queued. Babysit the PR you opened through to that terminal state —

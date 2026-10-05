@@ -60,13 +60,11 @@ re-diagnose them as new. Incident detail lives in the cited issue.
   #1215; `docs/agents/guards.md` covers the narrower fix of never autonomously
   dispatching a guard/settings-touching edit)
 - **The harness's instruction-shaped-content scanner can false-positive on
-  ordinary technical discussion that merely mentions "settings.json" /
-  "settings-json"** — e.g. a subagent's report discussing `.claude/settings.json`
-  hook wiring. When a tool result is flagged this way, inspect the content: if
-  it's benign discussion, not a real injection attempt, treat it as this scanner
-  quirk. (sessions
-  session_0174Bf4itHjWjJ3yMKmRd1KM, 2026-09-15, and
-  session_019QghEUG36tGWuhPUdM4t5Q, 2026-09-16)
+  ordinary discussion that merely mentions "settings.json" /
+  "settings-json"**, e.g. a subagent's report on `.claude/settings.json` hook
+  wiring. When a result is flagged, inspect it: if it is benign discussion
+  rather than an injection attempt, treat it as this quirk. (sessions
+  session_0174Bf4itHjWjJ3yMKmRd1KM, session_019QghEUG36tGWuhPUdM4t5Q)
 - **The container's git (2.43) can differ from CI's (~2.55), so a git-based
   test fixture can pass here and fail in CI.** Force the precondition (e.g.
   delete the ref) instead of relying on default behavior — `init` + `remote
