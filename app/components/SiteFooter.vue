@@ -11,10 +11,15 @@ const SITES = [
   { name: 'Atlas', to: '/t/atlas' },
   { name: 'Tinkerfund', to: '/t/tinkerfund' },
 ]
+// Reachable from inside the sites, but kept off the homepage (#1316 rulings).
+const QUIET_SITES = [
+  { name: 'Search', to: '/t/commons/search' },
+  { name: 'Marquee', to: '/t/marquee' },
+]
 
 const route = useRoute()
 // Linking a visitor to the wing they are already in is a dead link.
-const sites = computed(() => SITES.filter((s) => s.to.split('/')[2] !== route.path.split('/')[2]))
+const sites = computed(() => (route.path === '/' ? SITES : [...SITES, ...QUIET_SITES]).filter((s) => s.to.split('/')[2] !== route.path.split('/')[2]))
 </script>
 
 <template>
