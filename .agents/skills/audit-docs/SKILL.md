@@ -24,7 +24,9 @@ conflicting facts is true.
 
 ## The three tiers — what you may touch
 
-Classify every surface **before** editing.
+Classify every surface **before** editing. The self-merged PR edits only
+**Live** surfaces; anything not named there is out of tier: leave it, and
+record drift you find in it as a Friction, never an edit.
 
 - **Live** — fix these. `CLAUDE.md`, `CONTEXT.md`, `CONTEXT-MAP.md`,
   `README.md`, `SECURITY.md`, `docs/agents/*`, `docs/research/*`,
@@ -48,7 +50,9 @@ Classify every surface **before** editing.
 
 **Skip entirely:** Tenant content that makes no claim about the Terrarium
 (`CONTEXT-MAP.md`'s Relationships section says which Tenants),
-`docs/proposals/<N>-*.md` bodies, and `.out-of-scope/*.md`.
+`docs/proposals/<N>-*.md` bodies, and `.out-of-scope/*.md`. Skill Inventory
+entries (`layers/journal/content/current/skills/*.yml`) are `audit-skills`'
+to edit; read them only as Drift corroboration.
 
 ## The eight lenses, in four paired agents
 
