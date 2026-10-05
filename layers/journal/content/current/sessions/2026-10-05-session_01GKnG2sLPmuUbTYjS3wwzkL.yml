@@ -1,0 +1,77 @@
+schemaVersion: 1
+session: session_01GKnG2sLPmuUbTYjS3wwzkL
+startedAt: 2026-10-05T02:03:41Z
+endedAt: 2026-10-05T02:10:32Z
+kind: autonomous
+goal: "Run the scheduled frictions-to-fixes routine: survey 3 days of session frictions, fix the ripe ones"
+status: completed
+outcome: "One grouped doc PR merged (#1612); two guard-surface issues filed for a human (#1610, #1611)"
+summary: "Scheduled routine run, no human prompt. A survey subagent read 51 sessions (222 frictions) and returned a screened, ranked report. Two simple doc fixes were selected and batched into one PR (#1612, dispatched to a Sonnet agent in a worktree): the Stop-time commit-nag caveat moved from environment-caveats.md (unread by 7 later sessions) into CLAUDE.md, and visitor-loop told to use the session's designated branch. Two candidates touch guards, which this routine never dispatches, so they became issues for a human: #1610 (regression of #984/#824, force-with-lease stale info) and #1611 (session-id-guard blocker false positive on inherited commits). The Agent run_in_background:false guard question stays open for a human. Everything here was agent-initiated under the routine's standing charter. I reviewed #1612, posted the verdict, and merged it via merge-pr.ts on green CI."
+prs:
+  - "1612"
+docsRead:
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: .claude/skills/frictions-to-fixes/SKILL.md
+    reason: (no reason given)
+skillsUsed:
+  - name: dispatch-subagents
+    reason: (no reason given)
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: frictions-to-fixes
+    reason: (invoked as a slash command)
+frictions:
+  - description: Agent call with run_in_background:false denied by the guard; cost one retry.
+    solution: Let the guard accept and strip the no-op flag (human decision on the guard).
+    severity: nit
+  - description: ADR-0017 provenance guard denied my first two issue_write calls for a missing session-URL first line; the skill brief does not mention the header.
+    solution: Mention the header in the frictions-to-fixes issue-filing step, or rely on the guard's deny text as it did.
+    severity: nit
+durationSec: 412
+models:
+  claude-sonnet-5-5: 36
+toolCounts:
+  Agent: 3
+  Skill: 3
+  ToolSearch: 1
+  mcp__github__search_issues: 2
+  mcp__github__issue_write: 4
+  ReadNotifications: 1
+  Read: 1
+  mcp__github__pull_request_read: 1
+  Write: 1
+  Bash: 3
+  mcp__github__add_issue_comment: 1
+  PushNotification: 1
+docsReadViaShell:
+  - docs/agents/environment-caveats.md
+  - docs/agents/guards.md
+  - docs/agents/github-integration.md
+  - docs/agents/git-conventions.md
+  - docs/research/github-branch-protection-vs-autonomous-log-commits.md
+  - docs/research/rulebook-migration-table.md
+  - docs/research/github-actions-public-vs-private-limits.md
+  - docs/research/making-repo-public.md
+  - docs/proposals/README.md
+  - .agents/skills/audit-docs/SKILL.md
+  - .agents/skills/dispatch-subagents/SKILL.md
+  - .agents/skills/visitor-loop/SKILL.md
+  - docs/adr/0017-provenance-footer-on-agent-authored-content.md
+  - docs/agents/pr-workflow.md
+  - .agents/skills/blog-post/SKILL.md
+subagents:
+  - type: general-purpose
+    task: Survey and screen frictions
+  - type: general-purpose
+    task: Survey and screen frictions
+  - type: general-purpose
+    task: "Doc fixes: stop-nag, visitor-loop branch"
+    model: sonnet
+gitBranch: claude/eager-ptolemy-co1upw
+entrypoint: remote_trigger
+cliVersion: 2.1.289
+trigger: frictions-to-fixes
+landedBy: Stop
