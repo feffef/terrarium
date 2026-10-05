@@ -136,8 +136,7 @@ like this:
   session only through its doorbell comment (none on a fork PR). Poll
   `get_check_runs` when you can't rely on that: at agent-completion checkpoints,
   or with `send_later` when no agent is running. Cadence lives in
-  [`pr-workflow.md`](./pr-workflow.md). `ScheduleWakeup` is not for this; it is
-  `/loop`-only (CLAUDE.md; guard in `docs/agents/guards.md`, issue #814).
+  [`pr-workflow.md`](./pr-workflow.md).
 - **Re-running an old workflow run does not recompute the merge ref.** It
   re-checks-out that run's original `refs/pull/N/merge` snapshot, so it can stay
   red after the fix has merged. Only a fresh push or branch update recomputes

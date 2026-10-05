@@ -25,9 +25,7 @@ re-diagnose them as new. Incident detail lives in the cited issue.
   a transient "permission stream closed" error.** Retry once; if it fails
   again, don't retry-loop. For `AskUserQuestion`, take the safer default option
   and say so in the output. For `send_later`, use `create_trigger` with
-  `run_once_at`. Never use `ScheduleWakeup`: a `PreToolUse` guard refuses it
-  (CLAUDE.md owns the rule, `docs/agents/guards.md` the mechanism). (issues
-  #145, #229, #359, #814)
+  `run_once_at`. (issues #145, #229, #359)
 - **A fired self-bind Routine's output may not surface as a visible turn.**
   Check `last_fired_at` via `list_triggers` before concluding it didn't fire.
   (issue #834)
