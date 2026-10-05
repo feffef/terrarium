@@ -24,74 +24,6 @@
 #            topic's tools correctly.
 trials:
   - problem: >
-      The backgrounding / pipe-to-tail cluster. Three CLAUDE.md bullets (no
-      trailing `&` on a `run_in_background` call; a subagent never backgrounds
-      or uses `Monitor`; no trailing `tail`/`head`/`echo` pipe) each failed as
-      prose first — #873 (two prose fixes "did not hold", per
-      `scripts/tail-pipe-guard.ts`'s header), #1208 (two recurrences, per
-      `double-background-guard.ts`), #694/#995 — and are now held by
-      `tail-pipe-guard.ts`, `double-background-guard.ts` and
-      `subagent-background-guard.ts`, whose deny messages name the fix. Merged
-      the three into one goal-shaped bullet (kept the `> log 2>&1` hint and
-      the guards.md pointer) and trimmed the dispatch-subagents verification
-      bullet to the rule, the log-marker signal and the `SendMessage` resume.
-      The search subagent covered the instruction corpus, the rulebook table
-      (excluded list included), guards.md and the guard script headers; it
-      could not read issue threads (GraphQL 403), so issue evidence is from
-      the guard headers. Net about -11 lines; the mass here was small.
-    territory:
-      paths:
-        - "CLAUDE.md: the three backgrounding / trailing-`&` / tail-pipe bullets"
-        - ".agents/skills/dispatch-subagents/SKILL.md: the \"Run verification ... in the foreground\" bullet"
-      keywords:
-        - trailing shell `&`
-        - double-background
-        - trailing `tail`
-    opened: 2026-10-01
-    proven: true
-    check: >
-      Damage is a `tail-pipe-guard`, `double-background-guard` or
-      `subagent-background-guard` denial (or a log line showing the shape got
-      through) for a session that didn't know the rule and whose deny message
-      didn't fix it in one retry, or a subagent whose backgrounded command
-      stranded work. NOT damage: a guard denial the session fixed from the
-      deny message.
-  - problem: >
-      The ADR-0017 provenance rule (GitHub-body header, commit trailer) failed
-      as prose repeatedly — ADR-0017's old amendment banner lists #346, #710,
-      #723, #737, #784; rulebook rows CM-43 (#387/#605/#628/#723) and CM-44
-      (#921) are marked Built — and is now held by `github-provenance-guard.ts`,
-      `commit-trailer-guard.ts` and `.githooks/commit-msg`, whose deny messages
-      name the fix. Yet the ADR still carried a stale Decision ("convention
-      only, not gate-enforced") beside its own amendment, and CLAUDE.md and
-      git-conventions.md restated the guard mechanics. Rewrote ADR-0017 whole
-      (decision unchanged: provenance on every agent-authored external
-      interaction, header on GitHub bodies, trailer on commits, bot identity
-      deferred), folded the amendments in, and trimmed the CLAUDE.md bullet and
-      the git-conventions commit-hygiene bullet to the rule plus a pointer. The
-      search subagent covered the instruction corpus, guards.md, the rulebook
-      table (excluded list included) and guard script headers; it could not
-      read issue threads, so issue evidence is from those headers and rows.
-      Code comments in `scripts/*provenance*` still cite "ADR-0017's 2026-08-01
-      amendment" by name; left as is. Net about -90 lines.
-    territory:
-      paths:
-        - "docs/adr/0017-provenance-footer-on-agent-authored-content.md (whole-file rewrite)"
-        - "CLAUDE.md: the \"Open every GitHub body\" bullet"
-        - "docs/agents/git-conventions.md: the commit-hygiene `commit-msg` backstop sentence"
-      keywords:
-        - ADR-0017 provenance header
-        - commit-msg backstop
-        - hand-write the commit trailer
-    opened: 2026-10-02
-    proven: false
-    check: >
-      Damage is a session that writes a GitHub body without the header, or a
-      commit with a hand-typed or missing trailer, and the guard's deny message
-      did not fix it in one retry; or a session misreading the rewritten ADR
-      (e.g. believing the footer is convention-only). NOT damage: a guard
-      denial the session fixed from the deny message.
-  - problem: >
       The workflow-file edit rule (rulebook CM-24/EC-07, Built). It failed as
       prose first: #897 (read this run) — the caveat was already in
       environment-caveats.md via #876 and a session still stranded a branch —
@@ -151,3 +83,30 @@ trials:
       `enable_pr_auto_merge`, or merges without a verdict and the `merge-pr.ts`
       refusal did not fix it in one retry. NOT damage: a `merge-pr.ts` refusal
       the session fixed from its message.
+  - problem: >
+      The `ScheduleWakeup` /loop-only rule. It failed as prose first: #814
+      ("REGRESSION ... despite #241 and #425", two doc fixes that did not hold,
+      read this run by the search subagent) and is now held by
+      `loop-only-tool-guard.ts` (fail-closed, unit-tested), whose deny message
+      names the alternative. Cut the CLAUDE.md bullet to one line and dropped
+      the two restating pointers in environment-caveats.md and
+      github-integration.md; the guards.md roster row stays. The search
+      subagent covered the instruction corpus, guards.md, the rulebook table
+      and guard headers; the session-id and ToolSearch-first rules were
+      runners-up (less safe or smaller). Net about -6 lines; the mass here was
+      small.
+    territory:
+      paths:
+        - "CLAUDE.md: the `ScheduleWakeup` bullet"
+        - "docs/agents/environment-caveats.md: the `ScheduleWakeup` sentence in the permission-stream bullet"
+        - "docs/agents/github-integration.md: the `ScheduleWakeup` sentence in the CI-success bullet"
+      keywords:
+        - ScheduleWakeup
+        - loop-only-tool-guard
+    opened: 2026-10-05
+    proven: true
+    check: >
+      Damage is a session that calls `ScheduleWakeup` outside `/loop` and the
+      deny message did not fix it in one retry, or one that polls with
+      filler calls instead of ending the turn. NOT damage: a guard denial the
+      session fixed from the deny message.

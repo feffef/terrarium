@@ -179,11 +179,8 @@ it with a tool.
   for a `TaskCreate` or `Monitor` call specifically and denies with the fix
   (`docs/agents/guards.md`, issue #612); it doesn't cover a wrongly-shaped call to
   any other deferred tool, so the `ToolSearch`-first habit still carries those.
-- **`ScheduleWakeup` is valid only inside a `/loop` session** (any pacing —
-  a fixed-interval loop is paced by the harness and wouldn't call it anyway, so
-  the guard doesn't narrow further); `stop: true` is exempt everywhere else.
-  Guarded (`docs/agents/guards.md`, issue #814) — the deny message names the
-  right alternative.
+- **Only `/loop` sessions call `ScheduleWakeup`.** A guard denies it elsewhere and
+  names the alternative (`docs/agents/guards.md`, issue #814).
 - **Don't state anything as settled — an identifier, a factual/causal/behavioral
   claim, another session's say-so, or a count — unless you verified it fresh,
   this turn, against a primary source.** Recalling or inferring one from
