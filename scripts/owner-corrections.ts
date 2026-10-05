@@ -4,7 +4,6 @@
 //
 // Usage:  tsx scripts/owner-corrections.ts [--since <iso>]
 //   Default cutoff: the last commit touching visitor-loop's decisions.md.
-//   A visitor-loop PR: head branch `claude/visitor-loop-*` or title `visitor-loop (…`.
 //   Prints a JSON array of { kind, url, relatesTo, files?, excerpt }:
 //   - review:        a human comment or review on a visitor-loop PR;
 //   - rework:        a merged PR whose title or body references a visitor-loop
@@ -175,6 +174,10 @@ function mergeFiles(sha: string | null, cwd: string): string[] {
   }
 }
 
+function isVisitorLoopPull(p: RawPull): boolean {
+  return isVisitorLoopPr({ headRef: p.head.ref, title: p.title })
+}
+
 function toPr(p: RawPull, cwd: string): Pr {
   return {
     number: p.number,
@@ -216,7 +219,7 @@ export function ownerCorrections(since: string | undefined, cwd = root): Candida
     ...allPages<RawComment>(`${repo}/issues/comments?${sinceQuery}`, cwd).map((c) => ({ ...c, thread: threadNumber(c.issue_url!) })),
     ...allPages<RawComment>(`${repo}/pulls/comments?${sinceQuery}`, cwd).map((c) => ({ ...c, thread: threadNumber(c.pull_request_url!) })),
     ...rawPulls
-      .filter((p) => isVisitorLoopPr({ headRef: p.head.ref, title: p.title }) && Date.parse(p.updated_at) > Date.parse(cutoff))
+      .filter((p) => isVisitorLoopPull(p) && Date.parse(p.updated_at) > Date.parse(cutoff))
       .flatMap((p) => allPages<RawComment>(`${repo}/pulls/${p.number}/reviews?`, cwd).map((r) => ({ ...r, thread: p.number }))),
   ]
 
@@ -258,7 +261,7 @@ export function ownerCorrections(since: string | undefined, cwd = root): Candida
       if (/HTTP 404|Not Found/.test(String(err))) continue // #n is an issue, not a PR
       throw err
     }
-    if (isVisitorLoopPr({ headRef: p.head.ref, title: p.title })) prs.push(toPr(p, cwd))
+    if (isVisitorLoopPull(p)) prs.push(toPr(p, cwd))
   }
   return findCandidates(cutoff, prs, comments)
 }

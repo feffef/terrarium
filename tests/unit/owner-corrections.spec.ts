@@ -132,7 +132,7 @@ describe('findCandidates', () => {
     expect(findCandidates('2026-10-25T00:00:00Z', [VL_1492, PR_1494, UNRELATED], [comment({})])).toEqual([])
   })
 
-  it('treats a pinned-branch PR titled `visitor-loop (` as a visitor-loop PR, and reworks of it as candidates', () => {
+  it('treats a pinned-branch PR whose title starts `visitor-loop` + space or `(` as a visitor-loop PR, and reworks of it as candidates', () => {
     const pinned: Pr = { ...VL_1492, number: 1563, title: 'visitor-loop (journal onramp): consensus fixes', headRef: 'ccr-7b24c32f-0nzqez' }
     const unrelatedPinned: Pr = { ...pinned, number: 1564, title: 'journal: tidy', mergedAt: '2026-09-29T17:00:00Z' }
     const out = findCandidates('2026-09-29T20:00:00Z', [unrelatedPinned, pinned, PR_1494], [])
@@ -141,10 +141,12 @@ describe('findCandidates', () => {
 })
 
 describe('isVisitorLoopPr', () => {
-  it('matches the visitor-loop branch prefix or a `visitor-loop (` title, case-insensitively', () => {
+  it('matches the visitor-loop branch prefix, or a title starting `visitor-loop` then a space or `(`, case-insensitively', () => {
     expect(isVisitorLoopPr({ headRef: 'claude/visitor-loop-fixes-2026-10-05', title: 'anything' })).toBe(true)
     expect(isVisitorLoopPr({ headRef: 'claude/adoring-galileo-9pcuh7', title: 'Visitor-loop (blog): fixes' })).toBe(true)
+    expect(isVisitorLoopPr({ headRef: 'claude/adoring-galileo-9pcuh7', title: 'visitor-loop fixes' })).toBe(true)
     expect(isVisitorLoopPr({ headRef: 'claude/adoring-galileo-9pcuh7', title: 'visitor-loop: Skill edit' })).toBe(false)
+    expect(isVisitorLoopPr({ headRef: 'claude/adoring-galileo-9pcuh7', title: 'visitor-loops (blog)' })).toBe(false)
     expect(isVisitorLoopPr({ headRef: 'claude/adoring-galileo-9pcuh7', title: 'Revert "visitor-loop (blog): fixes"' })).toBe(false)
   })
 })
