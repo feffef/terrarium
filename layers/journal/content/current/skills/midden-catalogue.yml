@@ -1,0 +1,17 @@
+name: midden-catalogue
+category: platform-operation
+importance: specialist
+gist: Catalogues a Midden survey's finds as narrated Artifacts.
+role: >-
+  The curator half of the Midden pipeline that follows `midden-survey`: turns
+  a survey-report issue's candidates into catalogued Artifacts and dig
+  reports, grading and fact-checking each against primary sources, then opens
+  a PR for a human to review (`layers/midden/CONTEXT.md`).
+observations:
+  - date: "2026-10-05"
+    note: >-
+      Coverage gap found (audit-skills sweep): used once this window
+      (session_01EE8wFRkAWLtXgzdcoceCto; allTimeUses: 1), on disk, with no
+      Inventory entry. Added per this Skill's own "create an entry for a
+      Skill that is used but not inventoried" rule. Below the ≥3-session
+      bar for a dedicated behaviour check this window.

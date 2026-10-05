@@ -81,3 +81,12 @@ observations:
       logs per `RETAIN_DATES = 7`. 6 older usedIn sessions re-confirmed
       clean from prior observations. No reverts in the 2-week git-log
       sweep. Grade/role unchanged.
+  - date: "2026-10-05"
+    note: >-
+      Re-verified, newest session_011L5Vf6kXGJ1jQTwrKjFTTL (PR #1607, the
+      2026-10-04 Digest): genuine fact-check dispatch (17 claims checked,
+      3 fixed), every spot-checked claim (post-count, SKILL.md line-count
+      rewrite, several PR titles) confirmed accurate against primary
+      sources, retention sweep moved exactly 1 digest + 15 session logs
+      per `RETAIN_DATES = 7`. No reverts of digest content found. Grade
+      unchanged.
