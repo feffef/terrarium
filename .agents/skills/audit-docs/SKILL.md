@@ -24,9 +24,7 @@ conflicting facts is true.
 
 ## The three tiers — what you may touch
 
-Classify every surface **before** editing. A surface no tier names (e.g. a
-Skill Inventory entry, `audit-skills`' to edit) is out of tier: record its
-drift as a Friction, or an issue under "Fix bravely"'s rule, never an edit.
+Classify every surface **before** editing.
 
 - **Live** — fix these. `CLAUDE.md`, `CONTEXT.md`, `CONTEXT-MAP.md`,
   `README.md`, `SECURITY.md`, `docs/agents/*`, `docs/research/*`,
@@ -34,7 +32,9 @@ drift as a Friction, or an issue under "Fix bravely"'s rule, never an edit.
   `layers/<tenant>/CONTEXT.md`, our own Skills (not keyed in
   `skills-lock.json`) with their sibling files, and the current journal's
   facing pages,
-  `layers/journal/content/current/pages/{architecture,highlights,history,how-it-works,index,real-and-invented}.md`.
+  `layers/journal/content/current/pages/{architecture,highlights,history,how-it-works,index,real-and-invented}.md`,
+  and Skill Inventory entries (`layers/journal/content/current/skills/*.yml`;
+  never an `importance` grade, which moves only on ADR-0015's evidence rule).
   Audit the source `.md`, not the render (the dashboard renders only part of
   `index.md`; its source still counts).
 - **Historical** — the append-only record: `docs/adr/*`, journal digests
