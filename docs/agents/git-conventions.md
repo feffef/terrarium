@@ -114,7 +114,8 @@ history** — landed on `main` before this branch existed, reachable from
 Before acting on the flag, run `git log origin/main..HEAD`. Commits not in
 that list predate this branch and must **not** be rebased or rewritten (e.g.
 via the hook's suggested `--reset-author`) — doing so would rewrite public
-history. Only commits that *are* in `origin/main..HEAD` are this session's
+history. Only commits that *are* in `origin/main..HEAD`, minus a checked-out
+branch's commits authored before this session started, are this session's
 own and fair game to fix.
 
 Before reaching for `--reset-author`, note the unprovisioned-signing-key

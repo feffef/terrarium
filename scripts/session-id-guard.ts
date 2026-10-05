@@ -3,10 +3,10 @@
 // PR #362's strengthened prose, one of which actually landed on `main`).
 // Prose alone can't catch "a plausible-looking id seen elsewhere in context" —
 // this compares every `Claude-Session:` trailer on the session's OWN commits
-// (`origin/main..HEAD`, minus any authored before the session started) against the resolved
-// ground-truth session id (`resolveGroundTruthSessionId`, session-trace.ts —
-// already built for the session log's own `session:` field by PR #533, and
-// reused here rather than re-derived) and reports a mismatch.
+// (`origin/main..HEAD`, minus any authored before the session started)
+// against the resolved ground-truth session id (`resolveGroundTruthSessionId`,
+// session-trace.ts — already built for the session log's own `session:` field
+// by PR #533, and reused here rather than re-derived) and reports a mismatch.
 //
 // Pure core (`findSessionIdMismatches`) is kept separate from the git/hook I/O
 // (`readOwnCommits`), mirroring the `handle()` split and the
@@ -122,10 +122,18 @@ export function resolveGroundTruthFromTranscript(
   return extractTrace(parseTranscript(transcriptJsonl), env).session ?? null
 }
 
-/** The session's start (`extractTrace(...).startedAt`), the cutoff that
- *  separates inherited commits from this session's own. */
-export function sessionStartFromTranscript(transcriptJsonl: string): string | undefined {
-  return extractTrace(parseTranscript(transcriptJsonl)).startedAt
+/** The whole check for both callers, parsing the transcript once: its
+ *  ground-truth id, and the mismatches on `cwd`'s own commits judged against
+ *  it, with the trace's `startedAt` as the inherited-commit cutoff. */
+export function checkOwnCommits(
+  cwd: string,
+  transcriptJsonl: string,
+  env: SessionIdEnv = process.env,
+): { groundTruthId: string | null; mismatches: SessionIdMismatch[] } {
+  const { session, startedAt } = extractTrace(parseTranscript(transcriptJsonl), env)
+  const groundTruthId = session ?? null
+  const mismatches = groundTruthId ? findSessionIdMismatches(readOwnCommits(cwd), groundTruthId, startedAt) : []
+  return { groundTruthId, mismatches }
 }
 
 /** Human-readable rejection naming every offending commit, the id its trailer
@@ -165,16 +173,11 @@ function main(): void {
     fail(`could not read transcript: ${err instanceof Error ? err.message : err}`)
   }
 
-  const groundTruthId = resolveGroundTruthFromTranscript(transcriptJsonl)
+  const { groundTruthId, mismatches } = checkOwnCommits(root, transcriptJsonl)
   if (!groundTruthId) {
     console.log('session-id-guard: no ground-truth session id available — skipping (pass)')
     return
   }
-  const mismatches = findSessionIdMismatches(
-    readOwnCommits(root),
-    groundTruthId,
-    sessionStartFromTranscript(transcriptJsonl),
-  )
   if (mismatches.length > 0) fail(formatMismatchError(mismatches))
   console.log(`session-id-guard: ✓ no Claude-Session trailer mismatches against ${groundTruthId}`)
 }
