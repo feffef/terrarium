@@ -32,8 +32,9 @@ wins; otherwise take row `$(( ($(date -u +%s)/86400 - $(date -u -d 2026-09-29 +%
 | 5 | mobile | `/` | Browse the whole visit at 390px width. |
 | 6 | homepage | `/` | |
 
-The focus names both PR titles (`visitor-loop (<focus>): …`), heads the tally,
-and goes in the session log's summary.
+Both PR titles start `visitor-loop (<focus>): …` — on a pinned branch that is how
+`owner-corrections.ts` recognises them. The focus also heads the tally and goes
+in the session log's summary.
 
 ## 1. Serve the site
 

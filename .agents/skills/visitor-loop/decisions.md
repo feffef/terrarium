@@ -14,3 +14,4 @@ here is dropped. One line each, newest last, citing the PR where it was made.
 - No featured-highlights / "Start here" strip of posts on the homepage — a poor choice of highlights that broke the layout, and not a good idea in general (owner, reverting #1405 in #1410, 2026-09-26).
 - Tinkerfund's `prod` deadlines move with real time by design (only `qa` pins its clock); deadlines shifting between visits is not a finding (owner, via #1364, 2026-09-26).
 - On phones the Atlas food and relations webs stay visible as cropped, text-free overviews with their lists below — never hidden or replaced by the list alone (owner, reworking #1492 in #1494, 2026-09-29).
+- Journal document pages keep a full-width ground with the text column centred at prose width — never a narrow capped card with page background beside it (owner, reverting #1563's 44rem cap in #1576, 2026-10-03).
