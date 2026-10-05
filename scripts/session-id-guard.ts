@@ -3,7 +3,7 @@
 // PR #362's strengthened prose, one of which actually landed on `main`).
 // Prose alone can't catch "a plausible-looking id seen elsewhere in context" —
 // this compares every `Claude-Session:` trailer on the session's OWN commits
-// (`origin/main..HEAD`, never inherited history) against the resolved
+// (`origin/main..HEAD`, minus any authored before the session started) against the resolved
 // ground-truth session id (`resolveGroundTruthSessionId`, session-trace.ts —
 // already built for the session log's own `session:` field by PR #533, and
 // reused here rather than re-derived) and reports a mismatch.
@@ -35,6 +35,7 @@ const REC = '\x1e' // record separator, matching audit-skills.ts's git-log conve
 export interface OwnCommit {
   sha: string
   trailerSessionId?: string
+  authoredAt?: string
 }
 
 export interface SessionIdMismatch {
@@ -43,20 +44,26 @@ export interface SessionIdMismatch {
   expected: string
 }
 
-/** The pure, unit-testable core: `(commits, groundTruthId) → mismatches`.
+/** The pure, unit-testable core: `(commits, groundTruthId, sessionStart?) → mismatches`.
  *  `groundTruthId` of `null`/`undefined` means no ground truth was resolvable
  *  (e.g. a plain local CLI session with no `CLAUDE_CODE_REMOTE_SESSION_ID` and
  *  no transcript `sessionId`) — the contract is to skip and pass, never a
  *  false failure, so this returns no mismatches in that case regardless of
- *  what the commits carry. */
+ *  what the commits carry. A commit authored before `sessionStart` is
+ *  inherited (a checked-out unmerged branch, issue #1611) and skipped; the
+ *  author date, unlike the committer date, survives a rebase or amend. An
+ *  unknown start checks every commit. */
 export function findSessionIdMismatches(
   commits: OwnCommit[],
   groundTruthId: string | null | undefined,
+  sessionStart?: string,
 ): SessionIdMismatch[] {
   if (!groundTruthId) return []
+  const start = sessionStart ? Date.parse(sessionStart) : NaN
   const out: SessionIdMismatch[] = []
-  for (const { sha, trailerSessionId } of commits) {
+  for (const { sha, trailerSessionId, authoredAt } of commits) {
     if (!trailerSessionId) continue // no trailer to check — not a mismatch
+    if (authoredAt && Date.parse(authoredAt) < start) continue
     if (trailerSessionId !== groundTruthId) {
       out.push({ sha, found: trailerSessionId, expected: groundTruthId })
     }
@@ -64,23 +71,24 @@ export function findSessionIdMismatches(
   return out
 }
 
-/** Expects `readOwnCommits`'s `git log` format: one record per commit, a sha
- *  header line followed by the full commit message body. */
+/** Expects `readOwnCommits`'s `git log` format: one record per commit, a
+ *  `<sha> <author ISO date>` header line followed by the full commit message body. */
 export function parseOwnCommits(raw: string): OwnCommit[] {
   const out: OwnCommit[] = []
   for (const block of raw.split(REC).map((b) => b.trim()).filter(Boolean)) {
     const nl = block.indexOf('\n')
-    const sha = (nl >= 0 ? block.slice(0, nl) : block).trim()
+    const [sha, authoredAt] = (nl >= 0 ? block.slice(0, nl) : block).trim().split(' ')
     const body = nl >= 0 ? block.slice(nl + 1) : ''
     if (!sha) continue
     const m = body.match(SESSION_TRAILER)
-    out.push({ sha, trailerSessionId: m ? m[1] : undefined })
+    out.push({ sha, trailerSessionId: m ? m[1] : undefined, authoredAt })
   }
   return out
 }
 
-/** The session's own commits — `origin/main..HEAD`, never inherited history
- *  already on `main` (CLAUDE.md's git-log-scoping rule). Fails open ([]) on
+/** The candidate own commits — `origin/main..HEAD`, which excludes history
+ *  already on `main` but still includes a checked-out branch's unmerged
+ *  commits (`findSessionIdMismatches` drops those by author date). Fails open ([]) on
  *  any git error (detached HEAD, no `origin` remote, offline): this is a
  *  backstop check, not the primary one, and it must never itself break a
  *  session that has nothing wrong with its trailers to report. */
@@ -93,7 +101,7 @@ export function readOwnCommits(cwd: string, remote = 'origin'): OwnCommit[] {
   try {
     const raw = execFileSync(
       'git',
-      ['log', `${remote}/main..HEAD`, `--pretty=format:${REC}%H%n%B`],
+      ['log', `${remote}/main..HEAD`, `--pretty=format:${REC}%H %aI%n%B`],
       { cwd, encoding: 'utf8' },
     )
     return parseOwnCommits(raw)
@@ -112,6 +120,12 @@ export function resolveGroundTruthFromTranscript(
   env: SessionIdEnv = process.env,
 ): string | null {
   return extractTrace(parseTranscript(transcriptJsonl), env).session ?? null
+}
+
+/** The session's start (`extractTrace(...).startedAt`), the cutoff that
+ *  separates inherited commits from this session's own. */
+export function sessionStartFromTranscript(transcriptJsonl: string): string | undefined {
+  return extractTrace(parseTranscript(transcriptJsonl)).startedAt
 }
 
 /** Human-readable rejection naming every offending commit, the id its trailer
@@ -156,7 +170,11 @@ function main(): void {
     console.log('session-id-guard: no ground-truth session id available — skipping (pass)')
     return
   }
-  const mismatches = findSessionIdMismatches(readOwnCommits(root), groundTruthId)
+  const mismatches = findSessionIdMismatches(
+    readOwnCommits(root),
+    groundTruthId,
+    sessionStartFromTranscript(transcriptJsonl),
+  )
   if (mismatches.length > 0) fail(formatMismatchError(mismatches))
   console.log(`session-id-guard: ✓ no Claude-Session trailer mismatches against ${groundTruthId}`)
 }

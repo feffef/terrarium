@@ -42,6 +42,7 @@ import {
   formatMismatchError,
   readOwnCommits,
   resolveGroundTruthFromTranscript,
+  sessionStartFromTranscript,
   type SessionIdMismatch,
 } from './session-id-guard.ts'
 import {
@@ -897,14 +898,18 @@ function landMain(argv: string[]): void {
 
   // The session-id-fabrication backstop (issue #387): CLAUDE.md's doc-only
   // "never predict/reconstruct a session id" rule has repeatedly failed to
-  // hold. Compare this session's own commits (origin/main..HEAD only — never
-  // inherited history) against the resolved ground-truth session id and
+  // hold. Compare this session's own commits (origin/main..HEAD, minus any
+  // authored before the session started) against the resolved ground-truth session id and
   // surface any mismatch loudly. Deliberately non-fatal here (this hook must
   // never wedge the log land) — the finding is recorded as a blocker friction
   // on the entry that lands, not by exiting non-zero (see session-id-guard.ts
   // for the standalone CLI that does exit non-zero on this same check).
   const groundTruthId = resolveGroundTruthFromTranscript(transcriptJsonl)
-  const mismatches = findSessionIdMismatches(readOwnCommits(root), groundTruthId)
+  const mismatches = findSessionIdMismatches(
+    readOwnCommits(root),
+    groundTruthId,
+    sessionStartFromTranscript(transcriptJsonl),
+  )
   if (mismatches.length > 0) {
     console.error(formatMismatchError(mismatches))
     scratch = withSessionIdMismatchFriction(scratch, mismatches)

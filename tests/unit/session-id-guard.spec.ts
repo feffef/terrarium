@@ -5,8 +5,8 @@
 // The pure core (`findSessionIdMismatches`/`parseOwnCommits`) is pinned here
 // directly; `readOwnCommits` is exercised against a real throwaway repo +
 // bare remote (mirroring log-session-push.spec.ts's pattern) so the
-// `origin/main..HEAD` scoping — the "never flag inherited history" guarantee
-// — is proven against real git, not just asserted.
+// `origin/main..HEAD` scoping and the author-date cutoff for a checked-out
+// branch's inherited commits (issue #1611) are proven against real git.
 import { execFileSync } from 'node:child_process'
 import { mkdtempSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
@@ -18,16 +18,18 @@ import {
   parseOwnCommits,
   readOwnCommits,
   resolveGroundTruthFromTranscript,
+  sessionStartFromTranscript,
   type OwnCommit,
 } from '../../scripts/session-id-guard.ts'
 
 /** git in a given repo, with a deterministic identity (mirrors log-session-push.spec.ts). */
-function git(cwd: string, args: string[]): string {
+function git(cwd: string, args: string[], extraEnv: Record<string, string> = {}): string {
   return execFileSync('git', args, {
     cwd,
     encoding: 'utf8',
     env: {
       ...process.env,
+      ...extraEnv,
       GIT_AUTHOR_NAME: 'test',
       GIT_AUTHOR_EMAIL: 'test@example.com',
       GIT_COMMITTER_NAME: 'test',
@@ -73,6 +75,37 @@ describe('findSessionIdMismatches() — the pure core (issue #387)', () => {
   })
 })
 
+describe('findSessionIdMismatches() — sessionStart cutoff (issue #1611)', () => {
+  const start = '2026-10-04T17:51:28Z'
+  const foreign = (authoredAt?: string): OwnCommit[] => [
+    { sha: 'aaa', trailerSessionId: 'session_OTHER', authoredAt },
+  ]
+
+  it('skips a foreign trailer authored before the session started (inherited branch)', () => {
+    expect(findSessionIdMismatches(foreign('2026-10-04T17:43:00+00:00'), 'session_REAL', start)).toEqual([])
+  })
+
+  it('still flags a foreign trailer authored at or after the start (the #387 case)', () => {
+    expect(findSessionIdMismatches(foreign('2026-10-04T17:51:28+00:00'), 'session_REAL', start)).toHaveLength(1)
+    expect(findSessionIdMismatches(foreign('2026-10-04T19:51:28+02:00'), 'session_REAL', start)).toHaveLength(1)
+  })
+
+  it('checks every commit when the start is unknown, or the author date is missing', () => {
+    expect(findSessionIdMismatches(foreign('2026-10-04T17:43:00+00:00'), 'session_REAL')).toHaveLength(1)
+    expect(findSessionIdMismatches(foreign(), 'session_REAL', start)).toHaveLength(1)
+  })
+})
+
+describe('sessionStartFromTranscript()', () => {
+  it("returns the transcript's earliest timestamp, or undefined when it has none", () => {
+    const rec = (timestamp?: string) => JSON.stringify({ type: 'user', timestamp, message: { content: 'x' } })
+    expect(sessionStartFromTranscript([rec('2026-10-04T17:51:28.500Z'), rec('2026-10-04T18:00:00Z')].join('\n'))).toBe(
+      '2026-10-04T17:51:28Z',
+    )
+    expect(sessionStartFromTranscript(rec())).toBeUndefined()
+  })
+})
+
 describe('parseOwnCommits()', () => {
   it("parses sha + trailer session id per record, matching readOwnCommits' git-log format", () => {
     const raw = [
@@ -82,6 +115,12 @@ describe('parseOwnCommits()', () => {
     expect(parseOwnCommits(raw)).toEqual([
       { sha: 'sha1', trailerSessionId: 'session_ABC' },
       { sha: 'sha2', trailerSessionId: undefined },
+    ])
+  })
+
+  it('reads the author date from the header line', () => {
+    expect(parseOwnCommits(`${REC}sha1 2026-10-04T17:43:00+00:00\nsubject`)).toEqual([
+      { sha: 'sha1', trailerSessionId: undefined, authoredAt: '2026-10-04T17:43:00+00:00' },
     ])
   })
 
@@ -186,5 +225,14 @@ describe('readOwnCommits() — against a throwaway bare remote, scoped to origin
   it('end to end: a correct trailer on the session\'s own commit passes with no mismatches', () => {
     git(work, ['commit', '--allow-empty', '-m', 'own work\n\nClaude-Session: https://claude.ai/code/session_REAL'])
     expect(findSessionIdMismatches(readOwnCommits(work), 'session_REAL')).toEqual([])
+  })
+
+  it('end to end: an inherited commit amended during the session (committer date ≥ start, author date < start) is skipped', () => {
+    const before = { GIT_AUTHOR_DATE: '2026-10-04T16:27:00Z', GIT_COMMITTER_DATE: '2026-10-04T16:27:00Z' }
+    git(work, ['commit', '--allow-empty', '-m', 'inherited\n\nClaude-Session: https://claude.ai/code/session_OTHER'], before)
+    git(work, ['commit', '--amend', '--allow-empty', '--no-edit'], { GIT_COMMITTER_DATE: '2026-10-04T18:00:00Z' })
+    expect(git(work, ['log', '-1', '--format=%aI %cI'])).toBe('2026-10-04T16:27:00+00:00 2026-10-04T18:00:00+00:00')
+    expect(findSessionIdMismatches(readOwnCommits(work), 'session_REAL', '2026-10-04T17:51:28Z')).toEqual([])
+    expect(findSessionIdMismatches(readOwnCommits(work), 'session_REAL')).toHaveLength(1)
   })
 })
