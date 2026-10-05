@@ -13,7 +13,9 @@ const corpus = computed(() =>
     (a, b) => a.tenant.localeCompare(b.tenant) || (a.title ?? a.url).localeCompare(b.title ?? b.url),
   ),
 )
-const tenantCount = computed(() => new Set(corpus.value.map((r) => r.tenant)).size)
+const tenantNames = computed(() =>
+  [...new Set(corpus.value.map((r) => r.tenant))].sort().map((t) => t[0]!.toUpperCase() + t.slice(1)),
+)
 
 const q = ref('')
 const results = computed(() => {
@@ -55,7 +57,7 @@ const shown = computed(() => results.value.slice(0, limit.value))
       {{ results.length }}
       <template v-if="results.length !== corpus.length">of {{ corpus.length }}</template>
       {{ corpus.length === 1 ? 'page' : 'pages' }}
-      across {{ tenantCount }} {{ tenantCount === 1 ? 'site' : 'sites' }}
+      across {{ tenantNames.length }} {{ tenantNames.length === 1 ? 'site' : 'sites' }}: {{ tenantNames.join(', ') }}
     </p>
 
     <ul ref="list" class="hits">

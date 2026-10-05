@@ -18,7 +18,9 @@ async function showMore() {
   await nextTick()
   list.value?.children[first]?.querySelector('a')?.focus()
 }
-const tenantCount = computed(() => new Set(entries.value.map((e) => e.tenant)).size)
+const tenantNames = computed(() =>
+  [...new Set(entries.value.map((e) => e.tenant))].sort().map((t) => t[0]!.toUpperCase() + t.slice(1)),
+)
 
 // Format the UTC calendar date straight from the ISO string parts — zone-stable,
 // so a `…Z` instant never shifts a day when re-rendered in the viewer's timezone
@@ -35,7 +37,7 @@ function calendarDate(iso: string): string {
   <div class="tl">
     <p class="count">
       {{ entries.length }} {{ entries.length === 1 ? 'entry' : 'entries' }}
-      across {{ tenantCount }} {{ tenantCount === 1 ? 'site' : 'sites' }}
+      across {{ tenantNames.length }} {{ tenantNames.length === 1 ? 'site' : 'sites' }}: {{ tenantNames.join(', ') }}
     </p>
 
     <ol ref="list" class="feed">

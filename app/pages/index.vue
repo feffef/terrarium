@@ -192,6 +192,7 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
         >
           <!-- Not one link: the stamp and glosses are buttons, which can't nest in one. -->
           <div v-if="find" class="find">
+            <span class="find-stamp-key">Condition</span>
             <button type="button" class="find-stamp" :aria-expanded="stampOpen" @click="stampOpen = !stampOpen">
               {{ conditionMeta(find.condition).label }}
             </button>
@@ -580,6 +581,13 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
   gap: 0.35rem;
   color: var(--midden-ink);
   text-decoration: none;
+}
+.find-stamp-key {
+  font-family: var(--midden-typewriter);
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--midden-muted);
 }
 .find-stamp {
   align-self: flex-start;
