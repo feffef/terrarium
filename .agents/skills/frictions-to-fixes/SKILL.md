@@ -7,12 +7,12 @@ disable-model-invocation: true
 # Frictions to Fixes
 
 The precursor to fuller self-improvement automation (ADR-0009): read
-the **frictions** every session honestly logged, turn the ones worth retiring into
-issues, dispatch fixes, then **review and land them yourself**. **Autonomy is the
+the **frictions** every session honestly logged, pick the ones worth retiring (only hard ones become issues, §4),
+dispatch fixes, then **review and land them yourself**. **Autonomy is the
 goal** — you act as the mid-term **review-agent** that ADR-0003 foresaw (the impl
 agents author the PRs; you review and merge them against the ADR-0004 gate),
 escalating to a human only when a change is genuinely high-risk. Harvest broadly —
-a friction is worth an issue when it recurs or stings and a change can retire it
+a friction is worth a fix when it recurs or stings and a change can retire it
 without touching a human-only surface — but keep the hard ones rare (§3).
 
 Run it when asked (a Routine also fires it on a schedule), or after a batch of
@@ -241,7 +241,8 @@ Dispatch the implementation to **Sonnet** agents (`model: sonnet`) — the impl 
 is well-scoped once §4 named the fix, so it doesn't need the main model. Each agent
 runs in its **own git worktree** (parallel PRs must not share a working tree) —
 invoke `dispatch-subagents` for the mechanism, the brief checklist, and the
-post-dispatch check:
+post-dispatch check. Run at most 2 impl agents' full gates concurrently
+(dispatch-subagents §3); dispatch the rest as those finish:
 
 - **Doc-only fixes** (Markdown / prose — CLAUDE.md, a **repo-owned** SKILL, a Skill
   Inventory entry): hand them **all to one agent as a single grouped PR**. These

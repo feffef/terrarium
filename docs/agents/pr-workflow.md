@@ -67,22 +67,13 @@ re-review each story or repeat its findings.
    merging it — see CLAUDE.md's Ground rules (human-only set; ADR-0004) for
    what counts.
 
-**GitHub can silently leave some `Closes #N`/`Fixes #N`-named issues open on a
-multi-issue PR, even a well-formed body** — an intermittent limit in GitHub's
-own closing pipeline, not this repo's doing (issue #983; root-caused via PRs
-#955/#985). `scripts/merge-pr.ts` self-heals it: after a merge succeeds, it
-re-parses the PR body's closing-keyword references (repeated-keyword and
-comma-listed styles alike) and closes any still open. Land through it.
-Using another merge path (hand-rolled `merge_pull_request`, the web UI)? This
-safety net doesn't run — verify each named issue's state with `issue_read`
-afterward and close by hand if it didn't fire.
+**GitHub can silently leave `Closes #N`/`Fixes #N` issues open on a multi-issue PR, even with a well-formed body** (intermittent, GitHub's closing pipeline; issue #983). `scripts/merge-pr.ts` self-heals: after a successful merge it re-parses the body's closing keywords (repeated or comma-listed) and closes any still open. Land through it. On any other merge path (hand-rolled `merge_pull_request`, web UI) it doesn't run; check each named issue with `issue_read` afterward and close by hand.
 
 **Restarting a branch after its PR merged?** GitHub deletes the remote branch
-by default on merge, so a `push --force-with-lease` on a restarted branch of
-the same name will typically fail with "stale info" against the local
-(now-stale) remote-tracking ref — that's expected, not a genuine
-concurrent-write conflict. Run `git remote prune origin` first, or just push
-without `--force-with-lease` since it's effectively a new remote branch.
+by default on merge, so `push --force-with-lease` on a same-named restarted branch
+typically fails with "stale info" against the stale remote-tracking ref. That is
+expected, not a concurrent write. Run `git remote prune origin` first, or push
+without `--force-with-lease` (it is effectively a new remote branch).
 
 **Before pushing a follow-up commit to an existing PR branch** (e.g. answering
 review), check the PR's current state first (`pull_request_read`) — an owner can

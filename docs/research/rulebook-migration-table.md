@@ -458,11 +458,11 @@ each rule that carries independent normative force beyond its step ordering.
 | DG-02 | Run the archive sweep on **every** invocation, not only on digest-producing days | digest §5 | W | #672 | A stage | 0 |
 | DG-03 | Never bake a per-run overview or digest list into `index.md` | digest §4 | J | none | Authoring judgement | — |
 | BP-01 | Never invent a detail — every claim anchored in a real repo fact | blog-post | J | none | The Skill's central honesty invariant; irreducible | — |
-| BP-02 | Pin a file/line GitHub link to a 40-char SHA, never `main` | blog-post §5 | G | none | A validator over `layers/blog/content/**/*.md`: flag `blob/main/`. **Zero false positives, trivially checkable** — the strongest unbuilt gate-check candidate | S |
-| BP-03 | Draw every tag from `blogTags`; an out-of-vocabulary tag fails validation | blog-post §5 | G | none | **Built** — the Zod enum in `validate:content` | 0 |
-| BP-04 | `publishedAt` is set at commit time; never future, never noticeably earlier | blog-post §5 | G | none | A validator comparing `publishedAt` against the commit date | S |
-| BP-05 | Re-derive every factual claim, the drafter's own included, from its primary source; for who-decided claims, the PR's review thread/timeline | blog-post §5 | W | #715, #1137, #1168 | **Built** — step 7's fresh fact-check subagent returns claim · source · verdict; `wrong`/`unverifiable` is fixed or cut, and an unresolved causal claim blocks self-merge | 0 |
-| BP-06 | Draft three candidates and let a fresh outside reader pick — every run | blog-post §A | W | #447 | A workflow stage; already fully specified | 0 |
+| BP-02 | Pin a file/line GitHub link to a 40-char SHA, never `main` | blog-post Reference: citing facts | G | none | A validator over `layers/blog/content/**/*.md`: flag `blob/main/`. **Zero false positives, trivially checkable** — the strongest unbuilt gate-check candidate | S |
+| BP-03 | Draw every tag from `blogTags`; an out-of-vocabulary tag fails validation | blog-post Reference: the post | G | none | **Built** — the Zod enum in `validate:content` | 0 |
+| BP-04 | `publishedAt` is set at commit time; never future, never noticeably earlier | blog-post step 7 | G | none | A validator comparing `publishedAt` against the commit date | S |
+| BP-05 | Re-derive every factual claim, the drafter's own included, from its primary source; for who-decided claims, the PR's review thread/timeline | blog-post step 9 | W | #715, #1137, #1168 | **Built** — step 9's fresh fact-check subagent returns claim · source · verdict; `wrong`/`unverifiable` is fixed or cut, and an unresolved causal claim blocks self-merge | 0 |
+| BP-06 | Draft three candidates and let a fresh outside reader pick — every run | blog-post steps 5–6 | W | #447 | A workflow stage; already fully specified | 0 |
 | BP-07 | Rotation: never two posts in a row from one Persona; no Persona starved past four | blog-post §1 | G | none | **Built** — `scripts/blog-rotation.ts` computes `{last, starved, eligible}` | 0 |
 | MS-01 | Refuse to survey on a shallow clone rather than under-report | midden-survey §1 | H (refusal) | none | **Built** — `scripts/midden-survey.ts` refuses. Same shape `GC-03` proposes generalizing | 0 |
 | MS-02 | Cluster candidates by cause; never enumerate one per file | midden-survey §3 | J | none | Curatorial judgement | — |

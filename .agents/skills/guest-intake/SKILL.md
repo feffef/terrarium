@@ -85,8 +85,8 @@ with a guest is neither, so this Skill is **bounded**:
 ## Not a build-time fit? Reframe, don't just reject
 
 Some ideas are a good story but a bad fit for a platform that is
-build-time-baked with nothing created at runtime, save the two narrow,
-already-wired exceptions (ADR-0001). The tell: the idea needs something to
+build-time-baked with nothing created at runtime, save the deploy
+runner (ADR-0001, ADR-0011). The tell: the idea needs something to
 persist past the visitor's own visit for *other* visitors to see (an account,
 a login, a comment or review, a shopping cart, a live chat), needs a fresh
 runtime fetch of outside data (a live feed, an API call nothing here already

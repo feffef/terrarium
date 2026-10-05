@@ -195,7 +195,7 @@ frontmatter or a moved path can break the build. Done when green.
 ## 8. Commit, push, open one gated PR, self-merge on green
 
 Follow `docs/agents/pr-workflow.md`'s "Closing a self-merged chartered run".
-One run, one commit, one PR; its body lists the fixes and any issue filed, and
+One self-merged commit and PR (the escalation PR below is separate); its body lists the fixes and any issue filed, and
 a one-line PR comment records the audit. It self-merges on green (ADR-0003
 amendment; ADR-0004's low-risk content tier, like `digest`).
 
