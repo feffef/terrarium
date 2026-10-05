@@ -11,28 +11,10 @@ const SITES = [
   { name: 'Atlas', to: '/t/atlas' },
   { name: 'Tinkerfund', to: '/t/tinkerfund' },
 ]
-// Reachable from inside the sites, but kept off the homepage (#1316 rulings).
-const QUIET_SITES = [
-  { name: 'Search', to: '/t/commons/search' },
-  { name: 'Marquee', to: '/t/marquee' },
-]
-
-// Pages visitors singled out as the best of the site, for the cold-landing
-// "Surprise me" link.
-const SURPRISES = [
-  '/t/atlas/floor/clathrina-vigil',
-  '/t/tinkerfund/prod/campaigns/meal-invites-for-cats',
-  '/t/midden/trench/the-current-cut',
-  '/t/blog/karen/2026-07-23-we-told-it-not-to-lie',
-  '/t/journal/current/real-and-invented',
-]
-function surprise() {
-  return navigateTo(SURPRISES[Math.floor(Math.random() * SURPRISES.length)])
-}
 
 const route = useRoute()
 // Linking a visitor to the wing they are already in is a dead link.
-const sites = computed(() => (route.path === '/' ? SITES : [...SITES, ...QUIET_SITES]).filter((s) => s.to.split('/')[2] !== route.path.split('/')[2]))
+const sites = computed(() => SITES.filter((s) => s.to.split('/')[2] !== route.path.split('/')[2]))
 </script>
 
 <template>
@@ -44,7 +26,6 @@ const sites = computed(() => (route.path === '/' ? SITES : [...SITES, ...QUIET_S
         <NuxtLink :to="s.to">{{ s.name }}</NuxtLink>
       </template>
     </span>
-    <a class="site-footer-surprise" :href="SURPRISES[0]" @click.prevent="surprise">Surprise me</a>
     <a class="site-footer-source" :href="REPO_URL">Source on GitHub</a>
   </footer>
 </template>
@@ -71,6 +52,6 @@ const sites = computed(() => (route.path === '/' ? SITES : [...SITES, ...QUIET_S
   text-decoration-color: color-mix(in srgb, currentColor 30%, transparent);
   text-underline-offset: 2px;
 }
-.site-footer-surprise { margin-left: auto; }
+.site-footer-source { margin-left: auto; }
 .site-footer a:hover { color: currentColor; text-decoration-color: currentColor; }
 </style>
