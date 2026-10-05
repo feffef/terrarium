@@ -113,8 +113,8 @@ function skillsInvokedBy(rec: Record<string, unknown>): string[] {
  *
  *  Any `/loop` invocation reads as `loop`, whatever its pacing. A
  *  fixed-interval loop is paced by the harness and would not call the tool
- *  anyway, so widening here only avoids false denials; narrowing would need the
- *  command's arguments, which the transcript does not reliably carry. */
+ *  anyway, so counting it too only avoids false denials; excluding it would need
+ *  the command's arguments, which the transcript does not reliably carry. */
 export function detectSessionMode(records: Record<string, unknown>[] | null | undefined): SessionMode {
   if (!records || records.length === 0) return 'undeterminable'
   for (const rec of records) {
