@@ -1,19 +1,25 @@
 schemaVersion: 1
 session: session_014mna6dsd4t2Ui98gbs3jCF
 startedAt: 2026-10-05T16:55:21Z
-endedAt: 2026-10-05T16:59:44Z
-kind: delegated
-goal: Run one /auto-triage sweep over the open terrarium issue backlog
+endedAt: 2026-10-05T17:04:01Z
+kind: interactive
+goal: Run /auto-triage over the open terrarium backlog, then re-triage every other open issue
 status: completed
-outcome: "7 needs-triage issues triaged (3 ready-for-agent, 4 ready-for-human); #1578 blocked by #1515"
-summary: "Human-instructed: the user invoked /auto-triage (single kickoff prompt). Everything after was the Skill's own procedure run autonomously. Listed 24 open issues with list-open-issues.ts and last-comment-authors.ts; every one had AI-authored last activity, so only the 7 needs-triage issues were eligible (#1611, #1610, #1608, #1603, #1586, #1585, #1578). No open PRs, none claimed or blocked. Dispatched one read-only general-purpose subagent per issue from a shared scratch brief; each verified claims against repo sources, set labels, and posted one comment. Outcomes: #1608, #1585, #1578 ready-for-agent; #1611, #1610, #1586 (guard work or judgment calls) and #1603 (gate relaxation needing an ADR-0004 amendment) ready-for-human. Subagents corrected two factual errors in issue bodies (#1608's ADR-0015 citation, #1610's docs-read claim). Agent-initiated extension: marked #1578 blocked by the pre-existing ready-for-agent #1515 (same visitor-loop SKILL.md), going slightly beyond the Skill's \"two of this run's\" wording. No commits, no PR."
+outcome: "22 issues reviewed: 7 newly triaged, #1375 closed as done, #1515 re-briefed, 13 unchanged"
+summary: "Human-instructed throughout. (1) The user invoked /auto-triage. Only the 7 needs-triage issues were eligible (all others had AI-authored last activity). One Opus subagent per issue, from a shared scratch brief: #1608, #1585, #1578 went ready-for-agent; #1611, #1610, #1586, #1603 ready-for-human. I marked #1578 blocked by #1515 (same visitor-loop SKILL.md), agent-initiated, a step beyond the Skill's same-run wording. (2) The user then asked to re-check all other open issues in Sonnet subagents for anything now closable or designable — effectively a human-directed full sweep. I fetched origin/main once and dispatched 15 Sonnet subagents with a re-triage brief: write to GitHub only when the outcome changes; grilling tickets stay HITL; maps untouched. Results: #1375 (Tinkerfund spec) closed completed after I verified all 14 child stories closed; #1515 got a superseding brief (owner-corrections.ts misses harness-pinned visitor-loop branches; match the title prefix too), which confirms the #1578 blocker; the other 13 were unchanged. I added the missing `enhancement` category to #1580 myself. No commits, no PR."
 prs: []
-docsRead: []
+docsRead:
+  - path: .claude/skills/triage/SKILL.md
+    reason: (no reason given)
+  - path: .claude/skills/triage/AGENT-BRIEF.md
+    reason: (no reason given)
+  - path: .claude/skills/auto-triage/SKILL.md
+    reason: (no reason given)
 skillsUsed:
   - name: auto-triage
     reason: the user's invoked sweep
   - name: triage
-    reason: per-issue rules, read and handed to subagents
+    reason: per-issue rules, handed to subagents
   - name: close-session
     reason: (no reason given)
   - name: log-session
@@ -25,21 +31,33 @@ frictions:
   - description: Shared subagent brief had to be inlined via a scratch file and each subagent re-read ~6 docs (triage, ADR-0022, CONTEXT.md); ~95k tokens per issue for 7 issues
     solution: Acceptable for a small eligible set; if sweeps grow, a condensed triage-subagent brief in the Skill would cut repeated reads
     severity: nit
-durationSec: 263
+  - description: Each Opus triage subagent re-read ~6 docs (~95k tokens per issue); the Sonnet re-check pass was ~75k per issue and mostly found no change
+    solution: A condensed triage-subagent brief in the auto-triage Skill would cut repeated reads; Sonnet is enough for no-change re-checks
+    severity: nit
+  - description: "The guards.md rule bars unattended sessions from guard work, so #1611 and #1304 sit ready-for-human although the design is settled; an attended session could implement them"
+    solution: Owner may hand guard issues to an attended session; no doc change needed
+    severity: nit
+durationSec: 519
 models:
-  claude-opus-5-5: 54
+  claude-opus-5-5: 97
 toolCounts:
-  Bash: 16
+  Bash: 23
   ToolSearch: 1
   mcp__github__list_pull_requests: 1
-  Agent: 7
+  Agent: 22
   Skill: 2
+  mcp__github__issue_write: 1
 docsReadViaShell:
   - .agents/skills/triage/SKILL.md
   - .agents/skills/triage/AGENT-BRIEF.md
   - docs/agents/issue-tracker.md
   - docs/agents/guards.md
   - CONTEXT.md
+  - docs/agents/triage-labels.md
+  - .agents/skills/visitor-loop/SKILL.md
+  - .agents/skills/auto-triage/SKILL.md
+  - docs/adr/0022-autonomous-triage-sweep.md
+  - .agents/skills/triage/OUT-OF-SCOPE.md
   - docs/research/rulebook-migration-table.md
   - docs/adr/0009-session-logs-commit-directly-to-main.md
   - docs/agents/pr-workflow.md
@@ -53,8 +71,8 @@ docsReadViaShell:
   - docs/adr/0026-gate-workflow-thin-shell.md
   - docs/agents/git-conventions.md
   - .agents/skills/setup-matt-pocock-skills/SKILL.md
-  - .agents/skills/visitor-loop/SKILL.md
   - docs/agents/github-integration.md
+  - docs/agents/environment-caveats.md
 subagents:
   - type: general-purpose
     task: "Triage issue #1611"
@@ -70,7 +88,54 @@ subagents:
     task: "Triage issue #1585"
   - type: general-purpose
     task: "Triage issue #1578"
+  - type: general-purpose
+    task: "Re-triage #1515"
+    model: sonnet
+  - type: general-purpose
+    task: "Re-triage #1580"
+    model: sonnet
+  - type: general-purpose
+    task: "Re-triage #1549"
+    model: sonnet
+  - type: general-purpose
+    task: "Re-triage #1512"
+    model: sonnet
+  - type: general-purpose
+    task: "Re-triage #1550"
+    model: sonnet
+  - type: general-purpose
+    task: "Re-triage #1552"
+    model: sonnet
+  - type: general-purpose
+    task: "Re-triage #1480"
+    model: sonnet
+  - type: general-purpose
+    task: "Re-triage #1499"
+    model: sonnet
+  - type: general-purpose
+    task: "Re-triage #1551"
+    model: sonnet
+  - type: general-purpose
+    task: "Re-triage #864"
+    model: sonnet
+  - type: general-purpose
+    task: "Re-triage #1375"
+    model: sonnet
+  - type: general-purpose
+    task: "Re-triage #866"
+    model: sonnet
+  - type: general-purpose
+    task: "Re-triage #868"
+    model: sonnet
+  - type: general-purpose
+    task: "Re-triage #1304"
+    model: sonnet
+  - type: general-purpose
+    task: "Re-triage #869"
+    model: sonnet
 gitBranch: ccr-cf531370-crf0ml
 entrypoint: remote_mobile
 cliVersion: 2.1.289
+learnings:
+  - "The tinkerfund wayfinder:map #1357 may now be closeable since its spec #1375 closed, but auto-triage must never touch maps — left for the owner"
 landedBy: Stop
