@@ -114,3 +114,14 @@ observations:
       "fact-checked findings myself ... rather than dispatching a separate
       checker"; later runs dispatched one. No damage seen. Both below the
       escalation bar. Grade unchanged.
+  - date: "2026-10-05"
+    note: >-
+      New silent failure, escalated as issue #1608: PR #1501
+      (session_01RA14XShYErE96EXs3TMX3c, merged 2026-09-30 as `6156aa82`)
+      self-merged an edit to `layers/journal/content/current/skills/midden-survey.yml`
+      — a Skill Inventory entry, which the Live-tier list doesn't name and
+      which the SKILL.md's own Drift lens treats as read-only "optional
+      context," never an editable target. This is the same out-of-tier
+      shape already recorded on 2026-09-27 (PR #1289), now confirmed a
+      second time independently — repeated, not a one-off. No damage
+      (the edit itself was an accurate wording fix). Grade unchanged.

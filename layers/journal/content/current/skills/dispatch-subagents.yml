@@ -143,3 +143,14 @@ observations:
       review reports came back only as text). The Skill ("Bank progress before
       continuing") gives no fallback. A third run reportedly banked to scratch
       files without trouble (unverified). Not escalated. Grade unchanged.
+  - date: "2026-10-05"
+    note: >-
+      Re-checked: #1585 (branch-collision) and #1586 (missed invocation,
+      regression against #1248) both confirmed still open, `needs-triage`,
+      zero comments, no remediation PR. Screened all 80 nonusers this
+      window by goal; no new missed invocation found beyond #1586 — every
+      git-touching/parallel candidate not already covered either dispatched
+      strictly read-only subagents or was the already-known case. No new
+      rule-adjacent incident in the 10 newest usedIn sessions (no
+      merge-pr.ts-to-subagent, no new branch/worktree collision beyond
+      #1585). Status quo; both issues await human triage. Grade unchanged.

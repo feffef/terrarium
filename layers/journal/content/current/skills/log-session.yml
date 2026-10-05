@@ -177,3 +177,12 @@ observations:
       "named but output shows no line"; its own guess: the file was deleted from the
       tree later). n=1 among ~25 later sessions, no filed issue. Grade/role
       unchanged.
+  - date: "2026-10-05"
+    note: >-
+      Re-checked, 10 newest usedIn sessions: clean field-split, genuine
+      `landedBy: Stop` on all 10, no new SHELL-READ-DETECTION instance.
+      #1482 (`resolveAgainstCdDir` absolute-path bug) and #1542
+      (`for`-loop-over-glob miss) both independently re-confirmed still
+      open and unfixed directly in current code
+      (`scripts/session-trace.ts`, `scripts/shell-reads.ts`). No reverts
+      touching this Skill's mechanics. Grade unchanged.

@@ -83,3 +83,16 @@ observations:
       still open, labeled bug/ready-for-human, awaiting a human — not
       silently dropped. No reverts in the 2-week git-log sweep. Grade/role
       unchanged.
+  - date: "2026-10-05"
+    note: >-
+      Freshly verified session_01RW5WnnVvnyuUbrqVZvdZNc (PR #1588) and
+      session_01NRVHQoPm4cP1F7iVUvh9rJ (PR #1601) via `pull_request_read`
+      directly: both clean, audit-trace review verdict strictly precedes
+      gate-green and merge in each, no guard-roster file touched, one
+      guard-adjacent item correctly left filed-only in each. Side note,
+      out of this Skill's own scope: session_01NRVHQoPm4cP1F7iVUvh9rJ's own
+      log flags a blocker — three of its commits carry a Claude-Session
+      trailer naming a different session
+      (session_016RHjBGGBWx1EUSJbEjRR15) — a session-identity/commit-trailer
+      issue, not a frictions-to-fixes defect; left for that session's own
+      friction survey to pick up. Grade unchanged.

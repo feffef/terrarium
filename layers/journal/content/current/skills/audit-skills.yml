@@ -177,3 +177,19 @@ observations:
       session — the #1514 403 that dogged prior runs is fixed), both
       orphan candidates already carry `resolvedBy`, humanPromptedClosures
       and manuallyRescuedClosures both empty. Grade/role unchanged.
+  - date: "2026-10-05"
+    note: >-
+      Self-check: dispatched 10 behaviour-check subagents this run,
+      verified each report's central claims against primary sources. One
+      new finding escalated as issue #1608 (audit-docs' second
+      out-of-tier self-merge, repeating the 2026-09-27-recorded #1289
+      shape). One comment with new evidence added to the open #1515
+      thread (visitor-loop's owner-memory step ran correctly for the
+      first time post-#1570, though its branch-matching gap persists).
+      blog-post's 4th step-8 skip was recorded as an observation only,
+      not a new issue — the fix had already landed same-day with one
+      clean pass behind it. Coverage gap found and added: `midden-catalogue`
+      (used once, no Inventory entry). Step 3 closure completeness: orphan
+      scan clean, both orphan candidates already resolved-by-annotation, no
+      human-prompted or manually-rescued closures this window. Grade/role
+      unchanged.

@@ -148,3 +148,14 @@ observations:
       command was denied. origin/prune/backgrounding-cluster still exists on the
       remote (git ls-remote), so a stray branch awaits a human. The Skill gives no
       instruction on the session branch. Not escalated; one run. Grade unchanged.
+  - date: "2026-10-05"
+    note: >-
+      Re-checked: `validate-prune-trials.ts` passes, ledger clean. The
+      backgrounding-cluster trial (opened 2026-10-01) is now judgeable
+      (floor 2026-10-04T13:16:22Z) but unjudged, the day's run having
+      started ~2 minutes before the floor — a 4th instance of the
+      already-noted narrow-margin pattern, still below the human-flag
+      bar (worth a human only on a 5th). `origin/prune/backgrounding-cluster`
+      still exists unaddressed. Verdict-commit spot checks (PR #1596, PR
+      #1558) both show genuine fresh searches, not inherited conclusions.
+      Grade unchanged.
