@@ -1,25 +1,43 @@
 schemaVersion: 1
 session: session_014mna6dsd4t2Ui98gbs3jCF
 startedAt: 2026-10-05T16:55:21Z
-endedAt: 2026-10-05T17:04:01Z
+endedAt: 2026-10-05T18:00:36Z
 kind: interactive
-goal: Run /auto-triage over the open terrarium backlog, then re-triage every other open issue
-status: completed
-outcome: "22 issues reviewed: 7 newly triaged, #1375 closed as done, #1515 re-briefed, 13 unchanged"
-summary: "Human-instructed throughout. (1) The user invoked /auto-triage. Only the 7 needs-triage issues were eligible (all others had AI-authored last activity). One Opus subagent per issue, from a shared scratch brief: #1608, #1585, #1578 went ready-for-agent; #1611, #1610, #1586, #1603 ready-for-human. I marked #1578 blocked by #1515 (same visitor-loop SKILL.md), agent-initiated, a step beyond the Skill's same-run wording. (2) The user then asked to re-check all other open issues in Sonnet subagents for anything now closable or designable — effectively a human-directed full sweep. I fetched origin/main once and dispatched 15 Sonnet subagents with a re-triage brief: write to GitHub only when the outcome changes; grilling tickets stay HITL; maps untouched. Results: #1375 (Tinkerfund spec) closed completed after I verified all 14 child stories closed; #1515 got a superseding brief (owner-corrections.ts misses harness-pinned visitor-loop branches; match the title prefix too), which confirms the #1578 blocker; the other 13 were unchanged. I added the missing `enhancement` category to #1580 myself. No commits, no PR."
-prs: []
+goal: Triage the terrarium backlog, then implement, review and drive every ready issue to a green PR
+status: in-review
+outcome: "22 issues triaged; 6 PRs for 7 issues: #1617, #1620, #1621 merged; #1618, #1622, #1623 green awaiting merge"
+summary: "Human-instructed throughout; the owner was present and steering. (1) /auto-triage: 7 needs-triage issues went to per-issue Opus subagents (3 ready-for-agent, 4 ready-for-human). (2) The owner asked for a Sonnet re-check of the other 15 open issues: #1375 closed as done, #1515 re-briefed, 13 unchanged. (3) The owner corrected me: this is NOT an unattended session, so the guards.md \"no unattended guard work\" rule didn't block #1611/#1304. They then directed implementing those two, #1512 (I traced the correct date to 07-22 from the guest's salvage-session end time, so the fix was a file rename, not the triage's suggested re-date), and all ready-for-agent issues. That was one PR per issue (owner-approved, beyond my single designated branch), each in its own worktree subagent, with gates serialized via flock. The owner asked why #1515 and #1578 were on separate branches; I merged them onto one branch and PR. (4) The owner asked for /code-review on every branch: 12 review subagents. Real findings were fixed via SendMessage to the implementers: a #1585 bug that excused worktrees with unpushed commits, #1608's tier-scope contradiction, and #1611 doc drift plus a double transcript parse. (5) The owner rejected #1608's premise in a PR review; I asked and they chose to make Skill Inventory entries Live for audit-docs (rework accepted, including an agent-added importance-grade carve-out). (6) Live probes at the owner's request: #1621's deny path through the real PreToolUse hook (PR script swapped in temporarily); #1611 against a real unmerged foreign branch (claude/1549-zod-4) — main's guard false-positives on 4 commits, the PR's passes. Agent-initiated: blocked #1578 on #1515; added the enhancement label to #1580; noted the slug-stability exception in #1617's body."
+prs:
+  - "1617"
+  - "1618"
+  - "1620"
+  - "1621"
+  - "1622"
+  - "1623"
 docsRead:
+  - path: scripts/loop-only-tool-guard.ts
+    reason: (read before editing)
   - path: .claude/skills/triage/SKILL.md
     reason: (no reason given)
   - path: .claude/skills/triage/AGENT-BRIEF.md
     reason: (no reason given)
   - path: .claude/skills/auto-triage/SKILL.md
     reason: (no reason given)
+  - path: scripts/check-worktrees.ts
+    reason: (read before editing)
+  - path: tests/unit/check-worktrees.spec.ts
+    reason: (read before editing)
+  - path: tests/unit/session-id-guard.spec.ts
+    reason: (no reason given)
 skillsUsed:
   - name: auto-triage
     reason: the user's invoked sweep
   - name: triage
     reason: per-issue rules, handed to subagents
+  - name: dispatch-subagents
+    reason: six worktree-isolated impl agents plus flock-serialized gates
+  - name: code-review
+    reason: two-axis review of every branch, at the owner's request
   - name: close-session
     reason: (no reason given)
   - name: log-session
@@ -37,39 +55,79 @@ frictions:
   - description: "The guards.md rule bars unattended sessions from guard work, so #1611 and #1304 sit ready-for-human although the design is settled; an attended session could implement them"
     solution: Owner may hand guard issues to an attended session; no doc change needed
     severity: nit
-durationSec: 519
+  - description: "Local gate:scoped passed but CI failed on PR #1622: a test hard-coded git 2.43's `+00:00` %aI output while CI's git 2.55 prints `Z`. Not an inert-classifier skip; the full local gate ran."
+    solution: Compare parsed instants rather than raw git date strings; note the container-vs-CI git version gap in environment-caveats.md
+    severity: moderate
+  - description: "Triage subagents classed #1611/#1304 ready-for-human on guards.md's unattended-session rule although the owner was attending; the owner had to correct me"
+    solution: Triage briefs should state whether the sweep is attended; ready-for-human only when the implementing session would be unattended
+    severity: moderate
+  - description: "The #1608 triage brief (made ready-for-agent) encoded a policy the owner rejected at review; a full impl + review + fix cycle was spent before the premise was questioned"
+    solution: A 'which behaviour is right' bug against a self-merge tier is an owner judgement call; route it ready-for-human
+    severity: moderate
+  - description: "First serialized dispatch of #1515 and #1578 (blocked-by) when one agent and branch for both was simpler; the owner had to point it out"
+    solution: When two ready issues edit the same file, default to one agent, one branch, one PR
+    severity: minor
+  - description: flock-serialized gates in subagents routinely exceeded the 600s foreground Bash timeout and were auto-backgrounded (4 agents reported it)
+    solution: For queued gates, have subagents poll a log marker, or cap concurrent impl agents to the gate concurrency
+    severity: minor
+  - description: workflow-edit-guard false-positived on a heredoc whose TEXT mentioned the CI workflow directory (no write to it); the worktree-isolation guard refused python heredocs mentioning git
+    solution: "Workflow-edit-guard should match write targets, not path mentions in heredoc bodies (issue #897)"
+    severity: minor
+  - description: "auto-triage's Blocking rule only covers two of this run's ready-for-agent issues; #1578 collided with an earlier-run ready-for-agent issue (#1515)"
+    solution: Widen the Report step to any open ready-for-agent issue sharing a file
+    severity: nit
+durationSec: 3915
 models:
-  claude-opus-5-5: 97
+  claude-opus-5-5: 344
 toolCounts:
-  Bash: 23
-  ToolSearch: 1
+  Bash: 58
+  ToolSearch: 4
   mcp__github__list_pull_requests: 1
-  Agent: 22
-  Skill: 2
+  Agent: 40
+  Skill: 4
   mcp__github__issue_write: 1
+  AskUserQuestion: 1
+  Write: 2
+  SendMessage: 8
+  mcp__claude-code-remote__subscribe_pr_activity: 6
+  ReadNotifications: 33
+  mcp__github__update_pull_request: 1
+  mcp__github__get_job_logs: 1
+  ScheduleWakeup: 1
+  mcp__github__add_issue_comment: 2
+filesEdited:
+  - scripts/loop-only-tool-guard.ts
+  - scripts/check-worktrees.ts
+  - tests/unit/check-worktrees.spec.ts
+  - .agents/skills/dispatch-subagents/SKILL.md
+  - scripts/session-id-guard.ts
+  - scripts/log-session.ts
+  - docs/agents/git-conventions.md
 docsReadViaShell:
   - .agents/skills/triage/SKILL.md
   - .agents/skills/triage/AGENT-BRIEF.md
   - docs/agents/issue-tracker.md
   - docs/agents/guards.md
   - CONTEXT.md
+  - .agents/skills/blog-post/SKILL.md
+  - docs/agents/pr-workflow.md
+  - docs/agents/git-conventions.md
+  - .agents/skills/audit-docs/SKILL.md
+  - docs/adr/0015-audit-skills-and-conditional-importance.md
+  - .agents/skills/dispatch-subagents/SKILL.md
   - docs/agents/triage-labels.md
   - .agents/skills/visitor-loop/SKILL.md
   - .agents/skills/auto-triage/SKILL.md
   - docs/adr/0022-autonomous-triage-sweep.md
   - .agents/skills/triage/OUT-OF-SCOPE.md
+  - .agents/skills/visitor-loop/decisions.md
   - docs/research/rulebook-migration-table.md
   - docs/adr/0009-session-logs-commit-directly-to-main.md
-  - docs/agents/pr-workflow.md
-  - .agents/skills/dispatch-subagents/SKILL.md
   - .agents/skills/prune-trial/SKILL.md
   - docs/adr/0027-prune-trials.md
-  - .agents/skills/audit-docs/SKILL.md
-  - docs/adr/0015-audit-skills-and-conditional-importance.md
   - .agents/skills/audit-skills/SKILL.md
   - docs/adr/0004-objective-safety-gate.md
   - docs/adr/0026-gate-workflow-thin-shell.md
-  - docs/agents/git-conventions.md
   - .agents/skills/setup-matt-pocock-skills/SKILL.md
   - docs/agents/github-integration.md
   - docs/agents/environment-caveats.md
@@ -133,9 +191,47 @@ subagents:
   - type: general-purpose
     task: "Re-triage #869"
     model: sonnet
+  - type: general-purpose
+    task: "Implement #1512 rename"
+  - type: general-purpose
+    task: "Implement #1611 guard fix"
+  - type: general-purpose
+    task: "Implement #1304 guard text"
+  - type: general-purpose
+    task: "Implement #1608 audit-docs"
+  - type: general-purpose
+    task: "Implement #1585 dispatch rule"
+  - type: general-purpose
+    task: "Implement #1515 visitor-loop"
+  - type: general-purpose
+    task: "Standards review #1617"
+  - type: general-purpose
+    task: "Spec review #1617"
+  - type: general-purpose
+    task: "Standards review #1618"
+  - type: general-purpose
+    task: "Spec review #1618"
+  - type: general-purpose
+    task: "Standards review #1620"
+  - type: general-purpose
+    task: "Spec review #1620"
+  - type: general-purpose
+    task: "Standards review #1621"
+  - type: general-purpose
+    task: "Spec review #1621"
+  - type: general-purpose
+    task: "Standards review #1622"
+  - type: general-purpose
+    task: "Spec review #1622"
+  - type: general-purpose
+    task: "Standards review #1623"
+  - type: general-purpose
+    task: "Spec review #1623"
 gitBranch: ccr-cf531370-crf0ml
 entrypoint: remote_mobile
 cliVersion: 2.1.289
 learnings:
   - "The tinkerfund wayfinder:map #1357 may now be closeable since its spec #1375 closed, but auto-triage must never touch maps — left for the owner"
+  - A hook-run guard reads the project checkout, so a PR's guard can be live-probed by temporarily checking out just that file, then restoring it
+  - The repo's commit-msg hook rewrites Claude-Session trailers, so a foreign-trailer fixture can't be crafted with git commit; use a real unmerged foreign branch instead
 landedBy: Stop

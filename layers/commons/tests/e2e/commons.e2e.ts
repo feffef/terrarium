@@ -25,7 +25,7 @@ export function registerCommonsE2E(): void {
       for (const tenant of ['atlas', 'marquee', 'midden', 'journal']) {
         expect(html, `expected a result from "${tenant}"`).toContain(tenant)
       }
-      expect(html).toMatch(/across [5-9] sites/)
+      expect(html).toMatch(/across [5-9] sites: /)
     })
 
     it('search: does not index the Commons itself (opt-in isolation default), and filters the corpus live as the user types', async () => {

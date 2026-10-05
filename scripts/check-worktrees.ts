@@ -17,9 +17,13 @@
 //   into `origin/main` (issue #1169): its work has already landed, so a
 //   stale dirty index or unpushed local commit left behind (e.g. by a
 //   review-subagent checkout collision, per dispatch-subagents/SKILL.md) is
-//   harmless cruft, not unrescued work.
+//   harmless cruft, not unrescued work. Likewise a dirty linked worktree whose
+//   content already equals a pushed commit's tree (issue #1585: a sibling moved
+//   its branch ref, so it reads as a reversed diff of work already on the remote).
 import { execFileSync } from 'node:child_process'
-import { dirname, resolve } from 'node:path'
+import { copyFileSync, existsSync, mkdtempSync, rmSync } from 'node:fs'
+import { tmpdir } from 'node:os'
+import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
@@ -61,6 +65,10 @@ export interface WorktreeState {
    *  `false` for a bare worktree (no HEAD to compare) and for any other
    *  undeterminable case — never assumed merged. */
   headMergedToMain: boolean
+  /** True when this dirty worktree's content (index + working files, untracked
+   *  non-ignored included) equals the tree of a commit on a remote-tracking ref
+   *  — already pushed, so not unrescued work (issue #1585). */
+  contentPushed: boolean
 }
 
 /** The sweep's verdict for one worktree. */
@@ -75,14 +83,26 @@ export interface Finding {
    *  worktree (issue #1169) apart from one that's actually clean, without
    *  needing the raw `WorktreeState`. */
   mergedToMain: boolean
+  /** Mirrors `WorktreeState.contentPushed`. */
+  contentPushed: boolean
+  /** Why a linked worktree that is dirty/unpushed still passes; `null` when
+   *  nothing needs excusing or nothing excuses it. */
+  excusedBy: Excusal | null
 }
+
+/** The single table of reasons a dirty/unpushed linked worktree passes — read
+ *  by both `sweep()` and the CLI report, so the two can't drift. */
+export const EXCUSALS = {
+  'merged-to-main': 'left dirty/unpushed but already merged into origin/main — harmless cruft (issue #1169)',
+  'content-pushed': 'dirty, but its content equals a pushed commit\'s tree and it has no unpushed commits (issue #1585)',
+} as const
+export type Excusal = keyof typeof EXCUSALS
 
 export interface SweepResult {
   /** Every worktree, primary included — for the visibility report. */
   findings: Finding[]
-  /** The subset that fails the sweep: linked (non-primary) AND (uncommitted
-   *  OR unpushed) AND NOT already merged into `origin/main` (issue #1169).
-   *  Drives the exit code. */
+  /** The subset that fails the sweep: linked (non-primary), uncommitted or
+   *  unpushed, and not excused. Drives the exit code. */
   failures: Finding[]
 }
 
@@ -136,17 +156,29 @@ export function primaryWorktreePath(gitCommonDir: string): string {
  *  merged into `origin/main` (issue #1169: cruft left behind by a
  *  review-subagent checkout collision whose PR has since landed) is reported
  *  in `findings` for visibility but excluded from `failures`, since its work
- *  is already safe. */
+ *  is already safe. `EXCUSALS` lists every such exemption. */
 export function sweep(states: WorktreeState[]): SweepResult {
-  const findings: Finding[] = states.map((s) => ({
-    path: s.path,
-    branch: s.branch,
-    isPrimary: s.isPrimary,
-    uncommitted: s.dirty,
-    unpushed: (s.unpushedCount ?? 0) > 0,
-    mergedToMain: s.headMergedToMain,
-  }))
-  const failures = findings.filter((f) => !f.isPrimary && (f.uncommitted || f.unpushed) && !f.mergedToMain)
+  const findings: Finding[] = states.map((s) => {
+    const uncommitted = s.dirty
+    const unpushed = (s.unpushedCount ?? 0) > 0
+    const needsRescue = !s.isPrimary && (uncommitted || unpushed)
+    const excusedBy: Excusal | null = !needsRescue
+      ? null
+      : s.headMergedToMain
+        ? 'merged-to-main'
+        : s.contentPushed && !unpushed ? 'content-pushed' : null
+    return {
+      path: s.path,
+      branch: s.branch,
+      isPrimary: s.isPrimary,
+      uncommitted,
+      unpushed,
+      mergedToMain: s.headMergedToMain,
+      contentPushed: s.contentPushed,
+      excusedBy,
+    }
+  })
+  const failures = findings.filter((f) => !f.isPrimary && (f.uncommitted || f.unpushed) && f.excusedBy === null)
   return { findings, failures }
 }
 
@@ -204,21 +236,44 @@ function isMergedToMain(head: string, cwd: string): boolean {
   }
 }
 
+/** Snapshots the worktree's content as a tree via a throwaway index copy (the
+ *  real index is untouched), then looks for that tree among remote commits. */
+export function contentMatchesRemoteCommit(path: string): boolean {
+  const dir = mkdtempSync(join(tmpdir(), 'check-worktrees-index-'))
+  try {
+    const index = join(dir, 'index')
+    const realIndex = resolve(path, git(['rev-parse', '--git-path', 'index'], path))
+    if (existsSync(realIndex)) copyFileSync(realIndex, index)
+    const env = { ...process.env, GIT_INDEX_FILE: index }
+    execFileSync('git', ['add', '-A'], { cwd: path, env, stdio: 'ignore' })
+    const tree = execFileSync('git', ['write-tree'], { cwd: path, env, encoding: 'utf8' }).trim()
+    return (tryGit(['log', '--remotes', '--format=%T'], path) ?? '').split('\n').includes(tree)
+  } catch {
+    return false
+  } finally {
+    rmSync(dir, { recursive: true, force: true })
+  }
+}
+
 function readWorktreeStates(cwd = root): WorktreeState[] {
   const porcelain = git(['worktree', 'list', '--porcelain'], cwd)
   const raw = parseWorktreeList(porcelain)
   const commonDir = resolve(cwd, git(['rev-parse', '--git-common-dir'], cwd))
   const primaryPath = primaryWorktreePath(commonDir)
-  return raw.map((wt) => ({
-    path: wt.path,
-    branch: wt.branch,
-    isPrimary: wt.path === primaryPath,
+  return raw.map((wt) => {
     // A bare worktree has no working tree to be dirty or ahead — report it
     // inert rather than shelling out to commands that don't apply to it.
-    dirty: wt.bare ? false : isDirty(wt.path),
-    unpushedCount: wt.bare ? 0 : unpushedCount(wt.path),
-    headMergedToMain: wt.bare ? false : isMergedToMain(wt.head, wt.path),
-  }))
+    const dirty = wt.bare ? false : isDirty(wt.path)
+    return {
+      path: wt.path,
+      branch: wt.branch,
+      isPrimary: wt.path === primaryPath,
+      dirty,
+      unpushedCount: wt.bare ? 0 : unpushedCount(wt.path),
+      headMergedToMain: wt.bare ? false : isMergedToMain(wt.head, wt.path),
+      contentPushed: dirty && contentMatchesRemoteCommit(wt.path),
+    }
+  })
 }
 
 export function runSweep(cwd = root): SweepResult {
@@ -245,13 +300,14 @@ function main(): void {
     console.log(`check-worktrees: primary ${primary.path} [${primary.branch ?? '(detached)'}] — ${state}`)
   }
   const linked = findings.filter((f) => !f.isPrimary)
-  const excused = linked.filter((f) => (f.uncommitted || f.unpushed) && f.mergedToMain)
-  if (excused.length > 0) {
-    console.log(`check-worktrees: ${excused.length} linked worktree(s) left dirty/unpushed but already merged into origin/main — harmless cruft, not failing the sweep (issue #1169):`)
+  for (const [reason, text] of Object.entries(EXCUSALS)) {
+    const excused = linked.filter((f) => f.excusedBy === reason)
+    if (excused.length === 0) continue
+    console.log(`check-worktrees: ${excused.length} linked worktree(s) ${text} — not failing the sweep:`)
     for (const f of excused) console.log(describe(f))
   }
   if (failures.length === 0) {
-    console.log(`check-worktrees: PASS — ${linked.length} linked worktree(s) clean/pushed or already merged into origin/main`)
+    console.log(`check-worktrees: PASS — ${linked.length} linked worktree(s) clean/pushed or excused`)
     return
   }
   console.error(`\ncheck-worktrees: FAIL — ${failures.length} linked worktree(s) have unrescued work (issue #427):\n`)

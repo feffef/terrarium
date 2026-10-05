@@ -1,0 +1,98 @@
+schemaVersion: 1
+session: session_01AbPzFC2mns85YxwqznmJUe
+startedAt: 2026-10-05T16:48:06Z
+endedAt: 2026-10-05T17:23:51Z
+kind: autonomous
+goal: "Run the visitor-loop (homepage focus): three blind visitors, fix consensus findings, build one feature"
+status: completed
+outcome: "Fix PR #1616 and feature PR #1619 both merged; no out-of-remit findings"
+summary: 'Scheduled visitor-loop run, homepage focus (agent-initiated, no human in the loop). Built and served the site, sent sonnet/fable/opus visitors. Consensus (two models each): Commons Search/Timeline site counts disagree with each other and with the "seven sites" claim; Commons and Marquee are unreachable from any footer; the homepage Midden "FRESH" stamp beside a July date reads as contradictory. Fixed all three in #1616 (counts now name their sites, inner-site footers gain Search and Marquee but the homepage footer is left alone because decisions.md keeps Commons and Marquee off the homepage, a visible "Condition" key before the stamp). Dropped consensus-adjacent items that decisions.md rules out (blog panel order on mobile, hero CTA and Start-here strip). Feature chosen: a "Surprise me" footer link to five visitor-praised pages (#1619), because every visitor said the best pages sit deep and a cold lander never finds them. #1616 got a real two-axis review with no important finding; #1619 got only my own diff read, not a parallel /code-review, because it was one file of about fifteen lines. The four owner-correction candidates the script printed were tinkerfund/midden reworks, none a ruling on a visitor-loop PR, so decisions.md is unchanged.'
+prs:
+  - "1616"
+  - "1619"
+docsRead:
+  - path: scripts/chromium-path.ts
+    reason: (no reason given)
+  - path: CLAUDE.md
+    reason: (no reason given)
+skillsUsed:
+  - name: code-review
+    reason: (no reason given)
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: visitor-loop
+    reason: (invoked as a slash command)
+frictions:
+  - description: Tail-pipe guard rejected a command that piped through tail; later a sleep-then-tail wait was also blocked. Cost two retries.
+    solution: Redirect to a log and read it separately; end the turn to wait on background builds.
+    severity: nit
+  - description: Agent calls with run_in_background false were denied by a guard, so the first three-visitor dispatch failed and had to be resent.
+    solution: The visitor-loop Skill says dispatch in one message; add that the run_in_background flag must be omitted.
+    severity: minor
+  - description: Harness attribution reminder says to end commits with Co-Authored-By and Claude-Session lines, but the commit-trailer guard denies hand-written trailers. First commit attempt was blocked.
+    solution: Make the harness reminder defer to the repo guard in this repo, or drop the instruction here.
+    severity: minor
+  - description: Stop hook nagged about uncommitted changes four times while the gate and build were legitimately running; CLAUDE.md says not to push unverified work.
+    solution: Have the stop-git-check hook skip when a background task is still running or the gate log is not yet finished.
+    severity: minor
+  - description: Playwright script in the scratchpad could not resolve playwright-core or top-level await; needed .mts and an absolute import path.
+    solution: Document a copy-paste visitor probe snippet next to preview.ts, or let scratch scripts resolve repo modules.
+    severity: nit
+durationSec: 2146
+models:
+  claude-sonnet-5-5: 108
+toolCounts:
+  Bash: 41
+  Agent: 8
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 2
+  Skill: 3
+  mcp__github__add_issue_comment: 2
+docsReadViaShell:
+  - .agents/skills/visitor-loop/visitor-brief.md
+  - .agents/skills/visitor-loop/decisions.md
+  - docs/adr/0003-agent-operating-model-and-governance.md
+  - docs/agents/pr-workflow.md
+  - docs/adr/0017-provenance-footer-on-agent-authored-content.md
+  - docs/agents/verifying-ui-changes.md
+  - docs/agents/tenant-layers.md
+subagents:
+  - type: general-purpose
+    task: Visitor sonnet
+    model: sonnet
+  - type: general-purpose
+    task: Visitor fable
+    model: fable
+  - type: general-purpose
+    task: Visitor opus
+    model: opus
+  - type: general-purpose
+    task: Visitor sonnet
+    model: sonnet
+  - type: general-purpose
+    task: Visitor fable
+    model: fable
+  - type: general-purpose
+    task: Visitor opus
+    model: opus
+  - type: Explore
+    task: Review standards axis
+  - type: Explore
+    task: Review spec axis
+gitBranch: claude/adoring-galileo-8c2d7c
+entrypoint: remote_trigger
+cliVersion: 2.1.289
+trigger: visitor-loop
+ideas:
+  - "Make the Surprise me destinations data, not a hard-coded list: add a frontmatter flag such as featured on a page and have the footer pick from queryPages, so renamed pages cannot rot the link."
+  - "Journal how-it-works flowchart clips at 390px (fable only; the site's own ideas page already lists it): stack the diagram below 480px or scale the SVG to fit."
+  - "Journal Recent activity cards read as agent jargon (for example Run the scheduled prune-trial Skill): show a plain outcome headline on the card and keep the Skill name secondary."
+  - "Karen post We Told It Not to Lie says In Writing. Twice. in the title but the body says the fourth doc-only rule: reconcile title and body (published post, so needs owner approval)."
+  - "Severity labels differ between the Journal week stats (blocker, majors, lesser) and digests (moderate, minor, trivial): pick one set and use it in both places."
+  - "Midden landing page introduces Trench, Stores, Plainer Cut and Cut with no key: add a two-line legend under the excavation heading."
+  - "Marquee reel promises an original illustration per chapter but shows none: add a thumbnail per chapter."
+  - "Commons Search lists all 272 pages alphabetically before any query: show an empty state or group by site with a few hits each."
+  - "Blog post session log links go to raw YAML on GitHub rather than the rendered Journal session card: link the card first and keep GitHub as a secondary raw link."
+landedBy: Stop

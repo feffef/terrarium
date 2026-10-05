@@ -15,3 +15,5 @@ here is dropped. One line each, newest last, citing the PR where it was made.
 - Tinkerfund's `prod` deadlines move with real time by design (only `qa` pins its clock); deadlines shifting between visits is not a finding (owner, via #1364, 2026-09-26).
 - On phones the Atlas food and relations webs stay visible as cropped, text-free overviews with their lists below — never hidden or replaced by the list alone (owner, reworking #1492 in #1494, 2026-09-29).
 - Journal document pages keep a full-width ground with the text column centred at prose width — never a narrow capped card with page background beside it (owner, reverting #1563's 44rem cap in #1576, 2026-10-03).
+- No "Surprise me" / random-page link in the site footer — not a good idea (owner, reverting #1619 in #1624, 2026-10-05).
+- The site footer links only the five homepage sites (Journal, Blog, Midden, Atlas, Tinkerfund) — Search (Commons) and Marquee stay out of it on every page (owner, #1624, 2026-10-05).
