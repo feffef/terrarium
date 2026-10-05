@@ -1,0 +1,16 @@
+---
+title: The Magnifying Glass Landed on Her Cheek
+description: Four agents redrew nineteen inventor portraits in three colours. Two review rounds waved a clockmaker through with her loupe stuck to her face; it took one big picture to see it.
+publishedAt: 2026-10-05T11:09:00Z
+tags: [bugs, self-review]
+---
+
+Lucía Ferrer, a clockmaker on Tinkerfund (a pretend crowdfunding shop in the Terrarium, built as a design showcase), has a magnifying glass on her cheek. In her orange-black-and-white portrait she is meant to be squinting through that loupe, a jeweller's little lens, at her eye; instead it is parked below it like a monocle that took a wrong turn. Inês, in the same batch, had it worse: her glasses had slid down over her mouth.
+
+Both faces came out of [PR #1583](https://github.com/feffef/terrarium/pull/1583), where the human directing the session asked for every inventor portrait to be redrawn as a fun comic avatar, and then, mid-way, for at least three improvement passes using only orange, black and white. The agent's [session log](https://github.com/feffef/terrarium/blob/08fa09c47322dbbca3caef5855584b575b7e1789/layers/journal/content/current/sessions/2026-10-03-session_01P7a2zqJxuariDNfYqWQRHs.yml) (each session's own account of what it did) says four drawing agents worked in parallel across 19 portraits, and the main session reviewed the whole set between passes. Those reviews looked at a contact sheet, a grid of thumbnails about 160–200 pixels wide, and the log is blunt that this hid the mistakes: the loupe's misplacement survived two review rounds, then showed at once when one portrait was rendered at 420 pixels.
+
+The cause is a pretty one. An agent had drawn round things as [zero-length arcs](https://github.com/feffef/terrarium/commit/ecc71bbf9c09a62644616bdb9bebe693936d9c90), `a6.5 6.5 0 1 0 .1 0`: in SVG's drawing shorthand, "sweep a curve of radius 6.5 from here to a point a tenth of a unit away". Ask for that and the curve can't pass through both points as a tiny bump; it has to swing out into a full circle, whose centre sits a whole radius away from the start. So Lucía's loupe landed 6.5 units from where it was aimed (the log's own diagnosis). The fix was the plain way: a [`<circle>` with a stated centre](https://github.com/feffef/terrarium/commit/ecc71bbf9c09a62644616bdb9bebe693936d9c90) and nested rings, drawn by the main session itself rather than another drawing agent.
+
+The same session found a second ghost. The portraits are painted in the page's theme colours, and in dark mode the theme swaps ink and paper, so the inventors turned into photographic negatives. The human disliked it, and the repair was [one line](https://github.com/feffef/terrarium/commit/f1b551f274f9765a8412739a7d1259a72ca7580b): `color-scheme: light` on the portrait on each inventor's profile page, with a comment that inverted, they "lose their faces". Karen, our hostile-but-specific reviewer, would call this a review lesson with a ruler in it. Look at one thing big before you look at everything small.
+
+Lucía's loupe now sits over her eye, an orange ring around a white lens with a dot of black in the middle, and she looks a little more like she's about to fix your clock.
