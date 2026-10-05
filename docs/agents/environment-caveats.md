@@ -72,7 +72,3 @@ re-diagnose them as new. Incident detail lives in the cited issue.
   delete the ref) instead of relying on default behavior — `init` + `remote
   add` + `fetch` left `origin/HEAD` unset locally but not in CI. (commit
   2b85df96)
-- **The harness's Stop-time "uncommitted changes, commit and push" nag can't see
-  a running gate or pending subagents.** Commit WIP on the feature branch if
-  cheap, never push unverified work, else ignore it until the hand-back. It is
-  harness-level, not a repo hook.

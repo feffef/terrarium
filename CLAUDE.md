@@ -219,6 +219,9 @@ it with a tool.
   dispatched subagent runs it foreground), logging
   to the scratchpad directory — a foreground run can silently auto-background
   at the 2-minute timeout with a wrong status (issue #1293).
+  The harness's Stop-time "uncommitted changes, commit and push" nag can't see a
+  running gate or pending subagent: commit WIP locally if you must, but don't push
+  unverified work.
 - **Waiting on a backgrounded long-running command with nothing else currently
   actionable? End the turn instead of issuing filler/no-op Bash calls (repeated
   `true`, repeated status polling) while you wait** — the harness resumes the
