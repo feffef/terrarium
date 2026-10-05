@@ -83,16 +83,26 @@ export interface Finding {
    *  worktree (issue #1169) apart from one that's actually clean, without
    *  needing the raw `WorktreeState`. */
   mergedToMain: boolean
+  /** Mirrors `WorktreeState.contentPushed`. */
   contentPushed: boolean
+  /** Why a linked worktree that is dirty/unpushed still passes; `null` when
+   *  nothing needs excusing or nothing excuses it. */
+  excusedBy: Excusal | null
 }
+
+/** The single table of reasons a dirty/unpushed linked worktree passes — read
+ *  by both `sweep()` and the CLI report, so the two can't drift. */
+export const EXCUSALS = {
+  'merged-to-main': 'left dirty/unpushed but already merged into origin/main — harmless cruft (issue #1169)',
+  'content-pushed': 'dirty, but its content equals a pushed commit\'s tree and it has no unpushed commits (issue #1585)',
+} as const
+export type Excusal = keyof typeof EXCUSALS
 
 export interface SweepResult {
   /** Every worktree, primary included — for the visibility report. */
   findings: Finding[]
-  /** The subset that fails the sweep: linked (non-primary) AND (uncommitted
-   *  OR unpushed) AND NOT already merged into `origin/main` (issue #1169) AND
-   *  NOT content-equal to a pushed commit (issue #1585).
-   *  Drives the exit code. */
+  /** The subset that fails the sweep: linked (non-primary), uncommitted or
+   *  unpushed, and not excused. Drives the exit code. */
   failures: Finding[]
 }
 
@@ -146,18 +156,29 @@ export function primaryWorktreePath(gitCommonDir: string): string {
  *  merged into `origin/main` (issue #1169: cruft left behind by a
  *  review-subagent checkout collision whose PR has since landed) is reported
  *  in `findings` for visibility but excluded from `failures`, since its work
- *  is already safe. */
+ *  is already safe. `EXCUSALS` lists every such exemption. */
 export function sweep(states: WorktreeState[]): SweepResult {
-  const findings: Finding[] = states.map((s) => ({
-    path: s.path,
-    branch: s.branch,
-    isPrimary: s.isPrimary,
-    uncommitted: s.dirty,
-    unpushed: (s.unpushedCount ?? 0) > 0,
-    mergedToMain: s.headMergedToMain,
-    contentPushed: s.contentPushed,
-  }))
-  const failures = findings.filter((f) => !f.isPrimary && (f.uncommitted || f.unpushed) && !f.mergedToMain && !f.contentPushed)
+  const findings: Finding[] = states.map((s) => {
+    const uncommitted = s.dirty
+    const unpushed = (s.unpushedCount ?? 0) > 0
+    const needsRescue = !s.isPrimary && (uncommitted || unpushed)
+    const excusedBy: Excusal | null = !needsRescue
+      ? null
+      : s.headMergedToMain
+        ? 'merged-to-main'
+        : s.contentPushed && !unpushed ? 'content-pushed' : null
+    return {
+      path: s.path,
+      branch: s.branch,
+      isPrimary: s.isPrimary,
+      uncommitted,
+      unpushed,
+      mergedToMain: s.headMergedToMain,
+      contentPushed: s.contentPushed,
+      excusedBy,
+    }
+  })
+  const failures = findings.filter((f) => !f.isPrimary && (f.uncommitted || f.unpushed) && f.excusedBy === null)
   return { findings, failures }
 }
 
@@ -279,18 +300,14 @@ function main(): void {
     console.log(`check-worktrees: primary ${primary.path} [${primary.branch ?? '(detached)'}] — ${state}`)
   }
   const linked = findings.filter((f) => !f.isPrimary)
-  const excused = linked.filter((f) => (f.uncommitted || f.unpushed) && f.mergedToMain)
-  if (excused.length > 0) {
-    console.log(`check-worktrees: ${excused.length} linked worktree(s) left dirty/unpushed but already merged into origin/main — harmless cruft, not failing the sweep (issue #1169):`)
+  for (const [reason, text] of Object.entries(EXCUSALS)) {
+    const excused = linked.filter((f) => f.excusedBy === reason)
+    if (excused.length === 0) continue
+    console.log(`check-worktrees: ${excused.length} linked worktree(s) ${text} — not failing the sweep:`)
     for (const f of excused) console.log(describe(f))
   }
-  const contentPushed = linked.filter((f) => f.uncommitted && !f.mergedToMain && f.contentPushed)
-  if (contentPushed.length > 0) {
-    console.log(`check-worktrees: ${contentPushed.length} linked worktree(s) dirty but their content equals a pushed commit's tree — not failing the sweep (issue #1585):`)
-    for (const f of contentPushed) console.log(describe(f))
-  }
   if (failures.length === 0) {
-    console.log(`check-worktrees: PASS — ${linked.length} linked worktree(s) clean/pushed, already merged, or content already pushed`)
+    console.log(`check-worktrees: PASS — ${linked.length} linked worktree(s) clean/pushed or excused`)
     return
   }
   console.error(`\ncheck-worktrees: FAIL — ${failures.length} linked worktree(s) have unrescued work (issue #427):\n`)

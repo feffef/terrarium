@@ -1,16 +1,26 @@
 // Unit tests for the worktree sweep's pure core (issue #427): the
 // `git worktree list --porcelain` parser and the pass/fail sweep decision —
-// where a classification bug would hide. The git shell (isDirty,
-// unpushedCount, readWorktreeStates) is a thin wrapper over these, exercised
-// by running the script directly against the real tree
-// (`tsx scripts/check-worktrees.ts`) rather than against fixtures here, since
-// it needs no real worktrees provisioned to be trusted.
+// where a classification bug would hide — plus the git probes with subtle
+// semantics (unpushedCount, contentMatchesRemoteCommit) against throwaway
+// temp repos.
 import { execFileSync } from 'node:child_process'
 import { mkdtempSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { contentMatchesRemoteCommit, parseWorktreeList, primaryWorktreePath, sweep, unpushedCount, type WorktreeState } from '../../scripts/check-worktrees.ts'
+
+function withTempRepo(body: (dir: string, run: (...args: string[]) => string) => void): void {
+  const dir = mkdtempSync(join(tmpdir(), 'check-worktrees-'))
+  try {
+    const run = (...args: string[]) =>
+      execFileSync('git', ['-c', 'user.name=t', '-c', 'user.email=t@t', '-c', 'commit.gpgsign=false', ...args], { cwd: dir, encoding: 'utf8' })
+    run('init', '-q', '-b', 'main')
+    body(dir, run)
+  } finally {
+    rmSync(dir, { recursive: true, force: true })
+  }
+}
 
 describe('parseWorktreeList()', () => {
   it('parses the primary worktree (no locked/prunable, branch present)', () => {
@@ -107,15 +117,15 @@ describe('sweep()', () => {
 
   it('flags a linked worktree with uncommitted changes', () => {
     const { failures } = sweep([state({ dirty: true, unpushedCount: 0 })])
-    expect(failures).toEqual([
-      { path: '/repo/.claude/worktrees/agent-x', branch: 'claude/foo', isPrimary: false, uncommitted: true, unpushed: false, mergedToMain: false, contentPushed: false },
+    expect(failures).toMatchObject([
+      { path: '/repo/.claude/worktrees/agent-x', branch: 'claude/foo', isPrimary: false, uncommitted: true, unpushed: false, mergedToMain: false },
     ])
   })
 
   it('flags a linked worktree with unpushed commits', () => {
     const { failures } = sweep([state({ dirty: false, unpushedCount: 2 })])
-    expect(failures).toEqual([
-      { path: '/repo/.claude/worktrees/agent-x', branch: 'claude/foo', isPrimary: false, uncommitted: false, unpushed: true, mergedToMain: false, contentPushed: false },
+    expect(failures).toMatchObject([
+      { path: '/repo/.claude/worktrees/agent-x', branch: 'claude/foo', isPrimary: false, uncommitted: false, unpushed: true, mergedToMain: false },
     ])
   })
 
@@ -148,8 +158,8 @@ describe('sweep()', () => {
   it('excludes a dirty and unpushed linked worktree from failures when its HEAD is already merged into origin/main (issue #1169)', () => {
     const { findings, failures } = sweep([state({ dirty: true, unpushedCount: 2, headMergedToMain: true })])
     expect(failures).toEqual([])
-    expect(findings).toEqual([
-      { path: '/repo/.claude/worktrees/agent-x', branch: 'claude/foo', isPrimary: false, uncommitted: true, unpushed: true, mergedToMain: true, contentPushed: false },
+    expect(findings).toMatchObject([
+      { path: '/repo/.claude/worktrees/agent-x', branch: 'claude/foo', isPrimary: false, uncommitted: true, unpushed: true, mergedToMain: true },
     ])
   })
 
@@ -161,17 +171,23 @@ describe('sweep()', () => {
   it('excludes a dirty, unmerged linked worktree whose content matches a pushed commit (issue #1585)', () => {
     const { findings, failures } = sweep([state({ dirty: true, contentPushed: true })])
     expect(failures).toEqual([])
-    expect(findings[0]).toMatchObject({ uncommitted: true, mergedToMain: false, contentPushed: true })
+    expect(findings[0]).toMatchObject({ uncommitted: true, mergedToMain: false, contentPushed: true, excusedBy: 'content-pushed' })
+  })
+
+  it('still flags a dirty, unmerged linked worktree whose content matches no pushed commit', () => {
+    const { failures } = sweep([state({ dirty: true, contentPushed: false })])
+    expect(failures).toHaveLength(1)
+  })
+
+  it('still flags matching content when the worktree also carries unpushed commits', () => {
+    const { failures } = sweep([state({ dirty: true, unpushedCount: 1, contentPushed: true })])
+    expect(failures).toHaveLength(1)
   })
 })
 
 describe('contentMatchesRemoteCommit()', () => {
   it('matches dirty content equal to a pushed tree, but not new or untracked content', () => {
-    const dir = mkdtempSync(join(tmpdir(), 'check-worktrees-'))
-    try {
-      const run = (...args: string[]) =>
-        execFileSync('git', ['-c', 'user.name=t', '-c', 'user.email=t@t', '-c', 'commit.gpgsign=false', ...args], { cwd: dir, encoding: 'utf8' })
-      run('init', '-q', '-b', 'main')
+    withTempRepo((dir, run) => {
       writeFileSync(join(dir, 'f'), 'v1')
       run('add', 'f')
       run('commit', '-q', '-m', 'v1')
@@ -185,19 +201,13 @@ describe('contentMatchesRemoteCommit()', () => {
       rmSync(join(dir, 'untracked'))
       writeFileSync(join(dir, 'f'), 'v3')
       expect(contentMatchesRemoteCommit(dir)).toBe(false)
-    } finally {
-      rmSync(dir, { recursive: true, force: true })
-    }
+    })
   })
 })
 
 describe('unpushedCount() with no upstream', () => {
   it('counts only commits on no remote-tracking ref (a HEAD contained in a pushed branch is rescued)', () => {
-    const dir = mkdtempSync(join(tmpdir(), 'check-worktrees-'))
-    try {
-      const run = (...args: string[]) =>
-        execFileSync('git', ['-c', 'user.name=t', '-c', 'user.email=t@t', '-c', 'commit.gpgsign=false', ...args], { cwd: dir, encoding: 'utf8' })
-      run('init', '-q', '-b', 'main')
+    withTempRepo((dir, run) => {
       run('commit', '-q', '--allow-empty', '-m', 'base')
       run('update-ref', 'refs/remotes/origin/main', 'HEAD')
       run('checkout', '-q', '-b', 'pushed')
@@ -209,8 +219,6 @@ describe('unpushedCount() with no upstream', () => {
       expect(unpushedCount(dir)).toBe(0)
       run('commit', '-q', '--allow-empty', '-m', 'unpushed work')
       expect(unpushedCount(dir)).toBe(1)
-    } finally {
-      rmSync(dir, { recursive: true, force: true })
-    }
+    })
   })
 })
