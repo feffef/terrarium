@@ -1,9 +1,9 @@
 // Mechanical backstop for issue #814: `ScheduleWakeup` is valid only inside a
-// `/loop` session's dynamic (self-paced) mode, and two doc-only fixes (#241,
-// #425) failed to stop plain scheduled and interactive sessions reaching for it
-// anyway. Both wrote the rule into `docs/agents/github-integration.md`, which
-// none of the affected sessions had reason to open. This guard, plus CLAUDE.md
-// now carrying the rule in its own right, is the owner's chosen two-layer fix.
+// `/loop` session, and two doc-only fixes (#241, #425) failed to stop plain
+// scheduled and interactive sessions reaching for it anyway. Both wrote the
+// rule into `docs/agents/github-integration.md`, which none of the affected
+// sessions had reason to open. This guard, plus CLAUDE.md now carrying the
+// rule in its own right, is the owner's chosen two-layer fix.
 //
 // Why a call outside `/loop` is not inert: a fired wakeup delivers a spurious
 // turn that can re-run the session's whole prompt. Two of the recorded misuses
@@ -111,11 +111,10 @@ function skillsInvokedBy(rec: Record<string, unknown>): string[] {
  *  readable transcript) and an empty transcript are both `undeterminable` —
  *  a real session always has turns, so nothing can be established from neither.
  *
- *  Deliberately broader than "`/loop` DYNAMIC mode": any `/loop` invocation
- *  reads as `loop`. A fixed-interval loop is paced by the harness and would not
- *  call the tool anyway, so widening here only avoids false denials; narrowing
- *  would need the command's arguments, which the transcript does not reliably
- *  carry. */
+ *  Any `/loop` invocation reads as `loop`, whatever its pacing. A
+ *  fixed-interval loop is paced by the harness and would not call the tool
+ *  anyway, so counting it too only avoids false denials; excluding it would need
+ *  the command's arguments, which the transcript does not reliably carry. */
 export function detectSessionMode(records: Record<string, unknown>[] | null | undefined): SessionMode {
   if (!records || records.length === 0) return 'undeterminable'
   for (const rec of records) {
@@ -154,7 +153,7 @@ export function formatGuardMessage(f: LoopToolFinding): string {
       : `this session's mode could not be determined (no readable transcript), and the guard fails CLOSED`
   return (
     `Blocked by the /loop-only tool guard (issue #814): \`${f.tool}\` is valid only inside a \`/loop\` ` +
-    `session's dynamic, self-paced mode — and ${why}.\n\n` +
+    `session — and ${why}.\n\n` +
     `Outside \`/loop\` this is not a harmless no-op: a fired wakeup delivers a spurious turn that can ` +
     `re-run this session's whole prompt (two recorded cases — an unwanted "autonomous loop tick" that had ` +
     `to be diagnosed and stopped, and a wakeup that would have re-sent \`/audit-docs\` mid-PR-review).\n\n` +
