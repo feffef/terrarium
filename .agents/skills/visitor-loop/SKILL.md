@@ -77,12 +77,14 @@ Merge the three reports into one tally in your scratchpad:
   resolve it in the tally: a rejected approach or standing preference becomes
   one new line in `decisions.md` (committed with step 4's PR); anything else
   is marked *not a ruling (why)*. Then drop anything [`decisions.md`](decisions.md) rules out,
-  anything an open or closed issue/PR already covers (search first), and
+  anything an open or closed issue/PR already covers (search first; record
+  each result in the tally — the match by number, or the query and *no match*), and
   anything already logged as an idea in the last week
   (`pnpm exec tsx scripts/ideas.ts gather --days 7`).
 
 Done when every candidate the script printed has a `decisions.md` line or a
 *not a ruling (why)* (an empty `[]` is the only "no corrections"); every
+feature idea and every *fix* or *out of remit* finding has its search result; every
 reported finding is in the tally, marked consensus or single; every consensus
 finding is marked *fix*, *dropped (why)*, or *out of remit*; and exactly one
 feature is chosen, with a line on why it beat the others.
@@ -108,8 +110,10 @@ Only after step 4's PR has merged or been escalated: branch
 `claude/visitor-loop-feature-<YYYY-MM-DD>` from the fresh `origin/main` and
 build the chosen feature — smallest version that a visitor would notice, in
 the site's existing voice and design. Tests where the Tenant already has them.
-Review and land it the same way as step 4, with the chosen idea as the spec.
-Done when the feature is visible on the rendered page, the last review has no
+Its body states the feature's search result and names any related issue, with a
+closing keyword only per `docs/agents/issue-tracker.md`. Review and land it the
+same way as step 4, with the chosen idea as the spec. Done when the feature is
+visible on the rendered page, the PR body has that search line, the last review has no
 important finding left unfixed, and the PR is merged or escalated.
 
 ## 6. File the rest, then close
