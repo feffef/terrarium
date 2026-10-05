@@ -66,6 +66,12 @@ The subagent cannot see this session's context, so the brief is self-contained:
   name.** Git refuses a second branch checkout across worktrees; the observed
   failure mode is the subagent falling back to committing in whichever
   checkout it *can* write to instead of failing loudly (issue #1169).
+- **Impl agents pushing to the branch you have checked out:** detach your
+  checkout before dispatch (re-sync from the remote after hand-back); each agent
+  bases on a freshly fetched `origin/<branch>` and pushes `HEAD:<branch>`
+  without creating or resetting a same-named local branch. Older git lets a
+  worktree's `checkout -B` move your ref, leaving your tree a reversed diff of
+  its commits (issue #1585).
 - **Commit + push before stopping, even mid-gate.** A subagent can end its turn —
   or die to an external "session limit" abort — leaving finished work **stranded**:
   uncommitted, and invisible to the orchestrator.

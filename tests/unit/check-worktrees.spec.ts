@@ -6,11 +6,11 @@
 // (`tsx scripts/check-worktrees.ts`) rather than against fixtures here, since
 // it needs no real worktrees provisioned to be trusted.
 import { execFileSync } from 'node:child_process'
-import { mkdtempSync, rmSync } from 'node:fs'
+import { mkdtempSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
-import { parseWorktreeList, primaryWorktreePath, sweep, unpushedCount, type WorktreeState } from '../../scripts/check-worktrees.ts'
+import { contentMatchesRemoteCommit, parseWorktreeList, primaryWorktreePath, sweep, unpushedCount, type WorktreeState } from '../../scripts/check-worktrees.ts'
 
 describe('parseWorktreeList()', () => {
   it('parses the primary worktree (no locked/prunable, branch present)', () => {
@@ -92,6 +92,7 @@ const state = (overrides: Partial<WorktreeState> = {}): WorktreeState => ({
   dirty: false,
   unpushedCount: 0,
   headMergedToMain: false,
+  contentPushed: false,
   ...overrides,
 })
 
@@ -107,14 +108,14 @@ describe('sweep()', () => {
   it('flags a linked worktree with uncommitted changes', () => {
     const { failures } = sweep([state({ dirty: true, unpushedCount: 0 })])
     expect(failures).toEqual([
-      { path: '/repo/.claude/worktrees/agent-x', branch: 'claude/foo', isPrimary: false, uncommitted: true, unpushed: false, mergedToMain: false },
+      { path: '/repo/.claude/worktrees/agent-x', branch: 'claude/foo', isPrimary: false, uncommitted: true, unpushed: false, mergedToMain: false, contentPushed: false },
     ])
   })
 
   it('flags a linked worktree with unpushed commits', () => {
     const { failures } = sweep([state({ dirty: false, unpushedCount: 2 })])
     expect(failures).toEqual([
-      { path: '/repo/.claude/worktrees/agent-x', branch: 'claude/foo', isPrimary: false, uncommitted: false, unpushed: true, mergedToMain: false },
+      { path: '/repo/.claude/worktrees/agent-x', branch: 'claude/foo', isPrimary: false, uncommitted: false, unpushed: true, mergedToMain: false, contentPushed: false },
     ])
   })
 
@@ -148,13 +149,45 @@ describe('sweep()', () => {
     const { findings, failures } = sweep([state({ dirty: true, unpushedCount: 2, headMergedToMain: true })])
     expect(failures).toEqual([])
     expect(findings).toEqual([
-      { path: '/repo/.claude/worktrees/agent-x', branch: 'claude/foo', isPrimary: false, uncommitted: true, unpushed: true, mergedToMain: true },
+      { path: '/repo/.claude/worktrees/agent-x', branch: 'claude/foo', isPrimary: false, uncommitted: true, unpushed: true, mergedToMain: true, contentPushed: false },
     ])
   })
 
   it('still flags a dirty linked worktree whose HEAD is NOT merged into origin/main', () => {
     const { failures } = sweep([state({ dirty: true, headMergedToMain: false })])
     expect(failures).toHaveLength(1)
+  })
+
+  it('excludes a dirty, unmerged linked worktree whose content matches a pushed commit (issue #1585)', () => {
+    const { findings, failures } = sweep([state({ dirty: true, contentPushed: true })])
+    expect(failures).toEqual([])
+    expect(findings[0]).toMatchObject({ uncommitted: true, mergedToMain: false, contentPushed: true })
+  })
+})
+
+describe('contentMatchesRemoteCommit()', () => {
+  it('matches dirty content equal to a pushed tree, but not new or untracked content', () => {
+    const dir = mkdtempSync(join(tmpdir(), 'check-worktrees-'))
+    try {
+      const run = (...args: string[]) =>
+        execFileSync('git', ['-c', 'user.name=t', '-c', 'user.email=t@t', '-c', 'commit.gpgsign=false', ...args], { cwd: dir, encoding: 'utf8' })
+      run('init', '-q', '-b', 'main')
+      writeFileSync(join(dir, 'f'), 'v1')
+      run('add', 'f')
+      run('commit', '-q', '-m', 'v1')
+      run('update-ref', 'refs/remotes/origin/main', 'HEAD')
+      writeFileSync(join(dir, 'f'), 'v2')
+      run('commit', '-q', '-am', 'v2')
+      writeFileSync(join(dir, 'f'), 'v1')
+      expect(contentMatchesRemoteCommit(dir)).toBe(true)
+      writeFileSync(join(dir, 'untracked'), 'x')
+      expect(contentMatchesRemoteCommit(dir)).toBe(false)
+      rmSync(join(dir, 'untracked'))
+      writeFileSync(join(dir, 'f'), 'v3')
+      expect(contentMatchesRemoteCommit(dir)).toBe(false)
+    } finally {
+      rmSync(dir, { recursive: true, force: true })
+    }
   })
 })
 
