@@ -32,7 +32,9 @@ Classify every surface **before** editing.
   `layers/<tenant>/CONTEXT.md`, our own Skills (not keyed in
   `skills-lock.json`) with their sibling files, and the current journal's
   facing pages,
-  `layers/journal/content/current/pages/{architecture,highlights,history,how-it-works,index,real-and-invented}.md`.
+  `layers/journal/content/current/pages/{architecture,highlights,history,how-it-works,index,real-and-invented}.md`,
+  and Skill Inventory entries (`layers/journal/content/current/skills/*.yml`;
+  never an `importance` grade, which moves only on ADR-0015's evidence rule).
   Audit the source `.md`, not the render (the dashboard renders only part of
   `index.md`; its source still counts).
 - **Historical** — the append-only record: `docs/adr/*`, journal digests
