@@ -11,8 +11,8 @@ role: >-
   gate within its ADR-0003 remit. It aims to remember the owner's review
   rulings via `decisions.md`, so a rejected idea stays rejected — that memory
   step failed every run (5/5) under its first, prose-only fix; its
-  script-backed replacement passed its first live test, though a known
-  branch-matching gap still limits its coverage (see observations).
+  script-backed replacement passed its first live test, and the script now
+  recognises visitor-loop PRs by branch or title prefix (#1515).
 observations:
   - date: 2026-09-27
     note: >-

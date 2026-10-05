@@ -23,7 +23,9 @@ import { getJson, parseOwnerRepo } from './list-open-issues.ts'
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 
 const DECISIONS = '.agents/skills/visitor-loop/decisions.md'
+// The harness pins most runs to a session branch, so the title is the stable marker (issue #1515).
 const VISITOR_LOOP_BRANCH = /^claude\/visitor-loop-/
+const VISITOR_LOOP_TITLE = /^visitor-loop[ (]/i
 /** How long after a visitor-loop PR merges a file overlap still counts as rework. */
 const OVERLAP_WINDOW_MS = 3 * 86_400_000
 const EXCERPT_CHARS = 200
@@ -68,6 +70,10 @@ export function mentions(text: string): number[] {
   return [...new Set([...refs].map((m) => Number(m[1])))]
 }
 
+export function isVisitorLoopPr(p: Pick<Pr, 'headRef' | 'title'>): boolean {
+  return VISITOR_LOOP_BRANCH.test(p.headRef) || VISITOR_LOOP_TITLE.test(p.title)
+}
+
 function isHuman(c: Pick<Comment, 'body' | 'isBot'>): boolean {
   return !c.isBot && c.body.trim() !== '' && !isAiAuthored(c.body)
 }
@@ -78,7 +84,7 @@ function excerpt(text: string): string {
 
 export function findCandidates(since: string, prs: Pr[], comments: Comment[]): Candidate[] {
   const sinceMs = Date.parse(since)
-  const visitorPrs = prs.filter((p) => VISITOR_LOOP_BRANCH.test(p.headRef))
+  const visitorPrs = prs.filter(isVisitorLoopPr)
   const visitorNumbers = new Set(visitorPrs.map((p) => p.number))
   const out: Candidate[] = []
 
@@ -168,6 +174,10 @@ function mergeFiles(sha: string | null, cwd: string): string[] {
   }
 }
 
+function isVisitorLoopPull(p: RawPull): boolean {
+  return isVisitorLoopPr({ headRef: p.head.ref, title: p.title })
+}
+
 function toPr(p: RawPull, cwd: string): Pr {
   return {
     number: p.number,
@@ -209,7 +219,7 @@ export function ownerCorrections(since: string | undefined, cwd = root): Candida
     ...allPages<RawComment>(`${repo}/issues/comments?${sinceQuery}`, cwd).map((c) => ({ ...c, thread: threadNumber(c.issue_url!) })),
     ...allPages<RawComment>(`${repo}/pulls/comments?${sinceQuery}`, cwd).map((c) => ({ ...c, thread: threadNumber(c.pull_request_url!) })),
     ...rawPulls
-      .filter((p) => VISITOR_LOOP_BRANCH.test(p.head.ref) && Date.parse(p.updated_at) > Date.parse(cutoff))
+      .filter((p) => isVisitorLoopPull(p) && Date.parse(p.updated_at) > Date.parse(cutoff))
       .flatMap((p) => allPages<RawComment>(`${repo}/pulls/${p.number}/reviews?`, cwd).map((r) => ({ ...r, thread: p.number }))),
   ]
 
@@ -251,7 +261,7 @@ export function ownerCorrections(since: string | undefined, cwd = root): Candida
       if (/HTTP 404|Not Found/.test(String(err))) continue // #n is an issue, not a PR
       throw err
     }
-    if (VISITOR_LOOP_BRANCH.test(p.head.ref)) prs.push(toPr(p, cwd))
+    if (isVisitorLoopPull(p)) prs.push(toPr(p, cwd))
   }
   return findCandidates(cutoff, prs, comments)
 }
