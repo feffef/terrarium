@@ -103,8 +103,8 @@ when something rides outside that scope):
 
 1. Run `pnpm gate:scoped` (ADR-0004; CLAUDE.md's **Self-verification** section
    owns what it runs). Done when it's green.
-2. Commit (one run rides one commit/PR), push with retry, and open **one
-   gated PR** scoped to that Skill's own diff.
+2. Commit, push with retry, and open **one gated PR** scoped to that Skill's
+   own diff — one per run unless the Skill's own SKILL.md names more.
 3. Subscribe on open and land via this doc's recipe once green.
 4. **At PR-open, invoke `close-session`** — your first log (`in-review`).
 5. If the gate is red for a reason that isn't yours, or anything outside the

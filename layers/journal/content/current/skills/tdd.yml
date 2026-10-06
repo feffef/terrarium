@@ -3,6 +3,7 @@ category: general-engineering
 importance: supporting
 installedSha256: cb01f66bebfaa25fa1f88e6b7e769cd9fd9f35b1120b8563749820738814c927
 role: >-
-  Test-first discipline for the generator, isolation, and app logic that the
-  safety gate protects. Reach for it when adding behaviour to those surfaces.
+  Test-first discipline for the manifest expansion, isolation, and app logic
+  that the safety gate protects. Reach for it when adding behaviour to those
+  surfaces.
 observations: []

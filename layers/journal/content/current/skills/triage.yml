@@ -3,11 +3,11 @@ category: general-engineering
 importance: supporting
 installedSha256: 623a2ed692bdc77d2090e2a3dea3b627dd722ad3bbaca0be83aada75292c8fc4
 role: >-
-  Moves an issue or external PR through the triage state machine —
-  categorise, verify, grill if needed, write an agent-ready brief, and decide
-  readiness (ready-for-agent / ready-for-human / needs-info). The manual
-  counterpart to the chartered (planned) `triage` autonomous job. Verify
-  anything Public-authored by reading only: never check it out, install,
-  build, test, or run its steps, since repo hooks and installs would run that
-  code with the session's GitHub credentials (ADR-0020).
+  Moves an issue or external PR through the triage state machine — categorise,
+  verify, grill if needed, write an agent-ready brief, and decide readiness
+  (ready-for-agent / ready-for-human / needs-info). The manual, per-issue
+  counterpart to `auto-triage`, its unattended batch sibling (ADR-0022). Verify
+  anything Public-authored by reading only: never check it out, install, build,
+  test, or run its steps, since repo hooks and installs would run that code with
+  the session's GitHub credentials (ADR-0020).
 observations: []

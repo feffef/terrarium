@@ -3,10 +3,8 @@ category: general-engineering
 importance: peripheral
 installedSha256: 551adca942227b44192edba88acd4e8db911f0121ce58ad16944ccf6a896a74a
 role: >-
-  The reference standard for authoring Skills, per `codify`'s planned remit.
-  Pull remains inconsistent but has moved past judgement-only use: it has now
-  framed an actual pair of new Skills being authored, not just informed a
-  decision about one.
+  The reference standard for authoring Skills. Pull is inconsistent, but beyond
+  judgement calls it has now framed the authoring of a pair of new Skills.
 observations:
   - date: 2026-09-25
     note: >-

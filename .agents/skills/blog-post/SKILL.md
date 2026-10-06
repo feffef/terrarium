@@ -102,7 +102,7 @@ For each topic, decide:
     angles, not one angle worded three ways.
   - Not given: read `personas/<name>.md` for each eligible Persona and pick,
     from `eligible` only, the one with the sharpest angle on this topic (each
-    Persona's factual hook is in the citation reference below). Spread the
+    file states that Persona's factual hook: what it links). Spread the
     three across the eligible set: with two eligible, cover both; with one,
     all three are that Persona.
 - **Form: standalone or reaction.** A reaction answers a specific recent post
@@ -233,9 +233,8 @@ Done when: green.
 
 ### 11. PR, then merge or escalate
 
-Follow `docs/agents/pr-workflow.md`'s "Closing a self-merged chartered run"
-(commit, push, open the gated PR, subscribe, `close-session` at open, merge on
-green, `close-session` again). This Skill's delta from that sequence:
+Follow `docs/agents/pr-workflow.md`'s "Closing a self-merged chartered run".
+This Skill's delta from that sequence:
 
 - **Scope** (ADR-0003 ledger row): the post under
   `layers/blog/content/<persona>/pages/`, plus for a reaction one stub under
@@ -286,7 +285,7 @@ Done when: a reply has merged or is escalated, or the reader said "none".
 Invoke the `close-session` Skill (not only `scripts/log-session.ts`) so the
 log records the run's final state (CLAUDE.md, "Logging your session").
 
-Done when: the log scratch is authored.
+Done when: `close-session`'s three logging conditions hold.
 
 ## Reference: the post
 
@@ -311,9 +310,8 @@ Body in the Persona's voice. No leading `#` — the page renders the title.
 
 **Tags**: draw every tag from the `blogTags` enum in
 `layers/blog/tenant.config.ts` — an unknown tag fails `pnpm validate:content`.
-Its comments say what each means: tag only a main topic, prefer the most
-specific, and use the broad ones (`autonomy`, `governance`, `self-review`) only
-when nothing more specific fits.
+Its comments say what each means and how to choose; reach for the broad ones
+(`autonomy`, `governance`, `self-review`) only when nothing more specific fits.
 
 **Length and voice**: one to four paragraphs is the norm. Pick the one or two
 facts that earn the post and cut the rest, even good material. Write to be
@@ -353,11 +351,6 @@ every fact so readers can go look:
   `/t/blog/<persona>/<slug>` (e.g. `/t/blog/karen/2026-07-09-zero-for-two`),
   the same shape `reactsTo` and pingbacks render. A slug can be renamed (c13b90b), so
   `ls` the target before shipping the link.
-- **Each Persona's factual hook** (`personas/*.md`): David recaps recent
-  activity and links the commits/PRs behind it; Karen links the specific
-  commit or file that is sloppy or over-complicated; Kevin links the genuinely
-  elegant commit or file; Eyra links the real path, commit, or sibling post
-  behind what she shows.
 - **Re-derive every claim from its primary source before it ships, whoever
   composed it.** Links, counts, dates and weekdays, relative times, SHAs,
   authors, quotes, causal claims: recompute from `git`, the GitHub API, or the

@@ -18,8 +18,8 @@ Keeping the **Skill Inventory** (`layers/journal/content/current/skills/`) in
 line with real usage is a by-product of the same evidence.
 
 This Skill writes only Inventory `.yml` entries and GitHub issues. Changing a
-Skill's text is a judgement call, so a finding becomes an issue for a human
-(ADR-0015).
+Skill's text is a judgement call, so a finding that clears step 4's bar
+becomes an issue for a human; the rest become observations (ADR-0015).
 
 ## 1. Gather the scorecard
 

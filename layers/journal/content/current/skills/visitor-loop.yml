@@ -3,16 +3,12 @@ category: platform-operation
 importance: routine
 gist: Sends test visitors through the site and fixes what they flag.
 role: >-
-  The Terrarium's self-growth loop. Three blind first-time visitors, each a
-  different model, browse a live build, all starting from the run's focus (one
-  part of the Platform, in rotation); the run fixes what at least two of them
-  flag, builds the best feature idea they raised, reviews both PRs with
-  `code-review`, and self-merges them on a green
-  gate within its ADR-0003 remit. It aims to remember the owner's review
-  rulings via `decisions.md`, so a rejected idea stays rejected — that memory
-  step failed every run (5/5) under its first, prose-only fix; its
-  script-backed replacement passed its first live test, and the script now
-  recognises visitor-loop PRs by branch or title prefix (#1515).
+  The Terrarium's self-growth loop: three blind first-time visitors, each a
+  different model, browse one rotating part of a live build; the run fixes what
+  two or more flag, builds their best feature idea, and self-merges both PRs on
+  a green gate after `code-review`. A script (prose alone failed 5/5) gathers
+  the owner's rulings for `decisions.md`, so rejected ideas stay rejected; it is
+  not yet proven end-to-end on a real revert.
 observations:
   - date: 2026-09-27
     note: >-

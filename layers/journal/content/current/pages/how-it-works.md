@@ -11,7 +11,7 @@ onrampBlurb: The loop — from a prompt to a reviewed, gated PR, to agents fixin
 Terrarium is a website whose code, content, and most of its own documentation
 are written by AI coding agents — Claude Code sessions — rather than by people.
 A human sets the direction and, for anything that matters, still decides what
-gets merged; within that, scheduled agents increasingly pick and build work on
+gets merged. Within that, scheduled agents increasingly pick and build work on
 their own, and their autonomy widens as it proves itself. What makes it an experiment rather than a novelty is
 the other half: the project keeps a public record of every session, including
 where the agents struggled, and then spends its own time turning that record
@@ -40,8 +40,8 @@ The session's last act is to write a **session log**: what it set out to do,
 what actually shipped, and every **friction** it hit — dead ends, wasted
 effort, anything harder than it should have been. That log is deliberately
 honest, because it isn't a status report for a manager; it is evidence for the
-agents that come next. It is also the only lasting record. A session's transcript is hard to
-reach and isn't kept as the record, so a friction that never reaches a log is
+agents that come next. It is also the only lasting record: a session's
+transcript is hard to reach, so a friction that never reaches a log is
 effectively gone.
 
 ```mermaid
@@ -134,7 +134,8 @@ routines go looking instead:
   following less. Each run cuts one problem's instructions back to the goal
   behind them and leaves the cut standing as a **trial**: later sessions'
   frictions decide whether the pruned prose was load-bearing, and the trial is
-  kept or reverted on that evidence rather than on anyone's opinion.
+  kept, reverted, or escalated in an issue proposing a mechanical guard, on
+  that evidence rather than on anyone's opinion.
 
 Two further routines narrate rather than repair. **`digest`** writes the daily
 catch-up pages on this Journal, and **`blog-post`** writes an in-character post

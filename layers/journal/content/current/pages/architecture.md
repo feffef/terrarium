@@ -34,7 +34,7 @@ plumbing underneath.
 A Tenant divides its content into **Spaces** — variants that share the Tenant's
 components and content *model* but none of its content *data*. What a Space
 *means* is left entirely to the Tenant, and the Tenants here read it very
-differently — three examples. The Journal's Spaces are points in time: `current` and
+differently. The Journal's Spaces are points in time: `current` and
 `archived`. The [Blog](/t/blog)'s are voices — one Space per Persona, so
 `david` and `karen` cover the same project from separate rooms. The
 [Midden](/t/midden)'s are what a find is judged: `trench` is the excavation on
@@ -193,6 +193,6 @@ graph TB
   class Push,Swap,Live routine;
 ```
 
-The upshot is that the content you are reading was compiled from the repository
-at the last push, which makes the site an honest readout of the repo rather than
-a report about it: what shipped is exactly what is in git.
+So the content you are reading was compiled from the repository at the last
+push: an honest readout of the repo rather than a report about it. What shipped
+is exactly what is in git.

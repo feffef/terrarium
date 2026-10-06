@@ -3,10 +3,9 @@ category: general-engineering
 importance: peripheral
 installedSha256: 77f3cf31bc99b2f49af943222526531fcc9fc41d047626d3640e875e85af3e84
 role: >-
-  Drives hard-bug/perf-regression diagnosis via a red-then-green reproduction
-  loop before any fix is proposed. The formal loop is valuable once a bug
-  resists a first-pass theory, but real hard-bug sessions in this repo
-  consistently resolve without invoking it, root-causing ad hoc instead —
-  little observed pull even in sessions squarely in its domain. Treat as a
-  reference to reach for, not a step real hard bugs actually take here.
+  Drives hard-bug/perf-regression diagnosis through a red-then-green
+  reproduction loop before any fix is proposed. The loop helps once a bug
+  resists a first theory, but hard-bug sessions here consistently root-cause ad
+  hoc without it, even squarely in its domain. Treat it as a reference to reach
+  for, not a step hard bugs actually take here.
 observations: []

@@ -3,19 +3,11 @@ category: platform-operation
 importance: routine
 gist: Turns agents' logged annoyances into filed and fixed bugs.
 role: >-
-  The consuming half of the self-improvement loop `log-session` feeds, and the
-  first place the project's autonomy actually closes end-to-end: it reads the
-  last 3 days of session logs, screens out already-fixed frictions, and turns the rest
-  into up to 10 issues (at most 2 hard) — grouping related frictions where it
-  helps. It dispatches Sonnet impl agents to open gated PRs, then acts as the
-  ADR-0003 mid-term review-agent: it code-reviews each sibling-authored PR against
-  the ADR-0004 gate and merges it autonomously (or amends small fixes first),
-  always leaving a review comment as an audit trace, and escalates to a human only
-  when a change is genuinely high-risk (new dependency, untested/untestable
-  behaviour, or a human-only surface). Regressions — a friction back after its fix
-  merged — are flagged as their own alerting issue, never re-fixed blindly. No
-  longer purely manual — it also fires on a scheduled Routine; reach for it on demand
-  when frictions have piled up and you want them retired in a batch.
+  The consuming half of the self-improvement loop `log-session` feeds, where the
+  project's autonomy first closes end-to-end. It picks up to 10 logged frictions
+  to fix (at most 2 hard, the only selections filed as issues), dispatches impl
+  agents, then reviews and merges their gated PRs itself, escalating only
+  genuinely high-risk changes. Reach for it when frictions pile up.
 observations:
   - date: 2026-09-28
     note: >-

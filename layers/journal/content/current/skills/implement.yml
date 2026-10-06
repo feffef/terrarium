@@ -4,8 +4,8 @@ importance: supporting
 installedSha256: 6d3fd9e83b8f36e5213854779db49b256a457a7ebb4a503e53fa7dcff696adc3
 role: >-
   Drives end-to-end implementation of an already-triaged, green-lit issue via
-  `/implement`. Adoption is inconsistent, not reliable yet — used in some of
-  this window's code-landing sessions but skipped in most others.
+  `/implement`. Adoption is inconsistent: used in some of this window's
+  code-landing sessions, skipped in most.
 observations:
   - date: 2026-09-25
     note: >-

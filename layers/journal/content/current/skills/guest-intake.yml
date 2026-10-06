@@ -6,7 +6,7 @@ role: >-
   The intake half of the guest-demo pipeline (ADR-0023): runs a bounded,
   GitHub-comment requirements-refinement session with each guest, borrowing
   `grilling` and `domain-modeling`'s voice, then hands off to `guest-build` via
-  `ready-for-agent`. Essential whenever the guest pipeline is actually
-  running — a bounded, owner-chosen demo window, not standing operation — so
-  its rarity reflects the window's rarity, not the Skill's value within it.
+  `ready-for-agent`. Essential while the guest pipeline runs — only in a
+  bounded, owner-chosen demo window, not standing operation — so it is rare
+  because the window is, not because it matters less there.
 observations: []
