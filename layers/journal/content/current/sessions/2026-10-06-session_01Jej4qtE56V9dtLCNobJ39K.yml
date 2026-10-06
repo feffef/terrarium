@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01Jej4qtE56V9dtLCNobJ39K
 startedAt: 2026-10-06T05:08:08Z
-endedAt: 2026-10-06T06:19:42Z
+endedAt: 2026-10-06T19:35:37Z
 kind: interactive
 goal: Explain why audit-docs left most concision proposals unapplied, then fix the Skill and dry-run it
 status: in-review
 outcome: PR 1632 (concision rotation, hard checker rule, checker-text-only fixes) green, awaiting review; two dry runs, gates green, fixes not shipped
-summary: "Human-instructed throughout. The user asked me to explain, from the full transcript, why the 2026-10-06 audit-docs run (session_01L6ePb5aMsH4u53XnEs7FLQ, PR 1631) left most concision proposals unapplied: 36 proposed, 1 applied, because briefs capped reviewers at about 10 findings, two agents split 40+ files, and no checker ran. The user then asked twice to adjust the Skill and dry-run it, choosing among options I offered each time. Round 1 (PR 1632): rotate one concision family per run with no cap, and only a checker's CONFIRMED is applied. Dry run 1 (family 4): 56 findings, 38 CONFIRMED, 15 CONFIRMED-BUT, 3 WRONG, 53 edits, full gate green; it exposed an octal bug in my formula (fixed) and two fixer-written unchecked edits. Round 2: fixers apply only checker text and return gaps to a checker, out-of-lens findings join the pool, plus three confirmed audit-docs fixes. Dry run 2 (family 4 again, by the user's choice): 67 findings, 22 CONFIRMED, 35 CONFIRMED-BUT, 9 WRONG, 1 CONFLICT, 56 edits with zero fixer-written text, full gate green. Two checker errors were caught by routing evidence back to the same checker; one of them (last_fired_at) was a wrong fix dry run 1 had applied. Patches for both dry runs are in the scratchpad, not shipped."
+summary: "Human-instructed throughout. The user asked me to explain, from the full transcript, why the 2026-10-06 audit-docs run (session_01L6ePb5aMsH4u53XnEs7FLQ, PR 1631) left most concision proposals unapplied: 36 proposed, 1 applied, because briefs capped reviewers at about 10 findings, two agents split 40+ files, and no checker ran. The user then asked twice to adjust the Skill and dry-run it, choosing among options I offered each time. Round 1 (PR 1632): rotate one concision family per run with no cap, and only a checker's CONFIRMED is applied. Dry run 1 (family 4): 56 findings, 38 CONFIRMED, 15 CONFIRMED-BUT, 3 WRONG, 53 edits, full gate green; it exposed an octal bug in my formula (fixed) and two fixer-written unchecked edits. Round 2: fixers apply only checker text and return gaps to a checker, out-of-lens findings join the pool, plus three confirmed audit-docs fixes. Dry run 2 (family 4 again, by the user's choice): 67 findings, 22 CONFIRMED, 35 CONFIRMED-BUT, 9 WRONG, 1 CONFLICT, 56 edits with zero fixer-written text, full gate green. Two checker errors were caught by routing evidence back to the same checker; one of them (last_fired_at) was a wrong fix dry run 1 had applied. Patches for both dry runs are in the scratchpad, not shipped. On the user's pick, dry run 2's seven checker-confirmed audit-docs self-fixes were then applied verbatim to PR 1632."
 prs:
   - "1632"
 docsRead:
@@ -111,14 +111,14 @@ frictions:
   - description: Checkers in different dry runs disagreed on the same facts (triage (planned), MCP prefix, trial territory of a bullet), so a verdict is not fully repeatable.
     solution: Have checkers cite the primary-source line for each verdict so disagreements are quick to resolve.
     severity: minor
-durationSec: 4294
+durationSec: 52049
 models:
-  claude-opus-5-5: 285
+  claude-opus-5-5: 305
 toolCounts:
-  Bash: 66
-  ToolSearch: 3
+  Bash: 71
+  ToolSearch: 4
   mcp__claude-code-remote__list_events: 14
-  AskUserQuestion: 2
+  AskUserQuestion: 3
   Read: 1
   Agent: 23
   mcp__github__search_pull_requests: 1
@@ -126,8 +126,9 @@ toolCounts:
   mcp__claude-code-remote__subscribe_pr_activity: 1
   Skill: 3
   ReadNotifications: 8
-  mcp__github__update_pull_request: 3
+  mcp__github__update_pull_request: 4
   SendMessage: 3
+  mcp__github__pull_request_read: 1
 docsReadViaShell:
   - .agents/skills/audit-docs/SKILL.md
   - docs/agents/pr-workflow.md
