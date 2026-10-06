@@ -144,8 +144,7 @@ reaches for on its own.
 2. **One subagent per issue** (parallel — the eligible set is usually small,
    since a ticket only surfaces when a human has said something since the last
    AI action on it). Brief each with `/triage`'s per-issue rules plus
-   the read-only rule, the brave/uncertainty line, the wayfinder overlay above, and
-whether the sweep is attended or unattended. Each subagent
+   the read-only rule, the brave/uncertainty line, and the wayfinder overlay above. Each subagent
    verifies every claim against a primary source in the repo, then applies its own
    labels and posts its own single comment (disclaimer + ADR-0017 provenance). A label
    update **replaces** the set, so each passes the complete final label set and
@@ -155,7 +154,7 @@ whether the sweep is attended or unattended. Each subagent
    action`). Where a `ready-for-agent` issue shares a file with any other open
    `ready-for-agent` issue (not only this run's), say so, and mark the
    higher-numbered one blocked by the other (`issue-tracker.md`'s Blocking); it
-   unblocks when that one closes. Pick them up in one agent, branch and PR.
+   unblocks when that one closes.
 
 **Loop it** by firing this skill by name on an interval — a Routine (standing,
 survives teardown) or `/loop` (within a live session). Idempotency above keeps a

@@ -1,7 +1,7 @@
 # Owner decisions
 
 Standing rulings from the owner's corrections. A tally item that contradicts a line
-here is dropped. One line each, newest last, citing the PR where it was made.
+here is dropped. One line each, in the order added, citing the PR where it was made.
 
 - Marquee stays unlisted on the homepage (#1316 planning).
 - The Commons is not a homepage card — "not interesting enough for the homepage" (#1316).

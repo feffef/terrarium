@@ -187,7 +187,9 @@ reconcile time budgeted.
 Run **`pnpm check:worktrees`** (`scripts/check-worktrees.ts`, issue #427). It
 enumerates every worktree from git state itself, not from subagent return values
 — so it catches the worktree of a subagent that died without ever returning, and
-exits non-zero naming any linked worktree left uncommitted or unpushed. It can't
+exits non-zero naming any linked worktree left uncommitted or unpushed, unless
+already merged into origin/main or its content already equals a pushed commit
+(`EXCUSALS` in the script). It can't
 prevent an abort; it ensures the damage is seen.
 
 **Your own `cd` into a subagent's worktree can outlive the inspection.** A
