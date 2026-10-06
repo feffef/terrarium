@@ -1,11 +1,11 @@
 schemaVersion: 1
 session: session_01Jej4qtE56V9dtLCNobJ39K
 startedAt: 2026-10-06T05:08:08Z
-endedAt: 2026-10-06T21:18:49Z
+endedAt: 2026-10-06T21:30:27Z
 kind: interactive
 goal: Explain why audit-docs left most concision proposals unapplied, then fix the Skill and dry-run it
-status: in-review
-outcome: PR 1632 merged (audit-docs rules); dry run 2 fixes opened as PR 1644 (docs) and PR 1643 (instruction changes), both awaiting review
+status: completed
+outcome: "Merged: PR 1632 (audit-docs rules), PR 1643 (instruction fixes) and PR 1644 (dry run 2 doc fixes)"
 summary: "Human-instructed throughout. The user asked me to explain, from the full transcript, why the 2026-10-06 audit-docs run (session_01L6ePb5aMsH4u53XnEs7FLQ, PR 1631) left most concision proposals unapplied: 36 proposed, 1 applied, because briefs capped reviewers at about 10 findings, two agents split 40+ files, and no checker ran. The user then asked twice to adjust the Skill and dry-run it, choosing among options I offered each time. Round 1 (PR 1632): rotate one concision family per run with no cap, and only a checker's CONFIRMED is applied. Dry run 1 (family 4): 56 findings, 38 CONFIRMED, 15 CONFIRMED-BUT, 3 WRONG, 53 edits, full gate green; it exposed an octal bug in my formula (fixed) and two fixer-written unchecked edits. Round 2: fixers apply only checker text and return gaps to a checker, out-of-lens findings join the pool, plus three confirmed audit-docs fixes. Dry run 2 (family 4 again, by the user's choice): 67 findings, 22 CONFIRMED, 35 CONFIRMED-BUT, 9 WRONG, 1 CONFLICT, 56 edits with zero fixer-written text, full gate green. Two checker errors were caught by routing evidence back to the same checker; one of them (last_fired_at) was a wrong fix dry run 1 had applied. Patches for both dry runs are in the scratchpad, not shipped. On the user's pick, dry run 2's seven checker-confirmed audit-docs self-fixes were then applied verbatim to PR 1632, which merged. The user then asked me to log the checker-tool friction only (no Skill change), apply the remaining dry-run-2 fixes on a branch fast-forwarded to origin/main, and run /code-review with opus agents. Spec came back clean; Standards flagged edits to dated Inventory observations and roles still over ~50 words. On the user's choice I reverted the observation edits, left role lengths, split four instruction changes into PR 1643, and opened the rest as PR 1644."
 prs:
   - "1632"
@@ -121,11 +121,11 @@ frictions:
   - description: The code review caught edits to dated Inventory observations that dry run 2's checker had approved as pointer corrections; checkers and audit-skills' leave-entries-as-they-are rule disagreed.
     solution: audit-docs could state that dated observations are never edited, not even pointers; corrections go to audit-skills as a new entry.
     severity: minor
-durationSec: 58241
+durationSec: 58939
 models:
-  claude-opus-5-5: 405
+  claude-opus-5-5: 423
 toolCounts:
-  Bash: 93
+  Bash: 95
   ToolSearch: 5
   mcp__claude-code-remote__list_events: 14
   AskUserQuestion: 4
@@ -135,12 +135,12 @@ toolCounts:
   mcp__github__create_pull_request: 3
   mcp__claude-code-remote__subscribe_pr_activity: 3
   Skill: 4
-  ReadNotifications: 13
+  ReadNotifications: 18
   mcp__github__update_pull_request: 4
   SendMessage: 3
   mcp__github__pull_request_read: 1
-  mcp__claude-code-remote__send_later: 1
-  mcp__claude-code-remote__delete_trigger: 1
+  mcp__claude-code-remote__send_later: 2
+  mcp__claude-code-remote__delete_trigger: 2
   Edit: 1
   mcp__github__list_pull_requests: 2
 docsReadViaShell:
