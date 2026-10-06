@@ -376,6 +376,10 @@
 .atlas-log { list-style: none; margin: 0; padding: 0; }
 .atlas-log li { display: grid; grid-template-columns: 6.5rem 4rem 1fr; gap: 0.6rem; padding: 0.62rem 0; border-top: 1px solid var(--atlas-line); font-size: 0.95rem; align-items: baseline; }
 .atlas-log li:first-child { border-top: 0; }
+@media (max-width: 30rem) {
+  .atlas-log li { grid-template-columns: auto 1fr; row-gap: 0.15rem; }
+  .atlas-log .obs { grid-column: 1 / -1; }
+}
 .atlas-log .when { font-family: var(--atlas-data); font-size: 0.76rem; color: var(--atlas-faint); }
 .atlas-log .tod { font-family: var(--atlas-label); font-size: 0.64rem; text-transform: uppercase; letter-spacing: 0.14em; color: var(--biome-accent); }
 .atlas-log .obs { color: var(--atlas-ink); }
@@ -488,8 +492,6 @@
    the list below it (visitor-loop, #1492). */
 .atlas-web-list { display: none; }
 @media (max-width: 30rem) {
-  .atlas-log li { grid-template-columns: auto 1fr; row-gap: 0.15rem; }
-  .atlas-log .obs { grid-column: 1 / -1; }
   .atlas-web svg text:not(.mk), .atlas-web .sigrule { display: none; }
   .atlas-web-list { display: grid; gap: 0.5rem; list-style: none; margin: 1rem 0 0; padding: 0; font-size: 0.95rem; }
   .atlas-web-list a { font-family: var(--atlas-display); font-style: italic; color: var(--atlas-ink); }
