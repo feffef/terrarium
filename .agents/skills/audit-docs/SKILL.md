@@ -1,6 +1,6 @@
 ---
 name: audit-docs
-description: Audit every live doc and Skill for drift, duplication, contradiction, ambiguity, needlessly complicated or verbose wording and stale-narration (one doc family per run), mis-location, and recently-added surfaces missing the reference they deserve — fact-check each finding, fix the safe ones, and file an issue (never ask) for anything needing a human call. Opens one gated PR and self-merges it on a green gate.
+description: Audit every live doc and Skill for drift, duplication, contradiction, ambiguity, needlessly complicated or verbose wording and stale-narration (one doc family per run), mis-location, and recently-added surfaces missing the reference they deserve — fact-check each finding, fix the safe ones, and file an issue (never ask) only for a factual conflict no primary source settles. Opens one self-merging gated PR, plus one human-reviewed PR for any escalated fix.
 disable-model-invocation: true
 ---
 
@@ -54,14 +54,14 @@ Classify every surface **before** editing.
 
 ## The eight lenses, in four paired agents
 
-Run four read-only reviewer agents in parallel, two lenses each. Each is a leaf:
+Run four read-only reviewer agents in parallel, two lenses each (Agent C may split into several). Each is a leaf:
 tell it to do the review itself and return findings directly, with no
 sub-agents and no waiting on other agents. Every finding is `file:line` plus
 the quoted text. A finding outside an agent's own lenses is still reported,
 named by lens, and joins the pool like any other.
 
-**Agent A — Freshness.** Both lenses start from `git log --since="48 hours ago"`
-and its diff.
+**Agent A — Freshness.** Both lenses start from `git log --since="48 hours ago" origin/main`
+(fetch first, `docs/agents/git-conventions.md`) and its diff.
 
 - **Drift** — a doc describes a mechanism, path, or term the code no longer
   matches. Most often a decision changed at its new home but its referrers
@@ -94,9 +94,9 @@ finding reached another way; the field's docstring lists why it undercounts.
 
 **Agent C — Concision.** Cut words, never meaning or a load-bearing "why".
 Each run covers one family of Live docs, picked by `$(( 10#$(date +%j) % 5 ))`:
-0 the root and per-Tenant docs (`CLAUDE.md`, `CONTEXT*.md`, the READMEs,
+0 the root and per-Tenant docs (`CLAUDE.md`, `CONTEXT*.md`, every Live README,
 `SECURITY.md`, `layers/*/CONTEXT.md`), 1 `docs/agents/*`, 2 `docs/research/*`,
-3 our own Skills, 4 the journal's facing pages and Inventory entries. Brief it
+3 our own Skills with their sibling files, 4 the journal's facing pages and Inventory entries. Brief it
 with that family's full file list. It reads every file in full and reports
 every finding, with no cap; split the family across agents if one can't.
 
@@ -160,8 +160,9 @@ instead of self-merging.
 
 File a `needs-triage` issue for one thing only: two sources state conflicting
 facts and no primary source (code, schemas, ADRs) settles which is true. Give
-both readings and your best guess, leave that finding, and move on. Search
-first (`search_issues`), never re-file an open one, and open with the
+both readings and your best guess, leave that finding, and move on. Check for
+an open duplicate first (`scripts/list-open-issues.ts` or a scoped
+`list_issues`; `docs/agents/github-integration.md`), never re-file one, and open with the
 provenance header (ADR-0017).
 
 ## 1. Get on a working branch
@@ -172,7 +173,7 @@ CLAUDE.md's branch-off rule.
 
 Glob every `*.md` outside `node_modules`, plus each `.agents/skills/*/` and the
 Skill Inventory `*.yml` (`layers/journal/content/current/skills/`), and put each
-surface in a tier. Done when every surface has a tier.
+surface in a tier or on the Skip list. Done when every surface has one.
 
 ## 3. Review across the eight lenses
 
