@@ -1,14 +1,16 @@
 schemaVersion: 1
 session: session_01Jej4qtE56V9dtLCNobJ39K
 startedAt: 2026-10-06T05:08:08Z
-endedAt: 2026-10-06T20:27:55Z
+endedAt: 2026-10-06T21:18:49Z
 kind: interactive
 goal: Explain why audit-docs left most concision proposals unapplied, then fix the Skill and dry-run it
-status: completed
-outcome: "PR 1632 merged: audit-docs concision rotation, hard checker rule, checker-text-only fixes; two dry runs, fixes not shipped"
-summary: "Human-instructed throughout. The user asked me to explain, from the full transcript, why the 2026-10-06 audit-docs run (session_01L6ePb5aMsH4u53XnEs7FLQ, PR 1631) left most concision proposals unapplied: 36 proposed, 1 applied, because briefs capped reviewers at about 10 findings, two agents split 40+ files, and no checker ran. The user then asked twice to adjust the Skill and dry-run it, choosing among options I offered each time. Round 1 (PR 1632): rotate one concision family per run with no cap, and only a checker's CONFIRMED is applied. Dry run 1 (family 4): 56 findings, 38 CONFIRMED, 15 CONFIRMED-BUT, 3 WRONG, 53 edits, full gate green; it exposed an octal bug in my formula (fixed) and two fixer-written unchecked edits. Round 2: fixers apply only checker text and return gaps to a checker, out-of-lens findings join the pool, plus three confirmed audit-docs fixes. Dry run 2 (family 4 again, by the user's choice): 67 findings, 22 CONFIRMED, 35 CONFIRMED-BUT, 9 WRONG, 1 CONFLICT, 56 edits with zero fixer-written text, full gate green. Two checker errors were caught by routing evidence back to the same checker; one of them (last_fired_at) was a wrong fix dry run 1 had applied. Patches for both dry runs are in the scratchpad, not shipped. On the user's pick, dry run 2's seven checker-confirmed audit-docs self-fixes were then applied verbatim to PR 1632."
+status: in-review
+outcome: PR 1632 merged (audit-docs rules); dry run 2 fixes opened as PR 1644 (docs) and PR 1643 (instruction changes), both awaiting review
+summary: "Human-instructed throughout. The user asked me to explain, from the full transcript, why the 2026-10-06 audit-docs run (session_01L6ePb5aMsH4u53XnEs7FLQ, PR 1631) left most concision proposals unapplied: 36 proposed, 1 applied, because briefs capped reviewers at about 10 findings, two agents split 40+ files, and no checker ran. The user then asked twice to adjust the Skill and dry-run it, choosing among options I offered each time. Round 1 (PR 1632): rotate one concision family per run with no cap, and only a checker's CONFIRMED is applied. Dry run 1 (family 4): 56 findings, 38 CONFIRMED, 15 CONFIRMED-BUT, 3 WRONG, 53 edits, full gate green; it exposed an octal bug in my formula (fixed) and two fixer-written unchecked edits. Round 2: fixers apply only checker text and return gaps to a checker, out-of-lens findings join the pool, plus three confirmed audit-docs fixes. Dry run 2 (family 4 again, by the user's choice): 67 findings, 22 CONFIRMED, 35 CONFIRMED-BUT, 9 WRONG, 1 CONFLICT, 56 edits with zero fixer-written text, full gate green. Two checker errors were caught by routing evidence back to the same checker; one of them (last_fired_at) was a wrong fix dry run 1 had applied. Patches for both dry runs are in the scratchpad, not shipped. On the user's pick, dry run 2's seven checker-confirmed audit-docs self-fixes were then applied verbatim to PR 1632, which merged. The user then asked me to log the checker-tool friction only (no Skill change), apply the remaining dry-run-2 fixes on a branch fast-forwarded to origin/main, and run /code-review with opus agents. Spec came back clean; Standards flagged edits to dated Inventory observations and roles still over ~50 words. On the user's choice I reverted the observation edits, left role lengths, split four instruction changes into PR 1643, and opened the rest as PR 1644."
 prs:
   - "1632"
+  - "1643"
+  - "1644"
 docsRead:
   - path: .agents/skills/audit-docs/SKILL.md
     reason: the Skill being diagnosed and edited
@@ -89,6 +91,8 @@ skillsUsed:
     reason: brief the fix-applying agents working in a manual scratch worktree
   - name: log-session
     reason: (no reason given)
+  - name: code-review
+    reason: (no reason given)
 frictions:
   - description: "Reading another session's transcript via list_events is very token-heavy: subagent events interleave with the parent's, so finding the dispatch briefs took about 10 pages of 60-190k chars each."
     solution: list_events could filter to parent-only events (parent_tool_use_id null), or a local script could page and extract tool_use/text events to a file.
@@ -111,26 +115,34 @@ frictions:
   - description: Checkers in different dry runs disagreed on the same facts (triage (planned), MCP prefix, trial territory of a bullet), so a verdict is not fully repeatable.
     solution: Have checkers cite the primary-source line for each verdict so disagreements are quick to resolve.
     severity: minor
-durationSec: 55187
+  - description: A checker confirmed a doc 'fix' from a tool's own description (list_triggers lacks last_fired_at) without calling the tool; real output has the field, so the original doc was right. Owner chose to defer a Skill rule.
+    solution: "Proposed for audit-docs: a checker verifies any tool-behaviour claim with a read-only call, and cross-checker disagreements go back for a re-verdict. Deferred by the owner; revisit if it recurs."
+    severity: moderate
+  - description: The code review caught edits to dated Inventory observations that dry run 2's checker had approved as pointer corrections; checkers and audit-skills' leave-entries-as-they-are rule disagreed.
+    solution: audit-docs could state that dated observations are never edited, not even pointers; corrections go to audit-skills as a new entry.
+    severity: minor
+durationSec: 58241
 models:
-  claude-opus-5-5: 318
+  claude-opus-5-5: 405
 toolCounts:
-  Bash: 72
-  ToolSearch: 4
+  Bash: 93
+  ToolSearch: 5
   mcp__claude-code-remote__list_events: 14
-  AskUserQuestion: 3
-  Read: 1
-  Agent: 23
+  AskUserQuestion: 4
+  Read: 2
+  Agent: 25
   mcp__github__search_pull_requests: 1
-  mcp__github__create_pull_request: 1
-  mcp__claude-code-remote__subscribe_pr_activity: 1
-  Skill: 3
-  ReadNotifications: 11
+  mcp__github__create_pull_request: 3
+  mcp__claude-code-remote__subscribe_pr_activity: 3
+  Skill: 4
+  ReadNotifications: 13
   mcp__github__update_pull_request: 4
   SendMessage: 3
   mcp__github__pull_request_read: 1
   mcp__claude-code-remote__send_later: 1
   mcp__claude-code-remote__delete_trigger: 1
+  Edit: 1
+  mcp__github__list_pull_requests: 2
 docsReadViaShell:
   - .agents/skills/audit-docs/SKILL.md
   - docs/agents/pr-workflow.md
@@ -179,17 +191,17 @@ docsReadViaShell:
   - docs/research/nuxt-content-review-grounding.md
   - docs/agents/mdc-when-to-use.md
   - .agents/skills/triage/SKILL.md
+  - docs/agents/guest-contributions.md
+  - docs/agents/triage-labels.md
   - docs/adr/0005-skill-model.md
   - docs/adr/0008-self-documentation-tenant-is-a-journal.md
   - docs/adr/0009-session-logs-commit-directly-to-main.md
   - docs/adr/0021-multi-context-domain-docs.md
   - docs/adr/0024-build-time-mermaid-prerender.md
   - .agents/skills/wait-what/SKILL.md
-  - docs/agents/triage-labels.md
   - docs/adr/0025-cross-tenant-catalog-and-collection-kinds.md
   - docs/adr/0018-tenant-layers-under-layers-directory.md
   - docs/research/content-client-queries-without-wasm.md
-  - docs/agents/guest-contributions.md
   - .agents/skills/triage/AGENT-BRIEF.md
   - .agents/skills/diagnosing-bugs/SKILL.md
   - .agents/skills/midden-catalogue/SKILL.md
@@ -242,6 +254,12 @@ subagents:
     task: "DR2 apply: journal pages+Inventory"
   - type: general-purpose
     task: "DR2 apply: docs, Skills, rulebook"
+  - type: general-purpose
+    task: "Code review: Standards axis"
+    model: opus
+  - type: general-purpose
+    task: "Code review: Spec axis"
+    model: opus
 gitBranch: ccr-6dc5f19e-3gr227
 entrypoint: remote_mobile
 cliVersion: 2.1.291
