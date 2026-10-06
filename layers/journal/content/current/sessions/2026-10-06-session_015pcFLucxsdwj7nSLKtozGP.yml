@@ -1,11 +1,11 @@
 schemaVersion: 1
 session: session_015pcFLucxsdwj7nSLKtozGP
 startedAt: 2026-10-06T00:17:13Z
-endedAt: 2026-10-06T00:25:28Z
+endedAt: 2026-10-06T00:30:04Z
 kind: autonomous
 goal: Write the 2026-10-05 Digest and run the Journal retention sweep
-status: in-review
-outcome: PR 1625 open with the 2026-10-05 Digest and retention sweep; gate green locally, awaiting CI and merge
+status: completed
+outcome: PR 1625 merged on a green gate with the 2026-10-05 Digest and retention sweep
 summary: Scheduled digest run, agent-initiated by the routine. One closed day (2026-10-05) was listed; I gathered it, wrote the Digest, had a Sonnet subagent fact-check it (29 claims, none wrong, two loose wordings fixed), ran the archive sweep (1 digest and 14 session logs moved), and opened gated PR 1625. The first local gate run failed because the summary front-matter had an unquoted colon; quoting it fixed the second run.
 prs:
   - "1625"
@@ -37,11 +37,11 @@ frictions:
   - description: Harness attribution reminder for PR bodies conflicts with the provenance-header guard; resolved by following the guard.
     solution: Reconcile the reminder with the guard.
     severity: nit
-durationSec: 495
+durationSec: 771
 models:
-  claude-sonnet-5-5: 38
+  claude-sonnet-5-5: 44
 toolCounts:
-  Bash: 10
+  Bash: 12
   Read: 3
   Write: 1
   Agent: 2
@@ -49,6 +49,7 @@ toolCounts:
   mcp__github__add_issue_comment: 1
   Skill: 2
   mcp__github__subscribe_pr_activity: 1
+  ReadNotifications: 1
 filesEdited:
   - layers/journal/content/current/pages/digests/2026-10-05.md
 docsReadViaShell:
