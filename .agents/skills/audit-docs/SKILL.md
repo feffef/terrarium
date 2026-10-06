@@ -92,6 +92,7 @@ finding reached another way; the field's docstring lists why it undercounts.
   (ADR-0006), so that move escalates (step 8).
 
 **Agent C — Concision.** Cut words, never meaning or a load-bearing "why".
+Brief it with an explicit file list, split per doc family, so it covers every Live doc.
 
 - **Verbose** — wording more complicated than its meaning needs: the same fact
   said twice, filler, long or nested sentences, stacked caveats and
