@@ -32,8 +32,8 @@ records an in-review PR when that's the state closure was reached in.
 committed substantive work opens its PR automatically when the work is coherent
 (CLAUDE.md / ADR-0003), and that first push is exactly when to write this log.
 Its `status` is then **`in-review`** — the PR is open but not merged — never
-`completed`, which is reserved for work that actually landed (a later session
-flips it to `completed` on merge) or a session that needed no PR at all.
+`completed`, which is reserved for work that actually landed (`close-session`
+finalizes it on merge) or a session that needed no PR at all.
 
 **The other three values, defined:** `partial` — some but not all of the goal
 landed, and what shipped is usable on its own; `blocked` — stopped by something

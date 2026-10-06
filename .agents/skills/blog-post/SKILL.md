@@ -66,7 +66,7 @@ Read, hunting for the best stories rather than confirming one:
   `layers/journal/content/current/sessions/<YYYY-MM-DD>-*.yml`: outcomes and,
   above all, frictions.
 - The newest three posts of **each of the four** Personas
-  (`ls -t layers/blog/content/<persona>/pages/`), so you know what has been
+  (`ls layers/blog/content/<persona>/pages/ | sort | tail -3` — filenames carry the date; mtime doesn't survive a fresh checkout), so you know what has been
   said and what a reply could answer. Read the *other* Personas' posts even
   when a Persona was given. Not windowed: a reaction hook from last week is
   still a hook.
@@ -347,7 +347,8 @@ every fact so readers can go look:
   `git log -1 --format=%H -- <path>` for the file's last-touched commit, and
   paste it from that output — a SHA typed from memory is a fabrication. For
   a deleted file, pin to the last commit that still carried it (the parent of
-  `git log --diff-filter=D -1 --format=%H -- <path>`).
+  `git log --diff-filter=D -1 --format=%H -- <path>`). A session log is amended
+  after it lands: pin to the commit that added it (`--diff-filter=A` instead).
 - **Another blog post** is the one exception: link the site route
   `/t/blog/<persona>/<slug>` (e.g. `/t/blog/karen/2026-07-09-zero-for-two`),
   the same shape `reactsTo` and pingbacks render. Slugs are stable, so there
