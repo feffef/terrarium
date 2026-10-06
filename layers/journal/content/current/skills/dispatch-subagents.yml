@@ -154,3 +154,16 @@ observations:
       rule-adjacent incident in the 10 newest usedIn sessions (no
       merge-pr.ts-to-subagent, no new branch/worktree collision beyond
       #1585). Status quo; both issues await human triage. Grade unchanged.
+  - date: "2026-10-06"
+    note: >-
+      Status update: issue #1585 (branch-collision) is now CLOSED, fixed
+      by PR #1620 (commit `4d275c3b`), which added a shared-branch
+      integration rule (orchestrator checkout detaches; impl agents push
+      `HEAD:<branch>` off a fresh `origin/<branch>` fetch, no local
+      `checkout -B`) now present in current SKILL.md, plus a
+      `check:worktrees` excusal for a worktree whose content already
+      matches a pushed remote commit. #1586 and #1480 confirmed still
+      open, unchanged, no remediation PR. 10 usedIn sessions re-checked
+      clean (no stranded work, no merge-pr.ts-to-subagent, no new
+      collision); 7 nonuser sessions opened by goal-risk, all dispatched
+      subagents strictly read-only. Grade unchanged.

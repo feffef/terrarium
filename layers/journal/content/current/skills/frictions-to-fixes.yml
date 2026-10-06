@@ -96,3 +96,15 @@ observations:
       (session_016RHjBGGBWx1EUSJbEjRR15) — a session-identity/commit-trailer
       issue, not a frictions-to-fixes defect; left for that session's own
       friction survey to pick up. Grade unchanged.
+  - date: "2026-10-06"
+    note: >-
+      Re-checked (audit-skills behaviour check), 8 usedIn sessions
+      (2026-09-29 through 10-05): all clean, every merge claim and
+      audit-trace verdict timestamp independently re-verified, no
+      guard-roster file touched. Both loose ends from the prior entry are
+      now resolved: issue #1304 (stale guard deny text) closed 2026-10-05
+      via PR #1621 (human-attended); the commit-trailer mismatch's root
+      cause (session-id-guard misjudging inherited unmerged commits from a
+      foreign branch) filed as #1611 and fixed via PR #1622
+      (human-attended) — correctly outside this Skill's own scope either
+      way. Grade unchanged.

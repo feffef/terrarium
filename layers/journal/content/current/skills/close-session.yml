@@ -116,3 +116,19 @@ observations:
       60+ sessions checked over seven audits. Remains n=1; structural gap
       stays an observation per this Skill's own convention. Grade/role
       unchanged.
+  - date: "2026-10-06"
+    note: >-
+      Re-checked (audit-skills behaviour check), 10 newest invocations
+      (PRs #1607-#1625): 0/10 stale, every `status: completed` log's real
+      PR `merged_at` precedes or lands within seconds of the log's
+      `endedAt`. session_01TMgZyrN42pwudxkUdHLKwP re-confirmed stale an
+      8th consecutive time — PR #1344's merge (2026-09-25T18:01:37Z) is
+      unchanged, and `git log --follow` shows the file's last content edit
+      (9c4a9f10) predates that merge, so the status was honest when
+      written and has had no commit since except the pure-relocation
+      archival move. Recommendation taken: this is now a settled, static
+      archived artifact (0 recurrence across 70+ sessions, 8 audits) — not
+      worth a 9th re-check in its current form; the live question going
+      forward is only whether the *current* finalize step ever leaves a
+      fresh merged PR's log stale, which this batch answers "no" for. Grade
+      unchanged.
