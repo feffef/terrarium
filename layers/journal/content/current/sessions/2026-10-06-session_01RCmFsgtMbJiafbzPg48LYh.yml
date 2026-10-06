@@ -1,0 +1,108 @@
+schemaVersion: 1
+session: session_01RCmFsgtMbJiafbzPg48LYh
+startedAt: 2026-10-06T13:14:29Z
+endedAt: 2026-10-06T13:24:35Z
+kind: autonomous
+goal: "Run the scheduled prune-trial: judge open trials, prune one problem, probe on Sonnet"
+status: in-review
+outcome: No trial judgeable yet; opened one new trial (provenance rule, -13 lines) in PR 1640
+summary: Scheduled run, no human input; everything was agent-initiated under the prune-trial Skill. The run started about two minutes before the earliest open trial became judgeable, so none was judged. A search subagent found the provenance-header and commit-trailer rule as the strongest failed-prose candidate (guards now hold it). I cut the CLAUDE.md bullet to one line, dropped the pr-workflow and github-integration restatements, added a ledger entry, and a Sonnet probe pinned to the post-prune SHA answered correctly. Gate green; PR 1640 opened and subscribed. The mass was small, so the delta is only about -13 lines.
+prs:
+  - "1640"
+docsRead:
+  - path: docs/agents/guards.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: docs/adr/0017-provenance-footer-on-agent-authored-content.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: prune-trial
+    reason: (invoked as a slash command)
+frictions:
+  - description: The commit-trailer guard denied my first commit because the system-reminder attribution told me to hand-write the trailer; the whole chained call, including the ledger append, was dropped.
+    solution: Harness attribution reminder and repo guard conflict; the guard message was clear and one retry fixed it.
+    severity: nit
+  - description: The Agent tool guard rejected run_in_background false, which the Skill's wording suggests for the probe.
+    solution: Omit the flag; wait for the notification.
+    severity: nit
+  - description: Run fired at 13:14 UTC, minutes before the first trial's judgeable-from time, so judging was wasted; the schedule is slightly early relative to the three-day window.
+    solution: Schedule the routine a few minutes later than the landing commit time.
+    severity: nit
+durationSec: 606
+models:
+  claude-sonnet-5-5: 45
+toolCounts:
+  Bash: 17
+  Agent: 3
+  ToolSearch: 1
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+  Skill: 2
+docsReadViaShell:
+  - docs/agents/git-conventions.md
+  - docs/agents/github-integration.md
+  - docs/agents/guest-contributions.md
+  - docs/agents/issue-tracker.md
+  - docs/agents/pr-workflow.md
+  - .agents/skills/audit-docs/SKILL.md
+  - .agents/skills/auto-triage/SKILL.md
+  - .agents/skills/guest-build/SKILL.md
+  - .agents/skills/guest-intake/SKILL.md
+  - .agents/skills/log-session/SKILL.md
+  - .agents/skills/midden-survey/SKILL.md
+  - docs/agents/guards.md
+  - docs/adr/0017-provenance-footer-on-agent-authored-content.md
+  - docs/research/rulebook-migration-table.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - CONTEXT.md
+  - docs/adr/0015-audit-skills-and-conditional-importance.md
+  - docs/adr/0027-prune-trials.md
+  - docs/adr/0024-build-time-mermaid-prerender.md
+  - .agents/skills/prune-trial/SKILL.md
+  - docs/adr/0009-session-logs-commit-directly-to-main.md
+  - docs/adr/0023-guest-driven-demo-pipeline.md
+  - .agents/skills/ask-matt/SKILL.md
+  - .agents/skills/atlas-specimen/SKILL.md
+  - .agents/skills/audit-skills/SKILL.md
+  - .agents/skills/blog-post/SKILL.md
+  - .agents/skills/claude-handoff/SKILL.md
+  - .agents/skills/digest/SKILL.md
+  - .agents/skills/grill-me/SKILL.md
+  - .agents/skills/grill-with-docs/SKILL.md
+  - .agents/skills/handoff/SKILL.md
+  - .agents/skills/implement/SKILL.md
+  - .agents/skills/improve-codebase-architecture/SKILL.md
+  - .agents/skills/midden-catalogue/SKILL.md
+  - .agents/skills/setup-matt-pocock-skills/SKILL.md
+  - .agents/skills/teach/SKILL.md
+  - .agents/skills/tinkerfund-campaign/SKILL.md
+  - .agents/skills/to-spec/SKILL.md
+  - .agents/skills/to-tickets/SKILL.md
+  - .agents/skills/triage/SKILL.md
+  - .agents/skills/visitor-loop/SKILL.md
+  - .agents/skills/wait-what/SKILL.md
+  - .agents/skills/wayfinder/SKILL.md
+  - .agents/skills/dispatch-subagents/SKILL.md
+subagents:
+  - type: general-purpose
+    task: Find failed-prose prune candidate
+    model: sonnet
+  - type: general-purpose
+    task: Find failed-prose prune candidate
+    model: sonnet
+  - type: general-purpose
+    task: Sonnet probe of pruned rule
+    model: sonnet
+gitBranch: claude/practical-rubin-pwen65
+entrypoint: remote_trigger
+cliVersion: 2.1.291
+trigger: prune-trial
+landedBy: Stop
