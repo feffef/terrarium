@@ -1,0 +1,78 @@
+schemaVersion: 1
+session: session_01ApFY3yyign1ba7pDd4aoeN
+startedAt: 2026-10-06T16:48:03Z
+endedAt: 2026-10-06T17:23:49Z
+kind: autonomous
+goal: "visitor-loop (atlas): send three blind visitors through the Atlas, fix consensus problems, build the best idea"
+status: completed
+outcome: "Fix PR #1641 and feature PR #1642 both merged on green"
+summary: "Scheduled visitor-loop run, focus atlas (agent-initiated; no human instruction beyond the schedule). Three visitors (sonnet, fable, opus) toured /t/atlas. Consensus fixes landed in #1641: the cover's wing names now link, a one-line Glass Year explainer, a Terrarium gloss on the cover, and the field log stacking on phones (DOM before/after). Dropped with reasons: lowercase log notes (deliberate voice, all 67 start lowercase), mobile food-web labels (owner ruling), plate numbers (cross-referenced authored prose). Feature #1642: the four newest sightings across all wings on the front door. Code review found one placement nit (field-log CSS under the food-web media block), fixed before merge."
+prs:
+  - "1641"
+  - "1642"
+docsRead:
+  - path: scripts/chromium-path.ts
+    reason: (no reason given)
+skillsUsed:
+  - name: code-review
+    reason: (no reason given)
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: visitor-loop
+    reason: (invoked as a slash command)
+frictions:
+  - description: Guards denied Agent run_in_background:false and a tail-piped Bash call; the playwright probe needed an .mts file with an absolute import path outside the repo.
+    solution: The visitor-loop Skill could ship a ready probe script and note that Agent calls always run in the background.
+    severity: nit
+durationSec: 2145
+models:
+  claude-sonnet-5-5: 103
+toolCounts:
+  Bash: 40
+  Agent: 8
+  mcp__github__create_pull_request: 2
+  Skill: 3
+  mcp__github__add_issue_comment: 2
+  mcp__github__search_issues: 1
+  Read: 1
+docsReadViaShell:
+  - .agents/skills/visitor-loop/visitor-brief.md
+  - .agents/skills/visitor-loop/decisions.md
+  - docs/adr/0003-agent-operating-model-and-governance.md
+  - docs/agents/pr-workflow.md
+  - layers/atlas/CONTEXT.md
+  - docs/agents/guards.md
+  - docs/adr/0017-provenance-footer-on-agent-authored-content.md
+  - docs/agents/tenant-layers.md
+subagents:
+  - task: Visitor sonnet
+    model: sonnet
+  - task: Visitor fable
+    model: fable
+  - task: Visitor opus
+    model: opus
+  - task: Visitor sonnet
+    model: sonnet
+  - task: Visitor fable
+    model: fable
+  - task: Visitor opus
+    model: opus
+  - type: Explore
+    task: Review standards axis
+  - type: Explore
+    task: Review spec axis
+gitBranch: claude/adoring-galileo-kfcf43
+entrypoint: remote_trigger
+cliVersion: 2.1.291
+trigger: visitor-loop
+ideas:
+  - "Atlas plate numbers (I to XXIII for 15 creatures) look random: add a List of plates index or a colophon line saying how plates are numbered (opus, fable)."
+  - "Atlas specimen-page relations diagram loses its labels on mobile: add the wing pages' text list beneath it (fable)."
+  - "Atlas 404 under /t/atlas links to the site root: lead with Back to the Atlas (fable)."
+  - "Atlas specimen pages repeat the Turn the almanac sentence near-verbatim: keep it once as a dial caption (fable)."
+  - "Atlas season dial gives no visible hint it is interactive: add a drag the needle and arrow keys hint (sonnet, fable)."
+  - "Atlas wing pages and last specimens are dead ends: add a Next wing link (opus)."
+  - "Atlas umbra-vacans prose dates the first report 24 June but the ledger lists 6 and 15 June entries: reconcile (opus)."
+landedBy: Stop
