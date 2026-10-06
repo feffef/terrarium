@@ -2,7 +2,7 @@
 
 ## Origin
 
-This PR (Dependabot config + ADR-0003 ledger row `dependabot`), requested by the
+#1633 (Dependabot config + ADR-0003 ledger row `dependabot`), requested by the
 repo owner in session `session_01QrvPXx1uquc4vvjJXhz1MU`.
 
 ## Target
