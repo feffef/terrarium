@@ -92,7 +92,12 @@ finding reached another way; the field's docstring lists why it undercounts.
   (ADR-0006), so that move escalates (step 8).
 
 **Agent C — Concision.** Cut words, never meaning or a load-bearing "why".
-Brief it with an explicit file list, split per doc family, so it covers every Live doc.
+Each run covers one family of Live docs, picked by `$(( $(date +%j) % 5 ))`:
+0 the root and per-Tenant docs (`CLAUDE.md`, `CONTEXT*.md`, the READMEs,
+`SECURITY.md`, `layers/*/CONTEXT.md`), 1 `docs/agents/*`, 2 `docs/research/*`,
+3 our own Skills, 4 the journal's facing pages and Inventory entries. Brief it
+with that family's full file list. It reads every file in full and reports
+every finding, with no cap; split the family across agents if one can't.
 
 - **Verbose** — wording more complicated than its meaning needs: the same fact
   said twice, filler, long or nested sentences, stacked caveats and
@@ -123,10 +128,11 @@ Don't restore or reword it; record what you found as a Friction and leave it to
 ## Fact-check before you touch anything
 
 Every finding is a hypothesis until checked against primary sources. Dispatch
-one independent checker that re-derives each claim from scratch and returns
-**CONFIRMED**, **CONFIRMED-BUT** (with the corrected line or quote), or
-**WRONG**. Act only on CONFIRMED(-BUT); a wrong finding acted on is new drift
-you authored.
+independent checkers (split a large pool) that re-derive each claim from
+scratch and return **CONFIRMED**, **CONFIRMED-BUT** (with the corrected line or
+quote), or **WRONG**. Act only on a checker's CONFIRMED(-BUT); a wrong finding
+acted on is new drift you authored. Never check inline instead: a finding no
+checker confirmed is left unfixed.
 
 What each lens is checked against:
 
@@ -169,7 +175,7 @@ each surface in a tier. Done when every surface has a tier.
 ## 3. Review across the eight lenses
 
 Run the four reviewer agents and pool their findings. Done when all four have
-reported.
+reported and every file in the concision family was read in full.
 
 ## 4. Dedupe the pool
 
@@ -180,9 +186,10 @@ two findings cover the same text.
 
 ## 5. Fact-check the findings
 
-Run the checker over the pool; drop every WRONG, apply every CONFIRMED-BUT
-correction. Done when each finding is CONFIRMED(-BUT) with an accurate
-`file:line`.
+Run the checkers over the whole pool; drop every WRONG, apply every
+CONFIRMED-BUT correction. Done when each finding has a verdict and each
+CONFIRMED(-BUT) has an accurate `file:line`. The session log's summary names the
+concision family and the verdict counts (CONFIRMED / CONFIRMED-BUT / WRONG).
 
 ## 6. Fix
 
