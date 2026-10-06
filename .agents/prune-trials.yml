@@ -135,7 +135,7 @@ trials:
         - github-provenance-guard
         - commit-trailer-guard
     opened: 2026-10-06
-    proven: false
+    proven: true
     check: >
       Damage is a session whose GitHub body lacks the provenance header, or that
       hand-types the commit trailer, and the guard's deny message did not fix it
