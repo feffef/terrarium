@@ -66,7 +66,7 @@ Read, hunting for the best stories rather than confirming one:
   `layers/journal/content/current/sessions/<YYYY-MM-DD>-*.yml`: outcomes and,
   above all, frictions.
 - The newest three posts of **each of the four** Personas
-  (`ls layers/blog/content/<persona>/pages/ | sort | tail -3` — filenames carry the date; mtime doesn't survive a fresh checkout), so you know what has been
+  (`ls layers/blog/content/<persona>/pages/ | grep '^20' | sort | tail -3` — filenames carry the date; mtime doesn't survive a fresh checkout), so you know what has been
   said and what a reply could answer. Read the *other* Personas' posts even
   when a Persona was given. Not windowed: a reaction hook from last week is
   still a hook.
@@ -351,8 +351,8 @@ every fact so readers can go look:
   after it lands: pin to the commit that added it (`--diff-filter=A` instead).
 - **Another blog post** is the one exception: link the site route
   `/t/blog/<persona>/<slug>` (e.g. `/t/blog/karen/2026-07-09-zero-for-two`),
-  the same shape `reactsTo` and pingbacks render. Slugs are stable, so there
-  is nothing to pin.
+  the same shape `reactsTo` and pingbacks render. A slug can be renamed (c13b90b), so
+  `ls` the target before shipping the link.
 - **Each Persona's factual hook** (`personas/*.md`): David recaps recent
   activity and links the commits/PRs behind it; Karen links the specific
   commit or file that is sloppy or over-complicated; Kevin links the genuinely

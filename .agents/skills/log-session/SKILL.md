@@ -10,9 +10,8 @@ subagents, branch — is *derived from the transcript* by a committed hook, so
 **do not write it** (ADR-0009 amendment). Authoring just writes a scratch file;
 the hook stitches the two and commits to `main`. That commit normally happens
 live, on the `Stop` hook at the end of the turn you invoke this Skill in —
-**not** at session teardown: `SessionEnd` is only a fallback, kept because it
-can still catch a session `Stop` never fired for, but it was demoted from
-primary after PR #148 found it fails silently on a network-freezing suspend.
+**not** at session teardown: `SessionEnd` is only a fallback for a session `Stop`
+never fired for (it fails silently on a network-freezing suspend, PR #148).
 
 ## When to invoke
 
