@@ -9,6 +9,8 @@
 // has no `space` param.)
 import { resolveSpaceRoute } from '#shared/routing'
 
+const SIGHTINGS_SHOWN = 4
+
 interface Sighting { date: string; note?: string; name?: string; to?: string }
 
 // Prerendered, so "today" is the build day — same as the wing dials.
@@ -19,7 +21,7 @@ const { data } = await useAsyncData('atlas-front', async () => {
   const stats: Record<string, number> = {}
   const specimens: string[] = []
   const abroad: { to: string; label: string }[] = []
-  let latest: Sighting | null = null
+  const recent: Sighting[] = []
   for (const b of BIOMES) {
     const r = resolveSpaceRoute('atlas', b.slug, undefined)
     if (!r) {
@@ -39,20 +41,22 @@ const { data } = await useAsyncData('atlas-front', async () => {
       if (s.phenology?.phases.some((p) => !p.quiet && inSpan(day, p.span)))
         abroad.push({ to: `/t/atlas/${b.slug}${s.path}`, label: s.binomial })
     }
-    const last = await queryCollection(r.collections.observations).order('date', 'DESC').first()
-    if (last && (!latest || last.date > latest.date)) {
-      const s = docs.find((d) => d.slug === last.specimen)
-      latest = { date: last.date, note: last.note, name: s?.binomial, to: s && `/t/atlas/${b.slug}${s.path}` }
+    const newest = await queryCollection(r.collections.observations).order('date', 'DESC').limit(SIGHTINGS_SHOWN).all()
+    for (const o of newest) {
+      const s = docs.find((d) => d.slug === o.specimen)
+      recent.push({ date: o.date, note: o.note, name: s?.binomial, to: s && `/t/atlas/${b.slug}${s.path}` })
     }
     stats[b.slug] = docs.length
   }
-  return { stats, specimens: specimens.sort(), abroad, latest }
+  recent.sort((a, b) => b.date.localeCompare(a.date))
+  return { stats, specimens: specimens.sort(), abroad, recent: recent.slice(0, SIGHTINGS_SHOWN) }
 })
 
 const stats = computed(() => data.value?.stats ?? {})
 const specimens = computed(() => data.value?.specimens ?? [])
 const abroad = computed(() => data.value?.abroad ?? [])
-const latest = computed(() => data.value?.latest ?? null)
+const recent = computed(() => data.value?.recent ?? [])
+const latest = computed(() => recent.value[0] ?? null)
 
 // The page is prerendered, so the pick happens on click: the href stays a
 // stable specimen for no-JS visitors and modified clicks (new tab).
@@ -123,10 +127,15 @@ useHead({ title: 'The Atlas of the Terrarium' })
           ><template v-if="abroad.length > 5"> and {{ abroad.length - 5 }} more</template>.
         </p>
         <p v-else class="today-abroad">Nothing is abroad; the glass keeps to itself.</p>
-        <p v-if="latest" class="today-latest">
-          Latest sighting, {{ latest.date }}<template v-if="latest.name"> — <NuxtLink :to="latest.to!">{{ latest.name }}</NuxtLink></template
-          ><template v-if="latest.note">: {{ latest.note }}</template>
-        </p>
+        <template v-if="recent.length">
+          <h3 class="today-log-h">Latest sightings, across all wings</h3>
+          <ul class="today-log">
+            <li v-for="o in recent" :key="`${o.date}-${o.note}`">
+              <span class="when">{{ o.date }}</span>
+              <NuxtLink v-if="o.name && o.to" :to="o.to">{{ o.name }}</NuxtLink><template v-if="o.name"> — </template>{{ o.note }}
+            </li>
+          </ul>
+        </template>
       </section>
 
       <nav class="directory" aria-label="The three wings">
@@ -210,7 +219,11 @@ useHead({ title: 'The Atlas of the Terrarium' })
 .today p { margin: 0 0 0.45rem; }
 .today p:last-child { margin-bottom: 0; }
 .today a { color: var(--atlas-ink); font-style: italic; }
-.today-latest { color: var(--atlas-muted); }
+.today-log-h { font-family: var(--atlas-label); font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--atlas-faint); margin: 0.9rem 0 0.4rem; font-weight: normal; }
+.today-log { list-style: none; margin: 0; padding: 0; color: var(--atlas-muted); font-size: 0.92rem; }
+.today-log li { padding: 0.35rem 0; border-top: 1px solid var(--atlas-line); }
+.today-log li:first-child { border-top: 0; }
+.today-log .when { display: block; font-family: var(--atlas-data); font-size: 0.74rem; color: var(--atlas-faint); }
 
 /* Directory — three wings, each a card that wears its own palette. */
 .directory { display: grid; gap: 1rem; }
