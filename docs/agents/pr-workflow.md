@@ -94,6 +94,8 @@ treat it as the already-merged restart case above instead of pushing.
   reviews the PR but never calls `merge_pull_request` or arms auto-merge (see
   `.agents/skills/guest-build/SKILL.md`'s "one hard subtraction" section and
   ADR-0023).
+- `dependabot` — merged by the `dependabot-automerge` workflow, never by an
+  agent; leave those PRs alone (ADR-0003 ledger).
 - An ordinary work PR — merged by a human, never self-merged.
 
 ## Closing a self-merged chartered run

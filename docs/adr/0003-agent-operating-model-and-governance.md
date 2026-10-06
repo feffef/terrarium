@@ -25,6 +25,8 @@ but answer different questions, and neither restates the other.
 | `prune-trial` | prunes and whole-file rewrites of agent-instruction prose anywhere in the rulebook, **including ADRs** (ADR-0027's narrow amendment to ADR-0004), as long as an ADR rewrite keeps what it decided — each shipped as a reversible trial; writing a hook is not — a trial files an issue proposing one (#1526) | 2026-08-23 | #1021 |
 | `visitor-loop` | per run, one PR fixing the first-time-visitor findings at least two of its three visitors raised, and one PR building **one** feature picked from its visitors' ideas — both confined to existing Tenant layers (`layers/<tenant>/`: content, components, pages, styles, that Tenant's tests; a manifest edit only to add a field to an existing Collection) and non-human-only files under `app/`, plus the Skill's own `decisions.md`. Out of scope: a new Tenant, Space or Collection, a new dependency, any human-only file, agent instructions, and editing authored history (published posts, session logs, digests, Midden artifacts) | 2026-09-24 | — |
 
+| `dependabot` (bot, not a Skill) | Dependabot npm minor/patch PRs whose commits are all Dependabot's and touch only `package.json`/`pnpm-lock.yaml`, merged by the `dependabot-automerge` workflow on a green `safety-gate`, no agent involved. Dependabot is repo-configured (`.github/dependabot.yml`), not a Public requester (ADR-0020). Majors and `github-actions` bumps stay human-merged | 2026-10-06 | — |
+
 Every row's bound is exact: content outside that scope, or a red gate, is
 never auto-merged and falls back to ADR-0003's default (gated PR, human merge).
 
