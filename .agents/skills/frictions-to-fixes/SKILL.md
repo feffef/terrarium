@@ -51,10 +51,10 @@ Its brief:
   Claude-Code development (ADR-0009 amendment); you never see them here, so don't
   go hunting the raw corpus for them.
 - **For a friction a doc already covers, check whether that session read the
-  doc.** Each triage record now carries `docsRead` directly (the paths the
-  session opened) — no need to re-read the full log for that; reach for the
-  record's `file` only when a candidate needs more context than the extract
-  carries. This
+  doc.** Each triage record carries `docsRead` (Read-tool opens plus any the
+  author listed). A `cat`/`grep` read shows only in the full log's
+  `docsReadViaShell`, so check the record's `file` before calling a doc *not
+  opened*. This
   splits one question into two very different frictions: **doc not opened** ⇒ a
   *discoverability* failure — the rule's home is wrong, or prose is the wrong
   mechanism entirely; **doc opened and the friction happened anyway** ⇒ the
@@ -180,7 +180,7 @@ From the subagent's ranked never-fixed candidates (already grouped by root cause
 if your judgement differs, but don't re-derive the ranking from scratch.)
 
 - **Simple (the bulk).** Passes the **ripeness test**, all three: **simple** (one
-  small code or config change — touches a single file with a bounded diff, no
+  small code, config or doc change — touches a single file with a bounded diff, no
   redesign), **autonomous** (an agent lands it start-to-finish with no human
   decision mid-way), and **safe surface** (touches none of the human-only
   surfaces — CLAUDE.md's Ground rules, ADR-0004; those are never dispatched
@@ -196,8 +196,8 @@ if your judgement differs, but don't re-derive the ranking from scratch.)
   more than two hard frictions rank highly, take the top two and leave the rest for
   a later run.
 
-Drop one-offs and anything an ADR defers. If the total count is unset and no user
-is reachable (autonomous run), default to everything that ranks, capped at the
+Drop one-offs and anything an ADR defers. The caller may pass a lower count as
+the Skill's argument; with none, take everything that ranks, capped at the
 same 10-total / 2-hard limits.
 
 Done when each selection names its evidence, is tagged **simple** or **hard**, and
