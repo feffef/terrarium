@@ -136,7 +136,7 @@ like this:
   the ref and gives a true re-check.
 - **This polling advice is for state that webhooks don't deliver, like CI. It
   does not apply to a dispatched Agent-tool subagent.**
-- **The polling recipe relies on `mcp__Claude_Code_Remote__*` and
+- **The polling recipe relies on remote-session MCP calls and
   `AskUserQuestion` calls, which can fail transiently.** See
   [`environment-caveats.md`](./environment-caveats.md) for the "permission
   stream closed" caveat and its fallback (issues #145, #229, #359).

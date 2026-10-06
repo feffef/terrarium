@@ -21,8 +21,9 @@ re-diagnose them as new. Incident detail lives in the cited issue.
   backgrounded `Agent`-tool subagent, or a scratchpad file on disk. Re-verify
   each is still registered/alive/intact after a resume rather than assuming it
   survived. (issues #571, #794, #891)
-- **Any `mcp__Claude_Code_Remote__*` call, and `AskUserQuestion`, can fail with
-  a transient "permission stream closed" error.** Retry once; if it fails
+- **Any `mcp__claude-code-remote__*` call (spelled `mcp__Claude_Code_Remote__*`
+  in some sessions), and `AskUserQuestion`, can fail with a transient
+  "permission stream closed" error.** Retry once; if it fails
   again, don't retry-loop. For `AskUserQuestion`, take the safer default option
   and say so in the output. For `send_later`, use `create_trigger` with
   `run_once_at`. (issues #145, #229, #359)

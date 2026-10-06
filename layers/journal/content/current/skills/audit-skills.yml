@@ -5,7 +5,7 @@ gist: Keeps the list of which Skills matter, and why, up to date.
 role: >-
   One of the self-improvement Skills. Checks that our own Skills fire when
   they should and deliver what they promise, even without frictions, and files
-  what it finds as issues rather than editing a Skill. Keeps the Skill
+  significant or repeated findings as issues rather than editing a Skill. Keeps the Skill
   Inventory's grades in line with usage as a by-product, self-merging those
   edits (ADR-0015).
 observations:

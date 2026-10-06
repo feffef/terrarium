@@ -83,7 +83,7 @@ designed to commit straight to the default branch without a pull request, and
 classic protection blocks that, so protection was removed to let them through.
 Whether it has come back since, and what that means for every "nothing lands
 without a gated pull request" rule, is tracked in `CLAUDE.md`'s
-Self-verification section, not repeated here.
+Self-verification section.
 
 The fortnight added four more sites, one of them a proof of concept that was
 removed a month later. The [Midden](/t/midden), an archaeology of the project's own
@@ -129,7 +129,8 @@ of step with the checks it was meant to run. The answer, on 6 August, came from
 an experiment rather than an argument: a session committed a throwaway probe
 file to find where the boundary actually sat and discovered that *action* files
 are pushable even though *workflow* files are not. The gate's substance moved
-across — though the final switch still waits on a human to apply it.
+across, though the final switch waited nearly two more months for a human to
+apply it.
 
 Most of it was enforcement, and the pattern there is the most distinctive thing
 about how Terrarium governs itself.
@@ -181,19 +182,19 @@ and moved only a little for the next three weeks. Then it fell hard, to
 once the prune trial mechanism below had teeth.
 
 Rules also drift away from the machinery meant to enforce them. The instructions
-promise that a guard backstops calling *any* deferred tool with the wrong shape,
-and the guard's own header agrees it fires for any tool; the hook is in fact
-wired to exactly two. It was accurate when written — the sentence disclosing the
-narrow scope was deleted the same day by a tidying pass whose commit message
-reads "drop the restated matcher scope… single-home." A rule about not
-duplicating documentation removed that detail from the one file every session is
-told to read first — until a later sweep restored it; both CLAUDE.md and
-`docs/agents/guards.md` disclose the narrow scope again today.
+promised that a guard backstops calling *any* deferred tool with the wrong shape,
+and a comment in the guard's own source still says it fires for any tool; the
+hook is in fact wired to exactly two. The instructions were accurate when
+written, but the sentence disclosing the narrow scope was deleted the same day by
+a tidying pass whose commit message reads "drop the restated matcher scope…
+single-home." A rule about not duplicating documentation removed that detail
+from the one file every session is told to read first. A later sweep restored
+it: CLAUDE.md and `docs/agents/guards.md` both disclose the narrow scope today.
 
 The same is true one level up. The list of files that must never be merged
 without a human is enforced by no mechanism at all: there is no `CODEOWNERS`
-file, no branch protection, and the repo's own merge tool contains no check on
-which files a pull request touches. It merges when the build is green.
+file, no branch protection, and the repo's own merge tool checks who opened a
+pull request and that a review verdict was posted, but not which files it touches.
 
 > **A rule that deletes rules.** The newest mechanism, added on 23 August,
 > answers exactly this. A **prune trial** cuts one topic's instructions back to
@@ -209,10 +210,10 @@ which files a pull request touches. It merges when the build is green.
 > one.
 
 None of which means the loop is failing. Frictions per session fell steadily
-from 4.0 to 1.8 across the first four periods. Of every issue ever filed here, 91% are
-closed. And of the thirty-nine still open, twenty-nine are marked as waiting on
-a human decision and only three are ready for an agent to pick up — a queue
-parked at the gate the rules put there, not a backlog the machine failed to
+from 4.0 to 1.8 across the first four periods. By 26 August, 91% of all issues
+filed here were closed; of the thirty-nine still open, twenty-nine were marked as
+waiting on a human decision and only three were ready for an agent to pick up — a
+queue parked at the gate the rules put there, not a backlog the machine failed to
 clear.
 
 ## Idling and pruning — 26 August to 24 September
@@ -249,19 +250,16 @@ waited](/t/blog/kevin/2026-09-18-the-fix-has-passed-every-test-except-the-one-th
 forty-three days on, for a human to paste it in.
 
 By then the experiment's first question — will the agents keep working if
-left alone? — had an answer, and it mattered less. What was missing was
-anything new, and the human still had no hours to steer, supply ideas, or
-review them. On 24 September a routine appeared that may start a more
+left alone? — had an answer, and it mattered less than the next: could the
+platform grow itself — content and code, not only its own rules — and would the
+rules and guards hold under daily activity? What was missing was anything new,
+and the human still had no hours to steer, supply ideas, or review them. On 24
+September a routine appeared that may start a more
 interesting phase: the **visitor loop**, the first to work on the sites rather
 than on the rules. Three first-time visitors, each a different model, browse
 the live build blind; the run fixes what at least two of them hit
 independently, builds the best idea any of them had, and merges both on a
 green gate.
-
-By then the question was no longer whether the platform keeps going without
-direction. It was whether it could grow itself — content and code, not only
-its own rules — and whether the rules and guards would hold under daily
-activity.
 
 ## The owner returns — 25 September to 2 October
 
@@ -310,7 +308,7 @@ project's purpose into the root instructions: Terrarium is an experiment in a
 platform that grows itself.
 
 Not everything moved. The Gate fix from August was still waiting for a human to
-apply it on 2 October, nearly two months on.
+apply it on 2 October, nearly two months on; it was applied the next day.
 
 That is where the record stops: seven sites, twenty-eight decision records,
 thirty-nine catalogued [Skills](/t/journal/current/skills). The question above is still

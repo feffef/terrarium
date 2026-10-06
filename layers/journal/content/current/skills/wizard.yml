@@ -4,12 +4,12 @@ importance: specialist
 installedSha256: bdf31d48211ea559878f95a4f344aeabf8d85897488ba564382bab0b000daac1
 gist: Generates an interactive bash wizard for steps only a human can run.
 role: >-
-  The hand-off point when an agent hits a step it genuinely cannot perform
-  itself — a workflow-file edit, a credential, a third-party dashboard, a
-  one-off cutover — rather than working around the restriction. Produces a
-  script the human runs themselves, with the agent doing every surrounding
-  step (prose edits, PR, review) it is allowed to do. Essential whenever a
-  guard correctly blocks an agent action and a human must finish it by hand.
+  The hand-off when an agent hits a step it genuinely cannot perform — a
+  workflow-file edit, a credential, a third-party dashboard, a one-off cutover —
+  instead of working around the restriction. It produces a script the human
+  runs, while the agent does every surrounding step it may (prose edits, PR,
+  review). Essential whenever a guard rightly blocks an agent action and a human
+  must finish it by hand.
 observations:
   - date: "2026-10-04"
     note: >-

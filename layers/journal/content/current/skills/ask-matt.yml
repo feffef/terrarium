@@ -3,7 +3,6 @@ category: general-engineering
 importance: peripheral
 installedSha256: b25d86fb36b1d294eeead5d7db529f86135f9671f2afcd607579a63bb2213769
 role: >-
-  A router that suggests which Skill or flow fits a situation. Rarely the entry
-  point here — agents are pointed straight at this Inventory and CLAUDE.md — so
-  it sees little use in this repo.
+  A router that suggests which Skill or flow fits a situation. Little used here:
+  agents are pointed straight at this Inventory and CLAUDE.md instead.
 observations: []

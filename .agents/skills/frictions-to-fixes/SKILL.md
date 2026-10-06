@@ -92,15 +92,12 @@ Its brief:
   `drop` or relabel any candidate they cover (§2), citing the run or PR. A run's
   summary can be wrong or partial: verify against the PR or `main` before dropping.
   A tracker issue is the weaker signal — a "simple" selection (§4) files none.
-- **GitHub-MCP hygiene** (these are themselves recurring frictions — heed them):
-  call the tools by their **fully-qualified `mcp__github__*` names** (bare names
-  don't resolve via ToolSearch). Call `ToolSearch` for the `mcp__github__*` tools
-  you'll need (e.g. `select:mcp__github__search_issues,mcp__github__search_pull_requests,mcp__github__issue_read,mcp__github__pull_request_read`
-  — the §2 nearby-issue eyeball step needs the read tools too)
-  **before** your first call to any of them — don't rely on a bare name resolving.
-  See `docs/agents/github-integration.md` for the
-  `list_issues`/`search_issues` pagination and overflow guidance — it applies
-  here too.
+- **GitHub-MCP hygiene** (a recurring friction — heed it): load the
+  `mcp__github__*` tools you need via `ToolSearch` before the first call (e.g.
+  `select:mcp__github__search_issues,mcp__github__search_pull_requests,mcp__github__issue_read,mcp__github__pull_request_read`
+  — the §2 nearby-issue eyeball step needs the read tools too).
+  `docs/agents/github-integration.md` owns name resolution and the
+  `list_*`/`search_*` overflow guidance.
 
 **The subagent also reports its own frictions.** Whatever it hits while running the
 survey — an MCP disconnect, a tool that only resolved under its full id, an
@@ -260,7 +257,8 @@ post-dispatch check. Run at most 2 impl agents' full gates concurrently
     logs — ADRs are human-only anyway, ADR-0004) **or a Pack-generic template**;
     (2) don't *author* any defect audit-docs' eight lenses catch — above all
     **single-home rather than restate** (the CLAUDE.md rule), and give any new
-    `docs/agents/*`/`docs/research/*` file its incoming CLAUDE.md-index link. A
+    `docs/agents/*` file its incoming CLAUDE.md-index link (`docs/research/`
+    stays unindexed). A
     friction doc fix that would become the next audit-docs finding isn't done.
     Put this in the doc-fix agent's brief.
 - **Code or config fixes**: one PR each — they carry distinct review and CI surface
