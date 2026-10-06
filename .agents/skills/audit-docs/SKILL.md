@@ -57,7 +57,8 @@ Classify every surface **before** editing.
 Run four read-only reviewer agents in parallel, two lenses each. Each is a leaf:
 tell it to do the review itself and return findings directly, with no
 sub-agents and no waiting on other agents. Every finding is `file:line` plus
-the quoted text.
+the quoted text. A finding outside an agent's own lenses is still reported,
+named by lens, and joins the pool like any other.
 
 **Agent A — Freshness.** Both lenses start from `git log --since="48 hours ago"`
 and its diff.
@@ -136,8 +137,8 @@ checker confirmed is left unfixed.
 
 What each lens is checked against:
 
-- **Drift, Contradiction** — the code (`content.config.ts`, `shared/expand.ts`,
-  `modules/routing.ts`, the schemas).
+- **Drift, Contradiction** — the code (`scripts/`, `content.config.ts`, `shared/`,
+  `modules/`, the schemas) and the ADRs.
 - **Duplication, Mis-location, Ambiguity** — the home convention: which doc
   owns the fact, and does it really hold it. A cited read count is re-run,
   never remembered. For Mis-location, first read any originating issue/PR the
@@ -169,8 +170,9 @@ CLAUDE.md's branch-off rule.
 
 ## 2. Inventory & classify
 
-Glob every `*.md` outside `node_modules`, plus each `.agents/skills/*/`, and put
-each surface in a tier. Done when every surface has a tier.
+Glob every `*.md` outside `node_modules`, plus each `.agents/skills/*/` and the
+Skill Inventory `*.yml` (`layers/journal/content/current/skills/`), and put each
+surface in a tier. Done when every surface has a tier.
 
 ## 3. Review across the eight lenses
 
@@ -193,14 +195,17 @@ concision family and the verdict counts (CONFIRMED / CONFIRMED-BUT / WRONG).
 
 ## 6. Fix
 
-Fix every surviving finding in place. Done when each is fixed, or filed as a
-true factual conflict.
+Fix every surviving finding in place, using only the checker-confirmed text. A
+gap that text leaves (a site it names but doesn't word) goes back to a checker
+as a new finding; it is never filled ad hoc. Done when each is fixed, or filed
+as a true factual conflict.
 
 ## 7. Clear the safety gate
 
 Run `pnpm gate:scoped` (step 1 of `docs/agents/pr-workflow.md`'s "Closing a
-self-merged chartered run"). Run it even for doc-only edits — a Skill's
-frontmatter or a moved path can break the build. Done when green.
+self-merged chartered run"). Run it even for doc-only edits: an edit under
+`layers/` (an Inventory `.yml`, a journal page) runs the full gate, and the
+floor still runs `verify:skills-lock` and `validate:content`. Done when green.
 
 ## 8. Commit, push, open one gated PR, self-merge on green
 
