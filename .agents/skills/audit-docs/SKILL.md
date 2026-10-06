@@ -1,6 +1,6 @@
 ---
 name: audit-docs
-description: Audit every live doc and Skill for drift, duplication, contradiction, ambiguity, needlessly complicated or verbose wording, stale-narration of a superseded state, mis-location, and recently-added surfaces missing the reference they deserve — fact-check each finding, fix the safe ones, and file an issue (never ask) for anything needing a human call. Opens one gated PR and self-merges it on a green gate.
+description: Audit every live doc and Skill for drift, duplication, contradiction, ambiguity, needlessly complicated or verbose wording and stale-narration (one doc family per run), mis-location, and recently-added surfaces missing the reference they deserve — fact-check each finding, fix the safe ones, and file an issue (never ask) only for a factual conflict no primary source settles. Opens one self-merging gated PR, plus one human-reviewed PR for any escalated fix.
 disable-model-invocation: true
 ---
 
@@ -54,13 +54,14 @@ Classify every surface **before** editing.
 
 ## The eight lenses, in four paired agents
 
-Run four read-only reviewer agents in parallel, two lenses each. Each is a leaf:
+Run four read-only reviewer agents in parallel, two lenses each (Agent C may split into several). Each is a leaf:
 tell it to do the review itself and return findings directly, with no
 sub-agents and no waiting on other agents. Every finding is `file:line` plus
-the quoted text.
+the quoted text. A finding outside an agent's own lenses is still reported,
+named by lens, and joins the pool like any other.
 
-**Agent A — Freshness.** Both lenses start from `git log --since="48 hours ago"`
-and its diff.
+**Agent A — Freshness.** Both lenses start from `git log --since="48 hours ago" origin/main`
+(fetch first, `docs/agents/git-conventions.md`) and its diff.
 
 - **Drift** — a doc describes a mechanism, path, or term the code no longer
   matches. Most often a decision changed at its new home but its referrers
@@ -92,7 +93,12 @@ finding reached another way; the field's docstring lists why it undercounts.
   (ADR-0006), so that move escalates (step 8).
 
 **Agent C — Concision.** Cut words, never meaning or a load-bearing "why".
-Brief it with an explicit file list, split per doc family, so it covers every Live doc.
+Each run covers one family of Live docs, picked by `$(( 10#$(date +%j) % 5 ))`:
+0 the root and per-Tenant docs (`CLAUDE.md`, `CONTEXT*.md`, every Live README,
+`SECURITY.md`, `layers/*/CONTEXT.md`), 1 `docs/agents/*`, 2 `docs/research/*`,
+3 our own Skills with their sibling files, 4 the journal's facing pages and Inventory entries. Brief it
+with that family's full file list. It reads every file in full and reports
+every finding, with no cap; split the family across agents if one can't.
 
 - **Verbose** — wording more complicated than its meaning needs: the same fact
   said twice, filler, long or nested sentences, stacked caveats and
@@ -123,15 +129,16 @@ Don't restore or reword it; record what you found as a Friction and leave it to
 ## Fact-check before you touch anything
 
 Every finding is a hypothesis until checked against primary sources. Dispatch
-one independent checker that re-derives each claim from scratch and returns
-**CONFIRMED**, **CONFIRMED-BUT** (with the corrected line or quote), or
-**WRONG**. Act only on CONFIRMED(-BUT); a wrong finding acted on is new drift
-you authored.
+independent checkers (split a large pool) that re-derive each claim from
+scratch and return **CONFIRMED**, **CONFIRMED-BUT** (with the corrected line or
+quote), or **WRONG**. Act only on a checker's CONFIRMED(-BUT); a wrong finding
+acted on is new drift you authored. Never check inline instead: a finding no
+checker confirmed is left unfixed.
 
 What each lens is checked against:
 
-- **Drift, Contradiction** — the code (`content.config.ts`, `shared/expand.ts`,
-  `modules/routing.ts`, the schemas).
+- **Drift, Contradiction** — the code (`scripts/`, `content.config.ts`, `shared/`,
+  `modules/`, the schemas) and the ADRs.
 - **Duplication, Mis-location, Ambiguity** — the home convention: which doc
   owns the fact, and does it really hold it. A cited read count is re-run,
   never remembered. For Mis-location, first read any originating issue/PR the
@@ -153,8 +160,9 @@ instead of self-merging.
 
 File a `needs-triage` issue for one thing only: two sources state conflicting
 facts and no primary source (code, schemas, ADRs) settles which is true. Give
-both readings and your best guess, leave that finding, and move on. Search
-first (`search_issues`), never re-file an open one, and open with the
+both readings and your best guess, leave that finding, and move on. Check for
+an open duplicate first (`scripts/list-open-issues.ts` or a scoped
+`list_issues`; `docs/agents/github-integration.md`), never re-file one, and open with the
 provenance header (ADR-0017).
 
 ## 1. Get on a working branch
@@ -163,13 +171,14 @@ CLAUDE.md's branch-off rule.
 
 ## 2. Inventory & classify
 
-Glob every `*.md` outside `node_modules`, plus each `.agents/skills/*/`, and put
-each surface in a tier. Done when every surface has a tier.
+Glob every `*.md` outside `node_modules`, plus each `.agents/skills/*/` and the
+Skill Inventory `*.yml` (`layers/journal/content/current/skills/`), and put each
+surface in a tier or on the Skip list. Done when every surface has one.
 
 ## 3. Review across the eight lenses
 
-Run the four reviewer agents and pool their findings. Done when all four have
-reported.
+Run the reviewer agents and pool their findings. Done when every one has
+reported and every file in the concision family was read in full.
 
 ## 4. Dedupe the pool
 
@@ -180,20 +189,24 @@ two findings cover the same text.
 
 ## 5. Fact-check the findings
 
-Run the checker over the pool; drop every WRONG, apply every CONFIRMED-BUT
-correction. Done when each finding is CONFIRMED(-BUT) with an accurate
-`file:line`.
+Run the checkers over the whole pool; drop every WRONG, apply every
+CONFIRMED-BUT correction. Done when each finding has a verdict and each
+CONFIRMED(-BUT) has an accurate `file:line`. The session log's summary names the
+concision family and the verdict counts (CONFIRMED / CONFIRMED-BUT / WRONG).
 
 ## 6. Fix
 
-Fix every surviving finding in place. Done when each is fixed, or filed as a
-true factual conflict.
+Fix every surviving finding in place, using only the checker-confirmed text. A
+gap that text leaves (a site it names but doesn't word) goes back to a checker
+as a new finding; it is never filled ad hoc. Done when each is fixed, or filed
+as a true factual conflict.
 
 ## 7. Clear the safety gate
 
 Run `pnpm gate:scoped` (step 1 of `docs/agents/pr-workflow.md`'s "Closing a
-self-merged chartered run"). Run it even for doc-only edits — a Skill's
-frontmatter or a moved path can break the build. Done when green.
+self-merged chartered run"). Run it even for doc-only edits: an edit under
+`layers/` (an Inventory `.yml`, a journal page) runs the full gate, and the
+floor still runs `verify:skills-lock` and `validate:content`. Done when green.
 
 ## 8. Commit, push, open one gated PR, self-merge on green
 
