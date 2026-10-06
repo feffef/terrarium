@@ -1,0 +1,147 @@
+schemaVersion: 1
+session: session_01L6ePb5aMsH4u53XnEs7FLQ
+startedAt: 2026-10-06T04:00:49Z
+endedAt: 2026-10-06T04:07:34Z
+kind: autonomous
+goal: Scheduled audit-docs sweep - fix stale or contradictory Live docs and Skills
+status: in-review
+outcome: PR 1631 opened with 7 fact-checked fixes; awaiting green CI to self-merge
+summary: "Scheduled audit-docs run, no human instruction beyond the stored prompt. Four reviewer agents (freshness, single-home, concision x2, coherence) reported; I fact-checked the chosen findings myself against code and files (check-worktrees EXCUSALS, index.md in blog persona dirs, auto-triage text) instead of dispatching a separate checker, and applied the confirmed ones. Most concision proposals were left unapplied: reviewers did not cover every Live doc, and each rewrite needed a rules-preserved check I did not run. gate:scoped passed. No factual-conflict issue filed, no ADR escalation needed."
+prs:
+  - "1631"
+docsRead:
+  - path: docs/agents/environment-caveats.md
+    reason: (no reason given)
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: docs/agents/guards.md
+    reason: (no reason given)
+  - path: docs/agents/issue-tracker.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: deploy/README.md
+    reason: (no reason given)
+  - path: docs/agents/tenant-layers.md
+    reason: (no reason given)
+  - path: docs/agents/verifying-ui-changes.md
+    reason: (no reason given)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/history.md
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/log-session/SKILL.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/how-it-works.md
+    reason: (no reason given)
+  - path: .agents/skills/close-session/SKILL.md
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: audit-docs
+    reason: (invoked as a slash command)
+frictions:
+  - description: Agent calls with run_in_background false were denied by a guard; first commit with hand-written trailer and first PR body without header shape were also denied, costing three retries.
+    solution: audit-docs and system-reminder attribution text conflict with repo guards; the audit-docs Skill could say omit the flag and trailer.
+    severity: nit
+  - description: Concision reviewers only covered part of the Live docs, so the concision lens was not exhaustively run.
+    solution: Brief concision agents with smaller per-family file lists, or run more than two.
+    severity: minor
+durationSec: 404
+models:
+  claude-sonnet-5-5: 49
+toolCounts:
+  Bash: 11
+  Agent: 10
+  ToolSearch: 1
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 2
+  Grep: 1
+  mcp__github__subscribe_pr_activity: 1
+  Skill: 2
+docsReadViaShell:
+  - docs/agents/git-conventions.md
+  - .agents/skills/dispatch-subagents/SKILL.md
+  - .agents/skills/blog-post/SKILL.md
+  - .agents/skills/auto-triage/SKILL.md
+  - docs/agents/github-integration.md
+  - .agents/skills/visitor-loop/decisions.md
+  - .agents/skills/log-session/SKILL.md
+  - docs/agents/guards.md
+  - docs/adr/0017-provenance-footer-on-agent-authored-content.md
+  - .agents/skills/audit-docs/SKILL.md
+  - docs/agents/pr-workflow.md
+  - .agents/skills/guest-build/SKILL.md
+  - docs/agents/environment-caveats.md
+  - docs/adr/0002-manifest-driven-config-generation.md
+  - docs/adr/0003-agent-operating-model-and-governance.md
+  - docs/adr/0004-objective-safety-gate.md
+  - docs/adr/0009-session-logs-commit-directly-to-main.md
+  - docs/adr/0010-digests-derived-append-only-journal-pages.md
+  - docs/adr/0013-dynamic-content-config-committed-routing-map.md
+  - docs/adr/0014-build-time-virtual-routing-module.md
+  - docs/adr/0015-audit-skills-and-conditional-importance.md
+  - docs/adr/0016-tenant-root-layer-routes.md
+  - docs/adr/0018-tenant-layers-under-layers-directory.md
+  - docs/adr/0025-cross-tenant-catalog-and-collection-kinds.md
+  - docs/adr/0026-gate-workflow-thin-shell.md
+  - CONTEXT.md
+  - .agents/skills/close-session/SKILL.md
+  - docs/agents/issue-tracker.md
+  - docs/agents/triage-labels.md
+  - docs/agents/guest-contributions.md
+  - docs/adr/0020-requester-trust-tiers.md
+  - docs/research/public-readiness-review.md
+  - docs/adr/0022-autonomous-triage-sweep.md
+  - docs/agents/mdc-when-to-use.md
+  - docs/research/shell-reads-by-output-matching.md
+  - CONTEXT-MAP.md
+  - docs/agents/verifying-ui-changes.md
+  - docs/agents/domain.md
+  - .agents/skills/visitor-loop/SKILL.md
+  - docs/agents/tenant-layers.md
+  - docs/proposals/README.md
+  - docs/research/rulebook-migration-table.md
+  - .agents/skills/claude-handoff/SKILL.md
+  - layers/blog/CONTEXT.md
+  - layers/commons/CONTEXT.md
+  - layers/midden/CONTEXT.md
+  - layers/tinkerfund/CONTEXT.md
+  - docs/research/github-branch-protection-vs-autonomous-log-commits.md
+  - layers/marquee/CONTEXT.md
+  - .agents/skills/digest/SKILL.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - .agents/skills/prune-trial/SKILL.md
+subagents:
+  - type: general-purpose
+    task: "Audit A: freshness"
+  - type: general-purpose
+    task: "Audit B: single-home"
+  - type: general-purpose
+    task: "Audit C1: concision core docs"
+  - type: general-purpose
+    task: "Audit C2: concision skills"
+  - type: general-purpose
+    task: "Audit D: coherence"
+  - type: general-purpose
+    task: "Audit A: freshness"
+  - type: general-purpose
+    task: "Audit B: single-home"
+  - type: general-purpose
+    task: "Audit C1: concision core docs"
+  - type: general-purpose
+    task: "Audit C2: concision skills"
+  - type: general-purpose
+    task: "Audit D: coherence"
+gitBranch: claude/festive-mayer-ca88hr
+entrypoint: remote_trigger
+cliVersion: 2.1.290
+trigger: audit-docs
+landedBy: Stop
