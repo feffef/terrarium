@@ -110,3 +110,34 @@ trials:
       deny message did not fix it in one retry, or one that polls with
       filler calls instead of ending the turn. NOT damage: a guard denial the
       session fixed from the deny message.
+  - problem: >
+      The provenance-header and commit-trailer rule (rulebook CM-43/CM-44, Built).
+      It failed as prose repeatedly: #921, #723 (four prior fixing rounds) and
+      #886, read this run by the search subagent; now held by
+      `github-provenance-guard.ts` and `commit-trailer-guard.ts`, whose deny
+      messages name the marker. Cut the CLAUDE.md bullet to one rule line,
+      dropped the pr-workflow.md restatement and the github-integration.md
+      intro, and trimmed the angle-bracket and `gh api`-bypass notes. The search
+      subagent covered the instruction corpus, the rulebook table, guards.md,
+      guard headers and the tracker; the ToolSearch-first rule (weaker guard)
+      and the pack-skill rule (gate-held, thin tracker evidence) were
+      runners-up. Net about -13 lines; the mass here was small. The other
+      restating homes (Skills, guest-contributions.md, git-conventions.md)
+      were left.
+    territory:
+      paths:
+        - "CLAUDE.md: the provenance-header/commit-trailer bullet"
+        - "docs/agents/pr-workflow.md: the provenance paragraph above 'Assembling several stories'"
+        - "docs/agents/github-integration.md: the opening provenance sentence, angle-bracket section, `gh api` note"
+      keywords:
+        - provenance header
+        - commit trailer
+        - github-provenance-guard
+        - commit-trailer-guard
+    opened: 2026-10-06
+    proven: true
+    check: >
+      Damage is a session whose GitHub body lacks the provenance header, or that
+      hand-types the commit trailer, and the guard's deny message did not fix it
+      in one retry. NOT damage: a guard denial the session fixed from the deny
+      message.
