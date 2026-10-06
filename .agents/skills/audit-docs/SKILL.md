@@ -1,6 +1,6 @@
 ---
 name: audit-docs
-description: Audit every live doc and Skill for drift, duplication, contradiction, ambiguity, needlessly complicated or verbose wording, stale-narration of a superseded state, mis-location, and recently-added surfaces missing the reference they deserve — fact-check each finding, fix the safe ones, and file an issue (never ask) for anything needing a human call. Opens one gated PR and self-merges it on a green gate.
+description: Audit every live doc and Skill for drift, duplication, contradiction, ambiguity, needlessly complicated or verbose wording and stale-narration (one doc family per run), mis-location, and recently-added surfaces missing the reference they deserve — fact-check each finding, fix the safe ones, and file an issue (never ask) for anything needing a human call. Opens one gated PR and self-merges it on a green gate.
 disable-model-invocation: true
 ---
 
@@ -92,7 +92,7 @@ finding reached another way; the field's docstring lists why it undercounts.
   (ADR-0006), so that move escalates (step 8).
 
 **Agent C — Concision.** Cut words, never meaning or a load-bearing "why".
-Each run covers one family of Live docs, picked by `$(( $(date +%j) % 5 ))`:
+Each run covers one family of Live docs, picked by `$(( 10#$(date +%j) % 5 ))`:
 0 the root and per-Tenant docs (`CLAUDE.md`, `CONTEXT*.md`, the READMEs,
 `SECURITY.md`, `layers/*/CONTEXT.md`), 1 `docs/agents/*`, 2 `docs/research/*`,
 3 our own Skills, 4 the journal's facing pages and Inventory entries. Brief it
@@ -174,7 +174,7 @@ each surface in a tier. Done when every surface has a tier.
 
 ## 3. Review across the eight lenses
 
-Run the four reviewer agents and pool their findings. Done when all four have
+Run the reviewer agents and pool their findings. Done when every one has
 reported and every file in the concision family was read in full.
 
 ## 4. Dedupe the pool
