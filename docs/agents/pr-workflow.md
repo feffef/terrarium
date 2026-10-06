@@ -12,11 +12,6 @@ For the `mcp__github__*` tool surface this recipe runs on — transient 503s and
 when to retry, `get_check_runs` vs `get_status`, the `list_*`/`search_*`
 overflow traps — see [`github-integration.md`](./github-integration.md).
 
-**Every GitHub body you open or post here** (a PR description, an issue, a
-review comment) opens with the ADR-0017 provenance header as its own first
-line. It is guard-enforced; ADR-0017 and the guard's deny message name the exact
-marker (CLAUDE.md, Working conventions).
-
 ## Assembling several stories into one integration PR
 
 When a branch stacks several already-reviewed stories into one integration PR,

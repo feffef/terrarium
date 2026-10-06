@@ -5,16 +5,11 @@ how to poll. Two workflow docs sit on top of this one and own their recipes:
 [`issue-tracker.md`](./issue-tracker.md) (issues, specs, triage) and
 [`pr-workflow.md`](./pr-workflow.md) (landing a gated PR).
 
-Every GitHub body an agent writes must open with the ADR-0017 provenance header
-(CLAUDE.md's Working Conventions). A guard enforces it:
-`scripts/github-provenance-guard.ts` lists the guarded tools and states the rule.
-
 ## Bare angle brackets vanish from a rendered title or body
 
-GitHub silently strips bare `<...>` text from a rendered issue/PR title or body,
-treating it as HTML. No error shows. Wrap it in a fenced code block; a single
-backtick wrap is not enough. The provenance guard denies a write that carries
-one (issue #886).
+GitHub silently strips bare `<...>` text from a rendered title or body. Wrap it
+in a fenced code block; a single backtick is not enough. A guard denies it
+(issue #886).
 
 ## Transient failures — retry before escalating
 
@@ -33,9 +28,8 @@ short pause before calling it a real failure. If `issue_read` keeps flaking,
 | `mcp__github__*` tools | only if configured | yes |
 | **Default** | `gh` | the MCP tools; `gh api` for REST a tool lacks |
 
-Why MCP for writes in the cloud, not `gh api`: the provenance guard
-(`scripts/github-provenance-guard.ts`) checks only `mcp__github__*` calls, so a
-body posted through `gh api` skips it. `gh api` suits bulk reads in scripts,
+Write through MCP in the cloud, not `gh api`: the provenance guard checks only
+`mcp__github__*` calls. `gh api` suits bulk reads in scripts,
 where the MCP list tools overflow. Some cloud sessions lack `gh`; check with
 `which gh`. In a cloud session, map the workflow docs' `gh` recipes
 like this:
