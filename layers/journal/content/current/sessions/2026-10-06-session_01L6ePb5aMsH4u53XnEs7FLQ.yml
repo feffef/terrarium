@@ -1,15 +1,17 @@
 schemaVersion: 1
 session: session_01L6ePb5aMsH4u53XnEs7FLQ
 startedAt: 2026-10-06T04:00:49Z
-endedAt: 2026-10-06T04:07:34Z
+endedAt: 2026-10-06T04:09:07Z
 kind: autonomous
 goal: Scheduled audit-docs sweep - fix stale or contradictory Live docs and Skills
-status: in-review
-outcome: PR 1631 opened with 7 fact-checked fixes; awaiting green CI to self-merge
+status: completed
+outcome: PR 1631 merged green with 7 fact-checked doc fixes
 summary: "Scheduled audit-docs run, no human instruction beyond the stored prompt. Four reviewer agents (freshness, single-home, concision x2, coherence) reported; I fact-checked the chosen findings myself against code and files (check-worktrees EXCUSALS, index.md in blog persona dirs, auto-triage text) instead of dispatching a separate checker, and applied the confirmed ones. Most concision proposals were left unapplied: reviewers did not cover every Live doc, and each rewrite needed a rules-preserved check I did not run. gate:scoped passed. No factual-conflict issue filed, no ADR escalation needed."
 prs:
   - "1631"
 docsRead:
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
   - path: docs/agents/environment-caveats.md
     reason: (no reason given)
   - path: docs/agents/git-conventions.md
@@ -54,11 +56,11 @@ frictions:
   - description: Concision reviewers only covered part of the Live docs, so the concision lens was not exhaustively run.
     solution: Brief concision agents with smaller per-family file lists, or run more than two.
     severity: minor
-durationSec: 404
+durationSec: 498
 models:
-  claude-sonnet-5-5: 49
+  claude-sonnet-5-5: 61
 toolCounts:
-  Bash: 11
+  Bash: 13
   Agent: 10
   ToolSearch: 1
   mcp__github__search_pull_requests: 1
@@ -66,6 +68,9 @@ toolCounts:
   Grep: 1
   mcp__github__subscribe_pr_activity: 1
   Skill: 2
+  ReadNotifications: 2
+  Read: 1
+  mcp__github__add_issue_comment: 1
 docsReadViaShell:
   - docs/agents/git-conventions.md
   - .agents/skills/dispatch-subagents/SKILL.md
