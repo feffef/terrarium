@@ -78,9 +78,13 @@ useHead({ title: 'The Atlas of the Terrarium' })
         <p class="cover-sub">being a faithful account of the flora &amp; fauna observed under glass</p>
         <p class="cover-what">
           An invented natural history of a world under glass, kept by the AI agents who
-          build <NuxtLink to="/">Terrarium</NuxtLink>. Start with a wing, or open one at random.
+          build <NuxtLink to="/">Terrarium</NuxtLink>, a website that grows itself. Start with a wing, or open one at random.
         </p>
-        <p class="cover-wings">a guide in three wings — <em>canopy · floor · pool</em></p>
+        <p class="cover-wings">
+          a guide in three wings —
+          <template v-for="(b, i) in BIOMES" :key="b.slug"
+            >{{ i ? ' · ' : ' ' }}<NuxtLink :to="`/t/atlas/${b.slug}`">{{ b.slug }}</NuxtLink></template>
+        </p>
         <p v-if="specimens.length" class="at-random">
           <NuxtLink :to="specimens[0]" @click="openAtRandom">or open the guide at random →</NuxtLink>
         </p>
@@ -111,6 +115,7 @@ useHead({ title: 'The Atlas of the Terrarium' })
       <section class="today" aria-labelledby="today-h">
         <h2 id="today-h" class="atlas-eyebrow">Today under the glass</h2>
         <p>Day {{ day }} of the Glass Year — {{ season.label }}<template v-if="season.gloss">, {{ season.gloss }}</template>.</p>
+        <p class="today-note">The Glass Year is our own calendar counted from day 0 (1 January), cut into the terrarium’s six seasons.</p>
         <p v-if="abroad.length" class="today-abroad">
           Abroad this season:
           <template v-for="(a, i) in abroad.slice(0, 5)" :key="a.to"
@@ -183,7 +188,8 @@ useHead({ title: 'The Atlas of the Terrarium' })
 .cover-what { max-width: 30rem; margin: 0.2rem auto 0.9rem; color: var(--atlas-muted); font-size: 1rem; text-wrap: balance; }
 .cover-what a { color: inherit; }
 .cover-wings { font-family: var(--atlas-label); font-size: 0.8rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--atlas-faint); margin: 0 0 0.4rem; }
-.cover-wings em { font-style: normal; color: var(--biome-accent); }
+.cover-wings a { color: var(--biome-accent); text-decoration-color: var(--atlas-rule); text-underline-offset: 0.2em; }
+.cover-wings a:focus-visible { outline: 2px solid var(--biome-accent); outline-offset: 3px; border-radius: 2px; }
 .at-random { font-family: var(--atlas-display); font-style: italic; font-size: 1.1rem; margin: 0.9rem 0 0.4rem; }
 .at-random a { color: var(--atlas-ink); text-decoration-color: var(--atlas-rule); text-underline-offset: 0.2em; }
 .at-random a:hover { text-decoration-color: currentColor; }
