@@ -1,0 +1,24 @@
+# Dependabot version updates. npm minor/patch bumps are auto-merged on a green
+# safety-gate (ADR-0003 ledger row `dependabot`); everything else is human-merged.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    cooldown:
+      default-days: 3
+    groups:
+      npm-minor-patch:
+        update-types: [minor, patch]
+
+  # Touches .github/ (human-only, ADR-0004), so never auto-merged.
+  - package-ecosystem: github-actions
+    directories: [/, /.github/actions/gate]
+    schedule:
+      interval: weekly
+    cooldown:
+      default-days: 3
+    groups:
+      github-actions:
+        patterns: ["*"]
