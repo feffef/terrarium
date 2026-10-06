@@ -106,10 +106,12 @@ with the reason.
 
 ## 5. Feature PR
 
-Only after step 4's PR has merged or been escalated: branch
-`claude/visitor-loop-feature-<YYYY-MM-DD>` from the fresh `origin/main` and
-build the chosen feature — smallest version that a visitor would notice, in
-the site's existing voice and design. Tests where the Tenant already has them.
+Only after step 4's PR has merged or been escalated, branch from the fresh
+`origin/main`: re-cut the session's designated branch if step 4's PR merged
+(`docs/agents/pr-workflow.md`'s restart-after-merge note), else
+`claude/visitor-loop-feature-<YYYY-MM-DD>`. Then build the chosen feature —
+smallest version that a visitor would notice, in the site's existing voice and
+design. Tests where the Tenant already has them.
 Its body states the feature's search result and names any related issue, with a
 closing keyword only per `docs/agents/issue-tracker.md`. Review and land it the
 same way as step 4, with the chosen idea as the spec. Done when the feature is
