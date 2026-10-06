@@ -36,7 +36,7 @@
     "@types/node": "^22.20.5",
     "eslint": "^10.12.0",
     "jiti": "^2.7.0",
-    "mermaid": "^11.17.2",
+    "mermaid": "^12.1.0",
     "playwright-core": "^1.63.0",
     "tsx": "^4.23.15",
     "typescript": "^6.0.3",
