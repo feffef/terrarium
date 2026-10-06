@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01Jej4qtE56V9dtLCNobJ39K
 startedAt: 2026-10-06T05:08:08Z
-endedAt: 2026-10-06T05:41:35Z
+endedAt: 2026-10-06T06:19:42Z
 kind: interactive
 goal: Explain why audit-docs left most concision proposals unapplied, then fix the Skill and dry-run it
 status: in-review
-outcome: PR 1632 (concision rotation + hard checker rule) green, awaiting review; dry run applied 53 checked fixes, gate green, not shipped
-summary: "Human-instructed throughout. The user asked me to explain, from the full transcript, why the 2026-10-06 audit-docs run (session_01L6ePb5aMsH4u53XnEs7FLQ, PR 1631) left most concision proposals unapplied. The transcript showed 36 rewrites proposed and 1 applied: the briefs capped each reviewer at about 10 findings, two agents split 40+ files, and no independent checker ran, so the log's coverage reason was only half the story. The user then asked me to fix the Skill and dry-run it, and chose among options I offered: rotate one concision family per run with no cap, only a checker's CONFIRMED is applied, and a full dry run with no PR for its doc fixes. PR 1632 carries the Skill change. The dry run (concision family 4, journal pages and Inventory, read in full) pooled 56 findings; 4 checkers returned 38 CONFIRMED, 15 CONFIRMED-BUT, 3 WRONG. The checkers caught real losses (a still-true guard fact, the broad-tags rule, a reach-for-it instruction). 53 edits were applied in a scratch worktree, the full gate passed, and the worktree was removed; the patch is in the scratchpad, not shipped. The coherence reviewer also caught an octal bug in my own Skill edit, fixed in PR 1632."
+outcome: PR 1632 (concision rotation, hard checker rule, checker-text-only fixes) green, awaiting review; two dry runs, gates green, fixes not shipped
+summary: "Human-instructed throughout. The user asked me to explain, from the full transcript, why the 2026-10-06 audit-docs run (session_01L6ePb5aMsH4u53XnEs7FLQ, PR 1631) left most concision proposals unapplied: 36 proposed, 1 applied, because briefs capped reviewers at about 10 findings, two agents split 40+ files, and no checker ran. The user then asked twice to adjust the Skill and dry-run it, choosing among options I offered each time. Round 1 (PR 1632): rotate one concision family per run with no cap, and only a checker's CONFIRMED is applied. Dry run 1 (family 4): 56 findings, 38 CONFIRMED, 15 CONFIRMED-BUT, 3 WRONG, 53 edits, full gate green; it exposed an octal bug in my formula (fixed) and two fixer-written unchecked edits. Round 2: fixers apply only checker text and return gaps to a checker, out-of-lens findings join the pool, plus three confirmed audit-docs fixes. Dry run 2 (family 4 again, by the user's choice): 67 findings, 22 CONFIRMED, 35 CONFIRMED-BUT, 9 WRONG, 1 CONFLICT, 56 edits with zero fixer-written text, full gate green. Two checker errors were caught by routing evidence back to the same checker; one of them (last_fired_at) was a wrong fix dry run 1 had applied. Patches for both dry runs are in the scratchpad, not shipped."
 prs:
   - "1632"
 docsRead:
@@ -56,6 +56,32 @@ docsRead:
     reason: (no reason given)
   - path: layers/journal/content/current/pages/real-and-invented.md
     reason: (no reason given)
+  - path: docs/agents/guest-contributions.md
+    reason: (no reason given)
+  - path: docs/agents/verifying-ui-changes.md
+    reason: (no reason given)
+  - path: docs/agents/tenant-layers.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/skills/audit-skills.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/skills/blog-post.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/skills/close-session.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/skills/digest.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/skills/dispatch-subagents.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/skills/frictions-to-fixes.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/skills/log-session.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/skills/prune-trial.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/skills/visitor-loop.yml
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: (no reason given)
 skillsUsed:
   - name: close-session
     reason: closure at PR open and after the dry run
@@ -79,22 +105,29 @@ frictions:
   - description: Tail-pipe guard denied a git diff --stat | tail chained before a backgrounded gate; one retry.
     solution: Redirect to a file as the guard says.
     severity: nit
-durationSec: 2007
+  - description: Checkers erred twice in dry run 2 (a dropped still-true clause, a field judged from a tool description rather than real output); dry run 1 shipped one of those wrong fixes to its patch.
+    solution: audit-docs could tell checkers to verify a tool-behaviour claim by calling the tool read-only, not from its description, and the orchestrator routes cross-checker disagreement back for a re-verdict.
+    severity: moderate
+  - description: Checkers in different dry runs disagreed on the same facts (triage (planned), MCP prefix, trial territory of a bullet), so a verdict is not fully repeatable.
+    solution: Have checkers cite the primary-source line for each verdict so disagreements are quick to resolve.
+    severity: minor
+durationSec: 4294
 models:
-  claude-opus-5-5: 189
+  claude-opus-5-5: 285
 toolCounts:
-  Bash: 46
+  Bash: 66
   ToolSearch: 3
   mcp__claude-code-remote__list_events: 14
-  AskUserQuestion: 1
+  AskUserQuestion: 2
   Read: 1
-  Agent: 11
+  Agent: 23
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
   Skill: 3
-  ReadNotifications: 6
-  mcp__github__update_pull_request: 2
+  ReadNotifications: 8
+  mcp__github__update_pull_request: 3
+  SendMessage: 3
 docsReadViaShell:
   - .agents/skills/audit-docs/SKILL.md
   - docs/agents/pr-workflow.md
@@ -109,43 +142,56 @@ docsReadViaShell:
   - docs/adr/0004-objective-safety-gate.md
   - docs/agents/github-integration.md
   - docs/agents/environment-caveats.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - .agents/skills/visitor-loop/SKILL.md
+  - .agents/skills/digest/SKILL.md
+  - .agents/skills/audit-skills/SKILL.md
+  - .agents/skills/prune-trial/SKILL.md
+  - docs/adr/0003-agent-operating-model-and-governance.md
+  - docs/research/rulebook-migration-table.md
+  - layers/blog/CONTEXT.md
+  - docs/agents/verifying-ui-changes.md
+  - .agents/skills/visitor-loop/decisions.md
+  - docs/agents/git-conventions.md
+  - docs/agents/guards.md
+  - .agents/skills/guest-intake/SKILL.md
+  - docs/adr/0001-single-container-baked-multitenancy.md
+  - CONTEXT.md
+  - docs/adr/0027-prune-trials.md
   - docs/agents/domain.md
   - .agents/skills/claude-handoff/SKILL.md
-  - .agents/skills/frictions-to-fixes/SKILL.md
   - docs/agents/issue-tracker.md
-  - layers/blog/CONTEXT.md
   - .agents/skills/blog-post/personas/david.md
   - .agents/skills/blog-post/personas/eyra.md
   - .agents/skills/blog-post/personas/karen.md
   - .agents/skills/blog-post/personas/kevin.md
-  - docs/research/rulebook-migration-table.md
-  - .agents/skills/digest/SKILL.md
   - layers/midden/CONTEXT.md
   - layers/tinkerfund/CONTEXT.md
-  - docs/agents/git-conventions.md
-  - .agents/skills/visitor-loop/SKILL.md
-  - .agents/skills/prune-trial/SKILL.md
-  - .agents/skills/audit-skills/SKILL.md
+  - docs/adr/0022-autonomous-triage-sweep.md
+  - .agents/skills/tdd/SKILL.md
+  - docs/adr/0013-dynamic-content-config-committed-routing-map.md
+  - .agents/skills/atlas-specimen/SKILL.md
   - docs/research/public-readiness-review.md
   - docs/adr/0026-gate-workflow-thin-shell.md
-  - .agents/skills/visitor-loop/decisions.md
   - docs/research/nuxt-content-review-grounding.md
-  - .agents/skills/guest-intake/SKILL.md
-  - docs/adr/0003-agent-operating-model-and-governance.md
   - docs/agents/mdc-when-to-use.md
   - .agents/skills/triage/SKILL.md
-  - CONTEXT.md
   - docs/adr/0005-skill-model.md
   - docs/adr/0008-self-documentation-tenant-is-a-journal.md
   - docs/adr/0009-session-logs-commit-directly-to-main.md
   - docs/adr/0021-multi-context-domain-docs.md
-  - docs/adr/0022-autonomous-triage-sweep.md
+  - docs/adr/0024-build-time-mermaid-prerender.md
   - .agents/skills/wait-what/SKILL.md
-  - docs/agents/guards.md
-  - docs/adr/0027-prune-trials.md
-  - docs/agents/verifying-ui-changes.md
+  - docs/agents/triage-labels.md
+  - docs/adr/0025-cross-tenant-catalog-and-collection-kinds.md
+  - docs/adr/0018-tenant-layers-under-layers-directory.md
   - docs/research/content-client-queries-without-wasm.md
+  - docs/agents/guest-contributions.md
   - .agents/skills/triage/AGENT-BRIEF.md
+  - .agents/skills/diagnosing-bugs/SKILL.md
+  - .agents/skills/midden-catalogue/SKILL.md
+  - .agents/skills/tinkerfund-campaign/SKILL.md
+  - .agents/skills/wayfinder/SKILL.md
 subagents:
   - type: general-purpose
     task: "Audit A: freshness"
@@ -169,7 +215,33 @@ subagents:
     task: "Apply fixes: journal pages+Inventory"
   - type: general-purpose
     task: "Apply fixes: docs, Skills, rulebook"
+  - type: general-purpose
+    task: "DR2 Audit A: freshness"
+  - type: general-purpose
+    task: "DR2 Audit B: single-home"
+  - type: general-purpose
+    task: "DR2 Audit C1: journal pages"
+  - type: general-purpose
+    task: "DR2 Audit C2: Inventory"
+  - type: general-purpose
+    task: "DR2 Audit D: coherence"
+  - type: general-purpose
+    task: "DR2 Checker 1: pages"
+  - type: general-purpose
+    task: "DR2 Checker 2: Inventory"
+  - type: general-purpose
+    task: "DR2 Checker 3: single-home + Skills"
+  - type: general-purpose
+    task: "DR2 Checker 4: coherence rest"
+  - type: general-purpose
+    task: "DR2 Checker 5: audit-docs self"
+  - type: general-purpose
+    task: "DR2 apply: journal pages+Inventory"
+  - type: general-purpose
+    task: "DR2 apply: docs, Skills, rulebook"
 gitBranch: ccr-6dc5f19e-3gr227
 entrypoint: remote_mobile
 cliVersion: 2.1.291
+learnings:
+  - list_triggers output carries a top-level last_fired_at alongside last_run, though the tool description lists only last_run.
 landedBy: Stop
