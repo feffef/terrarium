@@ -125,3 +125,19 @@ observations:
       as a new issue: the gap the finding names is already closed. Step 7
       fact-check dispatch stays clean across the newest runs. Grade
       unchanged.
+  - date: "2026-10-06"
+    note: >-
+      NEW silent failure, escalated as issue #1626: step 12's reply
+      decision was skipped a 5th time — session_01VKEB6VDDPrzTmGAt2obTsH
+      (PR #1614, started 2026-10-05T11:05:49Z, ran entirely under the
+      post-reword SKILL.md landed 11+ hours earlier) self-judged "none"
+      ("I skipped drafting per-Persona reply drafts and the reader pass...
+      because no grounded angle cleared its bar") instead of dispatching
+      the mandated fresh reader subagent for a reader-returned "none" —
+      directly contradicting the 2026-10-05 entry's "the gap is already
+      closed" conclusion. This is the first skip *since* the `074913c4`
+      reword that was believed to have fixed it, not a pre-fix recurrence.
+      Step 7's fact-check dispatch and Persona rotation both re-verified
+      clean across all 10 usedIn sessions (12 PRs checked against GitHub).
+      Grade unchanged — reliability gap confined to one sub-step, not core
+      delivery.

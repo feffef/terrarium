@@ -186,3 +186,25 @@ observations:
       open and unfixed directly in current code
       (`scripts/session-trace.ts`, `scripts/shell-reads.ts`). No reverts
       touching this Skill's mechanics. Grade unchanged.
+  - date: "2026-10-06"
+    note: >-
+      CORRECTION to the two entries above: #1482 and #1542 are not "still
+      open" — both were closed 2026-10-03 (completed), mooted by the
+      ADR-0009 output-matching rewrite (#1545, commit `87257aa4`), which
+      made shell-read crediting depend only on a command's output, never
+      on parsing its text. `resolveAgainstCdDir` (the buggy function) is
+      now reachable only from the advisory "why wasn't this credited"
+      message, never from the path that produces the landed
+      `docsReadViaShell` field — confirmed by reading the current
+      `scripts/session-trace.ts` directly and independently re-verified
+      against `gh api` before writing this. The 2026-10-04/05 entries
+      evidently diffed the function's body for textual changes without
+      tracing its call sites or checking GitHub issue state — exactly the
+      "don't state anything as settled... unless verified fresh against a
+      primary source" failure CLAUDE.md warns about, filed as issue #1627
+      (a second instance of the same class as the already-fixed
+      version-grading bug on `audit-skills`). 10 newest sessions
+      re-checked: clean field-split, genuine `landedBy: Stop`, no new
+      SHELL-READ-DETECTION instance, no regression from the 2026-10-05
+      `scripts/log-session.ts` change (unrelated session-id-guard plumbing).
+      Grade unchanged.

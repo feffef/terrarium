@@ -163,3 +163,25 @@ observations:
       Commented new evidence onto #1515 (left open pending a case that
       actually needs a ruling). Grade unchanged; role updated to reflect
       the pass.
+  - date: "2026-10-06"
+    note: >-
+      #1515 is now closed (2026-10-05, via PR #1570 and PR #1623's title-
+      matching fix) — but a deeper check found the branch-matching blind
+      spot DID cause a real missed ruling before it was patched: PR #1563
+      (branch `ccr-7b24c32f-0nzqez`) was reverted by owner-requested PR
+      #1576, both merged after #1570 landed, but #1563's non-matching
+      branch name made it invisible to `visitorPrs` — so the very next
+      run (session_01QS72zRhKidx1uP468fuAFK, the run credited with
+      "passing its first live test") correctly processed its 8 real
+      candidates but never saw #1576/#1563 at all, because the script
+      structurally couldn't surface it. The decisions.md line for that
+      revert was only added two days later, by PR #1623's own commit
+      manually backfilling it — not caught live by any audited run.
+      Title-matching (landed in that same PR) now covers `ccr-*` and
+      `claude/<adj>-<noun>-*` branches, but none of the 8 sessions checked
+      this sweep ran against the fixed code — commented this onto #1515
+      (not reopened, since the fix's logic is sound) asking for a human
+      spot-check on the next real revert/rework to confirm the mechanism
+      actually catches it end-to-end. Rest of the pipeline (3-model
+      dispatch, consensus, code-review before merge) clean across all 8
+      sessions, all 16 PRs verified merged. Grade unchanged.

@@ -125,3 +125,15 @@ observations:
       shape already recorded on 2026-09-27 (PR #1289), now confirmed a
       second time independently — repeated, not a one-off. No damage
       (the edit itself was an accurate wording fix). Grade unchanged.
+  - date: "2026-10-06"
+    note: >-
+      Re-checked (audit-skills behaviour check), 7 usedIn sessions
+      (2026-09-29 through 10-05): all clean against the SKILL.md text each
+      saw. Both #1541 (dropped Friction) and #1608 (second out-of-tier
+      self-merge) are now fixed and closed — #1608's root cause traced to
+      the SKILL.md diffs themselves: the tier list never classified
+      `layers/journal/content/current/skills/*.yml` at all until commit
+      `6a170199` (2026-10-05) added Inventory entries to the Live list
+      outright, with a carve-out never to touch the `importance` grade. No
+      reverts found (`git log --all -i --grep=revert` over "audit" returns
+      only unrelated commits). Grade unchanged.

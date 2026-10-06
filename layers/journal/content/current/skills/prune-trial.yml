@@ -159,3 +159,19 @@ observations:
       still exists unaddressed. Verdict-commit spot checks (PR #1596, PR
       #1558) both show genuine fresh searches, not inherited conclusions.
       Grade unchanged.
+  - date: "2026-10-06"
+    note: >-
+      Re-checked: ledger passes `validate-prune-trials.ts`, 3 open trials,
+      none judgeable yet. The backgrounding-cluster trial (flagged unjudged
+      past floor on 2026-10-05) resolved itself the same day it was
+      flagged: judged "holds" in commit `e5f400f5` (~24h past floor,
+      consistent with "floor, not deadline"), evidence traced and
+      confirmed genuine (PR #1615's cited friction matches
+      session_015LBxMJwGsviZMj4ScFXD38's actual log). Not a 5th
+      narrow-margin instance warranting escalation — a closed instance.
+      `origin/prune/backgrounding-cluster` still exists unaddressed, now a
+      3rd consecutive observation with no action — escalated as issue
+      #1628 (minor, no damage, purely a repeated-cleanup loose end). The
+      one confirmed silent failure on record (session_01U95GU6a93i4N25ZLgwXCSu,
+      corpus-search skip) remains unchanged, self-fixed same session. Grade
+      unchanged.

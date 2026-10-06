@@ -193,3 +193,38 @@ observations:
       scan clean, both orphan candidates already resolved-by-annotation, no
       human-prompted or manually-rescued closures this window. Grade/role
       unchanged.
+  - date: "2026-10-06"
+    note: >-
+      Self-check, two NEW verified silent failures in this Skill's own
+      methodology, both now escalated. (1) The version-grading bug recurred
+      twice before its own fix (`a0a3a816`, "grade a run against the Skill
+      in effect when it started"): session_01SYbiQQHsX8HmeXJTtxAPwp
+      (2026-09-29) filed #1479 claiming blog-post's step-7 skipped in 2/7
+      runs, graded against text the flagged sessions never saw — #1479 was
+      later closed as never-skipped by a human-triggered session.
+      session_01LsUHzQXAhqgRneHtsX7qm7 (2026-10-04) reopened #1515 on the
+      same error — a human-driven session caught it hours later, and that
+      correction directly produced `a0a3a816`. Neither self-caught by a
+      scheduled audit-skills run; both fixes came from human-involved
+      sessions. Not re-escalated (already fixed, no open action item) but
+      recorded here since the fix's own provenance should be visible where
+      it's tracked. (2) A second, NEW verification gap, not yet fixed:
+      this Skill's own 2026-10-04 and 2026-10-05 observations below (on
+      `log-session`) asserted issues #1482 and #1542 were "still open and
+      unfixed... independently re-confirmed in current code" — both were
+      actually closed since 2026-10-03, moved by the ADR-0009
+      output-matching rewrite (#1545) that routed the buggy function out of
+      the credited-path entirely. Caught this run by a subagent that read
+      live code and traced call sites instead of trusting the tracker note;
+      independently re-verified via `gh api` before filing issue #1627.
+      Same failure class as (1) — stating issue state as settled from a
+      code/git sweep alone, without the one-line `issue_read` check that
+      would catch it. Also this run: filed #1626 (blog-post step-12's 5th
+      skip, 1st since its "fix"), #1628 (stray `prune/backgrounding-cluster`
+      branch, repeated 3rd time unaddressed), one comment on closed #1515
+      noting its fix landed without an audited end-to-end catch. All 10
+      behaviourChecks subagents' reports independently verified before use.
+      Step 3 closure completeness: orphan scan clean (scanned: true, 1037
+      merged PRs, 887 with a session), both orphan candidates already
+      resolved-by-annotation, no human-prompted or manually-rescued
+      closures. Grade/role unchanged.

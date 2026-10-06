@@ -90,3 +90,15 @@ observations:
       sources, retention sweep moved exactly 1 digest + 15 session logs
       per `RETAIN_DATES = 7`. No reverts of digest content found. Grade
       unchanged.
+  - date: "2026-10-06"
+    note: >-
+      Re-verified, 7 usedIn sessions. The one digest.ts change this window
+      (c6f8d8975f) is a comment-text-only fix, zero functional diff —
+      doesn't affect grading. Newest, previously-unchecked
+      session_015pcFLucxsdwj7nSLKtozGP (PR #1625, the 2026-10-05 Digest):
+      genuine fact-check dispatch (29 claims, 0 wrong, 2 reworded), 4
+      spot-checked claims all accurate against GitHub, retention sweep
+      moved exactly 1 digest + 13 session logs matching `RETAIN_DATES = 7`
+      (correctly bucketed by `endedAt`, not filename, for one log whose
+      filename date differs from its `endedAt`). No new silent failures.
+      Grade unchanged.
