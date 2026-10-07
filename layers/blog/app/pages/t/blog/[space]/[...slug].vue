@@ -54,6 +54,20 @@ const { data: journalDay } = await useAsyncData(`${route.path}:journal-day`, asy
   return pages.find((p) => p.tenant === 'journal' && p.url.endsWith(`/digests/${day}`)) ?? null
 })
 
+// The accent drop cap only suits a post that opens on a letter (theme.css).
+const opensOnLetter = computed(() => {
+  // Minimark node: [tag, props, ...children]; descend to the first text.
+  const firstText = (node: unknown): string | undefined => {
+    if (typeof node === 'string') return node
+    if (!Array.isArray(node)) return undefined
+    for (const child of node.slice(2)) {
+      const t = firstText(child)
+      if (t?.trim()) return t
+    }
+  }
+  return /^\p{L}/u.test(firstText(post.value?.body?.value?.[0])?.trimStart() ?? '')
+})
+
 if (!post.value && !error.value) setResponseStatus(404)
 
 // The .bl-page body class scopes the blog canvas (full-bleed background +
@@ -90,7 +104,7 @@ useSeoMeta({ description: () => post.value?.description })
         </ul>
       </header>
 
-      <div class="prose prose--post">
+      <div class="prose prose--post" :class="{ 'prose--cap': opensOnLetter }">
         <ContentRenderer :value="post" />
       </div>
 
@@ -143,7 +157,11 @@ useSeoMeta({ description: () => post.value?.description })
 
     <div v-else class="prose">
       <h1>Not found</h1>
-      <p>No document at <code>{{ path }}</code> in blog/{{ space }}.</p>
+      <p>There's no post at this address.</p>
+      <p>
+        <NuxtLink :to="`/t/blog/${space}`">All of {{ meta.name }}'s posts →</NuxtLink><br>
+        <NuxtLink to="/t/blog">Back to the Blog →</NuxtLink>
+      </p>
     </div>
 
     <!-- A failed client-side content load raises a modal (message / technical
