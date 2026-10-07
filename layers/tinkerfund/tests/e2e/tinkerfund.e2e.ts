@@ -204,6 +204,7 @@ export function registerTinkerfundE2E(): void {
         ['pigeon-arrival-board', 'Back this Campaign'],
         ['snowflake-comparison-kit', 'Notify me'],
         ['pausable-hourglass', 'Pledging has closed'],
+        ['canned-silence', 'Back this Campaign'],
       ] as const) {
         it(`renders the prod Campaign page for ${slug}`, async () => {
           const html = await $fetch(`/t/tinkerfund/prod/campaigns/${slug}`)
