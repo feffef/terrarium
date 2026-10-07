@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01NyDGTR1fuP22hPo7XghCfz
 startedAt: 2026-10-07T10:38:24Z
-endedAt: 2026-10-07T12:11:00Z
+endedAt: 2026-10-07T12:19:17Z
 kind: interactive
 goal: "Prune trial: rewrite CLAUDE.md to the bare minimum in plain, precise words"
-status: in-review
-outcome: CLAUDE.md cut from 374 to 146 lines; PR 1658 open, probed on Sonnet twice and reviewed twice
-summary: "Human-instructed throughout: the owner invoked /prune-trial with an explicit ask to rewrite CLAUDE.md to the bare minimum, trace each rule's origin with git log/blame, drop rules whose origin wasn't major or critical, and use pointers wisely. The owner made every structural call in-session: keep the three open-trial bullets verbatim, keep WHY-not-WHAT and Read-not-cat, a minimal layout, drop issue/PR numbers, drop the Skill Inventory pointer, turn the docs index into mandatory \"before you X, read Y\" triggers, move the ADR rule from session start to a planning trigger, restore the pack-Skill rule, and remove vague wording everywhere. Agent-initiated parts: the rule-origin trace (subagent, 54 rules graded), the ADR-reading survey (36 large human-prompted sessions, median 2 of 28 ADRs read), the Skill Inventory usage check (only audit-skills sweeps read it), judging the workflow-file trial (holds), the Sonnet probes, and proposing fixes from two /code-review rounds that the owner ran and approved. Two surprises: \"read all ADRs\" was almost never followed, while grepping docs/adr by file path reliably finds the binding ADRs; and the Skill Inventory pointer was dead weight. What's still open: the owner decides whether this prune-trial PR self-merges or is merged by hand, given its size."
+status: completed
+outcome: CLAUDE.md cut from 374 to 146 lines; PR 1658 merged after two Sonnet probes and two review rounds
+summary: "Human-instructed throughout: the owner invoked /prune-trial with an explicit ask to rewrite CLAUDE.md to the bare minimum, trace each rule's origin with git log/blame, drop rules whose origin wasn't major or critical, and use pointers wisely. The owner made every structural call in-session: keep the three open-trial bullets verbatim, keep WHY-not-WHAT and Read-not-cat, a minimal layout, drop issue/PR numbers, drop the Skill Inventory pointer, turn the docs index into mandatory \"before you X, read Y\" triggers, move the ADR rule from session start to a planning trigger, restore the pack-Skill rule, and remove vague wording everywhere. Agent-initiated parts: the rule-origin trace (subagent, 54 rules graded), the ADR-reading survey (36 large human-prompted sessions, median 2 of 28 ADRs read), the Skill Inventory usage check (only audit-skills sweeps read it), judging the workflow-file trial (holds), the Sonnet probes, and proposing fixes from two /code-review rounds that the owner ran and approved. Two surprises: \"read all ADRs\" was almost never followed, while grepping docs/adr by file path reliably finds the binding ADRs; and the Skill Inventory pointer was dead weight. The owner merged PR 1658 after CI went green; the new trial's verdict is due three days after landing."
 prs:
   - "1658"
 docsRead:
@@ -67,15 +67,15 @@ frictions:
   - description: I issued one pointless 'echo' Bash call while thinking.
     solution: None needed beyond attention
     severity: nit
-durationSec: 5556
+durationSec: 6053
 models:
-  claude-opus-5-5: 348
+  claude-opus-5-5: 366
 toolCounts:
   Skill: 3
-  Bash: 96
+  Bash: 98
   Agent: 10
   AskUserQuestion: 1
-  ToolSearch: 2
+  ToolSearch: 3
   mcp__github__search_issues: 1
   Write: 3
   Read: 8
@@ -85,6 +85,10 @@ toolCounts:
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
   mcp__github__issue_read: 3
+  ReadNotifications: 4
+  mcp__github__pull_request_read: 1
+  mcp__claude-code-remote__send_later: 1
+  mcp__claude-code-remote__delete_trigger: 1
 filesEdited:
   - CLAUDE.md
   - docs/agents/tenant-layers.md
