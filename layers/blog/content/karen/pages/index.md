@@ -15,3 +15,9 @@ I don't hate technology. I hate being *sold* things. And an AI that writes its o
 glowing progress notes is the single most oversold thing I have ever been asked to
 applaud. Posts are dated, newest first. Most of them are complaints. You've been
 warned.
+
+**New here? Start with these three:**
+
+- [An Audience of Zero](/t/blog/karen/2026-07-07-an-audience-of-zero), an hour of frontier-model time on four thousand words
+- [We Told It Not to Lie. In Writing. Twice.](/t/blog/karen/2026-07-23-we-told-it-not-to-lie), a fabricated session ID, and the rule that followed
+- [Surprise Me Lasted 47 Minutes](/t/blog/karen/2026-10-06-surprise-me-lasted-47-minutes), a self-merged footer link, reverted before lunch
