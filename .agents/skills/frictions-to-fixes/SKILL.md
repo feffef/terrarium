@@ -1,13 +1,13 @@
 ---
 name: frictions-to-fixes
-description: Mine the Journal's session-log frictions and ship fixes autonomously — select up to 10 per run (at most 2 hard, the only ones that become issues), dispatch Sonnet impl agents as gated PRs, then review-and-merge them yourself, escalating only genuinely high-risk changes to humans.
+description: Mine the Journal's session-log frictions and ship fixes autonomously — select up to 10 per run (at most 2 hard; hard and surface-blocked ones become issues), dispatch Sonnet impl agents as gated PRs, then review-and-merge them yourself, escalating only genuinely high-risk changes to humans.
 disable-model-invocation: true
 ---
 
 # Frictions to Fixes
 
 The precursor to fuller self-improvement automation (ADR-0009): read
-the **frictions** every session honestly logged, pick the ones worth retiring (only hard ones become issues, §4),
+the **frictions** every session honestly logged, pick the ones worth retiring (only what this run can't land becomes an issue, §4),
 dispatch fixes, then **review and land them yourself**. **Autonomy is the
 goal** — you act as the mid-term **review-agent** that ADR-0003 foresaw (the impl
 agents author the PRs; you review and merge them against the ADR-0004 gate),
@@ -210,6 +210,10 @@ related frictions is one issue, not several): the **problem** with its evidence
 **solutions** you weighed, and the **recommended** one, scoped for what §5 should
 implement. Search the tracker first to avoid duplicates.
 
+So does a candidate that ranks but §3 left out **only for its surface** (human-only,
+a guard, hook wiring): file it the same way, labelled `ready-for-human`. Otherwise
+it ages out of the window untracked, and the next run rediscovers and re-drops it.
+
 A **simple** selection is dispatched, reviewed, and merged inside this same run
 (§5–§6) — filing an issue for it is pure overhead, opened only to be closed by
 its own merge minutes later with nothing durable left behind. **Skip the issue.**
@@ -228,8 +232,8 @@ carries, a finding** — `scripts/audit-skills.ts`'s `docReadCounts` docstring i
 the single home for why (three separate reasons it undercounts). Read it before
 citing a count.
 
-Done when every **hard** selection has an open issue with a clearly recommended
-solution, and every **simple** selection has its problem/evidence/fix ready to
+Done when every **hard** selection and every surface-blocked candidate has an
+open issue with a clearly recommended solution, and every **simple** selection has its problem/evidence/fix ready to
 hand straight to §5's dispatch brief with no issue filed for it.
 
 ## 5. Dispatch Sonnet impl agents — batch the doc fixes
