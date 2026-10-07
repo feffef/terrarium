@@ -3,207 +3,112 @@ name: dispatch-subagents
 description: "Dispatch work to subagents — use when about to spawn one or several (especially parallel, or any that will touch git), when authoring a dispatch brief, when checking that dispatched work actually landed, or when a subagent stopped mid-run and needs resuming. Other Skills that dispatch impl agents reach it by name."
 ---
 
-A dispatch is a **procedure**, not a tool call: lock the shared axis → pick the
-mechanism → author the brief → dispatch → verify no work was **stranded**. Every
-rule below is a repair for an observed failure, not a precaution.
+Goal: every subagent's work lands, is right, and is never **stranded**
+(finished but uncommitted, or unseen by you). The steps: lock the shared axis →
+pick the isolation → write the brief → dispatch → verify.
 
 ## 1. Lock the shared design axis first
 
-Before dispatching subagents whose outputs share a **load-bearing** design axis —
-the thing every one of their outputs depends on — grill it to a locked answer,
-using the `grilling` Skill by name. The trigger is the shared dependency, not
-headcount or pass size: even two subagents on a small pass need this if the axis
-is genuinely load-bearing across their outputs. An axis that shifts mid-build,
-after subagents have already authored against the old answer, forces a full
-re-authoring pass.
+If several subagents' outputs depend on one **load-bearing** design choice (even
+two agents on a small pass), settle it first with the `grilling` Skill. A choice
+that shifts after agents have started forces a full redo.
 
-Done when the axis has a locked answer, or you've established the outputs share
-no such axis.
+## 2. Pick the isolation
 
-## 2. Pick the isolation mechanism
+- **A dispatched subagent that touches git:** pass `isolation: 'worktree'` on the
+  Agent call. Without it, parallel agents share one checkout and race on
+  branches.
+- **`EnterWorktree`/`ExitWorktree`** moves your whole session. Use only when the
+  user says "worktree" or CLAUDE.md directs it.
+- **Manual `git worktree add`** is for your own one-off inspection, never a
+  subagent's brief.
 
-Three distinct mechanisms exist in this environment — pick the one that matches
-the task, don't conflate them.
+## 3. Write the brief
 
-1. **`EnterWorktree`/`ExitWorktree`** (interactive, session-level) — switches
-   *this whole session's* working directory into a new git worktree. Use it only
-   when the user explicitly says "worktree", or CLAUDE.md/memory directs the
-   current task to run in one — never proactively for routine work.
-2. **The Agent tool's `isolation: 'worktree'` parameter** (per-subagent) — the
-   mechanism for dispatched subagents, especially parallel ones, that will touch
-   git. Pass it **explicitly**: it is an Agent-tool parameter, not implied by the
-   prompt. Without it, "parallel" agents share one checkout and race on branches.
-3. **Plain manual `git worktree add`** — an ordinary git operation with no
-   session-switching or Agent-tool wiring. Use it only for an ad-hoc, one-off
-   worktree you'll manage by hand yourself (e.g. inspecting another branch's tree
-   side by side). A brief that tells a subagent to run `git worktree add` is doing
-   mechanism 2's job with the wrong mechanism.
+The subagent sees none of your context, so the brief is self-contained. Include
+every line that applies.
 
-Done when the mechanism is named — and, for mechanism 2, `isolation: 'worktree'`
-is actually in the Agent call.
+**Git and checkout**
+- Prefix every git command with `cd <worktree-root> &&`. The Bash tool resets cwd
+  between calls, so a one-time "cd into your worktree" does not carry over.
+- Say `pnpm install` may be needed first in a fresh worktree.
+- Pin the SHA to work from. The agent fetches, checks that HEAD matches it
+  (or `origin/<default-branch>` if none is pinned), and re-branches if not:
+  worktrees sometimes start stale (issue #1420). Subagents sharing one checkout
+  (no worktree) must each get an explicit SHA, never resolve `HEAD` themselves.
+- A review agent for a PR whose branch is checked out elsewhere checks out the
+  PR's commit SHA detached, not the branch name; otherwise it may commit into
+  whichever checkout it can write to (issue #1169).
+- Impl agents pushing to the branch you have checked out: detach your checkout
+  first and re-sync after hand-back. Each agent bases on a fresh
+  `origin/<branch>` and pushes `HEAD:<branch>` without creating or resetting a
+  same-named local branch (issue #1585).
+- A read-only agent that wants to experiment copies the file aside or uses its
+  own worktree. It never edits your checkout, even briefly: you would read the
+  change as the user's edit (issue #887).
 
-## 3. Author the brief
+**Stranding**
+- Commit and push before stopping, even mid-gate. An agent can end or be killed
+  at any time.
+- Long runs bank progress to disk after each step. The harness refuses a
+  subagent's Write of report or findings files, so bank to logs it may write and
+  have it return structured results in its final message for you to save.
+- Name every artifact the agent writes (logs, screenshots, scratch scripts, gate
+  output) uniquely to that agent. Subagents inherit your scratchpad, and a
+  shared name like `gate.log` collides silently (issues #847, #1191).
+- Run `pnpm gate:scoped` and other checks in the foreground (a guard denies
+  backgrounding; `docs/agents/guards.md`). If a check may outlast one call, name
+  a log-file marker as the done signal and resume with `SendMessage`, pasting the
+  log's real tail (issue #602).
+- Launch at most (20 − running) agents at a time; a bigger batch is rejected.
+  Every Agent call runs async, so wait for its notification.
+- At most 2 full gates at once in one container (`test:e2e` dies of memory
+  otherwise); rerun a dead one alone before diagnosing.
+- A screenshot agent shoots as soon as `pnpm build` succeeds, not after the gate
+  (issue #683).
 
-The subagent cannot see this session's context, so the brief is self-contained:
-
-- **Prefix every git-touching command with `cd <worktree-root> &&`.** A dispatched
-  subagent's Bash tool does not preserve working directory across separate tool
-  calls — each starts from whatever cwd the harness resets to, so an early `cd`
-  does not carry over. Never phrase it as "cd into your worktree, then run these
-  git commands": that reads as one-time setup, which the subagent will
-  (correctly, given how the tool actually behaves) fail to repeat.
-- **Say `pnpm install` may be needed first.** A freshly provisioned mechanism-2
-  worktree may not have dependencies installed, so `pnpm gate:scoped` — or any
-  other pnpm script — won't actually work there.
-- **Verify HEAD before reading or committing.** Mechanism-2 worktrees have been
-  observed starting from a stale or unrelated HEAD, hitting multiple parallel
-  subagents in the same session. Check that HEAD matches the SHA the brief pins
-  (fetch it first), or `origin/<default-branch>` when none is pinned, and
-  rebranch explicitly if it doesn't (issue #1420).
-- **A review subagent checking out a PR whose branch might already be checked
-  out elsewhere (e.g. the implementer's own mechanism-2 worktree for that same
-  PR) must check out the PR's commit SHA in detached HEAD, not the branch
-  name.** Git refuses a second branch checkout across worktrees; the observed
-  failure mode is the subagent falling back to committing in whichever
-  checkout it *can* write to instead of failing loudly (issue #1169).
-- **Impl agents pushing to the branch you have checked out:** detach your
-  checkout before dispatch (re-sync from the remote after hand-back); each agent
-  bases on a freshly fetched `origin/<branch>` and pushes `HEAD:<branch>`
-  without creating or resetting a same-named local branch. Older git lets a
-  worktree's `checkout -B` move your ref, leaving your tree a reversed diff of
-  its commits (issue #1585).
-- **Commit + push before stopping, even mid-gate.** A subagent can end its turn —
-  or die to an external "session limit" abort — leaving finished work **stranded**:
-  uncommitted, and invisible to the orchestrator.
-- **Name every artifact the subagent writes uniquely to that subagent** — logs,
-  screenshots, scratch scripts, and gate/test output paths (e.g. `pnpm
-  gate:scoped > /path/unique-to-agent/gate.log 2>&1`), even inside an
-  isolated worktree. Dispatched subagents inherit the *orchestrator's*
-  scratchpad, not one of their own, and the shared container can let a
-  sibling's run bleed into another's output — an un-prefixed path like
-  `gate.log` collides silently (no error; one agent just quotes another's run
-  as its own), so a collision needs PID-based re-verification to catch
-  (issues #847, #1191).
-- **Run verification (`pnpm gate:scoped`, any check) in the foreground and wait**;
-  a guard denies backgrounding it (`docs/agents/guards.md`). If a check might
-  outrun one call, name a log-file marker as the completion signal (never
-  `Monitor`) and resume a still-running one with `SendMessage`, pasting the
-  log's actual tail (issue #602).
-- **The Agent tool ignores `run_in_background: false`.** Every Agent-tool call
-  launches as a background async task regardless of the `run_in_background`
-  parameter passed — plan to wait on the automatic task-notification for the
-  subagent's result, not a synchronous inline return.
-- **The Agent tool caps at ~20 concurrent subagents.** Batch launches at most
-  (20 − currently-running agents) at a time, relaunching the remainder only as
-  slots free — a bigger batch gets rejected with no queueing (issue #1138).
-- **Decouple screenshot capture from gate completion.** A screenshot-capture
-  agent shoots finals as soon as `pnpm build` succeeds, independent of whether
-  `pnpm gate:scoped`/CI has finished — otherwise it blocks on the gate and never
-  takes the shot it was dispatched to produce, stranding the deliverable behind
-  an unrelated, often slower, gate (issue #683).
-- **Grant explicit authority to refuse a listed item — and require proof instead
-  of implementation.** Without that, a subagent that can see a listed change is
-  wrong implements it anyway and the reasoning never surfaces. A proven refusal
-  is a finding about the list: review it, don't re-dispatch the item.
-- **Bank progress before continuing.** A long-running subagent persists each
-  iteration's artifacts to disk before starting the next step. A transient API
-  failure mid-run kills it with no warning, taking everything unbanked — not just
-  the in-flight step. The harness refuses a subagent's Write of report/findings
-  files, so bank to per-step logs or artifacts it may write, and have it return
-  structured results in its final message for you to save.
-- **Pin an explicit SHA when subagents share one checkout** (concurrent dispatch
-  *without* `isolation: 'worktree'`) — never have them independently resolve
-  `FETCH_HEAD`/`HEAD`. A sibling's fetch moves the shared ref out from under
-  another subagent silently, since each still gets *a* valid answer, just against
-  the wrong commit (once, an entirely different PR's head).
-- **A read-only/review subagent that needs to experiment against a file must
-  copy it aside or use its own isolated worktree — never mutate the
-  orchestrator's shared checkout**, even transiently. The orchestrator reads
-  whatever diff results as an intentional user edit, with no signal it was a
-  subagent's throwaway probe — it can ship gutted or reverted code without
-  ever knowing the change wasn't real (issue #887).
-- **Front-load what you already hold** — the cheap grep-able facts of an
-  ideation brief (counts, kinds, grades), and the content of any primary source
-  you fetched, pasted in or written to a file you name. Re-deriving costs a
-  subagent a flagship idea the data already ruled out, or the fetch twice — and
-  against a source the proxy blocks (`environment-caveats.md`) it cannot verify
-  the claim at all, so it reports "unverified" on what you had disproven
+**Scope and trust**
+- Impl agents never call `merge-pr.ts`, whatever pre-authorization the brief
+  carries: the auto-mode classifier judges your session, not theirs. They hand
+  back a pushed, green PR and you merge (`docs/agents/pr-workflow.md`).
+- Impl agents do not run `close-session`/`log-session` (guard-enforced), and
+  cannot spawn subagents: run `/code-review` and any nested dispatch yourself.
+- Give a size ceiling for a "simple" fix ("under ~50 lines, one new test") and
+  tell the agent to report back rather than exceed it (issue #1182).
+- When the work touches routing or architecture, name the binding ADR in the
+  brief; an implementation-only brief skips the planning step that would find it
+  (an agent once added a catch-all route against ADR-0016).
+- Allow a listed item to be refused, with proof instead of implementation. A
+  proven refusal is a finding about the list; don't re-dispatch the item.
+- Paste in what you already hold (counts, kinds, fetched sources, or a file you
+  name), so the agent doesn't re-derive it or fail on a source the proxy blocks
   (issue #898).
-- **Never paste a scratch/draft file's content into a review-subagent's prompt —
-  name the path and have the subagent `Read` it itself.** Copying by hand has
-  silently dropped a draft's markdown links before (issues #981, #1114). Where
-  the reviewer must stay blind to the rest of the repo, scope it to the named
-  path(s) rather than forbidding `Read` outright.
-- **A subagent's prose (summaries, narrative claims, attribution) is candidate
-  material only** — re-check any factual/attribution claim (who did what, in
-  what order) against the primary source it cites before it ships, not just its
-  verbatim quotes (issue #1137).
-- **A dispatched worktree-isolated impl agent must not self-invoke
-  `close-session`/`log-session`** — guard-enforced (`close-session/SKILL.md`).
-- **A dispatched impl agent must never call `merge-pr.ts` (or otherwise attempt
-  the merge) itself, no matter what merge pre-authorization the brief carries.**
-  Auto-mode's "Merge Without Review" classifier evaluates the *orchestrating*
-  session's own context, not the dispatched agent's — pre-authorization language
-  in the brief doesn't change which session the classifier is looking at, and has
-  blocked merges this way more than once. Merging happens only from the
-  orchestrating session, after the dispatched agent hands back a pushed, green PR;
-  see `docs/agents/pr-workflow.md` for the merge recipe itself.
-- **Name a rough size ceiling for a "simple" fix brief instead of relying on
-  "keep it small" alone** — e.g. "under ~50 lines / one new test" — and tell the
-  impl agent to flag back to the orchestrator rather than silently exceeding it.
-  Without a concrete anchor, an impl agent's own judgment of "small" runs high
-  (issue #1182).
-- **When a brief touches routing or architecture, name the specific relevant
-  ADR(s) explicitly in the brief text** — don't rely on the impl agent
-  independently rediscovering which ADR applies. CLAUDE.md tells agents to find
-  and read the binding ADRs when *planning*, but a dispatch brief for implementation-only work can
-  skip that step entirely unless the brief itself names the ADR; one that didn't
-  let an agent add a Platform catch-all route contradicting ADR-0016, caught only
-  by a later standards review.
-- **Subagents cannot spawn subagents.** Route `/code-review` and any nested
-  dispatch back to the orchestrator; never report a self-review as `/code-review`.
-- **Cap concurrent full gates in one container at 2 (or serialize).** Five in
-  parallel exhausted memory: `test:e2e` died with a setup-hook timeout or worker
-  SIGKILL while every other step passed. Rerun it alone before diagnosing.
+- For a review, give the path of a scratch or draft file and have the agent
+  `Read` it; never paste its content (a paste once dropped its links, issues
+  #981, #1114). Scope a blind reviewer to named paths rather than banning `Read`.
+- A subagent's prose is candidate material: re-check any factual or attribution
+  claim (who did what, in what order) against the source it cites before it
+  ships (issue #1137).
 
-Done when every applicable line above appears **in the brief text** — not merely
-true in your head.
+## 4. Check for same-file collisions
 
-## 4. Check for same-file collisions before parallel dispatch
+Before dispatching parallel impl agents, check whether they may touch the same
+file. If so, serialize them or budget time to rebase and reconcile: two green
+gates do not make the branches safe to merge in any order, since edits in
+adjacent regions conflict silently (issue #603).
 
-Before dispatching several parallel impl agents, check whether their issues
-plausibly touch the same file. If they might, either serialize dispatch for that
-file or explicitly budget rebase-and-reconcile review time: a green gate on each
-branch independently does **not** mean the branches are safe to merge in any
-order. The second branch can go stale the moment the first merges — especially
-when both touch the same file in adjacent (not overlapping) regions git wouldn't
-flag as a conflict (issue #603).
+## 5. Verify nothing is stranded
 
-Done when every file two dispatches might both touch is either serialized or has
-reconcile time budgeted.
+Run **`pnpm check:worktrees`**. It reads git's own worktree list, so it catches a
+subagent that died without returning, and exits non-zero for any linked worktree
+left uncommitted or unpushed (`EXCUSALS` in the script lists the exceptions). It
+cannot prevent an abort, only make the damage visible. Done when it exits 0.
 
-## 5. Verify after dispatch — nothing **stranded**
+If you `cd`'d into a subagent's worktree, `cd` back (or use absolute paths) and
+re-check `git status` at the root: a closure Stop-hook flag may belong to that
+worktree, not your own tree.
 
-Run **`pnpm check:worktrees`** (`scripts/check-worktrees.ts`, issue #427). It
-enumerates every worktree from git state itself, not from subagent return values
-— so it catches the worktree of a subagent that died without ever returning, and
-exits non-zero naming any linked worktree left uncommitted or unpushed, unless
-already merged into origin/main, or dirty with no unpushed commits and content
-equal to a pushed commit (`EXCUSALS` in the script). It can't
-prevent an abort; it ensures the damage is seen.
+## 6. Resume a stopped subagent; never re-dispatch it
 
-**Your own `cd` into a subagent's worktree can outlive the inspection.** A
-session-closure Stop hook's "uncommitted changes" flag seen afterwards may belong
-to that still-in-progress subagent's tree, not your own repo state. After
-inspecting via `cd`, `cd` back to the repo root (or use absolute-path-prefixed
-one-off commands instead of a standalone `cd`), and re-check `git status`/branch
-at the root before trusting the warning as this session's own.
-
-Done when `pnpm check:worktrees` exits 0.
-
-## 6. Resume a stopped subagent — never re-dispatch it
-
-Use **`SendMessage` to its existing agent id**. A fresh `Agent` call provisions a
-brand-new checkout with no memory of the prior work, risking a duplicate
-branch/push or losing the first attempt's already-committed local work;
-`SendMessage` continues the same agent, worktree, and history.
+Use `SendMessage` to its agent id. A fresh `Agent` call gets a brand-new checkout
+with no memory, risking a duplicate branch or lost local commits.
