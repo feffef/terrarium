@@ -9,7 +9,7 @@
 // no browser download. Unlike `screenshot.ts`, this needs element-level
 // capture (just the plate, not the whole page) and multiple navigations, so
 // it drives Chromium through `playwright-core` (already a devDependency, see
-// CLAUDE.md's "Verifying UI changes" ad-hoc-script pattern) rather than the
+// `docs/agents/verifying-ui-changes.md`'s ad-hoc-script pattern) rather than the
 // bare CLI screenshot flag.
 //
 // How it builds ONE comparison image without an image-compositing dependency:

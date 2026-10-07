@@ -1,6 +1,6 @@
 // Unit tests for `findCadenceViolations()`/`validateSkillCadence()` (issue
-// #813) — the mechanical check for CLAUDE.md's "say a Skill *is* scheduled;
-// never say *when*" convention. Exercises it against hand-built fixture files
+// #813) — the mechanical check for the "say a Skill *is* scheduled; never
+// say *when*" convention. Exercises it against hand-built fixture files
 // under a throwaway temp dir, in the same spirit as `validate-content.spec.ts`.
 import { mkdtempSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'

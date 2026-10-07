@@ -5,9 +5,22 @@ Playwright/Chromium/client-only sharp edges that make "it looked fine" or "the
 test passed" untrustworthy. Read this before eyeballing a render, debugging a
 layout bug, or asserting a style took effect.
 
-The *how-to-capture* tooling — `scripts/preview.ts` (`shot`/`start`/`stop`) and
-`scripts/screenshot.ts` — lives in CLAUDE.md's self-verification section. This
-doc is the *methodology*: what proves a change, and what only looks like proof.
+## Capture tooling
+
+- **One screenshot:** `pnpm exec tsx scripts/preview.ts shot <route> <out.png> [WxH] [--dev] [--scheme light|dark]`.
+  It starts a server on its own port, takes the shot and stops the server, so
+  there is nothing to `pkill` (issue #240). By default it serves the production
+  build (run `pnpm build` first). `--dev` is faster, but its DevTools overlay
+  badge can cover real content and look like a UI bug. `WxH` sets the window
+  size; a `#anchor` in `<route>` scrolls to an element.
+- **A server that stays up:** `scripts/preview.ts start [--dev]` prints `PID=`
+  and `URL=`; `scripts/preview.ts stop <pid>` stops it (always exits 0).
+- **A URL that is already serving:** `scripts/screenshot.ts <url> <out.png> [WxH]`
+  drives the pre-installed Chromium directly. Ad-hoc `playwright-core` probes
+  can get the same browser path from `scripts/chromium-path.ts`.
+
+The rest of this doc is the *methodology*: what proves a change, and what only
+looks like proof.
 
 **Browser facts verified against** (from `node_modules`, re-check if they've
 moved): `playwright-core` **1.63.0**, `nuxt` **4.5.2**. Entries that came from a
@@ -174,8 +187,6 @@ Each cost a session at least one extra fix-and-check round.
 - **How to verify a UI change actually works**: drive the affected flow
   yourself and observe behavior before committing — this doc is the
   browser/UI-specific reference for that.
-- CLAUDE.md's self-verification section (the capture tooling's home, see
-  above) — also has the DevTools-overlay caveat for `--dev` shots.
 - `docs/agents/tenant-layers.md` — Nuxt-layer render gotchas (auto-imports,
   alias resolution, Platform-wide component overrides, scoped-CSS token
   inheritance).

@@ -24,36 +24,6 @@
 #            topic's tools correctly.
 trials:
   - problem: >
-      The workflow-file edit rule (rulebook CM-24/EC-07, Built). It failed as
-      prose first: #897 (read this run) — the caveat was already in
-      environment-caveats.md via #876 and a session still stranded a branch —
-      and is now held by `workflow-edit-guard.ts`, whose deny message names the
-      fix. Trimmed the CLAUDE.md bullet to the rule plus pointers, the
-      environment-caveats bullet to the goal, guards.md's known-gap bullet to
-      a pointer at the script header, and the proposals README intro. The
-      search subagent covered guards.md, the rulebook table's Built rows, the
-      ScheduleWakeup, deferred-tool and workflow-edit rule homes, and #897 and
-      #814; it did not read the other cited issues. Candidates ScheduleWakeup
-      (less mass) and the ToolSearch rule (weaker guard) were left. Net about
-      -12 lines; the mass here was small.
-    territory:
-      paths:
-        - "CLAUDE.md: the `.github/workflows/*` edit bullet"
-        - "docs/agents/environment-caveats.md: the workflow-write bullet"
-        - "docs/agents/guards.md: the workflow-edit-guard Bash-arm bullet"
-        - "docs/proposals/README.md: the Purpose paragraph"
-      keywords:
-        - workflow-edit-guard
-        - workflow OAuth scope
-        - docs/proposals
-    opened: 2026-10-03
-    proven: true
-    check: >
-      Damage is a session that writes a `.github/workflows/*` file or strands
-      commits behind a rejected push, or that has to ask how to hand off a
-      workflow change, and the guard's deny message did not fix it in one
-      retry. NOT damage: a guard denial the session fixed from the deny message.
-  - problem: >
       The PR-landing recipe's verdict and merge-path narrative
       (`docs/agents/pr-workflow.md` steps 3-5). It failed as prose: #301 then
       #853 (APPROVE-event verdict), #1276 (verdict skipped twice, #1113/#1115 and
@@ -140,4 +110,60 @@ trials:
       Damage is a session whose GitHub body lacks the provenance header, or that
       hand-types the commit trailer, and the guard's deny message did not fix it
       in one retry. NOT damage: a guard denial the session fixed from the deny
+      message.
+  - problem: >
+      CLAUDE.md as a whole: 374 lines of rules, incident histories and
+      restatements loaded into every session. Rewritten to 130 lines in plain
+      words. Each rule's origin was traced this run (git log -S / blame, the
+      cited issues, friction grades in session logs); rules whose origin was
+      minor or nit, or that a guard, gate step or another doc already holds,
+      were dropped or moved. Kept because major/critical with no other home:
+      empty prompt = stop and ask, stay on the branch, auto-open the gated PR
+      even against a harness rule, babysit the PR, the human-only list, verify
+      before stating, gate:scoped-green-but-CI-red = major friction, no pkill,
+      self-invoke close-session. Kept by owner decision: WHY-not-WHAT comments,
+      Read-not-cat, one home per fact. The three bullets of the other open
+      trials were copied word for word. "Read all ADRs" became "list and grep
+      docs/adr for the paths and terms you touch, read the relevant ones in
+      full": a survey of 36 large human-prompted sessions found a median of 2
+      ADRs read (1 of 36 read all), and structural edits missing their binding
+      ADRs. The Skill Inventory "use these" pointer was dropped: since
+      September only audit-skills sweeps read the inventory (9 of 96
+      sessions), none to choose a Skill. Issue/PR numbers were dropped from CLAUDE.md; git history is the
+      forwarding address. Moved: screenshot tooling to
+      verifying-ui-changes.md, adding a Space/Collection/Tenant to
+      tenant-layers.md, PR description sync to pr-workflow.md, reading other
+      transcripts to github-integration.md. Dropped outright: long commands
+      in background as a standalone rule (folded into the gate:scoped line),
+      no filler calls while waiting, ToolSearch first, Routine schedule
+      wording, background-status shapes, dispatch-subagents for git (now a
+      pointer), cheap-checks-first, the routing/manifest/pages-only/trust
+      ground rules (in their ADRs), the long layout tree, the Status section.
+      Net about -244 lines in CLAUDE.md.
+    territory:
+      paths:
+        - "CLAUDE.md (all of it, except the three bullets owned by the other open trials)"
+        - "docs/agents/verifying-ui-changes.md: the Capture tooling section"
+        - "docs/agents/tenant-layers.md: section 3"
+      keywords:
+        - read all ADRs
+        - empty task prompt
+        - cheap checks first
+        - filler calls
+        - long-running command
+        - Repo layout
+        - Skill Inventory
+    opened: 2026-10-07
+    proven: true
+    check: >
+      Damage is a session that does something a dropped rule used to
+      prevent, graded major or blocker: guesses a task from an empty prompt,
+      leaves its branch, holds back a PR because the harness said no, merges
+      or self-merges a human-only file, states an unverified id or count as
+      fact, kills a process by hand, plans a structural change without
+      reading the ADR that binds the file, or loses a gate run's real status
+      by polling with filler calls. Also count a session that could not find
+      moved material (screenshot tooling, adding a Tenant) where its pointer
+      sends it. NOT damage: a session that reads only the relevant ADRs, or
+      that a guard or gate step stopped and that fixed itself from the
       message.

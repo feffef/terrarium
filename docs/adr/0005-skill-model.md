@@ -7,8 +7,8 @@ Status: Accepted
 > `.agents/skills/`, with `.claude/skills/` now a symlink layer surfacing them
 > (every entry under `.claude/skills/` resolves to `../../.agents/skills/<name>`).
 > This ADR's Decision section below still names `.claude/skills/` as the
-> repo-committed home — read that as `.agents/skills/` (see CLAUDE.md's Skills
-> bullet and ADR-0015, which already assumes the current split).
+> repo-committed home — read that as `.agents/skills/` (see CLAUDE.md's Repo
+> layout and ADR-0015, which already assumes the current split).
 
 ## Context
 

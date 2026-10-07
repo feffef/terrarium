@@ -85,7 +85,7 @@ Check first (`git rev-parse --verify <branch>`) and handle the exists case.
 **Never chain `git push` (or any state-changing git command) with `;`/`&&` after
 starting a backgrounded gate/test run.** One session chained `git push` right
 after backgrounding `pnpm gate:scoped`, and the push went out while the gate was
-red. Start the run per CLAUDE.md's long-command bullet, then read its exit
+red. Start the run in the background, then read its exit
 status before anything that assumes it passed.
 
 ## Check `git status` before a destructive command, and never silence one's output
