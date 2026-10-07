@@ -114,10 +114,11 @@ tests/                    Platform tests; each Tenant keeps its own in its layer
 
 ## Self-verification
 
-- **Run `pnpm gate:scoped` before you propose a change.**
+- **Push only after `pnpm gate:scoped` passes** on what you're pushing. The
+  Stop hook's "commit and push" nag can't see a running gate: commit locally if
+  you must, then wait.
 - **Start long commands (the gate, a build, e2e) with `run_in_background: true`**
-  and log to a file. The Stop hook's "commit and push" nag can't see a running
-  gate: commit locally if you must, but push only after it passes.
+  and log to a file.
 - **CI runs the full gate on every PR**, and it must be green to merge. Don't
   run the full `pnpm gate` locally.
 - **Content-only edits:** `pnpm validate:content` checks every Document against
