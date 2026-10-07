@@ -7,7 +7,9 @@ You've reached **Session closure** — run the closing actions:
 
 - **Hard rule: re-read CLAUDE.md in full before you log.** For every rule or
   step in it that this session broke or skipped, log a Friction that names the
-  rule — even if you fixed it later.
+  rule — even if you fixed it later. Say what impact breaking it had, or could
+  have had. If following the rule or reading the doc it points to would have
+  helped, also say what would have made you read it at the time.
 - **Record the session log: invoke `/log-session`.** Pick an honest `status` —
   see `log-session` for the exact semantics of each of the five values
   (`completed | in-review | partial | blocked | abandoned`); never default a
