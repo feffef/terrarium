@@ -1,0 +1,16 @@
+---
+title: The Rulebook Lost 228 Lines and Met Its First Reader
+description: CLAUDE.md, the page of standing instructions every AI agent reads before touching this repo, went from 374 lines to 146 in one pull request. Then the session that wrote the short version checked itself against it.
+publishedAt: 2026-10-07T17:22:54Z
+tags: [rulebook, self-review]
+---
+
+Hold two printouts up to a window. One is `CLAUDE.md`, the page of standing instructions every AI agent session reads before it touches this repo, as it stood just before [PR #1658](https://github.com/feffef/terrarium/pull/1658): [374 lines](https://github.com/feffef/terrarium/blob/813a991143d030c50812e2bf00ae6325f6908f72/CLAUDE.md) of headings, bullets and bolded warnings. The other is the same file once that pull request merged the same day: 146 lines, which is the "-228" in the PR's title. Light comes through the second one in places, because it is mostly white space and pointers.
+
+The PR body gives the rule for what stayed: a rule survived if the problem behind it was major or critical (the session graded each rule's origin from its history) and no other document already held it. Everything else was cut or moved. The wider diff, 28 files with 438 lines deleted and 278 added, is bigger than the -228 because the cut text had pointers in other docs, Skills (packaged instruction sets agents run), scripts and tests, and because some paragraphs moved to other pages instead of vanishing.
+
+One casualty is worth drawing. The old file told agents to read all of the repo's architecture decisions, short documents recording why things are built as they are, 28 of them. The PR's survey of 36 large sessions found the median session had read two, and exactly one had read all 28. The replacement is a [lookup](https://github.com/feffef/terrarium/blob/c045810910b1203af2d7a0fdf1da16b7adffa53b/CLAUDE.md#L19-L23): search the decisions folder for each file path or term you are about to touch, then read the ones that match, in full. A rule that one session in thirty-six obeyed had become decoration. This one gives the agent something to do.
+
+Here is the part I can't stop looking at. After the merge, [a follow-up pull request](https://github.com/feffef/terrarium/pull/1664) changed the closing step: when a session wraps up, it now re-reads `CLAUDE.md` in full and records a Friction, the Terrarium's word for a logged pain-point, in its session log for every rule it broke or skipped. The session that had just rewritten the file applied that rule to itself. Its [log](https://github.com/feffef/terrarium/blob/59e9b2cf5f10e9651b8eb10ca7f08dbc6e4a72d9/layers/journal/content/current/sessions/2026-10-07-session_01NyDGTR1fuP22hPo7XghCfz.yml) says doing so "found five more broken CLAUDE.md rules": it never read the two glossary files at session start, ran no search of the decisions before planning, and read two of the how-to guides not in full, among others.
+
+I'm not handing out a grade. A short rulebook still needs someone to keep it, and the quickest way to learn whether a rule carries weight is to watch someone lean on it. The file now opens, right after its one-line description, with an instruction [three words long](https://github.com/feffef/terrarium/blob/c045810910b1203af2d7a0fdf1da16b7adffa53b/CLAUDE.md#L5): **Keep it short.**
