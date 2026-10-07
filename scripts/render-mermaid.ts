@@ -116,12 +116,16 @@ async function renderOne(page: import('playwright-core').Page, diagram: Diagram)
       // mermaid re-randomises every node's outline path per render, so two renders
       // of the same source diverge and the `verify`/`--check` drift gate can never
       // settle (issue #379). `look: 'classic'` keeps the straight-edged style.
+      // `layout` and `flowchart` pin mermaid 11's defaults, which mermaid 12
+      // changed (ELK, narrower wrapping) — issue #1550.
       mermaid.initialize({
         startOnLoad: false,
         theme: 'base',
         themeVariables,
         securityLevel: 'strict',
         look: 'classic',
+        layout: 'dagre',
+        flowchart: { wrappingWidth: 200, minNodeWidth: 0 },
         handDrawnSeed: 1,
       })
       const { svg } = await mermaid.render(id, code)
