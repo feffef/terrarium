@@ -1,27 +1,33 @@
 schemaVersion: 1
 session: session_01QLxPLD6AQ2Y6GyWHE1dkKp
 startedAt: 2026-10-07T12:33:47Z
-endedAt: 2026-10-07T12:36:45Z
-kind: delegated
-goal: Run one /auto-triage sweep over the open issues that need attention
-status: completed
-outcome: 4 eligible issues triaged (1 ready-for-agent x2, ready-for-human x2); no PRs, no closes
-summary: "Human-instructed: the owner invoked /auto-triage (the standing green-light, ADR-0022); everything else was agent-initiated within that. Listed 23 open issues and no open PRs, then fetched the last comment of each. Only #1647, #1628, #1627 and #1626 were eligible: the rest end on an AI-authored comment (ADR-0017 provenance) or are wayfinder maps. One subagent per issue verified claims against primary sources and posted one comment each. Results: #1627 and #1626 became ready-for-agent (Skill-text fixes to audit-skills and blog-post, distinct files, no overlap with each other or other ready-for-agent issues); #1628 (irreversible remote branch delete) and #1647 (fix PR #1632 already merged, whether it is strong enough is a human call) became ready-for-human. Nothing closed, no repo edits, no PR opened."
-prs: []
+endedAt: 2026-10-07T12:41:14Z
+kind: interactive
+goal: "Run one /auto-triage sweep, then implement the two issues it marked ready-for-agent (#1627, #1626)"
+status: in-review
+outcome: 4 issues triaged; two Skill-text fixes opened as separate PRs awaiting human merge
+summary: "Human-instructed: the owner invoked /auto-triage (the standing green-light, ADR-0022), then asked explicitly to implement #1627 and #1626, and chose two PRs on two branches when asked. Agent-initiated: everything inside the sweep and the wording of the fixes. The sweep listed 23 open issues and no open PRs; only #1647, #1628, #1627 and #1626 were eligible (the rest end on an AI comment or are wayfinder maps). One subagent per issue verified claims and posted one comment each: #1627 and #1626 became ready-for-agent, #1628 and #1647 ready-for-human, nothing closed. Implementation: #1661 adds a live issue-state read before audit-skills states an issue is open (step 2, pointer in step 4); #1662 makes blog-post step 12 leave the reader's \"none\" verdict and reason as a comment on the first post's PR, since that PR's body predates the decision. Both are prose-only edits to our own Skills, gate:scoped green locally before each push, no script or gate check added. Both PRs are open and subscribed; merge is human-only for ordinary work PRs."
+prs:
+  - "1661"
+  - "1662"
 docsRead:
-  - path: docs/adr/0022-autonomous-triage-sweep.md
-    reason: green-light bounds and escalation taxonomy
-  - path: docs/agents/github-integration.md
-    reason: overflow-safe listing and MCP write rules
+  - path: docs/agents/pr-workflow.md
+    reason: push-after-gate and PR landing rules
+  - path: docs/agents/git-conventions.md
+    reason: commit and branch hygiene
   - path: CONTEXT-MAP.md
     reason: (no reason given)
   - path: CONTEXT.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
     reason: (no reason given)
   - path: docs/agents/issue-tracker.md
     reason: (no reason given)
   - path: docs/agents/triage-labels.md
     reason: (no reason given)
   - path: docs/agents/guest-contributions.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/SKILL.md
     reason: (no reason given)
   - path: .agents/skills/triage/SKILL.md
     reason: (no reason given)
@@ -33,9 +39,9 @@ docsRead:
     reason: (no reason given)
   - path: .agents/prune-trials.yml
     reason: (no reason given)
-  - path: .agents/skills/blog-post/SKILL.md
-    reason: (no reason given)
   - path: .agents/skills/audit-docs/SKILL.md
+    reason: (no reason given)
+  - path: docs/adr/0022-autonomous-triage-sweep.md
     reason: (no reason given)
 skillsUsed:
   - name: auto-triage
@@ -51,26 +57,38 @@ frictions:
   - description: A Glob for the triage skill files returned nothing; had to fall back to ls to find them under .agents/skills.
     solution: Point auto-triage at the real path of the triage Skill.
     severity: nit
-durationSec: 178
+  - description: The Stop hook repeatedly demanded pushing unpushed commits while gate:scoped was still running, conflicting with CLAUDE.md's push-only-after-gate rule; cost several explanatory turns.
+    solution: Make the Stop hook detect a running gate or accept a gate-pending marker.
+    severity: minor
+  - description: A single bash command piping into tail while backgrounded was denied by the tail-pipe guard, and the chained python edit did not run, costing a retry.
+    solution: None needed; the guard worked as designed.
+    severity: nit
+durationSec: 447
 models:
-  claude-sonnet-5-5: 38
+  claude-sonnet-5-5: 90
 toolCounts:
-  Read: 6
+  Read: 7
   Glob: 1
-  Bash: 9
+  Bash: 27
   Agent: 4
-  Skill: 2
+  Skill: 3
+  AskUserQuestion: 1
+  Monitor: 1
+  mcp__github__create_pull_request: 2
+  mcp__claude-code-remote__subscribe_pr_activity: 2
+  ReadNotifications: 1
 docsReadViaShell:
   - .agents/skills/triage/SKILL.md
   - docs/agents/guards.md
   - .agents/skills/triage/AGENT-BRIEF.md
   - docs/adr/0022-autonomous-triage-sweep.md
   - docs/adr/0017-provenance-footer-on-agent-authored-content.md
-  - .agents/skills/audit-skills/SKILL.md
+  - docs/agents/git-conventions.md
+  - docs/agents/pr-workflow.md
   - docs/adr/0015-audit-skills-and-conditional-importance.md
+  - .agents/skills/audit-skills/SKILL.md
   - .agents/skills/blog-post/SKILL.md
   - docs/research/rulebook-migration-table.md
-  - docs/agents/pr-workflow.md
   - .agents/skills/audit-docs/SKILL.md
   - .agents/skills/prune-trial/SKILL.md
 subagents:
