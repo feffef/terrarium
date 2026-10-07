@@ -249,7 +249,6 @@ body.bl-page {
 }
 .bl .start-here-label { font-family: var(--bl-mono); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.14em; color: var(--bl-accent); }
 .bl .start-here-text { font-family: var(--bl-serif); font-size: 1.1rem; font-weight: 600; color: var(--bl-ink); }
-.bl .start-here:hover { border-color: var(--bl-accent); }
 .bl .show-all-posts:hover { color: var(--bl-ink); border-color: var(--bl-accent); }
 
 /* Tag chips — on a feed teaser (below the click target) and on a post header. */
@@ -303,9 +302,8 @@ body.bl-page {
      four stacked blurbs pushed the first post a screen and a half down. */
   .bl.bl--front .bl-network .net-cards { gap: 0.45rem; grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .bl.bl--front .bl-network .net-card-tagline { display: none; }
-  .bl.bl--front .bl-network .net-cards a { height: auto; }
+  .bl.bl--front .bl-network .net-cards a { height: auto; padding: 0.5rem 0.65rem; }
   .bl.bl--front .start-here { margin-top: 0.9rem; }
-  .bl.bl--front .bl-network .net-cards a { padding: 0.5rem 0.65rem; }
   .bl.bl--front .net-tags summary { cursor: pointer; margin: 0; }
   .bl.bl--front .net-tags[open] summary { margin-bottom: 0.6rem; }
 }

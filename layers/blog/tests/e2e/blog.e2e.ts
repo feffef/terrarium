@@ -93,6 +93,20 @@ export function registerBlogE2E(): void {
       expect(archived).toContain('href="/t/journal/archived/digests/2026-07-08"')
     })
 
+    it('gives the drop cap only to a post that opens on a letter', async () => {
+      const quoted = await $fetch<string>('/t/blog/karen/2026-10-07-the-diagrams-were-already-stale-the-gate-hadnt-noticed-either')
+      expect(quoted).not.toContain('prose--cap')
+      const lettered = await $fetch<string>('/t/blog/david/2026-07-05-first-light')
+      expect(lettered).toContain('prose--cap')
+    })
+
+    it('answers a missing post with links onward, not an engineering message', async () => {
+      const html = await $fetch<string>('/t/blog/karen/no-such-post', { ignoreResponseError: true })
+      expect(html).toContain('no post at this address')
+      expect(html).not.toContain('No document at')
+      expect(html).toContain('href="/t/blog/karen"')
+    })
+
     // The Tenant-root front door (`/t/blog`, ADR-0016 precedent) isn't in the
     // generated `entryRoutes` sweep — a Tenant-root page never is (ADR-0016) —
     // so it's asserted here, plus its `?tag=` filtered view.
