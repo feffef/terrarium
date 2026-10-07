@@ -100,6 +100,6 @@ the launch catalog's drawings actually had:
 - Over budget? Drop decoration before detail that explains the invention.
 - Does the dark sheet read as well as the light one?
 
-After `apply.mjs`, run `pnpm validate:content`, then screenshot the Campaign page
-(`pnpm exec tsx scripts/preview.ts shot /t/tinkerfund/prod/campaigns/<slug> <out.png> 1280x1600 --dev`)
+After `apply.mjs`, run `pnpm validate:content`, then, after `pnpm build`, screenshot the Campaign page
+(`pnpm exec tsx scripts/preview.ts shot /t/tinkerfund/prod/campaigns/<slug> <out.png> 1280x1600`)
 and Home, and check the gallery thumbnails and the hero in place.

@@ -1,7 +1,7 @@
 # Context — Midden Tenant
 
 > The Midden context: its own vocabulary (Site, Dig season, Artifact, Condition,
-> the inclusion test) and its reason-to-exist. Platform-wide terms it leans on
+> the Stores, the inclusion bar) and its reason-to-exist. Platform-wide terms it leans on
 > (Tenant, Space, Collection, …) live in the root `CONTEXT.md`; see
 > `CONTEXT-MAP.md`.
 
@@ -13,10 +13,7 @@ one of several Tenants themed around the Platform's **Observability** invariant
 comments on it, the Midden catalogues what the Platform stopped doing, once it
 is truly finished stopping.
 
-Full MVP spec, decision history, and the resolution of every sub-decision below:
-[issue #515](https://github.com/feffef/terrarium/issues/515) (a Wayfinder map;
-its 13 sub-issues #516–#528 carry the individual resolutions cited by number
-throughout this file).
+Full MVP spec, decision history, and every sub-decision's resolution: [issue #515](https://github.com/feffef/terrarium/issues/515) (a Wayfinder map; its 13 sub-issues #516–#528 carry the individual resolutions cited by number throughout this file). A content/design Tenant's decisions live there and in this file, not as ADRs (ADR-0021).
 
 ## Why it exists
 
@@ -37,14 +34,7 @@ forward-looking narration doesn't carry.
 ## Glossary
 
 ### Site
-A Space `pages` Document in `trench` — the Midden's word for what the Platform
-generically calls a page in this Space (root `CONTEXT.md`'s Collection term).
-The `stores` Space has no Sites (see The Stores below).
-One dig report: curator's-voice prose narrating a **cluster** of related
-Artifacts, each embedded inline (#521 — see Artifact below: never
-independently routed). Reused-per-Space collection naming (#516) —
-`gallery` (out of scope for v1, #522) would give the same collection an
-"exhibit" meaning instead.
+A `pages` Document in the `trench` Space: one dig report — curator's-voice prose narrating a **cluster** of related Artifacts, each embedded inline (#521; never independently routed — see Artifact below). The Midden's word for what the Platform generically calls a page in this Space (root `CONTEXT.md`'s Collection term). The `stores` Space has no Sites (see The Stores below). Reused-per-Space collection naming (#516): `gallery` (out of scope for v1, #522) would give the same collection an "exhibit" meaning instead.
 
 ### Dig season (Stratum)
 A curator-declared date range, named for what the Platform was mostly doing or
@@ -61,8 +51,7 @@ Document in `trench`'s `artifacts` data collection (#518). Names what kind of
 thing it was — a PR, a branch, a commit, a file, a dependency, or a Skill —
 with an optional live link and a note on whether that link still resolves;
 carries its dig-season, a curator-graded condition, and a curator's-voice
-note, plus a required assessment date that stays 100% curator-set and is
-never mechanically re-derived (#526 closes this question explicitly).
+note, plus a required assessment date, likewise curator-set and never mechanically re-derived (#526).
 Narrates from inside the `site` that discusses it — required in a Space that
 has Sites, absent in one that has none. May also carry a verbatim inscription
 and preservation links to the artifact's original state, each pinned to a
@@ -75,11 +64,7 @@ The curator-graded preservation state of an Artifact, one of six grades in
 decay-then-orthogonal order: `fresh → intact → fragmentary → dissolved` (the
 erosion axis) then `never-activated` (complete but never fired — a distinct
 axis, not a further decay step) and `lost` (its own gravestone template
-entirely; #523). **100% curator-authored, never mechanically re-derived** —
-not from `assessedAt`, not from any future continuity check (#526 closes this
-question explicitly). Shown as its word, never a glyph to decode. The six
-grades and their fixed one-line definitions are single-homed (see What lives
-where below), surfaced there exactly once so they're never authored twice.
+entirely; #523). **100% curator-authored, never mechanically re-derived** — not from `assessedAt`, not from any future continuity check (#526). Shown as its word, never a glyph to decode. The six grades and their one-line definitions are single-homed (see What lives where below), surfaced there exactly once so they're never authored twice.
 
 ### The Stores
 The Midden's second Space (`stores`): catalogued finds held **off display**. An
@@ -131,23 +116,12 @@ procedure lives in `.agents/skills/midden-catalogue/`.
 - **This file** — the Midden's vocabulary and why it exists.
 - **Root `CONTEXT.md`** — the platform-wide terms the Midden leans on, and the
   Tenants roster that points here.
-- **[issue #515](https://github.com/feffef/terrarium/issues/515)** — the full
-  MVP spec and every locked decision, with its sub-issues as the historical
-  record of how each was resolved (a content/design Tenant's decisions are
-  recorded there and in this file, not as ADRs — ADR-0021).
+
 - **`layers/midden/app/utils/strata.ts`** — the canonical dig-season list.
 - **`layers/midden/app/utils/condition.ts`** — the single-homed
   {grade, label, definition} table the dig-report page's condition key and each
   inline find read from.
-- **`scripts/validate-content-refs.ts`** — enforces what the schema can't
-  express (see Artifact and Dig season above): an Artifact's `site`
-  back-reference is required only in a Space that has Sites, absent in the
-  Sites-less `stores`; an Artifact's `stratum` reference resolves to a real
-  dig season; and a `removedIn` commit hash's date is corroborated against
-  that `stratum` where history allows, presuming a `commit`-kind `provenance`
-  referent hash terminal for that same check unless a declared `removedIn`
-  overrides it (a referent can instead be a birth record, as with the
-  the-spawn-verb Artifact's coining commit).
+- **`scripts/validate-content-refs.ts`** — enforces what the schema can't express (see Artifact and Dig season above): an Artifact's `site` back-reference is required only in a Space that has Sites, absent in the Sites-less `stores`; its `stratum` resolves to a real dig season; and a `removedIn` commit hash's date is corroborated against that `stratum` where history allows, a `commit`-kind `provenance` referent hash being presumed terminal for that check unless a declared `removedIn` overrides it (a referent can instead be a birth record, as with the `the-spawn-verb` Artifact's coining commit).
 - **`layers/midden/app/components/midden/TrenchLanding.vue`** — both
   landings in one layout: at `/t/midden` (`front`) the curatorial foreword
   (verbatim in-voice copy, not this file's register), the pull-quote, and a
@@ -175,7 +149,4 @@ procedure lives in `.agents/skills/midden-catalogue/`.
 
 ## Visitor rendering
 
-Each find renders **open and flat** (the note and inscription visible on load)
-using the corner stamp and the condition key (see Condition above). Full
-decision history — including which #515 sub-issue decisions led here (#523,
-#524, #527, #528) and why — is at issue #515.
+Each find renders **open and flat** (the note and inscription visible on load) using the corner stamp and the condition key (see Condition above); decisions: #523, #524, #527, #528 (history at #515).

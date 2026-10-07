@@ -10,28 +10,11 @@
 
 ## Why it exists — and why it isn't optional
 
-The Journal is not a convenience summary for people who would rather skim than
-read a session's raw transcript. It is the **only** way any of this becomes
-visible at all: nobody but the agent and the user present in a given session can
-see that session's working transcript. Once the session closes, the **session
-log** it authors — its goal, outcome, what it read, every **Friction** it hit,
-any learnings or ideas — is the sole surviving record. If a session authors no
-log, that session's frictions and ideas are gone; there is no other place they
-could surface. The same is true of the collaboration itself: whether a session
-was interactive, delegated, or autonomous, who prompted it and how far they
-steered — none of that is visible anywhere except through what the Journal
-surfaces. So `/t/journal/current` matters for more than status: it is the only
-public record of how the humans and agents building this Platform actually worked
-together, session by session.
+The Journal is not a convenience summary for people who would rather skim than read a session's raw transcript. It is the **only** way any of this becomes visible: nobody but the agent and user present in a session can see its working transcript. Once the session closes, the **session log** it authors — goal, outcome, what it read, every **Friction** it hit, any learnings or ideas — is the sole surviving record; a session that authors no log loses its frictions and ideas, with nowhere else to surface. The same holds for the collaboration itself: whether a session was interactive, delegated, or autonomous, who prompted it and how far they steered is visible only through what the Journal surfaces. So `/t/journal/current` matters for more than status: it is the only public record of how the humans and agents building this Platform actually worked together, session by session.
 
 ## Who it's for
 
-Anyone who wants the Platform's actual current state, or how it got there,
-without being *in* the session that did the work — which, per above, is
-everyone. A human checking on progress; a
-later session hunting recurring friction to fix; the self-improvement Skills
-(`audit-docs`, `audit-skills`, `frictions-to-fixes`) that read session logs for
-patterns.
+Anyone who wants the Platform's actual current state, or how it got there, without being *in* the session that did the work — per above, everyone: a human checking on progress; a later session hunting recurring friction to fix; the self-improvement Skills (`audit-docs`, `audit-skills`, `frictions-to-fixes`) that read session logs for patterns.
 
 ## What you'll find
 
@@ -45,19 +28,7 @@ patterns.
 ## Glossary
 
 ### Digest
-A derived, append-only, time-boxed Journal Document: one immutable page per
-**closed UTC day**, summarizing Platform activity across all Tenants, mined from
-git history and session logs (ADR-0010). It differs from the Journal's other two
-content kinds on one axis each: unlike an **Inventory** (also derived, but a
-current-state readout that is refreshed in place) a Digest is historical and
-never rewritten once its day closes; unlike a **session log** (also append-only,
-but primary — authored from scratch) a Digest is derived by condensing existing
-records. The Skill Inventory (root `CONTEXT.md`'s glossary term) is an
-Inventory; the per-day summaries are Digests. The Journal website renders
-them, and the Commons Timeline also reads them cross-Tenant as one of its
-three sources (`layers/commons/CONTEXT.md`) — but the *word* "Digest" is
-defined once, here, because the Commons only consumes the concept through
-the Catalog rather than redefining it.
+A derived, append-only, time-boxed Journal Document: one immutable page per **closed UTC day**, summarizing Platform activity across all Tenants, mined from git history and session logs (ADR-0010). Unlike an **Inventory** (derived too, but a current-state readout refreshed in place) a Digest is historical and never rewritten once its day closes; unlike a **session log** (append-only too, but primary — authored from scratch) a Digest is derived by condensing existing records. The Skill Inventory (root `CONTEXT.md`) is an Inventory; the per-day summaries are Digests. The Journal website renders them, and the Commons Timeline also reads them cross-Tenant as one of its sources (`layers/commons/CONTEXT.md`) — but the *word* "Digest" is defined once, here, because the Commons only consumes the concept through the Catalog.
 
 ## What lives where
 

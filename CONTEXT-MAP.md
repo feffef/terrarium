@@ -10,8 +10,7 @@ context when you work on that Tenant.
 - **Platform** — [`./CONTEXT.md`](./CONTEXT.md) — the concepts every agent needs
   regardless of task: Platform, Tenant, Space, Collection, Document, Session,
   Friction, Skill, Trusted/Public, Agent Authorship, session log, Skill Inventory.
-- **Blog** — [`layers/blog/CONTEXT.md`](./layers/blog/CONTEXT.md) — Persona,
-  Pingback; why the Blog exists (a demo/content Tenant).
+- **Blog** — [`layers/blog/CONTEXT.md`](./layers/blog/CONTEXT.md) — Persona, Pingback, Tag; why the Blog exists (a demo/content Tenant).
 - **Atlas** — [`layers/atlas/CONTEXT.md`](./layers/atlas/CONTEXT.md) — Biome,
   Specimen, Interaction, Observation; why the Atlas exists (a demo/content Tenant).
 - **Journal** — [`layers/journal/CONTEXT.md`](./layers/journal/CONTEXT.md) —
@@ -32,24 +31,23 @@ context when you work on that Tenant.
   cross-Tenant read model (ADR-0025, issue #642). The Platform-context terms it
   turns on — Collection kind, Catalog, Aggregator — live in the root `CONTEXT.md`.
 
-The root `CONTEXT.md` also carries a `## Tenants` roster that points at each of
-these — a pointer, not a second home. Substantive definitions live once, in the
-context listed above; pointers to them may live wherever they help a reader.
+The root `CONTEXT.md`'s `## Tenants` roster points at each of these: a pointer,
+not a second home. Substantive definitions live once, in the listed context;
+pointers to them may live anywhere they help.
 
 ## Relationships
 
 - **The content Tenants relate to reality differently.** The **Journal**
   documents the Platform honestly (primary/derived self-documentation). The
   **Blog** comments on real repo activity in-character (subjective,
-  non-authoritative). The **Atlas** is fiction — it claims nothing about the
-  Terrarium at all. The **Midden** is real like the Journal (every Artifact
+  non-authoritative). The **Atlas** is fiction and claims nothing about the
+  Terrarium. The **Midden** is real like the Journal (every Artifact
   traces to an actual discarded thing, gated by its two-gate inclusion test)
-  but curated and voiced rather than comprehensive — it catalogues a
-  hand-selected, graded subset, not an exhaustive record. The **Marquee** is
-  real like the Journal and the Midden (the films and their in-universe
-  order are genuine facts, not invented), but — like the Atlas — it claims
-  nothing about the Terrarium itself; it is plain content about something
-  else entirely. **Tinkerfund** is fiction too: a simulated shop of invented
+  but curated and voiced: a hand-selected, graded subset, not an exhaustive
+  record. The **Marquee** is real like the Journal and the Midden (the films and
+  their in-universe order are genuine facts) but, like the Atlas, claims
+  nothing about the Terrarium; it is plain content about something
+  else. **Tinkerfund** is fiction too: a simulated shop of invented
   products that claims nothing about the Terrarium. The **Commons** owns almost
   no content; it re-presents the other Tenants' opted-in content through the
   Catalog and makes no claims of its own.
@@ -64,7 +62,7 @@ context listed above; pointers to them may live wherever they help a reader.
 
 ## Decisions
 
-System-wide ADRs live in [`docs/adr/`](./docs/adr/). There are no context-scoped
-`docs/adr/` directories today — every ADR so far is Platform-wide. A demo Tenant's
-reason-to-exist is product, not architecture, so it is recorded in that Tenant's
+System-wide ADRs live in [`docs/adr/`](./docs/adr/); there are no context-scoped
+`docs/adr/` directories, and every ADR is Platform-wide. A demo Tenant's
+reason-to-exist is product, not architecture, so it goes in that Tenant's
 `CONTEXT.md`, not an ADR (ADR-0021).

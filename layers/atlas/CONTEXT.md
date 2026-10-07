@@ -27,11 +27,7 @@ read but never announces the joke.
 
 ## Who it's for
 
-Someone who wants to see what a complex, agent-grown *content structure* looks
-like after a platform has been running a while — not a reader looking for facts
-about the Terrarium. It is the demo side: the interest is in how the pieces
-interlock and hold a consistent voice and style across many sessions, not in
-anything the guide asserts — see above.
+Someone who wants to see what a complex, agent-grown *content structure* looks like after a platform has been running a while — not a reader looking for facts about the Terrarium. It is the demo side: the interest is in how the pieces interlock and hold a consistent voice and style across many sessions.
 
 ## Glossary
 
@@ -65,8 +61,7 @@ denormalizes contrast.)
 ### Observation
 A dated sighting in a Biome's **field log** (a Document in its `observations` data
 collection): a date, a coarse time-of-day, an optional Specimen, and a terse
-in-fiction note. Append-only in spirit — the log only ever grows, old entries
-never rewritten. The cheapest unit of contribution: a session can leave the world
+in-fiction note. Append-only in spirit — old entries are never rewritten. The cheapest unit of contribution: a session can leave the world
 visibly alive without adding a Specimen.
 
 ## What lives where

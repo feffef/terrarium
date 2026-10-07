@@ -89,14 +89,13 @@ treat it as the already-merged restart case above instead of pushing.
   reviews the PR but never calls `merge_pull_request` or arms auto-merge (see
   `.agents/skills/guest-build/SKILL.md`'s "one hard subtraction" section and
   ADR-0023).
-- `dependabot` — merged by the `dependabot-automerge` workflow, never by an
-  agent; leave those PRs alone (ADR-0003 ledger).
+- `dependabot` — merged by the `dependabot-automerge` workflow (proposal #1633, not yet applied), never by an agent; leave those PRs alone (ADR-0003 ledger).
 - An ordinary work PR — merged by a human, never self-merged.
 
 ## Closing a self-merged chartered run
 
 Every Skill in the tier list above except `reviewer-agent` (`frictions-to-fixes`,
-many PRs per run), `guest-build` and an ordinary work PR closes the same way once its own
+many PRs per run), `guest-build`, `dependabot` and an ordinary work PR closes the same way once its own
 scope-specific work is staged — each Skill's own SKILL.md states only its
 delta from this sequence (what its diff must be limited to, and what to do
 when something rides outside that scope):

@@ -20,8 +20,7 @@ down; it self-heals on the next good commit.
 /app/store   shared pnpm store
 ```
 
-Because the image carries no app code, **pushing to `main` never rebuilds or
-redeploys the image** — the container updates itself.
+
 
 ## On-VPS layout
 
@@ -42,13 +41,7 @@ redeploys the image** — the container updates itself.
 
 ## One-time bootstrap
 
-> **Run everything as your non-root Docker operator user** (`<deploy-user>` below —
-> substitute your host's actual account) — the account that's a member of the
-> `docker` group; *not* `root`, and *not* a user that merely has a GitHub SSH key.
-> A user outside the `docker` group gets `permission denied … /var/run/docker.sock`
-> on the first `docker compose`. `chown -R <deploy-user>:<deploy-user> /opt/terrarium`
-> so the deploy dir is owned by that user, then `sudo -iu <deploy-user>` and do the
-> rest there.
+> **Run everything as your non-root Docker operator user** (`<deploy-user>` below — substitute your host's account): a member of the `docker` group, *not* `root`, and *not* merely a user with a GitHub SSH key. Outside the `docker` group, the first `docker compose` fails with `permission denied … /var/run/docker.sock`. `chown -R <deploy-user>:<deploy-user> /opt/terrarium`, then `sudo -iu <deploy-user>` and do the rest there.
 
 1. **Fine-grained PAT.** <https://github.com/settings/personal-access-tokens/new>
    (Settings → Developer settings → **Fine-grained** tokens — *not* a classic
@@ -66,12 +59,7 @@ redeploys the image** — the container updates itself.
    chmod 600 .env                       # holds the PAT
    # edit .env: paste GITHUB_PAT (GIT_REPO_URL is already correct)
    ```
-   (The PAT above is for a **different** clone: the **container's own**, done
-   by `entrypoint.sh` inside the `terrarium_app` volume, independent of the
-   one just above per **On-VPS layout**. That clone needs the PAT from step 1
-   regardless of the repo's visibility — `entrypoint.sh` requires
-   `GITHUB_PAT` unconditionally and injects it via `GIT_ASKPASS` — see below —
-   so it's kept out of `.git/config` there too.)
+   (The PAT is for a **different** clone: the container's own, made by `entrypoint.sh` in the `terrarium_app` volume, independent of the host clone above (see **On-VPS layout**). It is needed regardless of repo visibility — `entrypoint.sh` requires `GITHUB_PAT` unconditionally and passes it via `GIT_ASKPASS` (see `deploy/entrypoint.sh`), keeping it out of `.git/config`.)
 
 3. **Shared proxy network.** Terrarium is reached by the existing Caddy over a
    shared network called `web`. Create it once:

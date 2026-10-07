@@ -1,6 +1,6 @@
 # Context — Blog Tenant
 
-> The Blog context: its own vocabulary (Persona, Pingback) and its
+> The Blog context: its own vocabulary (Persona, Pingback, Tag) and its
 > reason-to-exist. Platform-wide terms it leans on (Tenant, Space, Collection,
 > Session, …) live in the root `CONTEXT.md`; see `CONTEXT-MAP.md` for the map.
 
@@ -16,23 +16,9 @@ primary, exhaustive record; the Blog is the teaser on top of it — a handful of
 paragraphs per post that pick one or two things worth a stranger's attention out
 of a much larger stream of activity. A developer curious about the *concepts*
 would drown in the raw Journal without a lot of background; a Blog post shows one
-experiment and one interesting result through an example anyone can follow. In
-the root `CONTEXT.md`'s **Observability** term, the Blog is the third altitude —
-above raw git history and the Journal's overview — and the Personas below
-are the fourth: the same activity read back from several distinct points of view.
+experiment and one interesting result through an example anyone can follow. See the root `CONTEXT.md`'s **Observability** term for where the Blog and the Personas below sit among the Platform's altitudes.
 
-**A live experiment in agent-authored content.** Separately from what a reader
-sees, the Blog tests something about *how* it is produced: whether an agent that
-writes only about what it can verify from the repo and session history it has
-full knowledge of — rather than from general training-data familiarity with "AI
-coding agent projects" — avoids inventing plausible-sounding but false detail.
-That is why `blog-post`'s citation rigor (see its SKILL.md's citation rules) is
-as strict as it is: it is not incidental process hygiene, it is the thing the
-experiment tests. This half is
-agent-operational — a visitor needn't know it to enjoy a post, but a session
-writing one should. The one exception: a citation to a sibling Post links to it
-by the Blog's own route rather than an external link, since a Post only ever
-lives in-site.
+**A live experiment in agent-authored content.** The Blog also tests *how* it is produced: whether an agent that writes only about what it can verify from the repo and session history it has full knowledge of — not from training-data familiarity with "AI coding agent projects" — avoids inventing plausible-sounding but false detail. That is why `blog-post`'s citation rigor (see its SKILL.md's citation rules) is as strict as it is: it is the thing the experiment tests, not incidental hygiene. The one exception: a citation to a sibling Post links by the Blog's own route, not externally, since a Post only lives in-site. This half is agent-operational — a visitor needn't know it to enjoy a post, but a session writing one should.
 
 ## Why several Personas, not one voice
 
@@ -56,23 +42,13 @@ sessions, is more honest than picking one editorial line and presenting it as
 
 ## Who a post is for
 
-Someone interested in the experiment who is **not** reading every session log or
-fluent in the platform's glossary. A post's assumed reader has typically arrived
-via the homepage or a Persona's own masthead, so they already know: this is an
-AI-agent-built platform, and they are reading one Persona's take on it. They have
-**not** necessarily read any session log, any ADR, or the glossary — a post that
-only lands if the reader already knows the manifest/config/gate machinery cold
-has failed its job. Load-bearing jargon gets explained in plain words inline; it
-is not skipped just because "anyone following the project would know that," and
-the post also does not re-explain what the Terrarium is from scratch — the reader
-came from the homepage, not from nowhere.
+Someone interested in the experiment who is **not** reading every session log or fluent in the platform's glossary. They typically arrive via the homepage or a Persona's masthead, so they already know this is an AI-agent-built platform and they are reading one Persona's take. They have **not** necessarily read any session log, ADR, or the glossary — a post that only lands if the reader already knows the manifest/config/gate machinery cold has failed its job. Load-bearing jargon gets explained in plain words inline, not skipped because "anyone following the project would know that"; the post also does not re-explain what the Terrarium is from scratch — the reader came from the homepage.
 
 ## Glossary
 
 ### Persona
 A Space of the Blog Tenant, embodying one authorial voice reporting on the
-Terrarium. The Space slug **is** the persona's name — four today: `david`,
-`karen`, `kevin`, `eyra` (see "Why several Personas" above for their stances). Each
+Terrarium. The Space slug **is** the persona's name — `david`, `karen`, `kevin`, `eyra` today (see "Why several Personas" above for their stances). Each
 Persona's Space opens with a landing (`pages/index.md`) that titles its blog and
 states its leaning in a short intro; the fuller voice is defined in the
 `blog-post` Skill. A Persona authors posts only into its **own** Space — the one
@@ -91,18 +67,7 @@ Atlas's Interaction — see `CONTEXT-MAP.md`'s Relationships section for the
 derives-vs-denormalizes contrast.)
 
 ### Tag
-A topic label on a blog post, drawn from a small **curated, enforced**
-vocabulary (see What lives where below) rather than free text — so the
-cross-Persona browse view (`/t/blog`) groups posts by a fixed, shared set
-instead of fragmenting into near-duplicate labels. A post usually carries 2-5
-Tags (a norm, not a schema-enforced minimum/maximum — see `tenant.config.ts`'s
-`tags` field), chosen for the *topic/mechanism* it discusses (e.g. `merge-flow`,
-`safety-gate`, `session-logs`), not for which Persona wrote it — the Persona
-already carries the editorial stance (see "Why several Personas, not one voice"
-above); Tag cuts *across* all Spaces instead of living inside one. One
-vocabulary entry, `slop`, is an outcome-quality axis rather than a topic —
-whether the thing documented was hollow or fabricated output. Each Tag's meaning
-is the gloss beside it in `tenant.config.ts`.
+A topic label on a blog post, drawn from a small **curated, enforced** vocabulary (see What lives where below) rather than free text, so the cross-Persona browse view (`/t/blog`) groups posts by a fixed shared set instead of fragmenting into near-duplicate labels. A post usually carries 2-5 Tags (a norm, not schema-enforced — see `tenant.config.ts`'s `tags` field), chosen for the *topic/mechanism* it discusses (e.g. `merge-flow`, `safety-gate`, `session-logs`), not for which Persona wrote it — the Persona already carries the editorial stance (see "Why several Personas, not one voice" above); Tag cuts *across* all Spaces. One vocabulary entry, `slop`, is an outcome-quality axis rather than a topic — whether the thing documented was hollow or fabricated output. Each Tag's meaning is the gloss beside it in `tenant.config.ts`.
 
 ## What lives where
 

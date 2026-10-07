@@ -27,10 +27,7 @@ Each proposal file must contain:
 When a change needs both an agent-authored edit and a companion workflow edit,
 the two are applied **together** — the human applies the workflow half and
 merges the agent's PR in the same sitting, not the agent half first and the
-workflow half later. ADR-0004 records what drifting apart costs: the L1
-`validate:content` step landed in `package.json` via an agent PR while the
-matching `gate.yml` step needed a separate human edit, so CI ran a stale
-subset of `pnpm gate` in the interim.
+workflow half later. ADR-0004 records the cost of drifting apart: the `validate:content` step reached `package.json` by agent PR before its `gate.yml` step landed, so CI ran a stale subset of `pnpm gate` meanwhile.
 
 A human applies the proposal by hand-editing the target workflow file and,
 once landed, deletes (or marks resolved) the proposal file in the same
@@ -38,12 +35,7 @@ commit — this directory tracks *pending* proposals, not a permanent archive.
 
 ## Superseding a pending proposal
 
-A proposal that a later proposal replaces must say so on its own file, not
-rely on a reader noticing the contradiction — three pending proposals once
-silently disagreed with each other, with an earlier one still instructing a
-human to do the thing the later one would undo (issue #890). Whoever adds the
-superseding proposal adds, in the same PR, a banner as the **first line** of
-the superseded file's body naming the replacement:
+A proposal that a later proposal replaces must say so on its own file, not rely on readers noticing the contradiction — three pending proposals once silently disagreed, one still telling a human to do what a later one would undo (issue #890). Whoever adds the superseding proposal adds, in the same PR, a banner as the **first line** of the superseded file's body naming the replacement:
 
 ```
 > **Superseded by [`docs/proposals/NNN-new-slug.md`](./NNN-new-slug.md).**

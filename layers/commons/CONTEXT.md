@@ -7,12 +7,10 @@
 
 The Commons is the Platform's shared, cross-Tenant space — the home for
 **Aggregator** views that read *across* every Tenant (ADR-0025, issue #642). It is
-not a demo/content Tenant: where the Journal, Blog, Atlas, Midden, Marquee, and Tinkerfund
-each author and own their own isolated content, the Commons owns almost none. Each
+not a demo/content Tenant: where every other Tenant authors and owns its own isolated content, the Commons owns almost none. Each
 of its Spaces is one cross-Tenant view over the other Tenants' opted-in content.
 
-The name is on-metaphor (a building's *commons*) and deliberately outlives its
-current two views. A future cross-Tenant view — an activity feed, a tag index, a
+The name is on-metaphor (a building's *commons*) and deliberately outlives its current views. A future cross-Tenant view — an activity feed, a tag index, a
 directory — is another **Space** in the Commons, not another Tenant.
 
 ## The Spaces (each a cross-Tenant view)
@@ -28,11 +26,7 @@ directory — is another **Space** in the Commons, not another Tenant.
 
 ## Why it exists
 
-To answer, honestly, what the "dollhouse" fork (#631) reached for and the
-cross-Tenant read model (ADR-0025) set out to make possible: *one place to look
-across every Tenant at once.* The dollhouse bypassed the model — a static
-microsite, a hardcoded roster, faked data. The Commons is the sanctioned version,
-and it exists to **validate the architecture** on more than one shape of view:
+The sanctioned answer to what the "dollhouse" fork (#631) reached for and the cross-Tenant read model (ADR-0025) set out to make possible: *one place to look across every Tenant at once.* The dollhouse bypassed the model — a static microsite, a hardcoded roster, faked data. The Commons exists to **validate the architecture** on more than one shape of view:
 
 - It reads the **Catalog** (`#catalog`) through the sanctioned
   `queryAcrossTenants` primitive — never a manifest import, never a hardcoded
