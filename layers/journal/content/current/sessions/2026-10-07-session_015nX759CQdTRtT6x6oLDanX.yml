@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_015nX759CQdTRtT6x6oLDanX
 startedAt: 2026-10-07T12:33:21Z
-endedAt: 2026-10-07T12:39:56Z
+endedAt: 2026-10-07T12:40:48Z
 kind: delegated
 goal: "Run frictions-to-fixes: survey the last 3 days of session frictions, fix what is ripe"
-status: in-review
-outcome: "One fix PR (#1660) open for issue #1659; every other recurring friction was already tracked or on trial"
-summary: "Human-instructed: the user invoked /frictions-to-fixes (one prompt, no steering after). A survey subagent read all 33 sessions in the 3-day window and found nearly everything recurring already tracked by open issues 1651-1654 (guard or hook surfaces, so not dispatchable here) or inside open Prune Trials. The one never-fixed, safe-surface candidate: digest and blog-post templates show free-text YAML scalars unquoted, so an unquoted colon broke front matter in two sessions and cost a gate cycle each. It touches two files, so I treated it as hard, filed #1659 and dispatched one Sonnet impl agent in a worktree; it opened PR #1660 (3 lines, gate green locally). I dropped the survey's ADR-0017 model-name candidate because it sits in the provenance trial territory and the ADR is human-only. Agent-initiated: choosing and screening candidates, filing #1659. Review, comment and merge of #1660 are still pending CI."
+status: completed
+outcome: "Fix PR #1660 merged and issue #1659 closed; every other recurring friction was already tracked or on trial"
+summary: "Human-instructed: the user invoked /frictions-to-fixes (one prompt, no steering after). A survey subagent read all 33 sessions in the 3-day window and found nearly everything recurring already tracked by open issues 1651-1654 (guard or hook surfaces, so not dispatchable here) or inside open Prune Trials. The one never-fixed, safe-surface candidate: digest and blog-post templates show free-text YAML scalars unquoted, so an unquoted colon broke front matter in two sessions and cost a gate cycle each. It touches two files, so I treated it as hard, filed #1659 and dispatched one Sonnet impl agent in a worktree; it opened PR #1660 (3 lines, gate green locally and in CI). I dropped the survey's ADR-0017 model-name candidate because it sits in the provenance trial territory and the ADR is human-only. Agent-initiated: choosing and screening candidates, filing #1659. I reviewed #1660, posted the verdict comment and landed it with merge-pr.ts after the CI gate went green."
 prs:
   - "1660"
 docsRead:
@@ -59,19 +59,24 @@ frictions:
   - description: Impl agent's compound git command was refused as too complex and a chained grep -c exit 1 stopped later commands.
     solution: Brief should say to run git calls separately and not chain after grep -c.
     severity: nit
-durationSec: 395
+durationSec: 447
 models:
-  claude-sonnet-5-5: 45
+  claude-sonnet-5-5: 61
 toolCounts:
   Read: 7
-  Bash: 4
+  Bash: 6
   Agent: 3
   Skill: 3
   Grep: 1
   ToolSearch: 1
   mcp__github__issue_write: 2
-  mcp__github__pull_request_read: 3
+  mcp__github__pull_request_read: 4
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__claude-code-remote__send_later: 1
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__delete_trigger: 1
+  mcp__github__issue_read: 1
 filesEdited:
   - .agents/skills/digest/SKILL.md
   - .agents/skills/blog-post/SKILL.md
