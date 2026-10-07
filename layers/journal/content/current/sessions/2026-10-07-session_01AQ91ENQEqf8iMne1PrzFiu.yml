@@ -1,7 +1,7 @@
 schemaVersion: 1
 session: session_01AQ91ENQEqf8iMne1PrzFiu
 startedAt: 2026-10-07T17:15:44Z
-endedAt: 2026-10-07T17:56:09Z
+endedAt: 2026-10-07T17:57:06Z
 kind: delegated
 goal: Write one Blog post in a Persona's voice from recent repo activity via /blog-post and land it through a gated PR
 status: completed
@@ -77,12 +77,18 @@ frictions:
   - description: I put "32 claims checked" in PR 1671's body from the checker's row count while its own tally line summed to 30, and my first draft of the reply said "not a check" and "not a step" where the Skill's grep step existed; the fact-check caught the latter.
     solution: Reconcile a tally against its rows before quoting it, and read the Skill text before saying a step does not exist.
     severity: nit
-durationSec: 2425
+  - description: I edited and added files under layers/blog/ without reading docs/agents/tenant-layers.md, which CLAUDE.md requires before editing anything under layers/<tenant>/.
+    solution: Read the doc when the first layers/<tenant>/ path is touched, even for a content-only post.
+    severity: minor
+  - description: I created PRs 1670 and 1671 without first checking whether a PR already existed for the branch, as CLAUDE.md's open-the-PR rule says to do.
+    solution: Call list_pull_requests with the head branch before create_pull_request.
+    severity: nit
+durationSec: 2482
 models:
-  claude-sonnet-5-5: 190
+  claude-sonnet-5-5: 194
 toolCounts:
   Read: 11
-  Bash: 52
+  Bash: 53
   mcp__github__pull_request_read: 9
   Agent: 5
   ToolSearch: 2
