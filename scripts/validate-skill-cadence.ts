@@ -66,7 +66,7 @@ function sentencesOf(text: string): string[] {
 }
 
 /** Every sentence in `text` that pairs a cadence word with "Routine" — the
- *  schedule restated in a committed doc that CLAUDE.md forbids. */
+ *  schedule restated in a committed doc, which this convention forbids. */
 export function findCadenceViolations(text: string): { sentence: string; match: string }[] {
   const out: { sentence: string; match: string }[] = []
   for (const sentence of sentencesOf(text)) {
@@ -120,7 +120,7 @@ function printReport(violations: CadenceViolation[]): void {
   for (const v of violations) {
     console.error(`\n${v.file}  (${v.field})`)
     console.error(`  - restates a Routine's schedule ("${v.match}"): "${v.sentence}"`)
-    console.error('    CLAUDE.md: say a Skill *is* scheduled; never say *when* — a schedule can change without a commit.')
+    console.error('    Convention: say a Skill *is* scheduled; never say *when* — a schedule can change without a commit.')
   }
   const status = violations.length === 0 ? 'PASS' : 'FAIL'
   console.log(`\nvalidate-skill-cadence: ${status} — ${violations.length} violation(s)`)

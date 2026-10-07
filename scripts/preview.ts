@@ -40,7 +40,7 @@
 // a live URL — `scripts/plate-gallery.ts`, ad-hoc `playwright-core` probes.
 // Default is a production-accurate `preview` server (requires a prior
 // `pnpm build`); `--dev` uses `nuxt dev` for fast iteration (its DevTools
-// overlay makes it wrong for a trusted screenshot — see CLAUDE.md).
+// overlay makes it wrong for a trusted screenshot — see docs/agents/verifying-ui-changes.md).
 import { spawn, type ChildProcess } from 'node:child_process'
 import { createServer } from 'node:net'
 import { existsSync, openSync, closeSync, readFileSync, realpathSync, rmSync } from 'node:fs'

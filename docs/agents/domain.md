@@ -13,7 +13,7 @@ the shape (ADR-0021).
 
 For the reading order and what each file covers — `CONTEXT-MAP.md`, then
 `CONTEXT.md`, then the Tenant's own `layers/<tenant>/CONTEXT.md`, then the
-relevant ADRs — start at CLAUDE.md's "Read these first" rather than here.
+relevant ADRs — start at CLAUDE.md's "Start here" rather than here.
 
 This repo deliberately diverges from the `domain-modeling` Skill's generic
 templates (ADR-0021):
@@ -59,8 +59,8 @@ don't mint a term, a typology, or a classification for a population of one.
 
 This **complements**, not replaces, the `domain-modeling` Skill's 3-part ADR
 test: that test gates *decisions*, the rule of two gates *vocabulary*. A
-coined term is a standing tax — every session reads all the ADRs and
-reconciles term conflicts against the glossary — so the second instance is
+coined term is a standing tax — every session reads the glossary and
+reconciles term conflicts against it — so the second instance is
 what proves the abstraction is worth that tax. (The friction-tag taxonomy
 waits "until it can emerge from clustering real frictions"; ADR-0010 deferred
 a `digests` collection the same way.) It's a brake on new coinage, not a

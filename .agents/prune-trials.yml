@@ -113,57 +113,67 @@ trials:
       message.
   - problem: >
       CLAUDE.md as a whole: 374 lines of rules, incident histories and
-      restatements loaded into every session. Rewritten to 130 lines in plain
-      words. Each rule's origin was traced this run (git log -S / blame, the
-      cited issues, friction grades in session logs); rules whose origin was
-      minor or nit, or that a guard, gate step or another doc already holds,
-      were dropped or moved. Kept because major/critical with no other home:
-      empty prompt = stop and ask, stay on the branch, auto-open the gated PR
-      even against a harness rule, babysit the PR, the human-only list, verify
-      before stating, gate:scoped-green-but-CI-red = major friction, no pkill,
-      self-invoke close-session. Kept by owner decision: WHY-not-WHAT comments,
-      Read-not-cat, one home per fact. The three bullets of the other open
-      trials were copied word for word. "Read all ADRs" became "list and grep
-      docs/adr for the paths and terms you touch, read the relevant ones in
-      full": a survey of 36 large human-prompted sessions found a median of 2
-      ADRs read (1 of 36 read all), and structural edits missing their binding
-      ADRs. The Skill Inventory "use these" pointer was dropped: since
-      September only audit-skills sweeps read the inventory (9 of 96
-      sessions), none to choose a Skill. Issue/PR numbers were dropped from CLAUDE.md; git history is the
-      forwarding address. Moved: screenshot tooling to
+      restatements loaded into every session. Rewritten to 143 lines in plain,
+      precise words. Each rule's origin was traced this run (git log -S /
+      blame, the cited issues, friction grades in session logs). Rules whose
+      origin was minor or nit, or that a guard, gate step or another doc
+      already holds, were dropped or moved. Kept because major/critical with
+      no other home: empty prompt = stop and ask, stay on the branch,
+      auto-open the gated PR even against a harness rule (after checking none
+      exists), babysit the PR, the human-only list, verify before stating,
+      gate:scoped green but CI red = major friction (plus the CI-merge-ref
+      base-drift note), push only after the gate passes despite the Stop-hook
+      nag, background long commands, no pkill, invoke close-session. Kept by
+      owner decision: WHY-not-WHAT comments, Read-not-cat, one home per fact,
+      the pack-Skill rule (its where-to-put-advice half has no other home).
+      The ScheduleWakeup and provenance bullets (still on trial) and the
+      workflow-file bullet (trial closed this run) were copied word for word.
+      "Read all ADRs" became a planning trigger: list and grep docs/adr for
+      the paths and terms you touch, read every binding ADR in full. A survey
+      of 36 large human-prompted sessions found a median of 2 ADRs read (1 of
+      36 read all) and structural edits missing their binding ADRs. The docs
+      index became "Docs you must read first": one mandatory trigger per
+      docs/agents page. Dropped: the Skill Inventory "use these" pointer
+      (since September only audit-skills sweeps read the inventory, 9 of 96
+      sessions, none to choose a Skill); ToolSearch first; background-status
+      shapes; Routine-schedule wording; no filler calls while waiting; grep
+      before a long repro; the routing, manifest, pages-only, trust and
+      one-container ground rules (in their ADRs); the long layout tree; the
+      Status section; branch-protection facts. Issue/PR numbers were dropped
+      from CLAUDE.md by owner decision: git log -S / blame is the forwarding
+      address to each rule's history. Moved: screenshot tooling to
       verifying-ui-changes.md, adding a Space/Collection/Tenant to
       tenant-layers.md, PR description sync to pr-workflow.md, reading other
-      transcripts to github-integration.md. Dropped outright: long commands
-      in background as a standalone rule (folded into the gate:scoped line),
-      no filler calls while waiting, ToolSearch first, Routine schedule
-      wording, background-status shapes, dispatch-subagents for git (now a
-      pointer), cheap-checks-first, the routing/manifest/pages-only/trust
-      ground rules (in their ADRs), the long layout tree, the Status section.
-      Net about -244 lines in CLAUDE.md.
+      sessions' transcripts to github-integration.md. The pr-workflow and
+      github-integration insertions sit near, but outside, the provenance
+      trial's paragraphs. Inbound pointers to removed CLAUDE.md text were
+      repointed (guards.md, domain.md, git-conventions.md, ADR-0005, a few
+      script and test comments); historical narration in ADR-0015/0020 left
+      as is. Net -231 lines in CLAUDE.md.
     territory:
       paths:
-        - "CLAUDE.md (all of it, except the three bullets owned by the other open trials)"
+        - "CLAUDE.md (all of it except the ScheduleWakeup and provenance bullets)"
         - "docs/agents/verifying-ui-changes.md: the Capture tooling section"
         - "docs/agents/tenant-layers.md: section 3"
+        - "docs/agents/pr-workflow.md: the PR title/description sync paragraph"
+        - "docs/agents/github-integration.md: the other-sessions' transcript paragraph"
       keywords:
         - read all ADRs
+        - Docs you must read first
         - empty task prompt
-        - cheap checks first
-        - filler calls
-        - long-running command
-        - Repo layout
         - Skill Inventory
+        - Repo layout
     opened: 2026-10-07
     proven: true
     check: >
-      Damage is a session that does something a dropped rule used to
-      prevent, graded major or blocker: guesses a task from an empty prompt,
-      leaves its branch, holds back a PR because the harness said no, merges
-      or self-merges a human-only file, states an unverified id or count as
-      fact, kills a process by hand, plans a structural change without
-      reading the ADR that binds the file, or loses a gate run's real status
-      by polling with filler calls. Also count a session that could not find
-      moved material (screenshot tooling, adding a Tenant) where its pointer
-      sends it. NOT damage: a session that reads only the relevant ADRs, or
-      that a guard or gate step stopped and that fixed itself from the
-      message.
+      Damage is a major or blocker Friction where a session does something
+      the old CLAUDE.md prevented and the new one does not: guesses a task
+      from an empty prompt, leaves its branch, holds back a PR because the
+      harness said no, self-merges a human-only PR, states an unverified id
+      or count as fact, kills a process by hand, pushes before the gate
+      passed, plans a structural change without reading the ADR that binds
+      the file, or acts in a doc's area without reading the doc its trigger
+      names. Also count a session that cannot find moved material
+      (screenshot tooling, adding a Tenant) from the pointer. NOT damage: a
+      session that reads only the relevant ADRs, or one a guard or gate step
+      stopped that fixed itself from the message.

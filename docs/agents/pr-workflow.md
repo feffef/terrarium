@@ -104,8 +104,8 @@ scope-specific work is staged — each Skill's own SKILL.md states only its
 delta from this sequence (what its diff must be limited to, and what to do
 when something rides outside that scope):
 
-1. Run `pnpm gate:scoped` (ADR-0004; CLAUDE.md's **Self-verification** section
-   owns what it runs). Done when it's green.
+1. Run `pnpm gate:scoped` (ADR-0004; `scripts/gate.ts` owns what it runs).
+   Done when it's green.
 2. Commit, push with retry, and open **one gated PR** scoped to that Skill's
    own diff — one per run unless the Skill's own SKILL.md names more.
 3. Subscribe on open and land via this doc's recipe once green.

@@ -55,7 +55,7 @@ export interface ForeignSignature {
  *  both is the confusion. Add a row here as new foreign-shape confusions surface
  *  (e.g. another deferred tool repeatedly called with some known tool's shape).
  *  This is NOT `TaskCreate`-specific: it fires for ANY tool wrongly wearing the
- *  Agent shape (the rule is about every deferred tool — CLAUDE.md, issue #612). */
+ *  Agent shape (the rule is about every deferred tool — issue #612). */
 export const FOREIGN_SIGNATURES: readonly ForeignSignature[] = [
   { owner: 'Agent', requiredKeys: ['prompt', 'subagent_type'] },
 ]
