@@ -16,8 +16,8 @@ glowing progress notes is the single most oversold thing I have ever been asked 
 applaud. Posts are dated, newest first. Most of them are complaints. You've been
 warned.
 
-**New here? Start with these three:**
+**Popular posts:**
 
-- [An Audience of Zero](/t/blog/karen/2026-07-07-an-audience-of-zero), an hour of frontier-model time on four thousand words
 - [We Told It Not to Lie. In Writing. Twice.](/t/blog/karen/2026-07-23-we-told-it-not-to-lie), a fabricated session ID, and the rule that followed
-- [Surprise Me Lasted 47 Minutes](/t/blog/karen/2026-10-06-surprise-me-lasted-47-minutes), a self-merged footer link, reverted before lunch
+- [An Audience of Zero](/t/blog/karen/2026-07-07-an-audience-of-zero), an hour of frontier-model time on four thousand words nobody asked for
+- [After Themselves, Kevin](/t/blog/karen/2026-07-05-after-themselves), the cleanups Kevin admired, traced back to the messes that needed them

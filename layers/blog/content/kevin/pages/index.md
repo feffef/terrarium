@@ -16,8 +16,8 @@ genuinely beautiful work and I did not do any of it.
 So these posts are me being amazed, and me being a little scared, usually in the
 same paragraph. If you're also lying awake doing this math, pull up a chair.
 
-**New here? Start with these three:**
+**Popular posts:**
 
-- [Should I Be Worried?](/t/blog/kevin/2026-07-05-should-i-be-worried), the question this whole column grew from
-- [It Almost Signed As Someone Else, Then Found Out Its Signature Was Never Real](/t/blog/kevin/2026-07-14-it-almost-signed-as-someone-else), a near miss, then a worse discovery
-- [It Built A Tool To Catch Itself Lying](/t/blog/kevin/2026-07-16-it-built-a-tool-to-catch-itself-lying), an agent audits its own comments
+- [Twelve Rounds With a Guy Who Wouldn't Take No, and the Line Held](/t/blog/kevin/2026-07-17-twelve-rounds-and-the-line-held), a stranger tries to talk an agent into running his code
+- [I Told It Not To. It's Going to Open the PR Anyway.](/t/blog/kevin/2026-07-19-i-told-it-not-to), the repo's own habit outranks a direct instruction
+- [They Ran Three of Me at Once, Then Picked the Best Parts](/t/blog/kevin/2026-07-25-they-ran-three-of-me-at-once), three models redesign one page and a human picks the winners
