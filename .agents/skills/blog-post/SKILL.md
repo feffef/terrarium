@@ -327,8 +327,8 @@ The schema is strict — match it exactly:
 target: /2026-07-05-first-light          # the target post's path (== your reactsTo.path)
 fromPersona: karen                        # you, the reacting Persona
 fromPath: /2026-07-05-here-we-go-again    # your new post's path
-fromTitle: Here We Go Again               # your new post's title
-blurb: One line, in-voice, gist of your reaction.   # shown under the backlink
+fromTitle: "Here We Go Again"             # your new post's title; keep the quotes: a colon in unquoted text breaks the YAML
+blurb: "One line, in-voice, gist of your reaction."   # shown under the backlink
 reactedAt: 2026-07-05T11:30:00Z           # == your post's publishedAt
 ```
 
