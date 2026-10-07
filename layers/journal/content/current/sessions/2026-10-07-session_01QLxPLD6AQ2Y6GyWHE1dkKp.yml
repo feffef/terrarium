@@ -1,7 +1,7 @@
 schemaVersion: 1
 session: session_01QLxPLD6AQ2Y6GyWHE1dkKp
 startedAt: 2026-10-07T12:33:47Z
-endedAt: 2026-10-07T12:42:51Z
+endedAt: 2026-10-07T12:44:29Z
 kind: interactive
 goal: "Run one /auto-triage sweep, then implement the two issues it marked ready-for-agent (#1627, #1626)"
 status: completed
@@ -29,6 +29,12 @@ docsRead:
     reason: (no reason given)
   - path: .agents/skills/blog-post/SKILL.md
     reason: (no reason given)
+  - path: CLAUDE.md
+    reason: (no reason given)
+  - path: docs/adr/0027-prune-trials.md
+    reason: (no reason given)
+  - path: .agents/prune-trials.yml
+    reason: (no reason given)
   - path: .agents/skills/triage/SKILL.md
     reason: (no reason given)
   - path: .agents/skills/triage/AGENT-BRIEF.md
@@ -36,8 +42,6 @@ docsRead:
   - path: .agents/skills/triage/OUT-OF-SCOPE.md
     reason: (no reason given)
   - path: docs/research/rulebook-migration-table.md
-    reason: (no reason given)
-  - path: .agents/prune-trials.yml
     reason: (no reason given)
   - path: .agents/skills/audit-docs/SKILL.md
     reason: (no reason given)
@@ -63,13 +67,19 @@ frictions:
   - description: A single bash command piping into tail while backgrounded was denied by the tail-pipe guard, and the chained python edit did not run, costing a retry.
     solution: None needed; the guard worked as designed.
     severity: nit
-durationSec: 543
+  - description: "Own CLAUDE.md lapses, found when the user asked for a re-read: read ADR-0015 only partly and never ADR-0003/0004/0027 before editing two Skills; no ADR grep for blog-post at all; used cat/sed/grep instead of Read for docs; no check for an existing PR on the branch; checked skills-lock.json and prune-trials only after merge."
+    solution: Run the ADR grep and prune-trials/skills-lock checks as a fixed pre-edit step, and Read docs with the Read tool.
+    severity: minor
+  - description: Told the user the subagents' posted comments were spot-checked, but only their reports were read; none of the four comments was opened on GitHub.
+    solution: Say what was read; open one posted comment per batch before reporting a sweep.
+    severity: minor
+durationSec: 642
 models:
-  claude-sonnet-5-5: 103
+  claude-sonnet-5-5: 113
 toolCounts:
-  Read: 7
+  Read: 10
   Glob: 1
-  Bash: 29
+  Bash: 31
   Agent: 4
   Skill: 3
   AskUserQuestion: 1
