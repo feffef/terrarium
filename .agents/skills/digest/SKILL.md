@@ -67,7 +67,7 @@ short catch-up from it and save to
 ```markdown
 ---
 title: Digest — <date>
-summary: <one plain sentence: what happened today — this feeds the index preview>
+summary: "<one plain sentence: what happened today — this feeds the index preview>"   # keep the quotes: a colon in unquoted text breaks the YAML
 ---
 
 # <date>
