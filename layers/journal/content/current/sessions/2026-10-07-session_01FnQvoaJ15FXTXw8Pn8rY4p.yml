@@ -1,0 +1,55 @@
+schemaVersion: 1
+session: session_01FnQvoaJ15FXTXw8Pn8rY4p
+startedAt: 2026-10-07T02:03:44Z
+endedAt: 2026-10-07T02:07:59Z
+kind: autonomous
+goal: Survey the last 3 days of session frictions and ship fixes for the ripe ones (frictions-to-fixes Routine)
+status: completed
+outcome: "No dispatchable fix this run: top recurring frictions all sit on guard/hook surfaces; user notified"
+summary: Scheduled frictions-to-fixes run (agent-initiated by the Routine, no human prompt). A survey subagent read all 34 sessions in the window and ranked six candidates. The top three (Agent run_in_background denial, 21 of 34; commit-trailer guard vs harness attribution reminder, 13 of 34; Stop-hook uncommitted-changes nag, 12 of 34) are guard or harness surfaces, which the Skill says are never dispatched, so no impl PRs were opened. The deferred-tool ToolSearch gap is a hard guard change; the list_events token cost and the visitor-loop probe resolution are 2-of-34 minor/nit items judged not worth a PR under Keep it short. The user was notified of the guard candidates for a human-attended session.
+prs: []
+docsRead:
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: .agents/prune-trials.yml
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: frictions-to-fixes
+    reason: (invoked as a slash command)
+frictions:
+  - description: Agent call with run_in_background:false was denied by the guard, costing a retry, the same nit the survey found in 21 of 34 sessions.
+    solution: Guard should accept and strip the no-op flag, or be deleted (human-attended edit).
+    severity: nit
+  - description: session-frictions.ts JSON output is 180KB and merged-since.ts returns 1358 lines; the survey subagent overflowed a tool result once.
+    solution: Let merged-since.ts filter to merge commits or PRs only.
+    severity: nit
+durationSec: 255
+models:
+  claude-sonnet-5-5: 11
+toolCounts:
+  Agent: 2
+  Skill: 2
+  Write: 1
+  Bash: 1
+  PushNotification: 1
+docsReadViaShell:
+  - docs/agents/guards.md
+  - docs/agents/environment-caveats.md
+  - .agents/skills/blog-post/SKILL.md
+  - .agents/skills/dispatch-subagents/SKILL.md
+  - .agents/skills/auto-triage/SKILL.md
+  - .agents/skills/visitor-loop/SKILL.md
+subagents:
+  - type: general-purpose
+    task: Survey and screen frictions
+  - type: general-purpose
+    task: Survey and screen frictions
+gitBranch: claude/eager-ptolemy-wiewea
+entrypoint: remote_trigger
+cliVersion: 2.1.292
+trigger: frictions-to-fixes
+landedBy: Stop
