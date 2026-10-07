@@ -1,0 +1,175 @@
+schemaVersion: 1
+session: session_01NyDGTR1fuP22hPo7XghCfz
+startedAt: 2026-10-07T10:38:24Z
+endedAt: 2026-10-07T12:11:00Z
+kind: interactive
+goal: "Prune trial: rewrite CLAUDE.md to the bare minimum in plain, precise words"
+status: in-review
+outcome: CLAUDE.md cut from 374 to 146 lines; PR 1658 open, probed on Sonnet twice and reviewed twice
+summary: "Human-instructed throughout: the owner invoked /prune-trial with an explicit ask to rewrite CLAUDE.md to the bare minimum, trace each rule's origin with git log/blame, drop rules whose origin wasn't major or critical, and use pointers wisely. The owner made every structural call in-session: keep the three open-trial bullets verbatim, keep WHY-not-WHAT and Read-not-cat, a minimal layout, drop issue/PR numbers, drop the Skill Inventory pointer, turn the docs index into mandatory \"before you X, read Y\" triggers, move the ADR rule from session start to a planning trigger, restore the pack-Skill rule, and remove vague wording everywhere. Agent-initiated parts: the rule-origin trace (subagent, 54 rules graded), the ADR-reading survey (36 large human-prompted sessions, median 2 of 28 ADRs read), the Skill Inventory usage check (only audit-skills sweeps read it), judging the workflow-file trial (holds), the Sonnet probes, and proposing fixes from two /code-review rounds that the owner ran and approved. Two surprises: \"read all ADRs\" was almost never followed, while grepping docs/adr by file path reliably finds the binding ADRs; and the Skill Inventory pointer was dead weight. What's still open: the owner decides whether this prune-trial PR self-merges or is merged by hand, given its size."
+prs:
+  - "1658"
+docsRead:
+  - path: CLAUDE.md
+    reason: the file under rewrite
+  - path: .agents/prune-trials.yml
+    reason: open trials, territory, ledger entry
+  - path: docs/agents/pr-workflow.md
+    reason: tiers and the PR-open sequence
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: human-only set wording
+  - path: docs/adr/0015-audit-skills-and-conditional-importance.md
+    reason: whether the pack-Skill rule had another home
+  - path: docs/agents/tenant-layers.md
+    reason: (read before editing)
+skillsUsed:
+  - name: prune-trial
+    reason: the run itself
+  - name: writing-for-agents
+    reason: pointer and trigger wording
+  - name: code-review
+    reason: two owner-invoked review rounds
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: My first rewrite left about 20 dangling inbound references to removed CLAUDE.md text, in Skills, scripts, guards.md and docs. Two review rounds found them; my grep used a narrow regex.
+    solution: Grep for every removed phrase and section name repo-wide (Skills included) before the first commit, as prune-trial section 3 already says
+    severity: moderate
+  - description: I wrote unverified or false claims into CLAUDE.md ('main has no branch protection', 'CI runs the full gate on every PR'). A self-check and a reviewer caught them.
+    solution: Apply verify-before-you-state to my own instruction text, not only to session reports
+    severity: moderate
+  - description: The owner had to ask several times for further trims (a status line, an 'Agent skills' heading, vague words) after I had said the file was already trimmed. My first pass was not strict line by line.
+    solution: "Before presenting a rewrite, test every line: who acts on it, and when? Delete lines with no trigger"
+    severity: moderate
+  - description: I ran pnpm gate:scoped in the foreground once; it hit the 2-minute timeout and auto-backgrounded, against the CLAUDE.md long-command rule.
+    solution: Start every gate run with run_in_background from the outset
+    severity: minor
+  - description: The harness Stop-time 'commit and push' reminder fired about ten times while gates ran. Each time it took a turn to explain that the push waits for the gate.
+    solution: Have the Stop reminder skip when a backgrounded gate:scoped is still running
+    severity: minor
+  - description: A code-review subagent ran scripts/prune-trial-window.ts, which runs git fetch on its own and moved origin/main mid-review.
+    solution: Tell read-only review subagents not to run repo scripts, or make prune-trial-window.ts fetch-free behind a flag
+    severity: minor
+  - description: The first Sonnet probe's context held the old CLAUDE.md alongside the pinned one (the issue 1420 risk). It followed the pinned text, but the probe was not clean.
+    solution: Re-probe after a session restart, or say in the brief to ignore any CLAUDE.md already in context, as the second probe did
+    severity: minor
+  - description: I proposed repointing three Skills to validate-skill-cadence, which is pointless indirection; the owner rejected it.
+    solution: When a rule moves into an enforcing check, drop the citation instead of pointing at the check
+    severity: minor
+  - description: agent-background-flag-guard denied run_in_background false on an Agent call, costing a retry (tracked in issue 1651).
+    solution: "Issue 1651's options: allow the no-op flag or delete the guard"
+    severity: nit
+  - description: The harness system prompt says to keep model names out of PR bodies; ADR-0017's header carries one. I used the model-less 'Claude Code' name.
+    solution: Note in ADR-0017 that a model-less header name is acceptable
+    severity: nit
+  - description: I issued one pointless 'echo' Bash call while thinking.
+    solution: None needed beyond attention
+    severity: nit
+durationSec: 5556
+models:
+  claude-opus-5-5: 348
+toolCounts:
+  Skill: 3
+  Bash: 96
+  Agent: 10
+  AskUserQuestion: 1
+  ToolSearch: 2
+  mcp__github__search_issues: 1
+  Write: 3
+  Read: 8
+  Edit: 7
+  TaskStop: 1
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+  mcp__github__issue_read: 3
+filesEdited:
+  - CLAUDE.md
+  - docs/agents/tenant-layers.md
+  - docs/agents/pr-workflow.md
+  - docs/agents/github-integration.md
+  - .agents/prune-trials.yml
+docsReadViaShell:
+  - docs/research/rulebook-migration-table.md
+  - docs/agents/issue-tracker.md
+  - docs/agents/pr-workflow.md
+  - docs/agents/guards.md
+  - docs/agents/verifying-ui-changes.md
+  - docs/agents/domain.md
+  - docs/agents/git-conventions.md
+  - docs/adr/0004-objective-safety-gate.md
+  - docs/adr/0003-agent-operating-model-and-governance.md
+  - docs/adr/0005-skill-model.md
+  - docs/adr/0009-session-logs-commit-directly-to-main.md
+  - docs/adr/0026-gate-workflow-thin-shell.md
+  - CONTEXT.md
+  - .agents/skills/audit-docs/SKILL.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - .agents/skills/digest/SKILL.md
+  - .agents/skills/prune-trial/SKILL.md
+  - .agents/skills/setup-matt-pocock-skills/SKILL.md
+  - .agents/skills/atlas-specimen/SKILL.md
+  - .agents/skills/audit-skills/SKILL.md
+  - .agents/skills/close-session/SKILL.md
+  - .agents/skills/blog-post/SKILL.md
+  - docs/agents/github-integration.md
+  - docs/agents/tenant-layers.md
+  - docs/agents/environment-caveats.md
+  - docs/agents/triage-labels.md
+  - docs/agents/mdc-when-to-use.md
+  - docs/agents/guest-contributions.md
+  - docs/adr/0015-audit-skills-and-conditional-importance.md
+  - docs/adr/0020-requester-trust-tiers.md
+  - .agents/skills/guest-intake/SKILL.md
+  - .agents/skills/guest-build/SKILL.md
+  - .agents/skills/auto-triage/SKILL.md
+  - .agents/skills/dispatch-subagents/SKILL.md
+  - .agents/skills/ask-matt/SKILL.md
+  - .agents/skills/visitor-loop/decisions.md
+  - docs/adr/0006-runtime-routing-path-prefix.md
+  - docs/adr/0027-prune-trials.md
+  - docs/adr/0017-provenance-footer-on-agent-authored-content.md
+  - docs/adr/0013-dynamic-content-config-committed-routing-map.md
+  - docs/adr/0014-build-time-virtual-routing-module.md
+  - .agents/skills/log-session/SKILL.md
+  - .agents/skills/writing-for-agents/SKILL.md
+  - .agents/skills/tinkerfund-campaign/SKILL.md
+  - docs/adr/0018-tenant-layers-under-layers-directory.md
+  - docs/research/making-repo-public.md
+  - docs/research/shell-reads-by-output-matching.md
+subagents:
+  - type: general-purpose
+    task: Trace CLAUDE.md rule origins
+  - type: general-purpose
+    task: Check ADR reading in sessions
+  - type: general-purpose
+    task: Sonnet probe of pruned CLAUDE.md
+    model: sonnet
+  - type: general-purpose
+    task: Sonnet probe of pruned CLAUDE.md
+    model: sonnet
+  - type: general-purpose
+    task: Sonnet probe of pruned CLAUDE.md
+    model: sonnet
+  - type: general-purpose
+    task: Standards review of CLAUDE.md rewrite
+  - type: general-purpose
+    task: Spec review of CLAUDE.md rewrite
+  - type: general-purpose
+    task: Standards re-review of CLAUDE.md rewrite
+  - type: general-purpose
+    task: Spec re-review of CLAUDE.md rewrite
+  - type: general-purpose
+    task: Sonnet re-probe of final CLAUDE.md
+    model: sonnet
+gitBranch: claude/tender-carson-ojt79z
+entrypoint: remote
+cliVersion: 2.1.292
+learnings:
+  - Grepping docs/adr for a file path finds the ADRs that bind it far more reliably than an instruction to read all 28; sessions read a median of 2.
+  - A prune trial's own territory locators ('the paragraph above X') move when another prune inserts text nearby; inserting next to an open trial's locator muddies its verdict.
+ideas:
+  - "Add a pre-commit check to the prune-trial Skill's flow: for every heading or bolded bullet lead removed from CLAUDE.md, grep the repo (excluding session logs and blog content) for the phrase, and fail with the list of referencing files. Two review rounds here caught about 20 dangling references by hand."
+landedBy: Stop
