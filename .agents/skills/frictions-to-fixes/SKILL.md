@@ -1,13 +1,13 @@
 ---
 name: frictions-to-fixes
-description: Mine the Journal's session-log frictions and ship fixes autonomously — select up to 10 per run (at most 2 hard, the only ones that become issues), dispatch Sonnet impl agents as gated PRs, then review-and-merge them yourself, escalating only genuinely high-risk changes to humans.
+description: Mine the Journal's session-log frictions and ship fixes autonomously — select up to 10 per run (at most 2 hard; hard and surface-blocked ones become issues), dispatch Sonnet impl agents as gated PRs, then review-and-merge them yourself, escalating only genuinely high-risk changes to humans.
 disable-model-invocation: true
 ---
 
 # Frictions to Fixes
 
 The precursor to fuller self-improvement automation (ADR-0009): read
-the **frictions** every session honestly logged, pick the ones worth retiring (only hard ones become issues, §4),
+the **frictions** every session honestly logged, pick the ones worth retiring (only what this run can't land becomes an issue, §4),
 dispatch fixes, then **review and land them yourself**. **Autonomy is the
 goal** — you act as the mid-term **review-agent** that ADR-0003 foresaw (the impl
 agents author the PRs; you review and merge them against the ADR-0004 gate),
@@ -109,7 +109,8 @@ ran in a subagent.
 Done when the subagent returns a structured report: **(a) ranked actionable
 candidates** — each with title, severity, recurrence (N of the window's sessions), sessions, tracker
 classification (never-fixed / open-already #N / regression of #N), fix type
-(doc/code/config), human-only-surface flag, difficulty (simple/hard), a one-line
+(doc/code/config), surface-blocked flag (fails §3's safe-surface test: human-only,
+guard or hook wiring), difficulty (simple/hard), a one-line
 recommended fix, and evidence quotes; **(b) a dropped list** with one-line reasons;
 and **(c) the subagent's own frictions** from the run.
 
@@ -193,9 +194,10 @@ if your judgement differs, but don't re-derive the ranking from scratch.)
   more than two hard frictions rank highly, take the top two and leave the rest for
   a later run.
 
-Drop one-offs and anything an ADR defers. The caller may pass a lower count as
-the Skill's argument; with none, take everything that ranks, capped at the
-same 10-total / 2-hard limits.
+Drop one-offs and anything an ADR defers. A candidate that ranks but fails only the
+safe-surface test is **surface-blocked**: not dropped, §4 files it, uncapped. The
+caller may pass a lower count as the Skill's argument; with none, take everything
+that ranks, capped at the same 10-total / 2-hard limits.
 
 Done when each selection names its evidence, is tagged **simple** or **hard**, and
 you can state in one line why it earns a fix (and, for a group, which frictions it
@@ -209,6 +211,11 @@ related frictions is one issue, not several): the **problem** with its evidence
 (quote the logging sessions + severities — for a group, all of them), the
 **solutions** you weighed, and the **recommended** one, scoped for what §5 should
 implement. Search the tracker first to avoid duplicates.
+
+So does a **surface-blocked** candidate (§3): file it the same way, labelled
+`ready-for-human` (for a human-only file an agent may still write the fix; only
+the merge needs a human). Otherwise it ages out of the window untracked, and the
+next run rediscovers and re-drops it.
 
 A **simple** selection is dispatched, reviewed, and merged inside this same run
 (§5–§6) — filing an issue for it is pure overhead, opened only to be closed by
@@ -228,9 +235,10 @@ carries, a finding** — `scripts/audit-skills.ts`'s `docReadCounts` docstring i
 the single home for why (three separate reasons it undercounts). Read it before
 citing a count.
 
-Done when every **hard** selection has an open issue with a clearly recommended
-solution, and every **simple** selection has its problem/evidence/fix ready to
-hand straight to §5's dispatch brief with no issue filed for it.
+Done when every **hard** selection and every surface-blocked candidate has an
+open issue with a clearly recommended solution, and every **simple** selection
+has its problem/evidence/fix ready to hand straight to §5's dispatch brief with
+no issue filed for it.
 
 ## 5. Dispatch Sonnet impl agents — batch the doc fixes
 
