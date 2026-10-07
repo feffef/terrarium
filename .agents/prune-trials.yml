@@ -156,7 +156,10 @@ trials:
       auto-triage, dispatch-subagents and audit-docs, layers/journal/
       tenant.config.ts, and comments in eight scripts and two tests.
       Historical narration in ADR-0015/0020 and deferred-tool-guard.ts was
-      left as is. Net -228 lines in CLAUDE.md.
+      left as is. Net -228 lines in CLAUDE.md. Follow-up (owner request,
+      after merge): close-session gained a hard rule to re-read CLAUDE.md at
+      closure and log a Friction for every CLAUDE.md rule or step the session
+      broke or skipped, so the trial's verdict has direct evidence.
     territory:
       paths:
         - "CLAUDE.md (all of it except the ScheduleWakeup and provenance bullets)"
@@ -165,6 +168,7 @@ trials:
         - "docs/agents/pr-workflow.md: the PR title/description sync paragraph above 'Per-tier merge authority'"
         - "docs/agents/github-integration.md: the 'Reading another session's transcript' section"
         - "docs/agents/guards.md: the 'Rule homed in' cells of the deferred-tool, workflow-edit, tail-pipe and double-background rows"
+        - ".agents/skills/close-session/SKILL.md: the re-read-CLAUDE.md hard rule"
       keywords:
         - read all ADRs
         - Docs you must read first
@@ -184,4 +188,5 @@ trials:
       names. Also count a session that cannot find moved material
       (screenshot tooling, adding a Tenant) from the pointer. NOT damage: a
       session that reads only the relevant ADRs, or one a guard or gate step
-      stopped that fixed itself from the message.
+      stopped that fixed itself from the message. Start from the Frictions
+      that close-session's re-read logs against named CLAUDE.md rules.
