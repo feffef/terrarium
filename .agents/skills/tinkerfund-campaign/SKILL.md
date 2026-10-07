@@ -34,7 +34,7 @@ the tests a new Campaign disturbs.
    prints `ok` and the % funded matches the intended state.
 4. **Add the people and chatter.**
    - Inventor: reuse one, or add `inventors/<slug>.yml` (a one-sentence bio in
-     the voice, a portrait ≤ 1024 B on a 100×100 viewBox, tokens only).
+     the voice, a portrait ≤ 4096 B on a 100×100 viewBox, tokens only).
    - Live or Ended: `comments/<slug>.yml` with 5–10 comments, some with one
      level of Inventor replies (`inventor: true`), and 2–3 Updates in
      `updates/<slug>.yml`, each dated within the Campaign's timeline.
