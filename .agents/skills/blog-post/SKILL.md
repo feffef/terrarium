@@ -268,7 +268,10 @@ Spawn a fresh reader (the step 6 brief) to read the merged post plus the reply
 drafts and judge each against that bar alone, with **"none"** as a valid
 verdict.
 
-- **"none"**: stop, and say so in the session log.
+- **"none"**: stop. The first post's PR body predates this decision, so
+  comment the reader's verdict and reason on that PR, and say so in the
+  session log. Skipped five times (#1626): a "none" you judged yourself, with
+  no reader dispatched, is not done.
 - **A winner**: run it through steps 7–11 as its own reaction post —
   `reactsTo` frontmatter, pingback stub, tone re-read, fact-check, its own
   gated PR with `close-session` at open, exactly as for the first post. If
@@ -278,7 +281,8 @@ verdict.
   other Personas' reply angles, and the reader's reason. One reply per run at
   most; the original Persona does not answer back in this run.
 
-Done when: a reply has merged or is escalated, or the reader said "none".
+Done when: a reply has merged or is escalated, or the reader said "none" and
+its verdict and reason are on the first post's PR.
 
 ### 13. Close
 
