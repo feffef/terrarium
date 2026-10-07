@@ -100,3 +100,13 @@ observations:
       foreign branch) filed as #1611 and fixed via PR #1622
       (human-attended) — correctly outside this Skill's own scope either
       way. Grade unchanged.
+  - date: "2026-10-07"
+    note: >-
+      Re-checked (audit-skills behaviour check), 8 usedIn sessions; 2
+      freshly end-to-end verified: PR #1630 (2026-10-06, 4 files, doc-only
+      grouped fix) and PR #1500 (2026-09-30, 2 files). Both match their
+      session logs exactly, with 3 of the specific claimed fixes confirmed
+      present in current code. Issue #1499 (worktree-isolation guard
+      regression, correctly escalated rather than silently re-fixed)
+      re-confirmed still open. No reverts of any landed fix in the 2-week
+      git-log sweep. Grade unchanged.

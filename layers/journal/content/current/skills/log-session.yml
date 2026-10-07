@@ -205,3 +205,14 @@ observations:
       SHELL-READ-DETECTION instance, no regression from the 2026-10-05
       `scripts/log-session.ts` change (unrelated session-id-guard plumbing).
       Grade unchanged.
+  - date: "2026-10-07"
+    note: >-
+      Re-checked (audit-skills behaviour check), 10 newest usedIn sessions,
+      cross-checked every PR claim against GitHub and ran
+      `pnpm exec tsx scripts/validate-content.ts` repo-wide (0 violations).
+      Re-confirmed #1482/#1542 are genuinely closed (`state_reason:
+      completed`, both since 2026-10-03) — the 2026-10-06 correction holds.
+      All 10 summaries/outcomes matched live PR/git state exactly; frictions
+      honestly recorded and cross-consistent with each other across
+      sessions (several independently logged the same known guard
+      frictions). No silent failure found. Grade unchanged.

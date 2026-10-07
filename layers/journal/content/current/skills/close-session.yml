@@ -132,3 +132,14 @@ observations:
       forward is only whether the *current* finalize step ever leaves a
       fresh merged PR's log stale, which this batch answers "no" for. Grade
       unchanged.
+  - date: "2026-10-07"
+    note: >-
+      Re-checked (audit-skills behaviour check), 10 newest invocations (PRs
+      #1629-#1646): 0/10 stale, every claimed status independently verified
+      against live PR state (`merged_at`/`state`, not the less-reliable
+      `list_pull_requests` `merged` flag). Genuine-invocation spot-check
+      passed on all 10 (real `landedBy: Stop`, authored summary/outcome,
+      `Skill` tool-call counts matching `skillsUsed`), not a mislabeled tag.
+      `window_not_used` empty again — every window session used it.
+      session_01TMgZyrN42pwudxkUdHLKwP's stale log not re-checked, per the
+      2026-10-06 settled-static-artifact call. Grade/role unchanged.

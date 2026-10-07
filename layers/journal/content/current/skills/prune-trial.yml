@@ -175,3 +175,15 @@ observations:
       one confirmed silent failure on record (session_01U95GU6a93i4N25ZLgwXCSu,
       corpus-search skip) remains unchanged, self-fixed same session. Grade
       unchanged.
+  - date: "2026-10-07"
+    note: >-
+      Re-checked (audit-skills behaviour check), 8 usedIn sessions:
+      `validate-prune-trials.ts` passes, ledger holds 4 open trials
+      (workflow-edit-guard, pr-workflow, ScheduleWakeup, provenance), none
+      judgeable yet. Mapped each session to its verdict commits by exact
+      timestamp; all traceable to genuine evidence, no silent reversal
+      found (`git log origin/main -i --grep=prune-trial` over two weeks).
+      `origin/prune/backgrounding-cluster` still exists on the remote,
+      unaddressed — already escalated as issue #1628 (open), not
+      re-escalated. No new silent failure beyond the already-known,
+      self-fixed corpus-search skip. Grade unchanged.

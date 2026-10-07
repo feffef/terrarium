@@ -135,3 +135,20 @@ observations:
       outright, with a carve-out never to touch the `importance` grade. No
       reverts found (`git log --all -i --grep=revert` over "audit" returns
       only unrelated commits). Grade unchanged.
+  - date: "2026-10-07"
+    note: >-
+      Verified silent failure, escalated as issue #1647: the 2026-10-04
+      entry's "below escalation bar" call on session_01RA14XShYErE96EXs3TMX3c
+      skipping the mandatory independent-checker dispatch ("fact-checked
+      findings myself... rather than dispatching a separate checker") no
+      longer holds — the same shortcut recurred in
+      session_01L6ePb5aMsH4u53XnEs7FLQ (2026-10-06, PR #1631, verbatim: "I
+      fact-checked the chosen findings myself... instead of dispatching a
+      separate checker"), clearing the repeated bar. No damage either time
+      (both sets of inline-checked fixes independently confirmed correct).
+      A same-day fix (commit `5deab149`/PR #1632, "no fix without a checker
+      verdict") landed ~16h after the second lapse started, so it may
+      already be closed — a future sweep should confirm it held on its
+      first live test, since reworded steps elsewhere (blog-post step 12,
+      visitor-loop owner-memory) have not always held on the first try.
+      Grade unchanged.

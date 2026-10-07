@@ -181,3 +181,19 @@ observations:
       actually catches it end-to-end. Rest of the pipeline (3-model
       dispatch, consensus, code-review before merge) clean across all 8
       sessions, all 16 PRs verified merged. Grade unchanged.
+  - date: "2026-10-07"
+    note: >-
+      Re-checked (audit-skills behaviour check), 8 usedIn sessions, all 16
+      PRs re-verified merged. #1515 confirmed CLOSED (fixed by PR #1570 +
+      PR #1623's title-matching fix); its latest comment (2026-10-06) still
+      asks for a human spot-check on the next real revert, unanswered. The
+      one freshly-checked post-#1623 run — session_01ApFY3yyign1ba7pDd4aoeN
+      (2026-10-06, atlas focus, PRs #1641/#1642) — ran the owner-memory
+      step correctly (PR #1641's body: "Owner-correction candidates...
+      not a ruling"), but its session-log summary omits any mention of the
+      step — a disclosure gap, not a skip; n=1, not escalated. Also found:
+      PR #1619 ("Surprise me" footer link) was reverted same-day by
+      owner-requested PR #1624, correctly recorded in decisions.md by the
+      reverting session itself — a previously-unlisted but correctly
+      handled revert case, noted here for completeness. No new silent
+      failure. Grade unchanged.
