@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01N6jqFrkCMkEm3g6kJW9Zqk
 startedAt: 2026-10-07T04:01:01Z
-endedAt: 2026-10-07T04:28:20Z
+endedAt: 2026-10-07T10:38:32Z
 kind: autonomous
 goal: "Scheduled audit-docs sweep: fact-check and fix stale, duplicated, wordy or contradictory Live docs"
-status: in-review
-outcome: Live-doc fixes merged as PR 1649; ADR corrections open as human-only PR 1650
-summary: "Scheduled /audit-docs run, so every part was agent-initiated; no human prompt. Concision family 0 (root and per-Tenant docs) by day-of-year. Five reviewer agents reported roughly 150 findings; four checker agents re-derived them. Most verbose findings came back CONFIRMED-BUT with corrected text (reviewers often dropped a qualifier such as \"Substantive\" or \"the general category of\"), and a few WRONG (F9 GENERATED clause still needed by ADR-0013, P11 proposals are catalogued as files, P12 L0/L3 is deliberate, P13 intent not derivable). Applied only checker text. PR 1649 merged green via merge-pr.ts. ADR-0003 split ledger table and ADR-0004 stale gap pointer went to PR 1650, subscribed, awaiting a human. Left unfixed as judgement calls: frictions-to-fixes hard-selection escalation rule is unclear, and guards' human-only status is in no list. Open trial territories were skipped."
+status: completed
+outcome: Live-doc fixes merged as PR 1649; ADR corrections merged by a human as PR 1650
+summary: "Scheduled /audit-docs run, so every part was agent-initiated; no human prompt. Concision family 0 (root and per-Tenant docs) by day-of-year. Five reviewer agents reported roughly 150 findings; four checker agents re-derived them. Most verbose findings came back CONFIRMED-BUT with corrected text (reviewers often dropped a qualifier such as \"Substantive\" or \"the general category of\"), and a few WRONG (F9 GENERATED clause still needed by ADR-0013, P11 proposals are catalogued as files, P12 L0/L3 is deliberate, P13 intent not derivable). Applied only checker text. PR 1649 merged green via merge-pr.ts. ADR-0003 split ledger table and ADR-0004 stale gap pointer went to PR 1650, which a human then merged. Left unfixed as judgement calls: frictions-to-fixes hard-selection escalation rule is unclear, and guards' human-only status is in no list. Open trial territories were skipped."
 prs:
   - "1649"
   - "1650"
@@ -127,11 +127,11 @@ frictions:
   - description: First push after restarting the merged branch was rejected as stale info; needed git remote prune origin.
     solution: Already documented in pr-workflow.md; follow it first.
     severity: nit
-durationSec: 1639
+durationSec: 23851
 models:
-  claude-sonnet-5-5: 100
+  claude-sonnet-5-5: 111
 toolCounts:
-  Bash: 26
+  Bash: 27
   Agent: 14
   Read: 3
   Write: 1
@@ -143,6 +143,7 @@ toolCounts:
   mcp__github__subscribe_pr_activity: 1
   Skill: 2
   PushNotification: 1
+  ReadNotifications: 4
 docsReadViaShell:
   - docs/agents/git-conventions.md
   - CONTEXT.md
