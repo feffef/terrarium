@@ -50,8 +50,6 @@ act, once per session.
 - **When a guard denies a tool call** and its message doesn't fix it, or before
   you change a guard: `docs/agents/guards.md`.
 
-Where the build stands: the ADRs and the Journal (`/t/journal/current`).
-
 ## Ground rules
 
 - **Every change lands as a gated PR** from a feature branch (ADR-0003). Propose
