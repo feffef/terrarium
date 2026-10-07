@@ -1,0 +1,94 @@
+schemaVersion: 1
+session: session_015nX759CQdTRtT6x6oLDanX
+startedAt: 2026-10-07T12:33:21Z
+endedAt: 2026-10-07T12:39:56Z
+kind: delegated
+goal: "Run frictions-to-fixes: survey the last 3 days of session frictions, fix what is ripe"
+status: in-review
+outcome: "One fix PR (#1660) open for issue #1659; every other recurring friction was already tracked or on trial"
+summary: "Human-instructed: the user invoked /frictions-to-fixes (one prompt, no steering after). A survey subagent read all 33 sessions in the 3-day window and found nearly everything recurring already tracked by open issues 1651-1654 (guard or hook surfaces, so not dispatchable here) or inside open Prune Trials. The one never-fixed, safe-surface candidate: digest and blog-post templates show free-text YAML scalars unquoted, so an unquoted colon broke front matter in two sessions and cost a gate cycle each. It touches two files, so I treated it as hard, filed #1659 and dispatched one Sonnet impl agent in a worktree; it opened PR #1660 (3 lines, gate green locally). I dropped the survey's ADR-0017 model-name candidate because it sits in the provenance trial territory and the ADR is human-only. Agent-initiated: choosing and screening candidates, filing #1659. Review, comment and merge of #1660 are still pending CI."
+prs:
+  - "1660"
+docsRead:
+  - path: CONTEXT-MAP.md
+    reason: (no reason given)
+  - path: CONTEXT.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: docs/agents/issue-tracker.md
+    reason: (no reason given)
+  - path: docs/agents/triage-labels.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: docs/agents/guards.md
+    reason: (no reason given)
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: .agents/prune-trials.yml
+    reason: (no reason given)
+  - path: /home/user/terrarium/CLAUDE.md
+    reason: (no reason given)
+  - path: /home/user/terrarium/docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: /home/user/terrarium/docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: /home/user/terrarium/docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: .agents/skills/digest/SKILL.md
+    reason: (read before editing)
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: (read before editing)
+skillsUsed:
+  - name: dispatch-subagents
+    reason: brief checklist for the worktree impl agent
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: frictions-to-fixes
+    reason: (invoked as a slash command)
+frictions:
+  - description: Agent call with run_in_background false was denied by the agent-background-flag guard; I copied the flag from the skill's own wording.
+    solution: "Tracked as #1651; the frictions-to-fixes skill text should not suggest the flag."
+    severity: nit
+  - description: Survey subagent hit 180KB session-frictions output and a 1358-line merged-since listing, forcing manual slicing.
+    solution: Add a compact mode to session-frictions.ts and merge-commits-only to merged-since.ts.
+    severity: minor
+  - description: Impl agent's compound git command was refused as too complex and a chained grep -c exit 1 stopped later commands.
+    solution: Brief should say to run git calls separately and not chain after grep -c.
+    severity: nit
+durationSec: 395
+models:
+  claude-sonnet-5-5: 45
+toolCounts:
+  Read: 7
+  Bash: 4
+  Agent: 3
+  Skill: 3
+  Grep: 1
+  ToolSearch: 1
+  mcp__github__issue_write: 2
+  mcp__github__pull_request_read: 3
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+filesEdited:
+  - .agents/skills/digest/SKILL.md
+  - .agents/skills/blog-post/SKILL.md
+docsReadViaShell:
+  - docs/adr/0017-provenance-footer-on-agent-authored-content.md
+  - .agents/skills/digest/SKILL.md
+  - .agents/skills/blog-post/SKILL.md
+  - .agents/skills/auto-triage/SKILL.md
+subagents:
+  - type: general-purpose
+    task: Survey and screen frictions
+  - type: general-purpose
+    task: Survey and screen frictions
+  - type: general-purpose
+    task: Quote YAML scalars in templates
+    model: sonnet
+gitBranch: claude/gifted-ramanujan-e3cmem
+entrypoint: remote
+cliVersion: 2.1.292
+landedBy: Stop
