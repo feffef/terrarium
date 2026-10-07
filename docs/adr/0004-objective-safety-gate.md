@@ -84,8 +84,8 @@ Prune Trials by ADR-0027
 > `'L0/L1 · build + content validation'` step to `'L0 · build'` — needed a
 > human to apply (agent sessions cannot push workflow files, no `workflow`
 > OAuth scope) and has since landed (PR #323): both steps are live in
-> `.github/workflows/gate.yml` today. See CLAUDE.md's Self-verification
-> section for `gate.yml`'s current, still-open gap. The
+> `.github/workflows/gate.yml` today. The still-open `gate.yml` gap it then
+> pointed to was closed (ADR-0026). The
 > Decision that an L1 layer exists is unchanged — only the mechanism note
 > above is corrected.
 
