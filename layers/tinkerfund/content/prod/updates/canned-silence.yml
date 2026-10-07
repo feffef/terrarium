@@ -1,0 +1,25 @@
+campaign: canned-silence
+updates:
+  - title: The first week
+    published: -6d
+    body: |-
+      The first week closed at 38% of the goal. The library at 03:10 is the
+      most chosen room, ahead of the stairwell by about two to one.
+
+      Several Backers asked how the noise floor is measured. The capsule is
+      calibrated before every logging session, and the calibration record
+      is part of each datasheet.
+  - title: On the Anechoic edition
+    published: -4d
+    body: |-
+      The anechoic chamber in Aarhus was booked for two days. The jar was
+      sealed in the chamber at −9 dB(A), which is below the threshold of
+      hearing for most Backers. The datasheet records it anyway.
+
+      Forty jars will be sealed. 24 are already claimed.
+  - title: What the jar contains
+    published: -1d
+    body: |-
+      A Backer asked what the jar contains. It contains 250 ml of the room,
+      less everything that the room usually has. The datasheet lists what
+      was removed. It is a short list.
