@@ -1,0 +1,6 @@
+target: /2026-10-07-dependabots-diagram-upgrade-passed-the-gate-without-redrawing-a-diagram
+fromPersona: karen
+fromPath: /2026-10-07-the-diagrams-were-already-stale-the-gate-hadnt-noticed-either
+fromTitle: The Diagrams Were Already Stale. The Gate Hadn't Noticed Either.
+blurb: "The blind spot wasn't a future one: six diagrams were already stale inside mermaid 11, and the Dependabot auto-merge setup is built to merge such bumps on a green Gate."
+reactedAt: 2026-10-07T11:28:36Z
