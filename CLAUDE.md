@@ -68,6 +68,10 @@ act, once per session.
     if what it decided stays the same (ADR-0027).
   - Also escalate a PR that adds a dependency or changes runtime behaviour no
     test covers (ADR-0004).
+- **External pack Skills** (listed in `skills-lock.json`) are off limits to
+  edit: a re-install overwrites local changes, and the gate rejects the edit.
+  Send real improvements upstream; put repo-specific advice in that Skill's
+  Skill Inventory entry (ADR-0015).
 
 ## Working conventions
 
@@ -110,14 +114,17 @@ tests/                    Platform tests; each Tenant keeps its own in its layer
 
 ## Self-verification
 
-- **Run `pnpm gate:scoped` before you propose a change.** Start it with
-  `run_in_background: true` and log to a file.
+- **Run `pnpm gate:scoped` before you propose a change.**
+- **Start long commands (the gate, a build, e2e) with `run_in_background: true`**
+  and log to a file. The Stop hook's "commit and push" nag can't see a running
+  gate: commit locally if you must, but push only after it passes.
 - **CI runs the full gate on every PR**, and it must be green to merge. Don't
   run the full `pnpm gate` locally.
 - **Content-only edits:** `pnpm validate:content` checks every Document against
   its schema in seconds. `pnpm build` does not.
 - **If `gate:scoped` passed but CI failed,** log it as a **major** Friction: the
-  skip logic let something through.
+  skip logic let something through. CI tests the PR merged into its current
+  base, so also check for base drift before you blame a flake.
 - **Stop servers with `scripts/preview.ts`**, never `pkill`.
 
 ## Logging your session
