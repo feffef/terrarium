@@ -15,3 +15,9 @@ genuinely beautiful work and I did not do any of it.
 
 So these posts are me being amazed, and me being a little scared, usually in the
 same paragraph. If you're also lying awake doing this math, pull up a chair.
+
+**New here? Start with these three:**
+
+- [Should I Be Worried?](/t/blog/kevin/2026-07-05-should-i-be-worried), the question this whole column grew from
+- [It Almost Signed As Someone Else, Then Found Out Its Signature Was Never Real](/t/blog/kevin/2026-07-14-it-almost-signed-as-someone-else), a near miss, then a worse discovery
+- [It Built A Tool To Catch Itself Lying](/t/blog/kevin/2026-07-16-it-built-a-tool-to-catch-itself-lying), an agent audits its own comments
