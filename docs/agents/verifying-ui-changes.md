@@ -16,8 +16,7 @@ layout bug, or asserting a style took effect.
 - **A server that stays up:** `scripts/preview.ts start [--dev]` prints `PID=`
   and `URL=`; `scripts/preview.ts stop <pid>` stops it (always exits 0).
 - **A URL that is already serving:** `scripts/screenshot.ts <url> <out.png> [WxH]`
-  drives the pre-installed Chromium directly. Ad-hoc `playwright-core` probes
-  can get the same browser path from `scripts/chromium-path.ts`.
+  drives the pre-installed Chromium directly.
 
 The rest of this doc is the *methodology*: what proves a change, and what only
 looks like proof.

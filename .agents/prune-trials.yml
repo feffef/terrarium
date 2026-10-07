@@ -113,7 +113,7 @@ trials:
       message.
   - problem: >
       CLAUDE.md as a whole: 374 lines of rules, incident histories and
-      restatements loaded into every session. Rewritten to 143 lines in plain,
+      restatements loaded into every session. Rewritten to 146 lines in plain,
       precise words. Each rule's origin was traced this run (git log -S /
       blame, the cited issues, friction grades in session logs). Rules whose
       origin was minor or nit, or that a guard, gate step or another doc
@@ -122,8 +122,9 @@ trials:
       auto-open the gated PR even against a harness rule (after checking none
       exists), babysit the PR, the human-only list, verify before stating,
       gate:scoped green but CI red = major friction (plus the CI-merge-ref
-      base-drift note), push only after the gate passes despite the Stop-hook
-      nag, background long commands, no pkill, invoke close-session. Kept by
+      base-drift note), push only after the gate passes despite the
+      harness's Stop-time reminder, background long commands, no pkill and
+      no chained kill, invoke close-session. Kept by
       owner decision: WHY-not-WHAT comments, Read-not-cat, one home per fact,
       the pack-Skill rule (its where-to-put-advice half has no other home).
       The ScheduleWakeup and provenance bullets (still on trial) and the
@@ -136,27 +137,34 @@ trials:
       docs/agents page. Dropped: the Skill Inventory "use these" pointer
       (since September only audit-skills sweeps read the inventory, 9 of 96
       sessions, none to choose a Skill); ToolSearch first; background-status
-      shapes; Routine-schedule wording; no filler calls while waiting; grep
-      before a long repro; the routing, manifest, pages-only, trust and
+      shapes; Routine-schedule wording (validate-skill-cadence enforces it);
+      no filler calls while waiting; grep before a long repro; check known
+      failures first; the substantive-work definition (now "a pushed commit
+      that is not a session log"); the routing, manifest, pages-only, trust and
       one-container ground rules (in their ADRs); the long layout tree; the
       Status section; branch-protection facts. Issue/PR numbers were dropped
       from CLAUDE.md by owner decision: git log -S / blame is the forwarding
       address to each rule's history. Moved: screenshot tooling to
       verifying-ui-changes.md, adding a Space/Collection/Tenant to
       tenant-layers.md, PR description sync to pr-workflow.md, reading other
-      sessions' transcripts to github-integration.md. The pr-workflow and
-      github-integration insertions sit near, but outside, the provenance
-      trial's paragraphs. Inbound pointers to removed CLAUDE.md text were
-      repointed (guards.md, domain.md, git-conventions.md, ADR-0005, a few
-      script and test comments); historical narration in ADR-0015/0020 left
-      as is. Net -231 lines in CLAUDE.md.
+      sessions' transcripts to a new last section of github-integration.md
+      (both placed away from the provenance trial's paragraphs). Inbound
+      pointers to removed CLAUDE.md text were repointed or cut: guards.md
+      (four "Rule homed in" cells), domain.md, git-conventions.md,
+      pr-workflow.md step 1 of the chartered-run sequence, ADR-0005, the
+      Skills frictions-to-fixes, digest, guest-intake, guest-build,
+      auto-triage, dispatch-subagents and audit-docs, layers/journal/
+      tenant.config.ts, and comments in eight scripts and two tests.
+      Historical narration in ADR-0015/0020 and deferred-tool-guard.ts was
+      left as is. Net -228 lines in CLAUDE.md.
     territory:
       paths:
         - "CLAUDE.md (all of it except the ScheduleWakeup and provenance bullets)"
         - "docs/agents/verifying-ui-changes.md: the Capture tooling section"
         - "docs/agents/tenant-layers.md: section 3"
-        - "docs/agents/pr-workflow.md: the PR title/description sync paragraph"
-        - "docs/agents/github-integration.md: the other-sessions' transcript paragraph"
+        - "docs/agents/pr-workflow.md: the PR title/description sync paragraph above 'Per-tier merge authority'"
+        - "docs/agents/github-integration.md: the 'Reading another session's transcript' section"
+        - "docs/agents/guards.md: the 'Rule homed in' cells of the deferred-tool, workflow-edit, tail-pipe and double-background rows"
       keywords:
         - read all ADRs
         - Docs you must read first
@@ -170,7 +178,7 @@ trials:
       the old CLAUDE.md prevented and the new one does not: guesses a task
       from an empty prompt, leaves its branch, holds back a PR because the
       harness said no, self-merges a human-only PR, states an unverified id
-      or count as fact, kills a process by hand, pushes before the gate
+      or count as fact, uses pkill or chains a kill, pushes before the gate
       passed, plans a structural change without reading the ADR that binds
       the file, or acts in a doc's area without reading the doc its trigger
       names. Also count a session that cannot find moved material

@@ -13,7 +13,7 @@ the shape (ADR-0021).
 
 For the reading order and what each file covers — `CONTEXT-MAP.md`, then
 `CONTEXT.md`, then the Tenant's own `layers/<tenant>/CONTEXT.md`, then the
-relevant ADRs — start at CLAUDE.md's "Start here" rather than here.
+relevant ADRs — start at CLAUDE.md's "Docs you must read first" rather than here.
 
 This repo deliberately diverges from the `domain-modeling` Skill's generic
 templates (ADR-0021):

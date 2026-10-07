@@ -12,10 +12,6 @@ For the `mcp__github__*` tool surface this recipe runs on — transient 503s and
 when to retry, `get_check_runs` vs `get_status`, the `list_*`/`search_*`
 overflow traps — see [`github-integration.md`](./github-integration.md).
 
-**Keep the PR's title and description in sync with its content.** When a push
-changes what the PR does, update both in the same push: reviewers gate on the
-description.
-
 ## Assembling several stories into one integration PR
 
 When a branch stacks several already-reviewed stories into one integration PR,
@@ -79,6 +75,10 @@ review), check the PR's current state first (`pull_request_read`) — an owner c
 merge (and GitHub deletes the branch) while you're mid-flight, and pushing
 straight to the branch name silently recreates it. If it's already merged,
 treat it as the already-merged restart case above instead of pushing.
+
+**Keep the PR's title and description in sync with its content.** When a push
+changes what the PR does, update both in the same push: reviewers gate on the
+description.
 
 ## Per-tier merge authority
 

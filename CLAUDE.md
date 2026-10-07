@@ -7,18 +7,15 @@ In instructions, state the goal; list steps only where a mistake is costly or
 can't be undone. If a problem comes from one of our own instructions, cut or
 simplify that instruction before you add a new one (ADR-0027).
 
-## Start here
-
-**`CONTEXT-MAP.md`, then `CONTEXT.md`.** They define the words we use
-(Platform, Tenant, Space, Collection, Document, Skill, …). Working on a Tenant?
-Also read `layers/<tenant>/CONTEXT.md`. Use the glossary's terms. Before you
-add or change a term, read `docs/agents/domain.md`.
-
 ## Docs you must read first
 
 These are not optional. When a trigger applies, read the doc in full before you
 act, once per session.
 
+- **At session start:** `CONTEXT-MAP.md`, then `CONTEXT.md`. They define the
+  words we use (Platform, Tenant, Space, Collection, Document, Skill, …).
+  Working on a Tenant? Also read `layers/<tenant>/CONTEXT.md`. Use the
+  glossary's terms.
 - **Before you plan a change, and again once you know which files it touches:**
   the ADRs that bind it. List `docs/adr/` (the file names say what each
   decides) and grep it for every file path and term involved:
@@ -42,11 +39,11 @@ act, once per session.
   `docs/agents/tenant-layers.md`.
 - **Before you say a UI change works,** or take a screenshot:
   `docs/agents/verifying-ui-changes.md`.
-- **Before you write a Document that needs more than plain Markdown** (MDC
-  components, frontmatter fields, or a data Collection):
+- **Before you put a Vue component in a Document, or add a data Collection:**
   `docs/agents/mdc-when-to-use.md`.
-- **Before you debug a tool, push, network or permission error** that no
-  change of yours caused: `docs/agents/environment-caveats.md`.
+- **Before you add or change a glossary term:** `docs/agents/domain.md`.
+- **Before you debug a tool, push, network or permission error** that your
+  diff doesn't explain: `docs/agents/environment-caveats.md`.
 - **Before you add or change a guard:** `docs/agents/guards.md`.
 
 ## Ground rules
@@ -66,11 +63,13 @@ act, once per session.
   - `content.config.ts`, `shared/expand.ts`, `shared/routing.ts`,
     `shared/kinds.ts`, `shared/schemas/`, `modules/routing.ts`,
     `modules/catalog.ts`, `app/composables/catalog.ts` (ADR-0004, ADR-0025).
-  - Isolation logic: `shared/manifest.ts`, the root `nuxt.config.ts`, and any
-    new file that decides Tenant isolation (ADR-0018).
-  - CI (everything under `.github/`, ADR-0026) and the ADRs (`docs/adr/`). One
-    exception: a prune trial may rewrite an ADR if what it decided stays the
-    same (ADR-0027).
+  - Isolation logic: `shared/manifest.ts` (ADR-0025), the root
+    `nuxt.config.ts` (ADR-0018), and any new file that decides which Tenant's
+    data a request or query can reach.
+  - CI itself: `.github/workflows/` and `.github/actions/gate/action.yml`
+    (ADR-0004, ADR-0026).
+  - The ADRs (`docs/adr/`). One exception: a prune trial may rewrite an ADR if
+    what it decided stays the same (ADR-0027).
 
   A human must also merge a PR that adds a dependency, or changes runtime
   behaviour that no test covers (ADR-0004).
@@ -105,7 +104,8 @@ act, once per session.
 
 ## Repo layout
 
-Standard Nuxt and pnpm layout. The parts that are ours:
+`app/`, `modules/` and `nuxt.config.ts` follow Nuxt's own layout. The parts
+that are ours:
 
 ```
 layers/<tenant>/          one Tenant: tenant.config.ts (its manifest — edit this),
@@ -122,18 +122,21 @@ tests/                    Platform tests; each Tenant keeps its own in its layer
 ## Self-verification
 
 - **Push only after `pnpm gate:scoped` passes** on what you're pushing. The
-  Stop hook's "commit and push" nag can't see a running gate: commit locally,
-  wait for the gate, then push.
+  harness's Stop-time "commit and push" reminder can't see a running gate:
+  commit locally, wait for the gate, then push.
 - **Start any command that can take over 2 minutes** (the gate, a build, e2e)
   with `run_in_background: true`, and redirect its output to a file.
-- **CI runs the full gate on every PR**, and it must be green to merge. Don't
-  run the full `pnpm gate` locally.
+- **CI runs the gate on every PR** (skipping the slow steps for inert changes,
+  ADR-0004), and it must be green to merge. Don't run the full `pnpm gate`
+  locally.
 - **Content-only edits:** `pnpm validate:content` checks every Document against
   its schema in seconds. `pnpm build` does not.
 - **If `gate:scoped` passed but CI failed,** log it as a **major** Friction: the
   skip logic let something through. CI tests the PR merged into its current
   base, so also check for base drift before you blame a flake.
-- **Stop servers with `scripts/preview.ts`**, never `pkill`.
+- **Never use `pkill`,** and never chain a kill with `&&` or `;` (the commands
+  after it can silently not run). Stop a preview or dev server with
+  `scripts/preview.ts stop <pid>`.
 
 ## Logging your session
 

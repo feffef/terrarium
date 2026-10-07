@@ -109,7 +109,7 @@ every finding, with no cap; split the family across agents if one can't.
   superseded state ("we used to do X"). Cut it only where the history changes
   no reader's action, and cut to the rule plus a pointer to where the history
   lives (issue/ADR). Keep every "don't regress to the old way" rationale (e.g.
-  `CLAUDE.md`'s pkill saga, `dispatch-subagents`' worktree-HEAD rule,
+  `CLAUDE.md`'s never-`pkill` rule, `dispatch-subagents`' worktree-HEAD rule,
   `environment-caveats.md`'s `permissions.allow` bullet); retiring one is a
   Prune Trial's call (ADR-0027), not yours.
 

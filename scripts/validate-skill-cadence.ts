@@ -1,6 +1,6 @@
 // Mechanical check for the "say a Skill *is* scheduled; never say *when*"
 // convention: a Routine's schedule lives outside git and can change without
-// a commit — issue #813. This check is the convention's only home. A Skill Inventory entry
+// a commit — issue #813. A Skill Inventory entry
 // (`layers/journal/content/current/skills/*.yml`, ADR-0015) is the one place
 // this has actually been violated before, so this check is scoped to that
 // collection rather than content-wide.

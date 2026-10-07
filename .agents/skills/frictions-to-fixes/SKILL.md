@@ -324,8 +324,8 @@ review-agent, not a bystander waiting for a human. For each PR:
      your own judgement call, on top of that mechanical recipe.
    - **Amend then merge** when the only gaps are small — push the fixup yourself,
      re-run the gate, then merge. If your amendment **fundamentally changes** what
-     the PR does, update the PR title/description in the same push (the CLAUDE.md
-     hard rule — a stale description is a defect).
+     the PR does, update the PR title/description in the same push
+     (`docs/agents/pr-workflow.md` — a stale description is a defect).
    - **Escalate to a human** only when the change is **genuinely high-risk** per
      ADR-0004 (CLAUDE.md's Ground rules — same test as the safe-surface filter in
      §3, just applied to the actual diff instead of the issue's stated scope).
