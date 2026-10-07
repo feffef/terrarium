@@ -1,0 +1,91 @@
+schemaVersion: 1
+session: session_01BT5bPRncBfCNwhim2d71Hh
+startedAt: 2026-10-07T12:22:21Z
+endedAt: 2026-10-07T12:51:05Z
+kind: interactive
+goal: Add new Tinkerfund Campaigns via the tinkerfund-campaign Skill (requested as two, narrowed to one)
+status: in-review
+outcome: Canned Silence (TF-0029) built, gated and opened as a PR; awaiting review
+summary: "The user invoked /tinkerfund-campaign asking for two new campaigns. Per their standing preference I asked clarifying questions first (premises, states, extras, delivery); they asked me to propose premises. My first list was too generic and the user said \"try harder\"; the second was still the same household-object-with- one-function-removed pattern and they said \"think out of the box\". The third list (service/record/digital-reward ideas) landed: they chose Canned Silence and narrowed the scope to one Campaign. Human-instructed: the Skill run, the choice of Canned Silence, one Campaign, one PR. Agent-initiated: the Live/Sleep state and numbers, Inventor reuse (Annika Sørensen), comments, Updates, the e2e list entry, and opening the PR per CLAUDE.md. I wrote the page, comments and Updates, checked crowd numbers and Home's e2e assertions (no Home change needed), dispatched one Fable illustrator in a worktree for six figures (I reviewed the sheet, applied them, screenshotted page/Home/Discover in both themes), ran pnpm gate:scoped green, pushed, opened feffef/terrarium#1663 and subscribed to it."
+prs:
+  - "1663"
+docsRead:
+  - path: layers/tinkerfund/CONTEXT.md
+    reason: Tinkerfund vocabulary
+  - path: .agents/skills/tinkerfund-campaign/ILLUSTRATION.md
+    reason: figure rules for the illustrator brief
+  - path: docs/agents/git-conventions.md
+    reason: required before git commands
+  - path: docs/agents/pr-workflow.md
+    reason: required before opening the PR
+  - path: CONTEXT-MAP.md
+    reason: (no reason given)
+  - path: CONTEXT.md
+    reason: (no reason given)
+  - path: layers/tinkerfund/content/prod/pages/campaigns/canned-silence.md
+    reason: (no reason given)
+  - path: .agents/skills/tinkerfund-campaign/tools/lib.mjs
+    reason: (no reason given)
+  - path: .agents/skills/tinkerfund-campaign/tools/preview.mjs
+    reason: (no reason given)
+skillsUsed:
+  - name: tinkerfund-campaign
+    reason: the Campaign workflow
+  - name: dispatch-subagents
+    reason: brief rules for the illustrator
+  - name: close-session
+    reason: closure at PR open
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: First two premise lists were generic reductions of household objects; the user had to push twice ("try harder", "think out of the box") before the proposals were useful.
+    solution: Have the skill list pattern axes beyond object-with-one-function (services, records, digital Rewards, bureaucracy) in its placement step so the first proposal already spans them.
+    severity: minor
+  - description: Required reading (CONTEXT-MAP, CONTEXT, ADR list, git/GitHub/PR docs, a full prod Campaign file) was token-heavy for a content-only change.
+    solution: Let the tinkerfund-campaign Skill name the few docs a content Campaign needs and mark the rest as skippable.
+    severity: nit
+  - description: The Stop hook repeatedly asked to push unpushed commits while pnpm gate:scoped was still running, conflicting with CLAUDE.md's gate-first rule.
+    solution: Make the stop-hook reminder aware of a running or pending gate, or point to the gate-first rule in its message.
+    severity: minor
+  - description: The Fable illustrator worktree started on a stale HEAD and could not fetch the unpushed branch; it recovered by detaching to my local commit SHA.
+    solution: Dispatch brief should say to commit locally first and pin the SHA, and note that fetching an unpushed branch fails.
+    severity: nit
+  - description: The provenance guard rejected my first PR body for header shape; fixed on retry using the shape in the deny message.
+    solution: Mention the exact first-line header shape in pr-workflow.md before the PR step.
+    severity: nit
+durationSec: 1724
+models:
+  claude-sonnet-5-5: 108
+toolCounts:
+  AskUserQuestion: 1
+  Bash: 29
+  Read: 9
+  Skill: 3
+  Agent: 1
+  Edit: 1
+  ToolSearch: 1
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 2
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+  Write: 1
+filesEdited:
+  - layers/tinkerfund/tests/e2e/tinkerfund.e2e.ts
+docsReadViaShell:
+  - .agents/skills/tinkerfund-campaign/ILLUSTRATION.md
+  - docs/agents/tenant-layers.md
+  - docs/agents/verifying-ui-changes.md
+  - docs/agents/mdc-when-to-use.md
+  - docs/adr/0028-navigation-reads-server-payloads.md
+  - docs/agents/github-integration.md
+  - docs/agents/pr-workflow.md
+  - docs/agents/guards.md
+subagents:
+  - type: general-purpose
+    task: Draw Canned Silence figures
+    model: fable
+gitBranch: claude/sleepy-gates-ygkbwb
+entrypoint: remote
+cliVersion: 2.1.292
+learnings:
+  - Home's Popular now is uncapped and its e2e assertion is an ordered subsequence, so a new Live Campaign with backers between existing ones needs no Home change.
+landedBy: Stop
