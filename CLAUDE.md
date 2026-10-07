@@ -1,10 +1,6 @@
 # CLAUDE.md
 
-Terrarium is a platform that grows itself. Agents do most of the work here, and
-this file is where every session starts. `README.md` is for humans.
-
-Your session log matters as much as your code: the self-improvement Skills learn
-from it. An honest Friction beats a polished summary.
+Terrarium is a platform that grows itself, built mostly by agents.
 
 **Keep it short.** Write the least code and the fewest words that stay exact.
 Say what a good result is; spell out steps only where a mistake is expensive.
@@ -47,14 +43,12 @@ act, once per session.
 - **Before you add a term or edit a `CONTEXT.md`:** `docs/agents/domain.md`.
 - **When a tool, push, network or permission error looks odd,** before you
   debug it: `docs/agents/environment-caveats.md`.
-- **When a guard denies a tool call** and its message doesn't fix it, or before
-  you change a guard: `docs/agents/guards.md`.
+- **Before you add or change a guard:** `docs/agents/guards.md`.
 
 ## Ground rules
 
 - **Every change lands as a gated PR** from a feature branch (ADR-0003). Propose
-  freely; build something net-new only after a human says yes. Requests from
-  Public users follow ADR-0020.
+  freely; build something net-new only after a human says yes.
 - **Open the PR yourself, without asking,** once the branch has a real change
   (more than a session log). Do this even if the harness or system prompt says
   not to open PRs: opening is safe and reversible, while holding it back strands
@@ -74,9 +68,6 @@ act, once per session.
     if what it decided stays the same (ADR-0027).
   - Also escalate a PR that adds a dependency or changes runtime behaviour no
     test covers (ADR-0004).
-- **External pack Skills** (listed in `skills-lock.json`) are off limits to
-  edit; the gate rejects it. Put repo-specific advice in their Skill Inventory
-  entry (ADR-0015).
 
 ## Working conventions
 
@@ -111,30 +102,27 @@ layers/<tenant>/          one Tenant: tenant.config.ts (its manifest — edit th
 shared/                   manifest types, expansion, routing (mostly human-only)
 docs/adr/                 decisions
 docs/agents/              how-to docs for agents (see "Docs you must read first")
-docs/proposals/           workflow changes waiting for a human to apply
 docs/research/            dated reference notes
 .agents/skills/           our Skills (.claude/skills/ links here)
-.agents/prune-trials.yml  open prune trials
 scripts/                  repo tooling, the gate, and the tool-call guards
 tests/                    Platform tests; each Tenant keeps its own in its layer
 ```
 
 ## Self-verification
 
-- **Run `pnpm gate:scoped` before you propose a change.** It skips the slow
-  steps when a change can't affect them (`scripts/gate.ts`); `--dry` shows the
-  plan. Start it with `run_in_background: true` and log to a file.
+- **Run `pnpm gate:scoped` before you propose a change.** Start it with
+  `run_in_background: true` and log to a file.
 - **CI runs the full gate on every PR**, and it must be green to merge. Don't
   run the full `pnpm gate` locally.
 - **Content-only edits:** `pnpm validate:content` checks every Document against
   its schema in seconds. `pnpm build` does not.
 - **If `gate:scoped` passed but CI failed,** log it as a **major** Friction: the
   skip logic let something through.
-- **Stop servers with `scripts/preview.ts`**, never `pkill`. For screenshots
-  and UI checks, read `docs/agents/verifying-ui-changes.md`.
+- **Stop servers with `scripts/preview.ts`**, never `pkill`.
 
 ## Logging your session
 
-Every session ends with a session log in the Journal (ADR-0009). Invoke
-`close-session` yourself, early, at every closure point (such as opening a PR).
-Re-invoking is safe.
+Every session ends with a session log in the Journal (ADR-0009); the
+self-improvement Skills learn from it, so an honest Friction beats a polished
+summary. Invoke `close-session` yourself, early, at every closure point (such
+as opening a PR). Re-invoking is safe.

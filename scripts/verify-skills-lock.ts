@@ -1,7 +1,7 @@
 // Integrity gate for the external Skill pack (ADR-0015). The Skills keyed in
 // `skills-lock.json` are installed from `mattpocock/skills` and are **off limits
 // to edit**: their `SKILL.md` is not ours to patch, because a re-install of the
-// pack clobbers any local edit (CLAUDE.md "Skills … off limits to edit"). PR #304
+// pack clobbers any local edit (ADR-0015). PR #304
 // patched `wayfinder/SKILL.md` — a pack Skill — and the drift went undetected
 // because nothing verified the on-disk files against a known-good reference.
 // This script is that verification.
