@@ -190,3 +190,36 @@ trials:
       session that reads only the relevant ADRs, or one a guard or gate step
       stopped that fixed itself from the message. Start from the Frictions
       that close-session's re-read logs against named CLAUDE.md rules.
+  - problem: >
+      The `dispatch-subagents` Skill as a whole (209 lines, rewritten to about
+      118): rule-per-incident bullets with long justifications. It failed as
+      prose: #835 ("fix only reached dispatch-subagents/SKILL.md, not callers who
+      skip that Skill"), #1499 (the worktree guard-friction caveat never read by
+      impl agents), #427 (worktree agent stopped mid-task despite #317's guard)
+      — #1499 read by the search subagent this run, #835 and #427 by title only.
+      Backgrounding is held by `agent-background-flag-guard.ts`,
+      `subagent-background-guard.ts` and `double-background-guard.ts`; stranding
+      is detected by `check-worktrees.ts`. The bullets were regrouped (git and
+      checkout / stranding / scope and trust), each kept as one goal-shaped line
+      with its issue pointer; the "never Monitor" and `run_in_background:false`
+      explanations were cut to the guards. The search subagent covered the
+      instruction corpus, the rulebook table, guards.md and the tracker; the
+      blog-post fact-check rule (#1168, nothing holds it, so riskier) and the
+      frictions-to-fixes eyeball rule (#1008) were runners-up. Net about -91 lines.
+    territory:
+      paths:
+        - ".agents/skills/dispatch-subagents/SKILL.md (all of it)"
+      keywords:
+        - isolation: 'worktree'
+        - stranded
+        - check:worktrees
+        - dispatch brief
+    opened: 2026-10-07
+    proven: true
+    check: >
+      Damage is a major or blocker Friction where a dispatched agent loses work
+      (uncommitted at stop), commits in the wrong checkout, runs from a stale
+      HEAD unnoticed, backgrounds work a guard did not catch, merges or
+      self-closes, or collides on a shared log path — and the brief omitted a line
+      the old Skill carried. NOT damage: a guard denial the agent fixed from its
+      message.
