@@ -1,0 +1,95 @@
+schemaVersion: 1
+session: session_01S6auRmvHwvmSRZNciYFDbD
+startedAt: 2026-10-07T16:48:20Z
+endedAt: 2026-10-07T17:29:33Z
+kind: autonomous
+goal: "Visitor-loop run, focus blog: three blind visitors tour /t/blog, fix consensus problems, build one feature"
+status: completed
+outcome: "Two PRs self-merged (#1666 fixes, #1667 feature); two out-of-remit issues filed (#1668, #1669)"
+summary: "Scheduled visitor-loop run (all work agent-initiated by the schedule; no human prompt). Focus was blog (day-of-cycle row 1). Built and served the site, sent sonnet, fable and opus visitors. Consensus fixes landed in #1666: mobile persona cards compacted to name-only 2x2 chips (first post 595px down at 390px), the New-here banner made prominent and relabelled as a reading list, drop cap only when a post opens on a letter, friendlier post 404; the standards review flagged an uncovered runtime change (ADR-0004), so two e2e tests were added. The feature, #1667, is a hand-picked \"Start with these three\" list on each Persona landing; the thread-view idea all three visitors raised was dropped because it was already logged this week. Jargon in posts and Eyra's imageless post are out of remit and filed as #1668 and #1669. The before-state for the mobile fix came from the visitors' reports, not a re-measure."
+prs:
+  - "1666"
+  - "1667"
+docsRead:
+  - path: CONTEXT-MAP.md
+    reason: (no reason given)
+  - path: CONTEXT.md
+    reason: (no reason given)
+  - path: .claude/skills/visitor-loop/visitor-brief.md
+    reason: (no reason given)
+  - path: .claude/skills/visitor-loop/decisions.md
+    reason: (no reason given)
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: docs/agents/tenant-layers.md
+    reason: (no reason given)
+  - path: layers/blog/CONTEXT.md
+    reason: (no reason given)
+  - path: scripts/chromium-path.ts
+    reason: (no reason given)
+skillsUsed:
+  - name: code-review
+    reason: (no reason given)
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: visitor-loop
+    reason: (invoked as a slash command)
+frictions:
+  - description: Hand-wrote the Co-Authored-By trailer in a commit command and the commit-trailer guard denied it; the system reminder told me to add it.
+    solution: Reconcile the harness attribution reminder with the guard, or have the skill say never to add trailers.
+    severity: nit
+  - description: Several first attempts were denied by guards (sleep in Bash, tail pipe, PR body provenance shape), each costing a retry.
+    solution: Mention the provenance marker shape and the no-sleep/no-tail-pipe rules in the visitor-loop skill.
+    severity: nit
+  - description: The skill demands DOM evidence before and after, but by the time I measured, the build had already been overwritten with the fix, so no true before-measure exists.
+    solution: Have the skill say to capture before-evidence while the step-1 preview is still up.
+    severity: minor
+durationSec: 2473
+models:
+  claude-sonnet-5-5: 134
+toolCounts:
+  Bash: 53
+  Read: 11
+  Monitor: 1
+  ReadNotifications: 1
+  Agent: 5
+  mcp__github__search_issues: 4
+  mcp__github__create_pull_request: 3
+  Skill: 3
+  mcp__github__add_issue_comment: 3
+  mcp__github__issue_write: 2
+docsReadViaShell:
+  - layers/blog/CONTEXT.md
+  - docs/adr/0003-agent-operating-model-and-governance.md
+  - docs/agents/verifying-ui-changes.md
+  - docs/agents/issue-tracker.md
+  - docs/agents/guards.md
+subagents:
+  - type: general-purpose
+    task: Visitor (sonnet)
+    model: sonnet
+  - type: general-purpose
+    task: Visitor (fable)
+    model: fable
+  - type: general-purpose
+    task: Visitor (opus)
+    model: opus
+  - type: general-purpose
+    task: "Review: standards axis"
+  - type: general-purpose
+    task: "Review: spec axis"
+gitBranch: claude/adoring-galileo-hhuvnn
+entrypoint: remote_trigger
+cliVersion: 2.1.292
+trigger: visitor-loop
+ideas:
+  - "Blog persona landing: the start-here list sits at the bottom of a tall sticky About panel on desktop and is below the fold; move it into the masthead or above the About text so it is seen without scrolling."
+  - "Blog feed: link the in reply to marker on each card to the parent post by name and show a reply count, so threads are discoverable from the index (visitors, single-visitor finding, not built since a thread view was logged)."
+  - "Blog front door ships all 133 posts in the DOM behind a Show all button: render the rest on click or paginate, since the 390px page is about 6,800px tall."
+landedBy: Stop
