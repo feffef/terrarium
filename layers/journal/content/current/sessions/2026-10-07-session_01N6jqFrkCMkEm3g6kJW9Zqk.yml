@@ -1,0 +1,254 @@
+schemaVersion: 1
+session: session_01N6jqFrkCMkEm3g6kJW9Zqk
+startedAt: 2026-10-07T04:01:01Z
+endedAt: 2026-10-07T04:28:20Z
+kind: autonomous
+goal: "Scheduled audit-docs sweep: fact-check and fix stale, duplicated, wordy or contradictory Live docs"
+status: in-review
+outcome: Live-doc fixes merged as PR 1649; ADR corrections open as human-only PR 1650
+summary: "Scheduled /audit-docs run, so every part was agent-initiated; no human prompt. Concision family 0 (root and per-Tenant docs) by day-of-year. Five reviewer agents reported roughly 150 findings; four checker agents re-derived them. Most verbose findings came back CONFIRMED-BUT with corrected text (reviewers often dropped a qualifier such as \"Substantive\" or \"the general category of\"), and a few WRONG (F9 GENERATED clause still needed by ADR-0013, P11 proposals are catalogued as files, P12 L0/L3 is deliberate, P13 intent not derivable). Applied only checker text. PR 1649 merged green via merge-pr.ts. ADR-0003 split ledger table and ADR-0004 stale gap pointer went to PR 1650, subscribed, awaiting a human. Left unfixed as judgement calls: frictions-to-fixes hard-selection escalation rule is unclear, and guards' human-only status is in no list. Open trial territories were skipped."
+prs:
+  - "1649"
+  - "1650"
+docsRead:
+  - path: CONTEXT.md
+    reason: (no reason given)
+  - path: CLAUDE.md
+    reason: (no reason given)
+  - path: CONTEXT-MAP.md
+    reason: (no reason given)
+  - path: README.md
+    reason: (no reason given)
+  - path: SECURITY.md
+    reason: (no reason given)
+  - path: .agents/prune-trials.yml
+    reason: (no reason given)
+  - path: layers/atlas/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/blog/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/commons/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/journal/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/marquee/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/midden/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/tinkerfund/CONTEXT.md
+    reason: (no reason given)
+  - path: tests/README.md
+    reason: (no reason given)
+  - path: deploy/README.md
+    reason: (no reason given)
+  - path: docs/proposals/README.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: docs/agents/guards.md
+    reason: (no reason given)
+  - path: docs/agents/environment-caveats.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: docs/agents/issue-tracker.md
+    reason: (no reason given)
+  - path: docs/agents/guest-contributions.md
+    reason: (no reason given)
+  - path: docs/agents/domain.md
+    reason: (no reason given)
+  - path: docs/agents/triage-labels.md
+    reason: (no reason given)
+  - path: docs/agents/tenant-layers.md
+    reason: (no reason given)
+  - path: docs/agents/verifying-ui-changes.md
+    reason: (no reason given)
+  - path: docs/agents/mdc-when-to-use.md
+    reason: (no reason given)
+  - path: docs/adr/0003-agent-operating-model-and-governance.md
+    reason: (no reason given)
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: (no reason given)
+  - path: .agents/skills/close-session/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/log-session/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/prune-trial/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/auto-triage/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/guest-build/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/guest-intake/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/visitor-loop/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/digest/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/midden-survey/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/midden-catalogue/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/atlas-specimen/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/tinkerfund-campaign/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/tinkerfund-campaign/ILLUSTRATION.md
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: audit-docs
+    reason: (invoked as a slash command)
+frictions:
+  - description: git reset --hard origin/main was denied by the classifier although HEAD was already at origin/main; an ancestor check plus ff-only merge sufficed.
+    solution: Check merge-base --is-ancestor and use merge --ff-only first; skill step 1 could say so.
+    severity: nit
+  - description: Agent call with run_in_background false was rejected by the guard (a no-op flag); re-sent five reviewer prompts.
+    solution: Skill dispatch text should say omit the flag.
+    severity: nit
+  - description: tail-pipe guard blocked a piped check command; had to redirect to a file.
+    solution: None needed beyond habit; guard message was clear.
+    severity: nit
+  - description: First push after restarting the merged branch was rejected as stale info; needed git remote prune origin.
+    solution: Already documented in pr-workflow.md; follow it first.
+    severity: nit
+durationSec: 1639
+models:
+  claude-sonnet-5-5: 100
+toolCounts:
+  Bash: 26
+  Agent: 14
+  Read: 3
+  Write: 1
+  Grep: 1
+  ToolSearch: 1
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 2
+  mcp__github__add_issue_comment: 1
+  mcp__github__subscribe_pr_activity: 1
+  Skill: 2
+  PushNotification: 1
+docsReadViaShell:
+  - docs/agents/git-conventions.md
+  - CONTEXT.md
+  - CONTEXT-MAP.md
+  - layers/blog/CONTEXT.md
+  - layers/commons/CONTEXT.md
+  - layers/journal/CONTEXT.md
+  - layers/marquee/CONTEXT.md
+  - layers/midden/CONTEXT.md
+  - docs/agents/pr-workflow.md
+  - docs/agents/guards.md
+  - docs/adr/0017-provenance-footer-on-agent-authored-content.md
+  - docs/adr/0003-agent-operating-model-and-governance.md
+  - docs/adr/0004-objective-safety-gate.md
+  - docs/adr/0026-gate-workflow-thin-shell.md
+  - docs/agents/domain.md
+  - docs/agents/environment-caveats.md
+  - docs/proposals/README.md
+  - docs/agents/verifying-ui-changes.md
+  - docs/agents/tenant-layers.md
+  - docs/agents/issue-tracker.md
+  - docs/agents/triage-labels.md
+  - docs/agents/guest-contributions.md
+  - layers/atlas/CONTEXT.md
+  - layers/tinkerfund/CONTEXT.md
+  - docs/agents/github-integration.md
+  - docs/agents/mdc-when-to-use.md
+  - docs/research/rulebook-migration-table.md
+  - .agents/skills/digest/SKILL.md
+  - .agents/skills/audit-docs/SKILL.md
+  - .agents/skills/audit-skills/SKILL.md
+  - .agents/skills/blog-post/SKILL.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - .agents/skills/guest-build/SKILL.md
+  - .agents/skills/midden-catalogue/SKILL.md
+  - .agents/skills/tinkerfund-campaign/SKILL.md
+  - .agents/skills/atlas-specimen/SKILL.md
+  - .agents/skills/close-session/SKILL.md
+  - .agents/skills/dispatch-subagents/SKILL.md
+  - .agents/skills/log-session/SKILL.md
+  - docs/research/content-client-queries-without-wasm.md
+  - docs/research/github-actions-public-vs-private-limits.md
+  - docs/research/github-branch-protection-vs-autonomous-log-commits.md
+  - docs/research/making-repo-public.md
+  - docs/research/mermaid-server-side-rendering.md
+  - docs/research/nuxt-content-review-grounding.md
+  - docs/research/public-readiness-review.md
+  - docs/research/shell-reads-by-output-matching.md
+  - docs/adr/0024-build-time-mermaid-prerender.md
+  - .agents/skills/guest-intake/SKILL.md
+  - .agents/skills/auto-triage/SKILL.md
+  - .agents/skills/visitor-loop/SKILL.md
+  - docs/adr/0025-cross-tenant-catalog-and-collection-kinds.md
+  - docs/adr/0006-runtime-routing-path-prefix.md
+  - docs/adr/0013-dynamic-content-config-committed-routing-map.md
+  - .agents/skills/setup-matt-pocock-skills/SKILL.md
+  - docs/proposals/1633-dependabot-automerge.md
+  - docs/adr/0002-manifest-driven-config-generation.md
+  - docs/adr/0009-session-logs-commit-directly-to-main.md
+  - docs/adr/0010-digests-derived-append-only-journal-pages.md
+  - docs/adr/0014-build-time-virtual-routing-module.md
+  - docs/adr/0015-audit-skills-and-conditional-importance.md
+  - docs/adr/0016-tenant-root-layer-routes.md
+  - docs/adr/0018-tenant-layers-under-layers-directory.md
+  - docs/adr/0022-autonomous-triage-sweep.md
+  - docs/adr/0020-requester-trust-tiers.md
+  - docs/adr/0023-guest-driven-demo-pipeline.md
+  - docs/adr/0027-prune-trials.md
+  - .agents/skills/blog-post/personas/david.md
+  - .agents/skills/blog-post/personas/eyra.md
+  - .agents/skills/blog-post/personas/karen.md
+  - .agents/skills/blog-post/personas/kevin.md
+  - .agents/skills/visitor-loop/decisions.md
+  - .agents/skills/visitor-loop/visitor-brief.md
+  - .agents/skills/tinkerfund-campaign/ILLUSTRATION.md
+subagents:
+  - type: general-purpose
+    task: "Audit A: freshness"
+  - type: general-purpose
+    task: "Audit B: single-home"
+  - type: general-purpose
+    task: "Audit C1: concision CLAUDE/CONTEXT"
+  - type: general-purpose
+    task: "Audit C2: concision tenants/READMEs"
+  - type: general-purpose
+    task: "Audit D: coherence"
+  - type: general-purpose
+    task: "Audit A: freshness"
+  - type: general-purpose
+    task: "Audit B: single-home"
+  - type: general-purpose
+    task: "Audit C1: concision CLAUDE/CONTEXT"
+  - type: general-purpose
+    task: "Audit C2: concision tenants/READMEs"
+  - type: general-purpose
+    task: "Audit D: coherence"
+  - type: general-purpose
+    task: Check batch 1 findings
+  - type: general-purpose
+    task: Check CLAUDE.md verbose findings
+  - type: general-purpose
+    task: Check CONTEXT/MAP verbose findings
+  - type: general-purpose
+    task: Check tenant/README verbose findings
+gitBranch: claude/festive-mayer-a5d8bm
+entrypoint: remote_trigger
+cliVersion: 2.1.292
+trigger: audit-docs
+landedBy: Stop
