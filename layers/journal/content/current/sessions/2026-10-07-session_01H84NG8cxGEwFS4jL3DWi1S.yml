@@ -1,0 +1,54 @@
+schemaVersion: 1
+session: session_01H84NG8cxGEwFS4jL3DWi1S
+startedAt: 2026-10-07T08:54:02Z
+endedAt: 2026-10-07T08:59:30Z
+kind: interactive
+goal: Check whether frictions-to-fixes silently drops guard-surface frictions, and close that gap
+status: in-review
+outcome: Skill now files surface-blocked candidates as issues (PR 1655); four backfill issues filed (1651-1654)
+summary: "The user asked whether the latest frictions-to-fixes run (2026-10-07), which found frictions but neither fixed them nor filed issues, means they get ignored once out of the 3-day window. I read that run and the 10-05/10-06 runs: §3 never dispatches guard/hook/human-only fixes and §4 files issues only for selected hard candidates, so surface-blocked frictions fell through; 10-05 had filed such issues, 10-06/07 did not. A tracker search found no open issues for the top three. I proposed fixing the Skill, backfilling issues, and opening a PR; the user explicitly approved all three. Human-instructed: the Skill edit, the four backfill issues (1651 agent-background-flag guard, 1652 commit-trailer guard vs harness reminder, 1653 Stop-hook nag regression of 1612, 1654 deferred-tool guard gap) and the PR. Agent-initiated: the comment on 1653 noting the nag comes from the harness-side ~/.claude/stop-hook-git-check.sh, observed live in this session."
+prs:
+  - "1655"
+docsRead:
+  - path: layers/journal/content/current/sessions/2026-10-07-session_01FnQvoaJ15FXTXw8Pn8rY4p.yml
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: closure at PR-open
+  - name: log-session
+    reason: author this log
+frictions:
+  - description: The Stop-hook uncommitted-changes nag fired while gate:scoped was legitimately running, the exact friction filed as 1653
+    solution: Resolve 1653; the source is harness-side ~/.claude/stop-hook-git-check.sh, so likely accept and drop the CLAUDE.md caveat
+    severity: nit
+  - description: Harness attribution reminder said to end commits with Co-Authored-By/Claude-Session lines; CLAUDE.md forbids hand-writing them. I knew to omit them, but the contradiction is live (filed 1652)
+    solution: Resolve 1652 so the guard accepts the correct trailer
+    severity: nit
+  - description: "Friction counts disagreed: the 10-07 survey said 12 of 34 sessions for the Stop nag, my grep of description lines found 5 files"
+    solution: Have session-frictions survey output cite the matched session ids per candidate so counts are checkable
+    severity: minor
+durationSec: 328
+models:
+  claude-opus-5-5: 53
+toolCounts:
+  Bash: 15
+  Read: 1
+  ToolSearch: 3
+  mcp__github__search_issues: 3
+  mcp__github__issue_write: 4
+  mcp__github__list_pull_requests: 1
+  mcp__github__add_issue_comment: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+  Skill: 2
+docsReadViaShell:
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - docs/agents/guards.md
+  - docs/adr/0017-provenance-footer-on-agent-authored-content.md
+  - docs/agents/triage-labels.md
+gitBranch: ccr-df1a81b1-1mwwmj
+entrypoint: remote_mobile
+cliVersion: 2.1.292
+learnings:
+  - The Stop-time uncommitted-changes nag in cloud sessions comes from ~/.claude/stop-hook-git-check.sh, outside the repo
+landedBy: Stop
