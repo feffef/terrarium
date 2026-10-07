@@ -1,14 +1,15 @@
 schemaVersion: 1
 session: session_01NyDGTR1fuP22hPo7XghCfz
 startedAt: 2026-10-07T10:38:24Z
-endedAt: 2026-10-07T12:19:17Z
+endedAt: 2026-10-07T12:57:48Z
 kind: interactive
 goal: "Prune trial: rewrite CLAUDE.md to the bare minimum in plain, precise words"
-status: completed
-outcome: CLAUDE.md cut from 374 to 146 lines; PR 1658 merged after two Sonnet probes and two review rounds
-summary: "Human-instructed throughout: the owner invoked /prune-trial with an explicit ask to rewrite CLAUDE.md to the bare minimum, trace each rule's origin with git log/blame, drop rules whose origin wasn't major or critical, and use pointers wisely. The owner made every structural call in-session: keep the three open-trial bullets verbatim, keep WHY-not-WHAT and Read-not-cat, a minimal layout, drop issue/PR numbers, drop the Skill Inventory pointer, turn the docs index into mandatory \"before you X, read Y\" triggers, move the ADR rule from session start to a planning trigger, restore the pack-Skill rule, and remove vague wording everywhere. Agent-initiated parts: the rule-origin trace (subagent, 54 rules graded), the ADR-reading survey (36 large human-prompted sessions, median 2 of 28 ADRs read), the Skill Inventory usage check (only audit-skills sweeps read it), judging the workflow-file trial (holds), the Sonnet probes, and proposing fixes from two /code-review rounds that the owner ran and approved. Two surprises: \"read all ADRs\" was almost never followed, while grepping docs/adr by file path reliably finds the binding ADRs; and the Skill Inventory pointer was dead weight. The owner merged PR 1658 after CI went green; the new trial's verdict is due three days after landing."
+status: in-review
+outcome: CLAUDE.md cut from 374 to 146 lines (PR 1658 merged); close-session re-read rule in PR 1664
+summary: "Human-instructed throughout: the owner invoked /prune-trial with an explicit ask to rewrite CLAUDE.md to the bare minimum, trace each rule's origin with git log/blame, drop rules whose origin wasn't major or critical, and use pointers wisely. The owner made every structural call in-session: keep the three open-trial bullets verbatim, keep WHY-not-WHAT and Read-not-cat, a minimal layout, drop issue/PR numbers, drop the Skill Inventory pointer, turn the docs index into mandatory \"before you X, read Y\" triggers, move the ADR rule from session start to a planning trigger, restore the pack-Skill rule, and remove vague wording everywhere. Agent-initiated parts: the rule-origin trace (subagent, 54 rules graded), the ADR-reading survey (36 large human-prompted sessions, median 2 of 28 ADRs read), the Skill Inventory usage check (only audit-skills sweeps read it), judging the workflow-file trial (holds), the Sonnet probes, and proposing fixes from two /code-review rounds that the owner ran and approved. Two surprises: \"read all ADRs\" was almost never followed, while grepping docs/adr by file path reliably finds the binding ADRs; and the Skill Inventory pointer was dead weight. The owner merged PR 1658 after CI went green. Follow-up, also human-instructed: close-session gained a hard rule to re-read CLAUDE.md at closure and log every broken rule as a Friction (PR 1664, in review). Applying that rule to this session found five more broken CLAUDE.md rules, logged below."
 prs:
   - "1658"
+  - "1664"
 docsRead:
   - path: CLAUDE.md
     reason: the file under rewrite
@@ -21,6 +22,8 @@ docsRead:
   - path: docs/adr/0015-audit-skills-and-conditional-importance.md
     reason: whether the pack-Skill rule had another home
   - path: docs/agents/tenant-layers.md
+    reason: (read before editing)
+  - path: .agents/skills/close-session/SKILL.md
     reason: (read before editing)
 skillsUsed:
   - name: prune-trial
@@ -67,23 +70,38 @@ frictions:
   - description: I issued one pointless 'echo' Bash call while thinking.
     solution: None needed beyond attention
     severity: nit
-durationSec: 6053
+  - description: "Broke CLAUDE.md 'At session start: read CONTEXT-MAP.md, then CONTEXT.md' — never read either this session."
+    solution: Read both at session start, even for a docs-only task
+    severity: minor
+  - description: "Broke CLAUDE.md 'Before you plan a change: grep docs/adr for the paths you touch' (old CLAUDE.md: read all ADRs) — no ADR lookup before planning the rewrite or the close-session change."
+    solution: Run the docs/adr grep for CLAUDE.md, close-session and prune-trials.yml before planning; ADR-0009, 0027 and 0003 bind them
+    severity: moderate
+  - description: "Broke CLAUDE.md 'Before your first git command: read git-conventions.md' and 'Before your first GitHub operation: read github-integration.md' — read neither in full."
+    solution: Read both before the first commit and the first mcp__github__ call
+    severity: minor
+  - description: "Broke CLAUDE.md 'Before you dispatch a subagent that touches git: the dispatch-subagents Skill' — the probes and reviewers ran git show/grep/log without my reading the Skill."
+    solution: Read dispatch-subagents before the first git-touching dispatch, even a read-only one
+    severity: minor
+  - description: Broke CLAUDE.md 'Read files with the Read tool, not cat' — read many files with cat, sed -n and head in Bash.
+    solution: Use the Read tool with offset and limit for file reads
+    severity: nit
+durationSec: 8364
 models:
-  claude-opus-5-5: 366
+  claude-opus-5-5: 394
 toolCounts:
   Skill: 3
-  Bash: 98
+  Bash: 104
   Agent: 10
-  AskUserQuestion: 1
+  AskUserQuestion: 2
   ToolSearch: 3
   mcp__github__search_issues: 1
   Write: 3
-  Read: 8
-  Edit: 7
+  Read: 10
+  Edit: 8
   TaskStop: 1
   mcp__github__list_pull_requests: 1
-  mcp__github__create_pull_request: 1
-  mcp__claude-code-remote__subscribe_pr_activity: 1
+  mcp__github__create_pull_request: 2
+  mcp__claude-code-remote__subscribe_pr_activity: 2
   mcp__github__issue_read: 3
   ReadNotifications: 4
   mcp__github__pull_request_read: 1
@@ -95,6 +113,7 @@ filesEdited:
   - docs/agents/pr-workflow.md
   - docs/agents/github-integration.md
   - .agents/prune-trials.yml
+  - .agents/skills/close-session/SKILL.md
 docsReadViaShell:
   - docs/research/rulebook-migration-table.md
   - docs/agents/issue-tracker.md
