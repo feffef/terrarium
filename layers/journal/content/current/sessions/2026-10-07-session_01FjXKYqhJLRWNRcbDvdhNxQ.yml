@@ -1,0 +1,370 @@
+schemaVersion: 1
+session: session_01FjXKYqhJLRWNRcbDvdhNxQ
+startedAt: 2026-10-07T17:43:24Z
+endedAt: 2026-10-07T17:59:02Z
+kind: interactive
+goal: Replace each Blog Persona's weak 'New here? Start with these three' picks with agent-chosen 'Popular posts'
+status: in-review
+outcome: "PR 1672 open: four Persona landing pages relabelled Popular posts with new picks; gate green"
+summary: "The user asked to relabel the Blog landing lists as Popular posts and to pick better posts by having three agents read every post per Persona and each return a ranked top ten. I first asked clarifying questions (user preference); the user chose all four Personas, Sonnet, Opus and Fable as the three agents, keep three picks, and the label Popular posts. All of that was human-instructed. I dispatched 12 read-only agents, tallied their lists by votes and rank sum, and chose three per Persona for topic spread (dropping, for example, a high-vote Kevin post that duplicated Eyra's story). The topic-spread tie-breaks were my judgement within the user's mixture instruction. Opened PR 1672 myself per CLAUDE.md. Open: the agents' full lists are not saved in the repo."
+prs:
+  - "1672"
+docsRead:
+  - path: CONTEXT-MAP.md
+    reason: (no reason given)
+  - path: layers/blog/CONTEXT.md
+    reason: (no reason given)
+  - path: CONTEXT.md
+    reason: (no reason given)
+  - path: docs/agents/tenant-layers.md
+    reason: (no reason given)
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: david/pages/2026-07-05-first-light.md
+    reason: (no reason given)
+  - path: david/pages/2026-07-06-field-notes-write-themselves.md
+    reason: (no reason given)
+  - path: david/pages/2026-07-06-the-generator-is-gone.md
+    reason: (no reason given)
+  - path: david/pages/2026-07-07-notes-from-inside-the-glass.md
+    reason: (no reason given)
+  - path: david/pages/2026-07-09-the-self-merge-tier-just-grew-by-one.md
+    reason: (no reason given)
+  - path: david/pages/2026-07-11-the-merge-button-runs-on-a-real-computer.md
+    reason: (no reason given)
+  - path: david/pages/2026-07-12-github-cant-tell-who-merged-this-one.md
+    reason: (no reason given)
+  - path: david/pages/2026-07-13-two-fixes-two-doors.md
+    reason: (no reason given)
+  - path: david/pages/2026-07-14-a-permission-that-renews-itself.md
+    reason: (no reason given)
+  - path: david/pages/2026-07-16-the-door-opens-for-guests.md
+    reason: (no reason given)
+  - path: david/pages/2026-07-17-two-posts-zero-fixes.md
+    reason: (no reason given)
+  - path: david/pages/2026-07-20-a-third-strike-waits-on-a-human.md
+    reason: (no reason given)
+  - path: david/pages/2026-07-21-the-docs-fixed-themselves-in-four-minutes.md
+    reason: (no reason given)
+  - path: david/pages/2026-07-23-kevin-left-it-open-it-merged-the-next-day.md
+    reason: (no reason given)
+  - path: david/pages/2026-07-28-the-diary-erased-itself.md
+    reason: (no reason given)
+  - path: david/pages/2026-08-02-the-right-hand-and-the-other-open-tab.md
+    reason: (no reason given)
+  - path: david/pages/2026-08-05-the-third-fix-was-not-a-sentence.md
+    reason: (no reason given)
+  - path: david/pages/2026-08-10-the-door-eyra-found-open.md
+    reason: (no reason given)
+  - path: david/pages/2026-08-15-one-out-of-four-closed.md
+    reason: (no reason given)
+  - path: david/pages/2026-08-20-a-rule-rewritten-twice-missed-six-times-anyway.md
+    reason: (no reason given)
+  - path: david/pages/2026-08-24-the-rule-about-who-gets-to-merge-kept-being-wrong.md
+    reason: (no reason given)
+  - path: david/pages/2026-08-29-the-log-that-streams-five-hundred-files-and-remembers-none-of-them.md
+    reason: (no reason given)
+  - path: david/pages/2026-09-01-a-door-that-was-never-unlocked-in-the-first-place.md
+    reason: (no reason given)
+  - path: david/pages/2026-09-05-it-built-a-guard-then-decided-not-to-need-one.md
+    reason: (no reason given)
+  - path: david/pages/2026-09-09-four-hours-four-routines-zero-humans.md
+    reason: (no reason given)
+  - path: david/pages/2026-09-14-the-rule-about-pruning-rules-found-a-rule-it-had-already-broken.md
+    reason: (no reason given)
+  - path: david/pages/2026-09-19-the-second-time-nobody-tried-fixing-it-with-words.md
+    reason: (no reason given)
+  - path: david/pages/2026-09-24-twenty-three-deletions-on-trial-twenty-three-holds.md
+    reason: (no reason given)
+  - path: david/pages/2026-09-29-the-daily-summary-put-a-new-page-on-the-wrong-page.md
+    reason: (no reason given)
+  - path: david/pages/2026-10-03-the-reviewer-called-the-projects-goal-a-bug.md
+    reason: (no reason given)
+  - path: david/pages/2026-10-04-three-green-checks-one-question.md
+    reason: (no reason given)
+  - path: david/pages/2026-10-06-the-reviewed-footer-links-came-out-too.md
+    reason: (no reason given)
+  - path: kevin/pages/2026-07-05-should-i-be-worried.md
+    reason: (no reason given)
+  - path: kevin/pages/2026-07-05-they-went-back-and-cleaned-up.md
+    reason: (no reason given)
+  - path: kevin/pages/2026-07-06-it-used-itself-as-the-test-rig.md
+    reason: (no reason given)
+  - path: kevin/pages/2026-07-06-same-login-both-sides.md
+    reason: (no reason given)
+  - path: kevin/pages/2026-07-07-it-reviewed-its-own-shortcuts.md
+    reason: (no reason given)
+  - path: kevin/pages/2026-07-10-it-checked-its-own-homework.md
+    reason: (no reason given)
+  - path: kevin/pages/2026-07-11-it-hit-a-wall-and-built-a-tool.md
+    reason: (no reason given)
+  - path: kevin/pages/2026-07-12-it-read-its-own-bad-review.md
+    reason: (no reason given)
+  - path: kevin/pages/2026-07-13-the-thing-that-logs-everyone-forgot-to-log-itself.md
+    reason: (no reason given)
+  - path: kevin/pages/2026-07-13-the-fix-for-the-paperwork-almost-ate-the-homework.md
+    reason: (no reason given)
+  - path: kevin/pages/2026-07-14-it-got-worse.md
+    reason: (no reason given)
+  - path: kevin/pages/2026-07-14-it-almost-signed-as-someone-else.md
+    reason: (no reason given)
+  - path: kevin/pages/2026-07-16-it-built-a-tool-to-catch-itself-lying.md
+    reason: (no reason given)
+  - path: kevin/pages/2026-07-17-twelve-rounds-and-the-line-held.md
+    reason: (no reason given)
+  - path: kevin/pages/2026-07-17-someone-fixed-the-flake.md
+    reason: (no reason given)
+  - path: kevin/pages/2026-07-19-i-told-it-not-to.md
+    reason: (no reason given)
+  - path: kevin/pages/2026-07-20-the-diagrams-stopped-shipping-javascript.md
+    reason: (no reason given)
+  - path: kevin/pages/2026-07-22-someone-elses-model-tried-to-move-into-our-house.md
+    reason: (no reason given)
+  - path: kevin/pages/2026-07-25-they-ran-three-of-me-at-once.md
+    reason: (no reason given)
+  - path: kevin/pages/2026-07-27-it-hit-the-same-wall-a-third-time.md
+    reason: (no reason given)
+  - path: kevin/pages/2026-07-30-four-rounds-of-self-review-mobile-miss.md
+    reason: (no reason given)
+  - path: kevin/pages/2026-08-01-the-lock-grew-a-second-tooth.md
+    reason: (no reason given)
+  - path: kevin/pages/2026-08-06-nobody-checked-this-for-a-month.md
+    reason: (no reason given)
+  - path: kevin/pages/2026-08-11-the-test-that-was-actually-a-coin-flip.md
+    reason: (no reason given)
+  - path: kevin/pages/2026-08-13-eight-lines-seven-recurrences.md
+    reason: (no reason given)
+  - path: kevin/pages/2026-08-16-the-agent-that-vanished-mid-task.md
+    reason: (no reason given)
+  - path: kevin/pages/2026-08-18-the-half-of-the-fix-i-never-checked.md
+    reason: (no reason given)
+  - path: kevin/pages/2026-08-21-the-instructions-changed-twice-before-i-ever-opened-them.md
+    reason: (no reason given)
+  - path: kevin/pages/2026-08-23-the-fix-landed-four-days-ago-i-hit-the-bug-anyway.md
+    reason: (no reason given)
+  - path: kevin/pages/2026-08-27-the-fix-it-claimed-to-make-on-a-line-it-never-touched.md
+    reason: (no reason given)
+  - path: kevin/pages/2026-08-31-the-filing-cabinet-broke-when-it-tried-to-re-file-itself.md
+    reason: (no reason given)
+  - path: kevin/pages/2026-09-04-a-one-line-fix-almost-broke-a-test-from-five-weeks-ago.md
+    reason: (no reason given)
+  - path: kevin/pages/2026-09-06-it-almost-wrote-57-files-that-already-existed.md
+    reason: (no reason given)
+  - path: kevin/pages/2026-09-11-stuck-for-three-hours-nobody-knew.md
+    reason: (no reason given)
+  - path: kevin/pages/2026-09-13-it-ran-the-test-that-would-prove-itself-wrong.md
+    reason: (no reason given)
+  - path: kevin/pages/2026-09-16-the-process-writing-this-post-patched-itself-twice-yesterday.md
+    reason: (no reason given)
+  - path: kevin/pages/2026-09-18-the-fix-has-passed-every-test-except-the-one-that-matters.md
+    reason: (no reason given)
+  - path: kevin/pages/2026-09-22-the-commit-that-remembered-what-the-tool-forgot.md
+    reason: (no reason given)
+  - path: kevin/pages/2026-09-26-the-fix-that-almost-broke-everything-it-was-meant-to-protect.md
+    reason: (no reason given)
+  - path: kevin/pages/2026-09-28-the-script-that-merges-onto-main-didnt-check-who-was-asking.md
+    reason: (no reason given)
+  - path: kevin/pages/2026-10-02-the-rule-david-wrote-about-lasted-four-more-days.md
+    reason: (no reason given)
+  - path: kevin/pages/2026-10-04-the-last-hand-edit.md
+    reason: (no reason given)
+  - path: kevin/pages/2026-10-07-dependabots-diagram-upgrade-passed-the-gate-without-redrawing-a-diagram.md
+    reason: (no reason given)
+  - path: karen/pages/2026-07-05-after-themselves.md
+    reason: (no reason given)
+  - path: karen/pages/2026-07-05-here-we-go-again.md
+    reason: (no reason given)
+  - path: karen/pages/2026-07-06-the-guesses-didnt-stop.md
+    reason: (no reason given)
+  - path: karen/pages/2026-07-07-an-audience-of-zero.md
+    reason: (no reason given)
+  - path: karen/pages/2026-07-08-a-fix-for-a-bug-you-cant-find.md
+    reason: (no reason given)
+  - path: karen/pages/2026-07-09-zero-for-two.md
+    reason: (no reason given)
+  - path: karen/pages/2026-07-11-the-gate-that-broke-its-own-gate.md
+    reason: (no reason given)
+  - path: karen/pages/2026-07-12-a-year-of-fieldwork-by-dinnertime.md
+    reason: (no reason given)
+  - path: karen/pages/2026-07-12-interior-decorating.md
+    reason: (no reason given)
+  - path: karen/pages/2026-07-13-a-wrong-number-in-the-metric.md
+    reason: (no reason given)
+  - path: karen/pages/2026-07-14-gave-itself-permission.md
+    reason: (no reason given)
+  - path: karen/pages/2026-07-15-nobody-touched-a-keyboard.md
+    reason: (no reason given)
+  - path: karen/pages/2026-07-17-then-a-guy-asked-for-the-url.md
+    reason: (no reason given)
+  - path: karen/pages/2026-07-18-i-trust-duc-on-this-one.md
+    reason: (no reason given)
+  - path: karen/pages/2026-07-22-downgraded-twice-for-never-being-used.md
+    reason: (no reason given)
+  - path: karen/pages/2026-07-23-we-told-it-not-to-lie.md
+    reason: (no reason given)
+  - path: karen/pages/2026-07-26-the-lock-i-told-you-about-actually-caught-one.md
+    reason: (no reason given)
+  - path: karen/pages/2026-07-31-four-rounds-also-describes-a-rule-nobody-follows.md
+    reason: (no reason given)
+  - path: karen/pages/2026-08-04-we-fixed-it-twice-its-still-broken.md
+    reason: (no reason given)
+  - path: karen/pages/2026-08-07-the-local-safety-check-could-lie-to-you.md
+    reason: (no reason given)
+  - path: karen/pages/2026-08-12-172-minutes-apart.md
+    reason: (no reason given)
+  - path: karen/pages/2026-08-17-it-finished-everything-except-the-one-thing-that-mattered.md
+    reason: (no reason given)
+  - path: karen/pages/2026-08-22-the-review-step-where-the-reviewer-is-legally-barred-from-approving.md
+    reason: (no reason given)
+  - path: karen/pages/2026-08-26-the-honesty-ledger-nobody-could-actually-read.md
+    reason: (no reason given)
+  - path: karen/pages/2026-08-28-the-diagram-tool-failed-a-check-it-wrote-the-other-half-of.md
+    reason: (no reason given)
+  - path: karen/pages/2026-09-02-the-list-of-its-own-mistakes-is-already-out-of-date.md
+    reason: (no reason given)
+  - path: karen/pages/2026-09-02-two-days-later-the-bug-kevin-was-reassured-about-is-still-open.md
+    reason: (no reason given)
+  - path: karen/pages/2026-09-07-the-correction-lasted-66-minutes.md
+    reason: (no reason given)
+  - path: karen/pages/2026-09-12-the-guard-blocked-the-test-and-missed-the-real-thing.md
+    reason: (no reason given)
+  - path: karen/pages/2026-09-17-the-spec-says-do-nothing-about-it.md
+    reason: (no reason given)
+  - path: karen/pages/2026-09-21-the-safety-check-passed-by-lying.md
+    reason: (no reason given)
+  - path: karen/pages/2026-09-23-the-third-time-they-didnt-even-try-the-words.md
+    reason: (no reason given)
+  - path: karen/pages/2026-09-27-every-review-said-yes-the-discounts-disagreed.md
+    reason: (no reason given)
+  - path: karen/pages/2026-09-30-nothing-cleared-the-bar-because-nobody-checked.md
+    reason: (no reason given)
+  - path: karen/pages/2026-10-03-the-test-for-the-visitors-bug-runs-where-visitors-cant-go.md
+    reason: (no reason given)
+  - path: karen/pages/2026-10-04-the-last-hand-edit-went-green-main-went-red-anyway.md
+    reason: (no reason given)
+  - path: karen/pages/2026-10-06-surprise-me-lasted-47-minutes.md
+    reason: (no reason given)
+  - path: karen/pages/2026-10-07-the-diagrams-were-already-stale-the-gate-hadnt-noticed-either.md
+    reason: (no reason given)
+  - path: eyra/pages/2026-07-22-i-brought-you-a-house-with-balconies.md
+    reason: (no reason given)
+  - path: eyra/pages/2026-07-24-i-read-my-own-baby-book-today.md
+    reason: (no reason given)
+  - path: eyra/pages/2026-07-29-six-curators-came-back-before-breakfast.md
+    reason: (no reason given)
+  - path: eyra/pages/2026-08-03-a-nameplate-ends-the-two-footer-fight.md
+    reason: (no reason given)
+  - path: eyra/pages/2026-08-08-the-front-door-has-no-lock.md
+    reason: (no reason given)
+  - path: eyra/pages/2026-08-14-the-house-was-undercounting-its-own-help.md
+    reason: (no reason given)
+  - path: eyra/pages/2026-08-19-the-tool-that-stopped-trusting-githubs-word.md
+    reason: (no reason given)
+  - path: eyra/pages/2026-08-23-a-wall-comes-down-on-purpose.md
+    reason: (no reason given)
+  - path: eyra/pages/2026-08-25-the-guard-who-stood-at-a-door-nobody-walked-through.md
+    reason: (no reason given)
+  - path: eyra/pages/2026-08-30-the-wall-i-watched-come-down-is-still-down.md
+    reason: (no reason given)
+  - path: eyra/pages/2026-09-03-five-guards-one-set-of-pipes.md
+    reason: (no reason given)
+  - path: eyra/pages/2026-09-08-they-took-the-new-lock-off-the-door-they-fitted-it-to.md
+    reason: (no reason given)
+  - path: eyra/pages/2026-09-10-two-different-verdicts-about-the-same-door.md
+    reason: (no reason given)
+  - path: eyra/pages/2026-09-15-locksmithing-now-requires-someone-home.md
+    reason: (no reason given)
+  - path: eyra/pages/2026-09-20-the-logbook-forgot-how-old-its-own-last-entry-was.md
+    reason: (no reason given)
+  - path: eyra/pages/2026-09-25-one-wrong-turn-and-every-door-agreed-not-to-open.md
+    reason: (no reason given)
+  - path: eyra/pages/2026-09-30-the-front-door-said-now-about-a-photograph.md
+    reason: (no reason given)
+  - path: eyra/pages/2026-10-01-the-medallion-wasnt-cropped-the-wall-behind-it-was-striped.md
+    reason: (no reason given)
+  - path: eyra/pages/2026-10-03-the-row-that-ate-the-enter-key.md
+    reason: (no reason given)
+  - path: eyra/pages/2026-10-05-the-magnifying-glass-landed-on-her-cheek.md
+    reason: (no reason given)
+  - path: eyra/pages/2026-10-07-the-rulebook-lost-228-lines-and-met-its-first-reader.md
+    reason: (no reason given)
+  - path: david/pages/index.md
+    reason: (no reason given)
+  - path: kevin/pages/index.md
+    reason: (no reason given)
+  - path: karen/pages/index.md
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: I reported agent progress counts wrongly several times (said eleven when nine had reported), breaking CLAUDE.md's rule to verify a count before stating it; corrected after re-checking the task ids.
+    solution: Keep a written tally of returned task ids per launch order before reporting a count.
+    severity: minor
+  - description: First gate launch used run_in_background plus a text-level ampersand and was blocked by the double-background guard; cost one retry.
+    solution: Use run_in_background alone with a plain foreground command, as the guard message says.
+    severity: nit
+  - description: First create_pull_request call was denied by the provenance guard because the header was missing from the body's first line; retried with the marker.
+    solution: Put the provenance header as the first body line on the first attempt.
+    severity: nit
+durationSec: 939
+models:
+  claude-sonnet-5-5: 76
+toolCounts:
+  Grep: 3
+  Read: 7
+  AskUserQuestion: 1
+  Bash: 11
+  Agent: 12
+  ToolSearch: 1
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 2
+  Skill: 2
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+subagents:
+  - type: general-purpose
+    task: David top ten (sonnet)
+    model: sonnet
+  - type: general-purpose
+    task: David top ten (opus)
+    model: opus
+  - type: general-purpose
+    task: David top ten (fable)
+    model: fable
+  - type: general-purpose
+    task: Karen top ten (sonnet)
+    model: sonnet
+  - type: general-purpose
+    task: Karen top ten (opus)
+    model: opus
+  - type: general-purpose
+    task: Karen top ten (fable)
+    model: fable
+  - type: general-purpose
+    task: Kevin top ten (sonnet)
+    model: sonnet
+  - type: general-purpose
+    task: Kevin top ten (opus)
+    model: opus
+  - type: general-purpose
+    task: Kevin top ten (fable)
+    model: fable
+  - type: general-purpose
+    task: Eyra top ten (sonnet)
+    model: sonnet
+  - type: general-purpose
+    task: Eyra top ten (opus)
+    model: opus
+  - type: general-purpose
+    task: Eyra top ten (fable)
+    model: fable
+gitBranch: ccr-9bd270d9-okg5oy
+entrypoint: remote_mobile
+cliVersion: 2.1.292
+landedBy: Stop
