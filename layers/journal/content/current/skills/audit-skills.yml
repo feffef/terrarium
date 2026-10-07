@@ -228,3 +228,22 @@ observations:
       merged PRs, 887 with a session), both orphan candidates already
       resolved-by-annotation, no human-prompted or manually-rescued
       closures. Grade/role unchanged.
+  - date: "2026-10-07"
+    note: >-
+      Self-check: dispatched 10 behaviour-check subagents this run (one per
+      behaviourChecks entry), each report independently verified against
+      primary sources before use (every PR/issue claim spot-checked via
+      `gh api`/MCP, two reports' quoted log excerpts confirmed verbatim
+      against the raw session log). Confirmed #1627 (the 2026-10-06
+      stale-issue-state finding) accurately captures the one real gap in
+      this window — its one bad intermediate claim (the #1515 reopen) was
+      already corrected before that session closed, and no final committed
+      Inventory text failed re-verification. One new finding escalated as
+      issue #1647 (audit-docs' independent-checker dispatch skipped a 2nd
+      time, clearing the repeated bar — see audit-docs's own entry). #1626
+      (blog-post step-12's 5th skip) re-confirmed still open with nothing
+      new to add; #1515 (visitor-loop) confirmed closed. Step 3 closure
+      completeness: orphan scan clean (`scanned: true`, 1051 merged PRs, 900
+      with a session), both orphan candidates already resolved-by-annotation,
+      no human-prompted or manually-rescued closures this window. Grade/role
+      unchanged.

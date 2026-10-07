@@ -127,3 +127,18 @@ observations:
       clean across all 10 usedIn sessions (12 PRs checked against GitHub).
       Grade unchanged — reliability gap confined to one sub-step, not core
       delivery.
+  - date: "2026-10-07"
+    note: >-
+      Re-checked (audit-skills behaviour check), 10 newest usedIn sessions.
+      Issue #1626 (step 12's 5th skip) confirmed open, needs-triage, nothing
+      new to add. The one session newer than #1626's filing —
+      session_01QM5wbJFUHy2Qrq7AkphT9L (2026-10-06, PR #1638 standalone +
+      PR #1639 reply) — ran step 12 correctly: dispatched a reader subagent
+      that picked a reply draft, then a fresh fact-check dispatch before
+      shipping, both confirmed against PR #1639's live body ("Reader's
+      reason for David... Fact-check: 20 claims checked, 0 wrong, 3 soft
+      wordings fixed"). One clean run post-escalation is not proof the gap
+      is closed — the same false confidence preceded skip #5 — so #1626
+      stays open pending more data. Step 7 fact-check and rotation both
+      re-verified clean; no reverts of blog-post content found in the
+      2-week git-log sweep. Grade unchanged.

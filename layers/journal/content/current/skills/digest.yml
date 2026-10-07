@@ -99,3 +99,15 @@ observations:
       (correctly bucketed by `endedAt`, not filename, for one log whose
       filename date differs from its `endedAt`). No new silent failures.
       Grade unchanged.
+  - date: "2026-10-07"
+    note: >-
+      Re-checked (audit-skills behaviour check), 7 usedIn sessions; 6
+      already covered by prior checks, re-confirmed consistent. Newest,
+      previously-unchecked: session_01TY4CnbUTCjYqaKpHAHKHku (PR #1646, the
+      2026-10-06 Digest) verified end-to-end — retention sweep moved
+      exactly 1 digest + 13 session logs matching `RETAIN_DATES = 7`, a
+      genuine fact-check subagent dispatch (23 claims, none wrong), and 3
+      spot-checked factual claims (PRs #1632/#1633/#1642) all matched live
+      PR bodies exactly. Only `digest.ts` change in the window is the
+      already-noted comment-only 2026-10-04 fix. No new post-merge
+      correction beyond the already-known #1478 case. Grade unchanged.
