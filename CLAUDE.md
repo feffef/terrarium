@@ -36,7 +36,8 @@ act, once per session.
 - **Before you dispatch a subagent** that touches git or needs a worktree: the
   `dispatch-subagents` Skill.
 - **Before you edit anything under `layers/<tenant>/`** (config, pages,
-  components, CSS) or add a Space, Collection or Tenant:
+  components, CSS), edit any `nuxt.config.ts`, or add a Space, Collection or
+  Tenant:
   `docs/agents/tenant-layers.md`.
 - **Before you say a UI change works,** or take a screenshot:
   `docs/agents/verifying-ui-changes.md`.
@@ -76,7 +77,8 @@ act, once per session.
 - **External pack Skills** (listed in `skills-lock.json`) are off limits to
   edit: a re-install overwrites local changes, and the gate rejects the edit.
   Send general improvements upstream; put repo-specific advice in that Skill's
-  Skill Inventory entry (ADR-0015).
+  Skill Inventory entry, `layers/journal/content/current/skills/<name>.yml`
+  (ADR-0015).
 
 ## Working conventions
 
