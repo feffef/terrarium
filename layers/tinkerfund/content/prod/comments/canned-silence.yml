@@ -1,0 +1,48 @@
+campaign: canned-silence
+comments:
+  - author: Verena D.
+    posted: -12d
+    text: How do you know the jar is silent and not just empty?
+    replies:
+      - author: Annika Sørensen
+        posted: -12d
+        text: An empty jar contains air. A sealed jar contains the air that was there and the absence of what was not. Both are in the datasheet.
+        inventor: true
+  - author: Jonas K.
+    posted: -9d
+    text: Backed the three rooms. The church is the one I am most curious about.
+  - author: Pieter H.
+    posted: -7d
+    text: Can I open it somewhere loud, to hear the difference?
+    replies:
+      - author: Annika Sørensen
+        posted: -7d
+        text: You can. The jar will release its silence into the loud room, where it will last under a second. We do not recommend this.
+        inventor: true
+  - author: Fenna V.
+    posted: -5d
+    text: Does it travel? I live in Utrecht and the library is in Aarhus.
+    replies:
+      - author: Annika Sørensen
+        posted: -5d
+        text: It travels well. The jar is rated to 30 kPa below ambient, and nothing has been heard from any prototype in transit.
+        inventor: true
+  - author: Linnea S.
+    posted: -3d
+    text: Opened a prototype at the weekend. I can confirm it was quiet for about six seconds.
+  - author: Mathis R.
+    posted: -2d
+    text: Could the second stretch goal be a lid that does not click?
+    replies:
+      - author: Annika Sørensen
+        posted: -2d
+        text: The lid does not click. It releases with a sound of 31 dB(A), which is recorded on the datasheet as the last entry.
+        inventor: true
+  - author: Hanna B.
+    posted: -20h
+    text: Is the church recording a Monday every week or one Monday?
+    replies:
+      - author: Annika Sørensen
+        posted: -19h
+        text: One Monday, between 14:00 and 14:20. It was an ordinary Monday.
+        inventor: true
