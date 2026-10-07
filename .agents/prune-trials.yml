@@ -159,7 +159,9 @@ trials:
       left as is. Net -228 lines in CLAUDE.md. Follow-up (owner request,
       after merge): close-session gained a hard rule to re-read CLAUDE.md at
       closure and log a Friction for every CLAUDE.md rule or step the session
-      broke or skipped, so the trial's verdict has direct evidence.
+      broke or skipped, so the trial's verdict has direct evidence. Each such
+      Friction also states the impact (real or possible) and, where the rule
+      or its doc would have helped, what would have made the agent read it.
     territory:
       paths:
         - "CLAUDE.md (all of it except the ScheduleWakeup and provenance bullets)"
@@ -189,7 +191,8 @@ trials:
       (screenshot tooling, adding a Tenant) from the pointer. NOT damage: a
       session that reads only the relevant ADRs, or one a guard or gate step
       stopped that fixed itself from the message. Start from the Frictions
-      that close-session's re-read logs against named CLAUDE.md rules.
+      that close-session's re-read logs against named CLAUDE.md rules; their
+      "what would have made me read it" notes point at triggers to reword.
   - problem: >
       The `dispatch-subagents` Skill as a whole (209 lines, rewritten to about
       118): rule-per-incident bullets with long justifications. It failed as
