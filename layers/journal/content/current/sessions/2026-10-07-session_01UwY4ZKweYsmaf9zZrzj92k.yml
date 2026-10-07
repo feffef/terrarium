@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01UwY4ZKweYsmaf9zZrzj92k
 startedAt: 2026-10-07T13:15:44Z
-endedAt: 2026-10-07T13:28:12Z
+endedAt: 2026-10-07T13:50:43Z
 kind: autonomous
 goal: "Run the scheduled prune-trial: judge open trials, prune one problem, open a new trial"
-status: in-review
-outcome: No trial judgeable yet; pruned the dispatch-subagents Skill (-91 lines), PR open
-summary: "Scheduled run, no human prompt; everything was agent-initiated under the prune-trial charter. All four open trials landed less than 3 days ago per scripts/prune-trial-window.ts, so none was judged. A criterion-1 search subagent ranked failed-prose candidates; I chose the dispatch-subagents Skill (tracker failures #835, #1499, #427; backgrounding held by guards, stranding by check-worktrees) over the riskier blog-post fact-check rule that nothing holds. Rewrote it 209 to about 118 lines keeping every unguarded rule, added the ledger entry, probed on Sonnet at the pinned SHA (passed), ran gate:scoped (passed) and opened PR 1665. Still open - merge via merge-pr.ts after a verdict comment."
+status: completed
+outcome: No trial judgeable yet; pruned the dispatch-subagents Skill (-91 lines), PR merged by a human
+summary: "Scheduled run, no human prompt; everything was agent-initiated under the prune-trial charter. All four open trials landed less than 3 days ago per scripts/prune-trial-window.ts, so none was judged. A criterion-1 search subagent ranked failed-prose candidates; I chose the dispatch-subagents Skill (tracker failures #835, #1499, #427; backgrounding held by guards, stranding by check-worktrees) over the riskier blog-post fact-check rule that nothing holds. Rewrote it 209 to about 118 lines keeping every unguarded rule, added the ledger entry, probed on Sonnet at the pinned SHA (passed), ran gate:scoped (passed) and opened PR 1665. The classifier denied my self-merge, so a human merged it; the log is finalized after that merge."
 prs:
   - "1665"
 docsRead:
@@ -42,15 +42,15 @@ frictions:
   - description: First git commit hand-typed the Co-Authored-By and Claude-Session trailer from the system reminder; commit-trailer-guard denied it and the chained ledger append had to be redone.
     solution: The harness attribution reminder conflicts with CLAUDE.md; the reminder should say the trailer is landed automatically.
     severity: nit
-durationSec: 748
+durationSec: 2098
 models:
-  claude-sonnet-5-5: 64
+  claude-sonnet-5-5: 75
 toolCounts:
   Read: 8
-  Bash: 13
+  Bash: 14
   Skill: 3
   Agent: 2
-  ReadNotifications: 2
+  ReadNotifications: 6
   Write: 1
   Monitor: 1
   ToolSearch: 2
