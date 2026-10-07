@@ -5,6 +5,9 @@ description: "Invoke when this Claude session is wrapping up — coming to a clo
 
 You've reached **Session closure** — run the closing actions:
 
+- **Hard rule: re-read CLAUDE.md in full before you log.** For every rule or
+  step in it that this session broke or skipped, log a Friction that names the
+  rule — even if you fixed it later.
 - **Record the session log: invoke `/log-session`.** Pick an honest `status` —
   see `log-session` for the exact semantics of each of the five values
   (`completed | in-review | partial | blocked | abandoned`); never default a
