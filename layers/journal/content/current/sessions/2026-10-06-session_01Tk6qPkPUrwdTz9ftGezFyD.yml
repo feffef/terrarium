@@ -1,0 +1,58 @@
+schemaVersion: 1
+session: session_01Tk6qPkPUrwdTz9ftGezFyD
+startedAt: 2026-10-06T21:42:06Z
+endedAt: 2026-10-07T00:21:03Z
+kind: interactive
+goal: "Evaluate the mermaid 11 → 12 upgrade (issue #1550) by comparing rendering against main"
+status: in-review
+outcome: "Opened PR #1645 upgrading mermaid with mermaid-11 layout pinned; closed Dependabot PR #1635"
+summary: "Human-instructed throughout: the user asked me to look at issue #1550 and compare Dependabot PR #1635's rendering with main, then asked me to judge a variant myself before showing screenshots, then said to do it on my own branch and close #1635. #1635 only bumped package.json/lockfile, so it changed nothing visible; I re-rendered all 6 diagrams in a scratch worktree on mermaid 12 and screenshotted them side by side with main. Mermaid 12 defaults (ELK + wrappingWidth 120 + minNodeWidth 120) made diagrams 15-30% taller and tangled the how-it-works loop; layout dagre alone fixed the layout but not the wrapping. Reading mermaid 12's bundled config showed the changed flowchart defaults; pinning layout dagre plus wrappingWidth 200 / minNodeWidth 0 reproduced main within a few px. That config plus the re-rendered SVGs went into PR #1645 (gate:scoped full pass). Open: human merge (new major dep, ADR-0004)."
+prs:
+  - "1645"
+docsRead:
+  - path: scripts/render-mermaid.ts
+    reason: where mermaid.initialize options live
+  - path: docs/adr/0017-provenance-footer-on-agent-authored-content.md
+    reason: PR body header shape
+skillsUsed:
+  - name: close-session
+    reason: closure at PR open
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: "Issue #1550 said option 2 needs look 'classic' (already set) and omitted the wrappingWidth/minNodeWidth change needed to actually keep the old look"
+    solution: "Issue bodies proposing config fixes should be verified by rendering; PR #1645 records the real fix"
+    severity: minor
+  - description: System prompt forbids model identifiers in PR bodies while ADR-0017's header example names the model; I used a model-free '🤖 [Claude](session)' header
+    solution: ADR-0017 could state whether the model name is required or optional in the header
+    severity: minor
+durationSec: 9537
+models:
+  claude-opus-5-5: 84
+toolCounts:
+  ToolSearch: 2
+  mcp__github__search_issues: 1
+  mcp__github__search_pull_requests: 1
+  mcp__github__pull_request_read: 1
+  Bash: 24
+  Read: 10
+  SendUserFile: 2
+  Edit: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__add_issue_comment: 1
+  mcp__github__update_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+  Skill: 2
+filesEdited:
+  - scripts/render-mermaid.ts
+docsReadViaShell:
+  - docs/adr/0024-build-time-mermaid-prerender.md
+  - docs/agents/guards.md
+  - docs/agents/git-conventions.md
+  - docs/adr/0017-provenance-footer-on-agent-authored-content.md
+gitBranch: ccr-2889c099-7ukg18
+entrypoint: remote_mobile
+cliVersion: 2.1.292
+ideas:
+  - "Make verify:mermaid also fail when the installed mermaid version differs from the one recorded in each committed SVG (e.g. a data-mermaid-version attribute), so a Dependabot bump that changes rendering can't pass the gate with stale SVGs as #1635 would have"
+landedBy: Stop
