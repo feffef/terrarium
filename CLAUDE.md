@@ -12,14 +12,45 @@ If a problem comes from our own instructions, prune them first (ADR-0027).
 
 ## Read these first
 
-- **`CONTEXT-MAP.md`, then `CONTEXT.md`.** They define the words we use
-  (Platform, Tenant, Space, Collection, Document, Skill, …). Working on a
-  Tenant? Also read `layers/<tenant>/CONTEXT.md`. If your word clashes with a
-  glossary, stop and fix it.
-- **The ADRs that bind your change.** Before you plan or change structure, list
-  `docs/adr/` (the file names say what each decides) and grep it for every file
-  path and term you will touch: `grep -l <path-or-term> docs/adr/*`. Read each
-  relevant ADR in full.
+**`CONTEXT-MAP.md`, then `CONTEXT.md`.** They define the words we use
+(Platform, Tenant, Space, Collection, Document, Skill, …). Working on a Tenant?
+Also read `layers/<tenant>/CONTEXT.md`. If your word clashes with a glossary,
+stop and fix it.
+
+## Docs you must read first
+
+These are not optional. When a trigger applies, read the doc in full before you
+act, once per session.
+
+- **Before you plan a change, and again once you know which files it touches:**
+  the ADRs that bind it. List `docs/adr/` (the file names say what each
+  decides) and grep it for every file path and term involved:
+  `grep -l <path-or-term> docs/adr/*`. Read each relevant ADR in full.
+- **Before your first git command** beyond `status` and `diff` (commit, fetch,
+  pull, rebase, amend, reset, or reading history to draw a conclusion):
+  `docs/agents/git-conventions.md`.
+- **Before your first `mcp__github__*` call:** `docs/agents/github-integration.md`.
+- **Before you open, update or merge a PR:** `docs/agents/pr-workflow.md`.
+- **Before you file, triage or label an issue:** `docs/agents/issue-tracker.md`
+  and `docs/agents/triage-labels.md`.
+- **Before you act on an issue or PR from someone without write access, or
+  from an outside agent:** `docs/agents/guest-contributions.md`.
+- **Before you dispatch a subagent** that touches git or needs a worktree: the
+  `dispatch-subagents` Skill.
+- **Before you edit anything under `layers/<tenant>/`** (config, pages,
+  components, CSS) or add a Space, Collection or Tenant:
+  `docs/agents/tenant-layers.md`.
+- **Before you say a UI change works,** or take a screenshot:
+  `docs/agents/verifying-ui-changes.md`.
+- **Before you write content that needs layout or components** (MDC,
+  frontmatter or a data Collection?): `docs/agents/mdc-when-to-use.md`.
+- **Before you add a term or edit a `CONTEXT.md`:** `docs/agents/domain.md`.
+- **When a tool, push, network or permission error looks odd,** before you
+  debug it: `docs/agents/environment-caveats.md`.
+- **When a guard denies a tool call** and its message doesn't fix it, or before
+  you change a guard: `docs/agents/guards.md`.
+
+Where the build stands: the ADRs and the Journal (`/t/journal/current`).
 
 ## Ground rules
 
@@ -81,7 +112,7 @@ layers/<tenant>/          one Tenant: tenant.config.ts (its manifest — edit th
                           content/<space>/<collection>/, CONTEXT.md, tests/
 shared/                   manifest types, expansion, routing (mostly human-only)
 docs/adr/                 decisions
-docs/agents/              how-to docs for agents (see "Which doc to read")
+docs/agents/              how-to docs for agents (see "Docs you must read first")
 docs/proposals/           workflow changes waiting for a human to apply
 docs/research/            dated reference notes
 .agents/skills/           our Skills (.claude/skills/ links here)
@@ -109,21 +140,3 @@ tests/                    Platform tests; each Tenant keeps its own in its layer
 Every session ends with a session log in the Journal (ADR-0009). Invoke
 `close-session` yourself, early, at every closure point (such as opening a PR).
 Re-invoking is safe.
-
-## Which doc to read
-
-Read the doc when its trigger applies:
-
-- **Git** (fetch, rebase, amend, history, risky commands): `docs/agents/git-conventions.md`.
-- **Landing a PR** (merge tiers, `merge-pr.ts`): `docs/agents/pr-workflow.md`.
-- **GitHub MCP tools** (traps, polling, retries): `docs/agents/github-integration.md`.
-- **Issues** and their labels: `docs/agents/issue-tracker.md`, `docs/agents/triage-labels.md`.
-- **Odd failures** that may be platform quirks, not repo bugs: `docs/agents/environment-caveats.md`.
-- **A guard denied your tool call**: `docs/agents/guards.md`.
-- **Dispatching a subagent** that touches git: the `dispatch-subagents` Skill.
-- **Editing a Tenant layer** (Nuxt layer gotchas, adding a Tenant): `docs/agents/tenant-layers.md`.
-- **New words or domain docs**: `docs/agents/domain.md`.
-- **MDC or frontmatter?**: `docs/agents/mdc-when-to-use.md`.
-- **UI changes and screenshots**: `docs/agents/verifying-ui-changes.md`.
-- **Guest or external contributions**: `docs/agents/guest-contributions.md`.
-- **Where the build stands**: the ADRs and the Journal (`/t/journal/current`).
