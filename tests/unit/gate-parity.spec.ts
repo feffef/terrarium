@@ -47,7 +47,7 @@ function isGuarded(step: CompositeStep): boolean {
   return (step.if ?? '').includes("skip_heavy != 'true'")
 }
 
-/** `pnpm gate` is the single home of the full sequence (CLAUDE.md); re-derive it
+/** `pnpm gate` is the single home of the full sequence (package.json); re-derive it
  *  rather than hand-copying, so this can't drift the way the thing it guards did. */
 function packageGateScripts(): string[] {
   const pkg = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'))

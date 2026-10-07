@@ -13,7 +13,7 @@ the shape (ADR-0021).
 
 For the reading order and what each file covers — `CONTEXT-MAP.md`, then
 `CONTEXT.md`, then the Tenant's own `layers/<tenant>/CONTEXT.md`, then the
-relevant ADRs — start at CLAUDE.md's "Read these first" rather than here.
+relevant ADRs — start at CLAUDE.md's "Docs you must read first" rather than here.
 
 This repo deliberately diverges from the `domain-modeling` Skill's generic
 templates (ADR-0021):
@@ -38,7 +38,7 @@ them lazily, once a term or decision actually needs resolving.
 The same divergence applies to layout: the generic template puts each context
 under `src/<context>/` with its own `docs/adr/`. This repo instead co-locates
 each Tenant's `CONTEXT.md` under `layers/<tenant>/` and keeps every ADR at the
-root `docs/adr/`. CLAUDE.md's "Repo layout" has the full path list.
+root `docs/adr/`. CLAUDE.md's "Repo layout" shows where each lives.
 
 ## Use the glossary's vocabulary
 
@@ -59,8 +59,8 @@ don't mint a term, a typology, or a classification for a population of one.
 
 This **complements**, not replaces, the `domain-modeling` Skill's 3-part ADR
 test: that test gates *decisions*, the rule of two gates *vocabulary*. A
-coined term is a standing tax — every session reads all the ADRs and
-reconciles term conflicts against the glossary — so the second instance is
+coined term is a standing tax — every session reads the glossary and
+reconciles term conflicts against it — so the second instance is
 what proves the abstraction is worth that tax. (The friction-tag taxonomy
 waits "until it can emerge from clustering real frictions"; ADR-0010 deferred
 a `digests` collection the same way.) It's a brake on new coinage, not a
@@ -76,7 +76,7 @@ silently overriding it:
 ## Check a new Tenant/Collection proposal against ADR-0006 immediately
 
 Check a new Tenant or Collection against ADR-0006's pages-only-routing
-constraint (CLAUDE.md's Ground rules) as soon as it's proposed — don't defer
+constraint as soon as it's proposed — don't defer
 the check to a later pass. A separately-named, addressable-sounding
 Collection (e.g. a Tenant's "sites" or "exhibits") looks like natural design
 but violates ADR-0006. Catching it at proposal time stops the mistake from

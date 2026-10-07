@@ -158,4 +158,4 @@ reaches for on its own.
 
 **Loop it** by firing this skill by name on an interval — a Routine (standing,
 survives teardown) or `/loop` (within a live session). Idempotency above keeps a
-tight interval cheap (CLAUDE.md: don't restate a Routine's schedule).
+tight interval cheap.

@@ -87,7 +87,7 @@ export default defineTenant({
     // Its purpose is NOT to restate each Skill's own description, but to record
     // its *role and importance to this project*. Skills are installed wholesale
     // from an external pack (skills-lock.json), so this is where they get
-    // Terrarium-specific context; CLAUDE.md points agents here. The
+    // Terrarium-specific context (ADR-0015). The
     // `audit-skills` Skill keeps it current.
     skills: {
       type: 'data',

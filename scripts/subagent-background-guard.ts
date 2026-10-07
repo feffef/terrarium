@@ -114,7 +114,7 @@ export function formatGuardMessage(f: BackgroundFinding): string {
     `from a foreground call and returns.\n\n` +
     `This guard also blocks a bare \`&\` anywhere in the command text (trailing or not — \`nohup … &\` ` +
     `included), and a \`Monitor\` call — do not try to route around \`run_in_background: true\` with any ` +
-    `of those; they detach or strand the process the same way and add the silent-drop pitfalls CLAUDE.md records. If ` +
+    `of those; they detach or strand the process the same way. If ` +
     `you believe this genuinely IS the main session, that is a gap in the guard's context detection — ` +
     `report it on issue #694 rather than routing around it.`
   )

@@ -89,7 +89,7 @@ export type ProvenanceSurface = 'body' | 'commit'
 /** One tool call that can carry agent-authored provenance: which parameter
  *  holds the text, and which surface's shape that text must be in. Field names
  *  are verified against each tool's real schema via `ToolSearch` (issue #628 —
- *  CLAUDE.md: never guess a deferred tool's shape), never assumed from the
+ *  never guess a deferred tool's shape), never assumed from the
  *  tool's name. */
 export interface ProvenanceTool {
   tool: string

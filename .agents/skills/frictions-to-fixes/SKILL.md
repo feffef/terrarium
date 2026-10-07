@@ -118,7 +118,7 @@ and **(c) the subagent's own frictions** from the run.
 
 Never re-fix what is already fixed. **First, drop what isn't ours to change:** a
 candidate whose only fix edits an **external pack Skill's `SKILL.md`** is off
-limits (CLAUDE.md "Skills … off limits to edit"; ADR-0015) — the gate rejects it
+limits (ADR-0015) — the gate rejects it
 anyway, so screening it out here just avoids the wasted round-trip. A
 repo-specific fit-note still belongs in that Skill's Inventory entry, but that's
 `audit-skills`' job, not a friction fix.
@@ -324,8 +324,8 @@ review-agent, not a bystander waiting for a human. For each PR:
      your own judgement call, on top of that mechanical recipe.
    - **Amend then merge** when the only gaps are small — push the fixup yourself,
      re-run the gate, then merge. If your amendment **fundamentally changes** what
-     the PR does, update the PR title/description in the same push (the CLAUDE.md
-     hard rule — a stale description is a defect).
+     the PR does, update the PR title/description in the same push
+     (`docs/agents/pr-workflow.md` — a stale description is a defect).
    - **Escalate to a human** only when the change is **genuinely high-risk** per
      ADR-0004 (CLAUDE.md's Ground rules — same test as the safe-surface filter in
      §3, just applied to the actual diff instead of the issue's stated scope).

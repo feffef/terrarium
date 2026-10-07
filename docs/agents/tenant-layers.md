@@ -131,12 +131,16 @@ implications:
   with zero JS (only the *colour* tokens are live vars; font size/family are baked
   at render time — ADR-0024).
 
-## 3. A new Tenant/layer needs `nuxt prepare` before `pnpm lint`
+## 3. Adding a Space, Collection or Tenant
 
-After adding a new Tenant/layer, run `nuxt prepare` (or `pnpm install`, which
-runs it) before `pnpm lint` — a stale `.nuxt` doesn't yet know the layer's
-`app/pages/` directory and mis-fires `vue/multi-word-component-names` on the
-layer's pages.
+- **Space or Collection:** edit the Tenant's `tenant.config.ts`. The keyed
+  collections and the routing map follow at build time.
+- **Tenant:** add `layers/<name>/` with a manifest, content and its own
+  `nuxt.config.ts` (an empty `defineNuxtConfig({})` will do; without it
+  `nuxt prepare` warns "Cannot extend config"). Then run `nuxt prepare` (or
+  `pnpm install`, which runs it) before `pnpm lint` — a stale `.nuxt` doesn't
+  yet know the layer's `app/pages/` directory and mis-fires
+  `vue/multi-word-component-names` on the layer's pages.
 
 ## 4. Content-component overrides (`components/content/`) resolve Platform-wide
 
