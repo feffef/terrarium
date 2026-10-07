@@ -1,0 +1,90 @@
+schemaVersion: 1
+session: session_01QLxPLD6AQ2Y6GyWHE1dkKp
+startedAt: 2026-10-07T12:33:47Z
+endedAt: 2026-10-07T12:36:45Z
+kind: delegated
+goal: Run one /auto-triage sweep over the open issues that need attention
+status: completed
+outcome: 4 eligible issues triaged (1 ready-for-agent x2, ready-for-human x2); no PRs, no closes
+summary: "Human-instructed: the owner invoked /auto-triage (the standing green-light, ADR-0022); everything else was agent-initiated within that. Listed 23 open issues and no open PRs, then fetched the last comment of each. Only #1647, #1628, #1627 and #1626 were eligible: the rest end on an AI-authored comment (ADR-0017 provenance) or are wayfinder maps. One subagent per issue verified claims against primary sources and posted one comment each. Results: #1627 and #1626 became ready-for-agent (Skill-text fixes to audit-skills and blog-post, distinct files, no overlap with each other or other ready-for-agent issues); #1628 (irreversible remote branch delete) and #1647 (fix PR #1632 already merged, whether it is strong enough is a human call) became ready-for-human. Nothing closed, no repo edits, no PR opened."
+prs: []
+docsRead:
+  - path: docs/adr/0022-autonomous-triage-sweep.md
+    reason: green-light bounds and escalation taxonomy
+  - path: docs/agents/github-integration.md
+    reason: overflow-safe listing and MCP write rules
+  - path: CONTEXT-MAP.md
+    reason: (no reason given)
+  - path: CONTEXT.md
+    reason: (no reason given)
+  - path: docs/agents/issue-tracker.md
+    reason: (no reason given)
+  - path: docs/agents/triage-labels.md
+    reason: (no reason given)
+  - path: docs/agents/guest-contributions.md
+    reason: (no reason given)
+  - path: .agents/skills/triage/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/triage/AGENT-BRIEF.md
+    reason: (no reason given)
+  - path: .agents/skills/triage/OUT-OF-SCOPE.md
+    reason: (no reason given)
+  - path: docs/research/rulebook-migration-table.md
+    reason: (no reason given)
+  - path: .agents/prune-trials.yml
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: (no reason given)
+skillsUsed:
+  - name: auto-triage
+    reason: the sweep itself
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: "Subagent for #1647 skipped reading the out-of-scope knowledge base directly and relied on a prior triage comment's citation of it."
+    solution: State in the brief that .out-of-scope/*.md must be read directly, not via another comment.
+    severity: nit
+  - description: A Glob for the triage skill files returned nothing; had to fall back to ls to find them under .agents/skills.
+    solution: Point auto-triage at the real path of the triage Skill.
+    severity: nit
+durationSec: 178
+models:
+  claude-sonnet-5-5: 38
+toolCounts:
+  Read: 6
+  Glob: 1
+  Bash: 9
+  Agent: 4
+  Skill: 2
+docsReadViaShell:
+  - .agents/skills/triage/SKILL.md
+  - docs/agents/guards.md
+  - .agents/skills/triage/AGENT-BRIEF.md
+  - docs/adr/0022-autonomous-triage-sweep.md
+  - docs/adr/0017-provenance-footer-on-agent-authored-content.md
+  - .agents/skills/audit-skills/SKILL.md
+  - docs/adr/0015-audit-skills-and-conditional-importance.md
+  - .agents/skills/blog-post/SKILL.md
+  - docs/research/rulebook-migration-table.md
+  - docs/agents/pr-workflow.md
+  - .agents/skills/audit-docs/SKILL.md
+  - .agents/skills/prune-trial/SKILL.md
+subagents:
+  - type: general-purpose
+    task: "Triage #1647"
+  - type: general-purpose
+    task: "Triage #1628"
+  - type: general-purpose
+    task: "Triage #1627"
+  - type: general-purpose
+    task: "Triage #1626"
+gitBranch: claude/quirky-pasteur-ix42q6
+entrypoint: remote
+cliVersion: 2.1.292
+learnings:
+  - In this repo every agent-authored comment carries a claude.ai session URL, so matching that string on the latest comment reliably separates AI from human comments where author_association (always OWNER) cannot.
+landedBy: Stop
