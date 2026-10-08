@@ -61,7 +61,9 @@ Read, hunting for the best stories rather than confirming one:
   diffs that look interesting. Adjacent lines are not evidence of the same PR
   or of merge order — concurrent branches merge interleaved. Confirm any
   PR-boundary or ordering claim via the GitHub API (`pull_request_read` →
-  `get_commits` / `merged_at`) or `scripts/merged-since.ts`.
+  `get_commits` / `merged_at`) or `scripts/merged-since.ts`. Lifetimes and
+  durations on main use the PR `merged_at`, never a commit's author or revert
+  time.
 - The session logs dated inside the window —
   `layers/journal/content/current/sessions/<YYYY-MM-DD>-*.yml`: outcomes and,
   above all, frictions.
@@ -350,7 +352,12 @@ every fact so readers can go look:
   paste it from that output — a SHA typed from memory is a fabrication. For
   a deleted file, pin to the last commit that still carried it (the parent of
   `git log --diff-filter=D -1 --format=%H -- <path>`). A session log is amended
-  after it lands: pin to the commit that added it (`--diff-filter=A` instead).
+  after it lands: `git fetch origin main`, then pin it to a commit on
+  `origin/main` whose version contains the text you quote. Start from
+  `git log -1 --format=%H origin/main -- <path>` and check the quote with
+  `git show <sha>:<path>`; if it is missing, take the first line of
+  `git log --reverse --format=%H origin/main -S'<quote>' -- <path>` (the commit
+  that added it) and check that one the same way.
 - **Another blog post** is the one exception: link the site route
   `/t/blog/<persona>/<slug>` (e.g. `/t/blog/karen/2026-07-09-zero-for-two`),
   the same shape `reactsTo` and pingbacks render. A slug can be renamed (c13b90b), so
