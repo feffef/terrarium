@@ -180,3 +180,18 @@ observations:
       read-only, within this Skill's own carve-out — no new missed
       invocation beyond the already-tracked #1586. Both #1480 and #1586
       remain open, unaddressed. Grade unchanged.
+  - date: "2026-10-08"
+    note: >-
+      Re-checked (audit-skills behaviour check), 10 usedIn sessions: no
+      stranded work, no merge-pr.ts dispatched to a subagent, no new
+      branch/worktree collision; confirmed PR #1588/#1601/#1620's fixes all
+      still present in current SKILL.md, not reverted. Screened all 74
+      `notUsedInWindow` sessions by goal (59 ruled out from the goal alone,
+      15 opened in full): the one session ruled in as a missed invocation
+      (the Tinkerfund portrait redraw) is the same instance already tracked
+      as #1586, independently re-verified from its raw log rather than
+      trusted from the brief — no new instance found. A new prune trial
+      (opened 2026-10-07, SKILL.md pruned ~209→115 lines) has not yet been
+      exercised by any usedIn session; worth watching whether the shortened
+      prose holds under real dispatch load. #1480 and #1586 both remain
+      open, unaddressed. Grade unchanged (essential).

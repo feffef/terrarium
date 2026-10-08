@@ -187,3 +187,25 @@ observations:
       unaddressed — already escalated as issue #1628 (open), not
       re-escalated. No new silent failure beyond the already-known,
       self-fixed corpus-search skip. Grade unchanged.
+  - date: "2026-10-08"
+    note: >-
+      NEW finding, escalated as issue #1677 (audit-skills behaviour check):
+      the 5th narrow-margin scheduling miss. The pr-workflow-narrative trial
+      (landed `c1abfa52`, 2026-10-04T13:17:20Z) became judgeable
+      2026-10-07T13:17:20Z; session_01UwY4ZKweYsmaf9zZrzj92k started
+      2026-10-07T13:15:44Z, 96 seconds before the floor, and correctly
+      reported nothing judgeable — still unjudged as of today (confirmed
+      live via `prune-trial-window.ts`). This clears the escalation
+      threshold this Inventory's own 2026-10-04/06 entries explicitly set
+      ("worth a human only on a 5th," after the 4th/backgrounding-cluster
+      instance resolved itself without escalating). Not itself a silent
+      failure (the floor is "not a deadline"); the Routine's ~13:14 UTC fire
+      time has now produced 5 of these near-misses and the fix (nudge the
+      fire time later) has been proposed twice in friction logs without
+      action. Also flagged, suggestive-but-unverified: `session-frictions.ts`'s
+      default window narrowed from 20-newest-sessions to last-3-days (PR
+      #1598, 2026-10-04) while §1 never states a lookback, so trials judged
+      ~24h past floor could silently miss the first day of post-landing
+      frictions — checked concretely against the backgrounding-cluster trial
+      and found no outcome actually flipped. All 8 usedIn sessions' verdict
+      commits otherwise verified genuine, no reverts. Grade unchanged.

@@ -152,3 +152,21 @@ observations:
       first live test, since reworded steps elsewhere (blog-post step 12,
       visitor-loop owner-memory) have not always held on the first try.
       Grade unchanged.
+  - date: "2026-10-08"
+    note: >-
+      Re-checked (audit-skills behaviour check): issue #1647's open question
+      answered. The very next audit-docs run after the `5deab149` fix,
+      session_01N6jqFrkCMkEm3g6kJW9Zqk (2026-10-07T04:01-10:38Z, entirely
+      under the fixed wording), dispatched 4 distinct, explicitly-named
+      checker subagents ("Check batch 1 findings," "Check CLAUDE.md verbose
+      findings," "Check CONTEXT/MAP verbose findings," "Check tenant/README
+      verbose findings") and its log summary named the checker verdict tally
+      (CONFIRMED-BUT/WRONG counts), exactly as the fixed Step 5 requires — the
+      independent-checker-dispatch fix held on its first live test. Commented
+      this evidence onto #1647 rather than closing it (one post-fix run is
+      the "first" test the issue's own triage comment asked for, not
+      conclusive on its own; left the close/no-close call to a human per the
+      `ready-for-human` label). PR #1649 (self-merged, 14 Live-tier files)
+      and PR #1650 (ADR-0003/0004 fixes, correctly escalated to and merged by
+      a human) both independently verified correct. Rest of the 7 usedIn
+      sessions re-confirmed clean. Grade unchanged.

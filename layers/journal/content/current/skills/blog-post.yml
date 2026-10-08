@@ -142,3 +142,19 @@ observations:
       stays open pending more data. Step 7 fact-check and rotation both
       re-verified clean; no reverts of blog-post content found in the
       2-week git-log sweep. Grade unchanged.
+  - date: "2026-10-08"
+    note: >-
+      Re-checked (audit-skills behaviour check), 10 usedIn sessions, 2
+      newly-audited beyond #1626's filing: session_01RGKoFL9ZKfvji8zENgRVBT
+      (PR #1656 Kevin standalone, PR #1657 Karen reply) and
+      session_01AQ91ENQEqf8iMne1PrzFiu (PR #1670 Eyra standalone, PR #1671
+      Karen reply, correctly escalated for human merge per the Skill's own
+      rule rather than self-merged, since the "who caught it" claim rested
+      only on an agent-written log). Both ran genuine step-12 reader
+      dispatches and step-7 fact-checks with specific, non-boilerplate
+      tallies (38/32 and 36/32 claims respectively), content spot-checked
+      against primary sources (PR #1658's actual diff stats matched the
+      Eyra post's claimed line counts exactly). #1626 (step 12's 5th skip)
+      still open, nothing new; its fix has not yet been tested by a genuine
+      "none" verdict — both post-fix runs checked had actual reply winners.
+      No reverts found. Grade unchanged.

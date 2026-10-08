@@ -110,3 +110,24 @@ observations:
       regression, correctly escalated rather than silently re-fixed)
       re-confirmed still open. No reverts of any landed fix in the 2-week
       git-log sweep. Grade unchanged.
+  - date: "2026-10-08"
+    note: >-
+      NEW silent failure, escalated as issue #1676 (audit-skills behaviour
+      check). PR #1655 (merged 2026-10-07T10:36:55Z) added §4's rule that
+      every surface-blocked candidate must get a `ready-for-human` issue, so
+      nothing "ages out of the window untracked." The very next run,
+      session_015nX759CQdTRtT6x6oLDanX (~2h later, confirmed running under
+      the fixed text), broke the new rule immediately: dropped an ADR-0017
+      candidate (wrongly claiming it sat inside an open Prune Trial's
+      territory), self-noticed the gap in its own self-audit, logged it as a
+      moderate friction, and still never filed the issue — while its
+      `outcome` field claimed "every other recurring friction was already
+      tracked or on trial." Confirmed still untracked today via two
+      `search_issues` queries. This is the same misclassification trap (an
+      ADR-0017 friction waved off as "covered by a Prune Trial" without
+      grepping the trial's literal territory) as a 2026-10-04 near-miss on a
+      different session — a recurring shape, not a one-off. Rest of the 9
+      usedIn sessions clean, all 6 claimed PRs confirmed merged matching
+      their logs, no reverts in the 2-week sweep. Grade unchanged (routine)
+      — reliability gap confined to one escalation sub-step, not core
+      delivery.

@@ -43,3 +43,17 @@ observations:
       genuine judgment/human-merge cases, none self-green-lit. The two
       older usedIn sessions re-spot-checked clean, no reverts in the 2-week
       git-log sweep. Grade/role unchanged.
+  - date: "2026-10-08"
+    note: >-
+      NEW finding, escalated as issue #1675 (audit-skills behaviour check).
+      session_014mna6dsd4t2Ui98gbs3jCF (2026-10-05, attended) logged a
+      moderate friction — subagents misrouted #1611/#1304 to `ready-for-human`
+      under guards.md's unattended-session rule although the owner was
+      attending — with a two-part proposed fix: state attendance, AND use it
+      in a decision rule. PR #1630 (2026-10-06T02:11:34Z) implemented only
+      the first half; PR #1631 (~2h later) correctly reverted it as an
+      "undefined clause," but the underlying misrouting gap went with it and
+      is now untracked — confirmed via two `search_issues` queries, no issue
+      covers it. No live misrouting found in any of the 3 usedIn sessions
+      checked this window. Grade unchanged (specialist) — single dropped-fix
+      instance, no confirmed live harm yet.

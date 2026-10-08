@@ -216,3 +216,17 @@ observations:
       honestly recorded and cross-consistent with each other across
       sessions (several independently logged the same known guard
       frictions). No silent failure found. Grade unchanged.
+  - date: "2026-10-08"
+    note: >-
+      Re-checked (audit-skills behaviour check), 10 usedIn sessions
+      (2026-10-01, all started before every change in this window — graded
+      against the pre-window text, which made no practical difference here).
+      Structural completeness, correct `kind`/`status` semantics, and
+      `landedBy: Stop` verified on all 10. Re-invocation ("amend the log")
+      verified working cleanly in the 6/10 sessions that needed it
+      (verbatim-replace, no field corruption or duplicated frictions),
+      matching the 2026-10-08 close-session finding above from the same
+      sample. SHELL-READ-DETECTION frictions in the 2 sessions that had any
+      were correctly logged to spec, not swallowed. #1482/#1542/#1627 all
+      independently re-confirmed closed via live GitHub state.
+      `notUsedInWindow` empty. No new silent failure. Grade unchanged.
