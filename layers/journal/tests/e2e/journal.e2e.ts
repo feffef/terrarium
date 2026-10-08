@@ -256,11 +256,11 @@ export function registerJournalE2E(): void {
         const skills = await $fetch(`/t/journal/${space}/skills`)
         expect(skills).toMatch(/class="jd[\s"]/)
         expect(skills).toContain('Platform Skills')
-        expect(skills).not.toContain('No document at')
+        expect(skills).not.toMatch(/No document at <code[\s>]/)
         const ideas = await $fetch(`/t/journal/${space}/ideas`)
         expect(ideas).toContain('Ideas &amp; learnings')
         expect(ideas).toContain('Learnings')
-        expect(ideas).not.toContain('No document at')
+        expect(ideas).not.toMatch(/No document at <code[\s>]/)
       }
       const { ordinaryIdea } = currentSessionNotes()
       if (ordinaryIdea) expect(await $fetch('/t/journal/current/ideas')).toContain(ordinaryIdea)
@@ -320,7 +320,7 @@ export function registerJournalE2E(): void {
         expect(html).toMatch(/class="jd[\s"]/) // themed wrapper, not system-ui catch-all
         expect(html).toContain('aria-label="Breadcrumb"')
         expect(html).toContain('jd-prose')
-        expect(html).not.toContain('No document at')
+        expect(html).not.toMatch(/No document at <code[\s>]/)
       }
     })
 
@@ -355,7 +355,7 @@ export function registerJournalE2E(): void {
       const html = await res.text()
       expect(html).toMatch(/class="jd[\s"]/) // themed override reaches archived
       expect(html).toContain('aria-label="Breadcrumb"')
-      expect(html).toContain('No document at') // no such doc in archived
+      expect(html).toMatch(/No document at <code[\s>]/) // no such doc in archived
       expect(html).not.toContain('Nuxt Content fits this experiment') // did NOT leak current/architecture
     })
 

@@ -25,7 +25,7 @@ export function registerMiddenE2E(): void {
     it('renders the Midden front door', async () => {
       const html = await $fetch('/t/midden')
       expect(html).toMatch(/<h1[ >]/)
-      expect(html).not.toContain('No document at')
+      expect(html).not.toMatch(/No document at <code[\s>]/)
       expect(html.toLowerCase()).toContain('midden')
     })
 
