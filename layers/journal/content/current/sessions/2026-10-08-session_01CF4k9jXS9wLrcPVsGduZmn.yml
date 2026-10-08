@@ -1,14 +1,15 @@
 schemaVersion: 1
 session: session_01CF4k9jXS9wLrcPVsGduZmn
 startedAt: 2026-10-08T16:23:59Z
-endedAt: 2026-10-08T18:05:23Z
+endedAt: 2026-10-08T18:36:28Z
 kind: interactive
 goal: Design main-branch protection that keeps ADR-0009 session-log direct pushes working, verified against GitHub's docs
 status: in-review
 outcome: protect-main ruleset live on main (owner applied it by hand at 17:5x UTC; the proxy refuses the write), docs record it as current state, stage-2 App identity filed as issue 1689, PR 1690 in review
-summary: "Human-instructed: the owner asked for branch protection on main that does not hurt the current workflow, session logs included. Research first: every direct push and merge on main is actor feffef (100 of 100 direct pushes, all session-log commits), the cloud session's GH_TOKEN is the owner's OAuth token, and a ruleset bypass can name only a role, team or App, so the only bypass that lets the lander through today is Repository admin, which also covers every agent session. Per the owner's preference I asked before building. They chose a staged path (guardrail ruleset now, a GitHub App identity for the lander later, owner keeping a pull-request-only bypass in the end state) and asked me to apply the ruleset via the API; they confirmed the exact JSON. The proxy refused the POST to the rulesets endpoint, so the config became a Proposal (docs/proposals/348-protect-main-ruleset.md) with the one local gh command, and stage 2 became issue 1689 (ready-for-human: creating the App and its secrets is a human act; the lander change is a later gated PR). Agent-initiated within that scope: updating the July research note (status paragraph, plus the exempt bypass mode GitHub added in September 2025), an environment-caveats bullet for the proxy refusal, and widening the proposals README to admit repository settings. Rules deliberately left off because each would break the workflow: required approvals above 0 (the owner identity authors every PR and cannot self-approve), strict up-to-date branches, linear history, signed commits. Not verified from GitHub's docs: whether an Always bypass actor's REST merge passes a red check silently; recorded in the Proposal as a safety-net question only. Second human prompt: \"update all documentation as if the change was already applied\". Did that as a second commit: the research note's closing section became the single home for main's current state (rules, bypass, omitted rules and why, the JSON to re-create it); the Proposal file was deleted since a Proposal records pending intent; the Dependabot proposal's \"main has no branch protection\" rationale was reworded; ADR-0009 gained a dated amendment pointing at the research note; issue 1689 and the PR description were repointed. CLAUDE.md was left alone because the open prune trial's territory covers it. Stated plainly to the owner: the API still showed no ruleset at the time of writing, so the docs describe a state the owner must create by running the recorded command. The owner ran it during a /code-review of the branch; the live ruleset (id 24740110) matches the approved JSON exactly, and this log's own landing is the first session-log push through the admin bypass. Third human prompt: /code-review against origin/main, then \"fix all the findings\". Two review subagents (Standards, Spec) ran in parallel; their findings (research note contradicting itself between §4 and \"Current state\", a half-widened proposals README, duplicated rule values, a defaulted extra-approval parameter missing from the re-create JSON, \"every PR\" vs \"every agent PR\", stale \"main is unprotected\" lines in the rulebook migration table and the Journal history page) were all fixed in a third commit. The log's own landing after the ruleset went live shows result=bypass in the rule-suite log, which verified ADR-0009's path under the ruleset."
+summary: "Human-instructed: the owner asked for branch protection on main that does not hurt the current workflow, session logs included. Research first: every direct push and merge on main is actor feffef (100 of 100 direct pushes, all session-log commits), the cloud session's GH_TOKEN is the owner's OAuth token, and a ruleset bypass can name only a role, team or App, so the only bypass that lets the lander through today is Repository admin, which also covers every agent session. Per the owner's preference I asked before building. They chose a staged path (guardrail ruleset now, a GitHub App identity for the lander later, owner keeping a pull-request-only bypass in the end state) and asked me to apply the ruleset via the API; they confirmed the exact JSON. The proxy refused the POST to the rulesets endpoint, so the config became a Proposal (docs/proposals/348-protect-main-ruleset.md) with the one local gh command, and stage 2 became issue 1689 (ready-for-human: creating the App and its secrets is a human act; the lander change is a later gated PR). Agent-initiated within that scope: updating the July research note (status paragraph, plus the exempt bypass mode GitHub added in September 2025), an environment-caveats bullet for the proxy refusal, and widening the proposals README to admit repository settings. Rules deliberately left off because each would break the workflow: required approvals above 0 (the owner identity authors every PR and cannot self-approve), strict up-to-date branches, linear history, signed commits. Not verified from GitHub's docs: whether an Always bypass actor's REST merge passes a red check silently; recorded in the Proposal as a safety-net question only. Second human prompt: \"update all documentation as if the change was already applied\". Did that as a second commit: the research note's closing section became the single home for main's current state (rules, bypass, omitted rules and why, the JSON to re-create it); the Proposal file was deleted since a Proposal records pending intent; the Dependabot proposal's \"main has no branch protection\" rationale was reworded; ADR-0009 gained a dated amendment pointing at the research note; issue 1689 and the PR description were repointed. CLAUDE.md was left alone because the open prune trial's territory covers it. Stated plainly to the owner: the API still showed no ruleset at the time of writing, so the docs describe a state the owner must create by running the recorded command. The owner ran it during a /code-review of the branch; the live ruleset (id 24740110) matches the approved JSON exactly, and this log's own landing is the first session-log push through the admin bypass. Third human prompt: /code-review against origin/main, then \"fix all the findings\". Two review subagents (Standards, Spec) ran in parallel; their findings (research note contradicting itself between §4 and \"Current state\", a half-widened proposals README, duplicated rule values, a defaulted extra-approval parameter missing from the re-create JSON, \"every PR\" vs \"every agent PR\", stale \"main is unprotected\" lines in the rulebook migration table and the Journal history page) were all fixed in a third commit. The log's own landing after the ruleset went live shows result=bypass in the rule-suite log, which verified ADR-0009's path under the ruleset. Then CI went red on the docs PR while gate:scoped had passed: base drift, not the diff. A session log landed on main at 17:42 quoting the Journal's 404 text in an idea; the Journal index and Skills pages render it and the smoke test's plain substring check tripped, on main's own push gate too. With the owner's choice I cut a fix branch from main (PR 1695: match the 404 markup, seven assertion sites), proved it with a full local gate after a first run caught that the Journal's code tag carries a scoped-style attribute, ported the commit onto the docs branch, and left one standing-down comment on PR 1690."
 prs:
   - "1690"
+  - "1695"
 docsRead:
   - path: docs/research/github-branch-protection-vs-autonomous-log-commits.md
     reason: the existing home for this exact question; reused its verified facts and updated its status
@@ -54,24 +55,35 @@ frictions:
   - description: "SHELL-READ-DETECTION miss: `cat docs/adr/0009-session-logs-commit-directly-to-main.md && echo ===== && cat docs/adr/0003-agent-operating-model-and-governance.md && echo ===== && cat docs/adr/0004-objective-safety-gate.md` overflowed, the harness persisted the output to a tool-results file and showed a 2KB preview, and I read the full text with Read on that file; the detector credits only ADR-0009 (in the preview) and reports ADR-0003 and ADR-0004 as 'named by the command, but its output shows no line of this doc'. Both were read in full. Same session: .agents/skills/triage/SKILL.md was credited because an issue comment printed by `gh api .../issues/348/comments` quoted a line of it, which is a GitHub body echoing a doc, not a read."
     solution: "Let the trace follow a persisted-output pointer ('Full output saved to: <path>') and match the saved file's content, or treat a Read of a tool-results file as the Bash command's output. For the quoted-line case, consider excluding output of gh api calls that return GitHub bodies."
     severity: moderate
-durationSec: 6085
+  - description: "gate:scoped passed locally but CI failed on PR 1690: the docs changeset was Inert so e2e was skipped, and even a Full local gate would have passed because the trigger was a session log that reached main after the branch was cut (base drift, CI tests the merge ref). Cost: a diagnosis round, a second branch, two full local gates and a port."
+    solution: "Not a skip-logic hole: the Inert classification was right. The e2e assertions matched a phrase that real content can contain; fixed in PR 1695 by matching the 404 markup. A smoke assertion on rendered pages should match markup, never prose."
+    severity: major
+  - description: The e2e smoke tests' not.toContain('No document at') checks can be tripped by any Journal content that quotes the 404 page, which an idea in a session log did; main's push gate went red for three runs and every open PR with it.
+    solution: PR 1695 matches the markup. Consider the same review for other prose-substring assertions in the e2e suites.
+    severity: moderate
+  - description: MCP get_job_logs returned the whole 1.9 MB job log as one line and gh api's logs endpoint 302s to a blob URL the proxy forbids, so reading a CI failure needed a python slice of the persisted tool-result file.
+    solution: "Document the slice recipe in github-integration.md's get_job_logs bullet, or add a script that prints only the ##[error] lines and the vitest FAIL blocks."
+    severity: minor
+durationSec: 7950
 models:
-  claude-fable-5-1: 179
+  claude-fable-5-1: 239
 toolCounts:
-  Bash: 50
+  Bash: 71
   Read: 1
-  ToolSearch: 3
+  ToolSearch: 4
   WebFetch: 13
   WebSearch: 3
-  AskUserQuestion: 3
+  AskUserQuestion: 4
   mcp__github__issue_write: 2
-  mcp__github__create_pull_request: 1
-  mcp__claude-code-remote__subscribe_pr_activity: 1
+  mcp__github__create_pull_request: 2
+  mcp__claude-code-remote__subscribe_pr_activity: 2
   Skill: 2
-  ReadNotifications: 4
+  ReadNotifications: 5
   mcp__claude-code-remote__send_later: 2
   mcp__github__update_pull_request: 2
   Agent: 2
+  mcp__github__get_job_logs: 1
+  mcp__github__add_issue_comment: 1
 docsReadViaShell:
   - CONTEXT-MAP.md
   - CONTEXT.md
