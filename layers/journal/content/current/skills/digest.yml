@@ -111,3 +111,19 @@ observations:
       PR bodies exactly. Only `digest.ts` change in the window is the
       already-noted comment-only 2026-10-04 fix. No new post-merge
       correction beyond the already-known #1478 case. Grade unchanged.
+  - date: "2026-10-08"
+    note: >-
+      Re-checked (audit-skills behaviour check), 7 usedIn sessions. Newest,
+      session_01KCWd4fWsUfUxL6uT4Bephj (PR #1674, the 2026-10-07 Digest)
+      verified end-to-end: content matches primary sources (PRs #1645/#1655),
+      retention sweep moved exactly 1 digest + 12 session logs per
+      `RETAIN_DATES = 7`, genuine fact-check dispatch (22 claims, 1 reworded),
+      and the session correctly left the PR open/in-review for a human
+      because an out-of-scope e2e-test fix rode along — confirmed live via
+      GitHub (PR #1674 still open, gate green). Two separate retention-sweep
+      side-effect incidents this window (an unquoted YAML colon breaking the
+      gate, fixed via PR #1660; the sweep archiving a digest a blog e2e test
+      hard-coded, fixed inline) share the same underlying shape — the sweep's
+      side effects reach outside its own Space — but both were loudly caught
+      and fixed/escalated in the same run, not silent. Worth a human's
+      attention on a third occurrence. No new silent failure. Grade unchanged.

@@ -247,3 +247,29 @@ observations:
       with a session), both orphan candidates already resolved-by-annotation,
       no human-prompted or manually-rescued closures this window. Grade/role
       unchanged.
+  - date: "2026-10-08"
+    note: >-
+      Self-check: dispatched 11 behaviour-check subagents this run (one per
+      behaviourChecks entry), each report independently verified against
+      primary sources before use (every PR/issue claim checked live via
+      GitHub, several quoted log excerpts confirmed verbatim against the raw
+      session log). 3 new findings cleared the significant/repeated bar and
+      were filed as fresh issues (none had a standing open-issue home to
+      comment on instead): #1675 (auto-triage's PR #1630→#1631 revert
+      dropped a real friction's fix untracked), #1676 (frictions-to-fixes'
+      own new surface-blocked-filing rule, PR #1655, broke on its first live
+      test 2 hours after merging, and the run's `outcome` field hid it),
+      #1677 (prune-trial's narrow-margin scheduling miss hit the 5th instance
+      this Inventory's own 2026-10-04/06 entries set as the escalation
+      threshold). One comment with new evidence added to the already-open
+      #1647 (audit-docs' independent-checker dispatch fix held on its first
+      live test). The rest — blog-post, close-session, digest,
+      dispatch-subagents, log-session, visitor-loop — came back clean or
+      matched an already-tracked, already-open issue (#1515 confirmed closed;
+      #1586 confirmed still open with no new instance). Step 3 closure
+      completeness: orphan scan clean (`scanned: true`, 1071 merged PRs, 920
+      with a session), both orphan candidates carry `resolvedBy` (already
+      tracked, left alone), orphanSuppressionLog both entries
+      `resolved-annotation` with plausible issue numbers (healthy),
+      humanPromptedClosures and manuallyRescuedClosures both empty. Grade/role
+      unchanged.

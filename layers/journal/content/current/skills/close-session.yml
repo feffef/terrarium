@@ -143,3 +143,16 @@ observations:
       `window_not_used` empty again — every window session used it.
       session_01TMgZyrN42pwudxkUdHLKwP's stale log not re-checked, per the
       2026-10-06 settled-static-artifact call. Grade/role unchanged.
+  - date: "2026-10-08"
+    note: >-
+      Re-checked (audit-skills behaviour check), 10 usedIn invocations
+      (2026-10-01/02, all `kind: autonomous`, 10 merged PRs): 0/10 stale,
+      every claimed status matched live PR state. The two-step
+      finalize cycle (in-review → completed) independently re-verified
+      working cleanly in 6/10 sessions that needed it (exactly two Journal
+      commits each, verbatim-replace semantics honored, no field corruption
+      or duplicated frictions); the other 4 self-merged within one turn,
+      correctly single-commit. `window_not_used` empty, independently
+      corroborated by grepping every session log in the window for
+      `skillsUsed`. No reverts touching this Skill's mechanics. Grade/role
+      unchanged.

@@ -197,3 +197,17 @@ observations:
       reverting session itself — a previously-unlisted but correctly
       handled revert case, noted here for completeness. No new silent
       failure. Grade unchanged.
+  - date: "2026-10-08"
+    note: >-
+      Re-checked (audit-skills behaviour check), 8 usedIn sessions, 1 newly
+      audited beyond prior checks: session_01S6auRmvHwvmSRZNciYFDbD (blog
+      focus, PRs #1666/#1667) clean — 3-model dispatch, ≥2-visitor consensus,
+      code-review before merge, owner-memory step ran and correctly ruled
+      its candidates "not a ruling." Zero further skips of the owner-memory
+      step since PR #1623's title/branch-matching fix landed, across all 3
+      post-fix sessions now checked in full. The 2026-10-06/07 request for a
+      human spot-check on the next real revert/rework (to confirm the fixed
+      script catches one end-to-end, not just a same-day manual backfill)
+      remains unanswered — no new revert of visitor-loop work has landed
+      since #1619/#1624 (2026-10-05) to exercise it. No new silent failure.
+      Grade unchanged.
