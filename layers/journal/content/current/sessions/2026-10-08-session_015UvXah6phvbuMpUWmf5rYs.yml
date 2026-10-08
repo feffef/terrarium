@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_015UvXah6phvbuMpUWmf5rYs
 startedAt: 2026-10-08T13:18:00Z
-endedAt: 2026-10-08T13:28:05Z
+endedAt: 2026-10-08T14:25:16Z
 kind: autonomous
 goal: "Run the scheduled prune-trial: judge landed trials, open one new prune trial"
-status: in-review
-outcome: Two trials judged and deleted; git-conventions.md simplified (-30 lines); PR 1687 open
-summary: "Scheduled /prune-trial run, entirely agent-initiated under the stored prompt (no human instruction). Judged the PR-landing and ScheduleWakeup trials: no Friction or regression issue since landing traced to either, so both prunes held and their entries were deleted. The criterion-1 search subagent found no failed-prose rule clear of open trials' territory; guards.md was the largest runner-up but overlaps three open trials, so I simplified docs/agents/git-conventions.md whole (shallow section cut to a fallback, held by unshallow-on-start.ts) and opened a trial for it. Sonnet probe pinned to the pushed SHA answered all five situations correctly. gate:scoped passed; PR 1687 opened and subscribed. Open: merge via merge-pr.ts once green, after posting a verdict comment."
+status: completed
+outcome: Two trials judged and deleted; git-conventions.md simplified (-30 lines); PR 1687 merged by a human
+summary: "Scheduled /prune-trial run, entirely agent-initiated under the stored prompt (no human instruction). Judged the PR-landing and ScheduleWakeup trials: no Friction or regression issue since landing traced to either, so both prunes held and their entries were deleted. The criterion-1 search subagent found no failed-prose rule clear of open trials' territory; guards.md was the largest runner-up but overlaps three open trials, so I simplified docs/agents/git-conventions.md whole (shallow section cut to a fallback, held by unshallow-on-start.ts) and opened a trial for it. Sonnet probe pinned to the pushed SHA answered all five situations correctly. gate:scoped passed; PR 1687 opened and subscribed. The classifier denied my self-merge; a human merged. PR 1687 then merged."
 prs:
   - "1687"
 docsRead:
@@ -56,20 +56,23 @@ frictions:
   - description: Launched an unneeded no-op Workflow call without the user opting in; harmless but wasted a call.
     solution: Wait for the subagent notification instead of launching anything.
     severity: nit
-durationSec: 604
+durationSec: 4036
 models:
-  claude-sonnet-5-5: 65
+  claude-sonnet-5-5: 82
 toolCounts:
-  Bash: 14
+  Bash: 16
   Read: 5
   mcp__github__search_issues: 1
   Agent: 2
   Workflow: 1
-  ReadNotifications: 3
+  ReadNotifications: 7
   Write: 1
   mcp__github__create_pull_request: 2
   mcp__claude-code-remote__subscribe_pr_activity: 1
   Skill: 2
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 1
+  PushNotification: 1
 filesEdited:
   - docs/agents/git-conventions.md
 docsReadViaShell:
