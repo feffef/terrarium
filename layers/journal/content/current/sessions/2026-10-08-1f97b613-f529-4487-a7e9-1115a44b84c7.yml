@@ -1,20 +1,12 @@
 schemaVersion: 1
 session: 1f97b613-f529-4487-a7e9-1115a44b84c7
 startedAt: 2026-10-08T18:11:02Z
-endedAt: 2026-10-08T22:18:36Z
+endedAt: 2026-10-08T22:45:31Z
 kind: interactive
 goal: Research and write the brief for Terrarium overview diagrams (architecture plus the human/agent/GitHub improvement loop)
 status: in-review
 outcome: "One plain-language overview, docs/diagrams/terrarium-overview.md, after three review rounds and a grilling; in PR #1694"
-summary: |-
-  Human-instructed: the user asked for the research groundwork (not the diagrams) that a later session will use to draw two interactive diagrams. One covers the Nuxt app architecture. The other covers how humans, agent sessions and "gitlab" improve the Platform, with emphasis on the Routine and session-log self-improvement loop. Output: two markdown documents with pointers to real files, and explore agents allowed. The forge is GitHub; the briefs say so. Two Explore agents mapped the app and the process. I then verified their key claims against source: nuxt.config modules, gate.ts Floor/Heavy, deploy poll, Blog queryPages call, pr-workflow merge tiers, ADR-0003 ledger, settings.json hooks, merge-pr refusals, CI doorbell, session status enum and the scope of validate-skill-cadence. I tabulated Routine fire times from the 2026-10-01..08 session logs. The agent-proposed "routines fire every 90 min" reading was wrong; each fires once a day at a stable UTC time. The briefs also list doc/code gaps for honest drawing. Examples: the Platform home reads Tenant tables outside the Catalog; ideas are never promoted to issues; Dependabot auto-merge is still a Proposal. This same session id had already drawn diagrams before a /clear; this run produced only the research notes, as asked. The briefs live in docs/research/ (agent's choice of home). main was red on e2e because another session's log quotes the smoke test's 404 marker; the user said another session handles it, so I left it. Second round, human-instructed: the user asked for subagent reviews of both briefs. Questions: were all key components, actors and processes covered, and was anything over-explained? Two reviewer agents found real gaps that my first pass missed. Architecture: content files, Nuxt Content as the engine, the "decide it at build time" principle, GitHub as deploy source, layers changing Platform config. Process: Skill evolution, the issue lane, what the human actually does (mostly assessing Routine output), the auto-triage standing green-light, human idea harvest. They also found errors: "adding a Tenant needs nothing else", frictions-to-fixes hard-fix handling, a "four roles" list of five. And much over-detail (signatures, script names, times, PR numbers, plumbing). I spot-checked their claims (one miscount: the pack has 25 Skills, not 26). I grounded the human section in this week's human-started session goals. On the user's "yes" I rewrote both briefs and pushed a second commit to PR 1694. Third round, human-instructed: the user asked for another subagent review. The reviewers got the original task and the round-1 brief. The focus: what an outside visitor needs, facts, simple language over project jargon, and structured items that map onto diagram nodes. Both reviewers' key claims checked out: all 7 Tenants have their own pages, so the generic renderer is a fallback; Routine is defined in ADR-0010; there are four Observability altitudes; digest backfills; blog-post can add a reply. I rewrote both briefs: plain words with terms in parentheses, ADRs moved to Further reading, and node/edge tables per zoom. At the user's request I removed the cross-references to the Journal's own architecture/how-it-works pages and the companion/GitHub line. PR CI fails only on the inherited red-main e2e failure, which another session owns. Fourth round, human-instructed: the user asked for another review, then rewrites. Its concerns: plain language had drifted away from project terms, important concepts were missed (browse uncovered repo areas), and some minor things sounded too important. Mid-round the user added a fourth agent to compare the two briefs, said SKILL.md files beat the Journal's how-it-works.md for correctness, asked to write into docs/diagrams/, and said PR 1690 (protect-main ruleset) had merged. Four reviewers ran: two terminology, one repo coverage sweep, one cross-comparison. Verified fixes: my real-estate metaphor was wrong (floors/rooms instead of Spaces); Journal Spaces are current/archived; the Platform home also reads the Commons Timeline and a Midden component; frictions-to-fixes merge rules per SKILL.md; Proposals now cover repo settings too. The sweep's "main has no branch protection" claim was outdated: I read the live ruleset and the merged 1690 doc. Conflict resolved: the comparison reviewer wanted plain labels with terms in parentheses, but the user's goal is mapping back to project terms, so labels are glossary terms with plain subtitles. The briefs moved to docs/diagrams/ and were rewritten to one shared structure; the branch was rebased onto main and force-pushed. Fifth round, human-instructed: the maintainer reported that the diagrams built from those briefs didn't work. The jargon ("Trusted human") hurt, and manifest expansion, routing map and catalog got too much room. The briefs also never showed that guidance, skills, logs, content and code all live in one GitHub repo that Nuxt Content turns into a database at build time. Asked for one new brief, grouped by where things live (GitHub, Claude, Docker host, browser), plus research on the SSR engine and payload.json. Research in the installed packages: Nitro node-server runs Vue's server renderer; Nuxt Content ships compressed SQL dumps and loads each into SQLite on its first query; later clicks fetch _payload.json. Grilled the layout over three rounds (grill-with-docs). Decisions: maintainer/ visitor; six repo parts (agent guidance, skills, guards & hooks, app code, site content, session logs); logs and skill inventory as double-duty content; site content as tenants > spaces > collections, with the Journal expanded as the example; click-a-component stories (13) instead of scenario buttons; Part 1 prose for reuse, Part 2 visualisation ideas. Wrote docs/diagrams/terrarium-overview.md and deleted the two old briefs. Sixth round (2026-10-09), human-instructed review of the overview. Changes made: - Added a ground-truth note: ADRs, docs/agents, skills, scripts, app code, and the Journal's logs
-    and inventory are ground truth; other .md files may lag.
-  - Regrouped agent guidance: rules & reference, skills, guards & hooks, helper scripts. Checked
-    which scripts read logs and inventory; my first claim that the ideas page uses scripts/ideas.ts
-    was wrong, so I fixed it.
-  - Tenants differ in purpose and structure, not just design. - Researched how Vue, Nuxt, Nitro and Nuxt Content relate; a server-side queryCollection goes
-    through Nuxt Content's Nitro route to SQLite.
-  - Added the optional code-review step (26 of 110 logs). - Described audit-docs by its eight angles. - Guards explain as well as block.
+summary: "Human-instructed throughout (interactive). The maintainer asked for research a later session would use to draw two interactive Terrarium diagrams: the Nuxt architecture, and how humans, agent sessions and GitHub improve the platform. The user wrote \"gitlab\"; the forge is GitHub. I drafted two briefs from two Explore agents' maps. Three subagent review rounds at the maintainer's request reworked them: completeness and clutter; plain language and diagram-ready tables; project terms and a side-by-side comparison. The diagrams built from those briefs didn't work, so the maintainer asked for one new overview instead. After grill-with-docs settled the layout, docs/diagrams/terrarium-overview.md replaced both briefs. It has two parts: Part 1 is plain prose grouped by where things live (people, Claude, GitHub, Docker host, browser). Part 2 holds visualisation ideas: groups that open only when one of 11 stories needs them. Two more review rounds followed: maintainer feedback, then four model-paired reviewers plus a fact-finder. They brought research against the installed packages: how Vue, Nuxt, Nitro and Nuxt Content relate; that only /t/ pages get a _payload.json, while the home page queries a browser SQLite copy; and what the protect-main ruleset (PR 1690) enforces. Skill files and code were treated as ground truth over Journal explainer pages. The main lesson is logged as a major friction: review rounds polished the framing instead of questioning it. PR 1694 is open with green CI; a human merges it."
 prs:
   - "1694"
 docsRead:
@@ -42,6 +34,8 @@ docsRead:
     reason: (read before editing)
   - path: layers/journal/content/current/pages/how-it-works.md
     reason: (no reason given)
+  - path: docs/diagrams/terrarium-overview.md
+    reason: (read before editing)
 skillsUsed:
   - name: close-session
     reason: closure at PR-open
@@ -58,6 +52,12 @@ skillsUsed:
   - name: reload-plugins
     reason: (invoked as a slash command)
 frictions:
+  - description: My own research for the overview stopped at the /t/ cache route and generalised it into 'the browser never queries the database'. The payload rule (only cached routes get _payload.json) was in the same file I had read, and a later fact-finder caught it.
+    solution: When generalising runtime behaviour from one route, check the condition that gates it (here shouldLoadPayload / routeRules) and name the exceptions
+    severity: minor
+  - description: "The overview's first draft carried several unchecked simplifications: guards as 'code that blocks', audit-docs as 'docs vs code', 'Nitro runs the Vue app', and 'design' as the only difference between tenants. Each was easy to verify in the skill or guard docs but went unchecked until the maintainer's review."
+    solution: Before handing over a plain-language summary, re-read the primary file behind each one-line description (SKILL.md, guards.md, the package source) and check the simplification still holds
+    severity: moderate
   - description: Three review rounds optimised the two briefs locally (terms, tables, completeness) but never questioned their framing. The diagrams built from them missed the most basic fact (everything lives in one repo and becomes a database at build time) and over-weighted build internals; only the maintainer's verdict on the rendered diagrams exposed it
     solution: For overview docs, start by grilling the maintainer on the framing (zones, audience, what one picture must show) before any review rounds polish the details
     severity: major
@@ -91,17 +91,14 @@ frictions:
   - description: "Could not subscribe to PR activity: this local CLI session has no mcp__github__subscribe_pr_activity tool, so babysitting depends on the user returning"
     solution: pr-workflow.md could name the local-CLI fallback (gh pr checks --watch, or hand-off to the human)
     severity: minor
-  - description: "The overview's first draft carried several unchecked simplifications: guards as 'code that blocks', audit-docs as 'docs vs code', 'Nitro runs the Vue app', and 'design' as the only difference between tenants. Each was easy to verify in the skill or guard docs but went unchecked until the maintainer's review."
-    solution: Before handing over a plain-language summary, re-read the primary file behind each one-line description (SKILL.md, guards.md, the package source) and check the simplification still holds
-    severity: moderate
-durationSec: 14854
+durationSec: 16469
 models:
-  claude-opus-5-5: 383
+  claude-opus-5-5: 421
 toolCounts:
-  Bash: 112
-  Agent: 10
-  Write: 12
-  Edit: 23
+  Bash: 119
+  Agent: 15
+  Write: 13
+  Edit: 25
   Read: 9
   Skill: 5
   Artifact: 1
@@ -131,29 +128,31 @@ docsReadViaShell:
   - .agents/skills/audit-skills/SKILL.md
   - .agents/skills/audit-docs/SKILL.md
   - docs/agents/guards.md
-  - docs/diagrams/terrarium-overview.md
+  - docs/adr/0009-session-logs-commit-directly-to-main.md
+  - docs/agents/github-integration.md
+  - docs/adr/0017-provenance-footer-on-agent-authored-content.md
+  - docs/adr/0011-poc-self-updating-deploy-container.md
+  - docs/adr/0015-audit-skills-and-conditional-importance.md
+  - docs/adr/0023-guest-driven-demo-pipeline.md
+  - docs/adr/0027-prune-trials.md
+  - .agents/skills/auto-triage/SKILL.md
+  - .agents/skills/digest/SKILL.md
+  - docs/research/making-repo-public.md
   - docs/adr/0008-self-documentation-tenant-is-a-journal.md
   - docs/adr/0012-cross-persona-pingbacks-via-authored-denormalization.md
-  - docs/adr/0017-provenance-footer-on-agent-authored-content.md
   - docs/adr/0021-multi-context-domain-docs.md
   - docs/adr/0024-build-time-mermaid-prerender.md
   - docs/adr/0026-gate-workflow-thin-shell.md
-  - docs/adr/0015-audit-skills-and-conditional-importance.md
   - docs/adr/0005-skill-model.md
   - .agents/skills/prune-trial/SKILL.md
-  - docs/research/making-repo-public.md
   - docs/research/public-readiness-review.md
   - docs/research/rulebook-migration-table.md
   - docs/research/shell-reads-by-output-matching.md
   - docs/research/github-actions-public-vs-private-limits.md
   - docs/proposals/1633-dependabot-automerge.md
   - docs/agents/guest-contributions.md
-  - docs/adr/0027-prune-trials.md
-  - .agents/skills/digest/SKILL.md
-  - docs/agents/github-integration.md
   - .agents/skills/ask-matt/SKILL.md
   - .agents/skills/atlas-specimen/SKILL.md
-  - .agents/skills/auto-triage/SKILL.md
   - .agents/skills/claude-handoff/SKILL.md
   - .agents/skills/close-session/SKILL.md
   - .agents/skills/code-review/SKILL.md
@@ -188,22 +187,21 @@ docsReadViaShell:
   - docs/agents/issue-tracker.md
   - docs/agents/triage-labels.md
   - layers/journal/CONTEXT.md
-  - docs/adr/0009-session-logs-commit-directly-to-main.md
-  - docs/adr/0023-guest-driven-demo-pipeline.md
   - docs/adr/0004-objective-safety-gate.md
   - .agents/skills/triage/AGENT-BRIEF.md
   - docs/adr/0020-requester-trust-tiers.md
-  - docs/adr/0011-poc-self-updating-deploy-container.md
   - docs/adr/0001-single-container-baked-multitenancy.md
+  - docs/agents/verifying-ui-changes.md
+  - docs/adr/0013-dynamic-content-config-committed-routing-map.md
+  - docs/adr/0019-patched-nuxt-content-client-db-loading.md
+  - docs/adr/0025-cross-tenant-catalog-and-collection-kinds.md
+  - docs/diagrams/terrarium-overview.md
+  - docs/adr/0007-generated-config-committed-drift-checked.md
   - docs/adr/0002-manifest-driven-config-generation.md
   - docs/adr/0006-runtime-routing-path-prefix.md
-  - docs/adr/0007-generated-config-committed-drift-checked.md
-  - docs/adr/0013-dynamic-content-config-committed-routing-map.md
   - docs/adr/0014-build-time-virtual-routing-module.md
   - docs/adr/0016-tenant-root-layer-routes.md
   - docs/adr/0018-tenant-layers-under-layers-directory.md
-  - docs/adr/0019-patched-nuxt-content-client-db-loading.md
-  - docs/adr/0025-cross-tenant-catalog-and-collection-kinds.md
   - docs/agents/tenant-layers.md
   - layers/midden/CONTEXT.md
   - layers/marquee/CONTEXT.md
@@ -229,6 +227,20 @@ subagents:
     task: "Round 3: repo coverage sweep"
   - type: Explore
     task: "Round 3: cross-compare both briefs"
+  - type: Explore
+    task: Missing-concepts review (Fable)
+    model: fable
+  - type: Explore
+    task: Missing-concepts review (Opus)
+    model: opus
+  - type: Explore
+    task: Clutter review (Fable)
+    model: fable
+  - type: Explore
+    task: Clutter review (Opus)
+    model: opus
+  - type: Explore
+    task: Explain open questions
 gitBranch: main
 entrypoint: cli
 cliVersion: 2.1.294
