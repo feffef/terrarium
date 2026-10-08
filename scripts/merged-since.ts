@@ -7,7 +7,9 @@
 // an `isMerge` flag so a PR-merge commit (`Merge pull request #N …`) stands
 // out from a direct-to-`main` session/doc commit (ADR-0009).
 //
-// Usage:  tsx scripts/merged-since.ts <iso-instant> [<iso-instant> ...]
+// Usage:  tsx scripts/merged-since.ts [--merges-only] <iso-instant> [<iso-instant> ...]
+//   --merges-only keeps only `isMerge: true` commits: the full list runs to
+//   ~1200 lines for a 3-day window, enough to overflow a subagent tool result.
 //   With a single instant: prints every origin/main commit strictly after it
 //   as JSON — hash, isoCommitTime (UTC, "...Z"), subject, isMerge. Newest-first.
 //   Unchanged from before #412.
@@ -80,11 +82,12 @@ export function toUtcIso(iso: string): string {
  *  not retire it (that friction is a regression, not fixed). A single-instant
  *  call (`sinceUtcIso.length === 1`) filters/sorts/normalizes identically to
  *  the pre-#412 single-string version — `afterAll` is the only addition. */
-export function mergedSince(commits: RawCommit[], sinceUtcIso: string[]): AnnotatedCommit[] {
+export function mergedSince(commits: RawCommit[], sinceUtcIso: string[], mergesOnly = false): AnnotatedCommit[] {
   const sinceMsList = sinceUtcIso.map((iso) => ({ iso, ms: Date.parse(iso) }))
   return commits
     .map((c) => ({ ...c, ms: Date.parse(c.isoCommitTime) }))
     .filter((c) => sinceMsList.some((s) => c.ms > s.ms))
+    .filter((c) => !mergesOnly || isMergeSubject(c.subject))
     .sort((a, b) => b.ms - a.ms)
     .map(({ hash, isoCommitTime, subject, ms }) => ({
       hash,
@@ -122,9 +125,9 @@ function readCommits(cwd = root, sinceBoundUtcIso?: string): RawCommit[] {
 
 // ── Command ─────────────────────────────────────────────────────────────────
 
-export function mergedSinceOnMain(sinceUtcIso: string[], cwd = root): AnnotatedCommit[] {
+export function mergedSinceOnMain(sinceUtcIso: string[], cwd = root, mergesOnly = false): AnnotatedCommit[] {
   const earliest = sinceUtcIso.reduce((min, iso) => (Date.parse(iso) < Date.parse(min) ? iso : min))
-  return mergedSince(readCommits(cwd, earliest), sinceUtcIso)
+  return mergedSince(readCommits(cwd, earliest), sinceUtcIso, mergesOnly)
 }
 
 // ── CLI ───────────────────────────────────────────────────────────────────────
@@ -135,12 +138,14 @@ function fail(msg: string): never {
 }
 
 function main(): void {
-  const argv = process.argv.slice(2)
-  if (argv.length === 0) fail('usage: tsx scripts/merged-since.ts <iso-instant> [<iso-instant> ...]')
+  const args = process.argv.slice(2)
+  const mergesOnly = args.includes('--merges-only')
+  const argv = args.filter((a) => a !== '--merges-only')
+  if (argv.length === 0) fail('usage: tsx scripts/merged-since.ts [--merges-only] <iso-instant> [<iso-instant> ...]')
   for (const arg of argv) {
     if (Number.isNaN(Date.parse(arg))) fail(`not a valid ISO instant: ${arg}`)
   }
-  const results = mergedSinceOnMain(argv)
+  const results = mergedSinceOnMain(argv, root, mergesOnly)
   // Single-instant callers (the pre-#412 contract) get the pre-#412 shape
   // back — `afterAll` is trivially every result's whole input and adds
   // nothing, so it's dropped rather than sprung on existing consumers.
