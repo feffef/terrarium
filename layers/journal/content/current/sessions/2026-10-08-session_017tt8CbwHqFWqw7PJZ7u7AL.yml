@@ -1,0 +1,174 @@
+schemaVersion: 1
+session: session_017tt8CbwHqFWqw7PJZ7u7AL
+startedAt: 2026-10-08T04:01:44Z
+endedAt: 2026-10-08T04:21:33Z
+kind: autonomous
+goal: "Scheduled /audit-docs sweep: keep Live docs honest against the code, concision family docs/agents/*"
+status: in-review
+outcome: "PR #1681 open with 72 checker-confirmed doc fixes, local gate green, awaiting CI then self-merge"
+summary: "Entirely agent-run from the schedule's stored /audit-docs prompt; no human prompted. Five read-only reviewer agents covered freshness, single-home, two concision halves (family 1, docs/agents/*) and coherence. I deduped their findings, left out Prune Trial territory, ADR/CI edits and larger moves, and had five independent checkers re-derive the rest. 72 were confirmed or corrected, 5 were WRONG (e2e-rule move, two ADR conflicts that were really different hook kinds, a visitor-loop timing claim, a dispatch-subagents edit inside an open trial). Applied the confirmed edits with a line-range script, fixed two markdown breakages my wrapper introduced (a lost blockquote marker and a fence at line start), passed pnpm gate:scoped, pushed and opened PR #1681. No issue was filed because no true factual conflict survived checking. Open: the dependabot-automerge workflow exists only as proposal #1633 while dependabot.yml and ADR-0003 describe it as live; that is human-only and is noted in the PR."
+prs:
+  - "1681"
+docsRead:
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: .agents/prune-trials.yml
+    reason: (no reason given)
+  - path: docs/agents/issue-tracker.md
+    reason: (no reason given)
+  - path: docs/agents/mdc-when-to-use.md
+    reason: (no reason given)
+  - path: docs/agents/tenant-layers.md
+    reason: (no reason given)
+  - path: docs/agents/guards.md
+    reason: (no reason given)
+  - path: docs/agents/guest-contributions.md
+    reason: (no reason given)
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: (no reason given)
+  - path: docs/agents/triage-labels.md
+    reason: (no reason given)
+  - path: docs/agents/verifying-ui-changes.md
+    reason: (no reason given)
+  - path: docs/agents/domain.md
+    reason: (no reason given)
+  - path: docs/agents/environment-caveats.md
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: audit-docs
+    reason: (invoked as a slash command)
+frictions:
+  - description: Checkers cannot see my context, so I retyped about 12k tokens of reviewer findings into scratchpad pool files before they could be verified.
+    solution: Have reviewers write findings to a scratchpad file themselves (numbered, with exact replacement text) so checkers can read them directly.
+    severity: moderate
+  - description: Reviewer line spans often included heading or blank lines, or started mid-line; checkers had to correct about a dozen ranges, and my first apply script mis-wrapped nested blockquote text.
+    solution: Ask reviewers for exact start and end lines of the body only and to flag mid-line starts; verify the diff for markdown structure after any scripted edit.
+    severity: minor
+  - description: I wrote an unverified verdict count (75, then 42 rewrites) into the first PR body and corrected it minutes later after counting the checker results.
+    solution: "Count verdicts from the checker reports before drafting the PR body (CLAUDE.md: a count is a fact only after reading every item)."
+    severity: nit
+  - description: The Stop hook demanded a push while the gate was still running; CLAUDE.md says to wait, so I had to hold the push against the hook's reminder.
+    solution: "Known: the hook cannot see a running gate (CLAUDE.md Self-verification). No change needed."
+    severity: nit
+  - description: audit-docs and other Skills still cite CLAUDE.md's 'branch-off rule' and 'index', which a recent CLAUDE.md trial removed, so the dropped pointers broke several referrers.
+    solution: When a prune trial rewrites CLAUDE.md, grep removed section names across Skills and docs in the same PR; this run fixed the ones outside trial territory.
+    severity: minor
+durationSec: 1190
+models:
+  claude-sonnet-5-5: 85
+toolCounts:
+  Bash: 22
+  Read: 3
+  Agent: 10
+  bash: 1
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__update_pull_request: 1
+  mcp__github__add_issue_comment: 1
+  mcp__github__subscribe_pr_activity: 1
+  Skill: 2
+docsReadViaShell:
+  - CONTEXT-MAP.md
+  - CONTEXT.md
+  - docs/agents/domain.md
+  - docs/agents/environment-caveats.md
+  - docs/agents/git-conventions.md
+  - docs/agents/github-integration.md
+  - docs/agents/guards.md
+  - docs/agents/guest-contributions.md
+  - docs/agents/issue-tracker.md
+  - docs/agents/mdc-when-to-use.md
+  - docs/agents/pr-workflow.md
+  - docs/agents/tenant-layers.md
+  - .agents/skills/setup-matt-pocock-skills/triage-labels.md
+  - docs/agents/verifying-ui-changes.md
+  - docs/agents/triage-labels.md
+  - .agents/skills/audit-docs/SKILL.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - .agents/skills/log-session/SKILL.md
+  - .agents/skills/auto-triage/SKILL.md
+  - docs/proposals/README.md
+  - docs/research/nuxt-content-review-grounding.md
+  - docs/adr/0004-objective-safety-gate.md
+  - docs/adr/0003-agent-operating-model-and-governance.md
+  - docs/adr/0002-manifest-driven-config-generation.md
+  - docs/adr/0007-generated-config-committed-drift-checked.md
+  - docs/adr/0013-dynamic-content-config-committed-routing-map.md
+  - docs/adr/0006-runtime-routing-path-prefix.md
+  - docs/adr/0016-tenant-root-layer-routes.md
+  - docs/adr/0018-tenant-layers-under-layers-directory.md
+  - layers/journal/CONTEXT.md
+  - docs/adr/0025-cross-tenant-catalog-and-collection-kinds.md
+  - docs/adr/0009-session-logs-commit-directly-to-main.md
+  - .agents/skills/close-session/SKILL.md
+  - .agents/skills/dispatch-subagents/SKILL.md
+  - .agents/skills/prune-trial/SKILL.md
+  - docs/adr/0027-prune-trials.md
+  - docs/adr/0017-provenance-footer-on-agent-authored-content.md
+  - docs/adr/0026-gate-workflow-thin-shell.md
+  - .agents/skills/guest-build/SKILL.md
+  - .agents/skills/digest/SKILL.md
+  - .agents/skills/setup-matt-pocock-skills/SKILL.md
+  - .agents/skills/audit-skills/SKILL.md
+  - .agents/skills/blog-post/SKILL.md
+  - docs/adr/0005-skill-model.md
+  - .agents/skills/ask-matt/SKILL.md
+  - .agents/skills/claude-handoff/SKILL.md
+  - .agents/skills/research/SKILL.md
+  - layers/commons/CONTEXT.md
+  - layers/marquee/CONTEXT.md
+  - layers/blog/CONTEXT.md
+  - layers/atlas/CONTEXT.md
+  - layers/midden/CONTEXT.md
+  - .agents/skills/midden-survey/SKILL.md
+  - layers/tinkerfund/CONTEXT.md
+  - docs/research/github-branch-protection-vs-autonomous-log-commits.md
+  - docs/research/public-readiness-review.md
+  - docs/research/making-repo-public.md
+  - docs/research/rulebook-migration-table.md
+  - docs/research/content-client-queries-without-wasm.md
+  - docs/research/mermaid-server-side-rendering.md
+  - docs/research/shell-reads-by-output-matching.md
+  - docs/research/github-actions-public-vs-private-limits.md
+  - .agents/skills/visitor-loop/SKILL.md
+  - .agents/skills/guest-intake/SKILL.md
+  - docs/adr/0021-multi-context-domain-docs.md
+  - docs/adr/0020-requester-trust-tiers.md
+  - .agents/skills/atlas-specimen/SKILL.md
+  - docs/proposals/1633-dependabot-automerge.md
+  - .agents/skills/tinkerfund-campaign/SKILL.md
+  - docs/adr/0015-audit-skills-and-conditional-importance.md
+subagents:
+  - type: general-purpose
+    task: Freshness review (drift, orphan)
+  - type: general-purpose
+    task: Single-home review (dup, mislocation)
+  - type: general-purpose
+    task: Concision review docs/agents A
+  - type: general-purpose
+    task: Concision review docs/agents B
+  - type: general-purpose
+    task: Coherence review (contradiction, ambiguity)
+  - type: general-purpose
+    task: Fact-check pool A (1-15)
+  - type: general-purpose
+    task: Fact-check pool A (16-30)
+  - type: general-purpose
+    task: Fact-check pool B (1-20)
+  - type: general-purpose
+    task: Fact-check pool B (21-35)
+  - type: general-purpose
+    task: Fact-check pool C (drift/coherence)
+gitBranch: claude/festive-mayer-1o4stf
+entrypoint: remote_trigger
+cliVersion: 2.1.293
+trigger: audit-docs
+landedBy: Stop
