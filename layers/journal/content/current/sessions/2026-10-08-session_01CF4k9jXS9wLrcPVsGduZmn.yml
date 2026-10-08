@@ -1,0 +1,92 @@
+schemaVersion: 1
+session: session_01CF4k9jXS9wLrcPVsGduZmn
+startedAt: 2026-10-08T16:23:59Z
+endedAt: 2026-10-08T16:44:16Z
+kind: interactive
+goal: Design main-branch protection that keeps ADR-0009 session-log direct pushes working, verified against GitHub's docs
+status: in-review
+outcome: Ruleset approved by the owner but the proxy refused the API write; shipped as a Proposal plus the stage-2 App-identity issue (PR 1690, issue 1689)
+summary: "Human-instructed: the owner asked for branch protection on main that does not hurt the current workflow, session logs included. Research first: every direct push and merge on main is actor feffef (100 of 100 direct pushes, all session-log commits), the cloud session's GH_TOKEN is the owner's OAuth token, and a ruleset bypass can name only a role, team or App, so the only bypass that lets the lander through today is Repository admin, which also covers every agent session. Per the owner's preference I asked before building. They chose a staged path (guardrail ruleset now, a GitHub App identity for the lander later, owner keeping a pull-request-only bypass in the end state) and asked me to apply the ruleset via the API; they confirmed the exact JSON. The proxy refused the POST to the rulesets endpoint, so the config became a Proposal (docs/proposals/348-protect-main-ruleset.md) with the one local gh command, and stage 2 became issue 1689 (ready-for-human: creating the App and its secrets is a human act; the lander change is a later gated PR). Agent-initiated within that scope: updating the July research note (status paragraph, plus the exempt bypass mode GitHub added in September 2025), an environment-caveats bullet for the proxy refusal, and widening the proposals README to admit repository settings. Rules deliberately left off because each would break the workflow: required approvals above 0 (the owner identity authors every PR and cannot self-approve), strict up-to-date branches, linear history, signed commits. Not verified from GitHub's docs: whether an Always bypass actor's REST merge passes a red check silently; recorded in the Proposal as a safety-net question only."
+prs:
+  - "1690"
+docsRead:
+  - path: docs/research/github-branch-protection-vs-autonomous-log-commits.md
+    reason: the existing home for this exact question; reused its verified facts and updated its status
+  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
+    reason: the exception the ruleset must keep intact
+  - path: docs/adr/0003-agent-operating-model-and-governance.md
+    reason: who merges what, to know which rules would break self-merges
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: the gate as required check; human-only surfaces
+  - path: docs/proposals/README.md
+    reason: Proposal format; widened it to repository settings
+  - path: docs/agents/environment-caveats.md
+    reason: required before debugging the proxy 403; added the ruleset-write bullet
+skillsUsed:
+  - name: close-session
+    reason: closure at PR open
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: The agent proxy refuses POST repos/{owner}/{repo}/rulesets (403 'Write access to this GitHub API path is not permitted'), so the owner-approved ruleset could not be applied from the session.
+    solution: Recorded in environment-caveats; the config shipped as a Proposal with a one-line local gh command. Stage 2 (issue 1689) notes the same proxy may block an App token mint.
+    severity: moderate
+  - description: docs.github.com and github.blog are blocked by the egress proxy, so GitHub's own ruleset docs and the exempt-mode changelog could not be read first-hand.
+    solution: Used raw.githubusercontent.com/github/docs reusables (already the documented workaround) and the Terraform provider's ruleset docs for the REST schema; marked the changelog fact as second-hand in the research note.
+    severity: minor
+  - description: The proxy also blocks non-repo-scoped REST paths (apps/github-actions, repos/.../collaborators), needed for the required check's integration_id.
+    solution: Read the app id from a PR head's check-runs payload (.check_runs[].app.id), a repo-scoped path; noted in the environment-caveats bullet.
+    severity: nit
+  - description: WebFetch caps quotations at 125 characters, so verifying doc wording needs several fetches and paraphrase instead of one verbatim read.
+    solution: Ask for summaries plus short key quotes; keep the primary-source citation in the research note rather than the quote.
+    severity: nit
+  - description: Ran gh api read calls (rulesets, branch protection, activity) before reading docs/agents/github-integration.md, against CLAUDE.md's read-before-first-GitHub-operation rule; no harm, the doc then confirmed gh api reads are the right tool in the cloud.
+    solution: Read the doc in the same first batch as CONTEXT.md when the task is GitHub-shaped.
+    severity: nit
+  - description: The harness's auto mode instructs reading files with cat/sed while CLAUDE.md says use the Read tool; followed auto mode for most doc reads.
+    solution: None needed if the shell-read detector credits them (it did); otherwise CLAUDE.md's rule should say the detector makes shell reads acceptable.
+    severity: nit
+  - description: The harness Stop hook demanded a push while gate:scoped was still running, as CLAUDE.md predicts.
+    solution: Already documented; ignored it and pushed after the gate passed.
+    severity: nit
+  - description: "SHELL-READ-DETECTION miss: `cat docs/adr/0009-session-logs-commit-directly-to-main.md && echo ===== && cat docs/adr/0003-agent-operating-model-and-governance.md && echo ===== && cat docs/adr/0004-objective-safety-gate.md` overflowed, the harness persisted the output to a tool-results file and showed a 2KB preview, and I read the full text with Read on that file; the detector credits only ADR-0009 (in the preview) and reports ADR-0003 and ADR-0004 as 'named by the command, but its output shows no line of this doc'. Both were read in full. Same session: .agents/skills/triage/SKILL.md was credited because an issue comment printed by `gh api .../issues/348/comments` quoted a line of it, which is a GitHub body echoing a doc, not a read."
+    solution: "Let the trace follow a persisted-output pointer ('Full output saved to: <path>') and match the saved file's content, or treat a Read of a tool-results file as the Bash command's output. For the quoted-line case, consider excluding output of gh api calls that return GitHub bodies."
+    severity: moderate
+durationSec: 1217
+models:
+  claude-fable-5-1: 96
+toolCounts:
+  Bash: 27
+  Read: 1
+  ToolSearch: 2
+  WebFetch: 13
+  WebSearch: 3
+  AskUserQuestion: 2
+  mcp__github__issue_write: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+  Skill: 2
+docsReadViaShell:
+  - CONTEXT-MAP.md
+  - CONTEXT.md
+  - docs/adr/0009-session-logs-commit-directly-to-main.md
+  - docs/agents/github-integration.md
+  - docs/agents/git-conventions.md
+  - docs/proposals/README.md
+  - docs/adr/0026-gate-workflow-thin-shell.md
+  - docs/proposals/1633-dependabot-automerge.md
+  - docs/agents/pr-workflow.md
+  - docs/agents/environment-caveats.md
+  - docs/research/github-branch-protection-vs-autonomous-log-commits.md
+  - .agents/skills/triage/SKILL.md
+  - docs/agents/issue-tracker.md
+  - docs/agents/triage-labels.md
+  - docs/adr/0017-provenance-footer-on-agent-authored-content.md
+  - docs/agents/guards.md
+gitBranch: claude/loving-faraday-ogujg7
+entrypoint: remote
+cliVersion: 2.1.294
+learnings:
+  - GitHub's activity REST endpoint (repos/{o}/{r}/activity?activity_type=direct_push&ref=refs/heads/main) shows the pushing actor per direct push; it proved in one call that every session-log push is the owner's identity.
+  - The Terraform GitHub provider's repository_ruleset docs mirror the REST ruleset schema (RepositoryRole ids maintain=2, write=4, admin=5; bypass modes always, pull_request, exempt) and are reachable when docs.github.com is not.
+landedBy: Stop
