@@ -1,0 +1,67 @@
+schemaVersion: 1
+session: session_01UvFUKPkQSkZS1qS7VndRqX
+startedAt: 2026-10-08T05:38:48Z
+endedAt: 2026-10-08T05:48:43Z
+kind: interactive
+goal: Assess the proposed fix in issue 1679 (blog-post session-log pin rule) and implement it
+status: in-review
+outcome: Rule rewritten in the blog-post Skill; PR 1682 open with a green scoped gate, awaiting CI and merge
+summary: "The user asked for my thoughts on issue 1679 (human-instructed). I read the issue and the Skill and recommended a goal-stated rule (pin to an origin/main commit whose version contains the quote) plus a git log -S fallback, and a merged_at duration rule placed beside the existing ordering rule; I asked two questions first, per the user's preference. The user then explicitly told me to implement it with the -S fallback (human-instructed). I edited only .agents/skills/blog-post/SKILL.md, ran gate:scoped (green), committed, pushed, opened PR 1682 and subscribed. Opening the PR and invoking close-session were agent-initiated per CLAUDE.md. Still open: what to cite for a log not yet on origin/main (flagged in the PR body, not decided)."
+prs:
+  - "1682"
+docsRead:
+  - path: CONTEXT.md
+    reason: domain terms at session start
+  - path: docs/agents/github-integration.md
+    reason: required before the first GitHub call
+  - path: docs/agents/git-conventions.md
+    reason: required before commit and fetch; origin/main-scoped -S guidance
+  - path: docs/agents/pr-workflow.md
+    reason: required before opening the PR
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: the file edited
+  - path: CONTEXT-MAP.md
+    reason: (no reason given)
+  - path: CLAUDE.md
+    reason: (no reason given)
+skillsUsed:
+  - name: blog-post
+    reason: edited its citing-facts reference
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: CLAUDE.md says check that no PR exists for the branch before opening one; I opened PR 1682 without checking.
+    solution: Run list_pull_requests with head filter before create_pull_request; it was harmless here because the branch was fresh.
+    severity: nit
+  - description: CLAUDE.md says to read in full every ADR covering a touched file; I only grepped ADR-0003/0004/0015 matches for the Skill path and did not read them.
+    solution: Clarify whether a Skill-text edit needs ADR-0003's ledger row read; a grep hit on the bare name blog-post matches five ADRs and is too broad to act on.
+    severity: minor
+  - description: The harness attribution reminder says to end commits and PR bodies with trailers, but CLAUDE.md says never hand-write the commit trailer; I followed CLAUDE.md and the hook added it.
+    solution: Make the harness reminder and CLAUDE.md agree, or point CLAUDE.md at the guard that names the marker.
+    severity: nit
+durationSec: 595
+models:
+  claude-sonnet-5-5: 45
+toolCounts:
+  Read: 8
+  ToolSearch: 1
+  mcp__github__issue_read: 2
+  Grep: 1
+  Bash: 8
+  Edit: 2
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+  Skill: 2
+filesEdited:
+  - .agents/skills/blog-post/SKILL.md
+docsReadViaShell:
+  - docs/adr/0015-audit-skills-and-conditional-importance.md
+  - docs/adr/0017-provenance-footer-on-agent-authored-content.md
+gitBranch: ccr-c62fa153-qy9b3z
+entrypoint: remote_mobile
+cliVersion: 2.1.294
+learnings:
+  - A commit-msg hook appends the Co-Authored-By and Claude-Session trailers, so a plain git commit -F message is enough.
+landedBy: Stop
