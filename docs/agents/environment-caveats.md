@@ -34,6 +34,12 @@ re-diagnose them as new. Incident detail lives in the cited issue.
   its deny message says what to do. A commit that gets past it is rejected at
   push, stranding every other commit in that push. The edit itself goes in
   `docs/proposals/` ([README](../proposals/README.md)). (issues #659, #897)
+- **The agent proxy denies writes to repository-settings endpoints and any
+  non-repo-scoped path.** `POST repos/{owner}/{repo}/rulesets` returns 403
+  "Write access to this GitHub API path is not permitted through this proxy";
+  `apps/...` and `/app/...` return 403 "sessions are bound to their configured
+  repositories". A ruleset or other settings change goes in `docs/proposals/`
+  for a human (issue #1689).
 - **A local-only typecheck/build failure is usually stale install state, not a
   repo bug.** Before asserting "X is broken on main" from a local repro, reset
   the *full* install state (`rm -rf node_modules .nuxt && pnpm install

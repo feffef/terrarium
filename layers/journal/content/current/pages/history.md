@@ -193,7 +193,8 @@ it: `docs/agents/guards.md` discloses the narrow scope today.
 
 The same is true one level up. The list of files that must never be merged
 without a human is enforced by no mechanism at all: there is no `CODEOWNERS`
-file, no branch protection, and the repo's own merge tool checks who opened a
+file, the branch ruleset that arrived on 8 October requires the gate but
+looks at no file paths, and the repo's own merge tool checks who opened a
 pull request and that a review verdict was posted, but not which files it touches.
 
 > **A rule that deletes rules.** The newest mechanism, added on 23 August,
