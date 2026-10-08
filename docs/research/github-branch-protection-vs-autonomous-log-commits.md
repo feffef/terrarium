@@ -242,17 +242,72 @@ credential this repo doesn't use for this path.
 
 ---
 
-## Recommended configuration — now a Proposal (updated 2026-10-08)
+## Current state: the `protect-main` ruleset (applied 2026-10-08)
 
-The concrete config is `docs/proposals/348-protect-main-ruleset.md`: a
-ruleset requiring a PR (0 approvals) plus the `gate` check, blocking force
-pushes and deletions, with one Repository-admin bypass set to "Always". The
-owner approved it on 2026-10-08 and asked for it to be applied from a cloud
-session; the agent proxy refused the write (`docs/agents/environment-caveats.md`),
-so a human applies it. Stage 2, the App identity that lets the admin bypass
-narrow to "For pull requests only", is issue #1689. The owner closed #348 on
-2026-07-12 once the research landed; the earlier recommendation is on that
-issue's comment.
+`main` carries one active repository ruleset, `protect-main`, approved by the
+owner on 2026-10-08 (session `session_01CF4k9jXS9wLrcPVsGduZmn`) and applied
+by hand, because the agent proxy refuses ruleset writes
+(`docs/agents/environment-caveats.md`). This section is the single home for
+what it enforces; re-create it from the JSON below if it is ever lost (a
+visibility flip disables push rulesets, `making-repo-public.md` §1). Check with
+`gh api repos/feffef/terrarium/rules/branches/main`.
+
+- **Require a pull request before merging**, 0 approvals, all three merge
+  methods. 0 because the owner identity authors every PR and GitHub refuses
+  self-approval, so any higher count would block every PR.
+- **Require the `gate` status check** from GitHub Actions (`integration_id`
+  15368, so only the real `safety-gate` workflow satisfies it). "Require
+  branches to be up to date" is **off**: `main` moves many times a day with
+  session logs, and strict mode would demand a refresh before every merge.
+- **Block force pushes** and **restrict deletions**.
+- **Bypass list: Repository admin, "Always".** The session-log lander pushes
+  with the owner's own credential (§2), so this is the only bypass that lets
+  ADR-0009's direct push through, and it also covers every agent session,
+  which acts as the owner. The ruleset is therefore a guardrail, not a wall:
+  it makes the gate a required check, gives auto-merge a condition to wait on
+  (§4), and blocks force pushes and deletion, but blocks nothing the owner
+  identity does. Narrowing the bypass needs a distinct identity for the lander:
+  issue #1689 (a GitHub App as the sole "Always" bypass, the owner reduced to
+  "For pull requests only").
+- **Left off, each would break the workflow:** required approvals (above),
+  strict up-to-date (above), linear history (`scripts/merge-pr.ts` and humans
+  use merge commits), signed commits (session-log commits land unsigned).
+- Chartered Skills' self-merges, human merges and the Dependabot workflow all
+  merge green PRs and need no bypass. Unverified against GitHub's docs: whether
+  an "Always" bypass actor's REST merge passes a red check silently; the merge
+  script polls for green first, so it is a safety-net question only.
+
+```sh
+gh api -X POST repos/feffef/terrarium/rulesets --input - <<'JSON'
+{
+  "name": "protect-main",
+  "target": "branch",
+  "enforcement": "active",
+  "conditions": { "ref_name": { "include": ["~DEFAULT_BRANCH"], "exclude": [] } },
+  "bypass_actors": [
+    { "actor_id": 5, "actor_type": "RepositoryRole", "bypass_mode": "always" }
+  ],
+  "rules": [
+    { "type": "deletion" },
+    { "type": "non_fast_forward" },
+    { "type": "pull_request", "parameters": {
+        "required_approving_review_count": 0,
+        "dismiss_stale_reviews_on_push": false,
+        "require_code_owner_review": false,
+        "require_last_push_approval": false,
+        "required_review_thread_resolution": false,
+        "allowed_merge_methods": ["merge", "squash", "rebase"] } },
+    { "type": "required_status_checks", "parameters": {
+        "strict_required_status_checks_policy": false,
+        "do_not_enforce_on_create": false,
+        "required_status_checks": [ { "context": "gate", "integration_id": 15368 } ] } }
+  ]
+}
+JSON
+```
+
+The owner closed #348 on 2026-07-12 once the research landed; the earlier
+recommendation is on that issue's comment.
 
 ## 6. Re-checked 2026-10-08: a third bypass mode, `exempt`
 

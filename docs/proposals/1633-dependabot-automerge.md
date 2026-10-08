@@ -66,9 +66,11 @@ jobs:
 
 ## Rationale
 
-`main` has no branch protection, so GitHub's native auto-merge cannot wait for
-the gate. Triggering on `safety-gate`'s completion lets the merge happen only on
-a green gate for that exact head SHA. The checks mirror the ledger row's scope:
+GitHub's native auto-merge would wait for `main`'s required `gate` check
+(`docs/research/github-branch-protection-vs-autonomous-log-commits.md`) but
+cannot check the ledger row's scope. Triggering on `safety-gate`'s completion
+lets the merge happen only on a green gate for that exact head SHA, and the
+script checks the scope. The checks mirror the ledger row's scope:
 author, commit authorship, files touched, and the `update-type` metadata
 Dependabot writes into each commit message (the same source
 `dependabot/fetch-metadata` parses). The 3-day minimum age comes from

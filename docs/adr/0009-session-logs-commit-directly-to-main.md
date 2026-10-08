@@ -583,3 +583,18 @@ Two reads stay invisible by design (the `log-session` Skill points here): a
 doc read from git history whose lines no longer exist in the checkout, and a
 read that showed less than `MIN_DISTINCTIVE_LINE` of the doc. The schema is
 unchanged.
+
+## `main` is protected; the lander passes through the admin bypass (2026-10-08, issue #348)
+
+> **Amended.** The direct-to-`main` decision is unchanged; this records what
+> now stands between the lander and `main`.
+
+`main` carries the `protect-main` ruleset (required PR, required `gate`
+check, no force pushes or deletion). The lander's push gets through its
+Repository-admin "Always" bypass, because it pushes with the owner's own
+credential. That bypass is coarser than this ADR's one-file boundary and
+cannot be narrowed without a distinct identity for the lander (issue #1689);
+the helper script stays the single enforcement point of the boundary, as the
+Decision says. The ruleset's exact rules and the reasons for them are
+single-homed in
+`docs/research/github-branch-protection-vs-autonomous-log-commits.md`.
