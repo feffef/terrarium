@@ -86,8 +86,10 @@ describe('rawProblemFirstLines()', () => {
 describe('earliestJudgeableAtUtc() / isJudgeable() — the three-day floor', () => {
   const LANDED = '2026-08-25T20:23:39.000Z'
 
-  it('the floor sits exactly three days after landing, not "the third calendar date"', () => {
-    expect(earliestJudgeableAtUtc(LANDED)).toBe('2026-08-28T20:23:39.000Z')
+  it('the floor sits three days less a one-hour grace after landing, not "the third calendar date"', () => {
+    // The grace absorbs the opening run finishing after the judging run's
+    // start time (issue #1677).
+    expect(earliestJudgeableAtUtc(LANDED)).toBe('2026-08-28T19:23:39.000Z')
   })
 
   it('is not judgeable one day after landing, even on a later calendar date', () => {
@@ -97,11 +99,15 @@ describe('earliestJudgeableAtUtc() / isJudgeable() — the three-day floor', () 
   })
 
   it('is not judgeable a moment before the floor', () => {
-    expect(isJudgeable(LANDED, new Date('2026-08-28T20:23:38.999Z'))).toBe(false)
+    expect(isJudgeable(LANDED, new Date('2026-08-28T19:23:38.999Z'))).toBe(false)
+  })
+
+  it('is judgeable a few minutes before three full days (the #1677 shape)', () => {
+    expect(isJudgeable(LANDED, new Date('2026-08-28T20:18:00.000Z'))).toBe(true)
   })
 
   it('is judgeable at the floor, and any time after it', () => {
-    expect(isJudgeable(LANDED, new Date('2026-08-28T20:23:39.000Z'))).toBe(true)
+    expect(isJudgeable(LANDED, new Date('2026-08-28T19:23:39.000Z'))).toBe(true)
     // A day-plus late, as an actual scheduled run's fire time would be — still fine.
     expect(isJudgeable(LANDED, new Date('2026-08-31T00:00:00.000Z'))).toBe(true)
   })

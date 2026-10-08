@@ -37,6 +37,12 @@ import { fetchOriginMain } from './git-helpers.ts'
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const LEDGER_PATH = '.agents/prune-trials.yml'
 const WINDOW_MS = 3 * 24 * 60 * 60 * 1000 // ADR-0027: "left standing for three days"
+// The Routine that opens a trial also judges it three days later, so a trial
+// lands a few minutes after a run starts while the judging run starts at a
+// fixed lag: whenever the opening run took longer than that lag, the floor
+// fell minutes after the judging run and the verdict slipped a day. Moving the
+// schedule cannot fix it (both times move together); a grace can (issue #1677).
+const GRACE_MS = 60 * 60 * 1000
 
 // ── Types ───────────────────────────────────────────────────────────────────
 
@@ -93,20 +99,20 @@ export function rawProblemFirstLines(yamlText: string): string[] {
   return lines
 }
 
-/** True once `now` is at or past the floor (`landing + WINDOW_MS`) — never
- *  earlier. There's no matching upper bound to test: arriving late is not a
+/** True once `now` is at or past the floor (`landing + WINDOW_MS - GRACE_MS`)
+ *  — never earlier. There's no matching upper bound to test: arriving late is not a
  *  failure this function needs to detect, since nothing guarantees a
  *  judging Routine runs at any particular time. Exported so the floor
  *  itself (exactly three days from landing, not "the third calendar date")
  *  is independently testable. */
 export function isJudgeable(landingIsoUtc: string, now: Date): boolean {
-  return now.getTime() >= Date.parse(landingIsoUtc) + WINDOW_MS
+  return now.getTime() >= Date.parse(landingIsoUtc) + WINDOW_MS - GRACE_MS
 }
 
 /** The floor from `isJudgeable`, as a timestamp to report — not a deadline a
  *  judging Routine needs to hit. */
 export function earliestJudgeableAtUtc(landingIsoUtc: string): string {
-  return new Date(Date.parse(landingIsoUtc) + WINDOW_MS).toISOString()
+  return new Date(Date.parse(landingIsoUtc) + WINDOW_MS - GRACE_MS).toISOString()
 }
 
 /** One trial paired with the literal raw-file text `findLandingCommit` will
