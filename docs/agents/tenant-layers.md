@@ -1,10 +1,9 @@
 # Tenant layers: Nuxt-layer authoring conventions
 
-A Tenant is implemented as a Nuxt layer under `layers/<tenant>/` — Nuxt's
-conventional layer directory, so every `layers/*` is auto-extended with no
-`extends` list (ADR-0018). It extends the main app (CONTEXT.md, ADR-0001). Nuxt
-layers have gotchas that get re-discovered from scratch most sessions. Read
-this before editing a layer's `nuxt.config.ts`, pages, or components.
+A Tenant is a Nuxt layer under `layers/<tenant>/`; Nuxt auto-extends every
+`layers/*`, so there is no `extends` list (ADR-0018). It extends the main app
+(CONTEXT.md, ADR-0001). Read this before editing a layer's `nuxt.config.ts`,
+pages, or components: its gotchas get re-discovered most sessions.
 
 ## 1. Auto-imports first; aliases resolve to the main app, not the layer
 
@@ -28,12 +27,10 @@ the shared namespace safe:
   keep local names distinct (`const sessionCards = computed(() =>
   sessionCardViews(...))`).
 
-For what auto-import does *not* cover (type-only imports, assets), know the
-alias gotcha: inside a layer, the usual Nuxt aliases (`~`, `@`, `~~`, `@@`)
-resolve relative to the **main app's** root, not the layer directory the file
-physically lives in. A layer file can't `import '~/types/foo'` and expect Nuxt
-to look inside the layer for it — it will look in (and usually fail to find it
-in) the root app instead. Two ways layer code deals with this:
+Auto-import doesn't cover type-only imports and assets, and there the aliases
+(`~`, `@`, `~~`, `@@`) resolve against the **main app's** root, not the layer's.
+A layer file's `import '~/types/foo'` looks in the root app and usually fails.
+Two ways layer code deals with this:
 
 - **Layer-local type imports → plain relative paths.** The Space-landing page
   imports the journal Tenant's own types with a relative path, not an alias:
@@ -43,16 +40,15 @@ in) the root app instead. Two ways layer code deals with this:
   import type { SessionDoc, SkillDoc } from '../../../../types/journal'
   ```
 
-  That resolves to `layers/journal/app/types/journal.ts` — a layer-local file
-  — via plain relative traversal, sidestepping alias resolution entirely.
-  (`app/types/` is not a scanned dir; a type exported from `app/utils/` or
-  `app/composables/` IS auto-imported, as a global, alongside the values.)
+  This reaches the layer-local `layers/journal/app/types/journal.ts` by relative
+  path, with no alias. (`app/types/` is not scanned; a type exported from
+  `app/utils/` or `app/composables/` IS auto-imported, as a global, alongside
+  the values.)
 
 - **Layer-local asset paths in `nuxt.config.ts` → `fileURLToPath` from the
-  config's own URL.** Registering the layer's CSS by aliased path (e.g.
-  `~/assets/theme.css`) would resolve against the main app and silently miss
-  the layer's own file. Instead, resolve it from the config file's own
-  location:
+  config's own URL.** An aliased path (e.g. `~/assets/theme.css`) would resolve
+  against the main app and silently miss the layer's file, so resolve from the
+  config's own location:
 
   ```ts
   // layers/journal/nuxt.config.ts
@@ -63,14 +59,11 @@ in) the root app instead. Two ways layer code deals with this:
   })
   ```
 
-  This is unambiguous regardless of how layer aliases resolve, because it
-  never goes through the alias system at all.
 
-A layer page importing a main-app module uses the root aliases — e.g.
-`#shared/routing` (Nuxt's own alias for the root `shared/` directory) is right
-precisely *because* `shared/routing.ts` lives in the main app, not the layer.
-The rule is "which app root does the target file actually live under," not
-"always avoid aliases in a layer."
+A layer page importing a main-app module uses the root aliases:
+`#shared/routing` (Nuxt's alias for the root `shared/`) is right because
+`shared/routing.ts` lives in the main app. The rule is which app root the target
+file lives under, not "avoid aliases in a layer."
 
 ## 2. Layer-wrapper CSS custom properties inherit into scoped children
 
@@ -91,11 +84,10 @@ layer's top-level wrapper element:
 
 Every page that mounts a layer view wraps its template in that class (e.g.
 `<main class="jd">` in both `[space]/index.vue` and `[space]/[...slug].vue`).
-Because CSS custom properties are inherited down the DOM tree — and Vue's
-`scoped` attribute selectors don't block inheritance, only cross-component
-selector leakage — child components nested anywhere under the `.jd` wrapper
-can read those tokens in their own **scoped** `<style>` blocks with no
-re-declaration and no prop-drilling:
+CSS custom properties inherit down the DOM tree, and Vue's `scoped` attribute
+selectors block only cross-component selector leakage, not inheritance, so child
+components anywhere under `.jd` can read the tokens in their own **scoped**
+`<style>` with no re-declaration or prop-drilling:
 
 ```css
 /* layers/journal/app/components/journal/StatTile.vue — scoped, no --jd-* here */
@@ -144,22 +136,20 @@ implications:
 
 ## 4. Content-component overrides (`components/content/`) resolve Platform-wide
 
-A same-named file under any layer's `components/content/` directory overrides
-the matching bundled `@nuxtjs/mdc` prose component — Nuxt flattens every
-layer's component registry into one, so this is override *priority*, not
-per-Tenant scoping: there's no way to override a prose component for just one
-Tenant. That's why the root Platform's `app/components/content/ProsePre.vue`
-(issue #364 — Mermaid diagram rendering for ` ```mermaid ` fenced blocks)
-lives at the app root, not in a Tenant's `layers/` directory — placing it in a
-layer would wrongly imply a per-Tenant scoping that doesn't exist.
+A same-named file under any layer's `components/content/` overrides the matching
+bundled `@nuxtjs/mdc` prose component. Nuxt flattens every layer's component
+registry into one, so this is override *priority*, not per-Tenant scoping; you
+can't override a prose component for one Tenant. So the root Platform's
+`app/components/content/ProsePre.vue` (issue #364, Mermaid rendering for ` ```mermaid ` fences)
+lives at the app root: in a layer it would wrongly imply
+per-Tenant scoping.
 
 ## 5. Verify a routing claim against the layer's actual `pages/` tree, not prose search
 
-Before asserting whether a route exists (in a review, a comment, or anywhere
-else), check the layer's actual `layers/<tenant>/…/pages/` directory directly
-(ADR-0016 tenant-root routes) — don't grep Markdown/Vue prose for the path
-string instead. Text search can miss or misreport an actual route; the pages
-tree is the real source of truth for what routes exist.
+Before asserting a route exists (in a review, a comment, anywhere), check the
+layer's actual `layers/<tenant>/…/pages/` directory (ADR-0016 tenant-root
+routes); don't grep Markdown/Vue prose for the path. Text search can miss or
+misreport a route; the pages tree is the source of truth.
 
 ## 6. What leaks across Tenants
 

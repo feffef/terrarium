@@ -71,7 +71,7 @@ named by lens, and joins the pool like any other.
   finding; it is optional context.
 - **Orphan-addition** — something added in the last 48h that lacks the
   reference it needs. Only two cases: (1) a new `docs/agents/*` doc not
-  linked from `CLAUDE.md`'s index (`docs/research/` is deliberately unindexed) —
+  named in CLAUDE.md's "Docs you must read first" list (`docs/research/` is deliberately unindexed) —
   add the link;
   (2) a new ADR that amends or supersedes another without the amendment banner
   or Status-line pointer on the old one (ADR-0018) — that is an ADR edit, so it
@@ -167,7 +167,7 @@ provenance header (ADR-0017).
 
 ## 1. Get on a working branch
 
-CLAUDE.md's branch-off rule.
+CLAUDE.md's "Stay on the branch your session started on" rule.
 
 ## 2. Inventory & classify
 

@@ -82,8 +82,8 @@ The same day, quietly, branch protection came off `main`. Session logs are
 designed to commit straight to the default branch without a pull request, and
 classic protection blocks that, so protection was removed to let them through.
 Whether it has come back since, and what that means for every "nothing lands
-without a gated pull request" rule, is tracked in `CLAUDE.md`'s
-Self-verification section.
+without a gated pull request" rule, is tracked in
+`docs/research/github-branch-protection-vs-autonomous-log-commits.md`.
 
 The fortnight added four more sites, one of them a proof of concept that was
 removed a month later. The [Midden](/t/midden), an archaeology of the project's own
@@ -189,7 +189,7 @@ written, but the sentence disclosing the narrow scope was deleted the same day b
 a tidying pass whose commit message reads "drop the restated matcher scope…
 single-home." A rule about not duplicating documentation removed that detail
 from the one file every session is told to read first. A later sweep restored
-it: CLAUDE.md and `docs/agents/guards.md` both disclose the narrow scope today.
+it: `docs/agents/guards.md` discloses the narrow scope today.
 
 The same is true one level up. The list of files that must never be merged
 without a human is enforced by no mechanism at all: there is no `CODEOWNERS`

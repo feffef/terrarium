@@ -26,13 +26,12 @@ re-review each story or repeat its findings.
 
 1. Run `pnpm gate:scoped` (ADR-0004) and wait for it to finish — a red gate
    never merges, no exception.
-2. Run `pnpm exec tsx scripts/check-conflicting-issues.ts --pr <number>` (or `<base>
-   <head>` for a locally-resolvable diff) and eyeball any hits — it flags an
+2. Run `pnpm exec tsx scripts/check-conflicting-issues.ts --pr <number>` (or
+   `<base> <head>` for a locally-resolvable diff) and read any hits. It flags an
    *open* issue whose body names one of the PR's changed files alongside
-   deletion-language ("delete", "remove", "unused", …), the mechanical
-   cross-check added by issue #798. File-level
-   heuristic, advisory only — a hit is a prompt to go read that issue, not
-   proof of a real conflict, and this step never blocks the gate.
+   deletion-language ("delete", "remove", "unused", …) (issue #798). It is a
+   file-level heuristic and advisory: a hit means go read that issue, not that
+   there is a conflict, and it never blocks the gate.
 3. Poll `get_check_runs` for green. A check reporting `in_progress` is not
    the same as failing — don't read a still-running check as a failure.
    **"Do I conflict?" and "is my rationale still true?" are different
@@ -59,8 +58,7 @@ re-review each story or repeat its findings.
    throws misleading errors on pending or green PRs (#385). If the script is
    unavailable, hand-poll `get_check_runs` and call `merge_pull_request` on green.
 6. Escalate a genuinely high-risk or out-of-scope PR to a human instead of
-   merging it — see CLAUDE.md's Ground rules (human-only set; ADR-0004) for
-   what counts.
+   merging it.
 
 **GitHub can silently leave `Closes #N`/`Fixes #N` issues open on a multi-issue PR, even with a well-formed body** (intermittent, GitHub's closing pipeline; issue #983). `scripts/merge-pr.ts` self-heals: after a successful merge it re-parses the body's closing keywords (repeated or comma-listed) and closes any still open. Land through it. On any other merge path (hand-rolled `merge_pull_request`, web UI) it doesn't run; check each named issue with `issue_read` afterward and close by hand.
 
@@ -71,10 +69,10 @@ expected, not a concurrent write. Run `git remote prune origin` first, or push
 without `--force-with-lease` (it is effectively a new remote branch).
 
 **Before pushing a follow-up commit to an existing PR branch** (e.g. answering
-review), check the PR's current state first (`pull_request_read`) — an owner can
-merge (and GitHub deletes the branch) while you're mid-flight, and pushing
-straight to the branch name silently recreates it. If it's already merged,
-treat it as the already-merged restart case above instead of pushing.
+review), check the PR's state with `pull_request_read`. An owner can merge it
+mid-flight (GitHub then deletes the branch), and pushing to the branch name
+silently recreates it. If it's already merged, treat it as the restart case
+above.
 
 **Keep the PR's title and description in sync with its content.** When a push
 changes what the PR does, update both in the same push: reviewers gate on the
@@ -86,9 +84,9 @@ description.
   merge on a green gate alone (ADR-0003/0004).
 - `prune-trial` — merge on a green gate alone, and uniquely may rewrite ADRs,
   keeping what they decided, as part of a trial (ADR-0027's narrow amendment to ADR-0004).
-- `reviewer-agent` (`frictions-to-fixes`) — not purely mechanical: the
-  reviewing session's own risk judgement is also required, escalating a
-  genuinely high-risk PR to a human even when the gate is green (ADR-0003).
+- `reviewer-agent` (`frictions-to-fixes`) — green gate plus the reviewing
+  session's own risk judgement; escalate a genuinely high-risk PR to a human
+  even when the gate is green (ADR-0003).
 - `guest-build` — agent-dispatched but always **owner-merged**: it opens and
   reviews the PR but never calls `merge_pull_request` or arms auto-merge (see
   `.agents/skills/guest-build/SKILL.md`'s "one hard subtraction" section and
@@ -98,11 +96,10 @@ description.
 
 ## Closing a self-merged chartered run
 
-Every Skill in the tier list above except `reviewer-agent` (`frictions-to-fixes`,
-many PRs per run), `guest-build`, `dependabot` and an ordinary work PR closes the same way once its own
-scope-specific work is staged — each Skill's own SKILL.md states only its
-delta from this sequence (what its diff must be limited to, and what to do
-when something rides outside that scope):
+Every tier above except `reviewer-agent` (`frictions-to-fixes`; many PRs per
+run), `guest-build`, `dependabot` and an ordinary work PR closes the same way
+once its own work is staged. Each Skill's SKILL.md states only its delta (what
+its diff is limited to, and what to do when something rides outside that scope):
 
 1. Run `pnpm gate:scoped` (ADR-0004; `scripts/gate.ts` owns what it runs).
    Done when it's green.

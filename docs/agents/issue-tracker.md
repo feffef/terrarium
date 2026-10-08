@@ -1,17 +1,17 @@
 # Issue tracker: GitHub
 
-*Seeded from `.agents/skills/setup-matt-pocock-skills/issue-tracker-github.md`
-and customized for this repo (the conventions, spec and wayfinding sections are
-repo-specific). Don't re-sync the two: this file is the live one; the pack
-template stays generic and reinstallable (ADR-0005).*
+*Seeded from `.agents/skills/setup-matt-pocock-skills/issue-tracker-github.md`;
+the conventions, spec and wayfinding sections are repo-specific. Don't re-sync:
+this file is live, the pack template stays generic and reinstallable
+(ADR-0005).*
 
 Issues and specs live as GitHub issues. Use the `gh` CLI for all operations.
 
 ## Cloud session? See `github-integration.md`
 
-The recipes below are written as `gh` commands. For the MCP-tool equivalents
-in a cloud session, where GraphQL-backed `gh` subcommands 403, plus the overflow
-traps, polling rules and `ToolSearch` name resolution, see [`github-integration.md`](./github-integration.md).
+Recipes below use `gh`. In a cloud session, GraphQL-backed `gh` subcommands 403;
+for the MCP-tool equivalents, overflow traps, polling rules and `ToolSearch`
+name resolution, see [`github-integration.md`](./github-integration.md).
 
 ## Conventions
 
@@ -20,11 +20,10 @@ traps, polling rules and `ToolSearch` name resolution, see [`github-integration.
   question is an issue instead: a spec (below) if it is big enough to split
   into several user stories with their own sub-issues, a plain issue if not.
 - **`/triage`'s redundancy check applies to every open issue, no exemptions.**
-  Search for an existing implementation before actioning it, even when the
-  issue is not actionable by design (e.g. a governance proposal awaiting a
-  human green-light). Unactionable and unimplemented are independent: such a
-  proposal can ship through another issue or PR while it stays open and
-  unlabeled.
+  Before actioning one, search for an existing implementation, even if it's not
+  actionable by design (e.g. a governance proposal awaiting a human
+  green-light). Such a proposal can ship through another issue or PR while it
+  stays open and unlabeled.
 - **Before implementing a `ready-for-agent` issue, check for supersession.**
   A missing target file is not the only way an issue goes stale. Search for a
   merged PR or commit that already solved it another way
@@ -34,10 +33,10 @@ traps, polling rules and `ToolSearch` name resolution, see [`github-integration.
 - **Before locking a design that merges, moves or deletes a file, grep for its
   importers and what it imports.** One grep rules out an import cycle up front;
   issue #865 found one only during implementation (#1176).
-- **Picking up several issues under one caller-pinned branch** (CLAUDE.md's
-  branch-off bullet): flag that upfront and ask whether separate branches are
-  allowed. Don't bundle unrelated issues into one PR and wait for the objection
-  after the push.
+- **Several issues pinned to one caller-set branch** (CLAUDE.md, "Stay on the
+  branch your session started on"): flag it upfront and ask whether separate
+  branches are allowed. Don't bundle unrelated issues into one PR and wait for
+  an objection after the push.
 - **Create**: `gh issue create --title "..." --body "..."` (heredoc for multi-line bodies).
 - **Read**: `gh issue view <number> --comments`, filtering comments with `jq` and fetching labels too.
 - **List**: `gh issue list --state open --json number,title,body,labels,comments --jq '[.[] | {number, title, body, labels: [.labels[].name], comments: [.comments[].body]}]'`, with `--label` / `--state` filters as needed.
@@ -90,25 +89,22 @@ did) before calling `resolve_review_thread`. A resolved thread with no reply
 leaves no record.
 
 **Use a closing keyword (`Resolves`/`Closes`/`Fixes #N`) only for an issue the
-PR completes.** Merging auto-closes every issue named that way. PR #326
-silently closed a tracking issue (#213) it only touched, and the issue had to
-be reopened. For any other issue the PR body mentions, write "relates to #N" or
-"see #N".
+PR completes.** Merging auto-closes every issue named that way: PR #326 closed a
+tracking issue (#213) it only touched, and it had to be reopened. For any other
+issue write "relates to #N" or "see #N".
 
 **A multi-issue `Closes` line can leave some issues open.** The failure mode and
 the `merge-pr.ts` self-heal are in `docs/agents/pr-workflow.md`'s merge recipe.
 
 **Auditing PRs against session logs: parse `prs:`, don't regex it.** A log's
-`prs` field (`shared/schemas/session.ts`) is a structured array of quoted PR
-numbers (e.g. `["326"]`). Parse the log's YAML and read the array; don't
-regex-scan the raw text.
+`prs` field (`shared/schemas/session.ts`) is an array of quoted PR numbers (e.g.
+`["326"]`); read it from the parsed YAML, not a regex over raw text.
 
-**A "you already have a pending review" error means stop and ask the user, not
-call `delete_pending` and retry.** It can come from `pull_request_review_write`
-(or the raw review API) mid-triage. Agent API calls run under the human
-owner's own connection (ADR-0017), so you can't tell whether the pending
-review is your leftover or the maintainer's own unsubmitted draft. Deleting the
-wrong one erases the draft for good.
+**On a "you already have a pending review" error, stop and ask the user; don't
+`delete_pending` and retry.** It can come from `pull_request_review_write` (or
+the raw review API) mid-triage. Agent calls run under the human owner's
+connection (ADR-0017), so you can't tell your leftover from the maintainer's own
+unsubmitted draft, and deleting the wrong one erases the draft for good.
 
 ## When a skill says "publish to the issue tracker"
 

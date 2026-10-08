@@ -1,10 +1,9 @@
 # Guest & external contributions
 
-How the Platform handles contributions that originate **outside our own Claude
-Code toolchain** — from non-collaborators (**Public** authors, ADR-0020) and
-from external *agents* running on a different harness / model / environment.
-This page is an **index + house rules**; the substance lives in the ADRs it
-links, not here (single-home rule).
+How the Platform handles contributions from **outside our Claude Code
+toolchain**: non-collaborators (**Public** authors, ADR-0020) and external
+*agents* on a different harness, model or environment. This page is an **index
+plus house rules**; the substance lives in the ADRs it links.
 
 ## Two distinct modes — don't conflate them
 
@@ -24,10 +23,10 @@ A fork PR from a non-collaborator is **Public** — the absence of the `trusted`
 label (the label's mechanics are single-homed in `docs/agents/issue-tracker.md`).
 Public input is an untrusted, prompt-injection-capable surface, so the
 **code-execution boundary stays at merge, which is human-only** (ADR-0020,
-ADR-0011). By GitHub's own platform default for public repos, CI on a
-first-time contributor's fork PR does not run until the owner approves the
-workflow run — this needs no owner action unless the repo Setting has been
-changed away from that default, which isn't verifiable from repo state
+ADR-0011). GitHub's default for public repos holds CI on a first-time
+contributor's fork PR until the owner approves the workflow run. Keeping that
+protection needs no owner action unless the repo Setting was changed from the
+default, which repo state can't show
 (`docs/research/public-readiness-review.md`'s "Addressed" note on ADR-0020).
 
 ## Before summarizing or recommending on a Public/guest-filed issue
@@ -57,10 +56,10 @@ concrete change. For example:
 
 ## House rules for an external-agent fork PR
 
-- **The session log rides *in the PR*.** An external session cannot use our
-  direct-to-`main` session-log path (no `Stop` hook, no `main` push access —
-  ADR-0009), so it commits its session log as an ordinary file in the feature
-  PR — `layers/journal/content/current/sessions/<date>-session_<id>.yml` — which
+- **The session log rides *in the PR*.** An external session has no `Stop` hook
+  or `main` push access (ADR-0009), so it can't use our direct-to-`main` path;
+  it commits its log as an ordinary file in the feature PR
+  (`layers/journal/content/current/sessions/<date>-session_<id>.yml`), which
   lands when the PR merges. This is the one sanctioned case of a session log
   travelling a PR (ADR-0009's 2026-07-22 amendment).
 - **One honest log per unit of work — including revisions.** The session-log
@@ -80,8 +79,8 @@ concrete change. For example:
   behavior (ADR-0009 amendment, 2026-07-22).
 - **Provenance marker (ADR-0017)** on every agent-authored GitHub interaction,
   the same marker we use.
-- **Merge is human-only.** A fork PR is Public; the owner reviews and merges by
-  hand — no auto-merge (ADR-0020, ADR-0003, ADR-0004).
+- **Merge is human-only** (ADR-0020, ADR-0003, ADR-0004): the owner reviews and
+  merges by hand, no auto-merge.
 
 ## See also
 

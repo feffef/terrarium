@@ -1,14 +1,10 @@
 # MDC (Markdown Components): what it is, and when to reach for it
 
-A general reference for deciding whether **MDC** — Nuxt Content's "Markdown
-Components" — is the right tool for a given piece of content, with a decision
-checklist at the end. The Journal on-ramp cards are used as a worked example of
-a case where MDC is *capable but not the right fit*; the guidance itself is
-meant to outlast that feature.
-
-Version pins, verbatim syntax quotes, and component-resolution mechanics are
-grounding detail, not the decision itself — single-homed in
-`docs/research/nuxt-content-review-grounding.md` §13, not re-derived here.
+How to decide whether **MDC** (Nuxt Content's "Markdown Components") fits a
+piece of content, with a decision checklist at the end. The Journal on-ramp
+cards are a worked example where MDC is *capable but not the right fit*. Version
+pins, verbatim syntax and component-resolution mechanics live in
+`docs/research/nuxt-content-review-grounding.md` §13 (and its Sources section).
 
 ---
 
@@ -20,23 +16,20 @@ alongside ordinary prose. The Markdown is parsed to an AST (stored as minimark
 in SQLite in Content v3) and rendered with `<ContentRenderer :value="doc" />`,
 which resolves each custom tag to a Vue component and hydrates it like any other.
 
-It exists to solve one problem well: **letting content authors compose from a
-palette of components without writing Vue or leaving the Markdown file.** That
-framing — *author-facing, in-prose composition* — is the lens for every
-"should I use it?" decision below.
+Its job: **let authors compose from a palette of components without writing Vue
+or leaving the Markdown file.** The lens for every decision below is
+*author-facing, in-prose composition*.
 
-The syntax forms are: inline components (single `:`), block components (`::`,
-requiring a closing `::` — a missing one's failure mode is single-homed in §13,
-not re-derived here), inline `{}` props, a YAML
-`---` block for props (nested arrays of objects are a first-class fit, no
-escaping needed), default plus named `#slots` (slot content is itself rendered
-Markdown), and nesting (more colons per depth, indentation-significant). Full
-verbatim syntax reference, with citations: `docs/research/nuxt-content-review-grounding.md` §13.
+Syntax: inline components (single `:`); block components (`::`, needing a
+closing `::`; the failure mode of a missing one is in §13); inline `{}` props; a
+YAML `---` block for props (nested arrays of objects fit, no escaping); default
+and named `#slots` (slot content is rendered Markdown); nesting (more colons per
+depth, indentation-significant). Full reference with citations:
+`docs/research/nuxt-content-review-grounding.md` §13.
 
-Practical cost in a layer that doesn't already use MDC: adopting it means
-creating a `components/content/` dir and a new SFC (component-resolution
-mechanics: same §13). This repo's journal layer keeps its components under a
-*prefixed* `components/journal/` dir and has no `components/content/` today.
+Cost in a layer without MDC: a `components/content/` dir and a new SFC
+(mechanics: §13). The journal layer keeps its components in a *prefixed*
+`components/journal/` dir and has no `components/content/` today.
 
 ## The validation caveat (important in this repo)
 
@@ -146,5 +139,3 @@ it opens, and fits the repo's manifest/frontmatter-as-intent grain (ADR-0002/001
 and single-home rule (CLAUDE.md). This is the general pattern: **structural,
 layout-positioned, gate-validated data → frontmatter or a data collection; rich
 in-prose editorial → MDC.**
-
-Sources for the syntax/version/resolution claims above: `docs/research/nuxt-content-review-grounding.md` §13 and its own Sources section.

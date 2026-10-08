@@ -27,26 +27,24 @@ specific session cite it.
 
 ## The methodology
 
-- **Grepping SSR HTML is not proof a change renders.** The server-rendered
-  output includes a serialized `useAsyncData` payload — a string match there can
-  succeed even when the actual DOM never picks up the change (or errors trying
-  to). Verify presentational changes against the **rendered DOM**, not the raw
-  HTML text — take a screenshot with `scripts/screenshot.ts`, or drive the page
-  with Playwright.
-- **When a standalone repro of the logic agrees with expectations but the live
-  app doesn't, render the computed value into the DOM (a debug marker)
-  immediately** — don't iterate cache-busting/rebuild theories first. A stale
-  build can look identical to a live logic bug from the outside; a debug marker
-  settles which one you're looking at in one step.
-- **Before asserting an e2e/Playwright failure is "pre-existing" or
-  "environment-only," reproduce it with the full `test:e2e` suite — never a
-  `-t`-filtered single test — against a fresh `pnpm build` — never a reused
-  `.output` — on both `origin/main` and the branch.** A narrowed or stale
-  repro is not a valid comparison: a single filtered test skips setup/ordering
-  the full suite exercises, and a reused `.output` can quietly omit the very
-  change under test. A PR once asserted a failing assertion was pre-existing
-  on exactly this kind of invalid repro, and CI then failed for real on the
-  same assertion (issue #907).
+- **A grep of SSR HTML does not prove a change renders.** The HTML includes a
+  serialized `useAsyncData` payload, so a string match can succeed even when the
+  DOM never picks up the change (or errors trying). Check the **rendered DOM**:
+  take a screenshot with `scripts/screenshot.ts`, or drive the page with
+  Playwright.
+- **If a standalone repro of the logic matches expectations but the live app
+  doesn't, immediately render the computed value into the DOM (a debug
+  marker);** don't iterate cache-busting/rebuild theories first. A stale build
+  looks like a live logic bug from outside, and the marker tells them apart in
+  one step.
+- **Before calling an e2e/Playwright failure "pre-existing" or
+  "environment-only," reproduce it on both `origin/main` and the branch with the
+  full `test:e2e` suite (never a `-t`-filtered single test) against a fresh
+  `pnpm build` (never a reused `.output`).** A narrowed or stale repro isn't a
+  valid comparison: a filtered test skips setup/ordering the full suite
+  exercises, and a reused `.output` can omit the change under test. A PR once
+  called a failing assertion pre-existing on such a repro, and CI then failed
+  for real on it (issue #907).
 - **For the common case of checking one already-serving in-page value** (a
   computed style, a bounding rect, any other value read via `page.evaluate`),
   reach for `scripts/probe.ts` before writing an ad-hoc script — it already
@@ -77,14 +75,12 @@ specific session cite it.
   see `layers/journal/CONTEXT.md`'s "What lives where" for what it renders.
   Editing `index.md` alone will not change what most of that page shows; check
   the `.vue` file too.
-- **A `display: none` (or equivalent hide-at-breakpoint) rule that hides the
-  only rendering of real content/data is a design smell to justify, not a
-  default to ship silently.** Before shipping one, check whether it hides
-  purely decorative/redundant markup (fine) or the sole rendering of some
-  actual data (e.g. a dataset dimension with no other place it appears at
-  that breakpoint) — if the latter, call it out explicitly in the PR
-  description: why it's acceptable for that data to disappear at this
-  breakpoint, or where it reappears instead.
+- **A `display: none` (or hide-at-breakpoint) rule that hides the only rendering
+  of real content/data is a design smell to justify, not to ship silently.**
+  Before shipping one, check whether it hides only decorative/redundant markup
+  (fine) or the sole rendering of actual data (e.g. a dataset dimension with no
+  other place at that breakpoint). If the latter, say in the PR description why
+  losing it at that breakpoint is acceptable, or where it reappears.
 
 ## The sharp edges
 
@@ -93,26 +89,24 @@ and has cost a confused bisection round.
 
 ### Visibility is not in-viewport
 
-`locator.isVisible()` / `state: 'visible'` is true for an element that has a
-non-empty box and isn't `display:none`/`visibility:hidden` — **even when it's
-scrolled off-screen**. Proving something is actually *in the viewport* needs an
-explicit `getBoundingClientRect()`-vs-viewport check, not a visibility
-assertion. (Session `…ysCUut`.)
+`locator.isVisible()` / `state: 'visible'` is true for any element with a
+non-empty box that isn't `display:none`/`visibility:hidden`, **even when
+scrolled off-screen**. To prove it is in the viewport, compare
+`getBoundingClientRect()` against the viewport. (Session `…ysCUut`.)
 
 ### `locator.click()` scrolls the element into view first
 
-Playwright's actionability checks scroll the target into view before dispatching
-the click. So a test that measures exact geometry *around* a click is measuring
-a post-scroll layout, not the one the user saw. Call `scrollIntoViewIfNeeded()`
-yourself first (or account for the scroll) when the geometry matters. (Session
-`…q1cMNn`.)
+Playwright's actionability checks scroll the target into view before the click,
+so geometry measured around a click is post-scroll, not what the user saw. When
+geometry matters, call `scrollIntoViewIfNeeded()` yourself first (or account for
+the scroll). (Session `…q1cMNn`.)
 
 ### `screenshot({ clip })` is viewport-relative unless `fullPage: true`
 
-`page.screenshot({ clip })` interprets `clip` coordinates against the **viewport
-origin**, not the document origin — unless you also pass `fullPage: true`. On a
-scrolled or tall page, `clip` alone silently captures the wrong region. Pass
-`fullPage: true` with `clip` when clipping below the fold. (Session `…CnKWrh`.)
+`page.screenshot({ clip })` reads `clip` against the **viewport origin**, not
+the document, unless you also pass `fullPage: true`; on a scrolled or tall page,
+`clip` alone silently captures the wrong region, so pass `fullPage: true` when
+clipping below the fold. (Session `…CnKWrh`.)
 
 ### Desktop Chromium ignores the page's `<meta name="viewport">`
 
@@ -161,8 +155,6 @@ actually attaches. (Session `…pm7Vkb` — a Mermaid diagram that rendered blan
 because its container ref was null in `onMounted`.)
 
 ## CSS sharp edges
-
-Each cost a session at least one extra fix-and-check round.
 
 - **Media-query order:** an equal-specificity rule inside `@media` loses to a
   later base rule. Put the override after it (#1312).

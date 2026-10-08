@@ -1,12 +1,14 @@
 # Triage Labels
 
-*Seeded from `.agents/skills/setup-matt-pocock-skills/triage-labels.md`'s generic
-template; only the requester-trust note below is repo-specific — the label
-vocabulary matches the pack default 1:1. If you change the right-hand column
-below, this file intentionally diverges from that template; don't re-sync it
+*Seeded from `.agents/skills/setup-matt-pocock-skills/triage-labels.md`. The
+label vocabulary matches the pack default 1:1; only the requester-trust note
+below is repo-specific. If you change the right-hand column, this file diverges
+from the template on purpose; don't re-sync it.*
 back.*
 
-The skills speak in terms of five canonical triage roles. This file maps those roles to the actual label strings used in this repo's issue tracker.
+Skills name five canonical triage roles. This table maps each to the label
+string used in this repo's tracker; when a skill mentions a role (e.g. "apply
+the AFK-ready triage label"), use that string.
 
 | Label in mattpocock/skills | Label in our tracker | Meaning                                  |
 | -------------------------- | -------------------- | ---------------------------------------- |
@@ -16,10 +18,6 @@ The skills speak in terms of five canonical triage roles. This file maps those r
 | `ready-for-human`          | `ready-for-human`    | Requires human implementation            |
 | `wontfix`                  | `wontfix`            | Will not be actioned                     |
 
-When a skill mentions a role (e.g. "apply the AFK-ready triage label"), use the corresponding label string from this table.
-
-> **Requester-trust gate (ADR-0020).** `ready-for-agent` is gated by requester
-> trust — see ADR-0020, and, for the autonomous sweep specifically, the
-> `auto-triage` Skill's "standing green-light" section.
-
-Edit the right-hand column to match whatever vocabulary you actually use.
+> **Requester-trust gate.** `ready-for-agent` is gated by requester trust
+> (ADR-0020; for the autonomous sweep, the `auto-triage` Skill's "standing
+> green-light" section).

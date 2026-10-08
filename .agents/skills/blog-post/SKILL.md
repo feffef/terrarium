@@ -164,7 +164,7 @@ and the reviewer's one-line reason noted for the PR body.
 
 ### 7. Branch, save, pingback
 
-Cut a working branch per CLAUDE.md's branch-off rule.
+Cut a working branch per CLAUDE.md's "Stay on the branch your session started on" rule.
 
 Save the post to `layers/blog/content/<persona>/pages/<today-UTC>-<slug>.md`
 (format in the reference below). Set `publishedAt` now, with
