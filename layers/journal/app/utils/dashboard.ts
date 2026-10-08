@@ -88,6 +88,20 @@ export function frictionOtherCount(totals: Record<Severity, number>): number {
   return totals.nit + totals.minor + totals.moderate
 }
 
+// Array.sort is stable, so blockers-first keeps the caller's newest-first order within a severity.
+export function worstFrictions(
+  sessions: SessionDoc[],
+  max = 5,
+): { items: { severity: Severity; description: string; anchor: string; date: string }[]; rest: number } {
+  const all = sessions.flatMap((s) =>
+    s.frictions
+      .filter((f) => f.severity === 'blocker' || f.severity === 'major')
+      .map((f) => ({ severity: f.severity, description: f.description, anchor: sessionAnchor(s.session), date: s.endedAt.slice(0, 10) })),
+  )
+  all.sort((a, b) => Number(b.severity === 'blocker') - Number(a.severity === 'blocker'))
+  return { items: all.slice(0, max), rest: Math.max(0, all.length - max) }
+}
+
 export function kindCounts(sessions: SessionDoc[]): { interactive: number; delegated: number; autonomous: number } {
   const counts = { interactive: 0, delegated: 0, autonomous: 0 }
   for (const s of sessions) counts[s.kind]++
