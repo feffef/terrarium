@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01PAbucS7x82pN6ais2pbUyX
 startedAt: 2026-10-08T00:46:18Z
-endedAt: 2026-10-08T01:20:15Z
+endedAt: 2026-10-08T01:22:49Z
 kind: autonomous
 goal: Run the scheduled audit-skills sweep over the Platform's own Skills
-status: in-review
-outcome: "3 issues filed, 1 comment with new evidence, 11 Inventory entries updated, PR #1678 open"
-summary: "Scheduled /audit-skills run, so every part was agent-initiated; no human prompt. Ran scripts/audit-skills.ts for the 7-day scorecard (93 sessions). Dispatched 11 read-only Sonnet behaviour-check subagents in parallel (one per Skill used >=3 times in the window: audit-docs, audit-skills, auto-triage, blog-post, close-session, digest, dispatch-subagents, frictions-to-fixes, log-session, prune-trial, visitor-loop), each grading its usedIn sessions against the SKILL.md version in effect when they started. Independently verified every report's central claims against primary sources (git log/show, GitHub issue_read/pull_request_read) before using them, and spot-checked a claim from every clean report too. Step 3 closure completeness: orphan scan ran fully (scanned: true, 1071 merged PRs, 920 with a session), both orphan candidates carry resolvedBy (#736, #1063 - already tracked, left alone), orphanSuppressionLog both entries resolved-annotation with plausible issue numbers (healthy), both humanPromptedClosures and manuallyRescuedClosures empty - no closure-completeness findings this window. Step 4: filed 3 new needs-triage issues that cleared the significant/repeated bar - #1675 (auto-triage: PR #1630's attended/unattended fix landed half-done, correctly reverted by PR #1631, but the underlying friction it was meant to fix went untracked with it), #1676 (frictions-to-fixes: its own brand-new surface-blocked-candidate-filing rule, PR #1655, broke on its first live test ~2h after merging, and the run's own outcome field hid the gap), #1677 (prune-trial: 5th instance of a narrow-margin scheduling miss, clearing this Inventory's own previously-stated \"worth a human only on a 5th\" threshold). Commented new evidence onto the already-open #1647 (audit-docs: independent-checker-dispatch fix held on its first live test). Every other finding across the 11 Skills was clean or already fully tracked with nothing new to add (#1515, #1586 confirmed). Step 5: appended one dated 2026-10-08 observation to each of the 11 audited Skills' Inventory entries, citing this run's verified findings; no grade or role changes, since every gap found is a sub-step reliability issue, not a core-delivery failure. Step 6: diff touches only layers/journal/content/current/skills/*.yml (189 insertions, 11 files); pnpm gate:scoped and pnpm validate:content both pass; committed, pushed to claude/upbeat-sagan-epv87r, opened PR #1678 (merges on green gate alone per pr-workflow.md's tier list for audit-skills), subscribed to its activity. Babysitting the PR to green/merge next."
+status: completed
+outcome: "3 issues filed, 1 comment with new evidence, 11 Inventory entries updated, PR #1678 merged"
+summary: "Scheduled /audit-skills run, so every part was agent-initiated; no human prompt. Ran scripts/audit-skills.ts for the 7-day scorecard (93 sessions). Dispatched 11 read-only Sonnet behaviour-check subagents in parallel (one per Skill used >=3 times in the window: audit-docs, audit-skills, auto-triage, blog-post, close-session, digest, dispatch-subagents, frictions-to-fixes, log-session, prune-trial, visitor-loop), each grading its usedIn sessions against the SKILL.md version in effect when they started. Independently verified every report's central claims against primary sources (git log/show, GitHub issue_read/pull_request_read) before using them, and spot-checked a claim from every clean report too. Step 3 closure completeness: orphan scan ran fully (scanned: true, 1071 merged PRs, 920 with a session), both orphan candidates carry resolvedBy (#736, #1063 - already tracked, left alone), orphanSuppressionLog both entries resolved-annotation with plausible issue numbers (healthy), both humanPromptedClosures and manuallyRescuedClosures empty - no closure-completeness findings this window. Step 4: filed 3 new needs-triage issues that cleared the significant/repeated bar - #1675 (auto-triage: PR #1630's attended/unattended fix landed half-done, correctly reverted by PR #1631, but the underlying friction it was meant to fix went untracked with it), #1676 (frictions-to-fixes: its own brand-new surface-blocked-candidate-filing rule, PR #1655, broke on its first live test ~2h after merging, and the run's own outcome field hid the gap), #1677 (prune-trial: 5th instance of a narrow-margin scheduling miss, clearing this Inventory's own previously-stated \"worth a human only on a 5th\" threshold). Commented new evidence onto the already-open #1647 (audit-docs: independent-checker-dispatch fix held on its first live test). Every other finding across the 11 Skills was clean or already fully tracked with nothing new to add (#1515, #1586 confirmed). Step 5: appended one dated 2026-10-08 observation to each of the 11 audited Skills' Inventory entries, citing this run's verified findings; no grade or role changes, since every gap found is a sub-step reliability issue, not a core-delivery failure. Step 6: diff touched only layers/journal/content/current/skills/*.yml (189 insertions, 11 files); pnpm gate:scoped and pnpm validate:content both passed; committed, pushed to claude/upbeat-sagan-epv87r, opened PR #1678 (merges on green gate alone per pr-workflow.md's tier list for audit-skills), subscribed to its activity, posted the pre-merge verdict comment, and landed it via scripts/merge-pr.ts once CI's gate went green (merge commit 7323668d). Unsubscribed from the PR after merge."
 prs:
   - "1678"
 docsRead:
@@ -216,9 +216,9 @@ docsRead:
     reason: (no reason given)
 skillsUsed:
   - name: close-session
-    reason: session closure at PR-open
+    reason: session closure at PR-open and again at merge
   - name: log-session
-    reason: authoring this log
+    reason: authoring and finalizing this log
   - name: audit-skills
     reason: (invoked as a slash command)
 frictions:
@@ -231,27 +231,29 @@ frictions:
   - description: Never explicitly ran `grep -l <term> docs/adr/*` for this session's terms (ADR-0015, ADR-0003/0004, ADR-0027) before editing the Skill Inventory; relied instead on the audit-skills SKILL.md's own citations of them. No wrong action resulted — the edits stayed within the Skill's own established pattern — but the mechanical step itself was skipped.
     solution: Run the docs/adr/ grep once the touched-file set is known, even when a Skill's own text already names the relevant ADRs.
     severity: nit
-durationSec: 2037
+durationSec: 2191
 models:
-  claude-sonnet-5: 256
+  claude-sonnet-5: 275
 toolCounts:
-  Bash: 52
+  Bash: 55
   Read: 19
   Agent: 11
   ToolSearch: 9
   TaskCreate: 5
-  TaskUpdate: 7
+  TaskUpdate: 8
   mcp__github__issue_read: 7
   mcp__github__add_issue_comment: 2
   mcp__github__pull_request_read: 4
   mcp__github__search_issues: 5
   mcp__github__issue_write: 3
   Edit: 19
-  Write: 3
+  Write: 4
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
-  Skill: 2
+  Skill: 3
+  ReadNotifications: 2
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/journal/content/current/skills/audit-docs.yml
   - layers/journal/content/current/skills/audit-skills.yml
