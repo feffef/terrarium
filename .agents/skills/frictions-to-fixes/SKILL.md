@@ -265,7 +265,7 @@ post-dispatch check. Run at most 2 impl agents' full gates concurrently
     logs — ADRs are human-only anyway, ADR-0004) **or a Pack-generic template**;
     (2) don't *author* any defect audit-docs' eight lenses catch — above all
     **single-home rather than restate** (the CLAUDE.md rule), and give any new
-    `docs/agents/*` file its incoming CLAUDE.md-index link (`docs/research/`
+    `docs/agents/*` file its trigger in CLAUDE.md's "Docs you must read first" (`docs/research/`
     stays unindexed). A
     friction doc fix that would become the next audit-docs finding isn't done.
     Put this in the doc-fix agent's brief.

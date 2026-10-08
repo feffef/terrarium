@@ -13,10 +13,9 @@ in a fenced code block; a single backtick is not enough. A guard denies it
 
 ## Transient failures — retry before escalating
 
-`mcp__github__*` calls (`create_pull_request`, `merge_pull_request`,
-`add_issue_comment`, `issue_read`, `issue_write`, …) sometimes return a
-transient 503 ("no server currently available"). Retry once or twice after a
-short pause before calling it a real failure. If `issue_read` keeps flaking,
+`mcp__github__*` calls sometimes return a transient 503 ("no server currently
+available"). Retry once or twice after a short pause before calling it a
+failure. If `issue_read` keeps flaking,
 `search_issues` scoped to the issue number works as a fallback (issue #611).
 
 ## Local CLI vs cloud session: which tool works
@@ -50,13 +49,13 @@ like this:
 
 ## Overflow and precision traps
 
-- **`list_issues` and `list_pull_requests` have no `minimal_output`.** They
-  always return full bodies, so even a paginated call can overflow the
-  tool-result limit. Prefer a small `perPage` (5–10), paging through it, and expect to slice the saved file
-  by hand; a targeted `search_*` query avoids the overflow but is rate-limited (see
-  "Searching is the fragile path" below), so use it only when listing overflows.
-  Page both open and closed/merged. A broad `search_*` query overflows the same
-  way, so always scope it (state, label, keyword).
+- **`list_issues` and `list_pull_requests` have no `minimal_output`;** pass
+  `fields` omitting `body` (and `field_values`/`labels` on `list_issues`), or
+  full bodies can overflow even a paginated call. Use a small `perPage` (5-10),
+  page through open and closed/merged, and slice the saved file by hand. A
+  targeted `search_*` query is rate-limited (see "Searching is the fragile
+  path"), so use it only if listing still overflows. A broad `search_*` query
+  overflows too, so always scope it (state, label, keyword).
 - **`search_issues` / `search_pull_requests` ignore `minimal_output`**, though
   the server advertises it. Pass `fields: [...]` instead and leave out
   `body`, `labels` and `reactions` (the biggest parts) when you only need
@@ -76,8 +75,8 @@ like this:
 - **Searching is the fragile path; prefer a repo-scoped listing.** The proxy
   blocks GitHub's `search/issues` endpoint for scripts (it binds a session to
   `repos/{owner}/{repo}/…` endpoints). The `search_*` MCP tools return a 403
-  rate limit after only a few sequential calls; issue #952's "~2 concurrent /
-  ~49s backoff" numbers did not hold (issue #1092). Use `list_issues`,
+  rate limit after only a few sequential calls (issues #952, #1092). Use
+  `list_issues`,
   `list_pull_requests` or `pnpm exec tsx scripts/list-open-issues.ts` and filter
   locally. If a search is unavoidable and returns 403, wait at least a minute
   and retry once, sequentially.
@@ -126,9 +125,10 @@ like this:
   `get_status`.** The combined-status API reports `total_count: 0` / pending for
   Actions-based gates, which wrongly suggests the gate has not run.
 - **CI success is not delivered natively.** A green gate wakes a subscribed
-  session only through its doorbell comment (none on a fork PR). Poll
+  session only through the comment the gate action posts on green (its "doorbell",
+  `.github/actions/gate/action.yml`; none on a fork PR). Poll
   `get_check_runs` when you can't rely on that: at agent-completion checkpoints,
-  or with `send_later` when no agent is running. Cadence lives in
+  or with `send_later` when no agent is running. Babysit cadence: step 3 of
   [`pr-workflow.md`](./pr-workflow.md).
 - **Re-running an old workflow run does not recompute the merge ref.** It
   re-checks-out that run's original `refs/pull/N/merge` snapshot, so it can stay
@@ -168,10 +168,9 @@ REST endpoint with `$GH_TOKEN` and `Content-Type: application/json` (the proxy
 answers 415 without it). A summary read right after a write can be stale
 (issue #1373).
 
-**Known gap:** no GitHub API attaches a file or image to an issue or issue
-comment (neither REST nor GraphQL). Your options: (a) the web UI (needs a
-human), (b) commit the image to the repo and hotlink it, or (c) attach it as a
-release asset (issue #872).
+**Known gap:** no GitHub API (REST or GraphQL) attaches a file or image to an
+issue or comment. Options: (a) the web UI (needs a human), (b) commit the image
+and hotlink it, (c) attach it as a release asset (issue #872).
 
 ## Reading another session's transcript
 

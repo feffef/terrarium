@@ -1,19 +1,16 @@
 # Domain Docs
 
-*Seeded from the pack's generic `domain.md` template, then customized for this
-repo. This is the live, repo-authoritative version — don't re-sync it against
-the pack template, which stays generic and reinstallable (ADR-0005).*
+*Repo-authoritative. Don't re-sync it against the pack's generic, reinstallable
+`domain.md` template (ADR-0005).*
 
-How to use this repo's domain documentation while exploring the codebase.
-
-This repo is multi-context and shared-kernel-shaped — see `CONTEXT-MAP.md` for
-the shape (ADR-0021).
+How to use the domain docs while exploring. The repo's shape (multi-context,
+shared kernel) is in `CONTEXT-MAP.md` (ADR-0021).
 
 ## Before exploring, read these
 
-For the reading order and what each file covers — `CONTEXT-MAP.md`, then
-`CONTEXT.md`, then the Tenant's own `layers/<tenant>/CONTEXT.md`, then the
-relevant ADRs — start at CLAUDE.md's "Docs you must read first" rather than here.
+Reading order and triggers (`CONTEXT-MAP.md`, `CONTEXT.md`,
+`layers/<tenant>/CONTEXT.md`, relevant ADRs): see CLAUDE.md's "Docs you must
+read first", not this page.
 
 This repo deliberately diverges from the `domain-modeling` Skill's generic
 templates (ADR-0021):
@@ -29,16 +26,15 @@ templates (ADR-0021):
 Match the repo's actual files, not the template. See `CONTEXT-MAP.md`'s
 **Decisions** section for where ADRs live today.
 
-If any of these files don't exist, **proceed silently** — don't flag the
-absence or suggest creating them upfront. The `/domain-modeling` Skill creates
-them lazily, once a term or decision actually needs resolving.
+If any of these files are missing, **proceed silently**: don't flag it or
+suggest creating them. `/domain-modeling` creates them lazily, when a term or
+decision needs resolving.
 
 ## File structure
 
-The same divergence applies to layout: the generic template puts each context
-under `src/<context>/` with its own `docs/adr/`. This repo instead co-locates
-each Tenant's `CONTEXT.md` under `layers/<tenant>/` and keeps every ADR at the
-root `docs/adr/`. CLAUDE.md's "Repo layout" shows where each lives.
+Layout diverges too: the template puts each context under `src/<context>/` with
+its own `docs/adr/`; here each Tenant's `CONTEXT.md` lives under
+`layers/<tenant>/` and every ADR in root `docs/adr/` (CLAUDE.md "Repo layout").
 
 ## Use the glossary's vocabulary
 
@@ -46,9 +42,8 @@ When your output names a domain concept — an issue title, a refactor
 proposal, a hypothesis, a test name — use the term `CONTEXT.md` defines for
 it. Don't drift to a synonym the glossary explicitly avoids.
 
-If the concept you need isn't in the glossary yet, that's a signal: either
-you're inventing language the project doesn't use (reconsider), or there's a
-real gap (note it for `/domain-modeling`).
+A concept missing from the glossary means either you're inventing language
+(reconsider) or there's a real gap (note it for `/domain-modeling`).
 
 ## The rule of two: coin vocabulary on its second instance
 
@@ -76,8 +71,7 @@ silently overriding it:
 ## Check a new Tenant/Collection proposal against ADR-0006 immediately
 
 Check a new Tenant or Collection against ADR-0006's pages-only-routing
-constraint as soon as it's proposed — don't defer
-the check to a later pass. A separately-named, addressable-sounding
-Collection (e.g. a Tenant's "sites" or "exhibits") looks like natural design
-but violates ADR-0006. Catching it at proposal time stops the mistake from
-riding several turns before someone else notices (issue #573).
+constraint when it is proposed, not later. A separately-named,
+addressable-sounding Collection (e.g. a Tenant's "sites" or "exhibits") looks
+natural but violates ADR-0006. Catching it at proposal stops the mistake riding
+several turns (issue #573).

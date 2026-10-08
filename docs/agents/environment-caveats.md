@@ -16,11 +16,10 @@ re-diagnose them as new. Incident detail lives in the cited issue.
   `git commit -S`, and the Stop hook's `--reset-author` remedy for an
   "Unverified" commit, can silently fail to sign even with a correct author
   email.
-- **Session-only, in-memory state can silently empty across a session-resume
-  event, with no error** — a registered `/loop`/`CronCreate` job, a
-  backgrounded `Agent`-tool subagent, or a scratchpad file on disk. Re-verify
-  each is still registered/alive/intact after a resume rather than assuming it
-  survived. (issues #571, #794, #891)
+- **Session-only state can silently vanish across a session resume, with no
+  error:** a registered `/loop`/`CronCreate` job, a backgrounded `Agent`
+  subagent, a scratchpad file. After a resume, re-verify each is still
+  registered/alive/intact. (issues #571, #794, #891)
 - **Any `mcp__claude-code-remote__*` call (spelled `mcp__Claude_Code_Remote__*`
   in some sessions), and `AskUserQuestion`, can fail with a transient
   "permission stream closed" error.** Retry once; if it fails
@@ -38,32 +37,30 @@ re-diagnose them as new. Incident detail lives in the cited issue.
 - **A local-only typecheck/build failure is usually stale install state, not a
   repo bug.** Before asserting "X is broken on main" from a local repro, reset
   the *full* install state (`rm -rf node_modules .nuxt && pnpm install
-  --frozen-lockfile`) to mirror CI's `--frozen-lockfile` path — a `git stash`
-  or `rm -rf .nuxt && nuxt prepare` alone won't clear `node_modules`. (issues
-  #923, #928, #940)
-- **The container's worktree-isolation guard can false-positive on an ordinary
-  command and block it outright** — known triggers include a redirected
-  `pnpm`/`git push` command, a command whose text merely contains both "Bash"
-  and "pnpm", or a heredoc mentioning `git`. Write the command to a script
-  file and execute that instead of the raw inline command. (issue #1180)
+  --frozen-lockfile`, CI's path); `git stash` or `rm -rf .nuxt && nuxt prepare`
+  alone won't clear `node_modules`. (issues #923, #928, #940)
+- **The container's worktree-isolation guard can wrongly block an ordinary
+  command.** Known triggers: a redirected `pnpm`/`git push`, command text that
+  merely contains both "Bash" and "pnpm", a heredoc mentioning `git`. Run the
+  command from a script file, not inline. (issue #1180)
 - **A scheduled/autonomous session can find `mcp__github__*` unauthenticated
   with no `gh` CLI fallback** — there's no code-level fix from inside the
   repo. Push the branch as usual, then say so explicitly in the session log's
   `outcome`/`summary` (e.g. "branch pushed, PR NOT opened — no GitHub write
   access this run") so it doesn't read as ordinary completion. (issue #982)
-- **A dispatched subagent's tool call needing human permission approval blocks
-  indefinitely in an unattended run, with no signal to the orchestrating
-  session** — `PreToolUse` hooks do fire for a subagent's own calls, but
-  approval waits on a human UI click, and no wake-on-pending-approval signal is
-  known. Treat prolonged subagent silence as possibly stuck, not slow. (issue
-  #1215; `docs/agents/guards.md` covers the narrower fix of never autonomously
+- **In an unattended run, a dispatched subagent's tool call that needs human
+  approval blocks forever** and the orchestrator gets no signal: approval waits
+  on a human UI click, and no wake-on-pending-approval signal is known
+  (`PreToolUse` hooks do still fire for subagent calls, see `guards.md`). Treat
+  long subagent silence as possibly stuck, not slow. (issue #1215;
+  `docs/agents/guards.md` covers the narrower fix of never autonomously
   dispatching a guard/settings-touching edit)
 - **The harness's instruction-shaped-content scanner can false-positive on
-  ordinary discussion that merely mentions "settings.json" /
-  "settings-json"**, e.g. a subagent's report on `.claude/settings.json` hook
-  wiring. When a result is flagged, inspect it: if it is benign discussion
-  rather than an injection attempt, treat it as this quirk. (sessions
-  session_0174Bf4itHjWjJ3yMKmRd1KM, session_019QghEUG36tGWuhPUdM4t5Q)
+  benign text** that merely mentions "settings.json" / "settings-json", e.g. a
+  subagent's report on `.claude/settings.json` hook wiring. Inspect a flagged
+  result; if it is benign discussion, not an injection attempt, treat it as this
+  quirk. (sessions session_0174Bf4itHjWjJ3yMKmRd1KM,
+  session_019QghEUG36tGWuhPUdM4t5Q)
 - **The container's git (2.43) can differ from CI's (~2.55), so a git-based
   test fixture can pass here and fail in CI.** Force the precondition (e.g.
   delete the ref) instead of relying on default behavior — `init` + `remote

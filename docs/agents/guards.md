@@ -5,16 +5,15 @@ rationale, detection contract and residual fail-opens are single-homed in **its
 own script header** — read that before changing one. This page is the index and
 the conventions they share.
 
-`scripts/guard-io.ts` (issue #1080) owns the stdin→deny-JSON, transcript-read,
-`--dry-run`, and direct-run-bootstrap plumbing every `PreToolUse` guard needs — the mechanical
-shape, not the rules. Every guard but `subagent-background-guard.ts` and
-`session-id-guard.ts` (a different shape: quote-aware command scanning and a
-post-hoc trace read, respectively) builds on it; each still contributes only
-its own registry, pure predicate, and `formatGuardMessage`.
+`scripts/guard-io.ts` (issue #1080) holds the plumbing every `PreToolUse` guard
+needs (stdin→deny-JSON, transcript read, `--dry-run`, direct-run bootstrap), not
+the rules. Every guard builds on it except `subagent-background-guard.ts`
+(quote-aware command scanning) and `session-id-guard.ts` (post-hoc trace read);
+each adds only its own registry, pure predicate and `formatGuardMessage`.
 
-**If a guard just denied your call, its deny message is the instruction** — it
-names what to do instead. Don't route around it. If it is wrong, say so on the
-issue below rather than rephrasing the call until it passes.
+**A guard's deny message is the instruction:** it names what to do instead, so
+follow it and don't route around it. If it is wrong, say so on the guard's issue
+(roster below) rather than rephrasing the call until it passes.
 
 ## The roster
 
@@ -49,8 +48,8 @@ issue below rather than rephrasing the call until it passes.
   `tests/unit/<guard>.spec.ts`** — ADR-0004's reviewability bar for code that
   runs unattended. Run the `--dry-run` in a script's `Usage:` header to exercise
   a branch by hand.
-- **Human-only to merge** (ADR-0004, 2026-07-30). Unit tests don't clear that
-  bar: what they cannot observe is the *live* interception.
+- **Human-only to merge** (ADR-0004's 2026-07-30 amendment: behaviour the gate
+  can't observe), because unit tests can't observe the *live* interception.
 - **Never dispatch an unattended/scheduled session to implement a guard change,
   `.claude/settings.json`'s hook wiring included.** Editing it triggers an
   interactive permission prompt with no human present to grant it during a
@@ -93,8 +92,8 @@ case to `tests/unit/<guard>.spec.ts` too.
   payload key.
 - Every fail-closed guard runs through `scripts/guard-wrap.sh`, which
   synthesizes a deny when the wrapped guard exits nonzero with empty stdout
-  (issue #1223) — the one deliberate exception is `deferred-tool-guard.ts`,
-  which stays wired with a bare `|| true` because it is meant to fail open.
+  (issue #1223); `deferred-tool-guard.ts` is wired with a bare `|| true` because
+  it fails open.
 - `subagent-background-guard`'s command-text scan is not a full shell parser:
   a `&` reached only through command substitution, a here-doc, or ANSI-C
   quoting is outside its model (#964's accepted trade-off).

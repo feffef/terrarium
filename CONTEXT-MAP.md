@@ -10,26 +10,21 @@ context when you work on that Tenant.
 - **Platform** — [`./CONTEXT.md`](./CONTEXT.md) — the concepts every agent needs
   regardless of task: Platform, Tenant, Space, Collection, Document, Session,
   Friction, Skill, Trusted/Public, Agent Authorship, session log, Skill Inventory.
-- **Blog** — [`layers/blog/CONTEXT.md`](./layers/blog/CONTEXT.md) — Persona, Pingback, Tag; why the Blog exists (a demo/content Tenant).
+- **Blog** — [`layers/blog/CONTEXT.md`](./layers/blog/CONTEXT.md) — Persona, Pingback, Tag.
 - **Atlas** — [`layers/atlas/CONTEXT.md`](./layers/atlas/CONTEXT.md) — Biome,
-  Specimen, Interaction, Observation; why the Atlas exists (a demo/content Tenant).
+  Specimen, Interaction, Observation.
 - **Journal** — [`layers/journal/CONTEXT.md`](./layers/journal/CONTEXT.md) —
-  Digest; why the Journal isn't optional (Platform infrastructure, ADR-0008).
+  Digest.
 - **Midden** — [`layers/midden/CONTEXT.md`](./layers/midden/CONTEXT.md) — Site,
-  Dig season (Stratum), Artifact, Condition, the two-gate inclusion test; why the
-  Midden exists (a demo/content Tenant, issue #515).
+  Dig season (Stratum), Artifact, Condition, the two-gate inclusion test.
 - **Marquee** — [`layers/marquee/CONTEXT.md`](./layers/marquee/CONTEXT.md) —
-  Screening, Chapter, Poster; why the Marquee exists (a guest-requested
-  demo/content Tenant, ADR-0023, issue #551).
+  Screening, Chapter, Poster.
 - **Tinkerfund** — [`layers/tinkerfund/CONTEXT.md`](./layers/tinkerfund/CONTEXT.md) —
   Campaign, Inventor, Backer, Pledge, Reward, Promotion and the rest of a
-  crowdfunding shop's vocabulary; why Tinkerfund exists (a design-showcase
-  demo/content Tenant, issue #1375).
-- **Commons** — [`layers/commons/CONTEXT.md`](./layers/commons/CONTEXT.md) — why the
-  Commons exists: the first **Aggregator** (a platform view reading across Tenants
-  via the **Catalog**), with **Search** and **Timeline** Spaces, validating the
-  cross-Tenant read model (ADR-0025, issue #642). The Platform-context terms it
-  turns on — Collection kind, Catalog, Aggregator — live in the root `CONTEXT.md`.
+  crowdfunding shop's vocabulary.
+- **Commons** — [`layers/commons/CONTEXT.md`](./layers/commons/CONTEXT.md) — the
+  Aggregator Tenant: its Search and Timeline Spaces. The terms it turns on
+  (Collection kind, Catalog, Aggregator) live in the root `CONTEXT.md`.
 
 The root `CONTEXT.md`'s `## Tenants` roster points at each of these: a pointer,
 not a second home. Substantive definitions live once, in the listed context;

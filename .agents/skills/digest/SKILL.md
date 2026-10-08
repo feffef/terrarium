@@ -29,7 +29,7 @@ for the boundary and the merge mechanics.
 
 ## 1. Get on a working branch
 
-CLAUDE.md's branch-off rule.
+CLAUDE.md's "Stay on the branch your session started on" rule.
 
 ## 2. Find the days to write
 
