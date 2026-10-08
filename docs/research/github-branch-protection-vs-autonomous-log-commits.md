@@ -242,16 +242,27 @@ credential this repo doesn't use for this path.
 
 ---
 
-## Recommended configuration and tradeoffs — tracked on the issue, not here
+## Recommended configuration — now a Proposal (updated 2026-10-08)
 
-The concrete ruleset recommendation (replace classic protection with a
-repository ruleset requiring the `gate` status check plus one Repository-admin
-bypass-list entry) and its tradeoffs against routing session logs through the
-gated-PR flow instead were posted in full as a comment on issue #348. The
-owner closed #348 on 2026-07-12 (`completed`) once the research landed —
-the research task was done, but the ruleset change itself is a governance/CI
-surface, human-only to land (ADR-0004), and was deliberately left open for a
-human to apply; it has not been applied as of this writing (`main` still
-carries no branch protection or ruleset). See #348's comment for the full
-write-up; this doc keeps only the verified facts above (§1-§5), per
-`docs/agents/issue-tracker.md`'s research-doc-vs-issue convention.
+The concrete config is `docs/proposals/348-protect-main-ruleset.md`: a
+ruleset requiring a PR (0 approvals) plus the `gate` check, blocking force
+pushes and deletions, with one Repository-admin bypass set to "Always". The
+owner approved it on 2026-10-08 and asked for it to be applied from a cloud
+session; the agent proxy refused the write (`docs/agents/environment-caveats.md`),
+so a human applies it. Stage 2, the App identity that lets the admin bypass
+narrow to "For pull requests only", is issue #1689. The owner closed #348 on
+2026-07-12 once the research landed; the earlier recommendation is on that
+issue's comment.
+
+## 6. Re-checked 2026-10-08: a third bypass mode, `exempt`
+
+GitHub's REST ruleset schema now accepts `bypass_mode: exempt` next to
+`always` and `pull_request` (read from the Terraform GitHub provider's
+`repository_ruleset` docs, which mirror the API; the changelog announcing it,
+dated 2025-09-10, and docs.github.com are both blocked from this container).
+Reported semantics: rules are not evaluated for an exempt actor and no bypass
+entry is recorded, where "Always" evaluates and records a bypass. For the
+session-log lander "Always" is the better fit: the record of each bypass is
+exactly the audit trail ADR-0009's exception should leave. Everything in §1–§5
+above still holds; in particular the bypass picker still offers no
+individual-user entry, and no rule exempts a path from the other rules.

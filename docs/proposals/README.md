@@ -2,7 +2,8 @@
 
 ## Purpose
 
-The handoff for a `.github/workflows/*` change an agent can't push itself (why:
+The handoff for a change an agent can't apply itself: a `.github/workflows/*`
+edit, or a repository setting such as a ruleset (why:
 `docs/agents/environment-caveats.md`). An agent writes the intended change here;
 a human applies it by hand. This README owns the format and discipline below.
 
@@ -16,7 +17,8 @@ Each proposal file must contain:
 
 1. **Origin** — a pointer back to the originating PR/issue (`#NNN`).
 2. **Target** — the exact workflow file path the change applies to (e.g.
-   `.github/workflows/gate.yml`), plus the proposed diff or full new content.
+   `.github/workflows/gate.yml`), plus the proposed diff or full new content;
+   for a repository setting, the settings page and the exact API call.
 3. **Rationale** — why the change is needed.
 4. **Companion change** — which agent PR (if any) this workflow edit must be
    applied *alongside* (see the discipline below). State "none" if the
