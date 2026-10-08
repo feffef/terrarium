@@ -1,0 +1,93 @@
+schemaVersion: 1
+session: session_015CSc6hNccF3XgrSGaGGqjD
+startedAt: 2026-10-08T02:03:46Z
+endedAt: 2026-10-08T02:19:09Z
+kind: autonomous
+goal: "Run the scheduled frictions-to-fixes pass: survey 3 days of session frictions and land fixes"
+status: completed
+outcome: "PR #1680 merged (merged-since --merges-only); blog-post pin regression filed as #1679 for a human"
+summary: "Scheduled run, no human prompt. A survey subagent read all 32 sessions in the window and returned two candidates; everything else was already tracked (#1651-#1654, #1675-#1677), inside open Prune Trials, or already fixed. Candidate 1 (blog-post session-log pin rule) was a regression of the fix in 35eb778, so per the Skill I filed #1679 for human review instead of re-fixing. Candidate 2 (merged-since.ts output overflows a subagent) went to a Sonnet impl agent in a worktree, which opened PR #1680 adding --merges-only (+20/-8, gate green); I reviewed the diff and ran the flag against real history (48 merges vs 206 commits). All work was agent-initiated under the standing schedule; no human green-light was given for either item. PR #1680 then merged on a green gate with a posted review comment."
+prs:
+  - "1680"
+docsRead:
+  - path: CONTEXT-MAP.md
+    reason: (no reason given)
+  - path: CONTEXT.md
+    reason: (no reason given)
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+  - path: docs/agents/issue-tracker.md
+    reason: (no reason given)
+  - path: docs/agents/triage-labels.md
+    reason: (no reason given)
+  - path: .agents/skills/log-session/SKILL.md
+    reason: (no reason given)
+  - path: CLAUDE.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: (no reason given)
+  - path: scripts/merged-since.ts
+    reason: (no reason given)
+  - path: tests/unit/merged-since.spec.ts
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: frictions-to-fixes
+    reason: (invoked as a slash command)
+frictions:
+  - description: Agent call with run_in_background false was denied by the guard, though the Skill text and my brief used that form for the survey subagent.
+    solution: "Drop the run_in_background false wording from the frictions-to-fixes brief (tracked in #1651)."
+    severity: nit
+  - description: First issue_write lacked the ADR-0017 provenance header and was denied; the retry worked, but I did not know the header shape beforehand.
+    solution: None needed beyond the guard's deny message, which named the exact line.
+    severity: nit
+  - description: I cd'd into the impl agent's worktree to test the new flag, which moved my primary working directory until I cd'd back.
+    solution: Use absolute paths or a subshell when inspecting a subagent worktree.
+    severity: nit
+durationSec: 923
+models:
+  claude-sonnet-5-5: 61
+toolCounts:
+  Bash: 12
+  Read: 9
+  Agent: 3
+  ToolSearch: 1
+  mcp__github__issue_write: 2
+  ReadNotifications: 1
+  mcp__github__pull_request_read: 3
+  Skill: 1
+  mcp__github__add_issue_comment: 1
+  mcp__github__unsubscribe_pr_activity: 1
+  PushNotification: 1
+docsReadViaShell:
+  - .agents/skills/blog-post/SKILL.md
+  - docs/agents/guards.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - .agents/skills/digest/SKILL.md
+  - docs/adr/0017-provenance-footer-on-agent-authored-content.md
+  - docs/agents/environment-caveats.md
+  - .agents/skills/visitor-loop/SKILL.md
+  - .agents/skills/auto-triage/SKILL.md
+  - docs/agents/git-conventions.md
+  - docs/agents/github-integration.md
+  - docs/agents/pr-workflow.md
+subagents:
+  - type: general-purpose
+    task: Survey frictions, screen candidates
+  - type: general-purpose
+    task: Survey frictions, screen candidates
+  - type: general-purpose
+    task: Add --merges-only to merged-since
+    model: sonnet
+gitBranch: claude/eager-ptolemy-7jyiri
+entrypoint: remote_trigger
+cliVersion: 2.1.293
+trigger: frictions-to-fixes
+landedBy: Stop
