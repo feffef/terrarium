@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_011p9VA5A1CWNG9xd2VrQf8N
 startedAt: 2026-10-08T05:51:07Z
-endedAt: 2026-10-08T06:12:38Z
+endedAt: 2026-10-08T06:22:50Z
 kind: interactive
 goal: Assess issue 1677 (prune-trial Routine keeps firing seconds before the 3-day floor) and fix it
-status: in-review
-outcome: Root cause found (landing time depends on the fire time, so rescheduling cannot help); one-hour grace PR 1683 open, issue 1677 closed with the explanation
-summary: "The user asked for thoughts on issue 1677, which proposed nudging the prune-trial Routine's fire time later. I first recommended that as the cheapest fix without reading the prune-trial Skill, the Routine config or the ledger. When the user asked how the move would help, I reasoned it through, then read the Skill, the ledger, scripts/prune-trial-window.ts and the Routine list at the user's direction. That showed the clustering is self-induced: the same Routine run that judges trials also opens and self-merges a new one, so a trial lands at fire time plus the run's duration while the judging run starts at a fixed lag, and the race is independent of the nominal cron time. The user then chose option 2 (a grace on the floor), asked for the miss to be explained and logged as a friction, and asked for the issue to be closed with the explanation. Human-instructed: the investigation, the choice of option 2, the friction log and closing the issue. Agent-initiated: the one-hour size of the grace and the test changes. The gate passed, PR 1683 was opened (human-merged, flags the ADR-0027 three-days nuance) and issue 1677 was closed with the explanation. After the user asked whether I had read the ADR folder, I listed and grepped all ADRs and read 0003, 0004 and 0015 in full; they did not change the fix."
+status: completed
+outcome: Root cause found (landing time depends on the fire time, so rescheduling cannot help); one-hour grace merged in PR 1683, issue 1677 closed with the explanation
+summary: "The user asked for thoughts on issue 1677, which proposed nudging the prune-trial Routine's fire time later. I first recommended that as the cheapest fix without reading the prune-trial Skill, the Routine config or the ledger. When the user asked how the move would help, I reasoned it through, then read the Skill, the ledger, scripts/prune-trial-window.ts and the Routine list at the user's direction. That showed the clustering is self-induced: the same Routine run that judges trials also opens and self-merges a new one, so a trial lands at fire time plus the run's duration while the judging run starts at a fixed lag, and the race is independent of the nominal cron time. The user then chose option 2 (a grace on the floor), asked for the miss to be explained and logged as a friction, and asked for the issue to be closed with the explanation. Human-instructed: the investigation, the choice of option 2, the friction log and closing the issue. Agent-initiated: the one-hour size of the grace and the test changes. The gate passed, PR 1683 was opened and then merged by a human ( flags the ADR-0027 three-days nuance) and issue 1677 was closed with the explanation. After the user asked whether I had read the ADR folder, I listed and grepped all ADRs and read 0003, 0004 and 0015 in full; they did not change the fix."
 prs:
   - "1683"
 docsRead:
@@ -48,16 +48,16 @@ frictions:
   - description: Issue 1677, filed by the audit-skills sweep, proposed a schedule nudge that cannot work and repeated the earlier nit friction's premise without modelling why landings cluster.
     solution: Have sweeps that escalate a recurring pattern state the causal mechanism and check that the proposed fix changes it, not only that the pattern recurs.
     severity: minor
-durationSec: 1291
+durationSec: 1903
 models:
-  claude-sonnet-5-5: 90
+  claude-sonnet-5-5: 110
 toolCounts:
   Read: 14
   ToolSearch: 2
   mcp__github__issue_read: 2
   Glob: 1
   mcp__claude-code-remote__list_triggers: 1
-  Bash: 16
+  Bash: 18
   Edit: 6
   Skill: 1
   Write: 2
@@ -66,6 +66,10 @@ toolCounts:
   mcp__github__add_issue_comment: 1
   mcp__github__issue_write: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 4
+  mcp__github__pull_request_read: 2
+  mcp__claude-code-remote__send_later: 1
+  mcp__claude-code-remote__delete_trigger: 1
 filesEdited:
   - scripts/prune-trial-window.ts
   - tests/unit/prune-trial-window.spec.ts
