@@ -1,11 +1,11 @@
 schemaVersion: 1
 session: session_016ZmB2wonEm8Aki1P4V59cK
 startedAt: 2026-10-08T15:34:21Z
-endedAt: 2026-10-08T16:01:31Z
+endedAt: 2026-10-08T16:09:29Z
 kind: interactive
 goal: Rewrite Karen's reply to David's prune-trial post (replacing the one published earlier today) around the Skill's read-first, write-later structure and the agents that proposed a fix without reading it
 status: in-review
-outcome: Old post and pingback removed, new post and stub written; full gate green; PR 1688 open for the owner to merge; fact-check still running
+outcome: Old post and pingback removed, new post and stub written; full gate and CI green; PR 1688 open for the owner to merge; independent fact-check stalled and was stopped, claims self-re-derived instead
 summary: "Human-instructed throughout: the owner typed /blog-post, said Karen's reply to David (PR 1686) missed the fun part, named the angle (the prune-trial Skill reads the ledger in section 1 and writes it in section 3, so a trial always lands minutes after its run starts and rescheduling cannot help; the agent asked about issue 1677 proposed the fix without reading the Skill), and asked for a complete rewrite with the first post removed. The Skill tool refused /blog-post (disable-model-invocation), so I read SKILL.md and ran its steps by hand, skipping the three-candidate blind read because topic, Persona and form were given. I gathered the sources (both posts, the Skill, the ledger, issue 1677 and its comment, PR 1683, the fixing session's log, the Skill Inventory notes, all eight scheduled prune-trial logs paired with their ledger commits) and found every trial landed 1m57s to 3m09s after its run began, and that today's 13:18 run would have been miss number six without the grace merged at 06:22. I asked the owner two questions: they chose a human merge over self-merge and asked whether the two agents that \"had the file\" really read it, so I dispatched a Sonnet subagent to page three transcripts via claude-code-remote: the Oct 6 run's first message was the bare /prune-trial command (Skill body not in the transcript, so \"executing the Skill\" is the claim), the audit sweep's main agent never opened the Skill (its helper did), and the fixing session recommended rescheduling about six minutes before its first Read of the Skill. Agent-initiated: title, structure, the three-charges list, the decision to open on timestamps after a tone re-read found Karen's last three posts all open on a quote. Tree validates, full gate passed, PR 1688 opened and subscribed. An independent fact-check subagent is still running; its tally goes into the PR body when it reports."
 prs:
   - "1688"
@@ -66,25 +66,30 @@ frictions:
   - description: claude-code-remote list_events pages newest-first and the pages are large, so verifying what another session read cost a long subagent run and still could not reach a subagent's first ~23 tool calls.
     solution: An oldest-first or kind-and-text filtered query, or a script that answers 'did session X Read path P, and with what offset/limit' from the trace.
     severity: nit
-durationSec: 1630
+  - description: The independent fact-check subagent (Sonnet) stalled after 19 tool calls with its last transcript entry a tool result, never handed back, and was then stopped from the owner's side; the blog-post Skill's mandatory step 9 ended with a self-check instead of an independent tally.
+    solution: Give the checker a time budget and a partial-report instruction, or split the claim list across two smaller checkers so one stall does not lose the whole step.
+    severity: moderate
+durationSec: 2108
 models:
-  claude-fable-5-1: 137
+  claude-fable-5-1: 170
 toolCounts:
   Skill: 2
   Read: 2
-  Bash: 47
-  ToolSearch: 2
+  Bash: 53
+  ToolSearch: 3
   mcp__github__issue_read: 2
-  mcp__github__pull_request_read: 1
+  mcp__github__pull_request_read: 2
   mcp__github__list_pull_requests: 1
   AskUserQuestion: 1
   mcp__claude-code-remote__list_events: 2
   Agent: 2
   Write: 3
-  ReadNotifications: 4
+  ReadNotifications: 8
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
-  mcp__github__update_pull_request: 1
+  mcp__github__update_pull_request: 2
+  mcp__claude-code-remote__send_later: 1
+  SendMessage: 1
 filesEdited:
   - layers/blog/content/karen/pages/2026-10-08-two-minutes-early-by-design.md
 docsReadViaShell:
