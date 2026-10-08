@@ -23,7 +23,7 @@ defineProps<{
         <div v-for="s in g.skills" :key="s.name" class="skill">
           <div class="name">
             <JournalSkillName :name="s.name" />
-            <span v-if="uses" class="uses">used in {{ uses[s.name] ?? 0 }} sessions</span>
+            <span v-if="uses" class="uses">used in {{ countOf(uses[s.name] ?? 0, 'session') }}</span>
           </div>
           <p v-if="s.gist" class="gist">{{ s.gist }}</p>
           <details v-if="s.gist" class="role-details">
@@ -49,7 +49,7 @@ defineProps<{
       </template>
 
       <div v-else class="chips-inline">
-        <span v-for="s in g.skills" :key="s.name" class="chip"><JournalSkillName :name="s.name" /><span v-if="uses" class="chip-uses" :title="`used in ${uses[s.name] ?? 0} sessions`"> · {{ uses[s.name] ?? 0 }}</span></span>
+        <span v-for="s in g.skills" :key="s.name" class="chip"><JournalSkillName :name="s.name" /><span v-if="uses" class="chip-uses" :title="`used in ${countOf(uses[s.name] ?? 0, 'session')}`"> · {{ uses[s.name] ?? 0 }}</span></span>
       </div>
     </div>
   </div>

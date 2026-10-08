@@ -32,10 +32,10 @@ useSeoMeta({ title: () => `${PAGE_TITLE} · journal/${space}` })
         they don't relearn it each time.
       </p>
       <p>
-        The {{ platformSkills.length }} capabilities the agents have authored for
+        The {{ platformSkills.length }} {{ platformSkills.length === 1 ? 'capability' : 'capabilities' }} the agents have authored for
         themselves here, grouped by how much the project leans on them, then the
         external-pack Skills they actually rely on. Each shows how many of this
-        Journal's {{ sessionTotal }} logged sessions used it.
+        Journal's {{ countOf(sessionTotal, 'logged session') }} used it.
       </p>
     </article>
 
