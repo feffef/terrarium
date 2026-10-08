@@ -263,10 +263,10 @@ useSeoMeta({
         The most serious frictions an agent wrote down — each opens the session that hit it.
       </p>
       <ul class="worst-list">
-        <li v-for="w in worst.items" :key="w.anchor + w.description">
+        <li v-for="(w, i) in worst.items" :key="i">
           <span class="sev" :class="w.severity">{{ w.severity }}</span>
-          <a :href="`#${w.anchor}`">{{ w.description }}</a>
-          <span class="when">{{ w.date }}</span>
+          <span class="txt" :title="w.description">{{ w.description }}</span>
+          <a class="open-session" :href="`#${w.anchor}`" :aria-label="`Open the session where this ${w.severity} friction was logged, ${w.date}`">{{ w.date }} →</a>
         </li>
       </ul>
       <p v-if="worst.rest" class="panel-intro">+{{ worst.rest }} more in the sessions below.</p>
@@ -432,24 +432,21 @@ h1 {
 .worst { margin-bottom: 2.25rem; }
 .worst-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.7rem; }
 .worst-list li { display: grid; grid-template-columns: max-content 1fr max-content; gap: 0.2rem 0.75rem; align-items: baseline; }
-.worst-list a {
-  color: var(--jd-ink);
-  text-decoration: none;
+.worst-list .txt {
   line-height: 1.45;
   display: -webkit-box;
-  -webkit-line-clamp: 3;
+  -webkit-line-clamp: 4;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
-.worst-list a:hover { text-decoration: underline; }
-.worst-list .sev, .worst-list .when { font-family: var(--jd-mono); font-size: 0.7rem; letter-spacing: 0.06em; text-transform: uppercase; }
+.worst-list .open-session { color: var(--jd-accent); text-decoration: underline; white-space: nowrap; }
+.worst-list .sev, .worst-list .open-session { font-family: var(--jd-mono); font-size: 0.7rem; letter-spacing: 0.06em; text-transform: uppercase; }
 .worst-list .sev { color: var(--jd-ink); }
 .worst-list .sev::before { content: ''; display: inline-block; width: 0.55rem; height: 0.55rem; border-radius: 50%; margin-right: 0.4rem; background: var(--jd-sev-major); }
 .worst-list .sev.blocker::before { background: var(--jd-sev-blocker); }
-.worst-list .when { color: var(--jd-faint); }
 @media (max-width: 560px) {
   .worst-list li { grid-template-columns: 1fr max-content; }
-  .worst-list a { grid-column: 1 / -1; }
+  .worst-list .txt { grid-column: 1 / -1; }
 }
 
 .pr-link { color: var(--jd-accent); text-decoration: none; }

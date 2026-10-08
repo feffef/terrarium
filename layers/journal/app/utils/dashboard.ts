@@ -88,8 +88,7 @@ export function frictionOtherCount(totals: Record<Severity, number>): number {
   return totals.nit + totals.minor + totals.moderate
 }
 
-// The blocker and major frictions, blockers first then newest session first (the
-// caller's order), capped so the panel stays a glance. `rest` counts the cut ones.
+// Array.sort is stable, so blockers-first keeps the caller's newest-first order within a severity.
 export function worstFrictions(
   sessions: SessionDoc[],
   max = 5,
