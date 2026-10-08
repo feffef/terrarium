@@ -43,8 +43,8 @@ const { data: tour } = await useAsyncData(`${route.path}:onramp`, async () =>
 )
 
 // A Digest permalink steps to the days either side and back to the list, so it
-// isn't a dead end. Titles are the digests' own one-line summaries.
-const digestDate = computed(() => path.match(/^\/digests\/([\d-]+)$/)?.[1] ?? null)
+// isn't a dead end.
+const digestDate = computed(() => path.match(/^\/digests\/(\d{4}-\d{2}-\d{2})$/)?.[1] ?? null)
 const { data: digestNav } = await useAsyncData(`${route.path}:digest-nav`, async () => {
   if (!digestDate.value) return null
   const days = (await queryCollection(pagesKey).where('path', 'LIKE', '/digests/%').select('path').all())
@@ -66,10 +66,10 @@ useSeoMeta({
     <article v-if="page" class="jd-prose">
       <ContentRenderer :value="page" :components="{ table: JournalScrollTable }" />
       <JournalOnrampTour v-if="tour?.length" :steps="tour" :current="path" :base="`/t/journal/${space}`" />
-      <nav v-if="digestDate && digestNav" class="digest-nav" aria-label="Other days">
-        <NuxtLink v-if="digestNav.older" :to="`/t/journal/${space}/digests/${digestNav.older}`" rel="prev">← {{ digestNav.older }}</NuxtLink>
+      <nav v-if="digestDate && digestNav" class="digest-nav" aria-label="Digest days">
+        <NuxtLink v-if="digestNav.older" :to="`/t/journal/${space}/digests/${digestNav.older}`" rel="prev"><span aria-hidden="true">← </span>{{ digestNav.older }}</NuxtLink>
         <NuxtLink :to="`/t/journal/${space}#${digestAnchor(digestDate)}`">All daily digests</NuxtLink>
-        <NuxtLink v-if="digestNav.newer" :to="`/t/journal/${space}/digests/${digestNav.newer}`" rel="next">{{ digestNav.newer }} →</NuxtLink>
+        <NuxtLink v-if="digestNav.newer" :to="`/t/journal/${space}/digests/${digestNav.newer}`" rel="next">{{ digestNav.newer }}<span aria-hidden="true"> →</span></NuxtLink>
       </nav>
     </article>
     <div v-else class="jd-prose">

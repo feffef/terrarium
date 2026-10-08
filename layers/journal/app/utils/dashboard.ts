@@ -239,8 +239,8 @@ export function digestList<T extends { path: string; summary?: string; descripti
     }))
 }
 
-// The digest dates either side of `date` in a newest-first list, so a permalink
-// can step through days instead of dead-ending (visitor-loop, 2026-10-08).
+// The digest dates either side of `date` (any input order), so a permalink can
+// step through days instead of dead-ending.
 export function digestNeighbours(dates: string[], date: string): { older: string | null; newer: string | null } {
   const sorted = [...dates].sort()
   const i = sorted.indexOf(date)
@@ -248,7 +248,6 @@ export function digestNeighbours(dates: string[], date: string): { older: string
   return { older: sorted[i - 1] ?? null, newer: sorted[i + 1] ?? null }
 }
 
-// "1 session", "2 sessions" — the pages quote counts that are often 0 or 1.
 export function countOf(n: number, noun: string): string {
   return `${n} ${noun}${n === 1 ? '' : 's'}`
 }
