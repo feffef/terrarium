@@ -75,6 +75,13 @@ describe('mergedSince() — multiple instants (issue #412)', () => {
   })
 })
 
+describe('mergedSince() — mergesOnly', () => {
+  it('drops non-merge commits, in single and multi-instant mode', () => {
+    expect(mergedSince(commits, [SINCE], true).map((c) => c.hash)).toEqual(['h1', 'h3'])
+    expect(mergedSince(commits, [SINCE, '2026-07-07T16:30:00Z'], true).map((c) => c.hash)).toEqual(['h1', 'h3'])
+  })
+})
+
 describe('isMergeSubject()', () => {
   it('flags a PR merge commit', () => {
     expect(isMergeSubject('Merge pull request #204 from feffef/guardrail-fix')).toBe(true)

@@ -133,7 +133,7 @@ candidate, checking the tracker for an issue or PR that already covers it — an
 confirming against **`main`** where cheap (a "solution" isn't ripe if main already
 has it). `pnpm exec tsx scripts/merged-since.ts <friction session's startedAt>` lists every
 `origin/main` commit landed after that instant (UTC-normalized, newest-first,
-`isMerge`-flagged) — scan it for the fixing commit/PR to turn the
+`isMerge`-flagged; add `--merges-only` for PR merges alone, else a window's output can overflow a subagent) — scan it for the fixing commit/PR to turn the
 already-fixed/regression join into a direct comparison instead of manual
 git-timestamp archaeology. (Redirect stdout and stderr separately when
 capturing its output — it writes diagnostics to stderr and its JSON result to
