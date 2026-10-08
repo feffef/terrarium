@@ -14,6 +14,8 @@ import {
   countFrictions,
   digestAnchor,
   digestList,
+  digestNeighbours,
+  countOf,
   ideaGrillPrompt,
   sessionNotes,
   sessionAnchor,
@@ -431,5 +433,25 @@ describe('digestList', () => {
       { date: '2026-07-04', summary: '', doc: pages[4] },
       { date: '2026-07-03', summary: 'day three', doc: pages[2] },
     ])
+  })
+})
+
+describe('digestNeighbours', () => {
+  const days = ['2026-07-06', '2026-07-04', '2026-07-05']
+  it('finds the older and newer day regardless of input order', () => {
+    expect(digestNeighbours(days, '2026-07-05')).toEqual({ older: '2026-07-04', newer: '2026-07-06' })
+  })
+  it('has no neighbour past either end, nor for an unknown day', () => {
+    expect(digestNeighbours(days, '2026-07-04').older).toBeNull()
+    expect(digestNeighbours(days, '2026-07-06').newer).toBeNull()
+    expect(digestNeighbours(days, '1999-01-01')).toEqual({ older: null, newer: null })
+  })
+})
+
+describe('countOf', () => {
+  it('pluralises except for exactly one', () => {
+    expect(countOf(0, 'session')).toBe('0 sessions')
+    expect(countOf(1, 'session')).toBe('1 session')
+    expect(countOf(2, 'session')).toBe('2 sessions')
   })
 })

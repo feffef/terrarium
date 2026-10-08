@@ -239,6 +239,19 @@ export function digestList<T extends { path: string; summary?: string; descripti
     }))
 }
 
+// The digest dates either side of `date` (any input order), so a permalink can
+// step through days instead of dead-ending.
+export function digestNeighbours(dates: string[], date: string): { older: string | null; newer: string | null } {
+  const sorted = [...dates].sort()
+  const i = sorted.indexOf(date)
+  if (i < 0) return { older: null, newer: null }
+  return { older: sorted[i - 1] ?? null, newer: sorted[i + 1] ?? null }
+}
+
+export function countOf(n: number, noun: string): string {
+  return `${n} ${noun}${n === 1 ? '' : 's'}`
+}
+
 // ── Deep-link anchors ────────────────────────────────────
 // Stable, URL-safe fragment ids for the two inline-expandable feeds on the Space
 // landing (session cards + daily digests). One item is open at a time across the

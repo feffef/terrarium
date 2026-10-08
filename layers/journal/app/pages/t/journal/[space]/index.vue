@@ -109,7 +109,7 @@ const kindSubtext = computed(() =>
     .map(([k, n]) => `${n} ${k}`)
     .join(' · '),
 )
-const tilesHeadline = computed(() => (space === 'archived' ? 'Excluding the last week' : 'From the last week'))
+const tilesHeadline = computed(() => (space === 'archived' ? 'Counts from older logs, before the last week' : 'Counts from the last week of logs; Skills are as of today'))
 
 const title = computed(() => rootDoc.value?.title ?? `The Journal — ${space}`)
 const lede = computed(() => rootDoc.value?.description ?? `The ${space} Space of the journal Tenant.`)
@@ -210,13 +210,13 @@ useSeoMeta({
     </section>
 
     <p class="tiles-headline">{{ tilesHeadline }}</p>
-    <section class="tiles" aria-label="State of this Space">
+    <section class="tiles" :class="{ 'tiles-4': space === 'archived' }" aria-label="State of this Space">
       <JournalStatTile
         label="Sessions logged" gloss="One agent working session, logged"
         :value="sessions.length"
         :sub="kindSubtext"
       />
-      <JournalStatTile label="Platform Skills" gloss="Reusable playbooks the agents follow" :value="platformSkills.length">
+      <JournalStatTile v-if="space !== 'archived'" label="Platform Skills" gloss="Reusable playbooks the agents follow" :value="platformSkills.length">
         <template #sub>
           <template v-if="externalSkillTotal">+{{ externalSkillTotal }} external · </template>
           <NuxtLink class="pr-link" :to="{ name: 'journal-skills', params: { space } }">browse →</NuxtLink>
@@ -407,6 +407,8 @@ h1 {
   gap: 0.9rem;
   margin: 0 0 2.25rem;
 }
+
+.tiles-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 
 .pr-link { color: var(--jd-accent); text-decoration: none; }
 .pr-link:hover { text-decoration: underline; }
