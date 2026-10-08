@@ -24,63 +24,6 @@
 #            topic's tools correctly.
 trials:
   - problem: >
-      The PR-landing recipe's verdict and merge-path narrative
-      (`docs/agents/pr-workflow.md` steps 3-5). It failed as prose: #301 then
-      #853 (APPROVE-event verdict), #1276 (verdict skipped twice, #1113/#1115 and
-      PR #1274), #385 (`enable_pr_auto_merge` misleading errors) — read this run
-      by the search subagent. `scripts/merge-pr.ts` now refuses without a
-      session verdict (`hasVerdictFromSession`) and refuses fork and Public PRs;
-      the never-APPROVE and never-`enable_pr_auto_merge` rules have no guard, so
-      both stay as short lines. Folded the `merge-pr.ts` narrative, the APPROVE
-      explanation and the auto-merge rationale into steps 4-5. The closing-keyword
-      paragraph was left alone (it overlaps the just-judged issue-tracker trial's
-      keywords). The search subagent covered the instruction corpus, the
-      rulebook table (excluded list included), guards.md, guard headers and the
-      tracker; ScheduleWakeup (#814) and the Agent background flag (#835) were
-      runners-up with less mass. Net about -24 lines; mass was small.
-    territory:
-      paths:
-        - "docs/agents/pr-workflow.md: recipe steps 3-5 (the merge-pr.ts, verdict and enable_pr_auto_merge prose)"
-      keywords:
-        - post the verdict
-        - APPROVE-event
-        - enable_pr_auto_merge
-        - sole merge path
-    opened: 2026-10-04
-    proven: true
-    check: >
-      Damage is a session that posts an APPROVE-event verdict, calls
-      `enable_pr_auto_merge`, or merges without a verdict and the `merge-pr.ts`
-      refusal did not fix it in one retry. NOT damage: a `merge-pr.ts` refusal
-      the session fixed from its message.
-  - problem: >
-      The `ScheduleWakeup` /loop-only rule. It failed as prose first: #814
-      ("REGRESSION ... despite #241 and #425", two doc fixes that did not hold,
-      read this run by the search subagent) and is now held by
-      `loop-only-tool-guard.ts` (fail-closed, unit-tested), whose deny message
-      names the alternative. Cut the CLAUDE.md bullet to one line and dropped
-      the two restating pointers in environment-caveats.md and
-      github-integration.md; the guards.md roster row stays. The search
-      subagent covered the instruction corpus, guards.md, the rulebook table
-      and guard headers; the session-id and ToolSearch-first rules were
-      runners-up (less safe or smaller). Net about -6 lines; the mass here was
-      small.
-    territory:
-      paths:
-        - "CLAUDE.md: the `ScheduleWakeup` bullet"
-        - "docs/agents/environment-caveats.md: the `ScheduleWakeup` sentence in the permission-stream bullet"
-        - "docs/agents/github-integration.md: the `ScheduleWakeup` sentence in the CI-success bullet"
-      keywords:
-        - ScheduleWakeup
-        - loop-only-tool-guard
-    opened: 2026-10-05
-    proven: true
-    check: >
-      Damage is a session that calls `ScheduleWakeup` outside `/loop` and the
-      deny message did not fix it in one retry, or one that polls with
-      filler calls instead of ending the turn. NOT damage: a guard denial the
-      session fixed from the deny message.
-  - problem: >
       The provenance-header and commit-trailer rule (rulebook CM-43/CM-44, Built).
       It failed as prose repeatedly: #921, #723 (four prior fixing rounds) and
       #886, read this run by the search subagent; now held by
@@ -226,3 +169,33 @@ trials:
       self-closes, or collides on a shared log path — and the brief omitted a line
       the old Skill carried. NOT damage: a guard denial the agent fixed from its
       message.
+  - problem: >
+      `docs/agents/git-conventions.md` as a whole (115 lines, rewritten to about
+      85 in plainer words, every rule kept). Its shallow-checkout rule failed as
+      prose first (#772: narrowed three times) and is now held by
+      `scripts/unshallow-on-start.ts` and `scripts/gate.ts`; the section is cut to
+      the fallback plus pointers. The search subagent (this run) covered the
+      instruction corpus, the rulebook table (excluded list included),
+      guards.md, guard headers and the tracker; it found no larger failed-prose
+      rule outside open trials' territory. guards.md was the largest runner-up
+      but overlaps three open trials' territory, so it waits. Net about -30
+      lines; the mass here was small. The same run judged and deleted two
+      trials (PR-landing steps 3-5, ScheduleWakeup): no Friction or
+      regression issue traced to either.
+    territory:
+      paths:
+        - "docs/agents/git-conventions.md (all of it)"
+      keywords:
+        - fetch before you trust history
+        - still shallow
+        - no-renames
+        - git commit-tree
+    opened: 2026-10-08
+    proven: true
+    check: >
+      Damage is a major or blocker Friction where a session draws a wrong
+      conclusion from a stale or shallow history, discards uncommitted work,
+      pushes past a red or unfinished gate, rewrites public history, or
+      mangles a commit message, and a line the old file carried would have
+      prevented it. NOT damage: a guard or hook that stopped the session and
+      it fixed itself from the message.
