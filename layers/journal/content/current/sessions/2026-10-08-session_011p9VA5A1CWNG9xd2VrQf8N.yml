@@ -1,0 +1,65 @@
+schemaVersion: 1
+session: session_011p9VA5A1CWNG9xd2VrQf8N
+startedAt: 2026-10-08T05:51:07Z
+endedAt: 2026-10-08T06:06:52Z
+kind: interactive
+goal: Assess issue 1677 (prune-trial Routine keeps firing seconds before the 3-day floor) and fix it
+status: partial
+outcome: Root cause found (landing time depends on the fire time, so rescheduling cannot help); one-hour grace added to the floor, PR and issue close still pending
+summary: "The user asked for thoughts on issue 1677, which proposed nudging the prune-trial Routine's fire time later. I first recommended that as the cheapest fix without reading the prune-trial Skill, the Routine config or the ledger. When the user asked how the move would help, I reasoned it through, then read the Skill, the ledger, scripts/prune-trial-window.ts and the Routine list at the user's direction. That showed the clustering is self-induced: the same Routine run that judges trials also opens and self-merges a new one, so a trial lands at fire time plus the run's duration while the judging run starts at a fixed lag, and the race is independent of the nominal cron time. The user then chose option 2 (a grace on the floor), asked for the miss to be explained and logged as a friction, and asked for the issue to be closed with the explanation. Human-instructed: the investigation, the choice of option 2, the friction log and closing the issue. Agent-initiated: the one-hour size of the grace and the test changes. Still open at this log: gate, PR, issue close."
+prs: []
+docsRead:
+  - path: .agents/skills/prune-trial/SKILL.md
+    reason: showed the same run judges and opens trials, which explains the clustering
+  - path: scripts/prune-trial-window.ts
+    reason: the floor math changed for issue 1677
+  - path: .agents/prune-trials.yml
+    reason: open trials and their opened dates
+  - path: CONTEXT-MAP.md
+    reason: (no reason given)
+  - path: CONTEXT.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: docs/agents/issue-tracker.md
+    reason: (no reason given)
+  - path: docs/adr/0027-prune-trials.md
+    reason: (no reason given)
+  - path: tests/unit/prune-trial-window.spec.ts
+    reason: (read before editing)
+skillsUsed:
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Recommended moving the Routine's cron as the cheapest fix before reading the Skill, Routine config or ledger; the move would have changed nothing because landing time follows fire time.
+    solution: Before recommending a fix, read the mechanism the issue names and model what sets each variable; here a one-line look at SKILL.md section 2 and 5 showed the dependency.
+    severity: moderate
+  - description: Issue 1677, filed by the audit-skills sweep, proposed a schedule nudge that cannot work and repeated the earlier nit friction's premise without modelling why landings cluster.
+    solution: Have sweeps that escalate a recurring pattern state the causal mechanism and check that the proposed fix changes it, not only that the pattern recurs.
+    severity: minor
+durationSec: 946
+models:
+  claude-sonnet-5-5: 47
+toolCounts:
+  Read: 11
+  ToolSearch: 1
+  mcp__github__issue_read: 2
+  Glob: 1
+  mcp__claude-code-remote__list_triggers: 1
+  Bash: 7
+  Edit: 6
+  Skill: 1
+  Write: 1
+filesEdited:
+  - scripts/prune-trial-window.ts
+  - tests/unit/prune-trial-window.spec.ts
+docsReadViaShell:
+  - docs/adr/0027-prune-trials.md
+gitBranch: ccr-d04d82fa-qlh2lf
+entrypoint: remote_mobile
+cliVersion: 2.1.294
+landedBy: Stop
