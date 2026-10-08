@@ -589,9 +589,8 @@ unchanged.
 > **Amended.** The direct-to-`main` decision is unchanged; this records what
 > now stands between the lander and `main`.
 
-`main` carries the `protect-main` ruleset (required PR, required `gate`
-check, no force pushes or deletion). The lander's push gets through its
-Repository-admin "Always" bypass, because it pushes with the owner's own
+`main` carries the `protect-main` ruleset. The lander's push gets through
+its Repository-admin "Always" bypass, because it pushes with the owner's own
 credential. That bypass is coarser than this ADR's one-file boundary and
 cannot be narrowed without a distinct identity for the lander (issue #1689);
 the helper script stays the single enforcement point of the boundary, as the

@@ -6,10 +6,12 @@ A reference note for the tension issue #348 names: ADR-0009 has
 `layers/journal/content/current/sessions/`). Classic branch protection on
 `main` blocks that direct push. The maintainer removed protection on
 2026-07-11 to let log commits through, which had a side effect: repo-level
-**"Allow auto-merge"** now has nothing to wait on, because every PR is
-immediately mergeable with no protection in place — regressing #231. This note
-answers: can a **repository ruleset** (Settings → Rules → Rulesets) thread
-that needle instead of classic protection, and if so, how precisely.
+**"Allow auto-merge"** then had nothing to wait on, because every PR was
+immediately mergeable with no protection in place — regressing #231. §1–§5
+(July 2026) answer: can a **repository ruleset** (Settings → Rules →
+Rulesets) thread that needle instead of classic protection, and if so, how
+precisely. The answer was applied on 2026-10-08; **"Current state"** below is
+the single home for what `main` enforces today.
 
 **Verified against** the official GitHub Docs (docs.github.com), **date
 accessed 2026-07-12**. `docs.github.com` returns 403 to the automated fetcher
@@ -193,8 +195,9 @@ only appears — and only does anything — when the PR has an **unmet
 requirement to wait on** (a required review, a required status check that
 hasn't reported success yet, etc.), which today comes from branch
 protection/ruleset rules on the target branch. With protection removed
-entirely from `main` (as it is now, per the maintainer's 2026-07-11 change), a
-green PR is **immediately mergeable** the moment it's opened — there is
+entirely from `main` (as it was from 2026-07-11 until the ruleset of
+2026-10-08, "Current state" below), a green PR was **immediately mergeable**
+the moment it was opened — there is
 nothing left for auto-merge to defer on, so the digest/audit-docs/audit-skills
 tiers' "enable auto-merge, let it land once green" flow has no observable
 effect (it either never shows the option, or merges instantly, functionally
@@ -244,34 +247,41 @@ credential this repo doesn't use for this path.
 
 ## Current state: the `protect-main` ruleset (applied 2026-10-08)
 
-`main` carries one active repository ruleset, `protect-main`, approved by the
-owner on 2026-10-08 (session `session_01CF4k9jXS9wLrcPVsGduZmn`) and applied
-by hand, because the agent proxy refuses ruleset writes
-(`docs/agents/environment-caveats.md`). This section is the single home for
-what it enforces; re-create it from the JSON below if it is ever lost (a
-visibility flip disables push rulesets, `making-repo-public.md` §1). Check with
-`gh api repos/feffef/terrarium/rules/branches/main`.
+`main` carries one active repository ruleset, `protect-main` (id 24740110),
+approved by the owner on 2026-10-08 (session
+`session_01CF4k9jXS9wLrcPVsGduZmn`) and applied by hand at 17:43 UTC, because
+the agent proxy refuses ruleset writes (`docs/agents/environment-caveats.md`).
+This section is the single home for what it enforces. The JSON below is the
+create payload and holds the values; re-create from it if the ruleset is ever
+lost (a visibility flip disables push rulesets, `making-repo-public.md` §1),
+and check with `gh api repos/feffef/terrarium/rules/branches/main`. The
+bullets hold only the reasons.
 
-- **Require a pull request before merging**, 0 approvals, all three merge
-  methods. 0 because the owner identity authors every PR and GitHub refuses
-  self-approval, so any higher count would block every PR.
-- **Require the `gate` status check** from GitHub Actions (`integration_id`
-  15368, so only the real `safety-gate` workflow satisfies it). "Require
-  branches to be up to date" is **off**: `main` moves many times a day with
+- **0 approvals.** Every agent PR is authored by the owner's own identity
+  (Dependabot's by `dependabot[bot]`), and GitHub refuses self-approval, so
+  any higher count would block every agent PR.
+- **`require_extra_approval_for_unattributed_changes` is GitHub's default,
+  left true.** Per GitHub's rules doc it applies only when the ruleset
+  requires at least one approval, so at 0 it does nothing; it is in the JSON
+  so a re-create matches the live ruleset.
+- **The `gate` check is pinned to GitHub Actions** (`integration_id` 15368),
+  so only the real `safety-gate` workflow satisfies it. Strict mode ("require
+  branches to be up to date") is off: `main` moves many times a day with
   session logs, and strict mode would demand a refresh before every merge.
-- **Block force pushes** and **restrict deletions**.
-- **Bypass list: Repository admin, "Always".** The session-log lander pushes
-  with the owner's own credential (§2), so this is the only bypass that lets
+- **Bypass: Repository admin, "Always".** The session-log lander pushes with
+  the owner's own credential (§2), so this is the only bypass that lets
   ADR-0009's direct push through, and it also covers every agent session,
   which acts as the owner. The ruleset is therefore a guardrail, not a wall:
-  it makes the gate a required check, gives auto-merge a condition to wait on
-  (§4), and blocks force pushes and deletion, but blocks nothing the owner
-  identity does. Narrowing the bypass needs a distinct identity for the lander:
-  issue #1689 (a GitHub App as the sole "Always" bypass, the owner reduced to
-  "For pull requests only").
-- **Left off, each would break the workflow:** required approvals (above),
-  strict up-to-date (above), linear history (`scripts/merge-pr.ts` and humans
-  use merge commits), signed commits (session-log commits land unsigned).
+  the gate is a required check, auto-merge has a condition to wait on (§4),
+  force pushes and deletion are blocked, but nothing the owner identity does
+  is blocked. The first session-log push after it went live (17:44 UTC)
+  landed and shows as `result: bypass` in the repository's rule-suite log, so
+  each such push is audited. Narrowing the bypass needs a distinct identity
+  for the lander: issue #1689 (a GitHub App as the sole "Always" bypass, the
+  owner reduced to "For pull requests only").
+- **Left off, each would break the workflow:** linear history
+  (`scripts/merge-pr.ts` and humans use merge commits), signed commits
+  (session-log commits land unsigned).
 - Chartered Skills' self-merges, human merges and the Dependabot workflow all
   merge green PRs and need no bypass. Unverified against GitHub's docs: whether
   an "Always" bypass actor's REST merge passes a red check silently; the merge
@@ -292,6 +302,7 @@ gh api -X POST repos/feffef/terrarium/rulesets --input - <<'JSON'
     { "type": "non_fast_forward" },
     { "type": "pull_request", "parameters": {
         "required_approving_review_count": 0,
+        "require_extra_approval_for_unattributed_changes": true,
         "dismiss_stale_reviews_on_push": false,
         "require_code_owner_review": false,
         "require_last_push_approval": false,
@@ -318,6 +329,7 @@ dated 2025-09-10, and docs.github.com are both blocked from this container).
 Reported semantics: rules are not evaluated for an exempt actor and no bypass
 entry is recorded, where "Always" evaluates and records a bypass. For the
 session-log lander "Always" is the better fit: the record of each bypass is
-exactly the audit trail ADR-0009's exception should leave. Everything in §1–§5
-above still holds; in particular the bypass picker still offers no
-individual-user entry, and no rule exempts a path from the other rules.
+exactly the audit trail ADR-0009's exception should leave. §2 and §3 still
+hold: the bypass picker offers no individual-user entry, and no rule exempts
+a path from the other rules. §4's "no protection" premise ended with the
+ruleset above.
