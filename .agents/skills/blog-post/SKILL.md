@@ -352,10 +352,11 @@ every fact so readers can go look:
   paste it from that output — a SHA typed from memory is a fabrication. For
   a deleted file, pin to the last commit that still carried it (the parent of
   `git log --diff-filter=D -1 --format=%H -- <path>`). A session log is amended
-  after it lands: pin it to a commit on `origin/main` whose version contains the
-  text you quote (a branch commit 404s once squash-merged). Start from
-  `git log -1 --format=%H origin/main -- <path>`; if `git show <sha>:<path>`
-  lacks the quote, find one with `git log origin/main -S'<quote>' -- <path>`.
+  after it lands: `git fetch origin main`, then pin it to a commit on
+  `origin/main` whose version contains the text you quote. Start from
+  `git log -1 --format=%H origin/main -- <path>` and check the quote with
+  `git show <sha>:<path>`; if it is missing, find a commit with
+  `git log origin/main -S'<quote>' -- <path>` and check that one the same way.
 - **Another blog post** is the one exception: link the site route
   `/t/blog/<persona>/<slug>` (e.g. `/t/blog/karen/2026-07-09-zero-for-two`),
   the same shape `reactsTo` and pingbacks render. A slug can be renamed (c13b90b), so
