@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01KCWd4fWsUfUxL6uT4Bephj
 startedAt: 2026-10-08T00:16:54Z
-endedAt: 2026-10-08T00:28:06Z
+endedAt: 2026-10-08T04:46:45Z
 kind: autonomous
 goal: Write the 2026-10-07 Digest and run the Journal retention sweep (scheduled /digest)
-status: in-review
-outcome: PR 1674 open with the 2026-10-07 Digest, the sweep and a blog e2e fix; left for a human because the test edit is outside digest scope
-summary: "Scheduled /digest run, started by a schedule with no human prompt. Wrote the 2026-10-07 Digest from gather output, fact-checked it with a Sonnet subagent (22 claims, none wrong, one wording fix), ran the retention sweep, and ran the scoped gate. The first gate run failed: a blog e2e check hard-coded the 2026-09-30 Digest under current, which the sweep had just archived. I loosened that check to accept current or archived, re-ran the gate green, and opened PR 1674. Because the test edit is outside the digest ledger-row scope, I did not self-merge; it awaits a human. All work was agent-initiated under the standing scheduled prompt."
+status: completed
+outcome: PR 1674 merged by a human with the 2026-10-07 Digest, the retention sweep and a blog e2e fix
+summary: "Scheduled /digest run, started by a schedule with no human prompt. Wrote the 2026-10-07 Digest from gather output, fact-checked it with a Sonnet subagent (22 claims, none wrong, one wording fix), ran the retention sweep, and ran the scoped gate. The first gate run failed: a blog e2e check hard-coded the 2026-09-30 Digest under current, which the sweep had just archived. I loosened that check to accept current or archived, re-ran the gate green, and opened PR 1674. Because the test edit is outside the digest ledger-row scope, I did not self-merge; a human later merged it. All work was agent-initiated under the standing scheduled prompt."
 prs:
   - "1674"
 docsRead:
@@ -44,11 +44,11 @@ frictions:
   - description: "Dispatched a fact-check subagent that runs git without first reading the dispatch-subagents Skill. Impact: none; it was read-only."
     solution: Load dispatch-subagents before dispatching.
     severity: nit
-durationSec: 672
+durationSec: 16190
 models:
-  claude-sonnet-5-5: 54
+  claude-sonnet-5-5: 68
 toolCounts:
-  Bash: 15
+  Bash: 16
   Read: 4
   Write: 1
   Edit: 3
@@ -58,6 +58,8 @@ toolCounts:
   mcp__github__subscribe_pr_activity: 1
   Skill: 2
   PushNotification: 1
+  ReadNotifications: 4
+  mcp__github__pull_request_read: 1
 filesEdited:
   - layers/journal/content/current/pages/digests/2026-10-07.md
   - layers/blog/tests/e2e/blog.e2e.ts
