@@ -1,0 +1,83 @@
+schemaVersion: 1
+session: session_01SVbTmvqHK7xdAcGtG4SfKL
+startedAt: 2026-10-08T05:47:18Z
+endedAt: 2026-10-08T09:23:26Z
+kind: interactive
+goal: "Assess issue #1676 (frictions-to-fixes surface-blocked filing rule) and its proposed solution"
+status: completed
+outcome: "Issue #1676 verified claim by claim and commented; the dropped ADR-0017 candidate filed as #1684; no PR needed"
+summary: "The user asked what I thought of the proposed solution in #1676, then asked for deeper research reading all relevant files, then asked me to file the ADR-0017 issue and comment on #1676, then to run close-session. All four were human-instructed; I chose which files and logs to check. I read the Skill, ADRs 0015/0017/0027, prune-trials.yml, both cited session logs, PR 1655 and PR 1438, and git history of the Skill, the ADR and the trials ledger. Findings: the core break is real, but the claimed 10-04 repeat is wrong (the ADR-0017 prune trial was open from 10-02 to 10-05, so that drop was correct), the ADR-0015 justification is wrong, and the suggested required command adds to a 345-line Skill against ADR-0027. I recommended a one-sentence replacement in section 2 instead. The dropped ADR-0017 candidate is a real recurring conflict (seven logs, 10-01 to 10-07) between ADR-0017, the guard and the harness; I filed it as #1684 labelled ready-for-human and posted the corrections on #1676. No files were edited and no PR was opened. Open: a human decides whether to close or downgrade #1676, reword ADR-0017, and whether to make the section 2 change."
+prs: []
+docsRead:
+  - path: CONTEXT-MAP.md
+    reason: session-start glossary trigger
+  - path: CONTEXT.md
+    reason: session-start glossary trigger
+  - path: docs/agents/github-integration.md
+    reason: before first GitHub operation
+  - path: docs/agents/git-conventions.md
+    reason: before first git command
+  - path: docs/agents/issue-tracker.md
+    reason: before filing an issue
+  - path: docs/agents/triage-labels.md
+    reason: before labelling an issue
+  - path: docs/adr/0027-prune-trials.md
+    reason: binds prune-trial territory and Skill re-legislation
+  - path: docs/adr/0017-provenance-footer-on-agent-authored-content.md
+    reason: subject of the dropped candidate
+  - path: docs/adr/0015-audit-skills-and-conditional-importance.md
+    reason: checked the issue's ADR-0015 claim
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: (no reason given)
+  - path: .agents/prune-trials.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-07-session_015nX759CQdTRtT6x6oLDanX.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-04-session_01RW5WnnVvnyuUbrqVZvdZNc.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-07-session_01NyDGTR1fuP22hPo7XghCfz.yml
+    reason: (no reason given)
+  - path: CLAUDE.md
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: user asked to close
+  - name: log-session
+    reason: authored via close-session
+frictions:
+  - description: First reply gave thoughts after reading only the Skill section and prune-trials grep, and said the two severities I saw were nit. Later reads showed three were minor. The user then asked for deeper research.
+    solution: For a verify-this-issue request, read the cited logs, ADRs and git history before giving any assessment, and do not state a severity until every item is read.
+    severity: minor
+  - description: "Broke CLAUDE.md Verify before you state: gave a severity split from a partial grep. Impact: a wrong figure was handed to the user and had to be corrected in my next message. Fixed before it reached the issue body."
+    solution: I would have checked had the grep output shown severity lines; run grep with -A 2 on log fields before quoting severities.
+    severity: nit
+  - description: "Broke CLAUDE.md Read files with the Read tool: ran grep -c and wc -l through Bash on skills-lock.json and the Skill file. Impact: shell-read detection is less precise; no other cost."
+    solution: Use the Grep tool with output_mode count, and Read for line totals.
+    severity: nit
+  - description: "ADR-0017 says the provenance header names the model, the harness forbids model names, and the guard accepts any label. I again used a model-less Claude header on #1684 and the #1676 comment."
+    solution: "Tracked as #1684: reword ADR-0017 so the label is free text."
+    severity: nit
+durationSec: 12968
+models:
+  claude-sonnet-5-5: 64
+toolCounts:
+  ToolSearch: 1
+  Read: 15
+  mcp__github__issue_read: 6
+  Grep: 6
+  Bash: 6
+  mcp__github__search_issues: 1
+  mcp__github__pull_request_read: 2
+  mcp__github__list_issues: 1
+  mcp__github__issue_write: 1
+  mcp__github__add_issue_comment: 1
+  Skill: 2
+  Write: 1
+docsReadViaShell:
+  - .agents/skills/frictions-to-fixes/SKILL.md
+gitBranch: ccr-f2d99862-o8u4nr
+entrypoint: remote_mobile
+cliVersion: 2.1.294
+learnings:
+  - A prune trial is deleted from .agents/prune-trials.yml when judged, so whether a drop citing a trial was correct must be checked in git history of that file at the drop date, not in the current ledger.
+landedBy: Stop
