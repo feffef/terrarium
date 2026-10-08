@@ -104,7 +104,7 @@ export function registerBlogE2E(): void {
     it('answers a missing post with links onward, not an engineering message', async () => {
       const html = await $fetch<string>('/t/blog/karen/no-such-post', { ignoreResponseError: true })
       expect(html).toContain('no post at this address')
-      expect(html).not.toContain('No document at')
+      expect(html).not.toMatch(/No document at <code[\s>]/)
       expect(html).toContain('href="/t/blog/karen"')
     })
 

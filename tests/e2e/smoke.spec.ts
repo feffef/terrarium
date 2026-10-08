@@ -66,7 +66,9 @@ describe('L2 smoke render', async () => {
       it(`renders ${route}`, async () => {
         const html = await $fetch(route) // throws on non-2xx
         expect(html).toMatch(/<h1[ >]/)
-        expect(html).not.toContain('No document at')
+        // Match the 404 markup, not the phrase: a session log quoting the 404 page
+        // renders into the Journal and tripped the plain substring (PR #1690).
+        expect(html).not.toMatch(/No document at <code[\s>]/)
       })
     }
 
