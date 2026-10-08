@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01CF4k9jXS9wLrcPVsGduZmn
 startedAt: 2026-10-08T16:23:59Z
-endedAt: 2026-10-08T17:44:08Z
+endedAt: 2026-10-08T18:05:23Z
 kind: interactive
 goal: Design main-branch protection that keeps ADR-0009 session-log direct pushes working, verified against GitHub's docs
 status: in-review
 outcome: protect-main ruleset live on main (owner applied it by hand at 17:5x UTC; the proxy refuses the write), docs record it as current state, stage-2 App identity filed as issue 1689, PR 1690 in review
-summary: "Human-instructed: the owner asked for branch protection on main that does not hurt the current workflow, session logs included. Research first: every direct push and merge on main is actor feffef (100 of 100 direct pushes, all session-log commits), the cloud session's GH_TOKEN is the owner's OAuth token, and a ruleset bypass can name only a role, team or App, so the only bypass that lets the lander through today is Repository admin, which also covers every agent session. Per the owner's preference I asked before building. They chose a staged path (guardrail ruleset now, a GitHub App identity for the lander later, owner keeping a pull-request-only bypass in the end state) and asked me to apply the ruleset via the API; they confirmed the exact JSON. The proxy refused the POST to the rulesets endpoint, so the config became a Proposal (docs/proposals/348-protect-main-ruleset.md) with the one local gh command, and stage 2 became issue 1689 (ready-for-human: creating the App and its secrets is a human act; the lander change is a later gated PR). Agent-initiated within that scope: updating the July research note (status paragraph, plus the exempt bypass mode GitHub added in September 2025), an environment-caveats bullet for the proxy refusal, and widening the proposals README to admit repository settings. Rules deliberately left off because each would break the workflow: required approvals above 0 (the owner identity authors every PR and cannot self-approve), strict up-to-date branches, linear history, signed commits. Not verified from GitHub's docs: whether an Always bypass actor's REST merge passes a red check silently; recorded in the Proposal as a safety-net question only. Second human prompt: \"update all documentation as if the change was already applied\". Did that as a second commit: the research note's closing section became the single home for main's current state (rules, bypass, omitted rules and why, the JSON to re-create it); the Proposal file was deleted since a Proposal records pending intent; the Dependabot proposal's \"main has no branch protection\" rationale was reworded; ADR-0009 gained a dated amendment pointing at the research note; issue 1689 and the PR description were repointed. CLAUDE.md was left alone because the open prune trial's territory covers it. Stated plainly to the owner: the API still showed no ruleset at the time of writing, so the docs describe a state the owner must create by running the recorded command. The owner ran it during a /code-review of the branch; the live ruleset (id 24740110) matches the approved JSON exactly, and this log's own landing is the first session-log push through the admin bypass."
+summary: "Human-instructed: the owner asked for branch protection on main that does not hurt the current workflow, session logs included. Research first: every direct push and merge on main is actor feffef (100 of 100 direct pushes, all session-log commits), the cloud session's GH_TOKEN is the owner's OAuth token, and a ruleset bypass can name only a role, team or App, so the only bypass that lets the lander through today is Repository admin, which also covers every agent session. Per the owner's preference I asked before building. They chose a staged path (guardrail ruleset now, a GitHub App identity for the lander later, owner keeping a pull-request-only bypass in the end state) and asked me to apply the ruleset via the API; they confirmed the exact JSON. The proxy refused the POST to the rulesets endpoint, so the config became a Proposal (docs/proposals/348-protect-main-ruleset.md) with the one local gh command, and stage 2 became issue 1689 (ready-for-human: creating the App and its secrets is a human act; the lander change is a later gated PR). Agent-initiated within that scope: updating the July research note (status paragraph, plus the exempt bypass mode GitHub added in September 2025), an environment-caveats bullet for the proxy refusal, and widening the proposals README to admit repository settings. Rules deliberately left off because each would break the workflow: required approvals above 0 (the owner identity authors every PR and cannot self-approve), strict up-to-date branches, linear history, signed commits. Not verified from GitHub's docs: whether an Always bypass actor's REST merge passes a red check silently; recorded in the Proposal as a safety-net question only. Second human prompt: \"update all documentation as if the change was already applied\". Did that as a second commit: the research note's closing section became the single home for main's current state (rules, bypass, omitted rules and why, the JSON to re-create it); the Proposal file was deleted since a Proposal records pending intent; the Dependabot proposal's \"main has no branch protection\" rationale was reworded; ADR-0009 gained a dated amendment pointing at the research note; issue 1689 and the PR description were repointed. CLAUDE.md was left alone because the open prune trial's territory covers it. Stated plainly to the owner: the API still showed no ruleset at the time of writing, so the docs describe a state the owner must create by running the recorded command. The owner ran it during a /code-review of the branch; the live ruleset (id 24740110) matches the approved JSON exactly, and this log's own landing is the first session-log push through the admin bypass. Third human prompt: /code-review against origin/main, then \"fix all the findings\". Two review subagents (Standards, Spec) ran in parallel; their findings (research note contradicting itself between §4 and \"Current state\", a half-widened proposals README, duplicated rule values, a defaulted extra-approval parameter missing from the re-create JSON, \"every PR\" vs \"every agent PR\", stale \"main is unprotected\" lines in the rulebook migration table and the Journal history page) were all fixed in a third commit. The log's own landing after the ruleset went live shows result=bypass in the rule-suite log, which verified ADR-0009's path under the ruleset."
 prs:
   - "1690"
 docsRead:
@@ -23,12 +23,12 @@ docsRead:
   - path: docs/agents/environment-caveats.md
     reason: required before debugging the proxy 403; added the ruleset-write bullet
 skillsUsed:
+  - name: code-review
+    reason: two-axis review of the branch at the owner's request
   - name: close-session
     reason: closure at PR open
   - name: log-session
     reason: (no reason given)
-  - name: code-review
-    reason: (invoked as a slash command)
 frictions:
   - description: The agent proxy refuses POST repos/{owner}/{repo}/rulesets (403 'Write access to this GitHub API path is not permitted'), so the owner-approved ruleset could not be applied from the session.
     solution: Recorded in environment-caveats; the config shipped as a Proposal with a one-line local gh command. Stage 2 (issue 1689) notes the same proxy may block an App token mint.
@@ -54,11 +54,11 @@ frictions:
   - description: "SHELL-READ-DETECTION miss: `cat docs/adr/0009-session-logs-commit-directly-to-main.md && echo ===== && cat docs/adr/0003-agent-operating-model-and-governance.md && echo ===== && cat docs/adr/0004-objective-safety-gate.md` overflowed, the harness persisted the output to a tool-results file and showed a 2KB preview, and I read the full text with Read on that file; the detector credits only ADR-0009 (in the preview) and reports ADR-0003 and ADR-0004 as 'named by the command, but its output shows no line of this doc'. Both were read in full. Same session: .agents/skills/triage/SKILL.md was credited because an issue comment printed by `gh api .../issues/348/comments` quoted a line of it, which is a GitHub body echoing a doc, not a read."
     solution: "Let the trace follow a persisted-output pointer ('Full output saved to: <path>') and match the saved file's content, or treat a Read of a tool-results file as the Bash command's output. For the quoted-line case, consider excluding output of gh api calls that return GitHub bodies."
     severity: moderate
-durationSec: 4810
+durationSec: 6085
 models:
-  claude-fable-5-1: 153
+  claude-fable-5-1: 179
 toolCounts:
-  Bash: 41
+  Bash: 50
   Read: 1
   ToolSearch: 3
   WebFetch: 13
@@ -70,7 +70,7 @@ toolCounts:
   Skill: 2
   ReadNotifications: 4
   mcp__claude-code-remote__send_later: 2
-  mcp__github__update_pull_request: 1
+  mcp__github__update_pull_request: 2
   Agent: 2
 docsReadViaShell:
   - CONTEXT-MAP.md
@@ -95,6 +95,7 @@ docsReadViaShell:
   - docs/adr/0004-objective-safety-gate.md
   - docs/adr/0003-agent-operating-model-and-governance.md
   - docs/proposals/348-protect-main-ruleset.md
+  - docs/agents/tenant-layers.md
   - docs/agents/domain.md
   - .agents/skills/writing-for-agents/SKILL.md
 subagents:
