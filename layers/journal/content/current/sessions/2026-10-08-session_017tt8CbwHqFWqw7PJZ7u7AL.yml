@@ -1,11 +1,11 @@
 schemaVersion: 1
 session: session_017tt8CbwHqFWqw7PJZ7u7AL
 startedAt: 2026-10-08T04:01:44Z
-endedAt: 2026-10-08T04:21:33Z
+endedAt: 2026-10-08T04:26:05Z
 kind: autonomous
 goal: "Scheduled /audit-docs sweep: keep Live docs honest against the code, concision family docs/agents/*"
-status: in-review
-outcome: "PR #1681 open with 72 checker-confirmed doc fixes, local gate green, awaiting CI then self-merge"
+status: completed
+outcome: "PR #1681 merged green: 72 checker-confirmed doc fixes landed"
 summary: "Entirely agent-run from the schedule's stored /audit-docs prompt; no human prompted. Five read-only reviewer agents covered freshness, single-home, two concision halves (family 1, docs/agents/*) and coherence. I deduped their findings, left out Prune Trial territory, ADR/CI edits and larger moves, and had five independent checkers re-derive the rest. 72 were confirmed or corrected, 5 were WRONG (e2e-rule move, two ADR conflicts that were really different hook kinds, a visitor-loop timing claim, a dispatch-subagents edit inside an open trial). Applied the confirmed edits with a line-range script, fixed two markdown breakages my wrapper introduced (a lost blockquote marker and a fence at line start), passed pnpm gate:scoped, pushed and opened PR #1681. No issue was filed because no true factual conflict survived checking. Open: the dependabot-automerge workflow exists only as proposal #1633 while dependabot.yml and ADR-0003 describe it as live; that is human-only and is noted in the PR."
 prs:
   - "1681"
@@ -61,11 +61,11 @@ frictions:
   - description: audit-docs and other Skills still cite CLAUDE.md's 'branch-off rule' and 'index', which a recent CLAUDE.md trial removed, so the dropped pointers broke several referrers.
     solution: When a prune trial rewrites CLAUDE.md, grep removed section names across Skills and docs in the same PR; this run fixed the ones outside trial territory.
     severity: minor
-durationSec: 1190
+durationSec: 1461
 models:
-  claude-sonnet-5-5: 85
+  claude-sonnet-5-5: 99
 toolCounts:
-  Bash: 22
+  Bash: 27
   Read: 3
   Agent: 10
   bash: 1
@@ -75,6 +75,9 @@ toolCounts:
   mcp__github__add_issue_comment: 1
   mcp__github__subscribe_pr_activity: 1
   Skill: 2
+  ReadNotifications: 2
+  mcp__github__unsubscribe_pr_activity: 1
+  PushNotification: 1
 docsReadViaShell:
   - CONTEXT-MAP.md
   - CONTEXT.md
