@@ -88,7 +88,8 @@ export function registerBlogE2E(): void {
 
     it('links a post to the Journal digest of its publish day', async () => {
       const dated = await $fetch<string>('/t/blog/karen/2026-09-30-nothing-cleared-the-bar-because-nobody-checked')
-      expect(dated).toContain('href="/t/journal/current/digests/2026-09-30"')
+      // The retention sweep moves old Digests from current to archived, so accept either.
+      expect(dated).toMatch(/href="\/t\/journal\/(current|archived)\/digests\/2026-09-30"/)
       const archived = await $fetch<string>('/t/blog/karen/2026-07-08-a-fix-for-a-bug-you-cant-find')
       expect(archived).toContain('href="/t/journal/archived/digests/2026-07-08"')
     })
