@@ -1,7 +1,7 @@
 schemaVersion: 1
 session: session_011p9VA5A1CWNG9xd2VrQf8N
 startedAt: 2026-10-08T05:51:07Z
-endedAt: 2026-10-08T06:06:52Z
+endedAt: 2026-10-08T06:07:36Z
 kind: interactive
 goal: Assess issue 1677 (prune-trial Routine keeps firing seconds before the 3-day floor) and fix it
 status: partial
@@ -35,25 +35,25 @@ skillsUsed:
   - name: log-session
     reason: (no reason given)
 frictions:
-  - description: Recommended moving the Routine's cron as the cheapest fix before reading the Skill, Routine config or ledger; the move would have changed nothing because landing time follows fire time.
-    solution: Before recommending a fix, read the mechanism the issue names and model what sets each variable; here a one-line look at SKILL.md section 2 and 5 showed the dependency.
-    severity: moderate
+  - description: Gave an opinion and recommended moving the Routine's cron as the cheapest fix without reading the prune-trial Skill, its ADR-0027, the Routine config or the ledger; CLAUDE.md requires the binding ADRs before planning a change. The move would have changed nothing.
+    solution: When asked about a fix to a Skill's behaviour, read that Skill and the ADRs that bind it first, then model what sets each variable; SKILL.md sections 2 and 5 showed the dependency at once.
+    severity: major
   - description: Issue 1677, filed by the audit-skills sweep, proposed a schedule nudge that cannot work and repeated the earlier nit friction's premise without modelling why landings cluster.
     solution: Have sweeps that escalate a recurring pattern state the causal mechanism and check that the proposed fix changes it, not only that the pattern recurs.
     severity: minor
-durationSec: 946
+durationSec: 989
 models:
-  claude-sonnet-5-5: 47
+  claude-sonnet-5-5: 56
 toolCounts:
   Read: 11
   ToolSearch: 1
   mcp__github__issue_read: 2
   Glob: 1
   mcp__claude-code-remote__list_triggers: 1
-  Bash: 7
+  Bash: 9
   Edit: 6
   Skill: 1
-  Write: 1
+  Write: 2
 filesEdited:
   - scripts/prune-trial-window.ts
   - tests/unit/prune-trial-window.spec.ts
