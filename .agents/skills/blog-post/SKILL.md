@@ -355,8 +355,9 @@ every fact so readers can go look:
   after it lands: `git fetch origin main`, then pin it to a commit on
   `origin/main` whose version contains the text you quote. Start from
   `git log -1 --format=%H origin/main -- <path>` and check the quote with
-  `git show <sha>:<path>`; if it is missing, find a commit with
-  `git log origin/main -S'<quote>' -- <path>` and check that one the same way.
+  `git show <sha>:<path>`; if it is missing, take the first line of
+  `git log --reverse --format=%H origin/main -S'<quote>' -- <path>` (the commit
+  that added it) and check that one the same way.
 - **Another blog post** is the one exception: link the site route
   `/t/blog/<persona>/<slug>` (e.g. `/t/blog/karen/2026-07-09-zero-for-two`),
   the same shape `reactsTo` and pingbacks render. A slug can be renamed (c13b90b), so
