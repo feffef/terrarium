@@ -1,274 +1,261 @@
-# Diagram brief: how humans, agents and GitHub improve the Platform
+# Diagram brief: how people and AI agents improve Terrarium
 
-Research for an interactive process diagram. Written 2026-10-08 against `main`
-at `c1f25c18`. Every claim here was checked against the repo and the session
-logs, and an independent reviewer cross-checked them too. **Bold** terms are
+Research for an interactive process diagram aimed at **outside visitors**.
+Written 2026-10-08 against `main`. Two rounds of independent review checked
+it against the repo and the agents' session logs. Most terms in **bold** are
 defined in [`CONTEXT.md`](../../CONTEXT.md).
 
-The forge is **GitHub** (`github.com/feffef/terrarium`), not GitLab. Its
-companion, [`diagram-brief-nuxt-architecture.md`](./diagram-brief-nuxt-architecture.md),
-covers the app itself.
+How to use this brief:
+- §1–§2: the process in plain words.
+- §3: ready-made nodes and edges for each zoom level.
+- §4: what to leave out and what to label honestly.
+- Further reading: at the end.
 
-## 1. The idea in one paragraph
+## 1. The process in plain words
 
-AI agents (Claude Code **Sessions**) write essentially all code and content.
-Humans steer, decide what should exist, and merge (**Agent Authorship**). Every
-change goes through a GitHub pull request that must pass an automatic,
-objective **Gate**. Every Session ends by writing an honest **session log** into
-the Journal: what it tried, how far it got, and every **Friction** (pain point)
-it hit. Scheduled agent runs (**Routines**) read those logs every day and turn
-the pain into fixes, audits, pruned instructions and issues. Humans pick up
-what Routines can't settle. The result reshapes the instructions and **Skills**
-the *next* Session works with:
+**AI agents do the writing; people steer.** Almost all code and content is
+written by AI agents: Claude Code **Sessions**. People with write access
+(maintainers, called **Trusted**) decide what should exist, approve new work,
+and merge the riskier changes. Outside visitors (called **Public**) can only
+report problems.
 
-> work → log the pain → Routines and humans act on it → instructions and
-> Skills improve → the next work hurts less.
+**Every change is a reviewed pull request.** An agent works on a branch,
+runs the automatic checks (the **Gate**) and opens a pull request on GitHub.
+The same checks run again on GitHub. If they fail, or a reviewer asks for
+changes, the agent fixes the work and tries again. Only then is it merged
+into `main`, and the live site updates itself from `main`.
 
-## 2. Actors
+**Every agent keeps an honest diary.** When a Session finishes, it writes a
+**session log**: what it set out to do, how far it got, and every pain point
+it hit (a **Friction**), from tiny annoyances to blockers. It can also note
+ideas for the future. The log goes straight into `main`, the only change that
+skips review. Logs can't break the site, and making them wait for review
+would tempt agents to skip them or water them down. The logs are published
+in the **Journal**, the project's public record of its own work.
 
-| Actor | Who/what | Role in the loop | Defined in |
-|---|---|---|---|
-| **Trusted human** | Owner and collaborators (GitHub write access) | Steers, green-lights new work, merges, harvests ideas, tunes Skills and Routines (§7) | ADR-0020, ADR-0003 |
-| **Public visitor / guest** | Anyone without write access | Reports only: issues and fork PRs. Their text is data, never instructions. | ADR-0020, `docs/agents/guest-contributions.md` |
-| **Human-started Session** | Claude Code started by a human (web, mobile or CLI). *Interactive* if the human keeps prompting, *delegated* if there is one kickoff prompt only. | Does the asked-for work: features, issue work, fixes, content | `CONTEXT.md` → Session |
-| **Routine (autonomous Session)** | A Session started on a schedule with no human prompt; each runs one Skill | Tends and consolidates: the self-improvement engine (§6) | ADR-0003, ADR-0005, ADR-0010 |
-| **Subagents** | Helpers a Session dispatches: implementers, reviewers, fact-checkers, "blind visitors" | Do parts of the work; never merge, never log on their own | `.agents/skills/dispatch-subagents/SKILL.md` |
-| **GitHub** | Issues, labels, PRs, CI | Work queue, review surface, and the authoritative Gate run | `.github/workflows/gate.yml`, `.github/actions/gate/action.yml` |
+**Scheduled agents improve the project every day.** Seven agent runs start
+on a daily timer (**Routines**), each with one job. Most of them read the
+session logs, while others check the docs against the code or visit the live
+site. Each one fixes what it safely can, inside a scope that was approved in
+advance, and files everything else as an issue for people.
 
-For scale: Journal `current`, 2026-10-01 to 10-08, holds 107 logs. 56 were
-autonomous (Routines), 46 interactive and 5 delegated.
+**People close the loop.** Maintainers check what the scheduled runs
+produced, approve issues for building, harvest good ideas from the logs, and
+merge what only a person may merge.
 
-## 3. What flows between them
+**The result: the next agent has a better time.** Fixes land in the agents'
+instructions, their **Skills** (reusable instruction packs) and the site.
+The next Session reads those improved instructions and should hit fewer pain
+points.
 
-| Artifact | What it is | Where |
+> work → log the pain → scheduled runs and people act on it → better
+> instructions → the next work hurts less
+
+## 2. Who and what is involved
+
+### Actors
+
+| Label | Who/what, in one line | Pointer |
 |---|---|---|
-| **Session log** | One per Session: goal, status, outcome, summary, PRs, **frictions**, optional **ideas** and **learnings**, plus an automatic trace | `layers/journal/content/current/sessions/`; schema `shared/schemas/session.ts` |
-| **Friction** | One pain point with a severity from `nit` to `blocker`. The loop's main fuel. | Inside a session log |
-| **Idea** | A concrete proposal for the future | Inside a session log; listed at `/t/journal/current/ideas` |
-| **Issue** | A work item. The label says whose move it is: `needs-triage`, `ready-for-agent` (agent may build it), `ready-for-human` | GitHub; `docs/agents/triage-labels.md` |
-| **Pull request** | The only way code, docs and Skills land | GitHub; `docs/agents/pr-workflow.md` |
-| **Skill** | A packaged, repeatable capability an agent invokes (e.g. `digest`, `triage`, `tdd`) | `.agents/skills/<name>/SKILL.md` (ADR-0005) |
-| **Skill Inventory** | A per-Skill readout: what it's for and how important it is | `layers/journal/content/current/skills/` (ADR-0015) |
-| **Instructions** | What every Session reads first: `CLAUDE.md`, `CONTEXT.md`, ADRs (`docs/adr/`), how-tos (`docs/agents/`) | Repo |
-| **Digest / Blog post** | Daily summary and in-character retelling of activity | Journal and Blog Tenants |
+| **Maintainer** | Has write access: steers, approves new work, merges | `CONTEXT.md` → Trusted; ADR-0020 |
+| **Outside visitor** | No write access: can open issues and pull requests from a fork, but cannot direct agents | `CONTEXT.md` → Public |
+| **Agent session** | A Claude Code session a person starts, from web, phone or terminal | `CONTEXT.md` → Session |
+| **Scheduled agent** | The same kind of session, started by a daily timer with one fixed job | ADR-0010 (line 12); `layers/journal/content/current/pages/how-it-works.md` |
+| **Helper agent** | Does a sub-task for a session (build, review, fact-check); never merges | `.agents/skills/dispatch-subagents/SKILL.md` |
+| **GitHub** | Issues, pull requests, automatic checks | `.github/workflows/gate.yml` |
 
-## 4. Flow A: one Session, start to finish
+For scale, in one week (2026-10-01 to 10-08): 107 sessions, of which 56 were
+scheduled and 51 were started by a person.
 
-1. **Start:** a human prompts, or a schedule fires a Routine.
-2. **Read the instructions:** `CLAUDE.md`, the glossary, the ADRs and how-tos
-   that apply.
-3. **Branch:** it never works on `main` directly.
-4. **Work:** it may dispatch subagents. Automatic **guards** block unsafe tool
-   calls along the way (`docs/agents/guards.md`).
-5. **Gate locally,** then push and **open a PR** (without asking, ADR-0003).
-6. **Review:** often an agent review first (`code-review` Skill, sometimes on
-   a different model). An agent posts a verdict comment before any merge it
-   makes itself.
-7. **CI Gate** on GitHub (ADR-0004).
-8. **Merge, by tier:** a Routine inside its charter merges its own PR on a
-   green Gate. Everything else, and anything touching a sensitive surface, is
-   merged by a human (§8).
-9. **Deploy:** the server picks up the new `main` within minutes.
-10. **Session log:** written at PR-open and updated at the end (§5).
+### Things that move around
 
-A Session reaches **closure** when its work is in an honest state, often with
-the PR still open. Merging frequently happens later, by a human or in another
-Session. Long work can be handed to a fresh Session (`handoff` and
-`claude-handoff` Skills).
+| Label | One line | Pointer |
+|---|---|---|
+| **Session log** | One honest diary per session | `layers/journal/content/current/sessions/`; format `shared/schemas/session.ts` |
+| **Pain point** (Friction) | One problem noted in a log, graded from `nit` to `blocker` | inside a session log |
+| **Idea** | A concrete suggestion noted in a log | inside a session log; page `/t/journal/current/ideas` |
+| **Issue** | A work item; its label says whose move it is | GitHub; `docs/agents/triage-labels.md` |
+| **Pull request** | Every change except logs | GitHub; `docs/agents/pr-workflow.md` |
+| **Automatic checks** (Gate) | The same tests and checks, run locally and on GitHub | `scripts/gate.ts`; ADR-0004 |
+| **Main branch** | The source of truth | – |
+| **Live site** | Rebuilds itself from `main` | `deploy/` |
+| **Journal** | Public dashboard of logs, daily digests and Skills | `/t/journal/current` |
+| **Agent instructions** | What every agent reads first: house rules, glossary, how-tos, recorded decisions | `CLAUDE.md`, `CONTEXT.md`, `docs/agents/`, `docs/adr/` |
+| **Skills** | Reusable instruction packs for agents | `.agents/skills/<name>/SKILL.md` |
 
-## 5. The session log: the hub of the loop
+### The seven scheduled runs (Routines)
 
-The agent writes the *interpretive* half: goal, outcome, summary, every
-Friction and any ideas (`close-session` and `log-session` Skills). A hook then
-adds the *mechanical* half (timings, tools, files) from the transcript. It
-commits that one file **straight to `main`**, the only write that skips the PR
-(ADR-0009: logs are inert data, and making them wait for review would make
-Sessions skip or flatten them). Deploy publishes it live in the Journal.
-(Mechanics: `scripts/log-session.ts`, `scripts/session-trace.ts`, the
-`Stop` hook in `.claude/settings.json`.)
+Their timers live in claude.ai, not in the repo. The order below is
+**observed** from the logs: checks and fixes overnight (UTC), then the blog,
+pruning and visitor runs during the day.
 
-## 6. Flow B: the self-improvement loop
-
-### 6.1 The seven Routines
-
-Seven Skills run once a day each. Their schedules live in claude.ai,
-**deliberately outside the repo**. The order below is observed from session
-logs, so label it "observed": the audits and the friction fixer run overnight
-(UTC), and the blog, prune and visitor runs during the day. In the Skill
-Inventory, these seven and no others are graded `routine`.
-
-| Routine | Role | Reads | Produces | Who merges |
+| Label | Job in plain words | Role | Who merges | Pointer |
 |---|---|---|---|---|
-| `digest` | Narrate | Yesterday's git history and session logs | One Digest page; moves older Journal content to `archived` | Itself, on green |
-| `audit-skills` | Find rot | A week of session logs: which Skills ran, which failed silently | Updated Skill Inventory; issues for repeated failures; ideas for new or retired Skills (it never edits Skill text) | Itself, on green |
-| `frictions-to-fixes` | Repair | Frictions from the last 3 days, screened against open issues and recent merges | Up to 10 fixes per run. Simple fixes: built by subagents, reviewed and merged by the Routine. Hard fixes: an issue plus a PR left for a human to merge. Fixes on surfaces it may not touch: a `ready-for-human` issue. | Itself for simple fixes; a human for hard ones |
-| `audit-docs` | Find rot | All live docs and Skills vs the code | A doc-fix PR; a separate PR for ADR/CI edits that a human must merge | Itself + human |
-| `blog-post` | Narrate | The last 3 days of activity | One post by one of four Personas | Itself, on green |
-| `prune-trial` | Subtract | Its trial ledger `.agents/prune-trials.yml`, and Frictions since each prune | Deletes ~100 lines of instructions as a 3-day trial; judges older trials: keep the cut, restore a line, or propose a guard (ADR-0027) | Itself, on green |
-| `visitor-loop` | Outside eyes | The live site, seen by three blind visitor subagents on different models; past owner corrections | One fix PR for problems most visitors agree on; one feature PR for the best idea | Itself, on green |
+| **Write daily digest** | Summarises each finished day from history and logs | Narrate | Itself | `.agents/skills/digest/` |
+| **Grade the Skills** | Checks a week of logs for Skills that failed or went unused; updates their grades; files issues for repeated failures; never edits a Skill | Find problems | Itself | `.agents/skills/audit-skills/` |
+| **Fix reported pain** | Picks up to 10 recent pain points (at most 2 hard ones). Easy fixes are built by helpers and merged by this run; hard fixes go to a maintainer; fixes it may not touch become issues | Repair | Itself (easy), maintainer (hard) | `.agents/skills/frictions-to-fixes/` |
+| **Fact-check the docs** | Compares docs and Skills with the code and fixes drift | Find problems | Itself; a maintainer for recorded decisions and CI | `.agents/skills/audit-docs/` |
+| **Write a blog post** | One fictional author retells recent activity, sometimes with a reply from another | Narrate | Itself | `.agents/skills/blog-post/` |
+| **Trial-cut old rules** | Deletes a chunk of instructions for 3 days; the next pain points show whether they were needed | Subtract | Itself | `.agents/skills/prune-trial/`; `.agents/prune-trials.yml` |
+| **Fresh-eyes site visit** | Three helper agents on different AI models visit the site as newcomers. It fixes what at least two of them flag and builds the single best feature idea | Outside eyes | Itself | `.agents/skills/visitor-loop/` |
 
-Each one's definition is in `.agents/skills/<name>/SKILL.md`. Its exact merge
-scope is in the ledger at the top of
+Exact scope of what each run may merge: the table at the top of
 `docs/adr/0003-agent-operating-model-and-governance.md`.
 
-### 6.2 The five roles, in plain words
+### What maintainers actually do
 
-- **Repair reported pain:** `frictions-to-fixes`.
-- **Find rot nobody reported:** `audit-docs`, `audit-skills`.
-- **Subtract:** `prune-trial` removes instructions and lets the next days'
-  Frictions show whether they were needed.
-- **Outside eyes:** `visitor-loop` sees the site like a newcomer.
-- **Narrate:** `digest` and `blog-post` (they repair nothing).
+Drawn from this week's sessions started by a person:
+- **Check a scheduled run's output and fix it**, e.g. when a run misfires or
+  a rule it follows is wrong.
+- **Run a scheduled job by hand**, often from the phone.
+- **Work the issue list:** sort issues, then have an agent build the
+  approved ones.
+- **Harvest ideas** from the logs and ship the cheap wins. No scheduled run
+  does this.
+- **Ask for new features and content.** Building a new feature, Skill or site
+  needs their approval.
+- **Merge** what only a person may merge, and apply **change notes** agents
+  can't push themselves (e.g. CI settings, `docs/proposals/`).
+- **Watch** the project through git history, the Journal and the Blog.
+- **Set up** the scheduled runs' timers.
 
-### 6.3 The cycle
+## 3. Diagram items
 
-1. Every Session, Routines included, lands a session log on `main`.
-2. Routines read logs, git history and the live site.
-3. They merge what's in their charter and open issues or PRs for the rest.
-4. Issues flow into the **issue lane** (§7.1), where humans and agent Sessions
-   turn them into work.
-5. Merged changes update `CLAUDE.md`, docs, Skills, guards and the site.
-6. The next Session reads the updated instructions and meets fewer Frictions,
-   then back to 1.
+### Zoom 0: the loop
 
-The loop also watches itself. Routines log their own Frictions,
-`audit-skills` grades the Routines, and `visitor-loop` learns from the owner's
-corrections to its earlier PRs (`scripts/owner-corrections.ts`).
+Layout: a cycle in the middle, with lanes around it.
 
-## 7. The human half of the loop
+**Lanes**
+- Maintainers, with a thin lane for outside visitors.
+- Agents: sessions started by a person, plus scheduled runs coloured by role.
+- GitHub.
+- `main` → live site → Journal.
 
-### 7.1 The issue lane: how issues become work
+**Edges**
 
-- Issues come from Routines, humans, guests and agent Sessions.
-- **Triage** (`triage`, or the batch `auto-triage`) sorts each issue,
-  writes an agent-ready brief and labels it.
-- **`ready-for-agent` is the green-light.** A human Session (e.g. "Run one
-  /auto-triage sweep, then implement every issue it marked ready") builds it:
-  `implement`, then review, then PR.
-- **Standing green-light:** when a Trusted human starts `auto-triage`, it may
-  stamp `ready-for-agent` on Trusted-authored issues itself (ADR-0022).
-  Public-authored ones always wait for a human.
-- **Large work** is first planned as a spec and tickets (`to-spec`,
-  `to-tickets`), or as a map of decision issues (`wayfinder`).
+| From → To | Label | Note |
+|---|---|---|
+| Maintainer → Agent session | asks for work | |
+| Timer → Scheduled agent | starts daily | |
+| Agent → Pull request | opens | |
+| Pull request → Automatic checks | must pass | |
+| Automatic checks → Agent | fail → fix | return arrow |
+| Pull request → Main branch | merge | colour by who merges: itself, maintainer |
+| Main branch → Live site | updates itself | |
+| Agent → Session log | writes at the end | |
+| Session log → Main branch | straight in, no review | badge: "logs can't break the site" |
+| Session log → Scheduled agent | pain points feed | |
+| Scheduled agent → Issue | files what it can't fix | |
+| Issue → Agent session | once approved | |
+| Main branch → Instructions & Skills | improves | |
+| Instructions & Skills → Agent | read first | big closing arrow: "fewer pain points next time" |
+| Maintainer → Journal | watches | |
+| Session log ⇢ Issue | idea harvest | dashed: done by people |
 
-### 7.2 What a Trusted human actually does
+### Zoom 1 tabs
 
-From this week's human-started Session goals
-(`layers/journal/content/current/sessions/`, `kind: interactive|delegated`):
+**Tab A: one session, start to finish**
+1. Started by a person or a timer.
+2. Reads the instructions.
+3. Works on its own branch, maybe with helper agents. Built-in guards block
+   unsafe actions.
+4. Runs the checks.
+5. Opens a pull request.
+6. An agent reviews it, often on a different AI model.
+7. Checks run again on GitHub.
+8. Merged by itself, if inside its approved scope, or by a maintainer.
+9. The site updates.
+10. Writes its session log.
 
-- **Assess and fix Routine output.** Examples: "Assess issue 1677 (prune-trial
-  Routine…) and fix it", "Explain why audit-docs left most concision
-  proposals unapplied, then fix the Skill".
-- **Run a Routine's Skill by hand** (`/frictions-to-fixes`, `/blog-post`,
-  `/audit-skills`), often from the mobile app.
-- **Drive the issue lane:** auto-triage, then implement.
-- **Harvest ideas.** No Routine turns ideas into issues; a human does it on
-  purpose, e.g. "Mine two weeks of session ideas and learnings, rank them, and
-  ship the cheap wins".
-- **Direct new features and content,** e.g. Tinkerfund campaigns, Journal
-  pages. Building a new feature, Skill or Tenant needs this human green-light
-  (ADR-0003, ADR-0020).
-- **Merge** what only a human may merge, and apply **Proposals**: changes
-  agents can't push, like CI workflow files (`docs/proposals/`).
-- **Configure the Routines** in claude.ai, and **watch** (§7.4).
+Long work can be handed to a fresh session. Merging often happens later than
+the session itself.
 
-### 7.3 How Skills themselves evolve
+**Tab B: the seven scheduled runs.** A 24-hour ring, or a night/day row.
+Each run shows *reads → produces → who merges*, from the table above.
+Colour by role: repair, find problems, subtract, outside eyes, narrate.
 
-Skills are the capabilities the loop ultimately improves (ADR-0005: as much a
-deliverable as the app).
+**Tab C: from issue to change**
+1. Anyone files an issue.
+2. An agent sorts it and writes a brief (`triage`).
+3. A maintainer approves it (label `ready-for-agent`). When a maintainer
+   starts a batch sort (`auto-triage`), it may approve maintainers' own
+   issues itself. Outside visitors' issues always need a person, except in
+   the guest demo (Tab E).
+4. An agent session builds it (`implement`).
+5. Review, then a maintainer merges.
 
-- **Repo-owned Skills** change through ordinary PRs: from
-  `frictions-to-fixes`, `audit-docs`, `prune-trial`, or a human-directed
-  Session.
-- **External pack Skills** (25, from `mattpocock/skills`, pinned in
-  `skills-lock.json`) must not be edited; the Gate rejects edits.
-  Improvements go upstream, and repo-specific advice goes into that Skill's
-  Inventory entry (ADR-0015).
-- **`audit-skills` only observes and grades.** A new, split or retired Skill
-  starts as an idea and needs a Trusted green-light.
+Big work is first broken into a plan and tickets (`to-spec`, `to-tickets`,
+`wayfinder`).
 
-### 7.4 Watching: the observability surface
+**Tab D: how Skills improve**
+- **Own Skills:** changed by ordinary pull requests, from the pain-fixing
+  run, the doc fact-check, rule trials or a maintainer's request.
+- **Borrowed Skills:** an outside pack, frozen in place. Improvements go
+  upstream; local notes go into the Skill list.
+- **Skill grades:** the grading run observes and grades but never edits. A
+  new or retired Skill starts as an idea and needs a maintainer's approval.
 
-Humans read the loop through four views of the same activity (`CONTEXT.md` →
-Observability):
+**Tab E: outside contributions (small)**
+- **Outside visitor's issue:** sorted, then a maintainer decides.
+- **Guest demo:** an agent interviews the guest in the issue; once the guest
+  confirms, another agent builds it, and the owner merges (`guest-intake`,
+  `guest-build`).
+- **Outside agent's pull request:** a maintainer merges.
 
-- **git history;**
-- the **Journal** (`/t/journal/current`): dashboard, session logs, digests,
-  Skill Inventory, ideas;
-- the **Blog**: plain-language retelling by the Personas;
-- the **Commons Timeline**: everything in one feed.
+### Zoom 2 panels (click to open)
 
-The **Midden** catalogues discarded work: dead branches, closed PRs, retired
-Skills.
+- **Session log contents:** goal, status, outcome, pain points, ideas; plus
+  timings and tools, added automatically (`.agents/skills/log-session/`).
+- **Who may merge what:**
+  - scheduled runs: their own scope, when checks pass;
+  - everything else: a maintainer;
+  - always a maintainer: code that keeps sites apart, data formats, CI, new
+    dependencies, untested behaviour changes, and recorded decisions (one
+    exception: a rule trial may reword a decision without changing it).
+  - Full list: `CLAUDE.md` → Ground rules.
+- **Rule-trial cycle:** cut → 3 days → pain points → keep the cut, restore a
+  line, or propose an automatic guard.
 
-## 8. Guardrails (badges on the edges, not boxes)
+### Legend
 
-- **Gate:** the same objective checks locally and in GitHub CI; CI decides
-  (ADR-0004).
-- **Human-only merges:** isolation and routing code, schemas, CI, ADRs, new
-  dependencies, untested behaviour changes. Agents may edit these; a human
-  must merge (full list: `CLAUDE.md` → Ground rules).
-- **Trust tiers:** Trusted directs, Public reports (ADR-0020).
-- **Provenance:** every commit and GitHub post links the Session that wrote
-  it (ADR-0017).
-- **Guards:** automatic checks on agent tool calls. Routines may not change
-  guards; they file an issue (`docs/agents/guards.md`).
+- **Colour by who merges:** itself, maintainer.
+- **Colour by run role:** repair, find problems, subtract, outside eyes,
+  narrate.
+- **Dashed:** done by people on purpose, or not live yet.
 
-## 9. Flow C: guests and outside agents (small side lane)
+## 4. What to leave out, and what to label honestly
 
-- **Public issue** → triaged → a human decides.
-- **Guest demo** (ADR-0023, only while the owner runs it): `guest-intake`
-  interviews the guest in the issue, then `guest-build` has an agent build and
-  review it, then **the owner merges**.
-- **Outside agent** → fork PR → **a human merges**.
+**Leave out:**
+- script, hook and guard names;
+- names of the check steps;
+- exact run times;
+- issue and pull-request numbers;
+- log fields beyond pain points, ideas and status;
+- the content-making Skills of single sites;
+- sessions that loop on a timer by hand (none ran this week);
+- provenance markers on commits and posts;
+- the Midden site.
 
-## 10. Recommended diagram
+**Label honestly:**
+- **Ideas become work only through people.** Draw it dashed: "harvested by
+  maintainers" (`scripts/ideas.ts`: "promotion itself is out of scope").
+- **Run timers are not in the repo,** so the order shown is observed.
+- **Automatic merging of dependency updates is planned, not live**
+  (`docs/proposals/1633-dependabot-automerge.md`). Show it only in a
+  footnote, if at all.
 
-**Shape: a cycle in the middle, swimlanes around it.**
+## Further reading
 
-Lanes: **Humans** (Trusted; thin Public sub-lane) · **Agent Sessions**
-(human-started; Routines coloured by role) · **GitHub** (issues, PRs, CI) ·
-**`main` → live site → Journal**.
-
-**Zoom 0, the overview cycle:**
-- prompt or schedule → Session → PR → Gate → merge → `main` → live site;
-- Session → session log → `main` directly → Journal → Routines;
-- Routines → PRs (self-merged) and issues → issue lane → Sessions;
-- everything → updated instructions and Skills → next Session.
-
-Draw the closing arrow big: "the next Session meets less friction". Mark the
-human touchpoints clearly: green-light, merge, assess Routine output, harvest
-ideas, watch.
-
-**Zoom 1, tabs:** (a) one Session (§4–5); (b) the Routines (§6), as a 24-hour
-ring or a night/day row coloured by role, each with reads → produces → who
-merges; (c) the human half (§7): the issue lane, Skill evolution, watching;
-(d) guests (§9).
-
-**Zoom 2, click-to-open panels:** the session log (§5), merge tiers (§8), the
-prune-trial mini-cycle (prune → 3-day window → Frictions → keep or restore).
-
-**Emphasise:** the session log as the hub and the only direct write to
-`main`; the two ways to land (PR vs log); who merges, as colour-coded end
-states; Frictions as the fuel.
-
-**Leave out:** script, hook and guard names; Gate step names; exact Routine
-times; PR numbers; schema fields beyond frictions, ideas and status; content
-Skills such as `atlas-specimen` and `tinkerfund-campaign`; and `/loop`
-sessions. Those are a footnote: a human can run `auto-triage` or the guest
-Skills on a timer, but none ran this week.
-
-**Reuse:** `layers/journal/content/current/pages/how-it-works.md` already has
-three Mermaid diagrams on this. Its "What runs when nobody asked" diagram
-names only four of the seven Routines; the new one should show all seven.
-
-## 11. Labels to draw honestly
-
-- **Ideas → issues is human-driven.** Draw a dashed arrow labelled "human
-  harvest", not an automatic one (`scripts/ideas.ts`: "promotion itself is out
-  of scope").
-- **Routine schedules are not in the repo,** so the order is observed, not
-  configured.
-- **Dependabot auto-merge is only proposed**
-  (`docs/proposals/1633-dependabot-automerge.md`), although ADR-0003's ledger
-  describes it. Draw it dashed.
+| Topic | Where |
+|---|---|
+| How agents and people share the work | ADR-0003 |
+| The automatic checks | ADR-0004, `scripts/gate.ts`, `.github/actions/gate/action.yml` |
+| Skills as part of the product | ADR-0005, ADR-0015 |
+| Session logs go straight to `main` | ADR-0009, `scripts/log-session.ts` |
+| Scheduled runs and digests | ADR-0010 |
+| Maintainers vs outside visitors | ADR-0020, `docs/agents/guest-contributions.md` |
+| Batch issue sorting | ADR-0022 |
+| Guest demo | ADR-0023 |
+| Rule trials | ADR-0027 |
+| Session closure and logging | `.agents/skills/close-session/`, `.agents/skills/log-session/` |
+| Built-in guards | `docs/agents/guards.md` |
