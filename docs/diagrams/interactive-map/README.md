@@ -16,13 +16,16 @@ parts live and how agents and people keep improving it.
 Four rounds, 2026-10-08 to 2026-10-09:
 
 1. **Compare tools.** Archify and Claude artifacts got the same prompt,
-   research included. Each did its own research, so the results weren't
-   comparable.
-2. **Brief first, then draw.** Two reviewed briefs, drawn by both tools.
+   research included ([artifact result](https://claude.ai/artifact/HDgKuN7NhUBeWwMJxNR8vT)).
+   Each did its own research, so the results weren't comparable.
+2. **Brief first, then draw.** Two reviewed briefs, drawn by both tools
+   ([floor plan](https://claude.ai/artifact/Y1N8NvYWrfeVmyLXZxQob5),
+   [improvement loop](https://claude.ai/artifact/DtdeqjvrDRtPgdNHf4E7VQ)).
    Neither worked, and each diagram was hard to follow without the other.
 3. **One overview.** A single plain-language brief for one unified diagram.
 4. **Specify and build.** Many agents stress-tested Part 2. A Fable agent
-   built it. Too ambitious to finish for now.
+   [built it](https://claude.ai/artifact/E9spdeUp54KzsmXZjSJZ8L). Too
+   ambitious to finish for now.
 
 Details per version are below. Side findings:
 [#1701](https://github.com/feffef/terrarium/issues/1701),
