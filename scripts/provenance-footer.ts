@@ -115,8 +115,8 @@ export function hasProvenanceFooter(message: string): boolean {
 
 /** The session id a `Claude-Session:` trailer names, or `null` if `text` carries
  *  none — the shared `SESSION_TRAILER` pattern, applied here to either a full
- *  commit message or a lone freshly-built
- *  `sessionLine()`, so both sides of the mismatch check share one extraction. */
+ *  commit message or a lone freshly-built `sessionLine()`, so both sides of
+ *  the mismatch check share one extraction. */
 function trailerSessionId(text: string): string | null {
   const match = text.match(SESSION_TRAILER)
   return match?.[1] ?? null

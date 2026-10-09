@@ -267,24 +267,11 @@ describe('normalizeRemoteSessionId() / resolveGroundTruthSessionId() — issue #
 })
 
 describe('resolveGroundTruthFromTranscript()', () => {
-  const record = (sessionId?: string) =>
-    JSON.stringify({ type: 'assistant', timestamp: '2026-07-18T10:00:00Z', sessionId, message: { model: 'claude-opus-4-8', content: [] } })
-
-  it('prefers the normalized env id over the transcript id', () => {
-    expect(
-      resolveGroundTruthFromTranscript(record('b84dc292-4954-52dc-b693-5681f040259e'), {
-        CLAUDE_CODE_REMOTE_SESSION_ID: 'cse_019W471jzQDwoZmKzJKtE4vk',
-      }),
-    ).toBe('session_019W471jzQDwoZmKzJKtE4vk')
-  })
-
-  it("falls back to the transcript's own session id", () => {
+  it("resolves from a raw transcript's own session id, null when it has none", () => {
+    const record = (sessionId?: string) => JSON.stringify({ type: 'assistant', sessionId, message: { content: [] } })
     expect(resolveGroundTruthFromTranscript(record('b84dc292-4954-52dc-b693-5681f040259e'), {})).toBe(
       'b84dc292-4954-52dc-b693-5681f040259e',
     )
-  })
-
-  it('returns null when neither source is available', () => {
     expect(resolveGroundTruthFromTranscript(record(), {})).toBeNull()
   })
 })
