@@ -13,59 +13,20 @@ parts live and how agents and people keep improving it.
 
 ## How we got here
 
-It took four rounds, from 2026-10-08 to 2026-10-09.
+Four rounds, 2026-10-08 to 2026-10-09:
 
-1. **Compare two diagram tools.**
-   - The maintainer gave Archify and Claude's artifact-diagramming skill the
-     same prompt. It asked for two diagrams, the Nuxt app architecture and
-     the improvement loop, and included a large research phase.
-   - Two sessions ran in parallel. Each sent Explore agents through the
-     repo before drawing.
-   - Because each tool did its own research, the two results could differ in
-     content as well as in drawing. That made the comparison unfair.
-2. **Separate the brief from the drawing.**
-   - The new idea: do the exploration and the clean-up of concepts and
-     language once, in a brief, then hand that brief to any diagram
-     generator.
-   - A session wrote two briefs, one per diagram, and put them through three
-     subagent review rounds: completeness, plain language and project terms.
-   - Two sessions then drew from those briefs, one with Claude artifacts and
-     one with Archify. The artifact results were the
-     [architecture diagram](https://claude.ai/artifact/Y1N8NvYWrfeVmyLXZxQob5)
-     (a floor plan) and the [improvement loop](https://claude.ai/artifact/DtdeqjvrDRtPgdNHf4E7VQ).
-     The maintainer judged that neither attempt worked, and both were
-     abandoned.
-   - Lessons:
-     - The reviews polished the briefs' framing but never questioned it.
-       The diagrams missed the basic fact that everything lives in one
-       repository, which becomes a database at build time.
-     - Each diagram was still hard to understand without the other.
-3. **One plain-language overview for one unified diagram.**
-   - The brief's author replaced both briefs with one overview, grouped by
-     where things live: people, Claude, GitHub, the Docker host and the
-     browser.
-   - It went through a grilling with the maintainer, the maintainer's own
-     review, and a review by four agents on two models plus a fact-finder.
-   - Part 1 became the plain-language explanation. Part 2 collected ideas
-     for the interaction.
-   - The session slipped from writing a brief into designing the diagram's
-     rendering in detail. That design work was then split off into its own
-     round.
-4. **Stress-test and specify Part 2.** A cloud session ran these steps:
-   - three cold readers on three models, which saw only `CLAUDE.md` and the
-     overview;
-   - three agents that explored the repo for interaction ideas;
-   - ten Opus agents, one per open topic, each writing a proposal checked
-     against the code;
-   - a full rewrite of Part 2, with Part 1 facts corrected;
-   - three cold checkers on three models.
+1. **Compare tools.** Archify and Claude artifacts got the same prompt,
+   research included. Each did its own research, so the results weren't
+   comparable.
+2. **Brief first, then draw.** Two reviewed briefs, drawn by both tools.
+   Neither worked, and each diagram was hard to follow without the other.
+3. **One overview.** A single plain-language brief for one unified diagram.
+4. **Specify and build.** Many agents stress-tested Part 2. A Fable agent
+   built it. Too ambitious to finish for now.
 
-   The maintainer then decided what to cut and keep. A Fable agent built the
-   diagram from the final spec as an artifact.
-
-Along the way the research found three problems outside the diagram:
+Details per version are below. Side findings:
 [#1701](https://github.com/feffef/terrarium/issues/1701),
-[#1702](https://github.com/feffef/terrarium/issues/1702) and
+[#1702](https://github.com/feffef/terrarium/issues/1702),
 [#1703](https://github.com/feffef/terrarium/issues/1703).
 
 ## Session logs
