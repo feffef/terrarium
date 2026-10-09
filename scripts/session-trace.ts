@@ -427,6 +427,15 @@ export function resolveGroundTruthSessionId(
   return normalizeRemoteSessionId(env.CLAUDE_CODE_REMOTE_SESSION_ID) ?? transcriptSessionId
 }
 
+/** `resolveGroundTruthSessionId` straight from a raw transcript, for callers
+ *  that hold only the jsonl. */
+export function resolveGroundTruthFromTranscript(
+  transcriptJsonl: string,
+  env: SessionIdEnv = process.env,
+): string | null {
+  return extractTrace(parseTranscript(transcriptJsonl), env).session ?? null
+}
+
 /** `claude-opus-4-8` → `Claude Opus 4.8` — the display wording the harness's own
  *  commit template uses for the `Co-Authored-By:` line (ADR-0017). Moved here from
  *  `log-session.ts` (issue #346) so the direct-to-`main` log-commit footer and the

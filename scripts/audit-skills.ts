@@ -466,7 +466,7 @@ export function parseSessionTrailers(raw: string): SessionTrailerRef[] {
  *  unanchored `SESSION_TRAILER` matched it, inventing an orphan for the elided
  *  id `session_01…\`)`. That is issue #692's class of bug — a quoted marker read
  *  as authorship — and `SESSION_TRAILER` stays as-is because other readers
- *  (`session-id-guard.ts`) want its looser reach. */
+ *  (`provenance-footer.ts`, `github-provenance-guard.ts`) want its looser reach. */
 function legacyTrailerSession(body: string): string | undefined {
   for (const line of body.split('\n')) {
     if (!/^Claude-Session:/.test(line)) continue

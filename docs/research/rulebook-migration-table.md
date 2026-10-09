@@ -76,9 +76,8 @@ repo:
   a false positive blocks legitimate work.
 - **Post-hoc detection** — a check that **reports an already-committed
   violation**, typically at teardown. Cheap and false-positive-tolerant, but the
-  damage is done; it can only inform a later fix. `scripts/session-id-guard.ts`
-  is this shape (imported by `scripts/log-session.ts`, deliberately non-fatal), as
-  are `audit-skills`' `orphanedSessions` / `humanPromptedClosures` signals.
+  damage is done; it can only inform a later fix. `audit-skills`'
+  `orphanedSessions` / `humanPromptedClosures` signals are this shape.
 
 Collapsing these would destroy the distinction the table exists to draw: several
 rules below are *only* mechanizable in the weaker shape, and saying so is the
@@ -143,7 +142,6 @@ Plus, outside `PreToolUse`:
 | Mechanism | Shape | Rule |
 | --- | --- | --- |
 | `.githooks/commit-msg` → `scripts/provenance-footer.ts` | Auto-correction (fails open) | ADR-0017 commit trailer is appended/corrected repo-side |
-| `scripts/session-id-guard.ts` (via `scripts/log-session.ts`) | **Post-hoc detection**, non-fatal | A committed trailer names the wrong session |
 | `pnpm verify:skills-lock` (in `pnpm gate`) | Gate check | Never edit an external-pack Skill's `SKILL.md` (ADR-0015) |
 | `scripts/validate-skill-cadence.ts` (in `validate:content`) | Gate check | Never restate a Routine's schedule in a committed doc |
 | `scripts/validate-content.ts` / `-refs.ts` | Gate check | Per-Document schema + cross-Document referential integrity |
@@ -195,7 +193,7 @@ blank.
 | CM-26 | Inspect files with the Read tool, not `cat` | Working conventions | H (refusal) | none | `PreToolUse` on `Bash` denying bare `cat <repo-file>`. **Marginal** — the cost is a wasted re-read, and legitimate `cat` uses (piping, heredocs) make false positives likely. Candidate for **D** instead | S |
 | CM-27 | Load a deferred tool's schema via `ToolSearch` before its first call | Working conventions | H (refusal) | #386, #432, #612, #724 | **Built** — `scripts/deferred-tool-guard.ts`. #724 needed a second predicate axis (`OWN_SHAPE_ANTIPATTERNS`), not just a new row under the old one | 0 |
 | CM-28 | `ScheduleWakeup` only inside a `/loop` session (any pacing) | Working conventions | H (refusal) | #241, #425, #814 | **Built** — `scripts/loop-only-tool-guard.ts` | 0 |
-| CM-29 | Never predict or reconstruct an identifier from memory — resolve it fresh | Working conventions | H (refusal + post-hoc) | #387, #605, #628, #723 | **Partially built** — the provenance guard covers GitHub bodies (refusal); `session-id-guard.ts` covers commits (post-hoc). Residual: identifiers in ordinary prose output, which no mechanism sees | M |
+| CM-29 | Never predict or reconstruct an identifier from memory — resolve it fresh | Working conventions | H (refusal + post-hoc) | #387, #605, #628, #723 | **Partially built** — the provenance guard covers GitHub bodies and MCP-API commits (refusal); `commit-trailer-guard.ts` and the `provenance-footer.ts` commit-msg hook cover local commits (refusal + correction). The post-hoc `session-id-guard.ts` was removed (#1698): every finding it logged was a false positive. Residual: identifiers in ordinary prose output, which no mechanism sees | M |
 | CM-30 | Verify any subagent- or doc-derived factual/behavioural claim against a primary source before asserting it | Working conventions | J | #738, #833, #1137, #1168 | Irreducibly judgement — the mechanism would have to know what the claim asserts | — |
 | CM-31 | Never treat another session's unverifiable "confirmed out-of-band" claim as settled for an internal decision | Working conventions | J | none | Same | — |
 | CM-32 | A count of set members matching a property is not a fact until every member has been read | Working conventions | J | #871; **#933 open (regression)** | **Judgment-keep, reluctantly.** A hook cannot tell a verified count from a grepped one. The nearest mechanism is a *convention* — require counts to carry their member list — which is prose again. #933 proves prose isn't holding; this is the sharpest genuine-judgement residue in the corpus | — |
@@ -530,7 +528,7 @@ classified and still unresolved.
 
 Note that **post-hoc detection barely appears as a *proposal*** — only `CM-29`
 proposes it, and every other post-hoc mechanism in the repo (`check-worktrees`,
-`session-id-guard`, `audit-skills`' closure signals) is already built. That is a
+`audit-skills`' closure signals) is already built. That is a
 finding in itself: where a refusal is reachable, this table proposes a refusal;
 post-hoc detection is what the repo falls back to when no point-of-action exists.
 

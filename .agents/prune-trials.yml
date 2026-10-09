@@ -105,6 +105,8 @@ trials:
       stopped that fixed itself from the message. Start from the Frictions
       that close-session's re-read logs against named CLAUDE.md rules; their
       "what would have made me read it" notes point at triggers to reword.
+      Not damage either: session-id-guard's 2026-10-08 trailer-mismatch
+      blockers (false positives, see #1698).
   - problem: >
       The `dispatch-subagents` Skill as a whole (209 lines, rewritten to about
       118): rule-per-incident bullets with long justifications. It failed as
@@ -168,6 +170,8 @@ trials:
       mangles a commit message, and a line the old file carried would have
       prevented it. NOT damage: a guard or hook that stopped the session and
       it fixed itself from the message.
+      Not damage either: session-id-guard's 2026-10-08 trailer-mismatch
+      blockers (false positives, see #1698).
   - problem: >
       Mechanism-record prose in `docs/research/rulebook-migration-table.md`: §3
       (a table retelling #835, #772, #666, #873) and §4's `PreToolUse` guard
