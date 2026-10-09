@@ -1,7 +1,7 @@
 schemaVersion: 1
 session: session_01VaPP7iMRxMvKvX8KQh1qeY
 startedAt: 2026-10-09T10:24:52Z
-endedAt: 2026-10-09T16:03:24Z
+endedAt: 2026-10-09T16:04:37Z
 kind: interactive
 goal: "Explain issue #1698 (session-id-guard false blocker) and fix it"
 status: in-review
@@ -78,20 +78,23 @@ frictions:
   - description: I spent two fix-and-review rounds hardening session-id-guard's ownership parsing before checking whether the guard caught anything at all; the Journal showed its three findings ever were all false positives, so the right fix was deletion. The user had to prompt the step back.
     solution: "Before fixing a recurring false positive in a guard, count its true positives in the Journal first; a guard with none and a stronger point-of-action cover is a deletion candidate (CLAUDE.md: cut before you add)."
     severity: moderate
-durationSec: 20312
+  - description: I first counted the guard's findings only in layers/journal/content/current/sessions (111 logs since 2026-10-01) and presented that as its full record; the user had to point me at the archive (788 more logs back to 2026-07-04). The archive confirmed the claim, but I stated it before checking it.
+    solution: For any 'ever' or trend claim from the Journal, search both current/ and archived/ sessions over at least 30 days; CLAUDE.md's verify-before-you-state rule covers it.
+    severity: minor
+durationSec: 20384
 models:
-  claude-opus-5-5: 394
+  claude-opus-5-5: 411
 toolCounts:
-  Bash: 113
+  Bash: 118
   ToolSearch: 7
   mcp__github__issue_read: 2
-  Read: 20
+  Read: 21
   Edit: 13
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 2
   mcp__claude-code-remote__subscribe_pr_activity: 2
   ReadNotifications: 10
-  mcp__github__update_pull_request: 4
+  mcp__github__update_pull_request: 5
   Skill: 2
   Write: 10
   mcp__claude-code-remote__send_later: 4
@@ -139,6 +142,7 @@ learnings:
   - On a local machine, parallel sessions in one working copy share HEAD, so any git-range notion of 'this session's commits' sees siblings' commits; only the transcript knows which commits a session made.
   - git commit -q suppresses the [branch sha] subject line, the only per-commit trace a session's transcript otherwise carries; a merge prints none either.
   - Matching a command by substring catches text it merely quotes (heredocs, grep patterns, echo); anchoring at command position after ^ ; & | ( avoids that cheaply.
+  - The Journal splits session logs into current/ (recent) and archived/ (older); a history query over current/ alone misses most of it.
 ideas:
   - "Record each session's commits at commit time: have the commit-msg or post-commit hook append sha and session id to a gitignored per-session file, so session-id-guard and the trace extractor get exact ownership even for git commit -q, merges and rebases, instead of parsing tool output."
   - Share one 'git at command position' matcher across commit-trailer-guard, session-id-guard and the other Bash-matching guards, so a heredoc or grep that only mentions git stops tripping them.
