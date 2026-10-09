@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01S1WwkpNHDfbvKAf5T1afKq
 startedAt: 2026-10-08T22:50:06Z
-endedAt: 2026-10-09T05:44:41Z
+endedAt: 2026-10-09T07:22:06Z
 kind: interactive
 goal: "Stress-test and rewrite Part 2 (the interactive-diagram spec) of the Terrarium overview, PR #1694"
 status: in-review
-outcome: "Part 2 rewritten as a full diagram spec, Part 1 facts corrected, three issues filed; PR #1694 awaits the maintainer"
-summary: "Picked up a handoff from session 1f97b613 (overview doc on PR #1694). The maintainer asked, step by step, for each phase: fix the overview first; spawn three cold readers (Sonnet, Opus, Fable) that saw only CLAUDE.md and the overview; spawn three repo-exploring agents for ideas on clickable stories and zoom; cut the open topics into 10 buckets for 10 Opus proposal agents; rewrite Part 2 completely with minor Part 1 fixes; have three different-model cold checkers review it; then propose improvements for the maintainer to decide. All of that was human-instructed. The agent-initiated parts were how the 10 buckets were cut, how conflicting proposals were merged (e.g. the two-state vs close-up zoom models), and the list A/B/C of fixes. The bucket agents corrected several Part 1 facts against the code: frictions-to-fixes merges hard fixes itself; guards need a human-attended session; one dump per collection; deploy is copy+restart and ignores CI; Tinkerfund search has cache:false; new issues are unlabeled. The cold checkers found real contradictions in the first rewrite (multi-target steps, one file listed on two nodes, accent count, open-group rule). Two checkers wrongly flagged story 5's ready-for-human label; ADR-0022 confirms it. The maintainer then decided: - cut the real-run cards, chaining, browser back, and branches outside stories 1/2/3/5; - container and browser are close-ups only; - Part 2 may hold detail; - zoom = the component's insides plus the nodes it directly works with; - the maintainer is the sole owner. Filed issues #1701 (stale packages after a failed install), #1702 (uncached home page) and #1703 (dependabot ledger drift) at the maintainer's request. Where the diagram lives is still open. Nothing has been built yet."
+outcome: "Brief moved to interactive-map/ with a history README; diagram artifact built; Part 2 rewritten as a full diagram spec, Part 1 facts corrected, three issues filed; PR #1694 awaits the maintainer"
+summary: "Picked up a handoff from session 1f97b613 (overview doc on PR #1694). The maintainer asked, step by step, for each phase: fix the overview first; spawn three cold readers (Sonnet, Opus, Fable) that saw only CLAUDE.md and the overview; spawn three repo-exploring agents for ideas on clickable stories and zoom; cut the open topics into 10 buckets for 10 Opus proposal agents; rewrite Part 2 completely with minor Part 1 fixes; have three different-model cold checkers review it; then propose improvements for the maintainer to decide. All of that was human-instructed. The agent-initiated parts were how the 10 buckets were cut, how conflicting proposals were merged (e.g. the two-state vs close-up zoom models), and the list A/B/C of fixes. The bucket agents corrected several Part 1 facts against the code: frictions-to-fixes merges hard fixes itself; guards need a human-attended session; one dump per collection; deploy is copy+restart and ignores CI; Tinkerfund search has cache:false; new issues are unlabeled. The cold checkers found real contradictions in the first rewrite (multi-target steps, one file listed on two nodes, accent count, open-group rule). Two checkers wrongly flagged story 5's ready-for-human label; ADR-0022 confirms it. The maintainer then decided: - cut the real-run cards, chaining, browser back, and branches outside stories 1/2/3/5; - container and browser are close-ups only; - Part 2 may hold detail; - zoom = the component's insides plus the nodes it directly works with; - the maintainer is the sole owner. Filed issues #1701 (stale packages after a failed install), #1702 (uncached home page) and #1703 (dependabot ledger drift) at the maintainer's request. The maintainer then asked for a Fable agent to build the diagram as an artifact. It loaded artifact-design and artifact-diagramming, built all 11 stories and verified with Playwright. I read the whole page and published it (https://claude.ai/artifact/E9spdeUp54KzsmXZjSJZ8L). The maintainer judged it too ambitious to finish for now. At the maintainer's request I moved the brief to docs/diagrams/interactive-map/ and added a README. An Explore agent mapped the branch history and the diagram session logs for it, and the README links every pinned brief version and each log."
 prs:
   - "1694"
 docsRead:
@@ -107,6 +107,10 @@ skillsUsed:
     reason: closure at push
   - name: log-session
     reason: this log
+  - name: artifact-design
+    reason: (no reason given)
+  - name: artifact-diagramming
+    reason: (no reason given)
 frictions:
   - description: Skipped reading CONTEXT.md at session start (read only CONTEXT-MAP.md), breaking CLAUDE.md's session-start rule; glossary terms were taken from the handoff instead.
     solution: Read both at session start; a SessionStart hook reminder naming CONTEXT.md would make it hard to skip.
@@ -132,25 +136,30 @@ frictions:
   - description: "Subscribed to PR #1694's activity only on the second push, not when this session first pushed a commit to it."
     solution: Subscribe at the first push, as CLAUDE.md's 'Pushing is not landing' requires.
     severity: minor
-durationSec: 24876
+durationSec: 30721
 models:
-  claude-opus-5-5: 147
+  claude-opus-5-5: 206
 toolCounts:
-  Bash: 18
-  Read: 13
+  Bash: 25
+  Read: 21
   AskUserQuestion: 5
-  Agent: 19
-  Write: 4
+  Agent: 21
+  Write: 5
   ToolSearch: 1
   mcp__github__issue_write: 3
-  mcp__github__pull_request_read: 1
-  mcp__github__update_pull_request: 1
+  mcp__github__pull_request_read: 5
+  mcp__github__update_pull_request: 2
   mcp__claude-code-remote__subscribe_pr_activity: 1
   Skill: 2
+  ReadNotifications: 4
+  mcp__claude-code-remote__send_later: 2
+  SendMessage: 1
+  Artifact: 2
 filesEdited:
   - docs/diagrams/terrarium-overview.md
+  - docs/diagrams/interactive-map/README.md
 docsReadViaShell:
-  - docs/diagrams/terrarium-overview.md
+  - docs/diagrams/interactive-map/terrarium-overview.md
   - docs/adr/0022-autonomous-triage-sweep.md
   - docs/agents/triage-labels.md
   - .agents/skills/auto-triage/SKILL.md
@@ -193,6 +202,7 @@ docsReadViaShell:
   - docs/adr/0019-patched-nuxt-content-client-db-loading.md
   - docs/adr/0011-poc-self-updating-deploy-container.md
   - docs/adr/0001-single-container-baked-multitenancy.md
+  - docs/diagrams/terrarium-overview.md
   - CONTEXT-MAP.md
   - docs/adr/0006-runtime-routing-path-prefix.md
   - docs/adr/0024-build-time-mermaid-prerender.md
@@ -255,6 +265,11 @@ subagents:
   - type: general-purpose
     task: Cold check v2 (fable)
     model: fable
+  - type: general-purpose
+    task: Build Terrarium diagram artifact
+    model: fable
+  - type: Explore
+    task: Map diagram history and logs
 gitBranch: claude/diagram-research
 entrypoint: remote
 cliVersion: 2.1.295
