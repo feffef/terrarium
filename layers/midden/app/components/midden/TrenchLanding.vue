@@ -51,6 +51,13 @@ const { data } = await useAsyncData(`midden-landing-${props.front ? 'front' : 't
   return { intro: pages.find((p) => p.path === '/') ?? null, count: sites.length, sites, latest: [] }
 })
 
+// Hand-picked for a first visit: plain-spoken stories that need no repo vocabulary.
+const START_HERE = [
+  { slug: 'tried-and-left-alone', title: 'Tried and Left Alone', blurb: 'An upgrade that passed every check and was closed anyway.' },
+  { slug: 'built-never-fired', title: 'Built and Never Fired', blurb: 'Finished things that were never once put to use.' },
+  { slug: 'the-thirty-day-exception', title: 'The Thirty-Day Exception', blurb: 'A whole wing of the site, lifted out on an error that was not real.' },
+]
+
 const count = computed(() => data.value?.count ?? 0)
 const rows = computed(() =>
   props.front
@@ -109,6 +116,25 @@ useHead({ title: props.front ? 'The Midden' : 'The Trench · The Midden' })
       <div v-else-if="data?.intro" class="midden-landing__foreword">
         <ContentRenderer :value="data.intro" />
       </div>
+
+      <section v-if="front" class="midden-landing__section" aria-labelledby="midden-start-head">
+        <div class="midden-sechead">
+          <span id="midden-start-head" class="hand midden-sechead__title">New here? Start with these</span>
+          <span class="midden-sechead__rule" />
+        </div>
+        <ol class="midden-sites">
+          <li v-for="(s, i) in START_HERE" :key="s.slug" class="midden-sites__item">
+            <NuxtLink :to="`/t/midden/trench/${s.slug}`" class="midden-sites__link">
+              <span class="mono midden-sites__num">{{ i + 1 }}</span>
+              <span class="midden-sites__body">
+                <span class="midden-sites__title">{{ s.title }}</span>
+                <span class="midden-sites__blurb">{{ s.blurb }}</span>
+              </span>
+              <span class="midden-sites__arrow" aria-hidden="true">→</span>
+            </NuxtLink>
+          </li>
+        </ol>
+      </section>
 
       <section class="midden-landing__section" aria-labelledby="midden-sites-head">
         <div class="midden-sechead">
