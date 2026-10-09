@@ -1,0 +1,298 @@
+schemaVersion: 1
+session: session_01HgJSvxTfhCwRcTZEhFspLX
+startedAt: 2026-10-09T00:46:03Z
+endedAt: 2026-10-09T01:18:04Z
+kind: autonomous
+goal: Run the scheduled audit-skills sweep — check whether the Platform's own Skills are doing their job
+status: in-review
+outcome: "Opened PR #1697 (gate green) refreshing all 11 behaviour-checked Skills' Inventory observations; no new issues needed"
+summary: "Entirely agent-initiated: fired by a scheduled /audit-skills trigger with no human prompt at any point in this session. Followed audit-skills/SKILL.md's steps: ran scripts/audit-skills.ts for the scorecard, dispatched one read-only Sonnet subagent per qualifying Skill (11 total) in parallel, then independently verified every subagent's central claims against primary sources before trusting them (live GitHub state via issue_read/ pull_request_read, git log, pnpm validate:content), including one spot-check per clean report per the Skill's own rule. Step 3 closure-completeness signals (orphan scan, suppression log, human-prompted/manually-rescued closures) all came back clean. Two findings got new evidence commented onto existing open issues (#1480's 3rd cd-into-worktree occurrence, #1586's skillsUsed-logging gap recurrence) rather than new issues, since both were repeats of already-tracked shapes. Every other finding a subagent surfaced turned out to already be tracked and resolved via an existing closed issue/merged PR once checked live, so nothing else needed filing. Appended today's dated observation to all 11 Skills' Inventory entries (pure additions, no grade/role change — none of this round's evidence cleared the ≥2-session grade-change bar), ran the full gate (green), and opened PR #1697 scoped to layers/journal/content/current/skills/*.yml only, per step 6's constraint."
+prs:
+  - "1697"
+docsRead:
+  - path: CONTEXT-MAP.md
+    reason: session-start context map
+  - path: CONTEXT.md
+    reason: Session/Friction/Skill Inventory/Importance glossary terms
+  - path: docs/agents/git-conventions.md
+    reason: read before first commit, per CLAUDE.md
+  - path: docs/agents/github-integration.md
+    reason: read too late — see friction below
+  - path: docs/agents/pr-workflow.md
+    reason: "self-merge tier and PR-open recipe before opening PR #1697"
+  - path: docs/adr/0015-audit-skills-and-conditional-importance.md
+    reason: read too late — see friction below
+  - path: CLAUDE.md
+    reason: hard-rule re-read at Session closure
+  - path: layers/journal/content/current/skills/close-session.yml
+    reason: (read before editing)
+  - path: layers/journal/content/current/skills/audit-docs.yml
+    reason: (read before editing)
+  - path: layers/journal/content/current/skills/audit-skills.yml
+    reason: (read before editing)
+  - path: layers/journal/content/current/skills/auto-triage.yml
+    reason: (read before editing)
+  - path: layers/journal/content/current/skills/blog-post.yml
+    reason: (read before editing)
+  - path: layers/journal/content/current/skills/digest.yml
+    reason: (read before editing)
+  - path: layers/journal/content/current/skills/dispatch-subagents.yml
+    reason: (read before editing)
+  - path: layers/journal/content/current/skills/frictions-to-fixes.yml
+    reason: (read before editing)
+  - path: layers/journal/content/current/skills/log-session.yml
+    reason: (read before editing)
+  - path: layers/journal/content/current/skills/prune-trial.yml
+    reason: (read before editing)
+  - path: layers/journal/content/current/skills/visitor-loop.yml
+    reason: (read before editing)
+  - path: .agents/skills/auto-triage/SKILL.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-07-session_01QLxPLD6AQ2Y6GyWHE1dkKp.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-05-session_014mna6dsd4t2Ui98gbs3jCF.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-03-session_01548Bi1ZiGcknAp8CMLNMZB.yml
+    reason: (no reason given)
+  - path: .agents/skills/prune-trial/SKILL.md
+    reason: (no reason given)
+  - path: .agents/prune-trials.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-02-session_01WepvCFoUP9g2RgJaVdWKHe.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-03-session_01Kwyax1gVAi9qEByVfSoMUR.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-04-session_01WTye1srGoMxeqDp8bCMHT6.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-05-session_01BP68CxPvZypKHZE43z8gZA.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-06-session_01RCmFsgtMbJiafbzPg48LYh.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-07-session_01NyDGTR1fuP22hPo7XghCfz.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-07-session_01UwY4ZKweYsmaf9zZrzj92k.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-08-session_015UvXah6phvbuMpUWmf5rYs.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-03-session_01TiCx5GDdDdFGwCEs6xxr89.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-08-session_011p9VA5A1CWNG9xd2VrQf8N.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-04-session_01NRVHQoPm4cP1F7iVUvh9rJ.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-08-355d2d64-55fc-4515-81c1-e831f8b84601.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-08-49f1fea0-270e-4851-9cc7-3dbf8cc8609a.yml
+    reason: (no reason given)
+  - path: .agents/skills/visitor-loop/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/visitor-loop/decisions.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-08-session_01StQjYSNRStTihgZimvvx2r.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-07-session_01S6auRmvHwvmSRZNciYFDbD.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-06-session_01ApFY3yyign1ba7pDd4aoeN.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-05-session_01AbPzFC2mns85YxwqznmJUe.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-04-session_01QS72zRhKidx1uP468fuAFK.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-03-session_014weUowmS8AnzoS1SBQswzm.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-03-session_01AHXziH74pA8jFvFDiz8ytL.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-02-session_0162PRUV2S56tRQhAdPdPjhF.yml
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-02-session_01Mf1j87mVu3AjKJZSGSqpYa.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-03-session_0136FKZXeV7YZggeK5ScVmkP.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-04-session_01RW5WnnVvnyuUbrqVZvdZNc.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-05-session_01GKnG2sLPmuUbTYjS3wwzkL.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-06-session_01EMb6ow9CjFb4ECX36xBTDf.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-07-session_01FnQvoaJ15FXTXw8Pn8rY4p.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-07-session_015nX759CQdTRtT6x6oLDanX.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-08-session_015CSc6hNccF3XgrSGaGGqjD.yml
+    reason: (no reason given)
+  - path: .agents/skills/close-session/SKILL.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-09-session_01Pps6pXDX7ahChHwQajVZNc.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-08-1f97b613-f529-4487-a7e9-1115a44b84c7.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-08-session_01CF4k9jXS9wLrcPVsGduZmn.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-08-1a527758-724c-4cf0-8160-6440f5099ee6.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-08-df390af0-11a7-4415-9bb9-b24cea702246.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-08-session_016ZmB2wonEm8Aki1P4V59cK.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-08-session_01UvFUKPkQSkZS1qS7VndRqX.yml
+    reason: (no reason given)
+  - path: .agents/skills/digest/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-08-session_01PAbucS7x82pN6ais2pbUyX.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-07-session_012VBpgxdwfQHiAvJc531UYr.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-06-session_013fsctw2snxudxsDfjP74FT.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-05-session_01KyKW5E8oFPkSu3a4mCpT25.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-04-session_01LEQpnXw4SeWsfw4THR5NbX.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-04-session_01LsUHzQXAhqgRneHtsX7qm7.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-03-session_015LBxMJwGsviZMj4ScFXD38.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-02-session_01BK3hyL2f3mxedQimjd719K.yml
+    reason: (no reason given)
+  - path: .agents/skills/log-session/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-02-session_01BEQMve6mV2yNDTMmjiCAYL.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-03-session_01CbWrei9SvmrH9vjNx2MB2f.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-04-session_01JrdPvboL7hEVfdfvTyfSCb.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-05-session_01EPZv5jBQyJYPqy8eVn8e8h.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-06-session_01L6ePb5aMsH4u53XnEs7FLQ.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-07-session_01N6jqFrkCMkEm3g6kJW9Zqk.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-08-session_017tt8CbwHqFWqw7PJZ7u7AL.yml
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-08-session_01449u16G5rFweMPGkKZe9Tv.yml
+    reason: (no reason given)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-07-session_01BT5bPRncBfCNwhim2d71Hh.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-06-session_01Jej4qtE56V9dtLCNobJ39K.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-04-session_018DwTn5rSUpmtMHwXBrWqGL.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-03-session_01WTMb3hdimWwxkpAcxM4uUK.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-02-session_01THQSrDDRRLKHVMDaXPjAdk.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-04-session_01GxJXNFxh3SQh8q1nkReAxJ.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-01-session_015TVUDfeEoazwwnEyyKMa8M.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-04-session_016o8vxfkAFpgZMedEsKZqKT.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-03-session_01SWRyFbuNXxVWi47tGB8GX6.yml
+    reason: (no reason given)
+skillsUsed:
+  - name: audit-skills
+    reason: this session's own charter
+  - name: close-session
+    reason: PR-open closure point
+  - name: log-session
+    reason: this log
+frictions:
+  - description: "Called mcp__github__issue_read several times (verifying subagent findings) before reading docs/agents/github-integration.md, violating CLAUDE.md's \"before your first GitHub operation\" rule. Only read the doc right before opening PR #1697."
+    solution: Read github-integration.md at session start if the task is likely to need GitHub reads at all, not just before the PR-open step.
+    severity: minor
+  - description: Called ScheduleWakeup for a fallback heartbeat while subagents ran; CLAUDE.md reserves it for /loop sessions and a guard denied it immediately, naming the alternative (subagent self-notification).
+    solution: Remember a plain scheduled Skill run is not a /loop session — rely on the Agent tool's own completion notifications instead of scheduling a wakeup.
+    severity: nit
+  - description: Didn't grep docs/adr/ for the ADRs binding this change (Skill Inventory edits, ADR-0015) before planning/editing layers/journal/content/current/skills/*.yml, per CLAUDE.md's "before you plan a change" rule. Read ADR-0015 only retroactively at closure.
+    solution: Grep docs/adr/ for the touched path/terms before planning the edit, not after. No actual deviation from ADR-0015 resulted — the Skill's own SKILL.md already correctly encoded its constraints — but the letter of the rule was skipped.
+    severity: minor
+durationSec: 1921
+models:
+  claude-sonnet-5: 221
+toolCounts:
+  Bash: 39
+  Read: 25
+  Agent: 11
+  ScheduleWakeup: 1
+  ToolSearch: 4
+  mcp__github__issue_read: 9
+  mcp__github__pull_request_read: 1
+  mcp__github__search_issues: 1
+  mcp__github__add_issue_comment: 3
+  Edit: 17
+  ReadNotifications: 4
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  Skill: 2
+  Write: 1
+filesEdited:
+  - layers/journal/content/current/skills/audit-docs.yml
+  - layers/journal/content/current/skills/audit-skills.yml
+  - layers/journal/content/current/skills/auto-triage.yml
+  - layers/journal/content/current/skills/blog-post.yml
+  - layers/journal/content/current/skills/digest.yml
+  - layers/journal/content/current/skills/dispatch-subagents.yml
+  - layers/journal/content/current/skills/frictions-to-fixes.yml
+  - layers/journal/content/current/skills/log-session.yml
+  - layers/journal/content/current/skills/prune-trial.yml
+  - layers/journal/content/current/skills/visitor-loop.yml
+  - layers/journal/content/current/skills/close-session.yml
+docsReadViaShell:
+  - .agents/skills/visitor-loop/decisions.md
+  - .agents/skills/auto-triage/SKILL.md
+  - .agents/skills/prune-trial/SKILL.md
+  - docs/research/rulebook-migration-table.md
+  - .agents/skills/audit-skills/SKILL.md
+  - .agents/skills/audit-docs/SKILL.md
+  - .agents/skills/dispatch-subagents/SKILL.md
+subagents:
+  - type: general-purpose
+    task: Behaviour-check audit-docs skill
+    model: sonnet
+  - type: general-purpose
+    task: Behaviour-check audit-skills skill
+    model: sonnet
+  - type: general-purpose
+    task: Behaviour-check auto-triage skill
+    model: sonnet
+  - type: general-purpose
+    task: Behaviour-check blog-post skill
+    model: sonnet
+  - type: general-purpose
+    task: Behaviour-check close-session skill
+    model: sonnet
+  - type: general-purpose
+    task: Behaviour-check digest skill
+    model: sonnet
+  - type: general-purpose
+    task: Behaviour-check dispatch-subagents skill
+    model: sonnet
+  - type: general-purpose
+    task: Behaviour-check frictions-to-fixes skill
+    model: sonnet
+  - type: general-purpose
+    task: Behaviour-check log-session skill
+    model: sonnet
+  - type: general-purpose
+    task: Behaviour-check prune-trial skill
+    model: sonnet
+  - type: general-purpose
+    task: Behaviour-check visitor-loop skill
+    model: sonnet
+gitBranch: claude/upbeat-sagan-kjilwo
+entrypoint: remote_trigger
+cliVersion: 2.1.295
+trigger: audit-skills
+landedBy: Stop
