@@ -195,3 +195,25 @@ observations:
       exercised by any usedIn session; worth watching whether the shortened
       prose holds under real dispatch load. #1480 and #1586 both remain
       open, unaddressed. Grade unchanged (essential).
+  - date: "2026-10-09"
+    note: >-
+      Re-checked (audit-skills behaviour check), 10 usedIn sessions (18
+      claimed PRs independently verified merged via live GitHub state): no
+      stranded work, no merge-pr.ts dispatched to a subagent, no new
+      branch/worktree collision. One verification-gap note, no damage:
+      session_015nX759CQdTRtT6x6oLDanX (frictions-to-fixes, 2026-10-07)
+      self-logged skipping step 5's required `pnpm check:worktrees` after
+      dispatch; PR #1660 still landed clean. Screened all 84 `notUsedWindow`
+      sessions by goal (70 ruled out from goal text alone, 14 opened in
+      full): 13/14 no missed invocation (every git-touching edit was either
+      made directly by the orchestrator or strictly read-only). The 14th,
+      session_015CSc6hNccF3XgrSGaGGqjD (2026-10-08, frictions-to-fixes),
+      dispatched a worktree-isolated impl agent (PR #1680, confirmed
+      merged) without recording `dispatch-subagents` in `skillsUsed` — a
+      further occurrence of the 2026-10-02-noted logging gap, commented
+      onto #1586. The same session also self-logged a 3rd occurrence of the
+      #1480 cd-into-worktree footgun (self-caught, no damage) — commented
+      onto #1480, whose own 2026-10-03 triage comment had said "no third
+      occurrence" found yet. #1585 confirmed fixed/closed; #1586 and #1480
+      confirmed still open, each with a fresh comment added this round.
+      Grade unchanged (essential).

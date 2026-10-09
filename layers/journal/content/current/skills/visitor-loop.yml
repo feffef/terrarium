@@ -211,3 +211,21 @@ observations:
       remains unanswered — no new revert of visitor-loop work has landed
       since #1619/#1624 (2026-10-05) to exercise it. No new silent failure.
       Grade unchanged.
+  - date: "2026-10-09"
+    note: >-
+      Re-checked (audit-skills behaviour check), all 8 usedIn sessions: no
+      new silent failure. The two self-caught owner-memory skips this window
+      (midden, tinkerfund) are the same already-known pre-#1570 shape, not
+      new. The 5 post-#1623 sessions (mobile, homepage, atlas, blog, journal)
+      all ran the owner-memory step correctly, each resolving its candidates
+      as "not a ruling" — zero skips since the title/branch-matching fix,
+      now 5/5. Cross-checked every session's cited decisions.md rule
+      (#1316, #1312, #1494, #1624, #1364) against the file's current
+      content — all match verbatim. No zombie/dangling preview process found
+      in any of the 8 runs (pkill, "zombie", "dangling" grepped across
+      session logs and git log, no hits). The 2026-10-06/07 request for a
+      human spot-check on a genuine owner revert (to prove the fix catches
+      one end-to-end, not just the same-day manual backfill it was built
+      from) remains unanswered — no owner-directed revert has landed since
+      #1619/#1624 to exercise it; not a new finding, just still open. Grade
+      unchanged.

@@ -156,3 +156,18 @@ observations:
       corroborated by grepping every session log in the window for
       `skillsUsed`. No reverts touching this Skill's mechanics. Grade/role
       unchanged.
+  - date: "2026-10-09"
+    note: >-
+      Re-checked (audit-skills behaviour check), 10 newest invocations: 0/10
+      stale, every "completed" log's `endedAt` lands within seconds of its
+      PR's live `merged_at` (independently re-fetched via
+      `pull_request_read`, not the less-reliable `merged` flag), the one
+      "in-review" log (PR #1694) still correctly describes a genuinely-open
+      PR. session_01TMgZyrN42pwudxkUdHLKwP not re-fetched, per the
+      2026-10-06 settled-static-artifact call — today's clean 0/10 result
+      reconfirms that call by implication. The 1 notUsedWindow session
+      (session_011p9VA5A1CWNG9xd2VrQf8N) is an equivalent-closure case:
+      `log-session` was invoked directly with an accurate final status
+      (PR #1683 independently confirmed merged), not a missed invocation.
+      No reverts of this Skill's content in the 2-week git-log sweep.
+      Grade/role unchanged.

@@ -170,3 +170,13 @@ observations:
       and PR #1650 (ADR-0003/0004 fixes, correctly escalated to and merged by
       a human) both independently verified correct. Rest of the 7 usedIn
       sessions re-confirmed clean. Grade unchanged.
+  - date: "2026-10-09"
+    note: >-
+      Re-checked (audit-skills behaviour check), 7 usedIn sessions
+      (2026-10-02 through 10-08, PRs #1527/#1544/#1589/#1613/#1631/#1632/
+      #1649/#1650/#1681, 9 PRs across 7 sessions): all clean against the
+      SKILL.md version in effect when each started. Issue #1647's fix
+      (5deab149) re-confirmed holding on its second live test (PR #1649,
+      5 named checker subagents with a verdict tally). No new silent
+      failure found, no revert of any of the 9 PRs' content in the 2-week
+      git-log sweep. Grade/role unchanged.
