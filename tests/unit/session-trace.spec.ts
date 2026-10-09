@@ -16,6 +16,7 @@ import {
   normalizeRemoteSessionId,
   parseTranscript,
   readSubagentJsonls,
+  resolveGroundTruthFromTranscript,
   resolveGroundTruthSessionId,
   shellReadScanOf,
   stitch,
@@ -262,6 +263,16 @@ describe('normalizeRemoteSessionId() / resolveGroundTruthSessionId() — issue #
 
   it('returns undefined when neither source is available', () => {
     expect(resolveGroundTruthSessionId(undefined, {})).toBeUndefined()
+  })
+})
+
+describe('resolveGroundTruthFromTranscript()', () => {
+  it("resolves from a raw transcript's own session id, null when it has none", () => {
+    const record = (sessionId?: string) => JSON.stringify({ type: 'assistant', sessionId, message: { content: [] } })
+    expect(resolveGroundTruthFromTranscript(record('b84dc292-4954-52dc-b693-5681f040259e'), {})).toBe(
+      'b84dc292-4954-52dc-b693-5681f040259e',
+    )
+    expect(resolveGroundTruthFromTranscript(record(), {})).toBeNull()
   })
 })
 

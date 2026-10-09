@@ -20,11 +20,8 @@
 //
 // `computeFooterAction` also catches a *present-but-mismatched* `Claude-Session:`
 // trailer (issue #710) — the one commit surface where an agent hand-writes the
-// footer itself (`git commit -F`, no harness auto-injection) had zero preventive
-// coverage: `session-id-guard.ts`'s Stop-hook backstop only runs at teardown,
-// after the commit already landed. This reuses that same comparison shape
-// (`findSessionIdMismatches`) inline rather than importing across files, to keep
-// the fix a single-file change.
+// footer itself (`git commit -F`, no harness auto-injection) — and corrects it
+// before the commit lands.
 //
 // Issue #797 extends that same "already-present footer" check to the
 // `Co-Authored-By:` line's model name: it was previously matched loosely (any
@@ -117,9 +114,9 @@ export function hasProvenanceFooter(message: string): boolean {
 }
 
 /** The session id a `Claude-Session:` trailer names, or `null` if `text` carries
- *  none — the same `SESSION_TRAILER` pattern `session-id-guard.ts` compares
- *  against, applied here to either a full commit message or a lone freshly-built
- *  `sessionLine()`, so both sides of the mismatch check share one extraction. */
+ *  none — the shared `SESSION_TRAILER` pattern, applied here to either a full
+ *  commit message or a lone freshly-built `sessionLine()`, so both sides of
+ *  the mismatch check share one extraction. */
 function trailerSessionId(text: string): string | null {
   const match = text.match(SESSION_TRAILER)
   return match?.[1] ?? null
@@ -193,10 +190,8 @@ export type FooterAction =
  *
  *  A present footer is no longer an unconditional `noop` (issue #710): when
  *  the existing `Claude-Session:` trailer's id doesn't match the resolved
- *  ground-truth session, this returns `correct` instead — the same comparison
- *  `session-id-guard.ts`'s `findSessionIdMismatches` makes at Stop-hook time,
- *  run here at commit time instead so a hand-typed wrong id never lands in
- *  the first place. Any resolution failure (`sessionUrl` null, no trailer id
+ *  ground-truth session, this returns `correct` instead, so a hand-typed wrong
+ *  id never lands. Any resolution failure (`sessionUrl` null, no trailer id
  *  extractable on either side) still falls through to `noop` — fail-open,
  *  never a false-positive rewrite.
  *

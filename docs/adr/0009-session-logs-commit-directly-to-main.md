@@ -291,9 +291,9 @@ the common case** — the common case is landing live, mid-session, on `Stop`;
 > three stay live; they call `log-session.ts --land`.
 
 `scripts/session-trace.ts` stays separate. It is the pure transcript extractor
-that `provenance-footer.ts`, `session-id-guard.ts`, `audit-skills.ts` and
-`loop-only-tool-guard.ts` read, and the first two are dependencies of the lander
-— folding it in would make the lander import itself.
+that `provenance-footer.ts`, `audit-skills.ts` and `loop-only-tool-guard.ts`
+read, and the first is a dependency of the lander — folding it in would make
+the lander import itself.
 
 **Retiring the two fallbacks needs positive evidence, not an absence.** A
 session can recover out-of-band and drive `audit-skills`' `orphanedSessions` to

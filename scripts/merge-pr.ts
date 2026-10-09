@@ -68,7 +68,7 @@ import {
 } from './list-open-issues.ts'
 import { findTranscriptContents } from './provenance-footer.ts'
 import { hasAuthorshipMarker, readProvenanceHeader } from './provenance-header.ts'
-import { resolveGroundTruthFromTranscript } from './session-id-guard.ts'
+import { resolveGroundTruthFromTranscript } from './session-trace.ts'
 import { TRUSTED_ASSOCIATIONS } from './trust.ts'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')

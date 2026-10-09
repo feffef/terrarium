@@ -8,8 +8,8 @@ the conventions they share.
 `scripts/guard-io.ts` (issue #1080) holds the plumbing every `PreToolUse` guard
 needs (stdin→deny-JSON, transcript read, `--dry-run`, direct-run bootstrap), not
 the rules. Every guard builds on it except `subagent-background-guard.ts`
-(quote-aware command scanning) and `session-id-guard.ts` (post-hoc trace read);
-each adds only its own registry, pure predicate and `formatGuardMessage`.
+(quote-aware command scanning); each adds only its own registry, pure predicate
+and `formatGuardMessage`.
 
 **A guard's deny message is the instruction:** it names what to do instead, so
 follow it and don't route around it. If it is wrong, say so on the guard's issue
@@ -29,10 +29,8 @@ follow it and don't route around it. If it is wrong, say so on the guard's issue
 | `tail-pipe-guard.ts` | a `Bash` command piping into a trailing `tail`/`head`/`echo`/`tee` when it also backgrounds (`run_in_background: true`) or is a known long-runner (`pnpm gate`/`test`/`build`, `pnpm exec vitest`/`playwright`). An ordinary short foreground pipe is untouched | its script header | #873, #384, #812, #1329 |
 | `double-background-guard.ts` | a `Bash` call stacking `run_in_background: true` on a text-level background operator in the command (a bare `&` anywhere, `nohup … &` included) — for **any** caller, main session included (no `detectAgentContext` gate at all, unlike `subagent-background-guard.ts`) | its script header | #1208 |
 | `github-provenance-guard.ts` | a GitHub body, or an MCP-API commit, missing this session's provenance in the shape its surface prescribes; also a title or body carrying a bare `<...>` span GitHub silently strips | ADR-0017 — the deny message is the agent-facing home | #886 |
-| `session-id-guard.ts` | nothing: **post-hoc**. Reports a wrong session id on this session's own commits, at teardown | `log-session` ("Recovering the id") | #387 |
 
-`.claude/settings.json` wires all of these under `hooks.PreToolUse`, except
-`session-id-guard`, which `scripts/log-session.ts` calls.
+`.claude/settings.json` wires all of these under `hooks.PreToolUse`.
 
 ## Conventions every guard follows
 

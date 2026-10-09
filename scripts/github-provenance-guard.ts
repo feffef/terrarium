@@ -58,7 +58,7 @@ import { SESSION_TRAILER } from './git-helpers.ts'
 import { buildDenyOutput, denyUninspectable, readHookPayload, runIfMain, type DenyOutput } from './guard-io.ts'
 import { provenanceFooter } from './provenance-footer.ts'
 import { provenanceHeader, readProvenanceHeader, sessionIdsIn } from './provenance-header.ts'
-import { resolveGroundTruthFromTranscript } from './session-id-guard.ts'
+import { resolveGroundTruthFromTranscript } from './session-trace.ts'
 
 const LABEL = 'provenance guard'
 // The dated amendment, not just the ADR: this guard's fail-closed posture is a
