@@ -177,7 +177,7 @@ surface in a tier or on the Skip list. Done when every surface has one.
 
 ## 3. Review across the eight lenses
 
-Run the reviewer agents and pool their findings. Done when every one has
+Run the reviewer agents and pool their findings. Each reviewer writes its findings to its own numbered scratchpad file: `file:line`, quote, and replacement text, with exact body-only start and end lines (no heading or blank lines; whole lines). Done when every one has
 reported and every file in the concision family was read in full.
 
 ## 4. Dedupe the pool
@@ -189,7 +189,7 @@ two findings cover the same text.
 
 ## 5. Fact-check the findings
 
-Run the checkers over the whole pool; drop every WRONG, apply every
+Run the checkers over the whole pool, pointing each at the reviewer files to read, never retyping findings into a prompt; drop every WRONG, apply every
 CONFIRMED-BUT correction. Done when each finding has a verdict and each
 CONFIRMED(-BUT) has an accurate `file:line`. The session log's summary names the
 concision family and the verdict counts (CONFIRMED / CONFIRMED-BUT / WRONG).
