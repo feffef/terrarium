@@ -84,19 +84,52 @@ archive won't break it.
 
 ## Every version of the briefs
 
-Each link opens the file exactly as it was at that commit.
+Each brief link opens the file exactly as it was at that commit. Each commit
+link opens the commit message, which says what triggered that round: which
+reviewers ran, what they looked for and what changed. The prompts behind the
+rounds up to `8486535` came from a session on the maintainer's laptop; its
+transcript is not in the repository, so the commit messages are the record.
 
 | Commit | What changed | Briefs at that commit |
 |---|---|---|
-| `9444481` | first two briefs | [improvement loop](https://github.com/feffef/terrarium/blob/94444811504dc7f7d8fb65d51dd6ea76a19d9662/docs/research/diagram-brief-improvement-loop.md), [Nuxt architecture](https://github.com/feffef/terrarium/blob/94444811504dc7f7d8fb65d51dd6ea76a19d9662/docs/research/diagram-brief-nuxt-architecture.md) |
-| `f49c205` | review round 1: what's missing, what's clutter | [improvement loop](https://github.com/feffef/terrarium/blob/f49c205c5b08e96cb004d8f336aa5072c31bf714/docs/research/diagram-brief-improvement-loop.md), [Nuxt architecture](https://github.com/feffef/terrarium/blob/f49c205c5b08e96cb004d8f336aa5072c31bf714/docs/research/diagram-brief-nuxt-architecture.md) |
-| `a930e11` | review round 2: plain language | [improvement loop](https://github.com/feffef/terrarium/blob/a930e11687bcd511c42bebbd06a69bf551bdb583/docs/research/diagram-brief-improvement-loop.md), [Nuxt architecture](https://github.com/feffef/terrarium/blob/a930e11687bcd511c42bebbd06a69bf551bdb583/docs/research/diagram-brief-nuxt-architecture.md) |
-| `2bff5d1` | review round 3: project terms; moved to `docs/diagrams/` | [improvement loop](https://github.com/feffef/terrarium/blob/2bff5d1312d4c556dda95e6f7118fa4d4174a8b9/docs/diagrams/improvement-loop.md), [Nuxt architecture](https://github.com/feffef/terrarium/blob/2bff5d1312d4c556dda95e6f7118fa4d4174a8b9/docs/diagrams/nuxt-architecture.md) |
-| `b488881` | one plain-language overview replaces both briefs | [overview](https://github.com/feffef/terrarium/blob/b488881f9a6f84849e6588f1cced8775a3f07d49/docs/diagrams/terrarium-overview.md) |
-| `b90b6ae` | the maintainer's review | [overview](https://github.com/feffef/terrarium/blob/b90b6ae4503ccd548507c5c9af5561755aa7c712/docs/diagrams/terrarium-overview.md) |
-| `8486535` | review by four agents on two models, plus a fact-finder | [overview](https://github.com/feffef/terrarium/blob/8486535e3d53580eb396bdab4c99294faf4e1b5e/docs/diagrams/terrarium-overview.md) |
-| `a8c0400` | Part 2 rewritten as a spec; Part 1 facts corrected | [overview](https://github.com/feffef/terrarium/blob/a8c040081ec0e1bbabd3337b328a41a2a8d8e120/docs/diagrams/terrarium-overview.md) |
-| `e22557f` | cold-check fixes and the maintainer's decisions | [overview](https://github.com/feffef/terrarium/blob/e22557f3b65da71a0bc9813f4c06a8e12a3eff85/docs/diagrams/terrarium-overview.md) |
+| [`9444481`](https://github.com/feffef/terrarium/commit/94444811504dc7f7d8fb65d51dd6ea76a19d9662) | first two briefs | [improvement loop](https://github.com/feffef/terrarium/blob/94444811504dc7f7d8fb65d51dd6ea76a19d9662/docs/research/diagram-brief-improvement-loop.md), [Nuxt architecture](https://github.com/feffef/terrarium/blob/94444811504dc7f7d8fb65d51dd6ea76a19d9662/docs/research/diagram-brief-nuxt-architecture.md) |
+| [`f49c205`](https://github.com/feffef/terrarium/commit/f49c205c5b08e96cb004d8f336aa5072c31bf714) | review round 1: what's missing, what's clutter | [improvement loop](https://github.com/feffef/terrarium/blob/f49c205c5b08e96cb004d8f336aa5072c31bf714/docs/research/diagram-brief-improvement-loop.md), [Nuxt architecture](https://github.com/feffef/terrarium/blob/f49c205c5b08e96cb004d8f336aa5072c31bf714/docs/research/diagram-brief-nuxt-architecture.md) |
+| [`a930e11`](https://github.com/feffef/terrarium/commit/a930e11687bcd511c42bebbd06a69bf551bdb583) | review round 2: plain language | [improvement loop](https://github.com/feffef/terrarium/blob/a930e11687bcd511c42bebbd06a69bf551bdb583/docs/research/diagram-brief-improvement-loop.md), [Nuxt architecture](https://github.com/feffef/terrarium/blob/a930e11687bcd511c42bebbd06a69bf551bdb583/docs/research/diagram-brief-nuxt-architecture.md) |
+| [`2bff5d1`](https://github.com/feffef/terrarium/commit/2bff5d1312d4c556dda95e6f7118fa4d4174a8b9) | review round 3: project terms; moved to `docs/diagrams/` | [improvement loop](https://github.com/feffef/terrarium/blob/2bff5d1312d4c556dda95e6f7118fa4d4174a8b9/docs/diagrams/improvement-loop.md), [Nuxt architecture](https://github.com/feffef/terrarium/blob/2bff5d1312d4c556dda95e6f7118fa4d4174a8b9/docs/diagrams/nuxt-architecture.md) |
+| [`b488881`](https://github.com/feffef/terrarium/commit/b488881f9a6f84849e6588f1cced8775a3f07d49) | one plain-language overview replaces both briefs | [overview](https://github.com/feffef/terrarium/blob/b488881f9a6f84849e6588f1cced8775a3f07d49/docs/diagrams/terrarium-overview.md) |
+| [`b90b6ae`](https://github.com/feffef/terrarium/commit/b90b6ae4503ccd548507c5c9af5561755aa7c712) | the maintainer's review | [overview](https://github.com/feffef/terrarium/blob/b90b6ae4503ccd548507c5c9af5561755aa7c712/docs/diagrams/terrarium-overview.md) |
+| [`8486535`](https://github.com/feffef/terrarium/commit/8486535e3d53580eb396bdab4c99294faf4e1b5e) | review by four agents on two models, plus a fact-finder | [overview](https://github.com/feffef/terrarium/blob/8486535e3d53580eb396bdab4c99294faf4e1b5e/docs/diagrams/terrarium-overview.md) |
+| [`a8c0400`](https://github.com/feffef/terrarium/commit/a8c040081ec0e1bbabd3337b328a41a2a8d8e120) | Part 2 rewritten as a spec; Part 1 facts corrected | [overview](https://github.com/feffef/terrarium/blob/a8c040081ec0e1bbabd3337b328a41a2a8d8e120/docs/diagrams/terrarium-overview.md) |
+| [`e22557f`](https://github.com/feffef/terrarium/commit/e22557f3b65da71a0bc9813f4c06a8e12a3eff85) | cold-check fixes and the maintainer's decisions | [overview](https://github.com/feffef/terrarium/blob/e22557f3b65da71a0bc9813f4c06a8e12a3eff85/docs/diagrams/terrarium-overview.md) |
+
+### What triggered round 4
+
+These come from the cloud session's own prompts, summarised.
+
+- **Before `a8c0400`.** The maintainer asked for a fix of the overview,
+  built up in steps:
+  1. Three agents (Sonnet, Opus, Fable) read only `CLAUDE.md` and the
+     overview. Each explained what it understood and where it struggled.
+  2. Three more agents on the same models explored the repo. They proposed
+     how the clickable stories could work, for example by zooming into a
+     component and its neighbours.
+  3. The open topics were cut into ten buckets. One Opus agent per bucket
+     wrote a proposal.
+  4. Part 2 was rewritten completely, with minor fixes to Part 1.
+  5. Cold checkers on different models, with no other context, checked
+     whether the new spec was sound.
+  6. Improvements were proposed for the maintainer to decide.
+- **Before `e22557f`.** The maintainer answered those decisions:
+  - fix every clear bug the checkers found;
+  - cut real-run cards, chaining, browser back and most branches;
+  - make `container` and `browser` close-ups only;
+  - let Part 2 hold more detail than Part 1;
+  - a close-up shows a component's details plus the components it works
+    with directly;
+  - file three issues found along the way.
+- **After `e22557f`.** The maintainer asked for a Fable agent to build the
+  diagram as an artifact. Seeing how much work it would still need, they
+  stopped there and asked for this folder and README.
 
 The current version is [`terrarium-overview.md`](./terrarium-overview.md) in
 this folder.
