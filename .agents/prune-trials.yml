@@ -54,6 +54,10 @@ trials:
       hand-types the commit trailer, and the guard's deny message did not fix it
       in one retry. NOT damage: a guard denial the session fixed from the deny
       message.
+      Nor are the two `issue #387: Claude-Session trailer mismatch` blockers
+      session-id-guard logged on 2026-10-08 for sessions 355d2d64 and 49f1fea0.
+      They are false positives: a sibling session's correct commits on a shared
+      local working copy (#1698, fixed by PR #1704).
   - problem: >
       CLAUDE.md as a whole: 374 lines of rules, incident histories and
       restatements loaded into every session. Rewritten to 146 lines in plain,
@@ -136,6 +140,10 @@ trials:
       stopped that fixed itself from the message. Start from the Frictions
       that close-session's re-read logs against named CLAUDE.md rules; their
       "what would have made me read it" notes point at triggers to reword.
+      Not damage either: the two `issue #387: Claude-Session trailer mismatch` blockers
+      session-id-guard logged on 2026-10-08 for sessions 355d2d64 and 49f1fea0.
+      They are false positives: a sibling session's correct commits on a shared
+      local working copy (#1698, fixed by PR #1704).
   - problem: >
       The `dispatch-subagents` Skill as a whole (209 lines, rewritten to about
       118): rule-per-incident bullets with long justifications. It failed as
@@ -199,3 +207,10 @@ trials:
       mangles a commit message, and a line the old file carried would have
       prevented it. NOT damage: a guard or hook that stopped the session and
       it fixed itself from the message.
+      Not damage either: the two `issue #387: Claude-Session trailer mismatch` blockers
+      session-id-guard logged on 2026-10-08 for sessions 355d2d64 and 49f1fea0.
+      They are false positives: a sibling session's correct commits on a shared
+      local working copy (#1698, fixed by PR #1704).
+      But this file's last section defines "yours to fix" with the same
+      author-date rule #1698 showed wrong for a shared working copy; once
+      judged, reword it to match the guard (PR #1704).
