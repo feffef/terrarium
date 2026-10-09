@@ -28,7 +28,7 @@ content, the website shows, in public, how it is being built.
 
 | Zone | What lives there |
 |---|---|
-| **People** | The **maintainer** (the repo's owner, or anyone the owner gives write access) and **visitors** (everyone else). |
+| **People** | The **maintainer** (the repo's owner) and **visitors** (everyone else). |
 | **Claude** | The agents. **Routines** start on a timer set up in claude.ai. **Cloud sessions** are started by the maintainer at claude.ai/code, on the web or phone. **Local sessions** run in Claude Code on a laptop. All three are the same thing underneath: a Claude Code session working on its own copy of the repository. |
 | **GitHub** | The **repository**, **issues**, **pull requests** and **CI** (the automatic checks that run on every pull request). |
 | **Docker host** | A server running one container that watches the repository, builds the website and serves it. Caddy, a web server shared with other sites on that host, passes requests in. |
@@ -254,9 +254,9 @@ removes rules nobody needs.
 
 # Part 2 — The interactive diagram
 
-This part specifies the diagram. Part 1 holds the facts; Part 2 says how to
-show them. Where the diagram lives is still open (see "Still open" at the
-end).
+This part specifies the diagram. Part 1 is the plain introduction; Part 2 is
+the diagram's full content and may go into more detail. Where the diagram
+lives is still open (see "Still open" at the end).
 
 ## Principle
 
@@ -265,111 +265,111 @@ end).
 - **A story** is how you learn something. Clicking a component plays its
   story: the path lights up step by step, and the groups the story needs
   open.
-- **A close-up** shows a component's inside. Some components have one; it
-  zooms in while the dimmed map stays around it.
+- **A close-up** zooms in on one component: its inside, plus the components
+  it works with directly, while everything else stays dimmed around it.
 - **A details panel** answers "what is this?" for anything you click.
 
 ## The map
 
-Five bands, top to bottom. A group shows only its label until it opens.
-`repository` is a frame drawn around `guidance`, `code` and `content`; it
-never opens or closes. Only the `journal` chip opens one level further.
+Five bands, top to bottom. A group shows only its label until it opens. A
+node with nothing inside it is a single box. `repository` is a frame drawn
+around `guidance`, `code` and `content`; it never opens or closes, but it can
+light up. Only the `journal` chip opens one level further.
 
-| Zone | Group (id) | Inside, when open (ids) |
+| Zone | Node (id) | Inside, when open (ids) |
 |---|---|---|
 | people | maintainer (`maintainer`) | – |
 | people | visitor (`visitor`) | – |
 | Claude | routines (`routines`) | the seven routines, each its own node: `frictions-to-fixes`, `audit-docs`, `audit-skills`, `prune-trial`, `visitor-loop`, `digest`, `blog-post` |
 | Claude | sessions (`sessions`) | cloud (`cloud`), local (`local`): the sessions a person starts |
 | Claude | helper agents (`helper-agents`) | – |
-| GitHub, in `repository` | guidance (`guidance`) | rules & reference (`rules`), skills (`skills`), guards & hooks (`guards`), helper scripts (`scripts`) |
-| GitHub, in `repository` | code (`code`) | – |
-| GitHub, in `repository` | content (`content`) | the seven tenant chips: `journal`, `blog`, `midden`, `commons`, `atlas`, `tinkerfund`, `marquee` |
+| GitHub | repository (`repository`) | a frame around the next three rows |
+| GitHub | guidance (`guidance`) | rules & reference (`rules`), skills (`skills`), guards & hooks (`guards`), helper scripts (`scripts`) |
+| GitHub | code (`code`) | – |
+| GitHub | content (`content`) | the seven tenant chips: `journal`, `blog`, `midden`, `commons`, `atlas`, `tinkerfund`, `marquee` |
 | GitHub, inside `journal` | – | digests & pages (`journal-pages`), session logs (`logs`), skill inventory (`inventory`). `logs` and `inventory` carry the badge "also read by agents". |
 | GitHub | issues (`issues`) | – |
 | GitHub | pull requests (`prs`) | – |
 | GitHub | CI (`ci`) | – |
 | Docker host | caddy (`caddy`) | – |
-| Docker host | container (`container`) | updater (`updater`), build (`build`), server (`server`) |
-| browser | browser (`browser`) | page (`page`), _payload.json (`payload`), browser database (`browser-db`) |
+| Docker host | container (`container`) | – (its inside is a close-up) |
+| browser | browser (`browser`) | – (its inside is a close-up) |
 
 Notes:
+- **A group** is a node with something inside: `routines`, `sessions`,
+  `guidance`, `content` and `journal`.
 - **A routine node is that routine's own session.** A routine is a timer, a
   skill and the session the timer starts. `sessions` holds only the sessions
   a person starts.
-- **Helper agents** are their own group because routines and sessions both
-  send them out.
-- **Issue labels are not nodes.** A story shows the label as a tag on the
-  issue it is moving.
-- **Some words in stories are not nodes.** They appear only in step text, on
-  the node named in brackets: the timer (the routine), `main` (the
-  `repository` frame), a reviewer or fact-checker (`helper-agents`), the
-  preview (`visitor-loop`), a persona (`blog`), Nuxt Content and SQLite
-  (`build` or `server`), Vue (`server` or `browser`).
+- **`helper-agents`** is one node that stands for any number of helper
+  agents. Routines and sessions both send them out; the step text says how
+  many and what they do.
+- **Issue labels are not nodes.** A story shows the label as a tag on
+  `issues`.
+- **Some words in stories are not nodes.** They appear only in step text:
+  the timer, `main`, a reviewer or fact-checker, the preview, a persona, Vue,
+  Nuxt Content and SQLite. Where one of them matters, it is a close-up part.
 
 ## Interaction
 
 The diagram has three views: the **map**, a **story** and a **close-up**.
-The view zooms to whatever you chose. Nothing opens on a separate page.
+Nothing opens on a separate page.
 
-### What a click does
+### What a click does, at rest
 
 | You click | What happens |
 |---|---|
 | a ▶ marker | Its story plays. |
 | a node that owns a story (see the story list) | Its story plays. The panel shows the node's details, then the steps. |
-| a group with inner parts that owns no story: `routines`, `sessions`, `guidance`, `content` | The group opens where it stands. The panel shows its details and lists its inner parts. |
-| the `journal` chip, inside an open `content` | It opens into its three collections. |
+| a group that owns no story | It opens where it stands. The panel shows its details and lists what is inside. |
 | any other node | The node lights up, with every node it shares a story step with. The panel shows its details and the stories it appears in, each with a ▶. |
-| "look inside" in a panel | The close-up opens (see below). |
+| "look inside" in a panel | The close-up opens. |
 | empty space | Back to the map. |
-
-A group that owns a story (`container`, `issues`) plays it; the story opens
-the group anyway.
 
 ### Start markers
 
 A ▶ marks three places to start: `visitor`, `maintainer` and
 `frictions-to-fixes`. When a ▶ belongs to a node inside a closed group, the
-group's label shows it instead: `routines` with `▶ frictions-to-fixes`. At
-rest, the panel says what the diagram shows and suggests these three.
+group's label shows it instead: `routines` with `▶ frictions-to-fixes`. The
+▶ is its own tap target; the rest of the label opens the group. At rest, the
+panel says what the diagram shows and suggests these three.
 
 ### While a story plays
 
-- When the story starts, every group that holds one of its nodes opens. They
-  open together, so nothing moves between steps. All other groups stay
-  closed.
-- **Lit:** the nodes on the story's path. **Dimmed:** everything else,
-  faded to about a third. Dimmed nodes can still be clicked.
+- When the story starts, every group that holds one of its nodes opens,
+  including `content` and `journal` when a step names `logs`. They open
+  together, so nothing moves between steps. All other groups close.
+- **Lit:** every node the story names, from the first step on. **Dimmed:**
+  everything else, faded but readable. Dimmed nodes can still be clicked.
 - **The current step:** its nodes get a ring and the step's number, and its
-  line is drawn strong. Earlier lines stay faint. Later lines appear only
-  when you reach them.
+  line is drawn strong. Lines of earlier steps stay faint. Lines of later
+  steps are not drawn yet; stepping back hides them again.
 - **The panel** shows the numbered steps, with the current one marked. Prev
   and Next move one step, the ← and → keys do the same, and clicking a step
   jumps to it.
-- **Clicking a lit node** shows its details, and the story keeps playing. If
-  that node owns a story, its details offer ▶ to play it. If it has a
+- **Clicking a lit node** only shows its details; the story keeps playing.
+  If that node owns a story, its details offer ▶ to play it. If it has a
   close-up, its details offer "look inside".
-- **Clicking a dimmed node** ends the story and selects that node.
-- On the last step, the panel offers the next story, if there is one, and
-  "back to the map".
+- **Clicking a dimmed node** ends the story; then the click acts as at rest.
+- On the last step, the panel offers "back to the map".
 
 ### Close-ups
 
-Some nodes have a close-up: a small diagram of their inside, with 5–8 parts
-(see "Close-ups" below). It opens from "look inside" in the node's panel, or
-from a step that says "look inside".
-- The view zooms onto the node. Its box becomes the close-up, and the rest of
-  the map stays around it, dimmed.
-- During a story, the parts the current step uses are lit.
-- There is only one close-up level. A part never opens further; its details
-  are in the panel.
+Some nodes have a close-up (see "Close-ups" below). It opens from "look
+inside" in the node's panel, or from a step that says "look inside".
+- The view zooms onto the node. Its box grows into a small diagram of its
+  parts, 5–8 of them.
+- The nodes it works with directly (those that share a story step with it)
+  stay lit around it, with their lines to it. Everything else is dimmed.
+- During a story, the parts the current step names are lit.
+- There is only one close-up level. A part never opens further; its
+  details are in the panel.
 - Esc, or the breadcrumb, goes back out.
 
 ### Open groups
 
-- By hand, one group is open at a time; the `journal` inside `content` also
-  counts. Opening another group closes the first.
+- By hand, one top-level group is open at a time. Opening another closes the
+  first. Inside an open `content`, `journal` may also be open.
 - A story opens every group it needs. They close when the story ends.
 
 ### Going back
@@ -378,12 +378,10 @@ from a step that says "look inside".
   `map › a friction becomes a fix (step 3 of 9) › frictions-to-fixes (inside)`.
   Click any part to go back to it.
 - **Esc** goes one part back along the breadcrumb.
-- **The browser's back button** undoes your last click. Prev and Next don't
-  count as clicks.
 
 ### At phone width (under 30rem)
 
-- At rest, the closed map fits the screen, with at most five short labels per
+- At rest, the closed map fits the screen, with at most six short labels per
   band. Every label is big enough to tap.
 - The panel sits below the diagram.
 - During a story, the diagram zooms to the current step and the one before
@@ -393,27 +391,31 @@ from a step that says "look inside".
 ### For every width
 
 - Nothing needs hover.
-- Every node can be reached with Tab, and Enter does the same as a click.
-- Lit never relies on colour alone: the ring and the step number show it too.
-- Opening and zooming take about a third of a second. If the device asks for
-  reduced motion, they happen at once.
+- Every visible node can be reached with Tab, and Enter does the same as a
+  click.
+- Lit never relies on colour alone: the ring and the step number show it
+  too. A warm or accent step also says so in its text.
+- Opening, zooming and pulsing take about a third of a second. If the device
+  asks for reduced motion, they happen at once and nothing pulses.
 
 ## How stories are written
 
 ### A step
 
 Each step has:
-- **by:** the node that acts.
-- **from**, and **to** when something goes somewhere. With no **to**, the
-  node acts alone and pulses; no line is drawn.
-- **via:** a guidance item (`rules`, `skills`, `guards`, `scripts`) used
-  during the step.
+- **by:** the one node that acts.
+- **to:** optional; the one node something goes to, or is read from. With no
+  **to**, the node acts alone and pulses; no line is drawn.
+- **via:** optional; one guidance item (`rules`, `skills`, `guards`,
+  `scripts`) used during the step.
 - **kind:** `moves` (the default), `uses`, `log` or `loop`. See the legend.
-- **text:** one or two short sentences.
-- **look inside:** optional; the close-up this step invites you to open.
+- **parts:** optional; the close-up parts this step uses.
+- **text:** one or two short sentences. Other nodes may be named here; they
+  are not lit by this step.
 - **cite:** optional; one repository path, shown as a small link.
 
-`by`, `from`, `to` and `via` are always node ids from the map table.
+`by`, `to` and `via` are always node ids from the map table. One step is one
+actor and one move.
 
 A story opens every group that holds a node its steps name. No one keeps a
 separate list of what a story opens.
@@ -422,179 +424,182 @@ separate list of what a story opens.
 
 A session works on its own copy of the repository, so its rules, skills,
 guards and scripts run inside it. A step with `via` draws a dashed line from
-that guidance item to the session. While the step is current, the session
-shows a small chip with the item's name.
+that guidance item to the step's `by` node.
 
 ### Legend
 
-| Style | Meaning |
-|---|---|
-| solid line | something moves: a request, a pull request, a commit, a page |
-| dashed line | used from the session's own copy: reading a rule or skill, a guard checking an action, a script reading the session logs |
-| thick line | the loop closes: the next session reads the improved guidance |
-| accent colour | the session log goes straight to `main`, the only change that skips a pull request |
-| warm colour | a step the maintainer takes |
+| Style | Comes from | Meaning |
+|---|---|---|
+| solid line | `kind: moves` | something moves: a request, a pull request, a commit, a page |
+| dashed line | `kind: uses`, or any `via` | used from the session's own copy: reading a rule or skill, a guard checking an action, a script reading the session logs |
+| thick line | `kind: loop` | the loop closes: the next session reads the improved guidance |
+| accent colour | `kind: log` | the session log goes straight to `main`, the only change that skips a pull request |
+| warm colour | `by: maintainer` | a step the maintainer takes |
 
 Pattern, weight and colour can mix: the loop step is thick and dashed.
-- The accent step appears only in story 2. Every session writes a log; story
-  2 shows it once.
+- The accent steps appear only in story 2, steps 7 and 10. Every session
+  writes a log; story 2 shows it once, from first write to final.
 - The thick step ends stories 3, 6 and 8, the stories that change guidance.
 
 ### Branches
 
-Some steps are decisions. Under such a step, the step list shows a row of
-chips, one per outcome. The usual outcome is chosen at the start, so Prev and
-Next play the usual path. Choosing another chip plays that branch instead:
+Stories 1, 2, 3 and 5 have decision steps. Under such a step, the step list
+shows a row of chips, one per outcome. The usual outcome is chosen at the
+start, so Prev and Next play the usual path. Choosing another chip plays that
+branch instead:
 - the branch's steps are numbered after the decision step (4a, 4b);
 - the lit path on the map follows the branch;
-- the branch rejoins the usual path, or ends at `maintainer`, at `issues` or
-  with "nothing changes".
+- the branch rejoins the usual path at a named step, or ends.
 
-Rules:
-- at most two decisions per story, and at most three chips per decision;
-- a branch has at most three steps;
-- a chip is a real outcome named in a skill, script or decision record,
-  never an internal retry;
-- playing a story again chooses the usual outcomes again.
+Authoring notes: at most two decisions per story and three chips per
+decision; a branch has at most three steps; a chip is a real outcome named
+in a skill, script or decision record, never an internal retry. Playing a
+story again chooses the usual outcomes again.
 
-Every step where a routine merges its own work says "may merge itself". Its
-details say: "Claude Code's own permission check can still refuse the merge.
-The pull request then waits for the maintainer."
+In the other stories, other outcomes are a sentence in the step text.
 
-### Chaining
+### Merging
 
-A story may name one next story. After its last step, the panel shows a link
-such as "next: a change goes live (story 4)". It never plays by itself. The
-story it opens shows "back to story 2".
+Every step where a routine merges its own work ends with "may merge itself".
+Its details add: "Claude Code's own permission check can still refuse the
+merge. The pull request then waits for the maintainer."
 
 ### The object card
 
 In stories 2, 3 and 5, one thing changes form along the way. A small card
-beside the step list follows it, showing its current name and one real line.
-Other stories have no card.
+beside the step list follows it: its current name and one line of what it
+looks like at this step (an example, written in the data file). Other stories
+have no card.
 
 ## The stories
 
-Each story names the node that plays it, its steps, its branches, the
-close-ups it uses, and the next story.
+Each story names the node that plays it, its steps, its branches and its
+close-ups. In the steps, "(uses)", "(accent)" and "(thick)" give the step's
+kind.
 
 ### 1. Opening a page — ▶ `visitor`
 
-1. `visitor` opens a page. `browser` sends the request to `caddy`.
-2. `caddy` passes it to `server`.
-3. `server` checks what it keeps. A `/t/` page from the last 60 seconds goes
-   back as it is.
-4. Otherwise Nuxt Content asks SQLite. The first time a collection is asked
-   for after a deploy, SQLite loads it from the build's output.
-5. Vue renders the page to HTML, with the page's data inside.
-6. `browser` shows the `page` at once. Then Vue takes over, so later clicks
-   don't reload it.
-7. The pointer rests on a link. `browser` fetches that page's code and, for a
-   `/t/` page, its `payload`.
-8. The visitor clicks. *Decision.*
+1. `visitor` opens a page in `browser`.
+2. `browser` sends the request to `caddy`.
+3. `caddy` passes it to `container`. Look inside: `container`.
+4. The server checks what it keeps (parts: page store). A `/t/` page from
+   the last 60 seconds goes back as it is.
+5. Otherwise Nuxt Content asks SQLite (parts: Nuxt Content, SQLite). The
+   first time a collection is asked for after a deploy, SQLite loads it from
+   its dump.
+6. Vue renders the page to HTML, with the page's data inside (parts:
+   renderer).
+7. `container` sends the page to `browser`. It shows at once; then Vue takes
+   over, so later clicks don't reload it (parts: page, Vue app).
+8. The pointer rests on a link. `browser` fetches that page's code and, for
+   a `/t/` page, its `_payload.json` from `container` (parts: link
+   prefetch).
+9. The visitor clicks. *Decision.*
 
-Branches at step 8:
-- **a tenant page** (usual): `browser` builds the page from the `payload`
-  that `server` prepared. No query runs in the browser.
+Branches at step 9:
+- **a tenant page** (usual): `browser` builds the page from the
+  `_payload.json` the server prepared (parts: `_payload.json`). No query runs
+  in the browser.
 - **the home page or Tinkerfund's search:** the server doesn't keep these, so
-  they have no `payload`. Their queries run in the `browser-db`, which
-  fetches each collection's data from `server`.
+  they have no `_payload.json`. Their queries run in the browser database,
+  which fetches each collection's dump from `container` (parts: browser
+  database).
 
-Footnote on step 8: if a `payload` fails to load, the page falls back to the
-`browser-db`; if that fails too, a dialog offers a reload.
+If a `_payload.json` fails to load, the page falls back to the browser
+database; if that fails too, a dialog offers a reload (step 9's text).
 
-Close-ups: `server`, `browser`.
+Close-ups: `container`, `browser`.
 
 ### 2. Asking for a change — ▶ `maintainer`
 
 Object card: the change, from request to merged commit.
 
-1. `maintainer` asks a `cloud` or `local` session for a change.
-2. **Start.** Hooks install dependencies (via `guards`). Look inside:
-   session.
-3. **Read.** The session reads `rules` and the `skills` it needs (uses).
+1. `maintainer` asks a `cloud` session for a change. (A `local` session works
+   the same way.)
+2. **Start.** Start-up hooks install dependencies (`cloud`, via `guards`).
+   Look inside: a session.
+3. **Read.** The session reads `rules` and the skills it needs (uses).
 4. **Work.** It edits on its own branch, sometimes with `helper-agents`.
    Before some actions run, a guard checks them (via `guards`). A blocked
    action gets a message that says what to do instead.
 5. **Check.** It runs the local checks (via `scripts`), and sometimes an
    agent code review.
-6. **Pull request.** It pushes, opens a pull request in `prs` and watches it.
-7. **Log, first write.** It writes its session log into `logs` (accent). A
-   hook commits that one file straight to `main`. Look inside: session log.
-8. **CI.** `ci` runs the same checks. *Decision.* Look inside: checks.
-9. **Merge.** `maintainer` reviews and merges (warm). *Decision.*
-10. **Log, final.** The session updates its log, and the hook commits it
-    again (accent).
+6. **Pull request.** It pushes and opens a pull request in `prs`, and
+   watches it.
+7. **Log, first write.** It writes its session log to `logs` (accent). A
+   hook commits that one file straight to `main`. Look inside: a session
+   log.
+8. **CI.** `ci` runs the same checks. *Decision.* Look inside: the checks.
+9. **Merge.** `maintainer` reviews, then merges or tells the session to
+   merge. *Decision.*
+10. **Log, final.** The session updates its log in `logs` (accent), and the
+    hook commits it again.
 
 Branches:
 - at step 8: **green** (usual): CI posts a short comment that wakes the
   session. **Red:** CI tells the session, which fixes the work and pushes →
-  back to step 8.
+  rejoins at step 8.
 - at step 9: **merged** (usual). **Changes asked:** the session fixes the
-  work and pushes → back to step 8.
-
-Next: story 4.
+  work and pushes → rejoins at step 8.
 
 ### 3. A friction becomes a fix — ▶ `frictions-to-fixes`
 
 Object card: a friction, then a fix on a branch, then a pull request with
-the routine's verdict, then a changed line in a rule or skill, then that file
-in the next session's log.
+the routine's verdict, then a changed line in a rule, then that file in the
+next session's log.
 
 1. **Start.** `frictions-to-fixes` starts on its timer, or when the
    maintainer runs it by hand. It is a session like any other.
-2. **Survey.** A `helper-agents` member reads the last three days of `logs`
-   through a script (via `scripts`). It notes every friction and which docs
-   each session opened.
-3. **Screen.** It drops frictions that are already fixed on `main`, already
-   tracked in `issues` or `prs`, or inside a rule that `prune-trial` is
-   testing.
-4. **Pick.** The routine picks up to ten, at most two of them hard (several
-   files, or a design choice). Some runs find nothing worth fixing.
+2. **Survey.** It sends a helper to `helper-agents`.
+3. **Read.** The helper reads the last three days of `logs` through a script
+   (via `scripts`). It notes every friction and which docs each session
+   opened.
+4. **Screen.** The helper checks `issues`. It drops frictions that are
+   already fixed on `main`, already tracked in an issue or pull request,
+   inside a rule that `prune-trial` is testing, or only fixable in an
+   outside skill.
+5. **Pick.** `frictions-to-fixes` picks up to ten, at most two of them hard
+   (several files, or a design choice). Some runs find nothing worth fixing.
    *Decision.*
-5. **Fix.** `helper-agents` write the fixes, each on its own branch, and open
-   pull requests in `prs`. A hard fix also gets an issue in `issues`.
-   Helpers never merge.
-6. **Check.** `ci` runs the checks on each pull request.
-7. **Review.** The routine reviews each pull request and posts its verdict
-   as a comment. *Decision.*
-8. **Merge.** It may merge the pull request; the merge script refuses
-   without the verdict. The fix lands in `rules`, `skills`, `scripts` or
-   `code`.
-9. **The loop closes.** The next session in `sessions` reads the changed
-   file (thick). Its log lists that file among the docs it read.
+6. **Fix.** `helper-agents` write the fixes, each in its own copy of the
+   repository, and open pull requests in `prs`: one for all doc fixes, one
+   per code fix. A hard fix also gets an issue. Helpers never merge.
+7. **Check.** `ci` runs the checks on each pull request.
+8. **Review.** `frictions-to-fixes` reviews each pull request in `prs` and
+   posts its verdict as a comment. *Decision.*
+9. **Merge.** `frictions-to-fixes` may merge itself; the merge script
+   refuses without the verdict. The fix lands in `rules` (or in `skills`,
+   `scripts` or `code`).
+10. **The loop closes.** The next session, in `sessions`, reads the changed
+    rule (thick). Its log lists that file among the docs it read.
 
 Branches:
-- at step 4: **fix it** (usual) → step 5. **Leave it to the maintainer:** the
+- at step 5: **fix it** (usual) → step 6. **Leave it to the maintainer:** the
   fix would touch a guard, a hook, or a file only the maintainer may merge.
   The routine files a `ready-for-human` issue in `issues` with the fix it
-  recommends, and stops; it never builds a guard → ends at `maintainer`.
-  **Came back after a fix:** an earlier fix didn't hold. The routine files a
-  new issue that names the old fix, alerts the maintainer, and doesn't try
-  the same fix again → ends at `maintainer`.
-- at step 7: **low risk** (usual) → step 8. **Risky:** the pull request
-  stays open, the routine says why, and `maintainer` decides (warm) → ends.
+  recommends, and stops; it never builds a guard → ends. **Came back after a
+  fix:** an earlier fix didn't hold. The routine files a new issue in
+  `issues` that names the old fix, alerts the maintainer, and doesn't try the
+  same fix again → ends.
+- at step 8: **low risk** (usual) → step 9. **Risky:** the pull request
+  stays open, the routine says why, and `maintainer` decides → ends.
 
-Close-up: `frictions-to-fixes`. Next: story 2, with the changed guidance
-item lit.
+Close-up: `frictions-to-fixes`.
 
 ### 4. A change goes live — `container`
 
-1. `main` gets a new commit (`repository` lights up). This can be a merged
+1. `main` gets a new commit; `repository` lights up. This can be a merged
    pull request or a session log, which lands without one.
-2. Within two minutes the `updater` sees it and moves its copy to the new
-   commit. It does not wait for CI.
-3. If the lockfile changed, the `updater` installs packages first.
-4. `build` runs. Nuxt bundles `code`; Nuxt Content packs each collection of
-   `content` into a dump. *Decision.*
-5. The `updater` copies the new build over the old one and restarts
-   `server`. The site is down for a second or two.
-6. The restarted `server` starts empty. Each collection loads from its dump
+2. Within two minutes `container` sees it and moves its copy to the new
+   commit (parts: updater, repo copy). It does not wait for CI.
+3. If the lockfile changed, it installs packages first (parts: packages).
+4. The build runs (parts: build). Nuxt bundles `code`; Nuxt Content packs
+   each collection of `content` into a dump. If the build fails, the old
+   build keeps running until the next commit.
+5. The updater copies the new build over the old one and restarts the server
+   (parts: served copy, server). The site is down for a second or two.
+6. The restarted server starts empty. Each collection loads from its dump
    the first time a visitor needs it.
-
-Branches at step 4: **the build succeeds** (usual) → step 5. **The build
-fails:** the old build keeps running, with no retry; the next commit
-triggers a new build → ends with "nothing changes".
 
 Close-up: `container`.
 
@@ -603,88 +608,75 @@ Close-up: `container`.
 Object card: the issue, with its label as a tag.
 
 1. `visitor` opens an issue in `issues`. It has no label.
-2. `maintainer` starts a `cloud` session that runs `auto-triage` (warm).
-3. **Who wrote it?** The session reads the author's access from GitHub, never
+2. `maintainer` starts a `cloud` session that runs `auto-triage`.
+3. **Who wrote it?** `cloud` reads the author's access from `issues`, never
    from the text. *Decision.*
-4. The session checks the claim by reading only, and labels the issue
-   `ready-for-human` with a short summary. *Decision.*
-5. `maintainer` approves it for agents: `ready-for-agent` (warm).
-6. `maintainer` starts a session to build it, often the same one (warm).
-7. That session follows story 2 from step 2: `prs` → `ci` → `maintainer`
-   merges → the issue closes.
+4. `cloud` checks the claim by reading only, and labels the issue
+   `ready-for-human` with a short summary: it waits for the maintainer.
+   *Decision.*
+5. `maintainer` approves it for agents in `issues`: `ready-for-agent`.
+6. `maintainer` asks a `cloud` session to build it, often the same one.
+7. The session opens a pull request in `prs`, as in story 2.
+8. `ci` runs the checks.
+9. `maintainer` merges, or tells the session to merge. The issue closes.
 
 Branches:
 - at step 3: **a visitor** (usual) → step 4. **Written under the owner's
-  account** (the maintainer or an agent), and the design is clear: the
-  session labels it `ready-for-agent` and writes a brief → step 6.
+  account** (by the maintainer or an agent), and the design is clear: the
+  session labels it `ready-for-agent` and writes a brief → rejoins at
+  step 6.
 - at step 4: **clear** (usual) → step 5. **Details missing:** `needs-info`,
-  with specific questions; the reporter answers → back to step 2.
+  with specific questions; when the reporter answers → rejoins at step 2.
   **Already built, or a duplicate:** `wontfix`, closed → ends.
 
-Close-up: `issues`. Next: story 4.
+Close-up: `issues`.
 
 ### 6. The docs checked against the code — `audit-docs`
 
 1. `audit-docs` starts on its timer.
-2. It reads `rules`, `skills` and the last two days of changes.
+2. It reads `rules` and `skills`, and the last two days of changes (uses).
 3. Four reviewers in `helper-agents` look from eight angles.
-4. Fact-checkers in `helper-agents` keep only confirmed findings.
-   *Decision.*
+4. Fact-checkers in `helper-agents` keep only confirmed findings. Edits to a
+   decision record, CI or the code that keeps tenants apart go into a second
+   pull request for the maintainer. Two sources that disagree, with nothing
+   to settle it, become an issue.
 5. It fixes `rules` and `skills` in one pull request in `prs`.
-6. `ci` runs the checks. The routine may merge itself.
+6. `ci` runs the checks. `audit-docs` may merge itself.
 7. The next session reads the corrected docs (thick).
-
-Branches at step 4: **safe fix** (usual) → step 5. **Touches a decision
-record, CI or the code that keeps tenants apart:** a second pull request for
-the `maintainer` → ends. **Two sources disagree and nothing settles it:** an
-issue in `issues` → ends.
-
-Next: story 4.
 
 ### 7. Do the skills do their job? — `audit-skills`
 
 1. `audit-skills` starts on its timer.
-2. A script reads the last seven days of `logs` and the `inventory` (via
-   `scripts`).
+2. It reads the last seven days of `logs` and the `inventory` through a
+   script (via `scripts`).
 3. One checker per skill in `helper-agents` compares what each run promised
-   with what landed. *Decision.*
+   with what landed. A serious or repeated failure also becomes an issue.
 4. It updates `inventory` entries. It never edits a skill's text.
-5. A pull request in `prs`; `ci` runs the checks; the routine may merge
-   itself. If nothing changed, there is no pull request.
-
-Branches at step 3: **a note in the inventory** (usual) → step 4. **Serious
-or repeated:** an issue in `issues` → back to step 4.
-
-Next: story 4.
+5. It opens a pull request in `prs`; if nothing changed, there is none.
+6. `ci` runs the checks. `audit-skills` may merge itself.
 
 ### 8. A rule cut on trial — `prune-trial`
 
 Every run does two jobs: it judges older trials, then cuts one new rule. The
-story follows one trial across two runs, with a "three days later" divider.
+story follows one trial across two runs.
 
 1. `prune-trial` starts on its timer.
-2. It picks one rule in `rules` or `skills` whose prose already failed, or
-   that costs the most to read.
-3. It cuts the rule down to its goal and records the trial: what the rule
-   was for, and the files it covers. While the trial is open, `audit-docs`
-   and `frictions-to-fixes` leave those files alone.
+2. It picks one rule in `rules` whose prose already failed, or that costs the
+   most to read.
+3. It cuts the rule down to its goal and records the trial: what the rule was
+   for, and the files it covers. While the trial is open, `audit-docs` and
+   `frictions-to-fixes` leave those files alone.
 4. A smaller model in `helper-agents` reads only the cut text and answers
-   real questions with it. *Decision.*
-5. A pull request in `prs`; `ci` runs the checks; the routine may merge
-   itself. Twice in a row the permission check refused, and the
-   `maintainer` merged.
-6. *Three days later.* A later run reads the frictions in `logs` since the
-   cut (via `scripts`). *Decision.*
-7. The cut holds. The next session reads the shorter rule (thick).
+   real questions with it. If it still answers wrong, the cut is dropped and
+   an issue proposes a guard for the maintainer.
+5. It opens a pull request in `prs`.
+6. `ci` runs the checks. `prune-trial` may merge itself.
+7. *Three days later.* A later run reads the frictions in `logs` since the
+   cut (via `scripts`). If a serious friction traces to the cut, one line is
+   restored.
+8. The next session reads the shorter rule (thick).
 
-Branches:
-- at step 4: **answers right** (usual) → step 5. **Still answers wrong:**
-  the cut is dropped, and an issue in `issues` proposes a guard for the
-  `maintainer` → ends.
-- at step 6: **no serious friction** (usual) → step 7. **A serious friction
-  traces to the cut:** one line is restored in `rules` → step 7.
-
-Close-up: `prune-trial`. Next: story 4.
+Close-up: `prune-trial`.
 
 ### 9. Fresh eyes on the site — `visitor-loop`
 
@@ -693,18 +685,16 @@ Close-up: `prune-trial`. Next: story 4.
 2. It builds a preview of the site.
 3. Three visitor agents in `helper-agents`, each on a different AI model,
    use the preview without any other context.
-4. It keeps the problems at least two of them hit. *Decision.*
-5. A fix pull request in `prs`, touching `content` or `code`; `ci` runs the
-   checks; the routine may merge itself.
-6. A feature pull request for the one best idea; `ci`; the routine may merge
-   itself. Scheduling this routine is the maintainer's approval for one
-   feature per run.
+4. It keeps the problems at least two of them hit. A problem only one saw
+   becomes an idea in its log; one outside what it may change becomes an
+   issue.
+5. It opens a fix pull request in `prs`, touching `content` or `code`.
+6. `ci` runs the checks. `visitor-loop` may merge itself.
+7. It opens a feature pull request in `prs` for the one best idea. Scheduling
+   this routine is the maintainer's approval for one feature per run.
+8. `ci` runs the checks. `visitor-loop` may merge itself.
 
-Branches at step 4: **two of three agree** (usual) → step 5. **Only one
-visitor saw it:** an idea in the routine's `logs` entry → step 5. **Outside
-what the routine may change:** an issue in `issues` → step 5.
-
-Close-up: `visitor-loop`. Next: story 4.
+Close-up: `visitor-loop`.
 
 ### 10. The day written up — `digest`
 
@@ -714,36 +704,30 @@ Close-up: `visitor-loop`. Next: story 4.
 3. It writes a digest into `journal-pages`.
 4. A fact-checker in `helper-agents` checks every claim.
 5. It moves older digests and logs from `current` to `archived`.
-6. A pull request in `prs`; `ci` runs the checks. *Decision.*
-
-Branches at step 6: **only digests and moves** (usual): the routine may
-merge itself. **Something else rode in,** such as a test fix: the pull
-request waits for the `maintainer` → ends.
-
-Next: story 4.
+6. It opens a pull request in `prs`.
+7. `ci` runs the checks. `digest` may merge itself. If anything else rode
+   in, such as a test fix, the pull request waits for the maintainer.
 
 ### 11. The day's best story — `blog-post`
 
 1. `blog-post` starts on its timer and picks whose turn it is.
 2. It reads recent changes, `logs` and the newest posts of all four writers
    in `blog`.
-3. It writes three drafts. A blind reader in `helper-agents` picks one; a
-   fact-checker checks it.
-4. The post goes into the writer's space in `blog`, through a pull request
-   in `prs`; `ci` runs the checks; the routine may merge itself.
-5. A fresh reader judges whether another writer should reply. *Decision.*
-
-Branches at step 5: **no reply** (usual) → ends. **A reply earns its
-place:** a second writer's post takes the same path → ends.
-
-Next: story 4.
+3. It writes three drafts. A blind reader in `helper-agents` picks one, and
+   a fact-checker checks it.
+4. It opens a pull request in `prs` with the post for the writer's space in
+   `blog`.
+5. `ci` runs the checks. `blog-post` may merge itself.
+6. A fresh reader judges whether another writer should reply. Usually not;
+   if so, the reply takes the same path.
 
 ## Close-ups
 
-Each close-up has 5–8 parts. They are drawn inside the node's box, left to
-right where they form a sequence.
+Each close-up has 5–8 parts, drawn inside the node's box, left to right
+where they form a sequence. The nodes it works with directly stay lit around
+it.
 
-**`sessions`: a session** (stories 2 and 5)
+**`cloud` and `local`: a session** (stories 2 and 5)
 
 | Part | What it shows |
 |---|---|
@@ -759,7 +743,7 @@ right where they form a sequence.
 | Part | What it shows |
 |---|---|
 | quick checks | always run: lint, types, content validation and a few integrity checks |
-| slow checks | tests, the build and a browser smoke test; skipped only when nothing but docs changed |
+| slow checks | tests, the build and a browser smoke test; skipped only for inert changes (docs outside the tenants) |
 | same rule twice | the local run and CI ask one script which checks to skip, so they can't disagree |
 | wake-up comment | on green, CI posts a short comment so the waiting session wakes; red reaches it without one |
 | on `main` | every push to `main`, session logs included, runs all checks |
@@ -783,7 +767,7 @@ right where they form a sequence.
 | `needs-triage` | the maintainer still has to decide |
 | `needs-info` | waiting for the reporter; a reply sends it back to triage |
 | `ready-for-agent` | approved for an agent; a brief is attached |
-| `ready-for-human` | needs a person |
+| `ready-for-human` | needs a person; a visitor's issue waits here for the maintainer |
 | `wontfix` | closed without action |
 | agent or human? | an agent's post opens with a 🤖 line; that is how triage tells them apart |
 
@@ -799,17 +783,30 @@ right where they form a sequence.
 | review & merge | waits for green CI, reviews, posts a verdict, merges or leaves open |
 | log | writes the session log, with the routine's own frictions |
 
-**`prune-trial`** (story 8): a timeline. Run 1: pick → cut → check with a
-smaller model → pull request. A three-day gap, with sessions working and
-logging frictions. A later run: the verdict, with three ends: keep the cut,
-restore one line, or propose a guard.
+**`prune-trial`** (story 8)
 
-**`visitor-loop`** (story 9): today's focus → preview → three visitor
-figures, each with its model's name → a tally where two matching reports
-become one problem → four ends: fix pull request, feature pull request,
-issue, idea.
+| Part | What it shows |
+|---|---|
+| judge | a later run reads the frictions since each open trial's cut |
+| verdict | keep the cut, restore one line, or propose a guard |
+| pick | one rule whose prose failed, or that costs the most to read |
+| cut | down to its goal; the trial records its files |
+| probe | a smaller model answers real questions from the cut text |
+| three days | sessions work without the cut text and log their frictions |
 
-**`container`** (story 4)
+**`visitor-loop`** (story 9)
+
+| Part | What it shows |
+|---|---|
+| focus | today's tenant, the home page, or phone width |
+| preview | a production build of the site |
+| three visitors | each on a different AI model, with no other context |
+| tally | a problem counts when two of three hit it |
+| fix | one pull request for the agreed problems |
+| feature | one pull request for the best idea |
+| leftovers | ideas into the log; out-of-scope problems into issues |
+
+**`container`** (stories 1 and 4)
 
 | Part | What it shows |
 |---|---|
@@ -818,17 +815,7 @@ issue, idea.
 | packages | installed again only when the lockfile changed |
 | build | Nuxt bundles the code; Nuxt Content packs each collection into a dump |
 | served copy | the last build that succeeded; the server runs only from here |
-| server | reached by Caddy over a network shared with the other sites on the host; the container opens no port of its own |
-
-**`server`** (story 1)
-
-| Part | What it shows |
-|---|---|
-| page store | keeps each `/t/` page and its `_payload.json` for 60 seconds; never the home page or Tinkerfund's search |
-| renderer | Vue builds the page to HTML |
-| Nuxt Content | turns each content query into a database query |
-| SQLite | starts empty after each deploy; never edited by visitors |
-| dumps | one packed copy of each collection; loaded into SQLite on first use, and handed to browsers that ask |
+| server | page store (each `/t/` page and its `_payload.json` for 60 seconds; never the home page or Tinkerfund's search), renderer (Vue builds HTML), Nuxt Content, SQLite (starts empty after each deploy; never edited by visitors) |
 
 **`browser`** (story 1)
 
@@ -849,13 +836,12 @@ Every panel has the same rows, in this order. An empty row is hidden.
 |---|---|
 | **name** | The node's label and its zone, e.g. "GitHub › CI". |
 | **role** | One line, at most 12 words. |
-| **about** | Two or three short sentences, taken from Part 1. |
+| **about** | Two or three short sentences. |
 | **appears in stories** | Every story with a step on this node, each with a ▶. Computed from the steps. |
 | **reads / writes** | Routines only; see the table below. |
 | **look inside** | Only for nodes with a close-up. |
-| **files** | Where the node lives in the repository. Each path appears on one node only; a more specific path may sit inside another node's folder. |
+| **files** | Where the node lives in the repository. An exact path appears on one node only; a more specific path may sit inside another node's folder. |
 | **why** | The decision records that explain the node. These may repeat. |
-| **a real run** | Routines only, collapsed; see below. |
 
 ### Files and why
 
@@ -866,31 +852,31 @@ Every panel has the same rows, in this order. An empty row is hidden.
 | `maintainer` | none | ADR-0020, ADR-0003 |
 | `visitor` | `docs/agents/guest-contributions.md`, `scripts/trust.ts` | ADR-0020 |
 | `routines` | none: each timer is set in claude.ai | – |
-| each routine | `.agents/skills/<name>/` | ADR-0003 (its scope) |
+| each routine | `.agents/skills/<name>/` | ADR-0003 |
 | `prune-trial`, also | `.agents/prune-trials.yml` | ADR-0027 |
 | `sessions`, `cloud`, `local` | none; see `rules` and `guards` | ADR-0003 |
 | `helper-agents` | `.agents/skills/dispatch-subagents/` | – |
 | `rules` | `CLAUDE.md`, `CONTEXT-MAP.md`, `CONTEXT.md`, `layers/<tenant>/CONTEXT.md`, `docs/agents/`, `docs/adr/` | ADR-0021 |
-| `skills` | `.agents/skills/` (Claude Code finds them through `.claude/skills/`), `skills-lock.json` (the outside pack) | ADR-0005, ADR-0015 |
-| `guards` | `scripts/*-guard.ts`, `scripts/guard-wrap.sh`, `.claude/settings.json` (switches guards and hooks on), `.githooks/`, `docs/agents/guards.md` | ADR-0017 |
-| `scripts` | `scripts/` (everything not listed on another node) | – |
+| `skills` | `.agents/skills/`, `.claude/skills/`, `skills-lock.json` | ADR-0005, ADR-0015 |
+| `guards` | `scripts/*-guard.ts`, `scripts/guard-wrap.sh`, `.claude/settings.json`, `.githooks/`, `docs/agents/guards.md` | ADR-0017 |
+| `scripts` | `scripts/` | – |
 | `code` | `app/`, `modules/`, `shared/`, `nuxt.config.ts`, `content.config.ts`, `layers/<tenant>/app/`, `layers/<tenant>/nuxt.config.ts`, `layers/<tenant>/tenant.config.ts`, `layers/<tenant>/tests/`, `tests/` | ADR-0001, ADR-0018 |
 | `content` | `layers/<tenant>/content/` | ADR-0025 |
-| `journal` | `scripts/archive-journal-content.ts` (moves older days to `archived`) | ADR-0008, ADR-0010 |
-| `logs` | `layers/journal/content/*/sessions/`, `shared/schemas/session.ts` (what a log holds), `scripts/log-session.ts` | ADR-0009 |
+| `journal` | `scripts/archive-journal-content.ts` | ADR-0008, ADR-0010 |
+| `logs` | `layers/journal/content/*/sessions/`, `shared/schemas/session.ts`, `scripts/log-session.ts` | ADR-0009 |
 | `inventory` | `layers/journal/content/*/skills/` | ADR-0015 |
 | `issues` | `docs/agents/issue-tracker.md`, `docs/agents/triage-labels.md`, `.agents/skills/triage/`, `.agents/skills/auto-triage/` | ADR-0020, ADR-0022 |
-| `prs` | `docs/agents/pr-workflow.md` (how a pull request lands, and who may merge which kind), `scripts/merge-pr.ts` | ADR-0003, ADR-0009 |
-| `ci` | `.github/workflows/gate.yml` (when CI runs), `.github/actions/gate/action.yml` (the checks), `scripts/gate.ts` (the same checks run locally) | ADR-0004, ADR-0026 |
-| `caddy` | `deploy/README.md` (how Caddy is connected); Caddy itself is set up outside the repository | – |
-| `container`, `updater` | `deploy/entrypoint.sh`, `deploy/Dockerfile`, `deploy/docker-compose.yml` | ADR-0011 |
-| `build`, `server` | none; see `code` and `container` | ADR-0028 |
-| `browser` and its parts | `app/components/ContentLoadErrorDialog.vue` | ADR-0028, ADR-0019 |
+| `prs` | `docs/agents/pr-workflow.md`, `scripts/merge-pr.ts` | ADR-0003, ADR-0009 |
+| `ci` | `.github/workflows/gate.yml`, `.github/actions/gate/action.yml`, `scripts/gate.ts` | ADR-0004, ADR-0026 |
+| `caddy` | `deploy/README.md`; Caddy itself is set up outside the repository | – |
+| `container` | `deploy/entrypoint.sh`, `deploy/Dockerfile`, `deploy/docker-compose.yml` | ADR-0011, ADR-0028 |
+| `browser` | `app/components/ContentLoadErrorDialog.vue` | ADR-0028, ADR-0019 |
 
 ### What each routine reads and writes
 
-Every run also writes its own session log; the table leaves that out. "May
-merge itself only if" comes from ADR-0003; outside it, the maintainer
+Every run also writes its own session log; the table leaves that out. Who
+may merge what comes from ADR-0003; how a merge lands, from
+`docs/agents/pr-workflow.md`. Outside a routine's scope, the maintainer
 merges.
 
 | Routine | Reads | Writes | May merge itself only if |
@@ -910,47 +896,25 @@ merges.
   counts in the trial's verdict.
 - `audit-skills` → every routine: it checks each routine's runs.
 
-### A real run
-
-- Only routines have one, at most one each, collapsed by default.
-- It shows a date, a session log's id, and three to five plain lines about
-  what that run read, wrote and merged.
-- Pull request and issue numbers may appear here and nowhere else in the
-  diagram.
-- It says "as of <date>". Replacing it is a normal edit.
-- It points to the session log by id, not by folder, because older logs move
-  to `archived`.
-
-Example, `frictions-to-fixes`, as of 2026-10-08:
-- 10-07: the run read 34 sessions. The top three frictions were all on
-  guards, so it opened no pull request and alerted the maintainer. In its own
-  log it noted that a history script printed far too many lines.
-- 10-08: the run read 32 sessions and found two candidates. One had come back
-  after a fix, so it filed #1679 for the maintainer. A helper agent fixed the
-  other, the long output, in #1680; the routine reviewed and merged it.
-- Next run: its survey reads the new line in its own skill.
-
 ## Keeping it true
 
 - **One data file** holds the zones, nodes, stories, close-ups and panels.
   The diagram is drawn from it.
 - **A test** reads the data file and fails when:
-  1. a path in `files` or `why` matches nothing in the repository;
-  2. a step, story or close-up names a node id that doesn't exist;
-  3. two nodes list the same path in `files`;
-  4. a real run's session id matches no session log;
-  5. a routine has no story;
-  6. a role or about line contains a pull request or issue number.
+  1. a file path matches nothing in the repository (`<tenant>` and `*` are
+     expanded; `why` entries are matched to `docs/adr/`);
+  2. a step names a node id or close-up part that doesn't exist;
+  3. two nodes list exactly the same path in `files`;
+  4. a routine has no story;
+  5. a role or about line contains a pull request or issue number.
 
 ## Leave out
 
 - Names of single guards, hooks and CI checks. Panels use folders and
   patterns instead.
 - When a routine runs. Say that it runs on a timer, never at what time.
-- Counts that change daily: sessions, skills, the share of sessions that ran
-  a code review.
-- Pull request and issue numbers, session ids and commit ids, outside a
-  real-run card.
+- Counts that change daily: sessions, skills, how often something happened.
+- Pull request and issue numbers, session ids and commit ids.
 - Line numbers in file pointers.
 - How the server finds a tenant's content for an address, and how Commons
   reads across tenants. At most one sentence, on the Commons chip.
@@ -960,9 +924,7 @@ Example, `frictions-to-fixes`, as of 2026-10-08:
 
 ## Still open
 
-These need the maintainer's decision before the diagram is built.
-
-**Where the diagram lives.**
+**Where the diagram lives.** The maintainer decides before it is built.
 
 | | claude.ai artifact | HTML file in the repository | page in the Journal |
 |---|---|---|---|
