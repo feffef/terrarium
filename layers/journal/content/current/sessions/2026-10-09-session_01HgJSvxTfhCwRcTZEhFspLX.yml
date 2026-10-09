@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01HgJSvxTfhCwRcTZEhFspLX
 startedAt: 2026-10-09T00:46:03Z
-endedAt: 2026-10-09T01:18:04Z
+endedAt: 2026-10-09T01:19:54Z
 kind: autonomous
 goal: Run the scheduled audit-skills sweep — check whether the Platform's own Skills are doing their job
-status: in-review
-outcome: "Opened PR #1697 (gate green) refreshing all 11 behaviour-checked Skills' Inventory observations; no new issues needed"
-summary: "Entirely agent-initiated: fired by a scheduled /audit-skills trigger with no human prompt at any point in this session. Followed audit-skills/SKILL.md's steps: ran scripts/audit-skills.ts for the scorecard, dispatched one read-only Sonnet subagent per qualifying Skill (11 total) in parallel, then independently verified every subagent's central claims against primary sources before trusting them (live GitHub state via issue_read/ pull_request_read, git log, pnpm validate:content), including one spot-check per clean report per the Skill's own rule. Step 3 closure-completeness signals (orphan scan, suppression log, human-prompted/manually-rescued closures) all came back clean. Two findings got new evidence commented onto existing open issues (#1480's 3rd cd-into-worktree occurrence, #1586's skillsUsed-logging gap recurrence) rather than new issues, since both were repeats of already-tracked shapes. Every other finding a subagent surfaced turned out to already be tracked and resolved via an existing closed issue/merged PR once checked live, so nothing else needed filing. Appended today's dated observation to all 11 Skills' Inventory entries (pure additions, no grade/role change — none of this round's evidence cleared the ≥2-session grade-change bar), ran the full gate (green), and opened PR #1697 scoped to layers/journal/content/current/skills/*.yml only, per step 6's constraint."
+status: completed
+outcome: "PR #1697 merged (bc548ad9), refreshing all 11 behaviour-checked Skills' Inventory observations; no new issues needed"
+summary: "Entirely agent-initiated: fired by a scheduled /audit-skills trigger with no human prompt at any point in this session. Followed audit-skills/SKILL.md's steps: ran scripts/audit-skills.ts for the scorecard, dispatched one read-only Sonnet subagent per qualifying Skill (11 total) in parallel, then independently verified every subagent's central claims against primary sources before trusting them (live GitHub state via issue_read/ pull_request_read, git log, pnpm validate:content), including one spot-check per clean report per the Skill's own rule. Step 3 closure-completeness signals (orphan scan, suppression log, human-prompted/manually-rescued closures) all came back clean. Two findings got new evidence commented onto existing open issues (#1480's 3rd cd-into-worktree occurrence, #1586's skillsUsed-logging gap recurrence) rather than new issues, since both were repeats of already-tracked shapes. Every other finding a subagent surfaced turned out to already be tracked and resolved via an existing closed issue/merged PR once checked live, so nothing else needed filing. Appended today's dated observation to all 11 Skills' Inventory entries (pure additions, no grade/role change — none of this round's evidence cleared the ≥2-session grade-change bar), ran the full gate (green), opened PR #1697 scoped to layers/journal/content/current/skills/*.yml only per step 6's constraint, posted a merge verdict, and landed it via scripts/merge-pr.ts once CI confirmed green — merge commit bc548ad9, verified on origin/main."
 prs:
   - "1697"
 docsRead:
@@ -19,7 +19,7 @@ docsRead:
   - path: docs/agents/github-integration.md
     reason: read too late — see friction below
   - path: docs/agents/pr-workflow.md
-    reason: "self-merge tier and PR-open recipe before opening PR #1697"
+    reason: "self-merge tier and PR-open/land recipe for PR #1697"
   - path: docs/adr/0015-audit-skills-and-conditional-importance.md
     reason: read too late — see friction below
   - path: CLAUDE.md
@@ -204,9 +204,9 @@ skillsUsed:
   - name: audit-skills
     reason: this session's own charter
   - name: close-session
-    reason: PR-open closure point
+    reason: PR-open and merge closure points
   - name: log-session
-    reason: this log
+    reason: this log, authored then finalized on merge
 frictions:
   - description: "Called mcp__github__issue_read several times (verifying subagent findings) before reading docs/agents/github-integration.md, violating CLAUDE.md's \"before your first GitHub operation\" rule. Only read the doc right before opening PR #1697."
     solution: Read github-integration.md at session start if the task is likely to need GitHub reads at all, not just before the PR-open step.
@@ -217,11 +217,11 @@ frictions:
   - description: Didn't grep docs/adr/ for the ADRs binding this change (Skill Inventory edits, ADR-0015) before planning/editing layers/journal/content/current/skills/*.yml, per CLAUDE.md's "before you plan a change" rule. Read ADR-0015 only retroactively at closure.
     solution: Grep docs/adr/ for the touched path/terms before planning the edit, not after. No actual deviation from ADR-0015 resulted — the Skill's own SKILL.md already correctly encoded its constraints — but the letter of the rule was skipped.
     severity: minor
-durationSec: 1921
+durationSec: 2030
 models:
-  claude-sonnet-5: 221
+  claude-sonnet-5: 240
 toolCounts:
-  Bash: 39
+  Bash: 43
   Read: 25
   Agent: 11
   ScheduleWakeup: 1
@@ -231,12 +231,13 @@ toolCounts:
   mcp__github__search_issues: 1
   mcp__github__add_issue_comment: 3
   Edit: 17
-  ReadNotifications: 4
+  ReadNotifications: 6
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
-  Skill: 2
-  Write: 1
+  Skill: 4
+  Write: 2
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/journal/content/current/skills/audit-docs.yml
   - layers/journal/content/current/skills/audit-skills.yml
