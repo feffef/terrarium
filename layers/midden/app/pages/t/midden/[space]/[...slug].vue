@@ -75,7 +75,7 @@ const glossComponents = { 'midden-gloss': resolveComponent('MiddenGloss') }
 
 if (!site.value && !error.value) setResponseStatus(404)
 
-useHead({ title: () => `${site.value?.title ?? 'Not found'} · The Midden` })
+useHead({ title: () => `${site.value?.title.replaceAll('`', '') ?? 'Not found'} · The Midden` })
 </script>
 
 <template>
@@ -87,8 +87,8 @@ useHead({ title: () => `${site.value?.title ?? 'Not found'} · The Midden` })
         </nav>
 
         <p class="sc midden-eyebrow">Dig report</p>
-        <h1 class="doctitle midden-report__title">{{ site.title }}</h1>
-        <p v-if="site.description" class="midden-report__dek">{{ site.description }}</p>
+        <h1 class="doctitle midden-report__title"><MiddenTicks :text="site.title" /></h1>
+        <p v-if="site.description" class="midden-report__dek"><MiddenTicks :text="site.description" /></p>
 
         <div v-if="siteArtifacts.length" class="tech midden-report__meta">
           <span>{{ seasonSummary }}</span><span class="midden-report__dot">·</span>
@@ -121,7 +121,7 @@ useHead({ title: () => `${site.value?.title ?? 'Not found'} · The Midden` })
       </div>
     </div>
 
-    <SiteFooter />
+    <div class="midden-page midden-report__foot"><SiteFooter /></div>
   </main>
 </template>
 
@@ -219,6 +219,9 @@ useHead({ title: () => `${site.value?.title ?? 'Not found'} · The Midden` })
   padding: 0.05em 0.35em;
   border-radius: 2px;
 }
+
+/* Left edge on the prose's: the report grid is 44rem + 3.4rem gap + 13.5rem key. */
+.midden-report__foot { width: min(60.9rem, 100% - 3rem); max-width: none; padding: 0 0 5rem; }
 
 .midden-not-found h1 {
   font-size: 2.2rem;

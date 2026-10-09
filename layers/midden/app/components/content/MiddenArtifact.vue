@@ -59,7 +59,7 @@ const stampStyle = computed(() => {
     <header class="midden-find__head">
       <p v-if="digSeasonOf(artifact.stratum)" class="midden-find__season">{{ digSeasonOf(artifact.stratum)?.label }}</p>
 
-      <h3 class="mono midden-find__title">{{ artifact.title }}</h3>
+      <h3 class="mono midden-find__title"><MiddenTicks :text="artifact.title" /></h3>
 
       <p class="tech midden-find__prov">
         <a
@@ -236,6 +236,7 @@ const stampStyle = computed(() => {
 .midden-find__quote { display: block; }
 .midden-find__source {
   display: block;
+  overflow-wrap: anywhere;
   margin-top: 0.5rem;
   font-style: normal;
   font-size: 0.7rem;
@@ -261,6 +262,8 @@ const stampStyle = computed(() => {
   margin: 0.9rem 0 0;
   color: var(--midden-faint);
 }
+.midden-find__remains a, .midden-find__prov a { overflow-wrap: anywhere; }
+.midden-find a[target='_blank']::after { content: '\00a0\2197'; content: '\00a0\2197' / ''; }
 .midden-find__remains-label {
   text-transform: uppercase;
   letter-spacing: 0.08em;
