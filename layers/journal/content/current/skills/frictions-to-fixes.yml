@@ -131,3 +131,18 @@ observations:
       their logs, no reverts in the 2-week sweep. Grade unchanged (routine)
       — reliability gap confined to one escalation sub-step, not core
       delivery.
+  - date: "2026-10-09"
+    note: >-
+      Re-checked (audit-skills behaviour check), 9 usedIn sessions, each
+      graded against the SKILL.md version in effect when it started (13
+      intervening landings mapped per-session). Issue #1676's finding
+      (session_015nX759CQdTRtT6x6oLDanX, 2026-10-07, surface-blocked
+      ADR-0017 candidate dropped despite the brand-new §4 rule) independently
+      re-confirmed: still open, and its backfill (issue #1684, filed
+      2026-10-08 by a different session) is itself still open too — nothing
+      new to add to either thread. The other 8 sessions' claimed PRs/issues
+      all independently re-verified against live GitHub state and match
+      their logs exactly; the 2026-10-04 precursor instance
+      (session_01RW5WnnVvnyuUbrqVZvdZNc, pre-§4) re-confirmed not itself a
+      violation. No reverts of any landed fix in the 2-week git-log sweep.
+      Grade unchanged.

@@ -127,3 +127,18 @@ observations:
       side effects reach outside its own Space — but both were loudly caught
       and fixed/escalated in the same run, not silent. Worth a human's
       attention on a third occurrence. No new silent failure. Grade unchanged.
+  - date: "2026-10-09"
+    note: >-
+      Re-checked (audit-skills behaviour check), 7 usedIn sessions. Newest,
+      session_01Pps6pXDX7ahChHwQajVZNc (PR #1696, the 2026-10-08 Digest),
+      fully re-derived from scratch: ran `scripts/digest.ts gather
+      2026-10-08` directly and its rollup (14 PRs, 84 commits, 17 sessions,
+      99 frictions by severity) matches the merged Digest's footer exactly;
+      its own fact-check caught and fixed 3 wrong claims pre-merge, each
+      independently verified correct against the underlying session records
+      and GitHub state. Retention sweep archived exactly 2026-10-01 + 7
+      session logs, matching `RETAIN_DATES = 7`; `current/pages/digests/`
+      holds exactly the 7 newest dates today, no gaps or duplicates. The
+      other 6 sessions re-corroborated against prior observations (retention
+      file counts, PR merge states). No reverts of digest content beyond the
+      already-known #1478 case. Grade/role unchanged.

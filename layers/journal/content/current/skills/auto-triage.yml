@@ -57,3 +57,18 @@ observations:
       covers it. No live misrouting found in any of the 3 usedIn sessions
       checked this window. Grade unchanged (specialist) — single dropped-fix
       instance, no confirmed live harm yet.
+  - date: "2026-10-09"
+    note: >-
+      Re-verified (audit-skills behaviour check), all 3 usedIn sessions
+      (session_01QLxPLD6AQ2Y6GyWHE1dkKp 10-07, session_014mna6dsd4t2Ui98gbs3jCF
+      10-05, session_01548Bi1ZiGcknAp8CMLNMZB 10-03), each graded against the
+      SKILL.md version in effect when it started (3 intervening changes:
+      10f247fa, dc3f2e22, d5a6a2a1). Every triage/closure claim independently
+      re-verified live via `issue_read`/`pull_request_read`, not taken from
+      the session logs: all closed-issue claims confirmed closed with a
+      matching merged PR, all open/ready-for-human claims confirmed still
+      open and unchanged. The 2026-10-08 finding (#1611/#1304 attendance
+      misrouting under PR #1630→#1631) and the #1549 zod-bump judgment call
+      were both self-caught and owner-corrected in-session, not silent, and
+      predate the SKILL.md rules they exposed. No revert of any triage
+      decision found in the 2-week git-log sweep. Grade/role unchanged.

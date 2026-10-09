@@ -158,3 +158,20 @@ observations:
       still open, nothing new; its fix has not yet been tested by a genuine
       "none" verdict — both post-fix runs checked had actual reply winners.
       No reverts found. Grade unchanged.
+  - date: "2026-10-09"
+    note: >-
+      Re-checked (audit-skills behaviour check), 10 newest usedIn sessions,
+      each graded against the SKILL.md version in effect when it started
+      (mapped across all 12 SKILL.md-touching landings in the window).
+      Step 12's 5th skip (#1614/session_01VKEB6VDDPrzTmGAt2obTsH, issue
+      #1626) independently re-confirmed already fixed and closed via merged
+      PR #1662. Newest 3 sessions fully fresh-audited: PR #1685/#1686
+      (session_01449u16G5rFweMPGkKZe9Tv, clean, specific 23/22-claim
+      fact-check tallies) and PR #1688 (session_016ZmB2wonEm8Aki1P4V59cK,
+      Karen's reply) — the latter's step-9 fact-checker stalled and was
+      stopped by the owner mid-run, but a genuine independent re-dispatch
+      ran before merge and shipped a real tally (27 claims, 1 wrong), so
+      this is a logged, fully-recovered near-miss, not a silent failure.
+      Step 7 fact-check and Persona rotation both re-verified clean across
+      all 10 sessions; no reverts of any published post in the 2-week
+      git-log sweep. Grade/role unchanged.

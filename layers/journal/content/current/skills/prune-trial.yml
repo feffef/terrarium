@@ -209,3 +209,27 @@ observations:
       frictions — checked concretely against the backgrounding-cluster trial
       and found no outcome actually flipped. All 8 usedIn sessions' verdict
       commits otherwise verified genuine, no reverts. Grade unchanged.
+  - date: "2026-10-09"
+    note: >-
+      Re-checked (audit-skills behaviour check), all 8 usedIn sessions,
+      every ledger-diff claim verified byte-for-byte against its commit (no
+      revert found in the 2-week git-log sweep). Issue #1677's fix (one-hour
+      grace on the floor, commit `920f20f8`/PR #1683, merged
+      2026-10-08T06:22:33Z) confirmed held on its first live test:
+      session_015UvXah6phvbuMpUWmf5rYs (2026-10-08) correctly used the fixed
+      floor. New observation, not escalated as an issue: the session-id-
+      recovery trial, judged "holds" and deleted at commit `c1abfa52`
+      (2026-10-04), defines damage as "a session-id-guard report of a wrong
+      id on a session's commits" — that exact condition has now fired 3
+      times since the verdict (session_01NRVHQoPm4cP1F7iVUvh9rJ, 2026-10-04;
+      355d2d64-55fc-4515-81c1-e831f8b84601,
+      49f1fea0-270e-4851-9cc7-3dbf8cc8609a, both 2026-10-08), all three
+      postdating the verdict so no audited session had this evidence
+      available. All three trace to one committer's trailer landing on two
+      other sessions' commits — a dispatch/worktree branch-sharing collision
+      already covered by other prunes, not the pruned rule's territory
+      recurring — so this looks like the guard working as designed, not a
+      failed prune. But the trial is permanently deleted with no mechanism
+      to re-examine it even though its literal damage check has now fired
+      three times; worth a look if a fourth, genuinely-unexplained instance
+      turns up. Grade unchanged.

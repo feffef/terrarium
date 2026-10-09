@@ -230,3 +230,24 @@ observations:
       were correctly logged to spec, not swallowed. #1482/#1542/#1627 all
       independently re-confirmed closed via live GitHub state.
       `notUsedInWindow` empty. No new silent failure. Grade unchanged.
+  - date: "2026-10-09"
+    note: >-
+      Re-checked (audit-skills behaviour check, graded standalone per this
+      Skill's close-session carve-out), 10 usedIn sessions plus the 1
+      notUsedWindow session. Repo-wide `pnpm validate:content` passes (46
+      collections, 1533 documents, 0 violations), confirming schema validity
+      across all 10 plus every other log on main. Every claimed PR outcome
+      independently re-verified against live GitHub state (9 PRs checked),
+      all honest and none stale. Traced one cross-session friction thread by
+      hand (session_01StQjYSNRStTihgZimvvx2r's Journal-404 idea leading to
+      session_01CF4k9jXS9wLrcPVsGduZmn's independent discovery and fix in PR
+      #1695) — the mechanism working as designed, not a gap. Two sessions
+      (49f1fea0-270e-4851-9cc7-3dbf8cc8609a,
+      355d2d64-55fc-4515-81c1-e831f8b84601) honestly self-reported a
+      blocker-severity commit-trailer misattribution (issue #387's territory,
+      a different mechanism's bug) — honest reporting, not a log-session
+      defect. The 1 notUsedWindow session (session_015CSc6hNccF3XgrSGaGGqjD)
+      has a complete, schema-valid, correctly-stitched log committed to main
+      and close-session ran log-session's job internally without the Skill
+      name surfacing in `skillsUsed`, not a genuine missed invocation. No
+      new silent failure. Grade unchanged.
