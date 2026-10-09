@@ -1,0 +1,96 @@
+schemaVersion: 1
+session: session_01AuUp8RpGpxhyoa3yctctHN
+startedAt: 2026-10-09T18:29:43Z
+endedAt: 2026-10-09T18:35:06Z
+kind: interactive
+goal: Run one auto-triage sweep over the open issue backlog
+status: completed
+outcome: "9 eligible issues triaged: 6 ready-for-agent, 3 ready-for-human, none closed"
+summary: "Human-instructed: the owner invoked /auto-triage (no full-sweep). Of 33 open issues and 0 open PRs, 9 were eligible (needs-triage or unlabeled; every other issue's last activity carried ADR-0017 provenance; two wayfinder:map issues skipped). None were assigned or blocked; all owner-authored. One parallel subagent per issue verified claims read-only and applied labels plus one comment. Results: ready-for-agent #1711 (Midden surface-finds miscount), #1703 (ADR-0003 ledger names an unapplied dependabot workflow), #1701 (updater stale-lockfile hash), #1676 (frictions-to-fixes trial-drop rule), #1669 (Eyra post links), #1668 (blog-post jargon gloss); ready-for-human #1702 (home page caching vs ADR-0028), #1693 (session-card headline: three competing designs), #1675 (attended-session routing policy). No ready-for-agent file overlaps with each other or with #1712, so no blocking edges were added. Labels verified live after the sweep."
+prs: []
+docsRead:
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: (no reason given)
+skillsUsed:
+  - name: auto-triage
+    reason: owner-invoked sweep
+  - name: triage
+    reason: per-issue rules briefed to subagents
+  - name: close-session
+    reason: closure
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: "check-triage-drift.ts flagged #1693 as drift because its ready-for-human comment says the issue 'can move to ready-for-agent' once a design is picked"
+    solution: Have the drift phrase matcher ignore conditional/future phrasings, or teach triage comments to avoid label names in conditional sentences
+    severity: minor
+  - description: Subagents hit 403s on gh GraphQL and the search API during redundancy checks and fell back to REST listings, so open-issue duplicate searches were weaker
+    solution: Already documented in github-integration.md; brief subagents to use list-open-issues.ts plus local grep up front
+    severity: nit
+  - description: Local checkout was behind origin/main; one subagent noticed and used git show origin/main, others may have read stale files
+    solution: Have auto-triage fetch origin main once before dispatch and tell subagents to verify against origin/main
+    severity: minor
+  - description: My git-conventions.md read was cut off by a head -200 pipe before subagents ran git log/show (CLAUDE.md read-before-git rule); harmless here as all git use was read-only
+    solution: Read required docs with the Read tool, not a truncated cat chain
+    severity: nit
+durationSec: 324
+models:
+  claude-opus-5-5: 53
+toolCounts:
+  Bash: 16
+  Agent: 9
+  Skill: 2
+docsReadViaShell:
+  - CONTEXT-MAP.md
+  - CONTEXT.md
+  - .agents/skills/triage/SKILL.md
+  - docs/agents/github-integration.md
+  - docs/agents/issue-tracker.md
+  - docs/agents/triage-labels.md
+  - .agents/skills/triage/AGENT-BRIEF.md
+  - docs/agents/guards.md
+  - docs/adr/0017-provenance-footer-on-agent-authored-content.md
+  - .agents/skills/auto-triage/SKILL.md
+  - docs/adr/0022-autonomous-triage-sweep.md
+  - docs/research/rulebook-migration-table.md
+  - .agents/skills/triage/OUT-OF-SCOPE.md
+  - layers/blog/CONTEXT.md
+  - .agents/skills/blog-post/personas/eyra.md
+  - .agents/skills/blog-post/SKILL.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - .agents/skills/audit-skills/SKILL.md
+  - .agents/skills/blog-post/personas/david.md
+  - .agents/skills/blog-post/personas/kevin.md
+  - docs/adr/0003-agent-operating-model-and-governance.md
+  - docs/agents/pr-workflow.md
+  - docs/proposals/1633-dependabot-automerge.md
+  - docs/diagrams/interactive-map/terrarium-overview.md
+  - docs/adr/0018-tenant-layers-under-layers-directory.md
+  - docs/adr/0011-poc-self-updating-deploy-container.md
+  - docs/adr/0028-navigation-reads-server-payloads.md
+  - layers/midden/CONTEXT.md
+  - docs/adr/0009-session-logs-commit-directly-to-main.md
+  - .agents/skills/log-session/SKILL.md
+subagents:
+  - type: general-purpose
+    task: "Triage issue #1711"
+  - type: general-purpose
+    task: "Triage issue #1703"
+  - type: general-purpose
+    task: "Triage issue #1702"
+  - type: general-purpose
+    task: "Triage issue #1701"
+  - type: general-purpose
+    task: "Triage issue #1693"
+  - type: general-purpose
+    task: "Triage issue #1676"
+  - type: general-purpose
+    task: "Triage issue #1675"
+  - type: general-purpose
+    task: "Triage issue #1669"
+  - type: general-purpose
+    task: "Triage issue #1668"
+gitBranch: ccr-5ec35c56-qcpeoh
+entrypoint: remote_mobile
+cliVersion: 2.1.295
+landedBy: Stop
