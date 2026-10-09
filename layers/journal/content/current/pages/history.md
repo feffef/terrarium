@@ -81,8 +81,8 @@ change the repo.
 The same day, quietly, branch protection came off `main`. Session logs are
 designed to commit straight to the default branch without a pull request, and
 classic protection blocks that, so protection was removed to let them through.
-Whether it has come back since, and what that means for every "nothing lands
-without a gated pull request" rule, is tracked in
+A repository ruleset put a gate requirement back on 8 October, with an admin
+bypass so session logs still land; what it enforces and why is in
 `docs/research/github-branch-protection-vs-autonomous-log-commits.md`.
 
 The fortnight added four more sites, one of them a proof of concept that was

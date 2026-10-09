@@ -60,6 +60,11 @@ re-review each story or repeat its findings.
 6. Escalate a genuinely high-risk or out-of-scope PR to a human instead of
    merging it.
 
+**Use a closing keyword (`Resolves`/`Closes`/`Fixes #N`) only for an issue the
+PR completes.** Merging auto-closes every issue named that way: PR #326 closed a
+tracking issue (#213) it only touched, and it had to be reopened. For any other
+issue write "relates to #N" or "see #N".
+
 **GitHub can silently leave `Closes #N`/`Fixes #N` issues open on a multi-issue PR, even with a well-formed body** (intermittent, GitHub's closing pipeline; issue #983). `scripts/merge-pr.ts` self-heals: after a successful merge it re-parses the body's closing keywords (repeated or comma-listed) and closes any still open. Land through it. On any other merge path (hand-rolled `merge_pull_request`, web UI) it doesn't run; check each named issue with `issue_read` afterward and close by hand.
 
 **Restarting a branch after its PR merged?** GitHub deletes the remote branch
@@ -73,6 +78,10 @@ review), check the PR's state with `pull_request_read`. An owner can merge it
 mid-flight (GitHub then deletes the branch), and pushing to the branch name
 silently recreates it. If it's already merged, treat it as the restart case
 above.
+
+**Reply before resolving a review thread.** Say what changed (or why nothing
+did) before calling `resolve_review_thread`. A resolved thread with no reply
+leaves no record.
 
 **Keep the PR's title and description in sync with its content.** When a push
 changes what the PR does, update both in the same push: reviewers gate on the

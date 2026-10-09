@@ -32,8 +32,7 @@ merges the agent's PR in the same sitting, not the agent half first and the
 workflow half later. ADR-0004 records the cost of drifting apart: the `validate:content` step reached `package.json` by agent PR before its `gate.yml` step landed, so CI ran a stale subset of `pnpm gate` meanwhile.
 
 A human applies the proposal by hand (editing the workflow file, or making
-the setting) and,
-once landed, deletes (or marks resolved) the proposal file in the same
+the setting) and, once landed, deletes the proposal file in the same
 commit — this directory tracks *pending* proposals, not a permanent archive.
 
 ## Superseding a pending proposal

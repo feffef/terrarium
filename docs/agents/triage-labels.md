@@ -4,7 +4,6 @@
 label vocabulary matches the pack default 1:1; only the requester-trust note
 below is repo-specific. If you change the right-hand column, this file diverges
 from the template on purpose; don't re-sync it.*
-back.*
 
 Skills name five canonical triage roles. This table maps each to the label
 string used in this repo's tracker; when a skill mentions a role (e.g. "apply

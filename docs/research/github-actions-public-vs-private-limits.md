@@ -1,22 +1,20 @@
 # GitHub Actions: public vs. private repo limits & billing
 
-A reference note answering one operational question: our repo's Actions jobs
-stopped starting with the message *"The job was not started because recent
+Our repo's Actions jobs stopped starting with the message *"The job was not started because recent
 account payments have failed or your spending limit needs to be increased.
-Please check the 'Billing & plans' section in your settings"* — would making the
-repo **public** change the billing/limits picture? The short answer is at the
-bottom; the sections trace each fact back to the GitHub Docs page that owns it.
+Please check the 'Billing & plans' section in your settings"*. Would making the
+repo **public** change the billing/limits picture? The answer is at the
+bottom; each fact cites the GitHub Docs page that owns it.
 
-**Verified against** the official GitHub Docs (docs.github.com), **date accessed
-2026-07-11**. Pricing, included quotas, and limits change over time — re-check
-the linked pages before relying on a number. `docs.github.com` returns 403 to
-the automated fetcher here (`docs/agents/environment-caveats.md` owns this
-caveat), so the quotes below were read from the **canonical Markdown source**
-of the same pages in the public [`github/docs`](https://github.com/github/docs)
-repository (`content/…` and `data/reusables/…`); each fact is cited to the
-docs.github.com page it renders on.
-Where a fact is only corroborated by a non-owning source (e.g. a community
-thread), it is marked as such.
+**Verified against** the official GitHub Docs (docs.github.com), **accessed
+2026-07-11**. Prices, quotas and limits change: re-check the linked pages
+before relying on a number. `docs.github.com` returns 403 to the automated
+fetcher here (`docs/agents/environment-caveats.md` owns this caveat), so the
+quotes were read from the **canonical Markdown source** of the same pages in
+the public [`github/docs`](https://github.com/github/docs) repository
+(`content/…` and `data/reusables/…`); each fact is cited to the docs.github.com
+page it renders on. A fact corroborated only by a non-owning source (e.g. a
+community thread) is marked as such.
 
 ---
 
@@ -102,11 +100,10 @@ whole minute" ([Actions runner pricing](https://docs.github.com/en/billing/refer
 
 ## 3. Spending limits / budgets — why jobs "were not started"
 
-A **spending limit** (now being migrated to the newer **budgets** system) is the
-cap on how much paid, over-quota Actions usage your account will incur. The
-default is set up so that paid usage is **blocked** until you both have a valid
-payment method **and** have allowed spend above the free quota. The current owning
-statement:
+A **spending limit** (being migrated to **budgets**) caps the paid, over-quota
+Actions usage your account can incur. By default, paid usage is **blocked**
+until you have a valid payment method **and** allow spend above the free quota.
+The current owning statement:
 
 > "If your account does not have a valid payment method on file, usage is blocked
 > once you use up your quota. […] Usage of larger runners is always blocked until
@@ -129,13 +126,11 @@ with your account" (GitHub Docs, *Managing your spending limit for GitHub
 Actions* — this page is being folded into the budgets docs above; the $0-default
 wording persists in the GitHub Enterprise Cloud version of that page).
 
-**Tie to our error.** *"The job was not started because recent account payments
-have failed or your spending limit needs to be increased"* is exactly this
-mechanism firing: the account is at its cap because **either** a payment method
-failed **or** the spending limit / budget is at its default (effectively $0), so
-over-quota **private-repo** usage is blocked and the job never starts. The exact
-string and this diagnosis are corroborated (secondary, not owning) by multiple
-GitHub community threads, e.g.
+**Tie to our error.** The message is this mechanism firing: **either** a
+payment method failed **or** the spending limit / budget is at its default
+(effectively $0), so over-quota **private-repo** usage is blocked and the job
+never starts. Multiple GitHub community threads corroborate the exact string and
+this diagnosis (secondary, not owning), e.g.
 [community discussion #183940](https://github.com/orgs/community/discussions/183940)
 and [#161033](https://github.com/orgs/community/discussions/161033).
 
@@ -156,13 +151,11 @@ between public and private repos ([Actions limits](https://docs.github.com/en/ac
   which are the same account-wide numbers irrespective of a given repo's
   visibility.
 
-**Artifact/log retention differs slightly by visibility** (worth flagging since
-it's the one "retention" number that isn't identical): default retention is **90
-days**; you can configure it **1–90 days for public** repos and **1–400 days for
+**Artifact/log retention differs slightly by visibility:** the default is **90
+days**; you can set **1–90 days for public** repos and **1–400 days for
 private** repos
 ([Managing GitHub Actions settings for a repository](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/enabling-features-for-your-repository/managing-github-actions-settings-for-a-repository)).
-The default and the mechanism are the same; only the maximum you may raise it to
-is larger on private repos.
+Only the maximum differs.
 
 ## 5. Concurrency limits — by plan, not by visibility
 

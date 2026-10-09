@@ -22,23 +22,7 @@ their `{% data reusables/… %}` includes) in the public
 code search. Each fact is cited to the docs.github.com page it renders on plus
 the source file it was pulled from.
 
-**Repo-context check first** (why this matters for the "how narrow can the
-bypass be" question): the session-log push does **not** happen inside a
-GitHub Actions workflow. `scripts/log-session.ts` runs live, inside whatever
-session authored the log, and pushes over plain `git` using the credentials
-the session's own environment already has —
-`.claude/settings.json`'s hooks just invoke the script; there is no
-`GITHUB_TOKEN`-bearing workflow in the loop at all. Per **ADR-0017**
-("Provenance footer…"), "this session's GitHub access is a managed connector
-already authorized as the owner's own account" — there is no distinct bot
-identity yet (a machine-user PAT or GitHub App was "investigated and set
-aside," tracked on issue #124). `git log` confirms every landed session-log
-commit is authored/committed as `Claude <noreply@anthropic.com>` (the
-harness's commit-template identity), pushed with whatever `GH_TOKEN` /
-`GITHUB_TOKEN` env the container's connector injects — which, per ADR-0017, is
-the **repo owner's own personal GitHub credential**, shared with every other
-action that owner's sessions take. This one fact drives the answer to Q2
-below.
+**Repo context** (it decides the bypass-scope question): the session-log push does **not** run in a GitHub Actions workflow. `scripts/log-session.ts` runs inside the session that authored the log and pushes over plain `git` with the credentials that session already has (`.claude/settings.json` hooks just invoke the script); no `GITHUB_TOKEN` workflow is involved. Per **ADR-0017** ("Provenance footer…"), "this session's GitHub access is a managed connector already authorized as the owner's own account"; there is no distinct bot identity (a machine-user PAT or GitHub App was "investigated and set aside," issue #124). `git log` shows every landed session-log commit authored as `Claude <noreply@anthropic.com>` (the harness's commit-template identity) and pushed with the connector-injected `GH_TOKEN`/`GITHUB_TOKEN`, which per ADR-0017 is the **repo owner's own personal GitHub credential**, shared with every other action the owner's sessions take. This drives the answer to Q2.
 
 ---
 
@@ -108,20 +92,7 @@ UI gap.** The bypass-list actor picker only offers these types:
 > — [Creating rulesets for a repository §Granting bypass permissions](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/creating-rulesets-for-a-repository)
 > (`data/reusables/repositories/rulesets-bypass-step.md`)
 
-There is **no "add this one specific human user" option** in a ruleset bypass
-list — only **role**, **team**, or **app**. Combined with the repo-context
-fact above (the session's push is authenticated as **the repo owner's own
-personal GitHub account** — there is no distinct bot/App identity, ADR-0017),
-this means: the only bypass entry available today that lets
-`log-session.ts`'s push through is a **role** the owner already holds
-(**Repository admin**, since the owner is the repo's admin) — or a **team**
-containing exactly the owner. Either way, that bypass entry is
-**indistinguishable from a bypass for the owner's own manual, human-typed
-pushes** to `main` — because it *is* the same GitHub identity making both
-kinds of push. **A bypass this repo can grant today cannot be scoped tighter
-than "the repo owner," full stop** — it is not possible to say "bypass only
-when the push comes from `log-session.ts`" without a distinct machine
-identity to name.
+There is **no "add this one specific human user" option** in a ruleset bypass list — only **role**, **team**, or **app**. The session's push is authenticated as **the repo owner's own personal GitHub account** (no distinct bot/App identity, ADR-0017), so the only bypass entry that lets `log-session.ts`'s push through is a **role** the owner holds (**Repository admin**) or a **team** containing exactly the owner. Either way it is the same GitHub identity as the owner's own manual pushes to `main`, so the entry cannot tell them apart. **A bypass this repo can grant today cannot be scoped tighter than "the repo owner"**; "bypass only when the push comes from `log-session.ts`" needs a distinct machine identity to name.
 
 **The only way to get true actor-only scoping** is to close the gap ADR-0017
 explicitly deferred to issue #124: provision a **distinct GitHub App**
@@ -155,19 +126,7 @@ paths, they don't *exempt* them from other rules:
 >   extensions/size.
 > — [Available rules for rulesets](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/available-rules-for-rulesets)
 
-There is no rule that says "require status checks/PR review for everything
-*except* commits touching `layers/journal/content/current/sessions/**`." The
-closest real workaround is exactly what this repo already does: **push
-path-scoping down to the pushing mechanism itself**, not GitHub's protection
-layer. `scripts/log-session.ts`'s `SESSIONS_DIR` guard and
-`buildLogCommit`'s "commit changes exactly one path, or refuse" assertion
-(the `changed.length !== 1` check) *are* the path-scoping — GitHub-side
-config can only ever answer "does this actor bypass the whole rule," never
-"only for this path." ADR-0009's framing of the helper script as "the single
-enforcement point" of the path boundary is therefore not just good practice,
-it is the *only* enforcement point technically available — the bypass-list
-entry from §2 is a strictly coarser, unavoidable complement to it, never a
-substitute.
+There is no rule that says "require status checks/PR review for everything *except* commits touching `layers/journal/content/current/sessions/**`." The closest workaround is what this repo already does: **push path-scoping down to the pushing mechanism**. `scripts/log-session.ts`'s `SESSIONS_DIR` guard and `buildLogCommit`'s "commit changes exactly one path, or refuse" assertion (the `changed.length !== 1` check) *are* the path-scoping; GitHub-side config can only answer "does this actor bypass the whole rule," never "only for this path." So ADR-0009's "single enforcement point" of the path boundary is the only path-level enforcement technically available, and the bypass-list entry from §2 is a coarser, unavoidable complement to it, never a substitute.
 
 ## 4. What actually enables "Enable auto-merge" — verified against the issue's claim
 
@@ -189,21 +148,7 @@ prerequisite:
 > enabled for the repository."
 > — same page
 
-So: **Settings → General → Allow auto-merge alone is not sufficient.** It
-only makes the *feature available*; the "Enable auto-merge" affordance itself
-only appears — and only does anything — when the PR has an **unmet
-requirement to wait on** (a required review, a required status check that
-hasn't reported success yet, etc.), which today comes from branch
-protection/ruleset rules on the target branch. With protection removed
-entirely from `main` (as it was from 2026-07-11 until the ruleset of
-2026-10-08, "Current state" below), a green PR was **immediately mergeable**
-the moment it was opened — there is
-nothing left for auto-merge to defer on, so the digest/audit-docs/audit-skills
-tiers' "enable auto-merge, let it land once green" flow has no observable
-effect (it either never shows the option, or merges instantly, functionally
-equivalent to a manual merge with no auto-merge queueing behavior). This
-exactly matches and confirms the issue's stated regression mechanism — no
-correction needed to that framing.
+So: **Settings → General → Allow auto-merge alone is not sufficient.** It only makes the *feature available*; "Enable auto-merge" appears, and does anything, only when the PR has an **unmet requirement to wait on** (a required review, a required status check not yet green), which today comes from branch protection/ruleset rules on the target branch. With protection removed from `main` (2026-07-11 until the ruleset of 2026-10-08, "Current state" below), a green PR was mergeable the moment it opened, so nothing was left for auto-merge to defer on, and the digest/audit-docs/audit-skills tiers' "enable auto-merge, let it land once green" flow did nothing (no option shown, or an instant merge). This confirms the issue's regression mechanism; no correction needed.
 
 ## 5. Direct pushes and required status checks: `GITHUB_TOKEN` vs. PAT/App — and why this doesn't apply here
 
@@ -233,15 +178,7 @@ that credential is on the bypass list (§2) — `contents: write` permission
 alone does not let an actor skip a required check; the bypass list is the
 only skip mechanism.
 
-**This question's premise doesn't actually describe this repo, though** — see
-the repo-context note at the top: there is no GitHub Actions workflow pushing
-these commits at all, so the "default `GITHUB_TOKEN` in a workflow" case in
-the question doesn't apply here. The actual actor is a live session's own git
-credential (a personal-account-scoped `GH_TOKEN`/`GITHUB_TOKEN` env var
-injected by the session's connector), which behaves like an ordinary
-authenticated human push for branch-protection purposes — not like an
-Actions-runtime `GITHUB_TOKEN` push, which is a different, workflow-scoped
-credential this repo doesn't use for this path.
+**This repo is not that case**: no GitHub Actions workflow pushes these commits (see repo context). The actor is a live session's own git credential (a personal-account `GH_TOKEN`/`GITHUB_TOKEN` env var injected by the connector), which branch protection treats like an ordinary authenticated human push, not like a workflow-scoped Actions `GITHUB_TOKEN`.
 
 ---
 
@@ -317,8 +254,7 @@ gh api -X POST repos/feffef/terrarium/rulesets --input - <<'JSON'
 JSON
 ```
 
-The owner closed #348 on 2026-07-12 once the research landed; the earlier
-recommendation is on that issue's comment.
+The owner closed #348 on 2026-07-12; the earlier recommendation is in that issue's comment.
 
 ## 6. Re-checked 2026-10-08: a third bypass mode, `exempt`
 

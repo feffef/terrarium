@@ -41,18 +41,14 @@ In scope, per the ticket:
 
 | Surface | Count | Note |
 | --- | --- | --- |
-| Root agent-instructions file (`CLAUDE.md`) | 1 | 659 lines |
-| Per-topic agent docs (`docs/agents/*.md`) | 12 | 1,462 lines |
-| **Repo-authored** Skills (`.agents/skills/*/SKILL.md`) | 16 | 3,115 lines |
+| Root agent-instructions file (`CLAUDE.md`) | 1 | 146 lines |
+| Per-topic agent docs (`docs/agents/*.md`) | 12 | 1,369 lines |
+| **Repo-authored** Skills (`.agents/skills/*/SKILL.md`) | 17 | 3,113 lines |
 
-Out of scope: the **external-pack** Skills. `skills-lock.json` is the
-authoritative discriminator and was read programmatically rather than by
-eyeballing the directory — the two sets are interleaved in one directory and the
-pack set is the larger. It keys **25** names; `.agents/skills/` holds **41**
-directories; the repo-authored remainder is therefore **16**:
+Out of scope: the **external-pack** Skills. `skills-lock.json` is the authoritative discriminator, read programmatically because the two sets share one directory and the pack set is larger. It keys **25** names; `.agents/skills/` holds **42** directories; the repo-authored remainder is therefore **17**:
 `atlas-specimen`, `audit-docs`, `audit-skills`, `auto-triage`, `blog-post`,
 `close-session`, `digest`, `dispatch-subagents`, `frictions-to-fixes`,
-`guest-build`, `guest-intake`, `log-session`, `midden-survey`, `prune-trial`,
+`guest-build`, `guest-intake`, `log-session`, `midden-catalogue`, `midden-survey`, `prune-trial`,
 `tinkerfund-campaign`, `visitor-loop`.
 ADR-0015 makes the
 pack set read-only to us, so proposing a mechanism for a rule they own is a
@@ -99,12 +95,7 @@ finding.
 
 ### Prune-trial shortcut: Built rows as prune candidates
 
-A row marked **Cost: 0 (Built)** means a mechanism already enforces that rule —
-which makes it worth checking the origin doc (the row's Home (section) column)
-for prose that still narrates the full incident history the mechanism has
-since made redundant. That pattern is exactly `prune-trial`'s criterion-1
-bait (#1064). Check the Built rows first instead of re-scanning the whole
-table.
+A row marked **Cost: 0 (Built)** is already enforced by a mechanism, so its origin doc (the row's Home (section) column) may still narrate an incident history the mechanism made redundant. That is `prune-trial`'s criterion-1 bait (#1064). Check the Built rows first instead of re-scanning the whole table.
 
 ---
 
@@ -118,16 +109,12 @@ re-resolved against the issues it counts, fresh. Results:
 | **pkill ×3** | ✅ **Confirmed, exactly 3** | #102 "Convention: never `&&`-chain `pkill`-style teardown…" → #183 "Regression of #102…" → #240 "Third occurrence…". All three closed `completed`. |
 | **session-id ×4+** | ⚠️ **4 issues; the round count is higher** | #387, #605, #628, #723 all exist and are on-topic, all closed `completed`. But the "+" is real and under-counted by the issue list: #387's own title names an *earlier* round (#356 / PR #362) that isn't in it, and #723's title reads "despite 4 prior fixing rounds". So: **4 tracked issues, ≥5 fixing rounds.** Cite the issue count, not the round count, unless you re-derive the rounds. |
 | **deferred-tool ×3** | ✅ **Confirmed, 3 — and now 4** | #386 → #432 → #612 ("regressed a third time — prose fix isn't holding"). A fourth is **open**: #724, a gap in the guard's own `FOREIGN_SIGNATURES` registry. |
-| **provenance 6/20** | ⚠️ **Cited, not re-derived** | The figure is real and sourced — ADR-0017's 2026-07-20 amendment (pruned from the ADR's current text by `/prune-trial`; see that file's git history): "6 of 20 sessions in a recent window each paid a manual amend cycle." It is a **historical observation over a window that no longer exists**; I did not re-derive it, and it should not be quoted as a current rate. |
+| **provenance 6/20** | ⚠️ **Cited, not re-derived** | The figure is sourced: ADR-0017's 2026-07-20 amendment (since pruned by `/prune-trial`; see the ADR's git history): "6 of 20 sessions in a recent window each paid a manual amend cycle." It is a **historical observation over a window that no longer exists**; I did not re-derive it, so do not quote it as a current rate. |
 
 One count added by this asset, and how it was derived: **#921's hand-typed-trailer
 recurrence is 4**, not the 3 its body claims — the three session logs it names
 (2026-08-07 `…01DU5re`, 2026-08-08 `…0173pkX`, 2026-08-10 `…01AjWPe`) plus
-2026-08-12 `…01LywVF`, filed after the issue was opened. Each of the four was read
-individually. A repo-wide grep for the trailer strings hits far more session logs
-than that, but those are **quotations** of the trailer, not instances of the
-mistake — that grep is a heuristic and its total is deliberately not stated here
-(CLAUDE.md's own rule: a count is not a fact until every member has been read).
+2026-08-12 `…01LywVF`, filed after the issue was opened. Each of the four was read individually. A repo-wide grep for the trailer strings hits far more logs, but those **quote** the trailer rather than make the mistake; that grep is a heuristic, so its total is not stated (CLAUDE.md: a count is not a fact until every member has been read).
 
 ---
 
@@ -141,14 +128,11 @@ and **#873** is built as `scripts/tail-pipe-guard.ts`.
 | Issue | Rule row | Proposed mechanism | Why prose failed |
 | --- | --- | --- | --- |
 | **#835** — `run_in_background: false` confusion recurred | `CM-36` | **Built** — `scripts/agent-background-flag-guard.ts`, a fail-closed refusal. `PreToolUse` on `Agent`: the tool ignores `run_in_background: false`, so deny the call carrying it and say so — the parameter is a no-op that reads as a guarantee. | #810's fix reached only one of the two docs that state it; the affected sessions read neither. |
-| **#772** — shallow-clone check-first rule not holding (3rd attempt) | `GC-03` | **Fail-closed refusal.** `PreToolUse` on `Bash`: deny `git log -S`, `git blame`, and `git merge-base` when `git rev-parse --is-shallow-repository` is `true`, naming `--unshallow`. `scripts/gate.ts` already does exactly this check in code (`changedPaths()` unshallows; `changedPathsBetween()` refuses) — the guard generalizes a pattern the repo has already proven. **Superseded: shipped instead as a `SessionStart` unshallow hook — see `GC-03`.** | Three narrowing prose attempts; the rule fires at a moment (starting archaeology) that has no natural doc-reading trigger. |
+| **#772** — shallow-clone check-first rule not holding (3rd attempt) | `GC-03` | **Superseded:** shipped as a `SessionStart` unshallow hook (see `GC-03`), which removes the precondition instead of refusing the call. `scripts/gate.ts` already checks shallowness in code (`changedPaths()` unshallows; `changedPathsBetween()` refuses). | Three narrowing prose attempts; the rule fires at a moment (starting archaeology) that has no natural doc-reading trigger. |
 | **#666** — caller-pinned branch missed after #625's checklist fix | `CM-20`, `CM-21` | **Dropped, not mechanized** (PR #1159). No guard: the harness already checks the pinned branch out, so a session that is simply left alone keeps it. Sessions left it because our own text told them to branch off `origin/main`; deleting that instruction removes the cause the guard would have policed. | The pin lives in a different part of context from `CLAUDE.md`, so its absence from the doc isn't evidence no pin exists — and the checklist is read after the mistake. |
 | **#873** — tail/head exit-status piping (3rd recurrence, after #384 and #812) | `CM-38` | **Built** — `scripts/tail-pipe-guard.ts`, a fail-closed refusal. `PreToolUse` on `Bash`: deny a command that pipes into a trailing `tail`/`head`/`echo` **when `run_in_background: true`** or the piped command is a known long-runner (`pnpm gate*`, `pnpm test*`, `pnpm build`). Scoping to the backgrounded/long-running case is what keeps the false-positive rate near zero — an ordinary `ls \| head` is untouched. | Two prose fixes in two different homes; the trap is invisible at authoring time because the pipeline *succeeds*. |
 
-All four are the same shape: **a point-in-time behavioural rule whose violation is
-detectable from the tool call itself**. That is bucket 1's definition, and the
-repo's own history — four guards, each built after prose failed 2–3 times — is the
-argument that they should have been bucket 1 from the start.
+All four are **point-in-time behavioural rules whose violation shows in the tool call itself**: bucket 1's definition. Each was fixed (guard, hook or deletion) only after prose failed 2–3 times, so each should have been bucket 1 from the start.
 
 ---
 
@@ -156,7 +140,9 @@ argument that they should have been bucket 1 from the start.
 
 Read off the live configuration, not inferred (`docs/agents/guards.md` is the
 current roster's home — re-check there, this count drifts). `.claude/settings.json`
-registers **ten** `PreToolUse` guards as of this branch:
+registers **ten** `PreToolUse` guards:
+
+(Matcher rows name the wired entrypoint; a `.sh` is a hot-path pre-filter for the same-named `.ts`.)
 
 | Mechanism | Shape | Rule it enforces | Matcher |
 | --- | --- | --- | --- |
@@ -169,7 +155,7 @@ registers **ten** `PreToolUse` guards as of this branch:
 | `scripts/tail-pipe-guard.sh` | Fail-closed refusal | Never pipe a backgrounded/long-running command into a trailing `tail`/`head`/`echo` (#873) | `Bash` |
 | `scripts/double-background-guard.sh` | Fail-closed refusal | Never stack `run_in_background: true` on a text-level `&` (#1208) | `Bash` |
 | `scripts/github-provenance-guard.ts` | Fail-closed refusal | ADR-0017 provenance header on every GitHub body | 9 `mcp__github__*` tools |
-| `scripts/workflow-edit-guard.ts` | Fail-closed refusal | No agent write into `.github/workflows/` (#897) | `Edit\|Write\|Bash` |
+| `scripts/workflow-edit-guard.sh` | Fail-closed refusal | No agent write into `.github/workflows/` (#897) | `Edit\|Write\|Bash` |
 
 Plus, outside `PreToolUse`:
 
@@ -208,7 +194,7 @@ blank.
 | CM-06 | Never edit an external-pack Skill's `SKILL.md` (ADR-0015) | Ground rules | G | none | **Built** — `pnpm verify:skills-lock` | 0 |
 | CM-07 | Nothing is created at runtime (ADR-0001), save the ADR-0011 relaxation | Ground rules | J | none | Architectural invariant; the L2 smoke build covers the observable half | — |
 | CM-08 | Edit a Tenant's manifest; never hand-write the keyed cross-product | Ground rules | J | none | Design-review judgement — a hand-written cross-product is legal code | — |
-| CM-09 | Every change lands as a gated PR; no self-merge outside the chartered tiers | Ground rules | G | none | Branch protection. **Built 2026-10-08** — the `protect-main` ruleset requires a PR and the gate on `main`; the chartered tiers' self-merges and ADR-0009's direct push both ride the Repository-admin bypass, so the "outside the chartered tiers" half stays prose (`docs/research/github-branch-protection-vs-autonomous-log-commits.md`, #1689) | 0 |
+| CM-09 | Every change lands as a gated PR; no self-merge outside the chartered tiers | Ground rules | G | none | Branch protection. **Built 2026-10-08** — the `protect-main` ruleset requires a PR and the gate on `main`. Only ADR-0009's direct push needs the Repository-admin bypass (chartered self-merges of green PRs need none), but it covers every agent session, which acts as the owner, so the "outside the chartered tiers" half stays prose (`docs/research/github-branch-protection-vs-autonomous-log-commits.md`, #1689) | 0 |
 | CM-10 | Open the gated PR automatically once a session has committed substantive work — don't ask | Ground rules | W | none | A stage in `close-session`: detect ≥1 non-session-log commit on the branch, then open | S |
 | CM-11 | Check whether a PR already exists on the branch before announcing you'll open one | Ground rules | W | none | Same `close-session` stage — query by head branch first | S |
 | CM-12 | ADR-0003's auto-open default overrides a harness instruction forbidding PRs | Ground rules | J | none | A conflict-resolution rule about instructions; nothing to hook | — |
@@ -219,7 +205,7 @@ blank.
 | CM-17 | Only the `pages` Collection is route-addressable | Ground rules | J | none | Enforced by the resolver at runtime; the *proposal-time* half is `DA-05` | — |
 | CM-18 | Requester trust is drawn at write access (ADR-0020) | Ground rules | J | none | Policy definition; the mechanical aid is the `trusted` label workflow | — |
 | CM-19 | An empty or missing task prompt is a hard stop-and-ask — never infer the task from the branch name | Working conventions | H (refusal) | none | `UserPromptSubmit`/`SessionStart` check: if the prompt body is empty and only a title is present, emit a blocking message. Cheap and unambiguous | S |
-| CM-20 | Work on the branch your session started on | Working conventions | J | **#666**, #625, #684 | **Resolved by deletion** (PR #1159), not by a mechanism: the harness already checks the pinned branch out, and the misses came from our own text telling sessions to branch off `origin/main` instead. That instruction is gone; nothing is left to enforce | — |
+| CM-20 | Work on the branch your session started on | Working conventions | J | **#666**, #625, #684 | **Resolved by deletion** (PR #1159; cause in §3 and §7): nothing is left to enforce | — |
 | CM-21 | If the session started on `main`, cut a branch off `origin/main` first | Working conventions | J | **#666**, #625 | **Resolved by deletion** (PR #1159): what survives of the old fetch-and-branch step is one clause of `CM-20`'s bullet, with no mechanism proposed | — |
 | CM-22 | Single-home every fact — one home, everywhere else points | Working conventions | J | none | The defining judgement call; `audit-docs`' Duplication lens is the post-hoc detector | — |
 | CM-23 | Never restate a Routine's schedule in a committed doc | Working conventions | G | #813 | **Built** — `scripts/validate-skill-cadence.ts` | 0 |
@@ -236,14 +222,14 @@ blank.
 | CM-34 | Never tear down a preview/dev server with `pkill` — use `scripts/preview.ts` | Working conventions | H (refusal) | **#102, #183, #240** | `PreToolUse` on `Bash`: deny `pkill -f`. The calibration set's cleanest case — three recorded occurrences, an unambiguous trigger, and a named replacement tool | S |
 | CM-35 | Run any process-killing teardown as its own command, never `&&`/`;`-chained | Working conventions | H (refusal) | #102, #183, #240 | Same guard as CM-34 — one script, two conditions | S |
 | CM-36 | Never append a trailing `&` to a Bash command already passed `run_in_background: true` | Working conventions | H (refusal) | **#835 open**, #810 | `PreToolUse` on `Bash`: deny when `run_in_background` is true and the command ends in `&`. See §3 | S |
-| CM-37 | A dispatched subagent must never background a Bash command | Working conventions | H (refusal) | #694 (open), #602, #712 | **Built** — `scripts/subagent-background-guard.sh` | 0 |
+| CM-37 | A dispatched subagent must never background a Bash command | Working conventions | H (refusal) | #694 (open), #602, #712 | **Built** — `scripts/subagent-background-guard.ts` | 0 |
 | CM-38 | Never pipe a backgrounded/long-running command through a trailing command when exit status or full output matters | Working conventions | H (refusal) | #873, #384, #812 | **Built** — `scripts/tail-pipe-guard.ts`, scoped to the backgrounded or known-long-running case | 0 |
 | CM-39 | Keep a PR's description in sync with its content | Working conventions | J | none | Requires judging whether the diff still matches the prose | — |
 | CM-40 | Pushing is not landing — babysit the PR to merged/abandoned, and subscribe on open without asking | Working conventions | W | none | A `close-session` stage: on PR-open, call `subscribe_pr_activity` and schedule the check-in cadence | S |
 | CM-41 | Invoke `close-session` at PR-open — the first session log | Working conventions | W | #483, #397, #411 | Partially detected post-hoc by `audit-skills`' closure-nudge signals. The refusal shape doesn't exist (there is no "session is ending" tool call to deny) | M |
 | CM-42 | Invoke the `dispatch-subagents` Skill before spawning a subagent | Working conventions | W | #427, #603, #847, #887 | A stage; or a `PreToolUse` on `Agent` that *warns* when the Skill hasn't been loaded this session (post-hoc in spirit — warning, not denying, since a legitimate dispatch must not be blocked) | M |
 | CM-43 | Open every GitHub body with the ADR-0017 provenance header | Working conventions | H (refusal) | #387, #605, #628, #723 | **Built** — `scripts/github-provenance-guard.ts` | 0 |
-| CM-44 | Never hand-write the `Co-Authored-By`/`Claude-Session` trailer into a commit message | Working conventions | H (refusal) | **#921** (4 occurrences, §2) | **Built on this branch** — `scripts/commit-trailer-guard.sh` | 0 |
+| CM-44 | Never hand-write the `Co-Authored-By`/`Claude-Session` trailer into a commit message | Working conventions | H (refusal) | **#921** (4 occurrences, §2) | **Built** — `scripts/commit-trailer-guard.ts` | 0 |
 | CM-45 | Run `pnpm gate:scoped` before proposing a change | Self-verification | W | none | Already a stage in every chartered Skill; the residual is ordinary work PRs, where CI is the real gate | S |
 | CM-46 | When CI's full gate fails on a change where local `gate:scoped` passed, log it as a **major** friction | Self-verification | W | none | A stage in the PR-babysitting loop: on a CI failure whose paths `gate.ts` classified inert, emit the friction | M |
 | CM-47 | Do cheap checks (grep, known-failure check, base-drift check) before deep-diagnosing a gate failure | Self-verification | J | none | Diagnostic judgement | — |
@@ -486,13 +472,7 @@ stated principle:
 > prefer a guard that refuses the bad action at the point it is taken over a gate
 > step that re-checks every change forever.
 
-**The rejection is not absolute, and the repo's own gate proves it.** Two
-doc/metadata-shaped checks already sit in `pnpm gate` and were merged *after* the
-rejection was recorded: `verify:skills-lock` (ADR-0015's read-only pack rule) and
-`validate-skill-cadence.ts` (#813 — the Routine-cadence rule, merged via PR #816
-on 2026-08-02). The rejection issues #442/#444 were closed by the owner on
-2026-08-04 — i.e. **the rejection postdates the precedent**, so it cannot be read
-as unaware of it.
+**The rejection is not absolute, and the repo's own gate proves it.** Two doc/metadata-shaped checks already sit in `pnpm gate`: `verify:skills-lock` (ADR-0015's read-only pack rule) and `validate-skill-cadence.ts` (#813, the Routine-cadence rule, PR #816, merged 2026-08-02). The owner closed #442/#444 on 2026-08-04, so **the rejection postdates the precedent** and cannot be unaware of it.
 
 Reading the two together, the line falls here:
 
@@ -540,12 +520,7 @@ this residue as a finding it is waiting on.
 
 No row resists classification.
 
-`CM-20` — the caller-pinned branch — was listed here as the one residue, as a
-rule no mechanism could reach. It needed none. The harness checks the pinned
-branch out at session start, so a session that is left alone keeps it; sessions
-left it because our own text told them to branch off `origin/main`. PR #1159
-deleted that instruction (#666). The lesson worth keeping is that a rule which
-resists every mechanism may be one the instructions themselves are breaking.
+`CM-20` (the caller-pinned branch) was once listed here as the one rule no mechanism could reach. It needed none: the harness checks the pinned branch out, and sessions left it only because our own text said to branch off `origin/main`. PR #1159 deleted that instruction (#666). Lesson: a rule that resists every mechanism may be one the instructions themselves are breaking.
 
 Everything else lands in a bucket. Note in particular that `CM-32` ("a count is
 not a fact until every member is read", open regression #933) is *classified*
@@ -557,27 +532,20 @@ classified and still unresolved.
 
 ## 8. What the table says, in aggregate
 
-**208 rows.** The tally below was computed by parsing this file's own tables —
-not estimated — reading each row's `Class` and `Cost` cells. (An earlier draft of
-this section carried an eyeballed figure; it was wrong by ~70 rows, which is
-exactly the failure `CM-32` describes. Re-derive it the same way if you edit the
-tables.)
+**209 rows**, computed by parsing this file's own tables (each row's `Class` and `Cost` cells), not estimated. An eyeballed count is the failure `CM-32` describes; re-derive it the same way if you edit the tables.
 
 | Bucket | Rows | Of which already built (cost 0) |
 | --- | --- | --- |
-| **hook** — fail-closed refusal | 53 | 14 |
+| **hook** — fail-closed refusal | 52 | 15 |
+| **hook** — preventive repair (`GC-03`) | 1 | 1 |
 | **hook** — refusal + post-hoc detection (`CM-29`) | 1 | 0 |
-| **gate check** | 35 | 13 |
-| **workflow stage** | 39 | 18 |
+| **gate check** | 35 | 14 |
+| **workflow stage** | 40 | 19 |
 | **judgment-keep** | 80 | 1 |
 | **drop** (candidates flagged, none asserted) | 0 | — |
 | **residue** (§7) | 0 (see below) | — |
 
-46 of the 208 are already built. The `CM-03` reclassification from §6 is applied
-in the table's own row, so it is counted as `J` here, not `G`. `CM-21` moved from
-**hook** to **judgment-keep** when PR #1159 deleted the instruction instead of
-guarding it (§7), and the residue bucket is now empty, so the buckets still sum
-to 208.
+50 of the 209 are already built. `CM-03` (reclassified G→J in §6) and `CM-21` (moved hook→J when PR #1159 deleted its instruction instead of guarding it, §7) are counted as `J`; the residue bucket is empty, so the buckets sum to 209.
 
 Note that **post-hoc detection barely appears as a *proposal*** — only `CM-29`
 proposes it, and every other post-hoc mechanism in the repo (`check-worktrees`,
@@ -587,9 +555,9 @@ post-hoc detection is what the repo falls back to when no point-of-action exists
 
 Three observations a human might act on:
 
-1. **The unbuilt fail-closed refusals are cheap and concentrated.** 40 hook rows
-   are unbuilt, and **28 of them are cost `S`** — one script, one spec, one
-   matcher line, following a shape `.claude/settings.json` now wires nine times.
+1. **The unbuilt fail-closed refusals are cheap and concentrated.** 38 hook rows
+   are unbuilt, and **26 of them are cost `S`** — one script, one spec, one
+   matcher line, following a shape `.claude/settings.json` now wires for ten guards.
 2. **No row earned a `drop`.** Six rows are flagged as defensible drop candidates
    (`CM-26`, `GC-13`, `GI-07`, `GI-09`, `PR-10`, `VU-06`) — each narrow,
    low-stakes, self-diagnosing — but dropping a rule is a decision about

@@ -5,11 +5,7 @@ actually behave, gathered to verify (or refute) code-review claims about this
 app. Every claim below is traced to the official docs or the installed source
 in `node_modules` — nothing is from memory or third-party posts.
 
-**Researched 2026-07-11.** Versions verified against `node_modules` (re-check
-if they've moved) — **stale as of 2026-08-10** (commit `e3538b0` bumped
-installed `nuxt`/`@nuxt/kit` to **4.5.2**); the line-number citations below are
-pinned to the versions actually read at research time and have not been
-re-verified against 4.5.2:
+**Researched 2026-07-11** against the versions below (re-check if they've moved). **Stale since 2026-08-10**: commit `e3538b0` bumped installed `nuxt`/`@nuxt/kit` to **4.5.2**; the line-number citations are pinned to the versions read and not re-verified against 4.5.2:
 
 - `nuxt` **4.4.8** (`node_modules/nuxt/package.json`)
 - `@nuxt/content` **3.15.0** (`node_modules/@nuxt/content/package.json`)
@@ -17,13 +13,7 @@ re-verified against 4.5.2:
   config loader), `zod` **3.25.76** + `zod-to-json-schema` (the Zod-v3 path)
 - Node **22.22.2** in this environment
 
-Both `content.nuxt.com` and `nuxt.com` return 403 to the fetcher here, so doc
-quotes come from the docs *source* in the official repos, pinned to the
-installed versions: `nuxt/content` at tag `v3.15.0` (`docs/content/docs/…`,
-rendered at `content.nuxt.com/docs/…`) and `nuxt/nuxt` at tag `v4.4.8`
-(`docs/…`, rendered at `nuxt.com/docs/4.x/…`). Same content, version-pinned.
-File-path citations are to this repo's `node_modules` (installed code — the
-strongest source of all).
+Both `content.nuxt.com` and `nuxt.com` return 403 to the fetcher here, so doc quotes come from the docs *source* in the official repos, pinned to the installed versions: `nuxt/content` at tag `v3.15.0` (`docs/content/docs/…`, rendered at `content.nuxt.com/docs/…`) and `nuxt/nuxt` at tag `v4.4.8` (`docs/…`, rendered at `nuxt.com/docs/4.x/…`). File-path citations are to this repo's `node_modules` (installed code, the strongest source).
 
 ---
 
@@ -135,10 +125,6 @@ From Content `docs/2.collections/2.types.md` and the installed types
   — *nothing beyond the four base fields*. Notably `title` and `path` are
   **not** built-in on data collections: a `title:` in a data file goes into
   `meta` unless the collection schema declares it.
-
-The question's list (id, stem, extension, meta, path, title, description,
-seo, body, navigation) is confirmed as the page-collection set; only the
-first four exist on data collections.
 
 ## 4. `queryCollection` API
 
@@ -384,29 +370,11 @@ Source: `@nuxt/content/dist/module.mjs:2652` (`loadContentConfig`) and `c12`
   editing `modules/routing.ts` itself also hard-restarts dev
   (`nuxt/dist/index.mjs:7227-7228, 7400-7403`) — but that watch list contains
   the module entry files, not their imports.
-- **Consequence for this repo's claim** ("a manifest edit is picked up by
-  `nuxt dev` with no regenerate step"): the *no-regenerate-step* half is true
-  — nothing committed needs regenerating; the next `prepare`/`dev`/`build`
-  derives everything. As of `modules/routing.ts` explicitly pushing each
-  Tenant's `tenant.config.ts` and `shared/expand.ts` onto `nuxt.options.watch`
-  in dev (issue #325), a **running** dev server now picks up an edit to an
-  *existing* Tenant's `tenant.config.ts` or `shared/expand.ts` with an
-  automatic restart, same as `content.config.ts`/`modules/routing.ts` itself.
-  The one remaining gap: a brand-new `layers/<tenant>/` directory still needs
-  a manual restart, since layer auto-extension resolves before this module's
-  watcher registers. (Content *documents* are a separate, hot path: the
-  module chokidar-watches each source's cwd/prefix dirs and re-parses changed
-  files live, `module.mjs:1769-1800`.)
+- **Consequence for this repo's claim** ("a manifest edit is picked up by `nuxt dev` with no regenerate step"): the *no-regenerate-step* half is true; nothing committed needs regenerating, and the next `prepare`/`dev`/`build` derives everything. Since issue #325, `modules/routing.ts` pushes each Tenant's `tenant.config.ts` and `shared/expand.ts` onto `nuxt.options.watch` in dev, so a **running** dev server restarts on an edit to an *existing* Tenant's `tenant.config.ts` or `shared/expand.ts`, same as `content.config.ts`/`modules/routing.ts` itself. One gap remains: a brand-new `layers/<tenant>/` directory needs a manual restart, since layer auto-extension resolves before this module's watcher registers. (Content *documents* are a separate, hot path: the module chokidar-watches each source's cwd/prefix dirs and re-parses changed files live, `module.mjs:1769-1800`.)
 
 ## 13. MDC syntax (`remark-mdc`) and component resolution
 
-**Versions verified** (confirmed from `node_modules`, not assumed — re-check
-if they've moved): `@nuxtjs/mdc` **0.22.1** + `remark-mdc` **3.11.1** — i.e.
-**MDC v3**. Syntax quotes below are verbatim from the installed `remark-mdc`
-README (`node_modules/.pnpm/remark-mdc@3.11.1/node_modules/remark-mdc/README.md`)
-— the hosted docs at `remark-mdc.nuxt.space` and `content.nuxt.com/docs` both
-403 the fetcher, so the vendored README is used instead, same content,
-version-pinned.
+**Versions** (from `node_modules`; re-check if they've moved): `@nuxtjs/mdc` **0.22.1** + `remark-mdc` **3.11.1**, i.e. **MDC v3**. Syntax quotes below are verbatim from the installed `remark-mdc` README (`node_modules/.pnpm/remark-mdc@3.11.1/node_modules/remark-mdc/README.md`); the hosted docs at `remark-mdc.nuxt.space` and `content.nuxt.com/docs` both 403 the fetcher.
 
 **Inline component** — single `:` — sits inside a paragraph (spans, icons):
 

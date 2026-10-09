@@ -116,7 +116,7 @@ Only after step 4's PR has merged or been escalated, branch from the fresh
 smallest version that a visitor would notice, in the site's existing voice and
 design. Tests where the Tenant already has them.
 Its body states the feature's search result and names any related issue, with a
-closing keyword only per `docs/agents/issue-tracker.md`. Review and land it the
+closing keyword only per `docs/agents/pr-workflow.md`. Review and land it the
 same way as step 4, with the chosen idea as the spec. Done when the feature is
 visible on the rendered page, the PR body has that search line, the last review has no
 important finding left unfixed, and the PR is merged or escalated.
