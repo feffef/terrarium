@@ -24,37 +24,6 @@
 #            topic's tools correctly.
 trials:
   - problem: >
-      The provenance-header and commit-trailer rule (rulebook CM-43/CM-44, Built).
-      It failed as prose repeatedly: #921, #723 (four prior fixing rounds) and
-      #886, read this run by the search subagent; now held by
-      `github-provenance-guard.ts` and `commit-trailer-guard.ts`, whose deny
-      messages name the marker. Cut the CLAUDE.md bullet to one rule line,
-      dropped the pr-workflow.md restatement and the github-integration.md
-      intro, and trimmed the angle-bracket and `gh api`-bypass notes. The search
-      subagent covered the instruction corpus, the rulebook table, guards.md,
-      guard headers and the tracker; the ToolSearch-first rule (weaker guard)
-      and the pack-skill rule (gate-held, thin tracker evidence) were
-      runners-up. Net about -13 lines; the mass here was small. The other
-      restating homes (Skills, guest-contributions.md, git-conventions.md)
-      were left.
-    territory:
-      paths:
-        - "CLAUDE.md: the provenance-header/commit-trailer bullet"
-        - "docs/agents/pr-workflow.md: the provenance paragraph above 'Assembling several stories'"
-        - "docs/agents/github-integration.md: the opening provenance sentence, angle-bracket section, `gh api` note"
-      keywords:
-        - provenance header
-        - commit trailer
-        - github-provenance-guard
-        - commit-trailer-guard
-    opened: 2026-10-06
-    proven: true
-    check: >
-      Damage is a session whose GitHub body lacks the provenance header, or that
-      hand-types the commit trailer, and the guard's deny message did not fix it
-      in one retry. NOT damage: a guard denial the session fixed from the deny
-      message.
-  - problem: >
       CLAUDE.md as a whole: 374 lines of rules, incident histories and
       restatements loaded into every session. Rewritten to 146 lines in plain,
       precise words. Each rule's origin was traced this run (git log -S /
@@ -199,3 +168,32 @@ trials:
       mangles a commit message, and a line the old file carried would have
       prevented it. NOT damage: a guard or hook that stopped the session and
       it fixed itself from the message.
+  - problem: >
+      Mechanism-record prose in `docs/research/rulebook-migration-table.md`: §3
+      (a table retelling #835, #772, #666, #873) and §4's `PreToolUse` guard
+      roster, a third copy of `docs/agents/guards.md` and the script headers that
+      its own text says drifts. Each rule failed as prose (#835 read in full;
+      #873, #772 by title) and is now held by `agent-background-flag-guard.ts`,
+      `tail-pipe-guard.ts`, `unshallow-on-start.ts`; #666 by deleting the cause.
+      §3 became four one-line pointers; §4's roster became a pointer to
+      guards.md. The two provenance rows of §4 and the non-`PreToolUse` table
+      stay (provenance trial). The search subagent covered the instruction
+      corpus, the rulebook table (excluded list included), guards.md, guard
+      headers and the tracker; candidates left: the `--force-with-lease` note
+      in pr-workflow.md (#984, nothing enforces it) and the session-id rule
+      (trailer-adjacent). Net about -19 lines; the mass here was small.
+      The same run judged and deleted the provenance/commit-trailer trial:
+      only nit/minor Frictions where a guard denied and the session fixed it.
+    territory:
+      paths:
+        - "docs/research/rulebook-migration-table.md: sections 3 and 4's PreToolUse table"
+      keywords:
+        - four named regression-class issues
+        - Already mechanized
+    opened: 2026-10-09
+    proven: true
+    check: >
+      Damage is a major or blocker Friction where a session misses a guard's
+      purpose or re-adds a pruned rule because the table no longer retold the
+      incident. NOT damage: a session reading guards.md or the guard header
+      instead of the table.
