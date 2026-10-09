@@ -1,21 +1,8 @@
 # Switching a repo from Private to Public: what to review first
 
-Research reference for anyone (human or agent) about to flip a GitHub
-repository's visibility from Private to Public. Every claim below is sourced
-from GitHub's own docs (`docs.github.com`) — fetched from the primary content
-in the `github/docs` repository, which is what renders those pages — cited
-inline. Where a canonical `docs.github.com` URL is given but the underlying
-page content was retrieved via its `github/docs` source file, that's noted:
-`docs.github.com` returns 403 to the automated fetcher here
-(`docs/agents/environment-caveats.md` owns this caveat).
+Research reference for anyone flipping a GitHub repository from Private to Public. Every claim is sourced from GitHub's docs (`docs.github.com`) and cited inline. `docs.github.com` returns 403 to the automated fetcher here (`docs/agents/environment-caveats.md` owns this caveat), so the content was read from the `github/docs` source files that render those pages; canonical URLs are given.
 
-**This repo's own posture**: per `CLAUDE.md` and ADR-0001, Terrarium is one
-repo, one container, with human-only merge gates on CI/routing/isolation
-files (ADR-0004) and a `pnpm gate` safety gate — this document doesn't change
-any of that. This is the generic-mechanics grounding that fed the repo's actual
-flip to public on 2026-07-11 (see `public-readiness-review.md` for the
-repo-specific findings and decisions from that review) — kept here as
-reference for anyone reasoning about a repo's visibility, not a live proposal.
+**This repo**: one repo, one container (`CLAUDE.md`, ADR-0001), human-only merge gates on CI/routing/isolation files (ADR-0004) and a `pnpm gate` safety gate; this document changes none of that. It is the generic grounding for the repo's flip to public on 2026-07-11 (repo-specific findings: `public-readiness-review.md`), kept as reference, not a live proposal.
 
 ---
 
@@ -36,9 +23,7 @@ The canonical page is **[Setting repository visibility](https://docs.github.com/
   those logs. Confirmed separately by **[Using workflow run logs](https://docs.github.com/actions/managing-workflow-runs/using-workflow-run-logs)**: a viewer must be logged in to GitHub to see run logs, but for a public repo no repo-specific permission is required beyond that — anyone with a GitHub account can view them (and the REST API can serve public workflow-run data with no auth at all).
 - **Forks**: "Anyone can fork your repository," and (separately) **all forks
   of a public repository are public** — see §4 below.
-- **Stars/watchers**: interestingly, this is a private→public *warning*
-  in reverse — the docs warn that watchers/stars are erased when going
-  *private*, implying they're preserved/visible normally while public.
+- **Stars/watchers**: the docs warn they are erased when going *private*, implying they stay while public.
 - **Push rulesets**: "All push rulesets will be disabled" on the flip to
   public (see §3 for what to re-enable).
 - **GHAS-family features**: "The repository will automatically gain access to
@@ -51,12 +36,7 @@ tracked as [github/docs#38012](https://github.com/github/docs/issues/38012),
 confirmed by GitHub's actual behavior and adjacent docs / long-standing
 product behavior:
 
-- **Issues, Pull Requests, and PR review comments**: become visible in full —
-  every issue, PR, and every inline/top-level review comment on them,
-  including on closed/merged PRs, becomes readable by anyone. (There is no
-  GitHub visibility-change doc that says otherwise, and this matches the
-  "code will be visible to everyone" framing — Issues/PRs live in the same
-  repository visibility scope as code.)
+- **Issues, Pull Requests, and PR review comments**: all become readable by anyone, including every inline/top-level review comment and closed/merged PRs. (They share the code's visibility scope; no GitHub doc says otherwise.)
 - **Releases**: become publicly downloadable, same visibility scope as code.
 - **Wiki**: follows the repository's visibility — a public repo's wiki is
   public too (there is no independent wiki-visibility toggle).
@@ -340,28 +320,9 @@ Primary source: **[What happens to forks when a repository is deleted or changes
     remove the sensitive data or delete the fork entirely" — and GitHub
     explicitly **will not** give you contact info for those fork owners on
     GitHub.com/GHEC.
-  - **Cached/indexed copies persist on GitHub itself**: even after a
-    force-pushed history rewrite, the commit "may still be accessible... via
-    their SHA-1 hashes in cached views on GitHub" and "through any pull
-    requests that reference them" — this requires **contacting GitHub
-    Support** directly to purge, and even then: **"GitHub Support won't
-    remove non-sensitive data, and will only assist in the removal of
-    sensitive data in cases where we determine that the risk can't be
-    mitigated by rotating affected credentials"** — i.e., GitHub's own
-    support policy is built around the assumption that rotation is the real
-    remedy and history-purging is a last resort they'll only help with when
-    rotation genuinely isn't enough.
-  - Rewriting history also breaks commit hashes, invalidates signatures,
-    breaks PR diff views, and requires temporarily disabling any
-    force-push-blocking branch protection — all real operational cost for a
-    cleanup that, per GitHub's own framing, is often unnecessary once the
-    credential is rotated.
-- **Practical conclusion for this question**: when a secret is discovered in
-  a history that's about to go (or already went) public, the response order
-  is **(1) rotate/revoke the credential immediately — this is what actually
-  closes the exposure — (2) only then consider whether a history rewrite is
-  still worth the coordination cost, primarily to reduce noise/liability, not
-  because it removes real risk retroactively.**
+  - **Cached/indexed copies persist on GitHub itself**: even after a force-pushed rewrite, the commit "may still be accessible... via their SHA-1 hashes in cached views on GitHub" and "through any pull requests that reference them". Purging needs **GitHub Support**, who say: **"GitHub Support won't remove non-sensitive data, and will only assist in the removal of sensitive data in cases where we determine that the risk can't be mitigated by rotating affected credentials"** — a last resort when rotation isn't enough.
+  - Rewriting history also breaks commit hashes, invalidates signatures, breaks PR diff views, and needs force-push-blocking branch protection temporarily disabled — real cost for a cleanup that, per GitHub's own framing, is often unnecessary once the credential is rotated.
+- **Practical conclusion** (a secret found in a history about to go, or already, public): (1) rotate/revoke the credential immediately — this closes the exposure; (2) only then weigh whether a history rewrite is still worth the coordination cost, mainly to reduce noise/liability, since it removes no real risk retroactively.
 
 ---
 

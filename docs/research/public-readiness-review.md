@@ -1,12 +1,11 @@
 # Public-readiness review — `feffef/terrarium`'s 2026-07-11 flip to public
 
-A one-time review of what needed addressing before this repository's visibility
-switched from **private** to **public read** — the flip happened the same day
-this review was done (see the 2026-07-11 journal digest). The generic GitHub
-mechanics (what becomes visible, which settings to enable, fork/secret-scanning
-behaviour) are single-homed in **[`making-repo-public.md`](./making-repo-public.md)**
-— this doc is the **repo-specific** findings from that review, and the owner
-decisions that were still open as of it.
+One-time review before this repository went from **private** to **public read**;
+the flip happened the same day (see the 2026-07-11 journal digest). Generic
+GitHub mechanics (what becomes visible, which settings to enable,
+fork/secret-scanning behaviour) are single-homed in
+**[`making-repo-public.md`](./making-repo-public.md)**. This doc holds the
+repo-specific findings and the owner decisions still open at the time.
 
 _Review date: 2026-07-11. Scope: full working tree + all git history (92
 commits), CI, deploy, issues/PRs, and the ADR/skill agent workflow._
@@ -32,7 +31,7 @@ Actions logs, and the agent workflow's attack surface.**
 
 ## Decisions for the owner (status noted inline)
 
-1. **LICENSE.** ~~There is none.~~ **Resolved** — MIT `LICENSE` added (© 2026
+1. **LICENSE.** Resolved: MIT `LICENSE` added (© 2026
    Steffen Sauder), granting read/reuse rights.
 2. **Personal email in history.** `steffen.sauder@gmail.com` is baked into ~21
    commits' author/committer metadata and becomes permanently harvestable.
@@ -61,10 +60,9 @@ Actions logs, and the agent workflow's attack surface.**
    issues/PRs agents treat as untrusted input — never implemented without a
    Trusted green-light, never auto-merged. The mechanical half (fork-PR workflow
    approval + human-only merge for Public PRs) needed enabling at the flip;
-   whether it was actually turned on isn't verifiable from repo state (GitHub
-   Settings aren't tracked in the tree) — left as an open question, not
-   confirmed either way. The deploy-path `--ignore-scripts` hardening remains a
-   separate open item.
+   whether it was turned on can't be verified from repo state (GitHub Settings
+   aren't tracked in the tree), so it stays open. The deploy-path
+   `--ignore-scripts` hardening is also still open.
 
 ## GitHub settings to configure at/after the flip
 
@@ -85,9 +83,8 @@ Repo-specific priorities:
   collaborators** — CI runs `pnpm install` + `pnpm build` on fork code.
 - Confirm `GITHUB_TOKEN` default stays **read-only**.
 - Enable Dependabot alerts + updates; enable private vulnerability reporting
-  (`SECURITY.md` already points reporters at it, but whether it was actually
-  turned on isn't verifiable from repo state either — same open question as
-  the fork-PR-approval setting above).
+  (`SECURITY.md` points reporters at it; whether it was turned on is unverifiable
+  from repo state, like the fork-PR approval setting).
 
 ## Verified clean / low-risk (no action)
 
@@ -98,10 +95,9 @@ Repo-specific priorities:
   has no script-injection vector (only `github.sha` / `.number` / `.repository`
   reach `run:`), and pins actions to major tags. *Minor:* the doorbell
   `gh pr comment` step needs `pull-requests: write`, which a fork PR's read-only
-  token lacks — it will fail on outside PRs (cosmetic). Consider pinning actions
-  to full commit SHAs for supply-chain hardening. (This cosmetic prediction was
-  later confirmed as a real incident, #659, fixed in the Gate composite action,
-  ADR-0026.)
+  token lacks, so it fails on outside PRs (#659, fixed in the Gate composite
+  action, ADR-0026). Consider pinning actions to full commit SHAs for
+  supply-chain hardening.
 - Session logs / ADRs are professional; nothing embarrassing.
 - `Claude-Session:` URLs in commits/issues are auth-gated (opaque to the public)
   — fine to keep per ADR-0017.

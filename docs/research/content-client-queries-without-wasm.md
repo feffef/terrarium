@@ -152,13 +152,11 @@ compatibility version 5). `true` would add a separate `_payload.json` request
 on first load (`renderer.mjs:159`; `nitro-server/index.mjs:446-447`), so
 `'client'` is the setting to use.
 
-**State of the build before ADR-0028.** The client half is already switched on here, as a
-side effect. Content adds `prerender: true` rules for every
-`sql_dump.txt` (`content/module.mjs:3179-3184`). That makes Nuxt's client
-`payloadExtraction` flag true (`nuxt/index.mjs:3278`). The built client bundle
-confirms it: `loadPayload` has no `!payloadExtraction` early return. Only the
-server half is off: `.output/server/chunks/routes/renderer.mjs` contains
-`NUXT_RUNTIME_PAYLOAD_EXTRACTION = false`.
+**Why only the server half needed enabling.** Content adds `prerender: true` rules for every
+`sql_dump.txt` (`content/module.mjs:3179-3184`), which turns Nuxt's client
+`payloadExtraction` flag on (`nuxt/index.mjs:3278`): in the built client bundle,
+`loadPayload` has no `!payloadExtraction` early return. Only the server flag was off
+(`NUXT_RUNTIME_PAYLOAD_EXTRACTION = false` in `.output/server/chunks/routes/renderer.mjs`).
 
 ### Variant 2a: a runtime `cache` rule on page routes (adopted)
 
@@ -202,12 +200,12 @@ routeRules: {
   on the very first request (#1365). **(measured)**: the e2e test "renders each
   visitor in their own locale" failed before the fix and passes after it. Any
   page that reads a header or cookie on the server needs the same treatment.
-- **The cache has no size bound.** The key includes the full URL, query string
+- **The cache had no size bound.** The key includes the full URL, query string
   included (`cache.mjs:127-145`), so this is not only a search problem: blog
   `?tag=`, Atlas `?day=`, Tinkerfund filters and junk query strings each add an
   entry. Nitro writes entries with a `ttl` (`cache.mjs:70-73`), but unstorage's
-  memory driver ignores it, and the cache sits on the default in-memory mount.
-  Memory therefore grew until the next deploy or restart. **Since bounded** (#1446, ADR-0028 amendment): production uses the `lru-cache` driver with `max: 200`.
+  memory driver ignores it, so on the default in-memory mount memory grew until the next
+  deploy or restart. **Now bounded** (#1446, ADR-0028 amendment): production uses the `lru-cache` driver with `max: 200`.
 - **Each uncached navigation costs a full server render.** Only the payload is
   returned.
 - **Server-computed "now" can be up to about 2 minutes old on a first load.**
@@ -380,10 +378,9 @@ interactivity.
    survives Content upgrades. Unmatched cases fall back to the WASM path. Its
    real costs are the server-side cache's: request headers need `varies`, and
    the cache needed a size bound (now `lru-cache`, `max: 200`, #1446). `nuxt.config.ts` is human-only
-   (ADR-0018), and so is this global runtime change (ADR-0004). The
-   verification recipe that stood here is now two e2e tests in
-   `layers/blog/tests/e2e/blog.e2e.ts` and `layers/tinkerfund/tests/e2e/tinkerfund.e2e.ts`.
-   Only the view-transition check is still open.
+   (ADR-0018), and so is this global runtime change (ADR-0004). E2e tests in
+   `layers/blog/tests/e2e/blog.e2e.ts` and `layers/tinkerfund/tests/e2e/tinkerfund.e2e.ts`
+   verify it; only the view-transition check is still open.
 2. **Avenue 2c: prerender the page routes.** This has the same client benefit
    with no runtime cache, at the cost of build time and the work of listing
    the routes.

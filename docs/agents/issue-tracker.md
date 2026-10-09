@@ -81,17 +81,8 @@ PRs go through the same labels and states as issues, using `gh pr`:
 Issues and PRs share one number space, so a bare `#42` may be either. Try
 `gh pr view 42`, then fall back to `gh issue view 42`.
 
-A reviewing agent's verdict-posting rules are in `docs/agents/pr-workflow.md`,
-recipe step 4.
-
-**Reply before resolving a review thread.** Say what changed (or why nothing
-did) before calling `resolve_review_thread`. A resolved thread with no reply
-leaves no record.
-
-**Use a closing keyword (`Resolves`/`Closes`/`Fixes #N`) only for an issue the
-PR completes.** Merging auto-closes every issue named that way: PR #326 closed a
-tracking issue (#213) it only touched, and it had to be reopened. For any other
-issue write "relates to #N" or "see #N".
+A reviewing agent's verdict-posting, review-thread and closing-keyword rules are
+in `docs/agents/pr-workflow.md` (recipe step 4 for verdicts).
 
 **A multi-issue `Closes` line can leave some issues open.** The failure mode and
 the `merge-pr.ts` self-heal are in `docs/agents/pr-workflow.md`'s merge recipe.

@@ -1,22 +1,17 @@
 # Server-/build-side Mermaid rendering: what's possible, and why we pre-render
 
-Grounding note for issue #379 / ADR-0024. Re-derived 2026-07-20 (the original
-lived on the abandoned exploration branch `claude/server-side-mermaid-diagrams-24dse5`
-and was lost; this restates the findings and adds what the implementation
-confirmed). The rendering decision itself is a one-off, single-homed in
-ADR-0024 — but the one authoring convention below (lane grouping) is a living
-rule, not a historical note.
+Grounding note for issue #379 / ADR-0024, re-derived 2026-07-20. The rendering
+decision is single-homed in ADR-0024; the authoring convention below (lane
+grouping) is a living rule.
 
 ## Authoring convention: group lanes with `classDef stroke`, not `subgraph`
 
-When a fenced ` ```mermaid ` diagram (rendered per the mechanism below, via the
+In a fenced ` ```mermaid ` diagram (rendered per the mechanism below, via the
 Platform-wide `components/content/` override — `docs/agents/tenant-layers.md`
-§4) needs to visually group nodes into lanes, don't use `subgraph` for the
-grouping — subgraph boundaries **clip** any edge that crosses from one
-subgraph into another, silently hiding cross-lane arrows. Group visually
-instead via a `classDef` that sets a shared `stroke` (and/or `fill`) on the
-lane's nodes — this keeps every cross-lane edge intact while still reading as
-a distinct group.
+§4), don't group lanes with `subgraph`: subgraph boundaries **clip** any edge
+that crosses into another subgraph, silently hiding cross-lane arrows. Set a
+shared `stroke` (and/or `fill`) on the lane's nodes with a `classDef` instead;
+every cross-lane edge stays intact and the nodes still read as a group.
 
 ## The question
 
