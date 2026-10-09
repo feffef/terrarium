@@ -85,10 +85,8 @@ archive won't break it.
 ## Every version of the briefs
 
 Each brief link opens the file exactly as it was at that commit. Each commit
-link opens the commit message, which says what triggered that round: which
-reviewers ran, what they looked for and what changed. The prompts behind the
-rounds up to `8486535` came from a session on the maintainer's laptop; its
-transcript is not in the repository, so the commit messages are the record.
+link opens the commit message, which says what changed. "What was asked"
+below says what the maintainer asked for before each commit.
 
 | Commit | What changed | Briefs at that commit |
 |---|---|---|
@@ -102,10 +100,80 @@ transcript is not in the repository, so the commit messages are the record.
 | [`a8c0400`](https://github.com/feffef/terrarium/commit/a8c040081ec0e1bbabd3337b328a41a2a8d8e120) | Part 2 rewritten as a spec; Part 1 facts corrected | [overview](https://github.com/feffef/terrarium/blob/a8c040081ec0e1bbabd3337b328a41a2a8d8e120/docs/diagrams/terrarium-overview.md) |
 | [`e22557f`](https://github.com/feffef/terrarium/commit/e22557f3b65da71a0bc9813f4c06a8e12a3eff85) | cold-check fixes and the maintainer's decisions | [overview](https://github.com/feffef/terrarium/blob/e22557f3b65da71a0bc9813f4c06a8e12a3eff85/docs/diagrams/terrarium-overview.md) |
 
-### What triggered round 4
+### What was asked
 
-These come from the cloud session's own prompts, summarised.
+The maintainer's prompts behind each commit, summarised. Commits up to
+`8486535` come from the session on the maintainer's laptop, summarised from
+its transcript. The later ones come from the cloud session.
 
+- **Before `9444481`.** The maintainer asked for research groundwork, so that
+  another session could draw two interactive diagrams:
+  - the Nuxt app's architecture;
+  - how people, agent sessions and GitHub work together to improve the
+    platform, with the routines and session logs at the centre.
+
+  Explore agents were to take the time needed to be factually complete,
+  while keeping two easy-to-read Markdown briefs with pointers to real files.
+- **Before `f49c205`.** Subagents reviewed both briefs with two questions:
+  does each cover every key component, actor and process of a global
+  overview, and does any topic get more explanation than a high-level view
+  needs? The maintainer approved applying the findings.
+- **Before `a930e11`.** A second review round looked for more problems of the
+  same kind, this time with an outside visitor in mind:
+  - correct facts, without over-weighting minor things;
+  - text that reads well, in simple language rather than project jargon;
+  - structured items that turn easily into diagram elements.
+
+  The maintainer also dropped the notes about staying consistent with the
+  Journal's pages.
+- **Before `2bff5d1`.** The simple language had drifted so far from the
+  project's own terms that readers could no longer map the diagrams back to
+  the repo. A third round:
+  - re-anchored the briefs on those terms;
+  - searched uncovered parts of the repo for missing concepts;
+  - flagged minor things that sounded too important;
+  - compared the two briefs, carrying over whatever one did better.
+
+  Further instructions from the maintainer:
+  - skill files beat the Journal's explainer pages;
+  - the briefs move to `docs/diagrams/`, apart from research notes;
+  - the just-merged `main` ruleset (#1690) must be reflected.
+- **Before `b488881`.** The diagrams built from the briefs didn't work. The
+  maintainer named why:
+  - project jargon such as "Trusted human";
+  - too much room for build internals (manifest expansion, the routing map,
+    the Catalog, all 48 tables);
+  - human-only markings that didn't matter here;
+  - no diagram showed that skills, instructions, session logs, content and
+    code all live in one repository, which Nuxt Content turns into a
+    database at build time.
+
+  The new approach was one high-level brief, grouped by where things live.
+  It would research how the server renders pages and how the browser uses
+  `_payload.json`, and keep the earlier artifact's highlighted stories,
+  extended to builds and updates. A grilling then settled the vocabulary and
+  the shape:
+  - "agent guidance";
+  - session logs and the skill inventory as special site content;
+  - tenants, spaces and collections without listing them all;
+  - stories on components instead of buttons;
+  - lower-case terms;
+  - prose first, visualisation ideas second.
+- **Before `b90b6ae`.** The maintainer's review of the overview:
+  - only decision records, agent how-tos, skills, scripts, the app code and
+    the Journal's logs and inventory count as ground truth;
+  - agent guidance includes skills, hooks and the helper scripts;
+  - tenants differ in purpose and data, not only design;
+  - research how Nitro, Vue, Nuxt and Nuxt Content relate;
+  - add the code-review step;
+  - read what `audit-docs` really checks;
+  - guards explain, they don't only block.
+- **Before `8486535`.** A review from two angles, important things missing
+  and things that only clutter, each on Fable and on Opus, plus an Explore
+  agent to answer open questions. The maintainer also set the goal for
+  Part 2: the diagram need not be grasped in a minute, but it should stay a
+  simple interactive design that highlights each story's important parts,
+  grouping nodes and opening them only where a story needs it.
 - **Before `a8c0400`.** The maintainer asked for a fix of the overview,
   built up in steps:
   1. Three agents (Sonnet, Opus, Fable) read only `CLAUDE.md` and the
