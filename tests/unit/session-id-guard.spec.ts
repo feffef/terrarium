@@ -8,7 +8,7 @@
 // `origin/main..HEAD` scoping and the transcript ownership check (issues
 // #1611, #1698) are proven against real git.
 import { execFileSync } from 'node:child_process'
-import { mkdtempSync, rmSync } from 'node:fs'
+import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
@@ -44,27 +44,35 @@ const REC = '\x1e'
 
 /** Ownership by sha prefix, the shape `findMadeCommits` produces. */
 const madeShas = (...shas: string[]): MadeCommits => ({ shas, subjects: new Set() })
+const MADE_ALL = madeShas('aaa', 'bbb', 'ccc', 'ddd')
 
-/** A transcript record carrying one Bash tool result. */
-const toolResult = (content: unknown) =>
-  JSON.stringify({ type: 'user', message: { role: 'user', content: [{ type: 'tool_result', tool_use_id: 't', content }] } })
+let callId = 0
+/** The two transcript records of one tool call: the assistant's `tool_use`
+ *  and the `tool_result` that answers it. */
+function toolCall(command: string, output: unknown, name = 'Bash'): Record<string, unknown>[] {
+  const id = `toolu_${++callId}`
+  return [
+    { type: 'assistant', message: { content: [{ type: 'tool_use', id, name, input: { command } }] } },
+    { type: 'user', message: { content: [{ type: 'tool_result', tool_use_id: id, content: output }] } },
+  ]
+}
 
 describe('findSessionIdMismatches() — the pure core (issue #387)', () => {
   it('flags a commit whose trailer diverges from the ground truth', () => {
     const commits: OwnCommit[] = [{ sha: 'aaa111', trailerSessionId: 'session_WRONG' }]
-    expect(findSessionIdMismatches(commits, 'session_REAL', madeShas('aaa', 'bbb', 'ccc', 'ddd'))).toEqual([
+    expect(findSessionIdMismatches(commits, 'session_REAL', MADE_ALL)).toEqual([
       { sha: 'aaa111', found: 'session_WRONG', expected: 'session_REAL' },
     ])
   })
 
   it('passes silently on a matching trailer', () => {
     const commits: OwnCommit[] = [{ sha: 'aaa111', trailerSessionId: 'session_REAL' }]
-    expect(findSessionIdMismatches(commits, 'session_REAL', madeShas('aaa', 'bbb', 'ccc', 'ddd'))).toEqual([])
+    expect(findSessionIdMismatches(commits, 'session_REAL', MADE_ALL)).toEqual([])
   })
 
   it('never flags a commit with no trailer at all — most commits on a branch carry none', () => {
     const commits: OwnCommit[] = [{ sha: 'aaa111' }]
-    expect(findSessionIdMismatches(commits, 'session_REAL', madeShas('aaa', 'bbb', 'ccc', 'ddd'))).toEqual([])
+    expect(findSessionIdMismatches(commits, 'session_REAL', MADE_ALL)).toEqual([])
   })
 
   it('skips (passes) when no ground-truth id is available — no false failure on a local CLI session', () => {
@@ -80,7 +88,7 @@ describe('findSessionIdMismatches() — the pure core (issue #387)', () => {
       { sha: 'ccc' },
       { sha: 'ddd', trailerSessionId: 'session_ANOTHER_WRONG' },
     ]
-    expect(findSessionIdMismatches(commits, 'session_REAL', madeShas('aaa', 'bbb', 'ccc', 'ddd')).map((m) => m.sha)).toEqual(['bbb', 'ddd'])
+    expect(findSessionIdMismatches(commits, 'session_REAL', MADE_ALL).map((m) => m.sha)).toEqual(['bbb', 'ddd'])
   })
 })
 
@@ -101,30 +109,56 @@ describe('findSessionIdMismatches() — only commits the session made (issues #1
 })
 
 describe('findMadeCommits()', () => {
-  it('reads every `[<branch> <sha>] <subject>` line from string and text-part tool results, root and detached commits included', () => {
+  it('reads every `[<branch> <sha>] <subject>` line a committing git command printed, string or text-part results, root and detached commits included', () => {
     const made = findMadeCommits([
-      [
-        toolResult('[claude/x 1a2b3c4] first\n 1 file changed'),
-        toolResult([{ type: 'text', text: 'hook ok\n[main (root-commit) 5d6e7f8] init' }]),
-        toolResult('[detached HEAD 9a8b7c6] probe'),
-      ].join('\n'),
+      ...toolCall('git commit -F msg.txt', '[claude/x 1a2b3c4] first\n 1 file changed'),
+      ...toolCall('git -C /repo commit --amend --no-edit', [{ type: 'text', text: 'hook ok\n[main (root-commit) 5d6e7f8] init' }]),
+      ...toolCall('cd /repo && git cherry-pick abc', '[detached HEAD 9a8b7c6] probe'),
     ])
     expect(made.shas).toEqual(['1a2b3c4', '5d6e7f8', '9a8b7c6'])
-    expect([...made.subjects]).toEqual(['first', 'init', 'probe'])
   })
 
-  it('reads subagent transcripts alongside the main one', () => {
-    expect(findMadeCommits([toolResult('[a 1111111] main'), toolResult('[b 2222222] sub')]).shas).toEqual(['1111111', '2222222'])
+  it('reads the subagent records passed alongside the main ones', () => {
+    expect(findMadeCommits([...toolCall('git commit -m a', '[a 1111111] a'), ...toolCall('git commit -m b', '[b 2222222] b')]).shas).toEqual([
+      '1111111',
+      '2222222',
+    ])
   })
 
-  it("ignores a commit line the session only wrote or was shown outside a tool result", () => {
-    const assistant = JSON.stringify({ type: 'assistant', message: { content: [{ type: 'text', text: '[main 1a2b3c4] quoted' }] } })
-    const prompt = JSON.stringify({ type: 'user', message: { content: '[main 5d6e7f8] pasted' } })
-    expect(findMadeCommits([[assistant, prompt].join('\n')]).shas).toEqual([])
+  it('ignores a commit line the session only read: cat, git show, a log, a subagent report, another session transcript', () => {
+    const line = '[main 1a2b3c4] sibling work'
+    const made = findMadeCommits([
+      ...toolCall('cat .session-logs/x.log', line),
+      ...toolCall('git show HEAD', line),
+      ...toolCall('git log -1', line),
+      ...toolCall('', line, 'Read'),
+      ...toolCall('', line, 'mcp__claude-code-remote__list_events'),
+      ...toolCall('', line, 'Agent'),
+      { type: 'assistant', message: { content: [{ type: 'text', text: line }] } },
+      { type: 'user', message: { content: line } },
+    ])
+    expect(made.shas).toEqual([])
   })
 
-  it('ignores `git log` output, which has no bracketed commit line', () => {
-    expect(findMadeCommits([toolResult('1a2b3c4 subject\ncommit 5d6e7f8a\nAuthor: x')]).shas).toEqual([])
+  it('keeps subjects only once the session rebased, so a sibling sharing a subject is not claimed otherwise', () => {
+    const commit = toolCall('git commit -m "fix lint"', '[b 1a2b3c4] fix lint')
+    expect([...findMadeCommits(commit).subjects]).toEqual([])
+    expect([...findMadeCommits([...commit, ...toolCall('git rebase origin/main', 'Successfully rebased')]).subjects]).toEqual(['fix lint'])
+    expect([...findMadeCommits([...commit, ...toolCall('git pull --rebase origin b', 'ok')]).subjects]).toEqual(['fix lint'])
+  })
+
+  it('needs git at command position, so a command that only quotes a git commit or rebase is neither', () => {
+    const quoted = [
+      ...toolCall(`grep -n "git rebase" scripts/x.ts`, '[main 1a2b3c4] fix lint'),
+      ...toolCall("echo 'later: git commit -m x'", '[main 5d6e7f8] fix lint'),
+    ]
+    expect(findMadeCommits(quoted)).toEqual({ shas: [], subjects: new Set() })
+    const own = toolCall('git commit -m "fix lint"', '[b 9a8b7c6] fix lint')
+    expect([...findMadeCommits([...own, ...toolCall('echo "then git rebase main"', '')]).subjects]).toEqual([])
+  })
+
+  it('records nothing for a commit that prints no commit line (git commit -q, a merge): the documented fail-open', () => {
+    expect(findMadeCommits([...toolCall('git commit -q -m x', ''), ...toolCall('git merge origin/main', "Merge made by the 'ort' strategy.")]).shas).toEqual([])
   })
 })
 
@@ -226,41 +260,60 @@ describe('readOwnCommits() — against a throwaway bare remote, scoped to origin
     expect(commits.map((c) => c.subject)).toEqual(['own work', 'own work, no trailer'])
   })
 
-  /** Commits like a session's Bash call would, returning the tool result it would see. */
-  const commit = (message: string) => toolResult(git(work, ['commit', '--allow-empty', '-m', message]))
+  /** Commits as a session's Bash call would: the records of that call. */
+  const commit = (message: string) =>
+    toolCall('git commit --allow-empty -F msg.txt', git(work, ['commit', '--allow-empty', '-m', message]))
+  const jsonl = (records: Record<string, unknown>[]) => records.map((r) => JSON.stringify(r)).join('\n')
+  const header = { type: 'user', sessionId: 'session_REAL', message: { content: 'x' } }
 
   it('end to end: a fabricated trailer on a commit the session made is caught; the inherited one never surfaces', () => {
-    const made = findMadeCommits([commit('fabricated\n\nClaude-Session: https://claude.ai/code/session_FABRICATED')])
+    const made = findMadeCommits(commit('fabricated\n\nClaude-Session: https://claude.ai/code/session_FABRICATED'))
     expect(findSessionIdMismatches(readOwnCommits(work), 'session_REAL', made)).toEqual([
       { sha: expect.any(String), found: 'session_FABRICATED', expected: 'session_REAL' },
     ])
   })
 
   it("end to end: a correct trailer on the session's own commit passes with no mismatches", () => {
-    const made = findMadeCommits([commit('own work\n\nClaude-Session: https://claude.ai/code/session_REAL')])
+    const made = findMadeCommits(commit('own work\n\nClaude-Session: https://claude.ai/code/session_REAL'))
     expect(findSessionIdMismatches(readOwnCommits(work), 'session_REAL', made)).toEqual([])
   })
 
   it('end to end: an amended commit stays owned through the new sha git prints', () => {
     const first = commit('own\n\nClaude-Session: https://claude.ai/code/session_FABRICATED')
-    const amended = toolResult(git(work, ['commit', '--amend', '--allow-empty', '--no-edit']))
-    expect(findSessionIdMismatches(readOwnCommits(work), 'session_REAL', findMadeCommits([first, amended]))).toHaveLength(1)
+    const amended = toolCall('git commit --amend --no-edit', git(work, ['commit', '--amend', '--allow-empty', '--no-edit']))
+    expect(findSessionIdMismatches(readOwnCommits(work), 'session_REAL', findMadeCommits([...first, ...amended]))).toHaveLength(1)
+  })
+
+  it('end to end: a rebased commit (new sha, nothing reprinted) stays owned by its subject', () => {
+    const own = commit('own\n\nClaude-Session: https://claude.ai/code/session_FABRICATED')
+    git(work, ['branch', 'feature'])
+    git(work, ['reset', '--hard', 'origin/main'])
+    git(work, ['commit', '--allow-empty', '-m', 'main moved on'])
+    git(work, ['checkout', 'feature'])
+    const rebase = toolCall('git rebase main', git(work, ['rebase', '--empty=keep', 'main']))
+    const [rebased] = readOwnCommits(work)
+    expect(JSON.stringify(own)).not.toContain(rebased!.sha.slice(0, 7)) // the sha really changed
+    expect(findSessionIdMismatches(readOwnCommits(work), 'session_REAL', findMadeCommits([...own, ...rebase]))).toHaveLength(1)
   })
 
   it("checkOwnCommits(): a sibling's commit landing mid-session in the shared working copy is skipped (issue #1698)", () => {
     const own = commit('own\n\nClaude-Session: https://claude.ai/code/session_FABRICATED')
     git(work, ['commit', '--allow-empty', '-m', 'sibling\n\nClaude-Session: https://claude.ai/code/session_SIBLING'])
-    const transcript = [JSON.stringify({ type: 'user', sessionId: 'session_REAL', message: { content: 'x' } }), own].join('\n')
-    expect(checkOwnCommits(work, transcript, {})).toEqual({
+    const path = join(scratch, 'session.jsonl')
+    writeFileSync(path, jsonl([header, ...own]))
+    expect(checkOwnCommits(work, path, {})).toEqual({
       groundTruthId: 'session_REAL',
       mismatches: [{ sha: expect.any(String), found: 'session_FABRICATED', expected: 'session_REAL' }],
     })
   })
 
-  it('checkOwnCommits(): a commit made by a subagent is checked through its transcript', () => {
+  it('checkOwnCommits(): a commit made by a subagent is checked through its transcript beside the main one', () => {
     const sub = commit('sub\n\nClaude-Session: https://claude.ai/code/session_FABRICATED')
-    const main = JSON.stringify({ type: 'user', sessionId: 'session_REAL', message: { content: 'x' } })
-    expect(checkOwnCommits(work, main, {}).mismatches).toEqual([])
-    expect(checkOwnCommits(work, main, {}, [sub]).mismatches).toHaveLength(1)
+    const path = join(scratch, 'session.jsonl')
+    writeFileSync(path, jsonl([header]))
+    expect(checkOwnCommits(work, path, {}).mismatches).toEqual([])
+    mkdirSync(join(scratch, 'session', 'subagents'), { recursive: true })
+    writeFileSync(join(scratch, 'session', 'subagents', 'agent-a.jsonl'), jsonl(sub))
+    expect(checkOwnCommits(work, path, {}).mismatches).toHaveLength(1)
   })
 })

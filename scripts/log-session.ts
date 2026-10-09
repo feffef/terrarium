@@ -557,11 +557,10 @@ export const SESSION_ID_MISMATCH_FRICTION = "issue #387: Claude-Session trailer 
 /** Append a synthetic 'major' friction recording a detected `Claude-Session`
  *  trailer mismatch (issue #387) onto the authored scratch. Not 'blocker': it
  *  is found at teardown, after the session got on with its goal (issue
- *  #1698). This is the "recorded signal" half of the guard's contract
- *  (stderr, printed by `landMain()`, is the other half). This is how the mismatch survives past the ephemeral hook stderr
- *  and into the landed session log itself, where a human or `audit-skills` can
- *  find it later — all WITHOUT failing the hook itself (landing is deliberately
- *  non-fatal to teardown, see the file header).
+ *  #1698). It is the guard's recorded signal (stderr, printed by `landMain()`,
+ *  is the other half): the mismatch survives into the landed log, where a
+ *  human or `audit-skills` can find it, WITHOUT failing the hook itself
+ *  (landing is deliberately non-fatal to teardown, see the file header).
  *  A no-op (returns `scratch` unchanged) when there is nothing to report. */
 export function withSessionIdMismatchFriction(
   scratch: AuthoredScratch,
@@ -902,8 +901,7 @@ function landMain(argv: string[]): void {
   // land) — the finding is recorded as a major friction on the entry that
   // lands, not by exiting non-zero (see session-id-guard.ts for the standalone
   // CLI that does exit non-zero on this same check).
-  const subagentJsonls = readSubagentJsonls(transcriptPath).map((s) => s.jsonl)
-  const { mismatches } = checkOwnCommits(root, transcriptJsonl, process.env, subagentJsonls)
+  const { mismatches } = checkOwnCommits(root, transcriptPath)
   if (mismatches.length > 0) {
     console.error(formatMismatchError(mismatches))
     scratch = withSessionIdMismatchFriction(scratch, mismatches)
@@ -927,7 +925,7 @@ function landMain(argv: string[]): void {
     dryRun,
     remote: 'origin',
     landedBy,
-    subagentJsonls,
+    subagentJsonls: readSubagentJsonls(transcriptPath).map((s) => s.jsonl),
   })
   switch (result.action) {
     case 'invalid':

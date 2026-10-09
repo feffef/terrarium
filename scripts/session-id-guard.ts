@@ -16,6 +16,17 @@
 // non-zero, so a handler bug can't wedge teardown" rule — surfaces a mismatch
 // loudly (stderr + a recorded friction on the landed log) without failing the
 // hook itself.
+//
+// Own commits come from the transcript, not from git: parallel local sessions
+// can share one working copy, so `origin/main..HEAD` holds siblings' commits
+// (issue #1698). Residual fail-opens — commits this check never sees:
+// - a commit that prints no `[<branch> <sha>]` line: `git commit -q`, and the
+//   merge commit of a `git merge` or a non-rebasing `git pull`;
+// - an MCP-API commit (`push_files`, `create_or_update_file`), which
+//   `github-provenance-guard.ts` checks at call time instead;
+// - a commit made by a script or hook rather than a Bash `git` command.
+// And one residual false positive: after this session rebases, a sibling's
+// commit with the same subject as one of ours is checked too.
 import { execFileSync } from 'node:child_process'
 import { readFileSync } from 'node:fs'
 import { dirname, resolve } from 'node:path'
@@ -38,12 +49,10 @@ export interface OwnCommit {
   subject?: string
 }
 
-/** What the transcript shows the session committing: the short shas and
- *  subjects git prints as `[<branch> <sha>] <subject>` after a commit, amend or
- *  cherry-pick. The subject keeps a commit this session rebased (new sha, no
- *  output) its own. `git commit -q` prints no such line, so its commit goes
- *  unchecked: a fail-open behind `provenance-footer.ts`, which already
- *  corrects a wrong id at commit time. */
+/** What the transcript shows the session committing: the short shas git
+ *  printed after its own commit, amend or cherry-pick, plus — only once it has
+ *  rebased, which reprints nothing — those commits' subjects, so the rebased
+ *  copies stay its own. */
 export interface MadeCommits {
   shas: string[]
   subjects: Set<string>
@@ -81,27 +90,44 @@ export function findSessionIdMismatches(
 }
 
 const COMMIT_LINE = /^\[[^\]\n]+? ([0-9a-f]{7,40})\] (.+)$/gm
+// `git` at command position (line start or after `;`, `&`, `|`, `(`), so a
+// command that only quotes `git rebase` (an echo, a grep, a heredoc) is neither.
+const COMMITTING_GIT = /(?:^|[;&|(])\s*git\s+(?:-[cC]\s+\S+\s+)*(?:commit|cherry-pick|rebase|pull\b[^\n]*--rebase)\b/m
+const REBASING_GIT = /(?:^|[;&|(])\s*git\s+(?:-[cC]\s+\S+\s+)*(?:rebase|pull\b[^\n]*--rebase)\b/m
 
-/** Reads tool results only, so a commit line the session merely quoted
- *  never counts as one it made. */
-export function findMadeCommits(transcriptJsonls: string[]): MadeCommits {
-  const made: MadeCommits = { shas: [], subjects: new Set() }
-  for (const rec of transcriptJsonls.flatMap(parseTranscript)) {
+type ContentBlock = { type?: string; id?: string; tool_use_id?: string; name?: string; input?: { command?: unknown }; content?: unknown }
+
+/** Reads only the results of Bash calls that ran a committing `git` command:
+ *  a commit line the session merely read (a log, a sibling's transcript, a
+ *  subagent's report) is not one it made. Takes the session's and its
+ *  subagents' parsed records together. */
+export function findMadeCommits(records: Record<string, unknown>[]): MadeCommits {
+  const blocks = records.flatMap((rec) => {
     const content = (rec.message as { content?: unknown } | undefined)?.content
-    if (!Array.isArray(content)) continue
-    for (const part of content) {
-      if (part?.type !== 'tool_result') continue
-      const texts = Array.isArray(part.content) ? part.content.map((c: { text?: unknown }) => c?.text) : [part.content]
-      for (const text of texts) {
-        if (typeof text !== 'string') continue
-        for (const [, sha, subject] of text.matchAll(COMMIT_LINE)) {
-          made.shas.push(sha!)
-          made.subjects.add(subject!.trim())
-        }
+    return Array.isArray(content) ? (content as ContentBlock[]) : []
+  })
+  const committing = new Set<string>()
+  let rebased = false
+  for (const b of blocks) {
+    const command = b?.type === 'tool_use' && b.name === 'Bash' ? b.input?.command : undefined
+    if (typeof command !== 'string' || !b.id || !COMMITTING_GIT.test(command)) continue
+    committing.add(b.id)
+    rebased ||= REBASING_GIT.test(command)
+  }
+  const shas: string[] = []
+  const subjects = new Set<string>()
+  for (const b of blocks) {
+    if (b?.type !== 'tool_result' || !b.tool_use_id || !committing.has(b.tool_use_id)) continue
+    const texts = Array.isArray(b.content) ? b.content.map((c: { text?: unknown }) => c?.text) : [b.content]
+    for (const text of texts) {
+      if (typeof text !== 'string') continue
+      for (const [, sha, subject] of text.matchAll(COMMIT_LINE)) {
+        shas.push(sha!)
+        subjects.add(subject!.trim())
       }
     }
   }
-  return made
+  return { shas, subjects: rebased ? subjects : new Set() }
 }
 
 /** Expects `readOwnCommits`'s `git log` format: one record per commit, a
@@ -155,19 +181,19 @@ export function resolveGroundTruthFromTranscript(
   return extractTrace(parseTranscript(transcriptJsonl), env).session ?? null
 }
 
-/** The whole check for both callers: the transcript's ground-truth id, and
- *  the mismatches on the commits it and its subagents' transcripts show the
- *  session making. */
+/** The whole check for both callers: the ground-truth id from the transcript
+ *  at `transcriptPath`, and the mismatches on the commits it and its
+ *  subagents' transcripts show the session making. */
 export function checkOwnCommits(
   cwd: string,
-  transcriptJsonl: string,
+  transcriptPath: string,
   env: SessionIdEnv = process.env,
-  subagentJsonls: string[] = [],
 ): { groundTruthId: string | null; mismatches: SessionIdMismatch[] } {
-  const groundTruthId = resolveGroundTruthFromTranscript(transcriptJsonl, env)
-  const made = findMadeCommits([transcriptJsonl, ...subagentJsonls])
-  const mismatches = groundTruthId ? findSessionIdMismatches(readOwnCommits(cwd), groundTruthId, made) : []
-  return { groundTruthId, mismatches }
+  const records = parseTranscript(readFileSync(transcriptPath, 'utf8'))
+  const groundTruthId = extractTrace(records, env).session ?? null
+  if (!groundTruthId) return { groundTruthId, mismatches: [] }
+  const made = findMadeCommits([...records, ...readSubagentJsonls(transcriptPath).flatMap((s) => parseTranscript(s.jsonl))])
+  return { groundTruthId, mismatches: findSessionIdMismatches(readOwnCommits(cwd), groundTruthId, made) }
 }
 
 /** Human-readable rejection naming every offending commit, the id its trailer
@@ -200,15 +226,7 @@ function main(): void {
   const transcriptPath = idx >= 0 ? argv[idx + 1] : undefined
   if (!transcriptPath) fail('usage: --transcript <path-to-transcript.jsonl>')
 
-  let transcriptJsonl: string
-  try {
-    transcriptJsonl = readFileSync(transcriptPath, 'utf8')
-  } catch (err) {
-    fail(`could not read transcript: ${err instanceof Error ? err.message : err}`)
-  }
-
-  const subagentJsonls = readSubagentJsonls(transcriptPath).map((s) => s.jsonl)
-  const { groundTruthId, mismatches } = checkOwnCommits(root, transcriptJsonl, process.env, subagentJsonls)
+  const { groundTruthId, mismatches } = checkOwnCommits(root, transcriptPath)
   if (!groundTruthId) {
     console.log('session-id-guard: no ground-truth session id available — skipping (pass)')
     return
