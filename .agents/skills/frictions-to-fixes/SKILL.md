@@ -111,24 +111,24 @@ candidates** — each with title, severity, recurrence (N of the window's sessio
 classification (never-fixed / open-already #N / regression of #N), fix type
 (doc/code/config), surface-blocked flag (fails §3's safe-surface test: human-only,
 guard or hook wiring), difficulty (simple/hard), a one-line
-recommended fix, and evidence quotes; **(b) a dropped list** with one-line reasons;
+recommended fix, and evidence quotes; **(b) a dropped list** with one-line reasons
+(an on-trial one quotes its territory match, §2);
 and **(c) the subagent's own frictions** from the run.
 
 ## 2. Screen against fixes already shipped (the subagent's rules)
 
 Never re-fix what is already fixed. **First, drop what isn't ours to change:** a
 candidate whose only fix edits an **external pack Skill's `SKILL.md`** is off
-limits (ADR-0015) — the gate rejects it
-anyway, so screening it out here just avoids the wasted round-trip. A
-repo-specific fit-note still belongs in that Skill's Inventory entry, but that's
-`audit-skills`' job, not a friction fix.
+limits (ADR-0015; the gate rejects it). A repo-specific fit-note belongs in that
+Skill's Inventory entry: `audit-skills`' job, not a friction fix.
 **Next, drop what is on trial:** a candidate whose fix would restore prose inside
 an open **Prune Trial**'s territory (`.agents/prune-trials.yml`) is not yours to
 retire — that friction *is* the trial's evidence, and re-legislating it destroys
-the verdict `prune-trial` is waiting for (ADR-0027). Drop it with that reason. A
-`blocker` is the exception: after the usual tracker search, file it, naming the
-trial. Then, for the
-rest: the §1 subagent applies these rules to every
+the verdict `prune-trial` is waiting for (ADR-0027). The drop reason quotes the
+matching `territory` path or keyword verbatim; with no quotable match the
+candidate is not on trial, so classify it below (§4 files it if surface-blocked).
+A `blocker` is the exception: after the usual tracker search, file it, naming
+the trial. Then, for the rest: the §1 subagent applies these rules to every
 candidate, checking the tracker for an issue or PR that already covers it — and
 confirming against **`main`** where cheap (a "solution" isn't ripe if main already
 has it). `pnpm exec tsx scripts/merged-since.ts <friction session's startedAt>` lists every
