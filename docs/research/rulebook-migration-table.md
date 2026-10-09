@@ -118,44 +118,25 @@ recurrence is 4**, not the 3 its body claims — the three session logs it names
 
 ---
 
-## 3. The four named regression-class issues → their rows and mechanisms
+## 3. The four named regression-class issues
 
-The ticket asks specifically that each of these map to a named row and a named
-mechanism. **#835** is built, **#772** is superseded by a shipped `SessionStart`
-unshallow hook, **#666** is resolved by deleting the instruction that caused it,
-and **#873** is built as `scripts/tail-pipe-guard.ts`.
+All four are point-in-time behavioural rules whose violation shows in the tool call itself (bucket 1). Each was fixed only after prose failed 2–3 times. Why prose failed and how the guard works: the guard's script header.
 
-| Issue | Rule row | Proposed mechanism | Why prose failed |
-| --- | --- | --- | --- |
-| **#835** — `run_in_background: false` confusion recurred | `CM-36` | **Built** — `scripts/agent-background-flag-guard.ts`, a fail-closed refusal. `PreToolUse` on `Agent`: the tool ignores `run_in_background: false`, so deny the call carrying it and say so — the parameter is a no-op that reads as a guarantee. | #810's fix reached only one of the two docs that state it; the affected sessions read neither. |
-| **#772** — shallow-clone check-first rule not holding (3rd attempt) | `GC-03` | **Superseded:** shipped as a `SessionStart` unshallow hook (see `GC-03`), which removes the precondition instead of refusing the call. `scripts/gate.ts` already checks shallowness in code (`changedPaths()` unshallows; `changedPathsBetween()` refuses). | Three narrowing prose attempts; the rule fires at a moment (starting archaeology) that has no natural doc-reading trigger. |
-| **#666** — caller-pinned branch missed after #625's checklist fix | `CM-20`, `CM-21` | **Dropped, not mechanized** (PR #1159). No guard: the harness already checks the pinned branch out, so a session that is simply left alone keeps it. Sessions left it because our own text told them to branch off `origin/main`; deleting that instruction removes the cause the guard would have policed. | The pin lives in a different part of context from `CLAUDE.md`, so its absence from the doc isn't evidence no pin exists — and the checklist is read after the mistake. |
-| **#873** — tail/head exit-status piping (3rd recurrence, after #384 and #812) | `CM-38` | **Built** — `scripts/tail-pipe-guard.ts`, a fail-closed refusal. `PreToolUse` on `Bash`: deny a command that pipes into a trailing `tail`/`head`/`echo` **when `run_in_background: true`** or the piped command is a known long-runner (`pnpm gate*`, `pnpm test*`, `pnpm build`). Scoping to the backgrounded/long-running case is what keeps the false-positive rate near zero — an ordinary `ls \| head` is untouched. | Two prose fixes in two different homes; the trap is invisible at authoring time because the pipeline *succeeds*. |
-
-All four are **point-in-time behavioural rules whose violation shows in the tool call itself**: bucket 1's definition. Each was fixed (guard, hook or deletion) only after prose failed 2–3 times, so each should have been bucket 1 from the start.
+- **#835** (`CM-36`) — built: `scripts/agent-background-flag-guard.ts` denies the no-op `run_in_background: false`.
+- **#772** (`GC-03`) — superseded by the `SessionStart` unshallow hook, which removes the precondition; `scripts/gate.ts` also checks shallowness in code.
+- **#666** (`CM-20`, `CM-21`) — dropped, not mechanized (PR #1159): our own text told sessions to branch off `origin/main`, and deleting it removed the cause.
+- **#873** (`CM-38`) — built: `scripts/tail-pipe-guard.ts`.
 
 ---
 
 ## 4. Already mechanized (the current surface)
 
-Read off the live configuration, not inferred (`docs/agents/guards.md` is the
-current roster's home — re-check there, this count drifts). `.claude/settings.json`
-registers **ten** `PreToolUse` guards:
-
-(Matcher rows name the wired entrypoint; a `.sh` is a hot-path pre-filter for the same-named `.ts`.)
+The `PreToolUse` guard roster lives in `docs/agents/guards.md`. Two of its rows are kept here:
 
 | Mechanism | Shape | Rule it enforces | Matcher |
 | --- | --- | --- | --- |
-| `scripts/deferred-tool-guard.ts` | Fail-closed refusal | Load a deferred tool's schema via `ToolSearch` first | `TaskCreate\|Monitor` |
-| `scripts/loop-only-tool-guard.ts` | Fail-closed refusal | `ScheduleWakeup` only inside `/loop` | `ScheduleWakeup` |
-| `scripts/skill-inline-guard.ts` | Fail-closed refusal | A `Skill` call naming a Skill this session's `<command-name>` block already delivered inline | `Skill` |
-| `scripts/agent-background-flag-guard.ts` | Fail-closed refusal | An `Agent` call must not pass the no-op `run_in_background: false` | `Agent` |
-| `scripts/subagent-background-guard.sh` | Fail-closed refusal | A subagent never backgrounds a Bash command | `Bash` |
 | `scripts/commit-trailer-guard.sh` | Fail-closed refusal | Never hand-write the ADR-0017 commit trailer (#921) | `Bash` |
-| `scripts/tail-pipe-guard.sh` | Fail-closed refusal | Never pipe a backgrounded/long-running command into a trailing `tail`/`head`/`echo` (#873) | `Bash` |
-| `scripts/double-background-guard.sh` | Fail-closed refusal | Never stack `run_in_background: true` on a text-level `&` (#1208) | `Bash` |
 | `scripts/github-provenance-guard.ts` | Fail-closed refusal | ADR-0017 provenance header on every GitHub body | 9 `mcp__github__*` tools |
-| `scripts/workflow-edit-guard.sh` | Fail-closed refusal | No agent write into `.github/workflows/` (#897) | `Edit\|Write\|Bash` |
 
 Plus, outside `PreToolUse`:
 
