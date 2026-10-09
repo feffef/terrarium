@@ -1,0 +1,81 @@
+schemaVersion: 1
+session: session_01CHnq9iXU9t2se8nc2tBTnQ
+startedAt: 2026-10-09T02:04:14Z
+endedAt: 2026-10-09T02:12:34Z
+kind: autonomous
+goal: "Scheduled frictions-to-fixes run: survey 3 days of session frictions, fix what is ripe, review and merge the fixes"
+status: in-review
+outcome: "One grouped doc-fix PR (#1699) reviewed and awaiting green gate; regression of the session-id-guard fix filed as #1698"
+summary: "Scheduled run, no human prompt; everything was agent-initiated under the frictions-to-fixes charter. A survey subagent read the 3-day window (40 sessions, about 190 frictions). Most recurring frictions were already tracked and guard/hook-blocked, or sit inside open Prune Trial territory. Two simple doc fixes were selected: visitor-loop step 4 now names the probe and screenshot tools (discoverability failure, 5 sessions), and audit-docs sections 3 and 5 now hand reviewer findings to checkers through scratchpad files (one moderate friction). A Sonnet impl agent shipped both as PR #1699; I reviewed the diff, posted the verdict, and left it to merge when the gate is green. The survey also found session-id-guard false blockers recurring after the #1611 fix (a sibling session commits to the shared branch after the cutoff); that is a guard edit, so I filed #1698 as ready-for-human and sent a push notification. The survey bypassed the search tools, so its never-fixed labels rest on a title scan of 300 issues."
+prs:
+  - "1699"
+docsRead:
+  - path: CONTEXT-MAP.md
+    reason: (no reason given)
+  - path: CONTEXT.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: .claude/skills/frictions-to-fixes/SKILL.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: (no reason given)
+  - path: docs/agents/verifying-ui-changes.md
+    reason: (no reason given)
+skillsUsed:
+  - name: dispatch-subagents
+    reason: brief for the worktree-isolated impl agent
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: frictions-to-fixes
+    reason: (invoked as a slash command)
+frictions:
+  - description: Skipped CLAUDE.md's ADR grep before planning the doc fixes; the touched Skills turned out not to be covered, so no impact.
+    solution: None needed; the trigger could say it applies to code and doc surfaces with ADR coverage only.
+    severity: nit
+  - description: session-frictions.ts output is 251 KB for 40 sessions; the survey subagent needed several slicing passes and one overflow. merged-since.ts JSON field names are undocumented.
+    solution: Add a compact mode to session-frictions.ts and document merged-since.ts output fields in its header.
+    severity: minor
+  - description: Impl agent's PR open triggered a subscribe event in this session even though the brief forbade subscribing; expected per the Skill, noted only to avoid re-logging.
+    solution: None.
+    severity: nit
+durationSec: 501
+models:
+  claude-sonnet-5-5: 43
+toolCounts:
+  Bash: 7
+  Read: 4
+  Agent: 2
+  Skill: 3
+  ToolSearch: 1
+  mcp__github__issue_read: 1
+  mcp__github__issue_write: 1
+  PushNotification: 1
+  ReadNotifications: 1
+  mcp__github__pull_request_read: 3
+  mcp__github__add_issue_comment: 1
+docsReadViaShell:
+  - docs/agents/pr-workflow.md
+  - docs/agents/triage-labels.md
+  - docs/agents/issue-tracker.md
+  - docs/agents/guards.md
+  - docs/agents/verifying-ui-changes.md
+  - .agents/skills/digest/SKILL.md
+  - .agents/skills/visitor-loop/SKILL.md
+  - .agents/skills/audit-docs/SKILL.md
+subagents:
+  - type: general-purpose
+    task: Survey and screen frictions
+  - task: Grouped doc-fix PR
+    model: sonnet
+gitBranch: claude/eager-ptolemy-esy4av
+entrypoint: remote_trigger
+cliVersion: 2.1.295
+trigger: frictions-to-fixes
+landedBy: Stop
