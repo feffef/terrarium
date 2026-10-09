@@ -144,7 +144,10 @@ come from the cloud session.
 - **Result:** [improvement loop](https://github.com/feffef/terrarium/blob/2bff5d1312d4c556dda95e6f7118fa4d4174a8b9/docs/diagrams/improvement-loop.md), [Nuxt architecture](https://github.com/feffef/terrarium/blob/2bff5d1312d4c556dda95e6f7118fa4d4174a8b9/docs/diagrams/nuxt-architecture.md) · [`2bff5d1`](https://github.com/feffef/terrarium/commit/2bff5d1312d4c556dda95e6f7118fa4d4174a8b9)
 
 Two sessions then drew diagrams from these briefs (round 2 in "How we got
-here"). Both were abandoned.
+here"). The artifact results were the
+[architecture floor plan](https://claude.ai/artifact/Y1N8NvYWrfeVmyLXZxQob5)
+and the [improvement loop](https://claude.ai/artifact/DtdeqjvrDRtPgdNHf4E7VQ).
+Both attempts were abandoned.
 
 ### 5. One plain-language overview replaces both briefs
 
@@ -223,6 +226,7 @@ here"). Both were abandoned.
 - **Agents:** none; the session applied the decisions itself.
 - **Result:** [overview](https://github.com/feffef/terrarium/blob/e22557f3b65da71a0bc9813f4c06a8e12a3eff85/docs/diagrams/terrarium-overview.md) · [`e22557f`](https://github.com/feffef/terrarium/commit/e22557f3b65da71a0bc9813f4c06a8e12a3eff85)
 
-After this, a Fable agent built the diagram from version 9 as an artifact,
-and the brief moved to this folder. The current version is
+After this, a Fable agent built the diagram from version 9 as an
+[artifact](https://claude.ai/artifact/E9spdeUp54KzsmXZjSJZ8L), and the brief
+moved to this folder. The current version is
 [`terrarium-overview.md`](./terrarium-overview.md).
