@@ -13,11 +13,19 @@ const rows = computed(() => {
   const present = new Set(props.grades)
   return CONDITION_GRADES.filter((c) => present.has(c.grade))
 })
+
+// Open for the sticky desktop margin; on a phone it sits above the prose, so it
+// starts folded and the story is not pushed a screen down.
+const details = ref<HTMLDetailsElement>()
+onMounted(() => {
+  if (window.matchMedia('(max-width: 44rem)').matches && details.value) details.value.open = false
+})
 </script>
 
 <template>
   <aside v-if="rows.length" class="midden-key" aria-labelledby="midden-key-head">
-    <p id="midden-key-head" class="sc midden-key__head">Condition key</p>
+    <details ref="details" open class="midden-key__fold">
+    <summary id="midden-key-head" class="sc midden-key__head">Condition key</summary>
     <dl class="midden-key__list">
       <div v-for="c in rows" :key="c.grade" class="midden-key__row">
         <dt class="sc midden-key__term">{{ c.label }}</dt>
@@ -25,6 +33,7 @@ const rows = computed(() => {
       </div>
     </dl>
     <p class="tech midden-key__aside">curator-graded, never computed</p>
+    </details>
   </aside>
 </template>
 
@@ -34,6 +43,7 @@ const rows = computed(() => {
   padding-top: 0.85rem;
 }
 .midden-key__head {
+  cursor: pointer;
   margin: 0;
   font-size: 0.72rem;
   font-weight: 600;

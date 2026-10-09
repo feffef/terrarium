@@ -87,8 +87,8 @@ useHead({ title: () => `${site.value?.title ?? 'Not found'} · The Midden` })
         </nav>
 
         <p class="sc midden-eyebrow">Dig report</p>
-        <h1 class="doctitle midden-report__title">{{ site.title }}</h1>
-        <p v-if="site.description" class="midden-report__dek">{{ site.description }}</p>
+        <h1 class="doctitle midden-report__title"><MiddenTicks :text="site.title" /></h1>
+        <p v-if="site.description" class="midden-report__dek"><MiddenTicks :text="site.description" /></p>
 
         <div v-if="siteArtifacts.length" class="tech midden-report__meta">
           <span>{{ seasonSummary }}</span><span class="midden-report__dot">·</span>
@@ -121,7 +121,7 @@ useHead({ title: () => `${site.value?.title ?? 'Not found'} · The Midden` })
       </div>
     </div>
 
-    <SiteFooter />
+    <div class="midden-page midden-report__foot"><SiteFooter /></div>
   </main>
 </template>
 
@@ -219,6 +219,9 @@ useHead({ title: () => `${site.value?.title ?? 'Not found'} · The Midden` })
   padding: 0.05em 0.35em;
   border-radius: 2px;
 }
+
+/* Same 52rem column as the landings, not the viewport edge. */
+.midden-report__foot { padding-top: 0; }
 
 .midden-not-found h1 {
   font-size: 2.2rem;

@@ -235,7 +235,7 @@ const legend = computed(() => [...bands.value].reverse())
     </ul>
 
     <figcaption class="tech midden-section__caption">
-      the stores in section &middot; oldest at the floor &middot; the surface still accumulating
+      the stores in section &middot; oldest at the floor &middot; the surface still accumulating &middot; sterile: nothing in store from that season
     </figcaption>
   </figure>
 </template>

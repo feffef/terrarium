@@ -30,11 +30,21 @@ const { data } = await useAsyncData(`midden-landing-${props.front ? 'front' : 't
     return { intro: null, count, sites: [], latest }
   }
   const pages = await queryCollection(resolved.pagesKey).all()
+  const artifacts = await queryCollection(resolved.collections.artifacts).all()
+  // Per report: how many finds and when they were assessed, so the numbered list says what it holds.
+  const meta = (slug: string) => {
+    const dates = artifacts.filter((a) => a.site === slug).map((a) => a.assessedAt).sort()
+    if (!dates.length) return ''
+    const lo = formatMiddenDate(dates[0]!)
+    const hi = formatMiddenDate(dates[dates.length - 1]!)
+    return `${dates.length} ${dates.length === 1 ? 'find' : 'finds'} · assessed ${lo === hi ? lo : `${lo} – ${hi}`}`
+  }
   const sites = pages
     .filter((p) => p.path !== '/')
     .map((p, i) => ({
+      meta: meta(p.path.slice(1)),
       num: String(i + 1).padStart(2, '0'),
-      title: p.title ?? p.path.replace(/^\//, ''),
+      title: (p.title ?? p.path.replace(/^\//, '')).replaceAll('`', ''),
       description: p.description as string | undefined,
       href: `/t/midden/trench${p.path}`,
     }))
@@ -113,6 +123,7 @@ useHead({ title: props.front ? 'The Midden' : 'The Trench · The Midden' })
               <span class="midden-sites__body">
                 <span class="midden-sites__title">{{ site.title }}</span>
                 <span v-if="site.description" class="midden-sites__blurb">{{ site.description }}</span>
+                <span v-if="'meta' in site && site.meta" class="tech midden-sites__meta">{{ site.meta }}</span>
               </span>
               <span class="midden-sites__arrow" aria-hidden="true">→</span>
             </NuxtLink>
@@ -234,6 +245,11 @@ useHead({ title: props.front ? 'The Midden' : 'The Trench · The Midden' })
   font-size: 0.96rem;
   line-height: 1.55;
   color: var(--midden-muted);
+}
+.midden-sites__meta {
+  display: block;
+  margin-top: 0.35rem;
+  color: var(--midden-faint);
 }
 .midden-sites__arrow {
   color: var(--midden-faint);

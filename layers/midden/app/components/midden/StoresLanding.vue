@@ -135,9 +135,9 @@ useHead({ title: 'The Stores · The Midden' })
               <span>assessed {{ formatMiddenDate(find.assessedAt) }}</span>
             </p>
 
-            <h3 class="mono midden-entry__title">{{ find.title }}</h3>
+            <h3 class="mono midden-entry__title"><MiddenTicks :text="find.title" /></h3>
 
-            <p class="midden-entry__note">{{ find.catalogNote }}</p>
+            <p class="midden-entry__note"><MiddenTicks :text="find.catalogNote" /></p>
 
             <blockquote v-if="find.condition !== 'lost' && find.inscription" class="midden-entry__inscription">
               <span class="midden-entry__quote">&ldquo;{{ find.inscription.text }}&rdquo;</span>
@@ -164,7 +164,7 @@ useHead({ title: 'The Stores · The Midden' })
         <NuxtLink to="/t/midden/trench">← the trench</NuxtLink>
       </p>
 
-      <SiteFooter />
+      <SiteFooter class="midden-stores__footer" />
     </div>
   </main>
 </template>
@@ -188,6 +188,8 @@ useHead({ title: 'The Stores · The Midden' })
 .midden-stores__back { grid-column: 1; }
 .midden-stores__section { grid-row: 3; }
 .midden-stores__register { grid-row: 4; }
+/* Spans both columns: auto-placed, it lands in the narrow key column. */
+.midden-stores__footer { grid-column: 1 / -1; }
 .midden-stores__key {
   grid-column: 2;
   grid-row: 4;
@@ -223,6 +225,8 @@ useHead({ title: 'The Stores · The Midden' })
   color: var(--midden-faint);
 }
 .midden-stores__dot { opacity: 0.55; }
+.midden-entry a[target='_blank']::after { content: '\00a0\2197'; content: '\00a0\2197' / ''; }
+.midden-entry__remains a, .midden-entry__source { overflow-wrap: anywhere; }
 
 .midden-stores__foreword {
   margin-top: 1.6rem;
