@@ -75,7 +75,7 @@ const glossComponents = { 'midden-gloss': resolveComponent('MiddenGloss') }
 
 if (!site.value && !error.value) setResponseStatus(404)
 
-useHead({ title: () => `${site.value?.title ?? 'Not found'} · The Midden` })
+useHead({ title: () => `${site.value?.title.replaceAll('`', '') ?? 'Not found'} · The Midden` })
 </script>
 
 <template>
@@ -220,8 +220,8 @@ useHead({ title: () => `${site.value?.title ?? 'Not found'} · The Midden` })
   border-radius: 2px;
 }
 
-/* Same 52rem column as the landings, not the viewport edge. */
-.midden-report__foot { padding-top: 0; }
+/* Left edge on the prose's: the report grid is 44rem + 3.4rem gap + 13.5rem key. */
+.midden-report__foot { width: min(60.9rem, 100% - 3rem); max-width: none; padding: 0 0 5rem; }
 
 .midden-not-found h1 {
   font-size: 2.2rem;

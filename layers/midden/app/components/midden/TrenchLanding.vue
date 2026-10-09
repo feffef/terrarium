@@ -45,7 +45,7 @@ const { data } = await useAsyncData(`midden-landing-${props.front ? 'front' : 't
       meta: meta(p.path.slice(1)),
       num: String(i + 1).padStart(2, '0'),
       title: (p.title ?? p.path.replace(/^\//, '')).replaceAll('`', ''),
-      description: p.description as string | undefined,
+      description: (p.description as string | undefined)?.replaceAll('`', ''),
       href: `/t/midden/trench${p.path}`,
     }))
   return { intro: pages.find((p) => p.path === '/') ?? null, count: sites.length, sites, latest: [] }
