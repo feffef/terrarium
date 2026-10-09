@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01S1WwkpNHDfbvKAf5T1afKq
 startedAt: 2026-10-08T22:50:06Z
-endedAt: 2026-10-09T07:22:06Z
+endedAt: 2026-10-09T10:20:28Z
 kind: interactive
 goal: "Stress-test and rewrite Part 2 (the interactive-diagram spec) of the Terrarium overview, PR #1694"
-status: in-review
-outcome: "Brief moved to interactive-map/ with a history README; diagram artifact built; Part 2 rewritten as a full diagram spec, Part 1 facts corrected, three issues filed; PR #1694 awaits the maintainer"
-summary: "Picked up a handoff from session 1f97b613 (overview doc on PR #1694). The maintainer asked, step by step, for each phase: fix the overview first; spawn three cold readers (Sonnet, Opus, Fable) that saw only CLAUDE.md and the overview; spawn three repo-exploring agents for ideas on clickable stories and zoom; cut the open topics into 10 buckets for 10 Opus proposal agents; rewrite Part 2 completely with minor Part 1 fixes; have three different-model cold checkers review it; then propose improvements for the maintainer to decide. All of that was human-instructed. The agent-initiated parts were how the 10 buckets were cut, how conflicting proposals were merged (e.g. the two-state vs close-up zoom models), and the list A/B/C of fixes. The bucket agents corrected several Part 1 facts against the code: frictions-to-fixes merges hard fixes itself; guards need a human-attended session; one dump per collection; deploy is copy+restart and ignores CI; Tinkerfund search has cache:false; new issues are unlabeled. The cold checkers found real contradictions in the first rewrite (multi-target steps, one file listed on two nodes, accent count, open-group rule). Two checkers wrongly flagged story 5's ready-for-human label; ADR-0022 confirms it. The maintainer then decided: - cut the real-run cards, chaining, browser back, and branches outside stories 1/2/3/5; - container and browser are close-ups only; - Part 2 may hold detail; - zoom = the component's insides plus the nodes it directly works with; - the maintainer is the sole owner. Filed issues #1701 (stale packages after a failed install), #1702 (uncached home page) and #1703 (dependabot ledger drift) at the maintainer's request. The maintainer then asked for a Fable agent to build the diagram as an artifact. It loaded artifact-design and artifact-diagramming, built all 11 stories and verified with Playwright. I read the whole page and published it (https://claude.ai/artifact/E9spdeUp54KzsmXZjSJZ8L). The maintainer judged it too ambitious to finish for now. At the maintainer's request I moved the brief to docs/diagrams/interactive-map/ and added a README. An Explore agent mapped the branch history and the diagram session logs for it, and the README links every pinned brief version and each log."
+status: completed
+outcome: "Brief moved to interactive-map/ with a history README; diagram artifact built; Part 2 rewritten as a full diagram spec, Part 1 facts corrected, three issues filed; PR #1694 merged"
+summary: "Picked up a handoff from session 1f97b613 (overview doc on PR #1694). The maintainer asked, step by step, for each phase: fix the overview first; spawn three cold readers (Sonnet, Opus, Fable) that saw only CLAUDE.md and the overview; spawn three repo-exploring agents for ideas on clickable stories and zoom; cut the open topics into 10 buckets for 10 Opus proposal agents; rewrite Part 2 completely with minor Part 1 fixes; have three different-model cold checkers review it; then propose improvements for the maintainer to decide. All of that was human-instructed. The agent-initiated parts were how the 10 buckets were cut, how conflicting proposals were merged (e.g. the two-state vs close-up zoom models), and the list A/B/C of fixes. The bucket agents corrected several Part 1 facts against the code: frictions-to-fixes merges hard fixes itself; guards need a human-attended session; one dump per collection; deploy is copy+restart and ignores CI; Tinkerfund search has cache:false; new issues are unlabeled. The cold checkers found real contradictions in the first rewrite (multi-target steps, one file listed on two nodes, accent count, open-group rule). Two checkers wrongly flagged story 5's ready-for-human label; ADR-0022 confirms it. The maintainer then decided: - cut the real-run cards, chaining, browser back, and branches outside stories 1/2/3/5; - container and browser are close-ups only; - Part 2 may hold detail; - zoom = the component's insides plus the nodes it directly works with; - the maintainer is the sole owner. Filed issues #1701 (stale packages after a failed install), #1702 (uncached home page) and #1703 (dependabot ledger drift) at the maintainer's request. The maintainer then asked for a Fable agent to build the diagram as an artifact. It loaded artifact-design and artifact-diagramming, built all 11 stories and verified with Playwright. I read the whole page and published it (https://claude.ai/artifact/E9spdeUp54KzsmXZjSJZ8L). The maintainer judged it too ambitious to finish for now. At the maintainer's request I moved the brief to docs/diagrams/interactive-map/ and added a README. An Explore agent mapped the branch history and the diagram session logs for it, and the README links every pinned brief version and each log. The maintainer then shaped the README in rounds: they supplied a local agent's prompt summaries for the earlier commits, had a two-axis /code-review run on it, then asked for the version history to be merged into one section per version (asked / agents / result), the summary to be trimmed to a TLDR, and all four diagram artifact links to be placed in it. PR #1694 merged."
 prs:
   - "1694"
 docsRead:
@@ -26,6 +26,8 @@ docsRead:
     reason: before updating the PR
   - path: docs/adr/0022-autonomous-triage-sweep.md
     reason: settle the ready-for-human label dispute
+  - path: docs/diagrams/interactive-map/README.md
+    reason: (read before editing)
   - path: CLAUDE.md
     reason: (no reason given)
   - path: docs/adr/0003-agent-operating-model-and-governance.md
@@ -107,6 +109,8 @@ skillsUsed:
     reason: closure at push
   - name: log-session
     reason: this log
+  - name: code-review
+    reason: (invoked as a slash command)
   - name: artifact-design
     reason: (no reason given)
   - name: artifact-diagramming
@@ -136,25 +140,37 @@ frictions:
   - description: "Subscribed to PR #1694's activity only on the second push, not when this session first pushed a commit to it."
     solution: Subscribe at the first push, as CLAUDE.md's 'Pushing is not landing' requires.
     severity: minor
-durationSec: 30721
+  - description: CI's gate failed once on c1d37255 with a Tinkerfund e2e page.goto timeout, even though gate:scoped passed locally. The PR changed only docs, but CI tests the merge with the newer main, which ran the heavy tier. The next commits went green without a fix.
+    solution: Treat as a flaky e2e test. It is unrelated to this docs-only diff; the next run on a newer head passed. If it recurs, file it against the tinkerfund e2e test's load timeout.
+    severity: major
+  - description: I first swapped the two round-2 artifact links (floor plan vs improvement loop) in the README, guessing which was which from the order they were pasted in.
+    solution: Check an artifact's title with the Artifact list before labelling a link.
+    severity: minor
+  - description: The first README restated round 4 twice, repeated commit messages, and pinned this session's log before the build was recorded in it; the code review caught this.
+    solution: Pin a log link at the commit that holds the content cited; give each fact one home in the doc.
+    severity: minor
+durationSec: 41423
 models:
-  claude-opus-5-5: 206
+  claude-opus-5-5: 301
 toolCounts:
-  Bash: 25
-  Read: 21
+  Bash: 42
+  Read: 27
   AskUserQuestion: 5
-  Agent: 21
-  Write: 5
-  ToolSearch: 1
+  Agent: 23
+  Write: 6
+  ToolSearch: 2
   mcp__github__issue_write: 3
-  mcp__github__pull_request_read: 5
+  mcp__github__pull_request_read: 6
   mcp__github__update_pull_request: 2
   mcp__claude-code-remote__subscribe_pr_activity: 1
   Skill: 2
-  ReadNotifications: 4
+  ReadNotifications: 18
   mcp__claude-code-remote__send_later: 2
   SendMessage: 1
-  Artifact: 2
+  Artifact: 3
+  Edit: 2
+  mcp__github__get_job_logs: 1
+  mcp__claude-code-remote__delete_trigger: 1
 filesEdited:
   - docs/diagrams/terrarium-overview.md
   - docs/diagrams/interactive-map/README.md
@@ -167,6 +183,7 @@ docsReadViaShell:
   - docs/agents/github-integration.md
   - docs/agents/issue-tracker.md
   - docs/agents/pr-workflow.md
+  - docs/diagrams/interactive-map/README.md
   - docs/agents/verifying-ui-changes.md
   - docs/adr/0003-agent-operating-model-and-governance.md
   - .agents/skills/blog-post/SKILL.md
@@ -270,6 +287,10 @@ subagents:
     model: fable
   - type: Explore
     task: Map diagram history and logs
+  - type: general-purpose
+    task: README standards review
+  - type: general-purpose
+    task: README spec review
 gitBranch: claude/diagram-research
 entrypoint: remote
 cliVersion: 2.1.295
