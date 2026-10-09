@@ -1,0 +1,98 @@
+schemaVersion: 1
+session: session_01NHHafnvmf9qkvq85pvMYzc
+startedAt: 2026-10-09T16:47:50Z
+endedAt: 2026-10-09T17:32:26Z
+kind: autonomous
+goal: "visitor-loop run, focus midden: three blind visitors tour the Midden, fix consensus problems, build the best idea"
+status: completed
+outcome: Consensus fixes (PR 1709) and a Start-here list (PR 1710) merged; one out-of-remit issue (1711) filed
+summary: 'Scheduled visitor-loop run (all work agent-initiated by the schedule; no human instruction). Focus rotated to midden. Built and served the production site, sent sonnet, fable and opus visitors through /t/midden, and tallied consensus. Fixed in PR 1709: dig-report footer off the reading column (all three), raw backticks in titles and notes (two), Condition key pushing the story down on phones (two), long paths overflowing 390px (two), unexplained "sterile" (all three), trench index with no cue (two), external-link cue (two). A two-axis code review caught the footer still misaligned with the prose and backticks left in index blurbs and the tab title; both fixed before merge. Dropped: jargon (covered by closed 1463), season anchor links (the wide plate is aria-hidden so links would be invisible focus targets), strata plate emptiness (by design). Feature PR 1710: "New here? Start with these" on the Midden front door. Owner-corrections candidates were all blog or digest posts, none a ruling. Filed 1711 for the surface-finds "two vs three jobs" prose. Open: the Condition key flashes open before folding on phones (SSR then onMounted).'
+prs:
+  - "1709"
+  - "1710"
+docsRead:
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: scripts/chromium-path.ts
+    reason: (no reason given)
+skillsUsed:
+  - name: code-review
+    reason: (no reason given)
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: visitor-loop
+    reason: (invoked as a slash command)
+frictions:
+  - description: "CLAUDE.md triggers skipped: did not grep docs/adr for touched paths, nor read docs/agents/tenant-layers.md before editing layers/midden/. No harm seen (gate green, review clean) but a layer gotcha could have slipped."
+    solution: Read tenant-layers.md and grep the ADRs before the first layers/ edit; the visitor-loop SKILL could list them in step 4.
+    severity: minor
+  - description: The harness attribution reminder says to hand-write the Co-Authored-By trailer; the repo commit-trailer guard denies that. The denied Bash call also dropped an earlier python edit in the same call, so it had to be re-run.
+    solution: Keep file edits and commits in separate Bash calls; the guard message should state it denies the whole call, and the attribution reminder should defer to the repo.
+    severity: nit
+  - description: tail-pipe guard denied a chained command, and a Monitor until-loop grepping a subagent transcript matched early and gave a false done.
+    solution: Redirect to a file and read it; wait for subagent completion notifications instead of grepping their transcripts.
+    severity: nit
+  - description: scripts/probe.ts has no viewport flag, so measuring 390px needed an iframe workaround.
+    solution: Add a --viewport WxH flag to probe.ts.
+    severity: minor
+durationSec: 2676
+models:
+  claude-sonnet-5-5: 180
+toolCounts:
+  Bash: 62
+  Monitor: 9
+  ToolSearch: 1
+  mcp__github__issue_read: 2
+  Agent: 5
+  mcp__github__search_issues: 4
+  Read: 2
+  mcp__github__create_pull_request: 3
+  Skill: 3
+  mcp__github__add_issue_comment: 2
+  mcp__github__issue_write: 1
+docsReadViaShell:
+  - CONTEXT-MAP.md
+  - CONTEXT.md
+  - .agents/skills/visitor-loop/decisions.md
+  - .agents/skills/visitor-loop/visitor-brief.md
+  - layers/midden/CONTEXT.md
+  - docs/adr/0003-agent-operating-model-and-governance.md
+  - docs/agents/git-conventions.md
+  - docs/agents/pr-workflow.md
+  - docs/agents/verifying-ui-changes.md
+  - docs/agents/tenant-layers.md
+subagents:
+  - type: general-purpose
+    task: Visitor sonnet
+    model: sonnet
+  - type: general-purpose
+    task: Visitor fable
+    model: fable
+  - type: general-purpose
+    task: Visitor opus
+    model: opus
+  - type: general-purpose
+    task: "Review: standards axis"
+  - type: general-purpose
+    task: "Review: spec axis"
+gitBranch: claude/adoring-galileo-gquzst
+entrypoint: remote_trigger
+cliVersion: 2.1.295
+trigger: visitor-loop
+learnings:
+  - A scoped class passed to SiteFooter lands on its single root, so a parent grid can place it; an auto-placed footer in a two-column grid fell into the narrow key column.
+ideas:
+  - "Midden find cards: add a one-line what-it-cost or what-we-learned tag so a list of curiosities reads as lessons (opus)."
+  - Add /t/midden/condition/<grade> listing every find of one grade across reports, linked from the Condition key (fable, opus).
+  - Link each Midden find to its living counterpart on the Blog, Tinkerfund or Journal in a Survives alongside row (fable).
+  - RSS or new-since feed of newly assessed Midden finds; the front shows only the latest three (all three visitors).
+  - Dig-map timeline of finds by season and grade at the top of the trench index (sonnet).
+  - "Midden pull quote is all caps and reads as shouting: use sentence case with attribution (opus)."
+  - "Stores strata plate at 390px has unlabeled bands: put season names beside the bands (opus)."
+  - Rename report The Current Cut, which competes with the Current Midden season (fable).
+  - Reword Every other quarter of this place on /t/midden to Every other part of Terrarium (fable).
+  - Make season labels on cards link to their Stores band; needs the plate links to be non-aria-hidden (sonnet, fable).
+  - Add --viewport WxH to scripts/probe.ts so mobile checks need no iframe workaround.
+landedBy: Stop
