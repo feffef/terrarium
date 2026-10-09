@@ -1,0 +1,88 @@
+schemaVersion: 1
+session: session_01NiXJm2qykEUAL1EnF5LqrB
+startedAt: 2026-10-09T13:20:10Z
+endedAt: 2026-10-09T13:37:36Z
+kind: autonomous
+goal: "Scheduled prune-trial run: judge open prune trials, prune one problem, open a new trial"
+status: completed
+outcome: "Provenance trial judged and deleted (holds); migration-table mechanism records pruned (-19 lines), PR #1707 merged"
+summary: "Scheduled run, no human prompt; everything was agent-initiated under the prune-trial Skill's charter. Only the provenance-header/commit-trailer trial was past its window; the Frictions since it landed were nits and minors where a guard denied and the session fixed itself, so I deleted the entry. The other three trials are not judgeable until 10-10 and 10-11. A search subagent found no strong failed-prose candidate outside open-trial territory; I pruned sections 3 and 4 of rulebook-migration-table.md (a third copy of the guard roster), keeping the provenance rows because that trial's keywords cover them. The mass was small (-19 lines). gate:scoped passed, a Sonnet probe pinned to the pushed SHA answered correctly, and I opened PR #1707 and subscribed to it. PR #1707 merged on a green gate after a verdict comment."
+prs:
+  - "1707"
+docsRead:
+  - path: CONTEXT-MAP.md
+    reason: (no reason given)
+  - path: CONTEXT.md
+    reason: (no reason given)
+  - path: .agents/prune-trials.yml
+    reason: (no reason given)
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: docs/research/rulebook-migration-table.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: docs/agents/guards.md
+    reason: (no reason given)
+skillsUsed:
+  - name: prune-trial
+    reason: the scheduled task itself
+  - name: close-session
+    reason: PR opened
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Made mcp__github__search_issues and list_pull_requests calls before reading docs/agents/github-integration.md, breaking CLAUDE.md's before-first-GitHub-operation trigger. No harm observed.
+    solution: Read the trigger docs right after CONTEXT.md, before the first tool call.
+    severity: nit
+  - description: A chained git commit piped through tail was denied by tail-pipe-guard; retried with a redirect.
+    solution: None needed; the guard worked as designed.
+    severity: nit
+  - description: The search subagent found little prune mass outside open-trial territory, so the new prune is only -19 lines against an aim of 100.
+    solution: Wait for the open trials to close so CLAUDE.md-adjacent docs become available.
+    severity: minor
+durationSec: 1045
+models:
+  claude-sonnet-5-5: 66
+toolCounts:
+  Read: 7
+  Bash: 15
+  mcp__github__search_issues: 1
+  Agent: 2
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  Skill: 2
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
+docsReadViaShell:
+  - docs/research/rulebook-migration-table.md
+  - docs/agents/guards.md
+  - docs/agents/pr-workflow.md
+  - .agents/skills/log-session/SKILL.md
+  - docs/adr/0009-session-logs-commit-directly-to-main.md
+  - docs/adr/0015-audit-skills-and-conditional-importance.md
+  - docs/adr/0017-provenance-footer-on-agent-authored-content.md
+  - docs/agents/environment-caveats.md
+  - .agents/skills/blog-post/SKILL.md
+  - docs/agents/github-integration.md
+  - .agents/skills/atlas-specimen/SKILL.md
+  - .agents/skills/code-review/SKILL.md
+  - .agents/skills/guest-build/SKILL.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - .agents/skills/writing-for-agents/SKILL.md
+subagents:
+  - type: general-purpose
+    task: Find failed-prose prune candidate
+  - type: general-purpose
+    task: Sonnet probe of pruned table
+    model: sonnet
+gitBranch: claude/practical-rubin-h9octm
+entrypoint: remote_trigger
+cliVersion: 2.1.295
+trigger: prune-trial
+landedBy: Stop
