@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01Jo3m1r8fyuGvjtRE9qDrPH
 startedAt: 2026-10-09T04:01:11Z
-endedAt: 2026-10-09T04:21:52Z
+endedAt: 2026-10-09T04:25:26Z
 kind: autonomous
 goal: "Scheduled /audit-docs run: keep Live docs honest against the code (concision family 2, docs/research)"
-status: in-review
-outcome: "Fact-checked doc fixes applied and gate:scoped green; PR #1700 opened and subscribed, not yet merged"
-summary: "Entirely agent-initiated: a schedule fired the audit-docs Skill, no human prompt. Six read-only reviewer agents (drift, single-home, three concision splits over docs/research, coherence) produced findings; three checkers re-derived them. Verdicts: 37 CONFIRMED, 17 CONFIRMED-BUT, 5 WRONG (all five dropped: a mermaid rule move already deliberately reversed, a midden CONTEXT shortening that lost pointers, two findings in CLAUDE.md prune-trial territory, one over-reaching CM-09 reading). Three applier agents then edited disjoint files; gate:scoped passed; one PR (#1700) opened. Left unfixed on purpose: a stale CLAUDE.md citation in scripts/midden-survey.ts (code), and the CLAUDE.md vs dispatch-subagents background-gate conflict (trial territory). No ADR, CI or isolation edits; no issue filed. Still to do after this log: post a verdict comment and merge through scripts/merge-pr.ts once CI is green."
+status: completed
+outcome: "Fact-checked doc fixes applied, gate green, PR #1700 self-merged on green CI"
+summary: "Entirely agent-initiated: a schedule fired the audit-docs Skill, no human prompt. Six read-only reviewer agents (drift, single-home, three concision splits over docs/research, coherence) produced findings; three checkers re-derived them. Verdicts: 37 CONFIRMED, 17 CONFIRMED-BUT, 5 WRONG (all five dropped: a mermaid rule move already deliberately reversed, a midden CONTEXT shortening that lost pointers, two findings in CLAUDE.md prune-trial territory, one over-reaching CM-09 reading). Three applier agents then edited disjoint files; gate:scoped passed; one PR (#1700) opened. Left unfixed on purpose: a stale CLAUDE.md citation in scripts/midden-survey.ts (code), and the CLAUDE.md vs dispatch-subagents background-gate conflict (trial territory). No ADR, CI or isolation edits; no issue filed. Then: posted a verdict comment and merged through scripts/merge-pr.ts on green CI (merge commit 9c3983d)."
 prs:
   - "1700"
 docsRead:
@@ -72,11 +72,11 @@ frictions:
   - description: Reviewers A and D reported findings inside CLAUDE.md prune-trial territory that checkers then had to reject as WRONG.
     solution: Put the open Prune Trial territory paths in each reviewer brief up front, in audit-docs.
     severity: minor
-durationSec: 1241
+durationSec: 1455
 models:
-  claude-sonnet-5-5: 77
+  claude-sonnet-5-5: 87
 toolCounts:
-  Bash: 13
+  Bash: 15
   Read: 4
   Agent: 12
   Write: 2
@@ -85,6 +85,8 @@ toolCounts:
   Skill: 2
   mcp__github__subscribe_pr_activity: 1
   mcp__github__add_issue_comment: 1
+  ReadNotifications: 2
+  mcp__github__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/journal/content/current/pages/history.md
   - docs/proposals/README.md
