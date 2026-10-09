@@ -7,29 +7,40 @@ parts live and how agents and people keep improving it.
   - Part 1 explains Terrarium in plain words.
   - Part 2 specifies the diagram.
 - **The current diagram:** <https://claude.ai/artifact/E9spdeUp54KzsmXZjSJZ8L>.
-  It is a first build of Part 2. It works, but it would need a lot more work
-  to be finished, so the build stops here for now.
+  It is an experiment: a first build of Part 2, made with heavy use of
+  agents. The unified diagram turned out too ambitious to render easily, and
+  would need a lot more work to finish, so the build stops here for now.
 
 ## How we got here
 
-It took four rounds, from 2026-10-08 to 2026-10-09. Each round started over
-from a better brief.
+It took four rounds, from 2026-10-08 to 2026-10-09.
 
-1. **Draw it straight from the code.** Two sessions ran in parallel. Each
-   sent Explore agents through the repo and drew two diagrams: the Nuxt app
-   architecture and the improvement loop. One used Archify, the other an
-   artifact. Both diagrams passed their checks. Neither started from an
-   agreed reader or question.
-2. **Write briefs first, then draw.**
+1. **Compare two diagram tools.**
+   - The maintainer gave Archify and Claude's artifact-diagramming skill the
+     same prompt. It asked for two diagrams, the Nuxt app architecture and
+     the improvement loop, and included a large research phase.
+   - Two sessions ran in parallel. Each sent Explore agents through the
+     repo before drawing.
+   - Because each tool did its own research, the two results could differ in
+     content as well as in drawing. That made the comparison unfair.
+2. **Separate the brief from the drawing.**
+   - The new idea: do the exploration and the clean-up of concepts and
+     language once, in a brief, then hand that brief to any diagram
+     generator.
    - A session wrote two briefs, one per diagram, and put them through three
      subagent review rounds: completeness, plain language and project terms.
-   - Two sessions then drew from those briefs, one with an artifact and one
-     with Archify. The maintainer judged that neither diagram worked, and both
-     were abandoned.
-   - Lesson: the reviews polished the briefs' framing but never questioned
-     it. The diagrams missed the basic fact that everything lives in one
-     repository, which becomes a database at build time.
-3. **One plain-language overview.**
+   - Two sessions then drew from those briefs, one with Claude artifacts and
+     one with Archify. The artifact results were the
+     [architecture diagram](https://claude.ai/artifact/Y1N8NvYWrfeVmyLXZxQob5)
+     (a floor plan) and the [improvement loop](https://claude.ai/artifact/DtdeqjvrDRtPgdNHf4E7VQ).
+     The maintainer judged that neither attempt worked, and both were
+     abandoned.
+   - Lessons:
+     - The reviews polished the briefs' framing but never questioned it.
+       The diagrams missed the basic fact that everything lives in one
+       repository, which becomes a database at build time.
+     - Each diagram was still hard to understand without the other.
+3. **One plain-language overview for one unified diagram.**
    - The brief's author replaced both briefs with one overview, grouped by
      where things live: people, Claude, GitHub, the Docker host and the
      browser.
@@ -37,6 +48,9 @@ from a better brief.
      review, and a review by four agents on two models plus a fact-finder.
    - Part 1 became the plain-language explanation. Part 2 collected ideas
      for the interaction.
+   - The session slipped from writing a brief into designing the diagram's
+     rendering in detail. That design work was then split off into its own
+     round.
 4. **Stress-test and specify Part 2.** A cloud session ran these steps:
    - three cold readers on three models, which saw only `CLAUDE.md` and the
      overview;
@@ -64,7 +78,7 @@ archive won't break it.
 | 1 | [df390af0](https://github.com/feffef/terrarium/blob/67cc6145971586272f21b84089f248d091607271/layers/journal/content/current/sessions/2026-10-08-df390af0-11a7-4415-9bb9-b24cea702246.yml) | two diagrams with Archify, straight from the code | completed |
 | 1 | [1a527758](https://github.com/feffef/terrarium/blob/67cc6145971586272f21b84089f248d091607271/layers/journal/content/current/sessions/2026-10-08-1a527758-724c-4cf0-8160-6440f5099ee6.yml) | the same two diagrams as an [artifact](https://claude.ai/artifact/HDgKuN7NhUBeWwMJxNR8vT) | completed |
 | 2, 3 | [1f97b613](https://github.com/feffef/terrarium/blob/67cc6145971586272f21b84089f248d091607271/layers/journal/content/current/sessions/2026-10-08-1f97b613-f529-4487-a7e9-1115a44b84c7.yml) | wrote and reviewed the two briefs, then the plain-language overview | in review |
-| 2 | [355d2d64](https://github.com/feffef/terrarium/blob/67cc6145971586272f21b84089f248d091607271/layers/journal/content/current/sessions/2026-10-08-355d2d64-55fc-4515-81c1-e831f8b84601.yml) | artifacts drawn from the two briefs | abandoned |
+| 2 | [355d2d64](https://github.com/feffef/terrarium/blob/67cc6145971586272f21b84089f248d091607271/layers/journal/content/current/sessions/2026-10-08-355d2d64-55fc-4515-81c1-e831f8b84601.yml) | artifacts drawn from the two briefs: [architecture](https://claude.ai/artifact/Y1N8NvYWrfeVmyLXZxQob5), [improvement loop](https://claude.ai/artifact/DtdeqjvrDRtPgdNHf4E7VQ) | abandoned |
 | 2 | [49f1fea0](https://github.com/feffef/terrarium/blob/67cc6145971586272f21b84089f248d091607271/layers/journal/content/current/sessions/2026-10-08-49f1fea0-270e-4851-9cc7-3dbf8cc8609a.yml) | Archify diagrams drawn from the two briefs | abandoned |
 | 4 | [session_01S1Wwkp](https://github.com/feffef/terrarium/blob/67cc6145971586272f21b84089f248d091607271/layers/journal/content/current/sessions/2026-10-08-session_01S1WwkpNHDfbvKAf5T1afKq.yml) | stress-tested and rewrote Part 2, then had the diagram built | in review |
 
