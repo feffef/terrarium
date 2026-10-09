@@ -126,7 +126,7 @@ an open **Prune Trial**'s territory (`.agents/prune-trials.yml`) is not yours to
 retire — that friction *is* the trial's evidence, and re-legislating it destroys
 the verdict `prune-trial` is waiting for (ADR-0027). The drop reason quotes the
 matching `territory` path or keyword verbatim; with no quotable match the
-candidate is not on trial, so classify it below (§4 files it if surface-blocked).
+candidate is not on trial, so classify it below.
 A `blocker` is the exception: after the usual tracker search, file it, naming
 the trial. Then, for the rest: the §1 subagent applies these rules to every
 candidate, checking the tracker for an issue or PR that already covers it — and
