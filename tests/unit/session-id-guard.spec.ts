@@ -5,8 +5,8 @@
 // The pure core (`findSessionIdMismatches`/`parseOwnCommits`) is pinned here
 // directly; `readOwnCommits` is exercised against a real throwaway repo +
 // bare remote (mirroring log-session-push.spec.ts's pattern) so the
-// `origin/main..HEAD` scoping and the author-date cutoff for a checked-out
-// branch's inherited commits (issue #1611) are proven against real git.
+// `origin/main..HEAD` scoping and the transcript ownership check (issues
+// #1611, #1698) are proven against real git.
 import { execFileSync } from 'node:child_process'
 import { mkdtempSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
@@ -14,11 +14,13 @@ import { join } from 'node:path'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 import {
   checkOwnCommits,
+  findMadeCommits,
   findSessionIdMismatches,
   formatMismatchError,
   parseOwnCommits,
   readOwnCommits,
   resolveGroundTruthFromTranscript,
+  type MadeCommits,
   type OwnCommit,
 } from '../../scripts/session-id-guard.ts'
 
@@ -40,28 +42,35 @@ function git(cwd: string, args: string[], extraEnv: Record<string, string> = {})
 
 const REC = '\x1e'
 
+/** Ownership by sha prefix, the shape `findMadeCommits` produces. */
+const madeShas = (...shas: string[]): MadeCommits => ({ shas, subjects: new Set() })
+
+/** A transcript record carrying one Bash tool result. */
+const toolResult = (content: unknown) =>
+  JSON.stringify({ type: 'user', message: { role: 'user', content: [{ type: 'tool_result', tool_use_id: 't', content }] } })
+
 describe('findSessionIdMismatches() — the pure core (issue #387)', () => {
   it('flags a commit whose trailer diverges from the ground truth', () => {
     const commits: OwnCommit[] = [{ sha: 'aaa111', trailerSessionId: 'session_WRONG' }]
-    expect(findSessionIdMismatches(commits, 'session_REAL')).toEqual([
+    expect(findSessionIdMismatches(commits, 'session_REAL', madeShas('aaa', 'bbb', 'ccc', 'ddd'))).toEqual([
       { sha: 'aaa111', found: 'session_WRONG', expected: 'session_REAL' },
     ])
   })
 
   it('passes silently on a matching trailer', () => {
     const commits: OwnCommit[] = [{ sha: 'aaa111', trailerSessionId: 'session_REAL' }]
-    expect(findSessionIdMismatches(commits, 'session_REAL')).toEqual([])
+    expect(findSessionIdMismatches(commits, 'session_REAL', madeShas('aaa', 'bbb', 'ccc', 'ddd'))).toEqual([])
   })
 
   it('never flags a commit with no trailer at all — most commits on a branch carry none', () => {
     const commits: OwnCommit[] = [{ sha: 'aaa111' }]
-    expect(findSessionIdMismatches(commits, 'session_REAL')).toEqual([])
+    expect(findSessionIdMismatches(commits, 'session_REAL', madeShas('aaa', 'bbb', 'ccc', 'ddd'))).toEqual([])
   })
 
   it('skips (passes) when no ground-truth id is available — no false failure on a local CLI session', () => {
     const commits: OwnCommit[] = [{ sha: 'aaa111', trailerSessionId: 'session_WRONG' }]
-    expect(findSessionIdMismatches(commits, null)).toEqual([])
-    expect(findSessionIdMismatches(commits, undefined)).toEqual([])
+    expect(findSessionIdMismatches(commits, null, madeShas('aaa'))).toEqual([])
+    expect(findSessionIdMismatches(commits, undefined, madeShas('aaa'))).toEqual([])
   })
 
   it('reports every offending commit when several mismatch, ignoring the ones that match or lack a trailer', () => {
@@ -71,30 +80,51 @@ describe('findSessionIdMismatches() — the pure core (issue #387)', () => {
       { sha: 'ccc' },
       { sha: 'ddd', trailerSessionId: 'session_ANOTHER_WRONG' },
     ]
-    expect(findSessionIdMismatches(commits, 'session_REAL').map((m) => m.sha)).toEqual(['bbb', 'ddd'])
+    expect(findSessionIdMismatches(commits, 'session_REAL', madeShas('aaa', 'bbb', 'ccc', 'ddd')).map((m) => m.sha)).toEqual(['bbb', 'ddd'])
   })
 })
 
-describe('findSessionIdMismatches() — sessionStart cutoff (issue #1611)', () => {
-  const start = '2026-10-04T17:51:28Z'
-  const otherSessionCommit = (authoredAt?: string): OwnCommit[] => [
-    { sha: 'aaa', trailerSessionId: 'session_OTHER', authoredAt },
-  ]
+describe('findSessionIdMismatches() — only commits the session made (issues #1611, #1698)', () => {
+  const foreign: OwnCommit[] = [{ sha: 'aaa111', trailerSessionId: 'session_OTHER', subject: 'sibling work' }]
 
-  it('skips a foreign trailer authored before the session started (inherited branch), in either UTC spelling', () => {
-    expect(findSessionIdMismatches(otherSessionCommit('2026-10-04T17:43:00+00:00'), 'session_REAL', start)).toEqual([])
-    expect(findSessionIdMismatches(otherSessionCommit('2026-10-04T17:43:00Z'), 'session_REAL', start)).toEqual([])
+  it("skips another session's commit on the branch, inherited or made by a sibling sharing the working copy", () => {
+    expect(findSessionIdMismatches(foreign, 'session_REAL', { shas: ['bbb222'], subjects: new Set(['own work']) })).toEqual([])
   })
 
-  it('still flags a foreign trailer authored at or after the start (the #387 case)', () => {
-    expect(findSessionIdMismatches(otherSessionCommit('2026-10-04T17:51:28+00:00'), 'session_REAL', start)).toHaveLength(1)
-    expect(findSessionIdMismatches(otherSessionCommit('2026-10-04T17:51:28Z'), 'session_REAL', start)).toHaveLength(1)
-    expect(findSessionIdMismatches(otherSessionCommit('2026-10-04T19:51:28+02:00'), 'session_REAL', start)).toHaveLength(1)
+  it('flags a made commit by short-sha prefix (the #387 case)', () => {
+    expect(findSessionIdMismatches(foreign, 'session_REAL', madeShas('aaa111'))).toHaveLength(1)
   })
 
-  it('checks every commit when the start is unknown, or the author date is missing', () => {
-    expect(findSessionIdMismatches(otherSessionCommit('2026-10-04T17:43:00+00:00'), 'session_REAL')).toHaveLength(1)
-    expect(findSessionIdMismatches(otherSessionCommit(), 'session_REAL', start)).toHaveLength(1)
+  it('flags a made commit by subject, so a rebase (new sha, no commit output) keeps it owned', () => {
+    expect(findSessionIdMismatches(foreign, 'session_REAL', { shas: [], subjects: new Set(['sibling work']) })).toHaveLength(1)
+  })
+})
+
+describe('findMadeCommits()', () => {
+  it('reads every `[<branch> <sha>] <subject>` line from string and text-part tool results, root and detached commits included', () => {
+    const made = findMadeCommits([
+      [
+        toolResult('[claude/x 1a2b3c4] first\n 1 file changed'),
+        toolResult([{ type: 'text', text: 'hook ok\n[main (root-commit) 5d6e7f8] init' }]),
+        toolResult('[detached HEAD 9a8b7c6] probe'),
+      ].join('\n'),
+    ])
+    expect(made.shas).toEqual(['1a2b3c4', '5d6e7f8', '9a8b7c6'])
+    expect([...made.subjects]).toEqual(['first', 'init', 'probe'])
+  })
+
+  it('reads subagent transcripts alongside the main one', () => {
+    expect(findMadeCommits([toolResult('[a 1111111] main'), toolResult('[b 2222222] sub')]).shas).toEqual(['1111111', '2222222'])
+  })
+
+  it("ignores a commit line the session only wrote or was shown outside a tool result", () => {
+    const assistant = JSON.stringify({ type: 'assistant', message: { content: [{ type: 'text', text: '[main 1a2b3c4] quoted' }] } })
+    const prompt = JSON.stringify({ type: 'user', message: { content: '[main 5d6e7f8] pasted' } })
+    expect(findMadeCommits([[assistant, prompt].join('\n')]).shas).toEqual([])
+  })
+
+  it('ignores `git log` output, which has no bracketed commit line', () => {
+    expect(findMadeCommits([toolResult('1a2b3c4 subject\ncommit 5d6e7f8a\nAuthor: x')]).shas).toEqual([])
   })
 })
 
@@ -105,14 +135,8 @@ describe('parseOwnCommits()', () => {
       `${REC}sha2\nsubject with no trailer at all`,
     ].join('')
     expect(parseOwnCommits(raw)).toEqual([
-      { sha: 'sha1', trailerSessionId: 'session_ABC' },
-      { sha: 'sha2', trailerSessionId: undefined },
-    ])
-  })
-
-  it('reads the author date from the header line', () => {
-    expect(parseOwnCommits(`${REC}sha1 2026-10-04T17:43:00+00:00\nsubject`)).toEqual([
-      { sha: 'sha1', trailerSessionId: undefined, authoredAt: '2026-10-04T17:43:00+00:00' },
+      { sha: 'sha1', trailerSessionId: 'session_ABC', subject: 'subject line' },
+      { sha: 'sha2', trailerSessionId: undefined, subject: 'subject with no trailer at all' },
     ])
   })
 
@@ -199,50 +223,44 @@ describe('readOwnCommits() — against a throwaway bare remote, scoped to origin
     const commits = readOwnCommits(work)
     expect(commits).toHaveLength(2) // the inherited init commit is excluded
     expect(commits.map((c) => c.trailerSessionId)).toEqual(['session_OWN', undefined]) // git log is newest-first
+    expect(commits.map((c) => c.subject)).toEqual(['own work', 'own work, no trailer'])
   })
 
-  it('end to end: a fabricated trailer on an own commit is caught; the inherited one never surfaces', () => {
-    git(work, [
-      'commit',
-      '--allow-empty',
-      '-m',
-      'fabricated\n\nClaude-Session: https://claude.ai/code/session_FABRICATED',
-    ])
-    const mismatches = findSessionIdMismatches(readOwnCommits(work), 'session_REAL')
-    expect(mismatches).toEqual([
+  /** Commits like a session's Bash call would, returning the tool result it would see. */
+  const commit = (message: string) => toolResult(git(work, ['commit', '--allow-empty', '-m', message]))
+
+  it('end to end: a fabricated trailer on a commit the session made is caught; the inherited one never surfaces', () => {
+    const made = findMadeCommits([commit('fabricated\n\nClaude-Session: https://claude.ai/code/session_FABRICATED')])
+    expect(findSessionIdMismatches(readOwnCommits(work), 'session_REAL', made)).toEqual([
       { sha: expect.any(String), found: 'session_FABRICATED', expected: 'session_REAL' },
     ])
   })
 
-  it('end to end: a correct trailer on the session\'s own commit passes with no mismatches', () => {
-    git(work, ['commit', '--allow-empty', '-m', 'own work\n\nClaude-Session: https://claude.ai/code/session_REAL'])
-    expect(findSessionIdMismatches(readOwnCommits(work), 'session_REAL')).toEqual([])
+  it("end to end: a correct trailer on the session's own commit passes with no mismatches", () => {
+    const made = findMadeCommits([commit('own work\n\nClaude-Session: https://claude.ai/code/session_REAL')])
+    expect(findSessionIdMismatches(readOwnCommits(work), 'session_REAL', made)).toEqual([])
   })
 
-  it('end to end: an inherited commit amended during the session (committer date ≥ start, author date < start) is skipped', () => {
-    const before = { GIT_AUTHOR_DATE: '2026-10-04T16:27:00Z', GIT_COMMITTER_DATE: '2026-10-04T16:27:00Z' }
-    git(work, ['commit', '--allow-empty', '-m', 'inherited\n\nClaude-Session: https://claude.ai/code/session_OTHER'], before)
-    git(work, ['commit', '--amend', '--allow-empty', '--no-edit'], { GIT_COMMITTER_DATE: '2026-10-04T18:00:00Z' })
-    // git 2.55 prints a UTC `%aI` as `…Z`, 2.43 as `…+00:00`: compare instants.
-    const [authored, committed] = git(work, ['log', '-1', '--format=%aI %cI']).split(' ').map(Date.parse)
-    expect([authored, committed]).toEqual([Date.parse('2026-10-04T16:27:00Z'), Date.parse('2026-10-04T18:00:00Z')])
-    expect(findSessionIdMismatches(readOwnCommits(work), 'session_REAL', '2026-10-04T17:51:28Z')).toEqual([])
-    expect(findSessionIdMismatches(readOwnCommits(work), 'session_REAL')).toHaveLength(1)
+  it('end to end: an amended commit stays owned through the new sha git prints', () => {
+    const first = commit('own\n\nClaude-Session: https://claude.ai/code/session_FABRICATED')
+    const amended = toolResult(git(work, ['commit', '--amend', '--allow-empty', '--no-edit']))
+    expect(findSessionIdMismatches(readOwnCommits(work), 'session_REAL', findMadeCommits([first, amended]))).toHaveLength(1)
   })
 
-  it("checkOwnCommits(): takes the id and start from one transcript, flagging only the session's own bad trailer", () => {
-    const at = (d: string) => ({ GIT_AUTHOR_DATE: d, GIT_COMMITTER_DATE: d })
-    git(work, ['commit', '--allow-empty', '-m', 'inherited\n\nClaude-Session: https://claude.ai/code/session_OTHER'], at('2026-10-04T16:27:00Z'))
-    git(work, ['commit', '--allow-empty', '-m', 'own\n\nClaude-Session: https://claude.ai/code/session_FABRICATED'], at('2026-10-04T18:00:00Z'))
-    const transcript = JSON.stringify({
-      type: 'user',
-      timestamp: '2026-10-04T17:51:28Z',
-      sessionId: 'session_REAL',
-      message: { content: 'x' },
-    })
+  it("checkOwnCommits(): a sibling's commit landing mid-session in the shared working copy is skipped (issue #1698)", () => {
+    const own = commit('own\n\nClaude-Session: https://claude.ai/code/session_FABRICATED')
+    git(work, ['commit', '--allow-empty', '-m', 'sibling\n\nClaude-Session: https://claude.ai/code/session_SIBLING'])
+    const transcript = [JSON.stringify({ type: 'user', sessionId: 'session_REAL', message: { content: 'x' } }), own].join('\n')
     expect(checkOwnCommits(work, transcript, {})).toEqual({
       groundTruthId: 'session_REAL',
       mismatches: [{ sha: expect.any(String), found: 'session_FABRICATED', expected: 'session_REAL' }],
     })
+  })
+
+  it('checkOwnCommits(): a commit made by a subagent is checked through its transcript', () => {
+    const sub = commit('sub\n\nClaude-Session: https://claude.ai/code/session_FABRICATED')
+    const main = JSON.stringify({ type: 'user', sessionId: 'session_REAL', message: { content: 'x' } })
+    expect(checkOwnCommits(work, main, {}).mismatches).toEqual([])
+    expect(checkOwnCommits(work, main, {}, [sub]).mismatches).toHaveLength(1)
   })
 })

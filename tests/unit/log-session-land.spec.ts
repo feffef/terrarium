@@ -264,13 +264,13 @@ describe('withSessionIdMismatchFriction() — the recorded-signal half of the is
     expect(withSessionIdMismatchFriction(scratch, [])).toBe(scratch)
   })
 
-  it('appends a blocker friction carrying the greppable marker and the offending detail, without dropping existing frictions', () => {
+  it('appends a major friction carrying the greppable marker and the offending detail, without dropping existing frictions', () => {
     const withMismatch = withSessionIdMismatchFriction(scratch, [
       { sha: 'deadbeef0000', found: 'session_WRONG', expected: 'session_REAL' },
     ])
     expect(withMismatch.frictions).toHaveLength(scratch.frictions.length + 1)
     const added = withMismatch.frictions.at(-1)!
-    expect(added.severity).toBe('blocker')
+    expect(added.severity).toBe('major')
     expect(added.description).toContain(SESSION_ID_MISMATCH_FRICTION)
     expect(added.description).toContain('session_WRONG')
     expect(added.description).toContain('session_REAL')

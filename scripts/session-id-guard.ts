@@ -3,7 +3,7 @@
 // PR #362's strengthened prose, one of which actually landed on `main`).
 // Prose alone can't catch "a plausible-looking id seen elsewhere in context" —
 // this compares every `Claude-Session:` trailer on the session's OWN commits
-// (`origin/main..HEAD`, minus any authored before the session started)
+// (those in `origin/main..HEAD` its transcript shows it making, issue #1698)
 // against the resolved ground-truth session id (`resolveGroundTruthSessionId`,
 // session-trace.ts — already built for the session log's own `session:` field
 // by PR #533, and reused here rather than re-derived) and reports a mismatch.
@@ -21,7 +21,7 @@ import { readFileSync } from 'node:fs'
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import { fetchOriginMain, SESSION_TRAILER } from './git-helpers.ts'
-import { extractTrace, parseTranscript, type SessionIdEnv } from './session-trace.ts'
+import { extractTrace, parseTranscript, readSubagentJsonls, type SessionIdEnv } from './session-trace.ts'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 
@@ -35,7 +35,18 @@ const REC = '\x1e' // record separator, matching audit-skills.ts's git-log conve
 export interface OwnCommit {
   sha: string
   trailerSessionId?: string
-  authoredAt?: string
+  subject?: string
+}
+
+/** What the transcript shows the session committing: the short shas and
+ *  subjects git prints as `[<branch> <sha>] <subject>` after a commit, amend or
+ *  cherry-pick. The subject keeps a commit this session rebased (new sha, no
+ *  output) its own. `git commit -q` prints no such line, so its commit goes
+ *  unchecked: a fail-open behind `provenance-footer.ts`, which already
+ *  corrects a wrong id at commit time. */
+export interface MadeCommits {
+  shas: string[]
+  subjects: Set<string>
 }
 
 export interface SessionIdMismatch {
@@ -44,51 +55,73 @@ export interface SessionIdMismatch {
   expected: string
 }
 
-/** The pure, unit-testable core: `(commits, groundTruthId, sessionStart?) → mismatches`.
+/** The pure, unit-testable core: `(commits, groundTruthId, made) → mismatches`.
  *  `groundTruthId` of `null`/`undefined` means no ground truth was resolvable
  *  (e.g. a plain local CLI session with no `CLAUDE_CODE_REMOTE_SESSION_ID` and
  *  no transcript `sessionId`) — the contract is to skip and pass, never a
  *  false failure, so this returns no mismatches in that case regardless of
- *  what the commits carry. A commit authored before `sessionStart` is
- *  inherited (a checked-out unmerged branch, issue #1611) and skipped; the
- *  author date, unlike the committer date, survives a rebase or amend. An
- *  unknown start checks every commit. */
+ *  what the commits carry. Only commits in `made` are checked: a checked-out
+ *  branch can carry another session's commits, made before this one started
+ *  (issue #1611) or by a sibling sharing the working copy (issue #1698). */
 export function findSessionIdMismatches(
   commits: OwnCommit[],
   groundTruthId: string | null | undefined,
-  sessionStart?: string,
+  made: MadeCommits,
 ): SessionIdMismatch[] {
   if (!groundTruthId) return []
-  const start = sessionStart ? Date.parse(sessionStart) : NaN
   const out: SessionIdMismatch[] = []
-  for (const { sha, trailerSessionId, authoredAt } of commits) {
+  for (const { sha, trailerSessionId, subject } of commits) {
     if (!trailerSessionId) continue // no trailer to check — not a mismatch
-    if (authoredAt && Date.parse(authoredAt) < start) continue
-    if (trailerSessionId !== groundTruthId) {
+    const ours = made.shas.some((s) => sha.startsWith(s)) || (subject !== undefined && made.subjects.has(subject))
+    if (ours && trailerSessionId !== groundTruthId) {
       out.push({ sha, found: trailerSessionId, expected: groundTruthId })
     }
   }
   return out
 }
 
+const COMMIT_LINE = /^\[[^\]\n]+? ([0-9a-f]{7,40})\] (.+)$/gm
+
+/** Reads tool results only, so a commit line the session merely quoted
+ *  never counts as one it made. */
+export function findMadeCommits(transcriptJsonls: string[]): MadeCommits {
+  const made: MadeCommits = { shas: [], subjects: new Set() }
+  for (const rec of transcriptJsonls.flatMap(parseTranscript)) {
+    const content = (rec.message as { content?: unknown } | undefined)?.content
+    if (!Array.isArray(content)) continue
+    for (const part of content) {
+      if (part?.type !== 'tool_result') continue
+      const texts = Array.isArray(part.content) ? part.content.map((c: { text?: unknown }) => c?.text) : [part.content]
+      for (const text of texts) {
+        if (typeof text !== 'string') continue
+        for (const [, sha, subject] of text.matchAll(COMMIT_LINE)) {
+          made.shas.push(sha!)
+          made.subjects.add(subject!.trim())
+        }
+      }
+    }
+  }
+  return made
+}
+
 /** Expects `readOwnCommits`'s `git log` format: one record per commit, a
- *  `<sha> <author ISO date>` header line followed by the full commit message body. */
+ *  `<sha>` header line followed by the full commit message body. */
 export function parseOwnCommits(raw: string): OwnCommit[] {
   const out: OwnCommit[] = []
   for (const block of raw.split(REC).map((b) => b.trim()).filter(Boolean)) {
     const nl = block.indexOf('\n')
-    const [sha, authoredAt] = (nl >= 0 ? block.slice(0, nl) : block).trim().split(' ')
+    const sha = (nl >= 0 ? block.slice(0, nl) : block).trim()
     const body = nl >= 0 ? block.slice(nl + 1) : ''
     if (!sha) continue
     const m = body.match(SESSION_TRAILER)
-    out.push({ sha, trailerSessionId: m ? m[1] : undefined, authoredAt })
+    out.push({ sha, trailerSessionId: m ? m[1] : undefined, subject: body.split('\n')[0]!.trim() })
   }
   return out
 }
 
 /** The candidate own commits — `origin/main..HEAD`, which excludes history
- *  already on `main` but still includes a checked-out branch's unmerged
- *  commits (`findSessionIdMismatches` drops those by author date). Fails open ([]) on
+ *  already on `main` but still includes other sessions' unmerged commits on
+ *  the branch (`findSessionIdMismatches` drops those). Fails open ([]) on
  *  any git error (detached HEAD, no `origin` remote, offline): this is a
  *  backstop check, not the primary one, and it must never itself break a
  *  session that has nothing wrong with its trailers to report. */
@@ -101,7 +134,7 @@ export function readOwnCommits(cwd: string, remote = 'origin'): OwnCommit[] {
   try {
     const raw = execFileSync(
       'git',
-      ['log', `${remote}/main..HEAD`, `--pretty=format:${REC}%H %aI%n%B`],
+      ['log', `${remote}/main..HEAD`, `--pretty=format:${REC}%H%n%B`],
       { cwd, encoding: 'utf8' },
     )
     return parseOwnCommits(raw)
@@ -122,17 +155,18 @@ export function resolveGroundTruthFromTranscript(
   return extractTrace(parseTranscript(transcriptJsonl), env).session ?? null
 }
 
-/** The whole check for both callers, parsing the transcript once: its
- *  ground-truth id, and the mismatches on `cwd`'s own commits judged against
- *  it, with the trace's `startedAt` as the inherited-commit cutoff. */
+/** The whole check for both callers: the transcript's ground-truth id, and
+ *  the mismatches on the commits it and its subagents' transcripts show the
+ *  session making. */
 export function checkOwnCommits(
   cwd: string,
   transcriptJsonl: string,
   env: SessionIdEnv = process.env,
+  subagentJsonls: string[] = [],
 ): { groundTruthId: string | null; mismatches: SessionIdMismatch[] } {
-  const { session, startedAt } = extractTrace(parseTranscript(transcriptJsonl), env)
-  const groundTruthId = session ?? null
-  const mismatches = groundTruthId ? findSessionIdMismatches(readOwnCommits(cwd), groundTruthId, startedAt) : []
+  const groundTruthId = resolveGroundTruthFromTranscript(transcriptJsonl, env)
+  const made = findMadeCommits([transcriptJsonl, ...subagentJsonls])
+  const mismatches = groundTruthId ? findSessionIdMismatches(readOwnCommits(cwd), groundTruthId, made) : []
   return { groundTruthId, mismatches }
 }
 
@@ -173,7 +207,8 @@ function main(): void {
     fail(`could not read transcript: ${err instanceof Error ? err.message : err}`)
   }
 
-  const { groundTruthId, mismatches } = checkOwnCommits(root, transcriptJsonl)
+  const subagentJsonls = readSubagentJsonls(transcriptPath).map((s) => s.jsonl)
+  const { groundTruthId, mismatches } = checkOwnCommits(root, transcriptJsonl, process.env, subagentJsonls)
   if (!groundTruthId) {
     console.log('session-id-guard: no ground-truth session id available — skipping (pass)')
     return
