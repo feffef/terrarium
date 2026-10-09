@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01CHnq9iXU9t2se8nc2tBTnQ
 startedAt: 2026-10-09T02:04:14Z
-endedAt: 2026-10-09T02:12:34Z
+endedAt: 2026-10-09T02:13:40Z
 kind: autonomous
 goal: "Scheduled frictions-to-fixes run: survey 3 days of session frictions, fix what is ripe, review and merge the fixes"
-status: in-review
-outcome: "One grouped doc-fix PR (#1699) reviewed and awaiting green gate; regression of the session-id-guard fix filed as #1698"
-summary: "Scheduled run, no human prompt; everything was agent-initiated under the frictions-to-fixes charter. A survey subagent read the 3-day window (40 sessions, about 190 frictions). Most recurring frictions were already tracked and guard/hook-blocked, or sit inside open Prune Trial territory. Two simple doc fixes were selected: visitor-loop step 4 now names the probe and screenshot tools (discoverability failure, 5 sessions), and audit-docs sections 3 and 5 now hand reviewer findings to checkers through scratchpad files (one moderate friction). A Sonnet impl agent shipped both as PR #1699; I reviewed the diff, posted the verdict, and left it to merge when the gate is green. The survey also found session-id-guard false blockers recurring after the #1611 fix (a sibling session commits to the shared branch after the cutoff); that is a guard edit, so I filed #1698 as ready-for-human and sent a push notification. The survey bypassed the search tools, so its never-fixed labels rest on a title scan of 300 issues."
+status: completed
+outcome: "Grouped doc-fix PR #1699 reviewed and merged; regression of the session-id-guard fix filed as #1698 for a human"
+summary: "Scheduled run, no human prompt; everything was agent-initiated under the frictions-to-fixes charter. A survey subagent read the 3-day window (40 sessions, about 190 frictions). Most recurring frictions were already tracked and guard/hook-blocked, or sit inside open Prune Trial territory. Two simple doc fixes were selected: visitor-loop step 4 now names the probe and screenshot tools (discoverability failure, 5 sessions), and audit-docs sections 3 and 5 now hand reviewer findings to checkers through scratchpad files (one moderate friction). A Sonnet impl agent shipped both as PR #1699; I reviewed the diff, posted the verdict, and merged it on a green gate. The survey also found session-id-guard false blockers recurring after the #1611 fix (a sibling session commits to the shared branch after the cutoff); that is a guard edit, so I filed #1698 as ready-for-human and sent a push notification. The survey bypassed the search tools, so its never-fixed labels rest on a title scan of 300 issues."
 prs:
   - "1699"
 docsRead:
@@ -45,11 +45,11 @@ frictions:
   - description: Impl agent's PR open triggered a subscribe event in this session even though the brief forbade subscribing; expected per the Skill, noted only to avoid re-logging.
     solution: None.
     severity: nit
-durationSec: 501
+durationSec: 566
 models:
-  claude-sonnet-5-5: 43
+  claude-sonnet-5-5: 52
 toolCounts:
-  Bash: 7
+  Bash: 9
   Read: 4
   Agent: 2
   Skill: 3
@@ -57,8 +57,8 @@ toolCounts:
   mcp__github__issue_read: 1
   mcp__github__issue_write: 1
   PushNotification: 1
-  ReadNotifications: 1
-  mcp__github__pull_request_read: 3
+  ReadNotifications: 3
+  mcp__github__pull_request_read: 4
   mcp__github__add_issue_comment: 1
 docsReadViaShell:
   - docs/agents/pr-workflow.md
