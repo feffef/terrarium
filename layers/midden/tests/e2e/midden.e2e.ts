@@ -39,6 +39,8 @@ export function registerMiddenE2E(): void {
       expect(front).toContain('/t/midden/trench')
       expect(front).toContain('/t/midden/stores')
       expect(front).not.toContain('The Generated Map')
+      expect(front).toContain('New here? Start with these')
+      expect(front).toContain('/t/midden/trench/tried-and-left-alone')
       const trench = await $fetch('/t/midden/trench')
       expect(trench).toContain('The Trench')
       expect(trench).toContain('The Generated Map')
