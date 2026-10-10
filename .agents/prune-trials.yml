@@ -24,121 +24,6 @@
 #            topic's tools correctly.
 trials:
   - problem: >
-      CLAUDE.md as a whole: 374 lines of rules, incident histories and
-      restatements loaded into every session. Rewritten to 146 lines in plain,
-      precise words. Each rule's origin was traced this run (git log -S /
-      blame, the cited issues, friction grades in session logs). Rules whose
-      origin was minor or nit, or that a guard, gate step or another doc
-      already holds, were dropped or moved. Kept because major/critical with
-      no other home: empty prompt = stop and ask, stay on the branch,
-      auto-open the gated PR even against a harness rule (after checking none
-      exists), babysit the PR, the human-only list, verify before stating,
-      gate:scoped green but CI red = major friction (plus the CI-merge-ref
-      base-drift note), push only after the gate passes despite the
-      harness's Stop-time reminder, background long commands, no pkill and
-      no chained kill, invoke close-session. Kept by
-      owner decision: WHY-not-WHAT comments, Read-not-cat, one home per fact,
-      the pack-Skill rule (its where-to-put-advice half has no other home).
-      The ScheduleWakeup and provenance bullets (still on trial) and the
-      workflow-file bullet (trial closed this run) were copied word for word.
-      "Read all ADRs" became a planning trigger: list and grep docs/adr for
-      the paths and terms you touch, read every binding ADR in full. A survey
-      of 36 large human-prompted sessions found a median of 2 ADRs read (1 of
-      36 read all) and structural edits missing their binding ADRs. The docs
-      index became "Docs you must read first": one mandatory trigger per
-      docs/agents page. Dropped: the Skill Inventory "use these" pointer
-      (since September only audit-skills sweeps read the inventory, 9 of 96
-      sessions, none to choose a Skill); ToolSearch first; background-status
-      shapes; Routine-schedule wording (validate-skill-cadence enforces it);
-      no filler calls while waiting; grep before a long repro; check known
-      failures first; the substantive-work definition (now "a pushed commit
-      that is not a session log"); the routing, manifest, pages-only, trust and
-      one-container ground rules (in their ADRs); the long layout tree; the
-      Status section; branch-protection facts. Issue/PR numbers were dropped
-      from CLAUDE.md by owner decision: git log -S / blame is the forwarding
-      address to each rule's history. Moved: screenshot tooling to
-      verifying-ui-changes.md, adding a Space/Collection/Tenant to
-      tenant-layers.md, PR description sync to pr-workflow.md, reading other
-      sessions' transcripts to a new last section of github-integration.md
-      (both placed away from the provenance trial's paragraphs). Inbound
-      pointers to removed CLAUDE.md text were repointed or cut: guards.md
-      (four "Rule homed in" cells), domain.md, git-conventions.md,
-      pr-workflow.md step 1 of the chartered-run sequence, ADR-0005, the
-      Skills frictions-to-fixes, digest, guest-intake, guest-build,
-      auto-triage, dispatch-subagents and audit-docs, layers/journal/
-      tenant.config.ts, and comments in eight scripts and two tests.
-      Historical narration in ADR-0015/0020 and deferred-tool-guard.ts was
-      left as is. Net -228 lines in CLAUDE.md. Follow-up (owner request,
-      after merge): close-session gained a hard rule to re-read CLAUDE.md at
-      closure and log a Friction for every CLAUDE.md rule or step the session
-      broke or skipped, so the trial's verdict has direct evidence. Each such
-      Friction also states the impact (real or possible) and, where the rule
-      or its doc would have helped, what would have made the agent read it.
-    territory:
-      paths:
-        - "CLAUDE.md (all of it except the ScheduleWakeup and provenance bullets)"
-        - "docs/agents/verifying-ui-changes.md: the Capture tooling section"
-        - "docs/agents/tenant-layers.md: section 3"
-        - "docs/agents/pr-workflow.md: the PR title/description sync paragraph above 'Per-tier merge authority'"
-        - "docs/agents/github-integration.md: the 'Reading another session's transcript' section"
-        - "docs/agents/guards.md: the 'Rule homed in' cells of the deferred-tool, workflow-edit, tail-pipe and double-background rows"
-        - ".agents/skills/close-session/SKILL.md: the re-read-CLAUDE.md hard rule"
-      keywords:
-        - read all ADRs
-        - Docs you must read first
-        - empty task prompt
-        - Skill Inventory
-        - Repo layout
-    opened: 2026-10-07
-    proven: true
-    check: >
-      Damage is a major or blocker Friction where a session does something
-      the old CLAUDE.md prevented and the new one does not: guesses a task
-      from an empty prompt, leaves its branch, holds back a PR because the
-      harness said no, self-merges a human-only PR, states an unverified id
-      or count as fact, uses pkill or chains a kill, pushes before the gate
-      passed, plans a structural change without reading the ADR that binds
-      the file, or acts in a doc's area without reading the doc its trigger
-      names. Also count a session that cannot find moved material
-      (screenshot tooling, adding a Tenant) from the pointer. NOT damage: a
-      session that reads only the relevant ADRs, or one a guard or gate step
-      stopped that fixed itself from the message. Start from the Frictions
-      that close-session's re-read logs against named CLAUDE.md rules; their
-      "what would have made me read it" notes point at triggers to reword.
-  - problem: >
-      The `dispatch-subagents` Skill as a whole (209 lines, rewritten to about
-      118): rule-per-incident bullets with long justifications. It failed as
-      prose: #835 ("fix only reached dispatch-subagents/SKILL.md, not callers who
-      skip that Skill"), #1499 (the worktree guard-friction caveat never read by
-      impl agents), #427 (worktree agent stopped mid-task despite #317's guard)
-      — #1499 read by the search subagent this run, #835 and #427 by title only.
-      Backgrounding is held by `agent-background-flag-guard.ts`,
-      `subagent-background-guard.ts` and `double-background-guard.ts`; stranding
-      is detected by `check-worktrees.ts`. The bullets were regrouped (git and
-      checkout / stranding / scope and trust), each kept as one goal-shaped line
-      with its issue pointer; the "never Monitor" and `run_in_background:false`
-      explanations were cut to the guards. The search subagent covered the
-      instruction corpus, the rulebook table, guards.md and the tracker; the
-      blog-post fact-check rule (#1168, nothing holds it, so riskier) and the
-      frictions-to-fixes eyeball rule (#1008) were runners-up. Net about -91 lines.
-    territory:
-      paths:
-        - ".agents/skills/dispatch-subagents/SKILL.md (all of it)"
-      keywords:
-        - isolation: 'worktree'
-        - stranded
-        - check:worktrees
-        - dispatch brief
-    opened: 2026-10-07
-    proven: true
-    check: >
-      Damage is a major or blocker Friction where a dispatched agent loses work
-      (uncommitted at stop), commits in the wrong checkout, runs from a stale
-      HEAD unnoticed, backgrounds work a guard did not catch, merges or
-      self-closes, or collides on a shared log path — and the brief omitted a line
-      the old Skill carried. NOT damage: a guard denial the agent fixed from its
-      message.
-  - problem: >
       `docs/agents/git-conventions.md` as a whole (115 lines, rewritten to about
       85 in plainer words, every rule kept). Its shallow-checkout rule failed as
       prose first (#772: narrowed three times) and is now held by
@@ -197,3 +82,34 @@ trials:
       purpose or re-adds a pruned rule because the table no longer retold the
       incident. NOT damage: a session reading guards.md or the guard header
       instead of the table.
+  - problem: >
+      The landing recipe in `docs/agents/pr-workflow.md` (the recipe steps and the
+      closing-keyword, restart-branch, follow-up-push and reply-before-resolve
+      paragraphs, about 24 lines cut; steps keep their numbers because
+      `merge-pr.ts`, issue-tracker.md and github-integration.md cite them). It
+      failed as prose: #853 and #1276 (both read in full; #1276 says the verdict
+      line was read and skipped) and is now held by `scripts/merge-pr.ts`
+      (verdict, fork/Public refusal, closing-keyword reconcile). Nothing yet denies
+      an APPROVE review or `enable_pr_auto_merge`, so those two rules stay. The
+      hand-poll fallback for a missing script was cut. The search subagent covered
+      the instruction corpus, the rulebook table, guards.md, guard headers and
+      the tracker; runners-up: provenance-header restatements across ~10 Skills
+      (thin per file) and guards.md conventions (weak on "failed"). The same run
+      judged two trials. CLAUDE.md: one major (a recommendation given without
+      reading the binding ADRs, since the trigger said "plan"), so the trigger
+      now reads "plan or recommend". dispatch-subagents: only nit/minor, holds.
+    territory:
+      paths:
+        - "docs/agents/pr-workflow.md: 'The recipe' section and the paragraphs after it down to the title/description sync paragraph"
+      keywords:
+        - Land through `scripts/merge-pr.ts`
+        - closing keyword
+        - send_later check-ins
+    opened: 2026-10-10
+    proven: true
+    check: >
+      Damage is a major or blocker Friction where a session merges without a
+      posted verdict, approves a PR, arms auto-merge, closes a tracking issue
+      by a stray closing keyword, or merges a PR whose cited ADR went stale,
+      and a line the old recipe carried would have prevented it. NOT damage:
+      merge-pr.ts refusing and the session fixing itself from the message.
