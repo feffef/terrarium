@@ -2,8 +2,6 @@
 // `docsReadViaShell`. Every false-positive case below is a real command shape from
 // this repo's own transcripts, not an invented one: the decoys #1074's prototype
 // was measured against, plus the classes found while building it.
-import { execFileSync } from 'node:child_process'
-import { readFileSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
 import {
   buildDocLineIndex,
@@ -685,42 +683,6 @@ describe('diff as a reader verb', () => {
       rel,
     )
     expect(scan.paths.sort()).toEqual(['docs/agents/a.md', 'docs/agents/b.md'])
-  })
-})
-
-describe('no other consumer acts on the field', () => {
-  // The rule is a decision, not an accident (ADR-0009's shell-read amendment):
-  // nothing may read `docsReadViaShell` except the trace that derives it, the
-  // stitch that lands it, the authoring loop, and the Journal card that shows
-  // it. Prose alone has repeatedly failed to hold rules like this here
-  // (docs/agents/guards.md), and the natural way to add a consumer is to copy
-  // one that already reads a sibling trace field — so it is checked.
-  const ALLOWED = new Set([
-    'scripts/shell-reads.ts',
-    'scripts/session-trace.ts',
-    'scripts/log-session.ts',
-    'shared/schemas/session.ts',
-    'shared/trace-fields.ts',
-    'layers/journal/app/types/journal.ts',
-    'layers/journal/app/utils/dashboard.ts',
-    'layers/journal/app/components/journal/SessionCard.vue',
-    'tests/unit/shell-reads.spec.ts',
-    'tests/unit/shell-reads-output.spec.ts',
-    'tests/unit/session-trace.spec.ts',
-    'tests/unit/log-session.spec.ts',
-  ])
-
-  // Known narrowing: this greps for the literal field name, so a consumer that
-  // reaches the field by ITERATING `FOLDED_TRACE_FIELDS` would pass unnoticed.
-  // Both existing iterators (session-trace.ts, SessionCard.vue) are allowlisted,
-  // so the hole is latent rather than open — but a new iterator is not caught.
-
-  it('is referenced only by the trace, the stitch, the loop, and the card', () => {
-    const tracked = execFileSync('git', ['ls-files', '*.ts', '*.vue'], { encoding: 'utf8' })
-      .split('\n')
-      .filter(Boolean)
-    const referencing = tracked.filter((f) => readFileSync(f, 'utf8').includes('docsReadViaShell'))
-    expect(referencing.filter((f) => !ALLOWED.has(f))).toEqual([])
   })
 })
 

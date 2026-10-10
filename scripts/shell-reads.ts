@@ -78,7 +78,7 @@ export type SkipRule =
   | 'grep/rg output does not show this file being read'
   | '|| fallback: stderr suppressed, output may belong to the other side'
   | 'git show diff does not touch this path'
-  | 'named by the command, but its output shows no line of this doc'
+  | 'named by the command, but its output showed too little of this doc'
 
 export interface NearMiss {
   command: string
@@ -699,11 +699,17 @@ export interface DocText {
  *  session-trace.ts is the fs-backed builder. */
 export interface DocLineIndex {
   byLine: Map<string, string>
+  /** Each doc's count of distinctive lines, so a doc shorter than `MIN_LINES_SHOWN` can still be credited in full. */
+  sizes: Map<string, number>
 }
 
 /** Below this, a line is too common to tell one doc from another — the single
  *  home of the limit the ADR-0009 amendment and the log-session Skill refer to. */
 export const MIN_DISTINCTIVE_LINE = 30
+
+/** Distinct lines of one doc a session's output must show before the doc counts
+ *  as read: a grep hit or a two-line slice is a glance, not a read. */
+export const MIN_LINES_SHOWN = 10
 
 function distinctiveLines(text: string): string[] {
   return text.split('\n').map((l) => l.trim()).filter((l) => l.length >= MIN_DISTINCTIVE_LINE)
@@ -723,10 +729,14 @@ export function buildDocLineIndex(docs: DocText[], sinks: DocText[] = []): DocLi
   }
   const sunk = new Set(sinks.flatMap((s) => distinctiveLines(s.text)))
   const byLine = new Map<string, string>()
+  const sizes = new Map<string, number>()
   for (const [line, set] of owners) {
-    if (set.size === 1 && !sunk.has(line)) byLine.set(line, [...set][0]!)
+    if (set.size !== 1 || sunk.has(line)) continue
+    const doc = [...set][0]!
+    byLine.set(line, doc)
+    sizes.set(doc, (sizes.get(doc) ?? 0) + 1)
   }
-  return { byLine }
+  return { byLine, sizes }
 }
 
 export interface OutputScan {
@@ -755,8 +765,10 @@ function unwrappedCandidates(raw: string): string[] {
  *  (`x.md:12:1 MD013 …`) without showing the doc, so a column is excluded. */
 const PATH_PREFIX = /^([^:\s]+\.md)[:-]\d+[:-](?!\d+[: ])/
 
-/** GitHub bodies and Journal session logs, which routinely quote instruction docs. */
-const QUOTING_SURFACE = /\bgh\s+(?:api|issue|pr)\b|\blayers\/journal\//
+/** Output that shows doc lines without being a read of that doc: GitHub bodies
+ *  and Journal session logs quote them, and a commit's diff shows whatever docs
+ *  it touched. */
+const QUOTING_SURFACE = /\bgh\s+(?:api|issue|pr)\b|\blayers\/journal\/|\bgit\s+(?:show|diff|log)\b/
 
 /** `rel` relativizes an absolute path the way the trace does, so a prefix from
  *  `grep -rn … /repo/docs/x.md` lands on the same key as `docs/x.md`. */
@@ -764,8 +776,9 @@ export function scanShellReadsByOutput(
   commands: ShellCommand[],
   index: DocLineIndex,
   rel: (p: string) => string = (p) => p,
+  minLines: number = MIN_LINES_SHOWN,
 ): OutputScan {
-  const creditedBy = new Map<string, string>()
+  const shown = new Map<string, { lines: Set<string>; command: string }>()
   for (const entry of commands) {
     const { command, output } = normalizeShellCommand(entry)
     if (output === undefined) continue
@@ -773,20 +786,31 @@ export function scanShellReadsByOutput(
     // #1723), so a bare line only counts for a doc the command itself reads.
     const mayQuote = QUOTING_SURFACE.test(command)
     const named = mayQuote ? new Set(scanShellReads([command], rel).paths) : undefined
-    const credit = (doc: string): void => {
-      if (!creditedBy.has(doc)) creditedBy.set(doc, command)
+    const see = (doc: string, line: string): void => {
+      if (named !== undefined && !named.has(doc)) return
+      const seen = shown.get(doc) ?? { lines: new Set<string>(), command }
+      seen.lines.add(line)
+      shown.set(doc, seen)
     }
     for (const raw of output.split('\n')) {
       const prefixed = PATH_PREFIX.exec(raw)
       if (prefixed) {
         const doc = canonicalizeInstructionPath(rel(prefixed[1]!))
-        if (isInstructionDoc(doc)) credit(doc)
+        // Keyed by the prefix, so the same hit seen again in another grep counts once.
+        if (isInstructionDoc(doc)) {
+          see(doc, prefixed[0])
+          continue
+        }
       }
       for (const candidate of unwrappedCandidates(raw)) {
         const doc = index.byLine.get(candidate)
-        if (doc !== undefined && (named === undefined || named.has(doc))) credit(doc)
+        if (doc !== undefined) see(doc, candidate)
       }
     }
+  }
+  const creditedBy = new Map<string, string>()
+  for (const [doc, { lines, command }] of shown) {
+    if (lines.size >= Math.min(minLines, index.sizes.get(doc) ?? minLines)) creditedBy.set(doc, command)
   }
   return { paths: [...creditedBy.keys()], creditedBy }
 }

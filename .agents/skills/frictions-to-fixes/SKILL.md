@@ -43,7 +43,8 @@ Its brief:
 extract carries. **External sessions are already excluded:** the survey script drops any log flagged `external: true` (an external harness/toolchain, e.g. fork PR #631's Hermes/Grok run), since its frictions don't generalize to our Claude-Code development (ADR-0009 amendment). Don't hunt the raw corpus for them.
 - **For a friction a doc already covers, check whether that session read the
   doc.** Each triage record carries `docsRead` (Read-tool opens plus any the
-  author listed). A `cat`/`grep` read shows only in the full log's
+  author listed, and since 2026-10-10 shell reads). On an older log a
+  `cat`/`grep` read shows only in the full log's deprecated
   `docsReadViaShell`, so check the record's `file` before calling a doc *not
   opened*. This
   splits one question into two very different frictions: **doc not opened** ⇒ a

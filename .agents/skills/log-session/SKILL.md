@@ -155,30 +155,19 @@ your "this session is done" signal.
 The helper is gated code (ADR-0009): changing `log-session.ts` or `session-trace.ts`
 is a normal PR.
 
-## 3. Check the shell-read report
+## 3. Answer the reads report
 
-`--author` prints what the shell-read detector found: the instruction docs whose
-own lines appeared in a Bash command's output in this session's work
-(`docsReadViaShell`), each with the command that showed it and where it ran
-(this session or a named subagent — folded in by design, issue #796), and the
-docs a command *named* without showing, with the rule that explains each.
-Credit comes from the output, never the command (ADR-0009's output-matching
-amendment). The two reads that amendment leaves invisible by design — a doc
-read from git history, a read too short to be distinctive — are expected, not
-frictions. Check both lists against that evidence, not memory.
+`--author` lists every instruction doc the trace will fold into `docsRead`
+that has no reason yet, whether the Read tool opened it or a Bash command's
+output showed it (yours or a subagent's — folded in by design, issue #796),
+with the evidence for each. Re-run `--author` with a `docsRead` entry for each
+one: a one-line reason, or the reason `(not read)` when no command of this
+session or its subagents showed you that doc. A later pass merges with the
+first, so list only the new entries. ADR-0009's merged-read amendment says
+what the stitch does with `(not read)`.
 
-**You cannot correct the field** — it is derived, and an authored
-`docsReadViaShell` is refused by name. A wrong result is reported as a Friction
-instead:
-
-- `severity` **at least `moderate`** — a deliberate floor, not a cost judgement
-  (ADR-0009's shell-read amendment says why).
-- `description` contains the marker **`SHELL-READ-DETECTION`**, plus the
-  **command verbatim**, the **path** expected, and the **direction** — a miss or
-  a false positive. A Friction saying "detection looked off" can't drive a fix.
-- A **false positive** means no command's output in this session *or in any
-  subagent it dispatched* showed a line of that file. A folded path you didn't
-  personally read is not one, and reporting it buries the real signal.
-
-Nothing to report when both lists are right, and nothing prints when both are
-empty.
+The report also lists docs a command named but did not show enough of to
+count. ADR-0009's output-matching and merged-read amendments say what is
+invisible by design. If one of them was a real read, log a Friction:
+`severity` at least `moderate`, the marker `SHELL-READ-DETECTION`, the command
+verbatim, and the path expected.
