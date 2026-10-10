@@ -14,7 +14,6 @@ const VL_1492: Pr = {
   headRef: 'claude/visitor-loop-fixes-2026-09-29',
   mergedAt: '2026-09-29T17:07:40Z',
   files: ['layers/atlas/app/assets/theme.css', 'layers/atlas/app/components/FoodWeb.vue', 'layers/atlas/README.md'],
-  isBot: false,
 }
 
 const PR_1494: Pr = {
@@ -25,7 +24,6 @@ const PR_1494: Pr = {
   headRef: 'ccr-d97568dd-z8byz4',
   mergedAt: '2026-09-29T22:16:46Z',
   files: ['layers/atlas/app/assets/theme.css', 'layers/atlas/app/components/FoodWeb.vue'],
-  isBot: false,
 }
 
 const UNRELATED: Pr = {
@@ -36,7 +34,6 @@ const UNRELATED: Pr = {
   headRef: 'claude/docs-tidy',
   mergedAt: '2026-09-30T10:00:00Z',
   files: ['docs/agents/domain.md'],
-  isBot: false,
 }
 
 function comment(over: Partial<Comment>): Comment {
@@ -172,6 +169,26 @@ describe('unresolved', () => {
 
   it('fails a tally that dismisses candidates as a group, listing each one', () => {
     expect(unresolved(both, '10 candidates, all reworks, not rulings')).toEqual(both)
+  })
+
+  it('resolves only the first #N or URL on a line, so one line resolves one candidate', () => {
+    const second: Pr = { ...PR_1494, number: 1495, url: 'https://github.com/feffef/terrarium/pull/1495' }
+    const two = findCandidates('2026-09-29T20:00:00Z', [VL_1492, PR_1494, second], [])
+    expect(unresolved(two, '- #1700 reworks #1494: not a ruling')).toEqual(two)
+    expect(unresolved(two, '- #1494, #1495: not a ruling (lockfile)')).toEqual([two[1]])
+  })
+
+  it('accepts a URL followed by punctuation', () => {
+    expect(unresolved([review], `- ${review.url}: not a ruling (praise)`)).toEqual([])
+    expect(unresolved([rework!], `- (${rework!.url}) not a ruling`)).toEqual([])
+  })
+
+  it('lists a rework PR relating to two visitor-loop PRs once', () => {
+    const vl2: Pr = { ...VL_1492, number: 1493, url: 'https://github.com/feffef/terrarium/pull/1493', files: ['layers/atlas/app/components/FoodWeb.vue'] }
+    const vl1: Pr = { ...VL_1492, mergedAt: '2026-09-29T16:00:00Z', files: ['layers/atlas/app/assets/theme.css'] }
+    const dup = findCandidates('2026-09-29T20:00:00Z', [vl1, vl2, PR_1494], [])
+    expect(dup).toHaveLength(2)
+    expect(unresolved(dup, 'all reworks')).toEqual([dup[0]])
   })
 
   it('fails a candidate named without a resolution, or only by a longer comment URL', () => {

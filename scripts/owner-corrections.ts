@@ -43,7 +43,7 @@ export interface Pr {
   headRef: string
   mergedAt: string | null
   files: string[]
-  isBot: boolean
+  isBot?: boolean
 }
 
 /** A PR review, review comment, or issue/PR conversation comment. `threadText`
@@ -128,14 +128,22 @@ export function findCandidates(since: string, prs: Pr[], comments: Comment[]): C
   return out
 }
 
-/** The candidates `tally` doesn't resolve: each needs a line naming it (its
- *  URL, or `#N` for a rework PR) beside a decisions.md line or "not a ruling". */
+/** The candidates `tally` doesn't resolve, one per URL. A line resolves the
+ *  candidate its first `#N` (a rework PR) or URL names, when it also says
+ *  "not a ruling" or "decisions.md". */
 export function unresolved(candidates: Candidate[], tally: string): Candidate[] {
-  const lines = tally.split('\n').filter((l) => /not a ruling|decisions\.md/i.test(l))
-  const url = /https?:\/\/[^\s)>\]]+/g
+  const resolved = new Set(
+    tally
+      .split('\n')
+      .filter((l) => /not a ruling|decisions\.md/i.test(l))
+      .map((l) => l.match(/https?:\/\/\S+|#\d+/)?.[0].replace(/[:,.;)]+$/, '')),
+  )
+  const seen = new Set<string>()
   return candidates.filter((c) => {
-    const n = c.kind === 'rework' ? Number(c.url.slice(c.url.lastIndexOf('/') + 1)) : NaN
-    return !lines.some((l) => l.match(url)?.includes(c.url) || mentions(l.replace(url, '')).includes(n))
+    const named = resolved.has(c.url) || (c.kind === 'rework' && resolved.has(`#${threadNumber(c.url)}`))
+    if (named || seen.has(c.url)) return false
+    seen.add(c.url)
+    return true
   })
 }
 
@@ -292,19 +300,23 @@ function fail(msg: string): never {
 
 function main(): void {
   const argv = process.argv.slice(2)
-  const flags = new Map<string, string | undefined>()
+  const flags = new Map<string, string>()
   for (let i = 0; i < argv.length; i += 2) {
-    if (!['--since', '--check'].includes(argv[i]!) || !argv[i + 1]) fail('usage: tsx scripts/owner-corrections.ts [--since <iso>] [--check <tally-file>]')
-    flags.set(argv[i]!, argv[i + 1])
+    const [flag, value] = [argv[i]!, argv[i + 1]]
+    if (!['--since', '--check'].includes(flag) || !value) fail('usage: tsx scripts/owner-corrections.ts [--since <iso>] [--check <tally-file>]')
+    flags.set(flag, value)
   }
   const since = flags.get('--since')
   if (since !== undefined && Number.isNaN(Date.parse(since))) fail(`not a valid ISO instant: ${since}`)
   const candidates = ownerCorrections(since)
   const tallyFile = flags.get('--check')
-  if (tallyFile === undefined) return void process.stdout.write(JSON.stringify(candidates, null, 2) + '\n')
-  const missing = unresolved(candidates, readFileSync(tallyFile, 'utf8'))
-  if (missing.length > 0) fail(`unresolved candidates (give each its own line):\n${missing.map((c) => `  ${c.url} (re #${c.relatesTo})`).join('\n')}`)
-  console.log(`owner-corrections: all ${candidates.length} candidates resolved`)
+  if (tallyFile === undefined) {
+    process.stdout.write(JSON.stringify(candidates, null, 2) + '\n')
+  } else {
+    const missing = unresolved(candidates, readFileSync(tallyFile, 'utf8'))
+    if (missing.length > 0) fail(`unresolved candidates (give each its own line):\n${missing.map((c) => `  ${c.url} ${c.excerpt}`).join('\n')}`)
+    console.log(`owner-corrections: all ${new Set(candidates.map((c) => c.url)).size} candidates resolved`)
+  }
 }
 
 // Only run when executed directly (not when imported by the unit test).
