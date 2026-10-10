@@ -1,13 +1,34 @@
 schemaVersion: 1
 session: session_01Mw8k3DVnAyVho8fcDofChZ
 startedAt: 2026-10-10T14:38:06Z
-endedAt: 2026-10-10T14:42:08Z
+endedAt: 2026-10-10T15:03:44Z
 kind: interactive
-goal: Midden survey of what the Platform discarded since 2026-10-04
-status: completed
-outcome: "Survey-report issue #1739 filed with 5 candidates and 8 Gate-B exclusions"
-summary: "Human-instructed: the user invoked /midden-survey. Everything else here followed that Skill's steps. I bounded the sweep at the previous report's date (#1592, 2026-10-04) and ran scripts/midden-survey.ts on a full origin/main. It returned 15 deleted files, 0 dropped deps and 3 relocations. I also fetched all 235 branches. Only one tip crossed the 30-day floor, and it was fully merged. The search for closed-unmerged PRs gave 4 in the window. Five candidates survived both gates: three guards retired on 2026-10-09/10 (agent-background-flag, commit-trailer, and session-id-guard together with its failed rescue PR #1704), the fake scaffold-tenant row in the archived Journal, and two Dependabot PRs the owner closed with ignore commands (#1636, #1637). Excluded under Gate B: the mermaid bump (it landed separately in 6141ca27), the diagram briefs (folded into terrarium-overview), the applied protect-main proposal, and Karen's post that was replaced in place. The issue flags the commit-trailer guard as the weakest candidate, because the commit-msg hook shares its goal. No code changed, so no PR. Cataloguing waits for a human green-light via /midden-catalogue."
-prs: []
+goal: Midden survey and catalogue of what the Platform discarded since 2026-10-04
+status: in-review
+outcome: "Survey #1739 filed; PR #1740 catalogues its 5 finds and closes the Kiln Wasters season, awaiting human merge"
+summary: |-
+  All of this was human-instructed. The user invoked /midden-survey and then /midden-catalogue. Before cataloguing I asked three scope questions, and the user chose: all five candidates, leave Karen's replaced post out, and close and name the open season.
+  The survey (#1739) found five candidates and eight Gate-B exclusions.
+  For the catalogue, I re-read every find at its primary sources: commits, files at their last revision, issue and PR bodies and comments, the two session logs that did the removals, and #1637's CI log, which showed the zod-4 bump failing on the same tuple loosening as #1569. Those sources gave the facts the survey lacked: - the background-flag guard's premise had become false by the time it was
+    removed;
+  - the session-id check's only three findings were all false positives, and the
+    owner chose deletion over the #1704 rescue;
+  - the scaffold-tenant row was a 98-day placeholder that no test ever named.
+  Placement: - Three guard finds form a new report, Stood Down. #1704 is folded into the
+    session-id find rather than catalogued separately.
+  - The placeholder joined What the Record Claimed. - #1636 and #1637 became one find in Tried and Left Alone.
+  Agent-initiated choices: the season name (the Kiln Wasters, 09-05..10-04, six finds repointed, new Current Midden from 10-05), every grade, every report placement, and folding #1704 and #1637 into other finds. The PR flags these for the reviewer.
+  Two read-only reviewers ran in parallel: - The fact-check found three real errors: the Dependabot schedule went live at
+    07:09 UTC (PR #1633 merge), not at the config commit's 05:52; one of the
+    remaining background guards was added after the removed one; and the record
+    does hold a zod reason. It also found four overstatements. All were fixed, and
+    a second fact-check pass came back clean.
+  - The voice review drove plain titles, explanations of terms before use, and a
+    regrade of the bot upgrades to intact.
+
+  pnpm gate:scoped was green on both commits, and CI was green on the first push.
+prs:
+  - "1740"
 docsRead:
   - path: layers/midden/CONTEXT.md
     reason: inclusion bar and artifact shape
@@ -17,13 +38,35 @@ docsRead:
     reason: fetch-before-trusting-history
   - path: CONTEXT-MAP.md
     reason: session-start rule; only the 2KB preview was seen
+  - path: CONTEXT.md
+    reason: read in full this time with the Read tool before cataloguing
   - path: docs/agents/issue-tracker.md
     reason: before filing an issue; partly read, cut by head
+  - path: docs/agents/tenant-layers.md
+    reason: before editing layers/midden
+  - path: docs/agents/pr-workflow.md
+    reason: before opening PR 1740
+  - path: .agents/skills/midden-catalogue/SKILL.md
+    reason: voice reviewer read the house rules it checks against
+  - path: layers/midden/content/trench/pages/the-current-cut.md
+    reason: (no reason given)
+  - path: layers/midden/content/trench/pages/surface-finds.md
+    reason: (no reason given)
+  - path: layers/midden/content/trench/artifacts/the-branch-pin-guard.yml
+    reason: (no reason given)
+  - path: layers/midden/content/trench/artifacts/the-commit-trailer-guard.yml
+    reason: (read before editing)
+  - path: layers/midden/content/trench/artifacts/the-refused-bot-upgrades.yml
+    reason: (read before editing)
 skillsUsed:
   - name: midden-survey
     reason: user-invoked; the procedure for this run
   - name: close-session
     reason: closure after filing the issue
+  - name: midden-catalogue
+    reason: user-invoked; the cataloguing procedure
+  - name: dispatch-subagents
+    reason: briefing the two read-only reviewers
   - name: log-session
     reason: (no reason given)
 frictions:
@@ -36,26 +79,60 @@ frictions:
   - description: .agents/prune-trials.yml:61 on main still says a rule is held by agent-background-flag-guard.ts, which was deleted in b02ca418. That is a stale reference.
     solution: Fix the line in prune-trials.yml. When a guard is removed, its removal PR should grep .agents/ as well as docs/.
     severity: minor
-  - description: "SHELL-READ-DETECTION false positive: CONTEXT.md was credited from shell output, but the session marked it (not read)"
-    solution: Find the crediting command in the transcript and tighten scripts/shell-reads.ts
-    severity: moderate
-durationSec: 242
+  - description: "I wrote the first PR description to match review fixes I had planned but not yet made: new titles and an intact grade for the bot upgrades. For a few minutes the description did not match the pushed head."
+    solution: Describe the pushed head only, and update the description in the same step as the follow-up push.
+    severity: nit
+  - description: Two Write calls failed because I had edited those files with python string replacements after reading them. A re-read was needed before overwriting.
+    solution: When a record needs a full rewrite, use Write throughout rather than mixing shell edits with it.
+    severity: nit
+  - description: My first drafts overstated several facts that the fact-check then caught. I read "bot switched on" off the config commit's author time instead of its merge, said "both checks were there before" without dating them, and wrote "every saved change" and "the record holds none".
+    solution: Date a config's effect from its merge to main, not its commit. Check "every", "both" and "none" claims against a listing before writing them. The Skill's two-reviewer loop worked as intended.
+    severity: minor
+durationSec: 1538
 models:
-  claude-opus-5-5: 57
+  claude-opus-5-5: 256
 toolCounts:
-  Bash: 17
-  ToolSearch: 2
-  mcp__github__search_issues: 1
+  Bash: 70
+  ToolSearch: 4
+  mcp__github__search_issues: 2
   mcp__github__search_pull_requests: 1
   mcp__github__list_branches: 1
-  mcp__github__issue_read: 1
-  mcp__github__pull_request_read: 4
-  Write: 2
-  Edit: 1
-  Read: 1
+  mcp__github__issue_read: 7
+  mcp__github__pull_request_read: 6
+  Write: 17
+  Edit: 5
+  Read: 9
   mcp__github__issue_write: 1
-  Skill: 2
+  Skill: 3
+  AskUserQuestion: 1
+  TaskCreate: 1
+  TaskUpdate: 2
+  mcp__github__get_job_logs: 2
+  Agent: 2
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 3
+  SendMessage: 1
+  mcp__github__update_pull_request: 1
+  mcp__claude-code-remote__send_later: 1
+filesEdited:
+  - layers/midden/app/utils/strata.ts
+  - layers/midden/content/trench/artifacts/the-background-flag-guard.yml
+  - layers/midden/content/trench/artifacts/the-commit-trailer-guard.yml
+  - layers/midden/content/trench/artifacts/the-session-id-check.yml
+  - layers/midden/content/trench/artifacts/the-placeholder-skill.yml
+  - layers/midden/content/trench/artifacts/the-refused-bot-upgrades.yml
+  - layers/midden/content/trench/pages/stood-down.md
+  - layers/midden/content/trench/pages/what-the-record-claimed.md
+  - layers/midden/content/trench/pages/tried-and-left-alone.md
+subagents:
+  - type: general-purpose
+    task: Fact-check midden records
+  - type: general-purpose
+    task: Voice and domain review
 gitBranch: ccr-87e26db5-lpzcln
 entrypoint: remote_mobile
 cliVersion: 2.1.296
+learnings:
+  - A config file in a PR takes effect when the PR merges to the default branch, not at its commit's author time; Dependabot's schedule started at the PR 1633 merge.
 landedBy: Stop
