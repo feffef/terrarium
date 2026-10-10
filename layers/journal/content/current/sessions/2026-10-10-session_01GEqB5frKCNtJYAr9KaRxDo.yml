@@ -1,0 +1,102 @@
+schemaVersion: 1
+session: session_01GEqB5frKCNtJYAr9KaRxDo
+startedAt: 2026-10-10T02:03:47Z
+endedAt: 2026-10-10T02:16:29Z
+kind: autonomous
+goal: "Scheduled frictions-to-fixes run: survey the last 3 days of session frictions and land fixes for the ripe ones"
+status: in-review
+outcome: One simple fix in review (PR 1724), one hard fix filed as issue 1723 and dispatched, rest dropped
+summary: "Scheduled run, no human prompt. A survey subagent read all 40 sessions in the window (about 230 frictions) and found nearly everything recurring already tracked as a guard or hook surface, inside an open Prune Trial's territory, or fixed. Two candidates were selected, both agent-initiated under the Skill's charter. The simple one (a viewport flag for scripts/probe.ts) went to a Sonnet agent and is PR 1724; I reviewed it and posted a verdict, merge waits on the CI gate. The hard one (shell-read detector over-credits docs from quoted lines in command output, three moderate frictions, never fixed) was filed as issue 1723 and dispatched to a second Sonnet agent, still running at this log. Still open: the review and merge of that PR, which will likely escalate to a human since it is a hard selection."
+prs:
+  - "1724"
+docsRead:
+  - path: CONTEXT-MAP.md
+    reason: (no reason given)
+  - path: CONTEXT.md
+    reason: (no reason given)
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: .agents/prune-trials.yml
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+  - path: docs/agents/issue-tracker.md
+    reason: (no reason given)
+  - path: docs/agents/triage-labels.md
+    reason: (no reason given)
+  - path: docs/agents/guards.md
+    reason: (no reason given)
+  - path: .claude/skills/frictions-to-fixes/SKILL.md
+    reason: (no reason given)
+  - path: scripts/shell-reads.ts
+    reason: (read before editing)
+  - path: CLAUDE.md
+    reason: (no reason given)
+  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
+    reason: (no reason given)
+  - path: tests/unit/shell-reads-output.spec.ts
+    reason: (no reason given)
+  - path: tests/unit/shell-reads.spec.ts
+    reason: (read before editing)
+  - path: tests/unit/session-trace.spec.ts
+    reason: (read before editing)
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: frictions-to-fixes
+    reason: (invoked as a slash command)
+frictions:
+  - description: session-frictions.ts writes 280 KB for a 40-session window with no compact mode; the survey subagent had to dump frictions-only text and slice it.
+    solution: Add a compact or frictions-only flag to scripts/session-frictions.ts.
+    severity: minor
+  - description: merged-since.ts JSON fields are undocumented; the survey agent found no commit date or sha under the names it tried and fell back to git log --grep.
+    solution: Document the output fields in the script header.
+    severity: nit
+  - description: github-provenance-guard denied the first issue body because of a bare angle-bracket path placeholder; fixed from the deny message on retry.
+    solution: None needed, the guard worked as designed.
+    severity: nit
+  - description: The worktree guard refused impl-agent Bash calls that mixed git with other commands via && or ;, forcing split calls.
+    solution: State the rule in the dispatch brief, or relax the guard for read-only chaining.
+    severity: minor
+durationSec: 762
+models:
+  claude-sonnet-5-5: 49
+toolCounts:
+  Read: 10
+  Bash: 4
+  Agent: 3
+  mcp__github__search_issues: 1
+  mcp__github__issue_write: 2
+  ReadNotifications: 1
+  mcp__github__pull_request_read: 2
+  Grep: 1
+  mcp__github__add_issue_comment: 1
+  Skill: 2
+  Write: 1
+filesEdited:
+  - tests/unit/shell-reads.spec.ts
+  - scripts/shell-reads.ts
+  - scripts/session-trace.ts
+  - tests/unit/session-trace.spec.ts
+docsReadViaShell:
+  - CONTEXT-MAP.md
+subagents:
+  - type: general-purpose
+    task: Survey and screen frictions
+  - type: general-purpose
+    task: Fix shell-read over-credit (#1723)
+    model: sonnet
+  - type: general-purpose
+    task: Add probe.ts viewport flag
+    model: sonnet
+gitBranch: claude/eager-ptolemy-6v6sgy
+entrypoint: remote_trigger
+cliVersion: 2.1.296
+trigger: frictions-to-fixes
+landedBy: Stop
