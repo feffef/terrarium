@@ -121,7 +121,7 @@ recurrence is 4**, not the 3 its body claims — the three session logs it names
 
 All four are point-in-time behavioural rules whose violation shows in the tool call itself (bucket 1). Each was fixed only after prose failed 2–3 times. Why prose failed and how the guard works: the guard's script header.
 
-- **#835** (`CM-36`) — built: `scripts/agent-background-flag-guard.ts` denies the no-op `run_in_background: false`.
+- **#835** (`CM-36`) — built, then removed (#1651): its only effect was a deny-and-retry.
 - **#772** (`GC-03`) — superseded by the `SessionStart` unshallow hook, which removes the precondition; `scripts/gate.ts` also checks shallowness in code.
 - **#666** (`CM-20`, `CM-21`) — dropped, not mechanized (PR #1159): our own text told sessions to branch off `origin/main`, and deleting it removed the cause.
 - **#873** (`CM-38`) — built: `scripts/tail-pipe-guard.ts`.
