@@ -37,7 +37,8 @@ Use Nuxt payload extraction (`nuxt.config.ts`):
   not its state. The response also carries `max-age=60`, so a browser may reuse
   it for another minute. That makes the worst case about two minutes.
 
-  > **Amended (2026-10-10, #1702):** `routeRules['/']` gets the same cache, so the home page's daily picks share that bound.
+  > **Amended (2026-10-10, #1702):** `routeRules['/']` gets the same cache, so
+  > the home page's daily picks share that bound.
 - Tinkerfund's own layer config adds two rules. Its pages vary the cache on
   `accept-language`, because its money and dates follow the visitor's locale
   (#1365) and a cached render otherwise sees no request headers. Its search
@@ -61,6 +62,9 @@ skills 579 → 144 KB; Tinkerfund page 578 → 19 KB; Commons Timeline about
   is baked per deploy (ADR-0001), so that is safe. A page that reads anything
   else from the request, such as a header or cookie, needs `varies` like
   Tinkerfund's, or it serves the first visitor's version to everyone.
+
+  > **Amended (2026-10-10, #1702):** the home page `/` is cached the same way,
+  > so this applies to it too.
 - **The cache has no size bound.** Each distinct URL, query string included, is
   its own entry, and expired entries are only replaced, not evicted. Junk query
   strings grow memory until the next deploy or restart clears it (#1446).
