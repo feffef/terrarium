@@ -107,8 +107,8 @@ const listings = tinkerfundListings([
 describe('browsing Campaigns', () => {
   const titles = (query: Parameters<typeof browseTinkerfundListings>[1]) => browseTinkerfundListings(listings, query).map((l) => l.title)
 
-  it('sorts Popular by Backers', () => {
-    expect(titles({ sort: 'popular' })).toEqual(['ruler', 'stapler', 'hammock', 'lamp', 'kettle'])
+  it('sorts Popular by Backers, Live and Upcoming before Ended', () => {
+    expect(titles({ sort: 'popular' })).toEqual(['stapler', 'lamp', 'kettle', 'ruler', 'hammock'])
   })
 
   it('sorts Ending soon by the next deadline: Live first, then Upcoming, then the most recently Ended', () => {
@@ -124,7 +124,7 @@ describe('browsing Campaigns', () => {
   })
 
   it('filters by category, state, Ending soon and On Deal', () => {
-    expect(titles({ sort: 'popular', category: 'workshop' })).toEqual(['hammock', 'kettle'])
+    expect(titles({ sort: 'popular', category: 'workshop' })).toEqual(['kettle', 'hammock'])
     expect(titles({ sort: 'popular', state: 'ended' })).toEqual(['ruler', 'hammock'])
     expect(titles({ sort: 'popular', soon: true })).toEqual(['lamp'])
     expect(titles({ sort: 'popular', deal: true })).toEqual(['stapler'])
@@ -133,7 +133,7 @@ describe('browsing Campaigns', () => {
 
   it('keeps a Campaign with any Reward inside the price range', () => {
     expect(titles({ sort: 'popular', min: 20, max: 29 })).toEqual(['stapler'])
-    expect(titles({ sort: 'popular', min: 45 })).toEqual(['hammock', 'kettle'])
+    expect(titles({ sort: 'popular', min: 45 })).toEqual(['kettle', 'hammock'])
     expect(titles({ sort: 'popular', max: 5 })).toEqual(['stapler', 'lamp'])
   })
 
@@ -195,6 +195,10 @@ describe('recommendations (issue #1387)', () => {
     expect(titles(more)).toEqual(['plate', 'knife', 'cup', 'fork'])
   })
 
+  it('puts hand-picked Live Campaigns before Upcoming and Ended ones', () => {
+    expect(titles(tinkerfundRecommendations(listings, 'cup').also)).toEqual(['knife', 'fork'])
+  })
+
   it('shows only the category without alsoBacked, and nothing when the category holds nothing else', () => {
     expect(titles(tinkerfundRecommendations(listings, 'knife').also)).toEqual([])
     expect(titles(tinkerfundRecommendations(listings, 'lonely').more)).toEqual([])
@@ -203,7 +207,7 @@ describe('recommendations (issue #1387)', () => {
   it('fills the Cart’s row from its Campaigns’ alsoBacked minus the Cart, else from their categories', () => {
     const picked = tinkerfundCartRecommendations(listings, ['mug', 'cup', 'fork'])
     expect(picked.title).toBe('Backers also backed')
-    expect(titles(picked.cards)).toEqual(['rock', 'pea', 'knife'])
+    expect(titles(picked.cards)).toEqual(['rock', 'knife', 'pea'])
     const fallback = tinkerfundCartRecommendations(listings, ['rock', 'pea', 'lonely'])
     expect(fallback.title).toBe('More like this')
     expect(titles(fallback.cards)).toEqual(['plate', 'mug', 'knife', 'cup'])

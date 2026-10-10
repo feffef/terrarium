@@ -60,6 +60,7 @@ const backedBy = computed(() => formatTinkerfundBackedBy(
     </p>
     <p v-if="pledgeRef" class="backed">
       You backed this Campaign · <NuxtLink :to="link(`/account/pledges/${pledgeRef}`)">Pledge {{ pledgeRef }}</NuxtLink>
+      (sample Backer history)
     </p>
     <TinkerfundCampaignAction :slug="slug" :state="status.state" />
   </div>

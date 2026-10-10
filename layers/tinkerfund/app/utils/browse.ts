@@ -192,7 +192,7 @@ function deadline({ status }: TinkerfundListing): number {
 }
 
 const COMPARE: Record<TinkerfundSort, (a: TinkerfundListing, b: TinkerfundListing) => number> = {
-  popular: (a, b) => b.backers - a.backers,
+  popular: (a, b) => STATE_ORDER[a.status.state] - STATE_ORDER[b.status.state] || b.backers - a.backers,
   ending: (a, b) => STATE_ORDER[a.status.state] - STATE_ORDER[b.status.state] || deadline(a) - deadline(b),
   newest: (a, b) => b.status.launchAt - a.status.launchAt,
   funded: (a, b) => b.status.percent - a.status.percent,
@@ -259,6 +259,11 @@ function recommend<T extends TinkerfundListing>(listings: T[]): T[] {
   return browseTinkerfundListings(listings, { sort: 'ending' }).slice(0, RECOMMENDED)
 }
 
+/** A stable Live-and-Upcoming-first order that keeps the given order within a state. */
+function activeFirst<T extends TinkerfundListing>(listings: T[]): T[] {
+  return listings.map((l, i) => ({ l, i })).sort((a, b) => STATE_ORDER[a.l.status.state] - STATE_ORDER[b.l.status.state] || a.i - b.i).map(({ l }) => l)
+}
+
 export function tinkerfundBySlug<T extends TinkerfundListing>(listings: T[], slugs: Iterable<string>): T[] {
   const index = new Map(listings.map((l) => [tinkerfundSlug(l.path), l]))
   return [...new Set(slugs)].flatMap((s) => index.get(s) ?? [])
@@ -268,7 +273,7 @@ export function tinkerfundBySlug<T extends TinkerfundListing>(listings: T[], slu
  *  without the Campaigns the first already shows. */
 export function tinkerfundRecommendations<T extends TinkerfundListing>(listings: T[], slug: string) {
   const self = tinkerfundBySlug(listings, [slug])[0]
-  const also = tinkerfundBySlug(listings, self?.alsoBacked ?? []).slice(0, RECOMMENDED)
+  const also = activeFirst(tinkerfundBySlug(listings, self?.alsoBacked ?? [])).slice(0, RECOMMENDED)
   const shown = new Set([self, ...also])
   return { also, more: recommend(listings.filter((l) => l.category === self?.category && !shown.has(l))) }
 }
@@ -278,7 +283,7 @@ export function tinkerfundRecommendations<T extends TinkerfundListing>(listings:
 export function tinkerfundCartRecommendations<T extends TinkerfundListing>(listings: T[], inCart: string[]) {
   const held = tinkerfundBySlug(listings, inCart)
   const fresh = (l: T) => !held.includes(l)
-  const also = tinkerfundBySlug(listings, held.flatMap((l) => l.alsoBacked ?? [])).filter(fresh).slice(0, RECOMMENDED)
+  const also = activeFirst(tinkerfundBySlug(listings, held.flatMap((l) => l.alsoBacked ?? [])).filter(fresh)).slice(0, RECOMMENDED)
   if (also.length) return { title: TINKERFUND_RECOMMENDATIONS.also, cards: also }
   const categories = new Set(held.map((l) => l.category))
   return { title: TINKERFUND_RECOMMENDATIONS.similar, cards: recommend(listings.filter((l) => categories.has(l.category) && fresh(l))) }
