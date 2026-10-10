@@ -103,6 +103,28 @@ describe('L2 smoke render', async () => {
       await expectCleanHydration('/')
     })
 
+    it('navigates home client-side from the server payload, without the client DB (ADR-0028)', async () => {
+      const page = await createPage()
+      try {
+        await page.goto(url('/t/blog'), { waitUntil: 'hydration' })
+        const requests: string[] = []
+        page.on('request', (request) => requests.push(request.url()))
+        await page.locator('a[href="/"]').first().click()
+
+        await page.locator('.root h1').waitFor({ timeout: 8000 })
+        expect(requests.some((u) => new URL(u).pathname === '/_payload.json')).toBe(true)
+        expect(requests.filter((u) => u.includes('.wasm') || u.includes('sql_dump.txt'))).toEqual([])
+      } finally {
+        await page.close()
+      }
+    })
+
+    it('ships only the timeline entries the home page shows (#1702)', async () => {
+      const payload = await $fetch<string>('/_payload.json', { responseType: 'text' })
+      expect(payload).toContain('#digest-')
+      expect(payload).not.toContain('#session-')
+    })
+
     it('404s a missing document or Tenant, with a link back home', async () => {
       for (const route of ['/t/journal/current/nope', '/t/commons/search/nope', '/t/nope/nothing', '/t/nope', '/t/__proto__']) {
         expect((await fetch(route)).status, route).toBe(404)

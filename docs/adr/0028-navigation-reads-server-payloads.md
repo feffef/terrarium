@@ -36,6 +36,8 @@ Use Nuxt payload extraction (`nuxt.config.ts`):
   both recompute in the browser, because Nuxt merges only a payload's `data`,
   not its state. The response also carries `max-age=60`, so a browser may reuse
   it for another minute. That makes the worst case about two minutes.
+
+  > **Amended (2026-10-10, #1702):** `routeRules['/']` gets the same cache, so the home page's daily picks share that bound.
 - Tinkerfund's own layer config adds two rules. Its pages vary the cache on
   `accept-language`, because its money and dates follow the visitor's locale
   (#1365) and a cached render otherwise sees no request headers. Its search
