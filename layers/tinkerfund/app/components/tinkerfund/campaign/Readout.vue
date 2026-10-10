@@ -12,6 +12,8 @@ const props = defineProps<{
   clock: TinkerfundClock
   /** The visitor's own Pledge on this Campaign, if any. */
   pledgeRef?: string
+  /** The Pledge came with the demo Backer rather than from this visit. */
+  sample?: boolean
   /** The page's h1 by default; the qa gallery shows several at once. */
   heading?: 'h1' | 'h2'
 }>()
@@ -60,7 +62,7 @@ const backedBy = computed(() => formatTinkerfundBackedBy(
     </p>
     <p v-if="pledgeRef" class="backed">
       You backed this Campaign · <NuxtLink :to="link(`/account/pledges/${pledgeRef}`)">Pledge {{ pledgeRef }}</NuxtLink>
-      (sample Backer history)
+      <span v-if="sample"> (sample Backer history)</span>
     </p>
     <TinkerfundCampaignAction :slug="slug" :state="status.state" />
   </div>
