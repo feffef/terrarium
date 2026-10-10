@@ -146,3 +146,21 @@ observations:
       (session_01RW5WnnVvnyuUbrqVZvdZNc, pre-§4) re-confirmed not itself a
       violation. No reverts of any landed fix in the 2-week git-log sweep.
       Grade unchanged.
+  - date: "2026-10-10"
+    note: >-
+      Re-checked (audit-skills behaviour check), 9 usedIn sessions, each
+      graded against the SKILL.md text in effect when it started. #1676 and
+      its backfill #1684 both independently re-confirmed OPEN right now via
+      live `issue_read` (not inherited from the brief) — #1676's only
+      candidate fix, PR #1714, is itself still open/unmerged. New,
+      unescalated risk: PR #1714 is prose-only (adds one sentence requiring
+      an on-trial drop to quote the matching territory verbatim, with no
+      script enforcing that the quote exists) — exactly the shape #1676's
+      own "suggested direction" warned about; if it merges as-is and a
+      future run still asserts "on trial" without a real grep match, that
+      would be a third instance of this failure shape. Worth a human's
+      attention on #1714's review, not yet a confirmed recurrence since it
+      hasn't merged. #1675 ("now untracked" concern from 2026-10-08) is
+      resolved: it is itself the tracking issue, filed 2026-10-08, correctly
+      labeled `ready-for-human`. No new silent failure in this Skill's own
+      delivery. Grade unchanged.

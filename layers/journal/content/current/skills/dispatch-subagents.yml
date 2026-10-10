@@ -217,3 +217,22 @@ observations:
       occurrence" found yet. #1585 confirmed fixed/closed; #1586 and #1480
       confirmed still open, each with a fresh comment added this round.
       Grade unchanged (essential).
+  - date: "2026-10-10"
+    note: >-
+      Re-checked (audit-skills behaviour check), 10 usedIn sessions plus the
+      full 81-session `notUsedWindow` sweep (73/81 ruled out by goal text
+      alone, 8 opened in full). Part A: no stranded work, worktree isolation
+      used correctly on every git-touching dispatch; #1480 (cd-into-worktree)
+      had no new occurrence; #1585 (branch-collision) reconfirmed fixed, its
+      PR #1620 rule still present in SKILL.md. One new, single-instance,
+      not-yet-escalated note: session_01BT5bPRncBfCNwhim2d71Hh left an
+      illustrator's linked worktree in place after its PR merged (no damage
+      — §5/§6 don't cover post-merge worktree cleanup). Part B: one new
+      evidence item added to the already-open #1586 thread — two more
+      sessions (session_015LBxMJwGsviZMj4ScFXD38,
+      session_01HgJSvxTfhCwRcTZEhFspLX) show the skillsUsed-logging gap
+      recurs for parallel *read-only* fan-out too, not just git-touching
+      work; by contrast the structurally identical
+      session_013fsctw2snxudxsDfjP74FT correctly credited the Skill for the
+      same pattern. No new missed invocation found among the other sessions
+      opened in full. Grade unchanged (essential).

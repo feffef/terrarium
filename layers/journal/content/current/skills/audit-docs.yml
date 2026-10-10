@@ -180,3 +180,15 @@ observations:
       5 named checker subagents with a verdict tally). No new silent
       failure found, no revert of any of the 9 PRs' content in the 2-week
       git-log sweep. Grade/role unchanged.
+  - date: "2026-10-10"
+    note: >-
+      Re-checked (audit-skills behaviour check), 7 usedIn sessions, graded
+      against the SKILL.md text in effect at each start. One
+      previously-unchecked session, session_01Jo3m1r8fyuGvjtRE9qDrPH (PR
+      #1700, 14 Live-tier files), confirmed clean — no human-only surface
+      touched, concision-family rotation math checked out, no revert.
+      Correction to the 2026-10-09 entry above: its "5 named checker
+      subagents" claim for PR #1649/session_01N6jqFrkCMkEm3g6kJW9Zqk is wrong
+      on the count — the log's own `subagents` list has exactly 4, matching
+      the 2026-10-08 entry's correct count; a transcription slip, not a
+      Skill behaviour problem. No new silent failure. Grade/role unchanged.
