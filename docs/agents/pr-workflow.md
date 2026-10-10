@@ -1,7 +1,7 @@
 # Landing a gated PR
 
-The single home for the "land a low-risk gated PR" recipe. `CLAUDE.md`'s
-"Pushing is not landing" bullet and the per-Skill merge sections point here for
+The single home for the "land a low-risk gated PR" recipe. The ADR-0003 rule
+(`.claude/rules/adr-0003.md`) and the per-Skill merge sections point here for
 the mechanics.
 
 Why a tier merges on green: ADR-0003. What counts as high-risk: CLAUDE.md's
