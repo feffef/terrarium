@@ -1,19 +1,23 @@
 schemaVersion: 1
 session: session_018i6d2BQPkf9cq6jSEqCNSX
 startedAt: 2026-10-10T10:54:38Z
-endedAt: 2026-10-10T10:59:08Z
-kind: delegated
-goal: Run one auto-triage sweep over open issues and external PRs
+endedAt: 2026-10-10T12:18:56Z
+kind: interactive
+goal: Triage the backlog and turn parked issues into agent-ready work
 status: completed
-outcome: "1 of 28 open issues eligible; #1721 triaged to bug + ready-for-agent"
-summary: "Ran /auto-triage at the human-instructed kickoff prompt (the only prompt; if it was fired by a Routine the kind is autonomous instead, the transcript can't tell). Listed 28 open issues via list-open-issues.ts and checked last-comment authorship via last-comment-authors.ts: every issue's latest comment or body carries ADR-0017 provenance, and there are no open PRs, so only #1721 (needs-triage, always eligible) qualified; #439 and #1357 are wayfinder maps and were skipped. One subagent triaged #1721, verified every claim against PRs #1667/#1672/#1691, the visitor-loop Skill and owner-corrections.ts, and stamped bug + ready-for-agent with a path-free Agent Brief (backfill decisions.md, drop bot-authored rework candidates, fail blanket dismissals). It treated the #1672 relabel as a standing owner ruling, citing the three earlier reworks that each became a decisions.md line. I re-checked the labels and comment on GitHub. The other open ready-for-agent issue, #1712, shares no file with #1721's fix, so no blocking edge was added. All actions were within the skill's standing green-light; no repo changes, no PR."
+outcome: 9 issues ready-for-agent, 5 closed, 1 follow-up filed, 3 left for the owner
+summary: "Human-instructed throughout. Started with an /auto-triage sweep: only #1721 was eligible, and a subagent moved it to ready-for-agent. The owner then asked which ready-for-human issues a grilling session could unlock. I classified all 22 from their latest triage comments. On the owner's instruction I then ran 15 read-only Explore agents, one per issue (#1480/#1586 and #864/#866 paired), each checking current code, git history and the Journal session logs. The owner added the history and session-log requirement after interrupting my first dispatch. I spot-checked the key claims myself (route rules, model-name list, goal-length shift). Several findings overturned earlier triage: #868's merge design would hide ~800 sessions or re-bloat current; #1675's \"five guard issues stuck\" premise was wrong; #1653's nag is the harness's own Stop hook; #1693 traces to the 8-word-cap prune. The owner decided four things: keep the Journal split (#868), a failure-only hint for stale-info pushes (#1610), keep auto-imports and tidy only (#1580), and leave #1603, #864 and #866 alone. On repo-settled grounds I applied ready-for-agent briefs to #1702, #1693, #1684, #1651, #1652, #1675, #1499, #1610 and #1580, filed #1730 for the Journal cleanup, and closed #1654, #1653, #1480 and #1586 as not planned. Those four closures were presented to the owner as repo-settled before acting, but the owner did not explicitly confirm each one. I added blocking edges for shared files (#1610 then #1651, #1652, #1675; #1652 then #1684). No repo changes, no PR."
 prs: []
-docsRead: []
+docsRead:
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+  - path: CLAUDE.md
+    reason: (no reason given)
 skillsUsed:
   - name: auto-triage
-    reason: the task
+    reason: initial sweep
   - name: triage
-    reason: per-issue rules the subagent applied
+    reason: per-issue rules for every relabel and brief
   - name: close-session
     reason: (no reason given)
   - name: log-session
@@ -25,14 +29,30 @@ frictions:
   - description: "CLAUDE.md's ADR trigger: I delegated reading ADR-0022 to the subagent rather than reading it myself before planning the sweep; no harm, since the subagent applied it"
     solution: auto-triage could say the orchestrator may leave ADR-0022 to the per-issue subagent, since only it applies the taxonomy
     severity: nit
-durationSec: 270
+  - description: "agent-background-flag-guard denied my first Agent dispatch for passing run_in_background: false; one retry (issue 1651, now ready-for-agent to delete the guard)"
+    solution: Implement 1651
+    severity: minor
+  - description: "CLAUDE.md ADR trigger: I delegated reading ADR-0022 to the triage subagent instead of reading it before planning the sweep"
+    solution: auto-triage could state that the per-issue subagent owns ADR-0022's taxonomy
+    severity: nit
+  - description: My first deep-dive briefs checked only current code; the owner had to interrupt and ask for git history and session-log evidence, which turned out to overturn several earlier triage conclusions
+    solution: Investigation briefs for re-triage should always require git history plus session-log occurrence counts; say so in the triage Skill's Inventory entry
+    severity: minor
+  - description: My first grilling summary repeated a triage claim unverified (1675 unblocks five guard issues); the deep-dive showed each had its own design choice
+    solution: Mark relayed triage claims as unverified until checked
+    severity: nit
+durationSec: 5058
 models:
-  claude-opus-5-5: 31
+  claude-opus-5-5: 134
 toolCounts:
-  Bash: 9
-  Read: 1
-  Agent: 2
+  Bash: 30
+  Read: 2
+  Agent: 18
   Skill: 2
+  AskUserQuestion: 1
+  ToolSearch: 1
+  mcp__github__add_issue_comment: 14
+  mcp__github__issue_write: 15
 docsReadViaShell:
   - CONTEXT-MAP.md
   - CONTEXT.md
@@ -43,18 +63,91 @@ docsReadViaShell:
   - .agents/skills/triage/SKILL.md
   - .agents/skills/triage/AGENT-BRIEF.md
   - docs/research/rulebook-migration-table.md
+  - .agents/skills/grill-with-docs/SKILL.md
+  - docs/agents/guards.md
+  - .agents/skills/log-session/SKILL.md
+  - docs/adr/0009-session-logs-commit-directly-to-main.md
+  - docs/adr/0025-cross-tenant-catalog-and-collection-kinds.md
+  - docs/adr/0027-prune-trials.md
   - .agents/skills/auto-triage/SKILL.md
   - docs/adr/0022-autonomous-triage-sweep.md
   - .agents/skills/visitor-loop/SKILL.md
   - .agents/skills/visitor-loop/decisions.md
-  - docs/agents/guards.md
   - docs/adr/0003-agent-operating-model-and-governance.md
+  - .agents/skills/dispatch-subagents/SKILL.md
+  - .agents/skills/audit-skills/SKILL.md
+  - .agents/skills/prune-trial/SKILL.md
+  - .agents/skills/tinkerfund-campaign/SKILL.md
+  - docs/adr/0004-objective-safety-gate.md
+  - docs/adr/0026-gate-workflow-thin-shell.md
+  - docs/adr/0005-skill-model.md
+  - docs/agents/pr-workflow.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - .agents/skills/audit-docs/SKILL.md
+  - docs/adr/0015-audit-skills-and-conditional-importance.md
+  - docs/adr/0010-digests-derived-append-only-journal-pages.md
+  - docs/adr/0006-runtime-routing-path-prefix.md
+  - docs/adr/0008-self-documentation-tenant-is-a-journal.md
+  - docs/diagrams/interactive-map/terrarium-overview.md
+  - .agents/skills/digest/SKILL.md
+  - docs/adr/0028-navigation-reads-server-payloads.md
+  - docs/agents/git-conventions.md
+  - docs/agents/environment-caveats.md
+  - docs/agents/tenant-layers.md
+  - docs/agents/verifying-ui-changes.md
+  - docs/adr/0019-patched-nuxt-content-client-db-loading.md
+  - docs/research/content-client-queries-without-wasm.md
+  - .agents/skills/blog-post/SKILL.md
+  - docs/adr/0017-provenance-footer-on-agent-authored-content.md
+  - .agents/skills/diagnosing-bugs/SKILL.md
+  - .agents/skills/implement/SKILL.md
+  - .agents/skills/guest-build/SKILL.md
+  - docs/research/mermaid-server-side-rendering.md
+  - docs/research/shell-reads-by-output-matching.md
+  - docs/research/nuxt-content-review-grounding.md
+  - docs/adr/0018-tenant-layers-under-layers-directory.md
 subagents:
   - type: general-purpose
     task: "Triage issue #1721"
   - type: general-purpose
     task: "Triage issue #1721"
+  - type: Explore
+    task: "Deep-dive #1702 home cache"
+  - type: Explore
+    task: "Deep-dive #1702 home cache"
+  - type: Explore
+    task: "Deep-dive #1693 session headline"
+  - type: Explore
+    task: "Deep-dive #1684 ADR-0017 model name"
+  - type: Explore
+    task: "Deep-dive #1499 worktree guard"
+  - type: Explore
+    task: "Deep-dive #1480+#1586 dispatch"
+  - type: Explore
+    task: "Deep-dive #1603 scripts layout"
+  - type: Explore
+    task: "Deep-dive #1580 auto-imports"
+  - type: Explore
+    task: "Deep-dive #1675 guard routing"
+  - type: Explore
+    task: "Deep-dive #1651 background-flag guard"
+  - type: Explore
+    task: "Deep-dive #1652 commit-trailer guard"
+  - type: Explore
+    task: "Deep-dive #1654 deferred-tool guard"
+  - type: Explore
+    task: "Deep-dive #1610 stale-info push"
+  - type: Explore
+    task: "Deep-dive #1653 Stop-hook nag"
+  - type: Explore
+    task: "Deep-dive #868 Journal Space merge"
+  - type: Explore
+    task: "Deep-dive #864+#866 policy"
 gitBranch: ccr-d3461dde-cffgmt
 entrypoint: remote_mobile
 cliVersion: 2.1.296
+learnings:
+  - Session-log occurrence counts repeatedly differed from the counts quoted in issues (17 vs 7, 63 vs 25, 23 vs 13); recount before weighing any fix
+ideas:
+  - Give /triage a 'deep re-triage' mode that dispatches one read-only agent per ready-for-human issue with a fixed brief (code + git history + session-log counts + ADR-0027 prune-first check) and returns only owner-only decisions; this session showed most parked issues are repo-decidable once evidence is gathered
 landedBy: Stop
