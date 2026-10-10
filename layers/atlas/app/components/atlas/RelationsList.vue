@@ -9,7 +9,6 @@
 // this list only reads it (no matching emit back), lighting every row for that
 // counterpart. Unused (undefined) elsewhere: no behavior change for any other
 // caller.
-import type { Relation, SpecimenView } from '../../utils/atlas'
 
 defineProps<{
   relations: Relation[]

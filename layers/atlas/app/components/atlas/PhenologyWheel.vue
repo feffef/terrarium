@@ -22,8 +22,6 @@
 // payload-carried (composables/almanac.ts), and marks arrive reactively.
 // All year/angle/point geometry comes from utils/almanac.ts; only the
 // presentational rounding of those points lives here.
-import type { Span } from '../../utils/almanac'
-import type { PhenologyPhase } from '../../utils/atlas'
 
 const props = defineProps<{
   /** The specimen's phenology phases; omit/empty for the phase-less fallback

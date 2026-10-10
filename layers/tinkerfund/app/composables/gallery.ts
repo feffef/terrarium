@@ -1,7 +1,4 @@
-import type { TinkerfundBacking } from './cart'
-import type { TinkerfundShop } from '../utils/cart'
 import { TINKERFUND_GALLERY_FIXTURE as FIXTURE } from '../utils/gallery'
-import type { CampaignState } from '../utils/status'
 
 export async function useTinkerfundGallery() {
   // Every composable runs before the first await: after it, Nuxt's context is gone.

@@ -13,7 +13,6 @@
 // the shared `specimensBySlug` lookup) is single-homed in the
 // `useAtlasWingData` composable — the sibling `[...slug].vue` entry page needs
 // the exact same load (code review; see that composable's header for why).
-import type { SpecimenView } from '../../../../utils/atlas'
 
 const route = useRoute()
 const { space, pagesKey, collections } = useSpace('atlas')

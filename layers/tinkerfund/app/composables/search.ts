@@ -1,5 +1,3 @@
-import type { TinkerfundHit } from '../utils/search'
-
 /**
  * Searches this Space's Campaigns by title, description and Inventor name
  * (story #1382). The keys come from the route, so a search never leaves its

@@ -8,7 +8,6 @@
 // over it. Every node is a doorway to its entry; hovering/focusing a node
 // lights its strands and dims the rest — the "wander". Drawn in the engraved
 // register, and charming when sparse.
-import type { Edge, SpecimenView } from '../../utils/atlas'
 
 const props = defineProps<{ specimens: SpecimenView[]; edges: Edge[]; biome: string }>()
 

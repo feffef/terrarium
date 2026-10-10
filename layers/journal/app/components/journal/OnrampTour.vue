@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import type { OnrampStep } from '../../utils/onramp'
-
 const props = defineProps<{ steps: OnrampStep[]; current: string; base: string }>()
 
 const at = computed(() => props.steps.findIndex((s) => s.path === props.current))

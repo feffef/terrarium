@@ -52,8 +52,6 @@
 // parsing semantics are pure functions in `utils/almanacState.ts`, unit-tested
 // in `layers/atlas/tests/unit/almanac-state.spec.ts`.
 import type { InjectionKey, MaybeRefOrGetter, Ref } from 'vue'
-import type { AlmanacMark, AlmanacObservation } from '../utils/almanacState'
-import type { PhenologyPhase } from '../utils/atlas'
 
 /** The Almanac contract — what `useAlmanac()` returns (protocol in the file
  *  header above). */

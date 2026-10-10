@@ -1,5 +1,3 @@
-import type { TinkerfundListing } from '../utils/browse'
-
 export type TinkerfundCard = TinkerfundListing & { categoryName: string; inventorName: string }
 
 /**

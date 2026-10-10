@@ -2,7 +2,6 @@
 // A specimen's color signature (#68), stated as named swatches + its spoken gloss
 // ("lantern gold on soot"). Shown on the museum label; the same hues quietly tint
 // the rest of the entry via the inline --sig-* vars the page sets.
-import type { SignatureColor } from '../../utils/atlas'
 
 defineProps<{ colors: SignatureColor[]; gloss?: string }>()
 </script>

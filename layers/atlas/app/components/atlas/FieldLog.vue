@@ -3,7 +3,6 @@
 // Terse, in-fiction lines; a specimen mention links to its entry (wearing its
 // color signature). Optional `limit` for the biome-landing's recent view; the
 // specimen entry passes its own filtered slice.
-import type { SpecimenView } from '../../utils/atlas'
 
 interface Observation {
   date: string
