@@ -21,7 +21,7 @@ act, once per session.
   a file they govern. When a summary says so, read the full ADR before you act.
   Before you plan or recommend a change (an opinion asked in chat counts), find
   the ADRs that bind it with `grep -l <path-or-term> docs/adr/*` and read
-  their rule files.
+  them.
 - **Before your first git command** beyond `status` and `diff` (commit, fetch,
   pull, rebase, amend, reset, or `log`/`blame` to draw a conclusion):
   `docs/agents/git-conventions.md`.
