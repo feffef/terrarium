@@ -16,6 +16,7 @@ import {
   handle,
   isAlreadyLanded,
   recoverDroppedScratch,
+  schemaErrors,
   scratchHashOf,
   validateEntry,
 } from '../../scripts/log-session.ts'
@@ -111,6 +112,34 @@ describe('handle() — lands from gitignored staging, never the tree (#148)', ()
     expect(res.action).toBe('skipped-unchanged')
     expect(landFn).not.toHaveBeenCalled()
     expect(existsSync(stagingAbs)).toBe(false)
+  })
+})
+
+describe("main's session schema — a branch's new field cannot land a log main rejects", () => {
+  afterEach(() => rmSync(stagingAbs, { force: true }))
+
+  it('refuses to land, and stages nothing, when main rejects the entry', () => {
+    const landFn = vi.fn() as unknown as typeof import('../../scripts/log-session.ts').land
+    const res = handle(scratch, transcript, {
+      dryRun: false,
+      remote: 'origin',
+      env: {},
+      landFn,
+      mainVersionFn: () => null,
+      mainSchemaFn: () => "  (root): Unrecognized key(s) in object: 'newField'",
+    })
+    expect(res.action).toBe('invalid')
+    expect(res.detail).toContain("origin/main's session schema rejects this entry")
+    expect(res.detail).toContain('newField')
+    expect(landFn).not.toHaveBeenCalled()
+    expect(existsSync(stagingAbs)).toBe(false)
+  })
+
+  it('schemaErrors() runs a schema file against an entry', () => {
+    const schemaFile = join(repoRoot, 'shared/schemas/session.ts')
+    const entry = stitch(scratch, extractTrace(parseTranscript(transcript), {}))
+    expect(schemaErrors(schemaFile, entry)).toBeNull()
+    expect(schemaErrors(schemaFile, { ...entry, newField: 1 })).toContain('newField')
   })
 })
 

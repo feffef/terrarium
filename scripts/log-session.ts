@@ -26,7 +26,7 @@
 //       land a fully-formed entry directly (the original manual path).
 import { execFileSync } from 'node:child_process'
 import { createHash } from 'node:crypto'
-import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
+import { existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { basename, dirname, join, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
@@ -50,6 +50,7 @@ import {
   shellReadScanOf,
   NOT_READ_REASON,
   LAST_LANDED_FILE,
+  SCRATCH_DIR,
   SCRATCH_FILE,
   STAGING_DIR,
   type AuthoredScratch,
@@ -494,6 +495,68 @@ function mainVersion(relPath: string, remote: string): string | null {
   }
 }
 
+const SCHEMA_DIR = 'shared/schemas'
+/** Inside the repo, so the copied schema resolves `zod` from its node_modules. */
+const MAIN_SCHEMA_DIR = join(SCRATCH_DIR, 'main-schema')
+
+/** Validate `entry` with the `sessionSchema` exported by `schemaFile`, in a child
+ *  process because the lander is synchronous. Errors, or null when it passes. */
+export function schemaErrors(schemaFile: string, entry: unknown): string | null {
+  const check = `
+    import { readFileSync } from 'node:fs'
+    import { pathToFileURL } from 'node:url'
+    const { sessionSchema } = await import(pathToFileURL(process.argv[1]).href)
+    const res = sessionSchema.safeParse(JSON.parse(readFileSync(0, 'utf8')))
+    if (!res.success) console.log(res.error.issues.map((i) => '  ' + (i.path.join('.') || '(root)') + ': ' + i.message).join('\\n'))`
+  const out = execFileSync(process.execPath, ['--import', 'tsx', '--input-type=module', '-e', check, schemaFile], {
+    cwd: root,
+    encoding: 'utf8',
+    input: JSON.stringify(entry),
+  })
+  return out.trim() ? out.trimEnd() : null
+}
+
+/** The log lands on `main`, so it must pass `main`'s `.strict()` schema, not just
+ *  this branch's: a branch that adds a session field would otherwise land a log
+ *  that fails `main`'s content validation. Skips the child process when `main`'s
+ *  schema files match the checkout's; an unreadable `main` falls through, as in
+ *  `mainVersion`. Errors, or null when it passes. */
+function mainSchemaErrors(entry: unknown, remote: string): string | null {
+  const show = (args: string[]) =>
+    execFileSync('git', args, { cwd: root, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] })
+  let files: Record<string, string>
+  try {
+    const paths = show(['ls-tree', '-r', '--name-only', `${remote}/main`, `${SCHEMA_DIR}/`]).split('\n').filter(Boolean)
+    files = Object.fromEntries(paths.map((p) => [p, show(['show', `${remote}/main:${p}`])]))
+  } catch {
+    return null
+  }
+  const local = readdirSync(join(root, SCHEMA_DIR)).map((f) => `${SCHEMA_DIR}/${f}`)
+  const same =
+    local.length === Object.keys(files).length &&
+    local.every((p) => files[p] === readFileSync(join(root, p), 'utf8'))
+  if (same) return null
+
+  const dir = join(root, MAIN_SCHEMA_DIR)
+  rmSync(dir, { recursive: true, force: true })
+  for (const [p, text] of Object.entries(files)) {
+    mkdirSync(dirname(join(dir, p)), { recursive: true })
+    writeFileSync(join(dir, p), text)
+  }
+  return schemaErrors(join(dir, SCHEMA_DIR, 'session.ts'), entry)
+}
+
+/** Refuse a log `main`'s schema would reject; it lands on a later Stop once the
+ *  schema change has merged, since the sentinel records only a landed log. */
+function mainSchemaRefusal(entry: unknown, opts: LandOpts): HandlerResult | null {
+  const errors = (opts.mainSchemaFn ?? mainSchemaErrors)(entry, opts.remote)
+  if (errors === null) return null
+  return {
+    action: 'invalid',
+    detail: `${opts.remote}/main's session schema rejects this entry; it lands once the schema change merges:\n${errors}`,
+  }
+}
+
 export interface HandlerResult {
   action: 'skipped-no-scratch' | 'skipped-unchanged' | 'invalid' | 'landed' | 'dry-run'
   relPath?: string
@@ -509,6 +572,8 @@ export interface LandOpts {
   landedBy?: string
   landFn?: typeof land
   mainVersionFn?: (relPath: string, remote: string) => string | null
+  /** `main`'s schema errors for an entry, or null; see `mainSchemaErrors`. */
+  mainSchemaFn?: (entry: unknown, remote: string) => string | null
   env?: SessionIdEnv
   subagentJsonls?: string[]
   /** The doc-line index `docsReadViaShell` is derived against; built from `root` when absent. */
@@ -656,6 +721,9 @@ export function recoverDroppedScratch(transcriptJsonl: string, opts: LandOpts): 
     return { action: 'skipped-unchanged', relPath }
   }
 
+  const refusal = mainSchemaRefusal(entry, opts)
+  if (refusal) return refusal
+
   return stageAndLand(relPath, entryYaml(entry, opts), opts)
 }
 
@@ -680,6 +748,9 @@ export function handle(
   if (current !== null && withoutLandedBy(current) === withoutLandedBy(yaml)) {
     return { action: 'skipped-unchanged', relPath }
   }
+
+  const refusal = mainSchemaRefusal(entry, opts)
+  if (refusal) return refusal
 
   return stageAndLand(relPath, yaml, opts)
 }
