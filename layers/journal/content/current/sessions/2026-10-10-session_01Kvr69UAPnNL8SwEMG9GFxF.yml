@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01Kvr69UAPnNL8SwEMG9GFxF
 startedAt: 2026-10-10T06:05:29Z
-endedAt: 2026-10-10T07:13:07Z
+endedAt: 2026-10-10T07:21:56Z
 kind: interactive
 goal: "Explain issue #1720 simply, then draft the audit-skills fix for it"
-status: in-review
-outcome: "PR #1727 moves audit-skills' live-state rule to cover every written open/closed/merged claim"
-summary: "Human-instructed throughout: the user asked for a plain explanation of issue #1720 (audit-skills wrongly stated #1676/#1684 closed), then to draft the fix, then to check what was still open, then ran /code-review, then approved the review follow-up. Root cause: the #1627 rule covered only \"still open\" and sat in step 2 (checking), while the false \"closed\" claim was written in step 5. First commit moved the rule to one home in the intro and widened it to any written state. The two-axis review found that a standing rule alone is the shape that already failed, so the follow-up put the check into step 5's Done criterion, widened wording to resolved/fixed, and accepted any live GitHub read. Live check: #1676 closed today via PR #1714; #1684 still open (ready-for-human, ADR-0017 wording). PR #1727 green, awaiting human merge."
+status: completed
+outcome: "PR #1727 merged: audit-skills checks every written issue/PR state against a live read, at step 5's Done; #1720 closed"
+summary: "Human-instructed throughout: the user asked for a plain explanation of issue #1720 (audit-skills wrongly stated #1676/#1684 closed), then to draft the fix, then to check what was still open, then ran /code-review, then approved the review follow-up. Root cause: the #1627 rule covered only \"still open\" and sat in step 2 (checking), while the false \"closed\" claim was written in step 5. First commit moved the rule to one home in the intro and widened it to any written state. The two-axis review found that a standing rule alone is the shape that already failed, so the follow-up put the check into step 5's Done criterion, widened wording to resolved/fixed, and accepted any live GitHub read. Live check: #1676 closed today via PR #1714; #1684 still open (ready-for-human, ADR-0017 wording). PR #1727 merged by the owner; #1720 closed (verified live)."
 prs:
   - "1727"
 docsRead:
@@ -35,13 +35,13 @@ frictions:
   - description: "First draft of the #1720 fix put the rule only in the intro, repeating the standing-rule shape that already failed after #1627; /code-review caught it."
     solution: When fixing a recurrence, put the check in the failing step's Done criterion, not only as a standing rule.
     severity: minor
-durationSec: 4058
+durationSec: 4587
 models:
-  claude-opus-5-5: 103
+  claude-opus-5-5: 115
 toolCounts:
   ToolSearch: 4
-  mcp__github__issue_read: 4
-  Bash: 23
+  mcp__github__issue_read: 5
+  Bash: 24
   Read: 1
   Skill: 3
   Edit: 5
@@ -49,11 +49,12 @@ toolCounts:
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
   mcp__github__pull_request_read: 6
-  ReadNotifications: 4
+  ReadNotifications: 7
   mcp__claude-code-remote__send_later: 2
   AskUserQuestion: 1
   Agent: 4
   mcp__github__update_pull_request: 1
+  mcp__claude-code-remote__delete_trigger: 1
 filesEdited:
   - .agents/skills/audit-skills/SKILL.md
 docsReadViaShell:
