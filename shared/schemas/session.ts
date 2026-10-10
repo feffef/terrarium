@@ -27,7 +27,7 @@ export const sessionSchema = z
     // Autonomy spectrum, judged by who prompted — canonical definitions:
     // CONTEXT.md → Session.
     kind: z.enum(['interactive', 'delegated', 'autonomous']),
-    goal: z.string(), // one-liner — what the session set out to do
+    goal: z.string(), // short plain headline — what the session worked on
     // `in-review` is the honest state of a session that opened a gated PR but
     // hasn't seen it merged — the norm at closure (ADR-0003/0009), not
     // `completed`, which is reserved for work that actually landed (or needed no

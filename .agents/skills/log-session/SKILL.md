@@ -125,11 +125,9 @@ ideas:                             # OPTIONAL — omit unless something sparked
   ADR-0003's autonomy gate (net-new work needs a human green-light) depends on
   this being legible to a later reader, not reconstructed after the fact.
 - **Quote any scalar value containing `[`, `{`, `#`, or `,`**, the top-level `goal`/`outcome` strings as much as `path`/`reason` values. Unquoted, `[` or `{` starts a YAML flow sequence/map; `#` starts a YAML comment and truncates everything after it; `,` inside a flow map (`{ … }`) ends the current value early. Any of these silently mangles the entry instead of erroring. The `#` case (a bare `PR #354` truncating to `PR`) is caught: the `--author` step below rejects an unquoted-`#` truncation loudly and prints the value to quote.
-- `goal` and `outcome` are each a one-liner, written for a stranger (name the
-  thing, not "the issue"): they are the public dashboard's copy. `goal` is a
-  short, plain headline of what the session worked on, in your own words, not
-  the task or Routine prompt restated: "Weekly check of the Platform's own
-  Skills", not "Run the scheduled audit-skills sweep: …".
+- `goal` is a short, plain headline ("Weekly check of the Platform's own Skills",
+  not "Run the scheduled audit-skills sweep: …"), `outcome` a one-liner; both for
+  a stranger (name the thing, not "the issue"): they are the public dashboard's copy.
 - **Size the `summary` to the session:** a few sentences for a single task,
   longer for a session that runs a whole workflow (e.g. building a Tenant across
   many PRs). Spend the words on what git history and PR descriptions can't tell a
