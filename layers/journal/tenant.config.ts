@@ -56,8 +56,8 @@ export const skillSchema = z
 export default defineTenant({
   name: 'journal',
   // A lifecycle split: `current` is the live week, `archived` the older entries
-  // (issue #868). The split also carries the suite's only L2 cross-Space leak
-  // check (layers/journal/tests/e2e/journal.e2e.ts).
+  // (issue #868). It also exercises ADR-0004's L3 isolation invariant: this
+  // layer's e2e checks an archived route doesn't leak `current` content.
   spaces: ['current', 'archived'],
   collections: {
     // Rendered documentation pages — 1:1 file → route within the Space.
