@@ -181,6 +181,9 @@ describe('unresolved', () => {
   it('accepts a URL followed by punctuation', () => {
     expect(unresolved([review], `- ${review.url}: not a ruling (praise)`)).toEqual([])
     expect(unresolved([rework!], `- (${rework!.url}) not a ruling`)).toEqual([])
+    for (const wrapped of [`<${review.url}>:`, `\`${review.url}\` —`, `**${review.url}**`, `[${review.url}]`]) {
+      expect(unresolved([review], `- ${wrapped} not a ruling (praise)`)).toEqual([])
+    }
   })
 
   it('lists a rework PR relating to two visitor-loop PRs once', () => {

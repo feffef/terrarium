@@ -136,7 +136,7 @@ export function unresolved(candidates: Candidate[], tally: string): Candidate[] 
     tally
       .split('\n')
       .filter((l) => /not a ruling|decisions\.md/i.test(l))
-      .map((l) => l.match(/https?:\/\/\S+|#\d+/)?.[0].replace(/[:,.;)]+$/, '')),
+      .map((l) => l.match(/https?:\/\/[^\s<>`*]+|#\d+/)?.[0].replace(/[:,.;)\]]+$/, '')),
   )
   const seen = new Set<string>()
   return candidates.filter((c) => {
@@ -219,8 +219,8 @@ function isBotAccount(user: RawComment['user']): boolean {
   return user?.type ? user.type === 'Bot' : (user?.login ?? '').endsWith('[bot]')
 }
 
-function threadNumber(apiUrl: string): number {
-  return Number(apiUrl.slice(apiUrl.lastIndexOf('/') + 1))
+function threadNumber(url: string): number {
+  return Number(url.slice(url.lastIndexOf('/') + 1))
 }
 
 export function ownerCorrections(since: string | undefined, cwd = root): Candidate[] {
