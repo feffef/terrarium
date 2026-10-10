@@ -1,0 +1,60 @@
+schemaVersion: 1
+session: session_018i6d2BQPkf9cq6jSEqCNSX
+startedAt: 2026-10-10T10:54:38Z
+endedAt: 2026-10-10T10:59:08Z
+kind: delegated
+goal: Run one auto-triage sweep over open issues and external PRs
+status: completed
+outcome: "1 of 28 open issues eligible; #1721 triaged to bug + ready-for-agent"
+summary: "Ran /auto-triage at the human-instructed kickoff prompt (the only prompt; if it was fired by a Routine the kind is autonomous instead, the transcript can't tell). Listed 28 open issues via list-open-issues.ts and checked last-comment authorship via last-comment-authors.ts: every issue's latest comment or body carries ADR-0017 provenance, and there are no open PRs, so only #1721 (needs-triage, always eligible) qualified; #439 and #1357 are wayfinder maps and were skipped. One subagent triaged #1721, verified every claim against PRs #1667/#1672/#1691, the visitor-loop Skill and owner-corrections.ts, and stamped bug + ready-for-agent with a path-free Agent Brief (backfill decisions.md, drop bot-authored rework candidates, fail blanket dismissals). It treated the #1672 relabel as a standing owner ruling, citing the three earlier reworks that each became a decisions.md line. I re-checked the labels and comment on GitHub. The other open ready-for-agent issue, #1712, shares no file with #1721's fix, so no blocking edge was added. All actions were within the skill's standing green-light; no repo changes, no PR."
+prs: []
+docsRead: []
+skillsUsed:
+  - name: auto-triage
+    reason: the task
+  - name: triage
+    reason: per-issue rules the subagent applied
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: "agent-background-flag-guard denied my first Agent dispatch for passing run_in_background: false; cost one retry (already tracked as issue 1651)"
+    solution: "Resolve issue 1651: let the guard allow the no-op flag, or have the auto-triage Skill note to omit it"
+    severity: minor
+  - description: "CLAUDE.md's ADR trigger: I delegated reading ADR-0022 to the subagent rather than reading it myself before planning the sweep; no harm, since the subagent applied it"
+    solution: auto-triage could say the orchestrator may leave ADR-0022 to the per-issue subagent, since only it applies the taxonomy
+    severity: nit
+durationSec: 270
+models:
+  claude-opus-5-5: 31
+toolCounts:
+  Bash: 9
+  Read: 1
+  Agent: 2
+  Skill: 2
+docsReadViaShell:
+  - CONTEXT-MAP.md
+  - CONTEXT.md
+  - docs/agents/github-integration.md
+  - docs/agents/issue-tracker.md
+  - docs/agents/triage-labels.md
+  - docs/agents/guest-contributions.md
+  - .agents/skills/triage/SKILL.md
+  - .agents/skills/triage/AGENT-BRIEF.md
+  - docs/research/rulebook-migration-table.md
+  - .agents/skills/auto-triage/SKILL.md
+  - docs/adr/0022-autonomous-triage-sweep.md
+  - .agents/skills/visitor-loop/SKILL.md
+  - .agents/skills/visitor-loop/decisions.md
+  - docs/agents/guards.md
+  - docs/adr/0003-agent-operating-model-and-governance.md
+subagents:
+  - type: general-purpose
+    task: "Triage issue #1721"
+  - type: general-purpose
+    task: "Triage issue #1721"
+gitBranch: ccr-d3461dde-cffgmt
+entrypoint: remote_mobile
+cliVersion: 2.1.296
+landedBy: Stop
