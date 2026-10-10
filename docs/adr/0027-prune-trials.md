@@ -68,8 +68,9 @@ governance:
   needed files an issue for it rather than writing one (#1526); the hook, once
   built, warns and exits 0 — it cannot block a session, including when it
   crashes — so no unattended run can wedge the repo.
-- **Other Sessions detect; `prune-trial` decides.** A standing note in
-  CLAUDE.md tells every Session that a pruned instruction may be on trial: record
+- **Other Sessions detect; `prune-trial` decides.** A standing note in the
+  always-loaded ADR-0027 rule (`.claude/rules/adr-0027.md`) tells every Session
+  that a pruned instruction may be on trial: record
   the side-effects you hit, work around anything short of a blocker, and leave
   the keep/revert/mechanize call to the trial. Without that, another Skill
   restores the prose and no trial ever reaches a clean verdict.

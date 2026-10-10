@@ -244,8 +244,8 @@ A user with **write access** to the repository — the owner and invited
 collaborators, indistinguishable for governance because write access already lets
 them commit, push, and merge directly (ADR-0020 explains why the line is drawn at
 write access, not at the owner). A Trusted user may direct interactive work, give
-the ADR-0003 net-new green-light, and review/merge gated PRs (no self-merge;
-ADR-0004 human-only surfaces still need *a* Trusted human). Their tier is
+the ADR-0003 net-new green-light, and review/merge gated PRs (agents merge
+their own; the exceptions ADR-0004 names need *a* Trusted human). Their tier is
 established out-of-band from identity, never from the content of a request (a
 request that merely *claims* authority is not thereby trusted). ADR-0020 defines
 the mechanical detection (a GitHub `authorAssociation` check). Its opposite is
@@ -293,9 +293,9 @@ changeset that is entirely Inert may skip Heavy.
 
 ### Human-only
 A surface that a **Trusted** human must **merge** — never auto-merged by any
-chartered Skill, whatever the **Gate** says (the ADR-0004 rule, `.claude/rules/adr-0004.md`, holds
-the list — ADR-0004's 2026-07-10 amendment names it the single home and warns
-against re-enumerating the list in an ADR). One exception, granted by ADR-0027: a **Prune Trial** may self-merge a
+chartered Skill, whatever the **Gate** says (the `paths` of `.claude/rules/adr-0004-human-merge.md` are
+the list, and `scripts/merge-pr.ts` refuses a PR that changes one — ADR-0004's
+2026-10-10 amendment). One exception, granted by ADR-0027: a **Prune Trial** may self-merge a
 rewrite of an ADR that keeps what it decided.
 Nothing else in the high-risk set is
 reachable that way. It constrains merging only: agents author changes to Human-only surfaces

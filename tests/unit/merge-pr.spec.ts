@@ -11,6 +11,8 @@ import { describe, expect, it, vi } from 'vitest'
 import {
   failingCheckNames,
   hasVerdictFromSession,
+  humanMergeGlobs,
+  humanMergeRefusal,
   mergeRequestFields,
   parseClosingKeywordIssues,
   pollUntilResolved,
@@ -281,5 +283,32 @@ describe('hasVerdictFromSession() (issue #1276)', () => {
       expect(hasVerdictFromSession([{ body: header(me), authorAssociation }], me)).toBe(false)
       expect(hasVerdictFromSession([{ body: header(me), authorAssociation }], null)).toBe(false)
     }
+  })
+})
+
+describe('humanMergeRefusal() — the Human-only paths (ADR-0004)', () => {
+  const globs = humanMergeGlobs('---\nadr: x\npaths:\n  - "docs/adr/**"\n  - "nuxt.config.ts"\n  - "shared/schemas/**"\n---\nbody\n')
+
+  it('reads the rule\'s paths from its frontmatter', () => {
+    expect(globs).toEqual(['docs/adr/**', 'nuxt.config.ts', 'shared/schemas/**'])
+  })
+
+  it('lets an ordinary PR through, a layer config included', () => {
+    expect(humanMergeRefusal(['layers/blog/nuxt.config.ts', 'app/app.vue'], globs)).toBeNull()
+  })
+
+  it('refuses a PR that changes a listed file, naming it', () => {
+    expect(humanMergeRefusal(['app/app.vue', 'shared/schemas/session.ts'], globs)).toContain('shared/schemas/session.ts')
+  })
+
+  it('fails closed when no paths could be read', () => {
+    expect(humanMergeRefusal(['app/app.vue'], [])).toContain('refused')
+  })
+
+  it('lets a Prune Trial merge an ADR rewrite only with its ledger entry (ADR-0027)', () => {
+    const adr = ['docs/adr/0004-objective-safety-gate.md', '.claude/rules/adr-0004.md']
+    expect(humanMergeRefusal(adr, globs, true)).toContain('prune-trials.yml')
+    expect(humanMergeRefusal([...adr, '.agents/prune-trials.yml'], globs, true)).toBeNull()
+    expect(humanMergeRefusal([...adr, '.agents/prune-trials.yml', 'nuxt.config.ts'], globs, true)).toContain('nuxt.config.ts')
   })
 })

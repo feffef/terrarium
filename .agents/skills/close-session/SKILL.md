@@ -5,8 +5,9 @@ description: "Invoke when this Claude session is wrapping up — coming to a clo
 
 You've reached **Session closure** — run the closing actions:
 
-- **Hard rule: re-read CLAUDE.md in full before you log.** For every rule or
-  step in it that this session broke or skipped, log a Friction that names the
+- **Hard rule: re-read CLAUDE.md and the always-loaded rules in `.claude/rules/`
+  (the files with no `paths`) in full before you log.** For every rule or
+  step in them that this session broke or skipped, log a Friction that names the
   rule — even if you fixed it later. Say what impact breaking it had, or could
   have had. If following the rule or reading the doc it points to would have
   helped, also say what would have made you read it at the time.
@@ -14,7 +15,7 @@ You've reached **Session closure** — run the closing actions:
   see `log-session` for the exact semantics of each of the five values
   (`completed | in-review | partial | blocked | abandoned`); never default a
   stalled or abandoned session to `completed`.
-- **For any gated PR, follow CLAUDE.md's discipline:** open it, subscribe to its
+- **For any gated PR, follow the ADR-0003 rule:** open it, subscribe to its
   activity, and babysit it to merge/close.
 - **If a tool call in that PR-open sequence (`subscribe_pr_activity`, or this
   Skill's own trigger) gets rejected, don't let closure stall.** Still invoke
@@ -37,7 +38,7 @@ status. Three conditions, all required:
    main`, `git log origin/main --grep=<this session's id>` shows it.
 
 Authoring only arms (2). Since you stay alive to babysit any PR you opened
-(CLAUDE.md), use a later babysitting turn to confirm (3), and — once the PR merges —
+(the ADR-0003 rule), use a later babysitting turn to confirm (3), and — once the PR merges —
 **finalize the log via `log-session`** (status `completed`, plus any friction from
 closure), then re-verify. Until all three hold, the session is **not** logged.
 (For a **scheduled autonomous** run there is no human to notice a missing log and

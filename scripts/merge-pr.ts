@@ -18,9 +18,10 @@
 // is not. The strategy switch itself (`pickFetchStrategy`, `hasGhBinary`,
 // `envToken`) is single-homed in `list-open-issues.ts` and imported below.
 //
-// Usage:  tsx scripts/merge-pr.ts <pr-number> [--merge-method merge|squash|rebase] [--interval-ms N] [--timeout-ms N]
-//   Refuses up front for a fork or Public-authored PR, or unless this session's
-//   verdict is on the PR (issue #1276).
+// Usage:  tsx scripts/merge-pr.ts <pr-number> [--merge-method merge|squash|rebase] [--interval-ms N] [--timeout-ms N] [--prune-trial]
+//   Refuses up front for a fork or Public-authored PR, for a PR that changes a
+//   Human-only path (ADR-0004; `--prune-trial` lets a Prune Trial's ADR rewrite
+//   through, ADR-0027), or unless this session's verdict is on the PR (#1276).
 //   Then polls the PR's head-commit check runs every `interval-ms` (default 15s)
 //   until they resolve or `timeout-ms` (default 20 minutes) elapses, then:
 //     - all green  → merges via the given method (default `merge`, matching
@@ -57,8 +58,9 @@
 import { execFileSync } from 'node:child_process'
 import { mkdtempSync, readFileSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
-import { dirname, join, resolve } from 'node:path'
+import { dirname, join, matchesGlob, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
+import { parse as parseYaml } from 'yaml'
 import {
   envToken,
   hasGhBinary,
@@ -98,8 +100,9 @@ export interface PollOptions {
 export interface MergeResult {
   pr: number
   /** Refused before polling: `untrusted-origin` — see `prOriginRefusal`;
-   *  `no-verdict` — see `hasVerdictFromSession`. */
-  verdict: ChecksVerdict | 'untrusted-origin' | 'no-verdict'
+   *  `human-merge` — see `humanMergeRefusal`; `no-verdict` — see
+   *  `hasVerdictFromSession`. */
+  verdict: ChecksVerdict | 'untrusted-origin' | 'human-merge' | 'no-verdict'
   merged: boolean
   mergeCommitSha?: string
   message: string
@@ -160,6 +163,34 @@ export function hasVerdictFromSession(bodies: VerdictBody[], sessionId: string |
       TRUSTED_ASSOCIATIONS.has(authorAssociation) &&
       (sessionId === null ? hasAuthorshipMarker(b) : readProvenanceHeader(b)?.sessionId === sessionId),
   )
+}
+
+/** The single home of the Human-only list (ADR-0004): its frontmatter `paths`.
+ *  Read from `origin/main`, so a PR cannot shrink the list for itself. */
+export const HUMAN_MERGE_RULE = '.claude/rules/adr-0004-human-merge.md'
+/** Every Prune Trial ships its ledger entry in the prune's own commit (ADR-0027). */
+export const PRUNE_TRIAL_LEDGER = '.agents/prune-trials.yml'
+
+export function humanMergeGlobs(ruleText: string): string[] {
+  const fm = /^---\n([\s\S]*?)\n---\n/.exec(ruleText)?.[1]
+  const paths = fm ? (parseYaml(fm) as { paths?: unknown }).paths : undefined
+  return Array.isArray(paths) ? paths.filter((p): p is string => typeof p === 'string') : []
+}
+
+const isPruneTrialPath = (f: string) => matchesGlob(f, 'docs/adr/**') || /^\.claude\/rules\/adr-\d{4}\.md$/.test(f)
+
+/** Why this script must leave the PR to a human, or null. A Prune Trial may
+ *  still merge its ADR rewrite and the matching rule re-stamp (ADR-0027). An
+ *  empty list fails closed: it means the rule could not be read. */
+export function humanMergeRefusal(files: string[], globs: string[], pruneTrial = false): string | null {
+  if (globs.length === 0) return `refused: no Human-only paths read from origin/main:${HUMAN_MERGE_RULE}`
+  if (pruneTrial && !files.includes(PRUNE_TRIAL_LEDGER)) {
+    return `refused: --prune-trial needs the PR to change ${PRUNE_TRIAL_LEDGER} (ADR-0027)`
+  }
+  const hits = files.filter((f) => globs.some((g) => matchesGlob(f, g)) && !(pruneTrial && isPruneTrialPath(f)))
+  return hits.length
+    ? `refused: a human merges a PR that changes ${hits.join(', ')} (ADR-0004, ${HUMAN_MERGE_RULE})`
+    : null
 }
 
 /** Why this script must not merge the PR, or null: a fork or Public-authored
@@ -421,6 +452,34 @@ function closeIssueViaRest(owner: string, repo: string, issueNumber: number, tok
   )
 }
 
+type RawPrFile = { filename: string; previous_filename?: string }
+
+/** Every path the PR touches, a rename's old path included, so moving a file
+ *  out of a Human-only path still counts. */
+function readChangedFiles(strategy: FetchStrategy, owner: string, repo: string, prNumber: number, cwd: string): string[] {
+  const url = `repos/${owner}/${repo}/pulls/${prNumber}/files`
+  const files: string[] = []
+  for (let page = 1; ; page++) {
+    const items =
+      strategy === 'gh'
+        ? (JSON.parse(
+            execFileSync('gh', ['api', '--method', 'GET', url, '-f', 'per_page=100', '-f', `page=${page}`], { cwd, encoding: 'utf8' }),
+          ) as RawPrFile[])
+        : (curlRequestJson('GET', `https://api.github.com/${url}?per_page=100&page=${page}`, envToken()!, cwd) as RawPrFile[])
+    for (const i of items) files.push(i.filename, ...(i.previous_filename ? [i.previous_filename] : []))
+    if (items.length < 100) return files
+  }
+}
+
+function readHumanMergeGlobsFromMain(cwd: string): string[] {
+  try {
+    execFileSync('git', ['fetch', 'origin', 'main'], { cwd, stdio: 'ignore' })
+    return humanMergeGlobs(execFileSync('git', ['show', `origin/main:${HUMAN_MERGE_RULE}`], { cwd, encoding: 'utf8' }))
+  } catch {
+    return []
+  }
+}
+
 function readPrMeta(strategy: FetchStrategy, owner: string, repo: string, prNumber: number, cwd: string): PrMeta {
   if (strategy === 'gh') return readPrMetaViaGh(owner, repo, prNumber, cwd)
   return readPrMetaViaRest(owner, repo, prNumber, envToken()!, cwd)
@@ -518,7 +577,7 @@ function mergePr(
 
 export async function mergePrWhenGreen(
   prNumber: number,
-  opts: PollOptions & { mergeMethod: MergeMethod },
+  opts: PollOptions & { mergeMethod: MergeMethod; pruneTrial?: boolean },
   cwd = root,
 ): Promise<MergeResult> {
   const originUrl = readOriginUrl(cwd)
@@ -536,6 +595,15 @@ export async function mergePrWhenGreen(
   const originRefusal = prOriginRefusal(meta, owner, repo)
   if (originRefusal !== null) {
     return { pr: prNumber, verdict: 'untrusted-origin', merged: false, message: originRefusal }
+  }
+
+  const humanRefusal = humanMergeRefusal(
+    readChangedFiles(strategy, owner, repo, prNumber, cwd),
+    readHumanMergeGlobsFromMain(cwd),
+    opts.pruneTrial,
+  )
+  if (humanRefusal !== null) {
+    return { pr: prNumber, verdict: 'human-merge', merged: false, message: humanRefusal }
   }
 
   const sessionId = resolveGroundTruthFromTranscript(findTranscriptContents(process.env) ?? '')
@@ -617,10 +685,16 @@ function fail(msg: string): never {
   process.exit(1)
 }
 
-function parseArgsOrFail(argv: string[]): { prNumber: number; mergeMethod: MergeMethod; intervalMs: number; timeoutMs: number } {
+function parseArgsOrFail(argv: string[]): {
+  prNumber: number
+  mergeMethod: MergeMethod
+  intervalMs: number
+  timeoutMs: number
+  pruneTrial: boolean
+} {
   const prArg = argv[0]
   if (!prArg) {
-    fail('usage: tsx scripts/merge-pr.ts <pr-number> [--merge-method merge|squash|rebase] [--interval-ms N] [--timeout-ms N]')
+    fail('usage: tsx scripts/merge-pr.ts <pr-number> [--merge-method merge|squash|rebase] [--interval-ms N] [--timeout-ms N] [--prune-trial]')
   }
   const prNumber = Number(prArg)
   if (!Number.isInteger(prNumber) || prNumber <= 0) fail(`not a positive integer PR number: ${prArg}`)
@@ -628,8 +702,14 @@ function parseArgsOrFail(argv: string[]): { prNumber: number; mergeMethod: Merge
   let mergeMethod: MergeMethod = 'merge'
   let intervalMs = DEFAULT_INTERVAL_MS
   let timeoutMs = DEFAULT_TIMEOUT_MS
+  let pruneTrial = false
   for (let i = 1; i < argv.length; i += 2) {
     const flag = argv[i]
+    if (flag === '--prune-trial') {
+      pruneTrial = true
+      i -= 1
+      continue
+    }
     const value = argv[i + 1]
     if (flag === '--merge-method') {
       if (value !== 'merge' && value !== 'squash' && value !== 'rebase') fail(`invalid --merge-method: ${value}`)
@@ -644,12 +724,12 @@ function parseArgsOrFail(argv: string[]): { prNumber: number; mergeMethod: Merge
       fail(`unknown flag: ${flag}`)
     }
   }
-  return { prNumber, mergeMethod, intervalMs, timeoutMs }
+  return { prNumber, mergeMethod, intervalMs, timeoutMs, pruneTrial }
 }
 
 async function main(): Promise<void> {
-  const { prNumber, mergeMethod, intervalMs, timeoutMs } = parseArgsOrFail(process.argv.slice(2))
-  const result = await mergePrWhenGreen(prNumber, { mergeMethod, intervalMs, timeoutMs })
+  const { prNumber, mergeMethod, intervalMs, timeoutMs, pruneTrial } = parseArgsOrFail(process.argv.slice(2))
+  const result = await mergePrWhenGreen(prNumber, { mergeMethod, intervalMs, timeoutMs, pruneTrial })
   process.stdout.write(JSON.stringify(result, null, 2) + '\n')
   if (!result.merged) process.exitCode = 1
 }

@@ -4,8 +4,8 @@ The single home for the "land a low-risk gated PR" recipe. The ADR-0003 rule
 (`.claude/rules/adr-0003.md`) and the per-Skill merge sections point here for
 the mechanics.
 
-Why a tier merges on green: ADR-0003. What counts as high-risk: CLAUDE.md's
-Ground rules, ADR-0004. `main`'s branch-protection state:
+Why a tier merges on green: ADR-0003. What needs a human merge: ADR-0004's
+rules, `.claude/rules/adr-0004-human-merge.md` for the paths. `main`'s branch-protection state:
 `docs/research/github-branch-protection-vs-autonomous-log-commits.md` (issue #348).
 
 For the `mcp__github__*` tool surface this recipe runs on — transient 503s and
@@ -67,7 +67,8 @@ description.
 - `digest` / `audit-docs` / `audit-skills` / `blog-post` / `visitor-loop` —
   merge on a green gate alone (ADR-0003/0004).
 - `prune-trial` — merge on a green gate alone, and uniquely may rewrite ADRs,
-  keeping what they decided, as part of a trial (ADR-0027's narrow amendment to ADR-0004).
+  keeping what they decided, as part of a trial (ADR-0027's narrow amendment to ADR-0004):
+  run `merge-pr.ts --prune-trial`, with the trial's ledger entry in the PR.
 - `reviewer-agent` (`frictions-to-fixes`) — green gate plus the reviewing
   session's own risk judgement; escalate a genuinely high-risk PR to a human
   even when the gate is green (ADR-0003).
@@ -76,7 +77,8 @@ description.
   `.agents/skills/guest-build/SKILL.md`'s "one hard subtraction" section and
   ADR-0023).
 - `dependabot` — merged by the `dependabot-automerge` workflow (proposal #1633, not yet applied), never by an agent; leave those PRs alone (ADR-0003 ledger).
-- An ordinary work PR — merged by a human, never self-merged.
+- An ordinary work PR — merged by its authoring session on a green gate, unless
+  the ADR-0004 rule names an exception; then a human merges it (ADR-0003).
 
 ## Closing a self-merged chartered run
 
@@ -97,4 +99,4 @@ its diff is limited to, and what to do when something rides outside that scope):
    gate.
 
 Once the PR is merged or honestly left open, re-invoke `close-session` to update
-that log (the ADR-0009 rule (`.claude/rules/adr-0009.md`)).
+that log (the ADR-0009 rule, `.claude/rules/adr-0009.md`).

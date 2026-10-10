@@ -63,7 +63,7 @@ remaining reasons to change are triggers and permissions.
 
 **`.github/actions/gate/action.yml` joins ADR-0004's high-risk set** — Human-only
 to *merge*, never auto-merged by any chartered-Skill tier. It is agent-*editable*,
-exactly as `content.config.ts` is (`.claude/rules/adr-0004.md`). Removing a
+exactly as `content.config.ts` is (`.claude/rules/adr-0004-human-merge.md`). Removing a
 mechanical barrier does not remove a governance one.
 
 **`tests/unit/gate-parity.spec.ts` pins the three homes together**: the
