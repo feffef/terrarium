@@ -16,11 +16,12 @@ act, once per session.
   words we use (Platform, Tenant, Space, Collection, Document, Skill, …).
   Working on a Tenant? Also read `layers/<tenant>/CONTEXT.md`. Use the
   glossary's terms.
-- **Before you plan or recommend a change (an opinion asked in chat counts), and again once you know which files it touches:**
-  the ADRs that bind it. List `docs/adr/` (the file names say what each
-  decides) and grep it for every file path and term involved:
-  `grep -l <path-or-term> docs/adr/*`. Read in full every ADR whose decision
-  covers a file or term you will touch.
+- **ADRs arrive as rules.** Each ADR's summary is a rule in `.claude/rules/`:
+  the cross-cutting ones load at session start, the rest when you read or edit
+  a file they govern. When a summary says so, read the full ADR before you act.
+  Before you plan or recommend a change (an opinion asked in chat counts), find
+  the ADRs that bind it with `grep -l <path-or-term> docs/adr/*` and read
+  their rule files.
 - **Before your first git command** beyond `status` and `diff` (commit, fetch,
   pull, rebase, amend, reset, or `log`/`blame` to draw a conclusion):
   `docs/agents/git-conventions.md`.
