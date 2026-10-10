@@ -26,12 +26,12 @@
   },
   "dependencies": {
     "@nuxt/content": "^3.16.1",
-    "nuxt": "^4.5.2",
+    "nuxt": "^4.6.0",
     "zod": "^3.25.76"
   },
   "devDependencies": {
     "@nuxt/eslint": "^1.17.0",
-    "@nuxt/kit": "^4.5.2",
+    "@nuxt/kit": "^4.6.0",
     "@nuxt/test-utils": "^4.3.3",
     "@types/node": "^22.20.5",
     "eslint": "^10.12.0",
