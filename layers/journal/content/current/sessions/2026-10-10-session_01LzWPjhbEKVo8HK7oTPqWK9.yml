@@ -1,14 +1,15 @@
 schemaVersion: 1
 session: session_01LzWPjhbEKVo8HK7oTPqWK9
 startedAt: 2026-10-10T21:17:15Z
-endedAt: 2026-10-10T21:30:16Z
+endedAt: 2026-10-10T21:38:58Z
 kind: interactive
 goal: Check three session-log ideas and build the open ones
 status: in-review
-outcome: "Two ideas were already on main; PR #1748 makes the lander refuse logs main's schema rejects"
-summary: "The owner asked to investigate three ideas from a recent session log. Checking the code showed two were already shipped on main the same day (commit ac03730e): rulesLoaded in the trace, and ADR-rule staleness via a hash stamp (stronger than the proposed \"touch both files\" check). The third was a real gap: the lander validated a log against the branch's schema but committed it to main, whose strict schema could reject a branch-added field. I reported this and asked; the owner instructed building the third idea plus the remaining part of the first (whether an ADR was read after its rule loaded), with a rejected log refused rather than trimmed. Agent-chosen details: validate against origin/main's shared/schemas in a child process (the lander is synchronous), skip when the schema files match the checkout. PR #1748 is open. The second change (rulesFollowedUp) touches shared/schemas, a Human-only path, so it is planned as a separate PR after #1748 merges."
+outcome: "PR #1748 merged (lander refuses logs main's schema rejects); PR #1749 adds rulesFollowedUp and waits for a human merge"
+summary: "The owner asked to investigate three ideas from a recent session log. Checking the code showed two were already shipped on main the same day (commit ac03730e): rulesLoaded in the trace, and ADR-rule staleness via a hash stamp (stronger than the proposed \"touch both files\" check). The third was a real gap: the lander validated a log against the branch's schema but committed it to main, whose strict schema could reject a branch-added field. I reported this and asked; the owner instructed building the third idea plus the remaining part of the first (whether an ADR was read after its rule loaded), with a rejected log refused rather than trimmed, and then asked for the second change as a new PR. Agent-chosen details: validate against origin/main's shared/schemas in a child process (the lander is synchronous), skipped when the schema files match the checkout; count only a whole Read (no offset/limit) or a shell-detector credit as following up a rule, and only after the rule's first load. PR #1748 merged on a green gate. PR #1749 touches shared/schemas (Human-only), so it waits for a human merge; it was cut on a new branch at the owner's request. Probing the extractor on this session's own transcript caught that a 30-line partial Read counted as a follow-up, which led to the whole-Read rule. I switched back to the first branch before ending the turn so this session's own log would not carry rulesFollowedUp onto a main that lacks it."
 prs:
   - "1748"
+  - "1749"
 docsRead:
   - path: docs/adr/0009-session-logs-commit-directly-to-main.md
     reason: governs the lander and schema evolution
@@ -22,8 +23,16 @@ docsRead:
     reason: session start
   - path: CONTEXT.md
     reason: headings only, via grep (see friction)
+  - path: docs/adr/0025-cross-tenant-catalog-and-collection-kinds.md
+    reason: first 30 lines, to probe rulesFollowedUp on a real transcript
   - path: scripts/log-session.ts
     reason: (read before editing)
+  - path: scripts/session-trace.ts
+    reason: (no reason given)
+  - path: tests/unit/session-trace.spec.ts
+    reason: (read before editing)
+  - path: shared/schemas/session.ts
+    reason: (no reason given)
 skillsUsed:
   - name: close-session
     reason: (no reason given)
@@ -48,21 +57,35 @@ frictions:
   - description: Piped vitest into tail and the tail-pipe guard blocked it
     solution: Redirect to a file and check the exit code, as the guard says
     severity: nit
-durationSec: 781
+  - description: "Working on the rulesFollowedUp branch, which lacked #1748, risked landing this session's own log with a field main rejects"
+    solution: "Switched back to the #1748 branch before Stop; with #1748 merged, the lander now refuses such logs itself"
+    severity: minor
+  - description: First extractor probe on the live transcript showed no rules because attachment records are flushed after the tool call that triggers them
+    solution: Probe the transcript in a later tool call than the one that loads the rule
+    severity: nit
+durationSec: 1303
 models:
-  claude-opus-5-5: 105
+  claude-opus-5-5: 166
 toolCounts:
-  Bash: 36
-  Read: 2
-  Edit: 6
+  Bash: 55
+  Read: 7
+  Edit: 7
   ToolSearch: 2
   mcp__github__list_pull_requests: 1
-  mcp__github__create_pull_request: 1
-  mcp__claude-code-remote__subscribe_pr_activity: 1
+  mcp__github__create_pull_request: 2
+  mcp__claude-code-remote__subscribe_pr_activity: 2
   Skill: 2
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - scripts/log-session.ts
   - tests/unit/log-session-land.spec.ts
+  - tests/unit/session-trace.spec.ts
+rulesLoaded:
+  - .claude/rules/adr-0025.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0018.md
 gitBranch: ccr-19dd833a-97nm34
 entrypoint: remote_mobile
 cliVersion: 2.1.296
