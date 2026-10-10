@@ -168,6 +168,18 @@ function toolResultText(content: unknown): string {
 /** What the harness records in place of an empty stdout (issue #1355). */
 const EMPTY_BASH_OUTPUT = '(Bash completed with no output)'
 
+/** A large result reaches the transcript only as a 2KB preview plus a pointer
+ *  ("Full output saved to: <path>"); the command's real output is that file
+ *  (issue #1723). An unreadable pointer keeps the preview. */
+function persistedOutput(text: string): string {
+  const path = /Full output saved to:\s*(\S+)/.exec(text)?.[1]
+  try {
+    return path && existsSync(path) ? readFileSync(path, 'utf8') : text
+  } catch {
+    return text
+  }
+}
+
 /** Every Bash command a transcript recorded, each paired with its own
  *  `tool_result` output text — `scanShellReads` needs the OUTPUT, not just the
  *  command, to gate a grep/rg's crediting on what it actually matched (issue
@@ -183,7 +195,7 @@ function bashCommandsOf(records: Record<string, unknown>[]): ShellCommand[] {
     for (const block of content) {
       const b = block as { type?: string; tool_use_id?: string; content?: unknown }
       if (b?.type === 'tool_result' && typeof b.tool_use_id === 'string') {
-        const text = toolResultText(b.content)
+        const text = persistedOutput(toolResultText(b.content))
         outputs.set(b.tool_use_id, text.trim() === EMPTY_BASH_OUTPUT ? '' : text)
       }
     }
