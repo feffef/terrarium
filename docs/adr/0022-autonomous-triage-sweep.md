@@ -119,3 +119,13 @@ when the ticket body itself is AFK-drivable per wayfinder's own test;
 otherwise it escalates to `ready-for-human` under this ADR's existing
 judgment-call criteria (e.g. external access the agent lacks).
 `auto-triage/SKILL.md` implements this narrower rule.
+
+## Amendment: resulting PRs merge like any other PR
+
+> **Amended (2026-10-10, PR #1741).** At the owner's direction, the Decision's
+> "Merge stays gated … No self-merge; a human still merges every resulting PR"
+> is reversed, following ADR-0003's amendment of the same date. A PR built from
+> a sweep-labelled issue merges like any other: its authoring session merges it
+> on a green gate, unless one of ADR-0004's exceptions applies. The sweep's
+> labelling bounds (Trusted-authored only; Public requests, judgment calls and
+> design doubt to `ready-for-human`) are unchanged.
