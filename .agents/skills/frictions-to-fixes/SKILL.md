@@ -74,16 +74,16 @@ candidates** — each with title, severity, recurrence (N of the window's sessio
 classification (never-fixed / open-already #N / regression of #N), fix type
 (doc/code/config), surface-blocked flag (fails §3's safe-surface test: human-only,
 guard or hook wiring), difficulty (simple/hard), a one-line
-recommended fix, and evidence quotes; **(b) a dropped list** with one-line reasons;
+recommended fix, and evidence quotes; **(b) a dropped list** with one-line reasons (an on-trial one quotes its territory match, §2);
 and **(c) the subagent's own frictions** from the run.
 
 ## 2. Screen against fixes already shipped (the subagent's rules)
 
-Never re-fix what is already fixed. **First, drop what isn't ours to change:** a candidate whose only fix edits an **external pack Skill's `SKILL.md`** is off limits (ADR-0015); the gate rejects it anyway, so screening it out here saves a round-trip. A repo-specific fit-note still belongs in that Skill's Inventory entry, but that's `audit-skills`' job, not a friction fix.
+Never re-fix what is already fixed. **First, drop what isn't ours to change:** a candidate whose only fix edits an **external pack Skill's `SKILL.md`** is off limits (ADR-0015; the gate rejects it). A repo-specific fit-note belongs in that Skill's Inventory entry: `audit-skills`' job, not a friction fix.
 **Next, drop what is on trial:** a candidate whose fix would restore prose inside
 an open **Prune Trial**'s territory (`.agents/prune-trials.yml`) is not yours to
 retire — that friction *is* the trial's evidence, and re-legislating it destroys
-the verdict `prune-trial` is waiting for (ADR-0027). Drop it with that reason. A
+the verdict `prune-trial` is waiting for (ADR-0027). The drop reason quotes the matching `territory` path or keyword verbatim; with no quotable match the candidate is not on trial, so classify it below. A
 `blocker` is the exception: after the usual tracker search, file it, naming the
 trial. Then, for the rest: the §1 subagent applies these rules to every candidate, checking the tracker for an issue or PR that already covers it, and confirming against **`main`** where cheap (a "solution" isn't ripe if main already has it). `pnpm exec tsx scripts/merged-since.ts <friction session's startedAt>` lists every `origin/main` commit landed after that instant (UTC-normalized, newest-first, `isMerge`-flagged; add `--merges-only` for PR merges alone, else a window's output can overflow a subagent). Scan it for the fixing commit/PR to turn the already-fixed/regression join into a direct comparison instead of manual git-timestamp archaeology. (Redirect stdout and stderr separately when capturing its output: it writes diagnostics to stderr and its JSON result to stdout only, and combining them breaks JSON parsing.) **Before landing on "Never fixed," run a targeted keyword search of the tracker using the friction's tool name and error-message text as query terms** (not a paraphrase or a topic-level guess; keep the query narrow here too, per `docs/agents/github-integration.md`'s search-scoping guidance, not just at the start of this task). The search tools (e.g. `mcp__github__search_issues`) match natural language semantically, not by literal substring, so a miss is weaker evidence than a literal grep miss: a loosely-worded query can miss an issue or PR that already covers it and waste a dispatch on re-recommending a fix for something already closed. **A keyword-search miss alone is not sufficient proof of "never-fixed":** before finalizing that label, eyeball nearby issues (same file/script/mechanism as the candidate) for a closed issue covering the same root cause under different wording; a paraphrase or a nearby instance of an already-fixed cause is **fixed, not never-fixed** (issue #854). Classify each into one branch:
 
