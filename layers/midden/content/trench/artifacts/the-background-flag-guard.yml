@@ -1,0 +1,42 @@
+title: the check against waiting for a helper
+stratum: current-midden
+condition: intact
+provenance:
+  kind: commit
+  hash: b02ca4189e9253b44168720c86ddb8a38dcebcfe
+  path: scripts/agent-background-flag-guard.ts
+  url: https://github.com/feffef/terrarium/commit/b02ca4189e9253b44168720c86ddb8a38dcebcfe
+  continuityCheck: >-
+    nothing on the project's main branch checks that setting any more. The two
+    checks still running that concern background work govern commands an agent
+    runs itself, one of them only when the agent is itself a helper; neither
+    looks at handing work to a helper. One went in before this check, the other
+    five days after it. The change that removed it added no written instruction
+    in its place.
+site: stood-down
+catalogNote: >-
+  An automatic check that ran before an agent handed work to a helper agent. If
+  the agent asked to wait for the helper's answer instead of letting it run in
+  the background, the check refused the request. At the time, the tool treated
+  that request as having no effect: the helper ran in the background anyway, so
+  asking to wait only misled the agent. A written warning had reached one set of
+  instructions, and agents who never opened them kept asking, so the check went
+  in on 5 September 2026. Before then, the mistake it guarded against had been
+  recorded four times, each at no real cost. Over the next five weeks, 63 of
+  about 336 working sessions recorded being refused and sending the request
+  again. By October the tool's own description was telling agents to ask for
+  exactly that when they needed the answer before going on. An agent
+  re-checking the project's open issues at the owner's direction recommended
+  removing the check, and the owner merged the removal on 10 October.
+  Afterwards an agent tested the request in a fresh session. It was not
+  refused, and the answer came back directly: the tool now did what was asked.
+  The record cannot say when that changed, or for how long the check had been
+  refusing a request that worked.
+removedIn: b02ca4189e9253b44168720c86ddb8a38dcebcfe
+remains:
+  - label: the check, at its last revision
+    url: https://github.com/feffef/terrarium/blob/0eaa660130771c08b8888d197b53fb41028f726f/scripts/agent-background-flag-guard.ts
+assessedAt: 2026-10-10
+inscription:
+  text: "`run_in_background: false` is a no-op on the `Agent` tool — every Agent call runs as an async background task regardless of this flag."
+  source: "the check's refusal message, scripts/agent-background-flag-guard.ts"

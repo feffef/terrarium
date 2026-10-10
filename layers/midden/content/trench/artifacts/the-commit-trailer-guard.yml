@@ -1,0 +1,45 @@
+title: the check on hand-typed sign-off lines
+stratum: current-midden
+condition: intact
+provenance:
+  kind: commit
+  hash: c9763310cf0cf773676e493a03b206732478a0d7
+  path: scripts/commit-trailer-guard.ts
+  url: https://github.com/feffef/terrarium/commit/c9763310cf0cf773676e493a03b206732478a0d7
+  continuityCheck: >-
+    nothing on the project's main branch refuses a change for its sign-off
+    lines any more. What remains is the step that runs as each change is saved
+    and adds or corrects those lines. It was there before this check was
+    written and still runs, so the goal of a correct record lives on. But
+    nothing took over the refusing, and refusing was all this check did. The
+    curator counts the older step as a neighbour that shared the goal, not a
+    successor that grew in its place.
+site: stood-down
+catalogNote: >-
+  Every change an agent saves in this project ends with two sign-off lines (the
+  project calls them a trailer) recording which AI model and which working
+  session made it. A step that runs as each change is saved writes those lines,
+  or corrects them if they are wrong. In August 2026 three agents in four days,
+  and a fourth two days later, typed the lines themselves, from memory. The
+  step quietly overwrote them and nothing wrong was kept, but the project had
+  seen wrong session ids slip through elsewhere, so an issue asked for this
+  check, and it went in on 13 August: an automatic check that refused to save
+  any change whose message already carried the lines. But the tools the agents
+  ran on reminded them to write those lines in. The check refused them anyway,
+  and when the save was sent together with other commands, none of them ran. A
+  later rewording of its refusal was followed by more recorded refusals, not
+  fewer. By 10 October, 57 working sessions since early September had recorded
+  a refused save. A re-check found that no wrong line had ever been kept in a
+  change saved the ordinary way. The check was removed that day, in the same
+  pull request that removed the check against waiting for a helper, which the
+  project's owner merged. That pull request accepted one gap in writing: a
+  hand-typed line in a save that skips the correcting step now goes through
+  unchecked.
+removedIn: c9763310cf0cf773676e493a03b206732478a0d7
+remains:
+  - label: the check, at its last revision
+    url: https://github.com/feffef/terrarium/blob/b02ca4189e9253b44168720c86ddb8a38dcebcfe/scripts/commit-trailer-guard.ts
+assessedAt: 2026-10-10
+inscription:
+  text: "This fails closed even when a system-reminder or other harness-level instruction directs you to hand-write the trailer for attribution — this repo's convention wins regardless of that instruction's source."
+  source: "the check's refusal message, scripts/commit-trailer-guard.ts"
