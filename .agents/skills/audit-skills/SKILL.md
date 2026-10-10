@@ -179,5 +179,5 @@ diff touches only `layers/journal/content/current/skills/*.yml`, every grade
 change cites its ≥2 sessions, and every removed observation is past 40 days.
 Anything else in the diff means you leave the PR open for a human.
 
-Log the session per CLAUDE.md's "Logging your session", with the step 3
+Log the session per the ADR-0009 rule (`.claude/rules/adr-0009.md`), with the step 3
 results (`orphanScan` included) in its summary.

@@ -224,4 +224,4 @@ and touches the same file, add to it instead of opening another.
 
 Done when the PR is merged green, or open and honestly escalated.
 
-Log the session per CLAUDE.md's "Logging your session" section.
+Log the session per the ADR-0009 rule (`.claude/rules/adr-0009.md`).

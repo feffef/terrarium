@@ -42,8 +42,8 @@ Prune Trials by ADR-0027
 > stale — [ADR-0013](0013-dynamic-content-config-committed-routing-map.md) and
 > [ADR-0014](0014-build-time-virtual-routing-module.md) removed it; read every
 > "generator"/"routing/isolation/CI" mention below as historical framing from
-> before that split. The current human-only surface is CLAUDE.md's Ground
-> rules — the single home; no amendment here should re-enumerate it (two later
+> before that split. The current human-only surface is the ADR-0004 rule,
+> `.claude/rules/adr-0004.md` — the single home; no amendment here should re-enumerate it (two later
 > amendments tried, and both went stale the next time the list changed).
 
 > **Amended (2026-07-07).** *Where the gate's tests live, as the Platform grows.*
@@ -117,7 +117,7 @@ Prune Trials by ADR-0027
 > **Amended by [ADR-0025](0025-cross-tenant-catalog-and-collection-kinds.md)
 > (2026-07-22).** `shared/kinds.ts`, `modules/catalog.ts`, and
 > `app/composables/catalog.ts` join the human-only surface, for the reasons in
-> ADR-0025's Consequences. (CLAUDE.md's Ground rules is where the full current
+> ADR-0025's Consequences. (The ADR-0004 rule, `.claude/rules/adr-0004.md`, is where the full current
 > list lives — see the 2026-07-10 amendment above.)
 
 > **Amended (2026-07-30, `/audit-docs`).** *What counts as "changes

@@ -12,7 +12,7 @@
 // one of a small fixed deletion-language keyword list. That's a heuristic,
 // not a proof the issue actually schedules the file for deletion — it is
 // advisory, meant to be eyeballed by a reviewer before merge, not a hard gate
-// (CLAUDE.md's human-only/ADR-0004 boundary: this never runs in CI).
+// (ADR-0004's human-only boundary: this never runs in CI).
 //
 // Two ways to get the changed-file list, mirroring how a reviewer actually
 // has the PR in front of them:

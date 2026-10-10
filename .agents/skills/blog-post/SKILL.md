@@ -293,7 +293,7 @@ its verdict and reason are on the first post's PR.
 ### 13. Close
 
 Invoke the `close-session` Skill (not only `scripts/log-session.ts`) so the
-log records the run's final state (CLAUDE.md, "Logging your session").
+log records the run's final state (the ADR-0009 rule (`.claude/rules/adr-0009.md`)).
 
 Done when: `close-session`'s three logging conditions hold.
 

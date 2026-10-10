@@ -116,7 +116,7 @@ if your judgement differs, but don't re-derive the ranking from scratch.)
   small code, config or doc change — touches a single file with a bounded diff, no
   redesign), **autonomous** (an agent lands it start-to-finish with no human
   decision mid-way), and **safe surface** (touches none of the human-only
-  surfaces — CLAUDE.md's Ground rules, ADR-0004; those are never dispatched
+  surfaces — the ADR-0004 rule, `.claude/rules/adr-0004.md`; those are never dispatched
   here). A fix touching a guard or `.claude/settings.json`'s hook wiring is
   never dispatched either, regardless of size — `docs/agents/guards.md`'s own
   rule, since editing it needs a human-attended session. These you review and
@@ -251,7 +251,7 @@ review-agent, not a bystander waiting for a human. For each PR:
      the PR does, update the PR title/description in the same push
      (`docs/agents/pr-workflow.md` — a stale description is a defect).
    - **Escalate to a human** only when the change is **genuinely high-risk** per
-     ADR-0004 (CLAUDE.md's Ground rules — same test as the safe-surface filter in
+     ADR-0004 (its rule's Human-only list — same test as the safe-surface filter in
      §3, just applied to the actual diff instead of the issue's stated scope).
      ADR-0004's 2026-07-30 amendment gives worked examples for its vaguest axis,
      "changes untested/untestable runtime behaviour" — check the diff against
@@ -264,4 +264,4 @@ A PR is finished only when **merged** (by you) or **escalated/abandoned**, not a
 Done when every dispatched PR carries a posted review comment and is merged or
 escalated/abandoned.
 
-Log the session per CLAUDE.md's "Logging your session" section.
+Log the session per the ADR-0009 rule (`.claude/rules/adr-0009.md`).

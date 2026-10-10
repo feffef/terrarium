@@ -97,4 +97,4 @@ its diff is limited to, and what to do when something rides outside that scope):
    gate.
 
 Once the PR is merged or honestly left open, re-invoke `close-session` to update
-that log (CLAUDE.md, "Logging your session").
+that log (the ADR-0009 rule (`.claude/rules/adr-0009.md`)).

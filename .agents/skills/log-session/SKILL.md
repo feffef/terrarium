@@ -29,7 +29,7 @@ records an in-review PR when that's the state closure was reached in.
 
 **Opening a gated PR is a closure point — log at that moment.** A session opens
 its PR itself as soon as it has pushed a commit that is not a session log
-(CLAUDE.md, Ground rules; ADR-0003), and that first push is exactly when to write this log.
+(the ADR-0003 rule), and that first push is exactly when to write this log.
 Its `status` is then **`in-review`** — the PR is open but not merged — never
 `completed`, which is reserved for work that actually landed (`close-session`
 finalizes it on merge) or a session that needed no PR at all.

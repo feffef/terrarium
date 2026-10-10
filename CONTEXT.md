@@ -142,8 +142,8 @@ few named Frictions are graded by fixed rule instead: `SHELL-READ-DETECTION`
 takes a severity **floor** so a mechanism on trial keeps its tuning signal
 (ADR-0009's shell-read amendment defines it, and why a floor beats honest
 grading there); `HUMAN-PROMPTED-CLOSURE` is always `major` (`close-session`);
-a CI failure after a passing `gate:scoped` is `major` (CLAUDE.md,
-"Self-verification").
+a CI failure after a passing `gate:scoped` is `major` (the ADR-0004 rule,
+`.claude/rules/adr-0004.md`).
 
 Frictions are the primary signal the self-improvement Skills mine — for recurring
 pain (`frictions-to-fixes`), and as the verdict on an open **Prune Trial**
@@ -293,7 +293,7 @@ changeset that is entirely Inert may skip Heavy.
 
 ### Human-only
 A surface that a **Trusted** human must **merge** — never auto-merged by any
-chartered Skill, whatever the **Gate** says (`CLAUDE.md`'s Ground rules holds
+chartered Skill, whatever the **Gate** says (the ADR-0004 rule, `.claude/rules/adr-0004.md`, holds
 the list — ADR-0004's 2026-07-10 amendment names it the single home and warns
 against re-enumerating the list in an ADR). One exception, granted by ADR-0027: a **Prune Trial** may self-merge a
 rewrite of an ADR that keeps what it decided.
