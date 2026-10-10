@@ -106,6 +106,9 @@ export interface MechanicalTrace {
   /** Agent-instruction docs Bash output showed the session (#1074); the stitch
    *  folds them into `docsRead` like `filesRead`. */
   docsReadViaShell: string[]
+  /** Path-scoped `.claude/rules/` files the harness loaded on a file touch, in
+   *  load order — the rules that load at session start carry no signal. */
+  rulesLoaded: string[]
   skillsUsed: string[]
   /** The subset of `skillsUsed` seen only as a slash-command expansion — kept
    *  alongside (not instead of) the union so the stitch can annotate provenance
@@ -521,10 +524,14 @@ export function extractTrace(
   const commandSkills: string[] = []
   const subagents: SubagentRef[] = []
   const prSignals: string[] = []
+  const rules: string[] = []
 
   for (const rec of records) {
     const ts = typeof rec.timestamp === 'string' ? Date.parse(rec.timestamp) : NaN
     if (!Number.isNaN(ts)) stamps.push(ts)
+
+    const att = rec.attachment as { type?: string; path?: string } | undefined
+    if (att?.type === 'nested_memory' && att.path?.includes('/.claude/rules/')) rules.push(att.path)
 
     const msg = rec.message as { content?: unknown; model?: string } | undefined
     if (rec.type === 'assistant' && msg?.model) {
@@ -584,6 +591,7 @@ export function extractTrace(
     filesRead: dedup(reads).filter(isContentPath).map(rel),
     filesEdited: dedup(edits).filter(isContentPath).map(rel),
     docsReadViaShell: docIndex ? scanShellReadsByOutput(bashCommandsOf(records), docIndex, rel).paths : [],
+    rulesLoaded: dedup(rules).map(rel),
     skillsUsed: dedup([...skills, ...commandSkills]),
     commandSkills: dedup(commandSkills),
     subagents,
@@ -660,6 +668,9 @@ export function foldSubagentTrace(
   for (const { field } of FOLDED_TRACE_FIELDS) {
     folded[field] = dedup([...trace[field], ...subs.flatMap((s) => s[field])])
   }
+  // Folded too, but kept out of FOLDED_TRACE_FIELDS: SessionCard's explainer
+  // lists those fields, and the card does not render this one.
+  folded.rulesLoaded = dedup([...trace.rulesLoaded, ...subs.flatMap((s) => s.rulesLoaded)])
   return folded
 }
 

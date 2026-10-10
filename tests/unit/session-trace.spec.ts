@@ -132,6 +132,38 @@ describe('foldSubagentTrace() — subagent work counts as the session\'s (issue 
   })
 })
 
+// The harness records a path-scoped rule's load as an attachment record; the
+// startup `instructions` attachment holds the always-loaded rules and is ignored.
+describe('rulesLoaded — path-scoped rules that fired', () => {
+  const rule = (path: string) => ({ type: 'attachment', timestamp: '2026-07-06T10:03:00Z', attachment: { type: 'nested_memory', path } })
+  const records = [
+    ...parseTranscript(transcript),
+    { type: 'attachment', attachment: { type: 'instructions', files: [{ path: '/repo/.claude/rules/adr-0003.md' }] } },
+    rule('/repo/.claude/rules/adr-0024.md'),
+    rule('/repo/layers/blog/CLAUDE.md'),
+    rule('/repo/.claude/rules/adr-0024.md'),
+  ]
+  const trace = extractTrace(records, NO_ENV)
+
+  it('keeps each rule once, repo-relative, and only from .claude/rules/', () => {
+    expect(trace.rulesLoaded).toEqual(['.claude/rules/adr-0024.md'])
+  })
+
+  it('folds in rules a subagent loaded', () => {
+    const sub = [...parseTranscript(subagentTranscript), rule('/repo/.claude/rules/adr-0012.md')]
+    expect(foldSubagentTrace(trace, [sub], NO_ENV).rulesLoaded).toEqual(['.claude/rules/adr-0024.md', '.claude/rules/adr-0012.md'])
+  })
+
+  // The stitch starts writing the field only once main's schema accepts it, so a
+  // log landed from this branch cannot fail main's strict validation.
+  it('is accepted by the schema, and not yet written by the stitch', () => {
+    const authored: AuthoredScratch = { session: 'session_01RL', goal: 'g', status: 'completed', outcome: 'o', summary: 's', frictions: [] }
+    const entry = stitch(authored, trace)
+    expect(entry).not.toHaveProperty('rulesLoaded')
+    expect(validateEntry({ ...entry, rulesLoaded: trace.rulesLoaded }).ok).toBe(true)
+  })
+})
+
 describe('subagentTranscriptPaths()', () => {
   it('finds the harness\'s sibling subagents/ directory, sorted, .jsonl only', () => {
     const dir = mkdtempSync(join(tmpdir(), 'trace-'))
