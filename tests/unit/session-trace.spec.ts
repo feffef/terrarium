@@ -154,13 +154,11 @@ describe('rulesLoaded — path-scoped rules that fired', () => {
     expect(foldSubagentTrace(trace, [sub], NO_ENV).rulesLoaded).toEqual(['.claude/rules/adr-0024.md', '.claude/rules/adr-0012.md'])
   })
 
-  // The stitch starts writing the field only once main's schema accepts it, so a
-  // log landed from this branch cannot fail main's strict validation.
-  it('is accepted by the schema, and not yet written by the stitch', () => {
+  it('is written by the stitch and accepted by the schema', () => {
     const authored: AuthoredScratch = { session: 'session_01RL', goal: 'g', status: 'completed', outcome: 'o', summary: 's', frictions: [] }
     const entry = stitch(authored, trace)
-    expect(entry).not.toHaveProperty('rulesLoaded')
-    expect(validateEntry({ ...entry, rulesLoaded: trace.rulesLoaded }).ok).toBe(true)
+    expect(entry.rulesLoaded).toEqual(trace.rulesLoaded)
+    expect(validateEntry(entry).ok).toBe(true)
   })
 })
 
