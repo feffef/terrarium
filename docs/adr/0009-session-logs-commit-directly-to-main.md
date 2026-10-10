@@ -597,3 +597,32 @@ the helper script stays the single enforcement point of the boundary, as the
 Decision says. The ruleset's exact rules and the reasons for them are
 single-homed in
 `docs/research/github-branch-protection-vs-autonomous-log-commits.md`.
+
+## Shell reads fold into `docsRead`; the agent answers each derived doc (2026-10-10)
+
+> **Amended.** Supersedes the separate-field and no-consumer rules of the
+> 2026-08-29 shell-read amendment. The output-matching amendment still says how
+> a shell read is established.
+
+Two fields answering "what did it read" confused every reader. The shell read
+now folds into `docsRead` exactly as `filesRead` does, and `docsReadViaShell`
+is deprecated: never written again, kept in the schema so older logs validate.
+Once in `docsRead`, shell reads reach every `docsRead` consumer, so the
+detector was tightened first:
+
+- **A glance is not a read.** A doc counts only once the session's output has
+  shown `MIN_LINES_SHOWN` distinct lines of it (all of it, if shorter).
+  Measured on the logs of 2026-10-03 to 2026-10-10: lists of 40 to 97 credits
+  were inflated by single grep hits and two-line slices.
+- **A commit's diff is a quoting surface.** `git show`/`diff`/`log` output
+  counts only toward a doc the command itself names, like `gh` and Journal
+  output since #1723.
+
+**The agent explains every derived instruction doc.** `--author` lists each
+instruction doc the trace will fold in that has no authored reason yet, with
+its evidence. The agent answers each with a reason, or with `(not read)` for a
+doc no command of the session or its subagents showed it. The stitch drops a
+`(not read)` path, and when the shell detector had credited it, files a
+`moderate` `SHELL-READ-DETECTION` Friction itself, so a detector error stays
+visible even though the agent corrected the list. This relaxes "derived only,
+never corrected" for this one list: the correction is logged, not silent.

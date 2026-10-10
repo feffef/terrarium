@@ -37,8 +37,8 @@ export const sessionSchema = z
     summary: z.string(), // the fuller narrative; sizing guidance: log-session Skill
     prs: z.array(z.string()).default([]), // 0..N already-landed work-PR refs
     // docsRead/skillsUsed are a *merged* field (ADR-0009 amendment): the agent's
-    // curated entries plus transcript-observed reads the SessionEnd extractor
-    // folds in. `reason` stays required; a derived entry the agent never
+    // curated entries plus transcript-observed reads (Read tool and shell
+    // output) the SessionEnd extractor folds in. `reason` stays required; a derived entry the agent never
     // annotated gets a placeholder — `(read before editing)` for a docsRead path
     // also edited, `(no reason given)` otherwise.
     docsRead: z.array(z.object({ path: z.string(), reason: z.string() })).default([]),
@@ -50,16 +50,8 @@ export const sessionSchema = z
     models: z.record(z.string(), z.number().int()).optional(), // model id → assistant-turn count
     toolCounts: z.record(z.string(), z.number().int()).optional(), // tool name → call count
     filesEdited: z.array(z.string()).optional(),
-    // The shell half of "what it read": instruction docs a Bash command streamed
-    // into the session, which a Read-tool-only trace misses. An entry claims a
-    // COMMAND RAN THAT SHOWED THIS DOC, not that the agent attended to it.
-    //
-    // Derived only — never authored, and the one field carrying a no-consumer
-    // rule: nothing may act on its presence beyond the Journal card and
-    // `log-session`'s verification loop (a unit test enforces the allowlist).
-    // ADR-0009's shell-read amendment owns both rules and their rationale;
-    // `log-session/SKILL.md` owns the Friction an agent files instead of
-    // correcting a wrong value.
+    // DEPRECATED — no longer written. Shell reads now fold into `docsRead`
+    // (ADR-0009's merged-read amendment); the key stays so older logs validate.
     docsReadViaShell: z.array(z.string()).optional(),
     subagents: z
       .array(

@@ -48,6 +48,7 @@ import {
   readSubagentJsonls,
   stitch,
   shellReadScanOf,
+  NOT_READ_REASON,
   LAST_LANDED_FILE,
   SCRATCH_FILE,
   STAGING_DIR,
@@ -55,7 +56,7 @@ import {
   type MechanicalTrace,
   type SessionIdEnv,
 } from './session-trace.ts'
-import type { DocLineIndex } from './shell-reads.ts'
+import { isInstructionDoc, type DocLineIndex } from './shell-reads.ts'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 
@@ -138,11 +139,8 @@ const authoredScratchSchema = z
  *  generic error (issue #1074). */
 const DERIVED_ONLY_FIELDS: Record<string, string> = {
   docsReadViaShell:
-    'it is derived from the transcript and an agent may not correct it. It covers what subagents this ' +
-    'session dispatched read, not only what the session itself ran, so a path you did not run is not ' +
-    "wrong on that ground alone. If it is wrong even so, log a Friction instead — severity at least 'moderate', " +
-    'with the marker SHELL-READ-DETECTION, the command verbatim, the path expected, and whether it was a ' +
-    'miss or a false positive.',
+    'shell reads are derived from the transcript and folded into docsRead. Give a docsRead entry a reason ' +
+    `instead, or the reason '${NOT_READ_REASON}' for a path no command of this session or its subagents showed you.`,
 }
 
 export function validateAuthored(
@@ -220,6 +218,14 @@ function frictionKey(f: AuthoredScratch['frictions'][number]): string {
 
 const union = (a: string[] = [], b: string[] = []): string[] => [...new Set([...a, ...b])]
 
+/** Keyed union where `incoming` wins, so a second pass can answer the reads the
+ *  first pass's report listed without repeating every earlier entry. */
+function unionBy<T extends Record<K, string>, K extends string>(a: T[] = [], b: T[] = [], key: K): T[] {
+  const byKey = new Map(a.map((x) => [x[key], x]))
+  for (const x of b) byKey.set(x[key], x)
+  return [...byKey.values()]
+}
+
 /** Merge a second authoring pass with the first's scratch instead of erasing it
  *  (issue #688). Lists union; prose takes `incoming`, the more current account.
  *  A scratch left by a DIFFERENT session is replaced, not merged: the scratch is
@@ -230,6 +236,8 @@ export function mergeAuthored(existing: AuthoredScratch | undefined, incoming: A
   return {
     ...incoming,
     frictions: [...existing.frictions, ...incoming.frictions.filter((f) => !seen.has(frictionKey(f)))],
+    docsRead: unionBy(existing.docsRead, incoming.docsRead, 'path'),
+    skillsUsed: unionBy(existing.skillsUsed, incoming.skillsUsed, 'name'),
     prs: union(existing.prs, incoming.prs),
     learnings: union(existing.learnings, incoming.learnings),
     ideas: union(existing.ideas, incoming.ideas),
@@ -686,52 +694,62 @@ function fail(msg: string): never {
 
 /** How many near-misses to show. Capped: the list exists to make a MISS
  *  recognisable at a glance, and an uncapped dump of every rejected candidate
- *  would bury the detected paths it sits beside. */
+ *  would bury the reads it sits beside. */
 const NEAR_MISS_LIMIT = 5
 
-/** Print what the shell-read detector saw, so the authoring agent can check it
- *  against the session it just lived through (#1074's loop). Prints nothing when
- *  there is nothing to check — including when the transcript can't be found,
- *  which is a degraded report, never a failure to author. */
-export function reportShellReads(cwd: string, log: (line: string) => void = console.log, repoRoot: string = root): void {
+/** List every instruction doc the trace will fold into `docsRead` that the
+ *  agent has not yet given a reason, with the evidence for each, so the agent
+ *  can explain it or mark it `NOT_READ_REASON` (ADR-0009's merged-read
+ *  amendment). Prints nothing when there is nothing to answer — including when
+ *  the transcript can't be found, which degrades the report, never the authoring. */
+export function reportUnexplainedReads(
+  cwd: string,
+  authored: Pick<AuthoredScratch, 'docsRead'> = {},
+  log: (line: string) => void = console.log,
+  repoRoot: string = root,
+): void {
   let scan
+  let toolReads: string[]
   try {
     const transcriptPath = findLatestTranscript(cwd, process.env.HOME)
     if (!transcriptPath || !existsSync(transcriptPath)) return
-    scan = shellReadScanOf(
-      parseTranscript(readFileSync(transcriptPath, 'utf8')),
-      readSubagentJsonls(transcriptPath).map((s) => ({ label: s.label, records: parseTranscript(s.jsonl) })),
-      { repoRoot },
-    )
+    const records = parseTranscript(readFileSync(transcriptPath, 'utf8'))
+    const subagents = readSubagentJsonls(transcriptPath).map((s) => ({ label: s.label, records: parseTranscript(s.jsonl) }))
+    scan = shellReadScanOf(records, subagents, { repoRoot })
+    toolReads = foldSubagentTrace(extractTrace(records), subagents.map((s) => s.records)).filesRead
   } catch {
-    // Locating and reading the transcript is best-effort: a report that can't be
-    // built degrades to silence, never to a failed authoring (the scratch is
-    // already written by the time this runs).
     return
   }
-  if (scan.paths.length === 0 && scan.nearMisses.length === 0) return
+  const answered = new Set((authored.docsRead ?? []).map((d) => d.path))
+  const open = new Map<string, string>()
+  for (const p of toolReads) if (isInstructionDoc(p) && !answered.has(p)) open.set(p, 'Read tool')
+  for (const [p, { command, source }] of scan.provenance) {
+    if (!answered.has(p) && !open.has(p)) open.set(p, `[${source}] ${command.replace(/\s+/g, ' ').slice(0, 100)}`)
+  }
+  const misses = scan.nearMisses.filter((m) => !answered.has(m.path))
+  if (open.size === 0 && misses.length === 0) return
 
   log('')
-  log(`  docsReadViaShell — ${scan.paths.length} instruction doc(s) detected as read via shell:`)
-  const oneLine = (command: string): string => command.replace(/\s+/g, ' ').slice(0, 100)
-  for (const [p, { command, source }] of scan.provenance) {
-    log(`    ${p}`)
-    log(`      [${source}] ${oneLine(command)}`)
+  if (open.size) {
+    log(`  docsRead — ${open.size} instruction doc(s) read with no reason yet:`)
+    for (const [p, evidence] of open) {
+      log(`    ${p}`)
+      log(`      ${evidence}`)
+    }
+    log('  Re-run --author with a docsRead entry for each: a one-line reason, or the reason')
+    log(`  '${NOT_READ_REASON}' for a doc no command of this session or its subagents showed you.`)
+    log('  A shell-credited doc marked so is dropped and logged as a SHELL-READ-DETECTION friction.')
   }
-  if (scan.nearMisses.length) {
-    log(`  Not counted (${scan.nearMisses.length}), and why:`)
-    for (const m of scan.nearMisses.slice(0, NEAR_MISS_LIMIT)) {
+  if (misses.length) {
+    log(`  Not counted as read via shell (${misses.length}), and why:`)
+    for (const m of misses.slice(0, NEAR_MISS_LIMIT)) {
       log(`    ${m.token} — ${m.rule}`)
-      log(`      ${oneLine(m.command)}`)
+      log(`      ${m.command.replace(/\s+/g, ' ').slice(0, 100)}`)
     }
-    if (scan.nearMisses.length > NEAR_MISS_LIMIT) {
-      log(`    …and ${scan.nearMisses.length - NEAR_MISS_LIMIT} more`)
-    }
+    if (misses.length > NEAR_MISS_LIMIT) log(`    …and ${misses.length - NEAR_MISS_LIMIT} more`)
+    log("  If one of these was a real read, log a Friction: severity at least 'moderate', marker")
+    log('  SHELL-READ-DETECTION, the command verbatim, and the path expected.')
   }
-  log('  A subagent-credited path is folded in by design (issue #796).')
-  log('  You cannot edit this field. Log a Friction for a doc it missed, or for a path that')
-  log("  neither this session nor a subagent it dispatched read: severity at least 'moderate',")
-  log('  marker SHELL-READ-DETECTION, the command verbatim, the path expected, and the direction.')
 }
 
 /** `--author <authored.yml>`: validate the interpretive fields and write the
@@ -778,7 +796,7 @@ export function authorMain(
   writeScratch(result.data, scratchAbs)
   console.log(`✓ authored scratch written → ${SCRATCH_FILE}`)
   console.log('  the Stop hook will stitch it with the derived trace and commit, live, at the end of this turn.')
-  reportShellReads(cwd)
+  reportUnexplainedReads(cwd, JSON.parse(readFileSync(scratchAbs, 'utf8')) as AuthoredScratch)
 }
 
 function readStdin(): string {

@@ -128,11 +128,10 @@ const foldedFieldLabels = new Intl.ListFormat('en', { style: 'long', type: 'conj
               </ul>
             </details>
             <details v-if="card.docsReadViaShell.length" class="trace">
-              <summary>Read via shell <span class="n">{{ card.docsReadViaShell.length }}</span></summary>
+              <summary>Read via shell (deprecated) <span class="n">{{ card.docsReadViaShell.length }}</span></summary>
               <p class="subnote">
-                Instruction docs a <code>cat</code>/<code>sed</code>/<code>grep</code> command showed the
-                session — the reads the tool-call trace above can't see. Listed separately because it is
-                inferred from the command, so a wrong entry is a bug in that inference.
+                Deprecated: older logs listed shell reads of instruction docs here. Newer logs fold them
+                into the files read above.
               </p>
               <ul>
                 <li v-for="p in card.docsReadViaShell" :key="p"><code>{{ p }}</code></li>

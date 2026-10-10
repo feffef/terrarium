@@ -6,6 +6,7 @@
 import { describe, expect, it } from 'vitest'
 import {
   DERIVED_REASON,
+  NOT_READ_REASON,
   DERIVED_REASON_COMMAND,
   DERIVED_REASON_EDITED,
   deriveTrigger,
@@ -419,13 +420,46 @@ describe('docsReadViaShell (issues #1074, #1545)', () => {
     expect(folded.docsReadViaShell.sort()).toEqual(['CONTEXT.md', 'docs/agents/domain.md'])
   })
 
-  it('stitches in only when non-empty, and only from the trace', () => {
+  it('folds shell reads into docsRead and never writes the deprecated field', () => {
     const authored: AuthoredScratch = { session: 'session_01SH', goal: 'g', status: 'completed', outcome: 'o', summary: 's', frictions: [] }
-    const withReads = stitch(authored, extractTrace(withCwd(bash('cat CONTEXT.md', CONTEXT)), process.env, index))
-    expect(withReads.docsReadViaShell).toEqual(['CONTEXT.md'])
-    expect(validateEntry(withReads).ok).toBe(true)
-    const without = stitch(authored, extractTrace(withCwd(bash('ls docs/', 'agents\nadr')), process.env, index))
-    expect('docsReadViaShell' in without).toBe(false)
+    const entry = stitch(authored, extractTrace(withCwd(bash('cat CONTEXT.md', CONTEXT)), process.env, index))
+    expect(entry.docsRead).toEqual([{ path: 'CONTEXT.md', reason: DERIVED_REASON }])
+    expect('docsReadViaShell' in entry).toBe(false)
+    expect(validateEntry(entry).ok).toBe(true)
+  })
+
+  it('keeps an authored reason, and lists a doc read both ways once', () => {
+    const records = withCwd(bash('cat CONTEXT.md', CONTEXT))
+    records.push({
+      type: 'assistant',
+      timestamp: '2026-08-29T10:01:00.000Z',
+      message: { model: 'claude-opus-5', content: [{ type: 'tool_use', name: 'Read', input: { file_path: '/repo/CONTEXT.md' } }] },
+    })
+    const authored: AuthoredScratch = {
+      session: 'session_01SH', goal: 'g', status: 'completed', outcome: 'o', summary: 's', frictions: [],
+      docsRead: [{ path: 'CONTEXT.md', reason: 'glossary' }],
+    }
+    expect(stitch(authored, extractTrace(records, process.env, index)).docsRead).toEqual([{ path: 'CONTEXT.md', reason: 'glossary' }])
+  })
+
+  it(`drops a path marked ${NOT_READ_REASON}, filing a friction when the shell detector credited it`, () => {
+    const trace = extractTrace(withCwd(bash('cat CONTEXT.md', CONTEXT)), process.env, index)
+    trace.filesRead = ['docs/agents/domain.md']
+    const authored: AuthoredScratch = {
+      session: 'session_01SH', goal: 'g', status: 'completed', outcome: 'o', summary: 's', frictions: [],
+      docsRead: [
+        { path: 'CONTEXT.md', reason: NOT_READ_REASON },
+        { path: 'docs/agents/domain.md', reason: NOT_READ_REASON },
+      ],
+    }
+    const entry = stitch(authored, trace)
+    expect(entry.docsRead).toEqual([])
+    const frictions = entry.frictions as { description: string; severity: string }[]
+    expect(frictions).toHaveLength(1)
+    expect(frictions[0]!.description).toContain('SHELL-READ-DETECTION')
+    expect(frictions[0]!.description).toContain('CONTEXT.md')
+    expect(frictions[0]!.severity).toBe('moderate')
+    expect(validateEntry(entry).ok).toBe(true)
   })
 
   describe('the author-time advisory (shellReadScanOf)', () => {

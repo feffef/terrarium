@@ -8,9 +8,10 @@
 // The extraction is a pure function over parsed records (unit-tested); the file
 // IO is a thin shell. Read-tool paths are the only source of `filesRead`; what a
 // `cat`/`grep` inspection of an agent-instruction doc actually showed is picked
-// up separately as `docsReadViaShell` (shell-reads.ts, issues #1074/#1545): the
-// command's output matched against an injected doc-line index, so the command's
-// own shape never matters. Both remain a floor rather than a complete count.
+// up as `docsReadViaShell` (shell-reads.ts, issues #1074/#1545): the command's
+// output matched against an injected doc-line index, so the command's own shape
+// never matters. The stitch folds both into `docsRead`; both remain a floor
+// rather than a complete count.
 //
 // A dispatched subagent's tool calls are NOT inlined into the parent transcript
 // (it carries no sidechain records at all); the harness writes each one its own
@@ -102,9 +103,8 @@ export interface MechanicalTrace {
   toolCounts: Record<string, number>
   filesRead: string[]
   filesEdited: string[]
-  /** Agent-instruction docs a Bash command streamed into the session (#1074).
-   *  Derived, never authored: an agent verifies it and reports an error as a
-   *  Friction — it may not correct the value. See shared/schemas/session.ts. */
+  /** Agent-instruction docs Bash output showed the session (#1074); the stitch
+   *  folds them into `docsRead` like `filesRead`. */
   docsReadViaShell: string[]
   skillsUsed: string[]
   /** The subset of `skillsUsed` seen only as a slash-command expansion — kept
@@ -679,6 +679,11 @@ export const DERIVED_REASON_EDITED = '(read before editing)'
  *  doubles as the explanation for why `toolCounts` shows no `Skill` call for it. */
 export const DERIVED_REASON_COMMAND = '(invoked as a slash command)'
 
+/** The reason an agent gives a derived `docsRead` path it never read: the stitch
+ *  drops the path, and a shell credit dropped this way becomes a Friction, so the
+ *  detector's error stays visible (ADR-0009's merged-read amendment). */
+export const NOT_READ_REASON = '(not read)'
+
 /** The interpretive half the live agent writes to the scratch during the session.
  *  Timings/models/etc. are NOT here — those are derived. `session`/`kind` are the
  *  only identity fields the agent must supply; everything mechanical comes from
@@ -705,7 +710,7 @@ function mergeRefs<T extends Record<string, string>>(
   reasonFor: (key: string) => string = () => DERIVED_REASON,
 ): T[] {
   const seen = new Set(authored.map((a) => a[keyField]))
-  const folded = derivedKeys
+  const folded = dedup(derivedKeys)
     .filter((k) => !seen.has(k))
     .map((k) => ({ [keyField]: k, reason: reasonFor(k) }) as unknown as T)
   return [...authored, ...folded]
@@ -718,6 +723,12 @@ function mergeRefs<T extends Record<string, string>>(
  *  dropped so a minimal session stays clean. */
 export function stitch(authored: AuthoredScratch, trace: MechanicalTrace): Record<string, unknown> {
   const editedSet = new Set(trace.filesEdited)
+  const notRead = new Set((authored.docsRead ?? []).filter((d) => d.reason === NOT_READ_REASON).map((d) => d.path))
+  const detectorErrors = trace.docsReadViaShell.filter((p) => notRead.has(p)).map((p) => ({
+    description: `SHELL-READ-DETECTION false positive: ${p} was credited from shell output, but the session marked it ${NOT_READ_REASON}`,
+    solution: 'Find the crediting command in the transcript and tighten scripts/shell-reads.ts',
+    severity: 'moderate',
+  }))
   const entry: Record<string, unknown> = {
     schemaVersion: 1,
     // trace.session is already ground-truth-resolved; wins over authored.
@@ -730,22 +741,22 @@ export function stitch(authored: AuthoredScratch, trace: MechanicalTrace): Recor
     outcome: authored.outcome,
     summary: authored.summary,
     prs: authored.prs ?? [],
-    docsRead: mergeRefs(authored.docsRead ?? [], trace.filesRead, 'path', (path) =>
-      editedSet.has(path) ? DERIVED_REASON_EDITED : DERIVED_REASON,
+    docsRead: mergeRefs(
+      (authored.docsRead ?? []).filter((d) => !notRead.has(d.path)),
+      [...trace.filesRead, ...trace.docsReadViaShell].filter((p) => !notRead.has(p)),
+      'path',
+      (path) => (editedSet.has(path) ? DERIVED_REASON_EDITED : DERIVED_REASON),
     ),
     skillsUsed: mergeRefs(authored.skillsUsed ?? [], trace.skillsUsed, 'name', (name) =>
       trace.commandSkills.includes(name) ? DERIVED_REASON_COMMAND : DERIVED_REASON,
     ),
-    frictions: authored.frictions,
+    frictions: [...authored.frictions, ...detectorErrors],
   }
   // Mechanical fields — include only when they carry signal.
   if (trace.durationSec !== undefined) entry.durationSec = trace.durationSec
   if (Object.keys(trace.models).length) entry.models = trace.models
   if (Object.keys(trace.toolCounts).length) entry.toolCounts = trace.toolCounts
   if (trace.filesEdited.length) entry.filesEdited = trace.filesEdited
-  // Derived only — never read from `authored`. See the field's home in
-  // shared/schemas/session.ts for why an agent may not correct it here.
-  if (trace.docsReadViaShell.length) entry.docsReadViaShell = trace.docsReadViaShell
   if (trace.subagents.length) entry.subagents = trace.subagents
   if (trace.gitBranch) entry.gitBranch = trace.gitBranch
   if (trace.entrypoint) entry.entrypoint = trace.entrypoint
