@@ -1,0 +1,92 @@
+schemaVersion: 1
+session: session_01UEeKV1vUyYkM8vedtgWPnY
+startedAt: 2026-10-10T16:48:05Z
+endedAt: 2026-10-10T17:19:53Z
+kind: autonomous
+goal: "Visitor-loop run on Tinkerfund: fix what visitors agreed on, build one feature"
+status: in-review
+outcome: "Fix PR #1743 reviewed and merging; Deals copy-code feature PR not yet built"
+summary: Scheduled visitor-loop run (agent-initiated under ADR-0003's standing green-light; no human instruction this turn), focus tinkerfund. Served the production preview, sent sonnet, fable and opus visitors, tallied. Four consensus fixes landed in PR 1743 (Popular sort and Backers also backed put Live and Upcoming first, clearer demo-banner link text, a note on the seeded Pledge). Deadline drift was dropped under decisions.md; mobile table dropped as two different defects. code-review caught that the sample-history note would also have shown on a Pledge the visitor places in-session, which was false, so it now keys off the baked Pledges. Chosen feature, a Copy code button on Deals, is saved as a patch and not yet built; step 5 and the final log update remain open.
+prs:
+  - "1743"
+docsRead:
+  - path: .agents/skills/visitor-loop/decisions.md
+    reason: owner rulings the tally must respect (deadline drift)
+  - path: .agents/skills/visitor-loop/visitor-brief.md
+    reason: brief handed verbatim to the visitors
+  - path: CONTEXT-MAP.md
+    reason: session-start read, first 60 lines
+  - path: CONTEXT.md
+    reason: session-start read, first 80 lines
+  - path: docs/adr/0003-agent-operating-model-and-governance.md
+    reason: visitor-loop remit row
+  - path: docs/agents/git-conventions.md
+    reason: before first git command
+  - path: docs/agents/github-integration.md
+    reason: before first GitHub op, first 70 lines
+  - path: docs/agents/pr-workflow.md
+    reason: merge recipe and self-merge tier
+  - path: docs/agents/tenant-layers.md
+    reason: layer conventions, first 60 lines only
+  - path: layers/tinkerfund/CONTEXT.md
+    reason: Tenant vocabulary, first 40 lines
+  - path: scripts/chromium-path.ts
+    reason: (no reason given)
+skillsUsed:
+  - name: code-review
+    reason: (no reason given)
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: visitor-loop
+    reason: (invoked as a slash command)
+frictions:
+  - description: Read only the head of tenant-layers.md, github-integration.md and CONTEXT.md, skipped verifying-ui-changes.md and the ADR grep for touched files, though CLAUDE.md says read in full.
+    solution: A scheduled run should read the triggered docs in full before editing; the Skill could list the required reads in step 4.
+    severity: minor
+  - description: My first sample-history note was shown on every Pledge including ones placed in-session, a false claim only the spec review caught.
+    solution: Check where a prop's data originates (baked vs session) before writing copy about it.
+    severity: minor
+  - description: The tail-pipe guard rejected a vitest command piped into tail, and a chained commit plus gate run in the background made the commit look missing for a few seconds.
+    solution: Redirect to a file first; never chain commit and gate in one backgrounded line.
+    severity: nit
+durationSec: 1908
+models:
+  claude-sonnet-5-5: 116
+toolCounts:
+  Bash: 45
+  Agent: 5
+  ToolSearch: 2
+  mcp__github__search_issues: 5
+  mcp__github__issue_read: 1
+  bash: 1
+  Edit: 1
+  mcp__github__create_pull_request: 1
+  Skill: 3
+  mcp__github__add_issue_comment: 1
+filesEdited:
+  - layers/tinkerfund/tests/unit/browse.spec.ts
+subagents:
+  - type: general-purpose
+    task: Visitor (sonnet)
+    model: sonnet
+  - type: general-purpose
+    task: Visitor (fable)
+    model: fable
+  - type: general-purpose
+    task: Visitor (opus)
+    model: opus
+  - type: general-purpose
+    task: "Review: standards axis"
+  - type: general-purpose
+    task: "Review: spec axis"
+gitBranch: claude/adoring-galileo-d1gmd5
+entrypoint: remote_trigger
+cliVersion: 2.1.296
+trigger: visitor-loop
+ideas:
+  - "Tinkerfund 'Following' list on the account page fed by the existing Notify me button, with launch countdowns: opus and fable both asked for it, and it gives return visitors a reason to come back."
+  - "Tinkerfund Hall of Failures: an Ended tab or route on Discover listing unfunded Campaigns with their post-mortem updates, since sonnet found those the funniest content and they are buried in single pages."
+  - "Tinkerfund deals page layout: deal cards sit at one-third width leaving empty space and 'Applies to every Campaign' floats outside its card (opus); put banner and card side by side."
+landedBy: Stop
