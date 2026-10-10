@@ -16,19 +16,21 @@ import { ruleBody, rulePaths } from './validate-adr-rules.ts'
 
 const RULES_DIR = '.claude/rules'
 
-function field(obj: unknown, key: string): unknown {
+function prop(obj: unknown, key: string): unknown {
   return obj !== null && typeof obj === 'object' ? (obj as Record<string, unknown>)[key] : undefined
 }
 
 /** The repo Skill a payload invokes: a Skill tool call, or a prompt that is a
  *  slash command. Namespaced Skills (`plugin:name`) are not ours. */
 export function invokedSkill(payload: unknown): string | null {
+  const prompt = String(prop(payload, 'prompt') ?? '')
   const raw =
-    field(payload, 'tool_name') === 'Skill'
-      ? field(field(payload, 'tool_input'), 'skill')
-      : /^\s*\/([\w-]+)/.exec(String(field(payload, 'prompt') ?? ''))?.[1] ??
-        /<command-name>\/?([\w-]+)<\/command-name>/.exec(String(field(payload, 'prompt') ?? ''))?.[1]
-  return typeof raw === 'string' && /^[\w-]+$/.test(raw.replace(/^\//, '')) ? raw.replace(/^\//, '') : null
+    prop(payload, 'tool_name') === 'Skill'
+      ? prop(prop(payload, 'tool_input'), 'skill')
+      : (/^\s*\/([\w-]+)/.exec(prompt) ?? /<command-name>\/?([\w-]+)<\/command-name>/.exec(prompt))?.[1]
+  if (typeof raw !== 'string') return null
+  const name = raw.replace(/^\//, '')
+  return /^[\w-]+$/.test(name) ? name : null
 }
 
 export interface RuleFile {
@@ -69,7 +71,7 @@ function main(): void {
   const payload: unknown = JSON.parse(readFileSync(0, 'utf8'))
   const hint = hintFor(payload)
   if (!hint) return
-  const event = field(payload, 'hook_event_name') === 'UserPromptSubmit' ? 'UserPromptSubmit' : 'PostToolUse'
+  const event = prop(payload, 'hook_event_name') === 'UserPromptSubmit' ? 'UserPromptSubmit' : 'PostToolUse'
   process.stdout.write(JSON.stringify({ hookSpecificOutput: { hookEventName: event, additionalContext: hint } }))
 }
 

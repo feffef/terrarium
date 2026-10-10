@@ -11,11 +11,9 @@ Prune Trials by ADR-0027
 >   `.claude/rules/adr-0004-human-merge.md`. That rule loads when an agent
 >   touches a listed file, and `scripts/merge-pr.ts` reads the same paths from
 >   `origin/main` and refuses to merge a PR that changes one, so a PR cannot
->   shrink the list for itself. Besides the generator, routing, isolation, CI
->   and ADR files, the list now holds what keeps a self-merge safe: the merge
->   script and trust tiers, `scripts/gate.ts` and `package.json` (what the Gate
->   runs, ADR-0026), the guards and their hook wiring, the git hooks, and the
->   ADR rules themselves.
+>   shrink the list for itself. Besides the files listed before, it now holds
+>   what keeps a self-merge safe; the rule is the list, so it is not repeated
+>   here.
 > - **Without a path.** A PR that adds a dependency, changes behaviour no test
 >   covers, or adds logic deciding which Tenant's data a request can reach;
 >   and a Public, fork or guest-pipeline PR (ADR-0020, ADR-0023). The

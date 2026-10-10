@@ -1,5 +1,5 @@
 ---
-adr: c3cdbeb95dda
+adr: f265a3cfb0e6
 paths:
   - "content.config.ts"
   - "nuxt.config.ts"

@@ -28,9 +28,10 @@ follow it and don't route around it. If it is wrong, say so on the guard's issue
 | `double-background-guard.ts` | a `Bash` call stacking `run_in_background: true` on a text-level background operator in the command (a bare `&` anywhere, `nohup … &` included) — for **any** caller, main session included (no `detectAgentContext` gate at all, unlike `subagent-background-guard.ts`) | its script header | #1208 |
 | `github-provenance-guard.ts` | a GitHub body, or an MCP-API commit, missing this session's provenance in the shape its surface prescribes; also a title or body carrying a bare `<...>` span GitHub silently strips | ADR-0017 — the deny message is the agent-facing home | #886 |
 | `stale-info-hint.ts` | nothing: a hint, not a guard. After a `git push` rejected as "stale info" it adds the fix to the result, and it fails open | its script header | #1610 |
+| `skill-rules-hint.ts` | nothing: a hint, not a guard. When a Skill runs (Skill tool or slash command) it adds the ADR rules whose `paths` name the Skill's directory, and it fails open | its script header | PR #1741 |
 
-`.claude/settings.json` wires the guards under `hooks.PreToolUse`, and the hint
-under `PostToolUse` and `PostToolUseFailure`.
+`.claude/settings.json` wires the guards under `hooks.PreToolUse`, and the hints
+under `PostToolUse`, `PostToolUseFailure` and `UserPromptSubmit`.
 
 ## Conventions every guard follows
 

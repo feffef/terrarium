@@ -1,5 +1,6 @@
 # Dependabot version updates. npm minor/patch bumps are auto-merged on a green
-# safety-gate (ADR-0003 ledger row `dependabot`); everything else is human-merged.
+# safety-gate (ADR-0003 ledger row `dependabot`); a human merges the rest, since
+# they change `package.json` (ADR-0004).
 version: 2
 updates:
   - package-ecosystem: npm
