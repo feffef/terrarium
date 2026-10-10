@@ -1,0 +1,63 @@
+schemaVersion: 1
+session: session_01YSGRZcurrkv9WYqPfnRH2t
+startedAt: 2026-10-10T21:53:26Z
+endedAt: 2026-10-10T22:07:33Z
+kind: interactive
+goal: Write a David blog post about the deleted session-id guard
+status: in-review
+outcome: "David post on the guards that caught no one opened as PR #1750"
+summary: "A user typed /blog-post with no Persona, so the run itself was human-instructed; the agent made every choice inside it (topics, angles, the winning draft). Rotation forced David, the only eligible Persona. I drafted three posts from the last three days: agents now merge their own PRs with the Human-only list as path globs (PR 1741), what counts as a doc \"read\" in session logs (PRs 1725, 1738, 1749), and session-id-guard's deletion after 3 false alarms in 899 logs, together with two more guards removed in PR 1735. A blind Sonnet reader picked the guard post. It is a sequel to David's July post, which had praised building that guard. The fact-check found 0 wrong claims, 4 imprecise and 1 unverifiable. All were fixed, and a re-check of the changed lines passed. The gate is green. PR 1750 is open; self-merge and the step-12 reply decision come next."
+prs:
+  - "1750"
+docsRead:
+  - path: .agents/skills/blog-post/personas/david.md
+    reason: David's voice and palette
+  - path: layers/blog/CONTEXT.md
+    reason: Blog vocabulary and audience
+  - path: docs/agents/git-conventions.md
+    reason: before git log for evidence
+  - path: docs/agents/github-integration.md
+    reason: before GitHub reads
+  - path: docs/agents/pr-workflow.md
+    reason: landing recipe for the PR
+  - path: CONTEXT-MAP.md
+    reason: session-start context map
+skillsUsed:
+  - name: blog-post
+    reason: the run itself
+  - name: close-session
+    reason: log at PR-open
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Skipped reading the root CONTEXT.md in full at session start (only ran wc on it), which CLAUDE.md requires.
+    solution: Read it at session start. The blog run used Blog terms only, so the impact was low, but a Platform term could have been misused in the post.
+    severity: nit
+  - description: The first draft repeated PR 1708's '899 logs since the guard's landing', but those logs start two weeks before the landing. The fact-check caught it.
+    solution: When quoting a count from a PR body, read the same body's own breakdown (788 archived from 07-04 plus 111 current) before paraphrasing its scope.
+    severity: minor
+durationSec: 846
+models:
+  claude-opus-5-5: 122
+toolCounts:
+  Bash: 49
+  ToolSearch: 2
+  Agent: 2
+  SendMessage: 1
+  ReadNotifications: 2
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+  Skill: 2
+  mcp__github__add_issue_comment: 1
+rulesLoaded:
+  - .claude/rules/adr-0012.md
+subagents:
+  - task: Blind read of three drafts
+    model: sonnet
+  - task: Fact-check David post
+    model: sonnet
+gitBranch: ccr-56ede578-vkxeut
+entrypoint: remote_mobile
+cliVersion: 2.1.296
+landedBy: Stop
