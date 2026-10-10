@@ -23,7 +23,7 @@
 /** The bot icon opening the header. */
 export const BOT_ICON = '🤖'
 
-/** The ADR-0017 provenance header: bot icon, model name, linked to the session.
+/** The ADR-0017 provenance header: bot icon, a label, linked to the session.
  *  The single code home for the format — `reconstructFooterValues()`
  *  (provenance-footer.ts) resolves both arguments for the current session, so a
  *  caller never hand-assembles either (CLAUDE.md: never reconstruct an
