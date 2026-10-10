@@ -1,0 +1,109 @@
+schemaVersion: 1
+session: session_01KRLFYUD31NaEVTs4Qs1Tzj
+startedAt: 2026-10-10T13:14:07Z
+endedAt: 2026-10-10T13:24:44Z
+kind: autonomous
+goal: "Scheduled prune trial: judge open trials, prune one problem"
+status: in-review
+outcome: Two trials judged, pr-workflow landing recipe pruned (-24) and opened as a new trial in PR 1737
+summary: "Scheduled /prune-trial run, so everything was agent-initiated under the Skill's own charter. Judged the CLAUDE.md trial (one major Friction: a recommendation given without reading the binding ADRs, so the trigger now says plan or recommend) and the dispatch-subagents trial (nit/minor only, holds). A search subagent looked for prose that already failed; the landing recipe in pr-workflow.md ranked first (#853 and #1276, now held by merge-pr.ts). Pruned about 24 lines, kept step numbers because scripts and docs cite them, ran the gate, pushed, and had a Sonnet subagent pinned to the pushed SHA handle a realistic landing correctly. The mass here was small against an aim of 100. Opened PR 1737."
+prs:
+  - "1737"
+docsRead:
+  - path: CONTEXT-MAP.md
+    reason: (no reason given)
+  - path: CONTEXT.md
+    reason: (no reason given)
+  - path: .agents/prune-trials.yml
+    reason: (no reason given)
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: docs/adr/0017-agent-authorship-provenance.md
+    reason: (no reason given)
+  - path: docs/research/rulebook-migration-table.md
+    reason: (no reason given)
+  - path: docs/agents/guards.md
+    reason: (no reason given)
+  - path: docs/adr/0017-provenance-footer-on-agent-authored-content.md
+    reason: (no reason given)
+  - path: docs/agents/environment-caveats.md
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: prune-trial
+    reason: (invoked as a slash command)
+frictions:
+  - description: Did not list or grep docs/adr for pr-workflow.md or read ADR-0027 before planning the prune, against CLAUDE.md's ADR trigger.
+    solution: Run the grep as the first step of choosing a prune target; the Skill could name it.
+    severity: minor
+  - description: Tried to hand-write the Co-Authored-By trailer from the attribution reminder in a git commit; commit-trailer-guard denied the whole call, including a chained file edit.
+    solution: Never chain edits with a commit; write the message without a trailer.
+    severity: nit
+  - description: Stacked run_in_background true with a trailing ampersand; double-background-guard denied it, costing one retry.
+    solution: Use one background mechanism only.
+    severity: nit
+  - description: Dispatched a read-only search subagent without first reading the dispatch-subagents Skill, per CLAUDE.md.
+    solution: Read it before any dispatch, even a read-only one.
+    severity: nit
+  - description: The Stop hook pushed to commit and push twice while the gate was still running, conflicting with CLAUDE.md's gate-first rule; the Skill's section 4 also says push before the probe, which needs the gate to pass first.
+    solution: State in prune-trial section 4 that the push waits for gate:scoped.
+    severity: minor
+durationSec: 637
+models:
+  claude-sonnet-5-5: 66
+toolCounts:
+  Read: 7
+  Bash: 18
+  mcp__github__search_issues: 1
+  Agent: 2
+  Edit: 1
+  mcp__github__create_pull_request: 1
+  Skill: 2
+  Write: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+filesEdited:
+  - CLAUDE.md
+docsReadViaShell:
+  - docs/agents/issue-tracker.md
+  - docs/agents/environment-caveats.md
+  - docs/agents/pr-workflow.md
+  - docs/agents/github-integration.md
+  - docs/research/rulebook-migration-table.md
+  - docs/agents/guards.md
+  - docs/adr/0017-provenance-footer-on-agent-authored-content.md
+  - .agents/skills/log-session/SKILL.md
+  - .agents/skills/audit-docs/SKILL.md
+  - .agents/skills/auto-triage/SKILL.md
+  - .agents/skills/guest-build/SKILL.md
+  - .agents/skills/guest-intake/SKILL.md
+  - .agents/skills/midden-survey/SKILL.md
+  - docs/agents/guest-contributions.md
+  - docs/agents/git-conventions.md
+  - CONTEXT.md
+  - .agents/skills/blog-post/SKILL.md
+  - .agents/skills/diagnosing-bugs/SKILL.md
+  - .agents/skills/digest/SKILL.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - .agents/skills/prototype/SKILL.md
+  - .agents/skills/prune-trial/SKILL.md
+  - .agents/skills/visitor-loop/SKILL.md
+  - docs/agents/verifying-ui-changes.md
+subagents:
+  - type: general-purpose
+    task: Search for failed-prose rules
+    model: sonnet
+  - type: general-purpose
+    task: Probe pruned pr-workflow on Sonnet
+    model: sonnet
+gitBranch: claude/practical-rubin-0a19pk
+entrypoint: remote_trigger
+cliVersion: 2.1.296
+trigger: prune-trial
+landedBy: Stop

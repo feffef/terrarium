@@ -121,7 +121,7 @@ recurrence is 4**, not the 3 its body claims — the three session logs it names
 
 All four are point-in-time behavioural rules whose violation shows in the tool call itself (bucket 1). Each was fixed only after prose failed 2–3 times. Why prose failed and how the guard works: the guard's script header.
 
-- **#835** (`CM-36`) — built: `scripts/agent-background-flag-guard.ts` denies the no-op `run_in_background: false`.
+- **#835** (`CM-36`) — built, then removed (#1651): its only effect was a deny-and-retry.
 - **#772** (`GC-03`) — superseded by the `SessionStart` unshallow hook, which removes the precondition; `scripts/gate.ts` also checks shallowness in code.
 - **#666** (`CM-20`, `CM-21`) — dropped, not mechanized (PR #1159): our own text told sessions to branch off `origin/main`, and deleting it removed the cause.
 - **#873** (`CM-38`) — built: `scripts/tail-pipe-guard.ts`.
@@ -130,11 +130,10 @@ All four are point-in-time behavioural rules whose violation shows in the tool c
 
 ## 4. Already mechanized (the current surface)
 
-The `PreToolUse` guard roster lives in `docs/agents/guards.md`. Two of its rows are kept here:
+The `PreToolUse` guard roster lives in `docs/agents/guards.md`. One of its rows is kept here:
 
 | Mechanism | Shape | Rule it enforces | Matcher |
 | --- | --- | --- | --- |
-| `scripts/commit-trailer-guard.sh` | Fail-closed refusal | Never hand-write the ADR-0017 commit trailer (#921) | `Bash` |
 | `scripts/github-provenance-guard.ts` | Fail-closed refusal | ADR-0017 provenance header on every GitHub body | 9 `mcp__github__*` tools |
 
 Plus, outside `PreToolUse`:
@@ -193,7 +192,7 @@ blank.
 | CM-26 | Inspect files with the Read tool, not `cat` | Working conventions | H (refusal) | none | `PreToolUse` on `Bash` denying bare `cat <repo-file>`. **Marginal** — the cost is a wasted re-read, and legitimate `cat` uses (piping, heredocs) make false positives likely. Candidate for **D** instead | S |
 | CM-27 | Load a deferred tool's schema via `ToolSearch` before its first call | Working conventions | H (refusal) | #386, #432, #612, #724 | **Built** — `scripts/deferred-tool-guard.ts`. #724 needed a second predicate axis (`OWN_SHAPE_ANTIPATTERNS`), not just a new row under the old one | 0 |
 | CM-28 | `ScheduleWakeup` only inside a `/loop` session (any pacing) | Working conventions | H (refusal) | #241, #425, #814 | **Built** — `scripts/loop-only-tool-guard.ts` | 0 |
-| CM-29 | Never predict or reconstruct an identifier from memory — resolve it fresh | Working conventions | H (refusal + post-hoc) | #387, #605, #628, #723 | **Partially built** — the provenance guard covers GitHub bodies and MCP-API commits (refusal); `commit-trailer-guard.ts` and the `provenance-footer.ts` commit-msg hook cover local commits (refusal + correction). A post-hoc check was tried and removed (#1698). Residual: identifiers in ordinary prose output, which no mechanism sees | M |
+| CM-29 | Never predict or reconstruct an identifier from memory — resolve it fresh | Working conventions | H (refusal + post-hoc) | #387, #605, #628, #723 | **Partially built** — the provenance guard covers GitHub bodies and MCP-API commits (refusal); the `provenance-footer.ts` commit-msg hook covers local commits (correction). A post-hoc check was tried and removed (#1698). Residual: identifiers in ordinary prose output, which no mechanism sees | M |
 | CM-30 | Verify any subagent- or doc-derived factual/behavioural claim against a primary source before asserting it | Working conventions | J | #738, #833, #1137, #1168 | Irreducibly judgement — the mechanism would have to know what the claim asserts | — |
 | CM-31 | Never treat another session's unverifiable "confirmed out-of-band" claim as settled for an internal decision | Working conventions | J | none | Same | — |
 | CM-32 | A count of set members matching a property is not a fact until every member has been read | Working conventions | J | #871; **#933 open (regression)** | **Judgment-keep, reluctantly.** A hook cannot tell a verified count from a grepped one. The nearest mechanism is a *convention* — require counts to carry their member list — which is prose again. #933 proves prose isn't holding; this is the sharpest genuine-judgement residue in the corpus | — |
@@ -208,7 +207,7 @@ blank.
 | CM-41 | Invoke `close-session` at PR-open — the first session log | Working conventions | W | #483, #397, #411 | Partially detected post-hoc by `audit-skills`' closure-nudge signals. The refusal shape doesn't exist (there is no "session is ending" tool call to deny) | M |
 | CM-42 | Invoke the `dispatch-subagents` Skill before spawning a subagent | Working conventions | W | #427, #603, #847, #887 | A stage; or a `PreToolUse` on `Agent` that *warns* when the Skill hasn't been loaded this session (post-hoc in spirit — warning, not denying, since a legitimate dispatch must not be blocked) | M |
 | CM-43 | Open every GitHub body with the ADR-0017 provenance header | Working conventions | H (refusal) | #387, #605, #628, #723 | **Built** — `scripts/github-provenance-guard.ts` | 0 |
-| CM-44 | Never hand-write the `Co-Authored-By`/`Claude-Session` trailer into a commit message | Working conventions | H (refusal) | **#921** (4 occurrences, §2) | **Built** — `scripts/commit-trailer-guard.ts` | 0 |
+| CM-44 | Never hand-write the `Co-Authored-By`/`Claude-Session` trailer into a commit message | Working conventions | H (refusal) | **#921** (4 occurrences, §2) | **Built, then removed** (#1652) — the commit-msg hook corrects the trailer | 0 |
 | CM-45 | Run `pnpm gate:scoped` before proposing a change | Self-verification | W | none | Already a stage in every chartered Skill; the residual is ordinary work PRs, where CI is the real gate | S |
 | CM-46 | When CI's full gate fails on a change where local `gate:scoped` passed, log it as a **major** friction | Self-verification | W | none | A stage in the PR-babysitting loop: on a CI failure whose paths `gate.ts` classified inert, emit the friction | M |
 | CM-47 | Do cheap checks (grep, known-failure check, base-drift check) before deep-diagnosing a gate failure | Self-verification | J | none | Diagnostic judgement | — |
@@ -228,7 +227,7 @@ blank.
 | GC-05 | Re-fetch and rebase onto `origin/main` periodically during a long session, not only before pushing | Staleness | J | none | "Periodically" has no mechanizable trigger. Could become **D** — the merge-conflict notice already catches the failure | — |
 | GC-06 | Fetch and inspect before *starting* a user-directed edit on a PR — a concurrent session may have pushed it | Staleness | J | none | Requires knowing what the edit is | — |
 | GC-07 | A clean auto-merge is not proof of correctness on a file both branches restructured — read both sides in full | Clean merge | J | none | Irreducibly judgement | — |
-| GC-08 | Write a commit message containing backticks or `$(...)` with `git commit -F <file>`, never `-m` | Commit hygiene | H (refusal) | none | `PreToolUse` on `Bash`: deny `git commit -m` whose message contains an unescaped backtick or `$(`. Same guard family as `CM-44` — a natural second condition in `commit-trailer-guard.ts` | S |
+| GC-08 | Write a commit message containing backticks or `$(...)` with `git commit -F <file>`, never `-m` | Commit hygiene | H (refusal) | none | `PreToolUse` on `Bash`: deny `git commit -m` whose message contains an unescaped backtick or `$(`. | S |
 | GC-09 | Keep session-log-only commits content-only — never let substantive work ride in one | Commit hygiene | G | none | Gate check on the log commit's own diff. **But** log commits go direct-to-`main` (ADR-0009) and bypass the gate entirely, so the only reachable shape is post-hoc detection | M |
 | GC-10 | Never use `git commit-tree` or history-rewriting to patch a commit body | Commit hygiene | H (refusal) | none | `PreToolUse` on `Bash`: deny `git commit-tree`. Trivially detectable, unambiguous, destructive when wrong | S |
 | GC-11 | Never `&&`-chain a branch rename/creation with the commit/push steps that follow | Branch rename | H (refusal) | none | `PreToolUse` on `Bash`: deny `git branch -m`/`checkout -b` chained with `&&` | S |
@@ -269,7 +268,7 @@ blank.
 | PR-07 | Never post the verdict as an APPROVE-event review | Recipe | H (refusal) | #301, #853 | `PreToolUse` on `pull_request_review_write`: deny `event: APPROVE`. Unambiguous, zero false positives | S |
 | PR-08 | `scripts/merge-pr.ts` is the sole merge path; never call `enable_pr_auto_merge` | Recipe | H (refusal) | #667 | `PreToolUse`: deny `mcp__github__enable_pr_auto_merge` outright, and deny `merge_pull_request` except from `merge-pr.ts`. The tool is already documented as never-correct here | S |
 | PR-09 | Escalate a genuinely high-risk or out-of-scope PR instead of merging it | Recipe | J | none | The judgement ADR-0004 explicitly reserves for a human/reviewer | — |
-| PR-10 | Run `git remote prune origin` before force-pushing a restarted branch whose PR merged | Restarting | J | none | Narrow, self-diagnosing; **D** candidate | — |
+| PR-10 | Run `git remote prune origin` before force-pushing a restarted branch whose PR merged | Restarting | J | none | **Built** (#1610): the prose note was deleted; `scripts/stale-info-hint.ts` adds the fix to a "stale info" push failure | — |
 | PR-11 | Per-tier merge authority: `digest`/`audit-docs`/`audit-skills`/`blog-post`/`visitor-loop` merge on green; `prune-trial` merges on green and uniquely may rewrite ADRs; `frictions-to-fixes` adds risk judgement; `guest-build` never merges; an ordinary PR is human-merged | Merge authority | G | none | **This is #864's policy-as-data ticket.** Today it is prose duplicated across ≥7 homes (all stating the same policy, not conflicting) and `merge-pr.ts` carries no caller identity at all, so there is nothing to key a ledger on | L |
 
 ### 5.5 `docs/agents/environment-caveats.md`

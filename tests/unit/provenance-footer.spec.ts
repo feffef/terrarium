@@ -137,6 +137,14 @@ describe('model-name allowlist (issue #797)', () => {
     expect(isKnownModelName(FALLBACK_MODEL)).toBe(true)
   })
 
+  it.each(['Claude Opus 5.5', 'Claude Sonnet 5.5', 'Claude Haiku 5.5', 'Claude Fable 5.1'])(
+    'leaves a harness-reminder trailer naming %s exactly as written (issue #1652)',
+    (name) => {
+      const reminder = `subject\n\nCo-Authored-By: ${name} <noreply@anthropic.com>\nClaude-Session: https://claude.ai/code/session_ABC`
+      expect(computeFooterAction(reminder, 'https://claude.ai/code/session_ABC', 'Claude')).toEqual({ action: 'noop' })
+    },
+  )
+
   it('isKnownModelName rejects an unrecognized model name', () => {
     expect(isKnownModelName('Claude Nonexistent 9')).toBe(false)
   })

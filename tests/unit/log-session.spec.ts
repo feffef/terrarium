@@ -12,7 +12,7 @@ import {
   findTruncatedScalars,
   land,
   mergeAuthored,
-  reportShellReads,
+  reportUnexplainedReads,
   validateAuthored,
   validateEntry,
   writeScratch,
@@ -212,7 +212,7 @@ describe('derived-only fields cannot be authored', () => {
   // `.strict()` would reject it as an anonymous "Unrecognized key"; the named
   // refusal exists because the right next action — log a Friction — is not
   // guessable from that (issue #1074).
-  it('refuses an authored docsReadViaShell and names the friction route', () => {
+  it('refuses an authored docsReadViaShell and points at docsRead', () => {
     const res = validateAuthored({
       session: 'session_01A',
       goal: 'g',
@@ -225,12 +225,12 @@ describe('derived-only fields cannot be authored', () => {
     expect(res.ok).toBe(false)
     if (!res.ok) {
       expect(res.errors).toContain('cannot be authored')
-      expect(res.errors).toContain('SHELL-READ-DETECTION')
+      expect(res.errors).toContain("'(not read)'")
     }
   })
 })
 
-describe('reportShellReads (the author-time verification report)', () => {
+describe('reportUnexplainedReads (the author-time reasons prompt)', () => {
   // Builds a fake harness transcript store so the report can be driven end to
   // end — it is the agent-facing half of #1074's loop, and its silence rules
   // matter as much as its output.
@@ -274,11 +274,11 @@ describe('reportShellReads (the author-time verification report)', () => {
     }
     return { home, root }
   }
-  const run = ({ home, root }: { home: string; root: string }): string[] => {
+  const run = ({ home, root }: { home: string; root: string }, authored: Pick<AuthoredScratch, 'docsRead'> = {}): string[] => {
     const lines: string[] = []
     vi.stubEnv('HOME', home)
     try {
-      reportShellReads(root, (l) => lines.push(l), root)
+      reportUnexplainedReads(root, authored, (l) => lines.push(l), root)
     } finally {
       vi.unstubAllEnvs()
     }
@@ -317,22 +317,27 @@ describe('reportShellReads (the author-time verification report)', () => {
     expect(bare).toContain('      [subagent: a1] cat docs/agents/guards.md')
   })
 
-  it('does not ask for a friction about a path a subagent legitimately read', () => {
+  it('asks for a reason or (not read) per doc, counting what subagents were shown', () => {
     const out = run(store([['cat CONTEXT.md', FIXTURE_DOCS['CONTEXT.md']!]], [['cat docs/agents/guards.md', FIXTURE_DOCS['docs/agents/guards.md']!]])).join('\n')
-    // The old text — "check both lists against what you actually ran … if it
-    // listed one you never read, log a Friction" — is exactly what manufactured
-    // the false reports; a folded path is not something the reader ran.
-    expect(out).not.toMatch(/against what you actually ran/)
-    expect(out).toContain('folded in by design')
-    // A genuine error is still a friction, at the same floor.
-    expect(out).toContain('SHELL-READ-DETECTION')
-    expect(out).toMatch(/neither this session nor a subagent it dispatched/)
+    expect(out).toContain('2 instruction doc(s) read with no reason yet')
+    expect(out).toContain("'(not read)' for a doc no command of this session or its subagents showed you")
+  })
+
+  it('lists a Read-tool doc too, and drops every doc the agent already answered', () => {
+    const fixture = store([['cat CONTEXT.md', FIXTURE_DOCS['CONTEXT.md']!]])
+    const dir = join(fixture.home, '.claude', 'projects', fixture.root.replace(/[/.]/g, '-'))
+    // Relative: the noise filter drops absolute tmpdir paths.
+    const read = { type: 'assistant', message: { content: [{ type: 'tool_use', id: 'r1', name: 'Read', input: { file_path: 'docs/agents/guards.md' } }] } }
+    writeFileSync(join(dir, 'session.jsonl'), `${readFileSync(join(dir, 'session.jsonl'), 'utf8')}\n${JSON.stringify(read)}`)
+    const out = run(fixture).join('\n')
+    expect(out).toContain('docs/agents/guards.md\n      Read tool')
+    expect(run(fixture, { docsRead: [{ path: 'CONTEXT.md', reason: 'glossary' }, { path: 'docs/agents/guards.md', reason: '(not read)' }] })).toEqual([])
   })
 
   it('caps the near-miss list rather than burying the detected paths', () => {
     const many = Array.from({ length: 9 }, (_, i) => `echo docs/agents/d${i}.md`)
     const out = run(store(many)).join('\n')
-    expect(out).toContain('Not counted (9)')
+    expect(out).toContain('Not counted as read via shell (9)')
     expect(out).toContain('…and 4 more')
     // One rule line per rendered near-miss (each also echoes its command).
     expect(out.match(/not a reader command/g)?.length).toBe(5)

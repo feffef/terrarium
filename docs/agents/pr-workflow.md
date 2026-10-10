@@ -50,11 +50,10 @@ completes; it auto-closes everything it names (#326). Otherwise write
 "relates to #N". `merge-pr.ts` closes any named issue GitHub left open
 (#983); on any other merge path, check each one with `issue_read`.
 
-A merged PR's remote branch is deleted, so `push --force-with-lease` on a
-restarted branch of the same name fails with "stale info". That is expected:
-run `git remote prune origin` first. Before pushing a follow-up to an existing
-PR branch, check with `pull_request_read` that it isn't already merged, or the
-push silently recreates the branch.
+Before pushing a follow-up to an existing PR branch, check with
+`pull_request_read` that it isn't already merged, or the push silently
+recreates the branch. That is fine for a branch restarted after the merge:
+push plainly, without `--force-with-lease`.
 
 Reply on a review thread before calling `resolve_review_thread`: a resolved
 thread with no reply leaves no record.

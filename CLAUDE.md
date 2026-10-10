@@ -100,7 +100,7 @@ act, once per session.
 - **You can't write `.github/workflows/*`** (no `workflow` OAuth scope, ADR-0004): `workflow-edit-guard` denies it. Put the intended change in `docs/proposals/` for a human to apply (`docs/agents/environment-caveats.md`).
 - **Only `/loop` sessions call `ScheduleWakeup`.** A guard denies it elsewhere and
   names the alternative (`docs/agents/guards.md`, issue #814).
-- **Open every GitHub body with the ADR-0017 provenance header as its own first line, and never hand-write the commit trailer.** Both are guarded; the deny message names the marker to use (`docs/agents/guards.md`).
+- **Open every GitHub body with the ADR-0017 provenance header as its own first line.** It is guarded; the deny message names the marker to use (`docs/agents/guards.md`).
 
 ## Repo layout
 

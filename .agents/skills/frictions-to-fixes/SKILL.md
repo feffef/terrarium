@@ -43,7 +43,8 @@ Its brief:
 extract carries. **External sessions are already excluded:** the survey script drops any log flagged `external: true` (an external harness/toolchain, e.g. fork PR #631's Hermes/Grok run), since its frictions don't generalize to our Claude-Code development (ADR-0009 amendment). Don't hunt the raw corpus for them.
 - **For a friction a doc already covers, check whether that session read the
   doc.** Each triage record carries `docsRead` (Read-tool opens plus any the
-  author listed). A `cat`/`grep` read shows only in the full log's
+  author listed, and since 2026-10-10 shell reads). On an older log a
+  `cat`/`grep` read shows only in the full log's deprecated
   `docsReadViaShell`, so check the record's `file` before calling a doc *not
   opened*. This
   splits one question into two very different frictions: **doc not opened** ⇒ a
@@ -148,8 +149,9 @@ implement. Search the tracker first to avoid duplicates.
 
 So does a **surface-blocked** candidate (§3): file it the same way, labelled
 `ready-for-human` (for a human-only file an agent may still write the fix; only
-the merge needs a human). Otherwise it ages out of the window untracked, and the
-next run rediscovers and re-drops it.
+the merge needs a human), except a guard fix: `docs/agents/guards.md` routes
+it. Otherwise it ages out of the window untracked, and the next run rediscovers
+and re-drops it.
 
 A **simple** selection is dispatched, reviewed and merged inside this same run (§5–§6), so an issue would only be closed by its own merge minutes later, leaving nothing durable. **Skip the issue.** Carry the same problem/evidence/recommended-fix into §5's dispatch brief and have the impl agent write it into the PR description; the merged PR is the record.
 

@@ -37,24 +37,11 @@
         ]
       },
       {
-        "matcher": "Agent",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "cd \"${CLAUDE_PROJECT_DIR:-.}\" && sh scripts/guard-wrap.sh agent-background-flag-guard -- pnpm exec tsx scripts/agent-background-flag-guard.ts"
-          }
-        ]
-      },
-      {
         "matcher": "Bash",
         "hooks": [
           {
             "type": "command",
             "command": "cd \"${CLAUDE_PROJECT_DIR:-.}\" && sh scripts/guard-wrap.sh subagent-background-guard -- sh scripts/subagent-background-guard.sh"
-          },
-          {
-            "type": "command",
-            "command": "cd \"${CLAUDE_PROJECT_DIR:-.}\" && sh scripts/guard-wrap.sh commit-trailer-guard -- sh scripts/commit-trailer-guard.sh"
           },
           {
             "type": "command",
@@ -90,6 +77,28 @@
           {
             "type": "command",
             "command": "cd \"${CLAUDE_PROJECT_DIR:-.}\" && sh scripts/guard-wrap.sh github-provenance-guard -- pnpm exec tsx scripts/github-provenance-guard.ts"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cd \"${CLAUDE_PROJECT_DIR:-.}\" && sh scripts/stale-info-hint.sh || true"
+          }
+        ]
+      }
+    ],
+    "PostToolUseFailure": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cd \"${CLAUDE_PROJECT_DIR:-.}\" && sh scripts/stale-info-hint.sh || true"
           }
         ]
       }
