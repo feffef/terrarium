@@ -18,7 +18,10 @@ export default defineNuxtConfig({
     payloadExtraction: 'client',
     defaults: { nuxtLink: { prefetchOn: { visibility: false, interaction: true } } },
   },
-  routeRules: { '/t/**': { cache: { maxAge: 60, swr: false } } },
+  routeRules: {
+    '/': { cache: { maxAge: 60, swr: false } },
+    '/t/**': { cache: { maxAge: 60, swr: false } },
+  },
   // Bounds that page cache's memory (ADR-0028, #1446).
   nitro: { storage: { cache: { driver: 'lru-cache', max: 200 } } },
 

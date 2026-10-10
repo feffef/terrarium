@@ -41,23 +41,26 @@ const middenEntries = [
 
 // Teasers reuse the Commons Timeline's own normalization (`queryTimeline`,
 // layers/commons/app/composables/timeline.ts) rather than re-deriving a second
-// cross-Tenant read of digests and posts.
-const { data: timelineData } = await useAsyncData('home-timeline', () => queryTimeline())
-const digests = computed(() =>
-  (timelineData.value ?? []).filter((e) => e.genre === 'digest' && e.space === 'current'),
-)
-const blogPosts = computed(() =>
-  (timelineData.value ?? []).filter((e) => e.genre === 'post' && e.tenant === 'blog').slice(0, 10),
-)
+// cross-Tenant read of digests and posts. Only what's rendered is returned, since
+// it ships in the page payload (#1702).
+const { data: teasers } = await useAsyncData('home-timeline', async () => {
+  const timeline = await queryTimeline()
+  return {
+    digests: timeline.filter((e) => e.genre === 'digest' && e.space === 'current'),
+    blogPosts: timeline.filter((e) => e.genre === 'post' && e.tenant === 'blog').slice(0, 10),
+  }
+})
+const digests = computed(() => teasers.value?.digests ?? [])
+const blogPosts = computed(() => teasers.value?.blogPosts ?? [])
 
 // UTC so SSR and hydration agree, and a digest (stamped end-of-day UTC) shows the day it covers.
 function shortDate(when: string): string {
   return new Date(when).toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' })
 }
 
-// Today's pick from a stably sorted list, rotating by UTC day. This route isn't
-// prerendered, so it's computed per request — an honest "today", not a value
-// frozen at the last build.
+// Today's pick from a stably sorted list, rotating by UTC day. "Today" is
+// computed at render time, not frozen at the last build; the page cache bounds
+// its staleness (ADR-0028).
 function pickOfTheDay<T>(items: T[]): T | null {
   return items.length ? items[Math.floor(Date.now() / 86_400_000) % items.length]! : null
 }
