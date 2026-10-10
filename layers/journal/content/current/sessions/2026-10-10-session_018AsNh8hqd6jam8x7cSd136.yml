@@ -1,7 +1,7 @@
 schemaVersion: 1
 session: session_018AsNh8hqd6jam8x7cSd136
 startedAt: 2026-10-10T13:09:18Z
-endedAt: 2026-10-10T13:40:55Z
+endedAt: 2026-10-10T14:13:15Z
 kind: interactive
 goal: Make the shell-read list trustworthy enough to merge into docsRead
 status: in-review
@@ -29,19 +29,19 @@ docsRead:
   - path: docs/adr/0017-provenance-footer-on-agent-authored-content.md
     reason: PR body provenance header format
   - path: scripts/shell-reads.ts
-    reason: (no reason given)
+    reason: the output matcher this PR tightens
 skillsUsed:
   - name: close-session
-    reason: (no reason given)
+    reason: closure after the research answer and at PR-open
   - name: log-session
-    reason: (no reason given)
+    reason: authored this log; exercised the new reads report on it
   - name: code-review
-    reason: (no reason given)
+    reason: two-axis review the human asked for before the PR
 frictions:
   - description: Ran git log to date the shell-reads change before reading docs/agents/git-conventions.md, breaking CLAUDE.md's read-first rule for git log used to draw a conclusion
     solution: Read git-conventions.md before the first git log; impact here was nil as the log was only used to date a commit
     severity: minor
-  - description: Skimmed CONTEXT-MAP.md with head and never read CONTEXT.md or ADR-0009 in full, breaking CLAUDE.md's session-start and ADR read-first rules
+  - description: Skimmed CONTEXT-MAP.md with head and never read CONTEXT.md or ADR-0009 in full at the start, breaking CLAUDE.md's session-start and ADR read-first rules
     solution: Read both in full at session start even for research-only questions; a session-start hook printing the reminder would help
     severity: minor
   - description: A subagent used GitHub MCP search tools without docs/agents/github-integration.md being read first
@@ -59,20 +59,23 @@ frictions:
   - description: Started the gate before the review fixes, so it had to be stopped and rerun; cost ~4 minutes
     solution: Start the gate only after review fixes are committed when a review is already in flight
     severity: nit
-durationSec: 1896
+durationSec: 3837
 models:
-  claude-opus-5-5: 179
+  claude-opus-5-5: 209
 toolCounts:
-  Bash: 58
+  Bash: 64
   AskUserQuestion: 3
   Agent: 5
   Skill: 4
-  Read: 5
-  ToolSearch: 2
+  Read: 6
+  ToolSearch: 3
   TaskStop: 1
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 3
+  mcp__github__pull_request_read: 2
+  mcp__claude-code-remote__send_later: 1
 subagents:
   - type: Explore
     task: Audit docsReadViaShell in Oct logs
@@ -93,6 +96,5 @@ gitBranch: claude/epic-ptolemy-3zkr7l
 entrypoint: remote
 cliVersion: 2.1.296
 ideas:
-  - Before folding docsReadViaShell into docsRead, add a minimum distinct-line threshold (e.g. >=3 matched lines) and exclude git show/diff/log output, then re-measure on the 84 post-10-03 logs; fold only if the 40+-entry logs shrink to plausible size
   - Re-derive the 84 post-2026-10-03 logs with the 10-line minimum (a one-off script over loadDocLineIndex plus list_events transcripts) and post the before/after credit counts on PR 1738, so the human merging it sees the measured effect
 landedBy: Stop
