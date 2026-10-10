@@ -1,17 +1,19 @@
 schemaVersion: 1
 session: session_01YSGRZcurrkv9WYqPfnRH2t
 startedAt: 2026-10-10T21:53:26Z
-endedAt: 2026-10-10T22:07:33Z
+endedAt: 2026-10-10T22:19:08Z
 kind: interactive
 goal: Write a David blog post about the deleted session-id guard
-status: in-review
-outcome: "David post on the guards that caught no one opened as PR #1750"
-summary: "A user typed /blog-post with no Persona, so the run itself was human-instructed; the agent made every choice inside it (topics, angles, the winning draft). Rotation forced David, the only eligible Persona. I drafted three posts from the last three days: agents now merge their own PRs with the Human-only list as path globs (PR 1741), what counts as a doc \"read\" in session logs (PRs 1725, 1738, 1749), and session-id-guard's deletion after 3 false alarms in 899 logs, together with two more guards removed in PR 1735. A blind Sonnet reader picked the guard post. It is a sequel to David's July post, which had praised building that guard. The fact-check found 0 wrong claims, 4 imprecise and 1 unverifiable. All were fixed, and a re-check of the changed lines passed. The gate is green. PR 1750 is open; self-merge and the step-12 reply decision come next."
+status: completed
+outcome: "David post merged as PR #1750; no reply shipped because no draft survived fact-checking"
+summary: "A user typed /blog-post with no Persona, so the run itself was human-instructed; every choice inside it was the agent's. Rotation forced David, the only eligible Persona. Of three David drafts, a blind reader picked the one about session-id-guard's deletion (3 false alarms in 899 logs, PR 1708) and two more guards removed in PR 1735. It is a sequel to David's July post praising that guard. The fact-check found 0 wrong claims, 4 imprecise and 1 unverifiable; all were fixed and re-checked. The gate passed and the agent self-merged it as PR 1750 via merge-pr.ts. For step 12 the reader picked a Karen reply, with Kevin as runner-up. Karen's core claim failed two fact-check rounds: the issue behind PR 1735 does give a basis for \"no wrong trailer has ever shipped\". Kevin's thesis failed against git history (528 commits since 2026-10-01 kept their 5.5 model names). So no reply shipped, and the reasons are commented on PR 1750."
 prs:
   - "1750"
 docsRead:
   - path: .agents/skills/blog-post/personas/david.md
     reason: David's voice and palette
+  - path: .agents/skills/blog-post/personas/karen.md
+    reason: voice for the reply draft
   - path: layers/blog/CONTEXT.md
     reason: Blog vocabulary and audience
   - path: docs/agents/git-conventions.md
@@ -22,40 +24,53 @@ docsRead:
     reason: landing recipe for the PR
   - path: CONTEXT-MAP.md
     reason: session-start context map
+  - path: layers/blog/content/david/pages/2026-10-10-the-guard-i-liked-caught-no-one.md
+    reason: (no reason given)
 skillsUsed:
   - name: blog-post
     reason: the run itself
   - name: close-session
-    reason: log at PR-open
+    reason: log at PR-open and at close
   - name: log-session
-    reason: (no reason given)
+    reason: author the log
 frictions:
   - description: Skipped reading the root CONTEXT.md in full at session start (only ran wc on it), which CLAUDE.md requires.
-    solution: Read it at session start. The blog run used Blog terms only, so the impact was low, but a Platform term could have been misused in the post.
+    solution: Read it at session start. The impact was low here, since only Blog terms were used.
     severity: nit
-  - description: The first draft repeated PR 1708's '899 logs since the guard's landing', but those logs start two weeks before the landing. The fact-check caught it.
-    solution: When quoting a count from a PR body, read the same body's own breakdown (788 archived from 07-04 plus 111 current) before paraphrasing its scope.
+  - description: The first David draft repeated PR 1708's '899 logs since the guard landed', but those logs start two weeks before the landing. The fact-check caught it.
+    solution: When quoting a count from a PR body, read the same body's breakdown before paraphrasing its scope.
     severity: minor
-durationSec: 846
+  - description: The reader judged step-12 replies from scratch drafts whose premises were not verified. Both finalists failed fact-check after about 4 extra subagent rounds, and the run ended with no reply.
+    solution: Before sending reply drafts to the reader, check each draft's one load-bearing claim against its primary source. The Skill exempts reply drafts from full citation-checking, and that let both premises through.
+    severity: moderate
+  - description: blog-post step 12 has no path for 'the reader's winner fails fact-check'. I ended it as no reply and documented that on the PR, which is a judgment call outside the Skill text.
+    solution: "Add one line to blog-post step 12: if the winner fails fact-check, fall back to the runner-up or end with no reply, and comment the outcome on the first PR."
+    severity: minor
+durationSec: 1542
 models:
-  claude-opus-5-5: 122
+  claude-opus-5-5: 189
 toolCounts:
-  Bash: 49
+  Bash: 69
   ToolSearch: 2
-  Agent: 2
-  SendMessage: 1
-  ReadNotifications: 2
+  Agent: 4
+  SendMessage: 4
+  ReadNotifications: 5
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
   Skill: 2
-  mcp__github__add_issue_comment: 1
+  mcp__github__add_issue_comment: 2
 rulesLoaded:
   - .claude/rules/adr-0012.md
+  - .claude/rules/adr-0005.md
 subagents:
   - task: Blind read of three drafts
     model: sonnet
   - task: Fact-check David post
+    model: sonnet
+  - task: Blind read of reply drafts
+    model: sonnet
+  - task: Fact-check Karen reply
     model: sonnet
 gitBranch: ccr-56ede578-vkxeut
 entrypoint: remote_mobile
