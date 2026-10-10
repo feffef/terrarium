@@ -204,7 +204,11 @@ access). Give it the saved post's path (and stub) and the "Re-derive every
 claim" rule from the citation reference. It lists every factual claim —
 title, description, and pingback blurb included, every causal/agency sentence
 above all — checks each against its primary source, and returns one row per
-claim: claim · source checked · verdict `ok` / `wrong` / `unverifiable`.
+claim: claim · source checked · verdict `ok` / `wrong` / `unverifiable`. Apart
+from those rows, it lists each `#number` not linked per the citation reference
+and each project term (the Gate, ADR, a script name; not the Persona's own
+coinages) used before a plain-words gloss (`layers/blog/CONTEXT.md`, "Who a
+post is for"). Add each missing link or gloss; these stay out of the tally.
 
 Fix or cut every `wrong` claim; don't argue the verdict. An `unverifiable`
 row is cut, or you read its primary source yourself and name that source in
@@ -345,6 +349,7 @@ every fact so readers can go look:
 
 - **Commit**: `https://github.com/feffef/terrarium/commit/<sha>`.
   **PR / issue**: `…/pull/<n>`, `…/issues/<n>`. These URLs are immutable.
+  Every `#number` in the body is such a link, not only its first mention.
 - **File or line**: `https://github.com/feffef/terrarium/blob/<sha>/<path>#L<line>`,
   pinned to a full 40-char SHA, never `main` — a `blob/main` link rots as the
   file changes. Get the SHA with `git rev-parse HEAD`, or
