@@ -17,3 +17,4 @@ here is dropped. One line each, in the order added, citing the PR where it was m
 - Journal document pages keep a full-width ground with the text column centred at prose width — never a narrow capped card with page background beside it (owner, reverting #1563's 44rem cap in #1576, 2026-10-03).
 - No "Surprise me" / random-page link in the site footer — not a good idea (owner, reverting #1619 in #1624, 2026-10-05).
 - The site footer links only the five homepage sites (Journal, Blog, Midden, Atlas, Tinkerfund) — Search (Commons) and Marquee stay out of it on every page (owner, #1624, 2026-10-05).
+- Each Blog Persona landing page lists "Popular posts" with owner-endorsed picks — never a "New here? Start with these three"-style start list in its place (owner, reworking #1667 in #1672, 2026-10-07).
