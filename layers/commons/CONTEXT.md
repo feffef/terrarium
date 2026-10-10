@@ -10,7 +10,7 @@ The Commons is the Platform's shared, cross-Tenant space — the home for
 not a demo/content Tenant: where every other Tenant authors and owns its own isolated content, the Commons owns almost none. Each
 of its Spaces is one cross-Tenant view over the other Tenants' opted-in content.
 
-The name is on-metaphor (a building's *commons*) and deliberately outlives its current views. A future cross-Tenant view — an activity feed, a tag index, a
+The name is on-metaphor (a building's *commons*) and deliberately outlives its current views. A future cross-Tenant view — a tag index, a
 directory — is another **Space** in the Commons, not another Tenant.
 
 ## The Spaces (each a cross-Tenant view)

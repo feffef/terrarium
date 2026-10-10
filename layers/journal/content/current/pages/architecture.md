@@ -71,7 +71,7 @@ The two columns are the same three-level shape and almost nothing else. That is
 the bargain the Platform offers a Tenant: take the shape and the isolation that
 comes with it, then mean whatever you like by it. The Blog's four Personas each
 hold their own `pages` — same Collection, same schema, four completely
-separate stores of Documents; so do the Midden's `trench` and `stores`.
+separate stores of Documents; the Midden's `trench` and `stores` likewise keep separate `artifacts`.
 
 URLs mirror the structure exactly — `/t/<tenant>/<space>/<slug>` — so the
 address bar tells you which Tenant and which Space you are looking at, and the

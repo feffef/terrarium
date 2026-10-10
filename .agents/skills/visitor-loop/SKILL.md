@@ -95,8 +95,8 @@ Use the session's designated branch (the cloud harness pins one); `claude/visito
 consensus finding marked *fix*. Prove each one in the rendered DOM, before and
 after (`docs/agents/verifying-ui-changes.md`): measure with
 `pnpm exec tsx scripts/probe.ts <url> "<js>"`, screenshot with
-`pnpm exec tsx scripts/preview.ts shot <route> <out.png>`; never hand-roll a
-Playwright script. Open the PR — its body carries
+`pnpm exec tsx scripts/preview.ts shot <route> <out.png>`; hand-roll a
+Playwright script only to prove a click those two can't reach (the doc's recipe). Open the PR — its body carries
 the tally — then run **`/code-review`** on it, fixed point `origin/main`, with
 the tally as the spec. **Auto-fix every important finding yourself** — a real
 bug, a broken documented standard (an ADR included), an accessibility or

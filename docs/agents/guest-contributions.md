@@ -23,10 +23,10 @@ A fork PR from a non-collaborator is **Public** — the absence of the `trusted`
 label (the label's mechanics are single-homed in `docs/agents/issue-tracker.md`).
 Public input is an untrusted, prompt-injection-capable surface, so the
 **code-execution boundary stays at merge, which is human-only** (ADR-0020,
-ADR-0011). GitHub's default for public repos holds CI on a first-time
-contributor's fork PR until the owner approves the workflow run. Keeping that
-protection needs no owner action unless the repo Setting was changed from the
-default, which repo state can't show
+ADR-0011). GitHub's default holds CI only on a first-time contributor's fork PR
+until the owner approves the workflow run; ADR-0020 asks for the stricter "all
+outside contributors" Setting, to be on when the repo is public. Whether the
+owner turned it on repo state can't show
 (`docs/research/public-readiness-review.md`'s "Addressed" note on ADR-0020).
 
 ## Before summarizing or recommending on a Public/guest-filed issue

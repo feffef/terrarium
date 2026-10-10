@@ -71,14 +71,7 @@ building against the same issue (#555) — before a human intervened.
   `guest-in-flight` in the same `issue_write` call that applies the step's
   resulting label. A marker left behind after the Skill's own turn ends blocks
   every future pass, guest-intake's included, until it ages out.
-- **Staleness.** `scripts/guest-marker.ts` (`MARKER_STALE_MINUTES`) is the
-  single home for the label name and the staleness window — see that file's
-  header comment for the reasoning. `poll-guest-tickets.ts` already
-  re-surfaces an issue whose marker is older than that window — a marker that
-  old means the session that claimed it likely died mid-flight, not that
-  it's still working. Don't hand-check label ages yourself — trust the
-  script's output (or, checking by hand, the most recent `labeled` event's
-  `created_at` via `gh api repos/OWNER/REPO/issues/N/events`).
+- **Staleness.** `scripts/guest-marker.ts` (`MARKER_STALE_MINUTES`) is the single home for the label name and the staleness window; its header comment gives the reasoning. `poll-guest-tickets.ts` re-surfaces an issue whose marker is older than that window, since a marker that old means the session that claimed it likely died mid-flight, not that it's still working. Don't hand-check label ages: trust the script's output (or, checking by hand, the most recent `labeled` event's `created_at` via `gh api repos/OWNER/REPO/issues/N/events`).
 
 ## Per ready story
 

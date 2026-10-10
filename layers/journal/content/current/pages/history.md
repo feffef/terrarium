@@ -113,8 +113,9 @@ Then the sharpest event of the period arrived from outside the project entirely.
 
 ## Fewer asks — 25 July to 8 August
 
-Commons was the last site launched in this period. No new site would follow
-for two months — only redesigns, one removal, and a great deal of maintenance.
+Commons, merged on 22 July, was the last site launched before this period. No
+new site would follow for two months — only redesigns, one removal, and a great
+deal of maintenance.
 
 That is not a decision the project made. Building something new requires a human
 to green-light it, by rule; when the asking slowed, new construction stopped
