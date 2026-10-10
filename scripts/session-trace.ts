@@ -106,8 +106,8 @@ export interface MechanicalTrace {
   /** Agent-instruction docs Bash output showed the session (#1074); the stitch
    *  folds them into `docsRead` like `filesRead`. */
   docsReadViaShell: string[]
-  /** Path-scoped `.claude/rules/` files the harness loaded on a file touch, in
-   *  load order — the rules that load at session start carry no signal. */
+  /** Path-scoped `.claude/rules/` files that loaded on a file touch or a Skill
+   *  run, in load order — the rules that load at session start carry no signal. */
   rulesLoaded: string[]
   skillsUsed: string[]
   /** The subset of `skillsUsed` seen only as a slash-command expansion — kept
@@ -147,6 +147,13 @@ export function isContentPath(p: string | undefined): p is string {
  *  the noise filter, which keys on absolute paths. Paths outside the repo stay
  *  absolute — honestly flagging an external file. Shared with the author-time
  *  shell-read scan so both derive the same key for one file. */
+// The harness doesn't record a rule that scripts/skill-rules-hint.ts injects as a
+// load; only the hint's own "Contents of <rule>:" headers name it.
+function hintedRules(content: unknown): string[] {
+  const text = (Array.isArray(content) ? content : [content]).filter((c) => typeof c === 'string').join('\n')
+  return [...text.matchAll(/^Contents of (\.claude\/rules\/[\w.-]+\.md):$/gm)].map((m) => m[1]!)
+}
+
 function relativizer(records: Record<string, unknown>[]): (p: string) => string {
   const meta = records.find((r) => r.type === 'user' || r.type === 'assistant') ?? {}
   const cwd = typeof meta.cwd === 'string' ? meta.cwd : ''
@@ -530,8 +537,9 @@ export function extractTrace(
     const ts = typeof rec.timestamp === 'string' ? Date.parse(rec.timestamp) : NaN
     if (!Number.isNaN(ts)) stamps.push(ts)
 
-    const att = rec.attachment as { type?: string; path?: string } | undefined
+    const att = rec.attachment as { type?: string; path?: string; content?: unknown } | undefined
     if (att?.type === 'nested_memory' && att.path?.includes('/.claude/rules/')) rules.push(att.path)
+    if (att?.type === 'hook_additional_context') rules.push(...hintedRules(att.content))
 
     const msg = rec.message as { content?: unknown; model?: string } | undefined
     if (rec.type === 'assistant' && msg?.model) {
@@ -591,7 +599,7 @@ export function extractTrace(
     filesRead: dedup(reads).filter(isContentPath).map(rel),
     filesEdited: dedup(edits).filter(isContentPath).map(rel),
     docsReadViaShell: docIndex ? scanShellReadsByOutput(bashCommandsOf(records), docIndex, rel).paths : [],
-    rulesLoaded: dedup(rules).map(rel),
+    rulesLoaded: dedup(rules.map(rel)),
     skillsUsed: dedup([...skills, ...commandSkills]),
     commandSkills: dedup(commandSkills),
     subagents,
