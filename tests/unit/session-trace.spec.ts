@@ -464,6 +464,14 @@ describe('docsReadViaShell (issues #1074, #1545)', () => {
       expect(scan.nearMisses).toEqual([])
     })
 
+    it('follows a "Full output saved to" pointer and matches the saved file (#1723)', () => {
+      const saved = join(mkdtempSync(join(tmpdir(), 'persisted-')), 'out.txt')
+      writeFileSync(saved, GUARDS)
+      const preview = `Output too large. Full output saved to: ${saved}\n\nPreview:\n# Guards`
+      const scan = shellReadScanOf(withCwd(bash('cat docs/agents/guards.md', preview)), [], { docIndex: index })
+      expect(scan.paths).toEqual(['docs/agents/guards.md'])
+    })
+
     it('names the cd-resolved path in a near-miss, so the agent recognizes which file went unshown (#1454)', () => {
       const scan = shellReadScanOf(withCwd(bash('cd /repo/layers/tinkerfund; cat CONTEXT.md', '(Bash completed with no output)')), [], { docIndex: index })
       expect(scan.paths).toEqual([])
