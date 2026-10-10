@@ -1,14 +1,15 @@
 schemaVersion: 1
 session: session_01GEqB5frKCNtJYAr9KaRxDo
 startedAt: 2026-10-10T02:03:47Z
-endedAt: 2026-10-10T02:16:29Z
+endedAt: 2026-10-10T02:21:06Z
 kind: autonomous
 goal: "Scheduled frictions-to-fixes run: survey the last 3 days of session frictions and land fixes for the ripe ones"
 status: in-review
-outcome: One simple fix in review (PR 1724), one hard fix filed as issue 1723 and dispatched, rest dropped
-summary: "Scheduled run, no human prompt. A survey subagent read all 40 sessions in the window (about 230 frictions) and found nearly everything recurring already tracked as a guard or hook surface, inside an open Prune Trial's territory, or fixed. Two candidates were selected, both agent-initiated under the Skill's charter. The simple one (a viewport flag for scripts/probe.ts) went to a Sonnet agent and is PR 1724; I reviewed it and posted a verdict, merge waits on the CI gate. The hard one (shell-read detector over-credits docs from quoted lines in command output, three moderate frictions, never fixed) was filed as issue 1723 and dispatched to a second Sonnet agent, still running at this log. Still open: the review and merge of that PR, which will likely escalate to a human since it is a hard selection."
+outcome: PR 1724 (probe viewport flag) merged; PR 1725 (shell-read over-credit, issue 1723) escalated to a human merge
+summary: "Scheduled run, no human prompt; every selection was agent-initiated under the Skill's charter. A survey subagent read all 40 sessions in the window (about 230 frictions); nearly everything recurring was already tracked as a guard or hook surface, inside an open Prune Trial's territory, or fixed. Two candidates were taken. The simple one (a viewport flag for scripts/probe.ts) became PR 1724, reviewed, gate green, merged via merge-pr.ts. The hard one (shell-read detector over-credits docs from quoted lines in command output, issue 1723) became PR 1725; I reviewed and escalated it to a human because the persisted-output format is a guess and the rule is a blocklist, not the issue's allowlist. Still open: a human merge decision on 1725."
 prs:
   - "1724"
+  - "1725"
 docsRead:
   - path: CONTEXT-MAP.md
     reason: (no reason given)
@@ -64,21 +65,22 @@ frictions:
   - description: The worktree guard refused impl-agent Bash calls that mixed git with other commands via && or ;, forcing split calls.
     solution: State the rule in the dispatch brief, or relax the guard for read-only chaining.
     severity: minor
-durationSec: 762
+durationSec: 1039
 models:
-  claude-sonnet-5-5: 49
+  claude-sonnet-5-5: 71
 toolCounts:
   Read: 10
-  Bash: 4
+  Bash: 6
   Agent: 3
   mcp__github__search_issues: 1
   mcp__github__issue_write: 2
-  ReadNotifications: 1
-  mcp__github__pull_request_read: 2
+  ReadNotifications: 5
+  mcp__github__pull_request_read: 5
   Grep: 1
-  mcp__github__add_issue_comment: 1
+  mcp__github__add_issue_comment: 2
   Skill: 2
   Write: 1
+  PushNotification: 1
 filesEdited:
   - tests/unit/shell-reads.spec.ts
   - scripts/shell-reads.ts
