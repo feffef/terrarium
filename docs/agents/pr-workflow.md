@@ -70,7 +70,8 @@ issue write "relates to #N" or "see #N".
 **Before pushing a follow-up commit to an existing PR branch** (e.g. answering
 review), check the PR's state with `pull_request_read`. An owner can merge it
 mid-flight (GitHub then deletes the branch), and pushing to the branch name
-silently recreates it.
+silently recreates it. If it's already merged, push it as a new branch (plain
+push, no `--force-with-lease`).
 
 **Reply before resolving a review thread.** Say what changed (or why nothing
 did) before calling `resolve_review_thread`. A resolved thread with no reply

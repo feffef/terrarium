@@ -4,10 +4,6 @@
 // fix to the same tool result. It never blocks or rewrites a command, and fails
 // open: any error writes nothing (ADR-0027: a hook warns and exits 0).
 //
-// Wired to both PostToolUse (a push chained past a later step that succeeds)
-// and PostToolUseFailure (a bare failing push), each on `Bash`, behind the
-// `sh` pre-filter `scripts/stale-info-hint.sh`.
-//
 // Usage:
 //   sh scripts/stale-info-hint.sh                 # the installed hook entry
 //   tsx scripts/stale-info-hint.ts                # hook payload on stdin
@@ -27,28 +23,19 @@ const GIT_PUSH = /\bgit\b[^\n]*\bpush\b/
  *  that merely mentions "stale info" elsewhere in the output never matches. */
 const STALE_REJECTION = /\[rejected\][^\n]*\(stale info\)/
 
-interface HintPayload {
-  tool_name?: unknown
-  tool_input?: { command?: unknown } | null
-  tool_response?: { stdout?: unknown; stderr?: unknown } | null
-  error?: unknown
-}
-
-/** The output text of a PostToolUse (`tool_response`) or PostToolUseFailure
- *  (`error`) payload. */
-function outputOf(p: HintPayload): string {
-  const parts = [p.tool_response?.stdout, p.tool_response?.stderr, p.error]
-  return parts.filter((s): s is string => typeof s === 'string').join('\n')
+function field(obj: unknown, key: string): unknown {
+  return obj !== null && typeof obj === 'object' ? (obj as Record<string, unknown>)[key] : undefined
 }
 
 /** The hint for a Bash `git push` rejected as stale info, else `null`. Never
  *  throws. */
 export function staleInfoHint(payload: unknown): string | null {
-  if (payload === null || typeof payload !== 'object') return null
-  const p = payload as HintPayload
-  const command = p.tool_input?.command
-  if (p.tool_name !== 'Bash' || typeof command !== 'string' || !GIT_PUSH.test(command)) return null
-  return STALE_REJECTION.test(outputOf(p)) ? HINT : null
+  const command = field(field(payload, 'tool_input'), 'command')
+  if (field(payload, 'tool_name') !== 'Bash' || typeof command !== 'string' || !GIT_PUSH.test(command)) return null
+  // PostToolUse carries `tool_response`; PostToolUseFailure carries `error`.
+  const response = field(payload, 'tool_response')
+  const output = [field(response, 'stdout'), field(response, 'stderr'), field(payload, 'error')]
+  return output.some((s) => typeof s === 'string' && STALE_REJECTION.test(s)) ? HINT : null
 }
 
 function main(): void {
@@ -56,7 +43,7 @@ function main(): void {
   if (result.kind !== 'ok') return
   const hint = staleInfoHint(result.payload)
   if (!hint) return
-  const event = (result.payload as { hook_event_name?: unknown }).hook_event_name
+  const event = field(result.payload, 'hook_event_name')
   process.stdout.write(
     JSON.stringify({
       hookSpecificOutput: {

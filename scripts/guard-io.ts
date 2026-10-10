@@ -147,9 +147,10 @@ export function requireToolFlag(argv: string[], usage: string): string {
 /** `--input <json>` or `--input-file <path>` → the parsed `tool_input`, `{}`
  *  when neither is given. `--input-file` exists because a DENYING `--input`
  *  cannot always survive the trip inline — the very Bash call carrying it can
- *  be what the guard being probed denies (`workflow-edit-guard.ts`). Exits(1) with a message on an unreadable file or
- *  invalid JSON, rather than the bootstrap's fail-closed catch, which would
- *  print a deny control object a dry run must never emit. */
+ *  be what the guard being probed denies (`workflow-edit-guard.ts`). Exits(1)
+ *  with a message on an unreadable file or invalid JSON, rather than the
+ *  bootstrap's fail-closed catch, which would print a deny control object a
+ *  dry run must never emit. */
 export function resolveDryRunInput(argv: string[]): unknown {
   const inputFile = flagValue(argv, '--input-file')
   let rawInput = flagValue(argv, '--input')

@@ -28,8 +28,8 @@ export const BOT_ICON = '🤖'
  *  (provenance-footer.ts) resolves both arguments for the current session, so a
  *  caller never hand-assembles either (CLAUDE.md: never reconstruct an
  *  identifier from memory). */
-export function provenanceHeader(modelName: string, sessionUrl: string): string {
-  return `${BOT_ICON} [${modelName}](${sessionUrl})`
+export function provenanceHeader(label: string, sessionUrl: string): string {
+  return `${BOT_ICON} [${label}](${sessionUrl})`
 }
 
 /** A full session URL, wherever it appears and whatever wraps it. */
@@ -72,11 +72,11 @@ export function hasAuthorshipMarker(text: string): boolean {
   return PROVENANCE_HEADER.test(text) || LEGACY_PROVENANCE_FOOTER.test(text) || HARNESS_FOOTER.test(text)
 }
 
-/** The model name and session id the body's own header names, or `null` when it
+/** The label and session id the body's own header names, or `null` when it
  *  has none. Returns the id rather than the URL because every caller compares it
  *  against a resolved ground-truth id — handing back the URL would just make each
  *  one re-parse it. */
-export function readProvenanceHeader(text: string): { modelName: string; sessionId: string } | null {
+export function readProvenanceHeader(text: string): { label: string; sessionId: string } | null {
   const m = PROVENANCE_HEADER.exec(text)
-  return m ? { modelName: m[1]!.trim(), sessionId: m[2]! } : null
+  return m ? { label: m[1]!.trim(), sessionId: m[2]! } : null
 }

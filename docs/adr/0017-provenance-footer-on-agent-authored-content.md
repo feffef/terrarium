@@ -7,6 +7,9 @@ Status: Accepted
 > then rewritten whole under ADR-0027 with the decision unchanged. Git history
 > holds the earlier wording.
 
+> Amended 2026-10-10 (#1684): provenance must name the session; the model is
+> optional, since the session log records it.
+
 ## Context
 
 Human vs. agent authorship is unrecoverable from this repo's GitHub records:

@@ -130,11 +130,10 @@ All four are point-in-time behavioural rules whose violation shows in the tool c
 
 ## 4. Already mechanized (the current surface)
 
-The `PreToolUse` guard roster lives in `docs/agents/guards.md`. Two of its rows are kept here:
+The `PreToolUse` guard roster lives in `docs/agents/guards.md`. One of its rows is kept here:
 
 | Mechanism | Shape | Rule it enforces | Matcher |
 | --- | --- | --- | --- |
-| `scripts/commit-trailer-guard.sh` | Removed (#1652); the commit-msg hook below corrects the trailer | Never hand-write the ADR-0017 commit trailer (#921) | `Bash` |
 | `scripts/github-provenance-guard.ts` | Fail-closed refusal | ADR-0017 provenance header on every GitHub body | 9 `mcp__github__*` tools |
 
 Plus, outside `PreToolUse`:
