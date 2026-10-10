@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_015BjYk46dntcMuAWMn1z4Zw
 startedAt: 2026-10-10T15:07:43Z
-endedAt: 2026-10-10T15:58:58Z
+endedAt: 2026-10-10T16:08:09Z
 kind: interactive
 goal: Give every agent session short, current ADR summaries at the right moment
 status: in-review
-outcome: 27 ADR rule files in .claude/rules/ (9 always loaded, 18 path-scoped); draft PR 1741
-summary: "The owner asked for feedback on an idea: a five-line summary per ADR, loaded at session start. I read all 28 ADRs and recommended it, with changes (a flexible length, a \"read in full when\" trigger, one home per fact). At the owner's direction I dispatched one research agent per ADR. Each read the ADR's history, session logs and issues, and returned a summary, its reasoning, drift findings and sources. Mid-run the owner added the rule that summaries use simple, positive wording. The owner asked whether a CLAUDE.md import beats a hook. The docs showed a 10,000-character cap on hook output, and the summaries total about 12,000, so a hook would cut them off. On the owner's question about rules I explained `.claude/rules/`, then tested it at their request. Path-scoped rules load after Read, after a single-file `cat`, after a new-file Write, and inside subagents. Each load is recorded in the transcript as a `nested_memory` attachment, which `rulesLoaded` in the session log could use. The owner wanted agents to read full ADRs, so I tested `@` imports in rules. They are unusable: a path-scoped rule's import is not expanded when the rule loads, yet the imported file loads unconditionally at session start. The owner rejected copying ADR text and settled the design: the summary lives only in its rule file. Twelve rules end with a pointer to read the full ADR. The owner approved six wording conventions, and I wrote the 27 rules. The Stop hook asked me to commit, so I ran gate:scoped (green), pushed and opened a draft PR, as CLAUDE.md requires. Still open: the scenario checks with Sonnet agents, the CLAUDE.md edit, a gate check that keeps each rule in step with its ADR, and the ADR drift findings, which need human decisions. All design choices were the owner's; the split into always-loaded and path-scoped rules, the trap lines added to four rules and opening the PR were my proposals or CLAUDE.md defaults."
+outcome: 27 ADR rule files plus a CLAUDE.md edit, checked in five scenarios; draft PR 1741, CI green
+summary: "The owner asked for feedback on an idea: a five-line summary per ADR, loaded at session start. I read all 28 ADRs and recommended it, with changes (a flexible length, a \"read in full when\" trigger, one home per fact). At the owner's direction I dispatched one research agent per ADR. Each read the ADR's history, session logs and issues, and returned a summary, its reasoning, drift findings and sources. Mid-run the owner added the rule that summaries use simple, positive wording. The owner asked whether a CLAUDE.md import beats a hook. The docs showed a 10,000-character cap on hook output, and the summaries total about 12,000, so a hook would cut them off. On the owner's question about rules I explained `.claude/rules/`, then tested it at their request. Path-scoped rules load after Read, after a single-file `cat`, after a new-file Write, and inside subagents. Each load is recorded in the transcript as a `nested_memory` attachment, which `rulesLoaded` in the session log could use. The owner wanted agents to read full ADRs, so I tested `@` imports in rules. They are unusable: a path-scoped rule's import is not expanded when the rule loads, yet the imported file loads unconditionally at session start. The owner rejected copying ADR text and settled the design: the summary lives only in its rule file. Twelve rules end with a pointer to read the full ADR. The owner approved six wording conventions, and I wrote the 27 rules. The Stop hook asked me to commit, so I ran gate:scoped (green), pushed and opened a draft PR, as CLAUDE.md requires. At the owner's request I then edited CLAUDE.md so that it points to the rules, and ran five plan-only scenario checks in fresh headless Sonnet sessions, judged from their transcripts. All nine always-loaded rules arrived in every session, and the path rules for 0012 and 0026 fired. The mermaid rule did not fire on a content edit, but the CLAUDE.md grep step found ADR-0024. No session over-read the full governance ADRs, and every plan was right. The owner chose to keep the full-read line on ADRs 0003, 0004, 0009 and 0020 and watch real sessions. Still open: the gate check that keeps each rule in step with its ADR, rulesLoaded in the session log, and the ADR drift findings, which need human decisions. All design choices were the owner's; the split into always-loaded and path-scoped rules, the trap lines added to four rules and opening the PR were my proposals or CLAUDE.md defaults."
 prs:
   - "1741"
 docsRead:
@@ -119,7 +119,7 @@ docsRead:
   - path: app/components/ContentLoadErrorDialog.vue
     reason: (no reason given)
   - path: CLAUDE.md
-    reason: (no reason given)
+    reason: (read before editing)
 skillsUsed:
   - name: dispatch-subagents
     reason: one research agent per ADR, read-only, shared checkout
@@ -160,25 +160,28 @@ frictions:
   - description: "Doc contradiction: the ADR-0003 ledger and pr-workflow.md describe the dependabot auto-merge row as live, but proposal 1633 has not been applied."
     solution: Mark the ledger row as pending until a human applies docs/proposals/1633-dependabot-automerge.md.
     severity: minor
-durationSec: 3074
+durationSec: 3626
 models:
-  claude-opus-5-5: 215
+  claude-opus-5-5: 264
   claude-sonnet-5-5: 19
 toolCounts:
-  Bash: 54
+  Bash: 72
   Read: 8
   Skill: 3
   Write: 4
   Agent: 34
-  Edit: 1
-  ToolSearch: 2
+  Edit: 2
+  ToolSearch: 3
   SendMessage: 20
   SendUserFile: 2
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 4
+  mcp__github__update_pull_request: 2
 filesEdited:
   - rule-probe-scratch/a.txt
+  - CLAUDE.md
 subagents:
   - type: general-purpose
     task: Summarize ADR-0001
