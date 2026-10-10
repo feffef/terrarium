@@ -55,8 +55,9 @@ export const skillSchema = z
 
 export default defineTenant({
   name: 'journal',
-  // Two Spaces so the isolation invariant (ADR-0004 L3) is actually exercised:
-  // same collections, physically separate content per Space.
+  // A lifecycle split: `current` is the live week, `archived` the older entries
+  // (issue #868). The split also carries the suite's only L2 cross-Space leak
+  // check (layers/journal/tests/e2e/journal.e2e.ts).
   spaces: ['current', 'archived'],
   collections: {
     // Rendered documentation pages — 1:1 file → route within the Space.
