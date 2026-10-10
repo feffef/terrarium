@@ -480,7 +480,7 @@ describe('docsReadViaShell (issues #1074, #1545)', () => {
       ), [], { docIndex: index })
       expect(scan.paths).toEqual([])
       expect(scan.nearMisses.map((m) => [m.path, m.rule])).toEqual([
-        ['docs/agents/domain.md', 'named by the command, but its output shows no line of this doc'],
+        ['docs/agents/domain.md', 'named by the command, but its output showed too little of this doc'],
         ['docs/agents/new.md', 'redirect target: written, not read'],
         ['docs/agents/guards.md', 'not a reader command'],
       ])

@@ -78,7 +78,7 @@ export type SkipRule =
   | 'grep/rg output does not show this file being read'
   | '|| fallback: stderr suppressed, output may belong to the other side'
   | 'git show diff does not touch this path'
-  | 'named by the command, but its output shows no line of this doc'
+  | 'named by the command, but its output showed too little of this doc'
 
 export interface NearMiss {
   command: string
@@ -778,8 +778,7 @@ export function scanShellReadsByOutput(
   rel: (p: string) => string = (p) => p,
   minLines: number = MIN_LINES_SHOWN,
 ): OutputScan {
-  const shown = new Map<string, Set<string>>()
-  const firstCommand = new Map<string, string>()
+  const shown = new Map<string, { lines: Set<string>; command: string }>()
   for (const entry of commands) {
     const { command, output } = normalizeShellCommand(entry)
     if (output === undefined) continue
@@ -789,10 +788,9 @@ export function scanShellReadsByOutput(
     const named = mayQuote ? new Set(scanShellReads([command], rel).paths) : undefined
     const see = (doc: string, line: string): void => {
       if (named !== undefined && !named.has(doc)) return
-      const lines = shown.get(doc) ?? new Set<string>()
-      lines.add(line)
-      shown.set(doc, lines)
-      if (!firstCommand.has(doc)) firstCommand.set(doc, command)
+      const seen = shown.get(doc) ?? { lines: new Set<string>(), command }
+      seen.lines.add(line)
+      shown.set(doc, seen)
     }
     for (const raw of output.split('\n')) {
       const prefixed = PATH_PREFIX.exec(raw)
@@ -811,8 +809,8 @@ export function scanShellReadsByOutput(
     }
   }
   const creditedBy = new Map<string, string>()
-  for (const [doc, lines] of shown) {
-    if (lines.size >= Math.min(minLines, index.sizes.get(doc) ?? minLines)) creditedBy.set(doc, firstCommand.get(doc)!)
+  for (const [doc, { lines, command }] of shown) {
+    if (lines.size >= Math.min(minLines, index.sizes.get(doc) ?? minLines)) creditedBy.set(doc, command)
   }
   return { paths: [...creditedBy.keys()], creditedBy }
 }

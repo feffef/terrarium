@@ -336,7 +336,7 @@ export function shellReadScanOf(
     const parser = scanShellReads(commands, rel, resolveGlob)
     for (const [p, command] of parser.creditedBy) {
       const path = resolveAgainstCdDir(p, command, rel)
-      unshown.push({ command, token: p, path, rule: 'named by the command, but its output shows no line of this doc' })
+      unshown.push({ command, token: p, path, rule: 'named by the command, but its output showed too little of this doc' })
     }
     parsed.push(...parser.nearMisses.filter((m) => !crediting.has(m.command)))
   }

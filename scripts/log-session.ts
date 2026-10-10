@@ -139,8 +139,7 @@ const authoredScratchSchema = z
  *  generic error (issue #1074). */
 const DERIVED_ONLY_FIELDS: Record<string, string> = {
   docsReadViaShell:
-    'shell reads are derived from the transcript and folded into docsRead. Give a docsRead entry a reason ' +
-    `instead, or the reason '${NOT_READ_REASON}' for a path no command of this session or its subagents showed you.`,
+    `shell reads fold into docsRead; answer them there, with a reason or '${NOT_READ_REASON}' (log-session Skill, step 3).`,
 }
 
 export function validateAuthored(
@@ -697,6 +696,8 @@ function fail(msg: string): never {
  *  would bury the reads it sits beside. */
 const NEAR_MISS_LIMIT = 5
 
+const oneLine = (command: string): string => command.replace(/\s+/g, ' ').slice(0, 100)
+
 /** List every instruction doc the trace will fold into `docsRead` that the
  *  agent has not yet given a reason, with the evidence for each, so the agent
  *  can explain it or mark it `NOT_READ_REASON` (ADR-0009's merged-read
@@ -724,7 +725,7 @@ export function reportUnexplainedReads(
   const open = new Map<string, string>()
   for (const p of toolReads) if (isInstructionDoc(p) && !answered.has(p)) open.set(p, 'Read tool')
   for (const [p, { command, source }] of scan.provenance) {
-    if (!answered.has(p) && !open.has(p)) open.set(p, `[${source}] ${command.replace(/\s+/g, ' ').slice(0, 100)}`)
+    if (!answered.has(p) && !open.has(p)) open.set(p, `[${source}] ${oneLine(command)}`)
   }
   const misses = scan.nearMisses.filter((m) => !answered.has(m.path))
   if (open.size === 0 && misses.length === 0) return
@@ -744,7 +745,7 @@ export function reportUnexplainedReads(
     log(`  Not counted as read via shell (${misses.length}), and why:`)
     for (const m of misses.slice(0, NEAR_MISS_LIMIT)) {
       log(`    ${m.token} — ${m.rule}`)
-      log(`      ${m.command.replace(/\s+/g, ' ').slice(0, 100)}`)
+      log(`      ${oneLine(m.command)}`)
     }
     if (misses.length > NEAR_MISS_LIMIT) log(`    …and ${misses.length - NEAR_MISS_LIMIT} more`)
     log("  If one of these was a real read, log a Friction: severity at least 'moderate', marker")
@@ -796,7 +797,12 @@ export function authorMain(
   writeScratch(result.data, scratchAbs)
   console.log(`✓ authored scratch written → ${SCRATCH_FILE}`)
   console.log('  the Stop hook will stitch it with the derived trace and commit, live, at the end of this turn.')
-  reportUnexplainedReads(cwd, JSON.parse(readFileSync(scratchAbs, 'utf8')) as AuthoredScratch)
+  // The merged scratch, so an earlier pass's answers count; unreadable degrades to this pass.
+  let merged: AuthoredScratch = result.data
+  try {
+    merged = JSON.parse(readFileSync(scratchAbs, 'utf8')) as AuthoredScratch
+  } catch {}
+  reportUnexplainedReads(cwd, merged)
 }
 
 function readStdin(): string {

@@ -610,13 +610,14 @@ is deprecated: never written again, kept in the schema so older logs validate.
 Once in `docsRead`, shell reads reach every `docsRead` consumer, so the
 detector was tightened first:
 
-- **A glance is not a read.** A doc counts only once the session's output has
-  shown `MIN_LINES_SHOWN` distinct lines of it (all of it, if shorter).
+- **A glance is not a read.** A doc counts only once one transcript's output
+  (the session's own, or one subagent's) has shown `MIN_LINES_SHOWN` distinct
+  lines of it (all of it, if shorter); a `path:line:` grep hit is one line.
   Measured on the logs of 2026-10-03 to 2026-10-10: lists of 40 to 97 credits
   were inflated by single grep hits and two-line slices.
 - **A commit's diff is a quoting surface.** `git show`/`diff`/`log` output
   counts only toward a doc the command itself names, like `gh` and Journal
-  output since #1723.
+  output since #1723, and that holds for `path:line:` hits too.
 
 **The agent explains every derived instruction doc.** `--author` lists each
 instruction doc the trace will fold in that has no authored reason yet, with

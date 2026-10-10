@@ -36,11 +36,9 @@ export const sessionSchema = z
     outcome: z.string(), // one-liner — prose nuance on `status`
     summary: z.string(), // the fuller narrative; sizing guidance: log-session Skill
     prs: z.array(z.string()).default([]), // 0..N already-landed work-PR refs
-    // docsRead/skillsUsed are a *merged* field (ADR-0009 amendment): the agent's
-    // curated entries plus transcript-observed reads (Read tool and shell
-    // output) the SessionEnd extractor folds in. `reason` stays required; a derived entry the agent never
-    // annotated gets a placeholder — `(read before editing)` for a docsRead path
-    // also edited, `(no reason given)` otherwise.
+    // docsRead/skillsUsed are a *merged* field (ADR-0009 amendments): the
+    // agent's curated entries plus the reads and Skills the extractor derives,
+    // folded in with a placeholder `reason`.
     docsRead: z.array(z.object({ path: z.string(), reason: z.string() })).default([]),
     skillsUsed: z.array(z.object({ name: z.string(), reason: z.string() })).default([]),
     // Mechanical trace — derived from the session transcript by the SessionEnd
