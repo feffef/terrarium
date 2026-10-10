@@ -26,14 +26,7 @@ mechanism; the goal above is the point.
 **A trial is judgeable only once its prune has landed on `main` and sessions
 have run against it since.** `opened:` records when the entry was written, which
 is earlier and is never the window's start. Run
-`pnpm exec tsx scripts/prune-trial-window.ts` to get every open trial's real landing
-commit, timestamp, and window-close time — from `git log -S`, not a date to
-derive or recall by hand (a hand-derived one is how PR #1061 judged a
-trial a day early against a landing commit that turned out not to exist).
-Its `judgeable from:` time is a floor, not a deadline: judging any time at or
-after it is fine (nothing guarantees this Skill runs at a precise time), only
-judging before it is the failure. A `NOT FOUND` result means silence is not evidence:
-leave the entry alone and judge nothing.
+`pnpm exec tsx scripts/prune-trial-window.ts` to get every open trial's real landing commit, timestamp, and window-close time, taken from `git log -S`; never derive or recall them by hand (a hand-derived one is how PR #1061 judged a trial a day early against a landing commit that did not exist). Its `judgeable from:` time is a floor, not a deadline: judging at or after it is fine (nothing guarantees this Skill runs at a precise time); only judging before it is the failure. A `NOT FOUND` result means silence is not evidence: leave the entry alone and judge nothing.
 
 For each trial that has landed and is past its window: **apply** its `check`
 (prose, not a command), and read the Frictions logged since it landed
@@ -60,13 +53,7 @@ every candidate's full smear to rank them):
 
 1. **Prose that already failed.** A rule whose own failure is on the tracker —
    an issue filed because the rule didn't hold, or a rule narrowed repeatedly and
-   still not followed. Dispatch a single subagent to search for one in a full
-   pass — the instruction corpus, `docs/research/rulebook-migration-table.md`
-   (its "excluded from rule-extraction" list included: a mechanism record for a
-   guard already built is often the largest prose mass going), and the tracker
-   — before reading any candidate file yourself; manual, one-by-one reading is
-   the fallback only if that search comes up empty or ambiguous, not the
-   starting point. Such a
+   still not followed. Dispatch a single subagent to search for one in a full pass of the instruction corpus, `docs/research/rulebook-migration-table.md` (its "excluded from rule-extraction" list included: a mechanism record for a guard already built is often the largest prose mass going), and the tracker, before reading any candidate file yourself. Read candidates one by one only if that search comes up empty or ambiguous. Such a
    rule has proven **the prose** isn't load-bearing — not the behaviour, which
    may matter more than ever. Check what holds that behaviour now: a rule a wired
    guard, gate or test already enforces is the safest prune on the board; one

@@ -59,9 +59,9 @@ non-starter.
 | Document | Why excluded |
 | --- | --- |
 | `docs/agents/guards.md` | **Mechanism record, not a rule source.** Documents already-built guards; each rule they backstop is homed in `CLAUDE.md` and appears there. The mechanisms appear in §4. |
-| `docs/agents/mdc-when-to-use.md` | **Decision reference, not a rulebook.** 154 lines of "when is MDC the right tool", ending in a 6-question checklist. It carries exactly two normative rules (extracted below); the rest is capability reference. |
+| `docs/agents/mdc-when-to-use.md` | **Decision reference, not a rulebook.** 141 lines of "when is MDC the right tool", ending in a 6-question checklist. It carries exactly two normative rules (extracted below); the rest is capability reference. |
 | `.agents/skills/blog-post/personas/*.md` (4 files) | **Voice guidance for a fictional persona.** Do/don't lists about tone, not agent behaviour. |
-| `docs/agents/triage-labels.md` | **Vocabulary mapping table** (24 lines). Its one normative statement — the ADR-0020 trust gate on `ready-for-agent` — is homed in ADR-0020 and appears via `auto-triage`. |
+| `docs/agents/triage-labels.md` | **Vocabulary mapping table** (22 lines). Its one normative statement — the ADR-0020 trust gate on `ready-for-agent` — is homed in ADR-0020 and appears via `auto-triage`. |
 
 No other in-corpus document was skipped.
 
