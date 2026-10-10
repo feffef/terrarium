@@ -67,17 +67,10 @@ issue write "relates to #N" or "see #N".
 
 **GitHub can silently leave `Closes #N`/`Fixes #N` issues open on a multi-issue PR, even with a well-formed body** (intermittent, GitHub's closing pipeline; issue #983). `scripts/merge-pr.ts` self-heals: after a successful merge it re-parses the body's closing keywords (repeated or comma-listed) and closes any still open. Land through it. On any other merge path (hand-rolled `merge_pull_request`, web UI) it doesn't run; check each named issue with `issue_read` afterward and close by hand.
 
-**Restarting a branch after its PR merged?** GitHub deletes the remote branch
-by default on merge, so `push --force-with-lease` on a same-named restarted branch
-typically fails with "stale info" against the stale remote-tracking ref. That is
-expected, not a concurrent write. Run `git remote prune origin` first, or push
-without `--force-with-lease` (it is effectively a new remote branch).
-
 **Before pushing a follow-up commit to an existing PR branch** (e.g. answering
 review), check the PR's state with `pull_request_read`. An owner can merge it
 mid-flight (GitHub then deletes the branch), and pushing to the branch name
-silently recreates it. If it's already merged, treat it as the restart case
-above.
+silently recreates it.
 
 **Reply before resolving a review thread.** Say what changed (or why nothing
 did) before calling `resolve_review_thread`. A resolved thread with no reply

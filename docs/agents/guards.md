@@ -27,8 +27,10 @@ follow it and don't route around it. If it is wrong, say so on the guard's issue
 | `tail-pipe-guard.ts` | a `Bash` command piping into a trailing `tail`/`head`/`echo`/`tee` when it also backgrounds (`run_in_background: true`) or is a known long-runner (`pnpm gate`/`test`/`build`, `pnpm exec vitest`/`playwright`). An ordinary short foreground pipe is untouched | its script header | #873, #384, #812, #1329 |
 | `double-background-guard.ts` | a `Bash` call stacking `run_in_background: true` on a text-level background operator in the command (a bare `&` anywhere, `nohup … &` included) — for **any** caller, main session included (no `detectAgentContext` gate at all, unlike `subagent-background-guard.ts`) | its script header | #1208 |
 | `github-provenance-guard.ts` | a GitHub body, or an MCP-API commit, missing this session's provenance in the shape its surface prescribes; also a title or body carrying a bare `<...>` span GitHub silently strips | ADR-0017 — the deny message is the agent-facing home | #886 |
+| `stale-info-hint.ts` | nothing: a hint, not a guard. After a `git push` rejected as "stale info" it adds the fix to the result, and it fails open | its script header | #1610 |
 
-`.claude/settings.json` wires all of these under `hooks.PreToolUse`.
+`.claude/settings.json` wires the guards under `hooks.PreToolUse`, and the hint
+under `PostToolUse` and `PostToolUseFailure`.
 
 ## Conventions every guard follows
 

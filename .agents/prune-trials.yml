@@ -180,7 +180,7 @@ trials:
       stay (provenance trial). The search subagent covered the instruction
       corpus, the rulebook table (excluded list included), guards.md, guard
       headers and the tracker; candidates left: the `--force-with-lease` note
-      in pr-workflow.md (#984, nothing enforces it) and the session-id rule
+      in pr-workflow.md (#984; since replaced by a hint hook, #1610) and the session-id rule
       (trailer-adjacent). Net about -19 lines; the mass here was small.
       The same run judged and deleted the provenance/commit-trailer trial:
       only nit/minor Frictions where a guard denied and the session fixed it.
