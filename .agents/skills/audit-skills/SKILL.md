@@ -21,10 +21,10 @@ This Skill writes only Inventory `.yml` entries and GitHub issues. Changing a
 Skill's text is a judgement call, so a finding that clears step 4's bar
 becomes an issue for a human; the rest become observations (ADR-0015).
 
-Every issue or PR state you write (open, closed, merged), in an observation,
-issue, comment or session log, matches a live read (`issue_read`,
-`pull_request_read`) you made this run. A prior observation, a subagent's
-report, a git sweep and visible fix activity are not live reads (#1627, #1720).
+Every issue or PR state you write, in any words (open, closed, merged,
+resolved, fixed), in an observation, issue, comment or session log, matches a
+live GitHub read you made this run. A prior observation, a git sweep or visible
+fix activity is not one (#1627, #1720).
 
 ## 1. Gather the scorecard
 
@@ -168,7 +168,8 @@ window's.
   retirement, record it as this run's session-log `ideas` entry and never act
   on it (ADR-0003).
 
-Done when every entry's grade and `role` match the evidence.
+Done when every entry's grade and `role` match the evidence, and every issue
+or PR state your observations cite matches a live read this run.
 
 ## 6. Land the Inventory PR
 
