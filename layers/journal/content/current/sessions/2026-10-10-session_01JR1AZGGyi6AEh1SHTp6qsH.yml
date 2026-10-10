@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01JR1AZGGyi6AEh1SHTp6qsH
 startedAt: 2026-10-10T00:46:01Z
-endedAt: 2026-10-10T01:16:18Z
+endedAt: 2026-10-10T01:19:19Z
 kind: autonomous
 goal: Run the scheduled audit-skills sweep over the own-Skill behaviour-check roster
-status: in-review
-outcome: "11 Skills checked, 2 silent failures found and filed as issues #1720/#1721, Inventory PR #1722 open"
-summary: "Fully agent-initiated scheduled run, no human prompt at any point. Ran scripts/audit-skills.ts for the scorecard, then dispatched one read-only Sonnet subagent per Skill in behaviourChecks (11: audit-docs, audit-skills, auto-triage, blog-post, close-session, digest, dispatch-subagents, frictions-to-fixes, log-session, prune-trial, visitor-loop), all in parallel, each given a per-Skill brief built from the scorecard (usedIn sessions, SKILL.md change history, prior observations, and — for the three modelInvoked Skills — the window sessions that didn't use them). Independently verified every subagent's central claims against primary sources (mostly live `issue_read`/`pull_request_read`, never trusting a report or a prior observation's \"still open\"/\"closed\" framing) before acting on it. Two new, independently-confirmed silent failures surfaced and were filed as fresh needs-triage issues since no open thread covered either: #1720 (audit-skills' OWN 2026-10-09 Inventory entry wrongly stated issues #1676/#1684 were closed — both verified open, a third recurrence of issue #1627's exact \"stated issue state without checking it\" failure class, despite #1627's own fix already having landed); #1721 (visitor-loop's owner-memory step on PR #1691 batch-dismissed 10 owner-correction candidates by category instead of individually, missing a real owner rework of its own prior PR #1667→PR #1672 made 37 minutes apart — a recurrence of issue #1515's failure class, 3 days after #1515 closed). Added one comment with new corroborating evidence to the already-open #1586. Step 3 (closure completeness) was clean: orphan scan ran fine, both orphan candidates already carry `resolvedBy`, no human-prompted or manually-rescued closures this window — nothing to escalate there. Updated all 11 checked Skills' Inventory observations (step 5); no grade changes cleared the ≥2-session bar either direction. `pnpm validate:content` and `pnpm gate:scoped` both green (the gate's first run hit one flaky, content-unrelated unit test in tests/unit/check-worktrees.spec.ts — confirmed a flake by re-running it standalone and the full gate again, both green). Committed, pushed, and opened PR #1722 (audit-skills' own self-merge tier per pr-workflow.md), subscribed to its activity, and will babysit it to merge per CLAUDE.md."
+status: completed
+outcome: "11 Skills checked, 2 silent failures found and filed as issues #1720/#1721, Inventory PR #1722 merged"
+summary: "Fully agent-initiated scheduled run, no human prompt at any point. Ran scripts/audit-skills.ts for the scorecard, then dispatched one read-only Sonnet subagent per Skill in behaviourChecks (11: audit-docs, audit-skills, auto-triage, blog-post, close-session, digest, dispatch-subagents, frictions-to-fixes, log-session, prune-trial, visitor-loop), all in parallel, each given a per-Skill brief built from the scorecard (usedIn sessions, SKILL.md change history, prior observations, and — for the three modelInvoked Skills — the window sessions that didn't use them). Independently verified every subagent's central claims against primary sources (mostly live `issue_read`/`pull_request_read`, never trusting a report or a prior observation's \"still open\"/\"closed\" framing) before acting on it. Two new, independently-confirmed silent failures surfaced and were filed as fresh needs-triage issues since no open thread covered either: #1720 (audit-skills' OWN 2026-10-09 Inventory entry wrongly stated issues #1676/#1684 were closed — both verified open, a third recurrence of issue #1627's exact \"stated issue state without checking it\" failure class, despite #1627's own fix already having landed); #1721 (visitor-loop's owner-memory step on PR #1691 batch-dismissed 10 owner-correction candidates by category instead of individually, missing a real owner rework of its own prior PR #1667→PR #1672 made 37 minutes apart — a recurrence of issue #1515's failure class, 3 days after #1515 closed). Added one comment with new corroborating evidence to the already-open #1586. Step 3 (closure completeness) was clean: orphan scan ran fine, both orphan candidates already carry `resolvedBy`, no human-prompted or manually-rescued closures this window — nothing to escalate there. Updated all 11 checked Skills' Inventory observations (step 5); no grade changes cleared the ≥2-session bar either direction. `pnpm validate:content` and `pnpm gate:scoped` both green (the gate's first run hit one flaky, content-unrelated unit test in tests/unit/check-worktrees.spec.ts — confirmed a flake by re-running it standalone and the full gate again, both green). Committed, pushed, and opened PR #1722 (audit-skills' own self-merge tier per pr-workflow.md), subscribed to its activity, waited for the CI gate to report green (`cede2ea2`, `mergeable_state: clean`, no review threads), posted the merge verdict comment, and merged via `scripts/merge-pr.ts` (merge commit `73fa878f`). Unsubscribed once merged."
 prs:
   - "1722"
 docsRead:
@@ -175,31 +175,32 @@ frictions:
   - description: 'SHELL-READ-DETECTION: docsReadViaShell credited .agents/skills/wait-what/SKILL.md and .agents/skills/ask-matt/SKILL.md from one subagent command: `ls layers/journal/content/current/skills/ | grep -i wait; echo "---"; grep -rn "wait-what" layers/journal/...` (the "Behaviour-check audit-skills" subagent, checking the wait-what coverage-gap call). That command only reads layers/journal/content/current/skills/ and never cats or greps either SKILL.md under .agents/skills/, so its output cannot contain a line from either file.'
     solution: False positive, direction credited-but-not-read, on both paths. Same shape as the already-tracked SHELL-READ-DETECTION false-positive family (#1482/#1542) — a short/generic string ("wait") matched somewhere unrelated to the actual file content.
     severity: moderate
-durationSec: 1818
+durationSec: 1998
 models:
-  claude-sonnet-5: 249
+  claude-sonnet-5: 283
 toolCounts:
-  Bash: 35
-  Read: 30
+  Bash: 39
+  Read: 31
   Agent: 11
   ToolSearch: 7
   TaskCreate: 6
-  TaskUpdate: 12
+  TaskUpdate: 13
   mcp__github__issue_read: 6
   mcp__github__search_issues: 3
-  mcp__github__pull_request_read: 3
+  mcp__github__pull_request_read: 8
   Glob: 1
   mcp__github__issue_write: 2
-  mcp__github__add_issue_comment: 1
-  Edit: 16
+  mcp__github__add_issue_comment: 2
+  Edit: 18
   Grep: 1
-  ReadNotifications: 3
+  ReadNotifications: 5
   ScheduleWakeup: 1
   Write: 2
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
-  Skill: 2
+  Skill: 3
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/journal/content/current/skills/audit-docs.yml
   - layers/journal/content/current/skills/audit-skills.yml
