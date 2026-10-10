@@ -60,7 +60,6 @@ import { mkdtempSync, readFileSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { dirname, join, matchesGlob, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
-import { parse as parseYaml } from 'yaml'
 import {
   envToken,
   hasGhBinary,
@@ -72,6 +71,7 @@ import { findTranscriptContents } from './provenance-footer.ts'
 import { hasAuthorshipMarker, readProvenanceHeader } from './provenance-header.ts'
 import { resolveGroundTruthFromTranscript } from './session-trace.ts'
 import { TRUSTED_ASSOCIATIONS } from './trust.ts'
+import { rulePaths } from './validate-adr-rules.ts'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 
@@ -170,12 +170,6 @@ export function hasVerdictFromSession(bodies: VerdictBody[], sessionId: string |
 export const HUMAN_MERGE_RULE = '.claude/rules/adr-0004-human-merge.md'
 /** Every Prune Trial ships its ledger entry in the prune's own commit (ADR-0027). */
 export const PRUNE_TRIAL_LEDGER = '.agents/prune-trials.yml'
-
-export function humanMergeGlobs(ruleText: string): string[] {
-  const fm = /^---\n([\s\S]*?)\n---\n/.exec(ruleText)?.[1]
-  const paths = fm ? (parseYaml(fm) as { paths?: unknown }).paths : undefined
-  return Array.isArray(paths) ? paths.filter((p): p is string => typeof p === 'string') : []
-}
 
 const isPruneTrialPath = (f: string) => matchesGlob(f, 'docs/adr/**') || /^\.claude\/rules\/adr-\d{4}\.md$/.test(f)
 
@@ -474,7 +468,7 @@ function readChangedFiles(strategy: FetchStrategy, owner: string, repo: string, 
 function readHumanMergeGlobsFromMain(cwd: string): string[] {
   try {
     execFileSync('git', ['fetch', 'origin', 'main'], { cwd, stdio: 'ignore' })
-    return humanMergeGlobs(execFileSync('git', ['show', `origin/main:${HUMAN_MERGE_RULE}`], { cwd, encoding: 'utf8' }))
+    return rulePaths(execFileSync('git', ['show', `origin/main:${HUMAN_MERGE_RULE}`], { cwd, encoding: 'utf8' }))
   } catch {
     return []
   }

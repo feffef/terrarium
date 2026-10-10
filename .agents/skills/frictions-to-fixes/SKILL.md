@@ -215,7 +215,7 @@ before pushing — not just its targeted test file(s) — so a type error surfac
 locally instead of on the next full CI gate round-trip. The impl agent **never
 merges and never enables auto-merge**
 (ADR-0003) — it hands the open PR back to you. You are the reviewer (§6). The
-impl agent also must **not call `subscribe_pr_activity`** on the PR it opens: the orchestrator (§6) owns that PR's lifecycle and subscribes when needed (the ADR-0003 rule). A `subscribe_pr_activity` webhook reaching the orchestrating session when that PR opens is **expected, not a brief violation**; don't read it as the impl agent disobeying, and don't log it as a fresh friction (#428).
+impl agent also must **not call `subscribe_pr_activity`** on the PR it opens: the orchestrator (§6) owns that PR's lifecycle and subscribes when needed. A `subscribe_pr_activity` webhook reaching the orchestrating session when that PR opens is **expected, not a brief violation**; don't read it as the impl agent disobeying, and don't log it as a fresh friction (#428).
 **Dispatched worktree-isolated impl agents must NOT self-invoke `close-session`
 or `log-session`** — see `close-session/SKILL.md` for why and its mechanical
 enforcement.
@@ -264,4 +264,4 @@ A PR is finished only when **merged** (by you) or **escalated/abandoned**, not a
 Done when every dispatched PR carries a posted review comment and is merged or
 escalated/abandoned.
 
-Log the session per the ADR-0009 rule (`.claude/rules/adr-0009.md`).
+Log the session.

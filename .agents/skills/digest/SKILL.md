@@ -8,17 +8,16 @@ disable-model-invocation: true
 
 Bring the Journal's front pages up to date. Two products, one run: a **Digest**
 per closed UTC day — a short, human **catch-up** on everything that happened
-across the Platform that day (ADR-0010) — and a live, self-refreshing **index**
+across the Platform that day — and a live, self-refreshing **index**
 overview of the Platform's current state and capabilities. A thin, tested helper
 (`scripts/digest.ts`) does the deterministic gathering; **you write the prose**.
 
 > **Invoked, never self-fired — follow the steps.** This Skill is user-invoked
 > (`disable-model-invocation: true`): a scheduled Routine fires `/digest`, and
 > a human can run it on demand, but a session never reaches for it
-> unprompted. Scheduled, it keeps the Journal's derived content current
-> (ADR-0003/0015).
+> unprompted. Scheduled, it keeps the Journal's derived content current.
 
-Digests land through the **ordinary gated PR** (ADR-0003) — *not* the `log-session`
+Digests land through the **ordinary gated PR** — *not* the `log-session`
 direct-to-main path (that exception is bounded to inert `data`; a Digest is a
 rendered page). The PR is **eligible to self-merge as soon as the gate is green**
 (ADR-0003 amendment, activating ADR-0004's content-only low-risk tier) — see step 7
@@ -171,11 +170,11 @@ run" sequence — allowed **only** while the PR stays within this Skill's
 ADR-0003 ledger-row scope
 (`docs/adr/0003-agent-operating-model-and-governance.md`). If anything
 **outside the digest scope** rode into the PR, do **not** run `merge-pr.ts` —
-leave it open for human review (ADR-0003's default).
+leave it open for human review.
 
 Done when the PR has **merged with a green gate**, or — in the escalation
 cases above — is open and honestly awaiting a human.
 
 ## 8. Log this session before you finish
 
-Log the session per the ADR-0009 rule (`.claude/rules/adr-0009.md`).
+Log the session.

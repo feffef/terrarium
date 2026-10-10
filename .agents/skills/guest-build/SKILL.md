@@ -27,7 +27,7 @@ boundary, not a bug** — see `guest-intake`'s Skill for the full rationale
 **It composes existing Skills — never restate them.** The dispatch-and-review
 machinery is `frictions-to-fixes` §5–§6: a **Sonnet** impl agent in its **own git
 worktree** that branches from `origin/main`, implements, clears the **safety
-gate** (ADR-0004), pushes, and opens a **gated PR** — never merging, never
+gate**, pushes, and opens a **gated PR** — never merging, never
 enabling auto-merge, never self-invoking `close-session`/`log-session`, and
 committing + pushing before it stops even mid-gate (read `frictions-to-fixes`
 §5 and the `dispatch-subagents` Skill for the exact mechanics). Review is

@@ -21,6 +21,7 @@ paths:
   - "scripts/*-guard.sh"
   - "scripts/guard-io.ts"
   - "scripts/guard-wrap.sh"
+  - "scripts/skill-rules-hint.ts"
   - "scripts/merge-pr.ts"
   - "scripts/trust.ts"
   - "scripts/gate.ts"

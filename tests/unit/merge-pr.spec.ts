@@ -11,7 +11,6 @@ import { describe, expect, it, vi } from 'vitest'
 import {
   failingCheckNames,
   hasVerdictFromSession,
-  humanMergeGlobs,
   humanMergeRefusal,
   mergeRequestFields,
   parseClosingKeywordIssues,
@@ -21,6 +20,7 @@ import {
   verdictFromCheckRuns,
   type RawCheckRun,
 } from '../../scripts/merge-pr.ts'
+import { rulePaths } from '../../scripts/validate-adr-rules.ts'
 
 describe('verdictFromCheckRuns()', () => {
   it('is pending when there are no check runs yet', () => {
@@ -287,7 +287,7 @@ describe('hasVerdictFromSession() (issue #1276)', () => {
 })
 
 describe('humanMergeRefusal() — the Human-only paths (ADR-0004)', () => {
-  const globs = humanMergeGlobs('---\nadr: x\npaths:\n  - "docs/adr/**"\n  - "nuxt.config.ts"\n  - "shared/schemas/**"\n---\nbody\n')
+  const globs = rulePaths('---\nadr: x\npaths:\n  - "docs/adr/**"\n  - "nuxt.config.ts"\n  - "shared/schemas/**"\n---\nbody\n')
 
   it('reads the rule\'s paths from its frontmatter', () => {
     expect(globs).toEqual(['docs/adr/**', 'nuxt.config.ts', 'shared/schemas/**'])

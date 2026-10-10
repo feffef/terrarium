@@ -11,6 +11,7 @@ import { createHash } from 'node:crypto'
 import { existsSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
+import { parse as parseYaml } from 'yaml'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const ADR_DIR = 'docs/adr'
@@ -22,6 +23,17 @@ export const NO_RULE = new Set(['0007'])
 export const adrHash = (text: string) => createHash('sha256').update(text).digest('hex').slice(0, 12)
 
 const FRONTMATTER = /^---\n([\s\S]*?)\n---\n/
+
+/** A rule's `paths` frontmatter: the files that load it. Empty for a rule
+ *  that loads at session start. */
+export function rulePaths(ruleText: string): string[] {
+  const fm = FRONTMATTER.exec(ruleText)?.[1]
+  const paths = fm ? (parseYaml(fm) as { paths?: unknown } | null)?.paths : undefined
+  return Array.isArray(paths) ? paths.filter((p): p is string => typeof p === 'string') : []
+}
+
+/** The text Claude Code shows for a rule: everything after its frontmatter. */
+export const ruleBody = (ruleText: string) => ruleText.replace(FRONTMATTER, '')
 
 export function ruleHash(ruleText: string): string | undefined {
   return FRONTMATTER.exec(ruleText)?.[1]?.match(/^adr:\s*(\S+)\s*$/m)?.[1]

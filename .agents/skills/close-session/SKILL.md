@@ -15,7 +15,7 @@ You've reached **Session closure** — run the closing actions:
   see `log-session` for the exact semantics of each of the five values
   (`completed | in-review | partial | blocked | abandoned`); never default a
   stalled or abandoned session to `completed`.
-- **For any gated PR, follow the ADR-0003 rule:** open it, subscribe to its
+- **For any gated PR:** open it, subscribe to its
   activity, and babysit it to merge/close.
 - **If a tool call in that PR-open sequence (`subscribe_pr_activity`, or this
   Skill's own trigger) gets rejected, don't let closure stall.** Still invoke
@@ -37,8 +37,8 @@ status. Three conditions, all required:
 3. you have **verified that commit on `origin/main`** — after `git fetch origin
    main`, `git log origin/main --grep=<this session's id>` shows it.
 
-Authoring only arms (2). Since you stay alive to babysit any PR you opened
-(the ADR-0003 rule), use a later babysitting turn to confirm (3), and — once the PR merges —
+Authoring only arms (2). Since you stay alive to babysit any PR you opened,
+use a later babysitting turn to confirm (3), and — once the PR merges —
 **finalize the log via `log-session`** (status `completed`, plus any friction from
 closure), then re-verify. Until all three hold, the session is **not** logged.
 (For a **scheduled autonomous** run there is no human to notice a missing log and

@@ -28,8 +28,8 @@ active work **complete and in a coherent, honest state**. A log honestly
 records an in-review PR when that's the state closure was reached in.
 
 **Opening a gated PR is a closure point — log at that moment.** A session opens
-its PR itself as soon as it has pushed a commit that is not a session log
-(the ADR-0003 rule), and that first push is exactly when to write this log.
+its PR itself as soon as it has pushed a commit that is not a session log,
+and that first push is exactly when to write this log.
 Its `status` is then **`in-review`** — the PR is open but not merged — never
 `completed`, which is reserved for work that actually landed (`close-session`
 finalizes it on merge) or a session that needed no PR at all.
@@ -122,7 +122,7 @@ ideas:                             # OPTIONAL — omit unless something sparked
 - **`summary` must state plainly which parts of the session's work were
   human-instructed (a direct ask, or an explicit green-light) versus
   agent-initiated** — don't leave that provenance to be inferred from context.
-  ADR-0003's autonomy gate (net-new work needs a human green-light) depends on
+  ADR-0003's autonomy gate depends on
   this being legible to a later reader, not reconstructed after the fact.
 - **Quote any scalar value containing `[`, `{`, `#`, or `,`**, the top-level `goal`/`outcome` strings as much as `path`/`reason` values. Unquoted, `[` or `{` starts a YAML flow sequence/map; `#` starts a YAML comment and truncates everything after it; `,` inside a flow map (`{ … }`) ends the current value early. Any of these silently mangles the entry instead of erroring. The `#` case (a bare `PR #354` truncating to `PR`) is caught: the `--author` step below rejects an unquoted-`#` truncation loudly and prints the value to quote.
 - `goal` is a short, plain headline ("Weekly check of the Platform's own Skills",
@@ -148,7 +148,7 @@ pnpm exec tsx scripts/log-session.ts --author <path-to-authored.yml>
 ```
 
 It validates the interpretive fields and writes `.session-logs/pending.scratch.json`
-(gitignored). That's all you do — the hook described above (the ADR-0009 boundary)
+(gitignored). That's all you do — the hook described above
 takes it from here, **only if** the scratch exists, which is why authoring it *is*
 your "this session is done" signal.
 
