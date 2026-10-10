@@ -149,6 +149,18 @@ describe('rulesLoaded — path-scoped rules that fired', () => {
     expect(trace.rulesLoaded).toEqual(['.claude/rules/adr-0024.md'])
   })
 
+  it('adds the rules the skill-rules hint injected when a Skill ran', () => {
+    const hint = {
+      type: 'attachment',
+      attachment: {
+        type: 'hook_additional_context',
+        hookName: 'PostToolUse:Skill',
+        content: ['The audit-docs Skill runs under these ADR rules:\n\nContents of .claude/rules/adr-0021.md:\n\n# ADR-0021\n\nContents of .claude/rules/adr-0024.md:\n\n# ADR-0024'],
+      },
+    }
+    expect(extractTrace([...records, hint], NO_ENV).rulesLoaded).toEqual(['.claude/rules/adr-0024.md', '.claude/rules/adr-0021.md'])
+  })
+
   it('folds in rules a subagent loaded', () => {
     const sub = [...parseTranscript(subagentTranscript), rule('/repo/.claude/rules/adr-0012.md')]
     expect(foldSubagentTrace(trace, [sub], NO_ENV).rulesLoaded).toEqual(['.claude/rules/adr-0024.md', '.claude/rules/adr-0012.md'])
