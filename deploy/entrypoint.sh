@@ -49,9 +49,16 @@ AUTH_URL="${GIT_REPO_URL/https:\/\//https://x-access-token@}"
 # ---- build / serve helpers -------------------------------------------------
 lockhash() { sha1sum "$REPO_DIR/pnpm-lock.yaml" 2>/dev/null | cut -d' ' -f1; }
 
+# Kept outside the checkout so `reset --hard` can't touch it; cleared before each
+# install, written only on success, so any failed install is retried on the next
+# commit (issue #1701).
+INSTALLED_HASH="$APP_DIR/.installed-lockhash"
+
 install_deps() {
+  rm -f "$INSTALLED_HASH"
   log "pnpm install (frozen lockfile)…"
-  ( cd "$REPO_DIR" && pnpm install --frozen-lockfile --store-dir "$STORE_DIR" )
+  ( cd "$REPO_DIR" && pnpm install --frozen-lockfile --store-dir "$STORE_DIR" ) &&
+    lockhash > "$INSTALLED_HASH"
 }
 
 # Build into $REPO_DIR/.output. Returns non-zero on failure WITHOUT swapping,
@@ -137,10 +144,9 @@ while true; do
   [ "$local_rev" = "$remote_rev" ] && continue
 
   log "new commit $remote_rev — updating"
-  before="$(lockhash)"
   git -C "$REPO_DIR" reset --hard "origin/$BRANCH"
 
-  if [ "$(lockhash)" != "$before" ]; then
+  if [ "$(lockhash)" != "$(cat "$INSTALLED_HASH" 2>/dev/null)" ]; then
     install_deps || { log "install failed — keeping previous build live"; continue; }
   fi
 
