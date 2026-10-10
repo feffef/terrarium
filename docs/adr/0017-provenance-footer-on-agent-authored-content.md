@@ -8,7 +8,7 @@ Status: Accepted
 > holds the earlier wording.
 
 > Amended 2026-10-10 (#1684): provenance must name the session; the model is
-> optional, since the session log records it.
+> optional.
 
 ## Context
 

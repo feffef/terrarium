@@ -31,7 +31,8 @@ function field(obj: unknown, key: string): unknown {
  *  throws. */
 export function staleInfoHint(payload: unknown): string | null {
   const command = field(field(payload, 'tool_input'), 'command')
-  if (field(payload, 'tool_name') !== 'Bash' || typeof command !== 'string' || !GIT_PUSH.test(command)) return null
+  if (field(payload, 'tool_name') !== 'Bash') return null
+  if (typeof command !== 'string' || !GIT_PUSH.test(command)) return null
   // PostToolUse carries `tool_response`; PostToolUseFailure carries `error`.
   const response = field(payload, 'tool_response')
   const output = [field(response, 'stdout'), field(response, 'stderr'), field(payload, 'error')]
