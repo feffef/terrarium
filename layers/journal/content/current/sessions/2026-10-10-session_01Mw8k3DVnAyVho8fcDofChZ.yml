@@ -1,0 +1,61 @@
+schemaVersion: 1
+session: session_01Mw8k3DVnAyVho8fcDofChZ
+startedAt: 2026-10-10T14:38:06Z
+endedAt: 2026-10-10T14:42:08Z
+kind: interactive
+goal: Midden survey of what the Platform discarded since 2026-10-04
+status: completed
+outcome: "Survey-report issue #1739 filed with 5 candidates and 8 Gate-B exclusions"
+summary: "Human-instructed: the user invoked /midden-survey. Everything else here followed that Skill's steps. I bounded the sweep at the previous report's date (#1592, 2026-10-04) and ran scripts/midden-survey.ts on a full origin/main. It returned 15 deleted files, 0 dropped deps and 3 relocations. I also fetched all 235 branches. Only one tip crossed the 30-day floor, and it was fully merged. The search for closed-unmerged PRs gave 4 in the window. Five candidates survived both gates: three guards retired on 2026-10-09/10 (agent-background-flag, commit-trailer, and session-id-guard together with its failed rescue PR #1704), the fake scaffold-tenant row in the archived Journal, and two Dependabot PRs the owner closed with ignore commands (#1636, #1637). Excluded under Gate B: the mermaid bump (it landed separately in 6141ca27), the diagram briefs (folded into terrarium-overview), the applied protect-main proposal, and Karen's post that was replaced in place. The issue flags the commit-trailer guard as the weakest candidate, because the commit-msg hook shares its goal. No code changed, so no PR. Cataloguing waits for a human green-light via /midden-catalogue."
+prs: []
+docsRead:
+  - path: layers/midden/CONTEXT.md
+    reason: inclusion bar and artifact shape
+  - path: docs/agents/github-integration.md
+    reason: MCP search and overflow traps
+  - path: docs/agents/git-conventions.md
+    reason: fetch-before-trusting-history
+  - path: CONTEXT-MAP.md
+    reason: session-start rule; only the 2KB preview was seen
+  - path: docs/agents/issue-tracker.md
+    reason: before filing an issue; partly read, cut by head
+skillsUsed:
+  - name: midden-survey
+    reason: user-invoked; the procedure for this run
+  - name: close-session
+    reason: closure after filing the issue
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: I cat-ed CONTEXT-MAP.md and CONTEXT.md together with other files. The output was too long and went to a file, and I never read past its preview. That broke CLAUDE.md's "read CONTEXT.md in full at session start" rule.
+    solution: Read each required doc on its own with the Read tool, so one oversized output can't hide it.
+    severity: minor
+  - description: I piped issue-tracker.md and triage-labels.md through head -300, which cut them off. I filed the issue having read only part of the triage-label doc. The label was right only because the Skill names it.
+    solution: Never truncate a doc that CLAUDE.md requires reading in full. Read it with the Read tool.
+    severity: minor
+  - description: .agents/prune-trials.yml:61 on main still says a rule is held by agent-background-flag-guard.ts, which was deleted in b02ca418. That is a stale reference.
+    solution: Fix the line in prune-trials.yml. When a guard is removed, its removal PR should grep .agents/ as well as docs/.
+    severity: minor
+  - description: "SHELL-READ-DETECTION false positive: CONTEXT.md was credited from shell output, but the session marked it (not read)"
+    solution: Find the crediting command in the transcript and tighten scripts/shell-reads.ts
+    severity: moderate
+durationSec: 242
+models:
+  claude-opus-5-5: 57
+toolCounts:
+  Bash: 17
+  ToolSearch: 2
+  mcp__github__search_issues: 1
+  mcp__github__search_pull_requests: 1
+  mcp__github__list_branches: 1
+  mcp__github__issue_read: 1
+  mcp__github__pull_request_read: 4
+  Write: 2
+  Edit: 1
+  Read: 1
+  mcp__github__issue_write: 1
+  Skill: 2
+gitBranch: ccr-87e26db5-lpzcln
+entrypoint: remote_mobile
+cliVersion: 2.1.296
+landedBy: Stop
