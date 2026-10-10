@@ -2,7 +2,7 @@
 // merged PRs, reviews and comments are candidate owner corrections to a
 // `visitor-loop` PR. Fixture data only — the GitHub/git shell is thin.
 import { describe, expect, it } from 'vitest'
-import { findCandidates, isVisitorLoopPr, type Comment, type Pr } from '../../scripts/owner-corrections.ts'
+import { findCandidates, isVisitorLoopPr, unresolved, type Comment, type Pr } from '../../scripts/owner-corrections.ts'
 
 const AI_BODY = '🤖 [Claude Opus 5.5](https://claude.ai/code/session_01548Bi1ZiGcknAp8CMLNMZB)\n\nLooks good.'
 
@@ -14,6 +14,7 @@ const VL_1492: Pr = {
   headRef: 'claude/visitor-loop-fixes-2026-09-29',
   mergedAt: '2026-09-29T17:07:40Z',
   files: ['layers/atlas/app/assets/theme.css', 'layers/atlas/app/components/FoodWeb.vue', 'layers/atlas/README.md'],
+  isBot: false,
 }
 
 const PR_1494: Pr = {
@@ -24,6 +25,7 @@ const PR_1494: Pr = {
   headRef: 'ccr-d97568dd-z8byz4',
   mergedAt: '2026-09-29T22:16:46Z',
   files: ['layers/atlas/app/assets/theme.css', 'layers/atlas/app/components/FoodWeb.vue'],
+  isBot: false,
 }
 
 const UNRELATED: Pr = {
@@ -34,6 +36,7 @@ const UNRELATED: Pr = {
   headRef: 'claude/docs-tidy',
   mergedAt: '2026-09-30T10:00:00Z',
   files: ['docs/agents/domain.md'],
+  isBot: false,
 }
 
 function comment(over: Partial<Comment>): Comment {
@@ -60,6 +63,12 @@ describe('findCandidates', () => {
         excerpt: 'atlas: bring the food & relations webs back on phones',
       },
     ])
+  })
+
+  it('drops a rework by a bot account (Dependabot), keeping the same PR from a human', () => {
+    const bump: Pr = { ...PR_1494, title: 'chore(deps): bump vue', isBot: true }
+    expect(findCandidates('2026-09-29T20:00:00Z', [VL_1492, bump], [])).toEqual([])
+    expect(findCandidates('2026-09-29T20:00:00Z', [VL_1492, PR_1494], [])).toHaveLength(1)
   })
 
   it('lists a merged PR that names a visitor-loop PR (revert or follow-up), even with no file overlap', () => {
@@ -148,5 +157,25 @@ describe('isVisitorLoopPr', () => {
     expect(isVisitorLoopPr({ headRef: 'claude/adoring-galileo-9pcuh7', title: 'visitor-loop: Skill edit' })).toBe(false)
     expect(isVisitorLoopPr({ headRef: 'claude/adoring-galileo-9pcuh7', title: 'visitor-loops (blog)' })).toBe(false)
     expect(isVisitorLoopPr({ headRef: 'claude/adoring-galileo-9pcuh7', title: 'Revert "visitor-loop (blog): fixes"' })).toBe(false)
+  })
+})
+
+describe('unresolved', () => {
+  const [rework] = findCandidates('2026-09-29T20:00:00Z', [VL_1492, PR_1494], [])
+  const review = findCandidates('2026-09-29T20:00:00Z', [VL_1492], [comment({})])[0]!
+  const both = [rework!, review]
+
+  it('passes when every candidate is named on its own line with a resolution', () => {
+    const tally = `- #1494 reworks #1492: decisions.md line added\n- ${review.url} not a ruling (praise)`
+    expect(unresolved(both, tally)).toEqual([])
+  })
+
+  it('fails a tally that dismisses candidates as a group, listing each one', () => {
+    expect(unresolved(both, '10 candidates, all reworks, not rulings')).toEqual(both)
+  })
+
+  it('fails a candidate named without a resolution, or only by a longer comment URL', () => {
+    const tally = `- #1494 reworks #1492\n- ${review.url}0 not a ruling (praise)`
+    expect(unresolved(both, tally)).toEqual(both)
   })
 })

@@ -2,11 +2,13 @@
 // search behind that Skill's owner-memory step, which runs kept skipping when
 // it was prose alone (issue #1515).
 //
-// Usage:  tsx scripts/owner-corrections.ts [--since <iso>]
+// Usage:  tsx scripts/owner-corrections.ts [--since <iso>] [--check <tally-file>]
 //   Default cutoff: the last commit touching visitor-loop's decisions.md.
+//   --check: exit 1 naming each candidate the tally doesn't resolve on its own
+//   line (a run once dismissed ten as a group, #1721).
 //   Prints a JSON array of { kind, url, relatesTo, files?, excerpt }:
 //   - review:        a human comment or review on a visitor-loop PR;
-//   - rework:        a merged PR whose title or body references a visitor-loop
+//   - rework:        a merged non-bot PR whose title or body references a visitor-loop
 //                    PR (#N or its URL), or that touches files one touched in
 //                    the 3 days before it merged (`files` = the overlap);
 //   - issue-comment: a human comment on a thread that references one.
@@ -14,6 +16,7 @@
 //   ADR-0017 provenance (`isAiAuthored`) separates agent writes, which land
 //   under the owner's login, from the owner's own.
 import { execFileSync } from 'node:child_process'
+import { readFileSync } from 'node:fs'
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import { isAiAuthored } from './check-triage-drift.ts'
@@ -40,6 +43,7 @@ export interface Pr {
   headRef: string
   mergedAt: string | null
   files: string[]
+  isBot: boolean
 }
 
 /** A PR review, review comment, or issue/PR conversation comment. `threadText`
@@ -89,7 +93,7 @@ export function findCandidates(since: string, prs: Pr[], comments: Comment[]): C
   const out: Candidate[] = []
 
   for (const pr of prs) {
-    if (visitorNumbers.has(pr.number) || pr.mergedAt === null) continue
+    if (visitorNumbers.has(pr.number) || pr.mergedAt === null || pr.isBot) continue
     const mergedMs = Date.parse(pr.mergedAt)
     if (mergedMs <= sinceMs) continue
     const earlier = visitorPrs
@@ -124,6 +128,17 @@ export function findCandidates(since: string, prs: Pr[], comments: Comment[]): C
   return out
 }
 
+/** The candidates `tally` doesn't resolve: each needs a line naming it (its
+ *  URL, or `#N` for a rework PR) beside a decisions.md line or "not a ruling". */
+export function unresolved(candidates: Candidate[], tally: string): Candidate[] {
+  const lines = tally.split('\n').filter((l) => /not a ruling|decisions\.md/i.test(l))
+  const url = /https?:\/\/[^\s)>\]]+/g
+  return candidates.filter((c) => {
+    const n = c.kind === 'rework' ? Number(c.url.slice(c.url.lastIndexOf('/') + 1)) : NaN
+    return !lines.some((l) => l.match(url)?.includes(c.url) || mentions(l.replace(url, '')).includes(n))
+  })
+}
+
 // ── Shell (thin) ──────────────────────────────────────────────────────────────
 
 interface RawPull {
@@ -132,6 +147,7 @@ interface RawPull {
   title: string
   body: string | null
   head: { ref: string }
+  user: RawComment['user']
   merged_at: string | null
   merge_commit_sha: string | null
   updated_at: string
@@ -187,6 +203,7 @@ function toPr(p: RawPull, cwd: string): Pr {
     headRef: p.head.ref,
     mergedAt: p.merged_at,
     files: p.merged_at ? mergeFiles(p.merge_commit_sha, cwd) : [],
+    isBot: isBotAccount(p.user),
   }
 }
 
@@ -275,14 +292,19 @@ function fail(msg: string): never {
 
 function main(): void {
   const argv = process.argv.slice(2)
-  let since: string | undefined
-  if (argv[0] === '--since') {
-    since = argv[1]
-    if (!since || Number.isNaN(Date.parse(since))) fail(`not a valid ISO instant: ${since}`)
-  } else if (argv.length > 0) {
-    fail('usage: tsx scripts/owner-corrections.ts [--since <iso>]')
+  const flags = new Map<string, string | undefined>()
+  for (let i = 0; i < argv.length; i += 2) {
+    if (!['--since', '--check'].includes(argv[i]!) || !argv[i + 1]) fail('usage: tsx scripts/owner-corrections.ts [--since <iso>] [--check <tally-file>]')
+    flags.set(argv[i]!, argv[i + 1])
   }
-  process.stdout.write(JSON.stringify(ownerCorrections(since), null, 2) + '\n')
+  const since = flags.get('--since')
+  if (since !== undefined && Number.isNaN(Date.parse(since))) fail(`not a valid ISO instant: ${since}`)
+  const candidates = ownerCorrections(since)
+  const tallyFile = flags.get('--check')
+  if (tallyFile === undefined) return void process.stdout.write(JSON.stringify(candidates, null, 2) + '\n')
+  const missing = unresolved(candidates, readFileSync(tallyFile, 'utf8'))
+  if (missing.length > 0) fail(`unresolved candidates (give each its own line):\n${missing.map((c) => `  ${c.url} (re #${c.relatesTo})`).join('\n')}`)
+  console.log(`owner-corrections: all ${candidates.length} candidates resolved`)
 }
 
 // Only run when executed directly (not when imported by the unit test).
