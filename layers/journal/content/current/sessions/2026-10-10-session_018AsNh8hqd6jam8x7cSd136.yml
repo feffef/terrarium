@@ -1,20 +1,41 @@
 schemaVersion: 1
 session: session_018AsNh8hqd6jam8x7cSd136
 startedAt: 2026-10-10T13:09:18Z
-endedAt: 2026-10-10T13:18:35Z
+endedAt: 2026-10-10T13:40:55Z
 kind: interactive
-goal: Judge whether docsReadViaShell is reliable enough to fold into docsRead
-status: completed
-outcome: "Not yet: the mid-sized credits look right, but big lists are 20-30% false and the #1725 quote fix is untested"
-summary: "Human-instructed research question: is the shell-read list reliable enough to replace the separate docsReadViaShell field by merging it into docsRead, and what were the worst recent cases. The human chose (via clarifying questions) to judge only the post-2026-10-03 output-matching mechanism and a merge-as-is (instruction docs only). Three Sonnet Explore agents surveyed 84 logs since 10-03, frictions/issues/PRs (#1074..#1723/#1725), and raw transcripts via list_events for three suspect sessions. Finding: 1488 shell credits, 76% new to docsRead; small lists plausible, large lists (40-97 entries) mix true sed/cat reads with weak git show/diff and 2-line slices and some outright false credits (wait-what/ask-matt SKILL.md). #1725 (merged 10-10) targets quoting and persisted-output but has no soak time. Recommendation given in chat; no code changed."
-prs: []
+goal: Make the shell-read list trustworthy enough to merge into docsRead
+status: in-review
+outcome: "PR 1738 open: 10-line minimum, shell reads folded into docsRead, agent explains each derived doc"
+summary: "Human-instructed throughout. First a research question: is docsReadViaShell reliable enough to become the main read list? Three Sonnet explorers audited the 84 post-2026-10-03 logs, the frictions/issues (#1074 to #1723/#1725) and three raw transcripts; verdict: small lists right, 40-97 entry lists inflated by grep hits, 2-3 line slices and git show/diff output (20-30% false). The human then asked to implement and open a PR directly, choosing via questions: merge fields plus tighten, a 10-line minimum (changed mid-turn from my suggested 3), keep the old field but mark it deprecated, and their own design idea that the agent is shown the derived instruction docs and gives a reason or \"(not read)\" for each; a \"(not read)\" on a shell credit auto-files a SHELL-READ-DETECTION friction. Ran /code-review (two Sonnet axes); applied the fixes (one map per doc, shared helper, guarded re-read, near-miss wording, ADR note on per-transcript scope). Declined: pooling lines across parent and subagents, and retracting a docsRead entry on a later pass. The new author-time report was exercised on this session's own log. PR 1738 needs a human merge (schema + ADR-0009 amendment)."
+prs:
+  - "1738"
 docsRead:
+  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
+    reason: owns docsRead, the shell-read amendments and the schema evolution policy
+  - path: docs/agents/git-conventions.md
+    reason: required before commit/fetch
+  - path: docs/agents/pr-workflow.md
+    reason: required before opening the PR
+  - path: docs/agents/github-integration.md
+    reason: required before GitHub MCP calls
+  - path: .agents/skills/log-session/SKILL.md
+    reason: authoring flow and the step this PR rewrites
   - path: docs/research/shell-reads-by-output-matching.md
+    reason: measured precision of output matching, read by the frictions subagent
+  - path: CONTEXT-MAP.md
+    reason: session-start orientation
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: consumer of docsRead; its shell-read note needed updating
+  - path: docs/adr/0017-provenance-footer-on-agent-authored-content.md
+    reason: PR body provenance header format
+  - path: scripts/shell-reads.ts
     reason: (no reason given)
 skillsUsed:
   - name: close-session
     reason: (no reason given)
   - name: log-session
+    reason: (no reason given)
+  - name: code-review
     reason: (no reason given)
 frictions:
   - description: Ran git log to date the shell-reads change before reading docs/agents/git-conventions.md, breaking CLAUDE.md's read-first rule for git log used to draw a conclusion
@@ -29,24 +50,29 @@ frictions:
   - description: Raw transcripts of long sessions are ~100 events per list_events page with ~10% assistant/user, so mapping 50-70 credits to commands was infeasible
     solution: Have log-session persist the per-doc credit table (doc -> command) in the log or a sidecar so audits don't need transcript replay
     severity: moderate
-durationSec: 557
+  - description: First gate run failed on no-empty lint for an empty catch I added after review; lint was not run locally before committing the review fixes
+    solution: Run eslint on changed files before committing a fix round, not only vitest
+    severity: minor
+  - description: A python replace script asserted a wrong count and aborted midway, leaving half the review fixes applied across files
+    solution: Apply multi-file scripted edits per file with independent checks, or use the Edit tool
+    severity: nit
+  - description: Started the gate before the review fixes, so it had to be stopped and rerun; cost ~4 minutes
+    solution: Start the gate only after review fixes are committed when a review is already in flight
+    severity: nit
+durationSec: 1896
 models:
-  claude-opus-5-5: 39
+  claude-opus-5-5: 179
 toolCounts:
-  Bash: 11
-  AskUserQuestion: 1
-  Agent: 3
-  Skill: 2
-docsReadViaShell:
-  - CONTEXT-MAP.md
-  - docs/adr/0009-session-logs-commit-directly-to-main.md
-  - .agents/skills/ask-matt/SKILL.md
-  - layers/atlas/CONTEXT.md
-  - layers/blog/CONTEXT.md
-  - docs/adr/0021-multi-context-domain-docs.md
-  - .agents/skills/frictions-to-fixes/SKILL.md
-  - .agents/skills/log-session/SKILL.md
-  - .agents/skills/close-session/SKILL.md
+  Bash: 58
+  AskUserQuestion: 3
+  Agent: 5
+  Skill: 4
+  Read: 5
+  ToolSearch: 2
+  TaskStop: 1
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
 subagents:
   - type: Explore
     task: Audit docsReadViaShell in Oct logs
@@ -57,9 +83,16 @@ subagents:
   - type: Explore
     task: Peek transcripts for suspect credits
     model: sonnet
+  - type: general-purpose
+    task: Standards review of branch diff
+    model: sonnet
+  - type: general-purpose
+    task: Spec review of branch diff
+    model: sonnet
 gitBranch: claude/epic-ptolemy-3zkr7l
 entrypoint: remote
 cliVersion: 2.1.296
 ideas:
   - Before folding docsReadViaShell into docsRead, add a minimum distinct-line threshold (e.g. >=3 matched lines) and exclude git show/diff/log output, then re-measure on the 84 post-10-03 logs; fold only if the 40+-entry logs shrink to plausible size
+  - Re-derive the 84 post-2026-10-03 logs with the 10-line minimum (a one-off script over loadDocLineIndex plus list_events transcripts) and post the before/after credit counts on PR 1738, so the human merging it sees the measured effect
 landedBy: Stop
