@@ -1,5 +1,5 @@
 <script setup lang="ts">
-defineProps<{
+const props = defineProps<{
   promotion: {
     title: string
     description?: string
@@ -16,6 +16,14 @@ defineProps<{
   more?: string
 }>()
 const locale = useTinkerfundLocale()
+const copied = ref(false)
+async function copy() {
+  try {
+    await navigator.clipboard.writeText(props.promotion.code ?? '')
+    copied.value = true
+    setTimeout(() => { copied.value = false }, 2000)
+  } catch { /* no clipboard permission: the code stays selectable beside the button */ }
+}
 </script>
 
 <template>
@@ -34,6 +42,7 @@ const locale = useTinkerfundLocale()
       </span>
       <span v-else>No end date.</span>
     </p>
+    <button v-if="promotion.code && !more" type="button" class="tf-btn" aria-live="polite" @click="copy">{{ copied ? 'Copied' : 'Copy code' }}</button>
     <NuxtLink v-if="more" class="tf-btn" :to="more">See all Deals</NuxtLink>
   </div>
 </template>

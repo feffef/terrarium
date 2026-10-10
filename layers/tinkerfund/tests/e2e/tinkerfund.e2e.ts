@@ -530,6 +530,12 @@ export function registerTinkerfundE2E(): void {
         expect(await workshop.getAttribute('aria-pressed')).toBe('true')
 
         await visit('/deals')
+        await page.context().grantPermissions(['clipboard-read', 'clipboard-write'])
+        // Held by banner, not by name: the label becomes "Copied", which a name locator would stop matching.
+        const copy = page.locator('.banner', { hasText: 'TINKER10' }).getByRole('button')
+        await copy.click()
+        await expect.poll(() => copy.textContent()).toBe('Copied')
+        expect(await page.evaluate(() => navigator.clipboard.readText())).toBe('TINKER10')
 
         await visit('/discover')
         const side = page.locator('.side')
