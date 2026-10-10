@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01KRLFYUD31NaEVTs4Qs1Tzj
 startedAt: 2026-10-10T13:14:07Z
-endedAt: 2026-10-10T13:24:44Z
+endedAt: 2026-10-10T14:38:48Z
 kind: autonomous
 goal: "Scheduled prune trial: judge open trials, prune one problem"
-status: in-review
-outcome: Two trials judged, pr-workflow landing recipe pruned (-24) and opened as a new trial in PR 1737
-summary: "Scheduled /prune-trial run, so everything was agent-initiated under the Skill's own charter. Judged the CLAUDE.md trial (one major Friction: a recommendation given without reading the binding ADRs, so the trigger now says plan or recommend) and the dispatch-subagents trial (nit/minor only, holds). A search subagent looked for prose that already failed; the landing recipe in pr-workflow.md ranked first (#853 and #1276, now held by merge-pr.ts). Pruned about 24 lines, kept step numbers because scripts and docs cite them, ran the gate, pushed, and had a Sonnet subagent pinned to the pushed SHA handle a realistic landing correctly. The mass here was small against an aim of 100. Opened PR 1737."
+status: completed
+outcome: Two trials judged, pr-workflow landing recipe pruned (-24); PR 1737 merged by the owner
+summary: "Scheduled /prune-trial run, so everything was agent-initiated under the Skill's own charter. Judged the CLAUDE.md trial (one major Friction: a recommendation given without reading the binding ADRs, so the trigger now says plan or recommend) and the dispatch-subagents trial (nit/minor only, holds). A search subagent looked for prose that already failed; the landing recipe in pr-workflow.md ranked first (#853 and #1276, now held by merge-pr.ts). Pruned about 24 lines, kept step numbers because scripts and docs cite them, ran the gate, pushed, and had a Sonnet subagent pinned to the pushed SHA handle a realistic landing correctly. The mass here was small against an aim of 100. Opened PR 1737; the owner resolved a main conflict and merged it before my own merge push landed."
 prs:
   - "1737"
 docsRead:
@@ -32,6 +32,12 @@ docsRead:
     reason: (no reason given)
   - path: docs/agents/environment-caveats.md
     reason: (no reason given)
+  - path: .agents/skills/log-session/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/guest-build/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: (no reason given)
 skillsUsed:
   - name: close-session
     reason: (no reason given)
@@ -55,12 +61,12 @@ frictions:
   - description: The Stop hook pushed to commit and push twice while the gate was still running, conflicting with CLAUDE.md's gate-first rule; the Skill's section 4 also says push before the probe, which needs the gate to pass first.
     solution: State in prune-trial section 4 that the push waits for gate:scoped.
     severity: minor
-durationSec: 637
+durationSec: 5081
 models:
-  claude-sonnet-5-5: 66
+  claude-sonnet-5-5: 94
 toolCounts:
   Read: 7
-  Bash: 18
+  Bash: 26
   mcp__github__search_issues: 1
   Agent: 2
   Edit: 1
@@ -68,33 +74,11 @@ toolCounts:
   Skill: 2
   Write: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 2
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - CLAUDE.md
-docsReadViaShell:
-  - docs/agents/issue-tracker.md
-  - docs/agents/environment-caveats.md
-  - docs/agents/pr-workflow.md
-  - docs/agents/github-integration.md
-  - docs/research/rulebook-migration-table.md
-  - docs/agents/guards.md
-  - docs/adr/0017-provenance-footer-on-agent-authored-content.md
-  - .agents/skills/log-session/SKILL.md
-  - .agents/skills/audit-docs/SKILL.md
-  - .agents/skills/auto-triage/SKILL.md
-  - .agents/skills/guest-build/SKILL.md
-  - .agents/skills/guest-intake/SKILL.md
-  - .agents/skills/midden-survey/SKILL.md
-  - docs/agents/guest-contributions.md
-  - docs/agents/git-conventions.md
-  - CONTEXT.md
-  - .agents/skills/blog-post/SKILL.md
-  - .agents/skills/diagnosing-bugs/SKILL.md
-  - .agents/skills/digest/SKILL.md
-  - .agents/skills/frictions-to-fixes/SKILL.md
-  - .agents/skills/prototype/SKILL.md
-  - .agents/skills/prune-trial/SKILL.md
-  - .agents/skills/visitor-loop/SKILL.md
-  - docs/agents/verifying-ui-changes.md
 subagents:
   - type: general-purpose
     task: Search for failed-prose rules
