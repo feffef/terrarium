@@ -1,0 +1,60 @@
+schemaVersion: 1
+session: session_01Kvr69UAPnNL8SwEMG9GFxF
+startedAt: 2026-10-10T06:05:29Z
+endedAt: 2026-10-10T06:10:34Z
+kind: interactive
+goal: "Explain issue #1720 simply, then draft the audit-skills fix for it"
+status: in-review
+outcome: "PR #1727 moves audit-skills' live-state rule to cover every written open/closed/merged claim"
+summary: 'Human-instructed throughout: the user first asked for a plain explanation of issue #1720 (audit-skills wrongly stated #1676/#1684 closed), then asked me to draft the fix. The root cause was in the #1627 fix itself: its rule covered only "still open" claims and sat in step 2 (checking), while the false claim said "closed" and was written in step 5 (Inventory writing). Rather than add the self-check line the issue suggested, I moved the rule into one place (the intro paragraph about what the Skill writes), widened it to any issue/PR state in any written text, named "visible fix activity" as not a live read, and removed the step 2 and step 4 copies (+5/-4). gate:scoped green; PR #1727 awaits a human merge, since Skill text is a human call (ADR-0015).'
+prs:
+  - "1727"
+docsRead:
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: the file being fixed
+  - path: docs/adr/0015-audit-skills-and-conditional-importance.md
+    reason: binding ADR for audit-skills
+  - path: docs/agents/pr-workflow.md
+    reason: merge tier for an ordinary work PR
+skillsUsed:
+  - name: writing-for-agents
+    reason: editing a SKILL.md; single source of truth over adding a line
+  - name: close-session
+    reason: closure at PR-open
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Called mcp__github__issue_read before reading docs/agents/github-integration.md, which CLAUDE.md requires before the first GitHub operation.
+    solution: Read it at the first GitHub call; a one-issue read had no harm here, but the trigger applies to reads too.
+    severity: nit
+  - description: "Ran git log to trace the #1627 fix before reading docs/agents/git-conventions.md, which CLAUDE.md requires before log used to draw a conclusion."
+    solution: Read git-conventions first; I did fetch origin main before the commit, so no wrong conclusion resulted.
+    severity: nit
+durationSec: 306
+models:
+  claude-opus-5-5: 48
+toolCounts:
+  ToolSearch: 3
+  mcp__github__issue_read: 1
+  Bash: 13
+  Read: 1
+  Skill: 3
+  Edit: 3
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+filesEdited:
+  - .agents/skills/audit-skills/SKILL.md
+docsReadViaShell:
+  - CONTEXT-MAP.md
+  - CONTEXT.md
+  - docs/adr/0015-audit-skills-and-conditional-importance.md
+  - docs/adr/0027-prune-trials.md
+  - docs/agents/git-conventions.md
+  - docs/agents/github-integration.md
+  - docs/agents/pr-workflow.md
+  - docs/agents/guards.md
+gitBranch: ccr-e05cef30-eih65j
+entrypoint: remote_mobile
+cliVersion: 2.1.296
+landedBy: Stop
