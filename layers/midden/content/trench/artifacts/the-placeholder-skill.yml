@@ -1,4 +1,4 @@
-title: the `scaffold-tenant` entry
+title: the `scaffold-tenant` skill entry
 stratum: current-midden
 condition: intact
 provenance:
@@ -11,15 +11,16 @@ provenance:
     stand-in entry was added in its place.
 site: what-the-record-claimed
 catalogNote: >-
-  An entry on the platform's list of skills, in the older half of its records,
-  for a skill that never existed, and said so in its own text. It was written
-  on 4 July 2026, the platform's first day, when the list replaced an earlier
-  one. That half then held one page and this entry, which was put there
-  to show that each half kept its own content. No test named it, either when
-  it was written or when it was removed. It came through the renaming of the part of the site it lived in,
-  a move to a new folder and a change to the shape of every entry, and stood
-  for 98 days. By October the older half held hundreds of real records, and
-  the entry was the last stand-in left among them. Readers of the older half's
+  An entry on the platform's list of skills (packaged instructions an agent can
+  load), in the archived half of its records, for a skill that never existed,
+  and said so in its own text. It was written on 4 July 2026, the platform's
+  first day, when the list replaced an earlier one. The archived half then held
+  one page and this entry, which was put there to show that each half kept its
+  own content. No test named it, either when it was written or when it was
+  removed. It came through the renaming of the part of the site it lived in, a
+  move to a new folder and two changes to the shape of every entry, and stood
+  for 98 days. By October the archived half held hundreds of real records, and
+  the entry was the last stand-in left among them. Readers of the archived
   skill list still saw it. An issue filed on 10 October, after the owner chose
   to keep the two halves, asked for it to go; an agent removed it that day,
   and the owner merged the change.

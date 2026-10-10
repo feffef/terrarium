@@ -4,9 +4,9 @@ description: Three automatic checks removed on 9 and 10 October 2026, each after
 ---
 
 Three automatic checks, each written to stop an agent repeating a recorded
-mistake, and each removed within a day of the others. In every case the
-removal began with a count: how often the check had stopped something real,
-against how often it had stopped work that was fine. None of the three came
+mistake, and each removed within a day of the others. In every case a count
+settled it: how often the check had stopped something real, against how often
+it had stopped work that was fine. None of the three came
 out ahead.
 
 ::midden-artifact{slug="the-session-id-check"}

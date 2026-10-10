@@ -1,6 +1,6 @@
 ---
 title: What the Record Claimed
-description: Three finds where the Platform's own writing about itself was not true of the Platform — an Inventory entry recommending a Skill that was never there, a page recommended, delivered as a plan, and killed in one word, and a stand-in entry for a Skill that said outright it did not exist.
+description: Three finds where the Platform's own record held something that was not so — an entry on the list of recommended skills for a skill that was never there, a page recommended, delivered as a plan, and killed in one word, and a stand-in entry for a skill that said outright it did not exist.
 ---
 
 All three finds here are entries in the Platform's own record that were, in

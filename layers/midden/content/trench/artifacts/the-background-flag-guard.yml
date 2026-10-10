@@ -1,4 +1,4 @@
-title: the background-flag guard
+title: the check against waiting for a helper
 stratum: current-midden
 condition: intact
 provenance:
@@ -7,10 +7,12 @@ provenance:
   path: scripts/agent-background-flag-guard.ts
   url: https://github.com/feffef/terrarium/commit/b02ca4189e9253b44168720c86ddb8a38dcebcfe
   continuityCheck: >-
-    nothing on main checks that setting any more. The two checks still running
-    that concern background work are about shell commands, not helper agents,
-    and both were there before this one. The change that removed it added no
-    written instruction in its place.
+    nothing on the project's main branch checks that setting any more. The two
+    checks still running that concern background work govern commands an agent
+    runs itself, one of them only when the agent is itself a helper; neither
+    looks at handing work to a helper. One went in before this check, the other
+    five days after it. The change that removed it added no written instruction
+    in its place.
 site: stood-down
 catalogNote: >-
   An automatic check that ran before an agent handed work to a helper agent. If
@@ -24,12 +26,12 @@ catalogNote: >-
   about 336 working sessions recorded being refused and sending the request
   again. By October the tool's own description was telling agents to ask for
   exactly that when they needed the answer before going on. An agent
-  re-checking the backlog under the owner's direction recommended removing the
-  check, and the owner merged the removal on 10 October. Afterwards an agent
-  tested the request in a fresh session. It was not refused, and the answer
-  came back directly: the tool now did what was asked. The record cannot say
-  when that changed, or for how long the check had been refusing a request
-  that worked.
+  re-checking the project's open issues at the owner's direction recommended
+  removing the check, and the owner merged the removal on 10 October.
+  Afterwards an agent tested the request in a fresh session. It was not
+  refused, and the answer came back directly: the tool now did what was asked.
+  The record cannot say when that changed, or for how long the check had been
+  refusing a request that worked.
 removedIn: b02ca4189e9253b44168720c86ddb8a38dcebcfe
 remains:
   - label: the check, at its last revision

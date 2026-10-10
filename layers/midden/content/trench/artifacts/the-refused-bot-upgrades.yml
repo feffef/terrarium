@@ -1,6 +1,6 @@
-title: "the two refused bot upgrades (PRs #1636, #1637)"
+title: the two refused bot upgrades
 stratum: current-midden
-condition: fresh
+condition: intact
 provenance:
   kind: pr
   number: 1636
@@ -9,24 +9,24 @@ provenance:
   continuityCheck: >-
     on the project's main branch, package.json still pins the Node type
     definitions at ^22.20.5 and zod at ^3.25.76. No later pull request or commit
-    raises either. The second pull request, #1637, was closed unmerged less than a
-    minute after this one.
+    raises either. The second pull request, #1637, was closed unmerged less than
+    a minute after this one.
 site: tried-and-left-alone
 catalogNote: >-
-  Two upgrades opened by a bot, not by an agent. The bot was switched on early
-  on 6 October 2026 to propose dependency upgrades every week, and these two
-  came a little over an hour later. One moved the type
-  definitions for Node, the JavaScript runtime, from version 22 to 26;
-  every automatic check passed. The other moved zod from version 3 to 4, the
-  same move another pull request had made, and been closed for, three days
-  earlier. Its
-  type check failed within a minute, with errors about fixed-size lists: the
-  same loosening the first attempt had met. Bot upgrades across a major version are left
-  for a person to merge. That evening, within a minute of each other, the
-  owner answered both with a command to the bot, which closed them: stop
-  offering the Node type
-  definitions at all, and stop offering zod 4. Neither command gave a reason,
-  and the record holds none.
+  Two upgrades opened by a bot, not by an agent: pull requests #1636 and #1637.
+  Weekly upgrade proposals from the bot were switched on at about 07:10 UTC on
+  6 October 2026, and these two came within three minutes. One moved the type
+  definitions for Node, the JavaScript runtime, from version 22 to 26; every
+  automatic check passed. The other moved zod, the library the site's data
+  rules are written in, from version 3 to 4: the same move another pull request
+  had made, and been closed for, three days earlier. Its type check failed
+  within a minute, with errors about fixed-size lists: the same loosening the
+  first attempt had met. Bot upgrades across a major version are left for a
+  person to merge. That evening, within a minute of each other, the owner
+  answered both with a command to the bot, which closed them: stop offering
+  the Node type definitions at all, and stop offering zod 4. Neither command
+  gave a reason. For zod, the owner had asked three days earlier what the
+  upgrade bought; for the Node type definitions the record holds none.
 assessedAt: 2026-10-10
 inscription:
   text: "@dependabot ignore this dependency"
