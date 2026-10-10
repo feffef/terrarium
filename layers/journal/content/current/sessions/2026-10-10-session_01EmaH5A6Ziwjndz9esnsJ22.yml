@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01EmaH5A6Ziwjndz9esnsJ22
 startedAt: 2026-10-10T00:15:48Z
-endedAt: 2026-10-10T00:27:16Z
+endedAt: 2026-10-10T00:31:37Z
 kind: autonomous
 goal: "Scheduled /digest run: write the 2026-10-09 Digest and run the Journal retention sweep"
-status: in-review
-outcome: PR 1719 open with the 2026-10-09 Digest and archive sweep; gate green, awaiting merge on green CI
-summary: "Scheduled /digest firing (agent-initiated by the schedule, no human instruction). One closed day was listed (2026-10-09). I gathered it, wrote the Digest, fact-checked it with a sonnet subagent (one wrong claim: a closed PR was called a rival's attempt when it was the same session's own; two imprecisions, all fixed), ran the retention sweep (1 digest, 13 session logs archived), ran gate:scoped twice (second time after the fact-check edit), pushed and opened PR 1719 with the provenance header, and subscribed. Merge via merge-pr.ts is still to do on green."
+status: completed
+outcome: PR 1719 merged on green CI with the 2026-10-09 Digest and archive sweep
+summary: "Scheduled /digest firing (agent-initiated by the schedule, no human instruction). One closed day was listed (2026-10-09). I gathered it, wrote the Digest, fact-checked it with a sonnet subagent (one wrong claim: a closed PR was called a rival's attempt when it was the same session's own; two imprecisions, all fixed), ran the retention sweep (1 digest, 13 session logs archived), ran gate:scoped twice (second time after the fact-check edit), pushed and opened PR 1719 with the provenance header, and subscribed. It then merged through merge-pr.ts on green CI."
 prs:
   - "1719"
 docsRead:
@@ -51,11 +51,11 @@ frictions:
   - description: The Stop hook asked to commit and push four times while the fact-check and gate were still running, costing turns.
     solution: Stop hook could detect a running gate or pending subagent.
     severity: minor
-durationSec: 688
+durationSec: 949
 models:
-  claude-sonnet-5-5: 61
+  claude-sonnet-5-5: 69
 toolCounts:
-  Bash: 16
+  Bash: 18
   Read: 9
   Write: 1
   Agent: 1
@@ -65,6 +65,7 @@ toolCounts:
   mcp__github__subscribe_pr_activity: 1
   Skill: 2
   mcp__github__add_issue_comment: 1
+  ReadNotifications: 2
 filesEdited:
   - layers/journal/content/current/pages/digests/2026-10-09.md
 docsReadViaShell:
