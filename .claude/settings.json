@@ -45,10 +45,6 @@
           },
           {
             "type": "command",
-            "command": "cd \"${CLAUDE_PROJECT_DIR:-.}\" && sh scripts/guard-wrap.sh commit-trailer-guard -- sh scripts/commit-trailer-guard.sh"
-          },
-          {
-            "type": "command",
             "command": "cd \"${CLAUDE_PROJECT_DIR:-.}\" && sh scripts/guard-wrap.sh tail-pipe-guard -- sh scripts/tail-pipe-guard.sh"
           },
           {

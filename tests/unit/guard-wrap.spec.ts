@@ -38,7 +38,7 @@ describe('scripts/guard-wrap.sh (issue #1223)', () => {
     const denyJson = '{"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"deny","permissionDecisionReason":"real deny"}}'
     // A fake "guard" that behaves like every real one: prints its own deny
     // JSON and still exits 0 (main() "Always exits 0" — the guards' own
-    // documented contract, e.g. commit-trailer-guard.ts).
+    // documented contract, e.g. workflow-edit-guard.ts).
     const { stdout, status } = runWrapper(['test-guard', '--', 'printf', '%s', denyJson])
     expect(stdout).toBe(denyJson)
     expect(status).toBe(0)

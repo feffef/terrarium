@@ -52,10 +52,9 @@ narrower rule is just another gap to remember.
   Claude-Session: <session URL>
   ```
 
-  The harness template supplies it; `.githooks/commit-msg`
-  (`scripts/provenance-footer.ts`) appends or corrects it as a backstop, and
-  `scripts/commit-trailer-guard.ts` denies a hand-typed one. The ADR-0009 log
-  commit and the MCP-API write tools build the same trailer in repo-side code.
+  `.githooks/commit-msg` (`scripts/provenance-footer.ts`) adds it, or corrects
+  a wrong one, whoever wrote it. The ADR-0009 log commit and the MCP-API write
+  tools build the same trailer in repo-side code.
 - **The guards' deny messages are the agent-facing teaching surface**, naming
   the exact marker to use; `docs/agents/guards.md` lists them. CLAUDE.md states
   the rule agents apply.

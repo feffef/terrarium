@@ -1,6 +1,4 @@
-// Shared `PreToolUse` hook plumbing (issue #1080). Four guards —
-// `commit-trailer-guard.ts`, `loop-only-tool-guard.ts`,
-// `github-provenance-guard.ts`, `workflow-edit-guard.ts` — had each
+// Shared `PreToolUse` hook plumbing (issue #1080). The guards had each
 // independently reimplemented the same ~90 lines of stdin→deny-JSON→`--dry-run`
 // →bootstrap wiring around their own pure predicate; only the predicate and the
 // deny message were genuinely per-guard. This module owns the shape they share.
@@ -149,8 +147,7 @@ export function requireToolFlag(argv: string[], usage: string): string {
 /** `--input <json>` or `--input-file <path>` → the parsed `tool_input`, `{}`
  *  when neither is given. `--input-file` exists because a DENYING `--input`
  *  cannot always survive the trip inline — the very Bash call carrying it can
- *  be what the guard being probed denies (`commit-trailer-guard.ts`,
- *  `workflow-edit-guard.ts`). Exits(1) with a message on an unreadable file or
+ *  be what the guard being probed denies (`workflow-edit-guard.ts`). Exits(1) with a message on an unreadable file or
  *  invalid JSON, rather than the bootstrap's fail-closed catch, which would
  *  print a deny control object a dry run must never emit. */
 export function resolveDryRunInput(argv: string[]): unknown {

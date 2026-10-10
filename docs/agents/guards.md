@@ -23,7 +23,6 @@ follow it and don't route around it. If it is wrong, say so on the guard's issue
 | `loop-only-tool-guard.ts` | `ScheduleWakeup` outside a `/loop` session — `stop: true` is exempt in every mode, since a cancel can only remove a pending wakeup | CLAUDE.md | #814 |
 | `skill-inline-guard.ts` | a `Skill` call naming a Skill this session's `<command-name>` block already delivered inline | the deny message | #999, #1018 |
 | `subagent-background-guard.ts` | a **dispatched subagent** backgrounding a Bash command (`run_in_background: true`, or a bare `&` anywhere in the command text, `nohup … &` included), or calling `Monitor` to wait on one. Orchestrators are untouched | `dispatch-subagents` | #694, #964, #995 |
-| `commit-trailer-guard.ts` | a `git commit` whose message hand-types the ADR-0017 trailer the harness already lands | CLAUDE.md, ADR-0017 | #921 |
 | `workflow-edit-guard.ts` | a **write** into `.github/workflows/` — an `Edit`/`Write` path there, or a write-shaped `Bash` command. Reads pass, and `.github/actions/gate/action.yml` is untouched: agents may push that one (ADR-0026) | `environment-caveats.md` (the write-refusal rule); ADR-0026 (the `action.yml` carve-out) | #897 |
 | `tail-pipe-guard.ts` | a `Bash` command piping into a trailing `tail`/`head`/`echo`/`tee` when it also backgrounds (`run_in_background: true`) or is a known long-runner (`pnpm gate`/`test`/`build`, `pnpm exec vitest`/`playwright`). An ordinary short foreground pipe is untouched | its script header | #873, #384, #812, #1329 |
 | `double-background-guard.ts` | a `Bash` call stacking `run_in_background: true` on a text-level background operator in the command (a bare `&` anywhere, `nohup … &` included) — for **any** caller, main session included (no `detectAgentContext` gate at all, unlike `subagent-background-guard.ts`) | its script header | #1208 |
@@ -38,7 +37,7 @@ follow it and don't route around it. If it is wrong, say so on the guard's issue
   has no context to be unsure about: it fails **open**, never blocking a call it
   cannot positively identify.
 - **Matcher-scoped, never `"*"`.** Matching every tool would run a `tsx` process
-  (~0.3s) on the Read/Edit/Bash hot path. The five guards matching `Bash` (or
+  (~0.3s) on the Read/Edit/Bash hot path. The four guards matching `Bash` (or
   `Edit`/`Write`) add an `sh` pre-filter, so only a payload that could possibly
   match pays that start.
 - **Pure core split from the I/O, reachable by `--dry-run`, with a unit test in
