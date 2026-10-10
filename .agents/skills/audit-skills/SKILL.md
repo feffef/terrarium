@@ -21,6 +21,11 @@ This Skill writes only Inventory `.yml` entries and GitHub issues. Changing a
 Skill's text is a judgement call, so a finding that clears step 4's bar
 becomes an issue for a human; the rest become observations (ADR-0015).
 
+Every issue or PR state you write, in any words (open, closed, merged,
+resolved, fixed), in an observation, issue, comment or session log, matches a
+live GitHub read you made this run. A prior observation, a git sweep or visible
+fix activity is not one (#1627, #1720).
+
 ## 1. Gather the scorecard
 
 ```
@@ -79,9 +84,6 @@ this:
 A subagent's report is hearsay until you have verified it (CLAUDE.md). Check
 each finding against the source it cites before you use it, and check one
 claim from every clean report too: "nothing found" is a claim like any other.
-So is a prior observation's "still open": before you state an issue is open,
-or carry that claim forward, read its live state (`issue_read`) this run. A
-code or git sweep cannot show it (#1627).
 A finding that holds up in part but not enough to act on is **unverified**: it
 goes into the Skill's `observations` (step 5), so a later run can build on it.
 
@@ -118,7 +120,6 @@ For each finding that clears that bar:
 
 - Search open issues first: the session id for a closure finding,
   `audit-skills <skill>` for a Skill finding.
-  Read the live state of any issue you cite as open (step 2).
 - **Match found**: comment with only the evidence the thread does not
   already cite. A concern that recurs across runs belongs on one thread.
 - **No match**: file one `needs-triage` issue naming the Skill (or session),
@@ -167,7 +168,8 @@ window's.
   retirement, record it as this run's session-log `ideas` entry and never act
   on it (ADR-0003).
 
-Done when every entry's grade and `role` match the evidence.
+Done when every entry's grade and `role` match the evidence, and every issue
+or PR state your observations cite matches a live read this run.
 
 ## 6. Land the Inventory PR
 
