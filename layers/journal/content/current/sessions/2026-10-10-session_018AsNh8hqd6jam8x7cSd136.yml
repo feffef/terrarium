@@ -1,0 +1,65 @@
+schemaVersion: 1
+session: session_018AsNh8hqd6jam8x7cSd136
+startedAt: 2026-10-10T13:09:18Z
+endedAt: 2026-10-10T13:18:35Z
+kind: interactive
+goal: Judge whether docsReadViaShell is reliable enough to fold into docsRead
+status: completed
+outcome: "Not yet: the mid-sized credits look right, but big lists are 20-30% false and the #1725 quote fix is untested"
+summary: "Human-instructed research question: is the shell-read list reliable enough to replace the separate docsReadViaShell field by merging it into docsRead, and what were the worst recent cases. The human chose (via clarifying questions) to judge only the post-2026-10-03 output-matching mechanism and a merge-as-is (instruction docs only). Three Sonnet Explore agents surveyed 84 logs since 10-03, frictions/issues/PRs (#1074..#1723/#1725), and raw transcripts via list_events for three suspect sessions. Finding: 1488 shell credits, 76% new to docsRead; small lists plausible, large lists (40-97 entries) mix true sed/cat reads with weak git show/diff and 2-line slices and some outright false credits (wait-what/ask-matt SKILL.md). #1725 (merged 10-10) targets quoting and persisted-output but has no soak time. Recommendation given in chat; no code changed."
+prs: []
+docsRead:
+  - path: docs/research/shell-reads-by-output-matching.md
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Ran git log to date the shell-reads change before reading docs/agents/git-conventions.md, breaking CLAUDE.md's read-first rule for git log used to draw a conclusion
+    solution: Read git-conventions.md before the first git log; impact here was nil as the log was only used to date a commit
+    severity: minor
+  - description: Skimmed CONTEXT-MAP.md with head and never read CONTEXT.md or ADR-0009 in full, breaking CLAUDE.md's session-start and ADR read-first rules
+    solution: Read both in full at session start even for research-only questions; a session-start hook printing the reminder would help
+    severity: minor
+  - description: A subagent used GitHub MCP search tools without docs/agents/github-integration.md being read first
+    solution: Mention the doc in dispatch briefs that touch GitHub, or note in CLAUDE.md that read-only search is exempt
+    severity: nit
+  - description: Raw transcripts of long sessions are ~100 events per list_events page with ~10% assistant/user, so mapping 50-70 credits to commands was infeasible
+    solution: Have log-session persist the per-doc credit table (doc -> command) in the log or a sidecar so audits don't need transcript replay
+    severity: moderate
+durationSec: 557
+models:
+  claude-opus-5-5: 39
+toolCounts:
+  Bash: 11
+  AskUserQuestion: 1
+  Agent: 3
+  Skill: 2
+docsReadViaShell:
+  - CONTEXT-MAP.md
+  - docs/adr/0009-session-logs-commit-directly-to-main.md
+  - .agents/skills/ask-matt/SKILL.md
+  - layers/atlas/CONTEXT.md
+  - layers/blog/CONTEXT.md
+  - docs/adr/0021-multi-context-domain-docs.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - .agents/skills/log-session/SKILL.md
+  - .agents/skills/close-session/SKILL.md
+subagents:
+  - type: Explore
+    task: Audit docsReadViaShell in Oct logs
+    model: sonnet
+  - type: Explore
+    task: Frictions/issues on shell-read detection
+    model: sonnet
+  - type: Explore
+    task: Peek transcripts for suspect credits
+    model: sonnet
+gitBranch: claude/epic-ptolemy-3zkr7l
+entrypoint: remote
+cliVersion: 2.1.296
+ideas:
+  - Before folding docsReadViaShell into docsRead, add a minimum distinct-line threshold (e.g. >=3 matched lines) and exclude git show/diff/log output, then re-measure on the 84 post-10-03 logs; fold only if the 40+-entry logs shrink to plausible size
+landedBy: Stop
