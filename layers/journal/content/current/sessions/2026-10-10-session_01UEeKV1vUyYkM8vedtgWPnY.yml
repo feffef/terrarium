@@ -1,14 +1,15 @@
 schemaVersion: 1
 session: session_01UEeKV1vUyYkM8vedtgWPnY
 startedAt: 2026-10-10T16:48:05Z
-endedAt: 2026-10-10T17:19:53Z
+endedAt: 2026-10-10T17:46:44Z
 kind: autonomous
 goal: "Visitor-loop run on Tinkerfund: fix what visitors agreed on, build one feature"
-status: in-review
-outcome: "Fix PR #1743 reviewed and merging; Deals copy-code feature PR not yet built"
-summary: Scheduled visitor-loop run (agent-initiated under ADR-0003's standing green-light; no human instruction this turn), focus tinkerfund. Served the production preview, sent sonnet, fable and opus visitors, tallied. Four consensus fixes landed in PR 1743 (Popular sort and Backers also backed put Live and Upcoming first, clearer demo-banner link text, a note on the seeded Pledge). Deadline drift was dropped under decisions.md; mobile table dropped as two different defects. code-review caught that the sample-history note would also have shown on a Pledge the visitor places in-session, which was false, so it now keys off the baked Pledges. Chosen feature, a Copy code button on Deals, is saved as a patch and not yet built; step 5 and the final log update remain open.
+status: completed
+outcome: Fix PR 1743 and Copy code feature PR 1744 both merged
+summary: Scheduled visitor-loop run (agent-initiated under ADR-0003's standing green-light; no human instruction this turn), focus tinkerfund. Served the production preview, sent sonnet, fable and opus visitors, tallied. Four consensus fixes landed in PR 1743 (Popular sort and Backers also backed put Live and Upcoming first, clearer demo-banner link text, a note on the seeded Pledge). Deadline drift was dropped under decisions.md; the mobile table as two different defects. code-review caught that the sample-history note would also have shown on a Pledge the visitor places in-session, which was false, so it now keys off the baked Pledges. The chosen feature, a Copy code button on Deals, landed in PR 1744; review forced a real accessibility fix (status region, named buttons, visible failure state) and the first gate failed on my own e2e locator. Both PRs merged on green gates. No out-of-remit findings, so no issues filed; unbuilt ideas are below.
 prs:
   - "1743"
+  - "1744"
 docsRead:
   - path: .agents/skills/visitor-loop/decisions.md
     reason: owner rulings the tally must respect (deadline drift)
@@ -30,7 +31,11 @@ docsRead:
     reason: layer conventions, first 60 lines only
   - path: layers/tinkerfund/CONTEXT.md
     reason: Tenant vocabulary, first 40 lines
+  - path: /deals.png
+    reason: (no reason given)
   - path: scripts/chromium-path.ts
+    reason: (no reason given)
+  - path: docs/agents/verifying-ui-changes.md
     reason: (no reason given)
 skillsUsed:
   - name: code-review
@@ -51,20 +56,24 @@ frictions:
   - description: The tail-pipe guard rejected a vitest command piped into tail, and a chained commit plus gate run in the background made the commit look missing for a few seconds.
     solution: Redirect to a file first; never chain commit and gate in one backgrounded line.
     severity: nit
-durationSec: 1908
+  - description: First Copy code version put aria-live on the button itself and left every button named just Copy code; the standards review caught it, and my e2e locator broke when the label changed.
+    solution: Use a separate role=status span and a per-Deal accessible name from the start; hold locators by something that survives the state change.
+    severity: minor
+durationSec: 3519
 models:
-  claude-sonnet-5-5: 116
+  claude-sonnet-5-5: 178
 toolCounts:
-  Bash: 45
-  Agent: 5
+  Bash: 73
+  Agent: 7
   ToolSearch: 2
   mcp__github__search_issues: 5
   mcp__github__issue_read: 1
   bash: 1
   Edit: 1
-  mcp__github__create_pull_request: 1
+  mcp__github__create_pull_request: 2
   Skill: 3
-  mcp__github__add_issue_comment: 1
+  mcp__github__add_issue_comment: 2
+  Read: 2
 filesEdited:
   - layers/tinkerfund/tests/unit/browse.spec.ts
 subagents:
@@ -81,6 +90,10 @@ subagents:
     task: "Review: standards axis"
   - type: general-purpose
     task: "Review: spec axis"
+  - type: general-purpose
+    task: "Review feature: standards"
+  - type: general-purpose
+    task: "Review feature: spec"
 gitBranch: claude/adoring-galileo-d1gmd5
 entrypoint: remote_trigger
 cliVersion: 2.1.296
