@@ -44,6 +44,7 @@ import {
   type NearMiss,
   type ShellCommand,
 } from './shell-reads.ts'
+import { ruleAdr } from './validate-adr-rules.ts'
 
 export { DERIVED_REASON, FOLDED_TRACE_FIELDS } from '../shared/trace-fields.ts'
 
@@ -109,6 +110,10 @@ export interface MechanicalTrace {
   /** Path-scoped `.claude/rules/` files that loaded on a file touch or a Skill
    *  run, in load order — the rules that load at session start carry no signal. */
   rulesLoaded: string[]
+  /** The subset of `rulesLoaded` whose ADR the session read after the rule first
+   *  loaded: whole, by the Read tool, or in Bash output once `docIndex` is given
+   *  (the shell detector's floor, not a whole read). */
+  rulesFollowedUp: string[]
   skillsUsed: string[]
   /** The subset of `skillsUsed` seen only as a slash-command expansion — kept
    *  alongside (not instead of) the union so the stitch can annotate provenance
@@ -532,14 +537,17 @@ export function extractTrace(
   const subagents: SubagentRef[] = []
   const prSignals: string[] = []
   const rules: string[] = []
+  const ruleLoadedAt = new Map<string, number>()
+  const readAt: [string, number][] = []
 
-  for (const rec of records) {
+  for (const [i, rec] of records.entries()) {
     const ts = typeof rec.timestamp === 'string' ? Date.parse(rec.timestamp) : NaN
     if (!Number.isNaN(ts)) stamps.push(ts)
 
     const att = rec.attachment as { type?: string; path?: string; content?: unknown } | undefined
     if (att?.type === 'nested_memory' && att.path?.includes('/.claude/rules/')) rules.push(att.path)
     if (att?.type === 'hook_additional_context') rules.push(...hintedRules(att.content))
+    for (const r of rules) if (!ruleLoadedAt.has(r)) ruleLoadedAt.set(r, i)
 
     const msg = rec.message as { content?: unknown; model?: string } | undefined
     if (rec.type === 'assistant' && msg?.model) {
@@ -557,7 +565,10 @@ export function extractTrace(
       const input = b.input ?? {}
       toolCounts[name] = (toolCounts[name] ?? 0) + 1
 
-      if (name === 'Read') reads.push(input.file_path as string)
+      if (name === 'Read') {
+        reads.push(input.file_path as string)
+        if (input.offset === undefined && input.limit === undefined) readAt.push([input.file_path as string, i])
+      }
       else if (EDIT_TOOLS.has(name)) edits.push(input.file_path as string)
       else if (name === 'Skill') skills.push((input.skill ?? input.command) as string)
       else if (name === 'Agent' || name === 'Task') {
@@ -584,6 +595,13 @@ export function extractTrace(
   const ended = stamps.length ? Math.max(...stamps) : undefined
 
   const rel = relativizer(records)
+  const adrReadAfter = (rule: string, at: number): boolean => {
+    const n = ruleAdr(basename(rule))
+    if (n === undefined) return false
+    const isAdr = (p: string) => p.startsWith(`docs/adr/${n}-`)
+    if (readAt.some(([p, j]) => j > at && typeof p === 'string' && isAdr(rel(p)))) return true
+    return !!docIndex && scanShellReadsByOutput(bashCommandsOf(records.slice(at + 1)), docIndex, rel).paths.some(isAdr)
+  }
 
   return {
     session: resolveGroundTruthSessionId(meta.sessionId as string | undefined, env),
@@ -600,6 +618,7 @@ export function extractTrace(
     filesEdited: dedup(edits).filter(isContentPath).map(rel),
     docsReadViaShell: docIndex ? scanShellReadsByOutput(bashCommandsOf(records), docIndex, rel).paths : [],
     rulesLoaded: dedup(rules.map(rel)),
+    rulesFollowedUp: dedup([...ruleLoadedAt].filter(([r, at]) => adrReadAfter(r, at)).map(([r]) => rel(r))),
     skillsUsed: dedup([...skills, ...commandSkills]),
     commandSkills: dedup(commandSkills),
     subagents,
@@ -679,6 +698,7 @@ export function foldSubagentTrace(
   // Folded too, but kept out of FOLDED_TRACE_FIELDS: SessionCard's explainer
   // lists those fields, and the card does not render this one.
   folded.rulesLoaded = dedup([...trace.rulesLoaded, ...subs.flatMap((s) => s.rulesLoaded)])
+  folded.rulesFollowedUp = dedup([...trace.rulesFollowedUp, ...subs.flatMap((s) => s.rulesFollowedUp)])
   return folded
 }
 
@@ -777,6 +797,7 @@ export function stitch(authored: AuthoredScratch, trace: MechanicalTrace): Recor
   if (Object.keys(trace.toolCounts).length) entry.toolCounts = trace.toolCounts
   if (trace.filesEdited.length) entry.filesEdited = trace.filesEdited
   if (trace.rulesLoaded.length) entry.rulesLoaded = trace.rulesLoaded
+  if (trace.rulesFollowedUp.length) entry.rulesFollowedUp = trace.rulesFollowedUp
   if (trace.subagents.length) entry.subagents = trace.subagents
   if (trace.gitBranch) entry.gitBranch = trace.gitBranch
   if (trace.entrypoint) entry.entrypoint = trace.entrypoint

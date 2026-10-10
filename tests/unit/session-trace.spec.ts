@@ -174,6 +174,53 @@ describe('rulesLoaded — path-scoped rules that fired', () => {
   })
 })
 
+describe('rulesFollowedUp — a rule whose ADR was read after it loaded', () => {
+  const rule = (path: string) => ({ type: 'attachment', attachment: { type: 'nested_memory', path } })
+  const read = (file_path: string) => ({ type: 'assistant', message: { content: [{ type: 'tool_use', name: 'Read', input: { file_path } }] } })
+  const bash = (id: string, command: string, output: string) => [
+    { type: 'assistant', message: { content: [{ type: 'tool_use', id, name: 'Bash', input: { command } }] } },
+    { type: 'user', message: { content: [{ type: 'tool_result', tool_use_id: id, content: output }] } },
+  ]
+  const base = parseTranscript(transcript)
+
+  it('counts a Read of the ADR after the rule, and only after', () => {
+    const trace = extractTrace([
+      ...base,
+      read('/repo/docs/adr/0012-cross-persona-pingbacks.md'),
+      rule('/repo/.claude/rules/adr-0012.md'),
+      rule('/repo/.claude/rules/adr-0004-human-merge.md'),
+      read('/repo/docs/adr/0004-objective-safety-gate.md'),
+    ], NO_ENV)
+    expect(trace.rulesLoaded).toEqual(['.claude/rules/adr-0012.md', '.claude/rules/adr-0004-human-merge.md'])
+    expect(trace.rulesFollowedUp).toEqual(['.claude/rules/adr-0004-human-merge.md'])
+  })
+
+  it('does not count a partial Read', () => {
+    const partial = { type: 'assistant', message: { content: [{ type: 'tool_use', name: 'Read', input: { file_path: '/repo/docs/adr/0012-x.md', limit: 30 } }] } }
+    expect(extractTrace([...base, rule('/repo/.claude/rules/adr-0012.md'), partial], NO_ENV).rulesFollowedUp).toEqual([])
+  })
+
+  it('counts an ADR that later Bash output showed', () => {
+    const adr = 'docs/adr/0009-session-logs.md'
+    const lines = ['The session log commits straight to main.', 'A helper script is the single enforcement point.', 'Every landing records its hook registration.']
+    const index = buildDocLineIndex([{ path: adr, text: lines.join('\n') }])
+    const records = [...base, rule('/repo/.claude/rules/adr-0009.md'), ...bash('b1', `cat ${adr}`, lines.join('\n'))]
+    expect(extractTrace(records, NO_ENV, index).rulesFollowedUp).toEqual(['.claude/rules/adr-0009.md'])
+    expect(extractTrace(records, NO_ENV).rulesFollowedUp).toEqual([])
+  })
+
+  it('folds in a subagent, and is written by the stitch and accepted by the schema', () => {
+    const trace = extractTrace(base, NO_ENV)
+    const sub = [...parseTranscript(subagentTranscript), rule('/repo/.claude/rules/adr-0012.md'), read('/repo/docs/adr/0012-x.md')]
+    const folded = foldSubagentTrace(trace, [sub], NO_ENV)
+    expect(folded.rulesFollowedUp).toEqual(['.claude/rules/adr-0012.md'])
+    const authored: AuthoredScratch = { session: 'session_01RF', goal: 'g', status: 'completed', outcome: 'o', summary: 's', frictions: [] }
+    const entry = stitch(authored, folded)
+    expect(entry.rulesFollowedUp).toEqual(['.claude/rules/adr-0012.md'])
+    expect(validateEntry(entry).ok).toBe(true)
+  })
+})
+
 describe('subagentTranscriptPaths()', () => {
   it('finds the harness\'s sibling subagents/ directory, sorted, .jsonl only', () => {
     const dir = mkdtempSync(join(tmpdir(), 'trace-'))
