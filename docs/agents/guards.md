@@ -51,7 +51,8 @@ follow it and don't route around it. If it is wrong, say so on the guard's issue
   interactive permission prompt with no human present to grant it during a
   scheduled run — a routine that finds a guard-touching fix files the issue
   with the recommended fix and stops there; a human-attended session
-  implements it.
+  implements it. This limits who implements, not how triage routes: a guard
+  issue whose design is settled is `ready-for-agent` like any other.
 - **A unit test must assert the underlying property, not hand-picked substring
   fixtures.** A regex on a negated character class can match across newlines, so
   a verb on one line denied an unrelated action on the next; 26 passing tests
