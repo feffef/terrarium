@@ -72,3 +72,23 @@ observations:
       were both self-caught and owner-corrected in-session, not silent, and
       predate the SKILL.md rules they exposed. No revert of any triage
       decision found in the 2-week git-log sweep. Grade/role unchanged.
+  - date: "2026-10-10"
+    note: >-
+      Re-verified (audit-skills behaviour check), all 4 usedIn sessions,
+      each graded against the SKILL.md text in effect when it started
+      (confirmed no change mid-window beyond the already-noted
+      10f247fa/dc3f2e22/d5a6a2a1 same-day attend/unattended add+revert).
+      Issue #1675 re-confirmed OPEN via live `issue_read`; its only comment
+      is this run's own `/auto-triage` re-escalation with a genuine
+      judgment-call rationale — the gap is still unresolved but actively
+      tracked, not dropped further. New, minor, not escalated:
+      session_01AuUp8RpGpxhyoa3yctctHN's processing of #1675 at all looks
+      like it brushes against SKILL.md's own idempotency rule ("skip a
+      ticket whose most recent activity is already AI's own") — #1675's
+      body already carries an ADR-0017 marker, so a literal read would have
+      skipped it; the rule's wording doesn't clearly address an issue
+      self-filed by a different Skill's own process. Worth a line in
+      auto-triage's eligibility section if a human agrees. Spot-checked the
+      newest session's PR claims directly (#1713/#1717 both open/unmerged,
+      correctly flagged human-only-merge, matching the log). Grade/role
+      unchanged.

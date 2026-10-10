@@ -304,3 +304,35 @@ observations:
       on disk, uninventoried, and has zero uses to date (allTimeUses: 0) —
       not added per this Skill's own "used but not inventoried" rule.
       Grade/role unchanged.
+  - date: "2026-10-10"
+    note: >-
+      Self-check: dispatched 11 behaviour-check subagents this run (one per
+      behaviourChecks entry), each report independently verified against
+      primary sources before use (every PR/issue claim checked live via
+      GitHub). Two new silent failures found and escalated as fresh issues
+      (neither had a standing open-issue home to comment on instead): #1720
+      — this Skill's OWN 2026-10-09 entry wrongly claimed issues #1676/#1684
+      were closed; both verified OPEN right now via `issue_read`,
+      independently confirmed three times over (this run's own subagent,
+      this session directly, and a separate frictions-to-fixes subagent) —
+      the third recurrence of #1627's exact failure class, despite #1627's
+      own fix (PR #1661) already landing before the 2026-10-09 run. #1721 —
+      visitor-loop's owner-memory step on PR #1691 batch-dismissed 10
+      owner-correction candidates without individually naming the real
+      rework PR #1667→PR #1672 made 37 minutes apart ("All of that was
+      human-instructed," per #1672's own log); `decisions.md` has no line
+      for it — the same failure shape #1515 was fixed to end, recurring 3
+      days after #1515 closed. One comment with new evidence added to the
+      open #1586 thread (two more sessions,
+      session_015LBxMJwGsviZMj4ScFXD38 and session_01HgJSvxTfhCwRcTZEhFspLX,
+      show the skillsUsed-logging gap also recurs for parallel read-only
+      dispatch, not just git-touching work). The rest — audit-docs (one
+      minor transcription correction, see its own entry), auto-triage,
+      blog-post, close-session, digest, frictions-to-fixes, log-session,
+      prune-trial — came back clean or matched an already-tracked issue
+      (#1675, #1677, #1586, all independently re-confirmed via live GitHub
+      state rather than inherited from the brief). Step 3 closure
+      completeness: orphan scan clean (`scanned: true`), both orphan
+      candidates carry `resolvedBy` (already tracked, left alone),
+      orphanSuppressionLog both entries plausible, humanPromptedClosures and
+      manuallyRescuedClosures both empty. Grade/role unchanged.

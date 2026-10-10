@@ -233,3 +233,22 @@ observations:
       to re-examine it even though its literal damage check has now fired
       three times; worth a look if a fourth, genuinely-unexplained instance
       turns up. Grade unchanged.
+  - date: "2026-10-10"
+    note: >-
+      Re-checked (audit-skills behaviour check). Issue #1677 re-confirmed
+      CLOSED via live `issue_read` — closed by the human owner, who
+      rejected the audit-filed fix's framing with a correct structural
+      argument, and the real fix (a one-hour grace on the floor, commit
+      `920f20f8`/PR #1683) independently re-run live
+      (`prune-trial-window.ts`): all 4 currently-open trials correctly read
+      "not yet judgeable," no 6th narrow-margin instance since. The
+      2026-10-09 entry's session-id-recovery damage-condition claim
+      independently re-verified: all three cited commits trace to genuine,
+      independently-logged sessions whose commits landed on a different
+      session's branch via dispatch/worktree branch-sharing — not the
+      pruned behavior recurring. One new note: all three firings were
+      logged `blocker` severity by the sessions themselves (not minor, as
+      the prior entry's tone implied), and no open issue tracks the
+      dispatch/worktree branch-sharing collision as its own problem — the
+      "not escalated" call is defensible given the root-cause analysis, but
+      worth a dedicated issue if a 4th instance appears. Grade unchanged.

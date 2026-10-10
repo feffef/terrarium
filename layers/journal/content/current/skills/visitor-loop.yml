@@ -229,3 +229,27 @@ observations:
       from) remains unanswered — no owner-directed revert has landed since
       #1619/#1624 to exercise it; not a new finding, just still open. Grade
       unchanged.
+  - date: "2026-10-10"
+    note: >-
+      NEW silent failure, escalated as issue #1721 (audit-skills behaviour
+      check): the next visitor-loop run after PR #1667
+      (session_01StQjYSNRStTihgZimvvx2r, PR #1691) batch-dismissed its 10
+      owner-correction candidates as "all blog/digest/dependabot reworks,
+      not rulings" — but PR #1672 (37 minutes after #1667, same cluster)
+      reworked #1667's own output on direct owner instruction ("All of that
+      was human-instructed," per its committed log), and `decisions.md` has
+      no line for it. This is the same failure shape #1515 was fixed to end
+      (#1570/#1623), recurring 3 days after #1515 closed — unlike every
+      other audited run this window, which named specific candidate PR
+      numbers individually rather than dismissing by category. Correction to
+      a prior citation: commit `a0a3a816` (cited elsewhere as "the fix that
+      closed #1515") only touches `audit-skills/SKILL.md` — an unrelated
+      process fix, not a visitor-loop change; the real #1515 fixes are
+      #1570 and #1623. #1515 itself independently re-confirmed CLOSED via
+      live `issue_read`. 6 of the other 7 usedIn sessions showed a genuine,
+      evidenced owner-memory pass with specific candidate PRs named (midden
+      #1709, blog #1666, atlas #1641, homepage #1616, mobile #1599,
+      journal-onramp #1563); 1 (tinkerfund #1571) is the already-documented
+      pre-#1570 skip. Grade unchanged (routine) — reliability gap confined
+      to the owner-memory sub-step's judgment quality on category-dismissal,
+      not the core 3-model/consensus/code-review pipeline.

@@ -171,3 +171,20 @@ observations:
       (PR #1683 independently confirmed merged), not a missed invocation.
       No reverts of this Skill's content in the 2-week git-log sweep.
       Grade/role unchanged.
+  - date: "2026-10-10"
+    note: >-
+      Re-checked (audit-skills behaviour check), 10 usedIn invocations, all
+      read in full and cross-checked against live GitHub state
+      (`pull_request_read`, not the less-reliable `merged` flag): 9/10
+      `status: completed` with matching merged PRs; 1/10
+      (session_01AuUp8RpGpxhyoa3yctctHN) honestly `in-review` for 4
+      still-open PRs. Logs stayed candidly self-critical, not flattering —
+      e.g. session_01VaPP7iMRxMvKvX8KQh1qeY's 15 frictions include two
+      moderate self-criticisms matching its own PR #1708 narrative
+      verbatim. The 1 notUsedWindow session
+      (session_011p9VA5A1CWNG9xd2VrQf8N) re-confirmed an equivalent-closure
+      case: it ran close-session's substantive steps (PR subscription,
+      send_later babysitting, an honest major friction) via `log-session`
+      directly, with an independently-verified accurate final status — not
+      a missed invocation. No stale logs, no fabricated/flattering entries
+      found. Grade/role unchanged.

@@ -175,3 +175,20 @@ observations:
       Step 7 fact-check and Persona rotation both re-verified clean across
       all 10 sessions; no reverts of any published post in the 2-week
       git-log sweep. Grade/role unchanged.
+  - date: "2026-10-10"
+    note: >-
+      Re-checked (audit-skills behaviour check), 10 usedIn sessions
+      (2026-10-04 through 10-09). #1626 independently re-confirmed CLOSED
+      via `issue_read` (state_reason: completed, closed by merged PR
+      #1662); PR #1662's diff (+6/-2, only SKILL.md) matches its claimed
+      fix exactly — a real fix, not cosmetic. No 6th step-12 skip found: 3
+      freshly-scrutinized sessions' PRs (#1705/#1706, #1685/#1686, #1688)
+      each show a genuine reader-subagent dispatch with a real verdict, not
+      a self-judged "none". PR #1614's comments confirmed to carry no
+      retroactive step-12 fix (expected — #1662 only changes future runs).
+      Residual, unescalated risk: #1662's fix only requires a
+      reader-verdict comment to exist, nothing yet forces the subagent
+      dispatch itself to be real — the same class of gap #1626 named for
+      step 7's tally; watch for it, no instance occurred this window. Step
+      7 fact-check and Persona rotation both re-verified clean. Grade/role
+      unchanged.
