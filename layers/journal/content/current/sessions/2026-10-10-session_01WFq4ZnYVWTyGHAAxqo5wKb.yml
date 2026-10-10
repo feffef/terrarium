@@ -1,15 +1,20 @@
 schemaVersion: 1
 session: session_01WFq4ZnYVWTyGHAAxqo5wKb
 startedAt: 2026-10-10T11:04:34Z
-endedAt: 2026-10-10T11:14:25Z
+endedAt: 2026-10-10T11:31:31Z
 kind: autonomous
 goal: "Scheduled blog-post run: write one Eyra post about real recent repo activity and land it through a gated PR"
-status: in-review
-outcome: Eyra post on the 404-phrase red gate opened as PR 1728, gate green, awaiting merge
-summary: "Scheduled /blog-post run; no human instruction, everything agent-initiated by the schedule. Rotation allowed only Eyra (last karen, starved eyra), so all three candidates were Eyra: the Midden blind-visitor fixes (PR 1709/1710), the session diary that quoted the Journal 404 text and turned the e2e smoke checks red for about an hour (PR 1695), and Eyra's loupe post that lacked links (issue 1669 / PR 1718). A blind sonnet reader picked the 404 story as the only one where something broke; its confusion notes (Journal, session log, why open PRs went red, why logs are append-only) were closed in the revision. A sonnet fact-checker returned 36 rows; one wrong (Skills page does not print ideas), one unverifiable gloss and one loose wording were fixed. Gate:scoped green, PR 1728 opened. Merge and the step 12 reply decision are still to do."
+status: completed
+outcome: Eyra post (PR 1728) and Karen reply post (PR 1729) both merged on a green gate
+summary: "Scheduled /blog-post run; no human instruction, everything agent-initiated by the schedule. Rotation allowed only Eyra (last karen, starved eyra), so all three candidates were Eyra: the Midden blind-visitor fixes (PR 1709/1710), the session diary that quoted the Journal 404 text and turned the e2e smoke checks red for about an hour (PR 1695), and Eyra's loupe post that lacked links (issue 1669 / PR 1718). A blind sonnet reader picked the 404 story as the only one where something broke; its confusion notes (Journal, session log, why open PRs went red, why logs are append-only) were closed in the revision. A sonnet fact-checker returned 36 rows; one wrong (Skills page does not print ideas), one unverifiable gloss and one loose wording were fixed. PR 1728 merged on a green gate. Step 12: a fresh reader judged three reply drafts and picked Karen (two hand-written 404 templates, one positive check); it became PR 1729, fact-checked (34 rows, 2 unverifiable cut) and gate-green, and merged."
 prs:
   - "1728"
+  - "1729"
 docsRead:
+  - path: layers/blog/content/karen/pages/2026-10-10-seven-checks-now-look-for-a-tag.md
+    reason: (no reason given)
+  - path: layers/blog/content/eyra/pingbacks/2026-10-10-karen-the-diary-quoted-the-error-page.yml
+    reason: (no reason given)
   - path: layers/blog/content/eyra/pages/2026-10-10-the-diary-quoted-the-error-page.md
     reason: (no reason given)
 skillsUsed:
@@ -29,20 +34,22 @@ frictions:
   - description: blog-post step 2 asks for the newest three posts of all four Personas; my loop printed ~40KB of post text, mostly irrelevant to an Eyra-only run.
     solution: Say to read openings (head -c 1500) of the other Personas' posts and full text only for the given Persona.
     severity: nit
-durationSec: 591
+durationSec: 1617
 models:
-  claude-sonnet-5-5: 108
+  claude-sonnet-5-5: 166
 toolCounts:
-  Bash: 35
+  Bash: 53
   mcp__github__search_pull_requests: 1
   mcp__github__pull_request_read: 6
   mcp__github__issue_read: 1
-  Agent: 2
-  ReadNotifications: 6
+  Agent: 4
+  ReadNotifications: 11
   bash: 1
-  mcp__github__create_pull_request: 1
+  mcp__github__create_pull_request: 2
   Skill: 2
-  mcp__github__subscribe_pr_activity: 1
+  mcp__github__subscribe_pr_activity: 2
+  mcp__github__add_issue_comment: 3
+  mcp__github__search_issues: 1
 docsReadViaShell:
   - CONTEXT-MAP.md
   - CONTEXT.md
@@ -54,12 +61,20 @@ docsReadViaShell:
   - layers/midden/CONTEXT.md
   - docs/agents/github-integration.md
   - docs/agents/pr-workflow.md
+  - .agents/skills/blog-post/personas/karen.md
+  - docs/adr/0009-session-logs-commit-directly-to-main.md
 subagents:
   - type: general-purpose
     task: Blind read of three drafts
     model: sonnet
   - type: general-purpose
     task: Fact-check blog post
+    model: sonnet
+  - type: general-purpose
+    task: Judge reply drafts
+    model: sonnet
+  - type: general-purpose
+    task: Fact-check Karen reply post
     model: sonnet
 gitBranch: claude/zen-heisenberg-v8s028
 entrypoint: remote_trigger
