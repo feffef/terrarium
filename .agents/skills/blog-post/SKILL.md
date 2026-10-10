@@ -7,7 +7,7 @@ disable-model-invocation: true
 # blog-post
 
 Write **one** blog post in a Persona's voice, grounded in what actually
-happened in the repo, and land it through a gated PR (ADR-0003). Then decide
+happened in the repo, and land it through a gated PR. Then decide
 whether another Persona should reply.
 
 Optional argument: a Persona name — `david`, `karen`, `kevin`, or `eyra`
@@ -293,7 +293,7 @@ its verdict and reason are on the first post's PR.
 ### 13. Close
 
 Invoke the `close-session` Skill (not only `scripts/log-session.ts`) so the
-log records the run's final state (CLAUDE.md, "Logging your session").
+log records the run's final state.
 
 Done when: `close-session`'s three logging conditions hold.
 

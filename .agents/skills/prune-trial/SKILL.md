@@ -149,8 +149,8 @@ escalate that.
 ## Bounds
 
 Everything the Platform tells its agents is in scope: CLAUDE.md, CONTEXT.md,
-`docs/`, our own Skills including the scheduled ones, and the ADRs — ADR-0027
-grants that; ADR-0004's Human-only merge rule otherwise stands. You may
+`docs/`, our own Skills including the scheduled ones, and the ADRs; ADR-0004's
+Human-only merge rule otherwise stands. You may
 rewrite an ADR whole, Decision and Consequences included, as long as **what it
 decided does not change**: fold its amendments into the text and retell its
 history wherever that reads clearer. Skip

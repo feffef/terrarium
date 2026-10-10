@@ -128,7 +128,7 @@ For each finding that clears that bar:
 - **Human-nudged closures** go on one standing thread per trend, never one
   issue per session.
 
-Pack Skills get no issues. Their `SKILL.md` is not ours (ADR-0015), so their
+Pack Skills get no issues. Their `SKILL.md` is not ours, so their
 only lever is the Inventory entry.
 
 Done when every finding is either an issue (filed or commented on) or headed
@@ -166,7 +166,7 @@ window's.
   gone from disk, unless it is a built-in CLI Skill, which you flag instead.
 - **Ideas**: when the evidence suggests a new Skill, a split or a
   retirement, record it as this run's session-log `ideas` entry and never act
-  on it (ADR-0003).
+  on it.
 
 Done when every entry's grade and `role` match the evidence, and every issue
 or PR state your observations cite matches a live read this run.
@@ -179,5 +179,5 @@ diff touches only `layers/journal/content/current/skills/*.yml`, every grade
 change cites its ≥2 sessions, and every removed observation is past 40 days.
 Anything else in the diff means you leave the PR open for a human.
 
-Log the session per CLAUDE.md's "Logging your session", with the step 3
+Log the session, with the step 3
 results (`orphanScan` included) in its summary.

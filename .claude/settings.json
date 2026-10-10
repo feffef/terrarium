@@ -90,6 +90,15 @@
             "command": "cd \"${CLAUDE_PROJECT_DIR:-.}\" && sh scripts/stale-info-hint.sh || true"
           }
         ]
+      },
+      {
+        "matcher": "Skill",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cd \"${CLAUDE_PROJECT_DIR:-.}\" && pnpm exec tsx scripts/skill-rules-hint.ts || true"
+          }
+        ]
       }
     ],
     "PostToolUseFailure": [
@@ -145,6 +154,16 @@
           {
             "type": "command",
             "command": "cd \"${CLAUDE_PROJECT_DIR:-.}\" && pnpm exec tsx scripts/log-session.ts --land"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cd \"${CLAUDE_PROJECT_DIR:-.}\" && pnpm exec tsx scripts/skill-rules-hint.ts || true"
           }
         ]
       }

@@ -2,8 +2,8 @@
 // `/loop` session, and two doc-only fixes (#241, #425) failed to stop plain
 // scheduled and interactive sessions reaching for it anyway. Both wrote the
 // rule into `docs/agents/github-integration.md`, which none of the affected
-// sessions had reason to open. This guard, plus CLAUDE.md now carrying the
-// rule in its own right, is the owner's chosen two-layer fix.
+// sessions had reason to open. This guard is the fix, and its deny message is
+// the rule's only home.
 //
 // Why a call outside `/loop` is not inert: a fired wakeup delivers a spurious
 // turn that can re-run the session's whole prompt. Two of the recorded misuses

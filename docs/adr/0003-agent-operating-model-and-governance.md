@@ -91,6 +91,17 @@ never auto-merged and falls back to ADR-0003's default (gated PR, human merge).
 > to stand in for a human choosing each change.
 > Anything outside the row still waits for a human.
 
+> **Amended (2026-10-10, PR #1741).** **Agents merge their own PRs; ADR-0004
+> names the exceptions.** At the owner's direction, the Decision's "Merge is
+> always gated. No self-merge" default is reversed. Every change still lands as
+> a gated PR, and the authoring session merges it once the gate is green, by
+> posting its verdict and running `scripts/merge-pr.ts`. A human merges only the
+> exceptions ADR-0004's 2026-10-10 amendment names, and `merge-pr.ts` refuses
+> the path-based ones itself, so the boundary holds mechanically rather than in
+> prose. The ledger table above now bounds *what* each chartered job may change;
+> it no longer grants a merge right that ordinary work lacks. The net-new
+> green-light rule is unchanged.
+
 ## Context
 
 The Platform is developed primarily by Claude Code agents, in two ways: humans

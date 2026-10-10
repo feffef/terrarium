@@ -4,6 +4,26 @@ Date: 2026-07-04
 Status: Accepted — high-risk set extended by ADR-0026; ADR prose exempted for
 Prune Trials by ADR-0027
 
+> **Amended (2026-10-10, PR #1741).** **The Human-only set is a rule's
+> `paths`, enforced at merge.** With agents merging their own PRs
+> (ADR-0003's 2026-10-10 amendment), this ADR defines only the exceptions:
+> - **Paths.** The single home of the Human-only list is the `paths` of
+>   `.claude/rules/adr-0004-human-merge.md`. That rule loads when an agent
+>   touches a listed file, and `scripts/merge-pr.ts` reads the same paths from
+>   `origin/main` and refuses to merge a PR that changes one, so a PR cannot
+>   shrink the list for itself. Besides the files listed before, it now holds
+>   what keeps a self-merge safe; the rule is the list, so it is not repeated
+>   here.
+> - **Without a path.** A PR that adds a dependency, changes behaviour no test
+>   covers, or adds logic deciding which Tenant's data a request can reach;
+>   and a Public, fork or guest-pipeline PR (ADR-0020, ADR-0023). The
+>   always-loaded ADR-0004 rule states these.
+> - **Prune Trials** still merge their ADR rewrites (ADR-0027), through
+>   `merge-pr.ts --prune-trial`, which needs the trial's ledger entry in the PR.
+>
+> This supersedes the 2026-07-19 amendment's "an ordinary work PR is always
+> human-merged".
+
 > **Amended by [ADR-0027](0027-prune-trials.md) (2026-08-23).** ADR **prose**
 > leaves the never-auto-merged set for one caller only: a `prune-trial` Prune
 > Trial, whose every edit is reversible by construction and judged by the
@@ -42,8 +62,8 @@ Prune Trials by ADR-0027
 > stale — [ADR-0013](0013-dynamic-content-config-committed-routing-map.md) and
 > [ADR-0014](0014-build-time-virtual-routing-module.md) removed it; read every
 > "generator"/"routing/isolation/CI" mention below as historical framing from
-> before that split. The current human-only surface is CLAUDE.md's Ground
-> rules — the single home; no amendment here should re-enumerate it (two later
+> before that split. The current human-only surface is the `paths` of
+> `.claude/rules/adr-0004-human-merge.md` — the single home (2026-10-10 amendment); no amendment here should re-enumerate it (two later
 > amendments tried, and both went stale the next time the list changed).
 
 > **Amended (2026-07-07).** *Where the gate's tests live, as the Platform grows.*
@@ -117,7 +137,7 @@ Prune Trials by ADR-0027
 > **Amended by [ADR-0025](0025-cross-tenant-catalog-and-collection-kinds.md)
 > (2026-07-22).** `shared/kinds.ts`, `modules/catalog.ts`, and
 > `app/composables/catalog.ts` join the human-only surface, for the reasons in
-> ADR-0025's Consequences. (CLAUDE.md's Ground rules is where the full current
+> ADR-0025's Consequences. (`.claude/rules/adr-0004-human-merge.md` is where the full current
 > list lives — see the 2026-07-10 amendment above.)
 
 > **Amended (2026-07-30, `/audit-docs`).** *What counts as "changes

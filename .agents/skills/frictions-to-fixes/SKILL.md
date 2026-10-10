@@ -116,7 +116,7 @@ if your judgement differs, but don't re-derive the ranking from scratch.)
   small code, config or doc change — touches a single file with a bounded diff, no
   redesign), **autonomous** (an agent lands it start-to-finish with no human
   decision mid-way), and **safe surface** (touches none of the human-only
-  surfaces — CLAUDE.md's Ground rules, ADR-0004; those are never dispatched
+  surfaces — the `paths` of `.claude/rules/adr-0004-human-merge.md`; those are never dispatched
   here). A fix touching a guard or `.claude/settings.json`'s hook wiring is
   never dispatched either, regardless of size — `docs/agents/guards.md`'s own
   rule, since editing it needs a human-attended session. These you review and
@@ -215,7 +215,7 @@ before pushing — not just its targeted test file(s) — so a type error surfac
 locally instead of on the next full CI gate round-trip. The impl agent **never
 merges and never enables auto-merge**
 (ADR-0003) — it hands the open PR back to you. You are the reviewer (§6). The
-impl agent also must **not call `subscribe_pr_activity`** on the PR it opens: the orchestrator (§6) owns that PR's lifecycle and subscribes when needed (CLAUDE.md's "Pushing is not landing"). A `subscribe_pr_activity` webhook reaching the orchestrating session when that PR opens is **expected, not a brief violation**; don't read it as the impl agent disobeying, and don't log it as a fresh friction (#428).
+impl agent also must **not call `subscribe_pr_activity`** on the PR it opens: the orchestrator (§6) owns that PR's lifecycle and subscribes when needed. A `subscribe_pr_activity` webhook reaching the orchestrating session when that PR opens is **expected, not a brief violation**; don't read it as the impl agent disobeying, and don't log it as a fresh friction (#428).
 **Dispatched worktree-isolated impl agents must NOT self-invoke `close-session`
 or `log-session`** — see `close-session/SKILL.md` for why and its mechanical
 enforcement.
@@ -251,7 +251,7 @@ review-agent, not a bystander waiting for a human. For each PR:
      the PR does, update the PR title/description in the same push
      (`docs/agents/pr-workflow.md` — a stale description is a defect).
    - **Escalate to a human** only when the change is **genuinely high-risk** per
-     ADR-0004 (CLAUDE.md's Ground rules — same test as the safe-surface filter in
+     ADR-0004 (its rule's Human-only list — same test as the safe-surface filter in
      §3, just applied to the actual diff instead of the issue's stated scope).
      ADR-0004's 2026-07-30 amendment gives worked examples for its vaguest axis,
      "changes untested/untestable runtime behaviour" — check the diff against
@@ -259,9 +259,9 @@ review-agent, not a bystander waiting for a human. For each PR:
      high-risk, and **alert the user**. A **hard** selection (§3) usually lands
      here — that is expected.
 
-A PR is finished only when **merged** (by you) or **escalated/abandoned**, not at push time (`CLAUDE.md`: pushing is not landing).
+A PR is finished only when **merged** (by you) or **escalated/abandoned**, not at push time (the ADR-0003 rule).
 
 Done when every dispatched PR carries a posted review comment and is merged or
 escalated/abandoned.
 
-Log the session per CLAUDE.md's "Logging your session" section.
+Log the session.

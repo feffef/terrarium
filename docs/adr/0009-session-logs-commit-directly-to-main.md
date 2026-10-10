@@ -341,7 +341,7 @@ two different things here:
    closure.** Its `description` is the closure *trigger* — a deliberately loose,
    early "am I wrapping up?" signal, looser than "work complete and coherent" so
    it trips while the agent can still act. Invoking it runs the closing sequence:
-   coherent state → gated-PR discipline (ADR-0003, in CLAUDE.md) → the session
+   coherent state → gated-PR discipline (ADR-0003) → the session
    log, which it authors **by calling `log-session`**. The existing committer then
    lands that scratch, exactly as before.
 

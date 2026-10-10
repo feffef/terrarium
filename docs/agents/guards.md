@@ -20,7 +20,7 @@ follow it and don't route around it. If it is wrong, say so on the guard's issue
 | Guard | Denies | Rule homed in | Issue |
 | --- | --- | --- | --- |
 | `deferred-tool-guard.ts` | a deferred tool called with another tool's argument shape, or `TaskCreate` called with a top-level array value — the predicate is general, but the hook is wired to fire only for a `TaskCreate` or `Monitor` call itself, so a wrongly-shaped call to any other tool name is not intercepted | the harness (no repo home; the guard holds the rule) | #612, #724 |
-| `loop-only-tool-guard.ts` | `ScheduleWakeup` outside a `/loop` session — `stop: true` is exempt in every mode, since a cancel can only remove a pending wakeup | CLAUDE.md | #814 |
+| `loop-only-tool-guard.ts` | `ScheduleWakeup` outside a `/loop` session — `stop: true` is exempt in every mode, since a cancel can only remove a pending wakeup | the deny message | #814 |
 | `skill-inline-guard.ts` | a `Skill` call naming a Skill this session's `<command-name>` block already delivered inline | the deny message | #999, #1018 |
 | `subagent-background-guard.ts` | a **dispatched subagent** backgrounding a Bash command (`run_in_background: true`, or a bare `&` anywhere in the command text, `nohup … &` included), or calling `Monitor` to wait on one. Orchestrators are untouched | `dispatch-subagents` | #694, #964, #995 |
 | `workflow-edit-guard.ts` | a **write** into `.github/workflows/` — an `Edit`/`Write` path there, or a write-shaped `Bash` command. Reads pass, and `.github/actions/gate/action.yml` is untouched: agents may push that one (ADR-0026) | `environment-caveats.md` (the write-refusal rule); ADR-0026 (the `action.yml` carve-out) | #897 |
@@ -28,9 +28,10 @@ follow it and don't route around it. If it is wrong, say so on the guard's issue
 | `double-background-guard.ts` | a `Bash` call stacking `run_in_background: true` on a text-level background operator in the command (a bare `&` anywhere, `nohup … &` included) — for **any** caller, main session included (no `detectAgentContext` gate at all, unlike `subagent-background-guard.ts`) | its script header | #1208 |
 | `github-provenance-guard.ts` | a GitHub body, or an MCP-API commit, missing this session's provenance in the shape its surface prescribes; also a title or body carrying a bare `<...>` span GitHub silently strips | ADR-0017 — the deny message is the agent-facing home | #886 |
 | `stale-info-hint.ts` | nothing: a hint, not a guard. After a `git push` rejected as "stale info" it adds the fix to the result, and it fails open | its script header | #1610 |
+| `skill-rules-hint.ts` | nothing: a hint, not a guard. When a Skill runs (Skill tool or slash command) it adds the ADR rules whose `paths` name the Skill's directory, and it fails open | its script header | PR #1741 |
 
-`.claude/settings.json` wires the guards under `hooks.PreToolUse`, and the hint
-under `PostToolUse` and `PostToolUseFailure`.
+`.claude/settings.json` wires the guards under `hooks.PreToolUse`, and the hints
+under `PostToolUse`, `PostToolUseFailure` and `UserPromptSubmit`.
 
 ## Conventions every guard follows
 

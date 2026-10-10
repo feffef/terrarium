@@ -16,7 +16,7 @@ coherent across the many sessions that will draw it: the **naturalist's voice**
 (#75) and the **engraved-plate art direction** (#74).
 
 > **Manually invoked** (`disable-model-invocation: true`). Lands through an
-> ordinary gated PR (ADR-0003) on a feature branch — never direct-to-`main`.
+> ordinary gated PR on a feature branch.
 
 Everything textual — field notes, log lines, relation notes, even empty states —
 speaks in the one naturalist's voice. Everything drawn obeys the one plate style.
