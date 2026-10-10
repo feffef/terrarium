@@ -219,7 +219,7 @@ describe('the --dry-run path (ADR-0004: an unattended hook needs a way to be exe
 
   // The guard denies its own Bash probe when `--input` carries a double-backgrounded
   // command inline — so inline JSON cannot express the input most worth probing.
-  // `--input-file` is the reachable path, mirroring commit-trailer-guard.ts's spec.
+  // `--input-file` is the reachable path.
   it('reads the input from --input-file, the only way to probe a denying input from a shell', () => {
     const dir = mkdtempSync(join(tmpdir(), 'double-background-guard-'))
     const file = join(dir, 'dryrun.json')

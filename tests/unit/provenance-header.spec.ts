@@ -27,7 +27,7 @@ describe('provenanceHeader() — the format', () => {
 
   it('round-trips through readProvenanceHeader(), yielding the id callers compare', () => {
     expect(readProvenanceHeader(provenanceHeader('Claude Opus 5', URL))).toEqual({
-      modelName: 'Claude Opus 5',
+      label: 'Claude Opus 5',
       sessionId: ID,
     })
   })

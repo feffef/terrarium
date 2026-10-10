@@ -148,8 +148,9 @@ implement. Search the tracker first to avoid duplicates.
 
 So does a **surface-blocked** candidate (§3): file it the same way, labelled
 `ready-for-human` (for a human-only file an agent may still write the fix; only
-the merge needs a human). Otherwise it ages out of the window untracked, and the
-next run rediscovers and re-drops it.
+the merge needs a human), except a guard fix: `docs/agents/guards.md` routes
+it. Otherwise it ages out of the window untracked, and the next run rediscovers
+and re-drops it.
 
 A **simple** selection is dispatched, reviewed and merged inside this same run (§5–§6), so an issue would only be closed by its own merge minutes later, leaving nothing durable. **Skip the issue.** Carry the same problem/evidence/recommended-fix into §5's dispatch brief and have the impl agent write it into the PR description; the merged PR is the record.
 

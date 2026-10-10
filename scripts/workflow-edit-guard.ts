@@ -165,8 +165,8 @@ export function main(): void {
 /** Print the decision the hook would reach, running nothing. */
 function dryRun(argv: string[]): void {
   const tool = requireToolFlag(argv, 'usage: --dry-run --tool <name> [--input <json> | --input-file <path>]')
-  // `--input-file` mirrors commit-trailer-guard's: a denying `--input` cannot
-  // always survive the trip, since this guard blocks write-shaped Bash calls.
+  // `--input-file`: a denying `--input` cannot always survive the trip, since
+  // this guard blocks write-shaped Bash calls.
   const input = resolveDryRunInput(argv)
   const finding = checkWorkflowEdit(tool, input)
   printDryRunResult({
