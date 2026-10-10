@@ -16,7 +16,7 @@ act, once per session.
   words we use (Platform, Tenant, Space, Collection, Document, Skill, …).
   Working on a Tenant? Also read `layers/<tenant>/CONTEXT.md`. Use the
   glossary's terms.
-- **Before you plan a change, and again once you know which files it touches:**
+- **Before you plan or recommend a change (an opinion asked in chat counts), and again once you know which files it touches:**
   the ADRs that bind it. List `docs/adr/` (the file names say what each
   decides) and grep it for every file path and term involved:
   `grep -l <path-or-term> docs/adr/*`. Read in full every ADR whose decision
