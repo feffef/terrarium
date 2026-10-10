@@ -64,7 +64,7 @@ is ignored at best and rejected at worst.
 ```yaml
 session: session_01H…              # this session's canonical id (see "Recovering the id")
 kind: interactive                  # interactive | delegated | autonomous — see below
-goal: Rethink session logs         # one-liner — what the session set out to do
+goal: Rethink session logs         # short headline — what the session worked on
 status: in-review                  # completed | in-review | partial | blocked | abandoned
 outcome: Mechanism built and tested # one-liner — nuance on status
 summary: >-                        # the fuller narrative — sized to the session, see below
@@ -126,7 +126,10 @@ ideas:                             # OPTIONAL — omit unless something sparked
   this being legible to a later reader, not reconstructed after the fact.
 - **Quote any scalar value containing `[`, `{`, `#`, or `,`**, the top-level `goal`/`outcome` strings as much as `path`/`reason` values. Unquoted, `[` or `{` starts a YAML flow sequence/map; `#` starts a YAML comment and truncates everything after it; `,` inside a flow map (`{ … }`) ends the current value early. Any of these silently mangles the entry instead of erroring. The `#` case (a bare `PR #354` truncating to `PR`) is caught: the `--author` step below rejects an unquoted-`#` truncation loudly and prints the value to quote.
 - `goal` and `outcome` are each a one-liner, written for a stranger (name the
-  thing, not "the issue"): they are the public dashboard's copy.
+  thing, not "the issue"): they are the public dashboard's copy. `goal` is a
+  short, plain headline of what the session worked on, in your own words, not
+  the task or Routine prompt restated: "Weekly check of the Platform's own
+  Skills", not "Run the scheduled audit-skills sweep: …".
 - **Size the `summary` to the session:** a few sentences for a single task,
   longer for a session that runs a whole workflow (e.g. building a Tenant across
   many PRs). Spend the words on what git history and PR descriptions can't tell a
