@@ -530,6 +530,11 @@ export function registerTinkerfundE2E(): void {
         expect(await workshop.getAttribute('aria-pressed')).toBe('true')
 
         await visit('/deals')
+        await page.context().grantPermissions(['clipboard-read', 'clipboard-write'])
+        const copy = page.getByRole('button', { name: 'Copy code TINKER10' })
+        await copy.click()
+        await expect.poll(() => page.getByRole('status').filter({ hasText: 'copied' }).count()).toBe(1)
+        expect(await page.evaluate(() => navigator.clipboard.readText())).toBe('TINKER10')
 
         await visit('/discover')
         const side = page.locator('.side')

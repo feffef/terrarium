@@ -1,5 +1,5 @@
 <script setup lang="ts">
-defineProps<{
+const props = defineProps<{
   promotion: {
     title: string
     description?: string
@@ -16,6 +16,20 @@ defineProps<{
   more?: string
 }>()
 const locale = useTinkerfundLocale()
+const outcome = ref<'copied' | 'failed'>()
+let reset: ReturnType<typeof setTimeout> | undefined
+async function copy() {
+  try {
+    await navigator.clipboard.writeText(props.promotion.code!)
+    outcome.value = 'copied'
+  } catch {
+    // Denied, or no clipboard on an insecure origin: say so, the code stays selectable beside the button.
+    outcome.value = 'failed'
+  }
+  clearTimeout(reset)
+  reset = setTimeout(() => { outcome.value = undefined }, 2000)
+}
+onBeforeUnmount(() => clearTimeout(reset))
 </script>
 
 <template>
@@ -34,6 +48,12 @@ const locale = useTinkerfundLocale()
       </span>
       <span v-else>No end date.</span>
     </p>
+    <template v-if="promotion.code && !more">
+      <button type="button" class="tf-btn" :aria-label="`Copy code ${promotion.code}`" @click="copy">
+        {{ outcome === 'copied' ? 'Copied' : outcome === 'failed' ? 'Copy failed' : 'Copy code' }}
+      </button>
+      <span class="tf-sr" role="status">{{ outcome === 'copied' ? `Code ${promotion.code} copied` : outcome === 'failed' ? 'Could not copy the code' : '' }}</span>
+    </template>
     <NuxtLink v-if="more" class="tf-btn" :to="more">See all Deals</NuxtLink>
   </div>
 </template>
