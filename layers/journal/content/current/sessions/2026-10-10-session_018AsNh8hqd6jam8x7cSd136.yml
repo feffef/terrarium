@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_018AsNh8hqd6jam8x7cSd136
 startedAt: 2026-10-10T13:09:18Z
-endedAt: 2026-10-10T14:13:15Z
+endedAt: 2026-10-10T14:23:28Z
 kind: interactive
 goal: Make the shell-read list trustworthy enough to merge into docsRead
-status: in-review
-outcome: "PR 1738 open: 10-line minimum, shell reads folded into docsRead, agent explains each derived doc"
-summary: "Human-instructed throughout. First a research question: is docsReadViaShell reliable enough to become the main read list? Three Sonnet explorers audited the 84 post-2026-10-03 logs, the frictions/issues (#1074 to #1723/#1725) and three raw transcripts; verdict: small lists right, 40-97 entry lists inflated by grep hits, 2-3 line slices and git show/diff output (20-30% false). The human then asked to implement and open a PR directly, choosing via questions: merge fields plus tighten, a 10-line minimum (changed mid-turn from my suggested 3), keep the old field but mark it deprecated, and their own design idea that the agent is shown the derived instruction docs and gives a reason or \"(not read)\" for each; a \"(not read)\" on a shell credit auto-files a SHELL-READ-DETECTION friction. Ran /code-review (two Sonnet axes); applied the fixes (one map per doc, shared helper, guarded re-read, near-miss wording, ADR note on per-transcript scope). Declined: pooling lines across parent and subagents, and retracting a docsRead entry on a later pass. The new author-time report was exercised on this session's own log. PR 1738 needs a human merge (schema + ADR-0009 amendment)."
+status: completed
+outcome: "PR 1738 merged: 10-line minimum, shell reads folded into docsRead, agent explains each derived doc"
+summary: "Human-instructed throughout. First a research question: is docsReadViaShell reliable enough to become the main read list? Three Sonnet explorers audited the 84 post-2026-10-03 logs, the frictions/issues (#1074 to #1723/#1725) and three raw transcripts; verdict: small lists right, 40-97 entry lists inflated by grep hits, 2-3 line slices and git show/diff output (20-30% false). The human then asked to implement and open a PR directly, choosing via questions: merge fields plus tighten, a 10-line minimum (changed mid-turn from my suggested 3), keep the old field but mark it deprecated, and their own design idea that the agent is shown the derived instruction docs and gives a reason or \"(not read)\" for each; a \"(not read)\" on a shell credit auto-files a SHELL-READ-DETECTION friction. Ran /code-review (two Sonnet axes); applied the fixes (one map per doc, shared helper, guarded re-read, near-miss wording, ADR note on per-transcript scope). Declined: pooling lines across parent and subagents, and retracting a docsRead entry on a later pass. The new author-time report was exercised on this session's own log. The human merged PR 1738 (schema + ADR-0009 amendment) the same afternoon."
 prs:
   - "1738"
 docsRead:
@@ -59,11 +59,11 @@ frictions:
   - description: Started the gate before the review fixes, so it had to be stopped and rerun; cost ~4 minutes
     solution: Start the gate only after review fixes are committed when a review is already in flight
     severity: nit
-durationSec: 3837
+durationSec: 4449
 models:
-  claude-opus-5-5: 209
+  claude-opus-5-5: 219
 toolCounts:
-  Bash: 64
+  Bash: 66
   AskUserQuestion: 3
   Agent: 5
   Skill: 4
@@ -73,9 +73,10 @@ toolCounts:
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
-  ReadNotifications: 3
+  ReadNotifications: 4
   mcp__github__pull_request_read: 2
   mcp__claude-code-remote__send_later: 1
+  mcp__claude-code-remote__delete_trigger: 1
 subagents:
   - type: Explore
     task: Audit docsReadViaShell in Oct logs
