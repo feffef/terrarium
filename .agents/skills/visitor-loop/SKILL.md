@@ -74,17 +74,18 @@ Merge the three reports into one tally in your scratchpad:
   it prints every candidate owner correction since the last `decisions.md`
   commit (human reviews of `visitor-loop` PRs, merged PRs that revert or
   rework one, human issue comments about one). Read each candidate and
-  resolve it in the tally: a rejected approach or standing preference becomes
-  one new line in `decisions.md` (committed with step 4's PR); anything else
-  is marked *not a ruling (why)*. Then drop anything [`decisions.md`](decisions.md) rules out,
+  resolve it on its own tally line that names it first (a PR by `#N` or URL, a
+  comment by its URL): a rejected approach or standing preference becomes one
+  new line in `decisions.md` (committed with step 4's PR; say "decisions.md" on
+  the tally line); anything else is marked *not a ruling (why)*. Then drop anything [`decisions.md`](decisions.md) rules out,
   anything an open or closed issue/PR already covers (search first; record
   each result in the tally — the match by number, or the query and *no match*), and
   anything already logged as an idea in the last week
   (`pnpm exec tsx scripts/ideas.ts gather --days 7`).
 
-Done when every candidate the script printed has a `decisions.md` line or a
-*not a ruling (why)* (an empty `[]` is the only "no corrections"); every
-feature idea and every *fix* or *out of remit* finding has its search result; every
+Done when `pnpm exec tsx scripts/owner-corrections.ts --check <tally-file>`
+passes; every feature idea and every *fix* or *out of remit* finding has its
+search result; every
 reported finding is in the tally, marked consensus or single; every consensus
 finding is marked *fix*, *dropped (why)*, or *out of remit*; and exactly one
 feature is chosen, with a line on why it beat the others.
