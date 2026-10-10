@@ -1,5 +1,5 @@
 title: "the branch-pin guard (PR #1159)"
-stratum: current-midden
+stratum: kiln-wasters
 condition: never-activated
 provenance:
   kind: commit

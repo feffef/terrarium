@@ -1,0 +1,48 @@
+title: "the after-the-fact session check (PR #1704)"
+stratum: current-midden
+condition: intact
+provenance:
+  kind: commit
+  hash: 226b4074ba5e13061ac0c042ac86849c5cb8a8f5
+  path: scripts/session-id-guard.ts
+  url: https://github.com/feffef/terrarium/commit/226b4074ba5e13061ac0c042ac86849c5cb8a8f5
+  continuityCheck: >-
+    nothing on main looks back over a session's changes when it ends to compare
+    their recorded session id with the real one. One helper the check used, which
+    works out the real id from the session's own transcript, was moved into
+    another file because other code still calls it; it is a helper, not the
+    check. The checks that act as each change is saved were already running
+    before this one was removed, and were not written to replace it. The rescue
+    in pull request #1704 never reached main: none of its commits did, and its
+    core function appears nowhere there.
+site: stood-down
+catalogNote: >-
+  A check that ran when an agent's working session ended. It looked over the
+  changes on the session's branch that were not yet on main, and compared the
+  session id each one recorded with the session's real id. A mismatch went into
+  the session's log as the most serious grade of problem. It went in on 18 July
+  2026, because a written rule against recalling ids from memory had failed
+  at least four times, and once a wrong id had reached main. In 83 days it
+  recorded three findings, and all three were wrong. The first, on 4 October,
+  came from a branch the session had inherited, and was fixed the next day by
+  skipping changes made before the session began. The other two, on 8 October,
+  came from two sessions that shared one working copy with a third: the third
+  session's correct changes appeared on their branch, and they were blamed for
+  them. A pull request on 9 October tried to decide which changes a session
+  had made by reading its transcript. It passed every automatic check four
+  times, but after two rounds of review the matching was still too loose in
+  some cases and too strict in others. The person directing the work then asked
+  whether the whole thing was too complicated. Counting the findings showed
+  that all three were false, and that the checks run as each change is saved
+  already covered the failure, so on that person's instruction the pull
+  request was closed and the check removed the same afternoon.
+removedIn: 226b4074ba5e13061ac0c042ac86849c5cb8a8f5
+remains:
+  - label: the check, at its last revision
+    url: https://github.com/feffef/terrarium/blob/15c1cb5a9d774023d4743f7e0f3a642e3bd937e5/scripts/session-id-guard.ts
+  - label: the transcript-reading rescue, as the closed pull request left it
+    url: https://github.com/feffef/terrarium/blob/6f4ba0c2663fb68d70d0fc3444598fe808d9cef3/scripts/session-id-guard.ts
+assessedAt: 2026-10-10
+inscription:
+  text: "Two review rounds showed the transcript and shell-command parsing can't be made right: it was too loose in some shell shapes and too strict in others."
+  source: "the closing comment on PR #1704"

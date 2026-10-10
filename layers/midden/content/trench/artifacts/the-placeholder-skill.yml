@@ -1,0 +1,35 @@
+title: the `scaffold-tenant` entry
+stratum: current-midden
+condition: intact
+provenance:
+  kind: file
+  path: layers/journal/content/archived/skills/scaffold-tenant.yml
+  continuityCheck: >-
+    the list it stood on is empty on main, and its page now shows the message
+    for an empty list. No `scaffold-tenant` skill exists in the repository's
+    skill folders or in the lock file for installed skills, and no other
+    stand-in entry was added in its place.
+site: what-the-record-claimed
+catalogNote: >-
+  An entry on the platform's list of skills, in the older half of its records,
+  for a skill that never existed, and said so in its own text. It was written
+  on 4 July 2026, the platform's first day, when the list replaced an earlier
+  one. That half then held one page and this entry, which was put there
+  to show that each half kept its own content. No test named it, either when
+  it was written or when it was removed. It came through the renaming of the part of the site it lived in,
+  a move to a new folder and a change to the shape of every entry, and stood
+  for 98 days. By October the older half held hundreds of real records, and
+  the entry was the last stand-in left among them. Readers of the older half's
+  skill list still saw it. An issue filed on 10 October, after the owner chose
+  to keep the two halves, asked for it to go; an agent removed it that day,
+  and the owner merged the change.
+removedIn: f52c4e627971d0ab0e4574eb78e3da5406ddec98
+remains:
+  - label: the entry, at its last revision
+    url: https://github.com/feffef/terrarium/blob/0eaa660130771c08b8888d197b53fb41028f726f/layers/journal/content/archived/skills/scaffold-tenant.yml
+assessedAt: 2026-10-10
+inscription:
+  text: >-
+    Illustrative retired entry, present only in the archived Space (never in
+    `current`) to show the catalogue is isolated per Space. There is no such Skill.
+  source: layers/journal/content/archived/skills/scaffold-tenant.yml, its role

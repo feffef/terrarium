@@ -1,5 +1,5 @@
 title: "the issue-search script (PR #1149)"
-stratum: current-midden
+stratum: kiln-wasters
 condition: never-activated
 provenance:
   kind: commit
