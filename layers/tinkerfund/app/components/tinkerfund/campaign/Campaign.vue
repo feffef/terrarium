@@ -74,6 +74,7 @@ const backing = computed<TinkerfundBacking>(() => ({ slug: slug.value, state: st
         :deals="deals"
         :clock="clock"
         :pledge-ref="pledge?.ref"
+        :sample="baked.some((b) => b.ref === pledge?.ref)"
       />
       <TinkerfundCampaignRecentBackers
         v-if="status.state === 'live' && (c.recent || pledge)"

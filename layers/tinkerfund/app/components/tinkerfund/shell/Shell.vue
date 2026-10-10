@@ -14,7 +14,7 @@ useHead({
         <span aria-hidden="true">·</span>
         <TinkerfundShellResetDemo />
         <span aria-hidden="true">·</span>
-        <NuxtLink to="/" class="tf-link">Part of the Terrarium ↗</NuxtLink>
+        <NuxtLink to="/" class="tf-link">More sites in the Terrarium ↗</NuxtLink>
       </div>
     </div>
     <!-- A page with its own header is a focused flow: no footer either (#1367). -->
