@@ -797,11 +797,12 @@ export function authorMain(
   writeScratch(result.data, scratchAbs)
   console.log(`✓ authored scratch written → ${SCRATCH_FILE}`)
   console.log('  the Stop hook will stitch it with the derived trace and commit, live, at the end of this turn.')
-  // The merged scratch, so an earlier pass's answers count; unreadable degrades to this pass.
   let merged: AuthoredScratch = result.data
   try {
     merged = JSON.parse(readFileSync(scratchAbs, 'utf8')) as AuthoredScratch
-  } catch {}
+  } catch {
+    // Unreadable: this pass's answers alone; the merged scratch would add the earlier pass's.
+  }
   reportUnexplainedReads(cwd, merged)
 }
 
