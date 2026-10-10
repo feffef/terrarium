@@ -8,7 +8,6 @@
 // `v-model:highlight`, so hovering/focusing a phase band there lights up the
 // matching row here, and vice versa. Unused (both undefined) elsewhere: no
 // behavior change for any other caller.
-import type { SpecimenView } from '../../utils/atlas'
 
 const props = defineProps<{ specimens: SpecimenView[]; biome: string; highlight?: string | null }>()
 const emit = defineEmits<{ 'update:highlight': [slug: string | null] }>()

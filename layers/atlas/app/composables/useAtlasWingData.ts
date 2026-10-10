@@ -16,7 +16,6 @@
 // duplicates. The caller passes its own `useAsyncData` key, kept per-route, so
 // payload/dedup gives one cache entry per route, not a merged one.
 import type { SpaceContext } from '~/composables/space'
-import type { Edge, SpecimenView } from '../utils/atlas'
 
 /** Load one biome's `pages`/`interactions`/`observations` and derive the shared
  *  `specimensBySlug` lookup. `key` is the caller's own `useAsyncData` key, kept

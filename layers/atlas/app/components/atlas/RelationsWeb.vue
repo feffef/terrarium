@@ -10,7 +10,6 @@
 // hovering a spoke or its strand instead lights the matching row in the
 // `AtlasRelationsList` below, via `update:highlight`, so the two views of the
 // same handful of facts read as one instrument, not two disconnected ones.
-import type { Relation, SpecimenView } from '../../utils/atlas'
 
 const props = defineProps<{
   specimen: SpecimenView

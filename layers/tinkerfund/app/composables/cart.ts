@@ -1,7 +1,4 @@
 import type { Ref } from 'vue'
-import type { TinkerfundAction, TinkerfundUntimedAction } from '../utils/backer'
-import type { TinkerfundCartRequest, TinkerfundPledgeContents, TinkerfundShop, TinkerfundStep, TinkerfundZone } from '../utils/cart'
-import type { CampaignState } from '../utils/status'
 
 /** What a Campaign's Reward, Add-on and bonus-support controls share. */
 export interface TinkerfundBacking {
