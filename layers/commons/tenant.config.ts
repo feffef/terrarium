@@ -3,7 +3,7 @@
 // issue #642). The name is on-metaphor (a building's commons) and ages past its
 // current two views: **Search** (one box over every opted-in page) and
 // **Timeline** (every timestamped piece of content, newest first). A future
-// cross-Tenant view — an activity feed, a tag index, a directory — is another
+// cross-Tenant view — a tag index, a directory — is another
 // Space here, not another Tenant.
 //
 // Declarative intent only; `content.config.ts` builds the keyed collections at

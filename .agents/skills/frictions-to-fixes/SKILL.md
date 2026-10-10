@@ -32,12 +32,7 @@ works only from that report and never re-reads the raw corpus. The subagent
 
 Its brief:
 
-- **Steer the budget at the unfixed tail.** A recurring pattern across cycles: a
-  large share of the window's frictions turn out already resolved by a later
-  in-window session or a merged fix. When a friction is visibly resolved that
-  way, screen it out fast — it's a §2 `drop` — rather than re-deriving its full
-  history; save the deep archaeology for candidates with no in-window
-  resolution. Count recurrence from the **unresolved** occurrences only.
+- **Steer the budget at the unfixed tail.** A large share of the window's frictions are usually already resolved by a later in-window session or a merged fix. Screen those out fast as a §2 `drop` instead of re-deriving their history; save the deep archaeology for candidates with no in-window resolution. Count recurrence from the **unresolved** occurrences only.
 - **Read the last 3 days of session logs** via `pnpm exec tsx scripts/session-frictions.ts`
   (`--days N` to change the window; bare `tsx` isn't on PATH). Large output goes to
   `/tmp/session-frictions-output.json` and stdout gets only a notice — read the file, or
@@ -45,11 +40,7 @@ Its brief:
   sample** — read every session in it, don't chase frictions from older,
   likely-gone sessions. Each record's `id`/`file` point back to the full log —
   re-read it directly when a candidate needs more context than the triage
-  extract carries. **External sessions are already excluded** — the survey script
-  drops any log flagged `external: true` (an external harness/toolchain, e.g. fork
-  PR #631's Hermes/Grok run) because its frictions don't generalize to our
-  Claude-Code development (ADR-0009 amendment); you never see them here, so don't
-  go hunting the raw corpus for them.
+extract carries. **External sessions are already excluded:** the survey script drops any log flagged `external: true` (an external harness/toolchain, e.g. fork PR #631's Hermes/Grok run), since its frictions don't generalize to our Claude-Code development (ADR-0009 amendment). Don't hunt the raw corpus for them.
 - **For a friction a doc already covers, check whether that session read the
   doc.** Each triage record carries `docsRead` (Read-tool opens plus any the
   author listed). A `cat`/`grep` read shows only in the full log's
@@ -59,32 +50,9 @@ Its brief:
   *discoverability* failure — the rule's home is wrong, or prose is the wrong
   mechanism entirely; **doc opened and the friction happened anyway** ⇒ the
   prose itself is unclear, wrong, or too easy to read past. Report which, with
-  the paths as evidence. **"Opened" can mean a subagent opened it** — subagent
-  reads are folded into the parent's list (`session-trace.ts`'s
-  `foldSubagentTrace`), so on a session that delegated, check the `subagents`
-  field before reading a hit as "the agent that hit this friction had the rule
-  in front of it". A doc only a subagent opened is closer to *not opened* for
-  this purpose. This repo has paid for the distinction repeatedly: the
-  fixes for #241/#425 landed in `docs/agents/github-integration.md`, which the
-  affected sessions had no reason to open, and the friction kept recurring
-  until a `PreToolUse` guard replaced the prose.
-- **For a friction alleging a detector/tool/mechanism bug, check the
-  `subagents` field and read the relevant mechanism source before trusting
-  the friction's own root-cause guess.** A friction's self-diagnosis (logged
-  in the moment, without source access) is not itself evidence — e.g.
-  "detector over-credits reads" can be `foldSubagentTrace` correctly unioning
-  a dispatched subagent's reads rather than a real detector gap. Verify
-  against source before ranking it as a candidate.
-- **Group and rank.** Fold related/recurring frictions (shared root cause or single
-  fix) into one candidate; rank by **recurrence and severity together** (severity
-  is an ordered rank, not a number — weigh it qualitatively, never multiply it).
-  **Prioritize
-  `moderate`, `major`, and `blocker` frictions** — these earn a fix on severity
-  alone, even logged once. **But a low-severity friction is not automatically
-  dropped:** a `nit` or `minor` that **recurs across sessions _and_ is easy to
-  fix** should still be addressed — cheap, repeated papercuts add up and are worth
-  retiring. What gets dropped is the lone, low-severity one-off (a single `nit`
-  with a non-trivial fix), not every `nit`.
+the paths as evidence. **"Opened" can mean a subagent opened it:** subagent reads are folded into the parent's list (`session-trace.ts`'s `foldSubagentTrace`), so on a session that delegated, check the `subagents` field before concluding the agent that hit the friction had the rule in front of it. A doc only a subagent opened is closer to *not opened*. This repo has paid for the distinction repeatedly: the fixes for #241/#425 landed in `docs/agents/github-integration.md`, which the affected sessions had no reason to open, and the friction kept recurring until a `PreToolUse` guard replaced the prose.
+- **For a friction alleging a detector/tool/mechanism bug, check the `subagents` field and read the relevant mechanism source before trusting the friction's own root-cause guess.** A self-diagnosis logged in the moment, without source access, is not evidence: e.g. "detector over-credits reads" can be `foldSubagentTrace` correctly unioning a dispatched subagent's reads, not a real detector gap. Verify against source before ranking it.
+- **Group and rank.** Fold related/recurring frictions (shared root cause or single fix) into one candidate; rank by **recurrence and severity together** (severity is an ordered rank, not a number: weigh it qualitatively, never multiply it). **Prioritize `moderate`, `major`, and `blocker` frictions**: these earn a fix on severity alone, even logged once. **A low-severity friction is not automatically dropped:** a `nit` or `minor` that **recurs across sessions _and_ is easy to fix** is still worth retiring, since cheap repeated papercuts add up. What gets dropped is the lone low-severity one-off (a single `nit` with a non-trivial fix), not every `nit`.
 - **Screen against the tracker** — apply the §2 rules to every candidate.
 - **Last, check the window's own `frictions-to-fixes` runs.** The records with
   `trigger: frictions-to-fixes` carry a `summary`, `outcome` and `prs` saying what
@@ -99,59 +67,25 @@ Its brief:
   `docs/agents/github-integration.md` owns name resolution and the
   `list_*`/`search_*` overflow guidance.
 
-**The subagent also reports its own frictions.** Whatever it hits while running the
-survey — an MCP disconnect, a tool that only resolved under its full id, an
-oversized result it had to slice — it records and **returns alongside** the
-screened list, so this run's own frictions feed the next cycle (they belong in this
-session's log too, §6). Don't let the survey's frictions evaporate just because it
-ran in a subagent.
+**The subagent also reports its own frictions.** Whatever it hits while running the survey — an MCP disconnect, a tool that only resolved under its full id, an oversized result it had to slice — it records and **returns alongside** the screened list, so this run's own frictions feed the next cycle (they belong in this session's log too, §6).
 
 Done when the subagent returns a structured report: **(a) ranked actionable
 candidates** — each with title, severity, recurrence (N of the window's sessions), sessions, tracker
 classification (never-fixed / open-already #N / regression of #N), fix type
 (doc/code/config), surface-blocked flag (fails §3's safe-surface test: human-only,
 guard or hook wiring), difficulty (simple/hard), a one-line
-recommended fix, and evidence quotes; **(b) a dropped list** with one-line reasons
-(an on-trial one quotes its territory match, §2);
+recommended fix, and evidence quotes; **(b) a dropped list** with one-line reasons (an on-trial one quotes its territory match, §2);
 and **(c) the subagent's own frictions** from the run.
 
 ## 2. Screen against fixes already shipped (the subagent's rules)
 
-Never re-fix what is already fixed. **First, drop what isn't ours to change:** a
-candidate whose only fix edits an **external pack Skill's `SKILL.md`** is off
-limits (ADR-0015; the gate rejects it). A repo-specific fit-note belongs in that
-Skill's Inventory entry: `audit-skills`' job, not a friction fix.
+Never re-fix what is already fixed. **First, drop what isn't ours to change:** a candidate whose only fix edits an **external pack Skill's `SKILL.md`** is off limits (ADR-0015; the gate rejects it). A repo-specific fit-note belongs in that Skill's Inventory entry: `audit-skills`' job, not a friction fix.
 **Next, drop what is on trial:** a candidate whose fix would restore prose inside
 an open **Prune Trial**'s territory (`.agents/prune-trials.yml`) is not yours to
 retire — that friction *is* the trial's evidence, and re-legislating it destroys
-the verdict `prune-trial` is waiting for (ADR-0027). The drop reason quotes the
-matching `territory` path or keyword verbatim; with no quotable match the
-candidate is not on trial, so classify it below.
-A `blocker` is the exception: after the usual tracker search, file it, naming
-the trial. Then, for the rest: the §1 subagent applies these rules to every
-candidate, checking the tracker for an issue or PR that already covers it — and
-confirming against **`main`** where cheap (a "solution" isn't ripe if main already
-has it). `pnpm exec tsx scripts/merged-since.ts <friction session's startedAt>` lists every
-`origin/main` commit landed after that instant (UTC-normalized, newest-first,
-`isMerge`-flagged; add `--merges-only` for PR merges alone, else a window's output can overflow a subagent) — scan it for the fixing commit/PR to turn the
-already-fixed/regression join into a direct comparison instead of manual
-git-timestamp archaeology. (Redirect stdout and stderr separately when
-capturing its output — it writes diagnostics to stderr and its JSON result to
-stdout only; combining them breaks JSON parsing.) **Before landing on "Never fixed," run a targeted
-keyword search of the tracker using the friction's tool name and error-message
-text as query terms** (not a paraphrase or a topic-level guess; keep the query
-itself narrow per `docs/agents/github-integration.md`'s search-scoping guidance,
-not just at the start of this task) — the available
-search tools (e.g. `mcp__github__search_issues`) do natural-language semantic
-matching, not literal substring search, so a query miss is weaker evidence than
-a literal grep miss would be, and a loosely-worded query can still miss an issue
-or PR that already covers it, wasting a dispatch on re-recommending a fix for
-something already closed. **A keyword-search miss alone is not sufficient proof
-of "never-fixed"** — before finalizing that label, do a quick nearby-issue eyeball
-(same file/script/mechanism as the candidate) for a closed issue covering the
-same root cause under different wording; a paraphrase or a nearby instance of an
-already-fixed cause is **fixed, not never-fixed** (issue #854). Classify each
-into one branch:
+the verdict `prune-trial` is waiting for (ADR-0027). The drop reason quotes the matching `territory` path or keyword verbatim; with no quotable match the candidate is not on trial, so classify it below. A
+`blocker` is the exception: after the usual tracker search, file it, naming the
+trial. Then, for the rest: the §1 subagent applies these rules to every candidate, checking the tracker for an issue or PR that already covers it, and confirming against **`main`** where cheap (a "solution" isn't ripe if main already has it). `pnpm exec tsx scripts/merged-since.ts <friction session's startedAt>` lists every `origin/main` commit landed after that instant (UTC-normalized, newest-first, `isMerge`-flagged; add `--merges-only` for PR merges alone, else a window's output can overflow a subagent). Scan it for the fixing commit/PR to turn the already-fixed/regression join into a direct comparison instead of manual git-timestamp archaeology. (Redirect stdout and stderr separately when capturing its output: it writes diagnostics to stderr and its JSON result to stdout only, and combining them breaks JSON parsing.) **Before landing on "Never fixed," run a targeted keyword search of the tracker using the friction's tool name and error-message text as query terms** (not a paraphrase or a topic-level guess; keep the query narrow here too, per `docs/agents/github-integration.md`'s search-scoping guidance, not just at the start of this task). The search tools (e.g. `mcp__github__search_issues`) match natural language semantically, not by literal substring, so a miss is weaker evidence than a literal grep miss: a loosely-worded query can miss an issue or PR that already covers it and waste a dispatch on re-recommending a fix for something already closed. **A keyword-search miss alone is not sufficient proof of "never-fixed":** before finalizing that label, eyeball nearby issues (same file/script/mechanism as the candidate) for a closed issue covering the same root cause under different wording; a paraphrase or a nearby instance of an already-fixed cause is **fixed, not never-fixed** (issue #854). Classify each into one branch:
 
 - **Never fixed** — no issue/PR addresses it, confirmed by the keyword search
   above. Carries on to step 3.
@@ -217,12 +151,7 @@ So does a **surface-blocked** candidate (§3): file it the same way, labelled
 the merge needs a human). Otherwise it ages out of the window untracked, and the
 next run rediscovers and re-drops it.
 
-A **simple** selection is dispatched, reviewed, and merged inside this same run
-(§5–§6) — filing an issue for it is pure overhead, opened only to be closed by
-its own merge minutes later with nothing durable left behind. **Skip the issue.**
-Carry the same problem/evidence/recommended-fix straight into §5's dispatch
-brief, and have the impl agent write it into the PR description instead — the
-merged PR is the record.
+A **simple** selection is dispatched, reviewed and merged inside this same run (§5–§6), so an issue would only be closed by its own merge minutes later, leaving nothing durable. **Skip the issue.** Carry the same problem/evidence/recommended-fix into §5's dispatch brief and have the impl agent write it into the PR description; the merged PR is the record.
 
 **Before recommending "add a line to doc X", check that anyone reads doc X.**
 `pnpm exec tsx scripts/audit-skills.ts` reports `docReadCounts` — path → how many
@@ -284,14 +213,7 @@ before pushing — not just its targeted test file(s) — so a type error surfac
 locally instead of on the next full CI gate round-trip. The impl agent **never
 merges and never enables auto-merge**
 (ADR-0003) — it hands the open PR back to you. You are the reviewer (§6). The
-impl agent also must **not call `subscribe_pr_activity`** on the PR it opens —
-the orchestrator (§6) owns that PR's lifecycle and subscribes if/when needed.
-A `subscribe_pr_activity` webhook landing in the orchestrating session when that
-PR opens is **expected, not a brief violation** — the orchestrator is the one
-who owns and needs that subscription for §6's review/babysitting (CLAUDE.md's
-"Pushing is not landing"). Don't read the webhook's arrival as evidence the
-impl agent disobeyed the sentence above, and don't log it as a fresh friction
-(#428).
+impl agent also must **not call `subscribe_pr_activity`** on the PR it opens: the orchestrator (§6) owns that PR's lifecycle and subscribes when needed (CLAUDE.md's "Pushing is not landing"). A `subscribe_pr_activity` webhook reaching the orchestrating session when that PR opens is **expected, not a brief violation**; don't read it as the impl agent disobeying, and don't log it as a fresh friction (#428).
 **Dispatched worktree-isolated impl agents must NOT self-invoke `close-session`
 or `log-session`** — see `close-session/SKILL.md` for why and its mechanical
 enforcement.
@@ -335,9 +257,7 @@ review-agent, not a bystander waiting for a human. For each PR:
      high-risk, and **alert the user**. A **hard** selection (§3) usually lands
      here — that is expected.
 
-Autonomy is the default; escalation is the exception, reserved for genuinely high-risk
-changes. A PR is finished only when **merged** (by you) or **escalated/abandoned** —
-not at push time (`CLAUDE.md`: pushing is not landing).
+A PR is finished only when **merged** (by you) or **escalated/abandoned**, not at push time (`CLAUDE.md`: pushing is not landing).
 
 Done when every dispatched PR carries a posted review comment and is merged or
 escalated/abandoned.

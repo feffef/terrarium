@@ -27,9 +27,9 @@ Whichever way you arrive here, a log records the session at **Session closure**
 active work **complete and in a coherent, honest state**. A log honestly
 records an in-review PR when that's the state closure was reached in.
 
-**Opening a gated PR is a closure point — log at that moment.** A session that
-committed substantive work opens its PR automatically when the work is coherent
-(CLAUDE.md / ADR-0003), and that first push is exactly when to write this log.
+**Opening a gated PR is a closure point — log at that moment.** A session opens
+its PR itself as soon as it has pushed a commit that is not a session log
+(CLAUDE.md, Ground rules; ADR-0003), and that first push is exactly when to write this log.
 Its `status` is then **`in-review`** — the PR is open but not merged — never
 `completed`, which is reserved for work that actually landed (`close-session`
 finalizes it on merge) or a session that needed no PR at all.
@@ -47,12 +47,7 @@ wording — and the next live `Stop` (or, failing that, a `SessionEnd`/resume
 fallback) lands the merged result. So if you call closure and then more work
 happens, just **invoke again**.
 
-**"Latest wording" means replace, verbatim, not append.** If you re-invoke
-mid-session with `summary: "just fixed the CI flake"` as a quick note, that
-string **becomes the entire summary** — it does not get tacked onto what you
-wrote before. Never pass a short delta/placeholder note as `summary` (or
-`goal`/`outcome`) on a re-invoke; write out the complete, current version of
-the field every time you set it, exactly as if authoring it fresh.
+**"Latest wording" means replace, verbatim, not append.** A re-invoke with `summary: "just fixed the CI flake"` makes that string the **entire summary**; it is not added to what you wrote before. Never pass a short delta or placeholder as `summary` (or `goal`/`outcome`) on a re-invoke: write the complete, current version of the field every time you set it, as if authoring it fresh.
 
 **Merging only adds — it cannot remove or reword a friction you already
 authored.** To correct one, delete `.session-logs/pending.scratch.json` first,
@@ -129,14 +124,7 @@ ideas:                             # OPTIONAL — omit unless something sparked
   agent-initiated** — don't leave that provenance to be inferred from context.
   ADR-0003's autonomy gate (net-new work needs a human green-light) depends on
   this being legible to a later reader, not reconstructed after the fact.
-- **Quote any scalar value containing `[`, `{`, `#`, or `,`** — this applies to
-  the top-level `goal`/`outcome` strings just as much as `path`/`reason` values.
-  Unquoted, `[` or `{` starts a YAML flow sequence/map; `#` starts a YAML comment
-  and truncates everything after it; `,` inside a flow map (`{ … }`) ends the
-  current value early. Any of these silently mangles the entry instead of erroring.
-  The `#` case (a bare `PR #354` truncating to `PR`) is now caught: the `--author`
-  step below rejects an unquoted-`#` truncation loudly and prints the value to
-  quote — but quote up front and you never see it.
+- **Quote any scalar value containing `[`, `{`, `#`, or `,`**, the top-level `goal`/`outcome` strings as much as `path`/`reason` values. Unquoted, `[` or `{` starts a YAML flow sequence/map; `#` starts a YAML comment and truncates everything after it; `,` inside a flow map (`{ … }`) ends the current value early. Any of these silently mangles the entry instead of erroring. The `#` case (a bare `PR #354` truncating to `PR`) is caught: the `--author` step below rejects an unquoted-`#` truncation loudly and prints the value to quote.
 - `goal` and `outcome` are each a one-liner, written for a stranger (name the
   thing, not "the issue"): they are the public dashboard's copy.
 - **Size the `summary` to the session:** a few sentences for a single task,

@@ -142,3 +142,18 @@ observations:
       other 6 sessions re-corroborated against prior observations (retention
       file counts, PR merge states). No reverts of digest content beyond the
       already-known #1478 case. Grade/role unchanged.
+  - date: "2026-10-10"
+    note: >-
+      Re-checked (audit-skills behaviour check), 7 usedIn sessions. Newest,
+      session_01EmaH5A6Ziwjndz9esnsJ22 (PR #1719, the 2026-10-09 Digest),
+      verified end-to-end: genuine fact-check subagent dispatch with a real
+      tally (17 claims, 1 fixed, 2 tightened, 1 unverifiable), retention
+      sweep moved exactly 1 digest + 13 session logs per `RETAIN_DATES = 7`
+      with no gaps/dupes, opening line stays plain prose (issue #903's
+      regression guard). Strong fresh evidence the #1478 gap stays closed:
+      the exact same error class that caused #1478 (misattributing a PR by
+      surface label rather than checking the real source) recurred in this
+      run's own draft, and this time the fact-check step caught and fixed
+      it *before* merge — not just a second clean digest, a live catch of
+      the original failure mode. `git log` sweep found no reverts of digest
+      content, only forward fixes. Grade/role unchanged.

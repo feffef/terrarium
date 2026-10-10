@@ -121,7 +121,7 @@ procedure lives in `.agents/skills/midden-catalogue/`.
 - **`layers/midden/app/utils/condition.ts`** — the single-homed
   {grade, label, definition} table the dig-report page's condition key and each
   inline find read from.
-- **`scripts/validate-content-refs.ts`** — enforces what the schema can't express (see Artifact and Dig season above): an Artifact's `site` back-reference is required only in a Space that has Sites, absent in the Sites-less `stores`; its `stratum` resolves to a real dig season; and a `removedIn` commit hash's date is corroborated against that `stratum` where history allows, a `commit`-kind `provenance` referent hash being presumed terminal for that check unless a declared `removedIn` overrides it (a referent can instead be a birth record, as with the `the-spawn-verb` Artifact's coining commit).
+- **`scripts/validate-content-refs.ts`** — enforces what the schema can't express about an Artifact's `site`, `stratum` and `removedIn` (see Artifact and Dig season above); its comments hold the rules.
 - **`layers/midden/app/components/midden/TrenchLanding.vue`** — both
   landings in one layout: at `/t/midden` (`front`) the curatorial foreword
   (verbatim in-voice copy, not this file's register), the pull-quote, and a

@@ -5,7 +5,13 @@
 import { execFileSync } from 'node:child_process'
 import { readFileSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
-import { canonicalizeInstructionPath, isInstructionDoc, scanShellReads } from '../../scripts/shell-reads.ts'
+import {
+  buildDocLineIndex,
+  canonicalizeInstructionPath,
+  isInstructionDoc,
+  scanShellReads,
+  scanShellReadsByOutput,
+} from '../../scripts/shell-reads.ts'
 
 /** Mirrors the trace's own relativizer for an absolute in-repo path. */
 const rel = (p: string): string => (p.startsWith('/repo/') ? p.slice(6) : p)
@@ -715,5 +721,28 @@ describe('no other consumer acts on the field', () => {
       .filter(Boolean)
     const referencing = tracked.filter((f) => readFileSync(f, 'utf8').includes('docsReadViaShell'))
     expect(referencing.filter((f) => !ALLOWED.has(f))).toEqual([])
+  })
+})
+
+describe('output that only quotes a doc line is not a read (issue #1723)', () => {
+  const LINE = 'Run the worktree setup before any git command in a subagent.'
+  const index = buildDocLineIndex([{ path: 'docs/agents/environment-caveats.md', text: `# Caveats\n${LINE}` }])
+  const credited = (command: string, output: string): string[] =>
+    scanShellReadsByOutput([{ command, output }], index, rel).paths
+
+  it('ignores a session-log YAML line that quotes the doc', () => {
+    const cmd = 'sed -n 70,96p layers/journal/content/current/sessions/2026-10-08-x.yml; grep -rn worktree docs/agents/foo'
+    expect(credited(cmd, `    solution: ${LINE}`)).toEqual([])
+    expect(credited('grep -rn "wait-what" layers/journal/content/current', `layers/journal/content/current/sessions/x.yml:9:  ${LINE}`)).toEqual([])
+  })
+
+  it('ignores a GitHub body that quotes the doc', () => {
+    expect(credited('gh api repos/o/r/issues/348/comments', LINE)).toEqual([])
+  })
+
+  it('still credits a quoting-surface command that names the doc as a reader target', () => {
+    expect(credited('cat docs/agents/environment-caveats.md; gh api repos/o/r/issues/1', LINE)).toEqual([
+      'docs/agents/environment-caveats.md',
+    ])
   })
 })

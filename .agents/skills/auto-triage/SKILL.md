@@ -31,17 +31,7 @@ comments yet, the issue/PR **body** — and check who wrote it:
   evaluation is still in progress — regardless of who commented last.
 - **Any other state** (`needs-info`, `ready-for-human`, even `ready-for-agent`)
   **is eligible when its most recent comment (or body) is human-authored.**
-  Every agent-authored comment in this repo carries ADR-0017 provenance — a
-  full session URL, as the provenance header today or the legacy two-line
-  footer historically (`isAiAuthored` reads both) — and its **absence** is the
-  signal, not the GitHub author/association
-  field. The latter can't be trusted here: agent-driven writes land under the
-  human owner's own connection (ADR-0017), so an AI-authored comment and the
-  owner's own comment both show `author_association: OWNER` under the same
-  login. A human comment on *any* state — a decision dropped onto a
-  `ready-for-human` ticket, a clarifying reply on `needs-info`, new
-  instructions added to an already-`ready-for-agent` ticket — is worth
-  another look, label notwithstanding.
+  Every agent-authored comment in this repo carries ADR-0017 provenance (a full session URL: the provenance header, or the legacy two-line footer; `isAiAuthored` reads both), so its **absence** is the signal. Don't use the GitHub author/association field: agent-driven writes land under the human owner's own connection (ADR-0017), so an AI-authored comment and the owner's own comment both show `author_association: OWNER` under the same login. A human comment on *any* state — a decision dropped onto a `ready-for-human` ticket, a clarifying reply on `needs-info`, new instructions added to an already-`ready-for-agent` ticket — is worth another look, label notwithstanding.
 
 Skip a ticket the moment its most recent activity is already AI's own. That's
 what keeps a short-interval loop **idempotent**: once triage (or a directed
@@ -49,12 +39,7 @@ follow-through) responds to the human's comment, the ticket goes quiet again
 until a human writes something new — it does not re-surface on the next pass
 just because its label still reads `ready-for-human`.
 
-This is a full scan — one comments/body fetch per open issue, not a
-label-filtered query — because the whole point is catching a state/comment
-combination no label can express. There's no fixed issue-count threshold for
-when to reconsider that — revisit only once a full sweep visibly costs
-noticeable wall-clock time or API budget in practice, not by pre-building
-speculative pagination or caching against a guessed number.
+This is a full scan, one comments/body fetch per open issue rather than a label-filtered query, because no label can express a state/comment combination. There is no issue-count threshold for reconsidering that: revisit only once a full sweep visibly costs noticeable wall-clock time or API budget, and don't pre-build pagination or caching against a guessed number.
 
 ## Be brave — bounded by determinability
 

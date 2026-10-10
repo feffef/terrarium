@@ -251,3 +251,20 @@ observations:
       and close-session ran log-session's job internally without the Skill
       name surfacing in `skillsUsed`, not a genuine missed invocation. No
       new silent failure. Grade unchanged.
+  - date: "2026-10-10"
+    note: >-
+      Re-checked (audit-skills behaviour check), 10 usedIn invocations plus
+      the 1 notUsedWindow session. 3 full logs read end-to-end and
+      cross-checked against live GitHub state (PR #1708, PR #1697's 11-file
+      Inventory diff, PR #1719's fact-check tally) — all accurate, no
+      fabrication, honest self-critical frictions. The 1 notUsedWindow
+      session (session_015CSc6hNccF3XgrSGaGGqjD) has a complete,
+      schema-valid, GitHub-cross-checked log; `close-session` ran
+      `log-session`'s job internally without the Skill name surfacing in
+      `skillsUsed` — independently re-confirmed as an attribution/tracking
+      gap in how `skillsUsed` is populated on transitive invocation, not a
+      missed invocation and not a defect in this Skill's own output (same
+      conclusion as the 2026-10-09 entry, now independently re-derived from
+      the raw log rather than trusted). No numeric word-cap violation
+      (confirmed still pruned, #1450's trial). No new silent failure. Grade
+      unchanged.

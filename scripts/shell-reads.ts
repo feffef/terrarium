@@ -755,6 +755,9 @@ function unwrappedCandidates(raw: string): string[] {
  *  (`x.md:12:1 MD013 …`) without showing the doc, so a column is excluded. */
 const PATH_PREFIX = /^([^:\s]+\.md)[:-]\d+[:-](?!\d+[: ])/
 
+/** GitHub bodies and Journal session logs, which routinely quote instruction docs. */
+const QUOTING_SURFACE = /\bgh\s+(?:api|issue|pr)\b|\blayers\/journal\//
+
 /** `rel` relativizes an absolute path the way the trace does, so a prefix from
  *  `grep -rn … /repo/docs/x.md` lands on the same key as `docs/x.md`. */
 export function scanShellReadsByOutput(
@@ -766,6 +769,10 @@ export function scanShellReadsByOutput(
   for (const entry of commands) {
     const { command, output } = normalizeShellCommand(entry)
     if (output === undefined) continue
+    // Output of these surfaces quotes doc lines without being the doc (issue
+    // #1723), so a bare line only counts for a doc the command itself reads.
+    const mayQuote = QUOTING_SURFACE.test(command)
+    const named = mayQuote ? new Set(scanShellReads([command], rel).paths) : undefined
     const credit = (doc: string): void => {
       if (!creditedBy.has(doc)) creditedBy.set(doc, command)
     }
@@ -777,7 +784,7 @@ export function scanShellReadsByOutput(
       }
       for (const candidate of unwrappedCandidates(raw)) {
         const doc = index.byLine.get(candidate)
-        if (doc !== undefined) credit(doc)
+        if (doc !== undefined && (named === undefined || named.has(doc))) credit(doc)
       }
     }
   }

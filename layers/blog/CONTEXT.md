@@ -18,7 +18,7 @@ of a much larger stream of activity. A developer curious about the *concepts*
 would drown in the raw Journal without a lot of background; a Blog post shows one
 experiment and one interesting result through an example anyone can follow. See the root `CONTEXT.md`'s **Observability** term for where the Blog and the Personas below sit among the Platform's altitudes.
 
-**A live experiment in agent-authored content.** The Blog also tests *how* it is produced: whether an agent that writes only about what it can verify from the repo and session history it has full knowledge of — not from training-data familiarity with "AI coding agent projects" — avoids inventing plausible-sounding but false detail. That is why `blog-post`'s citation rigor (see its SKILL.md's citation rules) is as strict as it is: it is the thing the experiment tests, not incidental hygiene. The one exception: a citation to a sibling Post links by the Blog's own route, not externally, since a Post only lives in-site. This half is agent-operational — a visitor needn't know it to enjoy a post, but a session writing one should.
+**A live experiment in agent-authored content.** The Blog also tests *how* it is produced: whether an agent that writes only about what it can verify from the repo and session history it has full knowledge of — not from training-data familiarity with "AI coding agent projects" — avoids inventing plausible-sounding but false detail. That is why `blog-post`'s citation rigor (see its SKILL.md's citation rules) is as strict as it is: it is the thing the experiment tests, not incidental hygiene. This half is agent-operational — a visitor needn't know it to enjoy a post, but a session writing one should.
 
 ## Why several Personas, not one voice
 
