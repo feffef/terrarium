@@ -1,0 +1,181 @@
+schemaVersion: 1
+session: session_017inrpS21UKrpEun2DpjLd7
+startedAt: 2026-10-11T16:48:04Z
+endedAt: 2026-10-11T17:45:05Z
+kind: autonomous
+goal: Scheduled visitor-loop run, mobile focus
+status: completed
+outcome: "Fix PR #1779 and feature PR #1780 both merged"
+summary: "Scheduled run, so every change was agent-initiated under ADR-0003's standing visitor-loop green-light; no human prompted. Served a production preview and sent three blind visitors (sonnet, fable, opus) through the site at 390px. Two consensus findings were fixed in PR #1779 and merged: the Journal \"Worst snags\" panel repeating one blocker three times, and the Commons Search and Timeline copy saying \"every site\". My first dedupe keyed on the full description and did nothing, because the three entries differed in their commit-id detail lines. I only caught it by probing the rendered DOM, and fixed it by grouping on the first line. Dropped consensus findings: Commons/Marquee footer links, the \"Enter the Journal\" CTA and the Atlas relations diagram, all ruled out by decisions.md. Feature, PR #1780 (merged): the Journal landing keeps the newest 3 of 7 digests behind \"Show all\", because two visitors found it about 7,000px tall on a phone. I wrote \"no match\" search lines into the tally before running any search, then ran the searches and corrected them. I also created a wrong branch once and switched back to the designated one before any commit. Single-visitor ideas are in ideas."
+prs:
+  - "1779"
+  - "1780"
+docsRead:
+  - path: docs/agents/pr-workflow.md
+    reason: merge recipe and chartered-run closing
+    useful: yes
+  - path: .claude/skills/visitor-loop/decisions.md
+    reason: dropped three consensus findings
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: fetch and commit hygiene
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: MCP tool surface and search traps
+    useful: yes
+  - path: docs/adr/0003-agent-operating-model-and-governance.md
+    reason: visitor-loop ledger row bounds the remit
+    useful: yes
+  - path: CONTEXT-MAP.md
+    reason: tenant contexts index
+    useful: partly
+  - path: CONTEXT.md
+    reason: "glossary: Session, Friction, Tenant"
+    useful: yes
+  - path: .claude/skills/visitor-loop/visitor-brief.md
+    reason: (no reason given)
+skillsUsed:
+  - name: code-review
+    reason: (no reason given)
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: visitor-loop
+    reason: (invoked as a slash command)
+frictions:
+  - description: Wrote tally search results (no match) before running any search; caught and redone before the PR was opened.
+    solution: Tally template could list the search query field as required output of a tool call.
+    severity: nit
+  - description: Dedupe by full description matched nothing; only DOM probing showed the entries differ in detail lines. Cost a rebuild (about 2 min).
+    solution: Probe the real data before coding a grouping key.
+    severity: minor
+  - description: Created a new branch against the session's designated-branch instruction, then undid it before any commit.
+    solution: Skill's fallback branch name invites this; state the designated branch wins more loudly.
+    severity: nit
+durationSec: 3420
+models:
+  claude-sonnet-5-5: 150
+toolCounts:
+  Read: 7
+  Bash: 58
+  Grep: 1
+  Agent: 5
+  Monitor: 1
+  Edit: 1
+  ToolSearch: 1
+  mcp__github__search_issues: 3
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 2
+  Skill: 3
+  mcp__github__add_issue_comment: 2
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
+filesEdited:
+  - layers/journal/tests/unit/journal-dashboard.spec.ts
+rulesLoaded:
+  - .claude/rules/adr-0028.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0018.md
+  - .claude/rules/adr-0002.md
+  - .claude/rules/adr-0025.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/adr-0008.md
+rulesGlobal:
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0001.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0023.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0003.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0022.md
+    reason: not relevant to this task
+    useful: no
+  - path: .claude/rules/adr-0009.md
+    reason: close-session at PR open
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: not relevant to this task
+    useful: no
+  - path: .claude/rules/adr-0001.md
+    reason: not relevant to this task
+    useful: no
+  - path: .claude/rules/adr-0020.md
+    reason: not relevant to this task
+    useful: no
+  - path: .claude/rules/adr-0023.md
+    reason: not relevant to this task
+    useful: no
+  - path: .claude/rules/adr-0021.md
+    reason: not relevant to this task
+    useful: no
+  - path: .claude/rules/adr-0005.md
+    reason: not relevant to this task
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: not relevant to this task
+    useful: no
+  - path: .claude/rules/adr-0018.md
+    reason: not relevant to this task
+    useful: no
+  - path: .claude/rules/adr-0002.md
+    reason: not relevant to this task
+    useful: no
+  - path: .claude/rules/adr-0025.md
+    reason: not relevant to this task
+    useful: no
+  - path: .claude/rules/adr-0008.md
+    reason: not relevant to this task
+    useful: no
+  - path: .claude/rules/adr-0028.md
+    reason: not relevant to this task
+    useful: no
+  - path: .claude/rules/adr-0004.md
+    reason: gate:scoped before push
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: open PR, chartered row
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: provenance line on GitHub bodies
+    useful: yes
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: not relevant to this task
+    useful: no
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: not relevant to this task
+    useful: no
+  - path: .claude/rules/tenant-layers.md
+    reason: not relevant to this task
+    useful: no
+subagents:
+  - task: Visitor 1 (sonnet)
+    model: sonnet
+  - task: Visitor 2 (fable)
+    model: fable
+  - task: Visitor 3 (opus)
+    model: opus
+  - type: general-purpose
+    task: Standards review
+  - type: general-purpose
+    task: Spec review
+gitBranch: claude/adoring-galileo-04150c
+entrypoint: remote_trigger
+cliVersion: 2.1.296
+trigger: visitor-loop
+ideas:
+  - "Add per-snag session count tiles: show how many sessions hit each Worst snag so recurring frictions rank above one-offs on the Journal landing."
+  - "Atlas relations diagram on phones is empty-looking (two visitors) but kept by decision #1494: label the nodes with species names inside the cropped overview."
+  - "Marquee reel index promises illustrations but shows none (one visitor): add thumbnails next to each chapter."
+  - "Tinkerfund campaign page on phones puts title and price about 850px down (one visitor): lead with title, pitch and price above the gallery."
+landedBy: Stop
