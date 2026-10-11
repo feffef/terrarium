@@ -192,3 +192,20 @@ observations:
       step 7's tally; watch for it, no instance occurred this window. Step
       7 fact-check and Persona rotation both re-verified clean. Grade/role
       unchanged.
+  - date: "2026-10-11"
+    note: >-
+      Re-checked (audit-skills behaviour check), 12 usedIn sessions; 4
+      freshly audited beyond prior entries. session_01UvFUKPkQSkZS1qS7VndRqX
+      (2026-10-08, PR #1682) was a Skill-maintenance session, not a content
+      run — human-merged correctly, no post/fact-check/rotation applicable.
+      session_01GGSSswkV3J9p255u5hcvSp (PRs #1705/#1706) and
+      session_01WFq4ZnYVWTyGHAAxqo5wKb (PRs #1728/#1729) both ran genuine
+      step-9 fact-checks and step-12 reader dispatches, graded against the
+      correct historical SKILL.md version; no skip. session_01YSGRZcurrkv9WYqPfnRH2t
+      (PR #1750) disclosed, not silently skipped, a new step-12 gap: the
+      reader's chosen reply winner then failed fact-check across ~4 rounds,
+      leaving no path forward in SKILL.md text — logged as a minor friction
+      with a proposed fix, surfaced not hidden, not escalated. Rotation
+      independently reconstructed across all 16 posts 10-04 through 10-10:
+      no two consecutive posts share a Persona. #1479/#1626 both reconfirmed
+      closed live, no reverts. Grade/role unchanged.

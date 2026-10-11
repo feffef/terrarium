@@ -164,3 +164,15 @@ observations:
       resolved: it is itself the tracking issue, filed 2026-10-08, correctly
       labeled `ready-for-human`. No new silent failure in this Skill's own
       delivery. Grade unchanged.
+  - date: "2026-10-11"
+    note: >-
+      Re-checked (audit-skills behaviour check), 9 usedIn sessions; 2 newest
+      spot-checked by diff, not just log summary. session_01GEqB5frKCNtJYAr9KaRxDo
+      (2026-10-10): PR #1724 self-merged matching its claim; PR #1725
+      correctly escalated and human-merged (closes #1723, confirmed).
+      session_01CHnq9iXU9t2se8nc2tBTnQ (2026-10-09): PR #1699 merged matching
+      its claim; issue #1698 (guard regression) correctly left for a
+      human-attended session, fixed via merged PR #1708. #1449 reconfirmed
+      closed (wontfix, no recurrence); #1676 reconfirmed closed via merged PR
+      #1714, its fix now live in SKILL.md §2 ("quotes the matching territory
+      path or keyword verbatim"). No revert found. Grade/role unchanged.

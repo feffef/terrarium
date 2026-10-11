@@ -188,3 +188,20 @@ observations:
       directly, with an independently-verified accurate final status — not
       a missed invocation. No stale logs, no fabricated/flattering entries
       found. Grade/role unchanged.
+  - date: "2026-10-11"
+    note: >-
+      Re-checked (audit-skills behaviour check), 10 usedIn invocations, all
+      cross-checked against live GitHub state — 9/10 completed with matching
+      merged PRs, 1/10 honestly in-review. Refines (does not reverse) the
+      2026-10-09/10 "equivalent-closure, not missed invocation" verdict on
+      session_011p9VA5A1CWNG9xd2VrQf8N (the 1 notUsedWindow session):
+      close-session/SKILL.md (as of commit 6e5dd427/9c7bf400, both landed
+      before this session ran) adds a hard rule with no log-session
+      counterpart — re-read CLAUDE.md and the always-loaded rules in full
+      before logging, and name every rule broken/skipped as a Friction — and
+      this session's `docsRead` has no CLAUDE.md entry anywhere, a concrete,
+      checkable gap that running log-session alone doesn't cover. No
+      confirmed resulting damage found (its PR #1683 merged correctly, its
+      own frictions read like organic self-reflection, not a formal sweep).
+      Narrow, process-only, below the escalation bar. No reverts of this
+      Skill's content. Grade/role unchanged.

@@ -192,3 +192,19 @@ observations:
       on the count — the log's own `subagents` list has exactly 4, matching
       the 2026-10-08 entry's correct count; a transcription slip, not a
       Skill behaviour problem. No new silent failure. Grade/role unchanged.
+  - date: "2026-10-11"
+    note: >-
+      Re-checked (audit-skills behaviour check), 7 usedIn sessions, each
+      independently re-derived and verified against live GitHub/primary
+      sources. All 7 PRs (#1726/#1700/#1681/#1649+#1650/#1631/#1613/#1589)
+      confirmed merged, diffs matching logs; 3 non-trivial factual claims
+      from PR #1726 spot-checked directly against repo state (Midden has
+      no `pages`, Commons' Timeline already covers the activity-feed ask,
+      Commons' merge date), all correct. #1647 (independent-checker-dispatch
+      skip) reconfirmed still open, unchanged. New, sub-threshold:
+      session_01Tcn6x6mZizT14rJuQqYivt's own friction log admits skipping
+      CLAUDE.md's required tenant-layers.md/CONTEXT.md reads before editing
+      layers/commons and journal pages — isolated (6/7 other sessions in
+      window did read it), and the edits themselves verified correct, so no
+      damage; below the escalation bar. No reverts in the 2-week sweep.
+      Grade/role unchanged.
