@@ -24,35 +24,39 @@
 #            topic's tools correctly.
 trials:
   - problem: >
-      `docs/agents/git-conventions.md` as a whole (115 lines, rewritten to about
-      85 in plainer words, every rule kept). Its shallow-checkout rule failed as
-      prose first (#772: narrowed three times) and is now held by
-      `scripts/unshallow-on-start.ts` and `scripts/gate.ts`; the section is cut to
-      the fallback plus pointers. The search subagent (this run) covered the
-      instruction corpus, the rulebook table (excluded list included),
-      guards.md, guard headers and the tracker; it found no larger failed-prose
-      rule outside open trials' territory. guards.md was the largest runner-up
-      but overlaps three open trials' territory, so it waits. Net about -30
-      lines; the mass here was small. The same run judged and deleted two
-      trials (PR-landing steps 3-5, ScheduleWakeup): no Friction or
-      regression issue traced to either.
+      `docs/agents/guards.md` (102 lines rewritten to 88, every rule and every
+      section name other files cite kept): the conventions' incident stories
+      (the 26-test miss, the hot-path cost) cut to the rule plus a clause, the
+      intro and probe notes tightened, "Known gaps" cut to the two shared gaps
+      and a pointer to each script header, where the per-guard ones live. The
+      guard behaviours it legislates failed as prose (#873, #886, #1223, #1208;
+      read via the search subagent's report, not re-read in full) and are held by
+      the guards' own code, `tests/unit/guards-wiring.spec.ts` and
+      `guard-wrap.sh`. The search subagent (this run) covered the instruction
+      corpus, the rulebook table (excluded list included), guards.md, the
+      tracker and github-integration.md. Its top candidate, the Built rows of
+      the rulebook table's §5, was skipped: it shares a file with an open
+      trial, and §8's row counts are computed from those rows. Net about -14
+      lines; the mass here was small. The same run judged and deleted the
+      git-conventions trial: only nit/minor Frictions (fetch-order slips), no
+      regression issue. Issue #1712 (a wrong sentence in that file) is a
+      pre-existing flaw, not damage.
     territory:
       paths:
-        - "docs/agents/git-conventions.md (all of it)"
+        - "docs/agents/guards.md (all of it)"
       keywords:
-        - fetch before you trust history
-        - still shallow
-        - no-renames
-        - git commit-tree
-    opened: 2026-10-08
+        - Conventions every guard follows
+        - Probed live, and still unknown
+        - Known gaps
+    opened: 2026-10-11
     proven: true
     check: >
-      Damage is a major or blocker Friction where a session draws a wrong
-      conclusion from a stale or shallow history, discards uncommitted work,
-      pushes past a red or unfinished gate, rewrites public history, or
-      mangles a commit message, and a line the old file carried would have
-      prevented it. NOT damage: a guard or hook that stopped the session and
-      it fixed itself from the message.
+      Damage is a major or blocker Friction where a session changes or adds a
+      guard without the registry row, matcher line, unit test or live probe,
+      dispatches an unattended session to change a guard or hook wiring, or
+      routes around a deny message, and a line the old file carried would have
+      prevented it. NOT damage: a guard denying and the session fixing itself
+      from the message, or reading a script header instead of this page.
   - problem: >
       Mechanism-record prose in `docs/research/rulebook-migration-table.md`: §3
       (a table retelling #835, #772, #666, #873) and §4's `PreToolUse` guard
