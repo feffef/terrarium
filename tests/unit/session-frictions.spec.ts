@@ -114,13 +114,15 @@ describe('toTriageSession()', () => {
 })
 
 describe('toCompactSession()', () => {
-  it('keeps id/file/startedAt/prs and only description/severity per friction', () => {
+  it('keeps id/file/startedAt/prs, docsRead paths, subagents and only description/severity per friction', () => {
     const s = session('session_abc', '2026-07-04T12:00:00Z', {
       goal: 'fix the thing',
       outcome: 'PR',
       summary: 'ran the thing',
       trigger: 'frictions-to-fixes',
       prs: ['187'],
+      docsRead: [{ path: 'docs/a.md', reason: 'why' }],
+      subagents: [{ type: 'impl' }],
       frictions: [{ description: 'a stale claim', solution: 'fix it', severity: 'minor' }],
     })
     expect(toCompactSession(s)).toEqual({
@@ -128,6 +130,8 @@ describe('toCompactSession()', () => {
       file: s.file,
       startedAt: '2026-07-04T12:00:00Z',
       prs: ['187'],
+      docsRead: ['docs/a.md'],
+      subagents: [{ type: 'impl' }],
       frictions: [{ description: 'a stale claim', severity: 'minor' }],
     })
   })

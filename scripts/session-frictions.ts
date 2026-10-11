@@ -20,10 +20,10 @@
 // (see main()), so a large --days can no longer blow a caller's inline-capture
 // cap (issue #976) — no caller-side redirect or --compact is required for safety.
 //
-// --compact drops the prose fields (goal/outcome/solution) that make the
-// default output large, keeping only id/file/startedAt/prs and each
-// friction's description/severity, for a caller that wants a smaller read
-// regardless (issue #951).
+// --compact drops the prose fields (goal/outcome/summary/solution and per-doc
+// reasons) that make the default output large, keeping id/file/startedAt/prs,
+// docsRead paths, subagents and each friction's description/severity, for a
+// caller that wants a smaller read regardless (issues #951, #1755).
 //
 // --out PATH always writes the JSON to PATH instead of the shared tmpdir
 // default, regardless of size — for a caller that wants the output at a
@@ -78,14 +78,17 @@ export interface CompactFriction {
   severity: string
 }
 /** The `--compact` reduction of a TriageSession: drops the prose fields
- *  (goal/outcome/summary/solution) that make the default output exceed the Bash
- *  tool's inline-capture cap at the default window (issue #951). `id`/`file`
+ *  (goal/outcome/summary/solution, doc reasons) that make the default output
+ *  exceed the Bash tool's inline-capture cap at the default window (issue #951),
+ *  but keeps what the survey's doc-read check needs (issue #1755). `id`/`file`
  *  are kept so a candidate can still be traced back to its full log. */
 export interface CompactSession {
   id: string
   file: string
   startedAt: string
   prs: string[]
+  docsRead: string[]
+  subagents: SubagentRef[]
   frictions: CompactFriction[]
 }
 
@@ -151,6 +154,8 @@ export function toCompactSession(s: TriageSession): CompactSession {
     file: s.file,
     startedAt: s.startedAt,
     prs: s.prs,
+    docsRead: s.docsRead.map((d) => d.path),
+    subagents: s.subagents,
     frictions: s.frictions.map((fr) => ({ description: fr.description, severity: fr.severity })),
   }
 }
