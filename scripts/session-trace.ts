@@ -641,7 +641,10 @@ export function extractTrace(
   }
 }
 
-export const subagentsDir = (transcriptPath: string) => join(dirname(transcriptPath), basename(transcriptPath, '.jsonl'), 'subagents')
+const subagentsDir = (transcriptPath: string) => join(dirname(transcriptPath), basename(transcriptPath, '.jsonl'), 'subagents')
+
+/** One depth-1 subagent's transcript, named for the hook payload's `agent_id`. */
+export const subagentTranscript = (transcriptPath: string, agentId: string) => join(subagentsDir(transcriptPath), `agent-${agentId}.jsonl`)
 
 /** Every dispatched subagent's own transcript, given the parent's path: the
  *  harness writes them to `<parent-dir>/<parent-basename>/subagents/*.jsonl`

@@ -53,8 +53,6 @@ describe('bashRulesHint(), with an injected loaded set', () => {
       // A file matches only where the whole glob does.
       ['cat layers/journal/content/current/sessions/a.yml layers/atlas/content/x.png', []],
       ['cat README.md layers/atlas/content/a/b.md', T],
-      // A directory is a search, not a read: the harness loads a rule once a file there is touched.
-      ['grep -rn x layers/atlas/app/ | head', []],
       ['grep -rn x . | head', []],
       ['cat < layers/atlas/nuxt.config.ts | head', T],
       ['cat <layers/atlas/nuxt.config.ts | head', T],

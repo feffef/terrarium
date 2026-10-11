@@ -3,9 +3,9 @@
 // when the command is one simple read of one file; a piped, chained (`cd … &&`)
 // or multi-file read loads nothing (ADR-0029, issue #1764). So this stays
 // silent for a simple read and fills the gap for the rest. Rules already loaded
-// this session are skipped, read from the transcript: a subagent's own, beside
-// its parent's `transcript_path` (docs/agents/guards.md), or none if that is
-// missing. Fails open: any error adds nothing.
+// are skipped; a subagent's payload carries its parent's `transcript_path`
+// (docs/agents/guards.md), so it is checked against its own. Fails open: any
+// error adds nothing.
 // `scripts/bash-rules-hint.sh` is the hot-path pre-filter.
 //
 // Usage:
@@ -14,7 +14,7 @@
 import { existsSync, readFileSync, statSync } from 'node:fs'
 import { dirname, isAbsolute, join, matchesGlob, relative } from 'node:path'
 import { printDryRunResult, prop, readTranscript, resolveDryRunInput, runIfMain } from './guard-io.ts'
-import { extractTrace, subagentsDir } from './session-trace.ts'
+import { extractTrace, subagentTranscript } from './session-trace.ts'
 import { bashReadPaths } from './shell-reads.ts'
 import { loadRules, type RuleFile } from './skill-rules-hint.ts'
 import { RULES_DIR, ruleBlock, rulePaths } from './validate-adr-rules.ts'
@@ -26,9 +26,9 @@ export function bashRulesHint(command: string, cwd: string, root: string, rules:
   const { paths, simple } = bashReadPaths(command, cwd)
   if (simple) return null
   const reads = paths
-    .filter((p) => !p.endsWith('/') && !statSync(p, { throwIfNoEntry: false })?.isDirectory())
+    .filter((p) => !p.endsWith('/'))
     .map((p) => relative(root, p))
-    .filter((p) => !p.startsWith('..') && !isAbsolute(p))
+    .filter((p) => !p.startsWith('..') && !isAbsolute(p) && !statSync(join(root, p), { throwIfNoEntry: false })?.isDirectory())
   const hits = rules.filter((r) => rulePaths(r.text).some((g) => reads.some((p) => matchesGlob(p, g))))
   if (hits.length === 0) return null
   const skip = loaded()
@@ -55,7 +55,7 @@ function hintFor(payload: unknown): string | null {
   if (!root) return null
   const parent = String(prop(payload, 'transcript_path') ?? '')
   const agent = prop(payload, 'agent_id')
-  const transcript = agent === undefined ? parent : join(subagentsDir(parent), `agent-${agent}.jsonl`)
+  const transcript = agent === undefined ? parent : subagentTranscript(parent, String(agent))
   return bashRulesHint(command, cwd, root, loadRules(join(root, RULES_DIR)), () => new Set(extractTrace(readTranscript(transcript) ?? []).rulesLoaded))
 }
 
