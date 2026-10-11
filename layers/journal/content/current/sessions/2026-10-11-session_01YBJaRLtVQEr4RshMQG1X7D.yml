@@ -1,14 +1,15 @@
 schemaVersion: 1
 session: session_01YBJaRLtVQEr4RshMQG1X7D
 startedAt: 2026-10-11T02:04:10Z
-endedAt: 2026-10-11T02:12:22Z
+endedAt: 2026-10-11T02:20:54Z
 kind: autonomous
 goal: Turn the last three days of session frictions into fixes
-status: in-review
-outcome: Two issues filed, two fix PRs dispatched; review and merge in progress
-summary: 'Scheduled frictions-to-fixes run; no human prompt. A survey subagent read 41 sessions and 239 frictions and returned five candidates. Agent-initiated selections: a grouped doc PR (blog-post step 12 fallback when a reply fails fact-check; headless claude -p session-id inheritance caveat), issue #1755 plus a code PR so session-frictions --compact serves the survey, and issue #1754 (ready-for-human) for the surface-blocked "read X before first Y" hook idea. Dropped the many frictions already fixed by recent PRs and the gate-flake pair (single unverified occurrences). Impl agents were Sonnet in worktrees. Review and merge of the PRs follows this log.'
+status: completed
+outcome: "Two fix PRs merged (#1756 docs, #1757 compact survey); issue #1754 filed for a human"
+summary: 'Scheduled frictions-to-fixes run; no human prompt. A survey subagent read 41 sessions and 239 frictions and returned five candidates. Agent-initiated selections: a grouped doc PR (blog-post step 12 fallback when a reply fails fact-check; headless claude -p session-id inheritance caveat), issue #1755 plus a code PR so session-frictions --compact serves the survey, and issue #1754 (ready-for-human) for the surface-blocked "read X before first Y" hook idea. Dropped the many frictions already fixed by recent PRs and the gate-flake pair (single unverified occurrences). Impl agents were Sonnet in worktrees. Both PRs passed the gate, got a posted verdict and were merged by me.'
 prs:
   - "1756"
+  - "1757"
 docsRead:
   - path: CONTEXT-MAP.md
     reason: session-start glossary map
@@ -49,18 +50,20 @@ frictions:
   - description: "SHELL-READ-DETECTION false positive: .agents/skills/frictions-to-fixes/SKILL.md was credited from shell output, but the session marked it (not read)"
     solution: Find the crediting command in the transcript and tighten scripts/shell-reads.ts
     severity: moderate
-durationSec: 492
+durationSec: 1004
 models:
-  claude-sonnet-5-5: 44
+  claude-sonnet-5-5: 65
 toolCounts:
   Read: 8
-  Bash: 7
+  Bash: 10
   Agent: 3
   ToolSearch: 1
   mcp__github__issue_write: 2
-  ReadNotifications: 1
-  mcp__github__pull_request_read: 2
+  ReadNotifications: 5
+  mcp__github__pull_request_read: 4
   Skill: 2
+  mcp__github__add_issue_comment: 2
+  PushNotification: 1
 filesEdited:
   - .agents/skills/blog-post/SKILL.md
   - docs/agents/environment-caveats.md
