@@ -1,0 +1,126 @@
+schemaVersion: 1
+session: session_019w4vmM2Ygsu4yESyXPK6Tc
+startedAt: 2026-10-11T23:24:52Z
+endedAt: 2026-10-11T23:27:34Z
+kind: interactive
+goal: Let one moderate friction open a Friction Ledger entry
+status: in-review
+outcome: One-line frictions-to-fixes SKILL.md change, PR 1794 open
+summary: The owner asked directly that frictions-to-fixes add moderate frictions to the Friction Ledger even when they happened only once in the window. Its single home is SKILL.md §1's new-entry rule, which now accepts one moderate, major or blocker. Opening the PR was agent-initiated, per the ADR-0003 rule. The scoped gate passed. The change was small and its meaning clear, so I made it without asking clarifying questions first, though the user's preferences ask for that.
+prs:
+  - "1794"
+docsRead:
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: home of the new-entry rule
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: commit hygiene before committing
+    useful: partly
+  - path: docs/agents/pr-workflow.md
+    reason: PR and merge recipe
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: MCP tool use before the first GitHub call
+    useful: partly
+  - path: CONTEXT.md
+    reason: Friction Ledger term, to check there was no second home for the rule
+    useful: yes
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Skipped the CLAUDE.md session-start read of CONTEXT-MAP.md and all of CONTEXT.md; read only the Friction Ledger section.
+    solution: Low impact for a one-line Skill edit. A session-start hook that injects CONTEXT-MAP would make the read automatic.
+    severity: nit
+durationSec: 162
+models:
+  claude-opus-5-5: 35
+toolCounts:
+  Bash: 9
+  Read: 5
+  Edit: 1
+  ToolSearch: 1
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+  Skill: 2
+filesEdited:
+  - .agents/skills/frictions-to-fixes/SKILL.md
+rulesLoaded:
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0002.md
+  - .claude/rules/adr-0008.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0004-human-merge.md
+rulesGlobal:
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0001.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0023.md
+  - .claude/rules/adr-0017.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0022.md
+    reason: auto-triage sweep; not relevant
+    useful: no
+  - path: .claude/rules/adr-0004.md
+    reason: run gate:scoped before pushing
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: close-session at PR open
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: prune trials; checked that none covers this Skill
+    useful: partly
+  - path: .claude/rules/adr-0001.md
+    reason: build architecture; not relevant
+    useful: no
+  - path: .claude/rules/adr-0020.md
+    reason: owner is Trusted, so the request could be built
+    useful: partly
+  - path: .claude/rules/adr-0003.md
+    reason: open the PR and subscribe to it
+    useful: yes
+  - path: .claude/rules/adr-0023.md
+    reason: guest pipeline; not relevant
+    useful: no
+  - path: .claude/rules/adr-0017.md
+    reason: provenance line on the PR body
+    useful: yes
+  - path: .claude/rules/adr-0015.md
+    reason: frictions-to-fixes is repo-owned, not a pack Skill, so it is editable
+    useful: partly
+  - path: .claude/rules/adr-0005.md
+    reason: Skills change through a gated PR
+    useful: partly
+  - path: .claude/rules/adr-0002.md
+    reason: loaded by a grep of tenant.config.ts; not relevant
+    useful: no
+  - path: .claude/rules/adr-0008.md
+    reason: the Friction Ledger is a Journal Inventory
+    useful: partly
+  - path: .claude/rules/adr-0021.md
+    reason: context split; not relevant
+    useful: no
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: loaded by a journal grep; not relevant
+    useful: no
+  - path: .claude/rules/tenant-layers.md
+    reason: loaded by a journal grep; not relevant
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: rule placement; nothing new needed a rule
+    useful: no
+gitBranch: claude/bold-fermat-b0wjxv
+entrypoint: remote
+cliVersion: 2.1.296
+landedBy: Stop
