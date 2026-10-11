@@ -38,14 +38,14 @@ Its brief:
   `occurrence` so far. Append each friction in the window that matches an
   entry, whatever its severity, unless the entry already lists that session.
   A new entry needs a cause seen twice, or one `major` or `blocker`. A cluster
-  is a shared **root cause**, not a shared symptom: two frictions days apart,
-  on different tools, belong together when one change would retire both.
-  Count recurrence over the ledger's last 14 days of occurrences, not the
-  window alone. Return the ledger changes (new entries, appended occurrences,
-  status changes, each with its evidence) in the report.
-- **Steer the budget at the unfixed tail.** A large share of the window's frictions are usually already resolved by a later in-window session or a merged fix. Screen those out fast as a §2 `drop` instead of re-deriving their history; save the deep archaeology for candidates with no in-window resolution. Count recurrence from the **unresolved** occurrences only.
+  is a shared **root cause**: two frictions days apart, on different tools,
+  belong together when one change would retire both. An entry's recurrence is
+  its occurrences in the last 14 days, counting only those after its `fixedOn`
+  when it has one. Return the ledger changes (new entries, appended
+  occurrences, status changes, each with its evidence) in the report.
+- **Steer the budget at the unfixed tail.** A large share of the window's frictions are usually already resolved by a later in-window session or a merged fix. Screen those out fast as a §2 `drop` instead of re-deriving their history; save the deep archaeology for candidates with no in-window resolution.
 - **Read the window's session logs** via `pnpm exec tsx scripts/session-frictions.ts`
-  (its header says how far back the window reaches; bare `tsx` isn't on PATH). Large output goes to
+  (it prints where the window starts; bare `tsx` isn't on PATH). Large output goes to
   `/tmp/session-frictions-output.json` and stdout gets only a notice — read the file, or
   pass `--out PATH`; don't parse stdout. Use `--compact` (keeps `docsRead` paths and
   `subagents`, drops prose) and re-read a full log via its `file` only when a candidate needs it. This is a **recency window, not a
@@ -65,7 +65,8 @@ extract carries. **External sessions are already excluded:** the survey script d
   prose itself is unclear, wrong, or too easy to read past. Report which, with
 the paths as evidence. **"Opened" can mean a subagent opened it:** subagent reads are folded into the parent's list (`session-trace.ts`'s `foldSubagentTrace`), so on a session that delegated, check the `subagents` field before concluding the agent that hit the friction had the rule in front of it. A doc only a subagent opened is closer to *not opened*. This repo has paid for the distinction repeatedly: the fixes for #241/#425 landed in `docs/agents/github-integration.md`, which the affected sessions had no reason to open, and the friction kept recurring until a `PreToolUse` guard replaced the prose.
 - **For a friction alleging a detector/tool/mechanism bug, check the `subagents` field and read the relevant mechanism source before trusting the friction's own root-cause guess.** A self-diagnosis logged in the moment, without source access, is not evidence: e.g. "detector over-credits reads" can be `foldSubagentTrace` correctly unioning a dispatched subagent's reads, not a real detector gap. Verify against source before ranking it.
-- **Group and rank.** The ledger entry is the candidate (one per root cause); rank by **recurrence and severity together** (severity is an ordered rank, not a number: weigh it qualitatively, never multiply it). **Prioritize `moderate`, `major`, and `blocker` frictions**: these earn a fix on severity alone, even logged once. **A low-severity friction is not automatically dropped:** a `nit` or `minor` that **recurs across sessions _and_ is easy to fix** is still worth retiring, since cheap repeated papercuts add up. What gets dropped is the lone low-severity one-off (a single `nit` with a non-trivial fix), not every `nit`.
+- **Group and rank.** A candidate is a ledger entry (one per root cause) or a
+  window friction too new for one; rank by **recurrence and severity together** (severity is an ordered rank, not a number: weigh it qualitatively, never multiply it). **Prioritize `moderate`, `major`, and `blocker` frictions**: these earn a fix on severity alone, even logged once. **A low-severity friction is not automatically dropped:** a `nit` or `minor` that **recurs across sessions _and_ is easy to fix** is still worth retiring, since cheap repeated papercuts add up. What gets dropped is the lone low-severity one-off (a single `nit` with a non-trivial fix), not every `nit`.
 - **Screen against the tracker** — apply the §2 rules to every candidate.
 - **Earlier runs' decisions are the ledger's `status` and `ref`.** When an entry
   lacks them, the window's `trigger: frictions-to-fixes` logs (`summary`,
@@ -81,7 +82,7 @@ the paths as evidence. **"Opened" can mean a subagent opened it:** subagent read
 **The subagent also reports its own frictions.** Whatever it hits while running the survey — an MCP disconnect, a tool that only resolved under its full id, an oversized result it had to slice — it records and **returns alongside** the screened list, so this run's own frictions feed the next cycle (they belong in this session's log too, §6).
 
 Done when the subagent returns a structured report: **(a) ranked actionable
-candidates** — each with its ledger entry, severity, recurrence (N sessions in the ledger's last 14 days), sessions, tracker
+candidates** — each with its ledger entry, severity, recurrence (as §1 counts it), sessions, tracker
 classification (never-fixed / open-already #N / regression of #N), fix type
 (doc/code/config), surface-blocked flag (fails §3's safe-surface test: human-only,
 guard or hook wiring), difficulty (simple/hard), a one-line

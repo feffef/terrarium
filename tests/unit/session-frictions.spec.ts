@@ -14,6 +14,7 @@ function session(id: string, startedAt: string, opts: Partial<TriageSession> = {
     id,
     file: `layers/journal/content/current/sessions/${id}.yml`,
     startedAt,
+    endedAt: '',
     goal: 'g',
     outcome: 'o',
     summary: 's',
@@ -28,11 +29,11 @@ function session(id: string, startedAt: string, opts: Partial<TriageSession> = {
 
 describe('windowStart()', () => {
   const now = Date.parse('2026-07-10T00:00:00Z')
-  it('reaches back 48 hours when the ledger was committed more recently', () => {
-    expect(windowStart(now, Date.parse('2026-07-09T12:00:00Z'))).toBe(Date.parse('2026-07-08T00:00:00Z'))
+  it('reaches back 48 hours from the ledger commit when that is earlier than now', () => {
+    expect(windowStart(now, Date.parse('2026-07-09T12:00:00Z'))).toBe(Date.parse('2026-07-07T12:00:00Z'))
   })
-  it('reaches back to the last ledger commit when that is older, so a missed run loses no logs', () => {
-    expect(windowStart(now, Date.parse('2026-07-03T00:00:00Z'))).toBe(Date.parse('2026-07-03T00:00:00Z'))
+  it('reaches back 48 hours from an old ledger commit, so a missed run loses no logs', () => {
+    expect(windowStart(now, Date.parse('2026-07-03T00:00:00Z'))).toBe(Date.parse('2026-07-01T00:00:00Z'))
   })
   it('falls back to 48 hours when the ledger has no commit', () => {
     expect(windowStart(now, null)).toBe(Date.parse('2026-07-08T00:00:00Z'))
@@ -56,6 +57,13 @@ describe('pickRecencyWindow()', () => {
     ]
     expect(pickRecencyWindow(sessions, cutoff).map((s) => s.id)).toEqual(['z-earlier', 'a-later'])
   })
+  it('keeps a session that started before the cutoff but ended after it', () => {
+    const sessions = [
+      session('long', '2026-07-05T00:00:00Z', { endedAt: '2026-07-08T00:00:00Z' }),
+      session('done', '2026-07-05T00:00:00Z', { endedAt: '2026-07-06T00:00:00Z' }),
+    ]
+    expect(pickRecencyWindow(sessions, cutoff).map((s) => s.id)).toEqual(['long'])
+  })
   it('breaks ties on id for a stable, deterministic order', () => {
     const sessions = [
       session('b', '2026-07-09T00:00:00Z'),
@@ -70,6 +78,7 @@ describe('toTriageSession()', () => {
     const raw = {
       session: 'session_abc',
       startedAt: '2026-07-04T12:00:00Z',
+      endedAt: '2026-07-04T13:00:00Z',
       goal: 'fix the thing',
       outcome: 'PR',
       summary: 'ran the thing',
@@ -85,6 +94,7 @@ describe('toTriageSession()', () => {
       id: 'session_abc',
       file: 'path/to/file.yml',
       startedAt: '2026-07-04T12:00:00Z',
+      endedAt: '2026-07-04T13:00:00Z',
       goal: 'fix the thing',
       outcome: 'PR',
       summary: 'ran the thing',
@@ -114,6 +124,7 @@ describe('toTriageSession()', () => {
       id: '',
       file: 'f.yml',
       startedAt: '',
+      endedAt: '',
       goal: '',
       outcome: '',
       summary: '',

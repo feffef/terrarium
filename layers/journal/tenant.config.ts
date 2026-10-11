@@ -54,10 +54,9 @@ export const skillSchema = z
   })
   .strict()
 
-// The Friction Ledger (CONTEXT.md): one entry per cluster of session-log
-// Frictions with a common root cause. `frictions-to-fixes` maintains it, and
-// its SKILL.md holds the lifecycle. Counts and first/last-seen dates derive
-// from `occurrences`; nothing here is a hand-written total.
+// The Friction Ledger (CONTEXT.md). `frictions-to-fixes`' SKILL.md holds its
+// lifecycle. Counts and first/last-seen dates derive from `occurrences`;
+// nothing here is a hand-written total.
 export const frictionClusterSchema = z
   .object({
     name: z.string(),
@@ -68,20 +67,25 @@ export const frictionClusterSchema = z
     // docs/agents/guards.md); `outside` is the harness or a service this
     // repo cannot change.
     surface: z.enum(['safe', 'human-only', 'guard-or-hook', 'outside']),
-    // `open`: nothing covers it. `tracked`: an open issue or PR does (`ref`).
-    // `on-trial`: inside a Prune Trial's territory (`ref` quotes it,
-    // ADR-0027). `fixed`: the fix merged on `fixedOn`; an occurrence after
-    // that date is a regression.
+    // `open`: no open issue or PR covers it. `tracked`: one does. `on-trial`:
+    // inside a Prune Trial's territory (ADR-0027). `fixed`: the fix merged
+    // on `fixedOn`.
     status: z.enum(['open', 'tracked', 'on-trial', 'fixed']),
     fixedOn: utcDate.optional(),
+    // What backs the status: the tracking issue or PR, the trial's territory
+    // match, the fix, or on an `open` entry earlier partial fixes.
     ref: z.string().optional(),
-    occurrences: z.array(
-      z.object({
-        session: z.string(),
-        date: utcDate,
-        severity: sessionSchema.shape.frictions.element.shape.severity,
-      }),
-    ),
+    // One per session, or a session read twice by overlapping windows would
+    // inflate the recurrence count.
+    occurrences: z
+      .array(
+        z.object({
+          session: z.string(),
+          date: utcDate,
+          severity: sessionSchema.shape.frictions.element.shape.severity,
+        }),
+      )
+      .refine((occ) => new Set(occ.map((o) => o.session)).size === occ.length, 'a session is listed twice'),
   })
   .strict()
 

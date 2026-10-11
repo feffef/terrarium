@@ -26,9 +26,6 @@ occurrences:
   - session: session_01M8TuTH2JSu4rwMaW3pZKEZ
     date: "2026-09-28"
     severity: minor
-  - session: session_01M8TuTH2JSu4rwMaW3pZKEZ
-    date: "2026-09-28"
-    severity: nit
   - session: session_013FJgdc6i8gFLSfTPCEVysi
     date: "2026-09-29"
     severity: nit

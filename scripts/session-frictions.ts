@@ -1,7 +1,7 @@
 // The session-frictions helper: the deterministic half of the `frictions-to-fixes`
 // Skill's survey step. It does ONLY the mechanical gathering — parse every session
 // log, sort by `startedAt` (a filename/`ls` sort is not reliably chronological,
-// §1 of the Skill), and pick the last-N-days recency window — and emits each
+// §1 of the Skill), and pick the recency window — and emits each
 // session's *triage-essential* fields as compact JSON. Screening, grouping, and
 // ranking are judgement calls the Skill's subagent makes from this JSON; keeping
 // that judgement out of here is the point (predictable process, low token cost,
@@ -12,11 +12,11 @@
 // full later — this is a triage extract, not a replacement for the source log.
 //
 // Usage:  tsx scripts/session-frictions.ts [--days N] [--compact] [--out PATH]
-//   Prints the sessions started since the window's start (oldest first)
+//   Prints the sessions that ended since the window's start (oldest first)
 //   as JSON: id, file, startedAt, goal, outcome, prs, and every friction's
-//   description/solution/severity. The default window reaches back 48 hours
-//   or to the Friction Ledger's last commit, whichever is earlier, so a missed
-//   run loses no logs; `--days N` overrides it.
+//   description/solution/severity, and reports where the window starts. By
+//   default it starts 48 hours before the earlier of now and the Friction
+//   Ledger's last commit, so a missed run loses no logs; `--days N` overrides it.
 //
 // Output above OUTPUT_FILE_THRESHOLD is written to a file instead of stdout
 // (see main()), so a large --days can no longer blow a caller's inline-capture
@@ -42,11 +42,11 @@ import { readSessionLogs } from './session-logs.ts'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 
-/** The shortest default window: 48 hours lets a nit or minor that recurs
- *  across two daily runs be seen, though the ledger holds only clusters and
- *  major or blocker singletons. */
-export const MIN_WINDOW_HOURS = 48
-export const LEDGER_DIR = 'layers/journal/content/current/frictions'
+/** 48 hours lets a friction too minor for its own ledger entry be seen
+ *  recurring across two daily runs; reaching back that far from the ledger's
+ *  last commit also covers sessions that ended while that run was working. */
+export const WINDOW_HOURS = 48
+const LEDGER_DIR = 'layers/journal/content/current/frictions'
 
 // ── Types ───────────────────────────────────────────────────────────────────
 
@@ -68,6 +68,7 @@ export interface TriageSession {
   id: string
   file: string
   startedAt: string
+  endedAt: string
   goal: string
   outcome: string
   summary: string
@@ -99,19 +100,20 @@ export interface CompactSession {
 
 // ── Pure core (unit-tested) ───────────────────────────────────────────────────
 
-/** The default window's start: `MIN_WINDOW_HOURS` before `now`, or the
- *  ledger's last commit when that is earlier (`null`: no ledger commit yet). */
+/** The default window's start: `WINDOW_HOURS` before the earlier of `now`
+ *  and the ledger's last commit (`null`: no ledger commit yet). */
 export function windowStart(now: number, lastLedgerCommit: number | null): number {
-  return Math.min(now - MIN_WINDOW_HOURS * 3_600_000, lastLedgerCommit ?? Infinity)
+  return Math.min(now, lastLedgerCommit ?? now) - WINDOW_HOURS * 3_600_000
 }
 
-/** Sessions with `startedAt` (ISO) at or after `cutoff`,
+/** Sessions that ended at or after `cutoff` (a log lands when its session
+ *  ends, so a long session started before the cutoff is still new),
  *  oldest first — the order the Skill reads them in. Ties broken by `id` for a
  *  stable, deterministic order across runs. A filename sort is NOT a
  *  substitute for this: same-day sessions can have an unordered id suffix. */
 export function pickRecencyWindow(sessions: TriageSession[], cutoff: number): TriageSession[] {
   return sessions
-    .filter((s) => Date.parse(s.startedAt) >= cutoff)
+    .filter((s) => Date.parse(s.endedAt || s.startedAt) >= cutoff)
     .sort((a, b) => a.startedAt.localeCompare(b.startedAt) || a.id.localeCompare(b.id))
 }
 
@@ -136,6 +138,7 @@ export function toTriageSession(raw: Record<string, unknown>, file: string): Tri
     id: String(raw.session ?? ''),
     file,
     startedAt: String(raw.startedAt ?? ''),
+    endedAt: String(raw.endedAt ?? ''),
     goal: String(raw.goal ?? ''),
     outcome: String(raw.outcome ?? ''),
     summary: String(raw.summary ?? ''),
@@ -191,9 +194,12 @@ function lastLedgerCommit(cwd: string): number | null {
 // ── Command ─────────────────────────────────────────────────────────────────
 
 /** `days` overrides the default window (see `windowStart`). */
+export function windowCutoff(days?: number, cwd = root, now = Date.now()): number {
+  return days ? now - days * 86_400_000 : windowStart(now, lastLedgerCommit(cwd))
+}
+
 export function survey(days?: number, cwd = root, now = Date.now()): TriageSession[] {
-  const cutoff = days ? now - days * 86_400_000 : windowStart(now, lastLedgerCommit(cwd))
-  return pickRecencyWindow(readSessions(cwd), cutoff)
+  return pickRecencyWindow(readSessions(cwd), windowCutoff(days, cwd, now))
 }
 
 // ── CLI ───────────────────────────────────────────────────────────────────────
@@ -225,14 +231,17 @@ function main(): void {
   const dIdx = argv.indexOf('--days')
   const days = dIdx >= 0 ? Number(argv[dIdx + 1]) : undefined
   if (days !== undefined && !(days > 0)) fail('--days must be a positive number')
-  const sessions = survey(days)
+  const cutoff = windowCutoff(days)
+  const since = new Date(cutoff).toISOString()
+  const sessions = pickRecencyWindow(readSessions(), cutoff)
   const output = argv.includes('--compact') ? sessions.map(toCompactSession) : sessions
   const json = JSON.stringify(output, null, 2)
   const target = resolveOutputTarget(argv, json.length)
   if (target) {
     writeFileSync(target, json + '\n')
-    process.stdout.write(`session-frictions: ${sessions.length} sessions, ${json.length} bytes, written to ${target}\n`)
+    process.stdout.write(`session-frictions: ${sessions.length} sessions since ${since}, ${json.length} bytes, written to ${target}\n`)
   } else {
+    console.error(`session-frictions: window starts ${since}`)
     process.stdout.write(json + '\n')
   }
 }
