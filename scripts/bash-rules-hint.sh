@@ -7,16 +7,9 @@
 payload=$(cat)
 command=$(printf '%s' "$payload" | awk '!f && (i = index($0, "\"tool_input\"")) { $0 = substr($0, i); f = 1 } f' |
   grep -oE '"command" *: *"([^"\\]|\\.)*"' | head -n1)
-b='(^|[^[:alnum:]_.-]|\\[nt])'
+verb='(^|[^[:alnum:]_.-]|\\[nt])(cat|bat|head|tail|sed|awk|grep|rg|less|more|diff)'
 sep='( |\\t)+'
-# A bare count (`head -n 5`) is skipped like a flag, never a word.
-flag="$sep(-[^ ]*|[0-9]+)"
-word="$sep([^ 0-9-]|[0-9]+[^ 0-9])[^ ]*"
-two="($flag)*$word($flag)*$word"
-printf '%s' "$command" | grep -qE "$b(cat|bat|head|tail|sed|awk|grep|rg|less|more|diff)([^[:alnum:]_-]|\$)" || exit 0
-# Two words are two files, except after a pattern or program; a recursive
-# search may read a directory.
+printf '%s' "$command" | grep -qE "$verb([^[:alnum:]_-]|\$)" || exit 0
 printf '%s' "$command" | grep -qE '[|;&`]|\$\(|\\n' ||
-  printf '%s' "$command" | grep -qE "$b((cat|bat|head|tail|less|more|diff|rg)$two|(sed|awk|grep)$two($flag)*$word|grep($flag)*$sep-[^ ]*[rR])" ||
-  exit 0
+  printf '%s' "$command" | grep -qE "$verb($sep-[^ ]*)*$sep[^ -][^ ]*($sep-[^ ]*)*$sep[^ -]" || exit 0
 printf '%s' "$payload" | node_modules/.bin/tsx scripts/bash-rules-hint.ts

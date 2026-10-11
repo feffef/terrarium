@@ -138,7 +138,7 @@ describe('the hook entry (sh pre-filter → tsx)', () => {
     `{"tool_name":"Bash","cwd":${JSON.stringify(repo)},"tool_input":{"command":${JSON.stringify(seen)},"command":"cat README.md scripts/tail-pipe-guard.ts"}}`
 
   it('skips tsx for a read that cannot be compound or multi-file', () => {
-    for (const seen of ['cat f', 'head -50 f', 'head -n 5 f', 'grep x f', 'grep -m 1 x f', 'sed -n 1,5p f']) {
+    for (const seen of ['cat f', 'head -50 f']) {
       expect(run(probe(seen))).toMatchObject({ status: 0, stdout: '' })
     }
   })
@@ -148,6 +148,12 @@ describe('the hook entry (sh pre-filter → tsx)', () => {
     const multi = ['grep -n x a b', 'head -n 5 a b', 'sed -n 1p a b', 'grep -rn x d', 'rg x d']
     for (const seen of [...compound, ...multi]) {
       expect(run(probe(seen)).stdout, seen).toContain('guards.md')
+    }
+  })
+
+  it('injects rules for a recursive grep whose -r follows the pattern', () => {
+    for (const command of ['grep x -r layers/journal/', 'grep -e x -r layers/journal/', 'grep -n x -r layers/journal']) {
+      expect(run(bash(command)).stdout, command).toContain('Contents of .claude/rules/')
     }
   })
 
