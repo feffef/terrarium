@@ -300,6 +300,12 @@ Nothing else in the high-risk set is
 reachable that way. It constrains merging only: agents author changes to Human-only surfaces
 routinely, and review is the control.
 
+### Rule
+A short instruction that reaches an agent on its own: at session start, or when
+the agent opens or edits the files it names (ADR-0029). A Rule is either an
+ADR's summary or the home of an instruction about specific files; instructions
+that matter on an action live in `CLAUDE.md` instead.
+
 ### Prune Trial
 One problem's instructions pruned down to the goal behind them and left standing
 for a fixed window, on the premise that whether a rule is load-bearing is settled
