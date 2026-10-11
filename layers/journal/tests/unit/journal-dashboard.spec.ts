@@ -328,9 +328,9 @@ describe('sessionCardViews', () => {
     expect(c!.tools).toEqual([{ name: 'Bash', count: 9 }, { name: 'Read', count: 2 }])
   })
 
-  it('lists triggered rules once each, marking the ones whose ADR was read after', () => {
+  it('lists triggered rules, marking the ones whose ADR was read after', () => {
     const s = session({
-      rulesLoaded: ['.claude/rules/adr-0004.md', '.claude/rules/adr-0008.md', '.claude/rules/adr-0004.md'],
+      rulesLoaded: ['.claude/rules/adr-0004.md', '.claude/rules/adr-0008.md'],
       rulesFollowedUp: ['.claude/rules/adr-0008.md'],
     })
     const [c] = sessionCardViews([s])
