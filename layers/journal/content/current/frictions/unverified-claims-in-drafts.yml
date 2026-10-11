@@ -41,3 +41,21 @@ occurrences:
   - session: session_01YSGRZcurrkv9WYqPfnRH2t
     date: "2026-10-10"
     severity: moderate
+  - session: session_01Tcn6x6mZizT14rJuQqYivt
+    date: "2026-10-10"
+    severity: minor
+  - session: session_01Mw8k3DVnAyVho8fcDofChZ
+    date: "2026-10-10"
+    severity: minor
+  - session: session_01LARTWkGx5vBwRwsMrdftPD
+    date: "2026-10-11"
+    severity: minor
+  - session: session_01CasnQoauTyLNUxd74agJsP
+    date: "2026-10-11"
+    severity: minor
+  - session: session_0177ZCpnHq4Sw5wicAEmriDh
+    date: "2026-10-11"
+    severity: nit
+  - session: session_01V3bxJaTSH8AWjrtSoBhNxK
+    date: "2026-10-11"
+    severity: moderate

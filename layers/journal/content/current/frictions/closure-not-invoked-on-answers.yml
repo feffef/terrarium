@@ -1,0 +1,12 @@
+name: closure-not-invoked-on-answers
+cause: >-
+  A session that only answers a question skips close-session, and the user has to ask whether it was logged.
+surface: safe
+status: open
+occurrences:
+  - session: session_01DRBxySwYL4HR4xEEJc3CXX
+    date: "2026-10-11"
+    severity: minor
+  - session: session_01BBQnwhyfsvoksh4oV9MXsU
+    date: "2026-10-11"
+    severity: minor

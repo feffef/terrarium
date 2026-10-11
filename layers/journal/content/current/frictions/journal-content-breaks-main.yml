@@ -3,6 +3,7 @@ cause: >-
   Session logs and Digests land on main without a gate (ADR-0009) while e2e tests and the strict session schema assert on them, so one log turns main and every open PR red.
 surface: safe
 status: open
+ref: "issue #1785"
 occurrences:
   - session: a1af4e46-8293-4f33-bf41-c956bd7f6306
     date: "2026-10-03"
@@ -19,3 +20,9 @@ occurrences:
   - session: session_015BjYk46dntcMuAWMn1z4Zw
     date: "2026-10-10"
     severity: major
+  - session: session_01LzWPjhbEKVo8HK7oTPqWK9
+    date: "2026-10-10"
+    severity: minor
+  - session: session_01WoJ2cTAuA3Qo9Mi9fd6Tki
+    date: "2026-10-11"
+    severity: minor

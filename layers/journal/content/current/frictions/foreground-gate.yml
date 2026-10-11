@@ -1,0 +1,19 @@
+name: foreground-gate
+cause: >-
+  Sessions run pnpm gate:scoped (about 3 minutes) in the foreground although CLAUDE.md says to background commands over 2 minutes; only a guard would reach them.
+surface: guard-or-hook
+status: tracked
+ref: "issue #1785"
+occurrences:
+  - session: session_015BjYk46dntcMuAWMn1z4Zw
+    date: "2026-10-10"
+    severity: minor
+  - session: session_013GkBtC56M36dmz5AtEb1Hp
+    date: "2026-10-11"
+    severity: nit
+  - session: session_01WuJh8gfMFWfS5bWEJcdScC
+    date: "2026-10-11"
+    severity: nit
+  - session: session_01YVCyXmxSSDQ6csSBVJ554H
+    date: "2026-10-11"
+    severity: nit
