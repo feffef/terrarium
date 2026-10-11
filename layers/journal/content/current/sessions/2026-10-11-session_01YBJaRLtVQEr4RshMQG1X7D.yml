@@ -1,0 +1,87 @@
+schemaVersion: 1
+session: session_01YBJaRLtVQEr4RshMQG1X7D
+startedAt: 2026-10-11T02:04:10Z
+endedAt: 2026-10-11T02:12:22Z
+kind: autonomous
+goal: Turn the last three days of session frictions into fixes
+status: in-review
+outcome: Two issues filed, two fix PRs dispatched; review and merge in progress
+summary: 'Scheduled frictions-to-fixes run; no human prompt. A survey subagent read 41 sessions and 239 frictions and returned five candidates. Agent-initiated selections: a grouped doc PR (blog-post step 12 fallback when a reply fails fact-check; headless claude -p session-id inheritance caveat), issue #1755 plus a code PR so session-frictions --compact serves the survey, and issue #1754 (ready-for-human) for the surface-blocked "read X before first Y" hook idea. Dropped the many frictions already fixed by recent PRs and the gate-flake pair (single unverified occurrences). Impl agents were Sonnet in worktrees. Review and merge of the PRs follows this log.'
+prs:
+  - "1756"
+docsRead:
+  - path: CONTEXT-MAP.md
+    reason: session-start glossary map
+  - path: CONTEXT.md
+    reason: session-start glossary
+  - path: docs/agents/github-integration.md
+    reason: before first GitHub operation
+  - path: docs/agents/git-conventions.md
+    reason: before first git fetch
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: impl agent dispatch brief
+  - path: docs/agents/issue-tracker.md
+    reason: before filing issues
+  - path: docs/agents/triage-labels.md
+    reason: label choice for filed issues
+  - path: docs/agents/pr-workflow.md
+    reason: PR review and merge recipe
+  - path: scripts/session-frictions.ts
+    reason: (no reason given)
+  - path: tests/unit/session-frictions.spec.ts
+    reason: (no reason given)
+  - path: /home/user/terrarium/CLAUDE.md
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: frictions-to-fixes
+    reason: (invoked as a slash command)
+frictions:
+  - description: Survey subagent made github calls before reading github-integration.md and had to slice a 288KB session-frictions output over several passes.
+    solution: "Issue #1755 makes --compact keep docsRead and subagents and names it in the Skill; #1754 proposes a trigger-time doc reminder hook."
+    severity: minor
+  - description: "SHELL-READ-DETECTION false positive: .agents/skills/blog-post/SKILL.md was credited from shell output, but the session marked it (not read)"
+    solution: Find the crediting command in the transcript and tighten scripts/shell-reads.ts
+    severity: moderate
+  - description: "SHELL-READ-DETECTION false positive: .agents/skills/frictions-to-fixes/SKILL.md was credited from shell output, but the session marked it (not read)"
+    solution: Find the crediting command in the transcript and tighten scripts/shell-reads.ts
+    severity: moderate
+durationSec: 492
+models:
+  claude-sonnet-5-5: 44
+toolCounts:
+  Read: 8
+  Bash: 7
+  Agent: 3
+  ToolSearch: 1
+  mcp__github__issue_write: 2
+  ReadNotifications: 1
+  mcp__github__pull_request_read: 2
+  Skill: 2
+filesEdited:
+  - .agents/skills/blog-post/SKILL.md
+  - docs/agents/environment-caveats.md
+rulesLoaded:
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0021.md
+  - /home/user/terrarium/.claude/rules/adr-0015.md
+  - /home/user/terrarium/.claude/rules/adr-0005.md
+  - /home/user/terrarium/.claude/rules/adr-0012.md
+subagents:
+  - type: general-purpose
+    task: Survey and screen frictions
+  - type: general-purpose
+    task: Doc fixes grouped PR
+    model: sonnet
+  - type: general-purpose
+    task: Compact flag fix PR
+    model: sonnet
+gitBranch: claude/eager-ptolemy-s755js
+entrypoint: remote_trigger
+cliVersion: 2.1.296
+trigger: frictions-to-fixes
+landedBy: Stop
