@@ -1,13 +1,14 @@
 schemaVersion: 1
 session: session_01D3gBoQCQTmjVwEyuA3qZkQ
 startedAt: 2026-10-11T22:14:00Z
-endedAt: 2026-10-11T22:18:27Z
-kind: delegated
-goal: Auto-triage sweep of open issues
-status: completed
-outcome: "2 of 25 open issues eligible; both triaged to ready-for-agent (#1778, #1773)"
-summary: "Human-instructed: the owner started /auto-triage (the ADR-0022 standing green-light). Of 25 open issues, every latest comment carried ADR-0017 provenance, so only the two without a triage state were eligible: #1778 (unlabelled) and #1773 (needs-triage). No open PRs existed. Both are owner-authored, unassigned and unblocked. I dispatched one subagent per issue, and each one triaged its issue to enhancement + ready-for-agent with one Agent Brief comment. #1778 is a time-gated verification run (earliest 2026-10-14 13:00Z and at least 20 post-merge sessions). Its subagent put that gate in the brief, since ADR-0022 doesn't count a time gate as a reason to escalate and the blocking convention only covers issue blockers. #1773's subagent confirmed the blog-post step 12 novelty-only bar against the Skill and PR #1772. I checked both label sets on GitHub. The two briefs share no file with the other open ready-for-agent issues (#1499, #1712), so I added no blocking edges. No code changes and no PR."
-prs: []
+endedAt: 2026-10-11T22:30:38Z
+kind: interactive
+goal: Auto-triage sweep, then the blog-post reply fix and design proposals for recent ready-for-human issues
+status: in-review
+outcome: "Two issues triaged; PR #1788 open for the blog-post reply bar; #1778 early look and nine design proposals in progress"
+summary: "Human-instructed throughout. The owner started /auto-triage (the ADR-0022 standing green-light). Of 25 open issues, every latest comment carried ADR-0017 provenance, so only #1778 (unlabelled) and #1773 (needs-triage) were eligible. One subagent each triaged them to enhancement + ready-for-agent. #1778's time gate went into its brief. The owner then asked: (1) implement #1773 in a background agent. A worktree impl agent edited the blog-post Skill's steps 9 and 12 (\"none\" by default, a cold read of the final reply, no hedge for an unverifiable claim), and the scoped gate passed. I opened PR #1788 and ran a two-axis code review. The agent dropped the runner-up fallback, which I flagged for the owner. (2) An early, read-only look at the post-#1775 sessions for #1778 with proposed fixes; it is running. (3) One Opus agent per ready-for-human issue opened 2026-10-10 or 2026-10-11 (nine issues), each returning a design proposal to grill the owner on. I asked first how to split the agents, which grilling Skill to use, and where proposals go. The owner chose one per issue, grilling plus domain-modeling, and returned to this session, not posted."
+prs:
+  - "1788"
 docsRead:
   - path: CONTEXT-MAP.md
     reason: session-start context index
@@ -45,7 +46,65 @@ docsRead:
   - path: docs/research/rulebook-migration-table.md
     reason: "subagent: checked for an existing classification of the blog-post rule; none"
     useful: no
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: .agents/skills/writing-for-agents/SKILL.md
+    reason: (no reason given)
+  - path: docs/adr/0005-skill-model.md
+    reason: (no reason given)
+  - path: docs/adr/0029-instructions-load-with-the-files-they-govern.md
+    reason: (no reason given)
+  - path: .claude/rules/tenant-layers.md
+    reason: (no reason given)
+  - path: .claude/rules/guards.md
+    reason: (no reason given)
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: (no reason given)
+  - path: scripts/bash-rules-hint.ts
+    reason: (no reason given)
+  - path: scripts/bash-rules-hint.sh
+    reason: (no reason given)
+  - path: scripts/session-trace.ts
+    reason: (no reason given)
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: (no reason given)
+  - path: docs/agents/guards.md
+    reason: (no reason given)
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: (no reason given)
+  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
+    reason: (no reason given)
+  - path: scripts/log-session.ts
+    reason: (no reason given)
+  - path: scripts/merge-pr.ts
+    reason: (no reason given)
+  - path: docs/research/github-branch-protection-vs-autonomous-log-commits.md
+    reason: (no reason given)
+  - path: docs/adr/0003-agent-operating-model-and-governance.md
+    reason: (no reason given)
+  - path: docs/proposals/1633-dependabot-automerge.md
+    reason: (no reason given)
   - path: .agents/prune-trials.yml
+    reason: (no reason given)
+  - path: docs/adr/0018-tenant-layers-under-layers-directory.md
+    reason: (no reason given)
+  - path: scripts/validate-adr-rules.ts
+    reason: (no reason given)
+  - path: .agents/skills/visitor-loop/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/digest/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/prune-trial/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/log-session/SKILL.md
     reason: (no reason given)
 skillsUsed:
   - name: auto-triage
@@ -54,6 +113,12 @@ skillsUsed:
     reason: closure
   - name: log-session
     reason: (no reason given)
+  - name: dispatch-subagents
+    reason: (no reason given)
+  - name: code-review
+    reason: (no reason given)
+  - name: implement
+    reason: (invoked as a slash command)
 frictions:
   - description: Read CONTEXT-MAP.md, CONTEXT.md and four docs/agents files with chained cat instead of the Read tool, breaking CLAUDE.md's 'Read files with the Read tool' (ADR-0029); rules governing those files may not have loaded.
     solution: Use the Read tool for each instruction doc, even at session start when batching feels faster.
@@ -64,28 +129,41 @@ frictions:
   - description: "A #1778 triage subagent's broad grep over shared/ injected six unrelated rules at once (bash-rules hint fan-out)."
     solution: "Narrow the bash-rules hint for recursive greps over a directory, or count it in #1778 check 2."
     severity: nit
-durationSec: 268
+  - description: The owner named a /grill-with-docs Skill that doesn't exist here; I mapped it to grilling + domain-modeling after asking.
+    solution: None needed beyond asking; possibly alias the name if it recurs.
+    severity: nit
+durationSec: 999
 models:
-  claude-opus-5-5: 41
+  claude-opus-5-5: 92
 toolCounts:
-  Bash: 13
-  Read: 2
-  Agent: 2
-  Skill: 2
+  Bash: 18
+  Read: 4
+  Agent: 15
+  Skill: 4
   Write: 1
+  AskUserQuestion: 2
+  ToolSearch: 1
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+filesEdited:
+  - .agents/skills/blog-post/SKILL.md
 rulesLoaded:
   - .claude/rules/adr-0021.md
   - .claude/rules/adr-0005.md
   - .claude/rules/adr-0029.md
   - .claude/rules/adr-0004-human-merge.md
   - .claude/rules/adr-0018.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/adr-0012.md
   - .claude/rules/guards.md
   - .claude/rules/adr-0002.md
   - .claude/rules/adr-0006.md
   - .claude/rules/adr-0013.md
   - .claude/rules/adr-0014.md
   - .claude/rules/adr-0025.md
-  - .claude/rules/tenant-layers.md
+  - .claude/rules/adr-0026.md
+  - .claude/rules/adr-0028.md
 rulesGlobal:
   - .claude/rules/adr-0022.md
   - .claude/rules/adr-0004.md
@@ -97,8 +175,13 @@ rulesGlobal:
   - .claude/rules/adr-0023.md
   - .claude/rules/adr-0017.md
 rulesFollowedUp:
-  - .claude/rules/adr-0022.md
   - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0018.md
 ruleVerdicts:
   - path: .claude/rules/adr-0022.md
     reason: standing green-light scoped to Trusted-authored issues
@@ -168,6 +251,41 @@ subagents:
     task: "Triage issue #1778"
   - type: general-purpose
     task: "Triage issue #1773"
+  - type: general-purpose
+    task: "Implement #1773 blog-post step 12"
+  - type: general-purpose
+    task: "Early exploration for #1778"
+  - type: general-purpose
+    task: "Design proposal #1786"
+    model: opus
+  - type: general-purpose
+    task: "Design proposal #1785"
+    model: opus
+  - type: general-purpose
+    task: "Design proposal #1784"
+    model: opus
+  - type: general-purpose
+    task: "Design proposal #1769"
+    model: opus
+  - type: general-purpose
+    task: "Design proposal #1761"
+    model: opus
+  - type: general-purpose
+    task: "Design proposal #1759"
+    model: opus
+  - type: general-purpose
+    task: "Design proposal #1754"
+    model: opus
+  - type: general-purpose
+    task: "Design proposal #1752"
+    model: opus
+  - type: general-purpose
+    task: "Design proposal #1745"
+    model: opus
+  - type: general-purpose
+    task: "Standards review #1773 diff"
+  - type: general-purpose
+    task: "Spec review #1773 diff"
 gitBranch: claude/keen-brahmagupta-31hfew
 entrypoint: remote
 cliVersion: 2.1.296
