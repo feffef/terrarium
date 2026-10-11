@@ -1,0 +1,106 @@
+schemaVersion: 1
+session: session_01BBQnwhyfsvoksh4oV9MXsU
+startedAt: 2026-10-11T10:04:34Z
+endedAt: 2026-10-11T10:10:57Z
+kind: interactive
+goal: Open the site with the maintainer-mode query parameter
+status: completed
+outcome: Found the existing ?maintainer flag and gave the user the URL form; no repo changes
+summary: The user (human-instructed) asked to open Chrome with maintainer mode enabled via a query parameter. Per their preference I asked questions first. Repo search found no such parameter in app code at first and no Chrome tools exist in this cloud session; the user's answers were ambiguous ("Search" typed into the parameter question), so I searched again and found `?maintainer` / `?maintainer=0` in the journal layer (layers/journal/app/utils/maintainerView.ts), remembered per tab in sessionStorage. I could not open the user's Chrome from the container, so I explained the URL form (/t/journal/current?maintainer) and asked what they meant by "Search". The user confirmed it worked. Everything was human-instructed; nothing was agent-initiated, no files were edited and no PR was opened. Logging was done only after the user asked "Logged?".
+prs: []
+docsRead:
+  - path: layers/journal/app/utils/maintainerView.ts
+    reason: defines the ?maintainer flag semantics
+    useful: yes
+  - path: scripts/preview.ts
+    reason: checked how a preview server would be started; not needed in the end
+    useful: partly
+  - path: CLAUDE.md
+    reason: re-read at closure to audit rule breaks
+    useful: yes
+skillsUsed:
+  - name: close-session
+    reason: closure, prompted by the user
+  - name: log-session
+    reason: authoring this log
+frictions:
+  - description: Skipped the CLAUDE.md session-start rule to read CONTEXT-MAP.md and CONTEXT.md before acting.
+    solution: Read both first; low impact here since the task was a lookup, but the glossary could have named the Journal's maintainer view sooner.
+    severity: minor
+  - description: Read scripts/preview.ts with Bash sed instead of the Read tool, against the CLAUDE.md read-files rule (ADR-0029).
+    solution: Use Read; the rule exists so path-scoped rules load.
+    severity: nit
+  - description: Did not invoke close-session by self-judgment at task end; the user had to ask 'Logged?' (no PR existed, so not HUMAN-PROMPTED-CLOSURE).
+    solution: Invoke close-session when the user confirms the work is done.
+    severity: minor
+  - description: Recommended a course of action without first grepping docs/adr for ADRs binding the maintainer view, as CLAUDE.md asks.
+    solution: Run grep -l maintainer docs/adr/* before answering; the answer happened to be correct.
+    severity: nit
+  - description: The ?maintainer flag is documented only in code comments and tests, so a first search for 'maintainer' surfaced mostly unrelated triage docs.
+    solution: Mention ?maintainer in layers/journal/CONTEXT.md so it is findable by the glossary.
+    severity: nit
+durationSec: 383
+models:
+  claude-sonnet-5-5: 28
+toolCounts:
+  Grep: 2
+  ToolSearch: 1
+  AskUserQuestion: 1
+  Glob: 2
+  Read: 2
+  Bash: 3
+  Skill: 2
+  Write: 1
+rulesLoaded:
+  - .claude/rules/adr-0008.md
+  - .claude/rules/adr-0029.md
+rulesGlobal:
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0001.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0023.md
+  - .claude/rules/adr-0017.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0001.md
+    reason: one container, baked content; background only
+    useful: no
+  - path: .claude/rules/adr-0003.md
+    reason: PR/autonomy rules; no PR was needed
+    useful: no
+  - path: .claude/rules/adr-0004.md
+    reason: gate and human-merge; no change made
+    useful: no
+  - path: .claude/rules/adr-0009.md
+    reason: told me to log at closure; I only did so when asked
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: provenance on GitHub writes; none made
+    useful: no
+  - path: .claude/rules/adr-0020.md
+    reason: trust tiers; not relevant
+    useful: no
+  - path: .claude/rules/adr-0022.md
+    reason: triage sweep; not relevant
+    useful: no
+  - path: .claude/rules/adr-0023.md
+    reason: guest pipeline; not relevant
+    useful: no
+  - path: .claude/rules/adr-0027.md
+    reason: prune trials; not relevant
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: loaded when I read rules; not relevant
+    useful: no
+  - path: .claude/rules/adr-0008.md
+    reason: loaded on reading journal layer file; background
+    useful: no
+gitBranch: ccr-59011557-tjfd15
+entrypoint: remote_mobile
+cliVersion: 2.1.296
+ideas:
+  - "Add a one-line 'maintainer view: append ?maintainer to any Journal URL' to layers/journal/CONTEXT.md so agents and humans find it without code spelunking"
+landedBy: Stop
