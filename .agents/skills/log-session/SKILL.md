@@ -119,6 +119,9 @@ ideas:                             # OPTIONAL — omit unless something sparked
 - **frictions is the point.** List *every* one — anything that felt unnecessarily
   complex, token-heavy, or repetitive. A **doc contradiction found mid-session** is
   itself a friction: record it with a `solution` pointing at the single home to fix.
+  So is a **rule unrelated to your task** that confused you or cost you work
+  (ADR-0029): name the `.claude/rules/` file, the file or Skill you were on when
+  it appeared, and the narrower `paths` that would have spared you.
 - **`summary` must state plainly which parts of the session's work were
   human-instructed (a direct ask, or an explicit green-light) versus
   agent-initiated** — don't leave that provenance to be inferred from context.

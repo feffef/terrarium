@@ -52,11 +52,18 @@ whatever files it touches (a git command, a PR, a Public issue), stays in
   injects every rule whose `paths` name `.agents/skills/<skill>/`.
 - **A rule's `paths` can be a policy.** `adr-0004-human-merge.md`'s `paths` are
   the Human-only list that `scripts/merge-pr.ts` enforces.
+- **Rules stay short, so `paths` can be generous.** A rule is a few lines, so
+  loading it where it turns out irrelevant costs little; a broad glob is fine.
+- **A rule says what to know, not when to act.** It arrives after the touch
+  that loads it, as the text and its file path, without its `paths`. It cannot
+  order steps ("before your first edit") or make the agent read a file in full;
+  those stay in `CLAUDE.md`.
 
 Claude Code sees a file touch through Read, Edit and Write, and through a Bash
 command that is one simple read of one file (`cat`, `head`, `sed -n`, `grep`).
 It misses piped, chained (`cd … && …`) and multi-file commands (tested in this
-ADR's session). `CLAUDE.md` asks for the Read tool for that reason.
+ADR's session). `CLAUDE.md` asks for the Read tool for that reason. Rules load
+inside subagents too (PR #1741). Whether a Bash write loads one is untested.
 
 ## Consequences
 
@@ -69,9 +76,15 @@ ADR's session). `CLAUDE.md` asks for the Read tool for that reason.
   main home for non-ADR instructions.
 - A plan or an opinion often comes before any file is opened, so `CLAUDE.md`
   keeps the step to grep `docs/adr/` before recommending a change.
+- Action-bound instructions get their own delivery: issue #1754 proposes a
+  `PreToolUse` hook that points to the doc at the first matching action.
 - Session logs record which path-scoped rules loaded (`rulesLoaded`) and whose
   ADR the agent then read (`rulesFollowedUp`), so a rule's reach can be
-  measured.
+  estimated, not measured: a rule can be counted twice under a relative and an
+  absolute path, an ADR read by a subagent does not credit the parent's rule,
+  and Bash edits are missing from `filesEdited`.
+- An agent logs a Friction when an unrelated rule confused it or cost it work
+  (`log-session`), so a too-broad glob shows up and gets narrowed.
 - Gate checks for non-ADR rules (they have `paths`; the doc they name exists)
   are a follow-up.
 - Issue #1745 stays open as an alternative for ADR rules only: make each trimmed
