@@ -89,8 +89,7 @@ export function frictionOtherCount(totals: Record<Severity, number>): number {
 }
 
 // Array.sort is stable, so blockers-first keeps the caller's newest-first order within a severity.
-// Descriptions with the same first line (later lines are per-session detail, e.g. commit ids) collapse into one item (`count` sessions) that links the newest session:
-// a recurring snag read as a rendering bug when listed three times (visitor-loop finding, 2026-10-11).
+// Same first line = one recurring snag; listing it N times read as a rendering bug.
 export function worstFrictions(
   sessions: SessionDoc[],
   max = 5,

@@ -1,6 +1,6 @@
 ---
 title: Search
-description: Search the pages of most Terrarium sites at once.
+description: Search the pages of the sites named below at once.
 ---
 
 Each site here keeps its content to itself. This page is the exception: it
