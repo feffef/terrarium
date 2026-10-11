@@ -1,15 +1,16 @@
 schemaVersion: 1
 session: session_0177ZCpnHq4Sw5wicAEmriDh
 startedAt: 2026-10-11T11:04:44Z
-endedAt: 2026-10-11T11:36:53Z
+endedAt: 2026-10-11T12:37:09Z
 kind: autonomous
 goal: Write one Kevin blog post from the last three days of repo activity
 status: completed
-outcome: Kevin post (PR 1771) and Karen reply (PR 1772) both merged on a green gate
-summary: "Scheduled /blog-post run, no human prompt. Rotation forced Kevin (last david, starved and eligible kevin). Drafted three Kevin candidates from the Oct 8-11 window: the Human-only list as rule paths read by merge-pr.ts (PR 1741), the session-log rule follow-up and verdict fields (PRs 1749, 1767), and the failed step-12 reply drafts (PR 1750, 1756). A blind sonnet reader picked the first; I revised it for the jargon gaps it named, a second sonnet fact-checked it (about 19 claims, 5 fixed), the scoped gate passed and PR 1771 is open. All choices were agent-initiated within the Skill. PR 1771 merged. Step 12: three reply sketches (Karen, David, Eyra) went to a fresh reader after Karen's load-bearing claim was checked; Karen won (manifest `kind:` line is not on the Human-only list), was fact-checked (about 24 claims, 3 fixed) and merged as PR 1772 with a pingback stub."
+outcome: Kevin post merged (PR 1771); Karen reply merged (PR 1772) then removed at the owner's request (PR 1774); skill-quality issue 1773 filed
+summary: "Scheduled /blog-post run, no human prompt. Rotation forced Kevin (last david, starved and eligible kevin). Drafted three Kevin candidates from the Oct 8-11 window: the Human-only list as rule paths read by merge-pr.ts (PR 1741), the session-log rule follow-up and verdict fields (PRs 1749, 1767), and the failed step-12 reply drafts (PR 1750, 1756). A blind sonnet reader picked the first; I revised it for the jargon gaps it named, a second sonnet fact-checked it (about 19 claims, 5 fixed), the scoped gate passed and PR 1771 is open. All choices were agent-initiated within the Skill. PR 1771 merged. Step 12: three reply sketches (Karen, David, Eyra) went to a fresh reader after Karen's load-bearing claim was checked; Karen won (manifest `kind:` line is not on the Human-only list), was fact-checked (about 24 claims, 3 fixed) and merged as PR 1772 with a pingback stub. The owner then said the reply was uninteresting and hard to understand, and directed me to delete it and file an issue; I deleted post and stub (PR 1774) and filed issue 1773 about the step-12 reader's novelty-only bar."
 prs:
   - "1771"
   - "1772"
+  - "1774"
 docsRead:
   - path: CONTEXT.md
     reason: glossary and session kinds
@@ -40,6 +41,10 @@ docsRead:
     useful: yes
   - path: scripts/merge-pr.ts
     reason: (no reason given)
+  - path: docs/agents/issue-tracker.md
+    reason: (no reason given)
+  - path: docs/agents/triage-labels.md
+    reason: (no reason given)
   - path: layers/blog/content/kevin/pages/2026-10-11-the-warning-label-and-the-lock-read-the-same-list.md
     reason: (no reason given)
   - path: layers/blog/content/karen/pages/2026-10-11-the-clause-with-no-file-has-a-file.md
@@ -67,25 +72,30 @@ frictions:
   - description: Fact-check subagent found the first draft's description overbroad; two drafted counts also disagreed with the PR body (CLAUDE.md lines, commit counts), costing re-derivation.
     solution: Re-derive counts from git before drafting, as the Skill says.
     severity: nit
+  - description: Shipped a Karen reply the owner found uninteresting and hard to understand; step 12's reader judged only sketches on novelty and I should have accepted none.
+    solution: Issue 1773 - default step 12 to none, have the reader judge the finished draft for interest and clarity, cut an unverifiable thesis.
+    severity: moderate
   - description: "SHELL-READ-DETECTION false positive: docs/agents/github-integration.md was credited from shell output, but the session marked it (not read)"
     solution: Find the crediting command in the transcript and tighten scripts/shell-reads.ts
     severity: moderate
   - description: "SHELL-READ-DETECTION false positive: docs/adr/0003-agent-operating-model-and-governance.md was credited from shell output, but the session marked it (not read)"
     solution: Find the crediting command in the transcript and tighten scripts/shell-reads.ts
     severity: moderate
-durationSec: 1929
+durationSec: 5545
 models:
-  claude-sonnet-5-5: 110
+  claude-sonnet-5-5: 129
 toolCounts:
-  Read: 6
-  Bash: 39
+  Read: 8
+  Bash: 44
   mcp__github__search_pull_requests: 1
   mcp__github__pull_request_read: 5
   mcp__github__issue_read: 1
   Agent: 4
-  mcp__github__create_pull_request: 2
+  mcp__github__create_pull_request: 3
   Skill: 2
-  mcp__github__add_issue_comment: 2
+  mcp__github__add_issue_comment: 3
+  mcp__github__search_issues: 1
+  mcp__github__issue_write: 1
 rulesLoaded:
   - .claude/rules/adr-0012.md
   - .claude/rules/adr-0021.md
