@@ -98,20 +98,15 @@ export function findAdrRuleProblems(input: AdrRuleInput): string[] {
       `ADR-${ruleAdr(file)} changed since ${RULES_DIR}/${file} was last checked. Re-read it, update it if the rule changed, then run \`pnpm exec tsx scripts/validate-adr-rules.ts --write\`.`,
     )
   }
-  if (input.otherRules) problems.push(...otherRuleProblems(input.otherRules))
-  return problems
-}
-
-function otherRuleProblems({ files, exists }: NonNullable<AdrRuleInput['otherRules']>): string[] {
-  const problems: string[] = []
-  for (const [file, text] of Object.entries(files)) {
+  const other = input.otherRules
+  for (const [file, text] of Object.entries(other?.files ?? {})) {
     if (rulePaths(text).length === 0) {
       problems.push(
         `${RULES_DIR}/${file} has no \`paths\` list: a non-ADR rule loads with the files it governs (ADR-0029); cross-cutting instructions stay in CLAUDE.md.`,
       )
     }
     for (const p of ruleDocPaths(text)) {
-      if (!exists(p)) problems.push(`${RULES_DIR}/${file} names ${p}, which does not exist.`)
+      if (!other!.exists(p)) problems.push(`${RULES_DIR}/${file} names ${p}, which does not exist.`)
     }
   }
   return problems
@@ -148,9 +143,7 @@ function main(): void {
     console.error(`validate-adr-rules: FAIL\n${problems.map((p) => `  ${p}`).join('\n')}`)
     process.exit(1)
   }
-  console.log(
-    `validate-adr-rules: PASS — ${Object.keys(input.rules).length} ADR rule(s) match their ADRs, ${Object.keys(input.otherRules?.files ?? {}).length} other rule(s) have paths and existing docs`,
-  )
+  console.log(`validate-adr-rules: PASS — ${Object.keys({ ...input.rules, ...input.otherRules?.files }).length} rule(s)`)
 }
 
 if (import.meta.url === pathToFileURL(process.argv[1] ?? '').href) main()

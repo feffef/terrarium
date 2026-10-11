@@ -366,6 +366,7 @@ function showsNoContent(verb: string, tokens: Token[]): boolean {
  *  file to read, or why it is not one. Flags and redirect operators drop. */
 function readerArgs(verb: string, tokens: Token[]): { skip?: SkipRule; text: string }[] {
   const out: { skip?: SkipRule; text: string }[] = []
+  const redirect: SkipRule = 'redirect target: written, not read'
   const patternFlags = SCRIPT_FIRST.has(verb) ? PATTERN_FLAGS : new Set<string>()
   const patternSupplied = tokens.some((t) => !t.quoted && patternFlags.has(t.text))
   const valueFlags = new Set([...patternFlags, ...ARG_FLAGS, ...(VERB_ARG_FLAGS[verb] ?? [])])
@@ -381,12 +382,12 @@ function readerArgs(verb: string, tokens: Token[]): { skip?: SkipRule; text: str
       // `> out`, `>& out`, `2>> log`, `2>&1`, `&>out`. `<` is NOT here: `cat < docs/x.md`
       // genuinely streams the file.
       if (/^(?:\d*|&)>>?&?$/.test(t.text)) {
-        bound = 'redirect target: written, not read'
+        bound = redirect
         continue
       }
       const attached = /^(?:\d*|&)>>?(.+)$/.exec(t.text)
       if (attached) {
-        out.push({ skip: 'redirect target: written, not read', text: attached[1]! })
+        out.push({ skip: redirect, text: attached[1]! })
         continue
       }
       if (t.text.length > 1 && t.text.startsWith('-')) {

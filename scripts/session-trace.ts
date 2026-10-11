@@ -149,16 +149,10 @@ export function isContentPath(p: string | undefined): p is string {
   return typeof p === 'string' && p.length > 0 && !NOISE.some((re) => re.test(p))
 }
 
-/** Relativize repo paths to match how the agent cites them (`docs/adr/…`, not
- *  `/home/user/terrarium/docs/adr/…`) so the stitch dedups a curated entry
- *  against its observed twin instead of listing the file twice. Applied AFTER
- *  the noise filter, which keys on absolute paths. Paths outside the repo stay
- *  absolute — honestly flagging an external file. Shared with the author-time
- *  shell-read scan so both derive the same key for one file. */
 // The harness doesn't record a rule that scripts/skill-rules-hint.ts or
 // scripts/bash-rules-hint.ts injects as a load; only the hint's own
 // "Contents of <rule>:" headers name it.
-export function hintedRules(content: unknown): string[] {
+function hintedRules(content: unknown): string[] {
   return ruleBlockFiles((Array.isArray(content) ? content : [content]).filter((c) => typeof c === 'string').join('\n'))
 }
 
@@ -169,6 +163,12 @@ function ruleKey(path: string): string {
   return path.slice(path.lastIndexOf('.claude/rules/'))
 }
 
+/** Relativize repo paths to match how the agent cites them (`docs/adr/…`, not
+ *  `/home/user/terrarium/docs/adr/…`) so the stitch dedups a curated entry
+ *  against its observed twin instead of listing the file twice. Applied AFTER
+ *  the noise filter, which keys on absolute paths. Paths outside the repo stay
+ *  absolute — honestly flagging an external file. Shared with the author-time
+ *  shell-read scan so both derive the same key for one file. */
 function relativizer(records: Record<string, unknown>[]): (p: string) => string {
   const meta = records.find((r) => r.type === 'user' || r.type === 'assistant') ?? {}
   const cwd = typeof meta.cwd === 'string' ? meta.cwd : ''

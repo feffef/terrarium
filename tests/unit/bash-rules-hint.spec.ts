@@ -6,10 +6,9 @@ import { tmpdir } from 'node:os'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
-import { bashRulesHint, rulesForPaths } from '../../scripts/bash-rules-hint.ts'
-import { hintedRules } from '../../scripts/session-trace.ts'
-import { bashReadPaths } from '../../scripts/shell-reads.ts'
+import { bashRulesHint } from '../../scripts/bash-rules-hint.ts'
 import type { RuleFile } from '../../scripts/skill-rules-hint.ts'
+import { ruleBlockFiles } from '../../scripts/validate-adr-rules.ts'
 
 const repo = resolve(dirname(fileURLToPath(import.meta.url)), '../..')
 const rule = (file: string, paths: string[], body: string): RuleFile => ({
@@ -23,11 +22,11 @@ const RULES = [
 ]
 const none = () => new Set<string>()
 const hint = (command: string, cwd = '/repo') => bashRulesHint(command, cwd, '/repo', RULES, none)
-const injected = (command: string, cwd?: string) => hintedRules(hint(command, cwd) ?? '')
+const injected = (command: string, cwd?: string) => ruleBlockFiles(hint(command, cwd) ?? '')
 const T = ['.claude/rules/tenant.md']
 const G = ['.claude/rules/guards.md']
 
-describe('bashRulesHint() — the pure core', () => {
+describe('bashRulesHint(), with an injected loaded set', () => {
   it('shows each rule body under its header, without frontmatter', () => {
     const out = hint('cat layers/atlas/nuxt.config.ts | head') ?? ''
     expect(out.split('\n')[0]).toBe('Files this command read are governed by these rules:')
@@ -73,13 +72,9 @@ describe('bashRulesHint() — the pure core', () => {
     for (const [command, rules, cwd] of cases) expect(injected(command, cwd), command).toEqual(rules)
   })
 
+  // shell-reads.spec.ts pins which reads are simple.
   it('stays silent for a simple one-file read, which the harness already covers', () => {
-    const simple = ['cat nuxt.config.ts', 'head -50 nuxt.config.ts', 'head -n 50 nuxt.config.ts', 'sed -n 1,5p nuxt.config.ts', 'grep x nuxt.config.ts']
-    const redirected = ['cat nuxt.config.ts 2>&1', 'cat nuxt.config.ts >/dev/null 2>/dev/null', 'head -5 nuxt.config.ts 2> /dev/null', 'cat nuxt.config.ts >&2']
-    for (const c of [...simple, ...redirected]) {
-      expect(bashReadPaths(c, '/repo'), c).toEqual({ paths: ['/repo/nuxt.config.ts'], simple: true })
-      expect(hint(c), c).toBeNull()
-    }
+    for (const c of ['cat nuxt.config.ts', 'grep x nuxt.config.ts 2>&1']) expect(hint(c), c).toBeNull()
   })
 
   it('walks a real directory, without following symlinks, to find a file a glob matches', () => {
@@ -94,7 +89,7 @@ describe('bashRulesHint() — the pure core', () => {
     dir('layers/f/content')
     writeFileSync(join(root, 'layers/f/content/s'), '')
     const rules = [rule('mdc.md', ['layers/*/content/**/*.md'], '# MDC'), rule('app.md', ['layers/*/app/**'], '# App')]
-    const at = (d: string) => hintedRules(bashRulesHint(`grep -rn x ${d} | head`, root, root, rules, none) ?? '')
+    const at = (d: string) => ruleBlockFiles(bashRulesHint(`grep -rn x ${d} | head`, root, root, rules, none) ?? '')
     const started = Date.now()
     expect(at('layers/j/content/s/')).toEqual([]) // yml only, and a symlink loop
     expect(Date.now() - started).toBeLessThan(1000)
@@ -110,15 +105,10 @@ describe('bashRulesHint() — the pure core', () => {
     }
     expect(bashRulesHint('cat README.md | head', '/repo', '/repo', RULES, never)).toBeNull()
     const loaded = () => new Set(T)
-    expect(hintedRules(bashRulesHint('cat nuxt.config.ts scripts/a-guard.ts', '/repo', '/repo', RULES, loaded) ?? '')).toEqual(G)
+    expect(ruleBlockFiles(bashRulesHint('cat nuxt.config.ts scripts/a-guard.ts', '/repo', '/repo', RULES, loaded) ?? '')).toEqual(G)
     expect(bashRulesHint('cat a layers/a/nuxt.config.ts', '/repo', '/repo', RULES, loaded)).toBeNull()
   })
 
-  it('matches rules by their paths only', () => {
-    const holds = () => true
-    expect(rulesForPaths(['nuxt.config.ts', 'scripts/a-guard.ts'], RULES, holds).map((r) => r.file)).toEqual(['tenant.md', 'guards.md'])
-    expect(rulesForPaths(['README.md'], RULES, holds)).toEqual([])
-  })
 })
 
 describe('the hook entry (sh pre-filter → tsx)', () => {
@@ -138,10 +128,6 @@ describe('the hook entry (sh pre-filter → tsx)', () => {
     expect(out.additionalContext).toContain('Contents of .claude/rules/guards.md:')
   })
 
-  it('passes a reader verb on a later line through the pre-filter', () => {
-    expect(JSON.parse(run(bash('git status\nhead -5 README.md scripts/tail-pipe-guard.ts')).stdout).hookSpecificOutput.additionalContext).toContain('guards.md')
-  })
-
   it('writes nothing when the pre-filter drops the command', () => {
     expect(run(bash('ls -la && git status'))).toMatchObject({ status: 0, stdout: '' })
   })
@@ -152,14 +138,16 @@ describe('the hook entry (sh pre-filter → tsx)', () => {
     `{"tool_name":"Bash","cwd":${JSON.stringify(repo)},"tool_input":{"command":${JSON.stringify(seen)},"command":"cat README.md scripts/tail-pipe-guard.ts"}}`
 
   it('skips tsx for a read that cannot be compound or multi-file', () => {
-    for (const seen of ['cat scripts/tail-pipe-guard.ts', 'head -50 scripts/tail-pipe-guard.ts']) {
+    for (const seen of ['cat f', 'head -50 f', 'head -n 5 f', 'grep x f', 'grep -m 1 x f', 'sed -n 1,5p f']) {
       expect(run(probe(seen))).toMatchObject({ status: 0, stdout: '' })
     }
   })
 
   it('runs tsx for any compound or multi-word read', () => {
-    for (const seen of ['cat a | head', 'cd x && cat a', 'cat a; ls', 'cat $(ls)', 'ls\ncat a', 'cat a b', 'grep -n x a']) {
-      expect(run(probe(seen)).stdout).toContain('guards.md')
+    const compound = ['cat a | head', 'cd x && cat a', 'cat a; ls', 'cat $(ls)', 'ls\ncat a', 'cat a b', 'cat\ta b']
+    const multi = ['grep -n x a b', 'head -n 5 a b', 'sed -n 1p a b', 'grep -rn x d', 'rg x d']
+    for (const seen of [...compound, ...multi]) {
+      expect(run(probe(seen)).stdout, seen).toContain('guards.md')
     }
   })
 
@@ -169,10 +157,6 @@ describe('the hook entry (sh pre-filter → tsx)', () => {
     expect(run(late).stdout).toContain('guards.md')
     const quoted = `{"tool_name":"Bash","cwd":${JSON.stringify(repo)},"tool_input":{"command":${compound}},"tool_response":{"x":"tool_input","command":"ls"}}`
     expect(run(quoted).stdout).toContain('guards.md')
-  })
-
-  it('counts a tab as a word separator', () => {
-    expect(run(bash('cat\tREADME.md scripts/tail-pipe-guard.ts')).stdout).toContain('guards.md')
   })
 
   it('skips a rule the transcript already loaded, unless a subagent ran the command', () => {

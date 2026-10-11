@@ -225,7 +225,13 @@ describe('false positives', () => {
     expect(bashReadPaths('cat a \\\n  b', '/r').paths).toEqual(['/r/a', '/r/b'])
   })
 
-  it("reads tail -f's file: -f supplies patterns only to grep and rg", () => {
+  it('marks a one-file read simple, fd redirects included', () => {
+    const reads = ['cat f', 'head -50 f', 'head -n 50 f', 'sed -n 1,5p f', 'grep x f']
+    const redirected = ['cat f 2>&1', 'cat f >/dev/null 2>/dev/null', 'head -5 f 2> /dev/null', 'cat f >&2']
+    for (const c of [...reads, ...redirected]) expect(bashReadPaths(c, '/r'), c).toEqual({ paths: ['/r/f'], simple: true })
+  })
+
+  it("reads tail -f's file: -f supplies a pattern or program only to grep, rg, sed and awk", () => {
     expect(paths('tail -f docs/agents/x.md | head')).toEqual(['docs/agents/x.md'])
     expect(paths('tail -F docs/agents/x.md')).toEqual(['docs/agents/x.md'])
     expect(paths('grep -f docs/agents/x.md docs/agents/y.md')).toEqual(['docs/agents/y.md'])

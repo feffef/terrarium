@@ -43,12 +43,9 @@ function covers(path: string, glob: string, holds: Holds): boolean {
   return reaches(path, glob) && holds(path, glob)
 }
 
-export function rulesForPaths(paths: string[], rules: RuleFile[], holds: Holds): RuleFile[] {
-  return rules.filter((r) => rulePaths(r.text).some((g) => paths.some((p) => covers(p, g, holds))))
-}
-
-/** Stops at the first match. Symlinks are not followed, so a loop ends; a
- *  directory it cannot read counts as holding a match. */
+/** Symlinks are not followed, so a loop ends. A directory it cannot read
+ *  counts as a match: the hint fails generous, since a missing rule costs more
+ *  than an extra one. */
 function walker(root: string): Holds {
   const holds: Holds = (dir, glob) => {
     let entries
@@ -72,7 +69,8 @@ export function bashRulesHint(command: string, cwd: string, root: string, rules:
     .filter((p) => p !== '/' && !p.startsWith('..') && !isAbsolute(p))
   // A lone directory is not the one-file read the harness covers.
   if (simple && !reads.some((p) => p.endsWith('/'))) return null
-  const hits = rulesForPaths(reads, rules, walker(root))
+  const holds = walker(root)
+  const hits = rules.filter((r) => rulePaths(r.text).some((g) => reads.some((p) => covers(p, g, holds))))
   if (hits.length === 0) return null
   const skip = loaded()
   const fresh = hits.filter((r) => !skip.has(`${RULES_DIR}/${r.file}`))
@@ -88,10 +86,12 @@ function repoRoot(cwd: string): string | null {
   }
 }
 
+const cwdOf = (payload: unknown) => String(prop(payload, 'cwd') ?? process.cwd())
+
 function hintFor(payload: unknown): string | null {
   const command = prop(prop(payload, 'tool_input'), 'command')
   if (prop(payload, 'tool_name') !== 'Bash' || typeof command !== 'string') return null
-  const cwd = String(prop(payload, 'cwd') ?? process.cwd())
+  const cwd = cwdOf(payload)
   const root = repoRoot(cwd)
   if (!root) return null
   const subagent = prop(payload, 'agent_id') !== undefined
@@ -108,7 +108,7 @@ function main(): void {
 function dryRun(argv: string[]): void {
   const payload = resolveDryRunInput(argv)
   const command = prop(prop(payload, 'tool_input'), 'command')
-  const reads = typeof command === 'string' ? bashReadPaths(command, String(prop(payload, 'cwd') ?? process.cwd())) : null
+  const reads = typeof command === 'string' ? bashReadPaths(command, cwdOf(payload)) : null
   printDryRunResult({ reads, hint: hintFor(payload) })
 }
 
