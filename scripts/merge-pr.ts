@@ -1,6 +1,6 @@
-// The poll-then-merge helper (issue #667): `enable_pr_auto_merge` is for
-// arming a still-pending PR (`docs/agents/pr-workflow.md`'s recipe, step 5),
-// not for landing one that's already green or about to be — calling it there
+// The poll-then-merge helper (issue #667): never call `enable_pr_auto_merge`
+// (`docs/agents/pr-workflow.md`'s recipe, step 5) — it is no way to land a PR
+// that's already green or about to be; calling it there
 // throws a misleading error ("required checks are failing" while a check is
 // merely `in_progress`, or "protected branch rules not configured" once
 // actually green — issue #385). #385's fix was doc-only guidance to manually
