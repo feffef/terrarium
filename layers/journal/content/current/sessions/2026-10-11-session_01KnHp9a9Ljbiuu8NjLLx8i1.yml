@@ -1,0 +1,271 @@
+schemaVersion: 1
+session: session_01KnHp9a9Ljbiuu8NjLLx8i1
+startedAt: 2026-10-11T00:46:23Z
+endedAt: 2026-10-11T01:11:29Z
+kind: autonomous
+goal: Weekly check of the Platform's own Skills
+status: in-review
+outcome: One PR open (#1753) tuning the Skill Inventory; one new issue filed, one comment added
+summary: "Scheduled, fully autonomous run — no human prompt at any point. Ran `scripts/audit-skills.ts` for the 7-day scorecard, dispatched one read-only Sonnet behaviour-check subagent per Skill in `behaviourChecks` (11 Skills, all in parallel), and independently verified each subagent's central claims against primary sources (git log, live GitHub reads via issue_read/ pull_request_read) before using them, per this Skill's own \"hearsay until verified\" rule. Step 3 (closure completeness) was clean: orphan scan ran (1129 merged PRs, 977 with a session), both candidates already carry `resolvedBy`, no human-prompted or manually-rescued closures. One finding cleared the escalation bar: while checking `auto-triage`'s usedIn roster, a subagent flagged that session_018i6d2BQPkf9cq6jSEqCNSX closed 4 issues as not-planned on judgment calls without individual owner confirmation. I re-read that session's own log directly and found the actual mechanism was the `triage` Skill's per-issue process (a different Skill, not `auto-triage`'s own sweep, which behaved correctly that session) — filed issue #1752 correctly scoped to `triage`, and added `triage`'s first-ever Inventory observation. A second subagent (dispatch-subagents) sampled 19 of 73 notUsedInWindow sessions and found 12 new instances of the skillsUsed-logging gap, including one git-touching case, that the same-day closure of #1586 (\"not a regression\") hadn't seen — commented the new evidence onto #1586 rather than reopening it myself, leaving that call to a human. Tuned all 11 behaviourChecks Skills' Inventory entries plus `triage`'s with a dated 2026-10-11 observation each; no grade changed (no finding cleared the required ≥2-cited-sessions bar). Ran `pnpm gate:scoped` (full gate, since the changed paths aren't Inert) green, committed, pushed, and opened PR #1753 scoped only to the 12 Inventory YAML files, per pr-workflow.md's \"closing a self-merged chartered run\" recipe. Everything in this run was agent-initiated end to end (scheduled trigger, no human prompted or approved any step) — consistent with this being an unattended, fully autonomous session."
+prs:
+  - "1753"
+docsRead:
+  - path: CLAUDE.md
+    reason: re-read in full at closure per close-session's hard rule
+  - path: docs/agents/github-integration.md
+    reason: (not read) before this session's first mcp__github__ call — see friction
+  - path: docs/agents/issue-tracker.md
+    reason: (not read) before this session's first issue file/comment — see friction
+  - path: docs/agents/triage-labels.md
+    reason: (not read) before this session's first issue file/comment — see friction
+  - path: docs/agents/git-conventions.md
+    reason: read before this session's first git command beyond status/diff
+  - path: docs/agents/pr-workflow.md
+    reason: "read before opening PR #1753, governs the landing recipe"
+  - path: .agents/skills/triage/SKILL.md
+    reason: "to correctly attribute the #1752 finding away from auto-triage"
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: read mid-session while investigating the triage closures, not before this session's own subagent dispatches — see friction
+  - path: CONTEXT-MAP.md
+    reason: session-start required read
+  - path: CONTEXT.md
+    reason: session-start required read
+  - path: .agents/skills/close-session/SKILL.md
+    reason: invoked at closure
+  - path: .agents/skills/log-session/SKILL.md
+    reason: invoked at closure
+  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
+    reason: governs close-session's logging rules
+  - path: .agents/skills/auto-triage/SKILL.md
+    reason: behaviour-check brief for auto-triage (subagent read, folded in)
+  - path: docs/adr/0022-autonomous-triage-sweep.md
+    reason: "governs the judgment-call bar behind the #1752 finding"
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: behaviour-check brief for blog-post (subagent read, folded in)
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: this session's own charter
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: behaviour-check brief for audit-docs (subagent read, folded in)
+  - path: .agents/skills/digest/SKILL.md
+    reason: behaviour-check brief for digest (subagent read, folded in)
+  - path: .agents/skills/prune-trial/SKILL.md
+    reason: behaviour-check brief for prune-trial (subagent read, folded in)
+  - path: docs/adr/0027-prune-trials.md
+    reason: governs prune-trial's behaviour-check brief
+  - path: .agents/skills/visitor-loop/SKILL.md
+    reason: behaviour-check brief for visitor-loop (subagent read, folded in)
+  - path: .agents/skills/visitor-loop/decisions.md
+    reason: behaviour-check brief for visitor-loop (subagent read, folded in)
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: behaviour-check brief for frictions-to-fixes (subagent read, folded in)
+  - path: scripts/audit-skills.ts
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-10-session_018i6d2BQPkf9cq6jSEqCNSX.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/skills/triage.yml
+    reason: (read before editing)
+  - path: layers/journal/content/current/skills/auto-triage.yml
+    reason: (read before editing)
+  - path: layers/journal/content/current/skills/audit-docs.yml
+    reason: (read before editing)
+  - path: layers/journal/content/current/skills/audit-skills.yml
+    reason: (read before editing)
+  - path: layers/journal/content/current/skills/blog-post.yml
+    reason: (read before editing)
+  - path: layers/journal/content/current/skills/close-session.yml
+    reason: (read before editing)
+  - path: layers/journal/content/current/skills/digest.yml
+    reason: (read before editing)
+  - path: layers/journal/content/current/skills/dispatch-subagents.yml
+    reason: (read before editing)
+  - path: layers/journal/content/current/skills/frictions-to-fixes.yml
+    reason: (read before editing)
+  - path: layers/journal/content/current/skills/log-session.yml
+    reason: (read before editing)
+  - path: layers/journal/content/current/skills/prune-trial.yml
+    reason: (read before editing)
+  - path: layers/journal/content/current/skills/visitor-loop.yml
+    reason: (read before editing)
+  - path: layers/journal/content/current/sessions/2026-10-09-session_01AuUp8RpGpxhyoa3yctctHN.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-07-session_01QLxPLD6AQ2Y6GyWHE1dkKp.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-05-session_014mna6dsd4t2Ui98gbs3jCF.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-10-session_01YSGRZcurrkv9WYqPfnRH2t.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-10-session_01WFq4ZnYVWTyGHAAxqo5wKb.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-09-session_01GGSSswkV3J9p255u5hcvSp.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-08-session_01UvFUKPkQSkZS1qS7VndRqX.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-10-session_01JR1AZGGyi6AEh1SHTp6qsH.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-09-session_01HgJSvxTfhCwRcTZEhFspLX.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-10-session_01Tcn6x6mZizT14rJuQqYivt.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-08-session_017tt8CbwHqFWqw7PJZ7u7AL.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-05-session_01EPZv5jBQyJYPqy8eVn8e8h.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-09-session_01Jo3m1r8fyuGvjtRE9qDrPH.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-04-session_01JrdPvboL7hEVfdfvTyfSCb.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-07-session_01N6jqFrkCMkEm3g6kJW9Zqk.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-06-session_01L6ePb5aMsH4u53XnEs7FLQ.yml
+    reason: (no reason given)
+  - path: layers/midden/tenant.config.ts
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-11-session_013GkBtC56M36dmz5AtEb1Hp.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/digests/2026-10-10.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-03-session_01P7a2zqJxuariDNfYqWQRHs.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-08-session_015CSc6hNccF3XgrSGaGGqjD.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-10-session_01LzWPjhbEKVo8HK7oTPqWK9.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-10-session_01X7EjwNGgzS9n6614B4PTU3.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-06-session_01Tk6qPkPUrwdTz9ftGezFyD.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-08-session_01S1WwkpNHDfbvKAf5T1afKq.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-10-session_01UEeKV1vUyYkM8vedtgWPnY.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-10-session_01GEqB5frKCNtJYAr9KaRxDo.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-08-49f1fea0-270e-4851-9cc7-3dbf8cc8609a.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-08-1a527758-724c-4cf0-8160-6440f5099ee6.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-04-session_01EE8wFRkAWLtXgzdcoceCto.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-08-1f97b613-f529-4487-a7e9-1115a44b84c7.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-07-session_01FjXKYqhJLRWNRcbDvdhNxQ.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-04-session_01GxJXNFxh3SQh8q1nkReAxJ.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-10-session_01Mw8k3DVnAyVho8fcDofChZ.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-10-session_015BjYk46dntcMuAWMn1z4Zw.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-09-session_01CHnq9iXU9t2se8nc2tBTnQ.yml
+    reason: (no reason given)
+  - path: .agents/prune-trials.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-08-session_015UvXah6phvbuMpUWmf5rYs.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-09-session_01NHHafnvmf9qkvq85pvMYzc.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-05-session_01AbPzFC2mns85YxwqznmJUe.yml
+    reason: (no reason given)
+skillsUsed:
+  - name: audit-skills
+    reason: this session's own charter
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: CLAUDE.md requires reading docs/agents/github-integration.md before this session's first GitHub operation. I ran several mcp__github__ calls (issue_read, issue_write, add_issue_comment, subscribe_pr_activity) before reading it — only read it incidentally, right before opening the PR.
+    solution: No damage this run (no overflow, no HTML-entity-encoding mishap), but it was blind luck. Read the trigger docs before the first matching tool call, not after — check the "docs you must read first" list against the next tool call before making it, not just at session start.
+    severity: minor
+  - description: "CLAUDE.md requires reading docs/agents/issue-tracker.md and docs/agents/triage-labels.md before filing, triaging, or labeling an issue. I filed issue #1752 and commented on #1586 without reading either doc first."
+    solution: The label I used (`needs-triage`) happened to match convention by precedent from reading other Skills' instructions, but that's luck, not verification. Read the issue-tracker/triage-labels docs before the first issue_write/add_issue_comment call of a session that will file or label, not after.
+    severity: minor
+  - description: CLAUDE.md's dispatch-subagents trigger ("before you dispatch a subagent that touches git or needs a worktree") is ambiguous for a read-only investigative subagent that runs git-log/gh-api reads but performs no write and needs no worktree. I dispatched 11 such subagents without reading the Skill first, then read it later for an unrelated reason.
+    solution: No damage (no collision, since nothing wrote). Worth a line in CLAUDE.md or the Skill itself clarifying whether a strictly read-only git-inspection subagent is in scope for the trigger, so this stays a judgment call rather than a guess next time.
+    severity: nit
+durationSec: 1505
+models:
+  claude-sonnet-5: 163
+toolCounts:
+  Read: 22
+  Bash: 27
+  Agent: 11
+  TaskCreate: 1
+  ToolSearch: 5
+  mcp__github__issue_read: 7
+  mcp__github__search_issues: 1
+  mcp__github__issue_write: 2
+  ListAgents: 1
+  ScheduleWakeup: 1
+  mcp__github__add_issue_comment: 1
+  Edit: 13
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  Skill: 2
+  Write: 2
+filesEdited:
+  - layers/journal/content/current/skills/audit-docs.yml
+  - layers/journal/content/current/skills/audit-skills.yml
+  - layers/journal/content/current/skills/auto-triage.yml
+  - layers/journal/content/current/skills/triage.yml
+  - layers/journal/content/current/skills/blog-post.yml
+  - layers/journal/content/current/skills/close-session.yml
+  - layers/journal/content/current/skills/digest.yml
+  - layers/journal/content/current/skills/dispatch-subagents.yml
+  - layers/journal/content/current/skills/frictions-to-fixes.yml
+  - layers/journal/content/current/skills/log-session.yml
+  - layers/journal/content/current/skills/prune-trial.yml
+  - layers/journal/content/current/skills/visitor-loop.yml
+rulesLoaded:
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0008.md
+  - .claude/rules/adr-0018.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0012.md
+  - .claude/rules/adr-0026.md
+  - .claude/rules/adr-0002.md
+  - .claude/rules/adr-0010.md
+  - .claude/rules/adr-0028.md
+subagents:
+  - type: general-purpose
+    task: Behaviour-check audit-docs Skill
+    model: sonnet
+  - type: general-purpose
+    task: Behaviour-check audit-skills Skill (self)
+    model: sonnet
+  - type: general-purpose
+    task: Behaviour-check auto-triage Skill
+    model: sonnet
+  - type: general-purpose
+    task: Behaviour-check blog-post Skill
+    model: sonnet
+  - type: general-purpose
+    task: Behaviour-check close-session Skill
+    model: sonnet
+  - type: general-purpose
+    task: Behaviour-check digest Skill
+    model: sonnet
+  - type: general-purpose
+    task: Behaviour-check dispatch-subagents Skill
+    model: sonnet
+  - type: general-purpose
+    task: Behaviour-check frictions-to-fixes Skill
+    model: sonnet
+  - type: general-purpose
+    task: Behaviour-check log-session Skill
+    model: sonnet
+  - type: general-purpose
+    task: Behaviour-check prune-trial Skill
+    model: sonnet
+  - type: general-purpose
+    task: Behaviour-check visitor-loop Skill
+    model: sonnet
+gitBranch: claude/upbeat-sagan-o53yc2
+entrypoint: remote_trigger
+cliVersion: 2.1.296
+trigger: audit-skills
+ideas:
+  - "dispatch-subagents' skillsUsed-logging gap (now 15+ corroborating instances across #1586's thread) looks structural rather than a logging nit: build a small mechanical check — e.g. a session-trace heuristic that credits dispatch-subagents whenever the transcript shows ≥2 concurrent Agent-tool calls in one turn, the same way shell reads get folded into docsRead — rather than relying on the dispatching session to remember to cite it by name every time."
+landedBy: Stop
