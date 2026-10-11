@@ -1,0 +1,39 @@
+schemaVersion: 1
+session: session_01FW11yrFCnfGNcEXNtrWeko
+startedAt: 2026-10-11T06:18:30Z
+endedAt: 2026-10-11T07:12:45Z
+kind: interactive
+goal: "Explain PR #1757 and its effect on session-frictions --compact users"
+status: completed
+outcome: Question answered in chat; no code change
+summary: "Human-instructed: the user asked what PR 1757 did and how it affects agents using the compact option. I found the merge commit locally, read its diff and the frictions-to-fixes Skill's doc-read check, and explained that --compact now keeps docsRead paths and subagents so the survey subagent can run that check without the full output; only frictions-to-fixes uses --compact. No agent-initiated work; no PR."
+prs: []
+docsRead:
+  - path: docs/agents/git-conventions.md
+    reason: required before git log to draw conclusions
+  - path: docs/agents/github-integration.md
+    reason: read in case GitHub lookup was needed
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: the caller of --compact that 1757 changed
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Skipped the session-start read of CONTEXT-MAP.md and CONTEXT.md that CLAUDE.md requires; no impact on this read-only answer.
+    solution: For pure Q&A sessions, a short hook reminder at session start would make the rule hard to skip.
+    severity: nit
+  - description: Read files via cat/git show in Bash instead of the Read tool, against CLAUDE.md working conventions; harmless as nothing was edited.
+    solution: None needed for read-only work; CLAUDE.md could scope the rule to files you will edit.
+    severity: nit
+durationSec: 3255
+models:
+  claude-opus-5-5: 14
+toolCounts:
+  Bash: 5
+  Skill: 2
+gitBranch: claude/1757-compact-agents-impact-6stz85
+entrypoint: remote_mobile
+cliVersion: 2.1.296
+landedBy: Stop
