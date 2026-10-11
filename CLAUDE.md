@@ -36,8 +36,6 @@ act, once per session.
   `dispatch-subagents` Skill.
 - **Before you say a UI change works,** or take a screenshot:
   `docs/agents/verifying-ui-changes.md`.
-- **Before you put a Vue component in a Document, or add a data Collection:**
-  `docs/agents/mdc-when-to-use.md`.
 - **Before you add or change a glossary term:** `docs/agents/domain.md`.
 - **Before you debug a tool, push, network or permission error** that your
   diff doesn't explain: `docs/agents/environment-caveats.md`.
