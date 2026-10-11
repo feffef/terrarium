@@ -1,0 +1,21 @@
+name: premise-not-questioned
+cause: >-
+  An issue triaged ready-for-agent, or a broad instruction, is implemented in full before anyone asks whether the change has a benefit; the owner catches the premise after a full implementation and review cycle.
+surface: safe
+status: open
+occurrences:
+  - session: session_01548Bi1ZiGcknAp8CMLNMZB
+    date: "2026-10-03"
+    severity: moderate
+  - session: session_016o8vxfkAFpgZMedEsKZqKT
+    date: "2026-10-04"
+    severity: moderate
+  - session: session_014mna6dsd4t2Ui98gbs3jCF
+    date: "2026-10-05"
+    severity: moderate
+  - session: session_01VaPP7iMRxMvKvX8KQh1qeY
+    date: "2026-10-09"
+    severity: moderate
+  - session: session_01CasnQoauTyLNUxd74agJsP
+    date: "2026-10-11"
+    severity: moderate

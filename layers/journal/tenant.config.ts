@@ -4,6 +4,7 @@
 // generated into the repo.
 import { z } from 'zod'
 import { defineTenant } from '../../shared/manifest'
+import { sessionSchema } from '../../shared/schemas/session'
 
 // A plain UTC calendar date. Used where
 // a fact is date-scoped (at most one entry per day) rather than ordered within a
@@ -50,6 +51,41 @@ export const skillSchema = z
         note: z.string(),
       }),
     ),
+  })
+  .strict()
+
+// The Friction Ledger (CONTEXT.md). `frictions-to-fixes`' SKILL.md holds its
+// lifecycle. Counts and first/last-seen dates derive from `occurrences`;
+// nothing here is a hand-written total.
+export const frictionClusterSchema = z
+  .object({
+    name: z.string(),
+    // One line naming the shared root cause, not a list of symptoms.
+    cause: z.string(),
+    // Where a fix lands. `safe` is dispatchable; `guard-or-hook` and
+    // `human-only` need a human-attended session or merge (ADR-0004,
+    // docs/agents/guards.md); `outside` is the harness or a service this
+    // repo cannot change.
+    surface: z.enum(['safe', 'human-only', 'guard-or-hook', 'outside']),
+    // `open`: no open issue or PR covers it. `tracked`: one does. `on-trial`:
+    // inside a Prune Trial's territory (ADR-0027). `fixed`: the fix merged
+    // on `fixedOn`.
+    status: z.enum(['open', 'tracked', 'on-trial', 'fixed']),
+    fixedOn: utcDate.optional(),
+    // What backs the status: the tracking issue or PR, the trial's territory
+    // match, the fix, or on an `open` entry earlier partial fixes.
+    ref: z.string().optional(),
+    // One per session, or a session read twice by overlapping windows would
+    // inflate the recurrence count.
+    occurrences: z
+      .array(
+        z.object({
+          session: z.string(),
+          date: utcDate,
+          severity: sessionSchema.shape.frictions.element.shape.severity,
+        }),
+      )
+      .refine((occ) => new Set(occ.map((o) => o.session)).size === occ.length, 'a session is listed twice'),
   })
   .strict()
 
@@ -102,5 +138,10 @@ export default defineTenant({
     // the Catalog without re-declaring the schema. `scripts/log-session.ts`
     // validates authored logs against that same shared schema.
     sessions: { type: 'data', kind: 'session', source: '**/*.yml' },
+    frictions: {
+      type: 'data',
+      source: '**/*.yml',
+      schema: frictionClusterSchema,
+    },
   },
 })

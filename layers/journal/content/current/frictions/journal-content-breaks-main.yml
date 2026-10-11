@@ -1,0 +1,21 @@
+name: journal-content-breaks-main
+cause: >-
+  Session logs and Digests land on main without a gate (ADR-0009) while e2e tests and the strict session schema assert on them, so one log turns main and every open PR red.
+surface: safe
+status: open
+occurrences:
+  - session: a1af4e46-8293-4f33-bf41-c956bd7f6306
+    date: "2026-10-03"
+    severity: major
+  - session: session_01DU7WbYNfKmdNgRpry9qzeV
+    date: "2026-10-03"
+    severity: moderate
+  - session: session_01CF4k9jXS9wLrcPVsGduZmn
+    date: "2026-10-08"
+    severity: moderate
+  - session: session_01KCWd4fWsUfUxL6uT4Bephj
+    date: "2026-10-08"
+    severity: moderate
+  - session: session_015BjYk46dntcMuAWMn1z4Zw
+    date: "2026-10-10"
+    severity: major

@@ -1,0 +1,169 @@
+name: stop-hook-nag
+cause: >-
+  The Stop hook demands commit and push on every turn while a gate, build or fact-check subagent is still running, against ADR-0004's push-after-gate rule.
+surface: guard-or-hook
+status: open
+ref: "PRs #1588, #1612 (caveat docs)"
+occurrences:
+  - session: session_01DnPo4xLxkuDkmDxsdFZQTa
+    date: "2026-09-27"
+    severity: nit
+  - session: session_01LKfKKxwgThbVFE79NWohET
+    date: "2026-09-27"
+    severity: nit
+  - session: session_015xC64CdTv5cP4zXTxetqMa
+    date: "2026-09-29"
+    severity: nit
+  - session: session_01PFbH8DingPRHXom2siyggD
+    date: "2026-09-29"
+    severity: nit
+  - session: session_01QT1rB2ACjMQzt5xGT1ikLW
+    date: "2026-09-29"
+    severity: nit
+  - session: session_01JJjnpQCtu8pinf5RioLwgZ
+    date: "2026-09-30"
+    severity: nit
+  - session: session_01NbSN3foQRduNSW6jJyZD5F
+    date: "2026-09-30"
+    severity: nit
+  - session: session_01SieS1ZzrfAYMuxe8jYFNU2
+    date: "2026-09-30"
+    severity: nit
+  - session: session_01UYR72MD9JGXQMy7fZn84o8
+    date: "2026-09-30"
+    severity: nit
+  - session: session_01BNbm6z4gohjBmVoeadKibZ
+    date: "2026-10-01"
+    severity: minor
+  - session: session_01D3f62f5e7GhdAZLcuHjkdc
+    date: "2026-10-01"
+    severity: nit
+  - session: session_01BK3hyL2f3mxedQimjd719K
+    date: "2026-10-02"
+    severity: minor
+  - session: session_01FRVSQVFVfLCWyn2cBtG9qM
+    date: "2026-10-02"
+    severity: nit
+  - session: session_01HDNTJNfSFzDsgeaG92ZttX
+    date: "2026-10-02"
+    severity: nit
+  - session: session_01VC6tZCm3HYs9BsJ7JrQQ5Z
+    date: "2026-10-02"
+    severity: minor
+  - session: session_01CbWrei9SvmrH9vjNx2MB2f
+    date: "2026-10-03"
+    severity: nit
+  - session: session_01DtFw6GBViQZp25jvQV7gEF
+    date: "2026-10-03"
+    severity: nit
+  - session: session_01JUVBufFxrv8bKoVBV5rgYN
+    date: "2026-10-03"
+    severity: minor
+  - session: session_01JzzBErytZGXxGg7v9vqZts
+    date: "2026-10-03"
+    severity: nit
+  - session: session_01P7a2zqJxuariDNfYqWQRHs
+    date: "2026-10-03"
+    severity: moderate
+  - session: session_01WoSzRemGryY3vGQMWf2347
+    date: "2026-10-03"
+    severity: nit
+  - session: session_016o8vxfkAFpgZMedEsKZqKT
+    date: "2026-10-04"
+    severity: nit
+  - session: session_018DwTn5rSUpmtMHwXBrWqGL
+    date: "2026-10-04"
+    severity: nit
+  - session: session_01GxJXNFxh3SQh8q1nkReAxJ
+    date: "2026-10-04"
+    severity: nit
+  - session: session_01LEQpnXw4SeWsfw4THR5NbX
+    date: "2026-10-04"
+    severity: nit
+  - session: session_01MBV1mwgJPMcnYw7J9eXMmG
+    date: "2026-10-04"
+    severity: minor
+  - session: session_01QS72zRhKidx1uP468fuAFK
+    date: "2026-10-04"
+    severity: minor
+  - session: session_01XMzcTEcNXy3sKiUWtEKGLW
+    date: "2026-10-04"
+    severity: nit
+  - session: session_011L5Vf6kXGJ1jQTwrKjFTTL
+    date: "2026-10-05"
+    severity: nit
+  - session: session_01AbPzFC2mns85YxwqznmJUe
+    date: "2026-10-05"
+    severity: minor
+  - session: session_01VKEB6VDDPrzTmGAt2obTsH
+    date: "2026-10-05"
+    severity: nit
+  - session: session_01XEDYTXqBBWAqtftzqeMLrU
+    date: "2026-10-05"
+    severity: nit
+  - session: session_015pcFLucxsdwj7nSLKtozGP
+    date: "2026-10-06"
+    severity: nit
+  - session: session_01BT5bPRncBfCNwhim2d71Hh
+    date: "2026-10-07"
+    severity: minor
+  - session: session_01H84NG8cxGEwFS4jL3DWi1S
+    date: "2026-10-07"
+    severity: nit
+  - session: session_01QLxPLD6AQ2Y6GyWHE1dkKp
+    date: "2026-10-07"
+    severity: minor
+  - session: session_01RGKoFL9ZKfvji8zENgRVBT
+    date: "2026-10-07"
+    severity: nit
+  - session: session_01TY4CnbUTCjYqaKpHAHKHku
+    date: "2026-10-07"
+    severity: nit
+  - session: session_01449u16G5rFweMPGkKZe9Tv
+    date: "2026-10-08"
+    severity: nit
+  - session: session_016ZmB2wonEm8Aki1P4V59cK
+    date: "2026-10-08"
+    severity: minor
+  - session: session_017tt8CbwHqFWqw7PJZ7u7AL
+    date: "2026-10-08"
+    severity: nit
+  - session: session_01CF4k9jXS9wLrcPVsGduZmn
+    date: "2026-10-08"
+    severity: nit
+  - session: session_01KCWd4fWsUfUxL6uT4Bephj
+    date: "2026-10-08"
+    severity: minor
+  - session: session_01S1WwkpNHDfbvKAf5T1afKq
+    date: "2026-10-08"
+    severity: moderate
+  - session: session_01StQjYSNRStTihgZimvvx2r
+    date: "2026-10-08"
+    severity: nit
+  - session: session_01Jo3m1r8fyuGvjtRE9qDrPH
+    date: "2026-10-09"
+    severity: nit
+  - session: session_01Pps6pXDX7ahChHwQajVZNc
+    date: "2026-10-09"
+    severity: minor
+  - session: session_01EmaH5A6Ziwjndz9esnsJ22
+    date: "2026-10-10"
+    severity: minor
+  - session: session_01KRLFYUD31NaEVTs4Qs1Tzj
+    date: "2026-10-10"
+    severity: minor
+  - session: session_01Tcn6x6mZizT14rJuQqYivt
+    date: "2026-10-10"
+    severity: nit
+  - session: session_01CasnQoauTyLNUxd74agJsP
+    date: "2026-10-11"
+    severity: minor
+  - session: session_01GbMt1vGTDZpQxZ3h4pNsF8
+    date: "2026-10-11"
+    severity: nit
+  - session: session_01LARTWkGx5vBwRwsMrdftPD
+    date: "2026-10-11"
+    severity: nit
+  - session: session_01Tjsmye34hk57NtioyWQG4h
+    date: "2026-10-11"
+    severity: nit

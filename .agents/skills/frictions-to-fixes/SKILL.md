@@ -1,6 +1,6 @@
 ---
 name: frictions-to-fixes
-description: Mine the Journal's session-log frictions and ship fixes autonomously — select up to 10 per run (at most 2 hard; hard and surface-blocked ones become issues), dispatch Sonnet impl agents as gated PRs, then review-and-merge them yourself, escalating only genuinely high-risk changes to humans.
+description: Mine the Journal's session-log frictions and ship fixes autonomously — keep the Friction Ledger, select up to 10 per run (at most 2 hard; hard and surface-blocked ones become issues), dispatch Sonnet impl agents as gated PRs, then review-and-merge them yourself, escalating only genuinely high-risk changes to humans.
 disable-model-invocation: true
 ---
 
@@ -32,9 +32,21 @@ works only from that report and never re-reads the raw corpus. The subagent
 
 Its brief:
 
-- **Steer the budget at the unfixed tail.** A large share of the window's frictions are usually already resolved by a later in-window session or a merged fix. Screen those out fast as a §2 `drop` instead of re-deriving their history; save the deep archaeology for candidates with no in-window resolution. Count recurrence from the **unresolved** occurrences only.
-- **Read the last 3 days of session logs** via `pnpm exec tsx scripts/session-frictions.ts`
-  (`--days N` to change the window; bare `tsx` isn't on PATH). Large output goes to
+- **Start from the Friction Ledger** (`layers/journal/content/current/frictions/*.yml`;
+  schema in `layers/journal/tenant.config.ts`): one entry per cluster of
+  frictions with a common cause, carrying its `status`, `surface` and every
+  `occurrence` so far. Append each friction in the window that matches an
+  entry, whatever its severity; a session counts once, at its highest
+  severity. A new entry needs a cause seen twice, or one `major` or `blocker`.
+  A cluster is a shared **root cause**: two frictions days apart, on different
+  tools, belong together when one change would retire both. The ledger's
+  **horizon** is the last 14 days: an entry's recurrence is its occurrences
+  within it, counting only sessions that started after its fix merged when it
+  has one. Return the ledger changes (new entries, appended occurrences,
+  status changes, each with its evidence) in the report.
+- **Steer the budget at the unfixed tail.** A large share of the window's frictions are usually already resolved by a later in-window session or a merged fix. Screen those out fast as a §2 `drop` instead of re-deriving their history; save the deep archaeology for candidates with no in-window resolution.
+- **Read the window's session logs** via `pnpm exec tsx scripts/session-frictions.ts`
+  (it prints where the window starts; bare `tsx` isn't on PATH). Large output goes to
   `/tmp/session-frictions-output.json` and stdout gets only a notice — read the file, or
   pass `--out PATH`; don't parse stdout. Use `--compact` (keeps `docsRead` paths and
   `subagents`, drops prose) and re-read a full log via its `file` only when a candidate needs it. This is a **recency window, not a
@@ -54,14 +66,13 @@ extract carries. **External sessions are already excluded:** the survey script d
   prose itself is unclear, wrong, or too easy to read past. Report which, with
 the paths as evidence. **"Opened" can mean a subagent opened it:** subagent reads are folded into the parent's list (`session-trace.ts`'s `foldSubagentTrace`), so on a session that delegated, check the `subagents` field before concluding the agent that hit the friction had the rule in front of it. A doc only a subagent opened is closer to *not opened*. This repo has paid for the distinction repeatedly: the fixes for #241/#425 landed in `docs/agents/github-integration.md`, which the affected sessions had no reason to open, and the friction kept recurring until a `PreToolUse` guard replaced the prose.
 - **For a friction alleging a detector/tool/mechanism bug, check the `subagents` field and read the relevant mechanism source before trusting the friction's own root-cause guess.** A self-diagnosis logged in the moment, without source access, is not evidence: e.g. "detector over-credits reads" can be `foldSubagentTrace` correctly unioning a dispatched subagent's reads, not a real detector gap. Verify against source before ranking it.
-- **Group and rank.** Fold related/recurring frictions (shared root cause or single fix) into one candidate; rank by **recurrence and severity together** (severity is an ordered rank, not a number: weigh it qualitatively, never multiply it). **Prioritize `moderate`, `major`, and `blocker` frictions**: these earn a fix on severity alone, even logged once. **A low-severity friction is not automatically dropped:** a `nit` or `minor` that **recurs across sessions _and_ is easy to fix** is still worth retiring, since cheap repeated papercuts add up. What gets dropped is the lone low-severity one-off (a single `nit` with a non-trivial fix), not every `nit`.
+- **Group and rank.** A candidate is a ledger entry (one per root cause) or a
+  window friction too new for one; rank by **recurrence and severity together** (severity is an ordered rank, not a number: weigh it qualitatively, never multiply it). **Prioritize `moderate`, `major`, and `blocker` frictions**: these earn a fix on severity alone, even logged once. **A low-severity friction is not automatically dropped:** a `nit` or `minor` that **recurs across sessions _and_ is easy to fix** is still worth retiring, since cheap repeated papercuts add up. What gets dropped is the lone low-severity one-off (a single `nit` with a non-trivial fix), not every `nit`.
 - **Screen against the tracker** — apply the §2 rules to every candidate.
-- **Last, check the window's own `frictions-to-fixes` runs.** The records with
-  `trigger: frictions-to-fixes` carry a `summary`, `outcome` and `prs` saying what
-  earlier runs fixed, escalated or dropped. Read them in full after ranking, and
-  `drop` or relabel any candidate they cover (§2), citing the run or PR. A run's
-  summary can be wrong or partial: verify against the PR or `main` before dropping.
-  A tracker issue is the weaker signal — a "simple" selection (§4) files none.
+- **Earlier runs' decisions are the ledger's `status` and `ref`.** When an entry
+  lacks them, the window's `trigger: frictions-to-fixes` logs (`summary`,
+  `outcome`, `prs`) are the fallback; a run's summary can be wrong or partial, so
+  verify against the PR or `main` before dropping.
 - **GitHub-MCP hygiene** (a recurring friction — heed it): load the
   `mcp__github__*` tools you need via `ToolSearch` before the first call (e.g.
   `select:mcp__github__search_issues,mcp__github__search_pull_requests,mcp__github__issue_read,mcp__github__pull_request_read`
@@ -72,12 +83,12 @@ the paths as evidence. **"Opened" can mean a subagent opened it:** subagent read
 **The subagent also reports its own frictions.** Whatever it hits while running the survey — an MCP disconnect, a tool that only resolved under its full id, an oversized result it had to slice — it records and **returns alongside** the screened list, so this run's own frictions feed the next cycle (they belong in this session's log too, §6).
 
 Done when the subagent returns a structured report: **(a) ranked actionable
-candidates** — each with title, severity, recurrence (N of the window's sessions), sessions, tracker
+candidates** — each with its ledger entry, severity, recurrence (as §1 counts it), sessions, tracker
 classification (never-fixed / open-already #N / regression of #N), fix type
 (doc/code/config), surface-blocked flag (fails §3's safe-surface test: human-only,
 guard or hook wiring), difficulty (simple/hard), a one-line
 recommended fix, and evidence quotes; **(b) a dropped list** with one-line reasons (an on-trial one quotes its territory match, §2);
-and **(c) the subagent's own frictions** from the run.
+**(c) the subagent's own frictions** from the run; and **(d) the ledger changes**.
 
 ## 2. Screen against fixes already shipped (the subagent's rules)
 
@@ -93,11 +104,13 @@ trial. Then, for the rest: the §1 subagent applies these rules to every candida
   above. Carries on to step 3.
 - **Fixed, and not logged since the fix merged** — drop it (cite the issue/PR).
   Done is done; spending a PR here is duplicate work.
-- **Open already** — an **open** issue or **open** PR already tracks it (cite the
-  number). Don't file a duplicate; surface it so the main session can pick up the
-  existing thread instead.
+- **Open already** — an **open** issue or **open** PR already tracks it (the
+  ledger's `tracked`; cite the number). Don't file a duplicate. One with no
+  commit or comment within the horizon is idle: surface it as a candidate for
+  the main session to pick up or escalate.
 - **Reappeared _after_ its fix merged** (a friction logged in a session that
-  started later than the fixing PR landed) — this is a **regression**: the fix that
+  started later than the fixing PR landed; the entry's `fixedOn` dates it) —
+  this is a **regression**: the fix that
   was supposed to be in place did not hold. Do **not** route it through the ordinary
   simplest-fix dispatch — a change that already failed once needs human eyes, not a
   second run of the same idea. The main session files a distinct issue that flags
@@ -130,6 +143,9 @@ if your judgement differs, but don't re-derive the ranking from scratch.)
   more than two hard frictions rank highly, take the top two and leave the rest for
   a later run.
 
+Spend a hard slot on an open ledger entry with a `major` or `blocker` occurrence
+and a safe surface before filling simple ones; the hard slots exist for these.
+
 Drop one-offs and anything an ADR defers. A candidate that ranks but fails only the
 safe-surface test is **surface-blocked**: not dropped, §4 files it, uncapped. The
 caller may pass a lower count as the Skill's argument; with none, take everything
@@ -139,7 +155,20 @@ Done when each selection names its evidence, is tagged **simple** or **hard**, a
 you can state in one line why it earns a fix (and, for a group, which frictions it
 subsumes).
 
-## 4. File issues only for what outlives this run
+## 4. Update the ledger; file issues only for what outlives this run
+
+**Update the ledger every run, fixes or none.** It is the run's durable
+record. The ledger edit is:
+
+- the subagent's ledger changes (§1);
+- `status` and `ref` for what this run files, dispatches or escalates, with
+  `fixedOn` on anything it marks `fixed`;
+- deleting an entry that is `fixed` or holds one occurrence when it has no
+  occurrence within the horizon (git keeps it).
+
+You review and merge; you never author (ADR-0003's row for this Skill). So
+the ledger edit rides in the grouped doc PR (§5), or, on a run that dispatches
+none, goes to one Sonnet agent of its own.
 
 A **hard** selection (§3) is expected to need human review at merge (§6), so it
 can sit open past this run — file it as an issue on the tracker (a group of
@@ -182,7 +211,8 @@ post-dispatch check. Run at most 2 impl agents' full gates concurrently
 (dispatch-subagents §3); dispatch the rest as those finish:
 
 - **Doc-only fixes** (Markdown / prose — CLAUDE.md, a **repo-owned** SKILL, a Skill
-  Inventory entry): hand them **all to one agent as a single grouped PR**. These
+  Inventory entry): hand them **all to one agent as a single grouped PR**,
+  with this run's ledger edit (§4) in the brief. These
   are ordinarily **simple** selections with no issue filed (§4) — the PR
   description carries each fix's problem/evidence/recommended-fix directly
   instead of a `Closes #N`; a doc selection that came out **hard** still cites its
@@ -222,7 +252,7 @@ impl agent also must **not call `subscribe_pr_activity`** on the PR it opens: th
 or `log-session`** — see `close-session/SKILL.md` for why and its mechanical
 enforcement.
 
-Done when every selection is covered by a pushed gated PR (every simple doc fix by
+Done when every selection and the ledger edit are covered by a pushed gated PR (every simple doc fix and the ledger edit by
 the one grouped PR, each other selection by its own), gate green, awaiting your
 review — a hard selection's PR cites and `Closes` its issue; a simple selection's
 PR carries its problem/evidence/fix inline with no issue behind it.

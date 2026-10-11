@@ -51,9 +51,9 @@ This **complements**, not replaces, the `domain-modeling` Skill's 3-part ADR
 test: that test gates *decisions*, the rule of two gates *vocabulary*. A
 coined term is a standing tax — every session reads the glossary and
 reconciles term conflicts against it — so the second instance is
-what proves the abstraction is worth that tax. (The friction-tag taxonomy
-waits "until it can emerge from clustering real frictions"; ADR-0010 deferred
-a `digests` collection the same way.) It's a brake on new coinage, not a
+what proves the abstraction is worth that tax. (Friction tags waited until
+clustering real frictions could replace them, which the Friction Ledger now
+does; ADR-0010 deferred a `digests` collection the same way.) It's a brake on new coinage, not a
 purge — anything already built stays.
 
 ## Flag ADR conflicts

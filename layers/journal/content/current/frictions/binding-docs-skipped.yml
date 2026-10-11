@@ -1,0 +1,19 @@
+name: binding-docs-skipped
+cause: >-
+  CLAUDE.md's read-before-X triggers (ADRs before planning, git-conventions before git) are prose, so a session plans or acts first and reads after.
+surface: guard-or-hook
+status: tracked
+ref: "issue #1754"
+occurrences:
+  - session: session_01NyDGTR1fuP22hPo7XghCfz
+    date: "2026-10-07"
+    severity: moderate
+  - session: session_011p9VA5A1CWNG9xd2VrQf8N
+    date: "2026-10-08"
+    severity: major
+  - session: session_018i6d2BQPkf9cq6jSEqCNSX
+    date: "2026-10-10"
+    severity: moderate
+  - session: session_01LARTWkGx5vBwRwsMrdftPD
+    date: "2026-10-11"
+    severity: moderate

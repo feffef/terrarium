@@ -1,0 +1,143 @@
+name: agent-background-flag-guard
+cause: >-
+  Skills implied a synchronous Agent dispatch, sessions passed run_in_background: false, and the guard denied the no-op flag.
+surface: guard-or-hook
+status: fixed
+fixedOn: "2026-10-10"
+ref: "issues #835, #1651; commit b02ca418"
+occurrences:
+  - session: session_01GBGZzvHZbJyc3VsJDZHyEJ
+    date: "2026-09-27"
+    severity: nit
+  - session: session_01UAmBCUoSXva1vKut9gFfsr
+    date: "2026-09-27"
+    severity: nit
+  - session: session_01WZ4wbo5XL2yNHK6hTkFNWG
+    date: "2026-09-28"
+    severity: nit
+  - session: session_01FQ9WV8BrFC4WVuHDKH2Ezb
+    date: "2026-09-29"
+    severity: nit
+  - session: session_01HadeEKKUnDKgqMsoZB2m66
+    date: "2026-09-29"
+    severity: nit
+  - session: session_0198dditjfJhW8h67skJ9d3z
+    date: "2026-09-30"
+    severity: nit
+  - session: session_01SieS1ZzrfAYMuxe8jYFNU2
+    date: "2026-09-30"
+    severity: nit
+  - session: session_01U95GU6a93i4N25ZLgwXCSu
+    date: "2026-09-30"
+    severity: nit
+  - session: session_01UYR72MD9JGXQMy7fZn84o8
+    date: "2026-09-30"
+    severity: nit
+  - session: session_01D3f62f5e7GhdAZLcuHjkdc
+    date: "2026-10-01"
+    severity: nit
+  - session: session_01UsKJ529GfpJRL9cy9JCgMV
+    date: "2026-10-01"
+    severity: nit
+  - session: session_01C48djYtfD6dTcY8aESJJUD
+    date: "2026-10-02"
+    severity: nit
+  - session: session_01THQSrDDRRLKHVMDaXPjAdk
+    date: "2026-10-02"
+    severity: nit
+  - session: session_01WPQb6E2oWX3cJzcN11hAW5
+    date: "2026-10-02"
+    severity: nit
+  - session: session_014weUowmS8AnzoS1SBQswzm
+    date: "2026-10-03"
+    severity: nit
+  - session: session_0168r95gLDEqJ8JBEV6UuUbo
+    date: "2026-10-03"
+    severity: nit
+  - session: session_01DtFw6GBViQZp25jvQV7gEF
+    date: "2026-10-03"
+    severity: nit
+  - session: session_01JUVBufFxrv8bKoVBV5rgYN
+    date: "2026-10-03"
+    severity: nit
+  - session: session_01NNMvKMNNztEPTxJDQoUM96
+    date: "2026-10-03"
+    severity: nit
+  - session: session_01TiCx5GDdDdFGwCEs6xxr89
+    date: "2026-10-03"
+    severity: nit
+  - session: session_01WoSzRemGryY3vGQMWf2347
+    date: "2026-10-03"
+    severity: nit
+  - session: session_0163x7FmxRtXcQALXQ6UdygK
+    date: "2026-10-04"
+    severity: nit
+  - session: session_016RHjBGGBWx1EUSJbEjRR15
+    date: "2026-10-04"
+    severity: nit
+  - session: session_016o8vxfkAFpgZMedEsKZqKT
+    date: "2026-10-04"
+    severity: nit
+  - session: session_018DwTn5rSUpmtMHwXBrWqGL
+    date: "2026-10-04"
+    severity: nit
+  - session: session_01EE8wFRkAWLtXgzdcoceCto
+    date: "2026-10-04"
+    severity: nit
+  - session: session_01HSTMSUy4WCqqRtVVakyZm3
+    date: "2026-10-04"
+    severity: nit
+  - session: session_01JrdPvboL7hEVfdfvTyfSCb
+    date: "2026-10-04"
+    severity: nit
+  - session: session_01MBV1mwgJPMcnYw7J9eXMmG
+    date: "2026-10-04"
+    severity: nit
+  - session: session_01NRVHQoPm4cP1F7iVUvh9rJ
+    date: "2026-10-04"
+    severity: nit
+  - session: session_01QS72zRhKidx1uP468fuAFK
+    date: "2026-10-04"
+    severity: nit
+  - session: session_01WTye1srGoMxeqDp8bCMHT6
+    date: "2026-10-04"
+    severity: nit
+  - session: session_01AbPzFC2mns85YxwqznmJUe
+    date: "2026-10-05"
+    severity: minor
+  - session: session_01EPZv5jBQyJYPqy8eVn8e8h
+    date: "2026-10-05"
+    severity: nit
+  - session: session_015pcFLucxsdwj7nSLKtozGP
+    date: "2026-10-06"
+    severity: nit
+  - session: session_01ApFY3yyign1ba7pDd4aoeN
+    date: "2026-10-06"
+    severity: nit
+  - session: session_01L6ePb5aMsH4u53XnEs7FLQ
+    date: "2026-10-06"
+    severity: nit
+  - session: session_01QM5wbJFUHy2Qrq7AkphT9L
+    date: "2026-10-06"
+    severity: nit
+  - session: session_01RCmFsgtMbJiafbzPg48LYh
+    date: "2026-10-06"
+    severity: nit
+  - session: session_015nX759CQdTRtT6x6oLDanX
+    date: "2026-10-07"
+    severity: nit
+  - session: session_01H84NG8cxGEwFS4jL3DWi1S
+    date: "2026-10-07"
+    severity: nit
+  - session: session_01N6jqFrkCMkEm3g6kJW9Zqk
+    date: "2026-10-07"
+    severity: nit
+  - session: session_01NyDGTR1fuP22hPo7XghCfz
+    date: "2026-10-07"
+    severity: nit
+  - session: session_01RGKoFL9ZKfvji8zENgRVBT
+    date: "2026-10-07"
+    severity: nit
+  - session: session_018i6d2BQPkf9cq6jSEqCNSX
+    date: "2026-10-10"
+    severity: minor

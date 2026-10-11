@@ -19,8 +19,8 @@ Anyone who wants the Platform's actual current state, or how it got there, witho
 ## What you'll find
 
 - **Inventories** — curated/derived current-state readouts (the Skill Inventory
-  today; defined in the root `CONTEXT.md`), refreshed from repo state rather than
-  appended to.
+  and the Friction Ledger; defined in the root `CONTEXT.md`), refreshed from repo
+  state rather than appended to.
 - **Session logs** — primary, append-only records the agents author
   themselves (see above).
 - **Digests** — derived, append-only daily summaries (see the glossary below).

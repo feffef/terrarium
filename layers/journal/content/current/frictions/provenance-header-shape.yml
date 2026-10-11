@@ -1,0 +1,127 @@
+name: provenance-header-shape
+cause: >-
+  The ADR-0017 header's exact first-line shape lives only in the guard's deny message, and until 2026-10-10 the ADR's example named a model the harness forbids, so a session's first PR or comment is denied.
+surface: guard-or-hook
+status: open
+ref: "issue #1422; ADR-0017 amendment e76caa79"
+occurrences:
+  - session: session_0158JckUL8YWJtVL7s9i7xRr
+    date: "2026-09-27"
+    severity: nit
+  - session: session_019yVYHWm1Fzsj3gBFWkHHU1
+    date: "2026-09-27"
+    severity: minor
+  - session: session_01BW1YmuRKFcpcwtX6ZXGCQ8
+    date: "2026-09-27"
+    severity: nit
+  - session: session_01CYNZF3P7pj9CGXtJmnyuZP
+    date: "2026-09-27"
+    severity: minor
+  - session: session_01JeNNPB1Q8Lirwm4V4VadnB
+    date: "2026-09-27"
+    severity: nit
+  - session: session_01LXTsTPXbGXbMQqyTpPjcuU
+    date: "2026-09-28"
+    severity: nit
+  - session: session_01M8TuTH2JSu4rwMaW3pZKEZ
+    date: "2026-09-28"
+    severity: minor
+  - session: session_013FJgdc6i8gFLSfTPCEVysi
+    date: "2026-09-29"
+    severity: nit
+  - session: session_01DNo53zg7vsVjGYX6xb7VZN
+    date: "2026-09-29"
+    severity: nit
+  - session: session_01JFdzvuah2DATTv7ixCAPJg
+    date: "2026-09-29"
+    severity: nit
+  - session: session_012G6YRvBigrXTRr4QHFQsfm
+    date: "2026-09-30"
+    severity: nit
+  - session: session_01GoNR7LgfGTcJfKqZ8gUDSx
+    date: "2026-09-30"
+    severity: nit
+  - session: session_01JJjnpQCtu8pinf5RioLwgZ
+    date: "2026-09-30"
+    severity: minor
+  - session: session_01NbSN3foQRduNSW6jJyZD5F
+    date: "2026-09-30"
+    severity: nit
+  - session: session_01RA14XShYErE96EXs3TMX3c
+    date: "2026-09-30"
+    severity: nit
+  - session: session_01UAeYQB1xoCmRvmzsd7EMBB
+    date: "2026-09-30"
+    severity: nit
+  - session: session_015TVUDfeEoazwwnEyyKMa8M
+    date: "2026-10-01"
+    severity: nit
+  - session: session_01D3f62f5e7GhdAZLcuHjkdc
+    date: "2026-10-01"
+    severity: minor
+  - session: session_01Hi7Hh6P81Pdy936F6AmDzP
+    date: "2026-10-01"
+    severity: nit
+  - session: session_01BEQMve6mV2yNDTMmjiCAYL
+    date: "2026-10-02"
+    severity: nit
+  - session: session_01HDNTJNfSFzDsgeaG92ZttX
+    date: "2026-10-02"
+    severity: nit
+  - session: session_01THQSrDDRRLKHVMDaXPjAdk
+    date: "2026-10-02"
+    severity: minor
+  - session: session_01Kwyax1gVAi9qEByVfSoMUR
+    date: "2026-10-03"
+    severity: nit
+  - session: session_01WhVjfShqpBDDjMPkTrpvZH
+    date: "2026-10-03"
+    severity: nit
+  - session: session_01WoSzRemGryY3vGQMWf2347
+    date: "2026-10-03"
+    severity: nit
+  - session: session_0163x7FmxRtXcQALXQ6UdygK
+    date: "2026-10-04"
+    severity: moderate
+  - session: session_01GxJXNFxh3SQh8q1nkReAxJ
+    date: "2026-10-04"
+    severity: nit
+  - session: session_01NRVHQoPm4cP1F7iVUvh9rJ
+    date: "2026-10-04"
+    severity: nit
+  - session: session_01WTye1srGoMxeqDp8bCMHT6
+    date: "2026-10-04"
+    severity: nit
+  - session: session_01XMzcTEcNXy3sKiUWtEKGLW
+    date: "2026-10-04"
+    severity: nit
+  - session: session_011L5Vf6kXGJ1jQTwrKjFTTL
+    date: "2026-10-05"
+    severity: nit
+  - session: session_015pcFLucxsdwj7nSLKtozGP
+    date: "2026-10-06"
+    severity: nit
+  - session: session_01Tk6qPkPUrwdTz9ftGezFyD
+    date: "2026-10-06"
+    severity: minor
+  - session: session_01BT5bPRncBfCNwhim2d71Hh
+    date: "2026-10-07"
+    severity: nit
+  - session: session_01FjXKYqhJLRWNRcbDvdhNxQ
+    date: "2026-10-07"
+    severity: nit
+  - session: session_01NyDGTR1fuP22hPo7XghCfz
+    date: "2026-10-07"
+    severity: nit
+  - session: session_01TY4CnbUTCjYqaKpHAHKHku
+    date: "2026-10-07"
+    severity: nit
+  - session: session_01SVbTmvqHK7xdAcGtG4SfKL
+    date: "2026-10-08"
+    severity: nit
+  - session: session_01Pps6pXDX7ahChHwQajVZNc
+    date: "2026-10-09"
+    severity: nit
+  - session: session_01EmaH5A6Ziwjndz9esnsJ22
+    date: "2026-10-10"
+    severity: nit

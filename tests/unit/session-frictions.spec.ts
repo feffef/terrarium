@@ -2,18 +2,20 @@
 // ordering and the raw-log → triage-record reduction where correctness bugs
 // would hide. The FS IO is a thin shell over these and is exercised by running
 // the `frictions-to-fixes` Skill.
+import { execFileSync } from 'node:child_process'
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
-import { SESSIONS_DIR } from '../../scripts/session-logs.ts'
-import { OUTPUT_FILE_PATH, pickRecencyWindow, resolveOutputTarget, survey, toCompactSession, toTriageSession, type TriageSession } from '../../scripts/session-frictions.ts'
+import { ARCHIVED_SESSIONS_DIR, SESSIONS_DIR } from '../../scripts/session-logs.ts'
+import { defaultWindowStart, OUTPUT_FILE_PATH, pickRecencyWindow, resolveOutputTarget, survey, toCompactSession, toTriageSession, type TriageSession } from '../../scripts/session-frictions.ts'
 
 function session(id: string, startedAt: string, opts: Partial<TriageSession> = {}): TriageSession {
   return {
     id,
     file: `layers/journal/content/current/sessions/${id}.yml`,
     startedAt,
+    endedAt: '',
     goal: 'g',
     outcome: 'o',
     summary: 's',
@@ -26,29 +28,49 @@ function session(id: string, startedAt: string, opts: Partial<TriageSession> = {
   }
 }
 
-describe('pickRecencyWindow()', () => {
+describe('defaultWindowStart()', () => {
   const now = Date.parse('2026-07-10T00:00:00Z')
-  it('keeps sessions within the last n days, oldest first', () => {
+  it('reaches back 48 hours from the last ledger commit', () => {
+    expect(defaultWindowStart(now, Date.parse('2026-07-09T12:00:00Z'))).toBe(Date.parse('2026-07-07T12:00:00Z'))
+  })
+  it('reaches back 48 hours from an old ledger commit, so a missed run loses no logs', () => {
+    expect(defaultWindowStart(now, Date.parse('2026-07-03T00:00:00Z'))).toBe(Date.parse('2026-07-01T00:00:00Z'))
+  })
+  it('falls back to 48 hours when the ledger has no commit', () => {
+    expect(defaultWindowStart(now, null)).toBe(Date.parse('2026-07-08T00:00:00Z'))
+  })
+})
+
+describe('pickRecencyWindow()', () => {
+  const cutoff = Date.parse('2026-07-07T00:00:00Z')
+  it('keeps sessions at or after the cutoff, oldest first', () => {
     const sessions = [
       session('old', '2026-07-06T23:59:59Z'),
       session('b', '2026-07-09T00:00:00Z'),
       session('a', '2026-07-07T00:00:00Z'),
     ]
-    expect(pickRecencyWindow(sessions, 3, now).map((s) => s.id)).toEqual(['a', 'b'])
+    expect(pickRecencyWindow(sessions, cutoff).map((s) => s.id)).toEqual(['a', 'b'])
   })
   it('is not fooled by filename/id order — sorts purely on startedAt', () => {
     const sessions = [
       session('a-later', '2026-07-09T00:00:00Z'),
       session('z-earlier', '2026-07-08T00:00:00Z'),
     ]
-    expect(pickRecencyWindow(sessions, 3, now).map((s) => s.id)).toEqual(['z-earlier', 'a-later'])
+    expect(pickRecencyWindow(sessions, cutoff).map((s) => s.id)).toEqual(['z-earlier', 'a-later'])
+  })
+  it('keeps a session that started before the cutoff but ended after it', () => {
+    const sessions = [
+      session('long', '2026-07-05T00:00:00Z', { endedAt: '2026-07-08T00:00:00Z' }),
+      session('done', '2026-07-05T00:00:00Z', { endedAt: '2026-07-06T00:00:00Z' }),
+    ]
+    expect(pickRecencyWindow(sessions, cutoff).map((s) => s.id)).toEqual(['long'])
   })
   it('breaks ties on id for a stable, deterministic order', () => {
     const sessions = [
       session('b', '2026-07-09T00:00:00Z'),
       session('a', '2026-07-09T00:00:00Z'),
     ]
-    expect(pickRecencyWindow(sessions, 3, now).map((s) => s.id)).toEqual(['a', 'b'])
+    expect(pickRecencyWindow(sessions, cutoff).map((s) => s.id)).toEqual(['a', 'b'])
   })
 })
 
@@ -57,6 +79,7 @@ describe('toTriageSession()', () => {
     const raw = {
       session: 'session_abc',
       startedAt: '2026-07-04T12:00:00Z',
+      endedAt: '2026-07-04T13:00:00Z',
       goal: 'fix the thing',
       outcome: 'PR',
       summary: 'ran the thing',
@@ -72,6 +95,7 @@ describe('toTriageSession()', () => {
       id: 'session_abc',
       file: 'path/to/file.yml',
       startedAt: '2026-07-04T12:00:00Z',
+      endedAt: '2026-07-04T13:00:00Z',
       goal: 'fix the thing',
       outcome: 'PR',
       summary: 'ran the thing',
@@ -101,6 +125,7 @@ describe('toTriageSession()', () => {
       id: '',
       file: 'f.yml',
       startedAt: '',
+      endedAt: '',
       goal: '',
       outcome: '',
       summary: '',
@@ -173,7 +198,36 @@ describe('survey() — external exclusion (ADR-0009 amendment)', () => {
       'session: session_external\nstartedAt: 2026-07-21T00:00:00Z\nexternal: true\ngoal: external work\noutcome: done\nfrictions:\n  - description: a toolchain friction\n    solution: n/a\n    severity: blocker\n',
     )
 
-    const ids = survey(3, dir, Date.parse('2026-07-22T00:00:00Z')).map((s) => s.id)
+    const ids = survey(Date.parse('2026-07-19T00:00:00Z'), dir).sessions.map((s) => s.id)
     expect(ids).toEqual(['session_internal'])
+  })
+
+  it('reads archived logs inside the window too', () => {
+    mkdirSync(join(dir, ARCHIVED_SESSIONS_DIR), { recursive: true })
+    writeFileSync(
+      join(dir, ARCHIVED_SESSIONS_DIR, 'archived.yml'),
+      'session: session_archived\nstartedAt: 2026-07-20T00:00:00Z\ngoal: g\noutcome: o\nfrictions: []\n',
+    )
+    const ids = survey(Date.parse('2026-07-19T00:00:00Z'), dir).sessions.map((s) => s.id)
+    expect(ids).toEqual(['session_archived'])
+  })
+
+  it('by default starts 48 hours before the last ledger commit', () => {
+    const env = { ...process.env, GIT_AUTHOR_DATE: '2026-07-10T00:00:00Z', GIT_COMMITTER_DATE: '2026-07-10T00:00:00Z' }
+    const git = (...args: string[]): void => {
+      execFileSync('git', ['-c', 'user.name=t', '-c', 'user.email=t@t', '-c', 'core.hooksPath=/dev/null', ...args], { cwd: dir, env, stdio: 'ignore' })
+    }
+    mkdirSync(join(dir, 'layers/journal/content/current/frictions'), { recursive: true })
+    writeFileSync(join(dir, 'layers/journal/content/current/frictions/x.yml'), 'name: x\n')
+    git('init', '-q')
+    git('add', '.')
+    git('commit', '-q', '-m', 'ledger')
+    const { since } = survey(undefined, dir, Date.parse('2026-07-20T00:00:00Z'))
+    expect(new Date(since).toISOString()).toBe('2026-07-08T00:00:00.000Z')
+  })
+
+  it('by default starts 48 hours before now when no ledger commit is visible', () => {
+    const { since } = survey(undefined, dir, Date.parse('2026-07-20T00:00:00Z'))
+    expect(new Date(since).toISOString()).toBe('2026-07-18T00:00:00.000Z')
   })
 })

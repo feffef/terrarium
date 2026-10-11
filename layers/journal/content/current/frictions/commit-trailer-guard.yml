@@ -1,0 +1,134 @@
+name: commit-trailer-guard
+cause: >-
+  The harness attribution reminder told sessions to hand-write the Co-Authored-By and Claude-Session trailer the commit-msg hook adds, and the commit-trailer guard denied the hand-written one.
+surface: guard-or-hook
+status: fixed
+fixedOn: "2026-10-10"
+ref: "issue #1652; commit c9763310"
+occurrences:
+  - session: session_01BHBCrNAwjU9TjAEf1rjowP
+    date: "2026-09-27"
+    severity: nit
+  - session: session_01UAmBCUoSXva1vKut9gFfsr
+    date: "2026-09-27"
+    severity: minor
+  - session: session_0185EAXqfuX1twvr6Z67SsY4
+    date: "2026-09-28"
+    severity: minor
+  - session: session_01BWLBKCE8jBVrfvxzMu87hJ
+    date: "2026-09-28"
+    severity: nit
+  - session: session_015xC64CdTv5cP4zXTxetqMa
+    date: "2026-09-29"
+    severity: nit
+  - session: session_01DNo53zg7vsVjGYX6xb7VZN
+    date: "2026-09-29"
+    severity: nit
+  - session: session_01FQ9WV8BrFC4WVuHDKH2Ezb
+    date: "2026-09-29"
+    severity: nit
+  - session: session_01HadeEKKUnDKgqMsoZB2m66
+    date: "2026-09-29"
+    severity: nit
+  - session: session_01SYbiQQHsX8HmeXJTtxAPwp
+    date: "2026-09-29"
+    severity: nit
+  - session: session_01Hi7Hh6P81Pdy936F6AmDzP
+    date: "2026-10-01"
+    severity: nit
+  - session: session_01UsKJ529GfpJRL9cy9JCgMV
+    date: "2026-10-01"
+    severity: nit
+  - session: session_019e8Gy8cuUFcMzNkEYLfuP4
+    date: "2026-10-02"
+    severity: nit
+  - session: session_01BEQMve6mV2yNDTMmjiCAYL
+    date: "2026-10-02"
+    severity: nit
+  - session: session_01C48djYtfD6dTcY8aESJJUD
+    date: "2026-10-02"
+    severity: minor
+  - session: session_01FRVSQVFVfLCWyn2cBtG9qM
+    date: "2026-10-02"
+    severity: nit
+  - session: session_0168r95gLDEqJ8JBEV6UuUbo
+    date: "2026-10-03"
+    severity: minor
+  - session: session_01CbWrei9SvmrH9vjNx2MB2f
+    date: "2026-10-03"
+    severity: minor
+  - session: session_01DU7WbYNfKmdNgRpry9qzeV
+    date: "2026-10-03"
+    severity: nit
+  - session: session_01JUVBufFxrv8bKoVBV5rgYN
+    date: "2026-10-03"
+    severity: nit
+  - session: session_01JzzBErytZGXxGg7v9vqZts
+    date: "2026-10-03"
+    severity: minor
+  - session: session_0163x7FmxRtXcQALXQ6UdygK
+    date: "2026-10-04"
+    severity: nit
+  - session: session_016RHjBGGBWx1EUSJbEjRR15
+    date: "2026-10-04"
+    severity: minor
+  - session: session_016o8vxfkAFpgZMedEsKZqKT
+    date: "2026-10-04"
+    severity: nit
+  - session: session_018DwTn5rSUpmtMHwXBrWqGL
+    date: "2026-10-04"
+    severity: minor
+  - session: session_01GxJXNFxh3SQh8q1nkReAxJ
+    date: "2026-10-04"
+    severity: minor
+  - session: session_01MBV1mwgJPMcnYw7J9eXMmG
+    date: "2026-10-04"
+    severity: nit
+  - session: session_01XMzcTEcNXy3sKiUWtEKGLW
+    date: "2026-10-04"
+    severity: minor
+  - session: session_01AbPzFC2mns85YxwqznmJUe
+    date: "2026-10-05"
+    severity: minor
+  - session: session_01EPZv5jBQyJYPqy8eVn8e8h
+    date: "2026-10-05"
+    severity: minor
+  - session: session_01QrvPXx1uquc4vvjJXhz1MU
+    date: "2026-10-06"
+    severity: nit
+  - session: session_01RCmFsgtMbJiafbzPg48LYh
+    date: "2026-10-06"
+    severity: nit
+  - session: session_01AQ91ENQEqf8iMne1PrzFiu
+    date: "2026-10-07"
+    severity: minor
+  - session: session_01H84NG8cxGEwFS4jL3DWi1S
+    date: "2026-10-07"
+    severity: nit
+  - session: session_01S6auRmvHwvmSRZNciYFDbD
+    date: "2026-10-07"
+    severity: nit
+  - session: session_01UwY4ZKweYsmaf9zZrzj92k
+    date: "2026-10-07"
+    severity: nit
+  - session: session_015UvXah6phvbuMpUWmf5rYs
+    date: "2026-10-08"
+    severity: minor
+  - session: session_01UvFUKPkQSkZS1qS7VndRqX
+    date: "2026-10-08"
+    severity: nit
+  - session: session_01GGSSswkV3J9p255u5hcvSp
+    date: "2026-10-09"
+    severity: minor
+  - session: session_01NHHafnvmf9qkvq85pvMYzc
+    date: "2026-10-09"
+    severity: nit
+  - session: session_01VaPP7iMRxMvKvX8KQh1qeY
+    date: "2026-10-09"
+    severity: minor
+  - session: session_01KRLFYUD31NaEVTs4Qs1Tzj
+    date: "2026-10-10"
+    severity: nit
+  - session: session_01Tcn6x6mZizT14rJuQqYivt
+    date: "2026-10-10"
+    severity: nit

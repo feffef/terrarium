@@ -1,0 +1,16 @@
+name: local-gate-green-ci-red
+cause: >-
+  CI tests the merge ref against the current main with its own git version; the local gate tests the branch as cut with the container git and may skip Heavy as Inert, so a local green still fails in CI.
+surface: safe
+status: open
+ref: "PR #1483 (git-version caveat)"
+occurrences:
+  - session: session_014mna6dsd4t2Ui98gbs3jCF
+    date: "2026-10-05"
+    severity: moderate
+  - session: session_01CF4k9jXS9wLrcPVsGduZmn
+    date: "2026-10-08"
+    severity: major
+  - session: session_01S1WwkpNHDfbvKAf5T1afKq
+    date: "2026-10-08"
+    severity: major
