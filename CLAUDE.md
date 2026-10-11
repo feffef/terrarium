@@ -41,7 +41,6 @@ act, once per session.
 - **Before you add or change a glossary term:** `docs/agents/domain.md`.
 - **Before you debug a tool, push, network or permission error** that your
   diff doesn't explain: `docs/agents/environment-caveats.md`.
-- **Before you add or change a guard:** `docs/agents/guards.md`.
 
 ## Working conventions
 
