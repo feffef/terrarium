@@ -1,0 +1,93 @@
+schemaVersion: 1
+session: session_01WoJ2cTAuA3Qo9Mi9fd6Tki
+startedAt: 2026-10-11T07:51:14Z
+endedAt: 2026-10-11T08:06:16Z
+kind: interactive
+goal: Let session logs say whether each doc and rule helped
+status: in-review
+outcome: "PR #1767 open, gate green, waiting for a human merge (Human-only schema file)"
+summary: "Human-instructed: the owner asked for the \"Rules triggered\" list to carry a brief note on what each rule told the agent and whether it helped, like \"Files read\". Asked clarifying questions first (owner preference); the owner chose a required, structured verdict, wanted it on files read too, and older logs left as they are. Built an optional `useful` (yes | partly | no) on docsRead entries and a new optional `ruleVerdicts` list, threaded them through the authored scratch, merge, stitch, the `--author` report (which now lists docs without a verdict and loaded rules without one) and the Journal card, plus a short ADR-0009 amendment and Skill doc update. \"Required\" follows the existing docs prompt: a report to answer, not a hard failure. Verified with unit tests, gate:scoped, and a local render with temporary verdicts on one log (reverted). Because the lander validates against main's schema, this log can only carry verdicts after the PR merges."
+prs:
+  - "1767"
+docsRead:
+  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
+    reason: "schema evolution policy: additive optional fields need no version bump"
+  - path: docs/adr/0029-instructions-load-with-the-files-they-govern.md
+    reason: how rulesLoaded is recorded and its known path duplication
+  - path: .agents/skills/log-session/SKILL.md
+    reason: authoring template and the reads report to extend
+  - path: docs/agents/tenant-layers.md
+    reason: before editing the Journal layer; auto-import of journal utils
+  - path: docs/agents/verifying-ui-changes.md
+    reason: preview.ts and playwright click recipe for the card check
+  - path: docs/agents/git-conventions.md
+    reason: commit hygiene; session-log commit titles
+  - path: docs/agents/pr-workflow.md
+    reason: PR open and merge recipe
+  - path: docs/agents/github-integration.md
+    reason: MCP tool surface for PR creation
+  - path: CONTEXT-MAP.md
+    reason: session-start glossary map
+  - path: CONTEXT.md
+    reason: Session and session-log terms
+  - path: shared/schemas/session.ts
+    reason: (read before editing)
+  - path: scripts/log-session.ts
+    reason: (no reason given)
+  - path: layers/journal/app/utils/dashboard.ts
+    reason: (no reason given)
+  - path: layers/journal/app/types/journal.ts
+    reason: (no reason given)
+  - path: tests/unit/log-session.spec.ts
+    reason: (no reason given)
+  - path: scripts/session-trace.ts
+    reason: (no reason given)
+  - path: layers/journal/tests/unit/journal-dashboard.spec.ts
+    reason: (read before editing)
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+frictions:
+  - description: Read CONTEXT-MAP.md, CONTEXT.md and several scripts via cat/sed in chained Bash commands, breaking CLAUDE.md's 'Read files with the Read tool' rule
+    solution: Use Read; chained reads load no path-scoped rule (ADR-0029), so a governing rule could have been missed
+    severity: minor
+  - description: First commit was titled journal(sessions):, the prefix git-conventions reserves for session-log commits; amended before opening the PR
+    solution: Have commit-msg hook reject that prefix on a commit touching anything but a session log
+    severity: minor
+  - description: A test run piped into tail was blocked by the tail-pipe guard; rerun with output to a file
+    solution: None needed; the guard message was clear
+    severity: nit
+  - description: The lander validates logs against main's schema, so a session adding log fields cannot use them in its own log until merge; found by reading log-session.ts
+    solution: Mention it in the log-session Skill next to the schema note
+    severity: minor
+  - description: "First card screenshots showed collapsed details: setting el.open from script did not stick after hydration; clicking the summary worked"
+    solution: "Add to verifying-ui-changes.md: open a details element by clicking its summary"
+    severity: nit
+durationSec: 902
+models:
+  claude-opus-5-5: 117
+toolCounts:
+  Bash: 34
+  Read: 21
+  Edit: 6
+  ToolSearch: 2
+  Monitor: 1
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+  Skill: 1
+filesEdited:
+  - shared/schemas/session.ts
+  - layers/journal/app/components/journal/SessionCard.vue
+  - layers/journal/tests/unit/journal-dashboard.spec.ts
+rulesLoaded:
+  - .claude/rules/adr-0025.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0018.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0008.md
+gitBranch: ccr-41392be9-dymaea
+entrypoint: remote_mobile
+cliVersion: 2.1.296
+landedBy: Stop
