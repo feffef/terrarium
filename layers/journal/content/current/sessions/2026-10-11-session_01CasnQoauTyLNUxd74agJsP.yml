@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01CasnQoauTyLNUxd74agJsP
 startedAt: 2026-10-11T10:13:32Z
-endedAt: 2026-10-11T12:56:57Z
+endedAt: 2026-10-11T13:00:50Z
 kind: interactive
 goal: Triage the open backlog, then implement three ADR-0029 follow-ups
-status: in-review
-outcome: Seven issues triaged; three implemented and reviewed in PR 1775, awaiting a human merge
-summary: "The owner started an auto-triage sweep (human-instructed). Seven needs-triage issues went to one general-purpose subagent each: #1770, #1765 and #1764 became ready-for-agent, #1761, #1759, #1752 and #1745 ready-for-human; the other open issues were skipped because their last comment was AI-authored. The owner then asked, in separate prompts, for the three ready-for-agent issues to be explained, for an Opus agent to finalize their design, for the open design questions to be researched first (glob semantics, tsx latency, hook payload and ordering docs), and for one implementer subagent to build all three on this branch. The owner chose to skip the domain rule and to run one worktree agent. After that the owner repeatedly directed code-review rounds before any push (Standards, Spec and a Simplification-only reviewer, later a major-flaws-only round), approved fixing every finding, asked that the tenant-layers rule point at both docs, kept the in-place ADR-0029 edit, and chose to revert the pre-filter tightening that the last review found silenced a recursive grep. Agent-initiated: the choice of review shape inside each round, the grouping of fixes, and the proposal to revert; every push, PR and merge decision was the owner's. The branch ended as PR 1775 (gate green, human merge needed because it touches rules, settings.json, an ADR and guard scripts). The hard part was #1764: a small shell-command parser plus directory-versus-glob matching in a hook, built on undocumented harness behaviour. Directory matching and the silence on simple reads were my design additions, not the issue's, and they drove most of the five fix rounds; one optimization added late caused the only major flaw. Open: the hook firing under the real harness payload and transcript dedupe are not verified beyond one live firing."
+status: completed
+outcome: Seven issues triaged; three implemented and reviewed, merged by the owner as PR 1775
+summary: "The owner started an auto-triage sweep (human-instructed). Seven needs-triage issues went to one general-purpose subagent each: #1770, #1765 and #1764 became ready-for-agent, #1761, #1759, #1752 and #1745 ready-for-human; the other open issues were skipped because their last comment was AI-authored. The owner then asked, in separate prompts, for the three ready-for-agent issues to be explained, for an Opus agent to finalize their design, for the open design questions to be researched first (glob semantics, tsx latency, hook payload and ordering docs), and for one implementer subagent to build all three on this branch. The owner chose to skip the domain rule and to run one worktree agent. After that the owner repeatedly directed code-review rounds before any push (Standards, Spec and a Simplification-only reviewer, later a major-flaws-only round), approved fixing every finding, asked that the tenant-layers rule point at both docs, kept the in-place ADR-0029 edit, and chose to revert the pre-filter tightening that the last review found silenced a recursive grep. Agent-initiated: the choice of review shape inside each round, the grouping of fixes, and the proposal to revert; every push, PR and merge decision was the owner's. The branch ended as PR 1775: gate green, merged by the owner about five minutes after it opened (human merge, since it touches rules, settings.json, an ADR and guard scripts); #1765 and #1764 closed, #1770 stays open for the skipped domain rule. The hard part was #1764: a small shell-command parser plus directory-versus-glob matching in a hook, built on undocumented harness behaviour. Directory matching and the silence on simple reads were my design additions, not the issue's, and they drove most of the five fix rounds; one optimization added late caused the only major flaw. Open: the hook firing under the real harness payload and transcript dedupe are not verified beyond one live firing."
 prs:
   - "1775"
 docsRead:
@@ -179,25 +179,29 @@ frictions:
   - description: Harness flagged almost every subagent hand-back as instruction-shaped for mentioning settings.json, adding noise to routine reports.
     solution: Scope the settings-json pattern to imperative phrasing, not any mention of the file.
     severity: nit
-durationSec: 9806
+durationSec: 10038
 models:
-  claude-sonnet-5-5: 244
+  claude-sonnet-5-5: 274
 toolCounts:
   Read: 25
-  Glob: 2
-  Bash: 29
+  Glob: 3
+  Bash: 30
   Agent: 22
   Skill: 9
   AskUserQuestion: 2
   ToolSearch: 3
   SendMessage: 6
-  Grep: 2
+  Grep: 3
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
   Write: 1
-  Edit: 5
-  mcp__github__pull_request_read: 1
+  Edit: 7
+  mcp__github__pull_request_read: 6
+  ReadNotifications: 3
+  mcp__claude-code-remote__send_later: 1
+  mcp__claude-code-remote__delete_trigger: 1
+  mcp__github__issue_read: 3
 filesEdited:
   - tests/unit/validate-adr-rules.spec.ts
   - scripts/validate-adr-rules.ts
