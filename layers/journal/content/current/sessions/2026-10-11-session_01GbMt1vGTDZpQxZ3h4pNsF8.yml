@@ -1,14 +1,15 @@
 schemaVersion: 1
 session: session_01GbMt1vGTDZpQxZ3h4pNsF8
 startedAt: 2026-10-11T04:00:50Z
-endedAt: 2026-10-11T04:18:48Z
+endedAt: 2026-10-11T04:23:13Z
 kind: autonomous
 goal: "Weekly docs audit: keep prose honest against the code"
-status: in-review
-outcome: One gated PR with confirmed doc fixes opened; escalations to follow
-summary: "Scheduled audit-docs run (no human prompt; everything agent-initiated by the schedule). Concision family 4 (journal facing pages and Skill Inventory). Six reviewers ran in parallel (freshness, single-home, three concision splits, coherence); three checkers returned verdicts, then a fourth for the late-arriving C2 findings. Verdict counts: roughly 33 CONFIRMED or CONFIRMED-BUT and 19 WRONG (WRONG mostly marginal concision cuts, B3, B5, B10). The biggest real drift was the journal how-it-works page and diagram still saying ordinary work is human-merged after the 10 Oct self-merge flip; the same flip left stale wording in history, visitor-loop, digest, audit-docs, README and the rulebook table. The scoped gate first failed on the mermaid SVG hash (diagram edited); regenerated with render:mermaid and re-ran green. Open: the merge-pr.ts header comment (Human-only) and ADR-0003's out-of-scope wording versus its own amendment are escalations, not yet filed."
+status: completed
+outcome: "One gated PR #1758 merged; escalation PR #1760 and issue #1759 open"
+summary: "Scheduled audit-docs run (no human prompt; everything agent-initiated by the schedule). Concision family 4 (journal facing pages and Skill Inventory). Six reviewers ran in parallel (freshness, single-home, three concision splits, coherence); three checkers returned verdicts, then a fourth for the late-arriving C2 findings. Verdict counts: roughly 33 CONFIRMED or CONFIRMED-BUT and 19 WRONG (WRONG mostly marginal concision cuts, B3, B5, B10). The biggest real drift was the journal how-it-works page and diagram still saying ordinary work is human-merged after the 10 Oct self-merge flip; the same flip left stale wording in history, visitor-loop, digest, audit-docs, README and the rulebook table. The scoped gate first failed on the mermaid SVG hash (diagram edited); regenerated with render:mermaid and re-ran green. Open: the merge-pr.ts header comment (Human-only) and ADR-0003's out-of-scope wording versus its own amendment are escalations, filed as PR 1760 (human merge) and issue 1759."
 prs:
   - "1758"
+  - "1760"
 docsRead:
   - path: CONTEXT-MAP.md
     reason: (read before editing)
@@ -144,12 +145,12 @@ frictions:
   - description: Stop hook asked to push uncommitted work while the gate was running; ADR-0004 says push only after it passes, so I waited.
     solution: The hook could check for a running or failed gate before nagging.
     severity: nit
-durationSec: 1078
+durationSec: 1343
 models:
-  claude-sonnet-5-5: 150
+  claude-sonnet-5-5: 170
 toolCounts:
   Read: 21
-  Bash: 22
+  Bash: 28
   Agent: 10
   Write: 4
   ToolSearch: 2
@@ -158,11 +159,12 @@ toolCounts:
   Grep: 2
   Monitor: 1
   mcp__github__list_pull_requests: 1
-  mcp__github__create_pull_request: 1
-  mcp__github__subscribe_pr_activity: 1
+  mcp__github__create_pull_request: 2
+  mcp__github__subscribe_pr_activity: 2
   mcp__github__add_issue_comment: 1
   Skill: 2
   mcp__github__issue_write: 1
+  ReadNotifications: 2
 filesEdited:
   - layers/journal/content/current/pages/how-it-works.md
   - CLAUDE.md
