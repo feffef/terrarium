@@ -42,8 +42,9 @@ export const ruleBody = (ruleText: string) => ruleText.replace(FRONTMATTER, '')
 export const ruleBlock = (file: string, ruleText: string) =>
   `Contents of ${RULES_DIR}/${file}:\n\n${ruleBody(ruleText).trim()}`
 
-export const ruleBlockFiles = (text: string): string[] =>
-  [...text.matchAll(/^Contents of (\.claude\/rules\/[\w.-]+\.md):$/gm)].map((m) => m[1]!)
+const RULE_BLOCK_HEADER = new RegExp(`^Contents of (${RULES_DIR.replace(/[.]/g, '\\.')}/[\\w.-]+\\.md):$`, 'gm')
+
+export const ruleBlockFiles = (text: string): string[] => [...text.matchAll(RULE_BLOCK_HEADER)].map((m) => m[1]!)
 
 export function ruleHash(ruleText: string): string | undefined {
   return FRONTMATTER.exec(ruleText)?.[1]?.match(/^adr:\s*(\S+)\s*$/m)?.[1]
@@ -60,7 +61,7 @@ export function withRuleHash(ruleText: string, hash: string): string {
 export interface AdrRuleInput {
   adrs: Record<string, string> // ADR number → ADR file text
   rules: Record<string, string> // rule file name → rule file text
-  // Non-ADR rules, with the check for the `docs/` paths they name.
+  // `exists` travels with the files so the docs check can never be skipped.
   otherRules?: { files: Record<string, string>; exists: (repoPath: string) => boolean }
 }
 
@@ -98,7 +99,12 @@ export function findAdrRuleProblems(input: AdrRuleInput): string[] {
       `ADR-${ruleAdr(file)} changed since ${RULES_DIR}/${file} was last checked. Re-read it, update it if the rule changed, then run \`pnpm exec tsx scripts/validate-adr-rules.ts --write\`.`,
     )
   }
-  const { files = {}, exists = () => true } = input.otherRules ?? {}
+  if (input.otherRules) problems.push(...otherRuleProblems(input.otherRules))
+  return problems
+}
+
+function otherRuleProblems({ files, exists }: NonNullable<AdrRuleInput['otherRules']>): string[] {
+  const problems: string[] = []
   for (const [file, text] of Object.entries(files)) {
     if (rulePaths(text).length === 0) {
       problems.push(

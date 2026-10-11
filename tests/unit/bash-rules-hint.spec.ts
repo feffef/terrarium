@@ -82,6 +82,41 @@ describe('bashRulesHint() — the pure core', () => {
     expect(injected('cat <layers/atlas/nuxt.config.ts | head')).toEqual(['.claude/rules/tenant.md'])
   })
 
+  it('lists a real directory to decide a glob that continues past `**`', () => {
+    const root = mkdtempSync(join(tmpdir(), 'bash-rules-dir-'))
+    mkdirSync(join(root, 'layers/j/content/s'), { recursive: true })
+    mkdirSync(join(root, 'layers/k/content/s'), { recursive: true })
+    writeFileSync(join(root, 'layers/j/content/s/a.yml'), '')
+    writeFileSync(join(root, 'layers/k/content/s/b.md'), '')
+    const rules = [rule('mdc.md', ['layers/*/content/**/*.md'], '# MDC')]
+    const at = (dir: string) => hintedRules(bashRulesHint(`grep -rn x ${dir} | head`, root, root, rules) ?? '')
+    expect(at('layers/j/content/s/')).toEqual([])
+    expect(at('layers/j/content/s')).toEqual([])
+    expect(at('layers/k/content/s')).toEqual(['.claude/rules/mdc.md'])
+    expect(at('layers/z/content/s/')).toEqual(['.claude/rules/mdc.md'])
+  })
+
+  it('treats `>& target` and `&> target` as writes', () => {
+    expect(bashReadPaths('cat a >& scripts/a-guard.ts', '/repo').paths).toEqual(['/repo/a'])
+    expect(bashReadPaths('cat a &> scripts/a-guard.ts', '/repo').paths).toEqual(['/repo/a'])
+    expect(bashReadPaths('cat a >&2', '/repo')).toEqual({ paths: ['/repo/a'], simple: true })
+  })
+
+  it('joins a line continuation instead of reading it as a path', () => {
+    expect(bashReadPaths('cat a \\\n  b', '/repo').paths).toEqual(['/repo/a', '/repo/b'])
+  })
+
+  it('asks for the loaded rules only on a match', () => {
+    const never = () => {
+      throw new Error('read the transcript without a match')
+    }
+    expect(bashRulesHint('cat README.md | head', '/repo', '/repo', RULES, never)).toBeNull()
+    const loaded = () => new Set(['.claude/rules/tenant.md'])
+    expect(hintedRules(bashRulesHint('cat nuxt.config.ts scripts/a-guard.ts', '/repo', '/repo', RULES, loaded) ?? '')).toEqual([
+      '.claude/rules/guards.md',
+    ])
+  })
+
   it("keeps grep -v's files", () => {
     expect(injected('grep -v x README.md layers/atlas/nuxt.config.ts')).toEqual(['.claude/rules/tenant.md'])
   })
@@ -153,6 +188,20 @@ describe('the hook entry (sh pre-filter → tsx)', () => {
     for (const seen of ['cat a | head', 'cd x && cat a', 'cat a; ls', 'cat $(ls)', 'ls\ncat a', 'cat a b', 'grep -n x a']) {
       expect(run(probe(seen)).stdout).toContain('guards.md')
     }
+  })
+
+  it('reads the command from tool_input wherever it sits, with spaced colons', () => {
+    const compound = JSON.stringify('cat README.md scripts/tail-pipe-guard.ts')
+    const late = `{"tool_response":{"command":"ls"},"tool_name":"Bash","cwd":${JSON.stringify(repo)},"tool_input" : {"command" : ${compound}}}`
+    expect(run(late).stdout).toContain('guards.md')
+  })
+
+  it('skips a rule the transcript already loaded, unless a subagent ran the command', () => {
+    const transcript = join(mkdtempSync(join(tmpdir(), 'bash-rules-tx-')), 't.jsonl')
+    writeFileSync(transcript, `${JSON.stringify({ attachment: { type: 'nested_memory', path: `${repo}/.claude/rules/guards.md` } })}\n`)
+    const payload = { ...bash('cat README.md scripts/tail-pipe-guard.ts'), transcript_path: transcript }
+    expect(run(payload).stdout).not.toContain('rules/guards.md')
+    expect(run({ ...payload, agent_id: 'a1' }).stdout).toContain('rules/guards.md')
   })
 
   it('fails open on invalid JSON, a missing rules dir and a malformed rule', () => {

@@ -12,7 +12,7 @@
 // Usage:
 //   tsx scripts/bash-rules-hint.ts                # hook payload on stdin
 //   tsx scripts/bash-rules-hint.ts --dry-run (--input '<payload json>' | --input-file <path>)
-import { existsSync, readFileSync, statSync } from 'node:fs'
+import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs'
 import { dirname, isAbsolute, join, matchesGlob, relative } from 'node:path'
 import { printDryRunResult, prop, readTranscript, resolveDryRunInput, runIfMain } from './guard-io.ts'
 import { hintedRules, ruleKey } from './session-trace.ts'
@@ -20,12 +20,15 @@ import { bashReadPaths } from './shell-reads.ts'
 import { loadRules, type RuleFile } from './skill-rules-hint.ts'
 import { RULES_DIR, ruleBlock, rulePaths } from './validate-adr-rules.ts'
 
-/** A file counts where the glob matches it, as when the harness loads a rule.
- *  A directory (trailing `/`) counts only once it is as deep as the glob's
- *  fixed part, so `grep -rn x layers/` does not inject every layers rule. */
-function covers(path: string, glob: string): boolean {
-  if (!path.endsWith('/')) return matchesGlob(path, glob)
-  const parts = path.slice(0, -1).split('/')
+/** Files under a repo-relative directory, or null when it cannot be listed:
+ *  missing, or past the cap. */
+type Lister = (dir: string) => string[] | null
+const LIST_CAP = 2000
+
+/** A directory reaches a glob once it is as deep as the glob's fixed part, so
+ *  `grep -rn x layers/` does not inject every layers rule. */
+function reaches(dir: string, glob: string): boolean {
+  const parts = dir.slice(0, -1).split('/')
   const globs = glob.split('/')
   for (const [i, part] of parts.entries()) {
     if (globs[i] === '**') return true
@@ -35,14 +38,36 @@ function covers(path: string, glob: string): boolean {
   return rest.length === 1 || rest[0] === '**'
 }
 
-export function rulesForPaths(paths: string[], rules: RuleFile[]): RuleFile[] {
-  return rules.filter((r) => rulePaths(r.text).some((g) => paths.some((p) => covers(p, g))))
+/** A file counts where the glob matches it, as when the harness loads a rule.
+ *  A directory (trailing `/`) counts when it reaches the glob and holds a
+ *  matching file; when it cannot be listed, reaching it is enough. */
+function covers(path: string, glob: string, list: Lister): boolean {
+  if (!path.endsWith('/')) return matchesGlob(path, glob)
+  if (!reaches(path, glob)) return false
+  if (glob.endsWith('/**')) return true
+  const files = list(path)
+  return files === null || files.some((f) => matchesGlob(f, glob))
+}
+
+export function rulesForPaths(paths: string[], rules: RuleFile[], list: Lister = () => null): RuleFile[] {
+  return rules.filter((r) => rulePaths(r.text).some((g) => paths.some((p) => covers(p, g, list))))
 }
 
 const isDirectory = (p: string) => existsSync(p) && statSync(p).isDirectory()
 
+function lister(root: string): Lister {
+  return (dir) => {
+    try {
+      const files = readdirSync(join(root, dir), { recursive: true }) as string[]
+      return files.length > LIST_CAP ? null : files.map((f) => dir + f)
+    } catch {
+      return null
+    }
+  }
+}
+
 /** The rules governing what `command` read, repo-relative. */
-export function matchedRules(command: string, cwd: string, root: string, rules: RuleFile[]): RuleFile[] {
+function matchedRules(command: string, cwd: string, root: string, rules: RuleFile[]): RuleFile[] {
   const { paths, simple } = bashReadPaths(command, cwd)
   const reads = paths
     .map((p) => relative(root, p) + (p.endsWith('/') || isDirectory(p) ? '/' : ''))
@@ -50,7 +75,7 @@ export function matchedRules(command: string, cwd: string, root: string, rules: 
     .filter((p) => p !== '/' && p !== '' && !p.startsWith('..') && !isAbsolute(p))
   // A lone directory is not the one-file read the harness covers.
   if (simple && !reads.some((p) => p.endsWith('/'))) return []
-  return rulesForPaths(reads, rules)
+  return rulesForPaths(reads, rules, lister(root))
 }
 
 function formatHint(rules: RuleFile[]): string | null {
@@ -58,9 +83,19 @@ function formatHint(rules: RuleFile[]): string | null {
   return ['Files this command read are governed by these rules:', ...rules.map((r) => ruleBlock(r.file, r.text))].join('\n\n')
 }
 
-/** `loaded` holds `.claude/rules/<file>` keys already in the session. */
-export function bashRulesHint(command: string, cwd: string, root: string, rules: RuleFile[], loaded = new Set<string>()): string | null {
-  return formatHint(matchedRules(command, cwd, root, rules).filter((r) => !loaded.has(`${RULES_DIR}/${r.file}`)))
+/** `loaded` gives the `.claude/rules/<file>` keys already in the session. As
+ *  a function it runs only on a match, so a miss never reads the transcript. */
+export function bashRulesHint(
+  command: string,
+  cwd: string,
+  root: string,
+  rules: RuleFile[],
+  loaded: Set<string> | (() => Set<string>) = new Set(),
+): string | null {
+  const hits = matchedRules(command, cwd, root, rules)
+  if (hits.length === 0) return null
+  const skip = typeof loaded === 'function' ? loaded() : loaded
+  return formatHint(hits.filter((r) => !skip.has(`${RULES_DIR}/${r.file}`)))
 }
 
 /** Nearest ancestor holding `.claude/rules`, so a worktree matches its own tree. */
@@ -87,11 +122,10 @@ function hintFor(payload: unknown): string | null {
   const cwd = String(prop(payload, 'cwd') ?? process.cwd())
   const root = repoRoot(cwd)
   if (!root) return null
-  const hits = matchedRules(command, cwd, root, loadRules(join(root, RULES_DIR)))
-  if (hits.length === 0) return null
   const subagent = prop(payload, 'agent_id') !== undefined
-  const loaded = subagent ? new Set<string>() : loadedRules(readTranscript(String(prop(payload, 'transcript_path') ?? '')) ?? [])
-  return formatHint(hits.filter((r) => !loaded.has(`${RULES_DIR}/${r.file}`)))
+  return bashRulesHint(command, cwd, root, loadRules(join(root, RULES_DIR)), () =>
+    subagent ? new Set() : loadedRules(readTranscript(String(prop(payload, 'transcript_path') ?? '')) ?? []),
+  )
 }
 
 function main(): void {

@@ -213,6 +213,11 @@ describe('false positives', () => {
     expect(rules('grep -e docs/agents/x.md docs/agents/y.md')).toEqual(['value bound to a flag'])
   })
 
+  it('treats a spaced `>&` target as written, not read', () => {
+    expect(paths('cat docs/agents/x.md >& docs/agents/y.md')).toEqual(['docs/agents/x.md'])
+    expect(paths('cat docs/agents/x.md &> docs/agents/y.md')).toEqual(['docs/agents/x.md'])
+  })
+
   it("keeps grep -v's file: -v takes a value only for awk", () => {
     expect(paths('grep -v foo docs/agents/x.md')).toEqual(['docs/agents/x.md'])
   })

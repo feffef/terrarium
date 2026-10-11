@@ -256,7 +256,8 @@ function stripHeredocs(command: string): string {
  *  orphans the path into a segment whose verb is a pattern fragment — #1074's
  *  prototype scored 1/2 until this existed. */
 function segments(rawCommand: string): { tokens: Token[]; followedByOr: boolean }[] {
-  const command = stripHeredocs(rawCommand)
+  // A `\`-newline continues the line; left in, the newline becomes a path.
+  const command = stripHeredocs(rawCommand).replace(/\\\r?\n/g, ' ')
   const out: { tokens: Token[]; followedByOr: boolean }[] = []
   let tokens: Token[] = []
   let cur = ''
@@ -386,9 +387,9 @@ function readerArgs(verb: string, tokens: Token[]): { kind: ArgKind; text: strin
       continue
     }
     if (!t.quoted) {
-      // `> out`, `2>> log`, `2>&1`, `&>out`. `<` is NOT here: `cat < docs/x.md`
+      // `> out`, `>& out`, `2>> log`, `2>&1`, `&>out`. `<` is NOT here: `cat < docs/x.md`
       // genuinely streams the file.
-      if (/^(?:\d*|&)>>?$/.test(t.text)) {
+      if (/^(?:\d*|&)>>?&?$/.test(t.text)) {
         bound = 'redirect'
         continue
       }
