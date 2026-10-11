@@ -1,9 +1,9 @@
 name: stop-hook-nag
 cause: >-
   The Stop hook demands commit and push on every turn while a gate, build or fact-check subagent is still running, against ADR-0004's push-after-gate rule.
-surface: guard-or-hook
+surface: outside
 status: open
-ref: "PRs #1588, #1612 (caveat docs)"
+ref: "issue #1653 (closed not-planned 2026-10-10: harness-side stop-hook-git-check.sh); PRs #1588, #1612 (caveat docs)"
 occurrences:
   - session: session_01DnPo4xLxkuDkmDxsdFZQTa
     date: "2026-09-27"
@@ -165,5 +165,8 @@ occurrences:
     date: "2026-10-11"
     severity: nit
   - session: session_01Tjsmye34hk57NtioyWQG4h
+    date: "2026-10-11"
+    severity: nit
+  - session: session_01V3bxJaTSH8AWjrtSoBhNxK
     date: "2026-10-11"
     severity: nit

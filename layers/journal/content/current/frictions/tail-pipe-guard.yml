@@ -3,7 +3,7 @@ cause: >-
   The tail-pipe guard denies a whole chained command for a trailing pipe into tail or head; most sessions hit it on their first verification command.
 surface: guard-or-hook
 status: open
-ref: "issue #873"
+ref: "issue #873; open #1769"
 occurrences:
   - session: session_01BW1YmuRKFcpcwtX6ZXGCQ8
     date: "2026-09-27"
