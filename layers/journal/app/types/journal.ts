@@ -1,5 +1,5 @@
 import type { z } from 'zod'
-import type { sessionSchema } from '../../../../shared/schemas/session'
+import type { RuleVerdict, sessionSchema } from '../../../../shared/schemas/session'
 import type { skillSchema } from '../../tenant.config'
 
 // `z.input`, not `z.infer`: the schemas' `.default([])` fields are optional on the
@@ -11,6 +11,7 @@ export type Severity = Friction['severity']
 export type Status = SessionDoc['status']
 export type Subagent = NonNullable<SessionDoc['subagents']>[number]
 export type Importance = SkillDoc['importance']
+export type DocRead = NonNullable<SessionDoc['docsRead']>[number]
 
 // A session prepared for display in the recent-activity feed — the page derives
 // this from a SessionDoc (formats dates, counts frictions) so the card component
@@ -40,7 +41,7 @@ export interface SessionCardView {
   sid: string
   summary: string
   subagents: Subagent[]
-  docsRead: { path: string; reason: string }[]
+  docsRead: DocRead[]
   skillsUsed: { name: string; reason: string }[]
   frictions: Friction[]
   // Authored note fields — normalized to arrays (empty ⇒ the card hides them).
@@ -51,8 +52,10 @@ export interface SessionCardView {
   // edited nothing / spawned no subagent).
   filesEdited: string[]
   docsReadViaShell: string[]
-  // Path-scoped rules that loaded; `followedUp` ⇒ the session then read the full ADR.
-  rules: { path: string; followedUp: boolean }[]
+  // Rules that loaded, session-start (`global`) ones first; `followedUp` ⇒ the
+  // session then read the full ADR.
+  // `reason`/`useful` are the agent's verdict, absent on logs older than it.
+  rules: ({ path: string; global: boolean; followedUp: boolean } & Partial<Omit<RuleVerdict, 'path'>>)[]
   tools: { name: string; count: number }[]
 }
 

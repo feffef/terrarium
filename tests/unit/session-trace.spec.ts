@@ -132,9 +132,9 @@ describe('foldSubagentTrace() — subagent work counts as the session\'s (issue 
   })
 })
 
-// The harness records a path-scoped rule's load as an attachment record; the
-// startup `instructions` attachment holds the always-loaded rules and is ignored.
-describe('rulesLoaded — path-scoped rules that fired', () => {
+// The harness records a path-scoped rule's load as a `nested_memory`
+// attachment, and the rules with no `paths` in the startup `instructions` one.
+describe('rulesLoaded and rulesGlobal — rules that loaded', () => {
   const rule = (path: string) => ({ type: 'attachment', timestamp: '2026-07-06T10:03:00Z', attachment: { type: 'nested_memory', path } })
   const records = [
     ...parseTranscript(transcript),
@@ -147,6 +147,13 @@ describe('rulesLoaded — path-scoped rules that fired', () => {
 
   it('keeps each rule once, repo-relative, and only from .claude/rules/', () => {
     expect(trace.rulesLoaded).toEqual(['.claude/rules/adr-0024.md'])
+  })
+
+  it('lists the session-start rules apart, as global, and never in both lists', () => {
+    expect(trace.rulesGlobal).toEqual(['.claude/rules/adr-0003.md'])
+    expect(extractTrace([...records, rule('/repo/.claude/rules/adr-0003.md')], NO_ENV).rulesLoaded).toEqual(['.claude/rules/adr-0024.md'])
+    expect(stitch({ session: 's', goal: 'g', status: 'completed', outcome: 'o', summary: 's', frictions: [] }, trace).rulesGlobal)
+      .toEqual(['.claude/rules/adr-0003.md'])
   })
 
   it('adds the rules the skill-rules hint injected when a Skill ran', () => {
@@ -166,10 +173,29 @@ describe('rulesLoaded — path-scoped rules that fired', () => {
     expect(foldSubagentTrace(trace, [sub], NO_ENV).rulesLoaded).toEqual(['.claude/rules/adr-0024.md', '.claude/rules/adr-0012.md'])
   })
 
+  // Issue #1763: a worktree subagent's cwd differs, so its absolute rule path
+  // used to survive relativizing and duplicate the parent's.
+  it('counts a rule once when a worktree subagent loads it from another root', () => {
+    const worktree = { type: 'user', cwd: '/repo/.claude/worktrees/a1', message: { content: 'go' } }
+    const sub = [worktree, rule('/repo/.claude/rules/adr-0024.md'), rule('/repo/.claude/worktrees/a1/.claude/rules/adr-0012.md')]
+    expect(foldSubagentTrace(trace, [sub], NO_ENV).rulesLoaded).toEqual(['.claude/rules/adr-0024.md', '.claude/rules/adr-0012.md'])
+  })
+
   it('is written by the stitch and accepted by the schema', () => {
     const authored: AuthoredScratch = { session: 'session_01RL', goal: 'g', status: 'completed', outcome: 'o', summary: 's', frictions: [] }
     const entry = stitch(authored, trace)
     expect(entry.rulesLoaded).toEqual(trace.rulesLoaded)
+    expect(validateEntry(entry).ok).toBe(true)
+  })
+  it('carries authored rule verdicts and doc verdicts through the stitch', () => {
+    const authored: AuthoredScratch = {
+      session: 'session_01RL', goal: 'g', status: 'completed', outcome: 'o', summary: 's', frictions: [],
+      docsRead: [{ path: 'CONTEXT.md', reason: 'glossary', useful: 'yes' }],
+      ruleVerdicts: [{ path: '.claude/rules/adr-0024.md', reason: 'diagram tokens', useful: 'no' }],
+    }
+    const entry = stitch(authored, trace)
+    expect(entry.ruleVerdicts).toEqual(authored.ruleVerdicts)
+    expect(entry.docsRead).toContainEqual({ path: 'CONTEXT.md', reason: 'glossary', useful: 'yes' })
     expect(validateEntry(entry).ok).toBe(true)
   })
 })

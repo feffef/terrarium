@@ -70,11 +70,13 @@ outcome: Mechanism built and tested # one-liner — nuance on status
 summary: >-                        # the fuller narrative — sized to the session, see below
   What you set out to do and what actually happened.
 prs: ["42"]                        # work-PR refs (in-review is fine); [] if none
-docsRead:                          # OPTIONAL, curated — the docs that MATTERED, with why.
-  - { path: CONTEXT.md, reason: domain model }   # transcript-observed reads you omit
-  - { path: "app/pages/t/[tenant]/[space]/[...slug].vue", reason: routing }  # are folded
-skillsUsed:                        # in automatically (name cross-refs the Skill Inventory),
-  - { name: tdd, reason: "test-first the helper (see #99)" }  # deduped, uncited ones get (no reason given)
+docsRead:                          # curated — what each doc gave you, and whether it helped
+  - { path: CONTEXT.md, reason: "glossary: Space vs Collection", useful: yes }  # useful: yes | partly | no
+  - { path: "app/pages/t/[tenant]/[space]/[...slug].vue", reason: routing, useful: partly }
+skillsUsed:                        # transcript-observed reads/Skills you omit are folded in
+  - { name: tdd, reason: "test-first the helper (see #99)" }  # (name cross-refs the Skill Inventory)
+ruleVerdicts:                      # every rule that loaded, global ones too (step 3 lists them)
+  - { path: .claude/rules/adr-0025.md, reason: "kinds live in shared/kinds.ts", useful: no }
 frictions:                         # REQUIRED (may be []) — list EVERY friction
   - description: …                 # ~20 words, honest
     solution: …                    # the fix, or what would have helped
@@ -111,11 +113,13 @@ ideas:                             # OPTIONAL — omit unless something sparked
   **Session** term for the absent-⇒-internal semantics and the mining-exclusion/
   ideas split. This authoring path doesn't set it.
 - `docsRead`/`skillsUsed` are your **curated** picks (the ones worth a `reason`).
-  You don't have to list everything you touched — the extractor folds observed
-  reads in. A read you *do* cite keeps your `reason`; the rest get a derived
-  placeholder — `(read before editing)` if the same path was also edited (the
-  Edit/Write tool requires reading it first, so that read wasn't unexplained,
-  just uncited), otherwise `(no reason given)`.
+  A `docsRead` or `ruleVerdicts` `reason` says briefly what the doc or rule told
+  you; `useful` says whether that helped your task. You don't have to list
+  everything you touched — the extractor folds observed reads in. A read you
+  *do* cite keeps your `reason`; the rest get a derived placeholder —
+  `(read before editing)` if the same path was also edited (the Edit/Write tool
+  requires reading it first, so that read wasn't unexplained, just uncited),
+  otherwise `(no reason given)`.
 - **frictions is the point.** List *every* one — anything that felt unnecessarily
   complex, token-heavy, or repetitive. A **doc contradiction found mid-session** is
   itself a friction: record it with a `solution` pointing at the single home to fix.
@@ -161,13 +165,19 @@ is a normal PR.
 ## 3. Answer the reads report
 
 `--author` lists every instruction doc the trace will fold into `docsRead`
-that has no reason yet, whether the Read tool opened it or a Bash command's
-output showed it (yours or a subagent's — folded in by design, issue #796),
-with the evidence for each. Re-run `--author` with a `docsRead` entry for each
-one: a one-line reason, or the reason `(not read)` when no command of this
-session or its subagents showed you that doc. A later pass merges with the
-first, so list only the new entries. ADR-0009's merged-read amendment says
-what the stitch does with `(not read)`.
+that has no reason and `useful` verdict yet, whether the Read tool opened it or
+a Bash command's output showed it (yours or a subagent's — folded in by design,
+issue #796), with the evidence for each. Answer each with a `docsRead` entry: a
+one-line reason and a `useful` verdict, or the reason `(not read)` when no
+command of this session or its subagents showed you that doc. ADR-0009's
+merged-read amendment says what the stitch does with `(not read)`.
+
+It also lists every rule that loaded with no `ruleVerdicts` entry, including the
+global ones that load at session start. Answer each with a reason and a
+`useful` verdict.
+
+A later pass merges with the first, so list only the new or changed entries,
+but write each one whole: a pass replaces an entry with the same path.
 
 The report also lists docs a command named but did not show enough of to
 count. ADR-0009's output-matching and merged-read amendments say what is

@@ -33,6 +33,7 @@
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs'
 import { basename, dirname, join, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
+import type { RuleVerdict, UsefulVerdict } from '../shared/schemas/session.ts'
 import { DERIVED_REASON, FOLDED_TRACE_FIELDS } from '../shared/trace-fields.ts'
 import {
   buildDocLineIndex,
@@ -108,9 +109,11 @@ export interface MechanicalTrace {
    *  folds them into `docsRead` like `filesRead`. */
   docsReadViaShell: string[]
   /** Path-scoped `.claude/rules/` files that loaded on a file touch or a Skill
-   *  run, in load order — the rules that load at session start carry no signal. */
+   *  run, in load order. */
   rulesLoaded: string[]
-  /** The subset of `rulesLoaded` whose ADR the session read after the rule first
+  /** `.claude/rules/` files with no `paths`, which load at session start. */
+  rulesGlobal: string[]
+  /** The subset of both rule lists whose ADR the session read after the rule first
    *  loaded: whole, by the Read tool, or in Bash output once `docIndex` is given
    *  (the shell detector's floor, not a whole read). */
   rulesFollowedUp: string[]
@@ -157,6 +160,13 @@ export function isContentPath(p: string | undefined): p is string {
 function hintedRules(content: unknown): string[] {
   const text = (Array.isArray(content) ? content : [content]).filter((c) => typeof c === 'string').join('\n')
   return [...text.matchAll(/^Contents of (\.claude\/rules\/[\w.-]+\.md):$/gm)].map((m) => m[1]!)
+}
+
+/** A rule's identity is its `.claude/rules/` path, not where it was loaded
+ *  from: a worktree subagent loads the same rule under another absolute root,
+ *  which `relativizer` cannot strip (issue #1763). */
+function ruleKey(path: string): string {
+  return path.slice(path.lastIndexOf('.claude/rules/'))
 }
 
 function relativizer(records: Record<string, unknown>[]): (p: string) => string {
@@ -537,6 +547,7 @@ export function extractTrace(
   const subagents: SubagentRef[] = []
   const prSignals: string[] = []
   const rules: string[] = []
+  const globalRules: string[] = []
   const ruleLoadedAt = new Map<string, number>()
   const readAt: [string, number][] = []
 
@@ -544,10 +555,13 @@ export function extractTrace(
     const ts = typeof rec.timestamp === 'string' ? Date.parse(rec.timestamp) : NaN
     if (!Number.isNaN(ts)) stamps.push(ts)
 
-    const att = rec.attachment as { type?: string; path?: string; content?: unknown } | undefined
-    if (att?.type === 'nested_memory' && att.path?.includes('/.claude/rules/')) rules.push(att.path)
+    const att = rec.attachment as { type?: string; path?: string; content?: unknown; files?: { path?: string }[] } | undefined
+    if (att?.type === 'nested_memory' && att.path?.includes('/.claude/rules/')) rules.push(ruleKey(att.path))
     if (att?.type === 'hook_additional_context') rules.push(...hintedRules(att.content))
-    for (const r of rules) if (!ruleLoadedAt.has(r)) ruleLoadedAt.set(r, i)
+    if (att?.type === 'instructions') {
+      for (const f of att.files ?? []) if (f.path?.includes('/.claude/rules/')) globalRules.push(ruleKey(f.path))
+    }
+    for (const r of [...globalRules, ...rules]) if (!ruleLoadedAt.has(r)) ruleLoadedAt.set(r, i)
 
     const msg = rec.message as { content?: unknown; model?: string } | undefined
     if (rec.type === 'assistant' && msg?.model) {
@@ -617,8 +631,9 @@ export function extractTrace(
     filesRead: dedup(reads).filter(isContentPath).map(rel),
     filesEdited: dedup(edits).filter(isContentPath).map(rel),
     docsReadViaShell: docIndex ? scanShellReadsByOutput(bashCommandsOf(records), docIndex, rel).paths : [],
-    rulesLoaded: dedup(rules.map(rel)),
-    rulesFollowedUp: dedup([...ruleLoadedAt].filter(([r, at]) => adrReadAfter(r, at)).map(([r]) => rel(r))),
+    rulesLoaded: dedup(rules).filter((r) => !globalRules.includes(r)),
+    rulesGlobal: dedup(globalRules),
+    rulesFollowedUp: [...ruleLoadedAt].filter(([r, at]) => adrReadAfter(r, at)).map(([r]) => r),
     skillsUsed: dedup([...skills, ...commandSkills]),
     commandSkills: dedup(commandSkills),
     subagents,
@@ -696,8 +711,11 @@ export function foldSubagentTrace(
     folded[field] = dedup([...trace[field], ...subs.flatMap((s) => s[field])])
   }
   // Folded too, but kept out of FOLDED_TRACE_FIELDS: SessionCard's explainer
-  // lists those fields, and the card does not render this one.
-  folded.rulesLoaded = dedup([...trace.rulesLoaded, ...subs.flatMap((s) => s.rulesLoaded)])
+  // lists those fields, and the card shows these in a list of their own.
+  folded.rulesGlobal = dedup([...trace.rulesGlobal, ...subs.flatMap((s) => s.rulesGlobal)])
+  folded.rulesLoaded = dedup([...trace.rulesLoaded, ...subs.flatMap((s) => s.rulesLoaded)]).filter(
+    (r) => !folded.rulesGlobal.includes(r),
+  )
   folded.rulesFollowedUp = dedup([...trace.rulesFollowedUp, ...subs.flatMap((s) => s.rulesFollowedUp)])
   return folded
 }
@@ -735,14 +753,15 @@ export interface AuthoredScratch {
   outcome: string
   summary: string
   prs?: string[]
-  docsRead?: { path: string; reason: string }[]
+  docsRead?: { path: string; reason: string; useful?: UsefulVerdict }[]
   skillsUsed?: { name: string; reason: string }[]
+  ruleVerdicts?: RuleVerdict[]
   frictions: { description: string; solution: string; severity: string }[]
   learnings?: string[]
   ideas?: string[]
 }
 
-function mergeRefs<T extends Record<string, string>>(
+function mergeRefs<T extends Record<string, string | undefined>>(
   authored: T[],
   derivedKeys: string[],
   keyField: 'path' | 'name',
@@ -797,7 +816,9 @@ export function stitch(authored: AuthoredScratch, trace: MechanicalTrace): Recor
   if (Object.keys(trace.toolCounts).length) entry.toolCounts = trace.toolCounts
   if (trace.filesEdited.length) entry.filesEdited = trace.filesEdited
   if (trace.rulesLoaded.length) entry.rulesLoaded = trace.rulesLoaded
+  if (trace.rulesGlobal.length) entry.rulesGlobal = trace.rulesGlobal
   if (trace.rulesFollowedUp.length) entry.rulesFollowedUp = trace.rulesFollowedUp
+  if (authored.ruleVerdicts?.length) entry.ruleVerdicts = authored.ruleVerdicts
   if (trace.subagents.length) entry.subagents = trace.subagents
   if (trace.gitBranch) entry.gitBranch = trace.gitBranch
   if (trace.entrypoint) entry.entrypoint = trace.entrypoint

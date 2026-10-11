@@ -12,6 +12,11 @@ import { z } from 'zod'
 // The string-not-`z.date()` rationale lives with the shared refinement.
 import { utcTimestamp } from './timestamp'
 
+export const usefulVerdict = z.enum(['yes', 'partly', 'no'])
+export const ruleVerdict = z.object({ path: z.string(), reason: z.string(), useful: usefulVerdict })
+export type UsefulVerdict = z.infer<typeof usefulVerdict>
+export type RuleVerdict = z.infer<typeof ruleVerdict>
+
 /**
  * The frozen `sessions` schema (ADR-0009). `status`/`kind` are queryable spines;
  * `frictions` is a required list (may be []) forcing reflection. Strict → L1
@@ -38,8 +43,11 @@ export const sessionSchema = z
     prs: z.array(z.string()).default([]), // 0..N already-landed work-PR refs
     // docsRead/skillsUsed are a *merged* field (ADR-0009 amendments): the
     // agent's curated entries plus the reads and Skills the extractor derives,
-    // folded in with a placeholder `reason`.
-    docsRead: z.array(z.object({ path: z.string(), reason: z.string() })).default([]),
+    // folded in with a placeholder `reason`. `useful` is authored only; absent on
+    // folded-in reads and on logs older than the verdict (ADR-0009, 2026-10-11).
+    docsRead: z
+      .array(z.object({ path: z.string(), reason: z.string(), useful: usefulVerdict.optional() }))
+      .default([]),
     skillsUsed: z.array(z.object({ name: z.string(), reason: z.string() })).default([]),
     // Mechanical trace — derived from the session transcript by the SessionEnd
     // extractor (ADR-0009 amendment), never self-reported. All optional: absent ⇒
@@ -51,8 +59,11 @@ export const sessionSchema = z
     // Path-scoped `.claude/rules/` files that loaded on a file touch, so an audit
     // can see which ADR summaries fired and whether a full read followed.
     rulesLoaded: z.array(z.string()).optional(),
-    // The subset of `rulesLoaded` whose ADR was read after the rule loaded.
+    // Rules with no `paths`, which load at session start.
+    rulesGlobal: z.array(z.string()).optional(),
+    // The subset of both rule lists whose ADR was read after the rule loaded.
     rulesFollowedUp: z.array(z.string()).optional(),
+    ruleVerdicts: z.array(ruleVerdict).optional(),
     // DEPRECATED — no longer written. Shell reads now fold into `docsRead`
     // (ADR-0009's merged-read amendment); the key stays so older logs validate.
     docsReadViaShell: z.array(z.string()).optional(),
