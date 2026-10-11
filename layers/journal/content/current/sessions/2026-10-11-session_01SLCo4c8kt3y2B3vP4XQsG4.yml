@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01SLCo4c8kt3y2B3vP4XQsG4
 startedAt: 2026-10-11T07:14:36Z
-endedAt: 2026-10-11T07:24:17Z
+endedAt: 2026-10-11T07:43:41Z
 kind: interactive
 goal: Show triggered rules on the Journal session card
-status: in-review
-outcome: "PR #1766 adds a Rules triggered disclosure to the session card"
-summary: "Human-instructed: the owner asked that the Journal session component show the rules each session triggered. I found the data already exists (rulesLoaded / rulesFollowedUp in the session trace, only path-scoped rules, present in 8 of 98 current logs) but SessionCard rendered neither. Per the owner's preference to ask first, I asked four questions; the owner chose path-scoped rules only, marking rules whose full ADR was read, raw paths in a trace disclosure (not my recommended ADR-title formatting), and hiding the section on older logs. I implemented it in the view builder, type and card, deduplicating paths because older logs can repeat a rule (issue #1763). Test, gate:scoped and a dev-server check of a real card passed. Opening PR #1766 was agent-initiated per ADR-0003."
+status: completed
+outcome: "PR #1766 merged: session cards list triggered rules as logged, marking ADR follow-ups"
+summary: "Human-instructed: the owner asked that the Journal session component show the rules each session triggered. I found the data already exists (rulesLoaded / rulesFollowedUp in the session trace, only path-scoped rules, present in 8 of 98 current logs) but SessionCard rendered neither. Per the owner's preference to ask first, I asked four questions; the owner chose path-scoped rules only, marking rules whose full ADR was read, raw paths in a trace disclosure (not my recommended ADR-title formatting), and hiding the section on older logs. I implemented it in the view builder, type and card, at first deduplicating paths (issue #1763); a two-axis code-review by Sonnet subagents, which the owner requested, flagged that as unrequested, and the owner chose to list rules as logged since #1763 owns duplicates, so I removed it and keyed rows by index. Tests, gate:scoped on both commits and a dev-server check of a real card passed. Opening PR #1766 was agent-initiated per ADR-0003; the owner then said to merge when green, and I merged it."
 prs:
   - "1766"
 docsRead:
@@ -36,11 +36,15 @@ docsRead:
     reason: (read before editing)
   - path: shared/schemas/session.ts
     reason: (no reason given)
+  - path: layers/journal/CONTEXT.md
+    reason: (no reason given)
 skillsUsed:
   - name: close-session
     reason: (no reason given)
   - name: log-session
     reason: (no reason given)
+  - name: code-review
+    reason: (invoked as a slash command)
 frictions:
   - description: Broke CLAUDE.md "Working on a Tenant? Also read layers/<tenant>/CONTEXT.md" — never read layers/journal/CONTEXT.md before editing the Journal card.
     solution: Low impact here (pure display change), but a Journal term could have been misnamed; a path rule on layers/journal/** pointing at its CONTEXT.md would surface it at edit time.
@@ -54,20 +58,30 @@ frictions:
   - description: Broke CLAUDE.md "never chain a kill with && or ;" — ran preview.ts stop followed by ; rm of the verify script.
     solution: Run the stop as its own command; no harm here because both commands ran.
     severity: nit
-durationSec: 581
+  - description: Added unrequested deduplication of rulesLoaded to the card; the spec review caught it and the owner had it removed, costing one extra gate run and push.
+    solution: "When an existing issue owns a data defect (here #1763), show the data as logged and ask before compensating in the display layer."
+    severity: minor
+durationSec: 1745
 models:
-  claude-opus-5-5: 79
+  claude-opus-5-5: 133
 toolCounts:
-  Bash: 22
+  Bash: 33
   AskUserQuestion: 1
   Read: 13
-  Edit: 7
+  Edit: 10
   Write: 2
-  ToolSearch: 2
+  ToolSearch: 4
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
   Skill: 2
+  ReadNotifications: 4
+  mcp__claude-code-remote__send_later: 1
+  Agent: 2
+  mcp__github__update_pull_request: 1
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__delete_trigger: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/journal/tests/unit/journal-dashboard.spec.ts
   - layers/journal/app/utils/dashboard.ts
@@ -80,6 +94,13 @@ rulesLoaded:
   - .claude/rules/adr-0008.md
   - .claude/rules/adr-0025.md
   - .claude/rules/adr-0004-human-merge.md
+subagents:
+  - type: general-purpose
+    task: Standards review of PR diff
+    model: sonnet
+  - type: general-purpose
+    task: Spec review of PR diff
+    model: sonnet
 gitBranch: ccr-2cf719bf-qcl0l9
 entrypoint: remote_mobile
 cliVersion: 2.1.296
