@@ -37,7 +37,8 @@ Its brief:
   frictions with a common cause, carrying its `status`, `surface` and every
   `occurrence` so far. Append each friction in the window that matches an
   entry, whatever its severity; a session counts once, at its highest
-  severity. A new entry needs a cause seen twice, or one `major` or `blocker`.
+  severity. A new entry needs a cause seen twice, or one `moderate`, `major` or
+  `blocker`.
   A cluster is a shared **root cause**: two frictions days apart, on different
   tools, belong together when one change would retire both. The ledger's
   **horizon** is the last 14 days: an entry's recurrence is its occurrences
