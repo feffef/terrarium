@@ -4,6 +4,8 @@
 // frontmatter, so the hash costs no context. Any edit to an ADR changes its
 // hash, so the summary cannot go stale silently: the author re-reads the rule,
 // updates it if the decision changed, then runs this script with `--write`.
+// Every other rule must have `paths` and name only `docs/` files that exist
+// (ADR-0029, issue #1765).
 //
 // Usage: pnpm validate:content (chained), or
 //   pnpm exec tsx scripts/validate-adr-rules.ts [--write]
@@ -50,7 +52,14 @@ export function withRuleHash(ruleText: string, hash: string): string {
 export interface AdrRuleInput {
   adrs: Record<string, string> // ADR number → ADR file text
   rules: Record<string, string> // rule file name → rule file text
+  others?: Record<string, string> // non-ADR rule file name → rule file text
+  exists?: (repoPath: string) => boolean
 }
+
+/** The `docs/` paths a rule's body names (not its frontmatter globs). */
+export const ruleDocPaths = (ruleText: string): string[] => [
+  ...new Set(ruleBody(ruleText).match(/(?<![\w./-])docs\/[\w./-]*[\w-]/g) ?? []),
+]
 
 /** A rule file names its ADR: `adr-0004.md` is the summary, and an extra
  *  `adr-0004-<topic>.md` covers a part of that ADR with its own `paths`. */
@@ -81,6 +90,16 @@ export function findAdrRuleProblems(input: AdrRuleInput): string[] {
       `ADR-${ruleAdr(file)} changed since ${RULES_DIR}/${file} was last checked. Re-read it, update it if the rule changed, then run \`pnpm exec tsx scripts/validate-adr-rules.ts --write\`.`,
     )
   }
+  for (const [file, text] of Object.entries(input.others ?? {})) {
+    if (rulePaths(text).length === 0) {
+      problems.push(
+        `${RULES_DIR}/${file} has no \`paths\` list: a non-ADR rule loads with the files it governs (ADR-0029); cross-cutting instructions stay in CLAUDE.md.`,
+      )
+    }
+    for (const p of ruleDocPaths(text)) {
+      if (input.exists && !input.exists(p)) problems.push(`${RULES_DIR}/${file} names ${p}, which does not exist.`)
+    }
+  }
   return problems
 }
 
@@ -91,11 +110,13 @@ function load(): AdrRuleInput {
     if (n) adrs[n] = readFileSync(join(root, ADR_DIR, f), 'utf8')
   }
   const rules: Record<string, string> = {}
+  const others: Record<string, string> = {}
   const dir = join(root, RULES_DIR)
   for (const f of existsSync(dir) ? readdirSync(dir) : []) {
     if (f.startsWith('adr-')) rules[f] = readFileSync(join(dir, f), 'utf8')
+    else if (f.endsWith('.md')) others[f] = readFileSync(join(dir, f), 'utf8')
   }
-  return { adrs, rules }
+  return { adrs, rules, others, exists: (p) => existsSync(join(root, p)) }
 }
 
 function main(): void {
@@ -113,7 +134,9 @@ function main(): void {
     console.error(`validate-adr-rules: FAIL\n${problems.map((p) => `  ${p}`).join('\n')}`)
     process.exit(1)
   }
-  console.log(`validate-adr-rules: PASS — ${Object.keys(input.rules).length} rule(s) match their ADRs`)
+  console.log(
+    `validate-adr-rules: PASS — ${Object.keys(input.rules).length} ADR rule(s) match their ADRs, ${Object.keys(input.others ?? {}).length} other rule(s) have paths and existing docs`,
+  )
 }
 
 if (import.meta.url === pathToFileURL(process.argv[1] ?? '').href) main()
