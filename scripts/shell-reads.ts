@@ -14,6 +14,7 @@
 // command parser (`scanShellReads`) only explains a near-miss in the advisory
 // — ADR-0009's output-matching amendment (issue #1545) says why. Scope stays a
 // PATH-SHAPE test (`isInstructionDoc`), so a doc added later is still in scope.
+import { isAbsolute, resolve } from 'node:path'
 
 /** Argv-0s that stream a file's CONTENTS into the session. `find`/`ls`/`wc` are
  *  deliberately absent: they report *about* a file without showing it.
@@ -35,7 +36,8 @@ const SCRIPT_FIRST = new Set(['sed', 'awk', 'grep', 'rg'])
 
 /** Flags whose value is the next token AND supplies the pattern/program, so the
  *  first positional is then a FILE. Without the second half, `grep -e foo
- *  docs/x.md` loses the doc to the SCRIPT_FIRST rule. */
+ *  docs/x.md` loses the doc to the SCRIPT_FIRST rule. Only SCRIPT_FIRST verbs
+ *  take them: `tail -f docs/x.md` follows the file. */
 const PATTERN_FLAGS = new Set(['-e', '-f', '--regexp', '--file', '--expression'])
 
 /** Flags whose value is the next token but is NOT the pattern — a context or
@@ -43,9 +45,13 @@ const PATTERN_FLAGS = new Set(['-e', '-f', '--regexp', '--file', '--expression']
  *  lands in slot 2 and a doc path used as a grep pattern gets counted:
  *  `grep -C 3 "docs/x.md" CLAUDE.md` reads CLAUDE.md only. */
 const ARG_FLAGS = new Set([
-  '-A', '-B', '-C', '-m', '-d', '-v',
+  '-A', '-B', '-C', '-m', '-d',
   '--after-context', '--before-context', '--context', '--max-count', '--max-depth',
 ])
+
+/** Value-taking flags that mean something else to other readers: grep's `-v`
+ *  inverts the match and takes no value; `head -n 50`'s 50 is a count. */
+const VERB_ARG_FLAGS: Record<string, string[]> = { awk: ['-v'], head: ['-n', '-c'], tail: ['-n', '-c'] }
 
 /** Long flags under which a match is reported without ever showing the file. */
 const NO_CONTENT_FLAGS = new Set([
@@ -247,7 +253,8 @@ function stripHeredocs(command: string): string {
  *  orphans the path into a segment whose verb is a pattern fragment — #1074's
  *  prototype scored 1/2 until this existed. */
 function segments(rawCommand: string): { tokens: Token[]; followedByOr: boolean }[] {
-  const command = stripHeredocs(rawCommand)
+  // A `\`-newline continues the line; left in, the newline becomes a path.
+  const command = stripHeredocs(rawCommand).replace(/\\\r?\n/g, ' ')
   const out: { tokens: Token[]; followedByOr: boolean }[] = []
   let tokens: Token[] = []
   let cur = ''
@@ -293,6 +300,10 @@ function segments(rawCommand: string): { tokens: Token[]; followedByOr: boolean 
       const isOr = command[i + 1] === '|'
       if (isOr) i++
       endSegment(isOr)
+    } else if (c === '&' && (command[i - 1] === '>' || command[i + 1] === '>')) {
+      // `2>&1` and `&>out` redirect output: one token, not a list separator.
+      cur += c
+      started = true
     } else if (c === '&') {
       if (command[i + 1] === '&') i++
       endSegment(false)
@@ -349,6 +360,45 @@ function showsNoContent(verb: string, tokens: Token[]): boolean {
     const flags = t.text.slice(1)
     return /[lqc]/.test(flags) || (verb === 'grep' && flags.includes('L'))
   })
+}
+
+/** A reader segment's arguments, each classified once for both scanners: a
+ *  file to read, or why it is not one. Flags and redirect operators drop. */
+function readerArgs(verb: string, tokens: Token[]): { skip?: SkipRule; text: string }[] {
+  const out: { skip?: SkipRule; text: string }[] = []
+  const redirect: SkipRule = 'redirect target: written, not read'
+  const patternFlags = SCRIPT_FIRST.has(verb) ? PATTERN_FLAGS : new Set<string>()
+  const patternSupplied = tokens.some((t) => !t.quoted && patternFlags.has(t.text))
+  const valueFlags = new Set([...patternFlags, ...ARG_FLAGS, ...(VERB_ARG_FLAGS[verb] ?? [])])
+  let bound: SkipRule | undefined
+  let positionals = 0
+  for (const t of tokens.slice(1)) {
+    if (bound) {
+      out.push({ skip: bound, text: t.text })
+      bound = undefined
+      continue
+    }
+    if (!t.quoted) {
+      // `> out`, `>& out`, `2>> log`, `2>&1`, `&>out`. `<` is NOT here: `cat < docs/x.md`
+      // genuinely streams the file.
+      if (/^(?:\d*|&)>>?&?$/.test(t.text)) {
+        bound = redirect
+        continue
+      }
+      const attached = /^(?:\d*|&)>>?(.+)$/.exec(t.text)
+      if (attached) {
+        out.push({ skip: redirect, text: attached[1]! })
+        continue
+      }
+      if (t.text.length > 1 && t.text.startsWith('-')) {
+        if (valueFlags.has(t.text)) bound = 'value bound to a flag'
+        continue
+      }
+    }
+    const script = ++positionals === 1 && SCRIPT_FIRST.has(verb) && !patternSupplied
+    out.push({ skip: script ? 'first positional: a pattern or program, not a path' : undefined, text: t.text })
+  }
+  return out
 }
 
 /** A reader verb whose output is a FILTERED SUBSET of what it was given, so
@@ -557,45 +607,19 @@ export function scanShellReads(
       // pattern itself (issue #1298). `token` stays the raw argument text for
       // near-miss reporting regardless.
       const candidates: { path: string; token: string; matchText: string }[] = []
-      let skipReason: SkipRule | null = null
-      const patternSupplied = tokens.some((t) => !t.quoted && PATTERN_FLAGS.has(t.text))
-      let positionals = 0
       let fileCount = 0
-      for (const t of tokens.slice(1)) {
-        if (skipReason) {
-          note(fromReader, t.text, skipReason)
-          skipReason = null
-          continue
-        }
-        if (!t.quoted) {
-          // `> out`, `2>> log`, and the attached `>out` form. `<` is NOT here:
-          // `cat < docs/x.md` genuinely streams the file.
-          if (/^\d*>>?$/.test(t.text)) {
-            skipReason = 'redirect target: written, not read'
-            continue
-          }
-          const attached = /^\d*>>?(.+)$/.exec(t.text)
-          if (attached) {
-            note(fromReader, attached[1]!, 'redirect target: written, not read')
-            continue
-          }
-          if (t.text.length > 1 && t.text.startsWith('-')) {
-            if (PATTERN_FLAGS.has(t.text) || ARG_FLAGS.has(t.text)) skipReason = 'value bound to a flag'
-            continue
-          }
-        }
-        positionals++
-        if (positionals === 1 && SCRIPT_FIRST.has(verb) && !patternSupplied) {
-          note(fromReader, t.text, 'first positional: a pattern or program, not a path')
+      for (const a of readerArgs(verb, tokens)) {
+        if (a.skip) {
+          note(fromReader, a.text, a.skip)
           continue
         }
         fileCount++
-        const p = norm(t.text)
-        if (isInstructionDoc(p)) candidates.push({ path: p, token: t.text, matchText: t.text })
+        const p = norm(a.text)
+        if (isInstructionDoc(p)) candidates.push({ path: p, token: a.text, matchText: a.text })
         else if (isGlobbedInstructionDoc(p)) {
           const resolved = resolveGlobbedDoc(p)
-          if (resolved !== undefined) candidates.push({ path: resolved, token: t.text, matchText: resolved })
-          else note(fromReader, t.text, 'not a literal path: glob or variable')
+          if (resolved !== undefined) candidates.push({ path: resolved, token: a.text, matchText: resolved })
+          else note(fromReader, a.text, 'not a literal path: glob or variable')
         }
       }
 
@@ -685,6 +709,39 @@ export function scanShellReads(
     return true
   })
   return { paths: [...creditedBy.keys()], creditedBy, nearMisses: missed }
+}
+
+/** Every file a Bash command's reader verbs name, as absolute paths, for
+ *  scripts/bash-rules-hint.ts (issue #1764). Any file, not only instruction
+ *  docs. `simple` marks the one-file read Claude Code already loads rules for
+ *  (ADR-0029). After a `cd` the parser cannot follow, relative paths drop. */
+export function bashReadPaths(command: string, cwd: string): { paths: string[]; simple: boolean } {
+  const segs = segments(command)
+  const paths: string[] = []
+  let dir: string | undefined = cwd
+  let simple = false
+  for (const seg of segs) {
+    const tokens = unwrap(seg.tokens)
+    const verb = tokens[0]?.text.replace(/^.*\//, '') ?? ''
+    if (verb === 'cd') {
+      const to = tokens[1]?.text
+      dir = dir && to && to !== '-' && !GLOB_OR_VAR.test(to) ? resolve(dir, to) : undefined
+      continue
+    }
+    if (!READER_VERBS.has(verb) || isInPlaceEdit(verb, tokens) || showsNoContent(verb, tokens)) continue
+    let files = 0
+    for (const a of readerArgs(verb, tokens)) {
+      // `<` is an input redirect: `<file` and `< file` both read the file.
+      const text = a.text.replace(/^</, '')
+      if (a.skip || !text) continue
+      files++
+      if (GLOB_OR_VAR.test(text) || !(dir || isAbsolute(text))) continue
+      // A trailing `/` marks a directory for the hint; resolve() would drop it.
+      paths.push(resolve(dir ?? '/', text) + (text.endsWith('/') ? '/' : ''))
+    }
+    simple = segs.length === 1 && tokens.length === seg.tokens.length && files === 1
+  }
+  return { paths: [...new Set(paths)], simple }
 }
 
 // ── Crediting from OUTPUT (ADR-0009's output-matching amendment, #1545) ──────

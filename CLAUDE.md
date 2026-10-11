@@ -13,9 +13,8 @@ These are not optional. When a trigger applies, read the doc in full before you
 act, once per session.
 
 - **At session start:** `CONTEXT-MAP.md`, then `CONTEXT.md`. They define the
-  words we use (Platform, Tenant, Space, Collection, Document, Skill, …).
-  Working on a Tenant? Also read `layers/<tenant>/CONTEXT.md`. Use the
-  glossary's terms.
+  words we use (Platform, Tenant, Space, Collection, Document, Skill, …). Use
+  the glossary's terms.
 - **ADRs arrive as rules.** Each ADR's summary is a rule in `.claude/rules/`:
   the cross-cutting ones load at session start, the rest when you read or edit
   a file they govern or run a Skill they name. When a summary says so, read the
@@ -35,18 +34,11 @@ act, once per session.
   from an outside agent:** `docs/agents/guest-contributions.md`.
 - **Before you dispatch a subagent** that touches git or needs a worktree: the
   `dispatch-subagents` Skill.
-- **Before you edit anything under `layers/<tenant>/`** (config, pages,
-  components, CSS), edit any `nuxt.config.ts`, or add a Space, Collection or
-  Tenant:
-  `docs/agents/tenant-layers.md`.
 - **Before you say a UI change works,** or take a screenshot:
   `docs/agents/verifying-ui-changes.md`.
-- **Before you put a Vue component in a Document, or add a data Collection:**
-  `docs/agents/mdc-when-to-use.md`.
 - **Before you add or change a glossary term:** `docs/agents/domain.md`.
 - **Before you debug a tool, push, network or permission error** that your
   diff doesn't explain: `docs/agents/environment-caveats.md`.
-- **Before you add or change a guard:** `docs/agents/guards.md`.
 
 ## Working conventions
 
@@ -80,7 +72,7 @@ docs/adr/                 decisions
 .claude/rules/            important instructions (ADR summaries, the human-merge
                           list) that Claude Code injects into your context, at
                           session start, or when you touch a file or run a Skill they govern
-docs/agents/              how-to docs for agents (see "Docs you must read first")
+docs/agents/              how-to docs for agents
 docs/research/            dated reference notes
 .agents/skills/           our Skills (.claude/skills/ links here)
 scripts/                  repo tooling, the gate, and the tool-call guards

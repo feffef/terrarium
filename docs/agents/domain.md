@@ -8,9 +8,9 @@ shared kernel) is in `CONTEXT-MAP.md` (ADR-0021).
 
 ## Before exploring, read these
 
-Reading order and triggers (`CONTEXT-MAP.md`, `CONTEXT.md`,
-`layers/<tenant>/CONTEXT.md`, relevant ADRs): see CLAUDE.md's "Docs you must
-read first", not this page.
+Reading order and triggers (`CONTEXT-MAP.md`, `CONTEXT.md`, relevant ADRs):
+see CLAUDE.md's "Docs you must read first" and `.claude/rules/tenant-layers.md`,
+not this page.
 
 This repo deliberately diverges from the `domain-modeling` Skill's generic
 templates (ADR-0021):

@@ -4,6 +4,7 @@
 // was measured against, plus the classes found while building it.
 import { describe, expect, it } from 'vitest'
 import {
+  bashReadPaths,
   buildDocLineIndex,
   canonicalizeInstructionPath,
   isInstructionDoc,
@@ -211,6 +212,33 @@ describe('false positives', () => {
     // A BARE path bound to a flag is the case worth surfacing.
     expect(paths('grep -e docs/agents/x.md docs/agents/y.md')).toEqual(['docs/agents/y.md'])
     expect(rules('grep -e docs/agents/x.md docs/agents/y.md')).toEqual(['value bound to a flag'])
+  })
+
+  it('treats a spaced `>&` target as written, not read', () => {
+    expect(paths('cat docs/agents/x.md >& docs/agents/y.md')).toEqual(['docs/agents/x.md'])
+    expect(paths('cat docs/agents/x.md &> docs/agents/y.md')).toEqual(['docs/agents/x.md'])
+    expect(bashReadPaths('cat a >& b', '/r').paths).toEqual(['/r/a'])
+    expect(bashReadPaths('cat a &> b', '/r').paths).toEqual(['/r/a'])
+  })
+
+  it('joins a line continuation instead of reading it as a path', () => {
+    expect(bashReadPaths('cat a \\\n  b', '/r').paths).toEqual(['/r/a', '/r/b'])
+  })
+
+  it('marks a one-file read simple, fd redirects included', () => {
+    const reads = ['cat f', 'head -50 f', 'head -n 50 f', 'sed -n 1,5p f', 'grep x f']
+    const redirected = ['cat f 2>&1', 'cat f >/dev/null 2>/dev/null', 'head -5 f 2> /dev/null', 'cat f >&2']
+    for (const c of [...reads, ...redirected]) expect(bashReadPaths(c, '/r'), c).toEqual({ paths: ['/r/f'], simple: true })
+  })
+
+  it("reads tail -f's file: -f supplies a pattern or program only to grep, rg, sed and awk", () => {
+    expect(paths('tail -f docs/agents/x.md | head')).toEqual(['docs/agents/x.md'])
+    expect(paths('tail -F docs/agents/x.md')).toEqual(['docs/agents/x.md'])
+    expect(paths('grep -f docs/agents/x.md docs/agents/y.md')).toEqual(['docs/agents/y.md'])
+  })
+
+  it("keeps grep -v's file: -v takes a value only for awk", () => {
+    expect(paths('grep -v foo docs/agents/x.md')).toEqual(['docs/agents/x.md'])
   })
 
   it('rejects a redirect target: that doc is being WRITTEN', () => {

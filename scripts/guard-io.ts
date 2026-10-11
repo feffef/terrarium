@@ -12,6 +12,11 @@ import { readFileSync } from 'node:fs'
 import { pathToFileURL } from 'node:url'
 import { parseTranscript } from './session-trace.ts'
 
+/** `obj[key]` for an untyped payload, `undefined` for anything not an object. */
+export function prop(obj: unknown, key: string): unknown {
+  return obj !== null && typeof obj === 'object' ? (obj as Record<string, unknown>)[key] : undefined
+}
+
 /** The subset of the `PreToolUse` stdin payload every guard reads. */
 export interface PreToolUsePayload {
   tool_name?: string

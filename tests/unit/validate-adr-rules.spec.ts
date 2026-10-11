@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { adrHash, findAdrRuleProblems, ruleAdr, ruleHash, staleRules, withRuleHash } from '../../scripts/validate-adr-rules.ts'
+import { adrHash, findAdrRuleProblems, ruleAdr, ruleDocPaths, ruleHash, staleRules, withRuleHash } from '../../scripts/validate-adr-rules.ts'
 
 const ADR = '# 24. Mermaid\n\nDecision text.\n'
 const stamped = (body: string) => withRuleHash(body, adrHash(ADR))
@@ -42,5 +42,35 @@ describe('findAdrRuleProblems / staleRules', () => {
     expect(problems).toHaveLength(2)
     expect(problems.join('\n')).toContain('ADR-0024 has no summary rule')
     expect(problems.join('\n')).toContain('adr-0099.md has no matching ADR')
+  })
+})
+
+describe('non-ADR rules (ADR-0029)', () => {
+  const exists = (p: string) => p === 'docs/agents/guards.md'
+  const check = (files: Record<string, string>) => findAdrRuleProblems({ adrs: {}, rules: {}, otherRules: { files, exists } })
+  const scoped = (body: string) => `---\npaths:\n  - "scripts/*-guard.ts"\n---\n${body}`
+
+  it('passes a rule with paths whose docs exist, with no adr hash and no "no matching ADR"', () => {
+    expect(check({ 'guards.md': scoped('# Guards\n\nSee docs/agents/guards.md.\n') })).toEqual([])
+  })
+
+  it('fails a rule with missing, empty or bare-string paths, naming the file', () => {
+    for (const fm of ['', '---\npaths: []\n---\n', '---\npaths: "scripts/x.ts"\n---\n']) {
+      const problems = check({ 'guards.md': `${fm}# Guards\n` })
+      expect(problems).toHaveLength(1)
+      expect(problems[0]).toContain('.claude/rules/guards.md has no `paths` list')
+    }
+  })
+
+  it('fails on a docs/ path that does not exist, naming file and path', () => {
+    expect(check({ 'guards.md': scoped('Read docs/agents/missing.md.\n') })).toEqual([
+      '.claude/rules/guards.md names docs/agents/missing.md, which does not exist.',
+    ])
+  })
+
+  it('ignores frontmatter globs, trailing punctuation, anchors and backticks', () => {
+    const rule = '---\npaths:\n  - "docs/adr/**"\n---\n(docs/agents/guards.md), `docs/agents/guards.md`, docs/agents/guards.md#the-roster.\n'
+    expect(ruleDocPaths(rule)).toEqual(['docs/agents/guards.md'])
+    expect(check({ 'guards.md': rule })).toEqual([])
   })
 })
