@@ -103,8 +103,8 @@ export const sessionSchema = z
     // ADR-0009's 2026-09-05 amendment owns why the exit metric counts these
     // rather than orphans. Absent on a hand-landed or pre-#865 log.
     landedBy: z.string().optional(),
-    // List EVERY friction — not just one or two. No `tag` yet: the taxonomy is
-    // meant to emerge from clustering, once there is data.
+    // List EVERY friction — not just one or two. No `tag`: the Friction Ledger
+    // groups frictions by cause instead (CONTEXT.md).
     frictions: z.array(
       z.object({
         description: z.string(), // ~20 words — honest description
