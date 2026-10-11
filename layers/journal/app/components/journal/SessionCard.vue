@@ -144,7 +144,7 @@ const foldedFieldLabels = new Intl.ListFormat('en', { style: 'long', type: 'conj
               </ul>
             </details>
             <details v-if="card.rules.length" class="trace">
-              <summary>Rules triggered <span class="n">{{ card.rules.length }}</span></summary>
+              <summary>Rules loaded <span class="n">{{ card.rules.length }}</span></summary>
               <ul>
                 <li v-for="(r, i) in card.rules" :key="i">
                   <code>{{ r.path }}</code><span v-if="r.global" class="global">global</span><template v-if="r.reason"> — {{ r.reason }}</template
@@ -365,21 +365,15 @@ const foldedFieldLabels = new Intl.ListFormat('en', { style: 'long', type: 'conj
 .trace > ul { margin: 0; padding: 0 0.7rem 0.6rem; list-style: none; display: flex; flex-direction: column; gap: 0.35rem; }
 .trace li { font-size: 0.84rem; color: var(--jd-muted); line-height: 1.45; }
 .trace .followed { color: var(--jd-accent); }
-.trace .global {
-  margin-left: 0.4rem;
-  padding: 0 0.35rem;
-  border-radius: 999px;
-  background: var(--jd-line);
-  color: var(--jd-muted);
-  font-size: 0.85em;
-}
+.trace .global,
 .trace .useful {
   margin-left: 0.4rem;
   padding: 0 0.35rem;
-  border: 1px solid currentColor;
   border-radius: 999px;
   font-size: 0.85em;
 }
+.trace .global { background: var(--jd-line); color: var(--jd-muted); }
+.trace .useful { border: 1px solid currentColor; }
 .trace .useful[data-useful='yes'] { color: var(--jd-accent); }
 .trace .useful[data-useful='partly'] { color: var(--jd-sev-minor); }
 .trace .useful[data-useful='no'] { color: var(--jd-sev-major); }

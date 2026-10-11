@@ -132,9 +132,9 @@ describe('foldSubagentTrace() — subagent work counts as the session\'s (issue 
   })
 })
 
-// The harness records a path-scoped rule's load as an attachment record; the
-// startup `instructions` attachment holds the always-loaded rules and is ignored.
-describe('rulesLoaded — path-scoped rules that fired', () => {
+// The harness records a path-scoped rule's load as a `nested_memory`
+// attachment, and the rules with no `paths` in the startup `instructions` one.
+describe('rulesLoaded and rulesGlobal — rules that loaded', () => {
   const rule = (path: string) => ({ type: 'attachment', timestamp: '2026-07-06T10:03:00Z', attachment: { type: 'nested_memory', path } })
   const records = [
     ...parseTranscript(transcript),
@@ -149,8 +149,9 @@ describe('rulesLoaded — path-scoped rules that fired', () => {
     expect(trace.rulesLoaded).toEqual(['.claude/rules/adr-0024.md'])
   })
 
-  it('lists the session-start rules apart, as global', () => {
+  it('lists the session-start rules apart, as global, and never in both lists', () => {
     expect(trace.rulesGlobal).toEqual(['.claude/rules/adr-0003.md'])
+    expect(extractTrace([...records, rule('/repo/.claude/rules/adr-0003.md')], NO_ENV).rulesLoaded).toEqual(['.claude/rules/adr-0024.md'])
     expect(stitch({ session: 's', goal: 'g', status: 'completed', outcome: 'o', summary: 's', frictions: [] }, trace).rulesGlobal)
       .toEqual(['.claude/rules/adr-0003.md'])
   })

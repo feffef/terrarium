@@ -631,7 +631,7 @@ export function extractTrace(
     filesRead: dedup(reads).filter(isContentPath).map(rel),
     filesEdited: dedup(edits).filter(isContentPath).map(rel),
     docsReadViaShell: docIndex ? scanShellReadsByOutput(bashCommandsOf(records), docIndex, rel).paths : [],
-    rulesLoaded: dedup(rules),
+    rulesLoaded: dedup(rules).filter((r) => !globalRules.includes(r)),
     rulesGlobal: dedup(globalRules),
     rulesFollowedUp: [...ruleLoadedAt].filter(([r, at]) => adrReadAfter(r, at)).map(([r]) => r),
     skillsUsed: dedup([...skills, ...commandSkills]),
@@ -711,9 +711,11 @@ export function foldSubagentTrace(
     folded[field] = dedup([...trace[field], ...subs.flatMap((s) => s[field])])
   }
   // Folded too, but kept out of FOLDED_TRACE_FIELDS: SessionCard's explainer
-  // lists those fields, and the card does not render this one.
-  folded.rulesLoaded = dedup([...trace.rulesLoaded, ...subs.flatMap((s) => s.rulesLoaded)])
+  // lists those fields, and the card shows these in a list of their own.
   folded.rulesGlobal = dedup([...trace.rulesGlobal, ...subs.flatMap((s) => s.rulesGlobal)])
+  folded.rulesLoaded = dedup([...trace.rulesLoaded, ...subs.flatMap((s) => s.rulesLoaded)]).filter(
+    (r) => !folded.rulesGlobal.includes(r),
+  )
   folded.rulesFollowedUp = dedup([...trace.rulesFollowedUp, ...subs.flatMap((s) => s.rulesFollowedUp)])
   return folded
 }

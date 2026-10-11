@@ -348,6 +348,14 @@ describe('reportUnexplainedReads (the author-time reasons prompt)', () => {
     expect(run(fixture, { ruleVerdicts: [{ path: '.claude/rules/adr-0012.md', reason: 'pingbacks', useful: 'no' }] })).toEqual([])
   })
 
+  it('asks for a verdict on a global rule too', () => {
+    const fixture = store(['git status'])
+    const dir = join(fixture.home, '.claude', 'projects', fixture.root.replace(/[/.]/g, '-'))
+    const start = { type: 'attachment', attachment: { type: 'instructions', files: [{ path: join(fixture.root, '.claude/rules/adr-0003.md') }] } }
+    writeFileSync(join(dir, 'session.jsonl'), `${readFileSync(join(dir, 'session.jsonl'), 'utf8')}\n${JSON.stringify(start)}`)
+    expect(run(fixture).join('\n')).toContain('    .claude/rules/adr-0003.md')
+  })
+
   it('caps the near-miss list rather than burying the detected paths', () => {
     const many = Array.from({ length: 9 }, (_, i) => `echo docs/agents/d${i}.md`)
     const out = run(store(many)).join('\n')
