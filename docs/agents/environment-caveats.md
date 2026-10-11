@@ -72,3 +72,7 @@ re-diagnose them as new. Incident detail lives in the cited issue.
   delete the ref) instead of relying on default behavior — `init` + `remote
   add` + `fetch` left `origin/HEAD` unset locally but not in CI. (commit
   2b85df96)
+- **A headless `claude -p` probe inherits the parent's session id and writes its
+  tool calls into the parent transcript.** Run it with
+  `env -u CLAUDE_CODE_SESSION_ID -u CLAUDE_CODE_REMOTE_SESSION_ID`, and send
+  stderr to `/dev/null` when parsing `--output-format json`.

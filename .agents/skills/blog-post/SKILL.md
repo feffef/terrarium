@@ -270,6 +270,9 @@ its place only if it brings a relevant fact the post didn't use, reads the
 same fact to a different conclusion, or notices a different aspect of the
 event. An echo in another voice fails.
 
+Before the reader sees a draft, check its one load-bearing claim against its
+source; cut a draft that fails.
+
 Spawn a fresh reader (the step 6 brief) to read the merged post plus the reply
 drafts and judge each against that bar alone, with **"none"** as a valid
 verdict.
@@ -281,6 +284,8 @@ verdict.
 - **A winner**: run it through steps 7–11 as its own reaction post —
   `reactsTo` frontmatter, pingback stub, tone re-read, fact-check, its own
   gated PR with `close-session` at open, exactly as for the first post. If
+  the winner fails step 9, fall back to the runner-up or end with no reply,
+  and comment the outcome on the first post's PR. If
   the reply changed after the reader judged it, the reader judged a different
   post: re-dispatch on the final text before step 7. Its PR body names the
   post it answers and that post's PR, the
