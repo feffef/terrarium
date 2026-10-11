@@ -5,12 +5,11 @@ Status: Accepted
 
 ## Auto-merge exemption ledger
 
-The chartered jobs below hold a bounded exemption from this ADR's "gated PR,
-human merge" default (ADR-0004's low-risk auto-merge tier, unless the *shape*
-column says otherwise). Single-homed here per CLAUDE.md's single-home rule —
-each dated amendment note below gists its exemption and points back to this
-table rather than restating the scope inline. This table is the home for each
-exemption's *scope*; `docs/agents/pr-workflow.md`'s "Per-tier merge authority"
+Each chartered job below may change only what its row's *scope* allows; the
+footer under the table says how its PR merges. Single-homed here per CLAUDE.md's
+single-home rule — each dated amendment note below gists its row and points back
+to this table rather than restating the scope inline. This table is the home for
+each row's *scope*; `docs/agents/pr-workflow.md`'s "Per-tier merge authority"
 is the home for the *mechanics/tier* of how each row actually lands its PR
 (see the amendment note below) — the two lists name overlapping Skills
 but answer different questions, and neither restates the other.
@@ -26,8 +25,11 @@ but answer different questions, and neither restates the other.
 | `visitor-loop` | per run, one PR fixing the first-time-visitor findings at least two of its three visitors raised, and one PR building **one** feature picked from its visitors' ideas — both confined to existing Tenant layers (`layers/<tenant>/`: content, components, pages, styles, that Tenant's tests; a manifest edit only to add a field to an existing Collection) and non-human-only files under `app/`, plus the Skill's own `decisions.md`. Out of scope: a new Tenant, Space or Collection, a new dependency, any human-only file, agent instructions, and editing authored history (published posts, session logs, digests, Midden artifacts) | 2026-09-24 | — |
 | `dependabot` (bot, not a Skill) | Dependabot npm minor/patch PRs whose commits are all Dependabot's and touch only `package.json`/`pnpm-lock.yaml`, merged on a green `safety-gate` with no agent involved (mechanism: `docs/agents/pr-workflow.md`, Per-tier merge authority). Dependabot is repo-configured (`.github/dependabot.yml`), not a Public requester (ADR-0020). Majors and `github-actions` bumps stay human-merged | 2026-10-06 | — |
 
-Every row's bound is exact: content outside that scope, or a red gate, is
-never auto-merged and falls back to ADR-0003's default (gated PR, human merge).
+Every row's bound is exact: a chartered run merges only a diff inside its row's
+scope, on a green gate. If anything outside the scope rode into the PR, or the
+gate is red, the run leaves the PR open for a human; it does not fall back to
+the rule for ordinary work. An agent's PR that changes a Human-only path waits
+for a human either way (ADR-0004).
 
 > **Amended by [ADR-0018](0018-tenant-layers-under-layers-directory.md) (2026-07-07).**
 > Tenant layers moved from `tenants/` to Nuxt's conventional `layers/` directory;
@@ -137,11 +139,7 @@ Skill, each producing scoped PRs with a known expected shape):
 
 **Merge is always gated. No self-merge.** Every change — interactive or
 autonomous — lands as a PR on a feature branch. Merge → tag release → the single
-container redeploys. *(The chartered-Skill amendments above narrow this: each
-grants one named Skill authority to merge its own gated PR on a green gate. The
-gate still decides — the grant delegates the merge to an objective check, it does
-not restore author judgement — but the merging session is the authoring one, so
-read those amendments before applying this line to a chartered Skill.)*
+container redeploys. *(Reversed by the 2026-10-10 amendment above.)*
 - **One bounded exception (ADR-0009):** a session's own **session-log** Journal
   entry is committed **directly to `main`** by a helper script — never via a
   PR — because it is inert, schema-validated content the gate cannot protect and

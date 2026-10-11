@@ -13,9 +13,8 @@ idea any of them had. One visitor's complaint is taste; two visitors arriving
 at the same complaint is signal.
 
 Your **remit** — what this run may change and self-merge — is ADR-0003's
-`visitor-loop` ledger row. Read it before step 3; anything outside it lands as
-an ordinary gated PR (a human merges only if an ADR-0004 exception applies), or
-as an issue.
+`visitor-loop` ledger row. Read it before step 3; file a finding outside it as an
+issue (step 6).
 
 ## Today's focus
 
