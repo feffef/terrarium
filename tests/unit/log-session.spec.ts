@@ -2,20 +2,21 @@
 // (fetch → rebuild → push) is side-effecting and exercised via `--dry-run`; here we
 // pin the two guards that decide whether an entry is safe to land on `main`:
 // schema validation (the L1 stand-in) and the canonical `<date>-<session>.yml` filename.
-import { existsSync, mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs'
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { dirname, join } from 'node:path'
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterAll, afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import {
+  authorMain,
   CURRENT_SESSIONS_SCHEMA_VERSION,
   expectedFilename,
   findTruncatedScalars,
   land,
+  loadAuthorContext,
   mergeAuthored,
   reportUnexplainedReads,
   validateAuthored,
   validateEntry,
-  writeScratch,
 } from '../../scripts/log-session.ts'
 import type { AuthoredScratch } from '../../scripts/session-trace.ts'
 
@@ -242,9 +243,14 @@ describe('reportUnexplainedReads (the author-time reasons prompt)', () => {
     'docs/agents/guards.md': 'The mechanical PreToolUse guards that hold rules prose stopped holding.',
     'CONTEXT.md': 'The terms every agent needs regardless of task, and the Tenants roster.',
   }
-  type Cmd = string | [command: string, output: string]
+  type Cmd = string | [command: string, output: string] | { read: string }
   let n = 0
   const bash = (entry: Cmd): Record<string, unknown>[] => {
+    // Relative: the noise filter drops absolute tmpdir paths.
+    if (typeof entry === 'object' && !Array.isArray(entry)) {
+      const input = { file_path: entry.read }
+      return [{ type: 'assistant', message: { content: [{ type: 'tool_use', id: `toolu_${++n}`, name: 'Read', input }] } }]
+    }
     const [command, output] = typeof entry === 'string' ? [entry, ''] : entry
     const id = `toolu_${++n}`
     return [
@@ -278,7 +284,7 @@ describe('reportUnexplainedReads (the author-time reasons prompt)', () => {
     const lines: string[] = []
     vi.stubEnv('HOME', home)
     try {
-      reportUnexplainedReads(root, authored, (l) => lines.push(l), root)
+      reportUnexplainedReads(loadAuthorContext(root, root), authored, (l) => lines.push(l))
     } finally {
       vi.unstubAllEnvs()
     }
@@ -313,6 +319,7 @@ describe('reportUnexplainedReads (the author-time reasons prompt)', () => {
     const guards: Cmd = ['cat docs/agents/guards.md', FIXTURE_DOCS['docs/agents/guards.md']!]
     const named = run(store(['git status'], [guards], meta))
     expect(named).toContain('      [subagent: Triage issue #869] cat docs/agents/guards.md')
+    expect(run(store(['git status'], [{ read: 'docs/agents/guards.md' }], meta))).toContain('      [subagent: Triage issue #869] Read tool')
     const bare = run(store(['git status'], [guards], '{not json'))
     expect(bare).toContain('      [subagent: a1] cat docs/agents/guards.md')
   })
@@ -324,13 +331,9 @@ describe('reportUnexplainedReads (the author-time reasons prompt)', () => {
   })
 
   it('lists a Read-tool doc too, and drops every doc the agent already answered', () => {
-    const fixture = store([['cat CONTEXT.md', FIXTURE_DOCS['CONTEXT.md']!]])
-    const dir = join(fixture.home, '.claude', 'projects', fixture.root.replace(/[/.]/g, '-'))
-    // Relative: the noise filter drops absolute tmpdir paths.
-    const read = { type: 'assistant', message: { content: [{ type: 'tool_use', id: 'r1', name: 'Read', input: { file_path: 'docs/agents/guards.md' } }] } }
-    writeFileSync(join(dir, 'session.jsonl'), `${readFileSync(join(dir, 'session.jsonl'), 'utf8')}\n${JSON.stringify(read)}`)
+    const fixture = store([['cat CONTEXT.md', FIXTURE_DOCS['CONTEXT.md']!], { read: 'docs/agents/guards.md' }])
     const out = run(fixture).join('\n')
-    expect(out).toContain('docs/agents/guards.md\n      Read tool')
+    expect(out).toContain('docs/agents/guards.md\n      [this session] Read tool')
     expect(run(fixture, { docsRead: [{ path: 'CONTEXT.md', reason: 'glossary', useful: 'yes' }, { path: 'docs/agents/guards.md', reason: '(not read)' }] })).toEqual([])
   })
 
@@ -364,9 +367,103 @@ describe('reportUnexplainedReads (the author-time reasons prompt)', () => {
     // One rule line per rendered near-miss (each also echoes its command).
     expect(out.match(/not a reader command/g)?.length).toBe(5)
   })
+
+  describe('authorMain()', () => {
+    const authored = 'session: session_01A\ngoal: g\nstatus: completed\noutcome: o\nsummary: s\nfrictions: []\n'
+    // `exit` throws so a refusal is catchable; `log` lines are what the agent sees.
+    function author(
+      fixture: { home: string; root: string },
+      { mainSchemaFn = () => null, notRead = [], scratchAbs = join(fixture.root, 'scratch.json') }: {
+        mainSchemaFn?: (entry: unknown) => string | null
+        notRead?: string[]
+        scratchAbs?: string
+      } = {},
+    ) {
+      const yml = join(fixture.root, 'authored.yml')
+      const docsRead = notRead.map((p) => `  - { path: ${p}, reason: "(not read)" }\n`).join('')
+      writeFileSync(yml, authored + (docsRead && `docsRead:\n${docsRead}`))
+      const logs: string[] = []
+      const errors: string[] = []
+      vi.spyOn(console, 'log').mockImplementation((l: string) => void logs.push(l))
+      vi.spyOn(console, 'error').mockImplementation((l: string) => void errors.push(l))
+      vi.spyOn(process, 'exit').mockImplementation(() => {
+        throw new Error('EXIT')
+      })
+      vi.stubEnv('HOME', fixture.home)
+      let exited = false
+      try {
+        authorMain([yml], { cwd: fixture.root, scratchAbs, mainSchemaFn })
+      } catch (err) {
+        if ((err as Error).message !== 'EXIT') throw err
+        exited = true
+      } finally {
+        vi.unstubAllEnvs()
+        vi.restoreAllMocks()
+      }
+      return { logs, errors: errors.join('\n'), exited, scratchWritten: existsSync(scratchAbs) }
+    }
+
+    it('refuses (not read) for a doc a subagent opened with the Read tool, and writes no scratch', () => {
+      const res = author(store(['git status'], [{ read: 'docs/agents/guards.md' }]), { notRead: ['docs/agents/guards.md'] })
+      expect(res).toMatchObject({ exited: true, scratchWritten: false })
+      expect(res.errors).toContain('docs/agents/guards.md — opened by [subagent: a1]')
+      expect(res.errors).toContain("subagent reads count as the session's")
+    })
+
+    it('matches .claude/skills and .agents/skills spellings of one doc, both ways', () => {
+      const [claude, agents] = ['.claude/skills/x/SKILL.md', '.agents/skills/x/SKILL.md']
+      expect(author(store([{ read: claude }]), { notRead: [agents] }).exited).toBe(true)
+      expect(author(store([{ read: agents }]), { notRead: [claude] }).exited).toBe(true)
+    })
+
+    it('refuses a (not read) merged from an earlier pass too', () => {
+      const fixture = store([{ read: 'CONTEXT.md' }])
+      const scratchAbs = join(fixture.root, 'scratch.json')
+      const pass1 = { session: 'session_01A', goal: 'g', status: 'completed', outcome: 'o', summary: 's', frictions: [] }
+      writeFileSync(scratchAbs, JSON.stringify({ ...pass1, docsRead: [{ path: 'CONTEXT.md', reason: '(not read)' }] }))
+      expect(author(fixture, { scratchAbs }).exited).toBe(true)
+    })
+
+    it('accepts (not read) for a shell-only credit, or when no transcript is found', () => {
+      const shell = store([['cat CONTEXT.md', FIXTURE_DOCS['CONTEXT.md']!]])
+      expect(author(shell, { notRead: ['CONTEXT.md'] })).toMatchObject({ exited: false, scratchWritten: true })
+      const none = { home: mkdtempSync(join(tmpdir(), 'shellread-empty-')), root: mkdtempSync(join(tmpdir(), 'shellread-noroot-')) }
+      tmpDirs.push(none.home, none.root)
+      expect(author(none, { notRead: ['CONTEXT.md'] })).toMatchObject({ exited: false, scratchWritten: true })
+    })
+    const tmpDirs: string[] = []
+    afterAll(() => tmpDirs.forEach((d) => rmSync(d, { recursive: true, force: true })))
+    const written = [
+      '✓ authored scratch written → .session-logs/pending.scratch.json',
+      '  the Stop hook will stitch it with the derived trace and commit, live, at the end of this turn.',
+    ]
+
+    it("leaves the output unchanged when main's schema accepts the stitched entry", () => {
+      let checked: unknown
+      expect(author(store(['git status']), { mainSchemaFn: (e) => ((checked = e), null) }).logs).toEqual(written)
+      expect(checked).toMatchObject({ goal: 'g', summary: 's' })
+    })
+
+    it("treats a schema check that can't run as main unreadable: same output, exit 0", () => {
+      const crash = () => {
+        throw new Error('child process failed')
+      }
+      expect(author(store(['git status']), { mainSchemaFn: crash })).toMatchObject({ logs: written, exited: false, scratchWritten: true })
+    })
+
+    it("holds, rather than promising a commit, when main's schema rejects the stitched entry", () => {
+      const reject = () => "  (root): Unrecognized key(s) in object: 'newField'"
+      const { logs, scratchWritten } = author(store(['git status']), { mainSchemaFn: reject })
+      const out = logs.join('\n')
+      expect(scratchWritten).toBe(true)
+      expect(out).toContain("Unrecognized key(s) in object: 'newField'")
+      expect(out).toContain('first turn that ends after that merge, so stay subscribed to the schema PR.')
+      expect(out).not.toContain('at the end of this turn')
+    })
+  })
 })
 
-describe('writeScratch() — merge on re-fire (issue #688)', () => {
+describe('mergeAuthored() — merge on re-fire (issue #688)', () => {
   const pass1: AuthoredScratch = {
     session: 'session_01A',
     goal: 'Run /digest for 2026-07-24',
@@ -390,19 +487,8 @@ describe('writeScratch() — merge on re-fire (issue #688)', () => {
       pass1.frictions[0]!, // the same friction reported again — must not double up
     ],
   }
-  const freshScratch = () => join(mkdtempSync(join(tmpdir(), 'log-session-scratch-')), 'pending.scratch.json')
-
-  it('writes a single pass byte-identically to the authored object', () => {
-    const abs = freshScratch()
-    writeScratch(pass1, abs)
-    expect(readFileSync(abs, 'utf8')).toBe(JSON.stringify(pass1, null, 2))
-  })
-
   it('merges a second pass: lists union (deduped), prose takes the later pass', () => {
-    const abs = freshScratch()
-    writeScratch(pass1, abs)
-    writeScratch(pass2, abs)
-    const merged = JSON.parse(readFileSync(abs, 'utf8'))
+    const merged = mergeAuthored(pass1, pass2)
     expect(merged.frictions).toEqual([...pass1.frictions, pass2.frictions[0]])
     expect(merged.prs).toEqual(['680', '681'])
     expect(merged.learnings).toEqual([...pass1.learnings!, ...pass2.learnings!])
