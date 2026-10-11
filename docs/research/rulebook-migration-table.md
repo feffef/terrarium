@@ -124,7 +124,7 @@ All four are point-in-time behavioural rules whose violation shows in the tool c
 - **#835** (`CM-36`) — built, then removed (#1651): its only effect was a deny-and-retry.
 - **#772** (`GC-03`) — superseded by the `SessionStart` unshallow hook, which removes the precondition; `scripts/gate.ts` also checks shallowness in code.
 - **#666** (`CM-20`, `CM-21`) — dropped, not mechanized (PR #1159): our own text told sessions to branch off `origin/main`, and deleting it removed the cause.
-- **#873** (`CM-38`) — built: `scripts/tail-pipe-guard.ts`.
+- **#873** (`CM-38`) — built, then removed (#1769): its only effect was a deny-and-retry.
 
 ---
 
@@ -201,7 +201,7 @@ blank.
 | CM-35 | Run any process-killing teardown as its own command, never `&&`/`;`-chained | Working conventions | H (refusal) | #102, #183, #240 | Same guard as CM-34 — one script, two conditions | S |
 | CM-36 | Never append a trailing `&` to a Bash command already passed `run_in_background: true` | Working conventions | H (refusal) | **#835 open**, #810 | `PreToolUse` on `Bash`: deny when `run_in_background` is true and the command ends in `&`. See §3 | S |
 | CM-37 | A dispatched subagent must never background a Bash command | Working conventions | H (refusal) | #694 (open), #602, #712 | **Built** — `scripts/subagent-background-guard.ts` | 0 |
-| CM-38 | Never pipe a backgrounded/long-running command through a trailing command when exit status or full output matters | Working conventions | H (refusal) | #873, #384, #812 | **Built** — `scripts/tail-pipe-guard.ts`, scoped to the backgrounded or known-long-running case | 0 |
+| CM-38 | Never pipe a backgrounded/long-running command through a trailing command when exit status or full output matters | Working conventions | H (refusal) | #873, #384, #812 | **Built, then removed (#1769)**: its only effect was a deny-and-retry | 0 |
 | CM-39 | Keep a PR's description in sync with its content | Working conventions | J | none | Requires judging whether the diff still matches the prose | — |
 | CM-40 | Pushing is not landing — babysit the PR to merged/abandoned, and subscribe on open without asking | Working conventions | W | none | A `close-session` stage: on PR-open, call `subscribe_pr_activity` and schedule the check-in cadence | S |
 | CM-41 | Invoke `close-session` at PR-open — the first session log | Working conventions | W | #483, #397, #411 | Partially detected post-hoc by `audit-skills`' closure-nudge signals. The refusal shape doesn't exist (there is no "session is ending" tool call to deny) | M |

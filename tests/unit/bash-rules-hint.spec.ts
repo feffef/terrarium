@@ -100,7 +100,7 @@ describe('the hook entry (sh pre-filter → tsx)', () => {
   const bash = (command: string, cwd = repo) => ({ hook_event_name: 'PostToolUse', tool_name: 'Bash', cwd, tool_input: { command }, tool_response: { stdout: 'cat' } })
 
   it('emits PostToolUse additionalContext for a governed multi-file read', () => {
-    const { stdout, status } = run(bash('cat README.md scripts/tail-pipe-guard.ts'))
+    const { stdout, status } = run(bash('cat README.md scripts/double-background-guard.ts'))
     expect(status).toBe(0)
     const out = JSON.parse(stdout).hookSpecificOutput
     expect(out.hookEventName).toBe('PostToolUse')
@@ -114,7 +114,7 @@ describe('the hook entry (sh pre-filter → tsx)', () => {
   // The pre-filter reads the first `command` key; JSON.parse keeps the last.
   // A payload where they differ shows which side of the pre-filter ran.
   const probe = (seen: string) =>
-    `{"tool_name":"Bash","cwd":${JSON.stringify(repo)},"tool_input":{"command":${JSON.stringify(seen)},"command":"cat README.md scripts/tail-pipe-guard.ts"}}`
+    `{"tool_name":"Bash","cwd":${JSON.stringify(repo)},"tool_input":{"command":${JSON.stringify(seen)},"command":"cat README.md scripts/double-background-guard.ts"}}`
 
   it('skips tsx for a read that cannot be compound or multi-file', () => {
     for (const seen of ['cat f', 'head -50 f']) {
@@ -131,7 +131,7 @@ describe('the hook entry (sh pre-filter → tsx)', () => {
   })
 
   it('reads the command from tool_input wherever it sits, with spaced colons', () => {
-    const compound = JSON.stringify('cat README.md scripts/tail-pipe-guard.ts')
+    const compound = JSON.stringify('cat README.md scripts/double-background-guard.ts')
     const late = `{"tool_response":{"command":"ls"},"tool_name":"Bash","cwd":${JSON.stringify(repo)},"tool_input" : {"command" : ${compound}}}`
     expect(run(late).stdout).toContain('guards.md')
     const quoted = `{"tool_name":"Bash","cwd":${JSON.stringify(repo)},"tool_input":{"command":${compound}},"tool_response":{"x":"tool_input","command":"ls"}}`
@@ -145,7 +145,7 @@ describe('the hook entry (sh pre-filter → tsx)', () => {
     mkdirSync(join(dir, 't/subagents'), { recursive: true })
     writeFileSync(join(dir, 't/subagents/agent-a1.jsonl'), loaded)
     writeFileSync(join(dir, 't/subagents/agent-a2.jsonl'), '{}\n')
-    const payload = { ...bash('cat README.md scripts/tail-pipe-guard.ts'), transcript_path: join(dir, 't.jsonl') }
+    const payload = { ...bash('cat README.md scripts/double-background-guard.ts'), transcript_path: join(dir, 't.jsonl') }
     expect(run(payload).stdout).not.toContain('rules/guards.md')
     expect(run({ ...payload, agent_id: 'a1' }).stdout).not.toContain('rules/guards.md')
     expect(run({ ...payload, agent_id: 'a2' }).stdout).toContain('rules/guards.md')
