@@ -109,9 +109,11 @@ export interface MechanicalTrace {
    *  folds them into `docsRead` like `filesRead`. */
   docsReadViaShell: string[]
   /** Path-scoped `.claude/rules/` files that loaded on a file touch or a Skill
-   *  run, in load order — the rules that load at session start carry no signal. */
+   *  run, in load order. */
   rulesLoaded: string[]
-  /** The subset of `rulesLoaded` whose ADR the session read after the rule first
+  /** `.claude/rules/` files with no `paths`, which load at session start. */
+  rulesGlobal: string[]
+  /** The subset of both rule lists whose ADR the session read after the rule first
    *  loaded: whole, by the Read tool, or in Bash output once `docIndex` is given
    *  (the shell detector's floor, not a whole read). */
   rulesFollowedUp: string[]
@@ -545,6 +547,7 @@ export function extractTrace(
   const subagents: SubagentRef[] = []
   const prSignals: string[] = []
   const rules: string[] = []
+  const globalRules: string[] = []
   const ruleLoadedAt = new Map<string, number>()
   const readAt: [string, number][] = []
 
@@ -552,10 +555,13 @@ export function extractTrace(
     const ts = typeof rec.timestamp === 'string' ? Date.parse(rec.timestamp) : NaN
     if (!Number.isNaN(ts)) stamps.push(ts)
 
-    const att = rec.attachment as { type?: string; path?: string; content?: unknown } | undefined
+    const att = rec.attachment as { type?: string; path?: string; content?: unknown; files?: { path?: string }[] } | undefined
     if (att?.type === 'nested_memory' && att.path?.includes('/.claude/rules/')) rules.push(ruleKey(att.path))
     if (att?.type === 'hook_additional_context') rules.push(...hintedRules(att.content))
-    for (const r of rules) if (!ruleLoadedAt.has(r)) ruleLoadedAt.set(r, i)
+    if (att?.type === 'instructions') {
+      for (const f of att.files ?? []) if (f.path?.includes('/.claude/rules/')) globalRules.push(ruleKey(f.path))
+    }
+    for (const r of [...globalRules, ...rules]) if (!ruleLoadedAt.has(r)) ruleLoadedAt.set(r, i)
 
     const msg = rec.message as { content?: unknown; model?: string } | undefined
     if (rec.type === 'assistant' && msg?.model) {
@@ -626,6 +632,7 @@ export function extractTrace(
     filesEdited: dedup(edits).filter(isContentPath).map(rel),
     docsReadViaShell: docIndex ? scanShellReadsByOutput(bashCommandsOf(records), docIndex, rel).paths : [],
     rulesLoaded: dedup(rules),
+    rulesGlobal: dedup(globalRules),
     rulesFollowedUp: [...ruleLoadedAt].filter(([r, at]) => adrReadAfter(r, at)).map(([r]) => r),
     skillsUsed: dedup([...skills, ...commandSkills]),
     commandSkills: dedup(commandSkills),
@@ -706,6 +713,7 @@ export function foldSubagentTrace(
   // Folded too, but kept out of FOLDED_TRACE_FIELDS: SessionCard's explainer
   // lists those fields, and the card does not render this one.
   folded.rulesLoaded = dedup([...trace.rulesLoaded, ...subs.flatMap((s) => s.rulesLoaded)])
+  folded.rulesGlobal = dedup([...trace.rulesGlobal, ...subs.flatMap((s) => s.rulesGlobal)])
   folded.rulesFollowedUp = dedup([...trace.rulesFollowedUp, ...subs.flatMap((s) => s.rulesFollowedUp)])
   return folded
 }
@@ -806,6 +814,7 @@ export function stitch(authored: AuthoredScratch, trace: MechanicalTrace): Recor
   if (Object.keys(trace.toolCounts).length) entry.toolCounts = trace.toolCounts
   if (trace.filesEdited.length) entry.filesEdited = trace.filesEdited
   if (trace.rulesLoaded.length) entry.rulesLoaded = trace.rulesLoaded
+  if (trace.rulesGlobal.length) entry.rulesGlobal = trace.rulesGlobal
   if (trace.rulesFollowedUp.length) entry.rulesFollowedUp = trace.rulesFollowedUp
   if (authored.ruleVerdicts?.length) entry.ruleVerdicts = authored.ruleVerdicts
   if (trace.subagents.length) entry.subagents = trace.subagents

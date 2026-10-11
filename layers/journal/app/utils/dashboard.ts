@@ -225,9 +225,12 @@ export function sessionCardViews(sessions: SessionDoc[]): (SessionCardView & { k
       ideas: s.ideas ?? [],
       filesEdited: s.filesEdited ?? [],
       docsReadViaShell: s.docsReadViaShell ?? [],
-      rules: (s.rulesLoaded ?? []).map((path) => {
+      rules: [
+        ...(s.rulesGlobal ?? []).map((path) => ({ path, global: true })),
+        ...(s.rulesLoaded ?? []).map((path) => ({ path, global: false })),
+      ].map(({ path, global }) => {
         const v = s.ruleVerdicts?.find((r) => r.path === path)
-        return { path, followedUp: !!s.rulesFollowedUp?.includes(path), reason: v?.reason, useful: v?.useful }
+        return { path, global, followedUp: !!s.rulesFollowedUp?.includes(path), reason: v?.reason, useful: v?.useful }
       }),
       tools: sessionToolEntries(s.toolCounts),
     }

@@ -636,5 +636,6 @@ A path alone does not say whether a doc or rule earned its place in context.
 A `docsRead` entry gains an optional `useful` verdict (`yes`, `partly`, `no`),
 and a new optional `ruleVerdicts` list gives each loaded rule a `reason` (what
 it told the agent) and a `useful` verdict. Both are authored; `--author` lists
-every instruction doc and every loaded rule still missing one. Older logs
-carry neither and stay valid.
+every instruction doc and every loaded rule still missing one. The derived
+`rulesGlobal` lists the rules that load at session start, so they get a
+verdict too. Older logs carry none of these and stay valid.

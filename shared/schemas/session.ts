@@ -59,7 +59,9 @@ export const sessionSchema = z
     // Path-scoped `.claude/rules/` files that loaded on a file touch, so an audit
     // can see which ADR summaries fired and whether a full read followed.
     rulesLoaded: z.array(z.string()).optional(),
-    // The subset of `rulesLoaded` whose ADR was read after the rule loaded.
+    // Rules with no `paths`, which load at session start.
+    rulesGlobal: z.array(z.string()).optional(),
+    // The subset of both rule lists whose ADR was read after the rule loaded.
     rulesFollowedUp: z.array(z.string()).optional(),
     ruleVerdicts: z.array(ruleVerdict).optional(),
     // DEPRECATED — no longer written. Shell reads now fold into `docsRead`

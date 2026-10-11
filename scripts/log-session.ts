@@ -796,7 +796,7 @@ export function reportUnexplainedReads(
     scan = shellReadScanOf(records, subagents, { repoRoot })
     const trace = foldSubagentTrace(extractTrace(records), subagents.map((s) => s.records))
     toolReads = trace.filesRead
-    rulesLoaded = trace.rulesLoaded
+    rulesLoaded = [...trace.rulesGlobal, ...trace.rulesLoaded]
   } catch {
     return
   }

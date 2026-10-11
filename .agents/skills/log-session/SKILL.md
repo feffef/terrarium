@@ -75,7 +75,7 @@ docsRead:                          # curated — what each doc gave you, and whe
   - { path: "app/pages/t/[tenant]/[space]/[...slug].vue", reason: routing, useful: partly }
 skillsUsed:                        # transcript-observed reads/Skills you omit are folded in
   - { name: tdd, reason: "test-first the helper (see #99)" }  # (name cross-refs the Skill Inventory)
-ruleVerdicts:                      # every path-scoped rule that loaded (step 3 lists them)
+ruleVerdicts:                      # every rule that loaded, global ones too (step 3 lists them)
   - { path: .claude/rules/adr-0025.md, reason: "kinds live in shared/kinds.ts", useful: no }
 frictions:                         # REQUIRED (may be []) — list EVERY friction
   - description: …                 # ~20 words, honest
@@ -172,8 +172,9 @@ one-line reason and a `useful` verdict, or the reason `(not read)` when no
 command of this session or its subagents showed you that doc. ADR-0009's
 merged-read amendment says what the stitch does with `(not read)`.
 
-It also lists every path-scoped rule that loaded with no `ruleVerdicts` entry.
-Answer each with a reason and a `useful` verdict.
+It also lists every rule that loaded with no `ruleVerdicts` entry, including the
+global ones that load at session start. Answer each with a reason and a
+`useful` verdict.
 
 A later pass merges with the first, so list only the new or changed entries,
 but write each one whole: a pass replaces an entry with the same path.

@@ -149,6 +149,12 @@ describe('rulesLoaded — path-scoped rules that fired', () => {
     expect(trace.rulesLoaded).toEqual(['.claude/rules/adr-0024.md'])
   })
 
+  it('lists the session-start rules apart, as global', () => {
+    expect(trace.rulesGlobal).toEqual(['.claude/rules/adr-0003.md'])
+    expect(stitch({ session: 's', goal: 'g', status: 'completed', outcome: 'o', summary: 's', frictions: [] }, trace).rulesGlobal)
+      .toEqual(['.claude/rules/adr-0003.md'])
+  })
+
   it('adds the rules the skill-rules hint injected when a Skill ran', () => {
     const hint = {
       type: 'attachment',

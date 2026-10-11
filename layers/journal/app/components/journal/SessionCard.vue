@@ -147,7 +147,7 @@ const foldedFieldLabels = new Intl.ListFormat('en', { style: 'long', type: 'conj
               <summary>Rules triggered <span class="n">{{ card.rules.length }}</span></summary>
               <ul>
                 <li v-for="(r, i) in card.rules" :key="i">
-                  <code>{{ r.path }}</code><template v-if="r.reason"> — {{ r.reason }}</template
+                  <code>{{ r.path }}</code><span v-if="r.global" class="global">global</span><template v-if="r.reason"> — {{ r.reason }}</template
                   ><span v-if="r.useful" class="useful" :data-useful="r.useful">useful: {{ r.useful }}</span
                   ><span v-if="r.followedUp" class="followed"> — full ADR read</span>
                 </li>
@@ -365,6 +365,14 @@ const foldedFieldLabels = new Intl.ListFormat('en', { style: 'long', type: 'conj
 .trace > ul { margin: 0; padding: 0 0.7rem 0.6rem; list-style: none; display: flex; flex-direction: column; gap: 0.35rem; }
 .trace li { font-size: 0.84rem; color: var(--jd-muted); line-height: 1.45; }
 .trace .followed { color: var(--jd-accent); }
+.trace .global {
+  margin-left: 0.4rem;
+  padding: 0 0.35rem;
+  border-radius: 999px;
+  background: var(--jd-line);
+  color: var(--jd-muted);
+  font-size: 0.85em;
+}
 .trace .useful {
   margin-left: 0.4rem;
   padding: 0 0.35rem;
