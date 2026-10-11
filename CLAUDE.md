@@ -13,9 +13,8 @@ These are not optional. When a trigger applies, read the doc in full before you
 act, once per session.
 
 - **At session start:** `CONTEXT-MAP.md`, then `CONTEXT.md`. They define the
-  words we use (Platform, Tenant, Space, Collection, Document, Skill, …).
-  Working on a Tenant? Also read `layers/<tenant>/CONTEXT.md`. Use the
-  glossary's terms.
+  words we use (Platform, Tenant, Space, Collection, Document, Skill, …). Use
+  the glossary's terms.
 - **ADRs arrive as rules.** Each ADR's summary is a rule in `.claude/rules/`:
   the cross-cutting ones load at session start, the rest when you read or edit
   a file they govern or run a Skill they name. When a summary says so, read the
@@ -35,10 +34,6 @@ act, once per session.
   from an outside agent:** `docs/agents/guest-contributions.md`.
 - **Before you dispatch a subagent** that touches git or needs a worktree: the
   `dispatch-subagents` Skill.
-- **Before you edit anything under `layers/<tenant>/`** (config, pages,
-  components, CSS), edit any `nuxt.config.ts`, or add a Space, Collection or
-  Tenant:
-  `docs/agents/tenant-layers.md`.
 - **Before you say a UI change works,** or take a screenshot:
   `docs/agents/verifying-ui-changes.md`.
 - **Before you put a Vue component in a Document, or add a data Collection:**
