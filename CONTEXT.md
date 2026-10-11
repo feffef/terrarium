@@ -293,9 +293,8 @@ changeset that is entirely Inert may skip Heavy.
 
 ### Human-only
 A surface that a **Trusted** human must **merge** — never auto-merged by any
-chartered Skill, whatever the **Gate** says (the `paths` of `.claude/rules/adr-0004-human-merge.md` are
-the list, and `scripts/merge-pr.ts` refuses a PR that changes one — ADR-0004's
-2026-10-10 amendment). One exception, granted by ADR-0027: a **Prune Trial** may self-merge a
+chartered Skill, whatever the **Gate** says (the list is the `paths` of
+`.claude/rules/adr-0004-human-merge.md`; ADR-0004). One exception, granted by ADR-0027: a **Prune Trial** may self-merge a
 rewrite of an ADR that keeps what it decided.
 Nothing else in the high-risk set is
 reachable that way. It constrains merging only: agents author changes to Human-only surfaces
@@ -341,11 +340,8 @@ pointer into them (see `CONTEXT-MAP.md`).
 - **Tinkerfund** — a crowdfunding shop for fun, mostly useless inventions; a
   design showcase in which every interaction is simulated in the browser. A
   demo/content Tenant. → [`layers/tinkerfund/CONTEXT.md`](./layers/tinkerfund/CONTEXT.md)
-- **Commons** — the Platform's shared, cross-Tenant space: the home for
-  **Aggregator** views that read across every Tenant. Two Spaces: **Search**
-  (one box over every opted-in page) and **Timeline** (every timestamped page,
-  newest first). Not a demo/content Tenant: the first Aggregator, validating the
-  cross-Tenant read model (ADR-0025, issue #642). →
+- **Commons** — the first **Aggregator**: cross-Tenant Search and Timeline
+  Spaces; not a demo/content Tenant (ADR-0025, issue #642). →
   [`layers/commons/CONTEXT.md`](./layers/commons/CONTEXT.md)
 
 ## Retired terms

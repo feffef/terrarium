@@ -14,7 +14,7 @@ gated PR on green. It files an issue only when it can't tell which of two
 conflicting facts is true.
 
 > **Bounded.** The self-merged PR carries only fact-checked fixes that touch no
-> human-only surface (ADR-0004's low-risk content tier). It edits only *Live*
+> human-only surface (the `paths` of `.claude/rules/adr-0004-human-merge.md`). It edits only *Live*
 > docs — never a historical decision, never a pack template.
 
 > **Keep it short** (CLAUDE.md) governs every edit this run makes.
@@ -214,8 +214,8 @@ floor still runs `verify:skills-lock` and `validate:content`. Done when green.
 
 Follow `docs/agents/pr-workflow.md`'s "Closing a self-merged chartered run".
 One self-merged commit and PR (the escalation PR below is separate); its body lists the fixes and any issue filed, and
-a one-line PR comment records the audit. It self-merges on green (ADR-0003
-amendment; ADR-0004's low-risk content tier, like `digest`).
+a one-line PR comment records the audit. It self-merges on green (ADR-0003's
+2026-10-10 amendment), like `digest`.
 
 **These fixes escalate instead:** any ADR edit (including an Orphan-addition
 amendment banner), CI, isolation logic, the manifest-expansion/routing modules,

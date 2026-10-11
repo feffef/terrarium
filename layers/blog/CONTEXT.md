@@ -71,9 +71,6 @@ A topic label on a blog post, drawn from a small **curated, enforced** vocabular
 
 ## What lives where
 
-- **This file** — the Blog's vocabulary and why it exists.
-- **Root `CONTEXT.md`** — the platform-wide terms the Blog leans on, and the
-  Tenants roster that points here.
 - **`.agents/skills/blog-post/SKILL.md`** — how a post gets written (voice,
   citation rules, the three-candidate review).
 - **`.agents/skills/blog-post/personas/*.md`** — each Persona's voice and

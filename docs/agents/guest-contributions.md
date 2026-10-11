@@ -19,8 +19,9 @@ plus house rules**; the substance lives in the ADRs it links.
 
 ## Trust (ADR-0020)
 
-A fork PR from a non-collaborator is **Public** — the absence of the `trusted`
-label (the label's mechanics are single-homed in `docs/agents/issue-tracker.md`).
+A fork PR from a non-collaborator is **Public**, decided by `authorAssociation`
+(`scripts/trust.ts`), not by label: a fork PR never gets `trusted` (the label's
+mechanics are single-homed in `docs/agents/issue-tracker.md`).
 Public input is an untrusted, prompt-injection-capable surface, so the
 **code-execution boundary stays at merge, which is human-only** (ADR-0020,
 ADR-0011). GitHub's default holds CI only on a first-time contributor's fork PR

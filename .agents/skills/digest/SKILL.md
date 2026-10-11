@@ -20,8 +20,8 @@ overview of the Platform's current state and capabilities. A thin, tested helper
 Digests land through the **ordinary gated PR** — *not* the `log-session`
 direct-to-main path (that exception is bounded to inert `data`; a Digest is a
 rendered page). The PR is **eligible to self-merge as soon as the gate is green**
-(ADR-0003 amendment, activating ADR-0004's content-only low-risk tier) — see step 7
-for the boundary and the merge mechanics.
+(ADR-0003's 2026-10-10 amendment) — see step 7 for the boundary and the merge
+mechanics.
 
 > **Keep it short** (CLAUDE.md) governs it if this run touches the Platform or
 > its agent instructions.

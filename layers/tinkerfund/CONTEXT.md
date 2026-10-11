@@ -91,9 +91,6 @@ flat shipping rate.
 
 ## What lives where
 
-- **This file** — Tinkerfund's vocabulary and why it exists.
-- **Root `CONTEXT.md`** — the platform-wide terms Tinkerfund leans on, and the
-  Tenants roster that points here.
 - **[spec #1375](https://github.com/feffef/terrarium/issues/1375)** — the
   full spec, linking the ticket that holds each locked decision (a
   content/design Tenant's decisions live there and in this file, not in

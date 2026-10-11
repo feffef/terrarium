@@ -35,9 +35,6 @@ The Chapter's illustration: authored inline SVG art in its own softer, painterly
 
 ## What lives where
 
-- **This file** — the Marquee's vocabulary and why it exists.
-- **Root `CONTEXT.md`** — the platform-wide terms the Marquee leans on, and
-  the Tenants roster that points here.
-- **`layers/marquee/app/components/marquee/Poster.vue`** — the shared frame + caption a Chapter's `illustration` frontmatter field (authored inline SVG markup) renders through, via the same `v-html`-of-committed-markup approach as the Atlas's engraved plates. The evoke-don't-reproduce judgment lives with each Chapter's SVG, not in a Skill: the run is small and guest-scoped, unlike the Atlas's ongoing `atlas-specimen` pipeline.
+- **`layers/marquee/app/components/marquee/Poster.vue`** — the Poster's frame and caption, fed by a Chapter's `illustration` frontmatter field. The evoke-don't-reproduce judgment lives with each Chapter's SVG, not in a Skill.
 - **`layers/marquee/content/reel/pages/index.md`** — the Screening's own
   landing, listing the Chapters in story order.

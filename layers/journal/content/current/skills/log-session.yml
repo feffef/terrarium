@@ -3,12 +3,11 @@ category: platform-operation
 importance: essential
 gist: Writes the end-of-session diary entry every agent leaves behind.
 role: >-
-  The Platform's first platform-operation Skill and the source of its primary
-  self-improvement signal: each session's honest self-report — goal, outcome,
-  and above all its frictions — in this Journal. You author only that
-  interpretive half; a committed hook derives the rest and lands the log live on
-  `main` (ADR-0009's bounded exception). Usually invoked by `close-session`;
-  call it directly only to amend a written log.
+  The source of the Platform's primary self-improvement signal: each session's
+  honest self-report — goal, outcome, and above all its frictions — in this
+  Journal. You author only that interpretive half; a committed hook derives the
+  rest and lands the log live on `main` (ADR-0009's bounded exception). Usually
+  invoked by `close-session`; call it directly only to amend a written log.
 observations:
   - date: 2026-09-09
     note: >-

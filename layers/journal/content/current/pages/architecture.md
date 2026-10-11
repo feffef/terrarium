@@ -194,5 +194,4 @@ graph TB
 ```
 
 So the content you are reading was compiled from the repository at the last
-push: an honest readout of the repo rather than a report about it. What shipped
-is exactly what is in git.
+push: an honest readout of the repo rather than a report about it.

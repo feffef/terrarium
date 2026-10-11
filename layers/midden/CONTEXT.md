@@ -113,29 +113,11 @@ procedure lives in `.agents/skills/midden-catalogue/`.
 
 ## What lives where
 
-- **This file** — the Midden's vocabulary and why it exists.
-- **Root `CONTEXT.md`** — the platform-wide terms the Midden leans on, and the
-  Tenants roster that points here.
-
 - **`layers/midden/app/utils/strata.ts`** — the canonical dig-season list.
 - **`layers/midden/app/utils/condition.ts`** — the single-homed
   {grade, label, definition} table the dig-report page's condition key and each
   inline find read from.
 - **`scripts/validate-content-refs.ts`** — enforces what the schema can't express about an Artifact's `site`, `stratum` and `removedIn` (see Artifact and Dig season above); its comments hold the rules.
-- **`layers/midden/app/components/midden/TrenchLanding.vue`** — both
-  landings in one layout: at `/t/midden` (`front`) the curatorial foreword
-  (verbatim in-voice copy, not this file's register), the pull-quote, and a
-  doorway to each Space; at `/t/midden/trench` the trench's own intro
-  (`trench/pages/index.md`) and the dig-report list.
-- **`layers/midden/app/components/midden/ConditionKey.vue`** — the condition
-  key: a slim sticky sidebar on each dig-report/stores page listing only the
-  grades present in that report's finds and their one-line definitions
-  (owner-directed final design, #527). Shared by the dig-report page and
-  the stores register (see Condition above).
-- **`layers/midden/app/components/midden/StoresLanding.vue`** — the stores
-  register: every find held off display, grouped by Dig season. Deliberately
-  not the trench's specimen slip — same fields, quieter presentation (see The
-  Stores above).
 - **`layers/midden/app/utils/find.ts`** — the Artifact document shape and the
   two record-fact formatters, shared by both renderers so they cannot drift.
 - **`.agents/skills/midden-survey/`** — the survey Skill that mechanizes
@@ -146,7 +128,3 @@ procedure lives in `.agents/skills/midden-catalogue/`.
 - **`.agents/skills/midden-catalogue/`** — the catalogue Skill: turns a
   survey's accepted candidates into Artifacts and dig reports, per the
   Cataloguing discipline above.
-
-## Visitor rendering
-
-Each find renders **open and flat** (the note and inscription visible on load) using the corner stamp and the condition key (see Condition above); decisions: #523, #524, #527, #528 (history at #515).

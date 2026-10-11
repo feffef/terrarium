@@ -51,9 +51,6 @@ pointers to them may live anywhere they help.
   **Pingback** denormalizes a *cross-Space* reaction, copying the reference into
   the reacted-to Persona's Space at author time (ADR-0012). Same surface problem,
   opposite mechanism — dictated by whether the fact crosses a Space boundary.
-- **Tenant words for a Space.** Each Tenant's own `CONTEXT.md` names its word
-  (Persona, Biome, Screening); say it in product sentences, "Space" for the
-  mechanism.
 
 ## Decisions
 
