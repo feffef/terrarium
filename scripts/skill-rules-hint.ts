@@ -16,7 +16,7 @@ import { ruleBody, rulePaths } from './validate-adr-rules.ts'
 
 const RULES_DIR = '.claude/rules'
 
-function prop(obj: unknown, key: string): unknown {
+export function prop(obj: unknown, key: string): unknown {
   return obj !== null && typeof obj === 'object' ? (obj as Record<string, unknown>)[key] : undefined
 }
 
@@ -53,11 +53,11 @@ export function skillRulesHint(skill: string, rules: RuleFile[]): string | null 
   return [`The ${skill} Skill runs under these ADR rules:`, ...blocks].join('\n\n')
 }
 
-function loadRules(): RuleFile[] {
-  if (!existsSync(RULES_DIR)) return []
-  return readdirSync(RULES_DIR)
+export function loadRules(dir = RULES_DIR): RuleFile[] {
+  if (!existsSync(dir)) return []
+  return readdirSync(dir)
     .filter((f) => f.endsWith('.md'))
-    .map((file) => ({ file, text: readFileSync(join(RULES_DIR, file), 'utf8') }))
+    .map((file) => ({ file, text: readFileSync(join(dir, file), 'utf8') }))
 }
 
 function hintFor(payload: unknown): string | null {

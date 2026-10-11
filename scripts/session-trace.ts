@@ -155,9 +155,10 @@ export function isContentPath(p: string | undefined): p is string {
  *  the noise filter, which keys on absolute paths. Paths outside the repo stay
  *  absolute — honestly flagging an external file. Shared with the author-time
  *  shell-read scan so both derive the same key for one file. */
-// The harness doesn't record a rule that scripts/skill-rules-hint.ts injects as a
-// load; only the hint's own "Contents of <rule>:" headers name it.
-function hintedRules(content: unknown): string[] {
+// The harness doesn't record a rule that scripts/skill-rules-hint.ts or
+// scripts/bash-rules-hint.ts injects as a load; only the hint's own
+// "Contents of <rule>:" headers name it.
+export function hintedRules(content: unknown): string[] {
   const text = (Array.isArray(content) ? content : [content]).filter((c) => typeof c === 'string').join('\n')
   return [...text.matchAll(/^Contents of (\.claude\/rules\/[\w.-]+\.md):$/gm)].map((m) => m[1]!)
 }
@@ -165,7 +166,7 @@ function hintedRules(content: unknown): string[] {
 /** A rule's identity is its `.claude/rules/` path, not where it was loaded
  *  from: a worktree subagent loads the same rule under another absolute root,
  *  which `relativizer` cannot strip (issue #1763). */
-function ruleKey(path: string): string {
+export function ruleKey(path: string): string {
   return path.slice(path.lastIndexOf('.claude/rules/'))
 }
 

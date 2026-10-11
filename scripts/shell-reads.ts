@@ -14,6 +14,7 @@
 // command parser (`scanShellReads`) only explains a near-miss in the advisory
 // — ADR-0009's output-matching amendment (issue #1545) says why. Scope stays a
 // PATH-SHAPE test (`isInstructionDoc`), so a doc added later is still in scope.
+import { isAbsolute, resolve } from 'node:path'
 
 /** Argv-0s that stream a file's CONTENTS into the session. `find`/`ls`/`wc` are
  *  deliberately absent: they report *about* a file without showing it.
@@ -22,7 +23,7 @@
  *  below), and unlike `grep`/`rg` it is not in `OUTPUT_FILTERED_VERBS` either:
  *  it always processes every file it's given, so both stay unconditionally
  *  credited the way `cat`/`sed` already are. */
-const READER_VERBS = new Set(['cat', 'bat', 'sed', 'head', 'tail', 'awk', 'grep', 'rg', 'less', 'more', 'diff'])
+export const READER_VERBS = new Set(['cat', 'bat', 'sed', 'head', 'tail', 'awk', 'grep', 'rg', 'less', 'more', 'diff'])
 
 /** Wrappers that sit in front of the real command. `timeout` matters most: agent
  *  briefs in this environment mandate foreground commands with an explicit
@@ -31,18 +32,18 @@ const PREFIX_VERBS = new Set(['sudo', 'command', 'env', 'nice', 'stdbuf', 'nohup
 
 /** Readers whose FIRST positional is a pattern or a program, never a path being
  *  read. `grep "docs/agents/x.md" CLAUDE.md` reads CLAUDE.md, not `x.md`. */
-const SCRIPT_FIRST = new Set(['sed', 'awk', 'grep', 'rg'])
+export const SCRIPT_FIRST = new Set(['sed', 'awk', 'grep', 'rg'])
 
 /** Flags whose value is the next token AND supplies the pattern/program, so the
  *  first positional is then a FILE. Without the second half, `grep -e foo
  *  docs/x.md` loses the doc to the SCRIPT_FIRST rule. */
-const PATTERN_FLAGS = new Set(['-e', '-f', '--regexp', '--file', '--expression'])
+export const PATTERN_FLAGS = new Set(['-e', '-f', '--regexp', '--file', '--expression'])
 
 /** Flags whose value is the next token but is NOT the pattern — a context or
  *  count argument. Missing these shifts the positional index, so the pattern
  *  lands in slot 2 and a doc path used as a grep pattern gets counted:
  *  `grep -C 3 "docs/x.md" CLAUDE.md` reads CLAUDE.md only. */
-const ARG_FLAGS = new Set([
+export const ARG_FLAGS = new Set([
   '-A', '-B', '-C', '-m', '-d', '-v',
   '--after-context', '--before-context', '--context', '--max-count', '--max-depth',
 ])
@@ -63,7 +64,7 @@ const INSTRUCTION_DOC_PATTERNS = [
   /^CONTEXT(?:-MAP)?\.md$/,
 ]
 
-const GLOB_OR_VAR = /[*?$`~[\]{}]/
+export const GLOB_OR_VAR = /[*?$`~[\]{}]/
 
 /** Why a token that named an in-scope doc was NOT counted — surfaced to the
  *  authoring agent so checking for a MISS is recognition rather than recall. */
@@ -212,7 +213,7 @@ interface Token {
  *
  *  Only the marker and the body are removed, never the rest of the marker's own
  *  line: `cat <<'EOF' > f && cat docs/x.md` still carries a real read. */
-function stripHeredocs(command: string): string {
+export function stripHeredocs(command: string): string {
   // `(?<!<)` and `(?!<)` exclude the `<<<WORD` herestring, which shares the
   // prefix but has no body to strip.
   const marker = /(?<!<)<<-?(?!<)\s*(['"]?)([A-Za-z_][A-Za-z0-9_]*)\1/g
@@ -246,7 +247,7 @@ function stripHeredocs(command: string): string {
  *  `split('|')` shreds a quoted alternation (`grep "a\|b" docs/x.md`) and
  *  orphans the path into a segment whose verb is a pattern fragment — #1074's
  *  prototype scored 1/2 until this existed. */
-function segments(rawCommand: string): { tokens: Token[]; followedByOr: boolean }[] {
+export function segments(rawCommand: string): { tokens: Token[]; followedByOr: boolean }[] {
   const command = stripHeredocs(rawCommand)
   const out: { tokens: Token[]; followedByOr: boolean }[] = []
   let tokens: Token[] = []
@@ -310,7 +311,7 @@ function segments(rawCommand: string): { tokens: Token[]; followedByOr: boolean 
 /** Drop `timeout 60`, `sudo`, `FOO=1` — anything standing between the segment and
  *  the reader verb it actually runs. (A subshell's parens are already segment
  *  separators, so they never reach here.) */
-function unwrap(tokens: Token[]): Token[] {
+export function unwrap(tokens: Token[]): Token[] {
   let i = 0
   while (i < tokens.length) {
     const t = tokens[i]!
@@ -330,7 +331,7 @@ function unwrap(tokens: Token[]): Token[] {
 
 /** `sed -i` edits in place and prints nothing — the doc is written, not read.
  *  `i` is unambiguous among sed's short flags (n/e/f/i/r/E/s/u/z). */
-function isInPlaceEdit(verb: string, tokens: Token[]): boolean {
+export function isInPlaceEdit(verb: string, tokens: Token[]): boolean {
   if (verb !== 'sed') return false
   return tokens.some(
     (t) => !t.quoted && (t.text.startsWith('--in-place') || /^-[a-zA-Z]*i([.=].*)?$/.test(t.text)),
@@ -340,7 +341,7 @@ function isInPlaceEdit(verb: string, tokens: Token[]): boolean {
 /** `-l`/`-L`/`-q`/`-c`: the match is reported as a name or a count, so the file's
  *  contents never reached the session. `-L` is names-only for grep but means
  *  `--follow` for rg — verified against both binaries. */
-function showsNoContent(verb: string, tokens: Token[]): boolean {
+export function showsNoContent(verb: string, tokens: Token[]): boolean {
   if (verb !== 'grep' && verb !== 'rg') return false
   return tokens.some((t) => {
     if (t.quoted) return false
@@ -685,6 +686,57 @@ export function scanShellReads(
     return true
   })
   return { paths: [...creditedBy.keys()], creditedBy, nearMisses: missed }
+}
+
+/** Every file a Bash command's reader verbs name, as absolute paths, for
+ *  scripts/bash-rules-hint.ts (issue #1764). Any file, not only instruction
+ *  docs. `simple` marks the one-file read Claude Code already loads rules for
+ *  (ADR-0029). After a `cd` the parser cannot follow, relative paths drop. */
+export function bashReadPaths(command: string, cwd: string): { paths: string[]; simple: boolean } {
+  const segs = segments(command)
+  const paths: string[] = []
+  let dir: string | undefined = cwd
+  let simple = false
+  for (const seg of segs) {
+    const tokens = unwrap(seg.tokens)
+    const verb = tokens[0]?.text.replace(/^.*\//, '') ?? ''
+    if (verb === 'cd') {
+      const to = tokens[1]?.text
+      dir = dir && to && to !== '-' && !GLOB_OR_VAR.test(to) ? resolve(dir, to) : undefined
+      continue
+    }
+    if (!READER_VERBS.has(verb) || isInPlaceEdit(verb, tokens) || showsNoContent(verb, tokens)) continue
+    const patternSupplied = tokens.some((t) => !t.quoted && PATTERN_FLAGS.has(t.text))
+    let skipNext = false
+    let positionals = 0
+    let files = 0
+    for (const t of tokens.slice(1)) {
+      if (skipNext) {
+        skipNext = false
+        continue
+      }
+      if (!t.quoted) {
+        if (/^\d*>>?$/.test(t.text)) {
+          skipNext = true
+          continue
+        }
+        if (/^(\d*>|<)/.test(t.text)) continue
+        if (t.text.length > 1 && t.text.startsWith('-')) {
+          // `head -n 50`: the count, not a file.
+          const headCount = /^(head|tail)$/.test(verb) && /^-[nc]$/.test(t.text)
+          skipNext = PATTERN_FLAGS.has(t.text) || ARG_FLAGS.has(t.text) || headCount
+          continue
+        }
+      }
+      if (++positionals === 1 && SCRIPT_FIRST.has(verb) && !patternSupplied) continue
+      files++
+      if (GLOB_OR_VAR.test(t.text)) continue
+      if (isAbsolute(t.text)) paths.push(t.text)
+      else if (dir) paths.push(resolve(dir, t.text))
+    }
+    simple = segs.length === 1 && tokens.length === seg.tokens.length && files === 1
+  }
+  return { paths: [...new Set(paths)], simple }
 }
 
 // ── Crediting from OUTPUT (ADR-0009's output-matching amendment, #1545) ──────

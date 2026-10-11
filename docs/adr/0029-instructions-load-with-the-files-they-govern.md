@@ -75,7 +75,8 @@ inside subagents too (PR #1741). Whether a Bash write loads one is untested.
   each needs a human merge because `.claude/rules/**` is Human-only.
 - Rules still miss piped, chained and multi-file Bash reads. A fail-open
   `PostToolUse` hint on Bash, matching a command's file paths against rule
-  `paths` the way `skill-rules-hint.ts` does for Skills (#1764), should land
+  `paths` the way `skill-rules-hint.ts` does for Skills (#1764,
+  `scripts/bash-rules-hint.ts`), should land
   before rules become the main home for non-ADR instructions.
 - A plan or an opinion often comes before any file is opened, so `CLAUDE.md`
   keeps the step to grep `docs/adr/` before recommending a change.
