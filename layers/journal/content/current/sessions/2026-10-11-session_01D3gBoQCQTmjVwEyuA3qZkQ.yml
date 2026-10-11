@@ -1,0 +1,174 @@
+schemaVersion: 1
+session: session_01D3gBoQCQTmjVwEyuA3qZkQ
+startedAt: 2026-10-11T22:14:00Z
+endedAt: 2026-10-11T22:18:27Z
+kind: delegated
+goal: Auto-triage sweep of open issues
+status: completed
+outcome: "2 of 25 open issues eligible; both triaged to ready-for-agent (#1778, #1773)"
+summary: "Human-instructed: the owner started /auto-triage (the ADR-0022 standing green-light). Of 25 open issues, every latest comment carried ADR-0017 provenance, so only the two without a triage state were eligible: #1778 (unlabelled) and #1773 (needs-triage). No open PRs existed. Both are owner-authored, unassigned and unblocked. I dispatched one subagent per issue, and each one triaged its issue to enhancement + ready-for-agent with one Agent Brief comment. #1778 is a time-gated verification run (earliest 2026-10-14 13:00Z and at least 20 post-merge sessions). Its subagent put that gate in the brief, since ADR-0022 doesn't count a time gate as a reason to escalate and the blocking convention only covers issue blockers. #1773's subagent confirmed the blog-post step 12 novelty-only bar against the Skill and PR #1772. I checked both label sets on GitHub. The two briefs share no file with the other open ready-for-agent issues (#1499, #1712), so I added no blocking edges. No code changes and no PR."
+prs: []
+docsRead:
+  - path: CONTEXT-MAP.md
+    reason: session-start context index
+    useful: partly
+  - path: CONTEXT.md
+    reason: "glossary: Trusted/Public, Session kind"
+    useful: partly
+  - path: .agents/skills/triage/SKILL.md
+    reason: per-issue triage rules composed by auto-triage
+    useful: yes
+  - path: .agents/skills/triage/AGENT-BRIEF.md
+    reason: brief format to pass to subagents
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: list-open-issues script, gh api works in cloud
+    useful: yes
+  - path: docs/agents/issue-tracker.md
+    reason: blocking and wayfinder conventions
+    useful: partly
+  - path: docs/agents/triage-labels.md
+    reason: label mapping
+    useful: partly
+  - path: .agents/skills/auto-triage/SKILL.md
+    reason: sweep eligibility, brave bar, roll-up format
+    useful: yes
+  - path: docs/adr/0022-autonomous-triage-sweep.md
+    reason: "subagents: escalation taxonomy; time gate not a reason to escalate"
+    useful: yes
+  - path: docs/adr/0027-prune-trials.md
+    reason: "subagent: cut-before-add for the #1773 brief; no trial on blog-post"
+    useful: partly
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: "subagent: confirmed step 12 novelty-only bar for #1773"
+    useful: yes
+  - path: docs/research/rulebook-migration-table.md
+    reason: "subagent: checked for an existing classification of the blog-post rule; none"
+    useful: no
+  - path: .agents/prune-trials.yml
+    reason: (no reason given)
+skillsUsed:
+  - name: auto-triage
+    reason: owner-invoked sweep
+  - name: close-session
+    reason: closure
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Read CONTEXT-MAP.md, CONTEXT.md and four docs/agents files with chained cat instead of the Read tool, breaking CLAUDE.md's 'Read files with the Read tool' (ADR-0029); rules governing those files may not have loaded.
+    solution: Use the Read tool for each instruction doc, even at session start when batching feels faster.
+    severity: minor
+  - description: auto-triage has no single script that combines list-open-issues and last-comment-authors with the state-label eligibility rule, so I filtered by hand.
+    solution: Add an --eligible flag to last-comment-authors.ts that applies auto-triage's eligibility and wayfinder-skip rules.
+    severity: nit
+  - description: "A #1778 triage subagent's broad grep over shared/ injected six unrelated rules at once (bash-rules hint fan-out)."
+    solution: "Narrow the bash-rules hint for recursive greps over a directory, or count it in #1778 check 2."
+    severity: nit
+durationSec: 268
+models:
+  claude-opus-5-5: 41
+toolCounts:
+  Bash: 13
+  Read: 2
+  Agent: 2
+  Skill: 2
+  Write: 1
+rulesLoaded:
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0018.md
+  - .claude/rules/guards.md
+  - .claude/rules/adr-0002.md
+  - .claude/rules/adr-0006.md
+  - .claude/rules/adr-0013.md
+  - .claude/rules/adr-0014.md
+  - .claude/rules/adr-0025.md
+  - .claude/rules/tenant-layers.md
+rulesGlobal:
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0001.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0023.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0027.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0022.md
+    reason: standing green-light scoped to Trusted-authored issues
+    useful: yes
+  - path: .claude/rules/adr-0004.md
+    reason: gate/human-merge; no PR this session
+    useful: no
+  - path: .claude/rules/adr-0009.md
+    reason: log at closure
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: prune trials; checked none covers blog-post
+    useful: partly
+  - path: .claude/rules/adr-0001.md
+    reason: architecture; not relevant to triage
+    useful: no
+  - path: .claude/rules/adr-0020.md
+    reason: trust tier from authorAssociation; both issues OWNER
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: open PR on pushed commit; none pushed
+    useful: no
+  - path: .claude/rules/adr-0023.md
+    reason: guest pipeline; no guest issues
+    useful: no
+  - path: .claude/rules/adr-0017.md
+    reason: provenance header on triage comments
+    useful: yes
+  - path: .claude/rules/adr-0021.md
+    reason: contexts split; loaded on CONTEXT-MAP read
+    useful: no
+  - path: .claude/rules/adr-0005.md
+    reason: Skills are Platform code; loaded on skill read
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: use Read tool; I broke it with cat
+    useful: partly
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: loaded on reading scripts/trust.ts; no edit
+    useful: no
+  - path: .claude/rules/adr-0018.md
+    reason: subagent-loaded; not relevant
+    useful: no
+  - path: .claude/rules/guards.md
+    reason: "subagent read guard scripts for #1778 verification"
+    useful: partly
+  - path: .claude/rules/adr-0002.md
+    reason: subagent-loaded; not relevant
+    useful: no
+  - path: .claude/rules/adr-0006.md
+    reason: subagent-loaded; not relevant
+    useful: no
+  - path: .claude/rules/adr-0013.md
+    reason: subagent-loaded; not relevant
+    useful: no
+  - path: .claude/rules/adr-0014.md
+    reason: subagent-loaded; not relevant
+    useful: no
+  - path: .claude/rules/adr-0025.md
+    reason: subagent-loaded on a broad shared/ grep; not relevant
+    useful: no
+  - path: .claude/rules/tenant-layers.md
+    reason: "subagent confirmed it exists for #1778"
+    useful: partly
+subagents:
+  - type: general-purpose
+    task: "Triage issue #1778"
+  - type: general-purpose
+    task: "Triage issue #1773"
+gitBranch: claude/keen-brahmagupta-31hfew
+entrypoint: remote
+cliVersion: 2.1.296
+landedBy: Stop
