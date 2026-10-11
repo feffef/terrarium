@@ -225,6 +225,8 @@ export function sessionCardViews(sessions: SessionDoc[]): (SessionCardView & { k
       ideas: s.ideas ?? [],
       filesEdited: s.filesEdited ?? [],
       docsReadViaShell: s.docsReadViaShell ?? [],
+      // Deduplicated: older logs can list a rule twice (issue #1763).
+      rules: [...new Set(s.rulesLoaded)].map((path) => ({ path, followedUp: !!s.rulesFollowedUp?.includes(path) })),
       tools: sessionToolEntries(s.toolCounts),
     }
   })

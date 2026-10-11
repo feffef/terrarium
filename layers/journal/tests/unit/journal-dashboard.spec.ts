@@ -328,11 +328,24 @@ describe('sessionCardViews', () => {
     expect(c!.tools).toEqual([{ name: 'Bash', count: 9 }, { name: 'Read', count: 2 }])
   })
 
+  it('lists triggered rules once each, marking the ones whose ADR was read after', () => {
+    const s = session({
+      rulesLoaded: ['.claude/rules/adr-0004.md', '.claude/rules/adr-0008.md', '.claude/rules/adr-0004.md'],
+      rulesFollowedUp: ['.claude/rules/adr-0008.md'],
+    })
+    const [c] = sessionCardViews([s])
+    expect(c!.rules).toEqual([
+      { path: '.claude/rules/adr-0004.md', followedUp: false },
+      { path: '.claude/rules/adr-0008.md', followedUp: true },
+    ])
+  })
+
   it('defaults the trace fields for an older, authored-only log', () => {
     const [c] = sessionCardViews([session()])
     expect(c!.model).toBe('')
     expect(c!.subagents).toEqual([])
     expect(c!.filesEdited).toEqual([])
+    expect(c!.rules).toEqual([])
     expect(c!.tools).toEqual([])
   })
 
