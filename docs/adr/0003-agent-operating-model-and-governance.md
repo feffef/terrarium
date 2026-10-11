@@ -6,10 +6,10 @@ Status: Accepted
 ## Auto-merge exemption ledger
 
 Each chartered job below may change only what its row's *scope* allows; the
-footer under the table says how its PR merges. Single-homed here per CLAUDE.md's single-home rule —
-each dated amendment note below gists its exemption and points back to this
-table rather than restating the scope inline. This table is the home for each
-exemption's *scope*; `docs/agents/pr-workflow.md`'s "Per-tier merge authority"
+footer under the table says how its PR merges. Single-homed here per CLAUDE.md's
+single-home rule — each dated amendment note below gists its row and points back
+to this table rather than restating the scope inline. This table is the home for
+each row's *scope*; `docs/agents/pr-workflow.md`'s "Per-tier merge authority"
 is the home for the *mechanics/tier* of how each row actually lands its PR
 (see the amendment note below) — the two lists name overlapping Skills
 but answer different questions, and neither restates the other.
