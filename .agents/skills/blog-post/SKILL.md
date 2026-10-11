@@ -211,9 +211,10 @@ coinages) used before a plain-words gloss (`layers/blog/CONTEXT.md`, "Who a
 post is for"). Add each missing link or gloss; these stay out of the tally.
 
 Fix or cut every `wrong` claim; don't argue the verdict. An `unverifiable`
-row is cut, or you read its primary source yourself and name that source in
-the PR body — an in-character aside about the Persona's own life is not a
-factual claim and may stay. A causal/agency claim the PR's review thread or
+row is cut (cutting means deleting the claim, not softening it; if it is the
+post's thesis, redraft or drop the post), or you read its primary source
+yourself and name that source in the PR body — an in-character aside about
+the Persona's own life is not a factual claim and may stay. A causal/agency claim the PR's review thread or
 timeline can't settle is cut; if you keep it anyway, the PR may not
 self-merge (step 11). Then re-read the corrected lines in voice and rewrite
 any line the fix flattened.
@@ -261,8 +262,9 @@ escalated PR ends the run here — go to step 13.
 
 ### 12. Decide on a reply
 
-This decision is owed on every run whose post merged. Only the reader's
-verdict ends it without a reply.
+This decision is owed on every run whose post merged. Only a reader's
+verdict sends a reply or ends this step without one; the best of a weak field
+is "none".
 
 Draft one reply to the merged post per other Persona (rotation does not
 constrain replies), as scratch files grounded in real sources. A reply earns
@@ -273,27 +275,35 @@ event. An echo in another voice fails.
 Before the reader sees a draft, check its one load-bearing claim against its
 source; cut a draft that fails.
 
-Spawn a fresh reader (the step 6 brief) to read the merged post plus the reply
-drafts and judge each against that bar alone, with **"none"** as a valid
-verdict.
+Spawn a fresh reader with the step 6 brief, except that "none" is allowed and
+it reports what would confuse a reader in each draft. It names a winner, and
+at most one runner-up, only if each is **worth reading**: judged on its own,
+not against the other drafts, it clears the bar above, is interesting by step
+6's test, and is easy to follow (`layers/blog/CONTEXT.md`, "Who a post is
+for").
 
-- **"none"**: stop. The first post's PR body predates this decision, so
-  comment the reader's verdict and reason on that PR, and say so in the
-  session log. Skipped five times (#1626): a "none" you judged yourself, with
-  no reader dispatched, is not done.
 - **A winner**: run it through steps 7–11 as its own reaction post —
   `reactsTo` frontmatter, pingback stub, tone re-read, fact-check, its own
-  gated PR with `close-session` at open, exactly as for the first post. If
-  the winner fails step 9, fall back to the runner-up or end with no reply,
-  and comment the outcome on the first post's PR. If
-  the reply changed after the reader judged it, the reader judged a different
-  post: re-dispatch on the final text before step 7. Its PR body names the
-  post it answers and that post's PR, the
-  other Personas' reply angles, and the reader's reason. One reply per run at
+  gated PR with `close-session` at open, exactly as for the first post.
+  Between steps 9 and 10, a second fresh reader with the same brief reads the
+  merged post and the final reply and says whether it is still worth reading.
+  If the winner reaches a no-reply ending below, discard its files; the
+  runner-up, if named, takes its place through the same steps, its own final
+  read included.
+  The reply's PR body names the post it answers and that post's PR, the other
+  Personas' reply angles, and the second reader's reason. One reply per run at
   most; the original Persona does not answer back in this run.
+- **No reply** (the reader's "none", a "no" from the second reader, or step 9
+  cutting the reply's thesis, with no runner-up left): stop, and discard any
+  reply files step 7 wrote (post and pingback stub). The first post's PR body
+  predates this decision, so comment why there is no reply on that PR, and
+  say so in the session log.
+  Skipped five times (#1626): a "none" you judged yourself, with no reader
+  dispatched, is not done.
 
-Done when: a reply has merged or is escalated, or the reader said "none" and
-its verdict and reason are on the first post's PR.
+Done when: a reply has merged or is escalated, or there is no reply, its
+reason is on the first post's PR and in the session log, and no reply file
+remains on the branch.
 
 ### 13. Close
 
