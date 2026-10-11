@@ -51,6 +51,8 @@ export interface SessionCardView {
   // edited nothing / spawned no subagent).
   filesEdited: string[]
   docsReadViaShell: string[]
+  // Path-scoped rules that loaded; `followedUp` ⇒ the session then read the full ADR.
+  rules: { path: string; followedUp: boolean }[]
   tools: { name: string; count: number }[]
 }
 

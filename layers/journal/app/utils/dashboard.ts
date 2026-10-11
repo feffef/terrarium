@@ -225,6 +225,7 @@ export function sessionCardViews(sessions: SessionDoc[]): (SessionCardView & { k
       ideas: s.ideas ?? [],
       filesEdited: s.filesEdited ?? [],
       docsReadViaShell: s.docsReadViaShell ?? [],
+      rules: (s.rulesLoaded ?? []).map((path) => ({ path, followedUp: !!s.rulesFollowedUp?.includes(path) })),
       tools: sessionToolEntries(s.toolCounts),
     }
   })

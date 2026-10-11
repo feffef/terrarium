@@ -118,7 +118,7 @@ const foldedFieldLabels = new Intl.ListFormat('en', { style: 'long', type: 'conj
           <!-- Mechanical trace — verbose, transcript-derived lists. Tucked behind
                individual disclosures so they inform without swamping the narrative. -->
           <div
-            v-if="card.docsRead.length || card.docsReadViaShell.length || card.filesEdited.length || card.tools.length"
+            v-if="card.docsRead.length || card.docsReadViaShell.length || card.filesEdited.length || card.rules.length || card.tools.length"
             class="trace-group"
           >
             <details v-if="card.docsRead.length" class="trace">
@@ -141,6 +141,12 @@ const foldedFieldLabels = new Intl.ListFormat('en', { style: 'long', type: 'conj
               <summary>Files edited <span class="n">{{ card.filesEdited.length }}</span></summary>
               <ul>
                 <li v-for="f in card.filesEdited" :key="f"><code>{{ f }}</code></li>
+              </ul>
+            </details>
+            <details v-if="card.rules.length" class="trace">
+              <summary>Rules triggered <span class="n">{{ card.rules.length }}</span></summary>
+              <ul>
+                <li v-for="(r, i) in card.rules" :key="i"><code>{{ r.path }}</code><span v-if="r.followedUp" class="followed"> — full ADR read</span></li>
               </ul>
             </details>
             <details v-if="card.tools.length" class="trace">
@@ -354,6 +360,7 @@ const foldedFieldLabels = new Intl.ListFormat('en', { style: 'long', type: 'conj
 }
 .trace > ul { margin: 0; padding: 0 0.7rem 0.6rem; list-style: none; display: flex; flex-direction: column; gap: 0.35rem; }
 .trace li { font-size: 0.84rem; color: var(--jd-muted); line-height: 1.45; }
+.trace .followed { color: var(--jd-accent); }
 .tools { display: flex; flex-wrap: wrap; gap: 0.35rem; padding: 0 0.7rem 0.6rem; }
 .tool {
   display: inline-flex;
