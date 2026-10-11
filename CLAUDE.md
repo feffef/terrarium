@@ -72,7 +72,8 @@ docs/adr/                 decisions
 .claude/rules/            important instructions (ADR summaries, the human-merge
                           list) that Claude Code injects into your context, at
                           session start, or when you touch a file or run a Skill they govern
-docs/agents/              how-to docs for agents (see "Docs you must read first")
+docs/agents/              how-to docs for agents, reached through "Docs you must
+                          read first" or a rule in .claude/rules/
 docs/research/            dated reference notes
 .agents/skills/           our Skills (.claude/skills/ links here)
 scripts/                  repo tooling, the gate, and the tool-call guards

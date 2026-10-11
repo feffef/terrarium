@@ -3,8 +3,7 @@
 A Tenant is a Nuxt layer under `layers/<tenant>/`; Nuxt auto-extends every
 `layers/*`, so there is no `extends` list (ADR-0018). It extends the main app
 (CONTEXT.md, ADR-0001). Read this before editing a layer's `nuxt.config.ts`,
-pages, or components: its gotchas get re-discovered most sessions. The Tenant
-you work on defines its own terms in `layers/<tenant>/CONTEXT.md`: read it too.
+pages, or components: its gotchas get re-discovered most sessions.
 
 ## 1. Auto-imports first; aliases resolve to the main app, not the layer
 
