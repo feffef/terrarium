@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01KnHp9a9Ljbiuu8NjLLx8i1
 startedAt: 2026-10-11T00:46:23Z
-endedAt: 2026-10-11T01:11:29Z
+endedAt: 2026-10-11T01:14:01Z
 kind: autonomous
 goal: Weekly check of the Platform's own Skills
-status: in-review
-outcome: One PR open (#1753) tuning the Skill Inventory; one new issue filed, one comment added
-summary: "Scheduled, fully autonomous run — no human prompt at any point. Ran `scripts/audit-skills.ts` for the 7-day scorecard, dispatched one read-only Sonnet behaviour-check subagent per Skill in `behaviourChecks` (11 Skills, all in parallel), and independently verified each subagent's central claims against primary sources (git log, live GitHub reads via issue_read/ pull_request_read) before using them, per this Skill's own \"hearsay until verified\" rule. Step 3 (closure completeness) was clean: orphan scan ran (1129 merged PRs, 977 with a session), both candidates already carry `resolvedBy`, no human-prompted or manually-rescued closures. One finding cleared the escalation bar: while checking `auto-triage`'s usedIn roster, a subagent flagged that session_018i6d2BQPkf9cq6jSEqCNSX closed 4 issues as not-planned on judgment calls without individual owner confirmation. I re-read that session's own log directly and found the actual mechanism was the `triage` Skill's per-issue process (a different Skill, not `auto-triage`'s own sweep, which behaved correctly that session) — filed issue #1752 correctly scoped to `triage`, and added `triage`'s first-ever Inventory observation. A second subagent (dispatch-subagents) sampled 19 of 73 notUsedInWindow sessions and found 12 new instances of the skillsUsed-logging gap, including one git-touching case, that the same-day closure of #1586 (\"not a regression\") hadn't seen — commented the new evidence onto #1586 rather than reopening it myself, leaving that call to a human. Tuned all 11 behaviourChecks Skills' Inventory entries plus `triage`'s with a dated 2026-10-11 observation each; no grade changed (no finding cleared the required ≥2-cited-sessions bar). Ran `pnpm gate:scoped` (full gate, since the changed paths aren't Inert) green, committed, pushed, and opened PR #1753 scoped only to the 12 Inventory YAML files, per pr-workflow.md's \"closing a self-merged chartered run\" recipe. Everything in this run was agent-initiated end to end (scheduled trigger, no human prompted or approved any step) — consistent with this being an unattended, fully autonomous session."
+status: completed
+outcome: "PR #1753 (Skill Inventory tuning) merged; issue #1752 filed; new evidence commented onto #1586"
+summary: "Scheduled, fully autonomous run — no human prompt at any point. Ran `scripts/audit-skills.ts` for the 7-day scorecard, dispatched one read-only Sonnet behaviour-check subagent per Skill in `behaviourChecks` (11 Skills, all in parallel), and independently verified each subagent's central claims against primary sources (git log, live GitHub reads via issue_read/ pull_request_read) before using them, per this Skill's own \"hearsay until verified\" rule. Step 3 (closure completeness) was clean: orphan scan ran (1129 merged PRs, 977 with a session), both candidates already carry `resolvedBy`, no human-prompted or manually-rescued closures. One finding cleared the escalation bar: while checking `auto-triage`'s usedIn roster, a subagent flagged that session_018i6d2BQPkf9cq6jSEqCNSX closed 4 issues as not-planned on judgment calls without individual owner confirmation. I re-read that session's own log directly and found the actual mechanism was the `triage` Skill's per-issue process (a different Skill, not `auto-triage`'s own sweep, which behaved correctly that session) — filed issue #1752 correctly scoped to `triage`, and added `triage`'s first-ever Inventory observation. A second subagent (dispatch-subagents) sampled 19 of 73 notUsedInWindow sessions and found 12 new instances of the skillsUsed-logging gap, including one git-touching case, that the same-day closure of #1586 (\"not a regression\") hadn't seen — commented the new evidence onto #1586 rather than reopening it myself, leaving that call to a human. Tuned all 11 behaviourChecks Skills' Inventory entries plus `triage`'s with a dated 2026-10-11 observation each; no grade changed (no finding cleared the required ≥2-cited-sessions bar). Ran `pnpm gate:scoped` (full gate, since the changed paths aren't Inert) green, committed, pushed, and opened PR #1753 scoped only to the 12 Inventory YAML files, per pr-workflow.md's \"closing a self-merged chartered run\" recipe. Subscribed, confirmed CI green (gate doorbell comment) with no conflicts and `check-conflicting-issues.ts` clean, posted a verdict comment, and merged it myself via `scripts/merge-pr.ts` (commit dbce6162) since this tier merges on a green gate alone. Everything in this run was agent-initiated end to end (scheduled trigger, no human prompted or approved any step) — consistent with this being an unattended, fully autonomous session."
 prs:
   - "1753"
 docsRead:
@@ -183,26 +183,31 @@ frictions:
   - description: CLAUDE.md's dispatch-subagents trigger ("before you dispatch a subagent that touches git or needs a worktree") is ambiguous for a read-only investigative subagent that runs git-log/gh-api reads but performs no write and needs no worktree. I dispatched 11 such subagents without reading the Skill first, then read it later for an unrelated reason.
     solution: No damage (no collision, since nothing wrote). Worth a line in CLAUDE.md or the Skill itself clarifying whether a strictly read-only git-inspection subagent is in scope for the trigger, so this stays a judgment call rather than a guess next time.
     severity: nit
-durationSec: 1505
+durationSec: 1657
 models:
-  claude-sonnet-5: 163
+  claude-sonnet-5: 195
 toolCounts:
   Read: 22
-  Bash: 27
+  Bash: 31
   Agent: 11
   TaskCreate: 1
-  ToolSearch: 5
+  ToolSearch: 6
   mcp__github__issue_read: 7
   mcp__github__search_issues: 1
   mcp__github__issue_write: 2
   ListAgents: 1
   ScheduleWakeup: 1
-  mcp__github__add_issue_comment: 1
-  Edit: 13
+  mcp__github__add_issue_comment: 2
+  Edit: 14
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
-  Skill: 2
-  Write: 2
+  Skill: 4
+  Write: 3
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 4
+  mcp__Claude_Code_Remote__send_later: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/journal/content/current/skills/audit-docs.yml
   - layers/journal/content/current/skills/audit-skills.yml
