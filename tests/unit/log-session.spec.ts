@@ -7,6 +7,7 @@ import { tmpdir } from 'node:os'
 import { dirname, join } from 'node:path'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import {
+  authorMain,
   CURRENT_SESSIONS_SCHEMA_VERSION,
   expectedFilename,
   findTruncatedScalars,
@@ -363,6 +364,52 @@ describe('reportUnexplainedReads (the author-time reasons prompt)', () => {
     expect(out).toContain('…and 4 more')
     // One rule line per rendered near-miss (each also echoes its command).
     expect(out.match(/not a reader command/g)?.length).toBe(5)
+  })
+
+  describe('authorMain()', () => {
+    const authored = 'session: session_01A\ngoal: g\nstatus: completed\noutcome: o\nsummary: s\nfrictions: []\n'
+    // `exit` throws so a refusal is catchable; `log` lines are what the agent sees.
+    function author(fixture: { home: string; root: string }, mainSchemaFn: (entry: unknown) => string | null) {
+      const yml = join(fixture.root, 'authored.yml')
+      writeFileSync(yml, authored)
+      const scratchAbs = join(fixture.root, 'scratch.json')
+      const logs: string[] = []
+      vi.spyOn(console, 'log').mockImplementation((l: string) => void logs.push(l))
+      vi.spyOn(process, 'exit').mockImplementation(() => {
+        throw new Error('EXIT')
+      })
+      vi.stubEnv('HOME', fixture.home)
+      try {
+        authorMain([yml], { cwd: fixture.root, scratchAbs, mainSchemaFn })
+      } finally {
+        vi.unstubAllEnvs()
+        vi.restoreAllMocks()
+      }
+      return { logs, scratchWritten: existsSync(scratchAbs) }
+    }
+    const written = [
+      '✓ authored scratch written → .session-logs/pending.scratch.json',
+      '  the Stop hook will stitch it with the derived trace and commit, live, at the end of this turn.',
+    ]
+
+    it("leaves the output unchanged when main's schema accepts the stitched entry, or can't be read", () => {
+      let checked: unknown
+      expect(author(store(['git status']), (e) => ((checked = e), null)).logs).toEqual(written)
+      expect(checked).toMatchObject({ goal: 'g', summary: 's' })
+      const unreadable = () => {
+        throw new Error('fetch failed')
+      }
+      expect(author(store(['git status']), unreadable).logs).toEqual(written)
+    })
+
+    it("holds, rather than promising a commit, when main's schema rejects the stitched entry", () => {
+      const { logs, scratchWritten } = author(store(['git status']), () => "  (root): Unrecognized key(s) in object: 'newField'")
+      const out = logs.join('\n')
+      expect(scratchWritten).toBe(true)
+      expect(out).toContain("Unrecognized key(s) in object: 'newField'")
+      expect(out).toContain('stay subscribed')
+      expect(out).not.toContain('at the end of this turn')
+    })
   })
 })
 
