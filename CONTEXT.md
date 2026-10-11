@@ -302,9 +302,9 @@ routinely, and review is the control.
 
 ### Rule
 A short instruction that reaches an agent on its own: at session start, or when
-the agent opens or edits the files it names (ADR-0029). A Rule is either an
-ADR's summary or the home of an instruction about specific files; instructions
-that matter on an action live in `CLAUDE.md` instead.
+the agent works on the files or runs the **Skill** it names (ADR-0029). A Rule
+is either an ADR's summary or an instruction about specific files, which it
+holds or points to. Instructions that matter on an action are not Rules.
 
 ### Prune Trial
 One problem's instructions pruned down to the goal behind them and left standing

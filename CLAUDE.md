@@ -65,7 +65,7 @@ act, once per session.
 - **Code comments say WHY, never WHAT.** Default to no comment. When the why
   isn't obvious, point to the doc that holds it (an ADR, an issue).
 - **Read files with the Read tool**, not `cat`: Edit refuses a file you haven't
-  Read, and a piped or chained Bash read loads no rule (ADR-0029).
+  Read, and a piped, chained or multi-file Bash read loads no rule (ADR-0029).
 
 ## Repo layout
 
