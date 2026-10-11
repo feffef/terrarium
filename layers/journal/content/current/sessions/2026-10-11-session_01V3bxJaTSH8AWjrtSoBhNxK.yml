@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01V3bxJaTSH8AWjrtSoBhNxK
 startedAt: 2026-10-11T18:10:48Z
-endedAt: 2026-10-11T19:14:18Z
+endedAt: 2026-10-11T19:58:37Z
 kind: interactive
 goal: Check whether frictions-to-fixes' limits leave important fixes undone
-status: in-review
-outcome: "No run hit the cap; added a Friction Ledger collection and seeded it, PR #1782 open"
-summary: "Human-instructed: the owner asked for an analysis of the frictions-to-fixes Skill and the last 14 days of session logs, current and archived, with a Sonnet agent doing the exploration and the analysis done here. The Sonnet agent extracted all 15 daily runs and 889 frictions from 205 sessions; I spot-checked its PR lists, cap wording and severity totals against the raw logs. Finding: no run reached the 10-total or 2-hard cap; the binding filters are the guard and hook surface rule, the ripeness test and the 3-day window, which hides causes that recur every few days. The owner then asked whether this meant an observation log like audit-skills; I compared it with the prune-trial ledger and asked four questions. The owner chose a repo-file ledger in the Journal, seeded from the analysis, with full occurrence lists, named Friction Ledger, page in a later PR. I added the frictions Collection and schema to the Journal manifest, seeded 23 clusters (every moderate-or-worse friction read and classified by hand, papercut clusters matched by pattern with every match read), rewrote the Skill's survey and selection steps around the ledger, and added the glossary entry. Opening PR #1782 was agent-initiated per ADR-0003. The owner then questioned the 3-day scan; I proposed a cursor plus moderate-or-worse singletons, and the owner countered that nit and minor recurrence still needs a short scan window (48 hours). That window and singleton design is still open and will land on PR #1782 as a second commit if agreed."
+status: completed
+outcome: "No run hit the cap; PR #1782 merged, adding the Friction Ledger and a 48-hour-or-since-ledger survey window"
+summary: "Human-instructed: the owner asked for an analysis of the frictions-to-fixes Skill and the last 14 days of session logs, current and archived, with a Sonnet agent exploring and the analysis done here. The Sonnet agent extracted all 15 daily runs and 889 frictions from 205 sessions; I spot-checked its PR lists, cap wording and severity totals. Finding: no run reached the 10-total or 2-hard cap; the binding filters were the guard and hook surface rule, the ripeness test and the 3-day window, which hid causes recurring every few days. On the owner's follow-up I proposed a ledger like the prune-trial one; the owner chose a Journal Collection named Friction Ledger, seeded from the analysis with full occurrence lists, page later. I built the Collection, schema, seed, Skill rewrite and glossary entry and opened PR #1782 (agent-initiated per ADR-0003). The owner then decided the survey window (48 hours or since the last ledger commit) and that only major or blocker frictions get an entry on first occurrence; I added both as a second commit. The owner ran /code-review twice before merge; the first round found contradictions and restated rules I had introduced, the second an ADR-0003 conflict (the main session authoring the ledger PR) and an untested default window. The owner told me to keep two selection rules from my analysis, auto-apply every fix and self-merge if nothing major remained. I applied all fixes (ledger edit now authored by a dispatched agent, temp-git-repo test for the default window, --since for prune-trial, end-time window filter, schema dedupe), verified all 305 seed occurrences against their logs by script, posted the verdict and merged via merge-pr.ts. Human-only text that is now stale is listed on the PR for a human follow-up."
 prs:
   - "1782"
 docsRead:
@@ -52,8 +52,32 @@ docsRead:
   - path: docs/adr/0009-session-logs-commit-directly-to-main.md
     reason: "grepped its frictions-to-fixes passages: external-session exclusion and the SHELL-READ-DETECTION floor"
     useful: partly
+  - path: docs/adr/0003-agent-operating-model-and-governance.md
+    reason: "ledger row: frictions-to-fixes is reviewer, not author; fixed section 4 to match"
+    useful: yes
+  - path: .agents/skills/prune-trial/SKILL.md
+    reason: it calls the survey script; switched it to --since its landing
+    useful: yes
+  - path: .agents/skills/writing-for-agents/SKILL.md
+    reason: leading word 'horizon' for the three 14-day rules
+    useful: yes
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: read by the standards review subagents for the doc house rules (contradiction, single home, mis-location)
+    useful: yes
   - path: layers/journal/tenant.config.ts
     reason: (read before editing)
+  - path: scripts/session-frictions.ts
+    reason: (read before editing)
+  - path: tests/unit/session-frictions.spec.ts
+    reason: (no reason given)
+  - path: .claude/rules/adr-0029.md
+    reason: (no reason given)
+  - path: .claude/rules/adr-0002.md
+    reason: (no reason given)
+  - path: .claude/rules/tenant-layers.md
+    reason: (no reason given)
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: (no reason given)
 skillsUsed:
   - name: writing-for-agents
     reason: before editing the SKILL.md
@@ -61,6 +85,8 @@ skillsUsed:
     reason: PR-open closure
   - name: log-session
     reason: this log
+  - name: code-review
+    reason: owner-invoked twice before merge
   - name: model
     reason: (invoked as a slash command)
 frictions:
@@ -88,26 +114,53 @@ frictions:
   - description: "Survey subagent: a 55KB tool result was cut to a 2KB preview, and a Python regex used \\| as alternation and silently matched nothing; both re-run."
     solution: Write large extracts to files first; use | in Python regex.
     severity: nit
-durationSec: 3810
+  - description: I wrote SKILL.md section 4 so the main session authors and self-merges the ledger PR, against ADR-0003's 'reviewer, not author' row; the second review caught it before merge.
+    solution: Read a chartered Skill's ADR-0003 row before changing what that Skill writes; the always-loaded ADR-0003 summary does not carry the per-row bounds.
+    severity: minor
+  - description: My first two commits left SKILL.md self-contradictory (moderate one-offs had no path to a fix, two recurrence counts) and restated the entry rules in three files; the first review caught it.
+    solution: Re-read the whole Skill after a structural edit, and keep new rules in one home from the start.
+    severity: minor
+  - description: The seed script deduped on session plus severity, so one session landed twice in provenance-header-shape; the spec review caught it and a schema check now rejects it.
+    solution: Dedupe on the identity the consumer counts, and enforce it in the schema.
+    severity: minor
+  - description: The default survey window shipped untested in the second commit (every test passed --days); the second review flagged it under ADR-0004's untested-behaviour rule.
+    solution: Test every branch a change adds, including the git-backed default, before pushing.
+    severity: minor
+  - description: Stop hook asked to commit or push at least six more times while gate:scoped was running.
+    solution: Already the stop-hook-nag ledger entry.
+    severity: nit
+durationSec: 6468
 models:
   claude-fable-5-1: 132
-  claude-opus-5-5: 30
+  claude-opus-5-5: 247
 toolCounts:
-  Bash: 64
-  Agent: 1
+  Bash: 128
+  Agent: 5
   AskUserQuestion: 1
   Skill: 3
-  Read: 5
-  Edit: 16
-  ToolSearch: 1
+  Read: 11
+  Edit: 44
+  ToolSearch: 3
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 7
+  mcp__github__pull_request_read: 2
+  mcp__claude-code-remote__send_later: 2
+  mcp__github__update_pull_request: 2
+  mcp__github__issue_read: 1
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
+  mcp__claude-code-remote__delete_trigger: 1
 filesEdited:
   - CONTEXT.md
   - layers/journal/CONTEXT.md
   - .agents/skills/frictions-to-fixes/SKILL.md
   - layers/journal/tenant.config.ts
+  - scripts/session-frictions.ts
+  - docs/agents/domain.md
+  - .agents/skills/prune-trial/SKILL.md
+  - layers/journal/content/current/frictions/provenance-header-shape.yml
 rulesLoaded:
   - .claude/rules/adr-0021.md
   - .claude/rules/adr-0005.md
@@ -121,6 +174,9 @@ rulesLoaded:
   - .claude/rules/mdc-when-to-use.md
   - .claude/rules/adr-0010.md
   - .claude/rules/adr-0025.md
+  - .claude/rules/adr-0024.md
+  - .claude/rules/adr-0026.md
+  - .claude/rules/guards.md
 rulesGlobal:
   - .claude/rules/adr-0022.md
   - .claude/rules/adr-0004.md
@@ -133,6 +189,7 @@ rulesGlobal:
   - .claude/rules/adr-0017.md
 rulesFollowedUp:
   - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
   - .claude/rules/adr-0008.md
   - .claude/rules/adr-0015.md
 ruleVerdicts:
@@ -199,10 +256,27 @@ ruleVerdicts:
   - path: .claude/rules/adr-0025.md
     reason: the ledger opts into no kind, so it stays out of the Catalog
     useful: partly
+  - path: .claude/rules/adr-0024.md
+    reason: mermaid pre-render; loaded by a grep, not relevant
+    useful: no
+  - path: .claude/rules/adr-0026.md
+    reason: gate workflow shell; loaded by a grep, not relevant
+    useful: no
+  - path: .claude/rules/guards.md
+    reason: guards roster; loaded by a grep, not relevant
+    useful: no
 subagents:
   - type: general-purpose
     task: Survey 14 days of friction logs
     model: sonnet
+  - type: general-purpose
+    task: Standards review of PR 1782
+  - type: general-purpose
+    task: Spec review of PR 1782
+  - type: general-purpose
+    task: Standards re-review of PR 1782
+  - type: general-purpose
+    task: Spec re-review of PR 1782
 gitBranch: claude/zen-darwin-pombub
 entrypoint: remote
 cliVersion: 2.1.296
