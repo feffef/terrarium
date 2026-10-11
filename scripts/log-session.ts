@@ -58,7 +58,7 @@ import {
   type MechanicalTrace,
   type SessionIdEnv,
 } from './session-trace.ts'
-import { isInstructionDoc, type DocLineIndex } from './shell-reads.ts'
+import { canonicalizeInstructionPath, isInstructionDoc, type DocLineIndex } from './shell-reads.ts'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 
@@ -252,15 +252,16 @@ export function mergeAuthored(existing: AuthoredScratch | undefined, incoming: A
  *  whatever pass came before it in this same session (issue #688). */
 export function writeScratch(authored: AuthoredScratch, scratchAbs: string): void {
   mkdirSync(dirname(scratchAbs), { recursive: true })
-  let existing: AuthoredScratch | undefined
-  if (existsSync(scratchAbs)) {
-    try {
-      existing = JSON.parse(readFileSync(scratchAbs, 'utf8')) as AuthoredScratch
-    } catch {
-      existing = undefined // a corrupt or partial scratch is treated as absent, never blocking re-authoring
-    }
+  writeFileSync(scratchAbs, JSON.stringify(mergeAuthored(readScratch(scratchAbs), authored), null, 2))
+}
+
+/** A corrupt or partial scratch is treated as absent, never blocking re-authoring. */
+function readScratch(scratchAbs: string): AuthoredScratch | undefined {
+  try {
+    return JSON.parse(readFileSync(scratchAbs, 'utf8')) as AuthoredScratch
+  } catch {
+    return undefined
   }
-  writeFileSync(scratchAbs, JSON.stringify(mergeAuthored(existing, authored), null, 2))
 }
 
 /** True when `cwd` sits inside a LINKED git worktree — a checkout created by
@@ -788,6 +789,20 @@ function sessionTranscripts(cwd: string): { records: Record<string, unknown>[]; 
   }
 }
 
+/** Each doc the Read tool opened, canonicalized like a shell read, mapped to the
+ *  first transcript that opened it: `this session` or `subagent: <label>`. */
+function readToolSources(t: { records: Record<string, unknown>[]; subagents: LabelledRecords[] }): Map<string, string> {
+  const sources = new Map<string, string>()
+  const sets = [{ label: 'this session', records: t.records }, ...t.subagents.map((s) => ({ ...s, label: `subagent: ${s.label}` }))]
+  for (const { label, records } of sets) {
+    for (const p of extractTrace(records).filesRead) {
+      const doc = canonicalizeInstructionPath(p)
+      if (!sources.has(doc)) sources.set(doc, label)
+    }
+  }
+  return sources
+}
+
 /** List every instruction doc the trace will fold into `docsRead` and every
  *  rule that loaded that the agent has not yet given a reason and a `useful`
  *  verdict, with the evidence for each doc, so the agent can explain it or mark
@@ -820,7 +835,10 @@ export function reportUnexplainedReads(
   const ruled = new Set((authored.ruleVerdicts ?? []).map((r) => r.path))
   const openRules = rulesLoaded.filter((r) => !ruled.has(r))
   const open = new Map<string, string>()
-  for (const p of toolReads) if (isInstructionDoc(p) && !answered.has(p)) open.set(p, 'Read tool')
+  const sources = readToolSources(transcripts)
+  for (const p of toolReads) {
+    if (isInstructionDoc(p) && !answered.has(p)) open.set(p, `[${sources.get(canonicalizeInstructionPath(p))}] Read tool`)
+  }
   for (const [p, { command, source }] of scan.provenance) {
     if (!answered.has(p) && !open.has(p)) open.set(p, `[${source}] ${oneLine(command)}`)
   }
@@ -922,13 +940,19 @@ export function authorMain(
   }
   const result = validateAuthored(parsed)
   if (!result.ok) fail(`authored scratch is invalid:\n${result.errors}`)
-  writeScratch(result.data, scratchAbs)
-  let merged: AuthoredScratch = result.data
-  try {
-    merged = JSON.parse(readFileSync(scratchAbs, 'utf8')) as AuthoredScratch
-  } catch {
-    // Unreadable: this pass's answers alone; the merged scratch would add the earlier pass's.
+  const merged = mergeAuthored(readScratch(scratchAbs), result.data)
+  const transcripts = sessionTranscripts(cwd)
+  const sources = transcripts ? readToolSources(transcripts) : new Map<string, string>()
+  const misNotRead = (merged.docsRead ?? [])
+    .filter((d) => d.reason === NOT_READ_REASON && sources.has(canonicalizeInstructionPath(d.path)))
+    .map((d) => `  ${d.path} — opened by [${sources.get(canonicalizeInstructionPath(d.path))}]`)
+  if (misNotRead.length) {
+    fail(
+      `refusing '${NOT_READ_REASON}' for doc(s) the Read tool opened; subagent reads count as the session's:\n` +
+        `${misNotRead.join('\n')}\nGive each a reason and a useful verdict instead.`,
+    )
   }
+  writeScratch(result.data, scratchAbs)
   console.log(`✓ authored scratch written → ${SCRATCH_FILE}`)
   const hold = authorTimeMainRefusal(merged, cwd, opts.mainSchemaFn)
   if (hold) {

@@ -243,9 +243,14 @@ describe('reportUnexplainedReads (the author-time reasons prompt)', () => {
     'docs/agents/guards.md': 'The mechanical PreToolUse guards that hold rules prose stopped holding.',
     'CONTEXT.md': 'The terms every agent needs regardless of task, and the Tenants roster.',
   }
-  type Cmd = string | [command: string, output: string]
+  type Cmd = string | [command: string, output: string] | { read: string }
   let n = 0
   const bash = (entry: Cmd): Record<string, unknown>[] => {
+    // Relative: the noise filter drops absolute tmpdir paths.
+    if (typeof entry === 'object' && !Array.isArray(entry)) {
+      const input = { file_path: entry.read }
+      return [{ type: 'assistant', message: { content: [{ type: 'tool_use', id: `toolu_${++n}`, name: 'Read', input }] } }]
+    }
     const [command, output] = typeof entry === 'string' ? [entry, ''] : entry
     const id = `toolu_${++n}`
     return [
@@ -314,6 +319,7 @@ describe('reportUnexplainedReads (the author-time reasons prompt)', () => {
     const guards: Cmd = ['cat docs/agents/guards.md', FIXTURE_DOCS['docs/agents/guards.md']!]
     const named = run(store(['git status'], [guards], meta))
     expect(named).toContain('      [subagent: Triage issue #869] cat docs/agents/guards.md')
+    expect(run(store(['git status'], [{ read: 'docs/agents/guards.md' }], meta))).toContain('      [subagent: Triage issue #869] Read tool')
     const bare = run(store(['git status'], [guards], '{not json'))
     expect(bare).toContain('      [subagent: a1] cat docs/agents/guards.md')
   })
@@ -325,13 +331,9 @@ describe('reportUnexplainedReads (the author-time reasons prompt)', () => {
   })
 
   it('lists a Read-tool doc too, and drops every doc the agent already answered', () => {
-    const fixture = store([['cat CONTEXT.md', FIXTURE_DOCS['CONTEXT.md']!]])
-    const dir = join(fixture.home, '.claude', 'projects', fixture.root.replace(/[/.]/g, '-'))
-    // Relative: the noise filter drops absolute tmpdir paths.
-    const read = { type: 'assistant', message: { content: [{ type: 'tool_use', id: 'r1', name: 'Read', input: { file_path: 'docs/agents/guards.md' } }] } }
-    writeFileSync(join(dir, 'session.jsonl'), `${readFileSync(join(dir, 'session.jsonl'), 'utf8')}\n${JSON.stringify(read)}`)
+    const fixture = store([['cat CONTEXT.md', FIXTURE_DOCS['CONTEXT.md']!], { read: 'docs/agents/guards.md' }])
     const out = run(fixture).join('\n')
-    expect(out).toContain('docs/agents/guards.md\n      Read tool')
+    expect(out).toContain('docs/agents/guards.md\n      [this session] Read tool')
     expect(run(fixture, { docsRead: [{ path: 'CONTEXT.md', reason: 'glossary', useful: 'yes' }, { path: 'docs/agents/guards.md', reason: '(not read)' }] })).toEqual([])
   })
 
@@ -369,24 +371,61 @@ describe('reportUnexplainedReads (the author-time reasons prompt)', () => {
   describe('authorMain()', () => {
     const authored = 'session: session_01A\ngoal: g\nstatus: completed\noutcome: o\nsummary: s\nfrictions: []\n'
     // `exit` throws so a refusal is catchable; `log` lines are what the agent sees.
-    function author(fixture: { home: string; root: string }, mainSchemaFn: (entry: unknown) => string | null) {
+    function author(
+      fixture: { home: string; root: string },
+      mainSchemaFn: (entry: unknown) => string | null = () => null,
+      notRead: string[] = [],
+      scratchAbs = join(fixture.root, 'scratch.json'),
+    ) {
       const yml = join(fixture.root, 'authored.yml')
-      writeFileSync(yml, authored)
-      const scratchAbs = join(fixture.root, 'scratch.json')
+      const docsRead = notRead.map((p) => `  - { path: ${p}, reason: "(not read)" }\n`).join('')
+      writeFileSync(yml, authored + (docsRead && `docsRead:\n${docsRead}`))
       const logs: string[] = []
+      const errors: string[] = []
       vi.spyOn(console, 'log').mockImplementation((l: string) => void logs.push(l))
+      vi.spyOn(console, 'error').mockImplementation((l: string) => void errors.push(l))
       vi.spyOn(process, 'exit').mockImplementation(() => {
         throw new Error('EXIT')
       })
       vi.stubEnv('HOME', fixture.home)
+      let exited = false
       try {
         authorMain([yml], { cwd: fixture.root, scratchAbs, mainSchemaFn })
+      } catch {
+        exited = true
       } finally {
         vi.unstubAllEnvs()
         vi.restoreAllMocks()
       }
-      return { logs, scratchWritten: existsSync(scratchAbs) }
+      return { logs, errors: errors.join('\n'), exited, scratchWritten: existsSync(scratchAbs) }
     }
+
+    it('refuses (not read) for a doc a subagent opened with the Read tool, and writes no scratch', () => {
+      const res = author(store(['git status'], [{ read: 'docs/agents/guards.md' }]), undefined, ['docs/agents/guards.md'])
+      expect(res).toMatchObject({ exited: true, scratchWritten: false })
+      expect(res.errors).toContain('docs/agents/guards.md — opened by [subagent: a1]')
+      expect(res.errors).toContain("subagent reads count as the session's")
+    })
+
+    it('matches .claude/skills and .agents/skills spellings of one doc, both ways', () => {
+      const [claude, agents] = ['.claude/skills/x/SKILL.md', '.agents/skills/x/SKILL.md']
+      expect(author(store([{ read: claude }]), undefined, [agents]).exited).toBe(true)
+      expect(author(store([{ read: agents }]), undefined, [claude]).exited).toBe(true)
+    })
+
+    it('refuses a (not read) merged from an earlier pass too', () => {
+      const fixture = store([{ read: 'CONTEXT.md' }])
+      const scratchAbs = join(fixture.root, 'scratch.json')
+      writeScratch({ session: 'session_01A', goal: 'g', status: 'completed', outcome: 'o', summary: 's', frictions: [], docsRead: [{ path: 'CONTEXT.md', reason: '(not read)' }] }, scratchAbs)
+      expect(author(fixture, undefined, [], scratchAbs).exited).toBe(true)
+    })
+
+    it('accepts (not read) for a shell-only credit, or when no transcript is found', () => {
+      const shell = store([['cat CONTEXT.md', FIXTURE_DOCS['CONTEXT.md']!]])
+      expect(author(shell, undefined, ['CONTEXT.md'])).toMatchObject({ exited: false, scratchWritten: true })
+      const none = { home: mkdtempSync(join(tmpdir(), 'shellread-empty-')), root: mkdtempSync(join(tmpdir(), 'shellread-noroot-')) }
+      expect(author(none, undefined, ['CONTEXT.md'])).toMatchObject({ exited: false, scratchWritten: true })
+    })
     const written = [
       '✓ authored scratch written → .session-logs/pending.scratch.json',
       '  the Stop hook will stitch it with the derived trace and commit, live, at the end of this turn.',
