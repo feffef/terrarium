@@ -339,6 +339,12 @@ function unwrap(tokens: Token[]): Token[] {
   return tokens.slice(i)
 }
 
+/** Each segment's words from the verb it runs on: quotes, heredoc bodies and
+ *  prefixes (`sudo`, `FOO=1`) are already resolved. */
+export function commandWords(command: string): string[][] {
+  return segments(command).map((s) => unwrap(s.tokens).map((t) => t.text)).filter((w) => w.length > 0)
+}
+
 /** `sed -i` edits in place and prints nothing — the doc is written, not read.
  *  `i` is unambiguous among sed's short flags (n/e/f/i/r/E/s/u/z). */
 function isInPlaceEdit(verb: string, tokens: Token[]): boolean {
