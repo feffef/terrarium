@@ -211,7 +211,8 @@ coinages) used before a plain-words gloss (`layers/blog/CONTEXT.md`, "Who a
 post is for"). Add each missing link or gloss; these stay out of the tally.
 
 Fix or cut every `wrong` claim; don't argue the verdict. An `unverifiable`
-row is cut, or you read its primary source yourself and name that source in
+row is cut (a hedge is no cut; cutting a thesis means redrafting or dropping
+the post), or you read its primary source yourself and name that source in
 the PR body — an in-character aside about the Persona's own life is not a
 factual claim and may stay. A causal/agency claim the PR's review thread or
 timeline can't settle is cut; if you keep it anyway, the PR may not
@@ -261,8 +262,8 @@ escalated PR ends the run here — go to step 13.
 
 ### 12. Decide on a reply
 
-This decision is owed on every run whose post merged. Only the reader's
-verdict ends it without a reply.
+This decision is owed on every run whose post merged. **"none"** is the
+default; only a reader's verdict sends a reply.
 
 Draft one reply to the merged post per other Persona (rotation does not
 constrain replies), as scratch files grounded in real sources. A reply earns
@@ -273,9 +274,11 @@ event. An echo in another voice fails.
 Before the reader sees a draft, check its one load-bearing claim against its
 source; cut a draft that fails.
 
-Spawn a fresh reader (the step 6 brief) to read the merged post plus the reply
-drafts and judge each against that bar alone, with **"none"** as a valid
-verdict.
+Spawn a fresh reader (the step 6 brief, both questions) to read the merged
+post plus the reply drafts. It names a winner only if that reply, on its own,
+clears the bar above, is interesting by step 6's test, and is easy to follow
+(`layers/blog/CONTEXT.md`, "Who a post is for"). The best of a weak field is
+"none".
 
 - **"none"**: stop. The first post's PR body predates this decision, so
   comment the reader's verdict and reason on that PR, and say so in the
@@ -283,17 +286,17 @@ verdict.
   no reader dispatched, is not done.
 - **A winner**: run it through steps 7–11 as its own reaction post —
   `reactsTo` frontmatter, pingback stub, tone re-read, fact-check, its own
-  gated PR with `close-session` at open, exactly as for the first post. If
-  the winner fails step 9, fall back to the runner-up or end with no reply,
-  and comment the outcome on the first post's PR. If
-  the reply changed after the reader judged it, the reader judged a different
-  post: re-dispatch on the final text before step 7. Its PR body names the
+  gated PR with `close-session` at open, exactly as for the first post.
+  Between steps 9 and 10, a fresh reader with the same brief reads the merged
+  post and the final reply. If it no longer calls the reply clearly worth
+  reading and easy to follow, or the reply fails step 9, there is no reply:
+  comment the outcome on the first post's PR. Its PR body names the
   post it answers and that post's PR, the
   other Personas' reply angles, and the reader's reason. One reply per run at
   most; the original Persona does not answer back in this run.
 
-Done when: a reply has merged or is escalated, or the reader said "none" and
-its verdict and reason are on the first post's PR.
+Done when: a reply has merged or is escalated, or there is no reply and the
+reader's verdict and reason are on the first post's PR.
 
 ### 13. Close
 
