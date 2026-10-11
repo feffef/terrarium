@@ -172,6 +172,17 @@ describe('rulesLoaded — path-scoped rules that fired', () => {
     expect(entry.rulesLoaded).toEqual(trace.rulesLoaded)
     expect(validateEntry(entry).ok).toBe(true)
   })
+  it('carries authored rule verdicts and doc verdicts through the stitch', () => {
+    const authored: AuthoredScratch = {
+      session: 'session_01RL', goal: 'g', status: 'completed', outcome: 'o', summary: 's', frictions: [],
+      docsRead: [{ path: 'CONTEXT.md', reason: 'glossary', useful: 'yes' }],
+      ruleVerdicts: [{ path: '.claude/rules/adr-0024.md', reason: 'diagram tokens', useful: 'no' }],
+    }
+    const entry = stitch(authored, trace)
+    expect(entry.ruleVerdicts).toEqual(authored.ruleVerdicts)
+    expect(entry.docsRead).toContainEqual({ path: 'CONTEXT.md', reason: 'glossary', useful: 'yes' })
+    expect(validateEntry(entry).ok).toBe(true)
+  })
 })
 
 describe('rulesFollowedUp — a rule whose ADR was read after it loaded', () => {

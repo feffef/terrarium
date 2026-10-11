@@ -11,6 +11,8 @@ export type Severity = Friction['severity']
 export type Status = SessionDoc['status']
 export type Subagent = NonNullable<SessionDoc['subagents']>[number]
 export type Importance = SkillDoc['importance']
+export type DocRead = NonNullable<SessionDoc['docsRead']>[number]
+export type Useful = NonNullable<DocRead['useful']>
 
 // A session prepared for display in the recent-activity feed — the page derives
 // this from a SessionDoc (formats dates, counts frictions) so the card component
@@ -40,7 +42,7 @@ export interface SessionCardView {
   sid: string
   summary: string
   subagents: Subagent[]
-  docsRead: { path: string; reason: string }[]
+  docsRead: DocRead[]
   skillsUsed: { name: string; reason: string }[]
   frictions: Friction[]
   // Authored note fields — normalized to arrays (empty ⇒ the card hides them).
@@ -52,7 +54,8 @@ export interface SessionCardView {
   filesEdited: string[]
   docsReadViaShell: string[]
   // Path-scoped rules that loaded; `followedUp` ⇒ the session then read the full ADR.
-  rules: { path: string; followedUp: boolean }[]
+  // `reason`/`useful` are the agent's verdict, absent on logs older than it.
+  rules: { path: string; followedUp: boolean; reason?: string; useful?: Useful }[]
   tools: { name: string; count: number }[]
 }
 

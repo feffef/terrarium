@@ -340,6 +340,15 @@ describe('sessionCardViews', () => {
     ])
   })
 
+  it("attaches the agent's verdict to the rule it names", () => {
+    const s = session({
+      rulesLoaded: ['.claude/rules/adr-0004.md'],
+      ruleVerdicts: [{ path: '.claude/rules/adr-0004.md', reason: 'merge rules', useful: 'partly' }],
+    })
+    const [c] = sessionCardViews([s])
+    expect(c!.rules).toEqual([{ path: '.claude/rules/adr-0004.md', followedUp: false, reason: 'merge rules', useful: 'partly' }])
+  })
+
   it('defaults the trace fields for an older, authored-only log', () => {
     const [c] = sessionCardViews([session()])
     expect(c!.model).toBe('')

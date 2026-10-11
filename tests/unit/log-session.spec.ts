@@ -274,7 +274,7 @@ describe('reportUnexplainedReads (the author-time reasons prompt)', () => {
     }
     return { home, root }
   }
-  const run = ({ home, root }: { home: string; root: string }, authored: Pick<AuthoredScratch, 'docsRead'> = {}): string[] => {
+  const run = ({ home, root }: { home: string; root: string }, authored: Pick<AuthoredScratch, 'docsRead' | 'ruleVerdicts'> = {}): string[] => {
     const lines: string[] = []
     vi.stubEnv('HOME', home)
     try {
@@ -319,8 +319,8 @@ describe('reportUnexplainedReads (the author-time reasons prompt)', () => {
 
   it('asks for a reason or (not read) per doc, counting what subagents were shown', () => {
     const out = run(store([['cat CONTEXT.md', FIXTURE_DOCS['CONTEXT.md']!]], [['cat docs/agents/guards.md', FIXTURE_DOCS['docs/agents/guards.md']!]])).join('\n')
-    expect(out).toContain('2 instruction doc(s) read with no reason yet')
-    expect(out).toContain("'(not read)' for a doc no command of this session or its subagents showed you")
+    expect(out).toContain('2 instruction doc(s) read with no reason or verdict yet')
+    expect(out).toContain("the reason '(not read)' for a doc no command of this")
   })
 
   it('lists a Read-tool doc too, and drops every doc the agent already answered', () => {
@@ -331,7 +331,21 @@ describe('reportUnexplainedReads (the author-time reasons prompt)', () => {
     writeFileSync(join(dir, 'session.jsonl'), `${readFileSync(join(dir, 'session.jsonl'), 'utf8')}\n${JSON.stringify(read)}`)
     const out = run(fixture).join('\n')
     expect(out).toContain('docs/agents/guards.md\n      Read tool')
-    expect(run(fixture, { docsRead: [{ path: 'CONTEXT.md', reason: 'glossary' }, { path: 'docs/agents/guards.md', reason: '(not read)' }] })).toEqual([])
+    expect(run(fixture, { docsRead: [{ path: 'CONTEXT.md', reason: 'glossary', useful: 'yes' }, { path: 'docs/agents/guards.md', reason: '(not read)' }] })).toEqual([])
+  })
+
+  it('still asks for a verdict on a doc given only a reason', () => {
+    const fixture = store([['cat CONTEXT.md', FIXTURE_DOCS['CONTEXT.md']!]])
+    expect(run(fixture, { docsRead: [{ path: 'CONTEXT.md', reason: 'glossary' }] }).join('\n')).toContain('    CONTEXT.md')
+  })
+
+  it('asks for a verdict on every loaded rule until one is given', () => {
+    const fixture = store(['git status'])
+    const dir = join(fixture.home, '.claude', 'projects', fixture.root.replace(/[/.]/g, '-'))
+    const rule = { type: 'attachment', attachment: { type: 'nested_memory', path: join(fixture.root, '.claude/rules/adr-0012.md') } }
+    writeFileSync(join(dir, 'session.jsonl'), `${readFileSync(join(dir, 'session.jsonl'), 'utf8')}\n${JSON.stringify(rule)}`)
+    expect(run(fixture).join('\n')).toContain('1 rule(s) loaded with no verdict yet:\n    .claude/rules/adr-0012.md')
+    expect(run(fixture, { ruleVerdicts: [{ path: '.claude/rules/adr-0012.md', reason: 'pingbacks', useful: 'no' }] })).toEqual([])
   })
 
   it('caps the near-miss list rather than burying the detected paths', () => {
@@ -387,6 +401,12 @@ describe('writeScratch() — merge on re-fire (issue #688)', () => {
     expect(merged.goal).toBe(pass2.goal)
     expect(merged.outcome).toBe(pass2.outcome)
     expect(merged.summary).toBe(pass2.summary)
+  })
+
+  it('merges rule verdicts by path, the later pass winning', () => {
+    const v = (useful: 'yes' | 'no') => ({ path: '.claude/rules/adr-0012.md', reason: 'r', useful })
+    const merged = mergeAuthored({ ...pass1, ruleVerdicts: [v('no')] }, { ...pass2, ruleVerdicts: [v('yes')] })
+    expect(merged.ruleVerdicts).toEqual([v('yes')])
   })
 
   it('replaces, never merges, a scratch left behind by a different session', () => {

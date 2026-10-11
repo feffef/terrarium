@@ -45,6 +45,7 @@ import {
   type ShellCommand,
 } from './shell-reads.ts'
 import { ruleAdr } from './validate-adr-rules.ts'
+import type { UsefulVerdict } from '../shared/schemas/session.ts'
 
 export { DERIVED_REASON, FOLDED_TRACE_FIELDS } from '../shared/trace-fields.ts'
 
@@ -735,14 +736,15 @@ export interface AuthoredScratch {
   outcome: string
   summary: string
   prs?: string[]
-  docsRead?: { path: string; reason: string }[]
+  docsRead?: { path: string; reason: string; useful?: UsefulVerdict }[]
   skillsUsed?: { name: string; reason: string }[]
+  ruleVerdicts?: { path: string; reason: string; useful: UsefulVerdict }[]
   frictions: { description: string; solution: string; severity: string }[]
   learnings?: string[]
   ideas?: string[]
 }
 
-function mergeRefs<T extends Record<string, string>>(
+function mergeRefs<T extends Record<string, string | undefined>>(
   authored: T[],
   derivedKeys: string[],
   keyField: 'path' | 'name',
@@ -798,6 +800,7 @@ export function stitch(authored: AuthoredScratch, trace: MechanicalTrace): Recor
   if (trace.filesEdited.length) entry.filesEdited = trace.filesEdited
   if (trace.rulesLoaded.length) entry.rulesLoaded = trace.rulesLoaded
   if (trace.rulesFollowedUp.length) entry.rulesFollowedUp = trace.rulesFollowedUp
+  if (authored.ruleVerdicts?.length) entry.ruleVerdicts = authored.ruleVerdicts
   if (trace.subagents.length) entry.subagents = trace.subagents
   if (trace.gitBranch) entry.gitBranch = trace.gitBranch
   if (trace.entrypoint) entry.entrypoint = trace.entrypoint

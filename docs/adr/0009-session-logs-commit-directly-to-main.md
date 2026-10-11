@@ -627,3 +627,14 @@ doc no command of the session or its subagents showed it. The stitch drops a
 `moderate` `SHELL-READ-DETECTION` Friction itself, so a detector error stays
 visible even though the agent corrected the list. This relaxes "derived only,
 never corrected" for this one list: the correction is logged, not silent.
+
+## The agent rates what it read and which rules loaded (2026-10-11)
+
+> **Amended.** Additive optional fields, so no `schemaVersion` bump.
+
+A path alone does not say whether a doc or rule earned its place in context.
+A `docsRead` entry gains an optional `useful` verdict (`yes`, `partly`, `no`),
+and a new optional `ruleVerdicts` list gives each loaded rule a `reason` (what
+it told the agent) and a `useful` verdict. Both are authored; `--author` lists
+every instruction doc and every loaded rule still missing one. Older logs
+carry neither and stay valid.

@@ -12,6 +12,10 @@ import { z } from 'zod'
 // The string-not-`z.date()` rationale lives with the shared refinement.
 import { utcTimestamp } from './timestamp'
 
+/** The agent's verdict on whether a doc or rule it was given helped its task. */
+export const usefulVerdict = z.enum(['yes', 'partly', 'no'])
+export type UsefulVerdict = z.infer<typeof usefulVerdict>
+
 /**
  * The frozen `sessions` schema (ADR-0009). `status`/`kind` are queryable spines;
  * `frictions` is a required list (may be []) forcing reflection. Strict → L1
@@ -38,8 +42,11 @@ export const sessionSchema = z
     prs: z.array(z.string()).default([]), // 0..N already-landed work-PR refs
     // docsRead/skillsUsed are a *merged* field (ADR-0009 amendments): the
     // agent's curated entries plus the reads and Skills the extractor derives,
-    // folded in with a placeholder `reason`.
-    docsRead: z.array(z.object({ path: z.string(), reason: z.string() })).default([]),
+    // folded in with a placeholder `reason`. `useful` is authored only; absent on
+    // folded-in reads and on logs older than the verdict (ADR-0009, 2026-10-11).
+    docsRead: z
+      .array(z.object({ path: z.string(), reason: z.string(), useful: usefulVerdict.optional() }))
+      .default([]),
     skillsUsed: z.array(z.object({ name: z.string(), reason: z.string() })).default([]),
     // Mechanical trace — derived from the session transcript by the SessionEnd
     // extractor (ADR-0009 amendment), never self-reported. All optional: absent ⇒
@@ -53,6 +60,10 @@ export const sessionSchema = z
     rulesLoaded: z.array(z.string()).optional(),
     // The subset of `rulesLoaded` whose ADR was read after the rule loaded.
     rulesFollowedUp: z.array(z.string()).optional(),
+    // Authored: what each loaded rule told the agent, and whether it helped.
+    ruleVerdicts: z
+      .array(z.object({ path: z.string(), reason: z.string(), useful: usefulVerdict }))
+      .optional(),
     // DEPRECATED — no longer written. Shell reads now fold into `docsRead`
     // (ADR-0009's merged-read amendment); the key stays so older logs validate.
     docsReadViaShell: z.array(z.string()).optional(),
