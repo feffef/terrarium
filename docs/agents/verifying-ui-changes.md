@@ -22,8 +22,8 @@ The rest of this doc is the *methodology*: what proves a change, and what only
 looks like proof.
 
 **Browser facts verified against** (from `node_modules`, re-check if they've
-moved): `playwright-core` **1.63.0**, `nuxt` **4.5.2**. Entries that came from a
-specific session cite it.
+moved): `playwright-core` **1.63.0**, `nuxt` **4.5.2** (installed now: 4.6.0, not
+re-checked). Entries that came from a specific session cite it.
 
 ## The methodology
 

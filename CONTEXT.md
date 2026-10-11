@@ -138,12 +138,10 @@ Grade by the cost *this instance* actually incurred, not by how notorious the
 failure class is — a mistake fully caught before landing (self-review, or a
 guard working exactly as designed) stays `nit`/`minor`. Recurrence is tracked
 separately, by occurrence count, not by inflating each instance's severity. A
-few named Frictions are graded by fixed rule instead: `SHELL-READ-DETECTION`
-takes a severity **floor** so a mechanism on trial keeps its tuning signal
-(ADR-0009's shell-read amendment defines it, and why a floor beats honest
-grading there); `HUMAN-PROMPTED-CLOSURE` is always `major` (`close-session`);
-a CI failure after a passing `gate:scoped` is `major` (the ADR-0004 rule,
-`.claude/rules/adr-0004.md`).
+few named Frictions are graded by fixed rule instead, stated where each is
+used: `SHELL-READ-DETECTION` takes a severity floor (`log-session`, ADR-0009),
+`HUMAN-PROMPTED-CLOSURE` is always `major` (`close-session`), and a CI failure
+after a passing `gate:scoped` is `major` (the ADR-0004 rule).
 
 Frictions are the primary signal the self-improvement Skills mine — for recurring
 pain (`frictions-to-fixes`), and as the verdict on an open **Prune Trial**
@@ -294,11 +292,10 @@ changeset that is entirely Inert may skip Heavy.
 ### Human-only
 A surface that a **Trusted** human must **merge** — never auto-merged by any
 chartered Skill, whatever the **Gate** says (the list is the `paths` of
-`.claude/rules/adr-0004-human-merge.md`; ADR-0004). One exception, granted by ADR-0027: a **Prune Trial** may self-merge a
-rewrite of an ADR that keeps what it decided.
-Nothing else in the high-risk set is
-reachable that way. It constrains merging only: agents author changes to Human-only surfaces
-routinely, and review is the control.
+`.claude/rules/adr-0004-human-merge.md`; ADR-0004), except a **Prune Trial**'s
+rewrite of an ADR that keeps what it decided (ADR-0027). It constrains merging
+only: agents author changes to Human-only surfaces routinely, and review is the
+control.
 
 ### Rule
 A short instruction that reaches an agent on its own: at session start, or when

@@ -87,15 +87,7 @@ in `docs/agents/pr-workflow.md` (recipe step 4 for verdicts).
 **A multi-issue `Closes` line can leave some issues open.** The failure mode and
 the `merge-pr.ts` self-heal are in `docs/agents/pr-workflow.md`'s merge recipe.
 
-**Auditing PRs against session logs: parse `prs:`, don't regex it.** A log's
-`prs` field (`shared/schemas/session.ts`) is an array of quoted PR numbers (e.g.
-`["326"]`); read it from the parsed YAML, not a regex over raw text.
-
-**On a "you already have a pending review" error, stop and ask the user; don't
-`delete_pending` and retry.** It can come from `pull_request_review_write` (or
-the raw review API) mid-triage. Agent calls run under the human owner's
-connection (ADR-0017), so you can't tell your leftover from the maintainer's own
-unsubmitted draft, and deleting the wrong one erases the draft for good.
+**A "you already have a pending review" error is stop-and-ask, never `delete_pending`:** see "Write traps" in [`github-integration.md`](./github-integration.md).
 
 ## When a skill says "publish to the issue tracker"
 
@@ -116,4 +108,4 @@ Used by `/wayfinder`. The **map** is one issue; its **children** are tickets.
 - **Frontier query**: list the map's open children (`gh issue list --state open`, scoped to its sub-issues / task list). Drop any with an open blocker (`blocked_by > 0`, or an open issue in the `Blocked by` line) or an assignee. First in map order wins.
 - **Claim**: `gh issue edit <n> --add-assignee @me`, the session's first write.
 - **Resolve**: `gh issue comment <n> --body "<answer>"`, then `gh issue close <n>`, then append a context pointer (gist + link) to the map's Decisions-so-far.
-- **Rewriting a map or spec body wholesale**: pasting fresh content copies the OLD session's ADR-0017 header line, which the provenance guard then reads as this session's write and rejects as stale. Replace that line with the current session's marker before submitting.
+- **Rewriting a map or spec body wholesale**: replace the copied ADR-0017 header line; see "Write traps" in [`github-integration.md`](./github-integration.md).

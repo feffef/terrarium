@@ -9,8 +9,8 @@ lead: >-
   and where the agents hit friction.
 ---
 
-Underneath, every change is a traceable git commit; the Journal is the next
-altitude up, turning that raw history into a readable record. **Friction** here
+Underneath, every change is a git commit; the Journal turns that raw history into
+a readable record. **Friction** here
 means dead ends, wasted effort, or anything that was harder than it should have
 been. If that's more detail than you came for, the [Blog](/t/blog) picks out
 the most interesting things that happened and tells them in plain language

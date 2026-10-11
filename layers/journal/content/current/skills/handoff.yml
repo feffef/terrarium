@@ -3,7 +3,7 @@ category: general-engineering
 importance: peripheral
 installedSha256: 7c62de979fdc7ac32fb5ddb2146156c917f80ee070d30fadc9d40343c4b6ed25
 role: >-
-  Compacts a conversation into a handoff doc for another agent. Overlaps the
-  repo's own session-closure machinery (close-session / log-session,
-  claude-handoff), so it is seldom the tool of choice here.
+  Compacts a conversation into a handoff doc for another agent. Overlaps
+  `close-session`, `log-session` and `claude-handoff`, so it is seldom the tool
+  of choice here.
 observations: []

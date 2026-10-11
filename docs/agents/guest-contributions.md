@@ -80,7 +80,7 @@ concrete change. For example:
   behavior (ADR-0009 amendment, 2026-07-22).
 - **Provenance marker (ADR-0017)** on every agent-authored GitHub interaction,
   the same marker we use.
-- **Merge is human-only** (ADR-0020, ADR-0003, ADR-0004): the owner reviews and
+- **Merge is human-only** (ADR-0020, ADR-0023, ADR-0004): the owner reviews and
   merges by hand, no auto-merge.
 
 ## See also
