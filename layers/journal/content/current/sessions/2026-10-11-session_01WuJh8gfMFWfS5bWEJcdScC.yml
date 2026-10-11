@@ -1,0 +1,172 @@
+schemaVersion: 1
+session: session_01WuJh8gfMFWfS5bWEJcdScC
+startedAt: 2026-10-11T13:14:11Z
+endedAt: 2026-10-11T13:28:55Z
+kind: autonomous
+goal: "Scheduled prune trial: judge open trials, prune one problem"
+status: completed
+outcome: Git-conventions trial judged and deleted; guards.md pruned (-14 lines) in PR 1777, merged
+summary: "Scheduled /prune-trial run, no human prompt (all work agent-initiated under the Skill's charter). Ran prune-trial-window.ts: only the git-conventions trial was judgeable. Read the Frictions since it landed (59 sessions) and the tracker; only nit/minor fetch-order slips and the pre-existing issue 1712, so the prune holds and the entry was deleted. A search subagent found three failed-prose candidates. I skipped the top one (rulebook-table Built rows) because it shares a file with an open trial and section 8's counts are computed from those rows, and pruned guards.md instead: conventions' incident stories cut to rules, Known gaps cut to the two shared gaps plus a pointer, keeping every section name other files cite. Net only -14 lines; the mass was small. A Sonnet probe pinned to the pushed SHA answered five guard-change scenarios correctly. gate:scoped passed, PR 1777 opened, verdict posted and merged via merge-pr.ts on a green gate."
+prs:
+  - "1777"
+docsRead:
+  - path: CONTEXT.md
+    reason: glossary terms for Prune Trial, Friction
+    useful: yes
+  - path: CONTEXT-MAP.md
+    reason: required session-start read
+    useful: partly
+  - path: docs/agents/git-conventions.md
+    reason: read before git commands; was the judged trial's territory
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: required before GitHub ops; read late
+    useful: partly
+  - path: docs/agents/pr-workflow.md
+    reason: closing a self-merged chartered run sequence
+    useful: yes
+  - path: docs/agents/guards.md
+    reason: the pruned file
+    useful: yes
+  - path: docs/research/rulebook-migration-table.md
+    reason: assessed as a prune candidate, then skipped
+    useful: yes
+  - path: .agents/skills/log-session/SKILL.md
+    reason: read via the Skill invocation
+    useful: yes
+  - path: .agents/prune-trials.yml
+    reason: (no reason given)
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: prune-trial
+    reason: (invoked as a slash command)
+frictions:
+  - description: Called mcp__github__search_issues before reading docs/agents/github-integration.md, which CLAUDE.md requires before the first GitHub operation.
+    solution: Read the required docs in the first batch of tool calls, before any GitHub tool.
+    severity: nit
+  - description: Ran a repo-wide grep via Bash that dumped hundreds of test-file lines and loaded guard rules via the hint, against the Read-tool rule; cost context.
+    solution: Scope the grep with a glob that excludes tests, or use the Grep tool.
+    severity: minor
+  - description: Ran pnpm gate:scoped in the foreground (about 156s) instead of with run_in_background and an output file as CLAUDE.md says for commands over 2 minutes.
+    solution: Start the gate in the background with output redirected to a file.
+    severity: nit
+  - description: "The search subagent's top candidate (rulebook table Built rows) was unusable: same file as an open trial and section 8 counts are computed from the rows; the real prune mass was small (-14)."
+    solution: Have the search brief exclude whole files of open trials and files with computed counts.
+    severity: minor
+durationSec: 884
+models:
+  claude-sonnet-5-5: 69
+toolCounts:
+  Read: 10
+  Bash: 16
+  mcp__github__search_issues: 1
+  Agent: 2
+  Write: 2
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+  Skill: 2
+  mcp__github__add_issue_comment: 1
+filesEdited:
+  - docs/agents/guards.md
+rulesLoaded:
+  - .claude/rules/adr-0018.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/guards.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0010.md
+  - .claude/rules/adr-0012.md
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0024.md
+  - .claude/rules/adr-0026.md
+rulesGlobal:
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0001.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0023.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0017.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0027.md
+    reason: prune trials are this run's charter
+    useful: yes
+  - path: .claude/rules/adr-0004.md
+    reason: gate:scoped before push; guards.md is not Human-only
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: open PR myself and subscribe
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: provenance header on PR body
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: close-session at PR-open
+    useful: yes
+  - path: .claude/rules/guards.md
+    reason: loaded when touching guard files
+    useful: yes
+  - path: .claude/rules/adr-0022.md
+    reason: triage sweep; not relevant
+    useful: no
+  - path: .claude/rules/adr-0001.md
+    reason: architecture; not relevant
+    useful: no
+  - path: .claude/rules/adr-0020.md
+    reason: trust tiers; not relevant
+    useful: no
+  - path: .claude/rules/adr-0023.md
+    reason: guest pipeline; not relevant
+    useful: no
+  - path: .claude/rules/adr-0018.md
+    reason: tenant layers; not relevant
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: rules scoping; background
+    useful: no
+  - path: .claude/rules/adr-0021.md
+    reason: contexts; not relevant
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: confirmed my diff touches no listed path
+    useful: yes
+  - path: .claude/rules/adr-0005.md
+    reason: not relevant to this task
+    useful: no
+  - path: .claude/rules/adr-0010.md
+    reason: not relevant to this task
+    useful: no
+  - path: .claude/rules/adr-0012.md
+    reason: not relevant to this task
+    useful: no
+  - path: .claude/rules/adr-0015.md
+    reason: not relevant to this task
+    useful: no
+  - path: .claude/rules/adr-0024.md
+    reason: not relevant to this task
+    useful: no
+  - path: .claude/rules/adr-0026.md
+    reason: not relevant to this task
+    useful: no
+subagents:
+  - type: general-purpose
+    task: Find failed-prose prune candidate
+  - type: general-purpose
+    task: Sonnet probe of pruned guards.md
+    model: sonnet
+gitBranch: claude/practical-rubin-43f7c5
+entrypoint: remote_trigger
+cliVersion: 2.1.296
+trigger: prune-trial
+landedBy: Stop
