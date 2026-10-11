@@ -12,6 +12,7 @@ import {
   expectedFilename,
   findTruncatedScalars,
   land,
+  loadAuthorContext,
   mergeAuthored,
   reportUnexplainedReads,
   validateAuthored,
@@ -284,7 +285,7 @@ describe('reportUnexplainedReads (the author-time reasons prompt)', () => {
     const lines: string[] = []
     vi.stubEnv('HOME', home)
     try {
-      reportUnexplainedReads(root, authored, (l) => lines.push(l), root)
+      reportUnexplainedReads(loadAuthorContext(root, root), authored, (l) => lines.push(l))
     } finally {
       vi.unstubAllEnvs()
     }
@@ -373,9 +374,11 @@ describe('reportUnexplainedReads (the author-time reasons prompt)', () => {
     // `exit` throws so a refusal is catchable; `log` lines are what the agent sees.
     function author(
       fixture: { home: string; root: string },
-      mainSchemaFn: (entry: unknown) => string | null = () => null,
-      notRead: string[] = [],
-      scratchAbs = join(fixture.root, 'scratch.json'),
+      { mainSchemaFn = () => null, notRead = [], scratchAbs = join(fixture.root, 'scratch.json') }: {
+        mainSchemaFn?: (entry: unknown) => string | null
+        notRead?: string[]
+        scratchAbs?: string
+      } = {},
     ) {
       const yml = join(fixture.root, 'authored.yml')
       const docsRead = notRead.map((p) => `  - { path: ${p}, reason: "(not read)" }\n`).join('')
@@ -401,7 +404,7 @@ describe('reportUnexplainedReads (the author-time reasons prompt)', () => {
     }
 
     it('refuses (not read) for a doc a subagent opened with the Read tool, and writes no scratch', () => {
-      const res = author(store(['git status'], [{ read: 'docs/agents/guards.md' }]), undefined, ['docs/agents/guards.md'])
+      const res = author(store(['git status'], [{ read: 'docs/agents/guards.md' }]), { notRead: ['docs/agents/guards.md'] })
       expect(res).toMatchObject({ exited: true, scratchWritten: false })
       expect(res.errors).toContain('docs/agents/guards.md — opened by [subagent: a1]')
       expect(res.errors).toContain("subagent reads count as the session's")
@@ -409,44 +412,41 @@ describe('reportUnexplainedReads (the author-time reasons prompt)', () => {
 
     it('matches .claude/skills and .agents/skills spellings of one doc, both ways', () => {
       const [claude, agents] = ['.claude/skills/x/SKILL.md', '.agents/skills/x/SKILL.md']
-      expect(author(store([{ read: claude }]), undefined, [agents]).exited).toBe(true)
-      expect(author(store([{ read: agents }]), undefined, [claude]).exited).toBe(true)
+      expect(author(store([{ read: claude }]), { notRead: [agents] }).exited).toBe(true)
+      expect(author(store([{ read: agents }]), { notRead: [claude] }).exited).toBe(true)
     })
 
     it('refuses a (not read) merged from an earlier pass too', () => {
       const fixture = store([{ read: 'CONTEXT.md' }])
       const scratchAbs = join(fixture.root, 'scratch.json')
       writeScratch({ session: 'session_01A', goal: 'g', status: 'completed', outcome: 'o', summary: 's', frictions: [], docsRead: [{ path: 'CONTEXT.md', reason: '(not read)' }] }, scratchAbs)
-      expect(author(fixture, undefined, [], scratchAbs).exited).toBe(true)
+      expect(author(fixture, { scratchAbs }).exited).toBe(true)
     })
 
     it('accepts (not read) for a shell-only credit, or when no transcript is found', () => {
       const shell = store([['cat CONTEXT.md', FIXTURE_DOCS['CONTEXT.md']!]])
-      expect(author(shell, undefined, ['CONTEXT.md'])).toMatchObject({ exited: false, scratchWritten: true })
+      expect(author(shell, { notRead: ['CONTEXT.md'] })).toMatchObject({ exited: false, scratchWritten: true })
       const none = { home: mkdtempSync(join(tmpdir(), 'shellread-empty-')), root: mkdtempSync(join(tmpdir(), 'shellread-noroot-')) }
-      expect(author(none, undefined, ['CONTEXT.md'])).toMatchObject({ exited: false, scratchWritten: true })
+      expect(author(none, { notRead: ['CONTEXT.md'] })).toMatchObject({ exited: false, scratchWritten: true })
     })
     const written = [
       '✓ authored scratch written → .session-logs/pending.scratch.json',
       '  the Stop hook will stitch it with the derived trace and commit, live, at the end of this turn.',
     ]
 
-    it("leaves the output unchanged when main's schema accepts the stitched entry, or can't be read", () => {
+    it("leaves the output unchanged when main's schema accepts the stitched entry", () => {
       let checked: unknown
-      expect(author(store(['git status']), (e) => ((checked = e), null)).logs).toEqual(written)
+      expect(author(store(['git status']), { mainSchemaFn: (e) => ((checked = e), null) }).logs).toEqual(written)
       expect(checked).toMatchObject({ goal: 'g', summary: 's' })
-      const unreadable = () => {
-        throw new Error('fetch failed')
-      }
-      expect(author(store(['git status']), unreadable).logs).toEqual(written)
     })
 
     it("holds, rather than promising a commit, when main's schema rejects the stitched entry", () => {
-      const { logs, scratchWritten } = author(store(['git status']), () => "  (root): Unrecognized key(s) in object: 'newField'")
+      const reject = () => "  (root): Unrecognized key(s) in object: 'newField'"
+      const { logs, scratchWritten } = author(store(['git status']), { mainSchemaFn: reject })
       const out = logs.join('\n')
       expect(scratchWritten).toBe(true)
       expect(out).toContain("Unrecognized key(s) in object: 'newField'")
-      expect(out).toContain('stay subscribed')
+      expect(out).toContain('Stay subscribed to the schema PR.')
       expect(out).not.toContain('at the end of this turn')
     })
   })
@@ -485,10 +485,7 @@ describe('writeScratch() — merge on re-fire (issue #688)', () => {
   })
 
   it('merges a second pass: lists union (deduped), prose takes the later pass', () => {
-    const abs = freshScratch()
-    writeScratch(pass1, abs)
-    writeScratch(pass2, abs)
-    const merged = JSON.parse(readFileSync(abs, 'utf8'))
+    const merged = mergeAuthored(pass1, pass2)
     expect(merged.frictions).toEqual([...pass1.frictions, pass2.frictions[0]])
     expect(merged.prs).toEqual(['680', '681'])
     expect(merged.learnings).toEqual([...pass1.learnings!, ...pass2.learnings!])
