@@ -2,10 +2,10 @@
 // (fetch → rebuild → push) is side-effecting and exercised via `--dry-run`; here we
 // pin the two guards that decide whether an entry is safe to land on `main`:
 // schema validation (the L1 stand-in) and the canonical `<date>-<session>.yml` filename.
-import { existsSync, mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs'
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { dirname, join } from 'node:path'
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterAll, afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import {
   authorMain,
   CURRENT_SESSIONS_SCHEMA_VERSION,
@@ -17,7 +17,6 @@ import {
   reportUnexplainedReads,
   validateAuthored,
   validateEntry,
-  writeScratch,
 } from '../../scripts/log-session.ts'
 import type { AuthoredScratch } from '../../scripts/session-trace.ts'
 
@@ -394,7 +393,8 @@ describe('reportUnexplainedReads (the author-time reasons prompt)', () => {
       let exited = false
       try {
         authorMain([yml], { cwd: fixture.root, scratchAbs, mainSchemaFn })
-      } catch {
+      } catch (err) {
+        if ((err as Error).message !== 'EXIT') throw err
         exited = true
       } finally {
         vi.unstubAllEnvs()
@@ -419,7 +419,8 @@ describe('reportUnexplainedReads (the author-time reasons prompt)', () => {
     it('refuses a (not read) merged from an earlier pass too', () => {
       const fixture = store([{ read: 'CONTEXT.md' }])
       const scratchAbs = join(fixture.root, 'scratch.json')
-      writeScratch({ session: 'session_01A', goal: 'g', status: 'completed', outcome: 'o', summary: 's', frictions: [], docsRead: [{ path: 'CONTEXT.md', reason: '(not read)' }] }, scratchAbs)
+      const pass1 = { session: 'session_01A', goal: 'g', status: 'completed', outcome: 'o', summary: 's', frictions: [] }
+      writeFileSync(scratchAbs, JSON.stringify({ ...pass1, docsRead: [{ path: 'CONTEXT.md', reason: '(not read)' }] }))
       expect(author(fixture, { scratchAbs }).exited).toBe(true)
     })
 
@@ -427,8 +428,11 @@ describe('reportUnexplainedReads (the author-time reasons prompt)', () => {
       const shell = store([['cat CONTEXT.md', FIXTURE_DOCS['CONTEXT.md']!]])
       expect(author(shell, { notRead: ['CONTEXT.md'] })).toMatchObject({ exited: false, scratchWritten: true })
       const none = { home: mkdtempSync(join(tmpdir(), 'shellread-empty-')), root: mkdtempSync(join(tmpdir(), 'shellread-noroot-')) }
+      tmpDirs.push(none.home, none.root)
       expect(author(none, { notRead: ['CONTEXT.md'] })).toMatchObject({ exited: false, scratchWritten: true })
     })
+    const tmpDirs: string[] = []
+    afterAll(() => tmpDirs.forEach((d) => rmSync(d, { recursive: true, force: true })))
     const written = [
       '✓ authored scratch written → .session-logs/pending.scratch.json',
       '  the Stop hook will stitch it with the derived trace and commit, live, at the end of this turn.',
@@ -440,19 +444,26 @@ describe('reportUnexplainedReads (the author-time reasons prompt)', () => {
       expect(checked).toMatchObject({ goal: 'g', summary: 's' })
     })
 
+    it("treats a schema check that can't run as main unreadable: same output, exit 0", () => {
+      const crash = () => {
+        throw new Error('child process failed')
+      }
+      expect(author(store(['git status']), { mainSchemaFn: crash })).toMatchObject({ logs: written, exited: false, scratchWritten: true })
+    })
+
     it("holds, rather than promising a commit, when main's schema rejects the stitched entry", () => {
       const reject = () => "  (root): Unrecognized key(s) in object: 'newField'"
       const { logs, scratchWritten } = author(store(['git status']), { mainSchemaFn: reject })
       const out = logs.join('\n')
       expect(scratchWritten).toBe(true)
       expect(out).toContain("Unrecognized key(s) in object: 'newField'")
-      expect(out).toContain('Stay subscribed to the schema PR.')
+      expect(out).toContain('first turn that ends after that merge, so stay subscribed to the schema PR.')
       expect(out).not.toContain('at the end of this turn')
     })
   })
 })
 
-describe('writeScratch() — merge on re-fire (issue #688)', () => {
+describe('mergeAuthored() — merge on re-fire (issue #688)', () => {
   const pass1: AuthoredScratch = {
     session: 'session_01A',
     goal: 'Run /digest for 2026-07-24',
@@ -476,14 +487,6 @@ describe('writeScratch() — merge on re-fire (issue #688)', () => {
       pass1.frictions[0]!, // the same friction reported again — must not double up
     ],
   }
-  const freshScratch = () => join(mkdtempSync(join(tmpdir(), 'log-session-scratch-')), 'pending.scratch.json')
-
-  it('writes a single pass byte-identically to the authored object', () => {
-    const abs = freshScratch()
-    writeScratch(pass1, abs)
-    expect(readFileSync(abs, 'utf8')).toBe(JSON.stringify(pass1, null, 2))
-  })
-
   it('merges a second pass: lists union (deduped), prose takes the later pass', () => {
     const merged = mergeAuthored(pass1, pass2)
     expect(merged.frictions).toEqual([...pass1.frictions, pass2.frictions[0]])

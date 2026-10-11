@@ -248,22 +248,6 @@ export function mergeAuthored(existing: AuthoredScratch | undefined, incoming: A
   }
 }
 
-/** Write the authored scratch to its canonical, gitignored home. Its existence is
- *  the wrap-up signal the landing path gates on; `authorMain` hands it the pass
- *  already merged with `readScratch` (issue #688). */
-export function writeScratch(authored: AuthoredScratch, scratchAbs: string): void {
-  mkdirSync(dirname(scratchAbs), { recursive: true })
-  writeFileSync(scratchAbs, JSON.stringify(authored, null, 2))
-}
-
-/** A corrupt or partial scratch is treated as absent, never blocking re-authoring. */
-function readScratch(scratchAbs: string): AuthoredScratch | undefined {
-  try {
-    return JSON.parse(readFileSync(scratchAbs, 'utf8')) as AuthoredScratch
-  } catch {
-    return undefined
-  }
-}
 
 /** True when `cwd` sits inside a LINKED git worktree — a checkout created by
  *  `git worktree add`, distinct from the repo's main/primary working tree — used
@@ -778,10 +762,11 @@ const oneLine = (command: string): string => command.replace(/\s+/g, ' ').slice(
 
 /** What `--author` derives from this session's transcripts, loaded once. */
 export interface AuthorContext {
-  /** The trace `--land` stitches with (`traceOf`). */
+  /** From `traceOf`, so author time checks exactly what `--land` will stitch. */
   trace: MechanicalTrace
   scan: FoldedShellReadScan
-  /** Each doc the Read tool opened, canonicalized, to the first transcript that opened it. */
+  /** Canonical path → first transcript whose Read tool opened it: a subagent's
+   *  read is the session's, so `(not read)` can't deny it (issue #1786). */
   sources: Map<string, string>
 }
 
@@ -927,25 +912,40 @@ export function authorMain(
   }
   const result = validateAuthored(parsed)
   if (!result.ok) fail(`authored scratch is invalid:\n${result.errors}`)
-  const merged = mergeAuthored(readScratch(scratchAbs), result.data)
+  // Re-authoring merges with this session's earlier pass (issue #688); a corrupt
+  // or partial scratch counts as absent, never blocking re-authoring.
+  let existing: AuthoredScratch | undefined
+  try {
+    existing = JSON.parse(readFileSync(scratchAbs, 'utf8')) as AuthoredScratch
+  } catch {
+    existing = undefined
+  }
+  const merged = mergeAuthored(existing, result.data)
   const ctx = loadAuthorContext(cwd)
-  const sources = ctx?.sources ?? new Map<string, string>()
-  const misNotRead = (merged.docsRead ?? [])
-    .filter((d) => d.reason === NOT_READ_REASON && sources.has(canonicalizeInstructionPath(d.path)))
-    .map((d) => `  ${d.path} — opened by [${sources.get(canonicalizeInstructionPath(d.path))}]`)
+  const misNotRead = (merged.docsRead ?? []).flatMap((d) => {
+    const source = d.reason === NOT_READ_REASON && ctx?.sources.get(canonicalizeInstructionPath(d.path))
+    return source ? [`  ${d.path} — opened by [${source}]`] : []
+  })
   if (misNotRead.length) {
     fail(
       `refusing '${NOT_READ_REASON}' for doc(s) the Read tool opened; subagent reads count as the session's:\n` +
         `${misNotRead.join('\n')}\nGive each a reason and a useful verdict instead.`,
     )
   }
-  writeScratch(merged, scratchAbs)
+  // Its existence is the wrap-up signal the landing path gates on.
+  mkdirSync(dirname(scratchAbs), { recursive: true })
+  writeFileSync(scratchAbs, JSON.stringify(merged, null, 2))
   console.log(`✓ authored scratch written → ${SCRATCH_FILE}`)
   // The lander's refusal reaches only the hook's stderr, so say it here (issue #1784).
-  const hold = ctx && mainSchemaRefusal(stitch(merged, ctx.trace), { remote: 'origin', mainSchemaFn: opts.mainSchemaFn ?? fetchedMainSchemaErrors })
+  let hold: HandlerResult | null | undefined
+  try {
+    hold = ctx && mainSchemaRefusal(stitch(merged, ctx.trace), { remote: 'origin', mainSchemaFn: opts.mainSchemaFn ?? fetchedMainSchemaErrors })
+  } catch {
+    hold = null // a check that can't run counts as `main` unreadable: authoring never fails on it
+  }
   if (hold) {
     console.log(`  the Stop hook will hold it, not commit it this turn: ${hold.detail}`)
-    console.log('  Stay subscribed to the schema PR.')
+    console.log('  It lands on the first turn that ends after that merge, so stay subscribed to the schema PR.')
   } else {
     console.log('  the Stop hook will stitch it with the derived trace and commit, live, at the end of this turn.')
   }
