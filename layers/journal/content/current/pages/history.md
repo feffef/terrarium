@@ -192,11 +192,13 @@ single-home." A rule about not duplicating documentation removed that detail
 from the one file every session is told to read first. A later sweep restored
 it: `docs/agents/guards.md` discloses the narrow scope today.
 
-The same is true one level up. The list of files that must never be merged
-without a human is enforced by no mechanism at all: there is no `CODEOWNERS`
-file, the branch ruleset that arrived on 8 October requires the gate but
-looks at no file paths, and the repo's own merge tool checks who opened a
-pull request and that a review verdict was posted, but not which files it touches.
+The same was true one level up. Until 10 October the list of files that must
+never be merged without a human was enforced by no mechanism at all: there was
+no `CODEOWNERS` file, the branch ruleset that arrived on 8 October required the
+gate but looked at no file paths, and the repo's own merge tool checked who
+opened a pull request and that a review verdict was posted, but not which files
+it touched. On 10 October the merge tool began refusing any pull request that
+changes a listed path.
 
 > **A rule that deletes rules.** The newest mechanism, added on 23 August,
 > answers exactly this. A **prune trial** cuts one topic's instructions back to

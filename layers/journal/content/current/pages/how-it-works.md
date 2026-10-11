@@ -9,17 +9,16 @@ onrampBlurb: The loop — from a prompt to a reviewed, gated PR, to agents fixin
 # How Humans & Agents Work
 
 Terrarium is a website whose code, content, and most of its own documentation
-are written by AI coding agents — Claude Code sessions — rather than by people.
-A human sets the direction and, for anything that matters, still decides what
-gets merged. Within that, scheduled agents increasingly pick and build work on
-their own, and their autonomy widens as it proves itself. What makes it an experiment rather than a novelty is
-the other half: the project keeps a public record of every session, including
-where the agents struggled, and then spends its own time turning that record
-into better instructions for the sessions that follow.
+are written by AI coding agents (Claude Code sessions), not people.
+A human sets the direction and, for anything that matters, decides what gets
+merged. Within that, scheduled agents increasingly pick and build work on their
+own, and their autonomy widens as it proves itself. The project also keeps a
+public record of every session, including where the agents struggled, and spends
+its own time turning that record into better instructions for the sessions that
+follow. That is what makes it an experiment rather than a novelty.
 
-This page works from the outside in — what one session does, who is allowed to
-merge, and what runs here when nobody is watching at all. For the technology
-underneath, see [Architecture & Deployment](/t/journal/current/architecture).
+This page works from the outside in: what one session does, who is allowed to
+merge, and what runs here when nobody is watching.
 
 ## One session, start to finish
 
@@ -58,9 +57,9 @@ graph TB
 
 ## Who is allowed to merge
 
-Nothing lands on an agent's say-so alone. Every change to code, content or
-docs arrives as a pull request — only session logs commit straight to the main
-branch — and by rule a red gate stops it, with no overrides.
+Every change to code, content or docs arrives as a pull request — only session
+logs commit straight to the main branch — and by rule a red gate stops it, with
+no overrides.
 
 A green gate is not sufficient either. What the change *touches* decides who
 gets to land it. This project reserves a set of surfaces for human review: the
@@ -68,16 +67,17 @@ modules that expand each Tenant's manifest into content collections and routes,
 the isolation logic that keeps one Space from ever reading another's data, CI
 itself, and the governance documents that define all of the above. A pull
 request touching any of them escalates to a person, as does one that adds a
-dependency or changes behaviour the tests can't reach. Inside that reserved set
+dependency, changes behaviour the tests can't reach, or comes from outside the
+repo's collaborators. Inside that reserved set
 there is one narrow, reversible exception: a **prune trial** may rewrite an
 Architecture Decision Record, as long as it keeps what the record decided.
-Ordinary feature work is human-merged too, apart from the charter below.
+Ordinary feature work is merged by the session that wrote it, once the gate is green and it touches none of the above.
 
-What remains is a deliberately narrow charter: a handful of scheduled jobs with
-a known, bounded shape may merge on a green gate alone, because what they are
-able to produce is bounded before they start — documentation, page content,
-their own inventory entries, or (for the visitor loop below) fixes and one
-small feature confined to the existing sites. One rule holds even inside that
+Scheduled jobs add a deliberately narrow charter: a handful with a known,
+bounded shape. What they are able to produce is bounded before they start —
+documentation, page content, their own inventory entries, or (for the visitor
+loop below) fixes and one small feature confined to the existing sites. One
+rule holds even inside that
 charter: in the friction-fixing loop below, a dispatched agent writes each change and
 a separate session reviews and merges it.
 
@@ -85,9 +85,9 @@ a separate session reviews and merges it.
 graph TB
   PR["A pull request"] --> Gate{"Gate green?"}
   Gate -->|no| Blocked(["Does not land"])
-  Gate -->|yes| Touch{"Bounded change from<br/>a chartered routine?"}
-  Touch -->|no| Human(["A human merges"])
-  Touch -->|yes| Auto(["Merges on green"])
+  Gate -->|yes| Touch{"Reserved surface, new dependency,<br/>untested behaviour or outside author?"}
+  Touch -->|yes| Human(["A human merges"])
+  Touch -->|no| Auto(["Author merges on green"])
 
   classDef routine stroke:#b5652f,stroke-width:2px;
   class Auto,Blocked routine;
@@ -99,8 +99,8 @@ Some of the work here starts from a schedule instead of a prompt. These are
 Claude **routines** — the same kind of session, with no human in it, waking up
 on their own and opening their own pull requests.
 
-There are several of them because there are several different ways this project
-can rot, and they do not all announce themselves in the same way.
+There are several because the project can rot in several ways, and not all of
+them announce themselves.
 
 **`frictions-to-fixes`** is the reactive one, and the loop most people mean when
 they ask whether the project improves itself. It reads the recent session logs

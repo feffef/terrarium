@@ -5,10 +5,9 @@ gist: Writes one in-character Blog post from real site activity.
 role: >-
   Writes one in-character, repo-grounded post for a Blog Persona (`david`,
   `karen`, `kevin` or `eyra`). A rotation gate keeps the voices taking turns, a
-  blind reader picks the best of three drafts to self-merge as a gated PR, and a
-  merged post owes a decision on whether another Persona replies. It gives the
-  Terrarium a self-narrating, multi-voice commentary track on its own
-  development.
+  blind reader picks the best of three drafts, the winner self-merges as a gated
+  PR, and a merged post owes a decision on whether another Persona replies.
+  Gives the Terrarium a multi-voice commentary on its own development.
 observations:
   - date: 2026-09-29
     note: >-

@@ -66,9 +66,6 @@ visibly alive without adding a Specimen.
 
 ## What lives where
 
-- **This file** — the Atlas's vocabulary and why it exists.
-- **Root `CONTEXT.md`** — the platform-wide terms the Atlas leans on, and the
-  Tenants roster that points here.
 - **`.agents/skills/atlas-specimen/SKILL.md`** — how a Specimen/Interaction/
   Observation gets authored (the naturalist's voice, the engraved-plate art
   direction).

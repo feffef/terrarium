@@ -5,13 +5,11 @@ installedSha256: 47f4e52c21694def9c7c11cbfbf891ca35eac7a93e395797515be3c8a409ae5
 gist: Checks a change against the repo's rules and the original ask before it lands.
 role: >-
   Review the working diff (Standards+Spec) before every code-landing gated PR
-  (ADR-0003/0004) — it routinely catches real bugs self-review missed. A
-  spec-reviewer subagent has cited a fabricated line number, so restate
-  CLAUDE.md's don't-state-anything-as-settled rule in each review subagent's
-  brief, and re-verify every cited line and finding with a fresh Read before
-  trusting it. It reviews a diff against a fixed point; a whole-tree review
-  needs adapting (e.g. treat the full tree as the diff, or run it per
-  directory).
+  (ADR-0003/0004); it routinely catches bugs self-review missed. A spec-reviewer
+  subagent has cited a fabricated line, so restate CLAUDE.md's "verify before
+  you state" rule in each review brief and re-verify every cited line and
+  finding with a fresh Read. It reviews a diff against a fixed point; for a
+  whole tree, treat the tree as the diff or run per directory.
 observations:
   - date: 2026-09-29
     note: >-

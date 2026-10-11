@@ -32,11 +32,6 @@ A derived, append-only, time-boxed Journal Document: one immutable page per **cl
 
 ## What lives where
 
-- **This file** — why the Journal isn't optional, who it's for, and the Digest
-  term.
-- **Root `CONTEXT.md`** — the platform-wide concepts the Journal renders (session
-  log, Skill Inventory, Session, Session closure, Friction, Agent Authorship, …)
-  and the Tenants roster that points here.
 - **`layers/journal/app/pages/t/journal/[space]/`** — the pages a visitor sees:
   `index.vue` (digests, stats, session feed), `skills.vue` (Skill Inventory) and
   `ideas.vue` (ideas and learnings), none a Markdown render of any single file.

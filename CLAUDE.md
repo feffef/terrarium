@@ -18,7 +18,8 @@ act, once per session.
   glossary's terms.
 - **ADRs arrive as rules.** Each ADR's summary is a rule in `.claude/rules/`:
   the cross-cutting ones load at session start, the rest when you read or edit
-  a file they govern. When a summary says so, read the full ADR before you act.
+  a file they govern or run a Skill they name. When a summary says so, read the
+  full ADR before you act.
   Before you plan or recommend a change (an opinion asked in chat counts), find
   the ADRs that bind it with `grep -l <path-or-term> docs/adr/*` and read
   them.
@@ -74,11 +75,11 @@ that are ours:
 ```
 layers/<tenant>/          one Tenant: tenant.config.ts (its manifest — edit this),
                           content/<space>/<collection>/, CONTEXT.md, tests/
-shared/                   manifest types, expansion, routing (Human-only: ADR-0004)
+shared/                   manifest types, expansion, routing (mostly Human-only: ADR-0004)
 docs/adr/                 decisions
 .claude/rules/            important instructions (ADR summaries, the human-merge
                           list) that Claude Code injects into your context, at
-                          session start or when you touch a file they govern
+                          session start, or when you touch a file or run a Skill they govern
 docs/agents/              how-to docs for agents (see "Docs you must read first")
 docs/research/            dated reference notes
 .agents/skills/           our Skills (.claude/skills/ links here)

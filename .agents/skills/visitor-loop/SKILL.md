@@ -14,7 +14,8 @@ at the same complaint is signal.
 
 Your **remit** — what this run may change and self-merge — is ADR-0003's
 `visitor-loop` ledger row. Read it before step 3; anything outside it lands as
-an ordinary gated PR for a human, or as an issue.
+an ordinary gated PR (a human merges only if an ADR-0004 exception applies), or
+as an issue.
 
 ## Today's focus
 

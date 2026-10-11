@@ -95,8 +95,9 @@ its diff is limited to, and what to do when something rides outside that scope):
 4. **At PR-open, invoke `close-session`** — your first log (`in-review`).
 5. If the gate is red for a reason that isn't yours, or anything outside the
    Skill's own scope rode into the diff, leave the PR open and escalate to a
-   human instead of merging — never force a self-merge past scope or a red
-   gate.
+   human instead of merging: a chartered run merges only its own bounded diff
+   (ADR-0003 ledger), whatever the rule for an ordinary work PR says. Never
+   force a self-merge past scope or a red gate.
 
 Once the PR is merged or honestly left open, re-invoke `close-session` to update
 that log (the ADR-0009 rule, `.claude/rules/adr-0009.md`).

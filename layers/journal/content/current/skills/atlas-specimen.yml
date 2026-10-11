@@ -3,10 +3,9 @@ category: platform-operation
 importance: specialist
 gist: Writes one new fictional creature for the Atlas field guide.
 role: >-
-  Authors one Atlas Specimen — a fictional creature of the field-guide Tenant —
+  Authors one Atlas Specimen, a fictional creature of the field-guide Tenant,
   with its food-web Interactions and field-log Observations, through a gated PR
-  (ADR-0003). It is the single home for the naturalist's voice and the
-  engraved-plate art direction, as `blog-post` is for the Personas, so the many
-  sessions that grow the Atlas keep it reading as one hand. Essential whenever
-  the Atlas is extended.
+  (ADR-0003). Single home for the naturalist's voice and engraved-plate art
+  direction, as `blog-post` is for the Personas, so the Atlas reads as one hand.
+  Essential whenever the Atlas is extended.
 observations: []

@@ -3,14 +3,13 @@ category: platform-operation
 importance: routine
 gist: Writes the daily catch-up summary of what happened on the site.
 role: >-
-  Writes the Journal's daily Digests — one per closed UTC day, a short human
-  catch-up on Platform-wide activity mined from git history and session logs
-  (ADR-0010). A thin, tested helper (`scripts/digest.ts`) does the deterministic
-  gathering; the Skill writes the prose, has a separate pass fact-check it
-  against the PRs' diffs, and opens one gated PR (ADR-0003) that auto-merges
-  once the safety gate is green, never the `log-session` direct-to-main path. It
-  runs on a scheduled Routine; reach for it manually to catch the Journal up
-  after activity the schedule hasn't covered yet.
+  Writes the Journal's daily Digests: one per closed UTC day, a short human
+  catch-up on Platform-wide activity from git history and session logs
+  (ADR-0010). A tested helper (`scripts/digest.ts`) gathers the facts; the Skill
+  writes the prose, has a separate pass fact-check it against the PRs' diffs,
+  and opens one gated PR (ADR-0003) that auto-merges on a green gate, never the
+  `log-session` direct-to-main path. Scheduled; run it by hand to catch up
+  uncovered activity.
 observations:
   - date: "2026-09-30"
     note: >-

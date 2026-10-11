@@ -111,17 +111,10 @@ implications:
   browser defaults, check whether it's actually mounted under the wrapper
   element (`.jd`) in the render tree — a component rendered outside that
   wrapper (e.g. via `<Teleport>` to `<body>`) won't see the tokens.
-- **A Platform-generic component can theme itself from a Tenant this way too,
-  without coupling to that Tenant's token names — via an opt-in contract.**
-  Mermaid diagrams (`app/components/MermaidDiagram.vue`) carry a small set of
-  `--diagram-*` custom-property references baked into their pre-rendered SVG
-  (ADR-0024): each Tenant opts in by *mapping* its own tokens to that contract on
-  its wrapper (journal maps `--jd-*` → `--diagram-*` in `theme.css`). A Tenant
-  that maps none falls back to the contract's built-in defaults. Map via
-  `var(--jd-…)` rather than literal values so a dark-mode `--jd-*` override flows
-  through the contract for free — the SVG re-resolves the `var(--diagram-*)` refs
-  with zero JS (only the *colour* tokens are live vars; font size/family are baked
-  at render time — ADR-0024).
+- **A Platform-generic component can theme itself from a Tenant without naming
+  its tokens, via an opt-in contract.** Mermaid diagrams do this with
+  `--diagram-*` (ADR-0024; journal's mapping is in `theme.css`). Map with
+  `var(--jd-…)`, not literals, so a dark-mode override flows through.
 
 ## 3. Adding a Space, Collection or Tenant
 

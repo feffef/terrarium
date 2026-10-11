@@ -23,18 +23,13 @@ templates (ADR-0021):
   Tenants roster, and each per-Tenant `CONTEXT.md` adds a purpose narrative on
   top of its glossary.
 
-Match the repo's actual files, not the template. See `CONTEXT-MAP.md`'s
-**Decisions** section for where ADRs live today.
+Match the repo's actual files, not the template: `CONTEXT-MAP.md`'s
+**Decisions** section says where ADRs live; CLAUDE.md's "Repo layout" says where
+`layers/<tenant>/` contexts live.
 
 If any of these files are missing, **proceed silently**: don't flag it or
 suggest creating them. `/domain-modeling` creates them lazily, when a term or
 decision needs resolving.
-
-## File structure
-
-Layout diverges too: the template puts each context under `src/<context>/` with
-its own `docs/adr/`; here each Tenant's `CONTEXT.md` lives under
-`layers/<tenant>/` and every ADR in root `docs/adr/` (CLAUDE.md "Repo layout").
 
 ## Use the glossary's vocabulary
 
