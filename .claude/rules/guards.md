@@ -6,9 +6,9 @@ paths:
   - "scripts/guard-io.ts"
   - ".claude/settings.json"
   - "tests/unit/*-guard.spec.ts"
+  - "tests/unit/*-hint.spec.ts"
 ---
 # The guards
 
-Guards and hints share conventions (fail closed or open, matcher scope, a
-pure core with `--dry-run` and a unit test, a human merge) and a roster:
-docs/agents/guards.md holds them. Read it in full to change a guard or hint.
+Guards and hints follow shared conventions and have a roster: see
+docs/agents/guards.md.

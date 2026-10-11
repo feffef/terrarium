@@ -76,8 +76,8 @@ inside subagents too (PR #1741). Whether a Bash write loads one is untested.
 - Rules still miss piped, chained and multi-file Bash reads. A fail-open
   `PostToolUse` hint on Bash, matching a command's file paths against rule
   `paths` the way `skill-rules-hint.ts` does for Skills (#1764,
-  `scripts/bash-rules-hint.ts`), should land
-  before rules become the main home for non-ADR instructions.
+  `scripts/bash-rules-hint.ts`), should land before rules become the main
+  home for non-ADR instructions.
 - A plan or an opinion often comes before any file is opened, so `CLAUDE.md`
   keeps the step to grep `docs/adr/` before recommending a change.
 - Action-bound instructions get their own delivery: issue #1754 proposes a
@@ -89,6 +89,6 @@ inside subagents too (PR #1741). Whether a Bash write loads one is untested.
 - An agent logs a Friction when an unrelated rule confused it or cost it work
   (`log-session`), so a too-broad glob shows up and gets narrowed.
 - Gate checks for non-ADR rules (they have `paths`; the doc they name exists)
-  are a follow-up (#1765).
+  run in `scripts/validate-adr-rules.ts` (#1765).
 - Issue #1745 stays open as an alternative for ADR rules only: make each trimmed
   ADR its own rule and drop the summary copy.

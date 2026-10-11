@@ -70,8 +70,9 @@ named by lens, and joins the pool like any other.
   (`layers/journal/content/current/skills/<name>.yml`) can corroborate a
   finding; it is optional context.
 - **Orphan-addition** — something added in the last 48h that lacks the
-  reference it needs. Only two cases: (1) a new `docs/agents/*` doc not
-  named in CLAUDE.md's "Docs you must read first" list (`docs/research/` is deliberately unindexed) —
+  reference it needs. Only two cases: (1) a new `docs/agents/*` doc named
+  neither in CLAUDE.md's "Docs you must read first" list nor by a
+  `.claude/rules/` rule (ADR-0029; `docs/research/` is deliberately unindexed) —
   add the link;
   (2) a new ADR that amends or supersedes another without the amendment banner
   or Status-line pointer on the old one (ADR-0018) — that is an ADR edit, so it
