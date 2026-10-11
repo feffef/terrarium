@@ -1,0 +1,211 @@
+schemaVersion: 1
+session: session_01GbMt1vGTDZpQxZ3h4pNsF8
+startedAt: 2026-10-11T04:00:50Z
+endedAt: 2026-10-11T04:18:48Z
+kind: autonomous
+goal: "Weekly docs audit: keep prose honest against the code"
+status: in-review
+outcome: One gated PR with confirmed doc fixes opened; escalations to follow
+summary: "Scheduled audit-docs run (no human prompt; everything agent-initiated by the schedule). Concision family 4 (journal facing pages and Skill Inventory). Six reviewers ran in parallel (freshness, single-home, three concision splits, coherence); three checkers returned verdicts, then a fourth for the late-arriving C2 findings. Verdict counts: roughly 33 CONFIRMED or CONFIRMED-BUT and 19 WRONG (WRONG mostly marginal concision cuts, B3, B5, B10). The biggest real drift was the journal how-it-works page and diagram still saying ordinary work is human-merged after the 10 Oct self-merge flip; the same flip left stale wording in history, visitor-loop, digest, audit-docs, README and the rulebook table. The scoped gate first failed on the mermaid SVG hash (diagram edited); regenerated with render:mermaid and re-ran green. Open: the merge-pr.ts header comment (Human-only) and ADR-0003's out-of-scope wording versus its own amendment are escalations, not yet filed."
+prs:
+  - "1758"
+docsRead:
+  - path: CONTEXT-MAP.md
+    reason: (read before editing)
+  - path: CONTEXT.md
+    reason: (read before editing)
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (read before editing)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/how-it-works.md
+    reason: (read before editing)
+  - path: CLAUDE.md
+    reason: (read before editing)
+  - path: layers/journal/content/current/pages/history.md
+    reason: (read before editing)
+  - path: .agents/skills/visitor-loop/SKILL.md
+    reason: (read before editing)
+  - path: .agents/skills/digest/SKILL.md
+    reason: (read before editing)
+  - path: README.md
+    reason: (read before editing)
+  - path: docs/agents/guest-contributions.md
+    reason: (read before editing)
+  - path: docs/agents/issue-tracker.md
+    reason: (read before editing)
+  - path: layers/journal/content/current/pages/architecture.md
+    reason: (read before editing)
+  - path: docs/research/rulebook-migration-table.md
+    reason: (read before editing)
+  - path: docs/agents/domain.md
+    reason: (read before editing)
+  - path: docs/agents/tenant-layers.md
+    reason: (read before editing)
+  - path: layers/midden/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/commons/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/marquee/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/index.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/real-and-invented.md
+    reason: (no reason given)
+  - path: .agents/prune-trials.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/highlights.md
+    reason: (no reason given)
+  - path: docs/adr/0003-agent-operating-model-and-governance.md
+    reason: (no reason given)
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: (no reason given)
+  - path: docs/agents/guards.md
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: (read before editing)
+  - path: .agents/skills/close-session/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/log-session/SKILL.md
+    reason: (no reason given)
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: (no reason given)
+  - path: docs/agents/triage-labels.md
+    reason: (no reason given)
+  - path: docs/adr/0020-requester-trust-tiers.md
+    reason: (no reason given)
+  - path: docs/agents/environment-caveats.md
+    reason: (no reason given)
+  - path: .agents/skills/prune-trial/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/guest-build/SKILL.md
+    reason: (no reason given)
+  - path: docs/proposals/README.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+  - path: docs/agents/verifying-ui-changes.md
+    reason: (no reason given)
+  - path: docs/agents/mdc-when-to-use.md
+    reason: (no reason given)
+  - path: layers/journal/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/atlas/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/blog/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/tinkerfund/CONTEXT.md
+    reason: (no reason given)
+  - path: .agents/skills/auto-triage/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/guest-intake/SKILL.md
+    reason: (no reason given)
+  - path: docs/research/content-client-queries-without-wasm.md
+    reason: (no reason given)
+  - path: docs/research/github-actions-public-vs-private-limits.md
+    reason: (no reason given)
+  - path: docs/research/github-branch-protection-vs-autonomous-log-commits.md
+    reason: (no reason given)
+  - path: docs/research/mermaid-server-side-rendering.md
+    reason: (no reason given)
+  - path: docs/research/nuxt-content-review-grounding.md
+    reason: (no reason given)
+  - path: docs/research/shell-reads-by-output-matching.md
+    reason: (no reason given)
+  - path: docs/adr/0021-multi-context-domain-docs.md
+    reason: (no reason given)
+  - path: docs/adr/0024-build-time-mermaid-prerender.md
+    reason: (no reason given)
+  - path: .agents/skills/domain-modeling/CONTEXT-FORMAT.md
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: audit-docs
+    reason: (invoked as a slash command)
+frictions:
+  - description: Applied four C2 concision edits to how-it-works.md before the checker had returned; one (C2-4) was later judged WRONG and had to be reverted.
+    solution: Stage edits only after every checker verdict is in; the Skill says act only on CONFIRMED.
+    severity: minor
+  - description: Three of six reviewer subagents could not write their findings file (harness refused), so I transcribed findings into scratchpad files by hand and had to chase C2 a second time.
+    solution: Tell reviewers up front to return findings as text, and let the orchestrator write the files.
+    severity: moderate
+  - description: gate:scoped failed on verify:mermaid after I edited a mermaid diagram; the audit-docs Skill does not mention regenerating SVGs for diagram edits.
+    solution: Add a one-line note to audit-docs that editing a mermaid block needs pnpm render:mermaid.
+    severity: minor
+  - description: Stop hook asked to push uncommitted work while the gate was running; ADR-0004 says push only after it passes, so I waited.
+    solution: The hook could check for a running or failed gate before nagging.
+    severity: nit
+durationSec: 1078
+models:
+  claude-sonnet-5-5: 150
+toolCounts:
+  Read: 21
+  Bash: 22
+  Agent: 10
+  Write: 4
+  ToolSearch: 2
+  SendMessage: 1
+  Edit: 30
+  Grep: 2
+  Monitor: 1
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  mcp__github__add_issue_comment: 1
+  Skill: 2
+  mcp__github__issue_write: 1
+filesEdited:
+  - layers/journal/content/current/pages/how-it-works.md
+  - CLAUDE.md
+  - layers/journal/content/current/pages/history.md
+  - .agents/skills/visitor-loop/SKILL.md
+  - .agents/skills/digest/SKILL.md
+  - README.md
+  - docs/agents/guest-contributions.md
+  - docs/agents/issue-tracker.md
+  - .agents/skills/audit-docs/SKILL.md
+  - docs/agents/pr-workflow.md
+  - layers/journal/content/current/pages/architecture.md
+  - docs/research/rulebook-migration-table.md
+  - CONTEXT.md
+  - CONTEXT-MAP.md
+  - docs/agents/domain.md
+  - docs/agents/tenant-layers.md
+rulesLoaded:
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0018.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0026.md
+  - .claude/rules/adr-0008.md
+  - .claude/rules/adr-0028.md
+  - .claude/rules/adr-0010.md
+  - .claude/rules/adr-0025.md
+  - .claude/rules/adr-0004-human-merge.md
+rulesFollowedUp:
+  - .claude/rules/adr-0021.md
+subagents:
+  - task: "Audit A: freshness"
+  - task: "Audit B: single-home"
+  - task: "Audit C1: concision pages"
+  - task: "Audit C2: concision pages+yml"
+  - task: "Audit C3: concision yml"
+  - task: "Audit D: coherence"
+  - task: Fact-check A and D findings
+  - task: Fact-check B findings
+  - task: Fact-check C findings
+  - task: Fact-check C2 findings
+gitBranch: claude/festive-mayer-41jhvh
+entrypoint: remote_trigger
+cliVersion: 2.1.296
+trigger: audit-docs
+landedBy: Stop
