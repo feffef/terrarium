@@ -265,8 +265,8 @@ useSeoMeta({
       <ul class="worst-list">
         <li v-for="(w, i) in worst.items" :key="i">
           <span class="sev" :class="w.severity">{{ w.severity }}</span>
-          <span class="txt" :title="w.description">{{ w.description }}</span>
-          <a class="open-session" :href="`#${w.anchor}`" :aria-label="`Open the session where this ${w.severity} friction was logged, ${w.date}`">{{ w.date }} →</a>
+          <span class="txt" :title="w.count > 1 ? w.description.split('\n')[0] : w.description">{{ w.count > 1 ? w.description.split('\n')[0] : w.description }}<template v-if="w.count > 1"> ({{ w.count }} sessions)</template></span>
+          <a class="open-session" :href="`#${w.anchor}`" :aria-label="`Open ${w.count > 1 ? `the newest of ${w.count} sessions` : 'the session'} where this ${w.severity} friction was logged, ${w.date}`">{{ w.date }} →</a>
         </li>
       </ul>
       <p v-if="worst.rest" class="panel-intro">+{{ worst.rest }} more in the sessions below.</p>

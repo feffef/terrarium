@@ -498,6 +498,12 @@ describe('worstFrictions', () => {
   it('caps the list and counts the rest', () => {
     expect(worstFrictions([s1, s2], 1)).toMatchObject({ rest: 1 })
   })
+  it('collapses descriptions sharing a first line into one item linking the newest session', () => {
+    const later = session({ session: 'c', endedAt: '2026-07-04T10:00:00Z', frictions: [{ ...friction('major'), description: 'd\n  detail c' }] })
+    const { items, rest } = worstFrictions([s1, later])
+    expect(items).toMatchObject([{ severity: 'major', anchor: 'session-a', count: 2 }])
+    expect(rest).toBe(0)
+  })
   it('is empty when nothing is serious', () => {
     expect(worstFrictions([session({ frictions: [friction('nit')] })]).items).toEqual([])
   })
