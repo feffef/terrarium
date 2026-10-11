@@ -641,6 +641,11 @@ export function extractTrace(
   }
 }
 
+const subagentsDir = (transcriptPath: string) => join(dirname(transcriptPath), basename(transcriptPath, '.jsonl'), 'subagents')
+
+/** One depth-1 subagent's transcript, named for the hook payload's `agent_id`. */
+export const subagentTranscript = (transcriptPath: string, agentId: string) => join(subagentsDir(transcriptPath), `agent-${agentId}.jsonl`)
+
 /** Every dispatched subagent's own transcript, given the parent's path: the
  *  harness writes them to `<parent-dir>/<parent-basename>/subagents/*.jsonl`
  *  (each with a `.meta.json` sibling this fold has no use for). Returns [] when
@@ -654,7 +659,7 @@ export function extractTrace(
  *  parent or flattens it into the same directory — which is why this doesn't
  *  assert which one it does. */
 export function subagentTranscriptPaths(transcriptPath: string): string[] {
-  const dir = join(dirname(transcriptPath), basename(transcriptPath, '.jsonl'), 'subagents')
+  const dir = subagentsDir(transcriptPath)
   if (!existsSync(dir)) return []
   return readdirSync(dir)
     .filter((f) => f.endsWith('.jsonl'))

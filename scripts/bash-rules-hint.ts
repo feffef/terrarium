@@ -3,74 +3,33 @@
 // when the command is one simple read of one file; a piped, chained (`cd … &&`)
 // or multi-file read loads nothing (ADR-0029, issue #1764). So this stays
 // silent for a simple read and fills the gap for the rest. Rules already loaded
-// this session are skipped, read from the transcript; a subagent's
-// `transcript_path` is its parent's (docs/agents/guards.md), so a subagent may
-// get a rule twice. Fails open: any error adds nothing.
+// are skipped; a subagent's payload carries its parent's `transcript_path`
+// (docs/agents/guards.md), so it is checked against its own. Fails open: any
+// error adds nothing.
 // `scripts/bash-rules-hint.sh` is the hot-path pre-filter.
 //
 // Usage:
 //   tsx scripts/bash-rules-hint.ts                # hook payload on stdin
 //   tsx scripts/bash-rules-hint.ts --dry-run (--input '<payload json>' | --input-file <path>)
-import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs'
+import { existsSync, readFileSync, statSync } from 'node:fs'
 import { dirname, isAbsolute, join, matchesGlob, relative } from 'node:path'
 import { printDryRunResult, prop, readTranscript, resolveDryRunInput, runIfMain } from './guard-io.ts'
-import { extractTrace } from './session-trace.ts'
+import { extractTrace, subagentTranscript } from './session-trace.ts'
 import { bashReadPaths } from './shell-reads.ts'
 import { loadRules, type RuleFile } from './skill-rules-hint.ts'
 import { RULES_DIR, ruleBlock, rulePaths } from './validate-adr-rules.ts'
 
-/** Whether a repo-relative directory holds a file the glob matches. */
-type Holds = (dir: string, glob: string) => boolean
-
-/** A directory reaches a glob once it is as deep as the glob's fixed part, so
- *  `grep -rn x layers/` does not inject every layers rule. */
-function reaches(dir: string, glob: string): boolean {
-  const parts = dir.slice(0, -1).split('/')
-  const globs = glob.split('/')
-  for (const [i, part] of parts.entries()) {
-    if (globs[i] === '**') return true
-    if (globs[i] === undefined || !matchesGlob(part, globs[i])) return false
-  }
-  const rest = globs.slice(parts.length)
-  return rest.length === 1 || rest[0] === '**'
-}
-
-/** A file counts where the glob matches it, as when the harness loads a rule.
- *  A directory (trailing `/`) counts when it reaches the glob and holds a
- *  matching file. */
-function covers(path: string, glob: string, holds: Holds): boolean {
-  if (!path.endsWith('/')) return matchesGlob(path, glob)
-  return reaches(path, glob) && holds(path, glob)
-}
-
-/** Symlinks are not followed, so a loop ends. A directory it cannot read
- *  counts as a match: the hint fails generous, since a missing rule costs more
- *  than an extra one. */
-function walker(root: string): Holds {
-  const holds: Holds = (dir, glob) => {
-    let entries
-    try {
-      entries = readdirSync(join(root, dir), { withFileTypes: true })
-    } catch {
-      return true
-    }
-    return entries.some((e) => (e.isDirectory() ? holds(`${dir}${e.name}/`, glob) : e.isFile() && matchesGlob(dir + e.name, glob)))
-  }
-  return holds
-}
-
 /** `loaded` gives the `.claude/rules/<file>` keys already in the session; it
- *  runs only on a match, so a miss never reads the transcript. */
+ *  runs only on a match, so a miss never reads the transcript. A directory is a
+ *  search, not a read: the harness loads the rule once a file in it is touched. */
 export function bashRulesHint(command: string, cwd: string, root: string, rules: RuleFile[], loaded: () => Set<string>): string | null {
   const { paths, simple } = bashReadPaths(command, cwd)
+  if (simple) return null
   const reads = paths
-    .map((p) => relative(root, p) + (p.endsWith('/') || statSync(p, { throwIfNoEntry: false })?.isDirectory() ? '/' : ''))
-    // The repo root would match every rule: `grep -rn x .` is a search, not a read.
-    .filter((p) => p !== '/' && !p.startsWith('..') && !isAbsolute(p))
-  // A lone directory is not the one-file read the harness covers.
-  if (simple && !reads.some((p) => p.endsWith('/'))) return null
-  const holds = walker(root)
-  const hits = rules.filter((r) => rulePaths(r.text).some((g) => reads.some((p) => covers(p, g, holds))))
+    .filter((p) => !p.endsWith('/'))
+    .map((p) => relative(root, p))
+    .filter((p) => !p.startsWith('..') && !isAbsolute(p) && !statSync(join(root, p), { throwIfNoEntry: false })?.isDirectory())
+  const hits = rules.filter((r) => rulePaths(r.text).some((g) => reads.some((p) => matchesGlob(p, g))))
   if (hits.length === 0) return null
   const skip = loaded()
   const fresh = hits.filter((r) => !skip.has(`${RULES_DIR}/${r.file}`))
@@ -94,10 +53,10 @@ function hintFor(payload: unknown): string | null {
   const cwd = cwdOf(payload)
   const root = repoRoot(cwd)
   if (!root) return null
-  const subagent = prop(payload, 'agent_id') !== undefined
-  return bashRulesHint(command, cwd, root, loadRules(join(root, RULES_DIR)), () =>
-    subagent ? new Set() : new Set(extractTrace(readTranscript(String(prop(payload, 'transcript_path') ?? '')) ?? []).rulesLoaded),
-  )
+  const parent = String(prop(payload, 'transcript_path') ?? '')
+  const agent = prop(payload, 'agent_id')
+  const transcript = agent === undefined ? parent : subagentTranscript(parent, String(agent))
+  return bashRulesHint(command, cwd, root, loadRules(join(root, RULES_DIR)), () => new Set(extractTrace(readTranscript(transcript) ?? []).rulesLoaded))
 }
 
 function main(): void {

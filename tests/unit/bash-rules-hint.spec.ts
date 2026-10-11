@@ -1,7 +1,7 @@
 // Coverage for the Bash rules hint (issue #1764; contract in
 // `scripts/bash-rules-hint.ts`).
 import { spawnSync } from 'node:child_process'
-import { mkdirSync, mkdtempSync, symlinkSync, writeFileSync } from 'node:fs'
+import { mkdirSync, mkdtempSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -53,11 +53,6 @@ describe('bashRulesHint(), with an injected loaded set', () => {
       // A file matches only where the whole glob does.
       ['cat layers/journal/content/current/sessions/a.yml layers/atlas/content/x.png', []],
       ['cat README.md layers/atlas/content/a/b.md', T],
-      // A directory is never a "single file read", even alone. It counts only
-      // once it is as deep as a glob's fixed part, so a broad search stays quiet.
-      ['grep -rn x layers/atlas/app/', T],
-      ['grep -rn x layers/atlas/ | head', T],
-      ['grep -rn x layers/ | head', []],
       ['grep -rn x . | head', []],
       ['cat < layers/atlas/nuxt.config.ts | head', T],
       ['cat <layers/atlas/nuxt.config.ts | head', T],
@@ -77,26 +72,10 @@ describe('bashRulesHint(), with an injected loaded set', () => {
     for (const c of ['cat nuxt.config.ts', 'grep x nuxt.config.ts 2>&1']) expect(hint(c), c).toBeNull()
   })
 
-  it('walks a real directory, without following symlinks, to find a file a glob matches', () => {
-    const root = mkdtempSync(join(tmpdir(), 'bash-rules-dir-'))
-    const dir = (d: string) => mkdirSync(join(root, d), { recursive: true })
-    dir('layers/j/content/s')
-    writeFileSync(join(root, 'layers/j/content/s/a.yml'), '')
-    symlinkSync('..', join(root, 'layers/j/content/s/loop'))
-    dir('layers/k/content/s/a/b/c')
-    writeFileSync(join(root, 'layers/k/content/s/a/b/c/d.md'), '')
-    dir('layers/e/app')
-    dir('layers/f/content')
-    writeFileSync(join(root, 'layers/f/content/s'), '')
-    const rules = [rule('mdc.md', ['layers/*/content/**/*.md'], '# MDC'), rule('app.md', ['layers/*/app/**'], '# App')]
-    const at = (d: string) => ruleBlockFiles(bashRulesHint(`grep -rn x ${d} | head`, root, root, rules, none) ?? '')
-    const started = Date.now()
-    expect(at('layers/j/content/s/')).toEqual([]) // yml only, and a symlink loop
-    expect(Date.now() - started).toBeLessThan(1000)
-    expect(at('layers/k/content/s')).toEqual(['.claude/rules/mdc.md']) // an .md deep inside
-    expect(at('layers/e/app/')).toEqual([]) // exists but empty: nothing a glob can match
-    expect(at('layers/z/content/s/')).toEqual(['.claude/rules/mdc.md']) // missing: generous
-    expect(at('layers/f/content/s/')).toEqual(['.claude/rules/mdc.md']) // unreadable as a dir: generous
+  it('matches no rule for a real directory, even one a glob would match as a path', () => {
+    for (const d of ['layers/atlas', 'layers/atlas/', 'shared']) {
+      expect(bashRulesHint(`grep -rn x ${d} README.md`, repo, repo, RULES, none), d).toBeNull()
+    }
   })
 
   it('asks for the loaded rules only on a match, and skips them', () => {
@@ -145,15 +124,9 @@ describe('the hook entry (sh pre-filter → tsx)', () => {
 
   it('runs tsx for any compound or multi-word read', () => {
     const compound = ['cat a | head', 'cd x && cat a', 'cat a; ls', 'cat $(ls)', 'ls\ncat a', 'cat a b', 'cat\ta b']
-    const multi = ['grep -n x a b', 'head -n 5 a b', 'sed -n 1p a b', 'grep -rn x d', 'rg x d']
+    const multi = ['grep -n x a b', 'head -n 5 a b', 'sed -n 1p a b', 'grep -rn x d', 'rg x d', 'grep x -r d', 'grep -e x -r d']
     for (const seen of [...compound, ...multi]) {
       expect(run(probe(seen)).stdout, seen).toContain('guards.md')
-    }
-  })
-
-  it('injects rules for a recursive grep whose -r follows the pattern', () => {
-    for (const command of ['grep x -r layers/journal/', 'grep -e x -r layers/journal/', 'grep -n x -r layers/journal']) {
-      expect(run(bash(command)).stdout, command).toContain('Contents of .claude/rules/')
     }
   })
 
@@ -165,12 +138,18 @@ describe('the hook entry (sh pre-filter → tsx)', () => {
     expect(run(quoted).stdout).toContain('guards.md')
   })
 
-  it('skips a rule the transcript already loaded, unless a subagent ran the command', () => {
-    const transcript = join(mkdtempSync(join(tmpdir(), 'bash-rules-tx-')), 't.jsonl')
-    writeFileSync(transcript, `${JSON.stringify({ attachment: { type: 'nested_memory', path: `${repo}/.claude/rules/guards.md` } })}\n`)
-    const payload = { ...bash('cat README.md scripts/tail-pipe-guard.ts'), transcript_path: transcript }
+  it("skips a rule already loaded, read from a subagent's own transcript when it has one", () => {
+    const dir = mkdtempSync(join(tmpdir(), 'bash-rules-tx-'))
+    const loaded = `${JSON.stringify({ attachment: { type: 'nested_memory', path: `${repo}/.claude/rules/guards.md` } })}\n`
+    writeFileSync(join(dir, 't.jsonl'), loaded)
+    mkdirSync(join(dir, 't/subagents'), { recursive: true })
+    writeFileSync(join(dir, 't/subagents/agent-a1.jsonl'), loaded)
+    writeFileSync(join(dir, 't/subagents/agent-a2.jsonl'), '{}\n')
+    const payload = { ...bash('cat README.md scripts/tail-pipe-guard.ts'), transcript_path: join(dir, 't.jsonl') }
     expect(run(payload).stdout).not.toContain('rules/guards.md')
-    expect(run({ ...payload, agent_id: 'a1' }).stdout).toContain('rules/guards.md')
+    expect(run({ ...payload, agent_id: 'a1' }).stdout).not.toContain('rules/guards.md')
+    expect(run({ ...payload, agent_id: 'a2' }).stdout).toContain('rules/guards.md')
+    expect(run({ ...payload, agent_id: 'missing' }).stdout).toContain('rules/guards.md')
   })
 
   it('fails open on invalid JSON, a missing rules dir and a malformed rule', () => {
