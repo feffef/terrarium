@@ -138,7 +138,6 @@ export default defineTenant({
     // the Catalog without re-declaring the schema. `scripts/log-session.ts`
     // validates authored logs against that same shared schema.
     sessions: { type: 'data', kind: 'session', source: '**/*.yml' },
-    // The Friction Ledger — structured data, not routed; schema above.
     frictions: {
       type: 'data',
       source: '**/*.yml',

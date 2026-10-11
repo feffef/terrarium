@@ -11,12 +11,12 @@
 // dropped at this stage (summary, docsRead, learnings, …) can still be read in
 // full later — this is a triage extract, not a replacement for the source log.
 //
-// Usage:  tsx scripts/session-frictions.ts [--days N] [--compact] [--out PATH]
+// Usage:  tsx scripts/session-frictions.ts [--days N | --since ISO] [--compact] [--out PATH]
 //   Prints the sessions that ended since the window's start (oldest first)
 //   as JSON: id, file, startedAt, goal, outcome, prs, and every friction's
-//   description/solution/severity, and reports where the window starts. By
-//   default it starts 48 hours before the earlier of now and the Friction
-//   Ledger's last commit, so a missed run loses no logs; `--days N` overrides it.
+//   description/solution/severity, and reports where the window starts.
+//   `--days N` or `--since ISO` sets the start; the default is
+//   `defaultWindowStart`.
 //
 // Output above OUTPUT_FILE_THRESHOLD is written to a file instead of stdout
 // (see main()), so a large --days can no longer blow a caller's inline-capture
@@ -44,7 +44,8 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 
 /** 48 hours lets a friction too minor for its own ledger entry be seen
  *  recurring across two daily runs; reaching back that far from the ledger's
- *  last commit also covers sessions that ended while that run was working. */
+ *  last commit, not from now, means a missed run loses no logs and covers
+ *  sessions that ended while the last run was working. */
 export const WINDOW_HOURS = 48
 const LEDGER_DIR = 'layers/journal/content/current/frictions'
 
@@ -100,10 +101,8 @@ export interface CompactSession {
 
 // ── Pure core (unit-tested) ───────────────────────────────────────────────────
 
-/** The default window's start: `WINDOW_HOURS` before the earlier of `now`
- *  and the ledger's last commit (`null`: no ledger commit yet). */
-export function windowStart(now: number, lastLedgerCommit: number | null): number {
-  return Math.min(now, lastLedgerCommit ?? now) - WINDOW_HOURS * 3_600_000
+export function defaultWindowStart(now: number, lastLedgerCommit: number | null): number {
+  return (lastLedgerCommit ?? now) - WINDOW_HOURS * 3_600_000
 }
 
 /** Sessions that ended at or after `cutoff` (a log lands when its session
@@ -186,20 +185,22 @@ function readSessions(cwd = root): TriageSession[] {
     .map(({ file, data }) => toTriageSession(data, file))
 }
 
+/** `null` when no commit is visible (none yet, a shallow clone, no git):
+ *  the window then falls back to `WINDOW_HOURS` before now. */
 function lastLedgerCommit(cwd: string): number | null {
-  const out = execFileSync('git', ['log', '-1', '--format=%cI', '--', LEDGER_DIR], { cwd, encoding: 'utf8' }).trim()
-  return out ? Date.parse(out) : null
+  try {
+    const out = execFileSync('git', ['log', '-1', '--format=%cI', '--', LEDGER_DIR], { cwd, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).trim()
+    return out ? Date.parse(out) : null
+  } catch {
+    return null
+  }
 }
 
 // ── Command ─────────────────────────────────────────────────────────────────
 
-/** `days` overrides the default window (see `windowStart`). */
-export function windowCutoff(days?: number, cwd = root, now = Date.now()): number {
-  return days ? now - days * 86_400_000 : windowStart(now, lastLedgerCommit(cwd))
-}
-
-export function survey(days?: number, cwd = root, now = Date.now()): TriageSession[] {
-  return pickRecencyWindow(readSessions(cwd), windowCutoff(days, cwd, now))
+export function survey(start?: number, cwd = root, now = Date.now()): { since: number; sessions: TriageSession[] } {
+  const since = start ?? defaultWindowStart(now, lastLedgerCommit(cwd))
+  return { since, sessions: pickRecencyWindow(readSessions(cwd), since) }
 }
 
 // ── CLI ───────────────────────────────────────────────────────────────────────
@@ -229,11 +230,18 @@ function fail(msg: string): never {
 function main(): void {
   const argv = process.argv.slice(2)
   const dIdx = argv.indexOf('--days')
-  const days = dIdx >= 0 ? Number(argv[dIdx + 1]) : undefined
-  if (days !== undefined && !(days > 0)) fail('--days must be a positive number')
-  const cutoff = windowCutoff(days)
-  const since = new Date(cutoff).toISOString()
-  const sessions = pickRecencyWindow(readSessions(), cutoff)
+  const sIdx = argv.indexOf('--since')
+  let start: number | undefined
+  if (dIdx >= 0) {
+    const days = Number(argv[dIdx + 1])
+    if (!(days > 0)) fail('--days must be a positive number')
+    start = Date.now() - days * 86_400_000
+  } else if (sIdx >= 0) {
+    start = Date.parse(argv[sIdx + 1] ?? '')
+    if (Number.isNaN(start)) fail('--since must be an ISO timestamp')
+  }
+  const { since: startMs, sessions } = survey(start)
+  const since = new Date(startMs).toISOString()
   const output = argv.includes('--compact') ? sessions.map(toCompactSession) : sessions
   const json = JSON.stringify(output, null, 2)
   const target = resolveOutputTarget(argv, json.length)

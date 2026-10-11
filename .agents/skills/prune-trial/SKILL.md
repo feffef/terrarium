@@ -30,7 +30,7 @@ is earlier and is never the window's start. Run
 
 For each trial that has landed and is past its window: **apply** its `check`
 (prose, not a command), and read the Frictions logged since it landed
-(`scripts/session-frictions.ts --days N`, N reaching back to the landing — large output goes to a file automatically),
+(`scripts/session-frictions.ts --since <landing time>`, then only sessions that started after it — large output goes to a file automatically),
 plus Gate failures and any issue filed since as a regression of an earlier
 fix — `frictions-to-fixes` files those, naming the fix that didn't hold.
 

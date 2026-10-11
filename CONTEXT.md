@@ -152,11 +152,9 @@ Frictions that share a cause are grouped in the **Friction Ledger**, not tagged.
 
 ### Friction Ledger
 An Inventory of the Platform's Friction clusters: one entry per root cause, with
-the surface its fix lands on, its status (open, tracked, on trial or fixed) and
 every occurrence by Session, so recurrence is counted over weeks rather than one
-run's window, and a cause that recurs every few days is seen.
-`frictions-to-fixes` maintains it and holds its entry and expiry rules; the
-Journal manifest holds its schema.
+run's window and a cause that recurs every few days is seen.
+`frictions-to-fixes` maintains it.
 
 ### Skill
 A Claude Code skill that encodes a repeatable capability for developing or

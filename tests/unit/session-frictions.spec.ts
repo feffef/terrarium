@@ -2,12 +2,13 @@
 // ordering and the raw-log → triage-record reduction where correctness bugs
 // would hide. The FS IO is a thin shell over these and is exercised by running
 // the `frictions-to-fixes` Skill.
+import { execFileSync } from 'node:child_process'
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 import { ARCHIVED_SESSIONS_DIR, SESSIONS_DIR } from '../../scripts/session-logs.ts'
-import { OUTPUT_FILE_PATH, pickRecencyWindow, resolveOutputTarget, survey, toCompactSession, toTriageSession, windowStart, type TriageSession } from '../../scripts/session-frictions.ts'
+import { defaultWindowStart, OUTPUT_FILE_PATH, pickRecencyWindow, resolveOutputTarget, survey, toCompactSession, toTriageSession, type TriageSession } from '../../scripts/session-frictions.ts'
 
 function session(id: string, startedAt: string, opts: Partial<TriageSession> = {}): TriageSession {
   return {
@@ -27,16 +28,16 @@ function session(id: string, startedAt: string, opts: Partial<TriageSession> = {
   }
 }
 
-describe('windowStart()', () => {
+describe('defaultWindowStart()', () => {
   const now = Date.parse('2026-07-10T00:00:00Z')
-  it('reaches back 48 hours from the ledger commit when that is earlier than now', () => {
-    expect(windowStart(now, Date.parse('2026-07-09T12:00:00Z'))).toBe(Date.parse('2026-07-07T12:00:00Z'))
+  it('reaches back 48 hours from the last ledger commit', () => {
+    expect(defaultWindowStart(now, Date.parse('2026-07-09T12:00:00Z'))).toBe(Date.parse('2026-07-07T12:00:00Z'))
   })
   it('reaches back 48 hours from an old ledger commit, so a missed run loses no logs', () => {
-    expect(windowStart(now, Date.parse('2026-07-03T00:00:00Z'))).toBe(Date.parse('2026-07-01T00:00:00Z'))
+    expect(defaultWindowStart(now, Date.parse('2026-07-03T00:00:00Z'))).toBe(Date.parse('2026-07-01T00:00:00Z'))
   })
   it('falls back to 48 hours when the ledger has no commit', () => {
-    expect(windowStart(now, null)).toBe(Date.parse('2026-07-08T00:00:00Z'))
+    expect(defaultWindowStart(now, null)).toBe(Date.parse('2026-07-08T00:00:00Z'))
   })
 })
 
@@ -197,7 +198,7 @@ describe('survey() — external exclusion (ADR-0009 amendment)', () => {
       'session: session_external\nstartedAt: 2026-07-21T00:00:00Z\nexternal: true\ngoal: external work\noutcome: done\nfrictions:\n  - description: a toolchain friction\n    solution: n/a\n    severity: blocker\n',
     )
 
-    const ids = survey(3, dir, Date.parse('2026-07-22T00:00:00Z')).map((s) => s.id)
+    const ids = survey(Date.parse('2026-07-19T00:00:00Z'), dir).sessions.map((s) => s.id)
     expect(ids).toEqual(['session_internal'])
   })
 
@@ -207,7 +208,26 @@ describe('survey() — external exclusion (ADR-0009 amendment)', () => {
       join(dir, ARCHIVED_SESSIONS_DIR, 'archived.yml'),
       'session: session_archived\nstartedAt: 2026-07-20T00:00:00Z\ngoal: g\noutcome: o\nfrictions: []\n',
     )
-    const ids = survey(3, dir, Date.parse('2026-07-22T00:00:00Z')).map((s) => s.id)
+    const ids = survey(Date.parse('2026-07-19T00:00:00Z'), dir).sessions.map((s) => s.id)
     expect(ids).toEqual(['session_archived'])
+  })
+
+  it('by default starts 48 hours before the last ledger commit', () => {
+    const env = { ...process.env, GIT_AUTHOR_DATE: '2026-07-10T00:00:00Z', GIT_COMMITTER_DATE: '2026-07-10T00:00:00Z' }
+    const git = (...args: string[]): void => {
+      execFileSync('git', ['-c', 'user.name=t', '-c', 'user.email=t@t', '-c', 'core.hooksPath=/dev/null', ...args], { cwd: dir, env, stdio: 'ignore' })
+    }
+    mkdirSync(join(dir, 'layers/journal/content/current/frictions'), { recursive: true })
+    writeFileSync(join(dir, 'layers/journal/content/current/frictions/x.yml'), 'name: x\n')
+    git('init', '-q')
+    git('add', '.')
+    git('commit', '-q', '-m', 'ledger')
+    const { since } = survey(undefined, dir, Date.parse('2026-07-20T00:00:00Z'))
+    expect(new Date(since).toISOString()).toBe('2026-07-08T00:00:00.000Z')
+  })
+
+  it('by default starts 48 hours before now when no ledger commit is visible', () => {
+    const { since } = survey(undefined, dir, Date.parse('2026-07-20T00:00:00Z'))
+    expect(new Date(since).toISOString()).toBe('2026-07-18T00:00:00.000Z')
   })
 })

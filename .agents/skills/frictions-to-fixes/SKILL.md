@@ -36,13 +36,14 @@ Its brief:
   schema in `layers/journal/tenant.config.ts`): one entry per cluster of
   frictions with a common cause, carrying its `status`, `surface` and every
   `occurrence` so far. Append each friction in the window that matches an
-  entry, whatever its severity, unless the entry already lists that session.
-  A new entry needs a cause seen twice, or one `major` or `blocker`. A cluster
-  is a shared **root cause**: two frictions days apart, on different tools,
-  belong together when one change would retire both. An entry's recurrence is
-  its occurrences in the last 14 days, counting only those after its `fixedOn`
-  when it has one. Return the ledger changes (new entries, appended
-  occurrences, status changes, each with its evidence) in the report.
+  entry, whatever its severity; a session counts once, at its highest
+  severity. A new entry needs a cause seen twice, or one `major` or `blocker`.
+  A cluster is a shared **root cause**: two frictions days apart, on different
+  tools, belong together when one change would retire both. The ledger's
+  **horizon** is the last 14 days: an entry's recurrence is its occurrences
+  within it, counting only sessions that started after its fix merged when it
+  has one. Return the ledger changes (new entries, appended occurrences,
+  status changes, each with its evidence) in the report.
 - **Steer the budget at the unfixed tail.** A large share of the window's frictions are usually already resolved by a later in-window session or a merged fix. Screen those out fast as a §2 `drop` instead of re-deriving their history; save the deep archaeology for candidates with no in-window resolution.
 - **Read the window's session logs** via `pnpm exec tsx scripts/session-frictions.ts`
   (it prints where the window starts; bare `tsx` isn't on PATH). Large output goes to
@@ -105,11 +106,11 @@ trial. Then, for the rest: the §1 subagent applies these rules to every candida
   Done is done; spending a PR here is duplicate work.
 - **Open already** — an **open** issue or **open** PR already tracks it (the
   ledger's `tracked`; cite the number). Don't file a duplicate. One with no
-  commit or comment in 14 days is not covered: surface it as a candidate for the
-  main session to pick up or escalate, never as a drop.
-- **Reappeared _after_ its fix merged** (an occurrence dated after the entry's
-  `fixedOn`, or a friction logged in a session that started later than the
-  fixing PR landed) — this is a **regression**: the fix that
+  commit or comment within the horizon is idle: surface it as a candidate for
+  the main session to pick up or escalate.
+- **Reappeared _after_ its fix merged** (a friction logged in a session that
+  started later than the fixing PR landed; the entry's `fixedOn` dates it) —
+  this is a **regression**: the fix that
   was supposed to be in place did not hold. Do **not** route it through the ordinary
   simplest-fix dispatch — a change that already failed once needs human eyes, not a
   second run of the same idea. The main session files a distinct issue that flags
@@ -156,13 +157,18 @@ subsumes).
 
 ## 4. Update the ledger; file issues only for what outlives this run
 
-**Update the ledger every run, fixes or none.** Apply the subagent's ledger
-changes (§1), set `status`/`ref` for what this run files, dispatches or
-escalates, delete an entry that is `fixed` or holds one occurrence, once 14
-days pass with no new occurrence (git keeps it), and land the diff as one PR
-you merge yourself on a green gate
-(`pnpm validate:content` checks it). It is the run's durable record; a zero-fix
-run still lands it.
+**Update the ledger every run, fixes or none.** It is the run's durable
+record. The ledger edit is:
+
+- the subagent's ledger changes (§1);
+- `status` and `ref` for what this run files, dispatches or escalates, with
+  `fixedOn` on anything it marks `fixed`;
+- deleting an entry that is `fixed` or holds one occurrence when it has no
+  occurrence within the horizon (git keeps it).
+
+You review and merge; you never author (ADR-0003's row for this Skill). So
+the ledger edit rides in the grouped doc PR (§5), or, on a run that dispatches
+none, goes to one Sonnet agent of its own.
 
 A **hard** selection (§3) is expected to need human review at merge (§6), so it
 can sit open past this run — file it as an issue on the tracker (a group of
@@ -205,7 +211,8 @@ post-dispatch check. Run at most 2 impl agents' full gates concurrently
 (dispatch-subagents §3); dispatch the rest as those finish:
 
 - **Doc-only fixes** (Markdown / prose — CLAUDE.md, a **repo-owned** SKILL, a Skill
-  Inventory entry): hand them **all to one agent as a single grouped PR**. These
+  Inventory entry): hand them **all to one agent as a single grouped PR**,
+  with this run's ledger edit (§4) in the brief. These
   are ordinarily **simple** selections with no issue filed (§4) — the PR
   description carries each fix's problem/evidence/recommended-fix directly
   instead of a `Closes #N`; a doc selection that came out **hard** still cites its
@@ -245,7 +252,7 @@ impl agent also must **not call `subscribe_pr_activity`** on the PR it opens: th
 or `log-session`** — see `close-session/SKILL.md` for why and its mechanical
 enforcement.
 
-Done when every selection is covered by a pushed gated PR (every simple doc fix by
+Done when every selection and the ledger edit are covered by a pushed gated PR (every simple doc fix and the ledger edit by
 the one grouped PR, each other selection by its own), gate green, awaiting your
 review — a hard selection's PR cites and `Closes` its issue; a simple selection's
 PR carries its problem/evidence/fix inline with no issue behind it.
