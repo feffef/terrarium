@@ -75,7 +75,7 @@ docsRead:                          # curated — what each doc gave you, and whe
   - { path: "app/pages/t/[tenant]/[space]/[...slug].vue", reason: routing, useful: partly }
 skillsUsed:                        # transcript-observed reads/Skills you omit are folded in
   - { name: tdd, reason: "test-first the helper (see #99)" }  # (name cross-refs the Skill Inventory)
-ruleVerdicts:                      # every .claude/rules/ file that loaded (step 3 lists them)
+ruleVerdicts:                      # every path-scoped rule that loaded (step 3 lists them)
   - { path: .claude/rules/adr-0025.md, reason: "kinds live in shared/kinds.ts", useful: no }
 frictions:                         # REQUIRED (may be []) — list EVERY friction
   - description: …                 # ~20 words, honest
@@ -115,10 +115,11 @@ ideas:                             # OPTIONAL — omit unless something sparked
 - `docsRead`/`skillsUsed` are your **curated** picks (the ones worth a `reason`).
   A `docsRead` or `ruleVerdicts` `reason` says briefly what the doc or rule told
   you; `useful` says whether that helped your task. You don't have to list
-  everything you touched — the extractor folds observed reads in. A read you *do* cite keeps your `reason`; the rest get a derived
-  placeholder — `(read before editing)` if the same path was also edited (the
-  Edit/Write tool requires reading it first, so that read wasn't unexplained,
-  just uncited), otherwise `(no reason given)`.
+  everything you touched — the extractor folds observed reads in. A read you
+  *do* cite keeps your `reason`; the rest get a derived placeholder —
+  `(read before editing)` if the same path was also edited (the Edit/Write tool
+  requires reading it first, so that read wasn't unexplained, just uncited),
+  otherwise `(no reason given)`.
 - **frictions is the point.** List *every* one — anything that felt unnecessarily
   complex, token-heavy, or repetitive. A **doc contradiction found mid-session** is
   itself a friction: record it with a `solution` pointing at the single home to fix.
@@ -166,12 +167,16 @@ is a normal PR.
 `--author` lists every instruction doc the trace will fold into `docsRead`
 that has no reason and `useful` verdict yet, whether the Read tool opened it or
 a Bash command's output showed it (yours or a subagent's — folded in by design,
-issue #796), with the evidence for each, and every rule that loaded with no
-`ruleVerdicts` entry. Re-run `--author` with an entry for each one: a one-line
-reason and a `useful` verdict, or, for a doc, the reason `(not read)` when no
-command of this session or its subagents showed you that doc. A later pass merges with the
-first, so list only the new entries. ADR-0009's merged-read amendment says
-what the stitch does with `(not read)`.
+issue #796), with the evidence for each. Answer each with a `docsRead` entry: a
+one-line reason and a `useful` verdict, or the reason `(not read)` when no
+command of this session or its subagents showed you that doc. ADR-0009's
+merged-read amendment says what the stitch does with `(not read)`.
+
+It also lists every path-scoped rule that loaded with no `ruleVerdicts` entry.
+Answer each with a reason and a `useful` verdict.
+
+A later pass merges with the first, so list only the new or changed entries,
+but write each one whole: a pass replaces an entry with the same path.
 
 The report also lists docs a command named but did not show enough of to
 count. ADR-0009's output-matching and merged-read amendments say what is

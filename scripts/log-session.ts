@@ -32,7 +32,7 @@ import { basename, dirname, join, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import { isPair, isScalar, parse as parseYaml, parseDocument, stringify as stringifyYaml, visit } from 'yaml'
 import { z } from 'zod'
-import { sessionSchema, usefulVerdict } from '../shared/schemas/session.ts'
+import { ruleVerdict, sessionSchema, usefulVerdict } from '../shared/schemas/session.ts'
 import { sessionUrl } from '../shared/session-url.ts'
 import { fetchOriginMain } from './git-helpers.ts'
 import { FALLBACK_MODEL, provenanceFooter } from './provenance-footer.ts'
@@ -121,7 +121,7 @@ const authoredScratchSchema = z
     prs: z.array(z.string()).optional(),
     docsRead: z.array(z.object({ path: z.string(), reason: z.string(), useful: usefulVerdict.optional() })).optional(),
     skillsUsed: z.array(z.object({ name: z.string(), reason: z.string() })).optional(),
-    ruleVerdicts: z.array(z.object({ path: z.string(), reason: z.string(), useful: usefulVerdict })).optional(),
+    ruleVerdicts: z.array(ruleVerdict).optional(),
     frictions: z.array(
       z.object({
         description: z.string(),
@@ -769,6 +769,8 @@ function fail(msg: string): never {
  *  would bury the reads it sits beside. */
 const NEAR_MISS_LIMIT = 5
 
+const VERDICTS = usefulVerdict.options.join(' | ')
+
 const oneLine = (command: string): string => command.replace(/\s+/g, ' ').slice(0, 100)
 
 /** List every instruction doc the trace will fold into `docsRead` and every
@@ -819,7 +821,7 @@ export function reportUnexplainedReads(
       log(`      ${evidence}`)
     }
     log('  Re-run --author with a docsRead entry for each: a one-line reason (what it gave you) and')
-    log(`  useful: yes | partly | no, or the reason '${NOT_READ_REASON}' for a doc no command of this`)
+    log(`  useful: ${VERDICTS}, or the reason '${NOT_READ_REASON}' for a doc no command of this`)
     log('  session or its subagents showed you.')
     log('  A shell-credited doc marked so is dropped and logged as a SHELL-READ-DETECTION friction.')
   }
@@ -827,7 +829,7 @@ export function reportUnexplainedReads(
     log(`  ruleVerdicts — ${openRules.length} rule(s) loaded with no verdict yet:`)
     for (const r of openRules) log(`    ${r}`)
     log('  Re-run --author with a ruleVerdicts entry for each: a one-line reason (what it told you)')
-    log('  and useful: yes | partly | no.')
+    log(`  and useful: ${VERDICTS}.`)
   }
   if (misses.length) {
     log(`  Not counted as read via shell (${misses.length}), and why:`)

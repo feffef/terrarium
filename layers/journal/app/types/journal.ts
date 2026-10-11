@@ -1,5 +1,5 @@
 import type { z } from 'zod'
-import type { sessionSchema } from '../../../../shared/schemas/session'
+import type { RuleVerdict, sessionSchema } from '../../../../shared/schemas/session'
 import type { skillSchema } from '../../tenant.config'
 
 // `z.input`, not `z.infer`: the schemas' `.default([])` fields are optional on the
@@ -12,7 +12,6 @@ export type Status = SessionDoc['status']
 export type Subagent = NonNullable<SessionDoc['subagents']>[number]
 export type Importance = SkillDoc['importance']
 export type DocRead = NonNullable<SessionDoc['docsRead']>[number]
-export type Useful = NonNullable<DocRead['useful']>
 
 // A session prepared for display in the recent-activity feed — the page derives
 // this from a SessionDoc (formats dates, counts frictions) so the card component
@@ -55,7 +54,7 @@ export interface SessionCardView {
   docsReadViaShell: string[]
   // Path-scoped rules that loaded; `followedUp` ⇒ the session then read the full ADR.
   // `reason`/`useful` are the agent's verdict, absent on logs older than it.
-  rules: { path: string; followedUp: boolean; reason?: string; useful?: Useful }[]
+  rules: ({ path: string; followedUp: boolean } & Partial<Omit<RuleVerdict, 'path'>>)[]
   tools: { name: string; count: number }[]
 }
 

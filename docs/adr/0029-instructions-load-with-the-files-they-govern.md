@@ -83,9 +83,8 @@ inside subagents too (PR #1741). Whether a Bash write loads one is untested.
   `PreToolUse` hook that points to the doc at the first matching action.
 - Session logs record which path-scoped rules loaded (`rulesLoaded`) and whose
   ADR the agent then read (`rulesFollowedUp`), so a rule's reach can be
-  estimated, not measured: a rule can be counted twice under a relative and an
-  absolute path (#1763), an ADR read by a subagent does not credit the parent's rule,
-  and Bash edits are missing from `filesEdited`.
+  estimated, not measured: an ADR read by a subagent does not credit the
+  parent's rule, and Bash edits are missing from `filesEdited`.
 - An agent logs a Friction when an unrelated rule confused it or cost it work
   (`log-session`), so a too-broad glob shows up and gets narrowed.
 - Gate checks for non-ADR rules (they have `paths`; the doc they name exists)

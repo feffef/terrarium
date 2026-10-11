@@ -166,6 +166,14 @@ describe('rulesLoaded — path-scoped rules that fired', () => {
     expect(foldSubagentTrace(trace, [sub], NO_ENV).rulesLoaded).toEqual(['.claude/rules/adr-0024.md', '.claude/rules/adr-0012.md'])
   })
 
+  // Issue #1763: a worktree subagent's cwd differs, so its absolute rule path
+  // used to survive relativizing and duplicate the parent's.
+  it('counts a rule once when a worktree subagent loads it from another root', () => {
+    const worktree = { type: 'user', cwd: '/repo/.claude/worktrees/a1', message: { content: 'go' } }
+    const sub = [worktree, rule('/repo/.claude/rules/adr-0024.md'), rule('/repo/.claude/worktrees/a1/.claude/rules/adr-0012.md')]
+    expect(foldSubagentTrace(trace, [sub], NO_ENV).rulesLoaded).toEqual(['.claude/rules/adr-0024.md', '.claude/rules/adr-0012.md'])
+  })
+
   it('is written by the stitch and accepted by the schema', () => {
     const authored: AuthoredScratch = { session: 'session_01RL', goal: 'g', status: 'completed', outcome: 'o', summary: 's', frictions: [] }
     const entry = stitch(authored, trace)

@@ -33,6 +33,7 @@
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs'
 import { basename, dirname, join, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
+import type { RuleVerdict, UsefulVerdict } from '../shared/schemas/session.ts'
 import { DERIVED_REASON, FOLDED_TRACE_FIELDS } from '../shared/trace-fields.ts'
 import {
   buildDocLineIndex,
@@ -45,7 +46,6 @@ import {
   type ShellCommand,
 } from './shell-reads.ts'
 import { ruleAdr } from './validate-adr-rules.ts'
-import type { UsefulVerdict } from '../shared/schemas/session.ts'
 
 export { DERIVED_REASON, FOLDED_TRACE_FIELDS } from '../shared/trace-fields.ts'
 
@@ -158,6 +158,13 @@ export function isContentPath(p: string | undefined): p is string {
 function hintedRules(content: unknown): string[] {
   const text = (Array.isArray(content) ? content : [content]).filter((c) => typeof c === 'string').join('\n')
   return [...text.matchAll(/^Contents of (\.claude\/rules\/[\w.-]+\.md):$/gm)].map((m) => m[1]!)
+}
+
+/** A rule's identity is its `.claude/rules/` path, not where it was loaded
+ *  from: a worktree subagent loads the same rule under another absolute root,
+ *  which `relativizer` cannot strip (issue #1763). */
+function ruleKey(path: string): string {
+  return path.slice(path.lastIndexOf('.claude/rules/'))
 }
 
 function relativizer(records: Record<string, unknown>[]): (p: string) => string {
@@ -546,7 +553,7 @@ export function extractTrace(
     if (!Number.isNaN(ts)) stamps.push(ts)
 
     const att = rec.attachment as { type?: string; path?: string; content?: unknown } | undefined
-    if (att?.type === 'nested_memory' && att.path?.includes('/.claude/rules/')) rules.push(att.path)
+    if (att?.type === 'nested_memory' && att.path?.includes('/.claude/rules/')) rules.push(ruleKey(att.path))
     if (att?.type === 'hook_additional_context') rules.push(...hintedRules(att.content))
     for (const r of rules) if (!ruleLoadedAt.has(r)) ruleLoadedAt.set(r, i)
 
@@ -618,8 +625,8 @@ export function extractTrace(
     filesRead: dedup(reads).filter(isContentPath).map(rel),
     filesEdited: dedup(edits).filter(isContentPath).map(rel),
     docsReadViaShell: docIndex ? scanShellReadsByOutput(bashCommandsOf(records), docIndex, rel).paths : [],
-    rulesLoaded: dedup(rules.map(rel)),
-    rulesFollowedUp: dedup([...ruleLoadedAt].filter(([r, at]) => adrReadAfter(r, at)).map(([r]) => rel(r))),
+    rulesLoaded: dedup(rules),
+    rulesFollowedUp: [...ruleLoadedAt].filter(([r, at]) => adrReadAfter(r, at)).map(([r]) => r),
     skillsUsed: dedup([...skills, ...commandSkills]),
     commandSkills: dedup(commandSkills),
     subagents,
@@ -738,7 +745,7 @@ export interface AuthoredScratch {
   prs?: string[]
   docsRead?: { path: string; reason: string; useful?: UsefulVerdict }[]
   skillsUsed?: { name: string; reason: string }[]
-  ruleVerdicts?: { path: string; reason: string; useful: UsefulVerdict }[]
+  ruleVerdicts?: RuleVerdict[]
   frictions: { description: string; solution: string; severity: string }[]
   learnings?: string[]
   ideas?: string[]

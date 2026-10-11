@@ -12,9 +12,10 @@ import { z } from 'zod'
 // The string-not-`z.date()` rationale lives with the shared refinement.
 import { utcTimestamp } from './timestamp'
 
-/** The agent's verdict on whether a doc or rule it was given helped its task. */
 export const usefulVerdict = z.enum(['yes', 'partly', 'no'])
+export const ruleVerdict = z.object({ path: z.string(), reason: z.string(), useful: usefulVerdict })
 export type UsefulVerdict = z.infer<typeof usefulVerdict>
+export type RuleVerdict = z.infer<typeof ruleVerdict>
 
 /**
  * The frozen `sessions` schema (ADR-0009). `status`/`kind` are queryable spines;
@@ -60,10 +61,7 @@ export const sessionSchema = z
     rulesLoaded: z.array(z.string()).optional(),
     // The subset of `rulesLoaded` whose ADR was read after the rule loaded.
     rulesFollowedUp: z.array(z.string()).optional(),
-    // Authored: what each loaded rule told the agent, and whether it helped.
-    ruleVerdicts: z
-      .array(z.object({ path: z.string(), reason: z.string(), useful: usefulVerdict }))
-      .optional(),
+    ruleVerdicts: z.array(ruleVerdict).optional(),
     // DEPRECATED — no longer written. Shell reads now fold into `docsRead`
     // (ADR-0009's merged-read amendment); the key stays so older logs validate.
     docsReadViaShell: z.array(z.string()).optional(),
