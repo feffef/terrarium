@@ -213,6 +213,10 @@ describe('false positives', () => {
     expect(rules('grep -e docs/agents/x.md docs/agents/y.md')).toEqual(['value bound to a flag'])
   })
 
+  it("keeps grep -v's file: -v takes a value only for awk", () => {
+    expect(paths('grep -v foo docs/agents/x.md')).toEqual(['docs/agents/x.md'])
+  })
+
   it('rejects a redirect target: that doc is being WRITTEN', () => {
     expect(paths("cat > docs/agents/new-doc.md <<'EOF'")).toEqual([])
     expect(rules('cat foo.txt > docs/agents/new.md')).toEqual(['redirect target: written, not read'])

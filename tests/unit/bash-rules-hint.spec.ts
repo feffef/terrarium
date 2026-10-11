@@ -17,7 +17,7 @@ const rule = (file: string, paths: string[], body: string): RuleFile => ({
   text: `---\npaths:\n${paths.map((p) => `  - "${p}"`).join('\n')}\n---\n${body}\n`,
 })
 const RULES = [
-  rule('tenant.md', ['nuxt.config.ts', 'layers/*/*', 'layers/*/app/**'], '# Tenant layers'),
+  rule('tenant.md', ['nuxt.config.ts', 'layers/*/*', 'layers/*/app/**', 'layers/*/content/**/*.md'], '# Tenant layers'),
   rule('guards.md', ['scripts/*-guard.*'], '# The guards'),
   { file: 'adr-0003.md', text: '# ADR-0003: always loaded\n' },
 ]
@@ -59,9 +59,31 @@ describe('bashRulesHint() — the pure core', () => {
     expect(hint('cat ../layers/atlas/nuxt.config.ts | head', '/repo/docs/x')).toBeNull()
   })
 
-  it('treats a directory as covering the files under it, but not the whole repo', () => {
-    expect(injected('grep -rn x layers/ | head')).toEqual(['.claude/rules/tenant.md'])
+  it('matches a file only where the whole glob matches it', () => {
+    expect(hint('cat layers/journal/content/current/sessions/a.yml layers/atlas/content/x.png')).toBeNull()
+    expect(injected('cat README.md layers/atlas/content/a/b.md')).toEqual(['.claude/rules/tenant.md'])
+  })
+
+  // A directory is never a "single file read", even alone, so the harness
+  // loads nothing for it. It counts only once it is as deep as a glob's fixed
+  // part, so a broad search stays quiet instead of injecting every rule.
+  it('treats a directory as covering a glob only from the depth the glob fixes', () => {
+    expect(injected('grep -rn x layers/atlas/app/')).toEqual(['.claude/rules/tenant.md'])
+    expect(injected('grep -rn x layers/atlas/ | head')).toEqual(['.claude/rules/tenant.md'])
+    expect(hint('grep -rn x layers/ | head')).toBeNull()
     expect(hint('grep -rn x . | head')).toBeNull()
+  })
+
+  it('keeps fd redirects out of the compound test, and reads an input redirect', () => {
+    for (const c of ['cat nuxt.config.ts 2>&1', 'cat nuxt.config.ts >/dev/null 2>/dev/null', 'head -5 nuxt.config.ts 2> /dev/null']) {
+      expect(bashReadPaths(c, '/repo')).toEqual({ paths: ['/repo/nuxt.config.ts'], simple: true })
+    }
+    expect(injected('cat < layers/atlas/nuxt.config.ts | head')).toEqual(['.claude/rules/tenant.md'])
+    expect(injected('cat <layers/atlas/nuxt.config.ts | head')).toEqual(['.claude/rules/tenant.md'])
+  })
+
+  it("keeps grep -v's files", () => {
+    expect(injected('grep -v x README.md layers/atlas/nuxt.config.ts')).toEqual(['.claude/rules/tenant.md'])
   })
 
   it('skips heredoc bodies, globs, variables and command substitutions', () => {
@@ -114,6 +136,23 @@ describe('the hook entry (sh pre-filter → tsx)', () => {
 
   it('writes nothing when the pre-filter drops the command', () => {
     expect(run(bash('ls -la && git status'))).toMatchObject({ status: 0, stdout: '' })
+  })
+
+  // The pre-filter reads the first `command` key; JSON.parse keeps the last.
+  // A payload where they differ shows which side of the pre-filter ran.
+  const probe = (seen: string) =>
+    `{"tool_name":"Bash","cwd":${JSON.stringify(repo)},"tool_input":{"command":${JSON.stringify(seen)},"command":"cat README.md scripts/tail-pipe-guard.ts"}}`
+
+  it('skips tsx for a read that cannot be compound or multi-file', () => {
+    for (const seen of ['cat scripts/tail-pipe-guard.ts', 'head -50 scripts/tail-pipe-guard.ts']) {
+      expect(run(probe(seen))).toMatchObject({ status: 0, stdout: '' })
+    }
+  })
+
+  it('runs tsx for any compound or multi-word read', () => {
+    for (const seen of ['cat a | head', 'cd x && cat a', 'cat a; ls', 'cat $(ls)', 'ls\ncat a', 'cat a b', 'grep -n x a']) {
+      expect(run(probe(seen)).stdout).toContain('guards.md')
+    }
   })
 
   it('fails open on invalid JSON, a missing rules dir and a malformed rule', () => {

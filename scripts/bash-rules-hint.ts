@@ -12,45 +12,55 @@
 // Usage:
 //   tsx scripts/bash-rules-hint.ts                # hook payload on stdin
 //   tsx scripts/bash-rules-hint.ts --dry-run (--input '<payload json>' | --input-file <path>)
-import { existsSync, readFileSync } from 'node:fs'
+import { existsSync, readFileSync, statSync } from 'node:fs'
 import { dirname, isAbsolute, join, matchesGlob, relative } from 'node:path'
-import { printDryRunResult, readTranscript, resolveDryRunInput, runIfMain } from './guard-io.ts'
+import { printDryRunResult, prop, readTranscript, resolveDryRunInput, runIfMain } from './guard-io.ts'
 import { hintedRules, ruleKey } from './session-trace.ts'
 import { bashReadPaths } from './shell-reads.ts'
-import { loadRules, prop, type RuleFile } from './skill-rules-hint.ts'
-import { ruleBody, rulePaths } from './validate-adr-rules.ts'
+import { loadRules, type RuleFile } from './skill-rules-hint.ts'
+import { RULES_DIR, ruleBlock, rulePaths } from './validate-adr-rules.ts'
 
-const RULES_DIR = '.claude/rules'
-
-/** `path` is a file `glob` matches, or a directory that can hold one
- *  (`grep -rn x layers/` reads what `layers/*\/app/**` names). */
+/** A file counts where the glob matches it, as when the harness loads a rule.
+ *  A directory (trailing `/`) counts only once it is as deep as the glob's
+ *  fixed part, so `grep -rn x layers/` does not inject every layers rule. */
 function covers(path: string, glob: string): boolean {
-  if (matchesGlob(path, glob)) return true
-  const parts = path.split('/')
+  if (!path.endsWith('/')) return matchesGlob(path, glob)
+  const parts = path.slice(0, -1).split('/')
   const globs = glob.split('/')
   for (const [i, part] of parts.entries()) {
-    const g = globs[i]
-    if (g === undefined) return false
-    if (g === '**') return true
-    if (!matchesGlob(part, g)) return false
+    if (globs[i] === '**') return true
+    if (globs[i] === undefined || !matchesGlob(part, globs[i])) return false
   }
-  return globs.length > parts.length
+  const rest = globs.slice(parts.length)
+  return rest.length === 1 || rest[0] === '**'
 }
 
 export function rulesForPaths(paths: string[], rules: RuleFile[]): RuleFile[] {
   return rules.filter((r) => rulePaths(r.text).some((g) => paths.some((p) => covers(p, g))))
 }
 
+const isDirectory = (p: string) => existsSync(p) && statSync(p).isDirectory()
+
+/** The rules governing what `command` read, repo-relative. */
+export function matchedRules(command: string, cwd: string, root: string, rules: RuleFile[]): RuleFile[] {
+  const { paths, simple } = bashReadPaths(command, cwd)
+  const reads = paths
+    .map((p) => relative(root, p) + (p.endsWith('/') || isDirectory(p) ? '/' : ''))
+    // The repo root would match every rule: `grep -rn x .` is a search, not a read.
+    .filter((p) => p !== '/' && p !== '' && !p.startsWith('..') && !isAbsolute(p))
+  // A lone directory is not the one-file read the harness covers.
+  if (simple && !reads.some((p) => p.endsWith('/'))) return []
+  return rulesForPaths(reads, rules)
+}
+
+function formatHint(rules: RuleFile[]): string | null {
+  if (rules.length === 0) return null
+  return ['Files this command read are governed by these rules:', ...rules.map((r) => ruleBlock(r.file, r.text))].join('\n\n')
+}
+
 /** `loaded` holds `.claude/rules/<file>` keys already in the session. */
 export function bashRulesHint(command: string, cwd: string, root: string, rules: RuleFile[], loaded = new Set<string>()): string | null {
-  const { paths, simple } = bashReadPaths(command, cwd)
-  if (simple) return null
-  // The repo root itself ('') would match every rule: `grep -rn x .` is a search, not a read.
-  const inRepo = paths.map((p) => relative(root, p)).filter((p) => p !== '' && !p.startsWith('..') && !isAbsolute(p))
-  const hits = rulesForPaths(inRepo, rules).filter((r) => !loaded.has(`${RULES_DIR}/${r.file}`))
-  if (hits.length === 0) return null
-  const blocks = hits.map((r) => `Contents of ${RULES_DIR}/${r.file}:\n\n${ruleBody(r.text).trim()}`)
-  return ['Files this command read are governed by these rules:', ...blocks].join('\n\n')
+  return formatHint(matchedRules(command, cwd, root, rules).filter((r) => !loaded.has(`${RULES_DIR}/${r.file}`)))
 }
 
 /** Nearest ancestor holding `.claude/rules`, so a worktree matches its own tree. */
@@ -77,11 +87,11 @@ function hintFor(payload: unknown): string | null {
   const cwd = String(prop(payload, 'cwd') ?? process.cwd())
   const root = repoRoot(cwd)
   if (!root) return null
-  const rules = loadRules(join(root, RULES_DIR))
-  const hint = bashRulesHint(command, cwd, root, rules)
-  if (!hint || prop(payload, 'agent_id') !== undefined) return hint
-  const records = readTranscript(String(prop(payload, 'transcript_path') ?? ''))
-  return records ? bashRulesHint(command, cwd, root, rules, loadedRules(records)) : hint
+  const hits = matchedRules(command, cwd, root, loadRules(join(root, RULES_DIR)))
+  if (hits.length === 0) return null
+  const subagent = prop(payload, 'agent_id') !== undefined
+  const loaded = subagent ? new Set<string>() : loadedRules(readTranscript(String(prop(payload, 'transcript_path') ?? '')) ?? [])
+  return formatHint(hits.filter((r) => !loaded.has(`${RULES_DIR}/${r.file}`)))
 }
 
 function main(): void {

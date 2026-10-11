@@ -45,7 +45,7 @@ import {
   type NearMiss,
   type ShellCommand,
 } from './shell-reads.ts'
-import { ruleAdr } from './validate-adr-rules.ts'
+import { ruleAdr, ruleBlockFiles } from './validate-adr-rules.ts'
 
 export { DERIVED_REASON, FOLDED_TRACE_FIELDS } from '../shared/trace-fields.ts'
 
@@ -159,8 +159,7 @@ export function isContentPath(p: string | undefined): p is string {
 // scripts/bash-rules-hint.ts injects as a load; only the hint's own
 // "Contents of <rule>:" headers name it.
 export function hintedRules(content: unknown): string[] {
-  const text = (Array.isArray(content) ? content : [content]).filter((c) => typeof c === 'string').join('\n')
-  return [...text.matchAll(/^Contents of (\.claude\/rules\/[\w.-]+\.md):$/gm)].map((m) => m[1]!)
+  return ruleBlockFiles((Array.isArray(content) ? content : [content]).filter((c) => typeof c === 'string').join('\n'))
 }
 
 /** A rule's identity is its `.claude/rules/` path, not where it was loaded

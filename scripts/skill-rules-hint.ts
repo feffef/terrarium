@@ -11,14 +11,8 @@
 //   tsx scripts/skill-rules-hint.ts --dry-run (--input '<payload json>' | --input-file <path>)
 import { existsSync, readdirSync, readFileSync } from 'node:fs'
 import { join, matchesGlob } from 'node:path'
-import { printDryRunResult, resolveDryRunInput, runIfMain } from './guard-io.ts'
-import { ruleBody, rulePaths } from './validate-adr-rules.ts'
-
-const RULES_DIR = '.claude/rules'
-
-export function prop(obj: unknown, key: string): unknown {
-  return obj !== null && typeof obj === 'object' ? (obj as Record<string, unknown>)[key] : undefined
-}
+import { printDryRunResult, prop, resolveDryRunInput, runIfMain } from './guard-io.ts'
+import { RULES_DIR, ruleBlock, rulePaths } from './validate-adr-rules.ts'
 
 /** The repo Skill a payload invokes: a Skill tool call, or a prompt that is a
  *  slash command. Namespaced Skills (`plugin:name`) are not ours. */
@@ -49,8 +43,7 @@ export function rulesForSkill(skill: string, rules: RuleFile[]): RuleFile[] {
 export function skillRulesHint(skill: string, rules: RuleFile[]): string | null {
   const hits = rulesForSkill(skill, rules)
   if (hits.length === 0) return null
-  const blocks = hits.map((r) => `Contents of ${RULES_DIR}/${r.file}:\n\n${ruleBody(r.text).trim()}`)
-  return [`The ${skill} Skill runs under these ADR rules:`, ...blocks].join('\n\n')
+  return [`The ${skill} Skill runs under these ADR rules:`, ...hits.map((r) => ruleBlock(r.file, r.text))].join('\n\n')
 }
 
 export function loadRules(dir = RULES_DIR): RuleFile[] {

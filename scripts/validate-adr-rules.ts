@@ -17,7 +17,7 @@ import { parse as parseYaml } from 'yaml'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const ADR_DIR = 'docs/adr'
-const RULES_DIR = '.claude/rules'
+export const RULES_DIR = '.claude/rules'
 
 /** ADRs with no rule: superseded outright, so nothing in them binds an agent. */
 export const NO_RULE = new Set(['0007'])
@@ -37,6 +37,14 @@ export function rulePaths(ruleText: string): string[] {
 /** The text Claude Code shows for a rule: everything after its frontmatter. */
 export const ruleBody = (ruleText: string) => ruleText.replace(FRONTMATTER, '')
 
+/** A rule as the hints inject it. session-trace parses the header back with
+ *  `ruleBlockFiles` to record the rule as loaded, so both live here. */
+export const ruleBlock = (file: string, ruleText: string) =>
+  `Contents of ${RULES_DIR}/${file}:\n\n${ruleBody(ruleText).trim()}`
+
+export const ruleBlockFiles = (text: string): string[] =>
+  [...text.matchAll(/^Contents of (\.claude\/rules\/[\w.-]+\.md):$/gm)].map((m) => m[1]!)
+
 export function ruleHash(ruleText: string): string | undefined {
   return FRONTMATTER.exec(ruleText)?.[1]?.match(/^adr:\s*(\S+)\s*$/m)?.[1]
 }
@@ -52,8 +60,8 @@ export function withRuleHash(ruleText: string, hash: string): string {
 export interface AdrRuleInput {
   adrs: Record<string, string> // ADR number → ADR file text
   rules: Record<string, string> // rule file name → rule file text
-  others?: Record<string, string> // non-ADR rule file name → rule file text
-  exists?: (repoPath: string) => boolean
+  // Non-ADR rules, with the check for the `docs/` paths they name.
+  otherRules?: { files: Record<string, string>; exists: (repoPath: string) => boolean }
 }
 
 /** The `docs/` paths a rule's body names (not its frontmatter globs). */
@@ -90,14 +98,15 @@ export function findAdrRuleProblems(input: AdrRuleInput): string[] {
       `ADR-${ruleAdr(file)} changed since ${RULES_DIR}/${file} was last checked. Re-read it, update it if the rule changed, then run \`pnpm exec tsx scripts/validate-adr-rules.ts --write\`.`,
     )
   }
-  for (const [file, text] of Object.entries(input.others ?? {})) {
+  const { files = {}, exists = () => true } = input.otherRules ?? {}
+  for (const [file, text] of Object.entries(files)) {
     if (rulePaths(text).length === 0) {
       problems.push(
         `${RULES_DIR}/${file} has no \`paths\` list: a non-ADR rule loads with the files it governs (ADR-0029); cross-cutting instructions stay in CLAUDE.md.`,
       )
     }
     for (const p of ruleDocPaths(text)) {
-      if (input.exists && !input.exists(p)) problems.push(`${RULES_DIR}/${file} names ${p}, which does not exist.`)
+      if (!exists(p)) problems.push(`${RULES_DIR}/${file} names ${p}, which does not exist.`)
     }
   }
   return problems
@@ -116,7 +125,7 @@ function load(): AdrRuleInput {
     if (f.startsWith('adr-')) rules[f] = readFileSync(join(dir, f), 'utf8')
     else if (f.endsWith('.md')) others[f] = readFileSync(join(dir, f), 'utf8')
   }
-  return { adrs, rules, others, exists: (p) => existsSync(join(root, p)) }
+  return { adrs, rules, otherRules: { files: others, exists: (p) => existsSync(join(root, p)) } }
 }
 
 function main(): void {
@@ -135,7 +144,7 @@ function main(): void {
     process.exit(1)
   }
   console.log(
-    `validate-adr-rules: PASS — ${Object.keys(input.rules).length} ADR rule(s) match their ADRs, ${Object.keys(input.others ?? {}).length} other rule(s) have paths and existing docs`,
+    `validate-adr-rules: PASS — ${Object.keys(input.rules).length} ADR rule(s) match their ADRs, ${Object.keys(input.otherRules?.files ?? {}).length} other rule(s) have paths and existing docs`,
   )
 }
 
