@@ -86,6 +86,9 @@ const sessionCards = computed(() => sessionCardViews(sessions.value))
 // text is still there to find, only visually collapsed by default.
 const SESSIONS_VISIBLE = 10
 const showAllSessions = ref(false)
+// Same `v-show` reasoning: on a phone seven open-ended digest rows pushed the session log off-screen.
+const DIGESTS_VISIBLE = 3
+const showAllDigests = ref(false)
 const frictionSeverityTotals = computed(() => frictionTotals(sessions.value))
 const totalFrictions = computed(() => frictionCount(sessions.value))
 const otherFrictions = computed(() => frictionOtherCount(frictionSeverityTotals.value))
@@ -179,7 +182,8 @@ useSeoMeta({
       </p>
       <ul class="digest-list">
         <li
-          v-for="d in digests"
+          v-for="(d, i) in digests"
+          v-show="showAllDigests || i < DIGESTS_VISIBLE || isOpen(digestAnchor(d.date))"
           :id="digestAnchor(d.date)"
           :key="d.doc.path"
           class="digest"
@@ -208,6 +212,14 @@ useSeoMeta({
           </Transition>
         </li>
       </ul>
+      <button
+        v-if="digests.length > DIGESTS_VISIBLE && !showAllDigests"
+        type="button"
+        class="show-all-sessions"
+        @click="showAllDigests = true"
+      >
+        Show all {{ digests.length }} digests
+      </button>
     </section>
 
     <p class="tiles-headline">{{ tilesHeadline }}</p>
