@@ -4,6 +4,7 @@
 // was measured against, plus the classes found while building it.
 import { describe, expect, it } from 'vitest'
 import {
+  bashReadPaths,
   buildDocLineIndex,
   canonicalizeInstructionPath,
   isInstructionDoc,
@@ -216,6 +217,18 @@ describe('false positives', () => {
   it('treats a spaced `>&` target as written, not read', () => {
     expect(paths('cat docs/agents/x.md >& docs/agents/y.md')).toEqual(['docs/agents/x.md'])
     expect(paths('cat docs/agents/x.md &> docs/agents/y.md')).toEqual(['docs/agents/x.md'])
+    expect(bashReadPaths('cat a >& b', '/r').paths).toEqual(['/r/a'])
+    expect(bashReadPaths('cat a &> b', '/r').paths).toEqual(['/r/a'])
+  })
+
+  it('joins a line continuation instead of reading it as a path', () => {
+    expect(bashReadPaths('cat a \\\n  b', '/r').paths).toEqual(['/r/a', '/r/b'])
+  })
+
+  it("reads tail -f's file: -f supplies patterns only to grep and rg", () => {
+    expect(paths('tail -f docs/agents/x.md | head')).toEqual(['docs/agents/x.md'])
+    expect(paths('tail -F docs/agents/x.md')).toEqual(['docs/agents/x.md'])
+    expect(paths('grep -f docs/agents/x.md docs/agents/y.md')).toEqual(['docs/agents/y.md'])
   })
 
   it("keeps grep -v's file: -v takes a value only for awk", () => {

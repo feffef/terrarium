@@ -42,9 +42,8 @@ export const ruleBody = (ruleText: string) => ruleText.replace(FRONTMATTER, '')
 export const ruleBlock = (file: string, ruleText: string) =>
   `Contents of ${RULES_DIR}/${file}:\n\n${ruleBody(ruleText).trim()}`
 
-const RULE_BLOCK_HEADER = new RegExp(`^Contents of (${RULES_DIR.replace(/[.]/g, '\\.')}/[\\w.-]+\\.md):$`, 'gm')
-
-export const ruleBlockFiles = (text: string): string[] => [...text.matchAll(RULE_BLOCK_HEADER)].map((m) => m[1]!)
+export const ruleBlockFiles = (text: string): string[] =>
+  [...text.matchAll(/^Contents of (\.claude\/rules\/[\w.-]+\.md):$/gm)].map((m) => m[1]!)
 
 export function ruleHash(ruleText: string): string | undefined {
   return FRONTMATTER.exec(ruleText)?.[1]?.match(/^adr:\s*(\S+)\s*$/m)?.[1]

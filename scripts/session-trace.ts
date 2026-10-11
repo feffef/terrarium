@@ -165,7 +165,7 @@ export function hintedRules(content: unknown): string[] {
 /** A rule's identity is its `.claude/rules/` path, not where it was loaded
  *  from: a worktree subagent loads the same rule under another absolute root,
  *  which `relativizer` cannot strip (issue #1763). */
-export function ruleKey(path: string): string {
+function ruleKey(path: string): string {
   return path.slice(path.lastIndexOf('.claude/rules/'))
 }
 

@@ -14,10 +14,6 @@
 // command parser (`scanShellReads`) only explains a near-miss in the advisory
 // — ADR-0009's output-matching amendment (issue #1545) says why. Scope stays a
 // PATH-SHAPE test (`isInstructionDoc`), so a doc added later is still in scope.
-//
-// `bashReadPaths` reuses the same command parser for ANY file, because
-// scripts/bash-rules-hint.ts must match whatever a rule's `paths` name
-// (issue #1764); one parser keeps the two from drifting.
 import { isAbsolute, resolve } from 'node:path'
 
 /** Argv-0s that stream a file's CONTENTS into the session. `find`/`ls`/`wc` are
@@ -40,7 +36,8 @@ const SCRIPT_FIRST = new Set(['sed', 'awk', 'grep', 'rg'])
 
 /** Flags whose value is the next token AND supplies the pattern/program, so the
  *  first positional is then a FILE. Without the second half, `grep -e foo
- *  docs/x.md` loses the doc to the SCRIPT_FIRST rule. */
+ *  docs/x.md` loses the doc to the SCRIPT_FIRST rule. Only SCRIPT_FIRST verbs
+ *  take them: `tail -f docs/x.md` follows the file. */
 const PATTERN_FLAGS = new Set(['-e', '-f', '--regexp', '--file', '--expression'])
 
 /** Flags whose value is the next token but is NOT the pattern — a context or
@@ -365,46 +362,40 @@ function showsNoContent(verb: string, tokens: Token[]): boolean {
   })
 }
 
-type ArgKind = 'redirect' | 'flag value' | 'script' | 'file'
-const SKIP_RULE: Record<Exclude<ArgKind, 'file'>, SkipRule> = {
-  redirect: 'redirect target: written, not read',
-  'flag value': 'value bound to a flag',
-  script: 'first positional: a pattern or program, not a path',
-}
-
-/** A reader segment's arguments, each classified once for both scanners.
- *  Flags and redirect operators themselves are dropped. */
-function readerArgs(verb: string, tokens: Token[]): { kind: ArgKind; text: string }[] {
-  const out: { kind: ArgKind; text: string }[] = []
-  const patternSupplied = tokens.some((t) => !t.quoted && PATTERN_FLAGS.has(t.text))
-  const valueFlags = new Set([...PATTERN_FLAGS, ...ARG_FLAGS, ...(VERB_ARG_FLAGS[verb] ?? [])])
-  let bound: ArgKind | null = null
+/** A reader segment's arguments, each classified once for both scanners: a
+ *  file to read, or why it is not one. Flags and redirect operators drop. */
+function readerArgs(verb: string, tokens: Token[]): { skip?: SkipRule; text: string }[] {
+  const out: { skip?: SkipRule; text: string }[] = []
+  const patternFlags = SCRIPT_FIRST.has(verb) ? PATTERN_FLAGS : new Set<string>()
+  const patternSupplied = tokens.some((t) => !t.quoted && patternFlags.has(t.text))
+  const valueFlags = new Set([...patternFlags, ...ARG_FLAGS, ...(VERB_ARG_FLAGS[verb] ?? [])])
+  let bound: SkipRule | undefined
   let positionals = 0
   for (const t of tokens.slice(1)) {
     if (bound) {
-      out.push({ kind: bound, text: t.text })
-      bound = null
+      out.push({ skip: bound, text: t.text })
+      bound = undefined
       continue
     }
     if (!t.quoted) {
       // `> out`, `>& out`, `2>> log`, `2>&1`, `&>out`. `<` is NOT here: `cat < docs/x.md`
       // genuinely streams the file.
       if (/^(?:\d*|&)>>?&?$/.test(t.text)) {
-        bound = 'redirect'
+        bound = 'redirect target: written, not read'
         continue
       }
       const attached = /^(?:\d*|&)>>?(.+)$/.exec(t.text)
       if (attached) {
-        out.push({ kind: 'redirect', text: attached[1]! })
+        out.push({ skip: 'redirect target: written, not read', text: attached[1]! })
         continue
       }
       if (t.text.length > 1 && t.text.startsWith('-')) {
-        if (valueFlags.has(t.text)) bound = 'flag value'
+        if (valueFlags.has(t.text)) bound = 'value bound to a flag'
         continue
       }
     }
     const script = ++positionals === 1 && SCRIPT_FIRST.has(verb) && !patternSupplied
-    out.push({ kind: script ? 'script' : 'file', text: t.text })
+    out.push({ skip: script ? 'first positional: a pattern or program, not a path' : undefined, text: t.text })
   }
   return out
 }
@@ -617,8 +608,8 @@ export function scanShellReads(
       const candidates: { path: string; token: string; matchText: string }[] = []
       let fileCount = 0
       for (const a of readerArgs(verb, tokens)) {
-        if (a.kind !== 'file') {
-          note(fromReader, a.text, SKIP_RULE[a.kind])
+        if (a.skip) {
+          note(fromReader, a.text, a.skip)
           continue
         }
         fileCount++
@@ -741,7 +732,7 @@ export function bashReadPaths(command: string, cwd: string): { paths: string[]; 
     for (const a of readerArgs(verb, tokens)) {
       // `<` is an input redirect: `<file` and `< file` both read the file.
       const text = a.text.replace(/^</, '')
-      if (a.kind !== 'file' || !text) continue
+      if (a.skip || !text) continue
       files++
       if (GLOB_OR_VAR.test(text) || !(dir || isAbsolute(text))) continue
       // A trailing `/` marks a directory for the hint; resolve() would drop it.
