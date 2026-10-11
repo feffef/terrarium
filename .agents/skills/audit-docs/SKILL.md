@@ -179,7 +179,7 @@ surface in a tier or on the Skip list. Done when every surface has one.
 
 ## 3. Review across the eight lenses
 
-Run the reviewer agents and pool their findings. Each reviewer writes its findings to its own numbered scratchpad file: `file:line`, quote, and replacement text, with exact body-only start and end lines (no heading or blank lines; whole lines). Done when every one has
+Run the reviewer agents and pool their findings. Each reviewer returns its findings as text in its final reply: `file:line`, quote, and replacement text, with exact body-only start and end lines (no heading or blank lines; whole lines). Save each reply verbatim to its own numbered scratchpad file; copy, never retype. Done when every one has
 reported and every file in the concision family was read in full.
 
 ## 4. Dedupe the pool
