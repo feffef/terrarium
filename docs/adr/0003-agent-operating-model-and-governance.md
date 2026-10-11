@@ -28,9 +28,8 @@ but answer different questions, and neither restates the other.
 Every row's bound is exact: a chartered run merges only a diff inside its row's
 scope, on a green gate. If anything outside the scope rode into the PR, or the
 gate is red, the run leaves the PR open for a human; it does not fall back to
-the rule for ordinary work. A chartered Skill's PR that changes a Human-only
-path (the `paths` of `.claude/rules/adr-0004-human-merge.md`) also waits for a
-human, as any PR does; only a Prune Trial's ADR rewrite is excepted (ADR-0027).
+the rule for ordinary work. An agent's PR that changes a Human-only path waits
+for a human either way (ADR-0004).
 
 > **Amended by [ADR-0018](0018-tenant-layers-under-layers-directory.md) (2026-07-07).**
 > Tenant layers moved from `tenants/` to Nuxt's conventional `layers/` directory;
@@ -140,10 +139,7 @@ Skill, each producing scoped PRs with a known expected shape):
 
 **Merge is always gated. No self-merge.** Every change — interactive or
 autonomous — lands as a PR on a feature branch. Merge → tag release → the single
-container redeploys. *(The 2026-10-10 amendment above reverses this: the authoring
-session merges its own gated PR on a green gate, and ADR-0004 names the
-exceptions. The ledger bounds what each chartered job may change; it grants no
-merge right of its own.)*
+container redeploys. *(Reversed by the 2026-10-10 amendment above.)*
 - **One bounded exception (ADR-0009):** a session's own **session-log** Journal
   entry is committed **directly to `main`** by a helper script — never via a
   PR — because it is inert, schema-validated content the gate cannot protect and
