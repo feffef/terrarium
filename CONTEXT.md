@@ -151,13 +151,13 @@ pain (`frictions-to-fixes`), and as the verdict on an open **Prune Trial**
 Frictions that share a cause are grouped in the **Friction Ledger**, not tagged.
 
 ### Friction Ledger
-An Inventory of the Platform's Friction clusters: one entry per group of
-Frictions that share a root cause, with the surface its fix lands on, its status
-(open, tracked, on trial or fixed) and every occurrence by Session, so recurrence
-is counted over weeks rather than one run's window, and a cause that recurs
-every few days is seen. `frictions-to-fixes` maintains it; the Journal manifest
-holds its schema. An entry whose fix has held for 14 days is deleted, and git
-keeps the history.
+An Inventory of the Platform's Friction clusters: one entry per root cause seen
+twice, or once at `major` or `blocker`, with the surface its fix lands on, its
+status (open, tracked, on trial or fixed) and every occurrence by Session, so
+recurrence is counted over weeks rather than one run's window, and a cause that
+recurs every few days is seen. `frictions-to-fixes` maintains it; the Journal
+manifest holds its schema. An entry that is fixed, or holds one occurrence, is
+deleted after 14 days with no new occurrence, and git keeps the history.
 
 ### Skill
 A Claude Code skill that encodes a repeatable capability for developing or

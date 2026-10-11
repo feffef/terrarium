@@ -35,17 +35,17 @@ Its brief:
 - **Start from the Friction Ledger** (`layers/journal/content/current/frictions/*.yml`;
   schema in `layers/journal/tenant.config.ts`): one entry per cluster of
   frictions with a common cause, carrying its `status`, `surface` and every
-  `occurrence` so far. Match each friction in the window to an entry, or
-  propose a new cluster. A cluster is a shared **root cause**, not a shared
-  symptom: two frictions days apart, on different tools, belong together when
-  one change would retire both. Count recurrence over the ledger's last 14 days
-  of occurrences, not the window alone: the window finds new frictions, the
-  ledger says how often the cause recurs. Return the ledger changes (new
-  entries, appended occurrences, status changes, each with its evidence) in the
-  report.
+  `occurrence` so far. Append each friction in the window that matches an
+  entry, whatever its severity, unless the entry already lists that session.
+  A new entry needs a cause seen twice, or one `major` or `blocker`. A cluster
+  is a shared **root cause**, not a shared symptom: two frictions days apart,
+  on different tools, belong together when one change would retire both.
+  Count recurrence over the ledger's last 14 days of occurrences, not the
+  window alone. Return the ledger changes (new entries, appended occurrences,
+  status changes, each with its evidence) in the report.
 - **Steer the budget at the unfixed tail.** A large share of the window's frictions are usually already resolved by a later in-window session or a merged fix. Screen those out fast as a §2 `drop` instead of re-deriving their history; save the deep archaeology for candidates with no in-window resolution. Count recurrence from the **unresolved** occurrences only.
-- **Read the last 3 days of session logs** via `pnpm exec tsx scripts/session-frictions.ts`
-  (`--days N` to change the window; bare `tsx` isn't on PATH). Large output goes to
+- **Read the window's session logs** via `pnpm exec tsx scripts/session-frictions.ts`
+  (its header says how far back the window reaches; bare `tsx` isn't on PATH). Large output goes to
   `/tmp/session-frictions-output.json` and stdout gets only a notice — read the file, or
   pass `--out PATH`; don't parse stdout. Use `--compact` (keeps `docsRead` paths and
   `subagents`, drops prose) and re-read a full log via its `file` only when a candidate needs it. This is a **recency window, not a
@@ -157,8 +157,9 @@ subsumes).
 
 **Update the ledger every run, fixes or none.** Apply the subagent's ledger
 changes (§1), set `status`/`ref` for what this run files, dispatches or
-escalates, delete an entry `fixed` with no occurrence for 14 days (git keeps
-it), and land the diff as one PR you merge yourself on a green gate
+escalates, delete an entry that is `fixed` or holds one occurrence, once 14
+days pass with no new occurrence (git keeps it), and land the diff as one PR
+you merge yourself on a green gate
 (`pnpm validate:content` checks it). It is the run's durable record; a zero-fix
 run still lands it.
 

@@ -6,8 +6,8 @@ import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
-import { SESSIONS_DIR } from '../../scripts/session-logs.ts'
-import { OUTPUT_FILE_PATH, pickRecencyWindow, resolveOutputTarget, survey, toCompactSession, toTriageSession, type TriageSession } from '../../scripts/session-frictions.ts'
+import { ARCHIVED_SESSIONS_DIR, SESSIONS_DIR } from '../../scripts/session-logs.ts'
+import { OUTPUT_FILE_PATH, pickRecencyWindow, resolveOutputTarget, survey, toCompactSession, toTriageSession, windowStart, type TriageSession } from '../../scripts/session-frictions.ts'
 
 function session(id: string, startedAt: string, opts: Partial<TriageSession> = {}): TriageSession {
   return {
@@ -26,29 +26,42 @@ function session(id: string, startedAt: string, opts: Partial<TriageSession> = {
   }
 }
 
-describe('pickRecencyWindow()', () => {
+describe('windowStart()', () => {
   const now = Date.parse('2026-07-10T00:00:00Z')
-  it('keeps sessions within the last n days, oldest first', () => {
+  it('reaches back 48 hours when the ledger was committed more recently', () => {
+    expect(windowStart(now, Date.parse('2026-07-09T12:00:00Z'))).toBe(Date.parse('2026-07-08T00:00:00Z'))
+  })
+  it('reaches back to the last ledger commit when that is older, so a missed run loses no logs', () => {
+    expect(windowStart(now, Date.parse('2026-07-03T00:00:00Z'))).toBe(Date.parse('2026-07-03T00:00:00Z'))
+  })
+  it('falls back to 48 hours when the ledger has no commit', () => {
+    expect(windowStart(now, null)).toBe(Date.parse('2026-07-08T00:00:00Z'))
+  })
+})
+
+describe('pickRecencyWindow()', () => {
+  const cutoff = Date.parse('2026-07-07T00:00:00Z')
+  it('keeps sessions at or after the cutoff, oldest first', () => {
     const sessions = [
       session('old', '2026-07-06T23:59:59Z'),
       session('b', '2026-07-09T00:00:00Z'),
       session('a', '2026-07-07T00:00:00Z'),
     ]
-    expect(pickRecencyWindow(sessions, 3, now).map((s) => s.id)).toEqual(['a', 'b'])
+    expect(pickRecencyWindow(sessions, cutoff).map((s) => s.id)).toEqual(['a', 'b'])
   })
   it('is not fooled by filename/id order — sorts purely on startedAt', () => {
     const sessions = [
       session('a-later', '2026-07-09T00:00:00Z'),
       session('z-earlier', '2026-07-08T00:00:00Z'),
     ]
-    expect(pickRecencyWindow(sessions, 3, now).map((s) => s.id)).toEqual(['z-earlier', 'a-later'])
+    expect(pickRecencyWindow(sessions, cutoff).map((s) => s.id)).toEqual(['z-earlier', 'a-later'])
   })
   it('breaks ties on id for a stable, deterministic order', () => {
     const sessions = [
       session('b', '2026-07-09T00:00:00Z'),
       session('a', '2026-07-09T00:00:00Z'),
     ]
-    expect(pickRecencyWindow(sessions, 3, now).map((s) => s.id)).toEqual(['a', 'b'])
+    expect(pickRecencyWindow(sessions, cutoff).map((s) => s.id)).toEqual(['a', 'b'])
   })
 })
 
@@ -175,5 +188,15 @@ describe('survey() — external exclusion (ADR-0009 amendment)', () => {
 
     const ids = survey(3, dir, Date.parse('2026-07-22T00:00:00Z')).map((s) => s.id)
     expect(ids).toEqual(['session_internal'])
+  })
+
+  it('reads archived logs inside the window too', () => {
+    mkdirSync(join(dir, ARCHIVED_SESSIONS_DIR), { recursive: true })
+    writeFileSync(
+      join(dir, ARCHIVED_SESSIONS_DIR, 'archived.yml'),
+      'session: session_archived\nstartedAt: 2026-07-20T00:00:00Z\ngoal: g\noutcome: o\nfrictions: []\n',
+    )
+    const ids = survey(3, dir, Date.parse('2026-07-22T00:00:00Z')).map((s) => s.id)
+    expect(ids).toEqual(['session_archived'])
   })
 })
