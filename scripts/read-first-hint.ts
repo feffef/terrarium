@@ -21,7 +21,7 @@ import { printDryRunResult, prop, readTranscript, resolveDryRunInput, runIfMain 
 import { extractTrace, hintText, subagentTranscript } from './session-trace.ts'
 import { buildDocLineIndex, commandWords } from './shell-reads.ts'
 
-export interface ReadFirst {
+interface ReadFirst {
   doc: string
   /** CLAUDE.md's wording of the trigger, quoted in the pointer. */
   trigger: string

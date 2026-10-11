@@ -120,7 +120,8 @@ describe('the hook entry (sh pre-filter → tsx)', () => {
 
   it('fails open: malformed payload or missing main transcript adds nothing', () => {
     expect(run('{"tool_input":{"command":"git log"')).toMatchObject({ status: 0, stdout: '' })
-    expect(run(call('git log', { transcript_path: join(dir, 'nope.jsonl') }))).toMatchObject({ status: 0, stdout: '' })  })
+    expect(run(call('git log', { transcript_path: join(dir, 'nope.jsonl') }))).toMatchObject({ status: 0, stdout: '' })
+  })
 
   it('--dry-run prints the pointer for an unread doc, and nothing for git status', () => {
     const dry = (command: string) => {
