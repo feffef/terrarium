@@ -4,8 +4,8 @@ importance: supporting
 installedSha256: 10ff989e7498b23b5acb49d5048f11dcd906757d2f79c5cdf8a00001381296f2
 role: >-
   The one-question-at-a-time interrogation that stress-tests a plan or design
-  before building — used standalone or as the engine inside `grill-with-docs`.
-  Reach for it to pressure-test a design tree branch by branch.
+  before building, branch by branch of the design tree. Used standalone or as
+  the engine inside `grill-with-docs`.
 observations:
   - date: 2026-09-29
     note: >-

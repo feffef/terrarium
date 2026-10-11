@@ -3,11 +3,11 @@ category: platform-operation
 importance: specialist
 gist: Sorts the open-issue backlog automatically, without a human.
 role: >-
-  The batch, unattended sibling of `triage`: one brave sweep over the issues that
-  need attention, applying triage's per-issue rules autonomously and stamping
-  ready-for-agent under the ADR-0022 standing green-light. User-invoked; fired by
-  hand or on an interval to keep the Trusted-authored backlog moving. Escalates
-  genuine judgment calls and design uncertainty to a human.
+  The unattended, batch sibling of `triage`: one brave sweep over issues needing
+  attention, applying triage's per-issue rules and stamping ready-for-agent under
+  the ADR-0022 standing green-light. User-invoked, by hand or on an interval, to
+  keep the Trusted-authored backlog moving. Escalates judgment calls and design
+  uncertainty to a human.
 observations:
   - date: "2026-09-30"
     note: >-

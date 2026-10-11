@@ -3,11 +3,10 @@ category: platform-operation
 importance: routine
 gist: Tries cutting a rule to see whether anyone actually needed it.
 role: >-
-  The only Skill whose whole job is subtraction, and a scheduled Routine's work:
-  each run prunes one problem's instructions to the goal behind them and leaves
-  the cut standing as a trial, letting later sessions' frictions decide whether
-  the prose was load-bearing. Charters its own merge tier and may prune ADR
-  prose.
+  The only Skill whose whole job is subtraction, run by a scheduled Routine:
+  each run cuts one problem's instructions to their goal and leaves the cut
+  standing as a trial; later sessions' frictions decide whether the prose was
+  load-bearing. Charters its own merge tier and may prune ADR prose.
 observations:
   - date: "2026-09-27"
     note: >-

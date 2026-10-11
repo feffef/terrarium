@@ -73,13 +73,12 @@ there is one narrow, reversible exception: a **prune trial** may rewrite an
 Architecture Decision Record, as long as it keeps what the record decided.
 Ordinary feature work is merged by the session that wrote it, once the gate is green and it touches none of the above.
 
-Scheduled jobs add a deliberately narrow charter: a handful with a known,
-bounded shape. What they are able to produce is bounded before they start —
-documentation, page content, their own inventory entries, or (for the visitor
-loop below) fixes and one small feature confined to the existing sites. One
-rule holds even inside that
-charter: in the friction-fixing loop below, a dispatched agent writes each change and
-a separate session reviews and merges it.
+Scheduled jobs are a handful, each with a deliberately narrow charter that fixes
+what it can produce before it starts: documentation, page content, their own
+inventory entries, or (for the visitor loop below) fixes and one small feature
+confined to the existing sites. One rule holds even inside that charter: in the
+friction-fixing loop below, a dispatched agent writes each change and a separate
+session reviews and merges it.
 
 ```mermaid
 graph TB
@@ -111,16 +110,15 @@ resulting pull requests and merges them — escalating anything genuinely risky
 to a human. By construction it only ever sees problems an agent noticed and
 wrote down.
 
-That limit is worth naming, because a lot of rot is never reported by anyone. A
-document can quietly stop describing the code without a single session tripping
-over it. A Skill's description can drift away from what it is really used for.
-Instructions can be individually correct and collectively unreadable. Nobody
-logs a friction for any of that, so the reactive loop never learns of it. Three
+That limit matters because much rot is never reported: a document can stop
+describing the code, a Skill's description can drift from its real use, and
+instructions can be individually correct and collectively unreadable. No session
+logs a friction for any of it, so the reactive loop never learns of it. Three
 routines go looking instead:
 
 - **`audit-docs`** re-reads every live document and Skill against the code it
   claims to describe, hunting drift, duplication, contradiction, descriptions of
-  a state that has since been superseded, and needlessly complicated wording.
+  superseded state, and needlessly complicated wording.
   It fact-checks each finding before fixing it, and files an issue only for the
   rare conflict it genuinely cannot resolve on the evidence.
 - **`audit-skills`** checks that the Platform's own Skills do their job: that

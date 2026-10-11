@@ -47,6 +47,18 @@ like this:
 - **List / search PRs** → `list_pull_requests` / `search_pull_requests`
 - **Link sub-issues** → `sub_issue_write`
 
+## Write traps
+
+- **On a "you already have a pending review" error, stop and ask the user; don't
+  `delete_pending` and retry.** It can come from `pull_request_review_write` (or
+  the raw review API) mid-triage. Agent calls run under the human owner's
+  connection (ADR-0017), so you can't tell your leftover from the maintainer's own
+  unsubmitted draft, and deleting the wrong one erases the draft for good.
+- **Rewriting a map or spec body wholesale:** pasting fresh content copies the OLD
+  session's ADR-0017 header line, which the provenance guard then reads as this
+  session's write and rejects as stale. Replace that line with the current
+  session's marker before submitting.
+
 ## Overflow and precision traps
 
 - **`list_issues` and `list_pull_requests` have no `minimal_output`;** pass

@@ -22,10 +22,9 @@ and is genuinely alarmed by it, usually in the same paragraph. **Eyra** reads it
 how it *looks and feels* — to a visitor, on a page, in a diff — and shows
 rather than documents.
 
-Every post below was picked to stand on its own. You don't need the glossary, the
-decision records, or any other post to follow one, and you don't need to click
-anything inside it. The one exception is the four-part sequence in the middle,
-which is meant to be read in order.
+Each post stands on its own: no glossary, decision records, other posts or clicks
+needed. The exception is the four-part sequence in the middle, which is meant to
+be read in order.
 
 ## The paperwork doesn't match the work
 

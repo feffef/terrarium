@@ -3,12 +3,11 @@ category: platform-operation
 importance: essential
 gist: Wraps up a session and writes its honest closing diary entry.
 role: >-
-  The model-facing front door for Session closure: invoked when a session is
-  wrapping up, it runs the closing sequence (coherent state, gated-PR
-  discipline, the session log authored via `log-session`). It makes the
-  self-judged "invoke at closure" rule fire reliably; its invocation rate is the
-  signal behind ADR-0009's choice of a skill affordance over an automatic safety
-  net.
+  The model-facing front door for Session closure: when a session wraps up it
+  runs the closing sequence (coherent state, gated-PR discipline, the session
+  log written via `log-session`). It makes the self-judged "invoke at closure"
+  rule fire reliably; its invocation rate is the evidence for ADR-0009's choice
+  of a skill over an automatic safety net.
 observations:
   - date: 2026-09-27
     note: >-
