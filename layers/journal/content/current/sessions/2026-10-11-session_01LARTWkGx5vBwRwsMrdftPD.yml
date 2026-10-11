@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01LARTWkGx5vBwRwsMrdftPD
 startedAt: 2026-10-11T06:30:47Z
-endedAt: 2026-10-11T10:10:27Z
+endedAt: 2026-10-11T10:11:29Z
 kind: interactive
 goal: Record how instructions reach agents through .claude/rules/
 status: completed
 outcome: "ADR-0029 merged (PR #1762): file-bound instructions live in .claude/rules/; follow-ups filed as #1763, #1764, #1765"
-summary: "Human-instructed throughout. The owner first asked me to explain how ADRs reach agents through .claude/rules/; I traced PR #1741's mechanism. Asked whether it was documented, I found no ADR, glossary term or how-to. The owner ran /grill-with-docs and asked for an ADR that widens the idea: any instruction a glob can match to its files moves into a path-scoped rule. Sixteen questions were settled in rounds; the owner agreed to my recommendations except two choices of their own: the wording \"file-bound\" and the title, and keeping rules short instead of globs narrow (\"I don't mind the noise\"). At the owner's request I tested Bash reads: a lone single-file cat/head/sed -n/grep loads path rules, piped, chained and multi-file commands do not. My first chained test led me to overclaim that Bash reads never load rules; PR #1741's evidence and controlled tests corrected that. The owner then asked for a Sonnet agent to inspect the six sessions since #1741; its findings (broad firing, partial reads a rule cannot prevent, measurement gaps) went into the ADR. The owner asked to add a log-session instruction for Frictions about unrelated rules, which I did, and I filed #1763 as agreed. The owner then ran /code-review against origin/main with the grilling decisions as spec; it found 8 Standards and 3 Spec issues, chiefly the ADR contradicting itself on \"read the full ADR\". The owner approved all fixes and the exception for session-start ADR rules; I filed #1764 and #1765 for the untracked follow-ups. The owner enabled auto-merge and PR #1762 merged. A session resume then rolled the log scratch back; the owner noticed the completed log was missing and I re-landed it."
+summary: "Human-instructed throughout. The owner first asked me to explain how ADRs reach agents through .claude/rules/; I traced PR #1741's mechanism. Asked whether it was documented, I found no ADR, glossary term or how-to. The owner ran /grill-with-docs and asked for an ADR that widens the idea: any instruction a glob can match to its files moves into a path-scoped rule. Sixteen questions were settled in rounds; the owner agreed to my recommendations except two choices of their own: the wording \"file-bound\" and the title, and keeping rules short instead of globs narrow (\"I don't mind the noise\"). At the owner's request I tested Bash reads: a lone single-file cat/head/sed -n/grep loads path rules, piped, chained and multi-file commands do not. My first chained test led me to overclaim that Bash reads never load rules; PR #1741's evidence and controlled tests corrected that. The owner then asked for a Sonnet agent to inspect the six sessions since #1741; its findings (broad firing, partial reads a rule cannot prevent, measurement gaps) went into the ADR. The owner asked to add a log-session instruction for Frictions about unrelated rules, which I did, and I filed #1763 as agreed. The owner then ran /code-review against origin/main with the grilling decisions as spec; it found 8 Standards and 3 Spec issues, chiefly the ADR contradicting itself on \"read the full ADR\". The owner approved all fixes and the exception for session-start ADR rules; I filed #1764 and #1765 for the untracked follow-ups. The owner enabled auto-merge and PR #1762 merged. A session resume then rolled the log scratch back; the owner noticed the completed log was missing and I re-landed it. At the owner's request I then filed #1770 to move CLAUDE.md's file-bound triggers into rules, starting with tenant-layers."
 prs:
   - "1762"
 docsRead:
@@ -96,28 +96,29 @@ frictions:
   - description: A session resume rolled the container back to 07:01, losing the two later log-session updates (code-review friction, completed status) before the Stop hook landed them; the owner noticed.
     solution: After any resume, compare .session-logs/pending.scratch.json with the landed log on origin/main (environment-caveats.md already warns); re-author and land.
     severity: minor
-durationSec: 13180
+durationSec: 13242
 models:
-  claude-opus-5-5: 263
+  claude-opus-5-5: 278
 toolCounts:
-  Bash: 64
+  Bash: 67
   Skill: 6
   Agent: 4
   Read: 14
   Glob: 1
   Write: 5
   Edit: 15
-  ToolSearch: 5
+  ToolSearch: 6
   mcp__github__list_pull_requests: 2
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
   ReadNotifications: 8
   mcp__github__issue_read: 1
-  mcp__github__issue_write: 3
+  mcp__github__issue_write: 4
   mcp__github__update_pull_request: 2
   AskUserQuestion: 1
   Grep: 1
   TaskStop: 1
+  mcp__github__search_issues: 1
 filesEdited:
   - docs/adr/0029-instructions-load-with-the-files-they-govern.md
   - .claude/rules/adr-0029.md
@@ -155,3 +156,4 @@ learnings:
   - Claude Code loads a path rule on a lone single-file Bash read (cat, head, sed -n, grep, relative or absolute path) but not on piped, chained or multi-file commands.
 ideas:
   - Build a fail-open PostToolUse Bash hook, reusing rulePaths from validate-adr-rules.ts, that injects rules for file paths in compound or multi-file commands only, so rules stop missing the chained reads auto mode encourages.
+landedBy: Stop
