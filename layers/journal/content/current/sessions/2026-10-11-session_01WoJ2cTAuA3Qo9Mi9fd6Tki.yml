@@ -1,37 +1,54 @@
 schemaVersion: 1
 session: session_01WoJ2cTAuA3Qo9Mi9fd6Tki
 startedAt: 2026-10-11T07:51:14Z
-endedAt: 2026-10-11T08:14:06Z
+endedAt: 2026-10-11T08:37:54Z
 kind: interactive
 goal: Let session logs say whether each doc and rule helped
-status: in-review
-outcome: "PR #1767 open with the verdicts and the #1763 duplicate-rule fix; waits for a human merge"
-summary: "Human-instructed: the owner asked for the \"Rules triggered\" list to carry a brief note on what each rule told the agent and whether it helped, like \"Files read\". After clarifying questions (owner preference) the owner chose a required, structured verdict, on files read too, with old logs left as they are. Built an optional `useful` (yes | partly | no) on docsRead entries and a new optional `ruleVerdicts` list, threaded through the authored scratch, merge, stitch, the `--author` report and the Journal card, plus an ADR-0009 amendment and Skill doc update. The owner then asked for /code-review (which I ran after the first push, not before as they asked) and for issue #1763 (rules counted twice under relative and absolute paths) to be fixed in the same PR: rule paths are now keyed by their .claude/rules/ suffix, with a regression test shown red without the fix. Small review fixes rode along. Full gate green locally. The lander validates against main's schema, so this log can only carry verdicts after the PR merges."
+status: completed
+outcome: "PR #1767 merged: doc and rule verdicts, global rules marked global, #1763 fixed"
+summary: "Human-instructed throughout. The owner asked for a brief note and a usefulness verdict on each triggered rule and each file read; after clarifying questions they chose a required, structured verdict with old logs untouched. Built `useful` on docsRead and a `ruleVerdicts` list through scratch, merge, stitch, the --author report and the Journal card. The owner then asked for /code-review, the #1763 duplicate-rule fix (rule paths keyed by their .claude/rules/ suffix), and for global session-start rules to be listed and marked global: they are now derived from the transcript's instructions attachment into `rulesGlobal`, prompted for a verdict, and shown first with a pill under a renamed \"Rules loaded\" heading. Two review rounds, fixes applied; full gate green each time. The owner merged via auto-merge. This is the first log to carry the new verdicts."
 prs:
   - "1767"
 docsRead:
   - path: docs/adr/0009-session-logs-commit-directly-to-main.md
     reason: "schema evolution policy: additive optional fields need no version bump"
+    useful: yes
   - path: docs/adr/0029-instructions-load-with-the-files-they-govern.md
     reason: "how rulesLoaded is recorded; named #1763 as a known limit"
+    useful: yes
   - path: .agents/skills/log-session/SKILL.md
     reason: authoring template and the reads report to extend
+    useful: yes
   - path: docs/agents/tenant-layers.md
-    reason: before editing the Journal layer; auto-import of journal utils
+    reason: auto-imported journal utils and layer-relative type imports
+    useful: partly
   - path: docs/agents/verifying-ui-changes.md
-    reason: preview.ts and playwright click recipe for the card check
+    reason: preview.ts and the playwright click recipe for the card check
+    useful: yes
   - path: docs/agents/git-conventions.md
-    reason: commit hygiene; session-log commit titles
+    reason: session-log commit titles are reserved; led to the retitle
+    useful: yes
   - path: docs/agents/pr-workflow.md
-    reason: PR open and merge recipe
+    reason: PR recipe; human-merge PRs only needed the description note
+    useful: partly
   - path: docs/agents/github-integration.md
-    reason: MCP tool surface for PR creation
+    reason: MCP tool mapping; nothing new needed for this PR
+    useful: partly
   - path: CONTEXT-MAP.md
-    reason: session-start glossary map
+    reason: session-start map of contexts; no tenant context needed
+    useful: partly
   - path: CONTEXT.md
     reason: Session and session-log terms
+    useful: yes
   - path: .agents/skills/code-review/SKILL.md
-    reason: two-axis review process
+    reason: two-axis review process, run twice
+    useful: yes
+  - path: docs/adr/0018-tenant-layers-under-layers-directory.md
+    reason: "review agent: how to amend an ADR"
+    useful: yes
+  - path: .agents/skills/writing-for-agents/SKILL.md
+    reason: "review agent: Skill doc legibility; flagged unwrapped lines"
+    useful: partly
   - path: shared/schemas/session.ts
     reason: (read before editing)
   - path: scripts/log-session.ts
@@ -46,10 +63,6 @@ docsRead:
     reason: (no reason given)
   - path: layers/journal/tests/unit/journal-dashboard.spec.ts
     reason: (read before editing)
-  - path: docs/adr/0018-tenant-layers-under-layers-directory.md
-    reason: (no reason given)
-  - path: .agents/skills/writing-for-agents/SKILL.md
-    reason: (no reason given)
 skillsUsed:
   - name: close-session
     reason: (no reason given)
@@ -74,23 +87,29 @@ frictions:
   - description: The owner said 'Run /code-review before pushing' but the first commit was already pushed and the PR open; the review ran after the push
     solution: Run code-review before the first push on a non-trivial change, not only on request
     severity: minor
-durationSec: 1372
+  - description: The trace's own comment said session-start rules 'carry no signal', an earlier design call the owner reversed; a stale test comment repeated it until review caught it
+    solution: When reversing a recorded exclusion, grep for its rationale in comments and tests before committing
+    severity: nit
+durationSec: 2800
 models:
-  claude-opus-5-5: 165
+  claude-opus-5-5: 243
 toolCounts:
-  Bash: 46
-  Read: 22
+  Bash: 64
+  Read: 23
   Edit: 7
-  ToolSearch: 4
+  ToolSearch: 5
   Monitor: 1
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
-  Skill: 2
-  Agent: 2
-  ReadNotifications: 1
+  Skill: 3
+  Agent: 4
+  ReadNotifications: 8
   mcp__github__issue_read: 1
-  mcp__github__update_pull_request: 1
+  mcp__github__update_pull_request: 2
+  mcp__github__pull_request_read: 2
+  mcp__claude-code-remote__send_later: 1
+  mcp__claude-code-remote__delete_trigger: 1
 filesEdited:
   - shared/schemas/session.ts
   - layers/journal/app/components/journal/SessionCard.vue
@@ -103,11 +122,73 @@ rulesLoaded:
   - .claude/rules/adr-0029.md
   - .claude/rules/adr-0005.md
   - .claude/rules/adr-0008.md
+rulesGlobal:
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0001.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0023.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0009.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0022.md
+    reason: auto-triage sweep; not this task
+    useful: no
+  - path: .claude/rules/adr-0004.md
+    reason: run gate:scoped before pushing; human-merge exceptions
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: log at PR open and again when done
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: prune trials; not this task
+    useful: no
+  - path: .claude/rules/adr-0001.md
+    reason: one container, baked content; background only
+    useful: no
+  - path: .claude/rules/adr-0020.md
+    reason: Trusted vs Public requesters; owner request so Trusted
+    useful: partly
+  - path: .claude/rules/adr-0003.md
+    reason: open the PR yourself and subscribe
+    useful: yes
+  - path: .claude/rules/adr-0023.md
+    reason: guest pipeline; not this task
+    useful: no
+  - path: .claude/rules/adr-0017.md
+    reason: provenance line on GitHub bodies
+    useful: yes
+  - path: .claude/rules/adr-0025.md
+    reason: session is a collection kind; schema lives in shared/
+    useful: partly
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: schema, ADR and rule edits need a human merge
+    useful: yes
+  - path: .claude/rules/adr-0018.md
+    reason: amend an ADR with a dated section; fix details in place
+    useful: yes
+  - path: .claude/rules/adr-0029.md
+    reason: how rules load; pointed at the rulesLoaded limits
+    useful: yes
+  - path: .claude/rules/adr-0005.md
+    reason: Skills are gated Platform code
+    useful: partly
+  - path: .claude/rules/adr-0008.md
+    reason: session logs are ground truth; keep old logs unchanged
+    useful: yes
 subagents:
   - type: general-purpose
     task: Standards review of PR diff
   - type: general-purpose
     task: Spec review of PR diff
+  - type: general-purpose
+    task: Standards review of global-rules commit
+  - type: general-purpose
+    task: Spec review of global-rules commit
 gitBranch: ccr-41392be9-dymaea
 entrypoint: remote_mobile
 cliVersion: 2.1.296
