@@ -236,3 +236,23 @@ observations:
       session_013fsctw2snxudxsDfjP74FT correctly credited the Skill for the
       same pattern. No new missed invocation found among the other sessions
       opened in full. Grade unchanged (essential).
+  - date: "2026-10-11"
+    note: >-
+      Broader sampling (audit-skills behaviour check): of 73
+      notUsedInWindow sessions, 35 flagged plausible by goal, 19 opened in
+      full. 15/19 had genuinely dispatched subagents, and all 15 omitted
+      `dispatch-subagents` from `skillsUsed` — 12 newly found, none
+      previously logged, including session_01S1WwkpNHDfbvKAf5T1afKq (23
+      subagents, which even read this Skill's own SKILL.md that session yet
+      still didn't credit it) and a git-touching instance,
+      session_01GEqB5frKCNtJYAr9KaRxDo (frictions-to-fixes, 2 impl subagents
+      → merged PRs #1724/#1725), matching #1586's original git-touching
+      shape, not just its read-only extension. Commented this evidence onto
+      #1586, which had just been closed the same day (2026-10-10, "not a
+      regression") on a review that didn't see these 12 instances — left the
+      reopen call to a human. #1480 and #1586 are both now closed
+      (2026-10-10, by the `triage`-process session_018i6d2BQPkf9cq6jSEqCNSX,
+      tracked separately as issue #1752 — a `triage` gap, not a
+      dispatch-subagents one). No stranded work, no merge-pr.ts-to-subagent,
+      no new branch/worktree collision in any of the 19 opened logs. Grade
+      unchanged (essential).

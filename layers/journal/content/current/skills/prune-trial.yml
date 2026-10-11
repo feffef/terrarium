@@ -252,3 +252,16 @@ observations:
       dispatch/worktree branch-sharing collision as its own problem — the
       "not escalated" call is defensible given the root-cause analysis, but
       worth a dedicated issue if a 4th instance appears. Grade unchanged.
+  - date: "2026-10-11"
+    note: >-
+      Re-checked (audit-skills behaviour check), 8 usedIn sessions plus a
+      live run of `prune-trial-window.ts` directly. Two more post-#1677-fix
+      judged trials confirmed clearing their grace-adjusted floor with
+      margin, not seconds-before: commit 5032489348
+      (session_015UvXah6phvbuMpUWmf5rYs, ~3 days after floor) and commit
+      caf9cbb1 (session_01KRLFYUD31NaEVTs4Qs1Tzj, 2026-10-10, past the
+      un-graced floor by 17s but well past the graced one). #1677 reconfirmed
+      CLOSED via live `issue_read`. No major/blocker Friction found inside
+      any open trial's territory this window; `origin/prune/backgrounding-cluster`
+      stray branch unchanged, already tracked as #1628. No revert found.
+      Grade unchanged.

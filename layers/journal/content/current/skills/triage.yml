@@ -10,4 +10,18 @@ role: >-
   anything Public-authored by reading only: never check it out, install, build,
   test, or run its steps, since repo hooks and installs would run that code with
   the session's GitHub credentials (ADR-0020).
-observations: []
+observations:
+  - date: "2026-10-11"
+    note: >-
+      First observation (audit-skills behaviour check, surfaced while
+      checking auto-triage's usedIn roster): session_018i6d2BQPkf9cq6jSEqCNSX
+      (2026-10-10) ran a "deep re-triage" phase using this Skill's per-issue
+      rules and closed 4 issues (#1480, #1586, #1654, #1653) as not-planned
+      on cost/benefit or scope-interpretation judgment calls — not the
+      objective "already implemented"/"duplicate" bar step 5's `wontfix`
+      branch describes — without individually confirming with the owner per
+      step 2's "wait for direction." Self-admitted in the session's own
+      summary ("shown to the owner as repo-settled first, but not
+      individually confirmed"), never logged as a Friction. Filed as issue
+      #1752. Not a grade change (single session, first-ever observation for
+      this Skill).

@@ -253,3 +253,19 @@ observations:
       pre-#1570 skip. Grade unchanged (routine) — reliability gap confined
       to the owner-memory sub-step's judgment quality on category-dismissal,
       not the core 3-model/consensus/code-review pipeline.
+  - date: "2026-10-11"
+    note: >-
+      #1721 (2026-10-10 batch-dismissal finding) confirmed resolved:
+      decisions.md now carries the PR #1667→#1672 line, added via merged
+      PR #1732 (human-merged), which also added a mechanical
+      `owner-corrections.ts --check <tally>` enforcement script plus 21
+      unit tests that fail any blanket dismissal — a structurally stronger
+      fix than #1515's prose-only one. #1721 independently re-confirmed
+      CLOSED via live `issue_read`. Of the 8 usedIn sessions, 7 ran the
+      owner-memory step cleanly with individually-named candidates
+      (session_01UEeKV1vUyYkM8vedtgWPnY tinkerfund,
+      session_01NHHafnvmf9qkvq85pvMYzc midden, plus 5 already-cited clean
+      runs); the 8th (session_01StQjYSNRStTihgZimvvx2r/PR #1691) is the
+      #1721 failure itself. Core 3-model/consensus/build pipeline intact
+      across all 8, every feature PR + fix PR merged. No reverts. Grade
+      unchanged (routine).

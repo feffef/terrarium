@@ -92,3 +92,19 @@ observations:
       newest session's PR claims directly (#1713/#1717 both open/unmerged,
       correctly flagged human-only-merge, matching the log). Grade/role
       unchanged.
+  - date: "2026-10-11"
+    note: >-
+      Re-verified (audit-skills behaviour check), all 4 usedIn sessions.
+      session_018i6d2BQPkf9cq6jSEqCNSX's (2026-10-10) own `/auto-triage`
+      phase (routing #1721 to ready-for-agent) was correctly scoped and
+      clean. But the SAME session's later "deep re-triage" phase — a
+      different mechanism, the `triage` Skill's per-issue rules, not this
+      Skill's autonomous sweep — closed #1480/#1586/#1654/#1653 as
+      not-planned on judgment calls the Skill's own prior triage comments
+      had flagged as needing `ready-for-human`, self-admitted in the
+      session's own summary as "agent-initiated... not individually
+      confirmed," never logged as a Friction. Filed as issue #1752,
+      correctly scoped to `triage` rather than this entry, to avoid
+      misattributing a `triage`-process gap to `auto-triage`'s own sweep.
+      The other 3 usedIn sessions re-confirmed clean. Grade/role unchanged
+      (this Skill's own sweep behaved correctly).

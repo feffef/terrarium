@@ -268,3 +268,22 @@ observations:
       the raw log rather than trusted). No numeric word-cap violation
       (confirmed still pruned, #1450's trial). No new silent failure. Grade
       unchanged.
+  - date: "2026-10-11"
+    note: >-
+      Re-checked (audit-skills behaviour check), both notUsedInWindow
+      sessions independently re-resolved as transitive invocation via
+      close-session, not missed invocations: close-session's SKILL.md
+      explicitly runs log-session's authoring step internally ("Record the
+      session log: invoke `/log-session`"), and both logs
+      (session_01Tcn6x6mZizT14rJuQqYivt, session_015CSc6hNccF3XgrSGaGGqjD)
+      are schema-complete with specific, cross-verified-against-GitHub
+      content (PRs #1726 and #1680, both real and merged) — only the
+      `skillsUsed` tag is missing, an attribution gap in how a transitive
+      Skill-tool call gets credited, not a defect. 8 newest usedIn sessions
+      confirmed committed on origin/main via `git ls-tree`, 3 read
+      end-to-end for genuine (non-placeholder) authorship. The newest
+      log-session.ts change (commit 0ed3b459/PR #1748, "refuse to land a log
+      main's schema rejects") is itself a fix for a major friction
+      self-reported by session_015BjYk46dntcMuAWMn1z4Zw — the
+      self-improvement loop working as designed. No reverts. Grade
+      unchanged.

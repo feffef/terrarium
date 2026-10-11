@@ -336,3 +336,22 @@ observations:
       candidates carry `resolvedBy` (already tracked, left alone),
       orphanSuppressionLog both entries plausible, humanPromptedClosures and
       manuallyRescuedClosures both empty. Grade/role unchanged.
+  - date: "2026-10-11"
+    note: >-
+      Self-check: re-verified the two most recent self-runs,
+      session_01HgJSvxTfhCwRcTZEhFspLX (PR #1697) and
+      session_01JR1AZGGyi6AEh1SHTp6qsH (PR #1722), independently against
+      live GitHub — both merged, Inventory-YAML-only diffs as promised.
+      Confirmed #1720 (the 2026-10-09 run's stale-issue-state claim on
+      #1676/#1684) was genuinely caught and fixed by merged PR #1727, now
+      live in SKILL.md's provenance rule. #1721 (visitor-loop batch-dismissal)
+      independently re-verified: PR #1672's committed log really says "All of
+      that was human-instructed," decisions.md had no line for it at filing
+      time, and the closing PR #1732 added both a decisions.md line and a
+      mechanical `owner-corrections.ts --check` enforcement script plus 21
+      unit tests — a materially stronger fix than #1515's. No revert found of
+      this Skill's own text/tooling in the 2-week sweep. This run also filed
+      #1752 (triage: 4 issues closed on judgment calls without individual
+      owner confirmation, surfaced via session_018i6d2BQPkf9cq6jSEqCNSX) and
+      commented new evidence (12 further skillsUsed-logging-gap instances)
+      onto dispatch-subagents' just-closed #1586. Grade/role unchanged.
