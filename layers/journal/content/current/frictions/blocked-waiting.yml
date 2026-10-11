@@ -1,0 +1,13 @@
+name: blocked-waiting
+cause: >-
+  Waiting on a backgrounded gate, build or CI needs a sleep the guards deny, so sessions poll with no-op calls or shell backgrounding.
+surface: guard-or-hook
+status: tracked
+ref: "issue #1499"
+occurrences:
+  - session: session_01FjbeYkD522QKGpNQq5WVNR
+    date: "2026-09-27"
+    severity: moderate
+  - session: session_015LBxMJwGsviZMj4ScFXD38
+    date: "2026-10-03"
+    severity: moderate

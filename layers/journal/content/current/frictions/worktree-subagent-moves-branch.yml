@@ -1,0 +1,12 @@
+name: worktree-subagent-moves-branch
+cause: >-
+  An impl agent in a worktree checks out or pushes the branch the primary checkout has checked out, so the primary tree shows phantom reverse changes.
+surface: safe
+status: open
+occurrences:
+  - session: session_0158JckUL8YWJtVL7s9i7xRr
+    date: "2026-09-27"
+    severity: moderate
+  - session: session_01TiCx5GDdDdFGwCEs6xxr89
+    date: "2026-10-03"
+    severity: moderate

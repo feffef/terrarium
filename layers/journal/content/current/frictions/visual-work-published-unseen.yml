@@ -1,0 +1,24 @@
+name: visual-work-published-unseen
+cause: >-
+  Diagrams, illustrations and layouts ship after the agent's own screenshot check; the human first sees the result after it is published and judges it poor.
+surface: safe
+status: open
+occurrences:
+  - session: session_01QT1rB2ACjMQzt5xGT1ikLW
+    date: "2026-09-29"
+    severity: moderate
+  - session: session_01P7a2zqJxuariDNfYqWQRHs
+    date: "2026-10-03"
+    severity: moderate
+  - session: session_01TiCx5GDdDdFGwCEs6xxr89
+    date: "2026-10-03"
+    severity: major
+  - session: 1f97b613-f529-4487-a7e9-1115a44b84c7
+    date: "2026-10-08"
+    severity: major
+  - session: 355d2d64-55fc-4515-81c1-e831f8b84601
+    date: "2026-10-08"
+    severity: major
+  - session: 49f1fea0-270e-4851-9cc7-3dbf8cc8609a
+    date: "2026-10-08"
+    severity: major

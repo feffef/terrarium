@@ -1,0 +1,64 @@
+name: shell-read-detection
+cause: >-
+  The shell-read detector guesses which files a Bash command showed; globs, loops, cd prefixes and grep output each defeat it in a new way, so each fix leaves another shape, and ADR-0009 floors every instance at moderate.
+surface: safe
+status: open
+ref: "issues #1482, #1542, #1723; PRs #1485, #1725"
+occurrences:
+  - session: session_0158JckUL8YWJtVL7s9i7xRr
+    date: "2026-09-27"
+    severity: moderate
+  - session: session_019yVYHWm1Fzsj3gBFWkHHU1
+    date: "2026-09-27"
+    severity: moderate
+  - session: session_01C1P912tWDL3b8gtuQezv3Z
+    date: "2026-09-28"
+    severity: moderate
+  - session: session_01LXTsTPXbGXbMQqyTpPjcuU
+    date: "2026-09-28"
+    severity: moderate
+  - session: session_01SYbiQQHsX8HmeXJTtxAPwp
+    date: "2026-09-29"
+    severity: moderate
+  - session: session_01JJjnpQCtu8pinf5RioLwgZ
+    date: "2026-09-30"
+    severity: moderate
+  - session: session_01UYR72MD9JGXQMy7fZn84o8
+    date: "2026-09-30"
+    severity: moderate
+  - session: session_014aYTnetbYbfGH2MrSUDj9T
+    date: "2026-10-01"
+    severity: moderate
+  - session: session_01BNbm6z4gohjBmVoeadKibZ
+    date: "2026-10-01"
+    severity: moderate
+  - session: session_01BXoQpiEuaGZJVRQB7XpsFi
+    date: "2026-10-02"
+    severity: moderate
+  - session: session_01VC6tZCm3HYs9BsJ7JrQQ5Z
+    date: "2026-10-02"
+    severity: moderate
+  - session: a1af4e46-8293-4f33-bf41-c956bd7f6306
+    date: "2026-10-03"
+    severity: moderate
+  - session: session_01SWRyFbuNXxVWi47tGB8GX6
+    date: "2026-10-03"
+    severity: moderate
+  - session: session_01LEQpnXw4SeWsfw4THR5NbX
+    date: "2026-10-04"
+    severity: moderate
+  - session: session_01CF4k9jXS9wLrcPVsGduZmn
+    date: "2026-10-08"
+    severity: moderate
+  - session: session_01VaPP7iMRxMvKvX8KQh1qeY
+    date: "2026-10-09"
+    severity: moderate
+  - session: session_01JR1AZGGyi6AEh1SHTp6qsH
+    date: "2026-10-10"
+    severity: moderate
+  - session: session_015Hx2GtEuH6WZBL8Hp4aDgg
+    date: "2026-10-11"
+    severity: moderate
+  - session: session_0177ZCpnHq4Sw5wicAEmriDh
+    date: "2026-10-11"
+    severity: moderate

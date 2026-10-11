@@ -147,12 +147,17 @@ a CI failure after a passing `gate:scoped` is `major` (the ADR-0004 rule,
 
 Frictions are the primary signal the self-improvement Skills mine — for recurring
 pain (`frictions-to-fixes`), and as the verdict on an open **Prune Trial**
-(`prune-trial`) — so agents report **every** friction honestly, even nits. A
-tagging taxonomy is deliberately *not* fixed up front: it is meant
-to **emerge** from clustering real frictions, once a future session judges there
-are enough to cluster meaningfully, rather than be guessed before there is data.
-No session count, calendar window, or owning Skill is set in advance — that
-judgment call is left open by design, not an oversight.
+(`prune-trial`) — so agents report **every** friction honestly, even nits.
+Frictions that share a cause are grouped in the **Friction Ledger**, not tagged.
+
+### Friction Ledger
+An Inventory of the Platform's Friction clusters: one entry per group of
+Frictions that share a root cause, with the surface its fix lands on, its status
+(open, tracked, on trial or fixed) and every occurrence by Session, so recurrence
+is counted over weeks rather than one run's window, and a cause that recurs
+every few days is seen. `frictions-to-fixes` maintains it; the Journal manifest
+holds its schema. An entry whose fix has held for 14 days is deleted, and git
+keeps the history.
 
 ### Skill
 A Claude Code skill that encodes a repeatable capability for developing or
@@ -163,9 +168,10 @@ deliverable as the Nuxt code.
 ### Skill Inventory
 A curated, derived current-state readout of which Skills to actually use and each
 one's **role** and **importance** to this Platform. It
-is kept current by the `audit-skills` Skill. It is one **Inventory** — the general category of derived,
-current-state readouts that are refreshed in place rather than appended to
-(contrast the append-only Digest, defined in the Journal context).
+is kept current by the `audit-skills` Skill. It and the **Friction Ledger** are
+**Inventories** — the general category of derived, current-state readouts that
+are refreshed in place rather than appended to (contrast the append-only
+Digest, defined in the Journal context).
 
 ### Importance (of a Skill)
 A Skill Inventory entry's grade for how much a Skill matters to the Platform — a

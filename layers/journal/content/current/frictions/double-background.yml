@@ -1,0 +1,42 @@
+name: double-background
+cause: >-
+  Sessions combine run_in_background: true with a trailing & or nohup, and the double-background guard denies it.
+surface: guard-or-hook
+status: open
+occurrences:
+  - session: session_01BHBCrNAwjU9TjAEf1rjowP
+    date: "2026-09-27"
+    severity: nit
+  - session: session_01D6xBwcypmnqZFsZLLNGHtx
+    date: "2026-09-27"
+    severity: nit
+  - session: session_01UAmBCUoSXva1vKut9gFfsr
+    date: "2026-09-27"
+    severity: nit
+  - session: session_016PiKSCYGfiAj26Ze7NpkD1
+    date: "2026-09-28"
+    severity: nit
+  - session: session_0185EAXqfuX1twvr6Z67SsY4
+    date: "2026-09-28"
+    severity: nit
+  - session: session_01SYbiQQHsX8HmeXJTtxAPwp
+    date: "2026-09-29"
+    severity: nit
+  - session: session_01KyKW5E8oFPkSu3a4mCpT25
+    date: "2026-10-05"
+    severity: nit
+  - session: session_01AQ91ENQEqf8iMne1PrzFiu
+    date: "2026-10-07"
+    severity: nit
+  - session: session_01FjXKYqhJLRWNRcbDvdhNxQ
+    date: "2026-10-07"
+    severity: nit
+  - session: session_01449u16G5rFweMPGkKZe9Tv
+    date: "2026-10-08"
+    severity: minor
+  - session: session_01KRLFYUD31NaEVTs4Qs1Tzj
+    date: "2026-10-10"
+    severity: nit
+  - session: session_01Tjsmye34hk57NtioyWQG4h
+    date: "2026-10-11"
+    severity: nit

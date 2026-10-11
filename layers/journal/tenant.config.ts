@@ -4,6 +4,7 @@
 // generated into the repo.
 import { z } from 'zod'
 import { defineTenant } from '../../shared/manifest'
+import { sessionSchema } from '../../shared/schemas/session'
 
 // A plain UTC calendar date. Used where
 // a fact is date-scoped (at most one entry per day) rather than ordered within a
@@ -48,6 +49,37 @@ export const skillSchema = z
       z.object({
         date: utcDate,
         note: z.string(),
+      }),
+    ),
+  })
+  .strict()
+
+// The Friction Ledger (CONTEXT.md): one entry per cluster of session-log
+// Frictions with a common root cause. `frictions-to-fixes` maintains it, and
+// its SKILL.md holds the lifecycle. Counts and first/last-seen dates derive
+// from `occurrences`; nothing here is a hand-written total.
+export const frictionClusterSchema = z
+  .object({
+    name: z.string(),
+    // One line naming the shared root cause, not a list of symptoms.
+    cause: z.string(),
+    // Where a fix lands. `safe` is dispatchable; `guard-or-hook` and
+    // `human-only` need a human-attended session or merge (ADR-0004,
+    // docs/agents/guards.md); `outside` is the harness or a service this
+    // repo cannot change.
+    surface: z.enum(['safe', 'human-only', 'guard-or-hook', 'outside']),
+    // `open`: nothing covers it. `tracked`: an open issue or PR does (`ref`).
+    // `on-trial`: inside a Prune Trial's territory (`ref` quotes it,
+    // ADR-0027). `fixed`: the fix merged on `fixedOn`; an occurrence after
+    // that date is a regression.
+    status: z.enum(['open', 'tracked', 'on-trial', 'fixed']),
+    fixedOn: utcDate.optional(),
+    ref: z.string().optional(),
+    occurrences: z.array(
+      z.object({
+        session: z.string(),
+        date: utcDate,
+        severity: sessionSchema.shape.frictions.element.shape.severity,
       }),
     ),
   })
@@ -102,5 +134,11 @@ export default defineTenant({
     // the Catalog without re-declaring the schema. `scripts/log-session.ts`
     // validates authored logs against that same shared schema.
     sessions: { type: 'data', kind: 'session', source: '**/*.yml' },
+    // The Friction Ledger — structured data, not routed; schema above.
+    frictions: {
+      type: 'data',
+      source: '**/*.yml',
+      schema: frictionClusterSchema,
+    },
   },
 })

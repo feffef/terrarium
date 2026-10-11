@@ -1,0 +1,15 @@
+name: harness-proxy-blocks
+cause: >-
+  The cloud harness permission classifier or agent proxy refuses an owner-approved action (a guards dispatch, a rulesets POST, a numeric-id endpoint) with no in-session override.
+surface: outside
+status: open
+occurrences:
+  - session: session_014aYTnetbYbfGH2MrSUDj9T
+    date: "2026-10-01"
+    severity: moderate
+  - session: session_01CF4k9jXS9wLrcPVsGduZmn
+    date: "2026-10-08"
+    severity: moderate
+  - session: session_018i6d2BQPkf9cq6jSEqCNSX
+    date: "2026-10-10"
+    severity: moderate

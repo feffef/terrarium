@@ -1,0 +1,10 @@
+name: blog-reply-judged-on-sketches
+cause: >-
+  blog-post step 12's reader judges sketches, not finished replies, so a reply fails fact-check or reads poorly after shipping.
+surface: safe
+status: open
+ref: "PR #1756"
+occurrences:
+  - session: session_0177ZCpnHq4Sw5wicAEmriDh
+    date: "2026-10-11"
+    severity: moderate

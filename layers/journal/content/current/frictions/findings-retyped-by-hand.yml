@@ -1,0 +1,16 @@
+name: findings-retyped-by-hand
+cause: >-
+  Subagents cannot always write their findings where the parent can read them (harness refusals, non-extractable output), so the parent transcribes them by hand.
+surface: safe
+status: open
+ref: "PR #1699"
+occurrences:
+  - session: session_01GxJXNFxh3SQh8q1nkReAxJ
+    date: "2026-10-04"
+    severity: moderate
+  - session: session_017tt8CbwHqFWqw7PJZ7u7AL
+    date: "2026-10-08"
+    severity: moderate
+  - session: session_01GbMt1vGTDZpQxZ3h4pNsF8
+    date: "2026-10-11"
+    severity: moderate

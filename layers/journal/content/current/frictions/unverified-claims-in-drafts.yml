@@ -1,0 +1,43 @@
+name: unverified-claims-in-drafts
+cause: >-
+  First drafts of Digests, posts, docs, reports and CLAUDE.md edits carry claims never checked against a primary source; a fact-check or reviewer catches them at the cost of a round.
+surface: safe
+status: open
+ref: "PR #1756 (blog step 12 fallback)"
+occurrences:
+  - session: session_01JeNNPB1Q8Lirwm4V4VadnB
+    date: "2026-09-27"
+    severity: moderate
+  - session: session_01CUfke5VH7TdJpMTdUhPNgK
+    date: "2026-09-28"
+    severity: moderate
+  - session: session_01WZ4wbo5XL2yNHK6hTkFNWG
+    date: "2026-09-28"
+    severity: moderate
+  - session: session_01U95GU6a93i4N25ZLgwXCSu
+    date: "2026-09-30"
+    severity: moderate
+  - session: session_0168r95gLDEqJ8JBEV6UuUbo
+    date: "2026-10-03"
+    severity: moderate
+  - session: session_01SWRyFbuNXxVWi47tGB8GX6
+    date: "2026-10-03"
+    severity: moderate
+  - session: session_018DwTn5rSUpmtMHwXBrWqGL
+    date: "2026-10-04"
+    severity: moderate
+  - session: session_01EE8wFRkAWLtXgzdcoceCto
+    date: "2026-10-04"
+    severity: moderate
+  - session: session_01NyDGTR1fuP22hPo7XghCfz
+    date: "2026-10-07"
+    severity: moderate
+  - session: 1f97b613-f529-4487-a7e9-1115a44b84c7
+    date: "2026-10-08"
+    severity: moderate
+  - session: session_01S1WwkpNHDfbvKAf5T1afKq
+    date: "2026-10-08"
+    severity: moderate
+  - session: session_01YSGRZcurrkv9WYqPfnRH2t
+    date: "2026-10-10"
+    severity: moderate

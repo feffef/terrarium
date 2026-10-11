@@ -1,0 +1,17 @@
+name: session-id-guard-trailer
+cause: >-
+  session-id-guard judged inherited or pre-session commits as this session's and raised a blocker on a trailer it had no business checking.
+surface: guard-or-hook
+status: fixed
+fixedOn: "2026-10-09"
+ref: "issues #387, #1611, #1698; PR #1708"
+occurrences:
+  - session: session_01NRVHQoPm4cP1F7iVUvh9rJ
+    date: "2026-10-04"
+    severity: blocker
+  - session: 355d2d64-55fc-4515-81c1-e831f8b84601
+    date: "2026-10-08"
+    severity: blocker
+  - session: 49f1fea0-270e-4851-9cc7-3dbf8cc8609a
+    date: "2026-10-08"
+    severity: blocker

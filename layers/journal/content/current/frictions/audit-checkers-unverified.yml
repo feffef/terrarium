@@ -1,0 +1,22 @@
+name: audit-checkers-unverified
+cause: >-
+  audit-docs, audit-skills and prune-trial runs inherit a prior run's conclusion or a tool's description instead of checking the primary source this run.
+surface: safe
+status: open
+ref: "PRs #1630, #1699"
+occurrences:
+  - session: session_01S5bzNzvg1DURebeNRDgVi5
+    date: "2026-09-27"
+    severity: moderate
+  - session: session_015xC64CdTv5cP4zXTxetqMa
+    date: "2026-09-29"
+    severity: moderate
+  - session: session_01U95GU6a93i4N25ZLgwXCSu
+    date: "2026-09-30"
+    severity: major
+  - session: session_01HSTMSUy4WCqqRtVVakyZm3
+    date: "2026-10-04"
+    severity: moderate
+  - session: session_01Jej4qtE56V9dtLCNobJ39K
+    date: "2026-10-06"
+    severity: moderate
