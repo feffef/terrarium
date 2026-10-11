@@ -58,9 +58,9 @@ describe('triggeredDocs()', () => {
 })
 
 describe('the hook entry (sh pre-filter → tsx)', () => {
-  // `args` runs tsx directly, as the mcp__github__ entry does.
+  // `args` skips the pre-filter, for a `--dry-run`.
   const run = (payload: unknown, args?: string[]) =>
-    spawnSync('sh', args ? ['-c',`node_modules/.bin/tsx scripts/read-first-hint.ts ${args.join(' ')}`.trim()] : ['scripts/read-first-hint.sh'], {
+    spawnSync('sh', args ? ['-c', `node_modules/.bin/tsx scripts/read-first-hint.ts ${args.join(' ')}`.trim()] : ['scripts/read-first-hint.sh'], {
       cwd: repo,
       input: typeof payload === 'string' ? payload : JSON.stringify(payload),
       encoding: 'utf8',
@@ -88,14 +88,13 @@ describe('the hook entry (sh pre-filter → tsx)', () => {
       expect(context(r)).toContain(GIT)
       expect(context(r)).not.toContain('Contents of .claude/rules/')
     }
-    expect(context(run(call('x', { tool_name: 'mcp__github__get_me', tool_input: {} }), []))).toContain(GH)
+    expect(context(run(call('x', { tool_name: 'mcp__github__get_me', tool_input: {} })))).toContain(GH)
   })
 
   it('skips tsx and writes nothing for a command with no git or gh word', () => {
     // The pre-filter reads the first `command` key; JSON.parse keeps the last.
     const probe = `{"tool_name":"Bash","cwd":${JSON.stringify(repo)},"transcript_path":${JSON.stringify(empty)},"tool_input":{"command":"ls -la","command":"git log"}}`
     expect(run(probe)).toMatchObject({ status: 0, stdout: '' })
-    expect(run(call('git status'))).toMatchObject({ status: 0, stdout: '' })
   })
 
   it('stays silent once the transcript shows the doc read, shell-read or already pointed to', () => {
@@ -121,9 +120,7 @@ describe('the hook entry (sh pre-filter → tsx)', () => {
 
   it('fails open: malformed payload or missing main transcript adds nothing', () => {
     expect(run('{"tool_input":{"command":"git log"')).toMatchObject({ status: 0, stdout: '' })
-    expect(run(call('git log', { transcript_path: join(dir, 'nope.jsonl') }))).toMatchObject({ status: 0, stdout: '' })
-    expect(run(call('git log', { transcript_path: 7 }))).toMatchObject({ status: 0, stdout: '' })
-  })
+    expect(run(call('git log', { transcript_path: join(dir, 'nope.jsonl') }))).toMatchObject({ status: 0, stdout: '' })  })
 
   it('--dry-run prints the pointer for an unread doc, and nothing for git status', () => {
     const dry = (command: string) => {

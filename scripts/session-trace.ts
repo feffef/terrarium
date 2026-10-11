@@ -152,9 +152,9 @@ export function isContentPath(p: string | undefined): p is string {
 // The harness doesn't record a rule that scripts/skill-rules-hint.ts or
 // scripts/bash-rules-hint.ts injects as a load; only the hint's own
 // "Contents of <rule>:" headers name it.
-function hintedRules(content: unknown): string[] {
-  return ruleBlockFiles((Array.isArray(content) ? content : [content]).filter((c) => typeof c === 'string').join('\n'))
-}
+/** A `hook_additional_context` attachment's text. */
+export const hintText = (content: unknown) => (Array.isArray(content) ? content : [content]).filter((c) => typeof c === 'string').join('\n')
+const hintedRules = (content: unknown) => ruleBlockFiles(hintText(content))
 
 /** A rule's identity is its `.claude/rules/` path, not where it was loaded
  *  from: a worktree subagent loads the same rule under another absolute root,

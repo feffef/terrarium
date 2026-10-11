@@ -18,20 +18,19 @@ import { readFileSync } from 'node:fs'
 import { basename, dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { printDryRunResult, prop, readTranscript, resolveDryRunInput, runIfMain } from './guard-io.ts'
-import { extractTrace, subagentTranscript } from './session-trace.ts'
+import { extractTrace, hintText, subagentTranscript } from './session-trace.ts'
 import { buildDocLineIndex, commandWords } from './shell-reads.ts'
 
 export interface ReadFirst {
   doc: string
   /** CLAUDE.md's wording of the trigger, quoted in the pointer. */
   trigger: string
-  tool?: RegExp
-  /** One segment's words, verb first. */
-  bash?: (words: string[]) => boolean
+  /** `segs`: each Bash segment's words, verb first; empty for other tools. */
+  matches: (tool: string, segs: string[][]) => boolean
 }
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..')
-const verb =(words: string[]) => basename(words[0] ?? '')
+const runs = (segs: string[][], name: string, ok = (_w: string[]) => true) => segs.some((w) => basename(w[0] ?? '') === name && ok(w))
 
 /** git's subcommand: the first word after its global options. */
 function gitSubcommand(words: string[]): string | undefined {
@@ -46,19 +45,18 @@ export const READ_FIRST: ReadFirst[] = [
   {
     doc: 'docs/agents/git-conventions.md',
     trigger: 'Before your first git command',
-    bash: (w) => verb(w) === 'git' && !['status', 'diff', undefined].includes(gitSubcommand(w)),
+    matches: (_t, segs) => runs(segs, 'git', (w) => !['status', 'diff', undefined].includes(gitSubcommand(w))),
   },
   {
     doc: 'docs/agents/github-integration.md',
     trigger: 'Before your first GitHub operation',
-    tool: /^mcp__github__/,
-    bash: (w) => verb(w) === 'gh',
+    matches: (tool, segs) => tool.startsWith('mcp__github__') || runs(segs, 'gh'),
   },
 ]
 
 export function triggeredDocs(tool: string, command: unknown): ReadFirst[] {
   const segs = tool === 'Bash' && typeof command === 'string' ? commandWords(command) : []
-  return READ_FIRST.filter((r) => r.tool?.test(tool) || (r.bash && segs.some(r.bash)))
+  return READ_FIRST.filter((r) => r.matches(tool, segs))
 }
 
 const pointer = (r: ReadFirst) => `Read first: \`${r.doc}\` (CLAUDE.md: "${r.trigger}").`
@@ -71,8 +69,7 @@ function seen(records: Record<string, unknown>[], docs: ReadFirst[]): Set<string
   const hinted = records
     .map((r) => r.attachment as { type?: string; content?: unknown } | undefined)
     .filter((a) => a?.type === 'hook_additional_context')
-    .flatMap((a) => [a!.content].flat())
-    .filter((c) => typeof c === 'string')
+    .map((a) => hintText(a!.content))
     .join('\n')
   return new Set(docs.filter((r) => read.some((p) => p === r.doc || p.endsWith(`/${r.doc}`)) || hinted.includes(pointer(r))).map((r) => r.doc))
 }
