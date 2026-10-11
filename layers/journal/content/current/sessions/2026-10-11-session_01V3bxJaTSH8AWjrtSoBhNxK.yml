@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01V3bxJaTSH8AWjrtSoBhNxK
 startedAt: 2026-10-11T18:10:48Z
-endedAt: 2026-10-11T21:36:32Z
+endedAt: 2026-10-11T21:56:50Z
 kind: interactive
 goal: Check whether frictions-to-fixes' limits leave important fixes undone
-status: in-review
-outcome: "No run hit the cap; PR #1782 merged the Friction Ledger; PR #1783 (Human-only doc drift) awaits the owner's merge"
-summary: "Human-instructed: the owner asked for an analysis of the frictions-to-fixes Skill and the last 14 days of session logs, current and archived, with a Sonnet agent exploring and the analysis done here. The Sonnet agent extracted all 15 daily runs and 889 frictions from 205 sessions; I spot-checked its PR lists, cap wording and severity totals. Finding: no run reached the 10-total or 2-hard cap; the binding filters were the guard and hook surface rule, the ripeness test and the 3-day window, which hid causes recurring every few days. On the owner's follow-up I proposed a ledger like the prune-trial one; the owner chose a Journal Collection named Friction Ledger, seeded from the analysis with full occurrence lists, page later. I built the Collection, schema, seed, Skill rewrite and glossary entry and opened PR #1782 (agent-initiated per ADR-0003). The owner then decided the survey window (48 hours or since the last ledger commit) and that only major or blocker frictions get an entry on first occurrence; I added both as a second commit. The owner ran /code-review twice before merge; the first round found contradictions and restated rules I had introduced, the second an ADR-0003 conflict (the main session authoring the ledger PR) and an untested default window. The owner told me to keep two selection rules from my analysis, auto-apply every fix and self-merge if nothing major remained. I applied all fixes (ledger edit now authored by a dispatched agent, temp-git-repo test for the default window, --since for prune-trial, end-time window filter, schema dedupe), verified all 305 seed occurrences against their logs by script, posted the verdict and merged via merge-pr.ts. The owner then asked for a second PR for the Human-only doc drift and said they would merge it; I opened PR #1783 with in-place factual corrections to the session schema comment, ADR-0009, ADR-0015 and the ADR-0008 rule, plus refreshed rule stamps, after a green full gate."
+status: completed
+outcome: "No run hit the cap; PR #1782 merged the Friction Ledger; PR #1783 fixed the Human-only doc drift; both merged"
+summary: "Human-instructed: the owner asked for an analysis of the frictions-to-fixes Skill and the last 14 days of session logs, current and archived, with a Sonnet agent exploring and the analysis done here. The Sonnet agent extracted all 15 daily runs and 889 frictions from 205 sessions; I spot-checked its PR lists, cap wording and severity totals. Finding: no run reached the 10-total or 2-hard cap; the binding filters were the guard and hook surface rule, the ripeness test and the 3-day window, which hid causes recurring every few days. On the owner's follow-up I proposed a ledger like the prune-trial one; the owner chose a Journal Collection named Friction Ledger, seeded from the analysis with full occurrence lists, page later. I built the Collection, schema, seed, Skill rewrite and glossary entry and opened PR #1782 (agent-initiated per ADR-0003). The owner then decided the survey window (48 hours or since the last ledger commit) and that only major or blocker frictions get an entry on first occurrence; I added both as a second commit. The owner ran /code-review twice before merge; the first round found contradictions and restated rules I had introduced, the second an ADR-0003 conflict (the main session authoring the ledger PR) and an untested default window. The owner told me to keep two selection rules from my analysis, auto-apply every fix and self-merge if nothing major remained. I applied all fixes (ledger edit now authored by a dispatched agent, temp-git-repo test for the default window, --since for prune-trial, end-time window filter, schema dedupe), verified all 305 seed occurrences against their logs by script, posted the verdict and merged via merge-pr.ts. The owner then asked for a second PR for the Human-only doc drift and said they would merge it; I opened PR #1783 with in-place factual corrections to the session schema comment, ADR-0009, ADR-0015 and the ADR-0008 rule, plus refreshed rule stamps, after a green full gate; the owner merged it."
 prs:
   - "1782"
   - "1783"
@@ -136,12 +136,12 @@ frictions:
   - description: Pushing the restarted branch with --force-with-lease was rejected as stale info because the remote branch had been deleted on merge; a guard hint named the cause and a prune fixed it.
     solution: After a merge, prune origin before pushing a restarted branch.
     severity: nit
-durationSec: 12344
+durationSec: 13561
 models:
   claude-fable-5-1: 132
-  claude-opus-5-5: 285
+  claude-opus-5-5: 304
 toolCounts:
-  Bash: 140
+  Bash: 141
   Agent: 5
   AskUserQuestion: 1
   Skill: 3
@@ -151,14 +151,14 @@ toolCounts:
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 2
   mcp__claude-code-remote__subscribe_pr_activity: 2
-  ReadNotifications: 9
-  mcp__github__pull_request_read: 2
-  mcp__claude-code-remote__send_later: 2
+  ReadNotifications: 13
+  mcp__github__pull_request_read: 4
+  mcp__claude-code-remote__send_later: 4
   mcp__github__update_pull_request: 2
   mcp__github__issue_read: 1
   mcp__github__add_issue_comment: 1
   mcp__claude-code-remote__unsubscribe_pr_activity: 1
-  mcp__claude-code-remote__delete_trigger: 1
+  mcp__claude-code-remote__delete_trigger: 2
 filesEdited:
   - CONTEXT.md
   - layers/journal/CONTEXT.md
