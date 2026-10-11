@@ -123,9 +123,9 @@ The rules:
 - **Adding an OPTIONAL field — allowed anytime.** A `.strict()` schema still
   accepts old files that omit the new field; no migration, no version bump.
 - **Adding a REQUIRED field, renaming a field, or narrowing a field's type — NOT
-  allowed in place.** It would invalidate every historical file at once. (The
-  `tag` taxonomy CONTEXT.md plans for `sessions` is the canonical example of a
-  change that looks small but is breaking.) Instead **bump the version:**
+  allowed in place.** It would invalidate every historical file at once. (A
+  required `tag` on every friction is the canonical example of a change that
+  looks small but is breaking.) Instead **bump the version:**
   - define a new object schema carrying `schemaVersion: z.literal(2)` (plus the
     new required/renamed/narrowed shape);
   - keep the current shape as v1, with `schemaVersion: z.literal(1).optional()`;
