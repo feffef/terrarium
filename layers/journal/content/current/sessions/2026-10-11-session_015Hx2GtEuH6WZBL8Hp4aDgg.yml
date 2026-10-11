@@ -1,0 +1,146 @@
+schemaVersion: 1
+session: session_015Hx2GtEuH6WZBL8Hp4aDgg
+startedAt: 2026-10-11T09:32:46Z
+endedAt: 2026-10-11T09:41:04Z
+kind: delegated
+goal: Turn the last 3 days of session frictions into landed fixes
+status: completed
+outcome: "One audit-docs fix landed via PR #1768"
+summary: "Human-instructed: the user invoked /frictions-to-fixes; everything else followed that Skill. A survey subagent read all 44 logs in the 3-day window and returned one simple candidate (audit-docs reviewers cannot write findings files, so the lead retypes them; 2 sessions) and one surface-blocked nit (tail-pipe-guard retries, 10 nits). I dropped the second: nit-only, each self-fixed on one retry, and PR #1735 had just deleted two similar guards. Agent-initiated: I dispatched one Sonnet impl agent in a worktree; it changed one line in audit-docs SKILL.md §3 (reviewers return findings as text, lead saves them verbatim), passed gate:scoped and opened PR #1768. The fix edits a line PR #1699 added, so it is arguably a regression of that fix; I treated it as a new problem and told the user. I reviewed the one-line diff, posted a verdict comment and merged #1768 on a green gate."
+prs:
+  - "1768"
+docsRead:
+  - path: CONTEXT-MAP.md
+    reason: context index
+    useful: partly
+  - path: CONTEXT.md
+    reason: "glossary: Friction, Session closure, Human-only"
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: GitHub MCP traps before the first GitHub call
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: fetch before trusting history
+    useful: yes
+  - path: docs/agents/pr-workflow.md
+    reason: merge recipe and verdict-comment rule
+    useful: yes
+  - path: .claude/skills/frictions-to-fixes/SKILL.md
+    reason: (no reason given)
+  - path: .agents/prune-trials.yml
+    reason: (no reason given)
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: (no reason given)
+  - path: /home/user/terrarium/docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: /home/user/terrarium/docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: /home/user/terrarium/docs/agents/github-integration.md
+    reason: (no reason given)
+skillsUsed:
+  - name: frictions-to-fixes
+    reason: the task itself
+  - name: dispatch-subagents
+    reason: worktree brief for the impl agent
+  - name: close-session
+    reason: log at PR-open
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: "Skill §2 says a reappeared friction after a fix is a regression needing an issue and alert, but a fix whose own prescribed mechanism is refused is unclear: no rule for it."
+    solution: Add one clause to frictions-to-fixes §2 saying whether a fix that fails by construction counts as a regression.
+    severity: nit
+  - description: "SHELL-READ-DETECTION false positive: .agents/skills/blog-post/SKILL.md was credited from shell output, but the session marked it (not read)"
+    solution: Find the crediting command in the transcript and tighten scripts/shell-reads.ts
+    severity: moderate
+  - description: "SHELL-READ-DETECTION false positive: .agents/skills/audit-docs/SKILL.md was credited from shell output, but the session marked it (not read)"
+    solution: Find the crediting command in the transcript and tighten scripts/shell-reads.ts
+    severity: moderate
+durationSec: 498
+models:
+  claude-sonnet-5-5: 39
+toolCounts:
+  Read: 5
+  Agent: 2
+  Skill: 3
+  Bash: 6
+  ToolSearch: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+  mcp__github__pull_request_read: 2
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
+filesEdited:
+  - .agents/skills/audit-docs/SKILL.md
+rulesLoaded:
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0026.md
+  - .claude/rules/adr-0018.md
+rulesGlobal:
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0001.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0023.md
+  - .claude/rules/adr-0017.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0003.md
+    reason: review-agent role; open and subscribe to PR
+    useful: yes
+  - path: .claude/rules/adr-0004.md
+    reason: gate:scoped before push; human-merge exceptions
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: log at PR-open via close-session
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: provenance line one in brief for PR body
+    useful: yes
+  - path: .claude/rules/adr-0005.md
+    reason: Skills are Platform code, changed by PR
+    useful: partly
+  - path: .claude/rules/adr-0015.md
+    reason: pack Skill SKILL.md off limits when screening
+    useful: partly
+  - path: .claude/rules/adr-0027.md
+    reason: prune-trial territory screening
+    useful: yes
+  - path: .claude/rules/adr-0022.md
+    reason: no triage this run
+    useful: no
+  - path: .claude/rules/adr-0001.md
+    reason: unrelated to task
+    useful: no
+  - path: .claude/rules/adr-0020.md
+    reason: trust tiers; no Public input this run
+    useful: no
+  - path: .claude/rules/adr-0023.md
+    reason: guest pipeline; unrelated
+    useful: no
+  - path: .claude/rules/adr-0021.md
+    reason: context split; unrelated
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: rules load with files; unrelated
+    useful: no
+  - path: .claude/rules/adr-0026.md
+    reason: unrelated to task
+    useful: no
+  - path: .claude/rules/adr-0018.md
+    reason: unrelated to task
+    useful: no
+subagents:
+  - type: general-purpose
+    task: Survey and screen frictions
+  - type: general-purpose
+    task: Fix audit-docs reviewer findings handoff
+    model: sonnet
+gitBranch: ccr-162f25eb-4xudah
+entrypoint: remote_mobile
+cliVersion: 2.1.296
+landedBy: Stop
