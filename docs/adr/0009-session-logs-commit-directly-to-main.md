@@ -527,63 +527,6 @@ a same-field wording refinement, not a schema change, so it needs no
 the literal `(unknown)` string stay valid history; only newly-derived entries
 use the split wording.
 
-## The shell half of "what it read": `docsReadViaShell` (2026-08-29, issue #1074)
-
-> **Amended.** The mechanical trace gains one field, and the first standing rule
-> about who may *consume* one.
-
-`filesRead` sees `Read` calls only, so the `cat`/`sed`/`grep` inspection #1074
-measured overtaking it was invisible. `docsReadViaShell` records agent-instruction
-docs a Bash command streamed into the session — optional, additive, excluding
-harness-injected `CLAUDE.md`, a floor like `filesRead`, and claiming a command
-ran rather than that the agent attended, so a wrong entry is an extractor bug.
-**Derived only:** an agent reports an error as a Friction (floor `moderate`, the
-lowest `frictions-to-fixes` never drops; marker `SHELL-READ-DETECTION`) rather
-than editing it back into a self-report. **No consumer** may act on its presence
-beyond the trace, stitch, authoring loop and Journal card; a unit test enforces it.
-
-## `docsReadViaShell` is derived from command output, not command text (2026-10-03, issue #1545)
-
-> **Amended.** The shell-read amendment above still defines what the field
-> claims; this changes how the claim is established.
-
-The command parser (`scripts/shell-reads.ts`'s `scanShellReads`) read a shell
-string that was never executed, so every new command shape — a glob, a `for`
-loop, a `cd`, a `git show`/`diff`/`log -p`, a `||` fallback — needed its own
-rule, and the Journal kept logging new ones. The field is now derived by
-**matching the command's `tool_result` text against the lines of the
-instruction docs themselves**: an index of every instruction doc's trimmed
-lines of at least `MIN_DISTINCTIVE_LINE` characters (`scripts/shell-reads.ts`)
-that appear in no other file of the checkout (every non-doc file is a sink, so
-a line of code a doc quotes never credits the doc), matched after stripping the
-line prefixes reader commands add (`LINE_PREFIXES`); a doc whose own path
-prefixes an output line (`path:12:`) is credited too. A command that printed
-nothing can never be credited. Measured against the logged frictions in
-`docs/research/shell-reads-by-output-matching.md`.
-
-Two consequences the earlier wording did not allow for:
-
-- **The trace reads the checkout, not only the transcript.** It already read
-  tool results for this field since #1247's grep gate; now `extractTrace`
-  also takes an optional doc-line index, built from the working tree by
-  `loadDocLineIndex` at derivation time (the same author-time injection the
-  glob resolver of #1246 already used). Without one the field is empty, which
-  is what the guard and provenance callers see. A doc edited between two derivations of
-  the same session can therefore change the re-derived value, which the
-  superset premise of the idempotent re-derive does not cover — an accepted
-  limit, the alternative being a `git show` per doc against a start commit the
-  transcript does not record.
-- **The parser survives only as the advisory's explanation.** `--author`'s
-  near-miss list still comes from `scanShellReads`, because "why was this doc
-  not credited" needs the command text; crediting never does. The landed value
-  and the advisory now derive one value, where before the glob and `cd` fixes
-  (#1246, #1454) reached only the advisory.
-
-Two reads stay invisible by design (the `log-session` Skill points here): a
-doc read from git history whose lines no longer exist in the checkout, and a
-read that showed less than `MIN_DISTINCTIVE_LINE` of the doc. The schema is
-unchanged.
-
 ## `main` is protected; the lander passes through the admin bypass (2026-10-08, issue #348)
 
 > **Amended.** The direct-to-`main` decision is unchanged; this records what
@@ -598,44 +541,52 @@ Decision says. The ruleset's exact rules and the reasons for them are
 single-homed in
 `docs/research/github-branch-protection-vs-autonomous-log-commits.md`.
 
-## Shell reads fold into `docsRead`; the agent answers each derived doc (2026-10-10)
+## What the log says it read: the output-matching and merged-read amendments (2026-08-29 to 2026-10-11, issues #1074, #1545, #1723)
 
-> **Amended.** Supersedes the separate-field and no-consumer rules of the
-> 2026-08-29 shell-read amendment. The output-matching amendment still says how
-> a shell read is established.
+> **Amended.** One account of how `docsRead` is derived and who corrects it.
+> It replaces three earlier amendments: a separate `docsReadViaShell` field, a
+> command-text parser, and a "no consumer, never corrected" rule.
 
-Two fields answering "what did it read" confused every reader. The shell read
-now folds into `docsRead` exactly as `filesRead` does, and `docsReadViaShell`
-is deprecated: never written again, kept in the schema so older logs validate.
-Once in `docsRead`, shell reads reach every `docsRead` consumer, so the
-detector was tightened first:
+`filesRead` sees `Read` calls only, so docs streamed through `cat`/`sed`/`grep`
+were invisible (#1074). The trace now credits them, and they fold into
+`docsRead` exactly as `filesRead` does. `docsReadViaShell` is deprecated: never
+written again, kept in the schema so older logs validate.
 
-- **A glance is not a read.** A doc counts only once one transcript's output
-  (the session's own, or one subagent's) has shown `MIN_LINES_SHOWN` distinct
-  lines of it (all of it, if shorter); a `path:line:` grep hit is one line.
-  Measured on the logs of 2026-10-03 to 2026-10-10: lists of 40 to 97 credits
-  were inflated by single grep hits and two-line slices.
-- **A commit's diff is a quoting surface.** `git show`/`diff`/`log` output
-  counts only toward a doc the command itself names, like `gh` and Journal
-  output since #1723, and that holds for `path:line:` hits too.
+**How a shell read is established.** The trace matches a command's `tool_result`
+text against the lines of the instruction docs themselves, not the command text
+(a parser needed a new rule for every glob, loop, `cd` or `||` fallback, #1545).
+`scripts/shell-reads.ts` holds the mechanism: the index of each doc's lines of
+at least `MIN_DISTINCTIVE_LINE` characters that appear in no other file (a line
+of code a doc quotes never credits the doc); the stripped `LINE_PREFIXES`; a doc
+whose path prefixes an output line (`path:12:`) is credited. The measurements
+are in `docs/research/shell-reads-by-output-matching.md`. Rules that keep it
+honest, since a credit reaches every `docsRead` consumer:
 
-**The agent explains every derived instruction doc.** `--author` lists each
-instruction doc the trace will fold in that has no authored reason yet, with
-its evidence. The agent answers each with a reason, or with `(not read)` for a
+- A command that printed nothing credits nothing.
+- **A glance is not a read.** A doc counts once one transcript's output (the
+  session's or one subagent's) has shown `MIN_LINES_SHOWN` distinct lines of it
+  (all of it, if shorter). A `path:line:` grep hit is one line.
+- **A quoting surface is not a read.** `gh` and Journal output, and
+  `git show`/`diff`/`log` output, credit only a doc the command itself names
+  (#1723).
+
+Limits, accepted: the trace reads the checkout (`loadDocLineIndex`), so a doc
+edited between two derivations can change a re-derived value. A doc read from
+git history whose lines are gone, and a read that showed fewer than
+`MIN_DISTINCTIVE_LINE` characters, stay invisible (the `log-session` Skill
+points here). `scanShellReads` survives only to explain `--author`'s near-miss
+list.
+
+**The agent corrects the list, and the correction is logged.** `--author` lists
+each instruction doc the trace will fold in that has no authored reason yet,
+with its evidence. The agent answers each with a reason, or `(not read)` for a
 doc no command of the session or its subagents showed it. The stitch drops a
-`(not read)` path, and when the shell detector had credited it, files a
-`moderate` `SHELL-READ-DETECTION` Friction itself, so a detector error stays
-visible even though the agent corrected the list. This relaxes "derived only,
-never corrected" for this one list: the correction is logged, not silent.
+`(not read)` path and, when the detector had credited it, files a `moderate`
+`SHELL-READ-DETECTION` Friction itself, so a detector error stays visible.
 
-## The agent rates what it read and which rules loaded (2026-10-11)
-
-> **Amended.** Additive optional fields, so no `schemaVersion` bump.
-
-A path alone does not say whether a doc or rule earned its place in context.
-A `docsRead` entry gains an optional `useful` verdict (`yes`, `partly`, `no`),
-and a new optional `ruleVerdicts` list gives each loaded rule a `reason` (why it
-helped or didn't) and a `useful` verdict. Both are authored; `--author` lists
-every instruction doc and every loaded rule still missing one. The derived
+**Ratings.** A `docsRead` entry has an optional authored `useful` verdict
+(`yes`, `partly`, `no`). An optional `ruleVerdicts` list gives each loaded rule
+a `reason` (why it helped or didn't) and a `useful` verdict; the derived
 `rulesGlobal` lists the always-loaded rules (no `paths`; they load at session
-start), so they get a verdict too. Older logs carry none of these and stay valid.
+start). `--author` lists every doc and rule still missing one. Both are optional
+and additive, so no `schemaVersion` bump; older logs stay valid.

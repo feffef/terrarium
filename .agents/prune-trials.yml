@@ -58,35 +58,6 @@ trials:
       prevented it. NOT damage: a guard denying and the session fixing itself
       from the message, or reading a script header instead of this page.
   - problem: >
-      Mechanism-record prose in `docs/research/rulebook-migration-table.md`: §3
-      (a table retelling #835, #772, #666, #873) and §4's `PreToolUse` guard
-      roster, a third copy of `docs/agents/guards.md` and the script headers that
-      its own text says drifts. Each rule failed as prose (#835 read in full;
-      #873, #772 by title) and is now held by `agent-background-flag-guard.ts`,
-      `tail-pipe-guard.ts`, `unshallow-on-start.ts`; #666 by deleting the cause.
-      §3 became four one-line pointers; §4's roster became a pointer to
-      guards.md. The two provenance rows of §4 and the non-`PreToolUse` table
-      stay (provenance trial). The search subagent covered the instruction
-      corpus, the rulebook table (excluded list included), guards.md, guard
-      headers and the tracker; candidates left: the `--force-with-lease` note
-      in pr-workflow.md (#984, nothing enforces it) and the session-id rule
-      (trailer-adjacent). Net about -19 lines; the mass here was small.
-      The same run judged and deleted the provenance/commit-trailer trial:
-      only nit/minor Frictions where a guard denied and the session fixed it.
-    territory:
-      paths:
-        - "docs/research/rulebook-migration-table.md: sections 3 and 4's PreToolUse table"
-      keywords:
-        - four named regression-class issues
-        - Already mechanized
-    opened: 2026-10-09
-    proven: true
-    check: >
-      Damage is a major or blocker Friction where a session misses a guard's
-      purpose or re-adds a pruned rule because the table no longer retold the
-      incident. NOT damage: a session reading guards.md or the guard header
-      instead of the table.
-  - problem: >
       The landing recipe in `docs/agents/pr-workflow.md` (the recipe steps and the
       closing-keyword, restart-branch, follow-up-push and reply-before-resolve
       paragraphs, about 24 lines cut; steps keep their numbers because
@@ -117,3 +88,31 @@ trials:
       by a stray closing keyword, or merges a PR whose cited ADR went stale,
       and a line the old recipe carried would have prevented it. NOT damage:
       merge-pr.ts refusing and the session fixing itself from the message.
+  - problem: >
+      The shell-read amendment chain in
+      `docs/adr/0009-session-logs-commit-directly-to-main.md` (four stacked,
+      partly superseded amendments: `docsReadViaShell`, output matching, the
+      merged-read tightening, ratings; 97 lines folded into one 48-line section,
+      about -49 net; the protected-`main` amendment and every decision kept).
+      The detector's prose failed repeatedly: #1545, #1723, and #1786 (open
+      regression, read in full) while `scripts/shell-reads.ts` and its unit tests
+      hold the mechanism. The search subagent (this run) covered the instruction
+      corpus, the rulebook table (excluded list included) and the tracker; runners-up:
+      the `pkill` rule smeared over five files (3 rounds, no guard) and the
+      #1499 worktree caveat. The same run judged and deleted the rulebook-table
+      trial: no Friction named the table, nothing filed against it.
+    territory:
+      paths:
+        - "docs/adr/0009-session-logs-commit-directly-to-main.md: the shell-read, merged-read and ratings amendments (now one section)"
+      keywords:
+        - output-matching and merged-read amendments
+        - SHELL-READ-DETECTION
+    opened: 2026-10-12
+    proven: true
+    check: >
+      Damage is a major or blocker Friction where a session mis-authors its
+      docsRead (corrects a detector error silently, or marks a doc it read
+      `(not read)`), or a detector change breaks a rule this ADR carried, and a
+      line the old amendments held would have prevented it. NOT damage: the
+      known false-positive advisory firing (#1786), or a session reading the
+      scripts instead of the ADR.
