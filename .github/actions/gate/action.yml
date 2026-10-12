@@ -53,6 +53,18 @@ runs:
       shell: bash
       run: pnpm verify:mermaid
 
+    # eslint's per-file result cache. Entries are keyed on file content and the
+    # config + eslint + node version, so a stale restore is only ever slower,
+    # never wrong. A fresh key per commit makes every green run save a newer one.
+    - name: Restore the lint cache
+      uses: actions/cache@v4
+      with:
+        path: node_modules/.cache/eslint
+        key: eslint-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml', 'eslint.config.*') }}-${{ github.sha }}
+        restore-keys: |
+          eslint-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml', 'eslint.config.*') }}-
+          eslint-${{ runner.os }}-
+
     - name: 'L0 · lint'
       shell: bash
       run: pnpm lint
