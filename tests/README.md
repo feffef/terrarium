@@ -19,6 +19,10 @@ Where each test lives, and the one non-obvious e2e rule. The why: ADR-0004's 202
 
 Adding a Tenant that needs tests adds a `layers/<tenant>/tests/` folder; nothing here changes.
 
+- **A Skill's helper script** — one only its Skill runs — lives at
+  `.agents/skills/<name>/scripts/`, its unit test at
+  `.agents/skills/<name>/tests/unit/` (see ADR-0004, 2026-10-12 amendment).
+
 ## The e2e gate is ONE build, reused by every spec
 
 The build is the gate's `pnpm build`. The `e2e` vitest project's `globalSetup`
@@ -57,8 +61,8 @@ transition) needs its timeout raised per-call —
 ## Running
 
 - `pnpm test` — unit (L0/L3), platform **and** tenant, fast. Filters by the
-  `tests/unit` path substring, which matches both `tests/unit/**` and
-  `layers/*/tests/unit/**`.
+  `tests/unit` path substring, which matches `tests/unit/**`,
+  `layers/*/tests/unit/**` and `.agents/skills/*/tests/unit/**`.
 - `pnpm test:e2e` — the L2 specs, in parallel, on the gate's build.
 
 Both are part of the safety gate (ADR-0004); the steps live in `package.json`'s

@@ -87,7 +87,8 @@ runs:
     # The Heavy tier below is guarded on the scope decision (#445, ADR-0026). An
     # empty or absent output — step skipped, step failed, base undeterminable —
     # is not 'true', so it runs. The skip is only ever reached on a
-    # positively-proven Inert changeset.
+    # positively-proven Inert changeset. `skip_build` guards only build and e2e
+    # (ADR-0004, 2026-10-12 amendment).
 
     # L3 — isolation invariant: unique, correctly-scoped collection keys.
     - name: 'L3 · isolation'
@@ -101,7 +102,7 @@ runs:
     # version is not part of that hash; the prefix fallback restores the nearest
     # earlier cache and only changed files are parsed.
     - name: Restore the Content parse cache
-      if: steps.scope.outputs.skip_heavy != 'true'
+      if: steps.scope.outputs.skip_build != 'true'
       uses: actions/cache@v4
       with:
         path: .data/content
@@ -112,7 +113,7 @@ runs:
     # Content 3 has no safeParse in its parse/insert pipeline; schemas only
     # derive SQL column types (docs/research/nuxt-content-review-grounding.md §2).
     - name: 'L0 · build'
-      if: steps.scope.outputs.skip_heavy != 'true'
+      if: steps.scope.outputs.skip_build != 'true'
       shell: bash
       run: pnpm build
 
@@ -125,7 +126,7 @@ runs:
     # only added coverage fonts for scripts the site never uses (~10 s per run);
     # installing them on a miss only would make a hit and a miss render differently.
     - name: Restore the pinned Chromium
-      if: steps.scope.outputs.skip_heavy != 'true'
+      if: steps.scope.outputs.skip_build != 'true'
       id: pw-browsers
       uses: actions/cache@v4
       with:
@@ -133,14 +134,14 @@ runs:
         key: pw-browsers-${{ runner.os }}-${{ hashFiles('node_modules/playwright-core/package.json') }}
 
     - name: Install Chromium for the L2 browser smoke gate
-      if: steps.scope.outputs.skip_heavy != 'true' && steps.pw-browsers.outputs.cache-hit != 'true'
+      if: steps.scope.outputs.skip_build != 'true' && steps.pw-browsers.outputs.cache-hit != 'true'
       shell: bash
       env:
         PLAYWRIGHT_BROWSERS_PATH: ${{ github.workspace }}/.pw-browsers
       run: pnpm exec playwright-core install chromium
 
     - name: 'L2 · smoke render'
-      if: steps.scope.outputs.skip_heavy != 'true'
+      if: steps.scope.outputs.skip_build != 'true'
       shell: bash
       env:
         PLAYWRIGHT_BROWSERS_PATH: ${{ github.workspace }}/.pw-browsers

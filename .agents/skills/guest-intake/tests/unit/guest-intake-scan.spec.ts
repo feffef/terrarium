@@ -130,7 +130,7 @@ describe('commentsSinceCursor()', () => {
 
 describe('newestOwnerCommentSince() — issue #569', () => {
   it('finds a real OWNER comment sandwiched between two of the agent\'s own footer replies', () => {
-    // See scripts/guest-intake-scan.ts's header comment for the reported
+    // See .agents/skills/guest-intake/scripts/guest-intake-scan.ts's header comment for the reported
     // bug shape this reproduces (issue #569).
     const replyA = comment({ body: FOOTER_COMMENT, author_association: 'OWNER', created_at: '2026-07-17T01:00:00Z' })
     const ownerSteering = comment({

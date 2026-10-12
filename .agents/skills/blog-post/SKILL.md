@@ -35,7 +35,7 @@ Steps 1–6 work in the scratchpad only. The repo is first touched at step 7.
 ### 1. Rotation gate
 
 ```bash
-pnpm exec tsx scripts/blog-rotation.ts
+pnpm exec tsx .agents/skills/blog-post/scripts/blog-rotation.ts
 ```
 
 It prints `{ last, starved, eligible }`. The rules (no Persona twice in a row;

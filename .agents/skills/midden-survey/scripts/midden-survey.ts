@@ -12,19 +12,18 @@
 // PR and branch candidates are not this script's job — they live on GitHub,
 // not in git, so the Skill sweeps them via the GitHub MCP tools.
 //
-// Usage:  tsx scripts/midden-survey.ts [--since YYYY-MM-DD]
+// Usage:  tsx .agents/skills/midden-survey/scripts/midden-survey.ts [--since YYYY-MM-DD]
 //   Prints the JSON report. Refuses to run on a shallow clone: a grafted
 //   boundary commit silently truncates the deletion history (CLAUDE.md's
 //   shallow-clone rule), so a shallow sweep would report "nothing more found"
 //   falsely — deepen first (`git fetch --unshallow origin main`).
 import { readdirSync, readFileSync } from 'node:fs'
-import { dirname, join, resolve } from 'node:path'
-import { fileURLToPath, pathToFileURL } from 'node:url'
+import { join } from 'node:path'
+import { pathToFileURL } from 'node:url'
 import { execFileSync } from 'node:child_process'
 import { parse as parseYaml } from 'yaml'
-import { fetchOriginMain } from './git-helpers.ts'
-
-const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
+import { fetchOriginMain } from '../../../../scripts/git-helpers.ts'
+import { root } from '../../../../shared/expand.ts'
 
 const FIELD_SEP = '\x1f'
 

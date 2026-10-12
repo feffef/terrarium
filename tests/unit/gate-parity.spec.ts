@@ -7,7 +7,7 @@ import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { parse as parseYaml } from 'yaml'
 import { root } from '../../shared/expand.ts'
-import { FLOOR, HEAVY } from '../../scripts/gate.ts'
+import { BUILT, FLOOR, HEAVY } from '../../scripts/gate.ts'
 
 const ACTION = join(root, '.github/actions/gate/action.yml')
 
@@ -43,8 +43,17 @@ function layerSteps(): { script: string, step: CompositeStep }[] {
   })
 }
 
-function isGuarded(step: CompositeStep): boolean {
-  return (step.if ?? '').includes("skip_heavy != 'true'")
+/** `BUILT` steps (and their caches) skip on `skip_build`; the rest of HEAVY on `skip_heavy`. */
+function guard(step: CompositeStep): 'skip_heavy' | 'skip_build' | undefined {
+  const cond = step.if ?? ''
+  if (cond.includes("skip_heavy != 'true'")) return 'skip_heavy'
+  if (cond.includes("skip_build != 'true'")) return 'skip_build'
+  return undefined
+}
+
+function expectedGuard(script: string): 'skip_heavy' | 'skip_build' | undefined {
+  if ((BUILT as readonly string[]).includes(script)) return 'skip_build'
+  return (HEAVY as readonly string[]).includes(script) ? 'skip_heavy' : undefined
 }
 
 /** `pnpm gate` is the single home of the full sequence (package.json); re-derive it
@@ -67,19 +76,16 @@ describe('Gate parity — the composite action matches scripts/gate.ts (ADR-0026
     expect(scripts).toEqual([...FLOOR, ...HEAVY])
   })
 
-  it('guards every HEAVY step on the scope decision, and no FLOOR step', () => {
+  it('guards every HEAVY step on its scope output, and no FLOOR step', () => {
     for (const { script, step } of layerSteps()) {
-      const shouldGuard = (HEAVY as readonly string[]).includes(script)
-      expect(isGuarded(step), `pnpm ${script} should${shouldGuard ? '' : ' not'} be guarded on skip_heavy`).toBe(
-        shouldGuard,
-      )
+      expect(guard(step), `pnpm ${script}'s guard`).toBe(expectedGuard(script))
     }
   })
 
-  it('guards the Chromium install too — it exists only to serve the HEAVY e2e step', () => {
+  it('guards the Chromium install too — it exists only to serve the e2e step', () => {
     const chromium = steps().find((s) => s.run?.includes('playwright-core install'))
     expect(chromium, 'the composite must install Chromium for the L2 smoke gate').toBeDefined()
-    expect(isGuarded(chromium!)).toBe(true)
+    expect(guard(chromium!)).toBe('skip_build')
   })
 
   it('matches `pnpm gate`, so the local full sequence and CI cannot diverge', () => {

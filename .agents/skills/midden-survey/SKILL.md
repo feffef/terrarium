@@ -28,7 +28,7 @@ firing one).
 - Run the mechanical half:
 
   ```
-  pnpm exec tsx scripts/midden-survey.ts [--since YYYY-MM-DD]
+  pnpm exec tsx .agents/skills/midden-survey/scripts/midden-survey.ts [--since YYYY-MM-DD]
   ```
 
   It enumerates **deleted files** and **dropped dependencies** on

@@ -6,7 +6,7 @@ description: "Invoke when this Claude session is wrapping up — coming to a clo
 You've reached **Session closure** — run the closing actions:
 
 - **Hard rule: re-read CLAUDE.md and the always-loaded rules in full before you
-  log: run `pnpm exec tsx scripts/always-loaded.ts`.** Opening the rule files
+  log: run `pnpm exec tsx .agents/skills/close-session/scripts/always-loaded.ts`.** Opening the rule files
   yourself loads unrelated rules into your log. For every rule or
   step in them that this session broke or skipped, log a Friction that names the
   rule — even if you fixed it later. Say what impact breaking it had, or could

@@ -50,8 +50,8 @@ const condition = z.enum(['fresh', 'intact', 'fragmentary', 'dissolved', 'never-
 //   - `continuityCheck` is a short record of which Gate-B check ran and what it
 //     found, e.g. "git log --follow: no live successor" (the #525 two-gate test).
 //   - a `path` (on `file` or `commit`) ending in `/` declares a DIRECTORY, and
-//     scripts/midden-survey.ts screens every candidate beneath it; without the
-//     slash it screens that one file only (#752).
+//     the midden-survey Skill's script screens every candidate beneath it;
+//     without the slash it screens that one file only (#752).
 //   - a `commit` path means "the path this commit touched", not "this path is
 //     retired" — so it screens only the deletion its own `hash` performed, and a
 //     later deletion of a path this commit merely edited stays a candidate (#761).

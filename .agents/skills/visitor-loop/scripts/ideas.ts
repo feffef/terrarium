@@ -9,13 +9,11 @@
 // Mirrors `scripts/digest.ts`'s split: pure, unit-tested core (keyword
 // extraction, overlap scoring, clustering) behind a thin FS/CLI shell.
 //
-// Usage:  tsx scripts/ideas.ts gather [--threshold <n>] [--days <n>]
-import { dirname, resolve } from 'node:path'
-import { fileURLToPath, pathToFileURL } from 'node:url'
-import { isExternalSession } from '../shared/schemas/session.ts'
-import { readSessionLogs } from './session-logs.ts'
-
-const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
+// Usage:  tsx .agents/skills/visitor-loop/scripts/ideas.ts gather [--threshold <n>] [--days <n>]
+import { pathToFileURL } from 'node:url'
+import { isExternalSession } from '../../../../shared/schemas/session.ts'
+import { readSessionLogs } from '../../../../scripts/session-logs.ts'
+import { root } from '../../../../shared/expand.ts'
 
 // ── Types ───────────────────────────────────────────────────────────────────
 

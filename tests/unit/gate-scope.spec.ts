@@ -5,7 +5,7 @@ import { chmodSync, existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { afterEach, describe, expect, it } from 'vitest'
-import { changedPaths, decideScope, isInert, planSteps, FLOOR, HEAVY } from '../../scripts/gate.ts'
+import { changedPaths, decideScope, isInert, isSkillFile, planSteps, FLOOR, HEAVY } from '../../scripts/gate.ts'
 
 describe('isInert()', () => {
   it('treats a Markdown file outside layers/ as inert', () => {
@@ -49,7 +49,7 @@ describe('isInert()', () => {
 describe('decideScope()', () => {
   it('skips heavy layers when EVERY changed path is inert', () => {
     const scope = decideScope(['docs/adr/0004.md', 'README.md', '.agents/skills/x/SKILL.md'])
-    expect(scope.skipHeavy).toBe(true)
+    expect(scope).toMatchObject({ skipHeavy: true, skipBuild: true })
     expect(planSteps(scope)).toEqual([...FLOOR])
   })
 
@@ -64,6 +64,36 @@ describe('decideScope()', () => {
     const scope = decideScope(['.agents/skills/wayfinder/SKILL.md', '.claude/skills/wayfinder'])
     expect(scope.skipHeavy).toBe(true)
     expect(planSteps(scope)).toEqual([...FLOOR])
+  })
+
+  it('skips only build + e2e when the rest is Skill files (#1603)', () => {
+    const scope = decideScope([
+      '.agents/skills/blog-post/scripts/blog-rotation.ts',
+      '.agents/skills/blog-post/tests/unit/blog-rotation.spec.ts',
+      'docs/x.md',
+    ])
+    expect(scope).toMatchObject({ skipHeavy: false, skipBuild: true })
+    expect(planSteps(scope)).toEqual([...FLOOR, 'test'])
+  })
+
+  it('runs the full gate when a Skill file comes with any other non-inert path', () => {
+    const scope = decideScope(['.agents/skills/blog-post/scripts/blog-rotation.ts', 'scripts/session-logs.ts'])
+    expect(scope).toMatchObject({ skipHeavy: false, skipBuild: false })
+    expect(scope.reason).toContain('scripts/session-logs.ts')
+    expect(planSteps(scope)).toEqual([...FLOOR, ...HEAVY])
+  })
+
+  // The skip above is sound only while no build or e2e input imports a Skill file.
+  it('nothing outside a Skill and the unit tests imports from .agents/skills/', () => {
+    const tracked = execFileSync('git', ['ls-files', '*.ts', '*.mts', '*.mjs', '*.vue'], { encoding: 'utf8' }).split('\n')
+    const importers = tracked.filter(
+      (f) =>
+        f &&
+        !isSkillFile(f) &&
+        !/(^|\/)tests\/unit\//.test(f) &&
+        /(from|import\()\s*['"][^'"]*agents\/skills\//.test(readFileSync(f, 'utf8')),
+    )
+    expect(importers).toEqual([])
   })
 
   it('a single content .md under layers/ forces the full gate', () => {

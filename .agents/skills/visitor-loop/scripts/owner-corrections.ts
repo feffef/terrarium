@@ -2,7 +2,7 @@
 // search behind that Skill's owner-memory step, which runs kept skipping when
 // it was prose alone (issue #1515).
 //
-// Usage:  tsx scripts/owner-corrections.ts [--since <iso>] [--check <tally-file>]
+// Usage:  tsx .agents/skills/visitor-loop/scripts/owner-corrections.ts [--since <iso>] [--check <tally-file>]
 //   Default cutoff: the last commit touching visitor-loop's decisions.md.
 //   --check: exit 1 naming each candidate the tally doesn't resolve on its own
 //   line (a run once dismissed ten as a group, #1721).
@@ -17,13 +17,11 @@
 //   under the owner's login, from the owner's own.
 import { execFileSync } from 'node:child_process'
 import { readFileSync } from 'node:fs'
-import { dirname, resolve } from 'node:path'
-import { fileURLToPath, pathToFileURL } from 'node:url'
-import { isAiAuthored } from './check-triage-drift.ts'
-import { fetchOriginMain } from './git-helpers.ts'
-import { getJson, parseOwnerRepo } from './list-open-issues.ts'
-
-const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
+import { pathToFileURL } from 'node:url'
+import { isAiAuthored } from '../../../../scripts/check-triage-drift.ts'
+import { fetchOriginMain } from '../../../../scripts/git-helpers.ts'
+import { getJson, parseOwnerRepo } from '../../../../scripts/list-open-issues.ts'
+import { root } from '../../../../shared/expand.ts'
 
 const DECISIONS = '.agents/skills/visitor-loop/decisions.md'
 // The harness pins most runs to a session branch, so the title is the stable marker (issue #1515).
@@ -303,7 +301,7 @@ function main(): void {
   const flags = new Map<string, string>()
   for (let i = 0; i < argv.length; i += 2) {
     const [flag, value] = [argv[i]!, argv[i + 1]]
-    if (!['--since', '--check'].includes(flag) || !value) fail('usage: tsx scripts/owner-corrections.ts [--since <iso>] [--check <tally-file>]')
+    if (!['--since', '--check'].includes(flag) || !value) fail('usage: tsx .agents/skills/visitor-loop/scripts/owner-corrections.ts [--since <iso>] [--check <tally-file>]')
     flags.set(flag, value)
   }
   const since = flags.get('--since')

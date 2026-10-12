@@ -4,6 +4,20 @@ Date: 2026-07-04
 Status: Accepted — high-risk set extended by ADR-0026; ADR prose exempted for
 Prune Trials by ADR-0027
 
+> **Amended (2026-10-12, issue #1603).** *A Skill's own files skip build and
+> e2e, not unit tests.* A changed path under `.agents/skills/` that is not
+> Inert (a Skill's helper script and its unit test, which now live beside it)
+> lets `scripts/gate.ts` skip `build` and `test:e2e` but still run `test`,
+> provided every other changed path is Inert or such a Skill file. CI reads the
+> same decision from `--decide` (`skip_build`). The safety argument: `build`
+> reads `.agents/skills/` only to list which folders hold a SKILL.md
+> (`layers/journal/nuxt.config.ts`), which a non-`.md` file cannot change, and
+> no e2e spec reads `.agents/`. So nothing the build or an e2e spec loads may
+> live there. A unit test in `tests/unit/gate-scope.spec.ts` is a tripwire for
+> static imports from it by anything outside a Skill or the unit tests; it does
+> not catch a new build-time file read. The 2026-10-03 amendment's fail-safe
+> rules hold unchanged.
+
 > **Amended (2026-10-10, PR #1741).** **The Human-only set is a rule's
 > `paths`, enforced at merge.** With agents merging their own PRs
 > (ADR-0003's 2026-10-10 amendment), this ADR defines only the exceptions:
