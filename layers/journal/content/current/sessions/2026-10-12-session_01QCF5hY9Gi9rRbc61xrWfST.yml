@@ -1,0 +1,146 @@
+schemaVersion: 1
+session: session_01QCF5hY9Gi9rRbc61xrWfST
+startedAt: 2026-10-12T14:33:12Z
+endedAt: 2026-10-12T14:46:00Z
+kind: interactive
+goal: "Tinkerfund: show Reset demo only after the visitor changed something"
+status: in-review
+outcome: "PR 1822 open: Reset demo hidden until demo state exists, live in-tab; gate green, reviewed"
+summary: "The user asked (direct ask) that Tinkerfund's Reset demo button appear only once the visitor has modified in-browser state. Per their preference I asked three scoping questions first (not rendered vs disabled, whether a theme change counts, live vs on-load); they chose not rendered, theme excluded, live. I extracted a shared useTinkerfundActions() composable so the Cart and the button read one hydration-safe source, gated the button on it, moved the demo bar divider into the component, and updated e2e tests. The first gate run failed because I used Playwright's toHaveCount in a vitest suite; fixed with expect.poll. The user then asked (direct ask) for /code-review before self-merging; Standards and Spec subagents ran, I fixed a duplicated doc comment and deliberately left per-Space visibility as a documented limit. Opening the PR and subscribing were agent-initiated per ADR-0003. Still open: wait for CI, post verdict, run merge-pr.ts."
+prs:
+  - "1822"
+docsRead:
+  - path: CONTEXT-MAP.md
+    reason: map of contexts; pointed to Tinkerfund context
+    useful: yes
+  - path: CONTEXT.md
+    reason: platform glossary
+    useful: partly
+  - path: layers/tinkerfund/CONTEXT.md
+    reason: states Reset demo clears only visitor actions; theme is not demo state
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: commit via -F file, fetch before diff
+    useful: yes
+  - path: docs/agents/pr-workflow.md
+    reason: "recipe: verdict comment then merge-pr.ts"
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: MCP tool surface for PR create
+    useful: partly
+  - path: docs/agents/tenant-layers.md
+    reason: (not read) only named in my Standards subagent brief
+    useful: no
+  - path: layers/tinkerfund/app/components/tinkerfund/shell/ResetDemo.vue
+    reason: (read before editing)
+  - path: layers/tinkerfund/app/utils/demo.ts
+    reason: (no reason given)
+  - path: layers/tinkerfund/app/composables/cart.ts
+    reason: (read before editing)
+  - path: layers/tinkerfund/tests/unit/demo-storage.spec.ts
+    reason: (no reason given)
+  - path: layers/tinkerfund/app/utils/backer.ts
+    reason: (no reason given)
+  - path: layers/tinkerfund/app/components/tinkerfund/shell/Shell.vue
+    reason: (read before editing)
+  - path: layers/tinkerfund/app/components/tinkerfund/shell/Footer.vue
+    reason: (no reason given)
+  - path: layers/tinkerfund/tests/e2e/tinkerfund-flows.spec.ts
+    reason: (read before editing)
+  - path: layers/tinkerfund/tests/e2e/tinkerfund.spec.ts
+    reason: (read before editing)
+skillsUsed:
+  - name: code-review
+    reason: user-requested two-axis review before self-merge
+  - name: close-session
+    reason: closure at PR open
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Wrote a Playwright-style toHaveCount assertion in a vitest e2e suite; gate:scoped failed and cost one e2e rerun (~1 min).
+    solution: Check the suite's expect flavour (vitest, so expect.poll) before writing assertions.
+    severity: nit
+durationSec: 768
+models:
+  claude-sonnet-5-5: 89
+toolCounts:
+  Read: 15
+  Grep: 6
+  AskUserQuestion: 1
+  Edit: 12
+  Write: 1
+  Bash: 12
+  Skill: 3
+  Agent: 2
+  ToolSearch: 1
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+filesEdited:
+  - layers/tinkerfund/app/composables/cart.ts
+  - layers/tinkerfund/app/components/tinkerfund/shell/ResetDemo.vue
+  - layers/tinkerfund/app/components/tinkerfund/shell/Shell.vue
+  - layers/tinkerfund/tests/e2e/tinkerfund.spec.ts
+  - layers/tinkerfund/tests/e2e/tinkerfund-flows.spec.ts
+rulesLoaded:
+  - .claude/rules/adr-0021.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/adr-0029.md
+rulesGlobal:
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0001.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0023.md
+  - .claude/rules/adr-0017.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0022.md
+    reason: About autonomous triage; this was a direct user request, so it did not apply.
+    useful: no
+  - path: .claude/rules/adr-0004.md
+    reason: Made me run gate:scoped before pushing and judge human-merge exceptions; summary was enough, skipped the full ADR.
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Told me to invoke close-session at PR open; summary was enough.
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: About prune trials; no trial territory was touched here.
+    useful: no
+  - path: .claude/rules/adr-0001.md
+    reason: Baked-content architecture; background only, nothing changed because of it.
+    useful: no
+  - path: .claude/rules/adr-0020.md
+    reason: Requester was Trusted, so no Public-data handling needed; confirmed nothing to do.
+    useful: partly
+  - path: .claude/rules/adr-0003.md
+    reason: Told me to open the PR myself and subscribe despite the harness saying not to; summary was enough.
+    useful: yes
+  - path: .claude/rules/adr-0023.md
+    reason: Guest pipeline rule; not a guest request, so it did not apply.
+    useful: no
+  - path: .claude/rules/adr-0017.md
+    reason: Required the provenance line on the PR body; applied it, summary was enough.
+    useful: yes
+  - path: .claude/rules/adr-0021.md
+    reason: Context split; confirmed Tinkerfund terms live in its own CONTEXT.md, no new term added.
+    useful: partly
+  - path: .claude/rules/tenant-layers.md
+    reason: Layer gotchas pointer; my change touched no manifest or Space, so I did not open the doc.
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: About rule placement; no rules edited, so it did not apply.
+    useful: no
+subagents:
+  - type: Explore
+    task: Standards review
+  - type: Explore
+    task: Spec review
+gitBranch: ccr-2e8eb2fb-0ymobu
+entrypoint: remote_mobile
+cliVersion: 2.1.296
+learnings:
+  - Tinkerfund e2e tests use vitest expect with Playwright pages, so Playwright web-first matchers like toHaveCount are unavailable; use expect.poll.
+landedBy: Stop
