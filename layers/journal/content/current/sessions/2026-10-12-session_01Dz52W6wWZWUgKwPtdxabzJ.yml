@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01Dz52W6wWZWUgKwPtdxabzJ
 startedAt: 2026-10-12T04:01:46Z
-endedAt: 2026-10-12T04:24:51Z
+endedAt: 2026-10-12T04:28:16Z
 kind: autonomous
 goal: Scheduled audit of the repo's docs
-status: in-review
-outcome: Fixes opened as PR 1803; one true conflict filed as issue 1802
-summary: "Scheduled /audit-docs run, agent-initiated by the schedule with no human prompt. Concision family 0 (root and per-Tenant docs). Five reviewer agents (freshness found nothing; single-home 6; root concision 21; Tenant concision 15; coherence 10) then four fact-checkers re-derived each finding; many ranges and texts needed correction, and 2 Tenant findings were WRONG. Marginal rewraps and the two WRONG findings were skipped. Applied the survivors in one commit, gate:scoped passed, opened PR 1803 (no Human-only paths touched). One true factual conflict (who merges midden-catalogue PRs) was filed as issue 1802 and left unfixed. Open: PR merge on green."
+status: completed
+outcome: Fixes merged as PR 1803; one true conflict filed as issue 1802
+summary: Scheduled /audit-docs run, agent-initiated by the schedule with no human prompt. Concision family 0 (root and per-Tenant docs). Five reviewer agents (freshness found nothing; single-home 6; root concision 21; Tenant concision 15; coherence 10) then four fact-checkers re-derived each finding; many ranges and texts needed correction, and 2 Tenant findings were WRONG. Marginal rewraps and the two WRONG findings were skipped. Applied the survivors in one commit, gate:scoped passed, opened PR 1803 (no Human-only paths touched). One true factual conflict (who merges midden-catalogue PRs) was filed as issue 1802 and left unfixed. PR 1803 merged on a green gate.
 prs:
   - "1803"
 docsRead:
@@ -169,12 +169,12 @@ frictions:
   - description: Reviewer line ranges were off in about a third of the findings (partial sentences, wrong end line); checkers caught them, but it cost a second pass.
     solution: Ask reviewers to print the exact lines they would replace and verify the range with a sed echo before reporting.
     severity: minor
-durationSec: 1384
+durationSec: 1590
 models:
-  claude-sonnet-5-5: 115
+  claude-sonnet-5-5: 133
 toolCounts:
   Read: 15
-  Bash: 26
+  Bash: 29
   Agent: 9
   Monitor: 10
   mcp__github__search_issues: 1
@@ -183,6 +183,11 @@ toolCounts:
   mcp__github__create_pull_request: 1
   Skill: 2
   mcp__github__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 2
+  mcp__github__add_issue_comment: 1
+  mcp__github__unsubscribe_pr_activity: 1
+  PushNotification: 1
 rulesLoaded:
   - .claude/rules/adr-0005.md
   - .claude/rules/adr-0015.md
