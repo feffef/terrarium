@@ -66,7 +66,7 @@ const foldedFieldLabels = new Intl.ListFormat('en', { style: 'long', type: 'conj
     <Transition :css="false" @enter="expandOnEnter" @leave="expandOnLeave">
       <div v-if="expanded" class="detail-clip">
         <div :id="detailId" class="detail">
-          <p v-if="card.summary" class="summary">{{ card.summary }}</p>
+          <p v-for="(para, i) in summaryParagraphs(card.summary)" :key="i" class="summary">{{ para }}</p>
 
           <div v-if="card.subagents.length" class="block">
             <h4>Subagents</h4>
@@ -295,7 +295,7 @@ const foldedFieldLabels = new Intl.ListFormat('en', { style: 'long', type: 'conj
   padding-top: 0.9rem;
   border-top: 1px dashed var(--jd-line);
 }
-.summary { margin: 0 0 0.95rem; color: var(--jd-ink); font-size: 0.95rem; line-height: 1.55; }
+.summary { margin: 0 0 0.7rem; color: var(--jd-ink); font-size: 0.95rem; line-height: 1.55; }
 .block { margin: 0 0 0.9rem; }
 .block:last-child { margin-bottom: 0; }
 .block h4 {

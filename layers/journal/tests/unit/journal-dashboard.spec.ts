@@ -16,6 +16,7 @@ import {
   digestList,
   digestNeighbours,
   worstFrictions,
+  summaryParagraphs,
   countOf,
   ideaGrillPrompt,
   sessionNotes,
@@ -506,5 +507,18 @@ describe('worstFrictions', () => {
   })
   it('is empty when nothing is serious', () => {
     expect(worstFrictions([session({ frictions: [friction('nit')] })]).items).toEqual([])
+  })
+})
+
+describe('summaryParagraphs', () => {
+  it('keeps a short summary as one paragraph', () => {
+    expect(summaryParagraphs('One. Two.')).toEqual(['One. Two.'])
+  })
+  it('splits on line breaks and packs long runs of sentences into several paragraphs', () => {
+    const long = Array.from({ length: 12 }, (_, i) => `Sentence number ${i} says something fairly long here.`).join(' ')
+    const parts = summaryParagraphs(`First block.\n\n${long}`)
+    expect(parts[0]).toBe('First block.')
+    expect(parts.length).toBeGreaterThan(2)
+    expect(parts.slice(1).join(' ')).toBe(long)
   })
 })

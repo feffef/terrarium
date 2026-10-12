@@ -147,7 +147,10 @@ useSeoMeta({
         </div>
         <div v-if="space === 'current'" class="snapshot">
           <span class="live">live snapshot</span><br >
-          updates as sessions are logged
+          the last week · updates as sessions are logged
+        </div>
+        <div v-else class="snapshot">
+          older logs, from before the last week
         </div>
       </div>
     </header>
@@ -277,7 +280,7 @@ useSeoMeta({
       <ul class="worst-list">
         <li v-for="(w, i) in worst.items" :key="i">
           <span class="sev" :class="w.severity">{{ w.severity }}</span>
-          <span class="txt" :title="w.count > 1 ? w.description.split('\n')[0] : w.description">{{ w.count > 1 ? w.description.split('\n')[0] : w.description }}<template v-if="w.count > 1"> ({{ w.count }} sessions)</template></span>
+          <span class="txt" :title="w.description">{{ w.count > 1 ? w.description.split('\n')[0] : w.description }}<template v-if="w.count > 1"> ({{ w.count }} sessions)</template></span>
           <a class="open-session" :href="`#${w.anchor}`" :aria-label="`Open ${w.count > 1 ? `the newest of ${w.count} sessions` : 'the session'} where this ${w.severity} friction was logged, ${w.date}`">{{ w.date }} →</a>
         </li>
       </ul>
@@ -447,7 +450,7 @@ h1 {
 .worst-list .txt {
   line-height: 1.45;
   display: -webkit-box;
-  -webkit-line-clamp: 4;
+  -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }

@@ -321,3 +321,22 @@ export function sessionNotes(sessions: SessionDoc[]): { ideas: NoteItem[]; learn
 export function ideaGrillPrompt(item: NoteItem): string {
   return `/grill-with-docs to refine this idea from session ${item.session}:\n\n${item.note}`
 }
+
+// ── Session summary paragraphs ───────────────────────────
+// A log's `summary` is one string, often over 1,000 characters, and reads as a
+// wall when rendered whole. Display only: the stored text is untouched.
+const SUMMARY_PARA_CHARS = 380
+export function summaryParagraphs(text: string): string[] {
+  const out: string[] = []
+  for (const block of text.split(/\n+/).map((b) => b.trim()).filter(Boolean)) {
+    let cur = ''
+    for (const sentence of block.split(/(?<=[.!?])\s+(?=[A-Z"`(])/)) {
+      if (cur && cur.length + sentence.length > SUMMARY_PARA_CHARS) {
+        out.push(cur)
+        cur = sentence
+      } else cur = cur ? `${cur} ${sentence}` : sentence
+    }
+    if (cur) out.push(cur)
+  }
+  return out
+}
