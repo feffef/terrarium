@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_015LwBgLjaCn36ayZedges6G
 startedAt: 2026-10-12T20:50:21Z
-endedAt: 2026-10-12T20:58:16Z
+endedAt: 2026-10-12T21:07:06Z
 kind: interactive
 goal: Clear the issue backlog (second clear-backlog run today)
-status: partial
-outcome: "9 open issues checked; #1844 moved to a time-gated ready-for-agent check; nothing buildable"
-summary: "The owner started the clear-backlog Skill (human-instructed). It was the second run today, about two hours after session 017NBx, where the owner had already answered the grilling. Nine issues were open and there were no open PRs. A default-mode sweep left only #1844 (fresh, with open design questions) and the ready-for-agent #1778. I read every issue's thread myself rather than dispatching triage subagents, because most carried the owner's real deferral from that earlier run. Upstream blockers re-probed on npm: #1549 is still blocked (@nuxt/content 3.16.2 depends on zod ^3) and #1551 is still blocked (typescript-eslint 8.71.2 peers typescript below 6.1.0). #1778 is gated until 2026-10-14 13:00Z. I found that PRs #1853 and #1854 had already put review-before-first-push into ADR-0004 and pr-workflow.md, so #1844's remaining question was enforcement. The grilling had 3 questions. The owner answered 1c: keep #1844 open and check session logs in a few days. I recorded that as a time-gated agent brief (not before 2026-10-15 20:49Z) and relabelled it ready-for-agent, an agent decision that follows the owner's answer. The answer 2a kept #1786, #1552, #1689, #1745 and #1819 deferred. Nothing could be built, so no PRs."
+status: completed
+outcome: "9 open issues fully triaged; #1844 and #1778 briefs corrected; Node 26 chosen for #1552; nothing buildable yet"
+summary: "The owner started the clear-backlog Skill (human-instructed). It was the second run today, about two hours after session 017NBx's run. Nine issues were open and there were no open PRs. My first explore pass was shallow: I read the threads myself and leaned on the earlier run, and I dispatched no triage subagents. The owner asked whether I had done the deep exploration, and I said no. They then directed a full pass and asked me to log the friction. First grilling: the owner answered 1c (#1844 stays open as a time-gated log check) and 2a (keep the deferred issues). Full pass: seven read-only triage subagents (#1844, #1778, #1786, #1552, #1689, #1745, #1819). They didn't write to GitHub, and I spot-checked their key claims. Blockers re-probed on npm for #1549 (@nuxt/content still on zod 3) and #1551 (typescript-eslint peers typescript below 6.1). The pass found real errors in my own #1844 brief (wrong field name skillsUsed; skillsUsed can't show review order; wrong prune-trial reason), which I corrected in a comment. It also found three wording gaps in #1778's brief, posted as a comment. Second grilling (owner answers): #1786 deferred; #1689 deferred, with the new staging-branch plus GITHUB_TOKEN bypass idea recorded on the issue at the owner's request; #1552 targets Node 26 after its 2026-10-28 LTS, recorded; #1819 and #1745 stay deferred. Nothing was buildable, so there are no PRs. Agent-initiated: the brief corrections on #1844 and #1778."
 prs: []
 docsRead:
   - path: CONTEXT-MAP.md
@@ -31,12 +31,54 @@ docsRead:
     reason: "showed review-before-first-push already exists, which reframed #1844"
     useful: yes
   - path: .agents/skills/dispatch-subagents/SKILL.md
-    reason: (no reason given)
+    reason: isolation and brief rules for the 7 read-only triage subagents
+    useful: yes
   - path: docs/agents/triage-labels.md
-    reason: (no reason given)
+    reason: "label mapping; read late, after labelling #1844"
+    useful: partly
+  - path: docs/adr/0029-instructions-load-with-the-files-they-govern.md
+    reason: "subagent #1745: summary-rule model and #1745 kept open as alternative"
+    useful: yes
+  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
+    reason: "subagents #1745/#1786/#1689: lander, folded reads, admin-bypass amendment"
+    useful: yes
+  - path: docs/adr/0018-tenant-layers-under-layers-directory.md
+    reason: "subagent #1745: ADR editing rule"
+    useful: partly
+  - path: docs/adr/0027-prune-trials.md
+    reason: "subagent #1745: trials may fold amendments into ADRs"
+    useful: yes
+  - path: docs/agents/guards.md
+    reason: "subagent #1819: hook wiring conventions"
+    useful: partly
+  - path: .agents/skills/clear-backlog/SKILL.md
+    reason: "subagent #1844: diff of today's review-before-push change"
+    useful: partly
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: "subagent #1844: review step added by #1853"
+    useful: partly
+  - path: .agents/skills/guest-build/SKILL.md
+    reason: "subagent #1844: review step added by #1853"
+    useful: partly
+  - path: .agents/skills/visitor-loop/SKILL.md
+    reason: "subagent #1844: review step added by #1853"
+    useful: partly
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: "subagent #1844: review-before-first-push amendment"
+    useful: yes
   - path: docs/agents/environment-caveats.md
-    reason: (no reason given)
+    reason: "subagent #1689: proxy 403 on /app paths"
+    useful: yes
   - path: docs/research/github-branch-protection-vs-autonomous-log-commits.md
+    reason: "subagent #1689: bypass actor options"
+    useful: yes
+  - path: docs/adr/0017-provenance-footer-on-agent-authored-content.md
+    reason: "subagent #1689: bot identity still deferred"
+    useful: partly
+  - path: docs/proposals/1633-dependabot-automerge.md
+    reason: "subagent #1689: precedent for a proposal-applied workflow"
+    useful: partly
+  - path: scripts/session-trace.ts
     reason: (no reason given)
 skillsUsed:
   - name: clear-backlog
@@ -63,16 +105,16 @@ frictions:
   - description: "Skipped clear-backlog's exploration: no per-issue triage subagents, no full pass on deferred issues, no #1778 brief re-check; reported the run done anyway and the owner had to ask"
     solution: Treat the per-issue subagent pass as the explore phase's done line; a recent earlier run is not a substitute. Re-running it now at the owner's request
     severity: major
-durationSec: 475
+durationSec: 1005
 models:
-  claude-opus-5-5: 76
+  claude-opus-5-5: 103
 toolCounts:
-  Bash: 25
+  Bash: 33
   Read: 3
   Skill: 3
   ToolSearch: 2
-  PushNotification: 1
-  mcp__github__add_issue_comment: 1
+  PushNotification: 2
+  mcp__github__add_issue_comment: 5
   mcp__github__issue_write: 1
   Agent: 7
 rulesLoaded:
@@ -90,6 +132,11 @@ rulesGlobal:
   - .claude/rules/adr-0020.md
   - .claude/rules/adr-0003.md
   - .claude/rules/adr-0023.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0004.md
   - .claude/rules/adr-0017.md
 ruleVerdicts:
   - path: .claude/rules/adr-0022.md
