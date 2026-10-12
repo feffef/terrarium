@@ -4,7 +4,7 @@
 // suffix), so vitest never collects it. Every spec calls `setupL2()`, which
 // serves the build that the e2e project's globalSetup made sure exists
 // (tests/README.md; ADR-0004's 2026-10-12 amendment).
-import { mkdtempSync, rmSync } from 'node:fs'
+import { copyFileSync, existsSync, mkdtempSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -31,10 +31,14 @@ const chromiumPath = findPreinstalledChromium() ?? findSystemChrome()
  * Await inside a spec's top-level `describe`: serves `.output` and opens a browser. Never builds.
  * Each spec's server gets its own Nuxt Content SQLite file: servers sharing
  * `.output/server/contents.sqlite` raced to import the dumps and answered 500s.
+ * The copy is of the build's already-imported DB, so the server skips the
+ * import; a stale or missing one just means it imports into the copy.
  */
 export async function setupL2(): Promise<void> {
   const dbDir = mkdtempSync(join(tmpdir(), 'terrarium-e2e-'))
   afterAll(() => rmSync(dbDir, { recursive: true, force: true }))
+  const builtDb = join(root, '.data/content/contents.sqlite')
+  if (existsSync(builtDb)) copyFileSync(builtDb, join(dbDir, 'contents.sqlite'))
   await setup({
     rootDir: root,
     build: false,
