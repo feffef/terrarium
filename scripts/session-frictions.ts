@@ -11,7 +11,7 @@
 // dropped at this stage (summary, docsRead, learnings, …) can still be read in
 // full later — this is a triage extract, not a replacement for the source log.
 //
-// Usage:  tsx scripts/session-frictions.ts [--days N | --since ISO] [--compact] [--out PATH]
+// Usage:  tsx scripts/session-frictions.ts [--days N | --since ISO] [--compact] [--unledgered] [--out PATH]
 //   Prints the sessions that ended since the window's start (oldest first)
 //   as JSON: id, file, startedAt, goal, outcome, prs, and every friction's
 //   description/solution/severity, and reports where the window starts.
@@ -27,15 +27,19 @@
 // docsRead paths, subagents and each friction's description/severity, for a
 // caller that wants a smaller read regardless (issues #951, #1755).
 //
+// --unledgered drops sessions already cited as an occurrence in the Friction
+// Ledger, leaving only those the survey has yet to cover.
+//
 // --out PATH always writes the JSON to PATH instead of the shared tmpdir
 // default, regardless of size — for a caller that wants the output at a
 // specific location (e.g. its own scratchpad, to avoid colliding with a
 // parallel run) rather than the shared default.
 import { execFileSync } from 'node:child_process'
-import { writeFileSync } from 'node:fs'
+import { readdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
+import { parse as parseYaml } from 'yaml'
 import { isExternalSession } from '../shared/schemas/session.ts'
 import type { SubagentRef } from './session-trace.ts'
 import { readSessionLogs } from './session-logs.ts'
@@ -196,6 +200,17 @@ function lastLedgerCommit(cwd: string): number | null {
   }
 }
 
+/** Sessions the Friction Ledger already cites, so the survey can skip them. */
+export function dropLedgered(sessions: TriageSession[], cwd = root): TriageSession[] {
+  const dir = join(cwd, LEDGER_DIR)
+  const seen = new Set<string>()
+  for (const f of readdirSync(dir).filter((n) => n.endsWith('.yml'))) {
+    const occ = parseYaml(readFileSync(join(dir, f), 'utf8'))?.occurrences
+    for (const o of Array.isArray(occ) ? occ : []) seen.add(String(o?.session))
+  }
+  return sessions.filter((s) => !seen.has(s.id))
+}
+
 // ── Command ─────────────────────────────────────────────────────────────────
 
 export function survey(start?: number, cwd = root, now = Date.now()): { since: number; sessions: TriageSession[] } {
@@ -240,7 +255,8 @@ function main(): void {
     start = Date.parse(argv[sIdx + 1] ?? '')
     if (Number.isNaN(start)) fail('--since must be an ISO timestamp')
   }
-  const { since: startMs, sessions } = survey(start)
+  const { since: startMs, sessions: all } = survey(start)
+  const sessions = argv.includes('--unledgered') ? dropLedgered(all) : all
   const since = new Date(startMs).toISOString()
   const output = argv.includes('--compact') ? sessions.map(toCompactSession) : sessions
   const json = JSON.stringify(output, null, 2)
