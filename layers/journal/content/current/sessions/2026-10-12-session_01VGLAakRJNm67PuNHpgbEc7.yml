@@ -1,7 +1,7 @@
 schemaVersion: 1
 session: session_01VGLAakRJNm67PuNHpgbEc7
 startedAt: 2026-10-12T13:05:00Z
-endedAt: 2026-10-12T14:02:17Z
+endedAt: 2026-10-12T14:19:27Z
 kind: interactive
 goal: Make the Journal's "Rules loaded" list readable for humans
 status: in-review
@@ -61,6 +61,8 @@ docsRead:
     reason: (no reason given)
   - path: dry-run-session-card.png
     reason: (no reason given)
+  - path: layers/journal/app/components/journal/SessionCard.vue
+    reason: (read before editing)
 skillsUsed:
   - name: code-review
     reason: "user asked: two-axis review of PR 1812"
@@ -99,14 +101,17 @@ frictions:
   - description: Made a placeholder 'wip' commit with --no-verify, which skipped the commit-msg hook's session trailer; caught before pushing and redone.
     solution: Never use --no-verify; to free the tree before a merge, use git stash or a properly messaged commit.
     severity: minor
-durationSec: 3437
+  - description: Ran the full gate:scoped (about 4 min) just to get a build for screenshots during layout iteration, several times; the user pointed out it is a slow way to get a build.
+    solution: Iterate UI on scripts/preview.ts start --dev (seconds per edit), take the final shot from pnpm build (about 2 min), and run the gate once before pushing; verifying-ui-changes.md already lists --dev.
+    severity: minor
+durationSec: 4467
 models:
-  claude-opus-5-5: 364
+  claude-opus-5-5: 416
 toolCounts:
-  Bash: 89
-  Edit: 32
-  Read: 34
-  Write: 5
+  Bash: 102
+  Edit: 36
+  Read: 40
+  Write: 6
   ToolSearch: 5
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 1
@@ -114,16 +119,16 @@ toolCounts:
   mcp__claude-code-remote__create_session: 1
   Skill: 3
   Agent: 2
-  ReadNotifications: 4
+  ReadNotifications: 5
   mcp__claude-code-remote__get_session: 1
   mcp__claude-code-remote__send_later: 2
-  mcp__github__update_pull_request: 4
+  mcp__github__update_pull_request: 5
   mcp__claude-code-remote__list_events: 1
   mcp__github__get_job_logs: 2
-  mcp__github__add_issue_comment: 1
+  mcp__github__add_issue_comment: 2
   mcp__github__actions_run_trigger: 1
   mcp__github__issue_write: 5
-  SendUserFile: 1
+  SendUserFile: 2
 filesEdited:
   - layers/journal/app/utils/dashboard.ts
   - layers/journal/app/types/journal.ts
@@ -140,6 +145,7 @@ filesEdited:
   - tests/unit/always-loaded.spec.ts
   - .agents/skills/close-session/SKILL.md
   - .shot-dryrun.ts
+  - .shot-card.ts
 rulesLoaded:
   - .claude/rules/adr-0008.md
   - .claude/rules/tenant-layers.md
