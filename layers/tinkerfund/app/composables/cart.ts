@@ -11,8 +11,8 @@ export interface TinkerfundBacking {
 
 /**
  * The demo Backer's stored actions in this Space: empty on the server and on
- * the first client render, then read from sessionStorage after mount. Shared
- * by the Cart and Reset demo, which shows only once there is something to undo.
+ * the first client render, then read from sessionStorage after mount, so
+ * hydration always agrees. Shared by the Cart and Reset demo.
  */
 export function useTinkerfundActions() {
   const { space } = useTinkerfundSpace()
@@ -34,9 +34,8 @@ export function useTinkerfundActions() {
 
 /**
  * The demo Backer in this Space (issue #1359): their stored actions, replayed
- * over the baked shop into a Cart, Pledges and totals. Empty on the server and
- * on the first client render, then read from sessionStorage after mount, so
- * hydration always agrees. An action is taken at a freshly read "now"; one
+ * over the baked shop into a Cart, Pledges and totals (see `useTinkerfundActions`
+ * for when they load). An action is taken at a freshly read "now"; one
  * the rules refuse is not stored, and answers why. The Cart ships to the
  * `chosen` zone, else to the demo Backer's own address.
  */

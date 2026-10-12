@@ -116,7 +116,6 @@ describe('tinkerfund Tenant', async () => {
       await page.getByRole('article', { name: 'One stapler' }).getByRole('button', { name: 'Add to cart' }).click()
       await page.getByRole('dialog', { name: 'Added to your Cart' }).getByRole('button', { name: 'Close' }).click()
       expect(await page.evaluate(() => sessionStorage.getItem('tinkerfund:qa:actions'))).toContain('stapler')
-      // It appears in the demo bar and the footer as soon as the Cart changes, without a reload.
       await expect.poll(() => page.getByRole('button', { name: 'Reset demo' }).count()).toBe(2)
       await Promise.all([
         page.waitForEvent('load'),
