@@ -46,10 +46,10 @@ re-diagnose them as new. Incident detail lives in the cited issue.
   --frozen-lockfile`, CI's path); `git stash` or `rm -rf .nuxt && nuxt prepare`
   alone won't clear `node_modules`. (issues #923, #928, #940)
 - **The container's worktree-isolation guard can wrongly block an ordinary
-  command.** Known triggers: git chained with other commands, a redirected
-  `pnpm`/`git push`, command text that merely contains both "Bash" and "pnpm",
-  a heredoc mentioning `git`, a command naming git twice (branch name plus
-  scratch path). One git command per call; run the rest from a script file, not
+  command.** Known triggers: git chained with other commands (the `cd <root> &&`
+  prefix passes), a redirected `pnpm`/`git push`, command text that merely
+  contains both "Bash" and "pnpm", a heredoc mentioning `git`, a command naming
+  git twice. One git command per call; run the rest from a script file, not
   inline. (issues #1180, #1499)
 - **A scheduled/autonomous session can find `mcp__github__*` unauthenticated
   with no `gh` CLI fallback** — there's no code-level fix from inside the

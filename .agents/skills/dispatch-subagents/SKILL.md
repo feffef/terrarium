@@ -32,7 +32,7 @@ every line that applies.
 - Prefix every git command with `cd <worktree-root> &&`. The Bash tool resets cwd
   between calls, so a one-time "cd into your worktree" does not carry over. One
   git command per Bash call; a heredoc goes in a script file
-  (`docs/agents/environment-caveats.md`, worktree-isolation guard).
+  (`docs/agents/environment-caveats.md` has the guard's triggers).
 - Say `pnpm install` may be needed first in a fresh worktree.
 - Pin the SHA to work from. The agent fetches, checks that HEAD matches it
   (or `origin/<default-branch>` if none is pinned), and re-branches if not:
