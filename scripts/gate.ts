@@ -6,8 +6,8 @@
 //     — decision only, for CI to guard its own heavy steps on (#445; the CI
 //       half now lives in .github/actions/gate/action.yml — ADR-0026)
 import { execFileSync, spawnSync } from 'node:child_process'
-import { appendFileSync, linkSync, mkdirSync, readFileSync, renameSync, rmSync, statSync, writeFileSync } from 'node:fs'
-import { constants as osConstants, tmpdir } from 'node:os'
+import { appendFileSync, linkSync, mkdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs'
+import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { root } from '../shared/expand.ts'
@@ -176,9 +176,8 @@ export function ensureFreshDeps(projectRoot = root): void {
 // die of memory (exit 137). The slot dir is under the OS temp dir, not `root`,
 // because each worktree has its own root but all share the container's memory.
 export const HEAVY_SLOTS = 2
-export const SLOT_DIR = join(tmpdir(), 'terrarium-gate-heavy-slots')
+const SLOT_DIR = join(tmpdir(), 'terrarium-gate-heavy-slots')
 
-// `holders[i]` is the PID recorded in slot i, or null if the slot is empty.
 // A dead holder (OOM-killed, SIGKILLed) never released, so its slot counts as free.
 export function pickSlot(holders: (number | null)[], isAlive: (pid: number) => boolean): number | null {
   const i = holders.findIndex((pid) => pid === null || !isAlive(pid))
@@ -186,7 +185,8 @@ export function pickSlot(holders: (number | null)[], isAlive: (pid: number) => b
 }
 
 function isAlive(pid: number): boolean {
-  if (pid <= 0) return false // kill(0|-1, 0) would probe a whole process group
+  // NaN is a slot file that isn't a PID; kill(0|-1, 0) would probe a whole process group.
+  if (!Number.isInteger(pid) || pid <= 0) return false
   try {
     process.kill(pid, 0)
     return true
@@ -197,56 +197,41 @@ function isAlive(pid: number): boolean {
 
 function readHolder(path: string): number | null {
   try {
-    const pid = Number.parseInt(readFileSync(path, 'utf8'), 10)
-    return Number.isInteger(pid) ? pid : 0 // unreadable content: treat as a dead holder
+    return Number.parseInt(readFileSync(path, 'utf8'), 10)
   } catch {
     return null
   }
 }
 
-function tryTake(path: string, holder: number | null): boolean {
-  if (holder !== null) {
-    // Rename, not unlink: only one waiter can move the stale file away, so two
-    // reclaimers can't delete each other's freshly taken slot.
-    const moved = `${path}.reclaim-${process.pid}`
-    try {
-      renameSync(path, moved)
-    } catch {
-      return false
-    }
-    if (readHolder(moved) !== holder) {
-      try { linkSync(moved, path) } catch { /* slot was retaken meanwhile */ }
-      rmSync(moved, { force: true })
-      return false
-    }
-    rmSync(moved, { force: true })
-  }
+function tryTake(path: string, stale: boolean): boolean {
+  // Two waiters reclaiming the same stale slot can at worst both run: a third
+  // concurrent Heavy tier, i.e. the behaviour before #1800.
+  if (stale) rmSync(path, { force: true })
+  // Link a finished file into place so a reader never sees an empty slot file.
+  const tmp = `${path}.${process.pid}`
+  writeFileSync(tmp, String(process.pid))
   try {
-    writeFileSync(path, String(process.pid), { flag: 'wx' })
+    linkSync(tmp, path)
     return true
   } catch {
     return false
+  } finally {
+    rmSync(tmp, { force: true })
   }
 }
 
-// Blocks until a slot is ours; the returned function releases it (idempotent).
-export function acquireHeavySlot(dir = SLOT_DIR, slots = HEAVY_SLOTS, pollMs = 2000): () => void {
+export function acquireHeavySlot(dir = SLOT_DIR, slots = HEAVY_SLOTS, pollMs = 2000): void {
   mkdirSync(dir, { recursive: true })
   const paths = Array.from({ length: slots }, (_, i) => join(dir, `slot-${i}`))
   let announced = false
   for (;;) {
     const holders = paths.map(readHolder)
     const i = pickSlot(holders, isAlive)
-    if (i !== null && tryTake(paths[i]!, holders[i] ?? null)) {
-      const release = (): void => {
+    if (i !== null && tryTake(paths[i]!, holders[i] !== null)) {
+      process.on('exit', () => {
         if (readHolder(paths[i]!) === process.pid) rmSync(paths[i]!, { force: true })
-      }
-      process.on('exit', release)
-      // A signal's default action skips 'exit' handlers; exiting runs them.
-      for (const sig of ['SIGINT', 'SIGTERM', 'SIGHUP'] as const) {
-        process.once(sig, () => process.exit(128 + osConstants.signals[sig]))
-      }
-      return release
+      })
+      return
     }
     if (i === null && !announced) {
       console.log(`gate:scoped: waiting for a Heavy slot (${slots} max per container), held by PIDs ${holders.join(', ')}`)
@@ -300,12 +285,11 @@ function main(): void {
   console.log(`gate:scoped: ${scope.reason}`)
   console.log(`gate:scoped: ${dry ? 'would run' : 'running'} ${steps.join(' → ')}`)
   if (dry) return
-  let release: (() => void) | undefined
   for (const step of steps) {
-    if (!release && (HEAVY as readonly string[]).includes(step)) release = acquireHeavySlot()
+    // planSteps puts all of HEAVY or none of it at the end; the slot is freed on exit.
+    if (step === HEAVY[0]) acquireHeavySlot()
     run(step)
   }
-  release?.()
   console.log('gate:scoped: ✓ all planned steps passed')
 }
 
