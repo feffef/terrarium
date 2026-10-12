@@ -95,7 +95,8 @@ Every session log records the Session's **kind** — where it sat on the autonom
 spectrum, judged by **who prompted**: **interactive** (a human prompted again
 after kickoff — steered, answered, redirected), **delegated** (exactly one human
 prompt, the kickoff, with no human prompt after it), or **autonomous** (no human
-prompt at all — the Session was started by a schedule, not a person). Prompts
+prompt at all — the Session was started by a schedule or by another Session, not
+a person). Prompts
 injected by machinery — a scheduled self check-in, a webhook event, a hook
 reminder — arrive as user messages but are **not** human prompts and never make
 a Session interactive. Kind is descriptive of what happened, never a grant of
