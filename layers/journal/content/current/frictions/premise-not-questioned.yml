@@ -3,7 +3,7 @@ cause: >-
   An agent implements or hardens a solution before asking whether the change should exist or how big it should be; the triage-brief shape was fixed 2026-10-06 (auto-triage SKILL line 57), later cases differ.
 surface: safe
 status: open
-ref: "PR #XXXX (frictions-to-fixes doc PR adds the rule)"
+ref: "PR #1821 (adds the rule)"
 occurrences:
   - session: session_01548Bi1ZiGcknAp8CMLNMZB
     date: "2026-10-03"
