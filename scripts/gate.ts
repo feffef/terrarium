@@ -295,9 +295,10 @@ function main(): void {
   console.log(`gate:scoped: ${dry ? 'would run' : 'running'} ${steps.join(' → ')}`)
   if (dry) return
   for (const step of steps) {
-    // Only build + e2e exhaust memory; planSteps puts BUILT last or drops it. The
-    // slot is freed on exit.
-    if (step === BUILT[0]) acquireHeavySlot()
+    // planSteps puts HEAVY at the end; a Skill-only plan (#1603) runs `test`
+    // without BUILT, which never ran out of memory, so it takes no slot. The slot
+    // is freed on exit.
+    if (step === HEAVY[0] && steps.includes(BUILT[0])) acquireHeavySlot()
     run(step)
   }
   console.log('gate:scoped: ✓ all planned steps passed')
