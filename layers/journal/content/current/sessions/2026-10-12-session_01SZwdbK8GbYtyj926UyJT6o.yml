@@ -1,0 +1,307 @@
+schemaVersion: 1
+session: session_01SZwdbK8GbYtyj926UyJT6o
+startedAt: 2026-10-12T16:06:33Z
+endedAt: 2026-10-12T16:33:58Z
+kind: autonomous
+goal: "Dry run of the new clear-backlog Skill (PR #1826) over the open backlog"
+status: in-review
+outcome: "14 issues triaged and grilled; 4 PRs built, reviewed and green, all left open (dry run: nothing merged)"
+summary: "Started by the orchestrating session session_01DtK8w6aJ3361uPK73VAxhi, which invoked /clear-backlog on the owner's behalf (no human prompt reached this session, so it is logged autonomous, which is the very case issue #1816 asks about). The owner's instructions came through that kickoff: run every phase for real, merge nothing, send grilling and the final report back by send_message, and note every place the Skill was unclear. The grilling answers came from the orchestrator on the owner's behalf, and every comment that records one says so. Phase 1: one auto-triage subagent per open issue (14, all Trusted), in full-sweep mode. Only #1800 moved to ready-for-agent; 7 issues needed no comment, the rest got fact corrections. The clone turned out shallow (107 commits), so the first wave's history checks ran on a truncated graph; I unshallowed mid-run. Phase 2: one 17-question grilling list; answers moved #1786, #1802 and #1816 to ready-for-agent and kept or deferred the rest. Phase 3: four worktree build agents in waves that kept at most 2 Heavy gates running (agent-initiated scheduling choice). Phase 4: two-axis code review per PR (inline for the 2-line #1827); round 1 on #1828 found a real race (a waiter reading an empty slot file) and cut about 20 lines; #1829 and #1830 got small fixes; round 2 found only judgement calls. PRs #1827-#1830 are open, green and mergeable; #1828 would need a human merge anyway (scripts/gate.ts is Human-only). The §5 report, with 18 notes on Skill gaps, went to the orchestrator."
+prs:
+  - "1827"
+  - "1828"
+  - "1829"
+  - "1830"
+docsRead:
+  - path: CONTEXT.md
+    reason: glossary, Session kinds, Human-only, Inert/Heavy
+    useful: yes
+  - path: CONTEXT-MAP.md
+    reason: context index
+    useful: partly
+  - path: .agents/skills/auto-triage/SKILL.md
+    reason: sweep rules, full-sweep mode, roll-up
+    useful: yes
+  - path: .agents/skills/triage/SKILL.md
+    reason: per-issue state machine
+    useful: yes
+  - path: .agents/skills/grilling/SKILL.md
+    reason: round format
+    useful: yes
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: worktree isolation, brief checklist, gate cap, resume via SendMessage
+    useful: yes
+  - path: .agents/skills/code-review/SKILL.md
+    reason: two-axis review process
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: fetch first, unshallow rule
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: label replace trap, comment tool, gh api in cloud
+    useful: yes
+  - path: docs/agents/issue-tracker.md
+    reason: blocking and supersession checks
+    useful: partly
+  - path: docs/agents/triage-labels.md
+    reason: label vocabulary
+    useful: partly
+  - path: docs/agents/pr-workflow.md
+    reason: keep PR description in sync; no merge path used
+    useful: yes
+  - path: docs/adr/0022-autonomous-triage-sweep.md
+    reason: standing green-light bounds
+    useful: yes
+  - path: .agents/skills/triage/AGENT-BRIEF.md
+    reason: "subagents: Agent Brief format for posted briefs"
+    useful: yes
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: "subagents: Human-only merge and untested-behaviour bar for gate.ts"
+    useful: yes
+  - path: docs/agents/domain.md
+    reason: "subagent: how to edit the CONTEXT.md glossary for #1816"
+    useful: yes
+  - path: .agents/skills/log-session/SKILL.md
+    reason: "subagents: where session kinds and (not read) are defined, for #1816 and #1786"
+    useful: yes
+  - path: docs/adr/0003-agent-operating-model-and-governance.md
+    reason: "subagent: self-merge amendment vs midden owner review (#1802)"
+    useful: yes
+  - path: .agents/skills/midden-catalogue/SKILL.md
+    reason: "subagent: Step 5 to edit for #1802"
+    useful: yes
+  - path: layers/midden/CONTEXT.md
+    reason: "subagent: owner-review wording for #1802"
+    useful: yes
+  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
+    reason: "subagent: shell-read amendments bounding #1786"
+    useful: partly
+  - path: docs/agents/guards.md
+    reason: "subagent: hook routing for #1819 triage"
+    useful: partly
+  - path: docs/research/rulebook-migration-table.md
+    reason: "subagent: CONTEXT-read classified class J (#1819)"
+    useful: yes
+  - path: docs/adr/0029-instructions-load-with-the-files-they-govern.md
+    reason: "subagents: rule delivery model for #1745, #1778, #1819"
+    useful: yes
+  - path: docs/adr/0026-gate-workflow-thin-shell.md
+    reason: "subagent: gate action editability for #1800 and #1552"
+    useful: partly
+  - path: docs/research/github-branch-protection-vs-autonomous-log-commits.md
+    reason: "subagent: main ruleset context for #1689"
+    useful: partly
+  - path: docs/agents/environment-caveats.md
+    reason: "subagent: proxy blocks /app paths (#1689)"
+    useful: yes
+  - path: docs/adr/0017-provenance-footer-on-agent-authored-content.md
+    reason: "subagent: bot identity deferred (#1689)"
+    useful: partly
+  - path: scripts/log-session.ts
+    reason: (read before editing)
+  - path: scripts/session-trace.ts
+    reason: (read before editing)
+  - path: tests/unit/log-session.spec.ts
+    reason: (read before editing)
+  - path: scripts/gate.ts
+    reason: (read before editing)
+  - path: tests/unit/gate-stale-deps.spec.ts
+    reason: (no reason given)
+  - path: layers/journal/content/current/skills/midden-catalogue.yml
+    reason: (no reason given)
+skillsUsed:
+  - name: clear-backlog
+    reason: the Skill under dry run
+  - name: code-review
+    reason: two-axis review of PR 1828 and 1829
+  - name: close-session
+    reason: closure at PR-open state
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: "Opened PR #1827 about 15 minutes before invoking close-session; CLAUDE.md and ADR-0009 say invoke it when you open a PR"
+    solution: Invoke close-session right after the first PR opens in a multi-PR run; re-invoking is cheap
+    severity: minor
+  - description: Dispatched 14 triage agents on a shallow clone (107 commits); git-conventions says unshallow before trusting history, and two agents reported truncated git log results
+    solution: Check git rev-parse --is-shallow-repository before any history-dependent dispatch; clear-backlog/auto-triage could say so; the SessionStart hook errored (tsx not found) which likely skipped unshallow-on-start
+    severity: moderate
+  - description: "Read CONTEXT-MAP.md via a chained Bash cat at session start instead of the Read tool (CLAUDE.md: read files with Read)"
+    solution: Use Read for any doc read, even in a first orientation command
+    severity: nit
+  - description: clear-backlog full-sweep re-triage spent roughly 70-100k tokens per issue on 10 owner-deferred issues to conclude no change
+    solution: "clear-backlog: for an issue whose last owner comment is a deferral with a revisit condition, check only that condition"
+    severity: moderate
+  - description: "clear-backlog gives no wave rule that respects the 2-Heavy-gate cap; a literal wave of 3 build agents can reproduce the #1800 OOM"
+    solution: Say waves are limited by concurrent Heavy gates, not agent count (moot once PR 1828 lands)
+    severity: minor
+  - description: clear-backlog §2 Done and §5 report format have no outcome for settled-but-parked issues or issues ending with no PR (10 of 14 here)
+    solution: "Add a 'stays parked/deferred by answer' outcome and a 'no PR: why' report line"
+    severity: minor
+  - description: clear-backlog §1 design subagent overlaps auto-triage's per-issue subagent; unclear if one or two agents
+    solution: Say the triage subagent returns the design recommendation for non-ready issues
+    severity: minor
+  - description: log-session --author second pass rejected a partial YAML (only new docsRead/ruleVerdicts) though the Skill says list only new or changed entries
+    solution: Say in log-session step 3 that goal/status/outcome/summary/frictions are still required on every pass
+    severity: nit
+durationSec: 1645
+models:
+  claude-opus-5-5: 233
+toolCounts:
+  Bash: 47
+  Read: 14
+  Write: 6
+  Agent: 22
+  ToolSearch: 2
+  mcp__claude-code-remote__send_message: 2
+  PushNotification: 1
+  ReadNotifications: 15
+  mcp__github__add_issue_comment: 14
+  mcp__github__issue_write: 3
+  mcp__github__create_pull_request: 4
+  mcp__claude-code-remote__subscribe_pr_activity: 4
+  Skill: 3
+  SendMessage: 3
+  mcp__github__update_pull_request: 2
+filesEdited:
+  - tests/unit/log-session.spec.ts
+  - tests/unit/session-trace.spec.ts
+  - scripts/session-trace.ts
+  - scripts/log-session.ts
+  - scripts/gate.ts
+  - tests/unit/gate-heavy-slots.spec.ts
+  - .agents/skills/dispatch-subagents/SKILL.md
+  - CONTEXT.md
+  - .agents/skills/midden-catalogue/SKILL.md
+rulesLoaded:
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0018.md
+  - .claude/rules/adr-0026.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0008.md
+rulesGlobal:
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0001.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0023.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0017.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0022.md
+    reason: Bounded what triage could set ready-for-agent; read the full ADR because the sweep is its subject
+    useful: yes
+  - path: .claude/rules/adr-0004.md
+    reason: Made every build run gate:scoped before push and flagged gate.ts as human-merge; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Told me to close-session at PR-open, which I did late; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: Triage agents checked prune-trial overlap (ADR-0009, guards.md); summary was enough
+    useful: partly
+  - path: .claude/rules/adr-0001.md
+    reason: No build touched content baking or containers
+    useful: no
+  - path: .claude/rules/adr-0020.md
+    reason: Confirmed all 14 authors Trusted, so no Public routing; summary was enough
+    useful: partly
+  - path: .claude/rules/adr-0003.md
+    reason: Open PRs myself and subscribe; did so; owner's no-merge override took precedence; summary enough
+    useful: yes
+  - path: .claude/rules/adr-0023.md
+    reason: No guest pipeline running and no Public issues
+    useful: no
+  - path: .claude/rules/adr-0017.md
+    reason: Provenance header on every comment, PR and grilling message
+    useful: yes
+  - path: .claude/rules/adr-0021.md
+    reason: Loaded on reading CONTEXT files; no glossary scoping question arose for me
+    useful: no
+  - path: .claude/rules/adr-0005.md
+    reason: Confirmed Skill edits (#1802, dispatch-subagents) go through a gated PR
+    useful: partly
+  - path: .claude/rules/adr-0029.md
+    reason: Explained why Bash reads don't load rules; summary was enough
+    useful: partly
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Flagged gate.ts in PR 1828 as human-merge, stated in its description
+    useful: yes
+  - path: .claude/rules/adr-0018.md
+    reason: Loaded via ADR reads; no ADR was edited this run
+    useful: no
+  - path: .claude/rules/adr-0026.md
+    reason: Gate parity checked by reviewers for PR 1828; summary enough
+    useful: partly
+  - path: .claude/rules/tenant-layers.md
+    reason: "Loaded for layers/midden; the #1802 change touched only a Skill"
+    useful: no
+  - path: .claude/rules/adr-0015.md
+    reason: Loaded via a subagent ADR grep; no Skill Inventory change
+    useful: no
+  - path: .claude/rules/adr-0008.md
+    reason: Loaded via journal reads; no journal change
+    useful: no
+subagents:
+  - type: general-purpose
+    task: "Triage #1786"
+  - type: general-purpose
+    task: "Triage #1802"
+  - type: general-purpose
+    task: "Triage #1816"
+  - type: general-purpose
+    task: "Triage #1819"
+  - type: general-purpose
+    task: "Triage #1800"
+  - type: general-purpose
+    task: "Triage #1745"
+  - type: general-purpose
+    task: "Triage #1761"
+  - type: general-purpose
+    task: "Triage #1778"
+  - type: general-purpose
+    task: "Triage #1689"
+  - type: general-purpose
+    task: "Triage #1628"
+  - type: general-purpose
+    task: "Triage #1603"
+  - type: general-purpose
+    task: "Triage #1549"
+  - type: general-purpose
+    task: "Triage #1552"
+  - type: general-purpose
+    task: "Triage #1551"
+  - type: general-purpose
+    task: "Build #1800 gate slots"
+  - type: general-purpose
+    task: "Build #1786 shell-credit dispute"
+  - type: general-purpose
+    task: "Build #1816 session kind"
+  - type: general-purpose
+    task: "Build #1802 midden no-self-merge"
+  - type: general-purpose
+    task: Standards review PR 1828
+  - type: general-purpose
+    task: Spec review PR 1828
+  - type: general-purpose
+    task: Standards review PR 1829
+  - type: general-purpose
+    task: Spec review PR 1829
+gitBranch: claude/epic-clarke-3p9mlt
+entrypoint: remote
+cliVersion: 2.1.296
+ideas:
+  - "Give auto-triage a 'deferral check' mode: for an issue whose latest owner comment names a revisit condition (an upstream release, a date, another issue closing), a cheap script checks just that condition and only escalates to a full triage subagent when it flips, cutting full-sweep cost by most of the ready-for-human backlog."
+landedBy: Stop
