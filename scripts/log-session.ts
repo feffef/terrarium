@@ -49,6 +49,7 @@ import {
   stitch,
   shellReadScanOf,
   NOT_READ_REASON,
+  oneLine,
   LAST_LANDED_FILE,
   SCRATCH_DIR,
   SCRATCH_FILE,
@@ -758,8 +759,6 @@ const NEAR_MISS_LIMIT = 5
 
 const VERDICTS = usefulVerdict.options.join(' | ')
 
-const oneLine = (command: string): string => command.replace(/\s+/g, ' ').slice(0, 100)
-
 /** What `--author` derives from this session's transcripts, loaded once. */
 export interface AuthorContext {
   /** From `traceOf`, so author time checks exactly what `--land` will stitch. */
@@ -930,7 +929,8 @@ export function authorMain(
   const misNotRead = (merged.docsRead ?? []).flatMap((d) => {
     if (d.reason !== NOT_READ_REASON || !ctx) return []
     const doc = canonicalizeInstructionPath(d.path)
-    const [read, shell] = [ctx.sources.get(doc), ctx.subagentShell.get(doc)]
+    const read = ctx.sources.get(doc)
+    const shell = ctx.subagentShell.get(doc)
     if (read) return [`  ${d.path} — opened by [${read}] Read tool`]
     return shell ? [`  ${d.path} — shown by [${shell.source}] ${oneLine(shell.command)}`] : []
   })

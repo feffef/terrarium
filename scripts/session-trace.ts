@@ -110,7 +110,7 @@ export interface MechanicalTrace {
   docsReadViaShell: string[]
   /** The command whose output credited each `docsReadViaShell` path, so a
    *  disputed credit's Friction names it (issue #1786). Never landed. */
-  shellCreditedBy?: Record<string, string>
+  shellCreditedBy: Record<string, string>
   /** Path-scoped `.claude/rules/` files that loaded on a file touch or a Skill
    *  run, in load order. */
   rulesLoaded: string[]
@@ -378,6 +378,9 @@ export function shellReadScanOf(
   })
   return { paths: [...provenance.keys()], provenance, nearMisses }
 }
+
+/** A command shortened to one line, for reports and Frictions. */
+export const oneLine = (command: string): string => command.replace(/\s+/g, ' ').slice(0, 100)
 
 function dedup(xs: (string | undefined)[]): string[] {
   return [...new Set(xs.filter((x): x is string => !!x))]
@@ -728,6 +731,7 @@ export function foldSubagentTrace(
     (r) => !folded.rulesGlobal.includes(r),
   )
   folded.rulesFollowedUp = dedup([...trace.rulesFollowedUp, ...subs.flatMap((s) => s.rulesFollowedUp)])
+  // The session's own command wins: later sources overwrite earlier ones.
   folded.shellCreditedBy = Object.assign({}, ...subs.map((s) => s.shellCreditedBy), trace.shellCreditedBy)
   return folded
 }
@@ -750,8 +754,8 @@ export const DERIVED_REASON_COMMAND = '(invoked as a slash command)'
 
 /** The reason an agent gives a derived `docsRead` path it never read: the stitch
  *  drops the path, and a shell credit dropped this way becomes a Friction, so the
- *  dispute stays visible (ADR-0009's merged-read amendment). `--author` refuses it
- *  for a doc the Read tool or a subagent's command showed (issue #1786). */
+ *  dispute stays visible (ADR-0009's merged-read amendment). See `authorMain`
+ *  for when it is refused. */
 export const NOT_READ_REASON = '(not read)'
 
 /** The interpretive half the live agent writes to the scratch during the session.
@@ -797,7 +801,7 @@ export function stitch(authored: AuthoredScratch, trace: MechanicalTrace): Recor
   const notRead = new Set((authored.docsRead ?? []).filter((d) => d.reason === NOT_READ_REASON).map((d) => d.path))
   // Neutral: the detector is usually right when a credit is disputed (issue #1786).
   const disputes = trace.docsReadViaShell.filter((p) => notRead.has(p)).map((p) => ({
-    description: `SHELL-READ-DETECTION dispute: the session marked ${p} ${NOT_READ_REASON}, but shell output credited it. Command: ${trace.shellCreditedBy?.[p]?.replace(/\s+/g, ' ').slice(0, 200) ?? '(unknown)'}`,
+    description: `SHELL-READ-DETECTION dispute: the session marked ${p} ${NOT_READ_REASON}, but shell output credited it. Command: ${oneLine(trace.shellCreditedBy[p] ?? '(unknown)')}`,
     solution: 'Compare the command output with the doc: a real read means the mark was wrong; otherwise the command is a detector case.',
     severity: 'moderate',
   }))
