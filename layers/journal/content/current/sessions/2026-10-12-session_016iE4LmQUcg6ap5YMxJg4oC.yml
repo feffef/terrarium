@@ -1,0 +1,144 @@
+schemaVersion: 1
+session: session_016iE4LmQUcg6ap5YMxJg4oC
+startedAt: 2026-10-12T12:04:26Z
+endedAt: 2026-10-12T12:19:54Z
+kind: interactive
+goal: Remove the CI warnings on ProsePre.vue
+status: in-review
+outcome: PR 1811 gives ProsePre's props defaults; awaiting gate
+summary: "The user (human-instructed) asked to get rid of the warnings around ProsePre.vue visible in CI logs. I first misdiagnosed them as Vite's 500 kB chunk-size warning (reproduced via a local build, raised the limit, asked the user to choose), then the user's screenshot of the gate annotations showed the real ones: four vue/require-default-prop lint warnings. I reverted the config guess, switched the props to withDefaults, ran eslint, typecheck and gate:scoped, pushed and opened PR 1811 (agent-initiated per ADR-0003) and subscribed to it."
+prs:
+  - "1811"
+docsRead:
+  - path: CONTEXT.md
+    reason: session-start glossary
+    useful: partly
+  - path: docs/agents/github-integration.md
+    reason: MCP tool traps; log overflow
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: commit via -F file
+    useful: yes
+  - path: docs/agents/pr-workflow.md
+    reason: gate then PR recipe
+    useful: yes
+  - path: CONTEXT-MAP.md
+    reason: session-start map
+    useful: no
+  - path: app/components/content/ProsePre.vue
+    reason: (read before editing)
+  - path: app/components/MermaidDiagram.vue
+    reason: (no reason given)
+  - path: nuxt.config.ts
+    reason: (read before editing)
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Misdiagnosed the warnings as a Vite chunk-size warning from a local build and truncated CI log, wasting a build, a question to the user and a revert.
+    solution: Read the gate check-run annotations (lint warnings) first; the user's PrisePre typo and truncated log tail invited the guess.
+    severity: moderate
+  - description: Ran git branch --show-current before reading git-conventions.md, which CLAUDE.md requires before the first git command.
+    solution: Read the doc at session start when the task will involve git.
+    severity: nit
+  - description: CI job log download via curl was blocked (403 proxy) and get_job_logs with return_content overflowed, hiding the earlier build lines.
+    solution: Use check-run annotations or save logs to a file and slice, as github-integration.md says.
+    severity: minor
+durationSec: 928
+models:
+  claude-sonnet-5-5: 66
+toolCounts:
+  Read: 8
+  Glob: 4
+  Grep: 2
+  ToolSearch: 1
+  Bash: 14
+  mcp__github__actions_list: 2
+  mcp__github__get_job_logs: 2
+  AskUserQuestion: 1
+  Edit: 4
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+  Skill: 2
+  Write: 1
+filesEdited:
+  - nuxt.config.ts
+  - app/components/content/ProsePre.vue
+rulesLoaded:
+  - .claude/rules/adr-0021.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0024.md
+  - .claude/rules/adr-0018.md
+  - .claude/rules/adr-0028.md
+  - .claude/rules/tenant-layers.md
+rulesGlobal:
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0001.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0023.md
+  - .claude/rules/adr-0017.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0022.md
+    reason: loaded; not relevant to a prop-default lint fix
+    useful: no
+  - path: .claude/rules/adr-0004.md
+    reason: loaded; told me what to do
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: loaded; told me what to do
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: loaded; not relevant to a prop-default lint fix
+    useful: no
+  - path: .claude/rules/adr-0001.md
+    reason: loaded; not relevant to a prop-default lint fix
+    useful: no
+  - path: .claude/rules/adr-0020.md
+    reason: loaded; not relevant to a prop-default lint fix
+    useful: no
+  - path: .claude/rules/adr-0021.md
+    reason: loaded; not relevant to a prop-default lint fix
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: loaded; not relevant to a prop-default lint fix
+    useful: no
+  - path: .claude/rules/adr-0024.md
+    reason: loaded; not relevant to a prop-default lint fix
+    useful: no
+  - path: .claude/rules/adr-0018.md
+    reason: loaded; not relevant to a prop-default lint fix
+    useful: no
+  - path: .claude/rules/adr-0028.md
+    reason: loaded; not relevant to a prop-default lint fix
+    useful: no
+  - path: .claude/rules/adr-0023.md
+    reason: loaded; not relevant to a prop-default lint fix
+    useful: no
+  - path: .claude/rules/adr-0017.md
+    reason: loaded; told me what to do
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: loaded; told me what to do
+    useful: yes
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: loaded; not relevant to a prop-default lint fix
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: loaded; not relevant to a prop-default lint fix
+    useful: no
+  - path: .claude/rules/tenant-layers.md
+    reason: loaded; not relevant to a prop-default lint fix
+    useful: no
+gitBranch: ccr-1c0016e3-sdbntm
+entrypoint: remote_mobile
+cliVersion: 2.1.296
+landedBy: Stop
