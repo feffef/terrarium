@@ -166,3 +166,15 @@ observations:
       `current/pages/digests/` holds exactly 7 dates, no gaps/dupes. The
       #1478-class regression has not recurred in 11 days; only forward fixes
       found in the 2-week revert sweep. Grade/role unchanged.
+  - date: "2026-10-12"
+    note: >-
+      Re-checked (audit-skills behaviour check), newest
+      session_01QfaLuSd5cnBQPu8CCRrvkn (PR #1795, the 2026-10-11 Digest),
+      fully re-derived: ran `scripts/digest.ts gather 2026-10-11` directly,
+      rollup (21 sessions, 106 frictions by severity) matches the merged
+      Digest's footer exactly; retention sweep moved exactly 1 digest + 17
+      session logs per `RETAIN_DATES = 7`, `current/pages/digests/` holds
+      exactly 7 consecutive dates, no gaps/dupes anywhere from 2026-07-04
+      through today. Narrative claims spot-checked against the day's real
+      PR list (6 claims, including the "worst" pick) all matched. No new
+      silent failure; the #1478 gap remains closed. Grade/role unchanged.

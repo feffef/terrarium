@@ -169,7 +169,7 @@ experimental: {
   payloadExtraction: 'client',
   defaults: { nuxtLink: { prefetchOn: { visibility: false, interaction: true } } },
 },
-routeRules: { '/t/**': { cache: { maxAge: 60, swr: false } } },
+routeRules: { '/': { cache: { maxAge: 60, swr: false } }, '/t/**': { cache: { maxAge: 60, swr: false } } },
 // layers/tinkerfund/nuxt.config.ts
 routeRules: {
   '/t/tinkerfund/**': { cache: { varies: ['accept-language'] } },

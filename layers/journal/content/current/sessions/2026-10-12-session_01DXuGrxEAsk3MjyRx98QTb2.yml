@@ -1,0 +1,190 @@
+schemaVersion: 1
+session: session_01DXuGrxEAsk3MjyRx98QTb2
+startedAt: 2026-10-12T02:04:00Z
+endedAt: 2026-10-12T02:27:58Z
+kind: autonomous
+goal: Turn recent session frictions into fixes
+status: completed
+outcome: One doc PR merged, one regression issue filed; ledger brought up to date
+summary: "Scheduled frictions-to-fixes run (no human prompt; everything was agent-initiated under the Skill's charter). A survey subagent read the 40-session window and the 26-entry ledger and returned ranked candidates. Two simple doc fixes qualified; the second (designated-branch-clash) was kept as a ledger entry only, since it may cite the harness prompt rather than CLAUDE.md and a rule there would add prose for a nit. A Sonnet impl agent landed one grouped PR (#1801): a one-line CLAUDE.md bullet so question-only sessions still end with close-session, plus the ledger edits (six entries marked fixed, occurrences appended, one new entry). I reviewed the diff, posted the verdict comment, and merged with merge-pr.ts after the gate went green. The parallel-gates fix from PR #1588 regressed (a session read the doc and still ran three gates), so I filed #1800 for a human-merged concurrency guard in scripts/gate.ts. Left open: binding-docs-skipped remainder (owner decision), and #1786 whose labels disagree with its re-triage comment."
+prs:
+  - "1801"
+docsRead:
+  - path: CONTEXT.md
+    reason: glossary for ledger and Friction terms
+    useful: yes
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: brief checklist for the impl agent
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: read before git operations
+    useful: partly
+  - path: docs/agents/github-integration.md
+    reason: MCP tool surface before issue write
+    useful: partly
+  - path: docs/agents/pr-workflow.md
+    reason: "merge recipe: verdict comment then merge-pr.ts"
+    useful: yes
+  - path: CONTEXT-MAP.md
+    reason: context index at session start
+    useful: yes
+  - path: .claude/skills/frictions-to-fixes/SKILL.md
+    reason: (no reason given)
+  - path: layers/journal/tenant.config.ts
+    reason: (no reason given)
+  - path: CLAUDE.md
+    reason: (read before editing)
+  - path: layers/journal/content/current/frictions/tail-pipe-guard.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/frictions/foreground-gate.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/frictions/journal-content-breaks-main.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/frictions/blog-step12-reply-quality.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/frictions/findings-retyped-by-hand.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/frictions/provenance-header-shape.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/frictions/binding-docs-skipped.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/frictions/shell-read-detection.yml
+    reason: (no reason given)
+skillsUsed:
+  - name: dispatch-subagents
+    reason: brief for the worktree impl agent
+  - name: close-session
+    reason: closure after merge
+  - name: log-session
+    reason: (no reason given)
+  - name: frictions-to-fixes
+    reason: (invoked as a slash command)
+frictions:
+  - description: Survey subagent's ledger directory read overflowed (38KB) and the compact friction extract is still 135KB, so it hand-built a digest.
+    solution: Give session-frictions.ts a ledger summary mode or a smaller default window output.
+    severity: nit
+  - description: Subagent hand-back text arrived both as a message and a task notification, and the first report was long enough to need careful re-reading before dispatch.
+    solution: Have the survey brief cap the report length and ask for ledger edits as a file path rather than inline text.
+    severity: nit
+  - description: Impl agent exceeded the ~60-line ceiling (about 130 changed lines) because the ledger occurrences I specified were three YAML lines each; I had set the ceiling without counting them.
+    solution: State the size ceiling excluding mechanical ledger occurrence lines, or let the agent append occurrences by script.
+    severity: nit
+  - description: "SHELL-READ-DETECTION false positive: .agents/skills/auto-triage/SKILL.md was credited from shell output, but the session marked it (not read)"
+    solution: Find the crediting command in the transcript and tighten scripts/shell-reads.ts
+    severity: moderate
+durationSec: 1438
+models:
+  claude-sonnet-5-5: 37
+toolCounts:
+  Read: 6
+  Agent: 2
+  ToolSearch: 1
+  mcp__github__issue_write: 1
+  ReadNotifications: 1
+  mcp__github__pull_request_read: 2
+  mcp__github__add_issue_comment: 1
+  Bash: 3
+  Skill: 2
+  Write: 1
+  PushNotification: 1
+filesEdited:
+  - CLAUDE.md
+rulesLoaded:
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0002.md
+  - .claude/rules/adr-0008.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/guards.md
+  - .claude/rules/adr-0026.md
+  - .claude/rules/adr-0018.md
+rulesGlobal:
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0001.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0023.md
+  - .claude/rules/adr-0017.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0001.md
+    reason: one container, baked content
+    useful: no
+  - path: .claude/rules/adr-0003.md
+    reason: agent opens PR and keeps working it to merge
+    useful: yes
+  - path: .claude/rules/adr-0004.md
+    reason: gate and human-merge list; PR was safe surface
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: close-session at PR open and on completion
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: provenance line on the issue, PR and comment
+    useful: yes
+  - path: .claude/rules/adr-0020.md
+    reason: trust tiers; all authors here were Trusted
+    useful: no
+  - path: .claude/rules/adr-0022.md
+    reason: triage sweep, not applicable
+    useful: no
+  - path: .claude/rules/adr-0023.md
+    reason: guest pipeline, not applicable
+    useful: no
+  - path: .claude/rules/adr-0027.md
+    reason: prune trials; used to screen on-trial drops
+    useful: partly
+  - path: .claude/rules/adr-0005.md
+    reason: Skills are Platform code, not touched
+    useful: no
+  - path: .claude/rules/adr-0015.md
+    reason: pack Skills off limits, none proposed
+    useful: no
+  - path: .claude/rules/adr-0021.md
+    reason: contexts, not touched
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: rules load with governed files
+    useful: no
+  - path: .claude/rules/adr-0002.md
+    reason: not relevant to this run
+    useful: no
+  - path: .claude/rules/adr-0008.md
+    reason: not relevant to this run
+    useful: no
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: not relevant to this run
+    useful: no
+  - path: .claude/rules/tenant-layers.md
+    reason: not relevant to this run
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: human-only list used to confirm PR was safe surface
+    useful: yes
+  - path: .claude/rules/guards.md
+    reason: guards are never dispatched; none touched
+    useful: partly
+  - path: .claude/rules/adr-0026.md
+    reason: not relevant to this run
+    useful: no
+  - path: .claude/rules/adr-0018.md
+    reason: not relevant to this run
+    useful: no
+subagents:
+  - type: general-purpose
+    task: Survey and screen frictions
+  - task: Grouped doc PR plus ledger
+    model: sonnet
+gitBranch: claude/eager-ptolemy-das70z
+entrypoint: remote_trigger
+cliVersion: 2.1.296
+trigger: frictions-to-fixes
+learnings:
+  - merge-pr.ts polls the gate itself, so a foreground call with a long timeout replaces separate check-run polling.
+landedBy: Stop

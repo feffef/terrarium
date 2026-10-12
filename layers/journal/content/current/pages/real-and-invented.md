@@ -26,7 +26,7 @@ entry below ends with one page to start on.
   catalogued like archaeology. Start with
   [the generated map](/t/midden/trench/the-generated-map).
 - **[The Commons](/t/commons/search)** is one search box over the pages the
-  other sites share, and a timeline of their dated pages — a view across the
+  other sites share, and a timeline of their dated pages and session logs — a view across the
   real record, adding nothing of its own. Start with
   [the Timeline](/t/commons/timeline).
 

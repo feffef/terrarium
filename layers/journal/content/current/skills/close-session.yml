@@ -204,3 +204,22 @@ observations:
       own frictions read like organic self-reflection, not a formal sweep).
       Narrow, process-only, below the escalation bar. No reverts of this
       Skill's content. Grade/role unchanged.
+  - date: "2026-10-12"
+    note: >-
+      Re-checked (audit-skills behaviour check), 10 usedIn invocations, all
+      cross-checked against live GitHub state — 9/10 completed with matching
+      merged PRs, 1/10 honestly in-review. windowNotUsed session
+      (session_011p9VA5A1CWNG9xd2VrQf8N) re-confirmed equivalent-closure, a
+      4th consecutive audit reaching this conclusion — not a missed
+      invocation. NEW finding, escalated as issue #1797: this run's own
+      `humanPromptedClosures` mechanical signal (step 3) false-flagged
+      session_01BBQnwhyfsvoksh4oV9MXsU — its friction description reads
+      "...so not HUMAN-PROMPTED-CLOSURE" and `hasHumanPromptedClosure()`'s
+      naive substring match (`scripts/audit-skills.ts:637-639`) matched the
+      keyword despite the explicit negation. The session itself is a
+      genuine, low-severity ("minor") "had to be asked if it was logged"
+      case, correctly distinguished by its own author from the fixed-severity
+      keyword case — a bug in the detector, not a new instance of this
+      Skill's own reliability gap. session_01TMgZyrN42pwudxkUdHLKwP's stale
+      log not re-checked, per the 2026-10-06 settled-static-artifact call. No
+      reverts of this Skill's content. Grade/role unchanged.

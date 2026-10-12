@@ -79,8 +79,9 @@ inside subagents too (PR #1741). Whether a Bash write loads one is untested.
   `skill-rules-hint.ts` does for Skills.
 - A plan or an opinion often comes before any file is opened, so `CLAUDE.md`
   keeps the step to grep `docs/adr/` before recommending a change.
-- Action-bound instructions get their own delivery: issue #1754 proposes a
-  `PreToolUse` hook that points to the doc at the first matching action.
+- Action-bound instructions get their own delivery: a fail-open hint,
+  `scripts/read-first-hint.ts` (#1754), points to the doc at the first matching
+  action.
 - Session logs record which path-scoped rules loaded (`rulesLoaded`) and whose
   ADR the agent then read (`rulesFollowedUp`), so a rule's reach can be
   estimated, not measured: an ADR read by a subagent does not credit the

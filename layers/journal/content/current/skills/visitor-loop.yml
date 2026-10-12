@@ -269,3 +269,18 @@ observations:
       #1721 failure itself. Core 3-model/consensus/build pipeline intact
       across all 8, every feature PR + fix PR merged. No reverts. Grade
       unchanged (routine).
+  - date: "2026-10-12"
+    note: >-
+      Re-checked (audit-skills behaviour check), newest
+      session_017inrpS21UKrpEun2DpjLd7 (PRs #1779/#1780, 2026-10-11, mobile
+      focus), fully re-derived: owner-memory step named candidates
+      individually (not a batch dismissal, the #1721 failure shape),
+      correctly ruled 3 as "not a ruling" against their actual PRs; both
+      claimed fixes (dashboard wording, Commons "every site" phrasing)
+      independently confirmed still live and unclobbered. The 3
+      dropped-consensus decisions.md lines it cited all verified present
+      verbatim. The other 6 usedIn sessions re-confirmed clean via
+      spot-check, including the durable #1619/#1624 revert (SiteFooter.vue
+      today matches decisions.md's line exactly). No revert of visitor-loop's
+      own mechanics beyond the already-tracked cases. Grade unchanged
+      (routine).

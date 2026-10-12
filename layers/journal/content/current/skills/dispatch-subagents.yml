@@ -256,3 +256,24 @@ observations:
       dispatch-subagents one). No stranded work, no merge-pr.ts-to-subagent,
       no new branch/worktree collision in any of the 19 opened logs. Grade
       unchanged (essential).
+  - date: "2026-10-12"
+    note: >-
+      Re-checked (audit-skills behaviour check), 10 usedIn sessions plus the
+      full 77-session notUsedInWindow sweep (58 ruled out by goal plus a
+      structured skillsUsed/subagents/filesEdited scan, 19 opened in full).
+      No stranded work, no merge-pr.ts dispatched to a subagent, no new
+      branch/worktree collision in any of the 10 usedIn or 19 opened logs —
+      0 silent failures, 0 novel missed invocations this window. Of the 19
+      opened: 16 clean (read-only or orchestrator-authored git work); 3 are
+      further occurrences of the already-tracked #1586 skillsUsed-logging
+      gap (one new instance not previously cited,
+      session_01YBJaRLtVQEr4RshMQG1X7D, 2026-10-11, PRs #1756/#1757 both
+      merged, `docsRead` cites the SKILL.md explicitly — commented onto
+      #1586, closed 2026-10-10 on a review that predated the 12 instances
+      the 2026-10-11 entry already added, reopen call again left to a
+      human); 1 borderline instance (session_01Jo3m1r8fyuGvjtRE9qDrPH,
+      audit-docs) where no subagent ran git itself, so worktree isolation
+      wasn't actually required by this Skill's own rule — a milder logging
+      gap, not a collision risk. #1480 and #1586 both remain closed, as of
+      the 2026-10-11 entry. No revert of this Skill's own mechanics in the
+      2-week sweep. Grade unchanged (essential).

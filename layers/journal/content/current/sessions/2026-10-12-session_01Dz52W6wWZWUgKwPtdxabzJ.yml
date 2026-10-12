@@ -1,0 +1,337 @@
+schemaVersion: 1
+session: session_01Dz52W6wWZWUgKwPtdxabzJ
+startedAt: 2026-10-12T04:01:46Z
+endedAt: 2026-10-12T04:28:16Z
+kind: autonomous
+goal: Scheduled audit of the repo's docs
+status: completed
+outcome: Fixes merged as PR 1803; one true conflict filed as issue 1802
+summary: Scheduled /audit-docs run, agent-initiated by the schedule with no human prompt. Concision family 0 (root and per-Tenant docs). Five reviewer agents (freshness found nothing; single-home 6; root concision 21; Tenant concision 15; coherence 10) then four fact-checkers re-derived each finding; many ranges and texts needed correction, and 2 Tenant findings were WRONG. Marginal rewraps and the two WRONG findings were skipped. Applied the survivors in one commit, gate:scoped passed, opened PR 1803 (no Human-only paths touched). One true factual conflict (who merges midden-catalogue PRs) was filed as issue 1802 and left unfixed. PR 1803 merged on a green gate.
+prs:
+  - "1803"
+docsRead:
+  - path: CONTEXT-MAP.md
+    reason: required start-of-session read
+    useful: yes
+  - path: CONTEXT.md
+    reason: glossary; also edited
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: fetch before trusting history
+    useful: yes
+  - path: docs/agents/pr-workflow.md
+    reason: closing a self-merged chartered run
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: issue_write mapping before filing the issue
+    useful: yes
+  - path: docs/agents/issue-tracker.md
+    reason: before filing an issue
+    useful: partly
+  - path: docs/agents/triage-labels.md
+    reason: needs-triage label
+    useful: partly
+  - path: README.md
+    reason: (no reason given)
+  - path: SECURITY.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: (no reason given)
+  - path: docs/research/nuxt-content-review-grounding.md
+    reason: (no reason given)
+  - path: docs/research/github-branch-protection-vs-autonomous-log-commits.md
+    reason: (no reason given)
+  - path: layers/atlas/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/blog/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/journal/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/marquee/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/midden/CONTEXT.md
+    reason: (no reason given)
+  - path: CLAUDE.md
+    reason: (no reason given)
+  - path: tests/README.md
+    reason: (no reason given)
+  - path: deploy/README.md
+    reason: (no reason given)
+  - path: docs/proposals/README.md
+    reason: (no reason given)
+  - path: layers/commons/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/tinkerfund/CONTEXT.md
+    reason: (no reason given)
+  - path: docs/agents/guest-contributions.md
+    reason: (no reason given)
+  - path: docs/agents/environment-caveats.md
+    reason: (no reason given)
+  - path: docs/agents/domain.md
+    reason: (no reason given)
+  - path: docs/agents/guards.md
+    reason: (no reason given)
+  - path: docs/agents/tenant-layers.md
+    reason: (no reason given)
+  - path: docs/agents/verifying-ui-changes.md
+    reason: (no reason given)
+  - path: docs/agents/mdc-when-to-use.md
+    reason: (no reason given)
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/guest-build/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/guest-intake/SKILL.md
+    reason: (no reason given)
+  - path: docs/adr/0020-requester-trust-tiers.md
+    reason: (no reason given)
+  - path: docs/research/making-repo-public.md
+    reason: (no reason given)
+  - path: docs/research/public-readiness-review.md
+    reason: (no reason given)
+  - path: .agents/skills/close-session/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/log-session/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/auto-triage/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/prune-trial/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/digest/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/visitor-loop/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/visitor-loop/decisions.md
+    reason: (no reason given)
+  - path: .agents/skills/visitor-loop/visitor-brief.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/personas/david.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/personas/karen.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/personas/kevin.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/personas/eyra.md
+    reason: (no reason given)
+  - path: .agents/skills/midden-catalogue/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/midden-survey/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/atlas-specimen/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/tinkerfund-campaign/SKILL.md
+    reason: (no reason given)
+  - path: docs/research/mermaid-server-side-rendering.md
+    reason: (no reason given)
+  - path: docs/research/shell-reads-by-output-matching.md
+    reason: (no reason given)
+  - path: docs/research/rulebook-migration-table.md
+    reason: (no reason given)
+  - path: docs/research/content-client-queries-without-wasm.md
+    reason: (no reason given)
+  - path: docs/adr/0003-agent-operating-model-and-governance.md
+    reason: (no reason given)
+  - path: .agents/skills/tinkerfund-campaign/ILLUSTRATION.md
+    reason: (no reason given)
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: (no reason given)
+  - path: docs/research/github-actions-public-vs-private-limits.md
+    reason: (no reason given)
+  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
+    reason: (no reason given)
+  - path: docs/adr/0022-autonomous-triage-sweep.md
+    reason: (no reason given)
+  - path: docs/adr/0029-instructions-load-with-the-files-they-govern.md
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: audit-docs
+    reason: (invoked as a slash command)
+frictions:
+  - description: Read .agents/prune-trials.yml and many line ranges with sed and cat through Bash instead of the Read tool, against the CLAUDE.md rule.
+    solution: Use Read with offset and limit for ranges; the rule is already in CLAUDE.md, this was a lapse.
+    severity: minor
+  - description: A Bash call with run_in_background plus a trailing ampersand was denied by the double-background guard; a chained sleep was also blocked.
+    solution: Use run_in_background alone and Monitor with an until-loop; the guard message said so.
+    severity: nit
+  - description: A reviewer subagent ran git checkout --detach origin/main by mistake and switched back; no harm, but it touched the shared checkout.
+    solution: Tell read-only reviewer briefs not to run any state-changing git command.
+    severity: nit
+  - description: Reviewer line ranges were off in about a third of the findings (partial sentences, wrong end line); checkers caught them, but it cost a second pass.
+    solution: Ask reviewers to print the exact lines they would replace and verify the range with a sed echo before reporting.
+    severity: minor
+durationSec: 1590
+models:
+  claude-sonnet-5-5: 133
+toolCounts:
+  Read: 15
+  Bash: 29
+  Agent: 9
+  Monitor: 10
+  mcp__github__search_issues: 1
+  mcp__github__issue_write: 1
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  Skill: 2
+  mcp__github__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 2
+  mcp__github__add_issue_comment: 1
+  mcp__github__unsubscribe_pr_activity: 1
+  PushNotification: 1
+rulesLoaded:
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0018.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0026.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0008.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0028.md
+  - .claude/rules/adr-0012.md
+  - .claude/rules/adr-0002.md
+  - .claude/rules/guards.md
+  - .claude/rules/adr-0025.md
+  - .claude/rules/adr-0011.md
+  - .claude/rules/adr-0014.md
+  - .claude/rules/adr-0024.md
+  - .claude/rules/adr-0010.md
+rulesGlobal:
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0001.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0023.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0029.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0001.md
+    reason: loaded at start; nothing in this docs sweep depended on it
+    useful: no
+  - path: .claude/rules/adr-0002.md
+    reason: loaded at start; nothing in this docs sweep depended on it
+    useful: no
+  - path: .claude/rules/adr-0003.md
+    reason: loaded at start; nothing in this docs sweep depended on it
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: loaded at start; nothing in this docs sweep depended on it
+    useful: no
+  - path: .claude/rules/adr-0004.md
+    reason: loaded at start; nothing in this docs sweep depended on it
+    useful: no
+  - path: .claude/rules/adr-0005.md
+    reason: loaded at start; nothing in this docs sweep depended on it
+    useful: no
+  - path: .claude/rules/adr-0008.md
+    reason: loaded at start; nothing in this docs sweep depended on it
+    useful: no
+  - path: .claude/rules/adr-0009.md
+    reason: loaded at start; nothing in this docs sweep depended on it
+    useful: no
+  - path: .claude/rules/adr-0010.md
+    reason: loaded at start; nothing in this docs sweep depended on it
+    useful: no
+  - path: .claude/rules/adr-0011.md
+    reason: loaded at start; nothing in this docs sweep depended on it
+    useful: no
+  - path: .claude/rules/adr-0012.md
+    reason: loaded at start; nothing in this docs sweep depended on it
+    useful: no
+  - path: .claude/rules/adr-0014.md
+    reason: loaded at start; nothing in this docs sweep depended on it
+    useful: no
+  - path: .claude/rules/adr-0015.md
+    reason: loaded at start; nothing in this docs sweep depended on it
+    useful: no
+  - path: .claude/rules/adr-0017.md
+    reason: loaded at start; nothing in this docs sweep depended on it
+    useful: no
+  - path: .claude/rules/adr-0018.md
+    reason: loaded at start; nothing in this docs sweep depended on it
+    useful: no
+  - path: .claude/rules/adr-0020.md
+    reason: loaded at start; nothing in this docs sweep depended on it
+    useful: no
+  - path: .claude/rules/adr-0021.md
+    reason: loaded at start; nothing in this docs sweep depended on it
+    useful: no
+  - path: .claude/rules/adr-0022.md
+    reason: loaded at start; nothing in this docs sweep depended on it
+    useful: no
+  - path: .claude/rules/adr-0023.md
+    reason: loaded at start; nothing in this docs sweep depended on it
+    useful: no
+  - path: .claude/rules/adr-0024.md
+    reason: loaded at start; nothing in this docs sweep depended on it
+    useful: no
+  - path: .claude/rules/adr-0025.md
+    reason: loaded at start; nothing in this docs sweep depended on it
+    useful: no
+  - path: .claude/rules/adr-0026.md
+    reason: loaded at start; nothing in this docs sweep depended on it
+    useful: no
+  - path: .claude/rules/adr-0027.md
+    reason: loaded at start; nothing in this docs sweep depended on it
+    useful: no
+  - path: .claude/rules/adr-0028.md
+    reason: loaded at start; nothing in this docs sweep depended on it
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: loaded at start; nothing in this docs sweep depended on it
+    useful: no
+  - path: .claude/rules/guards.md
+    reason: loaded at start; nothing in this docs sweep depended on it
+    useful: no
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: loaded at start; nothing in this docs sweep depended on it
+    useful: no
+  - path: .claude/rules/tenant-layers.md
+    reason: loaded at start; nothing in this docs sweep depended on it
+    useful: no
+subagents:
+  - type: general-purpose
+    task: "Audit A: freshness"
+  - type: general-purpose
+    task: "Audit B: single-home"
+  - type: general-purpose
+    task: "Audit C1: concision root docs"
+  - type: general-purpose
+    task: "Audit C2: concision tenant docs"
+  - type: general-purpose
+    task: "Audit D: coherence"
+  - type: general-purpose
+    task: Fact-check root concision
+  - type: general-purpose
+    task: Fact-check tenant concision
+  - type: general-purpose
+    task: Fact-check single-home
+  - type: general-purpose
+    task: Fact-check coherence
+gitBranch: claude/festive-mayer-9xnvht
+entrypoint: remote_trigger
+cliVersion: 2.1.296
+trigger: audit-docs
+landedBy: Stop

@@ -355,3 +355,33 @@ observations:
       owner confirmation, surfaced via session_018i6d2BQPkf9cq6jSEqCNSX) and
       commented new evidence (12 further skillsUsed-logging-gap instances)
       onto dispatch-subagents' just-closed #1586. Grade/role unchanged.
+  - date: "2026-10-12"
+    note: >-
+      Self-check: dispatched 11 behaviour-check subagents this run (one per
+      behaviourChecks entry), each report independently verified against
+      primary sources before use. All 7 of this Skill's own usedIn sessions
+      (PRs #1609 through #1753) re-confirmed merged, Inventory-YAML-only.
+      TWO new silent failures found in this Skill's own process, both
+      escalated. (1) Issue #1798: session_01KnHp9a9Ljbiuu8NjLLx8i1 (2026-10-11)
+      filed issue #1752 against `triage`, a confirmed Pack Skill
+      (`skills-lock.json`), directly breaking this Skill's own step-4 rule
+      ("Pack Skills get no issues... their only lever is the Inventory
+      entry") — its own commit text framed the choice as "correctly scoped
+      to `triage`," inverting the rule rather than following it; #1752 was
+      engaged with live by the owner and closed before this run caught it.
+      The gap: step 4's escalation branches have no Pack-Skill check of
+      their own when a finding is discovered mid-investigation (via another
+      Skill's usedIn session) rather than through the upfront
+      behaviourChecks roster, which excludes Pack Skills only by
+      construction. (2) Issue #1797 (see close-session's own entry): this
+      run's `humanPromptedClosures` signal false-flagged a friction that
+      explicitly negated the keyword it matched on. The rest — audit-docs,
+      auto-triage, blog-post, close-session (apart from #1797), digest,
+      dispatch-subagents, frictions-to-fixes, log-session (apart from a
+      #1786 regression, see its own entry), prune-trial, visitor-loop — came
+      back clean this run. Step 3 closure completeness: orphan scan clean
+      (`scanned: true`, 1158 merged PRs, 1006 with a session), both orphan
+      candidates carry `resolvedBy` (already tracked, left alone),
+      orphanSuppressionLog both entries plausible (`resolved-annotation`),
+      manuallyRescuedClosures empty, humanPromptedClosures' one entry was
+      the #1797 false positive above. Grade/role unchanged.

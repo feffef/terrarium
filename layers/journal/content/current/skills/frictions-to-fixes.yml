@@ -176,3 +176,22 @@ observations:
       closed (wontfix, no recurrence); #1676 reconfirmed closed via merged PR
       #1714, its fix now live in SKILL.md §2 ("quotes the matching territory
       path or keyword verbatim"). No revert found. Grade/role unchanged.
+  - date: "2026-10-12"
+    note: >-
+      Re-checked (audit-skills behaviour check), 3 newly-checked sessions
+      beyond the 2026-10-11 entry: session_01YBJaRLtVQEr4RshMQG1X7D (PR
+      #1756/#1757), session_015Hx2GtEuH6WZBL8Hp4aDgg (PR #1768),
+      session_01LuXuScHA2QsY4RXipy9nAt (ledger PR #1787, issues
+      #1784/#1785/#1786 filed). All three deliver exactly as claimed — diffs
+      match logs, issues real and correctly labeled, no revert in the
+      2-week sweep. No new silent failure in this Skill's own delivery. One
+      loose end, not escalated: issue #1786 (filed by
+      session_01LuXuScHA2QsY4RXipy9nAt as a shell-read-detection regression)
+      was later re-triaged and found to actually be a different bug
+      (log-session's "(not read)" refusal, not the shell-read detector) — a
+      correct, self-healing re-triage, but `shell-read-detection.yml`'s
+      `cause` field and `ref` line still describe #1786 as belonging to
+      this Ledger entry, now slightly stale; worth a line fix on this
+      Skill's next pass (see log-session's own entry above for #1786's
+      reopening, for an unrelated reason — the fix PR itself didn't cover
+      the reported shell-output case). Grade/role unchanged.

@@ -1,8 +1,6 @@
 # Tests
 
-How the test suite is laid out, and the one non-obvious rule about e2e. The
-*why* is ADR-0004 (see its 2026-10-12 amendment); this file is the operational
-"where do I put a test" reference.
+Where each test lives, and the one non-obvious e2e rule. The why: ADR-0004's 2026-10-12 amendment.
 
 ## A test is homed with the code it exercises
 
@@ -19,9 +17,7 @@ How the test suite is laid out, and the one non-obvious rule about e2e. The
   - `layers/<tenant>/tests/unit/*.spec.ts`
   - `layers/<tenant>/tests/e2e/<tenant>.spec.ts` — that Tenant's e2e spec (see below).
 
-This keeps "which tests belong to which Tenant vs. which are global" obvious,
-and lets the suite grow additively: adding a Tenant that needs tests adds a
-`layers/<tenant>/tests/` folder — nothing here changes.
+Adding a Tenant that needs tests adds a `layers/<tenant>/tests/` folder; nothing here changes.
 
 ## The e2e gate is ONE build, reused by every spec
 
@@ -53,8 +49,7 @@ e2e assertions use vitest's `expect` (with `expect.poll(...).toBe(...)` for
 async/polling conditions), not Playwright's own matcher set (`toBeVisible`,
 `toHaveText`, etc.) — those won't type or run here.
 
-`expect.poll` defaults to a **1000ms timeout / 50ms interval** — not set in
-`vitest.config.ts`, so the numbers aren't visible from this repo's own config.
+`expect.poll` defaults to a **1000ms timeout / 50ms interval** (vitest's own defaults, not set in `vitest.config.ts`).
 A poll racing a longer app-side settle animation (e.g. a rAF-driven
 transition) needs its timeout raised per-call —
 `expect.poll(..., { timeout: 5000 })` — not just re-run as flaky.

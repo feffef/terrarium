@@ -45,10 +45,6 @@
           },
           {
             "type": "command",
-            "command": "cd \"${CLAUDE_PROJECT_DIR:-.}\" && sh scripts/guard-wrap.sh tail-pipe-guard -- sh scripts/tail-pipe-guard.sh"
-          },
-          {
-            "type": "command",
             "command": "cd \"${CLAUDE_PROJECT_DIR:-.}\" && sh scripts/guard-wrap.sh double-background-guard -- sh scripts/double-background-guard.sh"
           }
         ]
@@ -96,6 +92,15 @@
         ]
       },
       {
+        "matcher": "Bash|mcp__github__.*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cd \"${CLAUDE_PROJECT_DIR:-.}\" && sh scripts/read-first-hint.sh || true"
+          }
+        ]
+      },
+      {
         "matcher": "Skill",
         "hooks": [
           {
@@ -112,6 +117,15 @@
           {
             "type": "command",
             "command": "cd \"${CLAUDE_PROJECT_DIR:-.}\" && sh scripts/stale-info-hint.sh || true"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash|mcp__github__.*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cd \"${CLAUDE_PROJECT_DIR:-.}\" && sh scripts/read-first-hint.sh || true"
           }
         ]
       }

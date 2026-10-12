@@ -2,8 +2,8 @@ name: parallel-gates-exhaust-memory
 cause: >-
   More than two full gates in one container exhaust memory and kill e2e.
 surface: safe
-status: open
-ref: "PR #1588 (fix did not hold: session 018i6d2BQPkf9cq6jSEqCNSX ran three gates against the limit of two, 2026-10-10)"
+status: tracked
+ref: "PR #1588 (doc; regressed 2026-10-10: session 018i6d2B read dispatch-subagents and ran three gates); regression issue #1800"
 occurrences:
   - session: session_01LKfKKxwgThbVFE79NWohET
     date: "2026-09-27"

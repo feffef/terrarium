@@ -54,10 +54,12 @@ import {
   SCRATCH_FILE,
   STAGING_DIR,
   type AuthoredScratch,
+  type FoldedShellReadScan,
+  type LabelledRecords,
   type MechanicalTrace,
   type SessionIdEnv,
 } from './session-trace.ts'
-import { isInstructionDoc, type DocLineIndex } from './shell-reads.ts'
+import { canonicalizeInstructionPath, isInstructionDoc, type DocLineIndex } from './shell-reads.ts'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 
@@ -246,21 +248,6 @@ export function mergeAuthored(existing: AuthoredScratch | undefined, incoming: A
   }
 }
 
-/** Write the authored scratch to its canonical, gitignored home. Its existence is
- *  the wrap-up signal the landing path gates on; re-authoring merges with
- *  whatever pass came before it in this same session (issue #688). */
-export function writeScratch(authored: AuthoredScratch, scratchAbs: string): void {
-  mkdirSync(dirname(scratchAbs), { recursive: true })
-  let existing: AuthoredScratch | undefined
-  if (existsSync(scratchAbs)) {
-    try {
-      existing = JSON.parse(readFileSync(scratchAbs, 'utf8')) as AuthoredScratch
-    } catch {
-      existing = undefined // a corrupt or partial scratch is treated as absent, never blocking re-authoring
-    }
-  }
-  writeFileSync(scratchAbs, JSON.stringify(mergeAuthored(existing, authored), null, 2))
-}
 
 /** True when `cwd` sits inside a LINKED git worktree — a checkout created by
  *  `git worktree add`, distinct from the repo's main/primary working tree — used
@@ -550,7 +537,7 @@ function mainSchemaErrors(entry: unknown, remote: string): string | null {
 
 /** Refuse a log `main`'s schema would reject; it lands on a later Stop once the
  *  schema change has merged, since the sentinel records only a landed log. */
-function mainSchemaRefusal(entry: unknown, opts: LandOpts): HandlerResult | null {
+function mainSchemaRefusal(entry: unknown, opts: Pick<LandOpts, 'remote' | 'mainSchemaFn'>): HandlerResult | null {
   const errors = (opts.mainSchemaFn ?? mainSchemaErrors)(entry, opts.remote)
   if (errors === null) return null
   return {
@@ -687,7 +674,7 @@ function withoutLandedBy(yaml: string): string {
 /** The parent transcript's trace with every dispatched subagent's reads, edits,
  *  and Skill invocations folded in — `subagentJsonls` is passed by `landMain`
  *  from disk and by tests inline, so neither entry point can drift from the other. */
-function traceOf(transcriptJsonl: string, opts: LandOpts): MechanicalTrace {
+function traceOf(transcriptJsonl: string, opts: Pick<LandOpts, 'env' | 'subagentJsonls' | 'docIndex'>): MechanicalTrace {
   const docIndex = opts.docIndex ?? loadDocLineIndex(root)
   const trace = extractTrace(parseTranscript(transcriptJsonl), opts.env, docIndex)
   return foldSubagentTrace(trace, (opts.subagentJsonls ?? []).map(parseTranscript), opts.env, docIndex)
@@ -773,6 +760,48 @@ const VERDICTS = usefulVerdict.options.join(' | ')
 
 const oneLine = (command: string): string => command.replace(/\s+/g, ' ').slice(0, 100)
 
+/** What `--author` derives from this session's transcripts, loaded once. */
+export interface AuthorContext {
+  /** From `traceOf`, so author time checks exactly what `--land` will stitch. */
+  trace: MechanicalTrace
+  scan: FoldedShellReadScan
+  /** Canonical path → first transcript whose Read tool opened it: a subagent's
+   *  read is the session's, so `(not read)` can't deny it (issue #1786). */
+  sources: Map<string, string>
+}
+
+/** Best-effort (see `findLatestTranscript`): undefined when no transcript can be
+ *  found or read, which degrades the checks and the report, never the authoring. */
+export function loadAuthorContext(cwd: string, repoRoot: string = root): AuthorContext | undefined {
+  try {
+    const transcriptPath = findLatestTranscript(cwd, process.env.HOME)
+    if (!transcriptPath || !existsSync(transcriptPath)) return undefined
+    const jsonl = readFileSync(transcriptPath, 'utf8')
+    const subs = readSubagentJsonls(transcriptPath)
+    const docIndex = loadDocLineIndex(repoRoot)
+    const records = parseTranscript(jsonl)
+    const subagents = subs.map((s) => ({ label: s.label, records: parseTranscript(s.jsonl) }))
+    return {
+      trace: traceOf(jsonl, { subagentJsonls: subs.map((s) => s.jsonl), docIndex }),
+      scan: shellReadScanOf(records, subagents, { repoRoot, docIndex }),
+      sources: readToolSources([{ label: 'this session', records }, ...subagents.map((s) => ({ ...s, label: `subagent: ${s.label}` }))]),
+    }
+  } catch {
+    return undefined
+  }
+}
+
+function readToolSources(sets: LabelledRecords[]): Map<string, string> {
+  const sources = new Map<string, string>()
+  for (const { label, records } of sets) {
+    for (const p of extractTrace(records).filesRead) {
+      const doc = canonicalizeInstructionPath(p)
+      if (!sources.has(doc)) sources.set(doc, label)
+    }
+  }
+  return sources
+}
+
 /** List every instruction doc the trace will fold into `docsRead` and every
  *  rule that loaded that the agent has not yet given a reason and a `useful`
  *  verdict, with the evidence for each doc, so the agent can explain it or mark
@@ -780,33 +809,23 @@ const oneLine = (command: string): string => command.replace(/\s+/g, ' ').slice(
  *  nothing when there is nothing to answer — including when the transcript
  *  can't be found, which degrades the report, never the authoring. */
 export function reportUnexplainedReads(
-  cwd: string,
+  ctx: AuthorContext | undefined,
   authored: Pick<AuthoredScratch, 'docsRead' | 'ruleVerdicts'> = {},
   log: (line: string) => void = console.log,
-  repoRoot: string = root,
 ): void {
-  let scan
-  let toolReads: string[]
-  let rulesLoaded: string[]
-  try {
-    const transcriptPath = findLatestTranscript(cwd, process.env.HOME)
-    if (!transcriptPath || !existsSync(transcriptPath)) return
-    const records = parseTranscript(readFileSync(transcriptPath, 'utf8'))
-    const subagents = readSubagentJsonls(transcriptPath).map((s) => ({ label: s.label, records: parseTranscript(s.jsonl) }))
-    scan = shellReadScanOf(records, subagents, { repoRoot })
-    const trace = foldSubagentTrace(extractTrace(records), subagents.map((s) => s.records))
-    toolReads = trace.filesRead
-    rulesLoaded = [...trace.rulesGlobal, ...trace.rulesLoaded]
-  } catch {
-    return
-  }
+  if (!ctx) return
+  const { trace, scan, sources } = ctx
+  const rulesLoaded = [...trace.rulesGlobal, ...trace.rulesLoaded]
   const answered = new Set(
     (authored.docsRead ?? []).filter((d) => d.useful || d.reason === NOT_READ_REASON).map((d) => d.path),
   )
   const ruled = new Set((authored.ruleVerdicts ?? []).map((r) => r.path))
   const openRules = rulesLoaded.filter((r) => !ruled.has(r))
   const open = new Map<string, string>()
-  for (const p of toolReads) if (isInstructionDoc(p) && !answered.has(p)) open.set(p, 'Read tool')
+  for (const p of trace.filesRead) {
+    const source = sources.get(canonicalizeInstructionPath(p))
+    if (isInstructionDoc(p) && !answered.has(p)) open.set(p, source ? `[${source}] Read tool` : 'Read tool')
+  }
   for (const [p, { command, source }] of scan.provenance) {
     if (!answered.has(p) && !open.has(p)) open.set(p, `[${source}] ${oneLine(command)}`)
   }
@@ -843,6 +862,15 @@ export function reportUnexplainedReads(
   }
 }
 
+function fetchedMainSchemaErrors(entry: unknown, remote: string): string | null {
+  try {
+    fetchOriginMain(root, remote, undefined, true)
+  } catch {
+    /* offline: check the cached `main`, as `mainVersion` does */
+  }
+  return mainSchemaErrors(entry, remote)
+}
+
 /** `--author <authored.yml>`: validate the interpretive fields and write the
  *  scratch. This is what the model-invocable `log-session` Skill calls at
  *  closure; it does NOT commit — `--land` does, live on the next `Stop` (with
@@ -851,7 +879,7 @@ export function reportUnexplainedReads(
  *  refusal + `--allow-worktree` escape hatch), not just the underlying primitive. */
 export function authorMain(
   argv: string[],
-  opts: { cwd?: string; scratchAbs?: string } = {},
+  opts: { cwd?: string; scratchAbs?: string; mainSchemaFn?: LandOpts['mainSchemaFn'] } = {},
 ): void {
   const cwd = opts.cwd ?? process.cwd()
   const scratchAbs = opts.scratchAbs ?? join(root, SCRATCH_FILE)
@@ -884,16 +912,44 @@ export function authorMain(
   }
   const result = validateAuthored(parsed)
   if (!result.ok) fail(`authored scratch is invalid:\n${result.errors}`)
-  writeScratch(result.data, scratchAbs)
-  console.log(`✓ authored scratch written → ${SCRATCH_FILE}`)
-  console.log('  the Stop hook will stitch it with the derived trace and commit, live, at the end of this turn.')
-  let merged: AuthoredScratch = result.data
+  // Re-authoring merges with this session's earlier pass (issue #688); a corrupt
+  // or partial scratch counts as absent, never blocking re-authoring.
+  let existing: AuthoredScratch | undefined
   try {
-    merged = JSON.parse(readFileSync(scratchAbs, 'utf8')) as AuthoredScratch
+    existing = JSON.parse(readFileSync(scratchAbs, 'utf8')) as AuthoredScratch
   } catch {
-    // Unreadable: this pass's answers alone; the merged scratch would add the earlier pass's.
+    existing = undefined
   }
-  reportUnexplainedReads(cwd, merged)
+  const merged = mergeAuthored(existing, result.data)
+  const ctx = loadAuthorContext(cwd)
+  const misNotRead = (merged.docsRead ?? []).flatMap((d) => {
+    const source = d.reason === NOT_READ_REASON && ctx?.sources.get(canonicalizeInstructionPath(d.path))
+    return source ? [`  ${d.path} — opened by [${source}]`] : []
+  })
+  if (misNotRead.length) {
+    fail(
+      `refusing '${NOT_READ_REASON}' for doc(s) the Read tool opened; subagent reads count as the session's:\n` +
+        `${misNotRead.join('\n')}\nGive each a reason and a useful verdict instead.`,
+    )
+  }
+  // Its existence is the wrap-up signal the landing path gates on.
+  mkdirSync(dirname(scratchAbs), { recursive: true })
+  writeFileSync(scratchAbs, JSON.stringify(merged, null, 2))
+  console.log(`✓ authored scratch written → ${SCRATCH_FILE}`)
+  // The lander's refusal reaches only the hook's stderr, so say it here (issue #1784).
+  let hold: HandlerResult | null | undefined
+  try {
+    hold = ctx && mainSchemaRefusal(stitch(merged, ctx.trace), { remote: 'origin', mainSchemaFn: opts.mainSchemaFn ?? fetchedMainSchemaErrors })
+  } catch {
+    hold = null // a check that can't run counts as `main` unreadable: authoring never fails on it
+  }
+  if (hold) {
+    console.log(`  the Stop hook will hold it, not commit it this turn: ${hold.detail}`)
+    console.log('  It lands on the first turn that ends after that merge, so stay subscribed to the schema PR.')
+  } else {
+    console.log('  the Stop hook will stitch it with the derived trace and commit, live, at the end of this turn.')
+  }
+  reportUnexplainedReads(ctx, merged)
 }
 
 function readStdin(): string {

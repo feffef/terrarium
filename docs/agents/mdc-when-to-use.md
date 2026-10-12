@@ -20,12 +20,7 @@ Its job: **let authors compose from a palette of components without writing Vue
 or leaving the Markdown file.** The lens for every decision below is
 *author-facing, in-prose composition*.
 
-Syntax: inline components (single `:`); block components (`::`, needing a
-closing `::`; the failure mode of a missing one is in §13); inline `{}` props; a
-YAML `---` block for props (nested arrays of objects fit, no escaping); default
-and named `#slots` (slot content is rendered Markdown); nesting (more colons per
-depth, indentation-significant). Full reference with citations:
-`docs/research/nuxt-content-review-grounding.md` §13.
+Syntax and component resolution, with citations (including the missing-closing-`::` failure mode): `docs/research/nuxt-content-review-grounding.md` §13.
 
 Cost in a layer without MDC: a `components/content/` dir and a new SFC
 (mechanics: §13). The journal layer keeps its components in a *prefixed*
