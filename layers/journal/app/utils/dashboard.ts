@@ -323,10 +323,8 @@ export function ideaGrillPrompt(item: NoteItem): string {
 }
 
 // ── Session summary paragraphs ───────────────────────────
-// A log's `summary` is one long string, often over 1,000 characters; rendered
-// whole it reads as a wall. Split on existing line breaks first, then pack
-// sentences into paragraphs of about SUMMARY_PARA_CHARS. Display only: the
-// stored text is untouched.
+// A log's `summary` is one string, often over 1,000 characters, and reads as a
+// wall when rendered whole. Display only: the stored text is untouched.
 const SUMMARY_PARA_CHARS = 380
 export function summaryParagraphs(text: string): string[] {
   const out: string[] = []

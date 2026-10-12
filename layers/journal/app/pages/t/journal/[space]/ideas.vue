@@ -47,10 +47,10 @@ useSeoMeta({ title: () => `${PAGE_TITLE} · journal/${space}` })
         agents' own working notes, unedited.
       </p>
 
-      <p v-if="notes.ideas.length || notes.learnings.length" class="jump">
-        Jump to: <a href="#ideas-h">{{ notes.ideas.length }} ideas</a> ·
-        <a href="#learnings-h">{{ notes.learnings.length }} learnings</a>
-      </p>
+      <nav v-if="notes.ideas.length || notes.learnings.length" class="jump" aria-label="Jump to a section">
+        Jump to: <a href="#ideas-h">{{ countOf(notes.ideas.length, 'idea') }}</a> ·
+        <a href="#learnings-h">{{ countOf(notes.learnings.length, 'learning') }}</a>
+      </nav>
 
       <h2 id="ideas-h">Ideas <span class="n">{{ notes.ideas.length }}</span></h2>
       <ol v-if="notes.ideas.length" class="notes">

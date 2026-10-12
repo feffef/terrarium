@@ -48,10 +48,12 @@ defineProps<{
         </div>
       </template>
 
-      <p v-else-if="uses" class="chips-note">Number after a name: sessions that used it. No number: not used in this Space.</p>
-      <div v-if="g.importance === 'supporting' || g.importance === 'peripheral'" class="chips-inline">
-        <span v-for="s in g.skills" :key="s.name" class="chip"><JournalSkillName :name="s.name" /><span v-if="uses && uses[s.name]" class="chip-uses" :title="`used in ${countOf(uses[s.name] ?? 0, 'session')}`"> · {{ uses[s.name] }}</span></span>
-      </div>
+      <template v-else>
+        <p v-if="uses && g.importance === 'supporting'" class="chips-note">Number after a name: sessions that used it. No number: not used in this Space.</p>
+        <div class="chips-inline">
+          <span v-for="s in g.skills" :key="s.name" class="chip"><JournalSkillName :name="s.name" /><span v-if="uses && uses[s.name]" class="chip-uses" :title="`used in ${countOf(uses[s.name] ?? 0, 'session')}`"> · {{ uses[s.name] }}</span></span>
+        </div>
+      </template>
     </div>
   </div>
 </template>
