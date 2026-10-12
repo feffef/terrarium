@@ -184,7 +184,7 @@ the merge needs a human), except a guard fix: `docs/agents/guards.md` routes
 it. Otherwise it ages out of the window untracked, and the next run rediscovers
 and re-drops it.
 
-A **simple** selection is dispatched, reviewed and merged inside this same run (§5–§6), so an issue would only be closed by its own merge minutes later, leaving nothing durable. **Skip the issue.** Carry the same problem/evidence/recommended-fix into §5's dispatch brief and have the impl agent write it into the PR description; the merged PR is the record.
+A **simple** selection is dispatched, reviewed and merged inside this same run (§5–§6), so an issue would only be closed by its own merge minutes later, leaving nothing durable. **Skip the issue.** Carry the same problem/evidence/recommended-fix into §5's dispatch brief and into the PR description you write (§6); the merged PR is the record.
 
 **Before recommending "add a line to doc X", check that anyone reads doc X.**
 `pnpm exec tsx scripts/audit-skills.ts` reports `docReadCounts` — path → how many
@@ -240,49 +240,45 @@ post-dispatch check. Run at most 2 impl agents' full gates concurrently
   one cites its issue and `Closes` it.
 
 Every agent's brief is self-contained: read the issue(s), branch from `origin/main`,
-implement the **recommended** option only, clear the **safety gate**, push, and open
-a **gated PR**. The brief must instruct the agent to run `pnpm typecheck` itself
-(not a bare `tsc --noEmit`, which skips this repo's `nuxt typecheck` step and can
+implement the **recommended** option only, clear the **safety gate**, and commit,
+unpushed (`dispatch-subagents` §3, "Scope and trust"). The brief must instruct
+the agent to run `pnpm typecheck` itself (not a bare `tsc --noEmit`, which skips this repo's `nuxt typecheck` step and can
 pass clean while `pnpm typecheck` still catches real errors) on touched files
-before pushing — not just its targeted test file(s) — so a type error surfaces
+before committing — not just its targeted test file(s) — so a type error surfaces
 locally instead of on the next full CI gate round-trip. The impl agent **never
 merges and never enables auto-merge**
-(ADR-0003) — it hands the open PR back to you. You are the reviewer (§6). The
-impl agent also must **not call `subscribe_pr_activity`** on the PR it opens: the orchestrator (§6) owns that PR's lifecycle and subscribes when needed. A `subscribe_pr_activity` webhook reaching the orchestrating session when that PR opens is **expected, not a brief violation**; don't read it as the impl agent disobeying, and don't log it as a fresh friction (#428).
+(ADR-0003) — it hands the committed branch back to you. You are the reviewer (§6)
+and open the PR.
 **Dispatched worktree-isolated impl agents must NOT self-invoke `close-session`
 or `log-session`** — see `close-session/SKILL.md` for why and its mechanical
 enforcement.
 
-Done when every selection and the ledger edit are covered by a pushed gated PR (every simple doc fix and the ledger edit by
-the one grouped PR, each other selection by its own), gate green, awaiting your
-review — a hard selection's PR cites and `Closes` its issue; a simple selection's
-PR carries its problem/evidence/fix inline with no issue behind it.
-
-**At PR-open (the dispatched PRs are pushed), invoke `close-session`** — your first log (`in-review`), before you review and merge in §6. This `in-review` log is a safety net for review/merge *not* finishing in the same turn (session limits, waiting on CI, etc.) — when every dispatched PR merges before the closing turn ends, skipping straight to one final `completed`-status close in §6 is fine, not a deviation.
+Done when every selection and the ledger edit are covered by a committed branch
+(every simple doc fix and the ledger edit by the one grouped branch, each other
+selection by its own), gate green, awaiting your review.
 
 ## 6. Review and merge — autonomously, escalate only high-risk
 
-Once an impl agent hands back an open PR, **you review it** — you are the ADR-0003
-review-agent, not a bystander waiting for a human. For each PR:
+Once an impl agent hands back its branch, **you review it** — you are the ADR-0003
+review-agent, not a bystander waiting for a human. For each branch:
 
 1. **Confirm the gate is green** (ADR-0004: build / validate / isolation / smoke).
-   A red gate is never mergeable — bounce it back to the agent or fix it yourself.
-2. **Code-review the diff** — run `/code-review` (or review directly for a small
-   doc PR). Check it implements the issue's recommended option, matches repo
+   A red gate is never mergeable — resume the agent to fix it.
+2. **Code-review the diff** before the first push, per `dispatch-subagents` §3
+   ("Scope and trust"). Check it implements the issue's recommended option, matches repo
    conventions, and confines itself to a safe surface. **For a doc PR, also
    confirm it clears `audit-docs`' house rules** (§5): a fix that would itself be
-   a future audit-docs finding is amended or bounced back, not merged.
+   a future audit-docs finding is bounced back, not merged.
+3. **Have the agent push, then open the PR.** A hard selection's PR cites and
+   `Closes` its issue; a simple selection's PR carries its problem/evidence/fix
+   inline. At the first PR open, invoke `close-session` (`in-review`).
    **Always post the review result as a PR comment before merging, with no
    exception** — see `docs/agents/pr-workflow.md`'s recipe (step 4) for the
    rule and why it matters.
-3. **Decide, and act:**
+4. **Decide, and act:**
    - **Merge right away** when the review is clean and the change is low-risk —
      follow `docs/agents/pr-workflow.md`'s recipe; this tier merges only by
      your own judgement call, on top of that mechanical recipe.
-   - **Amend then merge** when the only gaps are small — push the fixup yourself,
-     re-run the gate, then merge. If your amendment **fundamentally changes** what
-     the PR does, update the PR title/description in the same push
-     (`docs/agents/pr-workflow.md` — a stale description is a defect).
    - **Escalate to a human** only when the change is **genuinely high-risk** per
      ADR-0004 (its rule's Human-only list — same test as the safe-surface filter in
      §3, just applied to the actual diff instead of the issue's stated scope).

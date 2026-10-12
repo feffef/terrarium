@@ -27,18 +27,18 @@ boundary, not a bug** — see `guest-intake`'s Skill for the full rationale
 **It composes existing Skills — never restate them.** The dispatch-and-review
 machinery is `frictions-to-fixes` §5–§6: a **Sonnet** impl agent in its **own git
 worktree** that branches from `origin/main`, implements, clears the **safety
-gate**, pushes, and opens a **gated PR** — never merging, never
-enabling auto-merge, never self-invoking `close-session`/`log-session`, and
-committing + pushing before it stops even mid-gate (read `frictions-to-fixes`
-§5 and the `dispatch-subagents` Skill for the exact mechanics). Review is
-`/code-review`; the land recipe is `docs/agents/pr-workflow.md`. This Skill adds
+gate**, and commits — never merging, never enabling auto-merge, never
+self-invoking `close-session`/`log-session`, and committing before it stops
+even mid-gate (read `frictions-to-fixes` §5 and the `dispatch-subagents` Skill
+for the exact mechanics). It pushes only after your `/code-review`; the land
+recipe is `docs/agents/pr-workflow.md`. This Skill adds
 only what a guest-demo build needs — and one hard subtraction.
 
 ## The one hard subtraction — it does NOT merge
 
 `frictions-to-fixes` reviews **and merges** its own dispatched PRs. This Skill
 does **not**. Every guest-driven PR is gated and **owner-merged** (ADR-0020 rule
-3 / ADR-0004 / ADR-0023): it opens the PR, reviews it, posts the review verdict
+3 / ADR-0004 / ADR-0023): it reviews the branch, opens the PR, posts the review verdict
 as a PR comment, comments on the issue that the story awaits the owner's merge,
 and **stops**. It never calls `merge_pull_request` and never enables
 auto-merge — the owner is the sole merge authority for guest work.
@@ -85,12 +85,14 @@ building against the same issue (#555) — before a human intervened.
 2. **Claim the marker, then dispatch one Sonnet impl agent** (`model: sonnet`,
    `isolation: 'worktree'`) with a self-contained brief per `dispatch-subagents`,
    `frictions-to-fixes` §5, and the prohibitions above: read the issue, branch from `origin/main`,
-   implement, clear the gate, push, and open a **gated PR** that `Closes #N` —
-   then stop and hand back rather than touch any human-only surface.
-3. **Review on a different model.** The impl is Sonnet; run `/code-review` on the
-   orchestrator's own model (a distinct model, as the demo requires). **Post the
-   verdict as a PR comment — every time, even when clean** — so the audit trail
-   lives on the PR (`docs/agents/pr-workflow.md`).
+   implement, clear the gate, and commit, unpushed — then stop and hand back
+   rather than touch any human-only surface.
+3. **Review on a different model.** The impl is Sonnet; run `/code-review` in
+   its worktree on the orchestrator's own model (a distinct model, as the demo
+   requires), per `dispatch-subagents` §3 ("Scope and trust"). Once clean, the
+   agent pushes and you open a **gated PR** that `Closes #N`. **Post the verdict as a PR
+   comment — every time, even when clean** — so the audit trail lives on the PR
+   (`docs/agents/pr-workflow.md`).
 4. **Hand it to the owner.** Comment on the issue: the story is built, PR #N is
    open, and it is **waiting for the owner to merge** — dropping the marker in
    the same `issue_write` call. Subscribe to the PR's activity to babysit it to

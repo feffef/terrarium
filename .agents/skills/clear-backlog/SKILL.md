@@ -8,9 +8,9 @@ Take every open issue to a merged PR, a closed issue, or a decision only the
 owner can make. The owner is present twice: at the start and for one
 **grilling** in the middle. Everything else runs unattended.
 
-The chat holds only questions for the owner. Handle PR events, task
-notifications and finished agents silently. When you wait on an answer, the
-questions are your whole message.
+The chat holds only questions for the owner and the final report. Handle PR
+events, task notifications and finished agents silently. When you wait on an
+answer, the questions are your whole message.
 
 This Skill only orders other Skills and passes work between them. Their rules
 live in those Skills. A phase is done only when its **done** line holds.
@@ -23,9 +23,12 @@ If `git rev-parse --is-shallow-repository` prints `true`, run
 `git fetch --unshallow` first: triage reads the history.
 
 `auto-triage` is user-invoked, so read `.agents/skills/auto-triage/SKILL.md`
-and run its sweep in `full-sweep` mode. The owner starting this run is the
-human direction that mode needs. Re-checking older issues is the point. Add
-to each per-issue brief:
+and run its sweep in its default mode, which leaves out older issues nobody
+has touched since the last triage. Add every open `ready-for-agent` issue to
+its set: re-check its brief, then build it. Only when that combined set is
+empty at the start of the run, run the sweep in `full-sweep` mode instead; the
+owner starting this run is the human direction that mode needs. Add to
+each per-issue brief:
 
 - Give a `ready-for-agent` brief CLAUDE.md's premise check. A wrong premise
   costs a whole build-and-review cycle.
@@ -57,9 +60,9 @@ Send a push notification with the `PushNotification` tool:
 `grilling ready: N questions`. Then run the `grilling` Skill on one list.
 Where its format differs, this list wins, and builds keep running:
 
-- Number the questions `Q1`, `Q2`, … across the whole run; a follow-up round
-  continues the count. Label every option `a)`, `b)`, `c)`, so the owner can
-  answer `1a, 2c, 3b`.
+- Keep the `Q` numbering running across the whole run: follow-up rounds and
+  §3 interrupts continue the count. Label every option `a)`, `b)`, `c)`, so
+  the owner can answer `1a, 2c, 3b`.
 - Each question gives one line on what the issue is and one on the choice,
   then the options, your pick and why. Flag a pick you changed from the
   subagent's. The owner never needs to open a ticket.
@@ -84,12 +87,11 @@ closed, or parked by the owner (deferred, or waiting on a condition).
 
 ## 3. Build
 
-Every change is built by a build agent through `dispatch-subagents`, one
-worktree per planned branch, based on `origin/main`. Your own checkout stays
-clean: you orchestrate. Dispatch a simple, mechanical change with
-`model: "sonnet"`. When a closed, unmerged PR already implements the agreed
-pick, cherry-pick its commits onto the new branch and link it from the PR.
-Each build agent pushes its branch and reports any Human-only path it
+Build agents do all the building, through `dispatch-subagents`: one worktree
+per planned branch, based on `origin/main`; you orchestrate. A change inside
+that Skill's "simple" ceiling gets `model: "sonnet"`. When a closed, unmerged
+PR already implements the agreed pick, the build agent cherry-picks its
+commits. Each build agent reports its decisions and any Human-only path it
 touched. Dispatch in waves of at most 3 build agents, with at most 2 of them
 running the full gate.
 
@@ -103,32 +105,31 @@ running the full gate.
 - reversing a grilling answer
 
 Pause just that branch, send a push notification, and resume it on the answer.
-The rest keep going. Any other decision the agent makes itself, and records
-in the PR description.
+The rest keep going. Any other decision the agent makes itself.
 
-**Done:** every startable `ready-for-agent` issue has a pushed branch with a
-green `pnpm gate:scoped`. An issue that can't start yet (time-gated, or its
+**Done:** every startable `ready-for-agent` issue has a committed branch with
+a green `pnpm gate:scoped`. An issue that can't start yet (time-gated, or its
 output is not a PR) goes to the report.
 
 ## 4. Review
 
-Invoke the `code-review` Skill on every branch, with simplicity as the focus,
-before its PR exists. Resume the build agent that wrote the branch
-(`dispatch-subagents` §6) to fix the findings, then review again. Check every
-fix yourself before you report it: past runs relayed subagent claims
+Review each branch per `dispatch-subagents` §3 ("Scope and trust"): every
+round invokes the `code-review` Skill, with simplicity as the focus. Check
+every fix yourself before you report it: past runs relayed subagent claims
 unchecked.
 
-**Done:** a review round finds only judgement calls not worth fixing. Only
-then open the PR, so every PR the owner sees is reviewed.
+**Done:** a review round finds only judgement calls not worth fixing. Then
+the build agent pushes and you open the PR, with the agent's decisions and
+any cherry-picked PR in its description.
 
 ## 5. Land and report
 
-Land each PR with `docs/agents/pr-workflow.md`, including its check before a
-follow-up push. A PR built from a Public issue waits for a human merge
-(ADR-0020 rule 3), even though `scripts/merge-pr.ts` would accept it. Merge the rest where `merge-pr.ts` allows.
+Land each PR with `docs/agents/pr-workflow.md`; its build agent makes any
+later fix. A PR built from a Public issue waits for a human merge (ADR-0020
+rule 3), even though `scripts/merge-pr.ts` would accept it. Merge the rest
+where `merge-pr.ts` allows.
 
 **Done:** every PR is merged or waiting for a human merge.
 
 Report one line per issue: `#N | outcome | PR or "no PR: why" | merged / waits
-for you (why)`. Invoke `close-session` when you open the first PR, and again
-after the report.
+for you (why)`. Then run `close-session`.

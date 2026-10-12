@@ -51,8 +51,8 @@ every line that applies.
   change as the user's edit (issue #887).
 
 **Stranding**
-- Commit and push before stopping, even mid-gate. An agent can end or be killed
-  at any time.
+- Commit before stopping, even mid-gate: an agent can end or be killed at any
+  time. Push once its branch is reviewed ("Scope and trust" below).
 - Long runs bank progress to disk after each step. The harness refuses a
   subagent's Write of report or findings files, so bank to logs it may write and
   have it return structured results in its final message for you to save.
@@ -74,7 +74,10 @@ every line that applies.
 **Scope and trust**
 - Impl agents never call `merge-pr.ts`, whatever pre-authorization the brief
   carries: the auto-mode classifier judges your session, not theirs. They hand
-  back a pushed, green PR and you merge (`docs/agents/pr-workflow.md`).
+  back a committed, green branch, unpushed. You run `/code-review` on its
+  worktree (`pr-workflow.md`, "Review before the first push"), resume the
+  agent for every fix, later ones included, and review again; it pushes once a
+  review is clean, and you open and land the PR (`pr-workflow.md`).
 - Impl agents do not run `close-session`/`log-session` (guard-enforced), and
   cannot spawn subagents: run `/code-review` and any nested dispatch yourself.
 - Give a size ceiling for a "simple" fix ("under ~50 lines, one new test") and
@@ -103,10 +106,12 @@ adjacent regions conflict silently (issue #603).
 
 ## 5. Verify nothing is stranded
 
-Run **`pnpm check:worktrees`**. It reads git's own worktree list, so it catches a
-subagent that died without returning, and exits non-zero for any linked worktree
-left uncommitted or unpushed (`EXCUSALS` in the script lists the exceptions). It
-cannot prevent an abort, only make the damage visible. Done when it exits 0.
+Before you finish, push every reviewed branch, remove the worktree of any branch
+you dropped, and run **`pnpm check:worktrees`**. It reads git's own worktree
+list, so it catches a subagent that died without returning, and exits non-zero
+for any linked worktree left uncommitted or unpushed (`EXCUSALS` in the script
+lists the exceptions). It cannot prevent an abort, only make the damage
+visible. Done when it exits 0.
 
 If you `cd`'d into a subagent's worktree, `cd` back (or use absolute paths) and
 re-check `git status` at the root: a closure Stop-hook flag may belong to that
@@ -115,4 +120,6 @@ worktree, not your own tree.
 ## 6. Resume a stopped subagent; never re-dispatch it
 
 Use `SendMessage` to its agent id. A fresh `Agent` call gets a brand-new checkout
-with no memory, risking a duplicate branch or lost local commits.
+with no memory, risking a duplicate branch or lost local commits. When its
+branch already has a PR, tell it to check the PR is unmerged before it pushes
+(`pr-workflow.md`).

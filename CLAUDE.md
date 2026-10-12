@@ -27,7 +27,8 @@ act, once per session.
   `docs/agents/git-conventions.md`.
 - **Before your first GitHub operation** (`mcp__github__*` tool or `gh`):
   `docs/agents/github-integration.md`.
-- **Before you open, update or merge a PR:** `docs/agents/pr-workflow.md`.
+- **Before you push a branch, or open, update or merge a PR:**
+  `docs/agents/pr-workflow.md`.
 - **Before you file, triage or label an issue:** `docs/agents/issue-tracker.md`
   and `docs/agents/triage-labels.md`.
 - **Before you act on an issue or PR from someone without write access, or
