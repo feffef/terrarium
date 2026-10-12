@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_017NBxJhtBSd9AoCwTzsg6pM
 startedAt: 2026-10-12T17:17:36Z
-endedAt: 2026-10-12T18:07:56Z
+endedAt: 2026-10-12T18:28:49Z
 kind: interactive
 goal: Clear the issue backlog (clear-backlog run)
 status: in-review
-outcome: 17 issues triaged; 6 PRs merged, 3 reviewed and waiting for the owner's merge
-summary: "The owner started the clear-backlog Skill (human-instructed) and answered two grilling rounds in chat; every build below follows an owner answer. Phase 1 dispatched one triage subagent per open issue (17). Most were owner-reserved or deferred ready-for-human items; stand-in dry-run answers were treated as non-binding and re-asked. Grilling answers were recorded on each issue whose state changed. Built and merged: #1840 (SessionStart unshallow after install, #1835; merged by the owner before I had reviewed it, review posted after), #1841 (midden-catalogue waits for the owner, #1802), #1842 (Session started by another Session is autonomous, #1816), #1843 (prune-trial stays on the session branch, #1628), #1848 (docs: install first in a worktree; real hook skip condition, #1834). Waiting for a human merge after two-axis review: #1845 (2-slot Heavy-tier lock in gate:scoped, #1800, cherry-picked from dry-run PR #1828 plus review fixes and a live 3-process/SIGKILL check), #1847 (retire the rulebook migration table, #1836), #1849 (Skill-only helper scripts moved beside their Skill; gate skips build+e2e for them, #1603). Filed #1844 (review-before-self-merge rule, owner asked) and #1846 (salvaged unbuilt checks, owner asked). Closed #1761 as not planned per the owner. Investigations: #1834's trailer miss never happened (the subagent wrote the trailer itself); #1786's shell-read credits were true reads, and the owner deferred the fix to rethink per-subagent logs. Deferred by the owner: #1552, #1745, #1819, #1689, #1846. Blocked outside chat: #1778 (date), #1551 and #1549 (upstream), #1628 (owner deletes the stray branch). The owner found the run hard to manage: questions were buried among status updates."
+outcome: 17 issues triaged; 8 PRs merged, 1 (#1850) reviewed and waiting for the owner's merge
+summary: "The owner started the clear-backlog Skill (human-instructed) and answered two grilling rounds in chat; every build below follows an owner answer. Phase 1 dispatched one triage subagent per open issue (17). Most were owner-reserved or deferred ready-for-human items; stand-in dry-run answers were treated as non-binding and re-asked. Grilling answers were recorded on each issue whose state changed. Built and merged: #1840 (SessionStart unshallow after install, #1835; merged by the owner before I had reviewed it, review posted after), #1841 (midden-catalogue waits for the owner, #1802), #1842 (Session started by another Session is autonomous, #1816), #1843 (prune-trial stays on the session branch, #1628), #1848 (docs: install first in a worktree; real hook skip condition, #1834). Waiting for a human merge after two-axis review: #1845 (2-slot Heavy-tier lock in gate:scoped, #1800, cherry-picked from dry-run PR #1828 plus review fixes and a live 3-process/SIGKILL check), #1847 (retire the rulebook migration table, #1836), #1849 (Skill-only helper scripts moved beside their Skill; gate skips build+e2e for them, #1603); all three were later merged by the owner. #1850 re-lands an interaction fix between #1845 and #1849 (a Skill-only run takes no Heavy slot; owner accepted) and waits for the owner's merge. Filed #1844 (review-before-self-merge rule, owner asked) and #1846 (salvaged unbuilt checks, owner asked). Closed #1761 as not planned per the owner. Investigations: #1834's trailer miss never happened (the subagent wrote the trailer itself); #1786's shell-read credits were true reads, and the owner deferred the fix to rethink per-subagent logs. Deferred by the owner: #1552, #1745, #1819, #1689, #1846. Blocked outside chat: #1778 (date), #1551 and #1549 (upstream), #1628 (owner deletes the stray branch). The owner found the run hard to manage: questions were buried among status updates."
 prs:
   - "1840"
   - "1841"
@@ -16,6 +16,7 @@ prs:
   - "1847"
   - "1848"
   - "1849"
+  - "1850"
 docsRead:
   - path: CONTEXT-MAP.md
     reason: context index at start
@@ -97,6 +98,10 @@ docsRead:
     useful: partly
   - path: .claude/settings.json
     reason: (read before editing)
+  - path: .claude/worktrees/agent-afbf99ade945f8484/scripts/gate.ts
+    reason: (read before editing)
+  - path: /home/user/wt-slot/scripts/gate.ts
+    reason: (read before editing)
   - path: .githooks/commit-msg
     reason: (no reason given)
   - path: layers/journal/content/current/sessions/2026-10-12-session_01La82mxqduxHnRS9jRfNHmU.yml
@@ -167,28 +172,36 @@ frictions:
   - description: Read diffs and settings with grep/sed/git show in Bash rather than the Read tool, so path rules may not have loaded.
     solution: Use Read for repo files; Bash only for git diffs.
     severity: nit
-durationSec: 3020
+  - description: "Pushed a follow-up fix to #1849's branch after the owner had merged it, breaking pr-workflow's check-before-follow-up rule; the fix never reached main and was re-landed as #1850."
+    solution: Before any push to a PR branch, check with pull_request_read that the PR is still open.
+    severity: moderate
+  - description: "Pushed and opened #1850 before its review ran, so an unreviewed version was visible and then changed twice; the owner flagged the confusion."
+    solution: Review the local worktree first; push and open the PR once the review rounds are clean.
+    severity: moderate
+durationSec: 4274
 models:
-  claude-opus-5-5: 292
+  claude-opus-5-5: 368
 toolCounts:
-  Bash: 63
-  Read: 16
+  Bash: 77
+  Read: 19
   Write: 3
-  Agent: 25
-  Edit: 2
+  Agent: 29
+  Edit: 5
   ToolSearch: 3
   PushNotification: 1
-  mcp__github__create_pull_request: 8
-  mcp__claude-code-remote__subscribe_pr_activity: 8
+  mcp__github__create_pull_request: 9
+  mcp__claude-code-remote__subscribe_pr_activity: 9
   mcp__github__issue_write: 11
-  mcp__github__add_issue_comment: 19
-  mcp__github__update_pull_request: 2
-  ReadNotifications: 8
+  mcp__github__add_issue_comment: 22
+  mcp__github__update_pull_request: 3
+  ReadNotifications: 18
   mcp__claude-code-remote__list_triggers: 1
   SendMessage: 1
   Skill: 2
 filesEdited:
   - .claude/settings.json
+  - .claude/worktrees/agent-afbf99ade945f8484/scripts/gate.ts
+  - /home/user/wt-slot/scripts/gate.ts
   - scripts/github-provenance-guard.ts
   - .agents/skills/audit-docs/SKILL.md
   - .agents/skills/prune-trial/SKILL.md
@@ -212,9 +225,9 @@ rulesLoaded:
   - .claude/rules/guards.md
   - .claude/rules/adr-0018.md
   - .claude/rules/adr-0012.md
+  - .claude/rules/adr-0026.md
   - .claude/rules/tenant-layers.md
   - .claude/rules/adr-0008.md
-  - .claude/rules/adr-0026.md
   - .claude/rules/adr-0015.md
   - .claude/rules/adr-0011.md
   - .claude/rules/adr-0025.md
@@ -374,6 +387,14 @@ subagents:
     task: "Standards review PR #1603"
   - type: general-purpose
     task: "Spec review PR #1603"
+  - type: general-purpose
+    task: Standards review slot fix
+  - type: general-purpose
+    task: Spec review slot fix
+  - type: general-purpose
+    task: "Standards review #1850 round 2"
+  - type: general-purpose
+    task: "Spec review #1850 round 2"
 gitBranch: ccr-92a30d5b-oifyog
 entrypoint: remote_mobile
 cliVersion: 2.1.296
