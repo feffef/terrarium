@@ -1,11 +1,11 @@
 schemaVersion: 1
 session: session_0147GPfMLJfFV6JbmC4HZGHb
 startedAt: 2026-10-12T13:27:53Z
-endedAt: 2026-10-12T13:36:07Z
+endedAt: 2026-10-12T13:37:41Z
 kind: autonomous
 goal: "Scheduled prune trial: judge open trials, prune one problem"
-status: in-review
-outcome: Rulebook-table trial judged and deleted; ADR-0009 shell-read amendments folded (-49 lines), PR open
+status: completed
+outcome: Rulebook-table trial judged and deleted; ADR-0009 shell-read amendments folded (-49 lines), PR 1813 merged
 summary: "Scheduled run, no human prompt. Judged the rulebook-table trial (landed 2026-10-09): no Friction names it and nothing was filed against it, so it holds and the entry is deleted. The other two open trials were not yet judgeable. The criterion-1 search subagent found the ADR-0009 shell-read amendment chain (four stacked, partly superseded amendments; open regression #1786). I folded them into one section, keeping every decision and the protected-main amendment, restamped the rule hash, and added a ledger entry. A Sonnet probe pinned to the post-prune SHA answered four situations correctly, so proven is true. gate:scoped passed. PR #1813 opened, verdict commented; it merges with --prune-trial once CI is green. All work was agent-initiated by the schedule."
 prs:
   - "1813"
@@ -61,11 +61,11 @@ frictions:
   - description: "SHELL-READ-DETECTION false positive: .agents/skills/dispatch-subagents/SKILL.md was credited from shell output, but the session marked it (not read)"
     solution: Find the crediting command in the transcript and tighten scripts/shell-reads.ts
     severity: moderate
-durationSec: 494
+durationSec: 588
 models:
-  claude-sonnet-5-5: 68
+  claude-sonnet-5-5: 78
 toolCounts:
-  Bash: 20
+  Bash: 22
   Read: 8
   mcp__github__search_issues: 1
   Skill: 3
@@ -77,6 +77,8 @@ toolCounts:
   mcp__github__add_issue_comment: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
   mcp__github__pull_request_read: 1
+  ReadNotifications: 2
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 rulesLoaded:
   - .claude/rules/adr-0018.md
   - .claude/rules/adr-0029.md
