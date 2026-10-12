@@ -108,7 +108,7 @@ trials:
         - output-matching and merged-read amendments
         - SHELL-READ-DETECTION
     opened: 2026-10-12
-    proven: false
+    proven: true
     check: >
       Damage is a major or blocker Friction where a session mis-authors its
       docsRead (corrects a detector error silently, or marks a doc it read
