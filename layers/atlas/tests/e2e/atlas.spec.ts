@@ -1,7 +1,7 @@
 // L2 e2e assertions specific to the **atlas** Tenant. Serves the gate's build via
 // `setupL2()` and never builds (ADR-0004 amendment, tests/README.md).
 //
-// The entry-route sweep in `tests/e2e/smoke.spec.ts` only reaches each biome's
+// The entry-route sweep in `tests/e2e/entry-routes-*.spec.ts` only reaches each biome's
 // Space landing (`/t/atlas/<biome>`) — a Specimen entry (`/t/atlas/<biome>/<slug>`)
 // is a deeper route the sweep never visits, and it's exactly where
 // `AtlasSpecimenPlate` and its sibling components render (issue #212's origin,

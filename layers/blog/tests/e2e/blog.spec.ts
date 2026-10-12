@@ -78,7 +78,7 @@ async function expectDavidAbout(page: Page, timeout: number): Promise<void> {
 describe('blog Tenant', async () => {
   await setupL2()
 
-  // The entry-route sweep in `tests/e2e/smoke.spec.ts` only reaches each
+  // The entry-route sweep in `tests/e2e/entry-routes-*.spec.ts` only reaches each
   // Persona's landing (`/t/blog/<persona>`) — an individual post is a deeper
   // route the sweep never visits. Cover one representative post here so a
   // typo'd/renamed auto-import component on that page can't ship silently

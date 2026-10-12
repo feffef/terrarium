@@ -1,5 +1,5 @@
-// Shared L2 e2e support, imported by the Platform smoke spec
-// (`tests/e2e/smoke.spec.ts`) and by each Tenant's e2e spec
+// Shared L2 e2e support, imported by the Platform specs
+// (`tests/e2e/*.spec.ts`) and by each Tenant's e2e spec
 // (`layers/<tenant>/tests/e2e/<tenant>.spec.ts`). Not a spec itself (no `.spec.ts`
 // suffix), so vitest never collects it. Every spec calls `setupL2()`, which
 // serves the build that the e2e project's globalSetup made sure exists

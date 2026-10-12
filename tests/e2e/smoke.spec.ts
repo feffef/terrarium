@@ -1,48 +1,24 @@
-// L2 — Smoke render (ADR-0004): every (Tenant, Space) entry route returns 200,
-// renders content, and — in a REAL browser — hydrates with no console/page
-// errors. The target list is derived at build time from the manifests
-// (ADR-0014), so new Spaces are covered automatically.
-//
-// This file is the Platform spec: the cross-Tenant entry-route sweep, the root
-// page and the mermaid sweep. Tenant-SPECIFIC L2 assertions live in each layer
-// (`layers/<tenant>/tests/e2e/<tenant>.spec.ts`).
+// L2 — Smoke render (ADR-0004): the Platform's root page and mermaid sweep, in a
+// REAL browser. The cross-Tenant entry-route sweep is in
+// entry-routes-even.spec.ts and entry-routes-odd.spec.ts, so the three run in
+// parallel. The mermaid target list is derived from the manifests (ADR-0014),
+// so new pages are covered automatically. Tenant-SPECIFIC L2 assertions live in
+// each layer (`layers/<tenant>/tests/e2e/<tenant>.spec.ts`).
 //
 // Every e2e spec calls `setupL2()` and never builds. The one build is the gate's
 // `pnpm build`; the e2e project's globalSetup (tests/support/e2e-global-setup.ts)
 // reuses it and builds only if `.output` is stale (ADR-0004 amendment; tests/README.md).
-//
-// A real browser (`createPage`) loads each route: the server-rendered document
-// is checked from the navigation's response, and the client bundle actually
-// executes. That is the half CLAUDE.md warns a string match on SSR HTML cannot
-// prove — uncaught errors and hydration throws surface as console.error /
-// pageerror, which the listeners assert stay empty.
 import { describe, expect, it } from 'vitest'
 import { $fetch, createPage, fetch, url } from '@nuxt/test-utils/e2e'
-import { attrs, entryRoutes, expectCleanHydration, expectHydrated, mermaidPageRoutes, setupL2, withRendered } from '../support/e2e.ts'
+import { attrs, expectCleanHydration, expectHydrated, mermaidPageRoutes, setupL2, withRendered } from '../support/e2e.ts'
 import { CONDITION_GRADES } from '../../layers/midden/app/utils/condition.ts'
 
 describe('L2 smoke render', async () => {
   await setupL2()
 
-  // ── Platform: every (Tenant, Space) entry route ─────────────────────────────
-  describe('entry routes', () => {
-    // Every entry route is loaded in Chromium. The navigation's server-rendered
-    // document must be 2xx with an <h1> and not the 404 page; then the client
-    // bundle runs and we assert (a) an <h1> exists in the *rendered DOM*, (b)
-    // nothing logged a console error or threw during hydration, and (c) no
-    // unresolved auto-import component silently rendered as an unknown custom
-    // element (issue #212) — vue-tsc and (a)/(b) all stay green on that failure
-    // mode, so it needs its own assertion.
-    for (const route of entryRoutes) {
-      it(`hydrates ${route} in a browser with no console/page errors`, async () => {
-        await expectCleanHydration(route)
-      })
-    }
-  })
-
   // ── Platform: the root index page (`/`) ─────────────────────────────────────
   // Not a Tenant/Space route, so — like a Tenant-root front door (ADR-0016) —
-  // it's outside the manifest-derived `entryRoutes` sweep above and asserted
+  // it's outside the manifest-derived `entryRoutes` sweep (entry-routes-*.spec.ts) and asserted
   // here directly.
   describe('root index page', () => {
     // Card order is asserted by the title-link test below; raw-HTML indexOf would

@@ -1,7 +1,7 @@
 // L2 e2e assertions specific to the **marquee** Tenant. Serves the gate's build
 // via `setupL2()` and never builds (ADR-0004 amendment, tests/README.md).
 //
-// The entry-route sweep in `tests/e2e/smoke.spec.ts` only reaches the reel
+// The entry-route sweep in `tests/e2e/entry-routes-*.spec.ts` only reaches the reel
 // Space landing (`/t/marquee/reel`) — an individual Chapter
 // (`/t/marquee/reel/<slug>`) is a deeper route the sweep never visits, and
 // it's exactly where `MarqueePoster` renders its authored SVG illustration.
