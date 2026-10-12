@@ -22,7 +22,7 @@ function findChromium(browsersDir: string): string | undefined {
   const convenience = join(browsersDir, 'chromium')
   if (existsAndExecutable(convenience)) return convenience
 
-  // Fall back to scanning for a versioned `chromium-*/chrome-linux/chrome`.
+  // Fall back to scanning for a versioned `chromium-*/chrome-linux{64,}/chrome`.
   let entries: string[]
   try {
     entries = readdirSync(browsersDir)
@@ -34,8 +34,10 @@ function findChromium(browsersDir: string): string | undefined {
     .sort()
     .reverse() // prefer the newest-looking version directory
   for (const dir of versioned) {
-    const candidate = join(browsersDir, dir, 'chrome-linux', 'chrome')
-    if (existsAndExecutable(candidate)) return candidate
+    for (const platformDir of ['chrome-linux64', 'chrome-linux']) {
+      const candidate = join(browsersDir, dir, platformDir, 'chrome')
+      if (existsAndExecutable(candidate)) return candidate
+    }
   }
   return undefined
 }
@@ -70,8 +72,9 @@ export function findSystemChrome(): string | undefined {
 /**
  * Resolve the pre-installed Chromium executable path: checks the `chromium`
  * convenience symlink first, then falls back to scanning for a versioned
- * `chromium-` directory's `chrome-linux/chrome` under the Playwright browsers
- * cache dir (`PLAYWRIGHT_BROWSERS_PATH`, defaulting to `/opt/pw-browsers`).
+ * `chromium-` directory's `chrome-linux64/chrome` (or `chrome-linux/chrome`)
+ * under the Playwright browsers cache dir (`PLAYWRIGHT_BROWSERS_PATH`,
+ * defaulting to `/opt/pw-browsers`).
  *
  * Throws if no pre-installed Chromium can be found.
  */
@@ -82,7 +85,7 @@ export function resolveChromiumPath(): string {
       `Could not find a pre-installed Chromium under ` +
         `"${process.env.PLAYWRIGHT_BROWSERS_PATH ?? '/opt/pw-browsers'}" ` +
         '(checked for a `chromium` convenience symlink and a versioned ' +
-        '`chromium-*/chrome-linux/chrome`). Set PLAYWRIGHT_BROWSERS_PATH to ' +
+        '`chromium-*/chrome-linux{64,}/chrome`). Set PLAYWRIGHT_BROWSERS_PATH to ' +
         'the directory containing the pre-installed browser.',
     )
   }

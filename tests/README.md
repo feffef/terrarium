@@ -38,6 +38,12 @@ To add e2e coverage for a new Tenant: write
 `layers/<tenant>/tests/e2e/<tenant>.e2e.ts` exporting a `register…()`
 function, then add one import + one call in `tests/e2e/smoke.spec.ts`.
 
+`test:e2e` reuses the `.output` that `pnpm build` wrote, so the gate builds once.
+`.output/server/index.mjs` must be at least as new as every tracked and
+untracked-not-ignored file and its directories (a deletion moves only the
+directory's mtime); anything else builds a second time. `E2E_FRESH_BUILD=1`
+forces that build. The decision is `tests/support/fresh-output.ts`.
+
 ## Playwright scroll/visibility gotchas
 
 Single-homed in `docs/agents/verifying-ui-changes.md`'s "The sharp edges" section

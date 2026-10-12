@@ -9,10 +9,14 @@
 // `register…()` export so they run under this file's single `setup()`/build.
 //
 // ⚠️ Keep this ONE spec file with ONE `setup()`. A second e2e `*.spec.ts` re-runs
-// `setup()` → another full `nuxt build`, multiplying the gate's slowest step per
-// Tenant. That is why tenant assertions are imported modules, not sibling specs —
-// do not "clean this up" into per-Tenant spec files (ADR-0004 amendment;
-// tests/README.md).
+// `setup()` → another full `nuxt build` (when it has to build, below), multiplying
+// the gate's slowest step per Tenant. That is why tenant assertions are imported
+// modules, not sibling specs — do not "clean this up" into per-Tenant spec files
+// (ADR-0004 amendment; tests/README.md).
+//
+// The gate's `pnpm build` already built the app, so a `.output` newer than every
+// source file is served as-is instead of building it a second time
+// (tests/support/fresh-output.ts); otherwise `setup()` builds.
 //
 // Two layered tiers, cheapest-first (the gate's own design principle, ADR-0004):
 //   Tier 1 — fast SSR `$fetch`: the route serves 200 and the server-rendered
@@ -34,6 +38,7 @@ import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
 import { $fetch, createPage, fetch, setup, url } from '@nuxt/test-utils/e2e'
 import { attrs, entryRoutes, expectCleanHydration, mermaidPageRoutes, withRendered } from '../support/e2e.ts'
+import { reusableOutput } from '../support/fresh-output.ts'
 import { findPreinstalledChromium, findSystemChrome } from '../../scripts/chromium-path.ts'
 import { registerJournalE2E } from '../../layers/journal/tests/e2e/journal.e2e.ts'
 import { registerBlogE2E } from '../../layers/blog/tests/e2e/blog.e2e.ts'
@@ -45,10 +50,17 @@ import { registerCommonsE2E } from '../../layers/commons/tests/e2e/commons.e2e.t
 import { registerTinkerfundE2E } from '../../layers/tinkerfund/tests/e2e/tinkerfund.e2e.ts'
 
 const chromiumPath = findPreinstalledChromium() ?? findSystemChrome()
+const rootDir = fileURLToPath(new URL('../..', import.meta.url))
+const output = reusableOutput(rootDir)
+// stdout, not console.log: vitest 5 drops console output from a passing run.
+process.stdout.write(output
+  ? `L2: reusing .output built ${output.builtAt.toISOString()} (set E2E_FRESH_BUILD=1 to force a build)\n`
+  : 'L2: no fresh .output — building\n')
 
 describe('L2 smoke render', async () => {
   await setup({
-    rootDir: fileURLToPath(new URL('../..', import.meta.url)),
+    rootDir,
+    ...(output ? { build: false, nuxtConfig: { nitro: { output: { dir: output.dir } } } } : {}),
     browser: true,
     browserOptions: {
       type: 'chromium',
