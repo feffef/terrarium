@@ -8,6 +8,10 @@ Take every open issue to a merged PR, a closed issue, or a decision only the
 owner can make. The owner is present twice: at the start and for one
 **grilling** in the middle. Everything else runs unattended.
 
+The chat holds only questions for the owner. Handle PR events, task
+notifications and finished agents silently. When you wait on an answer, the
+questions are your whole message.
+
 This Skill only orders other Skills and passes work between them. Their rules
 live in those Skills. A phase is done only when its **done** line holds.
 Issues move through the phases on their own, so an early build can be in
@@ -53,8 +57,9 @@ Send a push notification with the `PushNotification` tool:
 `grilling ready: N questions`. Then run the `grilling` Skill on one list.
 Where its format differs, this list wins, and builds keep running:
 
-- Key each question by issue (`#1803a`, `#1803b`), so numbers stay put
-  across rounds. Key side findings `#S1` and process questions `#R1`.
+- Number the questions `Q1`, `Q2`, … across the whole run; a follow-up round
+  continues the count. Label every option `a)`, `b)`, `c)`, so the owner can
+  answer `1a, 2c, 3b`.
 - Each question gives one line on what the issue is and one on the choice,
   then the options, your pick and why. Flag a pick you changed from the
   subagent's. The owner never needs to open a ticket.
@@ -67,7 +72,8 @@ Where its format differs, this list wins, and builds keep running:
   `ready-for-agent` briefs, and Public issues (the owner's yes is the
   green-light ADR-0020 requires). Also include proposals to close an issue as
   obsolete or superseded. Close only on a yes.
-- Answers may raise new questions. Keep each follow-up round to those alone.
+- Answers may raise new questions. Keep each follow-up round to those alone,
+  with its own push notification.
 
 The answers are the owner's confirmation. Record an answer on its issue
 only when it changes the issue's state or scope, and set the label it
@@ -78,11 +84,14 @@ closed, or parked by the owner (deferred, or waiting on a condition).
 
 ## 3. Build
 
-Use `dispatch-subagents`, one worktree per planned branch, based on
-`origin/main`. When a closed, unmerged PR already implements the agreed pick,
-cherry-pick its commits onto the new branch and link it from the new PR. Each build agent pushes its branch and reports any Human-only
-path it touched; you open the PR. Dispatch in waves of at most 3 build
-agents, with at most 2 of them running the full gate.
+Every change is built by a build agent through `dispatch-subagents`, one
+worktree per planned branch, based on `origin/main`. Your own checkout stays
+clean: you orchestrate. Dispatch a simple, mechanical change with
+`model: "sonnet"`. When a closed, unmerged PR already implements the agreed
+pick, cherry-pick its commits onto the new branch and link it from the PR.
+Each build agent pushes its branch and reports any Human-only path it
+touched. Dispatch in waves of at most 3 build agents, with at most 2 of them
+running the full gate.
 
 **Interrupt the owner only** for these:
 
@@ -93,31 +102,33 @@ agents, with at most 2 of them running the full gate.
 - a change to which Tenant's data a request can reach
 - reversing a grilling answer
 
-Pause just that PR, send a push notification, and resume it on the answer.
+Pause just that branch, send a push notification, and resume it on the answer.
 The rest keep going. Any other decision the agent makes itself, and records
 in the PR description.
 
-**Done:** every startable `ready-for-agent` issue has an open PR with a green
-`pnpm gate:scoped`. An issue that can't start yet (time-gated, or its output
-is not a PR) goes to the report.
+**Done:** every startable `ready-for-agent` issue has a pushed branch with a
+green `pnpm gate:scoped`. An issue that can't start yet (time-gated, or its
+output is not a PR) goes to the report.
 
 ## 4. Review
 
-Run `code-review` on each PR, with simplicity as the focus; a few-line diff
-gets one inline review instead. Resume the build agent that wrote the PR
+Invoke the `code-review` Skill on every branch, with simplicity as the focus,
+before its PR exists. Resume the build agent that wrote the branch
 (`dispatch-subagents` §6) to fix the findings, then review again. Check every
 fix yourself before you report it: past runs relayed subagent claims
 unchecked.
 
-**Done:** a review round finds only judgement calls not worth fixing.
+**Done:** a review round finds only judgement calls not worth fixing. Only
+then open the PR, so every PR the owner sees is reviewed.
 
 ## 5. Land and report
 
-Land each PR with `docs/agents/pr-workflow.md`. A PR built from a Public issue
-waits for a human merge (ADR-0020 rule 3), even though `scripts/merge-pr.ts`
-would accept it. Merge the rest where `merge-pr.ts` allows.
+Land each PR with `docs/agents/pr-workflow.md`, including its check before a
+follow-up push. A PR built from a Public issue waits for a human merge
+(ADR-0020 rule 3), even though `scripts/merge-pr.ts` would accept it. Merge the rest where `merge-pr.ts` allows.
 
 **Done:** every PR is merged or waiting for a human merge.
 
 Report one line per issue: `#N | outcome | PR or "no PR: why" | merged / waits
-for you (why)`. Then run `close-session`.
+for you (why)`. Invoke `close-session` when you open the first PR, and again
+after the report.
