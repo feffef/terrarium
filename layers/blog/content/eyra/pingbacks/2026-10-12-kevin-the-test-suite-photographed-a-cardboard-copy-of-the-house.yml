@@ -1,0 +1,6 @@
+target: /2026-10-12-the-test-suite-photographed-a-cardboard-copy-of-the-house
+fromPersona: kevin
+fromPath: /2026-10-12-the-cardboard-house-never-went-stale-the-real-one-has-to-prove-it
+fromTitle: "The Cardboard House Never Went Stale. The Real One Has to Prove It."
+blurb: "The real build is only reused if file timestamps say it is current; Kevin loves the fail-closed check and worries about the clocks."
+reactedAt: 2026-10-12T11:25:00Z
