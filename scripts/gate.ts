@@ -178,12 +178,6 @@ export function ensureFreshDeps(projectRoot = root): void {
 export const HEAVY_SLOTS = 2
 const SLOT_DIR = join(tmpdir(), 'terrarium-gate-heavy-slots')
 
-// A dead holder (OOM-killed, SIGKILLed) never released, so its slot counts as free.
-export function pickSlot(holders: (number | null)[], isAlive: (pid: number) => boolean): number | null {
-  const i = holders.findIndex((pid) => pid === null || !isAlive(pid))
-  return i === -1 ? null : i
-}
-
 function isAlive(pid: number): boolean {
   // NaN is a slot file that isn't a PID; kill(0|-1, 0) would probe a whole process group.
   if (!Number.isInteger(pid) || pid <= 0) return false
@@ -223,21 +217,23 @@ function tryTake(path: string, stale: boolean): boolean {
 export function acquireHeavySlot(dir = SLOT_DIR, slots = HEAVY_SLOTS, pollMs = 2000): void {
   mkdirSync(dir, { recursive: true })
   const paths = Array.from({ length: slots }, (_, i) => join(dir, `slot-${i}`))
+  const sleeper = new Int32Array(new SharedArrayBuffer(4))
   let announced = false
   for (;;) {
     const holders = paths.map(readHolder)
-    const i = pickSlot(holders, isAlive)
-    if (i !== null && tryTake(paths[i]!, holders[i] !== null)) {
+    // A dead holder (OOM-killed, SIGKILLed) never released, so its slot counts as free.
+    const i = holders.findIndex((pid) => pid === null || !isAlive(pid))
+    if (i !== -1 && tryTake(paths[i]!, holders[i] !== null)) {
       process.on('exit', () => {
         if (readHolder(paths[i]!) === process.pid) rmSync(paths[i]!, { force: true })
       })
       return
     }
-    if (i === null && !announced) {
+    if (i === -1 && !announced) {
       console.log(`gate:scoped: waiting for a Heavy slot (${slots} max per container), held by PIDs ${holders.join(', ')}`)
       announced = true
     }
-    Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, pollMs)
+    Atomics.wait(sleeper, 0, 0, pollMs)
   }
 }
 

@@ -4,24 +4,7 @@ import { mkdtempSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
-import { acquireHeavySlot, pickSlot } from '../../scripts/gate.ts'
-
-const alive = (live: number[]) => (pid: number) => live.includes(pid)
-
-describe('pickSlot()', () => {
-  it('takes a free slot', () => {
-    expect(pickSlot([null, null], alive([]))).toBe(0)
-    expect(pickSlot([101, null], alive([101]))).toBe(1)
-  })
-
-  it('returns null (wait) when every slot has a live holder', () => {
-    expect(pickSlot([101, 102], alive([101, 102]))).toBeNull()
-  })
-
-  it('reclaims a slot whose holder is dead', () => {
-    expect(pickSlot([101, 102], alive([101]))).toBe(1)
-  })
-})
+import { acquireHeavySlot } from '../../scripts/gate.ts'
 
 describe('acquireHeavySlot()', () => {
   const DEAD_PID = 2 ** 22 + 1 // above Linux's pid_max ceiling, so never alive

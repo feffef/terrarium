@@ -64,8 +64,9 @@ every line that applies.
   log's real tail (issue #602).
 - Launch at most (20 − running) agents at a time; a bigger batch is rejected.
   Every Agent call runs async, so wait for its notification.
-- `pnpm gate:scoped` (not plain `pnpm gate`) queues Heavy tiers beyond
-  `HEAVY_SLOTS` in `scripts/gate.ts`.
+- At most 2 full gates at once in one container (`test:e2e` dies of memory
+  otherwise). `pnpm gate:scoped` waits for a slot (`HEAVY_SLOTS`); plain
+  `pnpm gate` does not. Rerun an exit-137 run alone before diagnosing.
 - A screenshot agent shoots as soon as `pnpm build` succeeds, not after the gate
   (issue #683).
 
