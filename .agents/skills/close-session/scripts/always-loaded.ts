@@ -3,10 +3,10 @@
 // loads the path-scoped rules that govern `.claude/rules/**` and logs the reads
 // as docs; one script run does neither (PR #1812).
 //
-// Usage: pnpm exec tsx scripts/always-loaded.ts
+// Usage: pnpm exec tsx .agents/skills/close-session/scripts/always-loaded.ts
 import { readFileSync } from 'node:fs'
-import { loadRules } from './skill-rules-hint.ts'
-import { RULES_DIR, rulePaths } from './validate-adr-rules.ts'
+import { loadRules } from '../../../../scripts/skill-rules-hint.ts'
+import { RULES_DIR, rulePaths } from '../../../../scripts/validate-adr-rules.ts'
 
 export function alwaysLoadedText(claudeMd: string, rules: { file: string; text: string }[]): string {
   const always = rules.filter((r) => rulePaths(r.text).length === 0)

@@ -48,6 +48,9 @@
     "shared/**/*.ts",
     "tests/unit/**/*.ts",
     "layers/*/tests/unit/**/*.ts",
+    // A Skill's helper scripts and their unit tests (#1603).
+    ".agents/skills/*/scripts/**/*.ts",
+    ".agents/skills/*/tests/unit/**/*.ts",
     "content.config.ts"
   ],
   // These two specs are out for the same reason the e2e specs are: each exercises

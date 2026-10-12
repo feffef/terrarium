@@ -121,8 +121,8 @@ procedure lives in `.agents/skills/midden-catalogue/`.
   two record-fact formatters, shared by both renderers so they cannot drift.
 - **`.agents/skills/midden-survey/`** — the survey Skill that mechanizes
   candidate *discovery* (deleted files / dropped dependencies via
-  `scripts/midden-survey.ts`; PRs / branches via the GitHub tools) and files a
-  survey-report issue. The inclusion bar above is the judgment it applies;
+  its `scripts/midden-survey.ts`; PRs / branches via the GitHub tools) and
+  files a survey-report issue. The inclusion bar above is the judgment it applies;
   everything curatorial is left to the catalogue Skill below.
 - **`.agents/skills/midden-catalogue/`** — the catalogue Skill: turns a
   survey's accepted candidates into Artifacts and dig reports, per the

@@ -33,7 +33,7 @@
 // Fetch strategy: same `gh`-then-REST-fallback split as `check-triage-drift.ts`
 // (issue #505's `gh`-less remote-session fragility).
 //
-// Usage:  tsx scripts/guest-intake-scan.ts [N]
+// Usage:  tsx .agents/skills/guest-intake/scripts/guest-intake-scan.ts [N]
 //   Scans up to N open issues (default 100) and prints a `ScanReport` JSON:
 //   { scannedCount, counts: {guest-activity, owner-steering,
 //   agent-authored-skip, bystander-comment, unrecognized-association}, actionable: ScannedIssue[] }
@@ -51,7 +51,7 @@ import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
-import { isAiAuthored } from './check-triage-drift.ts'
+import { isAiAuthored } from '../../../../scripts/check-triage-drift.ts'
 import {
   decodeHtmlEntities,
   envToken,
@@ -60,11 +60,11 @@ import {
   parseOwnerRepo,
   pickFetchStrategy,
   type FetchStrategy,
-} from './list-open-issues.ts'
-import { hasMarker, isMarkerFresh, type RawLabelEventRecord } from './guest-marker.ts'
-import { PUBLIC_ASSOCIATIONS, TRUSTED_ASSOCIATIONS } from './trust.ts'
+} from '../../../../scripts/list-open-issues.ts'
+import { hasMarker, isMarkerFresh, type RawLabelEventRecord } from '../../../../scripts/guest-marker.ts'
+import { PUBLIC_ASSOCIATIONS, TRUSTED_ASSOCIATIONS } from '../../../../scripts/trust.ts'
 
-const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
+const root = resolve(dirname(fileURLToPath(import.meta.url)), '../../../..')
 
 const DEFAULT_LIMIT = 100
 

@@ -70,7 +70,7 @@ Merge the three reports into one tally in your scratchpad:
   A newcomer-orientation feature that can't touch the homepage hero can go on
   a Journal page with `onramp` frontmatter, which lists it in the "New here?"
   cards with no code change (#1475).
-- **Owner memory.** First run `pnpm exec tsx scripts/owner-corrections.ts`:
+- **Owner memory.** First run `pnpm exec tsx .agents/skills/visitor-loop/scripts/owner-corrections.ts`:
   it prints every candidate owner correction since the last `decisions.md`
   commit (human reviews of `visitor-loop` PRs, merged PRs that revert or
   rework one, human issue comments about one). Read each candidate and
@@ -83,7 +83,7 @@ Merge the three reports into one tally in your scratchpad:
   anything already logged as an idea in the last week
   (`pnpm exec tsx scripts/ideas.ts gather --days 7`).
 
-Done when `pnpm exec tsx scripts/owner-corrections.ts --check <tally-file>`
+Done when `pnpm exec tsx .agents/skills/visitor-loop/scripts/owner-corrections.ts --check <tally-file>`
 passes; every feature idea and every *fix* or *out of remit* finding has its
 search result; every
 reported finding is in the tally, marked consensus or single; every consensus

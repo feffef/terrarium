@@ -65,12 +65,15 @@ describe('changedPathsBetween()', () => {
 
 describe('githubOutputBlock()', () => {
   it('emits the skip decision as a plain boolean the workflow can compare against', () => {
-    expect(githubOutputBlock({ skipHeavy: true, reason: 'all inert' })).toContain('skip_heavy=true')
-    expect(githubOutputBlock({ skipHeavy: false, reason: 'all inert' })).toContain('skip_heavy=false')
+    expect(githubOutputBlock({ skipHeavy: true, skipBuild: true, reason: 'all inert' })).toContain('skip_heavy=true')
+    expect(githubOutputBlock({ skipHeavy: false, skipBuild: false, reason: 'all inert' })).toContain('skip_heavy=false')
+    const skill = githubOutputBlock({ skipHeavy: false, skipBuild: true, reason: 'skill files' })
+    expect(skill).toContain('skip_heavy=false')
+    expect(skill).toContain('skip_build=true')
   })
 
   it('survives a reason containing a newline', () => {
-    const block = githubOutputBlock({ skipHeavy: false, reason: 'line one\nline two' })
+    const block = githubOutputBlock({ skipHeavy: false, skipBuild: false, reason: 'line one\nline two' })
     expect(block).toContain('reason<<GATE_SCOPE_EOF\nline one\nline two\nGATE_SCOPE_EOF\n')
   })
 })

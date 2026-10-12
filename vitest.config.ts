@@ -43,7 +43,7 @@ export default defineConfig({
           // in a fresh context, ~10 s of a 40 s run. A spec that touches
           // process.env, PATH or globalThis must restore it itself.
           isolate: false,
-          include: ['tests/unit/**/*.spec.ts', 'layers/*/tests/unit/**/*.spec.ts'],
+          include: ['tests/unit/**/*.spec.ts', 'layers/*/tests/unit/**/*.spec.ts', '.agents/skills/*/tests/unit/**/*.spec.ts'],
         },
       },
       {

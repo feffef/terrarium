@@ -3,7 +3,7 @@
 // Gate-B screens (regrown paths / relocated files / re-added deps), and the
 // dedupe against already-catalogued Midden artifacts. The git shell is a thin
 // wrapper over these, exercised by running the script directly
-// (`tsx scripts/midden-survey.ts`).
+// (`tsx .agents/skills/midden-survey/scripts/midden-survey.ts`).
 import { describe, expect, it } from 'vitest'
 import {
   cataloguedIndex,

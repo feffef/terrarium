@@ -187,7 +187,7 @@ Same marker and rationale as `guest-build`'s "Concurrency" section (issue #570, 
 
 ## Run it
 
-1. **Resolve the guest set.** Run `scripts/guest-intake-scan.ts` (or scan open
+1. **Resolve the guest set.** Run `.agents/skills/guest-intake/scripts/guest-intake-scan.ts` (or scan open
    issues by hand); for each, check the newest activity against the
    guest-authorship rule above; keep the guest-authored, drop the agent's-own
    and (unless steering) the owner's. An issue currently held by a concurrent

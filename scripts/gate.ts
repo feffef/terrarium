@@ -1,6 +1,6 @@
 // `pnpm gate:scoped` — additive, change-scoped wrapper around `pnpm gate` (#350).
-// Skips the heavy layers when the whole changeset is inert, else runs the full
-// gate. Design, safety argument, and the inert-set proof: issue #350.
+// Skips the heavy layers when the whole changeset is inert, only build + e2e when
+// the rest is Skill files (#1603), else runs the full gate. Design, safety argument, and the inert-set proof: issue #350.
 //   pnpm gate:scoped [--dry]
 //   pnpm exec tsx scripts/gate.ts --decide --base <ref> [--head <ref>]
 //     — decision only, for CI to guard its own heavy steps on (#445; the CI
@@ -24,29 +24,44 @@ export function isInert(path: string): boolean {
   return (path.endsWith('.md') && !path.startsWith('layers/')) || path.startsWith('.claude/skills/')
 }
 
+// A Skill's own files, such as a helper script beside it (#1603): `test` still
+// runs their unit tests. `build` reads only which Skill folders hold a SKILL.md
+// (layers/journal/nuxt.config.ts), which a non-.md file cannot change, and no
+// e2e spec reads `.agents/`.
+export function isSkillFile(path: string): boolean {
+  return path.startsWith('.agents/skills/')
+}
+
+export const BUILT = ['build', 'test:e2e'] as const
+
 export interface Scope {
   skipHeavy: boolean
+  /** Skip `BUILT` only; implied by `skipHeavy`. */
+  skipBuild: boolean
   reason: string
 }
 
 // `null` (undeterminable base) is kept distinct from `[]` (nothing changed); both
 // run the full gate, so the skip path is only ever reached on a proven inert set.
 export function decideScope(changed: string[] | null): Scope {
-  if (changed === null) {
-    return { skipHeavy: false, reason: 'could not determine changed files (no usable diff base) — running full gate' }
-  }
-  if (changed.length === 0) {
-    return { skipHeavy: false, reason: 'no changes vs the diff base — running full gate' }
-  }
+  const full = (reason: string): Scope => ({ skipHeavy: false, skipBuild: false, reason })
+  if (changed === null) return full('could not determine changed files (no usable diff base) — running full gate')
+  if (changed.length === 0) return full('no changes vs the diff base — running full gate')
   const firstNonInert = changed.find((p) => !isInert(p))
   if (firstNonInert === undefined) {
-    return { skipHeavy: true, reason: `every changed path is inert (${changed.length} file(s)) — skipping ${HEAVY.join(', ')}` }
+    return { skipHeavy: true, skipBuild: true, reason: `every changed path is inert (${changed.length} file(s)) — skipping ${HEAVY.join(', ')}` }
   }
-  return { skipHeavy: false, reason: `changed set includes non-inert path (${firstNonInert}) — running full gate` }
+  const firstOther = changed.find((p) => !isInert(p) && !isSkillFile(p))
+  if (firstOther === undefined) {
+    return { skipHeavy: false, skipBuild: true, reason: `every changed path is inert or a Skill file (${firstNonInert}) — skipping ${BUILT.join(', ')}` }
+  }
+  return full(`changed set includes non-inert path (${firstOther}) — running full gate`)
 }
 
 export function planSteps(scope: Scope): string[] {
-  return scope.skipHeavy ? [...FLOOR] : [...FLOOR, ...HEAVY]
+  if (scope.skipHeavy) return [...FLOOR]
+  const skipped: readonly string[] = scope.skipBuild ? BUILT : []
+  return [...FLOOR, ...HEAVY].filter((s) => !skipped.includes(s))
 }
 
 function git(args: string[], cwd: string = root): string {
@@ -131,7 +146,7 @@ export function changedPathsBetween(baseRef: string, headRef = 'HEAD'): string[]
 // Heredoc form, not `key=value`: a reason string is prose, and the bare form
 // silently truncates at the first newline one ever grows.
 export function githubOutputBlock(scope: Scope): string {
-  return `skip_heavy=${scope.skipHeavy}\nreason<<GATE_SCOPE_EOF\n${scope.reason}\nGATE_SCOPE_EOF\n`
+  return `skip_heavy=${scope.skipHeavy}\nskip_build=${scope.skipBuild}\nreason<<GATE_SCOPE_EOF\n${scope.reason}\nGATE_SCOPE_EOF\n`
 }
 
 // ── Stale-deps preflight (#445) ─────────────────────────────────────────────
