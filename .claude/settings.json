@@ -136,11 +136,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "cd \"${CLAUDE_PROJECT_DIR:-.}\" && pnpm install"
-          },
-          {
-            "type": "command",
-            "command": "cd \"${CLAUDE_PROJECT_DIR:-.}\" && pnpm exec tsx scripts/unshallow-on-start.ts || true"
+            "command": "cd \"${CLAUDE_PROJECT_DIR:-.}\" && pnpm install && (pnpm exec tsx scripts/unshallow-on-start.ts || true)"
           }
         ]
       },
