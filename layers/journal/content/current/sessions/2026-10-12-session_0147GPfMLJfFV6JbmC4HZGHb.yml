@@ -1,0 +1,151 @@
+schemaVersion: 1
+session: session_0147GPfMLJfFV6JbmC4HZGHb
+startedAt: 2026-10-12T13:27:53Z
+endedAt: 2026-10-12T13:36:07Z
+kind: autonomous
+goal: "Scheduled prune trial: judge open trials, prune one problem"
+status: in-review
+outcome: Rulebook-table trial judged and deleted; ADR-0009 shell-read amendments folded (-49 lines), PR open
+summary: "Scheduled run, no human prompt. Judged the rulebook-table trial (landed 2026-10-09): no Friction names it and nothing was filed against it, so it holds and the entry is deleted. The other two open trials were not yet judgeable. The criterion-1 search subagent found the ADR-0009 shell-read amendment chain (four stacked, partly superseded amendments; open regression #1786). I folded them into one section, keeping every decision and the protected-main amendment, restamped the rule hash, and added a ledger entry. A Sonnet probe pinned to the post-prune SHA answered four situations correctly, so proven is true. gate:scoped passed. PR #1813 opened, verdict commented; it merges with --prune-trial once CI is green. All work was agent-initiated by the schedule."
+prs:
+  - "1813"
+docsRead:
+  - path: docs/agents/git-conventions.md
+    reason: read after the fetch the window script ran
+    useful: partly
+  - path: docs/agents/github-integration.md
+    reason: read after my first search_issues call
+    useful: partly
+  - path: docs/agents/pr-workflow.md
+    reason: closing a self-merged chartered run
+    useful: yes
+  - path: CONTEXT-MAP.md
+    reason: session-start read
+    useful: partly
+  - path: CONTEXT.md
+    reason: "glossary: Prune Trial, Friction, Human-only"
+    useful: yes
+  - path: docs/agents/dispatch-subagents.md
+    reason: read (does not exist as that path)
+    useful: no
+  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
+    reason: the amendments I pruned
+    useful: yes
+  - path: .agents/prune-trials.yml
+    reason: (no reason given)
+skillsUsed:
+  - name: dispatch-subagents
+    reason: search and probe briefs
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: prune-trial
+    reason: (invoked as a slash command)
+frictions:
+  - description: Ran the window script (which fetches) and a GitHub search before reading git-conventions.md and github-integration.md, as CLAUDE.md requires.
+    solution: The prune-trial Skill's first command is a git fetch; have it say to read git-conventions first.
+    severity: nit
+  - description: First search_issues call returned ~10 full issue bodies, flooding context.
+    solution: Pass fields without body, as github-integration.md says; read it before the first call.
+    severity: minor
+  - description: ScheduleWakeup call was blocked by the /loop-only guard; wasted a call.
+    solution: None needed; the deny message was clear.
+    severity: nit
+  - description: "SHELL-READ-DETECTION false positive: docs/research/rulebook-migration-table.md was credited from shell output, but the session marked it (not read)"
+    solution: Find the crediting command in the transcript and tighten scripts/shell-reads.ts
+    severity: moderate
+  - description: "SHELL-READ-DETECTION false positive: docs/agents/environment-caveats.md was credited from shell output, but the session marked it (not read)"
+    solution: Find the crediting command in the transcript and tighten scripts/shell-reads.ts
+    severity: moderate
+  - description: "SHELL-READ-DETECTION false positive: .agents/skills/dispatch-subagents/SKILL.md was credited from shell output, but the session marked it (not read)"
+    solution: Find the crediting command in the transcript and tighten scripts/shell-reads.ts
+    severity: moderate
+durationSec: 494
+models:
+  claude-sonnet-5-5: 68
+toolCounts:
+  Bash: 20
+  Read: 8
+  mcp__github__search_issues: 1
+  Skill: 3
+  Agent: 2
+  ScheduleWakeup: 1
+  mcp__github__issue_read: 1
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+  mcp__github__pull_request_read: 1
+rulesLoaded:
+  - .claude/rules/adr-0018.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/guards.md
+rulesGlobal:
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0001.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0023.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0009.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0022.md
+    reason: summary rule
+    useful: no
+  - path: .claude/rules/adr-0004.md
+    reason: summary rule
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: summary rule
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: summary rule
+    useful: yes
+  - path: .claude/rules/adr-0001.md
+    reason: summary rule
+    useful: no
+  - path: .claude/rules/adr-0020.md
+    reason: summary rule
+    useful: no
+  - path: .claude/rules/adr-0003.md
+    reason: summary rule
+    useful: no
+  - path: .claude/rules/adr-0023.md
+    reason: summary rule
+    useful: no
+  - path: .claude/rules/adr-0017.md
+    reason: summary rule
+    useful: no
+  - path: .claude/rules/adr-0018.md
+    reason: summary rule
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: summary rule
+    useful: no
+  - path: .claude/rules/adr-0021.md
+    reason: summary rule
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: ADR edit needs --prune-trial
+    useful: yes
+  - path: .claude/rules/guards.md
+    reason: guard rules
+    useful: no
+subagents:
+  - type: Explore
+    task: Find failed-prose prune candidate
+  - type: general-purpose
+    task: Sonnet probe of pruned ADR
+    model: sonnet
+gitBranch: claude/practical-rubin-unueds
+entrypoint: remote_trigger
+cliVersion: 2.1.296
+trigger: prune-trial
+landedBy: Stop
