@@ -39,6 +39,10 @@ export default defineConfig({
         extends: true,
         test: {
           name: 'unit',
+          // Each file re-imported vue, nuxt utils and the scripts' dependency graph
+          // in a fresh context, ~10 s of a 40 s run. A spec that touches
+          // process.env, PATH or globalThis must restore it itself.
+          isolate: false,
           include: ['tests/unit/**/*.spec.ts', 'layers/*/tests/unit/**/*.spec.ts'],
         },
       },
