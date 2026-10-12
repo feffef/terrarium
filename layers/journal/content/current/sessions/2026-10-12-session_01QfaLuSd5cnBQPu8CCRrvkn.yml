@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01QfaLuSd5cnBQPu8CCRrvkn
 startedAt: 2026-10-12T00:16:30Z
-endedAt: 2026-10-12T00:24:38Z
+endedAt: 2026-10-12T00:29:34Z
 kind: autonomous
 goal: Write the 2026-10-11 Journal Digest
-status: in-review
-outcome: Digest and retention sweep opened as PR 1795, gate green, fact-check clean, awaiting merge
-summary: "Scheduled /digest run, no human prompt. Listed one unwritten day (2026-10-11), gathered its data, wrote the Digest, had a fresh read-only subagent fact-check every claim (26 checked, none wrong), ran the retention sweep (one Digest and 17 session logs archived), cleared gate:scoped in the background, and opened PR 1795 with the PR-body tally. All steps were agent-initiated per the Skill; nothing was human-instructed beyond the schedule. Still open: merge on green and confirming the log landed on main."
+status: completed
+outcome: Digest and retention sweep merged as PR 1795 on a green gate
+summary: Scheduled /digest run, no human prompt. Listed one unwritten day (2026-10-11), gathered its data, wrote the Digest, had a fresh read-only subagent fact-check every claim (26 checked, none wrong), ran the retention sweep (one Digest and 17 session logs archived), cleared gate:scoped in the background, and opened PR 1795 with the PR-body tally. All steps were agent-initiated per the Skill; nothing was human-instructed beyond the schedule. Merged on a green gate after posting a verdict.
 prs:
   - "1795"
 docsRead:
@@ -47,18 +47,21 @@ frictions:
   - description: "SHELL-READ-DETECTION false positive: docs/adr/0003-agent-operating-model-and-governance.md was credited from shell output, but the session marked it (not read)"
     solution: Find the crediting command in the transcript and tighten scripts/shell-reads.ts
     severity: moderate
-durationSec: 488
+durationSec: 785
 models:
-  claude-sonnet-5-5: 42
+  claude-sonnet-5-5: 57
 toolCounts:
   Read: 7
-  Bash: 13
+  Bash: 17
   Write: 1
   Agent: 1
   ToolSearch: 1
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
   Skill: 2
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 1
 filesEdited:
   - layers/journal/content/current/pages/digests/2026-10-11.md
 rulesLoaded:
