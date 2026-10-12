@@ -4,6 +4,15 @@ Date: 2026-07-04
 Status: Accepted — high-risk set extended by ADR-0026; ADR prose exempted for
 Prune Trials by ADR-0027
 
+> **Amended (2026-10-12, after PR #1853).** *Review before the first push.*
+> Beside the gate, a branch is reviewed before its first push, because pushing
+> opens the PR (ADR-0003). A green gate shows the change builds and passes
+> tests; a review shows it is the right change, written to the repo's
+> standards. `docs/agents/pr-workflow.md` ("Review before the first push")
+> holds the rule and its skips. A later push of a change unlikely to break the
+> gate (prose, docs) may skip the local `gate:scoped` and rely on CI's gate; a
+> code change still runs it first.
+
 > **Amended (2026-10-12, issue #1603).** *A Skill's own files skip build and
 > e2e, not unit tests.* A changed path under `.agents/skills/` that is not
 > Inert (a Skill's helper script and its unit test, which now live beside it)
