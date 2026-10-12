@@ -8,7 +8,7 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 import { ARCHIVED_SESSIONS_DIR, SESSIONS_DIR } from '../../scripts/session-logs.ts'
-import { defaultWindowStart, OUTPUT_FILE_PATH, pickRecencyWindow, resolveOutputTarget, survey, toCompactSession, toTriageSession, type TriageSession } from '../../scripts/session-frictions.ts'
+import { defaultWindowStart, dropLedgered, OUTPUT_FILE_PATH, pickRecencyWindow, resolveOutputTarget, survey, toCompactSession, toTriageSession, type TriageSession } from '../../scripts/session-frictions.ts'
 
 function session(id: string, startedAt: string, opts: Partial<TriageSession> = {}): TriageSession {
   return {
@@ -229,5 +229,16 @@ describe('survey() — external exclusion (ADR-0009 amendment)', () => {
   it('by default starts 48 hours before now when no ledger commit is visible', () => {
     const { since } = survey(undefined, dir, Date.parse('2026-07-20T00:00:00Z'))
     expect(new Date(since).toISOString()).toBe('2026-07-18T00:00:00.000Z')
+  })
+})
+
+describe('dropLedgered() — --unledgered', () => {
+  it('drops sessions the ledger cites as an occurrence', () => {
+    const dir = mkdtempSync(join(tmpdir(), 'session-frictions-'))
+    mkdirSync(join(dir, 'layers/journal/content/current/frictions'), { recursive: true })
+    writeFileSync(join(dir, 'layers/journal/content/current/frictions/x.yml'), 'name: x\noccurrences:\n  - session: session_a\n')
+    const mk = (id: string) => toTriageSession({ session: id }, `${id}.yml`)
+    expect(dropLedgered([mk('session_a'), mk('session_b')], dir).map((s) => s.id)).toEqual(['session_b'])
+    rmSync(dir, { recursive: true, force: true })
   })
 })

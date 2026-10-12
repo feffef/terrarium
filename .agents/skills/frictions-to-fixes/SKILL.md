@@ -49,7 +49,7 @@ Its brief:
 - **Read the window's session logs** via `pnpm exec tsx scripts/session-frictions.ts`
   (it prints where the window starts; bare `tsx` isn't on PATH). Large output goes to
   `/tmp/session-frictions-output.json` and stdout gets only a notice — read the file, or
-  pass `--out PATH`; don't parse stdout. Use `--compact` (keeps `docsRead` paths and
+  pass `--out PATH`; don't parse stdout. Use `--compact --unledgered` (the latter skips sessions the ledger already cites; `--compact` keeps `docsRead` paths and
   `subagents`, drops prose) and re-read a full log via its `file` only when a candidate needs it. This is a **recency window, not a
   sample** — read every session in it, don't chase frictions from older,
   likely-gone sessions. Each record's `id`/`file` point back to the full log —
