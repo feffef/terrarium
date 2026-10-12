@@ -52,10 +52,10 @@ export interface SessionCardView {
   // edited nothing / spawned no subagent).
   filesEdited: string[]
   docsReadViaShell: string[]
-  // Rules that loaded, session-start (`global`) ones first; `followedUp` ⇒ the
+  // Rules that loaded, always-loaded ones (session start) first; `followedUp` ⇒ the
   // session then read the full ADR.
   // `reason`/`useful` are the agent's verdict, absent on logs older than it.
-  rules: ({ path: string; global: boolean; followedUp: boolean } & Partial<Omit<RuleVerdict, 'path'>>)[]
+  rules: ({ path: string; title?: string; alwaysLoaded: boolean; followedUp: boolean } & Partial<Omit<RuleVerdict, 'path'>>)[]
   tools: { name: string; count: number }[]
 }
 

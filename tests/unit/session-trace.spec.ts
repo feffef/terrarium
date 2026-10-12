@@ -149,7 +149,7 @@ describe('rulesLoaded and rulesGlobal — rules that loaded', () => {
     expect(trace.rulesLoaded).toEqual(['.claude/rules/adr-0024.md'])
   })
 
-  it('lists the session-start rules apart, as global, and never in both lists', () => {
+  it('lists the always-loaded rules apart and never in both lists', () => {
     expect(trace.rulesGlobal).toEqual(['.claude/rules/adr-0003.md'])
     expect(extractTrace([...records, rule('/repo/.claude/rules/adr-0003.md')], NO_ENV).rulesLoaded).toEqual(['.claude/rules/adr-0024.md'])
     expect(stitch({ session: 's', goal: 'g', status: 'completed', outcome: 'o', summary: 's', frictions: [] }, trace).rulesGlobal)
@@ -197,6 +197,11 @@ describe('rulesLoaded and rulesGlobal — rules that loaded', () => {
     expect(entry.ruleVerdicts).toEqual(authored.ruleVerdicts)
     expect(entry.docsRead).toContainEqual({ path: 'CONTEXT.md', reason: 'glossary', useful: 'yes' })
     expect(validateEntry(entry).ok).toBe(true)
+  })
+  it('logs a re-read rule file as a rule, not a doc read', () => {
+    const authored: AuthoredScratch = { session: 'session_01RL', goal: 'g', status: 'completed', outcome: 'o', summary: 's', frictions: [] }
+    const entry = stitch(authored, { ...trace, filesRead: ['.claude/rules/adr-0004.md', 'CONTEXT.md'] })
+    expect((entry.docsRead as { path: string }[]).map((d) => d.path)).toEqual(['CONTEXT.md'])
   })
 })
 

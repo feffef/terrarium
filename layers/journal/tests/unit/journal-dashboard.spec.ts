@@ -10,6 +10,7 @@
 import { describe, expect, it } from 'vitest'
 import {
   sessionCardViews,
+  sessionRuleTitles,
   skillUrl,
   countFrictions,
   digestAnchor,
@@ -337,8 +338,8 @@ describe('sessionCardViews', () => {
     })
     const [c] = sessionCardViews([s])
     expect(c!.rules).toEqual([
-      { path: '.claude/rules/adr-0004.md', global: false, followedUp: false },
-      { path: '.claude/rules/adr-0008.md', global: false, followedUp: true },
+      { path: '.claude/rules/adr-0004.md', alwaysLoaded: false, followedUp: false },
+      { path: '.claude/rules/adr-0008.md', alwaysLoaded: false, followedUp: true },
     ])
   })
 
@@ -348,12 +349,29 @@ describe('sessionCardViews', () => {
       ruleVerdicts: [{ path: '.claude/rules/adr-0004.md', reason: 'merge rules', useful: 'partly' }],
     })
     const [c] = sessionCardViews([s])
-    expect(c!.rules).toEqual([{ path: '.claude/rules/adr-0004.md', global: false, followedUp: false, reason: 'merge rules', useful: 'partly' }])
+    expect(c!.rules).toEqual([{ path: '.claude/rules/adr-0004.md', alwaysLoaded: false, followedUp: false, reason: 'merge rules', useful: 'partly' }])
   })
 
-  it('lists global rules first, marked global', () => {
+  it('names each rule by its heading, falling back to the path, and keeps the reason as written', () => {
+    const titles = sessionRuleTitles({
+      '../../.claude/rules/adr-0022.md': '---\npaths: []\n---\n\n# ADR-0022: Autonomous triage sweep\n\nBody.',
+      '../../.claude/rules/untitled.md': 'No heading.',
+    })
+    expect(titles).toEqual({ '.claude/rules/adr-0022.md': 'ADR-0022: Autonomous triage sweep' })
+    const s = session({
+      rulesGlobal: ['.claude/rules/adr-0022.md', '.claude/rules/gone.md'],
+      ruleVerdicts: [{ path: '.claude/rules/adr-0022.md', reason: 'loaded; not related to a blog post', useful: 'no' }],
+    })
+    const [c] = sessionCardViews([s], titles)
+    expect(c!.rules.map((r) => [r.title, r.reason])).toEqual([
+      ['ADR-0022: Autonomous triage sweep', 'loaded; not related to a blog post'],
+      [undefined, undefined],
+    ])
+  })
+
+  it('lists always-loaded rules first, marked so', () => {
     const [c] = sessionCardViews([session({ rulesGlobal: ['.claude/rules/adr-0003.md'], rulesLoaded: ['.claude/rules/adr-0004.md'] })])
-    expect(c!.rules.map((r) => [r.path, r.global])).toEqual([
+    expect(c!.rules.map((r) => [r.path, r.alwaysLoaded])).toEqual([
       ['.claude/rules/adr-0003.md', true],
       ['.claude/rules/adr-0004.md', false],
     ])

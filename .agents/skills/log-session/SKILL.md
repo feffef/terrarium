@@ -75,8 +75,9 @@ docsRead:                          # curated — what each doc gave you, and whe
   - { path: "app/pages/t/[tenant]/[space]/[...slug].vue", reason: routing, useful: partly }
 skillsUsed:                        # transcript-observed reads/Skills you omit are folded in
   - { name: tdd, reason: "test-first the helper (see #99)" }  # (name cross-refs the Skill Inventory)
-ruleVerdicts:                      # every rule that loaded, global ones too (step 3 lists them)
-  - { path: .claude/rules/adr-0025.md, reason: "kinds live in shared/kinds.ts", useful: no }
+ruleVerdicts:                      # every rule that loaded, always-loaded ones too (step 3)
+  - { path: .claude/rules/adr-0004.md, reason: "Made me run gate:scoped before pushing; summary was enough, skipped the full ADR", useful: yes }
+  - { path: .claude/rules/adr-0023.md, reason: "About guest PRs; this was a Trusted blog post, so it didn't apply", useful: no }
 frictions:                         # REQUIRED (may be []) — list EVERY friction
   - description: …                 # ~20 words, honest
     solution: …                    # the fix, or what would have helped
@@ -113,8 +114,8 @@ ideas:                             # OPTIONAL — omit unless something sparked
   **Session** term for the absent-⇒-internal semantics and the mining-exclusion/
   ideas split. This authoring path doesn't set it.
 - `docsRead`/`skillsUsed` are your **curated** picks (the ones worth a `reason`).
-  A `docsRead` or `ruleVerdicts` `reason` says briefly what the doc or rule told
-  you; `useful` says whether that helped your task. You don't have to list
+  A `docsRead` `reason` says briefly what the doc told you; `useful` says
+  whether that helped your task. Step 3 says what a `ruleVerdicts` entry says. You don't have to list
   everything you touched — the extractor folds observed reads in. A read you
   *do* cite keeps your `reason`; the rest get a derived placeholder —
   `(read before editing)` if the same path was also edited (the Edit/Write tool
@@ -173,8 +174,14 @@ command of this session or its subagents showed you that doc. ADR-0009's
 merged-read amendment says what the stitch does with `(not read)`.
 
 It also lists every rule that loaded with no `ruleVerdicts` entry, including the
-global ones that load at session start. Answer each with a reason and a
-`useful` verdict.
+always-loaded ones (no `paths`; they load at session start). You can't see this
+list before your first `--author` pass, so expect a second pass. Answer each with a `useful` verdict
+and a one-sentence `reason` (about 20 words) that says why: for `yes` or
+`partly`, what in the rule changed or confirmed something you did; for `no`,
+why it didn't apply to this task, or what it got wrong. For a `yes` or `partly`
+rule that points to a full ADR or doc, also say why you did or didn't open it
+(the trace records whether): the summary was enough, or you needed a detail it
+held. Don't restate the rule.
 
 A later pass merges with the first, so list only the new or changed entries,
 but write each one whole: a pass replaces an entry with the same path.

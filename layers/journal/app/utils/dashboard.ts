@@ -206,7 +206,21 @@ export function skillRoleParts(role: string): { kind: 'text' | 'code' | 'em' | '
 // Maps each SessionDoc to the display view the session card renders (formats
 // dates, counts frictions, truncates the session id), so the card stays a dumb
 // renderer. `key` is the stable session id for the v-for.
-export function sessionCardViews(sessions: SessionDoc[]): (SessionCardView & { key: string })[] {
+// Rule path → its `# ` heading, so a card shows "ADR-0022: Autonomous triage
+// sweep" rather than a bare filename.
+export function sessionRuleTitles(sources: Record<string, string>): Record<string, string> {
+  const titles: Record<string, string> = {}
+  for (const [file, text] of Object.entries(sources)) {
+    const title = /^# (.+)$/m.exec(text)?.[1]?.trim()
+    if (title) titles[file.slice(file.lastIndexOf('.claude/rules/'))] = title
+  }
+  return titles
+}
+
+export function sessionCardViews(
+  sessions: SessionDoc[],
+  ruleTitles: Record<string, string> = {},
+): (SessionCardView & { key: string })[] {
   return sessions.map((s) => {
     const external = s.external === true
     return {
@@ -235,11 +249,11 @@ export function sessionCardViews(sessions: SessionDoc[]): (SessionCardView & { k
       filesEdited: s.filesEdited ?? [],
       docsReadViaShell: s.docsReadViaShell ?? [],
       rules: [
-        ...(s.rulesGlobal ?? []).map((path) => ({ path, global: true })),
-        ...(s.rulesLoaded ?? []).map((path) => ({ path, global: false })),
-      ].map(({ path, global }) => {
+        ...(s.rulesGlobal ?? []).map((path) => ({ path, alwaysLoaded: true })),
+        ...(s.rulesLoaded ?? []).map((path) => ({ path, alwaysLoaded: false })),
+      ].map(({ path, alwaysLoaded }) => {
         const v = s.ruleVerdicts?.find((r) => r.path === path)
-        return { path, global, followedUp: !!s.rulesFollowedUp?.includes(path), reason: v?.reason, useful: v?.useful }
+        return { path, title: ruleTitles[path], alwaysLoaded, followedUp: !!s.rulesFollowedUp?.includes(path), reason: v?.reason, useful: v?.useful }
       }),
       tools: sessionToolEntries(s.toolCounts),
     }

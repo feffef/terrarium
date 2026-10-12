@@ -586,7 +586,7 @@ doc no command of the session or its subagents showed it. The stitch drops a
 
 **Ratings.** A `docsRead` entry has an optional authored `useful` verdict
 (`yes`, `partly`, `no`). An optional `ruleVerdicts` list gives each loaded rule
-a `reason` and a `useful` verdict; the derived `rulesGlobal` lists the rules
-that load at session start. `--author` lists every doc and rule still missing
-one. Both are optional and additive, so no `schemaVersion` bump; older logs stay
-valid.
+a `reason` (why it helped or didn't) and a `useful` verdict; the derived
+`rulesGlobal` lists the always-loaded rules (no `paths`; they load at session
+start). `--author` lists every doc and rule still missing one. Both are optional
+and additive, so no `schemaVersion` bump; older logs stay valid.
