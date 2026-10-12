@@ -41,7 +41,7 @@ describe('tinkerfund Tenant', async () => {
       it(`renders the shell in ${space}`, async () => {
         const html = await $fetch(`/t/tinkerfund/${space}`)
         expect(html).toContain('Demo shop — nothing here is real')
-        expect(html).toContain('Reset demo')
+        expect(html).not.toContain('Reset demo')
         expect(html).toMatch(/<header[^>]*>[\s\S]*Tinkerfund[\s\S]*Discover[\s\S]*Categories[\s\S]*Deals/)
         expect(html).toContain(`href="/t/tinkerfund/${space}/cart"`)
         expect(html).toMatch(/<footer[\s\S]*How it works[\s\S]*Theme/)

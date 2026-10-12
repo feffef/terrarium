@@ -81,7 +81,9 @@ describe('tinkerfund Tenant', async () => {
       expect(placeholder).toEqual({ color: 'rgb(143, 156, 164)', opacity: '1' })
 
       // WCAG 1.4.11: the ring must sit on the surface, not over the checked option's ink fill.
-      await page.locator('.foot').getByRole('button', { name: 'Reset demo' }).focus()
+      // Reset demo stays away until the visitor has changed something (checked below).
+      expect(await page.getByRole('button', { name: 'Reset demo' }).count()).toBe(0)
+      await page.locator('.foot').getByRole('link', { name: 'Deals' }).focus()
       await page.keyboard.press('Tab')
       expect(await page.getByLabel('System').evaluate((el) => el === document.activeElement)).toBe(true)
       const ring = await page.locator('.theme .options').evaluate((el) => {
@@ -104,20 +106,17 @@ describe('tinkerfund Tenant', async () => {
       await visit('/how-it-works')
       expect(await page.evaluate(() => document.documentElement.dataset.tfTheme)).toBe('dark')
       expect(await page.getByLabel('Dark').isChecked()).toBe(true)
-      await Promise.all([
-        page.waitForEvent('load'),
-        page.locator('.demo').getByRole('button', { name: 'Reset demo' }).click(),
-      ])
-      expect(await page.evaluate(() => document.documentElement.dataset.tfTheme)).toBe('dark')
-      expect(await page.evaluate(() => sessionStorage.getItem('tinkerfund-theme'))).toBe('dark')
-      expect(await bg()).toBe(dark)
+      // A theme pick is a preference, not demo state: it doesn't reveal Reset demo.
+      expect(await page.getByRole('button', { name: 'Reset demo' }).count()).toBe(0)
 
       // Reset clears the demo Backer's actions but no other Tenant's keys, and not the theme.
       await visit('/campaigns/goal-exact-stapler')
       await page.evaluate(() => sessionStorage.setItem('journal:keep', '1'))
+      expect(await page.getByRole('button', { name: 'Reset demo' }).count()).toBe(0)
       await page.getByRole('article', { name: 'One stapler' }).getByRole('button', { name: 'Add to cart' }).click()
       await page.getByRole('dialog', { name: 'Added to your Cart' }).getByRole('button', { name: 'Close' }).click()
       expect(await page.evaluate(() => sessionStorage.getItem('tinkerfund:qa:actions'))).toContain('stapler')
+      await expect.poll(() => page.getByRole('button', { name: 'Reset demo' }).count()).toBe(2)
       await Promise.all([
         page.waitForEvent('load'),
         page.locator('.foot').getByRole('button', { name: 'Reset demo' }).click(),

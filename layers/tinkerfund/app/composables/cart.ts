@@ -10,19 +10,15 @@ export interface TinkerfundBacking {
 }
 
 /**
- * The demo Backer in this Space (issue #1359): their stored actions, replayed
- * over the baked shop into a Cart, Pledges and totals. Empty on the server and
- * on the first client render, then read from sessionStorage after mount, so
- * hydration always agrees. An action is taken at a freshly read "now"; one
- * the rules refuse is not stored, and answers why. The Cart ships to the
- * `chosen` zone, else to the demo Backer's own address.
+ * The demo Backer's stored actions in this Space: empty on the server and on
+ * the first client render, then read from sessionStorage after mount, so
+ * hydration always agrees. Shared by the Cart and Reset demo.
  */
-export async function useTinkerfundCart(chosen: Readonly<Ref<TinkerfundZone | undefined>> = ref()) {
-  const { space, pagesKey, collections } = useTinkerfundSpace()
+export function useTinkerfundActions() {
+  const { space } = useTinkerfundSpace()
   const actions = useState<TinkerfundAction[]>(`tinkerfund-actions-${space}`, () => [])
   const loaded = useState(`tinkerfund-actions-loaded-${space}`, () => false)
 
-  // Registered before the first await, while the component is still current.
   onMounted(() => {
     if (loaded.value) return
     try {
@@ -32,6 +28,21 @@ export async function useTinkerfundCart(chosen: Readonly<Ref<TinkerfundZone | un
     }
     loaded.value = true
   })
+
+  return { actions, loaded }
+}
+
+/**
+ * The demo Backer in this Space (issue #1359): their stored actions, replayed
+ * over the baked shop into a Cart, Pledges and totals (see `useTinkerfundActions`
+ * for when they load). An action is taken at a freshly read "now"; one
+ * the rules refuse is not stored, and answers why. The Cart ships to the
+ * `chosen` zone, else to the demo Backer's own address.
+ */
+export async function useTinkerfundCart(chosen: Readonly<Ref<TinkerfundZone | undefined>> = ref()) {
+  const { space, pagesKey, collections } = useTinkerfundSpace()
+  // Registered before the first await, while the component is still current.
+  const { actions, loaded } = useTinkerfundActions()
 
   const clockReady = useTinkerfundClock()
   const shopReady = useTinkerfundShop()
