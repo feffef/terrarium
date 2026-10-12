@@ -45,7 +45,10 @@ export default defineNuxtConfig({
     // or never, for a silently ignored option. Add just that glob.
     // Path is relative to the buildDir (`.nuxt/`), matching the style of Nuxt's
     // own `../layers/*/app/**/*` entry.
+    // Incremental, so the Gate's warm `vue-tsc` run re-checks only what changed
+    // (cached across CI runs, .github/actions/gate/action.yml). Relative to `.nuxt/`.
     tsConfig: {
+      compilerOptions: { incremental: true, tsBuildInfoFile: '../node_modules/.cache/tsc/nuxt.tsbuildinfo' },
       include: ['../layers/*/tenant.config.*'],
     },
   },
