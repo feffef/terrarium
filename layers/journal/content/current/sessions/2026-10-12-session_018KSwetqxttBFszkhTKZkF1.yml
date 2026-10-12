@@ -1,0 +1,121 @@
+schemaVersion: 1
+session: session_018KSwetqxttBFszkhTKZkF1
+startedAt: 2026-10-12T18:53:50Z
+endedAt: 2026-10-12T19:14:03Z
+kind: interactive
+goal: Diagnose the clear-backlog run and fix the clear-backlog Skill
+status: in-review
+outcome: "Diagnosis reported; clear-backlog Skill revised in PR #1852"
+summary: "Human-instructed: the owner asked for an Explore agent to diagnose session session_017NBxJhtBSd9AoCwTzsg6pM (a clear-backlog run) against its session log, transcript and the clear-backlog Skill. The agent paged the full transcript with the claude-code-remote list_events tool and found: an unreviewed PR offered for human merge, six PRs reviewed inline only, the orchestrator building 7 of 9 PRs itself, owner questions buried in status chatter (continuing after the owner complained), and a fix pushed to an already-merged branch. The owner then chose the fixes (human-instructed): every branch gets the full code-review Skill and is built by a dispatched agent (sonnet for simple tasks), no PR opens before review, questions are numbered Q1.. with a)/b)/c) options. I added (agent-initiated, within that direction) a quiet-chat rule, a push notification per follow-up round, a pointer to pr-workflow's pre-push check, and close-session at first PR open per CLAUDE.md."
+prs:
+  - "1852"
+docsRead:
+  - path: .agents/skills/clear-backlog/SKILL.md
+    reason: the Skill being fixed
+    useful: yes
+  - path: docs/agents/pr-workflow.md
+    reason: pre-push merged-PR check to point at
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: required before fetch/commit
+    useful: partly
+  - path: docs/agents/github-integration.md
+    reason: required before GitHub ops; transcript tools note
+    useful: partly
+  - path: layers/journal/content/current/sessions/2026-10-12-session_017NBxJhtBSd9AoCwTzsg6pM.yml
+    reason: (no reason given)
+skillsUsed:
+  - name: writing-for-agents
+    reason: positive phrasing and leading words for the Skill edit
+  - name: close-session
+    reason: PR opened
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Skipped reading CONTEXT-MAP.md and CONTEXT.md at session start, as CLAUDE.md requires; went straight to dispatching the Explore agent.
+    solution: Read them first; low impact here since the task was a Skill prose edit using no glossary-sensitive terms.
+    severity: nit
+  - description: "The clear-backlog Skill itself caused the diagnosed run's problems: a few-line inline-review exception, no review-before-PR ordering, optional dispatching, no chat discipline."
+    solution: "Fixed in PR #1852."
+    severity: major
+durationSec: 1213
+models:
+  claude-opus-5-5: 50
+toolCounts:
+  Agent: 1
+  Read: 4
+  Bash: 11
+  Skill: 3
+  Edit: 5
+  ToolSearch: 1
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+filesEdited:
+  - .agents/skills/clear-backlog/SKILL.md
+rulesLoaded:
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/adr-0008.md
+rulesGlobal:
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0001.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0023.md
+  - .claude/rules/adr-0017.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0022.md
+    reason: Auto-triage green-light; the edit kept clear-backlog's triage phase unchanged, so it did not bear on my change.
+    useful: no
+  - path: .claude/rules/adr-0004.md
+    reason: Made me run gate:scoped before pushing; summary was enough.
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Prompted close-session at PR open; summary was enough.
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: Checked the Skill was not in a prune trial; none applied.
+    useful: partly
+  - path: .claude/rules/adr-0001.md
+    reason: Content baking; unrelated to a Skill prose edit.
+    useful: no
+  - path: .claude/rules/adr-0020.md
+    reason: The Skill cites it for Public issues; I left that line unchanged.
+    useful: no
+  - path: .claude/rules/adr-0003.md
+    reason: Told me to open the PR myself and subscribe despite the harness default; summary was enough.
+    useful: yes
+  - path: .claude/rules/adr-0023.md
+    reason: Guest pipeline; not relevant to this owner-directed edit.
+    useful: no
+  - path: .claude/rules/adr-0017.md
+    reason: Put the provenance line first in the PR body.
+    useful: yes
+  - path: .claude/rules/adr-0005.md
+    reason: Confirmed a Skill change goes through a gated PR; summary was enough.
+    useful: partly
+  - path: .claude/rules/adr-0029.md
+    reason: Loaded with writing-for-agents; no rule file was added, so it did not apply.
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Loaded when I grepped it; confirmed Skills are not Human-only, so the PR can self-merge.
+    useful: yes
+  - path: .claude/rules/tenant-layers.md
+    reason: Loaded via the gate's content checks; no Tenant layer was touched.
+    useful: no
+  - path: .claude/rules/adr-0008.md
+    reason: Loaded incidentally; it did not bear on a Skill prose edit.
+    useful: no
+subagents:
+  - type: Explore
+    task: Investigate failed clear-backlog session
+gitBranch: claude/wizardly-ramanujan-i6v8es
+entrypoint: remote
+cliVersion: 2.1.296
+landedBy: Stop
