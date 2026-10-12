@@ -208,3 +208,20 @@ observations:
       window did read it), and the edits themselves verified correct, so no
       damage; below the escalation bar. No reverts in the 2-week sweep.
       Grade/role unchanged.
+  - date: "2026-10-12"
+    note: >-
+      Re-checked (audit-skills behaviour check), 2 freshly-audited sessions
+      beyond the 2026-10-11 entry: session_01YVCyXmxSSDQ6csSBVJ554H (PR
+      #1781) and session_01GbMt1vGTDZpQxZ3h4pNsF8 (PR #1758/#1760, issue
+      #1759) — both clean, diffs match claims, PR #1760's
+      `scripts/merge-pr.ts` touch correctly escalated to human merge
+      (ADR-0004's Human-only list), issue #1759's ambiguity genuinely
+      resolved by a human. One sub-threshold note, not escalated:
+      session_01YVCyXmxSSDQ6csSBVJ554H saved reviewer replies by having
+      each subagent write its own scratchpad file rather than copying them
+      verbatim, the opposite of the SKILL.md step-3 text in effect at the
+      time (which had just flipped, again, 09:40:52) — self-reported, nit
+      severity, zero outcome damage, but the step-3 wording has now
+      reversed direction twice in under 48h without a run actually
+      following the current text; worth a future check. No reverts in the
+      2-week sweep. Grade/role unchanged.

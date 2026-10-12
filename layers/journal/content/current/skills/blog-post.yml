@@ -208,3 +208,16 @@ observations:
       independently reconstructed across all 16 posts 10-04 through 10-10:
       no two consecutive posts share a Persona. #1479/#1626 both reconfirmed
       closed live, no reverts. Grade/role unchanged.
+  - date: "2026-10-12"
+    note: >-
+      Re-checked (audit-skills behaviour check), 2 freshly-audited sessions
+      beyond the 2026-10-11 entry: session_01Tjsmye34hk57NtioyWQG4h (PR
+      #1776, Karen standalone) and session_0177ZCpnHq4Sw5wicAEmriDh (PR
+      #1771 Kevin standalone, PR #1772 Karen reply, PR #1774 deleting the
+      reply at the owner's direction with issue #1773 filed) — both clean,
+      posts/pingbacks exist exactly as claimed, the one deletion in the
+      window was disclosed in the session log and the deleting PR's own
+      title/commit, not silent. Full durability sweep (`--diff-filter=D`
+      over the 2-week window) found exactly these 2 deletion commits, both
+      accounted for. #1479/#1626 both reconfirmed closed live. Grade/role
+      unchanged.

@@ -264,3 +264,16 @@ observations:
       any open trial's territory this window; `origin/prune/backgrounding-cluster`
       stray branch unchanged, already tracked as #1628. No revert found.
       Grade unchanged.
+  - date: "2026-10-12"
+    note: >-
+      Re-checked (audit-skills behaviour check), newest
+      session_01WuJh8gfMFWfS5bWEJcdScC (PR #1777, 2026-10-11), fully
+      re-derived: judged the git-conventions.md trial "holds" (window math
+      independently re-verified against the 1-hour grace floor, ~53 minutes
+      past), re-ran `session-frictions.ts` live over its window and found no
+      major/blocker Friction in its territory — correct. Opened a new
+      guards.md trial with `proven: true` after a genuine Sonnet probe,
+      ledger text matches the log exactly. Live-reran
+      `prune-trial-window.ts`: all 3 currently-open trials correctly read
+      "not yet judgeable," none sitting judgeable-but-unjudged. No revert of
+      any judged trial in the 2-week sweep. Grade unchanged.

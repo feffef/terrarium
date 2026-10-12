@@ -286,3 +286,28 @@ observations:
       self-reported by session_015BjYk46dntcMuAWMn1z4Zw — the
       self-improvement loop working as designed. No reverts. Grade
       unchanged.
+  - date: "2026-10-12"
+    note: >-
+      Re-checked (audit-skills behaviour check), 10 newest usedIn sessions
+      plus 3 windowNotUsed. All 13 logs sit on origin/main, landed via
+      `landedBy: Stop`, no stuck-on-branch logs; `skillsUsed` tagging on the
+      10 newest looked accurate, correctly keeping reviewer-subagent-only
+      reads out of it. The 3 windowNotUsed sessions all have complete,
+      schema-valid logs with `close-session` in `skillsUsed` but no explicit
+      `log-session` entry — the same already-tracked transitive-invocation
+      tagging gap (2026-10-09/10/11 entries), not a missed invocation; one
+      (session_015CSc6hNccF3XgrSGaGGqjD) is the same session already named
+      there. NEW silent failure found and escalated: issue #1786 ("shell-read
+      false positives persist") was closed `completed` by PR #1792, but PR
+      #1792's own body admits "a doc credited only by shell output can still
+      be marked (not read)" — a narrower fix (for Read-tool-sourced credits)
+      than #1786's actual reported shape (all shell-output credits).
+      Confirmed still broken: the very next session,
+      session_01QfaLuSd5cnBQPu8CCRrvkn (~43 minutes after #1792 merged),
+      logged two fresh shell-output-credit false positives
+      (docs/adr/0029/0003), neither doc appearing in its `docsRead` at all.
+      Reopened #1786 with this evidence and `needs-triage` rather than
+      filing a duplicate. The Friction Ledger (`shell-read-detection.yml`)
+      was not fooled (still `status: open`) but the issue tracker's state
+      was. No reverts of log-session's own mechanics in the 2-week sweep.
+      Grade/role unchanged.
