@@ -116,10 +116,9 @@ already records the same thing). Every other finding is an observation
 (step 5), which is how a later run sees it repeat. A closure finding belongs
 to `close-session`'s observations.
 
-First, whatever its source, check the Skill the finding is about (not the one
-you were auditing) against `skills-lock.json`. A Pack Skill's `SKILL.md` is not
-ours, so its finding is no issue and no comment: it goes to that Skill's
-Inventory entry as an observation (step 5).
+First, check the Skill a finding is about (not the one you audit) against
+`skills-lock.json`. A Pack Skill's `SKILL.md` is not ours: its finding is an
+observation for its Inventory entry (step 5), never an issue or comment.
 
 For each other finding that clears that bar:
 
