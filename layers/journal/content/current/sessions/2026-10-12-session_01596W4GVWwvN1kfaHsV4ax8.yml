@@ -1,0 +1,200 @@
+schemaVersion: 1
+session: session_01596W4GVWwvN1kfaHsV4ax8
+startedAt: 2026-10-12T15:03:46Z
+endedAt: 2026-10-12T15:08:09Z
+kind: delegated
+goal: Triage sweep of the open issue backlog
+status: completed
+outcome: "Seven issues triaged: four ready-for-agent, three ready-for-human; no PR needed"
+summary: "The owner started the auto-triage Skill with one slash command (human-instructed; it is the standing green-light under ADR-0022). I listed the open issues, checked who wrote each one's latest activity, and found seven eligible: #1786, #1797, #1798, #1802, #1816, #1817 and #1818 (needs-triage or unlabeled; every other open issue already had an AI-authored last comment or body, and no external PRs were open). I dispatched one read-only triage subagent per issue (agent-initiated). Each verified claims against the repo and posted one comment with labels. Results: #1797, #1798, #1817, #1818 ready-for-agent with briefs; #1786, #1802, #1816 ready-for-human (governance or glossary calls, and #1786 sits inside an open Prune Trial). The #1818 subagent found the issue's push theory wrong (the test fakes the remote with update-ref). I did not write code or open a PR. I did not check the new ready-for-agent issues for file overlap with the older open ready-for-agent issues (#1499, #1712, #1778); among the new four there is none."
+prs: []
+docsRead:
+  - path: CONTEXT-MAP.md
+    reason: context index; required at session start
+    useful: partly
+  - path: CONTEXT.md
+    reason: glossary for triage wording and Session kind
+    useful: partly
+  - path: docs/agents/github-integration.md
+    reason: write traps and overflow-safe listing script
+    useful: yes
+  - path: docs/agents/issue-tracker.md
+    reason: wayfinder blocking and PR triage conventions
+    useful: yes
+  - path: docs/agents/triage-labels.md
+    reason: label vocabulary and requester-trust gate
+    useful: yes
+  - path: docs/adr/0022-autonomous-triage-sweep.md
+    reason: bounds of the standing green-light
+    useful: yes
+  - path: .claude/skills/triage/SKILL.md
+    reason: per-issue rules and disclaimer
+    useful: yes
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: "read by the #1798 subagent to verify the Pack-Skill rule"
+    useful: yes
+  - path: docs/agents/domain.md
+    reason: "read by the #1816 subagent: glossary changes need a human"
+    useful: yes
+  - path: .agents/skills/midden-catalogue/SKILL.md
+    reason: "read by the #1802 subagent for reading A"
+    useful: yes
+  - path: .agents/skills/close-session/SKILL.md
+    reason: "read by the #1797 subagent: keyword mandate"
+    useful: yes
+  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
+    reason: "read by the #1786 subagent for the shell-read amendment"
+    useful: yes
+  - path: layers/midden/CONTEXT.md
+    reason: "read by the #1802 subagent for the cataloguing discipline"
+    useful: yes
+  - path: docs/adr/0003-agent-operating-model-and-governance.md
+    reason: "read by the #1802 subagent for the self-merge amendment"
+    useful: yes
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: "read by the #1802 subagent for the human-merge list"
+    useful: yes
+  - path: docs/agents/pr-workflow.md
+    reason: "read by the #1802 subagent for per-tier merge authority"
+    useful: partly
+  - path: .claude/skills/triage/AGENT-BRIEF.md
+    reason: (no reason given)
+  - path: .claude/skills/auto-triage/SKILL.md
+    reason: (no reason given)
+  - path: scripts/shell-reads.ts
+    reason: (no reason given)
+  - path: scripts/check-worktrees.ts
+    reason: (no reason given)
+  - path: tests/unit/check-worktrees.spec.ts
+    reason: (no reason given)
+  - path: layers/tinkerfund/tests/e2e/tinkerfund-flows.spec.ts
+    reason: (no reason given)
+  - path: scripts/audit-skills.ts
+    reason: (no reason given)
+skillsUsed:
+  - name: auto-triage
+    reason: the sweep itself
+  - name: triage
+    reason: per-issue rules, applied by the subagents
+  - name: close-session
+    reason: closure
+  - name: log-session
+    reason: this log
+frictions:
+  - description: "Subagent for #1797 could not find closed issues with gh api, so its redundancy check on closed issues was incomplete."
+    solution: Document a working REST recipe for listing closed issues in github-integration.md or add a script.
+    severity: minor
+  - description: "I relayed subagent claims (for example the #1818 cause) without re-checking them against the source myself."
+    solution: Spot-check one claim per hand-back, or have briefs require cited lines.
+    severity: nit
+  - description: I did not read the dispatch-subagents Skill before dispatching; the subagents touched no git, so no harm came of it.
+    solution: CLAUDE.md trigger says git or worktree only; fine as written.
+    severity: nit
+  - description: The skill's overlap check against older open ready-for-agent issues was left undone and is reported as unchecked.
+    solution: Have the sweep script list ready-for-agent issue files, or make the subagent brief request overlap checks.
+    severity: minor
+durationSec: 263
+models:
+  claude-sonnet-5-5: 46
+toolCounts:
+  Read: 7
+  Bash: 8
+  Agent: 7
+  Skill: 2
+  Write: 2
+rulesLoaded:
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0018.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0008.md
+  - .claude/rules/adr-0015.md
+  - .claude/rules/tenant-layers.md
+rulesGlobal:
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0001.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0023.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0004-human-merge.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0022.md
+    reason: Defined the sweep's bounds; I opened the full ADR to confirm the amendments.
+    useful: yes
+  - path: .claude/rules/adr-0004.md
+    reason: No PR or gate this session, so it did not apply.
+    useful: no
+  - path: .claude/rules/adr-0009.md
+    reason: Told me to invoke close-session; the summary was enough.
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: "Prune trials mattered only through a subagent's overlap finding on #1786."
+    useful: partly
+  - path: .claude/rules/adr-0001.md
+    reason: Build architecture, unrelated to triage.
+    useful: no
+  - path: .claude/rules/adr-0020.md
+    reason: Confirmed all issues were Trusted-authored; summary was enough.
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Open-a-PR rule did not apply to a labels-only sweep.
+    useful: no
+  - path: .claude/rules/adr-0023.md
+    reason: Guest pipeline; no Public issues were in the set.
+    useful: no
+  - path: .claude/rules/adr-0017.md
+    reason: Required the provenance header on every GitHub comment; I put it in each brief.
+    useful: yes
+  - path: .claude/rules/adr-0021.md
+    reason: Context split; irrelevant to triage.
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: How rules load; did not change what I did.
+    useful: no
+  - path: .claude/rules/adr-0018.md
+    reason: Tenant layers and ADR editing; not touched.
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Subagents used it to judge human-merge needs for briefs.
+    useful: partly
+  - path: .claude/rules/adr-0005.md
+    reason: "Skills-are-code; relevant only to the #1798 fix territory."
+    useful: no
+  - path: .claude/rules/adr-0008.md
+    reason: Journal Tenant rule; not relevant to triage.
+    useful: no
+  - path: .claude/rules/adr-0015.md
+    reason: "Pack Skills stay as installed; confirmed #1798's rule via a subagent."
+    useful: partly
+  - path: .claude/rules/tenant-layers.md
+    reason: Loaded by a layers file read; not relevant to triage.
+    useful: no
+subagents:
+  - type: general-purpose
+    task: "Triage #1818"
+  - type: general-purpose
+    task: "Triage #1817"
+  - type: general-purpose
+    task: "Triage #1816"
+  - type: general-purpose
+    task: "Triage #1802"
+  - type: general-purpose
+    task: "Triage #1798"
+  - type: general-purpose
+    task: "Triage #1797"
+  - type: general-purpose
+    task: "Triage #1786"
+gitBranch: ccr-8d258eed-veg4jl
+entrypoint: remote_mobile
+cliVersion: 2.1.296
+landedBy: Stop
