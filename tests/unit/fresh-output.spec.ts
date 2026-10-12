@@ -37,7 +37,7 @@ describe('reusableOutput()', () => {
   beforeEach(() => {
     fixture = createGitFixture('fresh-output')
     root = fixture.work
-    commitFile(root, '.gitignore', '.output', 'ignore')
+    commitFile(root, '.gitignore', '.output\n.pw-browsers', 'ignore')
     commitFile(root, 'src/a.ts', 'a', 'a')
     commitFile(root, 'src/b.ts', 'b', 'b')
     mkdirSync(join(root, '.output/server'), { recursive: true })
@@ -50,6 +50,13 @@ describe('reusableOutput()', () => {
 
   it('reuses an output built after every source, and reports when', () => {
     expect(reusableOutput(root, {})).toEqual({ dir: join(root, '.output'), builtAt: new Date(BUILT * 1000) })
+  })
+
+  it('stays fresh when a gitignored directory appeared at the root after the build', () => {
+    mkdirSync(join(root, '.pw-browsers'))
+    stamp('.pw-browsers', BUILT + 10)
+    stamp('.', BUILT + 10)
+    expect(reusableOutput(root, {})).toBeDefined()
   })
 
   it('builds when a tracked file changed after the build', () => {

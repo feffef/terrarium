@@ -26,6 +26,8 @@ function sourceMtimes(root: string): number[] {
   const files = [...git('ls-files', '-z'), ...git('ls-files', '-z', '--others', '--exclude-standard')]
   const paths = new Set(files)
   for (const file of files) for (let dir = dirname(file); !paths.has(dir); dir = dirname(dir)) paths.add(dir)
+  // CI creates the gitignored `.pw-browsers` here after the build, which bumps the root's mtime.
+  paths.delete('.')
   return [...paths].flatMap((path) => mtimeOf(join(root, path)) ?? [])
 }
 
