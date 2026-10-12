@@ -1,0 +1,163 @@
+schemaVersion: 1
+session: session_01BkB4AFUGkEudyf13aa44Wy
+startedAt: 2026-10-12T16:48:12Z
+endedAt: 2026-10-12T17:25:51Z
+kind: autonomous
+goal: Visitor-loop run on the homepage focus
+status: completed
+outcome: Two consensus fixes (#1837) and a five-minute tour page (#1838) merged; one issue filed (#1839)
+summary: "Scheduled visitor-loop run, focus homepage; entirely agent-initiated, no human prompt. Served the production build and sent three blind visitors (sonnet, fable, opus). Consensus findings: \"seven sites\" vs five on the home page (all three) and Tinkerfund's \"More sites in the Terrarium ↗\" bar (two). Fixed both in #1837 as copy-only edits, because adding Commons or Marquee to the home page or footer is ruled out by decisions.md. The raw \"Worst frictions\" text on the Journal landing (two visitors) is out of remit, so it became #1839. The Journal-first CTA complaint was dropped per decisions.md. The chosen feature, \"Five Minutes in the Terrarium\" (all three asked for a curated route), became an onramp Journal page in #1838, renumbering the other cards and updating one e2e test. Code review was done inline because both diffs were tiny."
+prs:
+  - "1837"
+  - "1838"
+docsRead:
+  - path: CONTEXT.md
+    reason: glossary
+    useful: yes
+  - path: docs/agents/pr-workflow.md
+    reason: merge recipe and verdict requirement
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: MCP tool mapping
+    useful: partly
+  - path: docs/agents/git-conventions.md
+    reason: fetch and branch restart
+    useful: partly
+  - path: docs/agents/verifying-ui-changes.md
+    reason: probe and shot tooling
+    useful: yes
+  - path: CONTEXT-MAP.md
+    reason: context index
+    useful: partly
+  - path: .claude/skills/visitor-loop/visitor-brief.md
+    reason: (no reason given)
+  - path: .claude/skills/visitor-loop/decisions.md
+    reason: (no reason given)
+skillsUsed:
+  - name: visitor-loop
+    reason: the run itself
+  - name: code-review
+    reason: invoked; ran inline instead of two sub-agents for a 2-hunk diff
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: gate:scoped failed once on an unrelated Tinkerfund checkout e2e (matcher timeout) and passed on rerun, costing about a minute.
+    solution: Make that poll tolerant of slow runners.
+    severity: nit
+  - description: A broad search_issues query returned huge issue bodies (Tinkerfund spec), flooding context.
+    solution: Use minimal_output or narrower queries for duplicate searches.
+    severity: minor
+  - description: Moving the onramp renumbering between the fix and feature PRs needed stash juggling; the feature's test broke on first gate.
+    solution: Keep onramp-order edits and tests in one commit from the start.
+    severity: nit
+durationSec: 2259
+models:
+  claude-sonnet-5-5: 107
+toolCounts:
+  Read: 5
+  Bash: 45
+  Agent: 3
+  mcp__github__search_issues: 4
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 2
+  Skill: 3
+  mcp__github__add_issue_comment: 2
+  mcp__github__issue_write: 1
+rulesLoaded:
+  - .claude/rules/adr-0028.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0018.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0008.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/adr-0002.md
+rulesGlobal:
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0001.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0023.md
+  - .claude/rules/adr-0017.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Told me to run gate:scoped before pushing and which edits need a human; the summary was enough.
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Ledger row set the remit I used to sort fixes; I grepped the row rather than reading the full ADR.
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Required the provenance line on PR and issue bodies; the summary was enough.
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Reminded me to close-session; the summary was enough.
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: About prune trials; no trial touched this work.
+    useful: no
+  - path: .claude/rules/adr-0022.md
+    reason: About auto-triage sweeps; not this run.
+    useful: no
+  - path: .claude/rules/adr-0001.md
+    reason: Background on baked content; no effect on a copy edit.
+    useful: no
+  - path: .claude/rules/adr-0020.md
+    reason: Trust tiers; all content here was Trusted-owned, so it didn't apply.
+    useful: no
+  - path: .claude/rules/adr-0023.md
+    reason: Guest pipeline; no guest PR involved.
+    useful: no
+  - path: .claude/rules/adr-0028.md
+    reason: Payload caching; no effect on these edits.
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Loaded after a read; none of my paths were human-only, so merge-pr proceeded.
+    useful: partly
+  - path: .claude/rules/adr-0018.md
+    reason: Tenant layers note; the edits stayed inside existing layers.
+    useful: partly
+  - path: .claude/rules/adr-0029.md
+    reason: About rule loading; irrelevant to the task.
+    useful: no
+  - path: .claude/rules/adr-0021.md
+    reason: Context split; no vocabulary change.
+    useful: no
+  - path: .claude/rules/adr-0005.md
+    reason: Skills as code; I did not edit a Skill.
+    useful: no
+  - path: .claude/rules/adr-0008.md
+    reason: Journal documents the Platform; confirmed the on-ramp page is Journal content.
+    useful: partly
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: MDC guidance; I used plain Markdown.
+    useful: no
+  - path: .claude/rules/tenant-layers.md
+    reason: Tenant layers gotchas; not needed for page and component edits.
+    useful: no
+  - path: .claude/rules/adr-0002.md
+    reason: Manifest rule; I changed no manifest.
+    useful: no
+subagents:
+  - type: general-purpose
+    task: Visitor (sonnet)
+    model: sonnet
+  - type: general-purpose
+    task: Visitor (fable)
+    model: fable
+  - type: general-purpose
+    task: Visitor (opus)
+    model: opus
+gitBranch: claude/adoring-galileo-bmcrw0
+entrypoint: remote_trigger
+cliVersion: 2.1.296
+trigger: visitor-loop
+ideas:
+  - "Add an optional one-line plain summary field to friction entries in session logs, and show it in the Journal's Worst frictions list (see #1839)"
+landedBy: Stop
