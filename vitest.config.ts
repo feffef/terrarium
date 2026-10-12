@@ -29,12 +29,27 @@ export default defineConfig({
   },
   test: {
     // Platform tests live under `tests/`; Tenant-specific tests live in their
-    // layer under `layers/<tenant>/tests/` (see tests/README.md). Only `.spec.ts`
-    // is collected — tenant e2e modules use `.e2e.ts` and run via the platform
-    // smoke spec's single build, so they are never collected standalone.
-    include: ['tests/**/*.spec.ts', 'layers/*/tests/**/*.spec.ts'],
-    // e2e (L2) builds the app and is slow; unit (L0/L1/L3) is fast.
-    // `pnpm test` runs unit only; `pnpm test:e2e` runs the smoke render.
+    // layer under `layers/<tenant>/tests/` (see tests/README.md). `pnpm test` and
+    // `pnpm test:e2e` select a project by path. The build lives in the e2e
+    // project's globalSetup, which vitest runs only when an e2e spec is selected.
+    // Shared: e2e flows need it, and unit specs always ran under it.
     testTimeout: 120_000,
+    projects: [
+      {
+        extends: true,
+        test: {
+          name: 'unit',
+          include: ['tests/unit/**/*.spec.ts', 'layers/*/tests/unit/**/*.spec.ts'],
+        },
+      },
+      {
+        extends: true,
+        test: {
+          name: 'e2e',
+          include: ['tests/e2e/**/*.spec.ts', 'layers/*/tests/e2e/**/*.spec.ts'],
+          globalSetup: ['tests/support/e2e-global-setup.ts'],
+        },
+      },
+    ],
   },
 })

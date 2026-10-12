@@ -40,9 +40,10 @@ re-checked). Entries that came from a specific session cite it.
 - **Before calling an e2e/Playwright failure "pre-existing" or
   "environment-only," reproduce it on both `origin/main` and the branch with the
   full `test:e2e` suite (never a `-t`-filtered single test) against a fresh
-  `pnpm build` (never a reused `.output`).** A narrowed or stale repro isn't a
+  build (run `pnpm build` then `pnpm test:e2e`, or set `E2E_FRESH_BUILD=1`; the
+  e2e run rebuilds a stale `.output` itself).** A narrowed or stale repro isn't a
   valid comparison: a filtered test skips setup/ordering the full suite
-  exercises, and a reused `.output` can omit the change under test. A PR once
+  exercises, and a stale `.output` can omit the change under test. A PR once
   called a failing assertion pre-existing on such a repro, and CI then failed
   for real on it (issue #907).
 - **For the common case of checking one already-serving in-page value** (a
