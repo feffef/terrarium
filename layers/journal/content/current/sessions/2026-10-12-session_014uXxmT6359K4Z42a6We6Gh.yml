@@ -1,0 +1,203 @@
+schemaVersion: 1
+session: session_014uXxmT6359K4Z42a6We6Gh
+startedAt: 2026-10-12T09:18:26Z
+endedAt: 2026-10-12T09:59:03Z
+kind: delegated
+goal: "Visitor loop on the Journal: three blind visitors, consensus fixes, one feature"
+status: completed
+outcome: "Fix PR #1806 and feature PR #1807 both merged on green gates"
+summary: "One human prompt kicked off the run (/visitor-loop with focus on journal); everything after was agent-initiated inside the visitor-loop remit. Built and served the production preview, sent three blind visitors (sonnet, fable, opus) into /t/journal/current and tallied their reports. Five consensus findings were fixed in #1806 (Worst snags clamped to two lines, session summaries split into paragraphs for display, captions on the current/archived toggle, a key and no zero counts on the Skills chips, jump links on the Ideas page). Eight more consensus clusters were dropped because the week's ideas already logged them or decisions.md rules them out. All seven owner-correction candidates were reworks of other work, so no decisions.md line. The feature, chosen because opus and fable both asked for a friction trend, is a \"Snags per session, by day\" panel (#1807). Code review caught a real honesty problem in my first version: \"fewer is better\" punishes honest friction logging, so the caption now says self-reported, counts are real text for screen readers, and the bars scroll on phones instead of hiding labels. One reviewer suggestion (drop `?? 0`) was wrong and reddened the typecheck once. Both PRs were merged with merge-pr.ts after posting verdicts."
+prs:
+  - "1806"
+  - "1807"
+docsRead:
+  - path: CONTEXT-MAP.md
+    reason: session-start context map
+    useful: partly
+  - path: CONTEXT.md
+    reason: "glossary: Friction, Session kind, Digest, Gate"
+    useful: yes
+  - path: docs/adr/0003-agent-operating-model-and-governance.md
+    reason: visitor-loop ledger row bounds what the run may change
+    useful: yes
+  - path: .claude/skills/visitor-loop/visitor-brief.md
+    reason: brief given verbatim to each visitor
+    useful: yes
+  - path: .claude/skills/visitor-loop/decisions.md
+    reason: owner rulings used to drop footer and tile findings
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: git hygiene before first git command
+    useful: partly
+  - path: layers/journal/CONTEXT.md
+    reason: Journal Tenant purpose and page layout
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: MCP tool surface; read after a hook prompted it
+    useful: partly
+  - path: docs/agents/pr-workflow.md
+    reason: merge recipe and chartered-run closing steps
+    useful: yes
+  - path: docs/agents/verifying-ui-changes.md
+    reason: probe.ts and preview shot for DOM evidence
+    useful: yes
+  - path: layers/journal/app/pages/t/journal/[space]/index.vue
+    reason: (no reason given)
+  - path: layers/journal/app/pages/t/journal/[space]/ideas.vue
+    reason: (no reason given)
+  - path: layers/journal/app/components/journal/SkillInventory.vue
+    reason: (no reason given)
+  - path: scripts/chromium-path.ts
+    reason: (no reason given)
+  - path: layers/journal/app/utils/dashboard.ts
+    reason: (no reason given)
+skillsUsed:
+  - name: visitor-loop
+    reason: the run itself
+  - name: code-review
+    reason: two-axis review of both PRs
+  - name: close-session
+    reason: session closure
+  - name: log-session
+    reason: authoring this log
+frictions:
+  - description: "Opened PR #1806 before reading docs/agents/pr-workflow.md, and made the first GitHub call before github-integration.md; a hook reminded me only afterwards."
+    solution: Read both docs when the visitor-loop Skill reaches step 4, or have the Skill's step 4 name pr-workflow.md up front as it does for verifying-ui-changes.
+    severity: minor
+  - description: Invoked close-session only after both PRs had merged, not at the first PR-open as ADR-0009 and the closing recipe require.
+    solution: Make step 4 of the visitor-loop Skill say 'open the PR, then close-session' as its own bullet so the closure point is not missed.
+    severity: minor
+  - description: Read several repo files with Bash sed/grep/python instead of the Read tool, against CLAUDE.md's Read-tool rule; no read was lost.
+    solution: Use Read for whole files and Grep for searches; reserve Bash for commands that act.
+    severity: nit
+  - description: The standards reviewer claimed `?? 0` was dead code; removing it failed the typecheck and cost one extra gate run.
+    solution: Run vue-tsc or the gate before accepting a reviewer's 'dead code' claim on typed index access.
+    severity: nit
+  - description: The visitors' reports were mostly already logged as ideas this week, so most tally time went to dedupe against ideas.ts output of 71 notes.
+    solution: Have ideas.ts gather accept a keyword filter so a tally can search the week's ideas directly.
+    severity: minor
+durationSec: 2437
+models:
+  claude-sonnet-5-5: 163
+toolCounts:
+  Read: 16
+  Bash: 45
+  Agent: 6
+  mcp__github__pull_request_read: 4
+  mcp__github__search_issues: 3
+  mcp__github__create_pull_request: 2
+  mcp__claude-code-remote__subscribe_pr_activity: 2
+  Skill: 3
+  ReadNotifications: 2
+  mcp__github__add_issue_comment: 2
+rulesLoaded:
+  - .claude/rules/adr-0028.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0018.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/adr-0008.md
+  - .claude/rules/adr-0006.md
+  - .claude/rules/adr-0016.md
+  - .claude/rules/adr-0025.md
+rulesGlobal:
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0001.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0023.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0003.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0022.md
+    reason: auto-triage sweep; not touched by this run
+    useful: no
+  - path: .claude/rules/adr-0004.md
+    reason: run gate:scoped before push; human-merge exceptions
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: close-session at PR-open; I was late
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: prune trials; not my territory
+    useful: no
+  - path: .claude/rules/adr-0001.md
+    reason: content baked at build time; explains rebuild before verifying
+    useful: partly
+  - path: .claude/rules/adr-0020.md
+    reason: Trusted vs Public; not triggered
+    useful: no
+  - path: .claude/rules/adr-0003.md
+    reason: open PR, subscribe, babysit; ledger bounds the run
+    useful: yes
+  - path: .claude/rules/adr-0023.md
+    reason: guest pipeline; not touched
+    useful: no
+  - path: .claude/rules/adr-0017.md
+    reason: provenance line one on every GitHub body
+    useful: yes
+  - path: .claude/rules/adr-0028.md
+    reason: navigation payloads and caching; not touched by these changes
+    useful: no
+  - path: .claude/rules/adr-0021.md
+    reason: context split; not touched
+    useful: no
+  - path: .claude/rules/adr-0018.md
+    reason: how to edit an ADR; not touched
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: loaded with the ADR-0004 read; no Human-only file changed
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: rules load with files; not touched
+    useful: no
+  - path: .claude/rules/adr-0005.md
+    reason: Skills are code; not touched
+    useful: no
+  - path: .claude/rules/tenant-layers.md
+    reason: loaded when editing layers/journal; I did not need the doc
+    useful: no
+  - path: .claude/rules/adr-0008.md
+    reason: Journal documents the Platform; context only
+    useful: partly
+  - path: .claude/rules/adr-0006.md
+    reason: routing by path prefix; not touched
+    useful: no
+  - path: .claude/rules/adr-0016.md
+    reason: Tenant root pages; not touched
+    useful: no
+  - path: .claude/rules/adr-0025.md
+    reason: kinds and catalog; loaded on a dashboard.ts read, not relevant
+    useful: no
+subagents:
+  - task: Visitor 1 (sonnet)
+    model: sonnet
+  - task: Visitor 2 (fable)
+    model: fable
+  - task: Visitor 3 (opus)
+    model: opus
+  - type: general-purpose
+    task: Standards review
+  - type: general-purpose
+    task: Spec review
+  - type: general-purpose
+    task: Review feature PR
+gitBranch: ccr-f67555bc-bhccko
+entrypoint: remote_mobile
+cliVersion: 2.1.296
+learnings:
+  - With noUncheckedIndexedAccess, a Record<string, number> lookup is number | undefined even inside a truthy v-if, so a `?? 0` that looks redundant is required by vue-tsc.
+ideas:
+  - "Journal ideas page: group the 71 ideas and 57 learnings by Tenant or topic with a filter chip row (all three visitors found the flat list unreadable; this PR only added jump links)"
+  - "Archived digest pages (for example /t/journal/archived/digests/2026-07-14) are PR-number soup, yet Blog posts link to them from 'Same day in the Journal': add a plain-language summary above the old text"
+  - "Journal landing: a 'This week in one paragraph' strip built from the newest digest, above the stats, since visitors found the landing a dashboard before a story (fable)"
+  - "Session cards: show a 'Read Karen's take' chip linking to the Blog post written about that session, tying the narrative pages to the raw record (fable)"
+  - "Journal 'Story threads': pages following one recurring problem across sessions, digests and posts, starting with the session-ID trailer saga that the highlights page makes gripping (opus)"
+  - "Journal landing: one-line legend for model chips and session kinds, and a last-logged timestamp replacing the static 'live snapshot' badge (fable)"
+landedBy: Stop
