@@ -11,8 +11,7 @@ useHead({
     <div class="demo tf-noprint" role="note">
       <div class="tf-wrap">
         <span>Demo shop — nothing here is real</span>
-        <span aria-hidden="true">·</span>
-        <TinkerfundShellResetDemo />
+        <TinkerfundShellResetDemo divider />
         <span aria-hidden="true">·</span>
         <NuxtLink to="/" class="tf-link">More sites in the Terrarium ↗</NuxtLink>
       </div>
