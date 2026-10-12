@@ -29,33 +29,21 @@ describe('atlas Tenant', async () => {
     })
   })
 
-  // issue #355: a body MDC block component with a dropped closing `::`
-  // degrades silently to plain prose — no hydration/console error, so a
-  // clean-hydration check alone can't catch it. Assert the route's
-  // structured, content-driven output actually rendered, not just that
-  // nothing errored.
-  it('renders the mycora-susurrans field note and its relations structurally', async () => {
-    const route = '/t/atlas/canopy/mycora-susurrans'
-    await withRendered(route, async (page) => {
-      await expectHydrated(page, route)
-      const fieldnote = await page.locator('.atlas-fieldnote').textContent()
-      expect(fieldnote).toContain('a company of pale sage caps standing shoulder to shoulder')
-      const relations = await page.locator('.atlas-relations').textContent()
-      expect(relations).toContain('Umbra vacans')
-      expect(relations).toContain('Lumina fabulae')
-      expect(relations).toContain('Folium mendax')
-    })
-  })
-
-  // issue #342: the checks above assert prose text, which an unclosed
-  // `::almanac`/`::phase-note`/`::sighting` block still carries once MDC
-  // degrades it to plain paragraphs — no console error either way. Assert
+  // issue #342: a prose-text check passes on an unclosed
+  // `::almanac`/`::phase-note`/`::sighting` block, which still carries its text
+  // once MDC degrades it to plain paragraphs — no console error either way. Assert
   // each MDC component's own rendered DOM marker instead, so a silent
   // degrade-to-prose fails the count. Table-driven: mycora-susurrans and
   // lumina-fabulae differ only by route and expected counts. lumina-fabulae
   // weaves ::almanac / ::phase-note / ::sighting into its field note — an
   // unresolved MDC tag, or a hydration mismatch in the phase-note collapse or
   // the ::sighting registration protocol, surfaces as a console error/unknown tag.
+  //
+  // issue #355: a body MDC block component with a dropped closing `::`
+  // degrades silently to plain prose — no hydration/console error, so a
+  // clean-hydration check alone can't catch it. Assert the route's
+  // structured, content-driven output actually rendered, not just that
+  // nothing errored (mycora-susurrans' field note and its relations).
   for (const { route, almanac, phaseNote, sighting } of [
     { route: '/t/atlas/canopy/mycora-susurrans', almanac: 1, phaseNote: 4, sighting: 3 },
     { route: '/t/atlas/canopy/lumina-fabulae', almanac: 1, phaseNote: 3, sighting: 2 },
@@ -67,6 +55,14 @@ describe('atlas Tenant', async () => {
         expect(await page.locator('.entry-almanac').count()).toBe(almanac)
         expect(await page.locator('.atlas-phase-note').count()).toBe(phaseNote)
         expect(await page.locator('.atlas-sighting').count()).toBe(sighting)
+        if (route === '/t/atlas/canopy/mycora-susurrans') {
+          const fieldnote = await page.locator('.atlas-fieldnote').textContent()
+          expect(fieldnote).toContain('a company of pale sage caps standing shoulder to shoulder')
+          const relations = await page.locator('.atlas-relations').textContent()
+          expect(relations).toContain('Umbra vacans')
+          expect(relations).toContain('Lumina fabulae')
+          expect(relations).toContain('Folium mendax')
+        }
       })
     })
   }

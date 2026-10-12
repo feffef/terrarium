@@ -92,15 +92,12 @@ describe('tinkerfund Tenant', async () => {
       })
     }
 
-    it('renders How it works with its title, social meta and the categories in the header', async () => {
+    it('renders How it works with its title, social meta and the categories in the header, and keeps qa out of search results', async () => {
       const html = await $fetch('/t/tinkerfund/prod/how-it-works')
       expect(html).toContain('<title>How Tinkerfund works · Tinkerfund</title>')
       expect(html).toContain('<meta property="og:site_name" content="Tinkerfund">')
       expect(html).toContain('<meta name="robots" content="index, follow">')
       expect(html).toMatch(/category\/kitchen[\s\S]*category\/desk[\s\S]*category\/outdoors/)
-    })
-
-    it('keeps qa out of search results', async () => {
       expect(await $fetch('/t/tinkerfund/qa/how-it-works')).toContain('<meta name="robots" content="noindex, nofollow">')
     })
 

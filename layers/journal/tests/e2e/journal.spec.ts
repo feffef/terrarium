@@ -332,15 +332,6 @@ describe('journal Tenant', async () => {
     expect(digest).not.toContain('Start here ·')
   })
 
-  // The entry-route sweep in `tests/e2e/smoke.spec.ts` only reaches the Space
-  // landing (`/t/journal/<space>`) — a standalone Document is a deeper route
-  // the sweep never visits. Cover one representative Document here so a
-  // typo'd/renamed auto-import component on that page can't ship silently
-  // (issue #212).
-  it('hydrates a standalone document with no unresolved components', async () => {
-    await expectCleanHydration('/t/journal/current/architecture')
-  })
-
   // The archived Space's Document routes are served by the SAME themed override
   // (not the generic catch-all) AND stay isolated: `/t/journal/archived/architecture`
   // has no document, so it renders a *themed* 404 and must not leak

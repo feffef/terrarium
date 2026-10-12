@@ -11,16 +11,14 @@
 // `pnpm build`; the e2e project's globalSetup (tests/support/e2e-global-setup.ts)
 // reuses it and builds only if `.output` is stale (ADR-0004 amendment; tests/README.md).
 //
-// Two layered tiers, cheapest-first (the gate's own design principle, ADR-0004):
-//   Tier 1 — fast SSR `$fetch`: the route serves 200 and the server-rendered
-//            HTML carries the expected structure.
-//   Tier 2 — real browser (`createPage`): the client bundle actually executes.
-//            This is the half CLAUDE.md warns a string match on SSR HTML cannot
-//            prove — uncaught errors and hydration throws surface as
-//            console.error / pageerror, which the listeners assert stay empty.
+// A real browser (`createPage`) loads each route: the server-rendered document
+// is checked from the navigation's response, and the client bundle actually
+// executes. That is the half CLAUDE.md warns a string match on SSR HTML cannot
+// prove — uncaught errors and hydration throws surface as console.error /
+// pageerror, which the listeners assert stay empty.
 import { describe, expect, it } from 'vitest'
 import { $fetch, createPage, fetch, url } from '@nuxt/test-utils/e2e'
-import { attrs, entryRoutes, expectCleanHydration, mermaidPageRoutes, setupL2, withRendered } from '../support/e2e.ts'
+import { attrs, entryRoutes, expectCleanHydration, expectHydrated, mermaidPageRoutes, setupL2, withRendered } from '../support/e2e.ts'
 import { CONDITION_GRADES } from '../../layers/midden/app/utils/condition.ts'
 
 describe('L2 smoke render', async () => {
@@ -28,20 +26,9 @@ describe('L2 smoke render', async () => {
 
   // ── Platform: every (Tenant, Space) entry route ─────────────────────────────
   describe('entry routes', () => {
-    // Tier 1: fast SSR checks (cheap first tier).
-    for (const route of entryRoutes) {
-      it(`renders ${route}`, async () => {
-        const html = await $fetch(route) // throws on non-2xx
-        expect(html).toMatch(/<h1[ >]/)
-        // Match the 404 markup, not the phrase: a session log quoting the 404 page
-        // renders into the Journal and tripped the plain substring (PR #1690).
-        expect(html).not.toMatch(/No document at <code[\s>]/)
-      })
-    }
-
-    // Tier 2: real browser render — hydrates cleanly and the DOM is present.
-    // Every entry route is loaded in Chromium, the client bundle runs, and we
-    // assert (a) an <h1> exists in the *rendered DOM* (not the SSR string), (b)
+    // Every entry route is loaded in Chromium. The navigation's server-rendered
+    // document must be 2xx with an <h1> and not the 404 page; then the client
+    // bundle runs and we assert (a) an <h1> exists in the *rendered DOM*, (b)
     // nothing logged a console error or threw during hydration, and (c) no
     // unresolved auto-import component silently rendered as an unknown custom
     // element (issue #212) — vue-tsc and (a)/(b) all stay green on that failure
@@ -163,6 +150,9 @@ describe('L2 smoke render', async () => {
     for (const route of mermaidPageRoutes) {
       it(`renders a pre-rendered mermaid SVG and ships no mermaid JS on ${route}`, async () => {
         await withRendered(route, async (page, requests) => {
+          // Also the hydration check for the Documents' deeper routes, which the
+          // entry-route sweep never visits (issue #212).
+          await expectHydrated(page, route)
           await page.locator('.mermaid-diagram svg').first().waitFor({ state: 'attached', timeout: 10_000 })
           expect(await page.locator('.mermaid-diagram svg').count()).toBeGreaterThan(0)
           // The whole point of #379: the ~600 KB mermaid renderer must never be

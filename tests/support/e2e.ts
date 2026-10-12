@@ -8,7 +8,7 @@ import { mkdtempSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import type { Locator, Page } from 'playwright-core'
+import type { Locator, Page, Response } from 'playwright-core'
 import { afterAll, expect } from 'vitest'
 import { createPage, fetch, setup, url } from '@nuxt/test-utils/e2e'
 import { findPreinstalledChromium, findSystemChrome } from '../../scripts/chromium-path.ts'
@@ -69,11 +69,12 @@ export const mermaidPageRoutes = mermaidRoutes(expandedCollections)
  * page error, and requested URL from before navigation until the network
  * settles. Returns the page (for DOM assertions), the collected error strings,
  * and every request URL (so a test can assert what did — or, for #379's
- * zero-mermaid-JS guarantee, did NOT — get fetched).
+ * zero-mermaid-JS guarantee, did NOT — get fetched), plus the navigation's
+ * response (the server-rendered document).
  */
 async function renderAndCollectErrors(
   route: string,
-): Promise<{ page: Page; errors: string[]; requests: string[] }> {
+): Promise<{ page: Page; errors: string[]; requests: string[]; response: Response | null }> {
   const errors: string[] = []
   const requests: string[] = []
   // Un-navigated page (createPage() with no path skips its own goto), so the
@@ -91,9 +92,9 @@ async function renderAndCollectErrors(
   })
   // waitUntil: 'hydration' blocks until Nuxt reports isHydrating === false, so a
   // throw during hydration surfaces as a pageerror we then assert on.
-  await page.goto(url(route), { waitUntil: 'hydration' })
+  const response = await page.goto(url(route), { waitUntil: 'hydration' })
   await page.waitForLoadState('networkidle')
-  return { page, errors, requests }
+  return { page, errors, requests, response }
 }
 
 /**
@@ -122,11 +123,11 @@ export async function collectUnknownElementTags(page: Page): Promise<string[]> {
  */
 export async function withRendered(
   route: string,
-  fn: (page: Page, requests: string[]) => Promise<void>,
+  fn: (page: Page, requests: string[], response: Response | null) => Promise<void>,
 ): Promise<void> {
-  const { page, errors, requests } = await renderAndCollectErrors(route)
+  const { page, errors, requests, response } = await renderAndCollectErrors(route)
   try {
-    await fn(page, requests)
+    await fn(page, requests, response)
     expect(errors, `console/page errors on ${route}:\n${errors.join('\n')}`).toEqual([])
   } finally {
     await page.close()
@@ -141,9 +142,23 @@ export async function expectHydrated(page: Page, route: string): Promise<void> {
   expect(unknownTags, `unresolved components on ${route}: ${unknownTags.join(', ')}`).toEqual([])
 }
 
-/** `withRendered` + `expectHydrated` for a route that needs no other assertion. */
+/** Asserts the navigation's server-rendered document is a 2xx page with an `<h1>`, not the 404 page. */
+async function expectServerRendered(response: Response | null, route: string): Promise<void> {
+  expect(response, `no navigation response for ${route}`).not.toBeNull()
+  expect(response!.ok(), `${route} answered ${response!.status()}`).toBe(true)
+  const html = await response!.text()
+  expect(html).toMatch(/<h1[ >]/)
+  // Match the 404 markup, not the phrase: a session log quoting the 404 page
+  // renders into the Journal and tripped the plain substring (PR #1690).
+  expect(html).not.toMatch(/No document at <code[\s>]/)
+}
+
+/** `withRendered` + the server-rendered and hydrated checks, for a route that needs no other assertion. */
 export const expectCleanHydration = (route: string): Promise<void> =>
-  withRendered(route, (page) => expectHydrated(page, route))
+  withRendered(route, async (page, _requests, response) => {
+    await expectServerRendered(response, route)
+    await expectHydrated(page, route)
+  })
 
 /** Asserts `from` answers a 302 to `to` (no redirect followed). */
 export async function expectRedirect(from: string, to: string): Promise<void> {
