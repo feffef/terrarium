@@ -275,17 +275,18 @@ useSeoMeta({
     <section v-if="dailyFrictions.length > 1" class="panel trend" aria-labelledby="trend-h">
       <div class="section-head">
         <h2 id="trend-h">Snags per session, by day</h2>
-        <span class="count">fewer is better</span>
+        <span class="count">self-reported, UTC days</span>
       </div>
-      <ol class="trend-bars">
-        <li v-for="d in dailyFrictions" :key="d.date" :title="`${d.date}: ${d.frictions} frictions in ${countOf(d.sessions, 'session')}`">
-          <span class="trend-val">{{ d.perSession }}</span>
+      <ol class="trend-bars" aria-label="Frictions per session, by day">
+        <li v-for="d in dailyFrictions" :key="d.date">
+          <span class="trend-val">{{ d.perSession }}<span class="trend-raw"> per session on {{ d.date }}: {{ countOf(d.frictions, 'friction') }} in {{ countOf(d.sessions, 'session') }}</span></span>
           <span class="trend-bar"><span :style="{ height: `${Math.max(4, (d.perSession / dailyMax) * 100)}%` }" /></span>
           <span class="trend-day">{{ d.date.slice(5) }}</span>
         </li>
       </ol>
       <p class="panel-intro">
-        Frictions an agent logged, divided by the sessions that day. Hover a bar for the raw counts.
+        Frictions agents wrote down, divided by that day's sessions. Logging more honestly raises it, so read it as a
+        rough pulse, not a score.
       </p>
     </section>
 
@@ -466,14 +467,14 @@ h1 {
 
 .trend { margin-bottom: 1.25rem; }
 .trend-bars { list-style: none; margin: 0 0 0.7rem; padding: 0; display: flex; gap: 0.4rem; align-items: stretch; }
-.trend-bars li { flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: center; gap: 0.2rem; font-family: var(--jd-mono); font-size: 0.68rem; color: var(--jd-faint); }
+.trend-bars li { position: relative; flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: center; gap: 0.2rem; font-family: var(--jd-mono); font-size: 0.68rem; color: var(--jd-faint); }
 .trend-bar { display: flex; align-items: flex-end; width: 100%; height: 4.5rem; }
 .trend-bar > span { display: block; width: 100%; background: var(--jd-accent); border-radius: 3px 3px 0 0; }
 .trend-val { color: var(--jd-ink); }
+.trend-raw { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 @media (max-width: 560px) {
-  .trend-bars { gap: 0.2rem; }
-  .trend-bars li:nth-child(even) :is(.trend-day, .trend-val) { visibility: hidden; }
-  .trend-day, .trend-val { white-space: nowrap; }
+  .trend-bars { overflow-x: auto; padding-bottom: 0.2rem; }
+  .trend-bars li { flex: 1 0 2.4rem; }
 }
 .worst { margin-bottom: 2.25rem; }
 .worst-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.7rem; }

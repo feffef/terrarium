@@ -536,6 +536,10 @@ describe('frictionsByDay', () => {
       { date: '2026-07-06', sessions: 2, frictions: 3, perSession: 1.5 },
     ])
   })
+  it('is empty with no sessions and reports 0 for a clean day', () => {
+    expect(frictionsByDay([])).toEqual([])
+    expect(frictionsByDay([session({ session: 'z', endedAt: '2026-07-01T10:00:00Z', frictions: [] })])).toMatchObject([{ perSession: 0 }])
+  })
   it('keeps only the newest days', () => {
     const many = [1, 2, 3].map((d) => session({ session: `s${d}`, endedAt: `2026-07-0${d}T10:00:00Z` }))
     expect(frictionsByDay(many, 2).map((d) => d.date)).toEqual(['2026-07-02', '2026-07-03'])

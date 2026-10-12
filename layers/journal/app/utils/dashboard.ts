@@ -342,8 +342,8 @@ export function summaryParagraphs(text: string): string[] {
 }
 
 // ── Friction per session, by day ─────────────────────────
-// One point per UTC day that has sessions, oldest first, keeping the newest
-// `max` days: the Journal's own answer to "are the agents snagging less?".
+// The Journal's own answer to "are the agents snagging less?". UTC days, like
+// the rest of the dashboard.
 export function frictionsByDay(
   sessions: SessionDoc[],
   max = 14,
