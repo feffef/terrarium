@@ -146,8 +146,7 @@ What each lens is checked against:
 - **Duplication, Mis-location, Ambiguity** — the home convention: which doc
   owns the fact, and does it really hold it. A cited read count is re-run,
   never remembered. For Mis-location, first read any originating issue/PR the
-  target doc names or implies; an explicit placement there wins (e.g. issue
-  #867 put `docs/research/rulebook-migration-table.md` where it is).
+  target doc names or implies; an explicit placement there wins.
 - **Orphan-addition** — git history (added inside 48h?) and the expected home
   (reference really missing?).
 - **Verbose** — the original text. List every rule, condition, exception, and

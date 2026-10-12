@@ -47,8 +47,7 @@
 // `<...>` span in a title or body as an unrecognized HTML tag, no error shown.
 // A doc-only fix (#779) did not hold across two further recurrences, so
 // `checkAngleBrackets` catches it here instead — the registry that already
-// enumerates every GitHub-write tool is the natural extension point, per
-// `docs/research/rulebook-migration-table.md`'s GI-01 row.
+// enumerates every GitHub-write tool is the natural extension point.
 //
 // Usage (normally invoked by the PreToolUse hook with the payload on stdin):
 //   tsx scripts/github-provenance-guard.ts
