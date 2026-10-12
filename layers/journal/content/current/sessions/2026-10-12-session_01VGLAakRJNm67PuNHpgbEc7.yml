@@ -1,11 +1,11 @@
 schemaVersion: 1
 session: session_01VGLAakRJNm67PuNHpgbEc7
 startedAt: 2026-10-12T13:05:00Z
-endedAt: 2026-10-12T14:19:27Z
+endedAt: 2026-10-12T14:22:59Z
 kind: interactive
 goal: Make the Journal's "Rules loaded" list readable for humans
-status: in-review
-outcome: "PR #1812 open: rule headings on the Journal, richer rule verdicts, always-loaded naming, script-based re-read; waits for a human merge (ADR-0009 edit)"
+status: completed
+outcome: "PR #1812 merged: rule headings and two-line rows on the Journal, richer rule verdicts, always-loaded naming, script-based re-read"
 summary: "The user asked for the Journal's \"Rules loaded\" list to stop showing bare rule paths like adr-0022.md, and asked me to choose between renaming rule files and tuning the instruction. I offered three options. The user picked showing each rule's heading (reading the headings at build time also fixes past logs), and asked to drop the \"loaded;\" prefix and for a better instruction on why a rule helped and why the agent opened its ADR or not. Done at the user's direction: the heading display, the log-session step 3 wording (approved, then adjusted), fixing ADR-0009 in place (they chose option A, which makes the PR a human merge), and stopping rule files from being logged under docsRead (they asked why always-loaded rules showed up there; close-session's re-read rule is the cause). The user also asked for a /code-review and a dry-run session. The review found that the --author hint and ADR-0009 contradicted the new wording, and that my prefix-stripping regex missed about 70 \"loaded at start;\" reasons. The dry run showed the new wording works, and also that \"don't write 'loaded'\" prompted the word, that \"no\" verdicts repeated \"ADR not opened\" as filler, and that some rules point to no ADR. Its findings outside this PR are filed as issues 1814-1816. I had first stripped \"loaded …;\" from reasons at display time; the user rejected changing text agents wrote, so the page now shows reasons verbatim. In a later round the user asked me to fix every rule problem in this PR rather than file it. I had filed 1814 and 1815 to keep the PR narrow, which was the wrong call. Now in the PR: the two-pass note (1814); \"always-loaded\" in place of \"global\" everywhere except the stored rulesGlobal field (1815); and, following the user's idea, scripts/always-loaded.ts. close-session's re-read now runs that script, so it no longer loads the human-merge rule and ADR-0029 into every log. I dropped a batch-based trace filter I had started, because the script is simpler. Merging main hit an ADR-0009 conflict with a prune-trial rewrite; I kept main's shorter text with my two wording changes. Issues filed at the user's direction: 1816 (session kind), 1817 (flaky tinkerfund e2e, which passed on re-run) and 1818 (flaky check-worktrees unit test). I also sent the user a screenshot of the dry-run session's card."
 prs:
   - "1812"
@@ -104,11 +104,11 @@ frictions:
   - description: Ran the full gate:scoped (about 4 min) just to get a build for screenshots during layout iteration, several times; the user pointed out it is a slow way to get a build.
     solution: Iterate UI on scripts/preview.ts start --dev (seconds per edit), take the final shot from pnpm build (about 2 min), and run the gate once before pushing; verifying-ui-changes.md already lists --dev.
     severity: minor
-durationSec: 4467
+durationSec: 4678
 models:
-  claude-opus-5-5: 416
+  claude-opus-5-5: 429
 toolCounts:
-  Bash: 102
+  Bash: 103
   Edit: 36
   Read: 40
   Write: 6
@@ -119,7 +119,7 @@ toolCounts:
   mcp__claude-code-remote__create_session: 1
   Skill: 3
   Agent: 2
-  ReadNotifications: 5
+  ReadNotifications: 9
   mcp__claude-code-remote__get_session: 1
   mcp__claude-code-remote__send_later: 2
   mcp__github__update_pull_request: 5
@@ -129,6 +129,7 @@ toolCounts:
   mcp__github__actions_run_trigger: 1
   mcp__github__issue_write: 5
   SendUserFile: 2
+  mcp__claude-code-remote__delete_trigger: 1
 filesEdited:
   - layers/journal/app/utils/dashboard.ts
   - layers/journal/app/types/journal.ts
