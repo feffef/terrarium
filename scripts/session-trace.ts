@@ -111,7 +111,8 @@ export interface MechanicalTrace {
   /** Path-scoped `.claude/rules/` files that loaded on a file touch or a Skill
    *  run, in load order. */
   rulesLoaded: string[]
-  /** `.claude/rules/` files with no `paths`, which load at session start. */
+  /** Always-loaded rules: `.claude/rules/` files with no `paths`, which load at
+   *  session start. The field keeps its older name because landed logs carry it. */
   rulesGlobal: string[]
   /** The subset of both rule lists whose ADR the session read after the rule first
    *  loaded: whole, by the Read tool, or in Bash output once `docIndex` is given
@@ -547,7 +548,7 @@ export function extractTrace(
   const subagents: SubagentRef[] = []
   const prSignals: string[] = []
   const rules: string[] = []
-  const globalRules: string[] = []
+  const alwaysLoadedRules: string[] = []
   const ruleLoadedAt = new Map<string, number>()
   const readAt: [string, number][] = []
 
@@ -559,9 +560,9 @@ export function extractTrace(
     if (att?.type === 'nested_memory' && att.path?.includes('/.claude/rules/')) rules.push(ruleKey(att.path))
     if (att?.type === 'hook_additional_context') rules.push(...hintedRules(att.content))
     if (att?.type === 'instructions') {
-      for (const f of att.files ?? []) if (f.path?.includes('/.claude/rules/')) globalRules.push(ruleKey(f.path))
+      for (const f of att.files ?? []) if (f.path?.includes('/.claude/rules/')) alwaysLoadedRules.push(ruleKey(f.path))
     }
-    for (const r of [...globalRules, ...rules]) if (!ruleLoadedAt.has(r)) ruleLoadedAt.set(r, i)
+    for (const r of [...alwaysLoadedRules, ...rules]) if (!ruleLoadedAt.has(r)) ruleLoadedAt.set(r, i)
 
     const msg = rec.message as { content?: unknown; model?: string } | undefined
     if (rec.type === 'assistant' && msg?.model) {
@@ -631,8 +632,8 @@ export function extractTrace(
     filesRead: dedup(reads).filter(isContentPath).map(rel),
     filesEdited: dedup(edits).filter(isContentPath).map(rel),
     docsReadViaShell: docIndex ? scanShellReadsByOutput(bashCommandsOf(records), docIndex, rel).paths : [],
-    rulesLoaded: dedup(rules).filter((r) => !globalRules.includes(r)),
-    rulesGlobal: dedup(globalRules),
+    rulesLoaded: dedup(rules).filter((r) => !alwaysLoadedRules.includes(r)),
+    rulesGlobal: dedup(alwaysLoadedRules),
     rulesFollowedUp: [...ruleLoadedAt].filter(([r, at]) => adrReadAfter(r, at)).map(([r]) => r),
     skillsUsed: dedup([...skills, ...commandSkills]),
     commandSkills: dedup(commandSkills),

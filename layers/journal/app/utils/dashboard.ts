@@ -249,11 +249,11 @@ export function sessionCardViews(
       filesEdited: s.filesEdited ?? [],
       docsReadViaShell: s.docsReadViaShell ?? [],
       rules: [
-        ...(s.rulesGlobal ?? []).map((path) => ({ path, global: true })),
-        ...(s.rulesLoaded ?? []).map((path) => ({ path, global: false })),
-      ].map(({ path, global }) => {
+        ...(s.rulesGlobal ?? []).map((path) => ({ path, alwaysLoaded: true })),
+        ...(s.rulesLoaded ?? []).map((path) => ({ path, alwaysLoaded: false })),
+      ].map(({ path, alwaysLoaded }) => {
         const v = s.ruleVerdicts?.find((r) => r.path === path)
-        return { path, title: ruleTitles[path], global, followedUp: !!s.rulesFollowedUp?.includes(path), reason: v?.reason, useful: v?.useful }
+        return { path, title: ruleTitles[path], alwaysLoaded, followedUp: !!s.rulesFollowedUp?.includes(path), reason: v?.reason, useful: v?.useful }
       }),
       tools: sessionToolEntries(s.toolCounts),
     }

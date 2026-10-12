@@ -149,7 +149,7 @@ describe('rulesLoaded and rulesGlobal — rules that loaded', () => {
     expect(trace.rulesLoaded).toEqual(['.claude/rules/adr-0024.md'])
   })
 
-  it('lists the session-start rules apart, as global, and never in both lists', () => {
+  it('lists the always-loaded rules apart and never in both lists', () => {
     expect(trace.rulesGlobal).toEqual(['.claude/rules/adr-0003.md'])
     expect(extractTrace([...records, rule('/repo/.claude/rules/adr-0003.md')], NO_ENV).rulesLoaded).toEqual(['.claude/rules/adr-0024.md'])
     expect(stitch({ session: 's', goal: 'g', status: 'completed', outcome: 'o', summary: 's', frictions: [] }, trace).rulesGlobal)

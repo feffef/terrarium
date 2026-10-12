@@ -637,5 +637,5 @@ A `docsRead` entry gains an optional `useful` verdict (`yes`, `partly`, `no`),
 and a new optional `ruleVerdicts` list gives each loaded rule a `reason` (why it
 helped or didn't) and a `useful` verdict. Both are authored; `--author` lists
 every instruction doc and every loaded rule still missing one. The derived
-`rulesGlobal` lists the rules that load at session start, so they get a
-verdict too. Older logs carry none of these and stay valid.
+`rulesGlobal` lists the always-loaded rules (no `paths`; they load at session
+start), so they get a verdict too. Older logs carry none of these and stay valid.

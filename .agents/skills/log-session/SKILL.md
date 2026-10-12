@@ -75,7 +75,7 @@ docsRead:                          # curated — what each doc gave you, and whe
   - { path: "app/pages/t/[tenant]/[space]/[...slug].vue", reason: routing, useful: partly }
 skillsUsed:                        # transcript-observed reads/Skills you omit are folded in
   - { name: tdd, reason: "test-first the helper (see #99)" }  # (name cross-refs the Skill Inventory)
-ruleVerdicts:                      # every rule that loaded, global ones too (step 3 lists them)
+ruleVerdicts:                      # every rule that loaded, always-loaded ones too (step 3)
   - { path: .claude/rules/adr-0004.md, reason: "Made me run gate:scoped before pushing; summary was enough, skipped the full ADR", useful: yes }
   - { path: .claude/rules/adr-0023.md, reason: "About guest PRs; this was a Trusted blog post, so it didn't apply", useful: no }
 frictions:                         # REQUIRED (may be []) — list EVERY friction
@@ -174,7 +174,8 @@ command of this session or its subagents showed you that doc. ADR-0009's
 merged-read amendment says what the stitch does with `(not read)`.
 
 It also lists every rule that loaded with no `ruleVerdicts` entry, including the
-global ones that load at session start. Answer each with a `useful` verdict
+always-loaded ones (no `paths`; they load at session start). You can't see this
+list before your first `--author` pass, so expect a second pass. Answer each with a `useful` verdict
 and a one-sentence `reason` (about 20 words) that says why: for `yes` or
 `partly`, what in the rule changed or confirmed something you did; for `no`,
 why it didn't apply to this task, or what it got wrong. For a `yes` or `partly`

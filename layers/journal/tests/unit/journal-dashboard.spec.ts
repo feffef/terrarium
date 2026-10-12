@@ -338,8 +338,8 @@ describe('sessionCardViews', () => {
     })
     const [c] = sessionCardViews([s])
     expect(c!.rules).toEqual([
-      { path: '.claude/rules/adr-0004.md', global: false, followedUp: false },
-      { path: '.claude/rules/adr-0008.md', global: false, followedUp: true },
+      { path: '.claude/rules/adr-0004.md', alwaysLoaded: false, followedUp: false },
+      { path: '.claude/rules/adr-0008.md', alwaysLoaded: false, followedUp: true },
     ])
   })
 
@@ -349,7 +349,7 @@ describe('sessionCardViews', () => {
       ruleVerdicts: [{ path: '.claude/rules/adr-0004.md', reason: 'merge rules', useful: 'partly' }],
     })
     const [c] = sessionCardViews([s])
-    expect(c!.rules).toEqual([{ path: '.claude/rules/adr-0004.md', global: false, followedUp: false, reason: 'merge rules', useful: 'partly' }])
+    expect(c!.rules).toEqual([{ path: '.claude/rules/adr-0004.md', alwaysLoaded: false, followedUp: false, reason: 'merge rules', useful: 'partly' }])
   })
 
   it('names each rule by its heading, falling back to the path, and keeps the reason as written', () => {
@@ -369,9 +369,9 @@ describe('sessionCardViews', () => {
     ])
   })
 
-  it('lists global rules first, marked global', () => {
+  it('lists always-loaded rules first, marked so', () => {
     const [c] = sessionCardViews([session({ rulesGlobal: ['.claude/rules/adr-0003.md'], rulesLoaded: ['.claude/rules/adr-0004.md'] })])
-    expect(c!.rules.map((r) => [r.path, r.global])).toEqual([
+    expect(c!.rules.map((r) => [r.path, r.alwaysLoaded])).toEqual([
       ['.claude/rules/adr-0003.md', true],
       ['.claude/rules/adr-0004.md', false],
     ])
