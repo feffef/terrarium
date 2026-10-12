@@ -51,8 +51,8 @@ every line that applies.
   change as the user's edit (issue #887).
 
 **Stranding**
-- Commit and push before stopping, even mid-gate. An agent can end or be killed
-  at any time.
+- Commit before stopping, even mid-gate: an agent can end or be killed at any
+  time. Push once its branch is reviewed (§3 "Scope and trust").
 - Long runs bank progress to disk after each step. The harness refuses a
   subagent's Write of report or findings files, so bank to logs it may write and
   have it return structured results in its final message for you to save.
@@ -74,7 +74,9 @@ every line that applies.
 **Scope and trust**
 - Impl agents never call `merge-pr.ts`, whatever pre-authorization the brief
   carries: the auto-mode classifier judges your session, not theirs. They hand
-  back a pushed, green PR and you merge (`docs/agents/pr-workflow.md`).
+  back a committed, green branch, unpushed. You run `/code-review` on its
+  worktree (`pr-workflow.md`, "Review before the first push"), resume the agent
+  to fix and push, then open the PR and merge.
 - Impl agents do not run `close-session`/`log-session` (guard-enforced), and
   cannot spawn subagents: run `/code-review` and any nested dispatch yourself.
 - Give a size ceiling for a "simple" fix ("under ~50 lines, one new test") and

@@ -12,6 +12,15 @@ For the `mcp__github__*` tool surface this recipe runs on — transient 503s and
 when to retry, `get_check_runs` vs `get_status`, the `list_*`/`search_*`
 overflow traps — see [`github-integration.md`](./github-integration.md).
 
+## Review before the first push
+
+Pushing opens the PR (ADR-0003), so review first. Before a branch's first
+push, invoke the [`code-review`](../../.agents/skills/code-review/SKILL.md)
+Skill on its committed diff against `origin/main`, in the checkout that holds
+it, and fix the findings. This holds even when the Stop hook asks you to
+push. Skip it only for a diff that already got that same review. A session-log
+commit needs none.
+
 ## Assembling several stories into one integration PR
 
 When a branch stacks several already-reviewed stories into one integration PR,
@@ -89,8 +98,9 @@ its diff is limited to, and what to do when something rides outside that scope):
 
 1. Run `pnpm gate:scoped` (ADR-0004; `scripts/gate.ts` owns what it runs).
    Done when it's green.
-2. Commit, push with retry, and open **one gated PR** scoped to that Skill's
-   own diff — one per run unless the Skill's own SKILL.md names more.
+2. Commit, review (see "Review before the first push"), push with retry, and
+   open **one gated PR** scoped to that Skill's own diff — one per run unless
+   the Skill's own SKILL.md names more.
 3. Subscribe on open and land via this doc's recipe once green.
 4. **At PR-open, invoke `close-session`** — your first log (`in-review`).
 5. If the gate is red for a reason that isn't yours, or anything outside the
