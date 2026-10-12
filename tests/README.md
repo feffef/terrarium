@@ -1,7 +1,7 @@
 # Tests
 
 How the test suite is laid out, and the one non-obvious rule about e2e. The
-*why* is ADR-0004 (see its 2026-07-07 amendment); this file is the operational
+*why* is ADR-0004 (see its 2026-10-12 amendment); this file is the operational
 "where do I put a test" reference.
 
 ## A test is homed with the code it exercises
@@ -17,32 +17,28 @@ How the test suite is laid out, and the one non-obvious rule about e2e. The
   (`layers/<tenant>/app/**`, its content, its dashboard module) — live *in that
   layer* under `layers/<tenant>/tests/`:
   - `layers/<tenant>/tests/unit/*.spec.ts`
-  - `layers/<tenant>/tests/e2e/*.e2e.ts` — an imported module, **not** a spec
-    (see below).
+  - `layers/<tenant>/tests/e2e/<tenant>.spec.ts` — that Tenant's e2e spec (see below).
 
 This keeps "which tests belong to which Tenant vs. which are global" obvious,
 and lets the suite grow additively: adding a Tenant that needs tests adds a
 `layers/<tenant>/tests/` folder — nothing here changes.
 
-## The e2e gate is ONE build — do not split it
+## The e2e gate is ONE build, reused by every spec
 
-There is exactly **one** e2e spec: `tests/e2e/smoke.spec.ts`. It owns the sole
-`setup()` and runs the cross-Tenant entry-route sweep. Each Tenant's e2e
-assertions live in its layer as a `register…()` module (e.g.
-`layers/journal/tests/e2e/journal.e2e.ts`) that the smoke spec **imports and
-calls inside its single `describe`** — so they share the one build.
+The build is the gate's `pnpm build`. The `e2e` vitest project's `globalSetup`
+(`tests/support/e2e-global-setup.ts`) reuses its `.output` and builds only when
+that is stale: `.output/server/index.mjs` must be at least as new as every
+tracked and untracked-not-ignored file and its directories (a deletion moves
+only the directory's mtime). The decision is `tests/support/fresh-output.ts`;
+`E2E_FRESH_BUILD=1` forces a build.
 
-**Do not "clean this up" into per-Tenant e2e spec files** — see ADR-0004's
-2026-07-07 amendment for why splitting them multiplies the gate's build cost.
-To add e2e coverage for a new Tenant: write
-`layers/<tenant>/tests/e2e/<tenant>.e2e.ts` exporting a `register…()`
-function, then add one import + one call in `tests/e2e/smoke.spec.ts`.
+Every e2e spec calls `await setupL2()` (`tests/support/e2e.ts`) inside its
+top-level `describe`, which spawns a server on `.output` plus a browser. An e2e
+spec never passes `build: true`. Specs run in parallel, one per Tenant plus the
+Platform spec (`tests/e2e/smoke.spec.ts`).
 
-`test:e2e` reuses the `.output` that `pnpm build` wrote, so the gate builds once.
-`.output/server/index.mjs` must be at least as new as every tracked and
-untracked-not-ignored file and its directories (a deletion moves only the
-directory's mtime); anything else builds a second time. `E2E_FRESH_BUILD=1`
-forces that build. The decision is `tests/support/fresh-output.ts`.
+To add e2e coverage for a Tenant, add `layers/<tenant>/tests/e2e/<tenant>.spec.ts`
+that calls `setupL2()`; nothing else needs wiring.
 
 ## Playwright scroll/visibility gotchas
 
@@ -67,7 +63,7 @@ transition) needs its timeout raised per-call —
 - `pnpm test` — unit (L0/L3), platform **and** tenant, fast. Filters by the
   `tests/unit` path substring, which matches both `tests/unit/**` and
   `layers/*/tests/unit/**`.
-- `pnpm test:e2e` — the single L2 smoke build.
+- `pnpm test:e2e` — the L2 specs, in parallel, on the gate's build.
 
 Both are part of the safety gate (ADR-0004); the steps live in `package.json`'s
 `gate` script.

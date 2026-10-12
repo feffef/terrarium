@@ -41,7 +41,7 @@ re-checked). Entries that came from a specific session cite it.
   "environment-only," reproduce it on both `origin/main` and the branch with the
   full `test:e2e` suite (never a `-t`-filtered single test) against a fresh
   build (run `pnpm build` then `pnpm test:e2e`, or set `E2E_FRESH_BUILD=1`; the
-  spec refuses a stale `.output` itself).** A narrowed or stale repro isn't a
+  e2e run rebuilds a stale `.output` itself).** A narrowed or stale repro isn't a
   valid comparison: a filtered test skips setup/ordering the full suite
   exercises, and a stale `.output` can omit the change under test. A PR once
   called a failing assertion pre-existing on such a repro, and CI then failed

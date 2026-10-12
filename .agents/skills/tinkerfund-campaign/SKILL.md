@@ -46,7 +46,7 @@ the tests a new Campaign disturbs.
    [`ILLUSTRATION.md`](ILLUSTRATION.md). Done when the Campaign has at least two
    isometric and two patent figures, ordered isometric first (the hero is
    FIG. 1), then patent, and the illustrator's sheets have been looked at.
-6. **Fix what the Campaign disturbs** in `layers/tinkerfund/tests/e2e/tinkerfund.e2e.ts`'s
+6. **Fix what the Campaign disturbs** in `layers/tinkerfund/tests/e2e/tinkerfund.spec.ts`'s
    server-rendered `prod` checks: add the slug and its expected action to the
    prod Campaign page list, and re-read the Home assertion. Home derives its
    sections: *featured* is the Live Campaign with the highest % funded, *Ending

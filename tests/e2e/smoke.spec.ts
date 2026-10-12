@@ -3,20 +3,13 @@
 // errors. The target list is derived at build time from the manifests
 // (ADR-0014), so new Spaces are covered automatically.
 //
-// This file is the Platform half: the cross-Tenant entry-route sweep that
-// applies to every Tenant uniformly. Tenant-SPECIFIC L2 assertions live in each
-// layer (`layers/<tenant>/tests/e2e/*.e2e.ts`) and are pulled in here via their
-// `register…()` export so they run under this file's single `setup()`/build.
+// This file is the Platform spec: the cross-Tenant entry-route sweep, the root
+// page and the mermaid sweep. Tenant-SPECIFIC L2 assertions live in each layer
+// (`layers/<tenant>/tests/e2e/<tenant>.spec.ts`).
 //
-// ⚠️ Keep this ONE spec file with ONE `setup()`. A second e2e `*.spec.ts` re-runs
-// `setup()` → another full `nuxt build` (when it has to build, below), multiplying
-// the gate's slowest step per Tenant. That is why tenant assertions are imported
-// modules, not sibling specs — do not "clean this up" into per-Tenant spec files
-// (ADR-0004 amendment; tests/README.md).
-//
-// The gate's `pnpm build` already built the app, so a `.output` newer than every
-// source file is served as-is instead of building it a second time
-// (tests/support/fresh-output.ts); otherwise `setup()` builds.
+// Every e2e spec calls `setupL2()` and never builds. The one build is the gate's
+// `pnpm build`; the e2e project's globalSetup (tests/support/e2e-global-setup.ts)
+// reuses it and builds only if `.output` is stale (ADR-0004 amendment; tests/README.md).
 //
 // Two layered tiers, cheapest-first (the gate's own design principle, ADR-0004):
 //   Tier 1 — fast SSR `$fetch`: the route serves 200 and the server-rendered
@@ -25,51 +18,13 @@
 //            This is the half CLAUDE.md warns a string match on SSR HTML cannot
 //            prove — uncaught errors and hydration throws surface as
 //            console.error / pageerror, which the listeners assert stay empty.
-//
-// The browser is located, not resolved by playwright's own pinned revision:
-// first a Chromium under PLAYWRIGHT_BROWSERS_PATH (the agent sandbox's
-// pre-installed build, or the one CI provisions there), then the system
-// Chrome/Chromium. Both lookups are single-homed in scripts/chromium-path.ts,
-// shared with scripts/screenshot.ts and ad-hoc probes (issue #202). CI pins a
-// Playwright-managed Chromium via the first path for determinism; the
-// system-Chrome fallback keeps every other environment provisioning-free
-// (issue #97).
-import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
-import { $fetch, createPage, fetch, setup, url } from '@nuxt/test-utils/e2e'
-import { attrs, entryRoutes, expectCleanHydration, mermaidPageRoutes, withRendered } from '../support/e2e.ts'
-import { reusableOutput } from '../support/fresh-output.ts'
-import { findPreinstalledChromium, findSystemChrome } from '../../scripts/chromium-path.ts'
-import { registerJournalE2E } from '../../layers/journal/tests/e2e/journal.e2e.ts'
-import { registerBlogE2E } from '../../layers/blog/tests/e2e/blog.e2e.ts'
-import { registerAtlasE2E } from '../../layers/atlas/tests/e2e/atlas.e2e.ts'
-import { registerMiddenE2E } from '../../layers/midden/tests/e2e/midden.e2e.ts'
+import { $fetch, createPage, fetch, url } from '@nuxt/test-utils/e2e'
+import { attrs, entryRoutes, expectCleanHydration, mermaidPageRoutes, setupL2, withRendered } from '../support/e2e.ts'
 import { CONDITION_GRADES } from '../../layers/midden/app/utils/condition.ts'
-import { registerMarqueeE2E } from '../../layers/marquee/tests/e2e/marquee.e2e.ts'
-import { registerCommonsE2E } from '../../layers/commons/tests/e2e/commons.e2e.ts'
-import { registerTinkerfundE2E } from '../../layers/tinkerfund/tests/e2e/tinkerfund.e2e.ts'
-
-const chromiumPath = findPreinstalledChromium() ?? findSystemChrome()
-const rootDir = fileURLToPath(new URL('../..', import.meta.url))
-const output = reusableOutput(rootDir)
-// stdout, not console.log: vitest 5 drops console output from a passing run.
-process.stdout.write(output
-  ? `L2: reusing .output built ${output.builtAt.toISOString()} (set E2E_FRESH_BUILD=1 to force a build)\n`
-  : 'L2: no fresh .output — building\n')
 
 describe('L2 smoke render', async () => {
-  await setup({
-    rootDir,
-    ...(output ? { build: false, nuxtConfig: { nitro: { output: { dir: output.dir } } } } : {}),
-    browser: true,
-    browserOptions: {
-      type: 'chromium',
-      launch: {
-        ...(chromiumPath ? { executablePath: chromiumPath } : {}),
-        args: ['--no-sandbox', '--disable-gpu'],
-      },
-    },
-  })
+  await setupL2()
 
   // ── Platform: every (Tenant, Space) entry route ─────────────────────────────
   describe('entry routes', () => {
@@ -101,7 +56,7 @@ describe('L2 smoke render', async () => {
   // ── Platform: the root index page (`/`) ─────────────────────────────────────
   // Not a Tenant/Space route, so — like a Tenant-root front door (ADR-0016) —
   // it's outside the manifest-derived `entryRoutes` sweep above and asserted
-  // here directly rather than via a per-Tenant `register…()` module.
+  // here directly.
   describe('root index page', () => {
     // Card order is asserted by the title-link test below; raw-HTML indexOf would
     // trip over a digest or teaser that happens to name a Tenant first.
@@ -218,13 +173,4 @@ describe('L2 smoke render', async () => {
       })
     }
   })
-
-  // ── Per-Tenant assertions, homed in each layer, sharing this one build ───────
-  registerJournalE2E()
-  registerBlogE2E()
-  registerAtlasE2E()
-  registerMiddenE2E()
-  registerMarqueeE2E()
-  registerCommonsE2E()
-  registerTinkerfundE2E()
 })

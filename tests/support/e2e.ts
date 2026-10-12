@@ -1,14 +1,55 @@
-// Shared L2 e2e support, imported by the single platform smoke spec
-// (`tests/e2e/smoke.spec.ts`) AND by each Tenant's e2e module
-// (`layers/<tenant>/tests/e2e/*.e2e.ts`). It is NOT a spec itself (no `.spec.ts`
-// suffix) so vitest never collects it standalone — it only runs under the one
-// `setup()`/build the smoke spec owns (see tests/README.md and ADR-0004's
-// amendment: the L2 gate stays a single Nuxt build as Tenants multiply).
+// Shared L2 e2e support, imported by the Platform smoke spec
+// (`tests/e2e/smoke.spec.ts`) and by each Tenant's e2e spec
+// (`layers/<tenant>/tests/e2e/<tenant>.spec.ts`). Not a spec itself (no `.spec.ts`
+// suffix), so vitest never collects it. Every spec calls `setupL2()`, which
+// serves the build that the e2e project's globalSetup made sure exists
+// (tests/README.md; ADR-0004's 2026-10-12 amendment).
+import { mkdtempSync, rmSync } from 'node:fs'
+import { tmpdir } from 'node:os'
+import { join } from 'node:path'
+import { fileURLToPath } from 'node:url'
 import type { Locator, Page } from 'playwright-core'
-import { expect } from 'vitest'
-import { createPage, fetch, url } from '@nuxt/test-utils/e2e'
+import { afterAll, expect } from 'vitest'
+import { createPage, fetch, setup, url } from '@nuxt/test-utils/e2e'
+import { findPreinstalledChromium, findSystemChrome } from '../../scripts/chromium-path.ts'
 import { entryRoutesFrom, expand, loadManifests } from '../../shared/expand.ts'
 import { mermaidRoutes } from './mermaid-pages.ts'
+
+const root = fileURLToPath(new URL('../..', import.meta.url))
+
+// The browser is located, not resolved by playwright's own pinned revision:
+// first a Chromium under PLAYWRIGHT_BROWSERS_PATH (the agent sandbox's
+// pre-installed build, or the one CI provisions there), then the system
+// Chrome/Chromium. Both lookups are single-homed in scripts/chromium-path.ts,
+// shared with scripts/screenshot.ts and ad-hoc probes (issue #202). CI pins a
+// Playwright-managed Chromium via the first path for determinism; the
+// system-Chrome fallback keeps every other environment provisioning-free
+// (issue #97).
+const chromiumPath = findPreinstalledChromium() ?? findSystemChrome()
+
+/**
+ * Await inside a spec's top-level `describe`: serves `.output` and opens a browser. Never builds.
+ * Each spec's server gets its own Nuxt Content SQLite file: servers sharing
+ * `.output/server/contents.sqlite` raced to import the dumps and answered 500s.
+ */
+export async function setupL2(): Promise<void> {
+  const dbDir = mkdtempSync(join(tmpdir(), 'terrarium-e2e-'))
+  afterAll(() => rmSync(dbDir, { recursive: true, force: true }))
+  await setup({
+    rootDir: root,
+    build: false,
+    nuxtConfig: { nitro: { output: { dir: join(root, '.output') } } },
+    env: { NUXT_CONTENT_DATABASE_FILENAME: join(dbDir, 'contents.sqlite') },
+    browser: true,
+    browserOptions: {
+      type: 'chromium',
+      launch: {
+        ...(chromiumPath ? { executablePath: chromiumPath } : {}),
+        args: ['--no-sandbox', '--disable-gpu'],
+      },
+    },
+  })
+}
 
 // Both target lists are derived at test-time from the SAME expanded manifests
 // (ADR-0014), so new Spaces/pages are covered automatically with no hard-coding.

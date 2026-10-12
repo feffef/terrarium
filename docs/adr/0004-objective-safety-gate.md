@@ -88,6 +88,17 @@ Prune Trials by ADR-0027
 > platform spec and covers every Tenant uniformly.) L0/L1/L3 tests have no such
 > per-file build cost and are simply homed per the rule above.
 
+> **Amended (2026-10-12).** The 2026-07-07 "one spec, one `setup()`" rule rested
+> on `setup()` rebuilding the app per spec file. That premise is gone: the e2e
+> now reuses the gate's `pnpm build` output through a vitest `e2e`-project
+> `globalSetup` (`tests/support/e2e-global-setup.ts`, freshness-checked,
+> fail-closed: it builds only if `.output` is stale) and a `setupL2()` helper
+> that starts a server on it without building. L2 is still ONE build, but is
+> now one spec per Tenant (`layers/<tenant>/tests/e2e/<tenant>.spec.ts`) plus the
+> Platform spec, run in parallel by vitest. The invariant that remains is
+> "an e2e spec never builds". Each spec's server gets its own Nuxt Content
+> SQLite file, since servers sharing one answered with "database is locked".
+
 > **Amended (2026-07-11).** The L1 bullet's premise below — "free with Nuxt
 > Content Zod schemas — invalid frontmatter fails the build" — is false. Verified
 > against the installed `@nuxt/content` source (see

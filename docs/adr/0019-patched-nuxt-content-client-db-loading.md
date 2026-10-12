@@ -72,7 +72,7 @@ Ship a committed `pnpm patch` of `@nuxt/content@3.15.0`
   checklist, still is — an unconfirmed hypothesis; the ring buffer is how a
   real occurrence gets captured without devtools open.
 
-A red-capable e2e regression test (`layers/blog/tests/e2e/blog.e2e.ts`) injects
+A red-capable e2e regression test (`layers/blog/tests/e2e/blog.spec.ts`) injects
 the two-failure blip on a client navigation and asserts the component still
 fills; it fails on an unpatched build and passes patched.
 

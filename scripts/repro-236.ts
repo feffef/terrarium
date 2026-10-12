@@ -6,7 +6,7 @@
 // so the reverse-apply build steps below are historical. A plain `pnpm build` is
 // now the STOCK build, against which this harness still reproduces the underlying
 // poison (RED). The app-level mitigation (ContentLoadErrorDialog + reload) is not
-// what this server-restart harness exercises; the e2e in blog.e2e.ts covers it.
+// what this server-restart harness exercises; the e2e in blog.spec.ts covers it.
 //
 // Reproduces the bug with a GENUINE trigger — no request mocking, no injected
 // aborts: a real production server is stopped and restarted (exactly what a

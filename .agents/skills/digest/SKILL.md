@@ -93,7 +93,7 @@ notable) go in **Also shipped** instead, never both. A session's
 `learnings` or `ideas` earn a sentence only when a reader would find them
 genuinely interesting. **Keep the
 opening paragraph's first ~10 words plain prose — no backticks, links, or bold**:
-`layers/journal/tests/e2e/journal.e2e.ts`'s `digestBodySnippet()` literal-matches the first
+`layers/journal/tests/e2e/journal.spec.ts`'s `digestBodySnippet()` literal-matches the first
 six rendered words against the rendered HTML, and MDC renders inline markdown
 (e.g. a backtick code span) as an HTML tag, breaking that match (issue #903).
 **Include
