@@ -28,30 +28,41 @@ to each per-issue brief:
 - For an issue that is not clearly ready, read the binding ADRs in full and
   return a recommended solution and its options in plain words. That becomes
   its grilling question.
-- When the owner's last comment parks the issue until a condition holds,
-  check only that condition.
-- Comment only on a label change or a new fact.
+- An issue blocked outside the chat (an upstream release, a date, an action
+  only the owner can take outside chat) gets only a check that the blocker
+  still holds; probe the outside source if needed. Everything else, deferred
+  issues included, gets the full pass.
+- An issue the owner reserved ("I decide this one", directly or relayed) never
+  gets `ready-for-agent` from the sweep.
+- A grilling answer recorded by a stand-in in an earlier run doesn't bind;
+  ask it again.
+- Comment only on a label change or a fact that changes the outcome. Return
+  side findings to you instead.
 
 Then plan the PR grouping: one branch per change, grouped only when issues
-are clearly related or share files. A grouping you are unsure of is a
+are clearly related or share files. That grouping replaces `auto-triage`'s
+"mark the higher-numbered one blocked". A grouping you are unsure of is a
 grilling question. Start building issues with no design choice left (§3).
 
 **Done:** every issue the sweep didn't skip is building, closed as a duplicate
-or as already done, or holds a grilling question.
+or as already done, blocked outside the chat, or holds a grilling question.
 
 ## 2. Grill in one sitting
 
 Send a push notification with the `PushNotification` tool:
-`grilling ready: N questions on M issues`. Then run the `grilling` Skill on
-one list:
+`grilling ready: N questions`. Then run the `grilling` Skill on one list.
+Where its format differs, this list wins, and builds keep running:
 
 - Key each question by issue (`#1803a`, `#1803b`), so numbers stay put
-  across rounds.
+  across rounds. Key side findings `#S1` and process questions `#R1`.
 - Each question gives one line on what the issue is and one on the choice,
-  then the options, your pick and why. The owner never needs to open a
-  ticket.
+  then the options, your pick and why. Flag a pick you changed from the
+  subagent's. The owner never needs to open a ticket.
 - Put the most important questions first, and end with "accept my picks for
   the rest".
+- Include every issue an answer in chat could move, deferred ones too: a
+  later run may be the one that takes on the hard ones. Leave out only issues
+  blocked outside the chat, and list them in the report with their blocker.
 - Include `ready-for-human` items, real design forks inside
   `ready-for-agent` briefs, and Public issues (the owner's yes is the
   green-light ADR-0020 requires). Also include proposals to close an issue as
@@ -68,7 +79,8 @@ closed, or parked by the owner (deferred, or waiting on a condition).
 ## 3. Build
 
 Use `dispatch-subagents`, one worktree per planned branch, based on
-`origin/main`. Each build agent pushes its branch and reports any Human-only
+`origin/main`. When a closed, unmerged PR already implements the agreed pick,
+cherry-pick its commits onto the new branch and link it from the new PR. Each build agent pushes its branch and reports any Human-only
 path it touched; you open the PR. Dispatch in waves of at most 3 build
 agents, with at most 2 of them running the full gate.
 
