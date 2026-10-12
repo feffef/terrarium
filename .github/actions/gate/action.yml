@@ -91,13 +91,29 @@ runs:
     # L2 — every (Tenant, Space) entry route renders 200 with content. Pins the
     # browser to a Playwright-managed Chromium instead of the runner image's
     # system Chrome; the smoke spec reads PLAYWRIGHT_BROWSERS_PATH to find it. A
-    # workspace path — not /opt/pw-browsers — so no sudo is needed.
+    # workspace path — not /opt/pw-browsers — so no sudo is needed. The ~300 MB
+    # download is cached per playwright-core version; the apt packages it needs
+    # (fonts, mainly) are not cacheable, so `install-deps` still runs on a hit.
+    - name: Restore the pinned Chromium
+      if: steps.scope.outputs.skip_heavy != 'true'
+      id: pw-browsers
+      uses: actions/cache@v4
+      with:
+        path: ${{ github.workspace }}/.pw-browsers
+        key: pw-browsers-${{ runner.os }}-${{ hashFiles('node_modules/playwright-core/package.json') }}
+
     - name: Install Chromium for the L2 browser smoke gate
       if: steps.scope.outputs.skip_heavy != 'true'
       shell: bash
       env:
         PLAYWRIGHT_BROWSERS_PATH: ${{ github.workspace }}/.pw-browsers
-      run: pnpm exec playwright-core install --with-deps chromium
+        CACHE_HIT: ${{ steps.pw-browsers.outputs.cache-hit }}
+      run: |
+        if [ "$CACHE_HIT" = 'true' ]; then
+          pnpm exec playwright-core install-deps chromium
+        else
+          pnpm exec playwright-core install --with-deps chromium
+        fi
 
     - name: 'L2 · smoke render'
       if: steps.scope.outputs.skip_heavy != 'true'

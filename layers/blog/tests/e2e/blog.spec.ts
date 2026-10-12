@@ -45,7 +45,10 @@ async function failDavidDump(page: Page, fail: (route: Route) => Promise<void>):
 async function failContentChunkImport(page: Page): Promise<void> {
   await failDavidPayload(page)
   await page.route('**/_nuxt/*.js', async (route) => {
-    const response = await route.fetch()
+    // The test's reloadNuxtApp can dispose the page mid-fetch; vitest counts
+    // that rejection as an unhandled error and fails the run.
+    const response = await route.fetch().catch(() => undefined)
+    if (!response) return
     const body = await response.text()
     const isSqliteEntry = body.includes('sqlite3InitModule') && !route.request().url().includes('worker1')
     return isSqliteEntry
