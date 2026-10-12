@@ -46,6 +46,7 @@ act, once per session.
   task from the branch name or past commits.
 - **Stay on the branch your session started on.** If that is `main`, fetch
   `origin main` and cut a new branch first.
+- **A session that only answers a question** still ends with `close-session`.
 - **Merge your own PR** once its gate is green: post your verdict, then run
   `scripts/merge-pr.ts <number>` (`docs/agents/pr-workflow.md`). The ADR-0004
   rule names the few exceptions a human merges.

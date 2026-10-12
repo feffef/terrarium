@@ -2,8 +2,9 @@ name: provenance-header-shape
 cause: >-
   The ADR-0017 header's exact first-line shape lives only in the guard's deny message, and until 2026-10-10 the ADR's example named a model the harness forbids, so a session's first PR or comment is denied.
 surface: guard-or-hook
-status: open
-ref: "issue #1422; ADR-0017 amendment e76caa79"
+status: fixed
+fixedOn: "2026-10-10"
+ref: "issues #1422, #1684; PR #1438; ADR-0017 amendment e76caa79"
 occurrences:
   - session: session_0158JckUL8YWJtVL7s9i7xRr
     date: "2026-09-27"

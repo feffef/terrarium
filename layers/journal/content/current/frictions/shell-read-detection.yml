@@ -1,9 +1,9 @@
 name: shell-read-detection
 cause: >-
-  The shell-read detector guesses which files a Bash command showed; globs, loops, cd prefixes and grep output each defeat it in a new way, so each fix leaves another shape, and ADR-0009 floors every instance at moderate.
+  The advisory fires when an agent marks `(not read)` a doc the detector credited from shell output, often one a subagent opened; the detector is usually right, and `--author` hides subagent shell reads (#1786 re-triage).
 surface: safe
-status: open
-ref: "issues #1482, #1542, #1723, #1786 (shell-read false positives persist after PR #1725); PRs #1485, #1725"
+status: tracked
+ref: "issue #1786 (reopened 2026-10-12; PR #1792 refuses (not read) only for Read-tool docs); closed #1482, #1542, #1723; PRs #1485, #1725"
 occurrences:
   - session: session_0158JckUL8YWJtVL7s9i7xRr
     date: "2026-09-27"
@@ -67,4 +67,7 @@ occurrences:
     severity: moderate
   - session: session_01YVCyXmxSSDQ6csSBVJ554H
     date: "2026-10-11"
+    severity: moderate
+  - session: session_01QfaLuSd5cnBQPu8CCRrvkn
+    date: "2026-10-12"
     severity: moderate

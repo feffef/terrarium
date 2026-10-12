@@ -1,6 +1,6 @@
 name: bash-reads-not-read-tool
 cause: >-
-  Sessions read governed files with cat, sed or chained Bash instead of the Read tool, so path rules did not load; PR #1775's Bash rules hint now loads them but sessions still break the CLAUDE.md rule.
+  Sessions read governed files with cat, sed or chained Bash instead of the Read tool, so path rules did not load; PR #1775's Bash rules hint now loads them but sessions still break the CLAUDE.md rule; the harness auto-mode message that tells agents to prefer Bash also contributes (sessions 01V3bxJa, 01BLrfuH).
 surface: safe
 status: tracked
 ref: "issue #1778; PR #1775 (merged 2026-10-11)"
@@ -46,4 +46,16 @@ occurrences:
     severity: nit
   - session: session_01V3bxJaTSH8AWjrtSoBhNxK
     date: "2026-10-11"
+    severity: nit
+  - session: session_01LuXuScHA2QsY4RXipy9nAt
+    date: "2026-10-11"
+    severity: nit
+  - session: session_01D3gBoQCQTmjVwEyuA3qZkQ
+    date: "2026-10-11"
+    severity: minor
+  - session: session_01BLrfuHbMMEmjZZ7STpe1AN
+    date: "2026-10-11"
+    severity: minor
+  - session: session_01Nxo7EM7AbxUU6FFvEEQ7s8
+    date: "2026-10-12"
     severity: nit
