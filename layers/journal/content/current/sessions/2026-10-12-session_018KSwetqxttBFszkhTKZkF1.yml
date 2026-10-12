@@ -1,15 +1,16 @@
 schemaVersion: 1
 session: session_018KSwetqxttBFszkhTKZkF1
 startedAt: 2026-10-12T18:53:50Z
-endedAt: 2026-10-12T19:35:31Z
+endedAt: 2026-10-12T20:41:21Z
 kind: interactive
 goal: Diagnose the clear-backlog run and fix how PRs get reviewed
-status: completed
-outcome: "Skill fix in PR #1852 and review-before-push rule in PR #1853, both merged"
+status: in-review
+outcome: "#1852 and #1853 merged; ADR-0004 rule update in PR #1854 waits for a human merge"
 summary: "Human-instructed throughout. An Explore agent diagnosed session session_017NBxJhtBSd9AoCwTzsg6pM (a clear-backlog run) from its log and full transcript. On the owner's choices I revised clear-backlog (PR #1852, self-merged on a green gate). The owner then asked why I hadn't run code-review on it; I hadn't, which repeated the very failure being fixed. The post-merge two-axis review found real conflicts (ADR-0003's open-PR-on-push vs review-before-PR; dispatch-subagents' pushed-PR handoff). The owner chose: review before the first push for every PR, build agents hand back committed unpushed branches, rewrite frictions-to-fixes/guest-build/visitor-loop to match, and make clear-backlog triage fresh issues plus ready-for-agent first with full-sweep only as a fallback. Two review rounds ran before pushing PR #1853; they also caught digest, audit-docs and prune-trial pushing before review. The Stop hook asked to push five times; I held until review was done."
 prs:
   - "1852"
   - "1853"
+  - "1854"
 docsRead:
   - path: .agents/skills/clear-backlog/SKILL.md
     reason: the Skill being fixed
@@ -59,6 +60,9 @@ docsRead:
   - path: .agents/skills/digest/SKILL.md
     reason: added review before its push
     useful: yes
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: amendment format and order before adding the review amendment
+    useful: yes
   - path: layers/journal/content/current/sessions/2026-10-12-session_017NBxJhtBSd9AoCwTzsg6pM.yml
     reason: (no reason given)
   - path: .claude/skills/writing-for-agents/SKILL.md
@@ -88,30 +92,35 @@ frictions:
   - description: Stop hook repeatedly asks to push unreviewed local commits, contrary to the new review-before-push rule.
     solution: pr-workflow now says the rule holds even when the Stop hook asks; the hook could check for a pending review.
     severity: minor
+  - description: Reviewed the ADR-0004 change with one hand-rolled two-axis agent instead of invoking the code-review Skill, which the new rule names.
+    solution: Invoke the code-review Skill itself, even for a small diff.
+    severity: minor
   - description: "SHELL-READ-DETECTION false positive: .agents/skills/log-session/SKILL.md was credited from shell output, but the session marked it (not read)"
     solution: Find the crediting command in the transcript and tighten scripts/shell-reads.ts
     severity: moderate
-durationSec: 2501
+durationSec: 6451
 models:
-  claude-opus-5-5: 190
+  claude-opus-5-5: 241
 toolCounts:
-  Agent: 5
-  Read: 12
-  Bash: 52
+  Agent: 6
+  Read: 16
+  Bash: 67
   Skill: 4
-  Edit: 9
+  Edit: 14
   ToolSearch: 2
   mcp__github__list_pull_requests: 1
-  mcp__github__create_pull_request: 2
-  mcp__claude-code-remote__subscribe_pr_activity: 2
-  ReadNotifications: 3
+  mcp__github__create_pull_request: 3
+  mcp__claude-code-remote__subscribe_pr_activity: 3
+  ReadNotifications: 4
   mcp__github__add_issue_comment: 2
   mcp__claude-code-remote__unsubscribe_pr_activity: 2
-  SendMessage: 2
+  SendMessage: 3
 filesEdited:
   - .agents/skills/clear-backlog/SKILL.md
   - .agents/skills/dispatch-subagents/SKILL.md
   - docs/agents/pr-workflow.md
+  - docs/adr/0004-objective-safety-gate.md
+  - .claude/rules/adr-0004.md
 rulesLoaded:
   - .claude/rules/adr-0005.md
   - .claude/rules/adr-0029.md
@@ -135,7 +144,9 @@ rulesGlobal:
   - .claude/rules/adr-0023.md
   - .claude/rules/adr-0017.md
 rulesFollowedUp:
+  - .claude/rules/adr-0004.md
   - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0004-human-merge.md
 ruleVerdicts:
   - path: .claude/rules/adr-0022.md
     reason: Auto-triage green-light; the edit kept clear-backlog's triage phase unchanged, so it did not bear on my change.
@@ -208,6 +219,8 @@ subagents:
     task: Standards review of review-before-push branch
   - type: general-purpose
     task: Spec review of review-before-push branch
+  - type: general-purpose
+    task: Two-axis review of ADR-0004 rule change
 gitBranch: claude/wizardly-ramanujan-i6v8es
 entrypoint: remote
 cliVersion: 2.1.296
