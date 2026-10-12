@@ -46,7 +46,8 @@ GitHub PR-files API has the same gap: read `previous_filename` too.
 - A commit message containing backticks or `$(...)` goes through
   `git commit -F <file>` (or a quoted heredoc), never `-m`: the shell would run
   the span as a command. `.githooks/commit-msg` backstops the ADR-0017 trailer
-  but silently no-ops if pnpm/tsx is off PATH, so check it landed.
+  but silently no-ops when the main checkout has no `node_modules` or `node`
+  is off PATH, so check it landed.
 - A commit titled as a session-log commit holds only the session log. Title any
   other commit for its work.
 - Never patch a commit body with `git commit-tree` or other history rewriting;
