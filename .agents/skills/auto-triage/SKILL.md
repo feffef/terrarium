@@ -122,7 +122,8 @@ reaches for on its own.
 
 1. **Resolve the set.** List every open issue via `pnpm exec tsx scripts/list-open-issues.ts`
    (overflow-safe — see `docs/agents/github-integration.md` — not raw
-   `list_issues`/`search_issues`) plus in-scope external PRs; for each, check its
+   `list_issues`/`search_issues`) plus in-scope external PRs (`issue-tracker.md`'s
+   "List external PRs"); for each, check its
    most recent comment (or body, if none) against the human-authorship rule above
    — skip that check entirely in full-sweep mode; keep the eligible set; apply
    the wayfinder skips.
@@ -130,7 +131,9 @@ reaches for on its own.
    since a ticket only surfaces when a human has said something since the last
    AI action on it). Brief each with `/triage`'s per-issue rules plus
    the read-only rule, the brave/uncertainty line, and the wayfinder overlay above. Each subagent
-   verifies every claim against a primary source in the repo. Before judging, it
+   verifies every claim against a primary source in the repo, and reports a claim
+   only a write or an external probe could check as unverifiable, naming what
+   would verify it. Before judging, it
    reads the git history and session logs that touched the issue's area since
    the issue was filed: later work may have done, superseded or changed it
    (an obsolete or superseded issue is a judgment call, so `ready-for-human`).
