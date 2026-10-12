@@ -39,6 +39,8 @@ like this:
   - Closing or reopening a PR does **not**: `issue_write` rejects `state` /
     `state_reason` on a PR number. Use `update_pull_request`.
   - A PR that needs labels and a state change takes two calls.
+  - A label update **replaces** the whole set: pass every label the issue
+    should end with.
 - **Comment on an issue or PR** → `add_issue_comment`. Never use `issue_write`
   with `method: update` and a `body` for this: it *overwrites the description*
   with no confirmation and no diff (issue #723).

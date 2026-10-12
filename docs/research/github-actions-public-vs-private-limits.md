@@ -3,7 +3,8 @@
 Our repo's Actions jobs stopped starting with the message *"The job was not started because recent
 account payments have failed or your spending limit needs to be increased.
 Please check the 'Billing & plans' section in your settings"*. Would making the
-repo **public** change the billing/limits picture? The answer is at the
+repo **public** change the billing/limits picture? (Asked before the repo went
+public on 2026-07-11.) The answer is at the
 bottom; each fact cites the GitHub Docs page that owns it.
 
 **Verified against** the official GitHub Docs (docs.github.com), **accessed
@@ -186,7 +187,7 @@ start. Public standard-runner minutes are free and **don't draw on that quota at
 all**, so a public repo running only standard runners sidesteps the block without
 touching billing.
 
-**Two caveats before flipping the switch:**
+**Two caveats that applied before the flip:**
 1. If any workflow targets **larger runners** (bigger/GPU GitHub-hosted machines),
    those are billed **even on public repos** and stay blocked until a valid
    payment method is on file — going public does not fix that path

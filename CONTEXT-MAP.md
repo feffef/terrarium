@@ -26,9 +26,7 @@ context when you work on that Tenant.
   Aggregator Tenant: its Search and Timeline Spaces. The terms it turns on
   (Collection kind, Catalog, Aggregator) live in the root `CONTEXT.md`.
 
-The root `CONTEXT.md`'s `## Tenants` roster points at each of these: a pointer,
-not a second home. Substantive definitions live once, in the listed context;
-pointers to them may live anywhere they help.
+The root `CONTEXT.md`'s `## Tenants` roster points at each of these. Definitions live once, in the listed context; pointers to them may live anywhere they help.
 
 ## Relationships
 
@@ -40,9 +38,7 @@ pointers to them may live anywhere they help.
   traces to an actual discarded thing, gated by its two-gate inclusion test)
   but curated and voiced: a hand-selected, graded subset, not an exhaustive
   record. The **Marquee** is real like the Journal and the Midden (the films and
-  their in-universe order are genuine facts) but, like the Atlas, claims
-  nothing about the Terrarium; it is plain content about something
-  else. **Tinkerfund** is fiction too: a simulated shop of invented
+their in-universe order are genuine facts) but, like the Atlas, claims nothing about the Terrarium. **Tinkerfund** is fiction too: a simulated shop of invented
   products that claims nothing about the Terrarium. The **Commons** owns almost
   no content; it re-presents the other Tenants' opted-in content through the
   Catalog and makes no claims of its own.
@@ -54,7 +50,4 @@ pointers to them may live anywhere they help.
 
 ## Decisions
 
-System-wide ADRs live in [`docs/adr/`](./docs/adr/); there are no context-scoped
-`docs/adr/` directories, and every ADR is Platform-wide. A demo Tenant's
-reason-to-exist is product, not architecture, so it goes in that Tenant's
-`CONTEXT.md`, not an ADR (ADR-0021).
+ADRs live in [`docs/adr/`](./docs/adr/) and are all Platform-wide; there are no context-scoped ADR directories. A demo Tenant's reason-to-exist is product, not architecture, so it goes in that Tenant's `CONTEXT.md`, not an ADR (ADR-0021).

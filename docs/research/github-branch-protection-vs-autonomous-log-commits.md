@@ -219,7 +219,8 @@ bullets hold only the reasons.
 - **Left off, each would break the workflow:** linear history
   (`scripts/merge-pr.ts` and humans use merge commits), signed commits
   (session-log commits land unsigned).
-- Chartered Skills' self-merges, human merges and the Dependabot workflow all
+- Chartered Skills' self-merges, human merges and the Dependabot workflow (once
+  proposal #1633 is applied) all
   merge green PRs and need no bypass. Unverified against GitHub's docs: whether
   an "Always" bypass actor's REST merge passes a red check silently; the merge
   script polls for green first, so it is a safety-net question only.

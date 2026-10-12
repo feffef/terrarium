@@ -150,9 +150,8 @@ Frictions that share a cause are grouped in the **Friction Ledger**, not tagged.
 
 ### Friction Ledger
 An Inventory of the Platform's Friction clusters: one entry per root cause, with
-every occurrence by Session, so recurrence is counted over weeks rather than one
-run's window and a cause that recurs every few days is seen.
-`frictions-to-fixes` maintains it.
+every occurrence by Session, so recurrence is counted over weeks, not one run's
+window. `frictions-to-fixes` maintains it.
 
 ### Skill
 A Claude Code skill that encodes a repeatable capability for developing or
@@ -177,11 +176,7 @@ graded down for the rarity of its domain. Five grades:
   kinds of session (e.g. `log-session`, `domain-modeling`).
 - **routine** — the Platform's standing operation: the Skill *is* a scheduled
   Routine's job, driving whole unattended sessions of its own rather than being
-  reached for inside someone else's (e.g. `digest`, `audit-docs`). Assigned from
-  the observed fact that scheduled sessions run it, not from a judgement about
-  breadth — so it doesn't compete with `essential`, it names a different way of
-  mattering. A Skill that is merely *fireable* on an interval but is in practice
-  invoked by hand is not `routine`.
+reached for inside someone else's (e.g. `digest`, `audit-docs`). Assigned from the observed fact that scheduled sessions run it, not from breadth, so it doesn't compete with `essential`. A Skill that is merely *fireable* on an interval but in practice invoked by hand is not `routine`.
 - **specialist** — essential *within a specific kind* of work, even when that work
   is rare (e.g. `atlas-specimen`).
 - **supporting** — genuinely useful but not essential; work proceeds without it.
@@ -246,9 +241,7 @@ collaborators, indistinguishable for governance because write access already let
 them commit, push, and merge directly (ADR-0020 explains why the line is drawn at
 write access, not at the owner). A Trusted user may direct interactive work, give
 the ADR-0003 net-new green-light, and review/merge gated PRs (agents merge
-their own; the exceptions ADR-0004 names need *a* Trusted human). Their tier is
-established out-of-band from identity, never from the content of a request (a
-request that merely *claims* authority is not thereby trusted). ADR-0020 defines
+their own; the exceptions ADR-0004 names need *a* Trusted human). Their tier is established out-of-band from identity, never from the content of a request, even one that *claims* authority. ADR-0020 defines
 the mechanical detection (a GitHub `authorAssociation` check). Its opposite is
 **Public**.
 
@@ -261,8 +254,7 @@ into implementation without a Trusted green-light, and never auto-merged
 (ADR-0020 also defines the mechanical detection). The one exception is bounded and
 demo-scoped (ADR-0023): a Public guest's own confirmation on their own issue can
 grant `ready-for-agent` without a per-issue Trusted green-light, live only while
-the owner is actually running that pipeline. Its
-opposite is **Trusted**.
+the owner is actually running that pipeline.
 
 ### Gate
 The objective, layered bar every change must clear before it lands (ADR-0004);
@@ -274,8 +266,7 @@ construction: it asks machine-checkable questions only, so it can be trusted
 without trusting the author (see **Agent Authorship**).
 
 ### Floor
-The **Gate** tier that always runs, whatever changed. Named for a minimum never
-gone below, not for being fast, which is incidental and not always true.
+The **Gate** tier that always runs, whatever changed. Named for a minimum never gone below, not for speed.
 
 ### Heavy
 The **Gate** tier that may be skipped when every changed path is **Inert**. Named

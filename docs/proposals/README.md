@@ -29,19 +29,16 @@ Each proposal file must contain:
 When a change needs both an agent-authored edit and a companion workflow edit,
 the two are applied **together** — the human applies the workflow half and
 merges the agent's PR in the same sitting, not the agent half first and the
-workflow half later. ADR-0004 records the cost of drifting apart: the `validate:content` step reached `package.json` by agent PR before its `gate.yml` step landed, so CI ran a stale subset of `pnpm gate` meanwhile.
+workflow half later. ADR-0004 records the cost of drifting apart: CI ran a stale subset of `pnpm gate`.
 
-A human applies the proposal by hand (editing the workflow file, or making
-the setting) and, once landed, deletes the proposal file in the same
-commit — this directory tracks *pending* proposals, not a permanent archive.
+A human applies the proposal by hand (editing the workflow file, or making the setting) and, once landed, deletes the proposal file in the same commit; this directory tracks only *pending* proposals.
 
 ## Superseding a pending proposal
 
-A proposal that a later proposal replaces must say so on its own file, not rely on readers noticing the contradiction — three pending proposals once silently disagreed, one still telling a human to do what a later one would undo (issue #890). Whoever adds the superseding proposal adds, in the same PR, a banner as the **first line** of the superseded file's body naming the replacement:
+A proposal that a later proposal replaces must say so on its own file; readers won't notice the contradiction otherwise (issue #890). Whoever adds the superseding proposal adds, in the same PR, a banner as the **first line** of the superseded file's body naming the replacement:
 
 ```
 > **Superseded by [`docs/proposals/NNN-new-slug.md`](./NNN-new-slug.md).**
 ```
 
-The superseded file otherwise stays as-is — this is an announcement, not a
-rewrite of its historical content — until a human applies or deletes it.
+The superseded file otherwise stays as-is until a human applies or deletes it.

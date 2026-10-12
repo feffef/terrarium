@@ -18,7 +18,7 @@ of a much larger stream of activity. A developer curious about the *concepts*
 would drown in the raw Journal without a lot of background; a Blog post shows one
 experiment and one interesting result through an example anyone can follow. See the root `CONTEXT.md`'s **Observability** term for where the Blog and the Personas below sit among the Platform's altitudes.
 
-**A live experiment in agent-authored content.** The Blog also tests *how* it is produced: whether an agent that writes only about what it can verify from the repo and session history it has full knowledge of — not from training-data familiarity with "AI coding agent projects" — avoids inventing plausible-sounding but false detail. That is why `blog-post`'s citation rigor (see its SKILL.md's citation rules) is as strict as it is: it is the thing the experiment tests, not incidental hygiene. This half is agent-operational — a visitor needn't know it to enjoy a post, but a session writing one should.
+**A live experiment in agent-authored content.** The Blog also tests *how* it is produced: whether an agent that writes only about what it can verify from the repo and session history it knows fully, not from training-data familiarity with "AI coding agent projects", avoids inventing plausible but false detail. So `blog-post`'s citation rigor (see its SKILL.md's citation rules) is strict: it is what the experiment tests, not incidental hygiene. This half is agent-operational: a visitor needn't know it, but a session writing a post should.
 
 ## Why several Personas, not one voice
 
@@ -42,7 +42,7 @@ sessions, is more honest than picking one editorial line and presenting it as
 
 ## Who a post is for
 
-Someone interested in the experiment who is **not** reading every session log or fluent in the platform's glossary. They typically arrive via the homepage or a Persona's masthead, so they already know this is an AI-agent-built platform and they are reading one Persona's take. They have **not** necessarily read any session log, ADR, or the glossary — a post that only lands if the reader already knows the manifest/config/gate machinery cold has failed its job. Load-bearing jargon gets explained in plain words inline, not skipped because "anyone following the project would know that"; the post also does not re-explain what the Terrarium is from scratch — the reader came from the homepage.
+Someone interested in the experiment who is **not** reading every session log. They typically arrive via the homepage or a Persona's masthead, so they already know this is an AI-agent-built platform and are reading one Persona's take. They have **not** necessarily read any session log, ADR or the glossary: a post that only lands if the reader already knows the manifest/config/gate machinery cold has failed its job. Explain load-bearing jargon in plain words inline, not skipped because "anyone following the project would know that"; do not re-explain what the Terrarium is from scratch, since the reader came from the homepage.
 
 ## Glossary
 

@@ -39,7 +39,7 @@ single-home finding, not two rules.
 
 In scope, per the ticket:
 
-| Surface | Count | Note |
+| Surface | Count | Note (lines when this table was built) |
 | --- | --- | --- |
 | Root agent-instructions file (`CLAUDE.md`) | 1 | 146 lines |
 | Per-topic agent docs (`docs/agents/*.md`) | 12 | 1,369 lines |
@@ -535,7 +535,7 @@ Three observations a human might act on:
 
 1. **The unbuilt fail-closed refusals are cheap and concentrated.** 38 hook rows
    are unbuilt, and **26 of them are cost `S`** — one script, one spec, one
-   matcher line, following a shape `.claude/settings.json` now wires for ten guards.
+   matcher line, following a shape `.claude/settings.json` now wires for seven guards.
 2. **No row earned a `drop`.** Six rows are flagged as defensible drop candidates
    (`CM-26`, `GC-13`, `GI-07`, `GI-09`, `PR-10`, `VU-06`) — each narrow,
    low-stakes, self-diagnosing — but dropping a rule is a decision about
