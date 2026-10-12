@@ -20,6 +20,9 @@
     // scripts import sibling modules by explicit `.ts` path (tsx runtime); allow it.
     "allowImportingTsExtensions": true,
     "noEmit": true,
+    // Cached across CI runs with the lint cache (.github/actions/gate/action.yml).
+    "incremental": true,
+    "tsBuildInfoFile": "./node_modules/.cache/tsc/node.tsbuildinfo",
     "strict": true,
     "noUncheckedIndexedAccess": true,
     "esModuleInterop": true,

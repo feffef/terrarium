@@ -9,6 +9,7 @@ import { describe, expect, it } from 'vitest'
 import { bashRulesHint } from '../../scripts/bash-rules-hint.ts'
 import type { RuleFile } from '../../scripts/skill-rules-hint.ts'
 import { ruleBlockFiles } from '../../scripts/validate-adr-rules.ts'
+import { FORWARDED, prefilterReaching } from '../support/run-script.ts'
 
 const repo = resolve(dirname(fileURLToPath(import.meta.url)), '../..')
 const rule = (file: string, paths: string[], body: string): RuleFile => ({
@@ -116,26 +117,25 @@ describe('the hook entry (sh pre-filter → tsx)', () => {
   const probe = (seen: string) =>
     `{"tool_name":"Bash","cwd":${JSON.stringify(repo)},"tool_input":{"command":${JSON.stringify(seen)},"command":"cat README.md scripts/double-background-guard.ts"}}`
 
+  // Only the pre-filter's own decision is under test, so tsx is a stub.
+  const reaches = prefilterReaching('bash-rules-hint.sh')
+
   it('skips tsx for a read that cannot be compound or multi-file', () => {
-    for (const seen of ['cat f', 'head -50 f']) {
-      expect(run(probe(seen))).toMatchObject({ status: 0, stdout: '' })
-    }
+    for (const seen of ['cat f', 'head -50 f']) expect(reaches(probe(seen)), seen).toBe('')
   })
 
   it('runs tsx for any compound or multi-word read', () => {
     const compound = ['cat a | head', 'cd x && cat a', 'cat a; ls', 'cat $(ls)', 'ls\ncat a', 'cat a b', 'cat\ta b']
     const multi = ['grep -n x a b', 'head -n 5 a b', 'sed -n 1p a b', 'grep -rn x d', 'rg x d', 'grep x -r d', 'grep -e x -r d']
-    for (const seen of [...compound, ...multi]) {
-      expect(run(probe(seen)).stdout, seen).toContain('guards.md')
-    }
+    for (const seen of [...compound, ...multi]) expect(reaches(probe(seen)), seen).toBe(FORWARDED)
   })
 
   it('reads the command from tool_input wherever it sits, with spaced colons', () => {
     const compound = JSON.stringify('cat README.md scripts/double-background-guard.ts')
     const late = `{"tool_response":{"command":"ls"},"tool_name":"Bash","cwd":${JSON.stringify(repo)},"tool_input" : {"command" : ${compound}}}`
-    expect(run(late).stdout).toContain('guards.md')
+    expect(reaches(late)).toBe(FORWARDED)
     const quoted = `{"tool_name":"Bash","cwd":${JSON.stringify(repo)},"tool_input":{"command":${compound}},"tool_response":{"x":"tool_input","command":"ls"}}`
-    expect(run(quoted).stdout).toContain('guards.md')
+    expect(reaches(quoted)).toBe(FORWARDED)
   })
 
   it("skips a rule already loaded, read from a subagent's own transcript when it has one", () => {

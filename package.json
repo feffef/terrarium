@@ -13,7 +13,7 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "typecheck": "nuxt typecheck && tsc -p tsconfig.node.json",
-    "lint": "eslint .",
+    "lint": "eslint . --cache --cache-strategy content --cache-location node_modules/.cache/eslint/",
     "test": "nuxt prepare && vitest run tests/unit",
     "test:e2e": "vitest run tests/e2e",
     "validate:content": "tsx scripts/validate-content.ts && tsx scripts/validate-content-refs.ts && tsx scripts/validate-skill-cadence.ts && tsx scripts/validate-prune-trials.ts && tsx scripts/validate-adr-rules.ts",

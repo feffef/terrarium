@@ -7,6 +7,7 @@ import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
 import { READ_FIRST, triggeredDocs } from '../../scripts/read-first-hint.ts'
+import { runTsx } from '../support/run-script.ts'
 
 const repo = resolve(dirname(fileURLToPath(import.meta.url)), '../..')
 const GIT = 'docs/agents/git-conventions.md'
@@ -58,9 +59,8 @@ describe('triggeredDocs()', () => {
 })
 
 describe('the hook entry (sh pre-filter → tsx)', () => {
-  // `args` skips the pre-filter, for a `--dry-run`.
-  const run = (payload: unknown, args?: string[]) =>
-    spawnSync('sh', args ? ['-c', `node_modules/.bin/tsx scripts/read-first-hint.ts ${args.join(' ')}`.trim()] : ['scripts/read-first-hint.sh'], {
+  const run = (payload: unknown) =>
+    spawnSync('sh', ['scripts/read-first-hint.sh'], {
       cwd: repo,
       input: typeof payload === 'string' ? payload : JSON.stringify(payload),
       encoding: 'utf8',
@@ -126,7 +126,7 @@ describe('the hook entry (sh pre-filter → tsx)', () => {
   it('--dry-run prints the pointer for an unread doc, and nothing for git status', () => {
     const dry = (command: string) => {
       const input = JSON.stringify({ tool_name: 'Bash', cwd: repo, tool_input: { command } })
-      return JSON.parse(run('', ['--dry-run', '--input', `'${input}'`]).stdout).hint as string | null
+      return JSON.parse(runTsx(join(repo, 'scripts/read-first-hint.ts'), { args: ['--dry-run', '--input', input] })).hint as string | null
     }
     expect(dry('git log -1')).toContain(GIT)
     expect(dry('git status')).toBeNull()

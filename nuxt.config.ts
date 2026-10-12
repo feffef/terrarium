@@ -24,6 +24,9 @@ export default defineNuxtConfig({
   },
   // Bounds that page cache's memory (ADR-0028, #1446).
   nitro: { storage: { cache: { driver: 'lru-cache', max: 200 } } },
+  // Nothing reads them: the server runs without --enable-source-maps. Skipping them
+  // saves several seconds of the build.
+  sourcemap: { server: false, client: false },
 
   content: {
     // Native node:sqlite (Node >= 22.5) — no better-sqlite3 native build in CI.
@@ -47,6 +50,9 @@ export default defineNuxtConfig({
     // own `../layers/*/app/**/*` entry.
     tsConfig: {
       include: ['../layers/*/tenant.config.*'],
+      // Incremental, so the Gate's warm `vue-tsc` run re-checks only what changed
+      // (cached across CI runs, .github/actions/gate/action.yml). Relative to `.nuxt/`.
+      compilerOptions: { incremental: true, tsBuildInfoFile: '../node_modules/.cache/tsc/nuxt.tsbuildinfo' },
     },
   },
 })
