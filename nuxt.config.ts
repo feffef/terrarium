@@ -24,6 +24,9 @@ export default defineNuxtConfig({
   },
   // Bounds that page cache's memory (ADR-0028, #1446).
   nitro: { storage: { cache: { driver: 'lru-cache', max: 200 } } },
+  // Nothing reads them: the server runs without --enable-source-maps. Skipping them
+  // saves several seconds of the build.
+  sourcemap: { server: false, client: false },
 
   content: {
     // Native node:sqlite (Node >= 22.5) — no better-sqlite3 native build in CI.

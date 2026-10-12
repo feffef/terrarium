@@ -80,6 +80,19 @@ runs:
       shell: bash
       run: pnpm test
 
+    # Nuxt Content's per-file parse cache lives in this SQLite file. Each entry
+    # carries a hash of the file's content and its Collection, so a stale entry
+    # is re-parsed, never served. The lockfile leads the key because the Content
+    # version is not part of that hash; the prefix fallback restores the nearest
+    # earlier cache and only changed files are parsed.
+    - name: Restore the Content parse cache
+      if: steps.scope.outputs.skip_heavy != 'true'
+      uses: actions/cache@v4
+      with:
+        path: .data/content
+        key: content-parse-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}-${{ hashFiles('layers/*/content/**', 'layers/*/tenant.config.ts', 'content.config.ts') }}
+        restore-keys: content-parse-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}-
+
     # L0 — build succeeds. Does NOT validate content against schemas — Nuxt
     # Content 3 has no safeParse in its parse/insert pipeline; schemas only
     # derive SQL column types (docs/research/nuxt-content-review-grounding.md §2).
