@@ -72,6 +72,10 @@ re-checked). Entries that came from a specific session cite it.
   `page.$eval(selector, el => getComputedStyle(el).propertyName)`. A screenshot
   confirms a render happened; computed-style probing confirms a *specific* style
   took effect.
+- **A diagram, illustration or layout from a brief needs the human's eye first.**
+  Agree the reader and the question it answers, and show a rough draft for a
+  quick reaction before you polish and publish. Passing gates is necessary, not
+  sufficient.
 - **The journal Space landing is a custom dashboard, not a Markdown render** —
   see `layers/journal/CONTEXT.md`'s "What lives where" for what it renders.
   Editing `index.md` alone will not change what most of that page shows; check

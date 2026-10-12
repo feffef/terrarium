@@ -68,3 +68,9 @@ occurrences:
   - session: session_01BLrfuHbMMEmjZZ7STpe1AN
     date: "2026-10-11"
     severity: nit
+  - session: session_016iE4LmQUcg6ap5YMxJg4oC
+    date: "2026-10-12"
+    severity: moderate
+  - session: session_01VGLAakRJNm67PuNHpgbEc7
+    date: "2026-10-12"
+    severity: moderate

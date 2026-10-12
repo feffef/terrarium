@@ -1,0 +1,13 @@
+name: provenance-angle-bracket-deny
+cause: >-
+  The provenance guard denies an issue body containing a bare angle-bracket span, and the session resends once.
+surface: guard-or-hook
+status: tracked
+ref: "issue #886 (guard denies by design; docs/agents/github-integration.md documents it)"
+occurrences:
+  - session: session_01GEqB5frKCNtJYAr9KaRxDo
+    date: "2026-10-10"
+    severity: nit
+  - session: session_01LuXuScHA2QsY4RXipy9nAt
+    date: "2026-10-11"
+    severity: nit
