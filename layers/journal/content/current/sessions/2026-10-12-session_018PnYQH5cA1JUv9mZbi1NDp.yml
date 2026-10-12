@@ -1,0 +1,136 @@
+schemaVersion: 1
+session: session_018PnYQH5cA1JUv9mZbi1NDp
+startedAt: 2026-10-12T13:19:33Z
+endedAt: 2026-10-12T13:21:39Z
+kind: autonomous
+goal: Dry run of the log-session rule-verdict step on a Journal question
+status: completed
+outcome: Answered how the Journal picks its default-visible session cards; read-only, no PR
+summary: 'An automated system notification (no human prompt in this session) asked a read-only question: how the Journal decides which session cards are visible by default, and where that is tested; then to close the session and report the ruleVerdicts, as a dry run of the rule-verdict instruction from PR 1812. Everything done was instructed by that notification; nothing was agent-initiated beyond choosing which files to read. Answer: the Journal Space index page queries sessions ordered by endedAt DESC and v-shows the first SESSIONS_VISIBLE=10 cards, plus any card whose anchor is open (deep link), until "Show all N sessions" sets showAllSessions. No test asserts the cut itself; the e2e journal.spec.ts only accommodates it (the goal-clickable guard skips hidden cards). No edits, commits or PRs.'
+prs: []
+docsRead:
+  - path: CONTEXT-MAP.md
+    reason: session-start read; pointed to Journal context
+    useful: partly
+  - path: CONTEXT.md
+    reason: session-start glossary; Session kind definitions used for kind
+    useful: yes
+  - path: CLAUDE.md
+    reason: close-session re-read; checked for broken rules
+    useful: yes
+  - path: layers/journal/app/pages/t/journal/[space]/index.vue
+    reason: "holds SESSIONS_VISIBLE and the v-show condition: the answer"
+    useful: yes
+  - path: layers/journal/tests/e2e/journal.spec.ts
+    reason: only test touching the cut; it skips hidden cards rather than asserting the cut
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: (no reason given)
+  - path: .claude/rules/adr-0003.md
+    reason: (no reason given)
+  - path: .claude/rules/adr-0004.md
+    reason: (no reason given)
+  - path: .claude/rules/adr-0017.md
+    reason: (no reason given)
+  - path: .claude/rules/adr-0001.md
+    reason: (no reason given)
+  - path: .claude/rules/adr-0020.md
+    reason: (no reason given)
+  - path: .claude/rules/adr-0022.md
+    reason: (no reason given)
+  - path: .claude/rules/adr-0023.md
+    reason: (no reason given)
+  - path: .claude/rules/adr-0027.md
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: required closure even for a question-only session
+  - name: log-session
+    reason: author this log and the ruleVerdicts under test
+frictions:
+  - description: Task arrived only as a system notification that says it is not user input, yet carries the task; unclear whether it is authoritative and which kind to log
+    solution: Have the dry-run harness send the task as a normal prompt, or state in CONTEXT.md Session kind how a harness-injected task counts
+    severity: minor
+  - description: Used a Bash loop with head/grep over .claude/rules/*.md to find unscoped rules; a multi-file shell read loads no rules
+    solution: close-session could name the always-loaded rule files, or a script could list them
+    severity: nit
+durationSec: 126
+models:
+  claude-opus-5-5: 43
+toolCounts:
+  Read: 15
+  Grep: 7
+  Skill: 2
+  Bash: 4
+  Write: 1
+rulesLoaded:
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0006.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/adr-0016.md
+  - .claude/rules/adr-0008.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0004-human-merge.md
+rulesGlobal:
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0001.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0023.md
+  - .claude/rules/adr-0017.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0001.md
+    reason: "Context only: a read-only question about one page needed nothing about build-time baking; summary enough, ADR not opened"
+    useful: no
+  - path: .claude/rules/adr-0003.md
+    reason: No branch commit was pushed so no PR was due; it confirmed opening nothing was correct; summary enough, ADR not opened
+    useful: partly
+  - path: .claude/rules/adr-0004.md
+    reason: No PR or push, so the gate never came up; didn't apply and I didn't open the ADR
+    useful: no
+  - path: .claude/rules/adr-0009.md
+    reason: Told me this question-only session still logs via close-session and the hook lands it on main; summary enough
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: No GitHub write happened, so no provenance line was needed; didn't apply; the summary names no full ADR to read, so none opened
+    useful: no
+  - path: .claude/rules/adr-0020.md
+    reason: Task came from a harness notification, not a GitHub requester, so trust tiers didn't apply; ADR not opened
+    useful: no
+  - path: .claude/rules/adr-0022.md
+    reason: About the auto-triage Skill, which this session never ran; didn't apply, ADR not opened
+    useful: no
+  - path: .claude/rules/adr-0023.md
+    reason: About the guest pipeline; no guest issue or PR involved; didn't apply, ADR not opened
+    useful: no
+  - path: .claude/rules/adr-0027.md
+    reason: No problem landed in a prune-trial's territory that I could tell; didn't apply, ADR not opened
+    useful: no
+  - path: .claude/rules/adr-0021.md
+    reason: Loaded on CONTEXT.md; confirmed the Journal's own terms sit in its layer CONTEXT.md, which I didn't need; ADR not opened
+    useful: no
+  - path: .claude/rules/adr-0006.md
+    reason: Loaded on the Journal index page; routing via resolveSpaceRoute is irrelevant to the visibility cut; ADR not opened
+    useful: no
+  - path: .claude/rules/tenant-layers.md
+    reason: Loaded on the Journal page; layer gotchas matter for edits, not this read-only question; pointed doc not opened
+    useful: no
+  - path: .claude/rules/adr-0016.md
+    reason: Tenant root pages; the file I read is a Space index, not the root page; didn't apply, ADR not opened
+    useful: no
+  - path: .claude/rules/adr-0008.md
+    reason: Framed the Journal as Platform self-documentation, context for what session cards are; summary enough, ADR not opened
+    useful: partly
+  - path: .claude/rules/adr-0029.md
+    reason: Loaded on reading rules files; explained why my Bash loop over rules loaded nothing; summary enough, ADR not opened
+    useful: partly
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Loaded because I read rule files for close-session; I changed nothing, so no human merge; didn't apply
+    useful: no
+gitBranch: ccr-9f50fba9-3z0eox
+entrypoint: remote
+cliVersion: 2.1.296
+landedBy: Stop
