@@ -381,10 +381,10 @@ describe('tinkerfund Tenant', async () => {
 
       await page.goBack()
       await expect.poll(h1).toBe('Shipping')
-      expect(await page.getByLabel('Europe').isChecked()).toBe(true)
+      await expect.poll(() => page.getByLabel('Europe').isChecked()).toBe(true)
       await page.goForward()
       await expect.poll(h1).toBe('Payment')
-      expect(await page.getByLabel('Promissory handshake').isChecked()).toBe(true)
+      await expect.poll(() => page.getByLabel('Promissory handshake').isChecked()).toBe(true)
       await page.getByRole('link', { name: 'Review your Pledges' }).click()
 
       await expect.poll(h1).toBe('Review')

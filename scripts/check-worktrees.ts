@@ -21,7 +21,7 @@
 //   content already equals a pushed commit's tree (issue #1585: a sibling moved
 //   its branch ref, so it reads as a reversed diff of work already on the remote).
 import { execFileSync } from 'node:child_process'
-import { copyFileSync, existsSync, mkdtempSync, rmSync } from 'node:fs'
+import { copyFileSync, existsSync, mkdtempSync, rmSync, statSync, utimesSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
@@ -243,7 +243,14 @@ export function contentMatchesRemoteCommit(path: string): boolean {
   try {
     const index = join(dir, 'index')
     const realIndex = resolve(path, git(['rev-parse', '--git-path', 'index'], path))
-    if (existsSync(realIndex)) copyFileSync(realIndex, index)
+    // Keep the real index's mtime: a fresher copy hides git's racy-timestamp
+    // check, so a same-size rewrite within one clock tick reads as unchanged
+    // (issue #1818).
+    if (existsSync(realIndex)) {
+      copyFileSync(realIndex, index)
+      const { atime, mtime } = statSync(realIndex)
+      utimesSync(index, atime, mtime)
+    }
     const env = { ...process.env, GIT_INDEX_FILE: index }
     execFileSync('git', ['add', '-A'], { cwd: path, env, stdio: 'ignore' })
     const tree = execFileSync('git', ['write-tree'], { cwd: path, env, encoding: 'utf8' }).trim()
