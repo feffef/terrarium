@@ -77,7 +77,7 @@ GitHub PR-files API has the same gap: read `previous_filename` too.
 The closure Stop hook can flag inherited commits already on `origin/main`. Run
 `git log origin/main..HEAD` first. Never rebase or rewrite commits outside that
 list (for example via the hook's suggested `--reset-author`); that rewrites
-public history. Only commits in `origin/main..HEAD`, minus a checked-out
-branch's commits authored before this session started, are yours to fix.
+public history. A commit is yours to fix only if this session made it: in a
+working copy shared with other sessions, `origin/main..HEAD` also holds theirs.
 `--reset-author` may also fail to sign: see the signing-key caveat in
 [`environment-caveats.md`](./environment-caveats.md).
