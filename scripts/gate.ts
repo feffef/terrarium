@@ -295,9 +295,9 @@ function main(): void {
   console.log(`gate:scoped: ${dry ? 'would run' : 'running'} ${steps.join(' → ')}`)
   if (dry) return
   for (const step of steps) {
-    // planSteps puts HEAVY at the end; a Skill-only plan (#1603) runs `test`
-    // without BUILT, which never ran out of memory, so it takes no slot. The slot
-    // is freed on exit.
+    // planSteps puts HEAVY at the end. A Skill-only plan (#1603) runs `test`
+    // without BUILT and takes no slot: #1800 traced the OOM to `test:e2e`. The
+    // slot is freed on exit.
     if (step === HEAVY[0] && steps.includes(BUILT[0])) acquireHeavySlot()
     run(step)
   }
