@@ -77,7 +77,7 @@ skillsUsed:                        # transcript-observed reads/Skills you omit a
   - { name: tdd, reason: "test-first the helper (see #99)" }  # (name cross-refs the Skill Inventory)
 ruleVerdicts:                      # every rule that loaded, global ones too (step 3 lists them)
   - { path: .claude/rules/adr-0004.md, reason: "Made me run gate:scoped before pushing; summary was enough, skipped the full ADR", useful: yes }
-  - { path: .claude/rules/adr-0023.md, reason: "About guest PRs; this was a Trusted blog post, so it didn't apply and I didn't open the ADR", useful: no }
+  - { path: .claude/rules/adr-0023.md, reason: "About guest PRs; this was a Trusted blog post, so it didn't apply", useful: no }
 frictions:                         # REQUIRED (may be []) — list EVERY friction
   - description: …                 # ~20 words, honest
     solution: …                    # the fix, or what would have helped
@@ -177,10 +177,10 @@ It also lists every rule that loaded with no `ruleVerdicts` entry, including the
 global ones that load at session start. Answer each with a `useful` verdict
 and a one-sentence `reason` (about 20 words) that says why: for `yes` or
 `partly`, what in the rule changed or confirmed something you did; for `no`,
-why it didn't apply to this task, or what it got wrong. Also say why you did or
-didn't open the full ADR or doc the rule points to (the trace records whether):
-the summary was enough, you needed a detail it held, or it didn't apply. Don't restate the rule, and
-don't write "loaded".
+why it didn't apply to this task, or what it got wrong. For a `yes` or `partly`
+rule that points to a full ADR or doc, also say why you did or didn't open it
+(the trace records whether): the summary was enough, or you needed a detail it
+held. Don't restate the rule.
 
 A later pass merges with the first, so list only the new or changed entries,
 but write each one whole: a pass replaces an entry with the same path.

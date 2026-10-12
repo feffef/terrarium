@@ -806,7 +806,9 @@ export function stitch(authored: AuthoredScratch, trace: MechanicalTrace): Recor
     prs: authored.prs ?? [],
     docsRead: mergeRefs(
       (authored.docsRead ?? []).filter((d) => !notRead.has(d.path)),
-      [...trace.filesRead, ...trace.docsReadViaShell].filter((p) => !notRead.has(p)),
+      // A rule file is logged as a rule (rulesGlobal/rulesLoaded + ruleVerdicts),
+      // even when close-session has the agent re-read it.
+      [...trace.filesRead, ...trace.docsReadViaShell].filter((p) => !notRead.has(p) && !p.startsWith('.claude/rules/')),
       'path',
       (path) => (editedSet.has(path) ? DERIVED_REASON_EDITED : DERIVED_REASON),
     ),

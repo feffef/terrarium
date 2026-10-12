@@ -198,6 +198,11 @@ describe('rulesLoaded and rulesGlobal — rules that loaded', () => {
     expect(entry.docsRead).toContainEqual({ path: 'CONTEXT.md', reason: 'glossary', useful: 'yes' })
     expect(validateEntry(entry).ok).toBe(true)
   })
+  it('logs a re-read rule file as a rule, not a doc read', () => {
+    const authored: AuthoredScratch = { session: 'session_01RL', goal: 'g', status: 'completed', outcome: 'o', summary: 's', frictions: [] }
+    const entry = stitch(authored, { ...trace, filesRead: ['.claude/rules/adr-0004.md', 'CONTEXT.md'] })
+    expect((entry.docsRead as { path: string }[]).map((d) => d.path)).toEqual(['CONTEXT.md'])
+  })
 })
 
 describe('rulesFollowedUp — a rule whose ADR was read after it loaded', () => {
