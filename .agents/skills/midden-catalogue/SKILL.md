@@ -84,4 +84,8 @@ fixes until it comes back clean.
 Open the gated PR. Its description lists each find with its placement,
 season and grade, and names the judgment calls a reviewer should look at
 first: a close Gate-B call, a season named or closed, a placement that could
-go either way. Close the survey issue from the PR.
+go either way, and says it waits for the owner's review. Close the survey
+issue from the PR.
+
+Never merge it yourself, even on a green gate: the owner reviews the
+curatorial fields and merges it (owner's direction, 2026-09-28; #1802).
