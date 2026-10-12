@@ -24,6 +24,19 @@ export default defineNuxtConfig({
   },
   // Bounds that page cache's memory (ADR-0028, #1446).
   nitro: { storage: { cache: { driver: 'lru-cache', max: 200 } } },
+  // Nothing reads them: the server runs without --enable-source-maps. Skipping them
+  // saves several seconds of the build.
+  sourcemap: { server: false, client: false },
+  hooks: {
+    // Content prerenders every Collection's `sql_dump.txt`, which makes Nitro bundle
+    // the server a second time for the prerenderer. The node preset serves the same
+    // dumps at runtime, and nothing else is prerendered.
+    'nitro:config'(config) {
+      for (const [route, rule] of Object.entries(config.routeRules ?? {})) {
+        if (route.endsWith('/sql_dump.txt')) rule.prerender = false
+      }
+    },
+  },
 
   content: {
     // Native node:sqlite (Node >= 22.5) — no better-sqlite3 native build in CI.
