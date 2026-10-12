@@ -10,26 +10,34 @@ owner can make. The owner is present twice: at the start and for one
 
 This Skill only orders other Skills and passes work between them. Their rules
 live in those Skills. A phase is done only when its **done** line holds.
+Issues move through the phases on their own, so an early build can be in
+review while the grilling runs.
 
 ## 1. Explore
 
-Run `auto-triage full-sweep`. Re-checking older issues is the point.
+`auto-triage` is user-invoked, so read `.agents/skills/auto-triage/SKILL.md`
+and run its sweep in `full-sweep` mode. The owner starting this run is the
+human direction that mode needs. Re-checking older issues is the point.
 
-- Give every `ready-for-agent` brief a premise check: should this exist, and
-  how big does it need to be? A wrong premise costs a whole build-and-review
-  cycle.
+- Give every `ready-for-agent` brief CLAUDE.md's premise check. A wrong
+  premise costs a whole build-and-review cycle.
 - For each issue that is not clearly ready, dispatch one read-only design
-  subagent. It reads the binding ADRs, git history and session logs. It
-  returns a recommended solution and its options in plain words.
+  subagent. It reads the binding ADRs in full, and returns a recommended
+  solution and its options in plain words. That becomes the issue's grilling
+  question.
+- Plan the PR grouping: one branch per change, grouped only when issues are
+  clearly related or share files. A grouping you are unsure of is a grilling
+  question.
 - Start building issues that are clearly ready right away (§3).
 
-**Done:** every open issue is in one of three states: building, closed as
-duplicate or already done, or holding a question for the grilling.
+**Done:** every issue the sweep didn't skip is building, closed as a duplicate
+or as already done, or holds a grilling question.
 
-## 2. Grill once
+## 2. Grill in one sitting
 
-Send a push notification: `grilling ready: N questions on M issues`. Then use
-the `grilling` Skill on one list, with these changes:
+Send a push notification with the `PushNotification` tool:
+`grilling ready: N questions on M issues`. Then run the `grilling` Skill on
+one list:
 
 - Key each question by issue (`#1803a`, `#1803b`), so numbers stay put
   across rounds.
@@ -39,10 +47,10 @@ the `grilling` Skill on one list, with these changes:
 - Put the most important questions first, and end with "accept my picks for
   the rest".
 - Include `ready-for-human` items, real design forks inside
-  `ready-for-agent` briefs, and Public issues. Approving a Public issue is the
-  green-light ADR-0020 requires, and its PR waits for a human merge. Also
-  include proposals to close an issue as obsolete or superseded. Close only
-  on a yes.
+  `ready-for-agent` briefs, and Public issues (the owner's yes is the
+  green-light ADR-0020 requires). Also include proposals to close an issue as
+  obsolete or superseded. Close only on a yes.
+- Answers may raise new questions. Keep each follow-up round to those alone.
 
 Record each answer on its issue and set the label it implies.
 
@@ -51,10 +59,8 @@ is `ready-for-agent` or closed.
 
 ## 3. Build
 
-Use `dispatch-subagents`. Give each change its own branch and worktree.
-Group issues only when they are clearly related or share files; put any
-grouping you are unsure of into the grilling. Dispatch in waves of at
-most 3 build agents.
+Use `dispatch-subagents`, one worktree per planned branch. Dispatch in waves
+of at most 3 build agents, within its gate cap.
 
 **Interrupt the owner only** for these:
 
@@ -65,21 +71,28 @@ most 3 build agents.
 - a change to which Tenant's data a request can reach
 - reversing a grilling answer
 
-Pause just that PR and send a push notification; the rest keep going. Any
-other decision the agent makes itself, and records in the PR description.
+Pause just that PR, send a push notification, and resume it on the answer.
+The rest keep going. Any other decision the agent makes itself, and records
+in the PR description.
+
+**Done:** every `ready-for-agent` issue is on a pushed branch with a green
+`pnpm gate:scoped`.
 
 ## 4. Review
 
 Run `code-review` on each PR, with simplicity as the focus. The build agent
-that wrote the PR fixes the findings. Check every fix yourself before you
-report it.
+that wrote the PR fixes the findings, then review again. Check every fix
+yourself before you report it: past runs relayed subagent claims unchecked.
 
 **Done:** a review round finds only judgement calls not worth fixing.
 
 ## 5. Land and report
 
-Land each PR with `docs/agents/pr-workflow.md`. Merge what
-`scripts/merge-pr.ts` allows, and leave the rest for a human merge.
+Land each PR with `docs/agents/pr-workflow.md`. A PR built from a Public issue
+waits for a human merge (ADR-0020 rule 3), even though `scripts/merge-pr.ts`
+would accept it. Merge the rest where `merge-pr.ts` allows.
+
+**Done:** every PR is merged or waiting for a human merge.
 
 Report one line per issue: `#N | outcome | PR | merged / waits for you (why)`.
 Then run `close-session`.
