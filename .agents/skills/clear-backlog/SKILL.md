@@ -23,9 +23,11 @@ If `git rev-parse --is-shallow-repository` prints `true`, run
 `git fetch --unshallow` first: triage reads the history.
 
 `auto-triage` is user-invoked, so read `.agents/skills/auto-triage/SKILL.md`
-and run its sweep in `full-sweep` mode. The owner starting this run is the
-human direction that mode needs. Re-checking older issues is the point. Add
-to each per-issue brief:
+and run its sweep in its default mode, so fresh, easy issues come first. Add
+every open `ready-for-agent` issue to its set: re-check its brief, then build
+it. Only when that set is empty, run the sweep in `full-sweep` mode instead;
+the owner starting this run is the human direction that mode needs. Add to
+each per-issue brief:
 
 - Give a `ready-for-agent` brief CLAUDE.md's premise check. A wrong premise
   costs a whole build-and-review cycle.
