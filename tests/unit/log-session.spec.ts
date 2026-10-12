@@ -392,7 +392,7 @@ describe('reportUnexplainedReads (the author-time reasons prompt)', () => {
       vi.stubEnv('HOME', fixture.home)
       let exited = false
       try {
-        authorMain([yml], { cwd: fixture.root, scratchAbs, mainSchemaFn })
+        authorMain([yml], { cwd: fixture.root, scratchAbs, mainSchemaFn, repoRoot: fixture.root })
       } catch (err) {
         if ((err as Error).message !== 'EXIT') throw err
         exited = true
@@ -424,8 +424,16 @@ describe('reportUnexplainedReads (the author-time reasons prompt)', () => {
       expect(author(fixture, { scratchAbs }).exited).toBe(true)
     })
 
-    it('accepts (not read) for a shell-only credit, or when no transcript is found', () => {
-      const shell = store([['cat CONTEXT.md', FIXTURE_DOCS['CONTEXT.md']!]])
+    it("refuses (not read) for a doc a subagent's shell command showed, even if the session's did too", () => {
+      const cat: Cmd = ['cat CONTEXT.md', FIXTURE_DOCS['CONTEXT.md']!]
+      const res = author(store(['echo hi'], [cat]), { notRead: ['CONTEXT.md'] })
+      expect(res).toMatchObject({ exited: true, scratchWritten: false })
+      expect(res.errors).toContain('CONTEXT.md — shown by [subagent: a1] cat CONTEXT.md')
+      expect(author(store([cat], [cat]), { notRead: ['CONTEXT.md'] }).exited).toBe(true)
+    })
+
+    it("accepts (not read) for the session's own shell credit, or when no transcript is found", () => {
+      const shell = store([['cat CONTEXT.md', FIXTURE_DOCS['CONTEXT.md']!]], ['echo hi'])
       expect(author(shell, { notRead: ['CONTEXT.md'] })).toMatchObject({ exited: false, scratchWritten: true })
       const none = { home: mkdtempSync(join(tmpdir(), 'shellread-empty-')), root: mkdtempSync(join(tmpdir(), 'shellread-noroot-')) }
       tmpDirs.push(none.home, none.root)

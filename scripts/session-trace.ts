@@ -108,6 +108,9 @@ export interface MechanicalTrace {
   /** Agent-instruction docs Bash output showed the session (#1074); the stitch
    *  folds them into `docsRead` like `filesRead`. */
   docsReadViaShell: string[]
+  /** The command whose output credited each `docsReadViaShell` path, so a
+   *  disputed credit's Friction names it (issue #1786). Never landed. */
+  shellCreditedBy?: Record<string, string>
   /** Path-scoped `.claude/rules/` files that loaded on a file touch or a Skill
    *  run, in load order. */
   rulesLoaded: string[]
@@ -610,6 +613,7 @@ export function extractTrace(
   const ended = stamps.length ? Math.max(...stamps) : undefined
 
   const rel = relativizer(records)
+  const shell = docIndex ? scanShellReadsByOutput(bashCommandsOf(records), docIndex, rel) : undefined
   const adrReadAfter = (rule: string, at: number): boolean => {
     const n = ruleAdr(basename(rule))
     if (n === undefined) return false
@@ -631,7 +635,8 @@ export function extractTrace(
     toolCounts,
     filesRead: dedup(reads).filter(isContentPath).map(rel),
     filesEdited: dedup(edits).filter(isContentPath).map(rel),
-    docsReadViaShell: docIndex ? scanShellReadsByOutput(bashCommandsOf(records), docIndex, rel).paths : [],
+    docsReadViaShell: shell?.paths ?? [],
+    shellCreditedBy: Object.fromEntries(shell?.creditedBy ?? []),
     rulesLoaded: dedup(rules).filter((r) => !alwaysLoadedRules.includes(r)),
     rulesGlobal: dedup(alwaysLoadedRules),
     rulesFollowedUp: [...ruleLoadedAt].filter(([r, at]) => adrReadAfter(r, at)).map(([r]) => r),
@@ -723,6 +728,7 @@ export function foldSubagentTrace(
     (r) => !folded.rulesGlobal.includes(r),
   )
   folded.rulesFollowedUp = dedup([...trace.rulesFollowedUp, ...subs.flatMap((s) => s.rulesFollowedUp)])
+  folded.shellCreditedBy = Object.assign({}, ...subs.map((s) => s.shellCreditedBy), trace.shellCreditedBy)
   return folded
 }
 
@@ -744,7 +750,8 @@ export const DERIVED_REASON_COMMAND = '(invoked as a slash command)'
 
 /** The reason an agent gives a derived `docsRead` path it never read: the stitch
  *  drops the path, and a shell credit dropped this way becomes a Friction, so the
- *  detector's error stays visible (ADR-0009's merged-read amendment). */
+ *  dispute stays visible (ADR-0009's merged-read amendment). `--author` refuses it
+ *  for a doc the Read tool or a subagent's command showed (issue #1786). */
 export const NOT_READ_REASON = '(not read)'
 
 /** The interpretive half the live agent writes to the scratch during the session.
@@ -788,9 +795,10 @@ function mergeRefs<T extends Record<string, string | undefined>>(
 export function stitch(authored: AuthoredScratch, trace: MechanicalTrace): Record<string, unknown> {
   const editedSet = new Set(trace.filesEdited)
   const notRead = new Set((authored.docsRead ?? []).filter((d) => d.reason === NOT_READ_REASON).map((d) => d.path))
-  const detectorErrors = trace.docsReadViaShell.filter((p) => notRead.has(p)).map((p) => ({
-    description: `SHELL-READ-DETECTION false positive: ${p} was credited from shell output, but the session marked it ${NOT_READ_REASON}`,
-    solution: 'Find the crediting command in the transcript and tighten scripts/shell-reads.ts',
+  // Neutral: the detector is usually right when a credit is disputed (issue #1786).
+  const disputes = trace.docsReadViaShell.filter((p) => notRead.has(p)).map((p) => ({
+    description: `SHELL-READ-DETECTION dispute: the session marked ${p} ${NOT_READ_REASON}, but shell output credited it. Command: ${trace.shellCreditedBy?.[p]?.replace(/\s+/g, ' ').slice(0, 200) ?? '(unknown)'}`,
+    solution: 'Compare the command output with the doc: a real read means the mark was wrong; otherwise the command is a detector case.',
     severity: 'moderate',
   }))
   const entry: Record<string, unknown> = {
@@ -816,7 +824,7 @@ export function stitch(authored: AuthoredScratch, trace: MechanicalTrace): Recor
     skillsUsed: mergeRefs(authored.skillsUsed ?? [], trace.skillsUsed, 'name', (name) =>
       trace.commandSkills.includes(name) ? DERIVED_REASON_COMMAND : DERIVED_REASON,
     ),
-    frictions: [...authored.frictions, ...detectorErrors],
+    frictions: [...authored.frictions, ...disputes],
   }
   // Mechanical fields — include only when they carry signal.
   if (trace.durationSec !== undefined) entry.durationSec = trace.durationSec

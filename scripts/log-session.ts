@@ -768,6 +768,9 @@ export interface AuthorContext {
   /** Canonical path → first transcript whose Read tool opened it: a subagent's
    *  read is the session's, so `(not read)` can't deny it (issue #1786). */
   sources: Map<string, string>
+  /** Subagents' shell credits alone, since `scan` credits the session first:
+   *  these count as the session's reads too (issue #1786). */
+  subagentShell: FoldedShellReadScan['provenance']
 }
 
 /** Best-effort (see `findLatestTranscript`): undefined when no transcript can be
@@ -784,6 +787,7 @@ export function loadAuthorContext(cwd: string, repoRoot: string = root): AuthorC
     return {
       trace: traceOf(jsonl, { subagentJsonls: subs.map((s) => s.jsonl), docIndex }),
       scan: shellReadScanOf(records, subagents, { repoRoot, docIndex }),
+      subagentShell: shellReadScanOf([], subagents, { docIndex }).provenance,
       sources: readToolSources([{ label: 'this session', records }, ...subagents.map((s) => ({ ...s, label: `subagent: ${s.label}` }))]),
     }
   } catch {
@@ -842,7 +846,8 @@ export function reportUnexplainedReads(
     log('  Re-run --author with a docsRead entry for each: a one-line reason (what it gave you) and')
     log(`  useful: ${VERDICTS}, or the reason '${NOT_READ_REASON}' for a doc no command of this`)
     log('  session or its subagents showed you.')
-    log('  A shell-credited doc marked so is dropped and logged as a SHELL-READ-DETECTION friction.')
+    log("  Only a doc your own shell command was credited with can be marked so; it is dropped and")
+    log('  logged as a SHELL-READ-DETECTION friction.')
   }
   if (openRules.length) {
     log(`  ruleVerdicts — ${openRules.length} rule(s) loaded with no verdict yet:`)
@@ -879,7 +884,7 @@ function fetchedMainSchemaErrors(entry: unknown, remote: string): string | null 
  *  refusal + `--allow-worktree` escape hatch), not just the underlying primitive. */
 export function authorMain(
   argv: string[],
-  opts: { cwd?: string; scratchAbs?: string; mainSchemaFn?: LandOpts['mainSchemaFn'] } = {},
+  opts: { cwd?: string; scratchAbs?: string; mainSchemaFn?: LandOpts['mainSchemaFn']; repoRoot?: string } = {},
 ): void {
   const cwd = opts.cwd ?? process.cwd()
   const scratchAbs = opts.scratchAbs ?? join(root, SCRATCH_FILE)
@@ -921,14 +926,17 @@ export function authorMain(
     existing = undefined
   }
   const merged = mergeAuthored(existing, result.data)
-  const ctx = loadAuthorContext(cwd)
+  const ctx = loadAuthorContext(cwd, opts.repoRoot)
   const misNotRead = (merged.docsRead ?? []).flatMap((d) => {
-    const source = d.reason === NOT_READ_REASON && ctx?.sources.get(canonicalizeInstructionPath(d.path))
-    return source ? [`  ${d.path} — opened by [${source}]`] : []
+    if (d.reason !== NOT_READ_REASON || !ctx) return []
+    const doc = canonicalizeInstructionPath(d.path)
+    const [read, shell] = [ctx.sources.get(doc), ctx.subagentShell.get(doc)]
+    if (read) return [`  ${d.path} — opened by [${read}] Read tool`]
+    return shell ? [`  ${d.path} — shown by [${shell.source}] ${oneLine(shell.command)}`] : []
   })
   if (misNotRead.length) {
     fail(
-      `refusing '${NOT_READ_REASON}' for doc(s) the Read tool opened; subagent reads count as the session's:\n` +
+      `refusing '${NOT_READ_REASON}' for doc(s) the Read tool or a subagent's command showed; subagent reads count as the session's:\n` +
         `${misNotRead.join('\n')}\nGive each a reason and a useful verdict instead.`,
     )
   }

@@ -576,8 +576,10 @@ describe('docsReadViaShell (issues #1074, #1545)', () => {
     expect(entry.docsRead).toEqual([])
     const frictions = entry.frictions as { description: string; severity: string }[]
     expect(frictions).toHaveLength(1)
-    expect(frictions[0]!.description).toContain('SHELL-READ-DETECTION')
+    expect(frictions[0]!.description).toContain('SHELL-READ-DETECTION dispute')
     expect(frictions[0]!.description).toContain('CONTEXT.md')
+    expect(frictions[0]!.description).toContain('Command: cat CONTEXT.md')
+    expect(JSON.stringify(frictions)).not.toMatch(/false positive|shell-reads\.ts/)
     expect(frictions[0]!.severity).toBe('moderate')
     expect(validateEntry(entry).ok).toBe(true)
   })
