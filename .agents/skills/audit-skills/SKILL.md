@@ -116,7 +116,12 @@ already records the same thing). Every other finding is an observation
 (step 5), which is how a later run sees it repeat. A closure finding belongs
 to `close-session`'s observations.
 
-For each finding that clears that bar:
+First, whatever its source, check the Skill the finding is about (not the one
+you were auditing) against `skills-lock.json`. A Pack Skill's `SKILL.md` is not
+ours, so its finding is no issue and no comment: it goes to that Skill's
+Inventory entry as an observation (step 5).
+
+For each other finding that clears that bar:
 
 - Search open issues first: the session id for a closure finding,
   `audit-skills <skill>` for a Skill finding.
@@ -127,9 +132,6 @@ For each finding that clears that bar:
   quoted evidence, promised against delivered, and your hypothesis.
 - **Human-nudged closures** go on one standing thread per trend, never one
   issue per session.
-
-Pack Skills get no issues. Their `SKILL.md` is not ours, so their
-only lever is the Inventory entry.
 
 Done when every finding is either an issue (filed or commented on) or headed
 for step 5 as an observation.

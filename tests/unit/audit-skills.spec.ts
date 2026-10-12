@@ -757,6 +757,22 @@ describe('hasHumanPromptedClosure()', () => {
     expect(hasHumanPromptedClosure(['a normal friction', 'another one'])).toBe(false)
     expect(hasHumanPromptedClosure([])).toBe(false)
   })
+
+  it('ignores a mention that only says the case does not qualify', () => {
+    const K = HUMAN_PROMPTED_CLOSURE
+    for (const d of [
+      `no PR existed, so not ${K}`,
+      `this isn't ${K}`,
+      `it wasn't a ${K}`,
+      `not an instance of ${K}`,
+      `no case of ${K}`,
+    ]) expect(hasHumanPromptedClosure([d])).toBe(false)
+  })
+
+  it('still flags a description that also has a plain mention', () => {
+    const K = HUMAN_PROMPTED_CLOSURE
+    expect(hasHumanPromptedClosure([`not ${K} at first, then nudged — ${K}`])).toBe(true)
+  })
 })
 
 describe('findHumanPromptedClosures()', () => {
