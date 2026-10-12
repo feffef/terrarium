@@ -34,11 +34,12 @@ only the directory's mtime). The decision is `tests/support/fresh-output.ts`;
 
 Every e2e spec calls `await setupL2()` (`tests/support/e2e.ts`) inside its
 top-level `describe`, which spawns a server on `.output` plus a browser. An e2e
-spec never passes `build: true`. Specs run in parallel, one per Tenant plus the
-Platform spec (`tests/e2e/smoke.spec.ts`).
+spec never passes `build: true`. Specs run in parallel: one or more per Tenant plus
+the Platform spec (`tests/e2e/smoke.spec.ts`).
 
 To add e2e coverage for a Tenant, add `layers/<tenant>/tests/e2e/<tenant>.spec.ts`
-that calls `setupL2()`; nothing else needs wiring.
+that calls `setupL2()`; nothing else needs wiring. Split a Tenant's slowest spec
+into several (`tinkerfund-flows.spec.ts`) so its parts run in parallel.
 
 ## Playwright scroll/visibility gotchas
 
