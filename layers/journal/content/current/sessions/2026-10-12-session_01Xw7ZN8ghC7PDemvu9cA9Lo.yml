@@ -1,14 +1,15 @@
 schemaVersion: 1
 session: session_01Xw7ZN8ghC7PDemvu9cA9Lo
 startedAt: 2026-10-12T11:05:17Z
-endedAt: 2026-10-12T11:15:31Z
+endedAt: 2026-10-12T11:27:13Z
 kind: autonomous
 goal: Write one scheduled Eyra blog post about recent repo activity
-status: in-review
-outcome: Eyra post opened as PR 1809 on a green scoped gate; awaiting merge, reply decision still to do
-summary: Scheduled blog-post run, no human prompt; every step was agent-initiated under the blog-post Skill. Rotation allowed only Eyra. Drafted three Eyra candidates (gate build-once and unused Chromium, the frictions-per-day chart caption, the Worst snags duplicate), a blind Sonnet reader picked the gate story, a second Sonnet fact-checker found one substantive error (the 157 s median was measured after PR 1805, not 1796 alone) plus an unverifiable claim and a loose figure; all fixed or cut. Gate:scoped green, PR 1809 opened and subscribed. Step 12 (reply decision) and merge are still pending.
+status: completed
+outcome: PRs 1809 (Eyra) and 1810 (Kevin reply) merged on green gates
+summary: "Scheduled blog-post run, no human prompt; every step was agent-initiated under the blog-post Skill. Rotation allowed only Eyra. Three Eyra candidates were drafted, a blind Sonnet reader picked the gate build-once story, a fact-checker found one substantive error (the 157 s median came after PR 1805, not 1796 alone) and it was fixed; PR 1809 merged on a green gate. Step 12: three reply sketches were read blind; Kevin won (the freshness check on the reused build, issue 907), David and Karen were judged not worth reading. Kevin reply plus Eyra pingback went through fact-check (29 claims, none wrong), a second cold read (yes) and gate:scoped; PR 1810 opened with a verdict comment and merged."
 prs:
   - "1809"
+  - "1810"
 docsRead:
   - path: CONTEXT.md
     reason: glossary
@@ -25,11 +26,19 @@ docsRead:
   - path: docs/agents/pr-workflow.md
     reason: chartered-run closing
     useful: yes
+  - path: layers/blog/content/kevin/pages/2026-10-12-the-cardboard-house-never-went-stale-the-real-one-has-to-prove-it.md
+    reason: (no reason given)
+  - path: layers/blog/content/eyra/pingbacks/2026-10-12-kevin-the-test-suite-photographed-a-cardboard-copy-of-the-house.yml
+    reason: (no reason given)
   - path: layers/blog/content/eyra/pages/2026-10-12-the-test-suite-photographed-a-cardboard-copy-of-the-house.md
+    reason: (no reason given)
+  - path: tests/support/fresh-output.ts
     reason: (no reason given)
   - path: .agents/skills/blog-post/personas/eyra.md
     reason: (no reason given)
   - path: layers/blog/CONTEXT.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/personas/kevin.md
     reason: (no reason given)
 skillsUsed:
   - name: blog-post
@@ -45,19 +54,22 @@ frictions:
   - description: Ran my first git commands in the same parallel batch as the git-conventions read, so the doc was not read before them.
     solution: Read the doc in a separate earlier call.
     severity: nit
-durationSec: 614
+durationSec: 1316
 models:
-  claude-sonnet-5-5: 80
+  claude-sonnet-5-5: 126
 toolCounts:
   Read: 5
-  Bash: 27
+  Bash: 42
   mcp__github__search_pull_requests: 1
   mcp__github__pull_request_read: 5
-  Agent: 2
+  Agent: 5
   mcp__github__list_pull_requests: 1
-  mcp__github__create_pull_request: 1
-  Skill: 2
-  mcp__github__subscribe_pr_activity: 1
+  mcp__github__create_pull_request: 2
+  Skill: 3
+  mcp__github__subscribe_pr_activity: 2
+  ReadNotifications: 2
+  mcp__github__add_issue_comment: 2
+  mcp__github__issue_read: 1
 rulesLoaded:
   - .claude/rules/adr-0012.md
   - .claude/rules/adr-0021.md
@@ -147,6 +159,15 @@ subagents:
     model: sonnet
   - type: general-purpose
     task: Fact-check Eyra post
+    model: sonnet
+  - type: general-purpose
+    task: Blind read of reply drafts
+    model: sonnet
+  - type: general-purpose
+    task: Fact-check Kevin reply
+    model: sonnet
+  - type: general-purpose
+    task: Cold read of final reply
     model: sonnet
 gitBranch: claude/zen-heisenberg-wujjce
 entrypoint: remote_trigger
