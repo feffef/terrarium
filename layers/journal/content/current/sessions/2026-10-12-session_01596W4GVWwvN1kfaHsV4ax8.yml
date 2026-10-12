@@ -1,13 +1,16 @@
 schemaVersion: 1
 session: session_01596W4GVWwvN1kfaHsV4ax8
 startedAt: 2026-10-12T15:03:46Z
-endedAt: 2026-10-12T15:08:09Z
-kind: delegated
-goal: Triage sweep of the open issue backlog
-status: completed
-outcome: "Seven issues triaged: four ready-for-agent, three ready-for-human; no PR needed"
-summary: "The owner started the auto-triage Skill with one slash command (human-instructed; it is the standing green-light under ADR-0022). I listed the open issues, checked who wrote each one's latest activity, and found seven eligible: #1786, #1797, #1798, #1802, #1816, #1817 and #1818 (needs-triage or unlabeled; every other open issue already had an AI-authored last comment or body, and no external PRs were open). I dispatched one read-only triage subagent per issue (agent-initiated). Each verified claims against the repo and posted one comment with labels. Results: #1797, #1798, #1817, #1818 ready-for-agent with briefs; #1786, #1802, #1816 ready-for-human (governance or glossary calls, and #1786 sits inside an open Prune Trial). The #1818 subagent found the issue's push theory wrong (the test fakes the remote with update-ref). I did not write code or open a PR. I did not check the new ready-for-agent issues for file overlap with the older open ready-for-agent issues (#1499, #1712, #1778); among the new four there is none."
-prs: []
+endedAt: 2026-10-12T15:27:24Z
+kind: interactive
+goal: Triage the open backlog, then implement its ready-for-agent issues
+status: in-review
+outcome: Seven issues triaged; six implemented in three PRs awaiting CI and merge
+summary: "The owner ran the auto-triage Skill (human-instructed; standing green-light under ADR-0022). I found seven eligible issues and dispatched one triage subagent each (agent-initiated): four became ready-for-agent (#1797, #1798, #1817, #1818), three ready-for-human (#1786, #1802, #1816); none closed. The owner then asked me to implement all ready-for-agent issues in subagents and worktrees, grouped, then run /code-review and fix before pushing. I asked about PR layout and #1778; the owner chose separate PRs per group and to skip #1778 (a time-delayed verification). Both prune-trial gates on #1499 and #1712 had already cleared. Three impl subagents worked in worktrees: audit-skills (#1797 and #1798, PR #1823), flaky tests (#1817 and #1818, PR #1824) and agent docs (#1499 and #1712, PR #1825). The #1818 subagent proved the issue's push theory wrong and fixed the real cause, a fresh index-copy mtime defeating git's racy-timestamp check (2/300 failures before, 0/900 after). Two review subagents (Standards, Spec) found one real inconsistency (guard trigger vs the cd prefix) plus wording nits, which I applied. gate:scoped passed on each branch before pushing; PRs opened and subscribed. Still open: CI and merge of all three, the 50-run load check for #1818 that was not done, and the unchecked overlap between #1818 and older open issues."
+prs:
+  - "1823"
+  - "1824"
+  - "1825"
 docsRead:
   - path: CONTEXT-MAP.md
     reason: context index; required at session start
@@ -55,8 +58,17 @@ docsRead:
     reason: "read by the #1802 subagent for the human-merge list"
     useful: yes
   - path: docs/agents/pr-workflow.md
-    reason: "read by the #1802 subagent for per-tier merge authority"
-    useful: partly
+    reason: recipe before opening PRs
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: read before first git command; commit and chaining rules
+    useful: yes
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: brief checklist, isolation, no-gate for impl agents
+    useful: yes
+  - path: docs/adr/0015-audit-skills-and-conditional-importance.md
+    reason: "read by the audit-skills subagent: Pack Skills stay as installed"
+    useful: yes
   - path: .claude/skills/triage/AGENT-BRIEF.md
     reason: (no reason given)
   - path: .claude/skills/auto-triage/SKILL.md
@@ -64,22 +76,30 @@ docsRead:
   - path: scripts/shell-reads.ts
     reason: (no reason given)
   - path: scripts/check-worktrees.ts
-    reason: (no reason given)
+    reason: (read before editing)
   - path: tests/unit/check-worktrees.spec.ts
     reason: (no reason given)
   - path: layers/tinkerfund/tests/e2e/tinkerfund-flows.spec.ts
-    reason: (no reason given)
+    reason: (read before editing)
+  - path: tests/unit/audit-skills.spec.ts
+    reason: (read before editing)
   - path: scripts/audit-skills.ts
-    reason: (no reason given)
+    reason: (read before editing)
 skillsUsed:
   - name: auto-triage
     reason: the sweep itself
   - name: triage
     reason: per-issue rules, applied by the subagents
   - name: close-session
-    reason: closure
+    reason: closure at PR-open
   - name: log-session
     reason: this log
+  - name: implement
+    reason: the owner's command to build the issues
+  - name: dispatch-subagents
+    reason: worktree isolation and brief checklist for three impl agents
+  - name: code-review
+    reason: Standards and Spec review of the three branches
 frictions:
   - description: "Subagent for #1797 could not find closed issues with gh api, so its redundancy check on closed issues was incomplete."
     solution: Document a working REST recipe for listing closed issues in github-integration.md or add a script.
@@ -93,23 +113,54 @@ frictions:
   - description: The skill's overlap check against older open ready-for-agent issues was left undone and is reported as unchecked.
     solution: Have the sweep script list ready-for-agent issue files, or make the subagent brief request overlap checks.
     severity: minor
-durationSec: 263
+  - description: A git commit ran in the wrong worktree after the primary directory switched under me; it failed harmlessly.
+    solution: Use git -C with an absolute worktree path, never cd, when several worktrees are active.
+    severity: minor
+  - description: I typed a wrong link in the docs PR footer (claude.ai/code instead of the session URL).
+    solution: Reuse one prepared footer string for every PR body.
+    severity: nit
+  - description: Impl subagents could not run the brief's 50-run load check; the guard blocked backgrounding and xargs -P.
+    solution: State in briefs which acceptance checks are infeasible in the container, or give a sanctioned way to load the CPU.
+    severity: minor
+  - description: My own regex hoist left the docblock above the wrong declaration; I caught it by grepping the file before committing.
+    solution: Re-read the edited hunk after moving a declaration.
+    severity: nit
+durationSec: 1418
 models:
-  claude-sonnet-5-5: 46
+  claude-sonnet-5-5: 132
 toolCounts:
-  Read: 7
-  Bash: 8
-  Agent: 7
-  Skill: 2
-  Write: 2
+  Read: 9
+  Bash: 32
+  Agent: 12
+  Skill: 5
+  Write: 4
+  AskUserQuestion: 1
+  Edit: 7
+  ToolSearch: 1
+  mcp__github__create_pull_request: 3
+  mcp__claude-code-remote__subscribe_pr_activity: 3
+filesEdited:
+  - .claude/worktrees/agent-abcf047c69c801989/.agents/skills/audit-skills/SKILL.md
+  - .claude/worktrees/agent-abcf047c69c801989/scripts/audit-skills.ts
+  - .claude/worktrees/agent-a9dca56b4705edba4/scripts/check-worktrees.ts
+  - .claude/worktrees/agent-aa23b39558348731e/docs/agents/environment-caveats.md
+  - .claude/worktrees/agent-aa23b39558348731e/.agents/skills/dispatch-subagents/SKILL.md
+  - scripts/check-worktrees.ts
+  - layers/tinkerfund/tests/e2e/tinkerfund-flows.spec.ts
+  - .agents/skills/dispatch-subagents/SKILL.md
+  - docs/agents/environment-caveats.md
+  - docs/agents/git-conventions.md
+  - tests/unit/audit-skills.spec.ts
+  - scripts/audit-skills.ts
+  - .agents/skills/audit-skills/SKILL.md
 rulesLoaded:
   - .claude/rules/adr-0021.md
   - .claude/rules/adr-0029.md
   - .claude/rules/adr-0018.md
   - .claude/rules/adr-0004-human-merge.md
   - .claude/rules/adr-0005.md
-  - .claude/rules/adr-0008.md
   - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0008.md
   - .claude/rules/tenant-layers.md
 rulesGlobal:
   - .claude/rules/adr-0022.md
@@ -124,6 +175,7 @@ rulesGlobal:
 rulesFollowedUp:
   - .claude/rules/adr-0022.md
   - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0015.md
   - .claude/rules/adr-0004.md
   - .claude/rules/adr-0003.md
   - .claude/rules/adr-0004-human-merge.md
@@ -194,6 +246,16 @@ subagents:
     task: "Triage #1797"
   - type: general-purpose
     task: "Triage #1786"
+  - type: general-purpose
+    task: "Fix audit-skills #1797 #1798"
+  - type: general-purpose
+    task: "Fix flaky tests #1817 #1818"
+  - type: general-purpose
+    task: "Fix agent docs #1499 #1712"
+  - type: Explore
+    task: "Code review: Standards axis"
+  - type: Explore
+    task: "Code review: Spec axis"
 gitBranch: ccr-8d258eed-veg4jl
 entrypoint: remote_mobile
 cliVersion: 2.1.296
