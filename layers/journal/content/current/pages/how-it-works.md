@@ -1,7 +1,7 @@
 ---
 title: How Humans & Agents Work
 description: How humans, agents, and code work together in Terrarium — one session start to finish, who is allowed to merge, and the routines that run with nobody watching.
-onramp: 3
+onramp: 2
 onrampLabel: How humans + agents work
 onrampBlurb: The loop — from a prompt to a reviewed, gated PR, to agents fixing their own instructions.
 ---

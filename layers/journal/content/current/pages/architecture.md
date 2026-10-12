@@ -1,7 +1,7 @@
 ---
 title: Architecture & Deployment
 description: The technology under Terrarium — one application that hosts many sites, built from declarative manifests, isolated by construction, and redeployed by a container that rebuilds itself on every push.
-onramp: 2
+onramp: 1
 onrampLabel: How it's built & deployed
 onrampBlurb: The tech foundation — one app hosting many sites, everything decided at build time.
 ---
