@@ -81,7 +81,7 @@ Merge the three reports into one tally in your scratchpad:
   anything an open or closed issue/PR already covers (search first; record
   each result in the tally — the match by number, or the query and *no match*), and
   anything already logged as an idea in the last week
-  (`pnpm exec tsx scripts/ideas.ts gather --days 7`).
+  (`pnpm exec tsx .agents/skills/visitor-loop/scripts/ideas.ts gather --days 7`).
 
 Done when `pnpm exec tsx .agents/skills/visitor-loop/scripts/owner-corrections.ts --check <tally-file>`
 passes; every feature idea and every *fix* or *out of remit* finding has its

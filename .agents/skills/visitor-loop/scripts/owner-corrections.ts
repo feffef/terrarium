@@ -17,13 +17,11 @@
 //   under the owner's login, from the owner's own.
 import { execFileSync } from 'node:child_process'
 import { readFileSync } from 'node:fs'
-import { dirname, resolve } from 'node:path'
-import { fileURLToPath, pathToFileURL } from 'node:url'
+import { pathToFileURL } from 'node:url'
 import { isAiAuthored } from '../../../../scripts/check-triage-drift.ts'
 import { fetchOriginMain } from '../../../../scripts/git-helpers.ts'
 import { getJson, parseOwnerRepo } from '../../../../scripts/list-open-issues.ts'
-
-const root = resolve(dirname(fileURLToPath(import.meta.url)), '../../../..')
+import { root } from '../../../../shared/expand.ts'
 
 const DECISIONS = '.agents/skills/visitor-loop/decisions.md'
 // The harness pins most runs to a session branch, so the title is the stable marker (issue #1515).

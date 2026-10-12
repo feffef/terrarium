@@ -87,8 +87,8 @@ runs:
     # The Heavy tier below is guarded on the scope decision (#445, ADR-0026). An
     # empty or absent output — step skipped, step failed, base undeterminable —
     # is not 'true', so it runs. The skip is only ever reached on a
-    # positively-proven Inert changeset. `skip_build` also covers a changeset of
-    # Inert paths and Skill files (#1603), so it guards only build and e2e.
+    # positively-proven Inert changeset. `skip_build` guards only build and e2e
+    # (ADR-0004, 2026-10-12 amendment).
 
     # L3 — isolation invariant: unique, correctly-scoped collection keys.
     - name: 'L3 · isolation'

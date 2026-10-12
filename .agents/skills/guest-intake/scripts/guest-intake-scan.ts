@@ -49,8 +49,8 @@
 import { execFileSync } from 'node:child_process'
 import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
-import { dirname, join, resolve } from 'node:path'
-import { fileURLToPath, pathToFileURL } from 'node:url'
+import { join } from 'node:path'
+import { pathToFileURL } from 'node:url'
 import { isAiAuthored } from '../../../../scripts/check-triage-drift.ts'
 import {
   decodeHtmlEntities,
@@ -63,8 +63,7 @@ import {
 } from '../../../../scripts/list-open-issues.ts'
 import { hasMarker, isMarkerFresh, type RawLabelEventRecord } from '../../../../scripts/guest-marker.ts'
 import { PUBLIC_ASSOCIATIONS, TRUSTED_ASSOCIATIONS } from '../../../../scripts/trust.ts'
-
-const root = resolve(dirname(fileURLToPath(import.meta.url)), '../../../..')
+import { root } from '../../../../shared/expand.ts'
 
 const DEFAULT_LIMIT = 100
 

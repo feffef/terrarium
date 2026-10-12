@@ -7,10 +7,9 @@
 //   Prints `{ last, starved, eligible }` as JSON — see `eligiblePersonas`'s
 //   doc comment for what each field means.
 import { readdirSync, readFileSync } from 'node:fs'
-import { dirname, resolve } from 'node:path'
-import { fileURLToPath, pathToFileURL } from 'node:url'
-
-const root = resolve(dirname(fileURLToPath(import.meta.url)), '../../../..')
+import { resolve } from 'node:path'
+import { pathToFileURL } from 'node:url'
+import { root } from '../../../../shared/expand.ts'
 const BLOG_CONTENT_DIR = 'layers/blog/content'
 
 // ── Types ───────────────────────────────────────────────────────────────────

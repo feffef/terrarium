@@ -21,8 +21,7 @@ Adding a Tenant that needs tests adds a `layers/<tenant>/tests/` folder; nothing
 
 - **A Skill's helper script** — one only its Skill runs — lives at
   `.agents/skills/<name>/scripts/`, its unit test at
-  `.agents/skills/<name>/tests/unit/`. A change there skips the gate's build and
-  e2e (#1603), so nothing the build or an e2e spec imports belongs there.
+  `.agents/skills/<name>/tests/unit/` (see ADR-0004, 2026-10-12 amendment).
 
 ## The e2e gate is ONE build, reused by every spec
 

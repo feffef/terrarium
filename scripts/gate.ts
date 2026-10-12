@@ -1,6 +1,7 @@
 // `pnpm gate:scoped` — additive, change-scoped wrapper around `pnpm gate` (#350).
-// Skips the heavy layers when the whole changeset is inert, only build + e2e when
-// the rest is Skill files (#1603), else runs the full gate. Design, safety argument, and the inert-set proof: issue #350.
+// Skips the heavy layers when the whole changeset is inert, else runs the full
+// gate. Design, safety argument, and the inert-set proof: issue #350. A
+// changeset of inert paths and Skill files skips only build and e2e (#1603).
 //   pnpm gate:scoped [--dry]
 //   pnpm exec tsx scripts/gate.ts --decide --base <ref> [--head <ref>]
 //     — decision only, for CI to guard its own heavy steps on (#445; the CI
@@ -24,10 +25,7 @@ export function isInert(path: string): boolean {
   return (path.endsWith('.md') && !path.startsWith('layers/')) || path.startsWith('.claude/skills/')
 }
 
-// A Skill's own files, such as a helper script beside it (#1603): `test` still
-// runs their unit tests. `build` reads only which Skill folders hold a SKILL.md
-// (layers/journal/nuxt.config.ts), which a non-.md file cannot change, and no
-// e2e spec reads `.agents/`.
+// Why build + e2e may skip these: ADR-0004's 2026-10-12 amendment.
 export function isSkillFile(path: string): boolean {
   return path.startsWith('.agents/skills/')
 }

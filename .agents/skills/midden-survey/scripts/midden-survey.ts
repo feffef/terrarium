@@ -18,13 +18,12 @@
 //   shallow-clone rule), so a shallow sweep would report "nothing more found"
 //   falsely — deepen first (`git fetch --unshallow origin main`).
 import { readdirSync, readFileSync } from 'node:fs'
-import { dirname, join, resolve } from 'node:path'
-import { fileURLToPath, pathToFileURL } from 'node:url'
+import { join } from 'node:path'
+import { pathToFileURL } from 'node:url'
 import { execFileSync } from 'node:child_process'
 import { parse as parseYaml } from 'yaml'
 import { fetchOriginMain } from '../../../../scripts/git-helpers.ts'
-
-const root = resolve(dirname(fileURLToPath(import.meta.url)), '../../../..')
+import { root } from '../../../../shared/expand.ts'
 
 const FIELD_SEP = '\x1f'
 

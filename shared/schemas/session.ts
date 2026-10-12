@@ -127,7 +127,7 @@ export const sessionSchema = z
 /** True when a raw (parsed, not-yet-validated) session log was authored by an
  *  EXTERNAL harness — the `external: true` flag above. Single home for that check,
  *  shared by every self-improvement consumer that must exclude external sessions
- *  (`scripts/ideas.ts`, `scripts/audit-skills.ts`, `scripts/session-frictions.ts`;
+ *  (visitor-loop's `ideas.ts`, `scripts/audit-skills.ts`, `scripts/session-frictions.ts`;
  *  ADR-0009 amendment, 2026-07-22). Absent/false/non-object ⇒ internal. */
 export function isExternalSession(raw: unknown): boolean {
   return typeof raw === 'object' && raw !== null && (raw as Record<string, unknown>).external === true
