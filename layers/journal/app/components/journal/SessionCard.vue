@@ -147,7 +147,7 @@ const foldedFieldLabels = new Intl.ListFormat('en', { style: 'long', type: 'conj
               <summary>Rules loaded <span class="n">{{ card.rules.length }}</span></summary>
               <ul>
                 <li v-for="(r, i) in card.rules" :key="i">
-                  <code>{{ r.path }}</code><span v-if="r.global" class="global">global</span><template v-if="r.reason"> — {{ r.reason }}</template
+                  <span v-if="r.title" :title="r.path">{{ r.title }}</span><code v-else>{{ r.path }}</code><span v-if="r.global" class="global">global</span><template v-if="r.reason"> — {{ r.reason }}</template
                   ><span v-if="r.useful" class="useful" :data-useful="r.useful">useful: {{ r.useful }}</span
                   ><span v-if="r.followedUp" class="followed"> — full ADR read</span>
                 </li>

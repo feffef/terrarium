@@ -10,6 +10,7 @@
 import { describe, expect, it } from 'vitest'
 import {
   sessionCardViews,
+  sessionRuleTitles,
   skillUrl,
   countFrictions,
   digestAnchor,
@@ -349,6 +350,26 @@ describe('sessionCardViews', () => {
     })
     const [c] = sessionCardViews([s])
     expect(c!.rules).toEqual([{ path: '.claude/rules/adr-0004.md', global: false, followedUp: false, reason: 'merge rules', useful: 'partly' }])
+  })
+
+  it("names each rule by its heading and drops an older log's 'loaded;' prefix", () => {
+    const titles = sessionRuleTitles({
+      '../../.claude/rules/adr-0022.md': '---\npaths: []\n---\n\n# ADR-0022: Autonomous triage sweep\n\nBody.',
+      '../../.claude/rules/untitled.md': 'No heading.',
+    })
+    expect(titles).toEqual({ '.claude/rules/adr-0022.md': 'ADR-0022: Autonomous triage sweep' })
+    const s = session({
+      rulesGlobal: ['.claude/rules/adr-0022.md', '.claude/rules/gone.md'],
+      ruleVerdicts: [
+        { path: '.claude/rules/adr-0022.md', reason: 'loaded; not related to a blog post', useful: 'no' },
+        { path: '.claude/rules/gone.md', reason: 'loaded', useful: 'no' },
+      ],
+    })
+    const [c] = sessionCardViews([s], titles)
+    expect(c!.rules.map((r) => [r.title, r.reason])).toEqual([
+      ['ADR-0022: Autonomous triage sweep', 'not related to a blog post'],
+      [undefined, undefined],
+    ])
   })
 
   it('lists global rules first, marked global', () => {
