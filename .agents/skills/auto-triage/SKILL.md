@@ -57,11 +57,6 @@ over `ready-for-human`. But a dependency major bump with no stated concrete
 benefit, or a bug where which behaviour is right is a policy choice, is a judgment
 call: `ready-for-human`.
 
-**Regression candidates: check the rulebook-migration-table first.** Before
-recommending `ready-for-human` for a "prose rule didn't hold" regression, check
-whether `docs/research/rulebook-migration-table.md` already classifies that
-rule — use its classification instead of re-deriving one.
-
 ## Closing
 
 Auto-close as `wontfix` only the two **objective, repo-verifiable** kinds:
