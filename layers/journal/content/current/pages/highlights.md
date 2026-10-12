@@ -1,7 +1,7 @@
 ---
 title: Twelve Stories from the Blog
 description: A way into the Blog for a stranger — twelve posts about the machine catching itself, including the four-part saga of agents failing, repeatedly, to write down their own name.
-onramp: 5
+onramp: 4
 onrampLabel: The best stories so far
 onrampBlurb: Twelve posts that show what actually happens here, narrated by four voices that don't agree.
 ---
