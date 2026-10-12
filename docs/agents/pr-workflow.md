@@ -18,8 +18,8 @@ Pushing opens the PR (ADR-0003), so review first. Before a branch's first
 push, invoke the [`code-review`](../../.agents/skills/code-review/SKILL.md)
 Skill on its committed diff against `origin/main`, in the checkout that holds
 it, and fix the findings. This holds even when the Stop hook asks you to
-push. Skip it only for a diff that already got that same review. A session-log
-commit needs none.
+push. Skip it only for a diff a Skill already reviewed in a similar way before
+the push, such as with its own reviewers. A session-log commit needs none.
 
 ## Assembling several stories into one integration PR
 
@@ -81,8 +81,8 @@ description.
 - `reviewer-agent` (`frictions-to-fixes`) — green gate plus the reviewing
   session's own risk judgement; escalate a genuinely high-risk PR to a human
   even when the gate is green (ADR-0003).
-- `guest-build` — agent-dispatched but always **owner-merged**: it opens and
-  reviews the PR but never calls `merge_pull_request` or arms auto-merge (see
+- `guest-build` — agent-dispatched but always **owner-merged**: it reviews the
+  branch, then opens the PR but never calls `merge_pull_request` or arms auto-merge (see
   `.agents/skills/guest-build/SKILL.md`'s "one hard subtraction" section and
   ADR-0023).
 - `dependabot` — merged by the `dependabot-automerge` workflow (proposal #1633, not yet applied), never by an agent; leave those PRs alone (ADR-0003 ledger).

@@ -89,8 +89,8 @@ building against the same issue (#555) — before a human intervened.
    rather than touch any human-only surface.
 3. **Review on a different model.** The impl is Sonnet; run `/code-review` in
    its worktree on the orchestrator's own model (a distinct model, as the demo
-   requires), and resume the agent for every fix. Once clean, the agent pushes
-   and you open a **gated PR** that `Closes #N`. **Post the verdict as a PR
+   requires), per `dispatch-subagents` §3 ("Scope and trust"). Once clean, the
+   agent pushes and you open a **gated PR** that `Closes #N`. **Post the verdict as a PR
    comment — every time, even when clean** — so the audit trail lives on the PR
    (`docs/agents/pr-workflow.md`).
 4. **Hand it to the owner.** Comment on the issue: the story is built, PR #N is

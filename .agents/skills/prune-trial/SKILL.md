@@ -121,7 +121,7 @@ one unit test. The hook must warn and exit 0, even when it crashes
 
 ## 4. Prove it on Sonnet
 
-Before shipping, commit and push the prune, then dispatch a Sonnet subagent
+Before shipping, commit the prune, then dispatch a Sonnet subagent
 (`dispatch-subagents`) pinned to **that exact post-prune SHA** — never the
 orchestrator's own working copy, where the deleted prose is still reachable.
 The probe checks out that SHA before reading anything and reports the SHA it

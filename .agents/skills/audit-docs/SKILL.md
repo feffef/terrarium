@@ -211,7 +211,7 @@ self-merged chartered run"). Run it even for doc-only edits: an edit under
 `layers/` (an Inventory `.yml`, a journal page) runs the full gate, and the
 floor still runs `verify:skills-lock` and `validate:content`. Done when green.
 
-## 8. Commit, push, open one gated PR, self-merge on green
+## 8. Commit, review, push, open one gated PR, self-merge on green
 
 Follow `docs/agents/pr-workflow.md`'s "Closing a self-merged chartered run".
 One self-merged commit and PR (the escalation PR below is separate); its body lists the fixes and any issue filed, and

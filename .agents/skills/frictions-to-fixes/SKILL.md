@@ -184,7 +184,7 @@ the merge needs a human), except a guard fix: `docs/agents/guards.md` routes
 it. Otherwise it ages out of the window untracked, and the next run rediscovers
 and re-drops it.
 
-A **simple** selection is dispatched, reviewed and merged inside this same run (§5–§6), so an issue would only be closed by its own merge minutes later, leaving nothing durable. **Skip the issue.** Carry the same problem/evidence/recommended-fix into §5's dispatch brief and have the impl agent write it into the PR description; the merged PR is the record.
+A **simple** selection is dispatched, reviewed and merged inside this same run (§5–§6), so an issue would only be closed by its own merge minutes later, leaving nothing durable. **Skip the issue.** Carry the same problem/evidence/recommended-fix into §5's dispatch brief and into the PR description you write (§6); the merged PR is the record.
 
 **Before recommending "add a line to doc X", check that anyone reads doc X.**
 `pnpm exec tsx scripts/audit-skills.ts` reports `docReadCounts` — path → how many
@@ -264,9 +264,8 @@ review-agent, not a bystander waiting for a human. For each branch:
 
 1. **Confirm the gate is green** (ADR-0004: build / validate / isolation / smoke).
    A red gate is never mergeable — resume the agent to fix it.
-2. **Code-review the diff** — run `/code-review` in its worktree, before the first
-   push (`docs/agents/pr-workflow.md`). Resume the agent for every fix, then
-   review again. Check it implements the issue's recommended option, matches repo
+2. **Code-review the diff** before the first push, per `dispatch-subagents` §3
+   ("Scope and trust"). Check it implements the issue's recommended option, matches repo
    conventions, and confines itself to a safe surface. **For a doc PR, also
    confirm it clears `audit-docs`' house rules** (§5): a fix that would itself be
    a future audit-docs finding is bounced back, not merged.

@@ -8,7 +8,7 @@ Take every open issue to a merged PR, a closed issue, or a decision only the
 owner can make. The owner is present twice: at the start and for one
 **grilling** in the middle. Everything else runs unattended.
 
-Outside the questions and the final report, say nothing in chat. Handle PR
+The chat holds only questions for the owner and the final report. Handle PR
 events, task notifications and finished agents silently. When you wait on an
 answer, the questions are your whole message.
 
@@ -23,10 +23,11 @@ If `git rev-parse --is-shallow-repository` prints `true`, run
 `git fetch --unshallow` first: triage reads the history.
 
 `auto-triage` is user-invoked, so read `.agents/skills/auto-triage/SKILL.md`
-and run its sweep in its default mode, so fresh, easy issues come first. Add
-every open `ready-for-agent` issue to its set: re-check its brief, then build
-it. Only when that set is empty, run the sweep in `full-sweep` mode instead;
-the owner starting this run is the human direction that mode needs. Add to
+and run its sweep in its default mode, which leaves out older issues nobody
+has touched since the last triage. Add every open `ready-for-agent` issue to
+its set: re-check its brief, then build it. Only when that combined set is
+empty at the start of the run, run the sweep in `full-sweep` mode instead; the
+owner starting this run is the human direction that mode needs. Add to
 each per-issue brief:
 
 - Give a `ready-for-agent` brief CLAUDE.md's premise check. A wrong premise
@@ -112,10 +113,10 @@ output is not a PR) goes to the report.
 
 ## 4. Review
 
-Every round invokes the `code-review` Skill, with simplicity as the focus.
-Resume the build agent that wrote the branch (`dispatch-subagents` §6) for
-every fix, then review again. Check every fix yourself before you report it:
-past runs relayed subagent claims unchecked.
+Review each branch per `dispatch-subagents` §3 ("Scope and trust"): every
+round invokes the `code-review` Skill, with simplicity as the focus. Check
+every fix yourself before you report it: past runs relayed subagent claims
+unchecked.
 
 **Done:** a review round finds only judgement calls not worth fixing. Then
 the build agent pushes and you open the PR, with the agent's decisions and

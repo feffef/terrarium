@@ -157,11 +157,12 @@ it made are staged for the commit below.
 Run `pnpm gate:scoped` — step 1 of `docs/agents/pr-workflow.md`'s "Closing a
 self-merged chartered run" sequence. Done when it's green.
 
-## 7. Commit, push, open one gated PR — self-merge on green
+## 7. Commit, review, push, open one gated PR — self-merge on green
 
 Commit the new Digest(s) and this run's archive sweep together (a backfill of
-several days, plus the sweep, rides one commit/PR), push the branch with retry,
-and open **one gated PR**. Keep the PR description in sync with what it
+several days, plus the sweep, rides one commit/PR), review it
+(`docs/agents/pr-workflow.md`), push the branch with retry, and open **one
+gated PR**. Keep the PR description in sync with what it
 contains (`docs/agents/pr-workflow.md`), including the fact-check tally ("N claims checked, M
 fixed, K unverifiable" — list any unverifiable ones).
 
