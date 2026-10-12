@@ -108,3 +108,17 @@ observations:
       misattributing a `triage`-process gap to `auto-triage`'s own sweep.
       The other 3 usedIn sessions re-confirmed clean. Grade/role unchanged
       (this Skill's own sweep behaved correctly).
+  - date: "2026-10-12"
+    note: >-
+      Re-verified (audit-skills behaviour check), 2 freshly-checked sessions
+      beyond the 2026-10-11 entry: session_01CasnQoauTyLNUxd74agJsP
+      (2026-10-11, 7 issues triaged) and session_01D3gBoQCQTmjVwEyuA3qZkQ
+      (same day, later `/auto-triage` phase, 2 issues plus a distinct
+      owner-directed batch). All closures/escalations confirmed correct and
+      Trusted-authored (`author_association: OWNER` on every issue touched,
+      no Public issue green-lit), every `ready-for-agent` grant led to a
+      merged PR matching its "Closes" claim, reopened-event counts checked
+      at zero across all 12 issues touched. Self-merge-vs-human-merge split
+      correctly follows the same-window ADR-0003/0004 update. No revert of
+      any triage decision in the 2-week sweep. Grade/role unchanged
+      (specialist).
