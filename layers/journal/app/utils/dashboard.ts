@@ -212,7 +212,7 @@ export function sessionRuleTitles(sources: Record<string, string>): Record<strin
   const titles: Record<string, string> = {}
   for (const [file, text] of Object.entries(sources)) {
     const title = /^# (.+)$/m.exec(text)?.[1]?.trim()
-    if (title) titles[`.claude/rules/${file.split('/').pop()}`] = title
+    if (title) titles[file.slice(file.lastIndexOf('.claude/rules/'))] = title
   }
   return titles
 }
@@ -253,8 +253,9 @@ export function sessionCardViews(
         ...(s.rulesLoaded ?? []).map((path) => ({ path, global: false })),
       ].map(({ path, global }) => {
         const v = s.ruleVerdicts?.find((r) => r.path === path)
-        // Older logs open each reason with "loaded;", which the list already says.
-        const reason = v?.reason?.replace(/^loaded\b[;:,]?\s*/i, '') || undefined
+        // Older logs open each reason with how the rule loaded ("loaded at start;"),
+        // which the list already says. Landed logs are fixed (ADR-0009), so strip it here.
+        const reason = v?.reason?.replace(/^loaded\b[^;]*(;\s*|$)/i, '') || undefined
         return { path, title: ruleTitles[path], global, followedUp: !!s.rulesFollowedUp?.includes(path), reason, useful: v?.useful }
       }),
       tools: sessionToolEntries(s.toolCounts),

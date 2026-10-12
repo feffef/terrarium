@@ -177,9 +177,9 @@ It also lists every rule that loaded with no `ruleVerdicts` entry, including the
 global ones that load at session start. Answer each with a `useful` verdict
 and a one-sentence `reason` (about 20 words) that says why: for `yes` or
 `partly`, what in the rule changed or confirmed something you did; for `no`,
-why it didn't apply to this task, or what it got wrong. Also say whether you
-opened the full ADR or doc the rule points to, and why: the summary was enough,
-you needed a detail it held, or it didn't apply. Don't restate the rule, and
+why it didn't apply to this task, or what it got wrong. Also say why you did or
+didn't open the full ADR or doc the rule points to (the trace records whether):
+the summary was enough, you needed a detail it held, or it didn't apply. Don't restate the rule, and
 don't write "loaded".
 
 A later pass merges with the first, so list only the new or changed entries,

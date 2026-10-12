@@ -847,8 +847,8 @@ export function reportUnexplainedReads(
   if (openRules.length) {
     log(`  ruleVerdicts — ${openRules.length} rule(s) loaded with no verdict yet:`)
     for (const r of openRules) log(`    ${r}`)
-    log('  Re-run --author with a ruleVerdicts entry for each: a one-line reason (what it told you)')
-    log(`  and useful: ${VERDICTS}.`)
+    log('  Re-run --author with a ruleVerdicts entry for each: a one-sentence reason (why it helped')
+    log(`  or not, and why you did or didn't open its ADR) and useful: ${VERDICTS}.`)
   }
   if (misses.length) {
     log(`  Not counted as read via shell (${misses.length}), and why:`)

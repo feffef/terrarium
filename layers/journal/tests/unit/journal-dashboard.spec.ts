@@ -364,10 +364,17 @@ describe('sessionCardViews', () => {
         { path: '.claude/rules/adr-0022.md', reason: 'loaded; not related to a blog post', useful: 'no' },
         { path: '.claude/rules/gone.md', reason: 'loaded', useful: 'no' },
       ],
+      rulesLoaded: ['.claude/rules/a.md', '.claude/rules/b.md'],
     })
+    s.ruleVerdicts!.push(
+      { path: '.claude/rules/a.md', reason: 'loaded at session start; made me run the gate', useful: 'yes' },
+      { path: '.claude/rules/b.md', reason: 'loaded when touching guard files', useful: 'no' },
+    )
     const [c] = sessionCardViews([s], titles)
     expect(c!.rules.map((r) => [r.title, r.reason])).toEqual([
       ['ADR-0022: Autonomous triage sweep', 'not related to a blog post'],
+      [undefined, undefined],
+      [undefined, 'made me run the gate'],
       [undefined, undefined],
     ])
   })

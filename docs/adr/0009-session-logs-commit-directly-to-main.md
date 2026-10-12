@@ -634,8 +634,9 @@ never corrected" for this one list: the correction is logged, not silent.
 
 A path alone does not say whether a doc or rule earned its place in context.
 A `docsRead` entry gains an optional `useful` verdict (`yes`, `partly`, `no`),
-and a new optional `ruleVerdicts` list gives each loaded rule a `reason` (what
-it told the agent) and a `useful` verdict. Both are authored; `--author` lists
+and a new optional `ruleVerdicts` list gives each loaded rule a `reason` (why it
+helped or didn't, and why the agent did or didn't open its ADR) and a `useful`
+verdict. Both are authored; `--author` lists
 every instruction doc and every loaded rule still missing one. The derived
 `rulesGlobal` lists the rules that load at session start, so they get a
 verdict too. Older logs carry none of these and stay valid.
