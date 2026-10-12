@@ -45,15 +45,18 @@ async function failDavidDump(page: Page, fail: (route: Route) => Promise<void>):
 async function failContentChunkImport(page: Page): Promise<void> {
   await failDavidPayload(page)
   await page.route('**/_nuxt/*.js', async (route) => {
-    // The test's reloadNuxtApp can dispose the page mid-fetch; vitest counts
+    // The test's reloadNuxtApp can dispose the page at any await; vitest counts
     // that rejection as an unhandled error and fails the run.
-    const response = await route.fetch().catch(() => undefined)
-    if (!response) return
-    const body = await response.text()
-    const isSqliteEntry = body.includes('sqlite3InitModule') && !route.request().url().includes('worker1')
-    return isSqliteEntry
-      ? route.fulfill({ status: 500, contentType: 'application/javascript', body: '' })
-      : route.fulfill({ response, body })
+    try {
+      const response = await route.fetch()
+      const body = await response.text()
+      const isSqliteEntry = body.includes('sqlite3InitModule') && !route.request().url().includes('worker1')
+      await (isSqliteEntry
+        ? route.fulfill({ status: 500, contentType: 'application/javascript', body: '' })
+        : route.fulfill({ response, body }))
+    } catch {
+      // disposed mid-flight: nothing to answer
+    }
   })
 }
 
