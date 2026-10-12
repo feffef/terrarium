@@ -253,10 +253,7 @@ export function sessionCardViews(
         ...(s.rulesLoaded ?? []).map((path) => ({ path, global: false })),
       ].map(({ path, global }) => {
         const v = s.ruleVerdicts?.find((r) => r.path === path)
-        // Older logs open each reason with how the rule loaded ("loaded at start;"),
-        // which the list already says. Landed logs are fixed (ADR-0009), so strip it here.
-        const reason = v?.reason?.replace(/^loaded\b[^;]*(;\s*|$)/i, '') || undefined
-        return { path, title: ruleTitles[path], global, followedUp: !!s.rulesFollowedUp?.includes(path), reason, useful: v?.useful }
+        return { path, title: ruleTitles[path], global, followedUp: !!s.rulesFollowedUp?.includes(path), reason: v?.reason, useful: v?.useful }
       }),
       tools: sessionToolEntries(s.toolCounts),
     }

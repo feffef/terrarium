@@ -352,7 +352,7 @@ describe('sessionCardViews', () => {
     expect(c!.rules).toEqual([{ path: '.claude/rules/adr-0004.md', global: false, followedUp: false, reason: 'merge rules', useful: 'partly' }])
   })
 
-  it("names each rule by its heading and drops an older log's 'loaded;' prefix", () => {
+  it('names each rule by its heading, falling back to the path, and keeps the reason as written', () => {
     const titles = sessionRuleTitles({
       '../../.claude/rules/adr-0022.md': '---\npaths: []\n---\n\n# ADR-0022: Autonomous triage sweep\n\nBody.',
       '../../.claude/rules/untitled.md': 'No heading.',
@@ -360,21 +360,11 @@ describe('sessionCardViews', () => {
     expect(titles).toEqual({ '.claude/rules/adr-0022.md': 'ADR-0022: Autonomous triage sweep' })
     const s = session({
       rulesGlobal: ['.claude/rules/adr-0022.md', '.claude/rules/gone.md'],
-      ruleVerdicts: [
-        { path: '.claude/rules/adr-0022.md', reason: 'loaded; not related to a blog post', useful: 'no' },
-        { path: '.claude/rules/gone.md', reason: 'loaded', useful: 'no' },
-      ],
-      rulesLoaded: ['.claude/rules/a.md', '.claude/rules/b.md'],
+      ruleVerdicts: [{ path: '.claude/rules/adr-0022.md', reason: 'loaded; not related to a blog post', useful: 'no' }],
     })
-    s.ruleVerdicts!.push(
-      { path: '.claude/rules/a.md', reason: 'loaded at session start; made me run the gate', useful: 'yes' },
-      { path: '.claude/rules/b.md', reason: 'loaded when touching guard files', useful: 'no' },
-    )
     const [c] = sessionCardViews([s], titles)
     expect(c!.rules.map((r) => [r.title, r.reason])).toEqual([
-      ['ADR-0022: Autonomous triage sweep', 'not related to a blog post'],
-      [undefined, undefined],
-      [undefined, 'made me run the gate'],
+      ['ADR-0022: Autonomous triage sweep', 'loaded; not related to a blog post'],
       [undefined, undefined],
     ])
   })
