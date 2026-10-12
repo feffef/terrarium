@@ -32,7 +32,7 @@ turned inward or lost its way, but because the repository has one human, who ran
 out of hours. The interesting part is what kept happening anyway, and what
 changed in the last row once the human had time again.
 
-This account stops at 2 October. The daily digests go on from there: the
+This account covers 4 July to 2 October; the counts are as of then, and a few later events (3, 8 and 10 October) are noted where they close an earlier thread. The daily digests go on from 2 October: the
 most recent week on the [current Journal](/t/journal/current), earlier days in
 the [archive](/t/journal/archived).
 
@@ -279,7 +279,7 @@ the first new site since July. On 26 September the owner planned
 [Tinkerfund](/t/tinkerfund) — a deadpan crowdfunding shop for mostly useless
 inventions — as fourteen small features; agents built ten of them as
 separate pull requests, combined them, and the owner merged the whole shop
-the same day. It has twenty-eight campaigns now.
+the same day. It had twenty-eight campaigns by 2 October.
 
 > **What real work exposed.** It worked as intended. Frictions per session
 > more than doubled, nearly half of them nits.

@@ -1,8 +1,6 @@
 # Tests
 
-How the test suite is laid out, and the one non-obvious rule about e2e. The
-*why* is ADR-0004 (see its 2026-07-07 amendment); this file is the operational
-"where do I put a test" reference.
+Where each test lives, and the one non-obvious e2e rule. The why: ADR-0004's 2026-07-07 amendment.
 
 ## A test is homed with the code it exercises
 
@@ -20,9 +18,7 @@ How the test suite is laid out, and the one non-obvious rule about e2e. The
   - `layers/<tenant>/tests/e2e/*.e2e.ts` — an imported module, **not** a spec
     (see below).
 
-This keeps "which tests belong to which Tenant vs. which are global" obvious,
-and lets the suite grow additively: adding a Tenant that needs tests adds a
-`layers/<tenant>/tests/` folder — nothing here changes.
+Adding a Tenant that needs tests adds a `layers/<tenant>/tests/` folder; nothing here changes.
 
 ## The e2e gate is ONE build — do not split it
 
@@ -32,8 +28,7 @@ assertions live in its layer as a `register…()` module (e.g.
 `layers/journal/tests/e2e/journal.e2e.ts`) that the smoke spec **imports and
 calls inside its single `describe`** — so they share the one build.
 
-**Do not "clean this up" into per-Tenant e2e spec files** — see ADR-0004's
-2026-07-07 amendment for why splitting them multiplies the gate's build cost.
+**Do not "clean this up" into per-Tenant e2e spec files**: splitting multiplies the gate's build cost (ADR-0004, 2026-07-07 amendment).
 To add e2e coverage for a new Tenant: write
 `layers/<tenant>/tests/e2e/<tenant>.e2e.ts` exporting a `register…()`
 function, then add one import + one call in `tests/e2e/smoke.spec.ts`.
@@ -50,8 +45,7 @@ e2e assertions use vitest's `expect` (with `expect.poll(...).toBe(...)` for
 async/polling conditions), not Playwright's own matcher set (`toBeVisible`,
 `toHaveText`, etc.) — those won't type or run here.
 
-`expect.poll` defaults to a **1000ms timeout / 50ms interval** — not set in
-`vitest.config.ts`, so the numbers aren't visible from this repo's own config.
+`expect.poll` defaults to a **1000ms timeout / 50ms interval** (vitest's own defaults, not set in `vitest.config.ts`).
 A poll racing a longer app-side settle animation (e.g. a rAF-driven
 transition) needs its timeout raised per-call —
 `expect.poll(..., { timeout: 5000 })` — not just re-run as flaky.

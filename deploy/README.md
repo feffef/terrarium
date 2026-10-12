@@ -59,7 +59,7 @@ down; it self-heals on the next good commit.
    chmod 600 .env                       # holds the PAT
    # edit .env: paste GITHUB_PAT (GIT_REPO_URL is already correct)
    ```
-   (The PAT is for a **different** clone: the container's own, made by `entrypoint.sh` in the `terrarium_app` volume, independent of the host clone above (see **On-VPS layout**). It is needed regardless of repo visibility — `entrypoint.sh` requires `GITHUB_PAT` unconditionally and passes it via `GIT_ASKPASS` (see `deploy/entrypoint.sh`), keeping it out of `.git/config`.)
+   (The PAT is for the container's own clone (see **On-VPS layout**), not this host clone. It is needed even for a public repo: `entrypoint.sh` requires `GITHUB_PAT` unconditionally and passes it via `GIT_ASKPASS`, keeping it out of `.git/config`.)
 
 3. **Shared proxy network.** Terrarium is reached by the existing Caddy over a
    shared network called `web`. Create it once:
@@ -101,12 +101,10 @@ down; it self-heals on the next good commit.
    `healthy` once `/` returns 200 (`docker compose ps` to check).
 
    > If `up` fails with **`network web declared as external, but could not be
-   > found`**, you skipped `docker network create web` in step 3 — create it and
-   > re-run. Confirm both containers share it:
+   > found`**, run `docker network create web` (step 3) and retry. Confirm both containers share it:
    > `docker network inspect web --format '{{range .Containers}}{{.Name}} {{end}}'`
    > → should list the Caddy container **and** `deploy-terrarium-1` (Compose's
-   > default project name is the compose file's directory basename —
-   > `deploy` here, since step 6 `cd`s into `deploy/` first).
+   > default project name is the compose file's directory basename, `deploy` here).
 
 ## Operations
 
@@ -128,7 +126,7 @@ supervisor at that branch — it drives both the initial clone and the poll loop
 
 ```sh
 # /opt/terrarium/.env
-BRANCH=deploy/self-updating-container   # any branch
+BRANCH=<branch>
 ```
 `docker compose up -d`, and the container serves (and keeps pulling) that branch.
 After the PR merges, set `BRANCH=main` (or delete the line — `main` is the

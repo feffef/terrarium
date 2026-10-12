@@ -172,9 +172,8 @@ Same marker and rationale as `guest-build`'s "Concurrency" section (issue #570, 
 - **Claim it before acting.** The moment you're about to take the one bounded
   step for an issue (post the next question round, the reframe proposals, the
   confirmation summary, the green-light, or the escalation), add
-  `guest-in-flight` to that issue's label set first — via `issue_write` (a
-  label update *replaces* the set, so include the issue's other current
-  labels alongside the marker, not just the marker).
+  `guest-in-flight` to that issue's label set first — via `issue_write`, passing
+  the full label set (`docs/agents/github-integration.md`).
 - **Release it when you're done with that step** — in the same `issue_write`
   call that applies the step's resulting label (`needs-info`,
   `ready-for-agent`, `ready-for-human`, …), drop `guest-in-flight` from the

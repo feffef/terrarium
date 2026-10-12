@@ -13,7 +13,7 @@ one of several Tenants themed around the Platform's **Observability** invariant
 comments on it, the Midden catalogues what the Platform stopped doing, once it
 is truly finished stopping.
 
-Full MVP spec, decision history, and every sub-decision's resolution: [issue #515](https://github.com/feffef/terrarium/issues/515) (a Wayfinder map; its 13 sub-issues #516–#528 carry the individual resolutions cited by number throughout this file). A content/design Tenant's decisions live there and in this file, not as ADRs (ADR-0021).
+MVP spec, decision history and resolutions: [issue #515](https://github.com/feffef/terrarium/issues/515) (a Wayfinder map; sub-issues #516–#528 hold the individual resolutions cited by number in this file). A content/design Tenant's decisions live there and in this file, not as ADRs (ADR-0021).
 
 ## Why it exists
 
@@ -49,22 +49,21 @@ condition word carries its dig-season label).
 The Midden's atomic unit of contribution: one catalogued discarded thing, a
 Document in `trench`'s `artifacts` data collection (#518). Names what kind of
 thing it was — a PR, a branch, a commit, a file, a dependency, or a Skill —
-with an optional live link and a note on whether that link still resolves;
+with an optional live link and a short `continuityCheck` record of the Gate-B check that ran;
 carries its dig-season, a curator-graded condition, and a curator's-voice
 note, plus a required assessment date, likewise curator-set and never mechanically re-derived (#526).
-Narrates from inside the `site` that discusses it — required in a Space that
-has Sites, absent in one that has none. May also carry a verbatim inscription
-and preservation links to the artifact's original state, each pinned to a
-full commit SHA so the link stays immutable — a few meaningful views, not a
-mechanical dump of every touched path. Both are expected absent on a `lost`
-artifact, since nothing survives to view. Exact document shape: see What lives where below.
+Narrates from inside the `site` that discusses it. May also carry a verbatim
+inscription and preservation links to the artifact's original state — a few
+meaningful views, not a mechanical dump of every touched path — both expected absent on
+a `lost` artifact, since nothing survives to view. The exact shape and its
+rules (SHA-pinned links, when `site` is required): see What lives where below.
 
 ### Condition
 The curator-graded preservation state of an Artifact, one of six grades in
-decay-then-orthogonal order: `fresh → intact → fragmentary → dissolved` (the
+this order: `fresh → intact → fragmentary → dissolved` (the
 erosion axis) then `never-activated` (complete but never fired — a distinct
 axis, not a further decay step) and `lost` (its own gravestone template
-entirely; #523). **100% curator-authored, never mechanically re-derived** — not from `assessedAt`, not from any future continuity check (#526). Shown as its word, never a glyph to decode. The six grades and their one-line definitions are single-homed (see What lives where below), surfaced there exactly once so they're never authored twice.
+entirely; #523). **100% curator-authored, never mechanically re-derived** — not from `assessedAt`, not from any future continuity check (#526). Shown as its word, never a glyph to decode. The six grades and their one-line definitions are single-homed (see What lives where below).
 
 ### The Stores
 The Midden's second Space (`stores`): catalogued finds held **off display**. An
@@ -83,9 +82,9 @@ demotion record; the reverse move is the same operation. Demotion is explicitly
 *not* a quality judgment and never edits a record down — a real museum keeps
 most of its collection in the stores and nobody reads that as a verdict.
 
-The name completes an institution the Midden had already half-named: **trench**
-(excavation) → **gallery** (exhibition, still out of scope — #522) → **stores**
-(storage). A find is on display in the trench, or held in the stores.
+The name completes an institution's set: **trench** (excavation) → **gallery**
+(exhibition, out of scope, #522) → **stores** (storage). A find is on display in
+the trench, or held in the stores.
 
 Not to be confused with material that fails the inclusion bar outright, which is
 never catalogued at all — that is spoil, and spoil is by definition unrecorded.

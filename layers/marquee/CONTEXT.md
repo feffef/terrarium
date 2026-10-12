@@ -20,7 +20,7 @@ time, each paired with an original illustration rather than a poster scrape.
 
 ## Who it's for
 
-Someone who wants the MCU's internal chronology rather than its release history, and is happy to read a short, spoiler-light take on each film as they go. No familiarity with the Terrarium's build is assumed — unlike the Journal or Blog, nothing here is about the platform; the Marquee is plain content, like the Atlas's fiction but non-fictional film commentary.
+Someone who wants the MCU's internal chronology rather than its release history, and is happy to read a short, spoiler-light take on each film as they go. No Terrarium knowledge is assumed: unlike the Journal or Blog, nothing here is about the platform. It is plain content, like the Atlas's fiction but non-fictional film commentary.
 
 ## Glossary
 

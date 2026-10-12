@@ -60,8 +60,7 @@ building against the same issue (#555) — before a human intervened.
 
 - **Claim it before dispatching.** Before step 2 below (dispatching the impl
   agent), add `guest-in-flight` to the issue's label set via `issue_write`
-  (a label update *replaces* the set — include `ready-for-agent` and the
-  issue's other current labels alongside the marker, not just the marker).
+  (pass the full label set, `ready-for-agent` included: `docs/agents/github-integration.md`).
   If `poll-guest-tickets.ts` supplied the candidate list, the marker is
   already known absent-or-stale for every issue in it; if you're checking an
   issue by hand instead, read its labels first (`issue_read` `get_labels`)
