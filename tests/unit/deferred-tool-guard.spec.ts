@@ -6,7 +6,6 @@
 // exercised end to end against the real built script so the exact regression
 // case (`TaskCreate` carrying Agent-shaped args) is proven to be blocked with a
 // corrective message, not just asserted in the abstract.
-import { execFileSync } from 'node:child_process'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
@@ -17,6 +16,7 @@ import {
   formatGuardMessage,
   FOREIGN_SIGNATURES,
 } from '../../scripts/deferred-tool-guard.ts'
+import { runTsx } from '../support/run-script.ts'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '../..')
 const SCRIPT = join(root, 'scripts', 'deferred-tool-guard.ts')
@@ -25,11 +25,7 @@ const SCRIPT = join(root, 'scripts', 'deferred-tool-guard.ts')
  *  stdout. Returns the parsed deny object, or null when the guard stayed silent
  *  (an allowed call). */
 function runHook(payload: unknown): { hookSpecificOutput: Record<string, string> } | null {
-  const out = execFileSync('pnpm', ['exec', 'tsx', SCRIPT], {
-    cwd: root,
-    input: JSON.stringify(payload),
-    encoding: 'utf8',
-  }).trim()
+  const out = runTsx(SCRIPT, { input: JSON.stringify(payload) }).trim()
   return out ? JSON.parse(out) : null
 }
 
@@ -140,7 +136,7 @@ describe('the CLI as the PreToolUse hook would invoke it (stdin JSON → stdout 
   })
 
   it('END TO END: stays silent on non-JSON / empty stdin (fails open)', () => {
-    const out = execFileSync('pnpm', ['exec', 'tsx', SCRIPT], { cwd: root, input: '', encoding: 'utf8' }).trim()
+    const out = runTsx(SCRIPT, { input: '' }).trim()
     expect(out).toBe('')
   })
 })

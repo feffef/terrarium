@@ -14,6 +14,7 @@ import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
 import { checkDoubleBackground, denyOutputFor, formatGuardMessage } from '../../scripts/double-background-guard.ts'
+import { envWithTsxShim, runTsx } from '../support/run-script.ts'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '../..')
 const SCRIPT = join(root, 'scripts', 'double-background-guard.ts')
@@ -129,11 +130,7 @@ describe('denyOutputFor() — the PreToolUse control object', () => {
 
 describe('the CLI as the PreToolUse hook would invoke it (stdin JSON → stdout deny)', () => {
   function runHook(payload: unknown): { hookSpecificOutput: Record<string, string> } | null {
-    const out = execFileSync('pnpm', ['exec', 'tsx', SCRIPT], {
-      cwd: root,
-      input: typeof payload === 'string' ? payload : JSON.stringify(payload),
-      encoding: 'utf8',
-    }).trim()
+    const out = runTsx(SCRIPT, { input: typeof payload === 'string' ? payload : JSON.stringify(payload) }).trim()
     return out ? JSON.parse(out) : null
   }
 
@@ -156,7 +153,7 @@ describe('the CLI as the PreToolUse hook would invoke it (stdin JSON → stdout 
   })
 
   it('END TO END: stays silent on empty stdin (a bare manual run is not a tool call to police)', () => {
-    const out = execFileSync('pnpm', ['exec', 'tsx', SCRIPT], { cwd: root, input: '', encoding: 'utf8' }).trim()
+    const out = runTsx(SCRIPT, { input: '' }).trim()
     expect(out).toBe('')
   })
 })
@@ -165,6 +162,7 @@ describe('the double-background-guard.sh hot-path pre-filter', () => {
   function runPrefilter(payload: unknown): string {
     return execFileSync('sh', [PREFILTER], {
       cwd: root,
+      env: envWithTsxShim(),
       input: typeof payload === 'string' ? payload : JSON.stringify(payload),
       encoding: 'utf8',
     }).trim()
@@ -199,7 +197,7 @@ describe('the double-background-guard.sh hot-path pre-filter', () => {
 
 describe('the --dry-run path (ADR-0004: an unattended hook needs a way to be exercised by hand)', () => {
   function dryRun(args: string[]): { decision: string; reason?: string } {
-    return JSON.parse(execFileSync('pnpm', ['exec', 'tsx', SCRIPT, '--dry-run', ...args], { cwd: root, encoding: 'utf8' }))
+    return JSON.parse(runTsx(SCRIPT, { args: ['--dry-run', ...args] }))
   }
 
   it('prints the deny decision for a double-backgrounded input', () => {

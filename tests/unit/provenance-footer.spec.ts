@@ -5,7 +5,6 @@
 // directly; the whole script is then exercised end to end via `tsx` against a real
 // commit-message file that omits the footer — the acceptance-criterion trace that
 // #318/#320 never produced.
-import { execFileSync } from 'node:child_process'
 import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { dirname, join, resolve } from 'node:path'
@@ -27,6 +26,7 @@ import {
   sessionUrlFromEnv,
 } from '../../scripts/provenance-footer.ts'
 import { busiestModelId, formatModelId } from '../../scripts/session-trace.ts'
+import { runTsx } from '../support/run-script.ts'
 
 const scriptPath = resolve(dirname(fileURLToPath(import.meta.url)), '../../scripts/provenance-footer.ts')
 
@@ -327,10 +327,7 @@ describe('end-to-end: running the script over a real commit-message file (issue 
   /** Run the script with a controlled env and an empty config dir (no transcript,
    *  so the env-only session-URL path is what lands). */
   function runScript(env: Record<string, string>): void {
-    execFileSync('tsx', [scriptPath, msgFile], {
-      env: { ...process.env, CLAUDE_CONFIG_DIR: join(scratch, 'empty-config'), ...env },
-      encoding: 'utf8',
-    })
+    runTsx(scriptPath, { args: [msgFile], env: { ...process.env, CLAUDE_CONFIG_DIR: join(scratch, 'empty-config'), ...env } })
   }
 
   it('appends the footer to a message that omits it, using the remote session id from env', () => {
@@ -435,14 +432,14 @@ describe('end-to-end: running the script over a real commit-message file (issue 
       }),
     )
     writeFileSync(msgFile, 'feat: transcript-derived model\n')
-    execFileSync('tsx', [scriptPath, msgFile], {
+    runTsx(scriptPath, {
+      args: [msgFile],
       env: {
         ...process.env,
         CLAUDE_CONFIG_DIR: join(scratch, 'cfg'),
         CLAUDE_CODE_SESSION_ID: uuid,
         CLAUDE_CODE_REMOTE_SESSION_ID: '',
       },
-      encoding: 'utf8',
     })
     const out = readFileSync(msgFile, 'utf8')
     expect(out).toContain('Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>')
