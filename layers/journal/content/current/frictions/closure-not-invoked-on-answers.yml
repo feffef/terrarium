@@ -2,8 +2,8 @@ name: closure-not-invoked-on-answers
 cause: >-
   A session skips close-session when it is due (after answering a question, or at PR-open) and the user has to ask whether it was logged.
 surface: safe
-status: open
-ref: "PR #1801 (merged 2026-10-12T02:27Z, covers the answers case only); this run widens CLAUDE.md to the PR-open case"
+status: tracked
+ref: "PR #1801 (answers case, merged 2026-10-12T02:27Z); PR #1821 (PR-open case)"
 occurrences:
   - session: session_01DRBxySwYL4HR4xEEJc3CXX
     date: "2026-10-11"

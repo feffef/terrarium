@@ -2,8 +2,9 @@ name: survey-output-overflow
 cause: >-
   The frictions-to-fixes survey reads (session-frictions --compact at about 135-150 KB, the ledger directory at about 40 KB) overflow tool results, so subagents slice or hand-digest them.
 surface: safe
-status: open
-ref: "PR #1757 (added --compact; output still large); this run adds a filter"
+status: fixed
+fixedOn: "2026-10-12"
+ref: "PR #1757 (added --compact); PR #1820 (merged 2026-10-12, added --unledgered)"
 occurrences:
   - session: session_01GEqB5frKCNtJYAr9KaRxDo
     date: "2026-10-10"
