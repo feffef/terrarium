@@ -2,7 +2,8 @@ name: closure-not-invoked-on-answers
 cause: >-
   A session that only answers a question skips close-session, and the user has to ask whether it was logged.
 surface: safe
-status: open
+status: tracked
+ref: "PR TBD"
 occurrences:
   - session: session_01DRBxySwYL4HR4xEEJc3CXX
     date: "2026-10-11"

@@ -1,6 +1,6 @@
 name: premise-not-questioned
 cause: >-
-  An issue triaged ready-for-agent, or a broad instruction, is implemented in full before anyone asks whether the change has a benefit; the owner catches the premise after a full implementation and review cycle.
+  An agent implements or hardens a solution before asking whether the change should exist or how big it should be; the triage-brief shape was fixed 2026-10-06 (auto-triage SKILL line 57), later cases differ.
 surface: safe
 status: open
 occurrences:

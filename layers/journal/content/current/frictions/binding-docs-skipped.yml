@@ -1,9 +1,9 @@
 name: binding-docs-skipped
 cause: >-
-  CLAUDE.md's read-before-X triggers (ADRs before planning, git-conventions before git) are prose, so a session plans or acts first and reads after.
+  CLAUDE.md's read-first triggers are prose; the hint (#1793) now covers git and GitHub docs, but CONTEXT.md, full-ADR reads and the dispatch-subagents trigger are unhooked.
 surface: guard-or-hook
-status: tracked
-ref: "issue #1754"
+status: open
+ref: "issue #1754 (closed by PR #1793: read-first hint covers git and GitHub docs only)"
 occurrences:
   - session: session_01NyDGTR1fuP22hPo7XghCfz
     date: "2026-10-07"
@@ -77,3 +77,24 @@ occurrences:
   - session: session_01BBQnwhyfsvoksh4oV9MXsU
     date: "2026-10-11"
     severity: minor
+  - session: session_01JR1AZGGyi6AEh1SHTp6qsH
+    date: "2026-10-10"
+    severity: minor
+  - session: session_01Tjsmye34hk57NtioyWQG4h
+    date: "2026-10-11"
+    severity: nit
+  - session: session_0177ZCpnHq4Sw5wicAEmriDh
+    date: "2026-10-11"
+    severity: nit
+  - session: session_01WuJh8gfMFWfS5bWEJcdScC
+    date: "2026-10-11"
+    severity: nit
+  - session: session_01V3bxJaTSH8AWjrtSoBhNxK
+    date: "2026-10-11"
+    severity: minor
+  - session: session_019w4vmM2Ygsu4yESyXPK6Tc
+    date: "2026-10-11"
+    severity: nit
+  - session: session_01QfaLuSd5cnBQPu8CCRrvkn
+    date: "2026-10-12"
+    severity: nit

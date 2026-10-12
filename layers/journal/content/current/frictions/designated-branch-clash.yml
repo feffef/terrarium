@@ -1,0 +1,15 @@
+name: designated-branch-clash
+cause: >-
+  CLAUDE.md's "Stay on the branch your session started on" and the session's designated-branch instruction collide with tasks that need a PR's branch or several independent PRs, so the session asks or breaks the rule.
+surface: safe
+status: open
+occurrences:
+  - session: session_01X7EjwNGgzS9n6614B4PTU3
+    date: "2026-10-10"
+    severity: nit
+  - session: session_017inrpS21UKrpEun2DpjLd7
+    date: "2026-10-11"
+    severity: nit
+  - session: session_01D3gBoQCQTmjVwEyuA3qZkQ
+    date: "2026-10-11"
+    severity: minor
