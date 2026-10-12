@@ -130,7 +130,11 @@ reaches for on its own.
    since a ticket only surfaces when a human has said something since the last
    AI action on it). Brief each with `/triage`'s per-issue rules plus
    the read-only rule, the brave/uncertainty line, and the wayfinder overlay above. Each subagent
-   verifies every claim against a primary source in the repo, then applies its own
+   verifies every claim against a primary source in the repo. Before judging, it
+   reads the git history and session logs that touched the issue's area since
+   the issue was filed: later work may have done, superseded or changed it
+   (an obsolete or superseded issue is a judgment call, so `ready-for-human`).
+   It then applies its own
    labels and posts its own single comment (disclaimer + provenance header). A label
    update **replaces** the set, so each passes the complete final label set and
    preserves any `wayfinder:*` label. Each returns to you — not in its brief,
