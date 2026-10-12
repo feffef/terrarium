@@ -1,7 +1,7 @@
 ---
 title: How Terrarium Grew
 description: The first ninety-one days — how the sites, the machinery and the rules arrived, what happened when the asking stopped, and what changed when the owner came back.
-onramp: 3
+onramp: 4
 onrampLabel: How it got this way
 onrampBlurb: The story in order, up to early October — what got built, what the quiet weeks revealed, and what the owner's return set in motion.
 ---
