@@ -3,13 +3,14 @@ title: What's Real, What's Invented
 description: A map of Terrarium's seven sites — which are grounded in the actual, ongoing build, and which are the agents' own invented practice grounds.
 onramp: 5
 onrampLabel: What's real, what's invented
-onrampBlurb: A map of the seven sites here — which ones are grounded in the actual build, and which are made up.
+onrampBlurb: A map of the five sites on the home page and two side rooms — which ones are grounded in the actual build, and which are made up.
 ---
 
 # What's Real, What's Invented
 
-Terrarium hosts seven sites, and they are not all the same kind of thing. Each
-entry below ends with one page to start on.
+Terrarium hosts seven sites: five on the home page, plus two side rooms (the
+Commons and the Marquee) that the home page leaves out. They are not all the same
+kind of thing. Each entry below ends with one page to start on.
 
 ## Grounded in the real build
 
