@@ -1,15 +1,16 @@
 schemaVersion: 1
 session: session_014uXxmT6359K4Z42a6We6Gh
 startedAt: 2026-10-12T09:18:26Z
-endedAt: 2026-10-12T09:59:03Z
-kind: delegated
+endedAt: 2026-10-12T10:43:04Z
+kind: interactive
 goal: "Visitor loop on the Journal: three blind visitors, consensus fixes, one feature"
 status: completed
-outcome: "Fix PR #1806 and feature PR #1807 both merged on green gates"
-summary: "One human prompt kicked off the run (/visitor-loop with focus on journal); everything after was agent-initiated inside the visitor-loop remit. Built and served the production preview, sent three blind visitors (sonnet, fable, opus) into /t/journal/current and tallied their reports. Five consensus findings were fixed in #1806 (Worst snags clamped to two lines, session summaries split into paragraphs for display, captions on the current/archived toggle, a key and no zero counts on the Skills chips, jump links on the Ideas page). Eight more consensus clusters were dropped because the week's ideas already logged them or decisions.md rules them out. All seven owner-correction candidates were reworks of other work, so no decisions.md line. The feature, chosen because opus and fable both asked for a friction trend, is a \"Snags per session, by day\" panel (#1807). Code review caught a real honesty problem in my first version: \"fewer is better\" punishes honest friction logging, so the caption now says self-reported, counts are real text for screen readers, and the bars scroll on phones instead of hiding labels. One reviewer suggestion (drop `?? 0`) was wrong and reddened the typecheck once. Both PRs were merged with merge-pr.ts after posting verdicts."
+outcome: "Fix PR #1806, feature PR #1807 and a wording follow-up #1808 all merged on green gates"
+summary: "One human prompt kicked off the run (/visitor-loop with focus on journal); everything after was agent-initiated inside the visitor-loop remit. Built and served the production preview, sent three blind visitors (sonnet, fable, opus) into /t/journal/current and tallied their reports. Five consensus findings were fixed in #1806 (Worst snags clamped to two lines, session summaries split into paragraphs for display, captions on the current/archived toggle, a key and no zero counts on the Skills chips, jump links on the Ideas page). Eight more consensus clusters were dropped because the week's ideas already logged them or decisions.md rules them out. All seven owner-correction candidates were reworks of other work, so no decisions.md line. The feature, chosen because opus and fable both asked for a friction trend, is a \"Snags per session, by day\" panel (#1807). Code review caught a real honesty problem in my first version: \"fewer is better\" punishes honest friction logging, so the caption now says self-reported, counts are real text for screen readers, and the bars scroll on phones instead of hiding labels. One reviewer suggestion (drop `?? 0`) was wrong and reddened the typecheck once. Both PRs were merged with merge-pr.ts after posting verdicts. After the run the user asked what separates snags from frictions (one thing: Friction is the glossary term, snag was the page's plain-language word) and then directed that the Journal say \"frictions\" everywhere, since the intro already explains it; that human-instructed follow-up was #1808, a text-only rename of two headings, a tile gloss and two comments, with published digests left untouched as authored history. The user then asked for this closure to be logged."
 prs:
   - "1806"
   - "1807"
+  - "1808"
 docsRead:
   - path: CONTEXT-MAP.md
     reason: session-start context map
@@ -76,20 +77,27 @@ frictions:
   - description: The visitors' reports were mostly already logged as ideas this week, so most tally time went to dedupe against ideas.ts output of 71 notes.
     solution: Have ideas.ts gather accept a keyword filter so a tally can search the week's ideas directly.
     severity: minor
-durationSec: 2437
+  - description: "HUMAN-PROMPTED-CLOSURE: the user had to ask for the log after #1808 had already been opened and merged; I offered it instead of invoking close-session at PR-open."
+    solution: Invoke close-session at every PR-open, including small chat-directed follow-up PRs, rather than offering it afterwards.
+    severity: major
+  - description: Mixed 'snags' and 'frictions' on one page for the same thing; the spec reviewer flagged it and I left it until the user asked.
+    solution: When adding UI copy, check the glossary term in CONTEXT.md and use it; the Journal landing should say Friction everywhere.
+    severity: minor
+durationSec: 5078
 models:
-  claude-sonnet-5-5: 163
+  claude-sonnet-5-5: 189
 toolCounts:
   Read: 16
-  Bash: 45
+  Bash: 52
   Agent: 6
   mcp__github__pull_request_read: 4
   mcp__github__search_issues: 3
-  mcp__github__create_pull_request: 2
+  mcp__github__create_pull_request: 3
   mcp__claude-code-remote__subscribe_pr_activity: 2
-  Skill: 3
-  ReadNotifications: 2
-  mcp__github__add_issue_comment: 2
+  Skill: 4
+  ReadNotifications: 3
+  mcp__github__add_issue_comment: 3
+  Grep: 1
 rulesLoaded:
   - .claude/rules/adr-0028.md
   - .claude/rules/adr-0021.md
