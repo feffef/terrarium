@@ -64,8 +64,9 @@ every line that applies.
   log's real tail (issue #602).
 - Launch at most (20 − running) agents at a time; a bigger batch is rejected.
   Every Agent call runs async, so wait for its notification.
-- At most 2 full gates at once in one container (`test:e2e` dies of memory
-  otherwise); rerun a dead one alone before diagnosing.
+- `gate:scoped` queues Heavy tiers beyond `HEAVY_SLOTS` per container
+  (`scripts/gate.ts`, issue #1800); a gate that died anyway (exit 137): rerun
+  it alone before diagnosing.
 - A screenshot agent shoots as soon as `pnpm build` succeeds, not after the gate
   (issue #683).
 
