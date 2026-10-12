@@ -1,14 +1,15 @@
 schemaVersion: 1
 session: session_01BLrfuHbMMEmjZZ7STpe1AN
 startedAt: 2026-10-11T23:33:09Z
-endedAt: 2026-10-12T06:32:42Z
+endedAt: 2026-10-12T06:58:04Z
 kind: interactive
 goal: Cut the full gate's duration, chiefly its e2e step, without losing coverage
-status: completed
-outcome: "PR 1796 merged: one build instead of two, e2e specs in parallel; CI gate 285 s to 183 s, e2e 100-130 s to 56 s"
-summary: "Human-instructed: investigate why the full gate (especially e2e) is slow and improve it without losing coverage, using Sonnet agents for exploration and refactoring with this session orchestrating; mid-way the user added that some e2e tests could become component tests; the user reviews and merges, no self-merge. Three read-only agents measured first: five CI job logs (full gate 205-296 s, e2e 99-130 s, pnpm build 27-47 s, Chromium download 17-22 s every run), a local profile (e2e 185 s of which 84 s was a second nuxt build inside setup()), and a source read of @nuxt/test-utils showing build:false plus nitro.output.dir serves an existing .output. Agent-initiated design, within the ask: reuse the gate's own build (freshness-checked by mtime, fail-closed, because a stale reuse once hid a regression), then split the single smoke spec into one spec per Tenant run in parallel by vitest, which needed a dated ADR-0004 amendment since the one-spec rule rested on the per-spec rebuild. Surprises: parallel Nitro servers sharing one Nuxt Content SQLite file corrupted each other's lazy import (database is locked, 500s), fixed by a per-spec copy of .data/content/contents.sqlite; CI's Chromium download had never been used because playwright-core now installs chrome-linux64 and chromium-path.ts scanned chrome-linux, so CI ran the runner's system Chrome; the e2e had been testing a build with test-utils' compatibilityDate 2024-04-03 rather than the production one. Twenty duplicate tests were folded with every assertion rehomed (150 to 131). The component-test suggestion was analysed, not built: a classification of all 150 tests (57 keep, 60 could be component tests, 3 unit, 20 duplicates) shows that after the parallel split it would no longer shorten wall-clock, and it adds two devDependencies plus a nuxt-environment vitest project, so it is reported for the user's decision. Local gate:scoped green; the PR's first CI run took 203 s for the composite (typical before: 270-295 s) with test:e2e at 56 s (before: 100-130 s), 9 files, 131 tests; the second run, with the Chromium cache hitting, 183 s. A main-side audit-docs sweep conflicted on tests/README.md, merged by hand; the owner then enabled auto-merge and the PR landed. Follow-up experiments (e2e file split, Chromium apt step, build caches, Floor parallelism, in-process guard specs) ran as separate Sonnet agents in worktrees after the merge, to find which remaining cuts are easy wins."
+status: in-review
+outcome: PR 1796 merged (CI gate 285 s to 183 s); follow-up PR 1805 open with the measured remaining cuts, waits for a human merge
+summary: "Human-instructed: investigate why the full gate (especially e2e) is slow and improve it without losing coverage, using Sonnet agents for exploration and refactoring with this session orchestrating; mid-way the user added that some e2e tests could become component tests; the user reviews and merges, no self-merge. Three read-only agents measured first: five CI job logs (full gate 205-296 s, e2e 99-130 s, pnpm build 27-47 s, Chromium download 17-22 s every run), a local profile (e2e 185 s of which 84 s was a second nuxt build inside setup()), and a source read of @nuxt/test-utils showing build:false plus nitro.output.dir serves an existing .output. Agent-initiated design, within the ask: reuse the gate's own build (freshness-checked by mtime, fail-closed, because a stale reuse once hid a regression), then split the single smoke spec into one spec per Tenant run in parallel by vitest, which needed a dated ADR-0004 amendment since the one-spec rule rested on the per-spec rebuild. Surprises: parallel Nitro servers sharing one Nuxt Content SQLite file corrupted each other's lazy import (database is locked, 500s), fixed by a per-spec copy of .data/content/contents.sqlite; CI's Chromium download had never been used because playwright-core now installs chrome-linux64 and chromium-path.ts scanned chrome-linux, so CI ran the runner's system Chrome; the e2e had been testing a build with test-utils' compatibilityDate 2024-04-03 rather than the production one. Twenty duplicate tests were folded with every assertion rehomed (150 to 131). The component-test suggestion was analysed, not built: a classification of all 150 tests (57 keep, 60 could be component tests, 3 unit, 20 duplicates) shows that after the parallel split it would no longer shorten wall-clock, and it adds two devDependencies plus a nuxt-environment vitest project, so it is reported for the user's decision. Local gate:scoped green; the PR's first CI run took 203 s for the composite (typical before: 270-295 s) with test:e2e at 56 s (before: 100-130 s), 9 files, 131 tests; the second run, with the Chromium cache hitting, 183 s. A main-side audit-docs sweep conflicted on tests/README.md, merged by hand; the owner then enabled auto-merge and the PR landed. Follow-up experiments (e2e file split, Chromium apt step, build caches, Floor parallelism, in-process guard specs) ran as separate Sonnet agents in worktrees after the merge, to find which remaining cuts are easy wins. Human-instructed: try all five in separate agents. Wins, now PR 1805: guard specs spawning node --import tsx instead of pnpm exec tsx plus isolate:false (unit 52 s to 28 s locally), eslint and incremental-typecheck caches, the Content parse cache, no sourcemaps, Chromium without apt deps. Rejected on measurement: the 14-file e2e split (65.6 s vs 56 s in CI, draft PR 1804 closed), disabling the sql_dump prerender (the runtime handler sets no ETag and re-splits the database per request, a live-site cost), Nuxt buildCache (served stale content), concurrent lint+typecheck (both already use ~3 cores)."
 prs:
   - "1796"
+  - "1805"
 docsRead:
   - path: CONTEXT-MAP.md
     reason: context layout; which Tenant contexts exist
@@ -91,6 +92,10 @@ docsRead:
     reason: (no reason given)
   - path: .agents/skills/resolving-merge-conflicts/SKILL.md
     reason: (no reason given)
+  - path: nuxt.config.ts
+    reason: (read before editing)
+  - path: tests/unit/typecheck-coverage.spec.ts
+    reason: (no reason given)
   - path: layers/journal/tests/e2e/journal.e2e.ts
     reason: (no reason given)
   - path: layers/blog/tests/e2e/blog.e2e.ts
@@ -114,8 +119,6 @@ docsRead:
   - path: tests/unit/fresh-output.spec.ts
     reason: (read before editing)
   - path: vitest.config.ts
-    reason: (no reason given)
-  - path: nuxt.config.ts
     reason: (read before editing)
   - path: scripts/chromium-path.ts
     reason: (no reason given)
@@ -124,6 +127,12 @@ docsRead:
   - path: scripts/guard-io.ts
     reason: (no reason given)
   - path: tests/unit/workflow-edit-guard.spec.ts
+    reason: (no reason given)
+  - path: tests/unit/bash-rules-hint.spec.ts
+    reason: (read before editing)
+  - path: tests/unit/read-first-hint.spec.ts
+    reason: (no reason given)
+  - path: tests/unit/subagent-background-guard.spec.ts
     reason: (no reason given)
   - path: docs/adr/0028-navigation-reads-server-payloads.md
     reason: (no reason given)
@@ -154,35 +163,47 @@ frictions:
   - description: The Stop hook asked three times to commit and push while agents had work in flight and the gate had not run; each nag cost a turn to decline.
     solution: The ADR-0004 rule already covers it; nothing to add.
     severity: nit
-durationSec: 25173
+  - description: Cherry-picked incremental-typecheck commit put compilerOptions before include in nuxt.config.ts; the typecheck-coverage canary parses that block with a regex expecting include first, so the first gate run on the follow-up branch went red.
+    solution: Reordered the keys. The canary could match either order, but a regex over config source is the fragile part; leave as is unless it bites again.
+    severity: minor
+  - description: Experiment timings on this 4-CPU box were noisy (load 8-18 with five agents); agents fell back to user-CPU seconds, and the e2e split needed a CI run (draft PR) to be judged.
+    solution: For wall-clock questions, run at most two agents at a time or measure in CI from the start.
+    severity: minor
+durationSec: 26695
 models:
-  claude-fable-5-1: 261
+  claude-fable-5-1: 333
 toolCounts:
-  Read: 31
-  Bash: 62
-  ToolSearch: 4
+  Read: 35
+  Bash: 81
+  ToolSearch: 5
   TaskCreate: 7
   Agent: 13
   mcp__github__issue_read: 1
-  TaskUpdate: 9
-  Edit: 4
+  TaskUpdate: 14
+  Edit: 9
   mcp__github__list_pull_requests: 1
-  mcp__github__create_pull_request: 2
-  mcp__claude-code-remote__subscribe_pr_activity: 2
+  mcp__github__create_pull_request: 3
+  mcp__claude-code-remote__subscribe_pr_activity: 3
   Skill: 1
   Write: 2
-  ReadNotifications: 7
-  mcp__github__get_job_logs: 1
+  ReadNotifications: 8
+  mcp__github__get_job_logs: 3
   mcp__claude-code-remote__send_later: 1
   mcp__github__pull_request_read: 5
+  mcp__github__add_issue_comment: 1
+  mcp__github__update_pull_request: 1
 filesEdited:
   - layers/blog/tests/e2e/blog.spec.ts
   - .github/actions/gate/action.yml
   - tests/README.md
+  - nuxt.config.ts
   - tests/support/fresh-output.ts
   - tests/unit/fresh-output.spec.ts
-  - nuxt.config.ts
   - tsconfig.node.json
+  - tests/support/run-script.ts
+  - tests/unit/stale-info-hint.spec.ts
+  - tests/unit/bash-rules-hint.spec.ts
+  - vitest.config.ts
 rulesLoaded:
   - .claude/rules/adr-0021.md
   - .claude/rules/adr-0004-human-merge.md
@@ -354,6 +375,9 @@ learnings:
   - A vitest project's globalSetup runs only when that project has specs in the run (plus the root project), so an e2e-only build hook must sit on the e2e project.
   - "CI's playwright-core install had been dead weight: Linux Chromium now lands in chromium-<rev>/chrome-linux64/, chromium-path.ts scanned chrome-linux/, and the suite silently ran the runner's system Chrome."
   - vitest 5 drops console.log output from a passing run; a line that must always show goes through process.stdout.write.
+  - "Splitting e2e spec files past the worker count costs more than it saves: each file adds ~3 s of server, DB copy and Chromium startup, and 3 workers on 4 vCPUs are bound by total work (CI: 65.6 s with 14 files vs 56 s with 9)."
+  - pnpm exec tsx costs ~1.7 s per spawn here versus ~0.45 s for node --import tsx; guard specs that spawn per case pay that 45 times per file.
+  - "Nuxt experimental.buildCache hashes only app/, layer config and the lockfile: it served stale content after a content-only edit and missed shared/ changes."
 ideas:
   - "Component tests as a third vitest project (@nuxt/test-utils/runtime with happy-dom): the per-test classification in this session's PR description says 60 of 131 e2e tests only need a mounted component plus mocked queryCollection (39 Tinkerfund server-rendered checks, 8 Journal dashboard checks, Commons search/timeline). Gains maintainability and test speed per file, not gate wall-clock now that specs run in parallel; costs two devDependencies and queryCollection mocking."
   - "Shorten the new e2e critical path (tinkerfund-flows ~37 s, smoke ~31 s locally): move each Tenant's entry-route hydrations from the Platform sweep into that Tenant's spec, and split the six Tinkerfund flows two per file; both are mechanical and coverage-neutral."
