@@ -1,0 +1,109 @@
+schemaVersion: 1
+session: session_01P1PVFxwyuuQJShzqfd55D3
+startedAt: 2026-10-12T18:28:14Z
+endedAt: 2026-10-12T18:33:06Z
+kind: interactive
+goal: Remove the "Five Minutes in the Terrarium" Journal on-ramp page
+status: in-review
+outcome: Reverted the commit that added the page; gate:scoped green, PR open
+summary: "Human-instructed: the owner asked to delete the \"Five Minutes in the Terrarium\" page because the Journal on-ramp should explain the Platform itself, not tour the demo sites. The page came from one visitor-loop commit (e14c2465) that also shifted every other on-ramp page's order by one and bumped the e2e tour assertions to \"of 6\"; a clean `git revert -n` undid all of it, so the on-ramp is back to its earlier five pages. gate:scoped passed (131 e2e tests). Opening the PR and subscribing were agent-initiated per ADR-0003."
+prs:
+  - "1851"
+docsRead:
+  - path: docs/agents/git-conventions.md
+    reason: fetch before trusting history; commit -F for messages
+    useful: partly
+  - path: docs/agents/pr-workflow.md
+    reason: verdict comment then merge-pr.ts
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: MCP tool surface for PR create
+    useful: partly
+  - path: layers/journal/content/current/pages/five-minutes.md
+    reason: (no reason given)
+  - path: layers/journal/tests/e2e/journal.spec.ts
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Ran `git log` on the page's history before reading docs/agents/git-conventions.md, breaking CLAUDE.md's 'before your first git command' rule.
+    solution: Read it first; the PostToolUse hook reminder came after the command. A PreToolUse reminder would catch it in time.
+    severity: nit
+  - description: Skipped reading CONTEXT-MAP.md and CONTEXT.md at session start, which CLAUDE.md requires; the deletion needed no glossary terms.
+    solution: None needed for a one-file revert; the rule could exempt trivial content deletions.
+    severity: nit
+durationSec: 291
+models:
+  claude-opus-5-5: 38
+toolCounts:
+  Grep: 3
+  Bash: 11
+  Read: 5
+  ToolSearch: 1
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+  Skill: 2
+  Write: 1
+rulesLoaded:
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/adr-0008.md
+  - .claude/rules/adr-0029.md
+rulesGlobal:
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0001.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0023.md
+  - .claude/rules/adr-0017.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0022.md
+    reason: About the auto-triage sweep; no triage happened in this session
+    useful: no
+  - path: .claude/rules/adr-0004.md
+    reason: Made me run gate:scoped before pushing; summary was enough, no need for the full ADR
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Told me to invoke close-session at PR open; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: About prune trials; this revert touched no trial territory
+    useful: no
+  - path: .claude/rules/adr-0001.md
+    reason: Confirmed deleting a content file is the whole change; nothing else to wire
+    useful: partly
+  - path: .claude/rules/adr-0020.md
+    reason: Requester was the Trusted owner, so the Public-tier rules did not apply
+    useful: no
+  - path: .claude/rules/adr-0003.md
+    reason: Made me open the PR and subscribe without asking; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0023.md
+    reason: About the guest pipeline; this was an owner request
+    useful: no
+  - path: .claude/rules/adr-0017.md
+    reason: Made me put the session provenance line first in the PR body; summary was enough
+    useful: yes
+  - path: .claude/rules/tenant-layers.md
+    reason: Layer gotchas; a single content deletion hit none of them
+    useful: no
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: About choosing MDC or a Collection; nothing was added
+    useful: no
+  - path: .claude/rules/adr-0008.md
+    reason: Confirmed the Journal documents the Platform, matching the owner's reason for the cut
+    useful: partly
+  - path: .claude/rules/adr-0029.md
+    reason: Rule-placement policy; I wrote no rules
+    useful: no
+gitBranch: claude/gracious-bell-gde055
+entrypoint: remote
+cliVersion: 2.1.296
+landedBy: Stop
