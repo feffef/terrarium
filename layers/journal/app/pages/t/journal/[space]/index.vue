@@ -147,7 +147,10 @@ useSeoMeta({
         </div>
         <div v-if="space === 'current'" class="snapshot">
           <span class="live">live snapshot</span><br >
-          updates as sessions are logged
+          the last week · updates as sessions are logged
+        </div>
+        <div v-else class="snapshot">
+          older logs, from before the last week
         </div>
       </div>
     </header>
@@ -447,7 +450,7 @@ h1 {
 .worst-list .txt {
   line-height: 1.45;
   display: -webkit-box;
-  -webkit-line-clamp: 4;
+  -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }

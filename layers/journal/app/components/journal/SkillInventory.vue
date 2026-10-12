@@ -48,8 +48,9 @@ defineProps<{
         </div>
       </template>
 
-      <div v-else class="chips-inline">
-        <span v-for="s in g.skills" :key="s.name" class="chip"><JournalSkillName :name="s.name" /><span v-if="uses" class="chip-uses" :title="`used in ${countOf(uses[s.name] ?? 0, 'session')}`"> · {{ uses[s.name] ?? 0 }}</span></span>
+      <p v-else-if="uses" class="chips-note">Number after a name: sessions that used it. No number: not used in this Space.</p>
+      <div v-if="g.importance === 'supporting' || g.importance === 'peripheral'" class="chips-inline">
+        <span v-for="s in g.skills" :key="s.name" class="chip"><JournalSkillName :name="s.name" /><span v-if="uses && uses[s.name]" class="chip-uses" :title="`used in ${countOf(uses[s.name] ?? 0, 'session')}`"> · {{ uses[s.name] }}</span></span>
       </div>
     </div>
   </div>
@@ -102,6 +103,7 @@ defineProps<{
 .role-details > summary::before { content: '▸ '; }
 .role-details[open] > summary::before { content: '▾ '; }
 .role-details > .role { margin-top: 0.35rem; }
+.chips-note { margin: 0 0 0.4rem; font-size: 0.75rem; color: var(--jd-faint); }
 .chips-inline { display: flex; flex-wrap: wrap; gap: 0.4rem; }
 .chip {
   font-family: var(--jd-mono);

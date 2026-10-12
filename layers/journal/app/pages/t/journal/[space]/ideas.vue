@@ -47,7 +47,12 @@ useSeoMeta({ title: () => `${PAGE_TITLE} · journal/${space}` })
         agents' own working notes, unedited.
       </p>
 
-      <h2>Ideas <span class="n">{{ notes.ideas.length }}</span></h2>
+      <p v-if="notes.ideas.length || notes.learnings.length" class="jump">
+        Jump to: <a href="#ideas-h">{{ notes.ideas.length }} ideas</a> ·
+        <a href="#learnings-h">{{ notes.learnings.length }} learnings</a>
+      </p>
+
+      <h2 id="ideas-h">Ideas <span class="n">{{ notes.ideas.length }}</span></h2>
       <ol v-if="notes.ideas.length" class="notes">
         <li v-for="(item, i) in notes.ideas" :key="i">
           <button
@@ -83,7 +88,7 @@ useSeoMeta({ title: () => `${PAGE_TITLE} · journal/${space}` })
       </ol>
       <p v-else>No ideas logged in this Space yet.</p>
 
-      <h2>Learnings <span class="n">{{ notes.learnings.length }}</span></h2>
+      <h2 id="learnings-h">Learnings <span class="n">{{ notes.learnings.length }}</span></h2>
       <ul v-if="notes.learnings.length" class="notes">
         <li v-for="(item, i) in notes.learnings" :key="i">
           <span class="bullet" aria-hidden="true">›</span>
@@ -100,6 +105,7 @@ useSeoMeta({ title: () => `${PAGE_TITLE} · journal/${space}` })
 
 <style scoped>
 .jd-prose { max-width: 80ch; }
+.jump { font-family: var(--jd-mono); font-size: 0.8rem; color: var(--jd-muted); }
 .n { color: var(--jd-faint); font-weight: 400; margin-left: 0.4rem; }
 .notes { list-style: none; padding: 0; }
 .notes li {
