@@ -89,7 +89,7 @@ export function frictionOtherCount(totals: Record<Severity, number>): number {
 }
 
 // Array.sort is stable, so blockers-first keeps the caller's newest-first order within a severity.
-// Same first line = one recurring snag; listing it N times read as a rendering bug.
+// Same first line = one recurring friction; listing it N times read as a rendering bug.
 export function worstFrictions(
   sessions: SessionDoc[],
   max = 5,
@@ -342,7 +342,7 @@ export function summaryParagraphs(text: string): string[] {
 }
 
 // ── Friction per session, by day ─────────────────────────
-// The Journal's own answer to "are the agents snagging less?". UTC days, like
+// The Journal's own answer to "are the agents hitting fewer frictions?". UTC days, like
 // the rest of the dashboard.
 export function frictionsByDay(
   sessions: SessionDoc[],
