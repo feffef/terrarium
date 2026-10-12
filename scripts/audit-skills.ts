@@ -630,12 +630,18 @@ export function findOrphanedSessions(
   return { orphaned: orphaned.sort(oldestFirst), suppressed: suppressed.sort(oldestFirst) }
 }
 
-/** True when any friction `description` carries the exact keyword. Only
- *  descriptions are passed in — `close-session` mandates the keyword there, and
- *  scanning `solution`/summary text would flag a session that merely *discusses*
- *  the regression (e.g. the PR that introduced the keyword). */
+const NEGATED_KEYWORD = new RegExp(
+  `(?:\\b(?:not|no)\\b|n't)\\s+(?:(?:a|an|the|instance|case|of)\\s+){0,4}${HUMAN_PROMPTED_CLOSURE}`,
+  'gi',
+)
+
+/** True when any friction `description` carries the keyword un-negated ("so not
+ *  KEYWORD" says the case does not qualify). Only descriptions are passed in —
+ *  `close-session` mandates the keyword there, and scanning `solution`/summary
+ *  text would flag a session that merely *discusses* the regression (e.g. the PR
+ *  that introduced the keyword). */
 export function hasHumanPromptedClosure(frictionDescriptions: string[]): boolean {
-  return frictionDescriptions.some((d) => d.includes(HUMAN_PROMPTED_CLOSURE))
+  return frictionDescriptions.some((d) => d.replace(NEGATED_KEYWORD, '').includes(HUMAN_PROMPTED_CLOSURE))
 }
 
 /** The sessions that flagged a human-prompted closure, oldest first. */
