@@ -75,9 +75,9 @@ every line that applies.
 - Impl agents never call `merge-pr.ts`, whatever pre-authorization the brief
   carries: the auto-mode classifier judges your session, not theirs. They hand
   back a committed, green branch, unpushed. You run `/code-review` on its
-  worktree (`pr-workflow.md`, "Review before the first push") and resume the
-  agent for every fix, later ones included; it pushes once the review is clean,
-  and you open and land the PR (`pr-workflow.md`).
+  worktree (`pr-workflow.md`, "Review before the first push"), resume the
+  agent for every fix, later ones included, and review again; it pushes once a
+  review is clean, and you open and land the PR (`pr-workflow.md`).
 - Impl agents do not run `close-session`/`log-session` (guard-enforced), and
   cannot spawn subagents: run `/code-review` and any nested dispatch yourself.
 - Give a size ceiling for a "simple" fix ("under ~50 lines, one new test") and
@@ -106,10 +106,12 @@ adjacent regions conflict silently (issue #603).
 
 ## 5. Verify nothing is stranded
 
-Once every reviewed branch is pushed, run **`pnpm check:worktrees`**. It reads
-git's own worktree list, so it catches a subagent that died without returning,
-and exits non-zero for any linked worktree left uncommitted or unpushed (`EXCUSALS` in the script lists the exceptions). It
-cannot prevent an abort, only make the damage visible. Done when it exits 0.
+Before you finish, push every reviewed branch, remove the worktree of any branch
+you dropped, and run **`pnpm check:worktrees`**. It reads git's own worktree
+list, so it catches a subagent that died without returning, and exits non-zero
+for any linked worktree left uncommitted or unpushed (`EXCUSALS` in the script
+lists the exceptions). It cannot prevent an abort, only make the damage
+visible. Done when it exits 0.
 
 If you `cd`'d into a subagent's worktree, `cd` back (or use absolute paths) and
 re-check `git status` at the root: a closure Stop-hook flag may belong to that

@@ -18,8 +18,9 @@ Pushing opens the PR (ADR-0003), so review first. Before a branch's first
 push, invoke the [`code-review`](../../.agents/skills/code-review/SKILL.md)
 Skill on its committed diff against `origin/main`, in the checkout that holds
 it, and fix the findings. This holds even when the Stop hook asks you to
-push. Skip it only for a diff a Skill already reviewed in a similar way before
-the push, such as with its own reviewers. A session-log commit needs none.
+push. Skip it only where a Skill's own steps already review the diff in a
+similar way before the push, as `midden-catalogue` §4 does. A session-log
+commit needs none.
 
 ## Assembling several stories into one integration PR
 
