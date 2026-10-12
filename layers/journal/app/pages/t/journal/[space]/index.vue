@@ -247,7 +247,7 @@ useSeoMeta({
           <NuxtLink class="pr-link" :to="{ name: 'journal-ideas', params: { space } }">browse →</NuxtLink>
         </template>
       </JournalStatTile>
-      <JournalStatTile label="Frictions surfaced" gloss="Snags an agent hit and wrote down" :value="totalFrictions">
+      <JournalStatTile label="Frictions surfaced" gloss="Problems an agent hit and wrote down" :value="totalFrictions">
         <template #sub>
           <JournalFrictionStrata :counts="frictionSeverityTotals" :total="totalFrictions">
             {{ frictionSeverityTotals.blocker }} blocker{{ frictionSeverityTotals.blocker === 1 ? '' : 's' }} ·
@@ -274,7 +274,7 @@ useSeoMeta({
 
     <section v-if="dailyFrictions.length > 1" class="panel trend" aria-labelledby="trend-h">
       <div class="section-head">
-        <h2 id="trend-h">Snags per session, by day</h2>
+        <h2 id="trend-h">Frictions per session, by day</h2>
         <span class="count">self-reported, UTC days</span>
       </div>
       <ol class="trend-bars" aria-label="Frictions per session, by day">
@@ -292,7 +292,7 @@ useSeoMeta({
 
     <section v-if="worst.items.length" class="panel worst" aria-labelledby="worst-h">
       <div class="section-head">
-        <h2 id="worst-h">Worst snags</h2>
+        <h2 id="worst-h">Worst frictions</h2>
         <span class="count">blockers and majors, in this window</span>
       </div>
       <p class="panel-intro">
