@@ -97,6 +97,9 @@ const sessionKindCounts = computed(() => kindCounts(sessions.value))
 const referencedPrs = computed(() => prRefs(sessions.value))
 const referencedPrParts = computed(() => prRefsParts(referencedPrs.value))
 
+const dailyFrictions = computed(() => frictionsByDay(sessions.value))
+const dailyMax = computed(() => Math.max(1, ...dailyFrictions.value.map((d) => d.perSession)))
+
 const notes = computed(() => sessionNotes(sessions.value))
 
 const platformSkills = computed(() => ownSkills(skills.value))
@@ -267,6 +270,23 @@ useSeoMeta({
           <template v-else>none yet</template>
         </template>
       </JournalStatTile>
+    </section>
+
+    <section v-if="dailyFrictions.length > 1" class="panel trend" aria-labelledby="trend-h">
+      <div class="section-head">
+        <h2 id="trend-h">Snags per session, by day</h2>
+        <span class="count">fewer is better</span>
+      </div>
+      <ol class="trend-bars">
+        <li v-for="d in dailyFrictions" :key="d.date" :title="`${d.date}: ${d.frictions} frictions in ${countOf(d.sessions, 'session')}`">
+          <span class="trend-val">{{ d.perSession }}</span>
+          <span class="trend-bar"><span :style="{ height: `${Math.max(4, (d.perSession / dailyMax) * 100)}%` }" /></span>
+          <span class="trend-day">{{ d.date.slice(5) }}</span>
+        </li>
+      </ol>
+      <p class="panel-intro">
+        Frictions an agent logged, divided by the sessions that day. Hover a bar for the raw counts.
+      </p>
     </section>
 
     <section v-if="worst.items.length" class="panel worst" aria-labelledby="worst-h">
@@ -444,6 +464,17 @@ h1 {
 
 .tiles-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 
+.trend { margin-bottom: 1.25rem; }
+.trend-bars { list-style: none; margin: 0 0 0.7rem; padding: 0; display: flex; gap: 0.4rem; align-items: stretch; }
+.trend-bars li { flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: center; gap: 0.2rem; font-family: var(--jd-mono); font-size: 0.68rem; color: var(--jd-faint); }
+.trend-bar { display: flex; align-items: flex-end; width: 100%; height: 4.5rem; }
+.trend-bar > span { display: block; width: 100%; background: var(--jd-accent); border-radius: 3px 3px 0 0; }
+.trend-val { color: var(--jd-ink); }
+@media (max-width: 560px) {
+  .trend-bars { gap: 0.2rem; }
+  .trend-bars li:nth-child(even) :is(.trend-day, .trend-val) { visibility: hidden; }
+  .trend-day, .trend-val { white-space: nowrap; }
+}
 .worst { margin-bottom: 2.25rem; }
 .worst-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.7rem; }
 .worst-list li { display: grid; grid-template-columns: max-content 1fr max-content; gap: 0.2rem 0.75rem; align-items: baseline; }

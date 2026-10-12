@@ -340,3 +340,24 @@ export function summaryParagraphs(text: string): string[] {
   }
   return out
 }
+
+// ── Friction per session, by day ─────────────────────────
+// One point per UTC day that has sessions, oldest first, keeping the newest
+// `max` days: the Journal's own answer to "are the agents snagging less?".
+export function frictionsByDay(
+  sessions: SessionDoc[],
+  max = 14,
+): { date: string; sessions: number; frictions: number; perSession: number }[] {
+  const days = new Map<string, { sessions: number; frictions: number }>()
+  for (const s of sessions) {
+    const date = s.endedAt.slice(0, 10)
+    const d = days.get(date) ?? { sessions: 0, frictions: 0 }
+    d.sessions++
+    d.frictions += s.frictions.length
+    days.set(date, d)
+  }
+  return [...days.entries()]
+    .sort(([a], [b]) => a.localeCompare(b))
+    .slice(-max)
+    .map(([date, d]) => ({ date, ...d, perSession: Math.round((d.frictions / d.sessions) * 10) / 10 }))
+}

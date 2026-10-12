@@ -16,6 +16,7 @@ import {
   digestList,
   digestNeighbours,
   worstFrictions,
+  frictionsByDay,
   summaryParagraphs,
   countOf,
   ideaGrillPrompt,
@@ -520,5 +521,23 @@ describe('summaryParagraphs', () => {
     expect(parts[0]).toBe('First block.')
     expect(parts.length).toBeGreaterThan(2)
     expect(parts.slice(1).join(' ')).toBe(long)
+  })
+})
+
+describe('frictionsByDay', () => {
+  it('groups by UTC day, oldest first, and averages per session', () => {
+    const days = frictionsByDay([
+      session({ session: 'a', endedAt: '2026-07-06T10:00:00Z', frictions: [friction('nit'), friction('minor'), friction('major')] }),
+      session({ session: 'b', endedAt: '2026-07-06T11:00:00Z', frictions: [] }),
+      session({ session: 'c', endedAt: '2026-07-05T10:00:00Z', frictions: [friction('nit')] }),
+    ])
+    expect(days).toEqual([
+      { date: '2026-07-05', sessions: 1, frictions: 1, perSession: 1 },
+      { date: '2026-07-06', sessions: 2, frictions: 3, perSession: 1.5 },
+    ])
+  })
+  it('keeps only the newest days', () => {
+    const many = [1, 2, 3].map((d) => session({ session: `s${d}`, endedAt: `2026-07-0${d}T10:00:00Z` }))
+    expect(frictionsByDay(many, 2).map((d) => d.date)).toEqual(['2026-07-02', '2026-07-03'])
   })
 })
