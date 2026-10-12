@@ -3,7 +3,7 @@ cause: >-
   CLAUDE.md's read-first triggers are prose; the hint (#1793) now covers git and GitHub docs, but CONTEXT.md, full-ADR reads and the dispatch-subagents trigger are unhooked.
 surface: guard-or-hook
 status: open
-ref: "issue #1754 (closed by PR #1793: read-first hint covers git and GitHub docs only)"
+ref: "issue #1754 (closed by PR #1793, merged 2026-10-11T23:46Z: the read-first hint is PostToolUse, so it cannot stop the first git or GitHub call; CONTEXT.md at session start is unhooked)"
 occurrences:
   - session: session_01NyDGTR1fuP22hPo7XghCfz
     date: "2026-10-07"
@@ -96,5 +96,20 @@ occurrences:
     date: "2026-10-11"
     severity: nit
   - session: session_01QfaLuSd5cnBQPu8CCRrvkn
+    date: "2026-10-12"
+    severity: nit
+  - session: session_014uXxmT6359K4Z42a6We6Gh
+    date: "2026-10-12"
+    severity: minor
+  - session: session_01Xw7ZN8ghC7PDemvu9cA9Lo
+    date: "2026-10-12"
+    severity: nit
+  - session: session_016iE4LmQUcg6ap5YMxJg4oC
+    date: "2026-10-12"
+    severity: nit
+  - session: session_01VGLAakRJNm67PuNHpgbEc7
+    date: "2026-10-12"
+    severity: moderate
+  - session: session_0147GPfMLJfFV6JbmC4HZGHb
     date: "2026-10-12"
     severity: nit

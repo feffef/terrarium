@@ -3,6 +3,7 @@ cause: >-
   Diagrams, illustrations and layouts ship after the agent's own screenshot check; the human first sees the result after it is published and judges it poor.
 surface: safe
 status: open
+ref: "PR #XXXX (frictions-to-fixes doc PR adds the rule)"
 occurrences:
   - session: session_01QT1rB2ACjMQzt5xGT1ikLW
     date: "2026-09-29"

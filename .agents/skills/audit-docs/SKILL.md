@@ -56,9 +56,10 @@ Classify every surface **before** editing.
 
 Run four read-only reviewer agents in parallel, two lenses each (Agent C may split into several). Each is a leaf:
 tell it to do the review itself and return findings directly, with no
-sub-agents and no waiting on other agents. Every finding is `file:line` plus
-the quoted text. A finding outside an agent's own lenses is still reported,
-named by lens, and joins the pool like any other.
+sub-agents and no waiting on other agents. Every finding is the file plus
+the exact sentence, quoted whole; no line ranges, which reviewers get wrong. A
+finding outside an agent's own lenses is still reported, named by lens, and
+joins the pool like any other.
 
 **Agent A — Freshness.** Both lenses start from `git log --since="48 hours ago" origin/main`
 (fetch first, `docs/agents/git-conventions.md`) and its diff.
@@ -180,12 +181,12 @@ surface in a tier or on the Skip list. Done when every surface has one.
 
 ## 3. Review across the eight lenses
 
-Run the reviewer agents and pool their findings. Each reviewer returns its findings as text in its final reply: `file:line`, quote, and replacement text, with exact body-only start and end lines (no heading or blank lines; whole lines). Save each reply verbatim to its own numbered scratchpad file; copy, never retype. Done when every one has
+Run the reviewer agents and pool their findings. Each reviewer returns its findings as text in its final reply: the file, the exact sentence quoted whole (no line range), and replacement text. Save each reply verbatim to its own numbered scratchpad file; copy, never retype. Done when every one has
 reported and every file in the concision family was read in full.
 
 ## 4. Dedupe the pool
 
-Merge findings whose `file:line` ranges or quotes overlap, even across agents,
+Merge findings whose quotes overlap, even across agents,
 so two fixes don't fight over one span. Where two agents reach opposite
 verdicts on the same span, read the primary source and keep one. Done when no
 two findings cover the same text.
