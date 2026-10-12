@@ -244,7 +244,8 @@ export function contentMatchesRemoteCommit(path: string): boolean {
     const index = join(dir, 'index')
     const realIndex = resolve(path, git(['rev-parse', '--git-path', 'index'], path))
     // Keep the real index's mtime: a fresher copy hides git's racy-timestamp
-    // check, so a same-size rewrite within one clock tick reads as unchanged.
+    // check, so a same-size rewrite within one clock tick reads as unchanged
+    // (issue #1818).
     if (existsSync(realIndex)) {
       copyFileSync(realIndex, index)
       const { atime, mtime } = statSync(realIndex)
