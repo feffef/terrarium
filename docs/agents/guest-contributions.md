@@ -91,5 +91,4 @@ concrete change. For example:
 - **ADR-0023** — guest-driven demo pipeline; the `guest-intake` / `guest-build`
   Skills.
 - **ADR-0017** — provenance header/trailer on agent-authored content.
-- `docs/agents/issue-tracker.md` — how external PRs enter the triage queue
-  (the `gh pr list` filter; ADR-0020 lists the `authorAssociation` values).
+- `docs/agents/issue-tracker.md` — how external PRs enter the triage queue.

@@ -123,10 +123,9 @@ reaches for on its own.
 1. **Resolve the set.** List every open issue via `pnpm exec tsx scripts/list-open-issues.ts`
    (overflow-safe — see `docs/agents/github-integration.md` — not raw
    `list_issues`/`search_issues`) plus in-scope external PRs (`issue-tracker.md`'s
-   "List external PRs"); for each, check its
-   most recent comment (or body, if none) against the human-authorship rule above
-   — skip that check entirely in full-sweep mode; keep the eligible set; apply
-   the wayfinder skips.
+   "List external PRs"); for each, check its most recent comment (or body, if
+   none) against the human-authorship rule above — skip that check entirely in
+   full-sweep mode; keep the eligible set; apply the wayfinder skips.
 2. **One subagent per issue** (parallel — the eligible set is usually small,
    since a ticket only surfaces when a human has said something since the last
    AI action on it). Brief each with `/triage`'s per-issue rules plus
