@@ -6,7 +6,6 @@
 // here directly; the CLI's stdin→deny-JSON and `--dry-run` paths are exercised
 // end to end against the real script so the blocked call is proven, not merely
 // asserted in the abstract.
-import { execFileSync } from 'node:child_process'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
@@ -17,6 +16,7 @@ import {
   formatGuardMessage,
   LOOP_ONLY_TOOLS,
 } from '../../scripts/loop-only-tool-guard.ts'
+import { runTsx } from '../support/run-script.ts'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '../..')
 const SCRIPT = join(root, 'scripts', 'loop-only-tool-guard.ts')
@@ -148,11 +148,7 @@ describe('denyOutputFor() — the PreToolUse control object', () => {
 
 describe('the CLI as the PreToolUse hook would invoke it (stdin JSON → stdout deny)', () => {
   function runHook(payload: unknown): { hookSpecificOutput: Record<string, string> } | null {
-    const out = execFileSync('pnpm', ['exec', 'tsx', SCRIPT], {
-      cwd: root,
-      input: JSON.stringify(payload),
-      encoding: 'utf8',
-    }).trim()
+    const out = runTsx(SCRIPT, { input: JSON.stringify(payload) }).trim()
     return out ? JSON.parse(out) : null
   }
 
@@ -167,14 +163,14 @@ describe('the CLI as the PreToolUse hook would invoke it (stdin JSON → stdout 
   })
 
   it('END TO END: stays silent on empty stdin (a bare manual run is not a tool call to police)', () => {
-    const out = execFileSync('pnpm', ['exec', 'tsx', SCRIPT], { cwd: root, input: '', encoding: 'utf8' }).trim()
+    const out = runTsx(SCRIPT, { input: '' }).trim()
     expect(out).toBe('')
   })
 })
 
 describe('the --dry-run path (ADR-0004: an unattended hook needs a way to be exercised by hand)', () => {
   function dryRun(args: string[]): { mode: string; decision: string; reason?: string } {
-    return JSON.parse(execFileSync('pnpm', ['exec', 'tsx', SCRIPT, '--dry-run', ...args], { cwd: root, encoding: 'utf8' }))
+    return JSON.parse(runTsx(SCRIPT, { args: ['--dry-run', ...args] }))
   }
 
   it('reports the deny decision and the mode it read, running nothing', () => {

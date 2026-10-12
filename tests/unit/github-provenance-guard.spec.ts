@@ -13,7 +13,6 @@
 // The pure core is pinned directly; the CLI's stdin→deny-JSON path is exercised
 // end to end against the real script with a real transcript file, so the
 // regression cases are proven blocked rather than asserted in the abstract.
-import { execFileSync } from 'node:child_process'
 import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { dirname, join, resolve } from 'node:path'
@@ -27,6 +26,7 @@ import {
   formatGuardMessage,
   GITHUB_PROVENANCE_TOOLS,
 } from '../../scripts/github-provenance-guard.ts'
+import { runTsx } from '../support/run-script.ts'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '../..')
 const SCRIPT = join(root, 'scripts', 'github-provenance-guard.ts')
@@ -334,12 +334,7 @@ describe('the CLI as the PreToolUse hook would invoke it (stdin JSON → stdout 
    *  Without clearing it these tests would silently resolve ground truth from
    *  the real outer session instead of their fixture. */
   function runHook(payload: unknown, remoteSessionId = ''): { hookSpecificOutput: Record<string, string> } | null {
-    const out = execFileSync('pnpm', ['exec', 'tsx', SCRIPT], {
-      cwd: root,
-      input: JSON.stringify(payload),
-      encoding: 'utf8',
-      env: { ...process.env, CLAUDE_CODE_REMOTE_SESSION_ID: remoteSessionId },
-    }).trim()
+    const out = runTsx(SCRIPT, { input: JSON.stringify(payload), env: { ...process.env, CLAUDE_CODE_REMOTE_SESSION_ID: remoteSessionId } }).trim()
     return out ? JSON.parse(out) : null
   }
 
@@ -419,12 +414,12 @@ describe('the CLI as the PreToolUse hook would invoke it (stdin JSON → stdout 
   })
 
   it('END TO END: denies an unparseable hook payload instead of waving it through', () => {
-    const out = execFileSync('pnpm', ['exec', 'tsx', SCRIPT], { cwd: root, input: '{not json', encoding: 'utf8' }).trim()
+    const out = runTsx(SCRIPT, { input: '{not json' }).trim()
     expect(JSON.parse(out).hookSpecificOutput.permissionDecision).toBe('deny')
   })
 
   it('END TO END: a bare manual run with no stdin is not a tool call, and stays silent', () => {
-    const out = execFileSync('pnpm', ['exec', 'tsx', SCRIPT], { cwd: root, input: '', encoding: 'utf8' }).trim()
+    const out = runTsx(SCRIPT, { input: '' }).trim()
     expect(out).toBe('')
   })
 })

@@ -5,6 +5,7 @@ import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
 import { staleInfoHint } from '../../scripts/stale-info-hint.ts'
+import { envWithTsxShim } from '../support/run-script.ts'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '../..')
 const PUSH = 'git push --force-with-lease origin claude/x'
@@ -51,7 +52,7 @@ describe('staleInfoHint() — the pure core', () => {
 
 describe('the hook entry (sh pre-filter → tsx)', () => {
   const run = (stdin: string) =>
-    spawnSync('sh', ['scripts/stale-info-hint.sh'], { cwd: root, input: stdin, encoding: 'utf8' })
+    spawnSync('sh', ['scripts/stale-info-hint.sh'], { cwd: root, input: stdin, encoding: 'utf8', env: envWithTsxShim() })
 
   it('emits additionalContext under the event that fired', () => {
     for (const event of ['PostToolUse', 'PostToolUseFailure']) {
