@@ -33,7 +33,8 @@ every line that applies.
   between calls, so a one-time "cd into your worktree" does not carry over. One
   git command per Bash call; a heredoc goes in a script file
   (`docs/agents/environment-caveats.md` has the guard's triggers).
-- Say `pnpm install` may be needed first in a fresh worktree.
+- Have the agent run `pnpm install` in its worktree first: a fresh worktree has
+  no `node_modules`, so the gate and every `pnpm exec tsx` fail without it.
 - Pin the SHA to work from. The agent fetches, checks that HEAD matches it
   (or `origin/<default-branch>` if none is pinned), and re-branches if not:
   worktrees sometimes start stale (issue #1420). Subagents sharing one checkout
@@ -65,7 +66,8 @@ every line that applies.
 - Launch at most (20 − running) agents at a time; a bigger batch is rejected.
   Every Agent call runs async, so wait for its notification.
 - At most 2 full gates at once in one container (`test:e2e` dies of memory
-  otherwise); rerun a dead one alone before diagnosing.
+  otherwise). `pnpm gate:scoped` waits for a slot (`HEAVY_SLOTS`); plain
+  `pnpm gate` does not. Rerun an exit-137 run alone before diagnosing.
 - A screenshot agent shoots as soon as `pnpm build` succeeds, not after the gate
   (issue #683).
 

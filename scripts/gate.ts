@@ -7,7 +7,8 @@
 //     — decision only, for CI to guard its own heavy steps on (#445; the CI
 //       half now lives in .github/actions/gate/action.yml — ADR-0026)
 import { execFileSync, spawnSync } from 'node:child_process'
-import { appendFileSync, statSync } from 'node:fs'
+import { appendFileSync, linkSync, mkdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs'
+import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { root } from '../shared/expand.ts'
@@ -183,6 +184,72 @@ export function ensureFreshDeps(projectRoot = root): void {
   if (typeof r.status === 'number' && r.status !== 0) process.exit(r.status)
 }
 
+// ── Heavy slots (#1800) ─────────────────────────────────────────────────────
+// More than this many concurrent Heavy tiers in one container make `test:e2e`
+// die of memory (exit 137). The slot dir is under the OS temp dir, not `root`,
+// because each worktree has its own root but all share the container's memory.
+export const HEAVY_SLOTS = 2
+const SLOT_DIR = join(tmpdir(), 'terrarium-gate-heavy-slots')
+
+function isAlive(pid: number): boolean {
+  // NaN is a slot file that isn't a PID; kill(0|-1, 0) would probe a whole process group.
+  if (!Number.isInteger(pid) || pid <= 0) return false
+  try {
+    process.kill(pid, 0)
+    return true
+  } catch (e) {
+    return (e as NodeJS.ErrnoException).code === 'EPERM'
+  }
+}
+
+function readHolder(path: string): number | null {
+  try {
+    return Number.parseInt(readFileSync(path, 'utf8'), 10)
+  } catch {
+    return null
+  }
+}
+
+function tryTake(path: string, stale: boolean): boolean {
+  // Two waiters reclaiming the same stale slot can at worst both run: a third
+  // concurrent Heavy tier, i.e. the behaviour before #1800.
+  if (stale) rmSync(path, { force: true })
+  // Link a finished file into place so a reader never sees an empty slot file.
+  const tmp = `${path}.${process.pid}`
+  writeFileSync(tmp, String(process.pid))
+  try {
+    linkSync(tmp, path)
+    return true
+  } catch {
+    return false
+  } finally {
+    rmSync(tmp, { force: true })
+  }
+}
+
+export function acquireHeavySlot(dir = SLOT_DIR, slots = HEAVY_SLOTS, pollMs = 2000): void {
+  mkdirSync(dir, { recursive: true })
+  const paths = Array.from({ length: slots }, (_, i) => join(dir, `slot-${i}`))
+  const sleeper = new Int32Array(new SharedArrayBuffer(4))
+  let announced = false
+  for (;;) {
+    const holders = paths.map(readHolder)
+    // A dead holder (OOM-killed, SIGKILLed) never released, so its slot counts as free.
+    const i = holders.findIndex((pid) => pid === null || !isAlive(pid))
+    if (i !== -1 && tryTake(paths[i]!, holders[i] !== null)) {
+      process.on('exit', () => {
+        if (readHolder(paths[i]!) === process.pid) rmSync(paths[i]!, { force: true })
+      })
+      return
+    }
+    if (i === -1 && !announced) {
+      console.log(`gate:scoped: waiting for a Heavy slot (${slots} max per container), held by PIDs ${holders.join(', ')}`)
+      announced = true
+    }
+    Atomics.wait(sleeper, 0, 0, pollMs)
+  }
+}
+
 // ── CLI ───────────────────────────────────────────────────────────────────────
 
 const RESET_HINT_STEPS = ['typecheck', 'build']
@@ -227,7 +294,11 @@ function main(): void {
   console.log(`gate:scoped: ${scope.reason}`)
   console.log(`gate:scoped: ${dry ? 'would run' : 'running'} ${steps.join(' → ')}`)
   if (dry) return
-  for (const step of steps) run(step)
+  for (const step of steps) {
+    // planSteps puts all of HEAVY or none of it at the end; the slot is freed on exit.
+    if (step === HEAVY[0]) acquireHeavySlot()
+    run(step)
+  }
   console.log('gate:scoped: ✓ all planned steps passed')
 }
 
