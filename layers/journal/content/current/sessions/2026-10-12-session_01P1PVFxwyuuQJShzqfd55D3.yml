@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01P1PVFxwyuuQJShzqfd55D3
 startedAt: 2026-10-12T18:28:14Z
-endedAt: 2026-10-12T18:33:06Z
+endedAt: 2026-10-12T18:36:06Z
 kind: interactive
 goal: Remove the "Five Minutes in the Terrarium" Journal on-ramp page
-status: in-review
-outcome: Reverted the commit that added the page; gate:scoped green, PR open
-summary: "Human-instructed: the owner asked to delete the \"Five Minutes in the Terrarium\" page because the Journal on-ramp should explain the Platform itself, not tour the demo sites. The page came from one visitor-loop commit (e14c2465) that also shifted every other on-ramp page's order by one and bumped the e2e tour assertions to \"of 6\"; a clean `git revert -n` undid all of it, so the on-ramp is back to its earlier five pages. gate:scoped passed (131 e2e tests). Opening the PR and subscribing were agent-initiated per ADR-0003."
+status: completed
+outcome: Reverted the commit that added the page; merged as PR 1851 on a green gate
+summary: "Human-instructed: the owner asked to delete the \"Five Minutes in the Terrarium\" page because the Journal on-ramp should explain the Platform itself, not tour the demo sites. The page came from one visitor-loop commit (e14c2465) that also shifted every other on-ramp page's order by one and bumped the e2e tour assertions to \"of 6\"; a clean `git revert -n` undid all of it, so the on-ramp is back to its earlier five pages. gate:scoped passed (131 e2e tests) and CI went green; merged via merge-pr.ts. Opening the PR and subscribing were agent-initiated per ADR-0003."
 prs:
   - "1851"
 docsRead:
@@ -35,12 +35,12 @@ frictions:
   - description: Skipped reading CONTEXT-MAP.md and CONTEXT.md at session start, which CLAUDE.md requires; the deletion needed no glossary terms.
     solution: None needed for a one-file revert; the rule could exempt trivial content deletions.
     severity: nit
-durationSec: 291
+durationSec: 471
 models:
-  claude-opus-5-5: 38
+  claude-opus-5-5: 54
 toolCounts:
   Grep: 3
-  Bash: 11
+  Bash: 14
   Read: 5
   ToolSearch: 1
   mcp__github__list_pull_requests: 1
@@ -48,6 +48,12 @@ toolCounts:
   mcp__claude-code-remote__subscribe_pr_activity: 1
   Skill: 2
   Write: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 1
+  mcp__claude-code-remote__send_later: 1
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__delete_trigger: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 rulesLoaded:
   - .claude/rules/tenant-layers.md
   - .claude/rules/mdc-when-to-use.md
