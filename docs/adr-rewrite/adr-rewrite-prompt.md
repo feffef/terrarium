@@ -13,13 +13,15 @@ moot. List anything you are unsure about as an open question.
 **Write only to the scratchpad; change nothing in the repo.** Other agents are
 rewriting other ADRs at the same time. Run only read-only git commands (`log`,
 `show`, `blame`, `grep`). Write the rewrite to
-`/tmp/claude-0/-home-user-terrarium/468fb6ef-963a-5a51-b883-82308adbcdbb/scratchpad/rewrites-v4/{NNNN}.md`
-and your report to `…/rewrites-v4/{NNNN}-report.md`.
+`/tmp/claude-0/-home-user-terrarium/468fb6ef-963a-5a51-b883-82308adbcdbb/scratchpad/rewrites-v5/{NNNN}.md`
+and your report to `…/rewrites-v5/{NNNN}-report.md`.
 
 ## 1. Read
 
 Read each in full with the Read tool:
 
+- `docs/adr-rewrite/decisions.md`: the owner's answers so far. They override
+  the sources.
 - `docs/adr/0030-how-we-write-adrs.md`: the format. Its
   *Scope and limits* is your spec.
 - The target ADR, and its summary rule `.claude/rules/adr-{NNNN}.md`.
@@ -128,15 +130,16 @@ contributor who knows nothing of this project.
   words.
 - Short sentences: one idea each, rarely over 20 words, no clause tucked into
   the middle.
-
-**Short beats complete.** Keep what an agent needs to act or to judge an edge
-case; cut the rest, even true details. A detail that lives in code, a Skill or
-a doc goes away, with a pointer in *See* at most. Most ADRs should fit in
-40–70 lines; say in your report why yours needs more.
 - Cross-references go at the end of a sentence or in *See*, never in
   parentheses mid-sentence.
 - Bold only the lead-in of a *Scope and limits* bullet. Point to other ADRs by
   number; restate nothing they own.
+
+**Short beats complete.** Keep what an agent needs to act or to judge an edge
+case; cut the rest, even true details. Say what a mechanism guarantees, not how
+it works: which checks run, which files or paths, which steps or examples
+belong in its code or doc, with a pointer in *See* at most. Most ADRs should
+fit in 40–70 lines; say in your report why yours needs more.
 
 Done when the rewrite satisfies every bullet in ADR-0030's *Scope and limits*,
 a sentence-by-sentence pass under `writing-for-agents` finds nothing to cut, and

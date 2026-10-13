@@ -7,6 +7,7 @@ before the work lands; nothing here is an instruction for agents.
 |---|---|
 | `adr-rewrite-prompt.md` | The prompt given to each rewrite agent (current version). |
 | `expectations-prompt.md` | The prompt for the blind "what do callers expect" agents. |
+| `decisions.md` | The owner's answers so far; the rewrites follow them. |
 | `background/adr-survey.md` | Survey of all 29 ADRs, plus restructuring options. Written before ADR-0030. |
 | `background/session-log-usage.md` | How sessions used rule summaries and full ADRs, from session logs. |
 | `rewrites/NNNN.md` | Test rewrites of 10 ADRs in ADR-0030's format (decision unchanged, no splits or merges). |
