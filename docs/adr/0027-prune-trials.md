@@ -51,14 +51,12 @@ made.
 Three consequences of that principle are settled here because they bear on
 governance:
 
-- **Scope is the whole rulebook, ADRs included.** A trial may prune any
-  instruction the Platform gives its agents, or rewrite a whole Skill, doc or
-  ADR in simpler, precise words. This is a narrow amendment to ADR-0004: ADR
-  prose loses its Human-only merge status *for prune trials*, which are
-  reversible by construction. An ADR rewrite follows ADR-0030 and never
-  changes what the ADR decided. Everything else in ADR-0004's
-  high-risk set is untouched, and the external pack Skills (ADR-0015) remain
-  unreachable because the Gate rejects the edit.
+- **Scope is the rulebook, ADRs excepted.** A trial may prune any
+  instruction the Platform gives its agents, or rewrite a whole Skill or doc
+  in simpler, precise words. ADRs and their summary rules are out of scope: a
+  human-led rewrite changes them (ADR-0030), and they stay Human-only to merge
+  (ADR-0004). The external pack Skills (ADR-0015) remain unreachable because
+  the Gate rejects the edit.
 - **Merge authority: green Gate alone.** The exemption's exact scope is a row in
   ADR-0003's auto-merge exemption ledger, which single-homes it; how the PR
   actually lands is `docs/agents/pr-workflow.md`. A trial that proves a hook is

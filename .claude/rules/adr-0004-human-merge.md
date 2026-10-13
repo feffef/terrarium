@@ -1,5 +1,5 @@
 ---
-adr: acc799bc3566
+adr: f9c195bb50ac
 paths:
   - "content.config.ts"
   - "nuxt.config.ts"
@@ -34,5 +34,4 @@ paths:
 You just touched a Human-only file: this rule's `paths` are the list. If your
 PR changes one of them, a human merges it. Open the PR as usual and say in its
 description that it waits for a human merge; `scripts/merge-pr.ts` refuses to
-merge it. A Prune Trial may still merge its ADR rewrite with
-`merge-pr.ts --prune-trial` (ADR-0027).
+merge it.

@@ -71,11 +71,8 @@ description.
 
 ## Per-tier merge authority
 
-- `digest` / `audit-docs` / `audit-skills` / `blog-post` / `visitor-loop` —
-  merge on a green gate alone (ADR-0003/0004).
-- `prune-trial` — merge on a green gate alone, and uniquely may rewrite ADRs,
-  keeping what they decided, as part of a trial (ADR-0027's narrow amendment to ADR-0004):
-  run `merge-pr.ts --prune-trial`, with the trial's ledger entry in the PR.
+- `digest` / `audit-docs` / `audit-skills` / `blog-post` / `visitor-loop` /
+  `prune-trial` — merge on a green gate alone (ADR-0003/0004).
 - `reviewer-agent` (`frictions-to-fixes`) — green gate plus the reviewing
   session's own risk judgement; escalate a genuinely high-risk PR to a human
   even when the gate is green (ADR-0003).

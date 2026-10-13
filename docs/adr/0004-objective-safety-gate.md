@@ -1,9 +1,8 @@
 # 4. Objective safety gate for agent PRs
 
 Date: 2026-07-04
-Status: Accepted — high-risk set extended by ADR-0026; ADR prose exempted for
-Prune Trials by ADR-0027; Skill-file scope widened to `.claude/workflows/` by
-ADR-0005
+Status: Accepted — high-risk set extended by ADR-0026; Skill-file scope widened
+to `.claude/workflows/` by ADR-0005
 
 > **Amended by [ADR-0005](0005-skill-model.md) (2026-10-13, issue #1870).** A
 > `.claude/workflows/` script counts as one of its Skill's files in the
@@ -46,17 +45,9 @@ ADR-0005
 >   covers, or adds logic deciding which Tenant's data a request can reach;
 >   and a Public, fork or guest-pipeline PR (ADR-0020, ADR-0023). The
 >   always-loaded ADR-0004 rule states these.
-> - **Prune Trials** still merge their ADR rewrites (ADR-0027), through
->   `merge-pr.ts --prune-trial`, which needs the trial's ledger entry in the PR.
 >
 > This supersedes the 2026-07-19 amendment's "an ordinary work PR is always
 > human-merged".
-
-> **Amended by [ADR-0027](0027-prune-trials.md) (2026-08-23).** ADR **prose**
-> leaves the never-auto-merged set for one caller only: a `prune-trial` Prune
-> Trial, whose every edit is reversible by construction and judged by the
-> sessions that follow it. The rest of the high-risk set below is untouched, and
-> no other Skill gains ADR reach.
 
 > **Amended by [ADR-0026](0026-gate-workflow-thin-shell.md) (2026-08-06).**
 > `.github/actions/gate/action.yml` — the composite action that holds the

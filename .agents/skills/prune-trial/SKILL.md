@@ -105,7 +105,7 @@ and never delete the worked examples a weaker reader needs.
 
 **You may also simplify the language of any Markdown file in scope** (see
 Bounds), alongside a prune or instead of one. Do this when no problem clears
-the bar. Rewrite the whole file if that helps: a Skill, a doc or an ADR. Use
+the bar. Rewrite the whole file if that helps: a Skill or a doc. Use
 short sentences. Avoid project jargon. Prefer plain English. Keep every rule and
 decision; cut the rest. Be brave: restructure the file, merge its sections,
 reword all of it. The file is the trial's territory. It gets the same ledger
@@ -149,15 +149,14 @@ escalate that.
 ## Bounds
 
 Everything the Platform tells its agents is in scope: CLAUDE.md, CONTEXT.md,
-`docs/`, our own Skills including the scheduled ones, and the ADRs; ADR-0004's
-Human-only merge rule otherwise stands. You may
-rewrite an ADR whole (ADR-0030), as long as **what it decided does not
-change**. Skip
-`docs/proposals/<N>-*.md` and `.out-of-scope/*.md` — written for a human to
-apply once, not for agents to read.
+`docs/` and our own Skills including the scheduled ones; ADR-0004's Human-only
+merge rule stands. Skip `docs/proposals/<N>-*.md` and `.out-of-scope/*.md` —
+written for a human to apply once, not for agents to read.
 
-Two exceptions and one refusal:
+Three exceptions and one refusal:
 
+- **ADRs** (`docs/adr/`) and their summary rules — a human-led rewrite
+  changes them (ADR-0030), never a trial.
 - **External pack Skills** (`skills-lock.json`) — the Gate rejects the edit.
 - **Session logs** — the record, not instructions.
 - **Retiring a Skill or a Routine, including your own** — file a `needs-triage`

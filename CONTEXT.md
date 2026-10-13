@@ -295,8 +295,7 @@ changeset that is entirely Inert may skip Heavy.
 ### Human-only
 A surface that a **Trusted** human must **merge** — never auto-merged by any
 chartered Skill, whatever the **Gate** says (the list is the `paths` of
-`.claude/rules/adr-0004-human-merge.md`; ADR-0004), except a **Prune Trial**'s
-rewrite of an ADR that keeps what it decided (ADR-0027). It constrains merging
+`.claude/rules/adr-0004-human-merge.md`; ADR-0004). It constrains merging
 only: agents author changes to Human-only surfaces routinely, and review is the
 control.
 

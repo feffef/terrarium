@@ -21,7 +21,7 @@ but answer different questions, and neither restates the other.
 | `audit-docs` | fact-checked reconciliations to *live* docs and Skills only (its own Live/Historical/Pack-generic tiering); an ADR amendment, CI, isolation, or routing/manifest-expansion edit is out of scope | 2026-07-09 | #262 |
 | `audit-skills` | Inventory-only content citing an existing evidence rule (ADR-0015) | 2026-07-09 | — |
 | `blog-post` | the post itself under `layers/blog/content/<persona>/pages/`, plus for a reaction one pingback stub under `…/pingbacks/` | 2026-07-12 | — |
-| `prune-trial` | prunes and whole-file rewrites of agent-instruction prose anywhere in the rulebook, **including ADRs** (ADR-0027's narrow amendment to ADR-0004), as long as an ADR rewrite keeps what it decided — each shipped as a reversible trial; writing a hook is not — a trial files an issue proposing one (#1526) | 2026-08-23 | #1021 |
+| `prune-trial` | prunes and whole-file rewrites of agent-instruction prose anywhere in the rulebook except ADRs and their summary rules (ADR-0027), each shipped as a reversible trial; writing a hook is not — a trial files an issue proposing one (#1526) | 2026-08-23 | #1021 |
 | `visitor-loop` | per run, one PR fixing the first-time-visitor findings at least two of its three visitors raised, and one PR building **one** feature picked from its visitors' ideas — both confined to existing Tenant layers (`layers/<tenant>/`: content, components, pages, styles, that Tenant's tests; a manifest edit only to add a field to an existing Collection) and non-human-only files under `app/`, plus the Skill's own `decisions.md`. Out of scope: a new Tenant, Space or Collection, a new dependency, any human-only file, agent instructions, and editing authored history (published posts, session logs, digests, Midden artifacts) | 2026-09-24 | — |
 | `dependabot` (bot, not a Skill) | Dependabot npm minor/patch PRs whose commits are all Dependabot's and touch only `package.json`/`pnpm-lock.yaml`, merged on a green `safety-gate` with no agent involved (mechanism: `docs/agents/pr-workflow.md`, Per-tier merge authority). Dependabot is repo-configured (`.github/dependabot.yml`), not a Public requester (ADR-0020). Majors and `github-actions` bumps stay human-merged | 2026-10-06 | — |
 
@@ -75,9 +75,7 @@ for a human either way (ADR-0004).
 > the Trusted-authored backlog. Merge stays gated; see ADR-0022 for the boundary.
 
 > **Amended by [ADR-0027](0027-prune-trials.md) (2026-08-23).** `prune-trial`
-> joins the ledger above, and is the first row whose scope reaches a **Human-only**
-> surface: ADR *prose* may be pruned and self-merged as part of a Prune Trial.
-> That reach is bounded by reversibility, not by file — every prune stands for a
+> joins the ledger above. Its reach is bounded by reversibility — every prune stands for a
 > fixed window and is judged by the sessions that follow it (ADR-0027 holds the
 > reasoning). Retiring a Skill or Routine stays outside it: that is filed as an
 > issue for a human, since no verdict could detect a mistaken retirement.
