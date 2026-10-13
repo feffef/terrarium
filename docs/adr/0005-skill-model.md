@@ -10,6 +10,14 @@ Status: Accepted
 > repo-committed home — read that as `.agents/skills/` (see CLAUDE.md's Repo
 > layout and ADR-0015, which already assumes the current split).
 
+> **Amended (2026-10-13, issue #1870).** *A Skill's workflow scripts are its
+> code.* A Claude Code workflow script is Platform code owned by the Skill that
+> runs it, and that Skill names the workflows it runs. It lives in
+> `.claude/workflows/<name>.js`, the location Claude Code loads a workflow from
+> by name, as a real file: saving a workflow refuses a symlink. It changes
+> through a gated PR, and the gate treats it as one of its Skill's files
+> (ADR-0004's 2026-10-12 amendment).
+
 ## Context
 
 "An ever-growing set of Skills that develop the Platform" is the project's core

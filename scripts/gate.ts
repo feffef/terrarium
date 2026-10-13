@@ -26,9 +26,10 @@ export function isInert(path: string): boolean {
   return (path.endsWith('.md') && !path.startsWith('layers/')) || path.startsWith('.claude/skills/')
 }
 
-// Why build + e2e may skip these: ADR-0004's 2026-10-12 amendment.
+// Why build + e2e may skip these: ADR-0004's 2026-10-12 amendment. A workflow
+// script belongs to its Skill: ADR-0005's 2026-10-13 amendment.
 export function isSkillFile(path: string): boolean {
-  return path.startsWith('.agents/skills/')
+  return path.startsWith('.agents/skills/') || path.startsWith('.claude/workflows/')
 }
 
 export const BUILT = ['build', 'test:e2e'] as const

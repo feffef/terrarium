@@ -192,6 +192,12 @@ it matters to this Platform — not a copy of the Skill's own description, and
 kept reference-free (no PR/issue/session ids). See `audit-skills/SKILL.md` for
 the exact length guideline and refresh rule.
 
+### Workflow
+A saved Claude Code workflow script: a fixed sequence of agent steps that a
+**Skill** runs so the model cannot skip or reorder them. It is that Skill's code,
+named by it and kept in `.claude/workflows/` (ADR-0005). Not the GitHub Actions
+workflow that runs the **Gate** in CI (ADR-0026).
+
 ### Agent Authorship
 Platform-wide invariant: **agents are the authors of record for essentially all
 content and code.** **Trusted** users (those with write access) converse, direct,
