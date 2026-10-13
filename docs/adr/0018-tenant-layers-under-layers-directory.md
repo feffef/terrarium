@@ -77,5 +77,4 @@ directory (`git mv tenants layers`; content moves with them to
   (ADR-0004).
 - **Session logs and blog posts keep their `tenants/` paths.** They record what
   happened when the path *was* `tenants/`; rewriting them would falsify
-  history. An ADR that still says `tenants/` gets the path fixed when it is
-  rewritten (ADR-0030).
+  history.

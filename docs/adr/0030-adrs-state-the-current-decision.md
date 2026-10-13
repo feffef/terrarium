@@ -1,19 +1,19 @@
 # 30. ADRs state the current decision
 
-An ADR says what we decided, as it stands today, and why. When a decision
-changes, we rewrite the ADR in place; git keeps the history, as for any other
-file. Each ADR has a summary rule that turns its important parts into short
-instructions for agents, so the ADR itself can focus on the decision and its
-reasons.
+An ADR states one decision as it stands today: its scope and limits, why we
+made it, and the alternatives we rejected, in the template below. When the
+decision changes, we rewrite the ADR in place and git keeps the history. Each
+ADR's summary rule turns its important parts into short instructions for
+agents.
 
 ## Scope and limits
 
-- **One decision per ADR.** If its opening sentences can't summarise the whole
-  decision, split it.
+- **One decision per ADR.** If the summary can't cover the whole decision in
+  2–3 sentences, split the ADR.
 - **No history in the text.** No amendments, dates, status lines, "Amended by"
   banners or notes about what used to be true. Use `git log` on the file.
-- **Change an ADR by rewriting it.** Fix a detail, change the decision, merge
-  two ADRs, narrow one's focus or retire one: each is an ordinary edit.
+- **Change an ADR by rewriting it.** Change the decision, merge two ADRs,
+  narrow one's focus or retire one: each is an ordinary edit.
 - **The ADR is the single source.** Its summary rule in `.claude/rules/`
   (ADR-0029) rewrites the important parts as instructions and adds nothing the
   ADR doesn't say.
@@ -33,26 +33,32 @@ reasons.
      part of the decision or a rejected alternative.
   7. **Consequences** (optional): only effects that aren't obvious.
   8. **See** (optional): the code, Skills and docs that hold the mechanics.
-- **Existing ADRs** keep their old shape until someone rewrites them. A
-  rewrite brings the whole ADR into this shape.
+- **Older ADRs** keep their old shape until someone rewrites one in full; the
+  full rewrite brings it into this shape. A small fix before then just edits
+  the wrong line.
 
 ## Why
 
-Agents read a full ADR to check limits, exceptions and edge cases. Session logs
-from October 2026 show this: the summary rules carried the everyday
-instruction, and agents opened the full ADR for the bounds of the auto-triage
-green-light or the length of a prune trial's window. Amendments scattered
-exactly those details, so an agent had to rebuild the current rule from
-several dated layers, some of which reversed others.
+Agents read a full ADR to check limits, exceptions and edge cases. The session
+logs show it: the summary rules carried the everyday instruction, and agents
+opened the full ADR for the bounds of the auto-triage green-light or the length
+of a prune trial's window. Amendments scattered exactly those details, so an
+agent had to rebuild the current rule from several dated layers, some of which
+reversed others.
 
 History has a home already. Git records every change with its PR and reason,
 so keeping it in the text too was a second copy that made the decision harder
 to read.
 
+Rejected alternatives stay in the text because they are not history: they stop
+a review or a new idea from bringing back what we already ruled out. "When to
+revisit" says what new evidence would justify that, so a decision is firm
+without being permanent.
+
 ## Rejected alternatives
 
-- **Append dated amendments and keep the original text.** This was the old rule
-  (ADR-0018). It kept the history but buried the current decision under it.
+- **Append dated amendments and keep the original text.** It keeps the history
+  in the ADR but buries the current decision under it.
 - **Make each ADR its own rule** (issue #1745). The whole ADR would load into
   context, so it would have to be as short as a summary and lose its reasons and
   alternatives. Summary rules already work, so we keep the split.
@@ -77,6 +83,6 @@ to read.
 
 - `.agents/skills/domain-modeling/ADR-FORMAT.md`: the pack template and its
   test for when a decision deserves an ADR. Our template above replaces its
-  section layout.
+  section layout and its Status field.
 - `scripts/validate-adr-rules.ts`: fails the gate until a changed ADR's summary
   rule is re-checked.

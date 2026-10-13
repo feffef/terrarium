@@ -151,8 +151,8 @@ escalate that.
 Everything the Platform tells its agents is in scope: CLAUDE.md, CONTEXT.md,
 `docs/`, our own Skills including the scheduled ones, and the ADRs; ADR-0004's
 Human-only merge rule otherwise stands. You may
-rewrite an ADR whole in ADR-0030's shape, as long as **what it decided does not
-change**: fold its amendments into the text and drop its history. Skip
+rewrite an ADR whole (ADR-0030), as long as **what it decided does not
+change**. Skip
 `docs/proposals/<N>-*.md` and `.out-of-scope/*.md` — written for a human to
 apply once, not for agents to read.
 

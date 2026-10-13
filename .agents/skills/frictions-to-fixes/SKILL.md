@@ -227,8 +227,8 @@ post-dispatch check. Run at most 2 impl agents' full gates concurrently
     the home for them (`audit-docs/SKILL.md`, not restated here), and since this
     Skill self-merges its doc commits too (§6), they hold to the same standard the
     doc-audit sweep verifies. Two axes: (1) respect each surface's **tier** — Live
-    is fixable, but **never rewrite a Historical decision** (ADRs/digests/session
-    logs — ADRs are human-only anyway, ADR-0004) **or a Pack-generic template**;
+    is fixable, but **never edit an ADR** (human-only, ADR-0004), **a Historical
+    record** (digests, session logs) **or a Pack-generic template**;
     (2) don't *author* any defect audit-docs' eight lenses catch — above all
     **single-home rather than restate** (the CLAUDE.md rule), and give any new
     `docs/agents/*` file its trigger in CLAUDE.md's "Docs you must read first"

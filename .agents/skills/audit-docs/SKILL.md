@@ -76,8 +76,9 @@ joins the pool like any other.
   `.claude/rules/` rule (ADR-0029; `docs/research/` is deliberately unindexed) —
   add the link;
   (2) a new ADR that changes another's decision while the old ADR still states
-  it (ADR-0030) — rewriting the old one is an ADR edit, so it escalates (step 8). Never add a hand-kept ADR list to `CLAUDE.md`. Older
-  additions are out of scope.
+  it (ADR-0030) — rewriting the old one is an ADR edit, so it escalates
+  (step 8). Never add a hand-kept ADR list to `CLAUDE.md`. Older additions are
+  out of scope.
 
 **Agent B — Single-home.** `pnpm exec tsx scripts/audit-skills.ts` reports
 `docReadCounts` (how many recent sessions opened each doc). A fact in a doc

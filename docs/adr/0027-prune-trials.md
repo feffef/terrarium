@@ -55,7 +55,7 @@ governance:
   instruction the Platform gives its agents, or rewrite a whole Skill, doc or
   ADR in simpler, precise words. This is a narrow amendment to ADR-0004: ADR
   prose loses its Human-only merge status *for prune trials*, which are
-  reversible by construction. An ADR rewrite follows ADR-0030, but it never
+  reversible by construction. An ADR rewrite follows ADR-0030 and never
   changes what the ADR decided. Everything else in ADR-0004's
   high-risk set is untouched, and the external pack Skills (ADR-0015) remain
   unreachable because the Gate rejects the edit.
