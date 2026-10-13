@@ -1,6 +1,6 @@
 export const meta = {
   name: 'clear-backlog-build',
-  description: 'clear-backlog §3–4: per planned branch, build in a worktree, then Standards + Spec review and fix until only judgement calls remain; returns branches ready to push',
+  description: 'clear-backlog §3: per planned branch, build in a worktree, then Standards + Spec review and fix until only judgement calls remain; returns branches ready to push',
   whenToUse: 'Run only from the clear-backlog Skill, with the planned branches as args',
   phases: [
     { title: 'Build', detail: 'one worktree per branch, based on origin/main' },

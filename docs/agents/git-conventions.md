@@ -45,9 +45,10 @@ GitHub PR-files API has the same gap: read `previous_filename` too.
 
 - A commit message containing backticks or `$(...)` goes through
   `git commit -F <file>` (or a quoted heredoc), never `-m`: the shell would run
-  the span as a command. `.githooks/commit-msg` backstops the ADR-0017 trailer
-  but silently no-ops when the main checkout has no `node_modules` or `node`
-  is off PATH, so check it landed.
+  the span as a command.
+- Check the ADR-0017 trailer landed: `.githooks/commit-msg` adds it but
+  silently no-ops when the main checkout has no `node_modules` or `node` is off
+  PATH.
 - A commit titled as a session-log commit holds only the session log. Title any
   other commit for its work.
 - Never patch a commit body with `git commit-tree` or other history rewriting;
@@ -76,9 +77,10 @@ GitHub PR-files API has the same gap: read `previous_filename` too.
 ## A Stop-hook "Unverified" flag isn't automatically yours to fix
 
 The closure Stop hook can flag inherited commits already on `origin/main`. Run
-`git log origin/main..HEAD` first. Never rebase or rewrite commits outside that
-list (for example via the hook's suggested `--reset-author`); that rewrites
-public history. A commit is yours to fix only if this session made it: in a
-working copy shared with other sessions, `origin/main..HEAD` also holds theirs.
+`git log origin/main..HEAD` first: a commit outside that list is public
+history, so never rebase or rewrite it (for example via the hook's suggested
+`--reset-author`). Even inside the list, a commit is yours to fix only if this
+session made it; in a working copy shared with other sessions, the list also
+holds theirs.
 `--reset-author` may also fail to sign: see the signing-key caveat in
 [`environment-caveats.md`](./environment-caveats.md).

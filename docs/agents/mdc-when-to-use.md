@@ -22,20 +22,19 @@ or leaving the Markdown file.** The lens for every decision below is
 *author-facing, in-prose composition*.
 
 Cost in a layer without MDC: a `components/content/` dir and a new SFC
-(mechanics: §13). The journal layer keeps its components in a *prefixed*
+(mechanics: the research doc's §13). The journal layer keeps its components in a *prefixed*
 `components/journal/` dir and has no `components/content/` today.
 
 ## The validation caveat (important in this repo)
 
-**Body MDC skips the collection's Zod schema entirely — only a `.md` file's
-frontmatter is `safeParse`d** (by `scripts/validate-content.ts`); the body
-"isn't part of the authored schema" (why, and what a collection `schema` is/isn't
-used for at build: `docs/research/nuxt-content-review-grounding.md` §2, not
-re-derived here). Consequence: a typo'd key or missing field in body-authored
-MDC props surfaces only at render, if at all — while the same problem in
-frontmatter is caught by `pnpm validate:content`. In a repo where "schemas are
-contracts" and agents write nearly everything, that gap is a real trade-off,
-not a detail.
+**Body MDC skips the collection's Zod schema: `scripts/validate-content.ts`
+`safeParse`s only a `.md` file's frontmatter** (why, and what a collection
+`schema` is and isn't used for at build:
+`docs/research/nuxt-content-review-grounding.md` §2). So a typo'd key or
+missing field in body MDC props surfaces only at render, if at all, while
+`pnpm validate:content` catches the same mistake in frontmatter. In a repo
+where schemas are contracts and agents write nearly everything, that gap is a
+real trade-off.
 
 ## When MDC is a good fit
 
@@ -44,13 +43,11 @@ composition**:
 
 - **Rich editorial inside a page body** — callout/note/tip blocks, figures with
   captions, embeds, tabbed examples, a hero — placed *where they sit in the
-  reading flow*.
+  reading flow*: the block's position in the body *is* its position on the page.
 - **Author-facing component palettes** — you want writers (or content-editing
   agents) to compose from reusable blocks without touching Vue.
 - **One block with rich content** — a slot that holds formatted Markdown
   (emphasis, links, nested blocks) is exactly what slots are for.
-- **Content that's naturally part of the document's narrative order** — the
-  block's position in the body *is* its position on the page.
 
 ## When MDC is the wrong tool
 
@@ -120,7 +117,7 @@ failed the checklist:
    fewer — to replace a small array.
 3. **Validation (checklist #3).** Body MDC skips Zod, so the card data would get
    no gate coverage.
-4. **Logic (when-wrong bullet).** The cards are filtered so a card only shows
+4. **Logic ("Logic must wrap the block").** The cards are filtered so a card only shows
    when its target page exists in-Space — layout logic that lives cleanly in a
    `computed`, awkwardly in a body node.
 

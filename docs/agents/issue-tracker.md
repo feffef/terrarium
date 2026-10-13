@@ -5,11 +5,11 @@ the conventions, spec and wayfinding sections are repo-specific. Don't re-sync:
 this file is live, the pack template stays generic and reinstallable
 (ADR-0005).*
 
-Issues and specs live as GitHub issues. Use the `gh` CLI for all operations.
+Issues and specs live as GitHub issues. The recipes below use the `gh` CLI.
 
 ## Cloud session? See `github-integration.md`
 
-Recipes below use `gh`. In a cloud session, GraphQL-backed `gh` subcommands 403;
+In a cloud session, GraphQL-backed `gh` subcommands 403;
 for the MCP-tool equivalents, overflow traps, polling rules and `ToolSearch`
 name resolution, see [`github-integration.md`](./github-integration.md).
 

@@ -27,8 +27,9 @@ Match the repo's actual files, not the template: `CONTEXT-MAP.md`'s
 **Decisions** section says where ADRs live; CLAUDE.md's "Repo layout" says where
 `layers/<tenant>/` contexts live.
 
-If any of these files are missing, **proceed silently**: don't flag it or
-suggest creating them. `/domain-modeling` creates them lazily, when a term or
+If `CONTEXT-MAP.md`, a `CONTEXT.md` or an ADR is missing, **proceed
+silently**: don't flag it or suggest creating it. `/domain-modeling` creates
+a missing one lazily, when a term or
 decision needs resolving.
 
 ## Use the glossary's vocabulary
@@ -47,14 +48,12 @@ ADR) only once its **second** instance exists or is concretely scheduled.
 Before that, describe the first instance in plain words, where it lives —
 don't mint a term, a typology, or a classification for a population of one.
 
-This **complements**, not replaces, the `domain-modeling` Skill's 3-part ADR
-test: that test gates *decisions*, the rule of two gates *vocabulary*. A
-coined term taxes every session, which reads the glossary and
-reconciles term conflicts against it; only a second instance proves the
-abstraction worth that. (Friction tags waited until
-clustering real frictions could replace them, which the Friction Ledger now
-does; ADR-0010 deferred a `digests` collection the same way.) It's a brake on new coinage, not a
-purge — anything already built stays.
+This complements, not replaces, the `domain-modeling` Skill's 3-part ADR test:
+that test gates *decisions*, the rule of two gates *vocabulary*. Every session
+reads the glossary and reconciles term conflicts against it, so a coined term
+costs every session; only a second instance proves it worth that (ADR-0010
+deferred a `digests` collection this way). It brakes new coinage; anything
+already built stays.
 
 ## Flag ADR conflicts
 
@@ -65,8 +64,7 @@ silently overriding it:
 
 ## Check a new Tenant/Collection proposal against ADR-0006 immediately
 
-Check a new Tenant or Collection against ADR-0006's pages-only-routing
-constraint when it is proposed, not later. A separately named,
-addressable-sounding Collection (e.g. a Tenant's "sites" or "exhibits") looks
-natural but violates it; catching that at proposal stops the mistake riding
+A separately named, addressable-sounding Collection (e.g. a Tenant's "sites"
+or "exhibits") looks natural but violates ADR-0006's pages-only routing. Check
+a new Tenant or Collection against it at proposal, before the mistake rides
 several turns (issue #573).

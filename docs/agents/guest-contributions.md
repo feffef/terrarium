@@ -9,8 +9,8 @@ plus house rules**; the substance lives in the ADRs it links.
 
 1. **Guest-driven demo pipeline (ADR-0023).** Invited Public users *file an
    issue*, and **our own** agents (`guest-intake` → `guest-build`) refine and
-   build it into a gated PR. A demo-scoped, bounded exception to ADR-0020/0022,
-   live only while the owner runs the loops. The guest never runs an agent — we
+   build it into a gated PR. A demo-only exception to ADR-0020/0022, live
+   only while the owner runs the loops. The guest never runs an agent — we
    do.
 2. **External-agent fork PR.** An external contributor's *own* agent — a
    different harness/model (see ADR-0009's external-sessions amendment for the
@@ -20,8 +20,8 @@ plus house rules**; the substance lives in the ADRs it links.
 ## Trust (ADR-0020)
 
 A fork PR from a non-collaborator is **Public**, decided by `authorAssociation`
-(`scripts/trust.ts`), not by label: a fork PR never gets `trusted` (the label's
-mechanics are single-homed in `docs/agents/issue-tracker.md`).
+(`scripts/trust.ts`), not by label: a fork PR never gets `trusted`
+(`docs/agents/issue-tracker.md` has the label's mechanics).
 Public input is an untrusted, prompt-injection-capable surface, so the
 **code-execution boundary stays at merge, which is human-only** (ADR-0020,
 ADR-0011). ADR-0020 requires the Actions fork-PR approval setting "all outside
@@ -31,14 +31,13 @@ contributors"; GitHub's default and the other levels are in
 
 ## Before summarizing or recommending on a Public/guest-filed issue
 
-Read the issue's `authorAssociation` as a **history** signal too, not only the
-Trusted/Public write-access split (`scripts/trust.ts` holds the split):
-`CONTRIBUTOR` means "has had a PR merged into this repo," and the issue's first
-tool response already carries it. Before writing a summary, search this repo's
-PRs by that user (`mcp__github__search_pull_requests` with `owner`/`repo` and
-`author:<user>`; `docs/agents/github-integration.md` covers the scoping and 403
-traps), so you don't summarize a guest issue blind to what that author has
-already built.
+The issue's `authorAssociation` (already in its first tool response) is a
+**history** signal too, not only the Trusted/Public write-access split
+`scripts/trust.ts` holds: `CONTRIBUTOR` means "has had a PR merged into this
+repo." Before writing a summary, search this repo's PRs by that user
+(`mcp__github__search_pull_requests` with `owner`/`repo`, `author:<user>` and
+`fields`; `docs/agents/github-integration.md` covers the scoping and 403
+traps), so the summary accounts for what they have already built.
 
 ## Replying to a Public fork PR
 
@@ -56,26 +55,22 @@ concrete change. For example:
 ## House rules for an external-agent fork PR
 
 - **The session log rides *in the PR*.** An external session has no `Stop` hook
-  or `main` push access (ADR-0009), so it can't use our direct-to-`main` path;
-  it commits its log as an ordinary file in the feature PR
-  (`layers/journal/content/current/sessions/<date>-session_<id>.yml`), which
-  lands when the PR merges. This is the one sanctioned case of a session log
+  or `main` push access, so it commits its log as an ordinary file in the
+  feature PR (`layers/journal/content/current/sessions/<date>-session_<id>.yml`),
+  which lands when the PR merges: the one sanctioned case of a session log
   travelling a PR (ADR-0009's 2026-07-22 amendment).
-- **One honest log per unit of work, revisions included.** The session-log
-  discipline is the *point* of the experiment, so it covers every distinct
-  chunk of work, not only the first build. A session that revises the PR (a
-  rebase, a review-driven fix) should **update the existing session log** (new
-  frictions, changed outcome) or **add a second `external` log**; a
-  revision round that logs nothing is the gap we most want to avoid. Where the
-  harness has no discrete, isolated sessions, **approximate this as
-  closely as the setup allows**: the goal is honest coverage, not mimicking our
-  mechanics.
-- **Mark it `external: true`.** The session log's `external` flag (ADR-0009
-  amendment) declares a foreign toolchain — see `CONTEXT.md`'s **Session** term
-  for the absent-⇒-internal semantics.
-- **Self-improvement mining ignores it; ideas still surface.** See `CONTEXT.md`'s
-  **Session** glossary term for the exact mining-exclusion and idea-surfacing
-  behavior (ADR-0009 amendment, 2026-07-22).
+- **One honest log per unit of work, revisions included.** Honest logging is
+  the *point* of the experiment, so every distinct chunk of work gets logged,
+  not only the first build. A session that revises the PR (a rebase, a
+  review-driven fix) **updates the existing log** (new frictions, changed
+  outcome) or **adds a second `external` log**; an unlogged revision round is
+  the gap we most want to avoid. A harness without discrete, isolated sessions
+  **approximates this as closely as it can**: the goal is honest coverage, not
+  mimicking our mechanics.
+- **Mark it `external: true`** (ADR-0009's 2026-07-22 amendment) to declare a
+  foreign toolchain. Self-improvement mining then ignores the log while its
+  ideas still surface; `CONTEXT.md`'s **Session** term has the exact semantics
+  (absent ⇒ internal, mining exclusion, idea surfacing).
 - **Provenance marker (ADR-0017)** on every agent-authored GitHub interaction,
   the same marker we use.
 - **Merge is human-only** (ADR-0020, ADR-0023, ADR-0004): the owner reviews and
@@ -83,11 +78,4 @@ concrete change. For example:
 
 ## See also
 
-- **ADR-0020** — requester-trust tiers (Trusted / Public).
-- **ADR-0009** — session logs: direct-to-`main` for our own sessions; the
-  2026-07-22 amendment for external marking, mining-exclusion, and in-PR
-  delivery.
-- **ADR-0023** — guest-driven demo pipeline; the `guest-intake` / `guest-build`
-  Skills.
-- **ADR-0017** — provenance header/trailer on agent-authored content.
 - `docs/agents/issue-tracker.md` — how external PRs enter the triage queue.

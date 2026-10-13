@@ -66,10 +66,10 @@ like this:
 - **`list_issues` and `list_pull_requests` have no `minimal_output`;** pass
   `fields` omitting `body` (and `field_values`/`labels` on `list_issues`), or
   full bodies can overflow even a paginated call. Use a small `perPage` (5-10),
-  page through open and closed/merged, and slice the saved file by hand. A
-  targeted `search_*` query is rate-limited (see "Searching is the fragile
-  path"), so use it only if listing still overflows. A broad `search_*` query
-  overflows too, so always scope it (state, label, keyword).
+  page through open and closed/merged, and slice the saved file by hand. Use
+  `search_*` only if listing still overflows (it is rate-limited: see
+  "Searching is the fragile path"), and always scope it (state, label,
+  keyword): a broad query overflows too.
 - **`search_issues` / `search_pull_requests` need `fields`:**
   `github-search-fields-guard.ts` denies a call without it, and its message
   says what to pass.
@@ -125,11 +125,11 @@ like this:
 - **Did an AI comment claim a triage-label change the issue never got?** It
   happens (issue #325's comment said `moved to ready-for-agent` while the issue
   stayed `ready-for-human`) and nothing else catches it. Run
-  `pnpm exec tsx scripts/check-triage-drift.ts [N]`: for each open issue it
-  compares the newest AI-authored comment (found by its ADR-0017 marker, since
-  `author_association` can't be trusted here; see the script's header)
-  against a phrase list for the five canonical labels and prints mismatches as
-  JSON (issue #507). It is standalone, not part of any periodic sweep, and has
+  `pnpm exec tsx scripts/check-triage-drift.ts [N]`. For each open issue it
+  finds the newest AI-authored comment by its ADR-0017 marker
+  (`author_association` can't be trusted here; see the script's header),
+  checks it against a phrase list for the five canonical labels, and prints
+  mismatches as JSON (issue #507). It is standalone, not part of any periodic sweep, and has
   the same `gh`-less token fallback (issue #505).
 
 ## Polling: gate status is not webhook-delivered
@@ -147,8 +147,8 @@ like this:
   re-checks-out that run's original `refs/pull/N/merge` snapshot, so it can stay
   red after the fix has merged. Only a fresh push or branch update recomputes
   the ref and gives a true re-check.
-- **This polling advice is for state that webhooks don't deliver, like CI. It
-  does not apply to a dispatched Agent-tool subagent.**
+- **This polling advice covers state webhooks don't deliver, like CI, not a
+  dispatched Agent-tool subagent.**
 - **Polling relies on remote-session MCP and `AskUserQuestion` calls, which can
   fail transiently:** see the "permission stream closed" caveat and its fallback
   in [`environment-caveats.md`](./environment-caveats.md).
@@ -169,11 +169,10 @@ repo can't change.
   That is the recovery when a `select:` guess fails. If it still comes back
   empty, broaden it into a phrase.
 
-**The bad-name trap:** calling a tool directly by an unknown name, bare or a
-misspelled full name, gives the same `Error: No such tool available: <name>`. It
-offers no "did you mean" and no hint to try `ToolSearch`. That is when a
-plausible bare name gets wrongly written off as unsupported instead of retried
-as a keyword query.
+**The bad-name trap:** calling a tool directly by an unknown name (bare, or a
+misspelled full name) gives `Error: No such tool available: <name>`, with no
+"did you mean" and no hint to try `ToolSearch`. Don't write off a plausible
+bare name as unsupported: retry it as a keyword query.
 
 **No MCP tool for issue dependencies** (wayfinding *Blocking*): `curl` the same
 REST endpoint with `$GH_TOKEN` and `Content-Type: application/json` (the proxy

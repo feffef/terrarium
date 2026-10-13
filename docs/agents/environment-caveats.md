@@ -22,15 +22,15 @@ re-diagnose them as new. Incident detail lives in the cited issue.
   registered/alive/intact. (issues #571, #794, #891)
 - **Any `mcp__claude-code-remote__*` call (spelled `mcp__Claude_Code_Remote__*`
   in some sessions), and `AskUserQuestion`, can fail with a transient
-  "permission stream closed" error.** Retry once only. For `AskUserQuestion`, take the safer default option
-  and say so in the output. For `send_later`, use `create_trigger` with
-  `run_once_at`. (issues #145, #229, #359)
+  "permission stream closed" error.** Retry once only. If the retry fails: for `AskUserQuestion`, take the
+  safer default option and say so in the output; for `send_later`, use
+  `create_trigger` with `run_once_at`. (issues #145, #229, #359)
 - **A fired self-bind Routine's output may not surface as a visible turn.**
   Check `last_fired_at` via `list_triggers` before concluding it didn't fire.
   (issue #834)
 - **An agent session cannot write `.github/workflows/*` here — no `workflow`
-  OAuth scope.** `workflow-edit-guard` ([guards](./guards.md)) denies the write;
-  its deny message says what to do. A commit that gets past it is rejected at
+  OAuth scope.** `workflow-edit-guard` ([guards](./guards.md)) denies the write.
+  A commit that gets past it is rejected at
   push, stranding every other commit in that push. The edit itself goes in
   `docs/proposals/` ([README](../proposals/README.md)). (issues #659, #897)
 - **The agent proxy denies writes to repository-settings endpoints and any
@@ -56,16 +56,17 @@ re-diagnose them as new. Incident detail lives in the cited issue.
   `outcome`/`summary` (e.g. "branch pushed, PR NOT opened — no GitHub write
   access this run") so it doesn't read as ordinary completion. (issue #982)
 - **In an unattended run, a dispatched subagent's tool call that needs human
-  approval blocks forever** and the orchestrator gets no signal: approval waits
-  on a human UI click, and no wake-on-pending-approval signal is known
-  (`PreToolUse` hooks do still fire for subagent calls). Treat
-  long subagent silence as possibly stuck, not slow. (issue #1215;
-  `docs/agents/guards.md` has both that and the narrower fix of never
-  autonomously dispatching a guard/settings-touching edit)
+  approval blocks forever, with no signal to the orchestrator:** approval waits
+  on a human click, and no wake-on-pending-approval signal is known
+  (`PreToolUse` hooks do still fire for subagent calls). Treat long subagent
+  silence as possibly stuck, not slow. (issue #1215; [guards](./guards.md) has
+  the hook probe and the narrower fix: never dispatch an unattended or
+  scheduled session to change a guard or its `.claude/settings.json` hook
+  wiring.)
 - **The harness's instruction-shaped-content scanner can false-positive on
   benign text** that merely mentions "settings.json" / "settings-json", e.g. a
-  subagent's report on `.claude/settings.json` hook wiring. Inspect a flagged
-  result; if it is benign discussion, not an injection attempt, treat it as this
+  subagent's report on `.claude/settings.json` hook wiring. If a flagged
+  result is benign discussion, not an injection attempt, treat it as this
   quirk. (sessions session_0174Bf4itHjWjJ3yMKmRd1KM,
   session_019QghEUG36tGWuhPUdM4t5Q)
 - **The container's git (2.43) can differ from CI's (~2.55), so a git-based

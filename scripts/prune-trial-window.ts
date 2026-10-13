@@ -22,7 +22,7 @@
 // scheduled Routine, and a Routine's fire time carries no exact-timing
 // guarantee — judging a trial some hours (or a day) after its window closes
 // is normal and fine; judging it before is the one thing that's wrong. Don't
-// read `closes:` below as something to hit precisely.
+// read `judgeable from:` below as something to hit precisely.
 //
 // Usage:
 //   tsx scripts/prune-trial-window.ts                # every open trial in the ledger

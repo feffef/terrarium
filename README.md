@@ -34,8 +34,8 @@ is; the ADRs record what's decided vs. deliberately left open.
 ## Where to look
 
 - **[`CLAUDE.md`](CLAUDE.md)** — the contributor guide: which docs to read first,
-  working conventions and repo layout. The safety gate is ADR-0004
-  (`pnpm gate:scoped` before you push). Start here before making changes —
+  working conventions and repo layout. The safety gate is ADR-0004.
+  Start here before making changes —
   humans and agents alike.
 - **[`CONTEXT-MAP.md`](CONTEXT-MAP.md)** — the domain model: indexes the Platform
   context ([`CONTEXT.md`](CONTEXT.md), which also lists the Tenants) and each

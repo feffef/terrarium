@@ -18,9 +18,6 @@ layout bug, or asserting a style took effect.
 - **A URL that is already serving:** `scripts/screenshot.ts <url> <out.png> [WxH]`
   drives the pre-installed Chromium directly.
 
-The rest of this doc is the *methodology*: what proves a change, and what only
-looks like proof.
-
 **Browser facts verified against** (from `node_modules`, re-check if they've
 moved): `playwright-core` **1.63.0**, `nuxt` **4.6.0**. Entries that came from a specific session cite it.
 
@@ -38,12 +35,10 @@ moved): `playwright-core` **1.63.0**, `nuxt` **4.6.0**. Entries that came from a
   one step.
 - **Before calling an e2e/Playwright failure "pre-existing" or
   "environment-only," reproduce it on both `origin/main` and the branch** with the
-  full `test:e2e` suite (never a `-t`-filtered single test) against a fresh
-  build (`pnpm build` then `pnpm test:e2e`, or `E2E_FRESH_BUILD=1`; the
-  e2e run rebuilds a stale `.output` itself). A narrowed or stale repro isn't a
-  valid comparison: a filtered test skips setup/ordering the full suite
-  exercises, and a stale `.output` can omit the change under test. A PR once
-  called a failing assertion pre-existing on such a repro, and CI then failed
+  full `pnpm test:e2e` suite, never a `-t`-filtered single test: a filtered test
+  skips setup and ordering the full suite exercises. The run rebuilds a stale
+  `.output` itself; `E2E_FRESH_BUILD=1` forces a build. A PR once called a
+  failing assertion pre-existing on a narrowed or stale repro, and CI then failed
   for real on it (issue #907).
 - **To read one in-page value from an already-serving page** (a computed style,
   a bounding rect, any `page.evaluate` result), use `scripts/probe.ts` before an
@@ -51,22 +46,21 @@ moved): `playwright-core` **1.63.0**, `nuxt` **4.6.0**. Entries that came from a
   `pnpm exec tsx scripts/probe.ts <url> "<js-expression>"`, e.g.
   `pnpm exec tsx scripts/probe.ts http://localhost:3000/t/journal/current "getComputedStyle(document.querySelector('.foo')).color"`.
 - **To verify a click/interaction, not just a static render**, write a small
-  ad-hoc `playwright-core` script against the same pre-installed Chromium
-  `scripts/screenshot.ts` uses — import `resolveChromiumPath()` from
-  `scripts/chromium-path.ts` rather than re-deriving the `PLAYWRIGHT_BROWSERS_PATH`
-  lookup by hand, and launch it with `chromium.launch({ executablePath: resolveChromiumPath() })`.
-  Three gotchas: (1) `tsx` runs the ad-hoc script as CJS, so wrap top-level `await`
-  in an `async` IIFE; (2) write the script **inside the repo tree** so imports
-  resolve against this repo's `node_modules` (`playwright-core`, `yaml` and other
-  devDependencies aren't global); (3) pass `page.evaluate(...)` its body as a **string**, not a function
-  reference — `tsx`/esbuild's `keepNames` transform injects a `__name` helper into
-  a compiled function that only exists in the Node/tsx context, so a function
-  reference throws `__name is not defined` inside the browser page.
-- **A screenshot can't be trusted to rule out a subtle/scoped CSS change** —
+  ad-hoc `playwright-core` script and launch the pre-installed Chromium
+  `scripts/screenshot.ts` uses with
+  `chromium.launch({ executablePath: resolveChromiumPath() })`, importing
+  `resolveChromiumPath()` from `scripts/chromium-path.ts` (don't re-derive the
+  `PLAYWRIGHT_BROWSERS_PATH` lookup). Three gotchas: (1) `tsx` runs it as CJS,
+  so wrap top-level `await` in an `async` IIFE; (2) write it **inside the repo
+  tree** so imports resolve against this repo's `node_modules`
+  (`playwright-core`, `yaml` and other devDependencies aren't global); (3) pass
+  `page.evaluate(...)` its body as a **string**: `tsx`/esbuild's `keepNames`
+  injects a `__name` helper that exists only in Node, so a function reference
+  throws `__name is not defined` in the page.
+- **A screenshot can't be trusted to rule out a subtle/scoped CSS change:**
   downscaled or compressed PNGs can mask a style that actually applied. Before
-  concluding a scoped style is missing, probe the element's *computed* style
-  with the same `playwright-core` pattern above, e.g.
-  `page.$eval(selector, el => getComputedStyle(el).propertyName)`.
+  concluding a scoped style is missing, read the element's *computed* style
+  with `scripts/probe.ts` (above).
 - **A diagram, illustration or layout from a brief needs the human's eye first.**
   Agree the reader and the question it answers, and show a rough draft for a
   quick reaction before you polish and publish. Passing gates is necessary, not
@@ -136,12 +130,10 @@ A screenshot captures whatever frame exists *now*. Two ways the frame is empty:
 
 ### A green production `preview` probe doesn't prove a dev-warning fix
 
-A green production `preview` probe is not proof a hydration-mismatch or Vue
-dev-warning fix worked. Those diagnostics are Vue dev-only and are compiled out
-of production builds entirely, so a clean production run is consistent with
-*either* "actually fixed" or "warning can't appear in this build mode
-regardless." Verify this class of fix against a `--dev` build instead (or in
-addition), checking the actual console/warning output.
+Hydration-mismatch and other Vue dev warnings are compiled out of production
+builds, so a clean production run can't tell "fixed" from "can't appear in
+this build mode." Verify such a fix against a `--dev` build (instead or as
+well), checking the actual console/warning output.
 
 ### `<ClientOnly>` attaches its slot DOM *after* `onMounted`
 

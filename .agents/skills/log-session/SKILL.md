@@ -27,9 +27,8 @@ Whichever way you arrive here, a log records the session at **Session closure**
 active work **complete and in a coherent, honest state**. A log honestly
 records an in-review PR when that's the state closure was reached in.
 
-**Opening a gated PR is a closure point — log at that moment.** A session opens
-its PR itself as soon as it has pushed a commit that is not a session log,
-and that first push is exactly when to write this log.
+**Opening a gated PR is a closure point — log at that moment** (the ADR-0003
+rule says when a PR opens).
 Its `status` is then **`in-review`** — the PR is open but not merged — never
 `completed`, which is reserved for work that actually landed (`close-session`
 finalizes it on merge) or a session that needed no PR at all.
@@ -182,8 +181,10 @@ rule that points to a full ADR or doc, also say why you did or didn't open it
 held. Don't restate the rule.
 
 Every pass is a full scratch with every field the schema requires. Its lists
-merge with the earlier pass, so list only new or changed entries, each written
-whole; repeat a friction word for word or it is logged twice.
+merge with the earlier pass, so list only new entries, plus any `docsRead`,
+`skillsUsed` or `ruleVerdicts` entry you change, written whole (it replaces the
+one with the same `path` or `name`). Repeat a friction word for word, severity
+included, or it is logged twice.
 
 The report also lists docs a command named but did not show enough of to
 count. ADR-0009's output-matching and merged-read amendments say what is
