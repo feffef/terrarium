@@ -1,0 +1,92 @@
+schemaVersion: 1
+session: session_01EdZyfmrUBL5o3ePoaobtae
+startedAt: 2026-10-13T23:10:28Z
+endedAt: 2026-10-13T23:17:40Z
+kind: interactive
+goal: Find why agent-written issue and PR descriptions got shorter
+status: completed
+outcome: Issues shortened from 2026-10-13 20:00Z in two ADR-rewrite sessions; PRs did not; no merge to main explains it
+summary: "Human-instructed: the owner asked which merge to main made agent-written issue and PR descriptions shorter. A subagent (agent-initiated delegation) measured all 188 header-marked bodies since Oct 9: issue medians fell from about 1500 to about 800 chars from #1895 (20:00Z), all ten short issues coming from the two owner-driven ADR-rewrite sessions; PR lengths did not change. Merges before 20:00Z (#1891, #1893, #1894) don't touch issue writing, no doc lost an issue template, and #1898 merged after the drop started, so I attributed it to those sessions' context, not a merge, and flagged #1898 as worth watching. The owner will keep an eye on it; nothing was built."
+prs: []
+docsRead:
+  - path: docs/agents/git-conventions.md
+    reason: fetch before trusting history; scope log to origin/main
+    useful: partly
+  - path: docs/agents/github-integration.md
+    reason: "subagent: gh api for bulk reads instead of MCP list tools"
+    useful: yes
+  - path: docs/agents/issue-tracker.md
+    reason: "grepped as evidence: holds no issue-body template"
+    useful: yes
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Skipped CLAUDE.md's session-start reads of CONTEXT-MAP.md and CONTEXT.md for a question-only session.
+    solution: Read them at start; here no glossary term mattered, so no impact beyond the broken rule.
+    severity: nit
+  - description: Read git-conventions.md in the same command that ran git fetch and log, so the read did not come first; also used cat, not Read.
+    solution: Read the doc with the Read tool in its own call before any git command.
+    severity: nit
+  - description: Did not read github-integration.md before delegating GitHub reads to a subagent; the subagent read it and used gh api for bulk reads.
+    solution: Name the doc in the subagent brief, or read it before dispatching.
+    severity: nit
+  - description: Deferred close-session until after the owner's follow-up instead of invoking it when the answer was given.
+    solution: Invoke close-session with the answer; re-logging is cheap.
+    severity: nit
+durationSec: 432
+models:
+  claude-opus-5-5: 34
+toolCounts:
+  Bash: 12
+  ToolSearch: 1
+  Agent: 1
+  Skill: 2
+rulesLoaded:
+  - .claude/rules/adr-0029.md
+rulesGlobal:
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0023.md
+  - .claude/rules/adr-0017.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0022.md
+    reason: About the triage sweep; this was a history question, so it didn't apply
+    useful: no
+  - path: .claude/rules/adr-0004.md
+    reason: Gate and merge rules; nothing was pushed or merged
+    useful: no
+  - path: .claude/rules/adr-0009.md
+    reason: Told me to log via close-session and keep the log off any branch; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: Prune trials; I changed no instruction
+    useful: no
+  - path: .claude/rules/adr-0020.md
+    reason: All bodies measured were agent-written by the owner's sessions; trust tiers didn't arise
+    useful: no
+  - path: .claude/rules/adr-0003.md
+    reason: No change was built, so no PR was owed
+    useful: no
+  - path: .claude/rules/adr-0023.md
+    reason: Guest pipeline; not involved
+    useful: no
+  - path: .claude/rules/adr-0017.md
+    reason: Its header line let the subagent tell agent-written bodies from human ones; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0029.md
+    reason: Loaded on reading git-conventions; about where instructions live, not relevant here
+    useful: no
+subagents:
+  - type: general-purpose
+    task: Measure PR/issue body lengths
+gitBranch: claude/cool-franklin-o6tjg5
+entrypoint: remote
+cliVersion: 2.1.296
+landedBy: Stop
