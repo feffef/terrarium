@@ -1,10 +1,10 @@
-# 30. ADRs state the current decision
+# ADR-0030: How we write ADRs
 
 An ADR states one decision as it stands today: its scope and limits, why we
 made it, and the alternatives we rejected, in the template below. When the
-decision changes, we rewrite the ADR in place and git keeps the history. Each
-ADR's summary rule turns its important parts into short instructions for
-agents.
+decision changes, we rewrite the ADR in place and git keeps the history. The
+ADR is the source of the decision; its summary rule (ADR-0029) brings the key
+parts to agents.
 
 ## Scope and limits
 
@@ -14,15 +14,16 @@ agents.
   banners or notes about what used to be true. Use `git log` on the file.
 - **Change an ADR by rewriting it.** Change the decision, merge two ADRs,
   narrow one's focus or retire one: each is an ordinary edit.
-- **The ADR is the single source.** Its summary rule in `.claude/rules/`
-  (ADR-0029) rewrites the important parts as instructions and adds nothing the
-  ADR doesn't say.
+- **The ADR is the source.** Its summary rule may turn parts of it into
+  instructions, but never decides anything the ADR doesn't. What a summary
+  rule is for is ADR-0029's.
 - **Procedures live elsewhere.** Commands, steps and formats go in
   `docs/agents/`, a Skill or a code comment. The ADR points to them.
 - **Plain language.** Short sentences, the glossary's terms, no jargon.
 - **Template.** Every section after the summary is a `##` heading in this
   order; leave out an optional one rather than fill it:
-  1. Title: a short reminder of what the ADR is about.
+  1. Title: `# ADR-NNNN: <title>`, a short reminder of what the ADR is about,
+     the same heading its summary rule uses.
   2. A summary of 2–3 sentences covering the whole decision. A reader who
      stops here knows what we decided.
   3. **Scope and limits:** what the decision covers, its limits, exceptions

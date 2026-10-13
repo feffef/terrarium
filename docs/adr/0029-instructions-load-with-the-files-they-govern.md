@@ -37,11 +37,14 @@ whatever files it touches (a git command, a PR, a Public issue), stays in
 `CLAUDE.md`.
 
 - **ADR rules.** Every ADR has a summary rule, `.claude/rules/adr-NNNN.md`, plus
-  optional `adr-NNNN-<topic>.md` rules that scope one part of it. It loads at
+  optional `adr-NNNN-<topic>.md` rules that scope one part of it. A summary
+  rule has two jobs: it tells the agent the ADR exists and when to read it in
+  full, and it gives the ADR's key actionable parts as instructions. It loads at
   session start only when the ADR binds every session; otherwise its `paths`
   name the files the ADR governs. Its `adr:` hash makes the gate fail when the
   ADR changes until the summary is re-checked (`scripts/validate-adr-rules.ts`).
-  ADR rules are the one deliberate copy of a fact: the ADR stays the home.
+  ADR rules are the one deliberate copy of a fact: the ADR stays the home, and
+  a rule never decides anything its ADR doesn't (ADR-0030).
 - **Other rules.** A non-ADR rule always has `paths`. A short instruction lives
   in the rule alone and is deleted from its doc; a long one stays in its
   `docs/agents/` doc, and the rule states its goal in a line and points there.

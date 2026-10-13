@@ -15,7 +15,7 @@ and your report to `…/rewrites/{NNNN}-report.md`.
 
 Read each in full with the Read tool:
 
-- `docs/adr/0030-adrs-state-the-current-decision.md`: the format. Its
+- `docs/adr/0030-how-we-write-adrs.md`: the format. Its
   *Scope and limits* is your spec.
 - The target ADR, and its summary rule `.claude/rules/adr-{NNNN}.md`.
 - `CONTEXT.md` (glossary; also lists **Retired terms** to drop).
@@ -59,8 +59,9 @@ ADR, so its levers apply in full. Keep each fact in one home, leave lookups to
 the environment, prune no-ops and sediment, prefer leading words over spelled-out
 restatements, and phrase rules positively.
 
-Follow ADR-0030's template exactly. Keep the existing `# {N}. Title` heading
-form; you may shorten the title.
+Follow ADR-0030's template exactly, heading included (`# ADR-{NNNN}: Title`).
+You may shorten the title; it reminds of the topic and doesn't repeat the
+summary.
 
 - **Summary:** 2–3 sentences covering the whole decision.
 - **Scope and limits:** every inventory row lands here, unless it is reasoning
