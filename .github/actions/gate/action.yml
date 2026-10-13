@@ -58,7 +58,7 @@ runs:
     # slower, never wrong. A fresh key per commit makes every green run save a
     # newer one.
     - name: Restore the lint and typecheck caches
-      uses: actions/cache@v4
+      uses: actions/cache@v6
       with:
         path: |
           node_modules/.cache/eslint
@@ -103,7 +103,7 @@ runs:
     # earlier cache and only changed files are parsed.
     - name: Restore the Content parse cache
       if: steps.scope.outputs.skip_build != 'true'
-      uses: actions/cache@v4
+      uses: actions/cache@v6
       with:
         path: .data/content
         key: content-parse-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}-${{ hashFiles('layers/*/content/**', 'layers/*/tenant.config.ts', 'content.config.ts') }}
@@ -128,7 +128,7 @@ runs:
     - name: Restore the pinned Chromium
       if: steps.scope.outputs.skip_build != 'true'
       id: pw-browsers
-      uses: actions/cache@v4
+      uses: actions/cache@v6
       with:
         path: ${{ github.workspace }}/.pw-browsers
         key: pw-browsers-${{ runner.os }}-${{ hashFiles('node_modules/playwright-core/package.json') }}
