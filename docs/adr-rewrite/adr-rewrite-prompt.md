@@ -26,7 +26,10 @@ Read each in full with the Read tool:
   `grep -l "ADR-{NNNN}\|{NNNN}-" docs/adr/*`.
 - `docs/adr-rewrite/expectations/{NNNN}.md`: what live code and docs need from
   this ADR, built without reading it. The raw references are in
-  `docs/adr-rewrite/refs/{NNNN}.md`.
+  `docs/adr-rewrite/refs/{NNNN}.md`; open them only to check a single item.
+- The rewrites already in `docs/adr-rewrite/rewrites/` of every ADR that this
+  one cites or that cites it. They are the current text of those ADRs: state
+  their facts as they do, and point to them rather than restate them.
 - The parts of `docs/adr-rewrite/background/session-log-usage.md` about this
   ADR: why agents opened it.
 
@@ -99,8 +102,10 @@ Plain language:
   actually happens, however often callers quote them.
 - Cross-references go at the end of a sentence or in *See*.
 
-Aim for 40–70 lines. Then invoke the `writing-for-agents` Skill and prune
-sentence by sentence.
+Aim for 40–70 lines. Then read `.agents/skills/writing-for-agents/SKILL.md`
+with the Read tool (the Skill tool refuses it inside a subagent) and prune
+sentence by sentence. Dropping a true detail is fine; a reader who needs it
+finds it at its home.
 
 Done when every live part is in the rewrite, no mechanic's value is repeated,
 and a reviewer who reads only the summary and *Scope* knows what they may

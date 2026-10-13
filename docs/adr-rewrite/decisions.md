@@ -47,3 +47,14 @@ From the grilling round at the end of the prep session:
 - **The exact workflow per PR** is decided in a fresh session.
 - **This branch** (`claude/adr-rewrite-prep-b8fijv`, PR #1892) stays open and
   unmerged; it is the base for the next session.
+
+From the review session (format decisions now live in ADR-0030):
+
+- **Known gaps are issues, not ADR text.** `merge-pr.ts` not refusing
+  guest-pipeline PRs is #1895; scoping the ADR-0022 and ADR-0023 rules is
+  #1896; Dependabot auto-merge versus the Human-only `package.json` has its own
+  issue. A rewrite may name such a gap under *Consequences* in one ADR only.
+- **ADR-0003's job ledger goes whole.** Any row's still-live scope (such as
+  what `visitor-loop` may build) moves into that Skill.
+- **One-shot rewrite.** Be brave: drop details freely as long as the decisions
+  stay clear and consistent across ADRs.
