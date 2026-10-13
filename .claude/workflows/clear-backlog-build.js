@@ -70,7 +70,7 @@ function rules(b) {
 - Commit before you stop, even mid-work. Never push, open a PR, merge, or run close-session/log-session: the orchestrator does those.
 - Every GitHub body you post starts with this exact first line: ${HEADER}
 - Stop and return needs-owner, with the question, its options and your pick, before you add a new dependency, change stored data or the content schema, make a decision big enough for an ADR, delete content visitors can see, change which Tenant's data a request can reach, or reverse an owner's pick above. Decide everything else yourself and list it in decisions.
-- Return worktree only when the branch has commits.
+- Return worktree, the absolute path of the worktree that holds your commits, only when the branch has commits.
 - List in humanOnly every touched path matching the \`paths\` of .claude/rules/adr-0004-human-merge.md.`
 }
 
@@ -90,7 +90,7 @@ ${rules(b)}`
 }
 
 function fresh(b) {
-  return `Run \`pwd\` once to learn your worktree root. Then \`pnpm install\`, \`git fetch origin main\`, \`git checkout -b ${b.name} origin/main\`, and check HEAD equals origin/main.${b.cherryPick ? ` Closed PR #${b.cherryPick} already implements the agreed pick: \`git fetch origin pull/${b.cherryPick}/head\`, cherry-pick its commits onto your branch, then adapt them to the brief.` : ''}`
+  return `Run \`pwd\` once to learn your worktree root. Then \`pnpm install\`, \`git fetch origin main\`, \`git checkout -b ${b.name} origin/main\` (if \`${b.name}\` already exists locally or on origin, check it out instead and keep its commits), and check HEAD equals origin/main or that branch.${b.cherryPick ? ` Closed PR #${b.cherryPick} already implements the agreed pick: \`git fetch origin pull/${b.cherryPick}/head\`, cherry-pick its commits onto your branch, then adapt them to the brief.` : ''}`
 }
 
 function reviewPrompt(b, axis, wt, round) {
