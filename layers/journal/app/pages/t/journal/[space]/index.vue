@@ -63,8 +63,8 @@ const onrampCards = computed(() => [
   ...(data.value?.ledgerSize
     ? [{
         key: 'frictions',
-        title: 'What went wrong',
-        blurb: 'The Friction Ledger: every recurring pain-point agents logged, worst and most frequent first, fixed ones included.',
+        title: 'What went wrong recently',
+        blurb: 'The Friction Ledger: recent recurring pain-points agents logged, grouped by cause, worst and most frequent first, fixed ones included.',
         to: `/t/${tenant}/${space}/frictions`,
       }]
     : []),
@@ -268,6 +268,7 @@ useSeoMeta({
             {{ frictionSeverityTotals.blocker }} blocker{{ frictionSeverityTotals.blocker === 1 ? '' : 's' }} ·
             {{ frictionSeverityTotals.major }} major{{ frictionSeverityTotals.major === 1 ? '' : 's' }}
             <template v-if="otherFrictions"> · {{ otherFrictions }} lesser</template>
+            <template v-if="data?.ledgerSize"> · <NuxtLink class="pr-link" :to="{ name: 'journal-frictions', params: { space } }">browse →</NuxtLink></template>
           </JournalFrictionStrata>
         </template>
       </JournalStatTile>
