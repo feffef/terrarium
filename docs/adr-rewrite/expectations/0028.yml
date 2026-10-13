@@ -1,126 +1,95 @@
-adr: "0028"
-summary_in_context: false
-checklist:
-  - id: C1
-    text: In-app navigation reads a server-rendered _payload.json instead of querying Content in the browser client DB.
-    kind: claim
-    section: Summary
+items:
+  - id: 1
+    text: In-app navigation loads page data from a server-rendered payload, not the browser content database.
+    kind: decision
     refs: [nuxt.config.ts:16, layers/blog/tests/e2e/blog.spec.ts:12, layers/blog/tests/e2e/blog.spec.ts:126, tests/e2e/smoke.spec.ts:60, .claude/rules/adr-0019.md:15, docs/adr/0019-patched-nuxt-content-client-db-loading.md:199, docs/research/content-client-queries-without-wasm.md:31, docs/research/content-client-queries-without-wasm.md:376]
     conflict: false
-  - id: C2
-    text: Pages / and /t/** are served from a server-side page cache (maxAge 60, swr false).
-    kind: claim
-    section: Summary
-    refs: [nuxt.config.ts:16, app/pages/index.vue:63, layers/tinkerfund/nuxt.config.ts:10, layers/tinkerfund/tests/e2e/tinkerfund.spec.ts:31, docs/research/content-client-queries-without-wasm.md:163, docs/research/content-client-queries-without-wasm.md:376]
+  - id: 2
+    text: When does the browser content database still load (Tinkerfund search, re-queries after mount, failed payload fetch falling back)?
+    kind: decision
+    refs: [layers/blog/tests/e2e/blog.spec.ts:26, layers/blog/tests/e2e/blog.spec.ts:12, docs/adr/0019-patched-nuxt-content-client-db-loading.md:199, .claude/rules/adr-0019.md:15, docs/diagrams/interactive-map/terrarium-overview.md:873, docs/research/content-client-queries-without-wasm.md:376]
     conflict: false
-  - id: C3
-    text: The page cache is size-bounded (lru-cache, max 200, #1446), added as an amendment.
-    kind: claim
-    section: Consequences
+  - id: 3
+    text: How is it tested? E2e tests assert navigation makes no browser-database request; blog tests block the payload to reach the recovery dialog.
+    kind: mechanic
+    home: [tests/e2e/smoke.spec.ts, layers/blog/tests/e2e/blog.spec.ts]
+    refs: [tests/e2e/smoke.spec.ts:60, layers/blog/tests/e2e/blog.spec.ts:126, layers/blog/tests/e2e/blog.spec.ts:26, docs/adr/0019-patched-nuxt-content-client-db-loading.md:199, docs/research/content-client-queries-without-wasm.md:376]
+    conflict: false
+  - id: 4
+    text: The server page cache is size-bounded (LRU, 200 entries) however many distinct URLs arrive.
+    kind: mechanic
+    home: [nuxt.config.ts, tests/unit/page-cache.spec.ts]
     refs: [nuxt.config.ts:25, tests/unit/page-cache.spec.ts:1, docs/research/content-client-queries-without-wasm.md:208, docs/research/content-client-queries-without-wasm.md:376]
     conflict: false
-  - id: C4
-    text: Where does the client DB still load? Queries outside a payload - Tinkerfund search, re-queries after mount, a failed payload fetch (falls back to the client DB).
-    kind: question
-    section: Scope and limits
-    refs: [layers/blog/tests/e2e/blog.spec.ts:26, docs/adr/0019-patched-nuxt-content-client-db-loading.md:199, layers/tinkerfund/nuxt.config.ts:10, docs/research/content-client-queries-without-wasm.md:376]
+  - id: 5
+    text: Which pages are cached and for how long? / and /t/**, 60 s, no stale serving.
+    kind: mechanic
+    home: [nuxt.config.ts]
+    refs: [nuxt.config.ts:16, docs/research/content-client-queries-without-wasm.md:163, app/pages/index.vue:63]
     conflict: false
-  - id: C5
-    text: A page that reads a request header or cookie on the server must list it in the cache's varies, or one visitor's output reaches the next (#1365).
-    kind: claim
-    section: Consequences
-    refs: [layers/tinkerfund/nuxt.config.ts:10, layers/tinkerfund/tests/e2e/tinkerfund.spec.ts:31, docs/research/content-client-queries-without-wasm.md:376]
+  - id: 6
+    text: A page whose server render reads a request header must make the cache keep one copy per value; one visitor's locale never reaches another.
+    kind: decision
+    home: [layers/tinkerfund/nuxt.config.ts, layers/tinkerfund/tests/e2e/tinkerfund.spec.ts]
+    refs: [layers/tinkerfund/nuxt.config.ts:10, layers/tinkerfund/tests/e2e/tinkerfund.spec.ts:31, docs/research/content-client-queries-without-wasm.md:208, docs/research/content-client-queries-without-wasm.md:376]
     conflict: false
-  - id: C6
-    text: Failure recovery stays ADR-0019's; a failed payload falls back to the client DB where ContentLoadErrorDialog and its funnels apply unchanged.
-    kind: claim
-    section: See
-    refs: [layers/blog/tests/e2e/blog.spec.ts:12, layers/blog/tests/e2e/blog.spec.ts:26, docs/diagrams/interactive-map/terrarium-overview.md:873, docs/adr/0019-patched-nuxt-content-client-db-loading.md:199]
+  - id: 7
+    text: How stale may time-dependent content ("today", "now") be? Computed at render time; cache bounds it (about 60 s server plus 60 s browser).
+    kind: decision
+    refs: [app/pages/index.vue:63, docs/research/content-client-queries-without-wasm.md:208]
     conflict: false
-  - id: C7
-    text: Server-computed "now" is computed at render time and stale by at most the page cache's window.
-    kind: claim
-    section: Consequences
-    refs: [app/pages/index.vue:63]
+  - id: 8
+    text: Which pages skip the cache? Tinkerfund search is uncached and runs in the browser.
+    kind: decision
+    refs: [layers/tinkerfund/nuxt.config.ts:10, docs/adr/0019-patched-nuxt-content-client-db-loading.md:199]
     conflict: false
-  - id: C8
-    text: Payloads carry useAsyncData results, so Tenant code trims them to what the page reads.
-    kind: claim
-    section: Consequences
+  - id: 9
+    text: Does the ADR hold the final configuration and byte measurements, or point to nuxt.config.ts? Research note says both.
+    kind: decision
+    refs: [docs/research/content-client-queries-without-wasm.md:31, docs/research/content-client-queries-without-wasm.md:34, docs/research/content-client-queries-without-wasm.md:163]
+    conflict: true
+  - id: 10
+    text: Links fetch a payload on interaction, not when they scroll into view.
+    kind: mechanic
+    home: [nuxt.config.ts]
+    refs: [nuxt.config.ts:16, docs/research/content-client-queries-without-wasm.md:163]
+    conflict: false
+  - id: 11
+    text: Keep payloads small; fetched data is trimmed to what the page reads (partly unclear).
+    kind: decision
     refs: [layers/tinkerfund/app/composables/browse.ts:20]
     conflict: false
-  - id: C9
-    text: Where do the final configuration and the byte measurements live? research:34 says ADR-0028; research:163 says ADR-0028 and the two nuxt.config.ts files.
-    kind: question
-    section: Why
-    refs: [docs/research/content-client-queries-without-wasm.md:34, docs/research/content-client-queries-without-wasm.md:163]
-    conflict: true
-  - id: C10
-    text: Why payload extraction over prerendering, rewiring queryCollection, or a JS query engine?
-    kind: question
-    section: Rejected alternatives
-    refs: [docs/research/content-client-queries-without-wasm.md:31, docs/research/content-client-queries-without-wasm.md:376]
-    conflict: false
-  - id: C11
-    text: It is a global runtime change in a Human-only file, so a human merges changes to it (ADR-0004, ADR-0018).
-    kind: claim
-    section: Consequences
+  - id: 12
+    text: Who merges a change here? Global runtime change and nuxt.config.ts need a human (ADR-0004, ADR-0018).
+    kind: decision
     refs: [docs/research/content-client-queries-without-wasm.md:376]
     conflict: false
-  - id: C12
-    text: Does ADR-0028 govern the container files (deploy/entrypoint.sh, Dockerfile, docker-compose.yml)? Unclear from context.
-    kind: question
-    section: Scope and limits
-    refs: [docs/diagrams/interactive-map/terrarium-overview.md:872]
-    conflict: false
-  - id: C13
-    text: The view-transition check is still open.
-    kind: claim
-    section: When to revisit
-    refs: [docs/research/content-client-queries-without-wasm.md:376]
-    conflict: false
-rewrite:
-  - list: keep
-    file: app/pages/index.vue
-    line: 63
-    note: term "page cache" (also tinkerfund nuxt.config.ts:10, tinkerfund.spec.ts:31, nuxt.config.ts:25, page-cache.spec.ts:1)
-  - list: keep
-    file: nuxt.config.ts
-    line: 16
-    note: terms "server payload"/_payload.json and "client DB" (also blog.spec.ts:12/26/126, smoke.spec.ts:60, rules/adr-0019.md:15)
-  - list: keep
-    file: docs/research/content-client-queries-without-wasm.md
-    line: 163
-    note: config values payloadExtraction 'client', maxAge 60, swr false, lru-cache max 200, varies accept-language (also :208, :376)
-  - list: keep
-    file: docs/adr/0019-patched-nuxt-content-client-db-loading.md
-    line: 199
-    note: the list of client-DB cases (Tinkerfund search, re-queries after mount, failed payload fetch)
+lists:
   - list: repoint
     file: docs/research/content-client-queries-without-wasm.md
     line: 208
-    note: cites "ADR-0028 amendment" for the #1446 size bound; breaks if folded into the body
+    note: Names an "ADR-0028 amendment" (#1446).
+  - list: repoint
+    file: docs/research/content-client-queries-without-wasm.md
+    line: 31
+    note: Says ADR-0028 is the home for the final configuration and byte measurements.
   - list: repoint
     file: docs/research/content-client-queries-without-wasm.md
     line: 34
-    note: says ADR-0028 holds the final configuration and byte measurements; breaks if either is dropped
-  - list: fix
+    note: Same sentence as line 31.
+  - list: repoint
     file: docs/research/content-client-queries-without-wasm.md
     line: 163
-    note: repeats the nuxt.config.ts snippet; point to it instead
-  - list: fix
-    file: docs/research/content-client-queries-without-wasm.md
-    line: 34
-    note: conflicts with :163 on where the config's home is; settle on nuxt.config.ts
-  - list: fix
-    file: docs/research/content-client-queries-without-wasm.md
-    line: 376
-    note: restates cache costs (varies, size bound); point to ADR-0028
+    note: Says ADR-0028 and the two nuxt.config.ts files are the source of truth.
   - list: fix
     file: docs/adr/0019-patched-nuxt-content-client-db-loading.md
     line: 199
-    note: lists where the client DB still loads; that fact belongs in ADR-0028 with ADR-0019 pointing
+    note: Dated amendment repeats where the browser DB still loads; make it a pointer (ADR, human decides).
+  - list: fix
+    file: docs/research/content-client-queries-without-wasm.md
+    line: 163
+    note: Copies the config snippet; point to nuxt.config.ts.
   - list: fix
     file: docs/diagrams/interactive-map/terrarium-overview.md
     line: 872
-    note: ADR-0028 cited for container files; check and drop if a miscite
+    note: Cites ADR-0028 for container files (deploy/*); unclear, possible miscite.
