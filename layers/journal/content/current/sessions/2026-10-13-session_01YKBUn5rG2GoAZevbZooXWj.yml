@@ -1,0 +1,228 @@
+schemaVersion: 1
+session: session_01YKBUn5rG2GoAZevbZooXWj
+startedAt: 2026-10-13T09:55:06Z
+endedAt: 2026-10-13T10:12:55Z
+kind: delegated
+goal: Turn recent session frictions into fixes (frictions-to-fixes, second run of 2026-10-13)
+status: in-review
+outcome: "One grouped doc PR (#1882): four Skill-doc fixes plus the Friction Ledger update"
+summary: "Human-instructed: the owner invoked /frictions-to-fixes; everything after was agent-run under that Skill. A survey subagent read the 10 unledgered sessions since 2026-10-11 and saved its ledger changes as a YAML patch file, which the impl agent applied without re-typing. That is itself one of the fixes, for findings-retyped-by-hand, which I judged a scope gap and not a regression: the earlier fixes covered audit-docs only. I picked four simple doc fixes: dispatch-subagents (a user interrupt can cancel agents silently; one major occurrence), frictions-to-fixes §1/§5 (ledger patch file), log-session (every --author pass needs every required field) and clear-backlog §2 (skip it with no grill results). I dropped the HTML-entity note for clear-backlog-explore.js as a lone minor that would need its own PR. unverified-claims-in-drafts (27 occurrences) has no ripe fix: the CLAUDE.md prose is read and still missed, so a mechanism needs design. binding-docs-skipped #1819 is now unblocked (#1859 closed) and waits on a human. One Sonnet impl agent built the branch with gate:scoped green. Two code-review rounds caught a wrong claim in my own brief: mergeAuthored unions every list, not only docsRead/ruleVerdicts. They also moved the patch-file hand-off into §5. Pushed to the designated branch and opened #1882."
+prs:
+  - "1882"
+docsRead:
+  - path: CONTEXT-MAP.md
+    reason: session-start read
+    useful: partly
+  - path: CONTEXT.md
+    reason: Friction severity grading and Friction Ledger terms
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: before first git command; fetch before trusting history
+    useful: partly
+  - path: docs/agents/github-integration.md
+    reason: before GitHub ops; PR body and comment tools
+    useful: partly
+  - path: docs/agents/pr-workflow.md
+    reason: review before first push, merge recipe and verdict comment
+    useful: yes
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: worktree isolation, brief checklist, resume via SendMessage
+    useful: yes
+  - path: .agents/skills/log-session/SKILL.md
+    reason: authoring this log
+    useful: yes
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: Standards reviewer checked the doc edits against its house rules
+    useful: yes
+  - path: .agents/skills/writing-for-agents/SKILL.md
+    reason: Standards reviewer's source for co-location and negation findings
+    useful: yes
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: the run's own Skill, also an edited file under review
+    useful: yes
+  - path: .agents/skills/clear-backlog/SKILL.md
+    reason: survey checked §2 for the zero-grill gap
+    useful: yes
+  - path: .agents/skills/digest/SKILL.md
+    reason: survey checked the §7 heading nit before dropping it
+    useful: partly
+  - path: layers/journal/tenant.config.ts
+    reason: (no reason given)
+  - path: /home/user/terrarium/.agents/skills/frictions-to-fixes/SKILL.md
+    reason: (no reason given)
+  - path: .claude/workflows/clear-backlog-explore.js
+    reason: (no reason given)
+  - path: scripts/log-session.ts
+    reason: (no reason given)
+  - path: layers/journal/content/current/frictions/bash-reads-not-read-tool.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/frictions/binding-docs-skipped.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/frictions/clear-backlog-gaps.yml
+    reason: (read before editing)
+  - path: layers/journal/content/current/frictions/shell-read-detection.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/frictions/harness-proxy-blocks.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/frictions/stop-hook-nag.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/frictions/unverified-claims-in-drafts.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/frictions/findings-retyped-by-hand.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/frictions/github-search-overflow.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/frictions/closure-not-invoked-on-answers.yml
+    reason: (no reason given)
+skillsUsed:
+  - name: frictions-to-fixes
+    reason: the run itself
+  - name: dispatch-subagents
+    reason: survey and impl agent briefs
+  - name: code-review
+    reason: two-axis review before first push
+  - name: close-session
+    reason: in-review log at PR open
+frictions:
+  - description: My impl brief said only docsRead and ruleVerdicts merge across log-session passes, repeating a survey claim; I checked validateAuthored but not mergeAuthored. Spec review caught it.
+    solution: Verify each source claim in a brief against the function it names before dispatch (CLAUDE.md 'Verify before you state').
+    severity: minor
+  - description: My brief's required-field list for log-session left out outcome; the impl agent caught it against the schema.
+    solution: Point the brief at the schema rather than retyping its field list.
+    severity: nit
+  - description: I read rule-governed files (prune-trials.yml, log-session SKILL.md lines, tenant.config.ts grep, log-session.ts) with chained Bash cat/sed/grep instead of the Read tool.
+    solution: Use Read for rule-governed files; the auto-mode prompt's invitation to cat works against CLAUDE.md here.
+    severity: minor
+  - description: The Stop hook asked three times to push the impl branch while code review was still running.
+    solution: stop-hook-nag ledger entry; the ADR-0004 rule already says to review first, so I held.
+    severity: nit
+  - description: The impl agent's Bash guard refused compound commands containing the string 'github' (ledger filenames such as github-search-overflow.yml); it worked around this with a scratch script.
+    solution: Have the guard match the GitHub CLI or API rather than the bare substring in file paths.
+    severity: minor
+  - description: The survey subagent's cat of the whole friction ledger directory overflowed the tool result (51 KB).
+    solution: "survey-output-overflow ledger entry: give the ledger a compact summary script as session-frictions has."
+    severity: minor
+  - description: The impl agent was Sonnet, but the commit-msg hook stamped a Co-Authored-By trailer naming Opus.
+    solution: Have the hook take the model from the authoring agent, or drop the model name from the trailer.
+    severity: nit
+durationSec: 1068
+models:
+  claude-opus-5-5: 65
+toolCounts:
+  Bash: 14
+  Read: 8
+  Agent: 4
+  SendMessage: 2
+  Skill: 2
+  ToolSearch: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+  Write: 1
+  mcp__github__pull_request_read: 1
+filesEdited:
+  - .agents/skills/dispatch-subagents/SKILL.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - .agents/skills/log-session/SKILL.md
+  - .agents/skills/clear-backlog/SKILL.md
+  - layers/journal/content/current/frictions/clear-backlog-gaps.yml
+rulesLoaded:
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0002.md
+  - .claude/rules/adr-0008.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/adr-0026.md
+  - .claude/rules/adr-0018.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0010.md
+rulesGlobal:
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0001.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0023.md
+  - .claude/rules/adr-0017.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0022.md
+    reason: Auto-triage sweep rules; this run labelled no issues, so it did not apply
+    useful: no
+  - path: .claude/rules/adr-0004.md
+    reason: Held the push until gate:scoped and code-review were done despite three Stop-hook nags; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Logged at PR open and kept the log off the branch; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: Screened candidates against open prune-trial territories; none overlapped; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0001.md
+    reason: Build architecture; doc and ledger edits did not touch it
+    useful: no
+  - path: .claude/rules/adr-0020.md
+    reason: All frictions came from our own Trusted sessions; no Public input
+    useful: no
+  - path: .claude/rules/adr-0003.md
+    reason: Opened the PR myself after the first push and subscribed; the reviewer-agent row bounds my merge; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0023.md
+    reason: Guest pipeline; not involved in this run
+    useful: no
+  - path: .claude/rules/adr-0017.md
+    reason: Started the PR body with the session provenance line
+    useful: yes
+  - path: .claude/rules/adr-0005.md
+    reason: Confirmed the edited Skills are repo-owned Platform code changed through a gated PR
+    useful: partly
+  - path: .claude/rules/adr-0015.md
+    reason: Confirmed no edit touched a pack Skill from skills-lock.json
+    useful: partly
+  - path: .claude/rules/adr-0029.md
+    reason: Explained why Bash reads load no rules; I still used Bash reads, which I logged
+    useful: partly
+  - path: .claude/rules/adr-0021.md
+    reason: Context split; no glossary change in this run
+    useful: no
+  - path: .claude/rules/adr-0002.md
+    reason: Loaded on the journal manifest grep for the ledger schema; no manifest edit
+    useful: no
+  - path: .claude/rules/adr-0008.md
+    reason: Confirmed the Friction Ledger is a Journal Inventory refreshed in place
+    useful: partly
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: Loaded on the journal layer read; no MDC or Collection decision
+    useful: no
+  - path: .claude/rules/tenant-layers.md
+    reason: Loaded on the journal layer read; no layer change
+    useful: no
+  - path: .claude/rules/adr-0026.md
+    reason: Loaded for a subagent's file; not relevant to doc fixes
+    useful: no
+  - path: .claude/rules/adr-0018.md
+    reason: Loaded for a subagent's file; not relevant to doc fixes
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Used its paths list to confirm every edited file is a safe surface I can self-merge
+    useful: yes
+  - path: .claude/rules/adr-0010.md
+    reason: Digest rules; loaded when the survey read digest SKILL; no digest work
+    useful: no
+subagents:
+  - type: general-purpose
+    task: Survey and screen frictions
+  - type: general-purpose
+    task: Grouped friction doc fixes
+    model: sonnet
+  - type: general-purpose
+    task: Standards review of doc PR
+  - type: general-purpose
+    task: Spec review of doc PR
+gitBranch: ccr-e79714c3-n9r8bn
+entrypoint: remote_mobile
+cliVersion: 2.1.296
+landedBy: Stop
