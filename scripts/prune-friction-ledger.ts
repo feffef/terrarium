@@ -8,10 +8,10 @@
 import { readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
-import { isSeq, parseDocument } from 'yaml'
+import { isMap, isSeq, parseDocument } from 'yaml'
+import { LEDGER_DIR } from './session-frictions.ts'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
-const LEDGER_DIR = 'layers/journal/content/current/frictions'
 const HORIZON_DAYS = 14
 
 /** The oldest occurrence date the horizon keeps. */
@@ -27,7 +27,7 @@ export function pruneEntry(text: string, start: string): { text: string | null; 
   const occ = doc.get('occurrences')
   if (!isSeq(occ)) return { text, dropped: 0 }
   const before = occ.items.length
-  occ.items = occ.items.filter((item) => String((item as { get(k: string): unknown }).get('date')) >= start)
+  occ.items = occ.items.filter((item) => isMap(item) && String(item.get('date')) >= start)
   const dropped = before - occ.items.length
   if (occ.items.length === 0) return { text: null, dropped }
   return { text: dropped ? doc.toString({ lineWidth: 0 }) : text, dropped }
