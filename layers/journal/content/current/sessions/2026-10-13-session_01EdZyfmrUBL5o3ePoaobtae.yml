@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01EdZyfmrUBL5o3ePoaobtae
 startedAt: 2026-10-13T23:10:28Z
-endedAt: 2026-10-13T23:17:40Z
+endedAt: 2026-10-13T23:52:14Z
 kind: interactive
-goal: Find why agent-written issue and PR descriptions got shorter
+goal: Find why agent-written issue and PR descriptions got shorter and lost headings
 status: completed
-outcome: Issues shortened from 2026-10-13 20:00Z in two ADR-rewrite sessions; PRs did not; no merge to main explains it
-summary: "Human-instructed: the owner asked which merge to main made agent-written issue and PR descriptions shorter. A subagent (agent-initiated delegation) measured all 188 header-marked bodies since Oct 9: issue medians fell from about 1500 to about 800 chars from #1895 (20:00Z), all ten short issues coming from the two owner-driven ADR-rewrite sessions; PR lengths did not change. Merges before 20:00Z (#1891, #1893, #1894) don't touch issue writing, no doc lost an issue template, and #1898 merged after the drop started, so I attributed it to those sessions' context, not a merge, and flagged #1898 as worth watching. The owner will keep an eye on it; nothing was built."
+outcome: No merge to main caused it; headings come only from clear-backlog's PR step, other sessions vary about 50/50
+summary: "Human-instructed: the owner asked which merge to main made agent-written issue and PR descriptions shorter, then pointed at PR 1910's missing ## headings against PR 1874. A subagent (agent-initiated delegation) measured 188 header-marked bodies since Oct 9: issue medians fell from about 1500 to about 800 chars from 20:00Z on Oct 13, all from two owner-driven ADR-rewrite sessions; PR lengths did not change. For headings, about half of agent PRs per half-day had them throughout Oct 9-13; PR 1874's sections come from clear-backlog step 4 (decisions, judgement calls), unchanged since; no doc ever prescribed a PR or issue layout, so neither 1898 nor 1908 removed one, and the model was the same. I offered a one-line layout rule in pr-workflow.md; the owner declined. Nothing was built."
 prs: []
 docsRead:
   - path: docs/agents/git-conventions.md
@@ -17,6 +17,9 @@ docsRead:
     useful: yes
   - path: docs/agents/issue-tracker.md
     reason: "grepped as evidence: holds no issue-body template"
+    useful: yes
+  - path: .agents/skills/clear-backlog/SKILL.md
+    reason: step 4 is where PR 1874 sections came from
     useful: yes
 skillsUsed:
   - name: close-session
@@ -36,14 +39,22 @@ frictions:
   - description: Deferred close-session until after the owner's follow-up instead of invoking it when the answer was given.
     solution: Invoke close-session with the answer; re-logging is cheap.
     severity: nit
-durationSec: 432
+  - description: On resume, called mcp__github__pull_request_read without re-reading github-integration.md first; the hook reminded me after.
+    solution: Read it before the first GitHub call in each session, resumed ones included.
+    severity: nit
+  - description: An unscoped list_pull_requests with body overflowed to a 76k-char file.
+    solution: Use the saved rows.json or a smaller perPage when bodies are needed.
+    severity: nit
+durationSec: 2505
 models:
-  claude-opus-5-5: 34
+  claude-opus-5-5: 63
 toolCounts:
-  Bash: 12
-  ToolSearch: 1
+  Bash: 23
+  ToolSearch: 2
   Agent: 1
   Skill: 2
+  mcp__github__pull_request_read: 1
+  mcp__github__list_pull_requests: 1
 rulesLoaded:
   - .claude/rules/adr-0029.md
 rulesGlobal:
