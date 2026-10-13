@@ -165,4 +165,34 @@ describe('buildWindows() — landing commit', () => {
     expect(found!.judgeableNow).toBe(false)
     expect(missing!.landing).toBeNull()
   })
+
+  it('dates a branch-committed entry by the merge that brought it onto main (issue #1856)', () => {
+    const repo = mkdtempSync(join(tmpdir(), 'prune-trial-window-'))
+    const git = (args: string[], date?: string) =>
+      execFileSync('git', ['-c', 'core.hooksPath=/dev/null', '-c', 'commit.gpgsign=false', '-c', 'user.name=t', '-c', 'user.email=t@t', ...args], {
+        cwd: repo,
+        encoding: 'utf8',
+        env: date ? { ...process.env, GIT_AUTHOR_DATE: date, GIT_COMMITTER_DATE: date } : process.env,
+      }).trim()
+    mkdirSync(join(repo, '.agents'))
+    const ledger = join(repo, '.agents/prune-trials.yml')
+    git(['init', '-q', '-b', 'main'])
+    writeFileSync(ledger, 'trials: []\n')
+    git(['add', '-A'])
+    git(['commit', '-qm', 'base'], '2026-10-01T00:00:00Z')
+    git(['switch', '-q', '-c', 'side'])
+    writeFileSync(ledger, 'trials:\n  - problem: >\n      Merged entry.\n    opened: 2026-10-08\n')
+    git(['commit', '-qam', 'entry'], '2026-10-08T13:00:00Z')
+    writeFileSync(join(repo, 'later.txt'), 'x')
+    git(['add', '-A'])
+    git(['commit', '-qm', 'more branch work'], '2026-10-08T13:30:00Z')
+    git(['switch', '-q', 'main'])
+    git(['merge', '-q', '--no-ff', '-m', 'merge', 'side'], '2026-10-08T14:00:00Z')
+    const merge = git(['rev-parse', 'HEAD'])
+    git(['update-ref', 'refs/remotes/origin/main', 'HEAD'])
+
+    const trial = { problem: 'Merged entry.', opened: '2026-10-08' }
+    const [w] = buildWindows([{ trial, searchKey: 'Merged entry.' }], new Date('2026-10-09T00:00:00Z'), repo)
+    expect(w!.landing).toEqual({ hash: merge, isoCommitTime: '2026-10-08T14:00:00.000Z' })
+  })
 })
