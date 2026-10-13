@@ -92,29 +92,6 @@ export function frictionOtherCount(totals: Record<Severity, number>): number {
   return totals.nit + totals.minor + totals.moderate
 }
 
-// Array.sort is stable, so blockers-first keeps the caller's newest-first order within a severity.
-// Same first line = one recurring friction; listing it N times read as a rendering bug.
-export function worstFrictions(
-  sessions: SessionDoc[],
-  max = 5,
-): { items: { severity: Severity; description: string; anchor: string; date: string; count: number }[]; rest: number } {
-  const all = sessions.flatMap((s) =>
-    s.frictions
-      .filter((f) => f.severity === 'blocker' || f.severity === 'major')
-      .map((f) => ({ severity: f.severity, description: f.description, anchor: sessionAnchor(s.session), date: s.endedAt.slice(0, 10), count: 1 })),
-  )
-  all.sort((a, b) => Number(b.severity === 'blocker') - Number(a.severity === 'blocker'))
-  const groups = new Map<string, (typeof all)[number]>()
-  for (const f of all) {
-    const key = `${f.severity}\n${f.description.split('\n')[0]}`
-    const g = groups.get(key)
-    if (g) g.count++
-    else groups.set(key, { ...f })
-  }
-  const items = [...groups.values()]
-  return { items: items.slice(0, max), rest: Math.max(0, items.length - max) }
-}
-
 export function kindCounts(sessions: SessionDoc[]): { interactive: number; delegated: number; autonomous: number } {
   const counts = { interactive: 0, delegated: 0, autonomous: 0 }
   for (const s of sessions) counts[s.kind]++

@@ -1,7 +1,6 @@
 <script setup lang="ts">
 // The Friction Ledger (CONTEXT.md), rendered. A static segment, so it outranks
 // the sibling `[...slug].vue`; reads only this Space's collections via useSpace.
-import type { LedgerEntry } from '../../../../utils/ledger'
 
 definePageMeta({ name: 'journal-frictions' })
 const PAGE_TITLE = 'Friction Ledger'
@@ -32,13 +31,6 @@ const sections = computed(() => [
   },
 ])
 
-const STATUS_LABEL: Record<LedgerEntry['status'], string> = {
-  open: 'open',
-  tracked: 'tracked',
-  'on-trial': 'on trial',
-  fixed: 'fixed',
-}
-
 useSeoMeta({ title: () => `${PAGE_TITLE} · journal/${space}` })
 </script>
 
@@ -68,7 +60,7 @@ useSeoMeta({ title: () => `${PAGE_TITLE} · journal/${space}` })
                 <span class="pills">
                   <span class="pill sev" :class="e.worst" :title="`Worst severity: ${e.worst}`">{{ e.worst }}</span>
                   <span class="pill status" :class="e.status" :title="e.fixedOn ? `Fixed on ${e.fixedOn}` : undefined">
-                    {{ e.fixedOn ? `${STATUS_LABEL[e.status]} ${e.fixedOn.slice(5)}` : STATUS_LABEL[e.status] }}
+                    {{ e.status.replace('-', ' ') }}{{ e.fixedOn ? ` ${e.fixedOn.slice(5)}` : '' }}
                   </span>
                   <a v-if="e.refLink" class="pill ref" :href="e.refLink.url" @click.stop>{{ e.refLink.label }}</a>
                 </span>
