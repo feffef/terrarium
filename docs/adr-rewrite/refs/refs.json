@@ -156,7 +156,7 @@
  {
   "adr": 4,
   "file": "CLAUDE.md",
-  "line": 52,
+  "line": 53,
   "kind": "docs",
   "forms": [
    "ADR-0004"
@@ -167,7 +167,7 @@
  {
   "adr": 29,
   "file": "CLAUDE.md",
-  "line": 64,
+  "line": 65,
   "kind": "docs",
   "forms": [
    "ADR-0029"
@@ -178,7 +178,7 @@
  {
   "adr": 4,
   "file": "CLAUDE.md",
-  "line": 74,
+  "line": 75,
   "kind": "docs",
   "forms": [
    "ADR-0004"
@@ -189,7 +189,7 @@
  {
   "adr": 5,
   "file": "CLAUDE.md",
-  "line": 82,
+  "line": 83,
   "kind": "docs",
   "forms": [
    "ADR-0005"
@@ -1890,18 +1890,18 @@
    "ADR-0029"
   ],
   "anchor": false,
-  "ctx": "// Gate check that every ADR summary in `.claude/rules/adr-NNNN.md` was\n// re-checked after its ADR last changed. Each rule's frontmatter carries\n// `adr: <hash of the ADR file>`; Claude Code reads only `paths` from a rule's\n// frontmatter, so the hash costs no context. Any edit to an ADR changes its\n// hash, so the summary cannot go stale silently: the author re-reads the rule,\n// updates it if the decision changed, then runs this script with `--write`.\n// Every other rule must have `paths` and name only `docs/` files that exist\n// (ADR-0029, issue #1765).\n//\n// Usage: pnpm validate:content (chained), or\n//   pnpm exec tsx scripts/validate-adr-rules.ts [--write]\nimport { createHash } from 'node:crypto'\nimport { existsSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'\nimport { dirname, join, resolve } from 'node:path'\nimport { fileURLToPath, pathToFileURL } from 'node:url'\nimport { parse as parseYaml } from 'yaml'"
+  "ctx": "// Gate check that every ADR summary in `.claude/rules/adr-NNNN.md` was\n// re-checked after its ADR last changed. Each rule's frontmatter carries\n// `adr: <hash of the ADR file>`; Claude Code reads only `paths` from a rule's\n// frontmatter, so the hash costs no context. Any edit to an ADR changes its\n// hash, so the summary cannot go stale silently: the author re-reads the rule,\n// updates it if the decision changed, then runs this script with `--write`.\n// Every other rule must have `paths` and name only `docs/` files that exist\n// (ADR-0029, issue #1765). An ADR in the new shape carries no history\n// (ADR-0030).\n//\n// Usage: pnpm validate:content (chained), or\n//   pnpm exec tsx scripts/validate-adr-rules.ts [--write]\nimport { createHash } from 'node:crypto'\nimport { existsSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'\nimport { dirname, join, resolve } from 'node:path'\nimport { fileURLToPath, pathToFileURL } from 'node:url'\nimport { parse as parseYaml } from 'yaml'"
  },
  {
-  "adr": 4,
+  "adr": 30,
   "file": "scripts/validate-adr-rules.ts",
-  "line": 72,
+  "line": 9,
   "kind": "code",
   "forms": [
-   "adr-0004"
+   "ADR-0030"
   ],
   "anchor": false,
-  "ctx": "/** The `docs/` paths a rule's body names (not its frontmatter globs). */\nexport const ruleDocPaths = (ruleText: string): string[] => [\n  ...new Set(ruleBody(ruleText).match(/(?<![\\w./-])docs\\/[\\w./-]*[\\w-]/g) ?? []),\n]\n\n/** A rule file names its ADR: `adr-0004.md` is the summary, and an extra\n *  `adr-0004-<topic>.md` covers a part of that ADR with its own `paths`. */\nexport const ruleAdr = (file: string) => /^adr-(\\d{4})(?:-[a-z0-9-]+)?\\.md$/.exec(file)?.[1]\n\n/** Rule files whose stamp no longer matches their ADR. */\nexport function staleRules({ adrs, rules }: AdrRuleInput): string[] {\n  return Object.entries(rules)\n    .filter(([file, text]) => {\n      const adr = adrs[ruleAdr(file) ?? '']\n      return adr !== undefined && ruleHash(text) !== adrHash(adr)\n    })\n    .map(([file]) => file)\n}"
+  "ctx": "// Gate check that every ADR summary in `.claude/rules/adr-NNNN.md` was\n// re-checked after its ADR last changed. Each rule's frontmatter carries\n// `adr: <hash of the ADR file>`; Claude Code reads only `paths` from a rule's\n// frontmatter, so the hash costs no context. Any edit to an ADR changes its\n// hash, so the summary cannot go stale silently: the author re-reads the rule,\n// updates it if the decision changed, then runs this script with `--write`.\n// Every other rule must have `paths` and name only `docs/` files that exist\n// (ADR-0029, issue #1765). An ADR in the new shape carries no history\n// (ADR-0030).\n//\n// Usage: pnpm validate:content (chained), or\n//   pnpm exec tsx scripts/validate-adr-rules.ts [--write]\nimport { createHash } from 'node:crypto'\nimport { existsSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'\nimport { dirname, join, resolve } from 'node:path'\nimport { fileURLToPath, pathToFileURL } from 'node:url'\nimport { parse as parseYaml } from 'yaml'"
  },
  {
   "adr": 4,
@@ -1915,9 +1915,42 @@
   "ctx": "/** The `docs/` paths a rule's body names (not its frontmatter globs). */\nexport const ruleDocPaths = (ruleText: string): string[] => [\n  ...new Set(ruleBody(ruleText).match(/(?<![\\w./-])docs\\/[\\w./-]*[\\w-]/g) ?? []),\n]\n\n/** A rule file names its ADR: `adr-0004.md` is the summary, and an extra\n *  `adr-0004-<topic>.md` covers a part of that ADR with its own `paths`. */\nexport const ruleAdr = (file: string) => /^adr-(\\d{4})(?:-[a-z0-9-]+)?\\.md$/.exec(file)?.[1]\n\n/** Rule files whose stamp no longer matches their ADR. */\nexport function staleRules({ adrs, rules }: AdrRuleInput): string[] {\n  return Object.entries(rules)\n    .filter(([file, text]) => {\n      const adr = adrs[ruleAdr(file) ?? '']\n      return adr !== undefined && ruleHash(text) !== adrHash(adr)\n    })\n    .map(([file]) => file)\n}"
  },
  {
+  "adr": 4,
+  "file": "scripts/validate-adr-rules.ts",
+  "line": 74,
+  "kind": "code",
+  "forms": [
+   "adr-0004"
+  ],
+  "anchor": false,
+  "ctx": "/** The `docs/` paths a rule's body names (not its frontmatter globs). */\nexport const ruleDocPaths = (ruleText: string): string[] => [\n  ...new Set(ruleBody(ruleText).match(/(?<![\\w./-])docs\\/[\\w./-]*[\\w-]/g) ?? []),\n]\n\n/** A rule file names its ADR: `adr-0004.md` is the summary, and an extra\n *  `adr-0004-<topic>.md` covers a part of that ADR with its own `paths`. */\nexport const ruleAdr = (file: string) => /^adr-(\\d{4})(?:-[a-z0-9-]+)?\\.md$/.exec(file)?.[1]\n\n/** Rule files whose stamp no longer matches their ADR. */\nexport function staleRules({ adrs, rules }: AdrRuleInput): string[] {\n  return Object.entries(rules)\n    .filter(([file, text]) => {\n      const adr = adrs[ruleAdr(file) ?? '']\n      return adr !== undefined && ruleHash(text) !== adrHash(adr)\n    })\n    .map(([file]) => file)\n}"
+ },
+ {
+  "adr": 30,
+  "file": "scripts/validate-adr-rules.ts",
+  "line": 87,
+  "kind": "code",
+  "forms": [
+   "ADR-0030"
+  ],
+  "anchor": false,
+  "ctx": "/** Rule files whose stamp no longer matches their ADR. */\nexport function staleRules({ adrs, rules }: AdrRuleInput): string[] {\n  return Object.entries(rules)\n    .filter(([file, text]) => {\n      const adr = adrs[ruleAdr(file) ?? '']\n      return adr !== undefined && ruleHash(text) !== adrHash(adr)\n    })\n    .map(([file]) => file)\n}\n\n/** History an ADR in the ADR-0030 shape (`# ADR-NNNN:` heading) must not\n *  carry; an older `# NN.` ADR is exempt until rewritten. */\nconst HISTORY: [RegExp, string][] = [\n  [/\\b\\d{4}-\\d{2}-\\d{2}\\b/, 'a date'],\n  [/^(Status|Date):/m, 'a status line'],\n  [/^>\\s*\\**(Amended|Superseded)\\b/im, 'an amendment banner'],\n]"
+ },
+ {
+  "adr": 30,
+  "file": "scripts/validate-adr-rules.ts",
+  "line": 98,
+  "kind": "code",
+  "forms": [
+   "ADR-0030"
+  ],
+  "anchor": false,
+  "ctx": "export function newFormatProblems(n: string, text: string): string[] {\n  if (!/^# ADR-\\d{4}:/.test(text)) return []\n  if (!text.startsWith(`# ADR-${n}:`)) return [`ADR-${n}'s heading names a different number.`]\n  return HISTORY.filter(([re]) => re.test(text)).map(([, what]) => `ADR-${n} has ${what}; ADR-0030 keeps history in git.`)\n}\n\nexport function findAdrRuleProblems(input: AdrRuleInput): string[] {\n  const { adrs, rules } = input\n  const problems: string[] = []\n  for (const [n, text] of Object.entries(adrs)) {\n    if (!NO_RULE.has(n) && !(`adr-${n}.md` in rules)) problems.push(`ADR-${n} has no summary rule: add ${RULES_DIR}/adr-${n}.md.`)\n    problems.push(...newFormatProblems(n, text))\n  }\n  for (const file of Object.keys(rules)) {\n    const n = ruleAdr(file)\n    if (n === undefined || !(n in adrs)) problems.push(`${RULES_DIR}/${file} has no matching ADR in ${ADR_DIR}/.`)"
+ },
+ {
   "adr": 29,
   "file": "scripts/validate-adr-rules.ts",
-  "line": 105,
+  "line": 121,
   "kind": "code",
   "forms": [
    "ADR-0029"
@@ -6534,15 +6567,125 @@
   "ctx": "  it('fails on a missing summary and on a rule with no ADR, but exempts superseded ADR-0007', () => {\n    const problems = findAdrRuleProblems({ adrs: { '0024': ADR, '0007': 'old' }, rules: { 'adr-0099.md': 'x' } })\n    expect(problems).toHaveLength(2)\n    expect(problems.join('\\n')).toContain('ADR-0024 has no summary rule')\n    expect(problems.join('\\n')).toContain('adr-0099.md has no matching ADR')\n  })\n})"
  },
  {
-  "adr": 29,
+  "adr": 30,
   "file": "tests/unit/validate-adr-rules.spec.ts",
   "line": 48,
+  "kind": "code",
+  "forms": [
+   "ADR-0030"
+  ],
+  "anchor": false,
+  "ctx": "  it('fails on a missing summary and on a rule with no ADR, but exempts superseded ADR-0007', () => {\n    const problems = findAdrRuleProblems({ adrs: { '0024': ADR, '0007': 'old' }, rules: { 'adr-0099.md': 'x' } })\n    expect(problems).toHaveLength(2)\n    expect(problems.join('\\n')).toContain('ADR-0024 has no summary rule')\n    expect(problems.join('\\n')).toContain('adr-0099.md has no matching ADR')\n  })\n})\n\ndescribe('newFormatProblems (ADR-0030)', () => {\n  const NEW = '# ADR-0024: Mermaid\\n\\nDecision text.\\n'\n\n  it('passes a clean new-shape ADR and exempts an old-shape one', () => {\n    expect(newFormatProblems('0024', NEW)).toEqual([])\n    expect(newFormatProblems('0024', '# 24. Mermaid\\n\\nDate: 2026-01-01\\nStatus: Accepted\\n')).toEqual([])\n  })"
+ },
+ {
+  "adr": 24,
+  "file": "tests/unit/validate-adr-rules.spec.ts",
+  "line": 49,
+  "kind": "code",
+  "forms": [
+   "ADR-0024"
+  ],
+  "anchor": false,
+  "ctx": "  it('fails on a missing summary and on a rule with no ADR, but exempts superseded ADR-0007', () => {\n    const problems = findAdrRuleProblems({ adrs: { '0024': ADR, '0007': 'old' }, rules: { 'adr-0099.md': 'x' } })\n    expect(problems).toHaveLength(2)\n    expect(problems.join('\\n')).toContain('ADR-0024 has no summary rule')\n    expect(problems.join('\\n')).toContain('adr-0099.md has no matching ADR')\n  })\n})\n\ndescribe('newFormatProblems (ADR-0030)', () => {\n  const NEW = '# ADR-0024: Mermaid\\n\\nDecision text.\\n'\n\n  it('passes a clean new-shape ADR and exempts an old-shape one', () => {\n    expect(newFormatProblems('0024', NEW)).toEqual([])\n    expect(newFormatProblems('0024', '# 24. Mermaid\\n\\nDate: 2026-01-01\\nStatus: Accepted\\n')).toEqual([])\n  })"
+ },
+ {
+  "adr": 24,
+  "file": "tests/unit/validate-adr-rules.spec.ts",
+  "line": 59,
+  "kind": "code",
+  "forms": [
+   "ADR-0024"
+  ],
+  "anchor": false,
+  "ctx": "  it('flags a date, a status line and an amendment banner', () => {\n    const text = `${NEW}Status: Accepted\\n\\n> **Amended (2026-07-06).** Changed.\\n`\n    expect(newFormatProblems('0024', text)).toEqual([\n      'ADR-0024 has a date; ADR-0030 keeps history in git.',\n      'ADR-0024 has a status line; ADR-0030 keeps history in git.',\n      'ADR-0024 has an amendment banner; ADR-0030 keeps history in git.',\n    ])\n  })"
+ },
+ {
+  "adr": 30,
+  "file": "tests/unit/validate-adr-rules.spec.ts",
+  "line": 59,
+  "kind": "code",
+  "forms": [
+   "ADR-0030"
+  ],
+  "anchor": false,
+  "ctx": "  it('flags a date, a status line and an amendment banner', () => {\n    const text = `${NEW}Status: Accepted\\n\\n> **Amended (2026-07-06).** Changed.\\n`\n    expect(newFormatProblems('0024', text)).toEqual([\n      'ADR-0024 has a date; ADR-0030 keeps history in git.',\n      'ADR-0024 has a status line; ADR-0030 keeps history in git.',\n      'ADR-0024 has an amendment banner; ADR-0030 keeps history in git.',\n    ])\n  })"
+ },
+ {
+  "adr": 24,
+  "file": "tests/unit/validate-adr-rules.spec.ts",
+  "line": 60,
+  "kind": "code",
+  "forms": [
+   "ADR-0024"
+  ],
+  "anchor": false,
+  "ctx": "  it('flags a date, a status line and an amendment banner', () => {\n    const text = `${NEW}Status: Accepted\\n\\n> **Amended (2026-07-06).** Changed.\\n`\n    expect(newFormatProblems('0024', text)).toEqual([\n      'ADR-0024 has a date; ADR-0030 keeps history in git.',\n      'ADR-0024 has a status line; ADR-0030 keeps history in git.',\n      'ADR-0024 has an amendment banner; ADR-0030 keeps history in git.',\n    ])\n  })"
+ },
+ {
+  "adr": 30,
+  "file": "tests/unit/validate-adr-rules.spec.ts",
+  "line": 60,
+  "kind": "code",
+  "forms": [
+   "ADR-0030"
+  ],
+  "anchor": false,
+  "ctx": "  it('flags a date, a status line and an amendment banner', () => {\n    const text = `${NEW}Status: Accepted\\n\\n> **Amended (2026-07-06).** Changed.\\n`\n    expect(newFormatProblems('0024', text)).toEqual([\n      'ADR-0024 has a date; ADR-0030 keeps history in git.',\n      'ADR-0024 has a status line; ADR-0030 keeps history in git.',\n      'ADR-0024 has an amendment banner; ADR-0030 keeps history in git.',\n    ])\n  })"
+ },
+ {
+  "adr": 24,
+  "file": "tests/unit/validate-adr-rules.spec.ts",
+  "line": 61,
+  "kind": "code",
+  "forms": [
+   "ADR-0024"
+  ],
+  "anchor": false,
+  "ctx": "  it('flags a date, a status line and an amendment banner', () => {\n    const text = `${NEW}Status: Accepted\\n\\n> **Amended (2026-07-06).** Changed.\\n`\n    expect(newFormatProblems('0024', text)).toEqual([\n      'ADR-0024 has a date; ADR-0030 keeps history in git.',\n      'ADR-0024 has a status line; ADR-0030 keeps history in git.',\n      'ADR-0024 has an amendment banner; ADR-0030 keeps history in git.',\n    ])\n  })\n\n  it('flags a heading whose number is not the file\\'s, and reaches the gate', () => {\n    expect(newFormatProblems('0025', NEW)).toEqual([\"ADR-0025's heading names a different number.\"])\n    expect(findAdrRuleProblems({ adrs: { '0024': `${NEW}Date: 2026-01-01\\n` }, rules: { 'adr-0024.md': withRuleHash('x', adrHash(`${NEW}Date: 2026-01-01\\n`)) } })).toHaveLength(2)\n  })\n})"
+ },
+ {
+  "adr": 30,
+  "file": "tests/unit/validate-adr-rules.spec.ts",
+  "line": 61,
+  "kind": "code",
+  "forms": [
+   "ADR-0030"
+  ],
+  "anchor": false,
+  "ctx": "  it('flags a date, a status line and an amendment banner', () => {\n    const text = `${NEW}Status: Accepted\\n\\n> **Amended (2026-07-06).** Changed.\\n`\n    expect(newFormatProblems('0024', text)).toEqual([\n      'ADR-0024 has a date; ADR-0030 keeps history in git.',\n      'ADR-0024 has a status line; ADR-0030 keeps history in git.',\n      'ADR-0024 has an amendment banner; ADR-0030 keeps history in git.',\n    ])\n  })\n\n  it('flags a heading whose number is not the file\\'s, and reaches the gate', () => {\n    expect(newFormatProblems('0025', NEW)).toEqual([\"ADR-0025's heading names a different number.\"])\n    expect(findAdrRuleProblems({ adrs: { '0024': `${NEW}Date: 2026-01-01\\n` }, rules: { 'adr-0024.md': withRuleHash('x', adrHash(`${NEW}Date: 2026-01-01\\n`)) } })).toHaveLength(2)\n  })\n})"
+ },
+ {
+  "adr": 25,
+  "file": "tests/unit/validate-adr-rules.spec.ts",
+  "line": 66,
+  "kind": "code",
+  "forms": [
+   "ADR-0025"
+  ],
+  "anchor": false,
+  "ctx": "  it('flags a date, a status line and an amendment banner', () => {\n    const text = `${NEW}Status: Accepted\\n\\n> **Amended (2026-07-06).** Changed.\\n`\n    expect(newFormatProblems('0024', text)).toEqual([\n      'ADR-0024 has a date; ADR-0030 keeps history in git.',\n      'ADR-0024 has a status line; ADR-0030 keeps history in git.',\n      'ADR-0024 has an amendment banner; ADR-0030 keeps history in git.',\n    ])\n  })\n\n  it('flags a heading whose number is not the file\\'s, and reaches the gate', () => {\n    expect(newFormatProblems('0025', NEW)).toEqual([\"ADR-0025's heading names a different number.\"])\n    expect(findAdrRuleProblems({ adrs: { '0024': `${NEW}Date: 2026-01-01\\n` }, rules: { 'adr-0024.md': withRuleHash('x', adrHash(`${NEW}Date: 2026-01-01\\n`)) } })).toHaveLength(2)\n  })\n})"
+ },
+ {
+  "adr": 24,
+  "file": "tests/unit/validate-adr-rules.spec.ts",
+  "line": 67,
+  "kind": "code",
+  "forms": [
+   "adr-0024"
+  ],
+  "anchor": false,
+  "ctx": "  it('flags a date, a status line and an amendment banner', () => {\n    const text = `${NEW}Status: Accepted\\n\\n> **Amended (2026-07-06).** Changed.\\n`\n    expect(newFormatProblems('0024', text)).toEqual([\n      'ADR-0024 has a date; ADR-0030 keeps history in git.',\n      'ADR-0024 has a status line; ADR-0030 keeps history in git.',\n      'ADR-0024 has an amendment banner; ADR-0030 keeps history in git.',\n    ])\n  })\n\n  it('flags a heading whose number is not the file\\'s, and reaches the gate', () => {\n    expect(newFormatProblems('0025', NEW)).toEqual([\"ADR-0025's heading names a different number.\"])\n    expect(findAdrRuleProblems({ adrs: { '0024': `${NEW}Date: 2026-01-01\\n` }, rules: { 'adr-0024.md': withRuleHash('x', adrHash(`${NEW}Date: 2026-01-01\\n`)) } })).toHaveLength(2)\n  })\n})\n\ndescribe('non-ADR rules (ADR-0029)', () => {\n  const exists = (p: string) => p === 'docs/agents/guards.md'\n  const check = (files: Record<string, string>) => findAdrRuleProblems({ adrs: {}, rules: {}, otherRules: { files, exists } })\n  const scoped = (body: string) => `---\\npaths:\\n  - \"scripts/*-guard.ts\"\\n---\\n${body}`"
+ },
+ {
+  "adr": 29,
+  "file": "tests/unit/validate-adr-rules.spec.ts",
+  "line": 71,
   "kind": "code",
   "forms": [
    "ADR-0029"
   ],
   "anchor": false,
-  "ctx": "  it('fails on a missing summary and on a rule with no ADR, but exempts superseded ADR-0007', () => {\n    const problems = findAdrRuleProblems({ adrs: { '0024': ADR, '0007': 'old' }, rules: { 'adr-0099.md': 'x' } })\n    expect(problems).toHaveLength(2)\n    expect(problems.join('\\n')).toContain('ADR-0024 has no summary rule')\n    expect(problems.join('\\n')).toContain('adr-0099.md has no matching ADR')\n  })\n})\n\ndescribe('non-ADR rules (ADR-0029)', () => {\n  const exists = (p: string) => p === 'docs/agents/guards.md'\n  const check = (files: Record<string, string>) => findAdrRuleProblems({ adrs: {}, rules: {}, otherRules: { files, exists } })\n  const scoped = (body: string) => `---\\npaths:\\n  - \"scripts/*-guard.ts\"\\n---\\n${body}`"
+  "ctx": "  it('flags a heading whose number is not the file\\'s, and reaches the gate', () => {\n    expect(newFormatProblems('0025', NEW)).toEqual([\"ADR-0025's heading names a different number.\"])\n    expect(findAdrRuleProblems({ adrs: { '0024': `${NEW}Date: 2026-01-01\\n` }, rules: { 'adr-0024.md': withRuleHash('x', adrHash(`${NEW}Date: 2026-01-01\\n`)) } })).toHaveLength(2)\n  })\n})\n\ndescribe('non-ADR rules (ADR-0029)', () => {\n  const exists = (p: string) => p === 'docs/agents/guards.md'\n  const check = (files: Record<string, string>) => findAdrRuleProblems({ adrs: {}, rules: {}, otherRules: { files, exists } })\n  const scoped = (body: string) => `---\\npaths:\\n  - \"scripts/*-guard.ts\"\\n---\\n${body}`"
  },
  {
   "adr": 20,
@@ -9097,6 +9240,17 @@
   "ctx": "[section: ## Consequences]\n- Autonomous \"consolidate automatically\" is one bounded, well-understood job, not\n  the agent's general temperament \u2014 so its PRs are reviewable against a known\n  expectation.\n- The review-agent and the human reviewer need the *same* objective safety\n  signals; defining that gate is a prerequisite for auto-merge (ADR-0004).\n- Assumes GitHub PRs. If the host is actually GitLab, the review-agent tooling\n  changes (not the model).\n"
  },
  {
+  "adr": 29,
+  "file": "docs/adr/0030-adrs-document-a-decision-not-its-history.md",
+  "line": 6,
+  "kind": "docs",
+  "forms": [
+   "ADR-0029"
+  ],
+  "anchor": false,
+  "ctx": "[section: # ADR-0030: ADRs document a decision, not its history]\nAn ADR states one decision as it stands today: what it covers, why we made it,\nand the alternatives we rejected, in the template below. When the decision\nchanges, we rewrite the ADR in place and git keeps the history. The ADR is the\nsource of the decision; its summary rule (ADR-0029) brings the key parts to\nagents.\n\n## Scope"
+ },
+ {
   "adr": 15,
   "file": "docs/adr/0005-skill-model.md",
   "line": 11,
@@ -9437,39 +9591,6 @@
   ],
   "anchor": false,
   "ctx": "[section: ## Consequences]\n- **The input screen is convention, not a gate.** A determined injection that an\n  agent naively obeys is only caught downstream by the human-merge backstop \u2014\n  which is why rule 3 (no auto-merge for Public work) is non-negotiable even\n  though rules 1\u20132 are convention.\n- **Shared-credential blind spot.** A Public user driving a session through a\n  Trusted user's own connector would read as Trusted and the input screen\n  could not fire \u2014 only the merge backstop remains. Same limit as ADR-0017 / #124\n  (bot identity); out of scope here.\n- **Two tiers, not a spectrum.** All non-write associations collapse to Public and\n  all write-holders to Trusted. A middle \"partially trusted collaborator\" tier is\n  deliberately *not* introduced until a concrete need proves it (rule of two).\n- **Reversible.** This is additive policy plus settings; it can be tightened or\n  relaxed without touching the isolation/routing core."
- },
- {
-  "adr": 29,
-  "file": "docs/adr/0030-how-we-write-adrs.md",
-  "line": 6,
-  "kind": "docs",
-  "forms": [
-   "ADR-0029"
-  ],
-  "anchor": false,
-  "ctx": "[section: # ADR-0030: How we write ADRs]\nAn ADR states one decision as it stands today: its scope and limits, why we\nmade it, and the alternatives we rejected, in the template below. When the\ndecision changes, we rewrite the ADR in place and git keeps the history. The\nADR is the source of the decision; its summary rule (ADR-0029) brings the key\nparts to agents.\n\n## Scope and limits"
- },
- {
-  "adr": 29,
-  "file": "docs/adr/0030-how-we-write-adrs.md",
-  "line": 19,
-  "kind": "docs",
-  "forms": [
-   "ADR-0029"
-  ],
-  "anchor": false,
-  "ctx": "[section: ## Scope and limits]\n- **One decision per ADR.** If the summary can't cover the whole decision in\n  2\u20133 sentences, split the ADR.\n- **No history in the text.** No amendments, dates, status lines, \"Amended by\"\n  banners or notes about what used to be true. Use `git log` on the file.\n- **Change an ADR by rewriting it.** Change the decision, merge two ADRs,\n  narrow one's focus or retire one: each is an ordinary edit.\n- **The ADR is the source.** Its summary rule may turn parts of it into\n  instructions, but never decides anything the ADR doesn't. What a summary\n  rule is for is ADR-0029's.\n- **Procedures live elsewhere.** Commands, steps and formats go in\n  `docs/agents/`, a Skill or a code comment. The ADR points to them.\n- **Plain language.** Short sentences, the glossary's terms, no jargon.\n- **Template.** Every section after the summary is a `##` heading in this\n  order; leave out an optional one rather than fill it:\n  1. Title: `# ADR-NNNN: <title>`, a short reminder of what the ADR is about,\n     the same heading its summary rule uses.\n  2. A summary of 2\u20133 sentences covering the whole decision. A reader who\n     stops here knows what we decided.\n  3. **Scope and limits:** what the decision covers, its limits, exceptions\n     and edge cases.\n  4. **Why:** the reasons, briefly."
- },
- {
-  "adr": 9,
-  "file": "docs/adr/0030-how-we-write-adrs.md",
-  "line": 79,
-  "kind": "docs",
-  "forms": [
-   "ADR-0009"
-  ],
-  "anchor": false,
-  "ctx": "[section: ## When to revisit]\n- Agents often need a decision's history to act, and git proves too awkward\n  for it.\n- Summary rules keep drifting from their ADRs despite the `adr:` hash check.\n\n## Consequences\n\n- Code comments and docs that cite a dated amendment (\"ADR-0009's 2026-07-22\n  amendment\") need repointing to the ADR, or to the section that holds the\n  rule, when that ADR is rewritten.\n\n## See"
  },
  {
   "adr": 3,
