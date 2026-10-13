@@ -161,6 +161,10 @@ Fix every confirmed finding, and decide scope yourself; don't ask, and don't
 file an issue for a judgement call. Only the fixes listed in step 8 escalate
 instead of self-merging.
 
+Two ADRs that contradict each other: fix it in the escalation PR, keeping the
+more specific ADR unless git history or the code shows it is a leftover. File
+an issue only when neither settles it.
+
 File a `needs-triage` issue for one thing only: two sources state conflicting
 facts and no primary source (code, schemas, ADRs) settles which is true. Give
 both readings and your best guess, leave that finding, and move on. Check for
