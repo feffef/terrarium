@@ -1,0 +1,14 @@
+pnpm-lock.yaml:3515: resolution: {integrity: sha512-41Cifkg6e8TylSpdtTpeLVMqvSBEVzTttHvERD741+pnZ8ANv0004MRL43QKPDlK9cGvNp6NZWZUBlbGXYxxng==}
+app/components/ContentLoadErrorDialog.vue:95: box-shadow: 0 12px 40px #0004;
+app/components/ContentLoadErrorDialog.vue:99: background: #0006;
+scripts/validate-adr-rules.ts:23: export const NO_RULE = new Set(['0007'])
+scripts/shell-reads.ts:712: const key = `${m.path}\u0000${m.rule}`
+scripts/session-trace.ts:371: const key = `${m.path}\u0000${m.rule}`
+layers/tinkerfund/content/prod/pages/campaigns/cat-acknowledgement-button.md:44: <g transform="matrix(.866 .5 -.866 .5 200 207)"><rect x="-16" y="-8.5" width="32" height="17" rx="2" style="fill:var(--tf-ink)" /><rect x="-14" y="-6.5" width="
+layers/midden/content/trench/artifacts/the-phantom-skill.yml:30: url: https://github.com/feffef/terrarium/blob/65978c777b7dfd0008acbb751730aed7cfbcd6b0/layers/journal/content/current/skills/review.yml
+tests/unit/double-background-guard.spec.ts:213: expect(dryRun(['--tool', 'Edit', '--input', '{"command":"pnpm gate:scoped \\u0026","run_in_background":true}']).decision).toBe(
+tests/unit/log-session-land.spec.ts:63: return 'deadbeef0000'
+tests/unit/log-session-land.spec.ts:222: return 'deadbeef0000'
+tests/unit/shell-reads.spec.ts:635: output: 'the real content of 0018',
+tests/unit/validate-adr-rules.spec.ts:31: expect(findAdrRuleProblems({ adrs: { '0024': ADR }, rules })).toEqual([])
+tests/unit/validate-adr-rules.spec.ts:41: const problems = findAdrRuleProblems({ adrs: { '0024': ADR, '0007': 'old' }, rules: { 'adr-0099.md': 'x' } })

@@ -1,0 +1,22 @@
+import { readdirSync, readFileSync, writeFileSync } from 'node:fs'
+import { join } from 'node:path'
+import { createRequire } from 'node:module'
+const require = createRequire('/home/user/terrarium/package.json')
+const YAML = require('yaml')
+const root = '/home/user/terrarium/layers/journal/content'
+const out = []; let total = 0, parseErr = [], noFields = 0
+for (const d of ['current/sessions', 'archived/sessions']) {
+  for (const f of readdirSync(join(root, d))) {
+    if (!f.endsWith('.yml') && !f.endsWith('.yaml')) { parseErr.push(f+' (ext)'); continue }
+    total++
+    let doc; try { doc = YAML.parse(readFileSync(join(root, d, f), 'utf8')) } catch (e) { parseErr.push(f); continue }
+    const has = ['rulesLoaded','rulesGlobal','rulesFollowedUp','ruleVerdicts'].some(k => k in doc) || (doc.docsRead||[]).some(x => x && x.useful)
+    if (!has) { noFields++; continue }
+    out.push({ file: d.split('/')[0]+'/'+f, startedAt: doc.startedAt, kind: doc.kind, external: doc.external, drop: doc.droppedScratchRecovery, entrypoint: doc.entrypoint, trigger: doc.trigger, branch: doc.gitBranch, goal: doc.goal, status: doc.status,
+      skills: (doc.skillsUsed||[]).map(s=>s.name), rulesLoaded: doc.rulesLoaded||[], rulesGlobal: doc.rulesGlobal||[], rulesFollowedUp: doc.rulesFollowedUp||[], ruleVerdicts: doc.ruleVerdicts||[],
+      hasRL: 'rulesLoaded' in doc, hasRG: 'rulesGlobal' in doc, hasRF: 'rulesFollowedUp' in doc, hasRV: 'ruleVerdicts' in doc,
+      docsRead: (doc.docsRead||[]).filter(x => x && (x.useful || /docs\/adr\//.test(x.path))) , frictions: (doc.frictions||[]).filter(fr => /\.claude\/rules|rule/i.test(fr.description)).map(fr=>({d:fr.description,s:fr.severity})) })
+  }
+}
+writeFileSync(process.argv[2], JSON.stringify(out, null, 1))
+console.log({ total, parsedWithFields: out.length, noFields, parseErr })

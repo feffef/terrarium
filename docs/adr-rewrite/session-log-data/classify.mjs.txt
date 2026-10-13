@@ -1,0 +1,26 @@
+import { readFileSync, writeFileSync } from 'node:fs'
+const d = JSON.parse(readFileSync('./data.json','utf8')).sort((a,b)=>a.startedAt.localeCompare(b.startedAt))
+const ex = JSON.parse(readFileSync('./extra.json','utf8'))
+const bn = p => p.replace(/.*\.claude\/rules\//,'')
+const T = JSON.parse(readFileSync('./types.json','utf8'))
+const PH = /^\((no reason given|read before editing|not read)/
+const rows = []
+for (const s of d) { const id = s.file.match(/session_(\w{7})/)[1]; const e = ex[s.file]; const seen = new Set()
+  for (const x of s.docsRead) { const m = x.path.match(/^docs\/adr\/(\d{4})/); if (!m || seen.has(m[1])) continue; seen.add(m[1]); const n = m[1], r = x.reason
+    const shown = [...s.rulesGlobal,...s.rulesLoaded].map(bn).includes(`adr-${n}.md`), fu = s.rulesFollowedUp.map(bn).includes(`adr-${n}.md`)
+    const edited = e.adrEdited.includes(n), ph = PH.test(r)
+    let reader = /research agent, and/.test(r) ? 'mixed' : /subagent|reviewer|review agent|research agent|triage agent/i.test(r) ? 'subagent' : (!ph && (e.subs===0 || /\b(I|me|my)\b/.test(r))) ? 'main' : 'unknown'
+    let trig
+    if (ph) trig = edited ? 'subject' : 'unclear'
+    else if (/reviewer|review agent/i.test(r)) trig = 'search'
+    else if (/bind|grepped|triage|#\d/i.test(r) && reader !== 'main') trig = 'search'
+    else if (edited || /amendment|amend|for the post|source for|background on|pruned|for feedback|escalat|fixed in place|decision all three|supersedes|first 30 lines|ADR drift|precedent the owner|design$/i.test(r)) trig = 'subject'
+    else if (s.hasRV && !shown) trig = 'search'
+    else if (shown && fu) trig = 'pointer'
+    else if (!s.hasRV && /governs/.test(r)) trig = 'search'
+    else trig = 'unclear'
+    const rv = s.ruleVerdicts.find(v => bn(v.path) === `adr-${n}.md`)
+    rows.push({ id, date: s.startedAt.slice(0,10), kind: s.kind, early: !s.hasRV, type: T[id], goal: s.goal, n, shown, fu, edited, reader, trig, useful: x.useful ?? (ph ? 'placeholder' : 'none'), reason: r, ruleV: rv?.useful ?? (s.hasRV ? 'unrated' : 'n/a'), ruleReason: rv?.reason })
+  } }
+writeFileSync('./rows.json', JSON.stringify(rows, null, 1))
+for (const r of rows) console.log([r.id, r.early?'E':'', r.type, r.n, (r.shown?'S':'-')+(r.fu?'F':'-')+(r.edited?'E':'-'), r.reader, r.trig, r.useful, 'rule:'+r.ruleV, '::', r.reason.slice(0,70)].join(' '))

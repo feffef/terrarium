@@ -1,0 +1,19 @@
+import { readFileSync, writeFileSync } from 'node:fs'
+const rows = JSON.parse(readFileSync('./rows.json','utf8'))
+const O = { '01WoJ2c 0029':['unknown','subject'], '01CasnQ 0029':['mixed','subject'], '01CasnQ 0022':['unknown','pointer'], '01CasnQ 0017':['unknown','unclear'],
+ '01D3gBo 0022':['subagent','search'], '01V3bxJ 0003':['unknown','unclear'], '01V3bxJ 0009':['unknown','subject'], '01596W4 0015':['subagent','search'],
+ '01SZwdb 0004':['subagent','search'], '01DqPT8 0022':['subagent','search'], '01AnHXy 0009':['subagent','search'], '01AnHXy 0020':['subagent','search'],
+ '017NBxJ 0005':['subagent','search'], '017NBxJ 0018':['subagent','search'], '017XWy7 0018':['subagent','search'], '01BLrfu 0003':['unknown','pointer'] }
+for (const r of rows) { const o = O[r.id+' '+r.n]; if (o) [r.reader, r.trig] = o }
+writeFileSync('./rows2.json', JSON.stringify(rows,null,1))
+const cnt = (a,f) => a.reduce((m,x)=>{const k=f(x);m[k]=(m[k]||0)+1;return m},{})
+const V = rows.filter(r=>!r.early), E = rows.filter(r=>r.early)
+console.log('rows all', rows.length, 'early', E.length, 'V', V.length, 'sessions V', new Set(V.map(r=>r.id)).size, 'sessions E', new Set(E.map(r=>r.id)).size)
+console.log('V trig', cnt(V,r=>r.trig), 'V reader', cnt(V,r=>r.reader)); console.log('E trig', cnt(E,r=>r.trig), 'E reader', cnt(E,r=>r.reader))
+console.log('V reader x trig', cnt(V,r=>r.reader+'/'+r.trig))
+console.log('V useful', cnt(V,r=>r.useful)); console.log('useful x reader', cnt(V,r=>r.reader+'/'+r.useful)); console.log('useful x trig', cnt(V,r=>r.trig+'/'+r.useful))
+console.log('per ADR (V):'); const by={}; for (const r of V) (by[r.n]??=[]).push(r)
+for (const [n,a] of Object.entries(by).sort()) { const c=cnt(a,r=>r.useful); const real=(c.yes||0)+(c.partly||0)+(c.no||0); console.log(n, 'n='+a.length, 'y'+(c.yes||0),'p'+(c.partly||0),'n'+(c.no||0),'miss'+((c.placeholder||0)+(c.none||0)), 'real '+Math.round(100*real/a.length)+'%', 'trig', JSON.stringify(cnt(a,r=>r.trig)), 'sess', a.map(r=>r.id).join(',')) }
+console.log('crosstab full(useful) x rule(summary):', JSON.stringify(cnt(V,r=>r.useful+' | rule '+r.ruleV)))
+console.log('per type:'); const bt={}; for (const r of V) (bt[r.type]??=[]).push(r); for (const [t,a] of Object.entries(bt)) console.log(t, 'sessions', new Set(a.map(r=>r.id)).size, 'reads', a.length, 'ADRs', [...new Set(a.map(r=>r.n))].sort().join(','), 'trig', JSON.stringify(cnt(a,r=>r.trig)))
+console.log('E per ADR', JSON.stringify(cnt(E,r=>r.n)))

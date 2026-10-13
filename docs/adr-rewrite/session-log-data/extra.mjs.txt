@@ -1,0 +1,8 @@
+import { readFileSync, writeFileSync } from 'node:fs'
+import { createRequire } from 'node:module'
+const YAML = createRequire('/home/user/terrarium/package.json')('yaml')
+const d = JSON.parse(readFileSync('./data.json','utf8')); const out={}
+for (const s of d) { const doc = YAML.parse(readFileSync('/home/user/terrarium/layers/journal/content/'+s.file.replace('/','/sessions/'),'utf8'))
+  out[s.file]={ subs:(doc.subagents||[]).length, adrEdited:(doc.filesEdited||[]).filter(p=>p.startsWith('docs/adr/')).map(p=>p.slice(9,13)), toolCounts: doc.toolCounts?.Agent??0 } }
+writeFileSync('./extra.json', JSON.stringify(out)); for (const [k,v] of Object.entries(out)) if (v.adrEdited.length||true) {}
+console.log(Object.entries(out).filter(([k])=>/015BjYk|01LzWPj|013GkBt|01KnHp9|01GbMt1|01LARTW|01DRBxy|01WoJ2c|01CasnQ|0177ZCp|01Tjsmy|017inrp|01YVCyX|01V3bxJ|01D3gBo|01BLrfu|01Dz52W|014uXxm|01VGLAa|0147GPf|01596W4|01DtK8w|01SZwdb|01La82m|017NBxJ|018KSwe|015LwBg|01AA2LX|01FJuuz|01STVS3|017XWy7|013FXrB|016gu9e|01DqPT8|01AnHXy/.test(k)).map(([k,v])=>k.match(/session_(\w{7})/)[1]+' subs='+v.subs+' adrEdited='+v.adrEdited.join(',')).join('\n'))

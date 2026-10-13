@@ -1,0 +1,10 @@
+import { readFileSync } from 'node:fs'
+const d = JSON.parse(readFileSync('./data.json','utf8')).filter(s=>s.hasRV)
+const bn = p => p.replace(/.*\.claude\/rules\//,'')
+let a={fuClaimSummary:0, fuClaimRead:0, fuOther:0, nofuClaimRead:0, nofuClaimSummary:0}, ex=[] , short=0, shortSess={}
+const claimsRead = r => /(read|opened|open) (the )?(full|whole) ADR|full ADR (was|for)|read the ADR|opened the ADR/i.test(r) && !/(did not|didn't|not|no need|without|skipped|never) (open|read)|summary was enough|ADR not opened|rather than reading/i.test(r)
+const claimsSum = r => /summary (was )?enough|summary sufficed|not open|didn't open|did not open|skipped the full|no need for the full|ADR not opened|rather than reading the full/i.test(r)
+for (const s of d) { const fu = new Set(s.rulesFollowedUp.map(bn)); for (const v of s.ruleVerdicts) { const r=bn(v.path); if (v.reason.length<25){short++; shortSess[s.file.slice(-30)]=(shortSess[s.file.slice(-30)]||0)+1}
+  if (fu.has(r)) { if (claimsRead(v.reason)) a.fuClaimRead++; else if (claimsSum(v.reason)) {a.fuClaimSummary++; ex.push(s.file.slice(-30)+' '+r+' '+v.useful+' :: '+v.reason)} else a.fuOther++ }
+  else { if (claimsRead(v.reason)) {a.nofuClaimRead++; ex.push('NOFU '+s.file.slice(-30)+' '+r+' :: '+v.reason)} else if (claimsSum(v.reason)) a.nofuClaimSummary++ } } }
+console.log(a, 'short reasons(<25ch)', short, shortSess); console.log(ex.join('\n'))

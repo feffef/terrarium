@@ -1,0 +1,94 @@
+import os, re, json, sys
+ROOT = '/home/user/terrarium'
+OUT = os.path.dirname(os.path.abspath(__file__))
+SKIP = {'node_modules', '.git', '.nuxt', '.output'}
+adr_files = {int(f[:4]): f for f in os.listdir(f'{ROOT}/docs/adr') if re.match(r'\d{4}-.*\.md$', f)}
+
+def own(n, rel):
+    return rel == f'docs/adr/{adr_files[n]}' or re.fullmatch(rf'\.claude/rules/adr-{n:04d}[^/]*\.md', rel)
+
+def kind(rel):
+    if re.match(r'(layers/(journal|blog)/content/|\.session-logs/)', rel): return 'historical'
+    if rel.endswith(('.md', '.mdx', '.txt')) and not rel.startswith(('scripts/', 'tests/')): return 'docs'
+    if re.match(r'(scripts|app|modules|shared|tests|deploy|\.github|\.githooks|\.claude/workflows)/', rel) or re.match(r'layers/[^/]+/(app|tests)/', rel): return 'code'
+    if rel.endswith(('.ts', '.js', '.mjs', '.vue', '.json', '.yml', '.yaml', '.sh', '.cjs')) : return 'code'
+    if re.match(r'layers/[^/]+/content/', rel): return 'docs'  # other tenant content
+    return 'docs'
+
+NUM = r'0*(\d{1,4})'
+# ADR prefix + first number, then optional continuation list of 4-digit 00NN ids
+pfx = re.compile(r'(?<![A-Za-z])adrs?[ _-]?(?:#)?' + r'(\d{1,4})(?!\d)((?:\s*(?:,|/|&|\band\b|\bor\b|–|\+)\s*(?:and\s+|or\s+)?00\d\d(?!\d))*)', re.I)
+cont = re.compile(r'00(\d\d)(?!\d)')
+path_re = re.compile(r'(?<![\d-])(00[0-3]\d)-([a-z0-9]+(?:-[a-z0-9]+)*)(\.md)?(#[\w-]+)?')
+range_re = re.compile(r'(?<![A-Za-z])adrs?[ -]?00(\d\d)\s*(?:–|-|to|\.\.)\s*00(\d\d)(?!\d)', re.I)
+
+refs = []; scanned = 0; skipped_bin = 0; bare = []
+for dp, dns, fns in os.walk(ROOT):
+    dns[:] = [d for d in dns if d not in SKIP and not os.path.islink(os.path.join(dp, d))]
+    for fn in fns:
+        p = os.path.join(dp, fn)
+        if os.path.islink(p): continue
+        rel = os.path.relpath(p, ROOT)
+        try:
+            data = open(p, 'rb').read()
+            if b'\0' in data[:8192]: skipped_bin += 1; continue
+            text = data.decode('utf-8', 'replace')
+        except Exception: skipped_bin += 1; continue
+        scanned += 1
+        lines = text.split('\n')
+        for i, line in enumerate(lines):
+            hits = {}
+            for m in pfx.finditer(line):
+                ns = [int(m.group(1))] + [int(x) for x in cont.findall(m.group(2))]
+                for n in ns:
+                    if n in adr_files: hits.setdefault(n, []).append(('id', m.group(0)))
+            for m in range_re.finditer(line):
+                for n in range(int(m.group(1)), int(m.group(2)) + 1):
+                    if n in adr_files: hits.setdefault(n, []).append(('range', m.group(0)))
+            for m in path_re.finditer(line):
+                n = int(m.group(1)); slug = m.group(2)
+                if n in adr_files and adr_files[n][5:].startswith(slug.split('-')[0]):
+                    hits.setdefault(n, []).append(('path', m.group(0)))
+            for m in re.finditer(r'docs/adr/00([0-3]\d)(?!\d)', line):
+                n = int(m.group(1))
+                if n in adr_files and not any(m.group(0) in f[1] or f[1] in line[m.start():m.start()+120] and f[0]=='path' for f in hits.get(n, [])):
+                    hits.setdefault(n, []).append(('dirpath', m.group(0)))
+            for n, forms in hits.items():
+                if own(n, rel): continue
+                refs.append(dict(adr=n, file=rel, line=i + 1, kind=kind(rel), forms=[f[1] for f in forms],
+                                 anchor=any('#' in f[1] for f in forms),
+                                 ctx='\n'.join(lines[max(0, i - 2):i + 3])))
+            if not hits and re.search(r'(?<![\d.:-])00[0-3]\d(?![\d:.-])', line) and not re.match(r'(layers/(journal|blog)/content/|\.session-logs/)', rel):
+                bare.append(f'{rel}:{i+1}: {line.strip()[:160]}')
+json.dump(refs, open(f'{OUT}/refs.json', 'w'), indent=1)
+open(f'{OUT}/bare_candidates.txt', 'w').write('\n'.join(bare))
+from collections import Counter
+c = Counter((r['adr'], r['kind']) for r in refs)
+print(f'files scanned: {scanned}, binary skipped: {skipped_bin}, refs: {len(refs)}, bare candidates: {len(bare)}')
+print('ADR  code docs hist total files')
+for n in sorted(adr_files):
+    fs = len({r['file'] for r in refs if r['adr'] == n})
+    print(f'{n:04d} {c[(n,"code")]:4} {c[(n,"docs")]:4} {c[(n,"historical")]:4} {c[(n,"code")]+c[(n,"docs")]+c[(n,"historical")]:5} {fs:4}')
+
+LABEL = {'code': 'Live code', 'docs': 'Live docs', 'historical': 'Historical records'}
+idx = ['# ADR reference index', '', f'Scanned {scanned} text files under {ROOT} (excluding node_modules, .git, .nuxt, .output; symlinks not followed; {skipped_bin} binary files skipped). Own ADR file and own rule(s) `.claude/rules/adr-NNNN*.md` excluded. One reference = one (file, line, ADR).', '',
+       '| ADR | live code | live docs | historical | total | files |', '|---|---|---|---|---|---|']
+tot = 0
+for n in sorted(adr_files):
+    rs = sorted([r for r in refs if r['adr'] == n], key=lambda r: (r['file'], r['line']))
+    cnt = {k: sum(r['kind'] == k for r in rs) for k in LABEL}
+    tot += len(rs)
+    idx.append(f"| [{n:04d}]({n:04d}.md) | {cnt['code']} | {cnt['docs']} | {cnt['historical']} | {len(rs)} | {len({r['file'] for r in rs})} |")
+    out = [f'# References to ADR-{n:04d}', '', f'Target file: docs/adr/{adr_files[n]} (excluded, with .claude/rules/adr-{n:04d}*.md).', '',
+           f"Counts: live code {cnt['code']}, live docs {cnt['docs']}, historical {cnt['historical']}, total {len(rs)}.", '']
+    for k in LABEL:
+        out += [f'## {LABEL[k]} ({cnt[k]})', '']
+        for r in rs:
+            if r['kind'] != k: continue
+            fence = '~~~~' if '```' in r['ctx'] or '~~~' in r['ctx'] else '```'
+            out += [f"### {r['file']}:{r['line']}", f"kind: {k}; matched: {', '.join('`'+f+'`' for f in r['forms'])}", '', fence + 'text', r['ctx'], fence, '']
+    open(f'{OUT}/{n:04d}.md', 'w').write('\n'.join(out))
+idx += ['', f'Total references: {tot}.', '', 'Unmatched bare `00NN` tokens outside historical records (manual review; not counted):', '']
+idx += ['- `' + b.replace('`', "'") + '`' for b in bare]
+open(f'{OUT}/INDEX.md', 'w').write('\n'.join(idx) + '\n')
+print('total', tot)

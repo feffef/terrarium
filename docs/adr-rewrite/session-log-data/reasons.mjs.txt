@@ -1,0 +1,10 @@
+import { readFileSync } from 'node:fs'
+const d = JSON.parse(readFileSync('./data.json','utf8')).filter(s=>s.hasRV)
+const bn = p => p.replace(/.*\.claude\/rules\//,'')
+const f = s => s.file.replace(/.*\//,'')
+const mode = process.argv[2]
+if (mode==='fu') for (const s of d) for (const r of s.rulesFollowedUp.map(bn)) { const v = s.ruleVerdicts.find(v=>bn(v.path)===r); console.log(f(s).slice(11,30), r, v?.useful, '::', v?.reason) }
+if (mode==='rule') for (const s of d) { const v = s.ruleVerdicts.find(v=>bn(v.path)===process.argv[3]); if (v) console.log(f(s).slice(11,30), v.useful, '::', v.reason) }
+if (mode==='fr') for (const s of d) for (const x of s.frictions) console.log(f(s).slice(11,30), x.s, '::', x.d)
+if (mode==='summ') for (const s of d) for (const v of s.ruleVerdicts) if (/full ADR|summary/i.test(v.reason)) console.log(f(s).slice(11,30), bn(v.path), v.useful, '::', v.reason)
+if (mode==='adrread') for (const s of d) { const a = s.docsRead.filter(x=>/docs\/adr\//.test(x.path)); if (a.length) console.log(f(s).slice(11,30), a.length, a.map(x=>x.path.match(/\d{4}/)[0]+':'+(x.useful??'-')).join(' '), '| FU:', s.rulesFollowedUp.map(bn).join(',')) }

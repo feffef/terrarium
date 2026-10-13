@@ -1,0 +1,17 @@
+# ADR rewrite: working files
+
+Temporary review folder for the ADR rewrite (ADR-0030). Pruned from history
+before the work lands; nothing here is an instruction for agents.
+
+| Path | What it is |
+|---|---|
+| `adr-rewrite-prompt.md` | The prompt given to each rewrite agent (current version). |
+| `expectations-prompt.md` | The prompt for the blind "what do callers expect" agents. |
+| `background/adr-survey.md` | Survey of all 29 ADRs, plus restructuring options. Written before ADR-0030. |
+| `background/session-log-usage.md` | How sessions used rule summaries and full ADRs, from session logs. |
+| `rewrites/NNNN.md` | Test rewrites of 10 ADRs in ADR-0030's format (decision unchanged, no splits or merges). |
+| `rewrites/NNNN-report.md` | Each rewrite agent's report: rule inventory, what was dropped, rule check, format friction. |
+| `refs/NNNN.md` | Every reference to each ADR in the repo, with context (mechanical, 6,357 in all). |
+| `expectations/NNNN.md` | Blind checklists: what live callers expect each ADR to answer. |
+| `comparison/NNNN.md`, `comparison/SUMMARY.md` | Each rewrite checked against its checklist; decisions needed and prompt fixes. |
+| `session-log-data/` | Extracted session-log data and the analysis scripts behind `session-log-usage.md`. |

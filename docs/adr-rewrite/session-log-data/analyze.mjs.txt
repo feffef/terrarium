@@ -1,0 +1,41 @@
+import { readFileSync } from 'node:fs'
+const d = JSON.parse(readFileSync('./data.json','utf8'))
+const T = {
+'015BjYk':'meta','01LzWPj':'meta','01YSGRZ':'blog-post','013GkBt':'digest','01KnHp9':'audit-skills','01YBJaR':'frictions-to-fixes','01GbMt1':'audit-docs',
+'01LARTW':'meta','01SLCo4':'feature','01DRBxy':'question','01WoJ2c':'meta','015Hx2G':'frictions-to-fixes','01BBQnw':'question','01CasnQ':'backlog',
+'0177ZCp':'blog-post','01Tjsmy':'blog-post','01WuJh8':'prune-trial','017inrp':'visitor-loop','01YVCyX':'audit-docs','01V3bxJ':'meta','01LuXuS':'frictions-to-fixes',
+'01D3gBo':'backlog','019w4vm':'meta','01BLrfu':'feature','01QfaLu':'digest','01Nxo7E':'audit-skills','01DXuGr':'frictions-to-fixes','01Dz52W':'audit-docs',
+'014uXxm':'visitor-loop','01Xw7ZN':'blog-post','016iE4L':'bugfix','01VGLAa':'feature','018PnYQ':'probe','0147GPf':'prune-trial','01LtYEk':'frictions-to-fixes',
+'01QCF5h':'feature','01596W4':'backlog','01DtK8w':'meta','01SZwdb':'backlog','01La82m':'backlog','01BkB4A':'visitor-loop','017NBxJ':'backlog','01P1PVF':'docs/content',
+'018KSwe':'meta','015LwBg':'backlog','01Rn5xT':'digest','01AA2LX':'audit-skills','01UZ53Y':'frictions-to-fixes','01FJuuz':'audit-docs','01STVS3':'backlog',
+'01HNLMJ':'probe','017XWy7':'meta','013FXrB':'backlog','016gu9e':'backlog','01RDtAc':'feature','01DqPT8':'backlog','01YKBUn':'frictions-to-fixes','01AnHXy':'audit-docs',
+'01JW1NE':'docs/content','01MZBQ3':'blog-post','01QUhfM':'meta'}
+const typ = s => { const k = Object.keys(T).find(k => s.file.includes('session_'+k)); if(!k) throw s.file; return T[k] }
+const bn = p => p.replace(/.*\.claude\/rules\//,'')
+const cnt = (arr) => arr.reduce((m,x)=>(m[x]=(m[x]||0)+1,m),{})
+const all = d.map(s=>({...s, t: typ(s)}))
+const V = all.filter(s=>s.hasRV)
+console.log('types all', cnt(all.map(s=>s.t)), 'types V', cnt(V.map(s=>s.t)), 'kind V', cnt(V.map(s=>s.kind)))
+// rule table over V
+const R = {}
+const g = r => R[r] ??= { shownG:0, shownL:0, yes:0, partly:0, no:0, unrated:0, followed:0, followedYes:0, types:{}, verdictNotShown:0 }
+for (const s of V) {
+  const shown = new Set([...s.rulesGlobal.map(bn), ...s.rulesLoaded.map(bn)])
+  const verd = Object.fromEntries(s.ruleVerdicts.map(v=>[bn(v.path), v]))
+  const fol = new Set(s.rulesFollowedUp.map(bn))
+  for (const r of shown) { const o=g(r); s.rulesGlobal.map(bn).includes(r)?o.shownG++:o.shownL++; const v=verd[r]; v? o[v.useful]++ : o.unrated++; if(fol.has(r)){o.followed++; if(v&&v.useful!=='no')o.followedYes++}; o.types[s.t]=(o.types[s.t]||0)+1 }
+  for (const r of Object.keys(verd)) if(!shown.has(r)) { g(r).verdictNotShown++; }
+  for (const r of fol) if(!shown.has(r)) console.log('followed but not shown', s.file, r)
+}
+const rows = Object.entries(R).sort((a,b)=>(b[1].shownG+b[1].shownL)-(a[1].shownG+a[1].shownL))
+for (const [r,o] of rows) console.log(r.padEnd(26), 'G',o.shownG,'L',o.shownL,'| yes',o.yes,'partly',o.partly,'no',o.no,'unr',o.unrated,'| fu',o.followed,'(fu&useful',o.followedYes+')','vNS',o.verdictNotShown,'|',Object.entries(o.types).sort((a,b)=>b[1]-a[1]).map(([k,v])=>k+':'+v).join(' '))
+// pre-verdict logs
+const P = all.filter(s=>!s.hasRV)
+console.log('pre-verdict logs', P.length, cnt(P.flatMap(s=>s.rulesLoaded.map(bn))), 'followed', P.flatMap(s=>s.rulesFollowedUp.map(bn)))
+// full ADR reads from docsRead
+const A = {}
+for (const s of all) for (const x of s.docsRead) { const m = x.path.match(/docs\/adr\/(\d{4})/); if(!m) continue; const o = A[m[1]] ??= {n:0, yes:0,partly:0,no:0,none:0,types:{},sess:[]}; o.n++; o[x.useful??'none']++; o.types[s.t]=(o.types[s.t]||0)+1 }
+console.log('ADR docsRead entries'); for (const [k,o] of Object.entries(A).sort()) console.log(k, JSON.stringify(o))
+// followup vs docsRead adr
+console.log('sessions with any rulesFollowedUp', V.filter(s=>s.rulesFollowedUp.length).length, '/', V.length)
+console.log('verdict count total', V.reduce((a,s)=>a+s.ruleVerdicts.length,0), cnt(V.flatMap(s=>s.ruleVerdicts.map(v=>v.useful))))
