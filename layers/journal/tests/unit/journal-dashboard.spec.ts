@@ -309,7 +309,6 @@ describe('sessionCardViews', () => {
     expect(frictions.map((x) => x.description)).toEqual(['a', 'b', 'c', 'd', 'e', 'f'])
   })
 
-
   it('maps a SessionDoc to its display view, including sessionShortId truncation', () => {
     const s = session({
       session: 'session_0123456789abcdefXYZW',
