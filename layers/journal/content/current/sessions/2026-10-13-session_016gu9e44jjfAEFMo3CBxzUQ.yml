@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_016gu9e44jjfAEFMo3CBxzUQ
 startedAt: 2026-10-13T08:52:18Z
-endedAt: 2026-10-13T09:14:48Z
+endedAt: 2026-10-13T09:23:21Z
 kind: delegated
 goal: Clear the issue backlog
 status: completed
 outcome: "Fix for #1876 merged as PR #1877; #1778 and #1844 wait for their dates to pass"
-summary: "The owner invoked clear-backlog (human-instructed). The default auto-triage set held only three open ready-for-agent issues (#1876, #1778, #1844); every other open issue's last comment was AI-authored. The explore workflow found #1778 time-gated until 2026-10-14 13:00Z and #1844 until 2026-10-15 20:49Z, both report-only, and #1876 buildable. With no grill results, the grilling step was skipped. Agent-initiated: I added the missing `bug` category label to #1876 (a triage side finding) and ran the build workflow, which built, reviewed (two rounds) and gated the session-trace fix. I checked its commits and diff myself, then pushed and opened PR #1877, which merged on a green gate."
+summary: "The owner invoked clear-backlog (human-instructed). The default auto-triage set held only three open ready-for-agent issues (#1876, #1778, #1844); every other open issue's last comment was AI-authored. The explore workflow found #1778 and #1844 time-gated report-only checks, not startable before 2026-10-14 13:00Z and 2026-10-15 20:49Z respectively. It found #1876 buildable. With no grill results, the grilling step was skipped. Agent-initiated: I added the missing `bug` label to #1876, a triage side finding. The build workflow implemented #1876 in scripts/session-trace.ts and scripts/log-session.ts, merged as PR #1877. (1) Session logs now list workflow agents in `subagents`. Until now only Agent/Task tool calls appeared there, so a clear-backlog run with 17 workflow agents showed none. readSubagentJsonls tags each transcript under subagents/workflows/ with a ref: type from its .meta.json agentType, task from its description, else the agent id. foldSubagentTrace appends those refs with each agent's busiest model, while models, toolCounts and timings stay the parent's. log-session's LandOpts.subagentJsonls became `subagents`, so the lander and the session-trace CLI get the entries from one function. (2) relativizer strips a leading .claude/worktrees/NAME/, so docsRead no longer holds worktree-prefixed duplicates of repo paths. Review round 1 moved the workflow-agent append from log-session's traceOf into foldSubagentTrace, and reused busiestModelId instead of a hand-rolled model scan. Round 2 was clean apart from judgement calls left as is: two near-identical transcript types, and acceptance covered by two tests instead of one end-to-end test. I checked the commits and diff before pushing, and PR #1877 merged on a green gate."
 prs:
   - "1877"
 docsRead:
@@ -71,11 +71,14 @@ frictions:
   - description: "A second --author pass with only docsRead and ruleVerdicts was rejected: goal, status, summary, frictions and session were all required. log-session step 3 implies a partial pass works."
     solution: Either let --author accept a partial pass that merges into the existing scratch, or have step 3 say that every pass must carry the required fields.
     severity: minor
-durationSec: 1350
+  - description: My first session log summarized the build as 'the session-trace fix' and left out what it changed, although the workflow returned every decision. The owner had to ask for it.
+    solution: clear-backlog §4 or log-session should require one line per merged branch naming what it changed, since the digest reads the log rather than the PR.
+    severity: moderate
+durationSec: 1863
 models:
-  claude-opus-5-5: 73
+  claude-opus-5-5: 82
 toolCounts:
-  Bash: 23
+  Bash: 25
   Read: 5
   Workflow: 2
   ToolSearch: 1
@@ -84,7 +87,7 @@ toolCounts:
   mcp__claude-code-remote__subscribe_pr_activity: 1
   Skill: 2
   mcp__claude-code-remote__send_later: 1
-  ReadNotifications: 2
+  ReadNotifications: 3
   mcp__github__pull_request_read: 1
   mcp__github__add_issue_comment: 1
   mcp__claude-code-remote__delete_trigger: 1
