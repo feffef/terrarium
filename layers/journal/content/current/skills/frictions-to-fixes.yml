@@ -195,3 +195,13 @@ observations:
       Skill's next pass (see log-session's own entry above for #1786's
       reopening, for an unrelated reason — the fix PR itself didn't cover
       the reported shell-output case). Grade/role unchanged.
+  - date: "2026-10-13"
+    note: >-
+      Self-check (audit-skills behaviour check): newest 10 of 11 usedIn
+      sessions checked (2 fresh, 8 corroborated from prior independent
+      verification). #1675 and #1676 both independently re-confirmed
+      CLOSED via live `issue_read`, and their fixes verified still present
+      verbatim in today's SKILL.md — both holding with no recurrence of
+      either failure shape across any of the 10 sessions. No reverts of
+      this Skill's work in the 2-week sweep. No new silent failure.
+      Grade/role unchanged.

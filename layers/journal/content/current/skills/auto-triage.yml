@@ -122,3 +122,17 @@ observations:
       correctly follows the same-window ADR-0003/0004 update. No revert of
       any triage decision in the 2-week sweep. Grade/role unchanged
       (specialist).
+  - date: "2026-10-13"
+    note: >-
+      Self-check (audit-skills behaviour check): all 7 usedIn sessions
+      checked (5 already deep-verified in prior observations, 2 fresh:
+      session_01596W4GVWwvN1kfaHsV4ax8 and session_017NBxJhtBSd9AoCwTzsg6pM,
+      both 2026-10-12). Every ready-for-agent grant independently confirmed
+      Trusted-authored (OWNER), every closure matched a real merged PR
+      (#1823, #1824, #1840-#1849 range), judgment-call closures (#1761)
+      confirmed genuine owner decisions, no ADR-0022 violation. Self-reported
+      process frictions from these sessions (late close-session, premature
+      "ready for merge" signal) correctly scoped to clear-backlog/
+      dispatch-subagents territory, not this Skill's own sweep. No revert of
+      SKILL.md or any triage decision in the 2-week sweep. Grade/role
+      unchanged.

@@ -311,3 +311,15 @@ observations:
       was not fooled (still `status: open`) but the issue tracker's state
       was. No reverts of log-session's own mechanics in the 2-week sweep.
       Grade/role unchanged.
+  - date: "2026-10-13"
+    note: >-
+      Self-check (audit-skills behaviour check): all 4 window sessions that
+      didn't record log-session in `skillsUsed` checked — each has a
+      complete, well-formed log on disk (confirmed by file existence and
+      content, not just the tally), matching the known attribution gap
+      where close-session invokes log-session's authoring step internally
+      without it surfacing in `skillsUsed`. Not a missed invocation. #1786
+      (shell-read false positive) still open, human-owned, a dry-run fix
+      (PR #1829) closed unmerged while the owner considers a bigger
+      redesign — reported only, not ours to act on. No new finding.
+      Grade/role unchanged.

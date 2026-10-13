@@ -223,3 +223,16 @@ observations:
       Skill's own reliability gap. session_01TMgZyrN42pwudxkUdHLKwP's stale
       log not re-checked, per the 2026-10-06 settled-static-artifact call. No
       reverts of this Skill's content. Grade/role unchanged.
+  - date: "2026-10-13"
+    note: >-
+      Self-check (audit-skills behaviour check): the window's one
+      humanPromptedClosures entry, session_014uXxmT6359K4Z42a6We6Gh
+      (2026-10-12), independently re-confirmed GENUINE, not a #1797-style
+      false positive: its own friction log explicitly and unnegated says
+      "the user had to ask for the log after #1808 had already been opened
+      and merged," severity major, with a corroborating second friction
+      about invoking close-session late. The detector correctly fired this
+      time. (The window's one not-used-close-session candidate,
+      session_011p9VA5A1CWNG9xd2VrQf8N, remains the already-settled
+      equivalent-closure case recorded 2026-10-08 through 10-12; no new
+      fact to add there.) No new finding.

@@ -385,3 +385,37 @@ observations:
       orphanSuppressionLog both entries plausible (`resolved-annotation`),
       manuallyRescuedClosures empty, humanPromptedClosures' one entry was
       the #1797 false positive above. Grade/role unchanged.
+  - date: "2026-10-13"
+    note: >-
+      Self-check: dispatched 12 behaviour-check subagents this run (one per
+      behaviourChecks entry), every report independently verified against
+      primary sources before use (every PR/issue claim checked live via
+      GitHub, several factual/timestamp claims re-derived directly with
+      `git show`/`git log` rather than trusted from the subagent). TWO
+      significant findings cleared the bar and were filed as fresh issues,
+      neither had a standing open-issue home to comment on instead: #1856
+      (prune-trial's #1677 fix added an undocumented 1-hour grace to the
+      ADR-0027 floor, confirmed to have let one trial — git-conventions.md —
+      be judged 2m47s before the true 3-day floor, unflagged across 8+ days
+      of this Skill's own prior observations re-verifying against the wrong,
+      graced floor) and #1857 (clear-backlog's §1 explore phase silently
+      skipped, the owner had to ask before a real pass ran). One sub-threshold
+      self-finding: session_012VBpgxdwfQHiAvJc531UYr's own committed log
+      (2026-10-07) stated issue #1627 was "correctly closed" ~11.5 hours
+      before it actually closed — the exact stale-issue-state class #1627/
+      #1720 name, this time in the orchestrating session's own prose rather
+      than a subagent report; no downstream action was based on the false
+      claim, so recorded here rather than escalated. Two recurrences of
+      already-wontfix'd dispatch-subagents issues (#1480 cd-into-worktree,
+      #1586 skillsUsed-logging gap) checked directly via `issue_read`
+      against their closed/not_planned state — not re-escalated, owner
+      already accepted the recurrence. Coverage gap found and added:
+      `clear-backlog` (own Skill, used 4x this window, no prior entry),
+      graded `specialist`. Step 3 closure completeness: orphan scan clean
+      (`scanned: true`, 1196 merged PRs, 1044 with a session), both orphan
+      candidates carry `resolvedBy` (already tracked, left alone),
+      orphanSuppressionLog both entries plausible (`resolved-annotation`),
+      manuallyRescuedClosures empty, humanPromptedClosures' one entry
+      (session_014uXxmT6359K4Z42a6We6Gh) independently confirmed a genuine
+      instance, not a #1797-style false positive. Grade/role unchanged
+      (routine).

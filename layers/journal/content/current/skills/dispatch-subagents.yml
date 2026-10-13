@@ -277,3 +277,17 @@ observations:
       gap, not a collision risk. #1480 and #1586 both remain closed, as of
       the 2026-10-11 entry. No revert of this Skill's own mechanics in the
       2-week sweep. Grade unchanged (essential).
+  - date: "2026-10-13"
+    note: >-
+      Self-check (audit-skills behaviour check): the cd-into-worktree
+      footgun recurred twice the same day (session_017NBxJhtBSd9AoCwTzsg6pM,
+      session_01596W4GVWwvN1kfaHsV4ax8, both 2026-10-12), and the
+      skillsUsed-logging gap recurred once more
+      (session_015LwBgLjaCn36ayZedges6G). Checked both #1480 and #1586
+      directly via `issue_read`: both are `state: closed, state_reason:
+      not_planned` (wontfix), closed by the owner 2026-10-10 — a deliberate
+      decision to accept self-caught recurrence rather than build a
+      mechanical guard. Not escalating either recurrence; both instances
+      were self-caught with no damage. No genuine missed invocation found
+      (87 non-users screened by goal, 8 opened in full). No revert of this
+      Skill's own mechanics in the 2-week sweep. Grade/role unchanged.

@@ -277,3 +277,23 @@ observations:
       `prune-trial-window.ts`: all 3 currently-open trials correctly read
       "not yet judgeable," none sitting judgeable-but-unjudged. No revert of
       any judged trial in the 2-week sweep. Grade unchanged.
+  - date: "2026-10-13"
+    note: >-
+      NEW silent failure, verified independently (not just trusted from the
+      behaviour-check subagent) and escalated as issue #1856. #1677's fix
+      (PR #1683/commit 920f20f8) subtracted a 1-hour `GRACE_MS` from the
+      ADR-0027 floor in `scripts/prune-trial-window.ts` to stop wasted
+      no-op runs — confirmed via `git show 920f20f8`. ADR-0027 was never
+      amended to say so (grepped for "grace"/"71 hour": no match), so the
+      written contract still promises a full three days while the code
+      delivers as little as 71 hours. Confirmed instance: the
+      git-conventions.md trial landed 2026-10-08T13:21:09Z (true floor
+      2026-10-11T13:21:09Z) but was judged "holds" and deleted at
+      2026-10-11T13:18:22Z — 2m47s before the TRUE floor, only clearing the
+      graced one. This Inventory's own 2026-10-09 through 2026-10-12
+      entries repeatedly re-verified later judgments against the graced
+      floor without flagging the ADR mismatch, which is how it slipped past
+      8+ days of this Skill's own self-checks. #1677 (closed) is the
+      opposite-direction issue this fix was built for and says nothing
+      about early judging — not a duplicate. Grade unchanged pending a
+      human decision on #1856 (amend ADR-0027 vs. remove the grace).
