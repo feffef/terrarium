@@ -99,7 +99,7 @@ useHead({ title: `${meta.name} · The Atlas of the Terrarium` })
       <section v-if="withPhenology.length" class="almanac-section">
         <div class="atlas-sechead"><span class="atlas-eyebrow">The wing's year</span></div>
         <p class="almanac-lede">
-          Turn the needle to a season of the Glass Year — the calendar the whole terrarium
+          Turn the needle (drag it, or focus it and use the arrow keys) to a season of the Glass Year — the calendar the whole terrarium
           shares — and the roster names who this wing would find abroad in it. Each creature's
           own phases are read on its page.
         </p>

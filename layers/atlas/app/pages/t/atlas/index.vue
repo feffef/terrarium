@@ -19,7 +19,6 @@ const season = seasonOf(day)
 
 const { data } = await useAsyncData('atlas-front', async () => {
   const stats: Record<string, number> = {}
-  const specimens: string[] = []
   const abroad: { to: string; label: string }[] = []
   const recent: Sighting[] = []
   for (const b of BIOMES) {
@@ -37,7 +36,6 @@ const { data } = await useAsyncData('atlas-front', async () => {
         .all()
     ).map(toSpecimenView)
     for (const s of docs) {
-      specimens.push(`/t/atlas/${b.slug}${s.path}`)
       if (s.phenology?.phases.some((p) => !p.quiet && inSpan(day, p.span)))
         abroad.push({ to: `/t/atlas/${b.slug}${s.path}`, label: s.binomial })
     }
@@ -49,22 +47,13 @@ const { data } = await useAsyncData('atlas-front', async () => {
     stats[b.slug] = docs.length
   }
   recent.sort((a, b) => b.date.localeCompare(a.date))
-  return { stats, specimens: specimens.sort(), abroad, recent: recent.slice(0, SIGHTINGS_SHOWN) }
+  return { stats, abroad, recent: recent.slice(0, SIGHTINGS_SHOWN) }
 })
 
 const stats = computed(() => data.value?.stats ?? {})
-const specimens = computed(() => data.value?.specimens ?? [])
 const abroad = computed(() => data.value?.abroad ?? [])
 const recent = computed(() => data.value?.recent ?? [])
 const latest = computed(() => recent.value[0] ?? null)
-
-// The page is prerendered, so the pick happens on click: the href stays a
-// stable specimen for no-JS visitors and modified clicks (new tab).
-function openAtRandom(e: MouseEvent) {
-  if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return
-  e.preventDefault()
-  navigateTo(specimens.value[Math.floor(Math.random() * specimens.value.length)])
-}
 
 useHead({ title: 'The Atlas of the Terrarium' })
 </script>
@@ -89,11 +78,33 @@ useHead({ title: 'The Atlas of the Terrarium' })
           <template v-for="(b, i) in BIOMES" :key="b.slug"
             >{{ i ? ' · ' : ' ' }}<NuxtLink :to="`/t/atlas/${b.slug}`">{{ b.slug }}</NuxtLink></template>
         </p>
-        <p v-if="specimens.length" class="at-random">
-          <NuxtLink :to="specimens[0]" @click="openAtRandom">or open the guide at random →</NuxtLink>
+        <p class="at-random">
+          <NuxtLink to="/t/atlas/random">or open the guide at random →</NuxtLink>
         </p>
         <p class="cover-orn" aria-hidden="true">~ · ~ · ~ · ~ · ~</p>
       </header>
+
+      <nav class="directory" aria-label="The three wings">
+        <NuxtLink
+          v-for="b in BIOMES"
+          :key="b.slug"
+          class="wing"
+          :class="`atlas--${b.slug}`"
+          :to="`/t/atlas/${b.slug}`"
+        >
+          <span class="wing-num">{{ b.numeral }}</span>
+          <span class="wing-body">
+            <span class="wing-name">{{ b.name }}</span>
+            <span class="wing-char">{{ b.character }}</span>
+            <span class="wing-blurb">{{ b.blurb }}</span>
+          </span>
+          <span class="wing-foot">
+            <span class="swatch" :style="{ background: b.accent }" />
+            <span class="swatch" :style="{ background: b.accent2 }" />
+            <span class="wing-count">{{ stats[b.slug] ?? 0 }} catalogued</span>
+          </span>
+        </NuxtLink>
+      </nav>
 
       <section class="foreword atlas-prose">
         <p class="drop">
@@ -137,28 +148,6 @@ useHead({ title: 'The Atlas of the Terrarium' })
           </ul>
         </template>
       </section>
-
-      <nav class="directory" aria-label="The three wings">
-        <NuxtLink
-          v-for="b in BIOMES"
-          :key="b.slug"
-          class="wing"
-          :class="`atlas--${b.slug}`"
-          :to="`/t/atlas/${b.slug}`"
-        >
-          <span class="wing-num">{{ b.numeral }}</span>
-          <span class="wing-body">
-            <span class="wing-name">{{ b.name }}</span>
-            <span class="wing-char">{{ b.character }}</span>
-            <span class="wing-blurb">{{ b.blurb }}</span>
-          </span>
-          <span class="wing-foot">
-            <span class="swatch" :style="{ background: b.accent }" />
-            <span class="swatch" :style="{ background: b.accent2 }" />
-            <span class="wing-count">{{ stats[b.slug] ?? 0 }} catalogued</span>
-          </span>
-        </NuxtLink>
-      </nav>
 
       <footer class="colophon">
         <p>Compiled by the resident naturalists · Edition MMXXVI</p>
@@ -204,6 +193,7 @@ useHead({ title: 'The Atlas of the Terrarium' })
 .at-random a:hover { text-decoration-color: currentColor; }
 .at-random a:focus-visible { outline: 2px solid var(--biome-accent); outline-offset: 3px; border-radius: 2px; }
 
+.directory { margin-bottom: 3rem; }
 .foreword { max-width: 34rem; margin: 0 auto 3rem; font-size: 1.06rem; }
 .foreword .drop::first-letter {
   float: left;

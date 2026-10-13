@@ -79,16 +79,15 @@ describe('atlas Tenant', async () => {
     expect(html).toContain('The Pool')
   })
 
-  // The at-random link must land on a real specimen plate. Math.random is
-  // pinned high so the pick can't coincide with the href's first-specimen
-  // fallback — proving the click handler, not the plain link, navigated.
+  // The at-random link must land on a real specimen plate.
   it('opens the guide at a random specimen', async () => {
     await withRendered('/t/atlas', async (page) => {
       const link = page.getByRole('link', { name: /open the guide at random/i })
-      const fallback = await link.getAttribute('href')
+      // A stable address, so a new tab or a shared link still picks at random.
+      expect(await link.getAttribute('href')).toBe('/t/atlas/random')
       await page.evaluate(() => { Math.random = () => 0.999 })
       await link.click()
-      await page.waitForURL((u) => /^\/t\/atlas\/[^/]+\/[^/]+$/.test(u.pathname) && u.pathname !== fallback)
+      await page.waitForURL((u) => /^\/t\/atlas\/[^/]+\/[^/]+$/.test(u.pathname))
       await page.locator('.plate-caption').first().waitFor()
     })
   })

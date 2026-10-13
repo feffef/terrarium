@@ -4,14 +4,6 @@
 // 2026-09-24 — see that run's PR for the finding). Deliberately theme-neutral
 // (currentColor-derived, no Tenant CSS vars) so one component works unstyled
 // inside every Tenant's own look.
-const SITES = [
-  { name: 'Journal', to: '/t/journal/current' },
-  { name: 'Blog', to: '/t/blog' },
-  { name: 'Midden', to: '/t/midden' },
-  { name: 'Atlas', to: '/t/atlas' },
-  { name: 'Tinkerfund', to: '/t/tinkerfund' },
-]
-
 const route = useRoute()
 // Linking a visitor to the wing they are already in is a dead link.
 const sites = computed(() => SITES.filter((s) => s.to.split('/')[2] !== route.path.split('/')[2]))
@@ -23,7 +15,7 @@ const sites = computed(() => SITES.filter((s) => s.to.split('/')[2] !== route.pa
     <span class="site-footer-links">
       <template v-for="(s, i) in sites" :key="s.to">
         <span v-if="i" class="site-footer-sep" aria-hidden="true">·</span>
-        <NuxtLink :to="s.to">{{ s.name }}</NuxtLink>
+        <span><NuxtLink :to="s.to">{{ s.name }}</NuxtLink> <span class="site-footer-gloss">({{ s.gloss }})</span></span>
       </template>
     </span>
     <a class="site-footer-source" :href="REPO_URL">Source on GitHub</a>
@@ -45,6 +37,7 @@ const sites = computed(() => SITES.filter((s) => s.to.split('/')[2] !== route.pa
 }
 .site-footer-label { color: color-mix(in srgb, currentColor 55%, transparent); }
 .site-footer-links { display: inline-flex; flex-wrap: wrap; gap: 0.45rem; align-items: baseline; }
+.site-footer-gloss { color: color-mix(in srgb, currentColor 55%, transparent); }
 .site-footer-sep { color: color-mix(in srgb, currentColor 35%, transparent); }
 .site-footer a {
   color: color-mix(in srgb, currentColor 70%, transparent);

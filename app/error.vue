@@ -3,6 +3,12 @@ import type { NuxtError } from '#app'
 
 const props = defineProps<{ error: NuxtError }>()
 const notFound = computed(() => props.error.statusCode === 404)
+// A dead address inside a Tenant (`/t/atlas/nope`) should lead back to that Tenant first.
+const route = useRoute()
+const tenant = computed(() => {
+  const slug = route.path.split('/')[2]
+  return route.path.startsWith('/t/') ? SITES.find((s) => s.to.split('/')[2] === slug) : undefined
+})
 useHead({
   title: () => `${notFound.value ? 'Page not found' : 'Something went wrong'} · terrarium`,
   bodyAttrs: { style: 'margin: 0' },
@@ -16,6 +22,7 @@ useHead({
     <p class="note">
       {{ notFound ? 'Nothing grows at this address — it may have moved, or never existed.' : 'Something broke on our side. Try again in a moment.' }}
     </p>
+    <NuxtLink v-if="notFound && tenant" :to="tenant.to" class="home">← Back to the {{ tenant.name }}</NuxtLink>
     <a href="/" class="home" @click.prevent="clearError({ redirect: '/' })">← Back to the terrarium</a>
   </main>
 </template>
