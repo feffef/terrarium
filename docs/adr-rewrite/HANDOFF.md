@@ -78,6 +78,76 @@ other files rather than repeating them.
 - **One Tinkerfund e2e step** (`tinkerfund-flows.spec.ts:387`, `goForward`)
   timed out once in `gate:scoped` and passed on re-run.
 
+## Contradictions and open points
+
+Known after this session, as #1898 stands. Each report in `rewrites/` has the
+detail and a recommendation.
+
+**Contradictions still in the repo**
+
+1. **Cross-Tenant reads.** ADR-0025 lets any Tenant layer use the read
+   functions (the Blog already reads Journal Digests); the old "only a
+   governed set of Aggregators" rule is gone from `CONTEXT.md`. But the
+   ADR-0025 rule's `paths` cover only `layers/commons/**` among the layers, so
+   it won't load where the Blog uses the permission.
+2. **Digests.** ADR-0010 says a wrong fact in a landed Digest is fixed by an
+   ordinary PR; `audit-docs` and `frictions-to-fixes` still call Digests
+   historical records that are never edited.
+3. **Digest links.** Digests have their own page (ADR-0010), but the Commons
+   Timeline links them to the Journal dashboard; ADR-0025 was softened to "where
+   its owner shows the item" to cover it.
+4. **PRs built from a Public request** need a human merge (ADR-0004, ADR-0020),
+   but `merge-pr.ts` can't detect them; only the agent's judgement stops a
+   merge. Same gap for guest-pipeline PRs (#1895).
+5. **Dependabot.** `dependabot.yml` and `pr-workflow.md` now say a human merges
+   its PRs; proposal #1633 wants auto-merge, which would need an ADR-0004
+   exception. ADR-0004's "adds a dependency, or changes how one behaves" may
+   or may not cover a plain version bump.
+6. **Open prune trial on ADR-0009** (opened 2026-10-12, shell-read text), while
+   ADR-0027 now keeps trials away from ADRs. #1898 rewrites that text and
+   repoints the trial's territory; the trial's verdict is unsettled.
+7. **Fail-open hooks.** The "a trial-proposed hook warns and exits 0" rule is
+   dropped from ADR-0027 and the prune-trial Skill; the hint scripts no longer
+   cite ADR-0027 for failing open. Whether any doc should own a fail-open
+   policy is open (`docs/agents/guards.md` states it per hint).
+8. **ADR-0007** is recast as "derived files are built, not committed" — a
+   synthesis no single source stated. It overlaps ADR-0013 and ADR-0014, and
+   its new rule loads on the same files as theirs.
+9. **File names contradict titles**: 0007 (`generated-config-committed…`),
+   0013 (`…committed-routing-map`), 0017 (`provenance-footer…`), 0019
+   (`patched-…`), 0011 (`poc-…`). Kept as stable ids.
+10. **ADR-0012** is a Blog-only decision, though ADR-0021 says demo Tenants get
+    no ADR.
+11. **Pingbacks** are edited and deleted with their posts, yet ADR-0009's
+    "the schema only grows, logs are never migrated" covers them (ADR-0012).
+12. **Same fact, several homes:** "cut an instruction before adding one" is in
+    `CLAUDE.md`, ADR-0027 and its rule; the glossary sentence in `CLAUDE.md`
+    overlaps `docs/agents/domain.md` and ADR-0030.
+13. **`.github/workflows/` comments** still cite "ADR-0004's high-risk set"
+    and old ADR-0020 wording (#1897).
+
+**Unclear, for the owner to decide**
+
+14. Do issues an agent files count as Trusted-authored for `auto-triage`?
+    Agents post as the owner (ADR-0022, ADR-0020).
+15. Is the session header alone enough to mark a post as AI-written? Guest
+    Skills say yes, `auto-triage` adds a notice (ADR-0017). Should writes
+    through `gh api` be checked too?
+16. Should an `audit-skills` issue about our Skill go through ordinary triage
+    or to a human, and does its non-Inventory PR wait for a human (ADR-0015)?
+17. Should a failed database download reload the page once by itself, like a
+    failed code chunk (ADR-0019)?
+18. Must a published URL stay fixed when its file moves (ADR-0006)?
+19. A demo Tenant's product decisions in its `CONTEXT.md` are agent-mergeable,
+    while the same decision in an ADR needs a human merge (ADR-0021). Intended?
+20. ADR-0001 now decides "no store that visitors write to", and its rule no
+    longer loads every session. ADR-0011 is no longer called a PoC; should the
+    deploy install skip package scripts (`--ignore-scripts`)?
+21. `pr-workflow.md` says `midden-catalogue` PRs are owner-merged (#1802);
+    not checked against the Skill.
+22. ADR-0009 (93 lines) and ADR-0030 (84) stay over the 40–70 guide. Splits
+    belong in the tracking issue, which doesn't exist yet.
+
 ## Suggested next steps
 
 1. Review #1898 against its "Decisions for the owner" list; ask for changes
