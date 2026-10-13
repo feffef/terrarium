@@ -28,7 +28,7 @@ follow it and don't route around it. If it is wrong, say so on the guard's issue
 | `stale-info-hint.ts` | nothing: a hint, not a guard. After a `git push` rejected as "stale info" it adds the fix to the result, and it fails open | its script header | #1610 |
 | `skill-rules-hint.ts` | nothing: a hint, not a guard. When a Skill runs (Skill tool or slash command) it adds the rules whose `paths` name the Skill's directory, and it fails open | its script header | PR #1741 |
 | `bash-rules-hint.ts` | nothing: a hint, not a guard. After a piped, chained or multi-file Bash read it adds the rules whose `paths` match the files read, and it fails open | its script header | #1764 |
-| `read-first-hint.ts` | nothing: a hint, not a guard. At a session's first git (beyond `status`/`diff`) or GitHub call it points to the doc CLAUDE.md says to read first, once per doc, and it fails open | its script header | #1754 |
+| `read-first-hint.ts` | nothing: a hint, not a guard. At a session's first git (beyond `status`/`diff`) or GitHub call it points to the doc CLAUDE.md says to read first, once per doc. After a successful `mcp__github__create_pull_request` in the main session, until `close-session` is invoked, it says to invoke that Skill now. It fails open | its script header | #1754, #1859 |
 
 `.claude/settings.json` wires the guards under `hooks.PreToolUse`, and the hints
 under `PostToolUse`, `PostToolUseFailure` and `UserPromptSubmit`.
