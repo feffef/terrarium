@@ -45,7 +45,7 @@ const foldedFieldLabels = new Intl.ListFormat('en', { style: 'long', type: 'conj
     <div class="head-wrap">
       <JournalDisclosure class="head" :expanded="expanded" :controls="detailId" @toggle="emit('toggle')">
         <div class="top">
-          <span class="when">{{ card.when }} <span class="dur">· {{ card.duration }} min</span></span>
+          <span class="when">{{ card.when }} <span class="dur">· {{ card.duration }}</span></span>
           <JournalStatusPill :status="card.status" />
         </div>
         <h3 class="goal">{{ card.goal }}</h3>

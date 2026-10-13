@@ -40,6 +40,10 @@ export function sessionDurationMin(a: string, b: string): number {
   return Math.max(1, Math.round((new Date(b).getTime() - new Date(a).getTime()) / 60000))
 }
 
+export function sessionDurationLabel(min: number): string {
+  return min >= 60 ? `${Math.floor(min / 60)} h ${min % 60} min` : `${min} min`
+}
+
 export function sessionShortId(s: string): string {
   return s.length > 18 ? `${s.slice(0, 13)}…${s.slice(-4)}` : s
 }
@@ -217,6 +221,9 @@ export function sessionRuleTitles(sources: Record<string, string>): Record<strin
   return titles
 }
 
+// shared/schemas/session.ts orders severities least to most severe (Human-only), so rank here.
+const SEVERITY_RANK: Record<string, number> = { blocker: 0, major: 1, moderate: 2, minor: 3, nit: 4 }
+
 export function sessionCardViews(
   sessions: SessionDoc[],
   ruleTitles: Record<string, string> = {},
@@ -226,7 +233,7 @@ export function sessionCardViews(
     return {
       key: s.session,
       when: sessionWhen(s.endedAt),
-      duration: sessionDurationMin(s.startedAt, s.endedAt),
+      duration: sessionDurationLabel(sessionDurationMin(s.startedAt, s.endedAt)),
       goal: s.goal,
       status: s.status,
       outcome: s.outcome,
@@ -243,7 +250,8 @@ export function sessionCardViews(
       subagents: s.subagents ?? [],
       docsRead: s.docsRead ?? [],
       skillsUsed: s.skillsUsed ?? [],
-      frictions: s.frictions,
+      // Array.sort is stable: equal severities keep their logged order.
+      frictions: [...s.frictions].sort((a, b) => (SEVERITY_RANK[a.severity] ?? 5) - (SEVERITY_RANK[b.severity] ?? 5)),
       learnings: s.learnings ?? [],
       ideas: s.ideas ?? [],
       filesEdited: s.filesEdited ?? [],
