@@ -11,7 +11,7 @@ before the work lands; nothing here is an instruction for agents.
 | `background/session-log-usage.md` | How sessions used rule summaries and full ADRs, from session logs. |
 | `rewrites/NNNN.md` | Test rewrites of 10 ADRs in ADR-0030's format (decision unchanged, no splits or merges). |
 | `rewrites/NNNN-report.md` | Each rewrite agent's report: rule inventory, what was dropped, rule check, format friction. |
-| `refs/NNNN.md` | Every reference to each ADR in the repo, with context (mechanical, 6,357 in all). |
+| `refs/NNNN.md` | Every live reference to each ADR (code and docs; session logs and blog posts skipped), with its enclosing block as context. 1,170 in all; `find_refs.py.txt` regenerates them. |
 | `expectations/NNNN.md` | Blind checklists: what live callers expect each ADR to answer. |
 | `comparison/NNNN.md`, `comparison/SUMMARY.md` | Each rewrite checked against its checklist; decisions needed and prompt fixes. |
 | `session-log-data/` | Extracted session-log data and the analysis scripts behind `session-log-usage.md`. |

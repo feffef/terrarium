@@ -2,6 +2,19 @@ import os, re, json, sys
 ROOT = '/home/user/terrarium'
 OUT = os.path.dirname(os.path.abspath(__file__))
 SKIP = {'node_modules', '.git', '.nuxt', '.output'}
+HIST = re.compile(r'(layers/(journal|blog)/content/|\.session-logs/|docs/adr-rewrite/)')
+
+def context(lines, i, md):
+    # the enclosing block: grow to blank lines, at least 3 and at most 12 lines each side
+    lo = i
+    while lo > 0 and i - lo < 12 and (i - lo < 3 or lines[lo - 1].strip()): lo -= 1
+    hi = i
+    while hi < len(lines) - 1 and hi - i < 12 and (hi - i < 3 or lines[hi + 1].strip()): hi += 1
+    head = ''
+    if md:
+        for j in range(lo - 1, -1, -1):
+            if lines[j].startswith('#'): head = f'[section: {lines[j].strip()}]\n'; break
+    return head + '\n'.join(lines[lo:hi + 1])
 adr_files = {int(f[:4]): f for f in os.listdir(f'{ROOT}/docs/adr') if re.match(r'\d{4}-.*\.md$', f)}
 
 def own(n, rel):
@@ -29,6 +42,7 @@ for dp, dns, fns in os.walk(ROOT):
         p = os.path.join(dp, fn)
         if os.path.islink(p): continue
         rel = os.path.relpath(p, ROOT)
+        if HIST.match(rel): continue
         try:
             data = open(p, 'rb').read()
             if b'\0' in data[:8192]: skipped_bin += 1; continue
@@ -57,7 +71,7 @@ for dp, dns, fns in os.walk(ROOT):
                 if own(n, rel): continue
                 refs.append(dict(adr=n, file=rel, line=i + 1, kind=kind(rel), forms=[f[1] for f in forms],
                                  anchor=any('#' in f[1] for f in forms),
-                                 ctx='\n'.join(lines[max(0, i - 2):i + 3])))
+                                 ctx=context(lines, i, rel.endswith('.md'))))
             if not hits and re.search(r'(?<![\d.:-])00[0-3]\d(?![\d:.-])', line) and not re.match(r'(layers/(journal|blog)/content/|\.session-logs/)', rel):
                 bare.append(f'{rel}:{i+1}: {line.strip()[:160]}')
 json.dump(refs, open(f'{OUT}/refs.json', 'w'), indent=1)
@@ -68,19 +82,19 @@ print(f'files scanned: {scanned}, binary skipped: {skipped_bin}, refs: {len(refs
 print('ADR  code docs hist total files')
 for n in sorted(adr_files):
     fs = len({r['file'] for r in refs if r['adr'] == n})
-    print(f'{n:04d} {c[(n,"code")]:4} {c[(n,"docs")]:4} {c[(n,"historical")]:4} {c[(n,"code")]+c[(n,"docs")]+c[(n,"historical")]:5} {fs:4}')
+    print(f'{n:04d} {c[(n,"code")]:4} {c[(n,"docs")]:4} {c[(n,"code")]+c[(n,"docs")]:5} {fs:4}')
 
-LABEL = {'code': 'Live code', 'docs': 'Live docs', 'historical': 'Historical records'}
-idx = ['# ADR reference index', '', f'Scanned {scanned} text files under {ROOT} (excluding node_modules, .git, .nuxt, .output; symlinks not followed; {skipped_bin} binary files skipped). Own ADR file and own rule(s) `.claude/rules/adr-NNNN*.md` excluded. One reference = one (file, line, ADR).', '',
-       '| ADR | live code | live docs | historical | total | files |', '|---|---|---|---|---|---|']
+LABEL = {'code': 'Live code', 'docs': 'Live docs'}
+idx = ['# ADR reference index', '', f'Scanned {scanned} text files under {ROOT} (excluding node_modules, .git, .nuxt, .output; symlinks not followed; {skipped_bin} binary files skipped). Session logs, blog posts and docs/adr-rewrite/ skipped. Context is the enclosing block (to the nearest blank lines, 3 to 12 lines each side), with the Markdown section heading. Own ADR file and own rule(s) `.claude/rules/adr-NNNN*.md` excluded. One reference = one (file, line, ADR).', '',
+       '| ADR | live code | live docs | total | files |', '|---|---|---|---|---|']
 tot = 0
 for n in sorted(adr_files):
     rs = sorted([r for r in refs if r['adr'] == n], key=lambda r: (r['file'], r['line']))
     cnt = {k: sum(r['kind'] == k for r in rs) for k in LABEL}
     tot += len(rs)
-    idx.append(f"| [{n:04d}]({n:04d}.md) | {cnt['code']} | {cnt['docs']} | {cnt['historical']} | {len(rs)} | {len({r['file'] for r in rs})} |")
+    idx.append(f"| [{n:04d}]({n:04d}.md) | {cnt['code']} | {cnt['docs']} | {len(rs)} | {len({r['file'] for r in rs})} |")
     out = [f'# References to ADR-{n:04d}', '', f'Target file: docs/adr/{adr_files[n]} (excluded, with .claude/rules/adr-{n:04d}*.md).', '',
-           f"Counts: live code {cnt['code']}, live docs {cnt['docs']}, historical {cnt['historical']}, total {len(rs)}.", '']
+           f"Counts: live code {cnt['code']}, live docs {cnt['docs']}, total {len(rs)}.", '']
     for k in LABEL:
         out += [f'## {LABEL[k]} ({cnt[k]})', '']
         for r in rs:
