@@ -173,7 +173,7 @@ function ruleKey(path: string): string {
 function relativizer(records: Record<string, unknown>[]): (p: string) => string {
   const meta = records.find((r) => r.type === 'user' || r.type === 'assistant') ?? {}
   const cwd = typeof meta.cwd === 'string' ? meta.cwd : ''
-  return (p) => (cwd && p.startsWith(cwd + '/') ? p.slice(cwd.length + 1) : p)
+  return (p) => (cwd && p.startsWith(cwd + '/') ? p.slice(cwd.length + 1).replace(/^\.claude\/worktrees\/[^/]+\//, '') : p)
 }
 
 /** The text a `tool_result` block actually carries — a plain string, or the
@@ -667,13 +667,29 @@ export function subagentTranscriptPaths(transcriptPath: string): string[] {
     .sort()
 }
 
+export interface SubagentJsonl {
+  label: string
+  jsonl: string
+  agent?: SubagentRef
+}
+
+/** One subagent's parsed transcript; `agent` names a workflow agent (#1876). */
+export interface SubagentRecords {
+  records: Record<string, unknown>[]
+  agent?: SubagentRef
+}
+
 /** Every subagent transcript beside `transcriptPath`, read tolerantly. Callers
  *  are a Stop hook and a CLI, neither of which should die over a sibling jsonl
  *  that vanished or won't read: one lost subagent costs its reads, not the
  *  whole trace. Single-homed here so the hook and the CLI can't diverge on it.
- *  `label` is the sibling `.meta.json`'s dispatch `description`, else the agent id. */
-export function readSubagentJsonls(transcriptPath: string): { label: string; jsonl: string }[] {
-  const out: { label: string; jsonl: string }[] = []
+ *  `label` is the sibling `.meta.json`'s dispatch `description`, else the agent id.
+ *  `agent` is set only for a workflow agent: an Agent/Task dispatch is already
+ *  in the parent's `subagents`, but a workflow's agents are not (#1876).
+ *  `foldSubagentTrace` adds its model. */
+export function readSubagentJsonls(transcriptPath: string): SubagentJsonl[] {
+  const out: SubagentJsonl[] = []
+  const workflows = join(subagentsDir(transcriptPath), 'workflows') + '/'
   for (const p of subagentTranscriptPaths(transcriptPath)) {
     let jsonl
     try {
@@ -682,13 +698,15 @@ export function readSubagentJsonls(transcriptPath: string): { label: string; jso
       continue
     }
     let label = basename(p, '.jsonl').replace(/^agent-/, '')
+    let type: string | undefined
     try {
-      const { description } = JSON.parse(readFileSync(p.replace(/\.jsonl$/, '.meta.json'), 'utf8'))
+      const { description, agentType } = JSON.parse(readFileSync(p.replace(/\.jsonl$/, '.meta.json'), 'utf8'))
       if (typeof description === 'string' && description) label = description
+      if (typeof agentType === 'string') type = agentType
     } catch {
       /* no readable meta: keep the agent id */
     }
-    out.push({ label, jsonl })
+    out.push(p.startsWith(workflows) ? { label, jsonl, agent: { type, task: label } } : { label, jsonl })
   }
   return out
 }
@@ -698,19 +716,24 @@ export function readSubagentJsonls(transcriptPath: string): { label: string; jso
  *  subagents need no special case: each spawn depth gets its own transcript in
  *  the same directory.
  *
- *  Deliberately NOT merged: `models`/`toolCounts`/`durationSec`/`subagents`
- *  describe the parent's own turns, and a consumer reading `toolCounts.Read`
- *  against `filesRead` would otherwise compare two different populations.
- *  Timings stay the parent's for the same reason. */
+ *  Deliberately NOT merged: `models`/`toolCounts`/`durationSec` describe the
+ *  parent's own turns, and a consumer reading `toolCounts.Read` against
+ *  `filesRead` would otherwise compare two different populations. Timings stay
+ *  the parent's for the same reason. `subagents` gains only workflow agents,
+ *  which the parent never dispatched as a tool call (#1876). */
 export function foldSubagentTrace(
   trace: MechanicalTrace,
-  subagentRecordSets: Record<string, unknown>[][],
+  subagents: SubagentRecords[],
   env: SessionIdEnv = process.env,
   docIndex?: DocLineIndex,
 ): MechanicalTrace {
-  if (subagentRecordSets.length === 0) return trace
-  const subs = subagentRecordSets.map((records) => extractTrace(records, env, docIndex))
+  if (subagents.length === 0) return trace
+  const subs = subagents.map(({ records }) => extractTrace(records, env, docIndex))
   const folded = { ...trace }
+  folded.subagents = [
+    ...trace.subagents,
+    ...subagents.flatMap(({ agent }, i) => (agent ? [{ ...agent, model: busiestModelId(subs[i]!.models) }] : [])),
+  ]
   for (const { field } of FOLDED_TRACE_FIELDS) {
     folded[field] = dedup([...trace[field], ...subs.flatMap((s) => s[field])])
   }
@@ -846,7 +869,7 @@ function main(): void {
   }
   const docIndex = loadDocLineIndex(resolve(dirname(fileURLToPath(import.meta.url)), '..'))
   const trace = extractTrace(parseTranscript(readFileSync(path, 'utf8')), process.env, docIndex)
-  const folded = foldSubagentTrace(trace, readSubagentJsonls(path).map((s) => parseTranscript(s.jsonl)), process.env, docIndex)
+  const folded = foldSubagentTrace(trace, readSubagentJsonls(path).map((s) => ({ records: parseTranscript(s.jsonl), agent: s.agent })), process.env, docIndex)
   console.log(JSON.stringify(folded, null, 2))
 }
 

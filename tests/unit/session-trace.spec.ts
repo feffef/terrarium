@@ -80,6 +80,11 @@ describe('extractTrace()', () => {
     expect(trace.filesEdited).toEqual(['app.ts'])
   })
 
+  it('cites a read in a worktree by its repo path', () => {
+    const read = { type: 'assistant', message: { content: [{ type: 'tool_use', name: 'Read', input: { file_path: '/repo/.claude/worktrees/wf_x-1/docs/a.md' } }] } }
+    expect(extractTrace([...parseTranscript(transcript), read], NO_ENV).filesRead).toContain('docs/a.md')
+  })
+
   it('unions Skill tool calls with slash-command expansions, ignoring tool_results', () => {
     expect(trace.skillsUsed).toEqual(['tdd', 'digest', 'frictions-to-fixes']) // '/not-invoked' excluded
     expect(trace.commandSkills).toEqual(['digest', 'frictions-to-fixes'])
@@ -112,7 +117,7 @@ const subagentTranscript = [
 
 describe('foldSubagentTrace() — subagent work counts as the session\'s (issue #796)', () => {
   const parent = extractTrace(parseTranscript(transcript), NO_ENV)
-  const folded = foldSubagentTrace(parent, [parseTranscript(subagentTranscript)], NO_ENV)
+  const folded = foldSubagentTrace(parent, [{ records: parseTranscript(subagentTranscript) }], NO_ENV)
 
   it('unions the attention fields, deduping a path both read', () => {
     expect(folded.filesRead).toEqual(['CONTEXT.md', 'app.ts', 'docs/agents/pr-workflow.md'])
@@ -125,6 +130,14 @@ describe('foldSubagentTrace() — subagent work counts as the session\'s (issue 
     expect(folded.toolCounts).toEqual(parent.toolCounts)
     expect(folded.durationSec).toBe(parent.durationSec)
     expect(folded.subagents).toEqual(parent.subagents)
+  })
+
+  // A workflow agent is no tool call in the parent, so only its ref names it (#1876).
+  it('adds a workflow agent to subagents, with its busiest model', () => {
+    const agent = { type: 'workflow-subagent', task: 'triage #1778' }
+    const withAgent = foldSubagentTrace(parent, [{ records: parseTranscript(subagentTranscript), agent }], NO_ENV)
+    expect(withAgent.subagents).toEqual([...parent.subagents, { ...agent, model: 'claude-sonnet-5' }])
+    expect(withAgent.models).toEqual(parent.models)
   })
 
   it('is identity for a session that dispatched nobody', () => {
@@ -170,7 +183,7 @@ describe('rulesLoaded and rulesGlobal — rules that loaded', () => {
 
   it('folds in rules a subagent loaded', () => {
     const sub = [...parseTranscript(subagentTranscript), rule('/repo/.claude/rules/adr-0012.md')]
-    expect(foldSubagentTrace(trace, [sub], NO_ENV).rulesLoaded).toEqual(['.claude/rules/adr-0024.md', '.claude/rules/adr-0012.md'])
+    expect(foldSubagentTrace(trace, [{ records: sub }], NO_ENV).rulesLoaded).toEqual(['.claude/rules/adr-0024.md', '.claude/rules/adr-0012.md'])
   })
 
   // Issue #1763: a worktree subagent's cwd differs, so its absolute rule path
@@ -178,7 +191,7 @@ describe('rulesLoaded and rulesGlobal — rules that loaded', () => {
   it('counts a rule once when a worktree subagent loads it from another root', () => {
     const worktree = { type: 'user', cwd: '/repo/.claude/worktrees/a1', message: { content: 'go' } }
     const sub = [worktree, rule('/repo/.claude/rules/adr-0024.md'), rule('/repo/.claude/worktrees/a1/.claude/rules/adr-0012.md')]
-    expect(foldSubagentTrace(trace, [sub], NO_ENV).rulesLoaded).toEqual(['.claude/rules/adr-0024.md', '.claude/rules/adr-0012.md'])
+    expect(foldSubagentTrace(trace, [{ records: sub }], NO_ENV).rulesLoaded).toEqual(['.claude/rules/adr-0024.md', '.claude/rules/adr-0012.md'])
   })
 
   it('is written by the stitch and accepted by the schema', () => {
@@ -243,7 +256,7 @@ describe('rulesFollowedUp — a rule whose ADR was read after it loaded', () => 
   it('folds in a subagent, and is written by the stitch and accepted by the schema', () => {
     const trace = extractTrace(base, NO_ENV)
     const sub = [...parseTranscript(subagentTranscript), rule('/repo/.claude/rules/adr-0012.md'), read('/repo/docs/adr/0012-x.md')]
-    const folded = foldSubagentTrace(trace, [sub], NO_ENV)
+    const folded = foldSubagentTrace(trace, [{ records: sub }], NO_ENV)
     expect(folded.rulesFollowedUp).toEqual(['.claude/rules/adr-0012.md'])
     const authored: AuthoredScratch = { session: 'session_01RF', goal: 'g', status: 'completed', outcome: 'o', summary: 's', frictions: [] }
     const entry = stitch(authored, folded)
@@ -319,6 +332,27 @@ describe('readSubagentJsonls()', () => {
     const parent = join(dir, 'session-uuid.jsonl')
     writeFileSync(parent, '')
     expect(readSubagentJsonls(parent)).toEqual([])
+  })
+
+  // An Agent/Task dispatch is already a tool call in the parent; a workflow
+  // agent shows up only under workflows/ (#1876).
+  it('names a workflow agent as a subagent, and only a workflow agent', () => {
+    const dir = mkdtempSync(join(tmpdir(), 'trace-'))
+    const parent = join(dir, 'session-uuid.jsonl')
+    writeFileSync(parent, '')
+    const subs = join(dir, 'session-uuid', 'subagents')
+    const run = join(subs, 'workflows', 'run-1')
+    mkdirSync(run, { recursive: true })
+    writeFileSync(join(subs, 'agent-a.jsonl'), 'A')
+    const assistant = JSON.stringify({ type: 'assistant', message: { model: 'claude-sonnet-5', content: [] } })
+    writeFileSync(join(run, 'agent-x.jsonl'), assistant)
+    writeFileSync(join(run, 'agent-x.meta.json'), JSON.stringify({ agentType: 'workflow-subagent', description: 'triage #1778' }))
+    writeFileSync(join(run, 'agent-y.jsonl'), '')
+    expect(readSubagentJsonls(parent).map((s) => s.agent)).toEqual([
+      undefined,
+      { type: 'workflow-subagent', task: 'triage #1778' },
+      { task: 'y' },
+    ])
   })
 })
 
@@ -547,7 +581,7 @@ describe('docsReadViaShell (issues #1074, #1545)', () => {
 
   it("folds a subagent's shell reads in, as #796 did for filesRead", () => {
     const parent = extractTrace(withCwd(bash('cat CONTEXT.md', CONTEXT)), process.env, index)
-    const folded = foldSubagentTrace(parent, [withCwd(bash('cat docs/agents/domain.md', DOMAIN))], process.env, index)
+    const folded = foldSubagentTrace(parent, [{ records: withCwd(bash('cat docs/agents/domain.md', DOMAIN)) }], process.env, index)
     expect(folded.docsReadViaShell.sort()).toEqual(['CONTEXT.md', 'docs/agents/domain.md'])
   })
 
