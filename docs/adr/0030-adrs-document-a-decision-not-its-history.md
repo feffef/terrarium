@@ -1,4 +1,4 @@
-# ADR-0030: How we write ADRs
+# ADR-0030: ADRs document a decision, not its history
 
 An ADR states one decision as it stands today: what it covers, why we made it,
 and the alternatives we rejected, in the template below. When the decision
