@@ -148,3 +148,26 @@ describe('validateContent() — values cut short by an unquoted `#`', () => {
     expect(validateContent([{ ...baseCollection('.', schema), kind: 'session' }], dir).violations).toEqual([])
   })
 })
+
+describe('validateContent() — a folded line ending in `word-` (journal skills)', () => {
+  const schema = z.object({ note: z.string() })
+  const skills = { ...baseCollection('.', schema), tenant: 'journal', collection: 'skills' }
+  const check = (yml: string, col: ExpandedCollection = skills) => {
+    writeFileSync(join(dir, 'd.yml'), yml)
+    return validateContent([col], dir).violations
+  }
+
+  it('flags the line, naming the file and line number', () => {
+    const v = check('note: >-\n  the session-id-\n  recovery trial\n')
+    expect(v).toHaveLength(1)
+    expect(v[0]?.messages.join()).toMatch(/d\.yml.*line 2/)
+  })
+
+  it('passes a clean fold, and a code span crossing a line break at a space', () => {
+    expect(check('note: >-\n  the session-id\n  `a b\n  c` recovery\n')).toEqual([])
+  })
+
+  it('ignores other collections', () => {
+    expect(check('note: >-\n  the session-id-\n  recovery\n', baseCollection('.', schema))).toEqual([])
+  })
+})
