@@ -1,0 +1,82 @@
+adr: '0015'
+summary_in_context: false
+checklist:
+  - id: pack-skills-off-limits
+    text: External pack Skills keyed in skills-lock.json are off limits to edit and stay as installed, because a re-install clobbers local edits.
+    kind: claim
+    section: Summary
+    refs: [scripts/audit-skills.ts:64, scripts/verify-skills-lock.ts:1, scripts/verify-skills-lock.ts:4, scripts/verify-skills-lock.ts:221, .agents/skills/frictions-to-fixes/SKILL.md:97, .claude/rules/adr-0005.md:17, docs/adr/0027-prune-trials.md:58, docs/diagrams/interactive-map/terrarium-overview.md:860]
+    conflict: false
+  - id: pack-integrity-pin
+    text: The Gate enforces it via an installedSha256 pin in each pack Skill's Inventory entry, checked by pnpm verify:skills-lock (re-pin with --write; skills-lock.json read-only).
+    kind: claim
+    section: Consequences
+    refs: [.github/actions/gate/action.yml:45, layers/journal/tenant.config.ts:39, scripts/verify-skills-lock.ts:1, scripts/verify-skills-lock.ts:221, .agents/skills/frictions-to-fixes/SKILL.md:97, docs/adr/0027-prune-trials.md:58]
+    conflict: false
+  - id: inventory-purpose
+    text: What is the Skill Inventory? Structured data in layers/journal/content/*/skills/ recording each Skill's role and importance to this project, not its description.
+    kind: question
+    section: Summary
+    refs: [layers/journal/tenant.config.ts:127, scripts/verify-skills-lock.ts:4, scripts/validate-skill-cadence.ts:4, docs/diagrams/interactive-map/terrarium-overview.md:867]
+    conflict: false
+  - id: audit-skills-scope
+    text: The scheduled audit-skills Skill keeps the Inventory current against usage, writes only Inventory .yml and issues; Skill-text changes become issues for a human, the rest observations.
+    kind: claim
+    section: Scope and limits
+    refs: [.agents/skills/audit-skills/SKILL.md:22, layers/journal/tenant.config.ts:127, docs/adr/0010-digests-derived-append-only-journal-pages.md:14, docs/adr/0003-agent-operating-model-and-governance.md:22]
+    conflict: false
+  - id: evidence-rule
+    text: What existing evidence rule must audit-skills' Inventory-only content cite to merge under its ADR-0003 ledger row? (unclear from callers)
+    kind: question
+    section: Scope and limits
+    refs: [docs/adr/0003-agent-operating-model-and-governance.md:22]
+    conflict: false
+  - id: role-and-observations
+    text: role is a short reference-free paragraph (~50 words, 80 max); ids go in observations, an internal audit-skills-owned log not rendered in the Journal (2026-07-13 amendment).
+    kind: claim
+    section: Consequences
+    refs: [layers/journal/tenant.config.ts:34, layers/journal/tenant.config.ts:43, scripts/audit-skills.ts:112]
+    conflict: false
+  - id: observations-retention
+    text: Observations are kept 40 days; each run drops older entries (2026-09-27 amendment).
+    kind: claim
+    section: Consequences
+    refs: [layers/journal/tenant.config.ts:46]
+    conflict: false
+  - id: helper-gathers-session-judges
+    text: scripts/audit-skills.ts is the deterministic half (usage, Inventory, behaviour-check picks, closure signals); every judgement stays with the Skill's session.
+    kind: claim
+    section: See
+    refs: [scripts/audit-skills.ts:1, tests/unit/audit-skills.spec.ts:1]
+    conflict: false
+  - id: sync-remit
+    text: A chartered job is a remit realised by more than one Skill; sync spans digest and audit-skills.
+    kind: claim
+    section: Consequences
+    refs: [docs/adr/0003-agent-operating-model-and-governance.md:54, docs/adr/0010-digests-derived-append-only-journal-pages.md:14]
+    conflict: false
+  - id: skills-layout
+    text: ADR-0015 assumes .agents/skills/ is the committed home with .claude/skills/ symlinks.
+    kind: claim
+    section: See
+    refs: [docs/adr/0005-skill-model.md:11]
+    conflict: false
+lists:
+  - {list: keep, file: layers/journal/tenant.config.ts, line: 127, note: 'term "Skill Inventory" (also verify-skills-lock.ts:4, validate-skill-cadence.ts:4, audit-skills/SKILL.md:22)'}
+  - {list: keep, file: scripts/verify-skills-lock.ts, line: 221, note: '"external pack Skills", "off limits to edit" (also verify-skills-lock.ts:1, frictions-to-fixes/SKILL.md:97)'}
+  - {list: keep, file: .claude/rules/adr-0005.md, line: 17, note: '"Pack Skills ... stay as installed" (also adr/0027:58)'}
+  - {list: keep, file: layers/journal/tenant.config.ts, line: 39, note: 'field names installedSha256, role, observations (also :34, :43, :46, audit-skills.ts:112)'}
+  - {list: keep, file: docs/adr/0003-agent-operating-model-and-governance.md, line: 22, note: '"existing evidence rule" for audit-skills ledger row'}
+  - {list: keep, file: docs/adr/0003-agent-operating-model-and-governance.md, line: 54, note: 'sync remit = digest + audit-skills (also adr/0010:14)'}
+  - {list: repoint, file: .github/actions/gate/action.yml, line: 45, note: 'undated "ADR-0015 amendment" for the skills-lock pin'}
+  - {list: repoint, file: layers/journal/tenant.config.ts, line: 34, note: '"ADR-0015 amendment, 2026-07-13" (role reference-free)'}
+  - {list: repoint, file: layers/journal/tenant.config.ts, line: 43, note: '"ADR-0015 amendment, 2026-07-13" (observations not rendered)'}
+  - {list: repoint, file: layers/journal/tenant.config.ts, line: 46, note: '"ADR-0015 amendment, 2026-09-27" (40-day retention)'}
+  - {list: repoint, file: scripts/audit-skills.ts, line: 112, note: '"ADR-0015 amendment, 2026-07-13" (observations)'}
+  - {list: repoint, file: docs/adr/0005-skill-model.md, line: 11, note: '"ADR-0015, which already assumes the current split"'}
+  - {list: fix, file: docs/adr/0003-agent-operating-model-and-governance.md, line: 54, note: 'remit concept looks like ADR-0003''s own; cite of ADR-0015 unclear'}
+  - {list: fix, file: docs/adr/0005-skill-model.md, line: 11, note: 'Skill layout is homed in CLAUDE.md/ADR-0005; ADR-0015 cite is weak'}
+  - {list: fix, file: .agents/skills/audit-skills/SKILL.md, line: 22, note: 'repeats write scope; keep to a pointer clause'}
+  - {list: fix, file: .agents/skills/frictions-to-fixes/SKILL.md, line: 97, note: 'repeats pack-Skill rule; keep to a pointer clause'}
+  - {list: fix, file: docs/adr/0027-prune-trials.md, line: 58, note: 'repeats pack-Skill rule; keep to a pointer clause'}
+  - {list: fix, file: layers/journal/tenant.config.ts, line: 34, note: 'schema comments (34-46) restate amendment content; pick one home (schema) and point'}

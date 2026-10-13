@@ -1,0 +1,159 @@
+adr: "0025"
+summary_in_context: false
+items:
+  - id: C1
+    text: Isolation is the default; a Collection reaches the Catalog only by declaring a `kind`, and one without a kind is invisible to every Aggregator.
+    kind: claim
+    section: Summary
+    refs: [layers/atlas/tenant.config.ts:62, layers/blog/tenant.config.ts:66, layers/journal/tenant.config.ts:102, layers/marquee/tenant.config.ts:29, layers/midden/tenant.config.ts:148, layers/commons/tenant.config.ts:22, shared/manifest.ts:19, CONTEXT.md:70, shared/expand.ts:191, shared/kinds.ts:1, layers/commons/tests/e2e/commons.spec.ts:2, CONTEXT.md:35]
+    conflict: false
+  - id: C2
+    text: queryAcrossTenants over #catalog is the one sanctioned cross-Tenant read; never import another Tenant's manifest or hardcode a Tenant roster.
+    kind: claim
+    section: Summary
+    refs: [app/composables/catalog.ts:1, layers/commons/app/components/commons/Search.vue:5, layers/commons/app/components/commons/Timeline.vue:6, "layers/commons/app/pages/t/commons/[space]/index.vue:10", layers/commons/nuxt.config.ts:4, layers/commons/CONTEXT.md:32, layers/commons/CONTEXT.md:29, CONTEXT.md:35]
+    conflict: false
+  - id: C3
+    text: What is a Collection kind? A named shared read contract with a minimum contract merged into the local schema (local wins); one mechanism whether it covers a few fields (page) or a whole shape (session).
+    kind: question
+    section: Summary
+    refs: [shared/kinds.ts:26, shared/expand.ts:94, tests/unit/kinds.spec.ts:1, tests/unit/expand.spec.ts:163, shared/manifest.ts:19, CONTEXT.md:61]
+    conflict: false
+  - id: C4
+    text: The Catalog is derived at build time from the same expand(loadManifests()) as #routing, grouped by kind, never hand-written.
+    kind: claim
+    section: Summary
+    refs: [modules/catalog.ts:1, modules/catalog.ts:38, shared/expand.ts:39, shared/expand.ts:175, shared/expand.ts:191, CONTEXT.md:229]
+    conflict: false
+  - id: C5
+    text: The session schema moved verbatim to shared/schemas/session.ts and became the `session` kind; Journal references it by kind; log-session validates against it.
+    kind: claim
+    section: Consequences
+    refs: [docs/adr/0009-session-logs-commit-directly-to-main.md:11, layers/journal/tenant.config.ts:136, scripts/log-session.ts:68, shared/schemas/session.ts:1, shared/schemas/session.ts:4, shared/kinds.ts:64]
+    conflict: false
+  - id: C6
+    text: May only a governed set of Aggregators read across Tenants, or any Tenant through the sanctioned primitive? Who governs the set?
+    kind: question
+    section: Scope and limits
+    refs: [CONTEXT.md:238, "layers/blog/app/pages/t/blog/[space]/[...slug].vue:49"]
+    conflict: true
+    sides: "CONTEXT.md:238 says normal Tenants never read across; the Blog page reads the Journal via queryPages citing ADR-0025."
+  - id: C7
+    text: Which files are Human-only because of this ADR (shared/kinds.ts, modules/catalog.ts, app/composables/catalog.ts), and why?
+    kind: question
+    section: Consequences
+    refs: [docs/adr/0004-objective-safety-gate.md:167, docs/adr/0004-objective-safety-gate.md:170, shared/kinds.ts:1, modules/catalog.ts:1, layers/commons/app/composables/timeline.ts:1]
+    conflict: false
+  - id: C8
+    text: The page kind's contract carries optional publishedAt and summary.
+    kind: claim
+    section: See
+    refs: [layers/blog/tenant.config.ts:69, layers/journal/tenant.config.ts:106, layers/marquee/tenant.config.ts:26, shared/kinds.ts:64]
+    conflict: false
+  - id: C9
+    text: Cross-Tenant reads are read-only by construction (ADR-0020 untouched) and build-time/committed only (ADR-0001).
+    kind: claim
+    section: Scope and limits
+    refs: [app/composables/catalog.ts:1, layers/commons/app/composables/timeline.ts:1, layers/commons/app/components/commons/Search.vue:5, CONTEXT.md:229]
+    conflict: false
+  - id: C10
+    text: kind is orthogonal to type; a kind's type must match the collection's; unknown kinds fail at the manifest authoring surface.
+    kind: claim
+    section: Scope and limits
+    refs: [shared/manifest.ts:104, shared/manifest.ts:36, tests/unit/expand.spec.ts:125, shared/manifest.ts:19]
+    conflict: false
+  - id: C11
+    text: What is an Aggregator? An ordinary Tenant layer that reads the Catalog, writes nothing across, hosts one view per Space; Commons is the first.
+    kind: question
+    section: Summary
+    refs: [CONTEXT.md:238, CONTEXT.md:349, layers/commons/tenant.config.ts:2, layers/commons/CONTEXT.md:9, layers/commons/tests/e2e/commons.spec.ts:2]
+    conflict: false
+  - id: C12
+    text: "Why: avoid schema drift and manifest coupling; replace the dollhouse's hardcoded roster (#631); second cross-Tenant derivation after #routing (rule of two); origin issue #642."
+    kind: claim
+    section: Why
+    refs: [shared/kinds.ts:1, modules/catalog.ts:1, layers/commons/CONTEXT.md:29, CONTEXT.md:61]
+    conflict: false
+  - id: C13
+    text: Aggregator results link to the Document's real ADR-0006 route via documentUrl, never an invented URL.
+    kind: claim
+    section: Consequences
+    refs: [shared/routing.ts:62, layers/commons/app/composables/timeline.ts:13, layers/commons/CONTEXT.md:32]
+    conflict: false
+  - id: C14
+    text: The Aggregator owns the normalization policy for kinds it consumes; the primitive stays generic and platform-side.
+    kind: claim
+    section: Scope and limits
+    refs: [layers/commons/app/composables/timeline.ts:1, app/composables/catalog.ts:1, layers/commons/app/components/commons/Timeline.vue:6]
+    conflict: false
+  - id: C15
+    text: Timestamps are canonical UTC strings, not z.date() (unclear whether ADR-0025 decides this).
+    kind: claim
+    section: See
+    refs: [shared/schemas/timestamp.ts:1]
+    conflict: false
+  - id: C16
+    text: A data collection needs a schema source (schema, kind, or both).
+    kind: claim
+    section: See
+    refs: [shared/manifest.ts:123, tests/unit/expand.spec.ts:163]
+    conflict: false
+  - id: C17
+    text: Projection happens inside the fan-out; typing T from the kind name is a non-goal; the projector's one cast is the sanctioned boundary.
+    kind: claim
+    section: Rejected alternatives
+    refs: [app/composables/catalog.ts:44]
+    conflict: false
+lists:
+  - list: keep
+    file: CONTEXT.md
+    line: 61
+    note: Terms Collection kind, minimum contract, Catalog, Aggregator, isolation default (also CONTEXT.md:70/229/238, shared/kinds.ts:26).
+  - list: keep
+    file: app/composables/catalog.ts
+    line: 1
+    note: Identifiers kind, #catalog, queryAcrossTenants, kinds page and session (also modules/catalog.ts:1, shared/kinds.ts:64).
+  - list: keep
+    file: docs/adr/0004-objective-safety-gate.md
+    line: 167
+    note: Filename 0025-cross-tenant-catalog-and-collection-kinds.md and date 2026-07-22 (also docs/adr/0009…:11, layers/commons/CONTEXT.md:49 glob).
+  - list: keep
+    file: docs/adr/0004-objective-safety-gate.md
+    line: 170
+    note: A Consequences section giving the Human-only reasons (also app/composables/catalog.ts:44).
+  - list: keep
+    file: shared/kinds.ts
+    line: 1
+    note: Issue #642 as origin (also app/composables/catalog.ts:1, layers/commons/tenant.config.ts:2, tests/unit/kinds.spec.ts:1).
+  - list: repoint
+    file: app/composables/catalog.ts
+    line: 44
+    note: Cites "ADR-0025 Consequences" for the typed-projection non-goal; repoint if moved to Rejected alternatives.
+  - list: repoint
+    file: docs/adr/0004-objective-safety-gate.md
+    line: 170
+    note: Cites "ADR-0025's Consequences" for Human-only reasons and links the filename.
+  - list: repoint
+    file: docs/adr/0009-session-logs-commit-directly-to-main.md
+    line: 11
+    note: Links the filename; relies on ADR-0025 recording the session-schema move.
+  - list: fix
+    file: docs/diagrams/interactive-map/terrarium-overview.md
+    line: 864
+    note: Miscite; `content` dirs cite ADR-0025 (ADR-0001 likely fits).
+  - list: fix
+    file: shared/manifest.ts
+    line: 19
+    note: Repeats the kind rules at length; shorten to a pointer.
+  - list: fix
+    file: CONTEXT.md
+    line: 70
+    note: Isolation default restated here and in layers/commons/tenant.config.ts:22; one home, point from the other.
+  - list: fix
+    file: "layers/blog/app/pages/t/blog/[space]/[...slug].vue"
+    line: 49
+    note: Conflicts with CONTEXT.md:238 (C6); fix whichever side the ADR rules against.
+  - list: fix
+    file: shared/schemas/timestamp.ts
+    line: 1
+    note: Unclear whether ADR-0025 decides the string-timestamp rule; re-cite if not.

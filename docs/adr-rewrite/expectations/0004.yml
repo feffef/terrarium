@@ -1,0 +1,578 @@
+checklist:
+  - id: C4
+    text: "Which surfaces are Human-only to merge (isolation-critical code, CI, governance/ADRs, guards)? The ADR names categories and points to the rule paths for the list."
+    kind: question
+    section: "Scope and limits"
+    conflict: true
+    refs:
+      - ".github/dependabot.yml:16"
+      - ".github/workflows/gate.yml:5"
+      - "layers/journal/tenant.config.ts:66"
+      - "modules/catalog.ts:13"
+      - "shared/kinds.ts:13"
+      - ".agents/skills/frictions-to-fixes/SKILL.md:230"
+      - "CLAUDE.md:74"
+      - "docs/adr/0006-runtime-routing-path-prefix.md:50"
+      - "docs/adr/0007-generated-config-committed-drift-checked.md:51"
+      - "docs/adr/0010-digests-derived-append-only-journal-pages.md:54"
+      - "docs/adr/0011-poc-self-updating-deploy-container.md:68"
+      - "docs/adr/0013-dynamic-content-config-committed-routing-map.md:86"
+      - "docs/adr/0014-build-time-virtual-routing-module.md:87"
+      - "docs/adr/0014-build-time-virtual-routing-module.md:104"
+      - "docs/adr/0018-tenant-layers-under-layers-directory.md:60"
+      - "docs/adr/0018-tenant-layers-under-layers-directory.md:77"
+      - "docs/adr/0020-requester-trust-tiers.md:10"
+      - "docs/adr/0022-autonomous-triage-sweep.md:101"
+      - "docs/adr/0023-guest-driven-demo-pipeline.md:11"
+      - "docs/adr/0023-guest-driven-demo-pipeline.md:83"
+      - "docs/adr/0024-build-time-mermaid-prerender.md:91"
+      - "docs/adr/0025-cross-tenant-catalog-and-collection-kinds.md:177"
+      - "docs/adr/0026-gate-workflow-thin-shell.md:64"
+      - "docs/adr/0027-prune-trials.md:58"
+      - "docs/agents/guards.md:47"
+      - "docs/research/making-repo-public.md:5"
+      - "docs/research/making-repo-public.md:180"
+  - id: C5
+    text: "Presentation-only Tenant-layer code that reuses resolveSpaceRoute and reads only same-Space keyed collections is outside the Human-only core."
+    kind: claim
+    section: "Scope and limits"
+    conflict: false
+    refs:
+      - "app/composables/space.ts:7"
+      - "layers/atlas/app/composables/useAtlasWingData.ts:11"
+      - "layers/atlas/app/pages/t/atlas/[space]/[...slug].vue:7"
+      - "layers/atlas/app/pages/t/atlas/[space]/index.vue:6"
+      - "layers/atlas/nuxt.config.ts:6"
+      - "layers/blog/app/pages/t/blog/[space]/[...slug].vue:6"
+      - "layers/blog/app/pages/t/blog/[space]/index.vue:6"
+      - "layers/blog/app/pages/t/blog/index.vue:9"
+      - "layers/blog/nuxt.config.ts:8"
+      - "layers/commons/app/pages/t/commons/[space]/index.vue:6"
+      - "layers/commons/nuxt.config.ts:6"
+      - "layers/journal/app/assets/theme.css:6"
+      - "layers/journal/app/pages/t/journal/[space]/[...slug].vue:10"
+      - "layers/journal/nuxt.config.ts:9"
+      - "layers/marquee/app/pages/t/marquee/[space]/[...slug].vue:7"
+      - "layers/marquee/app/pages/t/marquee/[space]/index.vue:6"
+      - "layers/marquee/nuxt.config.ts:9"
+      - "layers/midden/app/components/content/MiddenArtifact.vue:15"
+      - "layers/midden/app/components/midden/StoresLanding.vue:12"
+      - "layers/midden/app/components/midden/TrenchLanding.vue:8"
+      - "layers/midden/app/pages/t/midden/[space]/[...slug].vue:14"
+      - "layers/midden/nuxt.config.ts:7"
+      - "docs/adr/0016-tenant-root-layer-routes.md:37"
+      - "docs/adr/0025-cross-tenant-catalog-and-collection-kinds.md:124"
+  - id: C11
+    text: "The gate layers are L0 typecheck, L1 content validation, L2 smoke render, L3 isolation invariant (unique, correctly scoped keys at expansion and resolution)."
+    kind: claim
+    section: "Summary"
+    conflict: false
+    refs:
+      - "layers/blog/tenant.config.ts:29"
+      - "layers/journal/tenant.config.ts:95"
+      - "nuxt.config.ts:47"
+      - "scripts/validate-content-refs.ts:17"
+      - "scripts/validate-content.ts:4"
+      - "shared/expand.ts:9"
+      - "shared/expand.ts:152"
+      - "shared/manifest.ts:34"
+      - "shared/routing.ts:3"
+      - "tests/e2e/smoke.spec.ts:1"
+      - "tests/unit/expand.spec.ts:1"
+      - "tests/unit/routing.spec.ts:1"
+      - "tsconfig.node.json:5"
+      - ".agents/skills/frictions-to-fixes/SKILL.md:268"
+      - "SECURITY.md:21"
+      - "docs/adr/0006-runtime-routing-path-prefix.md:21"
+      - "docs/adr/0012-cross-persona-pingbacks-via-authored-denormalization.md:12"
+      - "docs/adr/0023-guest-driven-demo-pipeline.md:19"
+  - id: C3
+    text: "The Human-only path list lives in the frontmatter paths of .claude/rules/adr-0004-human-merge.md; merge-pr.ts reads it from origin/main and fails closed."
+    kind: claim
+    section: "See"
+    conflict: false
+    refs:
+      - ".claude/workflows/clear-backlog-build.js:25"
+      - ".claude/workflows/clear-backlog-build.js:74"
+      - "scripts/merge-pr.ts:167"
+      - "scripts/merge-pr.ts:169"
+      - "scripts/merge-pr.ts:177"
+      - "tests/unit/merge-pr.spec.ts:289"
+      - "tests/unit/merge-pr.spec.ts:309"
+      - "tests/unit/merge-pr.spec.ts:310"
+      - ".agents/skills/audit-docs/SKILL.md:17"
+      - ".agents/skills/frictions-to-fixes/SKILL.md:135"
+      - "docs/adr/0026-gate-workflow-thin-shell.md:66"
+      - "docs/adr/0029-instructions-load-with-the-files-they-govern.md:57"
+      - "docs/agents/pr-workflow.md:5"
+      - "docs/agents/pr-workflow.md:6"
+  - id: C1
+    text: "Who merges? Agents self-merge on a green gate; ADR-0004 names the exceptions any Trusted human merges."
+    kind: question
+    section: "Summary"
+    conflict: true
+    refs:
+      - "scripts/merge-pr.ts:23"
+      - ".agents/skills/prune-trial/SKILL.md:152"
+      - ".claude/rules/adr-0022.md:9"
+      - "CLAUDE.md:52"
+      - "CONTEXT.md:253"
+      - "docs/adr/0003-agent-operating-model-and-governance.md:32"
+      - "docs/adr/0003-agent-operating-model-and-governance.md:94"
+      - "docs/adr/0003-agent-operating-model-and-governance.md:99"
+      - "docs/adr/0003-agent-operating-model-and-governance.md:148"
+      - "docs/adr/0022-autonomous-triage-sweep.md:35"
+      - "docs/adr/0022-autonomous-triage-sweep.md:58"
+      - "docs/adr/0022-autonomous-triage-sweep.md:129"
+      - "docs/agents/pr-workflow.md:75"
+      - "docs/agents/pr-workflow.md:88"
+  - id: C6
+    text: "A PR that adds a dependency, or changes a dependency's runtime behaviour, is human-merged."
+    kind: claim
+    section: "Summary"
+    conflict: true
+    refs:
+      - ".agents/skills/visitor-loop/scripts/ideas.ts:6"
+      - ".github/dependabot.yml:3"
+      - "layers/journal/tests/unit/accordion-deep-link.spec.ts:14"
+      - "layers/journal/tests/unit/expand-transition.spec.ts:14"
+      - ".agents/skills/guest-build/SKILL.md:81"
+      - ".agents/skills/guest-build/SKILL.md:83"
+      - ".agents/skills/guest-intake/SKILL.md:143"
+      - "docs/adr/0019-patched-nuxt-content-client-db-loading.md:108"
+      - "docs/adr/0019-patched-nuxt-content-client-db-loading.md:111"
+      - "docs/adr/0023-guest-driven-demo-pipeline.md:96"
+      - "docs/adr/0024-build-time-mermaid-prerender.md:125"
+      - "docs/adr/0024-build-time-mermaid-prerender.md:126"
+      - "docs/agents/tenant-layers.md:153"
+  - id: C7
+    text: "A PR that changes untested/untestable runtime behaviour (hooks, guards, global runtime) is human-merged; the gate is blind to malicious runtime behaviour."
+    kind: claim
+    section: "Scope and limits"
+    conflict: false
+    refs:
+      - "scripts/double-background-guard.ts:23"
+      - "scripts/skill-inline-guard.ts:8"
+      - ".agents/skills/frictions-to-fixes/SKILL.md:286"
+      - ".agents/skills/frictions-to-fixes/SKILL.md:288"
+      - "docs/adr/0009-session-logs-commit-directly-to-main.md:232"
+      - "docs/adr/0009-session-logs-commit-directly-to-main.md:325"
+      - "docs/adr/0009-session-logs-commit-directly-to-main.md:357"
+      - "docs/adr/0009-session-logs-commit-directly-to-main.md:372"
+      - "docs/adr/0019-patched-nuxt-content-client-db-loading.md:150"
+      - "docs/adr/0019-patched-nuxt-content-client-db-loading.md:195"
+      - "docs/adr/0023-guest-driven-demo-pipeline.md:125"
+      - "docs/research/content-client-queries-without-wasm.md:381"
+  - id: C8
+    text: "An unattended hook must be reviewable: pure core, --dry-run, unit test."
+    kind: claim
+    section: "See"
+    conflict: false
+    refs:
+      - "scripts/loop-only-tool-guard.ts:17"
+      - "scripts/subagent-background-guard.ts:11"
+      - "scripts/workflow-edit-guard.ts:10"
+      - "tests/unit/double-background-guard.spec.ts:6"
+      - "tests/unit/double-background-guard.spec.ts:198"
+      - "tests/unit/loop-only-tool-guard.spec.ts:171"
+      - "tests/unit/skill-inline-guard.spec.ts:6"
+      - "tests/unit/skill-inline-guard.spec.ts:159"
+      - "tests/unit/subagent-background-guard.spec.ts:281"
+      - "tests/unit/workflow-edit-guard.spec.ts:6"
+      - "tests/unit/workflow-edit-guard.spec.ts:225"
+  - id: C15
+    text: "e2e runs on one build: specs call setupL2() and never build; globalSetup builds only when .output is stale."
+    kind: claim
+    section: "Consequences"
+    conflict: true
+    refs:
+      - "layers/atlas/tests/e2e/atlas.spec.ts:2"
+      - "layers/blog/tests/e2e/blog.spec.ts:2"
+      - "layers/commons/tests/e2e/commons.spec.ts:4"
+      - "layers/journal/tests/e2e/journal.spec.ts:7"
+      - "layers/marquee/tests/e2e/marquee.spec.ts:2"
+      - "layers/midden/tests/e2e/midden.spec.ts:2"
+      - "tests/README.md:3"
+      - "tests/e2e/smoke.spec.ts:12"
+      - "tests/support/e2e-global-setup.ts:2"
+      - "tests/support/e2e.ts:6"
+  - id: C9
+    text: "Public-authored, fork and guest PRs are human-merged regardless of file classification."
+    kind: claim
+    section: "Summary"
+    conflict: false
+    refs:
+      - ".agents/skills/guest-build/SKILL.md:41"
+      - "docs/adr/0020-requester-trust-tiers.md:51"
+      - "docs/adr/0020-requester-trust-tiers.md:111"
+      - "docs/adr/0020-requester-trust-tiers.md:115"
+      - "docs/adr/0020-requester-trust-tiers.md:156"
+      - "docs/adr/0023-guest-driven-demo-pipeline.md:73"
+      - "docs/agents/guest-contributions.md:76"
+  - id: C12
+    text: "The gate is objective: it checks a PR's output mechanically, not the intent of its input; CI is authoritative."
+    kind: claim
+    section: "Why"
+    conflict: false
+    refs:
+      - "CONTEXT.md:269"
+      - "SECURITY.md:24"
+      - "docs/adr/0003-agent-operating-model-and-governance.md:157"
+      - "docs/adr/0020-requester-trust-tiers.md:16"
+      - "docs/adr/0020-requester-trust-tiers.md:29"
+      - "docs/adr/0022-autonomous-triage-sweep.md:87"
+      - "docs/research/public-readiness-review.md:47"
+  - id: C18
+    text: "Every PR passes the gate (local pnpm gate, CI safety-gate) before merge."
+    kind: claim
+    section: "Summary"
+    conflict: false
+    refs:
+      - ".github/workflows/gate.yml:1"
+      - "tests/README.md:68"
+      - ".agents/skills/frictions-to-fixes/SKILL.md:13"
+      - ".out-of-scope/ci-enforced-doc-invariants.md:35"
+      - "README.md:41"
+      - "docs/diagrams/interactive-map/terrarium-overview.md:870"
+  - id: C14
+    text: "A Skill's own files (.agents/skills/, .claude/workflows/) skip build and e2e, not unit tests."
+    kind: claim
+    section: "Scope and limits"
+    conflict: false
+    refs:
+      - ".github/actions/gate/action.yml:91"
+      - "scripts/gate.ts:29"
+      - "tests/README.md:24"
+      - "docs/adr/0005-skill-model.md:19"
+  - id: C16
+    text: "Agent sessions lack the workflow OAuth scope, so .github/workflows/ changes need a human; drift history."
+    kind: claim
+    section: "Consequences"
+    conflict: false
+    refs:
+      - "scripts/validate-content.ts:32"
+      - "docs/adr/0026-gate-workflow-thin-shell.md:15"
+      - "docs/adr/0026-gate-workflow-thin-shell.md:25"
+      - "docs/proposals/README.md:32"
+  - id: C19
+    text: "Blast radius is one axis, orthogonal to autonomy (ADR-0003) and provenance (ADR-0020)."
+    kind: claim
+    section: "Why"
+    conflict: false
+    refs:
+      - "docs/adr/0020-requester-trust-tiers.md:12"
+      - "docs/adr/0020-requester-trust-tiers.md:41"
+      - "docs/adr/0020-requester-trust-tiers.md:121"
+  - id: C13
+    text: "The gate is layered cheapest-first in Floor and Heavy tiers; Heavy skips only on a provably Inert changeset; gate:scoped decides locally."
+    kind: claim
+    section: "Summary"
+    conflict: false
+    refs:
+      - ".github/actions/gate/action.yml:2"
+      - "docs/agents/pr-workflow.md:97"
+  - id: C2
+    text: "Human-only constrains merging, not editing."
+    kind: claim
+    section: "Scope and limits"
+    conflict: false
+    refs:
+      - "CONTEXT.md:298"
+      - "docs/adr/0026-gate-workflow-thin-shell.md:88"
+      - "modules/catalog.ts:13"
+      - "docs/adr/0025-cross-tenant-catalog-and-collection-kinds.md:177"
+  - id: C17
+    text: "Run gate:scoped before the first push; a CI failure after a passing gate:scoped is a major Friction."
+    kind: claim
+    section: "Consequences"
+    conflict: false
+    refs:
+      - "CONTEXT.md:144"
+  - id: C10
+    text: "A PR that decides which Tenant's data a request can reach is human-merged."
+    kind: claim
+    section: "Summary"
+    conflict: false
+    refs:
+      - ".claude/workflows/clear-backlog-build.js:74"
+      - "layers/midden/app/components/content/MiddenArtifact.vue:15"
+  - id: C20
+    text: "Does ADR-0004 govern advisory checks kept out of CI? (unclear)"
+    kind: question
+    section: "unclear"
+    conflict: false
+    refs:
+      - "scripts/check-conflicting-issues.ts:15"
+lists:
+  - list: keep
+    file: "nuxt.config.ts"
+    line: 47
+    note: "L0 layer name"
+  - list: keep
+    file: "layers/blog/tenant.config.ts"
+    line: 29
+    note: "L1 layer name"
+  - list: keep
+    file: "shared/manifest.ts"
+    line: 34
+    note: "L1 layer name"
+  - list: keep
+    file: "tests/e2e/smoke.spec.ts"
+    line: 1
+    note: "L2 layer name"
+  - list: keep
+    file: "shared/expand.ts"
+    line: 152
+    note: "L3 isolation invariant: unique, correctly scoped keys"
+  - list: keep
+    file: "shared/routing.ts"
+    line: 3
+    note: "L3 at resolution time"
+  - list: keep
+    file: "tests/unit/expand.spec.ts"
+    line: 1
+    note: "L3"
+  - list: keep
+    file: "tests/unit/routing.spec.ts"
+    line: 1
+    note: "L3"
+  - list: keep
+    file: "layers/journal/tenant.config.ts"
+    line: 95
+    note: "ADR-0004's L3 isolation invariant"
+  - list: keep
+    file: "SECURITY.md"
+    line: 21
+    note: "ADR-0004 L3"
+  - list: keep
+    file: "docs/adr/0012-cross-persona-pingbacks-via-authored-denormalization.md"
+    line: 12
+    note: "isolation invariant (ADR-0004 L3)"
+  - list: keep
+    file: "CONTEXT.md"
+    line: 269
+    note: "Gate term: objective, layered, Floor/Heavy/Full, CI authoritative"
+  - list: keep
+    file: "CONTEXT.md"
+    line: 298
+    note: "Human-only term: merge-only, rule paths"
+  - list: keep
+    file: ".github/workflows/gate.yml"
+    line: 5
+    note: "\"high-risk set\""
+  - list: keep
+    file: "docs/adr/0026-gate-workflow-thin-shell.md"
+    line: 64
+    note: "\"high-risk set\""
+  - list: keep
+    file: "docs/adr/0006-runtime-routing-path-prefix.md"
+    line: 50
+    note: "\"blast-radius policy\""
+  - list: keep
+    file: "docs/adr/0020-requester-trust-tiers.md"
+    line: 121
+    note: "\"blast-radius tiers\""
+  - list: keep
+    file: "docs/adr/0020-requester-trust-tiers.md"
+    line: 111
+    note: "\"low-risk auto-merge tier\", \"untested-behaviour blind spot\""
+  - list: keep
+    file: "docs/adr/0019-patched-nuxt-content-client-db-loading.md"
+    line: 108
+    note: "\"escalation axes\""
+  - list: keep
+    file: ".agents/skills/frictions-to-fixes/SKILL.md"
+    line: 286
+    note: "axis wording \"changes untested/untestable runtime behaviour\""
+  - list: keep
+    file: "scripts/subagent-background-guard.ts"
+    line: 11
+    note: "\"unattended-hook reviewability bar\""
+  - list: keep
+    file: "tests/unit/merge-pr.spec.ts"
+    line: 309
+    note: "file name docs/adr/0004-objective-safety-gate.md asserted Human-only"
+  - list: keep
+    file: "scripts/merge-pr.ts"
+    line: 167
+    note: "rule file .claude/rules/adr-0004-human-merge.md (HUMAN_MERGE_RULE)"
+  - list: keep
+    file: "scripts/validate-adr-rules.ts"
+    line: 72
+    note: "topic-rule naming adr-0004-<topic>.md"
+  - list: keep
+    file: "docs/adr/0029-instructions-load-with-the-files-they-govern.md"
+    line: 57
+    note: "rule paths are the policy"
+  - list: keep
+    file: "CLAUDE.md"
+    line: 52
+    note: "\"ADR-0004 rule names the few exceptions a human merges\""
+  - list: keep
+    file: "docs/agents/pr-workflow.md"
+    line: 88
+    note: "\"unless the ADR-0004 rule names an exception\""
+  - list: keep
+    file: ".claude/rules/adr-0022.md"
+    line: 9
+    note: "\"ADR-0004 names the exceptions\""
+  - list: repoint
+    file: ".github/actions/gate/action.yml"
+    line: 91
+    note: "2026-10-12 amendment: skip_build guards only build + e2e"
+  - list: repoint
+    file: "scripts/gate.ts"
+    line: 29
+    note: "ADR-0004's 2026-10-12 amendment"
+  - list: repoint
+    file: "tests/README.md"
+    line: 3
+    note: "2026-10-12 amendment and its opening words about the 2026-07-07 rule"
+  - list: repoint
+    file: "tests/README.md"
+    line: 24
+    note: "2026-10-12 amendment titled \"A Skill's own files skip build and e2e, not unit tests\""
+  - list: repoint
+    file: "tests/support/e2e.ts"
+    line: 6
+    note: "2026-10-12 amendment"
+  - list: repoint
+    file: "docs/adr/0005-skill-model.md"
+    line: 19
+    note: "2026-10-12 amendment"
+  - list: repoint
+    file: "layers/atlas/tests/e2e/atlas.spec.ts"
+    line: 2
+    note: "undated ADR-0004 amendment (one-build e2e)"
+  - list: repoint
+    file: "layers/blog/tests/e2e/blog.spec.ts"
+    line: 2
+    note: "undated ADR-0004 amendment"
+  - list: repoint
+    file: "layers/commons/tests/e2e/commons.spec.ts"
+    line: 4
+    note: "undated ADR-0004 amendment"
+  - list: repoint
+    file: "layers/journal/tests/e2e/journal.spec.ts"
+    line: 7
+    note: "undated ADR-0004 amendment"
+  - list: repoint
+    file: "layers/marquee/tests/e2e/marquee.spec.ts"
+    line: 2
+    note: "undated ADR-0004 amendment"
+  - list: repoint
+    file: "layers/midden/tests/e2e/midden.spec.ts"
+    line: 2
+    note: "undated ADR-0004 amendment"
+  - list: repoint
+    file: "tests/e2e/smoke.spec.ts"
+    line: 12
+    note: "undated ADR-0004 amendment"
+  - list: repoint
+    file: "scripts/validate-content.ts"
+    line: 32
+    note: "undated ADR-0004 amendment (L1 CI job)"
+  - list: repoint
+    file: "scripts/double-background-guard.ts"
+    line: 23
+    note: "ADR-0004, 2026-07-30"
+  - list: repoint
+    file: "scripts/skill-inline-guard.ts"
+    line: 8
+    note: "ADR-0004, 2026-07-30"
+  - list: repoint
+    file: "scripts/workflow-edit-guard.ts"
+    line: 10
+    note: "ADR-0004, 2026-07-30 and its reviewability bar"
+  - list: repoint
+    file: "scripts/loop-only-tool-guard.ts"
+    line: 17
+    note: "ADR-0004's 2026-07-30 amendment"
+  - list: repoint
+    file: ".agents/skills/frictions-to-fixes/SKILL.md"
+    line: 286
+    note: "2026-07-30 amendment's worked examples"
+  - list: repoint
+    file: ".agents/skills/frictions-to-fixes/SKILL.md"
+    line: 288
+    note: "2026-07-30 amendment's worked examples"
+  - list: repoint
+    file: "docs/adr/0003-agent-operating-model-and-governance.md"
+    line: 99
+    note: "ADR-0004's 2026-10-10 amendment (the exceptions)"
+  - list: repoint
+    file: "docs/adr/0026-gate-workflow-thin-shell.md"
+    line: 15
+    note: "ADR-0004's 2026-07-11 amendment (no workflow scope)"
+  - list: repoint
+    file: "docs/adr/0026-gate-workflow-thin-shell.md"
+    line: 25
+    note: "ADR-0004's 2026-07-11 amendment (validate:content drift)"
+  - list: repoint
+    file: "docs/proposals/README.md"
+    line: 32
+    note: "ADR-0004 records CI running a stale subset"
+  - list: repoint
+    file: "docs/adr/0020-requester-trust-tiers.md"
+    line: 156
+    note: "ADR-0004 amending note (provenance axis)"
+  - list: repoint
+    file: "docs/adr/0024-build-time-mermaid-prerender.md"
+    line: 91
+    note: "ADR-0004's workflow scope"
+  - list: repoint
+    file: "docs/adr/0019-patched-nuxt-content-client-db-loading.md"
+    line: 111
+    note: "ADR-0004's named high-risk file list"
+  - list: fix
+    file: "scripts/check-conflicting-issues.ts"
+    line: 15
+    note: "miscite/unclear: \"human-only boundary: never runs in CI\""
+  - list: fix
+    file: "scripts/validate-content-refs.ts"
+    line: 17
+    note: "vague \"ADR-0004 gap\"; name the layer (L1)"
+  - list: fix
+    file: ".github/dependabot.yml"
+    line: 3
+    note: "conflict: package.json change vs \"adds a dependency\"; pr-workflow.md:75 says never agent-merged"
+  - list: fix
+    file: "docs/adr/0019-patched-nuxt-content-client-db-loading.md"
+    line: 108
+    note: "\"named high-risk file list\" -> point to rule paths (historical ADR, human decides)"
+  - list: fix
+    file: "docs/adr/0024-build-time-mermaid-prerender.md"
+    line: 91
+    note: "\"workflow scope\" -> ADR-0026 (historical ADR, human decides)"
+  - list: fix
+    file: ".agents/skills/frictions-to-fixes/SKILL.md"
+    line: 230
+    note: "repeats ADRs are Human-only; point to rule paths"
+  - list: fix
+    file: ".agents/skills/guest-build/SKILL.md"
+    line: 81
+    note: "repeats Human-only surface rule; point"
+  - list: fix
+    file: ".agents/skills/guest-build/SKILL.md"
+    line: 83
+    note: "repeats dependency rule; point"
+  - list: fix
+    file: "docs/adr/0023-guest-driven-demo-pipeline.md"
+    line: 83
+    note: "repeats list of Human-only surfaces"
+  - list: fix
+    file: "docs/adr/0023-guest-driven-demo-pipeline.md"
+    line: 96
+    note: "repeats dependency rule"
+  - list: fix
+    file: "docs/adr/0025-cross-tenant-catalog-and-collection-kinds.md"
+    line: 177
+    note: "repeats Human-only file list"
+  - list: fix
+    file: "docs/adr/0003-agent-operating-model-and-governance.md"
+    line: 148
+    note: "stale \"see ADR-0004, TBD\"; superseded in place"
+  - list: fix
+    file: "docs/adr/0022-autonomous-triage-sweep.md"
+    line: 58
+    note: "\"human merges every PR\"; superseded by its 2026-10-10 amendment"

@@ -1,0 +1,119 @@
+adr: "0003"
+summary_in_context: true  # .claude/rules/adr-0003.md loaded at session start; ignored
+checklist:
+  - id: C2
+    text: Where is each chartered Skill's self-merge scope (the auto-merge exemption ledger, one row per Skill), and what is it?
+    kind: question
+    section: Scope and limits
+    refs: [.agents/skills/blog-post/SKILL.md:246, .agents/skills/digest/SKILL.md:170, .agents/skills/digest/SKILL.md:171, .agents/skills/prune-trial/SKILL.md:145, .agents/skills/visitor-loop/SKILL.md:15, .claude/rules/adr-0010.md:15, docs/adr/0004-objective-safety-gate.md:154, docs/adr/0010-digests-derived-append-only-journal-pages.md:23, docs/adr/0015-audit-skills-and-conditional-importance.md:17, docs/adr/0027-prune-trials.md:61, docs/agents/pr-workflow.md:5, docs/agents/pr-workflow.md:75, docs/diagrams/interactive-map/terrarium-overview.md:878]
+    conflict: true  # 0027:61 ledger single-homes it; 0004:154 says pr-workflow.md holds the complete list
+  - id: C6
+    text: Agents may propose net-new work freely, but implementing it needs a Trusted green-light (propose vs implement); retiring a Skill counts as net-new.
+    kind: claim
+    section: Summary
+    refs: [.agents/skills/auto-triage/SKILL.md:69, CONTEXT.md:252, docs/adr/0015-audit-skills-and-conditional-importance.md:214, docs/adr/0020-requester-trust-tiers.md:23, docs/adr/0020-requester-trust-tiers.md:50, docs/adr/0022-autonomous-triage-sweep.md:22, docs/adr/0022-autonomous-triage-sweep.md:28, docs/adr/0022-autonomous-triage-sweep.md:37, docs/adr/0022-autonomous-triage-sweep.md:90]
+    conflict: false
+  - id: C1
+    text: Which PRs may an agent merge itself? (Agents merge their own on a green gate since 2026-10-10; ADR-0004 names exceptions.)
+    kind: question
+    section: Summary
+    refs: [.agents/skills/audit-docs/SKILL.md:218, .agents/skills/digest/SKILL.md:23, CONTEXT.md:252, docs/adr/0004-objective-safety-gate.md:36, docs/adr/0004-objective-safety-gate.md:154, docs/adr/0009-session-logs-commit-directly-to-main.md:30, docs/adr/0009-session-logs-commit-directly-to-main.md:47, docs/adr/0020-requester-trust-tiers.md:50, docs/adr/0022-autonomous-triage-sweep.md:127, docs/agents/pr-workflow.md:88, docs/diagrams/interactive-map/terrarium-overview.md:869]
+    conflict: true  # 0004:154 / 0009:30,47 / 0020:50 say no self-merge or ordinary PRs human-merged
+  - id: C7
+    text: What grants the green-light? (Trusted human in a session; the ready-for-agent label; a Trusted user starting auto-triage; never a Public issue.)
+    kind: question
+    section: Scope and limits
+    refs: [.agents/skills/auto-triage/SKILL.md:69, docs/adr/0020-requester-trust-tiers.md:95, docs/adr/0022-autonomous-triage-sweep.md:22, docs/adr/0022-autonomous-triage-sweep.md:51, docs/adr/0024-build-time-mermaid-prerender.md:33, docs/adr/0026-gate-workflow-thin-shell.md:7, docs/adr/0027-prune-trials.md:6, docs/adr/0028-navigation-reads-server-payloads.md:6, docs/adr/0029-instructions-load-with-the-files-they-govern.md:6]
+    conflict: false
+  - id: C11
+    text: What are the chartered jobs (sync, consolidate, triage charter, codify, drift-check, plus auto-triage), and what does each do?
+    kind: question
+    section: Scope and limits
+    refs: [docs/adr/0007-generated-config-committed-drift-checked.md:21, docs/adr/0007-generated-config-committed-drift-checked.md:37, docs/adr/0008-self-documentation-tenant-is-a-journal.md:8, docs/adr/0008-self-documentation-tenant-is-a-journal.md:46, docs/adr/0010-digests-derived-append-only-journal-pages.md:73, docs/adr/0015-audit-skills-and-conditional-importance.md:173, docs/adr/0015-audit-skills-and-conditional-importance.md:217, docs/adr/0020-requester-trust-tiers.md:97, docs/adr/0020-requester-trust-tiers.md:104, docs/adr/0022-autonomous-triage-sweep.md:44]
+    conflict: false
+  - id: C5
+    text: The review-agent (frictions-to-fixes) reviews and merges but never authors; it adds its own risk judgement to a green gate and escalates high-risk PRs; impl agents never merge or arm auto-merge.
+    kind: claim
+    section: Scope and limits
+    refs: [.agents/skills/frictions-to-fixes/SKILL.md:12, .agents/skills/frictions-to-fixes/SKILL.md:172, .agents/skills/frictions-to-fixes/SKILL.md:253, .agents/skills/frictions-to-fixes/SKILL.md:265, docs/adr/0004-objective-safety-gate.md:77, docs/adr/0004-objective-safety-gate.md:185, docs/adr/0004-objective-safety-gate.md:189, docs/agents/pr-workflow.md:78]
+    conflict: false
+  - id: C8
+    text: Every change lands as a gated PR from a feature branch by default; session logs (ADR-0009) are the bounded exception.
+    kind: claim
+    section: Summary
+    refs: [docs/adr/0009-session-logs-commit-directly-to-main.md:30, docs/adr/0009-session-logs-commit-directly-to-main.md:47, docs/adr/0009-session-logs-commit-directly-to-main.md:344, docs/adr/0010-digests-derived-append-only-journal-pages.md:62, docs/adr/0012-cross-persona-pingbacks-via-authored-denormalization.md:69, docs/adr/0015-audit-skills-and-conditional-importance.md:197]
+    conflict: false
+  - id: C14
+    text: The human the governance needs is any Trusted user (ADR-0020 amendment); the model once assumed a single trusted human.
+    kind: claim
+    section: Scope and limits
+    refs: [CONTEXT.md:252, docs/adr/0020-requester-trust-tiers.md:10, docs/adr/0020-requester-trust-tiers.md:16, docs/adr/0020-requester-trust-tiers.md:23, docs/adr/0020-requester-trust-tiers.md:154, docs/diagrams/interactive-map/terrarium-overview.md:852, docs/research/public-readiness-review.md:44]
+    conflict: false
+  - id: C4
+    text: Is a Dependabot npm minor/patch PR auto-merged under the dependabot ledger row?
+    kind: question
+    section: Scope and limits
+    refs: [.github/dependabot.yml:2, docs/agents/pr-workflow.md:84, docs/proposals/1633-dependabot-automerge.md:5, docs/proposals/1633-dependabot-automerge.md:14, docs/proposals/1633-dependabot-automerge.md:84]
+    conflict: true  # dependabot.yml says auto-merged; pr-workflow.md says never agent-merged, workflow not applied
+  - id: C12
+    text: ADR-0003 defines the autonomy tier, one of three orthogonal axes (with ADR-0004 blast radius and ADR-0020 provenance); the record of human-instructed vs agent-initiated work must stay legible.
+    kind: claim
+    section: Why
+    refs: [.agents/skills/log-session/SKILL.md:130, SECURITY.md:24, docs/adr/0020-requester-trust-tiers.md:41, docs/adr/0020-requester-trust-tiers.md:121]
+    conflict: false
+  - id: C3
+    text: A chartered run merges only its own bounded diff; anything outside rides to a human.
+    kind: claim
+    section: Scope and limits
+    refs: [.agents/skills/blog-post/SKILL.md:246, .agents/skills/digest/SKILL.md:170, docs/agents/pr-workflow.md:107]
+    conflict: false
+  - id: C9
+    text: Pushing opens the PR; open it as soon as the branch has a pushed commit.
+    kind: claim
+    section: Summary
+    refs: [.agents/skills/log-session/SKILL.md:30, docs/adr/0004-objective-safety-gate.md:13, docs/agents/pr-workflow.md:14]
+    conflict: false
+  - id: C10
+    text: A PR is not finished at push; work on it until merged or closed, and in-review is the honest closure state.
+    kind: claim
+    section: Summary
+    refs: [.agents/skills/frictions-to-fixes/SKILL.md:294, shared/schemas/session.ts:37]
+    conflict: false
+  - id: C13
+    text: ADR-0003's rule loads at session start (no paths) and may say when to act.
+    kind: claim
+    section: Consequences
+    refs: [docs/adr/0029-instructions-load-with-the-files-they-govern.md:66]
+    conflict: false
+  - id: C15
+    text: "Unclear: ADR-0003 is cited as the reason for routines and sessions (cloud/local) in the operating model; what is expected is not stated."
+    kind: question
+    section: Summary
+    refs: [docs/diagrams/interactive-map/terrarium-overview.md:855, docs/diagrams/interactive-map/terrarium-overview.md:857]
+    conflict: false
+lists:
+  - {list: keep, file: .agents/skills/digest/SKILL.md, line: 170, note: "term 'ledger row' and row names digest/audit-docs/audit-skills/blog-post/visitor-loop/prune-trial/frictions-to-fixes/dependabot; also blog-post:246, f2f:172, prune-trial:145, visitor-loop:15, 0027:61, pr-workflow:84,107"}
+  - {list: keep, file: docs/adr/0022-autonomous-triage-sweep.md, line: 44, note: "remit names sync/consolidate/triage/codify and the enumerated set; also 0007:21, 0010:73, 0015:173,217, 0020:97,104"}
+  - {list: keep, file: docs/adr/0022-autonomous-triage-sweep.md, line: 90, note: "'propose vs implement' two-tier split / net-new green-light; also 0022:22, 0020:23,50, CONTEXT.md:252"}
+  - {list: keep, file: docs/adr/0004-objective-safety-gate.md, line: 189, note: "'review-agent' (mid-term, scheduled); also f2f:12,265, 0004:77"}
+  - {list: keep, file: .agents/skills/digest/SKILL.md, line: 171, note: "file name docs/adr/0003-agent-operating-model-and-governance.md; also 0004:154 link"}
+  - {list: keep, file: docs/adr/0029-instructions-load-with-the-files-they-govern.md, line: 66, note: "rule stays always-loaded and may say when to act; log-session:30 cites 'the ADR-0003 rule'"}
+  - {list: repoint, file: .agents/skills/audit-docs/SKILL.md, line: 218, note: "cites ADR-0003's 2026-10-10 amendment"}
+  - {list: repoint, file: .agents/skills/digest/SKILL.md, line: 23, note: "cites ADR-0003's 2026-10-10 amendment"}
+  - {list: repoint, file: docs/adr/0004-objective-safety-gate.md, line: 36, note: "cites ADR-0003's 2026-10-10 amendment"}
+  - {list: repoint, file: docs/adr/0022-autonomous-triage-sweep.md, line: 127, note: "cites ADR-0003's amendment of 2026-10-10"}
+  - {list: repoint, file: docs/adr/0004-objective-safety-gate.md, line: 154, note: "cites individually-dated amendments to the auto-merge exemption ledger"}
+  - {list: repoint, file: docs/adr/0015-audit-skills-and-conditional-importance.md, line: 17, note: "cites 'third name on ADR-0003's exemption list'"}
+  - {list: repoint, file: docs/adr/0020-requester-trust-tiers.md, line: 154, note: "cites an ADR-0003 amending note (Trusted green-light); also :10"}
+  - {list: repoint, file: docs/adr/0009-session-logs-commit-directly-to-main.md, line: 30, note: "quotes 'every change lands as a gated PR on a feature branch — no self-merge'"}
+  - {list: repoint, file: docs/adr/0008-self-documentation-tenant-is-a-journal.md, line: 8, note: "quotes 'living-documentation Tenant / status report'; also :46 'derived from repo ground truth'"}
+  - {list: repoint, file: docs/adr/0007-generated-config-committed-drift-checked.md, line: 21, note: "quotes drift-check charter 'manifest ↔ generated-config ↔ content'"}
+  - {list: repoint, file: docs/adr/0015-audit-skills-and-conditional-importance.md, line: 173, note: "quotes sync remit 'keep living documentation matching real repo state'"}
+  - {list: repoint, file: docs/adr/0022-autonomous-triage-sweep.md, line: 44, note: "cites ADR-0003's enumerated set of remits"}
+  - {list: fix, file: .github/dependabot.yml, line: 2, note: "claims Dependabot minor/patch auto-merge; contradicts pr-workflow.md:84"}
+  - {list: fix, file: docs/adr/0004-objective-safety-gate.md, line: 154, note: "stale: ordinary work PRs always human-merged; names pr-workflow.md as complete list (conflicts 0027:61)"}
+  - {list: fix, file: docs/adr/0020-requester-trust-tiers.md, line: 50, note: "stale: says 'no self-merge' rule unchanged"}
+  - {list: fix, file: docs/agents/pr-workflow.md, line: 75, note: "restates ledger tiers (also :78, :88); pick one home and point"}
+  - {list: fix, file: docs/diagrams/interactive-map/terrarium-overview.md, line: 878, note: "restates per-routine merge scopes; point to the ledger"}
+  - {list: fix, file: .agents/skills/frictions-to-fixes/SKILL.md, line: 253, note: "repeats rule (impl agents never merge); also :294 (PR finished only when merged)"}
+  - {list: fix, file: docs/adr/0022-autonomous-triage-sweep.md, line: 22, note: "repeats propose/implement line; second home (low priority)"}
