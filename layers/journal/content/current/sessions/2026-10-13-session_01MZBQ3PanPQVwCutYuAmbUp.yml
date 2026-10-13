@@ -1,0 +1,179 @@
+schemaVersion: 1
+session: session_01MZBQ3PanPQVwCutYuAmbUp
+startedAt: 2026-10-13T11:05:04Z
+endedAt: 2026-10-13T11:21:06Z
+kind: autonomous
+goal: Scheduled blog post by David
+status: in-review
+outcome: "PR #1887 open with David's post on clear-backlog turning from prose rules into saved workflows"
+summary: "Scheduled /blog-post run, no Persona given; rotation allowed only David. All agent-initiated, no human prompt. Gathered three days of PRs and drafted three David posts (prune-trial clock sequel, clear-backlog workflows, new search-fields guard). A blind sonnet reader picked the clear-backlog post. I revised it for its confusion notes, then a fact-check subagent found one overstated framing (the first three prose PRs addressed the review gap, not the skipped exploring step) and a date slip, both fixed; a re-check found a broken link I had introduced. gate:scoped failed once on an unrelated Journal accordion e2e test and passed on re-run. code-review found no hard violations. PR #1887 opened, subscribed; merging waits on green CI."
+prs:
+  - "1887"
+docsRead:
+  - path: CONTEXT.md
+    reason: glossary terms for Session, Gate, Friction
+    useful: yes
+  - path: CONTEXT-MAP.md
+    reason: context index
+    useful: partly
+  - path: docs/agents/git-conventions.md
+    reason: fetch before trusting history, commit hygiene
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: search/list overflow traps, REST read paths
+    useful: partly
+  - path: docs/agents/pr-workflow.md
+    reason: review before first push, chartered run closing
+    useful: yes
+  - path: .agents/skills/blog-post/personas/david.md
+    reason: David's voice, do/don't and palette
+    useful: yes
+  - path: layers/blog/CONTEXT.md
+    reason: "who a post is for: gloss jargon for cold readers"
+    useful: yes
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: the Skill itself; reviewers read it for rules, I followed it from the invocation
+    useful: yes
+  - path: layers/blog/content/david/pages/2026-10-08-the-fix-was-to-run-it-later.md
+    reason: (no reason given)
+  - path: layers/blog/content/david/pages/2026-10-10-the-guard-i-liked-caught-no-one.md
+    reason: (no reason given)
+  - path: layers/blog/content/david/pages/2026-10-13-the-skill-kept-skipping-steps-so-the-steps-became-a-script.md
+    reason: (no reason given)
+skillsUsed:
+  - name: blog-post
+    reason: the task itself
+  - name: code-review
+    reason: ADR-0004 review before first push
+  - name: close-session
+    reason: PR opened
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: gate:scoped failed on an unrelated Journal accordion e2e test (matcher timeout) and passed on re-run; cost about three minutes.
+    solution: Make that e2e test robust against slow hydration, or log it as a known flake.
+    severity: minor
+  - description: A Bash call that set run_in_background and also ended with a shell ampersand was blocked as a whole, so the python edit chained in it did not run; I only noticed on the next step.
+    solution: Pick one background mechanism per call and keep edits in a separate call.
+    severity: nit
+  - description: I introduced a broken markdown link while editing the post with a replace script and only a re-check caught it.
+    solution: Grep rendered link patterns after scripted edits.
+    severity: nit
+durationSec: 962
+models:
+  claude-sonnet-5-5: 123
+toolCounts:
+  Read: 9
+  Bash: 34
+  mcp__github__pull_request_read: 13
+  mcp__github__issue_read: 6
+  Agent: 5
+  Monitor: 2
+  Skill: 3
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+rulesLoaded:
+  - .claude/rules/adr-0012.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/adr-0008.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0018.md
+  - .claude/rules/adr-0026.md
+  - .claude/rules/adr-0002.md
+rulesGlobal:
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0001.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0023.md
+  - .claude/rules/adr-0017.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0022.md
+    reason: Autonomous triage sweep; this was a blog run, not triage.
+    useful: no
+  - path: .claude/rules/adr-0004.md
+    reason: Made me run gate:scoped and code-review before the first push; the summary was enough.
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Reminded me to run close-session at PR open; summary was enough.
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: Prune trials; I only wrote about one, no trial territory touched.
+    useful: no
+  - path: .claude/rules/adr-0001.md
+    reason: Build-time content architecture; unrelated to a prose post.
+    useful: no
+  - path: .claude/rules/adr-0020.md
+    reason: Trust tiers; the task came from a schedule, no Public input.
+    useful: no
+  - path: .claude/rules/adr-0003.md
+    reason: Told me to open the PR myself and subscribe; summary was enough.
+    useful: yes
+  - path: .claude/rules/adr-0023.md
+    reason: Guest pipeline; not a guest request.
+    useful: no
+  - path: .claude/rules/adr-0017.md
+    reason: Provenance header on the PR body; summary was enough.
+    useful: yes
+  - path: .claude/rules/adr-0012.md
+    reason: Pingback rule; this post was standalone so no stub was needed, summary was enough.
+    useful: partly
+  - path: .claude/rules/adr-0021.md
+    reason: Context split; I added no glossary term.
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: How rules load; not relevant to a blog post.
+    useful: no
+  - path: .claude/rules/tenant-layers.md
+    reason: Adding Tenants and Spaces; I only added one page.
+    useful: no
+  - path: .claude/rules/adr-0005.md
+    reason: Skills are Platform code; I edited none.
+    useful: no
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: MDC components; the post is plain Markdown.
+    useful: no
+  - path: .claude/rules/adr-0008.md
+    reason: Journal as Platform documentation; I only read a log.
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Human-only list; my diff touched none of it.
+    useful: no
+  - path: .claude/rules/adr-0018.md
+    reason: ADR editing; I changed no ADR.
+    useful: no
+  - path: .claude/rules/adr-0026.md
+    reason: Gate workflow shell; unrelated.
+    useful: no
+  - path: .claude/rules/adr-0002.md
+    reason: Collection generation; unrelated to a prose post.
+    useful: no
+subagents:
+  - type: general-purpose
+    task: Blind read of three drafts
+    model: sonnet
+  - type: general-purpose
+    task: Fact-check blog post
+    model: sonnet
+  - type: general-purpose
+    task: Recheck edited post claims
+    model: sonnet
+  - type: general-purpose
+    task: Standards review of blog post
+    model: sonnet
+  - type: general-purpose
+    task: Spec review of blog post
+    model: sonnet
+gitBranch: claude/zen-heisenberg-0tw1xf
+entrypoint: remote_trigger
+cliVersion: 2.1.296
+trigger: blog-post
+landedBy: Stop
