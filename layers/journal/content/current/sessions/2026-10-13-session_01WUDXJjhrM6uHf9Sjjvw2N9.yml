@@ -1,0 +1,306 @@
+schemaVersion: 1
+session: session_01WUDXJjhrM6uHf9Sjjvw2N9
+startedAt: 2026-10-13T12:37:12Z
+endedAt: 2026-10-13T13:31:08Z
+kind: interactive
+goal: Prepare the ADR rewrite and decide how ADRs are written
+status: in-review
+outcome: "ADR-0030 (ADRs state the current decision) and consistency fixes in PR #1892, waiting for a human merge"
+summary: "Human-instructed throughout. The Trusted user asked for a preparation session for rewriting all ADRs (in the spirit of issue 1745): first a subagent survey of every ADR (gist, importance, rewrite effort), then restructuring options (merge/refocus/retire, templates, numbering), then two analyses of the new session-log fields (rulesLoaded, ruleVerdicts, docsRead useful verdicts). The data showed the summary rules carry the everyday instruction while full ADRs are read mostly by subagents searching for the binding ADR, and for limits and exceptions that amendments scatter. With the user we settled: no amendments or history in ADRs (git holds it), ADR is the single source and its rule adds nothing, notes stay separate from ADRs (1745's merge rejected), and a template (summary, Scope and limits, Why, Rejected alternatives, When to revisit, Consequences, See). The user asked to record this as ADR-0030 with the consistency fixes in one PR (ADR-0018's editing section removed; audit-docs, prune-trial, frictions-to-fixes, ADR-0021/0027/0029, CONTEXT.md, domain.md). Code-review's two axes found a missed frictions-to-fixes line and some self-inconsistencies in ADR-0030, fixed before the first push. Open: numbering for retired ADRs, and the first full rewrite (ADR-0022 is the likely pilot; its amendment still cites ADR-0018's removed rule)."
+prs:
+  - "1892"
+docsRead:
+  - path: CONTEXT.md
+    reason: glossary; Retired terms section needed editing
+    useful: yes
+  - path: CONTEXT-MAP.md
+    reason: where ADRs live; nothing to change
+    useful: partly
+  - path: docs/agents/git-conventions.md
+    reason: fetch before trusting git log origin/main
+    useful: partly
+  - path: docs/agents/pr-workflow.md
+    reason: review before first push; PR recipe
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: tool surface before creating the PR
+    useful: partly
+  - path: docs/agents/domain.md
+    reason: needed before editing CONTEXT.md; held a stale ADR-format line
+    useful: yes
+  - path: .agents/skills/domain-modeling/ADR-FORMAT.md
+    reason: pack ADR template and three-part ADR test
+    useful: yes
+  - path: docs/adr/0018-tenant-layers-under-layers-directory.md
+    reason: the editing section to remove
+    useful: yes
+  - path: docs/adr/0022-autonomous-triage-sweep.md
+    reason: sketched the new template on it
+    useful: yes
+  - path: docs/adr/0021-multi-context-domain-docs.md
+    reason: historical-record line to fix
+    useful: yes
+  - path: docs/adr/0027-prune-trials.md
+    reason: trial rewrite bound that cited ADR-0018
+    useful: yes
+  - path: docs/adr/0029-instructions-load-with-the-files-they-govern.md
+    reason: 1745 bullet and rule mechanics
+    useful: yes
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: Historical tier treated ADRs as append-only
+    useful: yes
+  - path: .agents/skills/prune-trial/SKILL.md
+    reason: ADR rewrite bounds
+    useful: yes
+  - path: docs/adr/0001-single-container-baked-multitenancy.md
+    reason: subagent survey of every ADR for rewrite effort
+    useful: yes
+  - path: docs/adr/0002-manifest-driven-config-generation.md
+    reason: subagent survey of every ADR for rewrite effort
+    useful: yes
+  - path: docs/adr/0003-agent-operating-model-and-governance.md
+    reason: subagent survey of every ADR for rewrite effort
+    useful: yes
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: subagent survey of every ADR for rewrite effort
+    useful: yes
+  - path: docs/adr/0005-skill-model.md
+    reason: subagent survey of every ADR for rewrite effort
+    useful: yes
+  - path: docs/adr/0006-runtime-routing-path-prefix.md
+    reason: subagent survey of every ADR for rewrite effort
+    useful: yes
+  - path: docs/adr/0007-generated-config-committed-drift-checked.md
+    reason: subagent survey of every ADR for rewrite effort
+    useful: yes
+  - path: docs/adr/0008-self-documentation-tenant-is-a-journal.md
+    reason: subagent survey of every ADR for rewrite effort
+    useful: yes
+  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
+    reason: subagent survey of every ADR for rewrite effort
+    useful: yes
+  - path: docs/adr/0010-digests-derived-append-only-journal-pages.md
+    reason: subagent survey of every ADR for rewrite effort
+    useful: yes
+  - path: docs/adr/0011-poc-self-updating-deploy-container.md
+    reason: subagent survey of every ADR for rewrite effort
+    useful: yes
+  - path: docs/adr/0012-cross-persona-pingbacks-via-authored-denormalization.md
+    reason: subagent survey of every ADR for rewrite effort
+    useful: yes
+  - path: docs/adr/0013-dynamic-content-config-committed-routing-map.md
+    reason: subagent survey of every ADR for rewrite effort
+    useful: yes
+  - path: docs/adr/0014-build-time-virtual-routing-module.md
+    reason: subagent survey of every ADR for rewrite effort
+    useful: yes
+  - path: docs/adr/0015-audit-skills-and-conditional-importance.md
+    reason: subagent survey of every ADR for rewrite effort
+    useful: yes
+  - path: docs/adr/0016-tenant-root-layer-routes.md
+    reason: subagent survey of every ADR for rewrite effort
+    useful: yes
+  - path: docs/adr/0017-provenance-footer-on-agent-authored-content.md
+    reason: subagent survey of every ADR for rewrite effort
+    useful: yes
+  - path: docs/adr/0019-patched-nuxt-content-client-db-loading.md
+    reason: subagent survey of every ADR for rewrite effort
+    useful: yes
+  - path: docs/adr/0020-requester-trust-tiers.md
+    reason: subagent survey of every ADR for rewrite effort
+    useful: yes
+  - path: docs/adr/0023-guest-driven-demo-pipeline.md
+    reason: subagent survey of every ADR for rewrite effort
+    useful: yes
+  - path: docs/adr/0024-build-time-mermaid-prerender.md
+    reason: subagent survey of every ADR for rewrite effort
+    useful: yes
+  - path: docs/adr/0025-cross-tenant-catalog-and-collection-kinds.md
+    reason: subagent survey of every ADR for rewrite effort
+    useful: yes
+  - path: docs/adr/0026-gate-workflow-thin-shell.md
+    reason: subagent survey of every ADR for rewrite effort
+    useful: yes
+  - path: docs/adr/0028-navigation-reads-server-payloads.md
+    reason: subagent survey of every ADR for rewrite effort
+    useful: yes
+  - path: docs/adr/0030-adrs-state-the-current-decision.md
+    reason: the ADR this session wrote
+    useful: yes
+  - path: .agents/skills/log-session/SKILL.md
+    reason: how to author this log
+    useful: yes
+  - path: .agents/skills/writing-for-agents/SKILL.md
+    reason: "single source, no restating, prune: shaped the template"
+    useful: yes
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: spec review found its Historical-ADR line; fixed
+    useful: yes
+  - path: shared/schemas/session.ts
+    reason: (no reason given)
+  - path: scripts/validate-adr-rules.ts
+    reason: (no reason given)
+  - path: scripts/session-trace.ts
+    reason: (no reason given)
+skillsUsed:
+  - name: writing-for-agents
+    reason: user asked its rules to shape the ADR format
+  - name: code-review
+    reason: required before first push
+  - name: close-session
+    reason: PR opened
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Read CONTEXT-MAP.md and CONTEXT.md only late, before editing, not at session start as CLAUDE.md requires
+    solution: Read them first even in a research-only start; low impact here since early work was delegated
+    severity: nit
+  - description: "Recommended pilots and templates from subagent reports without reading the binding ADRs myself (CLAUDE.md: grep docs/adr and read before recommending)"
+    solution: Read at least the ADRs I recommend as pilots before recommending; did read 0022 before sketching
+    severity: minor
+  - description: First ADR-0030 draft broke its own rules (dated evidence, history note, summary missing the template) and missed frictions-to-fixes' Historical-ADR line; code-review caught both
+    solution: Self-check a rule-setting doc against its own rules, and grep all Skills for the old tier wording before review
+    severity: minor
+  - description: "Scratch analysis script failed: yaml package not resolvable from the scratchpad, needed an absolute import path"
+    solution: Import /home/user/terrarium/node_modules/yaml directly, or run scripts via tsx from the repo root
+    severity: nit
+  - description: Several chained or multi-file Bash greps and sed reads (e.g. on 0021 and audit-docs) loaded no rules, against CLAUDE.md's Read-tool rule
+    solution: Use Read with offset for quick line checks
+    severity: nit
+durationSec: 3237
+models:
+  claude-opus-5-5: 192
+toolCounts:
+  Bash: 26
+  Agent: 4
+  Skill: 4
+  Grep: 7
+  Read: 20
+  ToolSearch: 2
+  SendMessage: 3
+  Write: 5
+  Edit: 27
+  Glob: 1
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+filesEdited:
+  - docs/adr/0030-adrs-state-the-current-decision.md
+  - .claude/rules/adr-0030.md
+  - docs/adr/0018-tenant-layers-under-layers-directory.md
+  - .claude/rules/adr-0018.md
+  - docs/adr/0027-prune-trials.md
+  - docs/adr/0021-multi-context-domain-docs.md
+  - docs/adr/0029-instructions-load-with-the-files-they-govern.md
+  - CONTEXT.md
+  - docs/agents/domain.md
+  - .agents/skills/audit-docs/SKILL.md
+  - .agents/skills/prune-trial/SKILL.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+rulesLoaded:
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0025.md
+  - .claude/rules/adr-0018.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0026.md
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0030.md
+rulesGlobal:
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0001.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0023.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0018.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0001.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0023.md
+  - .claude/rules/adr-0017.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0004-human-merge.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0022.md
+    reason: Auto-triage sweeps; this session ran none, though 0022 was discussed as rewrite pilot content
+    useful: no
+  - path: .claude/rules/adr-0004.md
+    reason: Made me run gate:scoped and code-review before the first push despite the Stop hook; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Told me to invoke close-session at PR-open and log honestly; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: Prune-trial bounds were one of the files to fix; read the full ADR to edit it
+    useful: partly
+  - path: .claude/rules/adr-0001.md
+    reason: Architecture background; no build or content work here
+    useful: no
+  - path: .claude/rules/adr-0020.md
+    reason: Only a Trusted user was involved; nothing Public to treat as data
+    useful: no
+  - path: .claude/rules/adr-0003.md
+    reason: Told me to open the PR without asking and subscribe; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0023.md
+    reason: Guest pipeline; not involved
+    useful: no
+  - path: .claude/rules/adr-0017.md
+    reason: Gave the provenance line for the PR body; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Confirmed ADR and rule edits need a human merge, stated in the PR
+    useful: yes
+  - path: .claude/rules/adr-0029.md
+    reason: Rule mechanics and hash stamping relevant to editing rules; read full ADR for its 1745 bullet
+    useful: partly
+  - path: .claude/rules/adr-0005.md
+    reason: Skill locations; no Skill structure changed
+    useful: no
+  - path: .claude/rules/adr-0025.md
+    reason: Loaded on a session-trace read; catalog unrelated
+    useful: no
+  - path: .claude/rules/adr-0018.md
+    reason: Its ADR-editing rule was the thing being replaced; read full ADR to cut it
+    useful: yes
+  - path: .claude/rules/adr-0021.md
+    reason: Its historical-record line needed fixing; read the full ADR for context
+    useful: partly
+  - path: .claude/rules/adr-0026.md
+    reason: Gate workflow shell; untouched
+    useful: no
+  - path: .claude/rules/adr-0015.md
+    reason: Skill Inventory; loaded via a Skill read, unrelated
+    useful: no
+  - path: .claude/rules/adr-0030.md
+    reason: The rule this session wrote; confirmed its wording loads on ADR files
+    useful: yes
+subagents:
+  - type: general-purpose
+    task: Assess ADR rewrite effort
+  - type: general-purpose
+    task: Analyze session-log ADR ratings
+  - type: general-purpose
+    task: Standards review of ADR-0030 diff
+  - type: general-purpose
+    task: Spec review of ADR-0030 diff
+gitBranch: claude/adr-rewrite-prep-b8fijv
+entrypoint: remote_mobile
+cliVersion: 2.1.296
+learnings:
+  - Session-log docsRead already folds in subagent reads (since August), so a session with no ADR in docsRead means its subagents read none either
+ideas:
+  - "Add an ADR-0030 template check to validate-adr-rules: for ADRs listed as rewritten, fail the gate on Date/Status lines or Amended banners, so the no-history rule is mechanical rather than prose"
+landedBy: Stop
