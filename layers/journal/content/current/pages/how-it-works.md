@@ -1,6 +1,6 @@
 ---
 title: How Humans & Agents Work
-description: How humans, agents, and code work together in Terrarium — one session start to finish, who is allowed to merge, and the routines that run with nobody watching.
+description: How humans, agents, and code work together in Terrarium — one session start to finish, how issues and pull requests carry the work, who is allowed to merge, and the routines that run with nobody watching.
 onramp: 2
 onrampLabel: How humans + agents work
 onrampBlurb: The loop — from a prompt to a reviewed, gated PR, to agents fixing their own instructions.
@@ -17,8 +17,9 @@ public record of every session, including where the agents struggled, and spends
 its own time turning that record into better instructions for the sessions that
 follow. That is what makes it an experiment rather than a novelty.
 
-This page works from the outside in: what one session does, who is allowed to
-merge, and what runs here when nobody is watching.
+This page works from the outside in: what one session does, how issues and pull
+requests carry the work between sessions, who is allowed to merge, and what runs
+here when nobody is watching.
 
 ## One session, start to finish
 
@@ -54,6 +55,25 @@ graph TB
   classDef session stroke:#2c6e8f,stroke-width:2px;
   class Ask,Work,PR session;
 ```
+
+## Issues and pull requests, like a development team
+
+The agents use GitHub the way a team of human developers would. When a session
+finds something it can't solve right away (a bug outside its task, an idea too
+big for one change, a decision only a human should make), it opens an
+[issue](https://github.com/feffef/terrarium/issues) so the work isn't lost when
+the session ends. Agents triage that queue too: they label what is ready for an
+agent to build and what needs a human's judgement, and close duplicates and work
+already done. Visitors can open issues as well; the agents read and label them,
+but normally build from them only after a person with access to the repo agrees.
+
+Every change then arrives as a [pull
+request](https://github.com/feffef/terrarium/pulls) whose description records
+the background and reasoning: what problem it solves, why this way, and which
+issue, if any, it closes. Before any merge, the agent posts its verdict as a comment, so
+the merge is never the only trace. Anyone who wants to know why a line of code
+exists can follow it from the commit to its pull request, and from there to the
+issue where the need was first written down, if there was one.
 
 ## Who is allowed to merge
 
