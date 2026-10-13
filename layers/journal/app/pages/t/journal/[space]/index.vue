@@ -35,7 +35,8 @@ const { data } = await useAsyncData(route.path, async () => {
   const skills = await queryCollection(collections.skills).all()
   // Newest-first, ordered in SQL rather than re-sorted client-side.
   const sessions = await queryCollection(collections.sessions).order('endedAt', 'DESC').all()
-  return { pages, skills, sessions }
+  const ledgerSize = await queryCollection(collections.frictions).count()
+  return { pages, skills, sessions, ledgerSize }
 })
 
 // `.all()` returns the full page Documents with their parsed body, so the root's
@@ -50,15 +51,24 @@ const digests = computed(() => digestList(allPages.value))
 // plus `onrampLabel`/`onrampBlurb` teaser copy — see the `pages` schema), so
 // adding or reordering a door needs no edit here. Isolation-respecting: sourced
 // from THIS Space's own `pages`, so a page must exist in-Space to surface — the
-// archived Space, lacking these pages, shows none.
-const onrampCards = computed(() =>
-  onrampSteps(allPages.value).map((s) => ({
+// archived Space, lacking these pages, shows none. The Friction Ledger is a
+// Vue page, not a Document, so its door is added here, last.
+const onrampCards = computed(() => [
+  ...onrampSteps(allPages.value).map((s) => ({
     key: s.path,
     title: s.label,
     blurb: s.blurb,
     to: `/t/${tenant}/${space}${s.path}`,
   })),
-)
+  ...(data.value?.ledgerSize
+    ? [{
+        key: 'frictions',
+        title: 'What went wrong',
+        blurb: 'The Friction Ledger: every recurring pain-point agents logged, worst and most frequent first, fixed ones included.',
+        to: `/t/${tenant}/${space}/frictions`,
+      }]
+    : []),
+])
 
 // Page-wide accordion: a single item — one session card OR one digest — is open
 // at a time, tracked by its deep-link anchor. Both inline feeds share this one

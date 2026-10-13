@@ -197,6 +197,7 @@ describe('journal Tenant', async () => {
     expect(html).toContain('Frictions surfaced')
     expect(html).toContain('href="/t/journal/current/skills"')
     expect(html).toContain('href="/t/journal/current/ideas"')
+    expect(html).toContain('href="/t/journal/current/frictions"')
     expect(html).toContain('aria-expanded="false"')
     expect(html).toMatch(/role="button"/)
   })
@@ -247,7 +248,7 @@ describe('journal Tenant', async () => {
 
   // The sub pages are static segments beside `[...slug].vue`; each must win
   // that route, in every Space, and read only its own Space's collections.
-  it('serves the Skills and Ideas & learnings pages in both Spaces', async () => {
+  it('serves the Skills, Ideas & learnings and Friction Ledger pages in both Spaces', async () => {
     for (const space of ['current', 'archived']) {
       const skills = await $fetch(`/t/journal/${space}/skills`)
       expect(skills).toMatch(/class="jd[\s"]/)
@@ -257,6 +258,9 @@ describe('journal Tenant', async () => {
       expect(ideas).toContain('Ideas &amp; learnings')
       expect(ideas).toContain('Learnings')
       expect(ideas).not.toMatch(/No document at <code[\s>]/)
+      const ledger = await $fetch(`/t/journal/${space}/frictions`)
+      expect(ledger).toContain('Friction Ledger')
+      expect(ledger).not.toMatch(/No document at <code[\s>]/)
     }
     const { ordinaryIdea } = currentSessionNotes()
     if (ordinaryIdea) expect(await $fetch('/t/journal/current/ideas')).toContain(ordinaryIdea)
@@ -265,6 +269,7 @@ describe('journal Tenant', async () => {
   it('hydrates the sub pages with no unresolved components', async () => {
     await expectCleanHydration('/t/journal/current/skills')
     await expectCleanHydration('/t/journal/current/ideas')
+    await expectCleanHydration('/t/journal/current/frictions')
   })
 
   // When a real `external: true` session (ADR-0009 amendment) is currently

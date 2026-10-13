@@ -33,5 +33,5 @@ A derived, append-only, time-boxed Journal Document: one immutable page per **cl
 ## What lives where
 
 - **`layers/journal/app/pages/t/journal/[space]/`** — the pages a visitor sees:
-  `index.vue` (digests, stats, session feed), `skills.vue` (Skill Inventory) and
-  `ideas.vue` (ideas and learnings), none a Markdown render of any single file.
+  `index.vue` (digests, stats, session feed), `skills.vue` (Skill Inventory),
+  `ideas.vue` (ideas and learnings) and `frictions.vue` (the Friction Ledger), none a Markdown render of any single file.
