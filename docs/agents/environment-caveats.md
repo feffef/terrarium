@@ -22,8 +22,7 @@ re-diagnose them as new. Incident detail lives in the cited issue.
   registered/alive/intact. (issues #571, #794, #891)
 - **Any `mcp__claude-code-remote__*` call (spelled `mcp__Claude_Code_Remote__*`
   in some sessions), and `AskUserQuestion`, can fail with a transient
-  "permission stream closed" error.** Retry once; if it fails
-  again, don't retry-loop. For `AskUserQuestion`, take the safer default option
+  "permission stream closed" error.** Retry once only. For `AskUserQuestion`, take the safer default option
   and say so in the output. For `send_later`, use `create_trigger` with
   `run_once_at`. (issues #145, #229, #359)
 - **A fired self-bind Routine's output may not surface as a visible turn.**
@@ -59,10 +58,10 @@ re-diagnose them as new. Incident detail lives in the cited issue.
 - **In an unattended run, a dispatched subagent's tool call that needs human
   approval blocks forever** and the orchestrator gets no signal: approval waits
   on a human UI click, and no wake-on-pending-approval signal is known
-  (`PreToolUse` hooks do still fire for subagent calls, see `guards.md`). Treat
+  (`PreToolUse` hooks do still fire for subagent calls). Treat
   long subagent silence as possibly stuck, not slow. (issue #1215;
-  `docs/agents/guards.md` covers the narrower fix of never autonomously
-  dispatching a guard/settings-touching edit)
+  `docs/agents/guards.md` has both that and the narrower fix of never
+  autonomously dispatching a guard/settings-touching edit)
 - **The harness's instruction-shaped-content scanner can false-positive on
   benign text** that merely mentions "settings.json" / "settings-json", e.g. a
   subagent's report on `.claude/settings.json` hook wiring. Inspect a flagged

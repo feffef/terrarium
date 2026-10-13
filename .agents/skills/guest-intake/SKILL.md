@@ -138,9 +138,9 @@ whichever reframed proposal they picked, not the original ask.
 
 When the guest confirms, run the **screen** (ADR-0023) before stamping anything:
 
-- If the request would **deface or break the site on purpose**, or raise a
-  **major security concern**, or **add a new external dependency** — do **not**
-  self-green-light. Escalate to the owner: apply `ready-for-human`, comment
+- If the request would **deface or break the site on purpose**, raise a
+  **major security concern**, **add a new external dependency** or **touch a
+  human-only surface** (ADR-0004) — do **not** self-green-light. Escalate to the owner: apply `ready-for-human`, comment
   naming the concern, and tell the guest their story needs owner review.
 - Otherwise apply **`ready-for-agent`** (per ADR-0023, the guest's confirmation
   *is* the green-light) and comment that their story is queued to be built.

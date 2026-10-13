@@ -88,8 +88,9 @@ closed, or parked by the owner (deferred, or waiting on a condition).
 ## 3. Build
 
 Build agents do all the building, through `dispatch-subagents`: one worktree
-per planned branch, based on `origin/main`; you orchestrate. A change inside
-that Skill's "simple" ceiling gets `model: "sonnet"`. When a closed, unmerged
+per planned branch, based on `origin/main`; you orchestrate. A change within
+`dispatch-subagents` §3's "simple" example (under ~50 lines, one new test) gets
+`model: "sonnet"`. When a closed, unmerged
 PR already implements the agreed pick, the build agent cherry-picks its
 commits. Each build agent reports its decisions and any Human-only path it
 touched. Dispatch in waves of at most 3 build agents, with at most 2 of them

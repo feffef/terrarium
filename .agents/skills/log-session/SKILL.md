@@ -92,8 +92,6 @@ ideas:                             # OPTIONAL — omit unless something sparked
   session did.** The canonical definitions of `interactive` / `delegated` /
   `autonomous` (including what does *not* count as a human prompt) live in
   `CONTEXT.md` → **Session** — classify against that entry, not from memory.
-  Kind is descriptive; it grants nothing (merge governance is ADR-0003's,
-  unchanged by kind).
 - **`learnings`/`ideas` are optional notes — leave them off unless the session
   genuinely produced one.** Don't pad them; an empty session log carries neither.
   Definitions live in `CONTEXT.md` → **Session** and **Idea** — don't restate them here.

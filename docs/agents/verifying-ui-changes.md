@@ -22,8 +22,7 @@ The rest of this doc is the *methodology*: what proves a change, and what only
 looks like proof.
 
 **Browser facts verified against** (from `node_modules`, re-check if they've
-moved): `playwright-core` **1.63.0**, `nuxt` **4.5.2** (installed now: 4.6.0, not
-re-checked). Entries that came from a specific session cite it.
+moved): `playwright-core` **1.63.0**, `nuxt` **4.6.0**. Entries that came from a specific session cite it.
 
 ## The methodology
 
@@ -38,18 +37,17 @@ re-checked). Entries that came from a specific session cite it.
   looks like a live logic bug from outside, and the marker tells them apart in
   one step.
 - **Before calling an e2e/Playwright failure "pre-existing" or
-  "environment-only," reproduce it on both `origin/main` and the branch with the
+  "environment-only," reproduce it on both `origin/main` and the branch** with the
   full `test:e2e` suite (never a `-t`-filtered single test) against a fresh
-  build (run `pnpm build` then `pnpm test:e2e`, or set `E2E_FRESH_BUILD=1`; the
-  e2e run rebuilds a stale `.output` itself).** A narrowed or stale repro isn't a
+  build (`pnpm build` then `pnpm test:e2e`, or `E2E_FRESH_BUILD=1`; the
+  e2e run rebuilds a stale `.output` itself). A narrowed or stale repro isn't a
   valid comparison: a filtered test skips setup/ordering the full suite
   exercises, and a stale `.output` can omit the change under test. A PR once
   called a failing assertion pre-existing on such a repro, and CI then failed
   for real on it (issue #907).
-- **For the common case of checking one already-serving in-page value** (a
-  computed style, a bounding rect, any other value read via `page.evaluate`),
-  reach for `scripts/probe.ts` before writing an ad-hoc script — it already
-  handles the gotchas below:
+- **To read one in-page value from an already-serving page** (a computed style,
+  a bounding rect, any `page.evaluate` result), use `scripts/probe.ts` before an
+  ad-hoc script; it handles the gotchas below:
   `pnpm exec tsx scripts/probe.ts <url> "<js-expression>"`, e.g.
   `pnpm exec tsx scripts/probe.ts http://localhost:3000/t/journal/current "getComputedStyle(document.querySelector('.foo')).color"`.
 - **To verify a click/interaction, not just a static render**, write a small
@@ -58,10 +56,9 @@ re-checked). Entries that came from a specific session cite it.
   `scripts/chromium-path.ts` rather than re-deriving the `PLAYWRIGHT_BROWSERS_PATH`
   lookup by hand, and launch it with `chromium.launch({ executablePath: resolveChromiumPath() })`.
   Three gotchas: (1) `tsx` runs the ad-hoc script as CJS, so wrap top-level `await`
-  in an `async` IIFE; (2) write the script **inside the repo tree** so its imports
-  resolve against `node_modules` (any devDependency used in an ad-hoc script —
-  `playwright-core`, `yaml`, etc. — is scoped to this repo's `node_modules`, not
-  global); (3) pass `page.evaluate(...)` its body as a **string**, not a function
+  in an `async` IIFE; (2) write the script **inside the repo tree** so imports
+  resolve against this repo's `node_modules` (`playwright-core`, `yaml` and other
+  devDependencies aren't global); (3) pass `page.evaluate(...)` its body as a **string**, not a function
   reference — `tsx`/esbuild's `keepNames` transform injects a `__name` helper into
   a compiled function that only exists in the Node/tsx context, so a function
   reference throws `__name is not defined` inside the browser page.
@@ -69,9 +66,7 @@ re-checked). Entries that came from a specific session cite it.
   downscaled or compressed PNGs can mask a style that actually applied. Before
   concluding a scoped style is missing, probe the element's *computed* style
   with the same `playwright-core` pattern above, e.g.
-  `page.$eval(selector, el => getComputedStyle(el).propertyName)`. A screenshot
-  confirms a render happened; computed-style probing confirms a *specific* style
-  took effect.
+  `page.$eval(selector, el => getComputedStyle(el).propertyName)`.
 - **A diagram, illustration or layout from a brief needs the human's eye first.**
   Agree the reader and the question it answers, and show a rough draft for a
   quick reaction before you polish and publish. Passing gates is necessary, not
@@ -108,10 +103,9 @@ the scroll). (Session `…q1cMNn`.)
 
 ### `screenshot({ clip })` is viewport-relative unless `fullPage: true`
 
-`page.screenshot({ clip })` reads `clip` against the **viewport origin**, not
-the document, unless you also pass `fullPage: true`; on a scrolled or tall page,
-`clip` alone silently captures the wrong region, so pass `fullPage: true` when
-clipping below the fold. (Session `…CnKWrh`.)
+`clip` is read against the **viewport origin**, not the document, unless you
+also pass `fullPage: true`; on a scrolled or tall page it silently captures the
+wrong region, so pass `fullPage: true` when clipping below the fold. (Session `…CnKWrh`.)
 
 ### Desktop Chromium ignores the page's `<meta name="viewport">`
 
@@ -139,20 +133,22 @@ A screenshot captures whatever frame exists *now*. Two ways the frame is empty:
   route can catch a half-built page and read as a false-positive layout bug.
   Prefer built `preview` mode (or a selector wait) before trusting a `--dev`
   screenshot for diagnosis. (Sessions `…pm7Vkb`, `…Bhu3Y1`.)
-- **A green production `preview` probe is not proof a hydration-mismatch or
-  Vue dev-warning fix worked.** Those diagnostics are Vue dev-only and are
-  compiled out of production builds entirely, so a clean production run is
-  consistent with *either* "actually fixed" or "warning can't appear in this
-  build mode regardless." Verify this class of fix against a `--dev` build
-  instead (or in addition), checking the actual console/warning output.
+
+### A green production `preview` probe doesn't prove a dev-warning fix
+
+A green production `preview` probe is not proof a hydration-mismatch or Vue
+dev-warning fix worked. Those diagnostics are Vue dev-only and are compiled out
+of production builds entirely, so a clean production run is consistent with
+*either* "actually fixed" or "warning can't appear in this build mode
+regardless." Verify this class of fix against a `--dev` build instead (or in
+addition), checking the actual console/warning output.
 
 ### `<ClientOnly>` attaches its slot DOM *after* `onMounted`
 
-Nuxt's `<ClientOnly>` renders its default slot only once its own `mounted` ref
-flips to `true`, which happens *in* its `onMounted` — so the slot's DOM attaches
-on the render *after* both child and parent `onMounted` fire (confirmed in
-`nuxt/dist/app/components/client-only.js`: `mounted` starts `false`, flips in
-`onMounted`, and the default slot is returned only when `mounted.value`). A
+Nuxt's `<ClientOnly>` returns its default slot only once its own `mounted` ref
+flips to `true` in its `onMounted` (`nuxt/dist/app/components/client-only.js`),
+so the slot's DOM attaches on the render *after* both child and parent
+`onMounted` fire. A
 parent `onMounted` that reads a `ref` pointing *inside* a `<ClientOnly>` slot
 therefore reads `null`. Drive the render from
 `watch(theRef, …, { immediate: true })` instead, so it fires when the ref
@@ -180,9 +176,8 @@ because its container ref was null in `onMounted`.)
 
 ## See also
 
-- **How to verify a UI change actually works**: drive the affected flow
-  yourself and observe behavior before committing — this doc is the
-  browser/UI-specific reference for that.
+- Drive the affected flow yourself and observe the behavior before committing;
+  this doc is the browser/UI reference for that.
 - `docs/agents/tenant-layers.md` — Nuxt-layer render gotchas (auto-imports,
   alias resolution, Platform-wide component overrides, scoped-CSS token
   inheritance).

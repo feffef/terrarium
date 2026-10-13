@@ -160,11 +160,10 @@ self-merged chartered run" sequence. Done when it's green.
 ## 7. Commit, review, push, open one gated PR — self-merge on green
 
 Commit the new Digest(s) and this run's archive sweep together (a backfill of
-several days, plus the sweep, rides one commit/PR), review it
-(`docs/agents/pr-workflow.md`), push the branch with retry, and open **one
-gated PR**. Keep the PR description in sync with what it
-contains (`docs/agents/pr-workflow.md`), including the fact-check tally ("N claims checked, M
-fixed, K unverifiable" — list any unverifiable ones).
+several days, plus the sweep, rides one commit/PR). Keep the PR description in
+sync with its contents (`docs/agents/pr-workflow.md`) and include the
+fact-check tally ("N claims checked, M fixed, K unverifiable" — list any
+unverifiable ones).
 
 Then follow `docs/agents/pr-workflow.md`'s "Closing a self-merged chartered
 run" sequence — allowed **only** while the PR stays within this Skill's

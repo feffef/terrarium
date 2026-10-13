@@ -3,7 +3,8 @@
 How to decide whether **MDC** (Nuxt Content's "Markdown Components") fits a
 piece of content, with a decision checklist at the end. The Journal on-ramp
 cards are a worked example where MDC is *capable but not the right fit*. Version
-pins, verbatim syntax and component-resolution mechanics live in
+pins, verbatim syntax, component-resolution mechanics and the
+missing-closing-`::` failure mode live in
 `docs/research/nuxt-content-review-grounding.md` §13 (and its Sources section).
 
 ---
@@ -19,8 +20,6 @@ which resolves each custom tag to a Vue component and hydrates it like any other
 Its job: **let authors compose from a palette of components without writing Vue
 or leaving the Markdown file.** The lens for every decision below is
 *author-facing, in-prose composition*.
-
-Syntax and component resolution, with citations (including the missing-closing-`::` failure mode): `docs/research/nuxt-content-review-grounding.md` §13.
 
 Cost in a layer without MDC: a `components/content/` dir and a new SFC
 (mechanics: §13). The journal layer keeps its components in a *prefixed*
@@ -90,9 +89,8 @@ Ask these in order; a "no" on the first three usually means *don't* use body MDC
 4. **Does it genuinely need a *component* (interactivity, rich slots), vs. just
    structured data?** (Pure data → frontmatter/data collection. A component with
    rich slot Markdown → MDC is a strong fit.)
-5. **Does adopting it *reduce* moving parts?** (If it adds an SFC + a
-   `components/content/` dir + relocated CSS for what was a small array → the
-   simpler home wins.)
+5. **Does adopting it *reduce* moving parts?** (If not, as in "You'd move
+   machinery without shrinking it" above, the simpler home wins.)
 6. **Who authors it, and with what tooling?** (Writers/agents composing in
    Markdown → MDC's whole point. A maintainer editing a Vue file anyway → less
    upside.)
@@ -116,7 +114,7 @@ failed the checklist:
    the block *inside* the intro's `<ContentRenderer>` output, wherever it sits in
    `index.md`. There's no clean hoist; the workarounds (the `excerpt`
    single-cut, or reading the body AST in the SFC to pull the node out) are
-   fragile and worse than the alternative.
+   fragile.
 2. **Machinery (checklist #5).** It would add a `components/content/` dir, a new
    SFC, and force the scoped `.onramp*` CSS out of `index.vue` — more parts, not
    fewer — to replace a small array.

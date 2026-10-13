@@ -40,10 +40,9 @@ Two ways layer code deals with this:
   import type { SessionDoc, SkillDoc } from '../../../../types/journal'
   ```
 
-  This reaches the layer-local `layers/journal/app/types/journal.ts` by relative
-  path, with no alias. (`app/types/` is not scanned; a type exported from
-  `app/utils/` or `app/composables/` IS auto-imported, as a global, alongside
-  the values.)
+  The target is `layers/journal/app/types/journal.ts`. `app/types/` is not
+  scanned; a type exported from `app/utils/` or `app/composables/` IS
+  auto-imported, as a global, alongside the values.
 
 - **Layer-local asset paths in `nuxt.config.ts` → `fileURLToPath` from the
   config's own URL.** An aliased path (e.g. `~/assets/theme.css`) would resolve
@@ -99,14 +98,11 @@ components anywhere under `.jd` can read the tokens in their own **scoped**
 }
 ```
 
-`StatTile.vue` never defines `--jd-surface` or `--jd-line` itself — it just
-consumes what cascaded in from the ancestor `.jd` wrapper. Practical
-implications:
+Practical implications:
 
 - Define a layer's design tokens **once**, on the outermost wrapper the
   layer's pages render (registered globally via the layer's `nuxt.config.ts`
-  `css: [...]`, per §1 above) — don't re-declare them per component.
-  Everything under `.jd` in the DOM inherits them for free.
+  `css: [...]`, per §1), not per component.
 - If a new component under the layer looks unstyled or falls back to
   browser defaults, check whether it's actually mounted under the wrapper
   element (`.jd`) in the render tree — a component rendered outside that
@@ -140,9 +136,8 @@ per-Tenant scoping.
 ## 5. Verify a routing claim against the layer's actual `pages/` tree, not prose search
 
 Before asserting a route exists (in a review, a comment, anywhere), check the
-layer's actual `layers/<tenant>/…/pages/` directory (ADR-0016 tenant-root
-routes); don't grep Markdown/Vue prose for the path. Text search can miss or
-misreport a route; the pages tree is the source of truth.
+layer's `layers/<tenant>/…/pages/` directory (ADR-0016 tenant-root
+routes), not Markdown/Vue prose: text search can miss or misreport a route.
 
 ## 6. What leaks across Tenants
 

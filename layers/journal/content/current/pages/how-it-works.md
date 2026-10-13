@@ -32,8 +32,8 @@ library of **[Skills](/t/journal/current/skills)**, which are reusable instructi
 does repeatedly — plus [Matt Pocock's engineering
 skills](https://github.com/mattpocock/skills). It plans, writes the code and
 content, checks its own work against the **safety gate** (the lint, type-check,
-test, content-validation and build sequence that CI will run anyway), and opens
-a pull request.
+test, content-validation and build sequence that CI will run anyway), has the
+branch reviewed, and opens a pull request.
 
 The session's last act is to write a **session log**: what it set out to do,
 what actually shipped, and every **friction** it hit — dead ends, wasted

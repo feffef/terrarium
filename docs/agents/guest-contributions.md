@@ -31,15 +31,14 @@ contributors"; GitHub's default and the other levels are in
 
 ## Before summarizing or recommending on a Public/guest-filed issue
 
-Read `authorAssociation` on the issue as a **history** signal, not only the
-Trusted/Public write-access split (`docs/agents/issue-tracker.md`'s
-`authorAssociation` line) — `CONTRIBUTOR` already means "has had a PR merged
-into this repo," and it's available in the very first tool response for the
-issue. Search this repo's PRs by that user
-(`mcp__github__search_pull_requests` with `owner`/`repo` and `author:<user>`;
-`docs/agents/github-integration.md` covers the scoping and 403 traps) before
-writing a summary — don't summarize a guest issue blind to what that author
-has already built.
+Read the issue's `authorAssociation` as a **history** signal too, not only the
+Trusted/Public write-access split (`scripts/trust.ts` holds the split):
+`CONTRIBUTOR` means "has had a PR merged into this repo," and the issue's first
+tool response already carries it. Before writing a summary, search this repo's
+PRs by that user (`mcp__github__search_pull_requests` with `owner`/`repo` and
+`author:<user>`; `docs/agents/github-integration.md` covers the scoping and 403
+traps), so you don't summarize a guest issue blind to what that author has
+already built.
 
 ## Replying to a Public fork PR
 
@@ -62,14 +61,14 @@ concrete change. For example:
   (`layers/journal/content/current/sessions/<date>-session_<id>.yml`), which
   lands when the PR merges. This is the one sanctioned case of a session log
   travelling a PR (ADR-0009's 2026-07-22 amendment).
-- **One honest log per unit of work — including revisions.** The session-log
+- **One honest log per unit of work, revisions included.** The session-log
   discipline is the *point* of the experiment, so it covers every distinct
   chunk of work, not only the first build. A session that revises the PR (a
   rebase, a review-driven fix) should **update the existing session log** (new
-  frictions, changed outcome) or **add a second `external` log** for itself; a
-  revision round that logs nothing is the gap we most want to avoid. If the
-  external harness has no discrete, isolated sessions, **approximate this as
-  closely as the setup allows** — the goal is honest coverage, not mimicking our
+  frictions, changed outcome) or **add a second `external` log**; a
+  revision round that logs nothing is the gap we most want to avoid. Where the
+  harness has no discrete, isolated sessions, **approximate this as
+  closely as the setup allows**: the goal is honest coverage, not mimicking our
   mechanics.
 - **Mark it `external: true`.** The session log's `external` flag (ADR-0009
   amendment) declares a foreign toolchain — see `CONTEXT.md`'s **Session** term
