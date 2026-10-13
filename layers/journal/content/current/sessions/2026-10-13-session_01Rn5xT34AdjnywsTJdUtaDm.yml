@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01Rn5xT34AdjnywsTJdUtaDm
 startedAt: 2026-10-13T00:16:39Z
-endedAt: 2026-10-13T00:24:28Z
+endedAt: 2026-10-13T00:26:59Z
 kind: autonomous
 goal: Write the 2026-10-12 Journal Digest
-status: in-review
-outcome: "Digest and retention sweep pushed as PR #1855; awaiting CI to self-merge"
-summary: "Scheduled digest run (agent-initiated by a schedule, no human prompt). One closed day lacked a Digest (2026-10-12). Gathered its data, wrote the Digest, had a fresh subagent fact-check it (22 claims, none wrong; two wording nits tightened), ran the retention sweep (1 digest and 9 session logs archived), ran gate:scoped green, ran code-review on both axes with clean results, then pushed and opened PR #1855 and subscribed to it. The Stop hook asked to push before the fact-check and gate had finished; I declined until they passed, as ADR-0004 requires. Still open: CI on the PR and the self-merge."
+status: completed
+outcome: "Digest and retention sweep merged as PR #1855 on a green gate"
+summary: "Scheduled digest run (agent-initiated by a schedule, no human prompt). One closed day lacked a Digest (2026-10-12). Gathered its data, wrote the Digest, had a fresh subagent fact-check it (22 claims, none wrong; two wording nits tightened), ran the retention sweep (1 digest and 9 session logs archived), ran gate:scoped green, ran code-review on both axes with clean results, then pushed and opened PR #1855 and subscribed to it. The Stop hook asked to push before the fact-check and gate had finished; I declined until they passed, as ADR-0004 requires. CI went green and the PR self-merged."
 prs:
   - "1855"
 docsRead:
@@ -57,12 +57,12 @@ frictions:
   - description: "SHELL-READ-DETECTION false positive: docs/adr/0004-objective-safety-gate.md was credited from shell output, but the session marked it (not read)"
     solution: Find the crediting command in the transcript and tighten scripts/shell-reads.ts
     severity: moderate
-durationSec: 469
+durationSec: 621
 models:
-  claude-sonnet-5-5: 50
+  claude-sonnet-5-5: 65
 toolCounts:
   Read: 6
-  Bash: 14
+  Bash: 17
   Write: 1
   Agent: 3
   Skill: 3
@@ -70,6 +70,9 @@ toolCounts:
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 2
+  mcp__github__add_issue_comment: 1
 filesEdited:
   - layers/journal/content/current/pages/digests/2026-10-12.md
 rulesLoaded:
