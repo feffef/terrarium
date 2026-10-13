@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01TW6hQ1C1Fm1aeaaoxQeHEp
 startedAt: 2026-10-13T23:36:51Z
-endedAt: 2026-10-13T23:46:16Z
+endedAt: 2026-10-13T23:48:56Z
 kind: interactive
 goal: Show each ADR's length in its summary rule's pointer
-status: in-review
-outcome: Line counts auto-stamped and gate-checked on all 30 summary rules; PR 1910 waits for a human merge
-summary: "The owner asked (human-instructed) for a note like \"(it's only N bytes long)\" on each ADR rule's pointer, to nudge agents into reading the full ADR. Following the owner's preference to ask first, I asked three questions; the owner chose auto-stamping via validate-adr-rules --write with a gate check, lines rather than bytes, and every adr-NNNN.md summary rule. Agent-initiated additions: the gate also fails a summary rule with no pointer at all (so the count can't be dodged), and review-driven tidying (one home for the pointer phrase, clearer names, per-ADR test fixtures). The first gate:scoped run hit an unrelated Tinkerfund e2e timeout; a re-run passed. PR 1910 touches .claude/rules/** so a human merges it."
+status: completed
+outcome: Line counts auto-stamped and gate-checked on all 30 summary rules; PR 1910 merged by the owner
+summary: "The owner asked (human-instructed) for a note like \"(it's only N bytes long)\" on each ADR rule's pointer, to nudge agents into reading the full ADR. Following the owner's preference to ask first, I asked three questions; the owner chose auto-stamping via validate-adr-rules --write with a gate check, lines rather than bytes, and every adr-NNNN.md summary rule. Agent-initiated additions: the gate also fails a summary rule with no pointer at all (so the count can't be dodged), and review-driven tidying (one home for the pointer phrase, clearer names, per-ADR test fixtures). The first gate:scoped run hit an unrelated Tinkerfund e2e timeout; a re-run passed. PR 1910 touched .claude/rules/** so the owner merged it (via auto-merge) once CI's gate was green."
 prs:
   - "1910"
 docsRead:
@@ -47,18 +47,22 @@ frictions:
   - description: First gate:scoped failed on an unrelated tinkerfund-flows e2e timeout (Cart and checkout), costing a full re-run
     solution: Raise that matcher's timeout or file a flake issue for tinkerfund-flows.spec.ts:387
     severity: minor
-durationSec: 565
+durationSec: 724
 models:
-  claude-opus-5-5: 64
+  claude-opus-5-5: 82
 toolCounts:
-  Bash: 22
+  Bash: 24
   Read: 2
   AskUserQuestion: 1
   Skill: 3
   Agent: 2
-  ToolSearch: 1
+  ToolSearch: 2
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 4
+  mcp__github__pull_request_read: 1
+  mcp__claude-code-remote__send_later: 1
+  mcp__claude-code-remote__delete_trigger: 1
 rulesLoaded:
   - .claude/rules/adr-0004-human-merge.md
   - .claude/rules/adr-0029.md
