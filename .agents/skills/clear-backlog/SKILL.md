@@ -1,10 +1,10 @@
 ---
 name: clear-backlog
-description: Clear the open-issue backlog in one run — explore every issue, grill the owner once in plain words, then build, review and land the PRs unattended.
+description: Clear the open-issue backlog in one run — explore the issues that need attention, grill the owner once in plain words, then build, review and land the PRs unattended.
 disable-model-invocation: true
 ---
 
-Take every open issue to a merged PR, a closed issue, or a decision only the
+Take every issue the sweep picks up (§1) to a merged PR, a closed issue, or a decision only the
 owner can make. The owner is present twice: at the start and for one
 **grilling** in the middle. Everything else runs unattended.
 
@@ -68,9 +68,9 @@ Where its format differs, this list wins, and builds keep running:
   subagent's. The owner never needs to open a ticket.
 - Put the most important questions first, and end with "accept my picks for
   the rest".
-- Include every issue an answer in chat could move, deferred ones too: a
-  later run may be the one that takes on the hard ones. Leave out only issues
-  blocked outside the chat, and list them in the report with their blocker.
+- Ask only about issues in §1's set; the ones the sweep skipped wait for a
+  run that picks them up. Leave out issues blocked outside the chat, and list
+  them in the report with their blocker.
 - Include `ready-for-human` items, real design forks inside
   `ready-for-agent` briefs, and Public issues (the owner's yes is the
   green-light ADR-0020 requires). Also include proposals to close an issue as
