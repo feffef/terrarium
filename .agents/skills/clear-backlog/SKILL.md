@@ -43,7 +43,8 @@ each per-issue brief:
   gets `ready-for-agent` from the sweep.
 - A grilling answer recorded by a stand-in in an earlier run doesn't bind;
   ask it again.
-- Comment only on a label change or a fact that changes the outcome. Return
+- Comment only on a label change, a fact that changes the outcome, or an issue
+  with no comments yet. Return
   side findings to you instead.
 
 Then plan the PR grouping: one branch per change, grouped only when issues
