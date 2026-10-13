@@ -75,6 +75,15 @@
             "command": "cd \"${CLAUDE_PROJECT_DIR:-.}\" && sh scripts/guard-wrap.sh github-provenance-guard -- pnpm exec tsx scripts/github-provenance-guard.ts"
           }
         ]
+      },
+      {
+        "matcher": "mcp__github__search_issues|mcp__github__search_pull_requests",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cd \"${CLAUDE_PROJECT_DIR:-.}\" && sh scripts/guard-wrap.sh github-search-fields-guard -- pnpm exec tsx scripts/github-search-fields-guard.ts"
+          }
+        ]
       }
     ],
     "PostToolUse": [

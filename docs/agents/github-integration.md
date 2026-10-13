@@ -70,10 +70,9 @@ like this:
   targeted `search_*` query is rate-limited (see "Searching is the fragile
   path"), so use it only if listing still overflows. A broad `search_*` query
   overflows too, so always scope it (state, label, keyword).
-- **`search_issues` / `search_pull_requests` ignore `minimal_output`**, though
-  the server advertises it. Pass `fields: [...]` instead and leave out
-  `body`, `labels` and `reactions` (the biggest parts) when you only need
-  titles, numbers or counts.
+- **`search_issues` / `search_pull_requests` need `fields`:**
+  `github-search-fields-guard.ts` denies a call without it, and its message
+  says what to pass.
 - **A narrow query is not a precise one.** Even a quoted, multi-term search does
   fuzzy matching, not exact-phrase matching, and returns loosely related hits
   next to real ones. Read every result. Hit count and ranking say nothing about
