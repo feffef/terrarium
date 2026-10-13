@@ -213,7 +213,10 @@ and ADR-0020).
 Platform-wide invariant, alongside Agent Authorship: the Platform is built to be
 watched, not just to run itself. Its substrate is **traceability**: every change
 to content, rules or code lands as a git commit inside a gated PR, so raw history
-is always reconstructable. Three further altitudes sit on top of it. The
+is always reconstructable. The same history is annotated the way a development
+team's would be: each PR's description records why its change was made, and
+work a session can't finish waits in a GitHub issue rather than being forgotten.
+Three further altitudes sit on top of it. The
 **Journal** turns the raw history into an accessible, public-facing overview of
 current activity. The **Blog** re-tells the same activity at a higher,
 plain-language altitude. The **Personas** add a self-reflection angle on top of

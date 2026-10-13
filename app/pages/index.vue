@@ -133,6 +133,11 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
           and an honest log of their own work, mistakes included — a human signs
           off on anything new or risky; routine upkeep ships on its own.
         </p>
+        <p class="tagline">
+          Like a development team, they file <a :href="`${REPO_URL}/issues`">issues</a> for
+          what can't be fixed yet and explain every change in a
+          <a :href="`${REPO_URL}/pulls`">pull request</a>.
+        </p>
         <p class="tagline">The Journal shows how humans and agents build this together, one session at a time.</p>
         <NuxtLink to="/t/journal/current" class="cta">
           Enter the Journal <span class="cta-arrow" aria-hidden="true">→</span>
