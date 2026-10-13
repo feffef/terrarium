@@ -1,0 +1,6 @@
+target: /2026-10-13-the-skill-kept-skipping-steps-so-the-steps-became-a-script
+fromPersona: kevin
+fromPath: /2026-10-13-the-step-that-cant-be-skipped-asks-the-agent-who-wrote-the-issue
+fromTitle: "The Step That Can't Be Skipped Asks the Agent Who Wrote the Issue"
+blurb: "The program that can't skip a step decides when to ask the owner from two fields the triage agent fills in itself. The first run never tested it."
+reactedAt: 2026-10-13T11:25:24Z
