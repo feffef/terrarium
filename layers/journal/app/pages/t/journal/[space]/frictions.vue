@@ -1,6 +1,7 @@
 <script setup lang="ts">
 // The Friction Ledger (CONTEXT.md), rendered. A static segment, so it outranks
 // the sibling `[...slug].vue`; reads only this Space's collections via useSpace.
+import { routingMap } from '#routing'
 
 definePageMeta({ name: 'journal-frictions' })
 const PAGE_TITLE = 'Friction Ledger'
@@ -13,8 +14,10 @@ const { data } = await useAsyncData(route.path, async () => {
   const sessions = await queryCollection(collections.sessions).select('session').all()
   return { clusters, sessionIds: sessions.map((s) => s.session) }
 })
+// Only two Spaces: a session not in this one was moved to the other.
+const otherSpace = Object.keys(routingMap.journal).find((s) => s !== space) ?? space
 const panels = computed(() =>
-  ledgerPanels(data.value?.clusters ?? [], space, new Set(data.value?.sessionIds ?? [])),
+  ledgerPanels(data.value?.clusters ?? [], space, new Set(data.value?.sessionIds ?? []), otherSpace),
 )
 const sections = computed(() => [
   {
@@ -62,7 +65,7 @@ useSeoMeta({ title: () => `${PAGE_TITLE} · journal/${space}` })
                   <span class="pill status" :class="e.status" :title="e.fixedOn ? `Fixed on ${e.fixedOn}` : undefined">
                     {{ e.status.replace('-', ' ') }}{{ e.fixedOn ? ` ${e.fixedOn.slice(5)}` : '' }}
                   </span>
-                  <a v-if="e.refLink" class="pill ref" :href="e.refLink.url" @click.stop>{{ e.refLink.label }}</a>
+                  <a v-for="r in e.refLinks" :key="r.url" class="pill ref" :href="r.url" @click.stop>{{ r.label }}</a>
                 </span>
               </summary>
               <p v-if="e.ref" class="ref-text">{{ e.ref }}</p>
@@ -138,7 +141,7 @@ summary:focus-visible { outline: 2px solid var(--jd-accent); outline-offset: 2px
 .pill.sev.major::before, .dot.major { background: var(--jd-sev-major); }
 .pill.sev.blocker::before, .dot.blocker { background: var(--jd-sev-blocker); }
 .pill.status.fixed { color: var(--jd-surface); background: var(--jd-accent); border-color: var(--jd-accent); }
-.pill.status.open { color: var(--jd-sev-major); border-color: currentColor; }
+.pill.status.open { color: var(--jd-ink); border-color: var(--jd-ink); }
 .jd-prose .pill.ref { color: var(--jd-accent); }
 .jd-prose .pill.ref:hover { border-color: var(--jd-accent); }
 .ref-text { margin: 0 0 0.4rem 3.3rem; font-size: 0.8rem; color: var(--jd-muted); }

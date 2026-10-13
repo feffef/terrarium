@@ -2,6 +2,7 @@
 // dashboard.ts: no Vue, relative type imports, distinctive export names.
 import type { FrictionClusterDoc, Severity } from '../types/journal'
 import { REPO_URL } from '../../../../app/utils/repo'
+import { sessionAnchor } from './dashboard'
 
 const SEVERITY_RANK: Record<Severity, number> = { nit: 0, minor: 1, moderate: 2, major: 3, blocker: 4 }
 
@@ -17,18 +18,22 @@ export interface LedgerEntry {
   status: FrictionClusterDoc['status']
   fixedOn?: string
   ref?: string
-  refLink?: { label: string; url: string }
+  refLinks: { label: string; url: string }[]
   worst: Severity
   worstCount: number
   count: number
   occurrences: LedgerOccurrence[]
 }
 
-/** The first `#123` a cluster's free-text `ref` names, linked. GitHub redirects
- *  `/issues/N` to `/pull/N` when N is a PR. */
-export function ledgerRefLink(ref: string | undefined): LedgerEntry['refLink'] {
-  const n = ref?.match(/#(\d+)/)?.[1]
-  return n ? { label: `#${n}`, url: `${REPO_URL}/issues/${n}` } : undefined
+/** The first issue and the first PR a cluster's free-text `ref` names: a ref
+ *  often cites old PRs before the issue that tracks it now. */
+export function ledgerRefLinks(ref: string | undefined): LedgerEntry['refLinks'] {
+  const issue = ref?.match(/\bissues? #(\d+)/)?.[1]
+  const pr = ref?.match(/\bPRs? #(\d+)/)?.[1]
+  return [
+    ...(issue ? [{ label: `issue #${issue}`, url: `${REPO_URL}/issues/${issue}` }] : []),
+    ...(pr ? [{ label: `PR #${pr}`, url: `${REPO_URL}/pull/${pr}` }] : []),
+  ]
 }
 
 export const LEDGER_SEVERE_SIZE = 8
@@ -37,11 +42,12 @@ export const LEDGER_SEVERE_SIZE = 8
  *  (then how often it hit that, then total) go to `severe`, the rest to
  *  `frequent` by total. Relative, so `severe` fills whatever the worst
  *  severity is. `ownSessions` holds this Space's session ids; an occurrence
- *  missing from it was archived. */
+ *  missing from it links to `otherSpace`, where archiving moved it. */
 export function ledgerPanels(
   clusters: FrictionClusterDoc[],
   space: string,
   ownSessions: Set<string>,
+  otherSpace: string,
 ): { severe: LedgerEntry[]; frequent: LedgerEntry[] } {
   const entries = clusters.map((c): LedgerEntry => {
     const worst = c.occurrences.reduce<Severity>((w, o) => (SEVERITY_RANK[o.severity] > SEVERITY_RANK[w] ? o.severity : w), 'nit')
@@ -51,7 +57,7 @@ export function ledgerPanels(
       status: c.status,
       fixedOn: c.fixedOn,
       ref: c.ref,
-      refLink: ledgerRefLink(c.ref),
+      refLinks: ledgerRefLinks(c.ref),
       worst,
       worstCount: c.occurrences.filter((o) => o.severity === worst).length,
       count: c.occurrences.length,
@@ -59,7 +65,7 @@ export function ledgerPanels(
         .map((o) => ({
           date: o.date,
           severity: o.severity,
-          to: `/t/journal/${ownSessions.has(o.session) ? space : 'archived'}#session-${o.session}`,
+          to: `/t/journal/${ownSessions.has(o.session) ? space : otherSpace}#${sessionAnchor(o.session)}`,
         }))
         .sort((a, b) => b.date.localeCompare(a.date)),
     }
