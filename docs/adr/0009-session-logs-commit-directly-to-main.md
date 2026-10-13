@@ -22,8 +22,8 @@ writes only the judgement half; the rest comes from the session's transcript.
   every Friction, and why the docs and Skills it names mattered. Timings,
   models, tools, files read and edited, subagents and loaded rules come from
   the transcript. A doc counts as read when a command's output showed enough
-  of it. The agent may mark a derived read "not read"; it is then dropped and
-  logged as a Friction, so detector errors stay visible.
+  of it. The agent may mark a read credited from a command's output "not read";
+  it is then dropped and logged as a Friction, so detector errors stay visible.
 - **Landed logs stay as they are.** No other session edits a log, not even to
   fix its wording.
 - **The schema only grows.** No log is ever migrated, so every old log must
