@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01WUDXJjhrM6uHf9Sjjvw2N9
 startedAt: 2026-10-13T12:37:12Z
-endedAt: 2026-10-13T13:31:08Z
+endedAt: 2026-10-13T18:41:35Z
 kind: interactive
 goal: Prepare the ADR rewrite and decide how ADRs are written
 status: in-review
-outcome: "ADR-0030 (ADRs state the current decision) and consistency fixes in PR #1892, waiting for a human merge"
-summary: "Human-instructed throughout. The Trusted user asked for a preparation session for rewriting all ADRs (in the spirit of issue 1745): first a subagent survey of every ADR (gist, importance, rewrite effort), then restructuring options (merge/refocus/retire, templates, numbering), then two analyses of the new session-log fields (rulesLoaded, ruleVerdicts, docsRead useful verdicts). The data showed the summary rules carry the everyday instruction while full ADRs are read mostly by subagents searching for the binding ADR, and for limits and exceptions that amendments scatter. With the user we settled: no amendments or history in ADRs (git holds it), ADR is the single source and its rule adds nothing, notes stay separate from ADRs (1745's merge rejected), and a template (summary, Scope and limits, Why, Rejected alternatives, When to revisit, Consequences, See). The user asked to record this as ADR-0030 with the consistency fixes in one PR (ADR-0018's editing section removed; audit-docs, prune-trial, frictions-to-fixes, ADR-0021/0027/0029, CONTEXT.md, domain.md). Code-review's two axes found a missed frictions-to-fixes line and some self-inconsistencies in ADR-0030, fixed before the first push. Open: numbering for retired ADRs, and the first full rewrite (ADR-0022 is the likely pilot; its amendment still cites ADR-0018's removed rule)."
+outcome: "ADR-0030 and prune-trial scope change in PR #1892; rewrite process tested over five prompt versions; handoff written for a review session"
+summary: "Human-instructed throughout. After PR #1892 (ADR-0030, how we write ADRs) went up, the Trusted user steered a test of the rewrite process: ten background agents rewrote ten ADRs into the new format (scratchpad only), a reference collector found every live reference to each ADR, ten blind agents (never reading the ADR) built checklists of what callers need, and a comparison showed the rewrites missed caller-held limits and changed quoted wording. The prompt went through five versions on 0004 and 0022: callers mapped (v2), plain language over quoted wording (v3), natural language over glossary terms, short sentences, a 40-70 line guide and current rules (v4), guarantees not mechanics (v5, 0004 at 63 lines from 237). At the user's request ADR rewrites were taken out of Prune Trial scope (ADRs, Skill, docs, and merge-pr.ts --prune-trial removed), ADR-0030 was renamed and given the heading format \"# ADR-NNNN: Title\", and ADR-0029 now states a summary rule's two jobs. All working files sit in docs/adr-rewrite/ on the PR branch, to be pruned later. A final grilling round settled the goal; answers are in docs/adr-rewrite/decisions.md and the next session starts from docs/adr-rewrite/HANDOFF.md. Nothing merged, by the user's instruction."
 prs:
   - "1892"
 docsRead:
@@ -136,11 +136,120 @@ docsRead:
   - path: .agents/skills/frictions-to-fixes/SKILL.md
     reason: spec review found its Historical-ADR line; fixed
     useful: yes
+  - path: docs/adr-rewrite/adr-rewrite-prompt.md
+    reason: rewrite prompt this session iterated v2-v5
+    useful: yes
+  - path: docs/adr-rewrite/decisions.md
+    reason: owner answers the prompt and handoff build on
+    useful: yes
+  - path: docs/adr/0030-how-we-write-adrs.md
+    reason: the format the rewrites follow
+    useful: yes
+  - path: docs/adr-rewrite/rewrites-v4/0004.md
+    reason: subagent v5 run read the v4 attempt to shorten it
+    useful: yes
+  - path: docs/adr-rewrite/rewrites-v5/0004.md
+    reason: checked the v5 result
+    useful: yes
+  - path: .agents/skills/handoff/SKILL.md
+    reason: handoff format for HANDOFF.md
+    useful: yes
+  - path: .agents/skills/auto-triage/SKILL.md
+    reason: subagents checked callers of ADR-0022
+    useful: partly
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: subagent checked ADR-0015 caller
+    useful: partly
+  - path: layers/journal/CONTEXT.md
+    reason: subagent checked Journal terms for ADR-0008
+    useful: partly
+  - path: layers/commons/CONTEXT.md
+    reason: subagent checked Commons terms for ADR-0025
+    useful: partly
+  - path: docs/research/content-client-queries-without-wasm.md
+    reason: subagent source for ADR-0028 alternatives
+    useful: partly
+  - path: docs/agents/triage-labels.md
+    reason: subagent checked label caller of ADR-0022
+    useful: partly
+  - path: docs/agents/guest-contributions.md
+    reason: subagent checked ADR-0020 open question
+    useful: partly
+  - path: docs/adr-rewrite/background/adr-survey.md
+    reason: working file read by a rewrite or checklist subagent
+    useful: yes
+  - path: docs/adr-rewrite/background/session-log-usage.md
+    reason: working file read by a rewrite or checklist subagent
+    useful: yes
+  - path: docs/adr-rewrite/expectations/0022.md
+    reason: working file read by a rewrite or checklist subagent
+    useful: yes
+  - path: docs/adr-rewrite/refs/0022.md
+    reason: working file read by a rewrite or checklist subagent
+    useful: yes
+  - path: docs/adr-rewrite/rewrites-v2/0022.md
+    reason: working file read by a rewrite or checklist subagent
+    useful: yes
+  - path: docs/adr-rewrite/rewrites-v2/0022-report.md
+    reason: working file read by a rewrite or checklist subagent
+    useful: yes
+  - path: docs/adr-rewrite/rewrites/0003.md
+    reason: working file read by a rewrite or checklist subagent
+    useful: yes
+  - path: docs/adr-rewrite/comparison/0022.md
+    reason: working file read by a rewrite or checklist subagent
+    useful: yes
+  - path: docs/adr-rewrite/expectations/0004.md
+    reason: working file read by a rewrite or checklist subagent
+    useful: yes
+  - path: docs/adr-rewrite/comparison/0004.md
+    reason: working file read by a rewrite or checklist subagent
+    useful: yes
+  - path: docs/adr-rewrite/refs/0003.md
+    reason: working file read by a rewrite or checklist subagent
+    useful: yes
+  - path: docs/adr-rewrite/rewrites-v2/0004.md
+    reason: working file read by a rewrite or checklist subagent
+    useful: yes
+  - path: docs/adr-rewrite/refs/0004.md
+    reason: working file read by a rewrite or checklist subagent
+    useful: yes
+  - path: docs/adr-rewrite/rewrites/0022.md
+    reason: working file read by a rewrite or checklist subagent
+    useful: yes
+  - path: docs/adr-rewrite/rewrites/0022-report.md
+    reason: working file read by a rewrite or checklist subagent
+    useful: yes
+  - path: docs/adr-rewrite/rewrites-v2/0004-report.md
+    reason: working file read by a rewrite or checklist subagent
+    useful: yes
+  - path: docs/adr-rewrite/rewrites-v3/0004.md
+    reason: working file read by a rewrite or checklist subagent
+    useful: yes
+  - path: docs/adr-rewrite/rewrites-v3/0004-report.md
+    reason: working file read by a rewrite or checklist subagent
+    useful: yes
   - path: shared/schemas/session.ts
     reason: (no reason given)
   - path: scripts/validate-adr-rules.ts
     reason: (no reason given)
+  - path: scripts/merge-pr.ts
+    reason: (read before editing)
+  - path: tests/unit/merge-pr.spec.ts
+    reason: (read before editing)
+  - path: docs/adr-rewrite/refs/find_refs.py.txt
+    reason: (no reason given)
+  - path: app/composables/contentLoadRecovery.ts
+    reason: (no reason given)
+  - path: app/utils/chunkRecovery.ts
+    reason: (no reason given)
+  - path: app/plugins/chunk-errors.client.ts
+    reason: (no reason given)
+  - path: app/components/ContentLoadErrorDialog.vue
+    reason: (no reason given)
   - path: scripts/session-trace.ts
+    reason: (no reason given)
+  - path: scripts/gate.ts
     reason: (no reason given)
 skillsUsed:
   - name: writing-for-agents
@@ -151,6 +260,12 @@ skillsUsed:
     reason: PR opened
   - name: log-session
     reason: (no reason given)
+  - name: grilling
+    reason: (no reason given)
+  - name: context
+    reason: (invoked as a slash command)
+  - name: grill-me
+    reason: (invoked as a slash command)
 frictions:
   - description: Read CONTEXT-MAP.md and CONTEXT.md only late, before editing, not at session start as CLAUDE.md requires
     solution: Read them first even in a research-only start; low impact here since early work was delegated
@@ -167,23 +282,40 @@ frictions:
   - description: Several chained or multi-file Bash greps and sed reads (e.g. on 0021 and audit-docs) loaded no rules, against CLAUDE.md's Read-tool rule
     solution: Use Read with offset for quick line checks
     severity: nit
-durationSec: 3237
+  - description: A subagent asked to save its report to a file was stopped mid-write by a safety filter; another was refused writing a summary file
+    solution: Extract handback text from the agent transcript with a script, as done here
+    severity: minor
+  - description: Subagents cannot spawn subagents, so per-ADR blind agents and agent-to-agent questions had to be relayed through the main session
+    solution: Document it in dispatch guidance; the handoff records it
+    severity: minor
+  - description: First rewrite prompt kept quoted wording and glossary terms, producing jargon-heavy ADRs the user rejected; three more prompt rounds were needed
+    solution: State plain-language and length goals up front; done in prompt v3-v5
+    severity: moderate
+  - description: Launched ten rewrite agents writing in place before confirming where output should go; the user rejected the launch
+    solution: Confirm output location before parallel dispatch that touches the working tree
+    severity: minor
+durationSec: 21863
 models:
-  claude-opus-5-5: 192
+  claude-opus-5-5: 617
 toolCounts:
-  Bash: 26
-  Agent: 4
-  Skill: 4
-  Grep: 7
-  Read: 20
-  ToolSearch: 2
-  SendMessage: 3
-  Write: 5
-  Edit: 27
+  Bash: 77
+  Agent: 48
+  Skill: 5
+  Grep: 8
+  Read: 45
+  ToolSearch: 4
+  SendMessage: 10
+  Write: 14
+  Edit: 78
   Glob: 1
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 28
+  mcp__github__pull_request_read: 3
+  mcp__claude-code-remote__send_later: 3
+  AskUserQuestion: 4
+  mcp__github__update_pull_request: 1
 filesEdited:
   - docs/adr/0030-adrs-state-the-current-decision.md
   - .claude/rules/adr-0030.md
@@ -197,6 +329,19 @@ filesEdited:
   - .agents/skills/audit-docs/SKILL.md
   - .agents/skills/prune-trial/SKILL.md
   - .agents/skills/frictions-to-fixes/SKILL.md
+  - scripts/merge-pr.ts
+  - tests/unit/merge-pr.spec.ts
+  - .claude/rules/adr-0004-human-merge.md
+  - docs/agents/pr-workflow.md
+  - docs/adr/0004-objective-safety-gate.md
+  - docs/adr/0003-agent-operating-model-and-governance.md
+  - .claude/rules/adr-0027.md
+  - docs/adr-rewrite/README.md
+  - docs/adr/0030-how-we-write-adrs.md
+  - .claude/rules/adr-0029.md
+  - docs/adr-rewrite/adr-rewrite-prompt.md
+  - docs/adr-rewrite/decisions.md
+  - docs/adr-rewrite/HANDOFF.md
 rulesLoaded:
   - .claude/rules/adr-0004-human-merge.md
   - .claude/rules/adr-0029.md
@@ -207,6 +352,16 @@ rulesLoaded:
   - .claude/rules/adr-0026.md
   - .claude/rules/adr-0015.md
   - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0028.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/adr-0014.md
+  - .claude/rules/adr-0002.md
+  - .claude/rules/adr-0013.md
+  - .claude/rules/adr-0008.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/adr-0010.md
+  - .claude/rules/adr-0006.md
+  - .claude/rules/adr-0012.md
 rulesGlobal:
   - .claude/rules/adr-0022.md
   - .claude/rules/adr-0004.md
@@ -223,15 +378,17 @@ rulesFollowedUp:
   - .claude/rules/adr-0029.md
   - .claude/rules/adr-0018.md
   - .claude/rules/adr-0030.md
-  - .claude/rules/adr-0004.md
-  - .claude/rules/adr-0009.md
-  - .claude/rules/adr-0001.md
-  - .claude/rules/adr-0020.md
   - .claude/rules/adr-0003.md
   - .claude/rules/adr-0023.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0013.md
+  - .claude/rules/adr-0026.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0001.md
   - .claude/rules/adr-0017.md
   - .claude/rules/adr-0021.md
-  - .claude/rules/adr-0004-human-merge.md
 ruleVerdicts:
   - path: .claude/rules/adr-0022.md
     reason: Auto-triage sweeps; this session ran none, though 0022 was discussed as rewrite pilot content
@@ -287,6 +444,36 @@ ruleVerdicts:
   - path: .claude/rules/adr-0030.md
     reason: The rule this session wrote; confirmed its wording loads on ADR files
     useful: yes
+  - path: .claude/rules/adr-0028.md
+    reason: Loaded via subagent reads for the 0028 rewrite test; no action of mine depended on it
+    useful: no
+  - path: .claude/rules/tenant-layers.md
+    reason: Loaded on a layer file read by a subagent; unrelated to the ADR work
+    useful: no
+  - path: .claude/rules/adr-0014.md
+    reason: Loaded for the 0014 rewrite test; content served as source only
+    useful: no
+  - path: .claude/rules/adr-0002.md
+    reason: Loaded via subagent reads; unrelated to my actions
+    useful: no
+  - path: .claude/rules/adr-0013.md
+    reason: Loaded via subagent reads; unrelated to my actions
+    useful: no
+  - path: .claude/rules/adr-0008.md
+    reason: Loaded for the 0008 rewrite test; source only
+    useful: no
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: Loaded on a docs read; unrelated
+    useful: no
+  - path: .claude/rules/adr-0010.md
+    reason: Loaded via subagent reads; unrelated
+    useful: no
+  - path: .claude/rules/adr-0006.md
+    reason: Loaded via subagent reads; unrelated
+    useful: no
+  - path: .claude/rules/adr-0012.md
+    reason: Loaded via subagent reads; unrelated
+    useful: no
 subagents:
   - type: general-purpose
     task: Assess ADR rewrite effort
@@ -296,11 +483,102 @@ subagents:
     task: Standards review of ADR-0030 diff
   - type: general-purpose
     task: Spec review of ADR-0030 diff
+  - type: general-purpose
+    task: Rewrite ADR-0003 in new format
+  - type: general-purpose
+    task: Rewrite ADR-0004 in new format
+  - type: general-purpose
+    task: Rewrite ADR-0008 in new format
+  - type: general-purpose
+    task: Rewrite ADR-0014 in new format
+  - type: general-purpose
+    task: Rewrite ADR-0015 in new format
+  - type: general-purpose
+    task: Rewrite ADR-0003 in new format
+  - type: general-purpose
+    task: Rewrite ADR-0004 in new format
+  - type: general-purpose
+    task: Rewrite ADR-0008 in new format
+  - type: general-purpose
+    task: Rewrite ADR-0014 in new format
+  - type: general-purpose
+    task: Rewrite ADR-0015 in new format
+  - type: general-purpose
+    task: Rewrite ADR-0019 in new format
+  - type: general-purpose
+    task: Rewrite ADR-0020 in new format
+  - type: general-purpose
+    task: Rewrite ADR-0022 in new format
+  - type: general-purpose
+    task: Rewrite ADR-0025 in new format
+  - type: general-purpose
+    task: Rewrite ADR-0028 in new format
+  - type: general-purpose
+    task: Infer ADR expectations from references
+  - type: general-purpose
+    task: Blind expectations for ADR-0003
+  - type: general-purpose
+    task: Blind expectations for ADR-0004
+  - type: general-purpose
+    task: Blind expectations for ADR-0008
+  - type: general-purpose
+    task: Blind expectations for ADR-0014
+  - type: general-purpose
+    task: Blind expectations for ADR-0015
+  - type: general-purpose
+    task: Blind expectations for ADR-0019
+  - type: general-purpose
+    task: Blind expectations for ADR-0020
+  - type: general-purpose
+    task: Blind expectations for ADR-0022
+  - type: general-purpose
+    task: Blind expectations for ADR-0025
+  - type: general-purpose
+    task: Blind expectations for ADR-0028
+  - type: general-purpose
+    task: Compare rewrites with caller checklists
+  - type: general-purpose
+    task: Caller needs for ADR-0003
+  - type: general-purpose
+    task: Caller needs for ADR-0004
+  - type: general-purpose
+    task: Caller needs for ADR-0008
+  - type: general-purpose
+    task: Caller needs for ADR-0014
+  - type: general-purpose
+    task: Caller needs for ADR-0015
+  - type: general-purpose
+    task: Caller needs for ADR-0019
+  - type: general-purpose
+    task: Caller needs for ADR-0020
+  - type: general-purpose
+    task: Caller needs for ADR-0022
+  - type: general-purpose
+    task: Caller needs for ADR-0025
+  - type: general-purpose
+    task: Caller needs for ADR-0028
+  - type: general-purpose
+    task: Rewrite v2 of ADR-0004
+  - type: general-purpose
+    task: Rewrite v2 of ADR-0022
+  - type: general-purpose
+    task: Rewrite v3 of ADR-0022
+  - type: general-purpose
+    task: Rewrite v3 of ADR-0004
+  - type: general-purpose
+    task: Rewrite v4 of ADR-0022
+  - type: general-purpose
+    task: Rewrite v4 of ADR-0004
+  - type: general-purpose
+    task: Rewrite v5 of ADR-0004
 gitBranch: claude/adr-rewrite-prep-b8fijv
 entrypoint: remote_mobile
 cliVersion: 2.1.296
 learnings:
   - Session-log docsRead already folds in subagent reads (since August), so a session with no ADR in docsRead means its subagents read none either
+  - Blind caller checklists (built only from references, never the ADR) catch limits that rewrites silently drop
+  - Always-loaded summary rules leak into every subagent, so blindness to those ADRs is partial
 ideas:
   - "Add an ADR-0030 template check to validate-adr-rules: for ADRs listed as rewritten, fail the gate on Date/Status lines or Amended banners, so the no-history rule is mechanical rather than prose"
+  - "Add a gate check in validate-adr-rules.ts: an ADR with the new '# ADR-NNNN:' heading fails if it contains Date/Status lines or Amended banners"
 landedBy: Stop
