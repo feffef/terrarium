@@ -181,8 +181,9 @@ rule that points to a full ADR or doc, also say why you did or didn't open it
 (the trace records whether): the summary was enough, or you needed a detail it
 held. Don't restate the rule.
 
-A later pass merges with the first, so list only the new or changed entries,
-but write each one whole: a pass replaces an entry with the same path.
+Every pass is a full scratch with every field the schema requires. Its lists
+merge with the earlier pass, so list only new or changed entries, each written
+whole; repeat a friction word for word or it is logged twice.
 
 The report also lists docs a command named but did not show enough of to
 count. ADR-0009's output-matching and merged-read amendments say what is

@@ -2,8 +2,9 @@ name: clear-backlog-gaps
 cause: >-
   The clear-backlog Skill, new and revised by dry runs, left out rules a run needs (owner reservations, a wave rule, an outcome for parked issues, review order, chat discipline, an early exit when everything is owner-deferred), so runs improvised or skipped steps; the full-sweep pass on deferred issues cost 70-100k tokens per issue, and a later run skipped §1 Explore and reported done.
 surface: safe
-status: tracked
-ref: "PRs #1826, #1833, #1852, #1853; issue #1857 (explore phase silently skipped, filed 2026-10-13)"
+status: fixed
+fixedOn: "2026-10-13"
+ref: "PRs #1826, #1833, #1852, #1853; issue #1857 closed by PR #1864; PR #1863 (grill only the sweep's set); PR #1871 (phases as saved workflows); PR #1880 (one log summary line per branch, #1878); frictions-to-fixes 2026-10-13b grouped doc PR (zero-grill skip)"
 occurrences:
   - session: session_01DtK8w6aJ3361uPK73VAxhi
     date: "2026-10-12"
@@ -23,3 +24,12 @@ occurrences:
   - session: session_015LwBgLjaCn36ayZedges6G
     date: "2026-10-12"
     severity: major
+  - session: session_01STVS35HcxNZp7dQ1pPnrhW
+    date: "2026-10-13"
+    severity: moderate
+  - session: session_013FXrBeYrgCUvFvJjysR7yM
+    date: "2026-10-13"
+    severity: nit
+  - session: session_016gu9e44jjfAEFMo3CBxzUQ
+    date: "2026-10-13"
+    severity: moderate

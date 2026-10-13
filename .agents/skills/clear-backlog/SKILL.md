@@ -49,6 +49,8 @@ report with that word.
 
 ## 2. Grill in one sitting
 
+With no `grill` results, skip this section.
+
 Send a push notification with the `PushNotification` tool:
 `grilling ready: N questions`. Then run the `grilling` Skill on one list,
 built from the `grill` results. Where its format differs, this list wins:
