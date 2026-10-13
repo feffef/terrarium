@@ -76,6 +76,12 @@ describe('decideScope()', () => {
     expect(planSteps(scope)).toEqual([...FLOOR, 'test'])
   })
 
+  it('treats a workflow script as a Skill file: skips build + e2e, runs test (#1870)', () => {
+    const scope = decideScope(['.claude/workflows/clear-backlog-build.js', '.agents/skills/clear-backlog/SKILL.md'])
+    expect(scope).toMatchObject({ skipHeavy: false, skipBuild: true })
+    expect(planSteps(scope)).toEqual([...FLOOR, 'test'])
+  })
+
   it('runs the full gate when a Skill file comes with any other non-inert path', () => {
     const scope = decideScope(['.agents/skills/blog-post/scripts/blog-rotation.ts', 'scripts/session-logs.ts'])
     expect(scope).toMatchObject({ skipHeavy: false, skipBuild: false })

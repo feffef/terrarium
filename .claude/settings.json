@@ -1,10 +1,15 @@
 {
+  "env": {
+    "CLAUDE_CODE_WORKFLOW_MAX_CONCURRENT_AGENTS": "8"
+  },
   "permissions": {
     "allow": [
       "mcp__github__create_pull_request",
       "mcp__github__subscribe_pr_activity",
       "mcp__github__unsubscribe_pr_activity",
-      "mcp__github__pull_request_read"
+      "mcp__github__pull_request_read",
+      "Workflow(clear-backlog-explore)",
+      "Workflow(clear-backlog-build)"
     ]
   },
   "hooks": {

@@ -651,22 +651,20 @@ export const subagentTranscript = (transcriptPath: string, agentId: string) => j
  *  harness writes them to `<parent-dir>/<parent-basename>/subagents/*.jsonl`
  *  (each with a `.meta.json` sibling this fold has no use for). Returns [] when
  *  the directory is absent — the shape of a session that dispatched nobody.
- *  Sorted so a fold is deterministic.
+ *  Sorted so a fold is deterministic, and a parent precedes what it dispatched.
  *
- *  Recurses on each transcript it finds, applying the same naming rule. A live
- *  probe confirmed the layout only for depth 1 (`.meta.json` carries a
- *  `spawnDepth`, so deeper is possible); recursing costs one `existsSync` per
- *  subagent and is correct whether the harness nests a depth-2 agent under its
- *  parent or flattens it into the same directory — which is why this doesn't
- *  assert which one it does. */
+ *  Walks every subdirectory, so it finds a depth-2 agent whether the harness
+ *  nests it under its parent (`agent-a/subagents/`) or flattens it beside it;
+ *  only depth 1 is confirmed live (`.meta.json` carries a `spawnDepth`). It
+ *  also finds workflow agents, reported under `workflows/<runId>/` beside the
+ *  engine's own `journal.jsonl`, which is no agent's transcript (#1870). */
 export function subagentTranscriptPaths(transcriptPath: string): string[] {
   const dir = subagentsDir(transcriptPath)
   if (!existsSync(dir)) return []
-  return readdirSync(dir)
-    .filter((f) => f.endsWith('.jsonl'))
+  return readdirSync(dir, { recursive: true, withFileTypes: true })
+    .filter((e) => e.isFile() && e.name.endsWith('.jsonl') && e.name !== 'journal.jsonl')
+    .map((e) => join(e.parentPath, e.name))
     .sort()
-    .map((f) => join(dir, f))
-    .flatMap((p) => [p, ...subagentTranscriptPaths(p)])
 }
 
 /** Every subagent transcript beside `transcriptPath`, read tolerantly. Callers

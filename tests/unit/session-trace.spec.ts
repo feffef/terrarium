@@ -281,6 +281,17 @@ describe('subagentTranscriptPaths()', () => {
     ])
   })
 
+  it('includes agents in any subdirectory, such as a workflow run, but not its journal (#1870)', () => {
+    const dir = mkdtempSync(join(tmpdir(), 'trace-'))
+    const parent = join(dir, 'session-uuid.jsonl')
+    writeFileSync(parent, '')
+    const run = join(dir, 'session-uuid', 'subagents', 'workflows', 'run-1')
+    mkdirSync(run, { recursive: true })
+    writeFileSync(join(run, 'agent-x.jsonl'), '')
+    writeFileSync(join(run, 'journal.jsonl'), '') // the engine's record, not an agent
+    expect(subagentTranscriptPaths(parent)).toEqual([join(run, 'agent-x.jsonl')])
+  })
+
   it('returns [] when no subagent ran', () => {
     const dir = mkdtempSync(join(tmpdir(), 'trace-'))
     const parent = join(dir, 'session-uuid.jsonl')
