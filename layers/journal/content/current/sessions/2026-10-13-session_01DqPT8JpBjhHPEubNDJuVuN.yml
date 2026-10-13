@@ -1,0 +1,177 @@
+schemaVersion: 1
+session: session_01DqPT8JpBjhHPEubNDJuVuN
+startedAt: 2026-10-13T09:37:06Z
+endedAt: 2026-10-13T09:43:57Z
+kind: delegated
+goal: Clear the backlog with the clear-backlog Skill
+status: completed
+outcome: "One issue built and merged (PR #1880 closes #1878); two time-gated measurement issues are left for later"
+summary: "The owner ran /clear-backlog. Everything after that ran unattended under the Skill's standing green-light. The default-mode sweep picked up three issues: #1878 (needs-triage), and #1778 and #1844 (ready-for-agent). There were no open external PRs. clear-backlog-explore triaged #1878 to ready-for-agent, with a brief limited to clear-backlog SKILL.md §4. It found #1778 and #1844 blocked by time gates in their own briefs (start 2026-10-14 13:00Z and 2026-10-15 20:49Z), and both are report-only measurement tasks. I checked both dates against the issue text myself. Triage raised no questions, so the grilling was skipped. clear-backlog-build, on sonnet, built clear-backlog-log-summary-1878. It added three lines to §4 saying that the session log's summary has one line per merged or opened branch: what the branch changed (from its decisions), plus open judgement calls. The why given is that the orchestrator's log is the Journal's only record of agent work. The review raised two optional wording calls (\"in a workflow run\" is redundant; \"per PR\" would be shorter). Both were left as they are and listed in the PR. I checked the commit and diff, gate:scoped passed, and I opened PR #1880. CI was green, so I posted a verdict and merged it with merge-pr.ts, which closed #1878."
+prs:
+  - "1880"
+docsRead:
+  - path: CONTEXT-MAP.md
+    reason: session-start glossary index
+    useful: partly
+  - path: CONTEXT.md
+    reason: session-start glossary; Session kind definitions
+    useful: partly
+  - path: .agents/skills/auto-triage/SKILL.md
+    reason: "step 1 set resolution: eligibility by last-comment provenance"
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: required before first git command
+    useful: partly
+  - path: docs/agents/github-integration.md
+    reason: list-open-issues script; MCP vs gh api in cloud
+    useful: yes
+  - path: docs/agents/pr-workflow.md
+    reason: review-before-push and merge recipe
+    useful: yes
+  - path: .claude/skills/grilling/SKILL.md
+    reason: grilling format
+    useful: no
+  - path: .agents/skills/code-review/SKILL.md
+    reason: "subagent: spec-review procedure for the branch"
+    useful: yes
+  - path: .agents/skills/clear-backlog/SKILL.md
+    reason: "subagent: the file the change edits, used for review"
+    useful: yes
+  - path: .agents/skills/implement/SKILL.md
+    reason: "subagent: build steps"
+    useful: yes
+  - path: .agents/skills/triage/SKILL.md
+    reason: "subagent: per-issue triage rules"
+    useful: yes
+  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
+    reason: "subagent: confirmed the binding ADR for #1878"
+    useful: partly
+  - path: docs/adr/0022-autonomous-triage-sweep.md
+    reason: "subagent: green-light scope for ready-for-agent"
+    useful: partly
+  - path: .agents/skills/log-session/SKILL.md
+    reason: "subagent grep: the 'don't retell the diff' advice stays"
+    useful: partly
+  - path: /home/user/terrarium/docs/agents/git-conventions.md
+    reason: (no reason given)
+skillsUsed:
+  - name: clear-backlog
+    reason: owner-invoked backlog run
+  - name: close-session
+    reason: closure at PR open
+  - name: log-session
+    reason: author this log
+frictions:
+  - description: I read the scripts/last-comment-authors.ts header with Bash head, not the Read tool, which breaks CLAUDE.md's Read-tool rule. It was a script, so no rule was missed, but it would have been invisible to the trace.
+    solution: Use Read with a limit for a file header
+    severity: nit
+  - description: The issue-tracker.md and triage-labels.md triggers (before triage) and the dispatch-subagents trigger (before a worktree subagent) were not read by me; the workflows do the triage and dispatch, so their agents read them
+    solution: Have CLAUDE.md, or the clear-backlog Skill, say that running a saved workflow satisfies those triggers for the orchestrator
+    severity: nit
+durationSec: 411
+models:
+  claude-opus-5-5: 67
+toolCounts:
+  Bash: 20
+  Read: 7
+  Grep: 1
+  Workflow: 2
+  ToolSearch: 2
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+  Skill: 2
+  Write: 2
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
+filesEdited:
+  - .agents/skills/clear-backlog/SKILL.md
+rulesLoaded:
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0018.md
+  - .claude/rules/adr-0008.md
+rulesGlobal:
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0001.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0023.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0009.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0022.md
+    reason: "Triage could set ready-for-agent on Trusted #1878 under the sweep's green-light; the summary was enough, so I didn't open the ADR"
+    useful: yes
+  - path: .claude/rules/adr-0004.md
+    reason: Made me run gate:scoped before the first push; the workflow covered the review; the summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Prompted close-session at PR open; the summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: No prune trial touched clear-backlog SKILL.md, so it didn't apply
+    useful: no
+  - path: .claude/rules/adr-0001.md
+    reason: Content and container architecture; this was a Skill prose change
+    useful: no
+  - path: .claude/rules/adr-0020.md
+    reason: Confirmed all three issues were Trusted-authored (OWNER), so no human merge is needed; the summary was enough
+    useful: partly
+  - path: .claude/rules/adr-0003.md
+    reason: Made me open the PR and subscribe right after the push; the summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0023.md
+    reason: Guest pipeline wasn't running and no guest issues were involved
+    useful: no
+  - path: .claude/rules/adr-0017.md
+    reason: Put the provenance header on the PR body; the summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0021.md
+    reason: Domain contexts; no glossary or Tenant work
+    useful: no
+  - path: .claude/rules/adr-0005.md
+    reason: Confirmed the Skill edit goes through a gated PR; the summary was enough
+    useful: partly
+  - path: .claude/rules/adr-0029.md
+    reason: Reminded me to use Read over cat; I slipped once with head on a script
+    useful: partly
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Confirmed SKILL.md is not a Human-only path, so self-merge is allowed
+    useful: partly
+  - path: .claude/rules/adr-0018.md
+    reason: Loaded via a subagent's file read; not relevant to this prose change
+    useful: no
+  - path: .claude/rules/adr-0008.md
+    reason: Journal Tenant rule loaded via log paths; nothing to act on
+    useful: no
+subagents:
+  - type: workflow-subagent
+    task: Spec clear-backlog-log-summary-1878 r1
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: Standards clear-backlog-log-summary-1878 r1
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: build clear-backlog-log-summary-1878
+    model: claude-sonnet-5-5
+  - type: workflow-subagent
+    task: "triage #1778"
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: "triage #1878"
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: "triage #1844"
+    model: claude-opus-5-5
+gitBranch: ccr-173c605e-akcf6g
+entrypoint: remote_mobile
+cliVersion: 2.1.296
+landedBy: Stop
