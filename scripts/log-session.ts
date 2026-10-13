@@ -58,6 +58,7 @@ import {
   type LabelledRecords,
   type MechanicalTrace,
   type SessionIdEnv,
+  type SubagentJsonl,
 } from './session-trace.ts'
 import { canonicalizeInstructionPath, isInstructionDoc, type DocLineIndex } from './shell-reads.ts'
 
@@ -564,7 +565,7 @@ export interface LandOpts {
   /** `main`'s schema errors for an entry, or null; see `mainSchemaErrors`. */
   mainSchemaFn?: (entry: unknown, remote: string) => string | null
   env?: SessionIdEnv
-  subagentJsonls?: string[]
+  subagents?: SubagentJsonl[]
   /** The doc-line index `docsReadViaShell` is derived against; built from `root` when absent. */
   docIndex?: DocLineIndex
 }
@@ -672,12 +673,15 @@ function withoutLandedBy(yaml: string): string {
 }
 
 /** The parent transcript's trace with every dispatched subagent's reads, edits,
- *  and Skill invocations folded in — `subagentJsonls` is passed by `landMain`
- *  from disk and by tests inline, so neither entry point can drift from the other. */
-function traceOf(transcriptJsonl: string, opts: Pick<LandOpts, 'env' | 'subagentJsonls' | 'docIndex'>): MechanicalTrace {
+ *  and Skill invocations folded in, plus its workflow agents — `subagents` is
+ *  passed by `landMain` from disk and by tests inline, so neither entry point can
+ *  drift from the other. */
+function traceOf(transcriptJsonl: string, opts: Pick<LandOpts, 'env' | 'subagents' | 'docIndex'>): MechanicalTrace {
   const docIndex = opts.docIndex ?? loadDocLineIndex(root)
+  const subs = opts.subagents ?? []
   const trace = extractTrace(parseTranscript(transcriptJsonl), opts.env, docIndex)
-  return foldSubagentTrace(trace, (opts.subagentJsonls ?? []).map(parseTranscript), opts.env, docIndex)
+  const folded = foldSubagentTrace(trace, subs.map((s) => parseTranscript(s.jsonl)), opts.env, docIndex)
+  return { ...folded, subagents: [...folded.subagents, ...subs.flatMap((s) => s.agent ?? [])] }
 }
 
 /** Recovery path for the "authored-then-dropped" case (issue #449 Gap 3),
@@ -782,7 +786,7 @@ export function loadAuthorContext(cwd: string, repoRoot: string = root): AuthorC
     const records = parseTranscript(jsonl)
     const subagents = subs.map((s) => ({ label: s.label, records: parseTranscript(s.jsonl) }))
     return {
-      trace: traceOf(jsonl, { subagentJsonls: subs.map((s) => s.jsonl), docIndex }),
+      trace: traceOf(jsonl, { subagents: subs, docIndex }),
       scan: shellReadScanOf(records, subagents, { repoRoot, docIndex }),
       sources: readToolSources([{ label: 'this session', records }, ...subagents.map((s) => ({ ...s, label: `subagent: ${s.label}` }))]),
     }
@@ -994,7 +998,7 @@ function landMain(argv: string[]): void {
         dryRun,
         remote: 'origin',
         landedBy,
-        subagentJsonls: readSubagentJsonls(transcriptPath).map((s) => s.jsonl),
+        subagents: readSubagentJsonls(transcriptPath),
       })
       if (result.action === 'landed' || result.action === 'dry-run') {
         console.error(
@@ -1040,7 +1044,7 @@ function landMain(argv: string[]): void {
     dryRun,
     remote: 'origin',
     landedBy,
-    subagentJsonls: readSubagentJsonls(transcriptPath).map((s) => s.jsonl),
+    subagents: readSubagentJsonls(transcriptPath),
   })
   switch (result.action) {
     case 'invalid':

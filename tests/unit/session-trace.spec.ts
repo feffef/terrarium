@@ -80,6 +80,11 @@ describe('extractTrace()', () => {
     expect(trace.filesEdited).toEqual(['app.ts'])
   })
 
+  it('cites a read in a worktree by its repo path', () => {
+    const read = { type: 'assistant', message: { content: [{ type: 'tool_use', name: 'Read', input: { file_path: '/repo/.claude/worktrees/wf_x-1/docs/a.md' } }] } }
+    expect(extractTrace([...parseTranscript(transcript), read], NO_ENV).filesRead).toContain('docs/a.md')
+  })
+
   it('unions Skill tool calls with slash-command expansions, ignoring tool_results', () => {
     expect(trace.skillsUsed).toEqual(['tdd', 'digest', 'frictions-to-fixes']) // '/not-invoked' excluded
     expect(trace.commandSkills).toEqual(['digest', 'frictions-to-fixes'])
@@ -319,6 +324,27 @@ describe('readSubagentJsonls()', () => {
     const parent = join(dir, 'session-uuid.jsonl')
     writeFileSync(parent, '')
     expect(readSubagentJsonls(parent)).toEqual([])
+  })
+
+  // An Agent/Task dispatch is already a tool call in the parent; a workflow
+  // agent shows up only under workflows/ (#1876).
+  it('names a workflow agent as a subagent, and only a workflow agent', () => {
+    const dir = mkdtempSync(join(tmpdir(), 'trace-'))
+    const parent = join(dir, 'session-uuid.jsonl')
+    writeFileSync(parent, '')
+    const subs = join(dir, 'session-uuid', 'subagents')
+    const run = join(subs, 'workflows', 'run-1')
+    mkdirSync(run, { recursive: true })
+    writeFileSync(join(subs, 'agent-a.jsonl'), 'A')
+    const assistant = JSON.stringify({ type: 'assistant', message: { model: 'claude-sonnet-5', content: [] } })
+    writeFileSync(join(run, 'agent-x.jsonl'), assistant)
+    writeFileSync(join(run, 'agent-x.meta.json'), JSON.stringify({ agentType: 'workflow-subagent', description: 'triage #1778' }))
+    writeFileSync(join(run, 'agent-y.jsonl'), '')
+    expect(readSubagentJsonls(parent).map((s) => s.agent)).toEqual([
+      undefined,
+      { type: 'workflow-subagent', task: 'triage #1778', model: 'claude-sonnet-5' },
+      { task: 'y' },
+    ])
   })
 })
 

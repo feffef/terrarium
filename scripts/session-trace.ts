@@ -173,7 +173,7 @@ function ruleKey(path: string): string {
 function relativizer(records: Record<string, unknown>[]): (p: string) => string {
   const meta = records.find((r) => r.type === 'user' || r.type === 'assistant') ?? {}
   const cwd = typeof meta.cwd === 'string' ? meta.cwd : ''
-  return (p) => (cwd && p.startsWith(cwd + '/') ? p.slice(cwd.length + 1) : p)
+  return (p) => (cwd && p.startsWith(cwd + '/') ? p.slice(cwd.length + 1).replace(/^\.claude\/worktrees\/[^/]+\//, '') : p)
 }
 
 /** The text a `tool_result` block actually carries — a plain string, or the
@@ -667,13 +667,22 @@ export function subagentTranscriptPaths(transcriptPath: string): string[] {
     .sort()
 }
 
+export interface SubagentJsonl {
+  label: string
+  jsonl: string
+  agent?: SubagentRef
+}
+
 /** Every subagent transcript beside `transcriptPath`, read tolerantly. Callers
  *  are a Stop hook and a CLI, neither of which should die over a sibling jsonl
  *  that vanished or won't read: one lost subagent costs its reads, not the
  *  whole trace. Single-homed here so the hook and the CLI can't diverge on it.
- *  `label` is the sibling `.meta.json`'s dispatch `description`, else the agent id. */
-export function readSubagentJsonls(transcriptPath: string): { label: string; jsonl: string }[] {
-  const out: { label: string; jsonl: string }[] = []
+ *  `label` is the sibling `.meta.json`'s dispatch `description`, else the agent id.
+ *  `agent` is set only for a workflow agent: an Agent/Task dispatch is already
+ *  in the parent's `subagents`, but a workflow's agents are not (#1876). */
+export function readSubagentJsonls(transcriptPath: string): SubagentJsonl[] {
+  const out: SubagentJsonl[] = []
+  const workflows = join(subagentsDir(transcriptPath), 'workflows') + '/'
   for (const p of subagentTranscriptPaths(transcriptPath)) {
     let jsonl
     try {
@@ -682,13 +691,22 @@ export function readSubagentJsonls(transcriptPath: string): { label: string; jso
       continue
     }
     let label = basename(p, '.jsonl').replace(/^agent-/, '')
+    let type: string | undefined
     try {
-      const { description } = JSON.parse(readFileSync(p.replace(/\.jsonl$/, '.meta.json'), 'utf8'))
+      const { description, agentType } = JSON.parse(readFileSync(p.replace(/\.jsonl$/, '.meta.json'), 'utf8'))
       if (typeof description === 'string' && description) label = description
+      if (typeof agentType === 'string') type = agentType
     } catch {
       /* no readable meta: keep the agent id */
     }
-    out.push({ label, jsonl })
+    if (!p.startsWith(workflows)) {
+      out.push({ label, jsonl })
+      continue
+    }
+    const model = parseTranscript(jsonl)
+      .map((r) => (r.type === 'assistant' ? (r.message as { model?: unknown } | undefined)?.model : undefined))
+      .find((m): m is string => typeof m === 'string')
+    out.push({ label, jsonl, agent: { type, task: label, model } })
   }
   return out
 }
