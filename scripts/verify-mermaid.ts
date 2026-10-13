@@ -5,7 +5,8 @@
 // missing (a diagram changed or was added but `pnpm render:mermaid` wasn't run),
 // empty, orphaned (an SVG with no live source), or unsafe to v-html
 // (app/utils/svg.ts). It reads files ONLY — it never launches a browser, so it
-// is safe in CI and the prod container, neither of which has Chromium (#379).
+// runs in the FLOOR before CI installs Chromium, and in the prod container,
+// which has none (#379).
 import { existsSync, readFileSync, statSync } from 'node:fs'
 import { join } from 'node:path'
 import { pathToFileURL } from 'node:url'

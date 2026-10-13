@@ -50,4 +50,4 @@ their in-universe order are genuine facts) but, like the Atlas, claims nothing a
 
 ## Decisions
 
-ADRs live in [`docs/adr/`](./docs/adr/) and record Platform architecture only (ADR-0021).
+ADRs live in [`docs/adr/`](./docs/adr/) and record decisions about the Platform and how agents work on it (ADR-0021).

@@ -2,8 +2,8 @@
 
 Each mermaid diagram is drawn into an SVG file when it is written, and that
 file is committed. The site serves the SVG and loads no mermaid code in the
-browser. Only that authoring step runs a browser; CI checks and the production
-app read the committed files.
+browser. Only that authoring step draws diagrams; the gate and the production
+app read the committed SVGs.
 
 ## Scope
 
@@ -44,8 +44,8 @@ check stays meaningful.
 - **Render in the browser at runtime.** It works and re-themes everything, but
   ships the large mermaid bundle to readers.
 - **Render during CI or the build** instead of committing SVGs. Every run would
-  need a browser, the floor checks that run on every change would lose their
-  browser-free speed, and reviewers would not see the output.
+  need a browser, the Floor would lose its browser-free speed, and reviewers
+  would not see the output.
 - **A browser-free renderer** (jsdom or SVG shims). None can measure text, so
   mermaid's layout breaks. The only truly browser-free option (Graphviz) uses
   a different diagram language.

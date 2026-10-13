@@ -1,16 +1,18 @@
 # ADR-0015: Pack Skills stay as installed; audit-skills grades every Skill by need
 
-We never edit a Skill installed from the outside pack, and the gate checks
-that. The Skill Inventory records each Skill's role and importance to this
-project, and is where a pack Skill gets our notes. The `audit-skills` Skill
-checks that our own Skills fire and do their job, and keeps the Inventory in
-line with that evidence; it edits only Inventory entries and issues.
+We never edit a Skill installed from the outside pack, and the gate checks each
+one that has a Skill Inventory entry. The Skill Inventory records each Skill's
+role and importance to this project, and is where a pack Skill gets our notes.
+The `audit-skills` Skill checks that our own Skills fire and do their job, and
+keeps the Inventory in line with that evidence; it edits only Inventory entries
+and issues.
 
 ## Scope
 
 - **Pack Skills.** A Skill named in `skills-lock.json` comes from the outside
-  pack. Nobody here edits its files. Notes on how it fits this project, and
-  problems with its text, go in its Inventory entry, never in an issue.
+  pack. Nobody here edits its files. Its Inventory entry pins a hash of its
+  installed `SKILL.md`, which the gate compares. Notes on how it fits this
+  project, and problems with its text, go in that entry, never in an issue.
 - **The Inventory covers every Skill in use,** ours and the pack's. A Skill
   gets an entry when it is first seen in use, not when it is installed.
 - **Importance is how much a Skill matters when its kind of work comes up,**
@@ -27,7 +29,8 @@ line with that evidence; it edits only Inventory entries and issues.
 - **What `audit-skills` may change:** Inventory entries, and issues it files
   or comments on. It never edits a Skill. A finding about one of our Skills
   becomes an issue when it matters enough, and otherwise an observation, so a
-  later run sees it repeat. Ideas for a new, split or retired Skill are only
+  later run sees it repeat. Such an issue goes through ordinary triage, and
+  its fix merges like any PR. Ideas for a new, split or retired Skill are only
   recorded.
 - **A script gathers the facts; the session makes every judgement.**
 
@@ -54,7 +57,7 @@ line with that evidence; it edits only Inventory entries and issues.
   can't see a failure that leaves no friction.
 - **Pin pack Skills with `skills-lock.json`'s own hash.** That file belongs to
   the installer, and its hash is of the upstream source, which can't be
-  checked offline. The pin lives in the Inventory entry instead.
+  checked offline.
 
 ## Consequences
 

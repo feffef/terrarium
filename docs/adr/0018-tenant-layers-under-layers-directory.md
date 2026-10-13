@@ -42,9 +42,8 @@ stays the domain word; `layers/` is only a path.
 
 - Old session logs and blog posts still name `tenants/…` paths. They record
   what was true then and stay as written.
-- Moving or renaming the folder touches Human-only files such as
-  `nuxt.config.ts` and `shared/expand.ts`, so a human merges that change
-  (ADR-0004).
+- Moving or renaming the folder touches Human-only files, so a human merges
+  that change (ADR-0004).
 
 ## See
 

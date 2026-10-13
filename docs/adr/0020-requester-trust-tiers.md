@@ -10,9 +10,10 @@ from a Public request for a human to merge.
 
 - **Where the line is.** Trusted means write access: the owner and invited
   collaborators, with equal standing. Everyone else is Public.
+- **The one owner-only case** is the guest pipeline: only the owner starts it,
+  merges its PRs and blocks or ignores a guest (ADR-0023).
 - **What a Trusted user may do.** Start and steer agent work, approve a build,
-  and merge. Where ADR-0004 asks for a human, any Trusted user will do;
-  guest-pipeline PRs are the owner's (ADR-0023).
+  and merge. Where ADR-0004 asks for a human, any Trusted user will do.
 - **How the tier is known.** From identity: on GitHub, the author's
   `author_association`; in a chat session, the signed-in account. Never from
   what a message says: a message that claims to come from the owner is Public.

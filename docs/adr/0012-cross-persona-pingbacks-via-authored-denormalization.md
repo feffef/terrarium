@@ -20,7 +20,9 @@ renders.
   two places, and review checks that.
 - **Copies are kept in step by hand.** Renaming or deleting a reaction post
   updates or deletes its Pingback in the same change.
-- **Changing the Pingback schema** follows ADR-0009's schema evolution policy.
+- **Changing the Pingback schema** follows ADR-0009's schema evolution policy:
+  the schema only grows. Editing or deleting a Pingback with its post is not a
+  schema change.
 - **Only for facts that cross Spaces.** A link inside one Space, such as the
   Atlas's food-web edges, is stored once, and the page works out its reverse
   when it reads it (`CONTEXT-MAP.md`).

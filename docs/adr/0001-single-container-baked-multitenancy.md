@@ -10,16 +10,16 @@ creates or changes content while the site runs.
 - **One app for every Tenant.** Every Tenant and Space runs in the same app
   and the same image. A view across Tenants, such as the Commons, is an
   ordinary Tenant layer in that app, not a separate service (ADR-0025).
-- **Content comes from committed files only.** Each Tenant × Space ×
-  Collection becomes its own collection, built into one SQLite database. The
-  running site fetches no outside data and keeps no store that visitors write
-  to. A feature that needs one, such as accounts, comments or uploads, needs a
-  new decision first.
+- **Content comes from committed files only.** Each Tenant × Space × Collection
+  becomes its own collection, built into one SQLite database. Serving a request
+  fetches no outside data, and the site keeps no store that visitors write to. A
+  feature that needs one, such as accounts, comments or uploads, needs a new
+  decision first.
 - **Nothing is created while the site runs.** You add a Tenant, Space,
   Collection or Document by editing files and building again (ADR-0002).
 - **Content changes only with a new build.** So a rendered page can be cached
-  until the next deploy (ADR-0028). Where the build runs, in CI or on the
-  server, is ADR-0011's decision.
+  until the next build goes live (ADR-0028). Where the build runs, in CI or on
+  the server, is ADR-0011's decision.
 - **A request picks a Tenant and Space** from its URL and reads only that
   Space's collections (ADR-0006).
 - **Isolation means separate tables, not separate images.** Each collection is

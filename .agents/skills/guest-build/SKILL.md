@@ -34,7 +34,7 @@ only what a guest-demo build needs — and one hard subtraction.
 `frictions-to-fixes` reviews **and merges** its own dispatched PRs. This Skill
 does **not**. Every guest-driven PR is gated and **owner-merged** (ADR-0023): it reviews the branch, opens the PR, posts the review verdict
 as a PR comment, comments on the issue that the story awaits the owner's merge,
-and **stops**. It never calls `merge_pull_request` and never enables
+and follows the PR without merging it. It never calls `merge_pull_request` and never enables
 auto-merge — the owner is the sole merge authority for guest work.
 
 ## What it acts on

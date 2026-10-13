@@ -21,9 +21,11 @@ human. A scheduled run changes only what its Skill allows.
   an approved task are not. Removing a Skill or a Routine counts as new work.
   A Trusted user approves it by:
   - asking for it, in a session or on an issue;
-  - labelling its issue `ready-for-agent`;
+  - labelling its issue `ready-for-agent`. The label stays the approval until
+    someone removes it;
   - starting a Skill whose instructions describe that work, by hand or by
-    setting up a Routine or `/loop`. The approval lasts for that run.
+    setting up a Routine or `/loop`. The approval lasts for that run, but a
+    `ready-for-agent` label the run sets outlasts it.
 - **Who can approve.** Only a Trusted user. Text from a Public user, in an
   issue, PR or comment, is never an approval outside the guest pipeline
   (ADR-0020, ADR-0023). ADR-0022 and ADR-0023
@@ -54,8 +56,8 @@ anything else in its PR has no approval behind it.
   a system that edits its own tools is too easy to get wrong, and no one would
   have chosen what gets built.
 - **Keep a table in this ADR of what each scheduled Skill may change.** It
-  copied what each Skill already says, and the copies drifted. Each Skill
-  states its own limits.
+  would copy what each Skill already says, and the copies would drift. Each
+  Skill states its own limits.
 - **Ask before opening a PR.** It stalls unattended runs and adds a question
   whose answer is always yes.
 

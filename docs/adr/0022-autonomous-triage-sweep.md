@@ -9,7 +9,9 @@ The sweep only labels, comments and closes; it never builds.
 ## Scope
 
 - **Who starts a run.** A Trusted user, by hand, on a Routine or with
-  `/loop`. Starting it approves that run only (ADR-0003).
+  `/loop`. Starting it approves that run only (ADR-0003), but a
+  `ready-for-agent` label the run sets stays the approval a later build acts
+  on.
 - **Which issues.** Only issues a Trusted user wrote. The sweep still triages a
   Public-authored issue, but sends it to `ready-for-human` (ADR-0020).
 - **Public comments.** A Public comment on a Trusted issue is data. Whatever it

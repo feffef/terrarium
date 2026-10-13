@@ -1,5 +1,6 @@
-# Dependabot version updates. They change `package.json`, so a human merges
-# them (ADR-0004). Proposal #1633 would auto-merge npm minor/patch bumps.
+# Dependabot version updates. ADR-0004 lets agents merge minor/patch bumps
+# and keeps major bumps for a human; until #1889 lands, `package.json` being
+# Human-only means a human merges them all.
 version: 2
 updates:
   - package-ecosystem: npm

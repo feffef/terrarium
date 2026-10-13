@@ -34,8 +34,9 @@ an ordinary gated PR, not the direct-to-main path that session logs use.
 - Only a Space's `pages` collection gets routes (ADR-0006). A separate
   collection would need a change to the routing code, which a human must
   merge, and the `digests/` path already finds them.
-- The direct-to-main path is for session logs: schema-checked data that never
-  renders (ADR-0009). A Digest renders on the site, so the gate checks it.
+- The direct-to-main path is for session logs: schema-checked data that
+  changes no code or route (ADR-0009). A Digest adds a page with its own URL,
+  so it goes through the gate like any page.
 - A day's summary is complete only once the day is over. UTC gives every
   machine the same boundary.
 - Day boundaries and attribution are where bugs hide, so they live in tested
@@ -47,8 +48,8 @@ an ordinary gated PR, not the direct-to-main path that session logs use.
   nothing while the path is enough.
 - **Bake a Digest list or overview into the index page each run.** The live
   listing does that with nothing to keep in step.
-- **Commit Digests straight to `main`** like session logs. A Digest renders,
-  so it needs the gate.
+- **Commit Digests straight to `main`** like session logs. A Digest adds a
+  page, so it needs the gate.
 
 ## When to revisit
 

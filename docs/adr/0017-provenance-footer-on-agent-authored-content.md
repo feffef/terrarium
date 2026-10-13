@@ -2,9 +2,8 @@
 
 Agents act on GitHub through the owner's own account, so GitHub cannot tell
 an agent's post from the owner's. Every agent write to GitHub, git or any
-other outside system therefore names the session that made it, with no
-exceptions. A GitHub body opens with a one-line header; a commit ends with a
-two-line trailer.
+other outside system therefore names the session that made it. A GitHub body
+opens with a one-line header; a commit ends with a two-line trailer.
 
 ## Scope
 
@@ -14,9 +13,11 @@ two-line trailer.
 - **The mark names this session.** A link to another session is a wrong
   mark, so a body copied from another session gets a new header. The model
   name is optional; the session log records it.
-- **GitHub bodies are blocked without the header.** The tool-call guard
-  denies a write that lacks this session's header, has it in another shape,
-  or cannot be checked.
+- **GitHub bodies written through the MCP tools are blocked without the
+  header.** The tool-call guard denies a write that lacks this session's
+  header, has it in another shape, or cannot be checked.
+- **The header alone marks a post as written by an agent.** It needs no
+  further notice.
 - **Commits are repaired, not blocked.** The commit hook adds or corrects the
   trailer. If the hook fails, the commit goes through unmarked, so agents
   check that the trailer landed.
@@ -30,8 +31,8 @@ two-line trailer.
 The login and `author_association` show the owner for every agent write, so
 agents misread who did what, and pipelines that skip their own earlier
 comments need another way to find them. A mark in the content is the one
-signal every reader can check. No exceptions, because each narrower rule is
-one more gap to remember.
+signal every reader can check. One rule covers every write, because each
+narrower rule is one more gap to remember.
 
 Prose versions of this rule were missed again and again, even by sessions
 that had read them. So the guard blocks, and its deny message teaches the
@@ -44,8 +45,8 @@ work.
 - **A separate bot account** (issue #124). It fixes the login fields at the
   source, but GitHub access is a managed connection set up outside this repo,
   and each kind of session would need re-pointing. Set aside, not ruled out.
-- **A footer at the end of GitHub bodies.** It fought the Claude Code tool's
-  own footer for the last line, and agents dropped it.
+- **A footer at the end of GitHub bodies.** It competes with the Claude Code
+  tool's own footer for the last line, and agents drop it.
 - **Accept any shape that names the session.** Agents invented shapes that
   readers could not rely on.
 - **Let the guard add a missing header instead of blocking.** Nobody has

@@ -1,10 +1,10 @@
 # ADR-0021: A Platform glossary plus one context per Tenant
 
-The domain's words are split by who needs them. The root `CONTEXT.md` holds
-the terms every agent needs, whatever its task. Each Tenant's own words, why it
-exists and its product decisions live in `layers/<tenant>/CONTEXT.md`, beside
-its code. ADRs record Platform architecture only, so a Tenant that only serves
-content gets no ADR.
+The root `CONTEXT.md` holds the terms every agent needs, whatever its task.
+Each Tenant's own words, why it exists and its product decisions live in
+`layers/<tenant>/CONTEXT.md`, beside its code. ADRs record decisions about the
+Platform and how agents work on it, so a Tenant that only serves content gets
+no ADR.
 
 ## Scope
 
@@ -21,12 +21,14 @@ content gets no ADR.
   in the Tenant's folder: it is instruction for agents, while the Tenant's
   content is not.
 - **`CONTEXT-MAP.md`** lists every context and how they relate.
-- **Which decisions get an ADR.** Only Platform architecture, and every ADR
-  lives in `docs/adr/`. A Tenant gets one only when it changes how the Platform
-  works, as the Journal (ADR-0008) and the Commons (ADR-0025) do. Why a demo
-  Tenant exists, and what it should be, belongs in its context.
+- **Which decisions get an ADR.** Only decisions about the Platform and how
+  agents work on it, and every ADR lives in `docs/adr/`. A Tenant gets one only
+  when it changes how the Platform works, as the Journal (ADR-0008) and the
+  Commons (ADR-0025) do. Why a demo Tenant exists, and what it should be,
+  belongs in its context.
 - **Adding a Tenant** means adding its `CONTEXT.md`, a line in the root
-  list and an entry in `CONTEXT-MAP.md`. It needs no ADR unless it changes the architecture.
+  list and an entry in `CONTEXT-MAP.md`. It needs no ADR unless it changes
+  how the Platform works.
 
 ## Why
 

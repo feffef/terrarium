@@ -11,9 +11,10 @@ its manifest and nothing else.
 - **The manifest is the only place a Tenant declares content.** It gives the
   Tenant's name, which is also its folder name, its Spaces and its Collections.
   Each Collection has a type, page or data, and a schema, a kind (ADR-0025) or
-  both. Routes follow from the page Collections; the manifest doesn't list them.
-- **Only manifests define collections.** A Tenant's layer may change how its
-  pages look, but never defines a collection of its own.
+  both. Routes follow from each Space's `pages` Collection (ADR-0006); the
+  manifest doesn't list them.
+- **Only manifests declare collections.** A Tenant's layer may change how its
+  pages look, but never declares a collection of its own.
 - **Code does the expansion.** Nobody writes the keyed collections by hand.
   One expansion feeds the collections (ADR-0013), the routing map (ADR-0014)
   and the cross-Tenant catalog (ADR-0025), and it refuses two collections with

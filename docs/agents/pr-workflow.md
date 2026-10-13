@@ -86,8 +86,9 @@ an exception. Some Skills narrow that:
   high-risk PR even when the gate is green.
 - `guest-build` (ADR-0023) and `midden-catalogue` (#1802) open the PR and
   never merge it; the owner does.
-- Dependabot PRs: leave them alone. They change `package.json`, so a human
-  merges them (ADR-0004).
+- Dependabot PRs: a major bump waits for a human; a minor or patch bump may
+  merge on a green gate (ADR-0004). Until #1889 lands, `merge-pr.ts` refuses
+  them all because they change `package.json`, so leave them alone.
 
 ## Closing a scheduled run's PR
 

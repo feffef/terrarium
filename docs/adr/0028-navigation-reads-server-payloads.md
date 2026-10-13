@@ -9,7 +9,7 @@ rendered pages briefly, and a page that reads the request must say so.
 
 - **The home page and every Tenant page are cached on the server** for a short
   time, in a cache of bounded size, never serving an expired copy. Content
-  changes only with a deploy (ADR-0001), so this is safe.
+  changes only when a new build goes live (ADR-0001), so this is safe.
 - **One rendered copy serves every visitor.** A page whose server render reads
   a request header or cookie lists it in its route's `varies`, or the first
   visitor's version reaches everyone.

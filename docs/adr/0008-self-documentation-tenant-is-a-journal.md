@@ -11,8 +11,8 @@ readouts derived from the repo and daily Digests.
   is an ADR, while a demo Tenant's lives only in its own `CONTEXT.md`
   (ADR-0021).
 - **It holds three kinds of content:**
-  - session logs: one honest self-report per session, written by the agent
-    and only added to;
+  - session logs: one honest self-report per session, written by that
+    session's agent and never changed by another session;
   - Inventories: readouts derived from the repo and refreshed in place, such
     as the Skill Inventory and the Friction Ledger;
   - Digests: daily summaries derived from the other records (ADR-0010).
@@ -29,7 +29,8 @@ readouts derived from the repo and daily Digests.
   Friction. The self-improvement Skills mine those logs to find what to fix.
 - That makes the Journal's most valuable content first-hand and
   ever-growing. A status report is the opposite: derived, and overwritten each
-  time. A logbook is kept and only added to, which is what the Journal is.
+  time. A logbook gains entries and keeps the old ones, which is what the
+  Journal is.
 - Keeping derived readouts and first-hand records apart tells every agent
   which content it may refresh and which it must preserve.
 

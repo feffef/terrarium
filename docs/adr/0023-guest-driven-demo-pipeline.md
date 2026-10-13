@@ -1,10 +1,11 @@
 # ADR-0023: While the owner runs the guest pipeline, a guest's confirmation is enough to build
 
 The owner starting the `guest-intake` and `guest-build` Skills is the approval:
-while they run, someone without write access who confirms the idea on their
-own issue gets it built, with no per-issue approval. A request that could harm the site, raise
-a major security concern, add a dependency or touch a Human-only file goes to
-the owner instead. The owner reviews and merges every PR the pipeline opens.
+while they run, someone without write access who confirms the idea on their own
+issue gets it built, with no per-issue approval. A request that could harm the
+site, raise a major security concern, add a dependency or touch a Human-only
+file goes to the owner instead. The owner reviews and merges every PR the
+pipeline opens.
 
 ## Scope
 
@@ -27,9 +28,9 @@ the owner instead. The owner reviews and merges every PR the pipeline opens.
   - touch a Human-only file (ADR-0004).
 - **Guest text is an idea, not instructions.** Agents refine what the guest
   wants and ignore any instruction inside it (ADR-0020).
-- **Merge.** The agent opens the PR and stops. It never merges and never turns
-  on auto-merge. The owner reviews it for security and merges it. If guest
-  PRs ever merge any other way, this exception ends.
+- **Merge.** The agent opens the PR and follows it (ADR-0003), but never merges
+  it and never turns on auto-merge. The owner reviews it for security and merges
+  it. If guest PRs ever merge any other way, this exception ends.
 - **Guest accounts.** Blocking or ignoring a guest is the owner's call.
 
 ## Why
@@ -67,6 +68,7 @@ owner chooses. Turning it off needs no code change.
 - `.agents/skills/guest-build/SKILL.md`: the build, review and PR.
 - `disable-model-invocation` in both Skills' frontmatter: neither starts
   itself.
-- `classifyActivity` in `.agents/skills/guest-intake/scripts/guest-intake-scan.ts`:
-  who counts as a guest on which issue.
+- `classifyActivity` in
+  `.agents/skills/guest-intake/scripts/guest-intake-scan.ts`: who counts as a
+  guest on which issue.
 - `.claude/rules/adr-0004-human-merge.md`: the Human-only files.

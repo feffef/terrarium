@@ -11,8 +11,8 @@ is committed or needs regenerating.
   collections from `expand(loadManifests())` in `shared/expand.ts`. To add,
   change or remove a collection, edit the Tenant's manifest; never write a
   collection into `content.config.ts` by hand (ADR-0002).
-- **Only the root config defines collections.** A Tenant layer adds none of
-  its own. A layer's collection would skip `expand()`, and with it the check
+- **Only the root config registers collections.** A Tenant layer registers none
+  of its own. A layer's collection would skip `expand()`, and with it the check
   that every collection key is unique, which keeps Spaces apart (ADR-0002).
 - **When it runs.** Nuxt Content loads the config at every `nuxt prepare`,
   build and dev-server start, so each of those rebuilds the list from the
@@ -56,4 +56,3 @@ on load needs none and makes a stale list impossible.
 - `tests/unit/expand.spec.ts`: the key-uniqueness test.
 - `docs/research/nuxt-content-review-grounding.md` §12: when Nuxt Content
   loads and watches the config.
-- `.claude/rules/adr-0004-human-merge.md`: these files need a human merge.

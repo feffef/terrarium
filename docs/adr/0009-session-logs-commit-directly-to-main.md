@@ -8,7 +8,7 @@ writes only the judgement half; the rest comes from the session's transcript.
 
 - **What skips the PR.** Only a session's own log, one file in the Journal's
   current sessions folder. Everything else goes through a gated PR (ADR-0003),
-  including archive moves of old logs and the lander's own code.
+  including archive moves of old logs and the landing script's own code.
 - **One script holds the boundary.** `scripts/log-session.ts` alone lands a
   log. It builds the commit from `main`, so none of the session's other work
   rides along, and refuses a commit that touches another path or a log that
@@ -29,7 +29,7 @@ writes only the judgement half; the rest comes from the session's transcript.
 - **The schema only grows.** No log is ever migrated, so every old log must
   stay valid. A new optional field is fine at any time. A required, renamed or
   narrower field needs a new schema version beside the old one; a log with no
-  version is version 1. Blog Pingbacks follow the same rule (ADR-0012).
+  version is version 1.
 - **Logs from outside agents** are marked `external`. They stay on the Timeline
   and dashboard, but Friction mining and the Skill audit skip them; only their
   ideas are used. Their authors can't push to `main`, so such a log travels in
@@ -70,12 +70,12 @@ writes only the judgement half; the rest comes from the session's transcript.
   reminder hook.
 - `landedBy` shows no landings by a fallback hook over a trial window: retire
   that hook.
-- The lander gets its own GitHub identity (#1689): narrow its bypass.
+- The landing script gets its own GitHub identity (#1689): narrow its bypass.
 
 ## Consequences
 
-- `main`'s protection lets the owner's credential, which the lander uses, push
-  anything. Only the lander narrows that to one file.
+- `main`'s protection lets the owner's credential, which the script uses, push
+  anything. Only the script narrows that to one file.
 - A session that never reaches closure leaves no log; a missing log beats a
   partial one.
 

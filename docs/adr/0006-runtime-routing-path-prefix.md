@@ -1,9 +1,9 @@
 # ADR-0006: Requests reach one Space by the path prefix `/t/<tenant>/<space>`
 
-A request names its Tenant and Space in the URL path: `/t/<tenant>/<space>/<path>`.
-One shared resolver turns that pair into the Collections of exactly one Space,
-or a 404. Only a Space's `pages` Collection has URLs; its other Collections are
-data that those pages read.
+A request names its Tenant and Space in the URL path:
+`/t/<tenant>/<space>/<path>`. One shared resolver turns that pair into the
+Collections of exactly one Space, or a 404. Only a Space's `pages` Collection
+has URLs; its other Collections are data that those pages read.
 
 ## Scope
 
@@ -11,9 +11,10 @@ data that those pages read.
   `/t/<tenant>/<space>` plus its path inside the Space. The path is relative to
   the Space, so two Spaces can each have `/about`. The path comes from the
   Document's file, so moving the file changes its URL.
-- **Only `pages` is routed.** Every other Collection a Space's manifest
-  declares has no URL of its own. Pages read it and show it. Check a
-  new Collection that seems to need its own URL against this before building it.
+- **Only `pages` is routed.** The Collection's name decides, not its type: every
+  other Collection a Space's manifest declares has no URL of its own. Pages read
+  it and show it. Check a new Collection that seems to need its own URL against
+  this before building it.
 - **One resolver for every Space page.** The Platform's catch-all page and any
   page a Tenant layer adds inside a Space both resolve the request through
   `useSpace`, which calls `resolveSpaceRoute`. It reads only the requested

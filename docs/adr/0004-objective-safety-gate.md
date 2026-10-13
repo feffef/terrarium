@@ -15,15 +15,17 @@ A human merges the few PRs whose risk the gate cannot see.
   file can affect that step. Without proof, it runs everything.
 - **Before the first push,** the branch passes the gate locally and gets a code
   review. CI's run of the gate decides the merge.
-- **Who merges.** The agent that wrote the PR, once CI's gate is green, unless
-  an exception below applies.
+- **Who merges.** The agent that wrote the PR, once CI's gate is green and it
+  has posted its verdict on the PR, unless an exception below applies.
 - **A human merges a PR that:**
   - changes a file on the Human-only list;
-  - adds a dependency, or changes how one behaves;
+  - adds a dependency, moves one to a new major version, or patches its code.
+    A minor or patch version bump merges like any other PR;
   - changes behaviour no test or gate step can observe, such as a hook or
     script that runs unattended, timing-dependent logic, or an outside side
     effect. Touching unfamiliar code that has tests does not count;
-  - adds logic that decides which Tenant's data a request can reach;
+  - adds logic that decides which Tenant's data a request can reach. Calling
+    the catalog's read functions (ADR-0025) is not such logic;
   - comes from a Public author, a fork or the guest pipeline, or was built
     from a Public request (ADR-0020, ADR-0023).
 - **The Human-only list** holds the files where a bad change escapes the gate
@@ -33,8 +35,7 @@ A human merges the few PRs whose risk the gate cannot see.
   itself.
 - **Merging, not editing.** Agents may edit Human-only files; only the merge
   waits for a human.
-- **"A human"** is any Trusted user; guest-pipeline PRs are the owner's
-  (ADR-0023).
+- **"A human"** is any Trusted user, with one exception (ADR-0020).
 
 ## Why
 
@@ -64,6 +65,8 @@ blindness matters, so a person reads them before they land.
   enforces the path list and Public or fork authors. The other exceptions rest
   on the agent recognising them, including a PR built from a Public request
   and a guest-pipeline PR: both look Trusted because an agent opens them.
+- `package.json` is on the Human-only list, so `merge-pr.ts` still refuses a
+  minor or patch bump (#1889).
 
 ## See
 

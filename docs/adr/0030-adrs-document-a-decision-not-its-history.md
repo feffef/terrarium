@@ -10,7 +10,8 @@ agents.
 
 - **Readers.** First an agent or reviewer asking "why is this so, and may I
   change it?", then the owner keeping an overview.
-- **One decision per ADR,** in about 40–70 lines.
+- **One decision per ADR.** About 40–70 lines is a guide; one decision
+  matters more than the length.
 - **No history in the text.** No amendments, dates, status lines, "Amended by"
   banners or notes about what used to be true. Use `git log` on the file.
 - **The ADR is the home of the decision:** what it allows and forbids, and the
@@ -35,8 +36,9 @@ agents.
   *Rejected alternatives*, and optional sections left out rather than filled.
   A rejected alternative is one someone could plausibly propose again today;
   an older rule that later changes overtook is history.
-- **The gate fails an ADR** with the `# ADR-NNNN:` heading that carries a date,
-  a status line or an amendment banner.
+- **The gate fails an ADR** that doesn't start with its `# ADR-NNNN:`
+  heading, or that holds a date, a status line or an amendment banner
+  anywhere in its text.
 
 ## Why
 

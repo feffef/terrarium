@@ -19,14 +19,13 @@ drift.
   composable, so the resolver in `shared/routing.ts` stays plain code that
   unit tests can run without Nuxt.
 - **To change the map,** edit a manifest. Never commit or hand-write a routing
-  file, and never add a generator script or a drift check.
-- **Other data derived from the manifests** follows the same rule: build it at
-  build time into a `#` import, never commit it. `#catalog` does (ADR-0025).
+  file (ADR-0007).
+- **Other data derived from the manifests** is built the same way, into a `#`
+  import. `#catalog` is one (ADR-0025).
 
 ## Why
 
-- A committed copy of derived data can go stale. A check that catches a stale
-  copy still fails PRs; building the map every time makes it impossible.
+- Building the map every time makes a stale copy impossible (ADR-0007).
 - The browser needs the map, but working it out there would ship every
   manifest and zod to the client. Building it ahead of time ships plain data.
 - One expansion feeding the collections, the map and the tests keeps the
@@ -34,10 +33,8 @@ drift.
 
 ## Rejected alternatives
 
-- **Commit the generated map and check it for drift in the gate.** Its diff
-  showed reviewers which tables a manifest change adds or removes. The
-  manifest diff shows the same intent, and the drift check only detected the
-  mistake instead of preventing it.
+- **Commit the generated map and check it for drift in the gate.** ADR-0007
+  rejects committing derived files.
 - **Work out the map in the browser.** It pulls every manifest and zod into the
   client bundle.
 

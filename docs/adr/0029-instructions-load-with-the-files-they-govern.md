@@ -12,10 +12,12 @@ commit or a PR, stay in `CLAUDE.md`.
   files it is about. One that matters on an action, whatever files it touches,
   stays in `CLAUDE.md`. So does one that every session needs, unless it is an
   ADR summary.
-- **ADR summary rules.** Every ADR that still binds agents has one,
-  `adr-NNNN.md`, plus optional `adr-NNNN-<topic>.md` rules for one part of it.
-  It says when to read the ADR in full and gives its key actionable parts as
-  instructions, deciding nothing the ADR doesn't (ADR-0030). It loads at
+- **ADR summary rules.** Every ADR has one, `adr-NNNN.md`, plus optional
+  `adr-NNNN-<topic>.md` rules for one part of it. It says when to read the ADR
+  in full and gives its key actionable parts as instructions, deciding nothing
+  the ADR doesn't (ADR-0030). One rule holds a fact itself: the human-merge
+  rule's `paths` are the Human-only list, and ADR-0004 says what belongs on
+  it. It loads at
   session start only when the ADR binds every session; otherwise its `paths`
   list the files the ADR governs. When an ADR changes, the gate fails until
   its summary is re-checked.
@@ -48,7 +50,7 @@ each kind of instruction has one home.
 
 ## Rejected alternatives
 
-- **Keep file-bound "read first" lines in `CLAUDE.md`.** Sessions skipped them.
+- **Keep file-bound "read first" lines in `CLAUDE.md`.** Sessions skip them.
 - **A session-start hook that prints the summaries.** Hook output is capped
   below what the summaries add up to.
 - **A rule that imports its full ADR with `@`.** The import isn't expanded

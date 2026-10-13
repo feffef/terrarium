@@ -1,10 +1,9 @@
 # ADR-0025: Reads across Tenants go through opted-in collection kinds
 
-A Collection stays hidden from other Tenants unless its manifest names a kind:
-a shared shape from `shared/kinds.ts`. The build lists every Collection that
-names a kind in `#catalog`. Code reads across Tenants only through the
-catalog's read functions. These reads are read-only and see only built content
-(ADR-0001).
+A Collection stays hidden from other Tenants unless its manifest names a kind,
+a shared shape from `shared/kinds.ts`; the build lists every such Collection in
+`#catalog`. Code reads across Tenants only through the catalog's read
+functions, which only read built content (ADR-0001).
 
 ## Scope
 
@@ -26,12 +25,13 @@ catalog's read functions. These reads are read-only and see only built content
 - **A view's own logic is its own.** The read functions stay generic. How a
   view turns rows into entries, such as what counts as a post or which link it
   uses, lives in that view's layer and is an ordinary change.
-- **Links go to real addresses.** A result links to where its owner Tenant
-  shows the item.
+- **Links go to real addresses.** A result links to the item's own URL, as
+  `queryPages` gives it.
 - **Nothing writes across Tenants.** Each Tenant's content is written only in
   its own layer.
-- **Who merges.** The kinds and their schemas, the catalog module and the read
-  functions are Human-only (ADR-0004). A view's code in its layer is not.
+- **Who merges.** A view's code in its layer is an ordinary change, even when
+  it calls the read functions. Which catalog files wait for a human merge:
+  ADR-0004's list.
 
 ## Why
 

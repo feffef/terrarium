@@ -24,7 +24,8 @@ hit and leave the cut alone until it is judged.
   the cut stays. If the landing can't be found, the trial is not judged:
   missing evidence never counts as a pass.
 - **Every other session,** while a trial is open: don't restore or reword text
-  in its area. Log the problem as a Friction and work around it. A `blocker`
+  in its area. Log the problem as a Friction and work around it. Repointing a
+  reference that an ADR change requires (ADR-0030) is allowed. A `blocker`
   may still be filed as an issue that names the trial. Before you build an
   issue, check that it doesn't overlap an open trial.
 - **When one of our instructions causes a problem,** cut or simplify it before
@@ -53,8 +54,8 @@ verdict.
 - **Judge each rule by reading it,** as `audit-docs` does for drift. That keeps
   the text consistent but never smaller, and reading can't show what a rule
   still prevents.
-- **Let trials rewrite ADRs.** An ADR holds a decision and its reasons, and a
-  human merges any change to it (ADR-0004).
+- **Let trials rewrite ADRs.** An ADR holds a decision and its reasons, which
+  a person weighs before it changes.
 - **Let a trial write the hook its verdict calls for.** A hook changes what
   runs unattended, which a scheduled run must not decide alone.
 

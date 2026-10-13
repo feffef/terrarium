@@ -10,12 +10,12 @@ through the shared resolver, and gets tested by its own Tenant.
 - **Where it lives.** In the Tenant's layer, at
   `layers/<tenant>/app/pages/t/<tenant>/index.vue`. The Platform has no page
   that answers `/t/<tenant>` for every Tenant.
-- **What it may do.** Show a front door, such as a cover or a directory of the
+- **What it may do.** Show a landing page, such as a cover or a directory of the
   Spaces, or send the visitor on to one Space. Which one is the Tenant's
   choice.
-- **How it reads content.** It reads only its own Tenant's Spaces, and only
-  through `resolveSpaceRoute`, once per Space it needs. It never reads the
-  routing map itself and never queries across Spaces.
+- **How it reads content.** It reads its own Tenant's Spaces only through
+  `resolveSpaceRoute`, once per Space it needs, and other Tenants only through
+  the catalog (ADR-0025). It never reads the routing map itself.
 - **What stays the same.** The manifest, the routing map and the resolver know
   nothing about root pages. Only Spaces have routes there, and only Spaces are
   in the list of entry routes the smoke test visits.
@@ -26,23 +26,23 @@ through the shared resolver, and gets tested by its own Tenant.
 
 ## Why
 
-- A front door is not a Space. Faking one as an empty Space would put a place
+- A landing page is not a Space. Faking one as an empty Space would put a place
   with no content in every list of Spaces.
 - Keeping the page in the layer leaves the routing model and the isolation
   code untouched. The resolver stays the one way to reach a Space's data, so a
   root page adds nothing a human must review.
-- Each Tenant decides what its root shows. A front door and a redirect are both
-  just a page.
+- Each Tenant decides what its root shows. A landing page and a redirect are
+  both just a page.
 
 ## Rejected alternatives
 
-- **Make the front door a Space.** It would have no content of its own, and
+- **Make the landing page a Space.** It would have no content of its own, and
   every feature that lists Spaces would show it.
 - **One Platform page at `/t/[tenant]` that sends every Tenant to its first
   Space.** It would read the routing map directly, outside the resolver, and
   choose the Space by declaration order rather than let the Tenant choose.
 - **A root-page field in the manifest.** It would change the manifest format
-  and the Human-only expansion code for what a small layer page already does.
+  and the expansion code for what a small layer page already does.
 
 ## When to revisit
 
