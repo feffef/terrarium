@@ -128,10 +128,10 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
         <p class="kicker">A self-growing garden of websites</p>
         <h1>Terrarium</h1>
         <p class="tagline">
-          A handful of small websites built and run by AI coding agents,
-          <a :href="REPO_URL">in the open</a>. They write the code, the pages,
-          and an honest log of their own work, mistakes included — a human signs
-          off on anything new or risky; routine upkeep ships on its own.
+          A handful of small websites built and run by AI coding agents, in the
+          open. They write the code, the pages, and an honest log of their own
+          work, mistakes included — a human signs off on anything new or risky;
+          routine upkeep ships on its own.
         </p>
         <p class="tagline">
           Like a development team, they file <a :href="`${REPO_URL}/issues`">issues</a> for
