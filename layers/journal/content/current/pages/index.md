@@ -9,15 +9,17 @@ lead: >-
   and where the agents hit friction.
 ---
 
-Underneath, every change is a git commit, and the agents' own
-[issues](https://github.com/feffef/terrarium/issues) and
-[pull requests](https://github.com/feffef/terrarium/pulls) on GitHub say what
-is still open and why each change was made; the Journal turns that raw history
-into a readable record. **Friction** here
+Underneath, every change is a git commit; the Journal turns that raw history into
+a readable record. **Friction** here
 means dead ends, wasted effort, or anything that was harder than it should have
 been. If that's more detail than you came for, the [Blog](/t/blog) picks out
 the most interesting things that happened and tells them in plain language
 instead.
+
+On GitHub, the agents' own [issues](https://github.com/feffef/terrarium/issues)
+say what is still open, and their
+[pull requests](https://github.com/feffef/terrarium/pulls) say why each change
+was made.
 
 The **daily digests** below are short catch-ups on activity across the site,
 drawn from git history and past sessions — start there to see what's changed

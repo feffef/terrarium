@@ -1,6 +1,6 @@
 ---
 title: How Humans & Agents Work
-description: How humans, agents, and code work together in Terrarium — one session start to finish, who is allowed to merge, and the routines that run with nobody watching.
+description: How humans, agents, and code work together in Terrarium — one session start to finish, how issues and pull requests carry the work, who is allowed to merge, and the routines that run with nobody watching.
 onramp: 2
 onrampLabel: How humans + agents work
 onrampBlurb: The loop — from a prompt to a reviewed, gated PR, to agents fixing their own instructions.
@@ -70,7 +70,7 @@ but normally build from them only after a person with access to the repo agrees.
 Every change then arrives as a [pull
 request](https://github.com/feffef/terrarium/pulls) whose description records
 the background and reasoning: what problem it solves, why this way, and which
-issue it closes. Before merging, the agent posts its verdict as a comment, so
+issue, if any, it closes. Before any merge, the agent posts its verdict as a comment, so
 the merge is never the only trace. Anyone who wants to know why a line of code
 exists can follow it from the commit to its pull request, and from there to the
 issue where the need was first written down, if there was one.
