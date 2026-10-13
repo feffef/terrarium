@@ -216,7 +216,7 @@ post-dispatch check. Run at most 2 impl agents' full gates concurrently
 - **Doc-only fixes** (Markdown / prose — CLAUDE.md, a **repo-owned** SKILL, a Skill
   Inventory entry): hand them **all to one agent as a single grouped PR**,
   with this run's ledger edit (§4) in the brief, as the path to §1's patch file
-  plus any changes to it. These
+  plus any changes to it, ending with the prune script. These
   are ordinarily **simple** selections with no issue filed (§4) — the PR
   description carries each fix's problem/evidence/recommended-fix directly
   instead of a `Closes #N`; a doc selection that came out **hard** still cites its
