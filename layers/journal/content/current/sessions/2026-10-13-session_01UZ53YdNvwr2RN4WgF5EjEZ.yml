@@ -1,0 +1,154 @@
+schemaVersion: 1
+session: session_01UZ53YdNvwr2RN4WgF5EjEZ
+startedAt: 2026-10-13T02:03:56Z
+endedAt: 2026-10-13T02:18:10Z
+kind: autonomous
+goal: Scheduled sweep of logged session frictions
+status: in-review
+outcome: Ledger update PR open; two issues filed; no simple fix was ripe
+summary: "Scheduled frictions-to-fixes run, started by a schedule with no human prompt. A survey subagent read the 13 unledgered sessions of 2026-10-12 to 13 and screened them against the tracker and the open Prune Trials. Every ranked candidate was already tracked (#1857 clear-backlog, #1819 binding docs, #1778 verification, #1786 on trial under SHELL-READ-DETECTION) or surface-blocked, so no simple fix was dispatched. The agent filed #1859 (close-session skipped at PR open, a regression of #1821) and #1860 (a guard for unscoped github search calls), both ready-for-human, on its own initiative as the Skill directs. One Sonnet agent applied the ledger edits; I reviewed the diff by hand (data-only YAML, no separate code-review subagents), pushed it as PR #1861 and posted my verdict. Merge is still to do."
+prs:
+  - "1861"
+docsRead:
+  - path: docs/agents/git-conventions.md
+    reason: read before my first git fetch; nothing new
+    useful: partly
+  - path: docs/agents/github-integration.md
+    reason: search fields and overflow rules before the GitHub calls
+    useful: yes
+  - path: docs/agents/issue-tracker.md
+    reason: filing conventions for the two issues
+    useful: partly
+  - path: docs/agents/triage-labels.md
+    reason: label vocabulary for ready-for-human
+    useful: partly
+  - path: docs/agents/pr-workflow.md
+    reason: verdict-before-merge recipe
+    useful: yes
+  - path: CONTEXT-MAP.md
+    reason: context index; confirmed Journal holds the ledger
+    useful: partly
+  - path: CONTEXT.md
+    reason: Friction, Friction Ledger and Prune Trial definitions
+    useful: yes
+  - path: .agents/skills/clear-backlog/SKILL.md
+    reason: "opened only by the survey subagent to diagnose #1857; I used its report"
+    useful: partly
+  - path: .agents/prune-trials.yml
+    reason: (no reason given)
+skillsUsed:
+  - name: frictions-to-fixes
+    reason: the scheduled task itself
+  - name: dispatch-subagents
+    reason: brief checklist for the ledger agent
+  - name: code-review
+    reason: invoked, then judged a hand review enough for data-only YAML
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: I wrote a placeholder spec file to a mistyped scratchpad path and had to delete it, then rewrote it.
+    solution: Use the scratchpad path from the environment block verbatim.
+    severity: nit
+  - description: Subagent reports arrive as large pasted text with ledger YAML I then had to re-type into a spec file for the impl agent.
+    solution: Ask the survey subagent to write the ledger changes to a scratchpad file the impl agent can Read.
+    severity: minor
+durationSec: 854
+models:
+  claude-sonnet-5-5: 61
+toolCounts:
+  Read: 9
+  Bash: 11
+  Agent: 2
+  Skill: 4
+  Write: 3
+  ToolSearch: 1
+  mcp__github__search_issues: 2
+  mcp__github__issue_write: 2
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  mcp__github__add_issue_comment: 1
+  mcp__github__pull_request_read: 1
+rulesLoaded:
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0002.md
+  - .claude/rules/adr-0008.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/tenant-layers.md
+rulesGlobal:
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0001.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0023.md
+  - .claude/rules/adr-0017.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0022.md
+    reason: Triage sweep rule; this was not an auto-triage run, so it did not apply.
+    useful: no
+  - path: .claude/rules/adr-0004.md
+    reason: Told me to review before the first push and that Human-only PRs need a human; summary was enough.
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Told me to run close-session at PR open; summary was enough.
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: "Prune trials: used to drop the SHELL-READ-DETECTION candidate; the ledger file was enough."
+    useful: yes
+  - path: .claude/rules/adr-0001.md
+    reason: Build architecture; irrelevant to a ledger edit.
+    useful: no
+  - path: .claude/rules/adr-0020.md
+    reason: Trust tiers; no Public input here, so it did not apply.
+    useful: no
+  - path: .claude/rules/adr-0003.md
+    reason: Open the PR myself and subscribe; summary was enough.
+    useful: yes
+  - path: .claude/rules/adr-0023.md
+    reason: Guest pipeline; not a guest PR, did not apply.
+    useful: no
+  - path: .claude/rules/adr-0017.md
+    reason: Provenance header on every issue, PR and comment; I used it on all four.
+    useful: yes
+  - path: .claude/rules/adr-0005.md
+    reason: Skills as Platform code; loaded with the Skill, no change to my work.
+    useful: no
+  - path: .claude/rules/adr-0015.md
+    reason: Skill Inventory; no Skill grade changed here.
+    useful: no
+  - path: .claude/rules/adr-0021.md
+    reason: Loaded when I read the Context files; no new context was added.
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: Rules load with files; confirmed why rules appeared, no action.
+    useful: no
+  - path: .claude/rules/adr-0002.md
+    reason: Loaded when the survey read tenant.config.ts for the schema; I did not edit it.
+    useful: no
+  - path: .claude/rules/adr-0008.md
+    reason: Journal holds the Friction Ledger; confirmed what I edited, summary was enough.
+    useful: partly
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: Loaded by the journal read; unrelated to a YAML ledger edit.
+    useful: no
+  - path: .claude/rules/tenant-layers.md
+    reason: Loaded by the journal read; unrelated, no Tenant change.
+    useful: no
+subagents:
+  - type: general-purpose
+    task: Survey and screen frictions
+  - type: general-purpose
+    task: Apply friction ledger edits
+    model: sonnet
+gitBranch: claude/eager-ptolemy-bwg1x3
+entrypoint: remote_trigger
+cliVersion: 2.1.296
+trigger: frictions-to-fixes
+landedBy: Stop
