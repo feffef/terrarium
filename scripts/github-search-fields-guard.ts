@@ -1,20 +1,20 @@
-// Mechanical backstop for issue #1860: `mcp__github__search_issues` and
-// `search_pull_requests` ignore `minimal_output` and return full bodies, labels
-// and reactions unless `fields` leaves them out. The prose in
-// `docs/agents/github-integration.md` did not hold: four sessions in 14 days
-// flooded their context, one of them with the doc open. The deny message is
-// the rule's home.
+// Mechanical backstop for issue #1860 (why prose did not hold):
+// `mcp__github__search_issues` and `search_pull_requests` ignore
+// `minimal_output` and return full bodies, labels and reactions unless `fields`
+// leaves them out. The deny message is the rule's home.
 //
 // Any non-empty `fields` passes, `body` included: naming it is an explicit
 // opt-in. Fails closed on an unparseable payload (docs/agents/guards.md).
 //
 // Usage:
+//   sh scripts/guard-wrap.sh github-search-fields-guard -- pnpm exec tsx scripts/github-search-fields-guard.ts   # the installed hook entry
 //   tsx scripts/github-search-fields-guard.ts            # hook: payload on stdin
 //   tsx scripts/github-search-fields-guard.ts --dry-run --tool mcp__github__search_issues --input '<json>'
 import {
   buildDenyOutput,
   denyUninspectable,
   printDryRunResult,
+  prop,
   readHookPayload,
   requireToolFlag,
   resolveDryRunInput,
@@ -34,15 +34,16 @@ export const SEARCH_FIELDS_TOOLS: readonly string[] = [
  *  not an array, or empty. Never throws. */
 export function checkSearchFields(toolName: string, toolInput: unknown): boolean {
   if (!SEARCH_FIELDS_TOOLS.includes(toolName)) return false
-  const fields = toolInput !== null && typeof toolInput === 'object' ? (toolInput as Record<string, unknown>).fields : undefined
+  const fields = prop(toolInput, 'fields')
   return !Array.isArray(fields) || fields.length === 0
 }
 
 export function formatGuardMessage(tool: string): string {
   return (
-    `Blocked by the ${LABEL} (${REF}): \`${tool}\` was called without \`fields\`. It ignores ` +
-    `\`minimal_output\` and returns every result's full body, labels and reactions, which floods your context.\n\n` +
-    `Do instead: pass \`fields\` with only what you need, e.g. \`fields: ["number", "title", "state"]\`, ` +
+    `Blocked by the ${LABEL} (${REF}): \`${tool}\` was called without \`fields\` as a non-empty ` +
+    `array. It ignores \`minimal_output\` and returns every result's full body, labels and reactions, which ` +
+    `floods your context.\n\n` +
+    `Do instead: pass \`fields\` as a non-empty array with only what you need, e.g. \`fields: ["number", "title", "state"]\`, ` +
     `leaving out \`body\`, \`labels\` and \`reactions\`. List \`body\` only when you need it.\n\n` +
     `See docs/agents/github-integration.md ("Overflow and precision traps"). If this guard is wrong, say so on ` +
     `${REF} rather than routing around it.`
