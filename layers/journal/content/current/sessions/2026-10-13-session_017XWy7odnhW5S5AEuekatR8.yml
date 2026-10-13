@@ -1,0 +1,270 @@
+schemaVersion: 1
+session: session_017XWy7odnhW5S5AEuekatR8
+startedAt: 2026-10-13T06:31:24Z
+endedAt: 2026-10-13T07:40:23Z
+kind: interactive
+goal: Make clear-backlog run its phases as saved workflows
+status: in-review
+outcome: "PR #1871 open: two saved workflows, a rewritten Skill, and the Platform prerequisites; waits for a human merge"
+summary: "Human-instructed throughout. The owner asked whether clear-backlog should use a Claude Code workflow to enforce its steps. I read the Skill, its friction (clear-backlog-gaps, #1857, #1844) and its Inventory entry, and proposed a hybrid: the Skill keeps the owner-facing parts (grilling, interrupts, landing) and runs workflows for Explore and Build+Review, because a workflow takes no mid-run input. At the owner's direction I investigated past workflow use: four sessions called Workflow, two for real. A subagent recovered the 09-26 Tinkerfund build script verbatim from its transcript (DAG of stories, implement/review/fix/merge, args-driven relaunch, 4 of 10 merges blocked by the auto-mode classifier). The owner challenged two of my claims: review fan-out (workflow agents have no Agent tool, so the script must run the two review axes as separate agent() calls) and the concurrency cap, which I had called fixed; a claude-code-guide subagent and my own fetch of the env-vars doc showed CLAUDE_CODE_WORKFLOW_MAX_CONCURRENT_AGENTS sets it. On the owner's question I checked the fit against every binding ADR and found three gaps: ESLint cannot parse a workflow script (probed), gate scoping, and session-trace missing workflow agents. The owner then had me file #1870 and implement everything with background agents; via AskUserQuestion they chose full scope, .claude/workflows/, no cross-branch review, and concurrency 8 in settings.json. Two worktree agents built the prerequisites and the workflows plus Skill in parallel; I cherry-picked both, ran gate:scoped (green, 131 e2e), and ran a two-axis code-review. Round 1 found real bugs (gatePassed never read, lost worktrees, the reserved rule not applying in the ready-recheck mode, a duplicate gate semaphore, two dropped rules); the workflow agent fixed them, round 2 was clean apart from judgement calls, and I applied two one-line wording fixes myself. Pushed and opened PR #1871 (Human-only files: ADR, rules, settings.json, gate.ts). Open: no live workflow run yet, and the settings env pickup is untested."
+prs:
+  - "1871"
+docsRead:
+  - path: .agents/skills/clear-backlog/SKILL.md
+    reason: the Skill under discussion
+    useful: yes
+  - path: docs/adr/0005-skill-model.md
+    reason: only knows Skills; needed an amendment for workflow scripts
+    useful: yes
+  - path: docs/adr/0029-instructions-load-with-the-files-they-govern.md
+    reason: rules paths for the new folder
+    useful: partly
+  - path: docs/adr/0015-audit-skills-and-conditional-importance.md
+    reason: audit-skills would not see workflows
+    useful: partly
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: which touched paths force a human merge
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: MCP tool recipes before GitHub reads
+    useful: partly
+  - path: docs/agents/issue-tracker.md
+    reason: "filing conventions before #1870"
+    useful: partly
+  - path: docs/agents/triage-labels.md
+    reason: ready-for-agent label for the green-lit issue
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: commit -F, no chained pushes
+    useful: partly
+  - path: docs/agents/pr-workflow.md
+    reason: review before first push; human-merge PR
+    useful: yes
+  - path: .agents/skills/implement/SKILL.md
+    reason: briefs told agents to Read it
+    useful: partly
+  - path: .agents/skills/auto-triage/SKILL.md
+    reason: "subagent: the sweep the explore workflow wraps"
+    useful: yes
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: "subagent: brief rules carried into workflow briefs"
+    useful: yes
+  - path: .agents/skills/code-review/SKILL.md
+    reason: "subagent: the two axes the reviewers apply"
+    useful: yes
+  - path: docs/adr/0018-tenant-layers-under-layers-directory.md
+    reason: "subagent: how to amend ADR-0005"
+    useful: yes
+  - path: docs/agents/domain.md
+    reason: "subagent: glossary rules for the Workflow term"
+    useful: yes
+  - path: CONTEXT.md
+    reason: "subagent: where the Workflow entry goes"
+    useful: yes
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: "subagent: the 2026-10-12 Skill-file gate amendment it extended"
+    useful: yes
+  - path: layers/journal/content/archived/sessions/2026-09-26-session_01648DQZcyo8J5TBnQCYMzMM.yml
+    reason: (no reason given)
+  - path: layers/journal/content/archived/sessions/2026-09-27-session_01LKfKKxwgThbVFE79NWohET.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-10-session_01EmaH5A6Ziwjndz9esnsJ22.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-08-session_015UvXah6phvbuMpUWmf5rYs.yml
+    reason: (no reason given)
+  - path: .claude/workflows/clear-backlog-build.js
+    reason: (read before editing)
+  - path: .claude/workflows/clear-backlog-explore.js
+    reason: (read before editing)
+  - path: scripts/gate.ts
+    reason: (read before editing)
+  - path: tests/unit/gate-scope.spec.ts
+    reason: (read before editing)
+  - path: tests/unit/gate-parity.spec.ts
+    reason: (no reason given)
+  - path: scripts/session-trace.ts
+    reason: (read before editing)
+  - path: .claude/settings.json
+    reason: (no reason given)
+  - path: scripts/validate-adr-rules.ts
+    reason: (no reason given)
+skillsUsed:
+  - name: workflow-authoring
+    reason: script API and limits for judging the design
+  - name: dispatch-subagents
+    reason: worktree briefs for the two build agents
+  - name: code-review
+    reason: two rounds over the combined branch
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: context
+    reason: (invoked as a slash command)
+  - name: writing-for-agents
+    reason: (no reason given)
+frictions:
+  - description: Never read CONTEXT-MAP.md or CONTEXT.md at session start, as CLAUDE.md requires; the session added a glossary term through a subagent.
+    solution: Read both in the first batch of calls; impact low because the subagent read domain.md and CONTEXT.md itself.
+    severity: minor
+  - description: I stated the workflow concurrency cap as fixed and unconfigurable before checking the docs; the owner had to ask, and an env var sets it.
+    solution: Verify a harness limit against the current docs before calling it a constraint (CLAUDE.md Verify before you state).
+    severity: moderate
+  - description: Read several files through cat, sed and chained greps instead of the Read tool, so their rules may not have loaded (CLAUDE.md, ADR-0029).
+    solution: Use Read for single files; keep Bash for searches.
+    severity: minor
+  - description: Answered the first opinion question after grepping docs/adr but before reading the binding ADRs in full; ADR-0005 was read only later.
+    solution: Read the grep hits before giving the opinion, as CLAUDE.md asks.
+    severity: minor
+  - description: The owner asked for less progress-update spam mid-session; my early replies narrated subagent status.
+    solution: Reply only with findings and questions while agents run.
+    severity: minor
+  - description: The Stop hook asked to push unreviewed commits five times while the gate and reviews were still running.
+    solution: The Stop hook could recognise a running gate or pending review subagent and stay quiet.
+    severity: nit
+  - description: The first build brief left gatePassed unchecked and a lost-worktree path; only the two-axis review caught it.
+    solution: A workflow brief should name, for every schema field, what the script does with it.
+    severity: minor
+durationSec: 4138
+models:
+  claude-opus-5-5: 163
+toolCounts:
+  Bash: 35
+  Read: 16
+  Skill: 5
+  ToolSearch: 4
+  Agent: 7
+  mcp__claude-code-remote__read_documentation: 1
+  WebFetch: 3
+  Grep: 1
+  AskUserQuestion: 1
+  mcp__github__issue_write: 1
+  SendMessage: 1
+  Edit: 2
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+  Write: 2
+filesEdited:
+  - .claude/workflows/clear-backlog-build.js
+  - .claude/workflows/clear-backlog-explore.js
+  - .agents/skills/clear-backlog/SKILL.md
+  - tests/unit/gate-scope.spec.ts
+  - scripts/gate.ts
+  - tests/unit/session-trace.spec.ts
+  - scripts/session-trace.ts
+  - tests/unit/workflow-scripts.spec.ts
+  - docs/adr/0005-skill-model.md
+  - CONTEXT.md
+rulesLoaded:
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0018.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0008.md
+  - .claude/rules/adr-0015.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0026.md
+  - .claude/rules/guards.md
+  - .claude/rules/adr-0028.md
+rulesGlobal:
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0001.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0023.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0018.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0022.md
+    reason: About the auto-triage sweep; clear-backlog wraps it but this session ran no sweep
+    useful: no
+  - path: .claude/rules/adr-0004.md
+    reason: Held the push until gate:scoped and code-review passed despite five Stop-hook nags; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Told me to log at PR-open; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: Checked prune-trials.yml for overlap with the touched files; none, summary enough
+    useful: partly
+  - path: .claude/rules/adr-0001.md
+    reason: Content baking was unrelated to workflow tooling
+    useful: no
+  - path: .claude/rules/adr-0020.md
+    reason: Explore workflow forces grill for Public-authored issues; summary was enough
+    useful: partly
+  - path: .claude/rules/adr-0003.md
+    reason: Opened the PR myself after the first push and subscribed; summary enough
+    useful: yes
+  - path: .claude/rules/adr-0023.md
+    reason: Guest pipeline not involved in this owner-driven change
+    useful: no
+  - path: .claude/rules/adr-0017.md
+    reason: Provenance header on the issue, PR, and in every workflow brief that writes to GitHub
+    useful: yes
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Showed the PR needs a human merge for settings.json, rules, ADR and gate.ts
+    useful: yes
+  - path: .claude/rules/adr-0018.md
+    reason: Amend ADR-0005 with a dated banner; the subagent read the full ADR
+    useful: yes
+  - path: .claude/rules/adr-0029.md
+    reason: Explained why rules need paths; read the full ADR to judge a rule for workflows
+    useful: partly
+  - path: .claude/rules/adr-0005.md
+    reason: "Core of the fit check: Skills are Platform code; read the full ADR, then amended it"
+    useful: yes
+  - path: .claude/rules/adr-0008.md
+    reason: Loaded from reading Journal logs; only confirmed logs are ground truth
+    useful: partly
+  - path: .claude/rules/adr-0015.md
+    reason: audit-skills cannot see workflows; read the full ADR to judge that gap
+    useful: partly
+  - path: .claude/rules/tenant-layers.md
+    reason: Loaded from a Journal content read; Tenant layer gotchas didn't apply
+    useful: no
+  - path: .claude/rules/adr-0021.md
+    reason: Loaded from CONTEXT.md grep; the subagent's glossary entry followed it
+    useful: partly
+  - path: .claude/rules/adr-0026.md
+    reason: Named the Gate workflow, which the new Workflow term had to be distinguished from
+    useful: partly
+  - path: .claude/rules/guards.md
+    reason: Loaded in a subagent; no guard was hit that it explained
+    useful: no
+  - path: .claude/rules/adr-0028.md
+    reason: Navigation payloads, unrelated to this change
+    useful: no
+subagents:
+  - type: general-purpose
+    task: Recover workflow scripts from transcript
+  - type: claude-code-guide
+    task: Check Workflow concurrency config
+  - task: Platform prerequisites for workflows
+  - task: clear-backlog workflows and Skill
+  - type: general-purpose
+    task: "Standards review of #1870 branch"
+  - type: general-purpose
+    task: "Spec review of #1870 branch"
+  - type: general-purpose
+    task: Round-2 review of workflow fixes
+gitBranch: ccr-3ac2b3f8-clvky2
+entrypoint: remote_mobile
+cliVersion: 2.1.296
+learnings:
+  - Saved workflows in .claude/workflows/ appear as commands as soon as the file lands, without a reload.
+  - CLAUDE_CODE_WORKFLOW_MAX_CONCURRENT_AGENTS (1-256, v2.1.269+) sets a workflow's concurrency; the default is CPU-bound, 2 on a 4-CPU container.
+ideas:
+  - "Run a dry clear-backlog pass on two easy issues once #1871 merges, to verify settings env pickup and the subagents/workflows trace layout, before a full backlog run."
+landedBy: Stop
