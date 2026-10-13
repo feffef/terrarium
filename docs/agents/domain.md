@@ -33,7 +33,7 @@ decision needs resolving.
 
 ## Use the glossary's vocabulary
 
-CLAUDE.md's rule covers every output that names a domain concept: an issue
+CLAUDE.md's glossary-term rule covers every output that names a domain concept: an issue
 title, a refactor proposal, a hypothesis, a test name.
 
 A concept missing from the glossary means either you're inventing language

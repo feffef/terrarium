@@ -1,4 +1,6 @@
-# Dependabot version updates. Who merges them: docs/agents/pr-workflow.md (#1889).
+# Dependabot version updates. ADR-0004 lets agents merge minor/patch bumps
+# and keeps major bumps for a human; until #1889 lands, `package.json` being
+# Human-only means a human merges them all.
 version: 2
 updates:
   - package-ecosystem: npm
