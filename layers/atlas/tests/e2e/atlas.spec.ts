@@ -79,6 +79,15 @@ describe('atlas Tenant', async () => {
     expect(html).toContain('The Pool')
   })
 
+  // Every specimen's plate appears on the Plates page, linked to its entry.
+  it('lists every plate on /t/atlas/plates', async () => {
+    const html = await $fetch<string>('/t/atlas/plates')
+    expect(html).toContain('The Plates')
+    expect((html.match(/class="atlas-plate/g) ?? []).length).toBe(15)
+    expect(html).toContain('/t/atlas/canopy/aranea-patiens')
+    expect(await $fetch<string>('/t/atlas')).toContain('href="/t/atlas/plates"')
+  })
+
   // The at-random link must land on a real specimen plate.
   it('opens the guide at a random specimen', async () => {
     await withRendered('/t/atlas', async (page) => {
