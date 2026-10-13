@@ -19,7 +19,10 @@ parts to agents.
   rule is for is ADR-0029's.
 - **Procedures live elsewhere.** Commands, steps and formats go in
   `docs/agents/`, a Skill or a code comment. The ADR points to them.
-- **Plain language.** Short sentences, the glossary's terms, no jargon.
+- **Plain language.** Short sentences in plain words, written for someone who
+  knows nothing of this project. Use a glossary term only when it is the
+  clearest word for the concept; replace coined phrases with what actually
+  happens.
 - **Template.** Every section after the summary is a `##` heading in this
   order; leave out an optional one rather than fill it:
   1. Title: `# ADR-NNNN: <title>`, a short reminder of what the ADR is about,

@@ -109,12 +109,16 @@ Follow-up work the old ADR postponed doesn't go in the rewrite: list it in your
 report as candidate issues.
 
 **Plain language comes first.** Write as you would explain the rule to a new
-contributor who knows only the glossary in `CONTEXT.md`.
+contributor who knows nothing of this project.
 
 - Replace coined phrases with what actually happens. Phrases the old ADR or
-  its callers repeat but the glossary doesn't define ("standing green-light",
-  "the one relaxation", "high-risk set", "Trusted-authored backlog") are
-  jargon, however often they are quoted.
+  its callers repeat ("standing green-light", "the one relaxation", "high-risk
+  set", "Trusted-authored backlog") are jargon, however often they are quoted.
+- Use a glossary term from `CONTEXT.md` only when it really is the clearest
+  word for the concept. Otherwise say it in plain words ("a person with write
+  access" rather than "a Trusted user", "an issue someone outside the team
+  filed" rather than "a Public-authored issue"). Don't capitalise ordinary
+  words to make them look like terms.
 - Short sentences, one idea each.
 - Cross-references go at the end of a sentence or in *See*, never in
   parentheses mid-sentence.
