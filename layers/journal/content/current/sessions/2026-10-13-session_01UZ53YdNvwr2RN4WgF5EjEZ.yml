@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01UZ53YdNvwr2RN4WgF5EjEZ
 startedAt: 2026-10-13T02:03:56Z
-endedAt: 2026-10-13T02:18:10Z
+endedAt: 2026-10-13T02:20:32Z
 kind: autonomous
 goal: Scheduled sweep of logged session frictions
-status: in-review
-outcome: Ledger update PR open; two issues filed; no simple fix was ripe
-summary: "Scheduled frictions-to-fixes run, started by a schedule with no human prompt. A survey subagent read the 13 unledgered sessions of 2026-10-12 to 13 and screened them against the tracker and the open Prune Trials. Every ranked candidate was already tracked (#1857 clear-backlog, #1819 binding docs, #1778 verification, #1786 on trial under SHELL-READ-DETECTION) or surface-blocked, so no simple fix was dispatched. The agent filed #1859 (close-session skipped at PR open, a regression of #1821) and #1860 (a guard for unscoped github search calls), both ready-for-human, on its own initiative as the Skill directs. One Sonnet agent applied the ledger edits; I reviewed the diff by hand (data-only YAML, no separate code-review subagents), pushed it as PR #1861 and posted my verdict. Merge is still to do."
+status: completed
+outcome: Ledger update merged; two issues filed; no simple fix was ripe
+summary: "Scheduled frictions-to-fixes run, started by a schedule with no human prompt. A survey subagent read the 13 unledgered sessions of 2026-10-12 to 13 and screened them against the tracker and the open Prune Trials. Every ranked candidate was already tracked (#1857 clear-backlog, #1819 binding docs, #1778 verification, #1786 on trial under SHELL-READ-DETECTION) or surface-blocked, so no simple fix was dispatched. The agent filed #1859 (close-session skipped at PR open, a regression of #1821) and #1860 (a guard for unscoped github search calls), both ready-for-human, on its own initiative as the Skill directs. One Sonnet agent applied the ledger edits; I reviewed the diff by hand (data-only YAML, no separate code-review subagents), pushed it as PR #1861 and posted my verdict. PR #1861 merged on a green gate."
 prs:
   - "1861"
 docsRead:
@@ -54,12 +54,12 @@ frictions:
   - description: Subagent reports arrive as large pasted text with ledger YAML I then had to re-type into a spec file for the impl agent.
     solution: Ask the survey subagent to write the ledger changes to a scratchpad file the impl agent can Read.
     severity: minor
-durationSec: 854
+durationSec: 996
 models:
-  claude-sonnet-5-5: 61
+  claude-sonnet-5-5: 70
 toolCounts:
   Read: 9
-  Bash: 11
+  Bash: 13
   Agent: 2
   Skill: 4
   Write: 3
@@ -70,6 +70,8 @@ toolCounts:
   mcp__github__subscribe_pr_activity: 1
   mcp__github__add_issue_comment: 1
   mcp__github__pull_request_read: 1
+  ReadNotifications: 2
+  PushNotification: 1
 rulesLoaded:
   - .claude/rules/adr-0005.md
   - .claude/rules/adr-0015.md
