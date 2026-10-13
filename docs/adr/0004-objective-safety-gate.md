@@ -20,7 +20,7 @@ A human merges the few PRs whose risk the gate cannot see.
 - **A human merges a PR that:**
   - changes a file on the Human-only list;
   - adds a dependency, moves one to a new major version, or patches its code.
-    A minor or patch version bump merges like any other PR;
+    A minor or patch version bump is not by itself an exception;
   - changes behaviour no test or gate step can observe, such as a hook or
     script that runs unattended, timing-dependent logic, or an outside side
     effect. Touching unfamiliar code that has tests does not count;
