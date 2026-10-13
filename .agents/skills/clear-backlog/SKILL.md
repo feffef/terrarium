@@ -52,7 +52,8 @@ are clearly related or share files. That grouping replaces `auto-triage`'s
 grilling question. Start building issues with no design choice left (§3).
 
 **Done:** every issue the sweep picked up is building, closed as a duplicate
-or as already done, blocked outside the chat, or holds a grilling question.
+or as already done, blocked outside the chat, or holds a grilling question,
+and a triage subagent reported on each.
 
 ## 2. Grill in one sitting
 
