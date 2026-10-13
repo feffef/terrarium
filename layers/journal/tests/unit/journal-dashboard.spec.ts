@@ -16,7 +16,6 @@ import {
   digestAnchor,
   digestList,
   digestNeighbours,
-  worstFrictions,
   frictionsByDay,
   summaryParagraphs,
   countOf,
@@ -520,28 +519,6 @@ describe('countOf', () => {
     expect(countOf(0, 'session')).toBe('0 sessions')
     expect(countOf(1, 'session')).toBe('1 session')
     expect(countOf(2, 'session')).toBe('2 sessions')
-  })
-})
-
-describe('worstFrictions', () => {
-  const s1 = session({ session: 'a', endedAt: '2026-07-06T10:00:00Z', frictions: [friction('major'), friction('nit')] })
-  const s2 = session({ session: 'b', endedAt: '2026-07-05T10:00:00Z', frictions: [friction('blocker'), friction('minor')] })
-  it('keeps only blockers and majors, blockers first', () => {
-    const { items, rest } = worstFrictions([s1, s2])
-    expect(items.map((i) => [i.severity, i.anchor])).toEqual([['blocker', 'session-b'], ['major', 'session-a']])
-    expect(rest).toBe(0)
-  })
-  it('caps the list and counts the rest', () => {
-    expect(worstFrictions([s1, s2], 1)).toMatchObject({ rest: 1 })
-  })
-  it('collapses descriptions sharing a first line into one item linking the newest session', () => {
-    const later = session({ session: 'c', endedAt: '2026-07-04T10:00:00Z', frictions: [{ ...friction('major'), description: 'd\n  detail c' }] })
-    const { items, rest } = worstFrictions([s1, later])
-    expect(items).toMatchObject([{ severity: 'major', anchor: 'session-a', count: 2 }])
-    expect(rest).toBe(0)
-  })
-  it('is empty when nothing is serious', () => {
-    expect(worstFrictions([session({ frictions: [friction('nit')] })]).items).toEqual([])
   })
 })
 

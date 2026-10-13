@@ -35,7 +35,8 @@ const { data } = await useAsyncData(route.path, async () => {
   const skills = await queryCollection(collections.skills).all()
   // Newest-first, ordered in SQL rather than re-sorted client-side.
   const sessions = await queryCollection(collections.sessions).order('endedAt', 'DESC').all()
-  return { pages, skills, sessions }
+  const ledgerSize = await queryCollection(collections.frictions).count()
+  return { pages, skills, sessions, ledgerSize }
 })
 
 // `.all()` returns the full page Documents with their parsed body, so the root's
@@ -50,15 +51,24 @@ const digests = computed(() => digestList(allPages.value))
 // plus `onrampLabel`/`onrampBlurb` teaser copy — see the `pages` schema), so
 // adding or reordering a door needs no edit here. Isolation-respecting: sourced
 // from THIS Space's own `pages`, so a page must exist in-Space to surface — the
-// archived Space, lacking these pages, shows none.
-const onrampCards = computed(() =>
-  onrampSteps(allPages.value).map((s) => ({
+// archived Space, lacking these pages, shows none. The Friction Ledger is a
+// Vue page, not a Document, so its door is added here, last.
+const onrampCards = computed(() => [
+  ...onrampSteps(allPages.value).map((s) => ({
     key: s.path,
     title: s.label,
     blurb: s.blurb,
     to: `/t/${tenant}/${space}${s.path}`,
   })),
-)
+  ...(data.value?.ledgerSize
+    ? [{
+        key: 'frictions',
+        title: 'What went wrong',
+        blurb: 'The Friction Ledger: every recurring pain-point agents logged, worst and most frequent first, fixed ones included.',
+        to: `/t/${tenant}/${space}/frictions`,
+      }]
+    : []),
+])
 
 // Page-wide accordion: a single item — one session card OR one digest — is open
 // at a time, tracked by its deep-link anchor. Both inline feeds share this one
@@ -98,7 +108,6 @@ const showAllDigests = ref(false)
 const frictionSeverityTotals = computed(() => frictionTotals(sessions.value))
 const totalFrictions = computed(() => frictionCount(sessions.value))
 const otherFrictions = computed(() => frictionOtherCount(frictionSeverityTotals.value))
-const worst = computed(() => worstFrictions(sessions.value))
 const sessionKindCounts = computed(() => kindCounts(sessions.value))
 const referencedPrs = computed(() => prRefs(sessions.value))
 const referencedPrParts = computed(() => prRefsParts(referencedPrs.value))
@@ -296,24 +305,6 @@ useSeoMeta({
       </p>
     </section>
 
-    <section v-if="worst.items.length" class="panel worst" aria-labelledby="worst-h">
-      <div class="section-head">
-        <h2 id="worst-h">Worst frictions</h2>
-        <span class="count">blockers and majors, in this window</span>
-      </div>
-      <p class="panel-intro">
-        The most serious frictions an agent wrote down — each opens the session that hit it.
-      </p>
-      <ul class="worst-list">
-        <li v-for="(w, i) in worst.items" :key="i">
-          <span class="sev" :class="w.severity">{{ w.severity }}</span>
-          <span class="txt" :title="w.description">{{ w.count > 1 ? w.description.split('\n')[0] : w.description }}<template v-if="w.count > 1"> ({{ w.count }} sessions)</template></span>
-          <a class="open-session" :href="`#${w.anchor}`" :aria-label="`Open ${w.count > 1 ? `the newest of ${w.count} sessions` : 'the session'} where this ${w.severity} friction was logged, ${w.date}`">{{ w.date }} →</a>
-        </li>
-      </ul>
-      <p v-if="worst.rest" class="panel-intro">+{{ worst.rest }} more in the sessions below.</p>
-    </section>
-
     <section id="session-log" class="feed">
       <div class="section-head">
         <h2>Recent activity</h2>
@@ -482,26 +473,6 @@ h1 {
   .trend-bars { overflow-x: auto; padding-bottom: 0.2rem; }
   .trend-bars li { flex: 1 0 2.4rem; }
 }
-.worst { margin-bottom: 2.25rem; }
-.worst-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.7rem; }
-.worst-list li { display: grid; grid-template-columns: max-content 1fr max-content; gap: 0.2rem 0.75rem; align-items: baseline; }
-.worst-list .txt {
-  line-height: 1.45;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-.worst-list .open-session { color: var(--jd-accent); text-decoration: underline; white-space: nowrap; }
-.worst-list .sev, .worst-list .open-session { font-family: var(--jd-mono); font-size: 0.7rem; letter-spacing: 0.06em; text-transform: uppercase; }
-.worst-list .sev { color: var(--jd-ink); }
-.worst-list .sev::before { content: ''; display: inline-block; width: 0.55rem; height: 0.55rem; border-radius: 50%; margin-right: 0.4rem; background: var(--jd-sev-major); }
-.worst-list .sev.blocker::before { background: var(--jd-sev-blocker); }
-@media (max-width: 560px) {
-  .worst-list li { grid-template-columns: 1fr max-content; }
-  .worst-list .txt { grid-column: 1 / -1; }
-}
-
 .pr-link { color: var(--jd-accent); text-decoration: none; }
 .pr-link:hover { text-decoration: underline; }
 
