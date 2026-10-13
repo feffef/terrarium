@@ -24,16 +24,16 @@ Scan every **open** issue and in-scope external PR (external-PR scoping is
 Never scan a `wayfinder:map` — see "Coexisting with wayfinder" below; it's an
 index, not work, no matter who last commented on it.
 
-For everything else, fetch the **most recent comment** — or, if there are no
-comments yet, the issue/PR **body** — and check who wrote it:
+For everything else, fetch the **most recent comment** and check who wrote it:
 
-- **No state label, or `needs-triage`.** Always eligible — never triaged, or
-  evaluation is still in progress — regardless of who commented last.
+- **No state label, `needs-triage`, or no comments yet.** Always eligible — never
+  triaged, or evaluation is still in progress — regardless of who commented last
+  or who filed it: a body alone is not triage.
 - **Any other state** (`needs-info`, `ready-for-human`, even `ready-for-agent`)
-  **is eligible when its most recent comment (or body) is human-authored.**
+  **is eligible when its most recent comment is human-authored.**
   Every agent-authored comment in this repo carries ADR-0017 provenance (a full session URL: the provenance header, or the legacy two-line footer; `isAiAuthored` reads both), so its **absence** is the signal. Don't use the GitHub author/association field: agent-driven writes land under the human owner's own connection (ADR-0017), so an AI-authored comment and the owner's own comment both show `author_association: OWNER` under the same login. A human comment on *any* state — a decision dropped onto a `ready-for-human` ticket, a clarifying reply on `needs-info`, new instructions added to an already-`ready-for-agent` ticket — is worth another look, label notwithstanding.
 
-Skip a ticket the moment its most recent activity is already AI's own. That's
+Skip a ticket the moment its most recent comment is already AI's own. That's
 what keeps a short-interval loop **idempotent**: once triage (or a directed
 follow-through) responds to the human's comment, the ticket goes quiet again
 until a human writes something new — it does not re-surface on the next pass
@@ -118,8 +118,8 @@ reaches for on its own.
 1. **Resolve the set.** List every open issue via `pnpm exec tsx scripts/list-open-issues.ts`
    (overflow-safe — see `docs/agents/github-integration.md` — not raw
    `list_issues`/`search_issues`) plus in-scope external PRs (`issue-tracker.md`'s
-   "List external PRs"); for each, check its most recent comment (or body, if
-   none) against the human-authorship rule above — skip that check entirely in
+   "List external PRs"); for each, check its most recent comment (none: eligible)
+   against the human-authorship rule above — skip that check entirely in
    full-sweep mode; keep the eligible set; apply the wayfinder skips.
 2. **One subagent per issue** (parallel — the eligible set is usually small,
    since a ticket only surfaces when a human has said something since the last
