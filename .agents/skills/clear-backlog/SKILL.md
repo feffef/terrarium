@@ -118,7 +118,8 @@ any `humanOnly` path; at the first PR open, invoke `close-session`
 fix (CI, a PR comment), re-run that branch with its `worktree` and the fix
 in its `brief`. A PR built from a Public issue waits for a human merge
 (ADR-0020), even though `scripts/merge-pr.ts` would accept it. Merge
-the rest where `merge-pr.ts` allows.
+the rest unless ADR-0004 reserves it for a human; `merge-pr.ts` checks only
+some of its exceptions.
 
 **Done:** every PR is merged or waiting for a human merge, and
 `pnpm check:worktrees` exits 0.

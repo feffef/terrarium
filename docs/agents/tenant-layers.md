@@ -28,8 +28,8 @@ the shared namespace safe:
 
 Auto-import doesn't cover types outside `app/utils/` and `app/composables/`
 (e.g. `app/types/`) or assets, and there the aliases (`~`, `@`, `~~`, `@@`)
-resolve against the **main app's** root, not the layer's.
-A layer file's `import '~/types/foo'` looks in the root app and usually fails.
+resolve against the **main app's** root, not the layer's, so a layer's
+`import '~/types/foo'` usually fails.
 Two ways layer code deals with this:
 
 - **Layer-local type imports → plain relative paths.** The Space-landing page
@@ -40,14 +40,11 @@ Two ways layer code deals with this:
   import type { SessionDoc, SkillDoc } from '../../../../types/journal'
   ```
 
-  The target is `layers/journal/app/types/journal.ts`. `app/types/` is not
-  scanned; a type exported from `app/utils/` or `app/composables/` IS
-  auto-imported, as a global, alongside the values.
+  The target is `layers/journal/app/types/journal.ts`.
 
 - **Layer-local asset paths in `nuxt.config.ts` → `fileURLToPath` from the
-  config's own URL.** An aliased path (e.g. `~/assets/theme.css`) would resolve
-  against the main app and silently miss the layer's file, so resolve from the
-  config's own location:
+  config's own URL.** An aliased path (e.g. `~/assets/theme.css`) would
+  silently miss the layer's file. Instead:
 
   ```ts
   // layers/journal/nuxt.config.ts

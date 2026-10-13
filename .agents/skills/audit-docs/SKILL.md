@@ -222,9 +222,10 @@ One self-merged commit and PR (the escalation PR below is separate); its body li
 a one-line PR comment records the audit. It merges on green
 (ADR-0004), like `digest`.
 
-**These fixes escalate instead:** any ADR edit (including an Orphan-addition
-fix), CI, isolation logic, the manifest-expansion/routing modules,
-and a journal `pages/*.md` move that changes its route. Bundle all of them from
+**These fixes escalate instead:** any change to a Human-only path (the `paths`
+of `.claude/rules/adr-0004-human-merge.md`; any ADR edit, an Orphan-addition fix
+included, is one), isolation logic, and a journal `pages/*.md` move that changes
+its route. Bundle all of them from
 this sweep into **one** separate, human-reviewed PR, subscribe to it, and
 babysit it to merge or close. If an earlier sweep's escalation PR is still open
 and touches the same file, add to it instead of opening another.

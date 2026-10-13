@@ -25,10 +25,9 @@ failure. If `issue_read` keeps flaking,
 | GraphQL-backed `gh` subcommands (`gh issue view`, `gh pr list`, …) | yes | no: 403, GraphQL is blocked |
 | `gh api` and REST-backed subcommands (`gh run list`) | yes | yes, though `gh auth status` reports a bad token |
 | `mcp__github__*` tools | only if configured | yes |
-| **Default** | `gh` | the MCP tools; `gh api` for REST a tool lacks |
+| **Default** | `gh`; MCP for writes if configured | the MCP tools; `gh api` for REST a tool lacks |
 
-Write through MCP in the cloud, not `gh api`: the provenance guard checks only
-`mcp__github__*` calls. `gh api` suits bulk reads in scripts,
+Write through MCP in the cloud (ADR-0017); `gh api` suits bulk reads in scripts,
 where the MCP list tools overflow. Some cloud sessions lack `gh`; check with
 `which gh`. In a cloud session, map the workflow docs' `gh` recipes
 like this:
@@ -125,12 +124,12 @@ like this:
 - **Did an AI comment claim a triage-label change the issue never got?** It
   happens (issue #325's comment said `moved to ready-for-agent` while the issue
   stayed `ready-for-human`) and nothing else catches it. Run
-  `pnpm exec tsx scripts/check-triage-drift.ts [N]`. For each open issue it
+  `pnpm exec tsx scripts/check-triage-drift.ts [N]` (standalone, in no periodic
+  sweep; same `gh`-less token fallback, issue #505). For each open issue it
   finds the newest AI-authored comment by its ADR-0017 marker
   (`author_association` can't be trusted here; see the script's header),
   checks it against a phrase list for the five canonical labels, and prints
-  mismatches as JSON (issue #507). It is standalone, not part of any periodic sweep, and has
-  the same `gh`-less token fallback (issue #505).
+  mismatches as JSON (issue #507).
 
 ## Polling: gate status is not webhook-delivered
 
@@ -174,8 +173,8 @@ misspelled full name) gives `Error: No such tool available: <name>`, with no
 "did you mean" and no hint to try `ToolSearch`. Don't write off a plausible
 bare name as unsupported: retry it as a keyword query.
 
-**No MCP tool for issue dependencies** (wayfinding *Blocking*): `curl` the same
-REST endpoint with `$GH_TOKEN` and `Content-Type: application/json` (the proxy
+**No MCP tool for issue dependencies** (wayfinding *Blocking*): `curl` the endpoint
+in [`issue-tracker.md`](./issue-tracker.md)'s **Blocking** bullet with `$GH_TOKEN` and `Content-Type: application/json` (the proxy
 answers 415 without it). A summary read right after a write can be stale
 (issue #1373).
 

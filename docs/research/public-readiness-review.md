@@ -79,8 +79,8 @@ Repo-specific priorities:
   entry), not a blanket re-enable, and for `main`'s actual as-of-writing state.
 - Enable **secret scanning + push protection** (free on public repos, off by
   default).
-- Set Actions fork-PR approval to **require approval for all outside
-  collaborators** — CI runs `pnpm install` + `pnpm build` on fork code.
+- Set Actions fork-PR approval to **require approval for all external
+  contributors** — CI runs `pnpm install` + `pnpm build` on fork code.
 - Confirm `GITHUB_TOKEN` default stays **read-only**.
 - Enable Dependabot alerts + updates; enable private vulnerability reporting
   (`SECURITY.md` points reporters at it; whether it was turned on is unverifiable

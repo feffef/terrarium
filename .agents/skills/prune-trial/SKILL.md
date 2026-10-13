@@ -21,7 +21,7 @@ Everything below is mechanism; the goal above is the point.
 
 ## 1. Judge the open trials
 
-`.agents/prune-trials.yml` holds them; its header states the window.
+`.agents/prune-trials.yml` holds them; `scripts/prune-trial-window.ts` holds the window.
 
 **A trial is judgeable only once its prune has landed on `main` and sessions
 have run against it since.** `opened:` records when the entry was written, which

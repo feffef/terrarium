@@ -7,7 +7,7 @@ role: >-
   catch-up on Platform-wide activity from git history and session logs
   (ADR-0010). A tested helper (`scripts/digest.ts`) gathers the facts; the Skill
   writes the prose, has a separate pass fact-check it against the PRs' diffs,
-  and opens one gated PR (ADR-0003) that auto-merges on a green gate, never the
+  and opens one gated PR (ADR-0003) that it merges itself on a green gate, never the
   `log-session` direct-to-main path. Scheduled; run it by hand to catch up
   uncovered activity.
 observations:

@@ -1,11 +1,11 @@
 # Issue tracker: GitHub
 
-*Seeded from `.agents/skills/setup-matt-pocock-skills/issue-tracker-github.md`;
-the conventions, spec and wayfinding sections are repo-specific. Don't re-sync:
-this file is live, the pack template stays generic and reinstallable
-(ADR-0005).*
+*Repo-authoritative, seeded from
+`.agents/skills/setup-matt-pocock-skills/issue-tracker-github.md`. Don't re-sync
+it against that generic, reinstallable template (ADR-0005).*
 
-Issues and specs live as GitHub issues. The recipes below use the `gh` CLI.
+Issues and specs live as GitHub issues. The recipes below use the `gh` CLI; for writes, use
+the `mcp__github__*` tools where you have them (the ADR-0017 rule).
 
 ## Cloud session? See `github-integration.md`
 
@@ -51,9 +51,8 @@ name resolution, see [`github-integration.md`](./github-integration.md).
 A spec is an ordinary GitHub issue with no dedicated label. Precedent: #64 (the
 Atlas spec).
 
-- **Label**: none. While a spec is a concept document rather than actionable
-  work it carries no triage label (not `needs-triage`, not `ready-for-agent`);
-  `docs/agents/triage-labels.md` applies once the hold below clears.
+- **Label**: none while it is on hold (below): not `needs-triage`, not
+  `ready-for-agent`.
 - **Sub-issues**: link each user story to the spec as a native GitHub
   sub-issue (`sub_issue_write` / `gh api` on the sub-issues endpoint, as for
   [Wayfinding's child tickets](#wayfinding-operations)), and also put
@@ -64,7 +63,8 @@ Atlas spec).
   the idea, don't build."* Every sub-issue repeats the on-hold line at the top
   of its own body, so a reader who lands on a user story sees it. There is no
   "on hold" label; the body text is the source of truth. When the condition
-  clears, the spec and its sub-issues get ordinary triage labels.
+  clears, the spec and its sub-issues get ordinary triage labels
+  (`docs/agents/triage-labels.md`).
 
 ## Pull requests as a triage surface
 

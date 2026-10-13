@@ -33,9 +33,8 @@ decision needs resolving.
 
 ## Use the glossary's vocabulary
 
-When your output names a domain concept — an issue title, a refactor
-proposal, a hypothesis, a test name — use the term `CONTEXT.md` defines for
-it. Don't drift to a synonym the glossary explicitly avoids.
+CLAUDE.md's glossary-term rule covers every output that names a domain concept: an issue
+title, a refactor proposal, a hypothesis, a test name.
 
 A concept missing from the glossary means either you're inventing language
 (reconsider) or there's a real gap (note it for `/domain-modeling`).
@@ -47,12 +46,12 @@ ADR) only once its **second** instance exists or is concretely scheduled.
 Before that, describe the first instance in plain words, where it lives —
 don't mint a term, a typology, or a classification for a population of one.
 
-This complements, not replaces, the `domain-modeling` Skill's 3-part ADR test:
-that test gates *decisions*, the rule of two gates *vocabulary*. Every session
-reads the glossary and reconciles term conflicts against it, so a coined term
-costs every session; only a second instance proves it worth that (ADR-0010
-keeps Digests in the shared `pages` collection until something needs them apart). It brakes new coinage; anything
-already built stays.
+This complements the `domain-modeling` Skill's 3-part ADR test: that test gates
+*decisions*, the rule of two gates *vocabulary*. Every session reads the
+glossary and reconciles term conflicts against it, so a coined term costs every
+session; only a second instance proves it worth that. Example: ADR-0010 keeps
+Digests in the shared `pages` collection until something needs them apart. The
+rule brakes new coinage; anything already built stays.
 
 ## Flag ADR conflicts
 

@@ -1,7 +1,5 @@
 # Landing a gated PR
 
-The single home for the recipe that lands a gated PR.
-
 Who merges, and what needs a human merge: ADR-0004, with
 `.claude/rules/adr-0004-human-merge.md` for the paths. What a scheduled run may
 change: its Skill (ADR-0003). `main`'s branch-protection state:
@@ -12,12 +10,11 @@ overflow traps), see [`github-integration.md`](./github-integration.md).
 
 ## Review before the first push
 
-Pushing opens the PR (ADR-0003), so review first, and check that no PR exists
-for the branch yet. Before a branch's first
-push, invoke the [`code-review`](../../.agents/skills/code-review/SKILL.md)
-Skill on its committed diff against `origin/main`, in the checkout that holds
-it, and fix the findings. This holds even when the Stop hook asks you to
-push. Skip it only where a Skill's own steps already review the diff in a
+Pushing opens the PR (ADR-0003). So before a branch's first push, check that no
+PR exists for it yet, then run the
+[`code-review`](../../.agents/skills/code-review/SKILL.md) Skill on its
+committed diff against `origin/main`, in the checkout that holds it, and fix
+the findings, even when the Stop hook asks you to push. Skip it only where a Skill's own steps already review the diff in a
 similar way before the push, as `midden-catalogue` §4 does. A session-log
 commit needs none.
 
@@ -87,16 +84,16 @@ an exception. Some Skills narrow that:
 - `guest-build` (ADR-0023) opens the PR and never merges it; the owner does.
 - `midden-catalogue` (#1802) opens the PR and never merges it; a Trusted user
   does.
-- Dependabot PRs: a major bump waits for a human; a minor or patch bump may
-  merge on a green gate (ADR-0004). Until #1889 lands, `merge-pr.ts` refuses
-  them all because they change `package.json`, so leave them alone.
+- Dependabot PRs: leave them for a human. `merge-pr.ts` refuses every one:
+  their author counts as Public, and they change Human-only files
+  (`package.json`, `.github/`). #1889 decides how they should merge.
 
 ## Closing a scheduled run's PR
 
-Scheduled Skills that merge their own PR close the same way once their
-own work is staged. `frictions-to-fixes` does not, since it opens many
-PRs per run. Each Skill's SKILL.md states only its delta (what
-its diff is limited to, and what to do when something rides outside that scope):
+Scheduled Skills that merge their own PR close with the steps below once their
+own work is staged (not `frictions-to-fixes`, which opens many PRs per run).
+Each SKILL.md adds only its delta: what its diff is limited to, and what to do
+when something outside that scope rides in.
 
 1. Run `pnpm gate:scoped` (ADR-0004; `scripts/gate.ts` owns what it runs).
    Done when it's green.

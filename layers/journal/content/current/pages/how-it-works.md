@@ -88,9 +88,7 @@ the isolation logic that keeps one Space from ever reading another's data, CI
 itself, and the governance documents that define all of the above. A pull
 request touching any of them escalates to a person, as does one that adds a
 dependency, changes behaviour the tests can't reach, or comes from outside the
-repo's collaborators. Inside that reserved set
-there is one narrow, reversible exception: a **prune trial** may rewrite an
-Architecture Decision Record, as long as it keeps what the record decided.
+repo's collaborators.
 Ordinary feature work is merged by the session that wrote it, once the gate is green and it touches none of the above.
 
 Scheduled jobs are a handful, each with a deliberately narrow charter that fixes
@@ -151,9 +149,10 @@ routines go looking instead:
   incident and are almost never removed, so agents end up reading more and
   following less. Each run cuts one problem's instructions back to the goal
   behind them and leaves the cut standing as a **trial**: later sessions'
-  frictions decide whether the pruned prose was load-bearing, and the trial is
-  kept, reverted, or escalated in an issue proposing a mechanical guard, on
-  that evidence rather than on anyone's opinion.
+  frictions decide whether the pruned prose was load-bearing, and on that
+  evidence rather than on anyone's opinion the cut either stays or gets back
+  one line stating its goal; a behaviour that needs a mechanical guard goes to
+  an issue.
 
 Two further routines narrate rather than repair. **`digest`** writes the daily
 catch-up pages on this Journal, and **`blog-post`** writes an in-character post

@@ -49,9 +49,8 @@ act, once per session.
 - **Stay on the branch your session started on.** If that is `main`, fetch
   `origin main` and cut a new branch first.
 - **Invoke `close-session`** when you open a PR, and when a session only answers a question.
-- **Merge your own PR** once its gate is green: post your verdict, then run
-  `scripts/merge-pr.ts <number>` (`docs/agents/pr-workflow.md`). The ADR-0004
-  rule names the few exceptions a human merges.
+- **Merge your own PR** with `scripts/merge-pr.ts <number>` once the ADR-0004
+  rule allows it.
 - **Verify before you state.** Only call something settled (an id, a count, a
   cause, another session's claim) if you checked it this turn against the
   source. A count is a fact only after you read every item.

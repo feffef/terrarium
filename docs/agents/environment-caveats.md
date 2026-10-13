@@ -56,13 +56,11 @@ re-diagnose them as new. Incident detail lives in the cited issue.
   `outcome`/`summary` (e.g. "branch pushed, PR NOT opened — no GitHub write
   access this run") so it doesn't read as ordinary completion. (issue #982)
 - **In an unattended run, a dispatched subagent's tool call that needs human
-  approval blocks forever, with no signal to the orchestrator:** approval waits
-  on a human click, and no wake-on-pending-approval signal is known
-  (`PreToolUse` hooks do still fire for subagent calls). Treat long subagent
-  silence as possibly stuck, not slow. (issue #1215; [guards](./guards.md) has
-  the hook probe and the narrower fix: never dispatch an unattended or
-  scheduled session to change a guard or its `.claude/settings.json` hook
-  wiring.)
+  approval blocks forever, and the orchestrator gets no signal** (`PreToolUse`
+  hooks still fire for subagent calls). Treat long subagent silence as possibly
+  stuck, not slow, and never dispatch an unattended or scheduled session to
+  change a guard or its `.claude/settings.json` hook wiring. (issue #1215;
+  [guards](./guards.md) has the hook probe.)
 - **The harness's instruction-shaped-content scanner can false-positive on
   benign text** that merely mentions "settings.json" / "settings-json", e.g. a
   subagent's report on `.claude/settings.json` hook wiring. If a flagged

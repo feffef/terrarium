@@ -21,9 +21,9 @@ Its job: **let authors compose from a palette of components without writing Vue
 or leaving the Markdown file.** The lens for every decision below is
 *author-facing, in-prose composition*.
 
-Cost in a layer without MDC: a `components/content/` dir and a new SFC
-(mechanics: the research doc's §13). The journal layer keeps its components in a *prefixed*
-`components/journal/` dir and has no `components/content/` today.
+A layer without MDC needs a `components/content/` dir and a new SFC
+(mechanics: the research doc's §13). Journal has none (it keeps its components
+in a *prefixed* `components/journal/` dir); atlas and midden have one.
 
 ## The validation caveat (important in this repo)
 

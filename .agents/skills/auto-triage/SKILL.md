@@ -93,8 +93,8 @@ fighting wayfinder's mechanics** (read `/wayfinder` for them):
 ## Coexisting with the guest pipeline
 
 `guest-intake` grants `ready-for-agent` on a **Public** guest's own confirmation
-(ADR-0023). That human comment makes the ticket eligible here, and the
-Public-issue rule above would undo the grant — but `guest-intake`'s own
+(ADR-0023). That human comment makes the ticket eligible here, and ADR-0022's
+rule that a Public-authored issue goes to `ready-for-human` would undo the grant — but `guest-intake`'s own
 provenance-carrying reply lands right after it, so the usual "skip once AI's own"
 rule closes the gap. If a sweep inside that gap recurs in practice, add an
 explicit skip here rather than relying on the timing.
@@ -124,7 +124,7 @@ reaches for on its own.
    the issue was filed: later work may have done, superseded or changed it
    (an obsolete or superseded issue is a judgment call, so `ready-for-human`).
    It then applies its own
-   labels and posts its own single comment, with the disclaimer and provenance header; on an issue with no comments it always posts one, so the issue no longer counts as uncommented. A label
+   labels and posts its own single comment, with the provenance header and no disclaimer; on an issue with no comments it always posts one, so the issue no longer counts as uncommented. A label
    update **replaces** the set, so each passes the complete final label set and
    preserves any `wayfinder:*` label. Each returns to you — not in its brief,
    which stays path-free — the repo files a `ready-for-agent` fix would touch.
