@@ -29,25 +29,15 @@ agents.
 - **Plain language.** Short sentences in plain, common words. When you name a
   concept the glossary defines, use its term, not a synonym. Replace coined
   phrases with what actually happens.
-- **Template.** Every section after the summary is a `##` heading in this
-  order; leave out an optional one rather than fill it:
-  1. Title: `# ADR-NNNN: <title>`, a short reminder of what the ADR is about,
-     the same heading its summary rule uses.
-  2. A summary of 2–3 sentences covering the whole decision. A reader who
-     stops here knows what we decided.
-  3. **Scope:** what the decision covers, who may do what, and the exceptions
-     that change that.
-  4. **Why:** the reasons, briefly.
-  5. **Rejected alternatives:** options someone could plausibly propose again
-     today, and why we rejected each. An older rule that later changes
-     overtook is history, not an alternative.
-  6. **When to revisit** (optional): conditions that would make us reconsider
-     part of the decision or a rejected alternative.
-  7. **Consequences** (optional): only effects that aren't obvious.
-  8. **See** (optional): the code, Skills and docs that hold the mechanics.
+- **Template.** Follow `docs/adr/TEMPLATE.md`: a `# ADR-NNNN:` heading, a 2–3
+  sentence summary that covers the whole decision, then *Scope*, *Why* and
+  *Rejected alternatives*, and optional sections left out rather than filled.
+  A rejected alternative is one someone could plausibly propose again today;
+  an older rule that later changes overtook is history.
 - **Older ADRs** have a `# NN. <title>` heading and keep their old shape until
   someone rewrites one in full. A small fix before then just edits the wrong
-  line.
+  line. The gate fails an ADR with the new heading that carries a date, a
+  status line or an amendment banner.
 
 ## Why
 
@@ -91,5 +81,6 @@ evidence would justify that.
 - `.agents/skills/domain-modeling/ADR-FORMAT.md`: the pack template and its
   test for when a decision deserves an ADR. Our template above replaces its
   section layout and its Status field.
+- `docs/adr/TEMPLATE.md`: the template.
 - `scripts/validate-adr-rules.ts`: fails the gate until a changed ADR's summary
-  rule is re-checked.
+  rule is re-checked, and on history in a new-shape ADR.

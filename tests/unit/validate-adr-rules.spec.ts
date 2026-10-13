@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { adrHash, findAdrRuleProblems, ruleAdr, ruleDocPaths, ruleHash, staleRules, withRuleHash } from '../../scripts/validate-adr-rules.ts'
+import { adrHash, findAdrRuleProblems, newFormatProblems, ruleAdr, ruleDocPaths, ruleHash, staleRules, withRuleHash } from '../../scripts/validate-adr-rules.ts'
 
 const ADR = '# 24. Mermaid\n\nDecision text.\n'
 const stamped = (body: string) => withRuleHash(body, adrHash(ADR))
@@ -42,6 +42,29 @@ describe('findAdrRuleProblems / staleRules', () => {
     expect(problems).toHaveLength(2)
     expect(problems.join('\n')).toContain('ADR-0024 has no summary rule')
     expect(problems.join('\n')).toContain('adr-0099.md has no matching ADR')
+  })
+})
+
+describe('newFormatProblems (ADR-0030)', () => {
+  const NEW = '# ADR-0024: Mermaid\n\nDecision text.\n'
+
+  it('passes a clean new-shape ADR and exempts an old-shape one', () => {
+    expect(newFormatProblems('0024', NEW)).toEqual([])
+    expect(newFormatProblems('0024', '# 24. Mermaid\n\nDate: 2026-01-01\nStatus: Accepted\n')).toEqual([])
+  })
+
+  it('flags a date, a status line and an amendment banner', () => {
+    const text = `${NEW}Status: Accepted\n\n> **Amended (2026-07-06).** Changed.\n`
+    expect(newFormatProblems('0024', text)).toEqual([
+      'ADR-0024 has a date; ADR-0030 keeps history in git.',
+      'ADR-0024 has a status line; ADR-0030 keeps history in git.',
+      'ADR-0024 has an amendment banner; ADR-0030 keeps history in git.',
+    ])
+  })
+
+  it('flags a heading whose number is not the file\'s, and reaches the gate', () => {
+    expect(newFormatProblems('0025', NEW)).toEqual(["ADR-0025's heading names a different number."])
+    expect(findAdrRuleProblems({ adrs: { '0024': `${NEW}Date: 2026-01-01\n` }, rules: { 'adr-0024.md': withRuleHash('x', adrHash(`${NEW}Date: 2026-01-01\n`)) } })).toHaveLength(2)
   })
 })
 
