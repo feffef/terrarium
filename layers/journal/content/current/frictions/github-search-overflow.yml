@@ -1,0 +1,19 @@
+name: github-search-overflow
+cause: >-
+  mcp__github__search_issues and search_pull_requests return full bodies unless `fields` omits them, so a broad or early query floods context; github-integration.md documents it, but sessions hit it before reading the doc or anyway.
+surface: guard-or-hook
+status: open
+ref: "docs/agents/github-integration.md ('Overflow and precision traps'); issue #1860"
+occurrences:
+  - session: session_01RGKoFL9ZKfvji8zENgRVBT
+    date: "2026-10-07"
+    severity: nit
+  - session: session_01WFq4ZnYVWTyGHAAxqo5wKb
+    date: "2026-10-10"
+    severity: minor
+  - session: session_0147GPfMLJfFV6JbmC4HZGHb
+    date: "2026-10-12"
+    severity: minor
+  - session: session_01BkB4AFUGkEudyf13aa44Wy
+    date: "2026-10-12"
+    severity: minor

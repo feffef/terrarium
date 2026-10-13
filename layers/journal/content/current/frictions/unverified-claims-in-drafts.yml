@@ -1,9 +1,9 @@
 name: unverified-claims-in-drafts
 cause: >-
-  First drafts of Digests, posts, docs, reports and CLAUDE.md edits carry claims never checked against a primary source; a fact-check or reviewer catches them at the cost of a round.
+  First drafts of Digests, posts, docs, reports and CLAUDE.md edits, and subagent claims relayed as fact, carry claims never checked against a primary source; a fact-check or reviewer catches them at the cost of a round.
 surface: safe
 status: open
-ref: "PR #1756 (blog step 12 fallback)"
+ref: "PR #1756 (blog step 12 fallback); PRs #1852, #1853 (clear-backlog §4 'check every fix yourself')"
 occurrences:
   - session: session_01JeNNPB1Q8Lirwm4V4VadnB
     date: "2026-09-27"
@@ -72,5 +72,20 @@ occurrences:
     date: "2026-10-12"
     severity: moderate
   - session: session_01VGLAakRJNm67PuNHpgbEc7
+    date: "2026-10-12"
+    severity: moderate
+  - session: session_01LtYEkEsZ2cxf4uRFJvq4n9
+    date: "2026-10-12"
+    severity: minor
+  - session: session_01596W4GVWwvN1kfaHsV4ax8
+    date: "2026-10-12"
+    severity: nit
+  - session: session_01DtK8w6aJ3361uPK73VAxhi
+    date: "2026-10-12"
+    severity: moderate
+  - session: session_01La82mxqduxHnRS9jRfNHmU
+    date: "2026-10-12"
+    severity: minor
+  - session: session_017NBxJhtBSd9AoCwTzsg6pM
     date: "2026-10-12"
     severity: moderate
