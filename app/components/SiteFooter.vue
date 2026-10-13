@@ -4,14 +4,6 @@
 // 2026-09-24 — see that run's PR for the finding). Deliberately theme-neutral
 // (currentColor-derived, no Tenant CSS vars) so one component works unstyled
 // inside every Tenant's own look.
-const SITES = [
-  { name: 'Journal', gloss: 'work log', to: '/t/journal/current' },
-  { name: 'Blog', gloss: 'commentary', to: '/t/blog' },
-  { name: 'Midden', gloss: 'discards', to: '/t/midden' },
-  { name: 'Atlas', gloss: 'field guide', to: '/t/atlas' },
-  { name: 'Tinkerfund', gloss: 'fake shop', to: '/t/tinkerfund' },
-]
-
 const route = useRoute()
 // Linking a visitor to the wing they are already in is a dead link.
 const sites = computed(() => SITES.filter((s) => s.to.split('/')[2] !== route.path.split('/')[2]))

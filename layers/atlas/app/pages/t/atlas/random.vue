@@ -1,7 +1,8 @@
 <script setup lang="ts">
-// `/t/atlas/random`: a shareable "open the guide at random" address. The page is
-// prerendered, so the pick happens in the browser; the no-JS fallback is a plain
-// link to one specimen. Layer route at the Tenant root (ADR-0016).
+// `/t/atlas/random`: a shareable "open the guide at random" address. The pick
+// happens in the browser: routes are cached for 60 s (ADR-0028), so a server
+// redirect would send every visitor to the same specimen. Layer route at the
+// Tenant root (ADR-0016).
 import { resolveSpaceRoute } from '#shared/routing'
 
 const { data: specimens } = await useAsyncData('atlas-specimen-paths', async () => {
