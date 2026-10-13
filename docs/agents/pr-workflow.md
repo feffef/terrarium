@@ -1,8 +1,6 @@
 # Landing a gated PR
 
-The single home for the "land a low-risk gated PR" recipe. The ADR-0003 rule
-(`.claude/rules/adr-0003.md`) and the per-Skill merge sections point here for
-the mechanics.
+The single home for the recipe that lands a low-risk gated PR.
 
 Why a tier merges on green: ADR-0003. What needs a human merge: ADR-0004's
 rules, `.claude/rules/adr-0004-human-merge.md` for the paths. `main`'s branch-protection state:
@@ -23,13 +21,13 @@ commit needs none.
 
 ## Assembling several stories into one integration PR
 
-When a branch stacks several already-reviewed stories into one integration PR,
-run **one more whole-branch two-axis review** — [`code-review`](../../.agents/skills/code-review/SKILL.md)
-scoped to the full integration diff (fixed point: the branch's base, not a
-single story's start) — before opening it. Per-story review can't see how
-independently-correct stories interact (e.g. both ship the same thing, or stack
-discounts meant to be mutually exclusive) (issue #1421). One extra pass; don't
-re-review each story or repeat its findings.
+Before opening an integration PR that stacks several already-reviewed stories,
+run [`code-review`](../../.agents/skills/code-review/SKILL.md) **once more on
+the whole diff**, with the branch's base as its fixed point, not a single
+story's start. Per-story review can't see how independently correct stories
+interact (e.g. both ship the same thing, or stack discounts meant to be
+mutually exclusive; issue #1421). Don't re-review each story or repeat its
+findings.
 
 ## The recipe
 
@@ -81,21 +79,23 @@ description.
 - `reviewer-agent` (`frictions-to-fixes`) — green gate plus the reviewing
   session's own risk judgement; escalate a genuinely high-risk PR to a human
   even when the gate is green (ADR-0003).
-- `guest-build` — agent-dispatched but always **owner-merged**: it reviews the
-  branch, then opens the PR but never calls `merge_pull_request` or arms auto-merge (see
-  `.agents/skills/guest-build/SKILL.md`'s "one hard subtraction" section and
-  ADR-0023).
+- `guest-build` — always **owner-merged**: it opens the PR but never merges it
+  or arms auto-merge (`.agents/skills/guest-build/SKILL.md`'s "one hard
+  subtraction" section, ADR-0023).
 - `midden-catalogue` — always **owner-merged** (#1802): it opens the PR and
   never merges (`.agents/skills/midden-catalogue/SKILL.md` §5).
-- `dependabot` — merged by the `dependabot-automerge` workflow (proposal #1633, not yet applied), never by an agent; leave those PRs alone (ADR-0003 ledger).
+- `dependabot` — never merged by an agent; leave those PRs alone (ADR-0003
+  ledger). The `dependabot-automerge` workflow that will merge them is proposal
+  #1633, not yet applied.
 - An ordinary work PR — merged by its authoring session on a green gate, unless
   the ADR-0004 rule names an exception; then a human merges it (ADR-0003).
 
 ## Closing a self-merged chartered run
 
-Every tier above except `reviewer-agent` (`frictions-to-fixes`; many PRs per
-run), `guest-build`, `midden-catalogue`, `dependabot` and an ordinary work PR closes the same way
-once its own work is staged. Each Skill's SKILL.md states only its delta (what
+The tiers that merge on a green gate alone (`digest`, `audit-docs`,
+`audit-skills`, `blog-post`, `visitor-loop`, `prune-trial`) close the same way
+once their own work is staged. `reviewer-agent` does not, since it opens many
+PRs per run. Each Skill's SKILL.md states only its delta (what
 its diff is limited to, and what to do when something rides outside that scope):
 
 1. Run `pnpm gate:scoped` (ADR-0004; `scripts/gate.ts` owns what it runs).

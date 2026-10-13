@@ -79,6 +79,7 @@ docs/adr/                 decisions
 docs/agents/              how-to docs for agents
 docs/research/            dated reference notes
 .agents/skills/           our Skills (.claude/skills/ links here)
+.claude/workflows/        workflow scripts, each its Skill's code (ADR-0005)
 scripts/                  repo tooling, the gate, and the tool-call guards
 tests/                    Platform tests; each Tenant keeps its own in its layer
 ```

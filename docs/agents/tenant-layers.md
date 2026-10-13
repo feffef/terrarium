@@ -9,9 +9,8 @@ pages, or components: its gotchas get re-discovered most sessions.
 
 **Reach for Nuxt's auto-imports before writing any import.** A layer's
 `app/components/`, `app/composables/`, and `app/utils/` directories are all
-auto-imported and layer-aware — the mechanism and primary-source citations are
-single-homed in `docs/research/nuxt-content-review-grounding.md` §6, not
-re-derived here. Components resolve under their directory-prefixed name
+auto-imported and layer-aware (mechanism and sources:
+`docs/research/nuxt-content-review-grounding.md` §6). Components resolve under their directory-prefixed name
 (`layers/atlas/app/components/atlas/SpecimenPlate.vue`
 → `<AtlasSpecimenPlate>`), and utils/composables exports resolve by name in
 every SFC and every layer, with no import block at all. The root app's
@@ -27,8 +26,9 @@ the shared namespace safe:
   keep local names distinct (`const sessionCards = computed(() =>
   sessionCardViews(...))`).
 
-Auto-import doesn't cover type-only imports and assets, and there the aliases
-(`~`, `@`, `~~`, `@@`) resolve against the **main app's** root, not the layer's.
+Auto-import doesn't cover types outside `app/utils/` and `app/composables/`
+(e.g. `app/types/`) or assets, and there the aliases (`~`, `@`, `~~`, `@@`)
+resolve against the **main app's** root, not the layer's.
 A layer file's `import '~/types/foo'` looks in the root app and usually fails.
 Two ways layer code deals with this:
 
@@ -128,16 +128,16 @@ Practical implications:
 A same-named file under any layer's `components/content/` overrides the matching
 bundled `@nuxtjs/mdc` prose component. Nuxt flattens every layer's component
 registry into one, so this is override *priority*, not per-Tenant scoping; you
-can't override a prose component for one Tenant. So the root Platform's
-`app/components/content/ProsePre.vue` (issue #364, Mermaid rendering for ` ```mermaid ` fences)
-lives at the app root: in a layer it would wrongly imply
-per-Tenant scoping.
+can't override a prose component for one Tenant. So
+`app/components/content/ProsePre.vue` (Mermaid rendering for
+` ```mermaid ` fences, issue #364) lives at the app root: in a layer it would
+wrongly imply per-Tenant scoping.
 
 ## 5. Verify a routing claim against the layer's actual `pages/` tree, not prose search
 
-Before asserting a route exists (in a review, a comment, anywhere), check the
-layer's `layers/<tenant>/…/pages/` directory (ADR-0016 tenant-root
-routes), not Markdown/Vue prose: text search can miss or misreport a route.
+Before asserting anywhere that a route exists, check the layer's
+`layers/<tenant>/…/pages/` directory (ADR-0016 tenant-root routes), not
+Markdown/Vue prose: text search can miss or misreport a route.
 
 ## 6. What leaks across Tenants
 

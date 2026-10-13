@@ -4,7 +4,8 @@ importance: specialist
 gist: Surveys recently discarded code and flags what's worth keeping.
 role: >-
   The Midden's field-walk: sweeps for freshly discarded work (deleted files and
-  dropped dependencies mechanically via scripts/midden-survey.ts; closed
+  dropped dependencies mechanically via its own scripts/midden-survey.ts;
+  closed
   unmerged PRs and dormant branches via the GitHub tools), screens it against
   the two-gate inclusion bar, and files one survey-report issue for
   `midden-catalogue`. Discovery only; that Skill grades.

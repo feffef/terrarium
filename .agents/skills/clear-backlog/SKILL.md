@@ -113,7 +113,8 @@ branch, or its question or failure is in the report.
 
 Push each `ready-to-push` branch from its worktree and open its PR with the
 branch's decisions, its remaining judgement calls, any cherry-picked PR, and
-any `humanOnly` path. Land it with `docs/agents/pr-workflow.md`. For a later
+any `humanOnly` path; at the first PR open, invoke `close-session`
+(`in-review`). Land it with `docs/agents/pr-workflow.md`. For a later
 fix (CI, a PR comment), re-run that branch with its `worktree` and the fix
 in its `brief`. A PR built from a Public issue waits for a human merge
 (ADR-0020 rule 3), even though `scripts/merge-pr.ts` would accept it. Merge
@@ -123,7 +124,7 @@ the rest where `merge-pr.ts` allows.
 `pnpm check:worktrees` exits 0.
 
 Report one line per issue: `#N | outcome | PR or "no PR: why" | merged / waits
-for you (why)`. Then run `close-session`. Its log's `summary` carries one line
+for you (why)`. Then re-invoke `close-session`. Its log's `summary` carries one line
 per merged or opened branch: what it changed (from that branch's `decisions`)
 and any judgement calls left open. In a workflow run the orchestrator's log is
 the Journal's only record of what its agents built.

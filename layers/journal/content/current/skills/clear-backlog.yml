@@ -4,8 +4,9 @@ importance: specialist
 gist: Clears the whole open-issue backlog, unattended, in one run.
 role: >-
   Orchestrates `auto-triage`, `implement`, `dispatch-subagents` and
-  `code-review` into one run that empties the backlog: explores every open
-  issue, grills the owner once in plain words on judgment calls, then builds,
+  `code-review`, through two saved workflows, into one run that empties the
+  backlog: explores the open issues its sweep picks up, grills the owner once
+  in plain words on judgment calls, then builds,
   reviews and lands the resulting PRs unattended. The tool for a deliberate
   "clear everything now" pass, not a substitute for the smaller
   on-interval Skills it composes.
