@@ -78,9 +78,8 @@ are ground truth, not a projection of repo state (see the Journal Tenant).
 A session log may be **external**: authored by a different agent / harness /
 environment than our Claude Code toolchain. An external log is still a real, honest
 record and stays visible in the Timeline and dashboard; the schema marks it with an
-optional `external` flag (absent means internal). Its **Frictions** and **skills**
-are excluded from self-improvement mining, while its **ideas** (but not
-**learnings**) still surface (ADR-0009).
+optional `external` flag (absent means internal). ADR-0009 says what the flag
+changes for self-improvement mining.
 
 Every session log records the Session's **kind** — where it sat on the autonomy
 spectrum, judged by **who prompted**: **interactive** (a human prompted again
@@ -130,7 +129,7 @@ failure class is — a mistake fully caught before landing (self-review, or a
 guard working exactly as designed) stays `nit`/`minor`. Recurrence is tracked
 separately, by occurrence count, not by inflating each instance's severity. A
 few named Frictions are graded by fixed rule instead, stated where each is
-used: `SHELL-READ-DETECTION` takes a severity floor (`log-session`, ADR-0009),
+used: `SHELL-READ-DETECTION` takes a severity floor (`log-session`),
 `HUMAN-PROMPTED-CLOSURE` is always `major` (`close-session`), and a CI failure
 after a passing `gate:scoped` is `major` (`docs/agents/pr-workflow.md`).
 
@@ -226,7 +225,8 @@ Dedicated views live as Spaces of the Commons Tenant (ADR-0025).
 
 ### Trusted
 A user with **write access** to the repository: the owner and invited
-collaborators, with equal standing (ADR-0020). A Trusted user may direct agents,
+collaborators, with equal standing except in the guest pipeline, which only the
+owner runs and merges (ADR-0020). A Trusted user may direct agents,
 approve new work (ADR-0003), and merge the PRs ADR-0004 reserves for a human.
 Its opposite is **Public**.
 

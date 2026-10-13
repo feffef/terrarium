@@ -279,11 +279,9 @@ not a bystander waiting for a human. For each branch:
    - **Merge right away** when the review is clean and the change is low-risk —
      follow `docs/agents/pr-workflow.md`'s recipe; you merge only by your own
      judgement call, on top of that mechanical recipe.
-   - **Escalate to a human** only when the change is **genuinely high-risk** per
-     ADR-0004 (its rule's Human-only list — same test as the safe-surface filter in
-     §3, just applied to the actual diff instead of the issue's stated scope).
-     ADR-0004's *Scope* gives examples of behaviour no test can observe; check
-     the diff against them rather than guessing. Leave the PR open, say precisely why it is
+   - **Escalate to a human** only when the actual diff meets an ADR-0004
+     exception (its *Scope* lists them, with examples of behaviour no test can
+     observe); check the diff against them rather than guessing. Leave the PR open, say precisely why it is
      high-risk, and **alert the user**. A **hard** selection (§3) usually lands
      here — that is expected.
 

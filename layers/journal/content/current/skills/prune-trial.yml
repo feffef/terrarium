@@ -6,7 +6,8 @@ role: >-
   The only Skill whose whole job is subtraction, run by a scheduled Routine:
   each run cuts one problem's instructions to their goal and leaves the cut
   standing as a trial; later sessions' frictions decide whether the prose was
-  load-bearing. Charters its own merge tier and may prune ADR prose.
+  load-bearing. Its PR merges like any agent's; it never touches ADRs or their
+  summary rules.
 observations:
   - date: "2026-09-27"
     note: >-

@@ -69,17 +69,15 @@ moved): `playwright-core` **1.63.0**, `nuxt` **4.6.0**. Entries that came from a
   see `layers/journal/CONTEXT.md`'s "What lives where" for what it renders.
   Editing `index.md` alone will not change what most of that page shows; check
   the `.vue` file too.
-- **A `display: none` (or hide-at-breakpoint) rule that hides the only rendering
-  of real content/data is a design smell to justify, not to ship silently.**
-  Before shipping one, check whether it hides only decorative/redundant markup
-  (fine) or the sole rendering of actual data (e.g. a dataset dimension with no
-  other place at that breakpoint). If the latter, say in the PR description why
-  losing it at that breakpoint is acceptable, or where it reappears.
+- **Before shipping a `display: none` (or hide-at-breakpoint) rule, check what
+  it hides.** Decorative or redundant markup is fine. If it hides the only
+  rendering of real data (e.g. a dataset dimension with no other place at that
+  breakpoint), say in the PR description why losing it there is acceptable, or
+  where it reappears.
 
 ## The sharp edges
 
-Each of these is documented, intended behaviour that surprises on first contact
-and has cost a confused bisection round.
+Each is documented, intended behaviour, not a bug.
 
 ### Visibility is not in-viewport
 

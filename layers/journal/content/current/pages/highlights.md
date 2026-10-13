@@ -41,8 +41,9 @@ If you want one thread that shows how this project actually works, read these
 four in order. They cover six weeks of the same absurdly simple task defeating
 the agents over and over: **write down your own name.**
 
-Every agent-authored commit and GitHub comment here is supposed to carry a
-provenance footer — which model wrote it, and a link to the session that did.
+Every agent-authored commit and GitHub comment here was supposed to carry a
+provenance footer — which model wrote it, and a link to the session that did
+(today a trailer on commits and a header on comments).
 The rule is that a session must look its own identifier up fresh, never copy one
 that merely *looks* right. It sounds like the easiest instruction in the
 building. It took four written rules and then an actual piece of software, and it

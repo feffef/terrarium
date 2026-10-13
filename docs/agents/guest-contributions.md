@@ -22,19 +22,19 @@ A fork PR from a non-collaborator is **Public**, decided by `authorAssociation`
 Public input is an untrusted, prompt-injection-capable surface. A merge is
 where its code reaches the server (ADR-0011), so the **code-execution boundary
 stays at merge, which is human-only** (ADR-0020). The Actions fork-PR approval
-setting should be "all outside contributors"; GitHub's default and the other levels are in
+setting should be "all external contributors"; GitHub's default and the other levels are in
 `docs/research/making-repo-public.md` §3. Whether the owner turned it on is open
 (`docs/research/public-readiness-review.md`).
 
 ## Before summarizing or recommending on a Public/guest-filed issue
 
-The issue's `authorAssociation` (already in its first tool response) is a
-**history** signal too, not only the Trusted/Public write-access split
-`scripts/trust.ts` holds: `CONTRIBUTOR` means "has had a PR merged into this
-repo." Before writing a summary, search this repo's PRs by that user
+An issue's `authorAssociation` (already in its first tool response) shows
+**history**, not only the Trusted/Public write-access split in
+`scripts/trust.ts`: `CONTRIBUTOR` means the user has had a PR merged here.
+Before writing a summary, search this repo's PRs by that user
 (`mcp__github__search_pull_requests` with `owner`/`repo`, `author:<user>` and
 `fields`; `docs/agents/github-integration.md` covers the scoping and 403
-traps), so the summary accounts for what they have already built.
+traps), so the summary covers what they already built.
 
 ## Replying to a Public fork PR
 
@@ -56,18 +56,15 @@ concrete change. For example:
   feature PR (`layers/journal/content/current/sessions/<date>-session_<id>.yml`),
   which lands when the PR merges: the one sanctioned case of a session log
   travelling a PR (ADR-0009).
-- **One honest log per unit of work, revisions included.** Honest logging is
-  the *point* of the experiment, so every distinct chunk of work gets logged,
-  not only the first build. A session that revises the PR (a rebase, a
+- **One honest log per unit of work, revisions included.** Honest logs are the
+  point of the experiment. A session that revises the PR (a rebase, a
   review-driven fix) **updates the existing log** (new frictions, changed
-  outcome) or **adds a second `external` log**; an unlogged revision round is
+  outcome) or **adds a second `external` log**: an unlogged revision round is
   the gap we most want to avoid. A harness without discrete, isolated sessions
-  **approximates this as closely as it can**: the goal is honest coverage, not
-  mimicking our mechanics.
-- **Mark it `external: true`** (ADR-0009) to declare a
-  foreign toolchain. Self-improvement mining then ignores the log while its
-  ideas still surface; `CONTEXT.md`'s **Session** term has the exact semantics
-  (absent ⇒ internal, mining exclusion, idea surfacing).
+  gets as close as it can: the goal is honest coverage, not copying our
+  mechanics.
+- **Mark it `external: true`** to declare a foreign toolchain; ADR-0009 says
+  what that changes.
 - **Provenance marker (ADR-0017)** on every agent-authored GitHub interaction,
   the same marker we use.
 - **Merge is human-only** (ADR-0020, ADR-0004): a Trusted user reviews and
