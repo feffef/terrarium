@@ -80,6 +80,7 @@ useHead({ title: 'The Atlas of the Terrarium' })
         </p>
         <p class="at-random">
           <NuxtLink to="/t/atlas/random">or open the guide at random →</NuxtLink>
+          · <NuxtLink to="/t/atlas/plates">see every plate →</NuxtLink>
         </p>
         <p class="cover-orn" aria-hidden="true">~ · ~ · ~ · ~ · ~</p>
       </header>
