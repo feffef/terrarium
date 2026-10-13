@@ -1,0 +1,141 @@
+adr: '0027'
+summary_in_context: true # loaded at session start; set aside
+roles:
+  explains: 10
+  quotes: 4
+  enforces: 3
+  repeats: 3
+  points: 1
+  miscites: 0
+  noise: 0
+items:
+  - id: C1
+    text: A trial cuts one problem's instructions to their goal (or rewrites a doc or Skill plainly, keeping its decisions), leaves the cut standing for a set time, and judges from what goes wrong; a rule is tested by removing it.
+    kind: decision
+    refs:
+      - CONTEXT.md:311
+      - .agents/prune-trials.yml:1
+      - docs/adr/0003-agent-operating-model-and-governance.md:24
+      - docs/adr/0003-agent-operating-model-and-governance.md:77
+      - docs/adr/0003-agent-operating-model-and-governance.md:79
+    conflict: false
+  - id: C2
+    text: A trial stands about three days counted from when the cut lands on main, not from when the ledger entry was written; it is a minimum, so judging late is fine and judging early is wrong.
+    kind: mechanic
+    home: scripts/prune-trial-window.ts
+    refs:
+      - .agents/prune-trials.yml:3
+      - scripts/prune-trial-window.ts:1
+      - scripts/prune-trial-window.ts:18
+      - scripts/prune-trial-window.ts:40
+    conflict: false
+  - id: C3
+    text: While a trial stands, other sessions do not restore or re-fix the cut text in its area; they log a Friction, and only the prune-trial Skill decides the outcome (a blocker may still be filed as an issue naming the trial). Check for overlap with an open trial before building an issue.
+    kind: decision
+    refs:
+      - .agents/skills/frictions-to-fixes/SKILL.md:101
+      - docs/agents/issue-tracker.md:31
+      - CONTEXT.md:311
+      - layers/journal/tenant.config.ts:71
+    conflict: false
+  - id: C4
+    text: The Frictions logged while a trial stands are its evidence; missing evidence never counts as a pass, so a trial whose landing can't be found is not judged.
+    kind: decision
+    refs:
+      - CONTEXT.md:311
+      - .agents/skills/frictions-to-fixes/SKILL.md:101
+      - scripts/prune-trial-window.ts:93
+    conflict: false
+  - id: C5
+    text: Open trials are recorded one per cut problem (problem, territory) in a ledger; the entry ships in the cut's commit, is deleted once judged, and must parse as strict YAML.
+    kind: mechanic
+    home: .agents/prune-trials.yml (checked by scripts/validate-prune-trials.ts)
+    refs:
+      - .agents/prune-trials.yml:1
+      - scripts/validate-prune-trials.ts:1
+      - docs/diagrams/interactive-map/terrarium-overview.md:856
+    conflict: false
+  - id: C6
+    text: A hook warns and exits 0, even when it crashes. Unclear whether ADR-0027 owns this for every hook or only for hooks a trial proposes.
+    kind: decision
+    refs:
+      - .agents/skills/prune-trial/SKILL.md:120
+      - scripts/skill-rules-hint.ts:6
+      - scripts/stale-info-hint.ts:5
+    conflict: false
+  - id: C7
+    text: The prune-trial run merges its own PR on a green gate within its listed scope; a ledger entry never lets an ADR change skip a human merge.
+    kind: decision
+    refs:
+      - docs/adr/0003-agent-operating-model-and-governance.md:24
+      - docs/adr/0003-agent-operating-model-and-governance.md:77
+      - tests/unit/merge-pr.spec.ts:308
+    conflict: false
+  - id: C8
+    text: A trial may change any agent-instruction text except ADRs and their summary rules — but ADR-0017 says it was rewritten whole under ADR-0027.
+    kind: decision
+    refs:
+      - docs/adr/0003-agent-operating-model-and-governance.md:24
+      - docs/adr/0017-provenance-footer-on-agent-authored-content.md:7
+    conflict: true
+  - id: C9
+    text: A trial never writes a hook; when a behaviour proves it needs one, it files an issue and a session with a human present builds it.
+    kind: decision
+    refs:
+      - docs/adr/0003-agent-operating-model-and-governance.md:24
+      - .agents/skills/prune-trial/SKILL.md:120
+    conflict: false
+  - id: C10
+    text: Retiring a Skill or Routine is outside a trial and goes to a human as an issue, since no later evidence could reveal a mistaken retirement.
+    kind: decision
+    refs:
+      - docs/adr/0003-agent-operating-model-and-governance.md:77
+      - docs/adr/0003-agent-operating-model-and-governance.md:79
+    conflict: false
+  - id: C11
+    text: When one of our instructions causes a problem, cut or simplify it before adding a new one.
+    kind: decision
+    refs:
+      - CLAUDE.md:8
+    conflict: false
+lists:
+  - list: repoint
+    file: scripts/prune-trial-window.ts
+    line: 40
+    note: Quotes "left standing for three days" for WINDOW_MS.
+  - list: repoint
+    file: scripts/prune-trial-window.ts
+    line: 93
+    note: Quotes "silence is not evidence".
+  - list: repoint
+    file: docs/adr/0003-agent-operating-model-and-governance.md
+    line: 77
+    note: Dated amendment "Amended by ADR-0027 (2026-08-23)" restating reach and the Skill/Routine retirement exclusion.
+  - list: repoint
+    file: docs/adr/0003-agent-operating-model-and-governance.md
+    line: 79
+    note: Same amendment, "ADR-0027 holds the reasoning".
+  - list: fix
+    file: .agents/prune-trials.yml
+    line: 3
+    note: Repeats the window rule; point to scripts/prune-trial-window.ts and the ADR.
+  - list: fix
+    file: .agents/skills/frictions-to-fixes/SKILL.md
+    line: 101
+    note: Repeats the don't-restore-on-trial rule and its reason; point to the ADR.
+  - list: fix
+    file: docs/agents/issue-tracker.md
+    line: 31
+    note: Repeats "implementing over a trial re-legislates prose"; point to the ADR.
+  - list: fix
+    file: docs/adr/0017-provenance-footer-on-agent-authored-content.md
+    line: 7
+    note: Conflicts with ADRs being out of trial scope (C8); fix whichever side the rewrite rejects.
+  - list: fix
+    file: scripts/skill-rules-hint.ts
+    line: 6
+    note: Unclear; cites ADR-0027 for a general hook fail-open rule (C6). Repoint if the rewrite limits it to trial-proposed hooks.
+  - list: fix
+    file: scripts/stale-info-hint.ts
+    line: 5
+    note: Unclear; same as skill-rules-hint.ts.

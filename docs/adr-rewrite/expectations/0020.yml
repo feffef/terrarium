@@ -1,243 +1,226 @@
-adr: "0020"
+adr: '0020'
+source: docs/adr-rewrite/refs/0020.md
 summary_in_context: true
-checklist:
-  - id: T1
-    text: "A Public-authored issue never reaches ready-for-agent / implementation without a Trusted green-light (rule 2)."
-    kind: claim
-    section: Summary
-    conflict: false
+counts:
+  enforces: 13
+  explains: 15
+  points: 15
+  quotes: 12
+  repeats: 8
+  miscites: 4
+  noise: 0
+  total: 67
+items:
+  - id: C1
+    text: Can work a Public person asked for be built without a Trusted person's go-ahead? No; a Public issue never reaches ready-for-agent on its own.
+    kind: decision
     refs:
-      - docs/adr/0023-guest-driven-demo-pipeline.md:7
+      - .claude/workflows/clear-backlog-explore.js:56
+      - .agents/skills/clear-backlog/SKILL.md:69
+      - .claude/rules/adr-0003.md:12
+      - .claude/rules/adr-0023.md:8
+      - docs/adr/0003-agent-operating-model-and-governance.md:65
+      - docs/adr/0003-agent-operating-model-and-governance.md:68
+      - docs/adr/0022-autonomous-triage-sweep.md:24
+      - docs/adr/0022-autonomous-triage-sweep.md:60
       - docs/adr/0023-guest-driven-demo-pipeline.md:34
       - docs/adr/0023-guest-driven-demo-pipeline.md:35
       - docs/adr/0023-guest-driven-demo-pipeline.md:68
       - docs/adr/0023-guest-driven-demo-pipeline.md:113
       - docs/adr/0023-guest-driven-demo-pipeline.md:114
-      - .agents/skills/clear-backlog/SKILL.md:69
-      - .claude/workflows/clear-backlog-explore.js:56
-      - docs/adr/0022-autonomous-triage-sweep.md:24
-      - docs/adr/0022-autonomous-triage-sweep.md:60
-      - .claude/rules/adr-0003.md:12
-      - docs/adr/0003-agent-operating-model-and-governance.md:65
       - docs/agents/triage-labels.md:21
-      - docs/agents/guest-contributions.md:12
-      - docs/diagrams/interactive-map/terrarium-overview.md:868
       - CONTEXT.md:263
       - docs/research/public-readiness-review.md:58
-  - id: T2
-    text: "Who is Trusted vs Public, and how is it detected? Line at write access; GitHub authorAssociation (OWNER/MEMBER/COLLABORATOR Trusted, rest Public)."
-    kind: question
-    section: Summary
+      - docs/adr/0023-guest-driven-demo-pipeline.md:7
     conflict: false
+  - id: C2
+    text: Which PRs must a person merge because of who asked for them? Every PR from a Public author or a fork; never auto-merged.
+    kind: decision
     refs:
-      - CONTEXT.md:253
-      - CONTEXT.md:263
-      - scripts/trust.ts:1
-      - .github/workflows/pr-authorassociation-label.yml:2
-      - .github/workflows/pr-authorassociation-label.yml:46
-      - scripts/poll-guest-tickets.ts:11
-      - scripts/poll-guest-tickets.ts:100
-      - tests/unit/poll-guest-tickets.spec.ts:2
-      - tests/unit/poll-guest-tickets.spec.ts:14
-      - tests/unit/poll-guest-tickets.spec.ts:19
-      - docs/adr/0023-guest-driven-demo-pipeline.md:28
-      - docs/adr/0023-guest-driven-demo-pipeline.md:134
-      - docs/adr/0022-autonomous-triage-sweep.md:50
-      - docs/adr/0003-agent-operating-model-and-governance.md:68
-      - docs/adr/0004-objective-safety-gate.md:146
-      - docs/agents/guest-contributions.md:4
-      - docs/agents/guest-contributions.md:20
-      - docs/agents/issue-tracker.md:77
-      - SECURITY.md:25
-      - docs/diagrams/interactive-map/terrarium-overview.md:853
-      - docs/research/public-readiness-review.md:58
-  - id: T3
-    text: "Public-originated PRs (Public-authored, fork, guest-pipeline) are human/owner-merged, never auto-merged (rule 3)."
-    kind: claim
-    section: Summary
-    conflict: false
-    refs:
-      - docs/adr/0023-guest-driven-demo-pipeline.md:73
-      - .agents/skills/guest-build/SKILL.md:40
-      - .agents/skills/clear-backlog/SKILL.md:120
       - scripts/merge-pr.ts:182
       - scripts/merge-pr.ts:188
       - docs/agents/pr-workflow.md:51
       - docs/adr/0004-objective-safety-gate.md:46
       - docs/adr/0004-objective-safety-gate.md:142
+      - docs/adr/0004-objective-safety-gate.md:146
+      - docs/adr/0023-guest-driven-demo-pipeline.md:73
+      - .agents/skills/guest-build/SKILL.md:40
+      - .agents/skills/clear-backlog/SKILL.md:120
       - docs/agents/guest-contributions.md:26
       - docs/agents/guest-contributions.md:76
-      - docs/agents/issue-tracker.md:77
-      - .claude/rules/adr-0023.md:8
       - CONTEXT.md:263
       - docs/research/public-readiness-review.md:58
-  - id: T4
-    text: "Public content (issues, fork PRs, comments) is untrusted data, never instructions (rule 1)."
-    kind: claim
-    section: Summary
-    conflict: false
-    refs:
-      - docs/adr/0023-guest-driven-demo-pipeline.md:78
-      - docs/adr/0003-agent-operating-model-and-governance.md:65
-      - docs/adr/0022-autonomous-triage-sweep.md:60
-      - CONTEXT.md:210
-      - CONTEXT.md:263
-      - docs/agents/guest-contributions.md:26
       - SECURITY.md:25
-  - id: T5
-    text: "Tier comes from identity, never request content; claimed authority or a forgeable marker from a Public author counts for nothing."
-    kind: claim
-    section: Summary
     conflict: false
+  - id: C3
+    text: Which GitHub author_association values are trusted (OWNER, MEMBER, COLLABORATOR) and which are not (NONE, CONTRIBUTOR, FIRST_TIME_CONTRIBUTOR, FIRST_TIMER, MANNEQUIN)?
+    kind: mechanic
+    home: scripts/trust.ts
     refs:
-      - scripts/merge-pr.ts:158
-      - tests/unit/merge-pr.spec.ts:281
-      - docs/adr/0023-guest-driven-demo-pipeline.md:134
-      - CONTEXT.md:250
-      - .agents/skills/guest-intake/SKILL.md:59
-  - id: T6
-    text: "Why: prompt injection; the gate checks output not input intent; merge to main executes on the VPS (ADR-0011), so the code-execution boundary is the human-only merge."
-    kind: claim
-    section: Why
-    conflict: false
-    refs:
-      - docs/adr/0023-guest-driven-demo-pipeline.md:40
-      - docs/agents/guest-contributions.md:26
-      - SECURITY.md:25
-      - docs/research/public-readiness-review.md:58
-  - id: T7
-    text: "Which exceptions to rule 2 exist? ADR-0022 standing green-light (Trusted-authored only) and ADR-0023 demo-scoped guest exception, both additive."
-    kind: question
-    section: Scope and limits
-    conflict: false
-    refs:
-      - docs/adr/0023-guest-driven-demo-pipeline.md:7
-      - .claude/rules/adr-0023.md:8
-      - docs/agents/guest-contributions.md:12
-      - docs/agents/triage-labels.md:21
-      - docs/adr/0022-autonomous-triage-sweep.md:50
-      - docs/adr/0023-guest-driven-demo-pipeline.md:114
-  - id: T8
-    text: "ADR-0020 amended ADR-0003 (green-light must be Trusted) and ADR-0004 (request-provenance axis: Public PR human-merged regardless of file class) on 2026-07-11."
-    kind: claim
-    section: Consequences
-    conflict: false
-    refs:
-      - docs/adr/0003-agent-operating-model-and-governance.md:65
-      - docs/adr/0003-agent-operating-model-and-governance.md:68
-      - docs/adr/0004-objective-safety-gate.md:142
-      - docs/adr/0004-objective-safety-gate.md:146
-  - id: T9
-    text: "Fork-PR Actions approval set to 'all outside contributors'; fork-PR workflows use plain pull_request, not triggers that bypass approval. Conflict: label workflow says never workflow_run; dependabot proposal says workflow_run is fine when no PR code is checked out."
-    kind: claim
-    section: Scope and limits
-    conflict: true
-    refs:
-      - docs/agents/guest-contributions.md:27
-      - .github/workflows/pr-authorassociation-label.yml:17
-      - docs/proposals/1633-dependabot-automerge.md:15
-      - docs/research/public-readiness-review.md:58
-  - id: T10
-    text: "Where do the exact authorAssociation values live? Conflict: adr-0023 says ADR-0020; other callers say scripts/trust.ts."
-    kind: question
-    section: See
-    conflict: true
-    refs:
-      - docs/adr/0023-guest-driven-demo-pipeline.md:135
       - scripts/trust.ts:1
+      - scripts/poll-guest-tickets.ts:11
+      - scripts/poll-guest-tickets.ts:100
+      - tests/unit/poll-guest-tickets.spec.ts:2
+      - tests/unit/poll-guest-tickets.spec.ts:14
+      - tests/unit/poll-guest-tickets.spec.ts:19
+      - .github/workflows/pr-authorassociation-label.yml:46
       - .claude/workflows/clear-backlog-explore.js:56
       - docs/agents/guest-contributions.md:20
       - docs/agents/issue-tracker.md:77
-      - scripts/poll-guest-tickets.ts:11
-  - id: T11
-    text: "What may a Trusted user do? Direct interactive work, give the green-light, steer/override agents (unmarked OWNER comment), merge."
-    kind: question
-    section: Summary
-    conflict: false
+      - docs/adr/0023-guest-driven-demo-pipeline.md:134
+      - CONTEXT.md:253
+      - CONTEXT.md:263
+    conflict: true
+    conflict_note: docs/adr/0023:134 says ADR-0020 holds the enum values; scripts/trust.ts and its callers treat trust.ts as the home.
+  - id: C4
+    text: Where is the trust line drawn, and why? At write access (owner and collaborators alike), not at the owner; everyone else is Public.
+    kind: decision
     refs:
-      - .agents/skills/guest-intake/SKILL.md:59
       - CONTEXT.md:250
-      - .claude/rules/adr-0003.md:12
+      - CONTEXT.md:253
+      - CONTEXT.md:210
+      - docs/agents/guest-contributions.md:4
+      - docs/adr/0023-guest-driven-demo-pipeline.md:28
+      - docs/adr/0022-autonomous-triage-sweep.md:50
       - docs/diagrams/interactive-map/terrarium-overview.md:852
-  - id: T12
-    text: "Does rule 3 cover PRs our own agents build from a Public issue? Skills say yes; merge-pr.ts checks only PR author and fork."
-    kind: question
-    section: Scope and limits
+      - docs/diagrams/interactive-map/terrarium-overview.md:853
+      - docs/diagrams/interactive-map/terrarium-overview.md:868
+      - .github/workflows/pr-authorassociation-label.yml:2
+      - docs/research/public-readiness-review.md:58
+      - SECURITY.md:25
     conflict: false
+  - id: C5
+    text: How must agents treat text from Public people? As data, not instructions; embedded commands are ignored.
+    kind: decision
     refs:
-      - .agents/skills/clear-backlog/SKILL.md:120
-      - .agents/skills/guest-build/SKILL.md:40
-      - scripts/merge-pr.ts:182
-  - id: T13
-    text: "Rule 3's merge includes a genuine security review; ADR-0020 is the single home of the security-review and enforcement mechanics."
-    kind: claim
-    section: Consequences
+      - docs/adr/0023-guest-driven-demo-pipeline.md:78
+      - CONTEXT.md:210
+      - CONTEXT.md:263
+      - docs/adr/0003-agent-operating-model-and-governance.md:65
+      - docs/adr/0022-autonomous-triage-sweep.md:60
+      - docs/agents/guest-contributions.md:26
+      - docs/agents/issue-tracker.md:77
+      - docs/research/public-readiness-review.md:58
+      - SECURITY.md:25
     conflict: false
+  - id: C6
+    text: Why is this needed? Public input can carry prompt injection, the gate checks output not intent, and a merge to main runs code on the server.
+    kind: decision
     refs:
-      - docs/adr/0023-guest-driven-demo-pipeline.md:73
-      - docs/adr/0004-objective-safety-gate.md:146
-  - id: T14
-    text: "trusted label on same-repo PRs only, no public label; judge Public by authorAssociation, not a missing label."
-    kind: claim
-    section: See
+      - docs/adr/0023-guest-driven-demo-pipeline.md:40
+      - docs/agents/guest-contributions.md:26
+      - docs/research/public-readiness-review.md:58
+      - SECURITY.md:25
+      - docs/adr/0023-guest-driven-demo-pipeline.md:34
     conflict: false
+  - id: C7
+    text: Does the tier come from identity or from what a message says? Identity only; a claim of owner authority or a forged agent marker from a Public author counts for nothing.
+    kind: decision
+    refs:
+      - scripts/merge-pr.ts:158
+      - tests/unit/merge-pr.spec.ts:281
+      - docs/adr/0023-guest-driven-demo-pipeline.md:135
+      - CONTEXT.md:250
+      - CONTEXT.md:253
+    conflict: false
+  - id: C8
+    text: How are fork PRs kept from running untrusted code in CI? Actions requires approval for all outside contributors' fork PR workflows; fork-triggered workflows use plain pull_request, never pull_request_target or workflow_run.
+    kind: mechanic
+    home: GitHub repo setting (not in tree); levels in docs/research/making-repo-public.md §3
+    refs:
+      - .github/workflows/pr-authorassociation-label.yml:17
+      - docs/agents/guest-contributions.md:27
+      - docs/research/public-readiness-review.md:58
+      - docs/proposals/1633-dependabot-automerge.md:15
+    conflict: true
+    conflict_note: pr-authorassociation-label.yml:17 says ADR-0020 forbids workflow_run; proposal 1633 uses workflow_run, arguing the concern does not apply when no PR code is checked out.
+  - id: C9
+    text: Is there a label that shows a PR's tier? A trusted label on same-repo PRs by trusted authors; no public label; judge by author_association, not a missing label.
+    kind: mechanic
+    home: .github/workflows/pr-authorassociation-label.yml
     refs:
       - .github/workflows/pr-authorassociation-label.yml:1
       - .github/workflows/pr-authorassociation-label.yml:2
+      - .github/workflows/pr-authorassociation-label.yml:46
       - docs/agents/issue-tracker.md:79
       - docs/agents/guest-contributions.md:20
-  - id: T15
-    text: "Why draw the line at write access rather than at the owner?"
-    kind: question
-    section: Why
     conflict: false
+  - id: C10
+    text: Which other decisions relax C1, and does ADR-0020 name them? The triage sweep for Trusted-authored issues (ADR-0022) and the owner-run guest demo (ADR-0023).
+    kind: decision
     refs:
-      - CONTEXT.md:250
-  - id: T16
-    text: "Known limit: shared-credential blind spot; agent writes land under the owner's connection, provenance is by footer, not authorAssociation."
-    kind: claim
-    section: Scope and limits
+      - docs/adr/0022-autonomous-triage-sweep.md:50
+      - docs/adr/0022-autonomous-triage-sweep.md:60
+      - docs/adr/0023-guest-driven-demo-pipeline.md:7
+      - docs/agents/guest-contributions.md:12
+      - .claude/rules/adr-0023.md:8
+      - CONTEXT.md:263
+      - docs/agents/triage-labels.md:21
     conflict: false
+  - id: C11
+    text: What may a Trusted person do? Direct work, give the go-ahead to build, steer an issue by commenting (owner comment without the agent marker), and merge.
+    kind: decision
+    refs:
+      - .agents/skills/guest-intake/SKILL.md:59
+      - .claude/rules/adr-0003.md:12
+      - CONTEXT.md:250
+      - .agents/skills/clear-backlog/SKILL.md:69
+    conflict: false
+  - id: C12
+    text: Does a PR an agent built from a Public issue need a human merge?
+    kind: decision
+    refs:
+      - .agents/skills/clear-backlog/SKILL.md:120
+      - docs/adr/0004-objective-safety-gate.md:142
+      - scripts/merge-pr.ts:188
+    conflict: true
+    conflict_note: clear-backlog says yes (rule 3) though merge-pr.ts accepts it; ADR-0004 says Public-originated PRs; merge-pr.ts checks only PR author and fork.
+  - id: C13
+    text: Must the owner review security before merging a Public-origin PR? Yes, a genuine security review.
+    kind: decision
+    refs:
+      - docs/adr/0004-objective-safety-gate.md:142
+      - docs/adr/0023-guest-driven-demo-pipeline.md:73
+    conflict: false
+  - id: C14
+    text: Known blind spot? Agent writes go out under the owner's account, so author_association cannot tell agent from owner; the provenance marker does.
+    kind: decision
     refs:
       - docs/adr/0023-guest-driven-demo-pipeline.md:131
-  - id: T17
-    text: "Repo-configured bots (Dependabot) are not Public requesters."
-    kind: claim
-    section: Scope and limits
+      - .agents/skills/guest-intake/SKILL.md:59
     conflict: false
+  - id: C15
+    text: Are repo-configured bots such as Dependabot Public requesters? No.
+    kind: decision
     refs:
       - docs/adr/0003-agent-operating-model-and-governance.md:26
       - docs/proposals/1633-dependabot-automerge.md:15
-  - id: T18
-    text: "A Public user can only report (open issues, fork PRs), not direct, green-light or merge."
-    kind: claim
-    section: Summary
     conflict: false
-    refs:
-      - CONTEXT.md:210
-      - CONTEXT.md:263
-rewrite:
-  - {list: keep, file: docs/adr/0023-guest-driven-demo-pipeline.md, line: 78, note: "quotes 'rule 1' = untrusted-data rule"}
-  - {list: keep, file: docs/adr/0023-guest-driven-demo-pipeline.md, line: 35, note: "quotes 'rule 2' = no ready-for-agent without Trusted green-light (also :7, :68, :113)"}
-  - {list: keep, file: docs/adr/0023-guest-driven-demo-pipeline.md, line: 73, note: "quotes 'rule 3' = owner-merge backstop"}
-  - {list: keep, file: .agents/skills/clear-backlog/SKILL.md, line: 120, note: "quotes 'rule 3'"}
-  - {list: keep, file: .agents/skills/guest-build/SKILL.md, line: 40, note: "quotes 'rule 3'"}
-  - {list: keep, file: docs/adr/0003-agent-operating-model-and-governance.md, line: 65, note: "links file name 0020-requester-trust-tiers.md and the 2026-07-11 amendment"}
-  - {list: keep, file: docs/adr/0004-objective-safety-gate.md, line: 142, note: "links file name and the 2026-07-11 amendment"}
-  - {list: keep, file: CONTEXT.md, line: 250, note: "relies on ADR-0020 explaining why the line is write access, not the owner"}
-  - {list: keep, file: docs/agents/guest-contributions.md, line: 27, note: "relies on ADR-0020 requiring the 'all outside contributors' fork-PR approval setting"}
-  - {list: repoint, file: docs/adr/0023-guest-driven-demo-pipeline.md, line: 135, note: "'see ADR-0020 for the exact enum values' -> scripts/trust.ts if the ADR does not list them"}
-  - {list: repoint, file: docs/adr/0004-objective-safety-gate.md, line: 146, note: "claims ADR-0020 holds security-review and enforcement mechanics; repoint if moved"}
-  - {list: repoint, file: docs/adr/0023-guest-driven-demo-pipeline.md, line: 7, note: "rule 2 by number; breaks on renumbering (same for :35, :68, :73, :78, :113)"}
-  - {list: repoint, file: .agents/skills/clear-backlog/SKILL.md, line: 120, note: "rule 3 by number; breaks on renumbering"}
-  - {list: repoint, file: .agents/skills/guest-build/SKILL.md, line: 40, note: "rule 3 by number; breaks on renumbering"}
-  - {list: repoint, file: .github/workflows/pr-authorassociation-label.yml, line: 17, note: "'ADR-0020 requires' plain pull_request trigger; repoint if trigger guidance moves to docs/research/making-repo-public.md"}
-  - {list: repoint, file: docs/adr/0023-guest-driven-demo-pipeline.md, line: 131, note: "'same limit as ADR-0020' shared-credential blind spot; repoint if dropped"}
-  - {list: fix, file: app/composables/catalog.ts, line: 12, note: "miscite: 'write isolation (ADR-0020)'; ADR-0020 is requester trust (Human-only file)"}
-  - {list: fix, file: layers/commons/app/composables/timeline.ts, line: 9, note: "miscite: 'read-only by construction (ADR-0020)'"}
-  - {list: fix, file: modules/catalog.ts, line: 16, note: "miscite: 'write isolation (ADR-0020)' (Human-only file)"}
-  - {list: fix, file: docs/adr/0025-cross-tenant-catalog-and-collection-kinds.md, line: 165, note: "miscite: 'write isolation (ADR-0020)'"}
-  - {list: fix, file: scripts/poll-guest-tickets.ts, line: 11, note: "repeats the enum split; point to scripts/trust.ts"}
-  - {list: fix, file: docs/adr/0023-guest-driven-demo-pipeline.md, line: 135, note: "names ADR-0020 as enum home; conflicts with scripts/trust.ts"}
-  - {list: fix, file: docs/proposals/1633-dependabot-automerge.md, line: 15, note: "conflicts with pr-authorassociation-label.yml:17 on workflow_run; settle in ADR, fix the loser"}
-  - {list: fix, file: CONTEXT.md, line: 263, note: "optional: glossary restates the Public rules; could point to ADR-0020"}
+lists:
+  - {list: repoint, file: .agents/skills/clear-backlog/SKILL.md, line: 120, note: '"ADR-0020 rule 3"'}
+  - {list: repoint, file: .agents/skills/guest-build/SKILL.md, line: 40, note: '"ADR-0020 rule 3"'}
+  - {list: repoint, file: docs/adr/0003-agent-operating-model-and-governance.md, line: 65, note: 'dated amendment "Amended by ADR-0020 (2026-07-11)", file link'}
+  - {list: repoint, file: docs/adr/0003-agent-operating-model-and-governance.md, line: 68, note: 'same amendment, "See ADR-0020 for the tiers"'}
+  - {list: repoint, file: docs/adr/0004-objective-safety-gate.md, line: 142, note: 'dated amendment; "single home for ... security-review and enforcement mechanics"; "low-risk auto-merge tier"'}
+  - {list: repoint, file: docs/adr/0004-objective-safety-gate.md, line: 146, note: same amendment block}
+  - {list: repoint, file: docs/adr/0023-guest-driven-demo-pipeline.md, line: 7, note: '"ADR-0020 rule 2", file link'}
+  - {list: repoint, file: docs/adr/0023-guest-driven-demo-pipeline.md, line: 35, note: '"ADR-0020 rule 2 forbids"'}
+  - {list: repoint, file: docs/adr/0023-guest-driven-demo-pipeline.md, line: 68, note: '"ADR-0020 rule 2 applies in full again"'}
+  - {list: repoint, file: docs/adr/0023-guest-driven-demo-pipeline.md, line: 73, note: '"ADR-0020 rule 3"'}
+  - {list: repoint, file: docs/adr/0023-guest-driven-demo-pipeline.md, line: 78, note: '"ADR-0020 rule 1"'}
+  - {list: repoint, file: docs/adr/0023-guest-driven-demo-pipeline.md, line: 113, note: '"ADR-0020 rule 2 reapplies"'}
+  - {list: repoint, file: docs/adr/0023-guest-driven-demo-pipeline.md, line: 134, note: '"see ADR-0020 for the exact enum values"; home is scripts/trust.ts'}
+  - {list: fix, file: app/composables/catalog.ts, line: 12, note: 'miscite: write isolation is not ADR-0020'}
+  - {list: fix, file: layers/commons/app/composables/timeline.ts, line: 9, note: 'miscite: read-only by construction is not ADR-0020'}
+  - {list: fix, file: modules/catalog.ts, line: 16, note: 'miscite: write isolation is not ADR-0020'}
+  - {list: fix, file: docs/adr/0025-cross-tenant-catalog-and-collection-kinds.md, line: 165, note: 'miscite: write isolation is not ADR-0020'}
+  - {list: fix, file: scripts/poll-guest-tickets.ts, line: 11, note: 'repeats association lists; point to scripts/trust.ts'}
+  - {list: fix, file: CONTEXT.md, line: 263, note: 'glossary restates the rule; keep the term, point for the rule'}
+  - {list: fix, file: docs/adr/0022-autonomous-triage-sweep.md, line: 60, note: 'restates C1/C5'}
+  - {list: fix, file: docs/adr/0023-guest-driven-demo-pipeline.md, line: 114, note: 'restates C1'}
+  - {list: fix, file: docs/adr/0023-guest-driven-demo-pipeline.md, line: 135, note: 'restates C7'}
+  - {list: fix, file: docs/agents/guest-contributions.md, line: 26, note: 'restates C2/C6'}
+  - {list: fix, file: docs/agents/guest-contributions.md, line: 27, note: 'restates C8 Actions setting; keep one home'}
+  - {list: fix, file: docs/agents/guest-contributions.md, line: 76, note: 'restates C2'}
+  - {list: fix, file: .agents/skills/clear-backlog/SKILL.md, line: 120, note: 'C12 conflict: claims a human merge merge-pr.ts does not enforce'}
+  - {list: fix, file: docs/proposals/1633-dependabot-automerge.md, line: 15, note: 'C8 conflict with pr-authorassociation-label.yml:17 on workflow_run'}

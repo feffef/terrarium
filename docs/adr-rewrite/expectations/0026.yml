@@ -1,0 +1,63 @@
+adr: '0026'
+summary_in_context: false
+counts: {explains: 8, points: 6, enforces: 5, quotes: 2, repeats: 1, miscites: 0, noise: 0}
+items:
+  - id: steps-in-action-file
+    text: CI's check steps live in .github/actions/gate/action.yml; .github/workflows/gate.yml only starts them (triggers, permissions, checkout, token).
+    kind: decision
+    refs: [.github/actions/gate/action.yml:5, .github/workflows/gate.yml:2, scripts/gate.ts:8, tests/unit/gate-parity.spec.ts:4, docs/research/public-readiness-review.md:99, CONTEXT.md:199, docs/diagrams/interactive-map/terrarium-overview.md:870, .github/workflows/gate.yml:26, tests/unit/gate-parity.spec.ts:68, tests/unit/gate-parity.spec.ts:70, docs/research/mermaid-server-side-rendering.md:52]
+    conflict: false
+  - id: agents-push-action-file
+    text: Agents may edit and push the action file; only .github/workflows/ is blocked, because agent tokens lack the workflow permission.
+    kind: decision
+    home: scripts/workflow-edit-guard.ts
+    refs: [.github/actions/gate/action.yml:5, .github/workflows/gate.yml:2, tests/unit/gate-parity.spec.ts:4, scripts/workflow-edit-guard.ts:143, tests/unit/workflow-edit-guard.spec.ts:47, tests/unit/workflow-edit-guard.spec.ts:132, docs/agents/guards.md:25, docs/research/mermaid-server-side-rendering.md:52, docs/adr/0004-objective-safety-gate.md:52]
+    conflict: false
+  - id: person-merges-action-file
+    text: Who merges a change to the action file? A person, never auto-merge, like content.config.ts. Conflict on home - ADR-0004's list (0004:4, 0004:52, gate.yml:2) vs ADR-0026 (action.yml:5, mermaid:52).
+    kind: decision
+    refs: [docs/adr/0004-objective-safety-gate.md:4, docs/adr/0004-objective-safety-gate.md:52, .github/actions/gate/action.yml:5, .github/workflows/gate.yml:2, docs/research/mermaid-server-side-rendering.md:52]
+    conflict: true
+  - id: no-safety-lost
+    text: Letting agents push the action file loses no safety, because a person still has to merge it.
+    kind: decision
+    refs: [docs/adr/0004-objective-safety-gate.md:55, tests/unit/gate-parity.spec.ts:4]
+    conflict: false
+  - id: step-list-parity
+    text: CI's step list must match package.json's gate script and scripts/gate.ts FLOOR/HEAVY; a test checks it.
+    kind: mechanic
+    home: tests/unit/gate-parity.spec.ts
+    refs: [tests/unit/gate-parity.spec.ts:68, tests/unit/gate-parity.spec.ts:70, tests/unit/gate-parity.spec.ts:4, .github/actions/gate/action.yml:5]
+    conflict: false
+  - id: ci-uses-same-decision
+    text: CI asks scripts/gate.ts --decide whether to skip build and end-to-end tests, so local and CI decide the same way; a missing or failed answer runs everything (skip rule itself homed in ADR-0004's 2026-10-03 amendment).
+    kind: mechanic
+    home: scripts/gate.ts
+    refs: [.github/actions/gate/action.yml:87, scripts/gate.ts:8, docs/adr/0004-objective-safety-gate.md:65]
+    conflict: false
+  - id: fewer-proposals
+    text: Moving the steps out of .github/workflows/ shrank the set of changes an agent must hand to a person as a Proposal, and closed the old gate.yml gap.
+    kind: decision
+    refs: [CONTEXT.md:320, docs/adr/0004-objective-safety-gate.md:138]
+    conflict: false
+  - id: full-history-checkout
+    text: CI checks out full git history so the scope step can find the base commit; a shallow checkout falls back to the full run. Unclear whether ADR-0026 covers this.
+    kind: mechanic
+    home: .github/workflows/gate.yml
+    refs: [.github/workflows/gate.yml:26]
+    conflict: false
+  - id: comment-token-and-fork-fix
+    text: The PR comment token is passed in from the workflow; the fork-PR comment failure (#659) was fixed in the action file. Unclear.
+    kind: mechanic
+    home: .github/actions/gate/action.yml
+    refs: [docs/research/public-readiness-review.md:99]
+    conflict: false
+lists:
+  - {list: repoint, file: docs/adr/0004-objective-safety-gate.md, line: 4, note: Status line "high-risk set extended by ADR-0026".}
+  - {list: repoint, file: docs/adr/0004-objective-safety-gate.md, line: 52, note: Dated amendment "Amended by ADR-0026 (2026-08-06)" linking 0026-gate-workflow-thin-shell.md.}
+  - {list: repoint, file: docs/adr/0004-objective-safety-gate.md, line: 55, note: Paraphrases ADR-0026's argument that removing the push barrier removes no protection.}
+  - {list: fix, file: docs/research/mermaid-server-side-rendering.md, line: 52, note: Repeats agent-pushable but human-only to merge; make it a pointer.}
+  - {list: fix, file: .github/workflows/gate.yml, line: 2, note: Restates push/merge rule as ADR-0004's set; align with the chosen home (Human-only file, needs a Proposal).}
+  - {list: fix, file: .github/actions/gate/action.yml, line: 87, note: Restates fail-safe skip rule homed in ADR-0004's amendment under ADR-0026; cite one home.}
+  - {list: fix, file: .github/workflows/gate.yml, line: 26, note: '"See ADR-0026" for fetch-depth; repoint to ADR-0004 2026-10-03 amendment if the rewrite drops it.'}
+  - {list: fix, file: docs/research/public-readiness-review.md, line: 99, note: Possible miscite - #659 doorbell fix attributed to ADR-0026.}

@@ -1,0 +1,134 @@
+adr: '0017'
+source: docs/adr-rewrite/refs/0017.md
+summary_in_context: true
+roles:
+  enforces: 24
+  explains: 21
+  noise: 16
+  quotes: 13
+  repeats: 9
+  points: 6
+  miscites: 2
+  total: 91
+items:
+  - id: authorship-test
+    text: How does code tell an agent's comment from a human's? A deliberate mark (header at body start, old two-line footer, or the tool's "Generated with Claude Code" line); a bare session link does not count; no mark means human.
+    kind: mechanic
+    home: scripts/provenance-header.ts (hasAuthorshipMarker); scripts/check-triage-drift.ts (isAiAuthored)
+    refs: [scripts/check-triage-drift.ts:16, scripts/check-triage-drift.ts:111, .agents/skills/guest-intake/scripts/guest-intake-scan.ts:13, .agents/skills/guest-intake/scripts/guest-intake-scan.ts:117, .agents/skills/guest-intake/scripts/guest-intake-scan.ts:159, .agents/skills/guest-intake/scripts/guest-intake-scan.ts:191, .agents/skills/guest-intake/tests/unit/guest-intake-scan.spec.ts:79, scripts/last-comment-authors.ts:12, scripts/last-comment-authors.ts:28, .agents/skills/visitor-loop/scripts/owner-corrections.ts:16, scripts/audit-skills.ts:485, scripts/merge-pr.ts:155, docs/agents/github-integration.md:129, .agents/skills/guest-intake/SKILL.md:55, .agents/skills/guest-intake/SKILL.md:58, tests/unit/check-triage-drift.spec.ts:2, tests/unit/check-triage-drift.spec.ts:43, tests/unit/provenance-header.spec.ts:1]
+    conflict: false
+  - id: every-write-marked
+    text: Every agent write to GitHub or git names the session that made it, with no exceptions (issues, PRs, comments, reviews, commits, session-log commits, outside agents).
+    kind: decision
+    refs: [scripts/github-provenance-guard.ts:1, tests/unit/github-provenance-guard.spec.ts:1, scripts/log-session.ts:333, scripts/log-session.ts:370, scripts/provenance-footer.ts:64, .agents/skills/clear-backlog/SKILL.md:20, .agents/skills/guest-build/SKILL.md:107, .agents/skills/guest-intake/SKILL.md:39, .agents/skills/guest-intake/SKILL.md:199, .agents/skills/auto-triage/SKILL.md:33, docs/agents/guest-contributions.md:74, docs/agents/git-conventions.md:49]
+    conflict: false
+  - id: shared-owner-account
+    text: "Agents act on GitHub through the owner's own account with no separate bot account, so login and author_association cannot tell agent from owner; a bot account was set aside (issue #124)."
+    kind: decision
+    refs: [scripts/check-triage-drift.ts:13, .agents/skills/auto-triage/SKILL.md:33, docs/agents/github-integration.md:57, docs/research/github-branch-protection-vs-autonomous-log-commits.md:25, docs/research/github-branch-protection-vs-autonomous-log-commits.md:95, docs/research/github-branch-protection-vs-autonomous-log-commits.md:97, docs/adr/0020-requester-trust-tiers.md:175, docs/adr/0023-guest-driven-demo-pipeline.md:131, scripts/pr-timeline.ts:17, .agents/skills/visitor-loop/scripts/owner-corrections.ts:16]
+    conflict: false
+  - id: commit-trailer-format
+    text: 'What goes on a commit: last two lines "Co-Authored-By: <Model> <noreply@anthropic.com>" and "Claude-Session: <url>"; model from a known list; the last Claude-Session line is the commit''s own.'
+    kind: mechanic
+    home: scripts/provenance-footer.ts; scripts/git-helpers.ts (SESSION_TRAILER); scripts/session-trace.ts (formatModelId)
+    refs: [scripts/provenance-footer.ts:91, scripts/provenance-footer.ts:133, tests/unit/provenance-footer.spec.ts:1, tests/unit/provenance-footer.spec.ts:68, scripts/git-helpers.ts:136, scripts/session-trace.ts:478, tests/unit/log-session-push.spec.ts:81, .githooks/commit-msg:2, scripts/github-provenance-guard.ts:332]
+    conflict: false
+  - id: body-header-format
+    text: 'What goes on a GitHub body: first line "🤖 [Model](<session url>)", read only at the very start of the body so a quoted header never counts.'
+    kind: mechanic
+    home: scripts/provenance-header.ts
+    refs: [scripts/provenance-header.ts:1, scripts/provenance-header.ts:26, scripts/github-provenance-guard.ts:8, tests/unit/audit-skills.spec.ts:329, scripts/audit-skills.ts:485, tests/unit/provenance-header.spec.ts:1, .agents/skills/guest-intake/SKILL.md:199, .agents/skills/clear-backlog/SKILL.md:20]
+    conflict: false
+  - id: covered-surfaces
+    text: Which write paths are checked? The tool-call guard covers GitHub bodies and GitHub-API commits (create_or_update_file, push_files; merges excluded); the git hook covers local commits; log-session.ts writes its own trailer.
+    kind: mechanic
+    home: scripts/github-provenance-guard.ts (GITHUB_PROVENANCE_TOOLS); .githooks/commit-msg; scripts/log-session.ts
+    refs: [scripts/github-provenance-guard.ts:1, scripts/github-provenance-guard.ts:126, .githooks/commit-msg:2, scripts/log-session.ts:325, scripts/log-session.ts:370, scripts/provenance-footer.ts:1, scripts/provenance-footer.ts:4, tests/unit/log-session-push.spec.ts:81]
+    conflict: false
+  - id: this-session-only
+    text: The mark names this session; an agent never types a session id from memory (ids come from CLAUDE_CODE_REMOTE_SESSION_ID or the transcript); a body copied from another session gets its header replaced.
+    kind: decision
+    refs: [scripts/github-provenance-guard.ts:242, scripts/github-provenance-guard.ts:248, docs/agents/github-integration.md:60, docs/agents/issue-tracker.md:109, scripts/provenance-header.ts:26, scripts/provenance-footer.ts:186, scripts/log-session.ts:325, scripts/merge-pr.ts:155]
+    conflict: false
+  - id: guard-fails-closed
+    text: When the session can't be confirmed, the guard blocks the write; the gap where the hook command can't start at all is accepted.
+    kind: decision
+    refs: [scripts/github-provenance-guard.ts:8, scripts/github-provenance-guard.ts:66, scripts/github-provenance-guard.ts:208, scripts/github-provenance-guard.ts:248, scripts/github-provenance-guard.ts:385, tests/unit/github-provenance-guard.spec.ts:1]
+    conflict: false
+  - id: header-not-footer
+    text: Why the header replaced a trailing footer on GitHub bodies (the footer fought the tool's own footer for the last line), and the tool's own "Generated with Claude Code" line stays and counts as an agent mark.
+    kind: decision
+    refs: [scripts/provenance-header.ts:1, scripts/provenance-header.ts:2, scripts/provenance-header.ts:59, scripts/github-provenance-guard.ts:27, tests/unit/provenance-header.spec.ts:1]
+    conflict: false
+  - id: no-backfill
+    text: Old posts are not rewritten; the old footer is read as an agent mark forever.
+    kind: decision
+    refs: [scripts/provenance-header.ts:52, .agents/skills/auto-triage/SKILL.md:33, scripts/check-triage-drift.ts:16, scripts/audit-skills.ts:485, tests/unit/check-triage-drift.spec.ts:43]
+    conflict: false
+  - id: commit-hook-fails-open
+    text: The local commit hook never blocks a commit; on any error it leaves the message alone, and agents check the trailer landed.
+    kind: decision
+    home: .githooks/commit-msg; scripts/provenance-footer.ts (main)
+    refs: [.githooks/commit-msg:2, scripts/provenance-footer.ts:17, scripts/provenance-footer.ts:186, docs/agents/git-conventions.md:49]
+    conflict: false
+  - id: code-or-convention
+    text: 'Is the rule checked by code or left to agents? ADR-0020 says a behaviour agents keep, not enforceable by a check; the guard and guards.md say a guard enforces it and blocks writes.'
+    kind: decision
+    refs: [docs/adr/0020-requester-trust-tiers.md:125, scripts/github-provenance-guard.ts:1, docs/agents/guards.md:27]
+    conflict: true
+  - id: mark-vs-ai-notice
+    text: 'Does the mark alone tell readers an AI wrote it, or is a written AI notice also needed? guest-build and guest-intake say the header alone; auto-triage keeps both the triage AI notice and the mark.'
+    kind: decision
+    refs: [.agents/skills/guest-build/SKILL.md:107, .agents/skills/guest-intake/SKILL.md:39, .agents/skills/auto-triage/SKILL.md:13]
+    conflict: true
+  - id: fallback-model
+    text: When the model can't be found, the commit still names one, "Claude".
+    kind: mechanic
+    home: scripts/provenance-footer.ts (FALLBACK_MODEL)
+    refs: [scripts/provenance-footer.ts:64, scripts/log-session.ts:333]
+    conflict: false
+  - id: public-session-links-ok
+    text: Session links in public commits and issues are fine to keep, since only signed-in users can open them.
+    kind: decision
+    refs: [docs/research/public-readiness-review.md:103]
+    conflict: false
+  - id: outside-agents-same-mark
+    text: Outside agents opening fork PRs use the same mark.
+    kind: decision
+    refs: [docs/agents/guest-contributions.md:74]
+    conflict: false
+  - id: session-url
+    text: A session's link is https://claude.ai/code/<id>.
+    kind: mechanic
+    home: shared/session-url.ts
+    refs: [shared/session-url.ts:3]
+    conflict: false
+lists:
+  - {list: repoint, file: scripts/github-provenance-guard.ts, line: 8, note: "ADR-0017's requirement plus its 2026-08-01 amendment"}
+  - {list: repoint, file: scripts/github-provenance-guard.ts, line: 27, note: "history of ADR-0017's footer competing with the tool's footer"}
+  - {list: repoint, file: scripts/github-provenance-guard.ts, line: 66, note: "REF = 'ADR-0017, 2026-08-01' shown in deny messages"}
+  - {list: repoint, file: scripts/github-provenance-guard.ts, line: 126, note: "ADR-0017's 2026-07-20 amendment named the hole"}
+  - {list: repoint, file: scripts/github-provenance-guard.ts, line: 208, note: "(ADR-0017, 2026-08-01)"}
+  - {list: repoint, file: scripts/github-provenance-guard.ts, line: 248, note: "deny text (ADR-0017, 2026-08-01)"}
+  - {list: repoint, file: scripts/github-provenance-guard.ts, line: 385, note: "ADR-0017's 2026-08-01 amendment records the residual fail-open as accepted"}
+  - {list: repoint, file: scripts/provenance-footer.ts, line: 1, note: "quotes ADR-0017's Decision: 'Commits already get this from the harness template'"}
+  - {list: repoint, file: scripts/provenance-footer.ts, line: 4, note: "ADR-0017's 2026-07-20 amendment"}
+  - {list: repoint, file: scripts/provenance-footer.ts, line: 17, note: "ADR-0017: a regression degrades cleanly back to the manual-amend status quo"}
+  - {list: repoint, file: scripts/provenance-header.ts, line: 2, note: "Read ADR-0017's 2026-07-31 amendment"}
+  - {list: repoint, file: scripts/provenance-header.ts, line: 52, note: "quotes 'asymmetric history'; the 2026-07-31 amendment"}
+  - {list: repoint, file: scripts/provenance-header.ts, line: 59, note: "(ADR-0017 2026-07-31)"}
+  - {list: repoint, file: tests/unit/provenance-header.spec.ts, line: 1, note: "(2026-07-31 amendment)"}
+  - {list: repoint, file: tests/unit/github-provenance-guard.spec.ts, line: 1, note: "the 2026-08-01 posture flip"}
+  - {list: repoint, file: docs/research/github-branch-protection-vs-autonomous-log-commits.md, line: 25, note: "quotes title 'Provenance footer…' and phrases 'managed connector already authorized as the owner's own account', 'investigated and set aside'; dated note"}
+  - {list: repoint, file: docs/adr/0020-requester-trust-tiers.md, line: 125, note: "ADR-0017's provenance footer (also conflict code-or-convention)"}
+  - {list: repoint, file: docs/adr/0023-guest-driven-demo-pipeline.md, line: 131, note: "provenance is by footer (body mark is now a header)"}
+  - {list: fix, file: scripts/github-provenance-guard.ts, line: 359, note: "miscites: angle-bracket deny message labelled 'ADR-0017 provenance guard'; stripped <...> spans are not provenance"}
+  - {list: fix, file: docs/diagrams/interactive-map/terrarium-overview.md, line: 861, note: "miscites: guards node cites ADR-0017 for every guard, settings.json and .githooks"}
+  - {list: fix, file: scripts/check-triage-drift.ts, line: 16, note: "repeats the mark's shapes; point to provenance-header.ts"}
+  - {list: fix, file: .agents/skills/auto-triage/SKILL.md, line: 33, note: "repeats mark shapes and shared-account fact; point to the ADR"}
+  - {list: fix, file: scripts/log-session.ts, line: 333, note: "repeats 'no exemption'; point to the ADR"}
+  - {list: fix, file: scripts/log-session.ts, line: 370, note: "repeats 'no exemptions'; point to the ADR"}
+  - {list: fix, file: scripts/provenance-footer.ts, line: 64, note: "repeats 'no exemption'; point to the ADR"}
+  - {list: fix, file: .agents/skills/clear-backlog/SKILL.md, line: 20, note: "repeats that every write carries the header; point to the ADR"}
+  - {list: fix, file: .agents/skills/guest-build/SKILL.md, line: 107, note: "repeats the no-exemptions header rule; point to the ADR and settle mark-vs-ai-notice"}
+  - {list: fix, file: .agents/skills/guest-intake/SKILL.md, line: 39, note: "repeats header-only rule; point to the ADR and settle mark-vs-ai-notice"}
