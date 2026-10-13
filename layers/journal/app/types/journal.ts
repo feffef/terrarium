@@ -20,7 +20,7 @@ export type DocRead = NonNullable<SessionDoc['docsRead']>[number]
 // since sessions are a `data` collection).
 export interface SessionCardView {
   when: string
-  duration: number
+  duration: string
   goal: string
   status: Status
   outcome: string

@@ -24,6 +24,7 @@ import {
   sessionNotes,
   sessionAnchor,
   sessionDurationMin,
+  sessionDurationLabel,
   externalSkillCount,
   sessionWhen,
   sessionModelsLabel,
@@ -291,7 +292,22 @@ describe('skillUrl', () => {
   })
 })
 
+describe('sessionDurationLabel', () => {
+  it('shows hours from 60 minutes up', () => {
+    expect(sessionDurationLabel(596)).toBe('9 h 56 min')
+    expect(sessionDurationLabel(42)).toBe('42 min')
+    expect(sessionDurationLabel(60)).toBe('1 h 0 min')
+  })
+})
+
 describe('sessionCardViews', () => {
+  it('lists frictions most severe first, ties in original order, without mutating the log', () => {
+    const f = (severity: Severity, description: string) => ({ ...friction(severity), description })
+    const frictions = [f('nit', 'a'), f('major', 'b'), f('blocker', 'c'), f('major', 'd'), f('minor', 'e'), f('moderate', 'f')]
+    const [c] = sessionCardViews([session({ frictions })])
+    expect(c!.frictions.map((x) => x.description)).toEqual(['c', 'b', 'd', 'f', 'e', 'a'])
+    expect(frictions.map((x) => x.description)).toEqual(['a', 'b', 'c', 'd', 'e', 'f'])
+  })
 
   it('maps a SessionDoc to its display view, including sessionShortId truncation', () => {
     const s = session({
@@ -308,7 +324,7 @@ describe('sessionCardViews', () => {
     expect(c!.sid).toBe('session_01234…XYZW')
     expect(c!.url).toBe('https://claude.ai/code/session_0123456789abcdefXYZW')
     expect(c!.when).toBe('Jul 5 · 11:30 UTC')
-    expect(c!.duration).toBe(90)
+    expect(c!.duration).toBe('1 h 30 min')
     expect(c!.frictionCounts).toEqual({ nit: 1, minor: 0, moderate: 0, major: 0, blocker: 1 })
     expect(c!.frictionTotal).toBe(2)
     expect(c!.skillsUsed).toEqual([{ name: 'tdd', reason: 'r' }])
