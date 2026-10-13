@@ -1,14 +1,15 @@
 schemaVersion: 1
 session: session_01RDtAc5Vv37kkRH4yCtRDQB
 startedAt: 2026-10-13T09:07:12Z
-endedAt: 2026-10-13T09:34:00Z
+endedAt: 2026-10-13T09:47:11Z
 kind: interactive
 goal: A Journal page for the Friction Ledger
-status: completed
-outcome: "PR #1879 merged: /t/journal/<space>/frictions shows every ledger cluster once, and the dashboard's Worst frictions panel is gone"
-summary: "Human-instructed throughout. The owner asked for a Journal page rendering the Friction Ledger in two panels (most severe, most frequent) with description, counter and derived pills, expandable to dated links to session logs. Per the owner's preference I asked clarifying questions first; the owner settled the severity rule (worst occurrence, then count at worst, then total), kept fixed clusters with a green pill, chose `cause` as the description, dropped the surface pill, and asked for a sixth \"New here?\" card. Two corrections came from the owner mid-build: first \"show every cluster, each in one panel only\", then that my absolute `major`-or-worse split would leave the severe panel empty when nothing was worse than moderate, so it became a fixed top 8. The owner later also asked to remove the dashboard's Worst frictions panel. Agent-initiated: verifying that all 198 occurrences resolve to a session log in current or archived, and the review fixes (link the first issue and the first PR from `ref`, since the first `#N` was often a stale PR; fall back to the other Space rather than a hard-coded name; a neutral `open` pill). Merged on a green gate after posting the verdict."
+status: in-review
+outcome: "PR #1879 merged the Friction Ledger page; follow-up PR #1881 (card says recently, Frictions tile links the ledger) in review"
+summary: "Human-instructed throughout. The owner asked for a Journal page rendering the Friction Ledger in two panels (most severe, most frequent) with description, counter and derived pills, expandable to dated links to session logs. Per the owner's preference I asked clarifying questions first; the owner settled the severity rule (worst occurrence, then count at worst, then total), kept fixed clusters with a green pill, chose `cause` as the description, dropped the surface pill, and asked for a sixth \"New here?\" card. Two corrections came from the owner mid-build: first \"show every cluster, each in one panel only\", then that my absolute `major`-or-worse split would leave the severe panel empty when nothing was worse than moderate, so it became a fixed top 8. The owner later also asked to remove the dashboard's Worst frictions panel. Agent-initiated: verifying that all 198 occurrences resolve to a session log in current or archived, and the review fixes (link the first issue and the first PR from `ref`, since the first `#N` was often a stale PR; fall back to the other Space rather than a hard-coded name; a neutral `open` pill). Merged on a green gate after posting the verdict. The owner then asked for a follow-up: the card says \"What went wrong recently\" and the Frictions surfaced tile links to the ledger (PR #1881)."
 prs:
   - "1879"
+  - "1881"
 docsRead:
   - path: CONTEXT.md
     reason: Friction severity scale and Session terms
@@ -42,6 +43,8 @@ docsRead:
     reason: (no reason given)
   - path: layers/journal/tests/unit/journal-dashboard.spec.ts
     reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: (no reason given)
 skillsUsed:
   - name: code-review
     reason: two-axis review before first push; spec axis caught the stale-PR issue pill
@@ -71,22 +74,25 @@ frictions:
   - description: "git commit -qam with -F failed: -m and -F conflict."
     solution: Use git commit -qa -F file.
     severity: nit
-durationSec: 1608
+  - description: First push of the restarted branch used --force-with-lease against a stale remote-tracking ref (branch deleted on merge) and was rejected.
+    solution: Prune origin first, or push plainly, as pr-workflow.md says for a branch restarted after merge.
+    severity: nit
+durationSec: 2399
 models:
-  claude-opus-5-5: 173
+  claude-opus-5-5: 204
 toolCounts:
-  Bash: 55
-  Read: 8
+  Bash: 65
+  Read: 12
   Edit: 3
   Write: 4
   Skill: 3
-  Agent: 2
+  Agent: 3
   ToolSearch: 4
   TaskStop: 1
   mcp__github__list_pull_requests: 1
-  mcp__github__create_pull_request: 1
-  mcp__claude-code-remote__subscribe_pr_activity: 1
-  ReadNotifications: 2
+  mcp__github__create_pull_request: 2
+  mcp__claude-code-remote__subscribe_pr_activity: 2
+  ReadNotifications: 3
   mcp__github__pull_request_read: 2
   mcp__claude-code-remote__send_later: 1
   mcp__github__add_issue_comment: 1
@@ -107,6 +113,9 @@ rulesLoaded:
   - .claude/rules/adr-0016.md
   - .claude/rules/adr-0029.md
   - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0013.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0015.md
   - .claude/rules/adr-0025.md
 rulesGlobal:
   - .claude/rules/adr-0022.md
@@ -181,6 +190,8 @@ subagents:
     task: Standards review of ledger page
   - type: general-purpose
     task: Spec review of ledger page
+  - type: general-purpose
+    task: Review small follow-up diff
 gitBranch: ccr-0441b5a2-3rlrgv
 entrypoint: remote_mobile
 cliVersion: 2.1.296
