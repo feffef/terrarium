@@ -1,0 +1,158 @@
+schemaVersion: 1
+session: session_016gu9e44jjfAEFMo3CBxzUQ
+startedAt: 2026-10-13T08:52:18Z
+endedAt: 2026-10-13T09:12:23Z
+kind: delegated
+goal: Clear the issue backlog
+status: in-review
+outcome: "One fix PR open (#1877, for #1876); two time-gated issues left for later runs"
+summary: "The owner invoked clear-backlog (human-instructed). The default auto-triage set held only three open ready-for-agent issues (#1876, #1778, #1844); every other open issue's last comment was AI-authored. The explore workflow found #1778 time-gated until 2026-10-14 13:00Z and #1844 until 2026-10-15 20:49Z, both report-only, and #1876 buildable. With no grill results, the grilling step was skipped. Agent-initiated: I added the missing `bug` category label to #1876 (a triage side finding) and ran the build workflow, which built, reviewed (two rounds) and gated the session-trace fix. I checked its commits and diff myself, then pushed and opened PR #1877, which is now babysat to merge."
+prs:
+  - "1877"
+docsRead:
+  - path: CONTEXT-MAP.md
+    reason: session-start context index
+    useful: partly
+  - path: CONTEXT.md
+    reason: session-start glossary
+    useful: partly
+  - path: .agents/skills/auto-triage/SKILL.md
+    reason: "step 1: how to resolve the sweep's issue set"
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: required before git; fetch before trusting history
+    useful: partly
+  - path: docs/agents/github-integration.md
+    reason: required before GitHub ops; writes go through MCP
+    useful: partly
+  - path: docs/agents/pr-workflow.md
+    reason: landing recipe and merge-pr.ts
+    useful: yes
+  - path: .agents/skills/implement/SKILL.md
+    reason: build subagent's implementation steps
+    useful: yes
+  - path: .agents/skills/triage/SKILL.md
+    reason: triage subagent's per-issue rules
+    useful: yes
+  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
+    reason: "triage subagent: the ADR that binds the #1876 session-trace change"
+    useful: partly
+  - path: .claude/worktrees/wf_3e309f52-7f2-1/.agents/skills/code-review/SKILL.md
+    reason: (no reason given)
+  - path: .claude/worktrees/wf_3e309f52-7f2-1/scripts/session-trace.ts
+    reason: (no reason given)
+  - path: scripts/session-trace.ts
+    reason: (read before editing)
+  - path: scripts/log-session.ts
+    reason: (no reason given)
+  - path: tests/unit/session-trace.spec.ts
+    reason: (read before editing)
+  - path: .claude/worktrees/wf_3e309f52-7f2-1/tests/unit/session-trace.spec.ts
+    reason: (no reason given)
+skillsUsed:
+  - name: clear-backlog
+    reason: the owner's task
+  - name: close-session
+    reason: closing at PR-open
+  - name: log-session
+    reason: (no reason given)
+  - name: tdd
+    reason: (no reason given)
+frictions:
+  - description: I ran list-open-issues and gh api before reading github-integration.md, so the read-first hint fired after the fact.
+    solution: Read the GitHub doc at session start whenever the Skill is clear-backlog, since it always touches GitHub.
+    severity: nit
+  - description: I pushed on the build workflow's report of a passing gate:scoped. I checked its commits and diff, but did not re-run the gate myself.
+    solution: clear-backlog §3 could say whether the orchestrator should re-run gate:scoped or trust the workflow's gatePassed.
+    severity: nit
+  - description: The explore workflow's brief came back HTML-entity-encoded (&lt;), and I had to decode it by hand before passing it to the build workflow.
+    solution: Have clear-backlog-explore decode entities in the issue text its triage agents return.
+    severity: minor
+  - description: "A second --author pass with only docsRead and ruleVerdicts was rejected: goal, status, summary, frictions and session were all required. log-session step 3 implies a partial pass works."
+    solution: Either let --author accept a partial pass that merges into the existing scratch, or have step 3 say that every pass must carry the required fields.
+    severity: minor
+durationSec: 1205
+models:
+  claude-opus-5-5: 56
+toolCounts:
+  Bash: 19
+  Read: 5
+  Workflow: 2
+  ToolSearch: 1
+  mcp__github__issue_write: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+  Skill: 2
+  mcp__claude-code-remote__send_later: 1
+filesEdited:
+  - tests/unit/session-trace.spec.ts
+  - scripts/session-trace.ts
+rulesLoaded:
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0018.md
+  - .claude/rules/adr-0025.md
+rulesGlobal:
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0001.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0023.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0009.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0022.md
+    reason: Framed the sweep's standing green-light for Trusted-authored ready-for-agent issues; the summary was enough.
+    useful: yes
+  - path: .claude/rules/adr-0004.md
+    reason: Gate and review before the first push, which the build workflow ran; the summary was enough.
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Told me to invoke close-session at PR-open, which I did; no need for the full ADR.
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: No prune trial touched this work.
+    useful: no
+  - path: .claude/rules/adr-0001.md
+    reason: Architecture background, irrelevant to a tooling-script fix.
+    useful: no
+  - path: .claude/rules/adr-0020.md
+    reason: Confirmed every issue was owner-authored, so Trusted, with no human-merge needed for that reason.
+    useful: partly
+  - path: .claude/rules/adr-0003.md
+    reason: Open the PR myself and subscribe to it; I followed it with the summary alone.
+    useful: yes
+  - path: .claude/rules/adr-0023.md
+    reason: No guest pipeline was running and no guest issues were involved.
+    useful: no
+  - path: .claude/rules/adr-0017.md
+    reason: Provenance header on the PR body; the summary was enough.
+    useful: yes
+  - path: .claude/rules/adr-0021.md
+    reason: Context-map background; no glossary changes here.
+    useful: no
+  - path: .claude/rules/adr-0005.md
+    reason: Told me the workflows are Skill code in .claude/workflows, which I read; none were changed.
+    useful: partly
+  - path: .claude/rules/adr-0029.md
+    reason: Explained the rule loading; didn't change any action.
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Loaded via trust.ts; the PR touches no Human-only path, so it merges by agent.
+    useful: partly
+  - path: .claude/rules/adr-0018.md
+    reason: Loaded by a subagent's reads; it didn't apply to my orchestration steps.
+    useful: no
+  - path: .claude/rules/adr-0025.md
+    reason: Catalog and Aggregator rule loaded by a subagent; it doesn't apply to session-trace.
+    useful: no
+gitBranch: ccr-f938b767-q92yf3
+entrypoint: remote_mobile
+cliVersion: 2.1.296
+landedBy: Stop
