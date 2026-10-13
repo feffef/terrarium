@@ -269,7 +269,8 @@ can end it with "none"; your own "none", with no reader dispatched, is not done
 Draft one grounded reply per other Persona (rotation does not constrain
 replies) as scratch files. A reply earns its place only if it adds a
 relevant fact the post didn't use, reads the same fact to a different
-conclusion, or notices a different aspect; an echo fails. Check each draft's load-bearing claim against its source and cut failures.
+conclusion, or notices a different aspect; an echo fails. Check each draft's
+load-bearing claim against its source and cut failures.
 
 Spawn a fresh reader with the step 6 brief, but "none" is allowed. It names a
 winner, and at most one runner-up, only if each is worth reading on its own:
