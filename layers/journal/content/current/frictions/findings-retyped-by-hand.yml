@@ -3,8 +3,8 @@ cause: >-
   Subagents cannot always write their findings where the parent can read them (harness refusals, non-extractable output), so the parent transcribes them by hand.
 surface: safe
 status: fixed
-fixedOn: "2026-10-11"
-ref: "PRs #1699, #1768"
+fixedOn: "2026-10-13"
+ref: "PRs #1699, #1768 (audit-docs only); frictions-to-fixes 2026-10-13b grouped doc PR: survey subagent saves ledger changes as a patch file"
 occurrences:
   - session: session_01GxJXNFxh3SQh8q1nkReAxJ
     date: "2026-10-04"
@@ -15,3 +15,6 @@ occurrences:
   - session: session_01GbMt1vGTDZpQxZ3h4pNsF8
     date: "2026-10-11"
     severity: moderate
+  - session: session_01UZ53YdNvwr2RN4WgF5EjEZ
+    date: "2026-10-13"
+    severity: minor

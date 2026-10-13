@@ -1,0 +1,11 @@
+name: interrupt-cancels-subagents
+cause: >-
+  A user interrupt cancels running Agent subagents with no notification, and nothing tells the orchestrator to check, so it keeps reporting them as running.
+surface: safe
+status: fixed
+fixedOn: "2026-10-13"
+ref: "frictions-to-fixes 2026-10-13b grouped doc PR: dispatch-subagents §3 says to check agents are alive after an interrupt"
+occurrences:
+  - session: session_01STVS35HcxNZp7dQ1pPnrhW
+    date: "2026-10-13"
+    severity: major

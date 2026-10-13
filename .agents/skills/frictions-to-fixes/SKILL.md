@@ -89,7 +89,8 @@ classification (never-fixed / open-already #N / regression of #N), fix type
 (doc/code/config), surface-blocked flag (fails §3's safe-surface test: human-only,
 guard or hook wiring), difficulty (simple/hard), a one-line
 recommended fix, and evidence quotes; **(b) a dropped list** with one-line reasons (an on-trial one quotes its territory match, §2);
-**(c) the subagent's own frictions** from the run; and **(d) the ledger changes**.
+**(c) the subagent's own frictions** from the run; and **(d) the ledger changes**, also saved as a YAML patch file in the
+scratchpad whose path it names.
 
 ## 2. Screen against fixes already shipped (the subagent's rules)
 
@@ -213,7 +214,8 @@ post-dispatch check. Run at most 2 impl agents' full gates concurrently
 
 - **Doc-only fixes** (Markdown / prose — CLAUDE.md, a **repo-owned** SKILL, a Skill
   Inventory entry): hand them **all to one agent as a single grouped PR**,
-  with this run's ledger edit (§4) in the brief. These
+  with this run's ledger edit (§4) in the brief, as the path to §1's patch file
+  plus any changes to it. These
   are ordinarily **simple** selections with no issue filed (§4) — the PR
   description carries each fix's problem/evidence/recommended-fix directly
   instead of a `Closes #N`; a doc selection that came out **hard** still cites its

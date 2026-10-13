@@ -1,0 +1,12 @@
+name: chat-progress-narration
+cause: >-
+  Harness status nudges pull sessions into narrating subagent progress in chat, though clear-backlog says the chat holds only questions and the report.
+surface: outside
+status: open
+occurrences:
+  - session: session_01STVS35HcxNZp7dQ1pPnrhW
+    date: "2026-10-13"
+    severity: nit
+  - session: session_017XWy7odnhW5S5AEuekatR8
+    date: "2026-10-13"
+    severity: minor
