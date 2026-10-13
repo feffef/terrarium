@@ -60,7 +60,8 @@ the tests a new Campaign disturbs.
    with `--scheme light` and `--scheme dark`, after `pnpm build`) and look at
    them. Done when all are green and the page
    reads as intended.
-8. **Land** through a gated PR (CLAUDE.md). Figures are content the schema
+8. **Land** through a gated PR (CLAUDE.md), reviewed before its first push
+   (`docs/agents/pr-workflow.md`). Figures are content the schema
    checks; they need no code review of their own.
 
 ## Voice

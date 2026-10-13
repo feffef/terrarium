@@ -8,9 +8,8 @@ Why a tier merges on green: ADR-0003. What needs a human merge: ADR-0004's
 rules, `.claude/rules/adr-0004-human-merge.md` for the paths. `main`'s branch-protection state:
 `docs/research/github-branch-protection-vs-autonomous-log-commits.md` (issue #348).
 
-For the `mcp__github__*` tool surface this recipe runs on — transient 503s and
-when to retry, `get_check_runs` vs `get_status`, the `list_*`/`search_*`
-overflow traps — see [`github-integration.md`](./github-integration.md).
+For the `mcp__github__*` tool surface this recipe runs on (retries, polling,
+overflow traps), see [`github-integration.md`](./github-integration.md).
 
 ## Review before the first push
 
@@ -86,6 +85,8 @@ description.
   branch, then opens the PR but never calls `merge_pull_request` or arms auto-merge (see
   `.agents/skills/guest-build/SKILL.md`'s "one hard subtraction" section and
   ADR-0023).
+- `midden-catalogue` — always **owner-merged** (#1802): it opens the PR and
+  never merges (`.agents/skills/midden-catalogue/SKILL.md` §5).
 - `dependabot` — merged by the `dependabot-automerge` workflow (proposal #1633, not yet applied), never by an agent; leave those PRs alone (ADR-0003 ledger).
 - An ordinary work PR — merged by its authoring session on a green gate, unless
   the ADR-0004 rule names an exception; then a human merges it (ADR-0003).
@@ -93,7 +94,7 @@ description.
 ## Closing a self-merged chartered run
 
 Every tier above except `reviewer-agent` (`frictions-to-fixes`; many PRs per
-run), `guest-build`, `dependabot` and an ordinary work PR closes the same way
+run), `guest-build`, `midden-catalogue`, `dependabot` and an ordinary work PR closes the same way
 once its own work is staged. Each Skill's SKILL.md states only its delta (what
 its diff is limited to, and what to do when something rides outside that scope):
 
@@ -107,8 +108,7 @@ its diff is limited to, and what to do when something rides outside that scope):
 5. If the gate is red for a reason that isn't yours, or anything outside the
    Skill's own scope rode into the diff, leave the PR open and escalate to a
    human instead of merging: a chartered run merges only its own bounded diff
-   (ADR-0003 ledger), whatever the rule for an ordinary work PR says. Never
-   force a self-merge past scope or a red gate.
+   (ADR-0003 ledger), whatever the rule for an ordinary work PR says.
 
 Once the PR is merged or honestly left open, re-invoke `close-session` to update
 that log (the ADR-0009 rule, `.claude/rules/adr-0009.md`).

@@ -182,7 +182,7 @@ routeRules: {
 - A client navigation between `/t/**` pages fetches the target's
   `_payload.json`. It requests no `sqlite3*.wasm` and no `sql_dump.txt`, and
   it does not reload the page. The e2e test "navigates client-side from the
-  server payload" in `layers/blog/tests/e2e/blog.e2e.ts` holds this.
+  server payload" in `layers/blog/tests/e2e/blog.spec.ts` holds this.
 - Nitro merges overlapping rules with `defu`, most specific first
   (`nitropack/runtime/internal/route-rules.mjs:78`). So Tinkerfund pages get
   `{ varies, maxAge: 60, swr: false }`, and `cache: false` on search wins.
@@ -379,7 +379,7 @@ interactivity.
    real costs are the server-side cache's: request headers need `varies`, and
    the cache needed a size bound (now `lru-cache`, `max: 200`, #1446). `nuxt.config.ts` is human-only
    (ADR-0018), and so is this global runtime change (ADR-0004). E2e tests in
-   `layers/blog/tests/e2e/blog.e2e.ts` and `layers/tinkerfund/tests/e2e/tinkerfund.e2e.ts`
+   `layers/blog/tests/e2e/blog.spec.ts` and `layers/tinkerfund/tests/e2e/tinkerfund.spec.ts`
    verify it; only the view-transition check is still open.
 2. **Avenue 2c: prerender the page routes.** This has the same client benefit
    with no runtime cache, at the cost of build time and the work of listing

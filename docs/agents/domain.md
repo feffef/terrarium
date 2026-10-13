@@ -49,9 +49,9 @@ don't mint a term, a typology, or a classification for a population of one.
 
 This **complements**, not replaces, the `domain-modeling` Skill's 3-part ADR
 test: that test gates *decisions*, the rule of two gates *vocabulary*. A
-coined term is a standing tax — every session reads the glossary and
-reconciles term conflicts against it — so the second instance is
-what proves the abstraction is worth that tax. (Friction tags waited until
+coined term taxes every session, which reads the glossary and
+reconciles term conflicts against it; only a second instance proves the
+abstraction worth that. (Friction tags waited until
 clustering real frictions could replace them, which the Friction Ledger now
 does; ADR-0010 deferred a `digests` collection the same way.) It's a brake on new coinage, not a
 purge — anything already built stays.
@@ -66,7 +66,7 @@ silently overriding it:
 ## Check a new Tenant/Collection proposal against ADR-0006 immediately
 
 Check a new Tenant or Collection against ADR-0006's pages-only-routing
-constraint when it is proposed, not later. A separately-named,
+constraint when it is proposed, not later. A separately named,
 addressable-sounding Collection (e.g. a Tenant's "sites" or "exhibits") looks
-natural but violates ADR-0006. Catching it at proposal stops the mistake riding
+natural but violates it; catching that at proposal stops the mistake riding
 several turns (issue #573).

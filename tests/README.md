@@ -1,6 +1,6 @@
 # Tests
 
-Where each test lives, and the one non-obvious e2e rule. The why: ADR-0004's 2026-10-12 amendment.
+Where each test lives, and the one non-obvious e2e rule. The why: ADR-0004's 2026-10-12 amendment on the e2e build (it begins "The 2026-07-07 "one spec, one `setup()`" rule").
 
 ## A test is homed with the code it exercises
 
@@ -21,7 +21,7 @@ Adding a Tenant that needs tests adds a `layers/<tenant>/tests/` folder; nothing
 
 - **A Skill's helper script** — one only its Skill runs — lives at
   `.agents/skills/<name>/scripts/`, its unit test at
-  `.agents/skills/<name>/tests/unit/` (see ADR-0004, 2026-10-12 amendment).
+  `.agents/skills/<name>/tests/unit/` (see ADR-0004's 2026-10-12 amendment "A Skill's own files skip build and e2e, not unit tests", #1603).
 
 ## The e2e gate is ONE build, reused by every spec
 

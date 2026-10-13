@@ -123,13 +123,13 @@ like this:
   overflow (issue #494). With no `gh` binary but `GH_TOKEN` / `GITHUB_TOKEN`
   set, it falls back to a direct REST call with `curl`. With neither, use the
   MCP tools above (issue #505).
-- **Did an AI comment claim a triage-label change the issue never got?** This
+- **Did an AI comment claim a triage-label change the issue never got?** It
   happens (issue #325's comment said `moved to ready-for-agent` while the issue
   stayed `ready-for-human`) and nothing else catches it. Run
-  `pnpm exec tsx scripts/check-triage-drift.ts [N]`. For each open issue it
-  compares the newest AI-authored comment (found by its ADR-0017 marker, because
-  `author_association` can't be trusted here; see the script's header comment)
-  against a phrase list for the five canonical labels, and prints mismatches as
+  `pnpm exec tsx scripts/check-triage-drift.ts [N]`: for each open issue it
+  compares the newest AI-authored comment (found by its ADR-0017 marker, since
+  `author_association` can't be trusted here; see the script's header)
+  against a phrase list for the five canonical labels and prints mismatches as
   JSON (issue #507). It is standalone, not part of any periodic sweep, and has
   the same `gh`-less token fallback (issue #505).
 
@@ -150,16 +150,15 @@ like this:
   the ref and gives a true re-check.
 - **This polling advice is for state that webhooks don't deliver, like CI. It
   does not apply to a dispatched Agent-tool subagent.**
-- **The polling recipe relies on remote-session MCP calls and
-  `AskUserQuestion` calls, which can fail transiently.** See
-  [`environment-caveats.md`](./environment-caveats.md) for the "permission
-  stream closed" caveat and its fallback (issues #145, #229, #359).
+- **Polling relies on remote-session MCP and `AskUserQuestion` calls, which can
+  fail transiently:** see the "permission stream closed" caveat and its fallback
+  in [`environment-caveats.md`](./environment-caveats.md).
 
 ## Resolving deferred tool names
 
-Deferred MCP tools resolve only by **fully-qualified name**. `ToolSearch select:`
-needs `mcp__github__<name>` (for example `mcp__github__list_issues`); a bare
-`list_issues` fails. This is host behaviour this repo can't change.
+Deferred MCP tools resolve only by **fully-qualified name**
+(`mcp__github__list_issues`, not `list_issues`). This is host behaviour this
+repo can't change.
 
 **Query forms:**
 - `select:` plus a fully-qualified name resolves, comma-separated lists too.
