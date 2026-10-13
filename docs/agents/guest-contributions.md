@@ -70,7 +70,7 @@ concrete change. For example:
   (absent ⇒ internal, mining exclusion, idea surfacing).
 - **Provenance marker (ADR-0017)** on every agent-authored GitHub interaction,
   the same marker we use.
-- **Merge is human-only** (ADR-0020, ADR-0004): the owner reviews and
+- **Merge is human-only** (ADR-0020, ADR-0004): a Trusted user reviews and
   merges by hand, no auto-merge.
 
 ## See also

@@ -1,4 +1,4 @@
-# ADR-0014: The routing map is built from the manifests at build time, never committed
+# ADR-0014: The routing map is built from the manifests, never committed
 
 The routing map, which turns a Tenant and Space into its collection keys, is
 worked out from the Tenant manifests each time the app is prepared or built.

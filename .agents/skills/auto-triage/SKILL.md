@@ -61,7 +61,7 @@ call: `ready-for-human`.
 Auto-close as `wontfix` only the two **objective, repo-verifiable** kinds:
 **already-implemented** (point to where it lives; `state_reason: completed`) and
 **duplicate** (point to the canonical issue). A reject-as-out-of-scope is a
-judgment call → `ready-for-human`; write `.out-of-scope/` only on the owner's
+judgment call → `ready-for-human`; write `.out-of-scope/` only on a Trusted user's
 confirm (see `OUT-OF-SCOPE.md`).
 
 ## Approval

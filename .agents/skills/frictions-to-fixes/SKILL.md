@@ -227,7 +227,7 @@ post-dispatch check. Run at most 2 impl agents' full gates concurrently
     Skill self-merges its doc commits too (§6), they hold to the same standard the
     doc-audit sweep verifies. Two axes: (1) respect each surface's **tier** — Live
     is fixable, but **never edit an ADR** (its PR needs a human merge, ADR-0004, and this Skill merges its own), **a Historical
-    record** (digests, session logs) **or a Pack-generic template**;
+    record** (session logs, blog posts) **or a Pack-generic template**;
     (2) don't *author* any defect audit-docs' eight lenses catch — above all
     **single-home rather than restate** (the CLAUDE.md rule), and make any new
     `docs/agents/*` file reachable (ADR-0029; audit-docs' orphan-addition

@@ -1,4 +1,4 @@
-# ADR-0012: A Blog reaction is recorded in the target Persona's Space when it is written
+# ADR-0012: A Blog reaction is copied into the target Persona's Space
 
 When one Blog Persona's post reacts to another Persona's post, the same PR adds
 a small record, a Pingback, to the target Persona's Space. The Pingback holds a

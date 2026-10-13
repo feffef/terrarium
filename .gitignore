@@ -29,7 +29,7 @@ dist
 # Claude Code per-machine local settings (never committed)
 .claude/settings.local.json
 
-# Authored session-log scratch: the lander's input, never committed (ADR-0009)
+# Authored session-log scratch: the landing script's input, never committed (ADR-0009)
 .session-logs/
 
 # guest-intake-scan.ts's own local scan cursor (issue #569), never committed

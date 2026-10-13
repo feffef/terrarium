@@ -1,4 +1,4 @@
-# ADR-0019: A failed browser content load shows a reload dialog; only a failed code chunk reloads itself
+# ADR-0019: A failed content load shows a reload dialog; a failed chunk reloads
 
 `@nuxt/content` runs unpatched. When a page's content fails to load in the
 browser, the page shows an error dialog whose fix is a full page reload. One

@@ -155,8 +155,8 @@ A curated, derived current-state readout of which Skills to actually use and eac
 one's **role** and **importance** to this Platform. It
 is kept current by the `audit-skills` Skill. It and the **Friction Ledger** are
 **Inventories** — the general category of derived, current-state readouts that
-are refreshed in place rather than appended to (contrast the append-only
-Digest, defined in the Journal context).
+are refreshed in place rather than appended to (contrast the Digest, a
+daily summary defined in the Journal context).
 
 ### Importance (of a Skill)
 A Skill Inventory entry's grade for how much a Skill matters to the Platform — a

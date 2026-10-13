@@ -84,8 +84,9 @@ an exception. Some Skills narrow that:
 
 - `frictions-to-fixes` also applies its own risk judgement and escalates a
   high-risk PR even when the gate is green.
-- `guest-build` (ADR-0023) and `midden-catalogue` (#1802) open the PR and
-  never merge it; the owner does.
+- `guest-build` (ADR-0023) opens the PR and never merges it; the owner does.
+- `midden-catalogue` (#1802) opens the PR and never merges it; a Trusted user
+  does.
 - Dependabot PRs: a major bump waits for a human; a minor or patch bump may
   merge on a green gate (ADR-0004). Until #1889 lands, `merge-pr.ts` refuses
   them all because they change `package.json`, so leave them alone.

@@ -27,8 +27,8 @@ an ordinary gated PR, not the direct-to-main path that session logs use.
 ## Why
 
 - A Digest fits neither other Journal kind (ADR-0008). It is derived from
-  records, like an Inventory, but it records a past day, like a session log.
-  So it is written once and kept.
+  records, like an Inventory, but it covers a finished day, so a run writes it
+  once.
 - It is prose for people, with links, so it is a page. Data collections get
   no route.
 - Only a Space's `pages` collection gets routes (ADR-0006). A separate

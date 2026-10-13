@@ -1,4 +1,4 @@
-# ADR-0023: While the owner runs the guest pipeline, a guest's confirmation is enough to build
+# ADR-0023: In the guest pipeline, a guest's confirmation approves the build
 
 The owner starting the `guest-intake` and `guest-build` Skills is the approval:
 while they run, someone without write access who confirms the idea on their own

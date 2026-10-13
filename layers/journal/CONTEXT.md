@@ -23,7 +23,7 @@ Anyone who wants the Platform's actual current state, or how it got there, witho
   state rather than appended to.
 - **Session logs** — primary, append-only records the agents author
   themselves (see above).
-- **Digests** — derived, append-only daily summaries (see the glossary below).
+- **Digests** — derived daily summaries, written once per day (see the glossary below).
 
 ## Glossary
 

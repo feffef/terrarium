@@ -15,7 +15,7 @@ never fired for (it fails silently on a network-freezing suspend, PR #148).
 
 ## When to invoke
 
-**The normal front door is `close-session`, not this Skill directly.**
+**The normal entry point is `close-session`, not this Skill directly.**
 `close-session` owns the closure *trigger* (the "am I wrapping up?" judgment) and
 runs the whole closing sequence, of which authoring this log is one step — invoke
 that at closure and it calls this. Reach for `log-session` **directly** only to
@@ -141,7 +141,7 @@ ideas:                             # OPTIONAL — omit unless something sparked
 
 **Recovering the id:** copy the `session_01…` at the end of the
 `Claude-Session:` URL in your own system-prompt commit template — never from
-`git log` (it holds other sessions' ids, issue #99). The lander overwrites this
+`git log` (it holds other sessions' ids, issue #99). The landing script overwrites this
 field from ground truth whenever it can (issue #387), so it is only a fallback.
 
 ## 2. Write the scratch

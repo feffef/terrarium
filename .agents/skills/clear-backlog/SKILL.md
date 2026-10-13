@@ -66,7 +66,7 @@ built from the `grill` results. Where its format differs, this list wins:
 - Ask only about issues in §1's set; the ones the sweep skipped wait for a
   run that picks them up. Leave out `blocked` issues; the report lists them
   with their blocker.
-- Include Public issues (the owner's yes is the approval ADR-0020
+- Include Public issues (a Trusted user's yes is the approval ADR-0020
   requires) and proposals to close an issue as obsolete or superseded. Close
   only on a yes.
 - Answers may raise new questions. Keep each follow-up round to those alone,

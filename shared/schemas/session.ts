@@ -51,7 +51,7 @@ export const sessionSchema = z
       .default([]),
     skillsUsed: z.array(z.object({ name: z.string(), reason: z.string() })).default([]),
     // Mechanical trace — derived from the transcript by scripts/session-trace.ts
-    // when the lander runs (ADR-0009), never self-reported. All optional: absent ⇒
+    // when the landing script runs (ADR-0009), never self-reported. All optional: absent ⇒
     // an older, authored-only log. Additive per the schema-evolution policy.
     durationSec: z.number().int().nonnegative().optional(),
     models: z.record(z.string(), z.number().int()).optional(), // model id → assistant-turn count
@@ -94,7 +94,7 @@ export const sessionSchema = z
     // our fixes don't touch — while the ideas data layer still surfaces its `ideas`
     // (a good idea is toolchain-agnostic) and drops only its `learnings`.
     external: z.boolean().optional(),
-    // True ONLY on the synthetic placeholder the lander's recoverDroppedScratch
+    // True ONLY on the synthetic placeholder the landing script's recoverDroppedScratch
     // lands when a scratch was authored then lost before it could land (issue #449
     // Gap 3). Gives consumers a structured way to exclude/label it. Absent on every
     // genuinely agent-authored log.

@@ -1,4 +1,4 @@
-# ADR-0015: Pack Skills stay as installed; audit-skills grades every Skill by need
+# ADR-0015: Pack Skills stay as installed; every Skill is graded by need
 
 We never edit a Skill installed from the outside pack, and the gate checks each
 one that has a Skill Inventory entry. The Skill Inventory records each Skill's

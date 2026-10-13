@@ -1,4 +1,4 @@
-# ADR-0028: In-app navigation reads a cached server payload, not the browser database
+# ADR-0028: In-app navigation reads a cached server payload
 
 When a visitor follows a link inside the app, the page takes its data from a
 file the server rendered for that route (`_payload.json`), not from a Content

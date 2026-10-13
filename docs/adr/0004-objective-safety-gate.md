@@ -65,8 +65,6 @@ blindness matters, so a person reads them before they land.
   enforces the path list and Public or fork authors. The other exceptions rest
   on the agent recognising them, including a PR built from a Public request
   and a guest-pipeline PR: both look Trusted because an agent opens them.
-- `package.json` is on the Human-only list, so `merge-pr.ts` still refuses a
-  minor or patch bump (#1889).
 
 ## See
 
