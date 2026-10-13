@@ -1,14 +1,20 @@
 schemaVersion: 1
 session: session_01STVS35HcxNZp7dQ1pPnrhW
 startedAt: 2026-10-13T05:04:34Z
-endedAt: 2026-10-13T05:10:38Z
+endedAt: 2026-10-13T06:12:48Z
 kind: interactive
-goal: Clear the backlog's four fresh issues, and narrow clear-backlog's grilling
-status: in-review
-outcome: "Skill edit in review as PR #1863; triage of #1856, #1857, #1778, #1844 still running"
-summary: "The owner started a clear-backlog run. The default auto-triage sweep picked up two needs-triage issues (#1856, #1857) and the two open ready-for-agent issues (#1778, #1844); four triage subagents were dispatched for them. While they ran, the agent began reading the nine skipped ready-for-human issues to put them in the grilling, as §2 then required. The owner interrupted (human-instructed): grill only the four fresh issues, and adjust the instructions. Asked whether that meant the Skill or just this run, the owner chose editing the Skill. The agent edited clear-backlog §2 (and the intro, description, §1 full-pass line and both Done lines) so grilling covers only the issues the run's own sweep picked up; a two-axis code-review found stale wording, fixed in a second commit. Gate:scoped passed; PR #1863 opened. The grilling, builds and landing for the four issues are still to come in this session."
+goal: Clear the backlog's fresh issues and tighten clear-backlog and auto-triage
+status: completed
+outcome: "Seven PRs merged (#1863-#1869); #1856, #1857, #1859, #1860 closed; #1778 and #1844 wait on their dates"
+summary: "The owner started a clear-backlog run. The default sweep picked up #1856, #1857 and the ready-for-agent #1778 and #1844. Human-instructed changes: the owner interrupted to limit grilling to those fresh issues and to edit the Skill (PR #1863); later asked for #1859 and #1860 (AI-filed, uncommented) to be triaged and grilled, and for auto-triage to treat uncommented issues as fresh (PR #1867, which also makes triage always comment on such an issue so it does not resurface every run). Grilling answers (all owner picks): #1856 a+c (ADR-0027 amendment #1865, owner-merged with an owner review tweak; script dates landing from the first-parent main commit, #1866), #1857 a (#1864), #1859 route a (extend read-first-hint, #1868), #1860 build now (#1869, owner-merged). #1778 and #1844 are time-gated measurement tasks with no PR. Agent-initiated: two-axis reviews on every branch; the #1866 review caught a rev-list approach that silently returned nothing for most merges, replaced by git log --first-parent. Marked #1819 blocked by #1859 (same file)."
 prs:
   - "1863"
+  - "1864"
+  - "1865"
+  - "1866"
+  - "1867"
+  - "1868"
+  - "1869"
 docsRead:
   - path: .agents/skills/auto-triage/SKILL.md
     reason: default-mode eligibility rule decided the sweep set
@@ -55,6 +61,52 @@ docsRead:
   - path: docs/adr/0027-prune-trials.md
     reason: "a triage subagent checked #1856's prune-trial premise"
     useful: yes
+  - path: docs/agents/guards.md
+    reason: guard conventions; confirmed a settled guard fix stays ready-for-agent but needs an attended builder
+    useful: yes
+  - path: .agents/skills/prune-trial/SKILL.md
+    reason: "build agent checked the landing definition for #1856c"
+    useful: yes
+  - path: .agents/skills/triage/OUT-OF-SCOPE.md
+    reason: triage agent's prior-rejection check
+    useful: partly
+  - path: .agents/skills/digest/SKILL.md
+    reason: "triage agent found the archive retention that affects #1778"
+    useful: yes
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: "triage agent checked #1857's ADR-0015 claim"
+    useful: yes
+  - path: .agents/skills/close-session/SKILL.md
+    reason: "triage agent checked #1859's close-session trigger"
+    useful: yes
+  - path: .claude/worktrees/agent-abcccad0c1ec42731/.claude/settings.json
+    reason: (read before editing)
+  - path: .claude/worktrees/agent-abcccad0c1ec42731/docs/agents/guards.md
+    reason: (no reason given)
+  - path: .claude/worktrees/agent-abcccad0c1ec42731/scripts/double-background-guard.ts
+    reason: (no reason given)
+  - path: .claude/worktrees/agent-abcccad0c1ec42731/scripts/guard-io.ts
+    reason: (no reason given)
+  - path: scripts/prune-trial-window.ts
+    reason: (read before editing)
+  - path: tests/unit/prune-trial-window.spec.ts
+    reason: (read before editing)
+  - path: scripts/read-first-hint.ts
+    reason: (no reason given)
+  - path: tests/unit/read-first-hint.spec.ts
+    reason: (read before editing)
+  - path: scripts/read-first-hint.sh
+    reason: (no reason given)
+  - path: scripts/session-trace.ts
+    reason: (no reason given)
+  - path: scripts/loop-only-tool-guard.ts
+    reason: (no reason given)
+  - path: scripts/double-background-guard.ts
+    reason: (no reason given)
+  - path: tests/unit/guards-wiring.spec.ts
+    reason: (no reason given)
+  - path: tests/unit/double-background-guard.spec.ts
+    reason: (no reason given)
 skillsUsed:
   - name: clear-backlog
     reason: the run the owner started
@@ -74,29 +126,70 @@ frictions:
   - description: Posted progress lines in chat although clear-backlog says the chat holds only questions and the report; harness nudges asked for status
     solution: Reconcile the Skill's silent-chat rule with the harness's status nudges, or ignore the nudges
     severity: nit
-durationSec: 364
+  - description: Told the owner three times that the four triage agents were still running; the owner's interrupt had cancelled them at 05:06 and I never checked
+    solution: After any interrupt, verify subagent liveness (transcript tail or SendMessage) before reporting status; clear-backlog could say an interrupt cancels running agents
+    severity: major
+  - description: "First #1856c build used rev-list --first-parent --ancestry-path, which returns nothing when the ledger commit is not the merge's direct parent; review caught it, a rebuild round followed"
+    solution: Verify a git-history query against every live case before committing; the brief could ask for that
+    severity: moderate
+  - description: Auto-mode classifier blocked both the build agent's and my edit/commit of .claude/settings.json as self-modification despite the owner's approval in the grilling; needed an extra AskUserQuestion round
+    solution: guards.md could say the settings.json edit needs an explicit permission grant from the owner before dispatch, so it is asked once, up front
+    severity: minor
+  - description: Parallel subagents' git fetch hit a ref-lock race on origin/main (reported by two triage agents); a retry worked
+    solution: Have the orchestrator fetch once and tell subagents not to fetch, or retry on lock errors
+    severity: nit
+  - description: "Default sweep skipped AI-filed uncommented ready-for-human issues (#1859, #1860); the owner had to ask about them"
+    solution: "Fixed in PR #1867"
+    severity: minor
+  - description: "SHELL-READ-DETECTION false positive: docs/agents/mdc-when-to-use.md was credited from shell output, but the session marked it (not read)"
+    solution: Find the crediting command in the transcript and tighten scripts/shell-reads.ts
+    severity: moderate
+  - description: "SHELL-READ-DETECTION false positive: docs/agents/tenant-layers.md was credited from shell output, but the session marked it (not read)"
+    solution: Find the crediting command in the transcript and tighten scripts/shell-reads.ts
+    severity: moderate
+durationSec: 4094
 models:
-  claude-opus-5-5: 88
+  claude-opus-5-5: 349
 toolCounts:
-  Bash: 21
-  Read: 12
-  Write: 3
-  Agent: 6
-  AskUserQuestion: 1
-  Edit: 3
+  Bash: 72
+  Read: 15
+  Write: 5
+  Agent: 25
+  AskUserQuestion: 2
+  Edit: 6
   Skill: 3
-  ToolSearch: 1
+  ToolSearch: 5
   mcp__github__list_pull_requests: 1
-  mcp__github__create_pull_request: 1
-  mcp__claude-code-remote__subscribe_pr_activity: 1
+  mcp__github__create_pull_request: 7
+  mcp__claude-code-remote__subscribe_pr_activity: 7
+  ReadNotifications: 21
+  mcp__github__add_issue_comment: 8
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
+  SendMessage: 11
+  PushNotification: 2
+  mcp__github__issue_write: 2
+  mcp__github__add_reply_to_pull_request_comment: 1
 filesEdited:
   - .agents/skills/clear-backlog/SKILL.md
+  - .claude/worktrees/agent-abcccad0c1ec42731/.claude/settings.json
+  - scripts/prune-trial-window.ts
+  - tests/unit/prune-trial-window.spec.ts
+  - tests/unit/read-first-hint.spec.ts
+  - docs/agents/guards.md
+  - .agents/skills/auto-triage/SKILL.md
+  - scripts/github-search-fields-guard.ts
+  - tests/unit/github-search-fields-guard.spec.ts
+  - docs/agents/github-integration.md
 rulesLoaded:
   - .claude/rules/adr-0021.md
   - .claude/rules/adr-0005.md
   - .claude/rules/adr-0029.md
   - .claude/rules/adr-0018.md
   - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0010.md
+  - .claude/rules/guards.md
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0008.md
 rulesGlobal:
   - .claude/rules/adr-0022.md
   - .claude/rules/adr-0004.md
@@ -153,6 +246,18 @@ ruleVerdicts:
   - path: .claude/rules/adr-0004-human-merge.md
     reason: Checked the Skill path is not Human-only, so the PR can self-merge
     useful: yes
+  - path: .claude/rules/adr-0010.md
+    reason: Loaded via a digest-related read; digests were not touched in this run
+    useful: no
+  - path: .claude/rules/guards.md
+    reason: "Pointed me to guards.md, which settled the #1860 labelling and build constraints"
+    useful: yes
+  - path: .claude/rules/adr-0015.md
+    reason: Pack Skills stay as installed; none of the edited Skills is a pack Skill
+    useful: no
+  - path: .claude/rules/adr-0008.md
+    reason: Journal is Platform infrastructure; no Journal change in this run
+    useful: no
 subagents:
   - type: general-purpose
     task: Triage issue 1856
@@ -167,6 +272,54 @@ subagents:
     model: sonnet
   - type: general-purpose
     task: Spec review of Skill edit
+    model: sonnet
+  - type: general-purpose
+    task: Triage issue 1856
+  - type: general-purpose
+    task: Triage issue 1857
+  - type: general-purpose
+    task: Re-check brief issue 1778
+  - type: general-purpose
+    task: Re-check brief issue 1844
+  - type: general-purpose
+    task: Build 1856c landing time fix
+    model: sonnet
+  - type: general-purpose
+    task: Build 1856a ADR-0027 amendment
+    model: sonnet
+  - type: general-purpose
+    task: Build 1857a Done-line edit
+    model: sonnet
+  - type: general-purpose
+    task: Two-axis review of 1857 branch
+    model: sonnet
+  - type: general-purpose
+    task: Two-axis review of 1856a branch
+    model: sonnet
+  - type: general-purpose
+    task: Two-axis review of 1856c branch
+  - type: general-purpose
+    task: Re-review 1856c final diff
+    model: sonnet
+  - type: general-purpose
+    task: Triage issue 1859
+  - type: general-purpose
+    task: Triage issue 1860
+  - type: general-purpose
+    task: Build auto-triage no-comment rule
+    model: sonnet
+  - type: general-purpose
+    task: Review auto-triage eligibility edit
+    model: sonnet
+  - type: general-purpose
+    task: Build 1859 close-session hint
+  - type: general-purpose
+    task: Build 1860 search-fields guard
+  - type: general-purpose
+    task: Two-axis review of 1860 guard
+    model: sonnet
+  - type: general-purpose
+    task: Two-axis review of 1859 hint
     model: sonnet
 gitBranch: ccr-7bd1b915-p407z9
 entrypoint: remote_mobile
