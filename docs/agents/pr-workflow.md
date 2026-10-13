@@ -92,9 +92,8 @@ description.
 
 ## Closing a self-merged chartered run
 
-The tiers that merge on a green gate alone (`digest`, `audit-docs`,
-`audit-skills`, `blog-post`, `visitor-loop`, `prune-trial`) close the same way
-once their own work is staged. `reviewer-agent` does not, since it opens many
+The tiers above that merge on a green gate alone close the same way once their
+own work is staged. `reviewer-agent` does not, since it opens many
 PRs per run. Each Skill's SKILL.md states only its delta (what
 its diff is limited to, and what to do when something rides outside that scope):
 

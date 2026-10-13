@@ -28,7 +28,8 @@ Match the repo's actual files, not the template: `CONTEXT-MAP.md`'s
 `layers/<tenant>/` contexts live.
 
 If `CONTEXT-MAP.md`, a `CONTEXT.md` or an ADR is missing, **proceed
-silently**: don't flag it or suggest creating it. `/domain-modeling` creates them lazily, when a term or
+silently**: don't flag it or suggest creating it. `/domain-modeling` creates
+a missing one lazily, when a term or
 decision needs resolving.
 
 ## Use the glossary's vocabulary
