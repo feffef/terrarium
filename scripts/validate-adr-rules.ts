@@ -6,9 +6,8 @@
 // updates it if the decision changed, then runs this script with `--write`.
 // Every other rule must have `paths` and name only `docs/` files that exist
 // (ADR-0029, issue #1765). A summary's pointer gives its ADR's length, so an
-// agent sees that reading the full ADR is cheap; `--write` stamps it too.
-// An ADR in the new shape carries no history
-// (ADR-0030).
+// agent sees that reading the full ADR is cheap; `--write` stamps it too. An
+// ADR in the new shape carries no history (ADR-0030).
 //
 // Usage: pnpm validate:content (chained), or
 //   pnpm exec tsx scripts/validate-adr-rules.ts [--write]
@@ -59,10 +58,11 @@ export function withRuleHash(ruleText: string, hash: string): string {
 
 export const adrLines = (text: string) => text.replace(/\n$/, '').split('\n').length
 
-const POINTER = /read the full ADR first(?: \(it's only \d+ lines\))?:/
-const pointer = (lines: number) => `read the full ADR first (it's only ${lines} lines):`
+const POINTER = 'If this touches your task, read the full ADR first'
+const POINTER_RE = /If this touches your task, read the full ADR first(?: \(it's only \d+ lines\))?:/
+const pointerText = (lines: number) => `${POINTER} (it's only ${lines} lines):`
 
-export const withRuleLines = (ruleText: string, lines: number) => ruleText.replace(POINTER, pointer(lines))
+export const withRuleLines = (ruleText: string, lines: number) => ruleText.replace(POINTER_RE, pointerText(lines))
 
 const isSummary = (file: string) => /^adr-\d{4}\.md$/.test(file)
 
@@ -122,11 +122,11 @@ export function findAdrRuleProblems(input: AdrRuleInput): string[] {
   }
   for (const [file, text] of Object.entries(rules)) {
     const adr = adrs[ruleAdr(file) ?? '']
-    if (adr === undefined || !isSummary(file) || text.includes(pointer(adrLines(adr)))) continue
+    if (adr === undefined || !isSummary(file) || text.includes(pointerText(adrLines(adr)))) continue
     problems.push(
-      POINTER.test(text)
+      POINTER_RE.test(text)
         ? `${RULES_DIR}/${file} gives a stale ADR length: run \`pnpm exec tsx scripts/validate-adr-rules.ts --write\`.`
-        : `${RULES_DIR}/${file} must point to its ADR with "If this touches your task, read the full ADR first:".`,
+        : `${RULES_DIR}/${file} must point to its ADR with "${POINTER}:".`,
     )
   }
   const other = input.otherRules

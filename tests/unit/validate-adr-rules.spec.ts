@@ -3,8 +3,9 @@ import { adrHash, adrLines, findAdrRuleProblems, newFormatProblems, ruleAdr, rul
 
 const ADR = '# ADR-0024: Mermaid\n\nDecision text.\n'
 const stamped = (body: string) => withRuleHash(body, adrHash(ADR))
-const POINTER = 'If this touches your task, read the full ADR first:\ndocs/adr/0024-mermaid.md\n'
-const summary = withRuleLines(stamped(POINTER), adrLines(ADR))
+const POINTER_RULE = (n: string) => `If this touches your task, read the full ADR first:\ndocs/adr/${n}-mermaid.md\n`
+const summaryFor = (n: string) => withRuleLines(stamped(POINTER_RULE(n)), adrLines(ADR))
+const summary = summaryFor('0024')
 
 describe('withRuleHash / ruleHash', () => {
   it('adds frontmatter to a rule that has none, keeping the body', () => {
@@ -28,13 +29,13 @@ describe('ruleAdr', () => {
 })
 
 describe('findAdrRuleProblems / staleRules', () => {
-  it('passes when every rule carries its ADR hash, a topic rule included', () => {
+  it('passes when every rule carries its ADR hash and every summary its pointer, a topic rule included', () => {
     const rules = { 'adr-0024.md': summary, 'adr-0024-render.md': stamped('y') }
     expect(findAdrRuleProblems({ adrs: { '0024': ADR }, rules })).toEqual([])
   })
 
   it('names only the rules whose ADR changed after they were stamped', () => {
-    const input = { adrs: { '0024': `${ADR}Amended.\n`, '0012': ADR }, rules: { 'adr-0024.md': summary, 'adr-0012.md': summary } }
+    const input = { adrs: { '0024': `${ADR}Amended.\n`, '0012': ADR }, rules: { 'adr-0024.md': summary, 'adr-0012.md': summaryFor('0012') } }
     expect(staleRules(input)).toEqual(['adr-0024.md'])
     expect(findAdrRuleProblems(input).join('\n')).toContain('ADR-0024 changed')
   })
@@ -82,7 +83,7 @@ describe('newFormatProblems (ADR-0030)', () => {
   it('flags a heading whose number is not the file\'s, and reaches the gate', () => {
     expect(newFormatProblems('0025', NEW)).toEqual(['ADR-0025 must start with a `# ADR-0025: <title>` heading.'])
     const dated = `${NEW}Date: 2026-01-01\n`
-    const rule = withRuleLines(withRuleHash(POINTER, adrHash(dated)), adrLines(dated))
+    const rule = withRuleLines(withRuleHash(POINTER_RULE('0024'), adrHash(dated)), adrLines(dated))
     expect(findAdrRuleProblems({ adrs: { '0024': dated }, rules: { 'adr-0024.md': rule } })).toHaveLength(2)
   })
 })
