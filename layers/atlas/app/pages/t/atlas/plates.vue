@@ -35,7 +35,7 @@ useHead({ title: 'The Plates · The Atlas of the Terrarium' })
       </header>
 
       <section v-for="w in wings" :key="w.slug" class="plates-wing" :class="`atlas--${w.slug}`">
-        <div class="atlas-sechead"><span class="atlas-eyebrow">{{ w.meta.name }}</span></div>
+        <div class="atlas-sechead"><h2 class="atlas-eyebrow">{{ w.meta.name }}</h2></div>
         <ul class="plates-grid">
           <li v-for="s in w.specimens" :key="s.slug">
             <NuxtLink class="plate-link" :to="`/t/atlas/${w.slug}/${s.slug}`" :style="signatureVars(s.signature?.colors)">
@@ -64,6 +64,7 @@ useHead({ title: 'The Plates · The Atlas of the Terrarium' })
 .plates-title { font-family: var(--atlas-display); font-size: clamp(2.4rem, 7vw, 3.6rem); line-height: 1.05; margin: 0 0 0.6rem; }
 .plates-lede { color: var(--atlas-muted); max-width: 34rem; margin: 0; }
 .plates-wing { margin-bottom: 2.4rem; }
+.plates-wing h2 { margin: 0; }
 .plates-grid { list-style: none; margin: 1rem 0 0; padding: 0; display: grid; gap: 1.4rem; grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr)); }
 .plate-link { display: block; color: inherit; text-decoration: none; }
 .plate-link:hover .atlas-plate { transform: translateY(-2px); }

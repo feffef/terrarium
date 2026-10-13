@@ -85,6 +85,7 @@ describe('atlas Tenant', async () => {
     expect(html).toContain('The Plates')
     expect((html.match(/class="atlas-plate/g) ?? []).length).toBe(15)
     expect(html).toContain('/t/atlas/canopy/aranea-patiens')
+    expect(await $fetch<string>('/t/atlas')).toContain('href="/t/atlas/plates"')
   })
 
   // The at-random link must land on a real specimen plate.
