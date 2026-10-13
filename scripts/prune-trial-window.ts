@@ -132,27 +132,25 @@ export function selectTrials(pairs: TrialWithSearchKey[], filterSubstr: string):
 
 // ── Git shell (thin) ────────────────────────────────────────────────────────
 
-const FIELD_SEP = '\x1f'
+/** The first-parent `origin/main` commit that brought `sha` onto main: the
+ *  oldest of the first-parent commits after it (`ancestryOldestLast`, as
+ *  `rev-list` prints them), or `sha` itself when it is already on that chain
+ *  (a squash merge). A merged branch commit's own time predates its arrival
+ *  on main (issue #1856). */
+export function pickMainCommit(sha: string, ancestryOldestLast: string[], firstParentOf: (c: string) => string): string {
+  const oldest = ancestryOldestLast.at(-1)
+  return oldest && firstParentOf(oldest) !== sha ? oldest : sha
+}
 
-/** The newest `origin/main` commit that changed how often `problemText`
- *  appears in the ledger (see the header). `null` when there is none. */
+/** When the newest `origin/main` commit that changed how often `problemText`
+ *  appears in the ledger (see the header) reached main. `null` when none did. */
 function findLandingCommit(problemText: string, cwd = root): LandingCommit | null {
-  const out = execFileSync(
-    'git',
-    [
-      'log',
-      'origin/main',
-      '-1',
-      `--format=%H${FIELD_SEP}%cI`,
-      `-S${problemText}`,
-      '--',
-      LEDGER_PATH,
-    ],
-    { cwd, encoding: 'utf8' },
-  ).trim()
-  const [hash = '', isoCommitTime = ''] = out.split(FIELD_SEP)
-  if (!hash || !isoCommitTime) return null
-  return { hash, isoCommitTime: new Date(isoCommitTime).toISOString() }
+  const git = (...args: string[]) => execFileSync('git', args, { cwd, encoding: 'utf8' }).trim()
+  const sha = git('log', 'origin/main', '-1', '--format=%H', `-S${problemText}`, '--', LEDGER_PATH)
+  if (!sha) return null
+  const chain = git('rev-list', '--first-parent', '--ancestry-path', `${sha}..origin/main`).split('\n').filter(Boolean)
+  const hash = pickMainCommit(sha, chain, (c) => git('rev-parse', `${c}^1`))
+  return { hash, isoCommitTime: new Date(git('show', '-s', '--format=%cI', hash)).toISOString() }
 }
 
 export function buildWindows(pairs: TrialWithSearchKey[], now = new Date(), cwd = root): TrialWindow[] {

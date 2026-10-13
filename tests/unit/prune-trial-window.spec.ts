@@ -11,6 +11,7 @@ import {
   earliestJudgeableAtUtc,
   isJudgeable,
   parseTrials,
+  pickMainCommit,
   rawProblemFirstLines,
   selectTrials,
   type TrialWithSearchKey,
@@ -129,6 +130,20 @@ describe('selectTrials()', () => {
 
   it('returns nothing when no trial matches', () => {
     expect(selectTrials(pairs, 'no such text')).toEqual([])
+  })
+})
+
+describe('pickMainCommit() — when a ledger commit reached main (issue #1856)', () => {
+  const parent: Record<string, string> = { merge: 'base', next: 'sha' }
+  const firstParentOf = (c: string) => parent[c]!
+
+  it('takes the oldest first-parent commit when the ledger commit came in by merge', () => {
+    expect(pickMainCommit('sha', ['later', 'merge'], firstParentOf)).toBe('merge')
+  })
+
+  it('keeps the commit itself when it is on main\'s first-parent chain', () => {
+    expect(pickMainCommit('sha', ['later', 'next'], firstParentOf)).toBe('sha')
+    expect(pickMainCommit('sha', [], firstParentOf)).toBe('sha')
   })
 })
 
