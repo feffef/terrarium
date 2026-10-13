@@ -1,0 +1,82 @@
+adr: "0011"
+source: docs/adr-rewrite/refs/0011.md
+summary_in_context: false
+counts: {enforces: 4, explains: 6, points: 5, quotes: 1, repeats: 0, miscites: 0, noise: 0}
+items:
+  - id: 1
+    text: The live site runs in one container that downloads main, builds it and serves it; a push to main never needs a new image.
+    kind: decision
+    refs: [deploy/Dockerfile:3, deploy/docker-compose.yml:1, deploy/entrypoint.sh:3, README.md:34, deploy/README.md:4, SECURITY.md:27, docs/adr/0001-single-container-baked-multitenancy.md:6, docs/adr/0020-requester-trust-tiers.md:36]
+    conflict: false
+  - id: 2
+    text: Merging to main runs that code on the server, so merge is the code-execution boundary.
+    kind: decision
+    refs: [docs/adr/0020-requester-trust-tiers.md:36, docs/adr/0020-requester-trust-tiers.md:63, docs/adr/0023-guest-driven-demo-pipeline.md:44, docs/agents/guest-contributions.md:27, docs/research/public-readiness-review.md:52, SECURITY.md:27]
+    conflict: false
+  - id: 3
+    text: How far does this bend ADR-0001? Only the build runs at runtime, only in the deploy runner; content is still baked at build time and nothing creates Tenants or collections at runtime.
+    kind: decision
+    refs: [docs/adr/0001-single-container-baked-multitenancy.md:6, .agents/skills/guest-intake/SKILL.md:88, deploy/README.md:4]
+    conflict: false
+  - id: 4
+    text: Update cycle - poll origin/main, build beside the live copy, swap atomically; a failed build never touches the live server.
+    kind: mechanic
+    home: deploy/entrypoint.sh
+    refs: [deploy/entrypoint.sh:3, deploy/docker-compose.yml:1, docs/research/public-readiness-review.md:52]
+    conflict: false
+  - id: 5
+    text: Is this a temporary trial, and what is the way back to a fixed image built by CI?
+    kind: decision
+    refs: [docs/adr/0001-single-container-baked-multitenancy.md:6, docs/adr/0001-single-container-baked-multitenancy.md:12, deploy/README.md:4, README.md:34]
+    conflict: false
+  - id: 6
+    text: Which files make up the deploy (Dockerfile, docker-compose.yml, entrypoint.sh, .env.example, README).
+    kind: mechanic
+    home: deploy/README.md
+    refs: [docs/diagrams/interactive-map/terrarium-overview.md:872, deploy/README.md:4]
+    conflict: false
+  - id: 7
+    text: The GitHub token lives only in the server's .env, is passed to git at runtime and never stored in .git/config; the real .env is never committed.
+    kind: mechanic
+    home: deploy/.env.example
+    refs: [deploy/.env.example:1, deploy/docker-compose.yml:1]
+    conflict: false
+  - id: 8
+    text: Does the deploy install run package install scripts? (unclear; one caller suggests a locked, script-free install)
+    kind: mechanic
+    home: deploy/entrypoint.sh
+    refs: [docs/research/public-readiness-review.md:52]
+    conflict: false
+  - id: 9
+    text: The container is reached only through the shared Caddy proxy on the external web network; no host port is published.
+    kind: mechanic
+    home: deploy/docker-compose.yml
+    refs: [deploy/docker-compose.yml:1]
+    conflict: false
+  - id: 10
+    text: Base image is Node 22 or later for built-in SQLite; pnpm comes from corepack at the pinned version.
+    kind: mechanic
+    home: deploy/Dockerfile
+    refs: [deploy/Dockerfile:3]
+    conflict: false
+lists:
+  - list: repoint
+    file: docs/adr/0001-single-container-baked-multitenancy.md
+    line: 6
+    note: Dated amendment (2026-07-05) restating ADR-0011's scope; reduce to a pointer.
+  - list: repoint
+    file: docs/adr/0001-single-container-baked-multitenancy.md
+    line: 12
+    note: Cites ADR-0011's "scoped trade-off and its migration path".
+  - list: repoint
+    file: deploy/README.md
+    line: 4
+    note: Cites ADR-0011 for the why and the trade-off against ADR-0001.
+  - list: fix
+    file: docs/agents/guest-contributions.md
+    line: 27
+    note: Cites ADR-0011 for human-only merge; that is ADR-0004/ADR-0020. Keep ADR-0011 only for merge being the execution point.
+  - list: fix
+    file: docs/research/public-readiness-review.md
+    line: 52
+    note: Restates deploy steps; dated note, point to deploy/entrypoint.sh instead of treating as current.

@@ -1,0 +1,163 @@
+adr: '0002'
+summary_in_context: false
+counts:
+  explains: 12
+  repeats: 6
+  enforces: 5
+  quotes: 3
+  points: 1
+  miscites: 0
+  noise: 2
+items:
+  - id: one-place-for-collections
+    text: Every content collection is defined in the root content.config.ts, built from the manifests; a Tenant's Nuxt layer only changes how things look and defines no collections.
+    kind: decision
+    home: null
+    refs:
+      - layers/atlas/nuxt.config.ts:8
+      - layers/blog/nuxt.config.ts:7
+      - layers/journal/nuxt.config.ts:8
+      - layers/marquee/nuxt.config.ts:8
+      - layers/midden/nuxt.config.ts:9
+      - layers/tinkerfund/nuxt.config.ts:2
+      - nuxt.config.ts:3
+      - layers/atlas/tenant.config.ts:7
+      - layers/commons/tenant.config.ts:10
+      - layers/journal/tenant.config.ts:3
+      - layers/marquee/tenant.config.ts:7
+      - layers/midden/tenant.config.ts:9
+    conflict: false
+  - id: manifest-is-the-edit-surface
+    text: Each Tenant is described by one small settings file, layers/<tenant>/tenant.config.ts, stating what it contains rather than how to build it; agents edit that file.
+    kind: decision
+    home: null
+    refs:
+      - shared/manifest.ts:1
+      - nuxt.config.ts:45
+      - layers/atlas/tenant.config.ts:7
+      - layers/commons/tenant.config.ts:10
+      - layers/journal/tenant.config.ts:3
+      - layers/marquee/tenant.config.ts:7
+      - layers/midden/tenant.config.ts:9
+      - docs/adr/0013-dynamic-content-config-committed-routing-map.md:20
+      - docs/agents/mdc-when-to-use.md:128
+    conflict: false
+  - id: manifest-checked-before-build
+    text: A manifest is checked against a schema (and type-checked by the gate), so a mistake fails when the file is written, before any build.
+    kind: mechanic
+    home: shared/manifest.ts (validateManifest, collectionDefSchema); nuxt.config.ts typescript.tsConfig.include
+    refs:
+      - shared/manifest.ts:27
+      - shared/manifest.ts:89
+      - shared/manifest.ts:105
+      - shared/manifest.ts:164
+      - nuxt.config.ts:45
+      - docs/adr/0025-cross-tenant-catalog-and-collection-kinds.md:84
+    conflict: false
+  - id: generator-or-not
+    text: Does a generator write config files into the repo? Side A (0007, 0012, CONTEXT.md) says ADR-0002 has one writing content.config.ts and routing.generated.ts; side B (tenant configs, shared/manifest.ts) says nothing is generated. The rewrite must say whether ADR-0002 owns the generator or only the manifest decision.
+    kind: decision
+    home: null
+    refs:
+      - docs/adr/0007-generated-config-committed-drift-checked.md:19
+      - docs/adr/0012-cross-persona-pingbacks-via-authored-denormalization.md:26
+      - CONTEXT.md:51
+      - layers/atlas/tenant.config.ts:7
+      - layers/marquee/tenant.config.ts:7
+      - layers/midden/tenant.config.ts:9
+      - layers/journal/tenant.config.ts:3
+      - shared/manifest.ts:164
+    conflict: true
+  - id: code-expands-cross-product
+    text: Code, not people, turns each Tenant x Space x Collection combination into its own collection; nobody writes that list by hand.
+    kind: mechanic
+    home: shared/expand.ts (expand())
+    refs:
+      - shared/expand.ts:1
+      - shared/manifest.ts:1
+      - docs/adr/0013-dynamic-content-config-committed-routing-map.md:20
+      - CONTEXT.md:51
+    conflict: false
+  - id: one-expansion-two-outputs
+    text: One expansion feeds both the content collections and the URL routing map (mostly ADR-0014's mechanism, cited jointly).
+    kind: mechanic
+    home: shared/expand.ts; modules/routing.ts
+    refs:
+      - shared/expand.ts:1
+      - layers/atlas/tenant.config.ts:7
+      - layers/marquee/tenant.config.ts:7
+      - layers/midden/tenant.config.ts:9
+    conflict: false
+  - id: adding-a-tenant-adds-a-folder
+    text: Adding a Tenant only adds a layers/<name>/ folder and runs pnpm install; no shared config file is edited.
+    kind: decision
+    home: null
+    refs:
+      - docs/adr/0018-tenant-layers-under-layers-directory.md:17
+      - docs/adr/0018-tenant-layers-under-layers-directory.md:65
+    conflict: false
+lists:
+  - list: repoint
+    file: shared/manifest.ts
+    line: 89
+    note: quotes "an agent's output can be checked before build" promise
+  - list: repoint
+    file: shared/manifest.ts
+    line: 105
+    note: cites "the ADR-0002 promise" (fail at the authoring surface)
+  - list: repoint
+    file: shared/manifest.ts
+    line: 164
+    note: quotes ADR-0002 "manifests are schema-validated"
+  - list: repoint
+    file: docs/adr/0018-tenant-layers-under-layers-directory.md
+    line: 17
+    note: quotes "spawn a Tenant = drop a folder + pnpm install" story
+  - list: repoint
+    file: docs/adr/0018-tenant-layers-under-layers-directory.md
+    line: 65
+    note: "honouring ADR-0002" for additive Tenant spawning
+  - list: repoint
+    file: docs/adr/0007-generated-config-committed-drift-checked.md
+    line: 19
+    note: relies on ADR-0002 describing a generator that writes content.config.ts and routing.generated.ts
+  - list: repoint
+    file: docs/adr/0012-cross-persona-pingbacks-via-authored-denormalization.md
+    line: 26
+    note: relies on ADR-0002/0007 generator emitting routing.generated.ts
+  - list: repoint
+    file: docs/adr/0013-dynamic-content-config-committed-routing-map.md
+    line: 20
+    note: paraphrases ADR-0002's manifest and expand() cross-product
+  - list: repoint
+    file: nuxt.config.ts
+    line: 45
+    note: manifest as "the primary agent-edit surface, ADR-0002"
+  - list: repoint
+    file: CONTEXT.md
+    line: 51
+    note: sends reader to ADR-0002/0013 for the mechanism; says collections are "generated at build time"
+  - list: fix
+    file: layers/atlas/tenant.config.ts
+    line: 7
+    note: repeats the build mechanism (ADR-0013/0014's); shrink to a pointer
+  - list: fix
+    file: layers/commons/tenant.config.ts
+    line: 10
+    note: repeats the build mechanism; shrink to a pointer
+  - list: fix
+    file: layers/journal/tenant.config.ts
+    line: 3
+    note: repeats the build mechanism; shrink to a pointer
+  - list: fix
+    file: layers/marquee/tenant.config.ts
+    line: 7
+    note: repeats the build mechanism; shrink to a pointer
+  - list: fix
+    file: layers/midden/tenant.config.ts
+    line: 9
+    note: repeats the build mechanism; shrink to a pointer
+  - list: fix
+    file: nuxt.config.ts
+    line: 3
+    note: repeats the build mechanism; point to ADR-0013

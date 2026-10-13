@@ -1,0 +1,106 @@
+adr: '0005'
+summary_in_context: false
+roles:
+  explains: 10
+  points: 2
+  quotes: 2
+  enforces: 2
+  repeats: 0
+  miscites: 0
+  noise: 1
+items:
+  - id: workflow-script-is-skill-code
+    text: A workflow script in .claude/workflows/ is part of one Skill's code; the Skill names and runs it so the model can't skip or reorder fixed steps.
+    kind: decision
+    home: null
+    refs: [CONTEXT.md:198, CLAUDE.md:83, scripts/gate.ts:30, tests/unit/workflow-scripts.spec.ts:2, docs/adr/0004-objective-safety-gate.md:5, docs/adr/0004-objective-safety-gate.md:7]
+    conflict: false
+  - id: skills-dir-and-mirror
+    text: Skills are written in .agents/skills/; .claude/skills/ only links to them.
+    kind: mechanic
+    home: CLAUDE.md (repo layout); relied on by scripts/gate.ts isInert
+    refs: [scripts/gate.ts:22, CLAUDE.md:83, docs/diagrams/interactive-map/terrarium-overview.md:860]
+    conflict: false
+  - id: governed-files
+    text: Which files does this ADR govern? Callers name .agents/skills/**, .claude/skills/, skills-lock.json and .claude/workflows/.
+    kind: mechanic
+    home: .claude/rules/adr-0005.md paths frontmatter, read by scripts/skill-rules-hint.ts
+    refs: [scripts/skill-rules-hint.ts:36, docs/diagrams/interactive-map/terrarium-overview.md:860, CLAUDE.md:83]
+    conflict: false
+  - id: workflow-script-counts-as-skill-file-for-gate
+    text: For the gate, a workflow script counts as a Skill file, so a change touching only Skill files may skip build and end-to-end tests.
+    kind: mechanic
+    home: scripts/gate.ts (isSkillFile)
+    refs: [scripts/gate.ts:30, docs/adr/0004-objective-safety-gate.md:7, docs/adr/0004-objective-safety-gate.md:5]
+    conflict: false
+  - id: skill-is-ordinary-repo-code
+    text: A Skill is ordinary repo code, committed and changed through normal gated PRs, unlike runtime hook code the gate can't check.
+    kind: decision
+    home: null
+    refs: [docs/adr/0009-session-logs-commit-directly-to-main.md:365]
+    conflict: false
+  - id: scheduled-job-is-skill-plus-timer
+    text: A scheduled job is a Skill plus an outside timer (a Routine set in claude.ai).
+    kind: decision
+    home: null
+    refs: [docs/adr/0010-digests-derived-append-only-journal-pages.md:12, docs/adr/0015-audit-skills-and-conditional-importance.md:13]
+    conflict: false
+  - id: pack-skills-used-not-edited
+    text: Skills installed from outside packs (tracked in skills-lock.json) are used as they are, not changed here; a reinstall would overwrite edits.
+    kind: decision
+    home: null
+    refs: [docs/adr/0015-audit-skills-and-conditional-importance.md:188, docs/diagrams/interactive-map/terrarium-overview.md:860]
+    conflict: false
+  - id: seeded-docs-not-resynced
+    text: A doc copied from a pack template becomes the repo's own and is never re-synced; the pack template stays generic so it can be reinstalled.
+    kind: decision
+    home: null
+    refs: [docs/agents/domain.md:4, docs/agents/issue-tracker.md:6]
+    conflict: false
+  - id: build-reads-claude-dir
+    text: Does the app build read anything under .claude/? gate.ts:22 says never; ADR-0004:7 says only .claude/rules/*.md.
+    kind: mechanic
+    home: scripts/gate.ts
+    refs: [scripts/gate.ts:22, docs/adr/0004-objective-safety-gate.md:7]
+    conflict: true
+  - id: skills-are-main-product
+    text: The Skills are the project's main product.
+    kind: decision
+    home: null
+    refs: [docs/adr/0015-audit-skills-and-conditional-importance.md:128]
+    conflict: false
+  - id: workflow-scripts-not-linted
+    text: Workflow scripts are not ES modules (top-level return), so ESLint skips them and a unit test checks them instead.
+    kind: mechanic
+    home: tests/unit/workflow-scripts.spec.ts
+    refs: [tests/unit/workflow-scripts.spec.ts:2]
+    conflict: false
+lists:
+  - list: repoint
+    file: scripts/gate.ts
+    line: 30
+    note: cites "ADR-0005's 2026-10-13 amendment"
+  - list: repoint
+    file: tests/unit/workflow-scripts.spec.ts
+    line: 2
+    note: cites "ADR-0005's 2026-10-13 amendment, #1870"
+  - list: repoint
+    file: docs/adr/0004-objective-safety-gate.md
+    line: 7
+    note: '"Amended by ADR-0005 (2026-10-13, issue #1870)" and restates the rule; keep the date as history, ensure the rewrite still says it'
+  - list: repoint
+    file: docs/adr/0015-audit-skills-and-conditional-importance.md
+    line: 188
+    note: quotes the phrase "used, not evolved here"
+  - list: repoint
+    file: scripts/skill-rules-hint.ts
+    line: 36
+    note: names the rule's path glob .agents/skills/**; breaks if the rewrite changes it
+  - list: fix
+    file: scripts/gate.ts
+    line: 22
+    note: not a miscite or repeat; conflicts with ADR-0004:7 on whether the build reads .claude/rules/*.md; settle it in one place
+  - list: fix
+    file: docs/diagrams/interactive-map/terrarium-overview.md
+    line: 860
+    note: not a miscite or repeat; skills row omits .claude/workflows/, which callers say is Skill code

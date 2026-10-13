@@ -1,0 +1,119 @@
+adr: '0007'
+summary_in_context: false
+counts:
+  quotes: 8
+  points: 3
+  explains: 2
+  enforces: 1
+  repeats: 1
+  miscites: 0
+  noise: 2
+items:
+  - id: superseded
+    text: ADR-0007 no longer applies. ADR-0013 replaced its content-config half and ADR-0014 its routing-map half. No generated file is committed now.
+    kind: decision
+    refs:
+      - docs/adr/0013-dynamic-content-config-committed-routing-map.md:11
+      - docs/adr/0013-dynamic-content-config-committed-routing-map.md:12
+      - docs/adr/0014-build-time-virtual-routing-module.md:4
+      - docs/adr/0014-build-time-virtual-routing-module.md:24
+      - tests/unit/validate-adr-rules.spec.ts:40
+      - layers/midden/app/utils/strata.ts:37
+      - layers/midden/content/stores/artifacts/the-drift-check.yml:14
+    conflict: false
+  - id: commit-generated-outputs
+    text: The generator's two outputs, content.config.ts and shared/routing.generated.ts, were committed to the repo with a GENERATED banner.
+    kind: decision
+    refs:
+      - docs/adr/0013-dynamic-content-config-committed-routing-map.md:11
+      - docs/adr/0013-dynamic-content-config-committed-routing-map.md:22
+      - docs/adr/0012-cross-persona-pingbacks-via-authored-denormalization.md:26
+      - docs/adr/0013-dynamic-content-config-committed-routing-map.md:85
+      - layers/midden/app/utils/strata.ts:37
+    conflict: false
+  - id: why-reviewable-diff
+    text: Why commit generated output? So a pull request's diff shows, one line per tenant/space/collection, which tables a manifest change adds or removes.
+    kind: decision
+    refs:
+      - docs/adr/0013-dynamic-content-config-committed-routing-map.md:63
+      - docs/adr/0013-dynamic-content-config-committed-routing-map.md:65
+      - docs/adr/0014-build-time-virtual-routing-module.md:96
+      - docs/adr/0013-dynamic-content-config-committed-routing-map.md:67
+    conflict: false
+  - id: drift-check
+    text: A check regenerates the output and fails if git diff shows a change (pnpm gen && git diff --exit-code, as pnpm gate:drift, the first gate step). That plain diff is the whole check.
+    kind: mechanic
+    home: scripts/generate.ts, package.json gate:drift, .github/workflows/gate.yml (all deleted per the refs)
+    refs:
+      - docs/adr/0013-dynamic-content-config-committed-routing-map.md:22
+      - layers/midden/content/stores/artifacts/the-drift-check.yml:14
+      - docs/adr/0012-cross-persona-pingbacks-via-authored-denormalization.md:26
+      - docs/adr/0024-build-time-mermaid-prerender.md:88
+    conflict: false
+  - id: drift-pattern-precedent
+    text: It set the pattern later checks copy. A derived file is committed and the gate checks that it still matches its source.
+    kind: decision
+    refs:
+      - docs/adr/0024-build-time-mermaid-prerender.md:88
+      - docs/adr/0012-cross-persona-pingbacks-via-authored-denormalization.md:26
+    conflict: false
+  - id: redundancy-admitted
+    text: ADR-0007 admitted that the committed content config can look redundant with the manifest.
+    kind: decision
+    refs:
+      - docs/adr/0013-dynamic-content-config-committed-routing-map.md:67
+    conflict: false
+  - id: no-summary-rule
+    text: Because ADR-0007 is replaced, it needs no summary rule, and the ADR rule validator skips it. It is unclear whether the skip keys on status or on number.
+    kind: mechanic
+    home: validator behind findAdrRuleProblems (file unclear); pinned by tests/unit/validate-adr-rules.spec.ts
+    refs:
+      - tests/unit/validate-adr-rules.spec.ts:40
+    conflict: false
+  - id: fallback
+    text: If loading manifests at config time ever breaks, the fallback is to go back to a committed content config.
+    kind: decision
+    refs:
+      - docs/adr/0013-dynamic-content-config-committed-routing-map.md:85
+    conflict: false
+lists:
+  - list: repoint
+    file: docs/adr/0013-dynamic-content-config-committed-routing-map.md
+    line: 11
+    note: Says ADR-0007 committed both generated artifacts and splits its decision into two halves.
+  - list: repoint
+    file: docs/adr/0013-dynamic-content-config-committed-routing-map.md
+    line: 12
+    note: Names the content.config.ts decision and the routing.generated.ts decision separately.
+  - list: repoint
+    file: docs/adr/0013-dynamic-content-config-committed-routing-map.md
+    line: 65
+    note: Quotes the "which tables did this manifest change create/remove" signal.
+  - list: repoint
+    file: docs/adr/0013-dynamic-content-config-committed-routing-map.md
+    line: 67
+    note: Quotes "can look redundant with the manifest".
+  - list: repoint
+    file: docs/adr/0014-build-time-virtual-routing-module.md
+    line: 4
+    note: Status line says it "supersedes both halves of ADR-0007".
+  - list: repoint
+    file: docs/adr/0014-build-time-virtual-routing-module.md
+    line: 24
+    note: Supersedes ADR-0007 "both halves" and names each.
+  - list: repoint
+    file: docs/adr/0014-build-time-virtual-routing-module.md
+    line: 96
+    note: Restates the one-line-per-collection diff signal that ADR-0007/0013 valued.
+  - list: repoint
+    file: layers/midden/content/stores/artifacts/the-drift-check.yml
+    line: 14
+    note: Says ADR-0007 called plain git diff the entire drift-check signal (a historical catalog note).
+  - list: repoint
+    file: tests/unit/validate-adr-rules.spec.ts
+    line: 40
+    note: Expects ADR-0007 to be superseded. A rewrite must keep that status.
+  - list: fix
+    file: docs/adr/0013-dynamic-content-config-committed-routing-map.md
+    line: 22
+    note: Restates ADR-0007's whole decision and mechanics. It could point to ADR-0007 instead, though it may stay as ADR history.

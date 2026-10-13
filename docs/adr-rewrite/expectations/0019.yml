@@ -1,74 +1,50 @@
-adr: "0019"
 summary_in_context: false
+counts: {points: 6, explains: 4, quotes: 3, enforces: 1, noise: 2, repeats: 0, miscites: 0}
 items:
-  - id: C1
-    text: A failed client content load surfaces as ContentLoadErrorDialog; a full reload recovers (server-DB render), since @nuxt/content poisons its client DB state.
-    kind: claim
-    section: Summary
-    refs: [layers/blog/tests/e2e/blog.spec.ts:8, docs/adr/0028-navigation-reads-server-payloads.md:58, docs/diagrams/interactive-map/terrarium-overview.md:873, app/components/ContentLoadErrorDialog.vue:15, layers/midden/app/utils/strata.ts:70, app/composables/contentLoadRecovery.ts:5]
+  - id: dialog-on-failure
+    text: When a page's content fails to load in the browser, show an error dialog with a reload, not a blank page; only a full reload recovers.
+    kind: decision
+    home: app/components/ContentLoadErrorDialog.vue
+    refs: [app/components/ContentLoadErrorDialog.vue:15, layers/blog/tests/e2e/blog.spec.ts:8, docs/adr/0028-navigation-reads-server-payloads.md:58, docs/diagrams/interactive-map/terrarium-overview.md:873, layers/midden/app/utils/strata.ts:70, docs/research/content-client-queries-without-wasm.md:253]
     conflict: false
-  - id: C2
-    text: Chunk-load failures auto-reload once per path per reloadNuxtApp TTL; a surviving failure settles on the dialog (2026-08-04 amendment).
-    kind: claim
-    section: Summary
-    refs: [app/components/ContentLoadErrorDialog.vue:15, layers/blog/tests/e2e/blog.spec.ts:16, app/composables/contentLoadRecovery.ts:5, app/utils/chunkRecovery.ts:3, docs/adr/0028-navigation-reads-server-payloads.md:58]
+  - id: chunk-failure-auto-reload
+    text: A failed download of the app's own code reloads the page once by itself; if it fails again, the dialog shows. Every other failure gets the dialog, since a reload loop is worse.
+    kind: decision
+    refs: [app/components/ContentLoadErrorDialog.vue:15, app/composables/contentLoadRecovery.ts:5, app/utils/chunkRecovery.ts:3, layers/blog/tests/e2e/blog.spec.ts:16, docs/adr/0028-navigation-reads-server-payloads.md:58]
     conflict: false
-  - id: C3
-    text: Do not patch @nuxt/content; the 2026-07-16 amendment reverted the patch and pnpm-workspace.yaml.
-    kind: claim
-    section: Rejected alternatives
-    refs: [layers/blog/tests/e2e/blog.spec.ts:8, scripts/repro-236.ts:5, docs/research/content-client-queries-without-wasm.md:394, layers/midden/app/utils/strata.ts:70, layers/midden/content/trench/artifacts/the-nuxt-content-patch.yml:36]
+  - id: no-dependency-patch
+    text: We do not patch @nuxt/content; the client-DB patch was removed on 2026-07-16.
+    kind: decision
+    refs: [layers/blog/tests/e2e/blog.spec.ts:8, scripts/repro-236.ts:5, layers/midden/app/utils/strata.ts:70, docs/research/content-client-queries-without-wasm.md:394, layers/midden/content/trench/artifacts/the-nuxt-content-patch.yml:36]
     conflict: false
-  - id: C4
-    text: What is the failure? Lazily fetched per-collection WASM SQLite dump; a failed load poisons the collection for the page's life (#236, 2026-07-19 capture).
-    kind: question
-    section: Why
-    refs: [layers/blog/tests/e2e/blog.spec.ts:8, docs/adr/0028-navigation-reads-server-payloads.md:18, docs/research/content-client-queries-without-wasm.md:8, app/utils/chunkRecovery.ts:3, scripts/repro-236.ts:5]
+  - id: failure-cause
+    text: Browser queries use a SQLite DB that downloads each collection's data on first use; a failed download leaves that collection empty for the page's life (issue 236).
+    kind: mechanic
+    home: scripts/repro-236.ts
+    refs: [layers/blog/tests/e2e/blog.spec.ts:8, app/components/ContentLoadErrorDialog.vue:15, scripts/repro-236.ts:5, docs/adr/0028-navigation-reads-server-payloads.md:18, docs/research/content-client-queries-without-wasm.md:8]
     conflict: false
-  - id: C5
-    text: Only the chunk-load class auto-reloads because a reload cannot fix other funnels and a reload loop is worse than a modal.
-    kind: claim
-    section: Why
-    refs: [app/composables/contentLoadRecovery.ts:5, app/utils/chunkRecovery.ts:3]
-    conflict: false
-  - id: C6
-    text: Is ADR-0019 superseded or live? Midden content says superseded; code, tests and ADR-0028 cite it as live.
-    kind: question
-    section: Summary
-    refs: [layers/midden/app/utils/strata.ts:70, layers/midden/content/trench/artifacts/the-nuxt-content-patch.yml:36, docs/adr/0028-navigation-reads-server-payloads.md:58, app/components/ContentLoadErrorDialog.vue:15, app/composables/contentLoadRecovery.ts:5]
+  - id: status
+    text: Is ADR-0019 in force or superseded? Midden says superseded; ADR-0028 and code comments treat it as the live rule.
+    kind: decision
+    refs: [layers/midden/app/utils/strata.ts:70, layers/midden/content/trench/artifacts/the-nuxt-content-patch.yml:36, docs/adr/0028-navigation-reads-server-payloads.md:58, app/composables/contentLoadRecovery.ts:5]
     conflict: true
-  - id: C7
-    text: Recovery is one mechanism wired once at ContentLoadErrorDialog, not per page (#236).
-    kind: claim
-    section: Consequences
+  - id: reload-limit
+    text: The automatic reload happens at most once per path within Nuxt's reload time limit, and only in the browser.
+    kind: mechanic
+    home: app/composables/contentLoadRecovery.ts
+    refs: [app/composables/contentLoadRecovery.ts:5, layers/blog/tests/e2e/blog.spec.ts:16]
+    conflict: false
+  - id: single-mechanism
+    text: The recovery is wired once in the dialog every page shows, not per page (unclear whether the ADR or issue 236 owns this).
+    kind: decision
+    home: app/components/ContentLoadErrorDialog.vue
     refs: [app/components/ContentLoadErrorDialog.vue:15, app/composables/contentLoadRecovery.ts:5]
     conflict: false
-  - id: C8
-    text: ADR-0028 payloads skip the client DB on most navigations, but it still loads (search, re-queries, failed payload), so the recovery stays.
-    kind: claim
-    section: When to revisit
-    refs: [docs/adr/0028-navigation-reads-server-payloads.md:58, docs/research/content-client-queries-without-wasm.md:253, layers/blog/tests/e2e/blog.spec.ts:8]
-    conflict: false
-  - id: C9
-    text: Evidence lives in layers/blog/tests/e2e/blog.spec.ts and the historical scripts/repro-236.ts.
-    kind: claim
-    section: See
-    refs: [layers/blog/tests/e2e/blog.spec.ts:8, scripts/repro-236.ts:5, docs/research/content-client-queries-without-wasm.md:253]
-    conflict: false
 lists:
-  - {list: keep, file: app/components/ContentLoadErrorDialog.vue, line: 15, note: "cites the 2026-08-04 amendment by date"}
-  - {list: keep, file: layers/blog/tests/e2e/blog.spec.ts, line: 8, note: "cites the 2026-07-16 amendment by date"}
-  - {list: keep, file: layers/blog/tests/e2e/blog.spec.ts, line: 16, note: "cites the 2026-08-04 amendment by date"}
-  - {list: keep, file: scripts/repro-236.ts, line: 5, note: "cites the 2026-07-16 amendment"}
-  - {list: keep, file: docs/adr/0028-navigation-reads-server-payloads.md, line: 58, note: "term \"ADR-0019's recovery\" = ContentLoadErrorDialog + chunk-error auto-reload"}
-  - {list: keep, file: app/utils/chunkRecovery.ts, line: 3, note: "term \"chunk-load class\""}
-  - {list: keep, file: layers/midden/content/trench/artifacts/the-nuxt-content-patch.yml, line: 37, note: "filename linked via permalink pinned to bf99a17; survives rename, keep filename anyway"}
-  - {list: repoint, file: app/components/ContentLoadErrorDialog.vue, line: 15, note: "breaks if the 2026-08-04 amendment loses its date"}
-  - {list: repoint, file: layers/blog/tests/e2e/blog.spec.ts, line: 8, note: "breaks if the 2026-07-16 amendment loses its date"}
-  - {list: repoint, file: layers/blog/tests/e2e/blog.spec.ts, line: 16, note: "breaks if the 2026-08-04 amendment loses its date"}
-  - {list: repoint, file: scripts/repro-236.ts, line: 5, note: "breaks if the 2026-07-16 amendment disappears"}
-  - {list: repoint, file: layers/midden/app/utils/strata.ts, line: 70, note: "calls ADR-0019 superseded; revisit per C6"}
-  - {list: repoint, file: layers/midden/content/trench/artifacts/the-nuxt-content-patch.yml, line: 36, note: "label says 'before it was marked superseded'; revisit per C6"}
-  - {list: fix, file: docs/research/content-client-queries-without-wasm.md, line: 253, note: "'ADR-0019's blog failure tests' are blog.spec.ts/#236's; point to the spec"}
-  - {list: fix, file: layers/midden/app/utils/strata.ts, line: 70, note: "'superseded' may be wrong while code and ADR-0028 cite ADR-0019 as live; resolve C6"}
-  - {list: fix, file: app/composables/contentLoadRecovery.ts, line: 5, note: "restates the why; could point to the ADR alone"}
+  - {list: repoint, file: app/components/ContentLoadErrorDialog.vue, line: 15, note: "cites ADR-0019's 2026-08-04 amendment"}
+  - {list: repoint, file: layers/blog/tests/e2e/blog.spec.ts, line: 8, note: "cites ADR-0019 amendment, 2026-07-16"}
+  - {list: repoint, file: layers/blog/tests/e2e/blog.spec.ts, line: 16, note: "cites ADR-0019 amendment, 2026-08-04"}
+  - {list: repoint, file: scripts/repro-236.ts, line: 5, note: "cites ADR-0019 amendment (2026-07-16 note)"}
+  - {list: fix, file: layers/midden/app/utils/strata.ts, line: 70, note: "calls ADR-0019 superseded; conflicts with live citations; fix once status settled"}
+  - {list: fix, file: layers/midden/content/trench/artifacts/the-nuxt-content-patch.yml, line: 36, note: "label says 'marked superseded'; same status conflict; pinned URL at :37 stays valid"}
+  - {list: fix, file: docs/research/content-client-queries-without-wasm.md, line: 253, note: "'ADR-0019's blog failure tests' credits the ADR with the tests; low priority, dated note"}

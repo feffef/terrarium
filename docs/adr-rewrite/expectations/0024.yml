@@ -1,0 +1,68 @@
+adr: '0024'
+summary_in_context: false
+counts: {explains: 7, enforces: 6, points: 4, repeats: 1, quotes: 0, miscites: 0, noise: 23, total: 41}
+items:
+  - id: prerendered-no-browser-js
+    text: Diagrams are drawn ahead of time into SVG files committed to the repo; the browser loads no mermaid code, on every page.
+    kind: decision
+    home: null
+    refs: [app/components/MermaidDiagram.vue:2, app/components/MermaidDiagram.vue:10, app/assets/fonts/README.md:5, scripts/render-mermaid.ts:1, tests/e2e/smoke.spec.ts:143, tests/unit/mermaid-render.spec.ts:2, docs/research/mermaid-server-side-rendering.md:3, docs/research/mermaid-server-side-rendering.md:4, docs/research/mermaid-server-side-rendering.md:112, docs/diagrams/interactive-map/terrarium-overview.md:934]
+    conflict: false
+  - id: drift-gate
+    text: A gate check fails when a committed SVG is missing, empty, has no source left, or is unsafe; fix by running pnpm render:mermaid and committing.
+    kind: mechanic
+    home: scripts/verify-mermaid.ts
+    refs: [scripts/verify-mermaid.ts:1, scripts/verify-mermaid.ts:56, scripts/render-mermaid.ts:1, app/components/MermaidDiagram.vue:10, docs/research/mermaid-server-side-rendering.md:112]
+    conflict: false
+  - id: tenant-theming
+    text: How do diagrams take each Tenant's colours and dark mode without JS? Through --diagram-* CSS variables a Tenant maps to its own tokens.
+    kind: mechanic
+    home: app/utils/mermaid.ts
+    refs: [app/utils/mermaid.ts:15, app/components/MermaidDiagram.vue:10, scripts/render-mermaid.ts:1, tests/unit/mermaid-render.spec.ts:2, docs/agents/tenant-layers.md:112]
+    conflict: true
+    conflict_note: tenant-layers.md:112 points to ADR-0024 for the contract; app/utils/mermaid.ts:15 and mermaid-server-side-rendering.md:112 name app/utils/mermaid.ts as its single home.
+  - id: fixed-font
+    text: Text is measured when the SVG is drawn, so font family and size are fixed, not themeable; diagrams use one bundled font (Gelasio) that the site ships.
+    kind: decision
+    home: app/utils/mermaid.ts
+    refs: [app/utils/mermaid.ts:15, app/components/MermaidDiagram.vue:46, scripts/render-mermaid.ts:77, tests/unit/mermaid-render.spec.ts:104, app/assets/fonts/README.md:5]
+    conflict: false
+  - id: hash-key
+    text: How is a diagram matched to its SVG file? By a hash of its source.
+    kind: mechanic
+    home: app/utils/mermaid.ts
+    refs: [app/components/MermaidDiagram.vue:10, scripts/verify-mermaid.ts:1, tests/unit/mermaid-render.spec.ts:2, docs/research/mermaid-server-side-rendering.md:112]
+    conflict: false
+  - id: browser-only-at-authoring
+    text: Only the authoring step runs a browser; CI and production only read committed files, because the production container has no browser.
+    kind: decision
+    home: null
+    refs: [scripts/render-mermaid.ts:1, scripts/verify-mermaid.ts:1, docs/research/mermaid-server-side-rendering.md:112]
+    conflict: false
+  - id: raw-html-safety
+    text: Why may the page insert the SVG as raw HTML, and which HTML elements may it hold? It is our own committed file, checked free of scripts; mermaid labels need a few HTML elements.
+    kind: decision
+    home: app/utils/svg.ts
+    refs: [app/components/MermaidDiagram.vue:2, app/utils/svg.ts:14, scripts/verify-mermaid.ts:1]
+    conflict: false
+  - id: page-display
+    text: What does a page show? The SVG is in the server-rendered HTML; a missing SVG shows the source as plain text.
+    kind: mechanic
+    home: app/components/MermaidDiagram.vue
+    refs: [app/components/MermaidDiagram.vue:10, docs/research/mermaid-server-side-rendering.md:112]
+    conflict: false
+  - id: why-this-approach
+    text: Why this approach over others? It adds no dependency (reuses playwright-core and the installed Chromium) and makes mermaid a dev-only dependency.
+    kind: decision
+    home: null
+    refs: [docs/research/mermaid-server-side-rendering.md:3, docs/research/mermaid-server-side-rendering.md:112]
+    conflict: false
+lists:
+  - list: fix
+    file: docs/agents/tenant-layers.md
+    line: 112
+    note: Cites ADR-0024 for the --diagram-* contract whose stated home is app/utils/mermaid.ts; point there for the token list.
+  - list: fix
+    file: docs/diagrams/interactive-map/terrarium-overview.md
+    line: 934
+    note: Restates "no mermaid code in the browser"; short and cited, reduce to a pointer if the table should hold no rules.

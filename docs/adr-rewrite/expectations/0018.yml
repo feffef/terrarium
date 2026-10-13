@@ -1,0 +1,122 @@
+# Callers' expectations of ADR-0018, from docs/adr-rewrite/refs/0018.md only.
+# ADR-0018's summary rule was not in context.
+summary_in_context: false
+counts:
+  explains: 4
+  points: 3
+  quotes: 9
+  enforces: 2
+  repeats: 0
+  miscites: 1
+  noise: 3
+items:
+  - id: layers-location
+    text: Each Tenant's code, content and manifest live in its own folder under layers/<tenant>/; they moved there from tenants/ on 2026-07-07.
+    kind: decision
+    refs:
+      - nuxt.config.ts:8
+      - nuxt.config.ts:41
+      - shared/expand.ts:20
+      - docs/agents/tenant-layers.md:4
+      - shared/expand.ts:21
+      - docs/adr/0003-agent-operating-model-and-governance.md:19
+      - docs/diagrams/interactive-map/terrarium-overview.md:863
+      - docs/adr/0002-manifest-driven-config-generation.md:6
+      - docs/adr/0003-agent-operating-model-and-governance.md:34
+      - docs/adr/0009-session-logs-commit-directly-to-main.md:6
+      - docs/adr/0010-digests-derived-append-only-journal-pages.md:6
+      - docs/adr/0013-dynamic-content-config-committed-routing-map.md:7
+      - docs/adr/0014-build-time-virtual-routing-module.md:6
+      - docs/adr/0015-audit-skills-and-conditional-importance.md:7
+      - docs/adr/0016-tenant-root-layer-routes.md:6
+      - tests/unit/typecheck-coverage.spec.ts:10
+    conflict: false
+  - id: old-paths-kept-with-note
+    text: Older ADRs keep their tenants/ paths as written; a short note on each says the paths predate the move, instead of rewriting them.
+    kind: decision
+    refs:
+      - docs/adr/0002-manifest-driven-config-generation.md:6
+      - docs/adr/0003-agent-operating-model-and-governance.md:19
+      - docs/adr/0003-agent-operating-model-and-governance.md:34
+      - docs/adr/0009-session-logs-commit-directly-to-main.md:6
+      - docs/adr/0010-digests-derived-append-only-journal-pages.md:6
+      - docs/adr/0013-dynamic-content-config-committed-routing-map.md:7
+      - docs/adr/0014-build-time-virtual-routing-module.md:6
+      - docs/adr/0015-audit-skills-and-conditional-importance.md:7
+      - docs/adr/0016-tenant-root-layer-routes.md:6
+    conflict: false
+  - id: auto-extend
+    text: Nuxt loads every folder under layers/ on its own, so nuxt.config.ts keeps no list of layers; adding a Tenant is adding a folder (plus pnpm install). This made ADR-0002's 2026-07-05 extends amendment moot.
+    kind: mechanic
+    home: nuxt.config.ts
+    refs:
+      - nuxt.config.ts:8
+      - docs/agents/tenant-layers.md:4
+      - docs/adr/0002-manifest-driven-config-generation.md:6
+      - shared/expand.ts:21
+    conflict: false
+  - id: typecheck-coverage
+    text: Nuxt's own type check covers each layer's app/ and nuxt.config.*; only layers/*/tenant.config.* needs a hand-added include, and a test fails if that pattern stops matching a real file (issue #209 narrowed issue #93's check).
+    kind: mechanic
+    home: nuxt.config.ts (typescript.tsConfig.include); tests/unit/typecheck-coverage.spec.ts
+    refs:
+      - nuxt.config.ts:41
+      - shared/expand.ts:21
+      - tests/unit/typecheck-coverage.spec.ts:10
+      - tests/unit/typecheck-coverage.spec.ts:51
+    conflict: false
+  - id: fix-in-place-vs-amend
+    text: "Unclear: when may an ADR be fixed in place (a factual correction such as a renamed path) and when must a change be a new dated amendment (it reverses a decision)? Refs cannot show whether ADR-0018 states this."
+    kind: decision
+    refs:
+      - docs/adr/0022-autonomous-triage-sweep.md:112
+    conflict: false
+lists:
+  - list: repoint
+    file: docs/adr/0002-manifest-driven-config-generation.md
+    line: 6
+    note: Dated 2026-07-07 note linking the filename; restates the auto-extend rule and calls the 2026-07-05 amendment moot.
+  - list: repoint
+    file: docs/adr/0003-agent-operating-model-and-governance.md
+    line: 34
+    note: Dated 2026-07-07 note linking the filename.
+  - list: repoint
+    file: docs/adr/0009-session-logs-commit-directly-to-main.md
+    line: 6
+    note: Dated 2026-07-07 note linking the filename; restates the new sessions path.
+  - list: repoint
+    file: docs/adr/0010-digests-derived-append-only-journal-pages.md
+    line: 6
+    note: Dated 2026-07-07 note linking the filename.
+  - list: repoint
+    file: docs/adr/0013-dynamic-content-config-committed-routing-map.md
+    line: 7
+    note: Dated 2026-07-07 note linking the filename.
+  - list: repoint
+    file: docs/adr/0014-build-time-virtual-routing-module.md
+    line: 6
+    note: Dated 2026-07-07 note linking the filename.
+  - list: repoint
+    file: docs/adr/0015-audit-skills-and-conditional-importance.md
+    line: 7
+    note: Dated 2026-07-07 note linking the filename.
+  - list: repoint
+    file: docs/adr/0016-tenant-root-layer-routes.md
+    line: 6
+    note: Dated 2026-07-07 note linking the filename; restates one renamed path.
+  - list: repoint
+    file: docs/adr/0022-autonomous-triage-sweep.md
+    line: 112
+    note: Names "ADR-0018's factual-correction-vs-decision-reversal rule".
+  - list: repoint
+    file: tests/unit/typecheck-coverage.spec.ts
+    line: 51
+    note: Test title "narrowed by ADR-0018"; harmless unless the ADR is renumbered.
+  - list: fix
+    file: docs/research/content-client-queries-without-wasm.md
+    line: 381
+    note: Miscite; says nuxt.config.ts is human-only because of ADR-0018, but the human-only file list is ADR-0004's.
+  - list: fix
+    file: docs/adr/0022-autonomous-triage-sweep.md
+    line: 112
+    note: Possible miscite; verify ADR-0018 holds the fix-in-place vs new-amendment rule, else cite the ADR that does.

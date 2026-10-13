@@ -1,0 +1,67 @@
+adr: "0013"
+summary_in_context: false
+counts: {repeats: 12, explains: 12, points: 5, quotes: 5, enforces: 1, miscites: 1, noise: 1, total: 37}
+items:
+  - id: C1
+    text: content.config.ts is an ordinary hand-edited module (not generated, no banner, no drift check, linted) that builds one collection for each Tenant x Space x Collection from every manifest each time it loads; agents edit only the manifest.
+    kind: decision
+    conflict: true
+    note: CONTEXT.md:51 says "generated ... at build time" and .claude/rules/adr-0002.md:13 says "at build time"; content.config.ts and the manifest headers say "config-evaluation time" and "no generated file".
+    refs: [content.config.ts:1, nuxt.config.ts:3, shared/manifest.ts:4, layers/atlas/tenant.config.ts:7, layers/blog/tenant.config.ts:6, layers/commons/tenant.config.ts:10, layers/journal/tenant.config.ts:3, layers/marquee/tenant.config.ts:7, layers/midden/tenant.config.ts:9, layers/midden/content/trench/artifacts/the-committed-config.yml:10, layers/midden/content/trench/artifacts/the-committed-config.yml:16, .claude/rules/adr-0002.md:13, CONTEXT.md:51, docs/adr/0007-generated-config-committed-drift-checked.md:4, docs/adr/0007-generated-config-committed-drift-checked.md:6, docs/adr/0007-generated-config-committed-drift-checked.md:15, docs/adr/0014-build-time-virtual-routing-module.md:25, docs/adr/0014-build-time-virtual-routing-module.md:31, shared/expand.ts:4, tests/unit/expand.spec.ts:5, layers/midden/app/utils/strata.ts:38, docs/adr/0004-objective-safety-gate.md:81, docs/adr/0014-build-time-virtual-routing-module.md:26]
+  - id: C2
+    text: No generator or code-generation step remains; nothing is regenerated or committed, and validating a manifest is a standalone check.
+    kind: decision
+    conflict: true
+    note: Most callers credit ADR-0013/0014 jointly. ADR-0014:31, ADR-0007:11 and the-generator.yml:21 say ADR-0013 kept generate.ts, pnpm gen, gate:drift and the committed routing map, and that ADR-0014 removed them.
+    refs: [shared/manifest.ts:150, shared/manifest.ts:163, layers/midden/content/trench/artifacts/the-generator.yml:8, docs/adr/0004-objective-safety-gate.md:81, layers/atlas/tenant.config.ts:7, layers/blog/tenant.config.ts:6, layers/journal/tenant.config.ts:3, layers/marquee/tenant.config.ts:7, layers/midden/tenant.config.ts:9, tests/unit/expand.spec.ts:5, layers/midden/app/utils/strata.ts:38, docs/adr/0014-build-time-virtual-routing-module.md:31]
+  - id: C3
+    text: Which part of ADR-0007 ADR-0013 replaces (the committed content.config.ts), which part it kept (the committed routing map), and whether that kept part still stands (callers say ADR-0014 replaced it).
+    kind: decision
+    conflict: false
+    refs: [docs/adr/0007-generated-config-committed-drift-checked.md:4, docs/adr/0007-generated-config-committed-drift-checked.md:6, docs/adr/0007-generated-config-committed-drift-checked.md:11, docs/adr/0007-generated-config-committed-drift-checked.md:15, docs/adr/0014-build-time-virtual-routing-module.md:4, docs/adr/0014-build-time-virtual-routing-module.md:25, docs/adr/0014-build-time-virtual-routing-module.md:26, docs/adr/0014-build-time-virtual-routing-module.md:31, docs/adr/0014-build-time-virtual-routing-module.md:96, layers/midden/content/trench/artifacts/the-committed-config.yml:16]
+  - id: C4
+    text: Collections are defined only in the root content.config.ts; Tenant layers are presentation only and declare none.
+    kind: decision
+    conflict: false
+    note: unclear whether ADR-0013 or ADR-0002 owns this; every caller cites ADR-0002/0013.
+    refs: [layers/atlas/nuxt.config.ts:8, layers/blog/nuxt.config.ts:7, layers/journal/nuxt.config.ts:8, layers/marquee/nuxt.config.ts:8, layers/midden/nuxt.config.ts:9, layers/tinkerfund/nuxt.config.ts:2, nuxt.config.ts:3]
+  - id: C5
+    text: content.config.ts and modules/routing.ts run the same pure expand(), so one source of truth gives both the collections and the routes.
+    kind: mechanic
+    home: shared/expand.ts (tested by tests/unit/expand.spec.ts)
+    conflict: false
+    refs: [shared/expand.ts:4, content.config.ts:1, tests/unit/expand.spec.ts:5, shared/manifest.ts:150, .claude/rules/adr-0002.md:13]
+  - id: C6
+    text: Every nuxt prepare, build and dev-server start rebuilds the collections; Nuxt Content's config loader watches only content.config.ts, not its imports, so modules/routing.ts (ADR-0014, #325) catches manifest edits during a dev-server session.
+    kind: mechanic
+    home: content.config.ts, modules/routing.ts
+    conflict: false
+    refs: [content.config.ts:1, docs/adr/0014-build-time-virtual-routing-module.md:31]
+  - id: C7
+    text: Why. It removes the failure "a manifest was edited but the regenerated config was not committed"; the committed file's one-line-per-collection diff was valued as a review signal.
+    kind: decision
+    conflict: false
+    refs: [docs/adr/0014-build-time-virtual-routing-module.md:31, docs/adr/0014-build-time-virtual-routing-module.md:96, layers/midden/content/trench/artifacts/the-committed-config.yml:16]
+lists:
+  - {list: repoint, file: docs/adr/0004-objective-safety-gate.md, line: 81, note: "2026-07-10 amendment links the 0013-...-committed-routing-map.md file name; says ADR-0013/0014 removed the generator"}
+  - {list: repoint, file: docs/adr/0007-generated-config-committed-drift-checked.md, line: 4, note: "Status line: superseded by ADR-0013 (content.config.ts half)"}
+  - {list: repoint, file: docs/adr/0007-generated-config-committed-drift-checked.md, line: 6, note: "Amended by ADR-0013 (2026-07-05): links the file name and restates its content"}
+  - {list: repoint, file: docs/adr/0007-generated-config-committed-drift-checked.md, line: 11, note: "same block: routing map 'retained in ADR-0013'"}
+  - {list: repoint, file: docs/adr/0007-generated-config-committed-drift-checked.md, line: 15, note: "same block: read ADR-0013 and ADR-0014 for the amendments"}
+  - {list: repoint, file: docs/adr/0014-build-time-virtual-routing-module.md, line: 26, note: "Amends ADR-0013 (which retained the committed routing map)"}
+  - {list: repoint, file: docs/adr/0014-build-time-virtual-routing-module.md, line: 31, note: "Context restates ADR-0013's decision and what it kept (generate.ts, pnpm gen, gate:drift, routing.generated.ts)"}
+  - {list: repoint, file: docs/adr/0014-build-time-virtual-routing-module.md, line: 96, note: "ADR-0007/0013 valued the one-line-per-key PR diff"}
+  - {list: fix, file: docs/agents/mdc-when-to-use.md, line: 128, note: "miscites: frontmatter-as-intent is ADR-0002, not ADR-0013; cite ADR-0002 only"}
+  - {list: fix, file: CONTEXT.md, line: 51, note: "'generated ... at build time' contradicts 'no generated file'; drop the mechanism words, keep the pointer"}
+  - {list: fix, file: layers/atlas/nuxt.config.ts, line: 8, note: "repeats 'no collections of its own'; shorten to a pointer"}
+  - {list: fix, file: layers/blog/nuxt.config.ts, line: 7, note: "repeats 'no collections of its own'; shorten to a pointer"}
+  - {list: fix, file: layers/journal/nuxt.config.ts, line: 8, note: "repeats 'no collections of its own'; shorten to a pointer"}
+  - {list: fix, file: layers/marquee/nuxt.config.ts, line: 8, note: "repeats 'no collections of its own'; shorten to a pointer"}
+  - {list: fix, file: layers/midden/nuxt.config.ts, line: 9, note: "repeats 'no collections of its own'; shorten to a pointer"}
+  - {list: fix, file: layers/tinkerfund/nuxt.config.ts, line: 2, note: "repeats 'no collections of its own'; shorten to a pointer"}
+  - {list: fix, file: layers/atlas/tenant.config.ts, line: 7, note: "repeats the build mechanism; shorten to a pointer"}
+  - {list: fix, file: layers/blog/tenant.config.ts, line: 6, note: "repeats the build mechanism; shorten to a pointer"}
+  - {list: fix, file: layers/commons/tenant.config.ts, line: 10, note: "repeats the build mechanism; shorten to a pointer"}
+  - {list: fix, file: layers/journal/tenant.config.ts, line: 3, note: "repeats the build mechanism; shorten to a pointer"}
+  - {list: fix, file: layers/marquee/tenant.config.ts, line: 7, note: "repeats the build mechanism; shorten to a pointer"}
+  - {list: fix, file: layers/midden/tenant.config.ts, line: 9, note: "repeats the build mechanism; shorten to a pointer"}

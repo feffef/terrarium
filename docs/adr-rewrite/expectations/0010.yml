@@ -1,0 +1,91 @@
+adr: "0010"
+summary_in_context: false
+counts: {explains: 9, points: 3, enforces: 4, repeats: 1, quotes: 0, miscites: 0, noise: 5, total: 22}
+items:
+  - id: where-digests-live
+    text: "A digest is a page in the Journal's pages collection under /digests/<YYYY-MM-DD>. It has no collection of its own (put off until a second need)."
+    kind: mechanic
+    home: scripts/digest.ts
+    refs: [layers/journal/app/utils/dashboard.ts:249, scripts/digest.ts:31, docs/agents/domain.md:53, layers/commons/app/composables/timeline.ts:32, docs/adr/0025-cross-tenant-catalog-and-collection-kinds.md:152, "layers/journal/app/pages/t/journal/[space]/[...slug].vue:5"]
+    conflict: false
+  - id: which-days
+    text: "One digest per finished UTC day. Today never gets one. Finished days that had activity but have no digest are filled in, oldest first."
+    kind: mechanic
+    home: scripts/digest.ts
+    refs: [scripts/digest.ts:87, scripts/digest.ts:155, tests/unit/digest.spec.ts:1, scripts/archive-journal-content.ts:4, layers/journal/CONTEXT.md:31]
+    conflict: false
+  - id: index-display
+    text: "How does the Journal home page show digests: read live with no build step, or a preview the digest Skill writes into the index?"
+    kind: decision
+    refs: ["layers/journal/app/pages/t/journal/[space]/index.vue:44", scripts/digest.ts:21, layers/journal/app/utils/dashboard.ts:249, layers/journal/tenant.config.ts:104]
+    conflict: true
+    note: "Read live: index.vue:44, digest.ts:21. Written by the Skill: tenant.config.ts:104."
+  - id: content-source
+    text: "A digest summarizes activity across all Tenants and is built from git history and session logs. Nobody writes it from scratch."
+    kind: decision
+    refs: [layers/journal/CONTEXT.md:31, scripts/digest.ts:1, tests/unit/digest.spec.ts:1]
+    conflict: false
+  - id: script-skill-split
+    text: "scripts/digest.ts lists missing days and gathers one day's material as JSON. The digest Skill writes the prose."
+    kind: mechanic
+    home: scripts/digest.ts
+    refs: [scripts/digest.ts:1, tests/unit/digest.spec.ts:1]
+    conflict: false
+  - id: never-rewritten
+    text: "Once its day ends, a digest is never rewritten."
+    kind: decision
+    refs: [layers/journal/CONTEXT.md:31]
+    conflict: false
+  - id: archiving
+    text: "May old digests be moved from the current Space to archived? A cleanup script does this and keeps a fixed number in current."
+    kind: decision
+    refs: [scripts/archive-journal-content.ts:4, scripts/digest.ts:31, docs/diagrams/interactive-map/terrarium-overview.md:865]
+    conflict: true
+    note: "Possible conflict with never-rewritten: a move changes the digest's Space and URL."
+  - id: own-page
+    text: "Does a digest have its own page URL, or only a #fragment on the Journal home page?"
+    kind: decision
+    refs: ["layers/journal/app/pages/t/journal/[space]/[...slug].vue:5", layers/commons/app/composables/timeline.ts:32]
+    conflict: true
+    note: "Own page: [...slug].vue:5. No own page: timeline.ts:32."
+  - id: journal-only-path
+    text: "/digests/ means a digest only in the Journal. Another Tenant's page at that path is an ordinary page."
+    kind: decision
+    refs: [layers/commons/app/composables/timeline.ts:32, docs/adr/0025-cross-tenant-catalog-and-collection-kinds.md:152]
+    conflict: false
+  - id: headline-field
+    text: "A digest's one-line headline is its summary field, which falls back to description and then to an empty string."
+    kind: mechanic
+    home: layers/journal/tenant.config.ts
+    refs: [layers/journal/tenant.config.ts:104, layers/journal/app/utils/dashboard.ts:249]
+    conflict: false
+  - id: place-in-journal
+    text: "Digests are one of the Journal's kinds of content, next to inventories and session logs."
+    kind: decision
+    refs: [.claude/rules/adr-0008.md:12, layers/journal/CONTEXT.md:31]
+    conflict: false
+lists:
+  - list: repoint
+    file: docs/agents/domain.md
+    line: 53
+    note: "Says ADR-0010 'deferred a digests collection'. Keep that in the ADR or reword this line."
+  - list: repoint
+    file: layers/journal/tenant.config.ts
+    line: 104
+    note: "Credits summary and the Skill-written index preview to ADR-0010. Point to the ADR and resolve index-display."
+  - list: fix
+    file: layers/journal/CONTEXT.md
+    line: 31
+    note: "Repeats the rule. Keep the definition of the term and point to ADR-0010 for the rules."
+  - list: fix
+    file: layers/commons/app/composables/timeline.ts
+    line: 32
+    note: "Says a digest has no page of its own, which contradicts [...slug].vue:5. Fix whichever side is wrong once the ADR decides own-page."
+  - list: fix
+    file: "layers/journal/app/pages/t/journal/[space]/[...slug].vue"
+    line: 5
+    note: "Says each digest has its own page, which contradicts timeline.ts:32. See own-page."
+  - list: fix
+    file: scripts/digest.ts
+    line: 21
+    note: "Says the home page reads digests live, which contradicts tenant.config.ts:104. Fix whichever side is stale."

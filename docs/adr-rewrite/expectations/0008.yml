@@ -1,95 +1,67 @@
-adr: "0008"
 summary_in_context: false
-checklist:
-  - id: infrastructure-not-demo
-    text: The Journal is Platform infrastructure (the self-documentation apparatus), not a demo/content Tenant.
-    kind: claim
-    section: Summary
-    refs:
-      - CONTEXT.md:330
-      - layers/journal/CONTEXT.md:8
-      - docs/adr/0021-multi-context-domain-docs.md:69
+counts: {explains: 5, points: 3, quotes: 1, enforces: 0, repeats: 0, miscites: 0, noise: 8}
+items:
+  - id: infra-not-demo
+    text: The Journal is part of the Platform itself (its self-documentation), not a demo Tenant, and is the only Tenant whose reason to exist is in an ADR.
+    kind: decision
+    refs: [CONTEXT.md:330, docs/adr/0021-multi-context-domain-docs.md:69, layers/journal/CONTEXT.md:8]
     conflict: false
-  - id: why-journal-exists
-    text: Why does the Journal exist, and why is it the one Tenant whose rationale is an ADR?
-    kind: question
-    section: Why
-    refs:
-      - docs/adr/0021-multi-context-domain-docs.md:69
-      - layers/journal/CONTEXT.md:8
+  - id: why-it-exists
+    text: Why does the Platform keep a journal of its own work, and why can't it be dropped?
+    kind: decision
+    refs: [docs/adr/0021-multi-context-domain-docs.md:69, layers/journal/CONTEXT.md:8]
     conflict: false
-  - id: status-renamed-journal
-    text: The Tenant was renamed status to journal because "status" mislabelled a logbook; the status-dashboard framing was discarded.
-    kind: claim
-    section: Rejected alternatives
-    refs:
-      - layers/midden/content/trench/artifacts/the-status-dashboard.yml:10
-      - layers/midden/content/trench/artifacts/the-status-dashboard.yml:16
-    conflict: false
-  - id: session-logs
-    text: The Journal introduces session logs, one honest self-report per Session (goal, outcome, reads, Skills, every Friction), issue #2.
-    kind: claim
-    section: Scope and limits
-    refs:
-      - docs/adr/0009-session-logs-commit-directly-to-main.md:24
+  - id: renamed-from-status
+    text: The Tenant first called "status" was renamed the Journal because it is a logbook, not a status report; the status-dashboard design was dropped.
+    kind: decision
+    refs: [layers/midden/content/trench/artifacts/the-status-dashboard.yml:10, layers/midden/content/trench/artifacts/the-status-dashboard.yml:16]
     conflict: false
   - id: two-content-kinds
-    text: Two content kinds - Inventories (curated, derived from repo state, overwritten each sync) and Journal entries (primary, append-only, agent-authored).
-    kind: claim
-    section: Scope and limits
-    refs:
-      - docs/adr/0010-digests-derived-append-only-journal-pages.md:28
-      - docs/adr/0015-audit-skills-and-conditional-importance.md:153
+    text: Journal content comes in two kinds - Inventories rebuilt from repo state and overwritten each sync, and agent-written entries that are only ever added to (session logs, research, ideas).
+    kind: decision
+    refs: [docs/adr/0010-digests-derived-append-only-journal-pages.md:28, docs/adr/0015-audit-skills-and-conditional-importance.md:153]
+    conflict: false
+  - id: inventory-term-home
+    text: Where is the word "Inventory" defined? 0015 says the Journal glossary (ADR-0008); the Journal's CONTEXT.md says root CONTEXT.md.
+    kind: mechanic
+    home: unclear
+    refs: [docs/adr/0015-audit-skills-and-conditional-importance.md:153, layers/journal/CONTEXT.md:8]
+    conflict: true
+  - id: session-logs
+    text: Every agent session gets a session log in the Journal - one honest self-report of its goal, outcome, reads, Skills used and every problem hit.
+    kind: decision
+    refs: [docs/adr/0009-session-logs-commit-directly-to-main.md:24]
+    conflict: false
+  - id: journal-location
+    text: The Journal is shown at /t/journal/current and holds session logs, inventories and digests.
+    kind: mechanic
+    home: layers/journal/
+    refs: [CONTEXT.md:330]
     conflict: false
   - id: journal-files
-    text: Which files make up the journal part of the Platform? (unclear; map pairs it with scripts/archive-journal-content.ts alongside ADR-0010)
-    kind: question
-    section: See
-    refs:
-      - docs/diagrams/interactive-map/terrarium-overview.md:865
+    text: Which files implement the Journal? Unclear whether archiving belongs to ADR-0008 or ADR-0010.
+    kind: mechanic
+    home: scripts/archive-journal-content.ts
+    refs: [docs/diagrams/interactive-map/terrarium-overview.md:865]
     conflict: false
 lists:
-  - list: keep
-    file: CONTEXT.md
-    line: 330
-    note: '"Platform infrastructure, not a demo Tenant"'
-  - list: keep
-    file: layers/journal/CONTEXT.md
-    line: 8
-    note: '"Platform infrastructure (its rationale is ADR-0008), not a demo Tenant"'
-  - list: keep
-    file: docs/adr/0021-multi-context-domain-docs.md
-    line: 69
-    note: Journal is the one Tenant with an ADR because it is Platform infrastructure (self-documentation apparatus)
-  - list: keep
+  - list: repoint
     file: docs/adr/0010-digests-derived-append-only-journal-pages.md
     line: 28
-    note: Terms Inventory and Journal entry, overwritten vs append-only
-  - list: keep
-    file: docs/adr/0015-audit-skills-and-conditional-importance.md
-    line: 153
-    note: Term Inventory
-  - list: keep
-    file: layers/midden/content/trench/artifacts/the-status-dashboard.yml
-    line: 10
-    note: status to journal rename, reconceived as narrative journal
-  - list: keep
-    file: layers/midden/content/trench/artifacts/the-status-dashboard.yml
-    line: 16
-    note: '"status mislabelled a logbook"'
-  - list: keep
+    note: Restates ADR-0008's two content kinds in its wording; point instead, or keep the two kinds.
+  - list: repoint
     file: docs/adr/0009-session-logs-commit-directly-to-main.md
     line: 24
-    note: Journal introduces session logs (issue #2)
+    note: Says ADR-0008 introduces session logs and describes them; breaks if the rewrite drops session logs.
+  - list: repoint
+    file: layers/midden/content/trench/artifacts/the-status-dashboard.yml
+    line: 16
+    note: Quotes ADR-0008's ruling that status mislabelled a logbook; keep the ADR-0008 string (midden.spec.ts:109 expects it).
+  - list: fix
+    file: docs/adr/0015-audit-skills-and-conditional-importance.md
+    line: 153
+    note: Cites ADR-0008 for the Inventory definition; the term lives in root CONTEXT.md. Point to the glossary.
   - list: fix
     file: docs/diagrams/interactive-map/terrarium-overview.md
     line: 865
-    note: Unclear whether ADR-0008 belongs beside scripts/archive-journal-content.ts, which is ADR-0010's
-  - list: fix
-    file: docs/adr/0015-audit-skills-and-conditional-importance.md
-    line: 153
-    note: Says the Journal glossary defines Inventory; layers/journal/CONTEXT.md:8 says it lives in root CONTEXT.md
-  - list: fix
-    file: CONTEXT.md
-    line: 330
-    note: Optional - infrastructure-not-demo fact stated in three places; roster could just point
+    note: Unclear - cites ADR-0008 for the archive script that ADR-0010 owns; keep only if the row means the Journal as a whole.

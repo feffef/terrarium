@@ -1,0 +1,71 @@
+adr: '0029'
+summary_in_context: false
+counts: {enforces: 4, explains: 4, repeats: 2, points: 1, quotes: 0, miscites: 0, noise: 0}
+items:
+  - id: 1
+    text: "When does an instruction reach an agent? A rule shows up by itself at session start, or when the agent reads or edits the files it lists, or runs the Skill it names."
+    kind: decision
+    refs: [CONTEXT.md:242, scripts/validate-adr-rules.ts:121, .agents/skills/log-session/SKILL.md:188, docs/adr/0030-adrs-document-a-decision-not-its-history.md:6]
+    conflict: false
+  - id: 2
+    text: "Every rule that is not an ADR summary must list the files it covers; one without a file list fails the check."
+    kind: mechanic
+    home: scripts/validate-adr-rules.ts
+    refs: [scripts/validate-adr-rules.ts:8, scripts/validate-adr-rules.ts:121, tests/unit/validate-adr-rules.spec.ts:113]
+    conflict: false
+  - id: 3
+    text: "A Bash read loads the matching rule only when it is one plain read of one file; piped, chained or multi-file reads load nothing."
+    kind: mechanic
+    home: scripts/shell-reads.ts, scripts/bash-rules-hint.ts
+    refs: [scripts/bash-rules-hint.ts:4, scripts/shell-reads.ts:723, CLAUDE.md:220]
+    conflict: false
+  - id: 4
+    text: "Every docs/agents doc is named in CLAUDE.md's read-first list or by a rule; docs/research is deliberately left out."
+    kind: decision
+    refs: [.agents/skills/audit-docs/SKILL.md:135, .agents/skills/frictions-to-fixes/SKILL.md:160]
+    conflict: false
+  - id: 5
+    text: "A non-ADR rule may name only docs/ files that exist."
+    kind: mechanic
+    home: scripts/validate-adr-rules.ts
+    refs: [scripts/validate-adr-rules.ts:8, scripts/validate-adr-rules.ts:121]
+    conflict: false
+  - id: 6
+    text: "What can a rule be? An ADR's summary (the ADR stays the source) or an instruction about specific files, held in the rule or pointed to."
+    kind: decision
+    refs: [CONTEXT.md:242, docs/adr/0030-adrs-document-a-decision-not-its-history.md:6]
+    conflict: false
+  - id: 7
+    text: "Instructions for every session stay in CLAUDE.md, not in a rule."
+    kind: decision
+    refs: [scripts/validate-adr-rules.ts:121]
+    conflict: false
+  - id: 8
+    text: "Instructions tied to an action (a commit, a push) are not rules; where they live instead is unclear from callers."
+    kind: decision
+    refs: [CONTEXT.md:242]
+    conflict: false
+  - id: 9
+    text: "A rule that loads where it does not apply is logged as a Friction naming the rule, where it appeared, and the narrower file list that would have avoided it."
+    kind: decision
+    refs: [.agents/skills/log-session/SKILL.md:188]
+    conflict: false
+  - id: 10
+    text: "A hook adds the matching rules after a Bash read Claude Code skipped; a hint, not a guard; adds nothing on error. Conflict: CLAUDE.md:220 says such reads load no rule (so use Read), bash-rules-hint.ts:4 says the hook fills the gap."
+    kind: mechanic
+    home: scripts/bash-rules-hint.ts
+    refs: [scripts/bash-rules-hint.ts:4, CLAUDE.md:220]
+    conflict: true
+lists:
+  - list: repoint
+    file: scripts/validate-adr-rules.ts
+    line: 121
+    note: "Error message paraphrases the ADR title and restates item 7; keep the check, point to the ADR."
+  - list: fix
+    file: CLAUDE.md
+    line: 220
+    note: "Repeats the Bash-read mechanic (item 3) and conflicts with item 10; keep the Read-tool instruction, point to the ADR for why."
+  - list: fix
+    file: .agents/skills/frictions-to-fixes/SKILL.md
+    line: 160
+    note: "Restates the docs/agents reachability rule (item 4) that audit-docs holds; point instead."

@@ -1,0 +1,146 @@
+source: docs/adr-rewrite/refs/0001.md
+summary_in_context: true
+counts:
+  explains: 14
+  points: 5
+  quotes: 3
+  enforces: 1
+  repeats: 4
+  miscites: 0
+  noise: 2
+  total: 29
+items:
+  - id: 1
+    text: The site serves only content built from committed files; nothing is fetched from outside or live while it runs.
+    kind: decision
+    home: null
+    refs:
+      - app/composables/catalog.ts:13
+      - layers/commons/app/components/commons/Search.vue:6
+      - layers/commons/app/components/commons/Timeline.vue:7
+      - layers/commons/app/composables/timeline.ts:8
+      - .agents/skills/guest-intake/SKILL.md:88
+      - docs/adr/0011-poc-self-updating-deploy-container.md:21
+      - docs/adr/0025-cross-tenant-catalog-and-collection-kinds.md:166
+      - layers/commons/CONTEXT.md:36
+    conflict: false
+  - id: 2
+    text: One Nuxt app, in one repo and one container, serves every Tenant; a cross-Tenant view is an ordinary layer, not a separate runtime.
+    kind: decision
+    home: null
+    refs:
+      - nuxt.config.ts:1
+      - docs/adr/0025-cross-tenant-catalog-and-collection-kinds.md:132
+      - docs/diagrams/interactive-map/terrarium-overview.md:863
+      - docs/research/making-repo-public.md:5
+    conflict: false
+  - id: 3
+    text: May a build run on the live server? ADR-0011 reads ADR-0001 as forbidding it (immutable image, tag and redeploy) and relaxes it; the ADR-0011 rule and guest-intake cite ADR-0001 for the deploy runner being the one allowed runtime build.
+    kind: decision
+    home: deploy/entrypoint.sh
+    refs:
+      - docs/adr/0011-poc-self-updating-deploy-container.md:12
+      - docs/adr/0011-poc-self-updating-deploy-container.md:48
+      - docs/adr/0011-poc-self-updating-deploy-container.md:62
+      - docs/adr/0011-poc-self-updating-deploy-container.md:73
+      - .claude/rules/adr-0011.md:12
+      - .agents/skills/guest-intake/SKILL.md:88
+      - deploy/README.md:5
+    conflict: true
+  - id: 4
+    text: Content changes only with a new deploy, so caching a rendered page for the life of a deploy is safe.
+    kind: decision
+    home: null
+    refs:
+      - docs/adr/0028-navigation-reads-server-payloads.md:62
+      - docs/research/content-client-queries-without-wasm.md:195
+    conflict: false
+  - id: 5
+    text: What does isolation between Tenants and Spaces mean, and how strong is it? Callers expect separate tables per Space so no rows leak across.
+    kind: decision
+    home: null
+    refs:
+      - app/pages/t/[tenant]/[space]/[...slug].vue:2
+      - docs/adr/0023-guest-driven-demo-pipeline.md:19
+      - shared/manifest.ts:155
+    conflict: false
+  - id: 6
+    text: Each Tenant x Space x Collection is one SQLite table named <tenant>_<space>_<collection>, the unit of isolation.
+    kind: mechanic
+    home: shared/manifest.ts
+    refs:
+      - shared/manifest.ts:155
+      - app/pages/t/[tenant]/[space]/[...slug].vue:2
+    conflict: false
+  - id: 7
+    text: How does a request pick which Tenant and Space to serve? By routing among already-built content; ADR-0006 quotes the options (subdomain, path prefix, header) and picks the path.
+    kind: decision
+    home: null
+    refs:
+      - app/pages/t/[tenant]/[space]/[...slug].vue:2
+      - docs/adr/0006-runtime-routing-path-prefix.md:17
+    conflict: false
+  - id: 8
+    text: Tenants, Spaces and collections are declared in files and built; nothing creates them while the site runs.
+    kind: decision
+    home: null
+    refs:
+      - docs/adr/0011-poc-self-updating-deploy-container.md:50
+      - docs/adr/0011-poc-self-updating-deploy-container.md:12
+    conflict: false
+  - id: 9
+    text: Visitors have no way to save data that other visitors see (no accounts, comments, uploads). Unclear whether ADR-0001 states this or callers infer it.
+    kind: decision
+    home: null
+    refs:
+      - .agents/skills/guest-intake/SKILL.md:88
+    conflict: false
+  - id: 10
+    text: A Tenant is a Nuxt layer that extends the main app. Unclear whether ADR-0001 is its home (CONTEXT.md is co-cited).
+    kind: decision
+    home: null
+    refs:
+      - docs/adr/0018-tenant-layers-under-layers-directory.md:8
+      - docs/agents/tenant-layers.md:5
+    conflict: false
+lists:
+  - list: repoint
+    file: docs/adr/0006-runtime-routing-path-prefix.md
+    line: 17
+    note: quotes "subdomain / path prefix / header"
+  - list: repoint
+    file: docs/adr/0011-poc-self-updating-deploy-container.md
+    line: 12
+    note: quotes "tag a release -> redeploy the single updated image" and "nothing is created at runtime"
+  - list: repoint
+    file: docs/adr/0011-poc-self-updating-deploy-container.md
+    line: 48
+    note: quotes "tag a release -> redeploy the image / nothing at runtime" as the assumption it relaxes
+  - list: repoint
+    file: docs/adr/0011-poc-self-updating-deploy-container.md
+    line: 62
+    note: says ADR-0001 avoids a container whose state depends on runtime git and build
+  - list: repoint
+    file: docs/adr/0011-poc-self-updating-deploy-container.md
+    line: 73
+    note: '"the original ADR-0001 model" (CI-built, tagged, immutable images plus redeploy)'
+  - list: repoint
+    file: .claude/rules/adr-0011.md
+    line: 12
+    note: '"the one place a build runs at runtime (ADR-0001)"; depends on item 3'
+  - list: fix
+    file: docs/adr/0011-poc-self-updating-deploy-container.md
+    line: 50
+    note: repeats the content model; could point instead
+  - list: fix
+    file: docs/research/making-repo-public.md
+    line: 5
+    note: repeats "one repo, one container"; dated research note, low priority
+  - list: fix
+    file: docs/adr/0018-tenant-layers-under-layers-directory.md
+    line: 8
+    note: possible miscite (item 10); cite CONTEXT.md/ADR-0018 only if the rewrite drops Nuxt layers
+  - list: fix
+    file: docs/agents/tenant-layers.md
+    line: 5
+    note: possible miscite (item 10); cite CONTEXT.md/ADR-0018 only if the rewrite drops Nuxt layers

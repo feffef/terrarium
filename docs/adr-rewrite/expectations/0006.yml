@@ -1,0 +1,78 @@
+adr: "0006"
+summary_in_context: false
+counts: {explains: 18, enforces: 3, points: 2, quotes: 1, miscites: 1, repeats: 0, noise: 1}
+items:
+  - id: isolation
+    text: A request can only reach one Tenant's one Space's collections; a resolved route never names another's, and pages read only their own Space.
+    kind: decision
+    refs: [shared/routing.ts:1, shared/routing.ts:93, tests/unit/routing.spec.ts:3, layers/midden/app/components/content/MiddenArtifact.vue:15, SECURITY.md:21, docs/adr/0012-cross-persona-pingbacks-via-authored-denormalization.md:15, docs/adr/0016-tenant-root-layer-routes.md:13]
+    conflict: false
+  - id: url-shape
+    text: The URL is /t/<tenant>/<space>/<path>, keyed by Tenant name (not its folder), with nothing after the Space at the Space root.
+    kind: mechanic
+    home: shared/routing.ts
+    refs: [shared/routing.ts:60, app/composables/catalog.ts:74, layers/commons/app/composables/timeline.ts:19, layers/commons/CONTEXT.md:34, docs/adr/0016-tenant-root-layer-routes.md:13, docs/adr/0018-tenant-layers-under-layers-directory.md:72, .agents/skills/audit-docs/SKILL.md:97]
+    conflict: false
+  - id: one-routed-collection
+    text: Each Space has exactly one collection with URLs; every other collection has no URL of its own and is read only alongside it.
+    kind: decision
+    refs: [app/pages/index.vue:83, layers/midden/tenant.config.ts:28, layers/midden/CONTEXT.md:74, docs/agents/domain.md:64, docs/agents/domain.md:67, docs/adr/0012-cross-persona-pingbacks-via-authored-denormalization.md:46]
+    conflict: false
+  - id: named-pages
+    text: The routed collection must be named pages; the resolver finds no route for a Space without one.
+    kind: mechanic
+    home: shared/routing.ts
+    refs: [layers/atlas/tenant.config.ts:56, layers/blog/tenant.config.ts:62, layers/marquee/tenant.config.ts:21, layers/midden/tenant.config.ts:22, docs/adr/0012-cross-persona-pingbacks-via-authored-denormalization.md:46, shared/routing.ts:93]
+    conflict: false
+  - id: resolver-human-merge
+    text: Must a person merge changes to the resolver, and which ADR says so? Side A (ADR-0006) routing.spec.ts:3, ADR-0012:15; side B (ADR-0004) ADR-0016:33, routing.ts:1.
+    kind: decision
+    refs: [tests/unit/routing.spec.ts:3, docs/adr/0012-cross-persona-pingbacks-via-authored-denormalization.md:15, docs/adr/0016-tenant-root-layer-routes.md:33, shared/routing.ts:1]
+    conflict: true
+  - id: tenant-root-pages
+    text: May a Tenant have pages outside its Spaces, and are they outside the routing map and the smoke-test route list? Callers say yes and send them to ADR-0016.
+    kind: decision
+    refs: [docs/adr/0016-tenant-root-layer-routes.md:13, docs/adr/0016-tenant-root-layer-routes.md:33, layers/midden/app/pages/t/midden/index.vue:3]
+    conflict: false
+  - id: unknown-404
+    text: An unknown Tenant, Space or path gets a 404.
+    kind: mechanic
+    home: shared/routing.ts
+    refs: [shared/routing.ts:1, tests/unit/routing.spec.ts:3]
+    conflict: false
+  - id: stable-urls
+    text: A page's URL comes from its file path, so moving the file changes the URL. Must published URLs stay fixed?
+    kind: decision
+    refs: [.agents/skills/audit-docs/SKILL.md:97, docs/adr/0018-tenant-layers-under-layers-directory.md:72]
+    conflict: false
+  - id: path-form
+    text: The path inside a Space starts with /, has no trailing /, and is / at the Space root; the catch-all page needs at least Tenant and Space.
+    kind: mechanic
+    home: shared/routing.ts
+    refs: [shared/routing.ts:60, docs/adr/0016-tenant-root-layer-routes.md:33]
+    conflict: false
+lists:
+  - list: repoint
+    file: shared/routing.ts
+    line: 93
+    note: Quotes "a resolved route can never name another Tenant's or Space's collections"; point to the ADR.
+  - list: repoint
+    file: docs/agents/domain.md
+    line: 62
+    note: Example quotes the ADR title "runtime routing by path prefix".
+  - list: repoint
+    file: docs/agents/domain.md
+    line: 67
+    note: Relies on the phrase "pages-only routing" (heading at :64 too).
+  - list: fix
+    file: layers/midden/app/pages/t/midden/index.vue
+    line: 3
+    note: Miscite; Tenant-root layer routes are ADR-0016.
+  - list: fix
+    file: tests/unit/routing.spec.ts
+    line: 3
+    note: Credits ADR-0006 with resolver being human-merge only; settle the home (item resolver-human-merge).
+  - list: fix
+    file: docs/adr/0012-cross-persona-pingbacks-via-authored-denormalization.md
+    line: 15
+    note: Same human-only attribution as routing.spec.ts:3.

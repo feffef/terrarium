@@ -1,0 +1,74 @@
+adr: "0021"
+summary_in_context: false
+counts:
+  explains: 4
+  points: 1
+  quotes: 0
+  enforces: 1
+  repeats: 4
+  miscites: 0
+  noise: 2
+items:
+  - id: split-glossaries
+    text: The domain's words are split into one shared Platform glossary plus one glossary per Tenant.
+    kind: decision
+    refs: [CONTEXT-MAP.md:3, CONTEXT.md:3, docs/agents/domain.md:7, docs/agents/domain.md:16, docs/diagrams/interactive-map/terrarium-overview.md:859]
+    conflict: false
+  - id: glossary-paths
+    text: Where does each glossary file live? Root CONTEXT-MAP.md and CONTEXT.md; each Tenant's at layers/<tenant>/CONTEXT.md, directly in the Tenant folder, never in its content tree.
+    kind: mechanic
+    home: scripts/shell-reads.ts
+    refs: [scripts/shell-reads.ts:63, tests/unit/shell-reads.spec.ts:30, CONTEXT.md:3, CONTEXT-MAP.md:3]
+    conflict: false
+  - id: which-decisions-get-adrs
+    text: Which decisions get an ADR? All ADRs are Platform-wide in docs/adr/; no Tenant ADR folders. A demo or content/design Tenant's product decisions go in its CONTEXT.md and spec issue, not an ADR. (Does the spec issue count as a home?)
+    kind: decision
+    refs: [CONTEXT-MAP.md:53, layers/midden/CONTEXT.md:16, layers/tinkerfund/CONTEXT.md:97]
+    conflict: false
+  - id: context-contents
+    text: What may a CONTEXT.md hold? CONTEXT.md:3 says glossary only, no specs; Tenant files and CONTEXT-MAP.md:53 put decisions and purpose in a Tenant's CONTEXT.md. Does "glossary only" bind only the root file?
+    kind: decision
+    refs: [CONTEXT.md:3, CONTEXT-MAP.md:53, layers/midden/CONTEXT.md:16, layers/tinkerfund/CONTEXT.md:97, docs/agents/domain.md:16]
+    conflict: true
+  - id: context-layout
+    text: What layout does a CONTEXT.md use, and why does it differ from the domain-modeling Skill's templates? A "## Glossary" of "### Term" entries; root lists the Tenants; each Tenant file adds a purpose narrative. ADR layout belongs to ADR-0030.
+    kind: mechanic
+    home: docs/agents/domain.md
+    refs: [docs/agents/domain.md:16, CONTEXT.md:3]
+    conflict: false
+  - id: tenant-glossary-is-instruction
+    text: Tenant glossaries (layers/<tenant>/CONTEXT.md) count as agent instructions; the Tenant content tree does not.
+    kind: decision
+    refs: [scripts/shell-reads.ts:63, tests/unit/shell-reads.spec.ts:30, docs/diagrams/interactive-map/terrarium-overview.md:859]
+    conflict: false
+  - id: who-reads-what
+    text: Every agent reads the Platform glossary; an agent reads a Tenant's glossary when working on that Tenant. Reading order itself lives in CLAUDE.md and .claude/rules/tenant-layers.md.
+    kind: decision
+    refs: [CONTEXT-MAP.md:3, docs/agents/domain.md:16]
+    conflict: false
+  - id: scope-unclear
+    text: Does ADR-0021 cover all agent instruction files (CLAUDE.md, docs/agents/, docs/adr/) or only glossaries? Unclear.
+    kind: decision
+    refs: [docs/diagrams/interactive-map/terrarium-overview.md:859]
+    conflict: false
+lists:
+  - list: fix
+    file: CONTEXT-MAP.md
+    line: 53
+    note: Restates the no-Tenant-ADRs rule; cut to a pointer.
+  - list: fix
+    file: layers/midden/CONTEXT.md
+    line: 16
+    note: Restates the no-Tenant-ADRs rule; keep the issue link, point to the ADR.
+  - list: fix
+    file: layers/tinkerfund/CONTEXT.md
+    line: 97
+    note: Restates the no-Tenant-ADRs rule; keep the spec link, point to the ADR.
+  - list: fix
+    file: docs/agents/domain.md
+    line: 16
+    note: Lists the glossary layout the ADR may also hold; keep it in one place (unclear which).
+  - list: fix
+    file: docs/diagrams/interactive-map/terrarium-overview.md
+    line: 859
+    note: Cites ADR-0021 for CLAUDE.md, docs/agents/ and docs/adr/; possibly too broad (unclear). Narrow if the ADR covers only glossaries.

@@ -1,0 +1,101 @@
+adr: '0012'
+summary_in_context: false
+counts: { explains: 7, points: 3, quotes: 0, enforces: 1, repeats: 2, miscites: 0, noise: 20, total: 33 }
+items:
+  - id: same-space-render
+    text: A page that shows reactions reads only its own Space; nothing queries another Space when the page renders.
+    kind: decision
+    refs:
+      - layers/blog/app/pages/t/blog/[space]/[...slug].vue:10
+      - layers/blog/app/assets/theme.css:478
+      - layers/blog/tenant.config.ts:83
+      - layers/blog/CONTEXT.md:64
+      - CONTEXT-MAP.md:48
+      - layers/atlas/tenant.config.ts:21
+      - layers/atlas/app/utils/atlas.ts:91
+      - layers/atlas/app/pages/t/atlas/[space]/[...slug].vue:11
+    conflict: false
+  - id: record-in-target-space
+    text: A reaction from one Persona to another's post is stored in the reacted-to Persona's Space, written when the reaction is authored, with the reacting post's persona, path, title and blurb copied in.
+    kind: decision
+    refs:
+      - layers/blog/tenant.config.ts:12
+      - layers/blog/tenant.config.ts:83
+      - layers/blog/CONTEXT.md:64
+      - CONTEXT-MAP.md:48
+      - .agents/skills/blog-post/SKILL.md:181
+    conflict: false
+  - id: only-cross-space-write
+    text: A Persona writes outside its own Space only to add that reaction record to the target's pingbacks, never to another Persona's pages.
+    kind: decision
+    refs:
+      - .agents/skills/blog-post/SKILL.md:181
+      - layers/blog/tenant.config.ts:12
+    conflict: false
+  - id: schema-evolution
+    text: How may the reaction record's schema change? Callers say it is append-only and strict, follows ADR-0009's policy, needs no version field until its first breaking change, and ADR-0012 points to ADR-0009 instead of restating it.
+    kind: decision
+    refs:
+      - docs/adr/0009-session-logs-commit-directly-to-main.md:108
+      - docs/adr/0009-session-logs-commit-directly-to-main.md:111
+      - docs/adr/0009-session-logs-commit-directly-to-main.md:150
+      - layers/blog/tenant.config.ts:83
+    conflict: false
+  - id: general-or-blog-only
+    text: Is "no read of another Space at render" a general rule (Atlas cites it for same-biome edges) or only the Blog's answer for facts that cross a Space boundary (CONTEXT-MAP calls the Atlas the opposite mechanism)?
+    kind: decision
+    refs:
+      - layers/atlas/tenant.config.ts:21
+      - layers/atlas/app/utils/atlas.ts:91
+      - layers/atlas/app/pages/t/atlas/[space]/[...slug].vue:11
+      - CONTEXT-MAP.md:48
+    conflict: true
+  - id: why-copy-not-derive
+    text: Copy-at-write is chosen because the reaction crosses a Space boundary; a relation inside one Space derives its reverse instead.
+    kind: decision
+    refs:
+      - CONTEXT-MAP.md:48
+      - layers/blog/CONTEXT.md:64
+    conflict: false
+  - id: record-fields-and-file
+    text: 'The reaction record: fields target, fromPersona, fromPath (plus copied title/blurb), YAML in a strict data collection, at layers/blog/content/<target>/pingbacks/<today-UTC>-<persona>-<target-slug>.yml.'
+    kind: mechanic
+    home: layers/blog/tenant.config.ts (schema); .agents/skills/blog-post/SKILL.md (file path)
+    refs:
+      - layers/blog/tenant.config.ts:83
+      - .agents/skills/blog-post/SKILL.md:181
+      - layers/blog/CONTEXT.md:64
+    conflict: false
+  - id: reacts-to-ref
+    text: The reacting post may carry a reactsTo reference with the target's title copied in, so its header needs no read of another Space.
+    kind: mechanic
+    home: layers/blog/tenant.config.ts
+    refs:
+      - layers/blog/tenant.config.ts:83
+      - layers/blog/CONTEXT.md:64
+    conflict: false
+lists:
+  - list: repoint
+    file: docs/adr/0009-session-logs-commit-directly-to-main.md
+    line: 111
+    note: Says "ADR-0012 points back to it" (ADR-0009's schema evolution policy); the rewrite must keep that pointer or this line changes.
+  - list: fix
+    file: .agents/skills/blog-post/SKILL.md
+    line: 181
+    note: Repeats the boundary rule; keep the file path and step, point to ADR-0012 for the rule.
+  - list: fix
+    file: layers/blog/CONTEXT.md
+    line: 64
+    note: Glossary restates the why; keep the definition, point to ADR-0012 for the reason.
+  - list: fix
+    file: layers/atlas/tenant.config.ts
+    line: 21
+    note: Conditional on general-or-blog-only; if ADR-0012 is scoped to cross-Space reactions, "mirrors ADR-0012" becomes a miscite.
+  - list: fix
+    file: layers/atlas/app/utils/atlas.ts
+    line: 91
+    note: Conditional on general-or-blog-only (as above).
+  - list: fix
+    file: layers/atlas/app/pages/t/atlas/[space]/[...slug].vue
+    line: 11
+    note: Conditional on general-or-blog-only (as above).

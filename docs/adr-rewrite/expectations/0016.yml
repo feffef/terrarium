@@ -1,0 +1,109 @@
+adr: "0016"
+summary_in_context: false
+counts:
+  explains: 7
+  quotes: 2
+  enforces: 1
+  repeats: 1
+  points: 1
+  miscites: 0
+  noise: 0
+items:
+  - id: 1
+    text: A Tenant may add its own page at its root address /t/<tenant>, in its own layer, above its Spaces.
+    kind: decision
+    home: null
+    refs:
+      - layers/blog/app/pages/t/blog/index.vue:3
+      - layers/commons/app/pages/t/commons/index.vue:2
+      - layers/journal/app/pages/t/journal/index.vue:2
+      - layers/marquee/app/pages/t/marquee/index.vue:2
+      - layers/tinkerfund/app/pages/t/tinkerfund/index.vue:2
+      - layers/atlas/tests/e2e/atlas.spec.ts:14
+      - layers/midden/tests/e2e/midden.spec.ts:20
+      - layers/blog/tests/e2e/blog.spec.ts:115
+      - docs/agents/tenant-layers.md:139
+    conflict: false
+  - id: 2
+    text: A Tenant's root page sits outside the manifest and the shared routing map on purpose.
+    kind: decision
+    home: null
+    refs:
+      - layers/atlas/tests/e2e/atlas.spec.ts:14
+      - layers/midden/tests/e2e/midden.spec.ts:20
+      - layers/blog/tests/e2e/blog.spec.ts:116
+      - tests/e2e/smoke.spec.ts:44
+    conflict: false
+  - id: 3
+    text: The generated list of entry routes never includes a Tenant's root page, so the Platform smoke test never visits it.
+    kind: mechanic
+    home: tests/e2e/smoke.spec.ts
+    refs:
+      - layers/atlas/tests/e2e/atlas.spec.ts:14
+      - layers/midden/tests/e2e/midden.spec.ts:20
+      - layers/blog/tests/e2e/blog.spec.ts:116
+      - tests/e2e/smoke.spec.ts:44
+    conflict: false
+  - id: 4
+    text: A Tenant that relies on a root page must test it in its own tests.
+    kind: decision
+    home: null
+    refs:
+      - layers/atlas/tests/e2e/atlas.spec.ts:14
+      - layers/midden/tests/e2e/midden.spec.ts:20
+      - layers/blog/tests/e2e/blog.spec.ts:115
+    conflict: false
+  - id: 5
+    text: What should a Tenant's root address do when the Tenant has no front page of its own? (Callers redirect to a main Space; unclear whether the ADR prescribes it.)
+    kind: decision
+    home: null
+    refs:
+      - layers/commons/app/pages/t/commons/index.vue:2
+      - layers/journal/app/pages/t/journal/index.vue:2
+      - layers/marquee/app/pages/t/marquee/index.vue:2
+      - layers/tinkerfund/app/pages/t/tinkerfund/index.vue:2
+    conflict: false
+  - id: 6
+    text: The Atlas front door (/t/atlas) is the first case the ADR covers; later root pages follow it.
+    kind: mechanic
+    home: layers/atlas/app/pages/t/atlas/index.vue
+    refs:
+      - layers/blog/app/pages/t/blog/index.vue:3
+      - layers/midden/tests/e2e/midden.spec.ts:20
+      - layers/blog/tests/e2e/blog.spec.ts:115
+    conflict: false
+  - id: 7
+    text: Does the ADR forbid a catch-all route (one page that answers any path)? (Unclear.)
+    kind: decision
+    home: null
+    refs:
+      - .agents/skills/dispatch-subagents/SKILL.md:89
+    conflict: false
+  - id: 8
+    text: May a Tenant's root page show content from several of its Spaces, and under what limits? (Blog credits the limit to ADR-0004; unclear whether ADR-0016 must say it.)
+    kind: decision
+    home: null
+    refs:
+      - layers/blog/app/pages/t/blog/index.vue:3
+    conflict: false
+lists:
+  - list: repoint
+    file: layers/atlas/tests/e2e/atlas.spec.ts
+    line: 14
+    note: Quotes "should assert it in its own way".
+  - list: repoint
+    file: layers/midden/tests/e2e/midden.spec.ts
+    line: 20
+    note: Quotes "should assert it in its own way".
+  - list: repoint
+    file: layers/blog/app/pages/t/blog/index.vue
+    line: 3
+    note: Says the ADR established the Atlas precedent; breaks if the rewrite stops naming the Atlas.
+  - list: fix
+    file: layers/blog/tests/e2e/blog.spec.ts
+    line: 116
+    note: Repeats that a Tenant-root page is never in entryRoutes; make it a pointer.
+  - list: fix
+    file: .agents/skills/dispatch-subagents/SKILL.md
+    line: 89
+    note: Says a catch-all route goes against ADR-0016; check the ADR says so, else cite the right ADR.
