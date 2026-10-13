@@ -90,7 +90,7 @@ Skills, docs and code comments cite sections by name, and the Gate does not catc
 a dangling one.
 
 Cut an incident history to **the rule plus a pointer** to where the history
-lives (the issue, the ADR) — never to a ruleless rule with no forwarding
+lives (the issue or PR) — never to a ruleless rule with no forwarding
 address. `audit-docs`' Stale-narration lens owns that shape; it is barred from
 retiring these, and you are not.
 
@@ -151,9 +151,8 @@ escalate that.
 Everything the Platform tells its agents is in scope: CLAUDE.md, CONTEXT.md,
 `docs/`, our own Skills including the scheduled ones, and the ADRs; ADR-0004's
 Human-only merge rule otherwise stands. You may
-rewrite an ADR whole, Decision and Consequences included, as long as **what it
-decided does not change**: fold its amendments into the text and retell its
-history wherever that reads clearer. Skip
+rewrite an ADR whole in ADR-0030's shape, as long as **what it decided does not
+change**: fold its amendments into the text and drop its history. Skip
 `docs/proposals/<N>-*.md` and `.out-of-scope/*.md` — written for a human to
 apply once, not for agents to read.
 

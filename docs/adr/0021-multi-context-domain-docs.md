@@ -58,8 +58,7 @@ which only the Journal website renders).
 **The speculative job-taxonomy is retired.** `sync`, `consolidate`, and `codify`
 are named once in the Platform context as retired terms — describing their
 original intent and directing new writing to the real Skills — and are swept out
-of living docs. The ADRs that coined them are left untouched as the historical
-record. `Spawn` (never really used) is dropped; the coined term "Journal entry"
+of living docs. ADRs lose them when they are next rewritten (ADR-0030). `Spawn` (never really used) is dropped; the coined term "Journal entry"
 is retired in favour of the concrete "session log."
 
 The ADR boundary is drawn explicitly: **ADRs record Platform architecture only.**

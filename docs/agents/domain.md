@@ -15,8 +15,7 @@ not this page.
 This repo deliberately diverges from the `domain-modeling` Skill's generic
 templates (ADR-0021):
 
-- every ADR here uses the fuller `Context / Decision / Consequences` form, not
-  the Skill's minimal one;
+- an ADR follows ADR-0030's template, not the Skill's section layout;
 - a `CONTEXT.md` is a `## Glossary` of `### Term` entries, not the Skill's
   `## Language`/`_Avoid_` layout;
 - the root `CONTEXT.md` doubles as the Platform context and carries the

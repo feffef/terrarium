@@ -353,8 +353,8 @@ pointer into them (see `CONTEXT-MAP.md`).
 ## Retired terms
 
 Coined earlier, since drifted or unused. Recorded so their meaning stays legible
-in old docs and ADRs, but **avoid them in new writing**. The ADRs that used them
-are left untouched as the historical record (ADR-0021).
+in old docs and ADRs, but **avoid them in new writing**. An ADR that still uses
+one loses it when the ADR is next rewritten (ADR-0030).
 
 - **`sync`**, **`consolidate`** — speculative names for chartered self-improvement
   *jobs*, coined before the work existed. The work grew real names instead: name

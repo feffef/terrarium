@@ -90,5 +90,4 @@ inside subagents too (PR #1741). Whether a Bash write loads one is untested.
   (`log-session`), so a too-broad glob shows up and gets narrowed.
 - Gate checks for non-ADR rules (they have `paths`; the doc they name exists)
   run in `scripts/validate-adr-rules.ts` (#1765).
-- Issue #1745 stays open as an alternative for ADR rules only: make each trimmed
-  ADR its own rule and drop the summary copy.
+- Making each ADR its own rule (issue #1745) was rejected in ADR-0030.

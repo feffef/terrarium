@@ -55,11 +55,8 @@ governance:
   instruction the Platform gives its agents, or rewrite a whole Skill, doc or
   ADR in simpler, precise words. This is a narrow amendment to ADR-0004: ADR
   prose loses its Human-only merge status *for prune trials*, which are
-  reversible by construction. An ADR rewrite may reword its Decision and
-  Consequences, fold its amendments into the text and retell its history more
-  clearly, but it never changes what the ADR decided — for prune trials this
-  replaces ADR-0018's record-integrity rule (widened 2026-09-25 at the owner's
-  direction; it first reached explanatory prose only). Everything else in ADR-0004's
+  reversible by construction. An ADR rewrite follows ADR-0030, but it never
+  changes what the ADR decided. Everything else in ADR-0004's
   high-risk set is untouched, and the external pack Skills (ADR-0015) remain
   unreachable because the Gate rejects the edit.
 - **Merge authority: green Gate alone.** The exemption's exact scope is a row in
