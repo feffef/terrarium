@@ -80,11 +80,11 @@ function seen(records: Record<string, unknown>[], docs: ReadFirst[], trace: Retu
 function hintFor(payload: unknown, dryRun = false): string | null {
   const tool = String(prop(payload, 'tool_name'))
   const docs = triggeredDocs(tool, prop(prop(payload, 'tool_input'), 'command'))
-  if (docs.length === 0) return null
   const parent = prop(payload, 'transcript_path')
   const agent = prop(payload, 'agent_id')
   const prOpened = tool === 'mcp__github__create_pull_request' && agent === undefined
     && prop(payload, 'hook_event_name') !== 'PostToolUseFailure'
+  if (docs.length === 0 && !prOpened) return null
   let records: Record<string, unknown>[] | null
   if (typeof parent !== 'string') records = dryRun && parent === undefined ? [] : null
   else if (agent === undefined) records = readTranscript(parent)
