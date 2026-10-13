@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01QUhfMeVRZg7NX654bv5ZE5
 startedAt: 2026-10-13T11:46:44Z
-endedAt: 2026-10-13T11:58:12Z
+endedAt: 2026-10-13T12:00:52Z
 kind: interactive
 goal: Prune the Friction Ledger to its 14-day horizon with a script
-status: in-review
-outcome: "scripts/prune-friction-ledger.ts added, wired into frictions-to-fixes §4, ledger pruned; PR #1890 open"
-summary: "Human-instructed: the user asked for a script that frictions-to-fixes runs on every run to prune Friction Ledger entries older than 14 days. Per the user's stated preference I asked first, and the user chose: drop occurrences (not just whole entries) before the horizon, delete emptied entries of any status, run it in §4's ledger edit. A first scan showed no entry was wholly stale; 45 old occurrences sat across 13 entries. The script edits each file's parsed YAML document so comments and quoting survive; its first run removed only lines. Agent-initiated: applying the prune to today's ledger in the same PR, sharing LEDGER_DIR with session-frictions.ts, and a §5 hand-off line after the code-review spec axis noted the doc-PR agent's brief would not otherwise name the script. Open note in the PR: a run dispatching only code fixes has no carrier for its ledger edit (predates this PR)."
+status: completed
+outcome: "scripts/prune-friction-ledger.ts added, wired into frictions-to-fixes §4, ledger pruned; PR #1890 merged"
+summary: "Human-instructed: the user asked for a script that frictions-to-fixes runs on every run to prune Friction Ledger entries older than 14 days. Per the user's stated preference I asked first, and the user chose: drop occurrences (not just whole entries) before the horizon, delete emptied entries of any status, run it in §4's ledger edit. A first scan showed no entry was wholly stale; 45 old occurrences sat across 13 entries. The script edits each file's parsed YAML document so comments and quoting survive; its first run removed only lines. Agent-initiated: applying the prune to today's ledger in the same PR, sharing LEDGER_DIR with session-frictions.ts, and a §5 hand-off line after the code-review spec axis noted the doc-PR agent's brief would not otherwise name the script. Open note in the PR: a run dispatching only code fixes has no carrier for its ledger edit (predates this PR). CI gate green; posted verdict and merged via merge-pr.ts."
 prs:
   - "1890"
 docsRead:
@@ -51,11 +51,11 @@ frictions:
   - description: CLAUDE.md says to read ADRs found by grep before recommending a change; I only grepped ADR-0003/0004/0009 for ledger lines and read none in full.
     solution: Low impact here (no ADR names the ledger lifecycle), but the grep hit list was the cue to open at least ADR-0009 and ADR-0015.
     severity: minor
-durationSec: 687
+durationSec: 848
 models:
-  claude-opus-5-5: 77
+  claude-opus-5-5: 96
 toolCounts:
-  Bash: 22
+  Bash: 26
   Read: 7
   AskUserQuestion: 1
   Write: 4
@@ -66,6 +66,12 @@ toolCounts:
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 2
+  mcp__claude-code-remote__send_later: 1
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
+  mcp__claude-code-remote__delete_trigger: 1
 filesEdited:
   - scripts/prune-friction-ledger.ts
   - tests/unit/prune-friction-ledger.spec.ts
