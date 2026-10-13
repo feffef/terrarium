@@ -1,132 +1,54 @@
-# 18. Tenant layers live under Nuxt's conventional `layers/` directory
+# ADR-0018: Each Tenant is a Nuxt layer in `layers/<tenant>/`
 
-Date: 2026-07-07
-Status: Accepted — ADR editing narrowed by ADR-0027
+Each Tenant lives in its own folder, `layers/<tenant>/`, the folder Nuxt
+itself uses for layers. Nuxt loads every folder there on its own, so adding a
+Tenant means adding a folder, and no root config lists the Tenants. "Tenant"
+stays the domain word; `layers/` is only a path.
 
-> **Amended by [ADR-0027](0027-prune-trials.md) (2026-08-23, widened
-> 2026-09-25).** The "never auto-merged, regardless of category" rule below
-> gains one category: a Prune Trial may self-merge a rewrite of any ADR that
-> keeps what it decided — Decision and Consequences included, amendments folded
-> in. The record-integrity rule below binds every other edit.
+## Scope
 
-## Context
+- **Where a Tenant lives.** All of a Tenant sits under `layers/<tenant>/`: its
+  pages and components in `app/`, its own `nuxt.config.ts`, its manifest
+  `tenant.config.ts`, and its content under `content/<space>/<collection>/`.
+  Code that finds the Tenants reads this folder.
+- **No list of Tenants in `nuxt.config.ts`.** Nuxt extends every folder under
+  `layers/` itself. Adding or removing a Tenant never edits the root config.
+- **Type checking.** Nuxt's own type check covers each layer's `app/` and
+  `nuxt.config.*`. It cannot see the manifests, which load only at build time,
+  so `nuxt.config.ts` adds one include for them. A test fails if that include
+  stops matching a real manifest.
+- **Words.** Say "Tenant" for the domain idea and "layer" only for the Nuxt
+  mechanism (`CONTEXT.md`). The folder's name changes neither.
 
-A Tenant is implemented as a Nuxt layer (CONTEXT.md, ADR-0001). Nuxt 4
-**auto-extends** anything under a top-level `layers/` directory. Until now the
-Tenant layers lived under `tenants/` instead — a name chosen to echo the
-ubiquitous language (Platform / Tenant / Space). Because that name is *not*
-Nuxt's convention, the repo carried standing apparatus that the stock layout
-would delete outright:
+## Why
 
-1. A hand-curated `extends: ['./tenants/journal', './tenants/blog',
-   './tenants/atlas']` list in `nuxt.config.ts`. Every Tenant with its own
-   fit-out had to be added by hand — which quietly contradicted ADR-0002's
-   "spawn a Tenant = drop a folder + `pnpm install`" story: a Tenant with a
-   layer also needed a root-config edit.
-2. A `typescript.tsConfig.include` patch (issue #55 Option B, extended by #93)
-   re-adding `tenants/*/app/**`, `tenants/*/nuxt.config.*`, and
-   `tenants/*/tenant.config.*` to the typecheck program — globs Nuxt generates
-   for `layers/*` automatically.
-3. A typecheck-coverage canary (`tests/unit/typecheck-coverage.spec.ts`)
-   guarding that patch against silent glob rot.
+- Nuxt's convention does work we would otherwise do by hand. Under any other
+  folder name, each Tenant must be added to an `extends` list in the root
+  config, and type checking needs extra include patterns and a test to guard
+  them.
+- Adding a Tenant should be adding a folder (ADR-0002). A hand-kept list breaks
+  that: every new Tenant would also need an edit to a Human-only file.
+- Nuxt keeps its own include patterns in step with the folder. Only the
+  manifest include is ours, and a test watches it.
 
-This revives **issue #55's Option A**, which #55 recommended long-term but
-deferred in favour of Option B. It is recorded as its own decision because it
-meets the 3-part ADR test: it is **hard to reverse** (a directory rename that
-touches a human-only surface, `shared/expand.ts`), **surprising without
-context** (why would the "Tenant" concept live under a directory named
-`layers/`?), and **a real trade-off** — stock Nuxt convention versus a directory
-name that mirrors the domain vocabulary.
+## Rejected alternatives
 
-## Decision
-
-Move the Tenant layers from `tenants/` to Nuxt's conventional **`layers/`**
-directory (`git mv tenants layers`; content moves with them to
-`layers/<tenant>/content/…`).
-
-- **The domain term "Tenant" is unchanged.** CONTEXT.md's glossary is
-  untouched: "Tenant" stays the domain concept, "layer" the Nuxt primitive it
-  maps to. Only the *directory name* — a path, not a concept — becomes `layers/`.
-  Say "Tenant" in domain sentences; the folder is just where the layers live.
-- **`nuxt.config.ts` loses its `extends` list.** Nuxt auto-extends every
-  `layers/*`, verified empirically (all Tenant routes render via `pnpm build`
-  + `pnpm test:e2e` with no `extends`).
-- **The `tsConfig.include` patch shrinks to one glob:**
-  `['../layers/*/tenant.config.*']`. Nuxt's generated tsconfig already includes
-  `../layers/*/app/**/*` and `../layers/*/nuxt.config.*` (confirmed by
-  inspecting `.nuxt/tsconfig.app.json`); the manifest `tenant.config.ts` is the
-  one surface it does **not** know about (jiti-only at build time), so that
-  single glob is retained to keep the #93 coverage. Both halves were confirmed
-  by the #55 **negative test** — a deliberate type error injected into a layer
-  `app/**` file and into a `tenant.config.ts` each makes `pnpm typecheck` fail,
-  and reverts clean — not just by inspecting the generated includes.
-- **The coverage canary narrows accordingly.** The retired `nuxt.config.ts`
-  glob's canary is removed; the canary now guards only the surviving
-  `tenant.config.*` glob and `content.config.ts` in `tsconfig.node.json`.
-- `shared/expand.ts` (human-only, ADR-0004) reads from `layers/` and emits
-  `cwdRel: layers/<tenant>/content/<space>/<collection>`.
+- **A `tenants/` folder, named after the domain word.** It reads better next
+  to the glossary, but Nuxt doesn't know it. It needs the hand-kept `extends`
+  list, extra type-check includes and a test guarding them. We chose Nuxt's
+  convention over a matching name.
 
 ## Consequences
 
-- **Spawning a Tenant is now purely additive**, honouring ADR-0002: drop a
-  `layers/<name>/` folder + `pnpm install`. No `nuxt.config.ts` edit, even for a
-  Tenant with a full layer fit-out.
-- **Typecheck coverage for layer fit-out and layer config is free forever** —
-  Nuxt owns those globs now, so they cannot rot out from under us. Only the
-  manifest glob remains our responsibility, still canary-guarded.
-- **Runtime routing is unaffected.** Routes are `/t/<tenant>/<space>/<slug>`
-  (ADR-0006), keyed by Tenant *name* (journal/blog/atlas), which did not change —
-  only the source directory did. Immutable blog links, the routing map, and
-  isolation keys are all untouched.
-- **This ADR touched human-only surfaces** (`shared/expand.ts`, the root Nuxt
-  config) and so landed as a high-care, human-reviewed PR, never auto-merged
-  (ADR-0004).
-- **Prior ADRs and historical records keep their `tenants/` paths.** ADRs are
-  the historical record: affected ones (0002, 0003, 0009, 0010, 0013, 0014,
-  0015, 0016) carry a one-line amending note pointing here rather than being
-  rewritten. Session logs and blog posts — append-only records of what happened
-  when the path *was* `tenants/` — are likewise left as-is; rewriting them would
-  falsify history.
+- Old session logs and blog posts still name `tenants/…` paths. They record
+  what was true then and stay as written.
+- Moving or renaming the folder touches Human-only files, so a human merges
+  that change (ADR-0004).
 
-## Editing an ADR: factual correction vs. decision reversal
+## See
 
-> **Amended (2026-07-14, issue #455).** Extends the amendment mechanism this
-> ADR established (the "one-line amending note pointing here" convention just
-> above, and the amendment banners threaded through `docs/adr/`) with a rule
-> for *how* a drifted ADR — any ADR, not only this one — gets edited. Prompted
-> by `audit-docs` needing a crisp line between "just fix the typo" and "route
-> through an amendment." The Decision and Consequences above are unchanged;
-> this section adds a rule, it does not revise them.
-
-Not every ADR drift is the same kind of change, and the fix must match the
-kind:
-
-- **Pure factual correction** — a wrong path, a dead link, a stale
-  cross-reference, a typo in the prose *describing* the decision. Nothing
-  about the decision itself is wrong, only a detail describing it is. Fix
-  this with a **direct in-place edit** to the erroneous prose — no amendment
-  banner, no appended section, no Status-line pointer needed. The ADR's
-  Decision and Consequences continue to read as accurate today; only the
-  wrong detail changes.
-- **Decision reversal or change** — the decision itself is changing, being
-  narrowed, extended, or superseded. This still requires the **existing
-  amendment/supersession mechanism** above: an appended, clearly-marked
-  amendment note (like this section) when the amendment lives on the same
-  ADR, or a Status-line pointer / "Amended by [ADR-XXXX]" banner when a
-  *different* ADR becomes the new decision-holder. **Never** rewrite the
-  original Decision or Consequences text in place to reflect a changed
-  decision — that erases the historical record the amendment banners exist to
-  preserve (see "Prior ADRs and historical records keep their `tenants/`
-  paths" above for why history is left as-is even once a detail it names has
-  gone stale).
-
-This is a rule about **how** an ADR is edited, not about **who** may merge
-the edit. Every ADR PR — factual-correction or decision-reversal alike —
-still lands as an ordinary, human-reviewed PR and is never auto-merged; ADRs
-are a human-only-to-merge surface regardless of category (ADR-0004) — with the
-single exception added by ADR-0027: a Prune Trial self-merges a rewrite of any
-ADR that keeps what it decided, and is exempt from the record-integrity rule
-above.
-Classifying a finding as a pure factual correction only changes whether the
-fix is an in-place edit or a new amendment section — it never changes the
-merge gate.
+- `nuxt.config.ts`: the manifest include for type checking.
+- `tests/unit/typecheck-coverage.spec.ts`: fails when that include matches no
+  manifest.
+- `docs/agents/tenant-layers.md`: how to add a Tenant, and the layer gotchas.
+- `shared/expand.ts`: reads the manifests from `layers/`.

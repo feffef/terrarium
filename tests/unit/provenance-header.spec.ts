@@ -1,4 +1,4 @@
-// Coverage for the ADR-0017 provenance HEADER (2026-07-31 amendment) — see the
+// Coverage for the ADR-0017 provenance HEADER — see the
 // ADR for why the convention moved off a trailing footer.
 //
 // Two assertions here are load-bearing and easy to break by "simplifying":
@@ -56,7 +56,7 @@ describe('sessionIdsIn() — format-agnostic by design', () => {
     expect(sessionIdsIn(provenanceHeader('Claude Opus 5', URL))).toEqual([ID])
   })
 
-  it('reads the LEGACY two-line footer, so pre-amendment content stays attributable', () => {
+  it('reads the LEGACY two-line footer, so older content stays attributable', () => {
     expect(sessionIdsIn(`done\n\nCo-Authored-By: Claude Opus 5 <noreply@anthropic.com>\nClaude-Session: ${URL}`)).toEqual([ID])
   })
 

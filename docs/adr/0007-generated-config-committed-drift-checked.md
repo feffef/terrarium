@@ -1,52 +1,51 @@
-# 7. Generated config is committed and drift-checked via diff
+# ADR-0007: Derived files are built, not committed
 
-Date: 2026-07-04
-Status: Superseded — by ADR-0013 (content.config.ts half) and ADR-0014 (routing map half)
+Whatever the build can derive, such as the collections and routes from the
+Tenant manifests, it derives at build time, so no generated copy sits in the
+repo. A derived file is committed only
+when the build cannot make it. Then the gate re-derives or checks it and fails
+when the committed copy no longer matches its source.
 
-> **Amended by [ADR-0013](0013-dynamic-content-config-committed-routing-map.md)
-> (2026-07-05).** The decision to commit **`content.config.ts`** is superseded:
-> it is now an ordinary module that builds the keyed collections dynamically from
-> the manifests at config-evaluation time (no committed file, no banner, no drift
-> gate, and it is now linted). The decision to commit **`shared/routing.generated.ts`**
-> was **retained** in ADR-0013 — but is now **also superseded** by
-> [ADR-0014](0014-build-time-virtual-routing-module.md) (2026-07-05), which
-> replaces the committed routing map with a build-time virtual module (`#routing`).
-> No committed `GENERATED` file remains. Read this ADR for the original
-> both-artifacts reasoning; read ADR-0013 and ADR-0014 for the amendments.
+## Scope
 
-## Context
+- **Derived at build time.** The keyed collections, the routing map and the
+  catalog are computed from the manifests on every prepare, build or dev
+  start (ADR-0013, ADR-0014, ADR-0025). Edit the manifest; there is nothing
+  to regenerate or commit.
+- **Committed only when the build cannot make it.** For example, rendering a
+  diagram needs a browser, which the production container lacks, so the
+  SVGs are rendered by the author and committed (ADR-0024).
+- **A committed derived file has a gate check** that fails when the file no
+  longer matches its source. A new kind of committed derived file needs such
+  a check.
+- **Derivation is deterministic.** The same sources give byte-identical
+  output, or every build and check would see false drift.
 
-ADR-0002 has a generator expand the Tenant manifests into the global
-`content.config.ts` (and, in the implementation, `shared/routing.generated.ts`).
-ADR-0003 charters a **drift-check** job to detect "manifest ↔ generated-config ↔
-content" mismatches. We must decide whether the generated artifacts are committed
-to the tree or produced only at build time — and how drift is actually detected.
+## Why
 
-## Decision
+A committed copy of derived output needs machinery to stay honest: a "do not
+edit" banner, a regenerate step before every script, and a drift check. Even
+then the check only catches the common mistake, a manifest edited without the
+regenerated output. Deriving at build time makes that mistake impossible.
 
-**Commit the generated artifacts**, banner-marked `GENERATED — DO NOT EDIT`, and
-detect drift with `git diff`:
+The manifest diff already shows a reviewer what a change intends. Expanding
+it in a PR adds noise, not review.
 
-- `scripts/generate.ts` writes `content.config.ts` and
-  `shared/routing.generated.ts`. Both are committed.
-- `dev`/`build`/`typecheck` run `pnpm gen` first, so a developer's working tree
-  is always regenerated before use.
-- The gate runs `pnpm gate:drift` = `pnpm gen && git diff --exit-code` on the two
-  files. If a manifest changed but the committed output was not regenerated (or
-  someone hand-edited the generated file), the diff is non-empty and CI fails.
-  **That diff *is* the drift-check signal** ADR-0003 asks for — no bespoke
-  comparator needed yet.
+## Rejected alternatives
+
+- **Commit the generated config and routing map**, so a PR diff shows which
+  Collections a manifest change adds or removes. It needs the machinery
+  above, and the manifest diff carries the same signal.
 
 ## Consequences
 
-- The keyed collections and routing table are **reviewable in the PR diff**: a
-  reviewer sees exactly which `<tenant>_<space>_<collection>` tables a manifest
-  change creates or removes, next to the manifest change itself.
-- Generated files are excluded from ESLint and are never hand-edited; the banner
-  and the drift gate enforce this.
-- Cost: a generated file lives in the tree and can look redundant with the
-  manifest. The banner, the `pnpm gen` pre-step, and the drift gate keep it
-  honest. If regeneration is ever non-deterministic it would cause false drift —
-  so the generator must be deterministic (stable ordering, no timestamps).
-- The generator remains **human-only** (ADR-0004): it is the mechanism the whole
-  isolation guarantee rests on.
+- No file in the repo shows the expanded collections or routes. To inspect
+  them, run `expand(loadManifests())` from `shared/expand.ts`.
+
+## See
+
+- `shared/expand.ts`: the one expansion every build-time consumer uses.
+- `modules/routing.ts`, `modules/catalog.ts`, `content.config.ts`: where the
+  build derives them.
+- `scripts/verify-mermaid.ts` and `scripts/gate.ts`: the drift check for a
+  committed derived file and where the gate runs it.

@@ -1,0 +1,85 @@
+# ADR-0030: ADRs document a decision, not its history
+
+An ADR states one decision as it stands today: what it covers, why we made it,
+and the alternatives we rejected, in the template below. When the decision
+changes, we rewrite the ADR in place and git keeps the history. The ADR is the
+source of the decision; its summary rule (ADR-0029) brings the key parts to
+agents.
+
+## Scope
+
+- **Readers.** First an agent or reviewer asking "why is this so, and may I
+  change it?", then the owner keeping an overview.
+- **One decision per ADR.** About 40–70 lines is a guide; one decision
+  matters more than the length.
+- **No history in the text.** No amendments, dates, status lines, "Amended by"
+  banners or notes about what used to be true. Use `git log` on the file.
+- **The ADR is the home of the decision:** what it allows and forbids, and the
+  exceptions that change that. Its summary rule carries the key parts
+  (ADR-0029). Skills and docs point to the ADR
+  rather than restate it.
+- **Mechanics live where they are enforced.** Numbers, procedures and commands
+  belong in code, a Skill or `docs/agents/`. The ADR names them under *See* and
+  never repeats a value.
+- **Keep only what a reader needs.** Keep a detail when a reader of some code
+  or doc needs this ADR to understand it. Drop one that a caller only quotes.
+- **Change an ADR by rewriting it.** Change the decision, merge two ADRs,
+  narrow one's focus or retire one: each is an ordinary edit. The same PR
+  rewrites its summary rule, repoints the code and docs that cite it, and
+  gives a new home to anything they relied on that leaves the ADR.
+- **Plain language.** Short sentences in plain, common words. Say what happens
+  rather than name it: use a glossary term only when no plain phrase is as
+  clear, and then the glossary's own term, never a synonym. Replace coined
+  phrases the same way.
+- **Template.** Follow `docs/adr/TEMPLATE.md`: a `# ADR-NNNN:` heading, a 2–3
+  sentence summary that covers the whole decision, then *Scope*, *Why* and
+  *Rejected alternatives*, and optional sections left out rather than filled.
+  A rejected alternative is one someone could plausibly propose again today;
+  an older rule that later changes overtook is history.
+- **The gate fails an ADR** that doesn't start with its `# ADR-NNNN:`
+  heading, or that holds a date, a status line or an amendment banner
+  anywhere in its text.
+
+## Why
+
+Amendments buried the current decision. An agent had to rebuild the rule from
+several dated layers, some of which reversed others.
+
+Copies drift. When an ADR repeated a number or a step that code or a Skill
+also held, the two came apart, and agents trusted the stale one. One home for
+each fact, and a pointer from the ADR, removes that.
+
+The ADR's own job is the reasoning: why the decision holds and what was ruled
+out. That is what an agent or reviewer needs before changing it, and what no
+Skill or code comment records.
+
+History has a home already. Git records every change with its PR and reason,
+so keeping it in the text too was a second copy that made the decision harder
+to read. Rejected alternatives are not history: they stop a review or a new
+idea from bringing back what we ruled out, and *When to revisit* says what
+evidence would justify that.
+
+## Rejected alternatives
+
+- **Append dated amendments and keep the original text.** It keeps the history
+  in the ADR but buries the current decision under it.
+- **Make each ADR its own rule** (issue #1745). The whole ADR would load into
+  context, so it would have to be as short as a summary and lose its reasons and
+  alternatives. Summary rules already work, so we keep the split.
+- **A "for agents" section inside each ADR.** It would repeat the summary rule
+  in a second place.
+- **A rule card (Do / Why / Not chosen).** Too close to a how-to doc, which
+  belongs in `docs/agents/` or a Skill.
+
+## When to revisit
+
+- Agents often need a decision's history to act, and git proves too awkward
+  for it.
+- Summary rules keep drifting from their ADRs despite the re-check (ADR-0029).
+
+## See
+
+- `docs/adr/TEMPLATE.md`: the template. It replaces the section layout and
+  Status field of the pack's `.agents/skills/domain-modeling/ADR-FORMAT.md`,
+  whose test for when a decision deserves an ADR still applies.
+- `scripts/validate-adr-rules.ts`: fails the gate on history in an ADR.

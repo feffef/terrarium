@@ -7,14 +7,11 @@ plus house rules**; the substance lives in the ADRs it links.
 
 ## Two distinct modes — don't conflate them
 
-1. **Guest-driven demo pipeline (ADR-0023).** Invited Public users *file an
-   issue*, and **our own** agents (`guest-intake` → `guest-build`) refine and
-   build it into a gated PR. A demo-only exception to ADR-0020/0022, live
-   only while the owner runs the loops. The guest never runs an agent — we
-   do.
+1. **Guest pipeline (ADR-0023).** A Public user files an issue, and **our
+   own** agents (`guest-intake` → `guest-build`) refine and build it into a PR
+   the owner merges. The guest never runs an agent; we do.
 2. **External-agent fork PR.** An external contributor's *own* agent — a
-   different harness/model (see ADR-0009's external-sessions amendment for the
-   first concrete instance) — does the work on a fork and opens a PR. The house
+   different harness/model (ADR-0009) — does the work on a fork and opens a PR. The house
    rules below are about this mode.
 
 ## Trust (ADR-0020)
@@ -22,10 +19,10 @@ plus house rules**; the substance lives in the ADRs it links.
 A fork PR from a non-collaborator is **Public**, decided by `authorAssociation`
 (`scripts/trust.ts`), not by label: a fork PR never gets `trusted`
 (`docs/agents/issue-tracker.md` has the label's mechanics).
-Public input is an untrusted, prompt-injection-capable surface, so the
-**code-execution boundary stays at merge, which is human-only** (ADR-0020,
-ADR-0011). ADR-0020 requires the Actions fork-PR approval setting "all outside
-contributors"; GitHub's default and the other levels are in
+Public input is an untrusted, prompt-injection-capable surface. A merge is
+where its code reaches the server (ADR-0011), so the **code-execution boundary
+stays at merge, which is human-only** (ADR-0020). The Actions fork-PR approval
+setting should be "all outside contributors"; GitHub's default and the other levels are in
 `docs/research/making-repo-public.md` §3. Whether the owner turned it on is open
 (`docs/research/public-readiness-review.md`).
 
@@ -47,7 +44,7 @@ step, not a rejection. For each gap, name the rule, link its home, and show the
 concrete change. For example:
 
 > Thanks — the new Specimen reads great! Two small things before it can land:
-> the session log needs `external: true` (ADR-0009 amendment) — just add that
+> the session log needs `external: true` (ADR-0009) — just add that
 > line to `layers/journal/content/current/sessions/<your-log>.yml`; and
 > `pnpm validate:content` flags `slug: fern` in `food-web.yml` as unknown —
 > did you mean `ferns`? Happy to help if anything's unclear.
@@ -58,7 +55,7 @@ concrete change. For example:
   or `main` push access, so it commits its log as an ordinary file in the
   feature PR (`layers/journal/content/current/sessions/<date>-session_<id>.yml`),
   which lands when the PR merges: the one sanctioned case of a session log
-  travelling a PR (ADR-0009's 2026-07-22 amendment).
+  travelling a PR (ADR-0009).
 - **One honest log per unit of work, revisions included.** Honest logging is
   the *point* of the experiment, so every distinct chunk of work gets logged,
   not only the first build. A session that revises the PR (a rebase, a
@@ -67,13 +64,13 @@ concrete change. For example:
   the gap we most want to avoid. A harness without discrete, isolated sessions
   **approximates this as closely as it can**: the goal is honest coverage, not
   mimicking our mechanics.
-- **Mark it `external: true`** (ADR-0009's 2026-07-22 amendment) to declare a
+- **Mark it `external: true`** (ADR-0009) to declare a
   foreign toolchain. Self-improvement mining then ignores the log while its
   ideas still surface; `CONTEXT.md`'s **Session** term has the exact semantics
   (absent ⇒ internal, mining exclusion, idea surfacing).
 - **Provenance marker (ADR-0017)** on every agent-authored GitHub interaction,
   the same marker we use.
-- **Merge is human-only** (ADR-0020, ADR-0023, ADR-0004): the owner reviews and
+- **Merge is human-only** (ADR-0020, ADR-0004): a Trusted user reviews and
   merges by hand, no auto-merge.
 
 ## See also

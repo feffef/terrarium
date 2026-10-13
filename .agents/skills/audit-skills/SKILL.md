@@ -17,9 +17,9 @@ aims at two gaps that frictions never reveal:
 Keeping the **Skill Inventory** (`layers/journal/content/current/skills/`) in
 line with real usage is a by-product of the same evidence.
 
-This Skill writes only Inventory `.yml` entries and GitHub issues. Changing a
-Skill's text is a judgement call, so a finding that clears step 4's bar
-becomes an issue for a human; the rest become observations (ADR-0015).
+This Skill writes only Inventory `.yml` entries and GitHub issues (ADR-0015).
+A finding that clears step 4's bar becomes an issue; the rest become
+observations.
 
 Every issue or PR state you write, in any words (open, closed, merged,
 resolved, fixed), in an observation, issue, comment or session log, matches a
@@ -92,7 +92,8 @@ or dropped, and each clean report has had one claim checked.
 
 ## 3. Check closure completeness
 
-These mechanical signals cover `close-session`'s missed invocations:
+These mechanical signals cover `close-session`'s missed invocations. They are
+the measure ADR-0009 uses to decide whether a reminder hook should come back.
 
 - `orphanedSessions`: sessions that shipped a merged PR but never logged.
   Read `orphanScan` first. `scanned: false` means nothing was looked at, so
@@ -175,7 +176,7 @@ or PR state your observations cite matches a live read this run.
 ## 6. Land the Inventory PR
 
 If step 5 changed nothing, there is no PR. Otherwise follow
-`docs/agents/pr-workflow.md`'s "Closing a self-merged chartered run". The
+`docs/agents/pr-workflow.md`'s "Closing a scheduled run's PR". The
 diff touches only `layers/journal/content/current/skills/*.yml`, every grade
 change cites its ≥2 sessions, and every removed observation is past 40 days.
 Anything else in the diff means you leave the PR open for a human.

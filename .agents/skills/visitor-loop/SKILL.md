@@ -12,9 +12,19 @@ ones at least two of the three raised independently — and builds the best
 idea any of them had. One visitor's complaint is taste; two visitors arriving
 at the same complaint is signal.
 
-Your **remit** — what this run may change and self-merge — is ADR-0003's
-`visitor-loop` ledger row. Read it before step 3; file a finding outside it as an
-issue (step 6).
+## Remit
+
+Each run may change, and merge on a green gate, two PRs: one fixing the
+consensus findings and one building **one** feature from the visitors'
+ideas. Both stay inside existing Tenant layers (`layers/<tenant>/`:
+content, components, pages, styles and that Tenant's tests; a manifest
+edit only to add a field to an existing Collection), files under `app/`
+that are not Human-only, and this Skill's `decisions.md`. Out of remit: a
+new Tenant, Space or Collection, a new dependency, any Human-only file,
+agent instructions, and editing authored history (published posts,
+session logs, Digests, Midden artifacts). File an out-of-remit finding as
+an issue (step 6). If anything else gets into a PR, leave it open for a
+human (ADR-0003).
 
 ## Today's focus
 
@@ -100,7 +110,7 @@ important finding yourself** — a real bug, a broken documented standard (an
 ADR included), an accessibility or honesty problem — never defer it to a human
 or a follow-up. Re-review and repeat until nothing important remains. Then
 push and open the PR — its body carries the tally. Post the review verdict on the PR, then land it
-per `docs/agents/pr-workflow.md` ("Closing a self-merged chartered run" and
+per `docs/agents/pr-workflow.md` ("Closing a scheduled run's PR" and
 "The recipe"). Done when every *fix* item has DOM evidence, the last review
 has no important finding left unfixed, and the PR is merged — or left open and escalated
 with the reason.

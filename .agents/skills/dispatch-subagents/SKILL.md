@@ -86,7 +86,7 @@ every line that applies.
   tell the agent to report back rather than exceed it (issue #1182).
 - When the work touches routing or architecture, name the binding ADR in the
   brief; an implementation-only brief skips the planning step that would find it
-  (an agent once added a catch-all route against ADR-0016).
+  (an agent once added a Platform `/t/<tenant>` page against ADR-0016).
 - Allow a listed item to be refused, with proof instead of implementation. A
   proven refusal is a finding about the list; don't re-dispatch the item.
 - Paste in what you already hold (counts, kinds, fetched sources, or a file you

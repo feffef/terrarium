@@ -5,7 +5,7 @@
 // local offset (`+02:00`). This helper normalizes both to UTC and lists every
 // commit on `origin/main` strictly after a given instant, newest-first, with
 // an `isMerge` flag so a PR-merge commit (`Merge pull request #N …`) stands
-// out from a direct-to-`main` session/doc commit (ADR-0009).
+// out from a direct-to-`main` session-log commit (ADR-0009).
 //
 // Usage:  tsx scripts/merged-since.ts [--merges-only] <iso-instant> [<iso-instant> ...]
 //   --merges-only keeps only `isMerge: true` commits: the full list runs to
@@ -64,7 +64,7 @@ export interface AnnotatedCommit extends MergedCommit {
 
 /** A commit subject that names it a merge — a PR merge (`Merge pull request
  *  #N …`) or a direct branch merge (`Merge branch …`) — as opposed to an
- *  ordinary direct-to-`main` commit (ADR-0009 session/doc logs included). */
+ *  ordinary direct-to-`main` commit, such as a session log (ADR-0009). */
 export function isMergeSubject(subject: string): boolean {
   return /^Merge (pull request|branch)\b/.test(subject)
 }

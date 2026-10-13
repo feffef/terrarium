@@ -1,53 +1,56 @@
-# 8. The self-documentation Tenant is a Journal
+# ADR-0008: The Journal is the Platform's logbook, not a status report
 
-Date: 2026-07-04
-Status: Accepted
+The Platform documents itself in one Tenant, the Journal (`journal`). It is
+part of the Platform, not a demo Tenant. Its core is the session logs agents
+write about their own work, which nothing else can rebuild; next to them sit
+readouts derived from the repo and daily Digests.
 
-## Context
+## Scope
 
-The Platform hosts one Tenant that documents itself. ADR-0003 called it the
-"living-documentation Tenant / status report" and framed its content as **derived
-from repo ground truth** by the `sync` job — a current-state readout (inventory,
-CI/drift health, the Skill Inventory).
+- **The Journal is Platform infrastructure.** That is why its reason to exist
+  is an ADR, while a demo Tenant's lives only in its own `CONTEXT.md`
+  (ADR-0021).
+- **It holds three kinds of content:**
+  - session logs: one honest self-report per session, written by that
+    session's agent and never changed by another session;
+  - Inventories: readouts derived from the repo and refreshed in place, such
+    as the Skill Inventory and the Friction Ledger;
+  - Digests: daily summaries derived from the other records (ADR-0010).
+- **Session logs are the source of truth.** They record what happened in a
+  session, which the repo does not hold. They are kept, never regenerated
+  from repo state. How they are written and landed is ADR-0009's.
+- **Inventories show the current state.** Their owners refresh them in place
+  rather than add to them.
 
-Designing the next content types for it changed that picture. The most valuable
-content is a per-session **self-report**: what a session discussed and
-implemented, which docs it read, which Skills it used, and — most importantly —
-where it hit friction or wasted effort. Add research write-ups and nascent ideas,
-and the shared shape is clear: this is **primary, append-only, agent-authored**
-content that accumulates over time. That is the opposite of a derived,
-overwritten status snapshot. "Status" mislabels what is really a logbook.
+## Why
 
-## Decision
+- A session's transcript is seen only by those in it. Once it ends, its log is
+  the only lasting record of what it did, what it read and where it hit
+  Friction. The self-improvement Skills mine those logs to find what to fix.
+- That makes the Journal's most valuable content first-hand and
+  ever-growing. A status report is the opposite: derived, and overwritten each
+  time. A logbook gains entries and keeps the old ones, which is what the
+  Journal is.
+- Keeping derived readouts and first-hand records apart tells every agent
+  which content it may refresh and which it must preserve.
 
-Name this Tenant **`journal`** (retiring the "Living Documentation" term). It
-holds two kinds of content:
+## Rejected alternatives
 
-- **Inventories** — curated/derived current-state readouts (the Skill Inventory
-  today; the Tenant/Space inventory and CI/drift health later, via `sync`).
-- **Journal entries** — primary, append-only records the agents author
-  themselves: session logs, research, and ideas (forthcoming).
-
-The journal entries are honest self-reports and the primary signal the
-self-improvement jobs (`consolidate`, `codify`) mine for recurring friction — the
-mechanism by which the Platform improves itself. The slug, generated collection
-keys (`journal_<space>_<collection>`), and routes (`/t/journal/…`) follow the
-name. Spaces remain `current` / `archived`.
-
-The `sessions` schema, the authoring mechanism (a `log-session` platform-operation
-Skill, later backed by a `Stop` hook), and the open question of *how a session
-commits its own log* are deferred to a follow-up issue and PR.
+- **A status dashboard built only from repo state.** It cannot hold what
+  sessions alone know, so the self-improvement loop would have nothing to
+  mine.
+- **Treat the Journal as a demo Tenant with no ADR.** Agents rely on it to
+  improve the Platform, so its purpose is architecture, not product.
 
 ## Consequences
 
-- `CONTEXT.md`'s glossary entry becomes **Journal**. Historical ADRs keep their
-  original "living-documentation" wording as the record of the time; this ADR
-  supersedes that framing.
-- The "derived from repo ground truth" description (ADR-0003) is no longer the
-  whole story. The Agent Authorship distinction between *authored* and *derived*
-  content now maps directly onto journal entries vs. inventories.
-- Introducing primary self-authored content is what makes the self-improvement
-  loop possible, but it also means not all of this Tenant's content can be
-  regenerated — session logs are ground truth, not a projection of it.
-- The rename touches generated keys and routes; cheap now, stickier once external
-  links exist.
+- Not all of this Tenant can be rebuilt from the repo. A session log that is
+  lost or never written is gone for good.
+- The Tenant's name is in its collection keys and routes. Renaming it breaks
+  outside links.
+
+## See
+
+- `layers/journal/tenant.config.ts`: the Spaces and Collections.
+- `layers/journal/CONTEXT.md`: what a visitor finds, and the Digest.
+- `CONTEXT.md`: session log, Inventory, Skill Inventory, Friction Ledger.

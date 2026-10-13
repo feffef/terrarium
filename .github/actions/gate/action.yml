@@ -42,7 +42,7 @@ runs:
       run: pnpm exec tsx scripts/gate.ts --decide --base "$BASE_SHA" --head "$HEAD_SHA"
 
     # Pins each external pack Skill's installed SKILL.md hash against its
-    # Skill Inventory entry (ADR-0015 amendment) — a governance/provenance
+    # Skill Inventory entry (ADR-0015) — a governance/provenance
     # check, arguably its own layer rather than one of L0-L3, but the
     # cheapest check available, so it runs first, mirroring `pnpm gate`'s order.
     - name: 'L0 · skills-lock integrity'
@@ -84,11 +84,11 @@ runs:
       shell: bash
       run: pnpm validate:content
 
-    # The Heavy tier below is guarded on the scope decision (#445, ADR-0026). An
-    # empty or absent output — step skipped, step failed, base undeterminable —
-    # is not 'true', so it runs. The skip is only ever reached on a
+    # The Heavy tier below is guarded on the scope decision (#445; skip only on
+    # proof, ADR-0004). An empty or absent output — step skipped, step failed,
+    # base undeterminable — is not 'true', so it runs. The skip is only ever reached on a
     # positively-proven Inert changeset. `skip_build` guards only build and e2e
-    # (ADR-0004, 2026-10-12 amendment).
+    # (`scripts/gate.ts` `isSkillFile`, #1603).
 
     # L3 — isolation invariant: unique, correctly-scoped collection keys.
     - name: 'L3 · isolation'

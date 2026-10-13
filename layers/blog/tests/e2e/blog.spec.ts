@@ -1,19 +1,18 @@
 // L2 e2e assertions specific to the **blog** Tenant. Serves the gate's build via
-// `setupL2()` and never builds (ADR-0004 amendment, tests/README.md).
+// `setupL2()` and never builds (tests/README.md).
 //
 // The failure-mode assertions here guard the "component renders empty on link
 // navigation, permanently, until a reload" bug (issue #236). @nuxt/content
 // answers client-side queries from a WASM SQLite DB whose per-collection dump is
 // fetched lazily on first query; a failed load poisons that collection for the
-// life of the page. We do NOT patch the dependency (ADR-0019 amendment,
-// 2026-07-16) — instead the Space pages surface the failure as a modal
+// life of the page. We do NOT patch the dependency (ADR-0019) — instead the Space pages surface the failure as a modal
 // (ContentLoadErrorDialog) that a reload recovers from, since the reloaded page
 // renders from the server DB. Navigation normally reads a server payload and
 // skips the client DB (ADR-0028), so these tests fail that payload too, then a
 // dump load, and assert the dialog shows and a reload restores the content.
 //
 // One funnel is the exception: a failed dynamic *import* of a build chunk
-// reloads itself (ADR-0019 amendment, 2026-08-04), so its tests assert the
+// reloads itself (ADR-0019), so its tests assert the
 // content comes back with no click — and that a failure surviving that one
 // attempt settles on the dialog instead of reloading again.
 import { describe, expect, it } from 'vitest'
@@ -112,9 +111,8 @@ describe('blog Tenant', async () => {
     expect(html).toContain('href="/t/blog/karen"')
   })
 
-  // The Tenant-root front door (`/t/blog`, ADR-0016 precedent) isn't in the
-  // generated `entryRoutes` sweep — a Tenant-root page never is (ADR-0016) —
-  // so it's asserted here, plus its `?tag=` filtered view.
+  // The front door (`/t/blog`) is a Tenant root page, outside the `entryRoutes`
+  // sweep (ADR-0016), so it's asserted here, plus its `?tag=` filtered view.
   it('hydrates the front door with no unresolved components', async () => {
     await expectCleanHydration('/t/blog')
   })

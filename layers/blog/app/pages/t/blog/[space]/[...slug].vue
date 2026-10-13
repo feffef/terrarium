@@ -3,7 +3,7 @@
 // route than the Platform's generic catch-all, so blog posts render in the blog
 // theme with their pingbacks rather than falling through to the unstyled renderer.
 //
-// Isolation-respecting and presentation-only (ADR-0004): it resolves the request
+// Isolation-respecting and presentation-only (ADR-0006): it resolves the request
 // through the SAME shared, unit-tested `resolveSpaceRoute` (via the read-only
 // useSpace composable), then reads only this Space's keyed `pages` and
 // `pingbacks` collections. The pingback list is a SAME-Space read — the
@@ -46,7 +46,7 @@ const adjacentPosts = computed(() => {
 })
 
 // The Journal's digest of the day this post was published, when one exists —
-// the one cross-Tenant read the Blog makes, through the sanctioned `queryPages` (ADR-0025).
+// read across Tenants through `queryPages` (ADR-0025).
 const { data: journalDay } = await useAsyncData(`${route.path}:journal-day`, async () => {
   const day = post.value?.publishedAt?.slice(0, 10)
   if (!day) return null

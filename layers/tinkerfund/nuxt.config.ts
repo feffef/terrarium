@@ -1,5 +1,5 @@
 // The Tinkerfund Tenant's Nuxt layer: presentation only, no server code
-// (issue #1371), no collections of its own (ADR-0002/0013).
+// (issue #1371), no collections of its own (ADR-0013).
 import { fileURLToPath } from 'node:url'
 
 export default defineNuxtConfig({

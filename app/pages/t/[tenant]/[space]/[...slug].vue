@@ -1,5 +1,5 @@
 <script setup lang="ts">
-// Runtime routing (ADR-0001): the request path selects which baked (Tenant, Space)
+// Runtime routing (ADR-0006): the request path selects which baked (Tenant, Space)
 // to serve. We resolve it to generated collection keys and query only those
 // collections — physical table-level isolation means no cross-Space leakage.
 // Pure isolation-critical resolution lives in shared/routing.ts (unit-tested);

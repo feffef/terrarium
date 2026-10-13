@@ -4,9 +4,7 @@
 // CONTEXT.md Tenants roster: Midden; layers/midden/CONTEXT.md: Site / Artifact /
 // Dig season / Condition / the two-gate inclusion test; issue #515 (the Wayfinder
 // map that locked every decision below, via its 12 resolved sub-issues #516-528).
-// Declarative intent only: `content.config.ts` builds the keyed collections from
-// this manifest at config-evaluation time, and the routing map is derived from
-// it at build time (ADR-0002/0013/0014) — no generated file involved.
+// Declarative intent only (ADR-0002, ADR-0013).
 //
 // Two Spaces. `trench` is the excavation on display; `stores` holds finds kept
 // off display — fully catalogued, graded and dated, just not narrated by a dig

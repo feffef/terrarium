@@ -1,246 +1,76 @@
-# 4. Objective safety gate for agent PRs
+# ADR-0004: Every PR passes an objective gate; a human merges the risky few
 
-Date: 2026-07-04
-Status: Accepted — high-risk set extended by ADR-0026; ADR prose exempted for
-Prune Trials by ADR-0027; Skill-file scope widened to `.claude/workflows/` by
-ADR-0005
+Every change passes the gate: a fixed set of machine checks that must be green
+before a PR merges. With a green gate and a review, an agent merges its own PR.
+A human merges the few PRs whose risk the gate cannot see.
 
-> **Amended by [ADR-0005](0005-skill-model.md) (2026-10-13, issue #1870).** A
-> `.claude/workflows/` script counts as one of its Skill's files in the
-> 2026-10-12 (#1603) amendment below; the build reads only `.claude/rules/*.md`.
+## Scope
 
-> **Amended (2026-10-12, after PR #1853).** *Review before the first push.*
-> Beside the gate, a branch is reviewed before its first push, because pushing
-> opens the PR (ADR-0003). A green gate shows the change builds and passes
-> tests; a review shows it is the right change, written to the repo's
-> standards. `docs/agents/pr-workflow.md` ("Review before the first push")
-> holds the rule and its skips. A later push of a change unlikely to break the
-> gate (prose, docs) may skip the local `gate:scoped` and rely on CI's gate; a
-> code change still runs it first.
+- **What the gate checks.** Four kinds of check, cheapest first: the code and
+  every Tenant manifest are valid and the app builds (L0); every Document
+  matches its Collection's schema (L1); every entry route renders in a real
+  browser without errors (L2); a query for one Tenant and Space never returns
+  another's Documents (L3). Code and tests cite these labels.
+- **Skipping steps.** The gate may skip a step only when it proves no changed
+  file can affect that step. Without proof, it runs everything.
+- **Before the first push,** the branch passes the gate locally and gets a code
+  review. CI's run of the gate decides the merge.
+- **Who merges.** The agent that wrote the PR, once CI's gate is green and it
+  has posted its verdict on the PR, unless an exception below applies.
+- **A human merges a PR that:**
+  - changes a file on the Human-only list;
+  - adds a dependency, moves one to a new major version, or patches its code.
+    A minor or patch version bump merges like any other PR;
+  - changes behaviour no test or gate step can observe, such as a hook or
+    script that runs unattended, timing-dependent logic, or an outside side
+    effect. Touching unfamiliar code that has tests does not count;
+  - adds logic that decides which Tenant's data a request can reach. Calling
+    the catalog's read functions (ADR-0025) is not such logic;
+  - comes from a Public author, a fork or the guest pipeline, or was built
+    from a Public request (ADR-0020, ADR-0023).
+- **The Human-only list** holds the files where a bad change escapes the gate
+  or weakens the merge check itself. The list is the `paths` of the
+  human-merge rule.
+  `scripts/merge-pr.ts` reads it from `main`, so a PR cannot shrink it for
+  itself.
+- **Merging, not editing.** Agents may edit Human-only files; only the merge
+  waits for a human.
+- **"A human"** is any Trusted user, with one exception (ADR-0020).
 
-> **Amended (2026-10-12, issue #1603).** *A Skill's own files skip build and
-> e2e, not unit tests.* A changed path under `.agents/skills/` that is not
-> Inert (a Skill's helper script and its unit test, which now live beside it)
-> lets `scripts/gate.ts` skip `build` and `test:e2e` but still run `test`,
-> provided every other changed path is Inert or such a Skill file. CI reads the
-> same decision from `--decide` (`skip_build`). The safety argument: `build`
-> reads `.agents/skills/` only to list which folders hold a SKILL.md
-> (`layers/journal/nuxt.config.ts`), which a non-`.md` file cannot change, and
-> no e2e spec reads `.agents/`. So nothing the build or an e2e spec loads may
-> live there. A unit test in `tests/unit/gate-scope.spec.ts` is a tripwire for
-> static imports from it by anything outside a Skill or the unit tests; it does
-> not catch a new build-time file read. The 2026-10-03 amendment's fail-safe
-> rules hold unchanged.
+## Why
 
-> **Amended (2026-10-10, PR #1741).** **The Human-only set is a rule's
-> `paths`, enforced at merge.** With agents merging their own PRs
-> (ADR-0003's 2026-10-10 amendment), this ADR defines only the exceptions:
-> - **Paths.** The single home of the Human-only list is the `paths` of
->   `.claude/rules/adr-0004-human-merge.md`. That rule loads when an agent
->   touches a listed file, and `scripts/merge-pr.ts` reads the same paths from
->   `origin/main` and refuses to merge a PR that changes one, so a PR cannot
->   shrink the list for itself. Besides the files listed before, it now holds
->   what keeps a self-merge safe; the rule is the list, so it is not repeated
->   here.
-> - **Without a path.** A PR that adds a dependency, changes behaviour no test
->   covers, or adds logic deciding which Tenant's data a request can reach;
->   and a Public, fork or guest-pipeline PR (ADR-0020, ADR-0023). The
->   always-loaded ADR-0004 rule states these.
-> - **Prune Trials** still merge their ADR rewrites (ADR-0027), through
->   `merge-pr.ts --prune-trial`, which needs the trial's ledger entry in the PR.
->
-> This supersedes the 2026-07-19 amendment's "an ordinary work PR is always
-> human-merged".
+Agents change a system that includes their own tools. Automatic checks are what
+make that autonomy safe, so the gate is the one place we never cut for
+simplicity.
 
-> **Amended by [ADR-0027](0027-prune-trials.md) (2026-08-23).** ADR **prose**
-> leaves the never-auto-merged set for one caller only: a `prune-trial` Prune
-> Trial, whose every edit is reversible by construction and judged by the
-> sessions that follow it. The rest of the high-risk set below is untouched, and
-> no other Skill gains ADR reach.
+The gate asks only questions a machine can answer, so it can be trusted without
+trusting the author. For the same reason it is blind to intent: a clean build
+can still do harm at runtime. The exceptions are the changes where that
+blindness matters, so a person reads them before they land.
 
-> **Amended by [ADR-0026](0026-gate-workflow-thin-shell.md) (2026-08-06).**
-> `.github/actions/gate/action.yml` — the composite action that holds the
-> Gate's steps — **joins the high-risk set below**: Human-only to *merge*, never
-> auto-merged, exactly as `content.config.ts` is. ADR-0026 records the decision,
-> and why removing the push barrier removes no protection the merge barrier was
-> not already providing.
+## Rejected alternatives
 
-> **Amended (2026-10-03).** *CI skips the Heavy tier on a provably Inert
-> changeset.* The Decision's "every PR must clear it" still governs what the
-> Gate *covers*; this narrows only what it *executes*. When every changed path
-> in a PR passes `scripts/gate.ts`'s `isInert`, CI runs its `FLOOR` and skips
-> its `HEAVY` steps. The safety argument is the Inert-set proof in issues #350
-> and #544: no skipped step reads those paths. CI asks `scripts/gate.ts
-> --decide`, so local and CI classification cannot diverge (ADR-0026). The
-> relaxation is one-directional — an undeterminable diff base, a shallow
-> checkout, a failed decision step, an empty changeset, or a `push: main` event
-> each run the Full gate, so the skip is only ever reached on a
-> positively-proven Inert set (issues #445, #879). If CI ever goes green on an
-> Inert-classified PR that a Full gate would have caught, the classifier is
-> wrong: that is the signal that tightens `isInert` or retires this amendment.
-
-> **Amended (2026-07-06).** The high-risk (always human-only) set is extended
-> beyond the path-based blast-radius to two axes a path classifier can't see: a PR
-> that **introduces a new dependency**, or that **changes untested/untestable
-> runtime behaviour** (no gate layer can vouch for it). An agent reviewer
-> (ADR-0003) escalates these to a human even when the gate is green and the
-> surface is otherwise low-risk.
-
-> **Amended (2026-07-10).** The Decision's "generator" terminology below is
-> stale — [ADR-0013](0013-dynamic-content-config-committed-routing-map.md) and
-> [ADR-0014](0014-build-time-virtual-routing-module.md) removed it; read every
-> "generator"/"routing/isolation/CI" mention below as historical framing from
-> before that split. The current human-only surface is the `paths` of
-> `.claude/rules/adr-0004-human-merge.md` — the single home (2026-10-10 amendment); no amendment here should re-enumerate it (two later
-> amendments tried, and both went stale the next time the list changed).
-
-> **Amended (2026-07-07).** *Where the gate's tests live, as the Platform grows.*
-> A test is **homed with the code it exercises**: a Tenant-specific test lives in
-> that layer under `layers/<tenant>/tests/`; a Platform test (exercising
-> `shared/`, `scripts/`, `modules/`, routing, isolation) lives in the root
-> `tests/`. This keeps "which tests are this Tenant's vs. global" legible and lets
-> the suite grow additively with each spawned Tenant.
->
-> **L2 (smoke render) stays a SINGLE Nuxt build regardless of Tenant count.** The
-> `@nuxt/test-utils` `setup()` that L2 needs performs a full `nuxt build`, and
-> vitest isolates each *spec file* into its own worker — so every additional e2e
-> `*.spec.ts` re-runs `setup()` and pays for another build, multiplying the gate's
-> slowest step per Tenant. Therefore the L2 gate is **one** platform smoke spec
-> (`tests/e2e/smoke.spec.ts`, owner of the sole `setup()`), and each Tenant's
-> L2 assertions are contributed as an imported `register…()` **module**
-> (`layers/<tenant>/tests/e2e/*.e2e.ts`, not a `.spec.ts`) that the smoke spec
-> invokes inside its single `describe`. This is the surprising, deliberately
-> not-to-be-"cleaned-up" shape: splitting tenant assertions back into sibling
-> spec files is the exact regression this records against. (The cross-Tenant
-> entry-route sweep, derived from the manifests per ADR-0014, stays in the
-> platform spec and covers every Tenant uniformly.) L0/L1/L3 tests have no such
-> per-file build cost and are simply homed per the rule above.
-
-> **Amended (2026-10-12).** The 2026-07-07 "one spec, one `setup()`" rule rested
-> on `setup()` rebuilding the app per spec file. That premise is gone: the e2e
-> now reuses the gate's `pnpm build` output through a vitest `e2e`-project
-> `globalSetup` (`tests/support/e2e-global-setup.ts`, freshness-checked,
-> fail-closed: it builds only if `.output` is stale) and a `setupL2()` helper
-> that starts a server on it without building. L2 is still ONE build, but is
-> now a spec or a few per Tenant (`layers/<tenant>/tests/e2e/<tenant>.spec.ts`) plus the
-> Platform spec, run in parallel by vitest. The invariant that remains is
-> "an e2e spec never builds". Each spec's server gets its own Nuxt Content
-> SQLite file, since servers sharing one answered with "database is locked".
-
-> **Amended (2026-07-11).** The L1 bullet's premise below — "free with Nuxt
-> Content Zod schemas — invalid frontmatter fails the build" — is false. Verified
-> against the installed `@nuxt/content` source (see
-> `docs/research/nuxt-content-review-grounding.md` §2): Nuxt Content 3 never
-> calls `safeParse` (or any schema validation) in its parse/insert pipeline;
-> Collection schemas only derive SQL column types, wrong-typed frontmatter is
-> coerced, and an unparseable file is warn-skipped, not build-failed. `pnpm
-> build` therefore validates nothing. L1 is instead enforced by
-> `scripts/validate-content.ts` (`pnpm validate:content`), the only thing that
-> runs Documents through the Collection Zod schemas via `.safeParse()`. It is
-> now wired into the `gate` script in `package.json` (the single home CI
-> mirrors). The matching `.github/workflows/gate.yml` change — a dedicated
-> `'L1 · content validation'` step, plus renaming the former
-> `'L0/L1 · build + content validation'` step to `'L0 · build'` — needed a
-> human to apply (agent sessions cannot push workflow files, no `workflow`
-> OAuth scope) and has since landed (PR #323): both steps are live in
-> `.github/workflows/gate.yml` today. The still-open `gate.yml` gap it then
-> pointed to was closed (ADR-0026). The
-> Decision that an L1 layer exists is unchanged — only the mechanism note
-> above is corrected.
-
-> **Amended by [ADR-0020](0020-requester-trust-tiers.md) (2026-07-11).** A third,
-> orthogonal axis joins the blast-radius policy below: **provenance of the
-> request.** A Public-originated PR is human-merged regardless of file
-> classification — the low-risk auto-merge tier does not apply to Public
-> authors. ADR-0020 is the single home for the requester-trust axis (the
-> Trusted/Public tiers, the security-review and enforcement mechanics); see it
-> for the full rule — this is a pointer, not a restatement.
-
-> **Amended (2026-07-19).** The **Auto-merge eligibility** line below reads as a
-> general policy — any low-risk PR is auto-mergeable when green. In practice it
-> was never realized that broadly: auto-merge authority exists only as a set of
-> separate, individually-dated amendments to
-> [ADR-0003](0003-agent-operating-model-and-governance.md)'s auto-merge
-> exemption ledger, each naming one specific chartered Skill and a bounded
-> scope — `digest`, `audit-docs`, `audit-skills`, and `blog-post` merge on a
-> green gate alone; `frictions-to-fixes` merges only as a reviewer applying its
-> own risk judgement, not purely mechanically (see the ledger for dates and
-> exact scopes). An **ordinary work PR — even one that is content-only or
-> touches a single Tenant's layer/manifest — is always human-merged**; see
-> `docs/agents/pr-workflow.md`'s "Per-tier merge authority" for the current,
-> complete list. The Decision's blast-radius *classification* below (what
-> counts as low- vs high-risk) is unchanged and still governs; only which
-> Skills are actually granted auto-merge authority against that classification
-> is narrower than the general phrasing below implies.
-
-> **Amended by [ADR-0025](0025-cross-tenant-catalog-and-collection-kinds.md)
-> (2026-07-22).** `shared/kinds.ts`, `modules/catalog.ts`, and
-> `app/composables/catalog.ts` join the human-only surface, for the reasons in
-> ADR-0025's Consequences. (`.claude/rules/adr-0004-human-merge.md` is where the full current
-> list lives — see the 2026-07-10 amendment above.)
-
-> **Amended (2026-07-30, `/audit-docs`).** *What counts as "changes
-> untested/untestable runtime behaviour"* (the 2026-07-06 amendment above) was
-> left undefined — unlike [ADR-0023](0023-guest-driven-demo-pipeline.md)'s
-> parallel "major security concern" gate, which got a worked example list once
-> the bare phrase proved unactionable. Examples that clear this bar,
-> non-exhaustively: new client-visible JS behaviour with no test asserting it;
-> a hook, cron job, or script meant to run unattended with no dry-run or test
-> harness around it; timing-, ordering-, or concurrency-dependent logic a unit
-> test can't reliably exercise; and anything the gate's L0–L2 layers structurally
-> cannot observe (e.g. an external side effect, a webhook delivery). An ordinary
-> change with real test coverage does **not** clear the bar merely for touching
-> unfamiliar code. `frictions-to-fixes` — the reviewer-agent this axis is aimed
-> at (ADR-0003) — should point here rather than restating this list.
-
-## Context
-
-Both the human reviewer (now) and the scheduled review-agent (mid-term, ADR-0003)
-need the *same* objective signals to trust an agent-authored PR. Autonomous
-agents modifying a self-modifying system make automated verification
-non-optional — it is the net that makes autonomy tolerable. (This is the one
-place the project deliberately does **not** apply "KISS/skip it": everything else
-may be minimal, CI may not.)
-
-## Decision
-
-**Layered gate, cheapest-first. Every PR must clear it.**
-- **L0 — Manifest valid + generates + builds.** Every `tenant.config.ts`
-  validates against the manifest schema; the generator produces
-  `content.config.ts`; `nuxt build` succeeds; typecheck + lint pass.
-- **L1 — Content validates against Collection schemas.** Invalid frontmatter
-  fails `pnpm validate:content` (`scripts/validate-content.ts`, wired into the
-  `gate` script) — the only step that actually runs Documents through the
-  Collection Zod schemas via `.safeParse()`. `nuxt build` itself validates
-  nothing structurally (see the 2026-07-11 amendment above for the full
-  correction).
-- **L2 — Smoke render.** Every `(Tenant, Space)` entry route returns 200 with no
-  console errors (Playwright).
-- **L3 — Isolation invariant.** A query scoped to `(tenant=A, space=S)` never
-  returns another Tenant's or Space's Documents; generated collection keys are
-  unique and correctly scoped. Guards the core promise of the Platform.
-
-**Rollout:** L0 + L1 + L3 from day one (L0/L1 nearly free; L3 guards the core
-invariant against subtle generator bugs agents may introduce). L2 as soon as
-there is anything to render.
-
-**Auto-merge eligibility (mid-term review-agent) = green gate AND blast-radius
-policy.** Risk is a function of *what the PR touches*, not judgement:
-- **Low-risk (auto-mergeable when green):** content only, or a single Tenant's
-  layer/manifest. *(Read with the 2026-07-19 amendment above: this
-  classification stands, but only the named chartered-Skill tiers actually hold
-  auto-merge authority against it — an ordinary work PR of this shape is still
-  human-merged. `docs/agents/pr-workflow.md` is authoritative on who may merge
-  what.)*
-- **High-risk (human-only, always):** the generator, routing, isolation logic,
-  CI itself, or governance/ADRs.
+- **Sort every PR into risk tiers by the paths it touches,** and merge only the
+  low tier on green. Merging on green by default and listing the few
+  exceptions is simpler, and the list fails safe.
+- **Make every exception a path, so a script enforces all of them.** A new
+  dependency, untested behaviour, new isolation logic or an untrusted author
+  has no path to match.
+- **Rely on human review without a gate.** Review misses mechanical breakage,
+  and agents open more PRs than a person can check.
 
 ## Consequences
 
-- Strict Collection schemas do double duty: content contract + free L1
-  validation. Worth the up-front rigor.
-- The isolation test (L3) is bespoke and must exist before autonomous
-  consolidation runs, because a generator bug could silently cross-wire Spaces.
-- The blast-radius policy needs a reliable path-based classifier (which globs are
-  "generator/routing/isolation/CI"). That classification is itself high-risk and
-  human-owned.
+- `scripts/merge-pr.ts` sees a PR's author, not the request behind it, and
+  enforces the path list and Public or fork authors. The other exceptions rest
+  on the agent recognising them, including a PR built from a Public request
+  and a guest-pipeline PR: both look Trusted because an agent opens them.
+
+## See
+
+- `.claude/rules/adr-0004-human-merge.md`: the Human-only list.
+- `scripts/merge-pr.ts`: the merge refusals.
+- `scripts/gate.ts`, `.github/actions/gate/action.yml` and `package.json`'s
+  `gate`: the steps, their labels and when they skip (ADR-0026).
+- `docs/agents/pr-workflow.md`: running the gate, the review and the merge.
+- `tests/README.md`: where tests live and how the e2e reuses one build.

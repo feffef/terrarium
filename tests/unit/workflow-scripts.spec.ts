@@ -1,5 +1,5 @@
 // A workflow script is no ES module (top-level `return`), so ESLint skips it
-// and this spec checks it instead (ADR-0005's 2026-10-13 amendment, #1870).
+// and this spec checks it instead (#1870).
 import { existsSync, readdirSync, readFileSync } from 'node:fs'
 import { basename, join } from 'node:path'
 import { describe, expect, it } from 'vitest'

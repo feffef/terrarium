@@ -1,242 +1,77 @@
-# 25. Cross-Tenant read model: collection kinds + a derived `#catalog` + aggregator views
+# ADR-0025: Reads across Tenants go through opted-in collection kinds
 
-Date: 2026-07-22
-Status: Accepted
+A Collection stays hidden from other Tenants unless its manifest names a kind,
+a shared shape from `shared/kinds.ts`; the build lists every such Collection in
+`#catalog`. Code reads across Tenants only through the catalog's read
+functions, which only read built content (ADR-0001).
 
-> Concept surfaced in issue #642, itself provoked by the Eyra "dollhouse" fork
-> (#631). This ADR is the Decision half; #642 holds the fuller design narrative
-> and the alternatives weighed.
+## Scope
 
-> **Amended (2026-09-05, issue #829).** `shared/schemas/` joins the "Human-only
-> to merge" family below, directory-scoped: it supplies the contract values
-> `shared/kinds.ts` exports — the `session` kind's whole contract, the `page`
-> kind's `utcTimestamp` refinement — so a PR could otherwise widen or narrow a
-> kind's contract without touching `shared/kinds.ts` itself.
+- **Opt-in per Collection.** A Collection joins the catalog by naming a kind
+  in its manifest. Without one, no code outside its Tenant can read it.
+- **A kind is a minimum.** Its contract lists the fields every reader may rely
+  on. The Collection's schema is that contract plus its own fields, so opting
+  in costs a Tenant none of its private fields. A kind is separate from a
+  Collection's type, page or data; the manifest check refuses an unknown kind
+  or a mismatched type (ADR-0002).
+- **One read path.** `queryAcrossTenants` reads one kind from every Collection
+  that opted in and tags each row with its Tenant, Space and Collection.
+  `queryPages` adds each page's own URL. Code never reads another Tenant any
+  other way: not by its manifest, a list of Tenants or its collection keys.
+- **Who may read across.** Any Tenant layer may call the read functions. A
+  view whose whole job is to look across Tenants, such as Search or the
+  Timeline, goes in the Commons Tenant as a new Space. The Commons's own pages
+  name no kind, so its views never list the Commons itself.
+- **A view's own logic is its own.** The read functions stay generic. How a
+  view turns rows into entries, such as what counts as a post or which link it
+  uses, lives in that view's layer and is an ordinary change.
+- **Links go to real addresses.** A result links to the item's own URL, as
+  `queryPages` gives it.
+- **Nothing writes across Tenants.** Each Tenant's content is written only in
+  its own layer.
+- **Who merges.** A view's code in its layer is an ordinary change, even when
+  it calls the read functions. Which catalog files wait for a human merge:
+  ADR-0004's list.
 
-## Context
+## Why
 
-Tenant collections are isolated, and that is a feature: each
-`tenant_space_collection` key is its own SQLite table and **the unit of
-isolation** (`shared/manifest.ts`). But the Platform had **no model for an
-application with a legitimate interest in reading *across* Tenants** — a global
-search, a platform-wide activity feed, a "recent everywhere" rail, or an honest
-version of the dollhouse. The dollhouse fork, lacking any sanctioned seam, went
-around the model entirely: a static `public/` microsite, a hardcoded Tenant
-roster, and faked data. Wrong shape — but it exposed a real missing seam.
+- Views such as a search or an activity feed need to look across Tenants. With
+  no supported way, a fork built a hard-coded list of Tenants with fake data.
+- Copying another Tenant's schema drifts, and importing its manifest couples
+  the two. A kind gives a shared shape one home.
+- Opting in keeps isolation the default. A Tenant that names no kind is as
+  isolated as before, and nothing is exposed that a manifest did not mark.
+- The catalog comes from the same manifest expansion as routing (ADR-0014). A
+  new Tenant appears and a removed one drops with no list to edit.
+- Other Tenants and views depend on a kind. Renaming or dropping a field can
+  silently empty a view, and widening the read path can expose content. The
+  gate sees neither, so a human merges those files.
 
-Two concrete blockers, both grounded in the code:
+## Rejected alternatives
 
-1. **Schemas are per-Tenant, per-collection, inlined in each manifest**
-   (`shared/manifest.ts`, carried through by `expand()`). Collection *names* are
-   free slugs — nothing says two Tenants' `pages` collections share a shape. An
-   aggregator wanting "all pages" had to either **re-declare** each schema (drift)
-   or **import a Tenant's manifest internals** (coupling).
-2. **No cross-Tenant read primitive.** Nuxt Content queries one collection
-   (table) at a time. The only cross-Tenant derivation that existed was `#routing`
-   (ADR-0014), and it knows only `pages`, only for URL resolution.
+- **Each reader declares the schemas it reads.** The copies drift.
+- **Every Collection readable by default.** It ends isolation as the default,
+  and a Tenant would have to opt out to keep data private.
+- **A kind's contract is the whole schema.** Every Tenant that opts in would
+  move its schema into `shared/` and lose its private fields.
+- **Type each read's results from the kind name.** It fights Nuxt Content's
+  per-collection types for little gain. Each read accepts one cast instead.
 
-Both flow from **one** source already — `expand(loadManifests())`. The design
-must *extend that source*, never add a parallel one (the single-home rule).
+## When to revisit
 
-By the rule of two, this is earned: `#routing` was the first cross-Tenant
-derivation; this catalog is the second — so "collection kind" and "aggregator"
-deserve names (CONTEXT.md) and an ADR rather than another one-off. By the 3-part
-test it is ADR-worthy: **hard to reverse** (introduces cross-Tenant coupling),
-**surprising without context** (dents the "Tenants are isolated" model), **a real
-trade-off** (aggregation power vs isolation purity).
+- Before anyone builds a sitemap. Naming the `page` kind means both
+  "searchable" and "listed": a sitemap wants every routed page, including ones
+  with no kind. Read it from the routing map, or split the opt-in by purpose.
+- When the catalog grows large: the read functions fetch whole documents
+  before trimming them. Select fields in the query, or build an index at build
+  time.
 
-## Decision
+## See
 
-Three moves, all derived from the existing `expand()` source.
-
-### 1. Collection *kinds* — a shared, opt-in read contract
-
-A **kind** is a named, shared contract a manifest collection may assert
-conformance to. Kinds live in one registry, `shared/kinds.ts` (`KINDS`), the
-single home for every shared cross-Tenant shape. A collection references one via
-`kind:` in its manifest def:
-
-```ts
-collections: {
-  pages:   { type: 'page', kind: 'page' },       // catalog-visible, page contract
-  secrets: { type: 'data', schema: z.object({…}) } // no kind → invisible, Tenant-private
-}
-```
-
-- `kind` is **orthogonal to `type`**: `type` is the local build/route mechanism
-  (page vs data); `kind` is the cross-Tenant read contract **and** the catalog
-  opt-in.
-- **Every kind carries a *minimum contract*** — a Zod object stating the shared
-  floor an aggregator may rely on. A collection's **effective schema is the
-  kind's contract merged with the collection's own local `schema`**
-  (`shared/expand.ts`), uniformly for page and data collections, so opting in
-  never costs a Tenant its private fields. How much a contract covers is a
-  matter of degree, not two mechanisms: the `page` kind's contract adds only the
-  optional cross-cutting metadata aggregators read (`publishedAt`, `summary` —
-  optional because a `pages` collection is heterogeneous: index landings carry
-  no publish date, only posts do; the win is that the field name + type is
-  single-homed in the kind, not re-declared per Tenant), while the `session`
-  kind's contract is a collection's entire shape
-  (`shared/schemas/session.ts`). The shared `utcTimestamp` refinement both
-  contracts use is likewise single-homed (`shared/schemas/timestamp.ts`).
-- **A `data` collection needs at least one schema source** — an inline `schema`,
-  a `kind` whose contract supplies one, or both. Enforced in `validateManifest`,
-  so a mistake fails at the manifest-authoring surface (ADR-0002), not later
-  inside `expand()`. `kind`/`type` mismatch and unknown-kind references fail
-  there too.
-- **Opt-in is the whole point.** A collection with no `kind` is invisible to any
-  aggregator. **Isolation stays the default; cross-Tenant exposure is an explicit,
-  per-collection declaration.**
-
-### 2. A build-time `#catalog` projection (reuse the ADR-0014 pattern)
-
-`modules/catalog.ts` — a sibling to `modules/routing.ts` — runs the same
-`expand(loadManifests())`, tags each opted-in collection with its kind, and
-exposes `#catalog`: `catalogByKind('page') → [{ key, tenant, space, collection,
-kind }, …]`. **Derived, not hand-written** (`catalogFrom()` in `shared/expand.ts`,
-L3-tested): a new Tenant with a `kind`-tagged collection appears automatically; a
-removed one drops. Written to `.nuxt/catalog.mjs` as plain data + a companion
-`.d.ts`, wired as `#routing` is (nuxt alias, `tsconfig.node.json`; no
-`vitest.config.ts` alias, since no spec imports it).
-
-### 3. `queryAcrossTenants(kind)` + a first-class **aggregator** role
-
-`app/composables/catalog.ts` exposes `queryAcrossTenants<T>(kind, project)` — the
-sanctioned cross-Tenant read *primitive* (what `useSpace` is to `#routing`). It is
-generic over the kind (any `KindName`) and over the projection `T`: the caller's
-`project` picks the fields that kind's contract guarantees, and the fan-out
-(`Promise.all(catalogByKind(kind).map(…))`) stamps each row with its provenance.
-Projecting *inside* the fan-out keeps large fields (a page `body` AST) out of the
-aggregated corpus. The cross-collection generic is narrowed at **one** documented
-assertion boundary per consumer (issue #642's flagged typing question), mirroring
-`resolveSpaceRoute`'s single cast; deriving `T` from the kind name at the type
-level is a deliberate non-goal (it fights Nuxt Content's per-collection generics).
-A thin `queryPages()` convenience specializes the primitive for the `page` kind,
-adding the **canonical route** via a single-homed `documentUrl()`
-(`shared/routing.ts`) — shared by Search and the Timeline so the page projection
-and URL derivation live in one place.
-
-The platform composable stays the generic, isolation-critical *floor* only. An
-aggregator's **normalization policy** — which kinds it consumes, what counts as
-a post, how a digest is dated, which fragment a deep-link uses — lives in the
-aggregator's own layer (the Commons Timeline's adapters:
-`layers/commons/app/composables/timeline.ts`), where an agent can add or change
-a source under normal gating. This keeps the ADR-0004 human-only surface small:
-extending a *view* is a layer edit; only widening the *read primitive* touches
-the human-only family.
-
-The *consumer* — a search, a timeline, an activity feed, an honest dollhouse — is
-a new role: an **aggregator** (platform view). It is still implemented as an
-ordinary Tenant layer; its distinguishing feature is that it reads `#catalog`
-(the sanctioned cross-Tenant read), not that it is a different runtime mechanism
-(ADR-0001 intact). Normal Tenants never read across; a small, governed set of
-aggregators may. One aggregator Tenant may host **several** cross-Tenant views,
-one per Space.
-
-### First consumer — the Commons Tenant (two views validate two shapes)
-
-The **Commons Tenant** (`layers/commons/`) is the first aggregator, with two
-Spaces that deliberately exercise *different* shapes of cross-Tenant read:
-
-- **Search** (`/t/commons/search`) — one box over every opted-in `pages`
-  collection (`queryAcrossTenants('page')`), filtered client-side over baked
-  content, each result linking back to its real route.
-- **Timeline** (`/t/commons/timeline`) — a reverse-chronological feed of every
-  timestamped piece of content across the Platform (`queryTimeline()`, a Commons
-  layer composable), one line each. This is the "beyond the dollhouse" case: a
-  cross-Tenant view that *normalizes* across **kinds**. Three sources today, each
-  reduced to `{ when, summary, url }` by a per-source adapter in the layer's
-  `timeline.ts`: **posts** (`page`-kind rows with the contract's `publishedAt`),
-  **digests** (*Journal* `page`-kind rows under `/digests/<date>` — the digest
-  adapter is explicitly fenced to `tenant === 'journal'`, since `/digests/` is a
-  Journal path convention (ADR-0010), so another Tenant's page at that path is
-  treated as an ordinary page, never misclassified or mislinked), and
-  **sessions** (`session`-kind rows — session logs). The aggregator owns the
-  adapters for the kinds it consumes, so adding a source is a layer edit,
-  never per-Tenant.
-
-The Commons's *own* `pages` collections are deliberately **un-kinded**, so neither
-view surfaces the Commons itself — the isolation default, made concrete and tested.
-A future cross-Tenant view is another Space here, not another Tenant.
-
-## Consequences
-
-- **Read-only by construction.** The projection and the composable never write;
-  write isolation (ADR-0020) is untouched. An aggregator is strictly a consumer.
-- **Build-time + committed data only (ADR-0001).** The catalog and its reads
-  derive from committed content at build; no runtime/external data — precisely
-  where the dollhouse went wrong.
-- **`kind` is a versioned contract — and the aggregators' real dependencies live
-  in it.** Multiple Tenants and aggregators depend on a kind, so widening or
-  removing one is a breaking-change surface, wanting the same discipline the
-  session log's `schemaVersion` already shows. The minimum-contract semantics
-  exist precisely so the fields a view actually reads (`publishedAt`, `summary`)
-  are *in* the contract, not per-Tenant conventions read by cast — renaming a
-  manifest field can no longer silently drop a Tenant out of the Timeline,
-  because the field is not the manifest's to declare anymore.
-- **Human-only to merge (ADR-0004).** `shared/kinds.ts`, `shared/schemas/`,
-  `modules/catalog.ts`, and `app/composables/catalog.ts` join `content.config.ts` / `shared/expand.ts` /
-  `modules/routing.ts` / `shared/routing.ts` in the isolation-critical family —
-  editable, but a PR touching them never auto-merges. An aggregator's own
-  normalization (e.g. `layers/commons/app/composables/timeline.ts`) is
-  deliberately *outside* that family: it is an ordinary layer surface.
-- **Opt-in keeps isolation the default.** Nothing is exposed that a manifest did
-  not explicitly mark; a Tenant that never adds `kind:` is exactly as isolated as
-  before this ADR.
-- **Migration is additive.** Existing `pages` collections adopt `kind: 'page'`
-  when they want to be searchable; the contract's fields merge into their inline
-  page schema (which stops re-declaring them — `publishedAt` left the blog and
-  marquee manifests, `summary` left the Journal's, all now sourced from the
-  contract with unchanged names and types). No existing content changed. A future
-  shared kind is one `KINDS` entry away, with no change to `expand()`, the catalog
-  module, *or* the read primitive — `queryAcrossTenants<T>(kind, project)` already
-  serves any `KindName` (the session kind proves it).
-- **Session logs are a first-class `data` kind (the schema-relocation path taken).**
-  The Journal's `sessions` schema moved verbatim from its manifest to
-  `shared/schemas/session.ts` and became the `session` kind's contract; the Journal
-  references it by `kind`, and `scripts/log-session.ts` now sources the very same
-  object (behaviour-neutral — every session-logging test stays green). Under
-  minimum-contract semantics the relocation is a *choice*, not a forced move (a
-  collection can keep a local schema alongside its kind) — but it remains the
-  honest home here: a session log is Platform self-documentation (ADR-0009), not
-  Tenant-private content, and now that the Timeline reads it across the Catalog it
-  is a genuine cross-consumer contract. A future Tenant-owned shape that other
-  Tenants merely also want does **not** have to move into `shared/` as the price
-  of aggregation.
-- **Non-page content deep-links instead of routing.** Sessions and daily digests
-  have no standalone page route (they render on the Journal dashboard), so their
-  Timeline entries link to `<space-landing>#<anchor>` using the Journal's own
-  `session-`/`digest-` fragment scheme (defined by
-  `layers/journal/app/utils/dashboard.ts`). The Timeline's copy of that format
-  lives with its adapters in the Commons layer — the aggregator owns the
-  coupling it chose, citing the Journal source. Posts keep their real page route.
-
-### Deferred follow-ups (recorded, deliberately not built)
-
-- **Type-level kind→item linkage** *(the generic itself is now done; only the
-  type-inference remains deferred).* `queryAcrossTenants<T>(kind, project)` is
-  generic over any `KindName` and any projection `T`, and the session read now
-  goes through it — no private per-kind adapter remains. What is deliberately
-  *not* built is deriving `T` from the kind name at the type level (a real
-  `KindItem<K>` from `KINDS`): it would remove the projector's single documented
-  cast but fights Nuxt Content's per-collection generics for little gain. Deferred
-  until it earns itself.
-- **The sitemap/enumeration ambiguity.** `kind: 'page'` conflates
-  "aggregatable/searchable" with "publicly enumerable" — a sitemap wants every
-  routed page (`#routing`'s domain), including never-kinded ones like the
-  Commons's own landings. Either bless a `#routing`-derived enumeration as a
-  second, purpose-distinct sanctioned read, or split the exposure bit by
-  purpose — a one-paragraph amendment, needed before anyone builds a sitemap.
-- **Query payload.** Projecting inside the fan-out keeps `body` ASTs out of the
-  aggregated *corpus*, but `queryAcrossTenants` still runs `.all()` (no
-  `.select()`), so they are still *fetched* before projection. Fine at today's
-  scale; add `.select(…)` — or a baked build-time index module (the ADR-0014
-  pattern again) — when the corpus grows.
-- **Module consolidation.** `content.config.ts`, `modules/routing.ts`, and
-  `modules/catalog.ts` each run `expand(loadManifests())` with separately
-  maintained dev watch lists. Fold into one derived-data module the next time
-  either is touched — before a fourth parallel derivation appears.
-- **Tenant-identity metadata.** A directory/dollhouse view wants a display
-  name, tagline, accent per Tenant; the manifest carries only the slug. A small
-  optional manifest block surfaced through the catalog is the missing piece —
-  to be added when such a view is actually built, not speculatively.
+- `shared/kinds.ts`: the kinds and their contracts.
+- `shared/schemas/`: the session-log and timestamp shapes the contracts use.
+- `shared/manifest.ts` (`validateManifest`): the kind checks.
+- `shared/expand.ts` (`catalogFrom`) and `modules/catalog.ts`: build `#catalog`.
+- `app/composables/catalog.ts`: `queryAcrossTenants` and `queryPages`.
+- `shared/routing.ts` (`documentUrl`): a page's own URL.
+- `layers/commons/`: Search, the Timeline and its adapters (`timeline.ts`).

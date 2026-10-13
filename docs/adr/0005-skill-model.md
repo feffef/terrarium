@@ -1,61 +1,61 @@
-# 5. Skill model: generic, repo-committed, first-class
+# ADR-0005: Skills are Platform code, committed with the repo
 
-Date: 2026-07-04
-Status: Accepted
+Skills are part of what this project delivers, as much as the app's code. Each
+one lives in the repo and changes through a gated PR, like any other code. A
+workflow script a Skill runs is part of that Skill, and a schedule that runs a
+Skill lives outside the repo.
 
-> **Amended (2026-07-13).** The committed source of truth for Skills moved to
-> `.agents/skills/`, with `.claude/skills/` now a symlink layer surfacing them
-> (every entry under `.claude/skills/` resolves to `../../.agents/skills/<name>`).
-> This ADR's Decision section below still names `.claude/skills/` as the
-> repo-committed home — read that as `.agents/skills/` (see CLAUDE.md's Repo
-> layout and ADR-0015, which already assumes the current split).
+## Scope
 
-> **Amended (2026-10-13, issue #1870).** *A Skill's workflow scripts are its
-> code.* A Claude Code workflow script is Platform code owned by the Skill that
-> runs it, and that Skill names the workflows it runs. It lives in
-> `.claude/workflows/<name>.js`, the location Claude Code loads a workflow from
-> by name, as a real file: saving a workflow refuses a symlink. It changes
-> through a gated PR, and the gate treats it as one of its Skill's files
-> (ADR-0004's 2026-10-12 amendment).
+- **Where Skills live.** Each Skill is committed in `.agents/skills/<name>/`.
+  `.claude/skills/` only links to it, so Claude Code finds it. A Skill's PR
+  merges like any other (ADR-0004).
+- **A Skill that changes the Platform works on any Tenant.** It reads and
+  writes that Tenant's manifest and follows its schema. A Skill for one Tenant
+  is fine only for a repeated workflow unique to that Tenant, such as writing
+  its content.
+- **Pack Skills stay as installed** (ADR-0015). A doc we copy from a pack
+  template becomes ours: we edit it and never re-sync it, and the template
+  stays generic.
+- **Workflow scripts.** A Claude Code workflow script runs a fixed sequence of
+  agent steps, so the model cannot skip or reorder them. It belongs to the one
+  Skill that runs it, and that Skill names it. It is a real file in
+  `.claude/workflows/<name>.js`, and the gate treats it as one of its Skill's
+  files.
+- **Schedules.** A scheduled run is a Skill plus a timer set outside the repo
+  (a Routine). The Skill holds what the run does; the timer holds only when.
 
-## Context
+## Why
 
-"An ever-growing set of Skills that develop the Platform" is the project's core
-identity. We must decide what a Skill is here, where it lives, and whether Skills
-are generic or per-Tenant.
+- Scheduled and cloud sessions start from a fresh clone. A Skill that is not
+  in the repo is not there for them.
+- A committed Skill is reviewed and versioned with the code it changes.
+- One Skill that works through the manifest keeps conventions the same for
+  every Tenant, as the manifest does: one mechanism, and each Tenant declares
+  what it wants.
+- Claude Code loads a workflow from `.claude/workflows/` by name and refuses
+  to save one through a link, so a workflow cannot sit in its Skill's folder.
+  The Skill naming it keeps the ownership clear.
+- A schedule kept outside the Skill can change without a PR, and the same
+  Skill can still run by hand.
 
-Two categories exist and should not be conflated:
-- **Platform-operation Skills** — encode how to safely perform a Platform change
-  (`spawn-tenant`, `add-space`, `add-collection`, `edit-content`, and the
-  chartered autonomous jobs `sync`, `consolidate`, `triage`, `codify`). They
-  embed *this* Platform's conventions (manifest schema, layer structure,
-  safety gate). This is the first-class, ever-growing deliverable.
-- **General engineering Skills** — `tdd`, `code-review`, `domain-modeling`, etc.
-  Inherited tooling, reusable anywhere, not part of the Platform's identity.
+## Rejected alternatives
 
-"Skill" (a capability) is orthogonal to scheduling (a trigger). An autonomous job
-is a schedule that runs a session which invokes a Skill.
+- **Keep Skills in a user profile.** Cloud and scheduled sessions would not
+  have them.
+- **Give each Tenant its own copy of a Platform Skill.** The copies drift, and
+  conventions with them.
+- **Keep workflow scripts in the Skill's folder and link them into
+  `.claude/workflows/`.** Saving a workflow refuses a link.
+- **Separate our Skills from pack Skills by folder or name.** `skills-lock.json`
+  already lists every pack Skill, and the Skill Inventory records each Skill's
+  role.
 
-## Decision
+## See
 
-Platform-operation Skills are **generic** (operate on *any* Tenant by reading and
-writing that Tenant's manifest, respecting the schema, regenerating config, and
-honouring the gate) and **repo-committed** (`.claude/skills/`, versioned with the
-Platform, shipped as part of the deliverable, reviewed in the same PR flow).
-Bespoke per-Tenant Skills appear **only by exception**, when a Tenant has a
-genuinely unique, repeated workflow.
-
-The platform-operation vs general-engineering distinction is made **explicit** in
-the repo (directory/naming), so the deliverable set is visually separable from
-inherited tooling.
-
-## Consequences
-
-- **Repo-committed is not optional:** scheduled/cloud autonomous sessions start
-  cold, so Skills must travel with the repo, not live in a user profile.
-- Generic Skills mirror the manifest philosophy (generic mechanism, declarative
-  intent) and keep conventions from drifting per-Tenant.
-- Skills are code/instructions → changing one is a PR through the same safety
-  gate. A Skill that edits the generator/isolation is high-risk (human-only).
-- The `codify` job grows this set; new Skills should follow the
-  `writing-for-agents` standard and land via PR like anything else.
+- `CLAUDE.md` (Repo layout): where Skills and workflows live.
+- `scripts/gate.ts` (`isSkillFile`, `isInert`): which steps a Skill-only
+  change skips.
+- `tests/unit/workflow-scripts.spec.ts`: checks workflow scripts, which ESLint
+  skips.
+- `.agents/skills/writing-for-agents/SKILL.md`: how to write a Skill.

@@ -6,7 +6,7 @@ WASM runtime (~856 KB `sqlite3.*.wasm` plus a ~193 KB JS chunk) and the
 per-Collection `sql_dump.txt` files? Background: issue #1444 (closed, not
 planned: the owner kept browser-side building and rejected full page loads
 because of Tinkerfund's view transitions and in-memory state) and ADR-0019
-(the history of client-DB failures).
+(recovery from client-DB failures).
 
 **Researched 2026-09-27.** This note is based on installed source and the
 official upstream repos only. The versions read were:
@@ -28,11 +28,12 @@ Short names used in the citations below:
 `content.nuxt.com` returns 403 through the proxy here. Doc quotes therefore
 come from the docs source in `nuxt/content`, under `docs/content/docs/…` on `main`.
 
-**Status: Avenue 2a was built and adopted (ADR-0028, #1447, 2026-09-27).**
-Claims marked **(measured)** were confirmed against a production build, with
-Playwright and the e2e suite. Everything else comes from reading the source.
-ADR-0028 is the home for the final configuration and the byte measurements;
-this note keeps the reasoning and the rejected avenues.
+**Status: Avenue 2a was adopted (ADR-0028, #1447).** Claims marked
+**(measured)** were confirmed against a production build, with Playwright and
+the e2e suite. Everything else comes from reading the source. The configuration
+lives in `nuxt.config.ts` and `layers/tinkerfund/nuxt.config.ts`; ADR-0028 holds
+the decision; this note keeps the reasoning, the measurements and the rejected
+avenues.
 
 ---
 
@@ -160,22 +161,9 @@ on first load (`renderer.mjs:159`; `nitro-server/index.mjs:446-447`), so
 
 ### Variant 2a: a runtime `cache` rule on page routes (adopted)
 
-The adopted shape. ADR-0028 and the two `nuxt.config.ts` files are the source of
-truth; this is a summary:
-
-```ts
-// nuxt.config.ts
-experimental: {
-  payloadExtraction: 'client',
-  defaults: { nuxtLink: { prefetchOn: { visibility: false, interaction: true } } },
-},
-routeRules: { '/': { cache: { maxAge: 60, swr: false } }, '/t/**': { cache: { maxAge: 60, swr: false } } },
-// layers/tinkerfund/nuxt.config.ts
-routeRules: {
-  '/t/tinkerfund/**': { cache: { varies: ['accept-language'] } },
-  '/t/tinkerfund/*/search': { cache: false },
-},
-```
+The adopted shape lives in `nuxt.config.ts` (payload extraction,
+interaction-only prefetch, a short no-`swr` cache on `/` and `/t/**`) and
+`layers/tinkerfund/nuxt.config.ts` (`varies` on locale, search uncached).
 
 **What it does (measured)**
 
@@ -186,6 +174,9 @@ routeRules: {
 - Nitro merges overlapping rules with `defu`, most specific first
   (`nitropack/runtime/internal/route-rules.mjs:78`). So Tinkerfund pages get
   `{ varies, maxAge: 60, swr: false }`, and `cache: false` on search wins.
+- Gzipped transfer per navigation, before → after: blog post about 494 → 7 KB;
+  journal skills 579 → 144 KB; Tinkerfund page 578 → 19 KB; Commons Timeline
+  about 1.85 MB → 72 KB.
 
 **What it costs**
 
@@ -205,7 +196,10 @@ routeRules: {
   `?tag=`, Atlas `?day=`, Tinkerfund filters and junk query strings each add an
   entry. Nitro writes entries with a `ttl` (`cache.mjs:70-73`), but unstorage's
   memory driver ignores it, so on the default in-memory mount memory grew until the next
-  deploy or restart. **Now bounded** (#1446, ADR-0028 amendment): production uses the `lru-cache` driver with `max: 200`.
+  deploy or restart. **Now bounded** (#1446): production uses Nitro's
+  `lru-cache` driver, capped in `nuxt.config.ts`. Dev keeps Nitro's default
+  on-disk cache. Nitro checks `maxAge` on every read, so early eviction only
+  costs a re-render.
 - **Each uncached navigation costs a full server render.** Only the payload is
   returned.
 - **Server-computed "now" can be up to about 2 minutes old on a first load.**
@@ -250,7 +244,7 @@ and client, so the payload keys match.
 - Routes without a payload rule, such as Tinkerfund search.
 - A failed payload fetch. `_importPayload` returns `null` on non-OK or on a
   thrown fetch (`payload.js:87-108`), and the handler then runs in the browser as
-  before. **(measured)**: ADR-0019's blog failure tests reach the client-DB path
+  before. **(measured)**: The blog failure tests (`layers/blog/tests/e2e/blog.spec.ts`) reach the client-DB path
   only by first aborting David's `_payload.json`, and then the dialog appears.
 
 **Search pages**
@@ -377,8 +371,8 @@ interactivity.
    documented Nuxt config, needs no Content internals and no server code, and
    survives Content upgrades. Unmatched cases fall back to the WASM path. Its
    real costs are the server-side cache's: request headers need `varies`, and
-   the cache needed a size bound (now `lru-cache`, `max: 200`, #1446). `nuxt.config.ts` is human-only
-   (ADR-0018), and so is this global runtime change (ADR-0004). E2e tests in
+   the cache needed a size bound (now `lru-cache`, #1446). `nuxt.config.ts`
+   is on ADR-0004's human-merge list. E2e tests in
    `layers/blog/tests/e2e/blog.spec.ts` and `layers/tinkerfund/tests/e2e/tinkerfund.spec.ts`
    verify it; only the view-transition check is still open.
 2. **Avenue 2c: prerender the page routes.** This has the same client benefit

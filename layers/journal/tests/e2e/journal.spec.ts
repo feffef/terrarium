@@ -4,7 +4,7 @@
 // the cross-Tenant entry-route sweep stays in `tests/e2e/smoke.spec.ts`.
 //
 // Its own spec file: it serves the gate's build via `setupL2()` and never
-// builds (ADR-0004 amendment; tests/README.md).
+// builds (tests/README.md).
 import { readdirSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -46,7 +46,7 @@ function currentSessions(): Record<string, unknown>[] {
 // — the same "read live" fix as currentDigestDates() above, for the same
 // reason: the retention sweep (scripts/archive-journal-content.ts) can move
 // any given session out to `archived`. `external` is genuinely rare (only
-// created when a fork PR lands, ADR-0009 amendment) and can age out of the
+// created when a fork PR lands, ADR-0009) and can age out of the
 // window entirely with no replacement yet landed — the fork-PR #631 salvage
 // session did exactly that on 2026-07-28 — so callers must treat a missing
 // `external` as "nothing to assert today," not an error.
@@ -272,7 +272,7 @@ describe('journal Tenant', async () => {
     await expectCleanHydration('/t/journal/current/frictions')
   })
 
-  // When a real `external: true` session (ADR-0009 amendment) is currently
+  // When a real `external: true` session (ADR-0009) is currently
   // within the 7-day retention window, assert its card carries the
   // "external" marking (ribbon + `.card.external`) and an ordinary
   // session's card does not, so `SessionCardView.external` can't silently

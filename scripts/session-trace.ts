@@ -1,4 +1,4 @@
-// The session-trace extractor (ADR-0009 amendment): the deterministic half of a
+// The session-trace extractor (ADR-0009): the deterministic half of a
 // session log. It reads a Claude session's transcript jsonl and derives the
 // MECHANICAL trace — timings, models, tool counts, files read/edited, subagents,
 // and provenance — purely from the recorded tool calls. Nothing here is
@@ -282,10 +282,9 @@ function resolveGlobAgainstTree(repoRoot: string): (token: string) => string | u
 const BINARY_EXT = /\.(png|jpe?g|gif|webp|ico|woff2?|ttf|otf|pdf|zip|gz|wasm|mp4|mp3)$/i
 const MAX_SINK_BYTES = 1 << 20
 
-/** The doc-line index behind `docsReadViaShell` (ADR-0009's output-matching
- *  amendment, issue #1545), the one filesystem read it needs: every file in the
- *  checkout, the instruction docs (`isInstructionDoc`) as docs and all the rest
- *  as sinks — a doc that quotes a line of code or config must not be credited
+/** The doc-line index behind `docsReadViaShell` (ADR-0009, issue #1545),
+ *  the one filesystem read it needs: every file in the checkout, the
+ *  instruction docs (`isInstructionDoc`) as docs and all the rest as sinks — a doc that quotes a line of code or config must not be credited
  *  when the agent reads that code. `.claude/skills` is a symlink tree over
  *  `.agents/skills`, so it is skipped with the build and dependency trees. */
 export function loadDocLineIndex(repoRoot: string): DocLineIndex {
@@ -332,10 +331,10 @@ function resolveAgainstCdDir(p: string, command: string, rel: (s: string) => str
 
 /** The shell-read scan WITH its near-misses, for the author-time advisory the
  *  `log-session` Skill prints (#1074's loop): credit from the same output
- *  matcher `extractTrace` lands, explanations from the command parser (ADR-0009's
- *  output-matching amendment). A parser note on a command whose output DID
- *  credit a doc is dropped: an unresolved glob or loop token there is a doc
- *  the matcher already saw, not a miss. Subagent transcripts belong here for
+ *  matcher `extractTrace` lands, explanations from the command parser (ADR-0009).
+ *  A parser note on a command whose output DID credit a doc is dropped: an
+ *  unresolved glob or loop token there is a doc the matcher already saw, not a
+ *  miss. Subagent transcripts belong here for
  *  the same reason `docsReadViaShell` is in `FOLDED_TRACE_FIELDS`.
  *
  *  `repoRoot` builds the index from the checkout and resolves single-match
@@ -417,7 +416,7 @@ export function commandSkillNames(content: unknown): string[] {
  *  anywhere in the transcript. "The Routine's own prompt lands as the session's
  *  first user turn" (the same source `commandSkillNames` reads) is the only
  *  available signal, so this derives the slash-command name when the first turn
- *  expanded one (the common shape for every chartered Routine), else that turn's
+ *  expanded one (the common shape for every scheduled Routine), else that turn's
  *  own first line, capped so a long freeform prompt doesn't balloon the log.
  *  Populated ONLY for `entrypoint: 'remote_trigger'` — every other session omits
  *  the field, degrading cleanly rather than surfacing unrelated first-turn text. */
@@ -529,9 +528,8 @@ export function findLatestTranscript(cwd: string, home: string | undefined): str
 
 /** Derive the mechanical trace from parsed transcript records. Pure — the
  *  testable core. `env` is injectable (defaults to `process.env`). `docIndex`
- *  is what `docsReadViaShell` is credited against (ADR-0009's output-matching
- *  amendment): the lander and the advisory pass `loadDocLineIndex(root)`;
- *  without one the field is simply empty, which is all the guard and
+ *  is what `docsReadViaShell` is credited against (ADR-0009): the lander and
+ *  the advisory pass `loadDocLineIndex(root)`; without one the field is simply empty, which is all the guard and
  *  provenance callers need. */
 export function extractTrace(
   records: Record<string, unknown>[],
@@ -765,7 +763,7 @@ export const DERIVED_REASON_COMMAND = '(invoked as a slash command)'
 
 /** The reason an agent gives a derived `docsRead` path it never read: the stitch
  *  drops the path, and a shell credit dropped this way becomes a Friction, so the
- *  detector's error stays visible (ADR-0009's merged-read amendment). */
+ *  detector's error stays visible (ADR-0009). */
 export const NOT_READ_REASON = '(not read)'
 
 /** The interpretive half the live agent writes to the scratch during the session.

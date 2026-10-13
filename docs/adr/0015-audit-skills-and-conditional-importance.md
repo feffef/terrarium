@@ -1,218 +1,73 @@
-# 15. Skill Inventory upkeep: conditional importance & the `audit-skills` auditor
+# ADR-0015: Pack Skills stay as installed; every Skill is graded by need
 
-Date: 2026-07-06
+We never edit a Skill installed from the outside pack, and the gate checks each
+one that has a Skill Inventory entry. The Skill Inventory records each Skill's
+role and importance to this project, and is where a pack Skill gets our notes.
+The `audit-skills` Skill checks that our own Skills fire and do their job, and
+keeps the Inventory in line with that evidence; it edits only Inventory entries
+and issues.
 
-Status: Accepted
+## Scope
 
-> **Amended by [ADR-0018](0018-tenant-layers-under-layers-directory.md) (2026-07-07).**
-> Tenant layers moved from `tenants/` to Nuxt's conventional `layers/` directory;
-> `tenants/…` paths below reflect the pre-rename layout.
+- **Pack Skills.** A Skill named in `skills-lock.json` comes from the outside
+  pack. Nobody here edits its files. Its Inventory entry pins a hash of its
+  installed `SKILL.md`, which the gate compares. Notes on how it fits this
+  project, and problems with its text, go in that entry, never in an issue.
+- **The Inventory covers every Skill in use,** ours and the pack's. A Skill
+  gets an entry when it is first seen in use, not when it is installed.
+- **Importance is how much a Skill matters when its kind of work comes up,**
+  never how often it runs. A rare Skill that is the tool for its job keeps a
+  high grade. Disuse alone never lowers a grade. Sessions of its kind going
+  without it can lower a pack Skill's grade, since we can't fix its trigger;
+  for our own Skill, that is a trigger problem to report. A grade moves only
+  on cited session evidence. One grade, `routine`, instead marks a Skill that
+  scheduled runs drive. `CONTEXT.md` defines the grades.
+- **`role` is plain prose for the site's readers:** what the Skill does for
+  this project, not a copy of its own description, with no PR, issue or
+  session ids. Those go in `observations`, the audit's own record, which the
+  site does not show and which keeps only recent history.
+- **What `audit-skills` may change:** Inventory entries, and issues it files
+  or comments on. It never edits a Skill. A finding about one of our Skills
+  becomes an issue when it matters enough, and otherwise an observation, so a
+  later run sees it repeat. Such an issue goes through ordinary triage, and
+  its fix merges like any PR. Ideas for a new, split or retired Skill are only
+  recorded.
+- **A script gathers the facts; the session makes every judgement.**
 
-> **Amended (2026-07-08).** "A schedule is deferred, exactly as `digest`'s trigger
-> is" (Decision, cadence bullet) is now historical: `digest` has since gained a
-> schedule, making it the first live autonomous job (Skill + trigger, ADR-0005).
-> `audit-skills` now also runs on a schedule, not on-demand-only.
->
-> **Amended (2026-07-09).** `audit-skills` gains a bounded self-merge tier —
-> third name on ADR-0003's exemption list, after `digest`/`audit-docs`. Scope:
-> only `layers/journal/content/current/skills/*.yml` edits citing the
-> bright-line evidence rule above (now symmetric for promote and demote). A
-> frontmatter concern citing that same rule may file/comment on a
-> `needs-triage` issue directly (search first). The regression watch (friction
-> severity/count plus usage, screened cheaply, then a full-log deep-read for
-> any suspected Skill before judging) may also file/comment, on a judgement
-> basis grounded in that deep-read's quoted evidence — never from the cheap
-> screen alone, and never a grade change either way. Full detail in
-> `audit-skills/SKILL.md`.
->
-> **Amended (2026-07-11).** The "a pack Skill's SKILL.md is not ours to patch"
-> boundary (below) is now **gate-enforced**, not convention-only: PR #304 patched
-> an external pack Skill (`wayfinder`) because the boundary lived only in the
-> `audit-skills` *referral* stage, so a friction naming a pack Skill directly
-> reached `frictions-to-fixes` unchecked. `scripts/verify-skills-lock.ts`
-> (`pnpm verify:skills-lock`, run first in `pnpm gate`) pins each pack Skill's
-> installed `SKILL.md` hash in its **Skill Inventory** entry (`installedSha256`)
-> and fails on any drift. The pin lives in the Inventory — our repo-owned per-Skill
-> record — **not** in `skills-lock.json`, which is the installer's file and stays
-> read-only (we read only its keys, for the pack's key set). The lock's own
-> `computedHash` is the installer's upstream-source hash (not reproducible offline),
-> so `installedSha256` pins the installed file instead; `--write` regenerates it
-> after a legitimate pack install. Every pack Skill must be catalogued to pass the
-> gate, so this also closed the Inventory's coverage gap (8 pack Skills gained
-> entries).
->
-> **Amended (2026-09-25).** A pack Skill with no Inventory entry yet no longer
-> fails the gate; it stays unpinned until `audit-skills` adds its entry on first
-> observed use. Entries record real use, so a freshly installed Skill gets none.
->
-> **Amended (2026-07-13).** `role`'s "not a copy of the Skill's own description"
-> discipline held, but a second kind of drift crept in instead: several entries
-> (`atlas-specimen`, `audit-docs`, `code-review`, `diagnosing-bugs`, `implement`,
-> `triage`, `wayfinder`, `writing-great-skills`) had `role` doubling as a running
-> audit log — folding in PR/issue/session ids as evidence for a grade or usage
-> claim. That's the same scope-creep this ADR already cut once (helpfulness/
-> friction-per-use, dropped in grill-with-docs, issue #136) wearing a new shape:
-> a signal useful for auditing crowding out the rendered "use these" prose.
-> `role` now stays reference-free by rule — no PR/issue/session ids — and the
-> Skill Inventory schema (`layers/journal/tenant.config.ts`) gains a sibling
-> field, **`observations`**: `z.array(z.object({ date, note }))` — required,
-> like `frictions` on sessions (no `.default()`; every entry states it
-> explicitly, `[]` when there's nothing notable yet, rather than an implicit
-> fallback). Append-only (a run adds an entry, never rewrites or drops an
-> earlier one), written only when a run has a citable finding for that Skill —
-> a `role`/grade change (the bright-line rule above), a regression finding
-> (confirmed or suggestive), or a new/split/retire idea. A silent run adds
-> nothing, so this doesn't turn into an entry-per-run-per-Skill log.
-> `scripts/audit-skills.ts`'s
-> scorecard now surfaces each Skill's existing `observations` back to the
-> auditing session, so a run can factor in what a prior run already noted.
-> `observations` is purely internal — not rendered by `SkillInventory.vue` — but
-> not audit-skills-exclusive either: `audit-docs/SKILL.md` may also consult a
-> Skill's `observations` as corroborating evidence for its Drift/Stale-narration
-> lenses when auditing that Skill's own `SKILL.md`. The 8 drifted entries above
-> were migrated in the same change: PR/issue/session ids moved out of `role`
-> into a dated `observations` entry (dated by that file's last commit).
->
-> **Amended (2026-08-01).** The `importance` enum gains a fifth grade,
-> **`routine`**, between `essential` and `specialist`. The four-grade scale
-> graded only *conditional essentialness*, so the Skills that ARE the Platform's
-> scheduled unattended operation — each driving whole sessions of its own —
-> could only be filed as `specialist`, the grade whose defining example is a
-> rare-but-essential Skill. That reads as "narrow tool, seldom reached for" and
-> inverts the truth for the Skills that account for most of the Platform's
-> autonomous sessions. `routine` names that different way of mattering; it is
-> assigned from an *observable* fact (scheduled sessions run this Skill), not
-> from the conditional-essentialness judgement the other four grades share, so
-> it is the one grade whose assignment is not a re-derivation from the window's
-> usage judgement. Grade definitions stay single-homed in `CONTEXT.md`. Migrated
-> in the same change: `audit-docs`, `audit-skills`, `blog-post`, `digest` (all
-> `specialist`) and `frictions-to-fixes` (`essential`) → `routine`.
-> `frictions-to-fixes` moving off `essential` is not a demotion — it is the same
-> reclassification, and it is what keeps the grade honest: a `routine` bucket
-> that omitted a scheduled Skill would misdescribe the schedule.
->
-> **Amended (2026-08-29).** The Decision's "frontmatter-suspect issue — a
-> *referral to `frictions-to-fixes`*" framing (below) no longer matches
-> implementation: `audit-skills/SKILL.md` step 5 files a plain `needs-triage`
-> issue, with no hand-off mechanism naming `frictions-to-fixes`; that Skill's
-> own intake mines recent session-log frictions only (its window:
-> `scripts/session-frictions.ts`) and has no step
-> that scans open issues for such a referral. `how-it-works.md`'s "files an
-> issue and leaves it to a human" already describes current behaviour — the
-> "referral" term below is historical, not a live routing path.
->
-> **Amended (2026-09-27).** `audit-skills` now centres on whether our own Skills
-> do their job, which the owner named as its main purpose. It targets two gaps
-> that frictions never show: a Skill that runs without complaint but doesn't
-> deliver what its `SKILL.md` promises, and a model-invoked Skill that should
-> have fired but didn't. Each own Skill used in ≥3 windowed sessions gets one
-> read-only subagent that checks its runs against primary sources (and, if
-> model-invoked, looks for sessions that needed it). A finding becomes an issue
-> only when the misbehaviour is significant or repeated (owner's rule); otherwise
-> it is an observation, which lets a later run see it repeat. This partly revisits the
-> helpfulness cut below: it asks "did it deliver", not friction-per-use. Grading
-> stays, as a by-product. The friction-based regression watch is removed: 80
-> runs produced one confirmed finding, and it could not see failures that leave
-> no friction. The window becomes the **last 7 days**, not the 40 newest logs,
-> which scheduled runs had shrunk to about two days. The scorecard now reports
-> usage statistics for every Skill, pack Skills included. **`observations` stop
-> being append-only**: they carry 40 days of history between runs, since
-> daily runs over overlapping windows would otherwise pile up repeats (as on
-> `implement`/`code-review` before 2026-09-25). A run removes entries older than
-> 40 days (git keeps them) and adds one only when it cites a session no
-> remaining entry cites. Findings that couldn't yet be verified are recorded
-> there too, marked unverified, so a later run can confirm them.
+## Why
 
-## Context
+- Reinstalling the pack overwrites any local edit, so the edit is lost without
+  notice. The gate turns that into a visible failure.
+- Grading by frequency punishes the Skills we most want to keep: rare work
+  with one right tool.
+- Frictions miss two failures: a Skill that runs quietly but doesn't deliver
+  what it promises, and one that should have fired and didn't. The owner made
+  these the audit's main job.
+- Changing a Skill's text is a judgement call, so the audit hands it on as an
+  issue. Grades and notes are data that the next run can correct, so the audit
+  edits them itself.
+- Ids in `role` turned it into an audit log and crowded out the prose readers
+  need.
 
-The Skill set is the project's core deliverable (ADR-0005), and the loop only ever
-*grows* it: `codify` mints new Skills, `frictions-to-fixes` patches a SKILL.md when
-a friction names one. Nothing tended the set as a whole. The **Skill Inventory**
-(`tenants/journal/content/current/skills/`) — the curated "use these" list agents
-are pointed at (`CLAUDE.md`) — is hand-maintained, and its two evaluative fields
-drift: it held 14 entries against 25 on-disk Skills, and `importance` was a
-flat `core | supporting | peripheral` scale where 9 of 14 entries piled into
-`supporting`, carrying almost no signal.
+## Rejected alternatives
 
-Two things were wrong beyond mere staleness:
-
-1. **`importance` conflated two axes.** It read as a single global scale, so a
-   *rare-but-essential* Skill (`blog-post` — the tool for blog work, but blog
-   sessions are rare) could only be graded `core` (overstating its global weight)
-   or `supporting` (understating that it is *the* tool for its job). Grading by raw
-   frequency actively penalises the Skills you most want to keep.
-2. **No routine derived the fields from evidence.** Session logs already record
-   `skillsUsed` per session, so "used, and in what kind of session" is measurable —
-   but nobody measured it, and the fields were never checked against reality.
-
-Scope was deliberately cut during design (grill-with-docs, issue #136): *helpfulness*
-/ friction-per-use was **dropped** (a confounded signal — hard sessions use more
-Skills *and* log more frictions), leaving **usage** as the honest core.
-
-The term "catalogue" had also crept in as overloaded jargon — the Journal glossary
-already defines this readout as an **Inventory** (ADR-0008), and routing used
-"catalog" for an unrelated concept. Retired in favour of **Skill Inventory**.
-
-## Decision
-
-- **`importance` is *conditional essentialness*** — how essential a Skill is *when
-  its kind of work occurs*, **never** raw frequency — re-derived each run from the
-  observation window. Enum widened to
-  **`essential | specialist | supporting | peripheral`** (`core`→`essential` rename;
-  `specialist` added for narrow-but-essential). Grades and the "conditional, never
-  disuse-alone" rule are defined in `CONTEXT.md`. Frequency lives only in the `role`
-  prose. `role` carries a **≤ ~50 word** guideline (schema comment) — it states
-  role + importance-to-project, not a copy of the Skill's own description.
-
-- **A grade drops only on *opportunity-missed* evidence**, never disuse alone: the
-  Skill was absent from **≥2 windowed sessions of the kind it serves**. A Skill
-  unused only because its kind of session did not occur keeps its grade. This yields
-  a self-correcting loop: demote-and-flag → (frontmatter fixed) → Skill fires again →
-  next run re-promotes.
-
-- **`audit-skills` is a `sync`-family Skill, not a new chartered job.** ADR-0003's
-  `sync` is a *remit* ("keep living documentation matching real repo state") realised
-  by several Skills: `digest` keeps the digest feed honest, `audit-skills` keeps the
-  Inventory honest. It reads the **40 newest session logs**, and:
-  - **writes only** the Inventory's `importance` + `role` (and *creates* entries for
-    observed-but-uncatalogued Skills). It **never touches `.agents/skills/`**;
-  - **files a frontmatter-suspect issue** — a *referral to `frictions-to-fixes`*
-    (which owns SKILL.md) — when a Skill was absent from ≥2 sessions of its kind,
-    the signature of a `description` that mis-fires. Importance does not gate this:
-    a low-graded Skill is exactly where a broken `description` hides.
-
-- **Scope: tune both categories, refer only our own.** `importance`/`role` tuning
-  covers **all** catalogued Skills, external pack Skills included — their Inventory
-  entry records their *fit to this project* (the majority of entries), which drifts
-  like any other; grading a pack Skill's importance-here is not *evolving the Skill*,
-  so ADR-0005's "used, not evolved here" stance holds. But the **frontmatter-suspect
-  referral is our-own-Skills-only**: a pack Skill's SKILL.md is not ours to patch (a
-  re-install clobbers edits), so `audit-skills` never refers it to `frictions-to-fixes`.
-  The helper marks pack Skills `external` (from `skills-lock.json`) so the split is
-  robust regardless of whether a Skill is catalogued yet.
-
-- **Split of mechanics vs judgement, per the `digest` pattern.** A unit-tested
-  `scripts/audit-skills.ts` joins the three sources (on-disk Skills, Inventory
-  entries, windowed `skillsUsed`) into a compact scorecard; the Skill's session makes
-  every judgement. Both products land through the **ordinary gated PR** (ADR-0003) /
-  the referral issue — never the ADR-0009 direct-to-main path.
-
-- **Cadence: on-demand for v1.** User-invoked (`disable-model-invocation: true`);
-  a schedule is deferred, exactly as `digest`'s trigger is.
+- **Grade by frictions per use.** Hard sessions use more Skills and log more
+  frictions, so the signal is confounded.
+- **Watch for regressions through frictions.** It found almost nothing and
+  can't see a failure that leaves no friction.
+- **Pin pack Skills with `skills-lock.json`'s own hash.** That file belongs to
+  the installer, and its hash is of the upstream source, which can't be
+  checked offline.
 
 ## Consequences
 
-- The `importance` enum change is a strict-schema **rename + add**, so the schema and
-  all existing entries move together (done: the four `core` entries → `essential`).
-  `specialist` starts unused; `audit-skills` assigns it from evidence over time.
-- The Inventory's evaluative fields become a **rolling judgement**, not a frozen
-  hand-assignment — grades can move run to run as usage shifts, which is the point.
-- "Skill Inventory" replaces "catalogue" across docs, app, and routing (`catalog` →
-  "collection index"). Session logs and archived content are left as-is (append-only
-  history).
-- The auditor only ever *proposes* (gated PR / triage issue); retiring a Skill —
-  removing a deliverable — stays net-new-shaped and human-gated (ADR-0003), so
-  `audit-skills` demotes toward `peripheral` and refers, but never deletes.
-- `audit-skills` is a bounded first slice of the standing-inventory maintenance the
-  chartered `sync` job (ADR-0003) will eventually formalise; it does not claim the
-  `sync` name.
+- The gate checks only pack Skills that have an Inventory entry. One that is
+  installed but not yet used goes unchecked until the audit adds its entry.
+- A legitimate pack update re-pins in the same PR, or the gate fails.
+
+## See
+
+- `scripts/verify-skills-lock.ts`: the pack check and how to re-pin.
+- `.agents/skills/audit-skills/SKILL.md`: the audit's steps and limits.
+- `scripts/audit-skills.ts`: the scorecard and which Skills get checked.
+- `layers/journal/tenant.config.ts`: the Inventory schema.

@@ -86,10 +86,10 @@ const zodSchemaField = z.custom<ZodObject<ZodRawShape>>(
 // refinement would let a source-less `data` collection pass runtime validation
 // even though the TS type forbids it at compile time — it would fail only later,
 // inside `content.config.ts`, instead of at this manifest-authoring surface
-// (ADR-0002's "an agent's output can be checked before build" promise). (A `z.discriminatedUnion`
-// was the other option here, but its built-in "invalid discriminator" issue isn't
-// straightforwardly restyled into this file's labelled-message convention, so a
-// refinement on the existing object schema is the more surgical fix.)
+// (ADR-0002). (A `z.discriminatedUnion` was the other option here, but its
+// built-in "invalid discriminator" issue isn't straightforwardly restyled into
+// this file's labelled-message convention, so a refinement on the existing
+// object schema is the more surgical fix.)
 const collectionDefSchema = z
   .object({
     type: z.enum(['page', 'data'], { message: 'has an invalid type (expected "page" or "data")' }),
@@ -102,7 +102,7 @@ const collectionDefSchema = z
     // A `kind`, if present, must name a known contract (shared/kinds.ts) and its
     // `type` must match the collection's — a `page` kind can't sit on a `data`
     // collection or vice-versa (ADR-0025). Checked here so a bad `kind` fails at
-    // this authoring surface, not later inside `expand()` (the ADR-0002 promise).
+    // this authoring surface, not later inside `expand()` (ADR-0002).
     if (val.kind !== undefined) {
       if (!Object.hasOwn(KINDS, val.kind)) {
         ctx.addIssue({
@@ -147,7 +147,7 @@ const tenantManifestSchema = z
 
 /** Author-facing helper: declares a Tenant's intent. `content.config.ts` and
  *  `modules/routing.ts` do the rest, expanding it at config-evaluation/build
- *  time (ADR-0013/0014) — there is no separate generator or codegen step. */
+ *  time (ADR-0013/0014). */
 export function defineTenant(manifest: TenantManifest): TenantManifest {
   return manifest
 }
@@ -160,11 +160,10 @@ export function collectionKey(tenant: string, space: string, collection: string)
 /**
  * Structural validation of a Tenant manifest, callable standalone (e.g. from an
  * agent's own pre-flight check) before `content.config.ts`/`modules/routing.ts`
- * ever expand it (ADR-0013/0014) — no separate generator or codegen step exists
- * to "fail fast before". Backed by a zod schema (ADR-0002: "manifests are
- * schema-validated") — the same tool the Platform uses for every Collection
- * schema. Returns one path-qualified message per problem so every issue can be
- * listed at once, rather than fixed one `safeParse` at a time.
+ * ever expand it (ADR-0013/0014). Backed by a zod schema (ADR-0002), the same
+ * tool the Platform uses for every Collection schema. Returns one
+ * path-qualified message per problem so every issue can be listed at once,
+ * rather than fixed one `safeParse` at a time.
  */
 export function validateManifest(m: TenantManifest): string[] {
   const res = tenantManifestSchema.safeParse(m)

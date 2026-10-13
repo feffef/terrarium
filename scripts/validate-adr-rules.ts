@@ -5,7 +5,8 @@
 // hash, so the summary cannot go stale silently: the author re-reads the rule,
 // updates it if the decision changed, then runs this script with `--write`.
 // Every other rule must have `paths` and name only `docs/` files that exist
-// (ADR-0029, issue #1765).
+// (ADR-0029, issue #1765). An ADR in the new shape carries no history
+// (ADR-0030).
 //
 // Usage: pnpm validate:content (chained), or
 //   pnpm exec tsx scripts/validate-adr-rules.ts [--write]
@@ -18,9 +19,6 @@ import { parse as parseYaml } from 'yaml'
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const ADR_DIR = 'docs/adr'
 export const RULES_DIR = '.claude/rules'
-
-/** ADRs with no rule: superseded outright, so nothing in them binds an agent. */
-export const NO_RULE = new Set(['0007'])
 
 export const adrHash = (text: string) => createHash('sha256').update(text).digest('hex').slice(0, 12)
 
@@ -83,11 +81,24 @@ export function staleRules({ adrs, rules }: AdrRuleInput): string[] {
     .map(([file]) => file)
 }
 
+/** History an ADR must not carry: git holds it (ADR-0030). */
+const HISTORY: [RegExp, string][] = [
+  [/\b\d{4}-\d{2}-\d{2}\b/, 'a date'],
+  [/^(Status|Date):/m, 'a status line'],
+  [/^>\s*\**(Amended|Superseded)\b/im, 'an amendment banner'],
+]
+
+export function newFormatProblems(n: string, text: string): string[] {
+  if (!text.startsWith(`# ADR-${n}:`)) return [`ADR-${n} must start with a \`# ADR-${n}: <title>\` heading.`]
+  return HISTORY.filter(([re]) => re.test(text)).map(([, what]) => `ADR-${n} has ${what}; ADR-0030 keeps history in git.`)
+}
+
 export function findAdrRuleProblems(input: AdrRuleInput): string[] {
   const { adrs, rules } = input
   const problems: string[] = []
-  for (const n of Object.keys(adrs)) {
-    if (!NO_RULE.has(n) && !(`adr-${n}.md` in rules)) problems.push(`ADR-${n} has no summary rule: add ${RULES_DIR}/adr-${n}.md.`)
+  for (const [n, text] of Object.entries(adrs)) {
+    if (!(`adr-${n}.md` in rules)) problems.push(`ADR-${n} has no summary rule: add ${RULES_DIR}/adr-${n}.md.`)
+    problems.push(...newFormatProblems(n, text))
   }
   for (const file of Object.keys(rules)) {
     const n = ruleAdr(file)

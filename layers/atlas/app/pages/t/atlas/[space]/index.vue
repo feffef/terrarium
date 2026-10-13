@@ -3,7 +3,7 @@
 // A more specific route than the Platform's generic catch-all, so it wins for the
 // Space root; specimen entries render via the sibling `[...slug].vue`.
 //
-// Isolation-respecting and presentation-only (ADR-0004): it resolves the Space
+// Isolation-respecting and presentation-only (ADR-0006): it resolves the Space
 // through the SAME shared, unit-tested `resolveSpaceRoute` the catch-all uses
 // (via the read-only useSpace composable), then reads only this biome's keyed
 // pages/interactions/observations. Biomes cannot leak — the whole wing is a

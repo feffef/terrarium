@@ -5,7 +5,7 @@
 // doc it lives in. Same failure shape as #814 (`loop-only-tool-guard.ts`),
 // same fix: a `PreToolUse` guard replaces the prose.
 //
-// Runs unattended, so it is human-only to merge (ADR-0004, 2026-07-30). Pure
+// Runs unattended, so it is human-only to merge (ADR-0004). Pure
 // core (below) split from the shared stdin/`--dry-run`/bootstrap plumbing
 // (`guard-io.ts`, issue #1080).
 //

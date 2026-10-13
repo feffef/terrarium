@@ -173,7 +173,7 @@ describe('resolveOutputTarget() — --out CLI flag', () => {
   })
 })
 
-describe('survey() — external exclusion (ADR-0009 amendment)', () => {
+describe('survey() — external exclusion (ADR-0009)', () => {
   let dir: string
 
   beforeEach(() => {

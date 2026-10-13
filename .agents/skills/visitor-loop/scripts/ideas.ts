@@ -152,7 +152,7 @@ export function buildNoteClusters(records: NoteRecord[], threshold = CLUSTER_THR
 }
 
 /** Reduce one parsed session log to its note material, or `null` when it has
- *  nothing to gather. An EXTERNAL session (ADR-0009 amendment) keeps its `ideas`
+ *  nothing to gather. An EXTERNAL session (ADR-0009) keeps its `ideas`
  *  — a good idea is toolchain-agnostic — but drops its `learnings`, which reflect
  *  a different harness's development and don't generalize to ours. Internal
  *  sessions are unchanged (both fields kept). */

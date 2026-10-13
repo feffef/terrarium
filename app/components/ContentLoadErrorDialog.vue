@@ -12,7 +12,7 @@
 // re-created as `status` transitions.
 //
 // One failure class never gets this far: a failed dynamic import of a build
-// chunk auto-recovers by reloading instead (ADR-0019's 2026-08-04 amendment).
+// chunk auto-recovers by reloading instead (ADR-0019).
 // Every Space page already mounts this component, so wiring the recovery here
 // is what keeps it a single mechanism rather than one per page.
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'

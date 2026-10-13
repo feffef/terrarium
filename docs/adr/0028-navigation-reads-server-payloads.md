@@ -1,83 +1,71 @@
-# 28. In-app navigation reads server-rendered payloads, not the browser Content DB
+# ADR-0028: In-app navigation reads a cached server payload
 
-Date: 2026-09-27
-Status: Accepted
+When a visitor follows a link inside the app, the page takes its data from a
+file the server rendered for that route (`_payload.json`), not from a Content
+query in the browser. Only cached routes get that file, so the server caches
+rendered pages briefly, and a page that reads the request must say so.
 
-> Green-lit by a human in an interactive session (ADR-0003), after a local trial.
-> Research: `docs/research/content-client-queries-without-wasm.md` (PR #1445).
+## Scope
 
-## Context
+- **The home page and every Tenant page are cached on the server** for a short
+  time, in a cache of bounded size, never serving an expired copy. Content
+  changes only when a new build goes live (ADR-0001), so this is safe.
+- **One rendered copy serves every visitor.** A page whose server render reads
+  a request header or cookie lists it in its route's `varies`, or the first
+  visitor's version reaches everyone.
+- **A page may opt out of the cache;** navigation to it then queries Content
+  in the browser.
+- **Server-computed times such as "today" can be slightly old** on a first
+  page load, bounded by the cache's lifetime plus the browser's reuse of the
+  response. After a navigation the browser computes them afresh.
+- **Links fetch a payload, and the route's code, on hover or tap,** not when
+  they scroll into view.
+- **Everything a page's `useAsyncData` returns travels in its payload,** so
+  return only what the page reads.
+- **The browser database still loads** for an uncached page, a query that
+  re-runs after the page mounts, and a failed payload fetch. ADR-0019 covers
+  recovery when that load fails.
+- A Tenant adds `varies` or opts a page out in its own layer.
 
-With `@nuxt/content` 3.15.0, a `queryCollection` inside `useAsyncData` runs in
-the browser whenever the handler runs client-side, which is every in-app
-navigation to a route not yet loaded. The first such navigation downloads the
-SQLite WASM runtime and its loader (about 450 KB gzipped). Each queried
-Collection then adds its `sql_dump.txt`. Content has no switch to send those
-queries to its server endpoint instead (`executeContentQuery`,
-`dist/runtime/client.js`). That same browser load is also the failure path
-behind #236 and ADR-0019.
+## Why
 
-The owner wanted pages to keep building in the browser, so navigation stays
-client-side and Tinkerfund's view transitions and in-memory state survive
-(#1444). Full page loads were rejected for that reason.
+The owner wants pages to keep building in the browser, so view transitions
+and in-memory state such as Tinkerfund's cart survive navigation. A Content
+query in the browser downloads the SQLite WASM runtime and each Collection's
+dump. That is heavy, and it is where content loads fail (ADR-0019). Content
+has no setting to send browser queries to the server.
 
-## Decision
+Payloads need only documented Nuxt settings: no server code and no Content
+internals, so a Content upgrade does not break them. Measured navigations got
+several to dozens of times lighter. Fetching payloads on sight made navigation
+heavier than before, because every visible link fetched one and some are large.
 
-Use Nuxt payload extraction (`nuxt.config.ts`):
+## Rejected alternatives
 
-- `experimental.payloadExtraction: 'client'`: the first load keeps its payload
-  inline, and later navigations fetch the target route's `_payload.json`.
-  `useAsyncData` takes its data from that file and never runs the query in the
-  browser.
-- `routeRules['/t/**'].cache = { maxAge: 60, swr: false }`: Nuxt only extracts
-  payloads for cached (or prerendered) routes. A short lifetime without stale
-  serving bounds how old a first page load's server-computed "now" can be:
-  Atlas's `useGlassToday` and Tinkerfund's `useTinkerfundClock`. On navigation
-  both recompute in the browser, because Nuxt merges only a payload's `data`,
-  not its state. The response also carries `max-age=60`, so a browser may reuse
-  it for another minute. That makes the worst case about two minutes.
+- **Full page loads.** They lose view transitions and in-memory state. The
+  owner's call.
+- **Prerender the page routes.** Same benefit with no runtime cache, but a
+  longer build, a route list to keep, and no cover for query-string pages.
+- **Send `queryCollection` to Content's server endpoint from app code.** One
+  uncacheable request per query instead of one payload, and it relies on an
+  undocumented detail of `@nuxt/content/server`.
+- **Serve an expired copy while refreshing.** After an idle spell a visitor
+  gets an arbitrarily old page, and old server-computed times.
+- **Patch Content or hide WebAssembly from it.** Fragile across upgrades;
+  ADR-0019 rejects patching it.
 
-  > **Amended (2026-10-10, #1702):** `routeRules['/']` gets the same cache, so
-  > the home page's daily picks share that bound.
-- Tinkerfund's own layer config adds two rules. Its pages vary the cache on
-  `accept-language`, because its money and dates follow the visitor's locale
-  (#1365) and a cached render otherwise sees no request headers. Its search
-  route is uncached and keeps its deliberate in-browser search.
-- NuxtLink prefetches on interaction, not visibility. Visibility prefetch
-  fetched the payload of every visible link, and some pages carry about 550 KB
-  payloads, so navigations ended up heavier than before.
+## When to revisit
 
-Measured locally, gzipped per navigation: blog post about 494 → 7 KB; journal
-skills 579 → 144 KB; Tinkerfund page 578 → 19 KB; Commons Timeline about
-1.85 MB → 72 KB.
+- Payloads prove too narrow, such as many queries outside `useAsyncData`. Then
+  add the server-endpoint route as a complement.
+- Content ships a supported switch that sends browser queries to the server.
 
-## Consequences
+## See
 
-- **The browser DB still loads where a query runs outside a payload.** That
-  covers Tinkerfund search, reactive re-queries after mount, and a failed
-  payload fetch (Nuxt then runs the handler in the browser as before). ADR-0019's
-  recovery (`ContentLoadErrorDialog`, the chunk-error auto-reload) therefore
-  stays.
-- **The server now caches rendered `/t/**` pages in memory for 60 s.** Content
-  is baked per deploy (ADR-0001), so that is safe. A page that reads anything
-  else from the request, such as a header or cookie, needs `varies` like
-  Tinkerfund's, or it serves the first visitor's version to everyone.
-
-  > **Amended (2026-10-10, #1702):** the home page `/` is cached the same way,
-  > so this applies to it too.
-- **The cache has no size bound.** Each distinct URL, query string included, is
-  its own entry, and expired entries are only replaced, not evicted. Junk query
-  strings grow memory until the next deploy or restart clears it (#1446).
-
-  > **Amended (2026-09-28, #1446):** the cache is now bounded. In production,
-  > Nitro's `cache` storage uses unstorage's `lru-cache` driver, capped by the
-  > `max` set in `nuxt.config.ts`, so it evicts the least recently used entry
-  > once full. Each URL and each `varies` variant still counts as its
-  > own entry. Freshness is unchanged: Nitro checks `maxAge` on every read, so
-  > early eviction only costs a re-render. Dev keeps Nitro's default on-disk
-  > cache.
-- **A route's code downloads on hover, not on sight.** With visibility prefetch
-  off, a touch device fetches it on tap.
-- Reverting means deleting `payloadExtraction`, the `nuxtLink.prefetchOn`
-  default and the `routeRules` in `nuxt.config.ts` and
-  `layers/tinkerfund/nuxt.config.ts`. Nothing else depends on them.
+- `nuxt.config.ts`: payload, prefetch and cache settings, and the size cap.
+- `layers/tinkerfund/nuxt.config.ts`: its `varies` and opt-out rules.
+- `tests/unit/page-cache.spec.ts`, `tests/e2e/smoke.spec.ts`,
+  `layers/blog/tests/e2e/blog.spec.ts`,
+  `layers/tinkerfund/tests/e2e/tinkerfund.spec.ts`: the checks.
+- `docs/research/content-client-queries-without-wasm.md`: how it works, the
+  measurements and the options weighed.

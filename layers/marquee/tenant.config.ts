@@ -1,10 +1,8 @@
 // Manifest for the Marquee Tenant — a movie-blog microsite covering the Marvel
 // Cinematic Universe in in-universe story order rather than release order
 // (CONTEXT.md Tenants roster: Marquee; layers/marquee/CONTEXT.md: Screening,
-// Chapter; guest-submitted, issue #551). Declarative intent only:
-// `content.config.ts` builds the keyed collection from this manifest at
-// config-evaluation time, and the routing map is derived from it at build
-// time (ADR-0002/0013/0014) — no generated file involved.
+// Chapter; guest-submitted, issue #551). Declarative intent only (ADR-0002,
+// ADR-0013).
 //
 // One Space (`reel`) is enough: there is no lifecycle/voice/place distinction
 // to model here, just a single ordered run of posts (mirrors the Commits

@@ -17,6 +17,6 @@ the AFK-ready triage label"), use that string.
 | `ready-for-human`          | `ready-for-human`    | Requires human implementation            |
 | `wontfix`                  | `wontfix`            | Will not be actioned                     |
 
-> **Requester-trust gate.** `ready-for-agent` is gated by requester trust
-> (ADR-0020; for the autonomous sweep, the `auto-triage` Skill's "standing
-> green-light" section).
+> **Requester-trust gate.** A Public issue reaches `ready-for-agent` only
+> after a Trusted user approves it (ADR-0020), except in the guest pipeline
+> (ADR-0023). What the `auto-triage` sweep may label: ADR-0022.

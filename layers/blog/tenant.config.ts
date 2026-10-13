@@ -1,9 +1,6 @@
 // Manifest for the Blog Tenant — a simple blog reporting on the Terrarium from
 // several angles (CONTEXT.md Tenants roster: Blog; layers/blog/CONTEXT.md:
-// Persona / Pingback). Declarative intent
-// only; `content.config.ts` builds the keyed collections from this manifest at
-// config-evaluation time, and the routing map is derived at build time
-// (ADR-0013/0014) — there is no separate generator step.
+// Persona / Pingback). Declarative intent only (ADR-0002, ADR-0013).
 //
 // Each Space IS a Persona (its slug is the persona's name): `david` (neutral
 // observer), `karen` (snarky sceptic), `kevin` (dazzled dev), `eyra` (the artist).

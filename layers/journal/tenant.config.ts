@@ -1,7 +1,5 @@
 // Manifest for the Journal Tenant — the Platform's self-documentation (CONTEXT.md).
-// Declarative intent only — `content.config.ts` builds the keyed collections
-// from this manifest at config-evaluation time (ADR-0002/0013); nothing is
-// generated into the repo.
+// Declarative intent only (ADR-0002, ADR-0013).
 import { z } from 'zod'
 import { defineTenant } from '../../shared/manifest'
 import { sessionSchema } from '../../shared/schemas/session'
@@ -27,11 +25,9 @@ export const skillSchema = z
     // the Inventory page shows in full; `supporting`/`peripheral` skip it
     // (visitor-loop fix, 2026-09-26).
     gist: z.string().optional(),
-    // ≤ ~50 words — a tight paragraph on the Skill's role + importance to
-    // this project, NOT a copy of its own description; deeper detail lives
-    // in the Skill's own docs. ~80 is the outer limit; beyond that, trim.
-    // Reference-free: no concrete PR/issue/session ids — those belong in
-    // `observations` below (ADR-0015 amendment, 2026-07-13).
+    // The Skill's role and importance to this project, not a copy of its
+    // own description, and free of PR/issue/session ids (ADR-0015). Length:
+    // `.agents/skills/audit-skills/SKILL.md` step 5.
     role: z.string(),
     // Integrity pin for EXTERNAL pack Skills only (those keyed in
     // skills-lock.json): sha256 of the installed `SKILL.md`, verified by
@@ -39,12 +35,9 @@ export const skillSchema = z
     // (ADR-0015). Machine-managed — do NOT hand-edit; regenerate with
     // `pnpm verify:skills-lock --write`. Absent on our own Skills.
     installedSha256: z.string().optional(),
-    // A purely internal, `audit-skills`-owned log — NOT rendered in the
-    // journal blog (ADR-0015 amendment, 2026-07-13). Each entry is one
-    // run's citable finding (a role/grade change, a behaviour finding, a
-    // new/split/retire idea) — PR/issue/session ids belong here, not in
-    // `role`. Kept for 40 days: a run drops older entries (ADR-0015
-    // amendment, 2026-09-27).
+    // `audit-skills`' own record, not rendered on the site (ADR-0015). Each
+    // entry is one run's citable finding; PR/issue/session ids go here, not
+    // in `role`. How long entries stay: `audit-skills/SKILL.md` step 5.
     observations: z.array(
       z.object({
         date: utcDate,
@@ -101,10 +94,9 @@ export default defineTenant({
       type: 'page',
       kind: 'page', // opt into the cross-Tenant #catalog (ADR-0025)
       source: '**/*.md',
-      // A Digest's one-line day-headline (`summary`, ADR-0010 — the source the
-      // `digest` Skill bakes into the index's "recent digests" preview) rides in
-      // from the `page` kind's contract (shared/kinds.ts, ADR-0025); ordinary
-      // pages simply omit it.
+      // A Digest's one-line headline (`summary`) comes from the `page` kind's
+      // contract (shared/kinds.ts, ADR-0025); the Journal home page lists it
+      // live (ADR-0010). Ordinary pages omit it.
       schema: z.object({
         // `page` type already supplies path/title/description/body/seo.
         badge: z.string().optional(),

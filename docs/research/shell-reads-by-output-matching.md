@@ -1,7 +1,7 @@
 # Deriving `docsReadViaShell` from command output instead of command text
 
-Can the shell-read detector behind `docsReadViaShell` (ADR-0009's shell-read
-amendment, `scripts/shell-reads.ts`) stop parsing the Bash command string and
+Can the shell-read detector behind `docsReadViaShell` (ADR-0009,
+`scripts/shell-reads.ts`) stop parsing the Bash command string and
 instead credit an instruction doc when lines of that doc appear in the
 command's own `tool_result`? And would that close the SHELL-READ-DETECTION
 frictions the Journal has accumulated, or only trade them for new ones?

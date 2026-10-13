@@ -18,14 +18,17 @@ export type UsefulVerdict = z.infer<typeof usefulVerdict>
 export type RuleVerdict = z.infer<typeof ruleVerdict>
 
 /**
- * The frozen `sessions` schema (ADR-0009). `status`/`kind` are queryable spines;
+ * The grow-only `sessions` schema (ADR-0009). `status`/`kind` are queryable spines;
  * `frictions` is a required list (may be []) forcing reflection. Strict → L1
  * validation. Length hints in comments are intent only — a friction log must
  * never fail the build over word count.
  */
 export const sessionSchema = z
   .object({
-    schemaVersion: z.literal(1).optional(), // absent ⇒ 1; evolution policy: ADR-0009
+    // Absent ⇒ 1. A breaking change adds a v2 object with z.literal(2) and makes
+    // this z.union([v1, v2]); never .default(1), which would blur absent ⇒ v1.
+    // Readers tolerate older or unknown versions. Policy: ADR-0009.
+    schemaVersion: z.literal(1).optional(),
     session: z.string(), // Claude session id — stable identity
     startedAt: utcTimestamp, // UTC ISO-8601 — session start (ordering anchor)
     endedAt: utcTimestamp, //   UTC ISO-8601 — session end / log authored
@@ -33,24 +36,22 @@ export const sessionSchema = z
     // CONTEXT.md → Session.
     kind: z.enum(['interactive', 'delegated', 'autonomous']),
     goal: z.string(), // short plain headline — what the session worked on
-    // `in-review` is the honest state of a session that opened a gated PR but
-    // hasn't seen it merged — the norm at closure (ADR-0003/0009), not
-    // `completed`, which is reserved for work that actually landed (or needed no
-    // PR). A later session flips it to `completed` on merge.
+    // `in-review`: the session opened a gated PR that hasn't merged, the norm at
+    // closure. `completed` is for work that landed or needed no PR; the session
+    // re-logs as `completed` when its PR merges (close-session Skill).
     status: z.enum(['completed', 'in-review', 'partial', 'blocked', 'abandoned']),
     outcome: z.string(), // one-liner — prose nuance on `status`
     summary: z.string(), // the fuller narrative; sizing guidance: log-session Skill
     prs: z.array(z.string()).default([]), // 0..N already-landed work-PR refs
-    // docsRead/skillsUsed are a *merged* field (ADR-0009 amendments): the
-    // agent's curated entries plus the reads and Skills the extractor derives,
-    // folded in with a placeholder `reason`. `useful` is authored only; absent on
-    // folded-in reads and on logs older than the verdict (ADR-0009, 2026-10-11).
+    // docsRead/skillsUsed merge the agent's entries with derived ones, folded in
+    // with a placeholder `reason` (ADR-0009). `useful` is authored only, so absent
+    // on derived reads and older logs.
     docsRead: z
       .array(z.object({ path: z.string(), reason: z.string(), useful: usefulVerdict.optional() }))
       .default([]),
     skillsUsed: z.array(z.object({ name: z.string(), reason: z.string() })).default([]),
-    // Mechanical trace — derived from the session transcript by the SessionEnd
-    // extractor (ADR-0009 amendment), never self-reported. All optional: absent ⇒
+    // Mechanical trace — derived from the transcript by scripts/session-trace.ts
+    // when the landing script runs (ADR-0009), never self-reported. All optional: absent ⇒
     // an older, authored-only log. Additive per the schema-evolution policy.
     durationSec: z.number().int().nonnegative().optional(),
     models: z.record(z.string(), z.number().int()).optional(), // model id → assistant-turn count
@@ -64,8 +65,8 @@ export const sessionSchema = z
     // The subset of both rule lists whose ADR was read after the rule loaded.
     rulesFollowedUp: z.array(z.string()).optional(),
     ruleVerdicts: z.array(ruleVerdict).optional(),
-    // DEPRECATED — no longer written. Shell reads now fold into `docsRead`
-    // (ADR-0009's merged-read amendment); the key stays so older logs validate.
+    // DEPRECATED — no longer written; shell reads fold into `docsRead`. The key
+    // stays so older logs validate (ADR-0009).
     docsReadViaShell: z.array(z.string()).optional(),
     subagents: z
       .array(
@@ -87,21 +88,20 @@ export const sessionSchema = z
     // environment (first seen on fork PR #631's Hermes/Grok run, entrypoint
     // `external_hermes`). ABSENT ⇒ internal (our Claude Code harness); only an
     // external contributor's log ever sets it, so every existing internal log
-    // stays valid under `.strict()`. Governs self-improvement mining (ADR-0009
-    // amendment, 2026-07-22): `frictions-to-fixes` and `audit-skills` skip an
+    // stays valid under `.strict()`. Mining skips it (ADR-0009):
+    // `frictions-to-fixes` and `audit-skills` skip an
     // external session entirely — its frictions/skill-usage reflect a toolchain
     // our fixes don't touch — while the ideas data layer still surfaces its `ideas`
     // (a good idea is toolchain-agnostic) and drops only its `learnings`.
     external: z.boolean().optional(),
-    // True ONLY on the synthetic placeholder the lander's recoverDroppedScratch
+    // True ONLY on the synthetic placeholder the landing script's recoverDroppedScratch
     // lands when a scratch was authored then lost before it could land (issue #449
     // Gap 3). Gives consumers a structured way to exclude/label it. Absent on every
     // genuinely agent-authored log.
     droppedScratchRecovery: z.literal(true).optional(),
     // Which hook registration performed this landing (`Stop`, `SessionEnd`,
-    // `SessionStart`). The stored evidence for retiring the two fallbacks —
-    // ADR-0009's 2026-09-05 amendment owns why the exit metric counts these
-    // rather than orphans. Absent on a hand-landed or pre-#865 log.
+    // `SessionStart`): the evidence for retiring the two fallbacks (ADR-0009,
+    // When to revisit). Absent on a hand-landed or pre-#865 log.
     landedBy: z.string().optional(),
     // List EVERY friction — not just one or two. No `tag`: the Friction Ledger
     // groups frictions by cause instead (CONTEXT.md).
@@ -128,7 +128,7 @@ export const sessionSchema = z
  *  EXTERNAL harness — the `external: true` flag above. Single home for that check,
  *  shared by every self-improvement consumer that must exclude external sessions
  *  (visitor-loop's `ideas.ts`, `scripts/audit-skills.ts`, `scripts/session-frictions.ts`;
- *  ADR-0009 amendment, 2026-07-22). Absent/false/non-object ⇒ internal. */
+ *  ADR-0009). Absent/false/non-object ⇒ internal. */
 export function isExternalSession(raw: unknown): boolean {
   return typeof raw === 'object' && raw !== null && (raw as Record<string, unknown>).external === true
 }

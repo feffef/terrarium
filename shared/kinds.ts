@@ -9,10 +9,8 @@
 // Opt-in is the whole point: a collection with no `kind` (a bespoke inline
 // schema) is invisible to `#catalog` and to `queryAcrossTenants`. Isolation
 // stays the default; cross-Tenant exposure is an explicit, per-collection
-// declaration. This file — like `content.config.ts` / `shared/expand.ts` /
-// `modules/*` — is ADR-0004 human-only-to-merge: a kind is a versioned contract
-// that multiple Tenants and aggregators depend on, so widening or removing one
-// is a breaking-change surface.
+// declaration. This file is Human-only (ADR-0004): other Tenants depend on a
+// kind, so changing one can break them.
 import { z, type ZodObject, type ZodRawShape } from 'zod'
 // Type-only import (erased at runtime) so there is no runtime import cycle with
 // `manifest.ts`, which imports the KINDS runtime value from here.

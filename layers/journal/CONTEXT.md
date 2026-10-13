@@ -23,12 +23,12 @@ Anyone who wants the Platform's actual current state, or how it got there, witho
   state rather than appended to.
 - **Session logs** — primary, append-only records the agents author
   themselves (see above).
-- **Digests** — derived, append-only daily summaries (see the glossary below).
+- **Digests** — derived daily summaries, written once per day (see the glossary below).
 
 ## Glossary
 
 ### Digest
-A derived, append-only, time-boxed Journal Document: one immutable page per **closed UTC day**, summarizing Platform activity across all Tenants, mined from git history and session logs (ADR-0010). Unlike an **Inventory** (derived too, but a current-state readout refreshed in place) a Digest is historical and never rewritten once its day closes; unlike a **session log** (append-only too, but primary — authored from scratch) a Digest is derived by condensing existing records. The Journal website renders them, and the Commons Timeline also reads them cross-Tenant as a source (`layers/commons/CONTEXT.md`), but the *word* "Digest" is defined once, here, because the Commons only consumes the concept through the Catalog.
+A daily catch-up on Platform activity across all Tenants, condensed from git history and session logs: one page per finished UTC day, kept once written (ADR-0010). Unlike an **Inventory** (derived too, but refreshed in place) it records a past day; unlike a **session log** it is derived, not first-hand. The Commons Timeline also reads Digests (`layers/commons/CONTEXT.md`), but the word is defined here.
 
 ## What lives where
 

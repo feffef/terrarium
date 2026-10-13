@@ -1,592 +1,93 @@
-# 9. Session logs commit directly to `main` (a bounded gate exception)
+# ADR-0009: A session's own log goes straight to `main`, without a PR
 
-Date: 2026-07-04
-Status: Accepted
+Each session writes one honest log of its work, and a script commits that one
+file straight to `main`, without a PR. Nothing else takes this path. The agent
+writes only the judgement half; the rest comes from the session's transcript.
 
-> **Amended by [ADR-0018](0018-tenant-layers-under-layers-directory.md) (2026-07-07).**
-> Tenant layers moved from `tenants/` to Nuxt's conventional `layers/` directory;
-> `tenants/…` paths below (e.g. the session dir, now
-> `layers/journal/content/current/sessions/`) reflect the pre-rename layout.
+## Scope
 
-> **Amended by [ADR-0025](0025-cross-tenant-catalog-and-collection-kinds.md) (2026-07-22).**
-> The `sessions` schema moved verbatim from the Journal manifest to
-> `shared/schemas/session.ts` and became the shared **`session` collection kind**.
-> Where this ADR says the schema lives in the Journal manifest, read
-> `shared/schemas/session.ts` instead.
+- **What skips the PR.** Only a session's own log, one file in the Journal's
+  current sessions folder. Everything else goes through a gated PR (ADR-0003),
+  including archive moves of old logs and the landing script's own code.
+- **One script holds the boundary.** `scripts/log-session.ts` alone lands a
+  log. It builds the commit from `main`, so none of the session's other work
+  rides along, and refuses a commit that touches another path or a log that
+  fails the schema.
+- **When a session logs.** At Session closure, which the agent judges itself
+  through the `close-session` Skill. Opening a PR is one such point, and the
+  log then says the PR is in review. When the work merges, stops or is
+  blocked, the session logs again and replaces its earlier log. A session
+  with no PR logs too.
+- **Who writes what.** The agent writes the goal, status, outcome, summary,
+  every Friction, and why the docs and Skills it names mattered. Timings,
+  models, tools, files read and edited, subagents and loaded rules come from
+  the transcript. A doc counts as read when a command's output showed enough
+  of it. The agent may mark a derived read "not read"; it is then dropped and
+  logged as a Friction, so detector errors stay visible.
+- **Landed logs stay as they are.** No other session edits a log, not even to
+  fix its wording.
+- **The schema only grows.** No log is ever migrated, so every old log must
+  stay valid. A new optional field is fine at any time. A required, renamed or
+  narrower field needs a new schema version beside the old one; a log with no
+  version is version 1.
+- **Logs from outside agents** are marked `external`. They stay on the Timeline
+  and dashboard, but Friction mining and the Skill audit skip them; only their
+  ideas are used. Their authors can't push to `main`, so such a log travels in
+  the contributor's PR, the one case of a log in a PR.
 
-> **Every other amendment is dated inline at its own section below** — each
-> states its own decision and rationale there; this index doesn't restate them
-> (and would go stale trying to, since sections have been added since the last
-> time this list was updated).
+## Why
 
-## Context
+- A log records what only the session knew (ADR-0008), so it is worth most
+  when every session logs, honestly. A PR per log is a cost that makes agents
+  skip or flatten logs, and no PR fits every session: some open none, some
+  several, some see theirs rejected.
+- The gate stops broken builds and unsafe code. A log is schema-checked data
+  that changes no code or route, so once valid it cannot break the build. The
+  script that bounds the exception is itself gated.
+- Agents misreport facts the transcript records exactly. Only judgement needs
+  the agent.
+- Nothing can prompt the agent at teardown, and teardown may have no network.
+  So the agent writes its part while working, and hooks land it at the end of
+  that turn, with fallbacks at teardown and resume.
+- One invalid log fails the whole build, and old logs can't be rebuilt.
+- An outside agent's Frictions describe tools our fixes can't reach; its ideas
+  apply anywhere.
 
-The Journal Tenant introduces **session logs** (ADR-0008, issue #2): one honest
-self-report per Claude Session — its goal, outcome, what it read, which Skills it
-used, and every Friction it hit. These logs are the primary signal the
-`consolidate`/`codify` jobs mine for recurring pain, so their value depends on
-being written for *every* session and being honest.
+## Rejected alternatives
 
-That collides with ADR-0003: *every change lands as a gated PR on a feature
-branch — no self-merge.* Routing each session log through its own PR is heavy
-ceremony, and it breaks on the realistic cases:
+- **Land each log through a PR,** its own or the work's. See *Why*.
+- **Land the log only at session end.** That hook can't prompt the agent,
+  can't tell a pause from an end, and can fail with no network.
+- **A hook that reminds or blocks until a log exists.** It is runtime code the
+  gate can't test, and it fires at every pause. A Skill whose use we measure
+  is the cheaper bet.
+- **Find shell reads by parsing the command.** Each glob, loop or `cd` needs
+  a new rule.
 
-- a session that opens **no PR** (planning, research, a grilling session),
-- a session spanning **multiple PRs** (which one carries the log?),
-- a session whose work-PR is **abandoned or rejected** — yet the frictions it hit
-  still happened and are exactly what `consolidate` needs to see.
+## When to revisit
 
-A session log describes work that has *already* landed by session end; the log is
-meta, appended afterwards. It is ground truth about what happened, not a
-projection of repo state — so its fate should not be coupled to the work's PR.
-
-## Decision
-
-A session's own **session-log** Journal entry is committed **directly to `main`**
-by a helper script — never through a PR. This is a deliberate, bounded exception
-to ADR-0003's no-self-merge rule. The boundary:
-
-- **Scope:** exactly one additive file under
-  `tenants/journal/content/current/sessions/`, named `<date>-<sessionId>.yml`
-  (date-prefixed for chronological `stem` order; full session id guarantees
-  collision-free filenames across parallel sessions). *Nothing else* may travel
-  this path — all other changes remain gated PRs. This is not a general
-  "sessions push to `main`" loophole.
-- **The helper script is the single enforcement point.** It commits *only* that
-  one log file — never the session's other, possibly uncommitted, working-copy
-  changes — and refuses to run if anything else would be included or if
-  validation fails.
-- **Validate before push:** (1) the entry parses against the frozen `sessions`
-  schema; (2) adding it produces no generated-file drift (a `data` Document
-  regenerates nothing). Push is `fetch → rebase → push` with retry; parallel
-  sessions never collide because filenames are globally unique.
-- **Always lands, wherever the work went:** the log is pushed whether the session
-  ran on a feature branch, on a working copy that was never committed, or
-  produced no PR at all. Already-landed work is referenced by the entry's `prs`.
-
-The mechanism ships incrementally: first the `sessions` schema + a hand-authored
-entry (in a *normal* gated PR, because introducing the collection regenerates
-config); then a `log-session` platform-operation Skill wrapping the helper
-script.
-
-A third increment — a `Stop` hook to make logging fire automatically on *every*
-session — was explored and **dropped** (2026-07-05). A `Stop` hook fires once
-per turn, when the agent finishes responding, **not** at session end; in an
-interactive session it cannot tell a genuine wrap-up from a mid-session pause,
-so a block-until-logged hook would force a log the first time the agent yields.
-(It *could* be scoped to remote/autonomous runs via `CLAUDE_CODE_REMOTE`, but an
-autonomous session driven by webhooks/triggers is not reliably one-shot either.)
-Interactive logging is therefore a **reminder convention** — at wrap-up the agent
-asks the user, then logs on confirmation (see `CLAUDE.md`) — and a *deterministic*
-end-of-session trigger for autonomous sessions is deferred until those sessions
-exist and can be built with one.
+- The audit keeps finding merged PRs whose session left no log: reconsider the
+  reminder hook.
+- `landedBy` shows no landings by a fallback hook over a trial window: retire
+  that hook.
+- The landing script gets its own GitHub identity (#1689): narrow its bypass.
 
 ## Consequences
 
-- **Safe because the content type is inert.** The gate exists to stop broken
-  builds and unsafe code. A session log is strict-schema-validated `data` that
-  generates nothing, routes nothing, touches no code, and is isolated by its
-  collection key — none of the risks the gate guards against. If it validates, it
-  cannot break the build.
-- **Honesty depends on low authoring friction.** PR ceremony per session would
-  suppress logging or flatten it into dishonest summaries; direct-to-`main`
-  removes that cost, which is the point.
-- `main` receives commits that are not individually pre-merge reviewed. Accepted:
-  they cannot break the build and are honest ground truth; a reader consumes them
-  after the fact for signal, not as a gatekeeper.
-- The helper script is itself gated code — changing it is a normal PR — so the
-  exception's boundary is protected by the very gate it steps around.
-- **Aging is handled.** Session logs accumulate in `current` until the `digest`
-  Skill's mandatory archive-sweep step (`scripts/archive-journal-content.ts`,
-  issue #672) moves aged-out entries to `archived`, retaining the newest 7
-  session-log dates that actually exist — see the 2026-07-25 amendment above.
-
-## Schema evolution policy
-
-> **Amended (2026-07-05, issue #60).** This is the single home for how an
-> **append-only, strict `data` collection** may change its schema over time.
-> `sessions` is the primary instance; the Blog's `pingbacks` (ADR-0012) is the
-> second — a second append-only strict collection facing the same question is
-> what generalizes this from a `sessions`-only note into a policy, so it lives
-> here once and ADR-0012 points back to it.
-
-**Why a policy is needed.** These collections are `.strict()` and validated at
-the L1 gate, where **one** invalid file fails the *whole* build. Their history is
-**append-only ground truth** (ADR-0009): entries are never rewritten and never
-migrated. Together that means the schema may only ever change in
-**history-preserving** ways — a change that would invalidate any existing file is
-not an option, because there is no migration pass that could fix the file, and
-rewriting history is forbidden by this ADR.
-
-The rules:
-
-- **Adding an OPTIONAL field — allowed anytime.** A `.strict()` schema still
-  accepts old files that omit the new field; no migration, no version bump.
-- **Adding a REQUIRED field, renaming a field, or narrowing a field's type — NOT
-  allowed in place.** It would invalidate every historical file at once. (A
-  required `tag` on every friction is the canonical example of a change that
-  looks small but is breaking.) Instead **bump the version:**
-  - define a new object schema carrying `schemaVersion: z.literal(2)` (plus the
-    new required/renamed/narrowed shape);
-  - keep the current shape as v1, with `schemaVersion: z.literal(1).optional()`;
-  - make the collection schema `z.union([v1, v2])`.
-
-  Old files — which carry no `schemaVersion` — match v1 (absent ⇒ v1) and stay
-  valid **forever**; new files opt into v2 by writing `schemaVersion: 2`. History
-  is **never** migrated.
-- **`schemaVersion` is `z.literal(1).optional()`, NOT `z.default(1)`.** With one
-  version live there is *zero* migration to do now: `.optional()` lets every
-  pre-versioning file validate untouched, which is the whole point of laying the
-  spine down early. A Nuxt Content `default` would **not** retroactively rewrite
-  the stored rows on disk, and it would muddy the `absent ⇒ v1` discriminator the
-  future `z.union` relies on. New entries SHOULD still write `schemaVersion: 1`
-  explicitly (the `log-session` Skill's template does) so a file is
-  self-describing on disk.
-- **Consumers read old/unknown versions leniently.** `scripts/digest.ts`, the
-  dashboard, and the future `consolidate`/`codify` jobs must tolerate an
-  older-or-unknown `schemaVersion` rather than assume the latest shape — they
-  already do, via defensive `String(raw.x ?? '')`-style reads.
-
-**How pingbacks (ADR-0012) fit.** Blog `pingbacks` need **no** `schemaVersion`
-field yet: every pingback on disk today is retroactively distinguishable as v1 by
-the *absence* of the key, exactly as v1 session logs are. A field is added only
-when pingbacks take their first breaking change — at which point the same
-`z.literal(2)` + `z.union([v1, v2])` recipe above applies, with v1 keyed on the
-absent `schemaVersion`.
-
-## Automatic logging via a `SessionEnd` hook
-
-> **Amended (2026-07-06, this session).** Supersedes the *deferred end-of-session
-> trigger* left open in the Decision above. Shipped in the sections below
-> ("Landing mechanism as shipped" onward).
-
-**Why revisit.** The reminder-convention model requires an explicit, easily-skipped
-wrap-up, and its self-reported fields (`docsRead`, `skillsUsed`, `startedAt`,
-`prs`) proved unreliable against ground truth even though the session's
-transcript jsonl already records the same facts deterministically. `SessionEnd`
-alone can't carry the fix: it can't distinguish a mid-session freeze from a true
-end (both fire `reason: "other"` on the web harness), it's fire-and-forget
-(can't block or prompt the model), and its firings aren't written to the
-transcript.
-
-**Decision.**
-
-1. **Two kinds of content, two authors.**
-   - *Mechanical (derived, never self-reported):* timings, `models` (per-turn
-     counts — captures mid-session switches), tool counts, `filesRead`,
-     `filesEdited`, `skillsUsed`, `subagents` `{type, task, model}`, PR signals,
-     git branch / entrypoint / CLI version. Extracted from the transcript by a
-     committed extractor (`scripts/session-trace.ts`).
-   - *Authored (irreducible):* `goal`, `outcome`, `summary`, `frictions`, and any
-     per-item `reason`. The **live agent** writes these *during* the session —
-     `SessionEnd` cannot prompt, so authoring cannot happen at teardown.
-   - *Stitch:* `docsRead`/`skillsUsed` **union** the agent's curated entries with
-     the transcript-observed reads, keyed by path/name. The entry shape is
-     unchanged (no `source` field): a read the agent never annotated is folded in
-     with a `(unknown)` placeholder `reason`, which doubles as the lightweight
-     marker of a mechanically-observed read.
-
-2. **The scratch file is the wrap-up signal, and closure is the model's call.**
-   The agent writes its authored part via a helper (wrapped by the `log-session`
-   Skill) to a **scratch file outside git** (the harness scratchpad); the
-   `SessionEnd` hook **commits only if that scratch exists**. The agent choosing to
-   write it *is* its in-the-loop assertion of **closure** — a more reliable "done"
-   than any `reason` value, and the model **self-judges** it rather than asking the
-   human (this replaces the Decision's reminder-convention).
-
-   **Closure means *active work complete and in a coherent, honest state* — not
-   merged.** An ephemeral container rarely hosts a live agent at the later merge
-   moment, so the Decision's "a session ends when its work has merged" stance
-   *cannot be honoured automatically*; the automatic log fires at work-completion
-   and honestly records in-review PRs (`prs`, `status`/`outcome`). This is a
-   deliberate reframing of a session log from *post-landing* to *post-work* ground
-   truth, forced by the ephemeral-container reality.
-
-   Because invoking `log-session` now only *writes the scratch* — it no longer
-   commits — the Skill flips from **`disable-model-invocation: true`** (set
-   precisely to stop a premature self-fire from landing on `main`) to
-   **model-invocable**, with its `description` rewritten as a closure *trigger*. A
-   premature self-fire is now cheap (a scratch write, not a `main` commit) and
-   **self-heals**: if work continues the agent re-invokes `log-session`, and the
-   next `SessionEnd` overwrites the log with the superset. A freeze mid-work (no
-   scratch yet) → the hook does nothing.
-
-3. **Idempotent overwrite, diff-guarded.** The log is the single file
-   `<date>-<sessionId>.yml`. On a resumed-then-ended-again session the hook
-   **re-derives and overwrites** it; the transcript only grows, so a later extract
-   is a **superset** of an earlier one. A **diff-guard** skips the commit when the
-   re-derived log is byte-identical to what is on `main` — so a freeze/resume with
-   no new work never touches `main`. Push reuses this ADR's `fetch → rebase →
-   push`-with-retry; the filename is globally unique per session, so parallel
-   sessions never collide. This overwrite is a **same-session finalization**, not a
-   rewrite of another session's entry — cross-session history stays append-only.
-
-**Consequences.**
-
-- Coverage now depends on the agent **authoring a summary** (a low bar, still
-  nudged by the reminder convention) rather than on catching a clean end event.
-  No summary → no log: the same gap as today, no worse, and never a
-  partial/dishonest one.
-- The self-reported mechanical fields disappear; the previously admitted-guess
-  `startedAt` becomes exact.
-- **Human-gated install, prompt-free thereafter (ADR-0004).** The hook +
-  extractor ship **once** via a gated PR and are inherited by every session.
-  *Installing* hook config is the only step that prompts (correctly — a hook is
-  code that runs automatically), so autonomous runs, which only *inherit* the
-  committed hook, execute it unprompted. Verified this session: the committed
-  `pnpm install` `SessionStart` hook and the resume both ran with no prompt; only
-  the agent *writing* new hook config prompted.
-- **Residual edge.** A session frozen and reclaimed **without ever resuming** keeps
-  its last committed state; if that predates the scratch file, the session is
-  unlogged — graceful degradation over a partial log.
-- **`docsRead`/`skillsUsed` stay a *single* merged field — no parallel
-  `filesRead`.** Transcript-observed reads are folded *into* the agent's curated
-  list by the stitch (above), not stored in a separate "files read" home — that
-  would fragment one fact across two homes and force every consumer to re-union
-  them. The entry shape is unchanged: a folded-in read carries a `(unknown)`
-  placeholder `reason` (no `source` field). The stitch skips obvious non-content
-  paths (scratchpad, `node_modules`, `.nuxt`, …) before folding the rest in, so the
-  mechanical half doesn't drown the curated one.
-- **Schema impact — additive only, no version bump (per the policy above).** The
-  `sessions` schema is `.strict()`, so derived fields must be *declared* to be
-  stored — but all go in as **optional** keys (`models`, `subagents`, `toolCounts`,
-  `filesEdited`, `durationSec`, `gitBranch`, …), which the policy allows anytime;
-  old logs omit them and stay valid. `docsRead`/`skillsUsed` are **unchanged** — a
-  folded-in read just fills the required `reason` with a `(unknown)` placeholder, so
-  their `{path|name, reason}` shape is untouched. Nothing narrows, renames, or adds
-  a required field, so **no `schemaVersion: 2` / `z.union` is needed.**
-
-## Landing mechanism as shipped (PR #148)
-
-> **Amended (2026-07-06, PR #148).** The follow-up PR above shipped, but not as
-> pure `SessionEnd`-lands-at-teardown: a network-freezing suspend was found to
-> make `SessionEnd`'s push throw into a dead network, silently orphaning the
-> log. The same `scripts/session-end.ts` script is wired to **three** hook
-> events instead of one, in priority order:
-
-- **`Stop` (primary).** Fires at the end of the turn in which the agent invoked
-  `log-session` and wrote the scratch — the session is healthy and the network
-  is live, so the log lands promptly, well before any teardown.
-- **`SessionEnd` (fallback — catches what `Stop` missed).** Fires at teardown,
-  including a web freeze (`reason: "other"`). Best-effort only now, not the sole
-  chance — on a network-freezing suspend it can still fail silently, but `Stop`
-  has usually already landed the log.
-- **`SessionStart` matcher `resume` (deepest fallback).** A resumed session
-  always has a live network, so this catches anything neither `Stop` nor
-  `SessionEnd` managed to land.
-
-A sentinel (`.session-logs/last-landed.json`) keyed on the authored scratch's
-hash makes re-running the script on every `Stop` cheap: it only fetches/pushes
-when the scratch has changed since the last landing, so a session with many
-turns after closure doesn't re-push on each one. Net effect: **"lands on `main`
-at teardown via the `SessionEnd` hook" is no longer an accurate description of
-the common case** — the common case is landing live, mid-session, on `Stop`;
-`SessionEnd` only covers the sessions `Stop` missed.
-
-## One lander module, and the fallbacks' exit metric (2026-09-05, issue #865)
-
-> **Amended.** `scripts/session-end.ts` merged into `scripts/log-session.ts`.
-> One module now owns a log's whole life — validate the authored half, stitch it
-> with the trace, land it. The three registrations above are unchanged and all
-> three stay live; they call `log-session.ts --land`.
-
-`scripts/session-trace.ts` stays separate. It is the pure transcript extractor
-that `provenance-footer.ts`, `audit-skills.ts` and `loop-only-tool-guard.ts`
-read, and the first is a dependency of the lander — folding it in would make
-the lander import itself.
-
-**Retiring the two fallbacks needs positive evidence, not an absence.** A
-session can recover out-of-band and drive `audit-skills`' `orphanedSessions` to
-zero with the fallbacks doing nothing at all (issue #927 did exactly that), so a
-raw orphan count cannot tell "the fallbacks were never needed" from "the
-fallbacks never fired". Every landing therefore records the registration that
-performed it, as `landedBy` on the entry itself — stored data, not commit
-archaeology:
-
-```
-grep -h '^landedBy:' layers/journal/content/current/sessions/*.yml | sort | uniq -c
-```
-
-Zero `SessionEnd`/`SessionStart` catches over a shakedown window is what retires
-them; anything above zero names the one still carrying weight. `landedBy` is
-provenance about *how* a log landed, so the diff-guard ignores it — a re-derive
-by a second registration never re-pushes an otherwise identical log.
-
-## Closure invoked via a `close-session` front door
-
-> **Amended (2026-07-07, issue #215).** Refines *how the model is triggered to
-> author*, not how the log lands. **Nothing about the committer changes.**
-
-**The problem.** Interactive sessions kept finishing substantive work and
-forgetting to author the scratch, so the committer (fires only if one exists)
-had nothing to land and the session left no honest log (issue #215, recurring
-2/20 in one window). A general reminder/block `Stop` hook (issue #176's
-declined "option 2") was rejected as untested runtime behaviour the safety
-gate can't vouch for (ADR-0004), reversing a prior deliberate decision.
-
-**Two `Stop`-hook roles, do not conflate them.** The word "`Stop` hook" covers
-two different things here:
-
-- **The committer (`scripts/session-end.ts`) — unchanged, load-bearing.** Fires
-  every `Stop`; does real work *only* when a scratch exists; derives the trace,
-  stitches, and lands the log to `main`. This is the "Landing mechanism as
-  shipped" above and it is **not touched**.
-- **A hypothetical *reminder/block* hook — the thing #215/#176 proposed and this
-  amendment *again declines*.** It would fire when a session *acted but authored
-  no scratch*, to nudge or force the model into authoring one.
-
-**Decision.**
-
-1. **A model-facing `close-session` Skill is the single front door for Session
-   closure.** Its `description` is the closure *trigger* — a deliberately loose,
-   early "am I wrapping up?" signal, looser than "work complete and coherent" so
-   it trips while the agent can still act. Invoking it runs the closing sequence:
-   coherent state → gated-PR discipline (ADR-0003) → the session
-   log, which it authors **by calling `log-session`**. The existing committer then
-   lands that scratch, exactly as before.
-
-2. **`log-session` demotes from trigger to capability.** Its `description` stops
-   advertising a closure trigger (that now single-homes in `close-session`) and
-   becomes capability-shaped — *create **or update** the log* — so the model sees
-   **one** closure trigger, not two competing ones. It stays directly invocable to
-   *amend* an already-authored log.
-
-3. **The reminder/block hook stays declined — but now measurably so.** We bet a
-   better-shaped *affordance* (a discrete, named, freshly-surfaced Skill) fixes
-   more forgetting than buried prose (issue #215's rejected "option B") without
-   the ADR-0004 cost of ungateable runtime code. Crucially this is **not
-   prose-only**: `close-session`'s **invocation rate is an observable metric**.
-   That metric is the success criterion — if forgetting persists despite the
-   affordance, the heavier automatic net returns to the table with data behind it,
-   rather than being built on a hunch.
-
-**Consequences.**
-
-- **De-escalation.** The fix ships as an ordinary Skill (ADR-0005) + doc/glossary
-  edits — first-class, repo-committed, clears the normal gate. It touches **no**
-  runtime hook code, so it is *not* the human-only, ungateable change #215 was
-  escalated as.
-- **No mechanical guarantee — by design.** If the model never senses closure,
-  nothing fires, same as before this change; the affordance improves the odds, it
-  does not force. The invocation metric is what makes that acceptable: we measure
-  before spending the ADR-0004 budget on a hard net.
-- **Coverage still depends on authoring a scratch**, and the committer, sentinel,
-  diff-guard, and three-event landing are all unchanged. This amendment is purely
-  about *what triggers the authoring*.
-
-## Bounded exception: the pre-#367 truncation sweep (2026-07-16, issue #449 Gap 5)
-
-> **Amended.** The Schema evolution policy above states plainly: *"Their
-> history is **append-only ground truth**: entries are never rewritten and
-> never migrated"* and *"rewriting history is forbidden by this ADR."* This
-> amendment carves out one narrow, bounded, one-time exception — it does not
-> reopen a general "logs are mutable" door.
-
-**The problem.** An unquoted ` #` in an authored `outcome` (e.g. `outcome: PR
-#354 merged`) silently truncates at YAML-parse time — everything from the `#`
-onward reads as a comment (PR #367). The resulting guard stops it at author
-time going forward, but never swept the back-catalog; issue #449 Gap 5 asked
-for exactly that sweep.
-
-**Decision.** `scripts/sweep-truncated-sessions.ts` may correct the `outcome`
-field of an already-landed log — and *only* that field, for *only* this one
-bug signature — via two mechanisms, both bounded and auditable:
-
-- **Exact recovery.** When the full originally-intended text is still
-  physically present in the committed file (the parser's `.comment` on the
-  still-unquoted node recovers it byte-for-byte, the same mechanism
-  `findTruncatedScalars` already uses at author time) — this only re-quotes
-  text already sitting in the file, changing no fact.
-- **Corroborated reconstruction.** When the landed value is already a bare
-  fragment with nothing left to recover (the truncation happened upstream, at
-  author time, before the file was ever committed) — reconstructed only when
-  unambiguous (a lone `PR` against exactly one `prs` entry). Anything more
-  ambiguous is flagged via the new optional `historicallyTruncated` field
-  (Schema evolution policy above: an additive optional field, no
-  `schemaVersion` bump), never guessed.
-
-Every write re-validates the full entry against the frozen `sessions` schema
-before landing; a repair that would produce an invalid entry aborts loudly
-instead of silently corrupting the file. Nothing else in an entry — `goal`,
-`summary`, `frictions`, timestamps, or any other field — is ever touched by
-this sweep, and no other field's truncation is repaired by it, even where the
-same bug signature was incidentally spotted elsewhere (Gap 5 scoped this to
-`outcome`, the one field PR #367 already established as affected; a broader
-sweep is a distinct follow-up, not silently folded in here).
-
-**Consequences.**
-
-- This is a **one-time, scoped correction of a mechanical bug's fallout**, not
-  a precedent for editing session-log content generally — a future agent
-  reaching for `sweep-truncated-sessions.ts`'s pattern to "fix" an entry's
-  prose for any other reason is exactly the door this amendment does *not*
-  open.
-- The corrected text supersedes the bug-mangled value as the log's current
-  ground truth; the mangled value remains visible in the file's prior git
-  history (`git log -p`) for anyone who needs the literal bytes that were
-  actually on `main` before this sweep.
-- `historicallyTruncated` marks a log the sweep could only flag, not repair —
-  a durable, machine-readable record that its `outcome` is known-incomplete
-  and the true original text may be unrecoverable.
-
-## Bounded exception: repairing a clobbered same-session log (2026-07-25, issue #688)
-
-> **Amended.** The "superset" premise above held only for the derived half — a
-> second `log-session` firing *replaced* the authored half wholesale — so one
-> entry landed self-contradictory and was repaired by combining both authoring
-> passes, restoring only what its own git history already held. That defect is
-> fixed at the mechanism now: `mergeAuthored` (PR #1151) unions the two passes
-> on re-fire, so the hand repair below stays the only one. Like the
-> truncation sweep above, this is one bounded correction of a mechanical
-> defect's fallout, not a licence to edit log prose for any other reason.
-
-## External sessions: marked, and excluded from self-improvement mining (2026-07-22)
-
-> **Amended.** Adds one optional field (`external`) to the schema and defines
-> which consumers must ignore an external session. The direct-to-`main` boundary,
-> the derived/authored split, and every other field are unchanged.
-
-**Context.** The Platform now accepts session logs authored by an **external**
-session — a completely different harness / agent / environment, not our Claude
-Code toolchain. The first real one arrived on fork PR #631: a contributor's own
-agent running on Grok via a "Hermes" harness (`entrypoint: external_hermes`).
-Such a log is a genuine, honest self-report and belongs in the record — the
-Timeline and dashboard should show it. But its **frictions** and **skill-usage**
-describe a toolchain our fixes cannot touch: a Hermes/Grok friction does not
-generalize to our Claude-Code development, and mining it would send the
-self-improvement loop chasing non-generalizing signal. Its **ideas**, by
-contrast, are toolchain-agnostic — a good idea is worth surfacing wherever it
-came from.
-
-**Decision.** Add an optional `external: z.boolean().optional()` to the frozen
-`sessions` schema (`shared/schemas/session.ts`). **Absent ⇒ internal** (our
-harness); only an external contributor's log ever sets it, so every existing
-internal log stays valid under `.strict()`, and our own sessions leave it absent.
-A single-homed `isExternalSession(raw)` predicate lives beside the schema. The
-consumers split three ways:
-
-- **Excluded entirely** — `frictions-to-fixes` (via `scripts/session-frictions.ts`)
-  and `audit-skills` (via `scripts/audit-skills.ts`) drop an external session
-  before it enters the corpus: no friction mining, no skill-usage tally, no
-  regression/closure signal from it.
-- **Ideas kept, learnings dropped** — the ideas data layer (`scripts/ideas.ts`,
-  `readNoteMaterial`) still gathers an external session's `ideas` but omits its
-  `learnings`.
-- **Unchanged** — internal (non-external) behaviour is byte-for-byte identical;
-  external sessions remain visible in the Timeline/dashboard record.
-
-**Consequences.**
-
-- Additive and optional, so no `schemaVersion` bump per the evolution policy
-  above; older logs and every internal log validate unchanged.
-- The exclusion is enforced in the scripts' read layer, not left to the Skill
-  prose — an external log cannot leak into the mining corpus even if a future
-  survey forgets the rule.
-- `external` is self-declared by the external harness (unlike the derived
-  mechanical trace); we take the contributor's log at its word here, exactly as
-  we do for its authored `goal`/`summary`/`frictions`.
-
-**Delivery — the one session log that travels a PR.** An external contributor's
-environment has no `Stop`/`SessionEnd` committer and no `main` push access, so
-its session log commits as an ordinary file inside the contributor's feature PR
-instead, landing when that PR merges — the single sanctioned exception to the
-"never through a PR" boundary above. The direct-to-`main` rule is unchanged for
-every internal session. House rules: `docs/agents/guest-contributions.md`.
-
-## `session` reclassified as derived, not authored (2026-07-16)
-
-> **Amended.** `session` sits on the mechanical side of the split above: it
-> resolves from ground truth (`CLAUDE_CODE_REMOTE_SESSION_ID`, else the
-> transcript's own `sessionId`), and the typed value is used only when neither
-> resolves. The schema is unchanged. Why: a typed id once landed a log under
-> the wrong identity (issue #387/#449).
-
-## Folded-in `docsRead` reason split in two (2026-07-07)
-
-> **Amended.** The Decision and Consequences above describe a single
-> `(unknown)` placeholder `reason` for every folded-in read. That's now split
-> into two derived placeholders, `docsRead`-only (`skillsUsed` still gets one
-> plain placeholder — there's no analogous "edited" signal for a Skill):
-
-- **`(read before editing)`** — the path also appears in `filesEdited`. The
-  Edit tool (and Write on a file that already existed) refuses to run unless
-  the path was `Read` first in the same session, so this read wasn't
-  unexplained — it was a harness-enforced precondition of the edit that
-  happened to go uncited. Worded as "before", not "required for": the trace is
-  derived from `tool_use` calls, not results, so a `Read` attempted against a
-  path that didn't exist yet still lands in `filesRead` even though it errored
-  and read nothing.
-- **`(no reason given)`** — every other folded-in read, and any folded-in
-  skill. Renamed from the original `(unknown)` for the same reason: a plain
-  read genuinely carries no derivable signal for *why*, whereas an edited
-  path's read does.
-
-Shape is unchanged (still `{path|name, reason}`, no `source` field) — this is
-a same-field wording refinement, not a schema change, so it needs no
-`schemaVersion` bump per the policy above. Older logs already committed with
-the literal `(unknown)` string stay valid history; only newly-derived entries
-use the split wording.
-
-## `main` is protected; the lander passes through the admin bypass (2026-10-08, issue #348)
-
-> **Amended.** The direct-to-`main` decision is unchanged; this records what
-> now stands between the lander and `main`.
-
-`main` carries the `protect-main` ruleset. The lander's push gets through
-its Repository-admin "Always" bypass, because it pushes with the owner's own
-credential. That bypass is coarser than this ADR's one-file boundary and
-cannot be narrowed without a distinct identity for the lander (issue #1689);
-the helper script stays the single enforcement point of the boundary, as the
-Decision says. The ruleset's exact rules and the reasons for them are
-single-homed in
-`docs/research/github-branch-protection-vs-autonomous-log-commits.md`.
-
-## What the log says it read: the output-matching and merged-read amendments (2026-08-29 to 2026-10-11, issues #1074, #1545, #1723)
-
-> **Amended.** One account of how `docsRead` is derived and who corrects it.
-> It replaces three earlier amendments: a separate `docsReadViaShell` field, a
-> command-text parser, and a "no consumer, never corrected" rule.
-
-`filesRead` sees `Read` calls only, so docs streamed through `cat`/`sed`/`grep`
-were invisible (#1074). The trace now credits them, and they fold into
-`docsRead` exactly as `filesRead` does. `docsReadViaShell` is deprecated: never
-written again, kept in the schema so older logs validate.
-
-**How a shell read is established.** The trace matches a command's `tool_result`
-text against the lines of the instruction docs themselves, not the command text
-(a parser needed a new rule for every glob, loop, `cd` or `||` fallback, #1545).
-`scripts/shell-reads.ts` holds the mechanism: the index of each doc's lines of
-at least `MIN_DISTINCTIVE_LINE` characters that appear in no other file (a line
-of code a doc quotes never credits the doc); the stripped `LINE_PREFIXES`; a doc
-whose path prefixes an output line (`path:12:`) is credited. The measurements
-are in `docs/research/shell-reads-by-output-matching.md`. Rules that keep it
-honest, since a credit reaches every `docsRead` consumer:
-
-- A command that printed nothing credits nothing.
-- **A glance is not a read.** A doc counts once one transcript's output (the
-  session's or one subagent's) has shown `MIN_LINES_SHOWN` distinct lines of it
-  (all of it, if shorter). A `path:line:` grep hit is one line.
-- **A quoting surface is not a read.** `gh` and Journal output, and
-  `git show`/`diff`/`log` output, credit only a doc the command itself names
-  (#1723).
-
-Limits, accepted: the trace reads the checkout (`loadDocLineIndex`), so a doc
-edited between two derivations can change a re-derived value. A doc read from
-git history whose lines are gone, and a read that showed fewer than
-`MIN_DISTINCTIVE_LINE` characters, stay invisible (the `log-session` Skill
-points here). `scanShellReads` survives only to explain `--author`'s near-miss
-list.
-
-**The agent corrects the list, and the correction is logged.** `--author` lists
-each instruction doc the trace will fold in that has no authored reason yet,
-with its evidence. The agent answers each with a reason, or `(not read)` for a
-doc no command of the session or its subagents showed it. The stitch drops a
-`(not read)` path and, when the detector had credited it, files a `moderate`
-`SHELL-READ-DETECTION` Friction itself, so a detector error stays visible.
-
-**Ratings.** A `docsRead` entry has an optional authored `useful` verdict
-(`yes`, `partly`, `no`). An optional `ruleVerdicts` list gives each loaded rule
-a `reason` (why it helped or didn't) and a `useful` verdict; the derived
-`rulesGlobal` lists the always-loaded rules (no `paths`; they load at session
-start). `--author` lists every doc and rule still missing one. Both are optional
-and additive, so no `schemaVersion` bump; older logs stay valid.
+- `main`'s protection lets the owner's credential, which the script uses, push
+  anything. Only the script narrows that to one file.
+- A session that never reaches closure leaves no log; a missing log beats a
+  partial one.
+
+## See
+
+- `scripts/log-session.ts` and `.claude/settings.json`: authoring, landing and
+  its hooks, the filename, `landedBy`.
+- `scripts/session-trace.ts`, `scripts/shell-reads.ts`: derived fields and
+  shell-read thresholds.
+- `shared/schemas/session.ts`: the schema, versions, `isExternalSession`.
+- The `close-session` and `log-session` Skills: closure, statuses, authoring.
+- `scripts/archive-journal-content.ts`: how many logs stay in `current`.
+- `docs/agents/guest-contributions.md`: an outside agent's log.
+- `docs/research/github-branch-protection-vs-autonomous-log-commits.md`:
+  `main`'s ruleset.

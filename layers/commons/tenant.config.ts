@@ -6,8 +6,7 @@
 // cross-Tenant view — a tag index, a directory — is another
 // Space here, not another Tenant.
 //
-// Declarative intent only; `content.config.ts` builds the keyed collections at
-// config-evaluation time (ADR-0002/0013).
+// Declarative intent only (ADR-0002, ADR-0013).
 import { defineTenant } from '../../shared/manifest'
 
 export default defineTenant({

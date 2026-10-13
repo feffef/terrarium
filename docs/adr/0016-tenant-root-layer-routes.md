@@ -1,55 +1,64 @@
-# 16. A Tenant may own a root landing route above its Spaces
+# ADR-0016: A Tenant's own layer may hold a page at its root, `/t/<tenant>`
 
-Date: 2026-07-06
-Status: Accepted
+A Tenant may have one page at its root address, `/t/<tenant>`, above its
+Spaces. The page lives in that Tenant's own layer and is ordinary presentation
+code. It stays out of the manifest and the routing map, reads Space data only
+through the shared resolver, and gets tested by its own Tenant.
 
-> **Amended by [ADR-0018](0018-tenant-layers-under-layers-directory.md) (2026-07-07).**
-> Tenant layers moved from `tenants/` to Nuxt's conventional `layers/` directory;
-> the `tenants/atlas/app/pages/t/atlas/index.vue` path in the Decision below is now
-> `layers/atlas/app/pages/t/atlas/index.vue`.
+## Scope
 
-## Context
+- **Where it lives.** In the Tenant's layer, at
+  `layers/<tenant>/app/pages/t/<tenant>/index.vue`. The Platform has no page
+  that answers `/t/<tenant>` for every Tenant.
+- **What it may do.** Show a landing page, such as a cover or a directory of the
+  Spaces, or send the visitor on to one Space. Which one is the Tenant's
+  choice.
+- **How it reads content.** It reads its own Tenant's Spaces only through
+  `resolveSpaceRoute`, once per Space it needs, and other Tenants only through
+  the catalog (ADR-0025). It never reads the routing map itself.
+- **What stays the same.** The manifest, the routing map and the resolver know
+  nothing about root pages. Only Spaces have routes there, and only Spaces are
+  in the list of entry routes the smoke test visits.
+- **Who merges.** A root page adds no routing logic, so it merges like any
+  other Tenant layer page.
+- **Testing.** The smoke test never visits a root page, so each Tenant tests
+  its own root page in its own tests.
 
-ADR-0006 routes every request by the path prefix `/t/<tenant>/<space>/<slug>`:
-the isolation-critical resolver (`shared/routing.ts`) takes a `(tenant, space)`
-pair and maps it to exactly one Space's keyed `pages` collection. Every route
-under `/t/` has, until now, been Space-scoped — there was no reason for a page
-that belongs to a Tenant as a whole rather than to one of its Spaces.
+## Why
 
-The Atlas Tenant (PRD #64) needs one: a **front door** at `/t/atlas` — a cover,
-foreword, and directory of the three Biomes (#65). It is not a Space, has no
-Space content of its own, and exists to send the visitor *into* a Space. Forcing
-it to be a Space (an `atlas/index` Biome with no specimens) would be a lie in the
-domain model — a Biome is a place with a population — and would pollute the
-Biome set the food web, field log, and Space toggle enumerate.
+- A landing page is not a Space. Faking one as an empty Space would put a place
+  with no content in every list of Spaces.
+- Keeping the page in the layer leaves the routing model and the isolation
+  code untouched. The resolver stays the one way to reach a Space's data, so a
+  root page adds nothing a human must review.
+- Each Tenant decides what its root shows. A landing page and a redirect are
+  both just a page.
 
-## Decision
+## Rejected alternatives
 
-A Tenant's **layer** may register a static page at its own root, `/t/<tenant>`,
-above its Spaces. The Atlas does so with `tenants/atlas/app/pages/t/atlas/index.vue`.
+- **Make the landing page a Space.** It would have no content of its own, and
+  every feature that lists Spaces would show it.
+- **One Platform page at `/t/[tenant]` that sends every Tenant to its first
+  Space.** It would read the routing map directly, outside the resolver, and
+  choose the Space by declaration order rather than let the Tenant choose.
+- **A root-page field in the manifest.** It would change the manifest format
+  and the expansion code for what a small layer page already does.
 
-- The route is an ordinary Nuxt layer page at a fixed path. It is **not** produced
-  by the manifest, **not** in the routing map, and **not** in the `entryRoutes`
-  smoke list — those remain Space-scoped (ADR-0006/0014).
-- It never resolves a `(tenant, space)` request itself. Where it needs Space data
-  (the Atlas front door counts specimens per Biome for its directory), it calls
-  the **same** shared `resolveSpaceRoute` once per Space — read-only, no new
-  isolation surface. It therefore stays outside the ADR-0004 human-only routing
-  core: it is presentation, like any other layer page.
-- It does not collide with the catch-all: `/t/atlas` is a single segment after
-  `/t/`, while `app/pages/t/[tenant]/[space]/[...slug].vue` needs at least two.
+## When to revisit
+
+- Root pages become common enough to deserve a place in the manifest.
 
 ## Consequences
 
-- A Tenant that wants a proper landing (a showpiece cover, a portal) can have one
-  without inventing a sham Space. Spaces stay honest — every Space has real content.
-- The precedent is deliberately narrow: a Tenant-root page is a **layer
-  presentation** concern, not a routing-model change. The resolver, the routing
-  map, and the isolation guarantee are all untouched — a Tenant with no layer
-  still has no root page and falls through to the generic Space renderer.
-- The smoke gate does not cover `/t/<tenant>` roots automatically (they aren't
-  entry routes). A Tenant relying on one should assert it in its own way; the
-  Atlas front door is exercised via the per-Biome routes it links to and by the
-  build, which fails on a broken page.
-- If Tenant-root routes ever proliferate, revisit whether they deserve a
-  first-class place in the manifest rather than being a layer convention.
+- A Tenant without a root page answers `/t/<tenant>` with a 404, because the
+  Platform's catch-all page needs both a Tenant and a Space.
+- No check makes sure a root page has a test. The Tenant's tests are the only
+  cover, besides the build failing on a broken page.
+
+## See
+
+- `shared/expand.ts` (`entryRoutesFrom`): the entry routes the smoke test
+  visits.
+- `shared/routing.ts` (`resolveSpaceRoute`): the resolver (ADR-0006).
+- `app/pages/t/[tenant]/[space]/[...slug].vue`: the Platform catch-all.
+- `layers/<tenant>/tests/e2e/`: each Tenant's own root-page test.

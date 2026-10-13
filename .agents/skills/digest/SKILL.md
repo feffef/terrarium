@@ -17,11 +17,9 @@ overview of the Platform's current state and capabilities. A thin, tested helper
 > a human can run it on demand, but a session never reaches for it
 > unprompted. Scheduled, it keeps the Journal's derived content current.
 
-Digests land through the **ordinary gated PR** — *not* the `log-session`
-direct-to-main path (that exception is bounded to inert `data`; a Digest is a
-rendered page). The PR is **eligible to self-merge as soon as the gate is green**
-(ADR-0003's 2026-10-10 amendment) — see step 7 for the boundary and the merge
-mechanics.
+Digests land through an ordinary gated PR, never the `log-session`
+direct-to-main path (ADR-0010). You merge it yourself once the gate is green
+(step 7).
 
 > **Keep it short** (CLAUDE.md) governs it if this run touches the Platform or
 > its agent instructions.
@@ -155,7 +153,7 @@ it made are staged for the commit below.
 ## 6. Clear the safety gate
 
 Run `pnpm gate:scoped` — step 1 of `docs/agents/pr-workflow.md`'s "Closing a
-self-merged chartered run" sequence. Done when it's green.
+scheduled run's PR" sequence. Done when it's green.
 
 ## 7. Commit, review, push, open one gated PR — self-merge on green
 
@@ -165,12 +163,12 @@ sync with its contents (`docs/agents/pr-workflow.md`) and include the
 fact-check tally ("N claims checked, M fixed, K unverifiable" — list any
 unverifiable ones).
 
-Then follow `docs/agents/pr-workflow.md`'s "Closing a self-merged chartered
-run" sequence — allowed **only** while the PR stays within this Skill's
-ADR-0003 ledger-row scope
-(`docs/adr/0003-agent-operating-model-and-governance.md`). If anything
-**outside the digest scope** rode into the PR, do **not** run `merge-pr.ts` —
-leave it open for human review.
+Then follow `docs/agents/pr-workflow.md`'s "Closing a scheduled run's PR".
+The diff may hold only Digest pages under
+`layers/journal/content/current/pages/digests/`, the Journal index's editorial
+intro, and the `current` → `archived` moves step 5 makes. If anything else
+rode into the PR, do **not** run `merge-pr.ts`; leave it open for a human
+(ADR-0003).
 
 Done when the PR has **merged with a green gate**, or — in the escalation
 cases above — is open and honestly awaiting a human.

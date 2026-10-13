@@ -1,9 +1,8 @@
 // Coverage for the double-background guard (issue #1208; rationale and
 // detection contract in `scripts/double-background-guard.ts`). The pure core
 // is pinned directly; the CLI's stdin→deny-JSON path, `--dry-run`, and the
-// hot-path pre-filter are exercised end to end against the real scripts —
-// the same reviewability bar the sibling guards' specs set for an
-// unattended hook (ADR-0004). Per docs/agents/guards.md's warning, these
+// hot-path pre-filter are exercised end to end against the real scripts
+// (docs/agents/guards.md). Per docs/agents/guards.md's warning, these
 // assertions target the underlying property (both signals present, either
 // alone, adversarial command text) rather than a handful of hand-picked
 // substrings.
@@ -195,7 +194,7 @@ describe('the double-background-guard.sh hot-path pre-filter', () => {
   })
 })
 
-describe('the --dry-run path (ADR-0004: an unattended hook needs a way to be exercised by hand)', () => {
+describe('the --dry-run path (docs/agents/guards.md: exercise a guard by hand)', () => {
   function dryRun(args: string[]): { decision: string; reason?: string } {
     return JSON.parse(runTsx(SCRIPT, { args: ['--dry-run', ...args] }))
   }

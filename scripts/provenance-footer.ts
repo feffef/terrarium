@@ -1,8 +1,5 @@
-// The ADR-0017 provenance-footer backstop (issue #346). ADR-0017's Decision said
-// "Commits already get this from the harness template — no repo-side change," but
-// on cloud `git commit -m` that auto-injection intermittently does not fire (the
-// recurrence rate and rationale are ADR-0017's 2026-07-20 amendment / issue #346).
-// This is the code
+// The ADR-0017 commit-trailer backstop (issue #346): on cloud `git commit -m` the
+// harness template does not reliably add the trailer. This is the code
 // home for the footer's exact two-line format plus a commit-msg git-hook entry
 // point that appends it when absent, reconstructing the model name and session
 // URL repo-side — the same two values `buildLogCommit()` derives (both now share
@@ -14,9 +11,8 @@
 // git-hook I/O (`main`), mirroring the `handle`/`landMain` split in
 // `log-session.ts`. `main()` FAILS OPEN: any error, missing transcript, or
 // unresolvable session URL leaves the message untouched and the commit
-// proceeds — a guard bug must never wedge a commit (ADR-0017: a regression
-// degrades cleanly back to the manual-amend status quo, it is not a blocking
-// gate).
+// proceeds — a guard bug must never wedge a commit (ADR-0017: commits are
+// repaired, never blocked).
 //
 // `computeFooterAction` also catches a *present-but-mismatched* `Claude-Session:`
 // trailer (issue #710) — the one commit surface where an agent hand-writes the
@@ -61,7 +57,7 @@ import {
 
 /** The model-name fallback when no transcript is available to derive the busiest
  *  model — the single home, also consumed by `log-session.ts`'s `deriveModelName`.
- *  ADR-0017 has no "the trace didn't say" exemption; the footer still needs a value. */
+ *  The trailer still needs a value (ADR-0017). */
 export const FALLBACK_MODEL = 'Claude'
 
 /** The current Claude model family display names a `Co-Authored-By:` line is
@@ -183,8 +179,8 @@ export type FooterAction =
 /** The pure, unit-testable core. Idempotent (present-and-matching footer →
  *  `noop`); when the session URL is unresolvable it also `noop`s rather than
  *  append half a footer — the `Claude-Session:` line is the load-bearing
- *  recoverable key, and a footer missing it is worse than none (ADR-0017
- *  degrades to status quo).
+ *  recoverable key, and a footer missing it is worse than none (ADR-0017:
+ *  commits are repaired, never blocked).
  *
  *  A present footer is no longer an unconditional `noop` (issue #710): when
  *  the existing `Claude-Session:` trailer's id doesn't match the resolved

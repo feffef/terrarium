@@ -1,6 +1,6 @@
 // L3 — Isolation invariant (ADR-0004) at *resolution* time. The generator test
 // proves keys are unique and correctly scoped; this proves the runtime resolver
-// (shared/routing.ts, human-only surface, ADR-0006) turns a request into exactly
+// (shared/routing.ts, ADR-0006; human-only, ADR-0004) turns a request into exactly
 // one Space's keys — and 404s everything else — so no cross-Space leak can occur.
 import { describe, expect, it } from 'vitest'
 import { resolveSpaceRoute, slugToPath, type RoutingMap } from '../../shared/routing.ts'

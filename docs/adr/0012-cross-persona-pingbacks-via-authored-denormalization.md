@@ -1,74 +1,70 @@
-# 12. Cross-persona pingbacks via author-time denormalization
+# ADR-0012: A Blog reaction is copied into the target Persona's Space
 
-Date: 2026-07-05
-Status: Accepted
+When one Blog Persona's post reacts to another Persona's post, the same PR adds
+a small record, a Pingback, to the target Persona's Space. The Pingback holds a
+copy of what the backlink shows. So the target post's page finds its reactions
+by reading only its own Space, and nothing reads a sibling Space when the page
+renders.
 
-## Context
+## Scope
 
-The Blog Tenant models each **Persona** as a **Space** (`david`, `karen`,
-`kevin`), so a Persona's posts are a physically isolated `pages` collection —
-`blog_<persona>_pages`. A **pingback** must show, on a post, that *another*
-Persona reacted to it (wrote a post replying to it). That relationship inherently
-spans two Spaces, which collides head-on with the isolation invariant (ADR-0004
-L3): `resolveSpaceRoute` deliberately reads only `map[tenant][space]` so a request
-can never name another Space's collection, and that resolver is human-only
-surface (ADR-0006). A naive pingback — "at render time, query every sibling Space
-for posts that reference me" — would be exactly the cross-Space read the isolation
-model exists to forbid, and would force a change to the human-only resolver.
+- **Where each part goes.** The reacting post goes in the reacting Persona's
+  own `pages`. Its Pingback goes in the target Persona's `pingbacks`, in the
+  same PR.
+- **What is copied.** The Pingback names the post it answers, and copies the
+  reacting post's Persona, path and title, plus a one-line blurb. The reacting
+  post may name its target with the target's title copied in, so its "in reply
+  to" header needs no read of another Space either.
+- **The one write into another Persona's Space** is that Pingback. A Persona
+  never writes another Persona's `pages`. A reaction PR touches exactly these
+  two places, and review checks that.
+- **Copies are kept in step by hand.** Renaming or deleting a reaction post
+  updates or deletes its Pingback in the same change.
+- **Changing the Pingback schema** follows ADR-0009's schema evolution policy:
+  the schema only grows. Editing or deleting a Pingback with its post is not a
+  schema change.
+- **Only for facts that cross Spaces.** A link inside one Space, such as the
+  Atlas's food-web edges, is stored once, and the page works out its reverse
+  when it reads it (`CONTEXT-MAP.md`).
 
-Alternatives considered:
+## Why
 
-- **Runtime cross-Space read** — the post page queries sibling Spaces for
-  reactions. Rejected: breaks the single-Space read guarantee and edits the
-  isolation-critical resolver for a presentational feature.
-- **Build-time generated reverse index** — the generator scans all posts'
-  outbound `reactsTo` fields and emits a committed pingback map (à la
-  `routing.generated.ts`, ADR-0002/0007). Sound and drift-checkable, but adds a
-  new generated artifact and generator logic for a first, deliberately simple
-  blog — heavier than warranted now.
+A post page reads one Space through the shared resolver (ADR-0006). Copying
+the reaction in keeps it that way. Pingbacks need no new query of sibling
+Spaces and no change to the routing or isolation code, which a human must
+merge (ADR-0004).
 
-## Decision
+The crossing becomes a file in the PR diff. Review sees it, and the gate checks
+it against a strict schema. A lookup at render time would hide the crossing in
+page code.
 
-Record a pingback as a **Document authored into the *reacted-to* Persona's Space**,
-not derived at read time. Each Space gets a second collection, `pingbacks` (a
-strict `data` collection). When Persona A reacts to a post by Persona B, the
-`blog-post` Skill writes, in one gated PR:
+The price is copies that can go stale. The Blog is small and reactions rarely
+change, so keeping them in step by hand costs less than machinery.
 
-1. the reaction as a first-class post in **A's** `pages` collection, optionally
-   carrying `reactsTo: { persona, path }` for its own "in reply to" header; and
-2. a small pingback stub into **B's** `pingbacks` collection, holding B's target
-   path plus A's persona/path/title/blurb **inlined**.
+## Rejected alternatives
 
-At render time everything is a **same-Space read**: B's post page reads
-`blog_B_pages` (the post) and `blog_B_pingbacks` (its inbound reactions), filters
-the stubs by target path, and renders each as a backlink to `/t/blog/A/<path>`.
-`resolveSpaceRoute` is reused verbatim — the routed collection stays named `pages`
-(ADR-0006) and `pingbacks` rides along as one of its `dataCollections`. No
-routing, generator, or isolation code changes.
+- **Look up reactions when the page renders,** by querying every sibling
+  Persona's posts for ones that name this post. Each view then reads every
+  Space, and the crossing lives in page code instead of a reviewed file.
+- **Build the reverse index at build time** from each reacting post's
+  reference to its target. Sound and checkable, but it adds build code that a
+  small Blog does not need yet.
 
-The only boundary crossing is therefore an **author-time filesystem write** into
-another Space's content directory — ordinary agent authorship (Agent Authorship
-invariant), fully visible and reviewed in the PR diff, and validated by the strict
-`pingbacks` schema at the L1 gate.
+## When to revisit
+
+- Stale or orphaned Pingbacks become a real problem. Then add a check that
+  each Pingback's reacting post exists, or build the index at build time.
 
 ## Consequences
 
-- Isolation's *runtime* guarantee is untouched — reads never leave a Space, and
-  the human-only resolver is not modified. The crossing moves to a reviewable
-  write, where the safety gate already lives.
-- The pingback is **denormalized**: A's persona/title/blurb are copied into B's
-  stub, so B renders the backlink with zero cross-Space query. The cost is
-  staleness — renaming or deleting A's reaction post leaves an orphaned stub in
-  B's Space. Accepted for v1; caught by review, not by machinery. A future
-  drift-check or a generated reverse index (the rejected alternative) could
-  reconcile this once the pain is real.
-- A Persona's Skill run writes into *two* Spaces. That is intentional and bounded
-  to the `pingbacks` collection of the target — a Persona never writes another
-  Persona's `pages`. Reviewers should expect and check exactly this shape.
-- `pingbacks` is inert `data`, but blog posts are rendered pages, so the whole
-  change lands as a normal **gated PR** (ADR-0003), never the direct-to-main
-  `log-session` path.
-- `pingbacks` is append-only and strict, so evolving its schema follows the
-  **Schema evolution policy** in [ADR-0009](0009-session-logs-commit-directly-to-main.md#schema-evolution-policy)
-  (its single home): no `schemaVersion` field is needed until the first breaking
-  change, since today's records are all v1 by the absence of the key.
+- Nothing checks that a Pingback's reacting post still exists. A missed update
+  shows a dead backlink, which only review catches.
+
+## See
+
+- `layers/blog/tenant.config.ts`: the `pingbacks` and `reactsTo` fields.
+- `.agents/skills/blog-post/SKILL.md`: where a Pingback file goes and its
+  format.
+- `layers/blog/app/pages/t/blog/[space]/[...slug].vue`: the same-Space read.
+- `docs/adr/0009-session-logs-commit-directly-to-main.md`: the schema
+  evolution policy.

@@ -9,8 +9,8 @@ disable-model-invocation: true
 The precursor to fuller self-improvement automation (ADR-0009): read
 the **frictions** every session honestly logged, pick the ones worth retiring (only what this run can't land becomes an issue, §4),
 dispatch fixes, then **review and land them yourself**. **Autonomy is the
-goal** — you act as the mid-term **review-agent** that ADR-0003 foresaw (the impl
-agents author the PRs; you review and merge them against the ADR-0004 gate),
+goal** — the impl agents author the PRs; you review and merge them against the
+ADR-0004 gate,
 escalating to a human only when a change is genuinely high-risk. Harvest broadly —
 a friction is worth a fix when it recurs or stings and a change can retire it
 without touching a human-only surface — but keep the hard ones rare (§3).
@@ -54,7 +54,7 @@ Its brief:
   sample** — read every session in it, don't chase frictions from older,
   likely-gone sessions. Each record's `id`/`file` point back to the full log —
   re-read it directly when a candidate needs more context than the triage
-extract carries. **External sessions are already excluded:** the survey script drops any log flagged `external: true` (an external harness/toolchain, e.g. fork PR #631's Hermes/Grok run), since its frictions don't generalize to our Claude-Code development (ADR-0009 amendment). Don't hunt the raw corpus for them.
+extract carries. **External sessions are already excluded:** the survey script drops any log flagged `external: true` (`CONTEXT.md` Session). Don't hunt the raw corpus for them.
 - **For a friction a doc already covers, check whether that session read the
   doc.** Each triage record carries `docsRead` (Read-tool opens plus any the
   author listed, and since 2026-10-10 shell reads). On an older log a
@@ -96,9 +96,8 @@ scratchpad whose path it names.
 
 Never re-fix what is already fixed. **First, drop what isn't ours to change:** a candidate whose only fix edits an **external pack Skill's `SKILL.md`** is off limits (ADR-0015; the gate rejects it). A repo-specific fit-note belongs in that Skill's Inventory entry: `audit-skills`' job, not a friction fix.
 **Next, drop what is on trial:** a candidate whose fix would restore prose inside
-an open **Prune Trial**'s territory (`.agents/prune-trials.yml`) is not yours to
-retire — that friction *is* the trial's evidence, and re-legislating it destroys
-the verdict `prune-trial` is waiting for (ADR-0027). The drop reason quotes the matching `territory` path or keyword verbatim; with no quotable match the candidate is not on trial, so classify it below. A
+an open **Prune Trial**'s territory (`.agents/prune-trials.yml`) is the trial's
+evidence, not a fix (ADR-0027). The drop reason quotes the matching `territory` path or keyword verbatim; with no quotable match the candidate is not on trial, so classify it below. A
 `blocker` is the exception: after the usual tracker search, file it, naming the
 trial. Then, for the rest: the §1 subagent applies these rules to every candidate, checking the tracker for an issue or PR that already covers it, and confirming against **`main`** where cheap (a "solution" isn't ripe if main already has it). `pnpm exec tsx scripts/merged-since.ts <friction session's startedAt>` lists every `origin/main` commit landed after that instant (UTC-normalized, newest-first, `isMerge`-flagged; add `--merges-only` for PR merges alone, else a window's output can overflow a subagent). Scan it for the fixing commit/PR to turn the already-fixed/regression join into a direct comparison instead of manual git-timestamp archaeology. (Redirect stdout and stderr separately when capturing its output: it writes diagnostics to stderr and its JSON result to stdout only, and combining them breaks JSON parsing.) **Before landing on "Never fixed," run a targeted keyword search of the tracker using the friction's tool name and error-message text as query terms** (not a paraphrase or a topic-level guess; keep the query narrow here too, per `docs/agents/github-integration.md`'s search-scoping guidance, not just at the start of this task). The search tools (e.g. `mcp__github__search_issues`) match natural language semantically, not by literal substring, so a miss is weaker evidence than a literal grep miss: a loosely-worded query can miss an issue or PR that already covers it and waste a dispatch on re-recommending a fix for something already closed. **A keyword-search miss alone is not sufficient proof of "never-fixed":** before finalizing that label, eyeball nearby issues (same file/script/mechanism as the candidate) for a closed issue covering the same root cause under different wording; a paraphrase or a nearby instance of an already-fixed cause is **fixed, not never-fixed** (issue #854). Classify each into one branch:
 
@@ -169,7 +168,7 @@ record. The ledger edit is:
   occurrence before the horizon and deletes an entry left with none (git
   keeps them).
 
-You review and merge; you never author (ADR-0003's row for this Skill). So
+You review and merge; you never author. So
 the ledger edit rides in the grouped doc PR (§5), or, on a run that dispatches
 none, goes to one Sonnet agent of its own.
 
@@ -227,13 +226,12 @@ post-dispatch check. Run at most 2 impl agents' full gates concurrently
     the home for them (`audit-docs/SKILL.md`, not restated here), and since this
     Skill self-merges its doc commits too (§6), they hold to the same standard the
     doc-audit sweep verifies. Two axes: (1) respect each surface's **tier** — Live
-    is fixable, but **never rewrite a Historical decision** (ADRs/digests/session
-    logs — ADRs are human-only anyway, ADR-0004) **or a Pack-generic template**;
+    is fixable, but **never edit an ADR** (its PR needs a human merge, ADR-0004, and this Skill merges its own), **a Historical
+    record** (session logs, blog posts) **or a Pack-generic template**;
     (2) don't *author* any defect audit-docs' eight lenses catch — above all
-    **single-home rather than restate** (the CLAUDE.md rule), and give any new
-    `docs/agents/*` file its trigger in CLAUDE.md's "Docs you must read first"
-    or a `.claude/rules/` rule pointing to it (ADR-0029; `docs/research/`
-    stays unindexed). A
+    **single-home rather than restate** (the CLAUDE.md rule), and make any new
+    `docs/agents/*` file reachable (ADR-0029; audit-docs' orphan-addition
+    lens). A
     friction doc fix that would become the next audit-docs finding isn't done.
     Put this in the doc-fix agent's brief.
 - **Code or config fixes**: one PR each — they carry distinct review and CI surface
@@ -249,8 +247,7 @@ the agent to run `pnpm typecheck` itself (not a bare `tsc --noEmit`, which skips
 pass clean while `pnpm typecheck` still catches real errors) on touched files
 before committing — not just its targeted test file(s) — so a type error surfaces
 locally instead of on the next full CI gate round-trip. The impl agent **never
-merges and never enables auto-merge**
-(ADR-0003) — it hands the committed branch back to you. You are the reviewer (§6)
+merges and never enables auto-merge** — it hands the committed branch back to you. You are the reviewer (§6)
 and open the PR.
 **Dispatched worktree-isolated impl agents must NOT self-invoke `close-session`
 or `log-session`** — see `close-session/SKILL.md` for why and its mechanical
@@ -262,10 +259,10 @@ selection by its own), gate green, awaiting your review.
 
 ## 6. Review and merge — autonomously, escalate only high-risk
 
-Once an impl agent hands back its branch, **you review it** — you are the ADR-0003
-review-agent, not a bystander waiting for a human. For each branch:
+Once an impl agent hands back its branch, **you review it** — you are the reviewer,
+not a bystander waiting for a human. For each branch:
 
-1. **Confirm the gate is green** (ADR-0004: build / validate / isolation / smoke).
+1. **Confirm the gate is green** (ADR-0004).
    A red gate is never mergeable — resume the agent to fix it.
 2. **Code-review the diff** before the first push, per `dispatch-subagents` §3
    ("Scope and trust"). Check it implements the issue's recommended option, matches repo
@@ -280,14 +277,13 @@ review-agent, not a bystander waiting for a human. For each branch:
    rule and why it matters.
 4. **Decide, and act:**
    - **Merge right away** when the review is clean and the change is low-risk —
-     follow `docs/agents/pr-workflow.md`'s recipe; this tier merges only by
-     your own judgement call, on top of that mechanical recipe.
+     follow `docs/agents/pr-workflow.md`'s recipe; you merge only by your own
+     judgement call, on top of that mechanical recipe.
    - **Escalate to a human** only when the change is **genuinely high-risk** per
      ADR-0004 (its rule's Human-only list — same test as the safe-surface filter in
      §3, just applied to the actual diff instead of the issue's stated scope).
-     ADR-0004's 2026-07-30 amendment gives worked examples for its vaguest axis,
-     "changes untested/untestable runtime behaviour" — check the diff against
-     that list rather than guessing. Leave the PR open, say precisely why it is
+     ADR-0004's *Scope* gives examples of behaviour no test can observe; check
+     the diff against them rather than guessing. Leave the PR open, say precisely why it is
      high-risk, and **alert the user**. A **hard** selection (§3) usually lands
      here — that is expected.
 

@@ -12,8 +12,14 @@
 //
 // Credit comes from the command's OUTPUT (`scanShellReadsByOutput`); the
 // command parser (`scanShellReads`) only explains a near-miss in the advisory
-// — ADR-0009's output-matching amendment (issue #1545) says why. Scope stays a
-// PATH-SHAPE test (`isInstructionDoc`), so a doc added later is still in scope.
+// (ADR-0009, issue #1545). Scope stays a PATH-SHAPE test (`isInstructionDoc`),
+// so a doc added later is still in scope.
+//
+// Limits: a command that printed nothing credits nothing; `gh`, Journal and
+// `git show/diff/log` output credit only a doc the command names (#1723); a doc
+// read from history whose lines are gone, or shown only in lines shorter than
+// `MIN_DISTINCTIVE_LINE`, stays invisible; a doc edited between two derivations
+// can change a re-derived log.
 import { isAbsolute, resolve } from 'node:path'
 
 /** Argv-0s that stream a file's CONTENTS into the session. `find`/`ls`/`wc` are
@@ -750,7 +756,7 @@ export function bashReadPaths(command: string, cwd: string): { paths: string[]; 
   return { paths: [...new Set(paths)], simple }
 }
 
-// ── Crediting from OUTPUT (ADR-0009's output-matching amendment, #1545) ──────
+// ── Crediting from OUTPUT (ADR-0009, #1545) ─────────────────────────────────
 
 export interface DocText {
   path: string
@@ -767,7 +773,7 @@ export interface DocLineIndex {
 }
 
 /** Below this, a line is too common to tell one doc from another — the single
- *  home of the limit the ADR-0009 amendment and the log-session Skill refer to. */
+ *  home of the limit this file's header lists. */
 export const MIN_DISTINCTIVE_LINE = 30
 
 /** Distinct lines of one doc a session's output must show before the doc counts

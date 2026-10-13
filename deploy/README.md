@@ -1,8 +1,7 @@
-# Deploying Terrarium (PoC)
+# Deploying Terrarium
 
-A self-updating container that keeps the public site in sync with `main` without
-rebuilding the image on every push. See **ADR-0011** for the *why* and the
-trade-off against ADR-0001.
+A container that keeps the public site in sync with `main` without rebuilding
+the image on every push. ADR-0011 says why.
 
 ## How it works
 
@@ -138,7 +137,7 @@ default) and `docker compose up -d`; the volume checkout switches refs cleanly
 > http://localhost:3080/`. Remove it once Caddy fronts the site over `web` — no
 > host port is needed in normal operation.
 
-## Notes & caveats (PoC)
+## Notes & caveats
 
 - Every update pays a **full rebuild** — content is baked into the app's SQLite
   at build time, not hot-reloaded. Fine for infrequent updates.

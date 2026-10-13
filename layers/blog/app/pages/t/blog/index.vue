@@ -1,12 +1,10 @@
 <script setup lang="ts">
-// The Blog Tenant's front door (`/t/blog`) — a Tenant-root layer page above its
-// Spaces, the same precedent ADR-0016 already established for the Atlas
-// (`layers/atlas/app/pages/t/atlas/index.vue`). Combines every Persona's posts
-// into one reverse-chron feed, browsable by Tag (layers/blog/CONTEXT.md: Tag)
-// via the `?tag=` query param — filtering is a client-side computed over one
-// fetch, so switching tags never re-queries.
+// The Blog Tenant's front door (`/t/blog`), a Tenant root page (ADR-0016).
+// Combines every Persona's posts into one reverse-chron feed, browsable by Tag
+// (layers/blog/CONTEXT.md: Tag) via the `?tag=` query param — filtering is a
+// client-side computed over one fetch, so switching tags never re-queries.
 //
-// Isolation-respecting and presentation-only (ADR-0004): it resolves each
+// Isolation-respecting and presentation-only (ADR-0016): it resolves each
 // Persona through the SAME shared, unit-tested `resolveSpaceRoute` the rest of
 // the Blog uses, then reads only that Space's own keyed `pages` collection —
 // no cross-Space query, no new isolation surface. `PERSONA_SLUGS` arrives via

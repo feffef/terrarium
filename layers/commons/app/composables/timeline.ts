@@ -5,8 +5,7 @@
 // dated, which fragment a deep-link uses), so adding or changing a source is an
 // ordinary layer edit. The generic primitive it builds on
 // (`queryAcrossTenants`, app/composables/catalog.ts) stays platform-side and
-// human-only; reads are build-time/committed only (ADR-0001), read-only by
-// construction (ADR-0020).
+// human-only; reads are build-time/committed only (ADR-0001) and read-only.
 import { documentUrl } from '#shared/routing'
 
 /** One entry in the cross-Tenant **Timeline**: a timestamped piece of content,
@@ -25,14 +24,11 @@ export interface TimelineEntry {
 }
 
 // Journal deep-link fragment format, owned by layers/journal/app/utils/dashboard.ts
-// (sessionAnchor/digestAnchor). A session log and a daily digest have no standalone
-// page route — they render on the Journal dashboard, opened by this fragment — so
-// the Timeline links to `<space-landing>#<anchor>`. The coupling to the Journal's
-// scheme is this aggregator's own, deliberate choice, owned here in its layer.
-// A daily digest is a *Journal* page under `/digests/<YYYY-MM-DD>` (ADR-0010, a
-// Journal-scoped path convention) — the tenant guard below keeps it that way, so
-// another Tenant publishing a page at `/digests/<date>` is treated as an ordinary
-// page, never misclassified and deep-linked to a fragment that doesn't exist.
+// (sessionAnchor/digestAnchor). Session logs have no page of their own, and the
+// Timeline opens a Digest in place on the Journal home page too, so both link to
+// `<space-landing>#<anchor>`. That coupling is this aggregator's own choice.
+// `/digests/<date>` marks a Digest only in the Journal (ADR-0010); the tenant
+// guard below treats the same path in another Tenant as an ordinary page.
 const DIGEST_PATH = /^\/digests\/(\d{4}-\d{2}-\d{2})$/
 
 /**

@@ -90,8 +90,7 @@ export function resolveSpaceRoute<T extends string>(
   // `tenant === '__proto__'` (or `'constructor'`/`'hasOwnProperty'`, …) to
   // `Object.prototype` or one of its own members instead of failing closed.
   // Nothing on `Object.prototype` carries a `pages` string today, so there is no
-  // live leak — but ADR-0006's isolation guarantee ("a resolved route can never
-  // name another Tenant's or Space's collections") shouldn't rest on that being an
+  // live leak — but the isolation guarantee (ADR-0006) shouldn't rest on that being an
   // accident of what happens to live on `Object.prototype` right now.
   const tenantSpaces = Object.hasOwn(map, tenant) ? map[tenant] : undefined
   const spaceCollections =

@@ -90,7 +90,7 @@ Skills, docs and code comments cite sections by name, and the Gate does not catc
 a dangling one.
 
 Cut an incident history to **the rule plus a pointer** to where the history
-lives (the issue, the ADR) — never to a ruleless rule with no forwarding
+lives (the issue or PR) — never to a ruleless rule with no forwarding
 address. `audit-docs`' Stale-narration lens owns that shape; it is barred from
 retiring these, and you are not.
 
@@ -105,7 +105,7 @@ and never delete the worked examples a weaker reader needs.
 
 **You may also simplify the language of any Markdown file in scope** (see
 Bounds), alongside a prune or instead of one. Do this when no problem clears
-the bar. Rewrite the whole file if that helps: a Skill, a doc or an ADR. Use
+the bar. Rewrite the whole file if that helps: a Skill or a doc. Use
 short sentences. Avoid project jargon. Prefer plain English. Keep every rule and
 decision; cut the rest. Be brave: restructure the file, merge its sections,
 reword all of it. The file is the trial's territory. It gets the same ledger
@@ -116,8 +116,7 @@ the behaviour has proven it needs a hook. **File an issue proposing it**; a
 session with a human present builds it, because a scheduled run can't wire
 `.claude/settings.json` (`docs/agents/guards.md`). The issue names the
 behaviour, the trial or verdict that proved it, the wrong shape to fire on, and
-one unit test. The hook must warn and exit 0, even when it crashes
-(ADR-0027).
+one unit test.
 
 ## 4. Prove it on Sonnet
 
@@ -141,24 +140,21 @@ entry is what the verdict reads later. Never treat the step as satisfied.
 ## 5. Ship and record
 
 One PR, the line delta in its title. Follow `docs/agents/pr-workflow.md`'s
-"Closing a self-merged chartered run" sequence. Your tier is bounded by
-**reversibility, not by file** (ADR-0003's ledger row): prose anywhere, a
-script's comments included. Changing what runs unattended is not a prune —
-escalate that.
+"Closing a scheduled run's PR" sequence. You may prune any instruction text,
+a script's comments included; changing what runs is not a prune: escalate
+that (ADR-0027).
 
 ## Bounds
 
 Everything the Platform tells its agents is in scope: CLAUDE.md, CONTEXT.md,
-`docs/`, our own Skills including the scheduled ones, and the ADRs; ADR-0004's
-Human-only merge rule otherwise stands. You may
-rewrite an ADR whole, Decision and Consequences included, as long as **what it
-decided does not change**: fold its amendments into the text and retell its
-history wherever that reads clearer. Skip
-`docs/proposals/<N>-*.md` and `.out-of-scope/*.md` — written for a human to
-apply once, not for agents to read.
+`docs/` and our own Skills including the scheduled ones; ADR-0004's Human-only
+merge rule stands. Skip `docs/proposals/<N>-*.md` and `.out-of-scope/*.md` —
+written for a human to apply once, not for agents to read.
 
-Two exceptions and one refusal:
+Three exceptions and one refusal:
 
+- **ADRs** (`docs/adr/`) and their summary rules — a human-led rewrite
+  changes them (ADR-0030), never a trial.
 - **External pack Skills** (`skills-lock.json`) — the Gate rejects the edit.
 - **Session logs** — the record, not instructions.
 - **Retiring a Skill or a Routine, including your own** — file a `needs-triage`

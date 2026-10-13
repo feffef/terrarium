@@ -8,7 +8,7 @@
 // detection contract, the residual fail-opens, and the conventions every
 // guard here shares are in docs/agents/guards.md. Pure core is kept
 // separate from the stdin I/O and exercised by --dry-run, mirroring the
-// sibling guards (ADR-0004's unattended-hook reviewability bar).
+// sibling guards (docs/agents/guards.md).
 //
 // Usage:
 //   sh scripts/subagent-background-guard.sh          # the installed Bash hook entry

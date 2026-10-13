@@ -1,5 +1,5 @@
 // L2 e2e assertions specific to the **marquee** Tenant. Serves the gate's build
-// via `setupL2()` and never builds (ADR-0004 amendment, tests/README.md).
+// via `setupL2()` and never builds (tests/README.md).
 //
 // The entry-route sweep in `tests/e2e/smoke.spec.ts` only reaches the reel
 // Space landing (`/t/marquee/reel`) — an individual Chapter

@@ -1,6 +1,6 @@
 // L2 — Smoke render (ADR-0004): every (Tenant, Space) entry route returns 200,
 // renders content, and — in a REAL browser — hydrates with no console/page
-// errors. The target list is derived at build time from the manifests
+// errors. The target list is derived at test time from the manifests
 // (ADR-0014), so new Spaces are covered automatically.
 //
 // This file is the Platform spec: the cross-Tenant entry-route sweep, the root
@@ -9,7 +9,7 @@
 //
 // Every e2e spec calls `setupL2()` and never builds. The one build is the gate's
 // `pnpm build`; the e2e project's globalSetup (tests/support/e2e-global-setup.ts)
-// reuses it and builds only if `.output` is stale (ADR-0004 amendment; tests/README.md).
+// reuses it and builds only if `.output` is stale (tests/README.md).
 //
 // A real browser (`createPage`) loads each route: the server-rendered document
 // is checked from the navigation's response, and the client bundle actually

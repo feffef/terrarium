@@ -1,203 +1,69 @@
-# 19. A committed patch to `@nuxt/content`'s client-side DB loading
+# ADR-0019: A failed content load shows a reload dialog; a failed chunk reloads
 
-Date: 2026-07-08 (decision made); documented retroactively 2026-07-11
+`@nuxt/content` runs unpatched. When a page's content fails to load in the
+browser, the page shows an error dialog whose fix is a full page reload. One
+failure, a piece of the app's own code that failed to download, reloads the
+page by itself, once.
 
-Status: **Superseded (2026-07-16, issue #236)** — the patch was removed in favour
-of an app-level surface (see the Amendments at the end). Originally Accepted as a
-retroactive record: the patch had been live on `main` since commit `12a9564`
-(2026-07-08); this ADR was written after the fact once a review found the
-decision met the 3-part test but had no ADR. The Context/Decision/Consequences
-below describe the patch as it stood while live; the Amendment records why it was
-dropped.
+## Scope
 
-## Context
+- **Covers** a Content query that runs in the browser and fails. Most in-app
+  navigation reads a server payload instead; ADR-0028 lists where the browser
+  database still loads.
+- **No silent blank.** Every page or component that queries Content in the
+  browser mounts `ContentLoadErrorDialog` and passes it its `useAsyncData`
+  status and error. On failure the dialog says the content could not load,
+  shows the technical detail, and offers a reload.
+- **One mechanism.** The automatic reload is wired into the dialog, not into
+  each page, so a new page gets it by mounting the dialog.
+- **The one automatic reload.** A failed download of a code chunk reloads the
+  page without a click, at most once per path within Nuxt's own reload guard.
+  If it fails again, the dialog shows.
+- **Every other failure keeps the dialog,** such as a failed or corrupt
+  database download or a query error. Some of them repeat on reload, and a
+  reload loop is worse than a dialog.
+- **No in-page retry.** Recovery is always a full page load.
+- **No dependency patch** for this. A patch of `@nuxt/content` is a dependency
+  change, so a human merges it (ADR-0004).
 
-A human-reported bug (issue #236): following a link occasionally left a
-component (the About section on a blog Persona page) **permanently empty**
-until a full page reload. Diagnosis (session `session_014i7ctF8d56WnSorhtSNTUw`,
-2026-07-08) traced the root cause into `@nuxt/content` 3.15.0 itself, not this
-repo's code: client-side `queryCollection` runs against a WASM SQLite DB whose
-per-collection `sql_dump.txt` is fetched lazily on first query.
-`loadDatabaseAdapter` (`dist/runtime/internal/database.client.js`) caches that
-in-flight load as a promise in a module-level `dbPromises` map, but only
-evicts it — and marks the collection loaded — **after a successful await**. If
-the dump fetch rejects (a transient blip that outlasts `$fetch`'s single
-built-in retry), the **rejected promise stays cached**, so every later query
-for that collection re-awaits the same rejection: the component can never
-load again for the life of the page. Only a full reload (fresh module state)
-recovers. This repo is unusually exposed because it keys ~21 small
-per-(Tenant, Space, collection) collections, so client navigations fetch far
-more distinct dumps than a typical single-collection site.
+## Why
 
-This was reproduced deterministically two ways: first by aborting the first
-two `sql_dump.txt` requests during a client navigation (commit `12a9564`,
-PR #235), then — after issue #236 flagged the first repro as an *injected*
-failure, not a captured production one — by actually stopping/restarting the
-production server mid-navigation (`scripts/repro-236.ts`, PR #251, issue #236
-comment 2026-07-08T23:00:23Z): 4/4 RED unpatched, GREEN patched. The same
-evict-only-on-success code was confirmed present on `@nuxt/content`'s `main`
-branch at the time, i.e. this is an upstream robustness gap, not a misuse on
-our side. No upstream `nuxt/content` issue is recorded as filed yet (issue
-#236's tracking checklist still lists "file the upstream issue" as an open
-item); no upstream PR/issue reference exists anywhere in this repo.
+When `@nuxt/content` fails to load its browser database, it keeps that failure
+for the rest of the page's life. App code cannot reach in and clear it. A
+fresh page renders from the server database, so a full reload recovers every
+case. Without the dialog, the failure shows as a section that stays empty.
 
-This meets the 3-part ADR test: **hard to reverse** (the patch targets
-compiled `dist` output at a specific version and must be re-authored or
-re-validated on every `@nuxt/content` upgrade); **surprising without context**
-(a `pnpm patch` of a third-party dependency's build artifact is not
-discoverable from reading application code); **a real trade-off** (carrying a
-version-pinned fork of vendored code vs. leaving a real user-facing bug
-unpatched while waiting on upstream).
+The failure seen in production was a code chunk that briefly returned an
+error. That chunk is imported inside the page's `useAsyncData`, so the error
+never reaches the router, and Nuxt's own chunk-reload handling never acts. A
+reload reliably fixes it, so the app does it for the user. The cost is a
+flash and the loss of unsaved in-page state, which beats a dialog the user
+must click.
 
-## Decision
+## Rejected alternatives
 
-Ship a committed `pnpm patch` of `@nuxt/content@3.15.0`
-(`patches/@nuxt__content@3.15.0.patch`, wired via `pnpm-workspace.yaml`
-`patchedDependencies`), touching two compiled files under
-`dist/runtime/internal/`:
+- **Patch `@nuxt/content`** to forget a failed load and retry the download.
+  It is tied to one version's compiled code and must be redone on every
+  upgrade. It also misses failures where the load succeeds but leaves the
+  data empty or corrupt.
+- **Reload automatically on every failure.** A failure that repeats on
+  reload, such as a corrupt download, would loop the page.
+- **Retry inside the page.** The library's kept failure makes it fail again.
 
-- **`database.client.js`, `loadDatabaseAdapter`:** evict the cached
-  `dbPromises` entry in a `finally` (both the WASM-init entry and the
-  per-collection entry), on success **or** rejection. A failed load can now be
-  retried by the next query instead of poisoning the collection forever.
-- **`api.js`, `fetchDatabase`:** retry the dump fetch (`retry: 4,
-  retryDelay: 300`) so a short blip self-heals within a single query, before
-  it ever reaches the eviction path above.
-- **`api.js`, `fetchDatabase` (client only):** on a failure that survives the
-  retries, record a best-effort diagnostic entry to a `localStorage` ring
-  buffer (`__content_db_errors`, capped at 25 entries: timestamp, collection,
-  HTTP status if any, truncated message) and `console.warn`. This exists
-  because the underlying production trigger (network blip vs. post-deploy
-  checksum-mismatch 404 vs. 5xx) was — and, per issue #236's open tracking
-  checklist, still is — an unconfirmed hypothesis; the ring buffer is how a
-  real occurrence gets captured without devtools open.
+## When to revisit
 
-A red-capable e2e regression test (`layers/blog/tests/e2e/blog.spec.ts`) injects
-the two-failure blip on a client navigation and asserts the component still
-fills; it fails on an unpatched build and passes patched.
+- `@nuxt/content` ships a release that forgets a failed browser load. Then an
+  in-page retry could replace the reload.
+- A silent self-heal is wanted. It belongs upstream first.
 
-## Consequences
+## See
 
-- **Standing maintenance cost, not a one-time fix.** The patch is pinned to
-  `@nuxt/content@3.15.0`'s exact compiled output (`pnpm-workspace.yaml`'s
-  `patchedDependencies` key is version-qualified). Any `@nuxt/content` version
-  bump must re-validate the patch against the new `dist` output — line
-  offsets, surrounding code, or the bug itself may have changed — and likely
-  requires re-authoring the diff by hand. `pnpm install` applies the patch
-  from the store, so there is no pristine unpatched `dist` on disk to diff
-  against; reconstructing pre-patch behavior for A/B testing requires a
-  `patch -R` + rebuild + restore dance (documented in `scripts/repro-236.ts`'s
-  header).
-- **Exit path is upstream, not permanent forking.** Issue #236's tracking
-  checklist calls for filing the `finally`-evict fix upstream and dropping
-  this repo's patch once a fixed `@nuxt/content` release ships. As of this
-  writing no upstream issue or PR is recorded in this repo — that filing is
-  still outstanding.
-- **The root cause is still an open hypothesis, not a confirmed diagnosis.**
-  Issue #236 remains open; its first checklist item ("capture at least one
-  real `__content_db_errors` entry from production") is unchecked. The patch
-  is believed correct and necessary regardless of which specific trigger
-  (network blip, stale-deploy 404, 5xx) turns out to be the real-world one,
-  because all of them funnel through the same poisoned-promise code path — but
-  that belief has not yet been confirmed against a captured production entry.
-- **Gate coverage is automatic, not incidental.** Because the patch surfaces
-  as an ordinary `patches/*.patch` file plus a `pnpm-workspace.yaml` entry, it
-  re-applies on every `pnpm install`, so CI and the local safety gate exercise
-  the patched behavior the same way they exercise any other dependency.
-- **New-dependency-shaped risk without being a new dependency.** No new
-  package was added, but per ADR-0004's escalation axes, changing an existing
-  dependency's runtime behavior this way is exactly the kind of change that
-  stays human-only to merge even though the touched paths (`patches/`,
-  `pnpm-workspace.yaml`) aren't on ADR-0004's named high-risk file list.
-
-## Amendment (2026-07-16, issue #236): the patch was removed
-
-The owner reported (2026-07-14) that user-visible empties **still recurred** with
-the patch live, and asked to drop the dependency patch rather than carry it. On
-re-diagnosis the patch was found to close only the funnels where the client load
-promise *rejects*; funnels where the load **resolves broken** (per-command
-`db.exec` errors swallowed → collection marked "loaded" over an empty table) or
-where a corrupt dump is cached to `localStorage` before validation survive it.
-More to the point, the patch is the fragile, version-pinned `dist` fork this
-ADR's own Consequences flag as a standing cost.
-
-**Decision reversed.** The `pnpm patch` (`patches/@nuxt__content@3.15.0.patch`)
-and its `pnpm-workspace.yaml` `patchedDependencies` wiring were deleted; stock
-`@nuxt/content@3.15.0` is restored. The upstream poison (a rejected/failed
-client load stays un-recoverable for the life of the page) is therefore **back**
-— but it can no longer present as a *silent* permanent blank. It is mitigated at
-the application layer instead:
-
-- The three Space pages read `useAsyncData`'s `status`/`error` and, on failure,
-  raise **`ContentLoadErrorDialog`** (`app/components/`) — a modal stating the
-  content couldn't load, a disclosure with the technical detail, and a **Reload
-  page** action.
-- Reload is the deliberate (and only reliable) recovery: `@nuxt/content` poisons
-  its own module-level client-DB state on a failed load and app code cannot
-  reach in to clear it, so a fresh page — which renders from the **server** DB
-  during SSR, not the client WASM DB — is what recovers the content. A full
-  reload universally recovers every funnel; an in-page retry cannot.
-
-**Trade-off accepted.** A brief transient dump-fetch blip that the patch used to
-self-heal invisibly (`retry: 4` + `finally`-evict) now surfaces the modal and
-needs a manual reload. This was accepted to shed the version-fragile dependency
-fork; the app-level surface is durable across `@nuxt/content` upgrades and makes
-every failure visible and recoverable regardless of trigger. The `__content_db_errors`
-telemetry the patch added is gone too — the modal's technical-details disclosure
-surfaces the underlying error directly instead. If an invisible self-heal is
-wanted back later, it belongs upstream (or in a fresh, re-validated patch), not
-in this reverted one. This amendment is governance/dependency-runtime behaviour,
-so it stays human-only to merge (ADR-0004).
-
-## Amendment (2026-08-04, issue #236): the chunk-load funnel auto-recovers
-
-The amendment above concluded that a reload is the only reliable recovery and
-left the user to click it. The first real production capture (2026-07-19) then
-identified *which* failure the owner had actually been hitting, and it is not
-the dump fetch this ADR was written about: on `/t/blog/david`, with no deploy in
-flight, the dialog recorded `Failed to fetch dynamically imported module:
-…/_nuxt/5YSETiN2.js` with `status: 500` — a transient 500 on an existing,
-content-hashed build chunk. `@nuxt/content` lazily `import()`s
-`@sqlite.org/sqlite-wasm` on its first client-side query, *inside* the page's
-`useAsyncData` handler, so the failed import is captured as that block's `error`
-and never reaches the router. Nuxt's own `nuxt:chunk-reload` plugin only acts on
-chunk errors that surface through `router.onError`, so it stays dormant here —
-verified against `nuxt@4.4.8` and reproduced end-to-end by 500-ing that chunk
-during a client navigation.
-
-**Narrowed, not reversed.** The recovery is still a reload, for the same reason
-this ADR's previous amendment gives — a fresh page renders from the *server* DB
-and app code cannot clear `@nuxt/content`'s poisoned client state. What changes
-is who clicks it: for this one failure class the app now reloads itself via
-`reloadNuxtApp`, so a transient chunk 500 no longer parks the user on a modal.
-
-- Classification: an error is chunk-load if Nuxt's own `app:chunkError` hook
-  (fed by Vite's `vite:preloadError`) saw it — matched by identity through the
-  `cause` chain `useAsyncData`'s `createError()` wrapper adds — or, as a
-  fallback for an import that never passed through Vite's preload helper, if its
-  message matches any engine's wording for a failed dynamic import.
-- Loop safety: `reloadNuxtApp`'s own per-path `sessionStorage` TTL guard is the
-  only attempt counter. The app reads that same entry *before* calling, because
-  `reloadNuxtApp` returns nothing when it declines — so a failure that persists
-  past one auto-recovery falls back to `ContentLoadErrorDialog` rather than
-  reloading again.
-- Every other funnel is untouched: a rejected dump fetch, a decompression or
-  `db.exec` throw on a 200, and a genuinely absent document all keep the dialog,
-  since a reload cannot fix them and a reload loop on an unfixable error is
-  worse than a modal.
-
-**Trade-off accepted.** The auto-reload is a full page load: any unsaved
-in-page state is lost, and the user sees a flash rather than an explanation.
-That is judged better than a modal for the one class where the reload
-demonstrably restores the content — and it is bounded to that class precisely so
-the modal remains the answer everywhere a reload would just repeat. This
-amendment is governance, and it changes global runtime error/reload behaviour,
-so it too stays human-only to merge (ADR-0004).
-
-## Amendment (2026-09-27): navigation mostly skips the client DB
-
-ADR-0028 makes in-app navigation read a server-rendered payload, so the client
-DB, and with it every funnel above, now loads only where a query runs outside a
-payload: Tinkerfund search, re-queries after mount, or a failed payload fetch.
-The recovery above is unchanged. Its blog e2e tests fail the payload first to
-reach it.
+- `app/components/ContentLoadErrorDialog.vue`: the dialog and where recovery
+  is wired.
+- `app/composables/contentLoadRecovery.ts`, `app/utils/chunkRecovery.ts`,
+  `app/plugins/chunk-errors.client.ts`: which errors count as a chunk failure,
+  and the once-per-path guard.
+- `layers/blog/tests/e2e/blog.spec.ts`, `tests/unit/chunk-recovery.spec.ts`:
+  the checks.
+- `scripts/repro-236.ts`: reproduces the library's kept failure on a real
+  server restart.

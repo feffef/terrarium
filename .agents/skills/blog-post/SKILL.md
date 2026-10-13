@@ -176,9 +176,8 @@ than the commit that lands it.
 If it is a reaction, also write the pingback stub into the **target**
 Persona's Space at
 `layers/blog/content/<target>/pingbacks/<today-UTC>-<persona>-<target-slug>.yml`
-(format in the reference below). This is the only time a Persona writes
-outside its own Space, and only into `pingbacks`, never another Persona's
-`pages` (ADR-0012).
+(format in the reference below). Nothing else goes outside your own Space
+(ADR-0012).
 
 Done when: the post (and stub, if any) exist in the tree and nothing else
 changed.
@@ -240,10 +239,10 @@ Done when: green.
 
 ### 11. PR, then merge or escalate
 
-Follow `docs/agents/pr-workflow.md`'s "Closing a self-merged chartered run".
+Follow `docs/agents/pr-workflow.md`'s "Closing a scheduled run's PR".
 This Skill's delta from that sequence:
 
-- **Scope** (ADR-0003 ledger row): the post under
+- **Scope**: the post under
   `layers/blog/content/<persona>/pages/`, plus for a reaction one stub under
   `…/pingbacks/`. Nothing else.
 - **Escalate instead of merging** (leave the PR open for a human) if anything

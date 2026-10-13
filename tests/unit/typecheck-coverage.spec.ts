@@ -7,12 +7,8 @@
 // CLAUDE.md's single-home rule) and asserts each still matches a real, known
 // file on disk.
 //
-// Scope narrowed by ADR-0018 (issue #209): Tenant layers moved to Nuxt's
-// conventional `layers/` directory, so Nuxt's generated tsconfig now covers
-// `layers/*/app/**/*` and `layers/*/nuxt.config.*` natively. The only manual
-// glob left to guard is `layers/*/tenant.config.*` (the manifest — jiti-only,
-// invisible to Nuxt's program). The retired `nuxt.config.ts` canary is gone
-// with the patch it guarded.
+// Nuxt type-checks each layer's app/ and nuxt.config.* itself; only the
+// manifest glob is ours to guard (ADR-0018).
 import { existsSync, readFileSync } from 'node:fs'
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'

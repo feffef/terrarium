@@ -209,7 +209,7 @@ describe('buildDocReadCounts()', () => {
   })
 })
 
-describe('toSession() — external exclusion (ADR-0009 amendment)', () => {
+describe('toSession() — external exclusion (ADR-0009)', () => {
   const skillNames = new Set(['tdd'])
 
   it('reduces an internal log to a Session: real Skill names only, docsRead paths only', () => {

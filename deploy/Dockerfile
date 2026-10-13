@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1.7
 #
-# Terrarium PoC deployment image (ADR-0011): a thin RUNNER + BUILDER, not a baked
+# Terrarium deployment image (ADR-0011): a thin RUNNER + BUILDER, not a baked
 # app image. No application source is copied in — the supervisor clones `main`
 # and builds it at runtime into the /app volume, so pushing to `main` never
 # requires rebuilding or redeploying this image. The image only changes when the

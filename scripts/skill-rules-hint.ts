@@ -3,8 +3,8 @@
 // when a file is read or edited, and invoking a Skill (the Skill tool, or a
 // slash command) reads no file, so without this a rule meant for a Skill never
 // reaches its runs. The rules' `paths` stay the single definition of which
-// Skill needs which rule. Fails open: any error adds nothing (ADR-0027: a hook
-// warns and exits 0).
+// Skill needs which rule. Fails open: any error adds nothing, since a hint must
+// never block a session (docs/agents/guards.md).
 //
 // Usage:
 //   tsx scripts/skill-rules-hint.ts                # hook payload on stdin

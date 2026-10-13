@@ -21,8 +21,8 @@ name resolution, see [`github-integration.md`](./github-integration.md).
   into several user stories with their own sub-issues, a plain issue if not.
 - **`/triage`'s redundancy check applies to every open issue, no exemptions.**
   Before actioning one, search for an existing implementation, even if it's not
-  actionable by design (e.g. a governance proposal awaiting a human
-  green-light). Such a proposal can ship through another issue or PR while it
+  actionable by design (e.g. a governance proposal awaiting a Trusted
+  user's approval). Such a proposal can ship through another issue or PR while it
   stays open and unlabeled.
 - **Before implementing a `ready-for-agent` issue, check for supersession.**
   A missing target file is not the only way an issue goes stale. Search for a
