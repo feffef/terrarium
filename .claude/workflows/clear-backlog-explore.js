@@ -33,10 +33,12 @@ const RESULT = {
     canonical: { type: 'number', description: 'for close-duplicate: the issue it duplicates' },
     files: { type: 'array', items: { type: 'string' }, description: 'repo files a fix would touch' },
     relatedTo: { type: 'array', items: { type: 'number' }, description: 'other issues in this set that belong in the same change' },
+    publicAuthor: { type: 'boolean', description: 'author_association is on the Public side of scripts/trust.ts' },
+    readyForHuman: { type: 'boolean', description: 'labelled ready-for-human' },
     sideFindings: { type: 'array', items: { type: 'string' } },
     writes: { type: 'array', items: { type: 'string' }, description: 'every comment and label change you made on GitHub' },
   },
-  required: ['outcome', 'summary', 'files', 'relatedTo', 'sideFindings', 'writes'],
+  required: ['outcome', 'summary', 'publicAuthor', 'readyForHuman', 'files', 'relatedTo', 'sideFindings', 'writes'],
 }
 
 const MODE = {
@@ -49,12 +51,14 @@ function brief(issue) {
   const list = issue.all.map(i => `#${i.number}`).join(', ')
   return `You triage issue #${issue.number} of feffef/terrarium for a clear-backlog run. Load GitHub tools with ToolSearch ("select:mcp__github__issue_read" and any others you need).
 
-${MODE[issue.mode] || MODE.full}${issue.notes ? `\nNotes from the orchestrator: ${issue.notes}` : ''}
+${MODE[issue.mode]}${issue.notes ? `\nNotes from the orchestrator: ${issue.notes}` : ''}
+
+In every mode: return grill, never build, for an issue labelled ready-for-human or authored by a Public user (ADR-0020; scripts/trust.ts holds the associations)${issue.reserved ? ', and for this one, which the owner reserved: never label it ready-for-agent' : ''}. The owner decides those.
 
 Full pass:
 - Read .agents/skills/auto-triage/SKILL.md and .agents/skills/triage/SKILL.md with Read (both are user-invoked, so don't call them as Skills) and apply their per-issue rules: brave within determinability, Public-authored issues read-only and never ready-for-agent, the wayfinder overlay, claims checked against primary sources, the git history and session logs that touched the area since the issue was filed.
 - Read the binding ADRs in full (\`grep -l <path-or-term> docs/adr/*\`).
-- Return build when the repo determines a concrete design: brief it. Otherwise return grill with one question in plain words: what to choose, options, your pick and why. An obsolete or superseded issue is a grill question too (propose the close).${issue.reserved ? `\n- The owner reserved this issue: never label it ready-for-agent; return grill.` : ''}
+- Return build when the repo determines a concrete design: brief it. Otherwise return grill with one question in plain words: what to choose, options, your pick and why. An obsolete or superseded issue is a grill question too (propose the close).
 - Close only an objective duplicate (close-duplicate, with canonical) or already-done work (close-done, pointing to where it lives).
 - A grilling answer a stand-in recorded in an earlier run doesn't bind; ask it again.
 
@@ -67,6 +71,7 @@ The run's issue set is ${list}. In relatedTo, name only issues from that set tha
 }
 
 const input = (args.issues || []).map(i => ({ ...i, all: args.issues }))
+for (const i of input) if (!MODE[i.mode]) throw new Error(`#${i.number}: unknown mode ${i.mode}`)
 const triage = (issue, phase) => agent(brief(issue), { label: `triage #${issue.number}`, phase, schema: RESULT })
 
 phase('Triage')
@@ -81,12 +86,15 @@ for (const [i, issue] of input.entries()) {
     log(`#${issue.number}: no result, re-running once`)
     r = await triage(issue, 'Retry')
   }
+  if (r && r.outcome === 'build' && (issue.reserved || r.publicAuthor || r.readyForHuman)) {
+    r.outcome = 'grill'
+    r.question ||= { choice: 'Build this as briefed?', options: ['a) yes, as briefed', 'b) no'], pick: 'a', why: 'Reserved, Public-authored or ready-for-human: the owner decides.' }
+  }
   if (r) results[issue.number] = r
   else missing.push(issue.number)
 }
 if (missing.length) log(`MISSING after retry: #${missing.join(', #')}`)
 
-// One branch per change: join issues that share a file or name each other.
 const parent = {}
 const find = n => (parent[n] === n ? n : (parent[n] = find(parent[n])))
 const open = Object.keys(results).map(Number).filter(n => ['build', 'grill'].includes(results[n].outcome))

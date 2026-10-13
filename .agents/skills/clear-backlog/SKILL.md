@@ -61,7 +61,9 @@ built from the `grill` results. Where its format differs, this list wins:
   triage agent's. The owner never needs to open a ticket.
 - Put the most important questions first, and end with "accept my picks for
   the rest".
-- Leave out `blocked` issues; the report lists them with their blocker.
+- Ask only about issues in §1's set; the ones the sweep skipped wait for a
+  run that picks them up. Leave out `blocked` issues; the report lists them
+  with their blocker.
 - Include Public issues (the owner's yes is the green-light ADR-0020
   requires) and proposals to close an issue as obsolete or superseded. Close
   only on a yes.
@@ -89,12 +91,15 @@ Act on each branch's `status`:
 
 - `needs-owner`: an interrupt (the script lists the conditions). Send a push
   notification, ask its `question` in the running `Q` numbering, and re-run
-  just that branch with its `worktree`, `question` and the `answer`. The rest
+  just that branch with its `question`, the `answer`, and its `worktree` if
+  it returned one (without, the branch restarts from `origin/main`). The rest
   keep going.
 - `failed`: read the journal for the cause, then fix the brief and re-run the
   branch, or report it.
 - `ready-to-push`: check its `commits` against
-  `git log origin/main..HEAD` in its `worktree` before you trust it.
+  `git log origin/main..HEAD` in its `worktree`, and each claimed fix and
+  decision in its diff, before you trust it: past runs relayed subagent
+  claims unchecked.
 
 An issue that can't start yet (time-gated, or its output is not a PR) goes to
 the report.
