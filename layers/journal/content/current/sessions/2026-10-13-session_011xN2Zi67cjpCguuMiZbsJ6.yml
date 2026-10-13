@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_011xN2Zi67cjpCguuMiZbsJ6
 startedAt: 2026-10-13T18:43:22Z
-endedAt: 2026-10-13T21:08:12Z
+endedAt: 2026-10-13T21:30:52Z
 kind: interactive
 goal: Rewrite every ADR as its current decision
 status: in-review
 outcome: All 30 ADRs, their rules and ~150 callers rewritten in one PR (#1898), awaiting a human merge
-summary: "Human-instructed throughout: the owner asked me to read the ADR-rewrite handoff, survey the earlier test runs, grill and narrow their decisions into ADR-0030, build the new-ADR gate check, then \"be brave\": fix the prompt, rewrite all ADRs, repoint callers, review, and open a clean PR on a fresh branch, resolving open questions from git history first. The grilling settled readers, Scope instead of \"limits\" (an agent showed most limits already live in Skills/code, and copies of numbers drift), one home per fact, the keep/drop test, rejected-alternative test, fewer glossary terms, and a \"trace each part to its reason\" step; ADR-0030 was retitled and its template moved to docs/adr/TEMPLATE.md. Prompt v6 was tested on 5 ADRs (0004, 0015, 0022, 0023, 0028) and read far better than v1-v5; v7 added cross-batch reading. Then 24 blind caller-checklist agents and 24 rewrite agents ran in waves, 3 agents wrote summary rules, 4 agents repointed callers by disjoint file area, and a consistency agent plus the code-review Skill found cross-ADR contradictions (who merges guest and Public-request PRs, cross-Tenant reads, ADR-0007 overlap) that I settled and applied. Agent- initiated: filing #1895 and #1896 (owner then asked for them), #1897 for workflow comments agents can't push, and the decisions list in the PR. Real policy calls remain the owner's and are listed in #1898. The prep branch (PR #1892) keeps all working files."
+summary: "Human-instructed throughout: the owner asked me to read the ADR-rewrite handoff, survey the earlier test runs, grill and narrow their decisions into ADR-0030, build the new-ADR gate check, then \"be brave\": fix the prompt, rewrite all ADRs, repoint callers, review, and open a clean PR on a fresh branch, resolving open questions from git history first. The grilling settled readers, Scope instead of \"limits\" (an agent showed most limits already live in Skills/code, and copies of numbers drift), one home per fact, the keep/drop test, rejected-alternative test, fewer glossary terms, and a \"trace each part to its reason\" step; ADR-0030 was retitled and its template moved to docs/adr/TEMPLATE.md. Prompt v6 was tested on 5 ADRs (0004, 0015, 0022, 0023, 0028) and read far better than v1-v5; v7 added cross-batch reading. Then 24 blind caller-checklist agents and 24 rewrite agents ran in waves, 3 agents wrote summary rules, 4 agents repointed callers by disjoint file area, and a consistency agent plus the code-review Skill found cross-ADR contradictions (who merges guest and Public-request PRs, cross-Tenant reads, ADR-0007 overlap) that I settled and applied. Agent- initiated: filing #1895 and #1896 (owner then asked for them), #1897 for workflow comments agents can't push, and the decisions list in the PR. Real policy calls remain the owner's and are listed in #1898. The prep branch (PR #1892) keeps all working files. After CI went green, the owner asked for a handoff; HANDOFF.md on #1892 now records both branches' state and lists 13 contradictions and 9 open points for the review session."
 prs:
   - "1898"
   - "1892"
@@ -830,6 +830,8 @@ skillsUsed:
     reason: closure at PR open
   - name: log-session
     reason: (no reason given)
+  - name: context
+    reason: (invoked as a slash command)
 frictions:
   - description: A comment edit to .github/workflows/ got committed with the work; the push was rejected, and the workflow-edit guard then blocked even the revert to main's version.
     solution: Caller-repoint briefs should exclude .github/workflows/ explicitly; the guard (#897) could allow restoring a workflow file to origin/main's content.
@@ -861,21 +863,24 @@ frictions:
   - description: Parallel rewrite agents restated the same fact in several ADRs (merge-pr gap, generated-config alternative); it took a separate consistency pass to find and fix.
     solution: Rewrite in dependency order or add a mandatory cross-batch dedupe step to the rewrite guide.
     severity: moderate
-durationSec: 8689
+durationSec: 10050
 models:
-  claude-opus-5-5: 466
+  claude-opus-5-5: 498
 toolCounts:
-  Read: 27
-  Bash: 93
+  Read: 29
+  Bash: 98
   Agent: 71
   Skill: 6
-  Write: 8
-  Edit: 18
-  ToolSearch: 1
+  Write: 10
+  Edit: 19
+  ToolSearch: 2
   mcp__github__issue_write: 4
   mcp__github__create_pull_request: 1
   mcp__github__update_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 3
+  mcp__github__pull_request_read: 1
+  mcp__claude-code-remote__send_later: 1
 filesEdited:
   - docs/adr/0030-how-we-write-adrs.md
   - .claude/rules/adr-0030.md
@@ -892,6 +897,8 @@ filesEdited:
   - /home/user/terrarium-lean/.agents/skills/prune-trial/SKILL.md
   - /home/user/terrarium-lean/docs/adr/0030-adrs-document-a-decision-not-its-history.md
   - /home/user/terrarium-lean/docs/agents/pr-workflow.md
+  - docs/adr-rewrite/HANDOFF.md
+  - docs/adr-rewrite/README.md
   - docs/adr-rewrite/expectations/0003.md
   - docs/adr-rewrite/expectations/0003.yml
   - /home/user/terrarium-lean/.claude/rules/adr-0001.md
