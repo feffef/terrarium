@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_017XWy7odnhW5S5AEuekatR8
 startedAt: 2026-10-13T06:31:24Z
-endedAt: 2026-10-13T07:40:23Z
+endedAt: 2026-10-13T07:51:09Z
 kind: interactive
 goal: Make clear-backlog run its phases as saved workflows
-status: in-review
-outcome: "PR #1871 open: two saved workflows, a rewritten Skill, and the Platform prerequisites; waits for a human merge"
-summary: "Human-instructed throughout. The owner asked whether clear-backlog should use a Claude Code workflow to enforce its steps. I read the Skill, its friction (clear-backlog-gaps, #1857, #1844) and its Inventory entry, and proposed a hybrid: the Skill keeps the owner-facing parts (grilling, interrupts, landing) and runs workflows for Explore and Build+Review, because a workflow takes no mid-run input. At the owner's direction I investigated past workflow use: four sessions called Workflow, two for real. A subagent recovered the 09-26 Tinkerfund build script verbatim from its transcript (DAG of stories, implement/review/fix/merge, args-driven relaunch, 4 of 10 merges blocked by the auto-mode classifier). The owner challenged two of my claims: review fan-out (workflow agents have no Agent tool, so the script must run the two review axes as separate agent() calls) and the concurrency cap, which I had called fixed; a claude-code-guide subagent and my own fetch of the env-vars doc showed CLAUDE_CODE_WORKFLOW_MAX_CONCURRENT_AGENTS sets it. On the owner's question I checked the fit against every binding ADR and found three gaps: ESLint cannot parse a workflow script (probed), gate scoping, and session-trace missing workflow agents. The owner then had me file #1870 and implement everything with background agents; via AskUserQuestion they chose full scope, .claude/workflows/, no cross-branch review, and concurrency 8 in settings.json. Two worktree agents built the prerequisites and the workflows plus Skill in parallel; I cherry-picked both, ran gate:scoped (green, 131 e2e), and ran a two-axis code-review. Round 1 found real bugs (gatePassed never read, lost worktrees, the reserved rule not applying in the ready-recheck mode, a duplicate gate semaphore, two dropped rules); the workflow agent fixed them, round 2 was clean apart from judgement calls, and I applied two one-line wording fixes myself. Pushed and opened PR #1871 (Human-only files: ADR, rules, settings.json, gate.ts). Open: no live workflow run yet, and the settings env pickup is untested."
+status: completed
+outcome: "PR #1871 merged by the owner: two saved workflows, a rewritten Skill, and the Platform prerequisites"
+summary: "Human-instructed throughout. The owner asked whether clear-backlog should use a Claude Code workflow to enforce its steps. I read the Skill, its friction (clear-backlog-gaps, #1857, #1844) and its Inventory entry, and proposed a hybrid: the Skill keeps the owner-facing parts (grilling, interrupts, landing) and runs workflows for Explore and Build+Review, because a workflow takes no mid-run input. At the owner's direction I investigated past workflow use: four sessions called Workflow, two for real. A subagent recovered the 09-26 Tinkerfund build script verbatim from its transcript (DAG of stories, implement/review/fix/merge, args-driven relaunch, 4 of 10 merges blocked by the auto-mode classifier). The owner challenged two of my claims: review fan-out (workflow agents have no Agent tool, so the script must run the two review axes as separate agent() calls) and the concurrency cap, which I had called fixed; a claude-code-guide subagent and my own fetch of the env-vars doc showed CLAUDE_CODE_WORKFLOW_MAX_CONCURRENT_AGENTS sets it. On the owner's question I checked the fit against every binding ADR and found three gaps: ESLint cannot parse a workflow script (probed), gate scoping, and session-trace missing workflow agents. The owner then had me file #1870 and implement everything with background agents; via AskUserQuestion they chose full scope, .claude/workflows/, no cross-branch review, and concurrency 8 in settings.json. Two worktree agents built the prerequisites and the workflows plus Skill in parallel; I cherry-picked both, ran gate:scoped (green, 131 e2e), and ran a two-axis code-review. Round 1 found real bugs (gatePassed never read, lost worktrees, the reserved rule not applying in the ready-recheck mode, a duplicate gate semaphore, two dropped rules); the workflow agent fixed them, round 2 was clean apart from judgement calls, and I applied two one-line wording fixes myself. Pushed and opened PR #1871 (Human-only files: ADR, rules, settings.json, gate.ts); CI green, and the owner merged it, closing #1870. Open: no live workflow run yet, and the settings env pickup is untested."
 prs:
   - "1871"
 docsRead:
@@ -125,11 +125,11 @@ frictions:
   - description: The first build brief left gatePassed unchecked and a lost-worktree path; only the two-axis review caught it.
     solution: A workflow brief should name, for every schema field, what the script does with it.
     severity: minor
-durationSec: 4138
+durationSec: 4784
 models:
-  claude-opus-5-5: 163
+  claude-opus-5-5: 181
 toolCounts:
-  Bash: 35
+  Bash: 37
   Read: 16
   Skill: 5
   ToolSearch: 4
@@ -145,6 +145,11 @@ toolCounts:
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
   Write: 2
+  ReadNotifications: 4
+  mcp__github__pull_request_read: 1
+  mcp__claude-code-remote__send_later: 1
+  mcp__claude-code-remote__delete_trigger: 1
+  mcp__github__issue_read: 1
 filesEdited:
   - .claude/workflows/clear-backlog-build.js
   - .claude/workflows/clear-backlog-explore.js
