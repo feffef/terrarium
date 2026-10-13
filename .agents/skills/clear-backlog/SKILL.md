@@ -1,12 +1,12 @@
 ---
 name: clear-backlog
-description: Clear the open-issue backlog in one run — explore every issue, grill the owner once in plain words, then build, review and land the PRs unattended.
+description: Clear the open-issue backlog in one run — explore the issues its sweep picks up, grill the owner once in plain words, then build, review and land the PRs unattended.
 disable-model-invocation: true
 ---
 
-Take every open issue to a merged PR, a closed issue, or a decision only the
-owner can make. The owner is present twice: at the start and for one
-**grilling** in the middle. Everything else runs unattended.
+Take every issue the sweep picks up (§1) to a merged PR, a closed issue, or
+a decision only the owner can make. The owner is present twice: at the start
+and for one **grilling** in the middle. Everything else runs unattended.
 
 The chat holds only questions for the owner and the final report. Handle PR
 events, task notifications and finished agents silently. When you wait on an
@@ -37,8 +37,8 @@ each per-issue brief:
   its grilling question.
 - An issue blocked outside the chat (an upstream release, a date, an action
   only the owner can take outside chat) gets only a check that the blocker
-  still holds; probe the outside source if needed. Everything else, deferred
-  issues included, gets the full pass.
+  still holds; probe the outside source if needed. Every other issue in the
+  set, deferred ones included, gets the full pass.
 - An issue the owner reserved ("I decide this one", directly or relayed) never
   gets `ready-for-agent` from the sweep.
 - A grilling answer recorded by a stand-in in an earlier run doesn't bind;
@@ -51,7 +51,7 @@ are clearly related or share files. That grouping replaces `auto-triage`'s
 "mark the higher-numbered one blocked". A grouping you are unsure of is a
 grilling question. Start building issues with no design choice left (§3).
 
-**Done:** every issue the sweep didn't skip is building, closed as a duplicate
+**Done:** every issue the sweep picked up is building, closed as a duplicate
 or as already done, blocked outside the chat, or holds a grilling question.
 
 ## 2. Grill in one sitting
@@ -68,9 +68,9 @@ Where its format differs, this list wins, and builds keep running:
   subagent's. The owner never needs to open a ticket.
 - Put the most important questions first, and end with "accept my picks for
   the rest".
-- Include every issue an answer in chat could move, deferred ones too: a
-  later run may be the one that takes on the hard ones. Leave out only issues
-  blocked outside the chat, and list them in the report with their blocker.
+- Ask only about issues in §1's set; the ones the sweep skipped wait for a
+  run that picks them up. Leave out issues blocked outside the chat, and list
+  them in the report with their blocker.
 - Include `ready-for-human` items, real design forks inside
   `ready-for-agent` briefs, and Public issues (the owner's yes is the
   green-light ADR-0020 requires). Also include proposals to close an issue as
@@ -82,8 +82,9 @@ The answers are the owner's confirmation. Record an answer on its issue
 only when it changes the issue's state or scope, and set the label it
 implies.
 
-**Done:** every question is answered, and every issue is `ready-for-agent`,
-closed, or parked by the owner (deferred, or waiting on a condition).
+**Done:** every question is answered, and every issue in §1's set is
+`ready-for-agent`, closed, or parked by the owner (deferred, or waiting on a
+condition).
 
 ## 3. Build
 
