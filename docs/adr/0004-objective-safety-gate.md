@@ -2,7 +2,12 @@
 
 Date: 2026-07-04
 Status: Accepted — high-risk set extended by ADR-0026; ADR prose exempted for
-Prune Trials by ADR-0027
+Prune Trials by ADR-0027; Skill-file scope widened to `.claude/workflows/` by
+ADR-0005
+
+> **Amended by [ADR-0005](0005-skill-model.md) (2026-10-13, issue #1870).** A
+> `.claude/workflows/` script counts as one of its Skill's files in the
+> 2026-10-12 (#1603) amendment below; the build reads only `.claude/rules/*.md`.
 
 > **Amended (2026-10-12, after PR #1853).** *Review before the first push.*
 > Beside the gate, a branch is reviewed before its first push, because pushing
