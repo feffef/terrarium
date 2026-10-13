@@ -1,0 +1,333 @@
+schemaVersion: 1
+session: session_01AA2LXTN4qUsCEPgYEmWW4C
+startedAt: 2026-10-13T00:46:18Z
+endedAt: 2026-10-13T01:15:32Z
+kind: autonomous
+goal: Weekly check that the Platform's own Skills fire and deliver
+status: completed
+outcome: "Filed issues #1856 and #1857; PR #1858 merged, updating the Skill Inventory"
+summary: "Fully agent-initiated: fired by the audit-skills scheduled Routine, no human prompt at kickoff or after. Ran scripts/audit-skills.ts for the 7-day scorecard, then dispatched one read-only Sonnet subagent per Skill in behaviourChecks (12: audit-docs, audit-skills, auto-triage, blog-post, clear-backlog, close-session, digest, dispatch-subagents, frictions-to-fixes, log-session, prune-trial, visitor-loop), each checking that Skill's recent runs against primary sources (live GitHub reads, git history) rather than trusting session logs at face value. Verified every subagent's central claims myself before using them, independently re-deriving the two most consequential ones directly: prune-trial's #1677 fix (git show 920f20f8) really does subtract an undocumented 1-hour grace from the ADR-0027 three-day floor, and the git-conventions.md trial really was judged and deleted (commit b1300afc) 2m47s before the true floor — filed as issue #1856, the first time this specific consequence of the #1677 fix has been named despite 8+ days of this Skill's own prior observations re-verifying later judgments against the wrong (graced) floor without flagging the mismatch. clear-backlog's explore-phase skip (session_015LwBgLjaCn36ayZedges6G's own log: \"I dispatched no triage subagents,\" reported done until the owner asked) had no existing issue — filed #1857. clear-backlog's other finding (an unreviewed PR self-merged) was already fully covered by open issue #1844 with nothing new to add, so left alone. Checked #1480 and #1586 (dispatch-subagents) directly via issue_read before treating their new recurrences as non-findings: both are owner-closed wontfix, a deliberate decision to accept the recurrence, not an oversight to re-flag. Ran step 3 (closure completeness) myself from the scorecard's top-level fields rather than delegating it: orphan scan, suppression log and manuallyRescuedClosures all healthy; the window's one humanPromptedClosures entry independently confirmed genuine (not a #1797-style detector false positive) by reading the cited session's own friction log. Added clear-backlog.yml (coverage gap: used 4x this window, never catalogued; graded specialist from this window's own evidence). No existing entry's grade changed. Ran pnpm gate:scoped (green) and the code-review Skill (Standards + Spec axes, parallel subagents) before the first push, per pr-workflow.md and ADR-0004 — found and fixed one hard standards violation (clear-backlog.yml's gist exceeded the ≤12-word cap) and trimmed one minor spec finding (a redundant restatement in close-session.yml's new entry) before pushing. Opened PR #1858, scoped only to layers/journal/content/current/skills/*.yml, subscribed to its activity, confirmed CI green, posted the verdict comment and merged via scripts/merge-pr.ts (commit 2eb09326), then unsubscribed."
+prs:
+  - "1858"
+docsRead:
+  - path: CONTEXT-MAP.md
+    reason: session-start context map, which Tenant contexts exist
+    useful: partly
+  - path: CONTEXT.md
+    reason: "glossary: Skill Inventory, Importance grades, Friction, Session kind"
+    useful: yes
+  - path: docs/adr/0015-audit-skills-and-conditional-importance.md
+    reason: full ADR read since it governs this run directly
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: hook-prompted after my first git command; fetch-before-trust, commit hygiene
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: hook-prompted after my first GitHub call (one call predated the read); MCP tool traps
+    useful: yes
+  - path: docs/agents/pr-workflow.md
+    reason: the landing recipe and per-tier merge authority, self-merge closing steps
+    useful: yes
+  - path: docs/agents/issue-tracker.md
+    reason: labels and create/comment conventions before filing issues
+    useful: yes
+  - path: docs/agents/triage-labels.md
+    reason: confirming bug + needs-triage is the right label pair for a fresh finding
+    useful: yes
+  - path: .claude/skills/audit-skills/SKILL.md
+    reason: this run's own governing process (steps 1-6)
+    useful: yes
+  - path: .agents/skills/visitor-loop/SKILL.md
+    reason: "subagent read it to grade the visitor-loop behaviour check's #1732 fix against its promised owner-memory step"
+    useful: yes
+  - path: .agents/skills/visitor-loop/decisions.md
+    reason: "subagent checked it for spurious owner-correction lines after the #1732 fix"
+    useful: yes
+  - path: .agents/skills/log-session/SKILL.md
+    reason: subagent read it (and close-session's) to judge log-session's missed-invocation candidates
+    useful: yes
+  - path: .agents/skills/clear-backlog/SKILL.md
+    reason: subagent read it to work out §1/§4's completion criteria before checking clear-backlog's 4 runs
+    useful: yes
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: subagent read it to know which steps (6/9/12) are mandatory before grading a run against them
+    useful: yes
+  - path: .agents/skills/close-session/SKILL.md
+    reason: subagent read it to judge whether the one non-user session reached an equivalent closure
+    useful: yes
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: spec-review subagent read it as the governing spec for this whole run's own diff
+    useful: yes
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: subagent read it to judge the cd-into-worktree and skillsUsed-logging recurrences against §5's promise
+    useful: yes
+  - path: .agents/skills/auto-triage/SKILL.md
+    reason: subagent read it alongside ADR-0022 to judge each triage decision
+    useful: yes
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: subagent read it to know what each audit-docs run's steps promise to deliver
+    useful: yes
+  - path: .agents/skills/digest/SKILL.md
+    reason: subagent read it to know the fact-check step is mandatory before grading digest runs
+    useful: yes
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: subagent read it, noting it changed 19 times in the window, to version-grade each session correctly
+    useful: yes
+  - path: .agents/skills/prune-trial/SKILL.md
+    reason: subagent read it alongside the ledger and ADR-0027 to judge the 3-day-floor behaviour
+    useful: yes
+  - path: docs/adr/0027-prune-trials.md
+    reason: "Read the full ADR directly (not just grepped it) once I decided to escalate #1856, since it governs the finding; confirmed the literal three-day floor has no grace exception anywhere in the text."
+    useful: yes
+  - path: layers/journal/content/current/sessions/2026-10-12-session_014uXxmT6359K4Z42a6We6Gh.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/skills/audit-skills.yml
+    reason: (read before editing)
+  - path: layers/journal/tenant.config.ts
+    reason: (no reason given)
+  - path: layers/journal/content/current/skills/clear-backlog.yml
+    reason: (read before editing)
+  - path: .agents/skills/visitor-loop/scripts/owner-corrections.ts
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-10-session_01UEeKV1vUyYkM8vedtgWPnY.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-11-session_017inrpS21UKrpEun2DpjLd7.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-12-session_01BkB4AFUGkEudyf13aa44Wy.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-12-session_01SZwdbK8GbYtyj926UyJT6o.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-12-session_01La82mxqduxHnRS9jRfNHmU.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-12-session_017NBxJhtBSd9AoCwTzsg6pM.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-12-session_015LwBgLjaCn36ayZedges6G.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-12-session_01Xw7ZN8ghC7PDemvu9cA9Lo.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/skills/auto-triage.yml
+    reason: (read before editing)
+  - path: layers/journal/content/current/sessions/2026-10-12-session_01Nxo7EM7AbxUU6FFvEEQ7s8.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-11-session_01KnHp9a9Ljbiuu8NjLLx8i1.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-12-session_01596W4GVWwvN1kfaHsV4ax8.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-12-session_01LtYEkEsZ2cxf4uRFJvq4n9.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-12-session_018KSwetqxttBFszkhTKZkF1.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-12-session_01Dz52W6wWZWUgKwPtdxabzJ.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-08-session_017tt8CbwHqFWqw7PJZ7u7AL.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-13-session_01Rn5xT34AdjnywsTJdUtaDm.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-12-session_01DXuGrxEAsk3MjyRx98QTb2.yml
+    reason: (no reason given)
+  - path: .agents/prune-trials.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-11-session_01WuJh8gfMFWfS5bWEJcdScC.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-08-session_011p9VA5A1CWNG9xd2VrQf8N.yml
+    reason: (no reason given)
+skillsUsed:
+  - name: audit-skills
+    reason: the run itself
+  - name: code-review
+    reason: Standards + Spec review of the Inventory diff before the first push
+  - name: close-session
+    reason: PR-open closure trigger
+  - name: log-session
+    reason: authoring this log
+frictions:
+  - description: Made one mcp__github__search_issues call before reading docs/agents/github-integration.md; the PostToolUse hook caught it immediately afterward.
+    solution: Read github-integration.md proactively before the first GitHub-shaped tool call, not only after a hook names it.
+    severity: minor
+  - description: A spec-review subagent found one minor scope-creep issue (close-session.yml's new observation restated an already-5x-recorded conclusion alongside its one genuinely new citation) before I pushed.
+    solution: When writing a daily Inventory observation, write only the new citable fact; point back to prior entries by date instead of restating their conclusion.
+    severity: nit
+durationSec: 1754
+models:
+  claude-sonnet-5: 222
+toolCounts:
+  Bash: 44
+  Read: 16
+  Agent: 14
+  Write: 6
+  Edit: 23
+  ScheduleWakeup: 1
+  ToolSearch: 3
+  mcp__github__search_issues: 9
+  mcp__github__issue_read: 5
+  Grep: 1
+  mcp__github__issue_write: 2
+  Skill: 4
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+filesEdited:
+  - layers/journal/content/current/skills/audit-docs.yml
+  - layers/journal/content/current/skills/auto-triage.yml
+  - layers/journal/content/current/skills/blog-post.yml
+  - layers/journal/content/current/skills/close-session.yml
+  - layers/journal/content/current/skills/digest.yml
+  - layers/journal/content/current/skills/dispatch-subagents.yml
+  - layers/journal/content/current/skills/frictions-to-fixes.yml
+  - layers/journal/content/current/skills/log-session.yml
+  - layers/journal/content/current/skills/prune-trial.yml
+  - layers/journal/content/current/skills/visitor-loop.yml
+  - layers/journal/content/current/skills/clear-backlog.yml
+  - layers/journal/content/current/skills/audit-skills.yml
+rulesLoaded:
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0018.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/adr-0008.md
+  - .claude/rules/adr-0002.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/adr-0028.md
+  - .claude/rules/adr-0026.md
+  - .claude/rules/adr-0014.md
+  - .claude/rules/adr-0012.md
+  - .claude/rules/adr-0010.md
+rulesGlobal:
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0001.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0023.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0027.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0022.md
+    reason: Named the Trusted-green-light/ready-for-human split I checked auto-triage and clear-backlog's triage decisions against; summary was enough.
+    useful: yes
+  - path: .claude/rules/adr-0004.md
+    reason: Governed gate:scoped before pushing and the human-merge exceptions; read the summary, didn't need the full ADR since my diff is Inventory-only.
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Governs this very session-log closure mechanism and the once-per-PR-open close-session rule I followed.
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: Central to this run's biggest finding (#1856); read the full ADR since it directly touched my task and confirmed the literal three-day floor with no grace exception.
+    useful: yes
+  - path: .claude/rules/adr-0001.md
+    reason: Background on the one-container/baked-content model; not directly exercised by an Inventory-only YAML change.
+    useful: no
+  - path: .claude/rules/adr-0020.md
+    reason: Confirmed every triage decision I checked was Trusted-authored (author_association OWNER), matching this rule's identity-not-claim test.
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: "Governed opening PR #1858 promptly after the first non-log push and subscribing to its activity."
+    useful: yes
+  - path: .claude/rules/adr-0023.md
+    reason: Guest-pipeline rule; no guest/Public content touched by this run.
+    useful: no
+  - path: .claude/rules/adr-0017.md
+    reason: "Required the session-id provenance line on both filed issues (#1856, #1857) and the PR body; followed it directly."
+    useful: yes
+  - path: .claude/rules/adr-0015.md
+    reason: The governing ADR for this whole run; read it in full at session start since it directly touches the task.
+    useful: yes
+  - path: .claude/rules/adr-0021.md
+    reason: Platform/Tenant context-split background; not exercised editing only Journal Inventory YAML.
+    useful: no
+  - path: .claude/rules/adr-0018.md
+    reason: Tenant-layers/ADR-editing background; I didn't edit any ADR or Tenant layer this run.
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Confirmed none of the touched paths are on the Human-only list, so audit-skills' own green-gate self-merge applies.
+    useful: yes
+  - path: .claude/rules/adr-0029.md
+    reason: Explains why these per-file rules load at all; background only, no action it changed.
+    useful: no
+  - path: .claude/rules/tenant-layers.md
+    reason: Loaded by touching layers/journal content; no Tenant-layer gotcha applied to a pure Inventory-YAML edit.
+    useful: no
+  - path: .claude/rules/adr-0008.md
+    reason: Confirmed the Journal/Skill-Inventory files I edited are Platform infrastructure, not a demo Tenant's content.
+    useful: yes
+  - path: .claude/rules/adr-0002.md
+    reason: One-manifest-per-Tenant background; not touched, I only edited Inventory data files, no manifest.
+    useful: no
+  - path: .claude/rules/adr-0005.md
+    reason: Confirmed Skills are gated code I must not edit directly from this Skill's own mandate (Inventory-YAML and issues only).
+    useful: yes
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: MDC-component background; irrelevant to editing plain data YAML.
+    useful: no
+  - path: .claude/rules/adr-0028.md
+    reason: Navigation payload/caching background; untouched by this change.
+    useful: no
+  - path: .claude/rules/adr-0026.md
+    reason: Proposals-format background; this run writes Inventory entries and issues, not a Proposal doc.
+    useful: no
+  - path: .claude/rules/adr-0014.md
+    reason: Build-time routing background; untouched by an Inventory-only content edit.
+    useful: no
+  - path: .claude/rules/adr-0012.md
+    reason: Cross-Space denormalization background; not relevant to same-Space Inventory edits.
+    useful: no
+  - path: .claude/rules/adr-0010.md
+    reason: Digest mechanism background, relevant only to the digest behaviour-check subagent's own context, not to my own edits.
+    useful: no
+subagents:
+  - type: general-purpose
+    task: Behaviour-check audit-docs
+    model: sonnet
+  - type: general-purpose
+    task: Behaviour-check audit-skills
+    model: sonnet
+  - type: general-purpose
+    task: Behaviour-check auto-triage
+    model: sonnet
+  - type: general-purpose
+    task: Behaviour-check blog-post
+    model: sonnet
+  - type: general-purpose
+    task: Behaviour-check clear-backlog
+    model: sonnet
+  - type: general-purpose
+    task: Behaviour-check close-session
+    model: sonnet
+  - type: general-purpose
+    task: Behaviour-check digest
+    model: sonnet
+  - type: general-purpose
+    task: Behaviour-check dispatch-subagents
+    model: sonnet
+  - type: general-purpose
+    task: Behaviour-check frictions-to-fixes
+    model: sonnet
+  - type: general-purpose
+    task: Behaviour-check log-session
+    model: sonnet
+  - type: general-purpose
+    task: Behaviour-check prune-trial
+    model: sonnet
+  - type: general-purpose
+    task: Behaviour-check visitor-loop
+    model: sonnet
+  - type: general-purpose
+    task: Standards review of Inventory diff
+    model: sonnet
+  - type: general-purpose
+    task: Spec review of Inventory diff
+    model: sonnet
+gitBranch: claude/upbeat-sagan-yjgmwt
+entrypoint: remote_trigger
+cliVersion: 2.1.296
+trigger: audit-skills
+landedBy: Stop
