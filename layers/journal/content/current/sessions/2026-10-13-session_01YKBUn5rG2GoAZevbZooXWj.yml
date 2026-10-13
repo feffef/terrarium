@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01YKBUn5rG2GoAZevbZooXWj
 startedAt: 2026-10-13T09:55:06Z
-endedAt: 2026-10-13T10:12:55Z
+endedAt: 2026-10-13T10:14:30Z
 kind: delegated
 goal: Turn recent session frictions into fixes (frictions-to-fixes, second run of 2026-10-13)
-status: in-review
-outcome: "One grouped doc PR (#1882): four Skill-doc fixes plus the Friction Ledger update"
-summary: "Human-instructed: the owner invoked /frictions-to-fixes; everything after was agent-run under that Skill. A survey subagent read the 10 unledgered sessions since 2026-10-11 and saved its ledger changes as a YAML patch file, which the impl agent applied without re-typing. That is itself one of the fixes, for findings-retyped-by-hand, which I judged a scope gap and not a regression: the earlier fixes covered audit-docs only. I picked four simple doc fixes: dispatch-subagents (a user interrupt can cancel agents silently; one major occurrence), frictions-to-fixes §1/§5 (ledger patch file), log-session (every --author pass needs every required field) and clear-backlog §2 (skip it with no grill results). I dropped the HTML-entity note for clear-backlog-explore.js as a lone minor that would need its own PR. unverified-claims-in-drafts (27 occurrences) has no ripe fix: the CLAUDE.md prose is read and still missed, so a mechanism needs design. binding-docs-skipped #1819 is now unblocked (#1859 closed) and waits on a human. One Sonnet impl agent built the branch with gate:scoped green. Two code-review rounds caught a wrong claim in my own brief: mergeAuthored unions every list, not only docsRead/ruleVerdicts. They also moved the patch-file hand-off into §5. Pushed to the designated branch and opened #1882."
+status: completed
+outcome: "Merged #1882: four Skill-doc fixes plus the Friction Ledger update"
+summary: "Human-instructed: the owner invoked /frictions-to-fixes; everything after was agent-run under that Skill. A survey subagent read the 10 unledgered sessions since 2026-10-11 and saved its ledger changes as a YAML patch file, which the impl agent applied without re-typing. That is itself one of the fixes, for findings-retyped-by-hand, which I judged a scope gap and not a regression: the earlier fixes covered audit-docs only. I picked four simple doc fixes: dispatch-subagents (a user interrupt can cancel agents silently; one major occurrence), frictions-to-fixes §1/§5 (ledger patch file), log-session (every --author pass needs every required field) and clear-backlog §2 (skip it with no grill results). I dropped the HTML-entity note for clear-backlog-explore.js as a lone minor that would need its own PR. unverified-claims-in-drafts (27 occurrences) has no ripe fix: the CLAUDE.md prose is read and still missed, so a mechanism needs design. binding-docs-skipped #1819 is now unblocked (#1859 closed) and waits on a human. One Sonnet impl agent built the branch with gate:scoped green. Two code-review rounds caught a wrong claim in my own brief: mergeAuthored unions every list, not only docsRead/ruleVerdicts. They also moved the patch-file hand-off into §5. Pushed to the designated branch, opened #1882, posted the verdict and merged it on a green gate."
 prs:
   - "1882"
 docsRead:
@@ -105,11 +105,11 @@ frictions:
   - description: The impl agent was Sonnet, but the commit-msg hook stamped a Co-Authored-By trailer naming Opus.
     solution: Have the hook take the model from the authoring agent, or drop the model name from the trailer.
     severity: nit
-durationSec: 1068
+durationSec: 1163
 models:
-  claude-opus-5-5: 65
+  claude-opus-5-5: 75
 toolCounts:
-  Bash: 14
+  Bash: 17
   Read: 8
   Agent: 4
   SendMessage: 2
@@ -119,6 +119,9 @@ toolCounts:
   mcp__claude-code-remote__subscribe_pr_activity: 1
   Write: 1
   mcp__github__pull_request_read: 1
+  ReadNotifications: 1
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - .agents/skills/dispatch-subagents/SKILL.md
   - .agents/skills/frictions-to-fixes/SKILL.md
