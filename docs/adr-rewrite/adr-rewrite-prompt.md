@@ -1,15 +1,20 @@
 # Rewrite one ADR into ADR-0030's shape
 
 You rewrite **ADR-{NNNN}** (`docs/adr/{file}`) in `/home/user/terrarium` into the
-shape ADR-0030 sets. This run tests whether that format holds, so **the decision
-must not change**: same decision, same limits, same exceptions, stated as they
-stand today. Don't split or merge ADRs.
+shape ADR-0030 sets. This run tests whether that format holds, so **the core
+decision must not change or become unclear**. Losing details is fine. Don't
+split or merge ADRs.
+
+Many ADRs were written when agents were allowed much less than today. State
+the decision as it applies now: check what ADR-0003, ADR-0004 and `CLAUDE.md`
+allow, and drop cautions, justifications and limits that later decisions made
+moot. List anything you are unsure about as an open question.
 
 **Write only to the scratchpad; change nothing in the repo.** Other agents are
 rewriting other ADRs at the same time. Run only read-only git commands (`log`,
 `show`, `blame`, `grep`). Write the rewrite to
-`/tmp/claude-0/-home-user-terrarium/468fb6ef-963a-5a51-b883-82308adbcdbb/scratchpad/rewrites-v3/{NNNN}.md`
-and your report to `…/rewrites-v3/{NNNN}-report.md`.
+`/tmp/claude-0/-home-user-terrarium/468fb6ef-963a-5a51-b883-82308adbcdbb/scratchpad/rewrites-v4/{NNNN}.md`
+and your report to `…/rewrites-v4/{NNNN}-report.md`.
 
 ## 1. Read
 
@@ -18,7 +23,8 @@ Read each in full with the Read tool:
 - `docs/adr/0030-how-we-write-adrs.md`: the format. Its
   *Scope and limits* is your spec.
 - The target ADR, and its summary rule `.claude/rules/adr-{NNNN}.md`.
-- `CONTEXT.md` (glossary; also lists **Retired terms** to drop).
+- `CONTEXT.md`: the glossary, so you *understand* the sources. Your own
+  text prefers natural language (step 4).
 - Every ADR the target cites or that cites it. Find them with
   `grep -l "ADR-{NNNN}\|{NNNN}-" docs/adr/*`.
 - The callers' checklist, `…/scratchpad/expectations/{NNNN}.md` and `.yml`:
@@ -114,12 +120,19 @@ contributor who knows nothing of this project.
 - Replace coined phrases with what actually happens. Phrases the old ADR or
   its callers repeat ("standing green-light", "the one relaxation", "high-risk
   set", "Trusted-authored backlog") are jargon, however often they are quoted.
-- Use a glossary term from `CONTEXT.md` only when it really is the clearest
-  word for the concept. Otherwise say it in plain words ("a person with write
-  access" rather than "a Trusted user", "an issue someone outside the team
-  filed" rather than "a Public-authored issue"). Don't capitalise ordinary
-  words to make them look like terms.
-- Short sentences, one idea each.
+- The glossary helps you read the sources; your text prefers natural
+  language. Use a glossary term only when no plain phrase is as clear. Say "a
+  person with write access", not "a Trusted user"; "the gate", not "the Gate";
+  "a scheduled job", not "a chartered job"; "the slow steps", not "Heavy";
+  "a change that can't affect them", not "Inert". Don't capitalise ordinary
+  words.
+- Short sentences: one idea each, rarely over 20 words, no clause tucked into
+  the middle.
+
+**Short beats complete.** Keep what an agent needs to act or to judge an edge
+case; cut the rest, even true details. A detail that lives in code, a Skill or
+a doc goes away, with a pointer in *See* at most. Most ADRs should fit in
+40–70 lines; say in your report why yours needs more.
 - Cross-references go at the end of a sentence or in *See*, never in
   parentheses mid-sentence.
 - Bold only the lead-in of a *Scope and limits* bullet. Point to other ADRs by
