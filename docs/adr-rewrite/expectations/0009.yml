@@ -1,0 +1,301 @@
+# What callers need from ADR-0009. Source: docs/adr-rewrite/refs/0009.md only.
+# ADR-0009's summary rule was in context at session start; set aside, not used.
+counts:
+  explains: 31
+  quotes: 30
+  enforces: 26
+  points: 12
+  repeats: 7
+  miscites: 0
+  noise: 16
+  total: 122
+items:
+  - id: external-logs
+    text: A log by a different agent or toolchain carries external true (absent means ours); it stays visible and marked, has no session page, is skipped by friction mining and the Skill audit, keeps its ideas and drops its learnings.
+    kind: decision
+    conflict: false
+    refs:
+      - .agents/skills/visitor-loop/scripts/ideas.ts:155
+      - .agents/skills/visitor-loop/tests/unit/ideas.spec.ts:144
+      - layers/journal/app/utils/dashboard.ts:301
+      - layers/journal/tests/unit/journal-dashboard.spec.ts:413
+      - layers/journal/tests/unit/journal-dashboard.spec.ts:466
+      - scripts/audit-skills.ts:372
+      - tests/unit/audit-skills.spec.ts:212
+      - scripts/session-frictions.ts:182
+      - tests/unit/session-frictions.spec.ts:176
+      - shared/schemas/session.ts:90
+      - shared/schemas/session.ts:131
+      - CONTEXT.md:91
+      - .agents/skills/log-session/SKILL.md:110
+      - .agents/skills/frictions-to-fixes/SKILL.md:57
+      - layers/journal/app/assets/theme.css:32
+      - layers/journal/app/components/journal/SessionCard.vue:42
+      - layers/journal/app/components/journal/SessionCard.vue:204
+      - layers/journal/app/types/journal.ts:34
+      - layers/journal/tests/e2e/journal.spec.ts:275
+  - id: direct-to-main-scope
+    text: Only one session's own log file, in the sessions folder, pushed by a script, may reach main without a PR, because it is inert schema-checked data the gate can't protect and a PR would suppress; logs never travel through a feature branch or PR otherwise, and automatic PR opening doesn't change this.
+    kind: decision
+    conflict: true
+    conflict_note: scripts/merged-since.ts says "session/doc" commits go direct to main; all others limit it to the one session-log file.
+    refs:
+      - scripts/log-session.ts:438
+      - tests/unit/log-session-push.spec.ts:1
+      - docs/adr/0003-agent-operating-model-and-governance.md:44
+      - docs/adr/0003-agent-operating-model-and-governance.md:141
+      - docs/adr/0003-agent-operating-model-and-governance.md:145
+      - docs/diagrams/interactive-map/terrarium-overview.md:866
+      - scripts/merged-since.ts:8
+      - scripts/merged-since.ts:67
+      - docs/research/github-branch-protection-vs-autonomous-log-commits.md:3
+  - id: shell-read-detection
+    text: A shell command counts as reading a doc when its output shows enough of the doc's distinctive lines (lines of 30+ chars, at least 10 shown); parsing the command only explains near-misses; scope is a path-shape test; shell reads fold into docsRead and docsReadViaShell stays only so old logs validate.
+    kind: mechanic
+    home: scripts/shell-reads.ts
+    conflict: true
+    conflict_note: docs/research/shell-reads-by-output-matching.md:129 quotes the ADR saying the trace is derived from tool_use calls, not results; output matching reads results.
+    refs:
+      - scripts/shell-reads.ts:15
+      - scripts/shell-reads.ts:753
+      - scripts/shell-reads.ts:770
+      - scripts/session-trace.ts:285
+      - scripts/session-trace.ts:335
+      - scripts/session-trace.ts:532
+      - shared/schemas/session.ts:68
+      - docs/research/shell-reads-by-output-matching.md:3
+      - docs/research/shell-reads-by-output-matching.md:129
+      - docs/research/shell-reads-by-output-matching.md:139
+      - .agents/prune-trials.yml:107
+  - id: authored-vs-derived
+    text: The agent writes only the judgment half (goal, status, outcome, summary, every friction, optional ideas and learnings, chosen reads and Skills with reasons); timings, models, tool counts, files, subagents, branch and rules loaded come from the transcript and are never self-reported; uncited reads get a placeholder reason.
+    kind: decision
+    conflict: false
+    refs:
+      - scripts/session-trace.ts:1
+      - scripts/session-trace.ts:22
+      - scripts/log-session.ts:109
+      - shared/schemas/session.ts:53
+      - tests/unit/session-trace.spec.ts:1
+      - shared/trace-fields.ts:19
+      - .agents/skills/log-session/SKILL.md:10
+      - .agents/skills/log-session/SKILL.md:107
+  - id: schema-evolution
+    text: The log schema is frozen and strict; additive optional fields need no version bump and a missing schemaVersion means 1 until the first breaking change; other append-only collections (pingbacks) use this same policy, so the ADR is its single home.
+    kind: decision
+    conflict: false
+    refs:
+      - layers/blog/tenant.config.ts:86
+      - docs/adr/0012-cross-persona-pingbacks-via-authored-denormalization.md:72
+      - scripts/log-session.ts:67
+      - scripts/log-session.ts:72
+      - shared/schemas/session.ts:21
+      - shared/schemas/session.ts:28
+      - docs/adr/0017-provenance-footer-on-agent-authored-content.md:77
+  - id: when-to-log
+    text: A session writes its log when it opens a PR (status in-review, PR open but not merged) and again when done or blocked; completed is only for work that landed; the rule loads at session start so it can say when to act.
+    kind: decision
+    conflict: false
+    refs:
+      - docs/adr/0003-agent-operating-model-and-governance.md:46
+      - shared/schemas/session.ts:37
+      - docs/adr/0029-instructions-load-with-the-files-they-govern.md:66
+      - docs/agents/pr-workflow.md:110
+      - .agents/skills/audit-docs/SKILL.md:230
+      - docs/diagrams/interactive-map/terrarium-overview.md:869
+  - id: enforcement-point
+    text: scripts/log-session.ts is the single enforcement point and only lander; it refuses a file outside the sessions folder, a commit changing more than one path, and a wrong filename (<startedAt-date>-<session>.yml), and validates against the schema; GitHub can't scope by path, so this is the only path-level check.
+    kind: mechanic
+    home: scripts/log-session.ts
+    conflict: false
+    refs:
+      - scripts/log-session.ts:1
+      - scripts/log-session.ts:1097
+      - tests/unit/log-session.spec.ts:1
+      - docs/research/github-branch-protection-vs-autonomous-log-commits.md:129
+      - scripts/session-logs.ts:2
+  - id: external-log-in-pr
+    text: An outside agent has no hook and no push to main, so it commits its log inside its fork PR (the one allowed case of a log in a PR), marked external true, one log per unit of work including revisions.
+    kind: decision
+    conflict: false
+    refs:
+      - docs/agents/guest-contributions.md:16
+      - docs/agents/guest-contributions.md:50
+      - docs/agents/guest-contributions.md:61
+      - docs/agents/guest-contributions.md:70
+      - layers/journal/tests/e2e/journal.spec.ts:49
+  - id: main-protection-bypass
+    text: The protect-main ruleset lets the repo admin (the owner's credential the lander uses) bypass Always; each bypass is recorded as the exception's audit trail; classic branch protection would block the push.
+    kind: mechanic
+    home: GitHub protect-main ruleset (docs/research/github-branch-protection-vs-autonomous-log-commits.md, Current state)
+    conflict: false
+    refs:
+      - docs/research/github-branch-protection-vs-autonomous-log-commits.md:73
+      - docs/research/github-branch-protection-vs-autonomous-log-commits.md:210
+      - docs/research/github-branch-protection-vs-autonomous-log-commits.md:269
+      - docs/research/public-readiness-review.md:75
+      - .agents/prune-trials.yml:94
+  - id: landing-hooks
+    text: Authoring writes a gitignored scratch; hooks stitch it with the trace and push it, Stop primary with SessionEnd and SessionStart (resume) as fallbacks; each log records which hook landed it (landedBy); an unchanged re-derive never commits.
+    kind: mechanic
+    home: scripts/log-session.ts, .claude/settings.json
+    conflict: true
+    conflict_note: shared/schemas/session.ts:53 and .gitignore:33 call the lander the SessionEnd extractor/handler; scripts/log-session.ts:11 and the log-session Skill make Stop primary.
+    refs:
+      - scripts/log-session.ts:11
+      - scripts/log-session.ts:467
+      - scripts/log-session.ts:659
+      - shared/schemas/session.ts:103
+      - .gitignore:33
+  - id: log-purpose
+    text: A session log is one honest self-report per session, the Platform's main record of itself rather than a Tenant's content, and the input the self-improvement Skills mine.
+    kind: decision
+    conflict: false
+    refs:
+      - shared/schemas/session.ts:1
+      - .agents/skills/frictions-to-fixes/SKILL.md:9
+      - layers/journal/tenant.config.ts:135
+      - docs/adr/0025-cross-tenant-catalog-and-collection-kinds.md:201
+      - shared/kinds.ts:64
+  - id: archiving
+    text: Aged-out logs move from current to archived by git mv, keeping the newest 7 session dates, through a normal reviewed PR rather than the direct path.
+    kind: mechanic
+    home: scripts/archive-journal-content.ts
+    conflict: false
+    refs:
+      - scripts/archive-journal-content.ts:5
+      - docs/adr/0010-digests-derived-append-only-journal-pages.md:20
+      - docs/adr/0010-digests-derived-append-only-journal-pages.md:23
+      - docs/adr/0010-digests-derived-append-only-journal-pages.md:91
+      - .agents/skills/midden-survey/scripts/midden-survey.ts:111
+  - id: out-of-scope
+    text: Digests, pingbacks and blog content, Skill-audit output, archive moves and changes to the lander's own code all go through a normal PR, not the direct path.
+    kind: decision
+    conflict: false
+    refs:
+      - docs/adr/0010-digests-derived-append-only-journal-pages.md:62
+      - docs/adr/0015-audit-skills-and-conditional-importance.md:198
+      - scripts/archive-journal-content.ts:25
+      - .agents/skills/log-session/SKILL.md:160
+  - id: not-read-and-detection-friction
+    text: The agent marks a derived read it never read as (not read) and the stitch drops it, a dropped shell credit becoming a Friction; a real read the detector missed is logged as a SHELL-READ-DETECTION Friction, at least moderate, with the command and expected path.
+    kind: mechanic
+    home: scripts/session-trace.ts (NOT_READ_REASON), log-session Skill
+    conflict: false
+    refs:
+      - scripts/session-trace.ts:768
+      - .agents/skills/log-session/SKILL.md:170
+      - .agents/skills/log-session/SKILL.md:190
+      - CONTEXT.md:142
+  - id: read-verdicts
+    text: docsRead and skillsUsed merge the agent's picks with derived entries; the useful verdict (yes, partly, no) is agent-written only, absent on derived reads and on logs before 2026-10-11; loaded rules also get verdicts.
+    kind: mechanic
+    home: shared/schemas/session.ts
+    conflict: false
+    refs:
+      - shared/schemas/session.ts:44
+      - shared/schemas/session.ts:47
+      - scripts/log-session.ts:810
+  - id: commit-trailer
+    text: The log commit carries the same Claude-Session trailer, built in repo code, and log-session reads the session id from it.
+    kind: mechanic
+    home: unclear (scripts/log-session.ts)
+    conflict: false
+    refs:
+      - docs/adr/0017-provenance-footer-on-agent-authored-content.md:31
+      - docs/adr/0017-provenance-footer-on-agent-authored-content.md:59
+  - id: fallback-retirement-measure
+    text: What measure decides when the fallback hooks can be retired?
+    kind: decision
+    conflict: true
+    conflict_note: shared/schemas/session.ts:103 says it counts landedBy rather than orphaned sessions; scripts/audit-skills.ts:169 calls it the close-session invocation rate (orphan count).
+    refs:
+      - scripts/audit-skills.ts:169
+      - shared/schemas/session.ts:103
+  - id: landed-log-mutability
+    text: Can a landed log be changed?
+    kind: decision
+    conflict: true
+    conflict_note: scripts/validate-content.ts:97 treats older logs as untouchable (unclear wording); shared/schemas/session.ts:37 has a later session flip in-review to completed and guest-contributions.md:61 updates a log on revision.
+    refs:
+      - scripts/validate-content.ts:97
+      - shared/schemas/session.ts:37
+      - docs/agents/guest-contributions.md:61
+  - id: rederive-repeatable
+    text: Re-deriving a log gives the same bytes and a superset of entries; a doc edited between derivations can break this under output matching.
+    kind: mechanic
+    home: scripts/log-session.ts
+    conflict: false
+    refs:
+      - docs/research/shell-reads-by-output-matching.md:132
+      - scripts/log-session.ts:467
+lists:
+  - {list: repoint, file: .agents/prune-trials.yml, line: 94, note: "ADR path; four stacked amendments, protected-main amendment"}
+  - {list: repoint, file: .agents/prune-trials.yml, line: 107, note: "territory names shell-read, merged-read and ratings amendments"}
+  - {list: repoint, file: scripts/log-session.ts, line: 11, note: "Landing mechanism as shipped section; 2026-09-05 amendment"}
+  - {list: repoint, file: scripts/log-session.ts, line: 659, note: "2026-09-05 amendment"}
+  - {list: repoint, file: scripts/log-session.ts, line: 810, note: "merged-read and verdict amendments"}
+  - {list: repoint, file: scripts/session-trace.ts, line: 285, note: "output-matching amendment"}
+  - {list: repoint, file: scripts/session-trace.ts, line: 335, note: "output-matching amendment"}
+  - {list: repoint, file: scripts/session-trace.ts, line: 532, note: "output-matching amendment"}
+  - {list: repoint, file: scripts/session-trace.ts, line: 768, note: "merged-read amendment"}
+  - {list: repoint, file: scripts/shell-reads.ts, line: 15, note: "output-matching amendment"}
+  - {list: repoint, file: scripts/shell-reads.ts, line: 753, note: "output-matching amendment banner"}
+  - {list: repoint, file: scripts/shell-reads.ts, line: 770, note: "the limit the ADR-0009 amendment refers to"}
+  - {list: repoint, file: shared/schemas/session.ts, line: 47, note: "(ADR-0009, 2026-10-11)"}
+  - {list: repoint, file: shared/schemas/session.ts, line: 68, note: "merged-read amendment"}
+  - {list: repoint, file: shared/schemas/session.ts, line: 90, note: "amendment, 2026-07-22"}
+  - {list: repoint, file: shared/schemas/session.ts, line: 103, note: "2026-09-05 amendment"}
+  - {list: repoint, file: shared/schemas/session.ts, line: 131, note: "amendment, 2026-07-22"}
+  - {list: repoint, file: layers/journal/app/utils/dashboard.ts, line: 301, note: "external-sessions amendment"}
+  - {list: repoint, file: .agents/skills/log-session/SKILL.md, line: 110, note: "amendment, 2026-07-22"}
+  - {list: repoint, file: .agents/skills/log-session/SKILL.md, line: 170, note: "merged-read amendment"}
+  - {list: repoint, file: .agents/skills/log-session/SKILL.md, line: 190, note: "output-matching and merged-read amendments"}
+  - {list: repoint, file: CONTEXT.md, line: 91, note: "external-sessions amendment"}
+  - {list: repoint, file: docs/adr/0010-digests-derived-append-only-journal-pages.md, line: 23, note: "ADR-0009's matching correction"}
+  - {list: repoint, file: docs/adr/0012-cross-persona-pingbacks-via-authored-denormalization.md, line: 72, note: "anchor #schema-evolution-policy, Schema evolution policy heading"}
+  - {list: repoint, file: docs/agents/guest-contributions.md, line: 16, note: "external-sessions amendment"}
+  - {list: repoint, file: docs/agents/guest-contributions.md, line: 61, note: "2026-07-22 amendment"}
+  - {list: repoint, file: docs/agents/guest-contributions.md, line: 70, note: "2026-07-22 amendment"}
+  - {list: repoint, file: docs/research/github-branch-protection-vs-autonomous-log-commits.md, line: 129, note: "quoted single enforcement point (dated note)"}
+  - {list: repoint, file: docs/research/shell-reads-by-output-matching.md, line: 3, note: "shell-read amendment (dated note)"}
+  - {list: repoint, file: docs/research/shell-reads-by-output-matching.md, line: 129, note: "quoted derived from tool_use calls, not results (dated note)"}
+  - {list: repoint, file: docs/research/shell-reads-by-output-matching.md, line: 132, note: "superset and byte-identity premises (dated note)"}
+  - {list: repoint, file: .agents/skills/visitor-loop/scripts/ideas.ts, line: 155, note: "generic ADR-0009 amendment; drop the word"}
+  - {list: repoint, file: .agents/skills/visitor-loop/tests/unit/ideas.spec.ts, line: 144, note: "generic amendment"}
+  - {list: repoint, file: layers/journal/app/assets/theme.css, line: 32, note: "generic amendment"}
+  - {list: repoint, file: layers/journal/app/components/journal/SessionCard.vue, line: 204, note: "generic amendment"}
+  - {list: repoint, file: layers/journal/app/types/journal.ts, line: 34, note: "generic amendment"}
+  - {list: repoint, file: layers/journal/tests/e2e/journal.spec.ts, line: 49, note: "generic amendment"}
+  - {list: repoint, file: layers/journal/tests/e2e/journal.spec.ts, line: 275, note: "generic amendment"}
+  - {list: repoint, file: layers/journal/tests/unit/journal-dashboard.spec.ts, line: 413, note: "generic amendment"}
+  - {list: repoint, file: scripts/audit-skills.ts, line: 372, note: "generic amendment"}
+  - {list: repoint, file: scripts/log-session.ts, line: 109, note: "generic amendment"}
+  - {list: repoint, file: scripts/log-session.ts, line: 467, note: "generic amendment"}
+  - {list: repoint, file: scripts/session-frictions.ts, line: 182, note: "generic amendment"}
+  - {list: repoint, file: scripts/session-trace.ts, line: 1, note: "generic amendment"}
+  - {list: repoint, file: shared/schemas/session.ts, line: 44, note: "generic amendments"}
+  - {list: repoint, file: shared/schemas/session.ts, line: 53, note: "generic amendment"}
+  - {list: repoint, file: tests/unit/audit-skills.spec.ts, line: 212, note: "generic amendment"}
+  - {list: repoint, file: tests/unit/session-frictions.spec.ts, line: 176, note: "generic amendment"}
+  - {list: repoint, file: tests/unit/session-trace.spec.ts, line: 1, note: "generic amendment"}
+  - {list: repoint, file: .agents/skills/frictions-to-fixes/SKILL.md, line: 57, note: "generic amendment"}
+  - {list: repoint, file: .agents/skills/log-session/SKILL.md, line: 10, note: "generic amendment"}
+  - {list: repoint, file: .agents/skills/log-session/SKILL.md, line: 107, note: "generic amendment"}
+  - {list: repoint, file: .gitignore, line: 33, note: "generic amendment"}
+  - {list: repoint, file: docs/agents/guest-contributions.md, line: 50, note: "generic amendment"}
+  - {list: fix, file: scripts/merged-since.ts, line: 8, note: "session/doc direct-to-main commits; only session logs take that path"}
+  - {list: fix, file: scripts/merged-since.ts, line: 67, note: "same session/doc logs wording"}
+  - {list: fix, file: shared/schemas/session.ts, line: 53, note: "SessionEnd extractor; Stop is primary"}
+  - {list: fix, file: .gitignore, line: 33, note: "SessionEnd handler's input; Stop is primary"}
+  - {list: fix, file: scripts/audit-skills.ts, line: 169, note: "ADR-0009 metric conflicts with shared/schemas/session.ts:103"}
+  - {list: fix, file: scripts/validate-content.ts, line: 97, note: "older logs are ADR-0009's bounded exception: unclear"}
+  - {list: fix, file: docs/diagrams/interactive-map/terrarium-overview.md, line: 869, note: "prs row cites ADR-0009 for pr-workflow.md and merge-pr.ts; unclear tie"}
+  - {list: fix, file: .agents/skills/midden-survey/scripts/midden-survey.ts, line: 111, note: "credits archive-by-move to ADR-0009; overview cites ADR-0008/0010 for it"}
+  - {list: fix, file: .agents/skills/frictions-to-fixes/SKILL.md, line: 57, note: "repeats external exclusion; point to CONTEXT.md Session"}
+  - {list: fix, file: .agents/skills/log-session/SKILL.md, line: 10, note: "repeats derived fields; point"}
+  - {list: fix, file: .agents/skills/log-session/SKILL.md, line: 107, note: "repeats derived-field list; point"}
+  - {list: fix, file: .agents/skills/log-session/SKILL.md, line: 160, note: "repeats helper is gated code; point"}
+  - {list: fix, file: docs/adr/0003-agent-operating-model-and-governance.md, line: 46, note: "repeats PR open triggers first log at in-review"}
+  - {list: fix, file: docs/adr/0003-agent-operating-model-and-governance.md, line: 141, note: "restates exception boundary and reason"}
+  - {list: fix, file: docs/adr/0010-digests-derived-append-only-journal-pages.md, line: 20, note: "restates retention count; home is archive script"}
