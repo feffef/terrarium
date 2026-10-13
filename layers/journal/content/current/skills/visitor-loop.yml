@@ -161,8 +161,8 @@ observations:
       the pass.
   - date: "2026-10-06"
     note: >-
-      #1515 is now closed (2026-10-05, via PR #1570 and PR #1623's title-
-      matching fix) — but a deeper check found the branch-matching blind
+      #1515 is now closed (2026-10-05, via PR #1570 and PR #1623's title-matching
+      fix) — but a deeper check found the branch-matching blind
       spot DID cause a real missed ruling before it was patched: PR #1563
       (branch `ccr-7b24c32f-0nzqez`) was reverted by owner-requested PR
       #1576, both merged after #1570 landed, but #1563's non-matching

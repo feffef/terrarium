@@ -103,6 +103,21 @@ function truncations(absPath: string): string[] {
   )
 }
 
+/** Lines of a folded block scalar (`>`, `>-`, `>+`) ending in `word-`: the fold
+ *  turns the line break into a space, so the hyphenated word reads as two. */
+function foldedHyphens(absPath: string): string[] {
+  const out: string[] = []
+  let headerIndent = -1 // -1: not inside a folded scalar
+  readFileSync(absPath, 'utf8').split('\n').forEach((line, i) => {
+    const indent = line.length - line.trimStart().length
+    if (headerIndent >= 0 && line.trim() && indent <= headerIndent) headerIndent = -1
+    if (headerIndent >= 0) {
+      if (/[A-Za-z0-9]-$/.test(line.trimEnd())) out.push(`line ${i + 1} ends in "-" inside a folded scalar; the fold splits the word. Rejoin it`)
+    } else if (/(^|[:-])\s*>[-+]?\s*$/.test(line)) headerIndent = indent
+  })
+  return out
+}
+
 /** Validate every Document in every expanded Collection that carries a schema.
  *  Pure aside from the file reads — takes the already-expanded collections so
  *  it's testable against a hand-built list, not just the real `layers/` tree. */
@@ -133,6 +148,7 @@ export function validateContent(cols: ExpandedCollection[], projectRoot = root):
         continue
       }
       const messages = col.kind === 'session' ? [] : truncations(absPath)
+      if (col.tenant === 'journal' && col.collection === 'skills') messages.push(...foldedHyphens(absPath))
       const res = schema.safeParse(data)
       if (!res.success) {
         messages.push(
