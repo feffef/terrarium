@@ -97,3 +97,10 @@ friction with a new prose rule, so a pruned problem can be re-legislated. This
 was weighed and deliberately left open: the cutter out-cuts the source for now,
 and the constraint on friction fixes is itself a problem a future trial can
 take.
+
+## Amendment: "three days" is a floor with a one-hour grace
+
+> **Amended (2026-10-13, #1856).** "Three days" is a floor of landing + 72h
+> minus a one-hour grace (`GRACE_MS` in `scripts/prune-trial-window.ts`,
+> owner-approved in #1683 after a verdict slipped a day, #1677). "Landing" is
+> when the prune reached `main`.
