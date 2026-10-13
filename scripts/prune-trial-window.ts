@@ -10,13 +10,12 @@
 // timestamp — a single command's output to quote, not a date to derive by
 // hand.
 //
-// "Landed" means: the first-parent `origin/main` commit whose diff changed the
-// trial's ledger entry, which ships the prune too (SKILL.md §5). First-parent,
+// "Landed" means: the NEWEST first-parent `origin/main` `git log -S` match for
+// the entry's text, which ships the prune too (SKILL.md §5). First-parent,
 // because a merged branch commit's own time predates its arrival on main
-// (#1856). It is the NEWEST `git log -S` match for the
-// entry's text: that commit set up the entry's current presence. A later
-// edit or a same-keyed entry can only make it later, and a later floor is the
-// safe direction (ADR-0027); the oldest match judged too early (issue #1285).
+// (#1856). That commit set up the entry's current presence. A later edit or a
+// same-keyed entry can only make it later, and a later floor is the safe
+// direction (ADR-0027); the oldest match judged too early (issue #1285).
 //
 // The reported window is a FLOOR, not a deadline: the earliest instant a
 // judgment is valid, never a time a judgment is due. `/prune-trial` runs on a
