@@ -1,11 +1,11 @@
 schemaVersion: 1
 session: session_01QvnVVurQdA4cvYSZToBvud
 startedAt: 2026-10-13T22:43:19Z
-endedAt: 2026-10-13T23:03:37Z
+endedAt: 2026-10-13T23:09:15Z
 kind: delegated
 goal: Fact-checked docs sweep after the ADR rewrite
 status: in-review
-outcome: "Self-merge docs PR #1908 and human-merge ADR escalation PR #1909 opened, both gated"
+outcome: "Docs PR #1908 merged; ADR escalation PR #1909 green, waiting for the owner to merge"
 summary: "The user invoked /audit-docs (human-instructed: the whole sweep; everything below followed the Skill without further prompts). Concision family 1 (docs/agents) came up for the third time today, so most value came from the other lenses: the ADR rewrite in #1898 had left drift in journal pages, Inventory roles and several Skills (a prune-trial ADR exception that no longer exists, merge-pr.ts treated as the whole ADR-0004 test, a \"standing\" ADR-0022 approval). Five read-only reviewers, three independent checkers: 21 CONFIRMED, 22 CONFIRMED-BUT, 4 WRONG (dropped, including a proposed cut of CLAUDE.md's close-session bullet whose two triggers were placed on purpose). Agent-initiated within the Skill's scope: the separate escalation branch for two ADR sentences that contradicted the code (ADR-0004's minor/patch clause vs package.json being Human-only; ADR-0009's \"not read\" scope), plus re-stamped rule hashes and the dependabot.yml comment, which code review flagged as outside the Live tier and I moved there. The full gate (e2e 132/132) passed before the first push."
 prs:
   - "1908"
@@ -211,23 +211,32 @@ frictions:
   - description: "PRUNE-TRIAL (pr-workflow recipe, not edited): step 3 names mcp__Claude_Code_Remote__send_later, but this session's tool is mcp__claude-code-remote__send_later, so a literal search misses it"
     solution: Left for prune-trial to judge; the name could be written without the server prefix
     severity: nit
-durationSec: 1218
+  - description: Escalation PR first rewrote ADR-0004's minor/patch clause to 'not by itself an exception', changing what the ADR decided; the owner caught it in review (agents are meant to merge such bumps)
+    solution: When an ADR contradicts its own Human-only list, keep the decision and name the conflict (or ask the owner) rather than pick the side the code enforces; audit-docs already says never change what an ADR decided
+    severity: moderate
+durationSec: 1555
 models:
-  claude-opus-5-5: 190
+  claude-opus-5-5: 234
 toolCounts:
-  Bash: 31
-  Read: 31
+  Bash: 38
+  Read: 32
   Agent: 10
-  ToolSearch: 2
+  ToolSearch: 3
   mcp__github__list_pull_requests: 1
   Write: 2
-  Edit: 50
+  Edit: 51
   Grep: 1
   Skill: 3
   SendMessage: 1
   mcp__github__create_pull_request: 2
-  mcp__github__update_pull_request: 1
+  mcp__github__update_pull_request: 2
   mcp__claude-code-remote__subscribe_pr_activity: 2
+  ReadNotifications: 4
+  mcp__github__pull_request_read: 3
+  mcp__claude-code-remote__send_later: 1
+  mcp__github__add_reply_to_pull_request_comment: 2
+  mcp__github__add_issue_comment: 2
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/journal/content/current/pages/how-it-works.md
   - layers/journal/content/current/pages/highlights.md
