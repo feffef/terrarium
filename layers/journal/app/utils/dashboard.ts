@@ -222,7 +222,7 @@ export function sessionRuleTitles(sources: Record<string, string>): Record<strin
 }
 
 // shared/schemas/session.ts orders severities least to most severe (Human-only), so rank here.
-const SEVERITY_RANK: Record<string, number> = { blocker: 0, major: 1, moderate: 2, minor: 3, nit: 4 }
+const SEVERITY_RANK: Record<Severity, number> = { blocker: 0, major: 1, moderate: 2, minor: 3, nit: 4 }
 
 export function sessionCardViews(
   sessions: SessionDoc[],
@@ -251,7 +251,7 @@ export function sessionCardViews(
       docsRead: s.docsRead ?? [],
       skillsUsed: s.skillsUsed ?? [],
       // Array.sort is stable: equal severities keep their logged order.
-      frictions: [...s.frictions].sort((a, b) => (SEVERITY_RANK[a.severity] ?? 5) - (SEVERITY_RANK[b.severity] ?? 5)),
+      frictions: [...s.frictions].sort((a, b) => SEVERITY_RANK[a.severity] - SEVERITY_RANK[b.severity]),
       learnings: s.learnings ?? [],
       ideas: s.ideas ?? [],
       filesEdited: s.filesEdited ?? [],
