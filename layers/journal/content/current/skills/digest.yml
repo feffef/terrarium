@@ -178,3 +178,14 @@ observations:
       through today. Narrative claims spot-checked against the day's real
       PR list (6 claims, including the "worst" pick) all matched. No new
       silent failure; the #1478 gap remains closed. Grade/role unchanged.
+  - date: "2026-10-13"
+    note: >-
+      Self-check (audit-skills behaviour check): all 7 usedIn sessions
+      checked, including the newest, session_01Rn5xT34AdjnywsTJdUtaDm (PR
+      #1855, 2026-10-12). Fact-check subagent dispatch confirmed genuinely
+      run in all 7 (named in each log's `subagents` block, not just claimed
+      in a PR body). 4 specific factual claims across 2 sessions
+      independently verified true against live git/GitHub. No revert of
+      digest content in the 2-week sweep — every digest-touching commit is a
+      forward wording-tightening fix, the #1478-fix mechanism working as
+      designed across 12 consecutive daily audits now. No new finding.

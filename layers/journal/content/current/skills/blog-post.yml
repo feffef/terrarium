@@ -221,3 +221,13 @@ observations:
       over the 2-week window) found exactly these 2 deletion commits, both
       accounted for. #1479/#1626 both reconfirmed closed live. Grade/role
       unchanged.
+  - date: "2026-10-13"
+    note: >-
+      Self-check (audit-skills behaviour check): newest 10 of 12 usedIn
+      sessions checked. One freshly-audited session (session_01Xw7ZN8..,
+      PRs #1809/#1810, 2026-10-12) ran every mandatory dispatch (step 6,
+      step 9 fact-check, the full step-12 reader/fact-check/second-reader
+      chain) as genuine subagent calls, matching live PR-body tallies; 2
+      spot-checked factual claims independently verified true against
+      commit/PR/issue history. #1479's and #1626's historical skip classes
+      have not recurred. No new silent failure. Grade/role unchanged.

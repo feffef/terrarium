@@ -225,3 +225,14 @@ observations:
       reversed direction twice in under 48h without a run actually
       following the current text; worth a future check. No reverts in the
       2-week sweep. Grade/role unchanged.
+  - date: "2026-10-13"
+    note: >-
+      Self-check (audit-skills behaviour check): all 8 usedIn sessions
+      checked. Two freshly-verified sessions (session_01Dz52W6wWZWUgKwPtdxabzJ,
+      PR #1803; session_017tt8CbwHqFWqw7PJZ7u7AL, PR #1681) both deliver
+      exactly what their SKILL.md version promised — live diffs/bodies match
+      the logs' claimed fix lists and verdict tallies, issue #1802 correctly
+      escalated as a genuine two-source conflict, later human-closed via PR
+      #1841. Remaining 6 sessions re-confirmed via a fresh 2-week revert
+      sweep rather than re-trusting prior entries; #1541/#1608/#1647 all
+      still closed/fixed. No new silent failure. Grade/role unchanged.

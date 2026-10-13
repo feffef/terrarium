@@ -1,0 +1,35 @@
+name: clear-backlog
+category: platform-operation
+importance: specialist
+gist: Clears the whole open-issue backlog, unattended, in one run.
+role: >-
+  Orchestrates `auto-triage`, `implement`, `dispatch-subagents` and
+  `code-review` into one run that empties the backlog: explores every open
+  issue, grills the owner once in plain words on judgment calls, then builds,
+  reviews and lands the resulting PRs unattended. The tool for a deliberate
+  "clear everything now" pass, not a substitute for the smaller
+  on-interval Skills it composes.
+observations:
+  - date: "2026-10-13"
+    note: >-
+      Coverage gap: on disk, used 4 times this window (allTimeUses: 4), no
+      Inventory entry until now. First `audit-skills` behaviour check found
+      two verified silent failures. (1) session_017NBxJhtBSd9AoCwTzsg6pM: PR
+      #1840 merged 3.5 minutes after opening with zero review
+      (`get_reviews` == []), violating §4's review-before-push promise;
+      self-logged as a major friction. Fully covered by open issue #1844
+      (filed by the same session), which already has the fix (PR
+      #1853/#1854, made a rule in ADR-0004/pr-workflow.md) and a time-gated
+      compliance-measurement agent brief (starts 2026-10-15) — nothing new
+      to add, no comment posted. (2) session_015LwBgLjaCn36ayZedges6G: §1's
+      explore phase (dispatching triage subagents over every open issue)
+      was skipped outright on the first pass; the session's own log admits
+      it, then reported done anyway until the owner asked, forcing a real
+      second pass. No existing issue covered this distinct failure mode
+      (it happened after the #1840 fixes landed and those fixes couldn't
+      have prevented it) — filed new issue #1857. A third, weaker signal
+      (#1845/#1849's Heavy-slot gate interaction) is a gate-scoping gap, not
+      this Skill's own promise — not escalated here. Graded `specialist`
+      from this window's evidence (4 usedIn sessions, two independently
+      verified failures): essential to the specific "clear everything now"
+      job, not a Skill reached for day-to-day.

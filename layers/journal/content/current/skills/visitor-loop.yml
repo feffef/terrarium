@@ -284,3 +284,17 @@ observations:
       today matches decisions.md's line exactly). No revert of visitor-loop's
       own mechanics beyond the already-tracked cases. Grade unchanged
       (routine).
+  - date: "2026-10-13"
+    note: >-
+      Self-check (audit-skills behaviour check): all 8 usedIn sessions
+      checked, with focused re-verification of the 4 runs after the #1732
+      mechanical fix (owner-corrections.ts --check + 21 unit tests,
+      2026-10-10). The fix is holding cleanly 4/4: every post-fix PR body
+      names owner-correction candidates individually, zero batch-dismissals
+      (the #1721 shape), decisions.md's git log confirms zero spurious
+      lines added. Structural gap worth watching, not yet a failure:
+      `owner-corrections.ts --check` is not wired into the gate or CI
+      (`grep -rn owner-corrections scripts/gate.ts .github/` finds
+      nothing) — the fix holds today by agent compliance, not gate
+      enforcement, so a future non-compliant run would not be mechanically
+      blocked. No new silent failure to escalate. Grade/role unchanged.
