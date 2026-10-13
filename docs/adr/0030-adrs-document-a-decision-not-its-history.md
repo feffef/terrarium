@@ -26,9 +26,10 @@ agents.
   narrow one's focus or retire one: each is an ordinary edit. The same PR
   rewrites its summary rule, repoints the code and docs that cite it, and
   gives a new home to anything they relied on that leaves the ADR.
-- **Plain language.** Short sentences in plain, common words. When you name a
-  concept the glossary defines, use its term, not a synonym. Replace coined
-  phrases with what actually happens.
+- **Plain language.** Short sentences in plain, common words. Say what happens
+  rather than name it: use a glossary term only when no plain phrase is as
+  clear, and then the glossary's own term, never a synonym. Replace coined
+  phrases the same way.
 - **Template.** Follow `docs/adr/TEMPLATE.md`: a `# ADR-NNNN:` heading, a 2–3
   sentence summary that covers the whole decision, then *Scope*, *Why* and
   *Rejected alternatives*, and optional sections left out rather than filled.
