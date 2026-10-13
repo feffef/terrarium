@@ -1,0 +1,349 @@
+schemaVersion: 1
+session: session_01AnHXyvzXukt6izZTYs3YMr
+startedAt: 2026-10-13T10:23:08Z
+endedAt: 2026-10-13T10:41:41Z
+kind: delegated
+goal: Weekly-style fact-check of the repo's own docs (audit-docs, docs/agents family)
+status: in-review
+outcome: "PR #1884 open with 53 checker-confirmed doc fixes; ADR-0004 banner escalation queued as a follow-up PR"
+summary: "The human started this with the /audit-docs slash command (one kickoff prompt); everything after it was agent-run under that Skill's charter. Concision family 1 (docs/agents/*) came up by day of year, the same family a sweep covered earlier today (b0aa2d126), so concision findings were thinner but still real. Five read-only reviewers (Freshness, Single-home, two Concision halves, Coherence) reported; three independent checkers returned 45 CONFIRMED, 8 CONFIRMED-BUT and 2 WRONG (A#6, D#3, both dropped). The biggest real catches came from last-48h drift: clear-backlog ran close-session only at the end, auto-triage's step-2 reason went false after its eligibility change, log-session's re-author guidance misdescribed mergeAuthored for frictions, prune-trial wording still said \"due\" and \"closes:\", and pr-workflow claimed a dependabot-automerge workflow that does not exist. gate:scoped passed and the code-review Skill found no hard violations; two judgement calls were applied. The one ADR edit (ADR-0004 needs a pointer to ADR-0005's 2026-10-13 amendment) must be human-merged; because this session may push only to its own branch, it is queued as a follow-up PR on the same branch after #1884 merges, instead of a parallel escalation PR. Left open for a human: ADR-0003's ledger row and .github/dependabot.yml still say dependabot PRs auto-merge, and who merges them until proposal #1633 lands is a decision, not a fact."
+prs:
+  - "1884"
+docsRead:
+  - path: CONTEXT-MAP.md
+    reason: session-start read; tiers of Tenant content to skip
+    useful: partly
+  - path: CONTEXT.md
+    reason: session-start glossary; Human-only and Prune Trial terms
+    useful: partly
+  - path: docs/agents/git-conventions.md
+    reason: fetch before trusting history; commit -F for backticks
+    useful: yes
+  - path: docs/agents/pr-workflow.md
+    reason: closing a self-merged chartered run; review before first push
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: list_pull_requests needs fields; provenance via MCP
+    useful: yes
+  - path: .agents/prune-trials.yml
+    reason: open trial territory to keep edits out of
+    useful: yes
+  - path: docs/agents/verifying-ui-changes.md
+    reason: audited and edited (concision family)
+    useful: yes
+  - path: docs/agents/tenant-layers.md
+    reason: audited and edited (concision family)
+    useful: yes
+  - path: docs/agents/mdc-when-to-use.md
+    reason: audited and edited (concision family)
+    useful: yes
+  - path: docs/agents/issue-tracker.md
+    reason: audited and edited; gh-for-all contradiction
+    useful: yes
+  - path: docs/agents/triage-labels.md
+    reason: audited and edited (concision family)
+    useful: yes
+  - path: docs/agents/domain.md
+    reason: audited and edited (concision family)
+    useful: yes
+  - path: docs/agents/environment-caveats.md
+    reason: audited and edited (concision family)
+    useful: yes
+  - path: docs/agents/guest-contributions.md
+    reason: audited and edited (concision family)
+    useful: yes
+  - path: layers/journal/CONTEXT.md
+    reason: subagent cross-check of dashboard and ledger page facts
+    useful: partly
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: amendment banners; source for the escalated ADR-0004 pointer
+    useful: yes
+  - path: docs/agents/guards.md
+    reason: prune-trial territory; search-fields guard row confirmed drift fix
+    useful: partly
+  - path: .agents/skills/clear-backlog/SKILL.md
+    reason: audited; close-session timing and §3 workflow scope
+    useful: yes
+  - path: .agents/skills/log-session/SKILL.md
+    reason: audited; re-author merge guidance vs mergeAuthored
+    useful: yes
+  - path: .agents/skills/auto-triage/SKILL.md
+    reason: audited; eligibility vs skip rule
+    useful: yes
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: subagent cross-check for duplication
+    useful: partly
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: subagent cross-check for duplication; no finding
+    useful: no
+  - path: .agents/skills/close-session/SKILL.md
+    reason: subagent cross-check; PR-open sequence reference kept
+    useful: partly
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: subagent cross-check; no finding
+    useful: no
+  - path: .agents/skills/digest/SKILL.md
+    reason: subagent cross-check; no finding
+    useful: no
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: the Skill this run follows; spec for code review
+    useful: yes
+  - path: docs/proposals/README.md
+    reason: pointer target check for workflow-edit rule
+    useful: partly
+  - path: docs/research/nuxt-content-review-grounding.md
+    reason: verified §2, §6, §13 pointers and type auto-import claim
+    useful: yes
+  - path: docs/adr/0020-requester-trust-tiers.md
+    reason: subagent cross-check of Public merge rule
+    useful: partly
+  - path: .agents/skills/prune-trial/SKILL.md
+    reason: audited; judgeable-from wording fix
+    useful: yes
+  - path: .agents/skills/visitor-loop/SKILL.md
+    reason: subagent cross-check; no finding
+    useful: no
+  - path: .agents/skills/guest-intake/SKILL.md
+    reason: subagent cross-check; no finding
+    useful: no
+  - path: docs/adr/0005-skill-model.md
+    reason: 2026-10-13 amendment widens ADR-0004; basis of the escalation
+    useful: yes
+  - path: docs/adr/0018-tenant-layers-under-layers-directory.md
+    reason: one-line amending-note convention for the escalation
+    useful: yes
+  - path: .agents/skills/midden-survey/SKILL.md
+    reason: subagent confirmed moved script path
+    useful: partly
+  - path: layers/midden/CONTEXT.md
+    reason: already-correct script path wording reused for the Inventory fix
+    useful: partly
+  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
+    reason: subagent checked log-session pointer to its folded section
+    useful: partly
+  - path: .agents/skills/guest-build/SKILL.md
+    reason: confirmed never-merges wording for pr-workflow tier line
+    useful: yes
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: subagent ran docReadCounts context; no finding
+    useful: no
+  - path: .agents/skills/implement/SKILL.md
+    reason: subagent checked clear-backlog's Skill references
+    useful: partly
+  - path: layers/journal/content/current/pages/index.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/skills/clear-backlog.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/skills/midden-survey.yml
+    reason: (no reason given)
+  - path: scripts/log-session.ts
+    reason: (no reason given)
+  - path: README.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/how-it-works.md
+    reason: (no reason given)
+  - path: tests/README.md
+    reason: (no reason given)
+  - path: scripts/gate.ts
+    reason: (no reason given)
+  - path: SECURITY.md
+    reason: (no reason given)
+  - path: deploy/README.md
+    reason: (no reason given)
+  - path: tests/support/e2e-global-setup.ts
+    reason: (no reason given)
+  - path: tests/support/fresh-output.ts
+    reason: (no reason given)
+  - path: scripts/probe.ts
+    reason: (no reason given)
+  - path: .claude/workflows/clear-backlog-build.js
+    reason: (no reason given)
+  - path: .claude/workflows/clear-backlog-explore.js
+    reason: (no reason given)
+  - path: scripts/read-first-hint.ts
+    reason: (no reason given)
+  - path: scripts/prune-trial-window.ts
+    reason: (no reason given)
+skillsUsed:
+  - name: audit-docs
+    reason: the chartered sweep itself
+  - name: code-review
+    reason: required review before the branch's first push
+  - name: close-session
+    reason: log at PR open
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Read many files with cat/sed/head/grep in Bash instead of the Read tool, against CLAUDE.md's Read-tool rule; rules for those files may not have loaded.
+    solution: Use Read for any file whose content informs an edit; reserve Bash for locating text.
+    severity: minor
+  - description: First PR body stated 49 CONFIRMED verdicts without summing the three checker reports; the true count was 45, corrected by an edit.
+    solution: Sum counts from the saved checker files before writing them anywhere (CLAUDE.md Verify before you state).
+    severity: nit
+  - description: audit-docs picks the concision family by day of year, so a second sweep on the same day re-audits the family the morning sweep just tightened.
+    solution: Have audit-docs skip or rotate the concision family when an audit-docs commit for the same family landed in the last 24h.
+    severity: minor
+  - description: audit-docs step 8 wants a separate escalation PR, but the session may push only its own branch; had to defer the ADR edit to a follow-up PR on the same branch.
+    solution: Say in audit-docs step 8 that a session limited to one branch opens the escalation as a follow-up PR on that branch after the main PR merges.
+    severity: minor
+  - description: "Prune-trial note: pr-workflow.md recipe step 3 names mcp__Claude_Code_Remote__send_later, but this session's tool is mcp__claude-code-remote__send_later (in the pr-workflow trial's territory, so not edited)."
+    solution: Leave to prune-trial; environment-caveats.md already names both spellings.
+    severity: nit
+  - description: Applied two code-review nits after gate:scoped had started, so the local gate ran on the tree before those two prose edits.
+    solution: Rely on CI's gate for prose follow-ups (ADR-0004 allows it), or finish review fixes before starting the gate.
+    severity: nit
+durationSec: 1114
+models:
+  claude-opus-5-5: 125
+toolCounts:
+  Bash: 35
+  Read: 11
+  Agent: 10
+  ToolSearch: 2
+  mcp__github__list_pull_requests: 1
+  Skill: 3
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+  mcp__github__update_pull_request: 1
+  mcp__github__add_issue_comment: 2
+  mcp__github__pull_request_read: 1
+rulesLoaded:
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0018.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0026.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0008.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/adr-0010.md
+  - .claude/rules/guards.md
+  - .claude/rules/adr-0011.md
+  - .claude/rules/adr-0012.md
+  - .claude/rules/adr-0014.md
+  - .claude/rules/adr-0002.md
+  - .claude/rules/adr-0028.md
+rulesGlobal:
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0001.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0023.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0018.md
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0009.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0022.md
+    reason: auto-triage edits stay within the standing green-light rule; summary enough
+    useful: partly
+  - path: .claude/rules/adr-0004.md
+    reason: gate:scoped plus code-review before first push, held despite Stop-hook nags; summary enough, read ADR only for the escalation
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: told me to close-session at PR open; summary enough
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: kept edits out of open trial territory; logged the send_later note as a friction
+    useful: yes
+  - path: .claude/rules/adr-0001.md
+    reason: build-time content model; no bearing on doc fixes
+    useful: no
+  - path: .claude/rules/adr-0020.md
+    reason: trust tiers; no Public input in this run
+    useful: no
+  - path: .claude/rules/adr-0003.md
+    reason: open the PR myself and subscribe; chartered row lets audit-docs self-merge
+    useful: yes
+  - path: .claude/rules/adr-0023.md
+    reason: guest pipeline; not in play
+    useful: no
+  - path: .claude/rules/adr-0017.md
+    reason: provenance header on the PR body; commit trailer checked
+    useful: yes
+  - path: .claude/rules/adr-0005.md
+    reason: workflow scripts are Skill code, so the clear-backlog-build edit is a normal gated change
+    useful: yes
+  - path: .claude/rules/adr-0015.md
+    reason: Inventory role edits only, never importance
+    useful: yes
+  - path: .claude/rules/adr-0018.md
+    reason: ADR edits via amending note; shaped the escalation
+    useful: yes
+  - path: .claude/rules/adr-0021.md
+    reason: CONTEXT split; confirmed no Tenant context edits needed
+    useful: partly
+  - path: .claude/rules/adr-0026.md
+    reason: gate workflow shell; nothing touched
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: why Read tool matters; I still used Bash reads (friction)
+    useful: partly
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: confirmed no Human-only path in the main PR; ADR edit must escalate
+    useful: yes
+  - path: .claude/rules/adr-0008.md
+    reason: Journal Inventories refreshed in place; fit the role edits
+    useful: partly
+  - path: .claude/rules/tenant-layers.md
+    reason: loaded while auditing tenant-layers.md; pointed at the file under edit
+    useful: partly
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: loaded while auditing mdc-when-to-use.md; pointed at the file under edit
+    useful: partly
+  - path: .claude/rules/adr-0010.md
+    reason: digests are Historical, so never edited
+    useful: partly
+  - path: .claude/rules/guards.md
+    reason: loaded by guards.md read; trial territory, left alone
+    useful: partly
+  - path: .claude/rules/adr-0011.md
+    reason: loaded by a subagent read; no bearing on doc fixes
+    useful: no
+  - path: .claude/rules/adr-0012.md
+    reason: loaded by a subagent read; no bearing on doc fixes
+    useful: no
+  - path: .claude/rules/adr-0014.md
+    reason: loaded by a subagent read; no bearing on doc fixes
+    useful: no
+  - path: .claude/rules/adr-0002.md
+    reason: loaded by a subagent read; no bearing on doc fixes
+    useful: no
+  - path: .claude/rules/adr-0028.md
+    reason: loaded by a subagent read; no bearing on doc fixes
+    useful: no
+subagents:
+  - type: general-purpose
+    task: "Audit A: freshness lenses"
+  - type: general-purpose
+    task: "Audit B: single-home lenses"
+  - type: general-purpose
+    task: "Audit C1: concision part 1"
+  - type: general-purpose
+    task: "Audit C2: concision part 2"
+  - type: general-purpose
+    task: "Audit D: coherence lenses"
+  - type: general-purpose
+    task: Check C2 findings
+  - type: general-purpose
+    task: Check C1 findings
+  - type: general-purpose
+    task: Check A, B, D findings
+  - type: general-purpose
+    task: Standards review of sweep diff
+  - type: general-purpose
+    task: Spec review of sweep diff
+gitBranch: claude/audit-docs-mkzue8
+entrypoint: remote_mobile
+cliVersion: 2.1.296
+ideas:
+  - Teach scripts/log-session.ts to warn when a re-author pass adds a friction whose description nearly matches an existing one (edit distance), since mergeAuthored silently logs a reworded friction twice.
+landedBy: Stop
