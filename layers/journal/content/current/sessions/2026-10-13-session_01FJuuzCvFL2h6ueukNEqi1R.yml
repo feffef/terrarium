@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01FJuuzCvFL2h6ueukNEqi1R
 startedAt: 2026-10-13T04:01:46Z
-endedAt: 2026-10-13T04:19:38Z
+endedAt: 2026-10-13T04:22:34Z
 kind: autonomous
 goal: Scheduled audit of the repo's docs against the code
-status: in-review
-outcome: "Opened PR #1862 with 41 fact-checked doc fixes; gate:scoped green, awaiting CI and self-merge"
-summary: "Scheduled /audit-docs run (no human prompt; all work agent-initiated by the schedule). Concision family 1 (docs/agents/*). Four reviewer agents (freshness, single-home, concision, coherence) pooled about 48 findings; three independent checkers re-derived them. Applied 41 (including several CONFIRMED-BUT with corrected text); dropped four as WRONG (a mermaid-rule move that would reverse a deliberate earlier move, an issue-tracker move that lost content, a domain.md parenthetical that carried a pointer, an optional CONTEXT.md addition). Real drift found: stale .e2e.ts names, a midden-catalogue owner-merge tier missing from pr-workflow, guest-intake screening three of four ADR-0023 conditions, tinkerfund-campaign implying review-exempt. Open Prune Trial territory (guards.md, pr-workflow recipe) was left alone; three observations are in the PR body for prune-trial. Ran gate:scoped and code-review before the first push despite two Stop-hook push requests; no hard findings. PR is open and subscribed; merge on green is still to do."
+status: completed
+outcome: "Merged PR #1862 with 41 fact-checked doc fixes after a green gate"
+summary: "Scheduled /audit-docs run (no human prompt; all work agent-initiated by the schedule). Concision family 1 (docs/agents/*). Four reviewer agents (freshness, single-home, concision, coherence) pooled about 48 findings; three independent checkers re-derived them. Applied 41 (including several CONFIRMED-BUT with corrected text); dropped four as WRONG (a mermaid-rule move that would reverse a deliberate earlier move, an issue-tracker move that lost content, a domain.md parenthetical that carried a pointer, an optional CONTEXT.md addition). Real drift found: stale .e2e.ts names, a midden-catalogue owner-merge tier missing from pr-workflow, guest-intake screening three of four ADR-0023 conditions, tinkerfund-campaign implying review-exempt. Open Prune Trial territory (guards.md, pr-workflow recipe) was left alone; three observations are in the PR body for prune-trial. Ran gate:scoped and code-review before the first push despite two Stop-hook push requests; no hard findings. PR merged on green gate."
 prs:
   - "1862"
 docsRead:
@@ -152,17 +152,23 @@ frictions:
   - description: Fixer subagent self-reported edits as faithful, but review (Spec axis) re-litigated cuts the checkers had already confirmed, costing a review round
     solution: Pass the verdict files to the review agents so confirmed cuts are not re-flagged
     severity: minor
-durationSec: 1072
+durationSec: 1248
 models:
-  claude-sonnet-5-5: 70
+  claude-sonnet-5-5: 88
 toolCounts:
   Read: 6
-  Bash: 17
+  Bash: 20
   Agent: 10
   Skill: 2
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 2
+  mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__add_issue_comment: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
+  mcp__github__unsubscribe_pr_activity: 1
 filesEdited:
   - docs/research/content-client-queries-without-wasm.md
   - layers/journal/content/current/pages/how-it-works.md
