@@ -1,0 +1,176 @@
+schemaVersion: 1
+session: session_01JW1NEbkjzCyx2myBjt9X8V
+startedAt: 2026-10-13T10:23:58Z
+endedAt: 2026-10-13T10:38:32Z
+kind: interactive
+goal: Explain that agents use GitHub issues and PRs like a dev team
+status: in-review
+outcome: "README, homepage hero, Journal pages and glossary now say it, with links; PR #1883 open"
+summary: "Human-instructed: the owner asked to find every place that explains agents build the site and add that they also use GitHub issues (deferred work) and PRs (reasoning per change), deciding the detail level. Per the owner's stated preference I explored first and proposed a plan (detail on the Journal's How it works page, one sentence elsewhere, glossary line in Observability) and asked five questions; the owner approved it, asked for the homepage too, the broader framing and links. Agent-initiated: the two-axis code-review fixes. The Standards reviewer argued no doc requires sessions to file issues; I checked the tracker instead (all 29 recent issues carry the agent marker, recent PR bodies state reasoning) and kept the claims. Blog, digests, history, ADRs and agent docs were deliberately left alone."
+prs:
+  - "1883"
+docsRead:
+  - path: CONTEXT.md
+    reason: Observability and Agent Authorship terms; where to add the glossary line
+    useful: yes
+  - path: CONTEXT-MAP.md
+    reason: session-start read; context layout
+    useful: partly
+  - path: README.md
+    reason: one of the surfaces to edit
+    useful: yes
+  - path: layers/journal/content/current/pages/how-it-works.md
+    reason: main home for the new detail
+    useful: yes
+  - path: docs/agents/domain.md
+    reason: glossary edit rules; rule of two did not bar a sentence in an existing term
+    useful: partly
+  - path: docs/agents/verifying-ui-changes.md
+    reason: screenshot tooling; prefer built preview over cold dev
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: fetch before trusting history, commit -F
+    useful: partly
+  - path: docs/agents/pr-workflow.md
+    reason: review before first push, verdict comment, closing keywords; source for the new prose
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: MCP writes in cloud; list-open-issues script
+    useful: yes
+  - path: docs/agents/issue-tracker.md
+    reason: what issues are for; fact source for the prose
+    useful: yes
+  - path: layers/journal/CONTEXT.md
+    reason: Standards subagent checked Journal vocabulary; I grepped What lives where to confirm index.md body renders
+    useful: partly
+  - path: docs/agents/triage-labels.md
+    reason: Standards subagent verified the triage/close claim against it
+    useful: yes
+  - path: .agents/skills/log-session/SKILL.md
+    reason: Standards subagent checked where deferred work is recorded (session-log ideas/frictions)
+    useful: partly
+  - path: app/pages/index.vue
+    reason: (read before editing)
+skillsUsed:
+  - name: code-review
+    reason: required before first push; caught stale meta description and loose merge wording
+  - name: close-session
+    reason: PR opened
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Read several docs via cat/sed in Bash (CONTEXT-MAP.md, issue-tracker.md, pr-workflow.md head, human-merge rule) despite CLAUDE.md's Read-tool rule
+    solution: Use the Read tool for every doc read; batch parallel Read calls instead of a chained cat
+    severity: minor
+  - description: Recommended a plan in chat without first grepping docs/adr for binding ADRs, as CLAUDE.md asks before recommending a change
+    solution: Run grep -l on the touched paths/terms before the first recommendation, even for prose-only changes
+    severity: nit
+  - description: First homepage screenshot used --dev and caught the Nuxt loading splash; the doc already warns about cold dev servers
+    solution: Default to the built preview with --wait-for a selector, as verifying-ui-changes.md says
+    severity: nit
+  - description: Standards reviewer flagged the core claim as unverified because no doc tells sessions to file issues for deferred work; cost a tracker check
+    solution: The practice is real but undocumented; issue-tracker.md could state it in one line so reviewers find it
+    severity: nit
+durationSec: 874
+models:
+  claude-opus-5-5: 96
+toolCounts:
+  Bash: 28
+  Read: 12
+  Edit: 6
+  Skill: 3
+  Agent: 2
+  ToolSearch: 1
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+filesEdited:
+  - README.md
+  - app/pages/index.vue
+  - layers/journal/content/current/pages/index.md
+  - CONTEXT.md
+  - layers/journal/content/current/pages/how-it-works.md
+rulesLoaded:
+  - .claude/rules/adr-0021.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/adr-0008.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0018.md
+  - .claude/rules/adr-0015.md
+rulesGlobal:
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0001.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0023.md
+  - .claude/rules/adr-0017.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0022.md
+    reason: Confirmed the prose claim that triage closes only duplicates and done work; summary was enough
+    useful: partly
+  - path: .claude/rules/adr-0004.md
+    reason: Made me run gate:scoped and code-review before the first push despite the Stop hook; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Told me to log at PR open and keep the log off the branch; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: No prune trial overlapped these prose pages
+    useful: no
+  - path: .claude/rules/adr-0001.md
+    reason: Build architecture; irrelevant to a copy change
+    useful: no
+  - path: .claude/rules/adr-0020.md
+    reason: "Shaped the visitor-issues sentence: Public issues are data, built only after a Trusted green-light"
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Told me to open the PR myself after pushing and subscribe; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0023.md
+    reason: Guest pipeline exception is why the visitor sentence says normally
+    useful: partly
+  - path: .claude/rules/adr-0017.md
+    reason: Provenance line on the PR body
+    useful: yes
+  - path: .claude/rules/adr-0021.md
+    reason: Confirmed glossary line belongs in root CONTEXT.md, not a Tenant context
+    useful: partly
+  - path: .claude/rules/tenant-layers.md
+    reason: No layer config was touched, only Journal content
+    useful: no
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: Plain Markdown prose; no MDC or Collection decision
+    useful: no
+  - path: .claude/rules/adr-0008.md
+    reason: Context that the Journal is the self-documentation home, fitting it to carry the detail
+    useful: partly
+  - path: .claude/rules/adr-0029.md
+    reason: Reminded me shell reads load no rule; I broke the Read-tool rule anyway
+    useful: partly
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Confirmed no touched path is Human-only, so the PR can self-merge on green
+    useful: yes
+  - path: .claude/rules/adr-0005.md
+    reason: Skill model; no Skill was edited
+    useful: no
+  - path: .claude/rules/adr-0018.md
+    reason: Layers directory layout; nothing moved
+    useful: no
+  - path: .claude/rules/adr-0015.md
+    reason: audit-skills grading; not relevant to this change
+    useful: no
+subagents:
+  - type: general-purpose
+    task: Standards review of diff
+  - type: general-purpose
+    task: Spec review of diff
+gitBranch: ccr-c67d48e9-xeef19
+entrypoint: remote_mobile
+cliVersion: 2.1.296
+landedBy: Stop
