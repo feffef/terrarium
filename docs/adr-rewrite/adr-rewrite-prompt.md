@@ -8,8 +8,8 @@ stand today. Don't split or merge ADRs.
 **Write only to the scratchpad; change nothing in the repo.** Other agents are
 rewriting other ADRs at the same time. Run only read-only git commands (`log`,
 `show`, `blame`, `grep`). Write the rewrite to
-`/tmp/claude-0/-home-user-terrarium/468fb6ef-963a-5a51-b883-82308adbcdbb/scratchpad/rewrites-v2/{NNNN}.md`
-and your report to `…/rewrites-v2/{NNNN}-report.md`.
+`/tmp/claude-0/-home-user-terrarium/468fb6ef-963a-5a51-b883-82308adbcdbb/scratchpad/rewrites-v3/{NNNN}.md`
+and your report to `…/rewrites-v3/{NNNN}-report.md`.
 
 ## 1. Read
 
@@ -71,8 +71,11 @@ Go through the callers' checklist item by item. Each ends in one of:
 - **elsewhere:** procedure, constants or file lists belong in code or a doc;
   name the home.
 
-Keep wording that callers quote or name (a phrase, "rule 2", a heading) unless
-it is wrong. Done when every checklist item has an outcome.
+How callers word things never shapes the ADR's wording. A caller that quotes
+the ADR, names a heading or a numbered item, or repeats one of its phrases goes
+under "Callers to repoint": it will later just point to the ADR, without
+quoting it. The checklist's "Keep as is" list is such callers. Done when every
+checklist item has an outcome.
 
 ## 4. Write the rewrite
 
@@ -105,12 +108,23 @@ summary.
 Follow-up work the old ADR postponed doesn't go in the rewrite: list it in your
 report as candidate issues.
 
-Plain language: short sentences, glossary terms, no jargon. Bold only the
-lead-in of a *Scope and limits* bullet. Point to other ADRs by number; restate
-nothing they own.
+**Plain language comes first.** Write as you would explain the rule to a new
+contributor who knows only the glossary in `CONTEXT.md`.
 
-Done when the rewrite satisfies every bullet in ADR-0030's *Scope and limits*
-and a sentence-by-sentence pass under `writing-for-agents` finds nothing to cut.
+- Replace coined phrases with what actually happens. Phrases the old ADR or
+  its callers repeat but the glossary doesn't define ("standing green-light",
+  "the one relaxation", "high-risk set", "Trusted-authored backlog") are
+  jargon, however often they are quoted.
+- Short sentences, one idea each.
+- Cross-references go at the end of a sentence or in *See*, never in
+  parentheses mid-sentence.
+- Bold only the lead-in of a *Scope and limits* bullet. Point to other ADRs by
+  number; restate nothing they own.
+
+Done when the rewrite satisfies every bullet in ADR-0030's *Scope and limits*,
+a sentence-by-sentence pass under `writing-for-agents` finds nothing to cut, and
+reading the summary and *Scope and limits* as that new contributor, every
+sentence makes sense on its own.
 
 ## 5. Check against the summary rule and other ADRs
 
@@ -130,8 +144,8 @@ Write `{NNNN}-report.md` with:
 1. **Inventory table:** each current rule → its section in the rewrite.
 2. **Callers:** each checklist item → answered / added / contradicted /
    elsewhere.
-3. **Callers to repoint or fix:** file:line → what to change (new heading,
-   kept wording, correct ADR).
+3. **Callers to repoint or fix:** file:line → what to change (point to the ADR
+   without quoting it, the new heading, the correct ADR).
 4. **Dropped:** what you cut and why, and where each piece of moved detail
    should live.
 5. **Rule and cross-ADR check:** results of step 5.
