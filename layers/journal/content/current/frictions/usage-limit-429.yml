@@ -4,9 +4,6 @@ cause: >-
 surface: outside
 status: open
 occurrences:
-  - session: session_01LKfKKxwgThbVFE79NWohET
-    date: "2026-09-27"
-    severity: moderate
   - session: session_01VC6tZCm3HYs9BsJ7JrQQ5Z
     date: "2026-10-02"
     severity: moderate

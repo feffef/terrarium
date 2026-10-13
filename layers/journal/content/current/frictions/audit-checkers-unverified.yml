@@ -5,9 +5,6 @@ surface: safe
 status: open
 ref: "PRs #1630, #1699"
 occurrences:
-  - session: session_01S5bzNzvg1DURebeNRDgVi5
-    date: "2026-09-27"
-    severity: moderate
   - session: session_015xC64CdTv5cP4zXTxetqMa
     date: "2026-09-29"
     severity: moderate

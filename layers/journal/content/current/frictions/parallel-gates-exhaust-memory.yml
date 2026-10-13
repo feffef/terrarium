@@ -6,9 +6,6 @@ status: fixed
 fixedOn: "2026-10-12"
 ref: "PR #1588 (doc; regressed 2026-10-10); issue #1800 closed by PRs #1845, #1850 (gate:scoped caps Heavy tiers at 2 per container); clear-backlog §3 wave rule"
 occurrences:
-  - session: session_01LKfKKxwgThbVFE79NWohET
-    date: "2026-09-27"
-    severity: moderate
   - session: session_01548Bi1ZiGcknAp8CMLNMZB
     date: "2026-10-03"
     severity: moderate
