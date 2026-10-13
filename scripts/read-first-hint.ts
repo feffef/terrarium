@@ -7,6 +7,9 @@
 // recognises) or already holds the pointer. A subagent dedupes against its own
 // transcript beside its parent's; if that is missing it points anyway. A missing
 // main transcript adds nothing, since every call would repeat the pointer.
+// After a successful `mcp__github__create_pull_request` in the main session it
+// also says to invoke `close-session` now, until the transcript shows it invoked:
+// prose alone left sessions logging only at the end (issue #1859).
 // Fails open: any error adds nothing. `scripts/read-first-hint.sh` is the Bash
 // hot-path pre-filter.
 //
@@ -61,10 +64,10 @@ export function triggeredDocs(tool: string, command: unknown): ReadFirst[] {
 
 const pointer = (r: ReadFirst) => `Read first: \`${r.doc}\` (CLAUDE.md: "${r.trigger}").`
 
+export const CLOSE_SESSION_HINT = 'PR opened: invoke the `close-session` Skill now for an in-review first log (CLAUDE.md); re-invoking it later is safe.'
+
 /** The docs this transcript already read or was pointed to. */
-function seen(records: Record<string, unknown>[], docs: ReadFirst[]): Set<string> {
-  const index = buildDocLineIndex(docs.map((r) => ({ path: r.doc, text: readFileSync(join(ROOT, r.doc), 'utf8') })))
-  const trace = extractTrace(records, process.env, index)
+function seen(records: Record<string, unknown>[], docs: ReadFirst[], trace: ReturnType<typeof extractTrace>): Set<string> {
   const read = [...trace.filesRead, ...trace.docsReadViaShell]
   const hinted = records
     .map((r) => r.attachment as { type?: string; content?: unknown } | undefined)
@@ -75,18 +78,24 @@ function seen(records: Record<string, unknown>[], docs: ReadFirst[]): Set<string
 }
 
 function hintFor(payload: unknown, dryRun = false): string | null {
-  const docs = triggeredDocs(String(prop(payload, 'tool_name')), prop(prop(payload, 'tool_input'), 'command'))
-  if (docs.length === 0) return null
+  const tool = String(prop(payload, 'tool_name'))
+  const docs = triggeredDocs(tool, prop(prop(payload, 'tool_input'), 'command'))
   const parent = prop(payload, 'transcript_path')
   const agent = prop(payload, 'agent_id')
+  const prOpened = tool === 'mcp__github__create_pull_request' && agent === undefined
+    && prop(payload, 'hook_event_name') !== 'PostToolUseFailure'
+  if (docs.length === 0 && !prOpened) return null
   let records: Record<string, unknown>[] | null
   if (typeof parent !== 'string') records = dryRun && parent === undefined ? [] : null
   else if (agent === undefined) records = readTranscript(parent)
   else records = readTranscript(subagentTranscript(parent, String(agent))) ?? []
   if (!records) return null
-  const skip = seen(records, docs)
-  const fresh = docs.filter((r) => !skip.has(r.doc))
-  return fresh.length ? fresh.map(pointer).join('\n') : null
+  const index = buildDocLineIndex(docs.map((r) => ({ path: r.doc, text: readFileSync(join(ROOT, r.doc), 'utf8') })))
+  const trace = extractTrace(records, process.env, index)
+  const skip = seen(records, docs, trace)
+  const lines = docs.filter((r) => !skip.has(r.doc)).map(pointer)
+  if (prOpened && !trace.skillsUsed.includes('close-session')) lines.push(CLOSE_SESSION_HINT)
+  return lines.length ? lines.join('\n') : null
 }
 
 function main(): void {

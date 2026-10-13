@@ -6,7 +6,7 @@ import { tmpdir } from 'node:os'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
-import { READ_FIRST, triggeredDocs } from '../../scripts/read-first-hint.ts'
+import { CLOSE_SESSION_HINT, READ_FIRST, triggeredDocs } from '../../scripts/read-first-hint.ts'
 import { runTsx } from '../support/run-script.ts'
 
 const repo = resolve(dirname(fileURLToPath(import.meta.url)), '../..')
@@ -123,12 +123,28 @@ describe('the hook entry (sh pre-filter → tsx)', () => {
     expect(run(call('git log', { transcript_path: join(dir, 'nope.jsonl') }))).toMatchObject({ status: 0, stdout: '' })
   })
 
+  it('says to invoke close-session after a main-session PR create, until the transcript shows it invoked', () => {
+    const pr = (extra: object = {}) => context(run(call('x', { tool_name: 'mcp__github__create_pull_request', tool_input: {}, ...extra })))
+    expect(pr()).toContain(CLOSE_SESSION_HINT)
+    // Not tied to a doc pointer being due.
+    const ghRead = transcript('gh-read.jsonl', [toolUse('r', 'Read', { file_path: `${repo}/${GH}` })])
+    expect(pr({ transcript_path: ghRead })).toBe(CLOSE_SESSION_HINT)
+    transcript('pr/subagents/agent-s1.jsonl', [{ type: 'user', message: { content: 'go' } }])
+    expect(pr({ transcript_path: join(dir, 'pr.jsonl'), agent_id: 's1' })).not.toContain(CLOSE_SESSION_HINT)
+    expect(pr({ hook_event_name: 'PostToolUseFailure' })).not.toContain(CLOSE_SESSION_HINT)
+    const skill = transcript('skill.jsonl', [toolUse('s', 'Skill', { skill: 'close-session' })])
+    const slash = transcript('slash.jsonl', [{ type: 'user', message: { content: '<command-name>/close-session</command-name>' } }])
+    for (const t of [skill, slash]) expect(pr({ transcript_path: t }), t).not.toContain(CLOSE_SESSION_HINT)
+    expect(context(run(call('x', { tool_name: 'mcp__github__get_me', tool_input: {} })))).not.toContain(CLOSE_SESSION_HINT)
+  })
+
   it('--dry-run prints the pointer for an unread doc, and nothing for git status', () => {
-    const dry = (command: string) => {
-      const input = JSON.stringify({ tool_name: 'Bash', cwd: repo, tool_input: { command } })
+    const dry = (command: string, tool_name = 'Bash') => {
+      const input = JSON.stringify({ tool_name, cwd: repo, tool_input: { command } })
       return JSON.parse(runTsx(join(repo, 'scripts/read-first-hint.ts'), { args: ['--dry-run', '--input', input] })).hint as string | null
     }
     expect(dry('git log -1')).toContain(GIT)
     expect(dry('git status')).toBeNull()
+    expect(dry('', 'mcp__github__create_pull_request')).toContain(CLOSE_SESSION_HINT)
   })
 })
