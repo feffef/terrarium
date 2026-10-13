@@ -1,0 +1,156 @@
+schemaVersion: 1
+session: session_01Rn5xT34AdjnywsTJdUtaDm
+startedAt: 2026-10-13T00:16:39Z
+endedAt: 2026-10-13T00:24:28Z
+kind: autonomous
+goal: Write the 2026-10-12 Journal Digest
+status: in-review
+outcome: "Digest and retention sweep pushed as PR #1855; awaiting CI to self-merge"
+summary: "Scheduled digest run (agent-initiated by a schedule, no human prompt). One closed day lacked a Digest (2026-10-12). Gathered its data, wrote the Digest, had a fresh subagent fact-check it (22 claims, none wrong; two wording nits tightened), ran the retention sweep (1 digest and 9 session logs archived), ran gate:scoped green, ran code-review on both axes with clean results, then pushed and opened PR #1855 and subscribed to it. The Stop hook asked to push before the fact-check and gate had finished; I declined until they passed, as ADR-0004 requires. Still open: CI on the PR and the self-merge."
+prs:
+  - "1855"
+docsRead:
+  - path: CONTEXT.md
+    reason: glossary at session start
+    useful: yes
+  - path: docs/agents/pr-workflow.md
+    reason: review-before-push and self-merge recipe
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: read before git commands beyond status
+    useful: partly
+  - path: docs/agents/github-integration.md
+    reason: read before first GitHub call; confirmed MCP tools
+    useful: partly
+  - path: CONTEXT-MAP.md
+    reason: session-start context index
+    useful: yes
+  - path: .agents/skills/digest/SKILL.md
+    reason: the Skill I ran, read by the standards reviewer subagent
+    useful: yes
+  - path: layers/journal/content/current/pages/digests/2026-10-11.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/digests/2026-10-12.md
+    reason: (read before editing)
+skillsUsed:
+  - name: digest
+    reason: the scheduled task itself
+  - name: code-review
+    reason: required review before first push
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Ran git fetch and git log in a batch before reading git-conventions.md was cleanly sequenced; first git command beyond status ran (digest.ts list) before the doc was read.
+    solution: Read git-conventions.md at session start in scheduled Skills that always commit.
+    severity: nit
+  - description: Stop hook asked to commit and push twice while the fact-check and gate were still pending.
+    solution: Have the hook skip when a scheduled Skill has an unfinished gate.
+    severity: nit
+  - description: The digest Skill and gather output are large; had to summarize 22 sessions' frictions by hand-written node script.
+    solution: Let digest.ts gather print a compact one-line-per-session summary.
+    severity: minor
+  - description: "SHELL-READ-DETECTION false positive: .agents/skills/clear-backlog/SKILL.md was credited from shell output, but the session marked it (not read)"
+    solution: Find the crediting command in the transcript and tighten scripts/shell-reads.ts
+    severity: moderate
+  - description: "SHELL-READ-DETECTION false positive: docs/adr/0004-objective-safety-gate.md was credited from shell output, but the session marked it (not read)"
+    solution: Find the crediting command in the transcript and tighten scripts/shell-reads.ts
+    severity: moderate
+durationSec: 469
+models:
+  claude-sonnet-5-5: 50
+toolCounts:
+  Read: 6
+  Bash: 14
+  Write: 1
+  Agent: 3
+  Skill: 3
+  ToolSearch: 1
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+filesEdited:
+  - layers/journal/content/current/pages/digests/2026-10-12.md
+rulesLoaded:
+  - .claude/rules/adr-0010.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/adr-0008.md
+  - .claude/rules/adr-0005.md
+rulesGlobal:
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0001.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0023.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0004.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0022.md
+    reason: About autonomous triage; not relevant to a digest run.
+    useful: no
+  - path: .claude/rules/adr-0004.md
+    reason: Made me hold the push until gate and review passed despite the Stop hook; summary was enough.
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Reminded me to invoke close-session at PR-open; summary was enough.
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: Prune trials; not relevant here.
+    useful: no
+  - path: .claude/rules/adr-0001.md
+    reason: Architecture background; not needed for a content-only digest.
+    useful: no
+  - path: .claude/rules/adr-0020.md
+    reason: Trust tiers; the run is a Trusted schedule, so it did not apply.
+    useful: no
+  - path: .claude/rules/adr-0003.md
+    reason: Told me to open the PR myself and subscribe; summary was enough.
+    useful: yes
+  - path: .claude/rules/adr-0023.md
+    reason: Guest pipeline; not relevant.
+    useful: no
+  - path: .claude/rules/adr-0017.md
+    reason: Required the provenance header line on the PR body.
+    useful: yes
+  - path: .claude/rules/adr-0010.md
+    reason: Defined where the digest file lives and how it lands; summary was enough.
+    useful: yes
+  - path: .claude/rules/adr-0021.md
+    reason: Context-split decision; not relevant to this task.
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: Rule-loading design; not relevant to this task.
+    useful: no
+  - path: .claude/rules/tenant-layers.md
+    reason: Tenant layer gotchas; I touched only content, so it did not apply.
+    useful: no
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: About MDC components; the digest is plain Markdown.
+    useful: no
+  - path: .claude/rules/adr-0008.md
+    reason: Journal background; no new detail needed.
+    useful: partly
+  - path: .claude/rules/adr-0005.md
+    reason: Not relevant to a digest run.
+    useful: no
+subagents:
+  - type: general-purpose
+    task: Fact-check 2026-10-12 digest
+    model: sonnet
+  - task: Standards review of digest diff
+    model: sonnet
+  - task: Spec review of digest diff
+    model: sonnet
+gitBranch: claude/compassionate-lovelace-0cuxou
+entrypoint: remote_trigger
+cliVersion: 2.1.296
+trigger: digest
+landedBy: Stop
