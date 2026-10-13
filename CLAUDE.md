@@ -13,8 +13,9 @@ These are not optional. When a trigger applies, read the doc in full before you
 act, once per session.
 
 - **At session start:** `CONTEXT-MAP.md`, then `CONTEXT.md`. They define the
-  words we use (Platform, Tenant, Space, Collection, Document, Skill, …). Use
-  the glossary's terms.
+  words we use (Platform, Tenant, Space, Collection, Document, Skill, …). When
+  you name a concept the glossary defines, use its term, not a synonym.
+  Otherwise prefer plain, common words.
 - **ADRs arrive as rules.** Each ADR's summary is a rule in `.claude/rules/`:
   the cross-cutting ones load at session start, the rest when you read or edit
   a file they govern or run a Skill they name. When a summary says so, read the
