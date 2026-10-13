@@ -2,7 +2,7 @@
 
 A Tenant is a Nuxt layer under `layers/<tenant>/`; Nuxt auto-extends every
 `layers/*`, so there is no `extends` list (ADR-0018). It extends the main app
-(CONTEXT.md, ADR-0001). Read this before editing a layer's `nuxt.config.ts`,
+(CONTEXT.md). Read this before editing a layer's `nuxt.config.ts`,
 pages, or components: its gotchas get re-discovered most sessions.
 
 ## 1. Auto-imports first; aliases resolve to the main app, not the layer
@@ -109,8 +109,9 @@ Practical implications:
   wrapper (e.g. via `<Teleport>` to `<body>`) won't see the tokens.
 - **A Platform-generic component can theme itself from a Tenant without naming
   its tokens, via an opt-in contract.** Mermaid diagrams do this with
-  `--diagram-*` (ADR-0024; journal's mapping is in `theme.css`). Map with
-  `var(--jd-…)`, not literals, so a dark-mode override flows through.
+  `--diagram-*` (the list is in `app/utils/mermaid.ts`, the why in ADR-0024;
+  journal's mapping is in `theme.css`). Map with `var(--jd-…)`, not literals,
+  so a dark-mode override flows through.
 
 ## 3. Adding a Space, Collection or Tenant
 

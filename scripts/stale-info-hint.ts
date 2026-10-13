@@ -2,7 +2,7 @@
 // info", the remote branch was usually auto-deleted when its PR merged, and
 // agents misread the rejection as a concurrent write and retry. This adds the
 // fix to the same tool result. It never blocks or rewrites a command, and fails
-// open: any error writes nothing (ADR-0027: a hook warns and exits 0).
+// open: any error writes nothing, since a hint must never block a session.
 //
 // Usage:
 //   sh scripts/stale-info-hint.sh                 # the installed hook entry

@@ -1,52 +1,65 @@
-# 6. Runtime routing selects Tenant + Space by path prefix
+# ADR-0006: Requests reach one Space by the path prefix `/t/<tenant>/<space>`
 
-Date: 2026-07-04
-Status: Accepted — routing-map delivery amended by ADR-0014
+A request names its Tenant and Space in the URL path: `/t/<tenant>/<space>/<path>`.
+One shared resolver turns that pair into the Collections of exactly one Space,
+or a 404. Only a Space's `pages` Collection has URLs; its other Collections are
+data that those pages read.
 
-> **Amended by [ADR-0014](0014-build-time-virtual-routing-module.md) (2026-07-05).**
-> The path-prefix decision and the isolation model below stand unchanged, but the
-> routing map's delivery has moved since this was written: it is no longer a
-> committed `shared/routing.generated.ts` produced by a generator — the map is
-> derived from the manifests at build time by `modules/routing.ts` and imported
-> as the `#routing` virtual module, and the e2e sweep derives its entry-route
-> list from the same expansion (`entryRoutesFrom`, `shared/expand.ts`). Read the
-> mechanism references below as historical.
+## Scope
 
-## Context
+- **The URL.** A Document in a Space's `pages` Collection lives at
+  `/t/<tenant>/<space>` plus its path inside the Space. The path is relative to
+  the Space, so two Spaces can each have `/about`. The path comes from the
+  Document's file, so moving the file changes its URL.
+- **Only `pages` is routed.** Every other Collection a Space's manifest
+  declares has no URL of its own. Pages read it and show it. Check a
+  new Collection that seems to need its own URL against this before building it.
+- **One resolver for every Space page.** The Platform's catch-all page and any
+  page a Tenant layer adds inside a Space both resolve the request through
+  `useSpace`, which calls `resolveSpaceRoute`. It reads only the requested
+  Space's entry in the routing map, so a resolved route never names another
+  Tenant's or Space's Collections. An unknown Tenant or Space gets a 404.
+- **A page reads only its own Space.** The exceptions have their own ADRs: a
+  Tenant's root page above its Spaces (ADR-0016) and opt-in reads across
+  Tenants (ADR-0025).
 
-ADR-0001 bakes every Tenant × Space into one container and selects which one to
-serve by **runtime routing** — "subdomain / path prefix / header" — among content
-already baked at build time. The initial implementation has to pick one concrete
-mechanism. It must be trivial to develop against, crawlable by the L2 smoke gate
-(ADR-0004), and require no DNS/host configuration to run locally or in CI.
+## Why
 
-## Decision
+A path prefix is the simplest mechanism that works. It needs no wildcard DNS
+and no host parsing, so local dev, `curl` and the smoke test all work against
+`localhost` URLs, in CI too.
 
-For now, route by **path prefix**: `/t/<tenant>/<space>/<slug>`.
+Isolation rests on one lookup: Tenant and Space go in, one Space's Collection
+keys come out. Each Collection is its own table (ADR-0001), so a page that
+queries those keys cannot see another Space's Documents. Keeping one resolver
+for every page keeps that guarantee in one place, where a unit test covers it.
 
-- A single catch-all page (`app/pages/t/[tenant]/[space]/[...slug].vue`) reads
-  `tenant` and `space`, looks up the generated **routing map**
-  (`shared/routing.generated.ts`, produced by the generator alongside
-  `content.config.ts`), and resolves them to the keyed collection
-  `<tenant>_<space>_pages`. It then `queryCollection(key).path(slug)` and renders
-  with `<ContentRenderer>`.
-- The `path` inside a Space is Space-relative (collections are generated with
-  `prefix: '/'`), so `current` and `archived` can both have `/about` without
-  collision — they are different SQLite tables. Isolation is therefore a direct
-  consequence of resolving to the correct key; a query can only ever see one
-  Space's table.
-- An unknown Tenant/Space yields a 404. The derived entry-route list drives
-  the L2 smoke gate so new Spaces are covered automatically.
+## Rejected alternatives
+
+- **Subdomains** (`<space>.<tenant>.example.com`). Prettier, but they need
+  wildcard DNS and host parsing to run locally or in CI.
+- **A request header.** Plain links and crawlers cannot set it, so the smoke
+  test and a shared URL could not reach a Space.
+- **Giving other Collections their own URLs.** One routed Collection per Space
+  keeps the URL scheme, the resolver and the smoke test's route list simple.
+
+## When to revisit
+
+- A Tenant needs its own domain. Subdomain or header routing can then be added
+  without changing isolation: only the step that reads Tenant and Space from
+  the request changes.
 
 ## Consequences
 
-- Simplest thing that works: no wildcard DNS, no host parsing; local dev, `curl`,
-  and the Playwright/`$fetch` smoke test all work against `localhost` URLs.
-- Subdomain routing (`tenant.space.example.com`) and header-based routing remain
-  open options. They can be layered on **without changing the isolation model**,
-  because resolution funnels through the one routing map → collection key
-  indirection. Only the "extract (tenant, space) from the request" step changes.
-- The routing resolver is **isolation-critical** and therefore human-only under
-  the ADR-0004 blast-radius policy.
-- Path-prefix URLs are less production-pretty than subdomains; revisit if/when a
-  Tenant needs its own apex domain.
+- The smoke test's entry routes come from the manifests, so a new Space is
+  covered without editing the test. A Tenant's root page is not (ADR-0016).
+
+## See
+
+- `shared/routing.ts`: `resolveSpaceRoute`, `documentUrl` (the URL scheme) and
+  `slugToPath` (the path's shape).
+- `app/composables/space.ts`: `useSpace`, the page-side entry and its 404.
+- `app/pages/t/[tenant]/[space]/[...slug].vue`: the Platform catch-all.
+- `modules/routing.ts`: builds the routing map from the manifests (ADR-0014).
+- `shared/expand.ts`: `entryRoutesFrom`, the smoke test's entry routes.
+- `tests/unit/routing.spec.ts`: the resolver's isolation tests (ADR-0004 L3).

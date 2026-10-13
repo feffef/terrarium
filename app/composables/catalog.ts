@@ -9,7 +9,7 @@
 //
 // It fans out over the build-time catalog — never a manifest import — queries each
 // contributing collection, projects, and tags every row with its provenance.
-// Read-only by construction: write isolation (ADR-0020) is untouched. And
+// Read-only by construction: nothing writes across Tenants (ADR-0025). And
 // build-time + committed data only (ADR-0001): the corpus is whatever content was
 // baked, never a runtime/external fetch — which is exactly where the dollhouse
 // went wrong.
@@ -41,7 +41,7 @@ export type CatalogItem = Record<string, unknown>
  * fields — a page `body` AST — out of the aggregated corpus. Deriving `T` from the
  * kind name at the type level (a real `KindItem<K>`) is a deliberate non-goal: it
  * fights Nuxt Content's per-collection generics for little gain, so the projector's
- * one cast is the sanctioned boundary instead (ADR-0025 Consequences).
+ * one cast is the sanctioned boundary instead (ADR-0025).
  */
 export async function queryAcrossTenants<T>(
   kind: KindName,

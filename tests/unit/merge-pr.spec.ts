@@ -305,10 +305,8 @@ describe('humanMergeRefusal() — the Human-only paths (ADR-0004)', () => {
     expect(humanMergeRefusal(['app/app.vue'], [])).toContain('refused')
   })
 
-  it('lets a Prune Trial merge an ADR rewrite only with its ledger entry (ADR-0027)', () => {
-    const adr = ['docs/adr/0004-objective-safety-gate.md', '.claude/rules/adr-0004.md']
-    expect(humanMergeRefusal(adr, globs, true)).toContain('prune-trials.yml')
-    expect(humanMergeRefusal([...adr, '.agents/prune-trials.yml'], globs, true)).toBeNull()
-    expect(humanMergeRefusal([...adr, '.agents/prune-trials.yml', 'nuxt.config.ts'], globs, true)).toContain('nuxt.config.ts')
+  it('refuses an ADR change even alongside a Prune Trial ledger entry (ADR-0004)', () => {
+    const files = ['docs/adr/0004-objective-safety-gate.md', '.agents/prune-trials.yml']
+    expect(humanMergeRefusal(files, globs)).toContain('docs/adr/0004-objective-safety-gate.md')
   })
 })

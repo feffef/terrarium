@@ -8,7 +8,7 @@
 //   • #737 — no provenance at all (passed, because only divergence was checked)
 //   • #788 — the RIGHT id in the WRONG shape (passed, because the guard was
 //     deliberately format-agnostic)
-// Plus the 2026-08-01 posture flip: unverifiable now denies instead of passing.
+// Plus the fail-closed posture (ADR-0017): unverifiable now denies instead of passing.
 //
 // The pure core is pinned directly; the CLI's stdin→deny-JSON path is exercised
 // end to end against the real script with a real transcript file, so the
@@ -156,7 +156,7 @@ describe('commit surface — MCP-API commits require the trailer, last (#723 car
   })
 })
 
-describe('fail-closed: unresolvable ground truth denies (2026-08-01 posture flip)', () => {
+describe('fail-closed: unresolvable ground truth denies (fail-closed posture, ADR-0017)', () => {
   it('denies a bodied call when no ground truth is resolvable — the old behaviour passed it', () => {
     for (const truth of [null, undefined]) {
       expect(checkGithubProvenance(COMMENT, { body: `${header('session_ANY')}\n\nprose` }, truth)).toEqual({

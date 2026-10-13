@@ -1,4 +1,4 @@
-# Terrarium PoC deployment (ADR-0011).
+# Terrarium deployment (ADR-0011).
 #
 # On-VPS layout (see deploy/README.md):
 #   /opt/terrarium/

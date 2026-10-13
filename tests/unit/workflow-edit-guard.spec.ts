@@ -1,9 +1,8 @@
 // Coverage for the workflow-edit guard (issue #897; rationale and detection
 // contract in `scripts/workflow-edit-guard.ts`). The pure core is pinned
 // directly; the CLI's stdin→deny-JSON path, `--dry-run`, and the hot-path
-// pre-filter are exercised end to end against the real scripts — the same
-// reviewability bar the sibling guards' specs set for an unattended hook
-// (ADR-0004).
+// pre-filter are exercised end to end against the real scripts
+// (docs/agents/guards.md).
 import { execFileSync } from 'node:child_process'
 import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
@@ -222,7 +221,7 @@ describe('the guarded tools and the live hook matcher must not drift', () => {
   })
 })
 
-describe('the --dry-run path (ADR-0004: an unattended hook needs a way to be exercised by hand)', () => {
+describe('the --dry-run path (docs/agents/guards.md: exercise a guard by hand)', () => {
   function dryRun(args: string[]): { decision: string; via?: string; reason?: string } {
     return JSON.parse(
       runTsx(SCRIPT, { args: ['--dry-run', ...args] }),

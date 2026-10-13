@@ -179,7 +179,7 @@ export function toCompactSession(s: TriageSession): CompactSession {
 // ── FS IO (thin shell) ────────────────────────────────────────────────────────
 
 function readSessions(cwd = root): TriageSession[] {
-  // An EXTERNAL log (ADR-0009 amendment) is excluded from the frictions-to-fixes
+  // An EXTERNAL log (ADR-0009) is excluded from the frictions-to-fixes
   // corpus entirely: its frictions reflect a different harness/toolchain that our
   // fixes don't touch, so mining them would chase non-generalizing signal.
   // Archived logs too: a window reaching back to an old ledger commit can

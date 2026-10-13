@@ -1,9 +1,10 @@
 # Landing a gated PR
 
-The single home for the recipe that lands a low-risk gated PR.
+The single home for the recipe that lands a gated PR.
 
-Why a tier merges on green: ADR-0003. What needs a human merge: ADR-0004's
-rules, `.claude/rules/adr-0004-human-merge.md` for the paths. `main`'s branch-protection state:
+Who merges, and what needs a human merge: ADR-0004, with
+`.claude/rules/adr-0004-human-merge.md` for the paths. What a scheduled run may
+change: its Skill (ADR-0003). `main`'s branch-protection state:
 `docs/research/github-branch-protection-vs-autonomous-log-commits.md` (issue #348).
 
 For the `mcp__github__*` tool surface this recipe runs on (retries, polling,
@@ -11,13 +12,19 @@ overflow traps), see [`github-integration.md`](./github-integration.md).
 
 ## Review before the first push
 
-Pushing opens the PR (ADR-0003), so review first. Before a branch's first
+Pushing opens the PR (ADR-0003), so review first, and check that no PR exists
+for the branch yet. Before a branch's first
 push, invoke the [`code-review`](../../.agents/skills/code-review/SKILL.md)
 Skill on its committed diff against `origin/main`, in the checkout that holds
 it, and fix the findings. This holds even when the Stop hook asks you to
 push. Skip it only where a Skill's own steps already review the diff in a
 similar way before the push, as `midden-catalogue` §4 does. A session-log
 commit needs none.
+
+A later push of a change unlikely to break the gate (prose, docs) may skip
+`gate:scoped` and rely on CI's gate; run it first for a code change. If
+`gate:scoped` passed but CI failed, check for base drift, then log a
+`major` Friction.
 
 ## Assembling several stories into one integration PR
 
@@ -50,7 +57,8 @@ findings.
    refuses without your step-4 verdict (#1276) and refuses fork and
    Public-authored PRs, which a human merges (ADR-0020). Never call
    `enable_pr_auto_merge` (#385).
-6. Escalate a high-risk or out-of-scope PR to a human instead of merging it.
+6. Escalate a PR that needs a human merge (ADR-0004) or is out of scope to a
+   human instead of merging it.
 
 Use a closing keyword (`Closes`/`Fixes`/`Resolves #N`) only for an issue the PR
 completes; it auto-closes everything it names (#326). Otherwise write
@@ -69,31 +77,22 @@ thread with no reply leaves no record.
 changes what the PR does, update both in the same push: reviewers gate on the
 description.
 
-## Per-tier merge authority
+## Who merges
 
-- `digest` / `audit-docs` / `audit-skills` / `blog-post` / `visitor-loop` —
-  merge on a green gate alone (ADR-0003/0004).
-- `prune-trial` — merge on a green gate alone, and uniquely may rewrite ADRs,
-  keeping what they decided, as part of a trial (ADR-0027's narrow amendment to ADR-0004):
-  run `merge-pr.ts --prune-trial`, with the trial's ledger entry in the PR.
-- `reviewer-agent` (`frictions-to-fixes`) — green gate plus the reviewing
-  session's own risk judgement; escalate a genuinely high-risk PR to a human
-  even when the gate is green (ADR-0003).
-- `guest-build` — always **owner-merged**: it opens the PR but never merges it
-  or arms auto-merge (`.agents/skills/guest-build/SKILL.md`'s "one hard
-  subtraction" section, ADR-0023).
-- `midden-catalogue` — always **owner-merged** (#1802): it opens the PR and
-  never merges (`.agents/skills/midden-catalogue/SKILL.md` §5).
-- `dependabot` — never merged by an agent; leave those PRs alone (ADR-0003
-  ledger). The `dependabot-automerge` workflow that will merge them is proposal
-  #1633, not yet applied.
-- An ordinary work PR — merged by its authoring session on a green gate, unless
-  the ADR-0004 rule names an exception; then a human merges it (ADR-0003).
+The authoring session merges its PR on a green gate unless ADR-0004 names
+an exception. Some Skills narrow that:
 
-## Closing a self-merged chartered run
+- `frictions-to-fixes` also applies its own risk judgement and escalates a
+  high-risk PR even when the gate is green.
+- `guest-build` (ADR-0023) and `midden-catalogue` (#1802) open the PR and
+  never merge it; the owner does.
+- Dependabot PRs: leave them alone. They change `package.json`, so a human
+  merges them (ADR-0004).
 
-The tiers above that merge on a green gate alone close the same way once their
-own work is staged. `reviewer-agent` does not, since it opens many
+## Closing a scheduled run's PR
+
+Scheduled Skills that merge their own PR close the same way once their
+own work is staged. `frictions-to-fixes` does not, since it opens many
 PRs per run. Each Skill's SKILL.md states only its delta (what
 its diff is limited to, and what to do when something rides outside that scope):
 
@@ -106,8 +105,8 @@ its diff is limited to, and what to do when something rides outside that scope):
 4. **At PR-open, invoke `close-session`** — your first log (`in-review`).
 5. If the gate is red for a reason that isn't yours, or anything outside the
    Skill's own scope rode into the diff, leave the PR open and escalate to a
-   human instead of merging: a chartered run merges only its own bounded diff
-   (ADR-0003 ledger), whatever the rule for an ordinary work PR says.
+   human instead of merging: a scheduled run merges only what its SKILL.md
+   allows (ADR-0003).
 
 Once the PR is merged or honestly left open, re-invoke `close-session` to update
 that log (the ADR-0009 rule, `.claude/rules/adr-0009.md`).

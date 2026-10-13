@@ -3,7 +3,7 @@
 // directly against parsed transcript records — the same shape
 // `loop-only-tool-guard.spec.ts` uses for its `<command-name>` fixtures — plus
 // the CLI's stdin→deny-JSON path and `--dry-run`, exercised end to end against
-// the real script (ADR-0004's reviewability bar for an unattended hook).
+// the real script (docs/agents/guards.md).
 import { mkdtempSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { dirname, join, resolve } from 'node:path'
@@ -156,7 +156,7 @@ describe('the CLI as the PreToolUse hook would invoke it (stdin JSON → stdout 
   })
 })
 
-describe('the --dry-run path (ADR-0004: an unattended hook needs a way to be exercised by hand)', () => {
+describe('the --dry-run path (docs/agents/guards.md: exercise a guard by hand)', () => {
   function dryRun(args: string[]): { decision: string; reason?: string } {
     return JSON.parse(runTsx(SCRIPT, { args: ['--dry-run', ...args] }))
   }

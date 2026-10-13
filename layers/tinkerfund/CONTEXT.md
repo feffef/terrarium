@@ -92,9 +92,7 @@ flat shipping rate.
 ## What lives where
 
 - **[spec #1375](https://github.com/feffef/terrarium/issues/1375)** — the
-  full spec, linking the ticket that holds each locked decision (a
-  content/design Tenant's decisions live there and in this file, not in
-  ADRs — ADR-0021).
+  full spec, linking the ticket that holds each locked decision (ADR-0021).
 - **`layers/tinkerfund/schemas.ts`** — the content model: each
   Collection's shape, and how each Space tells time (`shop.now`).
 - **`scripts/validate-content-refs.ts`** — the cross-Document references a

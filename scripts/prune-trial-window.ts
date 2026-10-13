@@ -15,7 +15,7 @@
 // because a merged branch commit's own time predates its arrival on main
 // (#1856). That commit set up the entry's current presence. A later edit or a
 // same-keyed entry can only make it later, and a later floor is the safe
-// direction (ADR-0027); the oldest match judged too early (issue #1285).
+// direction (a trial is judged only after its window); the oldest match judged too early (issue #1285).
 //
 // The reported window is a FLOOR, not a deadline: the earliest instant a
 // judgment is valid, never a time a judgment is due. `/prune-trial` runs on a
@@ -37,7 +37,7 @@ import { fetchOriginMain } from './git-helpers.ts'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const LEDGER_PATH = '.agents/prune-trials.yml'
-const WINDOW_MS = 3 * 24 * 60 * 60 * 1000 // ADR-0027: "left standing for three days"
+const WINDOW_MS = 3 * 24 * 60 * 60 * 1000 // the trial window (ADR-0027); this constant is its home
 // The Routine that opens a trial also judges it three days later, so a trial
 // lands a few minutes after a run starts while the judging run starts at a
 // fixed lag: whenever the opening run took longer than that lag, the floor
@@ -61,8 +61,7 @@ export interface LandingCommit {
 export interface TrialWindow {
   trial: Trial
   /** null when no commit on origin/main ever introduced this exact text — the
-   *  ledger's own header rule applies: "silence is not evidence: leave the
-   *  entry alone and judge nothing." */
+   *  trial is not judged: missing evidence never counts as a pass (ADR-0027). */
   landing: LandingCommit | null
   /** The earliest instant this trial may be judged — a floor, not a deadline.
    *  No scheduled Routine fires at a guaranteed exact time, so being judged
@@ -90,8 +89,8 @@ export function parseTrials(yamlText: string): Trial[] {
  *  search key instead. Returned in document order, matched to `parseTrials`'
  *  output by position (both walk the same `- problem: >` occurrences); if
  *  that pairing were ever to drift, the failure mode is a `-S` miss, i.e.
- *  "NOT FOUND" — the fail-safe direction (ADR-0027: "silence is not
- *  evidence"). */
+ *  "NOT FOUND" — which leaves the trial unjudged: missing evidence
+ *  never counts as a pass (ADR-0027). */
 export function rawProblemFirstLines(yamlText: string): string[] {
   const lines: string[] = []
   const re = /-\s*problem:\s*>\s*\n\s+(.+)\n/g

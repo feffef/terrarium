@@ -1,106 +1,71 @@
-# 27. Instructions are pruned as trials, judged by the sessions that follow
+# ADR-0027: Test an instruction by removing it
 
-Date: 2026-08-23
-Status: Accepted
+We find out whether an instruction still matters by removing it and watching
+what goes wrong, not by reading it. Each `prune-trial` run cuts one problem's
+instructions down to the goal behind them, or rewrites one Skill or doc in
+plain words, and leaves the cut in place for a fixed time; the Frictions that
+later sessions log decide whether it stays. Other sessions report what they
+hit and leave the cut alone until it is judged.
 
-> Green-lit by a human in a `/grill-with-docs` session (ADR-0003). This ADR is
-> the Decision half; the `prune-trial` Skill is the mechanism.
+## Scope
 
-## Context
+- **What a trial may change:** any text that instructs our agents: `CLAUDE.md`,
+  `CONTEXT.md`, `docs/`, our own Skills, and comments in scripts. A whole-file
+  rewrite keeps every rule and decision the file holds.
+- **What it may not change:** ADRs and their summary rules (ADR-0030), pack
+  Skills (ADR-0015), session logs, and anything that changes what runs. When a
+  verdict shows a behaviour needs a hook, the trial files an issue, and a
+  session with a human present builds it.
+- **Retiring a Skill or a Routine** is never a trial; it needs a Trusted
+  user's approval (ADR-0003).
+- **The verdict.** A trial is judged only after its window has passed since
+  the cut landed on `main`. A `major` or `blocker` Friction caused by the cut
+  puts back one line stating the goal, never the old text. Anything less, and
+  the cut stays. If the landing can't be found, the trial is not judged:
+  missing evidence never counts as a pass.
+- **Every other session,** while a trial is open: don't restore or reword text
+  in its area. Log the problem as a Friction and work around it. A `blocker`
+  may still be filed as an issue that names the trial. Before you build an
+  issue, check that it doesn't overlap an open trial.
+- **When one of our instructions causes a problem,** cut or simplify it before
+  adding a new one.
+- **Merging.** A trial's PR merges like any agent's PR (ADR-0004).
 
-The Platform's instructions grow; its behaviour does not. Every incident ends in
-a rule, every rule that fails to hold is narrowed rather than removed, and
-nothing in the repo has removal as its job. `audit-docs` reconciles prose
-against the code — it fixes drift, duplication and contradiction — but a
-reconciled corpus is still a growing one.
+## Why
 
-Two things make that growth costly rather than merely untidy.
+Rules that only live in prose don't reliably hold. A prose rule can fail again
+and again, each time reworded a little sharper. The rules that held are the
+mechanical ones: guards, the gate, the commit hook.
 
-**Prose is not the enforcement mechanism we keep treating it as.** Issue #772
-records the same rule failing a fourth time across #413 → #682 → #703, each
-round sharpening the wording, and concludes that "prose alone is not holding for
-this rule". Issue #1018 shows why a doc fix can miss entirely: the sessions that
-hit the failure had no occasion in their own procedure to open the doc the fix
-landed in. The rules that have actually held here are the mechanical ones —
-`PreToolUse` guards, the Gate, `commit-msg`.
+Most sessions are scheduled runs that skim. Every extra line costs every run,
+so instructions that grow with each incident are paid for constantly.
 
-**The corpus is now read almost entirely by scheduled agents.** Of the 41
-session logs in the current Journal window, 40 are `kind: autonomous` and their
-triggers split exactly eight ways across each of the five scheduled Skills, with
-one interactive session. Instruction bloat is therefore paid for, every run, by
-agents that skim — and mostly by Sonnet.
+Nobody can tell which rule still matters by reading it. Adding a rule felt
+safe and removing one felt risky, so nothing was removed. A trial settles that
+with evidence, and a cut is easy to undo. A cut that causes damage is the
+strongest case for a hook: the behaviour matters, and prose didn't hold it.
 
-Removal has been blocked by a real asymmetry: adding a rule is safe and
-reversible, removing one might resurrect the incident it was written for, and
-nobody can tell which rules are still load-bearing by reading them. That
-uncertainty is empirical, so it should be settled empirically rather than
-argued.
+If other sessions restored the text, no trial would ever reach a clean
+verdict.
 
-## Decision
+## Rejected alternatives
 
-A rule's necessity is established by **removing it and observing**, not by
-inspection. The `prune-trial` Skill runs one **Prune Trial** per run: one
-problem's instructions are pruned to the goal behind them, shipped, and left
-standing for **three days**. Frictions logged by real sessions in that window
-deliver the verdict — `major` or `blocker` damage traceable to the prune
-restores one goal-shaped line; anything less means the prose was not
-load-bearing. Open trials are tracked in `.agents/prune-trials.yml` and each
-carries the check that would reveal its own failure, recorded when the prune is
-made.
-
-Three consequences of that principle are settled here because they bear on
-governance:
-
-- **Scope is the whole rulebook, ADRs included.** A trial may prune any
-  instruction the Platform gives its agents, or rewrite a whole Skill, doc or
-  ADR in simpler, precise words. This is a narrow amendment to ADR-0004: ADR
-  prose loses its Human-only merge status *for prune trials*, which are
-  reversible by construction. An ADR rewrite may reword its Decision and
-  Consequences, fold its amendments into the text and retell its history more
-  clearly, but it never changes what the ADR decided — for prune trials this
-  replaces ADR-0018's record-integrity rule (widened 2026-09-25 at the owner's
-  direction; it first reached explanatory prose only). Everything else in ADR-0004's
-  high-risk set is untouched, and the external pack Skills (ADR-0015) remain
-  unreachable because the Gate rejects the edit.
-- **Merge authority: green Gate alone.** The exemption's exact scope is a row in
-  ADR-0003's auto-merge exemption ledger, which single-homes it; how the PR
-  actually lands is `docs/agents/pr-workflow.md`. A trial that proves a hook is
-  needed files an issue for it rather than writing one (#1526); the hook, once
-  built, warns and exits 0 — it cannot block a session, including when it
-  crashes — so no unattended run can wedge the repo.
-- **Other Sessions detect; `prune-trial` decides.** A standing note in the
-  always-loaded ADR-0027 rule (`.claude/rules/adr-0027.md`) tells every Session
-  that a pruned instruction may be on trial: record
-  the side-effects you hit, work around anything short of a blocker, and leave
-  the keep/revert/mechanize call to the trial. Without that, another Skill
-  restores the prose and no trial ever reaches a clean verdict.
-- **Capability removal is not trialable.** Nothing fails when a Skill stops
-  running, so no verdict could detect a mistaken retirement. Retiring a Skill or
-  a Routine is filed as an issue for a human, never acted on.
+- **Judge each rule by reading it,** as `audit-docs` does for drift. That keeps
+  the text consistent but never smaller, and reading can't show what a rule
+  still prevents.
+- **Let trials rewrite ADRs.** An ADR holds a decision and its reasons, and a
+  human merges any change to it (ADR-0004).
+- **Let a trial write the hook its verdict calls for.** A hook changes what
+  runs unattended, which a scheduled run must not decide alone.
 
 ## Consequences
 
-Rules now leave the corpus the way they entered it: one at a time, with
-evidence. A prune that damages nothing is proof the rule was decoration; a prune
-that damages something has produced the strongest case available for a hook,
-because it has demonstrated the behaviour matters and prose did not hold it.
+- A session that fails without noticing logs no Friction, so a trial can miss
+  damage. Each trial's own check and a probe on a weaker model narrow that
+  gap. A later trial putting a line back is a normal outcome.
 
-The verdict window is blind in one direction: an agent that fails *without
-noticing* logs no friction. Each trial's recorded check narrows that blindness,
-and a Sonnet comprehension probe before shipping catches the common case of a
-goal written at a level its actual audience cannot act on — but silent damage
-remains possible, and a later trial reverting a prune is a normal outcome, not a
-failure of the mechanism.
+## See
 
-The growth engine is not capped. `frictions-to-fixes` may still answer a
-friction with a new prose rule, so a pruned problem can be re-legislated. This
-was weighed and deliberately left open: the cutter out-cuts the source for now,
-and the constraint on friction fixes is itself a problem a future trial can
-take.
-
-## Amendment: "three days" is a floor with a one-hour grace
-
-> **Amended (2026-10-13, #1856).** "Three days" is a floor of landing + 72h
-> minus a one-hour grace (`GRACE_MS` in `scripts/prune-trial-window.ts`,
-> owner-approved in #1683 after a verdict slipped a day, #1677). "Landing" is
-> when the prune reached `main`.
+- `.agents/skills/prune-trial/SKILL.md`: choosing, cutting, probing and judging.
+- `.agents/prune-trials.yml`: the open trials and their areas.
+- `scripts/prune-trial-window.ts`: the window and when a cut landed.

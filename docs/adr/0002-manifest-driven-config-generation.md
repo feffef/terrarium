@@ -1,53 +1,53 @@
-# 2. Per-Tenant manifest generates content.config.ts
+# ADR-0002: Each Tenant is declared in one manifest, and code expands it
 
-Date: 2026-07-04
-Status: Accepted
+Each Tenant states what it holds in one small file, its manifest
+`layers/<tenant>/tenant.config.ts`: its Spaces, and its Collections with their
+schemas. Code expands all manifests into one collection per Tenant × Space ×
+Collection, and into the routes. To change what a Tenant holds, an agent edits
+its manifest and nothing else.
 
-> **Amended by [ADR-0018](0018-tenant-layers-under-layers-directory.md) (2026-07-07).**
-> Tenant layers moved to Nuxt's conventional `layers/` directory, which
-> auto-extends every `layers/*` — so the 2026-07-05 amendment just below is now
-> **moot**: spawning a Tenant no longer needs any `nuxt.config.ts` `extends`
-> edit, and "drop a folder + `pnpm install`" is once again the whole story.
-> `tenants/…` paths below reflect the pre-rename layout.
+## Scope
 
-> **Amended (2026-07-05):** the "drop a folder and config regenerates"
-> consequence below is incomplete. Spawning a Tenant *also* requires registering
-> its layer in `nuxt.config.ts` `extends` by hand — the generator produces the
-> keyed `content.config.ts` but does not touch `nuxt.config.ts`. See #55 / PR #81
-> for the real requirement. Manifest-driven generation of the keyed collections
-> is unchanged; only the "one step" framing is corrected here.
+- **The manifest is the only place a Tenant declares content.** It gives the
+  Tenant's name, which is also its folder name, its Spaces and its Collections.
+  Each Collection has a type, page or data, and a schema, a kind (ADR-0025) or
+  both. Routes follow from the page Collections; the manifest doesn't list them.
+- **Only manifests define collections.** A Tenant's layer may change how its
+  pages look, but never defines a collection of its own.
+- **Code does the expansion.** Nobody writes the keyed collections by hand.
+  One expansion feeds the collections (ADR-0013), the routing map (ADR-0014)
+  and the cross-Tenant catalog (ADR-0025), and it refuses two collections with
+  the same key.
+- **A manifest is checked before it is expanded.** A misspelt key, an unknown
+  kind or a data Collection with no schema fails at the manifest, with a
+  message that names the field. The gate also type-checks every manifest.
+- **Adding a Tenant edits no shared config file** (ADR-0018). Its glossary
+  entries follow ADR-0021.
 
-## Context
+## Why
 
-The Platform is developed primarily by Claude Code agents. Agent-drivability
-depends on agents editing something small, local, and declarative rather than
-hand-maintaining Nuxt internals.
+- Agents build this Platform. They work best on a small file that states
+  intent and sits next to the Tenant's own code.
+- The full list of collections grows with every Tenant, Space and Collection.
+  Written by hand, it would be one file that every Tenant edits: easy to get
+  wrong, prone to merge conflicts, and a mistake there reaches every Tenant.
+- Each collection key is its own table and keeps Tenants apart (ADR-0001). The
+  expansion is mechanical and easy to get wrong, so it is tested code, not
+  hand-typed names.
+- Checking the manifest first makes an agent's mistake fail early and clearly,
+  not deep inside a build.
 
-Nuxt Content needs a single `content.config.ts` declaring every collection. With
-collections keyed `tenant × space × collection`, that file is a cross-product
-explosion (e.g. `marketing_prod_blog`, `marketing_uat_blog`, …) that grows with
-every Tenant, Space, and Collection — error-prone to author by hand and a
-global coupling point (one file, all Tenants, merge conflicts, wide blast radius).
+## Rejected alternatives
 
-## Decision
+- **One hand-written `content.config.ts` listing every collection.** It is the
+  shared file described under *Why*.
+- **A generator that writes the expanded config into the repo.** ADR-0007
+  rejects committing derived files.
 
-Each Tenant layer carries a small declarative **manifest** (e.g.
-`tenants/<tenant>/tenant.config.ts`) declaring its Spaces, its Collections (and
-their schemas), and its routing. A build step (a Nuxt module / prebuild script)
-iterates all `tenants/*/tenant.config.ts` and **generates** the global
-`content.config.ts` — expanding the `tenant × space × collection` cross-product,
-the collection keys, and the routing table automatically.
+## See
 
-Agents only ever author/diff the local manifest — they declare *intent*, never
-the keyed explosion. The mechanical, error-prone expansion is code.
-
-## Consequences
-
-- "Spawn a Tenant" = drop a folder with a manifest; config regenerates. Colocates
-  a Tenant's declaration with its layer.
-- Manifests are schema-validated → an agent's output can be checked before build.
-- Cost: a generator (Nuxt module) must be built and maintained up front, and
-  there is an indirection between manifest and the real Nuxt config. Debugging
-  spans the generated file, so generation must be legible and traceable.
-- The manifest — not `content.config.ts` — becomes the source of truth an agent
-  reasons about.
+- `shared/manifest.ts`: the manifest's shape and `validateManifest`.
+- `shared/expand.ts`: loading the manifests, the expansion and its checks.
+- `nuxt.config.ts`: the type-check include for manifests.
+- `docs/agents/tenant-layers.md` §3: the steps to add a Space, Collection or
+  Tenant.

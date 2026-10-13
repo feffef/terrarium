@@ -95,8 +95,8 @@ Repo-specific priorities:
   has no script-injection vector (only `github.sha` / `.number` / `.repository`
   reach `run:`), and pins actions to major tags. *Minor:* the doorbell
   `gh pr comment` step needs `pull-requests: write`, which a fork PR's read-only
-  token lacks, so it fails on outside PRs (#659, fixed in the Gate composite
-  action, ADR-0026). Consider pinning actions to full commit SHAs for
+  token lacks, so it fails on outside PRs (#659, fixed in
+  `.github/actions/gate/action.yml`). Consider pinning actions to full commit SHAs for
   supply-chain hardening.
 - Session logs / ADRs are professional; nothing embarrassing.
 - `Claude-Session:` URLs in commits/issues are auth-gated (opaque to the public)

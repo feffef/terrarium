@@ -3,7 +3,7 @@
 // (`layers/<tenant>/tests/e2e/<tenant>.spec.ts`). Not a spec itself (no `.spec.ts`
 // suffix), so vitest never collects it. Every spec calls `setupL2()`, which
 // serves the build that the e2e project's globalSetup made sure exists
-// (tests/README.md; ADR-0004's 2026-10-12 amendment).
+// (tests/README.md).
 import { copyFileSync, existsSync, mkdtempSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'

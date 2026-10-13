@@ -88,7 +88,7 @@ export interface Relation {
 /** Every relation touching `slug`, from that specimen's point of view — both the
  *  edges it authors (`out`) and the edges that name it (`in`). Deterministically
  *  ordered so the section is stable across renders. Same-biome data only (the
- *  caller passes this biome's edges), so no cross-Space read (mirrors ADR-0012). */
+ *  caller passes this biome's edges), so no cross-Space read (CONTEXT-MAP.md: Relationships). */
 export function relationsFor(slug: string, edges: Edge[]): Relation[] {
   const out: Relation[] = []
   for (const e of edges) {

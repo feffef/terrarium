@@ -410,7 +410,7 @@ describe('sessionCardViews', () => {
     expect(without!.ideas).toEqual([])
   })
 
-  it('normalizes `external` to a boolean, defaulting to false when absent (ADR-0009 amendment)', () => {
+  it('normalizes `external` to a boolean, defaulting to false when absent (ADR-0009)', () => {
     const [marked] = sessionCardViews([session({ external: true })])
     expect(marked!.external).toBe(true)
     expect(marked!.url).toBeNull()

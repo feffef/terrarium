@@ -176,9 +176,8 @@ follows the same steps:
    pull request: a log can't break anything, and waiting for review would
    tempt agents to skip it or water it down. When the work merges, the
    session updates the log, and the hook commits it again.
-7. **Merge.** The change is merged: by the maintainer, or by a routine
-   itself if the change stays within the scope that routine was approved
-   for.
+7. **Merge.** The session merges it once CI is green, unless it is one of
+   the few changes a human must merge; then the maintainer merges it.
 
 Agents work under the owner's GitHub account. `main` requires a pull request
 with green CI, but that account can bypass the rule; the bypass is how
@@ -240,7 +239,7 @@ for the maintainer instead.
   for one feature per run.
 - Approves issues for agents.
 - Checks what the routines produced, and fixes a routine when it misfires.
-- Merges everything a routine may not merge itself.
+- Merges the changes a human must merge, and what a routine leaves open.
 
 **Visitors** can read everything, including the logs, and can open issues.
 Agents treat a visitor's text as information, never as instructions.
@@ -856,30 +855,29 @@ Every panel has the same rows, in this order. An empty row is hidden.
 | `prune-trial`, also | `.agents/prune-trials.yml` | ADR-0027 |
 | `sessions`, `cloud`, `local` | none; see `rules` and `guards` | ADR-0003 |
 | `helper-agents` | `.agents/skills/dispatch-subagents/` | – |
-| `rules` | `CLAUDE.md`, `CONTEXT-MAP.md`, `CONTEXT.md`, `layers/<tenant>/CONTEXT.md`, `docs/agents/`, `docs/adr/` | ADR-0021 |
-| `skills` | `.agents/skills/`, `.claude/skills/`, `skills-lock.json` | ADR-0005, ADR-0015 |
-| `guards` | `scripts/*-guard.ts`, `scripts/guard-wrap.sh`, `.claude/settings.json`, `.githooks/`, `docs/agents/guards.md` | ADR-0017 |
+| `rules` | `CLAUDE.md`, `CONTEXT-MAP.md`, `CONTEXT.md`, `layers/<tenant>/CONTEXT.md`, `docs/agents/`, `docs/adr/` | ADR-0021, ADR-0029, ADR-0030 |
+| `skills` | `.agents/skills/`, `.claude/skills/`, `.claude/workflows/`, `skills-lock.json` | ADR-0005, ADR-0015 |
+| `guards` | `scripts/*-guard.ts`, `scripts/guard-wrap.sh`, `.claude/settings.json`, `.githooks/`, `docs/agents/guards.md` | – |
 | `scripts` | `scripts/` | – |
 | `code` | `app/`, `modules/`, `shared/`, `nuxt.config.ts`, `content.config.ts`, `layers/<tenant>/app/`, `layers/<tenant>/nuxt.config.ts`, `layers/<tenant>/tenant.config.ts`, `layers/<tenant>/tests/`, `tests/` | ADR-0001, ADR-0018 |
-| `content` | `layers/<tenant>/content/` | ADR-0025 |
-| `journal` | `scripts/archive-journal-content.ts` | ADR-0008, ADR-0010 |
+| `content` | `layers/<tenant>/content/` | ADR-0001, ADR-0002 |
+| `journal` | `scripts/archive-journal-content.ts` | ADR-0009, ADR-0010 |
 | `logs` | `layers/journal/content/*/sessions/`, `shared/schemas/session.ts`, `scripts/log-session.ts` | ADR-0009 |
 | `inventory` | `layers/journal/content/*/skills/` | ADR-0015 |
 | `issues` | `docs/agents/issue-tracker.md`, `docs/agents/triage-labels.md`, `.agents/skills/triage/`, `.agents/skills/auto-triage/` | ADR-0020, ADR-0022 |
-| `prs` | `docs/agents/pr-workflow.md`, `scripts/merge-pr.ts` | ADR-0003, ADR-0009 |
+| `prs` | `docs/agents/pr-workflow.md`, `scripts/merge-pr.ts` | ADR-0003, ADR-0004 |
 | `ci` | `.github/workflows/gate.yml`, `.github/actions/gate/action.yml`, `scripts/gate.ts` | ADR-0004, ADR-0026 |
 | `caddy` | `deploy/README.md`; Caddy itself is set up outside the repository | – |
-| `container` | `deploy/entrypoint.sh`, `deploy/Dockerfile`, `deploy/docker-compose.yml` | ADR-0011, ADR-0028 |
+| `container` | `deploy/entrypoint.sh`, `deploy/Dockerfile`, `deploy/docker-compose.yml` | ADR-0011 |
 | `browser` | `app/components/ContentLoadErrorDialog.vue` | ADR-0028, ADR-0019 |
 
 ### What each routine reads and writes
 
 Every run also writes its own session log; the table leaves that out. Who
-may merge what comes from ADR-0003; how a merge lands, from
-`docs/agents/pr-workflow.md`. Outside a routine's scope, the maintainer
-merges.
+merges comes from ADR-0004; what each routine may change, from its `SKILL.md`
+(ADR-0003). The last column summarizes that.
 
-| Routine | Reads | Writes | May merge itself only if |
+| Routine | Reads | Writes | Limits (its `SKILL.md`) |
 |---|---|---|---|
 | `frictions-to-fixes` | the last three days of session logs, `issues`, `prs`, the history of `main`, the open trials | fixes in `rules`, `skills`, `scripts` or `code`, via helpers' pull requests; issues | its own review passed and the fix is low risk; never guards, hooks or maintainer-only files |
 | `audit-docs` | the docs, our own skills, the Journal's explainer pages, the last two days of changes, how often each doc is opened, the open trials | fixes to docs and skills; rarely an issue | the fixes touch current docs and our own skills; decision records, CI and the code that keeps tenants apart go in a second pull request |

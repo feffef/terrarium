@@ -10,10 +10,8 @@
 // instead of the dollhouse's hardcoded `TENANTS`/`ROOM_*` arrays: a new Tenant
 // with a `kind`-tagged collection appears automatically; a removed one drops.
 //
-// Human-only to merge (ADR-0004): this joins content.config.ts / shared/expand.ts
-// / modules/routing.ts in the isolation-critical family. It is read-only by
-// construction — it names collection keys, never writes — so write isolation
-// (ADR-0020) is untouched.
+// Human-only to merge (ADR-0004). It is read-only by construction — it names
+// collection keys, never writes — so nothing writes across Tenants (ADR-0025).
 import { join } from 'node:path'
 import { addTemplate, addTypeTemplate, defineNuxtModule } from '@nuxt/kit'
 import { catalogFrom, expand, loadManifests, root } from '../shared/expand'

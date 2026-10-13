@@ -4,7 +4,7 @@
 // with its Poster illustration rather than falling through to the unstyled
 // renderer.
 //
-// Isolation-respecting and presentation-only (ADR-0004): it resolves the
+// Isolation-respecting and presentation-only (ADR-0006): it resolves the
 // request through the SAME shared, unit-tested `resolveSpaceRoute` (via the
 // read-only useSpace composable), then reads only this Space's keyed `pages`
 // collection.

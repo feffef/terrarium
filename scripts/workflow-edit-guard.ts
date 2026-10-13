@@ -7,9 +7,9 @@
 // Reads only the tool call, so it denies the edit itself rather than the commit:
 // by the time a commit exists the branch is already the expensive case.
 //
-// Runs unattended, so it is human-only to merge (ADR-0004, 2026-07-30). Pure
+// Runs unattended, so it is human-only to merge (ADR-0004). Pure
 // core (below) split from the shared stdin/`--dry-run`/bootstrap plumbing
-// (`guard-io.ts`, issue #1080), per that amendment's reviewability bar.
+// (`guard-io.ts`, issue #1080), per docs/agents/guards.md.
 //
 // Usage:
 //   sh scripts/workflow-edit-guard.sh                 # the installed hook entry

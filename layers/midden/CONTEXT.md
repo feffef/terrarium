@@ -13,7 +13,7 @@ one of several Tenants themed around the Platform's **Observability** invariant
 comments on it, the Midden catalogues what the Platform stopped doing, once it
 is truly finished stopping.
 
-MVP spec, decision history and resolutions: [issue #515](https://github.com/feffef/terrarium/issues/515) (a Wayfinder map; sub-issues #516–#528 hold the individual resolutions cited by number in this file). A content/design Tenant's decisions live there and in this file, not as ADRs (ADR-0021).
+MVP spec, decision history and resolutions: [issue #515](https://github.com/feffef/terrarium/issues/515) (a Wayfinder map; sub-issues #516–#528 hold the individual resolutions cited by number in this file). Why it gets no ADR: ADR-0021.
 
 ## Why it exists
 

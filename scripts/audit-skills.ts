@@ -109,7 +109,7 @@ export interface Landing {
   landedAt: string
   paths: string[]
 }
-/** One `observations` entry (ADR-0015 amendment, 2026-07-13). */
+/** One `observations` entry (ADR-0015). */
 export interface Observation {
   date: string
   note: string
@@ -166,8 +166,8 @@ export interface OrphanedSession {
 export type OrphanSuppressionReason = 'misfile-cleanup' | 'resolved-annotation'
 /** One line of the orphan suppression log: a candidate one of the levers acted
  *  on, reported rather than silently dropped (issue #754). A rule that moves
- *  ADR-0009's `close-session`-invocation-rate metric must leave an audit trail,
- *  or a false suppression is indistinguishable from a healthy denominator.
+ *  the orphan count, which tells whether `close-session` alone keeps sessions
+ *  logging (ADR-0009), must leave an audit trail, or a false suppression is indistinguishable from a healthy denominator.
  *  The two reasons are **asymmetric**, which is why this is a log and not a list
  *  of removals: a `misfile-cleanup` entry is *removed from* `orphanedSessions`;
  *  a `resolved-annotation` entry is *still listed* there, annotated with its
@@ -369,7 +369,7 @@ export function namesSkill(text: string, skill: string): boolean {
 }
 
 /** One parsed log as a `Session`, or `null` for an EXTERNAL log — excluded from
- *  the self-improvement corpus entirely (ADR-0009 amendment). `skillNames` drops
+ *  the self-improvement corpus entirely (ADR-0009). `skillNames` drops
  *  a `skillsUsed` entry that isn't a real Skill, e.g. "model" (issue #545). */
 export function toSession(raw: Record<string, unknown>, file: string, skillNames: ReadonlySet<string>): Session | null {
   if (isExternalSession(raw)) return null

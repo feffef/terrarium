@@ -13,15 +13,14 @@ see CLAUDE.md's "Docs you must read first" and `.claude/rules/tenant-layers.md`,
 not this page.
 
 This repo deliberately diverges from the `domain-modeling` Skill's generic
-templates (ADR-0021):
+templates:
 
-- every ADR here uses the fuller `Context / Decision / Consequences` form, not
-  the Skill's minimal one;
+- an ADR follows ADR-0030's template, not the Skill's section layout;
 - a `CONTEXT.md` is a `## Glossary` of `### Term` entries, not the Skill's
   `## Language`/`_Avoid_` layout;
 - the root `CONTEXT.md` doubles as the Platform context and carries the
   Tenants roster, and each per-Tenant `CONTEXT.md` adds a purpose narrative on
-  top of its glossary.
+  top of its glossary (ADR-0021 says why).
 
 Match the repo's actual files, not the template: `CONTEXT-MAP.md`'s
 **Decisions** section says where ADRs live; CLAUDE.md's "Repo layout" says where
@@ -52,7 +51,7 @@ This complements, not replaces, the `domain-modeling` Skill's 3-part ADR test:
 that test gates *decisions*, the rule of two gates *vocabulary*. Every session
 reads the glossary and reconciles term conflicts against it, so a coined term
 costs every session; only a second instance proves it worth that (ADR-0010
-deferred a `digests` collection this way). It brakes new coinage; anything
+keeps Digests in the shared `pages` collection until something needs them apart). It brakes new coinage; anything
 already built stays.
 
 ## Flag ADR conflicts
@@ -60,11 +59,11 @@ already built stays.
 If your output contradicts an existing ADR, say so explicitly rather than
 silently overriding it:
 
-> _Contradicts ADR-0006 (runtime routing by path prefix) — but worth reopening because…_
+> _Contradicts ADR-0006 (requests reach one Space by path prefix) — but worth reopening because…_
 
 ## Check a new Tenant/Collection proposal against ADR-0006 immediately
 
 A separately named, addressable-sounding Collection (e.g. a Tenant's "sites"
-or "exhibits") looks natural but violates ADR-0006's pages-only routing. Check
+or "exhibits") looks natural but breaks ADR-0006: only a Space's `pages` Collection has URLs. Check
 a new Tenant or Collection against it at proposal, before the mistake rides
 several turns (issue #573).

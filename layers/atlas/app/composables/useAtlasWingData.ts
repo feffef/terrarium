@@ -8,7 +8,7 @@
 // generic name — the auto-import namespace is global across every layer
 // (tenant-layers.md §1).
 //
-// Isolation-respecting (ADR-0004): this takes the ALREADY-resolved
+// Isolation-respecting (ADR-0006): this takes the ALREADY-resolved
 // `useSpace('atlas')` context as input rather than re-resolving the route
 // itself — the isolation-critical resolution step stays exactly where it was
 // (`useSpace` → `resolveSpaceRoute`); this composable only shapes the

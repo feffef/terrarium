@@ -8,9 +8,9 @@
 //
 // Three hook registrations in `.claude/settings.json` call `--land`, each with
 // the hook payload on stdin: `Stop` (primary), `SessionEnd` and `SessionStart`
-// matcher `resume` (fallbacks). ADR-0009's "Landing mechanism as shipped"
-// section owns why there are three; its 2026-09-05 amendment owns why every
-// landing records which one performed it (`landedBy`).
+// matcher `resume` (fallbacks). ADR-0009 says why there are three and when the
+// fallbacks retire; every landing records which one landed it (`landedBy`).
+// Count landings per hook: grep -h '^landedBy:' layers/journal/content/current/sessions/*.yml | sort | uniq -c
 //
 // This is gated code: changing it is a normal PR (the exception's boundary is
 // itself protected by the gate it steps around). Only the session-log *content*
@@ -64,7 +64,7 @@ import { canonicalizeInstructionPath, isInstructionDoc, type DocLineIndex } from
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 
-/** The frozen `sessions` schema (ADR-0009) — the shared `session` collection kind,
+/** The grow-only `sessions` schema (ADR-0009) — the shared `session` collection kind,
  *  single-homed in shared/schemas/session.ts (ADR-0025). The Journal manifest now
  *  references it by `kind`; this validates authored logs against the very same object. */
 const sessionsSchema = sessionSchema
@@ -106,7 +106,7 @@ export function expectedFilename(entry: SessionEntry): string {
   return `${date}-${entry.session}.yml`
 }
 
-// ── Authoring the scratch (ADR-0009 amendment) ──────────────────────────────
+// ── Authoring the scratch (ADR-0009) ────────────────────────────────────────
 // The interpretive half the live agent writes DURING the session (a hook
 // cannot prompt). Mechanical fields — timings, models, files, subagents — are
 // NOT authored; the landing path derives them from the transcript and stitches.
@@ -330,8 +330,8 @@ function sessionIdFromRelPath(relPath: string): string {
 
 /** The busiest model recorded on the stitched entry at `absPath` (session-trace.ts's
  *  `models`: model id → assistant-turn count), or a generic fallback for an
- *  authored-only entry from before the trace existed. ADR-0017 has no exemption for
- *  "the trace didn't say" — the footer still needs a value. The busiest-model pick
+ *  authored-only entry from before the trace existed. The trailer still needs a
+ *  value (ADR-0017). The busiest-model pick
  *  and the id→display formatting are single-homed in session-trace.ts (issue #346),
  *  reused here and by the commit-msg footer guard. */
 function deriveModelName(absPath: string): string {
@@ -367,8 +367,7 @@ export function buildLogCommit(
     git(['update-index', '--add', '--cacheinfo', `100644,${blob},${relPath}`], { env: idxEnv, cwd })
     const tree = git(['write-tree'], { env: idxEnv, cwd })
     const subject = `journal(sessions): log ${basename(relPath, '.yml')}`
-    // Separate `-m` paragraph, per ADR-0017 (no exemptions: every agent-authored
-    // commit carries this footer) — a trailer needs its own paragraph or git
+    // Separate `-m` paragraph, per ADR-0017 — a trailer needs its own paragraph or git
     // won't recognize it as one. The footer format is single-homed in
     // `provenance-footer.ts` (issue #346), shared with the commit-msg guard.
     const trailer = provenanceFooter(
@@ -464,7 +463,7 @@ export function land(
   }
 }
 
-// ── The landing path the hooks call (ADR-0009 amendment, PR #148) ───────────
+// ── The landing path the hooks call (ADR-0009) ──────────────────────────────
 
 /** origin/main's current bytes for a path, or null if it does not exist there.
  *  Used by the diff-guard so an unchanged re-derive never commits. */
@@ -656,7 +655,7 @@ function stageAndLand(relPath: string, yaml: string, opts: LandOpts): HandlerRes
 }
 
 /** Serialize a stitched entry, recording which hook registration landed it
- *  (issue #865 — ADR-0009's 2026-09-05 amendment owns why). */
+ *  (issue #865; ADR-0009 says why). */
 function entryYaml(entry: Record<string, unknown>, opts: LandOpts): string {
   if (opts.landedBy) entry.landedBy = opts.landedBy
   // Generous width so long summaries/paths don't hard-wrap into shapes the
@@ -807,7 +806,7 @@ function readToolSources(sets: LabelledRecords[]): Map<string, string> {
 /** List every instruction doc the trace will fold into `docsRead` and every
  *  rule that loaded that the agent has not yet given a reason and a `useful`
  *  verdict, with the evidence for each doc, so the agent can explain it or mark
- *  it `NOT_READ_REASON` (ADR-0009's merged-read and verdict amendments). Prints
+ *  it `NOT_READ_REASON` (ADR-0009). Prints
  *  nothing when there is nothing to answer — including when the transcript
  *  can't be found, which degrades the report, never the authoring. */
 export function reportUnexplainedReads(

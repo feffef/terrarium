@@ -2,7 +2,7 @@
 
 ## Origin
 
-#1633 (Dependabot config + ADR-0003 ledger row `dependabot`), requested by the
+#1633 (Dependabot config), requested by the
 repo owner in session `session_01QrvPXx1uquc4vvjJXhz1MU`.
 
 ## Target
@@ -11,7 +11,7 @@ New file `.github/workflows/dependabot-automerge.yml`:
 
 ```yaml
 # Merges a Dependabot npm minor/patch PR once safety-gate is green on its head
-# (ADR-0003 ledger row `dependabot`). workflow_run runs this file from main and
+# (an ADR-0004 exception for these bumps). workflow_run runs this file from main and
 # never checks out PR code, so the ADR-0020 fork-approval concern does not
 # apply: the PR author must be dependabot[bot] on a same-repo branch.
 name: dependabot-automerge
@@ -68,9 +68,9 @@ jobs:
 
 GitHub's native auto-merge would wait for `main`'s required `gate` check
 (`docs/research/github-branch-protection-vs-autonomous-log-commits.md`) but
-cannot check the ledger row's scope. Triggering on `safety-gate`'s completion
+cannot check the scope. Triggering on `safety-gate`'s completion
 lets the merge happen only on a green gate for that exact head SHA, and the
-script checks the scope. The checks mirror the ledger row's scope:
+script checks the scope:
 author, commit authorship, files touched, and the `update-type` metadata
 Dependabot writes into each commit message (the same source
 `dependabot/fetch-metadata` parses). The 3-day minimum age comes from
@@ -81,6 +81,7 @@ A merge made with `GITHUB_TOKEN` does not trigger `safety-gate`'s `push` run on
 
 ## Companion change
 
-The PR that adds `.github/dependabot.yml` and the ADR-0003 ledger row. Apply
+The PR that adds `.github/dependabot.yml`, and an ADR-0004 exception for
+Dependabot minor/patch bumps: today `package.json` is Human-only. Apply
 both in the same sitting: without this workflow, Dependabot PRs just wait for a
 human.

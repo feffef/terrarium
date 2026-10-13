@@ -187,8 +187,8 @@ export function skillRoleParts(role: string): { kind: 'text' | 'code' | 'em' | '
 // Maps each SessionDoc to the display view the session card renders (formats
 // dates, counts frictions, truncates the session id), so the card stays a dumb
 // renderer. `key` is the stable session id for the v-for.
-// Rule path → its `# ` heading, so a card shows "ADR-0022: Autonomous triage
-// sweep" rather than a bare filename.
+// Rule path → its `# ` heading, so a card shows "ADR-0022: The triage sweep may
+// mark Trusted issues ready to build" rather than a bare filename.
 export function sessionRuleTitles(sources: Record<string, string>): Record<string, string> {
   const titles: Record<string, string> = {}
   for (const [file, text] of Object.entries(sources)) {
@@ -298,8 +298,7 @@ export function digestAnchor(date: string): string {
 // ── Ideas & learnings (issue #440) ───────────────────────
 // Every session's authored ideas and learnings, flattened in the caller's
 // newest-first session order, each carrying its session's deep-link anchor. An
-// external session keeps its ideas but not its learnings (ADR-0009's
-// external-sessions amendment).
+// external session keeps its ideas but not its learnings (ADR-0009).
 export function sessionNotes(sessions: SessionDoc[]): { ideas: NoteItem[]; learnings: NoteItem[] } {
   const ideas: NoteItem[] = []
   const learnings: NoteItem[] = []

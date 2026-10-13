@@ -5,7 +5,7 @@
 // page is the trench itself — its own authored intro (`trench/pages/index.md`)
 // and the dig-report list. TrenchFace.vue is atmosphere only, no data.
 //
-// Presentation-only (ADR-0004): resolves the trench Space through the SAME shared
+// Presentation-only (ADR-0016): resolves the trench Space through the SAME shared
 // `resolveSpaceRoute`, hardcoded because `/t/midden` carries no `space` param.
 import { resolveSpaceRoute } from '#shared/routing'
 

@@ -57,12 +57,12 @@ is the Blog's word for a Space — say "Persona" in blog/product sentences, "Spa
 for the Platform mechanism.
 
 ### Pingback
-A record that one Persona's blog post reacted to another Persona's post. Modeled
-as a Document in a `pingbacks` **data** collection living in the *reacted-to*
-Persona's Space — denormalized there at author time (persona/path/title/blurb
-inlined), so surfacing it is a **same-Space read**, never a cross-Space runtime
-query (ADR-0012). The reacting post is itself a first-class post in its own Space,
-optionally headed by a `reactsTo` reference to the post it answers. (Contrast the
+A record that one Persona's blog post reacted to another Persona's post. It is
+a Document in a `pingbacks` **data** collection in the *reacted-to* Persona's
+Space, written with the reaction and holding a copy of the reacting post's
+persona, path, title and blurb (why: ADR-0012). The reacting post is itself a
+first-class post in its own Space, optionally headed by a `reactsTo` reference
+to the post it answers. (Contrast the
 Atlas's Interaction — see `CONTEXT-MAP.md`'s Relationships section for the
 derives-vs-denormalizes contrast.)
 

@@ -3,10 +3,9 @@
 // Platform's generic catch-all renderer for `/t/atlas/*` and adds the Tenant's
 // own front door at `/t/atlas` (a layer route, not a Space; #65).
 //
-// Purely presentational (ADR-0004): it reads the per-biome keyed collections
-// through the shared routing map, defines NO content collections of its own
-// (those stay in the root content.config.ts, ADR-0002/0013), and touches none of
-// the isolation-critical routing/expansion logic.
+// Purely presentational: it reads the per-biome keyed collections through the
+// shared routing map, defines no collections of its own (ADR-0013), and touches
+// none of the isolation-critical routing/expansion logic (ADR-0004).
 import { fileURLToPath } from 'node:url'
 
 export default defineNuxtConfig({

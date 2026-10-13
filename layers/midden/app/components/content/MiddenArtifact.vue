@@ -12,7 +12,7 @@
 // (owner-restored); the whole entry (note + inscription) is
 // visible on load. `land → read`, nothing to click.
 //
-// Same-Space read only (ADR-0004/0006): resolves the CURRENT route's Space through
+// Same-Space read only (ADR-0006): resolves the CURRENT route's Space through
 // `useSpace('midden')` to read this Space's own `artifacts` collection key, so an
 // embed inside one Site's body can never reach across Spaces.
 //

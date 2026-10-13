@@ -46,7 +46,7 @@ export default defineNuxtModule({
     // hook), so the app-side wiring needs no hand-paired reference. The separate
     // `tsconfig.node.json` `paths['#routing']` mapping still stands on its own — that
     // `tsc -p tsconfig.node.json` pass runs outside Nuxt's generated references
-    // (ADR-0014, wiring #3).
+    // (ADR-0014).
     // `routingMap` is declared with its precise literal type — the same `mapJson`
     // string the runtime data is written from, so type and data cannot diverge and
     // the key scheme stays single-homed in `collectionKey()` (shared/manifest.ts).

@@ -4,7 +4,7 @@
 // Tenant layer's overrides): useRoute → resolveSpaceRoute → createError → read
 // keys off the resolved route.
 //
-// Isolation-respecting (ADR-0004): this is a read-only wrapper around the SAME
+// Isolation-respecting (ADR-0006): this is a read-only wrapper around the SAME
 // shared, unit-tested `resolveSpaceRoute` — no isolation logic is duplicated or
 // changed, and the resolved keys stay precisely typed per Tenant.
 import { resolveSpaceRoute, type ResolvedRoute } from '#shared/routing'

@@ -50,4 +50,4 @@ their in-universe order are genuine facts) but, like the Atlas, claims nothing a
 
 ## Decisions
 
-ADRs live in [`docs/adr/`](./docs/adr/) and are all Platform-wide; there are no context-scoped ADR directories. A demo Tenant's reason-to-exist is product, not architecture, so it goes in that Tenant's `CONTEXT.md`, not an ADR (ADR-0021).
+ADRs live in [`docs/adr/`](./docs/adr/) and record Platform architecture only (ADR-0021).

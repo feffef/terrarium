@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# Self-updating supervisor for the Terrarium PoC deployment (ADR-0011).
+# Self-updating supervisor for the Terrarium deployment (ADR-0011).
 #
 # The image is a thin runner+builder; all state lives in the /app volume. This
 # script clones `main`, builds it, and serves a DECOUPLED COPY of the build

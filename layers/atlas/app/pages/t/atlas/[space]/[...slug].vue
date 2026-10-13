@@ -4,11 +4,11 @@
 // generic catch-all, so specimens render in the guide's theme rather than the
 // unstyled fallback.
 //
-// Isolation-respecting and presentation-only (ADR-0004): resolves through the
+// Isolation-respecting and presentation-only (ADR-0006): resolves through the
 // SAME shared, unit-tested `resolveSpaceRoute` (via the read-only useSpace
 // composable), then reads only this biome's keyed collections. Relations (#71)
 // and sightings are same-Space reads — the food-web edges were authored
-// in-biome (mirrors ADR-0012), so nothing queries a sibling. `biomeMeta`, the
+// in-biome (CONTEXT-MAP.md: Relationships), so nothing queries a sibling. `biomeMeta`, the
 // utils and the Atlas* components arrive via Nuxt's layer-wide auto-imports;
 // `entry`'s shape (below) is left to inference. The three-`queryCollection`
 // load itself is single-homed in the `useAtlasWingData` composable — the

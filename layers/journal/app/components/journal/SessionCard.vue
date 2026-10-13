@@ -201,7 +201,7 @@ const foldedFieldLabels = new Intl.ListFormat('en', { style: 'long', type: 'conj
 }
 .card:hover { border-color: color-mix(in oklab, var(--jd-accent) 40%, var(--jd-line)); }
 .card:not(.open):hover { transform: translateY(-2px); }
-/* A session log authored by a different agent/toolchain (ADR-0009 amendment) —
+/* A session log authored by a different agent/toolchain (ADR-0009) —
    marked so it's scannable at a glance while scrolling the feed, not just on
    close reading. */
 .card.external {

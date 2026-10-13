@@ -29,7 +29,7 @@
 //
 // Scope: content only. Does NOT run `pnpm test:e2e` or any other part of the
 // full gate, but IS wired in as its own `pnpm gate` step and CI's dedicated
-// 'L1 · content validation' job (ADR-0004 amendment, gate.yml).
+// 'L1 · content validation' step (ADR-0004 L1, .github/actions/gate/action.yml).
 import { globSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { pathToFileURL } from 'node:url'
@@ -94,7 +94,7 @@ export function parseDocument(absPath: string): Record<string, unknown> {
 }
 
 /** Values an unquoted ` #` silently cut short. Session logs are skipped: `log-session`
- *  already rejects this at authoring, and older logs are ADR-0009's bounded exception. */
+ *  rejects this at authoring, and landed logs stay as they are (ADR-0009). */
 function truncations(absPath: string): string[] {
   const raw = readFileSync(absPath, 'utf8')
   const yamlText = absPath.endsWith('.md') ? (raw.match(FRONTMATTER)?.[1] ?? '') : raw

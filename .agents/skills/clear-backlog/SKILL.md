@@ -66,7 +66,7 @@ built from the `grill` results. Where its format differs, this list wins:
 - Ask only about issues in §1's set; the ones the sweep skipped wait for a
   run that picks them up. Leave out `blocked` issues; the report lists them
   with their blocker.
-- Include Public issues (the owner's yes is the green-light ADR-0020
+- Include Public issues (the owner's yes is the approval ADR-0020
   requires) and proposals to close an issue as obsolete or superseded. Close
   only on a yes.
 - Answers may raise new questions. Keep each follow-up round to those alone,
@@ -117,7 +117,7 @@ any `humanOnly` path; at the first PR open, invoke `close-session`
 (`in-review`). Land it with `docs/agents/pr-workflow.md`. For a later
 fix (CI, a PR comment), re-run that branch with its `worktree` and the fix
 in its `brief`. A PR built from a Public issue waits for a human merge
-(ADR-0020 rule 3), even though `scripts/merge-pr.ts` would accept it. Merge
+(ADR-0020), even though `scripts/merge-pr.ts` would accept it. Merge
 the rest where `merge-pr.ts` allows.
 
 **Done:** every PR is merged or waiting for a human merge, and

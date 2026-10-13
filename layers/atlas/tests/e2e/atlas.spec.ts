@@ -1,5 +1,5 @@
 // L2 e2e assertions specific to the **atlas** Tenant. Serves the gate's build via
-// `setupL2()` and never builds (ADR-0004 amendment, tests/README.md).
+// `setupL2()` and never builds (tests/README.md).
 //
 // The entry-route sweep in `tests/e2e/smoke.spec.ts` only reaches each biome's
 // Space landing (`/t/atlas/<biome>`) — a Specimen entry (`/t/atlas/<biome>/<slug>`)
@@ -8,12 +8,9 @@
 // PR #208). Cover one representative Specimen route here so a typo'd/renamed
 // auto-import component on that page can't ship silently.
 //
-// The Atlas front door (`/t/atlas`) is a Tenant-root layer route, not a Space —
-// it is deliberately outside the manifest/routing map, so it is NOT in
-// `entryRoutes` and the platform sweep above never reaches it either
-// (ADR-0016). ADR-0016 says a Tenant relying on such a route "should assert it
-// in its own way" — this is that assertion, in the same `$fetch`-SSR-string
-// style the other Tenant-specific checks in this file use.
+// The Atlas front door (`/t/atlas`) is a Tenant root page, so the platform
+// sweep above never reaches it and the Tenant tests it here (ADR-0016), in
+// the same `$fetch`-SSR-string style the other Tenant-specific checks use.
 import { describe, expect, it } from 'vitest'
 import { $fetch } from '@nuxt/test-utils/e2e'
 import { expectHydrated, setupL2, withRendered } from '../../../../tests/support/e2e.ts'

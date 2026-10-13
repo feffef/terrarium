@@ -14,9 +14,8 @@
 // Pure core (`detectSessionMode`, `checkLoopOnlyToolCall`) is kept separate from
 // the shared stdin/`--dry-run`/bootstrap plumbing (`guard-io.ts`, issue #1080);
 // `--dry-run` exercises the same core by hand, so the decision is inspectable
-// without a live tool call (ADR-0004's 2026-07-30 amendment makes an
-// unattended, un-exercisable hook human-only to merge; this is what keeps that
-// review tractable).
+// without a live tool call (an unattended hook is human-only to merge,
+// ADR-0004; `--dry-run` keeps that review tractable).
 //
 // Usage:
 //   tsx scripts/loop-only-tool-guard.ts                      # hook: payload on stdin

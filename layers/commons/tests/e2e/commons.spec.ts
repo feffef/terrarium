@@ -1,7 +1,7 @@
 // L2 e2e assertions specific to the **commons** Tenant — the Platform's
 // cross-Tenant Aggregator (ADR-0025, issue #642), with a Search Space and a
 // Timeline Space. Serves the gate's build via `setupL2()` and never builds
-// (ADR-0004 amendment, tests/README.md).
+// (tests/README.md).
 //
 // The entry-route sweep already hits `/t/commons/search` and `/t/commons/timeline`
 // for a clean 200/hydration. These assertions prove what makes the Commons more

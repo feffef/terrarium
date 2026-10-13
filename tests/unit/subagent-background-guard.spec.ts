@@ -278,7 +278,7 @@ describe('the subagent-background-guard.sh hot-path pre-filter', () => {
   })
 })
 
-describe('the --dry-run path (ADR-0004: an unattended hook needs a way to be exercised by hand)', () => {
+describe('the --dry-run path (docs/agents/guards.md: exercise a guard by hand)', () => {
   function dryRun(args: string[]): { context: string; decision: string; reason?: string } {
     return JSON.parse(runTsx(SCRIPT, { args: ['--dry-run', ...args] }))
   }

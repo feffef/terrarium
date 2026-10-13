@@ -20,7 +20,7 @@
 // solved the quote-aware `&` scan; see that file's header for the residual
 // fail-opens (command substitution, here-docs, ANSI-C quoting).
 //
-// Runs unattended, so it is human-only to merge (ADR-0004, 2026-07-30). Pure
+// Runs unattended, so it is human-only to merge (ADR-0004). Pure
 // core split from the shared stdin/`--dry-run`/bootstrap plumbing
 // (`guard-io.ts`, issue #1080).
 //

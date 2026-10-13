@@ -23,8 +23,8 @@ and `docs/adr/`). Reports of particular interest:
   comment body) steering an autonomous agent into a change it shouldn't make,
   or clearing the safety gate with hostile intent (ADR-0003 / ADR-0004; the
   trust-tier line this draws is ADR-0020).
-- The **PoC deploy** path — the self-updating container that tracks `main`
-  (ADR-0011): anything that lets untrusted code reach a build/run step.
+- The **deploy** path: the container that builds and serves `main`
+  (ADR-0011). Anything that lets untrusted code reach a build or run step.
 
 ## What to expect
 

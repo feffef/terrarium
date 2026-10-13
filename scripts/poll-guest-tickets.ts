@@ -8,11 +8,8 @@
 // interval only wakes the model when there's an actual guest-authored
 // candidate.
 //
-// Guest vs. Trusted is the Public/Trusted split ADR-0020 already draws on
-// `authorAssociation` (`OWNER`/`MEMBER`/`COLLABORATOR` are Trusted; everything
-// else — `CONTRIBUTOR`/`FIRST_TIME_CONTRIBUTOR`/`FIRST_TIMER`/`MANNEQUIN`/`NONE`
-// — is Public) — mirrored here rather than re-derived, since this script's
-// whole job is to apply that same line before anything reaches the model.
+// Guest vs. Trusted is ADR-0020's line; `scripts/trust.ts` holds the
+// `authorAssociation` values.
 //
 // "Already has a linked PR" is checked via the issue's timeline
 // (`cross-referenced` events whose source is a PR that's still open or was
@@ -97,7 +94,7 @@ export interface RawTimelineEventRecord {
 
 // ── Pure core (unit-tested) ─────────────────────────────────────────────────
 
-/** True when `authorAssociation` is one of ADR-0020's Public values. */
+/** True when `authorAssociation` is Public (`scripts/trust.ts`). */
 export function isPublicAuthor(authorAssociation: string): boolean {
   return PUBLIC_ASSOCIATIONS.has(authorAssociation)
 }

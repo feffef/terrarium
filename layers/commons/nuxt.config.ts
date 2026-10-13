@@ -3,7 +3,7 @@
 // landing (`/t/commons/search`, `/t/commons/timeline`) with a real cross-Tenant
 // view over `#catalog` (ADR-0025).
 //
-// Presentation-only (ADR-0004): it reads the catalog through the sanctioned
+// Presentation-only: it reads the catalog through the sanctioned
 // `queryAcrossTenants`/`queryTimeline` composables and defines NO content
 // collections or isolation-critical logic of its own.
 import { fileURLToPath } from 'node:url'

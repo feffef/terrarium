@@ -7,7 +7,7 @@
 // would fall through to the Platform's deliberately unstyled catch-all and
 // render off-brand.
 //
-// Isolation-respecting and presentation-only (ADR-0004): it resolves the request
+// Isolation-respecting and presentation-only (ADR-0006): it resolves the request
 // through the SAME shared, unit-tested `resolveSpaceRoute` the catch-all uses
 // (via the read-only useSpace composable — no isolation logic duplicated or
 // changed), then reads only that one (Tenant, Space)'s keyed `pages` collection.

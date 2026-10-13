@@ -7,7 +7,7 @@ Record one honest **session log** for this Claude session. You author only the
 **interpretive** half — goal, outcome, summary, and every friction. The
 **mechanical** half — exact timings, models, tool counts, files read/edited,
 subagents, branch — is *derived from the transcript* by a committed hook, so
-**do not write it** (ADR-0009 amendment). Authoring just writes a scratch file;
+**do not write it**. Authoring just writes a scratch file;
 the hook stitches the two and commits to `main`. That commit normally happens
 live, on the `Stop` hook at the end of the turn you invoke this Skill in —
 **not** at session teardown: `SessionEnd` is only a fallback for a session `Stop`
@@ -104,10 +104,10 @@ ideas:                             # OPTIONAL — omit unless something sparked
     without having to re-derive your reasoning.
 
 - **Do NOT write** `startedAt`/`endedAt`, `durationSec`, `models`, `toolCounts`,
-  `filesEdited`, `subagents`, `gitBranch`, … — all derived (ADR-0009's amendment).
+  `filesEdited`, `subagents`, `gitBranch`, … — all derived.
 - **`external` is not for our logs.** The schema's optional `external` boolean
   marks a log authored by a *different* harness/toolchain (an external
-  contributor's own agent — ADR-0009 amendment, 2026-07-22) — see `CONTEXT.md`'s
+  contributor's own agent, ADR-0009) — see `CONTEXT.md`'s
   **Session** term for the absent-⇒-internal semantics and the mining-exclusion/
   ideas split. This authoring path doesn't set it.
 - `docsRead`/`skillsUsed` are your **curated** picks (the ones worth a `reason`).
@@ -127,7 +127,7 @@ ideas:                             # OPTIONAL — omit unless something sparked
 - **`summary` must state plainly which parts of the session's work were
   human-instructed (a direct ask, or an explicit green-light) versus
   agent-initiated** — don't leave that provenance to be inferred from context.
-  ADR-0003's autonomy gate depends on
+  ADR-0003's approval rule depends on
   this being legible to a later reader, not reconstructed after the fact.
 - **Quote any scalar value containing `[`, `{`, `#`, or `,`**, the top-level `goal`/`outcome` strings as much as `path`/`reason` values. Unquoted, `[` or `{` starts a YAML flow sequence/map; `#` starts a YAML comment and truncates everything after it; `,` inside a flow map (`{ … }`) ends the current value early. Any of these silently mangles the entry instead of erroring. The `#` case (a bare `PR #354` truncating to `PR`) is caught: the `--author` step below rejects an unquoted-`#` truncation loudly and prints the value to quote.
 - `goal` is a short, plain headline ("Weekly check of the Platform's own Skills",
@@ -157,9 +157,6 @@ It validates the interpretive fields and writes `.session-logs/pending.scratch.j
 takes it from here, **only if** the scratch exists, which is why authoring it *is*
 your "this session is done" signal.
 
-The helper is gated code (ADR-0009): changing `log-session.ts` or `session-trace.ts`
-is a normal PR.
-
 ## 3. Answer the reads report
 
 `--author` lists every instruction doc the trace will fold into `docsRead`
@@ -167,8 +164,8 @@ that has no reason and `useful` verdict yet, whether the Read tool opened it or
 a Bash command's output showed it (yours or a subagent's — folded in by design,
 issue #796), with the evidence for each. Answer each with a `docsRead` entry: a
 one-line reason and a `useful` verdict, or the reason `(not read)` when no
-command of this session or its subagents showed you that doc. ADR-0009's
-merged-read amendment says what the stitch does with `(not read)`.
+command of this session or its subagents showed you that doc. The stitch drops a `(not read)` entry, and logs a Friction
+if shell output had credited it.
 
 It also lists every rule that loaded with no `ruleVerdicts` entry, including the
 always-loaded ones (no `paths`; they load at session start). You can't see this
@@ -187,7 +184,6 @@ one with the same `path` or `name`). Repeat a friction word for word, severity
 included, or it is logged twice.
 
 The report also lists docs a command named but did not show enough of to
-count. ADR-0009's output-matching and merged-read amendments say what is
-invisible by design. If one of them was a real read, log a Friction:
+count; `scripts/shell-reads.ts`'s header lists what stays invisible. If one of them was a real read, log a Friction:
 `severity` at least `moderate`, the marker `SHELL-READ-DETECTION`, the command
 verbatim, and the path expected.

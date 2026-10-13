@@ -5,7 +5,7 @@
 // recorded recurrences (#387, #605, #628, #723, #788) each happened to a
 // session that had prose available and did not apply it.
 //
-// What it enforces — ADR-0017's requirement plus its 2026-08-01 amendment:
+// What it enforces (ADR-0017):
 // **an agent-authored artefact carries a full session URL naming THIS session,
 // in the shape its surface prescribes.** Two surfaces, two shapes, checked by
 // one registry (`GITHUB_PROVENANCE_TOOLS`):
@@ -23,13 +23,10 @@
 //     regression, and the one all five recurrences share.
 //   • `malformed`  — names THIS session, but not in the surface's shape. PR
 //     #788: a correct id written as `**Session:** <url>`, which every
-//     format-agnostic version of this guard passed. Format-agnosticism was
-//     justified while ADR-0017's footer competed with the harness's own for the
-//     same trailing position; the header moved to a position nothing else
-//     claims, so the conflict — and the reason to accept any shape — is gone.
+//     format-agnostic version of this guard passed. Any other shape is
+//     blocked; ADR-0017 says why.
 //   • `unverified` — ground truth is unresolvable, so compliance cannot be
-//     established. Denied, not passed: fail-CLOSED, per the 2026-08-01
-//     amendment. See `main()` for the residual fail-open this cannot close.
+//     established. Denied, not passed: fail-CLOSED (ADR-0017).
 //
 // Verifying is cheap and near-total: `resolveGroundTruthSessionId` prefers
 // `CLAUDE_CODE_REMOTE_SESSION_ID` and falls back to the transcript's own
@@ -60,10 +57,7 @@ import { provenanceHeader, readProvenanceHeader, sessionIdsIn } from './provenan
 import { resolveGroundTruthFromTranscript } from './session-trace.ts'
 
 const LABEL = 'provenance guard'
-// The dated amendment, not just the ADR: this guard's fail-closed posture is a
-// deliberate 2026-08-01 policy flip, not the default — the citation is worth
-// keeping in the one message this guard can still show without ground truth.
-const REF = 'ADR-0017, 2026-08-01'
+const REF = 'ADR-0017'
 
 /** A global copy of `SESSION_TRAILER` for `matchAll` — the last-match rule needs
  *  every occurrence (issue #692). Built locally rather than adding the `g` flag
@@ -74,8 +68,8 @@ const REF = 'ADR-0017, 2026-08-01'
  *  **Not dead code, despite issue #784.** That issue scheduled the removal of
  *  this constant and its `git-helpers` import along with the legacy
  *  body-surface fallback, on the correct premise that nothing would use it once
- *  bodies required the header. The 2026-08-01 amendment removed that fallback
- *  but gave the trailer a new, permanent job: reading the COMMIT surface, where
+ *  bodies required the header. Removing that fallback (ADR-0017)
+ *  gave the trailer a new, permanent job: reading the COMMIT surface, where
  *  the two-line trailer is still the prescribed marker. Deleting this now
  *  silently unenforces MCP-API commits. */
 const SESSION_TRAILER_GLOBAL = new RegExp(SESSION_TRAILER.source, 'g')
@@ -123,8 +117,7 @@ export const GITHUB_PROVENANCE_TOOLS: readonly ProvenanceTool[] = [
   // A review can be submitted with no comment (a bare approval).
   { tool: 'mcp__github__pull_request_review_write', required: () => false },
 
-  // MCP-API commits: the one surface that was covered by nothing (ADR-0017's
-  // 2026-07-20 amendment named the hole; #723's triage brief carved it out).
+  // MCP-API commits: the one surface that was covered by nothing (issue #723).
   // They bypass local git, so `.githooks/commit-msg` never sees them, and their
   // `message` is a commit message — hence the trailer, not the header. Both
   // schemas mark `message` required, so the default always-required holds.
@@ -205,7 +198,7 @@ export function checkGithubProvenance(
       : null
   }
 
-  // Fail closed (ADR-0017, 2026-08-01): text is being published and compliance
+  // Fail closed (ADR-0017): text is being published and compliance
   // cannot be established, so the call does not proceed.
   if (!groundTruthId) return { kind: 'unverified', tool: toolName, surface }
 
@@ -245,7 +238,7 @@ export function formatGuardMessage(f: ProvenanceFinding): string {
     return (
       `${head} publishes authored text, but this session's ground-truth id could not be resolved ` +
       `(no CLAUDE_CODE_REMOTE_SESSION_ID and no readable transcript), so provenance cannot be ` +
-      `verified. This guard fails CLOSED (ADR-0017, 2026-08-01) — an unverifiable post does not ` +
+      `verified. This guard fails CLOSED (ADR-0017) — an unverifiable post does not ` +
       `proceed. Do not hand-write a session id to get past this: a fabricated one is the exact ` +
       `failure this guard exists for (#387, #605, #628, #723). Surface the resolution failure to ` +
       `the user instead.`
@@ -356,7 +349,7 @@ export function checkAngleBrackets(
  *  wrap did not: `docs/agents/github-integration.md`, issue #886). */
 export function formatAngleBracketMessage(f: AngleBracketFinding): string {
   return (
-    `Blocked by the ADR-0017 provenance guard (#886): \`${f.tool}\`'s \`${f.field}\` contains a bare ` +
+    `Blocked by the provenance guard's angle-bracket check (#886): \`${f.tool}\`'s \`${f.field}\` contains a bare ` +
     `angle-bracket span, \`${f.span}\` — GitHub renders that as an unknown HTML tag and silently drops ` +
     `it, no error shown. Wrap it in a fenced code block:\n\n` +
     '```\n' +
@@ -378,11 +371,7 @@ export function formatAngleBracketMessage(f: AngleBracketFinding): string {
  *  a verification failure. The old early-return here skipped that env lookup
  *  entirely and passed such calls unchecked.
  *
- *  **The residual fail-open this cannot close:** the hook is invoked as
- *  `pnpm exec tsx … || true`. If tsx or pnpm is unavailable the command dies
- *  before this file is ever evaluated, producing no stdout and therefore no
- *  deny. Closing that needs a change of invocation, not of this script — see
- *  ADR-0017's 2026-08-01 amendment, which records it as accepted. */
+ *  A crash before this runs is turned into a deny by `scripts/guard-wrap.sh`. */
 export function main(): void {
   const result = readHookPayload()
   if (result.kind === 'none') return

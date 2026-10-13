@@ -11,7 +11,7 @@
 // landing to where its words actually appear. On narrow viewports the key drops
 // above the prose as a short strip instead of overlapping it.
 //
-// Isolation-respecting and presentation-only (ADR-0004): resolves through the SAME
+// Isolation-respecting and presentation-only (ADR-0006): resolves through the SAME
 // shared, unit-tested `resolveSpaceRoute` (via `useSpace`), then reads only this
 // Space's own keyed pages/artifacts. The former `useMiddenTrenchData` composable
 // was folded away in the simplification — the page's derived data (the compact

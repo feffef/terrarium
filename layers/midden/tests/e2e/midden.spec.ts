@@ -1,5 +1,5 @@
 // L2 e2e assertions specific to the **midden** Tenant. Serves the gate's build
-// via `setupL2()` and never builds (ADR-0004 amendment, tests/README.md).
+// via `setupL2()` and never builds (tests/README.md).
 //
 // Content covers the real `trench` Space (15 catalogued Sites, 42 Artifacts), the
 // `stores` Space (10 Artifacts held off display, no Sites — CONTEXT.md's "The
@@ -14,12 +14,9 @@ import { setupL2 } from '../../../../tests/support/e2e.ts'
 describe('midden Tenant', async () => {
   await setupL2()
 
-  // The Tenant-root foreword (`/t/midden`) is a Tenant-root layer route, not
-  // a Space — like the Atlas front door, it is deliberately outside the
-  // manifest/routing map, so it is NOT in `entryRoutes` and the platform
-  // sweep in `tests/e2e/smoke.spec.ts` never reaches it (ADR-0016 — "should
-  // assert it in its own way"). This is that assertion, in the same
-  // `$fetch`-SSR-string style `atlas.spec.ts`'s front-door check uses.
+  // The Midden front door (`/t/midden`) is a Tenant root page, so the platform
+  // sweep in `tests/e2e/smoke.spec.ts` never reaches it and the Tenant tests it
+  // here (ADR-0016), in the same style as `atlas.spec.ts`'s front-door check.
   it('renders the Midden front door', async () => {
     const html = await $fetch('/t/midden')
     expect(html).toMatch(/<h1[ >]/)

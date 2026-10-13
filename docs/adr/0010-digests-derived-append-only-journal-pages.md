@@ -1,91 +1,74 @@
-# 10. Digests — derived, append-only Journal pages
+# ADR-0010: A Digest is a daily Journal page, written once and landed by PR
 
-Date: 2026-07-05
-Status: Accepted
+A Digest is a short catch-up on one finished UTC day across the whole
+Platform, condensed from git history and session logs. It is an ordinary
+Markdown page in the Journal's `pages` collection under `digests/<date>`,
+written once and then kept. The `digest` Skill writes it and lands it through
+an ordinary gated PR, not the direct-to-main path that session logs use.
 
-> **Amended by [ADR-0018](0018-tenant-layers-under-layers-directory.md) (2026-07-07).**
-> Tenant layers moved from `tenants/` to Nuxt's conventional `layers/` directory;
-> `tenants/…` paths below reflect the pre-rename layout.
+## Scope
 
-> **Amended (2026-07-08).** The "chartered, still-deferred `sync` job" below is
-> **no longer fully deferred**: the `digest` Skill now runs on a schedule via an
-> external Routine (Skill + trigger = an autonomous job, ADR-0005), so the `sync`
-> remit is partially live — realised by `digest` and `audit-skills`, both now
-> scheduled (see ADR-0015). The live-dashboard point below stands unchanged.
+- **A page with its own URL.** The Journal's home page also lists Digests and
+  opens each in place. Both read the pages live, so a new Digest shows up
+  without any edit to the index.
+- **No collection of its own.** Digests share the Journal's `pages`
+  collection, and the `digests/` path marks them. The path means a Digest only
+  in the Journal; in another Tenant it is an ordinary page.
+- **Which days.** Only a finished UTC day gets a Digest, so today never does.
+  A day with no activity gets none. A run writes every finished day that is
+  still missing one.
+- **Written once.** A run never rewrites an existing Digest. Moving old
+  Digests from the `current` Space to `archived` is allowed: it changes the
+  URL, not the text. A wrong fact found later is fixed by an ordinary PR.
+- **Script and Skill.** A tested script finds the missing days and gathers one
+  day's material. The Skill writes the prose.
+- **Merging.** The agent merges the PR on a green gate (ADR-0004).
 
-> **Amended (2026-07-25, `/audit-docs`):** corrects the Consequences bullet on
-> backfill/aging below — the "future aging/`consolidate` job" it deferred to has
-> shipped: `scripts/archive-journal-content.ts` (issue #672), wired as a mandatory
-> step of the `digest` Skill, moves aged-out `current` Digest pages (and session
-> logs, ADR-0009) to `archived`, retaining the newest 7 dates that actually exist
-> per kind (a count, not a calendar window — a window measured from today used
-> to undercount Digests, since today's own Digest can't exist yet). See
-> ADR-0009's matching correction and ADR-0003's auto-merge ledger for
-> `digest`'s exemption scope.
+## Why
 
-## Context
+- A Digest fits neither other Journal kind (ADR-0008). It is derived from
+  records, like an Inventory, but it records a past day, like a session log.
+  So it is written once and kept.
+- It is prose for people, with links, so it is a page. Data collections get
+  no route.
+- Only a Space's `pages` collection gets routes (ADR-0006). A separate
+  collection would need a change to the routing code, which a human must
+  merge, and the `digests/` path already finds them.
+- The direct-to-main path is for session logs: schema-checked data that never
+  renders (ADR-0009). A Digest renders on the site, so the gate checks it.
+- A day's summary is complete only once the day is over. UTC gives every
+  machine the same boundary.
+- Day boundaries and attribution are where bugs hide, so they live in tested
+  code. The prose is judgement, so the Skill writes it.
 
-The Journal Tenant (ADR-0008) named two content kinds: **Inventories** (curated,
-derived from repo state, **overwritten** each sync — the Skill Inventory today)
-and **Journal entries** (**primary**, append-only, agent-authored — session logs,
-research, ideas). A new need does not fit either: a short, human-facing **daily
-catch-up** of everything that happened across the Platform on a given day, mined
-from git history and session logs.
+## Rejected alternatives
 
-It is *derived* (like an Inventory) yet *append-only and historical* (like a
-Journal entry): once a UTC day closes, its summary is fixed and never rewritten.
-The glossary names this third kind a **Digest** (`CONTEXT.md`).
+- **A dedicated `digests` collection.** It changes the routing code and buys
+  nothing while the path is enough.
+- **Bake a Digest list or overview into the index page each run.** The live
+  listing does that with nothing to keep in step.
+- **Commit Digests straight to `main`** like session logs. A Digest renders,
+  so it needs the gate.
 
-Three things had to be decided to build it: where a Digest lives in the content
-model, how it lands, and what authors it.
+## When to revisit
 
-## Decision
-
-- **A Digest is a rendered Markdown *page*, not `data`.** It is a free-form
-  human entry point — several paragraphs, inline links to issues/PRs — which is
-  exactly what Nuxt Content's `page` type is for; `data` collections are not
-  routable and were rejected.
-- **Digests live inside the existing `pages` collection**, under a `digests/`
-  subfolder: `tenants/journal/content/current/pages/digests/<YYYY-MM-DD>.md`,
-  routed for free at `/t/journal/current/digests/<YYYY-MM-DD>`. A *dedicated*
-  `digests` collection was considered and **deferred**: the runtime resolver
-  routes only the collection literally named `pages` (`shared/routing.ts`), so a
-  first-class collection would force a change to that human-only, isolation-
-  critical surface (ADR-0004) plus a per-collection URL-prefix convention. That
-  earns nothing today — Digests are found by their `/digests/` path and are
-  isolated per-Space regardless — so it waits until a first-class collection is
-  actually needed.
-- **One immutable file per *closed* UTC day.** A day is digestible only once its
-  `[00:00, 24:00)` UTC window has closed; today is never digested until it does.
-  Commits attribute to the UTC day of their commit timestamp; sessions to the UTC
-  day of their `endedAt`. A day with no activity gets no page.
-- **Digests land via a gated PR** (ADR-0003's default) — **not** the ADR-0009
-  direct-to-main path. That exception is deliberately bounded to inert,
-  schema-validated `data` (session logs); a Digest is a routed page that renders,
-  so it stays gated like all other content.
-- **A `digest` platform-operation Skill authors them**, backed by a thin,
-  unit-tested `scripts/digest.ts` helper that does only the deterministic work
-  (enumerate closed-and-undigested days; gather a day's git + session-log
-  materials as compact JSON). The Skill writes the prose. **The Journal index
-  needs no regeneration:** its Space landing is a live dashboard that queries this
-  Space's collections — including a *Recent digests* panel that reads the digest
-  pages — so a new Digest surfaces automatically, with no baked overview. That
-  standing live overview is what the chartered, still-deferred `sync` job (ADR-0003)
-  will one day formalize; the Skill does not claim the `sync` name.
+- Something needs Digests as their own collection, such as querying them
+  apart from other pages.
 
 ## Consequences
 
-- The `pages` schema gains an optional `summary` field (the day's headline, which
-  feeds the dashboard's *Recent digests* panel). Optional and non-strict, so
-  `index`/`about` are unaffected and no generated config drifts.
-- Because Digests share the `pages` collection key, they are not a *separate* Nuxt
-  collection — but they are still surfaced by path: the Space landing's live
-  dashboard filters the `pages` collection to `/digests/*` to render the recent-
-  digests panel, so previews are runtime-live, not baked. The deferred dedicated-
-  collection upgrade would make them independently queryable by collection if ever
-  wanted.
-- Digests surface **frictions** (as a rollup) in a human-facing page — visible
-  self-improvement, consistent with the Journal's purpose.
-- Backfill is unbounded by design (every missing closed day), which is a non-issue
-  at this repo's age; aging is handled by the `digest` Skill's archive-sweep step,
-  as it is for session logs (ADR-0009) — see the 2026-07-25 amendment above.
+- Because old Digests move to `archived`, the script must look in both Spaces
+  for existing Digests. Otherwise an archived day looks missing and gets
+  written again.
+
+## See
+
+- `.agents/skills/digest/SKILL.md`: the run, the writing rules and what a run
+  may change.
+- `scripts/digest.ts` and `tests/unit/digest.spec.ts`: the folders, finished
+  days and the day's material.
+- `scripts/archive-journal-content.ts`: how many Digests stay in `current`.
+- `layers/journal/app/utils/dashboard.ts`: the live listing and its headline.
+- `shared/kinds.ts`: the `summary` headline field.
+- `layers/commons/app/composables/timeline.ts`: the Timeline's Journal-only
+  reading of `digests/`.

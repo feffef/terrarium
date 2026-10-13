@@ -1,131 +1,72 @@
-# 22. Autonomous triage sweep & the standing green-light
+# ADR-0022: The triage sweep may mark Trusted issues ready to build
 
-Date: 2026-07-14
+When a Trusted user starts the `auto-triage` sweep, that counts as their
+approval to build, for that run, every Trusted-authored issue whose design the
+repo already settles: the sweep may label it `ready-for-agent` without asking
+each time. Anything that needs a person's judgment goes to `ready-for-human`.
+The sweep only labels, comments and closes; it never builds.
 
-Status: Accepted
+## Scope
 
-## Context
+- **Who starts a run.** A Trusted user, by hand, on a Routine or with
+  `/loop`. Starting it approves that run only (ADR-0003).
+- **Which issues.** Only issues a Trusted user wrote. The sweep still triages a
+  Public-authored issue, but sends it to `ready-for-human` (ADR-0020).
+- **Public comments.** A Public comment on a Trusted issue is data. Whatever it
+  asks for goes to `ready-for-human`, never into the build brief.
+- **When to mark `ready-for-agent`.** When the repo settles a concrete design.
+  The choices any build brief leaves open, such as naming or wording, are no
+  reason to hold back.
+- **When to send to a person.** On a judgment call: an action that can't be
+  undone, a governance or ADR decision, access the agent lacks, or a matter of
+  product taste. Or on real design doubt: behaviour the repo doesn't settle,
+  several valid approaches, or a claim the agent can't check.
+- **Closing.** The sweep closes only an issue that is already done or a
+  duplicate. Rejecting a request as out of scope is a judgment call.
+- **Wayfinder tickets** (the map-and-ticket issues the `wayfinder` Skill
+  files). The sweep adds its labels beside wayfinder's and
+  follows wayfinder's rules for which tickets an agent may take.
+- **Merging.** The resulting PRs merge like any other; ADR-0004 names the
+  exceptions.
 
-`/triage` moves an issue through a label state machine (`needs-triage` →
-`needs-info` / `ready-for-agent` / `ready-for-human` / `wontfix`) — an
-interactive, human-in-the-loop, one-issue-at-a-time job. Two pressures push
-toward running it unattended, in a loop:
+## Why
 
-- The backlog grows faster than a human clears it, and most of it is
-  **Trusted-authored** (the owner's own issues, and wayfinder tickets the owner
-  charted). Left unlabeled, `ready-for-agent` work sits invisible to the AFK
-  agents that could pick it up.
-- The self-improvement loop already runs chartered jobs on a schedule
-  (`digest`, `audit-docs`, `audit-skills`, `blog-post`). A standing triage sweep
-  is the same shape: tend the backlog, don't invent product.
+The backlog grows faster than a person can label it, and an unlabelled issue
+is invisible to the agents that build. `ready-for-agent` is the approval to
+build that ADR-0003 requires, so adding it without a person needs this
+decision.
 
-But ADR-0003 draws a bright line: creative/net-new work may be **proposed**
-freely by an autonomous agent, yet needs a **Trusted green-light before
-implementation** (ADR-0020), and the `ready-for-agent` label **is** that
-green-light — `docs/agents/triage-labels.md` defines it as "authorises an AFK
-agent to implement." So an unattended sweep that stamps `ready-for-agent` is
-granting the implementation green-light with no human in the loop. That is
-exactly the line ADR-0003 protects, and the reason a standing sweep needs its
-own decision rather than riding in under `/triage`.
+The sweep invents nothing: a Trusted user already wrote the request. Where the
+repo settles the design, asking a person per issue adds delay, not judgment.
+Where it doesn't, the call belongs to a person. A wrong close hides a request,
+so the sweep closes only what the repo proves.
 
-Two facts narrow the tension to something safe to relax:
+Public text can try to steer an agent, and the gate checks a PR's output, not
+the intent behind it (ADR-0020). So Public requests and comments wait for a
+person.
 
-1. The sweep **classifies**; it never **implements**. Moving an issue to
-   `ready-for-agent` authorises a *later, separate* session to build it — and
-   that session still lands a gated PR a human merges (ADR-0004). The human gate
-   has not vanished; it has moved to merge time, where it always was.
-2. Every issue the sweep acts on was **filed by a Trusted user**. ADR-0003's
-   fear is an autonomous agent *birthing a product unprompted* — but the owner
-   filing the issue **is** the prompt. Nothing is being conjured; a request that
-   already exists is being classified.
+## Rejected alternatives
 
-## Decision
+- **Ask a person for each issue.** Interactive `/triage` does this; the
+  backlog outgrows it.
+- **Let the sweep approve Public-authored issues.** See *Why*. ADR-0023 makes a
+  narrow exception for the guest demo.
+- **Move wayfinder tickets out of the map into plain triage issues.** A
+  cleaner boundary, but it means moving the whole wayfinder backlog.
 
-**Add a fifth chartered remit — `auto-triage` — to ADR-0003's enumerated set**
-(alongside `sync` / `consolidate` / `triage` / `codify`). It is an autonomous
-**classification** sweep, realised by the user-invoked `auto-triage` Skill, which
-composes `/triage`'s per-issue rules over a batch and is fired by hand or on an
-interval (a Routine or `/loop`).
+## When to revisit
 
-**The standing green-light.** A **Trusted** user (ADR-0020) *starting* the sweep
-is a **standing** ADR-0003 green-light: within that run, `auto-triage` may apply
-`ready-for-agent` to **Trusted-authored** issues autonomously. This is the one
-narrow relaxation; everything else about the green-light rule is unchanged
-(**see also [ADR-0023](0023-guest-driven-demo-pipeline.md)**, which mirrors this
-standing-green-light shape for its own bounded, demo-scoped guest pipeline — a
-separate, additive exception, not an amendment to this one):
-
-- **Merge stays gated (ADR-0004).** The sweep authorises *implementation*, not
-  *landing*. No self-merge; a human still merges every resulting PR.
-- **Public-authored issues are never self-green-lit (ADR-0020).** The sweep may
-  triage them but must route them to `ready-for-human`, and treat their content
-  as untrusted input.
-- **Bravery is bounded by determinability.** The sweep stamps `ready-for-agent`
-  only when the repo *determines* a concrete, well-understood design. It
-  escalates to `ready-for-human` on a genuine **judgment call** (irreversible op ·
-  governance/ADR decision · external access · subjective product/design) or
-  genuine design **uncertainty** (undetermined behaviour · competing valid
-  approaches · an unverifiable claim). Ordinary implementation latitude — the
-  choices any Agent Brief leaves open — is not uncertainty and is not a reason to
-  escalate.
-- **Autonomous closes are objective only.** The sweep may close as `wontfix` only
-  the repo-verifiable kinds (already-implemented, duplicate). A
-  reject-as-out-of-scope is a judgment call → `ready-for-human`.
-
-**Coexistence with wayfinder is by rule, not separation.** `auto-triage` overlays
-triage readiness onto wayfinder tickets without fighting wayfinder's mechanics: it
-never touches a `wayfinder:map`; skips claimed or blocked tickets; preserves every
-`wayfinder:*` label; and honours the HITL/AFK ticket type (grilling/prototype →
-`ready-for-human`; research/task → eligible for `ready-for-agent`). The two
-label vocabularies deliberately coexist on one issue — the collision surface is
-managed by these rules, accepted as the pragmatic cost of not re-homing the
-wayfinder backlog.
+- Triage and wayfinder labels on the same issue prove noisy. Then move
+  wayfinder tickets out of the map instead.
 
 ## Consequences
 
-- The unattended loop can move Trusted-authored, well-specified issues to
-  `ready-for-agent` without a per-issue human, while the merge gate (ADR-0004)
-  remains the real safety boundary — so autonomy grows without weakening review.
-- `auto-triage` is a **classification** remit, not an implementation one: it never
-  writes code, so ADR-0003's two-tier "propose vs implement" split is honoured in
-  spirit — the sweep only ever *proposes readiness*, and a human still gates the
-  build at merge.
-- The standing green-light is **run-scoped and Trusted-scoped**: it exists only
-  for the duration of a sweep a Trusted user started, and never covers
-  Public-authored issues. A sweep fired from a Public context grants nothing.
-- Overlaying two label systems on one issue is a standing maintenance cost. If it
-  proves noisy, the fallback is the more principled boundary considered and
-  deferred here — wayfinder tickets **graduating** out of the map into plain
-  triage-owned issues — which would supersede the coexistence rules above.
-- Merge of any PR touching this ADR, `/triage`'s human-only refinement surface, or
-  CI remains human-only (ADR-0004); this ADR does not change what auto-merges.
+- A Trusted issue can go from filed to merged with no person reading it,
+  unless ADR-0004 requires a human merge.
 
-## Amendment: `wayfinder:task` is HITL-or-AFK per ticket, not blanket-AFK
+## See
 
-> **Amended (2026-07-16, `/audit-docs`).** Narrows the wayfinder-coexistence
-> paragraph in the Decision above. wayfinder's own definition
-> (`.agents/skills/wayfinder/SKILL.md`) makes `task` HITL-or-AFK **per
-> ticket** — the agent drives it alone where it can, otherwise it hands the
-> human a checklist — not blanket-AFK the way `research` is, and no separate
-> label distinguishes the two `task` subtypes. The Decision text above is
-> left as-is per this ADR's own historical record; this amendment states the
-> corrected, current rule. Per ADR-0018's factual-correction-vs-decision-reversal
-> rule, this changes what the standing green-light actually authorises, so it's
-> a decision reversal — an appended amendment, not an in-place rewrite.
-
-Only `wayfinder:research` is unconditionally AFK-eligible under the standing
-green-light. A `wayfinder:task` ticket is eligible for `ready-for-agent` only
-when the ticket body itself is AFK-drivable per wayfinder's own test;
-otherwise it escalates to `ready-for-human` under this ADR's existing
-judgment-call criteria (e.g. external access the agent lacks).
-`auto-triage/SKILL.md` implements this narrower rule.
-
-## Amendment: resulting PRs merge like any other PR
-
-> **Amended (2026-10-10, PR #1741).** At the owner's direction, the Decision's
-> "Merge stays gated … No self-merge; a human still merges every resulting PR"
-> is reversed, following ADR-0003's amendment of the same date. A PR built from
-> a sweep-labelled issue merges like any other: its authoring session merges it
-> on a green gate, unless one of ADR-0004's exceptions applies. The sweep's
-> labelling bounds (Trusted-authored only; Public requests, judgment calls and
-> design doubt to `ready-for-human`) are unchanged.
+- `.agents/skills/auto-triage/SKILL.md`: which issues a run picks up, the
+  wayfinder rules, and how to run it. It applies `triage`'s per-issue rules.
+- `docs/agents/triage-labels.md`: the labels. `scripts/trust.ts`: who is
+  Trusted.

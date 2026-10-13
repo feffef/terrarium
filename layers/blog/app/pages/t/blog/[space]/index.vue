@@ -3,7 +3,7 @@
 // than the Platform's generic catch-all, so it wins for the Space *root*; single
 // posts render via the sibling `[...slug].vue`.
 //
-// Isolation-respecting and presentation-only (ADR-0004): it resolves the Space
+// Isolation-respecting and presentation-only (ADR-0006): it resolves the Space
 // through the SAME shared, unit-tested `resolveSpaceRoute` the catch-all uses
 // (via the read-only useSpace composable — no isolation logic duplicated), then
 // reads only this (Tenant, Space)'s keyed `pages` collection. Spaces cannot

@@ -1,7 +1,6 @@
 // The ADR-0017 provenance HEADER — the marker agents stamp on GitHub bodies
-// (issues, PR descriptions, comments, reviews). Read ADR-0017's 2026-07-31
-// amendment for why the convention moved here from a trailing footer; this file
-// is only its code home.
+// (issues, PR descriptions, comments, reviews). ADR-0017 says why it is a
+// header, not a footer; this file is only its code home.
 //
 // The load-bearing property is NOT the format: it is that a full session URL is
 // present, so authorship stays recoverable from the content itself. Hence the
@@ -47,16 +46,15 @@ export const PROVENANCE_HEADER = new RegExp(
   String.raw`^\s*${BOT_ICON}\s*\[([^\]]+)\]\(${SESSION_URL}\)`,
 )
 
-/** The legacy two-line footer's `Co-Authored-By:` half, carried by every
- *  agent-authored GitHub body posted before the 2026-07-31 amendment. Matched
- *  permanently, not as a transition shim: nothing is backfilled (ADR-0017's
- *  "asymmetric history"), so historical content would otherwise stop reading as
- *  agent-authored. Case-insensitive — git trailers conventionally use
+/** The legacy two-line footer's `Co-Authored-By:` half, carried by older
+ *  agent-authored GitHub bodies. Matched permanently, not as a transition shim:
+ *  old posts are never rewritten (ADR-0017), so historical content would
+ *  otherwise stop reading as agent-authored. Case-insensitive — git trailers conventionally use
  *  `Co-authored-by` and GitHub doesn't normalize case. */
 export const LEGACY_PROVENANCE_FOOTER = /co-authored-by:.*noreply@anthropic\.com/i
 
 /** The harness's own attribution footer, which this repo deliberately leaves in
- *  place (ADR-0017 2026-07-31). Its presence is also agent authorship. */
+ *  place (ADR-0017). Its presence is also agent authorship. */
 const HARNESS_FOOTER = /Generated (?:by|with) \[Claude Code\]/
 
 /** Every session id `text` references, in order, deduped. Answers "which

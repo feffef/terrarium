@@ -9,7 +9,7 @@
 // significance, not for quality, so the record travels whole (every authored
 // field renders here) while the presentation is quieter. Same facts, less voice.
 //
-// Presentation-only (ADR-0004): resolves through the SAME shared, unit-tested
+// Presentation-only (ADR-0006): resolves through the SAME shared, unit-tested
 // `resolveSpaceRoute` as TrenchLanding, hardcoding ('midden','stores') because
 // this component is mounted from a space-index route that already fixed the Space.
 // The read is same-Space only — this Space's own `artifacts`.

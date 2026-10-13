@@ -125,7 +125,7 @@ failed the checklist:
 page declares its own `onramp` order + `onrampLabel`/`onrampBlurb`, and the
 dashboard reads them from the already-loaded `pages`. That keeps placement in the
 SFC, gets real schema validation, single-homes each door's copy next to the page
-it opens, and fits the repo's manifest/frontmatter-as-intent grain (ADR-0002/0013)
+it opens, and fits the repo's manifest/frontmatter-as-intent grain (ADR-0002)
 and single-home rule (CLAUDE.md). This is the general pattern: **structural,
 layout-positioned, gate-validated data → frontmatter or a data collection; rich
 in-prose editorial → MDC.**

@@ -13,10 +13,8 @@
 // write runs under the human owner's own connection (ADR-0017), so an
 // AI-authored comment and the owner's own comment both show
 // `author_association: OWNER` under the same login. The only reliable signal
-// is the ADR-0017 authorship marker every AI-authored comment carries — the
-// provenance header today, the legacy two-line footer historically, or the
-// harness's own footer (`hasAuthorshipMarker`, single-homed in
-// `provenance-header.ts`) — its *absence* means human, matching the existing
+// is the ADR-0017 authorship marker (`hasAuthorshipMarker` in
+// `provenance-header.ts` decides which shapes count) — its *absence* means human, matching the existing
 // `auto-triage` convention rather than inventing a second one. Note it is
 // deliberately NOT "contains a session URL": a human pasting one in prose must
 // not read as agent-authored, or this pipeline never answers them.

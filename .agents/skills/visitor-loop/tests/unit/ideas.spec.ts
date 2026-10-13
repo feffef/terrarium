@@ -141,7 +141,7 @@ describe('readNoteMaterial()', () => {
     })
   })
 
-  it('keeps ideas but DROPS learnings for an external session (ADR-0009 amendment)', () => {
+  it('keeps ideas but DROPS learnings for an external session (ADR-0009)', () => {
     const raw = {
       session: 's-ext',
       endedAt: '2026-07-20T00:00:00Z',
