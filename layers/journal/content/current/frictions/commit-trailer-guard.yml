@@ -6,18 +6,6 @@ status: fixed
 fixedOn: "2026-10-10"
 ref: "issue #1652; commit c9763310"
 occurrences:
-  - session: session_01BHBCrNAwjU9TjAEf1rjowP
-    date: "2026-09-27"
-    severity: nit
-  - session: session_01UAmBCUoSXva1vKut9gFfsr
-    date: "2026-09-27"
-    severity: minor
-  - session: session_0185EAXqfuX1twvr6Z67SsY4
-    date: "2026-09-28"
-    severity: minor
-  - session: session_01BWLBKCE8jBVrfvxzMu87hJ
-    date: "2026-09-28"
-    severity: nit
   - session: session_015xC64CdTv5cP4zXTxetqMa
     date: "2026-09-29"
     severity: nit

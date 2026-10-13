@@ -41,9 +41,9 @@ Its brief:
   `blocker`.
   A cluster is a shared **root cause**: two frictions days apart, on different
   tools, belong together when one change would retire both. The ledger's
-  **horizon** is the last 14 days: an entry's recurrence is its occurrences
-  within it, counting only sessions that started after its fix merged when it
-  has one. Return the ledger changes (new entries, appended occurrences,
+  **horizon** is the last 14 days (§4 prunes it to that): an entry's
+  recurrence is its occurrences within it, counting only sessions that started
+  after its fix merged when it has one. Return the ledger changes (new entries, appended occurrences,
   status changes, each with its evidence) in the report.
 - **Steer the budget at the unfixed tail.** A large share of the window's frictions are usually already resolved by a later in-window session or a merged fix. Screen those out fast as a §2 `drop` instead of re-deriving their history; save the deep archaeology for candidates with no in-window resolution.
 - **Read the window's session logs** via `pnpm exec tsx scripts/session-frictions.ts`
@@ -165,8 +165,9 @@ record. The ledger edit is:
 - the subagent's ledger changes (§1);
 - `status` and `ref` for what this run files, dispatches or escalates, with
   `fixedOn` on anything it marks `fixed`;
-- deleting an entry that is `fixed` or holds one occurrence when it has no
-  occurrence within the horizon (git keeps it).
+- last, `pnpm exec tsx scripts/prune-friction-ledger.ts`, which drops every
+  occurrence before the horizon and deletes an entry left with none (git
+  keeps them).
 
 You review and merge; you never author (ADR-0003's row for this Skill). So
 the ledger edit rides in the grouped doc PR (§5), or, on a run that dispatches
@@ -215,7 +216,7 @@ post-dispatch check. Run at most 2 impl agents' full gates concurrently
 - **Doc-only fixes** (Markdown / prose — CLAUDE.md, a **repo-owned** SKILL, a Skill
   Inventory entry): hand them **all to one agent as a single grouped PR**,
   with this run's ledger edit (§4) in the brief, as the path to §1's patch file
-  plus any changes to it. These
+  plus any changes to it, ending with the prune script. These
   are ordinarily **simple** selections with no issue filed (§4) — the PR
   description carries each fix's problem/evidence/recommended-fix directly
   instead of a `Closes #N`; a doc selection that came out **hard** still cites its

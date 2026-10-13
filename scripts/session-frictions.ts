@@ -51,7 +51,7 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
  *  last commit, not from now, means a missed run loses no logs and covers
  *  sessions that ended while the last run was working. */
 export const WINDOW_HOURS = 48
-const LEDGER_DIR = 'layers/journal/content/current/frictions'
+export const LEDGER_DIR = 'layers/journal/content/current/frictions'
 
 // ── Types ───────────────────────────────────────────────────────────────────
 

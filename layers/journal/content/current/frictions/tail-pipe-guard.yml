@@ -6,12 +6,6 @@ status: fixed
 fixedOn: "2026-10-11"
 ref: "issues #873, #1769; PR #1793 (guard removed)"
 occurrences:
-  - session: session_01BW1YmuRKFcpcwtX6ZXGCQ8
-    date: "2026-09-27"
-    severity: nit
-  - session: session_01JeNNPB1Q8Lirwm4V4VadnB
-    date: "2026-09-27"
-    severity: minor
   - session: session_013FJgdc6i8gFLSfTPCEVysi
     date: "2026-09-29"
     severity: nit
