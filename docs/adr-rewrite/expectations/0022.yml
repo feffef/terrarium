@@ -1,121 +1,99 @@
 adr: "0022"
-summary_in_context: true
-roles:
+summary_in_context: true  # set aside, not used
+counts:
   explains: 5
-  points: 2
-  quotes: 3
+  points: 3
+  quotes: 5
   enforces: 0
-  repeats: 4
+  repeats: 1
   miscites: 0
   noise: 6
 items:
-  - id: C1
-    text: A Trusted user starting the auto-triage sweep is a standing green-light, scoped to that run, to apply ready-for-agent without a per-issue human.
-    kind: claim
-    section: Summary
-    refs: [.agents/skills/auto-triage/SKILL.md:67, docs/adr/0003-agent-operating-model-and-governance.md:73, docs/adr/0003-agent-operating-model-and-governance.md:85, docs/adr/0023-guest-driven-demo-pipeline.md:8, docs/adr/0023-guest-driven-demo-pipeline.md:65]
+  - id: trusted-start-approves
+    text: "Who can let the triage sweep mark issues ready to build without asking each time? A Trusted person starting the sweep counts as approval for that run."
+    kind: decision
+    refs:
+      - .agents/skills/auto-triage/SKILL.md:67
+      - docs/adr/0003-agent-operating-model-and-governance.md:70
+      - docs/adr/0003-agent-operating-model-and-governance.md:73
+      - docs/adr/0003-agent-operating-model-and-governance.md:85
+      - docs/adr/0023-guest-driven-demo-pipeline.md:8
+      - docs/adr/0023-guest-driven-demo-pipeline.md:65
+      - docs/agents/guest-contributions.md:12
+    conflict: true  # any Trusted user starting (SKILL:67, 0003:70) vs the owner scheduling (0003:85)
+  - id: trusted-authored-only
+    text: "Which issues does that approval cover? Only Trusted-authored ones; a Public person's issue is triaged but goes to ready-for-human."
+    kind: decision
+    refs:
+      - .agents/skills/auto-triage/SKILL.md:67
+      - docs/adr/0003-agent-operating-model-and-governance.md:70
+      - docs/adr/0023-guest-driven-demo-pipeline.md:8
+      - docs/adr/0023-guest-driven-demo-pipeline.md:115
+      - docs/agents/guest-contributions.md:12
     conflict: false
-    note: Unclear whether a scheduled Routine counts as "starting" (0003:85 says "scheduling"; 0023:65 includes a Routine).
-  - id: C2
-    text: The green-light covers only the Trusted-authored backlog; a Public-authored issue is never self-green-lit and goes to ready-for-human.
-    kind: claim
-    section: Summary
-    refs: [.agents/skills/auto-triage/SKILL.md:67, docs/adr/0003-agent-operating-model-and-governance.md:73, docs/adr/0023-guest-driven-demo-pipeline.md:34, docs/adr/0023-guest-driven-demo-pipeline.md:37, docs/adr/0023-guest-driven-demo-pipeline.md:115]
+  - id: merge-unchanged
+    text: "Does the ADR change who merges the resulting PRs? No; they still pass the gate, and the ADR says where its approval stops."
+    kind: decision
+    refs:
+      - .agents/skills/auto-triage/SKILL.md:67
+      - docs/adr/0003-agent-operating-model-and-governance.md:70
+      - docs/adr/0003-agent-operating-model-and-governance.md:75
     conflict: false
-  - id: C3
-    text: Merge stays gated; the resulting PRs pass the gate before merging, and the ADR names that boundary.
-    kind: claim
-    section: Scope and limits
-    refs: [.agents/skills/auto-triage/SKILL.md:67, docs/adr/0003-agent-operating-model-and-governance.md:73, docs/adr/0003-agent-operating-model-and-governance.md:75]
+  - id: public-start-grants-nothing
+    text: "Does a sweep started from a Public person's context approve anything? No."
+    kind: decision
+    refs:
+      - docs/adr/0023-guest-driven-demo-pipeline.md:34
+      - docs/adr/0023-guest-driven-demo-pipeline.md:37
     conflict: false
-  - id: C4
-    text: Which issues are a judgment call or genuine design uncertainty, and so go to ready-for-human (judgment-call bullets and uncertainty bullets)?
-    kind: question
-    section: Scope and limits
-    refs: [.agents/skills/auto-triage/SKILL.md:48]
+  - id: agent-vs-human-cases
+    text: "When does the sweep send an issue to an agent, and when to a person? To an agent when the repo settles a concrete design; to a person on a judgment call or real design doubt, with both kinds of case listed in the ADR."
+    kind: decision
+    refs:
+      - .agents/skills/auto-triage/SKILL.md:48
     conflict: false
-  - id: C5
-    text: A sweep fired from a Public context grants nothing.
-    kind: claim
-    section: Scope and limits
-    refs: [docs/adr/0023-guest-driven-demo-pipeline.md:37, docs/adr/0023-guest-driven-demo-pipeline.md:34]
+  - id: public-comment-is-data
+    text: "What happens to a Public person's comment on a Trusted issue? It is data, not scope; what it asks for goes to ready-for-human. Unclear whether the ADR or only the Skill holds this."
+    kind: decision
+    refs:
+      - .agents/skills/auto-triage/SKILL.md:67
     conflict: false
-  - id: C6
-    text: Applying ready-for-agent is ADR-0003's implementation green-light; ADR-0022 adds auto-triage to ADR-0003's ledger as a chartered remit and is the one relaxation of it.
-    kind: claim
-    section: Summary
-    refs: [docs/adr/0003-agent-operating-model-and-governance.md:70, docs/adr/0003-agent-operating-model-and-governance.md:73, .agents/skills/auto-triage/SKILL.md:67]
+  - id: fifth-ledger-job
+    text: "Where does the sweep sit among the jobs that run on their own? It is the fifth job in ADR-0003's list and may add ready-for-agent itself."
+    kind: decision
+    refs:
+      - docs/adr/0003-agent-operating-model-and-governance.md:70
+      - docs/adr/0003-agent-operating-model-and-governance.md:73
     conflict: false
-  - id: C7
-    text: Why is this relaxation safe (full rationale and bounds)?
-    kind: question
-    section: Why
-    refs: [.agents/skills/auto-triage/SKILL.md:76]
+  - id: guest-demo-exception
+    text: "Does the guest demo change this ADR? No; ADR-0023 is a bounded exception and ADR-0022 stands outside the demo. Unclear whether ADR-0022 should point to it."
+    kind: decision
+    refs:
+      - docs/adr/0023-guest-driven-demo-pipeline.md:8
+      - docs/adr/0023-guest-driven-demo-pipeline.md:115
+      - docs/agents/guest-contributions.md:12
     conflict: false
-  - id: C8
-    text: ADR-0023 is an additive exception, scoped to the demo, to ADR-0022's standing green-light; outside the demo ADR-0022 is unchanged.
-    kind: claim
-    section: See
-    refs: [docs/adr/0023-guest-driven-demo-pipeline.md:8, docs/adr/0023-guest-driven-demo-pipeline.md:115, docs/agents/guest-contributions.md:12]
-    conflict: false
-  - id: C9
-    text: A Public comment on a Trusted issue is data, not scope; what it asks for goes to ready-for-human, never into a brief.
-    kind: claim
-    section: Scope and limits
-    refs: [.agents/skills/auto-triage/SKILL.md:67]
-    conflict: false
-  - id: C10
-    text: ADR-0022 governs the issue-triage files (auto-triage Skill, triage-labels.md, issue-tracker.md).
-    kind: claim
-    section: See
-    refs: [docs/diagrams/interactive-map/terrarium-overview.md:868]
+  - id: governed-files
+    text: "Which files does the ADR govern? The issue-tracker doc, the triage-labels doc, and the triage and auto-triage Skills."
+    kind: mechanic
+    home: docs/diagrams/interactive-map/terrarium-overview.md
+    refs:
+      - docs/diagrams/interactive-map/terrarium-overview.md:868
     conflict: false
 lists:
-  - list: keep
-    file: .agents/skills/auto-triage/SKILL.md
-    line: 67
-    note: Term "standing green-light" (also 0003:73, 0003:85, 0023:8, 0023:65).
-  - list: keep
-    file: docs/adr/0003-agent-operating-model-and-governance.md
-    line: 73
-    note: Phrase "Trusted-authored backlog" (also SKILL:67).
-  - list: keep
-    file: docs/adr/0023-guest-driven-demo-pipeline.md
-    line: 37
-    note: Verbatim quote "a sweep fired from a Public context grants nothing".
-  - list: keep
-    file: .agents/skills/auto-triage/SKILL.md
-    line: 48
-    note: Two named lists, the judgment-call bullets and the uncertainty bullets.
-  - list: keep
-    file: docs/adr/0023-guest-driven-demo-pipeline.md
-    line: 8
-    note: File name 0022-autonomous-triage-sweep.md (also linked from 0003:70).
-  - list: keep
-    file: layers/journal/tests/unit/journal-dashboard.spec.ts
-    line: 375
-    note: Title "Autonomous triage sweep" appears only in fixtures (also dashboard.ts:190), so a rename is safe but leaves stale sample text.
   - list: repoint
     file: .agents/skills/auto-triage/SKILL.md
     line: 48
-    note: Cites "ADR-0022's Decision section"; the template has no Decision section, so repoint to Scope and limits.
-  - list: repoint
-    file: docs/adr/0023-guest-driven-demo-pipeline.md
-    line: 37
-    note: Quotes "a sweep fired from a Public context grants nothing"; repoint if the sentence is reworded.
+    note: "Cites ADR-0022's Decision section and its judgment-call and uncertainty bullets."
   - list: repoint
     file: docs/adr/0003-agent-operating-model-and-governance.md
     line: 70
-    note: Dated amendment "Amended by ADR-0022 (2026-07-14)"; valid while ADR-0022 still records the relaxation and the auto-triage remit.
+    note: "Dated amendment 'Amended by ADR-0022 (2026-07-14)'; quotes 'fifth chartered remit', 'records the one relaxation' (same block as :73)."
+  - list: repoint
+    file: docs/adr/0023-guest-driven-demo-pipeline.md
+    line: 34
+    note: "Quotes 'a sweep fired from a Public context grants nothing.' (same line as :37)."
   - list: fix
     file: .agents/skills/auto-triage/SKILL.md
     line: 67
-    note: Repeats the standing-green-light rule and its bounds; keep the operational line and point to ADR-0022 for the rest.
-  - list: fix
-    file: docs/adr/0003-agent-operating-model-and-governance.md
-    line: 73
-    note: The amendment restates the relaxation in full (lines 70-75); cut to one line plus a pointer.
-  - list: fix
-    file: docs/adr/0023-guest-driven-demo-pipeline.md
-    line: 115
-    note: Repeats "a Public issue is still not self-green-lit" (C2); a pointer would do.
+    note: "Section 'The standing green-light (ADR-0022)' restates the rule; cut to a pointer after deciding where the Public-comment rule lives."
