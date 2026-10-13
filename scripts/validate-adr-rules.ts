@@ -5,7 +5,9 @@
 // hash, so the summary cannot go stale silently: the author re-reads the rule,
 // updates it if the decision changed, then runs this script with `--write`.
 // Every other rule must have `paths` and name only `docs/` files that exist
-// (ADR-0029, issue #1765). An ADR in the new shape carries no history
+// (ADR-0029, issue #1765). A summary's pointer gives its ADR's length, so an
+// agent sees that reading the full ADR is cheap; `--write` stamps it too.
+// An ADR in the new shape carries no history
 // (ADR-0030).
 //
 // Usage: pnpm validate:content (chained), or
@@ -54,6 +56,15 @@ export function withRuleHash(ruleText: string, hash: string): string {
   const body = /^adr:.*$/m.test(head) ? head.replace(/^adr:.*$/m, `adr: ${hash}`) : `adr: ${hash}\n${head}`
   return `---\n${body}\n---\n${ruleText.slice(fm[0].length)}`
 }
+
+export const adrLines = (text: string) => text.replace(/\n$/, '').split('\n').length
+
+const POINTER = /read the full ADR first(?: \(it's only \d+ lines\))?:/
+const pointer = (lines: number) => `read the full ADR first (it's only ${lines} lines):`
+
+export const withRuleLines = (ruleText: string, lines: number) => ruleText.replace(POINTER, pointer(lines))
+
+const isSummary = (file: string) => /^adr-\d{4}\.md$/.test(file)
 
 export interface AdrRuleInput {
   adrs: Record<string, string> // ADR number → ADR file text
@@ -109,6 +120,15 @@ export function findAdrRuleProblems(input: AdrRuleInput): string[] {
       `ADR-${ruleAdr(file)} changed since ${RULES_DIR}/${file} was last checked. Re-read it, update it if the rule changed, then run \`pnpm exec tsx scripts/validate-adr-rules.ts --write\`.`,
     )
   }
+  for (const [file, text] of Object.entries(rules)) {
+    const adr = adrs[ruleAdr(file) ?? '']
+    if (adr === undefined || !isSummary(file) || text.includes(pointer(adrLines(adr)))) continue
+    problems.push(
+      POINTER.test(text)
+        ? `${RULES_DIR}/${file} gives a stale ADR length: run \`pnpm exec tsx scripts/validate-adr-rules.ts --write\`.`
+        : `${RULES_DIR}/${file} must point to its ADR with "If this touches your task, read the full ADR first:".`,
+    )
+  }
   const other = input.otherRules
   for (const [file, text] of Object.entries(other?.files ?? {})) {
     if (rulePaths(text).length === 0) {
@@ -142,11 +162,17 @@ function load(): AdrRuleInput {
 function main(): void {
   const input = load()
   if (process.argv.includes('--write')) {
-    const stale = staleRules(input)
-    for (const file of stale) {
-      writeFileSync(join(root, RULES_DIR, file), withRuleHash(input.rules[file] ?? '', adrHash(input.adrs[ruleAdr(file) ?? ''] ?? '')))
+    const stamped: string[] = []
+    for (const [file, text] of Object.entries(input.rules)) {
+      const adr = input.adrs[ruleAdr(file) ?? '']
+      if (adr === undefined) continue
+      const hashed = withRuleHash(text, adrHash(adr))
+      const out = isSummary(file) ? withRuleLines(hashed, adrLines(adr)) : hashed
+      if (out === text) continue
+      writeFileSync(join(root, RULES_DIR, file), out)
+      stamped.push(file)
     }
-    console.log(`validate-adr-rules: stamped ${stale.length} stale rule(s)${stale.length ? `: ${stale.join(', ')}` : ''}`)
+    console.log(`validate-adr-rules: stamped ${stamped.length} rule(s)${stamped.length ? `: ${stamped.join(', ')}` : ''}`)
     return
   }
   const problems = findAdrRuleProblems(input)

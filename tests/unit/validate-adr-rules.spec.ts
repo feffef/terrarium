@@ -1,8 +1,10 @@
 import { describe, expect, it } from 'vitest'
-import { adrHash, findAdrRuleProblems, newFormatProblems, ruleAdr, ruleDocPaths, ruleHash, staleRules, withRuleHash } from '../../scripts/validate-adr-rules.ts'
+import { adrHash, adrLines, findAdrRuleProblems, newFormatProblems, ruleAdr, ruleDocPaths, ruleHash, staleRules, withRuleHash, withRuleLines } from '../../scripts/validate-adr-rules.ts'
 
 const ADR = '# ADR-0024: Mermaid\n\nDecision text.\n'
 const stamped = (body: string) => withRuleHash(body, adrHash(ADR))
+const POINTER = 'If this touches your task, read the full ADR first:\ndocs/adr/0024-mermaid.md\n'
+const summary = withRuleLines(stamped(POINTER), adrLines(ADR))
 
 describe('withRuleHash / ruleHash', () => {
   it('adds frontmatter to a rule that has none, keeping the body', () => {
@@ -27,12 +29,12 @@ describe('ruleAdr', () => {
 
 describe('findAdrRuleProblems / staleRules', () => {
   it('passes when every rule carries its ADR hash, a topic rule included', () => {
-    const rules = { 'adr-0024.md': stamped('x'), 'adr-0024-render.md': stamped('y') }
+    const rules = { 'adr-0024.md': summary, 'adr-0024-render.md': stamped('y') }
     expect(findAdrRuleProblems({ adrs: { '0024': ADR }, rules })).toEqual([])
   })
 
   it('names only the rules whose ADR changed after they were stamped', () => {
-    const input = { adrs: { '0024': `${ADR}Amended.\n`, '0012': ADR }, rules: { 'adr-0024.md': stamped('x'), 'adr-0012.md': stamped('y') } }
+    const input = { adrs: { '0024': `${ADR}Amended.\n`, '0012': ADR }, rules: { 'adr-0024.md': summary, 'adr-0012.md': summary } }
     expect(staleRules(input)).toEqual(['adr-0024.md'])
     expect(findAdrRuleProblems(input).join('\n')).toContain('ADR-0024 changed')
   })
@@ -42,6 +44,21 @@ describe('findAdrRuleProblems / staleRules', () => {
     expect(problems).toHaveLength(2)
     expect(problems.join('\n')).toContain('ADR-0024 has no summary rule')
     expect(problems.join('\n')).toContain('adr-0099.md has no matching ADR')
+  })
+})
+
+describe('ADR length in the summary pointer', () => {
+  it('stamps the ADR\'s line count, and restamps a stale one', () => {
+    expect(summary).toContain("read the full ADR first (it's only 3 lines):\ndocs/adr/")
+    expect(withRuleLines(summary, 9)).toContain("(it's only 9 lines):")
+  })
+
+  it('fails a summary whose count is stale or whose pointer is missing', () => {
+    const check = (rule: string) => findAdrRuleProblems({ adrs: { '0024': ADR }, rules: { 'adr-0024.md': rule } })
+    expect(check(withRuleLines(summary, 9))).toEqual([
+      '.claude/rules/adr-0024.md gives a stale ADR length: run `pnpm exec tsx scripts/validate-adr-rules.ts --write`.',
+    ])
+    expect(check(stamped('x'))[0]).toContain('must point to its ADR')
   })
 })
 
@@ -64,7 +81,9 @@ describe('newFormatProblems (ADR-0030)', () => {
 
   it('flags a heading whose number is not the file\'s, and reaches the gate', () => {
     expect(newFormatProblems('0025', NEW)).toEqual(['ADR-0025 must start with a `# ADR-0025: <title>` heading.'])
-    expect(findAdrRuleProblems({ adrs: { '0024': `${NEW}Date: 2026-01-01\n` }, rules: { 'adr-0024.md': withRuleHash('x', adrHash(`${NEW}Date: 2026-01-01\n`)) } })).toHaveLength(2)
+    const dated = `${NEW}Date: 2026-01-01\n`
+    const rule = withRuleLines(withRuleHash(POINTER, adrHash(dated)), adrLines(dated))
+    expect(findAdrRuleProblems({ adrs: { '0024': dated }, rules: { 'adr-0024.md': rule } })).toHaveLength(2)
   })
 })
 
