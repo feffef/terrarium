@@ -3,7 +3,7 @@ cause: >-
   A session skips close-session when it is due (after answering a question, or at PR-open) and the user has to ask whether it was logged.
 surface: safe
 status: tracked
-ref: "PR #1801 (answers case, merged 2026-10-12T02:27Z); PR #1821 (PR-open case)"
+ref: "PR #1801 (answers case, merged 2026-10-12T02:27Z); PR #1821 (PR-open case, merged 2026-10-12T14:48Z; regressed in sessions 01SZwd and 017NBx; issue #1859)"
 occurrences:
   - session: session_01DRBxySwYL4HR4xEEJc3CXX
     date: "2026-10-11"
@@ -14,3 +14,9 @@ occurrences:
   - session: session_014uXxmT6359K4Z42a6We6Gh
     date: "2026-10-12"
     severity: major
+  - session: session_01SZwdbK8GbYtyj926UyJT6o
+    date: "2026-10-12"
+    severity: minor
+  - session: session_017NBxJhtBSd9AoCwTzsg6pM
+    date: "2026-10-12"
+    severity: minor

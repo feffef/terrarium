@@ -1,0 +1,14 @@
+name: shallow-clone-history
+cause: >-
+  The SessionStart unshallow hook ran beside pnpm install and failed ("tsx not found"), so the clone stayed shallow and history reads (git log, merge-base) were truncated.
+surface: guard-or-hook
+status: fixed
+fixedOn: "2026-10-12"
+ref: "issue #1835; PR #1840 (unshallow after pnpm install)"
+occurrences:
+  - session: session_01SZwdbK8GbYtyj926UyJT6o
+    date: "2026-10-12"
+    severity: moderate
+  - session: session_01La82mxqduxHnRS9jRfNHmU
+    date: "2026-10-12"
+    severity: minor

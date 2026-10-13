@@ -182,3 +182,9 @@ occurrences:
   - session: session_01QfaLuSd5cnBQPu8CCRrvkn
     date: "2026-10-12"
     severity: nit
+  - session: session_018KSwetqxttBFszkhTKZkF1
+    date: "2026-10-12"
+    severity: minor
+  - session: session_01Rn5xT34AdjnywsTJdUtaDm
+    date: "2026-10-13"
+    severity: nit
