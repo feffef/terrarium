@@ -678,10 +678,8 @@ function withoutLandedBy(yaml: string): string {
  *  drift from the other. */
 function traceOf(transcriptJsonl: string, opts: Pick<LandOpts, 'env' | 'subagents' | 'docIndex'>): MechanicalTrace {
   const docIndex = opts.docIndex ?? loadDocLineIndex(root)
-  const subs = opts.subagents ?? []
   const trace = extractTrace(parseTranscript(transcriptJsonl), opts.env, docIndex)
-  const folded = foldSubagentTrace(trace, subs.map((s) => parseTranscript(s.jsonl)), opts.env, docIndex)
-  return { ...folded, subagents: [...folded.subagents, ...subs.flatMap((s) => s.agent ?? [])] }
+  return foldSubagentTrace(trace, (opts.subagents ?? []).map((s) => ({ records: parseTranscript(s.jsonl), agent: s.agent })), opts.env, docIndex)
 }
 
 /** Recovery path for the "authored-then-dropped" case (issue #449 Gap 3),
