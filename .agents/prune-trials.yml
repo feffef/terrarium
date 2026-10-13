@@ -117,3 +117,27 @@ trials:
       line the old amendments held would have prevented it. NOT damage: the
       known false-positive advisory firing (#1786), or a session reading the
       scripts instead of the ADR.
+  - problem: >
+      `blog-post` step 12 (the reply decision), `.agents/skills/blog-post/SKILL.md`:
+      38 lines cut to 23, every rule kept, the "skipped five times" history cut to
+      a pointer to #1626. The rule failed as prose: skipped in 4 live runs, narrowed
+      to "owed" (PR #1602), skipped a fifth time (#1626, read in full via the
+      search subagent's report of it). No guard or test holds it. No trial was
+      judgeable this run (all three land inside their window). The search
+      subagent covered the instruction corpus, the tracker (#1626, #1610, #1859,
+      #1785 read) and guard records; runners-up: close-session-at-PR-open (held
+      now by the read-first hint, #1868) and foreground gate:scoped (3 lines).
+      Net about -15 lines; the mass here was small.
+    territory:
+      paths:
+        - ".agents/skills/blog-post/SKILL.md: step 12 only"
+      keywords:
+        - Decide on a reply
+        - reply decision
+    opened: 2026-10-13
+    proven: true
+    check: >
+      Damage is a major or blocker Friction where a blog-post run merged its post
+      and ended without a reader-dispatched reply decision, or shipped a reply
+      without the second reader, and a line the old step carried would have
+      prevented it. NOT damage: a reader's "none" with a comment on the first PR.

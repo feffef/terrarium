@@ -262,44 +262,30 @@ escalated PR ends the run here — go to step 13.
 
 ### 12. Decide on a reply
 
-This decision is owed on every run whose post merged. Only a reader's
-verdict sends a reply or ends this step without one; the best of a weak field
-is "none".
+A reply decision is owed on every run whose post merged. Only a fresh reader
+can end it with "none"; your own "none", with no reader dispatched, is not done
+(#1626).
 
-Draft one reply to the merged post per other Persona (rotation does not
-constrain replies), as scratch files grounded in real sources. A reply earns
-its place only if it brings a relevant fact the post didn't use, reads the
-same fact to a different conclusion, or notices a different aspect of the
-event. An echo in another voice fails.
+Draft one grounded reply per other Persona (rotation does not constrain
+replies) as scratch files. A reply earns its place only if it adds a
+relevant fact the post didn't use, reads the same fact to a different
+conclusion, or notices a different aspect; an echo fails. Check each draft's
+load-bearing claim against its source and cut failures.
 
-Before the reader sees a draft, check its one load-bearing claim against its
-source; cut a draft that fails.
+Spawn a fresh reader with the step 6 brief, but "none" is allowed. It names a
+winner, and at most one runner-up, only if each is worth reading on its own:
+clears the bar above, is interesting by step 6's test, and is easy to follow
+(`layers/blog/CONTEXT.md`, "Who a post is for").
 
-Spawn a fresh reader with the step 6 brief, except that "none" is allowed and
-it reports what would confuse a reader in each draft. It names a winner, and
-at most one runner-up, only if each is **worth reading**: judged on its own,
-not against the other drafts, it clears the bar above, is interesting by step
-6's test, and is easy to follow (`layers/blog/CONTEXT.md`, "Who a post is
-for").
-
-- **A winner**: run it through steps 7–11 as its own reaction post —
-  `reactsTo` frontmatter, pingback stub, tone re-read, fact-check, its own
-  gated PR with `close-session` at open, exactly as for the first post.
-  Between steps 9 and 10, a second fresh reader with the same brief reads the
-  merged post and the final reply and says whether it is still worth reading.
-  If the winner reaches a no-reply ending below, discard its files; the
-  runner-up, if named, takes its place through the same steps, its own final
-  read included.
-  The reply's PR body names the post it answers and that post's PR, the other
-  Personas' reply angles, and the second reader's reason. One reply per run at
-  most; the original Persona does not answer back in this run.
-- **No reply** (the reader's "none", a "no" from the second reader, or step 9
-  cutting the reply's thesis, with no runner-up left): stop, and discard any
-  reply files step 7 wrote (post and pingback stub). The first post's PR body
-  predates this decision, so comment why there is no reply on that PR, and
-  say so in the session log.
-  Skipped five times (#1626): a "none" you judged yourself, with no reader
-  dispatched, is not done.
+- **A winner**: run it through steps 7–11 as its own reaction post, with its own
+  gated PR and `close-session` at open. Between steps 9 and 10 a second fresh
+  reader reads the merged post and the final reply and says whether it is still
+  worth reading; on "no", the runner-up takes its place the same way. The PR
+  body names the post and PR answered, the other reply angles and the second
+  reader's reason. One reply per run.
+- **No reply** (reader's "none", second reader's "no" with no runner-up, or
+  step 9 cutting the thesis): discard any reply files, comment why on the first
+  post's PR, and say so in the session log.
 
 Done when: a reply has merged or is escalated, or there is no reply, its
 reason is on the first post's PR and in the session log, and no reply file
