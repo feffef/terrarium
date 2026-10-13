@@ -12,71 +12,59 @@ The chat holds only questions for the owner and the final report. Handle PR
 events, task notifications and finished agents silently. When you wait on an
 answer, the questions are your whole message.
 
-This Skill only orders other Skills and passes work between them. Their rules
-live in those Skills. A phase is done only when its **done** line holds.
-Issues move through the phases on their own, so an early build can be in
-review while the grilling runs.
+Two saved workflows do the agent work, so their steps can't be skipped:
+`clear-backlog-explore` (§1) and `clear-backlog-build` (§3). Invoking this
+Skill is the opt-in: run each by name with the Workflow tool, pass `args` as
+a JSON value, and act on the structured result. Pass `session` (this
+session's id, `session_…`) in both: every GitHub write carries it as the
+ADR-0017 header. A workflow can't ask the owner, wait on CI or merge, so you
+do those. To see what a run's agents did, read its `journal.jsonl`.
 
 ## 1. Explore
 
 If `git rev-parse --is-shallow-repository` prints `true`, run
 `git fetch --unshallow` first: triage reads the history.
 
-`auto-triage` is user-invoked, so read `.agents/skills/auto-triage/SKILL.md`
-and run its sweep in its default mode, which leaves out older issues nobody
-has touched since the last triage. Add every open `ready-for-agent` issue to
-its set: re-check its brief, then build it. Only when that combined set is
-empty at the start of the run, run the sweep in `full-sweep` mode instead; the
-owner starting this run is the human direction that mode needs. Add to
-each per-issue brief:
+Resolve the set with step 1 of `.agents/skills/auto-triage/SKILL.md` (Read
+it; it is user-invoked) in its default mode, and add every open
+`ready-for-agent` issue. Only when that set is empty, resolve it in
+`full-sweep` mode instead; the owner starting this run is the human direction
+that mode needs.
 
-- Give a `ready-for-agent` brief CLAUDE.md's premise check. A wrong premise
-  costs a whole build-and-review cycle.
-- For an issue that is not clearly ready, read the binding ADRs in full and
-  return a recommended solution and its options in plain words. That becomes
-  its grilling question.
-- An issue blocked outside the chat (an upstream release, a date, an action
-  only the owner can take outside chat) gets only a check that the blocker
-  still holds; probe the outside source if needed. Every other issue in the
-  set, deferred ones included, gets the full pass.
-- An issue the owner reserved ("I decide this one", directly or relayed) never
-  gets `ready-for-agent` from the sweep.
-- A grilling answer recorded by a stand-in in an earlier run doesn't bind;
-  ask it again.
-- Comment only on a label change, a fact that changes the outcome, or an issue
-  with no comments yet. Return
-  side findings to you instead.
+Run `clear-backlog-explore` with
+`{ session, issues: [{ number, mode, notes?, reserved? }] }`. `mode` is
+`ready-recheck` for a `ready-for-agent` issue, `blocked-check` for one
+blocked outside the chat (an upstream release, a date, an owner action), and
+`full` for the rest, deferred ones included. Set `reserved: true` on an issue
+the owner reserved ("I decide this one", directly or relayed).
 
-Then plan the PR grouping: one branch per change, grouped only when issues
-are clearly related or share files. That grouping replaces `auto-triage`'s
-"mark the higher-numbered one blocked". A grouping you are unsure of is a
-grilling question. Start building issues with no design choice left (§3).
+The result holds one triage `results[n]` per issue, the `missing` ones, and
+a proposed `grouping`: one branch per group of issues that share a file or
+are clearly related. Adjust the grouping where you know better; a grouping
+you are unsure of is a grilling question. Then start §3 for the groups whose
+issues are all `build`, and grill while it runs.
 
-**Done:** every issue the sweep picked up is building, closed as a duplicate
-or as already done, blocked outside the chat, or holds a grilling question,
-and each has its own triage subagent's report.
+**Done:** every issue has a result, or is in `missing` and goes to the
+report with that word.
 
 ## 2. Grill in one sitting
 
 Send a push notification with the `PushNotification` tool:
-`grilling ready: N questions`. Then run the `grilling` Skill on one list.
-Where its format differs, this list wins, and builds keep running:
+`grilling ready: N questions`. Then run the `grilling` Skill on one list,
+built from the `grill` results. Where its format differs, this list wins:
 
 - Keep the `Q` numbering running across the whole run: follow-up rounds and
   §3 interrupts continue the count. Label every option `a)`, `b)`, `c)`, so
   the owner can answer `1a, 2c, 3b`.
 - Each question gives one line on what the issue is and one on the choice,
   then the options, your pick and why. Flag a pick you changed from the
-  subagent's. The owner never needs to open a ticket.
+  triage agent's. The owner never needs to open a ticket.
 - Put the most important questions first, and end with "accept my picks for
   the rest".
-- Ask only about issues in §1's set; the ones the sweep skipped wait for a
-  run that picks them up. Leave out issues blocked outside the chat, and list
-  them in the report with their blocker.
-- Include `ready-for-human` items, real design forks inside
-  `ready-for-agent` briefs, and Public issues (the owner's yes is the
-  green-light ADR-0020 requires). Also include proposals to close an issue as
-  obsolete or superseded. Close only on a yes.
+- Leave out `blocked` issues; the report lists them with their blocker.
+- Include Public issues (the owner's yes is the green-light ADR-0020
+  requires) and proposals to close an issue as obsolete or superseded. Close
+  only on a yes.
 - Answers may raise new questions. Keep each follow-up round to those alone,
   with its own push notification.
 
@@ -85,55 +73,47 @@ only when it changes the issue's state or scope, and set the label it
 implies.
 
 **Done:** every question is answered, and every issue in §1's set is
-`ready-for-agent`, closed, or parked by the owner (deferred, or waiting on a
-condition).
+`ready-for-agent`, closed, or parked by the owner.
 
-## 3. Build
+## 3. Build and review
 
-Build agents do all the building, through `dispatch-subagents`: one worktree
-per planned branch, based on `origin/main`; you orchestrate. A change within
-`dispatch-subagents` §3's "simple" example (under ~50 lines, one new test) gets
-`model: "sonnet"`. When a closed, unmerged
-PR already implements the agreed pick, the build agent cherry-picks its
-commits. Each build agent reports its decisions and any Human-only path it
-touched. Dispatch in waves of at most 3 build agents, with at most 2 of them
-running the full gate.
+Run `clear-backlog-build` with `{ session, branches: [...] }`, one entry
+per branch: `name`, `issues`, `brief`, the agreed `picks`, `model: "sonnet"`
+for a change within `dispatch-subagents` §3's "simple" size, and
+`cherryPick` when a closed, unmerged PR already implements the agreed pick.
+Each branch is built in its own worktree off `origin/main`, then reviewed
+on both `code-review` axes and fixed until only judgement calls remain. Its
+review rounds are the review before the first push (`pr-workflow.md`).
 
-**Interrupt the owner only** for these:
+Act on each branch's `status`:
 
-- a new dependency
-- a change to stored data or the content schema
-- a decision big enough for an ADR
-- deleting content visitors can see
-- a change to which Tenant's data a request can reach
-- reversing a grilling answer
+- `needs-owner`: an interrupt (the script lists the conditions). Send a push
+  notification, ask its `question` in the running `Q` numbering, and re-run
+  just that branch with its `worktree`, `question` and the `answer`. The rest
+  keep going.
+- `failed`: read the journal for the cause, then fix the brief and re-run the
+  branch, or report it.
+- `ready-to-push`: check its `commits` against
+  `git log origin/main..HEAD` in its `worktree` before you trust it.
 
-Pause just that branch, send a push notification, and resume it on the answer.
-The rest keep going. Any other decision the agent makes itself.
+An issue that can't start yet (time-gated, or its output is not a PR) goes to
+the report.
 
-**Done:** every startable `ready-for-agent` issue has a committed branch with
-a green `pnpm gate:scoped`. An issue that can't start yet (time-gated, or its
-output is not a PR) goes to the report.
+**Done:** every startable `ready-for-agent` issue has a `ready-to-push`
+branch, or its question or failure is in the report.
 
-## 4. Review
+## 4. Land and report
 
-Review each branch per `dispatch-subagents` §3 ("Scope and trust"): every
-round invokes the `code-review` Skill, with simplicity as the focus. Check
-every fix yourself before you report it: past runs relayed subagent claims
-unchecked.
+Push each `ready-to-push` branch from its worktree and open its PR with the
+branch's decisions, its remaining judgement calls, any cherry-picked PR, and
+any `humanOnly` path. Land it with `docs/agents/pr-workflow.md`. For a later
+fix (CI, a PR comment), re-run that branch with its `worktree` and the fix
+in its `brief`. A PR built from a Public issue waits for a human merge
+(ADR-0020 rule 3), even though `scripts/merge-pr.ts` would accept it. Merge
+the rest where `merge-pr.ts` allows.
 
-**Done:** a review round finds only judgement calls not worth fixing. Then
-the build agent pushes and you open the PR, with the agent's decisions and
-any cherry-picked PR in its description.
-
-## 5. Land and report
-
-Land each PR with `docs/agents/pr-workflow.md`; its build agent makes any
-later fix. A PR built from a Public issue waits for a human merge (ADR-0020
-rule 3), even though `scripts/merge-pr.ts` would accept it. Merge the rest
-where `merge-pr.ts` allows.
-
-**Done:** every PR is merged or waiting for a human merge.
+**Done:** every PR is merged or waiting for a human merge, and
+`pnpm check:worktrees` exits 0.
 
 Report one line per issue: `#N | outcome | PR or "no PR: why" | merged / waits
 for you (why)`. Then run `close-session`.
