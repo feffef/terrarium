@@ -1,0 +1,94 @@
+schemaVersion: 1
+session: session_01HNLMJQDMabmJ9U54iWwtiH
+startedAt: 2026-10-13T06:19:44Z
+endedAt: 2026-10-13T06:20:49Z
+kind: delegated
+goal: Live probe of the GitHub search fields guard
+status: completed
+outcome: Guard denied search_issues without fields and allowed it with fields, as expected
+summary: "Human-instructed read-only probe of the PreToolUse guard from PR #1869 (issue #1860), asked for by the repo owner. Confirmed HEAD equals freshly fetched origin/main (fbdc5c3), that scripts/github-search-fields-guard.ts exists and that .claude/settings.json line 84 wires it. A search_issues call with no fields was denied with the guard's message; the same query with fields number/title/state ran and returned total_count 0. No files edited, nothing pushed, no GitHub writes. Nothing agent-initiated beyond this log."
+prs: []
+docsRead:
+  - path: docs/agents/git-conventions.md
+    reason: required before git fetch; fetch before trusting origin/main
+    useful: partly
+  - path: docs/agents/github-integration.md
+    reason: required before MCP calls; documents the fields guard and fuzzy search
+    useful: yes
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Skipped the session-start read of CONTEXT-MAP.md and CONTEXT.md that CLAUDE.md requires; no glossary terms were needed for this read-only probe.
+    solution: Low impact here; a probe-type task could note that the glossary read is optional when no domain terms come up.
+    severity: nit
+  - description: "The allowed search for 'repo:feffef/terrarium is:issue 1860' returned total_count 0 though issue #1860 exists; semantic search does not match an issue number given as plain text."
+    solution: Probe briefs should use a query the semantic search can match, e.g. words from the issue title, or say that 0 results is acceptable.
+    severity: nit
+durationSec: 66
+models:
+  claude-opus-5-5: 21
+toolCounts:
+  Read: 2
+  Bash: 5
+  ToolSearch: 1
+  mcp__github__search_issues: 2
+  Skill: 2
+  Write: 2
+rulesLoaded:
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/guards.md
+  - .claude/rules/adr-0029.md
+rulesGlobal:
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0001.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0023.md
+  - .claude/rules/adr-0017.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0022.md
+    reason: About the auto-triage sweep; this probe did no triage.
+    useful: no
+  - path: .claude/rules/adr-0004.md
+    reason: About the gate and human merges; this read-only probe opened no PR.
+    useful: no
+  - path: .claude/rules/adr-0009.md
+    reason: Confirmed I should log via close-session; the summary was enough, so I skipped the full ADR.
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: About prune trials; nothing in this probe touched a trial's territory.
+    useful: no
+  - path: .claude/rules/adr-0001.md
+    reason: About app architecture; not relevant to a guard probe.
+    useful: no
+  - path: .claude/rules/adr-0020.md
+    reason: The probe came from the owner, so no Public-input handling applied.
+    useful: no
+  - path: .claude/rules/adr-0003.md
+    reason: About PR-based governance; the probe was read-only, with no branch or PR.
+    useful: no
+  - path: .claude/rules/adr-0023.md
+    reason: About the guest pipeline; this was not a guest task.
+    useful: no
+  - path: .claude/rules/adr-0017.md
+    reason: About provenance on writes; this probe made no GitHub writes.
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Loaded because grep read settings.json; nothing changed, so no merge applied.
+    useful: no
+  - path: .claude/rules/guards.md
+    reason: Pointed to the guards roster; the deny message itself was enough for this probe.
+    useful: partly
+  - path: .claude/rules/adr-0029.md
+    reason: About rule placement; not relevant to probing a guard.
+    useful: no
+gitBranch: HEAD
+entrypoint: remote
+cliVersion: 2.1.296
+landedBy: Stop
