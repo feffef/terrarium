@@ -31,7 +31,7 @@
 // full gate, but IS wired in as its own `pnpm gate` step and CI's dedicated
 // 'L1 · content validation' job (ADR-0004 amendment, gate.yml).
 import { globSync, readFileSync } from 'node:fs'
-import { basename, join } from 'node:path'
+import { join } from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { parse as parseYaml } from 'yaml'
 import { expand, loadManifests, root, type ExpandedCollection } from '../shared/expand.ts'
@@ -112,7 +112,7 @@ function foldedHyphens(absPath: string): string[] {
     const indent = line.length - line.trimStart().length
     if (headerIndent >= 0 && line.trim() && indent <= headerIndent) headerIndent = -1
     if (headerIndent >= 0) {
-      if (/[A-Za-z0-9]-$/.test(line.trimEnd())) out.push(`${basename(absPath)}: line ${i + 1} ends in "-" inside a folded scalar; the fold splits the word. Rejoin it`)
+      if (/[A-Za-z0-9]-$/.test(line.trimEnd())) out.push(`line ${i + 1} ends in "-" inside a folded scalar; the fold splits the word. Rejoin it`)
     } else if (/(^|[:-])\s*>[-+]?\s*$/.test(line)) headerIndent = indent
   })
   return out

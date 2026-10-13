@@ -160,7 +160,8 @@ describe('validateContent() — a folded line ending in `word-` (journal skills)
   it('flags the line, naming the file and line number', () => {
     const v = check('note: >-\n  the session-id-\n  recovery trial\n')
     expect(v).toHaveLength(1)
-    expect(v[0]?.messages.join()).toMatch(/d\.yml.*line 2/)
+    expect(v[0]?.file).toMatch(/d\.yml$/)
+    expect(v[0]?.messages.join()).toMatch(/^line 2 /)
   })
 
   it('passes a clean fold, and a code span crossing a line break at a space', () => {
