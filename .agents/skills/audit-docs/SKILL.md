@@ -97,12 +97,14 @@ finding reached another way; the field's docstring lists why it undercounts.
   (ADR-0006), so that move escalates (step 8).
 
 **Agent C — Concision.** Cut words, never meaning or a load-bearing "why".
-Each run covers one family of Live docs, the one after the family the newest
-origin/main commit subject ending `(<family> concision family)` names (modulo 5); if
-none, use `$(( 10#$(date +%j) % 5 ))`:
-0 the root and per-Tenant docs (`CLAUDE.md`, `CONTEXT*.md`, every Live README,
-`SECURITY.md`, `layers/*/CONTEXT.md`), 1 `docs/agents/*`, 2 `docs/research/*`,
-3 our own Skills with their sibling files, 4 the journal's facing pages and Inventory entries. Brief it
+Each run covers one family of Live docs: the one after the family named by the
+newest origin/main commit subject ending `(<name> concision family)`, wrapping
+after 4; with no such commit, number `$(( 10#$(date +%j) % 5 ))`. Families,
+by number and name: 0 `root` (`CLAUDE.md`, `CONTEXT*.md`, every Live README,
+`SECURITY.md`, `layers/*/CONTEXT.md`), 1 `docs/agents` (`docs/agents/*`),
+2 `docs/research` (`docs/research/*`), 3 `skills` (our own Skills with their
+sibling files), 4 `journal` (the journal's facing pages and Inventory
+entries). Brief it
 with that family's full file list. It reads every file in full and reports
 every finding, with no cap; split the family across agents if one can't.
 
@@ -224,7 +226,7 @@ floor still runs `verify:skills-lock` and `validate:content`. Done when green.
 
 Follow `docs/agents/pr-workflow.md`'s "Closing a scheduled run's PR".
 One self-merged commit and PR (the escalation PR below is separate); its subject
-names the concision family, e.g. `audit-docs: 2026-10-14 sweep (docs/research concision family)`; its body lists the fixes and any issue filed, and
+ends with the family's name, e.g. `audit-docs: 2026-10-14 sweep (docs/research concision family)`; its body lists the fixes and any issue filed, and
 a one-line PR comment records the audit. It merges on green
 (ADR-0004), like `digest`.
 
