@@ -36,9 +36,9 @@ under `PostToolUse`, `PostToolUseFailure` and `UserPromptSubmit`.
 
 ## Conventions every guard follows
 
-- **A crash.** If a hint crashes, the action goes ahead. If a guard crashes, the
-  action is blocked, except `deferred-tool-guard`, whose crash lets it go ahead.
-  An undeterminable context or unparseable payload blocks too. Every guard but
+- **A crash.** If a hint crashes, the action goes ahead. If a guard crashes, or
+  can't read its context or payload, the action is blocked, except
+  `deferred-tool-guard`, which lets it go ahead. Every guard but
   `deferred-tool-guard.ts` runs through `scripts/guard-wrap.sh` (#1223); that one
   and all four hints use a bare `|| true`.
 - **Matcher-scoped, never `"*"`.** Each `tsx` start (~0.3s) would hit every
@@ -82,9 +82,7 @@ change. Add the case to `tests/unit/<guard>.spec.ts` too.
 
 ## Known gaps
 
-Each guard's header lists its own. Two apply to all:
+Each guard's header lists its own. One applies to all:
 
 - A textual pre-filter lets the action go ahead if the harness renames or
   re-serializes a payload key.
-- A guard that crashes before its own error handling exits nonzero with empty
-  stdout; `scripts/guard-wrap.sh` turns that into a block.
