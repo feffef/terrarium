@@ -1,0 +1,135 @@
+schemaVersion: 1
+session: session_01NVG22rfEsjhW9zkcCco6W8
+startedAt: 2026-10-14T16:51:51Z
+endedAt: 2026-10-14T16:54:53Z
+kind: delegated
+goal: Live test of the five rule and hook changes merged to main today
+status: completed
+outcome: Checks 3, 4, 5 and 6 pass; check 1 fails; check 2 is blocked by test order
+summary: "The owner's single kickoff prompt asked for a live test of today's merged changes (PRs 1946 to 1951), with no GitHub writes or pushes; I did everything agent-side from that instruction and no step was human-steered afterwards. I read CONTEXT-MAP.md and CONTEXT.md, cut a branch from origin/main, pushed nothing and wrote only this log. Results. 1 FAIL (PR 1946). `cat .claude/rules/guards.md; ls /nonexistent-path-xyz` exited 2 and its result held only the cat output and the ls error; no \"Files this command read are governed by these rules\" hint. The control `cat docs/agents/guards.md` also showed none (expected, no rule governs it). 2 BLOCKED (PR 1949). The task has me read the rules' paths frontmatter first, which marks tenant-layers, mdc-when-to-use and mermaid-lanes as loaded, so later reads could not show them. Observed: layers/atlas/tests/unit/almanac-state.spec.ts loaded nothing (2a, matches expectation but uninformative); layers/atlas/app/composables/webViewBox.ts and layers/atlas/content/floor/pages/rubra-territa.md loaded nothing; layers/atlas/tenant.config.ts loaded only adr-0002. The log-session report lists none of those three rules as loaded for me. In a fresh context the subagent did see tenant-layers load after its layers/atlas/app read (it could not say which of its two reads triggered it), a hint that 2b works. 2c and 2d are untested. Rerun with a session that reads those files before the rule files. 3 PASS (PR 1951). Reading scripts/poll-guest-tickets.ts in ../tt-sibling loaded nothing; reading it in .claude/worktrees/tt-inner injected adr-0023.md. Both worktrees were removed. Caveat: just before, I ran `grep -c . .claude/rules/adr-0023.md` in Bash, which did not load the rule. 4 PASS (PR 1948). In .claude/worktrees/tt-hop with both files committed, `pnpm exec tsx scripts/human-only-paths.ts` printed `.claude/rules/guards.md` only and exited 0; worktree and test/hop branch deleted. 5 PASS (PR 1950). adr-0004.md reads \"If this rule seems relevant to your task, you must read the full ADR first (about 1000 tokens):\", as expected; the same line is in every ADR rule. I judged the pointers mostly not applicable and opened no ADR. 6 PASS (PR 1947). A general-purpose subagent read docs/agents/tenant-layers.md and layers/atlas/app/composables/almanac.ts and reported both first lines. SendMessage worked and returned a verdict list. Pass (c) without subagentVerdicts listed docs/agents/tenant-layers.md and the tenant-layers rule under \"no verdict from subagent\" and asked me for nothing on them. Pass (d), a ruleVerdict for adr-0025.md, was refused with exit 1 and left the scratch byte-identical. Pass (e) with subagentVerdicts no longer listed them, and reminded me that the adr-0021 \"no\" verdict was omitted. | Check | Result | | 1 PR 1946 hint on failed Bash | FAIL | | 2 PR 1949 narrowed globs | BLOCKED | | 3 PR 1951 worktree rules | PASS | | 4 PR 1948 human-only-paths | PASS | | 5 PR 1950 ADR pointer | PASS | | 6 PR 1947 subagent verdicts | PASS |"
+prs: []
+docsRead:
+  - path: CONTEXT-MAP.md
+    reason: required start read; Tenant contexts
+    useful: partly
+  - path: CONTEXT.md
+    reason: required start read; glossary, Rule and Human-only terms
+    useful: partly
+  - path: docs/agents/git-conventions.md
+    reason: required before first git command; nothing changed in how I used git
+    useful: partly
+  - path: layers/atlas/tests/unit/almanac-state.spec.ts
+    reason: (no reason given)
+  - path: layers/atlas/app/composables/webViewBox.ts
+    reason: (no reason given)
+  - path: layers/atlas/content/floor/pages/rubra-territa.md
+    reason: (no reason given)
+  - path: layers/atlas/tenant.config.ts
+    reason: (no reason given)
+  - path: /home/user/tt-sibling/scripts/poll-guest-tickets.ts
+    reason: (no reason given)
+  - path: scripts/poll-guest-tickets.ts
+    reason: (no reason given)
+  - path: docs/agents/tenant-layers.md
+    reason: "[Read two files, report headings] Read as instructed; supplied the heading asked for"
+    useful: yes
+  - path: layers/atlas/app/composables/almanac.ts
+    reason: (no reason given)
+skillsUsed:
+  - name: dispatch-subagents
+    reason: section 5 told me to ask the subagent for rule and doc verdicts
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: "SHELL: PR 1946 hint missing. `cat .claude/rules/guards.md; ls /nonexistent-path-xyz` failed with exit 2 and its result carried no 'governed by these rules' hint."
+    solution: Emit the hint on non-zero exits too (PostToolUseFailure path), or fix the hook if it skips failed calls.
+    severity: moderate
+  - description: The check 2 script has me read each rule's frontmatter first, which marks it loaded, so reads of governed files showed nothing and 2b to 2d could not be observed.
+    solution: Have a subagent or later session read the governed files first, or tell the tester to check frontmatter with a Bash command that is not credited as a rule read.
+    severity: minor
+  - description: Reading files in .claude/rules/ loaded adr-0029 and adr-0004-human-merge, and adr-0021 arrived late, after an unrelated Bash call; all unrelated to the task.
+    solution: Do not load rules for reads under .claude/rules/, or deliver the rule on the Read that triggered it.
+    severity: nit
+  - description: The harness repeatedly injected 'task tools haven't been used' reminders into this short scripted session, adding noise to tool results.
+    solution: Suppress the task-tool reminder for sessions with a fixed procedure and no task list.
+    severity: nit
+  - description: The subagent reported CLAUDE.md's 'read CONTEXT-MAP.md first' conflicts with a read-only brief; it skipped it, and it had six unneeded session-start rules in context.
+    solution: Say in dispatch-subagents that briefs should state whether start-of-session docs are skipped.
+    severity: nit
+durationSec: 182
+models:
+  claude-sonnet-5-5: 60
+toolCounts:
+  Read: 12
+  Bash: 14
+  Skill: 2
+  Agent: 1
+  ToolSearch: 1
+  SendMessage: 1
+rulesLoaded:
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0002.md
+  - .claude/rules/adr-0023.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesLoadedBySubagents:
+  - .claude/rules/tenant-layers.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Gate before pushing; I pushed nothing, so the summary was enough and I did not open the ADR
+    useful: no
+  - path: .claude/rules/adr-0009.md
+    reason: Session logs go to main; I followed it through close-session, but the summary alone sufficed, no ADR opened
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: About prune trials; I changed no instruction text, so it did not apply
+    useful: no
+  - path: .claude/rules/adr-0020.md
+    reason: Trust tiers; no issue or PR text from others was involved
+    useful: no
+  - path: .claude/rules/adr-0003.md
+    reason: Says open a PR once pushed; the owner's no-push instruction overrode it, so I did not apply it
+    useful: no
+  - path: .claude/rules/adr-0017.md
+    reason: Provenance header on GitHub writes; I wrote nothing to GitHub
+    useful: no
+  - path: .claude/rules/adr-0021.md
+    reason: About glossary layout; this task touched no glossary, so it did not apply
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: Loaded when I read rule files; about where instructions live, not my task
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Loaded on reading rule files; I merged nothing, so it did not apply
+    useful: no
+  - path: .claude/rules/adr-0002.md
+    reason: Loaded on reading layers/atlas/tenant.config.ts; confirms manifest-only edits, none made
+    useful: no
+  - path: .claude/rules/adr-0023.md
+    reason: Loaded on the tt-inner read that check 3 tested; it was the observation itself
+    useful: yes
+subagentVerdicts:
+  - path: .claude/rules/tenant-layers.md
+    kind: rule
+    agent: Read two files, report headings
+    reason: Loaded after reading the layers/atlas/app file; pointed to a doc it had already read
+    useful: partly
+  - path: docs/agents/tenant-layers.md
+    kind: doc
+    agent: Read two files, report headings
+    reason: Read as instructed; supplied the heading asked for
+    useful: yes
+subagents:
+  - type: general-purpose
+    task: Read two files, report headings
+gitBranch: HEAD
+entrypoint: remote
+cliVersion: 2.1.299
+landedBy: Stop
