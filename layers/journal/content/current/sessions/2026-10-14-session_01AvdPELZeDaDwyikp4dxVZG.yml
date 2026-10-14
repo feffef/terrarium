@@ -1,0 +1,132 @@
+schemaVersion: 1
+session: session_01AvdPELZeDaDwyikp4dxVZG
+startedAt: 2026-10-14T00:16:23Z
+endedAt: 2026-10-14T00:24:08Z
+kind: autonomous
+goal: Write the 2026-10-13 Journal Digest
+status: completed
+outcome: Digest and retention sweep merged as PR 1911 on a green gate
+summary: "Scheduled /digest run, agent-initiated by the schedule with no human prompt. Gathered the one closed day without a Digest (2026-10-13, 25 sessions, 50 PRs), wrote the Digest, had a Sonnet subagent fact-check it (3 claims wrong or imprecise: a PR link that pointed at the issue, a mis-dated grill-scope change, a mislabelled scheduled sweep), fixed them, ran the archive sweep (1 Digest, 9 session logs moved), ran gate:scoped green, and opened PR 1911. Reviewed the content-only diff myself instead of running the two-agent code-review."
+prs:
+  - "1911"
+docsRead:
+  - path: CONTEXT.md
+    reason: glossary; no terms needed beyond Digest
+    useful: partly
+  - path: docs/agents/pr-workflow.md
+    reason: scheduled-run closing steps and review-before-push
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: commit hygiene before first git command
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: read before PR create
+    useful: partly
+  - path: CONTEXT-MAP.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/digests/2026-10-13.md
+    reason: (read before editing)
+skillsUsed:
+  - name: digest
+    reason: the task itself
+  - name: code-review
+    reason: invoked, then self-reviewed the content-only diff
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Invoked the code-review Skill but did not run its two parallel subagents; self-reviewed a prose-only diff instead, deviating from the Skill.
+    solution: Let pr-workflow state that content-only digest diffs may skip the two-axis review.
+    severity: nit
+  - description: Digest Skill step 3 needs a hand-written node script to summarise 25 sessions' frictions from the large gather file.
+    solution: Have gather print a per-session friction summary.
+    severity: minor
+durationSec: 465
+models:
+  claude-sonnet-5-5: 45
+toolCounts:
+  Read: 5
+  Bash: 14
+  Write: 1
+  Agent: 1
+  Skill: 3
+  ToolSearch: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 1
+filesEdited:
+  - layers/journal/content/current/pages/digests/2026-10-13.md
+rulesLoaded:
+  - .claude/rules/adr-0010.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0015.md
+rulesGlobal:
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0023.md
+  - .claude/rules/adr-0017.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0003.md
+    reason: Said to open the PR and subscribe; summary was enough
+    useful: partly
+  - path: .claude/rules/adr-0004.md
+    reason: Run gate:scoped and review before first push, self-merge rule; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Log goes via close-session straight to main; summary was enough
+    useful: partly
+  - path: .claude/rules/adr-0010.md
+    reason: Digest lands by gated PR and is never rewritten; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Header on the PR body and the commit trailer; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0020.md
+    reason: No Public input involved in this scheduled run
+    useful: no
+  - path: .claude/rules/adr-0021.md
+    reason: No glossary or context edits in this run
+    useful: no
+  - path: .claude/rules/adr-0022.md
+    reason: No triage sweep in this run
+    useful: no
+  - path: .claude/rules/adr-0023.md
+    reason: Not a guest pipeline run
+    useful: no
+  - path: .claude/rules/adr-0027.md
+    reason: No prune trial covered the text I touched
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: No rules were edited
+    useful: no
+  - path: .claude/rules/adr-0005.md
+    reason: No workflow scripts involved
+    useful: no
+  - path: .claude/rules/adr-0015.md
+    reason: Not relevant to Digest pages
+    useful: no
+  - path: .claude/rules/tenant-layers.md
+    reason: Loaded on touching the Journal layer; no layer structure changes made
+    useful: no
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: Loaded on a markdown page edit; the Digest uses plain prose, no components
+    useful: no
+subagents:
+  - type: general-purpose
+    task: Fact-check digest
+    model: sonnet
+gitBranch: claude/compassionate-lovelace-1bjg3r
+entrypoint: remote_trigger
+cliVersion: 2.1.296
+trigger: digest
+landedBy: Stop
