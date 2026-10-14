@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01ERZa4fUGxpF81MeLhZMkSB
 startedAt: 2026-10-14T02:03:57Z
-endedAt: 2026-10-14T02:22:35Z
+endedAt: 2026-10-14T02:24:37Z
 kind: autonomous
 goal: Turn the last days of session frictions into fixes
-status: in-review
-outcome: "Three fix PRs open (#1918, #1919, #1920), one new issue (#1917), evidence added to three open issues"
-summary: "Scheduled frictions-to-fixes run (agent-initiated by the schedule; no human prompt). A survey subagent read 16 sessions and reported two regressions (survey-output-overflow, merged-before-checked). I filed #1917 for the overflow, commented evidence on #1844, #1778 and #1819 (surface-blocked or owner decisions), and dispatched three Sonnet agents: survey compaction plus ledger --summary (PR #1918), a 10 s e2e expect.poll timeout (PR #1919), and a docs and ledger PR (#1920). I dropped the docs agent's audit-docs sentence that had the Skill authorise pushing a second branch past the harness's designated-branch rule, because it widens agent authority and belongs to a human; designated-branch-clash stays open. Code-review Skill ran on #1918 only; the 3-line poll diff and the docs diff were reviewed inline. Merging follows CI."
+status: completed
+outcome: "Three fix PRs (#1918, #1919, #1920) merged, issue #1917 closed, evidence added to three open issues"
+summary: "Scheduled frictions-to-fixes run (agent-initiated by the schedule; no human prompt). A survey subagent read 16 sessions and reported two regressions (survey-output-overflow, merged-before-checked). I filed #1917 for the overflow, commented evidence on #1844, #1778 and #1819 (surface-blocked or owner decisions), and dispatched three Sonnet agents: survey compaction plus ledger --summary (PR #1918), a 10 s e2e expect.poll timeout (PR #1919), and a docs and ledger PR (#1920). I dropped the docs agent's audit-docs sentence that had the Skill authorise pushing a second branch past the harness's designated-branch rule, because it widens agent authority and belongs to a human; designated-branch-clash stays open. Code-review Skill ran on #1918 only; the 3-line poll diff and the docs diff were reviewed inline. All three PRs merged green via merge-pr.ts."
 prs:
   - "1918"
   - "1919"
@@ -90,12 +90,12 @@ frictions:
   - description: Impl agent proposed a Skill sentence authorising a second pushed branch against the harness rule; auto mode flagged its report as instruction poisoning.
     solution: Keep authority changes human-decided; the designated-branch conflict needs an owner decision.
     severity: minor
-durationSec: 1118
+durationSec: 1240
 models:
-  claude-sonnet-5-5: 86
+  claude-sonnet-5-5: 102
 toolCounts:
   Read: 9
-  Bash: 22
+  Bash: 26
   Agent: 6
   ToolSearch: 1
   mcp__github__issue_write: 1
@@ -106,6 +106,8 @@ toolCounts:
   Write: 1
   Edit: 2
   mcp__github__pull_request_read: 1
+  ReadNotifications: 4
+  PushNotification: 1
 filesEdited:
   - .agents/skills/audit-docs/SKILL.md
   - docs/agents/environment-caveats.md
