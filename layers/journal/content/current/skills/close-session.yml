@@ -239,10 +239,13 @@ observations:
   - date: "2026-10-14"
     note: >-
       Self-check (audit-skills behaviour check), 10 newest invocations
-      (2026-10-13/14, PRs #1891-#1911), all cross-checked against live
-      GitHub state: 9/9 claimed-merged PRs genuinely merged, the one
-      left-open PR (#1892) genuinely still open and honestly logged
-      in-review. Recent infrastructure landed inside this window (#1859,
+      (2026-10-13/14, PRs #1891-#1911, including
+      session_01AvdPELZeDaDwyikp4dxVZG and
+      session_01QvnVVurQdA4cvYSZToBvud, neither previously cited here), all
+      cross-checked against live GitHub state: 9/9 claimed-merged PRs
+      genuinely merged, the one left-open PR (#1892) genuinely still open
+      and honestly logged in-review. Recent infrastructure landed inside
+      this window (#1859,
       commits aa1a2273/1508d767/308e5ef4, 2026-10-12/13) adds a PostToolUse
       hint nagging the session to invoke close-session after
       `create_pull_request`, directly targeting missed invocation. The one

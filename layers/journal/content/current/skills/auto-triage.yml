@@ -143,8 +143,10 @@ observations:
       #1797/#1798/#1817/#1818 ready-for-agent grants, #1786/#1802/#1816
       ready-for-human escalations, #1761 not-planned closure) — no
       mis-triage found. #1859/#1860's orphan-issue skip (an AI-filed issue
-      with a state label and no comments never becoming eligible again) was
-      caught and fixed same-day by owner-directed PR #1867, before any of
+      with a state label and no comments never becoming eligible again),
+      filed by session_01UZ53YdNvwr2RN4WgF5EjEZ (not previously cited
+      here), was caught and fixed same-day by owner-directed PR #1867,
+      before any of
       this window's 7 sessions could hit it — not a gap in this window, but
       worth a spot-check next cycle once a sweep runs under the fix. No new
       silent failure. Grade/role unchanged.

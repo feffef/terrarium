@@ -330,9 +330,12 @@ observations:
       (single-parent, ancestor of origin/main per ADR-0009), frictions read
       as honest self-criticism, no force-edit of another session's log
       found anywhere in the 2-week sweep. Part B (6 notUsedWindow
-      sessions) — 0 genuine missed invocations; all 6 have complete,
-      committed logs, the "miss" in every case is `skillsUsed` not
-      crediting close-session's internal log-session call. This exact
+      sessions, 4 freshly checked and not previously cited here —
+      session_01YKBUn5rG2GoAZevbZooXWj, session_01FJuuzCvFL2h6ueukNEqi1R,
+      session_01BLrfuHbMMEmjZZ7STpe1AN, session_01WoJ2cTAuA3Qo9Mi9fd6Tki) —
+      0 genuine missed invocations; all 6 have complete, committed logs,
+      the "miss" in every case is `skillsUsed` not crediting
+      close-session's internal log-session call. This exact
       false-positive class has now been independently rediscovered by ~8 of
       the last 9 daily audits with no fix landed and no Friction
       Ledger/issue tracking it — filed today as issue #1915 so it stops

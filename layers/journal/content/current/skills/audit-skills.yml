@@ -430,12 +430,16 @@ observations:
       new instance beyond what's already tracked. Four new findings from
       other Skills escalated as fresh issues: #1912 (visitor-loop's
       owner-corrections.ts --check regex credits only the first #N per
-      line, so a batched one-liner silently passes the mechanical gate —
+      line, so a batched one-liner on session_01N2WiBqiw2rFsAqpy41VnhA's PR
+      #1893 (and 4 other recent runs) silently passes the mechanical gate —
       the step-4 "body carries the tally" promise has likely been false in
       all 5 runs since #1732, despite 5 prior daily audits (2026-10-09
-      through 10-13) grading this clean), #1913 (audit-docs' fact-check has
-      no "ADR decision preserved" check), #1914 (audit-docs' same-day
-      concision-family collision, 3rd recurrence), #1915 (log-session's
+      through 10-13) grading this clean), #1913 (audit-docs'
+      session_01QvnVVurQdA4cvYSZToBvud reworded ADR-0004's decision and it
+      passed 3 checkers plus a two-axis review, caught only by the owner's
+      human-merge review — the fact-check has no "ADR decision preserved"
+      check), #1914 (audit-docs' same-day concision-family collision, 3rd
+      recurrence), #1915 (log-session's
       `window_not_used` false-positive class — a Skill invoked internally
       by another, e.g. close-session→log-session — independently
       rediscovered by ~8 of the last 9 daily audits with no fix and no
