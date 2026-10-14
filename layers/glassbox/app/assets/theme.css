@@ -1,0 +1,245 @@
+/* Glass Box's look, design 1b (issue #1989): frosted panes over a faint grid.
+   A layer's CSS loads on every page, so every rule sits under `.gb`, and the
+   faces (Instrument Sans, JetBrains Mono) get our own family names: the
+   Journal's mono stack names 'JetBrains Mono' and would pick up this file. */
+
+@font-face {
+  font-family: 'Glass Box Sans';
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url('./fonts/instrument-sans-latin-wght-normal.woff2') format('woff2-variations');
+}
+@font-face {
+  font-family: 'Glass Box Mono';
+  font-weight: 400;
+  font-display: swap;
+  src: url('./fonts/jetbrains-mono-latin-400-normal.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Glass Box Mono';
+  font-weight: 500;
+  font-display: swap;
+  src: url('./fonts/jetbrains-mono-latin-500-normal.woff2') format('woff2');
+}
+
+.gb {
+  --gb-bg: #e6edf0;
+  --gb-grid: rgb(15 40 55 / 0.06);
+  --gb-glow: rgb(255 255 255 / 0.7);
+  --gb-ink: #0f1d26;
+  --gb-ink-2: #1d3340;
+  --gb-muted: #4a5c66;
+  --gb-line: rgb(15 40 55 / 0.12);
+  --gb-pane: rgb(255 255 255 / 0.5);
+  --gb-pane-edge: rgb(255 255 255 / 0.85);
+  --gb-pane-shadow: 0 10px 30px rgb(15 40 55 / 0.07);
+  --gb-tint: rgb(140 200 230 / 0.2);
+  --gb-accent: oklch(0.48 0.12 220);
+  --gb-solid: #0f1d26;
+  --gb-solid-ink: #fff;
+  --gb-code-bg: #f6f8fa;
+  --gb-sans: 'Glass Box Sans', system-ui, sans-serif;
+  --gb-mono: 'Glass Box Mono', ui-monospace, monospace;
+  /* The frosted bar; solid where the browser can't blur (below). */
+  --gb-bar: var(--gb-pane);
+
+  /* MermaidDiagram's colour contract (app/utils/mermaid.ts). */
+  --diagram-node-bg: var(--gb-bg);
+  --diagram-node-border: var(--gb-accent);
+  --diagram-node-text: var(--gb-ink);
+  --diagram-line: var(--gb-muted);
+  --diagram-edge-label-bg: var(--gb-bg);
+  --diagram-cluster-bg: transparent;
+  --diagram-cluster-border: var(--gb-muted);
+  --diagram-error: var(--gb-accent);
+
+  display: block;
+  min-height: 100vh;
+  color: var(--gb-ink);
+  background:
+    radial-gradient(900px 500px at 70% 0, var(--gb-glow), transparent 70%),
+    linear-gradient(var(--gb-grid) 1px, transparent 1px) 0 0 / 28px 28px,
+    linear-gradient(90deg, var(--gb-grid) 1px, transparent 1px) 0 0 / 28px 28px,
+    var(--gb-bg);
+  font: 400 17px/1.65 var(--gb-sans);
+  -webkit-font-smoothing: antialiased;
+}
+@media (prefers-color-scheme: dark) {
+  .gb {
+    --gb-bg: #0a1216;
+    --gb-grid: rgb(255 255 255 / 0.035);
+    --gb-glow: rgb(80 160 200 / 0.12);
+    --gb-ink: #dce7ec;
+    --gb-ink-2: #c4d2d9;
+    --gb-muted: #8ea1ab;
+    --gb-line: rgb(255 255 255 / 0.09);
+    --gb-pane: rgb(255 255 255 / 0.045);
+    --gb-pane-edge: rgb(255 255 255 / 0.09);
+    --gb-pane-shadow: 0 10px 30px rgb(0 0 0 / 0.3);
+    --gb-tint: rgb(140 200 230 / 0.1);
+    --gb-accent: oklch(0.8 0.1 210);
+    --gb-solid: #dce7ec;
+    --gb-solid-ink: #0a1216;
+    --gb-code-bg: #0d1117;
+  }
+}
+@supports not (backdrop-filter: blur(1px)) {
+  .gb { --gb-bar: color-mix(in srgb, var(--gb-bg) 92%, transparent); }
+}
+body:has(.gb) { margin: 0; }
+
+.gb a { color: var(--gb-accent); }
+.gb code { font: 0.86em var(--gb-mono); }
+.gb .gb-label {
+  font: 11px var(--gb-mono);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gb-muted);
+}
+.gb .gb-pane {
+  background: var(--gb-pane);
+  border: 1px solid var(--gb-pane-edge);
+  border-radius: 18px;
+  box-shadow: var(--gb-pane-shadow);
+  backdrop-filter: blur(16px);
+}
+
+/* ── Header ─────────────────────────────────────────── */
+.gb .gb-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 60px;
+  font-size: 16px;
+}
+.gb .gb-brand {
+  display: grid;
+  grid-template-columns: 20px auto auto;
+  align-items: center;
+  column-gap: 10px;
+  color: inherit;
+  text-decoration: none;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+}
+.gb .gb-brand::before {
+  content: '';
+  width: 20px;
+  height: 20px;
+  box-sizing: border-box;
+  border: 1.5px solid currentColor;
+  border-radius: 6px;
+}
+.gb .gb-brand strong { font-weight: 600; }
+.gb .gb-brand span { color: var(--gb-muted); margin-left: -6px; }
+.gb .gb-brand span::before { content: '· '; }
+
+.gb .gb-menu { display: none; }
+@media (max-width: 640px) {
+  .gb .gb-brand { grid-template-columns: 20px auto; }
+  .gb .gb-brand::before { grid-row: span 2; }
+  .gb .gb-brand span { margin: 0; font-size: 12px; }
+  .gb .gb-brand span::before { content: none; }
+}
+
+/* ── Lesson and Walkthrough frame: sidebar column from 1024px, menu panel below ── */
+.gb-doc .gb-main { min-width: 0; padding: 0 40px 64px; }
+.gb-doc .gb-column { max-width: 760px; margin-inline: auto; }
+.gb-doc h1 {
+  margin: 56px 0 18px;
+  font-size: 54px;
+  line-height: 1.04;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+@media (min-width: 1024px) {
+  .gb-doc { display: grid; grid-template-columns: 272px minmax(0, 1fr); }
+  .gb-doc .gb-sidebar {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    box-sizing: border-box;
+    border-right: 1px solid var(--gb-line);
+    background: var(--gb-pane);
+    backdrop-filter: blur(12px);
+  }
+}
+@media (max-width: 1023.98px) {
+  .gb-doc .gb-main { padding: 0 20px 48px; }
+  .gb-doc .gb-header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    margin: 0 -20px;
+    padding: 8px 14px 8px 20px;
+    background: var(--gb-bar);
+    backdrop-filter: blur(14px);
+  }
+  .gb-doc .gb-menu {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+    width: 44px;
+    height: 44px;
+    border: 0;
+    border-radius: 12px;
+    background: var(--gb-solid);
+    color: var(--gb-solid-ink);
+    font-size: 20px;
+    cursor: pointer;
+  }
+  .gb.gb-doc .gb-sidebar { display: none; }
+  .gb.gb-doc.menu-open .gb-sidebar {
+    display: flex;
+    position: fixed;
+    inset: 10px;
+    z-index: 20;
+    overflow-y: auto;
+  }
+  .gb-doc h1 { margin-top: 28px; font-size: 38px; }
+}
+
+/* ── Prose ──────────────────────────────────────────── */
+.gb .gb-prose > p:first-child {
+  font-size: 21px;
+  line-height: 1.5;
+  color: var(--gb-ink-2);
+  text-wrap: pretty;
+}
+.gb .gb-prose h2 { font-size: 28px; font-weight: 600; letter-spacing: -0.02em; line-height: 1.2; margin: 2.2em 0 0.5em; }
+.gb .gb-prose h3 { font-size: 20px; font-weight: 600; margin: 1.6em 0 0.4em; }
+.gb .gb-prose h2 a, .gb .gb-prose h3 a { color: inherit; text-decoration: none; }
+.gb .gb-prose li + li { margin-top: 0.3em; }
+.gb .mermaid-diagram {
+  padding: 24px;
+  border: 1px solid var(--gb-pane-edge);
+  border-radius: 18px;
+  background: var(--gb-pane);
+  backdrop-filter: blur(16px);
+}
+.gb .mermaid-diagram svg { display: block; max-width: 100%; height: auto; margin: 0 auto; }
+
+/* ── Code ───────────────────────────────────────────── */
+.gb pre {
+  overflow-x: auto;
+  margin: 1.2em 0;
+  padding: 16px 0;
+  border-radius: 10px;
+  background: var(--gb-code-bg);
+  font: 13.5px/1.6 var(--gb-mono);
+}
+.gb pre code { font: inherit; }
+.gb pre .line { padding: 0 18px; }
+.gb pre .line.highlight {
+  background: color-mix(in oklch, var(--gb-accent) 14%, transparent);
+  box-shadow: inset 3px 0 var(--gb-accent);
+}
+/* Shiki's own dark rule keys on html.dark, which the Platform never sets. */
+@media (prefers-color-scheme: dark) {
+  .gb .shiki span { color: var(--shiki-dark); }
+}

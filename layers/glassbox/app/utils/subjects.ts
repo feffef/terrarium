@@ -12,7 +12,9 @@ export const glassboxSubjects = [
   { slug: 'terrarium-practice', name: 'Terrarium practice' },
 ] as const
 
-interface GlassboxPageLink {
+export const glassboxStartHere = '/walkthroughs/opening-a-page'
+
+export interface GlassboxPageLink {
   path: string
   title: string
 }
