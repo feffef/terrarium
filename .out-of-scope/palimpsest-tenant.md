@@ -32,7 +32,7 @@ revision history.
 The Midden's inclusion bar routed Gate-B failures — candidates that were
 renamed or superseded rather than discarded — to "Palimpsest territory", a home
 that now will never exist. That forward pointer has been removed from
-`layers/midden/CONTEXT.md` and from the `midden-survey` Skill. Those candidates
+`layers/midden/GLOSSARY.md` and from the `midden-survey` Skill. Those candidates
 are now simply out of the Midden's scope, recorded as Gate-B exclusions in the
 survey report so they are never silently dropped.
 
