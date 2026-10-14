@@ -27,7 +27,8 @@ If `git rev-parse --is-shallow-repository` prints `true`, run
 
 Resolve the set with step 1 of `.agents/skills/auto-triage/SKILL.md` (Read
 it; it is user-invoked) in its default mode, and add every open
-`ready-for-agent` issue. Only when that set is empty, resolve it in
+`ready-for-agent` issue. Leave out every issue with a `wayfinder:*` label; the
+`wayfinder` Skill drives those with the owner. Only when that set is empty, resolve it in
 `full-sweep` mode instead; the owner starting this run is the human direction
 that mode needs.
 
