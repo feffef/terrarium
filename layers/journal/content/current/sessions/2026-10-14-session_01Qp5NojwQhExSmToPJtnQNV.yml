@@ -1,0 +1,137 @@
+schemaVersion: 1
+session: session_01Qp5NojwQhExSmToPJtnQNV
+startedAt: 2026-10-14T20:49:58Z
+endedAt: 2026-10-14T21:02:15Z
+kind: interactive
+goal: "Glass Box: write the spec from the map's seven decisions"
+status: completed
+outcome: Intermediate spec issue for Claude Design posted; ticket closed, two follow-on tickets added to the map
+summary: "Human-instructed: the owner invoked /wayfinder on the Glass Box map to work the ticket \"Glass Box: write the spec\" from the resolution comments of seven closed tickets, settling conflicts with them first. I read all seven resolutions, checked what a new Tenant touches (the Tinkerfund skeleton commit, tenant-layers rule, Human-only list) and asked the owner two rounds of questions. One real defect surfaced while checking: #1971's inline `:source` would never reach a component, because `source` is a native HTML tag and MDC's renderer skips component lookup for HTML tags; the owner chose `:file`. The owner then changed the deliverable: instead of build-ready sub-issues, an intermediate spec to import into Claude Design (issue #1985, a design brief plus a build frame with draft stories and human-merge marks), a soft launch with no Platform links, and #1966's six seeds. Agent-initiated within that direction: the two new map tickets (Claude Design pass #1986, write the build spec #1987, blocked by #1986), the map's Decisions/Not-yet-specified/Out-of-scope edits, and not making the spec a map sub-issue (it would pollute the frontier query). No code, no PR."
+prs: []
+docsRead:
+  - path: GLOSSARY.md
+    reason: Tenant/Space/Collection terms and the Tenant roster the spec's build frame names
+    useful: yes
+  - path: GLOSSARY-MAP.md
+    reason: where a new Tenant's glossary entry goes
+    useful: yes
+  - path: docs/agents/issue-tracker.md
+    reason: Specs format, hold line, wayfinding blocking via curl
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: angle-bracket stripping, header replacement on map rewrites, dependency endpoint
+    useful: yes
+  - path: docs/agents/triage-labels.md
+    reason: spec on hold carries no triage label
+    useful: partly
+  - path: docs/agents/tenant-layers.md
+    reason: global component namespace and wrapper CSS for the build frame
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: fetch before trusting history; read after my first git log
+    useful: partly
+skillsUsed:
+  - name: wayfinder
+    reason: worked one task ticket on the Glass Box map
+  - name: close-session
+    reason: closure with no PR
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Read glossary and docs with cat in Bash instead of the Read tool, against CLAUDE.md's Read-tool convention; rules for those files may not have loaded
+    solution: Use Read for instruction docs; cat felt cheaper for batching four files
+    severity: nit
+  - description: Ran git log to infer which files a new Tenant touches before reading docs/agents/git-conventions.md (CLAUDE.md read-first trigger)
+    solution: Read git-conventions before any history-drawing git command; the hook hint came after the fact
+    severity: minor
+  - description: Did not grep and read the full ADRs binding the spec (ADR-0003, 0004, 0021, 0025) before recommending the build frame; relied on the summary rules
+    solution: Before writing a spec's human-merge marks, read ADR-0004 in full
+    severity: minor
+  - description: A closed decision ticket (#1971) chose MDC syntax `:source` without checking it against MDC; source is an HTML tag so the component would never render. Caught here only by chance
+    solution: Decision tickets that pick an MDC component name should check it against MDC's html-tags-list and the global component namespace
+    severity: minor
+durationSec: 736
+models:
+  claude-opus-5-5: 76
+toolCounts:
+  Bash: 27
+  ToolSearch: 1
+  Read: 2
+  AskUserQuestion: 2
+  Write: 2
+  mcp__github__issue_write: 5
+  mcp__github__add_issue_comment: 1
+  Skill: 2
+rulesLoaded:
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0002.md
+  - .claude/rules/adr-0008.md
+  - .claude/rules/adr-0025.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/tenant-layers.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Gave the human-merge criteria for the spec's draft stories; summary was enough, did not open the ADR
+    useful: yes
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Its paths list marked the drift rule story as human merge and confirmed the rest are agent merges
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Confirmed the log goes straight to main with no PR for this issue-only session
+    useful: partly
+  - path: .claude/rules/adr-0027.md
+    reason: No instruction text was changed this session
+    useful: no
+  - path: .claude/rules/adr-0020.md
+    reason: The owner is Trusted and directed the work; no Public input involved
+    useful: no
+  - path: .claude/rules/adr-0003.md
+    reason: Confirmed a new Tenant and Skills need Trusted approval, which the owner's map gives; summary was enough
+    useful: partly
+  - path: .claude/rules/adr-0017.md
+    reason: Every issue, comment and map rewrite started with this session's header, replacing the copied one
+    useful: yes
+  - path: .claude/rules/adr-0021.md
+    reason: Told me a new Tenant adds its GLOSSARY.md, a root roster line and a GLOSSARY-MAP entry, listed in the build frame
+    useful: yes
+  - path: .claude/rules/adr-0029.md
+    reason: Confirmed the drift rule belongs in a path-scoped rule; summary was enough
+    useful: partly
+  - path: .claude/rules/adr-0022.md
+    reason: Loaded with triage-labels; no triage sweep in this session
+    useful: no
+  - path: .claude/rules/adr-0030.md
+    reason: Loaded via the human-merge list read; no ADR was written
+    useful: no
+  - path: .claude/rules/adr-0002.md
+    reason: Confirmed the Tenant is declared only in its tenant.config.ts manifest, as the build frame says
+    useful: partly
+  - path: .claude/rules/adr-0008.md
+    reason: Loaded via a journal file read; Glass Box links the Journal but this rule decided nothing here
+    useful: no
+  - path: .claude/rules/adr-0025.md
+    reason: Confirmed that leaving out kind keeps Glass Box out of Commons Search for the soft launch
+    useful: partly
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: Loaded while checking MDC; the components were already decided by the tickets
+    useful: no
+  - path: .claude/rules/tenant-layers.md
+    reason: Its global-namespace line backed the question that led to renaming source to file
+    useful: yes
+gitBranch: claude/blissful-ramanujan-mdnd5p
+entrypoint: remote_desktop
+cliVersion: 2.1.300
+learnings:
+  - MDC renders any tag in its html-tags-list (for example `source`) as a native element and never resolves a component of that name, so an MDC component must not share a name with an HTML tag
+landedBy: Stop
