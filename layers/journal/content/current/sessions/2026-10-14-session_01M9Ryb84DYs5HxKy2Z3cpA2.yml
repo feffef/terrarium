@@ -1,0 +1,424 @@
+schemaVersion: 1
+session: session_01M9Ryb84DYs5HxKy2Z3cpA2
+startedAt: 2026-10-14T04:01:02Z
+endedAt: 2026-10-14T04:21:16Z
+kind: autonomous
+goal: Scheduled audit of the repo's docs (research family)
+status: in-review
+outcome: Doc fixes in PR 1921 (self-merge on green) and an ADR-touching escalation in PR 1922
+summary: "Scheduled audit-docs run (no human prompt), concision family 2 (docs/research). Four reviewer agents (freshness, single-home, concision, coherence) produced about 40 findings; three checkers re-derived them, with no WRONG verdicts and many CONFIRMED-BUT because reviewers quoted across the files' line wraps. Applied them in one commit, ran gate:scoped (green) and code-review, fixed two review nits, and opened PR 1921. Skipped as already settled or tracked: the ADR-0004 package.json sentence and the ADR-0020 Dependabot wording (issue 1889). Escalated in PR 1922 (human merge, edits ADR-0024): moving the mermaid lane-grouping rule from the research note into tenant-layers.md section 4 with an ADR-0024 repoint. Its gate:scoped could not run in that worktree; only validate:content ran. All work was agent-initiated by the schedule."
+prs:
+  - "1921"
+  - "1922"
+docsRead:
+  - path: CONTEXT.md
+    reason: glossary; Importance and Friction wording checked against ADR-0015
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: fetch before reading history; commit via -F file
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: MCP tool surface before opening the PR
+    useful: partly
+  - path: docs/agents/pr-workflow.md
+    reason: Closing a scheduled run's PR steps; gate before first push
+    useful: yes
+  - path: CONTEXT-MAP.md
+    reason: (no reason given)
+  - path: tests/README.md
+    reason: (read before editing)
+  - path: docs/agents/verifying-ui-changes.md
+    reason: (read before editing)
+  - path: layers/midden/CONTEXT.md
+    reason: (read before editing)
+  - path: layers/tinkerfund/CONTEXT.md
+    reason: (read before editing)
+  - path: .agents/skills/atlas-specimen/SKILL.md
+    reason: (read before editing)
+  - path: docs/agents/domain.md
+    reason: (no reason given)
+  - path: docs/agents/tenant-layers.md
+    reason: (no reason given)
+  - path: docs/research/github-branch-protection-vs-autonomous-log-commits.md
+    reason: (no reason given)
+  - path: CLAUDE.md
+    reason: (no reason given)
+  - path: docs/research/content-client-queries-without-wasm.md
+    reason: (no reason given)
+  - path: docs/research/github-actions-public-vs-private-limits.md
+    reason: (no reason given)
+  - path: docs/research/making-repo-public.md
+    reason: (no reason given)
+  - path: docs/research/mermaid-server-side-rendering.md
+    reason: (no reason given)
+  - path: docs/research/public-readiness-review.md
+    reason: (no reason given)
+  - path: docs/research/shell-reads-by-output-matching.md
+    reason: (no reason given)
+  - path: docs/research/nuxt-content-review-grounding.md
+    reason: (no reason given)
+  - path: docs/agents/environment-caveats.md
+    reason: (no reason given)
+  - path: README.md
+    reason: (no reason given)
+  - path: docs/agents/issue-tracker.md
+    reason: (no reason given)
+  - path: docs/agents/triage-labels.md
+    reason: (no reason given)
+  - path: docs/agents/guest-contributions.md
+    reason: (no reason given)
+  - path: docs/agents/guards.md
+    reason: (no reason given)
+  - path: docs/agents/mdc-when-to-use.md
+    reason: (no reason given)
+  - path: deploy/README.md
+    reason: (no reason given)
+  - path: SECURITY.md
+    reason: (no reason given)
+  - path: docs/proposals/README.md
+    reason: (no reason given)
+  - path: .agents/skills/log-session/SKILL.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/how-it-works.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/architecture.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/real-and-invented.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/index.md
+    reason: (no reason given)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/guest-build/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/visitor-loop/SKILL.md
+    reason: (no reason given)
+  - path: docs/adr/0024-build-time-mermaid-prerender.md
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/close-session/SKILL.md
+    reason: (no reason given)
+  - path: docs/adr/0015-audit-skills-and-conditional-importance.md
+    reason: (no reason given)
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: (no reason given)
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: (no reason given)
+  - path: .agents/skills/tinkerfund-campaign/SKILL.md
+    reason: (no reason given)
+  - path: docs/adr/0030-adrs-document-a-decision-not-its-history.md
+    reason: (no reason given)
+  - path: docs/adr/TEMPLATE.md
+    reason: (no reason given)
+  - path: layers/journal/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/atlas/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/commons/CONTEXT.md
+    reason: (no reason given)
+  - path: .agents/skills/digest/SKILL.md
+    reason: (no reason given)
+  - path: docs/proposals/1897-workflow-comments-adr-rewrite.md
+    reason: (no reason given)
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: (no reason given)
+  - path: docs/adr/0006-runtime-routing-path-prefix.md
+    reason: (no reason given)
+  - path: layers/marquee/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/blog/CONTEXT.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/midden-survey/SKILL.md
+    reason: (no reason given)
+  - path: docs/adr/0027-prune-trials.md
+    reason: (no reason given)
+  - path: .agents/skills/prune-trial/SKILL.md
+    reason: (no reason given)
+  - path: docs/adr/0007-generated-config-committed-drift-checked.md
+    reason: (no reason given)
+  - path: docs/adr/0013-dynamic-content-config-committed-routing-map.md
+    reason: (no reason given)
+  - path: docs/adr/0016-tenant-root-layer-routes.md
+    reason: (no reason given)
+  - path: docs/adr/0018-tenant-layers-under-layers-directory.md
+    reason: (no reason given)
+  - path: docs/adr/0001-single-container-baked-multitenancy.md
+    reason: (no reason given)
+  - path: docs/adr/0002-manifest-driven-config-generation.md
+    reason: (no reason given)
+  - path: docs/adr/0003-agent-operating-model-and-governance.md
+    reason: (no reason given)
+  - path: docs/adr/0005-skill-model.md
+    reason: (no reason given)
+  - path: docs/adr/0008-self-documentation-tenant-is-a-journal.md
+    reason: (no reason given)
+  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
+    reason: (no reason given)
+  - path: docs/adr/0010-digests-derived-append-only-journal-pages.md
+    reason: (no reason given)
+  - path: docs/adr/0011-poc-self-updating-deploy-container.md
+    reason: (no reason given)
+  - path: docs/adr/0012-cross-persona-pingbacks-via-authored-denormalization.md
+    reason: (no reason given)
+  - path: docs/adr/0014-build-time-virtual-routing-module.md
+    reason: (no reason given)
+  - path: docs/adr/0017-provenance-footer-on-agent-authored-content.md
+    reason: (no reason given)
+  - path: docs/adr/0019-patched-nuxt-content-client-db-loading.md
+    reason: (no reason given)
+  - path: docs/adr/0020-requester-trust-tiers.md
+    reason: (no reason given)
+  - path: docs/adr/0021-multi-context-domain-docs.md
+    reason: (no reason given)
+  - path: docs/adr/0022-autonomous-triage-sweep.md
+    reason: (no reason given)
+  - path: docs/adr/0023-guest-driven-demo-pipeline.md
+    reason: (no reason given)
+  - path: docs/adr/0025-cross-tenant-catalog-and-collection-kinds.md
+    reason: (no reason given)
+  - path: docs/adr/0026-gate-workflow-thin-shell.md
+    reason: (no reason given)
+  - path: docs/adr/0028-navigation-reads-server-payloads.md
+    reason: (no reason given)
+  - path: docs/adr/0029-instructions-load-with-the-files-they-govern.md
+    reason: (no reason given)
+  - path: .agents/skills/auto-triage/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/clear-backlog/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/guest-intake/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/midden-catalogue/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/tinkerfund-campaign/ILLUSTRATION.md
+    reason: (no reason given)
+  - path: .agents/skills/visitor-loop/decisions.md
+    reason: (no reason given)
+  - path: .agents/skills/visitor-loop/visitor-brief.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/personas/karen.md
+    reason: (no reason given)
+skillsUsed:
+  - name: audit-docs
+    reason: the run's own procedure
+  - name: code-review
+    reason: required review before first push
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Reviewers quoted multi-line text as flat sentences, so exact-string edits failed and a checker had to re-derive each wrapped quote.
+    solution: Tell reviewers to quote with the file's own line breaks, or give a grep-able anchor.
+    severity: minor
+  - description: Code-review's Spec agent flagged edits as scope creep that checkers had already confirmed; I had to re-verify each against checker verdicts.
+    solution: Pass checker verdicts to the review brief so confirmed fixes are not re-litigated.
+    severity: nit
+durationSec: 1214
+models:
+  claude-sonnet-5-5: 114
+toolCounts:
+  Read: 17
+  Bash: 25
+  Grep: 2
+  Agent: 9
+  Edit: 9
+  Skill: 3
+  ToolSearch: 1
+  mcp__github__create_pull_request: 2
+  mcp__github__subscribe_pr_activity: 2
+  mcp__github__pull_request_read: 1
+filesEdited:
+  - tests/README.md
+  - docs/agents/verifying-ui-changes.md
+  - docs/agents/pr-workflow.md
+  - layers/midden/CONTEXT.md
+  - layers/tinkerfund/CONTEXT.md
+  - .agents/skills/atlas-specimen/SKILL.md
+  - CONTEXT.md
+rulesLoaded:
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0014.md
+  - .claude/rules/adr-0026.md
+  - .claude/rules/adr-0002.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/adr-0028.md
+  - .claude/rules/adr-0001.md
+  - .claude/rules/adr-0011.md
+  - .claude/rules/adr-0006.md
+  - .claude/rules/adr-0008.md
+  - .claude/rules/guards.md
+  - .claude/rules/adr-0025.md
+  - .claude/rules/adr-0010.md
+  - .claude/rules/adr-0012.md
+  - .claude/rules/adr-0007.md
+  - .claude/rules/adr-0024.md
+rulesGlobal:
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0023.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0023.md
+  - .claude/rules/adr-0017.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0026.md
+  - .claude/rules/adr-0001.md
+  - .claude/rules/adr-0011.md
+  - .claude/rules/adr-0014.md
+  - .claude/rules/adr-0008.md
+  - .claude/rules/adr-0025.md
+  - .claude/rules/adr-0028.md
+  - .claude/rules/adr-0002.md
+  - .claude/rules/adr-0012.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0001.md
+    reason: Loaded for an unrelated rule scope; did not change anything this docs audit did.
+    useful: no
+  - path: .claude/rules/adr-0002.md
+    reason: Loaded for an unrelated rule scope; did not change anything this docs audit did.
+    useful: no
+  - path: .claude/rules/adr-0003.md
+    reason: Always-loaded; governed the gate, PR, log and provenance steps; the summary was enough, I did not open the full ADR.
+    useful: yes
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Loaded for an unrelated rule scope; did not change anything this docs audit did.
+    useful: no
+  - path: .claude/rules/adr-0004.md
+    reason: Always-loaded; governed the gate, PR, log and provenance steps; the summary was enough, I did not open the full ADR.
+    useful: yes
+  - path: .claude/rules/adr-0005.md
+    reason: Shaped what the audit may edit and where facts live; summary was enough, I did not open the full ADR.
+    useful: yes
+  - path: .claude/rules/adr-0006.md
+    reason: Loaded for an unrelated rule scope; did not change anything this docs audit did.
+    useful: no
+  - path: .claude/rules/adr-0007.md
+    reason: Loaded for an unrelated rule scope; did not change anything this docs audit did.
+    useful: no
+  - path: .claude/rules/adr-0008.md
+    reason: Loaded for an unrelated rule scope; did not change anything this docs audit did.
+    useful: no
+  - path: .claude/rules/adr-0009.md
+    reason: Always-loaded; governed the gate, PR, log and provenance steps; the summary was enough, I did not open the full ADR.
+    useful: yes
+  - path: .claude/rules/adr-0010.md
+    reason: Loaded for an unrelated rule scope; did not change anything this docs audit did.
+    useful: no
+  - path: .claude/rules/adr-0011.md
+    reason: Loaded for an unrelated rule scope; did not change anything this docs audit did.
+    useful: no
+  - path: .claude/rules/adr-0012.md
+    reason: Loaded for an unrelated rule scope; did not change anything this docs audit did.
+    useful: no
+  - path: .claude/rules/adr-0013.md
+    reason: Loaded for an unrelated rule scope; did not change anything this docs audit did.
+    useful: no
+  - path: .claude/rules/adr-0014.md
+    reason: Loaded for an unrelated rule scope; did not change anything this docs audit did.
+    useful: no
+  - path: .claude/rules/adr-0015.md
+    reason: Shaped what the audit may edit and where facts live; summary was enough, I did not open the full ADR.
+    useful: yes
+  - path: .claude/rules/adr-0016.md
+    reason: Loaded for an unrelated rule scope; did not change anything this docs audit did.
+    useful: no
+  - path: .claude/rules/adr-0017.md
+    reason: Always-loaded; governed the gate, PR, log and provenance steps; the summary was enough, I did not open the full ADR.
+    useful: yes
+  - path: .claude/rules/adr-0018.md
+    reason: Loaded for an unrelated rule scope; did not change anything this docs audit did.
+    useful: no
+  - path: .claude/rules/adr-0019.md
+    reason: Loaded for an unrelated rule scope; did not change anything this docs audit did.
+    useful: no
+  - path: .claude/rules/adr-0020.md
+    reason: Loaded for an unrelated rule scope; did not change anything this docs audit did.
+    useful: no
+  - path: .claude/rules/adr-0021.md
+    reason: Shaped what the audit may edit and where facts live; summary was enough, I did not open the full ADR.
+    useful: yes
+  - path: .claude/rules/adr-0022.md
+    reason: Loaded for an unrelated rule scope; did not change anything this docs audit did.
+    useful: no
+  - path: .claude/rules/adr-0023.md
+    reason: Loaded for an unrelated rule scope; did not change anything this docs audit did.
+    useful: no
+  - path: .claude/rules/adr-0024.md
+    reason: Loaded for an unrelated rule scope; did not change anything this docs audit did.
+    useful: no
+  - path: .claude/rules/adr-0025.md
+    reason: Loaded for an unrelated rule scope; did not change anything this docs audit did.
+    useful: no
+  - path: .claude/rules/adr-0026.md
+    reason: Loaded for an unrelated rule scope; did not change anything this docs audit did.
+    useful: no
+  - path: .claude/rules/adr-0027.md
+    reason: Shaped what the audit may edit and where facts live; summary was enough, I did not open the full ADR.
+    useful: yes
+  - path: .claude/rules/adr-0028.md
+    reason: Loaded for an unrelated rule scope; did not change anything this docs audit did.
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: Shaped what the audit may edit and where facts live; summary was enough, I did not open the full ADR.
+    useful: yes
+  - path: .claude/rules/adr-0030.md
+    reason: Shaped what the audit may edit and where facts live; summary was enough, I did not open the full ADR.
+    useful: yes
+  - path: .claude/rules/guards.md
+    reason: Loaded for an unrelated rule scope; did not change anything this docs audit did.
+    useful: no
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: Loaded for an unrelated rule scope; did not change anything this docs audit did.
+    useful: no
+  - path: .claude/rules/tenant-layers.md
+    reason: Loaded for an unrelated rule scope; did not change anything this docs audit did.
+    useful: no
+subagents:
+  - type: general-purpose
+    task: "Audit A: freshness"
+  - type: general-purpose
+    task: "Audit B: single-home"
+  - type: general-purpose
+    task: "Audit C: concision research docs"
+  - type: general-purpose
+    task: "Audit D: coherence"
+  - type: general-purpose
+    task: Fact-check findings X
+  - type: general-purpose
+    task: Fact-check findings Y
+  - type: general-purpose
+    task: Fact-check findings Z
+  - type: general-purpose
+    task: "Code review: Standards"
+  - type: general-purpose
+    task: "Code review: Spec"
+gitBranch: claude/festive-mayer-j5wx07
+entrypoint: remote_trigger
+cliVersion: 2.1.299
+trigger: audit-docs
+landedBy: Stop
