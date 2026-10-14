@@ -1,0 +1,251 @@
+schemaVersion: 1
+session: session_01Dcufz27EyPsKy6sYafpKRg
+startedAt: 2026-10-14T22:12:10Z
+endedAt: 2026-10-14T22:42:54Z
+kind: interactive
+goal: Write the Glass Box build spec
+status: completed
+outcome: 23 build-ready stories filed under the Glass Box spec; building may start
+summary: "The owner started this session with /wayfinder and asked for the ticket \"Glass Box: write the build spec\" (#1987) to be worked with them. Mid-session they asked for two more things: a second exploration agent to read every ticket's output, and a read of all ADRs. I claimed the ticket and read all 30 ADRs. Two agents ran: one answered the codebase questions with file:line evidence, the other read every map ticket, comment and the prototype branch for anything the spec had dropped. Then I put the open questions to the owner one at a time, and they decided: Subjects from a map in layer code; plain :file and ::excerpt names; ADRs and glossaries linked via :file and Journal pages via site links; prev/next through Lessons only; a render font exported per layer (rewrites ADR-0024); the landing page carries revision; search out of scope; building may start. Several decisions were the owner's own redirections rather than picks among my options: revisionDate as frontmatter, not read at build time; glossary terms that expand inline, with Glass Box's own definitions in a terms Collection; content creation as its own stories, one per Subject; and relaxing the stop rule to any link per stop, so the Start here Walkthrough can ship with the seeds. The codebase settled the rest, and I stated those as defaults: content path under guide/pages, two-digit prefixes because stems sort as text, the layer test inside pnpm test, and a fix for the smoke helper's prefix handling. I filed 23 sub-issues of #1985 (#1988-#2010) with ready-for-agent and native blocked-by edges. Two are marked human merge: the drift rule (#1995) and the per-Tenant Mermaid font (#1996). I rewrote the spec body (on-hold line lifted, Part 3 added), resolved and closed #1987, closed the stale design ticket #1974 as a duplicate of #1986, and added the map pointer. Nothing was built."
+prs: []
+docsRead:
+  - path: docs/agents/issue-tracker.md
+    reason: spec and sub-issue format, wayfinding operations, blocking endpoint
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: MCP mapping, header rewrite trap for spec and map bodies
+    useful: yes
+  - path: docs/agents/triage-labels.md
+    reason: ready-for-agent meaning before labelling stories
+    useful: yes
+  - path: GLOSSARY.md
+    reason: Tenant, Space, Collection, Human-only terms used in the stories
+    useful: yes
+  - path: GLOSSARY-MAP.md
+    reason: where Glass Box's glossary entry must go
+    useful: partly
+  - path: docs/adr/0001-single-container-baked-multitenancy.md
+    reason: owner asked to read all ADRs; content only from committed files at build
+    useful: partly
+  - path: docs/adr/0002-manifest-driven-config-generation.md
+    reason: a new Tenant edits only its manifest and layer
+    useful: yes
+  - path: docs/adr/0003-agent-operating-model-and-governance.md
+    reason: new Tenant and Skills need Trusted approval, given by the owner
+    useful: yes
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: which stories need a human merge
+    useful: yes
+  - path: docs/adr/0005-skill-model.md
+    reason: Skill home and links for the writing and update Skills
+    useful: yes
+  - path: docs/adr/0006-runtime-routing-path-prefix.md
+    reason: only pages is routed; terms as a data Collection is fine
+    useful: yes
+  - path: docs/adr/0007-generated-config-committed-drift-checked.md
+    reason: revisionDate in frontmatter needs a drift check, put in the layer test
+    useful: yes
+  - path: docs/adr/0008-self-documentation-tenant-is-a-journal.md
+    reason: read as asked; no bearing on Glass Box
+    useful: no
+  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
+    reason: read as asked; governs this log only
+    useful: partly
+  - path: docs/adr/0010-digests-derived-append-only-journal-pages.md
+    reason: read as asked; no bearing
+    useful: no
+  - path: docs/adr/0011-poc-self-updating-deploy-container.md
+    reason: prod clones main and builds, so build-time git was possible
+    useful: partly
+  - path: docs/adr/0012-cross-persona-pingbacks-via-authored-denormalization.md
+    reason: read as asked; topic NC10 context only
+    useful: no
+  - path: docs/adr/0013-dynamic-content-config-committed-routing-map.md
+    reason: layers register no collections; manifest does
+    useful: partly
+  - path: docs/adr/0014-build-time-virtual-routing-module.md
+    reason: refresh .nuxt after a new layer
+    useful: partly
+  - path: docs/adr/0015-audit-skills-and-conditional-importance.md
+    reason: no Skill registry to update for new Skills
+    useful: partly
+  - path: docs/adr/0016-tenant-root-layer-routes.md
+    reason: root redirect lives in the layer and needs its own test
+    useful: yes
+  - path: docs/adr/0017-provenance-footer-on-agent-authored-content.md
+    reason: header on every issue body
+    useful: yes
+  - path: docs/adr/0018-tenant-layers-under-layers-directory.md
+    reason: a new layer needs no Human-only change
+    useful: yes
+  - path: docs/adr/0019-patched-nuxt-content-client-db-loading.md
+    reason: read as asked; no bearing
+    useful: no
+  - path: docs/adr/0020-requester-trust-tiers.md
+    reason: owner is Trusted; no Public input involved
+    useful: partly
+  - path: docs/adr/0021-multi-context-domain-docs.md
+    reason: Glass Box glossary and product decisions go in its GLOSSARY.md
+    useful: yes
+  - path: docs/adr/0022-autonomous-triage-sweep.md
+    reason: wayfinder tickets and triage labels coexist
+    useful: partly
+  - path: docs/adr/0023-guest-driven-demo-pipeline.md
+    reason: read as asked; no bearing
+    useful: no
+  - path: docs/adr/0024-build-time-mermaid-prerender.md
+    reason: one-font rule the per-Tenant font story rewrites
+    useful: yes
+  - path: docs/adr/0025-cross-tenant-catalog-and-collection-kinds.md
+    reason: no kind keeps Glass Box out of Commons Search
+    useful: yes
+  - path: docs/adr/0026-gate-workflow-thin-shell.md
+    reason: read as asked; no bearing
+    useful: no
+  - path: docs/adr/0027-prune-trials.md
+    reason: read as asked; no open trial touched
+    useful: no
+  - path: docs/adr/0028-navigation-reads-server-payloads.md
+    reason: sidebar, prev/next and terms return only what the page reads
+    useful: yes
+  - path: docs/adr/0029-instructions-load-with-the-files-they-govern.md
+    reason: drift rule needs paths and a few lines
+    useful: yes
+  - path: docs/adr/0030-adrs-document-a-decision-not-its-history.md
+    reason: ADR-0024 is rewritten in place with its rule
+    useful: yes
+  - path: docs/agents/tenant-layers.md
+    reason: "subagent reported it: content components share one global name list"
+    useful: yes
+skillsUsed:
+  - name: wayfinder
+    reason: work the build-spec ticket of the Glass Box map, resolve and point the map
+  - name: close-session
+    reason: closure after resolving the ticket with no PR
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: The ADR-0017 guard blocked a curl loop that built dependency-edge bodies from variables, so I had to rewrite it as 44 literal curl calls
+    solution: Add an MCP tool or a small repo script for issue dependencies, so blocking edges need no hand-written curl
+    severity: minor
+  - description: Glass Box tickets keep citing user-attachments design files that the proxy blocks; this session could not check design 1b details itself
+    solution: Commit design exports to a branch, or have the owner upload them, when a design pass resolves
+    severity: minor
+  - description: I read Midden's Gloss.vue with cat instead of the Read tool, against CLAUDE.md's Read-tool rule; the hook loaded its rule anyway
+    solution: Use Read for file reads, as CLAUDE.md says
+    severity: nit
+  - description: The brief gave the content path without the Collection folder (content/guide/<subject>), which would have put the stories' files in the wrong place
+    solution: Fixed in the stories; spec writers should derive paths from shared/expand.ts
+    severity: nit
+durationSec: 1844
+models:
+  claude-opus-5-5: 163
+toolCounts:
+  ToolSearch: 1
+  Read: 38
+  mcp__github__issue_write: 28
+  mcp__github__issue_read: 4
+  Agent: 2
+  Bash: 17
+  AskUserQuestion: 12
+  mcp__github__add_issue_comment: 2
+  Skill: 2
+  Write: 2
+rulesLoaded:
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/adr-0022.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0028.md
+  - .claude/rules/adr-0007.md
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0001.md
+  - .claude/rules/adr-0018.md
+  - .claude/rules/adr-0028.md
+  - .claude/rules/adr-0002.md
+  - .claude/rules/adr-0013.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/adr-0014.md
+  - .claude/rules/adr-0007.md
+  - .claude/rules/adr-0024.md
+  - .claude/rules/adr-0006.md
+  - .claude/rules/adr-0016.md
+  - .claude/rules/adr-0025.md
+  - .claude/rules/adr-0012.md
+  - .claude/rules/adr-0008.md
+  - .claude/rules/adr-0011.md
+  - .claude/rules/adr-0026.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0015.md
+  - .claude/rules/mermaid-lanes.md
+docsReadBySubagents:
+  - docs/agents/tenant-layers.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Decided which stories carry a human merge; read the full ADR because the owner asked for all ADRs
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Only governs this log; summary enough
+    useful: partly
+  - path: .claude/rules/adr-0027.md
+    reason: No open trial covered text this session changed
+    useful: no
+  - path: .claude/rules/adr-0020.md
+    reason: Confirmed the owner's answers count as Trusted approval; summary enough
+    useful: partly
+  - path: .claude/rules/adr-0003.md
+    reason: Owner approval made the new Tenant, Skills and Collection buildable; no PR was opened
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Every issue body got this session's header, and spec and map headers were replaced
+    useful: yes
+  - path: .claude/rules/adr-0029.md
+    reason: Shaped the drift-rule story's constraints
+    useful: yes
+  - path: .claude/rules/adr-0021.md
+    reason: Put Glass Box terms in its own glossary in the skeleton story
+    useful: yes
+  - path: .claude/rules/adr-0030.md
+    reason: Mermaid font story rewrites ADR-0024 in place with its rule
+    useful: yes
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Its paths gave the Human-only list for marking stories
+    useful: yes
+  - path: .claude/rules/tenant-layers.md
+    reason: Global auto-import namespace and scoped layer CSS went into the stories
+    useful: yes
+  - path: .claude/rules/adr-0022.md
+    reason: Labelling stories ready-for-agent beside wayfinder labels; no sweep ran
+    useful: partly
+subagents:
+  - type: Explore
+    task: Explore codebase for Glass Box build spec
+  - type: general-purpose
+    task: Harvest all Glass Box ticket outputs
+gitBranch: HEAD
+entrypoint: remote
+cliVersion: 2.1.300
+learnings:
+  - Nuxt Content sorts navigation and surround by stem as plain text, so numeric filename prefixes need zero-padding once a folder reaches ten files
+ideas:
+  - Add a scripts/issue-deps.ts that takes 'child:blocker' pairs, resolves database ids and posts native blocked-by edges, so wayfinder and spec sessions wire dependencies in one call that the provenance guard can read
+landedBy: Stop
