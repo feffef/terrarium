@@ -1,0 +1,98 @@
+schemaVersion: 1
+session: session_01D2JnZT1y8zCvC9GJc27pZp
+startedAt: 2026-10-14T17:00:25Z
+endedAt: 2026-10-14T17:01:12Z
+kind: delegated
+goal: Test which path rules load after a failed shell read and after file reads
+status: completed
+outcome: All 5 rule-loading steps passed; no PR, no file edits
+summary: "Owner-approved test session (human-instructed kickoff, one prompt, no later human prompt). I ran the five ordered steps before any other read, then did the start reads and closed. Step 1 (failed Bash that read scripts/poll-guest-tickets.ts) PASS: failure carried the hint with adr-0023.md. Step 2 PASS: no rule. Step 3 PASS: mermaid-lanes.md and adr-0012.md, not mdc-when-to-use or tenant-layers. Step 4 PASS: tenant-layers.md only. Step 5 PASS: mdc-when-to-use.md and adr-0002.md, tenant-layers did not repeat. Nothing earlier could have loaded these rules, since the only prior content was the always-loaded set. Nothing was pushed or edited. After step 6 adr-0021.md loaded from the CONTEXT reads, as expected."
+prs: []
+docsRead:
+  - path: CONTEXT-MAP.md
+    reason: start read, ordered after the test steps
+    useful: partly
+  - path: CONTEXT.md
+    reason: start read, glossary for Session kind and closure
+    useful: yes
+  - path: layers/atlas/tests/unit/almanac-state.spec.ts
+    reason: (no reason given)
+  - path: layers/blog/content/david/pages/2026-07-05-first-light.md
+    reason: (no reason given)
+  - path: layers/atlas/app/composables/webViewBox.ts
+    reason: (no reason given)
+  - path: layers/blog/tenant.config.ts
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: required closing step
+  - name: log-session
+    reason: authors this log
+frictions: []
+durationSec: 47
+models:
+  claude-sonnet-5-5: 24
+toolCounts:
+  Bash: 3
+  Read: 6
+  Skill: 2
+  Write: 1
+rulesLoaded:
+  - .claude/rules/adr-0023.md
+  - .claude/rules/mermaid-lanes.md
+  - .claude/rules/adr-0012.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/adr-0002.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/adr-0021.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0023.md
+    reason: "Test target for step 1: injected via the failed-command hint; guest pipeline not otherwise relevant, summary enough"
+    useful: no
+  - path: .claude/rules/mermaid-lanes.md
+    reason: Test target for step 3; no mermaid work done
+    useful: no
+  - path: .claude/rules/adr-0012.md
+    reason: Test target for step 3; no blog edits made, summary enough
+    useful: no
+  - path: .claude/rules/tenant-layers.md
+    reason: Test target for step 4; no layer code written
+    useful: no
+  - path: .claude/rules/adr-0002.md
+    reason: Test target for step 5; no manifest edited, summary enough
+    useful: no
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: Test target for step 5; no content authored
+    useful: no
+  - path: .claude/rules/adr-0021.md
+    reason: Loaded on reading CONTEXT files; no glossary change made
+    useful: no
+  - path: .claude/rules/adr-0003.md
+    reason: No PR opened, as the test forbade; rule not applicable
+    useful: no
+  - path: .claude/rules/adr-0004.md
+    reason: No push or PR, so no gate run was needed
+    useful: no
+  - path: .claude/rules/adr-0009.md
+    reason: Told me to close-session and log; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: No GitHub writes were made, so no header needed
+    useful: no
+  - path: .claude/rules/adr-0020.md
+    reason: Requester was the Trusted owner; nothing to apply
+    useful: no
+  - path: .claude/rules/adr-0027.md
+    reason: No instruction text was changed
+    useful: no
+gitBranch: HEAD
+entrypoint: remote
+cliVersion: 2.1.299
+landedBy: Stop
