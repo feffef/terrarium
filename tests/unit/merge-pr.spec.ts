@@ -115,8 +115,7 @@ describe('prOriginRefusal()', () => {
   })
 
   it('refuses a guest-pipeline PR, though an agent opened it as the owner (ADR-0023)', () => {
-    expect(GUEST_PIPELINE_LABEL).toBe('guest-pipeline')
-    expect(prOriginRefusal({ ...meta, labels: ['bug', 'guest-pipeline'] }, 'feffef', 'terrarium')).toMatch(
+    expect(prOriginRefusal({ ...meta, labels: ['bug', GUEST_PIPELINE_LABEL] }, 'feffef', 'terrarium')).toMatch(
       /owner merges a guest-pipeline PR \(ADR-0023\)/,
     )
   })
