@@ -50,5 +50,5 @@ its manifest and nothing else.
 - `shared/manifest.ts`: the manifest's shape and `validateManifest`.
 - `shared/expand.ts`: loading the manifests, the expansion and its checks.
 - `nuxt.config.ts`: the type-check include for manifests.
-- `docs/agents/tenant-layers.md` §3: the steps to add a Space, Collection or
+- `.claude/rules/tenant-layers.md`: the steps to add a Space, Collection or
   Tenant.

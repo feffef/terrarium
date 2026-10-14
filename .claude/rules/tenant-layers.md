@@ -1,13 +1,33 @@
 ---
 paths:
   - "nuxt.config.ts"
-  - "layers/*/*"
+  - "layers/*/nuxt.config.ts"
+  - "layers/*/tenant.config.ts"
+  - "layers/*/package.json"
   - "layers/*/app/**"
-  - "layers/*/tests/**"
-  - "layers/*/content/**/*.md"
 ---
 # Tenant layers
 
-Tenant layers, `nuxt.config.ts`, and adding a Space, Collection or Tenant have
-gotchas sessions keep re-discovering: see docs/agents/tenant-layers.md. A
-Tenant's own terms are in layers/<tenant>/CONTEXT.md.
+- **Auto-imports first.** A layer's `app/components/`, `app/composables/` and
+  `app/utils/` are auto-imported in every layer, components by directory-prefixed
+  name (`atlas/SpecimenPlate.vue` → `<AtlasSpecimenPlate>`). The namespace is
+  global: name exports in the Tenant's words (`formatBlogDate`, not `fmtDate`),
+  and never give a local binding an auto-imported name (vue-tsc TS2774, #95).
+- **Aliases (`~`, `@`, `~~`, `@@`) resolve to the main app, not the layer.**
+  Import a layer's own types by relative path; in its `nuxt.config.ts`, build
+  asset paths with `fileURLToPath(new URL('./app/…', import.meta.url))`. A
+  main-app module keeps its alias (`#shared/routing`).
+- **Space or Collection:** edit `tenant.config.ts`. Only a Space's `pages`
+  Collection has URLs (ADR-0006, #573). **New Tenant:** give it a
+  `nuxt.config.ts` (`defineNuxtConfig({})` will do), then `nuxt prepare` (or
+  `pnpm install`) before `pnpm lint`, or a stale `.nuxt` misfires
+  `vue/multi-word-component-names` on its pages.
+- **A layer is not a sandbox.** Its `css:` loads on every page (scope it under
+  the wrapper class), its plugins and `nuxt.config` flags apply app-wide (keep
+  them inert outside the Tenant's opt-in, #1376), its `package.json` can't
+  scope a dependency (a new one escalates, ADR-0004), and storage is one origin
+  shared with Nuxt's reload guard (prefix keys, delete only yours, never
+  `clear()`, #1358).
+
+Wrapper CSS tokens, content-component overrides and routing claims:
+docs/agents/tenant-layers.md. A Tenant's own terms: layers/<tenant>/CONTEXT.md.

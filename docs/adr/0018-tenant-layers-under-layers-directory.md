@@ -50,5 +50,5 @@ stays the domain word; `layers/` is only a path.
 - `nuxt.config.ts`: the manifest include for type checking.
 - `tests/unit/typecheck-coverage.spec.ts`: fails when that include matches no
   manifest.
-- `docs/agents/tenant-layers.md`: how to add a Tenant, and the layer gotchas.
+- `.claude/rules/tenant-layers.md`: how to add a Tenant, and the layer gotchas.
 - `shared/expand.ts`: reads the manifests from `layers/`.

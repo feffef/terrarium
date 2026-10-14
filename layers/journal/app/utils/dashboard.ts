@@ -9,7 +9,7 @@
 //
 // Types are imported from the sibling layer-local file by RELATIVE path: inside
 // a Nuxt layer the `~/` alias resolves to the MAIN app, not this layer, so it
-// would not find `../types/journal` (see docs/agents/tenant-layers.md §1).
+// would not find `../types/journal` (see .claude/rules/tenant-layers.md).
 //
 // Nuxt auto-imports these named exports into the layer's app — the SFCs use
 // them directly, with no import block. The auto-import namespace is global

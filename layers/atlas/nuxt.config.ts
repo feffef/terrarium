@@ -12,6 +12,6 @@ export default defineNuxtConfig({
   // The `.atlas` theme tokens + per-biome palettes, registered globally so every
   // layer view (front door, biome wing, specimen entry) and every nested
   // component inherits them. Resolved from this config's own URL so it is
-  // unambiguous regardless of layer alias resolution (docs/agents/tenant-layers.md §1).
+  // unambiguous regardless of layer alias resolution (.claude/rules/tenant-layers.md).
   css: [fileURLToPath(new URL('./app/assets/theme.css', import.meta.url))],
 })
