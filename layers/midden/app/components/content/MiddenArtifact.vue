@@ -16,8 +16,9 @@
 // `useSpace('midden')` to read this Space's own `artifacts` collection key, so an
 // embed inside one Site's body can never reach across Spaces.
 //
-// A broken `slug` reference isn't caught at build/CI time (issue #740) — the
-// `v-else` fallback below is load-bearing, not a rare-case backstop.
+// `scripts/validate-content-refs.ts` (its `midden-artifact` check, run by
+// `validate:content` in the gate) catches a broken `slug`; the `v-else`
+// fallback below stays as a runtime backstop.
 const props = defineProps<{ slug: string }>()
 
 // The dig report's page-wide first-use split for this find's note (issue #1463).
