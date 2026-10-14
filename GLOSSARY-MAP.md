@@ -21,6 +21,8 @@ Platform glossary always; read a Tenant's glossary when you work on that Tenant.
 - **Tinkerfund** — [`layers/tinkerfund/GLOSSARY.md`](./layers/tinkerfund/GLOSSARY.md) —
   Campaign, Inventor, Backer, Pledge, Reward, Promotion and the rest of a
   crowdfunding shop's vocabulary.
+- **Glass Box** — [`layers/glassbox/GLOSSARY.md`](./layers/glassbox/GLOSSARY.md) —
+  Lesson, Walkthrough, Subject, Excerpt, Term.
 - **Commons** — [`layers/commons/GLOSSARY.md`](./layers/commons/GLOSSARY.md) — the
   Aggregator Tenant: its Search and Timeline Spaces. The terms it turns on
   (Collection kind, Catalog, Aggregator) live in the root `GLOSSARY.md`.
@@ -38,7 +40,9 @@ The root `GLOSSARY.md`'s `## Tenants` roster points at each of these. Definition
   but curated and voiced: a hand-selected, graded subset, not an exhaustive
   record. The **Marquee** is real like the Journal and the Midden (the films and
 their in-universe order are genuine facts) but, like the Atlas, claims nothing about the Terrarium. **Tinkerfund** is fiction too: a simulated shop of invented
-  products that claims nothing about the Terrarium. The **Commons** owns almost
+  products that claims nothing about the Terrarium. **Glass Box** is real like the
+  Journal but curated: a textbook pinned to dated commits that cites the Journal
+  and ADRs as evidence rather than recording activity. The **Commons** owns almost
   no content; it re-presents the other Tenants' opted-in content through the
   Catalog and makes no claims of its own.
 - **Same-Space derivation vs. cross-Space denormalization.** The Atlas's

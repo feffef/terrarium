@@ -14,10 +14,11 @@ import { root, type ExpandedCollection } from '../../shared/expand.ts'
  * `'digests/2026-07-04.md'`) within `(tenant, space)`. Mirrors the file → route
  * convention `app/pages/t/[tenant]/[space]/[...slug].vue` resolves at runtime: an
  * `index.md` (at any depth) is its own directory's route; every other file's
- * extension-stripped path is its slug.
+ * extension-stripped path is its slug, with each segment's `NN.` order prefix
+ * dropped as Nuxt Content does.
  */
 export function mermaidPageRoute(tenant: string, space: string, relPath: string): string {
-  const slug = relPath.replace(/\.md$/, '').replace(/(^|\/)index$/, '')
+  const slug = relPath.replace(/\.md$/, '').replace(/(^|\/)\d+\./g, '$1').replace(/(^|\/)index$/, '')
   return slug ? `/t/${tenant}/${space}/${slug}` : `/t/${tenant}/${space}`
 }
 
