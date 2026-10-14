@@ -15,7 +15,9 @@ through the shared resolver, and gets tested by its own Tenant.
   choice.
 - **How it reads content.** It reads its own Tenant's Spaces only through
   `resolveSpaceRoute`, once per Space it needs, and other Tenants only through
-  the catalog (ADR-0025). It never reads the routing map itself.
+  the catalog (ADR-0025). It never reads the routing map itself. The Platform
+  home page is not a root page; ADR-0025 names it as the one page that may read
+  the Tenants it features directly.
 - **What stays the same.** The manifest, the routing map and the resolver know
   nothing about root pages. Only Spaces have routes there, and only Spaces are
   in the list of entry routes the smoke test visits.
