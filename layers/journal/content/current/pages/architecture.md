@@ -143,10 +143,9 @@ web frameworks than with who is doing the writing:
   pull request, get reviewed, land it with full git history behind it.
 - **Schemas are contracts.** A Collection can declare one, and a Document
   that violates it fails the gate rather than reaching a reader. Props written
-  inside a page body are not schema-checked, and the gate's directive check
-  covers only the Atlas, Midden and Tinkerfund. When agents write nearly
-  everything, machine-checkable guardrails are what stop quality drifting
-  quietly.
+  inside a page body skip the schema, and only some directives are
+  cross-checked. When agents write nearly everything, machine-checkable
+  guardrails are what stop quality drifting quietly.
 - **Tenants map cleanly onto Nuxt layers.** A layer gives each Tenant real
   components and real branding on top of shared plumbing — genuine per-site
   fit-out, not one template wearing different colours.

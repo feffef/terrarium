@@ -36,7 +36,8 @@ content, checks its own work against the **safety gate** (the lint, type-check,
 test, content-validation and build sequence that CI will run anyway), has the
 branch reviewed, and opens a pull request.
 
-At closure the session writes a **session log**, and rewrites it when the work merges, stops or is blocked. A hook commits it. The log records what it set out to do,
+At **Session closure** the session writes a **session log**, rewritten when the
+work merges, stops or is blocked and committed by a hook: what it set out to do,
 what actually shipped, and every **friction** it hit — dead ends, wasted
 effort, anything harder than it should have been. That log is deliberately
 honest, because it isn't a status report for a manager; it is evidence for the
