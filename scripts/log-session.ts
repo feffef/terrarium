@@ -965,7 +965,7 @@ export function authorMain(
         'Drop them; a rule only a subagent loaded goes in subagentVerdicts, from that subagent.',
     )
   }
-  const keptNo = droppedNoVerdicts(existing, result.data)
+  const keptNo = droppedNoVerdicts(merged, result.data)
   // Its existence is the wrap-up signal the landing path gates on.
   mkdirSync(dirname(scratchAbs), { recursive: true })
   writeFileSync(scratchAbs, JSON.stringify(merged, null, 2))
@@ -991,11 +991,10 @@ export function authorMain(
   reportUnexplainedReads(ctx, merged)
 }
 
-/** Earlier 'no' rule verdicts the incoming pass leaves out (#1943). */
-function droppedNoVerdicts(existing: AuthoredScratch | undefined, incoming: AuthoredScratch): string[] {
-  if (existing?.session !== incoming.session) return []
+/** Earlier 'no' rule verdicts the merge kept though the incoming pass left them out (#1943). */
+function droppedNoVerdicts(merged: AuthoredScratch, incoming: AuthoredScratch): string[] {
   const sent = new Set((incoming.ruleVerdicts ?? []).map((v) => v.path))
-  return (existing.ruleVerdicts ?? []).filter((v) => v.useful === 'no' && !sent.has(v.path)).map((v) => v.path)
+  return (merged.ruleVerdicts ?? []).filter((v) => v.useful === 'no' && !sent.has(v.path)).map((v) => v.path)
 }
 
 function readStdin(): string {

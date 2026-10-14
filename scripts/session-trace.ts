@@ -820,6 +820,9 @@ export function stitch(authored: AuthoredScratch, trace: MechanicalTrace): Recor
     solution: 'Find the crediting command in the transcript and tighten scripts/shell-reads.ts',
     severity: 'moderate',
   }))
+  const authoredDocs = new Set((authored.docsRead ?? []).map((d) => d.path))
+  // docsRead holds one entry per path, so it takes the first agent's verdict;
+  // subagentVerdicts keeps every agent's.
   const subagentDocVerdicts = new Map<string, SubagentVerdict>()
   for (const v of authored.subagentVerdicts ?? []) if (v.kind === 'doc' && !subagentDocVerdicts.has(v.path)) subagentDocVerdicts.set(v.path, v)
   const entry: Record<string, unknown> = {
@@ -844,7 +847,7 @@ export function stitch(authored: AuthoredScratch, trace: MechanicalTrace): Recor
     ).map((d) => {
       // A doc the main session didn't rate takes its subagent's verdict (#1941).
       const v = subagentDocVerdicts.get(d.path)
-      return v && !(authored.docsRead ?? []).some((a) => a.path === d.path) ?{ path: d.path, reason: `[${v.agent}] ${v.reason}`, useful: v.useful } : d
+      return v && !authoredDocs.has(d.path) ? { path: d.path, reason: `[${v.agent}] ${v.reason}`, useful: v.useful } : d
     }),
     skillsUsed: mergeRefs(authored.skillsUsed ?? [], trace.skillsUsed, 'name', (name) =>
       trace.commandSkills.includes(name) ? DERIVED_REASON_COMMAND : DERIVED_REASON,
