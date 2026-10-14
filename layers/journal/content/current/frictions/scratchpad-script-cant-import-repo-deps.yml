@@ -1,0 +1,12 @@
+name: scratchpad-script-cant-import-repo-deps
+cause: A throwaway tsx script in the scratchpad resolves modules from its own directory, so `import 'yaml'` fails; no doc says to set NODE_PATH or import by absolute path.
+surface: safe
+status: fixed
+occurrences:
+  - session: session_01QUhfMeVRZg7NX654bv5ZE5
+    date: "2026-10-13"
+    severity: nit
+  - session: session_01WUDXJjhrM6uHf9Sjjvw2N9
+    date: "2026-10-13"
+    severity: nit
+fixedOn: "2026-10-14"
