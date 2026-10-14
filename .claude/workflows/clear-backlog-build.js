@@ -14,6 +14,22 @@ if (!args || !args.session) throw new Error('args.session (this session id, sess
 const HEADER = `🤖 [Claude](https://claude.ai/code/${args.session})`
 const MAX_ROUNDS = 3
 
+const VERDICTS = {
+  type: 'array',
+  description: 'your verdict on each .claude/rules file that loaded for you and each instruction doc you read',
+  items: {
+    type: 'object',
+    properties: {
+      path: { type: 'string' },
+      kind: { type: 'string', enum: ['rule', 'doc'] },
+      reason: { type: 'string', description: 'why it loaded or you read it, and whether it helped' },
+      useful: { type: 'string', enum: ['yes', 'partly', 'no'] },
+    },
+    required: ['path', 'kind', 'reason', 'useful'],
+  },
+}
+const ASK_VERDICTS = 'In verdicts, rate each .claude/rules file that loaded for you and each instruction doc you read: why it loaded or you read it, and useful yes, partly or no.'
+
 const WORK = {
   type: 'object',
   properties: {
@@ -26,6 +42,7 @@ const WORK = {
     fixed: { type: 'array', items: { type: 'string' } },
     refused: { type: 'array', items: { type: 'string' }, description: 'each refused finding with its proof' },
     reason: { type: 'string' },
+    verdicts: VERDICTS,
   },
   required: ['status', 'commits', 'gatePassed', 'decisions'],
 }
@@ -47,11 +64,13 @@ const REVIEW = {
       },
     },
     summary: { type: 'string' },
+    verdicts: VERDICTS,
   },
   required: ['findings', 'summary'],
 }
 
 const modelOf = b => (b.model ? { model: b.model } : {})
+const tagged = (r, agent) => ((r && r.verdicts) || []).map(v => ({ ...v, agent }))
 const slug = b => b.name.replace(/[^a-z0-9]+/gi, '-')
 
 function common(b) {
@@ -69,7 +88,8 @@ function rules(b) {
 - Commit before you stop, even mid-work. Never push, open a PR, merge, or run close-session/log-session: the orchestrator does those.
 - Every GitHub body you post starts with this exact first line: ${HEADER}
 - Stop and return needs-owner, with the question, its options and your pick, before you add a new dependency, change stored data or the content schema, make a decision big enough for an ADR, delete content visitors can see, change which Tenant's data a request can reach, or reverse an owner's pick above. Decide everything else yourself and list it in decisions.
-- Return worktree, the absolute path of the worktree that holds your commits, only when the branch has commits.`
+- Return worktree, the absolute path of the worktree that holds your commits, only when the branch has commits.
+- ${ASK_VERDICTS}`
 }
 
 function buildPrompt(b) {
@@ -98,7 +118,7 @@ function reviewPrompt(b, axis, wt, round) {
   return `You are the ${axis.toUpperCase()} reviewer, round ${round}. ${common(b)}
 ## Task
 Review read-only in ${wt} (\`cd ${wt} && …\`): the diff \`git diff origin/main...HEAD\`. Read .agents/skills/code-review/SKILL.md with Read and apply ${what} yourself; you can't spawn subagents. Focus on simplicity: what could be smaller, plainer or deleted. Edit no file and run no git command that changes state.
-Mark worthFixing false for a judgement call not worth another fix round.`
+Mark worthFixing false for a judgement call not worth another fix round. ${ASK_VERDICTS}`
 }
 
 function fixPrompt(b, wt, findings, round) {
@@ -118,13 +138,15 @@ async function buildBranch(b) {
 }
 
 async function reviewBranch(built, b) {
-  const out = { branch: b.name, issues: b.issues, worktree: built.worktree, commits: built.commits, decisions: [...built.decisions], rounds: 0 }
+  const out = { branch: b.name, issues: b.issues, worktree: built.worktree, commits: built.commits, decisions: [...built.decisions], rounds: 0, verdicts: tagged(built, `build ${b.name}`) }
   if (built.status !== 'done') return { ...out, status: built.status, question: built.question, reason: built.reason }
   if (!built.gatePassed || !built.worktree) return { ...out, status: 'failed', reason: 'build reported done without a passing gate:scoped or a worktree with commits' }
   for (let round = 1; round <= MAX_ROUNDS; round++) {
     out.rounds = round
-    const reviews = await parallel(['Standards', 'Spec'].map(axis => () =>
+    const axes = ['Standards', 'Spec']
+    const reviews = await parallel(axes.map(axis => () =>
       agent(reviewPrompt(b, axis, out.worktree, round), { label: `${axis} ${b.name} r${round}`, phase: 'Review', schema: REVIEW })))
+    reviews.forEach((r, i) => out.verdicts.push(...tagged(r, `${axes[i]} ${b.name} r${round}`)))
     if (reviews.some(r => !r)) return { ...out, status: 'failed', reason: `round ${round}: a reviewer returned nothing` }
     const all = reviews.flatMap(r => r.findings)
     const toFix = all.filter(f => f.worthFixing)
@@ -136,6 +158,7 @@ async function reviewBranch(built, b) {
     }
     const fix = await agent(fixPrompt(b, out.worktree, toFix, round), { label: `fix ${b.name} r${round}`, phase: 'Review', schema: WORK, ...modelOf(b) })
     if (!fix) return { ...out, status: 'failed', reason: `round ${round}: fix agent returned nothing` }
+    out.verdicts.push(...tagged(fix, `fix ${b.name} r${round}`))
     out.commits = fix.commits
     out.decisions.push(...fix.decisions)
     if (fix.status !== 'done') return { ...out, status: fix.status, question: fix.question, reason: fix.reason }

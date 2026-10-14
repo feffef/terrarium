@@ -12,6 +12,22 @@ export const meta = {
 if (!args || !args.session) throw new Error('args.session (this session id, session_…) is required for the provenance header')
 const HEADER = `🤖 [Claude](https://claude.ai/code/${args.session})`
 
+const VERDICTS = {
+  type: 'array',
+  description: 'your verdict on each .claude/rules file that loaded for you and each instruction doc you read',
+  items: {
+    type: 'object',
+    properties: {
+      path: { type: 'string' },
+      kind: { type: 'string', enum: ['rule', 'doc'] },
+      reason: { type: 'string', description: 'why it loaded or you read it, and whether it helped' },
+      useful: { type: 'string', enum: ['yes', 'partly', 'no'] },
+    },
+    required: ['path', 'kind', 'reason', 'useful'],
+  },
+}
+const ASK_VERDICTS = 'In verdicts, rate each .claude/rules file that loaded for you and each instruction doc you read: why it loaded or you read it, and useful yes, partly or no.'
+
 const RESULT = {
   type: 'object',
   properties: {
@@ -37,6 +53,7 @@ const RESULT = {
     readyForHuman: { type: 'boolean', description: 'labelled ready-for-human' },
     sideFindings: { type: 'array', items: { type: 'string' } },
     writes: { type: 'array', items: { type: 'string' }, description: 'every comment and label change you made on GitHub' },
+    verdicts: VERDICTS,
   },
   required: ['outcome', 'summary', 'publicAuthor', 'readyForHuman', 'files', 'relatedTo', 'sideFindings', 'writes'],
 }
@@ -67,7 +84,9 @@ GitHub writes:
 - A label update replaces the set: pass the complete final set and keep every wayfinder:* label.
 - Return side findings (bugs or gaps outside this issue) in sideFindings instead of filing them.
 
-The run's issue set is ${list}. In relatedTo, name only issues from that set that clearly belong in the same change as this one.`
+The run's issue set is ${list}. In relatedTo, name only issues from that set that clearly belong in the same change as this one.
+
+${ASK_VERDICTS}`
 }
 
 const input = (args.issues || []).map(i => ({ ...i, all: args.issues }))

@@ -33,7 +33,7 @@
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs'
 import { basename, dirname, join, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
-import type { RuleVerdict, UsefulVerdict } from '../shared/schemas/session.ts'
+import type { RuleVerdict, SubagentVerdict, UsefulVerdict } from '../shared/schemas/session.ts'
 import { DERIVED_REASON, FOLDED_TRACE_FIELDS } from '../shared/trace-fields.ts'
 import {
   buildDocLineIndex,
@@ -118,6 +118,9 @@ export interface MechanicalTrace {
    *  loaded: whole, by the Read tool, or in Bash output once `docIndex` is given
    *  (the shell detector's floor, not a whole read). */
   rulesFollowedUp: string[]
+  /** Rules only a subagent or workflow agent loaded: not the main session's own
+   *  loads, so it gives them no verdict (#1941). Set by `foldSubagentTrace`. */
+  rulesLoadedBySubagents?: string[]
   skillsUsed: string[]
   /** The subset of `skillsUsed` seen only as a slash-command expansion — kept
    *  alongside (not instead of) the union so the stitch can annotate provenance
@@ -329,6 +332,9 @@ function resolveAgainstCdDir(p: string, command: string, rel: (s: string) => str
   return dir && !dir.startsWith('/') && !dir.startsWith('..') ? `${dir}/${p}` : p
 }
 
+/** The label both read-source maps give the main session's own reads. */
+export const MAIN_SOURCE = 'this session'
+
 /** The shell-read scan WITH its near-misses, for the author-time advisory the
  *  `log-session` Skill prints (#1074's loop): credit from the same output
  *  matcher `extractTrace` lands, explanations from the command parser (ADR-0009).
@@ -346,7 +352,7 @@ export function shellReadScanOf(
 ): FoldedShellReadScan {
   const docIndex = opts.docIndex ?? (opts.repoRoot !== undefined ? loadDocLineIndex(opts.repoRoot) : buildDocLineIndex([]))
   const resolveGlob = opts.repoRoot !== undefined ? resolveGlobAgainstTree(opts.repoRoot) : undefined
-  const sets = [{ label: 'this session', records }, ...subagents.map((s) => ({ ...s, label: `subagent: ${s.label}` }))]
+  const sets = [{ label: MAIN_SOURCE, records }, ...subagents.map((s) => ({ ...s, label: `subagent: ${s.label}` }))]
   const provenance: FoldedShellReadScan['provenance'] = new Map()
   const unshown: NearMiss[] = []
   const parsed: NearMiss[] = []
@@ -738,8 +744,9 @@ export function foldSubagentTrace(
   // Folded too, but kept out of FOLDED_TRACE_FIELDS: SessionCard's explainer
   // lists those fields, and the card shows these in a list of their own.
   folded.rulesGlobal = dedup([...trace.rulesGlobal, ...subs.flatMap((s) => s.rulesGlobal)])
-  folded.rulesLoaded = dedup([...trace.rulesLoaded, ...subs.flatMap((s) => s.rulesLoaded)]).filter(
-    (r) => !folded.rulesGlobal.includes(r),
+  folded.rulesLoaded = trace.rulesLoaded.filter((r) => !folded.rulesGlobal.includes(r))
+  folded.rulesLoadedBySubagents = dedup(subs.flatMap((s) => s.rulesLoaded)).filter(
+    (r) => !folded.rulesGlobal.includes(r) && !folded.rulesLoaded.includes(r),
   )
   folded.rulesFollowedUp = dedup([...trace.rulesFollowedUp, ...subs.flatMap((s) => s.rulesFollowedUp)])
   return folded
@@ -781,6 +788,7 @@ export interface AuthoredScratch {
   docsRead?: { path: string; reason: string; useful?: UsefulVerdict }[]
   skillsUsed?: { name: string; reason: string }[]
   ruleVerdicts?: RuleVerdict[]
+  subagentVerdicts?: SubagentVerdict[]
   frictions: { description: string; solution: string; severity: string }[]
   learnings?: string[]
   ideas?: string[]
@@ -812,6 +820,11 @@ export function stitch(authored: AuthoredScratch, trace: MechanicalTrace): Recor
     solution: 'Find the crediting command in the transcript and tighten scripts/shell-reads.ts',
     severity: 'moderate',
   }))
+  const authoredDocs = new Set((authored.docsRead ?? []).map((d) => d.path))
+  // docsRead holds one entry per path, so it takes the first agent's verdict;
+  // subagentVerdicts keeps every agent's.
+  const subagentDocVerdicts = new Map<string, SubagentVerdict>()
+  for (const v of authored.subagentVerdicts ?? []) if (v.kind === 'doc' && !subagentDocVerdicts.has(v.path)) subagentDocVerdicts.set(v.path, v)
   const entry: Record<string, unknown> = {
     schemaVersion: 1,
     // trace.session is already ground-truth-resolved; wins over authored.
@@ -831,7 +844,11 @@ export function stitch(authored: AuthoredScratch, trace: MechanicalTrace): Recor
       [...trace.filesRead, ...trace.docsReadViaShell].filter((p) => !notRead.has(p) && !p.startsWith('.claude/rules/')),
       'path',
       (path) => (editedSet.has(path) ? DERIVED_REASON_EDITED : DERIVED_REASON),
-    ),
+    ).map((d) => {
+      // A doc the main session didn't rate takes its subagent's verdict (#1941).
+      const v = subagentDocVerdicts.get(d.path)
+      return v && !authoredDocs.has(d.path) ? { path: d.path, reason: `[${v.agent}] ${v.reason}`, useful: v.useful } : d
+    }),
     skillsUsed: mergeRefs(authored.skillsUsed ?? [], trace.skillsUsed, 'name', (name) =>
       trace.commandSkills.includes(name) ? DERIVED_REASON_COMMAND : DERIVED_REASON,
     ),
@@ -845,7 +862,9 @@ export function stitch(authored: AuthoredScratch, trace: MechanicalTrace): Recor
   if (trace.rulesLoaded.length) entry.rulesLoaded = trace.rulesLoaded
   if (trace.rulesGlobal.length) entry.rulesGlobal = trace.rulesGlobal
   if (trace.rulesFollowedUp.length) entry.rulesFollowedUp = trace.rulesFollowedUp
+  if (trace.rulesLoadedBySubagents?.length) entry.rulesLoadedBySubagents = trace.rulesLoadedBySubagents
   if (authored.ruleVerdicts?.length) entry.ruleVerdicts = authored.ruleVerdicts
+  if (authored.subagentVerdicts?.length) entry.subagentVerdicts = authored.subagentVerdicts
   if (trace.subagents.length) entry.subagents = trace.subagents
   if (trace.gitBranch) entry.gitBranch = trace.gitBranch
   if (trace.entrypoint) entry.entrypoint = trace.entrypoint

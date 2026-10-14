@@ -118,7 +118,7 @@ const foldedFieldLabels = new Intl.ListFormat('en', { style: 'long', type: 'conj
           <!-- Mechanical trace — verbose, transcript-derived lists. Tucked behind
                individual disclosures so they inform without swamping the narrative. -->
           <div
-            v-if="card.docsRead.length || card.docsReadViaShell.length || card.filesEdited.length || card.rules.length || card.tools.length"
+            v-if="card.docsRead.length || card.docsReadViaShell.length || card.filesEdited.length || card.rules.length || card.subagentRules.length || card.tools.length"
             class="trace-group"
           >
             <details v-if="card.docsRead.length" class="trace">
@@ -159,6 +159,21 @@ const foldedFieldLabels = new Intl.ListFormat('en', { style: 'long', type: 'conj
                     ><span v-if="r.followedUp" class="followed"> — full ADR read</span>
                   </div>
                   <div v-if="r.reason" class="entry-reason">{{ r.reason }}</div>
+                </li>
+              </ul>
+            </details>
+            <details v-if="card.subagentRules.length" class="trace">
+              <summary>Rules loaded by a subagent <span class="n">{{ card.subagentRules.length }}</span></summary>
+              <p class="subnote">Only a subagent loaded these, so the subagent, not the main session, gives the verdict.</p>
+              <ul>
+                <li v-for="(r, i) in card.subagentRules" :key="i">
+                  <div class="entry-head">
+                    <span v-if="r.title" :title="r.path">{{ r.title }}</span><code v-else>{{ r.path }}</code
+                    ><span v-if="r.followedUp" class="followed"> — full ADR read</span>
+                  </div>
+                  <div v-for="(v, j) in r.verdicts" :key="j" class="entry-reason">
+                    <span class="useful" :data-useful="v.useful">useful: {{ v.useful }}</span> {{ v.agent }}: {{ v.reason }}
+                  </div>
                 </li>
               </ul>
             </details>

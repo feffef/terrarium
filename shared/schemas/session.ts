@@ -14,8 +14,18 @@ import { utcTimestamp } from './timestamp'
 
 export const usefulVerdict = z.enum(['yes', 'partly', 'no'])
 export const ruleVerdict = z.object({ path: z.string(), reason: z.string(), useful: usefulVerdict })
+// A verdict on a rule or doc only a subagent or workflow agent loaded or read,
+// given by that agent (`agent` is its label), not by the main session (#1941).
+export const subagentVerdict = z.object({
+  path: z.string(),
+  kind: z.enum(['rule', 'doc']),
+  agent: z.string(),
+  reason: z.string(),
+  useful: usefulVerdict,
+})
 export type UsefulVerdict = z.infer<typeof usefulVerdict>
 export type RuleVerdict = z.infer<typeof ruleVerdict>
+export type SubagentVerdict = z.infer<typeof subagentVerdict>
 
 /**
  * The grow-only `sessions` schema (ADR-0009). `status`/`kind` are queryable spines;
@@ -62,9 +72,13 @@ export const sessionSchema = z
     rulesLoaded: z.array(z.string()).optional(),
     // Rules with no `paths`, which load at session start.
     rulesGlobal: z.array(z.string()).optional(),
-    // The subset of both rule lists whose ADR was read after the rule loaded.
+    // The subset of the rule lists whose ADR was read after the rule loaded.
     rulesFollowedUp: z.array(z.string()).optional(),
+    // Rules only a subagent or workflow agent loaded, kept out of `rulesLoaded`
+    // so the main session isn't asked to rate them (#1941).
+    rulesLoadedBySubagents: z.array(z.string()).optional(),
     ruleVerdicts: z.array(ruleVerdict).optional(),
+    subagentVerdicts: z.array(subagentVerdict).optional(),
     // DEPRECATED — no longer written; shell reads fold into `docsRead`. The key
     // stays so older logs validate (ADR-0009).
     docsReadViaShell: z.array(z.string()).optional(),

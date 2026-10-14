@@ -77,6 +77,8 @@ skillsUsed:                        # transcript-observed reads/Skills you omit a
 ruleVerdicts:                      # every rule that loaded, always-loaded ones too (step 3)
   - { path: .claude/rules/adr-0004.md, reason: "Made me run gate:scoped before pushing; summary was enough, skipped the full ADR", useful: yes }
   - { path: .claude/rules/adr-0023.md, reason: "About guest PRs; this was a Trusted blog post, so it didn't apply", useful: no }
+subagentVerdicts:                  # a subagent's own verdicts on what only it loaded or read (step 3)
+  - { path: .claude/rules/adr-0025.md, kind: rule, agent: "Triage #12", reason: "Loaded on a catalog read; confirmed queryPages was the right call", useful: yes }
 frictions:                         # REQUIRED (may be []) — list EVERY friction
   - description: …                 # ~20 words, honest
     solution: …                    # the fix, or what would have helped
@@ -159,16 +161,21 @@ your "this session is done" signal.
 
 ## 3. Answer the reads report
 
-`--author` lists every instruction doc the trace will fold into `docsRead`
-that has no reason and `useful` verdict yet, whether the Read tool opened it or
-a Bash command's output showed it (yours or a subagent's — folded in by design,
-issue #796), with the evidence for each. Answer each with a `docsRead` entry: a
+`--author` lists every instruction doc you read (Read tool or a Bash command's
+output) that has no reason and `useful` verdict yet, with the evidence for each.
+Answer each with a `docsRead` entry: a
 one-line reason and a `useful` verdict, or the reason `(not read)` when no
 command of this session or its subagents showed you that doc. The stitch drops a `(not read)` entry, and logs a Friction
 if shell output had credited it.
 
-It also lists every rule that loaded with no `ruleVerdicts` entry, including the
-always-loaded ones (no `paths`; they load at session start). You can't see this
+A rule or doc only a subagent loaded or read is that subagent's to rate: the
+report lists each one with no `subagentVerdicts` entry as `no verdict from
+subagent`, a reminder, not a block. Collect the verdicts as the
+`dispatch-subagents` Skill (§5) or the `clear-backlog` Skill says. A doc's
+subagent verdict becomes its `docsRead` entry unless you wrote one.
+
+It also lists every rule that loaded in this session with no `ruleVerdicts` entry,
+including the always-loaded ones (no `paths`; they load at session start). You can't see this
 list before your first `--author` pass, so expect a second pass. Answer each with a `useful` verdict
 and a one-sentence `reason` (about 20 words) that says why: for `yes` or
 `partly`, what in the rule changed or confirmed something you did; for `no`,
@@ -179,8 +186,9 @@ held. Don't restate the rule.
 
 Every pass is a full scratch with every field the schema requires. Its lists
 merge with the earlier pass, so list only new entries, plus any `docsRead`,
-`skillsUsed` or `ruleVerdicts` entry you change, written whole (it replaces the
-one with the same `path` or `name`). Repeat a friction word for word, severity
+`skillsUsed`, `ruleVerdicts` or `subagentVerdicts` entry you change, written whole (it replaces the
+one with the same `path` or `name`, or `path` and `agent`). An earlier `no` rule
+verdict you leave out stands, and the report lists it to re-confirm or change. Repeat a friction word for word, severity
 included, or it is logged twice.
 
 The report also lists docs a command named but did not show enough of to

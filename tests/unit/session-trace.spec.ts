@@ -181,9 +181,16 @@ describe('rulesLoaded and rulesGlobal — rules that loaded', () => {
     expect(extractTrace([...records, hint], NO_ENV).rulesLoaded).toEqual(['.claude/rules/adr-0024.md', '.claude/rules/adr-0021.md'])
   })
 
-  it('folds in rules a subagent loaded', () => {
-    const sub = [...parseTranscript(subagentTranscript), rule('/repo/.claude/rules/adr-0012.md')]
-    expect(foldSubagentTrace(trace, [{ records: sub }], NO_ENV).rulesLoaded).toEqual(['.claude/rules/adr-0024.md', '.claude/rules/adr-0012.md'])
+  // Issue #1941: a rule only a subagent loaded is not the main session's to rate.
+  it('keeps a rule only a subagent loaded apart, and one both loaded in rulesLoaded', () => {
+    const sub = [...parseTranscript(subagentTranscript), rule('/repo/.claude/rules/adr-0024.md'), rule('/repo/.claude/rules/adr-0012.md'), rule('/repo/.claude/rules/adr-0003.md')]
+    const folded = foldSubagentTrace(trace, [{ records: sub }], NO_ENV)
+    expect(folded.rulesLoaded).toEqual(['.claude/rules/adr-0024.md'])
+    expect(folded.rulesLoadedBySubagents).toEqual(['.claude/rules/adr-0012.md'])
+    const entry = stitch({ session: 'session_01RL', goal: 'g', status: 'completed', outcome: 'o', summary: 's', frictions: [] }, folded)
+    expect(entry.rulesLoadedBySubagents).toEqual(['.claude/rules/adr-0012.md'])
+    expect(validateEntry(entry).ok).toBe(true)
+    expect(stitch({ session: 'session_01RL', goal: 'g', status: 'completed', outcome: 'o', summary: 's', frictions: [] }, trace)).not.toHaveProperty('rulesLoadedBySubagents')
   })
 
   // Issue #1763: a worktree subagent's cwd differs, so its absolute rule path
@@ -191,7 +198,9 @@ describe('rulesLoaded and rulesGlobal — rules that loaded', () => {
   it('counts a rule once when a worktree subagent loads it from another root', () => {
     const worktree = { type: 'user', cwd: '/repo/.claude/worktrees/a1', message: { content: 'go' } }
     const sub = [worktree, rule('/repo/.claude/rules/adr-0024.md'), rule('/repo/.claude/worktrees/a1/.claude/rules/adr-0012.md')]
-    expect(foldSubagentTrace(trace, [{ records: sub }], NO_ENV).rulesLoaded).toEqual(['.claude/rules/adr-0024.md', '.claude/rules/adr-0012.md'])
+    const folded = foldSubagentTrace(trace, [{ records: sub }], NO_ENV)
+    expect(folded.rulesLoaded).toEqual(['.claude/rules/adr-0024.md'])
+    expect(folded.rulesLoadedBySubagents).toEqual(['.claude/rules/adr-0012.md'])
   })
 
   it('is written by the stitch and accepted by the schema', () => {
@@ -508,6 +517,21 @@ describe('stitch()', () => {
     const withTrigger = stitch(scratch, { ...trace, trigger: 'audit-docs' })
     expect(withTrigger.trigger).toBe('audit-docs')
     expect(validateEntry(withTrigger).ok).toBe(true)
+  })
+
+  // #1941: a doc only a subagent read carries that subagent's verdict, not a placeholder.
+  it("records a folded-in doc with a subagent's verdict, never over the main session's own", () => {
+    const sv = (path: string) => ({ path, kind: 'doc' as const, agent: 'Triage #12', reason: 'named the guard', useful: 'partly' as const })
+    const withSub = stitch(
+      { ...scratch, subagentVerdicts: [sv('docs/agents/x.md'), sv('CONTEXT.md')] },
+      { ...trace, filesRead: [...trace.filesRead, 'docs/agents/x.md'] },
+    )
+    const docs = withSub.docsRead as { path: string; reason: string; useful?: string }[]
+    expect(docs.find((d) => d.path === 'docs/agents/x.md')).toEqual({ path: 'docs/agents/x.md', reason: '[Triage #12] named the guard', useful: 'partly' })
+    expect(docs.find((d) => d.path === 'CONTEXT.md')).toEqual({ path: 'CONTEXT.md', reason: 'the domain model' })
+    expect(withSub.subagentVerdicts).toEqual([sv('docs/agents/x.md'), sv('CONTEXT.md')])
+    expect(validateEntry(withSub).ok).toBe(true)
+    expect('subagentVerdicts' in entry).toBe(false)
   })
 
   it('omits learnings/ideas entirely when the scratch has none', () => {
