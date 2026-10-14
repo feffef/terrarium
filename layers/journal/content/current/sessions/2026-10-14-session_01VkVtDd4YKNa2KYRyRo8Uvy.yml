@@ -1,0 +1,157 @@
+schemaVersion: 1
+session: session_01VkVtDd4YKNa2KYRyRo8Uvy
+startedAt: 2026-10-14T19:30:07Z
+endedAt: 2026-10-14T19:43:29Z
+kind: interactive
+goal: Decide Glass Box's content model and navigation
+status: completed
+outcome: Grilling ticket resolved and closed; map updated with the decision
+summary: "The owner asked (via /wayfinder) to work the HITL grilling ticket \"Glass Box: content model and navigation\" on the Glass Box map. I claimed it, read the three earlier resolutions, checked the Platform facts that bind it (only `pages` is routed, a page reads only its own Space per ADR-0006, the root page per ADR-0016, payload navigation per ADR-0028), then grilled the owner over three rounds. The owner decided every point: one Space `guide` with subjects as folders (overriding their earlier lean towards one Space per subject, because Walkthroughs cross subjects), one subject per tool (10 subjects), Claude Code and the Skill pack kept separate, `walkthroughs/` folder, no type or subject fields, numeric filename prefixes for order, a reference rather than a course, a landing page with Start here plus a subject directory, Lessons listing the Walkthroughs that link to them (derived server-side in useAsyncData, no new endpoint, which I verified when the owner asked), and sidebar, TOC placement and prev/next reach handed to the Claude Design pass. Walkthrough count is provisionally 11. Agent-initiated parts: the recommendations themselves and the map's new fog line for Glass Box's own glossary. No code, branch commits or PR."
+prs: []
+docsRead:
+  - path: GLOSSARY-MAP.md
+    reason: session-start read; context map
+    useful: partly
+  - path: GLOSSARY.md
+    reason: Space, Collection, Document definitions used in the grilling
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: MCP mapping, rewrite-map header trap
+    useful: yes
+  - path: docs/agents/issue-tracker.md
+    reason: "wayfinding operations: claim, resolve, map update"
+    useful: yes
+  - path: docs/adr/0006-runtime-routing-path-prefix.md
+    reason: "a page reads only its own Space: the key fact behind one-Space"
+    useful: yes
+  - path: docs/adr/0016-tenant-root-layer-routes.md
+    reason: root page may redirect or read each Space
+    useful: yes
+  - path: docs/adr/0028-navigation-reads-server-payloads.md
+    reason: answered the owner's server-endpoint question
+    useful: yes
+  - path: shared/manifest.ts
+    reason: slug rules and pages-only routing
+    useful: yes
+  - path: layers/atlas/tenant.config.ts
+    reason: precedent of Spaces as places
+    useful: partly
+  - path: layers/journal/tenant.config.ts
+    reason: precedent of frontmatter-driven onramp
+    useful: partly
+  - path: app/composables/space.ts
+    reason: useSpace resolves one Space
+    useful: partly
+  - path: .agents/skills/grilling/SKILL.md
+    reason: round format and frontier discipline
+    useful: yes
+  - path: .agents/skills/domain-modeling/SKILL.md
+    reason: glossary-on-resolution guidance; no glossary file to write yet
+    useful: partly
+skillsUsed:
+  - name: wayfinder
+    reason: work one map ticket
+  - name: grilling
+    reason: ran the rounds
+  - name: domain-modeling
+    reason: Subject as a Glass Box term; deferred glossary to build time
+  - name: close-session
+    reason: session only resolved a decision
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: "Broke CLAUDE.md 'Read files with the Read tool': read glossaries, docs, ADRs and manifests with cat/sed in Bash. Rules still arrived via the hint hook, so no real cost."
+    solution: Use Read for repo docs; Bash cat felt cheaper for batching several files at once.
+    severity: nit
+  - description: "Round 1 offered #1966's subject merges as a recommendation without a rationale of my own; the owner asked why, and the honest answer was that the merges only existed to limit Space count."
+    solution: Re-derive inherited recommendations against the current premise before offering them.
+    severity: minor
+  - description: Skipped CLAUDE.md's 'grep -l ADRs before recommending'; I read ADR-0006/0016 directly and ADR-0028 only when the owner asked about endpoints.
+    solution: Run the grep for Space/navigation terms before the first grilling round.
+    severity: nit
+durationSec: 802
+models:
+  claude-opus-5-5: 46
+toolCounts:
+  Bash: 8
+  Read: 1
+  ToolSearch: 1
+  mcp__github__issue_read: 6
+  mcp__github__issue_write: 3
+  mcp__github__add_issue_comment: 1
+  Skill: 2
+rulesLoaded:
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0001.md
+  - .claude/rules/adr-0002.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0008.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/adr-0006.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Used to confirm the one-Space and derived-list decisions add no human-merge trigger; summary enough.
+    useful: partly
+  - path: .claude/rules/adr-0009.md
+    reason: Told me to log via close-session at the end of a decision-only session; summary enough.
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: No instruction text was changed this session, so prune trials did not apply.
+    useful: no
+  - path: .claude/rules/adr-0020.md
+    reason: The map and ticket author is the owner, Trusted; nothing Public to treat as data.
+    useful: no
+  - path: .claude/rules/adr-0003.md
+    reason: No commits, so no PR; building Glass Box waits for approval, which the map already reflects.
+    useful: no
+  - path: .claude/rules/adr-0017.md
+    reason: Made me start the comment and the rewritten map body with this session's header; summary enough.
+    useful: yes
+  - path: .claude/rules/adr-0021.md
+    reason: Confirmed Lesson/Walkthrough/Subject belong in a future layers/glassbox/GLOSSARY.md, not root.
+    useful: yes
+  - path: .claude/rules/adr-0029.md
+    reason: Loaded with GLOSSARY reads; about where instructions live, not relevant to a content-model decision.
+    useful: no
+  - path: .claude/rules/adr-0005.md
+    reason: Loaded when reading Skill files; nothing about Skills was decided.
+    useful: no
+  - path: .claude/rules/adr-0030.md
+    reason: Loaded with domain-modeling; no ADR was written or edited.
+    useful: no
+  - path: .claude/rules/adr-0001.md
+    reason: Confirmed every Space is a separate table built ahead, supporting the one-Space reasoning.
+    useful: partly
+  - path: .claude/rules/adr-0002.md
+    reason: Confirmed Glass Box's Space and pages Collection will be declared in its manifest only.
+    useful: partly
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Loaded on reading shared/manifest.ts; I touched no file, so nothing to merge.
+    useful: no
+  - path: .claude/rules/adr-0008.md
+    reason: Loaded on the Journal manifest; Glass Box links to the Journal but this decision didn't touch it.
+    useful: no
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: Loaded on manifest reads; no MDC component was proposed in this ticket.
+    useful: no
+  - path: .claude/rules/tenant-layers.md
+    reason: Reminded that a root page and layer tests live in the Tenant's layer, matching the decisions.
+    useful: partly
+  - path: .claude/rules/adr-0006.md
+    reason: "Key fact: a page reads only its own Space, which drove the one-Space recommendation; I read the full ADR for the exceptions."
+    useful: yes
+gitBranch: claude/vigilant-cerf-pa4o7y
+entrypoint: remote
+cliVersion: 2.1.300
+landedBy: Stop
