@@ -32,6 +32,7 @@ const prParts = computed(() => ({
   shown: card.prs.slice(0, PR_SUB_MAX),
   rest: Math.max(0, card.prs.length - PR_SUB_MAX),
 }))
+const NO_VERDICT = 'unknown: no agent reported'
 const foldedFieldLabels = new Intl.ListFormat('en', { style: 'long', type: 'conjunction' }).format(
   FOLDED_TRACE_FIELDS.map((f) => f.label),
 )
@@ -118,7 +119,7 @@ const foldedFieldLabels = new Intl.ListFormat('en', { style: 'long', type: 'conj
           <!-- Mechanical trace — verbose, transcript-derived lists. Tucked behind
                individual disclosures so they inform without swamping the narrative. -->
           <div
-            v-if="card.docsRead.length || card.docsReadViaShell.length || card.filesEdited.length || card.rules.length || card.subagentRules.length || card.tools.length"
+            v-if="card.docsRead.length || card.docsReadViaShell.length || card.filesEdited.length || card.rules.length || card.tools.length"
             class="trace-group"
           >
             <details v-if="card.docsRead.length" class="trace">
@@ -126,7 +127,8 @@ const foldedFieldLabels = new Intl.ListFormat('en', { style: 'long', type: 'conj
               <ul>
                 <li v-for="d in card.docsRead" :key="d.path">
                   <div class="entry-head">
-                    <code>{{ d.path }}</code><span v-if="d.useful" class="useful" :data-useful="d.useful">useful: {{ d.useful }}</span>
+                    <code>{{ d.path }}</code><span v-if="d.useful" class="useful" :data-useful="d.useful">useful: {{ d.useful }}</span
+                    ><span v-if="d.viaSubagent" class="via">via subagent<template v-if="d.unknown"> · {{ NO_VERDICT }}</template></span>
                   </div>
                   <div v-if="d.reason !== DERIVED_REASON" class="entry-reason">{{ d.reason }}</div>
                 </li>
@@ -156,24 +158,10 @@ const foldedFieldLabels = new Intl.ListFormat('en', { style: 'long', type: 'conj
                     <span v-if="r.title" :title="r.path">{{ r.title }}</span><code v-else>{{ r.path }}</code
                     ><span v-if="r.useful" class="useful" :data-useful="r.useful">useful: {{ r.useful }}</span
                     ><span v-if="r.alwaysLoaded" class="always">always loaded</span
+                    ><span v-if="r.viaSubagent" class="via">via subagent<template v-if="r.unknown"> · {{ NO_VERDICT }}</template></span
                     ><span v-if="r.followedUp" class="followed"> — full ADR read</span>
                   </div>
                   <div v-if="r.reason" class="entry-reason">{{ r.reason }}</div>
-                </li>
-              </ul>
-            </details>
-            <details v-if="card.subagentRules.length" class="trace">
-              <summary>Rules loaded by a subagent <span class="n">{{ card.subagentRules.length }}</span></summary>
-              <p class="subnote">Only a subagent loaded these, so the subagent, not the main session, gives the verdict.</p>
-              <ul>
-                <li v-for="(r, i) in card.subagentRules" :key="i">
-                  <div class="entry-head">
-                    <span v-if="r.title" :title="r.path">{{ r.title }}</span><code v-else>{{ r.path }}</code
-                    ><span v-if="r.followedUp" class="followed"> — full ADR read</span>
-                  </div>
-                  <div v-for="(v, j) in r.verdicts" :key="j" class="entry-reason">
-                    <span class="useful" :data-useful="v.useful">useful: {{ v.useful }}</span> {{ v.agent }}: {{ v.reason }}
-                  </div>
                 </li>
               </ul>
             </details>
@@ -392,6 +380,7 @@ const foldedFieldLabels = new Intl.ListFormat('en', { style: 'long', type: 'conj
 .trace .entry-head { color: var(--jd-ink); }
 .trace .entry-reason { padding-left: 1rem; }
 .trace .always,
+.trace .via,
 .trace .useful {
   margin-left: 0.4rem;
   padding: 0 0.35rem;
@@ -399,7 +388,8 @@ const foldedFieldLabels = new Intl.ListFormat('en', { style: 'long', type: 'conj
   font-size: 0.85em;
   white-space: nowrap;
 }
-.trace .always { background: var(--jd-line); color: var(--jd-muted); }
+.trace .always,
+.trace .via { background: var(--jd-line); color: var(--jd-muted); }
 .trace .useful { border: 1px solid currentColor; }
 .trace .useful[data-useful='yes'] { color: var(--jd-accent); }
 .trace .useful[data-useful='partly'] { color: var(--jd-sev-minor); }

@@ -32,7 +32,7 @@ import { basename, dirname, join, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import { isPair, isScalar, parse as parseYaml, parseDocument, stringify as stringifyYaml, visit } from 'yaml'
 import { z } from 'zod'
-import { ruleVerdict, sessionSchema, subagentVerdict, usefulVerdict } from '../shared/schemas/session.ts'
+import { ruleVerdict, sessionSchema, usefulVerdict } from '../shared/schemas/session.ts'
 import { sessionUrl } from '../shared/session-url.ts'
 import { fetchOriginMain } from './git-helpers.ts'
 import { FALLBACK_MODEL, provenanceFooter } from './provenance-footer.ts'
@@ -126,7 +126,6 @@ const authoredScratchSchema = z
     docsRead: z.array(z.object({ path: z.string(), reason: z.string(), useful: usefulVerdict.optional() })).optional(),
     skillsUsed: z.array(z.object({ name: z.string(), reason: z.string() })).optional(),
     ruleVerdicts: z.array(ruleVerdict).optional(),
-    subagentVerdicts: z.array(subagentVerdict).optional(),
     frictions: z.array(
       z.object({
         description: z.string(),
@@ -245,7 +244,6 @@ export function mergeAuthored(existing: AuthoredScratch | undefined, incoming: A
     docsRead: unionBy(existing.docsRead, incoming.docsRead, (x) => x.path),
     skillsUsed: unionBy(existing.skillsUsed, incoming.skillsUsed, (x) => x.name),
     ruleVerdicts: unionBy(existing.ruleVerdicts, incoming.ruleVerdicts, (x) => x.path),
-    subagentVerdicts: unionBy(existing.subagentVerdicts, incoming.subagentVerdicts, (x) => `${x.path}\u0000${x.agent}`),
     prs: union(existing.prs, incoming.prs),
     learnings: union(existing.learnings, incoming.learnings),
     ideas: union(existing.ideas, incoming.ideas),
@@ -814,7 +812,7 @@ function readToolSources(sets: LabelledRecords[]): Map<string, string> {
  *  can't be found, which degrades the report, never the authoring. */
 export function reportUnexplainedReads(
   ctx: AuthorContext | undefined,
-  authored: Pick<AuthoredScratch, 'docsRead' | 'ruleVerdicts' | 'subagentVerdicts'> = {},
+  authored: Pick<AuthoredScratch, 'docsRead' | 'ruleVerdicts'> = {},
   log: (line: string) => void = console.log,
 ): void {
   if (!ctx) return
@@ -824,7 +822,6 @@ export function reportUnexplainedReads(
     (authored.docsRead ?? []).filter((d) => d.useful || d.reason === NOT_READ_REASON).map((d) => d.path),
   )
   const ruled = new Set((authored.ruleVerdicts ?? []).map((r) => r.path))
-  const bySubagent = new Set((authored.subagentVerdicts ?? []).map((v) => v.path))
   const openRules = rulesLoaded.filter((r) => !ruled.has(r))
   const open = new Map<string, string>()
   for (const p of trace.filesRead) {
@@ -834,17 +831,15 @@ export function reportUnexplainedReads(
   for (const [p, { command, source }] of scan.provenance) {
     if (!answered.has(p) && !open.has(p)) open.set(p, `[${source}] ${oneLine(command)}`)
   }
-  // Both source maps list this session first, so a doc neither credits to it
-  // was read only by a subagent, which gives its verdict (#1941).
-  const mainRead = (p: string) =>
-    sources.get(canonicalizeInstructionPath(p)) === MAIN_SOURCE || scan.provenance.get(p)?.source === MAIN_SOURCE
+  // Only a subagent can say what these gave it, so the main session asks it (#1941).
+  const docsBySubagents = new Set(trace.docsReadBySubagents ?? [])
   const unrated: [string, string?][] = []
   for (const [p, evidence] of open) {
-    if (mainRead(p)) continue
+    if (!docsBySubagents.has(p)) continue
     open.delete(p)
-    if (!bySubagent.has(p)) unrated.push([`${p} (doc)`, evidence])
+    unrated.push([`${p} (doc)`, evidence])
   }
-  for (const r of trace.rulesLoadedBySubagents ?? []) if (!bySubagent.has(r)) unrated.push([`${r} (rule)`])
+  for (const r of trace.rulesLoadedBySubagents ?? []) if (!ruled.has(r)) unrated.push([`${r} (rule)`])
   const misses = scan.nearMisses.filter((m) => !answered.has(m.path))
   if (open.size === 0 && misses.length === 0 && openRules.length === 0 && unrated.length === 0) return
 
@@ -867,12 +862,12 @@ export function reportUnexplainedReads(
     log(`  useful: ${VERDICTS}, as log-session step 3 says.`)
   }
   if (unrated.length) {
-    log(`  no verdict from subagent — ${unrated.length} rule(s) or doc(s) only a subagent loaded or read:`)
+    log(`  ${unrated.length} rule(s) or doc(s) only a subagent loaded or read, no verdict yet; ask the subagent, or it will show as unknown:`)
     for (const [item, evidence] of unrated) {
       log(`    ${item}`)
       if (evidence) log(`      ${evidence}`)
     }
-    log('  A reminder, not a block: add the subagent\'s answers as subagentVerdicts (log-session step 3).')
+    log("  A reminder, not a block: add each answer to ruleVerdicts or docsRead (log-session step 3).")
   }
   if (misses.length) {
     log(`  Not counted as read via shell (${misses.length}), and why:`)
@@ -956,13 +951,13 @@ export function authorMain(
         `${misNotRead.join('\n')}\nGive each a reason and a useful verdict instead.`,
     )
   }
-  // #1943: a verdict needs a rule this session loaded.
-  const loaded = ctx && new Set([...ctx.trace.rulesGlobal, ...ctx.trace.rulesLoaded])
+  // #1943: a verdict needs a rule this session or one of its subagents loaded.
+  const loaded = ctx && new Set([...ctx.trace.rulesGlobal, ...ctx.trace.rulesLoaded, ...(ctx.trace.rulesLoadedBySubagents ?? [])])
   const neverLoaded = loaded ? (result.data.ruleVerdicts ?? []).filter((v) => !loaded.has(v.path)) : []
   if (neverLoaded.length) {
     fail(
       `refusing ruleVerdicts for rule(s) this session never loaded:\n${neverLoaded.map((v) => `  ${v.path}`).join('\n')}\n` +
-        'Drop them; a rule only a subagent loaded goes in subagentVerdicts, from that subagent.',
+        'Drop them.',
     )
   }
   const keptNo = droppedNoVerdicts(merged, result.data)

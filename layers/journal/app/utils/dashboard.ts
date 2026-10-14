@@ -225,7 +225,10 @@ export function sessionCardViews(
       // Expanded detail — the full log, revealed on click (no route of its own).
       summary: s.summary,
       subagents: s.subagents ?? [],
-      docsRead: s.docsRead ?? [],
+      docsRead: (s.docsRead ?? []).map((d) => {
+        const viaSubagent = !!s.docsReadBySubagents?.includes(d.path)
+        return { ...d, viaSubagent, unknown: viaSubagent && !d.useful }
+      }),
       skillsUsed: s.skillsUsed ?? [],
       // Array.sort is stable: equal severities keep their logged order.
       frictions: [...s.frictions].sort((a, b) => SEVERITY_RANK[a.severity] - SEVERITY_RANK[b.severity]),
@@ -234,18 +237,22 @@ export function sessionCardViews(
       filesEdited: s.filesEdited ?? [],
       docsReadViaShell: s.docsReadViaShell ?? [],
       rules: [
-        ...(s.rulesGlobal ?? []).map((path) => ({ path, alwaysLoaded: true })),
-        ...(s.rulesLoaded ?? []).map((path) => ({ path, alwaysLoaded: false })),
-      ].map(({ path, alwaysLoaded }) => {
+        ...(s.rulesGlobal ?? []).map((path) => ({ path, alwaysLoaded: true, viaSubagent: false })),
+        ...(s.rulesLoaded ?? []).map((path) => ({ path, alwaysLoaded: false, viaSubagent: false })),
+        ...(s.rulesLoadedBySubagents ?? []).map((path) => ({ path, alwaysLoaded: false, viaSubagent: true })),
+      ].map(({ path, alwaysLoaded, viaSubagent }) => {
         const v = s.ruleVerdicts?.find((r) => r.path === path)
-        return { path, title: ruleTitles[path], alwaysLoaded, followedUp: !!s.rulesFollowedUp?.includes(path), reason: v?.reason, useful: v?.useful }
+        return {
+          path,
+          title: ruleTitles[path],
+          alwaysLoaded,
+          followedUp: !!s.rulesFollowedUp?.includes(path),
+          viaSubagent,
+          unknown: viaSubagent && !v,
+          reason: v?.reason,
+          useful: v?.useful,
+        }
       }),
-      subagentRules: (s.rulesLoadedBySubagents ?? []).map((path) => ({
-        path,
-        title: ruleTitles[path],
-        followedUp: !!s.rulesFollowedUp?.includes(path),
-        verdicts: (s.subagentVerdicts ?? []).filter((v) => v.kind === 'rule' && v.path === path).map(({ agent, reason, useful }) => ({ agent, reason, useful })),
-      })),
       tools: sessionToolEntries(s.toolCounts),
     }
   })

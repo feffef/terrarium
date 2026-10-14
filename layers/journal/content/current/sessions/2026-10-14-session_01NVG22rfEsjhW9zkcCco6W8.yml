@@ -31,7 +31,7 @@ docsRead:
   - path: scripts/poll-guest-tickets.ts
     reason: (no reason given)
   - path: docs/agents/tenant-layers.md
-    reason: "[Read two files, report headings] Read as instructed; supplied the heading asked for"
+    reason: "The subagent (Read two files, report headings) reported: read as instructed; supplied the heading asked for"
     useful: yes
   - path: layers/atlas/app/composables/almanac.ts
     reason: (no reason given)
@@ -115,17 +115,9 @@ ruleVerdicts:
   - path: .claude/rules/adr-0023.md
     reason: Loaded on the tt-inner read that check 3 tested; it was the observation itself
     useful: yes
-subagentVerdicts:
   - path: .claude/rules/tenant-layers.md
-    kind: rule
-    agent: Read two files, report headings
-    reason: Loaded after reading the layers/atlas/app file; pointed to a doc it had already read
+    reason: "The subagent (Read two files, report headings) reported: loaded after reading the layers/atlas/app file; pointed to a doc it had already read"
     useful: partly
-  - path: docs/agents/tenant-layers.md
-    kind: doc
-    agent: Read two files, report headings
-    reason: Read as instructed; supplied the heading asked for
-    useful: yes
 subagents:
   - type: general-purpose
     task: Read two files, report headings

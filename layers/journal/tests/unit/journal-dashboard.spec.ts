@@ -329,7 +329,7 @@ describe('sessionCardViews', () => {
     expect(c!.skillsUsed).toEqual([{ name: 'tdd', reason: 'r' }])
     expect(c!.prs).toEqual(['#7'])
     expect(c!.goal).toBe('goal')
-    expect(c!.docsRead).toEqual([{ path: 'CLAUDE.md', reason: 'r' }])
+    expect(c!.docsRead).toEqual([{ path: 'CLAUDE.md', reason: 'r', viaSubagent: false, unknown: false }])
   })
 
   it('surfaces the mechanical trace: model, subagents, files edited, tools', () => {
@@ -353,8 +353,8 @@ describe('sessionCardViews', () => {
     })
     const [c] = sessionCardViews([s])
     expect(c!.rules).toEqual([
-      { path: '.claude/rules/adr-0004.md', alwaysLoaded: false, followedUp: false },
-      { path: '.claude/rules/adr-0008.md', alwaysLoaded: false, followedUp: true },
+      { path: '.claude/rules/adr-0004.md', alwaysLoaded: false, followedUp: false, viaSubagent: false, unknown: false },
+      { path: '.claude/rules/adr-0008.md', alwaysLoaded: false, followedUp: true, viaSubagent: false, unknown: false },
     ])
   })
 
@@ -364,7 +364,7 @@ describe('sessionCardViews', () => {
       ruleVerdicts: [{ path: '.claude/rules/adr-0004.md', reason: 'merge rules', useful: 'partly' }],
     })
     const [c] = sessionCardViews([s])
-    expect(c!.rules).toEqual([{ path: '.claude/rules/adr-0004.md', alwaysLoaded: false, followedUp: false, reason: 'merge rules', useful: 'partly' }])
+    expect(c!.rules).toEqual([{ path: '.claude/rules/adr-0004.md', alwaysLoaded: false, followedUp: false, viaSubagent: false, unknown: false, reason: 'merge rules', useful: 'partly' }])
   })
 
   it('names each rule by its heading, falling back to the path, and keeps the reason as written', () => {
@@ -392,38 +392,47 @@ describe('sessionCardViews', () => {
     ])
   })
 
-  // Issue #1941: a rule only a subagent loaded is listed apart, with no verdict.
-  it('lists rules only a subagent loaded apart from the main list', () => {
+  // Issue #1941: one list each for rules and docs; a subagent-only entry is tagged,
+  // and with no verdict it is unknown, never a guessed yes/partly/no.
+  it('lists rules only a subagent loaded in the one rules list, tagged, with their verdict or as unknown', () => {
     const s = session({
       rulesLoaded: ['.claude/rules/adr-0004.md'],
-      rulesLoadedBySubagents: ['.claude/rules/adr-0012.md'],
+      rulesLoadedBySubagents: ['.claude/rules/adr-0012.md', '.claude/rules/adr-0021.md'],
       rulesFollowedUp: ['.claude/rules/adr-0012.md'],
-      ruleVerdicts: [{ path: '.claude/rules/adr-0012.md', reason: 'stray', useful: 'no' }],
+      ruleVerdicts: [{ path: '.claude/rules/adr-0012.md', reason: 'Triage #12 reported: named the pingback rule', useful: 'yes' }],
     })
     const [c] = sessionCardViews([s], { '.claude/rules/adr-0012.md': 'ADR-0012: Pingbacks' })
-    expect(c!.rules.map((r) => r.path)).toEqual(['.claude/rules/adr-0004.md'])
-    expect(c!.subagentRules).toEqual([{ path: '.claude/rules/adr-0012.md', title: 'ADR-0012: Pingbacks', followedUp: true, verdicts: [] }])
+    expect(c!.rules).toEqual([
+      { path: '.claude/rules/adr-0004.md', alwaysLoaded: false, followedUp: false, viaSubagent: false, unknown: false, reason: undefined, useful: undefined },
+      { path: '.claude/rules/adr-0012.md', title: 'ADR-0012: Pingbacks', alwaysLoaded: false, followedUp: true, viaSubagent: true, unknown: false, reason: 'Triage #12 reported: named the pingback rule', useful: 'yes' },
+      { path: '.claude/rules/adr-0021.md', alwaysLoaded: false, followedUp: false, viaSubagent: true, unknown: true, reason: undefined, useful: undefined },
+    ])
   })
 
-  it("shows each subagent's verdict on a rule only it loaded", () => {
+  it('tags a doc only a subagent read, unknown until it has a verdict; a main-session doc is never unknown', () => {
     const s = session({
-      rulesLoadedBySubagents: ['.claude/rules/adr-0012.md'],
-      subagentVerdicts: [
-        { path: '.claude/rules/adr-0012.md', kind: 'rule', agent: 'Triage #12', reason: 'named the pingback rule', useful: 'yes' },
-        { path: 'docs/agents/x.md', kind: 'doc', agent: 'Triage #12', reason: 'r', useful: 'no' },
+      docsRead: [
+        { path: 'GLOSSARY.md', reason: '(no reason given)' },
+        { path: 'docs/agents/x.md', reason: 'Triage #12 reported: r', useful: 'no' },
+        { path: 'docs/agents/y.md', reason: '(no reason given)' },
       ],
+      docsReadBySubagents: ['docs/agents/x.md', 'docs/agents/y.md'],
     })
     const [c] = sessionCardViews([s])
-    expect(c!.subagentRules[0]!.verdicts).toEqual([{ agent: 'Triage #12', reason: 'named the pingback rule', useful: 'yes' }])
+    expect(c!.docsRead.map((d) => [d.path, d.viaSubagent, d.unknown])).toEqual([
+      ['GLOSSARY.md', false, false],
+      ['docs/agents/x.md', true, false],
+      ['docs/agents/y.md', true, true],
+    ])
   })
 
   it('defaults the trace fields for an older, authored-only log', () => {
-    const [c] = sessionCardViews([session()])
+    const [c] = sessionCardViews([session({ docsRead: [{ path: 'GLOSSARY.md', reason: 'r' }] })])
     expect(c!.model).toBe('')
     expect(c!.subagents).toEqual([])
     expect(c!.filesEdited).toEqual([])
     expect(c!.rules).toEqual([])
-    expect(c!.subagentRules).toEqual([])
+    expect(c!.docsRead).toEqual([{ path: 'GLOSSARY.md', reason: 'r', viaSubagent: false, unknown: false }])
     expect(c!.tools).toEqual([])
   })
 
