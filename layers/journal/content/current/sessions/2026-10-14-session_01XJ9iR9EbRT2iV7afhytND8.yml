@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01XJ9iR9EbRT2iV7afhytND8
 startedAt: 2026-10-14T12:37:06Z
-endedAt: 2026-10-14T13:03:17Z
+endedAt: 2026-10-14T13:27:40Z
 kind: interactive
 goal: "Early run of the issue #1778 checks on PR #1775's path-scoped rules and Bash rules hint"
 status: completed
-outcome: "Draft report given to the owner; not posted on #1778, no failure issues filed yet"
-summary: "The owner asked (human-instructed) to run the #1778 checks about 20 minutes before the issue's 13:00Z time gate, accounting for recent ADR and rule-summary changes, using an Explore agent for a log overview and a second agent for transcripts. I asked three questions first; the owner chose a draft-to-owner report (no posting), an extra post-#1909 (ADR-0030 rewrite) cohort row, and agent-picked transcript sessions. The Explore agent computed checks 1, 2, 6 and 7 over 45 Before and 62 After logs; I checked CI myself (3 gate failures since the merge, all e2e, none from validate-adr-rules). The transcript agent replayed 677 Bash commands from 13 cloud sessions through the hint's dry-run: 98 of 100 governed commands matched, and it found a real gap (the hint is wired only on PostToolUse, so a compound read whose last step fails gets no hint), which I confirmed in .claude/settings.json. Results: checks 1, 2c, 4, 6, 7c pass; 2a fails for tenant-layers (88%), mdc-when-to-use (95%) and guards (50%) useful-no shares; 7a/7b fail for tenant-layers (doc unread rose from 31% to 65%); check 5's harness half is not checkable in cloud events; 2b is vacuous. The draft comment is in the scratchpad; posting and filing the failure issues wait on the owner."
+outcome: "Draft report, now with a misses section, given to the owner; not posted on #1778, no failure issues filed yet"
+summary: "The owner asked (human-instructed) to run the #1778 checks about 20 minutes before the issue's 13:00Z time gate, accounting for recent ADR and rule-summary changes, using an Explore agent for a log overview and a second agent for transcripts. I asked three questions first; the owner chose a draft-to-owner report (no posting), an extra post-#1909 (ADR-0030 rewrite) cohort row, and agent-picked transcript sessions. Checks 1, 2c, 4, 6, 7c pass; 2a fails for tenant-layers (88%), mdc-when-to-use (95%) and guards (50%) useful-no shares; 7a/7b fail for tenant-layers (doc unread 31% to 65%); check 3 found that the hint, wired only on PostToolUse, skips compound reads whose last step fails; check 5's harness half is not checkable in cloud events. In a follow-up the owner asked (human-instructed) for misses: sessions that needed a rule but never touched its paths. A third agent screened all 62 After sessions: zero confirmed misses for the three #1775 rules, one plausible adr-0004-human-merge miss (a clear-backlog build subagent returned an empty humanOnly list for .claude/rules edits, which I verified in the session log and the workflow script), and a few glob gaps with no session evidence. Posting and filing failure issues wait on the owner."
 prs: []
 docsRead:
   - path: CONTEXT-MAP.md
@@ -29,6 +29,12 @@ docsRead:
     reason: (no reason given)
   - path: .agents/prune-trials.yml
     reason: (no reason given)
+  - path: docs/agents/tenant-layers.md
+    reason: (no reason given)
+  - path: docs/agents/guards.md
+    reason: (no reason given)
+  - path: docs/agents/mdc-when-to-use.md
+    reason: (no reason given)
 skillsUsed:
   - name: close-session
     reason: (no reason given)
@@ -47,15 +53,15 @@ frictions:
   - description: Tried ScheduleWakeup as a fallback while waiting on a subagent; the /loop-only guard blocked it
     solution: None needed; subagents self-notify, as the guard says
     severity: nit
-durationSec: 1571
+durationSec: 3034
 models:
-  claude-opus-5-5: 49
+  claude-opus-5-5: 61
 toolCounts:
-  Bash: 11
+  Bash: 16
   ToolSearch: 2
   mcp__github__issue_read: 2
   AskUserQuestion: 1
-  Agent: 2
+  Agent: 3
   mcp__github__get_job_logs: 3
   ScheduleWakeup: 1
   Grep: 1
@@ -67,6 +73,8 @@ rulesLoaded:
   - .claude/rules/adr-0029.md
   - .claude/rules/guards.md
   - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0030.md
 rulesGlobal:
   - .claude/rules/adr-0004.md
   - .claude/rules/adr-0009.md
@@ -105,11 +113,19 @@ ruleVerdicts:
   - path: .claude/rules/adr-0004-human-merge.md
     reason: Loaded on reading settings.json; I changed no Human-only file
     useful: no
+  - path: .claude/rules/adr-0005.md
+    reason: Loaded when I read the clear-backlog build workflow to verify a finding; I changed no Skill
+    useful: no
+  - path: .claude/rules/adr-0030.md
+    reason: Loaded via a subagent's reads; ADR format was not part of this analysis
+    useful: no
 subagents:
   - type: Explore
     task: "Session-log overview for #1778"
   - type: general-purpose
     task: "Transcript deep-dive for #1778"
+  - type: general-purpose
+    task: Find rule false negatives
 gitBranch: ccr-77f9ffb6-nydit3
 entrypoint: remote_mobile
 cliVersion: 2.1.299
