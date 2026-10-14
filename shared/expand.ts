@@ -165,7 +165,8 @@ export function expand(manifests: LoadedManifest[]): ExpandedCollection[] {
  */
 export function entryRoutesFrom(cols: ExpandedCollection[]): string[] {
   return [
-    ...new Set(cols.filter((c) => c.type === 'page').map((c) => `/t/${c.tenant}/${c.space}`)),
+    // By name, matching `resolveSpaceRoute` (ADR-0006).
+    ...new Set(cols.filter((c) => c.collection === 'pages').map((c) => `/t/${c.tenant}/${c.space}`)),
   ].sort()
 }
 
