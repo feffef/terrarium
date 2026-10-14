@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_015dUGRadEQP1bvv6KytKLXT
 startedAt: 2026-10-14T15:21:51Z
-endedAt: 2026-10-14T16:46:37Z
+endedAt: 2026-10-14T17:02:57Z
 kind: interactive
 goal: Clear the issue backlog with the clear-backlog Skill
 status: completed
-outcome: Triaged 11 items; all 7 PRs merged (1945-1951), 10 issues closed; Dependabot 1906 left to the owner, 1844 time-gated
-summary: "The owner invoked /clear-backlog and later answered grilling rounds Q1-Q10 (human-instructed). Everything else was the Skill's own flow. The sweep found 10 issues plus Dependabot PR 1906. Per branch, what was built: 1945 (1905) states the hook crash rule once in guards.md; merged by me. 1946 (1940) runs bash-rules-hint on PostToolUseFailure; merged by the owner. 1948 (1942) adds scripts/human-only-paths.ts and drops humanOnly from the build workflow; merged by me. 1949 (1937, 1938) narrows the tenant-layers and mdc-when-to-use globs, moves the short instructions into the rule and adds a mermaid-lanes rule; merged by the owner. I fixed the build's last two review findings by hand after it hit the 3-round cap. 1950 (1939) changes the ADR pointer to \"must read when relevant\" with a token estimate (chars/4); the owner picked this over all three proposed options. I merged main into it after 1949 created a conflict; merged by the owner. 1951 (1944) sends manual worktrees to .claude/worktrees/. I ran the probe myself: a Read in a sibling worktree loaded no rule. Merged by me. 1947 (1941, 1943) adds rulesLoadedBySubagents and subagentVerdicts, has subagents rate the rules and docs only they loaded or read (SendMessage for Agent-tool subagents, a result schema for workflow agents), and adds the 1943 verdict checks; merged by the owner. The owner expanded 1943's scope over Q7-Q10. Open judgement calls are listed in each PR. 1844 is time-gated to 2026-10-15. The owner merges 1906 (pick 6a)."
+outcome: Triaged 11 items; all 7 PRs merged (1945-1951), 10 issues closed; Dependabot 1906 left to the owner, 1844 time-gated; live-tested in two child sessions
+summary: "The owner invoked /clear-backlog and later answered grilling rounds Q1-Q10 (human-instructed). Everything else was the Skill's own flow. The sweep found 10 issues plus Dependabot PR 1906. Per branch, what was built: 1945 (1905) states the hook crash rule once in guards.md; merged by me. 1946 (1940) runs bash-rules-hint on PostToolUseFailure; merged by the owner. 1948 (1942) adds scripts/human-only-paths.ts and drops humanOnly from the build workflow; merged by me. 1949 (1937, 1938) narrows the tenant-layers and mdc-when-to-use globs, moves the short instructions into the rule and adds a mermaid-lanes rule; merged by the owner. I fixed the build's last two review findings by hand after it hit the 3-round cap. 1950 (1939) changes the ADR pointer to \"must read when relevant\" with a token estimate (chars/4); the owner picked this over all three proposed options. I merged main into it after 1949 created a conflict; merged by the owner. 1951 (1944) sends manual worktrees to .claude/worktrees/. I ran the probe myself: a Read in a sibling worktree loaded no rule. Merged by me. 1947 (1941, 1943) adds rulesLoadedBySubagents and subagentVerdicts, has subagents rate the rules and docs only they loaded or read (SendMessage for Agent-tool subagents, a result schema for workflow agents), and adds the 1943 verdict checks; merged by the owner. The owner expanded 1943's scope over Q7-Q10. After the merges, the owner asked for a live test, so I started two Sonnet child sessions. The first (session_01NVG22rfEsjhW9zkcCco6W8) confirmed 1947, 1948, 1950 and 1951. My brief had it read rule files first, which hid the 1946 and 1949 checks. The second (session_01D2JnZT1y8zCvC9GJc27pZp) confirmed both: the PostToolUseFailure hook output carried adr-0023, and its committed rulesLoaded order matches every expected glob. Open judgement calls are listed in each PR. 1844 is time-gated to 2026-10-15. The owner merges 1906 (pick 6a)."
 prs:
   - "1945"
   - "1946"
@@ -167,11 +167,17 @@ frictions:
   - description: Builds of PRs that touch the same adr-0002 pointer line ran in parallel, so the second needed a manual conflict merge and restamp
     solution: Have clear-backlog group branches that regenerate the same stamped files, or order them
     severity: minor
-durationSec: 5086
+  - description: My first test-session brief told it to read the rule files before the governed files, which loaded those rules early and hid two of the six checks; it needed a second session
+    solution: When briefing a rule-loading test, order the steps so that no step loads a rule a later step checks, and work out each step's expected rules up front
+    severity: minor
+  - description: I ran git checkout origin/main -- with no path, which detached HEAD in the main checkout, against git-conventions; I restored the branch right away
+    solution: Read files from main with git show origin/main:path, as git-conventions says
+    severity: nit
+durationSec: 6065
 models:
-  claude-opus-5-5: 223
+  claude-opus-5-5: 273
 toolCounts:
-  Bash: 61
+  Bash: 73
   Workflow: 4
   ToolSearch: 4
   Read: 7
@@ -183,11 +189,13 @@ toolCounts:
   ReadNotifications: 19
   mcp__github__add_issue_comment: 6
   mcp__claude-code-remote__unsubscribe_pr_activity: 1
-  mcp__claude-code-remote__send_later: 2
+  mcp__claude-code-remote__send_later: 4
   mcp__github__issue_write: 5
   Edit: 3
   mcp__github__update_pull_request: 1
-  mcp__claude-code-remote__delete_trigger: 1
+  mcp__claude-code-remote__delete_trigger: 3
+  mcp__claude-code-remote__create_session: 2
+  mcp__claude-code-remote__list_events: 6
 filesEdited:
   - docs/adr/0002-manifest-driven-config-generation.md
   - .claude/rules/tenant-layers.md
