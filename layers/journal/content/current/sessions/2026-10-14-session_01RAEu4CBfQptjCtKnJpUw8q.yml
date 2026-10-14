@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01RAEu4CBfQptjCtKnJpUw8q
 startedAt: 2026-10-14T13:15:14Z
-endedAt: 2026-10-14T13:23:40Z
+endedAt: 2026-10-14T13:26:52Z
 kind: autonomous
 goal: "Scheduled prune trial: judge open trials, prune one problem"
-status: in-review
-outcome: Two trials judged and deleted; github-integration.md rewritten plainly (-31); PR 1936 open
-summary: Scheduled /prune-trial run, so everything was agent-initiated under the Skill's charter. The window script showed the guards.md and pr-workflow recipe trials judgeable. Frictions since landing were only nit/minor for both (the majors in the window belonged to clear-backlog), and no regression issue exists, so both were deleted. A search subagent looked for prose that already failed; the best candidate was the overflow traps in github-integration.md (the search fields rule failed as prose in 1860 and is now held by a guard). I rewrote that file plainly, cut about 31 lines (small mass, noted in the ledger), and kept the heading the guard message cites. A Sonnet probe pinned to the post-prune SHA answered five cases correctly. Standards and Spec review found one lost clause (search scoping), restored, and an off-by-one in the ledger line counts, fixed. Gate green, PR 1936 opened.
+status: completed
+outcome: Two trials judged and deleted; github-integration.md rewritten plainly (-31); PR 1936 merged
+summary: Scheduled /prune-trial run, so everything was agent-initiated under the Skill's charter. The window script showed the guards.md and pr-workflow recipe trials judgeable. Frictions since landing were only nit/minor for both (the majors in the window belonged to clear-backlog), and no regression issue exists, so both were deleted. A search subagent looked for prose that already failed; the best candidate was the overflow traps in github-integration.md (the search fields rule failed as prose in 1860 and is now held by a guard). I rewrote that file plainly, cut about 31 lines (small mass, noted in the ledger), and kept the heading the guard message cites. A Sonnet probe pinned to the post-prune SHA answered five cases correctly. Standards and Spec review found one lost clause (search scoping), restored, and an off-by-one in the ledger line counts, fixed. Gate green, PR 1936 opened and merged.
 prs:
   - "1936"
 docsRead:
@@ -51,17 +51,21 @@ frictions:
   - description: Gate ran as a long background job while review agents ran; its log held many push-negotiation warnings that made it hard to confirm success quickly.
     solution: Check the exit= line only.
     severity: nit
-durationSec: 506
+durationSec: 697
 models:
-  claude-sonnet-5-5: 71
+  claude-sonnet-5-5: 87
 toolCounts:
   Read: 6
-  Bash: 20
+  Bash: 23
   mcp__github__search_issues: 2
   Agent: 4
   Skill: 3
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 2
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 rulesLoaded:
   - .claude/rules/adr-0029.md
   - .claude/rules/adr-0030.md
