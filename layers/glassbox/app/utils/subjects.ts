@@ -27,3 +27,7 @@ export function glassboxDirectory(pages: GlassboxPageLink[]) {
     }))
     .filter((subject) => subject.lessons.length)
 }
+
+export function glassboxWalkthroughs(pages: GlassboxPageLink[]) {
+  return pages.filter((page) => page.path.startsWith('/walkthroughs/'))
+}
