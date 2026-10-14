@@ -1,0 +1,10 @@
+name: bash-rules-hint-failure-path
+cause: >-
+  The Bash rules hint (PR #1946, #1940) still added nothing to a failing compound read (`cat .claude/rules/guards.md; ls /nonexistent`, exit 2) in a live test run after #1946 merged.
+surface: guard-or-hook
+status: tracked
+ref: "issue #1954"
+occurrences:
+  - session: session_01NVG22rfEsjhW9zkcCco6W8
+    date: "2026-10-14"
+    severity: moderate
