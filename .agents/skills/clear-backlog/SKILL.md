@@ -113,7 +113,9 @@ branch, or its question or failure is in the report.
 
 Push each `ready-to-push` branch from its worktree and open its PR with the
 branch's decisions, its remaining judgement calls, any cherry-picked PR, and
-any `humanOnly` path; at the first PR open, invoke `close-session`
+the Human-only paths that `pnpm exec tsx scripts/human-only-paths.ts
+<worktree>` prints (a non-zero exit means the list couldn't be read: stop
+and report it); at the first PR open, invoke `close-session`
 (`in-review`). Land it with `docs/agents/pr-workflow.md`. For a later
 fix (CI, a PR comment), re-run that branch with its `worktree` and the fix
 in its `brief`. A PR built from a Public issue waits for a human merge
