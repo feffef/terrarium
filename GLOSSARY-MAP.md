@@ -1,11 +1,10 @@
 # Glossary Map
 
-This repo is **multi-context** (ADR-0021). Domain vocabulary is split between a
-shared **Platform context** at the root and one context per Tenant, co-located
-with that Tenant's code. Read the Platform context always; read a Tenant's
-context when you work on that Tenant.
+Domain vocabulary is split (ADR-0021) between a shared **Platform glossary** at
+the root and one glossary per Tenant, beside that Tenant's code. Read the
+Platform glossary always; read a Tenant's glossary when you work on that Tenant.
 
-## Contexts
+## Glossaries
 
 - **Platform** — [`./GLOSSARY.md`](./GLOSSARY.md) — the concepts every agent needs
   regardless of task: Platform, Tenant, Space, Collection, Document, Session,
@@ -26,7 +25,7 @@ context when you work on that Tenant.
   Aggregator Tenant: its Search and Timeline Spaces. The terms it turns on
   (Collection kind, Catalog, Aggregator) live in the root `GLOSSARY.md`.
 
-The root `GLOSSARY.md`'s `## Tenants` roster points at each of these. Definitions live once, in the listed context; pointers to them may live anywhere they help.
+The root `GLOSSARY.md`'s `## Tenants` roster points at each of these. Definitions live once, in the listed glossary; pointers to them may live anywhere they help.
 
 ## Relationships
 
