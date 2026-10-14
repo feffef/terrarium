@@ -9,7 +9,7 @@
 // re-deriving the path, and `persona` stays optional so the Persona
 // landing's feed renders with byte-identical markup to before the
 // extraction. `formatBlogDate`/`personaMeta` arrive via the layer's utils/
-// auto-imports (docs/agents/tenant-layers.md); feed styling itself lives in
+// auto-imports (.claude/rules/tenant-layers.md); feed styling itself lives in
 // the layer's global `theme.css` (`.bl .feed …`), not scoped here, so it
 // keeps applying unchanged across this component boundary.
 interface BlogFeedPost {

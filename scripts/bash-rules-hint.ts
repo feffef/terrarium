@@ -60,8 +60,10 @@ function hintFor(payload: unknown): string | null {
 }
 
 function main(): void {
-  const hint = hintFor(JSON.parse(readFileSync(0, 'utf8')))
-  if (hint) process.stdout.write(JSON.stringify({ hookSpecificOutput: { hookEventName: 'PostToolUse', additionalContext: hint } }))
+  const payload = JSON.parse(readFileSync(0, 'utf8'))
+  const hint = hintFor(payload)
+  const hookEventName = prop(payload, 'hook_event_name') === 'PostToolUseFailure' ? 'PostToolUseFailure' : 'PostToolUse'
+  if (hint) process.stdout.write(JSON.stringify({ hookSpecificOutput: { hookEventName, additionalContext: hint } }))
 }
 
 function dryRun(argv: string[]): void {

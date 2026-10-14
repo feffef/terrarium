@@ -1,7 +1,6 @@
 ---
 paths:
   - "layers/*/tenant.config.ts"
-  - "layers/*/content/**/*.md"
   - "app/components/content/**"
   - "layers/*/app/components/content/**"
 ---

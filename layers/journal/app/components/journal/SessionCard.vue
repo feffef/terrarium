@@ -7,7 +7,7 @@
 // in `<JournalDisclosure>`, shared with the digest rows on the Space landing —
 // this component supplies only the head's own content via its default slot.
 // Types are imported relatively (`~/` resolves to the main app in a layer —
-// docs/agents/tenant-layers.md §1); `prUrl` arrives via the utils auto-import.
+// .claude/rules/tenant-layers.md); `prUrl` arrives via the utils auto-import.
 //
 // Open/closed state is owned by the parent page, not this card: the landing runs
 // both feeds as one page-wide accordion (a single item open at a time, mirrored

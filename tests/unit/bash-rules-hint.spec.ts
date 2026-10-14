@@ -100,12 +100,14 @@ describe('the hook entry (sh pre-filter → tsx)', () => {
     })
   const bash = (command: string, cwd = repo) => ({ hook_event_name: 'PostToolUse', tool_name: 'Bash', cwd, tool_input: { command }, tool_response: { stdout: 'cat' } })
 
-  it('emits PostToolUse additionalContext for a governed multi-file read', () => {
-    const { stdout, status } = run(bash('cat README.md scripts/double-background-guard.ts'))
-    expect(status).toBe(0)
-    const out = JSON.parse(stdout).hookSpecificOutput
-    expect(out.hookEventName).toBe('PostToolUse')
-    expect(out.additionalContext).toContain('Contents of .claude/rules/guards.md:')
+  it('emits additionalContext for a governed multi-file read, on PostToolUse and PostToolUseFailure', () => {
+    for (const event of ['PostToolUse', 'PostToolUseFailure']) {
+      const { stdout, status } = run({ ...bash('cat README.md scripts/double-background-guard.ts'), hook_event_name: event })
+      expect(status).toBe(0)
+      const out = JSON.parse(stdout).hookSpecificOutput
+      expect(out.hookEventName).toBe(event)
+      expect(out.additionalContext).toContain('Contents of .claude/rules/guards.md:')
+    }
   })
 
   it('writes nothing when the pre-filter drops the command', () => {

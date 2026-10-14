@@ -6,7 +6,7 @@
 // single-homed here.
 // Named with Atlas vocabulary ("wing" = a biome landing's whole data need), not a
 // generic name — the auto-import namespace is global across every layer
-// (tenant-layers.md §1).
+// (.claude/rules/tenant-layers.md).
 //
 // Isolation-respecting (ADR-0006): this takes the ALREADY-resolved
 // `useSpace('atlas')` context as input rather than re-resolving the route

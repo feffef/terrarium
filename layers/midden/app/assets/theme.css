@@ -5,7 +5,7 @@
    An excavation catalogue of the Platform's own discarded work. Self-contained
    tokens (no sharing with other Tenants; ADR isolation stance, CONTEXT.md).
    Registered globally by the layer's nuxt.config, so every layer view and every
-   nested component inherits the tokens (docs/agents/tenant-layers.md §2).
+   nested component inherits the tokens (docs/agents/tenant-layers.md §1).
 
    The redesign reads as a physical dig report on ruled parchment: a warm cream
    ground, ONE fired-terracotta accent for the live thing on the page, and a cool

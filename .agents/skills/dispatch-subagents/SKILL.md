@@ -21,7 +21,8 @@ that shifts after agents have started forces a full redo.
 - **`EnterWorktree`/`ExitWorktree`** moves your whole session. Use only when the
   user says "worktree" or CLAUDE.md directs it.
 - **Manual `git worktree add`** is for your own one-off inspection, never a
-  subagent's brief.
+  subagent's brief. Put it under `.claude/worktrees/NAME/`: path-scoped rules
+  don't load for files outside the project folder (issue #1944).
 
 ## 3. Write the brief
 
