@@ -97,9 +97,9 @@ finding reached another way; the field's docstring lists why it undercounts.
   (ADR-0006), so that move escalates (step 8).
 
 **Agent C — Concision.** Cut words, never meaning or a load-bearing "why".
-Each run covers one family of Live docs, the next after the one named by the newest
-`audit-docs:` sweep commit on origin/main (modulo 5); with no such commit, use
-`$(( 10#$(date +%j) % 5 ))`:
+Each run covers one family of Live docs, the one after the family the newest
+origin/main commit subject ending `(<family> concision family)` names (modulo 5); if
+none, use `$(( 10#$(date +%j) % 5 ))`:
 0 the root and per-Tenant docs (`CLAUDE.md`, `CONTEXT*.md`, every Live README,
 `SECURITY.md`, `layers/*/CONTEXT.md`), 1 `docs/agents/*`, 2 `docs/research/*`,
 3 our own Skills with their sibling files, 4 the journal's facing pages and Inventory entries. Brief it
