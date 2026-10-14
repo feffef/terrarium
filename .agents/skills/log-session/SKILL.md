@@ -74,11 +74,10 @@ docsRead:                          # curated — what each doc gave you, and whe
   - { path: "app/pages/t/[tenant]/[space]/[...slug].vue", reason: routing, useful: partly }
 skillsUsed:                        # transcript-observed reads/Skills you omit are folded in
   - { name: tdd, reason: "test-first the helper (see #99)" }  # (name cross-refs the Skill Inventory)
-ruleVerdicts:                      # every rule that loaded, always-loaded ones too (step 3)
+ruleVerdicts:                      # every rule that loaded, yours or a subagent's (step 3)
   - { path: .claude/rules/adr-0004.md, reason: "Made me run gate:scoped before pushing; summary was enough, skipped the full ADR", useful: yes }
   - { path: .claude/rules/adr-0023.md, reason: "About guest PRs; this was a Trusted blog post, so it didn't apply", useful: no }
-subagentVerdicts:                  # a subagent's own verdicts on what only it loaded or read (step 3)
-  - { path: .claude/rules/adr-0025.md, kind: rule, agent: "Triage #12", reason: "Loaded on a catalog read; confirmed queryPages was the right call", useful: yes }
+  - { path: .claude/rules/adr-0025.md, reason: "Only Triage #12 loaded it; it reported the rule confirmed queryPages was the right call", useful: yes }
 frictions:                         # REQUIRED (may be []) — list EVERY friction
   - description: …                 # ~20 words, honest
     solution: …                    # the fix, or what would have helped
@@ -168,11 +167,11 @@ one-line reason and a `useful` verdict, or the reason `(not read)` when no
 command of this session or its subagents showed you that doc. The stitch drops a `(not read)` entry, and logs a Friction
 if shell output had credited it.
 
-A rule or doc only a subagent loaded or read is that subagent's to rate: the
-report lists each one with no `subagentVerdicts` entry as `no verdict from
-subagent`, a reminder, not a block. Collect the verdicts as the
-`dispatch-subagents` Skill (§5) or the `clear-backlog` Skill says. A doc's
-subagent verdict becomes its `docsRead` entry unless you wrote one.
+Give one verdict per rule and per doc for the whole session. For one a
+subagent also loaded or read, ask it (`dispatch-subagents` §5, or a workflow
+agent's `verdicts`), merge its view with yours, and say in the `reason` what it
+reported. The report lists each rule or doc only a subagent loaded or read that
+has no verdict yet, a reminder, not a block: unanswered, it shows as unknown.
 
 It also lists every rule that loaded in this session with no `ruleVerdicts` entry,
 including the always-loaded ones (no `paths`; they load at session start). You can't see this
@@ -186,8 +185,8 @@ held. Don't restate the rule.
 
 Every pass is a full scratch with every field the schema requires. Its lists
 merge with the earlier pass, so list only new entries, plus any `docsRead`,
-`skillsUsed`, `ruleVerdicts` or `subagentVerdicts` entry you change, written whole (it replaces the
-one with the same `path` or `name`, or `path` and `agent`). An earlier `no` rule
+`skillsUsed` or `ruleVerdicts` entry you change, written whole (it replaces the
+one with the same `path` or `name`). An earlier `no` rule
 verdict you leave out stands, and the report lists it to re-confirm or change. Repeat a friction word for word, severity
 included, or it is logged twice.
 

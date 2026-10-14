@@ -143,6 +143,15 @@ describe('foldSubagentTrace() — subagent work counts as the session\'s (issue 
   it('is identity for a session that dispatched nobody', () => {
     expect(foldSubagentTrace(parent, [], NO_ENV)).toBe(parent)
   })
+
+  // Rules and docs work the same way: a doc only a subagent read is marked.
+  it('marks an instruction doc only a subagent read, not one the parent read or a code file', () => {
+    expect(folded.docsReadBySubagents).toEqual(['docs/agents/pr-workflow.md'])
+    const entry = stitch({ session: 'session_01ABC', goal: 'g', status: 'completed', outcome: 'o', summary: 's', frictions: [] }, folded)
+    expect(entry.docsReadBySubagents).toEqual(['docs/agents/pr-workflow.md'])
+    expect(validateEntry(entry).ok).toBe(true)
+    expect(stitch({ session: 'session_01ABC', goal: 'g', status: 'completed', outcome: 'o', summary: 's', frictions: [] }, parent)).not.toHaveProperty('docsReadBySubagents')
+  })
 })
 
 // The harness records a path-scoped rule's load as a `nested_memory`
@@ -519,19 +528,12 @@ describe('stitch()', () => {
     expect(validateEntry(withTrigger).ok).toBe(true)
   })
 
-  // #1941: a doc only a subagent read carries that subagent's verdict, not a placeholder.
-  it("records a folded-in doc with a subagent's verdict, never over the main session's own", () => {
-    const sv = (path: string) => ({ path, kind: 'doc' as const, agent: 'Triage #12', reason: 'named the guard', useful: 'partly' as const })
-    const withSub = stitch(
-      { ...scratch, subagentVerdicts: [sv('docs/agents/x.md'), sv('GLOSSARY.md')] },
-      { ...trace, filesRead: [...trace.filesRead, 'docs/agents/x.md'] },
+  it('keeps docsReadBySubagents to docs still in docsRead', () => {
+    const notRead = stitch(
+      { ...scratch, docsRead: [{ path: 'docs/agents/x.md', reason: NOT_READ_REASON }] },
+      { ...trace, filesRead: [...trace.filesRead, 'docs/agents/x.md'], docsReadBySubagents: ['docs/agents/x.md'] },
     )
-    const docs = withSub.docsRead as { path: string; reason: string; useful?: string }[]
-    expect(docs.find((d) => d.path === 'docs/agents/x.md')).toEqual({ path: 'docs/agents/x.md', reason: '[Triage #12] named the guard', useful: 'partly' })
-    expect(docs.find((d) => d.path === 'GLOSSARY.md')).toEqual({ path: 'GLOSSARY.md', reason: 'the domain model' })
-    expect(withSub.subagentVerdicts).toEqual([sv('docs/agents/x.md'), sv('GLOSSARY.md')])
-    expect(validateEntry(withSub).ok).toBe(true)
-    expect('subagentVerdicts' in entry).toBe(false)
+    expect(notRead).not.toHaveProperty('docsReadBySubagents')
   })
 
   it('omits learnings/ideas entirely when the scratch has none', () => {

@@ -1,5 +1,5 @@
 import type { z } from 'zod'
-import type { RuleVerdict, SubagentVerdict, sessionSchema } from '../../../../shared/schemas/session'
+import type { RuleVerdict, sessionSchema } from '../../../../shared/schemas/session'
 import type { frictionClusterSchema, skillSchema } from '../../tenant.config'
 
 // `z.input`, not `z.infer`: the schemas' `.default([])` fields are optional on the
@@ -42,7 +42,9 @@ export interface SessionCardView {
   sid: string
   summary: string
   subagents: Subagent[]
-  docsRead: DocRead[]
+  // `viaSubagent`: only a subagent read it (#1941). `unknown`: such an entry no
+  // agent gave a verdict on, which counts as neither useful nor not.
+  docsRead: (DocRead & { viaSubagent: boolean; unknown: boolean })[]
   skillsUsed: { name: string; reason: string }[]
   frictions: Friction[]
   // Authored note fields — normalized to arrays (empty ⇒ the card hides them).
@@ -53,12 +55,11 @@ export interface SessionCardView {
   // edited nothing / spawned no subagent).
   filesEdited: string[]
   docsReadViaShell: string[]
-  // Rules that loaded, always-loaded ones (session start) first; `followedUp` ⇒ the
-  // session then read the full ADR.
+  // Rules that loaded, always-loaded ones (session start) first, then the main
+  // session's, then subagents'; `followedUp` ⇒ the session then read the full ADR.
   // `reason`/`useful` are the agent's verdict, absent on logs older than it.
-  rules: ({ path: string; title?: string; alwaysLoaded: boolean; followedUp: boolean } & Partial<Omit<RuleVerdict, 'path'>>)[]
-  // Rules only a subagent loaded, with each subagent's own verdict (#1941).
-  subagentRules: { path: string; title?: string; followedUp: boolean; verdicts: Omit<SubagentVerdict, 'path' | 'kind'>[] }[]
+  // `viaSubagent`/`unknown` as on `docsRead`.
+  rules: ({ path: string; title?: string; alwaysLoaded: boolean; followedUp: boolean; viaSubagent: boolean; unknown: boolean } & Partial<Omit<RuleVerdict, 'path'>>)[]
   tools: { name: string; count: number }[]
 }
 

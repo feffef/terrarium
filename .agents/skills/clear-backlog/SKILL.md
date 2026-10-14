@@ -128,8 +128,8 @@ some of its exceptions.
 
 Report one line per issue: `#N | outcome | PR or "no PR: why" | merged / waits
 for you (why)`. Then re-invoke `close-session`, passing every workflow agent's
-`verdicts` to `log-session` as `subagentVerdicts`, with `agent` the agent's
-label (`triage #N` for an explore result; build results carry it). Its log's `summary` carries one line
+`verdicts` merged into its own `ruleVerdicts` and `docsRead`, one entry per
+path (log-session step 3). Its log's `summary` carries one line
 per merged or opened branch: what it changed (from that branch's `decisions`)
 and any judgement calls left open. In a workflow run the orchestrator's log is
 the Journal's only record of what its agents built.

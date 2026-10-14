@@ -118,8 +118,8 @@ visible. Done when it exits 0.
 
 After an Agent-tool subagent finishes, ask it with `SendMessage` for a verdict
 on each rule that loaded for it and each doc it read: path, rule or doc, why it
-loaded or was read, and useful yes, partly or no. Pass the answers to
-`log-session` as `subagentVerdicts`, `agent` being its label.
+loaded or was read, and useful yes, partly or no. Merge each answer into your
+own `ruleVerdicts` or `docsRead` entry for that path (log-session step 3).
 
 If you `cd`'d into a subagent's worktree, `cd` back (or use absolute paths) and
 re-check `git status` at the root: a closure Stop-hook flag may belong to that

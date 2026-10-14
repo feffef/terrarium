@@ -33,12 +33,13 @@
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs'
 import { basename, dirname, join, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
-import type { RuleVerdict, SubagentVerdict, UsefulVerdict } from '../shared/schemas/session.ts'
+import type { RuleVerdict, UsefulVerdict } from '../shared/schemas/session.ts'
 import { DERIVED_REASON, FOLDED_TRACE_FIELDS } from '../shared/trace-fields.ts'
 import {
   buildDocLineIndex,
   scanShellReads,
   scanShellReadsByOutput,
+  canonicalizeInstructionPath,
   isInstructionDoc,
   type DocLineIndex,
   type DocText,
@@ -118,9 +119,10 @@ export interface MechanicalTrace {
    *  loaded: whole, by the Read tool, or in Bash output once `docIndex` is given
    *  (the shell detector's floor, not a whole read). */
   rulesFollowedUp: string[]
-  /** Rules only a subagent or workflow agent loaded: not the main session's own
-   *  loads, so it gives them no verdict (#1941). Set by `foldSubagentTrace`. */
+  /** Rules only a subagent or workflow agent loaded. Set by `foldSubagentTrace`. */
   rulesLoadedBySubagents?: string[]
+  /** Instruction docs only a subagent or workflow agent read. Set by `foldSubagentTrace`. */
+  docsReadBySubagents?: string[]
   skillsUsed: string[]
   /** The subset of `skillsUsed` seen only as a slash-command expansion — kept
    *  alongside (not instead of) the union so the stitch can annotate provenance
@@ -742,13 +744,17 @@ export function foldSubagentTrace(
     folded[field] = dedup([...trace[field], ...subs.flatMap((s) => s[field])])
   }
   // Folded too, but kept out of FOLDED_TRACE_FIELDS: SessionCard's explainer
-  // lists those fields, and the card shows these in a list of their own.
+  // lists those fields, and the card tags these 'via subagent' instead.
   folded.rulesGlobal = dedup([...trace.rulesGlobal, ...subs.flatMap((s) => s.rulesGlobal)])
   folded.rulesLoaded = trace.rulesLoaded.filter((r) => !folded.rulesGlobal.includes(r))
   folded.rulesLoadedBySubagents = dedup(subs.flatMap((s) => s.rulesLoaded)).filter(
     (r) => !folded.rulesGlobal.includes(r) && !folded.rulesLoaded.includes(r),
   )
   folded.rulesFollowedUp = dedup([...trace.rulesFollowedUp, ...subs.flatMap((s) => s.rulesFollowedUp)])
+  const mainDocs = new Set([...trace.filesRead, ...trace.docsReadViaShell].map(canonicalizeInstructionPath))
+  folded.docsReadBySubagents = dedup(subs.flatMap((s) => [...s.filesRead, ...s.docsReadViaShell])).filter(
+    (p) => isInstructionDoc(p) && !mainDocs.has(canonicalizeInstructionPath(p)),
+  )
   return folded
 }
 
@@ -788,7 +794,6 @@ export interface AuthoredScratch {
   docsRead?: { path: string; reason: string; useful?: UsefulVerdict }[]
   skillsUsed?: { name: string; reason: string }[]
   ruleVerdicts?: RuleVerdict[]
-  subagentVerdicts?: SubagentVerdict[]
   frictions: { description: string; solution: string; severity: string }[]
   learnings?: string[]
   ideas?: string[]
@@ -820,11 +825,15 @@ export function stitch(authored: AuthoredScratch, trace: MechanicalTrace): Recor
     solution: 'Find the crediting command in the transcript and tighten scripts/shell-reads.ts',
     severity: 'moderate',
   }))
-  const authoredDocs = new Set((authored.docsRead ?? []).map((d) => d.path))
-  // docsRead holds one entry per path, so it takes the first agent's verdict;
-  // subagentVerdicts keeps every agent's.
-  const subagentDocVerdicts = new Map<string, SubagentVerdict>()
-  for (const v of authored.subagentVerdicts ?? []) if (v.kind === 'doc' && !subagentDocVerdicts.has(v.path)) subagentDocVerdicts.set(v.path, v)
+  const docsRead = mergeRefs(
+    (authored.docsRead ?? []).filter((d) => !notRead.has(d.path)),
+    // A rule file is logged as a rule (rulesGlobal/rulesLoaded + ruleVerdicts),
+    // even when close-session has the agent re-read it.
+    [...trace.filesRead, ...trace.docsReadViaShell].filter((p) => !notRead.has(p) && !p.startsWith('.claude/rules/')),
+    'path',
+    (path) => (editedSet.has(path) ? DERIVED_REASON_EDITED : DERIVED_REASON),
+  )
+  const docsReadBySubagents = (trace.docsReadBySubagents ?? []).filter((p) => docsRead.some((d) => d.path === p))
   const entry: Record<string, unknown> = {
     schemaVersion: 1,
     // trace.session is already ground-truth-resolved; wins over authored.
@@ -837,18 +846,7 @@ export function stitch(authored: AuthoredScratch, trace: MechanicalTrace): Recor
     outcome: authored.outcome,
     summary: authored.summary,
     prs: authored.prs ?? [],
-    docsRead: mergeRefs(
-      (authored.docsRead ?? []).filter((d) => !notRead.has(d.path)),
-      // A rule file is logged as a rule (rulesGlobal/rulesLoaded + ruleVerdicts),
-      // even when close-session has the agent re-read it.
-      [...trace.filesRead, ...trace.docsReadViaShell].filter((p) => !notRead.has(p) && !p.startsWith('.claude/rules/')),
-      'path',
-      (path) => (editedSet.has(path) ? DERIVED_REASON_EDITED : DERIVED_REASON),
-    ).map((d) => {
-      // A doc the main session didn't rate takes its subagent's verdict (#1941).
-      const v = subagentDocVerdicts.get(d.path)
-      return v && !authoredDocs.has(d.path) ? { path: d.path, reason: `[${v.agent}] ${v.reason}`, useful: v.useful } : d
-    }),
+    docsRead,
     skillsUsed: mergeRefs(authored.skillsUsed ?? [], trace.skillsUsed, 'name', (name) =>
       trace.commandSkills.includes(name) ? DERIVED_REASON_COMMAND : DERIVED_REASON,
     ),
@@ -863,8 +861,8 @@ export function stitch(authored: AuthoredScratch, trace: MechanicalTrace): Recor
   if (trace.rulesGlobal.length) entry.rulesGlobal = trace.rulesGlobal
   if (trace.rulesFollowedUp.length) entry.rulesFollowedUp = trace.rulesFollowedUp
   if (trace.rulesLoadedBySubagents?.length) entry.rulesLoadedBySubagents = trace.rulesLoadedBySubagents
+  if (docsReadBySubagents.length) entry.docsReadBySubagents = docsReadBySubagents
   if (authored.ruleVerdicts?.length) entry.ruleVerdicts = authored.ruleVerdicts
-  if (authored.subagentVerdicts?.length) entry.subagentVerdicts = authored.subagentVerdicts
   if (trace.subagents.length) entry.subagents = trace.subagents
   if (trace.gitBranch) entry.gitBranch = trace.gitBranch
   if (trace.entrypoint) entry.entrypoint = trace.entrypoint
