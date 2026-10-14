@@ -52,6 +52,9 @@ export default defineConfig({
           name: 'e2e',
           include: ['tests/e2e/**/*.spec.ts', 'layers/*/tests/e2e/**/*.spec.ts'],
           globalSetup: ['tests/support/e2e-global-setup.ts'],
+          // The default 1 s is shorter than a browser state change (accordion
+          // toggle, route navigation) on a loaded CI or gate machine.
+          expect: { poll: { timeout: 10_000 } },
         },
       },
     ],
