@@ -45,12 +45,12 @@ export function shiftLines(range: LineRange, diff: string): LineRange | 'edited'
   return { start: range.start + shift, end: range.end + shift }
 }
 
-interface Cited {
+interface CitedFilesAndTerms {
   files: FileRef[]
   terms: string[]
 }
 
-export interface StopLinks extends Cited {
+export interface StopLinksBlock extends CitedFilesAndTerms {
   /** Markdown link targets. */
   links: string[]
 }
@@ -58,13 +58,13 @@ export interface StopLinks extends Cited {
 /** Every `:file` and `::excerpt` (in order), every `:term`, and what each
  *  `::stop-links` block links to. Inline code and fences outside `::excerpt`
  *  show syntax, so they cite nothing. */
-export function glassboxPageRefs(body: string): Cited & { stopLinks: StopLinks[] } {
+export function glassboxPageRefs(body: string): CitedFilesAndTerms & { stopLinks: StopLinksBlock[] } {
   const files: FileRef[] = []
   const terms: string[] = []
-  const stopLinks: StopLinks[] = []
+  const stopLinks: StopLinksBlock[] = []
   let fence: string | undefined
   let excerpt: FileRef | undefined
-  let stop: StopLinks | undefined
+  let stop: StopLinksBlock | undefined
   let code: string[] = []
 
   for (const line of body.split(/\r?\n/)) {

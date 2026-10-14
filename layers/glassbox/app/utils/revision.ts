@@ -14,7 +14,6 @@ export function glassboxFileUrl(path: string, revision: string, lines?: LineRang
   return `${REPO_URL}/${path.endsWith('/') ? 'tree' : 'blob'}/${revision}/${path}${anchor}`
 }
 
-/** `2026-10-14` → `14 Oct 2026`. */
 export function formatGlassboxDate(date: string) {
   return new Date(date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' })
 }
