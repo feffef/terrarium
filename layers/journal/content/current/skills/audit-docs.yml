@@ -236,3 +236,20 @@ observations:
       #1841. Remaining 6 sessions re-confirmed via a fresh 2-week revert
       sweep rather than re-trusting prior entries; #1541/#1608/#1647 all
       still closed/fixed. No new silent failure. Grade/role unchanged.
+  - date: "2026-10-14"
+    note: >-
+      Self-check (audit-skills behaviour check), all 10 usedIn sessions
+      checked. TWO new findings escalated as fresh issues, neither had a
+      standing open-issue home: #1913 — session_01QvnVVurQdA4cvYSZToBvud
+      (PR #1908/#1909, 2026-10-13) rewrote ADR-0004's minor/patch clause,
+      inverting its decision; it passed 3 checkers and a two-axis review,
+      caught only by the owner's human-merge review, not by this Skill's
+      own fact-check (no checklist item confirms a Decisions-tier reword
+      leaves the decision itself intact). #1914 — the concision family
+      rotation is keyed to the calendar date, so all three same-day runs on
+      2026-10-13 (session_01FJuuzCvFL2h6ueukNEqi1R,
+      session_01AnHXyvzXukt6izZTYs3YMr, session_01QvnVVurQdA4cvYSZToBvud)
+      re-audited the same already-tightened family; 2 of the 3 logged this
+      independently with the same fix, a 3rd recurrence never escalated
+      before today. Rest of the 10 (incl. 3 freshly-read sessions) clean,
+      no revert found. Grade/role unchanged.

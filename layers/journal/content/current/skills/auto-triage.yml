@@ -136,3 +136,15 @@ observations:
       dispatch-subagents territory, not this Skill's own sweep. No revert of
       SKILL.md or any triage decision in the 2-week sweep. Grade/role
       unchanged.
+  - date: "2026-10-14"
+    note: >-
+      Self-check (audit-skills behaviour check): all 7 usedIn sessions
+      independently re-verified against live GitHub (~13 issues checked:
+      #1797/#1798/#1817/#1818 ready-for-agent grants, #1786/#1802/#1816
+      ready-for-human escalations, #1761 not-planned closure) — no
+      mis-triage found. #1859/#1860's orphan-issue skip (an AI-filed issue
+      with a state label and no comments never becoming eligible again) was
+      caught and fixed same-day by owner-directed PR #1867, before any of
+      this window's 7 sessions could hit it — not a gap in this window, but
+      worth a spot-check next cycle once a sweep runs under the fix. No new
+      silent failure. Grade/role unchanged.

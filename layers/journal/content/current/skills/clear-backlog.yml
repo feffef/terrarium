@@ -34,3 +34,16 @@ observations:
       from this window's evidence (4 usedIn sessions, two independently
       verified failures): essential to the specific "clear everything now"
       job, not a Skill reached for day-to-day.
+  - date: "2026-10-14"
+    note: >-
+      Self-check (audit-skills behaviour check): all 8 usedIn sessions
+      checked. Two historical silent failures independently re-confirmed,
+      both already caught and fixed before this window closed: §4's
+      review-before-push promise skipped on session_017NBxJhtBSd9AoCwTzsg6pM
+      (PR #1840 self-merged unreviewed in 3m15s), self-filed as #1844 and
+      fixed same-day by PR #1852/#1853; §1's explore-phase triage sweep
+      skipped outright on session_015LwBgLjaCn36ayZedges6G, caught by the
+      owner, fixed via issue #1857/PR #1864. Neither fix has regressed; 3
+      post-fix narrow runs (2026-10-13) checked out clean against GitHub.
+      No third, previously-unreported silent failure found. Grade
+      unchanged.

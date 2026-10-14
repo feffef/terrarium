@@ -298,3 +298,26 @@ observations:
       nothing) — the fix holds today by agent compliance, not gate
       enforcement, so a future non-compliant run would not be mechanically
       blocked. No new silent failure to escalate. Grade/role unchanged.
+  - date: "2026-10-14"
+    note: >-
+      NEW significant finding, escalated as issue #1912: `unresolved()`
+      (owner-corrections.ts) credits only the *first* `#N`/URL on a line
+      matching "not a ruling"/"decisions.md" — so a single line batching
+      several candidates under one shared verdict resolves just the first
+      one. Every checked post-#1732 PR body (session_01N2WiBqiw2rFsAqpy41VnhA
+      /PR #1893, session_014uXxmT6359K4Z42a6We6Gh/PR #1806,
+      session_01BkB4AFUGkEudyf13aa44Wy/PR #1837,
+      session_017inrpS21UKrpEun2DpjLd7/PR #1779,
+      session_01UEeKV1vUyYkM8vedtgWPnY/PR #1743) batches its candidates onto
+      one line instead of one-per-line; independently confirmed by running
+      the live regex against PR #1893's and #1837's actual text — only
+      `#1883` of #1893's 15 named PRs would resolve, and #1837's line
+      contains no `#N` at all despite claiming "`--check` passes". Step 4's
+      literal promise ("its body carries the tally") has been false in
+      every one of the last 5 runs. This corrects, not contradicts, the
+      5 prior daily "clean"/"4/4"/"5/5" verdicts (2026-10-09 through
+      10-13): those checked only that PR numbers were *named* somewhere,
+      never whether a shared line still satisfies the mechanical gate
+      #1732 was built to add — by the check's own unit-test logic, it does
+      not. Grade/role unchanged pending a human decision on #1912's two
+      options (loosen the SKILL.md promise vs. harden the check).

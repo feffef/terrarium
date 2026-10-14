@@ -323,3 +323,18 @@ observations:
       (PR #1829) closed unmerged while the owner considers a bigger
       redesign — reported only, not ours to act on. No new finding.
       Grade/role unchanged.
+  - date: "2026-10-14"
+    note: >-
+      Self-check (audit-skills behaviour check): Part A (10 usedIn
+      sessions) — 0 silent failures; all 10 committed direct-to-main
+      (single-parent, ancestor of origin/main per ADR-0009), frictions read
+      as honest self-criticism, no force-edit of another session's log
+      found anywhere in the 2-week sweep. Part B (6 notUsedWindow
+      sessions) — 0 genuine missed invocations; all 6 have complete,
+      committed logs, the "miss" in every case is `skillsUsed` not
+      crediting close-session's internal log-session call. This exact
+      false-positive class has now been independently rediscovered by ~8 of
+      the last 9 daily audits with no fix landed and no Friction
+      Ledger/issue tracking it — filed today as issue #1915 so it stops
+      being rediscovered from scratch. No new finding on log-session's own
+      output correctness. Grade/role unchanged.
