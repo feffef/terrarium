@@ -21,8 +21,8 @@ directory — is another **Space** in the Commons, not another Tenant.
 - **Timeline** (`/t/commons/timeline`) — a reverse-chronological feed of every
   timestamped piece of content across the Platform, one line each. Three sources:
   **posts** (dated blog/marquee pages), **digests** (the Journal's daily
-  summaries), and **sessions** (session logs). Posts link to their real page;
-  sessions and digests link into the Journal home page.
+  summaries), and **sessions** (session logs). Posts and digests link to
+  their own page; sessions link into the Journal home page.
 
 ## Why it exists
 

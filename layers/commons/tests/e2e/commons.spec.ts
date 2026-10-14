@@ -83,10 +83,10 @@ describe('commons Tenant', async () => {
       expect(await page.locator('.tl-entry .genre-digest').count()).toBeGreaterThan(0)
       expect(await page.locator('.tl-entry .genre-post').count()).toBeGreaterThan(0)
 
-      // Sessions/digests have no standalone page route, so they deep-link into
-      // the Journal dashboard by fragment.
+      // Sessions have no standalone page route, so they deep-link into the
+      // Journal dashboard by fragment; a digest links to its own page.
       expect(hrefs.some((h) => h.includes('/t/journal/') && h.includes('#session-'))).toBe(true)
-      expect(hrefs.some((h) => h.includes('/t/journal/') && h.includes('#digest-'))).toBe(true)
+      expect(hrefs.some((h) => /^\/t\/journal\/[a-z]+\/digests\/\d{4}-\d{2}-\d{2}$/.test(h))).toBe(true)
     })
   })
 })
