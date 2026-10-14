@@ -1,0 +1,127 @@
+schemaVersion: 1
+session: session_018wtKTCgkvJwgb3gS8o8JKA
+startedAt: 2026-10-14T19:45:26Z
+endedAt: 2026-10-14T20:12:59Z
+kind: interactive
+goal: Decide how Glass Box pages stay accurate and who writes them
+status: completed
+outcome: Grilling ticket resolved and closed; map and the showing-code ticket updated
+summary: "The owner invoked wayfinder on the Glass Box map to work the HITL grilling ticket \"Glass Box: keeping pages accurate, and who writes them\" (human-instructed). I claimed it, read the four earlier resolutions, checked repo facts (the Blog's pinned-link test, the out-of-scope doc-invariants record, audit-docs' families, CI's full-history checkout, the default merge method) and ran three rounds of questions. The owner overturned two of my recommendations: links pin to one per-page `revision` commit, not `main` (Glass Box is a textbook, and the pin makes stale pages detectable); and a dedicated writing Skill from the start (two: lesson and walkthrough) instead of ordinary sessions. They then asked whether frontmatter adds value, which exposed that my proposed `files`/`docs` fields duplicated the body; frontmatter ended as title, description, revision. Also decided: a layer test checking paths and ADRs at `revision`, and a scheduled self-merging `glassbox-update` Skill (script pass plus concept pass) that replaces audit-docs coverage. The owner confirmed the summary; I posted the resolution, closed the ticket, updated the map, and left a note on the showing-code ticket (agent-initiated follow-through the wayfinder Skill requires). No code or PR."
+prs: []
+docsRead:
+  - path: GLOSSARY-MAP.md
+    reason: session-start glossary map
+    useful: partly
+  - path: GLOSSARY.md
+    reason: terms Tenant, Space, Skill, Gate, Routine
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: map body header replace trap; blocking via curl
+    useful: yes
+  - path: layers/blog/tests/unit/blog-immutable-links.spec.ts
+    reason: the layer-test precedent and its SHA pinning
+    useful: yes
+  - path: .out-of-scope/ci-enforced-doc-invariants.md
+    reason: why no Gate step for doc invariants
+    useful: yes
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: Live tier list and concision families
+    useful: yes
+skillsUsed:
+  - name: wayfinder
+    reason: work one ticket of the Glass Box map
+  - name: grilling
+    reason: three question rounds with the owner
+  - name: domain-modeling
+    reason: challenged duplicated frontmatter against one-home rule
+  - name: close-session
+    reason: closure after the ticket was recorded
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Ran git rev-parse before reading docs/agents/git-conventions.md, breaking the CLAUDE.md read-first trigger for git commands
+    solution: Read git-conventions.md at session start in any session likely to inspect git state; the hook reminder came after the fact
+    severity: nit
+  - description: Recommended file and ADR pointers without reading the full ADR-0005 or ADR-0029, only their summary rules, against the CLAUDE.md ADR-reading rule
+    solution: Read the binding ADRs in full before a recommendation round, even for planning tickets
+    severity: minor
+  - description: Proposed files/docs frontmatter that duplicated the body; the owner had to question it before I saw the one-home violation
+    solution: Check every proposed field against one-home-per-fact before recommending it
+    severity: minor
+durationSec: 1653
+models:
+  claude-opus-5-5: 60
+toolCounts:
+  ToolSearch: 1
+  Read: 7
+  mcp__github__issue_read: 7
+  mcp__github__get_me: 1
+  mcp__github__issue_write: 3
+  Skill: 4
+  Grep: 2
+  Bash: 9
+  mcp__github__add_issue_comment: 2
+  Write: 1
+rulesLoaded:
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/mermaid-lanes.md
+  - .claude/rules/adr-0026.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Told me a new rule needs a human merge, which shaped the drift-rule home; summary was enough
+    useful: partly
+  - path: .claude/rules/adr-0009.md
+    reason: Session log goes straight to main via close-session; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: No prune trial touched this planning work
+    useful: no
+  - path: .claude/rules/adr-0020.md
+    reason: Owner is Trusted; no Public input involved
+    useful: no
+  - path: .claude/rules/adr-0003.md
+    reason: Confirmed new Skills need Trusted approval, which the owner gave; no branch so no PR
+    useful: partly
+  - path: .claude/rules/adr-0017.md
+    reason: Made me replace the old session header when rewriting the map body; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0005.md
+    reason: Tenant-specific Skill condition framed the Skill question; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0015.md
+    reason: Pack Skills; nothing in this ticket touched them
+    useful: no
+  - path: .claude/rules/adr-0021.md
+    reason: Kept the decision out of an ADR and the glossary for later; summary enough
+    useful: partly
+  - path: .claude/rules/adr-0029.md
+    reason: Justified a path-scoped rule as the drift rules' home; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0030.md
+    reason: No ADR written or changed
+    useful: no
+  - path: .claude/rules/adr-0026.md
+    reason: Loaded by reading gate.yml for fetch depth; not relevant to the decision
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Loaded by a read; no PR here
+    useful: no
+  - path: .claude/rules/mermaid-lanes.md
+    reason: Loaded by grepping the overview brief; no diagram work
+    useful: no
+gitBranch: HEAD
+entrypoint: remote
+cliVersion: 2.1.300
+landedBy: Stop
