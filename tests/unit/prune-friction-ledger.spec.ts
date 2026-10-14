@@ -2,7 +2,7 @@ import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { afterEach, describe, expect, it } from 'vitest'
-import { horizonStart, pruneEntry, pruneLedger } from '../../scripts/prune-friction-ledger.ts'
+import { horizonStart, pruneEntry, pruneLedger, summarizeLedger } from '../../scripts/prune-friction-ledger.ts'
 import { LEDGER_DIR } from '../../scripts/session-frictions.ts'
 
 const entry = (...occ: [session: string, date: string][]) => `name: x
@@ -49,5 +49,16 @@ describe('pruneLedger()', () => {
     ])
     expect(existsSync(join(dir, 'old.yml'))).toBe(false)
     expect(readFileSync(join(dir, 'mixed.yml'), 'utf8')).not.toContain('2026-09-01')
+  })
+})
+
+describe('summarizeLedger()', () => {
+  it('lists name, status, ref, in-horizon count and max severity', () => {
+    const cwd = mkdtempSync(join(tmpdir(), 'ledger-'))
+    const dir = join(cwd, LEDGER_DIR)
+    mkdirSync(dir, { recursive: true })
+    writeFileSync(join(dir, 'x.yml'), entry(['a', '2026-09-01'], ['b', '2026-10-01']).replace('status: open', 'status: fixed\nref: "PR #1"'))
+    expect(summarizeLedger('2026-10-13', cwd)).toEqual(['x | fixed | PR #1 | 1 in horizon | nit'])
+    rmSync(cwd, { recursive: true, force: true })
   })
 })
