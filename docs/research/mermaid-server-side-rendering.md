@@ -59,10 +59,8 @@ rendered SVGs and drift-checking them instead:
 
 ## How theming survives as a static SVG
 
-The client renderer themed diagrams live by feeding mermaid a `--diagram-*`
-CSS-variable contract (`DIAGRAM_TOKENS`) read off the mounted element, so the
-diagram re-resolved against the Tenant palette and `prefers-color-scheme: dark`.
-A static SVG has no JS to do that — but the theming can be **baked as CSS-var
+A static SVG has no JS to read the `--diagram-*` CSS-variable contract
+(`DIAGRAM_TOKENS`) off the mounted element, so theming is **baked as CSS-var
 references** rather than concrete colours:
 
 1. Render with `theme: 'base'` and each colour token set to a **unique sentinel

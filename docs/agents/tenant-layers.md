@@ -114,6 +114,10 @@ Practical implications:
 
 - **Space or Collection:** edit the Tenant's `tenant.config.ts`. The keyed
   collections and the routing map follow at build time.
+- **Collection proposal:** only a Space's `pages` Collection has URLs (ADR-0006);
+  a separately named, addressable-sounding Collection (a Tenant's "sites",
+  "exhibits") breaks that. Check a new Tenant or Collection against it when you
+  propose it (issue #573).
 - **Tenant:** add `layers/<name>/` with a manifest, content and its own
   `nuxt.config.ts` (an empty `defineNuxtConfig({})` will do; without it
   `nuxt prepare` warns "Cannot extend config"). Then run `nuxt prepare` (or

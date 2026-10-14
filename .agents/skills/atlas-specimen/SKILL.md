@@ -196,7 +196,7 @@ day in exactly one phase), so the dial always has exactly one note to show.
   this phase, and it drives the phase's lit arc on the dial.
 - `label` — in-voice, the way `activity.label` is: "the lantern swell", not
   "winter dormancy".
-- `span` — `[startDayOfYear, endDayOfYear]`, 0–365. **May wrap the year**
+- `span` — `[startDayOfYear, endDayOfYear)`, 0–365, half-open: the end day belongs to the next phase, so abutting phases share the boundary number. **May wrap the year**
   (`[300, 45]`) exactly as an `activity` band may wrap midnight — a phase
   crossing the New Year is ordinary, not an edge case.
 - `gloss` — optional, one line in the voice, same register as an `activity`

@@ -29,8 +29,9 @@ surface — and anyone who wants to back a counterclockwise mug.
 ## Spaces
 
 - **`prod`** — realistic simulated content.
-- **`qa`** — deliberately awkward edge-case data. The e2e tests run against
-  it, and its front page indexes a component gallery, one page per section.
+- **`qa`** — deliberately awkward edge-case data. The browser e2e flows run
+  against it (`prod` is checked only through server-rendered HTML), and its
+  front page indexes a component gallery, one page per section.
 
 ## Glossary
 

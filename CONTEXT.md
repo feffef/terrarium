@@ -128,10 +128,8 @@ Grade by the cost *this instance* actually incurred, not by how notorious the
 failure class is — a mistake fully caught before landing (self-review, or a
 guard working exactly as designed) stays `nit`/`minor`. Recurrence is tracked
 separately, by occurrence count, not by inflating each instance's severity. A
-few named Frictions are graded by fixed rule instead, stated where each is
-used: `SHELL-READ-DETECTION` takes a severity floor (`log-session`),
-`HUMAN-PROMPTED-CLOSURE` is always `major` (`close-session`), and a CI failure
-after a passing `gate:scoped` is `major` (`docs/agents/pr-workflow.md`).
+few named Frictions are graded by a fixed rule instead, stated where each is
+used (`log-session`, `close-session`, `docs/agents/pr-workflow.md`).
 
 Frictions are the primary signal the self-improvement Skills mine — for recurring
 pain (`frictions-to-fixes`), and as the verdict on an open **Prune Trial**
@@ -172,9 +170,10 @@ reached for inside someone else's (e.g. `digest`, `audit-docs`). Assigned from t
 - **supporting** — genuinely useful but not essential; work proceeds without it.
 - **peripheral** — marginal or superseded: little observed pull even when it could
   have applied.
-Disuse *alone* never lowers a grade; a grade drops only on evidence that a Skill
-was **not used in sessions of the kind it serves** (opportunity missed, not merely
-absent).
+Disuse *alone* never lowers a grade, and a grade moves only on cited session
+evidence. Sessions of its kind going without a pack Skill can lower its grade;
+for one of our own Skills that is a trigger problem, reported as an issue, not
+a demotion (ADR-0015).
 
 ### Role (of a Skill)
 A Skill Inventory entry's plain-prose account of what the Skill is for and why

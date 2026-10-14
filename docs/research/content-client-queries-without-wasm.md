@@ -191,15 +191,14 @@ interaction-only prefetch, a short no-`swr` cache on `/` and `/t/**`) and
   on the very first request (#1365). **(measured)**: the e2e test "renders each
   visitor in their own locale" failed before the fix and passes after it. Any
   page that reads a header or cookie on the server needs the same treatment.
-- **The cache had no size bound.** The key includes the full URL, query string
-  included (`cache.mjs:127-145`), so this is not only a search problem: blog
-  `?tag=`, Atlas `?day=`, Tinkerfund filters and junk query strings each add an
-  entry. Nitro writes entries with a `ttl` (`cache.mjs:70-73`), but unstorage's
-  memory driver ignores it, so on the default in-memory mount memory grew until the next
-  deploy or restart. **Now bounded** (#1446): production uses Nitro's
-  `lru-cache` driver, capped in `nuxt.config.ts`. Dev keeps Nitro's default
-  on-disk cache. Nitro checks `maxAge` on every read, so early eviction only
-  costs a re-render.
+- **The cache needs a size bound.** The key includes the full URL, query string
+  included (`cache.mjs:127-145`), so blog `?tag=`, Atlas `?day=`, Tinkerfund
+  filters and junk query strings each add an entry, not only search. Nitro
+  writes entries with a `ttl` (`cache.mjs:70-73`), but unstorage's memory driver
+  ignores it, so the default in-memory mount grows until the next deploy or
+  restart. Bounded since #1446: production uses Nitro's `lru-cache` driver,
+  capped in `nuxt.config.ts`; dev keeps Nitro's default on-disk cache. Nitro
+  checks `maxAge` on every read, so early eviction only costs a re-render.
 - **Each uncached navigation costs a full server render.** Only the payload is
   returned.
 - **Server-computed "now" can be up to about 2 minutes old on a first load.**
@@ -268,8 +267,7 @@ vercel, netlify and zeabur presets. On `node-server` it does not become a
 normalized; `grep` finds `isr` only under `presets/`).
 
 The result is payload extraction without server caching. It works on this
-preset, but only because of preset-specific semantics that a reader would not
-expect. **Not recommended.**
+preset only through preset-specific behaviour. **Not recommended.**
 
 ### Variant 2c: prerender the page routes
 

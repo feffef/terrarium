@@ -19,7 +19,7 @@ layout bug, or asserting a style took effect.
   drives the pre-installed Chromium directly.
 
 **Browser facts verified against** (from `node_modules`, re-check if they've
-moved): `playwright-core` **1.63.0**, `nuxt` **4.6.0**. Entries that came from a specific session cite it.
+moved): `playwright-core` **1.64.0**, `nuxt` **4.6.1**. Entries that came from a specific session cite it.
 
 ## The methodology
 

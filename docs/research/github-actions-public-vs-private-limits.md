@@ -66,9 +66,7 @@ its plan. From the *actions-included-quotas* table on
 | GitHub Team | 3,000 | 2 GB | 10 GB |
 | GitHub Enterprise Cloud | 50,000 | 50 GB | 10 GB |
 
-Minutes reset every month; storage does not. These included amounts apply to
-**private** repos only — public-repo standard-runner usage is free and does not
-consume them (§1).
+Minutes reset every month; storage does not.
 
 **Per-minute rates + OS multipliers.** Windows and macOS cost more than Linux.
 The owning statement:
@@ -156,7 +154,7 @@ between public and private repos ([Actions limits](https://docs.github.com/en/ac
 days**; you can set **1–90 days for public** repos and **1–400 days for
 private** repos
 ([Managing GitHub Actions settings for a repository](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/enabling-features-for-your-repository/managing-github-actions-settings-for-a-repository)).
-Only the maximum differs.
+
 
 ## 5. Concurrency limits — by plan, not by visibility
 
@@ -172,8 +170,7 @@ the axis:
 > user or organization account depends on your GitHub plan."
 > — [Actions runner pricing](https://docs.github.com/en/billing/reference/actions-runner-pricing)
 
-Making a repo public does **not** raise (or lower) these concurrency ceilings —
-they're a function of the account's plan.
+
 
 ## Bottom line — does making the repo public fix the billing block?
 
@@ -192,10 +189,10 @@ touching billing.
    those are billed **even on public repos** and stay blocked until a valid
    payment method is on file — going public does not fix that path
    ([Actions runner pricing](https://docs.github.com/en/billing/reference/actions-runner-pricing)).
-2. Fixing the underlying billing (add/repair the payment method and raise the
-   spending limit/budget above $0) is the direct fix that also keeps **private**
-   repos working; making the repo public is a legitimate way to get standard-runner
-   CI free but is a visibility decision, not just a billing one.
+2. Fixing the billing (add or repair the payment method, raise the spending
+   limit/budget above $0) is the direct fix and keeps **private** repos working;
+   going public also makes standard-runner CI free but is a visibility decision,
+   not just a billing one.
 
 Everything else (6-hour job cap, 35-day run cap, 256-job matrix, API rate limits,
 concurrency-by-plan) is unchanged by visibility.

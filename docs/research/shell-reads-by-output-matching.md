@@ -51,8 +51,8 @@ Not replayed:
 - Four report docs credited from a dispatched subagent's transcript or report
   text (09-05 016ahW, 09-08 01DAJK, 09-09 01MCTb, 09-10 012HBW). Folding
   subagent reads into the parent is by design (issue #796), so these are not
-  detector errors. Output matching would fold them the same way, since it
-  scans the same transcripts; it changes nothing about this class.
+  detector errors; output matching would fold them the same way, as it scans
+  the same transcripts.
 - 09-17 01Ura7 (`git diff <path>` on an uncommitted change) is fixed and has
   no working-tree diff to replay.
 - 09-25 01QQyg's third friction has the same shape as its second.
@@ -136,5 +136,4 @@ matches 10 lines once it has).
   this.
 - No new dependency.
 
-Whether to adopt this, and how to settle the ADR-0009 points above, is
-issue #1545.
+Adoption and the ADR-0009 points above: issue #1545.
