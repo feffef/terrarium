@@ -1,0 +1,119 @@
+schemaVersion: 1
+session: session_01XJ9iR9EbRT2iV7afhytND8
+startedAt: 2026-10-14T12:37:06Z
+endedAt: 2026-10-14T13:03:17Z
+kind: interactive
+goal: "Early run of the issue #1778 checks on PR #1775's path-scoped rules and Bash rules hint"
+status: completed
+outcome: "Draft report given to the owner; not posted on #1778, no failure issues filed yet"
+summary: "The owner asked (human-instructed) to run the #1778 checks about 20 minutes before the issue's 13:00Z time gate, accounting for recent ADR and rule-summary changes, using an Explore agent for a log overview and a second agent for transcripts. I asked three questions first; the owner chose a draft-to-owner report (no posting), an extra post-#1909 (ADR-0030 rewrite) cohort row, and agent-picked transcript sessions. The Explore agent computed checks 1, 2, 6 and 7 over 45 Before and 62 After logs; I checked CI myself (3 gate failures since the merge, all e2e, none from validate-adr-rules). The transcript agent replayed 677 Bash commands from 13 cloud sessions through the hint's dry-run: 98 of 100 governed commands matched, and it found a real gap (the hint is wired only on PostToolUse, so a compound read whose last step fails gets no hint), which I confirmed in .claude/settings.json. Results: checks 1, 2c, 4, 6, 7c pass; 2a fails for tenant-layers (88%), mdc-when-to-use (95%) and guards (50%) useful-no shares; 7a/7b fail for tenant-layers (doc unread rose from 31% to 65%); check 5's harness half is not checkable in cloud events; 2b is vacuous. The draft comment is in the scratchpad; posting and filing the failure issues wait on the owner."
+prs: []
+docsRead:
+  - path: CONTEXT-MAP.md
+    reason: session-start context map
+    useful: partly
+  - path: CONTEXT.md
+    reason: glossary for Session, Friction, rules vocabulary
+    useful: partly
+  - path: docs/agents/github-integration.md
+    reason: job-log overflow and transcript-reading notes; MCP surface
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: fetch before trusting history
+    useful: partly
+  - path: .claude/settings.json
+    reason: (no reason given)
+  - path: scripts/bash-rules-hint.ts
+    reason: (no reason given)
+  - path: scripts/session-trace.ts
+    reason: (no reason given)
+  - path: .agents/prune-trials.yml
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Ran git status/log in the same Bash call that first printed git-conventions.md, so the doc was read after, not before, the first git log
+    solution: Read git-conventions.md in its own call before any git command beyond status/diff
+    severity: nit
+  - description: Read CONTEXT.md, CONTEXT-MAP.md and docs via cat in Bash despite CLAUDE.md's Read-tool rule; no rule load mattered here
+    solution: Use the Read tool for repo docs at session start
+    severity: nit
+  - description: gh api job logs redirect to a blob host the proxy blocks; MCP get_job_logs tail only showed cleanup lines. Check-run annotations gave the cause
+    solution: github-integration.md could name check-run annotations as the cheap way to get a gate failure's cause
+    severity: minor
+  - description: Tried ScheduleWakeup as a fallback while waiting on a subagent; the /loop-only guard blocked it
+    solution: None needed; subagents self-notify, as the guard says
+    severity: nit
+durationSec: 1571
+models:
+  claude-opus-5-5: 49
+toolCounts:
+  Bash: 11
+  ToolSearch: 2
+  mcp__github__issue_read: 2
+  AskUserQuestion: 1
+  Agent: 2
+  mcp__github__get_job_logs: 3
+  ScheduleWakeup: 1
+  Grep: 1
+  Read: 1
+  Write: 2
+  Skill: 2
+rulesLoaded:
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/guards.md
+  - .claude/rules/adr-0004-human-merge.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: About gating and merging PRs; this session opened no PR
+    useful: no
+  - path: .claude/rules/adr-0009.md
+    reason: Told me to invoke close-session after answering a question; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: Flagged the open guards.md prune trial as context for check 7; summary was enough
+    useful: partly
+  - path: .claude/rules/adr-0020.md
+    reason: Owner-authored issue and comments, so trust tier was not in question
+    useful: no
+  - path: .claude/rules/adr-0003.md
+    reason: No branch commit, so its open-a-PR rule did not apply
+    useful: no
+  - path: .claude/rules/adr-0017.md
+    reason: Made me put the session header on the draft comment; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0021.md
+    reason: Loaded from reading CONTEXT.md; glossary placement was not part of this task
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: Its rule-pointer guidance framed the check 7 next step; summary was enough
+    useful: partly
+  - path: .claude/rules/guards.md
+    reason: Loaded on reading settings.json to confirm hook wiring; no guard was changed
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Loaded on reading settings.json; I changed no Human-only file
+    useful: no
+subagents:
+  - type: Explore
+    task: "Session-log overview for #1778"
+  - type: general-purpose
+    task: "Transcript deep-dive for #1778"
+gitBranch: ccr-77f9ffb6-nydit3
+entrypoint: remote_mobile
+cliVersion: 2.1.299
+learnings:
+  - In cloud list_events, harness nested_memory rule loads are invisible; only hook_response stdout shows the Bash rules hint, so harness-vs-hint duplicate checks need local transcripts
+  - A Bash command that exits non-zero fires PostToolUseFailure, not PostToolUse, so the Bash rules hint skips compound reads whose last step fails
+landedBy: Stop
