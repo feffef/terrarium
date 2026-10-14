@@ -1,0 +1,158 @@
+schemaVersion: 1
+session: session_011JKK8rrCwea3xSmL4kw6si
+startedAt: 2026-10-14T17:50:03Z
+endedAt: 2026-10-14T18:09:20Z
+kind: delegated
+goal: Turn recent session frictions into fixes
+status: in-review
+outcome: "Grouped doc PR #1957 open; two guard/hook issues filed for a human"
+summary: "The owner invoked /frictions-to-fixes once (a direct ask); everything after was agent-initiated within that Skill. A survey subagent read 14 unledgered sessions and screened them: nothing was a clean never-fixed simple fix with weight. I picked one simple doc fix (reviewers copy findings with line breaks, audit-docs) and applied the survey's ledger patch, dispatched to one Sonnet agent in a worktree. I filed #1954 (suspected regression of #1940 / PR #1946, bash rules hint on failed compound reads) and #1955 (workflow-edit-guard blocks undoing a committed workflow edit) as ready-for-human, since both are guard or hook surfaces. code-review (Standards and Spec) caught a truncated ledger cause, a wrong fixedOn/ref that came from my own brief, and unquoted dates; the agent fixed them in a second commit before I pushed to the designated branch and opened PR #1957. Held back: the clear-backlog result-key sentence (the nesting could not be verified from repo files), bash-reads-not-read-tool (a premise question for the owner via prune-trial) and unverified-claims-in-drafts (hard, no concrete design). Still open: CI and merge of #1957."
+prs:
+  - "1957"
+docsRead:
+  - path: CONTEXT.md
+    reason: "glossary: Friction, Friction Ledger, Prune Trial"
+    useful: yes
+  - path: docs/agents/pr-workflow.md
+    reason: review before first push, verdict comment, merge-pr recipe
+    useful: yes
+  - path: docs/agents/guards.md
+    reason: "guard and hook fixes are human-attended; routed #1954 and #1955 to ready-for-human"
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: MCP tool surface and search scoping
+    useful: partly
+  - path: docs/agents/issue-tracker.md
+    reason: issue filing conventions
+    useful: partly
+  - path: docs/agents/git-conventions.md
+    reason: read before first git beyond status; nothing new for this task
+    useful: no
+  - path: .agents/skills/clear-backlog/SKILL.md
+    reason: read by the doc subagent to place a sentence; I did not open it
+    useful: partly
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: read by the doc subagent; I checked the two edited sentences in the diff
+    useful: yes
+  - path: CONTEXT-MAP.md
+    reason: (no reason given)
+  - path: .claude/skills/frictions-to-fixes/SKILL.md
+    reason: (no reason given)
+  - path: CLAUDE.md
+    reason: (no reason given)
+skillsUsed:
+  - name: frictions-to-fixes
+    reason: the invoked workflow
+  - name: dispatch-subagents
+    reason: worktree isolation and brief checklist for the doc agent
+  - name: code-review
+    reason: Standards and Spec review before the first push
+  - name: close-session
+    reason: PR opened
+  - name: log-session
+    reason: (no reason given)
+  - name: workflow-authoring
+    reason: (no reason given)
+frictions:
+  - description: My brief gave the doc agent a wrong fixedOn and ref for reviewer-line-ranges-off, against the survey patch; code-review caught it before the push.
+    solution: Point the brief at the patch for every status field instead of restating values from memory.
+    severity: nit
+  - description: The doc agent truncated a ledger cause at an unquoted hash and left new dates unquoted; the Standards review caught both.
+    solution: Have the patch writer quote causes and dates so applying it is a copy.
+    severity: minor
+  - description: The Stop hook repeatedly asked me to push or commit a subagent worktree's scratch log and unpushed commit while the branch was still under review.
+    solution: Let the hook skip linked worktrees that hold a branch under review.
+    severity: nit
+durationSec: 1157
+models:
+  claude-sonnet-5-5: 61
+toolCounts:
+  Read: 7
+  Bash: 9
+  Agent: 4
+  Skill: 4
+  ToolSearch: 1
+  mcp__github__search_issues: 2
+  mcp__github__issue_write: 2
+  SendMessage: 2
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+  Write: 1
+filesEdited:
+  - .agents/skills/audit-docs/SKILL.md
+  - docfix-apply.ts
+  - docfix-msg.txt
+  - docfix-norm.ts
+  - docfix-msg2.txt
+rulesLoaded:
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0030.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0002.md
+  - .claude/rules/adr-0008.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0025.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Told me to run gate:scoped and code-review before the first push and to merge after a verdict; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Log goes straight to main via close-session; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: Checked prune-trial territory when dropping candidates; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0020.md
+    reason: Trust tiers; all sources here were Trusted logs, so it did not change anything
+    useful: no
+  - path: .claude/rules/adr-0003.md
+    reason: Open the PR without asking and subscribe; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Provenance header on the issues and PR; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0005.md
+    reason: Loaded with the Skill; nothing here edited Skills structure
+    useful: no
+  - path: .claude/rules/adr-0015.md
+    reason: Loaded with the Skill; confirmed pack Skills are off limits when screening candidates
+    useful: partly
+  - path: .claude/rules/adr-0021.md
+    reason: Loaded after reading CONTEXT.md; no glossary change made
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: Loaded at the dispatch; no rule or doc placement decision arose
+    useful: no
+  - path: .claude/rules/adr-0022.md
+    reason: Loaded on a Bash read of a doc; triage sweep was not involved
+    useful: no
+  - path: .claude/rules/adr-0030.md
+    reason: Loaded on a Bash read; no ADR was edited
+    useful: no
+subagents:
+  - type: general-purpose
+    task: Survey frictions and screen
+  - type: general-purpose
+    task: Grouped doc fix + ledger edit
+    model: sonnet
+  - type: general-purpose
+    task: Standards review of doc PR
+  - type: general-purpose
+    task: Spec review of doc PR
+gitBranch: ccr-a96e07b8-pkhcn7
+entrypoint: remote_mobile
+cliVersion: 2.1.299
+landedBy: Stop
