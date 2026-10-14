@@ -29,7 +29,8 @@ Resolve the set with step 1 of `.agents/skills/auto-triage/SKILL.md` (Read
 it; it is user-invoked) in its default mode, and add every open
 `ready-for-agent` issue. Only when that set is empty, resolve it in
 `full-sweep` mode instead; the owner starting this run is the human direction
-that mode needs.
+that mode needs. Either way, leave out every issue with a `wayfinder:*` label;
+the `wayfinder` Skill drives those with the owner.
 
 Run `clear-backlog-explore` with
 `{ session, issues: [{ number, mode, notes?, reserved? }] }`. `mode` is
