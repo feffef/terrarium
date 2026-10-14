@@ -5,9 +5,9 @@
 // hash, so the summary cannot go stale silently: the author re-reads the rule,
 // updates it if the decision changed, then runs this script with `--write`.
 // Every other rule must have `paths` and name only `docs/` files that exist
-// (ADR-0029, issue #1765). A summary's pointer gives its ADR's length, so an
-// agent sees that reading the full ADR is cheap; `--write` stamps it too. An
-// ADR in the new shape carries no history (ADR-0030).
+// (ADR-0029, issue #1765). A summary's pointer estimates its ADR's tokens so
+// the read looks cheap (issue #1939); `--write` stamps it too. An ADR in the
+// new shape carries no history (ADR-0030).
 //
 // Usage: pnpm validate:content (chained), or
 //   pnpm exec tsx scripts/validate-adr-rules.ts [--write]
@@ -56,13 +56,14 @@ export function withRuleHash(ruleText: string, hash: string): string {
   return `---\n${body}\n---\n${ruleText.slice(fm[0].length)}`
 }
 
-export const adrLines = (text: string) => text.replace(/\n$/, '').split('\n').length
+/** About 4 characters a token, rounded to the nearest 100. */
+export const adrTokens = (text: string) => Math.max(100, Math.round(text.length / 400) * 100)
 
-const POINTER = 'If this touches your task, read the full ADR first'
-const POINTER_RE = /If this touches your task, read the full ADR first(?: \(it's only \d+ lines\))?:/
-const pointerText = (lines: number) => `${POINTER} (it's only ${lines} lines):`
+const POINTER = 'If this rule seems relevant to your task, you must read the full ADR first'
+const POINTER_RE = /If this rule seems relevant to your task, you must read the full ADR first(?: \(about \d+ tokens\))?:/
+const pointerText = (tokens: number) => `${POINTER} (about ${tokens} tokens):`
 
-export const withRuleLines = (ruleText: string, lines: number) => ruleText.replace(POINTER_RE, pointerText(lines))
+export const withRuleTokens = (ruleText: string, tokens: number) => ruleText.replace(POINTER_RE, pointerText(tokens))
 
 const isSummary = (file: string) => /^adr-\d{4}\.md$/.test(file)
 
@@ -122,10 +123,10 @@ export function findAdrRuleProblems(input: AdrRuleInput): string[] {
   }
   for (const [file, text] of Object.entries(rules)) {
     const adr = adrs[ruleAdr(file) ?? '']
-    if (adr === undefined || !isSummary(file) || text.includes(pointerText(adrLines(adr)))) continue
+    if (adr === undefined || !isSummary(file) || text.includes(pointerText(adrTokens(adr)))) continue
     problems.push(
       POINTER_RE.test(text)
-        ? `${RULES_DIR}/${file} gives a stale ADR length: run \`pnpm exec tsx scripts/validate-adr-rules.ts --write\`.`
+        ? `${RULES_DIR}/${file} gives a stale token estimate: run \`pnpm exec tsx scripts/validate-adr-rules.ts --write\`.`
         : `${RULES_DIR}/${file} must point to its ADR with "${POINTER}:".`,
     )
   }
@@ -167,7 +168,7 @@ function main(): void {
       const adr = input.adrs[ruleAdr(file) ?? '']
       if (adr === undefined) continue
       const hashed = withRuleHash(text, adrHash(adr))
-      const out = isSummary(file) ? withRuleLines(hashed, adrLines(adr)) : hashed
+      const out = isSummary(file) ? withRuleTokens(hashed, adrTokens(adr)) : hashed
       if (out === text) continue
       writeFileSync(join(root, RULES_DIR, file), out)
       stamped.push(file)

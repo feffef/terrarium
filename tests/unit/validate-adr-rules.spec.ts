@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest'
-import { adrHash, adrLines, findAdrRuleProblems, newFormatProblems, ruleAdr, ruleDocPaths, ruleHash, staleRules, withRuleHash, withRuleLines } from '../../scripts/validate-adr-rules.ts'
+import { adrHash, adrTokens, findAdrRuleProblems, newFormatProblems, ruleAdr, ruleDocPaths, ruleHash, staleRules, withRuleHash, withRuleTokens } from '../../scripts/validate-adr-rules.ts'
 
 const ADR = '# ADR-0024: Mermaid\n\nDecision text.\n'
 const stamped = (body: string) => withRuleHash(body, adrHash(ADR))
-const POINTER_RULE = (n: string) => `If this touches your task, read the full ADR first:\ndocs/adr/${n}-mermaid.md\n`
-const summaryFor = (n: string) => withRuleLines(stamped(POINTER_RULE(n)), adrLines(ADR))
+const POINTER_RULE = (n: string) => `If this rule seems relevant to your task, you must read the full ADR first:\ndocs/adr/${n}-mermaid.md\n`
+const summaryFor = (n: string) => withRuleTokens(stamped(POINTER_RULE(n)), adrTokens(ADR))
 const summary = summaryFor('0024')
 
 describe('withRuleHash / ruleHash', () => {
@@ -48,18 +48,25 @@ describe('findAdrRuleProblems / staleRules', () => {
   })
 })
 
-describe('ADR length in the summary pointer', () => {
-  it('stamps the ADR\'s line count, and restamps a stale one', () => {
-    expect(summary).toContain("read the full ADR first (it's only 3 lines):\ndocs/adr/")
-    expect(withRuleLines(summary, 9)).toContain("(it's only 9 lines):")
+describe('ADR token estimate in the summary pointer', () => {
+  it('estimates 4 characters a token, rounded to the nearest 100, and never below 100', () => {
+    expect(adrTokens('x'.repeat(7000))).toBe(1800)
+    expect(adrTokens('x'.repeat(7400))).toBe(1900)
+    expect(adrTokens(ADR)).toBe(100)
   })
 
-  it('fails a summary whose count is stale or whose pointer is missing', () => {
+  it('stamps the estimate, and restamps a stale one', () => {
+    expect(summary).toContain('If this rule seems relevant to your task, you must read the full ADR first (about 100 tokens):\ndocs/adr/')
+    expect(withRuleTokens(summary, 900)).toContain('(about 900 tokens):')
+  })
+
+  it('fails a summary whose estimate is stale or whose pointer is missing or old', () => {
     const check = (rule: string) => findAdrRuleProblems({ adrs: { '0024': ADR }, rules: { 'adr-0024.md': rule } })
-    expect(check(withRuleLines(summary, 9))).toEqual([
-      '.claude/rules/adr-0024.md gives a stale ADR length: run `pnpm exec tsx scripts/validate-adr-rules.ts --write`.',
+    expect(check(withRuleTokens(summary, 900))).toEqual([
+      '.claude/rules/adr-0024.md gives a stale token estimate: run `pnpm exec tsx scripts/validate-adr-rules.ts --write`.',
     ])
     expect(check(stamped('x'))[0]).toContain('must point to its ADR')
+    expect(check(stamped("If this touches your task, read the full ADR first (it's only 3 lines):\n"))[0]).toContain('must point to its ADR')
   })
 })
 
@@ -83,7 +90,7 @@ describe('newFormatProblems (ADR-0030)', () => {
   it('flags a heading whose number is not the file\'s, and reaches the gate', () => {
     expect(newFormatProblems('0025', NEW)).toEqual(['ADR-0025 must start with a `# ADR-0025: <title>` heading.'])
     const dated = `${NEW}Date: 2026-01-01\n`
-    const rule = withRuleLines(withRuleHash(POINTER_RULE('0024'), adrHash(dated)), adrLines(dated))
+    const rule = withRuleTokens(withRuleHash(POINTER_RULE('0024'), adrHash(dated)), adrTokens(dated))
     expect(findAdrRuleProblems({ adrs: { '0024': dated }, rules: { 'adr-0024.md': rule } })).toHaveLength(2)
   })
 })
