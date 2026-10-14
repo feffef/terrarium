@@ -141,7 +141,25 @@ const tenantManifestSchema = z
       .refine((s) => new Set(s).size === s.length, 'tenant has duplicate spaces'),
     collections: z
       .record(slug('collection'), collectionDefSchema)
-      .refine((c) => Object.keys(c).length > 0, 'tenant declares no collections'),
+      .refine((c) => Object.keys(c).length > 0, 'tenant declares no collections')
+      // Only `pages` is routed (ADR-0006), so the type must agree with the name.
+      .superRefine((c, ctx) => {
+        for (const [name, def] of Object.entries(c)) {
+          if (name !== 'pages' && def.type === 'page') {
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              path: [name, 'type'],
+              message: 'is type "page", but only the `pages` collection is routed (ADR-0006)',
+            })
+          } else if (name === 'pages' && def.type === 'data') {
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              path: [name, 'type'],
+              message: 'the `pages` collection is routed, so it must be type "page" (ADR-0006)',
+            })
+          }
+        }
+      }),
   })
   .strict()
 

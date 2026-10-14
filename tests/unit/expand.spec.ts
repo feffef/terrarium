@@ -7,9 +7,9 @@
 // cross-Space leak.
 import { describe, expect, it } from 'vitest'
 import { z } from 'zod'
-import { catalogFrom, expand, type LoadedManifest } from '../../shared/expand.ts'
+import { catalogFrom, entryRoutesFrom, expand, type ExpandedCollection, type LoadedManifest } from '../../shared/expand.ts'
 import { KINDS } from '../../shared/kinds.ts'
-import { collectionKey, validateManifest, type TenantManifest } from '../../shared/manifest.ts'
+import { collectionKey, validateManifest, type CollectionDef, type TenantManifest } from '../../shared/manifest.ts'
 
 const KEY = /^[a-z][a-z0-9]*_[a-z][a-z0-9]*_[a-z][a-z0-9]*$/
 
@@ -20,7 +20,10 @@ function tenant(name: string, spaces: string[], collections: string[]): LoadedMa
       name,
       spaces,
       collections: Object.fromEntries(
-        collections.map((c) => [c, { type: 'page' as const, schema: z.object({}) }]),
+        collections.map((c): [string, CollectionDef] => [
+          c,
+          c === 'pages' ? { type: 'page', schema: z.object({}) } : { type: 'data', schema: z.object({}) },
+        ]),
       ),
     },
   }
@@ -60,6 +63,24 @@ describe('expand() — cross-product & keying', () => {
     const archived = cols.find((c) => c.tenant === 'docs' && c.space === 'archived' && c.collection === 'pages')!
     expect(current.key).not.toBe(archived.key)
     expect(current.cwdRel).not.toBe(archived.cwdRel)
+  })
+})
+
+describe('entryRoutesFrom()', () => {
+  it('routes each Space that has a `pages` collection, chosen by name (ADR-0006)', () => {
+    const page = (tenant: string, space: string, collection: string): ExpandedCollection => ({
+      key: collectionKey(tenant, space, collection),
+      tenant,
+      space,
+      collection,
+      include: '**',
+      cwdRel: `layers/${tenant}/content/${space}/${collection}`,
+      type: 'page',
+    })
+    // `notes` can't pass validateManifest; built by hand to show the name decides, not the type.
+    expect(entryRoutesFrom([page('docs', 'current', 'pages'), page('docs', 'archived', 'notes')])).toEqual([
+      '/t/docs/current',
+    ])
   })
 })
 
@@ -114,6 +135,20 @@ describe('validateManifest()', () => {
     const errors = validateManifest(bad)
     expect(errors.length).toBeGreaterThan(0)
     expect(errors.join()).toMatch(/pings/)
+  })
+
+  it('rejects type "page" on a collection not named `pages` (ADR-0006)', () => {
+    const bad = { ...ok, collections: { ...ok.collections, notes: { type: 'page' as const } } }
+    expect(validateManifest(bad)).toEqual([
+      'collections.notes.type: is type "page", but only the `pages` collection is routed (ADR-0006)',
+    ])
+  })
+
+  it('rejects type "data" on the `pages` collection (ADR-0006)', () => {
+    const bad = { ...ok, collections: { pages: { type: 'data' as const, schema: z.object({}) } } }
+    expect(validateManifest(bad)).toEqual([
+      'collections.pages.type: the `pages` collection is routed, so it must be type "page" (ADR-0006)',
+    ])
   })
 
   it('rejects an unknown top-level key (e.g. a `space:` typo for `spaces:`)', () => {
