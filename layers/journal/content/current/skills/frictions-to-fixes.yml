@@ -205,3 +205,14 @@ observations:
       either failure shape across any of the 10 sessions. No reverts of
       this Skill's work in the 2-week sweep. No new silent failure.
       Grade/role unchanged.
+  - date: "2026-10-14"
+    note: >-
+      Self-check (audit-skills behaviour check): the two newest usedIn
+      sessions verified end-to-end against live git/GitHub —
+      session_01YKBUn5rG2GoAZevbZooXWj's PR #1882 (4 doc fixes + ledger
+      update) and session_01UZ53YdNvwr2RN4WgF5EjEZ's PR #1861 (merged) plus
+      issues #1859/#1860 (both closed via real merged fix PRs #1868/#1869).
+      Recurrence check across all 14 later session logs: no recurrence of
+      any fixed friction; one session even tripped the new #1869 guard and
+      recovered cleanly, live evidence the fix mechanism works. No reverts
+      in the 2-week sweep. No new silent failure. Grade/role unchanged.

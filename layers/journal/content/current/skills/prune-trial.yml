@@ -298,3 +298,22 @@ observations:
       opposite-direction issue this fix was built for and says nothing
       about early judging — not a duplicate. Grade unchanged pending a
       human decision on #1856 (amend ADR-0027 vs. remove the grace).
+  - date: "2026-10-14"
+    note: >-
+      Self-check (audit-skills behaviour check), all 8 usedIn sessions
+      checked. #1856 (ADR-0027 grace) independently re-confirmed fixed via
+      merged PR #1865 (amends both the ADR and its summary rule, and fixes
+      `prune-trial-window.ts`'s "landed" dating to the first-parent main
+      commit). One apparent violation looked real at first
+      (session_0147GPfMLJfFV6JbmC4HZGHb's PR #1813 edited ADR-0009 and its
+      summary rule directly) but traced to SKILL.md's "never a trial" ADR
+      bound only being added 2026-10-13T21:04 (`f042bd0a`, part of the
+      ADR-0030 rewrite) — before that, ADR-0027 itself permitted rewriting
+      an ADR whole as long as the decision didn't change, which this edit
+      did. All 8 sessions ran before the cutoff, so none violated the rule
+      in force at the time. Forward-looking: no prune-trial session has run
+      yet under the new stricter rule — next audit should confirm no
+      session proposes an ADR edit now that the carve-out is gone. Ledger
+      consistent with a live `prune-trial-window.ts` run, no quiet
+      restoration of pruned text found. No new silent failure. Grade
+      unchanged.

@@ -231,3 +231,14 @@ observations:
       spot-checked factual claims independently verified true against
       commit/PR/issue history. #1479's and #1626's historical skip classes
       have not recurred. No new silent failure. Grade/role unchanged.
+  - date: "2026-10-14"
+    note: >-
+      Self-check (audit-skills behaviour check): all 10 usedIn sessions
+      checked; the one freshly-unaudited session,
+      session_01MZBQ3PanPQVwCutYuAmbUp (2026-10-13, PR #1887/#1888),
+      independently verified end-to-end — both PRs merged, posts and the
+      pingback stub exist on disk matching claims, rotation-gate math
+      recomputed correct (`last: kevin`, `starved: [david]`), step-12 reply
+      decision ran a genuine dispatched-reader comparison, not a
+      self-judged "none". 9 other sessions spot-re-verified against prior
+      observations, held up. No new silent failure. Grade/role unchanged.

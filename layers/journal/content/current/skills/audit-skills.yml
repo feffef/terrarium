@@ -419,3 +419,32 @@ observations:
       (session_014uXxmT6359K4Z42a6We6Gh) independently confirmed a genuine
       instance, not a #1797-style false positive. Grade/role unchanged
       (routine).
+  - date: "2026-10-14"
+    note: >-
+      Self-check: dispatched 12 behaviour-check subagents this run (one per
+      behaviourChecks entry), each report independently verified before
+      use. Re-derived both of this Skill's own 2026-10-13 self-findings
+      (the #1752 Pack-Skill rule break, fixed via #1798/PR#1823; the
+      session_012VBpgxdwfQHiAvJc531UYr stale-#1627-claim) from scratch —
+      both already fully recorded in the 2026-10-12/13 entries above, no
+      new instance beyond what's already tracked. Four new findings from
+      other Skills escalated as fresh issues: #1912 (visitor-loop's
+      owner-corrections.ts --check regex credits only the first #N per
+      line, so a batched one-liner on session_01N2WiBqiw2rFsAqpy41VnhA's PR
+      #1893 (and 4 other recent runs) silently passes the mechanical gate —
+      the step-4 "body carries the tally" promise has likely been false in
+      all 5 runs since #1732, despite 5 prior daily audits (2026-10-09
+      through 10-13) grading this clean), #1913 (audit-docs'
+      session_01QvnVVurQdA4cvYSZToBvud reworded ADR-0004's decision and it
+      passed 3 checkers plus a two-axis review, caught only by the owner's
+      human-merge review — the fact-check has no "ADR decision preserved"
+      check), #1914 (audit-docs' same-day concision-family collision, 3rd
+      recurrence), #1915 (log-session's
+      `window_not_used` false-positive class — a Skill invoked internally
+      by another, e.g. close-session→log-session — independently
+      rediscovered by ~8 of the last 9 daily audits with no fix and no
+      Friction Ledger/issue home until today). Closure completeness (step
+      3): orphan scan clean (`scanned: true`), both orphan candidates carry
+      `resolvedBy`, humanPromptedClosures' one entry
+      (session_014uXxmT6359K4Z42a6We6Gh) already recorded 2026-10-13,
+      manuallyRescuedClosures empty. Grade/role unchanged (routine).

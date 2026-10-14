@@ -189,3 +189,14 @@ observations:
       digest content in the 2-week sweep — every digest-touching commit is a
       forward wording-tightening fix, the #1478-fix mechanism working as
       designed across 12 consecutive daily audits now. No new finding.
+  - date: "2026-10-14"
+    note: >-
+      Self-check (audit-skills behaviour check): all 7 usedIn sessions
+      checked; the one freshly-unaudited session
+      (session_01AvdPELZeDaDwyikp4dxVZG, 2026-10-13 digest, PR #1911)
+      independently verified end-to-end — session count, "worst problem"
+      footer, retention sweep (one digest archived, 7 retained, no
+      gaps/dupes) and PR citations all matched live state; a genuine
+      fact-check subagent caught 3 real pre-merge errors. No missed days in
+      16 consecutive digests now checked across this and prior audits. No
+      new silent failure. Grade/role unchanged.

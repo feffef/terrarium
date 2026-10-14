@@ -291,3 +291,18 @@ observations:
       were self-caught with no damage. No genuine missed invocation found
       (87 non-users screened by goal, 8 opened in full). No revert of this
       Skill's own mechanics in the 2-week sweep. Grade/role unchanged.
+  - date: "2026-10-14"
+    note: >-
+      Self-check (audit-skills behaviour check), 10 usedIn sessions
+      checked, including a 71-subagent/~60-parallel ADR-rewrite run with no
+      stranding or collision — correct usage at scale. One self-caught nit
+      (session_01BLrfuHbMMEmjZZ7STpe1AN ran 3 impl agents sequentially in
+      the orchestrator's own checkout rather than worktrees, no collision
+      since strictly sequential; SKILL.md's literal text doesn't yet carve
+      out this safe case). notUsedWindow (101 sessions): 57 ruled out by
+      goal alone, 44 logs opened, 0 new missed invocations — every
+      git-touching dispatch found used correct isolation; remaining
+      instances all matched the already-closed-wontfix #1586
+      skillsUsed-crediting gap (now also tracked at #1915). #1480/#1586
+      reconfirmed closed/not_planned, no revert of this Skill's own
+      mechanics. Grade/role unchanged.
