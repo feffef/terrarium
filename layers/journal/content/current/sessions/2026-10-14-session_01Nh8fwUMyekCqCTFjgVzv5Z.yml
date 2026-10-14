@@ -1,0 +1,117 @@
+schemaVersion: 1
+session: session_01Nh8fwUMyekCqCTFjgVzv5Z
+startedAt: 2026-10-14T20:35:18Z
+endedAt: 2026-10-14T20:44:10Z
+kind: interactive
+goal: Decide where Glass Box uses diagrams, and in what form
+status: completed
+outcome: The diagrams ticket on the Glass Box map is resolved with the owner, closed, and the map updated
+summary: "Worked the HITL grilling ticket \"Glass Box: diagrams\" on the Glass Box wayfinder map, as the owner (feffef) asked at kickoff; the owner answered every decision in the session. Read the map, the five earlier resolutions, ADR-0024, the Mermaid renderer and the SVG safety check, and the interactive-map brief. Two facts shaped the recommendations: the SVG safety check refuses outside links (so diagram nodes can't link to Lessons), and the brief's stories match the Walkthrough candidates (so the interactive diagram's natural future home is Glass Box). Decided: diagrams are optional and Mermaid only; at most one per Walkthrough where the story branches or loops; Lessons only in In Terrarium; none on the landing page; prose carries every fact; labels follow the drift rules; the writing Skills draw through a draw-render-review subagent loop (the owner's addition); the Claude Design pass must design only what Mermaid can draw (the owner's addition). Agent-initiated: only the bookkeeping the wayfinder Skill prescribes (claim, resolution comment, close, map update). No code, branch or PR."
+prs: []
+docsRead:
+  - path: GLOSSARY-MAP.md
+    reason: session-start vocabulary map
+    useful: partly
+  - path: GLOSSARY.md
+    reason: Tenant/Space/Skill terms for the resolution
+    useful: partly
+  - path: docs/agents/github-integration.md
+    reason: MCP mapping; comment vs body-overwrite trap; header replacement on map rewrite
+    useful: yes
+  - path: docs/agents/issue-tracker.md
+    reason: wayfinding claim/resolve operations
+    useful: yes
+  - path: docs/adr/0024-build-time-mermaid-prerender.md
+    reason: Mermaid is committed SVG, colours via --diagram-*, fixed font
+    useful: yes
+  - path: docs/diagrams/interactive-map/README.md
+    reason: "status of the interactive diagram: experiment, stopped"
+    useful: yes
+  - path: app/components/MermaidDiagram.vue
+    reason: how a page shows the SVG
+    useful: partly
+  - path: docs/diagrams/interactive-map/terrarium-overview.md
+    reason: "headings and Keeping it true: its stories match the Walkthrough candidates"
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+skillsUsed:
+  - name: wayfinder
+    reason: work one ticket of the Glass Box map
+  - name: grilling
+    reason: rounds of numbered questions with recommendations
+  - name: domain-modeling
+    reason: required by the map's Notes; no glossary term changed
+  - name: close-session
+    reason: closure after a question-only session
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Read app/utils/mermaid.ts and parts of the overview brief and Journal pages with cat/head/awk instead of the Read tool, breaking the CLAUDE.md Read-tool convention.
+    solution: Use Read with offset/limit for partial reads; impact here was only possibly missed path-scoped rules.
+    severity: nit
+  - description: Q5 bundled four bullets with no options, so the owner's '5a' reply was ambiguous and cost an extra round.
+    solution: In grilling, give each question lettered options or one yes/no; never a multi-part bullet list.
+    severity: minor
+durationSec: 532
+models:
+  claude-opus-5-5: 61
+toolCounts:
+  ToolSearch: 1
+  Read: 9
+  mcp__github__issue_read: 3
+  mcp__github__issue_write: 3
+  Bash: 14
+  Skill: 4
+  mcp__github__add_issue_comment: 1
+rulesLoaded:
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0024.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0004-human-merge.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: No branch or PR this session, so the gate and merge rules did not apply
+    useful: no
+  - path: .claude/rules/adr-0009.md
+    reason: Confirmed the log goes to main via close-session with no PR; summary was enough, did not open the ADR
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: No instruction text was changed, so prune trials did not apply
+    useful: no
+  - path: .claude/rules/adr-0020.md
+    reason: Owner is Trusted and spoke in-session; checked the ticket author was OWNER, no Public input
+    useful: partly
+  - path: .claude/rules/adr-0003.md
+    reason: Planning only; nothing was built, so approval and PR rules did not apply
+    useful: no
+  - path: .claude/rules/adr-0017.md
+    reason: Made me replace the copied header with this session's on the map rewrite and start the comment with it; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0021.md
+    reason: Confirmed Glass Box's terms belong in its own future GLOSSARY.md, not the root one
+    useful: partly
+  - path: .claude/rules/adr-0029.md
+    reason: Loaded with domain-modeling; no rule was written this session
+    useful: no
+  - path: .claude/rules/adr-0024.md
+    reason: "Central to the decision: committed SVG, --diagram-* colours, fixed font; I read the full ADR for the rejected alternatives"
+    useful: yes
+  - path: .claude/rules/adr-0030.md
+    reason: No ADR was written or changed
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Loaded by reading Mermaid files; nothing was edited, so no merge applied
+    useful: no
+gitBranch: HEAD
+entrypoint: remote
+cliVersion: 2.1.300
+landedBy: Stop
