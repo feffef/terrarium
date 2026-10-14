@@ -17,9 +17,9 @@ paths:
   Import a layer's own types by relative path; in its `nuxt.config.ts`, build
   asset paths with `fileURLToPath(new URL('./app/…', import.meta.url))`. A
   main-app module keeps its alias (`#shared/routing`).
-- Only a Space's `pages` Collection has URLs (ADR-0006, #573). **New
-  Tenant:** add a `nuxt.config.ts` (`defineNuxtConfig({})`), then
-  `nuxt prepare` before `pnpm lint`.
+- **New Tenant:** add a `nuxt.config.ts` (`defineNuxtConfig({})`), then
+  `nuxt prepare` before `pnpm lint`. Check a new Collection against ADR-0006
+  (only `pages` gets URLs, #573).
 - **A layer is not a sandbox.** Its `css:` loads on every page (scope it under
   the wrapper class), its plugins and `nuxt.config` flags apply app-wide (keep
   them inert outside the Tenant's opt-in), its `package.json` can't scope a
