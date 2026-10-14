@@ -1,0 +1,149 @@
+schemaVersion: 1
+session: session_01JYFKBPoDVHJanBhFhmw1kR
+startedAt: 2026-10-14T12:32:09Z
+endedAt: 2026-10-14T12:35:45Z
+kind: interactive
+goal: Clear the issue backlog in one supervised run
+status: completed
+outcome: "4 issues swept, none buildable today; #1904 parked by the owner for a later interactive session"
+summary: "The owner invoked clear-backlog (human-instructed). The default sweep found 4 issues: #1904, #1778 and #1844 (ready-for-agent) and #1905 (needs-triage). clear-backlog-explore triaged all four. #1778 and #1844 are time-gated report tasks, not PRs (#1778 opens 2026-10-14 13:00Z, #1844 opens 2026-10-15 20:49Z). #1905 is blocked by the open guards.md prune trial, which is ready to judge but not yet judged. #1904 went to the grilling: the owner's last comment asked for an interactive session. The triage agent moved it to ready-for-human (an agent-initiated label change that follows from that comment). The owner answered Q1 \"a, but not now\", so it is parked. No branch was built and no PR was opened. Running /prune-trial would unblock #1905 (and the pr-workflow.md trial)."
+prs: []
+docsRead:
+  - path: CONTEXT-MAP.md
+    reason: session-start context map
+    useful: partly
+  - path: CONTEXT.md
+    reason: glossary; Session kind for this log
+    useful: partly
+  - path: .agents/skills/auto-triage/SKILL.md
+    reason: "step 1: how to resolve the sweep set"
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: before fetch and history reads
+    useful: partly
+  - path: docs/agents/github-integration.md
+    reason: pointed to list-open-issues.ts and the overflow-safe listings
+    useful: yes
+  - path: docs/agents/pr-workflow.md
+    reason: read ahead for landing; no PR came of it
+    useful: no
+  - path: .agents/skills/triage/SKILL.md
+    reason: "subagent triage #1905: per-issue triage rules"
+    useful: yes
+  - path: docs/adr/0027-prune-trials.md
+    reason: "subagent triage #1905: showed the open guards.md trial blocks the edit"
+    useful: yes
+  - path: docs/agents/guards.md
+    reason: "subagent triage #1905: the file #1905 would change"
+    useful: yes
+  - path: docs/agents/triage-labels.md
+    reason: "subagent triage #1904: label for the relabel"
+    useful: yes
+  - path: docs/agents/issue-tracker.md
+    reason: "subagent triage #1904: how to comment and label"
+    useful: yes
+  - path: .agents/skills/clear-backlog/SKILL.md
+    reason: "subagent triage #1778: confirmed a non-PR output goes to the report"
+    useful: yes
+skillsUsed:
+  - name: clear-backlog
+    reason: the owner's request
+  - name: close-session
+    reason: session only triaged and asked, no PR
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Read CONTEXT-MAP.md with cat via Bash although CLAUDE.md says to use the Read tool; nothing was edited, so no harm done
+    solution: Use Read for doc reads even when batching shell checks
+    severity: nit
+  - description: "Did not read docs/agents/issue-tracker.md or triage-labels.md myself; the triage subagents did the labelling, but #1905 stays needs-triage while blocked and I did not check that label"
+    solution: The explore workflow could say which label a blocked issue should carry
+    severity: minor
+  - description: auto-triage step 1 needs a per-issue last-comment check; scripts/last-comment-authors.ts takes a count, not issue numbers, and I first passed it numbers
+    solution: Name last-comment-authors.ts and its usage in auto-triage step 1
+    severity: nit
+durationSec: 216
+models:
+  claude-opus-5-5: 38
+toolCounts:
+  Bash: 10
+  Read: 5
+  Workflow: 1
+  ReadNotifications: 1
+  ToolSearch: 1
+  PushNotification: 1
+  Skill: 2
+rulesLoaded:
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/guards.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0027.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Covers gating and merging; no PR came of this run, so it never applied
+    useful: no
+  - path: .claude/rules/adr-0009.md
+    reason: Told me to log at closure and keep the log off any branch; the summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: "Explained why #1905 is blocked by the open guards.md trial; the summary was enough"
+    useful: yes
+  - path: .claude/rules/adr-0020.md
+    reason: All four issues were Trusted-authored, so the Public handling never came up
+    useful: no
+  - path: .claude/rules/adr-0003.md
+    reason: Confirmed nothing gets built without approval; no PR came of this run
+    useful: partly
+  - path: .claude/rules/adr-0017.md
+    reason: Passed the session id to the workflow so its GitHub comments carry the header
+    useful: yes
+  - path: .claude/rules/adr-0022.md
+    reason: Confirmed the sweep may relabel Trusted issues and must never build; the summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0021.md
+    reason: Loaded with CONTEXT-MAP.md; this run changed no glossary or context
+    useful: no
+  - path: .claude/rules/adr-0005.md
+    reason: Loaded with the auto-triage Skill; this run changed no Skill
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: Explains why Read loads rules; I still used cat once, which is a friction
+    useful: partly
+  - path: .claude/rules/adr-0030.md
+    reason: "Loaded in a subagent reading ADRs for #1904; this run rewrote none"
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Loaded in a subagent; no merge happened this run
+    useful: no
+  - path: .claude/rules/guards.md
+    reason: "Loaded when the #1905 subagent read guards.md; it gave context on the hooks"
+    useful: partly
+subagents:
+  - type: workflow-subagent
+    task: "triage #1778"
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: "triage #1844"
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: "triage #1905"
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: "triage #1904"
+    model: claude-opus-5-5
+gitBranch: ccr-ff9e3584-li3ott
+entrypoint: remote_mobile
+cliVersion: 2.1.299
+landedBy: Stop
