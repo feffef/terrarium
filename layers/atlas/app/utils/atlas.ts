@@ -122,7 +122,8 @@ export type Band = [number, number]
  *  Bands may wrap past midnight (e.g. [20, 4] means 20:00→04:00), so the wrap
  *  case is handled. Named with Specimen vocabulary, not generic `activeAt` —
  *  the auto-import namespace is global across every layer
- *  (.claude/rules/tenant-layers.md), and `activeAt` is exactly generic enough for another Tenant to mint. */
+ *  (.claude/rules/tenant-layers.md), and `activeAt` is exactly generic
+ *  enough for another Tenant to mint. */
 export function specimenActiveAt(hour: number, bands: Band[]): boolean {
   return bands.some(([a, b]) => (a <= b ? hour >= a && hour < b : hour >= a || hour < b))
 }

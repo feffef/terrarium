@@ -696,7 +696,7 @@ describe('docsReadViaShell (issues #1074, #1545)', () => {
       // a Skill Inventory entry's `name:` line matches its SKILL.md frontmatter.
       const repoRoot = join(import.meta.dirname, '../..')
       const idx = loadDocLineIndex(repoRoot)
-      for (const file of ['layers/journal/app/components/journal/StatTile.vue','layers/journal/content/current/skills/resolving-merge-conflicts.yml']) {
+      for (const file of ['layers/journal/app/components/journal/StatTile.vue', 'layers/journal/content/current/skills/resolving-merge-conflicts.yml']) {
         const trace = extractTrace(withCwd(bash(`cat ${file}`, readFileSync(join(repoRoot, file), 'utf8'))), process.env, idx)
         expect(trace.docsReadViaShell, file).toEqual([])
       }
