@@ -402,7 +402,19 @@ describe('sessionCardViews', () => {
     })
     const [c] = sessionCardViews([s], { '.claude/rules/adr-0012.md': 'ADR-0012: Pingbacks' })
     expect(c!.rules.map((r) => r.path)).toEqual(['.claude/rules/adr-0004.md'])
-    expect(c!.subagentRules).toEqual([{ path: '.claude/rules/adr-0012.md', title: 'ADR-0012: Pingbacks', followedUp: true }])
+    expect(c!.subagentRules).toEqual([{ path: '.claude/rules/adr-0012.md', title: 'ADR-0012: Pingbacks', followedUp: true, verdicts: [] }])
+  })
+
+  it("shows each subagent's verdict on a rule only it loaded", () => {
+    const s = session({
+      rulesLoadedBySubagents: ['.claude/rules/adr-0012.md'],
+      subagentVerdicts: [
+        { path: '.claude/rules/adr-0012.md', kind: 'rule', agent: 'Triage #12', reason: 'named the pingback rule', useful: 'yes' },
+        { path: 'docs/agents/x.md', kind: 'doc', agent: 'Triage #12', reason: 'r', useful: 'no' },
+      ],
+    })
+    const [c] = sessionCardViews([s])
+    expect(c!.subagentRules[0]!.verdicts).toEqual([{ agent: 'Triage #12', reason: 'named the pingback rule', useful: 'yes' }])
   })
 
   it('defaults the trace fields for an older, authored-only log', () => {

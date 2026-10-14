@@ -1,5 +1,5 @@
 import type { z } from 'zod'
-import type { RuleVerdict, sessionSchema } from '../../../../shared/schemas/session'
+import type { RuleVerdict, SubagentVerdict, sessionSchema } from '../../../../shared/schemas/session'
 import type { frictionClusterSchema, skillSchema } from '../../tenant.config'
 
 // `z.input`, not `z.infer`: the schemas' `.default([])` fields are optional on the
@@ -57,8 +57,8 @@ export interface SessionCardView {
   // session then read the full ADR.
   // `reason`/`useful` are the agent's verdict, absent on logs older than it.
   rules: ({ path: string; title?: string; alwaysLoaded: boolean; followedUp: boolean } & Partial<Omit<RuleVerdict, 'path'>>)[]
-  // Rules only a subagent loaded: the main session gives them no verdict (#1941).
-  subagentRules: { path: string; title?: string; followedUp: boolean }[]
+  // Rules only a subagent loaded, with each subagent's own verdict (#1941).
+  subagentRules: { path: string; title?: string; followedUp: boolean; verdicts: Omit<SubagentVerdict, 'path' | 'kind'>[] }[]
   tools: { name: string; count: number }[]
 }
 

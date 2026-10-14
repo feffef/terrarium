@@ -519,6 +519,21 @@ describe('stitch()', () => {
     expect(validateEntry(withTrigger).ok).toBe(true)
   })
 
+  // #1941: a doc only a subagent read carries that subagent's verdict, not a placeholder.
+  it("records a folded-in doc with a subagent's verdict, never over the main session's own", () => {
+    const sv = (path: string) => ({ path, kind: 'doc' as const, agent: 'Triage #12', reason: 'named the guard', useful: 'partly' as const })
+    const withSub = stitch(
+      { ...scratch, subagentVerdicts: [sv('docs/agents/x.md'), sv('CONTEXT.md')] },
+      { ...trace, filesRead: [...trace.filesRead, 'docs/agents/x.md'] },
+    )
+    const docs = withSub.docsRead as { path: string; reason: string; useful?: string }[]
+    expect(docs.find((d) => d.path === 'docs/agents/x.md')).toEqual({ path: 'docs/agents/x.md', reason: '[Triage #12] named the guard', useful: 'partly' })
+    expect(docs.find((d) => d.path === 'CONTEXT.md')).toEqual({ path: 'CONTEXT.md', reason: 'the domain model' })
+    expect(withSub.subagentVerdicts).toEqual([sv('docs/agents/x.md'), sv('CONTEXT.md')])
+    expect(validateEntry(withSub).ok).toBe(true)
+    expect('subagentVerdicts' in entry).toBe(false)
+  })
+
   it('omits learnings/ideas entirely when the scratch has none', () => {
     expect('learnings' in entry).toBe(false)
     expect('ideas' in entry).toBe(false)

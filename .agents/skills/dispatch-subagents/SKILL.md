@@ -115,6 +115,11 @@ for any linked worktree left uncommitted or unpushed (`EXCUSALS` in the script
 lists the exceptions). It cannot prevent an abort, only make the damage
 visible. Done when it exits 0.
 
+After an Agent-tool subagent finishes, ask it with `SendMessage` for a verdict
+on each rule that loaded for it and each doc it read: path, rule or doc, why it
+loaded or was read, and useful yes, partly or no. Pass the answers to
+`log-session` as `subagentVerdicts`, `agent` being its label.
+
 If you `cd`'d into a subagent's worktree, `cd` back (or use absolute paths) and
 re-check `git status` at the root: a closure Stop-hook flag may belong to that
 worktree, not your own tree.
