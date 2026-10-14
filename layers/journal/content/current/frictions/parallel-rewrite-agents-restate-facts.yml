@@ -5,5 +5,5 @@ status: open
 ref: "one-off of the completed ADR rewrite (PR #1898); candidate to drop at the next horizon prune"
 occurrences:
   - session: session_011xN2Zi67cjpCguuMiZbsJ6
-    date: 2026-10-13
+    date: "2026-10-13"
     severity: moderate
