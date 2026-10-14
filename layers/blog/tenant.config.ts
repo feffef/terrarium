@@ -1,5 +1,5 @@
 // Manifest for the Blog Tenant — a simple blog reporting on the Terrarium from
-// several angles (CONTEXT.md Tenants roster: Blog; layers/blog/CONTEXT.md:
+// several angles (GLOSSARY.md Tenants roster: Blog; layers/blog/GLOSSARY.md:
 // Persona / Pingback). Declarative intent only (ADR-0002, ADR-0013).
 //
 // Each Space IS a Persona (its slug is the persona's name): `david` (neutral
@@ -21,7 +21,7 @@ const personaSlugs = ['david', 'karen', 'kevin', 'eyra'] as const
 // that exists.
 const persona = z.enum(personaSlugs)
 
-// The curated cross-Persona Tag vocabulary (layers/blog/CONTEXT.md: Tag). Fixed
+// The curated cross-Persona Tag vocabulary (layers/blog/GLOSSARY.md: Tag). Fixed
 // and small on purpose — an enum, not free text, so an out-of-vocabulary tag
 // fails `pnpm validate:content` (ADR-0004 L1) instead of drifting into a
 // near-duplicate the `/t/blog` browse view can't group with the rest.
@@ -52,7 +52,7 @@ const tag = z.enum(blogTags)
 export default defineTenant({
   name: 'blog',
   // Personas-as-Spaces: same content model, physically isolated content per
-  // Persona. The slug is the persona's name (layers/blog/CONTEXT.md: Persona).
+  // Persona. The slug is the persona's name (layers/blog/GLOSSARY.md: Persona).
   spaces: [...personaSlugs],
   collections: {
     // The routed blog. Named `pages` per the Platform convention the shared

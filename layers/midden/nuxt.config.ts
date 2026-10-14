@@ -1,4 +1,4 @@
-// The Midden Tenant's Nuxt layer (CONTEXT.md: "a Tenant is implemented as a Nuxt
+// The Midden Tenant's Nuxt layer (GLOSSARY.md: "a Tenant is implemented as a Nuxt
 // layer"). Its fit-out — an archaeology-themed catalogue of the Platform's own
 // discarded work — overrides the Platform's generic catch-all renderer for
 // `/t/midden/*` and adds the Tenant's own front door at `/t/midden` (a layer

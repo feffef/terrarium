@@ -4,7 +4,7 @@
 // is dropped in. Mirrors the Atlas's `SpecimenPlate` *mechanism* (v-html of
 // authored SVG, kept script-free by app/utils/svg.ts) but its own visual
 // language: muted, gradient-washed, Ghibli-inspired rather than the Atlas's
-// engraved-plate look (layers/marquee/CONTEXT.md: Poster).
+// engraved-plate look (layers/marquee/GLOSSARY.md: Poster).
 defineProps<{
   illustration?: string
   order?: number

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 // The Blog Tenant's front door (`/t/blog`), a Tenant root page (ADR-0016).
 // Combines every Persona's posts into one reverse-chron feed, browsable by Tag
-// (layers/blog/CONTEXT.md: Tag) via the `?tag=` query param — filtering is a
+// (layers/blog/GLOSSARY.md: Tag) via the `?tag=` query param — filtering is a
 // client-side computed over one fetch, so switching tags never re-queries.
 //
 // Isolation-respecting and presentation-only (ADR-0016): it resolves each

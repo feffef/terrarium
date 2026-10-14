@@ -1,7 +1,7 @@
 name: handoff
 category: general-engineering
 importance: peripheral
-installedSha256: 7c62de979fdc7ac32fb5ddb2146156c917f80ee070d30fadc9d40343c4b6ed25
+installedSha256: 4cbb043950dad2ffd3662ff1a5a0b51ae676004b5cae10e3787e8ee7a4ee69d3
 role: >-
   Compacts a conversation into a handoff doc for another agent. Overlaps
   `close-session`, `log-session` and `claude-handoff`, so it is seldom the tool

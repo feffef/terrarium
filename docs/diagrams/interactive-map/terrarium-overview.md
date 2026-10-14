@@ -855,7 +855,7 @@ Every panel has the same rows, in this order. An empty row is hidden.
 | `prune-trial`, also | `.agents/prune-trials.yml` | ADR-0027 |
 | `sessions`, `cloud`, `local` | none; see `rules` and `guards` | ADR-0003 |
 | `helper-agents` | `.agents/skills/dispatch-subagents/` | – |
-| `rules` | `CLAUDE.md`, `CONTEXT-MAP.md`, `CONTEXT.md`, `layers/<tenant>/CONTEXT.md`, `docs/agents/`, `docs/adr/` | ADR-0021, ADR-0029, ADR-0030 |
+| `rules` | `CLAUDE.md`, `GLOSSARY-MAP.md`, `GLOSSARY.md`, `layers/<tenant>/GLOSSARY.md`, `docs/agents/`, `docs/adr/` | ADR-0021, ADR-0029, ADR-0030 |
 | `skills` | `.agents/skills/`, `.claude/skills/`, `.claude/workflows/`, `skills-lock.json` | ADR-0005, ADR-0015 |
 | `guards` | `scripts/*-guard.ts`, `scripts/guard-wrap.sh`, `.claude/settings.json`, `.githooks/`, `docs/agents/guards.md` | – |
 | `scripts` | `scripts/` | – |
@@ -938,7 +938,7 @@ merges comes from ADR-0004; what each routine may change, from its `SKILL.md`
 **For agents and maintainers: what counts as ground truth.** This overview,
 the Journal's explainer pages, research notes and READMEs can fall behind.
 How the platform behaves is defined only by:
-- the house rules and glossary (`CLAUDE.md`, `CONTEXT.md`), the decision
+- the house rules and glossary (`CLAUDE.md`, `GLOSSARY.md`), the decision
   records (`docs/adr/`) and the agent how-tos (`docs/agents/`);
 - the skills (`.agents/skills/`), scripts (`scripts/`) and hook wiring
   (`.claude/settings.json`);

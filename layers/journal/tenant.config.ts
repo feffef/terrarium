@@ -1,4 +1,4 @@
-// Manifest for the Journal Tenant — the Platform's self-documentation (CONTEXT.md).
+// Manifest for the Journal Tenant — the Platform's self-documentation (GLOSSARY.md).
 // Declarative intent only (ADR-0002, ADR-0013).
 import { z } from 'zod'
 import { defineTenant } from '../../shared/manifest'
@@ -47,7 +47,7 @@ export const skillSchema = z
   })
   .strict()
 
-// The Friction Ledger (CONTEXT.md). `frictions-to-fixes`' SKILL.md holds its
+// The Friction Ledger (GLOSSARY.md). `frictions-to-fixes`' SKILL.md holds its
 // lifecycle. Counts and first/last-seen dates derive from `occurrences`;
 // nothing here is a hand-written total.
 export const frictionClusterSchema = z

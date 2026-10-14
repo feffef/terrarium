@@ -324,7 +324,7 @@ function checkObservations(
 /**
  * `stratum` cross-checks against the canonical dig-season list
  * (`layers/midden/app/utils/strata.ts`'s `DIG_SEASON_SLUGS`, per
- * `layers/midden/CONTEXT.md`'s "Dig season" term) — a value that isn't a
+ * `layers/midden/GLOSSARY.md`'s "Dig season" term) — a value that isn't a
  * real dig-season slug is caught here the same way `checkInteractions`/
  * `checkObservations` catch a slug naming no real Specimen (issue #519).
  */
@@ -432,7 +432,7 @@ export function checkProvenance(provenance: unknown, projectRoot: string): strin
 /**
  * Whether a commit instant falls inside a dig season's inclusive date range —
  * the corroboration behind the `removedIn` check below: dig seasons are dated
- * from the termination dates of their artifacts (layers/midden/CONTEXT.md,
+ * from the termination dates of their artifacts (layers/midden/GLOSSARY.md,
  * "Dig season"), so an artifact's removing commit should land inside its own
  * `stratum`. Compares on the DATE PART of the instant as git renders it
  * (`%cI` carries the committer's own offset) — the season bounds are calendar
@@ -494,7 +494,7 @@ function checkArtifacts(
 
     // `site` policy is per-Space and derived, never a hardcoded Space name: a
     // Space WITH dig reports must have every find narrated by one; a Space with
-    // none (the stores — layers/midden/CONTEXT.md) must not carry a dangling
+    // none (the stores — layers/midden/GLOSSARY.md) must not carry a dangling
     // back-reference. The schema can't express this — it is declared Tenant-wide.
     const site = typeof data.site === 'string' ? data.site : undefined
     if (siteSlugs.size === 0) {

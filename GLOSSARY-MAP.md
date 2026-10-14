@@ -7,26 +7,26 @@ context when you work on that Tenant.
 
 ## Contexts
 
-- **Platform** — [`./CONTEXT.md`](./CONTEXT.md) — the concepts every agent needs
+- **Platform** — [`./GLOSSARY.md`](./GLOSSARY.md) — the concepts every agent needs
   regardless of task: Platform, Tenant, Space, Collection, Document, Session,
   Friction, Skill, Trusted/Public, Agent Authorship, session log, Skill Inventory.
-- **Blog** — [`layers/blog/CONTEXT.md`](./layers/blog/CONTEXT.md) — Persona, Pingback, Tag.
-- **Atlas** — [`layers/atlas/CONTEXT.md`](./layers/atlas/CONTEXT.md) — Biome,
+- **Blog** — [`layers/blog/GLOSSARY.md`](./layers/blog/GLOSSARY.md) — Persona, Pingback, Tag.
+- **Atlas** — [`layers/atlas/GLOSSARY.md`](./layers/atlas/GLOSSARY.md) — Biome,
   Specimen, Interaction, Observation.
-- **Journal** — [`layers/journal/CONTEXT.md`](./layers/journal/CONTEXT.md) —
+- **Journal** — [`layers/journal/GLOSSARY.md`](./layers/journal/GLOSSARY.md) —
   Digest.
-- **Midden** — [`layers/midden/CONTEXT.md`](./layers/midden/CONTEXT.md) — Site,
+- **Midden** — [`layers/midden/GLOSSARY.md`](./layers/midden/GLOSSARY.md) — Site,
   Dig season (Stratum), Artifact, Condition, the two-gate inclusion test.
-- **Marquee** — [`layers/marquee/CONTEXT.md`](./layers/marquee/CONTEXT.md) —
+- **Marquee** — [`layers/marquee/GLOSSARY.md`](./layers/marquee/GLOSSARY.md) —
   Screening, Chapter, Poster.
-- **Tinkerfund** — [`layers/tinkerfund/CONTEXT.md`](./layers/tinkerfund/CONTEXT.md) —
+- **Tinkerfund** — [`layers/tinkerfund/GLOSSARY.md`](./layers/tinkerfund/GLOSSARY.md) —
   Campaign, Inventor, Backer, Pledge, Reward, Promotion and the rest of a
   crowdfunding shop's vocabulary.
-- **Commons** — [`layers/commons/CONTEXT.md`](./layers/commons/CONTEXT.md) — the
+- **Commons** — [`layers/commons/GLOSSARY.md`](./layers/commons/GLOSSARY.md) — the
   Aggregator Tenant: its Search and Timeline Spaces. The terms it turns on
-  (Collection kind, Catalog, Aggregator) live in the root `CONTEXT.md`.
+  (Collection kind, Catalog, Aggregator) live in the root `GLOSSARY.md`.
 
-The root `CONTEXT.md`'s `## Tenants` roster points at each of these. Definitions live once, in the listed context; pointers to them may live anywhere they help.
+The root `GLOSSARY.md`'s `## Tenants` roster points at each of these. Definitions live once, in the listed context; pointers to them may live anywhere they help.
 
 ## Relationships
 

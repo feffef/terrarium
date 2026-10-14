@@ -71,4 +71,4 @@ anything else in its PR has no approval behind it.
 - `docs/agents/pr-workflow.md`: opening, following and landing a PR.
 - `docs/agents/triage-labels.md`: `ready-for-agent` and `ready-for-human`.
 - Each scheduled Skill's `SKILL.md`: what its run may change.
-- `CONTEXT.md` **Trusted**, **Public** and **Session**.
+- `GLOSSARY.md` **Trusted**, **Public** and **Session**.

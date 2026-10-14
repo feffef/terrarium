@@ -18,7 +18,7 @@ stays the domain word; `layers/` is only a path.
   so `nuxt.config.ts` adds one include for them. A test fails if that include
   stops matching a real manifest.
 - **Words.** Say "Tenant" for the domain idea and "layer" only for the Nuxt
-  mechanism (`CONTEXT.md`). The folder's name changes neither.
+  mechanism (`GLOSSARY.md`). The folder's name changes neither.
 
 ## Why
 

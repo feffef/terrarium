@@ -24,13 +24,13 @@ describe('scope', () => {
   it('admits the four instruction shapes', () => {
     expect(paths('cat docs/agents/git-conventions.md')).toEqual(['docs/agents/git-conventions.md'])
     expect(paths('cat .agents/skills/log-session/SKILL.md')).toEqual(['.agents/skills/log-session/SKILL.md'])
-    expect(paths('cat layers/journal/CONTEXT.md')).toEqual(['layers/journal/CONTEXT.md'])
-    expect(paths('cat CONTEXT.md CONTEXT-MAP.md')).toEqual(['CONTEXT-MAP.md', 'CONTEXT.md'])
+    expect(paths('cat layers/journal/GLOSSARY.md')).toEqual(['layers/journal/GLOSSARY.md'])
+    expect(paths('cat GLOSSARY.md GLOSSARY-MAP.md')).toEqual(['GLOSSARY-MAP.md', 'GLOSSARY.md'])
   })
 
   it('excludes a Tenant content tree — the exact-depth layers pattern (ADR-0021)', () => {
     expect(paths('cat layers/journal/content/current/pages/how-it-works.md')).toEqual([])
-    expect(isInstructionDoc('layers/journal/CONTEXT.md')).toBe(true)
+    expect(isInstructionDoc('layers/journal/GLOSSARY.md')).toBe(true)
   })
 
   it('excludes CLAUDE.md: harness-injected, so permanently unmeasurable', () => {

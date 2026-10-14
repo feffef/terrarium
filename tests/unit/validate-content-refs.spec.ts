@@ -416,7 +416,7 @@ describe('checkProvenance() — file-kind path plausibility', () => {
 
   it('accepts an ordinary repo-relative path', () => {
     expect(filePath('scripts/validate-content-refs.ts')).toEqual([])
-    expect(filePath('CONTEXT.md')).toEqual([])
+    expect(filePath('GLOSSARY.md')).toEqual([])
   })
 
   it('accepts a pnpm patch filename (the "@" an allowlist rejected)', () => {

@@ -1,7 +1,7 @@
 name: ask-matt
 category: general-engineering
 importance: peripheral
-installedSha256: b25d86fb36b1d294eeead5d7db529f86135f9671f2afcd607579a63bb2213769
+installedSha256: 1371f5ce005de0992a44b137748bfb960a56948aa9871b405fe9d90b24332e3c
 role: >-
   A router that suggests which Skill or flow fits a situation. Little used here:
   agents choose Skills from their descriptions instead.

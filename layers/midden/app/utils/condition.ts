@@ -6,7 +6,7 @@
 //
 // Post-MVP simplification (owner-directed, this branch): condition now reads as a
 // plain WORD, not a glyph — the abstract SVG mark and its hover-to-decode tooltip
-// are gone (see CONTEXT.md's Condition term), so this table no longer carries any
+// are gone (see GLOSSARY.md's Condition term), so this table no longer carries any
 // glyph geometry. The word + its one-line definition — surfaced in the sticky
 // condition key beside each dig report's finds (owner-directed final design;
 // ConditionKey.vue), no longer on the landing — are the whole encoding now.

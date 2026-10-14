@@ -8,7 +8,7 @@
 // SAME shared, unit-tested `resolveSpaceRoute` (via the read-only useSpace
 // composable), then reads only this biome's keyed collections. Relations (#71)
 // and sightings are same-Space reads — the food-web edges were authored
-// in-biome (CONTEXT-MAP.md: Relationships), so nothing queries a sibling. `biomeMeta`, the
+// in-biome (GLOSSARY-MAP.md: Relationships), so nothing queries a sibling. `biomeMeta`, the
 // utils and the Atlas* components arrive via Nuxt's layer-wide auto-imports;
 // `entry`'s shape (below) is left to inference. The three-`queryCollection`
 // load itself is single-homed in the `useAtlasWingData` composable — the

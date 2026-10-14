@@ -30,7 +30,7 @@ const valid = {
   outcome: 'Helper + Skill landed',
   summary: 'A representative entry used to exercise the validator.',
   prs: ['5'],
-  docsRead: [{ path: 'CONTEXT.md', reason: 'domain model' }],
+  docsRead: [{ path: 'GLOSSARY.md', reason: 'domain model' }],
   skillsUsed: [{ name: 'tdd', reason: 'test-first' }],
   frictions: [{ description: 'x', solution: 'y', severity: 'nit' }],
 }
@@ -249,7 +249,7 @@ describe('reportUnexplainedReads (the author-time reasons prompt)', () => {
   // result showed is stated per case, never inferred from the command text.
   const FIXTURE_DOCS: Record<string, string> = {
     'docs/agents/guards.md': 'The mechanical PreToolUse guards that hold rules prose stopped holding.',
-    'CONTEXT.md': 'The terms every agent needs regardless of task, and the Tenants roster.',
+    'GLOSSARY.md': 'The terms every agent needs regardless of task, and the Tenants roster.',
   }
   type Cmd = string | [command: string, output: string] | { read: string }
   let n = 0
@@ -334,9 +334,9 @@ describe('reportUnexplainedReads (the author-time reasons prompt)', () => {
 
   it('asks the main session about its own docs, and lists a doc only a subagent read as no verdict from subagent', () => {
     const guards: Cmd = ['cat docs/agents/guards.md', FIXTURE_DOCS['docs/agents/guards.md']!]
-    const fixture = store([['cat CONTEXT.md', FIXTURE_DOCS['CONTEXT.md']!]], [guards])
+    const fixture = store([['cat GLOSSARY.md', FIXTURE_DOCS['GLOSSARY.md']!]], [guards])
     const out = run(fixture).join('\n')
-    expect(out).toContain('1 instruction doc(s) read with no reason or verdict yet:\n    CONTEXT.md')
+    expect(out).toContain('1 instruction doc(s) read with no reason or verdict yet:\n    GLOSSARY.md')
     expect(out).toContain("the reason '(not read)' for a doc no command of this")
     expect(out).toContain('no verdict from subagent — 1 rule(s) or doc(s) only a subagent loaded or read:\n    docs/agents/guards.md (doc)')
     const sv = { path: 'docs/agents/guards.md', kind: 'doc' as const, agent: 'a1', reason: 'r', useful: 'yes' as const }
@@ -344,22 +344,22 @@ describe('reportUnexplainedReads (the author-time reasons prompt)', () => {
   })
 
   it('still asks the main session about a doc both it and a subagent read', () => {
-    const ctx: Cmd = ['cat CONTEXT.md', FIXTURE_DOCS['CONTEXT.md']!]
+    const ctx: Cmd = ['cat GLOSSARY.md', FIXTURE_DOCS['GLOSSARY.md']!]
     const out = run(store([ctx], [ctx])).join('\n')
-    expect(out).toContain('1 instruction doc(s) read with no reason or verdict yet:\n    CONTEXT.md')
+    expect(out).toContain('1 instruction doc(s) read with no reason or verdict yet:\n    GLOSSARY.md')
     expect(out).not.toContain('no verdict from subagent')
   })
 
   it('lists a Read-tool doc too, and drops every doc the agent already answered', () => {
-    const fixture = store([['cat CONTEXT.md', FIXTURE_DOCS['CONTEXT.md']!], { read: 'docs/agents/guards.md' }])
+    const fixture = store([['cat GLOSSARY.md', FIXTURE_DOCS['GLOSSARY.md']!], { read: 'docs/agents/guards.md' }])
     const out = run(fixture).join('\n')
     expect(out).toContain('docs/agents/guards.md\n      [this session] Read tool')
-    expect(run(fixture, { docsRead: [{ path: 'CONTEXT.md', reason: 'glossary', useful: 'yes' }, { path: 'docs/agents/guards.md', reason: '(not read)' }] })).toEqual([])
+    expect(run(fixture, { docsRead: [{ path: 'GLOSSARY.md', reason: 'glossary', useful: 'yes' }, { path: 'docs/agents/guards.md', reason: '(not read)' }] })).toEqual([])
   })
 
   it('still asks for a verdict on a doc given only a reason', () => {
-    const fixture = store([['cat CONTEXT.md', FIXTURE_DOCS['CONTEXT.md']!]])
-    expect(run(fixture, { docsRead: [{ path: 'CONTEXT.md', reason: 'glossary' }] }).join('\n')).toContain('    CONTEXT.md')
+    const fixture = store([['cat GLOSSARY.md', FIXTURE_DOCS['GLOSSARY.md']!]])
+    expect(run(fixture, { docsRead: [{ path: 'GLOSSARY.md', reason: 'glossary' }] }).join('\n')).toContain('    GLOSSARY.md')
   })
 
   it('asks for a verdict on every loaded rule until one is given', () => {
@@ -451,19 +451,19 @@ describe('reportUnexplainedReads (the author-time reasons prompt)', () => {
     })
 
     it('refuses a (not read) merged from an earlier pass too', () => {
-      const fixture = store([{ read: 'CONTEXT.md' }])
+      const fixture = store([{ read: 'GLOSSARY.md' }])
       const scratchAbs = join(fixture.root, 'scratch.json')
       const pass1 = { session: 'session_01A', goal: 'g', status: 'completed', outcome: 'o', summary: 's', frictions: [] }
-      writeFileSync(scratchAbs, JSON.stringify({ ...pass1, docsRead: [{ path: 'CONTEXT.md', reason: '(not read)' }] }))
+      writeFileSync(scratchAbs, JSON.stringify({ ...pass1, docsRead: [{ path: 'GLOSSARY.md', reason: '(not read)' }] }))
       expect(author(fixture, { scratchAbs }).exited).toBe(true)
     })
 
     it('accepts (not read) for a shell-only credit, or when no transcript is found', () => {
-      const shell = store([['cat CONTEXT.md', FIXTURE_DOCS['CONTEXT.md']!]])
-      expect(author(shell, { notRead: ['CONTEXT.md'] })).toMatchObject({ exited: false, scratchWritten: true })
+      const shell = store([['cat GLOSSARY.md', FIXTURE_DOCS['GLOSSARY.md']!]])
+      expect(author(shell, { notRead: ['GLOSSARY.md'] })).toMatchObject({ exited: false, scratchWritten: true })
       const none = { home: mkdtempSync(join(tmpdir(), 'shellread-empty-')), root: mkdtempSync(join(tmpdir(), 'shellread-noroot-')) }
       tmpDirs.push(none.home, none.root)
-      expect(author(none, { notRead: ['CONTEXT.md'] })).toMatchObject({ exited: false, scratchWritten: true })
+      expect(author(none, { notRead: ['GLOSSARY.md'] })).toMatchObject({ exited: false, scratchWritten: true })
     })
     // Issue #1943: a verdict needs a rule that loaded in this session.
     const withRule = () => {

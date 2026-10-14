@@ -10,7 +10,7 @@ The excavation that follows a survey: turn the candidates in a
 `midden-survey` report issue into catalogued Artifacts, placed in the trench
 or the stores, narrated by dig reports. You are the curator: you author every
 curatorial field, and a human reviews them in the PR
-(`layers/midden/CONTEXT.md`).
+(`layers/midden/GLOSSARY.md`).
 
 The standard is **primary source**: every claim in a record traces to the
 commit, the file at its revision, the PR or issue body, or the session log
@@ -20,7 +20,7 @@ shipped twelve factual defects in one PR.
 
 ## 1. Ground yourself
 
-Read `layers/midden/CONTEXT.md` whole, then `layers/midden/app/utils/condition.ts`,
+Read `layers/midden/GLOSSARY.md` whole, then `layers/midden/app/utils/condition.ts`,
 `layers/midden/app/utils/strata.ts`, the Artifact schema in
 `layers/midden/tenant.config.ts`, and two or
 three existing dig reports with their Artifacts for the house voice. Done
@@ -47,7 +47,7 @@ write has a source you have read this session. What the record doesn't say
   `remains` link the file at the full SHA before deletion; `inscription` is a
   verbatim line, byte-for-byte.
 - **Placement** — trench when the find carries a decision, reversal or
-  transferable fact a report can argue from; stores otherwise (CONTEXT.md,
+  transferable fact a report can argue from; stores otherwise (GLOSSARY.md,
   The Stores). A trench find needs a `site`: fold it into an existing report
   whose argument it extends, or write a new one.
 - **Condition** — grade against the definition text in `condition.ts`, never
@@ -74,7 +74,7 @@ against its season), then `pnpm gate:scoped`.
 
 Dispatch two read-only reviewers in parallel (`dispatch-subagents`): an
 adversarial **fact-check** of every claim against primary sources, and a
-**voice and domain** review against CONTEXT.md, `condition.ts` and the house
+**voice and domain** review against GLOSSARY.md, `condition.ts` and the house
 voice, flagging every word a visitor would need the repository to understand. Fix every finding, then grep for each phrase you fixed: seeing new text
 in a diff does not prove the old text is gone. Repeat the fact-check on the
 fixes until it comes back clean.

@@ -146,7 +146,7 @@ that (ADR-0027).
 
 ## Bounds
 
-Everything the Platform tells its agents is in scope: CLAUDE.md, CONTEXT.md,
+Everything the Platform tells its agents is in scope: CLAUDE.md, GLOSSARY.md,
 `docs/` and our own Skills including the scheduled ones; ADR-0004's Human-only
 merge rule stands. Skip `docs/proposals/<N>-*.md` and `.out-of-scope/*.md` —
 written for a human to apply once, not for agents to read.

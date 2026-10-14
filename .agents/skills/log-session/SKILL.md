@@ -23,7 +23,7 @@ that at closure and it calls this. Reach for `log-session` **directly** only to
 you've closed.
 
 Whichever way you arrive here, a log records the session at **Session closure**
-(CONTEXT.md's glossary term — self-judged, not the same as merged) — its
+(GLOSSARY.md's glossary term — self-judged, not the same as merged) — its
 active work **complete and in a coherent, honest state**. A log honestly
 records an in-review PR when that's the state closure was reached in.
 
@@ -70,7 +70,7 @@ summary: >-                        # the fuller narrative — sized to the sessi
   What you set out to do and what actually happened.
 prs: ["42"]                        # work-PR refs (in-review is fine); [] if none
 docsRead:                          # curated — what each doc gave you, and whether it helped
-  - { path: CONTEXT.md, reason: "glossary: Space vs Collection", useful: yes }  # useful: yes | partly | no
+  - { path: GLOSSARY.md, reason: "glossary: Space vs Collection", useful: yes }  # useful: yes | partly | no
   - { path: "app/pages/t/[tenant]/[space]/[...slug].vue", reason: routing, useful: partly }
 skillsUsed:                        # transcript-observed reads/Skills you omit are folded in
   - { name: tdd, reason: "test-first the helper (see #99)" }  # (name cross-refs the Skill Inventory)
@@ -92,10 +92,10 @@ ideas:                             # OPTIONAL — omit unless something sparked
 - **`kind` is the autonomy spectrum — judged by who prompted, not by what the
   session did.** The canonical definitions of `interactive` / `delegated` /
   `autonomous` (including what does *not* count as a human prompt) live in
-  `CONTEXT.md` → **Session** — classify against that entry, not from memory.
+  `GLOSSARY.md` → **Session** — classify against that entry, not from memory.
 - **`learnings`/`ideas` are optional notes — leave them off unless the session
   genuinely produced one.** Don't pad them; an empty session log carries neither.
-  Definitions live in `CONTEXT.md` → **Session** and **Idea** — don't restate them here.
+  Definitions live in `GLOSSARY.md` → **Session** and **Idea** — don't restate them here.
   - `learnings` — a fact you read from a file is a `docsRead` entry, not a
     learning. Some things you'd log as a `nit` friction are better here —
     research/interactive sessions often end with learnings and no friction at all.
@@ -109,7 +109,7 @@ ideas:                             # OPTIONAL — omit unless something sparked
   `filesEdited`, `subagents`, `gitBranch`, … — all derived.
 - **`external` is not for our logs.** The schema's optional `external` boolean
   marks a log authored by a *different* harness/toolchain (an external
-  contributor's own agent, ADR-0009) — see `CONTEXT.md`'s
+  contributor's own agent, ADR-0009) — see `GLOSSARY.md`'s
   **Session** term for the absent-⇒-internal semantics and the mining-exclusion/
   ideas split. This authoring path doesn't set it.
 - `docsRead`/`skillsUsed` are your **curated** picks (the ones worth a `reason`).

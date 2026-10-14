@@ -43,7 +43,7 @@ const transcript = [
     { type: 'tool_result', content: 'transcript excerpt: <command-name>/not-invoked</command-name>' },
   ] } },
   { type: 'assistant', timestamp: '2026-07-06T10:00:10.000Z', message: { model: 'claude-opus-4-8', content: [
-    { type: 'tool_use', name: 'Read', input: { file_path: '/repo/CONTEXT.md' } },
+    { type: 'tool_use', name: 'Read', input: { file_path: '/repo/GLOSSARY.md' } },
     { type: 'tool_use', name: 'Read', input: { file_path: '/repo/node_modules/dep/index.js' } },
   ] } },
   { type: 'assistant', timestamp: '2026-07-06T10:05:00Z', message: { model: 'claude-opus-4-8', content: [
@@ -76,7 +76,7 @@ describe('extractTrace()', () => {
   })
 
   it('filters noise, then relativizes repo paths to how the agent cites them', () => {
-    expect(trace.filesRead).toEqual(['CONTEXT.md', 'app.ts']) // node_modules dropped, cwd stripped
+    expect(trace.filesRead).toEqual(['GLOSSARY.md', 'app.ts']) // node_modules dropped, cwd stripped
     expect(trace.filesEdited).toEqual(['app.ts'])
   })
 
@@ -120,7 +120,7 @@ describe('foldSubagentTrace() — subagent work counts as the session\'s (issue 
   const folded = foldSubagentTrace(parent, [{ records: parseTranscript(subagentTranscript) }], NO_ENV)
 
   it('unions the attention fields, deduping a path both read', () => {
-    expect(folded.filesRead).toEqual(['CONTEXT.md', 'app.ts', 'docs/agents/pr-workflow.md'])
+    expect(folded.filesRead).toEqual(['GLOSSARY.md', 'app.ts', 'docs/agents/pr-workflow.md'])
     expect(folded.filesEdited).toEqual(['app.ts', 'new.ts'])
     expect(folded.skillsUsed).toEqual(['tdd', 'digest', 'frictions-to-fixes', 'code-review'])
   })
@@ -212,18 +212,18 @@ describe('rulesLoaded and rulesGlobal — rules that loaded', () => {
   it('carries authored rule verdicts and doc verdicts through the stitch', () => {
     const authored: AuthoredScratch = {
       session: 'session_01RL', goal: 'g', status: 'completed', outcome: 'o', summary: 's', frictions: [],
-      docsRead: [{ path: 'CONTEXT.md', reason: 'glossary', useful: 'yes' }],
+      docsRead: [{ path: 'GLOSSARY.md', reason: 'glossary', useful: 'yes' }],
       ruleVerdicts: [{ path: '.claude/rules/adr-0024.md', reason: 'diagram tokens', useful: 'no' }],
     }
     const entry = stitch(authored, trace)
     expect(entry.ruleVerdicts).toEqual(authored.ruleVerdicts)
-    expect(entry.docsRead).toContainEqual({ path: 'CONTEXT.md', reason: 'glossary', useful: 'yes' })
+    expect(entry.docsRead).toContainEqual({ path: 'GLOSSARY.md', reason: 'glossary', useful: 'yes' })
     expect(validateEntry(entry).ok).toBe(true)
   })
   it('logs a re-read rule file as a rule, not a doc read', () => {
     const authored: AuthoredScratch = { session: 'session_01RL', goal: 'g', status: 'completed', outcome: 'o', summary: 's', frictions: [] }
-    const entry = stitch(authored, { ...trace, filesRead: ['.claude/rules/adr-0004.md', 'CONTEXT.md'] })
-    expect((entry.docsRead as { path: string }[]).map((d) => d.path)).toEqual(['CONTEXT.md'])
+    const entry = stitch(authored, { ...trace, filesRead: ['.claude/rules/adr-0004.md', 'GLOSSARY.md'] })
+    expect((entry.docsRead as { path: string }[]).map((d) => d.path)).toEqual(['GLOSSARY.md'])
   })
 })
 
@@ -459,7 +459,7 @@ describe('stitch()', () => {
     status: 'completed',
     outcome: 'It merges',
     summary: 'Authored summary.',
-    docsRead: [{ path: 'CONTEXT.md', reason: 'the domain model' }],
+    docsRead: [{ path: 'GLOSSARY.md', reason: 'the domain model' }],
     skillsUsed: [],
     frictions: [],
   }
@@ -487,7 +487,7 @@ describe('stitch()', () => {
 
   it('keeps the agent-curated reason and does not duplicate an already-cited read', () => {
     const docs = entry.docsRead as { path: string; reason: string }[]
-    const ctx = docs.filter((d) => d.path === 'CONTEXT.md')
+    const ctx = docs.filter((d) => d.path === 'GLOSSARY.md')
     expect(ctx).toHaveLength(1)
     expect(ctx[0]?.reason).toBe('the domain model') // authored reason preserved, not clobbered
   })
@@ -523,13 +523,13 @@ describe('stitch()', () => {
   it("records a folded-in doc with a subagent's verdict, never over the main session's own", () => {
     const sv = (path: string) => ({ path, kind: 'doc' as const, agent: 'Triage #12', reason: 'named the guard', useful: 'partly' as const })
     const withSub = stitch(
-      { ...scratch, subagentVerdicts: [sv('docs/agents/x.md'), sv('CONTEXT.md')] },
+      { ...scratch, subagentVerdicts: [sv('docs/agents/x.md'), sv('GLOSSARY.md')] },
       { ...trace, filesRead: [...trace.filesRead, 'docs/agents/x.md'] },
     )
     const docs = withSub.docsRead as { path: string; reason: string; useful?: string }[]
     expect(docs.find((d) => d.path === 'docs/agents/x.md')).toEqual({ path: 'docs/agents/x.md', reason: '[Triage #12] named the guard', useful: 'partly' })
-    expect(docs.find((d) => d.path === 'CONTEXT.md')).toEqual({ path: 'CONTEXT.md', reason: 'the domain model' })
-    expect(withSub.subagentVerdicts).toEqual([sv('docs/agents/x.md'), sv('CONTEXT.md')])
+    expect(docs.find((d) => d.path === 'GLOSSARY.md')).toEqual({ path: 'GLOSSARY.md', reason: 'the domain model' })
+    expect(withSub.subagentVerdicts).toEqual([sv('docs/agents/x.md'), sv('GLOSSARY.md')])
     expect(validateEntry(withSub).ok).toBe(true)
     expect('subagentVerdicts' in entry).toBe(false)
   })
@@ -560,7 +560,7 @@ describe('docsReadViaShell (issues #1074, #1545)', () => {
   const index = buildDocLineIndex([
     { path: 'docs/agents/guards.md', text: GUARDS },
     { path: 'docs/agents/domain.md', text: DOMAIN },
-    { path: 'CONTEXT.md', text: CONTEXT },
+    { path: 'GLOSSARY.md', text: CONTEXT },
   ])
   let n = 0
   const bash = (command: string, output = ''): Record<string, unknown>[] => {
@@ -604,40 +604,40 @@ describe('docsReadViaShell (issues #1074, #1545)', () => {
   })
 
   it("folds a subagent's shell reads in, as #796 did for filesRead", () => {
-    const parent = extractTrace(withCwd(bash('cat CONTEXT.md', CONTEXT)), process.env, index)
+    const parent = extractTrace(withCwd(bash('cat GLOSSARY.md', CONTEXT)), process.env, index)
     const folded = foldSubagentTrace(parent, [{ records: withCwd(bash('cat docs/agents/domain.md', DOMAIN)) }], process.env, index)
-    expect(folded.docsReadViaShell.sort()).toEqual(['CONTEXT.md', 'docs/agents/domain.md'])
+    expect(folded.docsReadViaShell.sort()).toEqual(['GLOSSARY.md', 'docs/agents/domain.md'])
   })
 
   it('folds shell reads into docsRead and never writes the deprecated field', () => {
     const authored: AuthoredScratch = { session: 'session_01SH', goal: 'g', status: 'completed', outcome: 'o', summary: 's', frictions: [] }
-    const entry = stitch(authored, extractTrace(withCwd(bash('cat CONTEXT.md', CONTEXT)), process.env, index))
-    expect(entry.docsRead).toEqual([{ path: 'CONTEXT.md', reason: DERIVED_REASON }])
+    const entry = stitch(authored, extractTrace(withCwd(bash('cat GLOSSARY.md', CONTEXT)), process.env, index))
+    expect(entry.docsRead).toEqual([{ path: 'GLOSSARY.md', reason: DERIVED_REASON }])
     expect('docsReadViaShell' in entry).toBe(false)
     expect(validateEntry(entry).ok).toBe(true)
   })
 
   it('keeps an authored reason, and lists a doc read both ways once', () => {
-    const records = withCwd(bash('cat CONTEXT.md', CONTEXT))
+    const records = withCwd(bash('cat GLOSSARY.md', CONTEXT))
     records.push({
       type: 'assistant',
       timestamp: '2026-08-29T10:01:00.000Z',
-      message: { model: 'claude-opus-5', content: [{ type: 'tool_use', name: 'Read', input: { file_path: '/repo/CONTEXT.md' } }] },
+      message: { model: 'claude-opus-5', content: [{ type: 'tool_use', name: 'Read', input: { file_path: '/repo/GLOSSARY.md' } }] },
     })
     const authored: AuthoredScratch = {
       session: 'session_01SH', goal: 'g', status: 'completed', outcome: 'o', summary: 's', frictions: [],
-      docsRead: [{ path: 'CONTEXT.md', reason: 'glossary' }],
+      docsRead: [{ path: 'GLOSSARY.md', reason: 'glossary' }],
     }
-    expect(stitch(authored, extractTrace(records, process.env, index)).docsRead).toEqual([{ path: 'CONTEXT.md', reason: 'glossary' }])
+    expect(stitch(authored, extractTrace(records, process.env, index)).docsRead).toEqual([{ path: 'GLOSSARY.md', reason: 'glossary' }])
   })
 
   it(`drops a path marked ${NOT_READ_REASON}, filing a friction when the shell detector credited it`, () => {
-    const trace = extractTrace(withCwd(bash('cat CONTEXT.md', CONTEXT)), process.env, index)
+    const trace = extractTrace(withCwd(bash('cat GLOSSARY.md', CONTEXT)), process.env, index)
     trace.filesRead = ['docs/agents/domain.md']
     const authored: AuthoredScratch = {
       session: 'session_01SH', goal: 'g', status: 'completed', outcome: 'o', summary: 's', frictions: [],
       docsRead: [
-        { path: 'CONTEXT.md', reason: NOT_READ_REASON },
+        { path: 'GLOSSARY.md', reason: NOT_READ_REASON },
         { path: 'docs/agents/domain.md', reason: NOT_READ_REASON },
       ],
     }
@@ -646,19 +646,19 @@ describe('docsReadViaShell (issues #1074, #1545)', () => {
     const frictions = entry.frictions as { description: string; severity: string }[]
     expect(frictions).toHaveLength(1)
     expect(frictions[0]!.description).toContain('SHELL-READ-DETECTION')
-    expect(frictions[0]!.description).toContain('CONTEXT.md')
+    expect(frictions[0]!.description).toContain('GLOSSARY.md')
     expect(frictions[0]!.severity).toBe('moderate')
     expect(validateEntry(entry).ok).toBe(true)
   })
 
   describe('the author-time advisory (shellReadScanOf)', () => {
     it('credits each path to the command and transcript whose output showed it, the session before a subagent', () => {
-      const scan = shellReadScanOf(withCwd(bash('head CONTEXT.md', CONTEXT)), [sub(bash('cat CONTEXT.md', CONTEXT), bash('cat docs/agents/domain.md', DOMAIN))], { docIndex: index })
+      const scan = shellReadScanOf(withCwd(bash('head GLOSSARY.md', CONTEXT)), [sub(bash('cat GLOSSARY.md', CONTEXT), bash('cat docs/agents/domain.md', DOMAIN))], { docIndex: index })
       expect([...scan.provenance]).toEqual([
-        ['CONTEXT.md', { command: 'head CONTEXT.md', source: 'this session' }],
+        ['GLOSSARY.md', { command: 'head GLOSSARY.md', source: 'this session' }],
         ['docs/agents/domain.md', { command: 'cat docs/agents/domain.md', source: 'subagent: Triage #1' }],
       ])
-      expect(scan.paths).toEqual(['CONTEXT.md', 'docs/agents/domain.md'])
+      expect(scan.paths).toEqual(['GLOSSARY.md', 'docs/agents/domain.md'])
     })
 
     it('explains, from the command text, why a doc a command named was not credited', () => {
@@ -696,9 +696,9 @@ describe('docsReadViaShell (issues #1074, #1545)', () => {
     })
 
     it('names the cd-resolved path in a near-miss, so the agent recognizes which file went unshown (#1454)', () => {
-      const scan = shellReadScanOf(withCwd(bash('cd /repo/layers/tinkerfund; cat CONTEXT.md', '(Bash completed with no output)')), [], { docIndex: index })
+      const scan = shellReadScanOf(withCwd(bash('cd /repo/layers/tinkerfund; cat GLOSSARY.md', '(Bash completed with no output)')), [], { docIndex: index })
       expect(scan.paths).toEqual([])
-      expect(scan.nearMisses.map((m) => m.path)).toEqual(['layers/tinkerfund/CONTEXT.md'])
+      expect(scan.nearMisses.map((m) => m.path)).toEqual(['layers/tinkerfund/GLOSSARY.md'])
     })
   })
 
@@ -707,12 +707,12 @@ describe('docsReadViaShell (issues #1074, #1545)', () => {
       const repoRoot = join(import.meta.dirname, '../..')
       const idx = loadDocLineIndex(repoRoot)
       const docs = new Set(idx.byLine.values())
-      expect(docs.has('CONTEXT.md')).toBe(true)
+      expect(docs.has('GLOSSARY.md')).toBe(true)
       expect(docs.has('docs/agents/guards.md')).toBe(true)
       expect(docs.has('.agents/skills/log-session/SKILL.md')).toBe(true)
       expect([...docs].some((d) => d.startsWith('.claude/') || d.endsWith('CLAUDE.md') || d === 'README.md')).toBe(false)
-      const real = extractTrace(withCwd(bash('cat CONTEXT.md', readFileSync(join(repoRoot, 'CONTEXT.md'), 'utf8'))), process.env, idx)
-      expect(real.docsReadViaShell).toEqual(['CONTEXT.md'])
+      const real = extractTrace(withCwd(bash('cat GLOSSARY.md', readFileSync(join(repoRoot, 'GLOSSARY.md'), 'utf8'))), process.env, idx)
+      expect(real.docsReadViaShell).toEqual(['GLOSSARY.md'])
     })
 
     it('treats every other file in the checkout as a sink, so a code line a doc quotes never credits the doc', () => {

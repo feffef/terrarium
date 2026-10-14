@@ -1,4 +1,4 @@
-// The Blog Tenant's Nuxt layer (CONTEXT.md: "a Tenant is implemented as a Nuxt
+// The Blog Tenant's Nuxt layer (GLOSSARY.md: "a Tenant is implemented as a Nuxt
 // layer"). Its fit-out — a simple blog theme plus a Persona landing and a post
 // page — overriding the Platform's generic catch-all renderer for `/t/blog/*`.
 //

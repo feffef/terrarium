@@ -15,9 +15,9 @@ describe('isInert()', () => {
     expect(isInert('.agents/skills/wayfinder/SKILL.md')).toBe(true)
   })
 
-  it('treats any .md UNDER layers/ as non-inert (content + per-Tenant CONTEXT)', () => {
+  it('treats any .md UNDER layers/ as non-inert (content + per-Tenant GLOSSARY)', () => {
     expect(isInert('layers/blog/content/karen/pages/index.md')).toBe(false)
-    expect(isInert('layers/atlas/CONTEXT.md')).toBe(false)
+    expect(isInert('layers/atlas/GLOSSARY.md')).toBe(false)
   })
 
   it('treats a .claude/skills/ entry as inert even though it is not a .md (#544)', () => {

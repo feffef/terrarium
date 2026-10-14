@@ -65,14 +65,14 @@ const NO_CONTENT_FLAGS = new Set([
 ])
 
 /** The repo-relative shapes that ARE platform agent instruction (#1074's scope).
- *  `layers/[^/]+/CONTEXT\.md` is deliberately exact-depth: it admits the
+ *  `layers/[^/]+/GLOSSARY\.md` is deliberately exact-depth: it admits the
  *  per-Tenant contexts (ADR-0021) while excluding the Tenants' content trees,
  *  which are not instruction. */
 const INSTRUCTION_DOC_PATTERNS = [
   /^docs\/(?:[^/]+\/)*[^/]+\.md$/,
   /^\.agents\/(?:[^/]+\/)*[^/]+\.md$/,
-  /^layers\/[^/]+\/CONTEXT\.md$/,
-  /^CONTEXT(?:-MAP)?\.md$/,
+  /^layers\/[^/]+\/GLOSSARY\.md$/,
+  /^GLOSSARY(?:-MAP)?\.md$/,
 ]
 
 const GLOB_OR_VAR = /[*?$`~[\]{}]/

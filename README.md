@@ -7,7 +7,7 @@ sealed little world you plant tenants in and watch grow. It is also built to be
 watched: every change is a traceable git commit, surfaced again at increasing
 altitude by the [Journal](https://terrarium.feffef.de/t/journal/current) and the
 [Blog](https://terrarium.feffef.de/t/blog) (see **Observability** in
-[`CONTEXT.md`](CONTEXT.md)).
+[`GLOSSARY.md`](GLOSSARY.md)).
 
 **Live:** [terrarium.feffef.de](https://terrarium.feffef.de)
 
@@ -41,8 +41,8 @@ is; the ADRs record what's decided vs. deliberately left open.
   working conventions and repo layout. The safety gate is ADR-0004.
   Start here before making changes —
   humans and agents alike.
-- **[`CONTEXT-MAP.md`](CONTEXT-MAP.md)** — the domain model: indexes the Platform
-  context ([`CONTEXT.md`](CONTEXT.md), which also lists the Tenants) and each
-  Tenant's own `layers/<tenant>/CONTEXT.md`.
+- **[`GLOSSARY-MAP.md`](GLOSSARY-MAP.md)** — the domain model: indexes the Platform
+  context ([`GLOSSARY.md`](GLOSSARY.md), which also lists the Tenants) and each
+  Tenant's own `layers/<tenant>/GLOSSARY.md`.
 - **[`docs/adr/`](docs/adr/)** — Architecture Decision Records: the reasoning
   behind the design, one decision per file.

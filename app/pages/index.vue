@@ -21,7 +21,7 @@ const atlasEntries = BIOMES.map((b) => ({
   accent: b.accent,
 }))
 
-// The Midden's palette is deliberately ONE fired terracotta (layers/midden/CONTEXT.md),
+// The Midden's palette is deliberately ONE fired terracotta (layers/midden/GLOSSARY.md),
 // single-homed as a global `:root` token by that layer's theme.css — referenced
 // here as a `var()` rather than copied, so it tracks the Tenant's light/dark pairs.
 const middenEntries = [
@@ -69,7 +69,7 @@ const { data: spotlight } = await useAsyncData('atlas-spotlight', async () => {
   return pickOfTheDay(picks)
 })
 
-// Trench only: the Stores are off display (layers/midden/CONTEXT.md). Artifacts
+// Trench only: the Stores are off display (layers/midden/GLOSSARY.md). Artifacts
 // aren't routed (ADR-0006), so a find links to its Site's dig report, which
 // anchors it as `#artifact-<stem>`.
 const { data: find } = await useAsyncData('midden-find', async () => {
@@ -83,7 +83,7 @@ const { data: find } = await useAsyncData('midden-find', async () => {
 const stampOpen = ref(false)
 
 // Tinkerfund's rooms are its two Spaces: the shop, and the edge-case data its own
-// e2e tests run against (layers/tinkerfund/CONTEXT.md) — the one Tenant that
+// e2e tests run against (layers/tinkerfund/GLOSSARY.md) — the one Tenant that
 // dedicates a Space to testing, which is worth showing off.
 const tinkerfundEntries = [
   { name: 'prod', path: tinkerfundPath('prod'), note: 'realistic campaigns, as a visitor sees them', accent: 'var(--tf-accent)' },

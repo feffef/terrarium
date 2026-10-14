@@ -12,7 +12,7 @@ simplify that instruction before you add a new one (ADR-0027).
 These are not optional. When a trigger applies, read the doc in full before you
 act, once per session.
 
-- **At session start:** `CONTEXT-MAP.md`, then `CONTEXT.md`. They define the
+- **At session start:** `GLOSSARY-MAP.md`, then `GLOSSARY.md`. They define the
   words we use (Platform, Tenant, Space, Collection, Document, Skill, …). When
   you name a concept the glossary defines, use its term, not a synonym.
   Otherwise prefer plain, common words.
@@ -70,7 +70,7 @@ that are ours:
 
 ```
 layers/<tenant>/          one Tenant: tenant.config.ts (its manifest — edit this),
-                          content/<space>/<collection>/, CONTEXT.md, tests/
+                          content/<space>/<collection>/, GLOSSARY.md, tests/
 shared/                   manifest types, expansion, routing (mostly Human-only: ADR-0004)
 docs/adr/                 decisions
 .claude/rules/            important instructions (ADR summaries, the human-merge

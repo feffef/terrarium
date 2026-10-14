@@ -8,7 +8,7 @@ readouts derived from the repo and daily Digests.
 ## Scope
 
 - **The Journal is Platform infrastructure.** That is why its reason to exist
-  is an ADR, while a demo Tenant's lives only in its own `CONTEXT.md`
+  is an ADR, while a demo Tenant's lives only in its own `GLOSSARY.md`
   (ADR-0021).
 - **It holds three kinds of content:**
   - session logs: one honest self-report per session, written by that
@@ -52,5 +52,5 @@ readouts derived from the repo and daily Digests.
 ## See
 
 - `layers/journal/tenant.config.ts`: the Spaces and Collections.
-- `layers/journal/CONTEXT.md`: what a visitor finds, and the Digest.
-- `CONTEXT.md`: session log, Inventory, Skill Inventory, Friction Ledger.
+- `layers/journal/GLOSSARY.md`: what a visitor finds, and the Digest.
+- `GLOSSARY.md`: session log, Inventory, Skill Inventory, Friction Ledger.

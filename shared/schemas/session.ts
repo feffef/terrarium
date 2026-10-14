@@ -43,7 +43,7 @@ export const sessionSchema = z
     startedAt: utcTimestamp, // UTC ISO-8601 — session start (ordering anchor)
     endedAt: utcTimestamp, //   UTC ISO-8601 — session end / log authored
     // Autonomy spectrum, judged by who prompted — canonical definitions:
-    // CONTEXT.md → Session.
+    // GLOSSARY.md → Session.
     kind: z.enum(['interactive', 'delegated', 'autonomous']),
     goal: z.string(), // short plain headline — what the session worked on
     // `in-review`: the session opened a gated PR that hasn't merged, the norm at
@@ -118,7 +118,7 @@ export const sessionSchema = z
     // When to revisit). Absent on a hand-landed or pre-#865 log.
     landedBy: z.string().optional(),
     // List EVERY friction — not just one or two. No `tag`: the Friction Ledger
-    // groups frictions by cause instead (CONTEXT.md).
+    // groups frictions by cause instead (GLOSSARY.md).
     frictions: z.array(
       z.object({
         description: z.string(), // ~20 words — honest description
@@ -127,7 +127,7 @@ export const sessionSchema = z
       }),
     ),
     // Two OPTIONAL authored notes — see the Session and Idea glossary entries
-    // (CONTEXT.md). `.optional()`, not `.default([])`, so an empty log stays
+    // (GLOSSARY.md). `.optional()`, not `.default([])`, so an empty log stays
     // truly empty.
     learnings: z.array(z.string()).optional(),
     ideas: z.array(z.string()).optional(),

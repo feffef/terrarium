@@ -69,7 +69,7 @@ describe('prFromCommit()', () => {
     })
   })
   it('returns null for an ordinary commit', () => {
-    expect(prFromCommit(commit('docs: tidy CONTEXT.md'))).toBeNull()
+    expect(prFromCommit(commit('docs: tidy GLOSSARY.md'))).toBeNull()
   })
 })
 

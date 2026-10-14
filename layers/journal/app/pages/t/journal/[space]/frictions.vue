@@ -1,5 +1,5 @@
 <script setup lang="ts">
-// The Friction Ledger (CONTEXT.md), rendered. A static segment, so it outranks
+// The Friction Ledger (GLOSSARY.md), rendered. A static segment, so it outranks
 // the sibling `[...slug].vue`; reads only this Space's collections via useSpace.
 import { routingMap } from '#routing'
 

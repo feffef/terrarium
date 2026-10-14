@@ -1,4 +1,4 @@
-// The Atlas Tenant's Nuxt layer (CONTEXT.md: "a Tenant is implemented as a Nuxt
+// The Atlas Tenant's Nuxt layer (GLOSSARY.md: "a Tenant is implemented as a Nuxt
 // layer"). Its fit-out — a Victorian specimen-plate field guide — overrides the
 // Platform's generic catch-all renderer for `/t/atlas/*` and adds the Tenant's
 // own front door at `/t/atlas` (a layer route, not a Space; #65).

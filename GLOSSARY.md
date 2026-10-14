@@ -1,9 +1,9 @@
 # Context — Platform
 
 > The **Platform context** of a multi-context repo (ADR-0021; see
-> [`CONTEXT-MAP.md`](./CONTEXT-MAP.md)): the concepts every agent needs
+> [`GLOSSARY-MAP.md`](./GLOSSARY-MAP.md)): the concepts every agent needs
 > regardless of task, plus a roster of the Tenants. Tenant-local vocabulary lives
-> in `layers/<tenant>/CONTEXT.md`. This file is a glossary only: no
+> in `layers/<tenant>/GLOSSARY.md`. This file is a glossary only: no
 > implementation details, no specs. Challenge any usage that conflicts with a
 > definition here.
 
@@ -292,31 +292,31 @@ steps need none: they live in an action agents can push (ADR-0026). See `docs/pr
 
 The Platform hosts these Tenants. Each has its own **context**
 (vocabulary + reason-to-exist) co-located with its code; this roster is the
-pointer into them (see `CONTEXT-MAP.md`).
+pointer into them (see `GLOSSARY-MAP.md`).
 
 - **Journal** — the Platform's self-documentation: session logs, inventories, and
   digests, rendered at `/t/journal/current`. Platform infrastructure, not a demo
-  Tenant (ADR-0008). → [`layers/journal/CONTEXT.md`](./layers/journal/CONTEXT.md)
+  Tenant (ADR-0008). → [`layers/journal/GLOSSARY.md`](./layers/journal/GLOSSARY.md)
 - **Blog** — in-character, deliberately non-authoritative commentary on the
   experiment, from several Personas (David, Karen, Kevin, Eyra). A demo/content
   Tenant. →
-  [`layers/blog/CONTEXT.md`](./layers/blog/CONTEXT.md)
+  [`layers/blog/GLOSSARY.md`](./layers/blog/GLOSSARY.md)
 - **Atlas** — a fictional natural-history field guide; the design-heavy showpiece.
-  A demo/content Tenant. → [`layers/atlas/CONTEXT.md`](./layers/atlas/CONTEXT.md)
+  A demo/content Tenant. → [`layers/atlas/GLOSSARY.md`](./layers/atlas/GLOSSARY.md)
 - **Midden** — an archaeology-themed catalogue of the Platform's own discarded
   work (dead branches, closed-unmerged PRs, deprecated Skills, removed
   files/dependencies, unapplied proposals). A demo/content Tenant. →
-  [`layers/midden/CONTEXT.md`](./layers/midden/CONTEXT.md)
+  [`layers/midden/GLOSSARY.md`](./layers/midden/GLOSSARY.md)
 - **Marquee** — a movie-blog microsite covering the Marvel Cinematic Universe
   in in-universe story order, one chapter per film. A guest-requested
   demo/content Tenant (ADR-0023, issue #551). →
-  [`layers/marquee/CONTEXT.md`](./layers/marquee/CONTEXT.md)
+  [`layers/marquee/GLOSSARY.md`](./layers/marquee/GLOSSARY.md)
 - **Tinkerfund** — a crowdfunding shop for fun, mostly useless inventions; a
   design showcase in which every interaction is simulated in the browser. A
-  demo/content Tenant. → [`layers/tinkerfund/CONTEXT.md`](./layers/tinkerfund/CONTEXT.md)
+  demo/content Tenant. → [`layers/tinkerfund/GLOSSARY.md`](./layers/tinkerfund/GLOSSARY.md)
 - **Commons** — the first **Aggregator**: cross-Tenant Search and Timeline
   Spaces; not a demo/content Tenant (ADR-0025, issue #642). →
-  [`layers/commons/CONTEXT.md`](./layers/commons/CONTEXT.md)
+  [`layers/commons/GLOSSARY.md`](./layers/commons/GLOSSARY.md)
 
 ## Retired terms
 

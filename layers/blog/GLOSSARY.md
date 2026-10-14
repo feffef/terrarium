@@ -2,7 +2,7 @@
 
 > The Blog context: its own vocabulary (Persona, Pingback, Tag) and its
 > reason-to-exist. Platform-wide terms it leans on (Tenant, Space, Collection,
-> Session, …) live in the root `CONTEXT.md`; see `CONTEXT-MAP.md` for the map.
+> Session, …) live in the root `GLOSSARY.md`; see `GLOSSARY-MAP.md` for the map.
 
 The Blog is a demo/content Tenant: in-character commentary on the Terrarium
 experiment itself, from several angles. It is deliberately **subjective,
@@ -16,7 +16,7 @@ primary, exhaustive record; the Blog is the teaser on top of it — a handful of
 paragraphs per post that pick one or two things worth a stranger's attention out
 of a much larger stream of activity. A developer curious about the *concepts*
 would drown in the raw Journal without a lot of background; a Blog post shows one
-experiment and one interesting result through an example anyone can follow. See the root `CONTEXT.md`'s **Observability** term for where the Blog and the Personas below sit among the Platform's altitudes.
+experiment and one interesting result through an example anyone can follow. See the root `GLOSSARY.md`'s **Observability** term for where the Blog and the Personas below sit among the Platform's altitudes.
 
 **A live experiment in agent-authored content.** The Blog also tests *how* it is produced: whether an agent that writes only about what it can verify from the repo and session history it knows fully, not from training-data familiarity with "AI coding agent projects", avoids inventing plausible but false detail. So `blog-post`'s citation rigor (see its SKILL.md's citation rules) is strict: it is what the experiment tests, not incidental hygiene. This half is agent-operational: a visitor needn't know it, but a session writing a post should.
 
@@ -63,7 +63,7 @@ Space, written with the reaction and holding a copy of the reacting post's
 persona, path, title and blurb (why: ADR-0012). The reacting post is itself a
 first-class post in its own Space, optionally headed by a `reactsTo` reference
 to the post it answers. (Contrast the
-Atlas's Interaction — see `CONTEXT-MAP.md`'s Relationships section for the
+Atlas's Interaction — see `GLOSSARY-MAP.md`'s Relationships section for the
 derives-vs-denormalizes contrast.)
 
 ### Tag

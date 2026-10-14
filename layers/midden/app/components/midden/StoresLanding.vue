@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // The stores landing (`/t/midden/stores`): every find held off display, in full,
-// grouped by dig season. See CONTEXT.md's "The Stores" term for why this Space
+// grouped by dig season. See GLOSSARY.md's "The Stores" term for why this Space
 // exists and what distinguishes a stored find from a trench one.
 //
 // The register deliberately does NOT reuse MiddenArtifact.vue. That component is

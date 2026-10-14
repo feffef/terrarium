@@ -2,7 +2,7 @@
 
 > The Atlas context: its own vocabulary (Biome, Specimen, Interaction,
 > Observation) and its reason-to-exist. Platform-wide terms it leans on (Tenant,
-> Space, Collection, …) live in the root `CONTEXT.md`; see `CONTEXT-MAP.md`.
+> Space, Collection, …) live in the root `GLOSSARY.md`; see `GLOSSARY-MAP.md`.
 
 The Atlas is the Platform's design-heavy showpiece: a lavishly designed
 natural-history **field guide** to a fictional ecosystem observed under glass.
@@ -55,7 +55,7 @@ of *preys-on, pollinates, mimics, shelters, fears*. Authored once as a directed
 edge (a Document in the Biome's `interactions` data collection); the reverse label
 ("preyed on by") is *derived*, so a Specimen's own Relations and the Biome's
 food-web diagram are two views of the one single-homed fact. (Contrast the Blog's
-Pingback — see `CONTEXT-MAP.md`'s Relationships section for the derives-vs-
+Pingback — see `GLOSSARY-MAP.md`'s Relationships section for the derives-vs-
 denormalizes contrast.)
 
 ### Observation

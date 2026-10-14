@@ -2,7 +2,7 @@
 
 > The Marquee context: its own vocabulary (Screening, Chapter, Poster) and its
 > reason-to-exist. Platform-wide terms it leans on (Tenant, Space, Collection,
-> …) live in the root `CONTEXT.md`; see `CONTEXT-MAP.md` for the map.
+> …) live in the root `GLOSSARY.md`; see `GLOSSARY-MAP.md` for the map.
 
 The Marquee is a movie-blog microsite: a running watch-through of the Marvel
 Cinematic Universe told in **in-universe story order** — the order the events

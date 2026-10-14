@@ -2,7 +2,7 @@
 // via `setupL2()` and never builds (tests/README.md).
 //
 // Content covers the real `trench` Space (15 catalogued Sites, 42 Artifacts), the
-// `stores` Space (10 Artifacts held off display, no Sites — CONTEXT.md's "The
+// `stores` Space (10 Artifacts held off display, no Sites — GLOSSARY.md's "The
 // Stores"), plus the Tenant-root `/t/midden` foreword page (issue #515). Assertions
 // here target ROUTES, not files on disk — mirroring
 // `layers/atlas/tests/e2e/atlas.spec.ts`'s shape: every assertion below is
@@ -78,7 +78,7 @@ describe('midden Tenant', async () => {
     expect(html).not.toContain('Gone without trace')
   })
 
-  // The stores register (CONTEXT.md's "The Stores"): the Midden's second Space,
+  // The stores register (GLOSSARY.md's "The Stores"): the Midden's second Space,
   // reached from the trench landing. It renders every stored find WHOLE — a
   // demotion is not an abridgement — grouped by Dig season, with no Sites of
   // its own. Pins the two properties that distinguish it from a dig report:

@@ -307,7 +307,7 @@ useHead({ title: props.front ? 'The Midden' : 'The Trench · The Midden' })
 }
 
 /* The quiet door to the stores: deliberately not a dig-report row — it leads to
-   the register of what this landing does NOT show (CONTEXT.md, "The Stores"). */
+   the register of what this landing does NOT show (GLOSSARY.md, "The Stores"). */
 .midden-landing__stores {
   margin: 1.4rem 0 0;
 }

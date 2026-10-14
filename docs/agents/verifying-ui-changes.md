@@ -66,7 +66,7 @@ moved): `playwright-core` **1.64.0**, `nuxt` **4.6.1**. Entries that came from a
   quick reaction before you polish and publish. Passing gates is necessary, not
   sufficient.
 - **The journal Space landing is a custom dashboard, not a Markdown render** —
-  see `layers/journal/CONTEXT.md`'s "What lives where" for what it renders.
+  see `layers/journal/GLOSSARY.md`'s "What lives where" for what it renders.
   Editing `index.md` alone will not change what most of that page shows; check
   the `.vue` file too.
 - **Before shipping a `display: none` (or hide-at-breakpoint) rule, check what

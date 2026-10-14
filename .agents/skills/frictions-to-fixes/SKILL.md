@@ -56,7 +56,7 @@ Its brief:
   sample** — read every session in it, don't chase frictions from older,
   likely-gone sessions. Each record's `id`/`file` point back to the full log —
   re-read it directly when a candidate needs more context than the triage
-extract carries. **External sessions are already excluded:** the survey script drops any log flagged `external: true` (`CONTEXT.md` Session). Don't hunt the raw corpus for them.
+extract carries. **External sessions are already excluded:** the survey script drops any log flagged `external: true` (`GLOSSARY.md` Session). Don't hunt the raw corpus for them.
 - **For a friction a doc already covers, check whether that session read the
   doc.** Each triage record carries `docsRead` (Read-tool opens plus any the
   author listed, and since 2026-10-10 shell reads). On an older log a

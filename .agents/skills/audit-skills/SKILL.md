@@ -142,7 +142,7 @@ for step 5 as an observation.
 
 ## 5. Tune the Inventory
 
-Grade each Skill by the definitions in `CONTEXT.md` (`### Importance`), after
+Grade each Skill by the definitions in `GLOSSARY.md` (`### Importance`), after
 reading its `observations`: earlier runs' evidence counts alongside this
 window's.
 
