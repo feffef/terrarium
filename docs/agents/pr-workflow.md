@@ -11,7 +11,7 @@ overflow traps), see [`github-integration.md`](./github-integration.md).
 ## Review before the first push
 
 Pushing opens the PR (ADR-0003). So before a branch's first push, check that no
-PR exists for it yet, then run the
+PR exists for it yet, run `pnpm gate:scoped`, then run the
 [`code-review`](../../.agents/skills/code-review/SKILL.md) Skill on its
 committed diff against `origin/main`, in the checkout that holds it, and fix
 the findings, even when the Stop hook asks you to push. Skip it only where a Skill's own steps already review the diff in a
@@ -77,13 +77,9 @@ description.
 ## Who merges
 
 The authoring session merges its PR on a green gate unless ADR-0004 names
-an exception. Some Skills narrow that:
+an exception. `frictions-to-fixes`, `guest-build` and `midden-catalogue` narrow
+that; their SKILL.md says how.
 
-- `frictions-to-fixes` also applies its own risk judgement and escalates a
-  high-risk PR even when the gate is green.
-- `guest-build` (ADR-0023) opens the PR and never merges it; the owner does.
-- `midden-catalogue` (#1802) opens the PR and never merges it; a Trusted user
-  does.
 - Dependabot PRs: leave them for a human. `merge-pr.ts` refuses every one:
   their author counts as Public, and they change Human-only files
   (`package.json`, `.github/`). #1889 decides how they should merge.

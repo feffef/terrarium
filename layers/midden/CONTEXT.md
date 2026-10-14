@@ -53,7 +53,7 @@ with an optional live link and a short `continuityCheck` record of the Gate-B ch
 carries its dig-season, a curator-graded condition, and a curator's-voice
 note, plus a required assessment date, likewise curator-set and never mechanically re-derived (#526).
 Narrates from inside the `site` that discusses it. May also carry a verbatim
-inscription and preservation links to the artifact's original state — a few
+inscription and preservation links (`remains`) to the artifact's original state — a few
 meaningful views, not a mechanical dump of every touched path — both expected absent on
 a `lost` artifact, since nothing survives to view. The exact shape and its
 rules (SHA-pinned links, when `site` is required): see What lives where below.
@@ -112,6 +112,7 @@ procedure lives in `.agents/skills/midden-catalogue/`.
 
 ## What lives where
 
+- **`layers/midden/tenant.config.ts`** — the Artifact schema: its shape and the SHA-pinned `remains` links.
 - **`layers/midden/app/utils/strata.ts`** — the canonical dig-season list.
 - **`layers/midden/app/utils/condition.ts`** — the single-homed
   {grade, label, definition} table the dig-report page's condition key and each

@@ -53,10 +53,10 @@ e2e assertions use vitest's `expect` (with `expect.poll(...).toBe(...)` for
 async/polling conditions), not Playwright's own matcher set (`toBeVisible`,
 `toHaveText`, etc.) — those won't type or run here.
 
-`expect.poll` defaults to a **1000ms timeout / 50ms interval** (vitest's own defaults, not set in `vitest.config.ts`).
-A poll racing a longer app-side settle animation (e.g. a rAF-driven
+In the `e2e` project `expect.poll` has a **10s timeout** (set in `vitest.config.ts`; vitest's own default is 1s, with a 50ms interval).
+A poll racing a settle animation longer than that (e.g. a rAF-driven
 transition) needs its timeout raised per-call —
-`expect.poll(..., { timeout: 5000 })` — not just re-run as flaky.
+`expect.poll(..., { timeout: 15_000 })` — not just re-run as flaky.
 
 ## Running
 

@@ -59,10 +59,3 @@ If your output contradicts an existing ADR, say so explicitly rather than
 silently overriding it:
 
 > _Contradicts ADR-0006 (requests reach one Space by path prefix) — but worth reopening because…_
-
-## Check a new Tenant/Collection proposal against ADR-0006 immediately
-
-A separately named, addressable-sounding Collection (e.g. a Tenant's "sites"
-or "exhibits") looks natural but breaks ADR-0006: only a Space's `pages` Collection has URLs. Check
-a new Tenant or Collection against it at proposal, before the mistake rides
-several turns (issue #573).

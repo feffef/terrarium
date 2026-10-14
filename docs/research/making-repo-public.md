@@ -57,13 +57,12 @@ product behavior:
   those remain in the public history exactly as committed (again, §4's
   history-rewrite caveats apply if you want to try to remove them).
 
-**Practical read**: before flipping to Public, assume *everything* — every
-commit ever made (including on deleted branches still reachable via refs,
-forks, or PRs), every issue/PR/comment, every Actions log, every release —
-becomes world-readable simultaneously. Audit history for secrets (§2) and for
-anything (internal URLs, employee names in old commit messages, unreleased
-roadmap discussion in issues, etc.) that was written assuming a private
-audience, before the switch, not after.
+**Practical read**: assume *everything* — every commit ever made (including on
+deleted branches still reachable via refs, forks, or PRs), every issue/PR/comment,
+every Actions log, every release — becomes world-readable at once. Before the
+switch, audit history for secrets (§2) and for anything (internal URLs, employee
+names in old commit messages, unreleased roadmap discussion in issues, etc.)
+written for a private audience.
 
 ---
 
@@ -80,7 +79,7 @@ Primary source: **[Secret scanning](https://docs.github.com/code-security/secret
 > with EMUs, or GHES with Secret Protection enabled."
 > — reusable snippet embedded in the secret-scanning docs (`data/reusables/gated-features/secret-scanning.md` in `github/docs`, rendered into the "Secret scanning" and quickstart pages above).
 
-Two distinct layers exist for public repos, and it's easy to conflate them:
+Public repos have two distinct layers:
 
 1. **Automatic, no-setup partner scanning** — GitHub always scans public
    repos for secrets matching known **service-provider partner patterns**
@@ -133,12 +132,10 @@ Per **[Push protection](https://docs.github.com/en/code-security/concepts/secret
 Recommended sequence, synthesized from the docs above and the **[Quickstart
 for securing your repository](https://docs.github.com/en/code-security/getting-started/quickstart-for-securing-your-repository)**:
 
-1. **Before flipping visibility** (while still private): enabling secret
-   protection on a private repo requires GHAS/paid tier — but you don't need
-   to enable GitHub's *hosted* alerting to do a pre-publish self-audit; run a
-   local/offline secret scanner (e.g. `gitleaks`, `trufflehog`) or
-   `git log -p` review across full history first, since the repo-hosted free
-   tier doesn't kick in until it's already public.
+1. **Before flipping visibility** (still private): hosted secret protection on a
+   private repo needs the paid GHAS tier, and the free tier starts only once the
+   repo is public, so self-audit first with a local scanner (e.g. `gitleaks`,
+   `trufflehog`) or `git log -p` across full history.
 2. **Immediately on/after making public**: enable GitHub Secret Protection
    (secret scanning alerts) and push protection — both free once public —
    and let the initial full-history scan complete; triage every alert it
@@ -159,9 +156,8 @@ Primary source: **[About rulesets](https://docs.github.com/en/repositories/confi
   public repositories with GitHub Free and GitHub Free for organizations, and
   in public and private repositories with GitHub Pro, GitHub Team, and GitHub
   Enterprise Cloud" (`data/reusables/gated-features/repo-rules.md`). So a
-  public repo gets ruleset support on the **free** plan even though a private
-  repo would need a paid plan for the same feature — a direct incentive/side
-  effect of going public.
+  public repo gets ruleset support on the **free** plan, where a private repo
+  would need a paid plan.
 - **Rulesets vs. classic branch protection rules**: rulesets **layer** with
   protection rules — "if multiple rulesets target the same branch... the
   rules... are aggregated," and "where multiple different versions of the
@@ -170,10 +166,8 @@ Primary source: **[About rulesets](https://docs.github.com/en/repositories/confi
   enforcement statuses (disable without deleting), and metadata rules (commit
   message / author-email restrictions) that classic branch protection
   doesn't have.
-- **Important note specific to going public**: per §1, "**all push rulesets
-  will be disabled**" the moment a repo is switched to public — so if push
-  rulesets were relied on beforehand, they must be **re-enabled explicitly
-  after** the switch, not assumed to carry over.
+- **Going public disables all push rulesets** (§1): re-enable any you relied on
+  explicitly after the switch; they do not carry over.
 - Recommended baseline for the default branch of a public repo: require PRs
   before merging (no direct pushes), require reviews, require status checks
   (the safety-gate CI) to pass, block force-pushes, and — per this repo's own

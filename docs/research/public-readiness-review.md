@@ -71,12 +71,11 @@ Repo-specific priorities:
 
 - Re-enable push rulesets (the flip auto-disables them) and branch protection on
   `main` (require PR + review + green gate, block force-push) — this is the RCE
-  boundary. **Caveat:** ordinary/classic branch protection would also re-block
-  ADR-0009's direct-to-`main` session-log commits, which is why protection was
-  removed in the first place — see
+  boundary. **Caveat:** classic branch protection would block ADR-0009's direct-to-`main`
+  session-log commits, so `main` uses a ruleset with a role/team/app bypass entry
+  instead;
   [`github-branch-protection-vs-autonomous-log-commits.md`](./github-branch-protection-vs-autonomous-log-commits.md)
-  for why this needs a carefully-scoped ruleset (with a role/team/app bypass
-  entry), not a blanket re-enable, and for `main`'s actual as-of-writing state.
+  holds the reasoning and what `main` enforces now.
 - Enable **secret scanning + push protection** (free on public repos, off by
   default).
 - Set Actions fork-PR approval to **require approval for all external

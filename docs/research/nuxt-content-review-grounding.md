@@ -1,9 +1,8 @@
 # Nuxt 4 / Nuxt Content 3: grounding facts for code-review claims
 
-Primary-source answers to twelve questions about how Nuxt 4 and Nuxt Content 3
-actually behave, gathered to verify (or refute) code-review claims about this
-app. Every claim below is traced to the official docs or the installed source
-in `node_modules` — nothing is from memory or third-party posts.
+Primary-source answers to thirteen questions about how Nuxt 4 and Nuxt Content 3
+behave, gathered to check code-review claims about this app. Every claim is
+traced to the official docs or the installed source in `node_modules`.
 
 **Researched 2026-07-11** against the versions below (re-check if they've moved). **Stale since 2026-08-10**: commit `e3538b0` bumped installed `nuxt`/`@nuxt/kit` to **4.5.2**; the line-number citations are pinned to the versions read and not re-verified against 4.5.2:
 
