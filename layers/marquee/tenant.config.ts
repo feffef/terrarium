@@ -5,8 +5,7 @@
 // ADR-0013).
 //
 // One Space (`reel`) is enough: there is no lifecycle/voice/place distinction
-// to model here, just a single ordered run of posts (mirrors the Commits
-// Tenant's single-Space `poc` choice).
+// to model here, just a single ordered run of posts.
 import { z } from 'zod'
 import { defineTenant } from '../../shared/manifest'
 import { safeSvg } from '../../app/utils/svg'
