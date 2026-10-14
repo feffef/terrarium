@@ -167,8 +167,8 @@ one-line reason and a `useful` verdict, or the reason `(not read)` when no
 command of this session or its subagents showed you that doc. The stitch drops a `(not read)` entry, and logs a Friction
 if shell output had credited it.
 
-It also lists every rule that loaded with no `ruleVerdicts` entry, including the
-always-loaded ones (no `paths`; they load at session start). You can't see this
+It also lists every rule that loaded in this session with no `ruleVerdicts` entry
+(a rule only a subagent loaded needs none), including the always-loaded ones (no `paths`; they load at session start). You can't see this
 list before your first `--author` pass, so expect a second pass. Answer each with a `useful` verdict
 and a one-sentence `reason` (about 20 words) that says why: for `yes` or
 `partly`, what in the rule changed or confirmed something you did; for `no`,

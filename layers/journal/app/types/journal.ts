@@ -57,6 +57,8 @@ export interface SessionCardView {
   // session then read the full ADR.
   // `reason`/`useful` are the agent's verdict, absent on logs older than it.
   rules: ({ path: string; title?: string; alwaysLoaded: boolean; followedUp: boolean } & Partial<Omit<RuleVerdict, 'path'>>)[]
+  // Rules only a subagent loaded: the main session gives them no verdict (#1941).
+  subagentRules: { path: string; title?: string; followedUp: boolean }[]
   tools: { name: string; count: number }[]
 }
 

@@ -359,6 +359,15 @@ describe('reportUnexplainedReads (the author-time reasons prompt)', () => {
     expect(run(fixture).join('\n')).toContain('    .claude/rules/adr-0003.md')
   })
 
+  // Issue #1941: the main session gives no verdict on a rule only a subagent loaded.
+  it('asks no verdict on a rule only a subagent loaded', () => {
+    const fixture = store(['git status'], ['git status'])
+    const subs = join(fixture.home, '.claude', 'projects', fixture.root.replace(/[/.]/g, '-'), 'session', 'subagents')
+    const rule = { type: 'attachment', attachment: { type: 'nested_memory', path: join(fixture.root, '.claude/rules/adr-0012.md') } }
+    writeFileSync(join(subs, 'agent-a1.jsonl'), `${readFileSync(join(subs, 'agent-a1.jsonl'), 'utf8')}\n${JSON.stringify(rule)}`)
+    expect(run(fixture)).toEqual([])
+  })
+
   it('caps the near-miss list rather than burying the detected paths', () => {
     const many = Array.from({ length: 9 }, (_, i) => `echo docs/agents/d${i}.md`)
     const out = run(store(many)).join('\n')

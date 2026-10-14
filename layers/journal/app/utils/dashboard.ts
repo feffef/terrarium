@@ -240,6 +240,7 @@ export function sessionCardViews(
         const v = s.ruleVerdicts?.find((r) => r.path === path)
         return { path, title: ruleTitles[path], alwaysLoaded, followedUp: !!s.rulesFollowedUp?.includes(path), reason: v?.reason, useful: v?.useful }
       }),
+      subagentRules: (s.rulesLoadedBySubagents ?? []).map((path) => ({ path, title: ruleTitles[path], followedUp: !!s.rulesFollowedUp?.includes(path) })),
       tools: sessionToolEntries(s.toolCounts),
     }
   })

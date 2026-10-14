@@ -392,12 +392,26 @@ describe('sessionCardViews', () => {
     ])
   })
 
+  // Issue #1941: a rule only a subagent loaded is listed apart, with no verdict.
+  it('lists rules only a subagent loaded apart from the main list', () => {
+    const s = session({
+      rulesLoaded: ['.claude/rules/adr-0004.md'],
+      rulesLoadedBySubagents: ['.claude/rules/adr-0012.md'],
+      rulesFollowedUp: ['.claude/rules/adr-0012.md'],
+      ruleVerdicts: [{ path: '.claude/rules/adr-0012.md', reason: 'stray', useful: 'no' }],
+    })
+    const [c] = sessionCardViews([s], { '.claude/rules/adr-0012.md': 'ADR-0012: Pingbacks' })
+    expect(c!.rules.map((r) => r.path)).toEqual(['.claude/rules/adr-0004.md'])
+    expect(c!.subagentRules).toEqual([{ path: '.claude/rules/adr-0012.md', title: 'ADR-0012: Pingbacks', followedUp: true }])
+  })
+
   it('defaults the trace fields for an older, authored-only log', () => {
     const [c] = sessionCardViews([session()])
     expect(c!.model).toBe('')
     expect(c!.subagents).toEqual([])
     expect(c!.filesEdited).toEqual([])
     expect(c!.rules).toEqual([])
+    expect(c!.subagentRules).toEqual([])
     expect(c!.tools).toEqual([])
   })
 

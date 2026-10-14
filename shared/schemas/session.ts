@@ -62,8 +62,11 @@ export const sessionSchema = z
     rulesLoaded: z.array(z.string()).optional(),
     // Rules with no `paths`, which load at session start.
     rulesGlobal: z.array(z.string()).optional(),
-    // The subset of both rule lists whose ADR was read after the rule loaded.
+    // The subset of the rule lists whose ADR was read after the rule loaded.
     rulesFollowedUp: z.array(z.string()).optional(),
+    // Rules only a subagent or workflow agent loaded, kept out of `rulesLoaded`
+    // so the main session isn't asked to rate them (#1941).
+    rulesLoadedBySubagents: z.array(z.string()).optional(),
     ruleVerdicts: z.array(ruleVerdict).optional(),
     // DEPRECATED — no longer written; shell reads fold into `docsRead`. The key
     // stays so older logs validate (ADR-0009).
