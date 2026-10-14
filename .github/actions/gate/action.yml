@@ -90,8 +90,9 @@ runs:
     # positively-proven Inert changeset. `skip_build` guards only build and e2e
     # (`scripts/gate.ts` `isSkillFile`, #1603).
 
-    # L3 — isolation invariant: unique, correctly-scoped collection keys.
-    - name: 'L3 · isolation'
+    # L0/L3 — the unit suite (`pnpm test`), including the isolation invariant:
+    # unique, correctly-scoped collection keys.
+    - name: 'L0/L3 · unit tests'
       if: steps.scope.outputs.skip_heavy != 'true'
       shell: bash
       run: pnpm test
