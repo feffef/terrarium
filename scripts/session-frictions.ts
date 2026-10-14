@@ -24,8 +24,9 @@
 //
 // --compact drops the prose fields (goal/outcome/summary/solution and per-doc
 // reasons) that make the default output large, keeping id/file/startedAt/prs,
-// docsRead paths, subagents and each friction's description/severity, for a
-// caller that wants a smaller read regardless (issues #951, #1755).
+// docsRead paths, subagents (counted per type/model) and each friction's description/severity, for a
+// caller that wants a smaller read regardless (issues #951, #1755). It prints one
+// unindented JSON line per session (issue #1917).
 //
 // --unledgered drops sessions already cited as an occurrence in the Friction
 // Ledger, leaving only those the survey has yet to cover.
@@ -84,6 +85,13 @@ export interface TriageSession {
   frictions: TriageFriction[]
 }
 
+/** Repeated subagents collapse to one entry per type/model: one session can
+ *  dispatch ~80 (issue #1917). */
+export interface CompactSubagent {
+  type?: string
+  model?: string
+  count: number
+}
 export interface CompactFriction {
   description: string
   severity: string
@@ -99,7 +107,7 @@ export interface CompactSession {
   startedAt: string
   prs: string[]
   docsRead: string[]
-  subagents: SubagentRef[]
+  subagents: CompactSubagent[]
   frictions: CompactFriction[]
 }
 
@@ -163,6 +171,23 @@ export function toTriageSession(raw: Record<string, unknown>, file: string): Tri
   }
 }
 
+function collapseSubagents(refs: SubagentRef[]): CompactSubagent[] {
+  const groups = new Map<string, CompactSubagent>()
+  for (const { type, model } of refs) {
+    const key = `${type ?? ''}|${model ?? ''}`
+    const g = groups.get(key) ?? { ...(type && { type }), ...(model && { model }), count: 0 }
+    g.count++
+    groups.set(key, g)
+  }
+  return [...groups.values()]
+}
+
+/** `--compact` output: one session per line, so line count tracks session
+ *  count, not field count (issue #1917). */
+export function formatCompact(sessions: CompactSession[]): string {
+  return sessions.length ? `[\n${sessions.map((s) => JSON.stringify(s)).join(',\n')}\n]` : '[]'
+}
+
 /** Reduce a TriageSession to its `--compact` fields (see CompactSession). */
 export function toCompactSession(s: TriageSession): CompactSession {
   return {
@@ -171,7 +196,7 @@ export function toCompactSession(s: TriageSession): CompactSession {
     startedAt: s.startedAt,
     prs: s.prs,
     docsRead: s.docsRead.map((d) => d.path),
-    subagents: s.subagents,
+    subagents: collapseSubagents(s.subagents),
     frictions: s.frictions.map((fr) => ({ description: fr.description, severity: fr.severity })),
   }
 }
@@ -258,8 +283,7 @@ function main(): void {
   const { since: startMs, sessions: all } = survey(start)
   const sessions = argv.includes('--unledgered') ? dropLedgered(all) : all
   const since = new Date(startMs).toISOString()
-  const output = argv.includes('--compact') ? sessions.map(toCompactSession) : sessions
-  const json = JSON.stringify(output, null, 2)
+  const json = argv.includes('--compact') ? formatCompact(sessions.map(toCompactSession)) : JSON.stringify(sessions, null, 2)
   const target = resolveOutputTarget(argv, json.length)
   if (target) {
     writeFileSync(target, json + '\n')

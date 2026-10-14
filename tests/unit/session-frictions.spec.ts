@@ -8,7 +8,7 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 import { ARCHIVED_SESSIONS_DIR, SESSIONS_DIR } from '../../scripts/session-logs.ts'
-import { defaultWindowStart, dropLedgered, OUTPUT_FILE_PATH, pickRecencyWindow, resolveOutputTarget, survey, toCompactSession, toTriageSession, type TriageSession } from '../../scripts/session-frictions.ts'
+import { defaultWindowStart, dropLedgered, OUTPUT_FILE_PATH, pickRecencyWindow, resolveOutputTarget, survey, formatCompact, toCompactSession, toTriageSession, type TriageSession } from '../../scripts/session-frictions.ts'
 
 function session(id: string, startedAt: string, opts: Partial<TriageSession> = {}): TriageSession {
   return {
@@ -138,6 +138,17 @@ describe('toTriageSession()', () => {
   })
 })
 
+describe('formatCompact()', () => {
+  it('prints one line per session and counts repeated subagents', () => {
+    const many = session('session_a', '2026-07-04T12:00:00Z', { subagents: [{ type: 'impl', task: 'x' }, { type: 'impl', task: 'y' }, { type: 'review', model: 'opus' }] })
+    const compact = toCompactSession(many)
+    expect(compact.subagents).toEqual([{ type: 'impl', count: 2 }, { type: 'review', model: 'opus', count: 1 }])
+    const out = formatCompact([compact, compact])
+    expect(out.split('\n')).toHaveLength(4)
+    expect(JSON.parse(out)).toHaveLength(2)
+  })
+})
+
 describe('toCompactSession()', () => {
   it('keeps id/file/startedAt/prs, docsRead paths, subagents and only description/severity per friction', () => {
     const s = session('session_abc', '2026-07-04T12:00:00Z', {
@@ -156,7 +167,7 @@ describe('toCompactSession()', () => {
       startedAt: '2026-07-04T12:00:00Z',
       prs: ['187'],
       docsRead: ['docs/a.md'],
-      subagents: [{ type: 'impl' }],
+      subagents: [{ type: 'impl', count: 1 }],
       frictions: [{ description: 'a stale claim', severity: 'minor' }],
     })
   })
