@@ -73,8 +73,12 @@ this:
 >
 > If you were given sessions that did not use the Skill, decide for each one
 > whether its work matches the case the Skill's `description` says it covers.
-> Judge from the goal first, then open the log. Each match is a **missed
-> invocation**. You are done when every listed session is ruled in or out.
+> Judge from the goal first, then open the log. A match is a **missed
+> invocation** only if the Skill's outcome is missing. It is not one when the
+> outcome was delivered another way: another Skill or a workflow script ran
+> the step, or the log's `docsRead` shows the session read the Skill's
+> `SKILL.md` and followed it. You are done when every listed session
+> is ruled in or out.
 >
 > Report every finding labelled silent failure or missed invocation, with its
 > session ids, quoted evidence, what the Skill promised against what happened,
