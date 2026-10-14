@@ -135,6 +135,12 @@ can't override a prose component for one Tenant. So
 ` ```mermaid ` fences, issue #364) lives at the app root: in a layer it would
 wrongly imply per-Tenant scoping.
 
+**Group lanes with `classDef stroke`, not `subgraph`.** In a fenced
+` ```mermaid ` diagram, subgraph boundaries **clip** any edge that crosses into
+another subgraph, silently hiding cross-lane arrows. Set a shared `stroke`
+(and/or `fill`) on the lane's nodes with a `classDef` instead; every cross-lane
+edge stays intact and the nodes still read as a group.
+
 ## 5. Verify a routing claim against the layer's actual `pages/` tree, not prose search
 
 Before asserting anywhere that a route exists, check the layer's
