@@ -57,7 +57,7 @@ Classify every surface **before** editing.
 Run four read-only reviewer agents in parallel, two lenses each (Agent C may split into several). Each is a leaf:
 tell it to do the review itself and return findings directly, with no
 sub-agents and no waiting on other agents. Every finding is the file plus
-the exact sentence, quoted whole; no line ranges, which reviewers get wrong. A
+the exact sentence, copied whole with its line breaks as in the file; no line ranges, which reviewers get wrong. A
 finding outside an agent's own lenses is still reported, named by lens, and
 joins the pool like any other.
 
@@ -191,7 +191,7 @@ surface in a tier or on the Skip list. Done when every surface has one.
 
 ## 3. Review across the eight lenses
 
-Run the reviewer agents and pool their findings. Each reviewer returns its findings as text in its final reply: the file, the exact sentence quoted whole (no line range), and replacement text. Save each reply verbatim to its own numbered scratchpad file; copy, never retype. Done when every one has
+Run the reviewer agents and pool their findings. Each reviewer returns its findings as text in its final reply: the file, the exact sentence copied whole with its line breaks as in the file (no line range), and replacement text. Save each reply verbatim to its own numbered scratchpad file; copy, never retype. Done when every one has
 reported and every file in the concision family was read in full.
 
 ## 4. Dedupe the pool

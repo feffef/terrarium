@@ -1,0 +1,9 @@
+name: workflow-edit-guard-revert-blocked
+cause: A comment edit under .github/workflows/ got committed with other work; the push was rejected and workflow-edit-guard then also denied the revert to main's version, leaving no documented way to undo it (environment-caveats says only "put the edit in docs/proposals/").
+surface: guard-or-hook
+status: tracked
+ref: "issue #1955"
+occurrences:
+  - session: session_011xN2Zi67cjpCguuMiZbsJ6
+    date: 2026-10-13
+    severity: moderate

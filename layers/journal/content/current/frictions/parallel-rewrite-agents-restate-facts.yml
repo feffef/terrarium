@@ -1,0 +1,9 @@
+name: parallel-rewrite-agents-restate-facts
+cause: Parallel rewrite agents (ADR rewrite campaign) each restated the same fact in several ADRs, needing a separate consistency pass; campaign-specific, expected not to recur.
+surface: safe
+status: open
+ref: "one-off of the completed ADR rewrite (PR #1898); candidate to drop at the next horizon prune"
+occurrences:
+  - session: session_011xN2Zi67cjpCguuMiZbsJ6
+    date: 2026-10-13
+    severity: moderate

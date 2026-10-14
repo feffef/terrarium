@@ -1,9 +1,10 @@
 name: audit-docs-adr-decision-reversed
 cause: audit-docs' checkers have no explicit check that an ADR rewording preserves the decision, so a rewrite that reverses it can pass; the owner caught it in review.
 surface: safe
-status: tracked
-ref: "issue #1913 (open, filed 2026-10-14T01:04Z)"
+status: fixed
+ref: "issue #1913 closed by PR #1932 (merged 2026-10-14T07:57Z)"
 occurrences:
   - session: session_01QvnVVurQdA4cvYSZToBvud
     date: "2026-10-13"
     severity: moderate
+fixedOn: 2026-10-14

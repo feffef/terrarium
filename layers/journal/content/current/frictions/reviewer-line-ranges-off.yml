@@ -2,7 +2,7 @@ name: reviewer-line-ranges-off
 cause: >-
   audit-docs reviewer subagents cite finding line ranges that are off by one or cover partial sentences, so the checkers must correct them in a second pass.
 surface: safe
-status: open
+status: fixed
 occurrences:
   - session: session_01YVCyXmxSSDQ6csSBVJ554H
     date: "2026-10-11"
@@ -10,3 +10,8 @@ occurrences:
   - session: session_01Dz52W6wWZWUgKwPtdxabzJ
     date: "2026-10-12"
     severity: minor
+  - session: session_01M9Ryb84DYs5HxKy2Z3cpA2
+    date: 2026-10-14
+    severity: minor
+fixedOn: "2026-10-14"
+ref: "frictions-to-fixes 2026-10-14 grouped doc PR"

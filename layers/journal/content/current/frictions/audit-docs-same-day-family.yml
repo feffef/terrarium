@@ -1,8 +1,8 @@
 name: audit-docs-same-day-family
 cause: audit-docs picks its doc family by day of year, so same-day reruns re-audit the family an earlier run just tightened.
 surface: safe
-status: tracked
-ref: "issue #1914 (open, filed 2026-10-14T01:04Z)"
+status: fixed
+ref: "issue #1914 closed by PR #1932; family naming follow-up commit 07:54Z"
 occurrences:
   - session: session_01AnHXyvzXukt6izZTYs3YMr
     date: "2026-10-13"
@@ -10,3 +10,4 @@ occurrences:
   - session: session_01QvnVVurQdA4cvYSZToBvud
     date: "2026-10-13"
     severity: minor
+fixedOn: 2026-10-14
