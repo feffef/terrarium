@@ -13,7 +13,6 @@ export default defineTenant({
       schema: z.object({
         title: z.string(),
         description: z.string(),
-        // The one `main` commit the page is pinned to, and that commit's date.
         revision: z.string().regex(/^[0-9a-f]{40}$/, 'revision must be a full commit hash'),
         revisionDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'revisionDate must be YYYY-MM-DD'),
       }),
@@ -24,7 +23,6 @@ export default defineTenant({
       schema: z.object({
         term: z.string(),
         definition: z.string(),
-        // Repo path of the glossary that defines the term.
         source: z.string().optional(),
       }),
     },

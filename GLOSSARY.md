@@ -314,8 +314,7 @@ pointer into them (see `GLOSSARY-MAP.md`).
   design showcase in which every interaction is simulated in the browser. A
   demo/content Tenant. → [`layers/tinkerfund/GLOSSARY.md`](./layers/tinkerfund/GLOSSARY.md)
 - **Glass Box** — a textbook of the concepts Terrarium is built on, with
-  Terrarium as the worked example. A content Tenant, soft-launched at
-  `/t/glassbox` (issue #1985). →
+  Terrarium as the worked example. A content Tenant (issue #1985). →
   [`layers/glassbox/GLOSSARY.md`](./layers/glassbox/GLOSSARY.md)
 - **Commons** — the first **Aggregator**: cross-Tenant Search and Timeline
   Spaces; not a demo/content Tenant (ADR-0025, issue #642). →

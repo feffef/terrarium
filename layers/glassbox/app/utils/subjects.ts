@@ -1,6 +1,4 @@
-// Every Subject in reading order: the folder slug under the `pages` Collection
-// and its display name. The sidebar, the landing directory and prev/next all
-// read this one list (issue #1985, Part 3).
+// Subject order and display names live here, not in content (issue #1985, Part 3).
 export const glassboxSubjects = [
   { slug: 'claude-code', name: 'Claude Code' },
   { slug: 'skill-pack', name: 'Skill pack' },

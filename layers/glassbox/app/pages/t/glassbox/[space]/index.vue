@@ -34,7 +34,6 @@ useSeoMeta({ description: () => landing.value?.description })
 
     <section v-if="data?.directory.length" class="directory">
       <h2>Subjects</h2>
-      <p>Each Subject is the tool whose official docs its Lessons link.</p>
       <section v-for="subject in data.directory" :key="subject.slug">
         <h3>{{ subject.name }}</h3>
         <ul>

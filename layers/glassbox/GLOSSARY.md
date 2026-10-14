@@ -3,7 +3,8 @@
 > The Glass Box glossary: its own vocabulary (Lesson, Walkthrough, Subject,
 > Excerpt, Term) and its reason to exist. Platform terms it leans on (Tenant,
 > Space, Collection, …) live in the root `GLOSSARY.md`; see `GLOSSARY-MAP.md`.
-> The spec, with its history, is issue #1985.
+> The spec, with its history, is
+> [issue #1985](https://github.com/feffef/terrarium/issues/1985).
 
 Glass Box teaches the concepts Terrarium is built on: Claude Code, the outside
 Skill pack, Nuxt and Vue, Nuxt Content, Zod, TypeScript, testing, deploy, Git
@@ -31,7 +32,7 @@ Terrarium applies them without reading the source.
 - **A reference, not a course.** No global reading order: newcomers start at the
   "Opening a page" Walkthrough, experts use the Subject directory.
 - **One Space, `guide`**, at `/t/glassbox/guide`; `/t/glassbox` redirects there.
-  Each Subject is a folder, plus `walkthroughs/`. A two-digit filename prefix
+  Walkthroughs sit in `walkthroughs/`. A two-digit filename prefix
   orders Lessons inside a folder; Subject order and names come from
   `glassboxSubjects` in `app/utils/subjects.ts`.
 - **Soft launch.** Online, but nothing on the Platform links to it yet, and
