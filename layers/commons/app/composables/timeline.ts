@@ -15,7 +15,7 @@ export interface TimelineEntry {
   when: string
   /** The one-line summary shown in the feed. */
   summary: string
-  /** Canonical ADR-0006 route (with a Journal deep-link fragment for sessions/digests). */
+  /** Canonical ADR-0006 route (with a Journal deep-link fragment for sessions). */
   url: string
   tenant: string
   space: string
@@ -24,8 +24,7 @@ export interface TimelineEntry {
 }
 
 // Journal deep-link fragment format, owned by layers/journal/app/utils/dashboard.ts
-// (sessionAnchor/digestAnchor). Session logs have no page of their own, and the
-// Timeline opens a Digest in place on the Journal home page too, so both link to
+// (sessionAnchor). Session logs have no page of their own, so they link to
 // `<space-landing>#<anchor>`. That coupling is this aggregator's own choice.
 // `/digests/<date>` marks a Digest only in the Journal (ADR-0010); the tenant
 // guard below treats the same path in another Tenant as an ordinary page.
@@ -64,7 +63,7 @@ export async function queryTimeline(): Promise<TimelineEntry[]> {
         // summarizes in the newest-first feed.
         when: `${digest[1]}T23:59:59Z`,
         summary: p.summary ?? p.description ?? p.title ?? p.url,
-        url: `${documentUrl(p.tenant, p.space, '/')}#digest-${digest[1]}`,
+        url: p.url,
         tenant: p.tenant,
         space: p.space,
         genre: 'digest',
