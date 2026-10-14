@@ -46,8 +46,8 @@ function codeBlock() {
         <a v-if="page" class="pill" :href="`${REPO_URL}/commit/${page.revision}`">{{ formatGlassboxDate(page.revisionDate) }} ↗</a>
       </span>
     </figcaption>
-    <pre v-for="block in [codeBlock()]" :key="props.path" :class="block.class"><code><span
-      v-for="(row, i) in block.rows"
+    <pre :class="codeBlock().class"><code><span
+      v-for="(row, i) in codeBlock().rows"
       :key="i"
       class="row"
       :class="{ gap: row.gap, highlight: row.highlight }"
