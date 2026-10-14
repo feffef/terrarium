@@ -76,8 +76,8 @@ this:
 > Judge from the goal first, then open the log. A match is a **missed
 > invocation** only if the Skill's outcome is missing. It is not one when the
 > outcome was delivered another way: another Skill or a workflow script ran
-> the step, or the log's `docsRead`/`filesRead` show the session read the
-> Skill's `SKILL.md` and followed it. You are done when every listed session
+> the step, or the log's `docsRead` shows the session read the Skill's
+> `SKILL.md` and followed it. You are done when every listed session
 > is ruled in or out.
 >
 > Report every finding labelled silent failure or missed invocation, with its
