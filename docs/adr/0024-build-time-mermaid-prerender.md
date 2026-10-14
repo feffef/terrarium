@@ -69,4 +69,4 @@ check stays meaningful.
   source when the SVG is missing.
 - `app/assets/fonts/README.md`: the bundled font.
 - `docs/research/mermaid-server-side-rendering.md`: the options compared.
-- `docs/agents/tenant-layers.md` §4: how to group lanes in a diagram.
+- `.claude/rules/mermaid-lanes.md`: how to group lanes in a diagram.

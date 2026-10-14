@@ -2,7 +2,7 @@
 
 Grounding note for issue #379 / ADR-0024, re-derived 2026-07-20. The rendering
 decision is single-homed in ADR-0024; how to group lanes in a diagram is in
-`docs/agents/tenant-layers.md` §4.
+`.claude/rules/mermaid-lanes.md`.
 
 ## The question
 
