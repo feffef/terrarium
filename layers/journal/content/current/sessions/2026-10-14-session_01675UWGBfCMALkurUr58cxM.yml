@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01675UWGBfCMALkurUr58cxM
 startedAt: 2026-10-14T17:53:18Z
-endedAt: 2026-10-14T18:06:40Z
+endedAt: 2026-10-14T18:34:20Z
 kind: interactive
 goal: Update the mattpocock skills pack to the latest version
-status: in-review
-outcome: Pack refreshed; upstream CONTEXT.md to GLOSSARY.md rename adopted repo-wide in PR 1956, awaiting a human merge
-summary: 'The user asked to update the Matt Pocock skills. Per their stated preference I asked scope, method and conflict-handling questions first; they chose all skills plus proposing new ones, the npx skills CLI, and stop-and-report on conflicts. The CLI updated 18 of 24 pinned skills (the lock then showed 25). Upstream renamed CONTEXT.md to GLOSSARY.md in domain-modeling, and I reported it. I first told the user only domain-modeling was affected, which was wrong: nine other pack skills also reference GLOSSARY.md. The user, asked directly, chose "hold domain-modeling back", then (after I corrected myself) chose "rename repo-wide" over symlinks or holding back affected skills. I did that as a path-only swap across 91 live files (code regexes, tests, rules, docs, ADRs with their rule stamps), leaving historical session logs, published Tenant prose and docs/research alone. Gate green; Standards and Spec review agents found no missed references. PR 1956 needs a human merge because it touches Human-only files. Proposing new upstream skills was not done and is still open. All steps were human-instructed except the choice to exclude historical logs and published prose from the rename, which I decided myself.'
+status: completed
+outcome: Pack refreshed, implement-spec added, GLOSSARY.md adopted repo-wide; PR 1956 merged by the owner
+summary: 'The user asked to update the Matt Pocock skills. Per their preference I asked scope, method and conflict-handling questions first; they chose all skills, the npx skills CLI, and stop-and-report on conflicts. The CLI refreshed the pinned pack skills. Upstream renamed CONTEXT.md to GLOSSARY.md; I first told the user only domain-modeling was affected, which was wrong (nine other pack skills also carried it), costing extra decision rounds. The user chose "rename repo-wide" and I did it as a path-only swap across about 90 live files (code regexes, tests, rules, docs, ADRs with re-stamped rules), leaving historical logs and published prose alone. On request I surveyed the 14 new upstream skills, read retro and chief-of-staff for ideas worth adopting, and installed implement-spec. The user rejected one review dispatch and told me not to review pack skill content, so the review excluded pack files; it found a stale palimpsest reference, fixed. On user instruction I also made ADR-0021 and its callers say glossary instead of context and retitled the map. The owner enabled auto-merge and PR 1956 merged after CI went green. Everything was human-instructed except excluding historical logs and published prose from the rename, which I decided. Open: two retro ideas (check-not-rule for mechanical frictions; coding standards enforced at review) were reported, not filed.'
 prs:
   - "1956"
 docsRead:
@@ -31,13 +31,43 @@ docsRead:
   - path: docs/adr/0021-multi-context-domain-docs.md
     reason: Seen as diff output when checking ADR edits were path swaps
     useful: partly
+  - path: .agents/skills/to-spec/SKILL.md
+    reason: Read to explain to-spec versus to-tickets accurately
+    useful: yes
+  - path: .agents/skills/to-tickets/SKILL.md
+    reason: Read to explain to-spec versus to-tickets accurately
+    useful: yes
+  - path: docs/adr/0030-adrs-document-a-decision-not-its-history.md
+    reason: Read before rewriting ADR-0021 wording; confirmed in-place edit with no history notes
+    useful: yes
+  - path: .agents/skills/implement-spec/SKILL.md
+    reason: Seen via the upstream clone; showed it orchestrates a whole spec, not a duplicate of implement
+    useful: yes
+  - path: .agents/skills/implement/SKILL.md
+    reason: Seen via the upstream clone; single-ticket skill, compared with implement-spec
+    useful: yes
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: Seen via grep; showed the friction review loop already covers retro and chief-of-staff purposes
+    useful: yes
+  - path: GLOSSARY-MAP.md
+    reason: Seen via grep; showed the Context Map heading and multi-context wording I aligned
+    useful: yes
+  - path: docs/agents/domain.md
+    reason: Seen via grep; showed the context wording to align with glossary
+    useful: yes
   - path: scripts/verify-skills-lock.ts
+    reason: (no reason given)
+  - path: .agents/skills/ask-matt/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/setup-matt-pocock-skills/issue-tracker-github.md
     reason: (no reason given)
 skillsUsed:
   - name: code-review
     reason: Standards and Spec agents on the committed diff before the first push
   - name: close-session
     reason: (no reason given)
+  - name: ask-matt
+    reason: (invoked as a slash command)
 frictions:
   - description: Never read CONTEXT-MAP.md and CONTEXT.md at session start, though CLAUDE.md requires it; the task was about those very files being renamed.
     solution: Read them first; a session-start read list in a hook output would make the skip visible.
@@ -51,20 +81,28 @@ frictions:
   - description: Stop hook asked four times to commit and push while a conflict decision and review were pending; ADR-0004 and pr-workflow require review before the first push.
     solution: Let the hook defer when a stop-and-report question or code-review is pending.
     severity: minor
-durationSec: 802
+  - description: I read green merge-ref gate comments as per-commit results, so I misstated which commits had passed CI until I checked the head.
+    solution: Poll get_check_runs on the head SHA; the gate comment names the merge ref, not the branch commit.
+    severity: nit
+durationSec: 2463
 models:
-  claude-sonnet-5-5: 88
+  claude-sonnet-5-5: 204
 toolCounts:
   Grep: 1
-  Bash: 24
-  AskUserQuestion: 3
-  Read: 6
-  Agent: 2
-  ToolSearch: 1
+  Bash: 49
+  AskUserQuestion: 5
+  Read: 11
+  Agent: 6
+  ToolSearch: 3
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
   Skill: 1
   Write: 1
+  ReadNotifications: 13
+  mcp__github__pull_request_read: 2
+  mcp__claude-code-remote__send_later: 1
+  mcp__github__update_pull_request: 1
+  mcp__claude-code-remote__delete_trigger: 1
 rulesLoaded:
   - .claude/rules/adr-0005.md
   - .claude/rules/adr-0015.md
@@ -72,6 +110,7 @@ rulesLoaded:
   - .claude/rules/adr-0007.md
   - .claude/rules/adr-0030.md
   - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0021.md
 rulesGlobal:
   - .claude/rules/adr-0004.md
   - .claude/rules/adr-0009.md
@@ -79,6 +118,14 @@ rulesGlobal:
   - .claude/rules/adr-0020.md
   - .claude/rules/adr-0003.md
   - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0021.md
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0001.md
+  - .claude/rules/adr-0018.md
+  - .claude/rules/adr-0028.md
+  - .claude/rules/tenant-layers.md
 ruleVerdicts:
   - path: .claude/rules/adr-0004.md
     reason: Made me run gate:scoped and code-review before the first push; summary was enough, I skipped the full ADR
@@ -116,11 +163,22 @@ ruleVerdicts:
   - path: .claude/rules/adr-0030.md
     reason: Said ADR edits are in-place rewrites with no history notes; I kept to path swaps and did not read the full ADR
     useful: yes
+  - path: .claude/rules/adr-0021.md
+    reason: Loaded on editing ADR-0021; I changed its title and re-stamped it, after reading the full ADR
+    useful: yes
 subagents:
   - type: general-purpose
     task: Standards review of rename diff
   - type: general-purpose
     task: Spec review of rename diff
+  - type: general-purpose
+    task: Standards review of branch diff
+  - type: general-purpose
+    task: Spec review of branch diff
+  - type: general-purpose
+    task: Standards review excluding pack skills
+  - type: general-purpose
+    task: Spec review excluding pack skills
 gitBranch: ccr-9cd71a05-ftrl4b
 entrypoint: remote_mobile
 cliVersion: 2.1.299
