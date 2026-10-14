@@ -1,7 +1,7 @@
 # The guards
 
 Rules that prose stopped holding are held mechanically instead. Each guard's
-rationale, detection contract and residual fail-opens are single-homed in **its
+rationale, detection contract and residual gaps are single-homed in **its
 own script header** — read that before changing one. This page is the index and
 the conventions they share.
 
@@ -26,19 +26,21 @@ follow it and don't route around it. If it is wrong, say so on the guard's issue
 | `double-background-guard.ts` | a `Bash` call stacking `run_in_background: true` on a text-level background operator in the command (a bare `&` anywhere, `nohup … &` included) — for **any** caller, main session included (no `detectAgentContext` gate, unlike `subagent-background-guard.ts`) | its script header | #1208 |
 | `github-provenance-guard.ts` | a GitHub body (MCP, or a Bash `gh api`/`curl` write), or an MCP-API commit, missing this session's provenance in the shape its surface prescribes; also an MCP title or body carrying a bare `<...>` span GitHub silently strips | ADR-0017 — the deny message is the agent-facing home | #886, #1900 |
 | `github-search-fields-guard.ts` | `search_issues` or `search_pull_requests` called with `fields` missing or empty | the deny message | #1860 |
-| `stale-info-hint.ts` | nothing: a hint, not a guard. After a `git push` rejected as "stale info" it adds the fix to the result, and it fails open | its script header | #1610 |
-| `skill-rules-hint.ts` | nothing: a hint, not a guard. When a Skill runs (Skill tool or slash command) it adds the rules whose `paths` name the Skill's directory, and it fails open | its script header | PR #1741 |
-| `bash-rules-hint.ts` | nothing: a hint, not a guard. After a piped, chained or multi-file Bash read it adds the rules whose `paths` match the files read, and it fails open | its script header | #1764 |
-| `read-first-hint.ts` | nothing: a hint, not a guard. At a session's first git (beyond `status`/`diff`) or GitHub call it points to the doc CLAUDE.md says to read first, once per doc. After a successful `mcp__github__create_pull_request` in the main session, until `close-session` is invoked, it says to invoke that Skill now. It fails open | its script header | #1754, #1859 |
+| `stale-info-hint.ts` | nothing: a hint, not a guard. After a `git push` rejected as "stale info" it adds the fix to the result | its script header | #1610 |
+| `skill-rules-hint.ts` | nothing: a hint, not a guard. When a Skill runs (Skill tool or slash command) it adds the rules whose `paths` name the Skill's directory | its script header | PR #1741 |
+| `bash-rules-hint.ts` | nothing: a hint, not a guard. After a piped, chained or multi-file Bash read it adds the rules whose `paths` match the files read | its script header | #1764 |
+| `read-first-hint.ts` | nothing: a hint, not a guard. At a session's first git (beyond `status`/`diff`) or GitHub call it points to the doc CLAUDE.md says to read first, once per doc. After a successful `mcp__github__create_pull_request` in the main session, until `close-session` is invoked, it says to invoke that Skill now | its script header | #1754, #1859 |
 
 `.claude/settings.json` wires the guards under `hooks.PreToolUse`, and the hints
 under `PostToolUse`, `PostToolUseFailure` and `UserPromptSubmit`.
 
 ## Conventions every guard follows
 
-- **Fail closed.** An undeterminable context, an unparseable payload or a crash
-  denies. The one exception is `deferred-tool-guard`, which fails **open**: it
-  never blocks a call it cannot positively identify.
+- **A crash.** If a hint crashes, the action goes ahead. If a guard crashes, the
+  action is blocked, except `deferred-tool-guard`, whose crash lets it go ahead.
+  An undeterminable context or unparseable payload blocks too. Every guard but
+  `deferred-tool-guard.ts` runs through `scripts/guard-wrap.sh` (#1223); that one
+  and all four hints use a bare `|| true`.
 - **Matcher-scoped, never `"*"`.** Each `tsx` start (~0.3s) would hit every
   Read/Edit/Bash call. The `Bash`, `Edit` and `Write` guards add an `sh`
   pre-filter so only a payload that could match pays it.
@@ -82,8 +84,7 @@ change. Add the case to `tests/unit/<guard>.spec.ts` too.
 
 Each guard's header lists its own. Two apply to all:
 
-- A textual pre-filter fails **open** if the harness renames or re-serializes a
-  payload key.
-- Every fail-closed guard runs through `scripts/guard-wrap.sh`, which denies when
-  the guard exits nonzero with empty stdout (#1223). `deferred-tool-guard.ts`
-  uses a bare `|| true` because it fails open.
+- A textual pre-filter lets the action go ahead if the harness renames or
+  re-serializes a payload key.
+- A guard that crashes before its own error handling exits nonzero with empty
+  stdout; `scripts/guard-wrap.sh` turns that into a block.
