@@ -1,10 +1,10 @@
 name: domain-modeling
 category: general-engineering
 importance: essential
-installedSha256: 327a2b50620e2fd70abc6893cd6965e76b20f8d0adb0dc2c8d5eb3845efb643e
+installedSha256: 7b925d7b1e341a2eeae33ad68a8a8c0ab889a38ddd22a7598e4c240e5a7556a3
 gist: Keeps the project's shared vocabulary and decisions consistent.
 role: >-
-  Owns the CONTEXT.md glossary and the ADR conventions — CONTEXT.md's own
+  Owns the GLOSSARY.md glossary and the ADR conventions — GLOSSARY.md's own
   canonical `essential` example. Use before any structural change or new
   vocabulary.
 observations: []

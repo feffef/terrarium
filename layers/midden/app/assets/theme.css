@@ -3,7 +3,7 @@
    "Section column")
 
    An excavation catalogue of the Platform's own discarded work. Self-contained
-   tokens (no sharing with other Tenants; ADR isolation stance, CONTEXT.md).
+   tokens (no sharing with other Tenants; ADR isolation stance, GLOSSARY.md).
    Registered globally by the layer's nuxt.config, so every layer view and every
    nested component inherits the tokens (docs/agents/tenant-layers.md §1).
 
@@ -212,7 +212,7 @@
 }
 
 /* Condition now reads as a plain WORD, not a glyph (owner-directed post-MVP
-   simplification, this branch — see CONTEXT.md's Condition term). The former
+   simplification, this branch — see GLOSSARY.md's Condition term). The former
    `.midden-glyph`, `.midden-tip*`, and `.stamp` blocks are gone; the landing's
    condition legend and each find style the word themselves (scoped). */
 

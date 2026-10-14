@@ -3,7 +3,7 @@
 > The Commons context: its reason-to-exist and the platform-wide terms it turns
 > on. Commons coins no vocabulary of its own — the concepts it depends on
 > (**Aggregator**, **Catalog**, **Collection kind**) are Platform terms and live
-> in the root `CONTEXT.md`; see `CONTEXT-MAP.md`.
+> in the root `GLOSSARY.md`; see `GLOSSARY-MAP.md`.
 
 The Commons is the Platform's shared, cross-Tenant space — the home for
 **Aggregator** views that read *across* every Tenant (ADR-0025, issue #642). It is

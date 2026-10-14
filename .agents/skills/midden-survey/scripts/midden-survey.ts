@@ -1,5 +1,5 @@
 // The midden-survey helper: the mechanical half of the `midden-survey` Skill's
-// candidate sweep (layers/midden/CONTEXT.md — "The inclusion bar"). It
+// candidate sweep (layers/midden/GLOSSARY.md — "The inclusion bar"). It
 // enumerates the git-derivable kinds of discarded thing — files deleted from
 // `origin/main` and dependencies dropped from `package.json` — screens out what
 // the machine can already rule out (noise paths, files that moved rather than
@@ -56,7 +56,7 @@ export interface DeletionCandidate extends CommitMeta {
 /** One file that did not die: the same thing stands at another path in the
  *  current tree. A Gate-B exclusion, not a candidate — the Midden records what
  *  the Platform discarded, never what it carried forward under a new shape
- *  (layers/midden/CONTEXT.md, "The inclusion bar"). */
+ *  (layers/midden/GLOSSARY.md, "The inclusion bar"). */
 export interface Relocation extends CommitMeta {
   path: string
   newPath: string

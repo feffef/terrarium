@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // Frictions rendered as soil strata — the accumulated sediment the
-// self-improvement Skills mine (`frictions-to-fixes` today; CONTEXT.md:
+// self-improvement Skills mine (`frictions-to-fixes` today; GLOSSARY.md:
 // Friction). The default slot replaces the "N frictions" caption.
 import type { Severity } from '../../types/journal'
 

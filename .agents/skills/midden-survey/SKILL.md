@@ -8,7 +8,7 @@ disable-model-invocation: true
 
 The field-walk that precedes an excavation: find what the Platform has
 discarded since the last survey, screen it against the Midden's **inclusion
-bar** (the two-gate test — `layers/midden/CONTEXT.md` is its single home), and
+bar** (the two-gate test — `layers/midden/GLOSSARY.md` is its single home), and
 hand the survivors to the curator as **one survey-report issue**. This Skill
 mechanizes *discovery only*; grading, placing and narrating the finds is
 `midden-catalogue`'s job, run once a human green-lights it.
@@ -19,7 +19,7 @@ firing one).
 
 ## 1. Ground yourself, then run the mechanical sweep
 
-- Read `layers/midden/CONTEXT.md` first — especially **The inclusion bar**
+- Read `layers/midden/GLOSSARY.md` first — especially **The inclusion bar**
   (Gate A: terminal disposition; Gate B: no living successor) and **Artifact**
   (what a candidate would become).
 - The sweep needs full history: if `git rev-parse --is-shallow-repository`
@@ -63,7 +63,7 @@ pagination/overflow guidance).
   so a dead branch candidate usually arrives here, wearing its PR.
 - **Dormant branches**: `mcp__github__list_branches`, screening out `main` and
   any branch with an **open** PR. Gate A for a branch additionally needs the
-  inclusion bar's **dormancy floor** — `layers/midden/CONTEXT.md` owns the
+  inclusion bar's **dormancy floor** — `layers/midden/GLOSSARY.md` owns the
   figure — checked against the branch's last-commit date
   (`mcp__github__list_commits` on the branch). A briefly quiet branch is not
   yet a corpse.
@@ -77,7 +77,7 @@ pagination/overflow guidance).
 
 ## 3. Judge the candidates — both gates, curatorial signal over bulk
 
-For each remaining candidate, apply the two-gate test (`layers/midden/CONTEXT.md`'s
+For each remaining candidate, apply the two-gate test (`layers/midden/GLOSSARY.md`'s
 inclusion bar owns Gate A/Gate B's definitions) honestly and keep only what
 passes **both** gates:
 
@@ -111,7 +111,7 @@ survey gets a comment, not a duplicate). For each surviving candidate:
   recording exactly which Gate-B check ran and what it found — plus a draft
   `removedIn` where the terminal event is a commit (the script already reports
   the deleting/dropping hash per candidate); `remains` stays out of the draft —
-  it is curator-curated by definition (`layers/midden/CONTEXT.md`'s Artifact
+  it is curator-curated by definition (`layers/midden/GLOSSARY.md`'s Artifact
   term);
 - one line on why it passes both gates.
 

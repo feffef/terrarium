@@ -1,7 +1,7 @@
 name: diagnosing-bugs
 category: general-engineering
 importance: peripheral
-installedSha256: 77f3cf31bc99b2f49af943222526531fcc9fc41d047626d3640e875e85af3e84
+installedSha256: 849198df88cdb65fd0d97236604c1fca7ff2f22d2f705f9724a800d0266b118d
 role: >-
   Diagnoses hard bugs and perf regressions through a red-then-green
   reproduction loop before any fix is proposed. It helps once a bug resists a

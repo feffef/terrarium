@@ -26,10 +26,10 @@ conflicting facts is true.
 
 Classify every surface **before** editing.
 
-- **Live** — fix these. `CLAUDE.md`, `CONTEXT.md`, `CONTEXT-MAP.md`,
+- **Live** — fix these. `CLAUDE.md`, `GLOSSARY.md`, `GLOSSARY-MAP.md`,
   `README.md`, `SECURITY.md`, `docs/agents/*`, `docs/research/*`,
   `docs/proposals/README.md`, `tests/README.md`, `deploy/README.md`, each
-  `layers/<tenant>/CONTEXT.md`, our own Skills (not keyed in
+  `layers/<tenant>/GLOSSARY.md`, our own Skills (not keyed in
   `skills-lock.json`) with their sibling files, and the current journal's
   facing pages,
   `layers/journal/content/current/pages/{architecture,highlights,history,how-it-works,index,real-and-invented}.md`,
@@ -49,7 +49,7 @@ Classify every surface **before** editing.
   from the repo in a Live doc instead.
 
 **Skip entirely:** Tenant content that makes no claim about the Terrarium
-(`CONTEXT-MAP.md`'s Relationships section says which Tenants),
+(`GLOSSARY-MAP.md`'s Relationships section says which Tenants),
 `docs/proposals/<N>-*.md` bodies, and `.out-of-scope/*.md`.
 
 ## The eight lenses, in four paired agents
@@ -91,7 +91,7 @@ finding reached another way; the field's docstring lists why it undercounts.
   `.claude/rules/` are a deliberate exception: each summarises its ADR so the
   rule can load on its own, and `validate-adr-rules` keeps the two in step.
 - **Mis-location** — a fact or file in the wrong home: implementation detail in
-  `CONTEXT.md`, a status narrative in `CLAUDE.md`, a repo-wide convention buried
+  `GLOSSARY.md`, a status narrative in `CLAUDE.md`, a repo-wide convention buried
   in a `docs/agents/*` topic file (fix: move it, leave a pointer), or a misfiled
   file (fix: `git mv`). Moving a journal `pages/*.md` changes its route
   (ADR-0006), so that move escalates (step 8).
@@ -100,8 +100,8 @@ finding reached another way; the field's docstring lists why it undercounts.
 Each run covers one family of Live docs: the one after the family named by the
 newest origin/main commit subject ending `(<name> concision family)`, wrapping
 after 4; with no such commit, number `$(( 10#$(date +%j) % 5 ))`. Families,
-by number and name: 0 `root` (`CLAUDE.md`, `CONTEXT*.md`, every Live README,
-`SECURITY.md`, `layers/*/CONTEXT.md`), 1 `docs/agents` (`docs/agents/*`),
+by number and name: 0 `root` (`CLAUDE.md`, `GLOSSARY*.md`, every Live README,
+`SECURITY.md`, `layers/*/GLOSSARY.md`), 1 `docs/agents` (`docs/agents/*`),
 2 `docs/research` (`docs/research/*`), 3 `skills` (our own Skills with their
 sibling files), 4 `journal` (the journal's facing pages and Inventory
 entries). Brief it

@@ -1,4 +1,4 @@
-// Manifest for the Tinkerfund Tenant (layers/tinkerfund/CONTEXT.md).
+// Manifest for the Tinkerfund Tenant (layers/tinkerfund/GLOSSARY.md).
 // `prod` holds realistic simulated content; `qa` holds edge-case test data
 // that Tinkerfund's e2e tests run against (issue #1375). No `kind`: Tinkerfund
 // stays out of the Commons' Catalog. The content model is issue #1366;

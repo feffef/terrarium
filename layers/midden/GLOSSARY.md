@@ -2,14 +2,14 @@
 
 > The Midden context: its own vocabulary (Site, Dig season, Artifact, Condition,
 > the Stores, the inclusion bar) and its reason-to-exist. Platform-wide terms it leans on
-> (Tenant, Space, Collection, …) live in the root `CONTEXT.md`; see
-> `CONTEXT-MAP.md`.
+> (Tenant, Space, Collection, …) live in the root `GLOSSARY.md`; see
+> `GLOSSARY-MAP.md`.
 
 The Midden is an archaeology-themed re-presentation of the Platform's own
 discarded work — dead branches, closed-unmerged pull requests, deprecated
 Skills, removed files and dependencies, and proposals that never landed. It is
 one of several Tenants themed around the Platform's **Observability** invariant
-(root `CONTEXT.md`): where the Journal narrates current activity and the Blog
+(root `GLOSSARY.md`): where the Journal narrates current activity and the Blog
 comments on it, the Midden catalogues what the Platform stopped doing, once it
 is truly finished stopping.
 
@@ -34,7 +34,7 @@ forward-looking narration doesn't carry.
 ## Glossary
 
 ### Site
-A `pages` Document in the `trench` Space: one dig report — curator's-voice prose narrating a **cluster** of related Artifacts, each embedded inline (#521; never independently routed — see Artifact below). The Midden's word for what the Platform generically calls a page in this Space (root `CONTEXT.md`'s Collection term). The `stores` Space has no Sites (see The Stores below). Reused-per-Space collection naming (#516): `gallery` (out of scope for v1, #522) would give the same collection an "exhibit" meaning instead.
+A `pages` Document in the `trench` Space: one dig report — curator's-voice prose narrating a **cluster** of related Artifacts, each embedded inline (#521; never independently routed — see Artifact below). The Midden's word for what the Platform generically calls a page in this Space (root `GLOSSARY.md`'s Collection term). The `stores` Space has no Sites (see The Stores below). Reused-per-Space collection naming (#516): `gallery` (out of scope for v1, #522) would give the same collection an "exhibit" meaning instead.
 
 ### Dig season (Stratum)
 A curator-declared date range, named for what the Platform was mostly doing or

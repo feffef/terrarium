@@ -10,7 +10,7 @@ hit and leave the cut alone until it is judged.
 ## Scope
 
 - **What a trial may change:** any text that instructs our agents: `CLAUDE.md`,
-  `CONTEXT.md`, `docs/`, our own Skills, and comments in scripts. A whole-file
+  `GLOSSARY.md`, `docs/`, our own Skills, and comments in scripts. A whole-file
   rewrite keeps every rule and decision the file holds.
 - **What it may not change:** ADRs and their summary rules (ADR-0030), pack
   Skills (ADR-0015), session logs, and anything that changes what runs. When a

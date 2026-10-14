@@ -119,7 +119,7 @@ unfixed `wrong` claim.
 
 The Journal's Space landing (`/t/journal/current`) is a **live dashboard**
 that queries this Space's collections at request time, not a Markdown render
-of any file — see `layers/journal/CONTEXT.md`'s "What lives where" for what it
+of any file — see `layers/journal/GLOSSARY.md`'s "What lives where" for what it
 renders. A Digest you wrote in step 3 therefore appears with **no edit to
 `index.md`**.
 

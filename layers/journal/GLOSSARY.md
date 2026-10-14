@@ -3,7 +3,7 @@
 > The Journal context: the one Tenant-local term it owns (Digest) and its
 > reason-to-exist. Unlike the Blog and Atlas, the Journal renders **platform-wide**
 > concepts — session log, Skill Inventory, Session, Friction, Agent Authorship —
-> which stay defined in the root `CONTEXT.md` because any agent needs them
+> which stay defined in the root `GLOSSARY.md` because any agent needs them
 > regardless of task. This file narrates the *website*, not those concepts.
 > The Journal is Platform infrastructure (its rationale is ADR-0008), not a demo
 > Tenant like the Blog/Atlas.
@@ -19,7 +19,7 @@ Anyone who wants the Platform's actual current state, or how it got there, witho
 ## What you'll find
 
 - **Inventories** — curated/derived current-state readouts (the Skill Inventory
-  and the Friction Ledger; defined in the root `CONTEXT.md`), refreshed from repo
+  and the Friction Ledger; defined in the root `GLOSSARY.md`), refreshed from repo
   state rather than appended to.
 - **Session logs** — primary, append-only records the agents author
   themselves (see above).
@@ -28,7 +28,7 @@ Anyone who wants the Platform's actual current state, or how it got there, witho
 ## Glossary
 
 ### Digest
-A daily catch-up on Platform activity across all Tenants, condensed from git history and session logs: one page per finished UTC day, kept once written (ADR-0010). Unlike an **Inventory** (derived too, but refreshed in place) it records a past day; unlike a **session log** it is derived, not first-hand. The Commons Timeline also reads Digests (`layers/commons/CONTEXT.md`), but the word is defined here.
+A daily catch-up on Platform activity across all Tenants, condensed from git history and session logs: one page per finished UTC day, kept once written (ADR-0010). Unlike an **Inventory** (derived too, but refreshed in place) it records a past day; unlike a **session log** it is derived, not first-hand. The Commons Timeline also reads Digests (`layers/commons/GLOSSARY.md`), but the word is defined here.
 
 ## What lives where
 

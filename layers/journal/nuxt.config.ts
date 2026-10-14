@@ -1,4 +1,4 @@
-// The Journal Tenant's Nuxt layer (CONTEXT.md: "a Tenant is implemented as a
+// The Journal Tenant's Nuxt layer (GLOSSARY.md: "a Tenant is implemented as a
 // Nuxt layer"). This is the Tenant's own fit-out — components and a Space-landing
 // page that render its content nicely, overriding the Platform's generic catch-all
 // renderer for `/t/journal/<space>` only.

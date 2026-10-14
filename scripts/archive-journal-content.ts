@@ -1,5 +1,5 @@
 // Moves aged-out Journal content from the `current` Space to `archived`
-// (CONTEXT.md's current/archived Space pair) — the `current` Space had grown
+// (GLOSSARY.md's current/archived Space pair) — the `current` Space had grown
 // too large. Scoped to exactly the two content kinds that make it large:
 // Digests (one page per closed UTC day, ADR-0010) and session logs (one per
 // Claude session, ADR-0009) — every other Journal Collection (skills, other

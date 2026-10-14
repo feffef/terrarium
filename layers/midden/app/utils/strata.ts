@@ -1,4 +1,4 @@
-// The canonical, ordered dig-season list (layers/midden/CONTEXT.md: "Dig season
+// The canonical, ordered dig-season list (layers/midden/GLOSSARY.md: "Dig season
 // (Stratum)", #519) — the Midden's structural analog to the Atlas's
 // `GLASS_SEASONS` (layers/atlas/app/utils/almanac.ts): an array-plus-lookup
 // shape, single-homed here so the stratigraphy sidebar (#524), the trench-index

@@ -1,7 +1,7 @@
 // The shape of one catalogued find, and the two formatters that render its
 // record facts — shared by the Midden's two renderers so they can never drift:
 // MiddenArtifact.vue (the trench's display slip) and StoresLanding.vue (the
-// stores register). CONTEXT.md's Artifact term defines the fields themselves.
+// stores register). GLOSSARY.md's Artifact term defines the fields themselves.
 //
 // Exports are layer-prefixed (`formatMiddenDate`, not `formatDate`) because Nuxt
 // auto-imports every `app/utils` export globally across ALL layers — the same

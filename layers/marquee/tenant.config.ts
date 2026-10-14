@@ -1,6 +1,6 @@
 // Manifest for the Marquee Tenant — a movie-blog microsite covering the Marvel
 // Cinematic Universe in in-universe story order rather than release order
-// (CONTEXT.md Tenants roster: Marquee; layers/marquee/CONTEXT.md: Screening,
+// (GLOSSARY.md Tenants roster: Marquee; layers/marquee/GLOSSARY.md: Screening,
 // Chapter; guest-submitted, issue #551). Declarative intent only (ADR-0002,
 // ADR-0013).
 //
@@ -34,7 +34,7 @@ export default defineTenant({
         // The authored inner SVG markup for this Chapter's original,
         // Ghibli-inspired illustration (never a real film still or official
         // artwork — see the `MarqueePoster` component and layers/marquee/
-        // CONTEXT.md for the art direction). Framed + captioned by the shared
+        // GLOSSARY.md for the art direction). Framed + captioned by the shared
         // Poster component, mirroring the Atlas's engraved-plate mechanism.
         illustration: safeSvg.optional(),
       }),

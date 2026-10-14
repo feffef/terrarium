@@ -1,6 +1,6 @@
 /* Marquee Tenant theme — a small movie-blog canvas, deliberately soft and
-   painterly (Ghibli-inspired mood, layers/marquee/CONTEXT.md: Poster).
-   Self-contained tokens (no sharing with any other Tenant; CONTEXT.md
+   painterly (Ghibli-inspired mood, layers/marquee/GLOSSARY.md: Poster).
+   Self-contained tokens (no sharing with any other Tenant; GLOSSARY.md
    isolation stance). Registered globally by the layer's nuxt.config.
    Light/dark aware. */
 :root {

@@ -68,7 +68,7 @@ observations:
       (2026-09-25 through 2026-10-01, PRs #1334/#1356/#1426/#1461/#1486/#1501/
       #1517). The newest, PR #1517, was independently fact-checked rather than
       trusted from its log: its "fourth altitude → third altitude" fix in
-      highlights.md confirmed against `layers/blog/CONTEXT.md` and `CONTEXT.md`,
+      highlights.md confirmed against `layers/blog/GLOSSARY.md` and `GLOSSARY.md`,
       and its tests/README.md heading-case fix confirmed against
       `docs/agents/verifying-ui-changes.md` — both correct. No human-only
       surface touched in any of the 7, no revert found in the unbroken PR
@@ -159,7 +159,7 @@ observations:
       session_01N6jqFrkCMkEm3g6kJW9Zqk (2026-10-07T04:01-10:38Z, entirely
       under the fixed wording), dispatched 4 distinct, explicitly-named
       checker subagents ("Check batch 1 findings," "Check CLAUDE.md verbose
-      findings," "Check CONTEXT/MAP verbose findings," "Check tenant/README
+      findings," "Check GLOSSARY/MAP verbose findings," "Check tenant/README
       verbose findings") and its log summary named the checker verdict tally
       (CONFIRMED-BUT/WRONG counts), exactly as the fixed Step 5 requires — the
       independent-checker-dispatch fix held on its first live test. Commented
@@ -203,7 +203,7 @@ observations:
       Commons' merge date), all correct. #1647 (independent-checker-dispatch
       skip) reconfirmed still open, unchanged. New, sub-threshold:
       session_01Tcn6x6mZizT14rJuQqYivt's own friction log admits skipping
-      CLAUDE.md's required tenant-layers.md/CONTEXT.md reads before editing
+      CLAUDE.md's required tenant-layers.md/GLOSSARY.md reads before editing
       layers/commons and journal pages — isolated (6/7 other sessions in
       window did read it), and the edits themselves verified correct, so no
       damage; below the escalation bar. No reverts in the 2-week sweep.

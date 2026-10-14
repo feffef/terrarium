@@ -1,6 +1,6 @@
 // Manifest for the Atlas Tenant — a lavishly designed natural-history field guide
-// to a fictional ecosystem observed under glass (CONTEXT.md Tenants roster:
-// Atlas; layers/atlas/CONTEXT.md: Biome / Specimen / Interaction / Observation;
+// to a fictional ecosystem observed under glass (GLOSSARY.md Tenants roster:
+// Atlas; layers/atlas/GLOSSARY.md: Biome / Specimen / Interaction / Observation;
 // PRD #64). Declarative intent only (ADR-0002, ADR-0013).
 //
 // The Atlas gives Spaces a third meaning: **places**. Where the Journal uses
@@ -15,7 +15,7 @@
 //  - `interactions` the food-web edges — one directed edge per file. Both the
 //                   diagram (#70) and a Specimen's own Relations (#71) are two
 //                   views of THIS single-homed data. Same-biome only, so the web
-//                   is always a same-Space read (CONTEXT-MAP.md: Relationships).
+//                   is always a same-Space read (GLOSSARY-MAP.md: Relationships).
 //  - `observations` the field log — dated sightings that accumulate over time
 //                   (#72). Append-only in spirit; the world's heartbeat.
 import { z } from 'zod'

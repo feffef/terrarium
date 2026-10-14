@@ -7,7 +7,7 @@
 //
 // Post-MVP simplification (owner-directed, this branch): a find now renders OPEN
 // and FLAT — no accordion, no hover-to-decode glyph. The former
-// ArtifactCard + this embed are one component now (see CONTEXT.md's Condition
+// ArtifactCard + this embed are one component now (see GLOSSARY.md's Condition
 // term). Condition reads as its WORD, shown as a slug-angled corner STAMP
 // (owner-restored); the whole entry (note + inscription) is
 // visible on load. `land → read`, nothing to click.

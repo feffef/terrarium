@@ -441,9 +441,9 @@ describe('cataloguedIndex()', () => {
   })
   it('binds a commit-kind declaration to its own commit, normalized to 7 chars (#761)', () => {
     const { paths } = cataloguedIndex([
-      { kind: 'commit', hash: 'c399e92b57843358d791e2e5aba1cc598bde171a', path: 'CONTEXT.md' },
+      { kind: 'commit', hash: 'c399e92b57843358d791e2e5aba1cc598bde171a', path: 'GLOSSARY.md' },
     ])
-    expect(paths.get('CONTEXT.md')).toEqual({ key: 'commit:c399e92', onlyIfDeletedBy: 'c399e92' })
+    expect(paths.get('GLOSSARY.md')).toEqual({ key: 'commit:c399e92', onlyIfDeletedBy: 'c399e92' })
   })
   it('leaves a file-kind declaration unconditional', () => {
     expect(cataloguedIndex([{ kind: 'file', path: 'app.vue' }]).paths.get('app.vue')).toEqual({ key: 'file:app.vue' })

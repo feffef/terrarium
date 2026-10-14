@@ -3,7 +3,7 @@
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-04',
 
-  // Tenants are Nuxt layers (CONTEXT.md). They live under Nuxt's conventional
+  // Tenants are Nuxt layers (GLOSSARY.md). They live under Nuxt's conventional
   // `layers/` directory (ADR-0018), so Nuxt auto-extends every `layers/*` — no
   // hand-curated `extends` list. A Tenant without its own fit-out simply has no
   // presentational code and falls back to the Platform's generic catch-all

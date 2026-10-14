@@ -3,12 +3,12 @@
 *Repo-authoritative. Don't re-sync it against the pack's generic, reinstallable
 `domain.md` template (ADR-0005).*
 
-How to use the domain docs while exploring. The repo's shape (multi-context,
-shared kernel) is in `CONTEXT-MAP.md` (ADR-0021).
+How to use the domain docs while exploring. The repo's shape (one shared
+glossary plus one per Tenant) is in `GLOSSARY-MAP.md` (ADR-0021).
 
 ## Before exploring, read these
 
-Reading order and triggers (`CONTEXT-MAP.md`, `CONTEXT.md`, relevant ADRs):
+Reading order and triggers (`GLOSSARY-MAP.md`, `GLOSSARY.md`, relevant ADRs):
 see CLAUDE.md's "Docs you must read first" and `.claude/rules/tenant-layers.md`,
 not this page.
 
@@ -16,17 +16,17 @@ This repo deliberately diverges from the `domain-modeling` Skill's generic
 templates:
 
 - an ADR follows ADR-0030's template, not the Skill's section layout;
-- a `CONTEXT.md` is a `## Glossary` of `### Term` entries, not the Skill's
+- a `GLOSSARY.md` is a `## Glossary` of `### Term` entries, not the Skill's
   `## Language`/`_Avoid_` layout;
-- the root `CONTEXT.md` doubles as the Platform context and carries the
-  Tenants roster, and each per-Tenant `CONTEXT.md` adds a purpose narrative on
+- the root `GLOSSARY.md` doubles as the Platform glossary and carries the
+  Tenants roster, and each per-Tenant `GLOSSARY.md` adds a purpose narrative on
   top of its glossary (ADR-0021 says why).
 
-Match the repo's actual files, not the template: `CONTEXT-MAP.md`'s
+Match the repo's actual files, not the template: `GLOSSARY-MAP.md`'s
 **Decisions** section says where ADRs live; CLAUDE.md's "Repo layout" says where
-`layers/<tenant>/` contexts live.
+`layers/<tenant>/` glossaries live.
 
-If `CONTEXT-MAP.md`, a `CONTEXT.md` or an ADR is missing, **proceed
+If `GLOSSARY-MAP.md`, a `GLOSSARY.md` or an ADR is missing, **proceed
 silently**: don't flag it or suggest creating it. `/domain-modeling` creates
 a missing one lazily, when a term or
 decision needs resolving.
@@ -41,7 +41,7 @@ A concept missing from the glossary means either you're inventing language
 
 ## The rule of two: coin vocabulary on its second instance
 
-A concept earns a glossary entry (`CONTEXT.md`) or a named taxonomy slot (an
+A concept earns a glossary entry (`GLOSSARY.md`) or a named taxonomy slot (an
 ADR) only once its **second** instance exists or is concretely scheduled.
 Before that, describe the first instance in plain words, where it lives —
 don't mint a term, a typology, or a classification for a population of one.

@@ -1,14 +1,14 @@
 // Manifest for the Midden Tenant — an archaeology-themed re-presentation of the
 // Platform's own discarded work (dead branches, closed-unmerged PRs, deprecated
-// Skills, removed files/dependencies, unapplied proposals). CONTEXT-MAP.md /
-// CONTEXT.md Tenants roster: Midden; layers/midden/CONTEXT.md: Site / Artifact /
+// Skills, removed files/dependencies, unapplied proposals). GLOSSARY-MAP.md /
+// GLOSSARY.md Tenants roster: Midden; layers/midden/GLOSSARY.md: Site / Artifact /
 // Dig season / Condition / the two-gate inclusion test; issue #515 (the Wayfinder
 // map that locked every decision below, via its 12 resolved sub-issues #516-528).
 // Declarative intent only (ADR-0002, ADR-0013).
 //
 // Two Spaces. `trench` is the excavation on display; `stores` holds finds kept
 // off display — fully catalogued, graded and dated, just not narrated by a dig
-// report (layers/midden/CONTEXT.md, "The Stores"). `gallery` remains out of
+// report (layers/midden/GLOSSARY.md, "The Stores"). `gallery` remains out of
 // scope (#522 — deferred until `trench` has accumulated enough graded artifacts
 // to curate real exhibits from); trench → gallery → stores is the whole life of
 // a real institution's material: excavation, exhibition, storage.

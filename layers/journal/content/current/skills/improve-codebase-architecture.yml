@@ -1,7 +1,7 @@
 name: improve-codebase-architecture
 category: general-engineering
 importance: specialist
-installedSha256: d1ac25511a936ff4250a48dbcefda363837d6bb9321b3cba73df99fa37270a75
+installedSha256: 552240a5ab5cec6b67c15dd1ad6e9f6962b1bca6ce870059a8c2713760c20392
 gist: Finds and fixes structural weak spots in the code's design.
 role: >-
   Scans the codebase for deepening opportunities, reports them visually, then

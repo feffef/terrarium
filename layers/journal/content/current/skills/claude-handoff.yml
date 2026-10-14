@@ -1,7 +1,7 @@
 name: claude-handoff
 category: general-engineering
 importance: supporting
-installedSha256: 6738e8b7c7899ea0038fb7a5c859ca1b90c7b1eb40123dcdbe94c51b5b119f12
+installedSha256: 79357a18425d66d4c24048bedf83dceb79d3bba356f38014950f764a7fab4026
 role: >-
   Captures session state so a later session can resume cleanly. Directly
   relevant to scheduled Routine runs, which start cold.

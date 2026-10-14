@@ -25,7 +25,7 @@ route around. Follow this doc's steps directly as instructions instead (issue
 **It composes existing Skills — never restate them.** The interview borrows
 `/grilling` (walk the design tree; explore the codebase instead of asking
 whatever the codebase can answer), and the confirmation summary speaks the
-Tenant's ubiquitous language via `/domain-modeling` (the relevant `CONTEXT.md`).
+Tenant's ubiquitous language via `/domain-modeling` (the relevant `GLOSSARY.md`).
 This Skill adds only the guest loop.
 
 The three labels it moves between — `needs-info`, `ready-for-agent`, and
@@ -122,7 +122,7 @@ not their original ask.
 
 When the idea is clear (or after round 3), post a summary of the requested
 **functionality** in the Tenant's ubiquitous language (`/domain-modeling`,
-`CONTEXT.md`) — what the site will do for a visitor — and ask the guest to
+`GLOSSARY.md`) — what the site will do for a visitor — and ask the guest to
 confirm. **No technical or internal detail**: describe the behaviour, never the
 Collection keys, the manifest, or the routing. Keep the issue `needs-info` until
 they answer. If the idea hit the build-time wall above, this summary is of

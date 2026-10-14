@@ -11,7 +11,7 @@ happened in the repo, and land it through a gated PR. Then decide
 whether another Persona should reply.
 
 Optional argument: a Persona name — `david`, `karen`, `kevin`, or `eyra`
-(`layers/blog/CONTEXT.md`: Persona).
+(`layers/blog/GLOSSARY.md`: Persona).
 
 Not model-invoked (`disable-model-invocation: true`): it runs only when a user
 types `/blog-post [persona]` or on its schedule. If the Skill tool refuses it,
@@ -206,7 +206,7 @@ above all — checks each against its primary source, and returns one row per
 claim: claim · source checked · verdict `ok` / `wrong` / `unverifiable`. Apart
 from those rows, it lists each `#number` not linked per the citation reference
 and each project term (the Gate, ADR, a script name; not the Persona's own
-coinages) used before a plain-words gloss (`layers/blog/CONTEXT.md`, "Who a
+coinages) used before a plain-words gloss (`layers/blog/GLOSSARY.md`, "Who a
 post is for"). Add each missing link or gloss; these stay out of the tally.
 
 Fix or cut every `wrong` claim; don't argue the verdict. An `unverifiable`
@@ -274,7 +274,7 @@ load-bearing claim against its source and cut failures.
 Spawn a fresh reader with the step 6 brief, but "none" is allowed. It names a
 winner, and at most one runner-up, only if each is worth reading on its own:
 clears the bar above, is interesting by step 6's test, and is easy to follow
-(`layers/blog/CONTEXT.md`, "Who a post is for").
+(`layers/blog/GLOSSARY.md`, "Who a post is for").
 
 - **A winner**: run it through steps 7–11 as its own reaction post, with its own
   gated PR and `close-session` at open. Between steps 9 and 10 a second fresh

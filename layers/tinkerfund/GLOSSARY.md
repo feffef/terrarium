@@ -2,7 +2,7 @@
 
 > The Tinkerfund context: its own vocabulary and its reason-to-exist.
 > Platform-wide terms it leans on (Tenant, Space, Collection, …) live in the
-> root `CONTEXT.md`; see `CONTEXT-MAP.md` for the map.
+> root `GLOSSARY.md`; see `GLOSSARY-MAP.md` for the map.
 
 Tinkerfund is a crowdfunding shop where inventors raise money for fun, mostly
 useless inventions. It looks and behaves like a modern, feature-rich

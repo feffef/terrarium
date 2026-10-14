@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // The site (dig-report) entry (`/t/midden/trench/<site>`). Only `trench` has Sites
-// — the `stores` Space has no `pages` Documents at all (CONTEXT.md, "The Stores"),
+// — the `stores` Space has no `pages` Documents at all (GLOSSARY.md, "The Stores"),
 // so this route resolves but never finds one there. Post-MVP simplification
 // (owner-directed, this branch): the scroll-synced stratigraphy gauge is gone —
 // the curator's prose with inline `::midden-artifact` embeds (each an open, flat

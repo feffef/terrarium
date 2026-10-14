@@ -8,7 +8,7 @@ disable-model-invocation: true
 
 Add **one Campaign** to Tinkerfund's `prod` Space: a fun, mostly useless invention
 raising money, with everything that makes it look real. Vocabulary is the
-Tenant's (`layers/tinkerfund/CONTEXT.md`): Campaign, Inventor, Backer, Pledge,
+Tenant's (`layers/tinkerfund/GLOSSARY.md`): Campaign, Inventor, Backer, Pledge,
 Reward, Add-on, Stretch goal, Promotion. The shop never says "product" or
 "order" — not in copy, captions, comments or commit messages.
 

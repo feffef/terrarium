@@ -1,7 +1,7 @@
 name: teach
 category: general-engineering
 importance: peripheral
-installedSha256: a32df9dcdfc0c4fdc1c98e1ed3940c5f56b84c1aa90ff60346f32b8b53915b43
+installedSha256: 550482c2d674b085c9043b87bfdc14a8f2ec453c736119e7fcbb1e9332bffeba
 role: >-
   Walks the user through a new concept within the workspace. A general-purpose
   tutoring aid with no repo-specific role; rarely used in this build.

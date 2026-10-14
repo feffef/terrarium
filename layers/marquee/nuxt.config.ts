@@ -1,4 +1,4 @@
-// The Marquee Tenant's Nuxt layer (CONTEXT.md: "a Tenant is implemented as a
+// The Marquee Tenant's Nuxt layer (GLOSSARY.md: "a Tenant is implemented as a
 // Nuxt layer"). Its fit-out — a small movie-blog theme plus a landing and a
 // post page — overrides the Platform's generic catch-all renderer for
 // `/t/marquee/*`.

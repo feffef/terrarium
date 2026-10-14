@@ -2,7 +2,7 @@
 // The trench face: a full-bleed section drawing under the Midden's masthead.
 //
 // Deliberately carries NO data — it is atmosphere, restoring the physicality the
-// post-MVP simplification stripped when the landing went to pure type (CONTEXT.md's
+// post-MVP simplification stripped when the landing went to pure type (GLOSSARY.md's
 // note at the foot). Because it states no fact, it is `aria-hidden`: there is
 // nothing here a screen reader would be missing.
 //
