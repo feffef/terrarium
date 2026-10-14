@@ -81,6 +81,8 @@ rulesGlobal:
   - .claude/rules/adr-0017.md
 rulesLoadedBySubagents:
   - .claude/rules/tenant-layers.md
+docsReadBySubagents:
+  - docs/agents/tenant-layers.md
 ruleVerdicts:
   - path: .claude/rules/adr-0004.md
     reason: Gate before pushing; I pushed nothing, so the summary was enough and I did not open the ADR
