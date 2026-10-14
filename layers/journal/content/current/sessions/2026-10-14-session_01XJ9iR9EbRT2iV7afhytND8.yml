@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01XJ9iR9EbRT2iV7afhytND8
 startedAt: 2026-10-14T12:37:06Z
-endedAt: 2026-10-14T13:27:40Z
+endedAt: 2026-10-14T13:43:40Z
 kind: interactive
 goal: "Early run of the issue #1778 checks on PR #1775's path-scoped rules and Bash rules hint"
 status: completed
 outcome: "Draft report, now with a misses section, given to the owner; not posted on #1778, no failure issues filed yet"
-summary: "The owner asked (human-instructed) to run the #1778 checks about 20 minutes before the issue's 13:00Z time gate, accounting for recent ADR and rule-summary changes, using an Explore agent for a log overview and a second agent for transcripts. I asked three questions first; the owner chose a draft-to-owner report (no posting), an extra post-#1909 (ADR-0030 rewrite) cohort row, and agent-picked transcript sessions. Checks 1, 2c, 4, 6, 7c pass; 2a fails for tenant-layers (88%), mdc-when-to-use (95%) and guards (50%) useful-no shares; 7a/7b fail for tenant-layers (doc unread 31% to 65%); check 3 found that the hint, wired only on PostToolUse, skips compound reads whose last step fails; check 5's harness half is not checkable in cloud events. In a follow-up the owner asked (human-instructed) for misses: sessions that needed a rule but never touched its paths. A third agent screened all 62 After sessions: zero confirmed misses for the three #1775 rules, one plausible adr-0004-human-merge miss (a clear-backlog build subagent returned an empty humanOnly list for .claude/rules edits, which I verified in the session log and the workflow script), and a few glob gaps with no session evidence. Posting and filing failure issues wait on the owner."
+summary: "The owner asked (human-instructed) to run the #1778 checks about 20 minutes before the issue's 13:00Z time gate, accounting for recent ADR and rule-summary changes, using an Explore agent for a log overview and a second agent for transcripts. I asked three questions first; the owner chose a draft-to-owner report (no posting), an extra post-#1909 (ADR-0030 rewrite) cohort row, and agent-picked transcript sessions. Checks 1, 2c, 4, 6, 7c pass; 2a fails for tenant-layers (88%), mdc-when-to-use (95%) and guards (50%) useful-no shares; 7a/7b fail for tenant-layers (doc unread 31% to 65%); check 3 found that the hint, wired only on PostToolUse, skips compound reads whose last step fails; check 5's harness half is not checkable in cloud events. In a follow-up the owner asked (human-instructed) for misses: sessions that needed a rule but never touched its paths. A third agent screened all 62 After sessions: zero confirmed misses for the three #1775 rules, one plausible adr-0004-human-merge miss (a clear-backlog build subagent returned an empty humanOnly list for .claude/rules edits, which I verified in the session log and the workflow script), and a few glob gaps with no session evidence. The owner then asked (human-instructed) to investigate the worktree hypothesis in a new session I start myself: I started session_01CJix3AqBpX5KrAENqNp1M7, which reports back here. Posting and filing failure issues wait on the owner."
 prs: []
 docsRead:
   - path: CONTEXT-MAP.md
@@ -53,11 +53,11 @@ frictions:
   - description: Tried ScheduleWakeup as a fallback while waiting on a subagent; the /loop-only guard blocked it
     solution: None needed; subagents self-notify, as the guard says
     severity: nit
-durationSec: 3034
+durationSec: 3994
 models:
-  claude-opus-5-5: 61
+  claude-opus-5-5: 66
 toolCounts:
-  Bash: 16
+  Bash: 17
   ToolSearch: 2
   mcp__github__issue_read: 2
   AskUserQuestion: 1
@@ -68,6 +68,7 @@ toolCounts:
   Read: 1
   Write: 2
   Skill: 2
+  mcp__claude-code-remote__create_session: 1
 rulesLoaded:
   - .claude/rules/adr-0021.md
   - .claude/rules/adr-0029.md
