@@ -1,0 +1,129 @@
+schemaVersion: 1
+session: session_01U6EF8qk4ANQLqE5KXmJgEY
+startedAt: 2026-10-14T19:55:54Z
+endedAt: 2026-10-14T22:49:41Z
+kind: interactive
+goal: Why subagent-only rules show no verdict in session logs
+status: completed
+outcome: "Traced the missing subagent verdicts to a skipped dispatch-subagents step; filed issue #2011"
+summary: "The owner asked how the rules entries in session_01BdQnbV's log came about, then narrowed it to the subagent entries, which show \"unknown: no agent reported\" in the Journal. It happened again in session_01G6m9Sb. I read scripts/session-trace.ts (extractTrace, foldSubagentTrace, stitch) and both logs. The trace data is correct and has no duplicates. The owner briefly suspected duplicates; my own overlapping sed output had looked doubled, and the two ADR-0004 rows are different rules. Verdicts are missing because Agent-tool subagents are asked for them only through a follow-up SendMessage in dispatch-subagents §5, which 01G6m9Sb skipped (no SendMessage call). The 01BdQnbV session never read the Skill: CLAUDE.md triggers it only for git or worktree subagents. 01BdQnbV also ran trace code older than c82a0ac1, so its log lacks docsReadBySubagents. Workflow agents return verdicts in their schema instead. The owner first approved my proposal to move the verdict ask into the dispatch brief, then rejected my reference grep mid-way and asked for an issue instead, as the fix looks more complex. At the owner's request I filed #2011 with the findings and open questions. No code changed."
+prs: []
+docsRead:
+  - path: docs/agents/git-conventions.md
+    reason: never git checkout ref -- path; read only after my first git commands
+    useful: yes
+  - path: docs/agents/pr-workflow.md
+    reason: read for the planned fix PR that was then dropped
+    useful: no
+  - path: docs/agents/github-integration.md
+    reason: MCP for writes; list-open-issues script for the duplicate check
+    useful: yes
+  - path: docs/agents/issue-tracker.md
+    reason: issue conventions; filed unlabelled
+    useful: partly
+  - path: docs/agents/triage-labels.md
+    reason: label set; no label applied
+    useful: partly
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: "§5 holds the SendMessage verdict step: the root cause"
+    useful: yes
+  - path: .agents/skills/log-session/SKILL.md
+    reason: step 3 points to dispatch-subagents §5 and calls unknown verdicts a reminder, not a block
+    useful: yes
+  - path: .agents/skills/code-review/SKILL.md
+    reason: pack Skill that writes its own sub-agent briefs; a fix can't edit it
+    useful: yes
+skillsUsed:
+  - name: close-session
+    reason: closure after filing the issue
+  - name: log-session
+    reason: this log
+frictions:
+  - description: Ran git fetch and git log before reading docs/agents/git-conventions.md, against CLAUDE.md's first-git-command trigger; the hook flagged it.
+    solution: Read git-conventions.md before the first fetch; the hook's reminder came after the call.
+    severity: nit
+  - description: Tried 'git checkout origin/main -- .' plus 'git stash' to read files from main; the classifier blocked it. git-conventions.md forbids it, and it could have overwritten the tree.
+    solution: Use git show or git grep on origin/main to read main's files, as git-conventions.md says.
+    severity: moderate
+  - description: Read session-trace.ts, Skills and logs with cat/sed/grep in Bash instead of the Read tool, against CLAUDE.md; rules may not have loaded.
+    solution: Use Read for files whose content matters; keep Bash for grep and listings.
+    severity: nit
+  - description: Skipped GLOSSARY-MAP.md and GLOSSARY.md at session start, against CLAUDE.md.
+    solution: Read both at session start, even for a question-only session.
+    severity: nit
+  - description: Proposed a fix (moving the verdict ask into the brief) without first grepping docs/adr for the ADRs that bind it, as CLAUDE.md's recommend trigger asks.
+    solution: Run grep -l on the touched paths in docs/adr before recommending; ADR-0029 and ADR-0005 were relevant.
+    severity: minor
+  - description: An overlapping sed range printed each list twice; I first flagged it as a possible duplicate before checking the YAML.
+    solution: Parse the YAML before reading counts or duplicates from shell output.
+    severity: nit
+durationSec: 10427
+models:
+  claude-opus-5-5: 76
+  <synthetic>: 1
+toolCounts:
+  Bash: 27
+  Read: 6
+  ToolSearch: 1
+  mcp__github__issue_write: 1
+  Skill: 2
+  Write: 1
+rulesLoaded:
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0004-human-merge.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Would have set gate and review before the PR; the PR was dropped, so the summary was enough
+    useful: no
+  - path: .claude/rules/adr-0009.md
+    reason: Told me to log via close-session even without a PR; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: Made me check prune-trials.yml for overlap with dispatch-subagents before editing; none found; summary enough
+    useful: partly
+  - path: .claude/rules/adr-0020.md
+    reason: Owner is Trusted; no Public input involved
+    useful: no
+  - path: .claude/rules/adr-0003.md
+    reason: Owner approved the fix, then switched to filing an issue; the issue route fits; summary enough
+    useful: partly
+  - path: .claude/rules/adr-0017.md
+    reason: Put the session header on line one of the issue body; summary enough
+    useful: yes
+  - path: .claude/rules/adr-0005.md
+    reason: Loaded on reading Skills; confirmed workflow scripts are Skill code, background only
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: Explained why Bash reads may not load rules; background for the subagent rule lists; summary enough
+    useful: partly
+  - path: .claude/rules/adr-0022.md
+    reason: Loaded on reading triage docs; no triage sweep, issue left unlabelled
+    useful: no
+  - path: .claude/rules/adr-0015.md
+    reason: Showed code-review is a pack Skill nobody may edit, an open question in the issue; summary enough
+    useful: yes
+  - path: .claude/rules/adr-0021.md
+    reason: Loaded while reading a log; no glossary work here
+    useful: no
+  - path: .claude/rules/adr-0030.md
+    reason: Loaded while reading a log; no ADR edit
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Confirmed CLAUDE.md and Skills aren't Human-only, so the planned fix could self-merge
+    useful: partly
+gitBranch: claude/practical-noether-o6kgrm
+entrypoint: remote
+cliVersion: 2.1.300
+landedBy: Stop
