@@ -5,7 +5,7 @@
 // `day` decides which phase the needle rides, and each `::phase-note` shows only
 // in its own phase, so turning the dial swaps the prose. The six shared seasons
 // stay on the rim as informational context, not the content axis. Auto-imported
-// layer-wide (docs/agents/tenant-layers.md §1).
+// layer-wide (.claude/rules/tenant-layers.md).
 //
 // ── The contract ─────────────────────────────────────────────────────────────
 // The specimen page owns the state and provides it once in its setup:

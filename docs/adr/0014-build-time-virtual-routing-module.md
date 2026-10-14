@@ -59,4 +59,4 @@ drift.
 - `vitest.config.ts`, `tsconfig.node.json`: the `#routing` aliases for tools
   outside Nuxt.
 - `shared/expand.ts`: the expansion and `entryRoutesFrom`.
-- `docs/agents/tenant-layers.md`: refreshing `.nuxt/` after adding a Tenant.
+- `.claude/rules/tenant-layers.md`: refreshing `.nuxt/` after adding a Tenant.

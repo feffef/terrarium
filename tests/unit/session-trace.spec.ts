@@ -692,11 +692,11 @@ describe('docsReadViaShell (issues #1074, #1545)', () => {
     })
 
     it('treats every other file in the checkout as a sink, so a code line a doc quotes never credits the doc', () => {
-      // `export default defineNuxtConfig({` is quoted in docs/agents/tenant-layers.md;
+      // StatTile.vue's token lines are quoted in docs/agents/tenant-layers.md;
       // a Skill Inventory entry's `name:` line matches its SKILL.md frontmatter.
       const repoRoot = join(import.meta.dirname, '../..')
       const idx = loadDocLineIndex(repoRoot)
-      for (const file of ['nuxt.config.ts', 'layers/journal/content/current/skills/resolving-merge-conflicts.yml']) {
+      for (const file of ['layers/journal/app/components/journal/StatTile.vue', 'layers/journal/content/current/skills/resolving-merge-conflicts.yml']) {
         const trace = extractTrace(withCwd(bash(`cat ${file}`, readFileSync(join(repoRoot, file), 'utf8'))), process.env, idx)
         expect(trace.docsReadViaShell, file).toEqual([])
       }
