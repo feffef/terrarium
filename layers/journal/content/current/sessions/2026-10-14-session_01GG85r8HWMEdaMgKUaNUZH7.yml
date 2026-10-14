@@ -1,0 +1,220 @@
+schemaVersion: 1
+session: session_01GG85r8HWMEdaMgKUaNUZH7
+startedAt: 2026-10-14T23:07:15Z
+endedAt: 2026-10-14T23:29:16Z
+kind: interactive
+goal: Build the Glass Box Tenant overnight from its spec and stories
+status: in-review
+outcome: First story (Tenant skeleton) in review as a PR into the Glass Box integration branch
+summary: "Human-instructed: the owner asked for Glass Box (spec #1985 and its sub-issue stories) to be built unattended overnight, by orchestrating one implementer subagent per story. They first said to land each story on main, then mid-session changed that: every story PR targets the integration branch claude/affectionate-lamport-fu16x5, Human-only stories merge there too, a draft PR from that branch to main is left for the owner, and diagrams are allowed once the Mermaid font story is in. Agent-initiated: the brief template, review briefs and merge mechanics. The skeleton story (#1988) was built by a worktree subagent, reviewed on two axes (Standards and Spec, no hard findings), fixed and opened as PR 2013 into the integration branch. The remaining stories follow the blocked-by graph."
+prs:
+  - "2013"
+docsRead:
+  - path: GLOSSARY-MAP.md
+    reason: "session start: glossary map"
+    useful: yes
+  - path: GLOSSARY.md
+    reason: "session start: Tenant, Space, Collection terms"
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: before first fetch and push
+    useful: partly
+  - path: docs/agents/github-integration.md
+    reason: MCP vs gh in the cloud; sub-issue and dependency reads
+    useful: yes
+  - path: docs/agents/pr-workflow.md
+    reason: review before push, verdict comment, merge-pr.ts
+    useful: yes
+  - path: docs/agents/verifying-ui-changes.md
+    reason: preview.ts shot for the implementers' screenshots
+    useful: yes
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: user asked; who merges and the Human-only list
+    useful: yes
+  - path: docs/adr/0016-tenant-root-layer-routes.md
+    reason: user asked; root redirect page
+    useful: yes
+  - path: docs/adr/0018-tenant-layers-under-layers-directory.md
+    reason: user asked; new layer folder
+    useful: yes
+  - path: docs/adr/0021-multi-context-domain-docs.md
+    reason: user asked; Tenant glossary
+    useful: yes
+  - path: docs/adr/0024-build-time-mermaid-prerender.md
+    reason: user asked; Mermaid font story
+    useful: partly
+  - path: docs/adr/0025-cross-tenant-catalog-and-collection-kinds.md
+    reason: user asked; no kind for soft launch
+    useful: yes
+  - path: docs/adr/0028-navigation-reads-server-payloads.md
+    reason: user asked; sidebar reads titles and paths only
+    useful: yes
+  - path: .agents/skills/implement/SKILL.md
+    reason: what each implementer follows; tdd plus typecheck
+    useful: yes
+  - path: .agents/skills/implement-spec/SKILL.md
+    reason: integration-branch pattern; the user later chose it
+    useful: partly
+  - path: .agents/skills/code-review/SKILL.md
+    reason: two-axis review steps I run per story
+    useful: yes
+  - path: docs/agents/domain.md
+    reason: (no reason given)
+  - path: layers/marquee/tenant.config.ts
+    reason: (no reason given)
+  - path: layers/marquee/nuxt.config.ts
+    reason: (no reason given)
+  - path: layers/marquee/app/pages/t/marquee/index.vue
+    reason: (no reason given)
+  - path: layers/marquee/app/pages/t/marquee/[space]/index.vue
+    reason: (no reason given)
+  - path: layers/marquee/app/pages/t/marquee/[space]/[...slug].vue
+    reason: (no reason given)
+  - path: layers/marquee/tests/e2e/marquee.spec.ts
+    reason: (no reason given)
+  - path: docs/agents/tenant-layers.md
+    reason: (no reason given)
+  - path: layers/marquee/GLOSSARY.md
+    reason: (no reason given)
+  - path: tests/support/mermaid-pages.ts
+    reason: (read before editing)
+  - path: docs/agents/mdc-when-to-use.md
+    reason: (no reason given)
+skillsUsed:
+  - name: dispatch-subagents
+    reason: worktree implementers, hand back unpushed, orchestrator reviews
+  - name: code-review
+    reason: two-axis review of each story branch
+  - name: close-session
+    reason: log at PR open
+  - name: log-session
+    reason: (no reason given)
+  - name: tdd
+    reason: (no reason given)
+frictions:
+  - description: Read several Skill and rule files with cat in Bash instead of the Read tool, against CLAUDE.md's Read-tool rule
+    solution: Use Read for instruction files; shell only for listings
+    severity: nit
+  - description: dispatch-subagents says impl agents can't run code-review (no nested subagents), but the user brief said each implementer runs it; orchestrator ran it instead
+    solution: Have implement/SKILL.md or dispatch-subagents name this split explicitly
+    severity: nit
+  - description: First plan landed stories on main per the kickoff; the user then redirected to an integration branch, a costless change only because no PR had opened yet
+    solution: For a multi-story spec with Human-only stories, propose an integration branch up front
+    severity: minor
+durationSec: 1321
+models:
+  claude-opus-5-5: 102
+toolCounts:
+  Bash: 25
+  Read: 14
+  Skill: 3
+  ToolSearch: 2
+  mcp__github__issue_read: 1
+  Write: 4
+  Agent: 3
+  AskUserQuestion: 1
+  Edit: 1
+  SendMessage: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+  mcp__github__add_issue_comment: 1
+filesEdited:
+  - tests/unit/mermaid-routes.spec.ts
+  - tests/support/mermaid-pages.ts
+  - layers/glassbox/tests/unit/subjects.spec.ts
+  - layers/glassbox/app/utils/subjects.ts
+  - layers/glassbox/nuxt.config.ts
+  - layers/glassbox/tenant.config.ts
+  - layers/glassbox/content/guide/pages/index.md
+  - layers/glassbox/app/pages/t/glassbox/index.vue
+  - layers/glassbox/app/pages/t/glassbox/[space]/index.vue
+  - layers/glassbox/app/pages/t/glassbox/[space]/[...slug].vue
+  - layers/glassbox/tests/e2e/glassbox.spec.ts
+  - layers/glassbox/GLOSSARY.md
+  - GLOSSARY.md
+  - GLOSSARY-MAP.md
+  - layers/glassbox/content/guide/pages/nuxt-vue/01.layers.md
+  - layers/glassbox/content/guide/pages/claude-code/02.rules.md
+  - layers/glassbox/content/guide/pages/claude-code/01.claude-md.md
+  - layers/glassbox/content/guide/pages/walkthroughs/opening-a-page.md
+rulesLoaded:
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0005.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0018.md
+  - .claude/rules/adr-0028.md
+  - .claude/rules/adr-0016.md
+rulesLoadedBySubagents:
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/adr-0002.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/adr-0001.md
+  - .claude/rules/adr-0018.md
+  - .claude/rules/adr-0028.md
+  - .claude/rules/adr-0006.md
+  - .claude/rules/adr-0016.md
+  - .claude/rules/adr-0013.md
+  - .claude/rules/glassbox-content.md
+  - .claude/rules/mermaid-lanes.md
+docsReadBySubagents:
+  - docs/agents/domain.md
+  - docs/agents/tenant-layers.md
+  - layers/marquee/GLOSSARY.md
+  - docs/agents/mdc-when-to-use.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Set gate and review before push and merge-pr.ts on green; user asked me to read the full ADR
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Made me log at PR open; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: No instruction text was cut or reworded this session
+    useful: no
+  - path: .claude/rules/adr-0020.md
+    reason: All input came from the owner (Trusted); nothing Public to treat as data
+    useful: no
+  - path: .claude/rules/adr-0003.md
+    reason: Confirmed the PR per story and subscribing; the owner approved the new Tenant
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Session header on every PR and comment and the commit trailers; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0021.md
+    reason: Told the skeleton story where the Glass Box terms go; full ADR read on request
+    useful: yes
+  - path: .claude/rules/adr-0029.md
+    reason: Explains why rules load per file; nothing to change here
+    useful: partly
+  - path: .claude/rules/adr-0030.md
+    reason: No ADR edited yet; applies to the Mermaid font story later
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Loaded on reading the ADR list; its paths decide which story PRs merge-pr.ts refuses
+    useful: partly
+  - path: .claude/rules/adr-0005.md
+    reason: Loaded on reading Skill files; relevant to the glassbox writing Skills later
+    useful: partly
+subagents:
+  - type: general-purpose
+    task: "Implement #1988 Tenant skeleton"
+  - type: general-purpose
+    task: "Standards review #1988"
+  - type: general-purpose
+    task: "Spec review #1988"
+gitBranch: claude/affectionate-lamport-fu16x5
+entrypoint: remote
+cliVersion: 2.1.300
+landedBy: Stop
