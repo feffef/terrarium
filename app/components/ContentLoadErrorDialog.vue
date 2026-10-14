@@ -11,8 +11,8 @@
 // keeps it mounted rather than v-if'ing it, so the dialog isn't torn down and
 // re-created as `status` transitions.
 //
-// One failure class never gets this far: a failed dynamic import of a build
-// chunk auto-recovers by reloading instead (ADR-0019).
+// Two failures never get this far the first time: a failed build chunk or
+// Content database download reloads the page instead (ADR-0019).
 // Every Space page already mounts this component, so wiring the recovery here
 // is what keeps it a single mechanism rather than one per page.
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'

@@ -11,10 +11,10 @@
 // skips the client DB (ADR-0028), so these tests fail that payload too, then a
 // dump load, and assert the dialog shows and a reload restores the content.
 //
-// One funnel is the exception: a failed dynamic *import* of a build chunk
-// reloads itself (ADR-0019), so its tests assert the
-// content comes back with no click — and that a failure surviving that one
-// attempt settles on the dialog instead of reloading again.
+// A failed download (a build chunk or the dump itself) is the exception: it
+// reloads itself once (ADR-0019), so its tests assert the content comes back
+// with no click — and that a failure surviving that one attempt settles on the
+// dialog instead of reloading again.
 import { describe, expect, it } from 'vitest'
 import { $fetch, createPage, url } from '@nuxt/test-utils/e2e'
 import type { Page, Route } from 'playwright-core'
@@ -56,6 +56,19 @@ async function failContentChunkImport(page: Page): Promise<void> {
     } catch {
       // disposed mid-flight: nothing to answer
     }
+  })
+}
+
+/**
+ * Stand in the state `reloadNuxtApp` leaves behind for a path it has just
+ * reloaded (its sessionStorage guard, still inside its TTL — see
+ * nuxt/dist/app/composables/chunk.js). This is how a *persistent* failure is
+ * reproduced deterministically: a real second pass would need the reloaded
+ * page to re-query the client DB, which a hydrated page never does.
+ */
+async function plantDavidReloadGuard(page: Page): Promise<void> {
+  await page.addInitScript(() => {
+    sessionStorage.setItem('nuxt:reload', JSON.stringify({ path: '/t/blog/david', expires: Date.now() + 10_000 }))
   })
 }
 
@@ -145,15 +158,32 @@ describe('blog Tenant', async () => {
   // guarantee is: the failure raises the ContentLoadErrorDialog (never a
   // silent empty), and a full reload recovers the content (the reloaded page
   // renders the About from the SERVER DB during SSR, never touching the
-  // poisoned client WASM DB). Two funnels, same surface + same recovery.
+  // poisoned client WASM DB).
 
-  it('shows the error dialog and recovers on reload after a dump-fetch blip', async () => {
+  it('auto-recovers from a dump-fetch blip on a client navigation', async () => {
     const page = await createPage()
     try {
       // Fail every request for David's pages dump — a client navigation whose
-      // lazy dump fetch never lands. Stock @nuxt/content caches the rejected
-      // load and the collection can't load again for the life of the page.
+      // lazy dump fetch never lands. A reload fixes that, so the app does it.
       await failDavidDump(page, (route) => route.abort('failed'))
+
+      await page.goto(url('/t/blog/karen'), { waitUntil: 'hydration' })
+      await page.locator('.net-cards a', { hasText: 'David' }).click()
+
+      await expectDavidAbout(page, 20000)
+      expect(await page.locator('dialog.cle-dialog[open]').count()).toBe(0)
+    } finally {
+      await page.close()
+    }
+  })
+
+  it('shows the error dialog and recovers on reload when the dump keeps failing', async () => {
+    const page = await createPage()
+    try {
+      // Stock @nuxt/content caches the rejected load, so the collection can't
+      // load again for the life of the page; the one automatic reload is spent.
+      await failDavidDump(page, (route) => route.abort('failed'))
+      await plantDavidReloadGuard(page)
 
       // Land on a sibling Persona (SSR), then follow the in-page link to David
       // — a client-side navigation, which with its payload failed falls back
@@ -210,8 +240,8 @@ describe('blog Tenant', async () => {
   // The chunk-load funnel is the one the production capture actually recorded
   // (issue #236, 2026-07-19): a 500 on an existing, content-hashed `_nuxt/*.js`
   // chunk that @nuxt/content lazily imports on its first client-side query.
-  // Unlike the dump funnels above it is *reload-fixable*, so it auto-recovers
-  // via `reloadNuxtApp` instead of parking the user on the modal.
+  // Like a dump-fetch blip it is *reload-fixable*, so it auto-recovers via
+  // `reloadNuxtApp` instead of parking the user on the modal.
 
   it('auto-recovers from a failed content-chunk import on a client navigation', async () => {
     const page = await createPage()
@@ -235,18 +265,7 @@ describe('blog Tenant', async () => {
     const page = await createPage()
     try {
       await failContentChunkImport(page)
-      // The exact state `reloadNuxtApp` leaves behind for a path it has just
-      // reloaded (its sessionStorage guard, still inside its TTL — see
-      // nuxt/dist/app/composables/chunk.js). Standing in it is how a
-      // *persistent* failure is reproduced deterministically: a real second
-      // pass would need the reloaded page to re-query the client DB, which a
-      // hydrated page never does.
-      await page.addInitScript(() => {
-        sessionStorage.setItem(
-          'nuxt:reload',
-          JSON.stringify({ path: '/t/blog/david', expires: Date.now() + 10_000 }),
-        )
-      })
+      await plantDavidReloadGuard(page)
 
       await page.goto(url('/t/blog/karen'), { waitUntil: 'hydration' })
       await plantReloadSentinel(page)

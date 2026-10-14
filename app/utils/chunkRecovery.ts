@@ -1,6 +1,6 @@
-// Deciding whether a failed client-side content load is the *chunk-load* class —
-// a failed dynamic import of a build chunk, the one failure a page reload
-// actually fixes (issue #236's 2026-07-19 production capture; ADR-0019).
+// Deciding whether a failed client-side content load is one a page reload
+// fixes: a failed dynamic import of a build chunk (issue #236) or a failed
+// download of the Content database dump (issue #1902; ADR-0019).
 //
 // Framework-free on purpose: the decision is pure so it can be unit-tested
 // without a browser, while the Nuxt-facing half (the `app:chunkError` feed and
@@ -21,16 +21,22 @@ export function recordChunkLoadError(error: unknown): void {
 const DYNAMIC_IMPORT_FAILURE
   = /failed to fetch dynamically imported module|error loading dynamically imported module|importing a module script failed/i
 
+// ofetch's FetchError message for @nuxt/content's dump download: `[GET] "<url>": `
+// then the status. Matched by message because h3's createError, which
+// useAsyncData applies, copies the message but drops the FetchError object. A
+// corrupt dump fails later, in decompression, with a different message.
+const DUMP_DOWNLOAD_FAILURE = /^\[GET\] "[^"]*\/__nuxt_content\/[^/"]+\/sql_dump\.txt[?"]/
+
 // useAsyncData hands the page a `createError()` wrapper whose `cause` is the
 // original import failure, and h3 can nest one wrapper deeper still.
 const MAX_CAUSE_DEPTH = 5
 
-export function isChunkLoadError(error: unknown): boolean {
+export function isReloadableLoadError(error: unknown): boolean {
   let current: unknown = error
   for (let depth = 0; current && depth <= MAX_CAUSE_DEPTH; depth++) {
     if (typeof current === 'object' && chunkLoadErrors.has(current as object)) return true
     const message = (current as { message?: unknown }).message
-    if (typeof message === 'string' && DYNAMIC_IMPORT_FAILURE.test(message)) return true
+    if (typeof message === 'string' && (DYNAMIC_IMPORT_FAILURE.test(message) || DUMP_DOWNLOAD_FAILURE.test(message))) return true
     current = (current as { cause?: unknown }).cause
   }
   return false
@@ -54,4 +60,9 @@ export function reloadAlreadyAttempted(rawGuard: string | null, path: string, no
   } catch {
     return false
   }
+}
+
+/** Whether to reload `path` now rather than show the error dialog. */
+export function shouldAutoReload(error: unknown, rawGuard: string | null, path: string, now: number): boolean {
+  return isReloadableLoadError(error) && !reloadAlreadyAttempted(rawGuard, path, now)
 }
