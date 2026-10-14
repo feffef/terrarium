@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { invokedSkill, rulesForSkill, skillRulesHint, type RuleFile } from '../../scripts/skill-rules-hint.ts'
+import { invokedSkill, loadRules, rulesForSkill, skillRulesHint, type RuleFile } from '../../scripts/skill-rules-hint.ts'
 
 const rule = (file: string, paths: string[], body: string): RuleFile => ({
   file,
@@ -36,5 +36,14 @@ describe('rulesForSkill / skillRulesHint', () => {
     expect(hint).toContain('# ADR-0012: Pingbacks')
     expect(hint).not.toContain('adr: x')
     expect(skillRulesHint('digest', RULES)).toBeNull()
+  })
+})
+
+describe('the repo rules', () => {
+  it('load ADR-0022 for the triage Skills and ADR-0023 for the guest Skills', () => {
+    const rules = loadRules()
+    const files = (skill: string) => rulesForSkill(skill, rules).map((r) => r.file)
+    for (const skill of ['auto-triage', 'triage', 'clear-backlog']) expect(files(skill)).toContain('adr-0022.md')
+    for (const skill of ['guest-intake', 'guest-build']) expect(files(skill)).toContain('adr-0023.md')
   })
 })
