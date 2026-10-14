@@ -5,9 +5,6 @@ surface: safe
 status: open
 ref: "PR #1821 (adds the rule)"
 occurrences:
-  - session: session_01QT1rB2ACjMQzt5xGT1ikLW
-    date: "2026-09-29"
-    severity: moderate
   - session: session_01P7a2zqJxuariDNfYqWQRHs
     date: "2026-10-03"
     severity: moderate

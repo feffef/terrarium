@@ -4,9 +4,6 @@ cause: >-
 surface: guard-or-hook
 status: open
 occurrences:
-  - session: session_01SYbiQQHsX8HmeXJTtxAPwp
-    date: "2026-09-29"
-    severity: nit
   - session: session_01KyKW5E8oFPkSu3a4mCpT25
     date: "2026-10-05"
     severity: nit
@@ -27,4 +24,7 @@ occurrences:
     severity: nit
   - session: session_01Dz52W6wWZWUgKwPtdxabzJ
     date: "2026-10-12"
+    severity: nit
+  - session: session_01MZBQ3PanPQVwCutYuAmbUp
+    date: "2026-10-13"
     severity: nit

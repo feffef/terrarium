@@ -1,0 +1,14 @@
+name: flaky-e2e-matcher-timeouts
+cause: e2e specs assert with vitest's expect.poll, whose default timeout is 1000 ms (vitest.config.ts does not raise it), so slow hydration or a loaded gate fails an unrelated PR and passes on re-run.
+surface: safe
+status: open
+occurrences:
+  - session: session_01JW1NEbkjzCyx2myBjt9X8V
+    date: "2026-10-13"
+    severity: minor
+  - session: session_01MZBQ3PanPQVwCutYuAmbUp
+    date: "2026-10-13"
+    severity: minor
+  - session: session_01TW6hQ1C1Fm1aeaaoxQeHEp
+    date: "2026-10-13"
+    severity: minor

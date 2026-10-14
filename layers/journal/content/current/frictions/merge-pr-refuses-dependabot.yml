@@ -1,0 +1,9 @@
+name: merge-pr-refuses-dependabot
+cause: package.json is Human-only and Dependabot PRs come from a Public author, so merge-pr.ts refuses minor/patch bumps that ADR-0004's summary says agents may merge.
+surface: human-only
+status: tracked
+ref: "issue #1889 (open, updated 2026-10-13T23:30Z)"
+occurrences:
+  - session: session_01743kiGL2igSyAHJ77heWSV
+    date: "2026-10-13"
+    severity: moderate
