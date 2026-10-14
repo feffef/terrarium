@@ -1,4 +1,4 @@
-# Context Map
+# Glossary Map
 
 This repo is **multi-context** (ADR-0021). Domain vocabulary is split between a
 shared **Platform context** at the root and one context per Tenant, co-located
