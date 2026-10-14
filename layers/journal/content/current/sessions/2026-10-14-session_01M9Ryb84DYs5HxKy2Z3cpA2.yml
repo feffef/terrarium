@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01M9Ryb84DYs5HxKy2Z3cpA2
 startedAt: 2026-10-14T04:01:02Z
-endedAt: 2026-10-14T04:21:16Z
+endedAt: 2026-10-14T04:22:12Z
 kind: autonomous
 goal: Scheduled audit of the repo's docs (research family)
-status: in-review
-outcome: Doc fixes in PR 1921 (self-merge on green) and an ADR-touching escalation in PR 1922
-summary: "Scheduled audit-docs run (no human prompt), concision family 2 (docs/research). Four reviewer agents (freshness, single-home, concision, coherence) produced about 40 findings; three checkers re-derived them, with no WRONG verdicts and many CONFIRMED-BUT because reviewers quoted across the files' line wraps. Applied them in one commit, ran gate:scoped (green) and code-review, fixed two review nits, and opened PR 1921. Skipped as already settled or tracked: the ADR-0004 package.json sentence and the ADR-0020 Dependabot wording (issue 1889). Escalated in PR 1922 (human merge, edits ADR-0024): moving the mermaid lane-grouping rule from the research note into tenant-layers.md section 4 with an ADR-0024 repoint. Its gate:scoped could not run in that worktree; only validate:content ran. All work was agent-initiated by the schedule."
+status: completed
+outcome: Doc fixes merged in PR 1921; ADR-touching escalation PR 1922 awaits a human merge
+summary: "Scheduled audit-docs run (no human prompt), concision family 2 (docs/research). Four reviewer agents (freshness, single-home, concision, coherence) produced about 40 findings; three checkers re-derived them, with no WRONG verdicts and many CONFIRMED-BUT because reviewers quoted across the files' line wraps. Applied them in one commit, ran gate:scoped (green) and code-review, fixed two review nits, and opened PR 1921, which merged on green. Skipped as already settled or tracked: the ADR-0004 package.json sentence and the ADR-0020 Dependabot wording (issue 1889). Escalated in PR 1922 (human merge, edits ADR-0024): moving the mermaid lane-grouping rule from the research note into tenant-layers.md section 4 with an ADR-0024 repoint. Its gate:scoped could not run in that worktree; only validate:content ran. All work was agent-initiated by the schedule."
 prs:
   - "1921"
   - "1922"
@@ -217,12 +217,12 @@ frictions:
   - description: Code-review's Spec agent flagged edits as scope creep that checkers had already confirmed; I had to re-verify each against checker verdicts.
     solution: Pass checker verdicts to the review brief so confirmed fixes are not re-litigated.
     severity: nit
-durationSec: 1214
+durationSec: 1270
 models:
-  claude-sonnet-5-5: 114
+  claude-sonnet-5-5: 125
 toolCounts:
   Read: 17
-  Bash: 25
+  Bash: 27
   Grep: 2
   Agent: 9
   Edit: 9
@@ -230,7 +230,9 @@ toolCounts:
   ToolSearch: 1
   mcp__github__create_pull_request: 2
   mcp__github__subscribe_pr_activity: 2
-  mcp__github__pull_request_read: 1
+  mcp__github__pull_request_read: 2
+  ReadNotifications: 2
+  mcp__github__add_issue_comment: 1
 filesEdited:
   - tests/README.md
   - docs/agents/verifying-ui-changes.md
