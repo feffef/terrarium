@@ -46,15 +46,35 @@
 // `checkAngleBrackets` catches it here instead — the registry that already
 // enumerates every GitHub-write tool is the natural extension point.
 //
+// Third entry point (issue #1900): a Bash call that sends a GitHub body through
+// `gh api` (a `body` field, or the `body` of an `--input` file) or `curl` to
+// `api.github.com` (a data flag's JSON `body`) is judged exactly like an MCP
+// body (`checkBashGithubWrite`). A file it can read is checked; a body it cannot
+// read (stdin, a shell variable, a command substitution) is denied. Fail-opens,
+// since this reads a command string, not a running shell:
+//   • `gh api` or `curl` run by a script, an alias, `xargs`, or a shell the
+//     command names other than `sh`/`bash`/`zsh`/`dash -c` or `eval`.
+//   • a GraphQL mutation (`gh api graphql -f query=…`), and the `gh issue` /
+//     `gh pr --body` subcommands: out of scope in #1900.
+//   • a `curl` URL built by the shell, combined short flags (`-sd`), and a
+//     file changed between this check and the call.
+//   • lines after a `<<WORD` written inside quotes, up to a `WORD` line:
+//     `shell-reads.ts`, whose words this reads, takes them for a heredoc.
+//   • the `sh` pre-filter forwards only payloads naming `gh … api` or
+//     `api.github.com`.
+//
 // Usage (normally invoked by the PreToolUse hook with the payload on stdin):
 //   tsx scripts/github-provenance-guard.ts
+//   sh scripts/github-provenance-guard.sh     # the Bash hook entry
 import { readFileSync } from 'node:fs'
+import { isAbsolute, resolve } from 'node:path'
 import { sessionUrl } from '../shared/session-url.ts'
 import { SESSION_TRAILER } from './git-helpers.ts'
-import { buildDenyOutput, denyUninspectable, readHookPayload, runIfMain, type DenyOutput } from './guard-io.ts'
+import { buildDenyOutput, denyUninspectable, prop, readHookPayload, runIfMain, type DenyOutput } from './guard-io.ts'
 import { provenanceFooter } from './provenance-footer.ts'
 import { provenanceHeader, readProvenanceHeader, sessionIdsIn } from './provenance-header.ts'
 import { resolveGroundTruthFromTranscript } from './session-trace.ts'
+import { shellSegments, type Token } from './shell-reads.ts'
 
 const LABEL = 'provenance guard'
 const REF = 'ADR-0017'
@@ -137,11 +157,13 @@ export const GITHUB_PROVENANCE_TOOLS: readonly ProvenanceTool[] = [
  *  `found` is present only on a `mismatch`. `expected` is absent only when
  *  ground truth could not be resolved. */
 export interface ProvenanceFinding {
-  kind: 'missing' | 'mismatch' | 'malformed' | 'unverified'
+  kind: 'missing' | 'mismatch' | 'malformed' | 'unverified' | 'uninspectable'
   tool: string
   surface: ProvenanceSurface
   found?: string
   expected?: string
+  /** Why a Bash write's body could not be read; only on `uninspectable`. */
+  detail?: string
 }
 
 /** Adjudicate `text` against `truth` once the designated slot has been read.
@@ -232,7 +254,25 @@ function prescribedMarker(surface: ProvenanceSurface, url: string): string {
  *  the real session id, and the exact marker to paste, so it works for an agent
  *  that has read no doc at all — which every recorded recurrence was. */
 export function formatGuardMessage(f: ProvenanceFinding): string {
+  const message = formatFinding(f)
+  return f.tool.startsWith('Bash') ? `${message}\n\n${USE_MCP}` : message
+}
+
+const USE_MCP =
+  'Write GitHub bodies through the GitHub MCP tools (`mcp__github__add_issue_comment`, ' +
+  '`mcp__github__issue_write`, `mcp__github__create_pull_request`, …), not `gh api` or `curl` ' +
+  '(docs/agents/github-integration.md).'
+
+function formatFinding(f: ProvenanceFinding): string {
   const head = `Blocked by the ADR-0017 provenance guard: \`${f.tool}\``
+
+  if (f.kind === 'uninspectable') {
+    const header = f.expected ? `\n\n${prescribedMarker(f.surface, sessionUrl(f.expected))}` : ''
+    return (
+      `${head} sends a GitHub body this guard cannot read (${f.detail}), so its provenance cannot ` +
+      `be checked. The guard fails CLOSED (ADR-0017).${header}`
+    )
+  }
 
   if (f.kind === 'unverified') {
     return (
@@ -358,6 +398,124 @@ export function formatAngleBracketMessage(f: AngleBracketFinding): string {
   )
 }
 
+// --- Bash `gh api` and `curl` writes (issue #1900) ---------------------------
+
+type BashBody = { text: string } | { uninspectable: string }
+
+/** `cwd` is `undefined` once a `cd` the guard cannot follow has run, so a
+ *  relative path is unknown. */
+function fileBody(path: Pick<Token, 'text' | 'dynamic'>, cwd: string | undefined): BashBody {
+  if (path.dynamic) return { uninspectable: 'its file path is built by the shell' }
+  if (path.text === '-') return { uninspectable: 'it is read from standard input' }
+  if (cwd === undefined && !isAbsolute(path.text)) return { uninspectable: `\`${path.text}\` is relative to a directory the guard cannot follow` }
+  try {
+    return { text: readFileSync(resolve(cwd ?? '/', path.text), 'utf8') }
+  } catch {
+    return { uninspectable: `\`${path.text}\` could not be read` }
+  }
+}
+
+function jsonBody(raw: BashBody): BashBody | null {
+  if ('uninspectable' in raw) return raw
+  let parsed: unknown
+  try {
+    parsed = JSON.parse(raw.text)
+  } catch {
+    return { uninspectable: 'the request data is not JSON' }
+  }
+  const body = prop(parsed, 'body')
+  if (body === undefined) return null
+  return typeof body === 'string' ? { text: body } : { uninspectable: 'its `body` is not a string' }
+}
+
+const DYNAMIC = { uninspectable: 'the shell builds it from a variable or command' }
+
+/** The bodies one `gh api` call sends: every `body` field (`-f`, `-F`,
+ *  `--raw-field`, `--field`, in any of their spellings) and the `body` of an
+ *  `--input` file. Only `-F`/`--field` read `@path`, as in gh itself. */
+function ghApiBodies(args: Token[], cwd: string | undefined): BashBody[] {
+  const bodies: BashBody[] = []
+  for (let j = 0; j < args.length; j++) {
+    const a = args[j]!.text
+    const field = /^(?:(-[fF])|(--(?:raw-)?field)(?:=|$))(.*)$/s.exec(a)
+    const input = /^--input(?:=(.*))?$/s.exec(a)
+    if (field) {
+      const attached = field[3] !== '' || a.includes('=')
+      const value = attached ? { text: field[3]!, dynamic: args[j]!.dynamic } : args[++j]
+      if (!value) continue
+      const eq = value.text.indexOf('=')
+      const key = eq < 0 ? value.text : value.text.slice(0, eq)
+      const keyUnknown = value.dynamic && /[$`]/.test(key)
+      if (key !== 'body' && !keyUnknown) continue
+      if (value.dynamic) {
+        bodies.push(DYNAMIC)
+        continue
+      }
+      const text = value.text.slice(eq + 1)
+      const typed = field[1] === '-F' || field[2] === '--field'
+      bodies.push(typed && text.startsWith('@') ? fileBody({ text: text.slice(1), dynamic: false }, cwd) : { text })
+    } else if (input) {
+      const path = input[1] !== undefined ? { text: input[1], dynamic: args[j]!.dynamic } : args[++j]
+      const body = path && jsonBody(fileBody(path, cwd))
+      if (body) bodies.push(body)
+    }
+  }
+  return bodies
+}
+
+function curlBodies(args: Token[], cwd: string | undefined): BashBody[] {
+  if (!args.some((w) => w.text.includes('api.github.com'))) return []
+  const bodies: BashBody[] = []
+  for (let j = 0; j < args.length; j++) {
+    const a = args[j]!.text
+    const flag = /^(?:-d|--json|--data(?:-raw|-binary|-ascii|-urlencode)?)(?==|$)|^-d(?=.)/.exec(a)
+    if (!flag) continue
+    const rest = a.slice(flag[0].length).replace(/^=/, '')
+    const attached = rest !== '' || a.includes('=')
+    const value = attached ? { text: rest, dynamic: args[j]!.dynamic } : args[++j]
+    if (!value) continue
+    const fromFile = value.text.startsWith('@') && flag[0] !== '--data-raw'
+    const body = value.dynamic
+      ? DYNAMIC
+      : jsonBody(fromFile ? fileBody({ text: value.text.slice(1), dynamic: false }, cwd) : { text: value.text })
+    if (body) bodies.push(body)
+  }
+  return bodies
+}
+
+/** The Bash half of the guard: does any `gh api` or `curl`-to-REST write in
+ *  `command` send a body without this session's header? Judged exactly as an
+ *  MCP body is (`checkGithubProvenance`); a body the guard cannot read is
+ *  `uninspectable`. `null` for a command that sends no body. Never throws. */
+export function checkBashGithubWrite(
+  command: string,
+  groundTruthId: string | null | undefined,
+  cwd: string | undefined,
+): ProvenanceFinding | null {
+  for (const { tokens, dir } of shellSegments(command, cwd)) {
+    // A script handed to a shell or `eval` is a command line of its own.
+    const sh = tokens.findIndex((w, n) => SHELL.test(w.text) && /^-[a-z]*c$/.test(tokens[n + 1]?.text ?? ''))
+    const script = sh >= 0 ? tokens[sh + 2]?.text : tokens[0]?.text === 'eval' ? tokens.slice(1).map((w) => w.text).join(' ') : undefined
+    const nested = script === undefined ? null : checkBashGithubWrite(script, groundTruthId, dir)
+    if (nested) return nested
+
+    const gh = tokens.findIndex((w, k) => /(?:^|\/)gh$/.test(w.text) && tokens[k + 1]?.text === 'api')
+    const curl = tokens.findIndex((w) => /(?:^|\/)curl$/.test(w.text))
+    const [tool, bodies] =
+      gh >= 0 ? ['Bash: gh api', ghApiBodies(tokens.slice(gh + 2), dir)] : curl >= 0 ? ['Bash: curl', curlBodies(tokens.slice(curl + 1), dir)] : ['', []]
+    for (const body of bodies) {
+      const finding =
+        'uninspectable' in body
+          ? { kind: 'uninspectable' as const, tool, surface: 'body' as const, detail: body.uninspectable, expected: groundTruthId ?? undefined }
+          : checkGithubProvenance(tool, { body: body.text }, groundTruthId, [{ tool }])
+      if (finding) return finding
+    }
+  }
+  return null
+}
+
+const SHELL = /(?:^|\/)(?:ba|z|da)?sh$/
+
 /** Reads the hook JSON on stdin, resolves ground truth, runs the pure check,
  *  and writes a deny control object to stdout for any finding.
  *
@@ -393,8 +551,14 @@ export function main(): void {
 
   const groundTruthId = resolveGroundTruthFromTranscript(transcriptJsonl)
   const angle = checkAngleBrackets(payload.tool_name, payload.tool_input)
+  const command = prop(payload.tool_input, 'command')
+  const cwd = prop(payload, 'cwd')
+  const bash =
+    payload.tool_name === 'Bash' && typeof command === 'string'
+      ? checkBashGithubWrite(command, groundTruthId, typeof cwd === 'string' ? cwd : process.cwd())
+      : null
   const output =
-    denyOutputFor(checkGithubProvenance(payload.tool_name, payload.tool_input, groundTruthId)) ??
+    denyOutputFor(checkGithubProvenance(payload.tool_name, payload.tool_input, groundTruthId) ?? bash) ??
     (angle && buildDenyOutput(formatAngleBracketMessage(angle)))
   if (output) process.stdout.write(JSON.stringify(output))
 }

@@ -211,9 +211,12 @@ function isGlobbedInstructionDoc(path: string): boolean {
 /** `quoted` is load-bearing, not bookkeeping: every flag rule below must ignore a
  *  token that only LOOKS like a flag because a pattern was quoted. Without it
  *  `grep -rn "-l" docs/x.md` reads as a names-only grep and the doc is lost. */
-interface Token {
+export interface Token {
   text: string
   quoted: boolean
+  /** The shell expands part of it (a variable or a substitution), so its real
+   *  value is unknown. */
+  dynamic: boolean
 }
 
 /** Remove heredoc bodies before anything is tokenized. A `cat > x.ts <<'EOF' …`
@@ -266,13 +269,29 @@ function segments(rawCommand: string): { tokens: Token[]; followedByOr: boolean 
   let cur = ''
   let started = false
   let quoted = false
+  let dynamic = false
   let quote: '"' | "'" | null = null
   const endToken = (): void => {
-    if (started) tokens.push({ text: cur, quoted })
+    if (started) tokens.push({ text: cur, quoted, dynamic })
     cur = ''
     started = false
     quoted = false
+    dynamic = false
   }
+  // A substitution's command runs too; the word it sits in keeps a `$`, so
+  // GLOB_OR_VAR still rejects it as a path.
+  const substitute = (at: number): number => {
+    const backtick = command[at] === '`'
+    const start = at + (backtick ? 1 : 2)
+    const end = backtick ? command.indexOf('`', start) : closingParen(command, start)
+    const stop = end < 0 ? command.length : end
+    out.push(...segments(command.slice(start, stop)))
+    cur += '$'
+    started = true
+    dynamic = true
+    return stop
+  }
+  const opensSubstitution = (i: number): boolean => command[i] === '`' || (command[i] === '$' && command[i + 1] === '(')
   const endSegment = (followedByOr: boolean): void => {
     endToken()
     if (tokens.length) out.push({ tokens, followedByOr })
@@ -281,9 +300,13 @@ function segments(rawCommand: string): { tokens: Token[]; followedByOr: boolean 
   for (let i = 0; i < command.length; i++) {
     const c = command[i]!
     if (quote) {
-      if (c === quote) quote = null
+      if (quote === '"' && opensSubstitution(i)) i = substitute(i)
+      else if (c === quote) quote = null
       else if (c === '\\' && quote === '"' && i + 1 < command.length) cur += command[++i]
-      else cur += c
+      else {
+        if (quote === '"' && c === '$') dynamic = true
+        cur += c
+      }
       started = true
       quoted = true
       continue
@@ -295,6 +318,8 @@ function segments(rawCommand: string): { tokens: Token[]; followedByOr: boolean 
     } else if (c === '\\' && i + 1 < command.length) {
       cur += command[++i]
       started = true
+    } else if (opensSubstitution(i)) {
+      i = substitute(i)
     } else if (c === '#' && !started) {
       // A trailing comment is prose, not arguments: `cat a.md # see also b.md`
       // never showed b.md.
@@ -316,12 +341,30 @@ function segments(rawCommand: string): { tokens: Token[]; followedByOr: boolean 
     } else if (c === ';' || c === '(' || c === ')' || c === '\n') endSegment(false)
     else if (c === ' ' || c === '\t' || c === '\r') endToken()
     else {
+      if (c === '$') dynamic = true
       cur += c
       started = true
     }
   }
   endSegment(false)
   return out
+}
+
+/** The index of the `)` that closes a `$(` whose body starts at `from`. */
+function closingParen(command: string, from: number): number {
+  let depth = 1
+  let quote: string | null = null
+  for (let i = from; i < command.length; i++) {
+    const c = command[i]!
+    if (quote) {
+      if (c === quote) quote = null
+      else if (c === '\\' && quote === '"') i++
+    } else if (c === '\\') i++
+    else if (c === '"' || c === "'") quote = c
+    else if (c === '(') depth++
+    else if (c === ')' && --depth === 0) return i
+  }
+  return -1
 }
 
 /** Drop `timeout 60`, `sudo`, `FOO=1` — anything standing between the segment and
@@ -728,18 +771,11 @@ export function scanShellReads(
  *  docs. `simple` marks the one-file read Claude Code already loads rules for
  *  (ADR-0029). After a `cd` the parser cannot follow, relative paths drop. */
 export function bashReadPaths(command: string, cwd: string): { paths: string[]; simple: boolean } {
-  const segs = segments(command)
+  const segs = shellSegments(command, cwd)
   const paths: string[] = []
-  let dir: string | undefined = cwd
   let simple = false
-  for (const seg of segs) {
-    const tokens = unwrap(seg.tokens)
+  for (const { tokens, whole, dir } of segs) {
     const verb = tokens[0]?.text.replace(/^.*\//, '') ?? ''
-    if (verb === 'cd') {
-      const to = tokens[1]?.text
-      dir = dir && to && to !== '-' && !GLOB_OR_VAR.test(to) ? resolve(dir, to) : undefined
-      continue
-    }
     if (!READER_VERBS.has(verb) || isInPlaceEdit(verb, tokens) || showsNoContent(verb, tokens)) continue
     let files = 0
     for (const a of readerArgs(verb, tokens)) {
@@ -751,9 +787,28 @@ export function bashReadPaths(command: string, cwd: string): { paths: string[]; 
       // A trailing `/` marks a directory for the hint; resolve() would drop it.
       paths.push(resolve(dir ?? '/', text) + (text.endsWith('/') ? '/' : ''))
     }
-    simple = segs.length === 1 && tokens.length === seg.tokens.length && files === 1
+    simple = segs.length === 1 && whole && files === 1
   }
   return { paths: [...new Set(paths)], simple }
+}
+
+/** Each segment's words from the verb it runs on, and the directory it starts
+ *  in: `undefined` after a `cd` the parser cannot follow. `whole` is false when
+ *  a prefix (`sudo`, `FOO=1`) was dropped. */
+export function shellSegments(
+  command: string,
+  cwd: string | undefined,
+): { tokens: Token[]; whole: boolean; dir: string | undefined }[] {
+  let dir = cwd
+  return segments(command).map((seg) => {
+    const tokens = unwrap(seg.tokens)
+    const out = { tokens, whole: tokens.length === seg.tokens.length, dir }
+    if (tokens[0]?.text.replace(/^.*\//, '') === 'cd') {
+      const to = tokens[1]?.text
+      dir = dir && to && to !== '-' && !GLOB_OR_VAR.test(to) ? resolve(dir, to) : undefined
+    }
+    return out
+  })
 }
 
 // ── Crediting from OUTPUT (ADR-0009, #1545) ─────────────────────────────────

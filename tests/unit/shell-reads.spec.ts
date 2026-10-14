@@ -10,6 +10,7 @@ import {
   isInstructionDoc,
   scanShellReads,
   scanShellReadsByOutput,
+  shellSegments,
 } from '../../scripts/shell-reads.ts'
 
 /** Mirrors the trace's own relativizer for an absolute in-repo path. */
@@ -734,5 +735,23 @@ describe('output that only quotes a doc line is not a read (issue #1723)', () =>
     expect(credited('cat docs/agents/environment-caveats.md; gh api repos/o/r/issues/1', LINE)).toEqual([
       'docs/agents/environment-caveats.md',
     ])
+  })
+})
+
+describe('shellSegments — the words the provenance guard reads (#1900)', () => {
+  const words = (cmd: string, cwd = '/repo') =>
+    shellSegments(cmd, cwd).map((s) => ({ words: s.tokens.map((t) => (t.dynamic ? `~${t.text}` : t.text)), dir: s.dir }))
+
+  it('marks a word the shell would expand, outside single quotes only', () => {
+    expect(words(`gh api x -f body="$B" -f t='$5' -f u=$'a'`)[0]!.words).toEqual(['gh', 'api', 'x', '-f', '~body=$B', '-f', 't=$5', '-f', '~u=$a'])
+  })
+
+  it('reads a substitution as a command of its own, leaving `$` in the word it sits in', () => {
+    expect(words('gh api x -f t=`cat b` -f body=c').map((s) => s.words)).toEqual([['cat', 'b'], ['gh', 'api', 'x', '-f', '~t=$', '-f', 'body=c']])
+    expect(words('gh api x -f t="a $(cat "b)") c" -f body=c').map((s) => s.words)).toEqual([['cat', 'b)'], ['gh', 'api', 'x', '-f', '~t=a $ c', '-f', 'body=c']])
+  })
+
+  it('gives each segment the directory it starts in, unknown after an unfollowable cd', () => {
+    expect(words('cd sub && cat a; cd "$D"; cat b').map((s) => s.dir)).toEqual(['/repo', '/repo/sub', '/repo/sub', undefined])
   })
 })
