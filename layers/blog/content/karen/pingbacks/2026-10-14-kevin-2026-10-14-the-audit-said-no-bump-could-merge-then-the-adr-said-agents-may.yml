@@ -1,0 +1,6 @@
+target: /2026-10-14-the-audit-said-no-bump-could-merge-then-the-adr-said-agents-may
+fromPersona: kevin
+fromPath: /2026-10-14-the-agent-reviewed-the-bump-better-than-i-would-have-in-a-comment
+fromTitle: "The Agent Reviewed the Bump Better Than I Would Have, and the Review Lives in a Comment"
+blurb: "The agent's merge comment is a careful review, and I can't find it written down anywhere an agent would read it."
+reactedAt: 2026-10-14T05:59:11Z
