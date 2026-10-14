@@ -1,6 +1,6 @@
 ---
 title: Architecture & Deployment
-description: The technology under Terrarium — one application that hosts many sites, built from declarative manifests, isolated by construction, and redeployed by a container that rebuilds itself on every push.
+description: The technology under Terrarium — one application that hosts many sites, built from declarative manifests, isolated by construction, and redeployed by a container that polls `main` and rebuilds itself when it changes.
 onramp: 1
 onrampLabel: How it's built & deployed
 onrampBlurb: The tech foundation — one app hosting many sites, everything decided at build time.
@@ -141,9 +141,11 @@ web frameworks than with who is doing the writing:
 - **Content is just files.** Markdown and structured data live in the repo, so
   publishing a page and shipping code are the same motion — edit files, open a
   pull request, get reviewed, land it with full git history behind it.
-- **Schemas are contracts.** Every Collection declares one, and content that
-  violates it fails the gate rather than reaching a reader. When agents write
-  nearly everything, machine-checkable guardrails are what stop quality drifting
+- **Schemas are contracts.** A Collection can declare one, and a Document
+  that violates it fails the gate rather than reaching a reader. Props written
+  inside a page body are not schema-checked, and the gate's directive check
+  covers only the Atlas, Midden and Tinkerfund. When agents write nearly
+  everything, machine-checkable guardrails are what stop quality drifting
   quietly.
 - **Tenants map cleanly onto Nuxt layers.** A layer gives each Tenant real
   components and real branding on top of shared plumbing — genuine per-site

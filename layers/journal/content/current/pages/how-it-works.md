@@ -36,7 +36,7 @@ content, checks its own work against the **safety gate** (the lint, type-check,
 test, content-validation and build sequence that CI will run anyway), has the
 branch reviewed, and opens a pull request.
 
-The session's last act is to write a **session log**: what it set out to do,
+At closure the session writes a **session log**, and rewrites it when the work merges, stops or is blocked. A hook commits it. The log records what it set out to do,
 what actually shipped, and every **friction** it hit — dead ends, wasted
 effort, anything harder than it should have been. That log is deliberately
 honest, because it isn't a status report for a manager; it is evidence for the
@@ -144,7 +144,8 @@ routines go looking instead:
   and that a Skill the agent should reach for on its own actually fires. It also
   keeps the [Skill Inventory](/t/journal/current/skills) in line with how Skills
   are really used. It never rewrites a Skill's text to fix what it finds; that
-  is a judgement call, so it files an issue and leaves it to a human.
+  is a judgement call, so it files an issue, which goes through ordinary triage,
+  and its fix merges like any other pull request.
 - **`prune-trial`** attacks the opposite failure. Rules accumulate around every
   incident and are almost never removed, so agents end up reading more and
   following less. Each run cuts one problem's instructions back to the goal
