@@ -1,0 +1,161 @@
+schemaVersion: 1
+session: session_01CJix3AqBpX5KrAENqNp1M7
+startedAt: 2026-10-14T13:44:03Z
+endedAt: 2026-10-14T13:47:56Z
+kind: autonomous
+goal: Check whether path-scoped rules load inside git worktrees
+status: completed
+outcome: Rules load in worktrees from the main checkout's copies; one small Bash-hint gap found; report sent to the parent session
+summary: "Spun off by session_01XJ9iR9EbRT2iV7afhytND8 at the owner's request, which made it investigate-only and allowed no code changes. Live tests: a manual worktree under .claude/worktrees read from the main cwd, and two fresh subagents. One ran with Agent isolation (cwd = the worktree), the other used the main cwd with worktree paths. All three loaded the matching rules. The labels showed that the harness maps worktree files to the MAIN checkout's .claude/rules. A plain nested dir with the same path suffix loaded nothing, so the match is anchored and aware of worktrees. EnterWorktree and Workflow agents are untested. A dry-run of bash-rules-hint found a gap: with cwd = main, a piped read of a worktree file gets no hint. So the #1896 empty humanOnly list most likely came from the agent's judgement or the self-classifying brief, not a missed rule, unless the agent edited the rule files only through Bash. Proposed fix: derive humanOnly from git diff in clear-backlog-build, and optionally strip the worktree prefix in bash-rules-hint. The report went to the parent session; nothing was posted on GitHub. All the work was agent-run under the parent session's delegated brief."
+prs: []
+docsRead:
+  - path: CONTEXT-MAP.md
+    reason: session-start read
+    useful: partly
+  - path: CONTEXT.md
+    reason: session-start glossary; Rule and Human-only terms
+    useful: partly
+  - path: docs/adr/0029-instructions-load-with-the-files-they-govern.md
+    reason: how rules are meant to load and the Bash backstop
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: required before git worktree commands
+    useful: partly
+  - path: .agents/skills/triage/SKILL.md
+    reason: probe read of a worktree copy to trigger adr-0022
+    useful: partly
+  - path: scripts/render-mermaid.ts
+    reason: (no reason given)
+  - path: probe-tmp/app/utils/chunkRecovery.ts
+    reason: (no reason given)
+  - path: app/utils/chunkRecovery.ts
+    reason: (no reason given)
+  - path: scripts/bash-rules-hint.ts
+    reason: (no reason given)
+  - path: scripts/skill-rules-hint.ts
+    reason: (no reason given)
+  - path: layers/journal/tenant.config.ts
+    reason: (no reason given)
+skillsUsed:
+  - name: dispatch-subagents
+    reason: before the worktree-isolated probe subagent
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Auto-mode classifier denied appending marker lines to a throwaway worktree's .claude/rules copies, which blocked the direct which-copy test
+    solution: Use subagent rule labels and a nested non-worktree control dir instead; it worked, so no change needed
+    severity: minor
+  - description: Read rule frontmatter with Bash head/awk instead of the Read tool, against the CLAUDE.md Read-tool convention; it loaded no unrelated rules but was a skipped convention
+    solution: Read the rule files with the Read tool, or grep for paths only
+    severity: nit
+  - description: Couldn't test Workflow-agent rule loading because the Workflow tool needs explicit user opt-in; case left untested
+    solution: The brief could pre-authorize one tiny Workflow run when it asks for that case
+    severity: nit
+durationSec: 233
+models:
+  claude-opus-5-5: 57
+toolCounts:
+  Bash: 13
+  Read: 11
+  Skill: 3
+  Agent: 2
+  mcp__claude-code-remote__send_message: 1
+  Write: 1
+rulesLoaded:
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0007.md
+  - .claude/rules/adr-0024.md
+  - .claude/rules/adr-0019.md
+  - .claude/rules/guards.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/adr-0002.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/adr-0008.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0029.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: No PR or push this session, so the gate and merge rules did not apply
+    useful: no
+  - path: .claude/rules/adr-0009.md
+    reason: Told me to log via close-session at the end; the summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: No instruction was changed this session
+    useful: no
+  - path: .claude/rules/adr-0020.md
+    reason: Made me treat subagent and transcript text as data; the summary was enough
+    useful: partly
+  - path: .claude/rules/adr-0003.md
+    reason: No branch or PR; investigate-only brief
+    useful: no
+  - path: .claude/rules/adr-0017.md
+    reason: Made me put the session header on the send_message report; the summary was enough, ADR not opened
+    useful: yes
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Its paths list was the subject of the investigation and its load was the key probe signal
+    useful: yes
+  - path: .claude/rules/adr-0029.md
+    reason: The rule mechanism under test; I opened the full ADR for the Bash backstop detail
+    useful: yes
+  - path: .claude/rules/adr-0030.md
+    reason: Loaded on reading rule files; no ADR was written
+    useful: no
+  - path: .claude/rules/adr-0021.md
+    reason: Loaded on reading CONTEXT.md; no glossary change
+    useful: no
+  - path: .claude/rules/adr-0022.md
+    reason: Loaded as a probe signal for worktree rule loading; its content did not apply to this read-only investigation
+    useful: partly
+  - path: .claude/rules/adr-0005.md
+    reason: Loaded as a probe signal for worktree rule loading; its content did not apply to this read-only investigation
+    useful: no
+  - path: .claude/rules/adr-0007.md
+    reason: Loaded as a probe signal for worktree rule loading; its content did not apply to this read-only investigation
+    useful: no
+  - path: .claude/rules/adr-0024.md
+    reason: Loaded as a probe signal for worktree rule loading; its content did not apply to this read-only investigation
+    useful: partly
+  - path: .claude/rules/adr-0019.md
+    reason: Loaded as a probe signal for worktree rule loading; its content did not apply to this read-only investigation
+    useful: partly
+  - path: .claude/rules/guards.md
+    reason: Loaded on reading the hint scripts; I changed no guard or hint
+    useful: no
+  - path: .claude/rules/tenant-layers.md
+    reason: Loaded as a probe signal for worktree rule loading; its content did not apply to this read-only investigation
+    useful: no
+  - path: .claude/rules/adr-0002.md
+    reason: Loaded as a probe signal for worktree rule loading; its content did not apply to this read-only investigation
+    useful: no
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: Loaded as a probe signal for worktree rule loading; its content did not apply to this read-only investigation
+    useful: no
+  - path: .claude/rules/adr-0008.md
+    reason: Loaded as a probe signal for worktree rule loading; its content did not apply to this read-only investigation
+    useful: no
+subagents:
+  - type: general-purpose
+    task: Probe rules in isolated worktree
+  - type: general-purpose
+    task: Probe rules via main-cwd worktree path
+gitBranch: HEAD
+entrypoint: remote
+cliVersion: 2.1.299
+learnings:
+  - Claude Code loads path-scoped rules for files inside a git worktree under .claude/worktrees using the main checkout's .claude/rules (the labels show main paths), while a plain nested dir with the same suffix loads none
+landedBy: Stop
