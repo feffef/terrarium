@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_011JKK8rrCwea3xSmL4kw6si
 startedAt: 2026-10-14T17:50:03Z
-endedAt: 2026-10-14T18:09:20Z
+endedAt: 2026-10-14T18:12:30Z
 kind: delegated
 goal: Turn recent session frictions into fixes
-status: in-review
-outcome: "Grouped doc PR #1957 open; two guard/hook issues filed for a human"
-summary: "The owner invoked /frictions-to-fixes once (a direct ask); everything after was agent-initiated within that Skill. A survey subagent read 14 unledgered sessions and screened them: nothing was a clean never-fixed simple fix with weight. I picked one simple doc fix (reviewers copy findings with line breaks, audit-docs) and applied the survey's ledger patch, dispatched to one Sonnet agent in a worktree. I filed #1954 (suspected regression of #1940 / PR #1946, bash rules hint on failed compound reads) and #1955 (workflow-edit-guard blocks undoing a committed workflow edit) as ready-for-human, since both are guard or hook surfaces. code-review (Standards and Spec) caught a truncated ledger cause, a wrong fixedOn/ref that came from my own brief, and unquoted dates; the agent fixed them in a second commit before I pushed to the designated branch and opened PR #1957. Held back: the clear-backlog result-key sentence (the nesting could not be verified from repo files), bash-reads-not-read-tool (a premise question for the owner via prune-trial) and unverified-claims-in-drafts (hard, no concrete design). Still open: CI and merge of #1957."
+status: completed
+outcome: "Grouped doc PR #1957 merged; two guard/hook issues filed for a human"
+summary: "The owner invoked /frictions-to-fixes once (a direct ask); everything after was agent-initiated within that Skill. A survey subagent read 14 unledgered sessions and screened them: nothing was a clean never-fixed simple fix with weight. I picked one simple doc fix (reviewers copy findings with line breaks, audit-docs) and applied the survey's ledger patch, dispatched to one Sonnet agent in a worktree. I filed #1954 (suspected regression of #1940 / PR #1946, bash rules hint on failed compound reads) and #1955 (workflow-edit-guard blocks undoing a committed workflow edit) as ready-for-human, since both are guard or hook surfaces. code-review (Standards and Spec) caught a truncated ledger cause, a wrong fixedOn/ref that came from my own brief, and unquoted dates; the agent fixed them in a second commit before I pushed to the designated branch and opened PR #1957. Held back: the clear-backlog result-key sentence (the nesting could not be verified from repo files), bash-reads-not-read-tool (a premise question for the owner via prune-trial) and unverified-claims-in-drafts (hard, no concrete design). PR #1957 passed the gate and I merged it with merge-pr.ts after posting my verdict."
 prs:
   - "1957"
 docsRead:
@@ -63,12 +63,12 @@ frictions:
   - description: The Stop hook repeatedly asked me to push or commit a subagent worktree's scratch log and unpushed commit while the branch was still under review.
     solution: Let the hook skip linked worktrees that hold a branch under review.
     severity: nit
-durationSec: 1157
+durationSec: 1347
 models:
-  claude-sonnet-5-5: 61
+  claude-sonnet-5-5: 77
 toolCounts:
   Read: 7
-  Bash: 9
+  Bash: 13
   Agent: 4
   Skill: 4
   ToolSearch: 1
@@ -78,6 +78,10 @@ toolCounts:
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
   Write: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - .agents/skills/audit-docs/SKILL.md
   - docfix-apply.ts
@@ -91,6 +95,7 @@ rulesLoaded:
   - .claude/rules/adr-0029.md
   - .claude/rules/adr-0022.md
   - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0004-human-merge.md
 rulesGlobal:
   - .claude/rules/adr-0004.md
   - .claude/rules/adr-0009.md
@@ -103,7 +108,6 @@ rulesLoadedBySubagents:
   - .claude/rules/adr-0008.md
   - .claude/rules/mdc-when-to-use.md
   - .claude/rules/tenant-layers.md
-  - .claude/rules/adr-0004-human-merge.md
   - .claude/rules/adr-0025.md
 ruleVerdicts:
   - path: .claude/rules/adr-0004.md
