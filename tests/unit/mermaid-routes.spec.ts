@@ -21,6 +21,11 @@ describe('mermaidPageRoute()', () => {
     expect(mermaidPageRoute('journal', 'current', 'index.md')).toBe('/t/journal/current')
   })
 
+  it('drops numeric order prefixes, as Nuxt Content does', () => {
+    expect(mermaidPageRoute('glassbox', 'guide', 'nuxt-vue/01.layers.md')).toBe('/t/glassbox/guide/nuxt-vue/layers')
+    expect(mermaidPageRoute('glassbox', 'guide', '2.part/10.intro.md')).toBe('/t/glassbox/guide/part/intro')
+  })
+
   it('routes a nested index.md to its directory route', () => {
     expect(mermaidPageRoute('journal', 'current', 'digests/index.md')).toBe('/t/journal/current/digests')
   })
