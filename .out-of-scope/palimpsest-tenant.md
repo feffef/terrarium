@@ -23,8 +23,8 @@ The overlap is the other half. The Midden already catalogues what the Platform
 discarded, and the proposed second half of the Palimpsest — reverted code and
 abandoned approaches — is largely what the Midden's dig reports already narrate.
 Only the words-and-decisions half was distinct, and that material is already
-recorded where it belongs: superseded decisions live in the ADRs as amendments
-and superseding records, and retired vocabulary lives in the glossaries'
+recorded where it belongs: a superseded decision is rewritten in place in its
+ADR and git history keeps the older text (ADR-0030), and retired vocabulary lives in the glossaries'
 revision history.
 
 ## The loose end this leaves, and how it was closed
