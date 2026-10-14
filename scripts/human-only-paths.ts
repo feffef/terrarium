@@ -10,17 +10,9 @@ import { rulePaths } from './validate-adr-rules.ts'
 
 const git = (cwd: string, args: string[]) => execFileSync('git', args, { cwd, encoding: 'utf8', stdio: 'pipe' })
 
-function mainGlobs(cwd: string): string[] {
-  try {
-    return rulePaths(git(cwd, ['show', `origin/main:${HUMAN_MERGE_RULE}`]))
-  } catch {
-    return []
-  }
-}
-
-/** Throws when main's rule yields no globs: fail closed, like `humanMergeRefusal`. */
+/** Throws when main's rule is missing or yields no globs: fail closed, like `humanMergeRefusal`. */
 export function humanOnlyPaths(cwd: string): string[] {
-  const globs = mainGlobs(cwd)
+  const globs = rulePaths(git(cwd, ['show', `origin/main:${HUMAN_MERGE_RULE}`]))
   if (globs.length === 0) throw new Error(`no Human-only paths read from origin/main:${HUMAN_MERGE_RULE}`)
   const files = git(cwd, ['diff', '--name-only', '--no-renames', 'origin/main...HEAD']).split('\n').filter(Boolean)
   return files.filter((f) => globs.some((g) => matchesGlob(f, g)))

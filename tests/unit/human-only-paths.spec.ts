@@ -36,6 +36,6 @@ describe('humanOnlyPaths()', () => {
 
   it('fails closed when main has no Human-only list', () => {
     git(fixture.work, ['update-ref', 'refs/remotes/origin/main', 'no-rule'])
-    expect(() => humanOnlyPaths(fixture.work)).toThrow(/Human-only/)
+    expect(() => humanOnlyPaths(fixture.work)).toThrow()
   })
 })
