@@ -1,19 +1,7 @@
 ---
-# PROTOTYPE (ticket #1968). Order A: the concept first, then Terrarium.
+# PROTOTYPE (ticket #1968)
 title: Path-scoped rules
-summary: Instructions that reach an agent only when it works on the files they are about.
-type: lesson
-subject: claude-code            # the Space, if Glass Box gets one Space per subject (#1970)
-officialDocs:
-  - label: Claude Code docs, "Path-specific rules"
-    url: https://code.claude.com/docs/en/memory#path-specific-rules
-inTerrarium:                    # real paths this page points at; a layer test checks each exists
-  - .claude/rules/
-  - CLAUDE.md
-  - docs/adr/0029-instructions-load-with-the-files-they-govern.md
-  - scripts/validate-adr-rules.ts
-prerequisites: [claude-md]      # Lessons a newcomer should read first (slugs)
-related: [adr-summary-rules, guards]
+description: Instructions that reach an agent only when it works on the files they are about.
 ---
 
 # Path-scoped rules

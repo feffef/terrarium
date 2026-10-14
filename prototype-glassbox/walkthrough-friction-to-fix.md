@@ -1,21 +1,7 @@
 ---
 # PROTOTYPE (ticket #1968)
 title: A friction becomes a fix
-summary: How a pain-point one agent hits ends up changing the instructions every later agent works under.
-type: walkthrough
-stops:                       # the Lessons this story passes through, in order (slugs); a test checks each exists
-  - session-logs
-  - the-journal
-  - friction-ledger
-  - routines-and-skills
-  - the-gate
-  - test-an-instruction-by-removing-it
-  - path-scoped-rules
-  - guards
-evidence:                    # ADRs and Journal pages that back the story; linked, never quoted
-  - docs/adr/0009-session-logs-commit-directly-to-main.md
-  - docs/adr/0027-prune-trials.md
-  - docs/adr/0029-instructions-load-with-the-files-they-govern.md
+description: How a pain-point one agent hits ends up changing the instructions every later agent works under.
 ---
 
 # A friction becomes a fix

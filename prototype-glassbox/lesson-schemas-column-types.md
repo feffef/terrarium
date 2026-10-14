@@ -1,23 +1,7 @@
 ---
-# PROTOTYPE (ticket #1968). Order B: Terrarium first, the concept in a box.
+# PROTOTYPE (ticket #1968)
 title: Schemas give column types, not validation
-summary: Nuxt Content turns a Collection's Zod schema into database columns; Terrarium runs the schema against every Document itself.
-type: lesson
-subject: nuxt-content
-officialDocs:
-  - label: Nuxt Content docs, "Define collections"
-    url: https://content.nuxt.com/docs/collections/define   # UNVERIFIED: proxy blocked the check
-  - label: Zod docs, "safeParse"
-    url: https://zod.dev/basics                              # UNVERIFIED
-verifiedAgainst:                 # a version-bound claim names the version it was checked on
-  "@nuxt/content": "3.16.1"
-inTerrarium:
-  - scripts/validate-content.ts
-  - layers/journal/tenant.config.ts
-  - .github/actions/gate/action.yml
-  - docs/adr/0004-objective-safety-gate.md
-prerequisites: [collections-and-the-manifest]
-related: [the-gate, one-manifest-per-tenant]
+description: Nuxt Content turns a Collection's Zod schema into database columns; Terrarium runs the schema against every Document itself.
 ---
 
 # Schemas give column types, not validation
@@ -26,8 +10,23 @@ Give a Nuxt Content Collection a strict Zod schema, add a Document with a typo'd
 field, and the build still passes. Terrarium doesn't rely on the build to catch
 it: it checks every Document against its schema in its own gate step.
 
-> **New to Nuxt Content collections or Zod?** Read [the concept](#the-concept)
-> first; it takes a minute.
+> **Know Nuxt Content collections and Zod?** Skip to [In Terrarium](#in-terrarium).
+
+## The concept
+
+**Nuxt Content** builds Markdown, YAML and JSON files into a SQLite database at
+build time. A **collection** groups files of one type and can carry a
+**schema** describing each file's fields.
+
+**Zod** describes the shape of data in TypeScript. `schema.parse(data)` throws
+on bad data; `schema.safeParse(data)` returns `{ success, error }` instead.
+`.strict()` makes unknown keys an error.
+
+The two meet in `defineCollection({ schema })`: Nuxt Content reads the Zod
+schema to decide the table's columns.
+
+→ Full reference: [Nuxt Content, "Define collections"](https://content.nuxt.com/docs/collections/define)
+(UNVERIFIED link) · [Zod basics](https://zod.dev/basics) (UNVERIFIED link)
 
 ## In Terrarium
 
@@ -63,25 +62,6 @@ without a full build.
 - **One source for the schemas.** The validator reuses the manifest expansion
   the build uses (`shared/expand.ts`), so it can never check a different schema
   from the one that built the table.
-
-<details>
-<summary><h2 id="the-concept">The concept</h2></summary>
-
-**Nuxt Content** builds Markdown, YAML and JSON files into a SQLite database at
-build time. A **collection** groups files of one type and can carry a
-**schema** describing each file's fields.
-
-**Zod** describes the shape of data in TypeScript. `schema.parse(data)` throws
-on bad data; `schema.safeParse(data)` returns `{ success, error }` instead.
-`.strict()` makes unknown keys an error.
-
-The two meet in `defineCollection({ schema })`: Nuxt Content reads the Zod
-schema to decide the table's columns.
-
-→ [Nuxt Content: Define collections](https://content.nuxt.com/docs/collections/define)
-· [Zod basics](https://zod.dev/basics)
-
-</details>
 
 ## Try it in your project
 
