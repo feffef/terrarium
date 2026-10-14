@@ -119,8 +119,7 @@ export interface MechanicalTrace {
    *  loaded: whole, by the Read tool, or in Bash output once `docIndex` is given
    *  (the shell detector's floor, not a whole read). */
   rulesFollowedUp: string[]
-  /** Rules only a subagent or workflow agent loaded: not the main session's own
-   *  loads, so it gives them no verdict (#1941). Set by `foldSubagentTrace`. */
+  /** Rules only a subagent or workflow agent loaded. Set by `foldSubagentTrace`. */
   rulesLoadedBySubagents?: string[]
   /** Instruction docs only a subagent or workflow agent read. Set by `foldSubagentTrace`. */
   docsReadBySubagents?: string[]
