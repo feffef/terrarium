@@ -1,14 +1,15 @@
 schemaVersion: 1
 session: session_01AdUi9nKLGKyPFfBe4HYvqG
 startedAt: 2026-10-14T16:48:02Z
-endedAt: 2026-10-14T17:10:12Z
+endedAt: 2026-10-14T17:22:39Z
 kind: autonomous
 goal: Scheduled visitor-loop run on the Blog
-status: in-review
-outcome: "Fix PR #1952 open (two consensus fixes); feature PR not started yet"
-summary: "Scheduled, agent-initiated visitor-loop run (no human prompt), focus blog. Served the production build and sent three blind visitors (sonnet, fable, opus) through /t/blog. Tally: seven consensus clusters, but five were dropped (a \"Popular posts\" rename and a start strip are ruled out by decisions.md; the long Show-all list and the thread view were already logged as ideas this week; Eyra images are covered by closed #1669; Tinkerfund's FIG. 1 is deliberate). Two were fixed in PR #1952: the reading-list link now says it is in the Journal, and the persona cards show each epithet, now homepage-shared via personaMeta. Gate:scoped green; code review done inline because the diff was four small files. Chosen feature (a Latest-from line on each persona card) is still to build after the fix PR merges."
+status: completed
+outcome: "Both PRs merged: #1952 (two consensus fixes) and #1953 (latest-post line on persona cards)"
+summary: "Scheduled, agent-initiated visitor-loop run (no human prompt), focus blog. Served the production build and sent three blind visitors (sonnet, fable, opus) through /t/blog. Tally: seven consensus clusters, but five were dropped (a \"Popular posts\" rename and a start strip are ruled out by decisions.md; the long Show-all list and the thread view were already logged as ideas this week; Eyra images are covered by closed #1669; Tinkerfund's FIG. 1 is deliberate). Two were fixed in PR #1952: the reading-list link now says it is in the Journal, and the persona cards show each epithet, now homepage-shared via personaMeta. Gate:scoped green; code review done inline because the diff was four small files. The feature PR #1953 (a Latest line on each persona card, plus a border-box fix for overlapping cards found on the way) merged after a green gate and an e2e test."
 prs:
   - "1952"
+  - "1953"
 docsRead:
   - path: CONTEXT.md
     reason: glossary; little needed for a UI label fix
@@ -66,20 +67,24 @@ frictions:
   - description: Owner-corrections printed 19 file-overlap reworks unrelated to the Blog; each needed its own tally line, which was boilerplate.
     solution: Have the script drop reworks whose overlap is only agent-infra files.
     severity: minor
-durationSec: 1330
+  - description: My PR body had a bare angle-bracket span and the provenance guard blocked it once; I re-sent it without.
+    solution: None needed; the guard worked as designed.
+    severity: nit
+durationSec: 2077
 models:
-  claude-sonnet-5-5: 97
+  claude-sonnet-5-5: 136
 toolCounts:
-  Read: 11
-  Bash: 31
+  Read: 13
+  Bash: 43
   Agent: 3
   ToolSearch: 2
   mcp__github__search_issues: 6
   Skill: 3
-  mcp__github__create_pull_request: 1
-  mcp__claude-code-remote__subscribe_pr_activity: 1
-  mcp__github__add_issue_comment: 1
+  mcp__github__create_pull_request: 3
+  mcp__claude-code-remote__subscribe_pr_activity: 2
+  mcp__github__add_issue_comment: 2
   mcp__github__pull_request_read: 1
+  ReadNotifications: 4
 rulesLoaded:
   - .claude/rules/adr-0028.md
   - .claude/rules/adr-0021.md
