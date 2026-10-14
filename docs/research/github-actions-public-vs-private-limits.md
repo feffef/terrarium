@@ -155,7 +155,6 @@ days**; you can set **1–90 days for public** repos and **1–400 days for
 private** repos
 ([Managing GitHub Actions settings for a repository](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/enabling-features-for-your-repository/managing-github-actions-settings-for-a-repository)).
 
-
 ## 5. Concurrency limits — by plan, not by visibility
 
 The number of jobs you can run concurrently depends on your **GitHub plan**, not
@@ -169,8 +168,6 @@ the axis:
 > "The number of jobs you can run concurrently across all repositories in your
 > user or organization account depends on your GitHub plan."
 > — [Actions runner pricing](https://docs.github.com/en/billing/reference/actions-runner-pricing)
-
-
 
 ## Bottom line — does making the repo public fix the billing block?
 
