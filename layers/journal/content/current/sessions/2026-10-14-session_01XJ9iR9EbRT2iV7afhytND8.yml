@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01XJ9iR9EbRT2iV7afhytND8
 startedAt: 2026-10-14T12:37:06Z
-endedAt: 2026-10-14T13:56:01Z
+endedAt: 2026-10-14T14:17:39Z
 kind: interactive
 goal: "Early run of the issue #1778 checks on PR #1775's path-scoped rules and Bash rules hint"
 status: completed
-outcome: Draft report with misses, worktree, pointer, verdict and fold follow-ups given to the owner; not posted
-summary: "The owner asked (human-instructed) to run the #1778 checks about 20 minutes before the issue's 13:00Z gate, accounting for recent ADR changes, with an Explore overview and a transcript agent. Checks 1, 2c, 4, 6, 7c pass; 2a fails for tenant-layers (88%) and mdc-when-to-use (95%); 7a/7b fail for tenant-layers; check 3 found the hint skips compound reads whose last step fails (PostToolUse only); check 5's harness half is not checkable in the cloud. Human-instructed follow-ups, each run by an agent: a misses search (0 confirmed for the three rules); a new session I started, session_01CJix3AqBpX5KrAENqNp1M7, which showed rules do load in worktrees, so the #1896 empty humanOnly list was the brief, not a rule miss; an ADR-pointer check (0 agents followed \"read the full ADR first\", with or without the line count); a verdict reliability check (92% of 40 verdicts correct, 2a stands); and a fold check (about a third of rulesLoaded is subagent-only and drives most \"no\" verdicts overall, but not for tenant-layers/mdc). I misattributed the ADR-0030 rewrite to #1909 (it was #1898); the pointer agent caught it and I fixed the draft. Posting and filing issues wait on the owner."
+outcome: "Summary report posted on #1778; issues #1937-#1944 filed with transcript evidence"
+summary: "The owner asked (human-instructed) to run the #1778 checks about 20 minutes before the issue's 13:00Z gate, accounting for recent ADR changes, with an Explore overview and a transcript agent. Checks 1, 2c, 4, 6, 7c pass; 2a fails for tenant-layers (88%) and mdc-when-to-use (95%); 7a/7b fail for tenant-layers; check 3 found the hint skips compound reads whose last step fails (PostToolUse only); check 5's harness half is not checkable in the cloud. Human-instructed follow-ups, each run by an agent: a misses search (0 confirmed for the three rules); a new session I started, session_01CJix3AqBpX5KrAENqNp1M7, which showed rules do load in worktrees, so the #1896 empty humanOnly list was the brief, not a rule miss; an ADR-pointer check (0 agents followed \"read the full ADR first\", with or without the line count); a verdict reliability check (37 of 40 verdicts correct, 2a stands); and a fold check (subagent-only rules are rated no far more often, but not the cause for tenant-layers/mdc). The owner then asked (human-instructed) to post a summary and file one detailed issue per finding: an evidence agent gathered excerpts, I filed #1937-#1944 and posted the summary on #1778, leaving its closure to the owner. The evidence agent's recount of the fold numbers (77% vs 37%) differed from the first agent's (84% vs 37%); I used the recount. I misattributed the ADR-0030 rewrite to #1909 (it was #1898) and fixed it before posting."
 prs: []
 docsRead:
   - path: CONTEXT-MAP.md
@@ -22,6 +22,10 @@ docsRead:
     reason: fetch before trusting history
     useful: partly
   - path: .claude/settings.json
+    reason: (no reason given)
+  - path: docs/agents/issue-tracker.md
+    reason: (no reason given)
+  - path: docs/agents/triage-labels.md
     reason: (no reason given)
   - path: .agents/skills/log-session/SKILL.md
     reason: (no reason given)
@@ -58,29 +62,35 @@ frictions:
   - description: "Labelled the ADR-0030 rewrite as PR #1909 from a merge-commit list without checking its diff; it was #1898, and #1909 only changed hash lines"
     solution: Check a merge's diff with git show --stat before naming it as the cause of a cohort split
     severity: minor
-durationSec: 4735
+  - description: Two agents measuring the same fold share from the same class.json reported different numbers (84% vs 77% no for subagent-only); caught only because the evidence agent re-derived it
+    solution: Have the evidence step re-derive every number it quotes from the saved data, as was done here
+    severity: minor
+durationSec: 6034
 models:
-  claude-opus-5-5: 92
+  claude-opus-5-5: 122
 toolCounts:
-  Bash: 23
-  ToolSearch: 2
+  Bash: 28
+  ToolSearch: 3
   mcp__github__issue_read: 2
   AskUserQuestion: 1
-  Agent: 6
+  Agent: 7
   mcp__github__get_job_logs: 3
   ScheduleWakeup: 1
   Grep: 3
-  Read: 1
+  Read: 3
   Write: 2
   Skill: 2
   mcp__claude-code-remote__create_session: 1
   ReadNotifications: 1
+  mcp__github__issue_write: 8
+  mcp__github__add_issue_comment: 1
 rulesLoaded:
   - .claude/rules/adr-0021.md
   - .claude/rules/adr-0029.md
   - .claude/rules/guards.md
   - .claude/rules/adr-0004-human-merge.md
   - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0022.md
   - .claude/rules/adr-0030.md
 rulesGlobal:
   - .claude/rules/adr-0004.md
@@ -126,6 +136,9 @@ ruleVerdicts:
   - path: .claude/rules/adr-0030.md
     reason: Loaded via a subagent's reads; ADR format was not part of this analysis
     useful: no
+  - path: .claude/rules/adr-0022.md
+    reason: Loaded on reading triage-labels.md; I labelled new owner-directed issues needs-triage, not as a sweep, so it did not apply
+    useful: no
 subagents:
   - type: Explore
     task: "Session-log overview for #1778"
@@ -139,6 +152,8 @@ subagents:
     task: Rule verdict reliability check
   - type: general-purpose
     task: Subagent rule loads in parent log
+  - type: general-purpose
+    task: Collect evidence excerpts per finding
 gitBranch: ccr-77f9ffb6-nydit3
 entrypoint: remote_mobile
 cliVersion: 2.1.299
