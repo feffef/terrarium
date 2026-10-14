@@ -5,10 +5,9 @@
 // hash, so the summary cannot go stale silently: the author re-reads the rule,
 // updates it if the decision changed, then runs this script with `--write`.
 // Every other rule must have `paths` and name only `docs/` files that exist
-// (ADR-0029, issue #1765). A summary's pointer says the full ADR must be read
-// when the rule seems relevant to the task and estimates its tokens, so an agent sees the
-// read is cheap (issue #1939); `--write` stamps it too. An
-// ADR in the new shape carries no history (ADR-0030).
+// (ADR-0029, issue #1765). A summary's pointer estimates its ADR's tokens so
+// the read looks cheap (issue #1939); `--write` stamps it too. An ADR in the
+// new shape carries no history (ADR-0030).
 //
 // Usage: pnpm validate:content (chained), or
 //   pnpm exec tsx scripts/validate-adr-rules.ts [--write]
