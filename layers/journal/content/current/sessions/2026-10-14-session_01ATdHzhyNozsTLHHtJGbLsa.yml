@@ -1,108 +1,161 @@
 schemaVersion: 1
 session: session_01ATdHzhyNozsTLHHtJGbLsa
 startedAt: 2026-10-14T19:08:36Z
-endedAt: 2026-10-14T19:27:47Z
+endedAt: 2026-10-14T19:38:21Z
 kind: interactive
 goal: Clear the open-issue backlog with the clear-backlog Skill
 status: in-review
-outcome: 12 issues triaged, 4 grilled; 3 PRs open, 5 more branches building
-summary: "The owner invoked /clear-backlog (human-instructed). I resolved the sweep set (11 eligible issues plus the ready-for-agent #1844) and ran clear-backlog-explore. Six issues came back build, four grill, and two blocked: #1844 has a time gate until 2026-10-15, and #1966 was claimed mid-run. I started building the five build issues (#1958, #1960, #1961, #1962, #1963) and grilled the owner on four questions. Owner answers (human-instructed): #1959 change ADR-0025 to name the home page as the exception; #1955 document the recipe only; close #1954; #1968 the owner handles in another session; and \"wayfinder tickets should be ignored by clear backlog\". Acting on that last answer, I reset the labels triage had added on #1967 and #1968 to only their wayfinder labels. I also built a one-line edit to the clear-backlog Skill so its sweep leaves out wayfinder:* issues; that edit was the owner's direction. A second build run produced PRs 1975 (ADR-0025/0016, waits for a human merge), 1976 (environment-caveats recipe) and 1977 (Skill edit)."
+outcome: 7 issues fixed in merged PRs, 1 closed as a false alarm; 2 PRs wait for a human merge
+summary: "The owner invoked /clear-backlog (human-instructed). I resolved the sweep set: 11 eligible issues plus the ready-for-agent #1844. clear-backlog-explore triaged them all. #1844 is time-gated until 2026-10-15 and #1966 was claimed mid-run. Six issues came back build. #1967 has a comment as its output, not a PR, so it was not built. I built #1958, #1960, #1961, #1962 and #1963 while grilling the owner on four questions. Owner answers (human-instructed): #1959 change ADR-0025 to name the home page as the exception; #1955 document the recipe only; close #1954; #1968 the owner handles in another session; wayfinder tickets should be ignored by clear-backlog. Acting on that last answer, I reset the labels triage had added on #1967 and #1968, and built a one-sentence Skill edit (owner-directed). Merged: 1975 (ADR-0025/0016 home-page exception; the owner merged it), 1976 (environment-caveats recipe for undoing a committed workflow edit), 1977 (clear-backlog skips wayfinder:* issues), 1978 (five Journal explainer facts), 1979 (two stale comments), 1980 (palimpsest note: ADRs are rewritten in place). Waiting for a human merge: 1981 (gate step renamed to L0/L3 unit tests) and 1982 (two dead allow entries dropped from settings.json); both are green. Judgement calls left open: wording and line-wrap nits listed in each PR, and the 1976 recipe is untested with a real push."
 prs:
   - "1975"
   - "1976"
   - "1977"
+  - "1978"
+  - "1979"
+  - "1980"
+  - "1981"
+  - "1982"
 docsRead:
-  - path: GLOSSARY.md
-    reason: session-start glossary
+  - path: .agents/skills/auto-triage/SKILL.md
+    reason: "step 1 eligibility rules for the sweep set. Read by subagents. 12 workflow agent(s): 11 yes, 1 partly, 0 no; e.g. triage #1954: Required by the task. Gave the brave and close rules."
+    useful: yes
+  - path: .agents/skills/triage/SKILL.md
+    reason: "Read by subagents. 12 workflow agent(s): 7 yes, 5 partly, 0 no; e.g. triage #1954: Required by the task. Its 'verify the claim' step led to the live re-check."
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: "list-open-issues script; label sets replace. Read by subagents. 11 workflow agent(s): 1 yes, 10 partly, 0 no; e.g. triage #1954: Read before the first GitHub write, as CLAUDE.md requires. Its rule that a label update replaces the whole set was useful."
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: "before git: fetch before trusting history. Read by subagents. 17 workflow agent(s): 2 yes, 13 partly, 2 no; e.g. triage #1955: CLAUDE.md trigger before git log; relevant background on why checkout -- path is discouraged"
     useful: partly
+  - path: docs/agents/triage-labels.md
+    reason: "Read by subagents. 10 workflow agent(s): 3 yes, 7 partly, 0 no; e.g. triage #1955: CLAUDE.md trigger before labelling; confirmed the label strings"
+    useful: partly
+  - path: docs/adr/0022-autonomous-triage-sweep.md
+    reason: "what the sweep may label. Read by subagents. 9 workflow agent(s): 9 yes, 0 partly, 0 no; e.g. triage #1955: The binding ADR for the sweep's labelling"
+    useful: partly
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: "Read by subagents. 3 workflow agent(s): 3 yes, 0 partly, 0 no; e.g. triage #1955: The binding ADR for who may merge a guard change"
+    useful: yes
+  - path: .agents/skills/triage/AGENT-BRIEF.md
+    reason: "Read by subagents. 2 workflow agent(s): 2 yes, 0 partly, 0 no; e.g. triage #1958: The format for the comment"
+    useful: yes
+  - path: docs/agents/issue-tracker.md
+    reason: "Read by subagents. 4 workflow agent(s): 2 yes, 0 partly, 2 no; e.g. triage #1966: CLAUDE.md trigger before triage; its Wayfinding section defines claim and blocking."
+    useful: yes
+  - path: docs/adr/0008-self-documentation-tenant-is-a-journal.md
+    reason: "Read by subagents. 1 workflow agent(s): 0 yes, 1 partly, 0 no; e.g. triage #1958: Binding ADR found by grep for layers/journal; no constraint on the prose fix"
+    useful: partly
+  - path: docs/adr/0025-cross-tenant-catalog-and-collection-kinds.md
+    reason: "Read by subagents. 2 workflow agent(s): 2 yes, 0 partly, 0 no; e.g. triage #1959: Binding ADR, read in full"
+    useful: yes
+  - path: docs/adr/0016-tenant-root-layer-routes.md
+    reason: "Read by subagents. 2 workflow agent(s): 2 yes, 0 partly, 0 no; e.g. triage #1959: Named in the issue; read its scope"
+    useful: yes
+  - path: docs/adr/0030-adrs-document-a-decision-not-its-history.md
+    reason: "Read by subagents. 4 workflow agent(s): 4 yes, 0 partly, 0 no; e.g. triage #1961: The binding ADR, read in full. It confirms amendments are forbidden."
+    useful: yes
+  - path: docs/adr/0019-patched-nuxt-content-client-db-loading.md
+    reason: "Read by subagents. 1 workflow agent(s): 1 yes, 0 partly, 0 no; e.g. triage #1961: Read to check the claim that its file name contradicts its title. Confirmed."
+    useful: yes
+  - path: CLAUDE.md
+    reason: "Read by subagents. 13 workflow agent(s): 10 yes, 3 partly, 0 no; e.g. triage #1962: Project instructions loaded at session start; its least-code principle settled rename over split"
+    useful: yes
+  - path: docs/adr/0026-gate-workflow-thin-shell.md
+    reason: "Read by subagents. 1 workflow agent(s): 1 yes, 0 partly, 0 no; e.g. triage #1962: Binding ADR for gate step changes"
+    useful: yes
+  - path: docs/agents/environment-caveats.md
+    reason: "Read by subagents. 6 workflow agent(s): 6 yes, 0 partly, 0 no; e.g. triage #1963: Primary source for the issue's claim that cloud drops the allow list"
+    useful: yes
+  - path: docs/adr/0028-navigation-reads-server-payloads.md
+    reason: "Read by subagents. 1 workflow agent(s): 1 yes, 0 partly, 0 no; e.g. triage #1967: Named in the issue as a constraint"
+    useful: yes
+  - path: .agents/skills/implement/SKILL.md
+    reason: "Read by subagents. 8 workflow agent(s): 2 yes, 5 partly, 1 no; e.g. build claude/journal-explainer-facts-1958: Task told me to follow it."
+    useful: partly
+  - path: .agents/skills/code-review/SKILL.md
+    reason: "Read by subagents. 26 workflow agent(s): 14 yes, 12 partly, 0 no; e.g. Spec claude/journal-explainer-facts-1958 r1: The task told me to read it and apply its Spec axis, which framed the missing / scope-creep / wrong checks."
+    useful: yes
+  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
+    reason: "Read by subagents. 3 workflow agent(s): 3 yes, 0 partly, 0 no; e.g. Standards claude/journal-explainer-facts-1958 r1: I grepped it to verify the closure and replace wording."
+    useful: yes
+  - path: docs/adr/0015
+    reason: "Read by subagents. 1 workflow agent(s): 1 yes, 0 partly, 0 no; e.g. Standards claude/journal-explainer-facts-1958 r1: I grepped it to verify the audit-skills triage wording."
+    useful: yes
+  - path: docs/adr/0015 (grep excerpt)
+    reason: "Read by subagents. 1 workflow agent(s): 1 yes, 0 partly, 0 no; e.g. Standards claude/journal-explainer-facts-1958 r2: Checked the audit-skills wording against the source; confirmed accurate."
+    useful: yes
+  - path: GLOSSARY.md (grep excerpt)
+    reason: "Read by subagents. 1 workflow agent(s): 1 yes, 0 partly, 0 no; e.g. Standards claude/journal-explainer-facts-1958 r2: Checked the capitalisation of Session closure and session log; the diff matches."
+    useful: yes
+  - path: docs/adr/0015-pack-skills-and-skill-grading.md
+    reason: "Read by subagents. 1 workflow agent(s): 1 yes, 0 partly, 0 no; e.g. Spec claude/journal-explainer-facts-1958 r2: Source for checking the audit-skills sentence."
+    useful: yes
+  - path: docs/agents/mdc-when-to-use.md
+    reason: "Read by subagents. 1 workflow agent(s): 1 yes, 0 partly, 0 no; e.g. Spec claude/journal-explainer-facts-1958 r2: Grepped to confirm that body MDC props skip the schema."
+    useful: yes
+  - path: GLOSSARY.md
+    reason: "session-start glossary. Read by subagents. 1 workflow agent(s): 1 yes, 0 partly, 0 no; e.g. Standards claude/journal-explainer-facts-1958 r3: I grepped it to check the terms Session closure, session log and Document."
+    useful: partly
+  - path: docs/adr/0015 (grep only)
+    reason: "Read by subagents. 1 workflow agent(s): 1 yes, 0 partly, 0 no; e.g. Spec claude/journal-explainer-facts-1958 r3: I grepped it to confirm the 'ordinary triage, and its fix merges like any PR' wording."
+    useful: yes
+  - path: docs/adr/0029-instructions-load-with-the-files-they-govern.md
+    reason: "Read by subagents. 1 workflow agent(s): 1 yes, 0 partly, 0 no; e.g. Standards claude/home-page-showcase-1959 r2: Read to check the rules for summary rules. It confirmed what the rule may and may not say."
+    useful: yes
+  - path: docs/adr/TEMPLATE.md
+    reason: "Read by subagents. 1 workflow agent(s): 1 yes, 0 partly, 0 no; e.g. Standards claude/home-page-showcase-1959 r2: Read to check where the exception and its why belong. It is the basis for finding 1."
+    useful: yes
+  - path: scripts/workflow-edit-guard.ts
+    reason: "Read by subagents. 1 workflow agent(s): 1 yes, 0 partly, 0 no; e.g. Standards claude/workflow-undo-recipe-1955 r2: Read to check whether the guard allows the recipe's commands. It answered that `git reset -- <path>` is allowed, which I confirmed with a dr"
+    useful: yes
+  - path: .agents/skills/clear-backlog/SKILL.md
+    reason: "Read by subagents. 1 workflow agent(s): 1 yes, 0 partly, 0 no; e.g. Standards claude/upbeat-albattani-2ryjxo r1: This is the edited file. Reading the surrounding §1 text revealed the full-sweep ordering ambiguity."
+    useful: yes
+  - path: .agents/skills/wayfinder/SKILL.md
+    reason: "Read by subagents. 1 workflow agent(s): 1 yes, 0 partly, 0 no; e.g. Spec claude/upbeat-albattani-2ryjxo r2: Grepped, not fully read, to confirm the wayfinder Skill exists and that both maps and tickets carry wayfinder:* labels. That confirmed the g"
+    useful: yes
   - path: GLOSSARY-MAP.md
     reason: session-start glossary map
     useful: partly
-  - path: docs/agents/git-conventions.md
-    reason: "before git: fetch before trusting history"
-    useful: partly
-  - path: docs/agents/github-integration.md
-    reason: list-open-issues script; label sets replace
-    useful: yes
   - path: docs/agents/pr-workflow.md
     reason: review-before-push and merge recipe
     useful: yes
-  - path: .agents/skills/auto-triage/SKILL.md
-    reason: step 1 eligibility rules for the sweep set
-    useful: yes
-  - path: docs/adr/0022-autonomous-triage-sweep.md
-    reason: what the sweep may label
-    useful: partly
   - path: .agents/skills/log-session/SKILL.md
-    reason: log format
-    useful: yes
-  - path: .agents/skills/triage/SKILL.md
-    reason: (no reason given)
+    reason: log format; my stale copy still named subagentVerdicts
+    useful: partly
   - path: .claude/settings.json
     reason: (no reason given)
-  - path: docs/agents/environment-caveats.md
-    reason: (read before editing)
-  - path: docs/agents/triage-labels.md
-    reason: (no reason given)
   - path: .github/actions/gate/action.yml
-    reason: (no reason given)
-  - path: docs/adr/0004-objective-safety-gate.md
-    reason: (no reason given)
-  - path: docs/adr/0026-gate-workflow-thin-shell.md
-    reason: (no reason given)
-  - path: .agents/skills/triage/AGENT-BRIEF.md
-    reason: (no reason given)
-  - path: docs/agents/issue-tracker.md
     reason: (no reason given)
   - path: layers/journal/content/current/pages/architecture.md
     reason: (no reason given)
   - path: layers/journal/content/current/pages/how-it-works.md
     reason: (no reason given)
-  - path: docs/adr/0008-self-documentation-tenant-is-a-journal.md
-    reason: (no reason given)
-  - path: docs/adr/0019-patched-nuxt-content-client-db-loading.md
-    reason: (no reason given)
-  - path: docs/adr/0030-adrs-document-a-decision-not-its-history.md
-    reason: (no reason given)
   - path: .out-of-scope/palimpsest-tenant.md
     reason: (read before editing)
   - path: app/pages/index.vue
     reason: (no reason given)
-  - path: scripts/workflow-edit-guard.ts
-    reason: (no reason given)
-  - path: .agents/skills/code-review/SKILL.md
-    reason: (no reason given)
-  - path: .agents/skills/implement/SKILL.md
-    reason: (no reason given)
   - path: /home/user/terrarium/docs/agents/git-conventions.md
     reason: (no reason given)
-  - path: docs/adr/0025-cross-tenant-catalog-and-collection-kinds.md
-    reason: (read before editing)
-  - path: docs/adr/0016-tenant-root-layer-routes.md
-    reason: (read before editing)
-  - path: .agents/skills/clear-backlog/SKILL.md
-    reason: (read before editing)
-  - path: docs/adr/0029-instructions-load-with-the-files-they-govern.md
-    reason: (no reason given)
   - path: docs/adr/0025-tenants-read-each-other-only-through-the-catalog.md
-    reason: (no reason given)
-  - path: docs/adr/0028-navigation-reads-server-payloads.md
-    reason: (no reason given)
-  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
     reason: (no reason given)
   - path: .agents/skills/audit-skills/SKILL.md
     reason: (no reason given)
   - path: .agents/skills/audit-docs/SKILL.md
     reason: (no reason given)
-  - path: docs/adr/TEMPLATE.md
+  - path: docs/adr/0015-audit-skills-and-conditional-importance.md
     reason: (no reason given)
 skillsUsed:
   - name: clear-backlog
     reason: owner invoked it
   - name: grilling
-    reason: clear-backlog §2 grilling
+    reason: clear-backlog §2
   - name: close-session
-    reason: PR open
+    reason: PR open and final
+  - name: log-session
+    reason: session log
 frictions:
   - description: clear-backlog plus auto-triage let triage agents label wayfinder tickets (1967 got ready-for-agent); the owner wants wayfinder ignored entirely.
     solution: PR 1977 makes clear-backlog §1 leave out wayfinder:* issues.
@@ -119,23 +172,30 @@ frictions:
   - description: Building on the session branch made the worktree use a local branch named worktree-wf_..., so it needed a refspec push to reach claude/upbeat-albattani-2ryjxo.
     solution: clear-backlog-build could detect a branch already checked out and push HEAD to the named branch itself.
     severity: nit
-  - description: The build result has no gatePassed field (undefined) for any branch, so I relied on CI's gate.
+  - description: The build result has no gatePassed field (undefined) for any branch, so I relied on CI gate.
     solution: Have the build workflow return gatePassed from its final round.
     severity: minor
-durationSec: 1150
+  - description: Workflow output nests results as a JSON string under result, so my first parse printed nothing useful and needed a second pass.
+    solution: Document the output shape in the clear-backlog Skill or return a flat object.
+    severity: nit
+  - description: Main dropped subagentVerdicts mid-run (c82a0ac19); my session-start copy of log-session still asked for it, so the first final log was held.
+    solution: Re-fetch main before closing a long session (main already updated clear-backlog to match).
+    severity: minor
+durationSec: 1784
 models:
-  claude-opus-5-5: 71
+  claude-opus-5-5: 136
 toolCounts:
-  Bash: 20
+  Bash: 35
   Workflow: 3
   ToolSearch: 3
   Skill: 2
   PushNotification: 1
-  mcp__github__add_issue_comment: 3
+  mcp__github__add_issue_comment: 8
   mcp__github__issue_write: 5
-  mcp__github__create_pull_request: 3
-  mcp__claude-code-remote__subscribe_pr_activity: 3
+  mcp__github__create_pull_request: 8
+  mcp__claude-code-remote__subscribe_pr_activity: 8
   Write: 1
+  ReadNotifications: 10
 filesEdited:
   - .out-of-scope/palimpsest-tenant.md
   - layers/midden/app/components/content/MiddenArtifact.vue
@@ -181,6 +241,103 @@ rulesLoadedBySubagents:
   - .claude/rules/adr-0011.md
   - .claude/rules/adr-0025.md
   - .claude/rules/adr-0015.md
+docsReadBySubagents:
+  - .agents/skills/triage/SKILL.md
+  - docs/agents/environment-caveats.md
+  - docs/agents/triage-labels.md
+  - docs/agents/issue-tracker.md
+  - docs/adr/0004-objective-safety-gate.md
+  - docs/adr/0026-gate-workflow-thin-shell.md
+  - .agents/skills/triage/AGENT-BRIEF.md
+  - docs/adr/0028-navigation-reads-server-payloads.md
+  - docs/adr/0008-self-documentation-tenant-is-a-journal.md
+  - docs/adr/0009-session-logs-commit-directly-to-main.md
+  - .agents/skills/audit-skills/SKILL.md
+  - docs/adr/0019-patched-nuxt-content-client-db-loading.md
+  - docs/adr/0030-adrs-document-a-decision-not-its-history.md
+  - .agents/skills/audit-docs/SKILL.md
+  - docs/adr/0025-cross-tenant-catalog-and-collection-kinds.md
+  - docs/adr/0016-tenant-root-layer-routes.md
+  - .agents/skills/code-review/SKILL.md
+  - .agents/skills/implement/SKILL.md
+  - docs/adr/0015-audit-skills-and-conditional-importance.md
+  - .agents/skills/clear-backlog/SKILL.md
+  - docs/adr/0029-instructions-load-with-the-files-they-govern.md
+  - docs/adr/TEMPLATE.md
+  - docs/adr/0025-tenants-read-each-other-only-through-the-catalog.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: "Decided which PRs I merged (1976-1980) and which wait for a human; the summary was enough. Subagents: 51 workflow agent(s): 13 yes, 22 partly, 16 no; e.g. triage #1958: Session start; confirms a content-only PR can be self-merged"
+    useful: yes
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: "Its paths flagged ADRs, rules, action.yml and settings.json as needing a human merge. Subagents: 21 workflow agent(s): 9 yes, 6 partly, 6 no; e.g. triage #1955: Loaded when I read the guard; it confirmed the guard is a Human-only file"
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: "Told me to log at PR open and again at the end; the summary was enough. Subagents: 48 workflow agent(s): 8 yes, 2 partly, 38 no; e.g. triage #1954: Loaded at session start. Not relevant to a triage subagent."
+    useful: partly
+  - path: .claude/rules/adr-0017.md
+    reason: "Set the header on every comment and PR; I checked the commit trailers landed. Subagents: 48 workflow agent(s): 10 yes, 5 partly, 33 no; e.g. triage #1844: Session start; provenance header, no writes made"
+    useful: yes
+  - path: .claude/rules/adr-0020.md
+    reason: "Confirmed every issue was owner-authored (Trusted), so no Public hold applied. Subagents: 48 workflow agent(s): 2 yes, 17 partly, 29 no; e.g. Standards claude/journal-explainer-facts-1958 r1: Loaded at session start. Trust tiers did not apply to this review."
+    useful: partly
+  - path: .claude/rules/adr-0003.md
+    reason: "Open the PR right after push and subscribe; the owner direction counted as approval for the Skill edit. Subagents: 49 workflow agent(s): 0 yes, 5 partly, 44 no; e.g. triage #1844: Session start; not needed for a blocked triage"
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: "No prune trial covered the text I changed. Subagents: 48 workflow agent(s): 1 yes, 11 partly, 36 no; e.g. triage #1954: Loaded at session start. Not relevant."
+    useful: no
+  - path: .claude/rules/adr-0022.md
+    reason: "Read the full ADR to confirm what the sweep may label ready-for-agent. Subagents: 16 workflow agent(s): 12 yes, 0 partly, 4 no; e.g. triage #1844: Loaded with the triage skills; confirmed Trusted-authored issues can stay ready-for-agent"
+    useful: yes
+  - path: .claude/rules/adr-0021.md
+    reason: "Loaded on reading the glossary; I added no glossary terms. Subagents: 1 workflow agent(s): 0 yes, 0 partly, 1 no; e.g. triage #1961: Loaded when I read the audit-docs Skill. Not relevant."
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: "Loaded on doc reads; no rule placement was involved. Subagents: 26 workflow agent(s): 6 yes, 3 partly, 17 no; e.g. triage #1844: Loaded on bash read of docs; not relevant"
+    useful: no
+  - path: .claude/rules/adr-0005.md
+    reason: "Loaded on reading the Skill; confirmed the Skill edit goes through a gated PR. Subagents: 44 workflow agent(s): 1 yes, 4 partly, 39 no; e.g. triage #1844: Loaded on reading Skill files; not relevant"
+    useful: partly
+  - path: .claude/rules/adr-0030.md
+    reason: "Loaded on reading ADR-0022; the ADR-0025 rewrite in PR 1975 followed it. Subagents: 16 workflow agent(s): 7 yes, 1 partly, 8 no; e.g. triage #1955: Loaded on reading ADRs; not relevant to this issue"
+    useful: partly
+  - path: .claude/rules/guards.md
+    reason: "Only subagents loaded it. 5 workflow agent(s): 0 yes, 1 partly, 4 no; e.g. triage #1954: Loaded through the bash hint on settings.json. It points to guards.md, which I did not need."
+    useful: no
+  - path: .claude/rules/adr-0015.md
+    reason: "Only subagents loaded it. 2 workflow agent(s): 1 yes, 0 partly, 1 no; e.g. triage #1958: Loaded when grepping ADR-0015 and audit-skills; confirmed one of the claims"
+    useful: yes
+  - path: .claude/rules/adr-0001.md
+    reason: "Only subagents loaded it. 2 workflow agent(s): 0 yes, 1 partly, 1 no; e.g. triage #1967: Loaded when I read nuxt.config.ts; no outside fetch at request time is relevant to highlighting"
+    useful: partly
+  - path: .claude/rules/adr-0002.md
+    reason: "Only subagents loaded it. 4 workflow agent(s): 0 yes, 1 partly, 3 no; e.g. triage #1958: Loaded on the manifest grep; background only"
+    useful: no
+  - path: .claude/rules/adr-0011.md
+    reason: "Only subagents loaded it. 1 workflow agent(s): 0 yes, 1 partly, 0 no; e.g. triage #1958: Loaded on the deploy/ grep; confirmed the polling deploy"
+    useful: partly
+  - path: .claude/rules/adr-0025.md
+    reason: "Only subagents loaded it. 6 workflow agent(s): 5 yes, 0 partly, 1 no; e.g. triage #1959: Loaded on reading app/pages/index.vue; it is the rule the issue is about"
+    useful: yes
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: "Only subagents loaded it. 5 workflow agent(s): 0 yes, 1 partly, 4 no; e.g. triage #1959: Loaded on reading tenant manifests"
+    useful: no
+  - path: .claude/rules/tenant-layers.md
+    reason: "Only subagents loaded it. 5 workflow agent(s): 0 yes, 1 partly, 4 no; e.g. triage #1958: Loaded on reading a layer file; not relevant"
+    useful: no
+  - path: .claude/rules/mermaid-lanes.md
+    reason: "Only subagents loaded it. 3 workflow agent(s): 0 yes, 0 partly, 3 no; e.g. triage #1958: Loaded on reading the Journal pages; not relevant to the prose fix"
+    useful: no
+  - path: .claude/rules/adr-0026.md
+    reason: "Only subagents loaded it. 2 workflow agent(s): 2 yes, 0 partly, 0 no; e.g. triage #1962: Loaded with the gate action; showed a split costs a three-way change while a rename does not"
+    useful: yes
+  - path: .claude/rules/adr-0028.md
+    reason: "Only subagents loaded it. 1 workflow agent(s): 1 yes, 0 partly, 0 no; e.g. triage #1967: Loaded when I read nuxt.config.ts; the issue names payload navigation as a constraint"
+    useful: yes
+  - path: .claude/rules/adr-0018.md
+    reason: "Only subagents loaded it. 1 workflow agent(s): 0 yes, 0 partly, 1 no; e.g. triage #1967: Loaded when I read nuxt.config.ts; not relevant"
+    useful: no
 subagents:
   - type: workflow-subagent
     task: "triage #1963"
@@ -228,7 +385,14 @@ subagents:
     task: build claude/gate-step-name-1962
     model: claude-sonnet-5-5
   - type: workflow-subagent
+    task: Spec claude/journal-explainer-facts-1958 r3
+    model: claude-opus-5-5
+  - type: workflow-subagent
     task: Spec claude/journal-explainer-facts-1958 r2
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: fix claude/journal-explainer-facts-1958 r2
+    model: claude-sonnet-5-5
   - type: workflow-subagent
     task: Standards claude/journal-explainer-facts-1958 r1
     model: claude-opus-5-5
@@ -243,11 +407,15 @@ subagents:
     model: claude-sonnet-5-5
   - type: workflow-subagent
     task: Standards claude/journal-explainer-facts-1958 r2
+    model: claude-opus-5-5
   - type: workflow-subagent
     task: Spec claude/settings-dead-allow-1963 r1
     model: claude-opus-5-5
   - type: workflow-subagent
     task: Spec claude/stale-comments-1960 r1
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: Standards claude/journal-explainer-facts-1958 r3
     model: claude-opus-5-5
   - type: workflow-subagent
     task: Standards claude/stale-comments-1960 r1
