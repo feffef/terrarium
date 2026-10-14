@@ -39,6 +39,13 @@ const { data } = await useAsyncData('blog-front', async () => {
 
 const posts = computed(() => data.value ?? [])
 
+// The feed is newest-first, so each Persona's first hit is their latest post.
+const latestTitles = computed(() => {
+  const out: Record<string, string> = {}
+  for (const p of posts.value) out[p.persona] ??= p.title
+  return out
+})
+
 // The tag directory: every tag actually in use across all Personas,
 // most-used first — not the full curated vocabulary, so an unused tag doesn't
 // clutter the list.
@@ -97,7 +104,7 @@ useSeoMeta({
            directory folded into it via its `#extra` slot rather than a second,
            separately-boxed panel stacked underneath. -->
       <aside class="about about--plain" aria-label="Browse the blog">
-        <BlogNetwork current="">
+        <BlogNetwork current="" :latest="latestTitles">
           <template #extra>
             <!-- Rendered twice, one shown per width by CSS: a plain list when
                  wide, a disclosure (closed unless a tag is active) when narrow. -->

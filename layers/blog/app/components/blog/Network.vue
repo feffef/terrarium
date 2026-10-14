@@ -8,7 +8,8 @@
 // layer-wide auto-imports.
 import { resolveSpaceRoute } from '#shared/routing'
 
-defineProps<{ current: string }>()
+// `latest` (slug → newest post title) is the front door's; other callers omit it.
+defineProps<{ current: string, latest?: Record<string, string> }>()
 
 // Each Persona's own stance, one line, is already authored on their landing
 // page (`description` frontmatter, e.g. Karen's "written by someone who
@@ -43,6 +44,7 @@ const { data: taglines } = await useAsyncData('blog-network-taglines', async () 
           <span class="net-card-name">{{ personaMeta(p).name }}</span>
           <span v-if="personaMeta(p).epithet" class="net-card-epithet">{{ personaMeta(p).epithet }}</span>
           <span v-if="taglines?.[p]" class="net-card-tagline">{{ taglines[p] }}</span>
+          <span v-if="latest?.[p]" class="net-card-latest"><span class="net-card-latest-label">Latest</span> {{ latest[p] }}</span>
         </NuxtLink>
       </li>
     </ul>
@@ -90,6 +92,7 @@ const { data: taglines } = await useAsyncData('blog-network-taglines', async () 
   flex-direction: column;
   gap: 0.3rem;
   height: 100%;
+  box-sizing: border-box;
   text-decoration: none;
   border: 1px solid var(--bl-line);
   border-radius: 10px;
@@ -116,6 +119,8 @@ const { data: taglines } = await useAsyncData('blog-network-taglines', async () 
 }
 .net-card-epithet { font-family: var(--bl-serif); font-size: 0.95rem; font-weight: 600; color: var(--bl-ink); }
 .net-card-tagline { font-size: 0.78rem; line-height: 1.4; color: var(--bl-faint); }
+.net-card-latest { margin-top: auto; padding-top: 0.45rem; border-top: 1px dashed var(--bl-line); font-family: var(--bl-serif); font-size: 0.85rem; line-height: 1.35; color: var(--bl-muted); }
+.net-card-latest-label { font-family: var(--bl-mono); font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--bl-faint); }
 .net-cards a:hover {
   border-color: var(--pa);
   transform: translateY(-1px);
@@ -126,6 +131,8 @@ const { data: taglines } = await useAsyncData('blog-network-taglines', async () 
 .net-cards a[aria-current='page'] { background: var(--pa); border-color: var(--pa); }
 .net-cards a[aria-current='page'] .net-card-name,
 .net-cards a[aria-current='page'] .net-card-epithet,
+.net-cards a[aria-current='page'] .net-card-latest,
+.net-cards a[aria-current='page'] .net-card-latest-label,
 .net-cards a[aria-current='page'] .net-card-tagline { color: #fff; }
 .net-cards a[aria-current='page'] .net-card-name::before { background: #fff; }
 </style>

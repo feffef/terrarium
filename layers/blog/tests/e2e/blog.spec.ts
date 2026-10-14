@@ -134,6 +134,21 @@ describe('blog Tenant', async () => {
     await expectCleanHydration('/t/blog?tag=governance')
   })
 
+  it('shows each columnist\'s latest post title on the front door cards', async () => {
+    const page = await createPage()
+    try {
+      await page.goto(url('/t/blog'), { waitUntil: 'hydration' })
+      const latest = await page.locator('.net-cards .net-card-latest').allTextContents()
+      expect(latest).toHaveLength(4)
+      for (const text of latest) expect(text.replace('Latest', '').trim().length).toBeGreaterThan(0)
+      // No other page's cards carry it.
+      await page.goto(url('/t/blog/karen'), { waitUntil: 'hydration' })
+      expect(await page.locator('.net-card-latest').count()).toBe(0)
+    } finally {
+      await page.close()
+    }
+  })
+
   it('navigates client-side from the server payload, without the client DB (ADR-0028)', async () => {
     const page = await createPage()
     try {
