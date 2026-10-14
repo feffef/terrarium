@@ -1,17 +1,8 @@
 # Server-/build-side Mermaid rendering: what's possible, and why we pre-render
 
 Grounding note for issue #379 / ADR-0024, re-derived 2026-07-20. The rendering
-decision is single-homed in ADR-0024; the authoring convention below (lane
-grouping) is a living rule.
-
-## Authoring convention: group lanes with `classDef stroke`, not `subgraph`
-
-In a fenced ` ```mermaid ` diagram (rendered per the mechanism below, via the
-Platform-wide `components/content/` override — `docs/agents/tenant-layers.md`
-§4), don't group lanes with `subgraph`: subgraph boundaries **clip** any edge
-that crosses into another subgraph, silently hiding cross-lane arrows. Set a
-shared `stroke` (and/or `fill`) on the lane's nodes with a `classDef` instead;
-every cross-lane edge stays intact and the nodes still read as a group.
+decision is single-homed in ADR-0024; how to group lanes in a diagram is in
+`docs/agents/tenant-layers.md` §4.
 
 ## The question
 
