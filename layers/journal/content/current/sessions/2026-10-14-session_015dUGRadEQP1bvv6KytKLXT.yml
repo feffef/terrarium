@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_015dUGRadEQP1bvv6KytKLXT
 startedAt: 2026-10-14T15:21:51Z
-endedAt: 2026-10-14T17:02:57Z
+endedAt: 2026-10-14T19:05:17Z
 kind: interactive
 goal: Clear the issue backlog with the clear-backlog Skill
-status: completed
+status: in-review
 outcome: Triaged 11 items; all 7 PRs merged (1945-1951), 10 issues closed; Dependabot 1906 left to the owner, 1844 time-gated; live-tested in two child sessions
-summary: "The owner invoked /clear-backlog and later answered grilling rounds Q1-Q10 (human-instructed). Everything else was the Skill's own flow. The sweep found 10 issues plus Dependabot PR 1906. Per branch, what was built: 1945 (1905) states the hook crash rule once in guards.md; merged by me. 1946 (1940) runs bash-rules-hint on PostToolUseFailure; merged by the owner. 1948 (1942) adds scripts/human-only-paths.ts and drops humanOnly from the build workflow; merged by me. 1949 (1937, 1938) narrows the tenant-layers and mdc-when-to-use globs, moves the short instructions into the rule and adds a mermaid-lanes rule; merged by the owner. I fixed the build's last two review findings by hand after it hit the 3-round cap. 1950 (1939) changes the ADR pointer to \"must read when relevant\" with a token estimate (chars/4); the owner picked this over all three proposed options. I merged main into it after 1949 created a conflict; merged by the owner. 1951 (1944) sends manual worktrees to .claude/worktrees/. I ran the probe myself: a Read in a sibling worktree loaded no rule. Merged by me. 1947 (1941, 1943) adds rulesLoadedBySubagents and subagentVerdicts, has subagents rate the rules and docs only they loaded or read (SendMessage for Agent-tool subagents, a result schema for workflow agents), and adds the 1943 verdict checks; merged by the owner. The owner expanded 1943's scope over Q7-Q10. After the merges, the owner asked for a live test, so I started two Sonnet child sessions. The first (session_01NVG22rfEsjhW9zkcCco6W8) confirmed 1947, 1948, 1950 and 1951. My brief had it read rule files first, which hid the 1946 and 1949 checks. The second (session_01D2JnZT1y8zCvC9GJc27pZp) confirmed both: the PostToolUseFailure hook output carried adr-0023, and its committed rulesLoaded order matches every expected glob. Open judgement calls are listed in each PR. 1844 is time-gated to 2026-10-15. The owner merges 1906 (pick 6a)."
+summary: "The owner invoked /clear-backlog and later answered grilling rounds Q1-Q10 (human-instructed). Everything else was the Skill's own flow. The sweep found 10 issues plus Dependabot PR 1906. Per branch, what was built: 1945 (1905) states the hook crash rule once in guards.md; merged by me. 1946 (1940) runs bash-rules-hint on PostToolUseFailure; merged by the owner. 1948 (1942) adds scripts/human-only-paths.ts and drops humanOnly from the build workflow; merged by me. 1949 (1937, 1938) narrows the tenant-layers and mdc-when-to-use globs, moves the short instructions into the rule and adds a mermaid-lanes rule; merged by the owner. I fixed the build's last two review findings by hand after it hit the 3-round cap. 1950 (1939) changes the ADR pointer to \"must read when relevant\" with a token estimate (chars/4); the owner picked this over all three proposed options. I merged main into it after 1949 created a conflict; merged by the owner. 1951 (1944) sends manual worktrees to .claude/worktrees/. I ran the probe myself: a Read in a sibling worktree loaded no rule. Merged by me. 1947 (1941, 1943) adds rulesLoadedBySubagents and subagentVerdicts, has subagents rate the rules and docs only they loaded or read (SendMessage for Agent-tool subagents, a result schema for workflow agents), and adds the 1943 verdict checks; merged by the owner. The owner expanded 1943's scope over Q7-Q10. After the merges, the owner asked for a live test, so I started two Sonnet child sessions. The first (session_01NVG22rfEsjhW9zkcCco6W8) confirmed 1947, 1948, 1950 and 1951. My brief had it read rule files first, which hid the 1946 and 1949 checks. The second (session_01D2JnZT1y8zCvC9GJc27pZp) confirmed both: the PostToolUseFailure hook output carried adr-0023, and its committed rulesLoaded order matches every expected glob. Open judgement calls are listed in each PR. The owner then found the separate subagent-rule section was not what they meant; after grilling Q11-Q16 I built PR 1964 (one verdict list, subagentVerdicts removed, one test log migrated as an owner-approved exception to ADR-0009), checked on a dev preview. 1844 is time-gated to 2026-10-15. The owner merges 1906 (pick 6a)."
 prs:
   - "1945"
   - "1946"
@@ -15,6 +15,7 @@ prs:
   - "1949"
   - "1950"
   - "1951"
+  - "1964"
 docsRead:
   - path: CONTEXT-MAP.md
     reason: session-start context map
@@ -82,8 +83,32 @@ docsRead:
     reason: (no reason given)
   - path: docs/adr/0002-manifest-driven-config-generation.md
     reason: (read before editing)
+  - path: docs/agents/verifying-ui-changes.md
+    reason: (read before editing)
+  - path: layers/journal/app/components/journal/SessionCard.vue
+    reason: (no reason given)
   - path: .claude/workflows/clear-backlog-build.js
     reason: (read before editing)
+  - path: scripts/session-trace.ts
+    reason: (read before editing)
+  - path: shared/schemas/session.ts
+    reason: (read before editing)
+  - path: scripts/log-session.ts
+    reason: (read before editing)
+  - path: layers/journal/app/types/journal.ts
+    reason: (read before editing)
+  - path: layers/journal/app/utils/dashboard.ts
+    reason: (read before editing)
+  - path: layers/journal/content/current/sessions/2026-10-14-session_01NVG22rfEsjhW9zkcCco6W8.yml
+    reason: (no reason given)
+  - path: tests/unit/session-trace.spec.ts
+    reason: (read before editing)
+  - path: tests/unit/log-session.spec.ts
+    reason: (read before editing)
+  - path: layers/journal/tests/unit/journal-dashboard.spec.ts
+    reason: (read before editing)
+  - path: /home/user/terrarium/.agents/skills/log-session/SKILL.md
+    reason: (no reason given)
   - path: scripts/merge-pr.ts
     reason: (no reason given)
   - path: scripts/validate-adr-rules.ts
@@ -92,20 +117,6 @@ docsRead:
     reason: (no reason given)
   - path: .claude/settings.json
     reason: (no reason given)
-  - path: scripts/session-trace.ts
-    reason: (read before editing)
-  - path: shared/schemas/session.ts
-    reason: (no reason given)
-  - path: tests/unit/session-trace.spec.ts
-    reason: (read before editing)
-  - path: tests/unit/log-session.spec.ts
-    reason: (read before editing)
-  - path: layers/journal/app/utils/dashboard.ts
-    reason: (no reason given)
-  - path: layers/journal/tests/unit/journal-dashboard.spec.ts
-    reason: (read before editing)
-  - path: layers/journal/app/components/journal/SessionCard.vue
-    reason: (no reason given)
   - path: scripts/human-only-paths.ts
     reason: (read before editing)
   - path: tests/unit/human-only-paths.spec.ts
@@ -113,8 +124,6 @@ docsRead:
   - path: scripts/shell-reads.ts
     reason: (no reason given)
   - path: layers/atlas/app/utils/atlas.ts
-    reason: (read before editing)
-  - path: docs/agents/verifying-ui-changes.md
     reason: (read before editing)
   - path: docs/research/mermaid-server-side-rendering.md
     reason: (read before editing)
@@ -130,8 +139,6 @@ docsRead:
     reason: (no reason given)
   - path: .agents/prune-trials.yml
     reason: (no reason given)
-  - path: scripts/log-session.ts
-    reason: (read before editing)
   - path: .claude/workflows/clear-backlog-explore.js
     reason: (no reason given)
   - path: .agents/skills/writing-for-agents/SKILL.md
@@ -173,17 +180,20 @@ frictions:
   - description: I ran git checkout origin/main -- with no path, which detached HEAD in the main checkout, against git-conventions; I restored the branch right away
     solution: Read files from main with git show origin/main:path, as git-conventions says
     severity: nit
-durationSec: 6065
+  - description: I briefed the 1947 build with a separate subagent-verdict list and card section without asking the owner how it should look; it shipped and needed a redesign PR (1964)
+    solution: When a change alters what a person sees, put the layout to the owner as a grilling question before building
+    severity: moderate
+durationSec: 13406
 models:
-  claude-opus-5-5: 273
+  claude-opus-5-5: 321
 toolCounts:
-  Bash: 73
-  Workflow: 4
+  Bash: 89
+  Workflow: 5
   ToolSearch: 4
-  Read: 7
+  Read: 10
   PushNotification: 1
-  mcp__github__create_pull_request: 7
-  mcp__claude-code-remote__subscribe_pr_activity: 7
+  mcp__github__create_pull_request: 8
+  mcp__claude-code-remote__subscribe_pr_activity: 8
   Skill: 2
   Write: 1
   ReadNotifications: 19
@@ -200,15 +210,19 @@ filesEdited:
   - docs/adr/0002-manifest-driven-config-generation.md
   - .claude/rules/tenant-layers.md
   - .claude/rules/adr-0002.md
+  - scripts/session-trace.ts
+  - tests/unit/session-trace.spec.ts
+  - shared/schemas/session.ts
+  - tests/unit/log-session.spec.ts
+  - layers/journal/tests/unit/journal-dashboard.spec.ts
+  - layers/journal/app/utils/dashboard.ts
+  - layers/journal/app/types/journal.ts
   - docs/agents/guards.md
   - tests/unit/human-only-paths.spec.ts
   - scripts/human-only-paths.ts
   - .claude/workflows/clear-backlog-build.js
   - /home/user/terrarium/.agents/skills/clear-backlog/SKILL.md
   - .agents/skills/clear-backlog/SKILL.md
-  - tests/unit/session-trace.spec.ts
-  - tests/unit/log-session.spec.ts
-  - layers/journal/tests/unit/journal-dashboard.spec.ts
   - .agents/skills/log-session/SKILL.md
   - .claude/rules/mdc-when-to-use.md
   - .claude/rules/mermaid-lanes.md
@@ -220,7 +234,6 @@ filesEdited:
   - scripts/validate-adr-rules.ts
   - /home/user/terrarium/.claude/worktrees/wf_fd825fd5-ba6-1/scripts/session-trace.ts
   - scripts/log-session.ts
-  - scripts/session-trace.ts
 rulesLoaded:
   - .claude/rules/adr-0022.md
   - .claude/rules/adr-0005.md
@@ -229,10 +242,10 @@ rulesLoaded:
   - .claude/rules/adr-0004-human-merge.md
   - .claude/rules/adr-0030.md
   - .claude/rules/adr-0023.md
-  - .claude/rules/guards.md
-  - .claude/rules/adr-0025.md
   - .claude/rules/adr-0008.md
   - .claude/rules/tenant-layers.md
+  - .claude/rules/guards.md
+  - .claude/rules/adr-0025.md
 rulesGlobal:
   - .claude/rules/adr-0004.md
   - .claude/rules/adr-0009.md
@@ -329,6 +342,24 @@ subagents:
     model: claude-opus-5-5
   - type: workflow-subagent
     task: "triage #1844"
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: Standards feat/single-verdict-list r1
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: Standards feat/single-verdict-list r2
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: Spec feat/single-verdict-list r1
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: fix feat/single-verdict-list r1
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: build feat/single-verdict-list
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: Spec feat/single-verdict-list r2
     model: claude-opus-5-5
   - type: workflow-subagent
     task: Standards docs/guards-hook-crash-1905 r2
