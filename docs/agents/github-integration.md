@@ -7,16 +7,14 @@ how to poll. Two workflow docs sit on top of this one and own their recipes:
 
 ## Bare angle brackets vanish from a rendered title or body
 
-GitHub silently strips bare `<...>` text from a rendered title or body. Wrap it
-in a fenced code block; a single backtick is not enough. A guard denies it
-(issue #886).
+GitHub strips bare `<...>` text. Put it in a fenced code block; a single
+backtick is not enough. A guard denies it.
 
-## Transient failures — retry before escalating
+## Transient failures
 
-`mcp__github__*` calls sometimes return a transient 503 ("no server currently
-available"). Retry once or twice after a short pause before calling it a
-failure. If `issue_read` keeps flaking,
-`search_issues` scoped to the issue number works as a fallback (issue #611).
+A 503 ("no server currently available") is usually transient: retry once or
+twice before calling it a failure. If `issue_read` keeps flaking,
+`search_issues` scoped to the issue number works as a fallback.
 
 ## Local CLI vs cloud session: which tool works
 
@@ -62,74 +60,45 @@ like this:
 
 ## Overflow and precision traps
 
-- **`list_issues` and `list_pull_requests` have no `minimal_output`;** pass
-  `fields` omitting `body` (and `field_values`/`labels` on `list_issues`), or
-  full bodies can overflow even a paginated call. Use a small `perPage` (5-10),
-  page through open and closed/merged, and slice the saved file by hand. Use
-  `search_*` only if listing still overflows (it is rate-limited: see
-  "Searching is the fragile path"), and always scope it (state, label,
-  keyword): a broad query overflows too.
-- **`search_issues` / `search_pull_requests` need `fields`:**
-  `github-search-fields-guard.ts` denies a call without it, and its message
-  says what to pass.
-- **A narrow query is not a precise one.** Even a quoted, multi-term search does
-  fuzzy matching, not exact-phrase matching, and returns loosely related hits
-  next to real ones. Read every result. Hit count and ranking say nothing about
-  precision.
-- **`total_count: 0` does not prove nothing matches.** The index can miss a real
-  hit. Before you assert "nothing exists," cross-check with a
-  `list_issues` / `list_pull_requests` scan (narrow filters, to dodge the
-  overflow above).
-- **For an identifier — a session id, an issue/PR number as text, an exact error
-  string — wrap the search query in quotes.** An unquoted natural-language query
-  can hit the oversized-result trap; a quoted one returns a small, exact set
-  (issue #932).
-- **Searching is the fragile path; prefer a repo-scoped listing.** The proxy
-  blocks GitHub's `search/issues` endpoint for scripts (it binds a session to
-  `repos/{owner}/{repo}/…` endpoints). The `search_*` MCP tools return a 403
-  rate limit after only a few sequential calls (issues #952, #1092). Use
-  `list_issues`,
+Large results overflow your context. Keep them small and read every hit.
+
+- **Prefer a repo-scoped listing to `search_*`.** Searching is the fragile path:
+  the `search_*` tools return a 403 rate limit after a few sequential calls, and
+  the proxy blocks GitHub's `search/issues` for scripts. Use `list_issues`,
   `list_pull_requests` or `pnpm exec tsx scripts/list-open-issues.ts` and filter
-  locally. If a search is unavoidable and returns 403, wait at least a minute
-  and retry once, sequentially.
-- **`search_pull_requests` needs explicit `owner` and `repo`.** Unlike
-  `search_issues`, it does not scope to this repo. Without them it searches all
-  of GitHub: hundreds or thousands of hits, and a likely overflow.
-- **`issue_read` / `pull_request_read` bodies come back HTML-entity-encoded**
-  (`&amp;`, `&#34;`, `&#39;`, `&lt;`, `&gt;`). Decode before you quote the text
-  or parse it (for example to pull out a `Closes #N` line).
-- **`actions_list` has no `minimal_output`** and returns full run objects
-  (~300KB), which overflow. To check "is main green," slice the saved file or
-  query by SHA.
-- **`get_job_logs` can return one enormous line (84k+ chars seen).** `Read`'s
-  offset/limit pages by line, so it does not help. Redirect the output to a file
-  and slice it, or fetch a small tail first.
-- **`issue_read`'s `get_sub_issues` returns full sub-issue bodies** and has
-  overflowed (94K–131K chars) on a wayfinder map/spec issue with many children.
-  If you only need linkage or a count, use `list_issues` with `fields` that omit
-  `body`, or read the parent's `sub_issues_summary.total_count`.
+  locally. If a search is unavoidable and returns 403, wait a minute and retry
+  once, sequentially. Always scope a search (state, label, keyword): a broad
+  query overflows too. A guard requires `fields` on `search_issues` and
+  `search_pull_requests`; its message says what to pass.
+- **`list_issues` and `list_pull_requests` have no `minimal_output`.** Pass
+  `fields` that omit `body` (and `field_values`/`labels` on `list_issues`), use a
+  small `perPage` (5-10), and page through open and closed/merged.
+- **`search_pull_requests` needs explicit `owner` and `repo`;** without them it
+  searches all of GitHub.
+- **A search result is not proof.** Matching is fuzzy even for a quoted phrase,
+  so read every hit. `total_count: 0` can miss a real hit: before you assert
+  "nothing exists," cross-check with a narrow `list_*` scan. Quote an identifier
+  (session id, issue number as text, exact error string); an unquoted query can
+  overflow.
+- **`issue_read` / `pull_request_read` bodies are HTML-entity-encoded**
+  (`&amp;`, `&#34;`, `&lt;`). Decode before you quote or parse them.
+- **Three calls return huge output.** `actions_list` returns full run objects
+  (~300KB): slice the saved file or query by SHA. `get_job_logs` can return one
+  enormous line, so `Read`'s offset/limit doesn't help: redirect to a file and
+  slice it, or fetch a small tail. `issue_read`'s `get_sub_issues` returns full
+  bodies: for linkage or a count, use `list_issues` with `fields` that omit
+  `body`, or read `sub_issues_summary.total_count`.
 
-## Script escapes — cheaper than the API for three common questions
+## Script escapes — cheaper than the API
 
-- **Which PRs merged recently, in what order, when?** Run
-  `pnpm exec tsx scripts/recent-prs.ts [N]`. It reads `git log origin/main`
-  (number, title, merge time only; `author` and `merged_by` need the API) and
-  cannot overflow (issue #319).
-- **Which issues are open right now?** Run
-  `pnpm exec tsx scripts/list-open-issues.ts [N]`. It calls the REST `issues`
-  endpoint through `gh api` (number, title, labels, updated time only) and cannot
-  overflow (issue #494). With no `gh` binary but `GH_TOKEN` / `GITHUB_TOKEN`
-  set, it falls back to a direct REST call with `curl`. With neither, use the
-  MCP tools above (issue #505).
-- **Did an AI comment claim a triage-label change the issue never got?** It
-  happens (issue #325's comment said `moved to ready-for-agent` while the issue
-  stayed `ready-for-human`) and nothing else catches it. Run
-  `pnpm exec tsx scripts/check-triage-drift.ts [N]` (standalone, in no periodic
-  sweep; same `gh`-less token fallback, issue #505). For each open issue it
-  finds the newest AI-authored comment by its ADR-0017 marker
-  (`author_association` can't be trusted here; see the script's header),
-  checks it against a phrase list for the five canonical labels, and prints
-  mismatches as JSON (issue #507).
+- **Recently merged PRs:** `pnpm exec tsx scripts/recent-prs.ts [N]` reads
+  `git log origin/main` (number, title, merge time only).
+- **Open issues:** `pnpm exec tsx scripts/list-open-issues.ts [N]` (number,
+  title, labels, updated time). It falls back to `curl` with `GH_TOKEN` /
+  `GITHUB_TOKEN` when `gh` is missing; with neither, use the MCP tools.
+- **An AI comment may claim a triage-label change the issue never got**
+  (issue #325). `pnpm exec tsx scripts/check-triage-drift.ts [N]` prints such
+  mismatches as JSON; the script's header says how.
 
 ## Polling: gate status is not webhook-delivered
 
