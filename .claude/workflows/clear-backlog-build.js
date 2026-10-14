@@ -22,13 +22,12 @@ const WORK = {
     commits: { type: 'array', items: { type: 'string' }, description: 'git log origin/main..HEAD --format=%H' },
     gatePassed: { type: 'boolean' },
     decisions: { type: 'array', items: { type: 'string' } },
-    humanOnly: { type: 'array', items: { type: 'string' }, description: 'touched paths that match .claude/rules/adr-0004-human-merge.md paths' },
     question: { type: 'string', description: 'for needs-owner: the owner question, with options and your pick' },
     fixed: { type: 'array', items: { type: 'string' } },
     refused: { type: 'array', items: { type: 'string' }, description: 'each refused finding with its proof' },
     reason: { type: 'string' },
   },
-  required: ['status', 'commits', 'gatePassed', 'decisions', 'humanOnly'],
+  required: ['status', 'commits', 'gatePassed', 'decisions'],
 }
 
 const REVIEW = {
@@ -70,8 +69,7 @@ function rules(b) {
 - Commit before you stop, even mid-work. Never push, open a PR, merge, or run close-session/log-session: the orchestrator does those.
 - Every GitHub body you post starts with this exact first line: ${HEADER}
 - Stop and return needs-owner, with the question, its options and your pick, before you add a new dependency, change stored data or the content schema, make a decision big enough for an ADR, delete content visitors can see, change which Tenant's data a request can reach, or reverse an owner's pick above. Decide everything else yourself and list it in decisions.
-- Return worktree, the absolute path of the worktree that holds your commits, only when the branch has commits.
-- List in humanOnly every touched path matching the \`paths\` of .claude/rules/adr-0004-human-merge.md.`
+- Return worktree, the absolute path of the worktree that holds your commits, only when the branch has commits.`
 }
 
 function buildPrompt(b) {
@@ -116,11 +114,11 @@ ${rules(b)}`
 async function buildBranch(b) {
   // Isolated even on a re-run: if b.worktree was auto-removed, the agent starts fresh in its own.
   const r = await agent(buildPrompt(b), { label: `build ${b.name}`, phase: 'Build', schema: WORK, isolation: 'worktree', ...modelOf(b) })
-  return r || { status: 'failed', reason: 'build agent returned nothing; its worktree may hold commits, and `pnpm check:worktrees` lists it', commits: [], decisions: [], humanOnly: [], worktree: b.worktree }
+  return r || { status: 'failed', reason: 'build agent returned nothing; its worktree may hold commits, and `pnpm check:worktrees` lists it', commits: [], decisions: [], worktree: b.worktree }
 }
 
 async function reviewBranch(built, b) {
-  const out = { branch: b.name, issues: b.issues, worktree: built.worktree, commits: built.commits, decisions: [...built.decisions], humanOnly: built.humanOnly, rounds: 0 }
+  const out = { branch: b.name, issues: b.issues, worktree: built.worktree, commits: built.commits, decisions: [...built.decisions], rounds: 0 }
   if (built.status !== 'done') return { ...out, status: built.status, question: built.question, reason: built.reason }
   if (!built.gatePassed || !built.worktree) return { ...out, status: 'failed', reason: 'build reported done without a passing gate:scoped or a worktree with commits' }
   for (let round = 1; round <= MAX_ROUNDS; round++) {
@@ -140,7 +138,6 @@ async function reviewBranch(built, b) {
     if (!fix) return { ...out, status: 'failed', reason: `round ${round}: fix agent returned nothing` }
     out.commits = fix.commits
     out.decisions.push(...fix.decisions)
-    out.humanOnly = [...new Set([...out.humanOnly, ...fix.humanOnly])]
     if (fix.status !== 'done') return { ...out, status: fix.status, question: fix.question, reason: fix.reason }
     if (!fix.gatePassed) return { ...out, status: 'failed', reason: `round ${round}: fix reported done without a passing gate:scoped` }
   }
