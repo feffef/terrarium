@@ -36,10 +36,10 @@ content, checks its own work against the **safety gate** (the lint, type-check,
 test, content-validation and build sequence that CI will run anyway), has the
 branch reviewed, and opens a pull request.
 
-At **Session closure** the session writes a **session log**, rewritten when the
-work merges, stops or is blocked and committed by a hook: what it set out to do,
+At **Session closure** the session writes a **session log**: what it set out to do,
 what actually shipped, and every **friction** it hit — dead ends, wasted
-effort, anything harder than it should have been. That log is deliberately
+effort, anything harder than it should have been. It replaces that log when the
+work merges, stops or is blocked, and a hook commits it. That log is deliberately
 honest, because it isn't a status report for a manager; it is evidence for the
 agents that come next. It is also the only lasting record: a session's
 transcript is hard to reach, so a friction that never reaches a log is
