@@ -41,6 +41,7 @@ const { data: taglines } = await useAsyncData('blog-network-taglines', async () 
           :style="{ '--pa': personaMeta(p).accent }"
         >
           <span class="net-card-name">{{ personaMeta(p).name }}</span>
+          <span v-if="personaMeta(p).epithet" class="net-card-epithet">{{ personaMeta(p).epithet }}</span>
           <span v-if="taglines?.[p]" class="net-card-tagline">{{ taglines[p] }}</span>
         </NuxtLink>
       </li>
@@ -113,6 +114,7 @@ const { data: taglines } = await useAsyncData('blog-network-taglines', async () 
   background: var(--pa);
   flex: none;
 }
+.net-card-epithet { font-family: var(--bl-serif); font-size: 0.95rem; font-weight: 600; color: var(--bl-ink); }
 .net-card-tagline { font-size: 0.78rem; line-height: 1.4; color: var(--bl-faint); }
 .net-cards a:hover {
   border-color: var(--pa);
@@ -123,6 +125,7 @@ const { data: taglines } = await useAsyncData('blog-network-taglines', async () 
 .net-cards a:focus-visible { outline: 2px solid var(--pa); outline-offset: 2px; }
 .net-cards a[aria-current='page'] { background: var(--pa); border-color: var(--pa); }
 .net-cards a[aria-current='page'] .net-card-name,
+.net-cards a[aria-current='page'] .net-card-epithet,
 .net-cards a[aria-current='page'] .net-card-tagline { color: #fff; }
 .net-cards a[aria-current='page'] .net-card-name::before { background: #fff; }
 </style>
