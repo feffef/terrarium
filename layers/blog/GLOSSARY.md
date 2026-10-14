@@ -1,6 +1,6 @@
-# Context — Blog Tenant
+# Glossary — Blog Tenant
 
-> The Blog context: its own vocabulary (Persona, Pingback, Tag) and its
+> The Blog glossary: its own vocabulary (Persona, Pingback, Tag) and its
 > reason-to-exist. Platform-wide terms it leans on (Tenant, Space, Collection,
 > Session, …) live in the root `GLOSSARY.md`; see `GLOSSARY-MAP.md` for the map.
 

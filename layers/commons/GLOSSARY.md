@@ -1,6 +1,6 @@
-# Context — Commons Tenant
+# Glossary — Commons Tenant
 
-> The Commons context: its reason-to-exist and the platform-wide terms it turns
+> The Commons glossary: its reason-to-exist and the platform-wide terms it turns
 > on. Commons coins no vocabulary of its own — the concepts it depends on
 > (**Aggregator**, **Catalog**, **Collection kind**) are Platform terms and live
 > in the root `GLOSSARY.md`; see `GLOSSARY-MAP.md`.

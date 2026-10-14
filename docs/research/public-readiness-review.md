@@ -41,7 +41,7 @@ Actions logs, and the agent workflow's attack surface.**
    → **Tracked** — issue #435 carries the accept-vs-`noreply` decision; this
    doc keeps only the verified facts above.
 3. **Governance / prompt-injection (the sharpest workflow risk).** The ADR
-   governance model assumes a **single trusted human** (ADR-0003, CONTEXT.md);
+   governance model assumes a **single trusted human** (ADR-0003, GLOSSARY.md);
    issue #213 already documents this breaking and is explicitly *"do NOT
    implement until the owner finalizes."* Going public makes it a prerequisite:
    - ADR-0004's gate checks a PR's **output** mechanically but never the

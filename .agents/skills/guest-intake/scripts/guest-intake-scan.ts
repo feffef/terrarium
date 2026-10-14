@@ -1,11 +1,8 @@
-// The guest-intake scan helper: turns `guest-intake`'s "scan every open issue,
-// check its newest activity for guest authorship" step — today done by
-// spawning a subagent that makes ~2 MCP tool calls (`issue_read` get +
-// get_comments) per open issue, ~190k tokens for a 25-issue pass that finds
-// zero guest activity (see the 2026-07-17 session log) — into a single direct
-// REST/`gh api` fetch. Mirrors `list-open-issues.ts` (issue #494) and
-// `check-triage-drift.ts` (issue #507)'s same fix for the same MCP-tool-cost
-// shape.
+// The guest-intake scan helper: does `guest-intake`'s "scan every open issue,
+// check its newest activity for guest authorship" step in one direct
+// REST/`gh api` fetch, instead of ~2 MCP calls per issue (~190k tokens for a
+// 25-issue pass; see the 2026-07-17 session log). Same fix as
+// `list-open-issues.ts` (issue #494) and `check-triage-drift.ts` (issue #507).
 //
 // Deliberate scope split: this script only *classifies* — it fetches every
 // open issue's newest activity and buckets it into a stage per
@@ -33,7 +30,7 @@
 // Fetch strategy: same `gh`-then-REST-fallback split as `check-triage-drift.ts`
 // (issue #505's `gh`-less remote-session fragility).
 //
-// Usage:  tsx .agents/skills/guest-intake/scripts/guest-intake-scan.ts [N]
+// Usage:  pnpm exec tsx .agents/skills/guest-intake/scripts/guest-intake-scan.ts [N]
 //   Scans up to N open issues (default 100) and prints a `ScanReport` JSON:
 //   { scannedCount, counts: {guest-activity, owner-steering,
 //   agent-authored-skip, bystander-comment, unrecognized-association}, actionable: ScannedIssue[] }
@@ -194,15 +191,11 @@ export function commentsSinceCursor(comments: RawCommentRecord[], cursor: string
  *  — see `commentsSinceCursor`). See the header comment for issue #569's fix
  *  this implements.
  *
- *  Known limitation: this returns only the single *newest* qualifying
- *  comment, not every one since the cursor. If two distinct real OWNER
- *  comments land within the same inter-scan gap, only the later one
- *  surfaces — the earlier is not re-offered on a later pass, since the
- *  cursor always advances to the true newest activity regardless of which
- *  comment actually got surfaced (see `guestIntakeScan`). Narrower than the
- *  originally-reported bug (a single sandwiched comment, which this does
- *  fix) and not addressed here — a fuller fix would need `scanIssue` to
- *  return every missed comment, not one. */
+ *  Known limitation: only the newest qualifying comment surfaces. If two real
+ *  OWNER comments land in one inter-scan gap, the earlier is never re-offered,
+ *  since the cursor advances to the newest activity regardless (see
+ *  `guestIntakeScan`). Fixing that needs `scanIssue` to return every missed
+ *  comment. */
 export function newestOwnerCommentSince(comments: RawCommentRecord[], cursor: string | null): RawCommentRecord | null {
   const candidates = commentsSinceCursor(comments, cursor).filter(
     (c) => TRUSTED_ASSOCIATIONS.has(c.author_association) && !isAiAuthored(c.body),
@@ -346,14 +339,11 @@ function readIssueEventsViaGh(owner: string, repo: string, issueNumber: number, 
 /** One `curl` GET through this environment's proxy, returning the response
  *  body text plus the *last* header block's status line and `Link` header.
  *
- *  Deliberately shells out to `curl` rather than using Node's global `fetch`:
- *  this environment routes outbound HTTPS through a pre-configured proxy via
- *  `HTTPS_PROXY`, which `curl` honors automatically but undici's `fetch` does
- *  not (it needs `NODE_USE_ENV_PROXY=1` set at process *startup*, which a
- *  script can't retroactively set on itself) — a plain `fetch()` here silently
- *  bypasses the proxy and gets an unauthenticated 401 straight from
- *  `api.github.com`, confirmed while building this script. `curl` sidesteps
- *  that gap with no new dependency.
+ *  Shells out to `curl`, not Node's `fetch`: outbound HTTPS goes through the
+ *  `HTTPS_PROXY` proxy, which `curl` honours but undici's `fetch` ignores
+ *  unless `NODE_USE_ENV_PROXY=1` is set at process startup (a script can't set
+ *  it on itself), so `fetch()` silently bypasses the proxy and gets an
+ *  unauthenticated 401 from `api.github.com`. `curl` needs no new dependency.
  *
  *  Through an HTTPS-over-proxy `CONNECT` tunnel, `curl -D` captures *two*
  *  header blocks — the proxy's own `200 Connection Established` first, then
@@ -461,7 +451,7 @@ const CURSOR_STATE_FILENAME = '.guest-intake-scan-state.json'
 
 /** The persisted cursor state at `path`, or `{}` when the file doesn't exist
  *  yet (an issue's first-ever scan) or is unreadable/corrupt — a missing
- *  cursor degrades to "check everything," never to a crash. */
+ *  cursor degrades to plain `newestActivity()`, never to a crash. */
 export function readCursorState(path: string): ScanCursorState {
   try {
     return JSON.parse(readFileSync(path, 'utf8')) as ScanCursorState

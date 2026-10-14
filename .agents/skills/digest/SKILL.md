@@ -6,16 +6,15 @@ disable-model-invocation: true
 
 # Digest
 
-Bring the Journal's front pages up to date. Two products, one run: a **Digest**
-per closed UTC day — a short, human **catch-up** on everything that happened
-across the Platform that day — and a live, self-refreshing **index**
-overview of the Platform's current state and capabilities. A thin, tested helper
-(`scripts/digest.ts`) does the deterministic gathering; **you write the prose**.
+Bring the Journal's front pages up to date: write a **Digest** per closed UTC
+day — a short, human **catch-up** on everything that happened across the
+Platform that day — and archive aged-out content. The index overview refreshes
+itself (step 4). A thin, tested helper (`scripts/digest.ts`) does the
+deterministic gathering; **you write the prose**.
 
-> **Invoked, never self-fired — follow the steps.** This Skill is user-invoked
-> (`disable-model-invocation: true`): a scheduled Routine fires `/digest`, and
-> a human can run it on demand, but a session never reaches for it
-> unprompted. Scheduled, it keeps the Journal's derived content current.
+> **Command-only — follow the steps.** A scheduled Routine or a human runs
+> `/digest`; `disable-model-invocation: true` keeps a session from invoking it
+> unprompted.
 
 Digests land through an ordinary gated PR, never the `log-session`
 direct-to-main path (ADR-0010). You merge it yourself once the gate is green
@@ -36,8 +35,8 @@ pnpm exec tsx scripts/digest.ts list
 
 It prints the **closed** UTC days that have activity but no digest yet — the
 backfill set, oldest first. Today is never listed (a day is digested only once its
-midnight UTC has passed). An empty list means no new Digests — skip to step 4 and
-still refresh the index.
+midnight UTC has passed). An empty list means no new Digests — skip to step 5;
+the archive sweep still runs.
 
 Done when you hold the list of days to author.
 
@@ -118,15 +117,14 @@ unfixed `wrong` claim.
 ## 4. The index refreshes itself — nothing to bake
 
 The Journal's Space landing (`/t/journal/current`) is a **live dashboard**
-that queries this Space's collections at request time, not a Markdown render
-of any file — see `layers/journal/GLOSSARY.md`'s "What lives where" for what it
-renders. A Digest you wrote in step 3 therefore appears with **no edit to
-`index.md`**.
+that queries this Space's collections at request time
+(`layers/journal/GLOSSARY.md`, "What lives where"), so a Digest from step 3
+appears with **no edit to `index.md`**.
 
-`index.md` still owns two things — its **free-form editorial intro** (its Markdown
-body, rendered above the dashboard) and its title/description. Touch those only
-when the standing introduction itself should change, **never** to bake a per-run
-overview or a digest list (the dashboard already lists them, live).
+`index.md` owns only its **editorial intro** (its Markdown body, rendered above
+the dashboard) and its title/description. Edit those only when the standing
+introduction should change, **never** to bake a per-run overview or a digest
+list: the dashboard lists them live.
 
 Done when you have confirmed the new Digest(s) will show — no index edit is needed.
 

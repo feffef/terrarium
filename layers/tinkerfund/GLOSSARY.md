@@ -1,6 +1,6 @@
-# Context — Tinkerfund Tenant
+# Glossary — Tinkerfund Tenant
 
-> The Tinkerfund context: its own vocabulary and its reason-to-exist.
+> The Tinkerfund glossary: its own vocabulary and its reason-to-exist.
 > Platform-wide terms it leans on (Tenant, Space, Collection, …) live in the
 > root `GLOSSARY.md`; see `GLOSSARY-MAP.md` for the map.
 

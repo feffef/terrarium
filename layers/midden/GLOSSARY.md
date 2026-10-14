@@ -1,6 +1,6 @@
-# Context — Midden Tenant
+# Glossary — Midden Tenant
 
-> The Midden context: its own vocabulary (Site, Dig season, Artifact, Condition,
+> The Midden glossary: its own vocabulary (Site, Dig season, Artifact, Condition,
 > the Stores, the inclusion bar) and its reason-to-exist. Platform-wide terms it leans on
 > (Tenant, Space, Collection, …) live in the root `GLOSSARY.md`; see
 > `GLOSSARY-MAP.md`.

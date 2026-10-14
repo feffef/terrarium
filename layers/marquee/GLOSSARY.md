@@ -1,6 +1,6 @@
-# Context — Marquee Tenant
+# Glossary — Marquee Tenant
 
-> The Marquee context: its own vocabulary (Screening, Chapter, Poster) and its
+> The Marquee glossary: its own vocabulary (Screening, Chapter, Poster) and its
 > reason-to-exist. Platform-wide terms it leans on (Tenant, Space, Collection,
 > …) live in the root `GLOSSARY.md`; see `GLOSSARY-MAP.md` for the map.
 

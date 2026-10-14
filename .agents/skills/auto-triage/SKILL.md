@@ -5,8 +5,7 @@ disable-model-invocation: true
 ---
 
 One brave **sweep** over the issues that need attention, applying `triage`'s
-per-issue rules autonomously — built to run by hand or be fired on an interval by
-a Routine or `/loop`.
+per-issue rules autonomously.
 
 **It composes `/triage`.** Every per-issue rule — the label state machine, claim
 verification, the Agent Brief format, the redundancy / prior-rejection checks —
@@ -22,24 +21,23 @@ live in `triage`'s Skill Inventory entry.
 
 Scan every **open** issue and in-scope external PR (external-PR scoping is
 `/triage`'s own filter — a collaborator's in-flight PR is never triage work).
-Never scan a `wayfinder:map` — see "Coexisting with wayfinder" below; it's an
-index, not work, no matter who last commented on it.
+Never scan a `wayfinder:map`, whoever last commented on it (see "Coexisting
+with wayfinder" below).
 
 For everything else, fetch the **most recent comment** and check who wrote it:
 
 - **No state label, `needs-triage`, or no comments.** Always eligible, whoever
-  filed it or commented last.
+  filed it or commented last, except an on-hold spec or sub-issue
+  (`docs/agents/issue-tracker.md`'s Specs), which follows the next bullet.
 - **Any other state** (`needs-info`, `ready-for-human`, even `ready-for-agent`)
   **is eligible when its most recent comment is human-authored.**
-  Every agent comment carries an ADR-0017 mark, so its **absence** is the signal (`isAiAuthored`). Never use the author or `author_association`: agents post as the owner (ADR-0017). A human comment on *any* state — a decision dropped onto a `ready-for-human` ticket, a clarifying reply on `needs-info`, new instructions added to an already-`ready-for-agent` ticket — is worth another look, label notwithstanding.
+  Every agent comment carries an ADR-0017 mark, so its **absence** is the signal (`isAiAuthored`). Never use the author or `author_association`: agents post as the owner (ADR-0017).
 
-Skip any other ticket the moment its most recent comment is already AI's own. That's
-what keeps a short-interval loop **idempotent**: once triage (or a directed
-follow-through) responds to the human's comment, the ticket goes quiet again
-until a human writes something new — it does not re-surface on the next pass
-just because its label still reads `ready-for-human`.
+Skip any other ticket whose most recent comment is already AI's own. That keeps a
+short-interval loop **idempotent**: once an agent answers the human's comment,
+the ticket stays quiet until a human writes again, whatever its label reads.
 
-This is a full scan, one comments fetch per open issue rather than a label-filtered query, because no label can express a state/comment combination. There is no issue-count threshold for reconsidering that: revisit only once a full sweep visibly costs noticeable wall-clock time or API budget, and don't pre-build pagination or caching against a guessed number.
+This is a full scan, one comments fetch per open issue rather than a label-filtered query, because no label can express a state/comment combination. Revisit that only once a full sweep visibly costs noticeable time or API budget, never at a guessed issue count, and don't pre-build pagination or caching.
 
 ## Be brave — bounded by determinability
 
@@ -75,20 +73,19 @@ Much of the backlog is wayfinder tickets. Overlay triage readiness **without
 fighting wayfinder's mechanics** (read `/wayfinder` for them):
 
 - **Never** triage a `wayfinder:map` — it is an index, not work.
-- **Skip** a **claimed** (assigned) ticket and a **blocked** ticket — an open
-  native dependency *or* a `Blocked by:` body line, the documented fallback
-  when a blocker isn't set as a native dependency (see `docs/agents/issue-tracker.md`'s
+- **Skip** a **claimed** (assigned) ticket and a **blocked** ticket (an open
+  native dependency *or* a `Blocked by:` body line; `docs/agents/issue-tracker.md`'s
   Wayfinding operations): wayfinder's frontier is open + unblocked + unclaimed,
   so a blocked ticket is not takeable and must not be stamped `ready-for-agent`.
 - **Preserve** every `wayfinder:*` label — this is an overlay, never a replacement.
 - Honour the ticket type: `wayfinder:grilling` and `wayfinder:prototype` are
   **HITL** (human-in-the-loop) → `ready-for-human`; `wayfinder:research` is
   **AFK** and, when unblocked and unclaimed, is eligible for `ready-for-agent`.
-  `wayfinder:task` is HITL-or-AFK **per ticket** (wayfinder's own definition —
-  the agent drives it alone where it can, otherwise it hands the human a
-  checklist): read the ticket body against that same test, and fall back to the
-  judgment-call escalation above (e.g. external access the agent lacks) before
-  granting `ready-for-agent` — there is no separate label splitting the two.
+  `wayfinder:task` is HITL or AFK **per ticket**, and no label splits the two:
+  by wayfinder's definition it is AFK where the agent can drive it alone, HITL
+  where it must hand the human a checklist. Judge the ticket body by that test;
+  where it fails (e.g. external access the agent lacks), fall back to the
+  judgment-call escalation above rather than grant `ready-for-agent`.
 
 ## Coexisting with the guest pipeline
 
@@ -104,9 +101,8 @@ explicit skip here rather than relying on the timing.
 **Full-sweep mode.** Pass `full-sweep` as this Skill's argument (e.g.
 `/auto-triage full-sweep`, or naming it in a Routine's prompt) to disable the
 AI-last-comment idempotency skip above for this run only — every open,
-in-scope issue is eligible regardless of who commented last. Reserved for a
-human-directed brave re-triage; never the default, and never a mode an agent
-reaches for on its own.
+in-scope issue is eligible regardless of who commented last. Use it only when
+a human directs a brave re-triage; an agent never picks it on its own.
 
 1. **Resolve the set.** List every open issue via `pnpm exec tsx scripts/list-open-issues.ts`
    (overflow-safe — see `docs/agents/github-integration.md` — not raw

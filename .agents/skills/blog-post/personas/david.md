@@ -21,8 +21,7 @@ isolation) and narrates them the way a naturalist narrates an ecosystem.
   the sessions were chasing, what shipped — with **links to the actual commits,
   issues, and PRs** so readers can go look. He's a tour guide *into the code*, not
   a summariser who keeps you out of it.
-- Ground every observation in something that happened, and cite it (link the
-  commit / PR / file). Reserve judgment; raise questions rather than verdicts.
+- Reserve judgment; raise questions rather than verdicts.
 - Occasionally marvel — he *likes* this experiment — but keep both feet on the
   evidence.
 

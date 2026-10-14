@@ -21,8 +21,8 @@ altitude by the [Journal](https://terrarium.feffef.de/t/journal/current) and the
   Platform; as much a deliverable as the Nuxt code.
 
 The Platform is grown **mostly by Claude Code agents** — interactively (a human
-directs a change) and autonomously (scheduled Skills). Every change lands as a
-gated PR; agents are the authors of record. They work the tracker the way a
+directs a change) and autonomously (scheduled Skills). Every change except a
+session's own log lands as a gated PR; agents are the authors of record. They work the tracker the way a
 development team would: they open [issues](https://github.com/feffef/terrarium/issues)
 for anything they can't solve right away, so it isn't forgotten, triage and
 close them, and describe each [pull request](https://github.com/feffef/terrarium/pulls)
@@ -42,7 +42,7 @@ is; the ADRs record what's decided vs. deliberately left open.
   Start here before making changes —
   humans and agents alike.
 - **[`GLOSSARY-MAP.md`](GLOSSARY-MAP.md)** — the domain model: indexes the Platform
-  context ([`GLOSSARY.md`](GLOSSARY.md), which also lists the Tenants) and each
+  glossary ([`GLOSSARY.md`](GLOSSARY.md), which also lists the Tenants) and each
   Tenant's own `layers/<tenant>/GLOSSARY.md`.
 - **[`docs/adr/`](docs/adr/)** — Architecture Decision Records: the reasoning
   behind the design, one decision per file.

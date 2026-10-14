@@ -1,6 +1,6 @@
-# Context — Atlas Tenant
+# Glossary — Atlas Tenant
 
-> The Atlas context: its own vocabulary (Biome, Specimen, Interaction,
+> The Atlas glossary: its own vocabulary (Biome, Specimen, Interaction,
 > Observation) and its reason-to-exist. Platform-wide terms it leans on (Tenant,
 > Space, Collection, …) live in the root `GLOSSARY.md`; see `GLOSSARY-MAP.md`.
 

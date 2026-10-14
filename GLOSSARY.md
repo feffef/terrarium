@@ -1,6 +1,6 @@
-# Context — Platform
+# Glossary — Platform
 
-> The **Platform context** of a multi-context repo (ADR-0021; see
+> The **Platform glossary** (ADR-0021; see
 > [`GLOSSARY-MAP.md`](./GLOSSARY-MAP.md)): the concepts every agent needs
 > regardless of task, plus a roster of the Tenants. Tenant-local vocabulary lives
 > in `layers/<tenant>/GLOSSARY.md`. This file is a glossary only: no
@@ -44,7 +44,7 @@ Tenant's components and content *model* but have completely separated content
 vary by Tenant; the Platform treats them generically. For example, the
 Journal Tenant uses `current` (live) and `archived` (retired snapshots). A
 customer-facing website Tenant might instead use `prod` (live
-content), `uat` (customer testing), and `dev` (developer playground). The Blog, Atlas and Marquee give a Space a Tenant-specific name and meaning — a **Persona**, a **Biome** and a **Screening** respectively (defined in their own contexts).
+content), `uat` (customer testing), and `dev` (developer playground). The Blog, Atlas and Marquee give a Space a Tenant-specific name and meaning — a **Persona**, a **Biome** and a **Screening** respectively (defined in their own glossaries).
 
 ### Collection
 The structure of one *type* of content within a Space (e.g. `blog`, `pages`,
@@ -153,7 +153,7 @@ one's **role** and **importance** to this Platform. It
 is kept current by the `audit-skills` Skill. It and the **Friction Ledger** are
 **Inventories** — the general category of derived, current-state readouts that
 are refreshed in place rather than appended to (contrast the Digest, a
-daily summary defined in the Journal context).
+daily summary defined in the Journal glossary).
 
 ### Importance (of a Skill)
 A Skill Inventory entry's grade for how much a Skill matters to the Platform — a
@@ -171,9 +171,7 @@ reached for inside someone else's (e.g. `digest`, `audit-docs`). Assigned from t
 - **peripheral** — marginal or superseded: little observed pull even when it could
   have applied.
 Disuse *alone* never lowers a grade, and a grade moves only on cited session
-evidence. Sessions of its kind going without a pack Skill can lower its grade;
-for one of our own Skills that is a trigger problem, reported as an issue, not
-a demotion (ADR-0015).
+evidence (ADR-0015; `audit-skills` step 5 says what evidence counts).
 
 ### Role (of a Skill)
 A Skill Inventory entry's plain-prose account of what the Skill is for and why
@@ -259,7 +257,8 @@ skipped).
 A changed path that provably cannot affect the **Heavy** tier, so running Heavy
 against it could only re-confirm the previous answer. A property of the *path*,
 not of the change's importance: an Inert change may still be substantial. Only a
-changeset that is entirely Inert may skip Heavy.
+changeset that is entirely Inert may skip all of Heavy; one of Inert paths and
+Skill files skips only `build` and `test:e2e`.
 
 ### Human-only
 A surface that a **Trusted** human must **merge** — never merged by an agent,
@@ -290,7 +289,7 @@ steps need none: they live in an action agents can push (ADR-0026). See `docs/pr
 
 ## Tenants
 
-The Platform hosts these Tenants. Each has its own **context**
+The Platform hosts these Tenants. Each has its own glossary
 (vocabulary + reason-to-exist) co-located with its code; this roster is the
 pointer into them (see `GLOSSARY-MAP.md`).
 

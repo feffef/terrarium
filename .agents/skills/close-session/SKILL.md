@@ -18,12 +18,11 @@ You've reached **Session closure** — run the closing actions:
   stalled or abandoned session to `completed`.
 - **For any gated PR:** open it, subscribe to its
   activity, and babysit it to merge/close.
-- **If a tool call in that PR-open sequence (`subscribe_pr_activity`, or this
-  Skill's own trigger) gets rejected, don't let closure stall.** Still invoke
-  `log-session` for the state actually reached — status `in-review`, noting in
-  the summary/friction which step was skipped — rather than deferring the whole
-  closure step until a human prompts it (the `HUMAN-PROMPTED-CLOSURE` failure
-  mode below).
+- **If a call in that PR-open sequence (`subscribe_pr_activity`, or this
+  Skill's own trigger) is rejected, log anyway:** invoke `log-session` with
+  status `in-review`, naming the skipped step in the summary or a friction.
+  Waiting for a human to prompt closure is the `HUMAN-PROMPTED-CLOSURE`
+  failure below.
 
 **Closing isn't one-shot.** If you do more work after closing, invoke
 `/close-session` again — re-logging self-heals (`log-session` explains why).

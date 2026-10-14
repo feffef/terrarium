@@ -21,8 +21,8 @@ export interface RotationPost {
 }
 
 /** The gate's result: `last` is the newest post's Persona (`null` with zero posts);
- *  `starved` lists any Persona that has sat out the four newest posts (rule
- *  2 — empty unless that rule fires); `eligible` is the set a draft/pick may
+ *  `starved` lists any Persona that has sat out the four newest posts (empty
+ *  unless the forced-next rule fires); `eligible` is the set a draft/pick may
  *  actually use this run. */
 export interface RotationState {
   last: string | null
@@ -32,15 +32,16 @@ export interface RotationState {
 
 // ── Pure core (unit-tested) ───────────────────────────────────────────────────
 
-/** The rotation rules, verbatim (SKILL.md "1. Rotation gate"):
+/** The rotation rules (no Persona twice in a row; a Persona missing from the
+ *  four newest posts is forced next), as steps:
  *
  *  1. Sort posts newest-first.
  *  2. `last` = the newest post's Persona, or `null` with no posts.
  *  3. `recentFour` = the Personas among the four newest posts.
  *  4. `missing` = universe Personas absent from `recentFour`.
- *  5. Fewer than four posts total (rule 2 can't apply yet): `starved = []`,
+ *  5. Fewer than four posts total (the forced-next rule can't apply yet): `starved = []`,
  *     eligible = universe minus `last`.
- *  6. A Persona missing from `recentFour` (starved past four): rule 2
+ *  6. A Persona missing from `recentFour` (starved past four): the forced-next rule
  *     collapses the set — `starved = missing`, `eligible = missing`.
  *  7. Otherwise (all of `recentFour`): `starved = []`, eligible = universe
  *     minus `last`.
@@ -72,10 +73,7 @@ export function eligiblePersonas(posts: RotationPost[], personaUniverse: string[
 
 // ── fs shell (thin) ─────────────────────────────────────────────────────────
 
-/** Every Persona is a `content/<persona>/` directory (the gate's own
- *  `layers/blog/content/<persona>/pages/<slug>.md` glob and its
- *  `content/([^/]+)/` persona extraction — every such directory name is a
- *  Persona). */
+/** Every directory under `layers/blog/content/` is a Persona. */
 function personaUniverse(cwd = root): string[] {
   return readdirSync(resolve(cwd, BLOG_CONTENT_DIR), { withFileTypes: true })
     .filter((entry) => entry.isDirectory())
@@ -84,8 +82,7 @@ function personaUniverse(cwd = root): string[] {
 }
 
 /** `publishedAt:`'s value, read straight off the frontmatter line — a full
- *  YAML parse is more than this single-field read needs (mirrors the gate's own
- *  `grep -m1 '^publishedAt:'`). */
+ *  YAML parse is more than this single-field read needs. */
 function readPublishedAt(path: string): string | null {
   const text = readFileSync(path, 'utf8')
   const m = /^publishedAt:\s*(.+)$/m.exec(text)

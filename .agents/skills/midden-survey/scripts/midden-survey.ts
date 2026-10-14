@@ -14,9 +14,10 @@
 //
 // Usage:  tsx .agents/skills/midden-survey/scripts/midden-survey.ts [--since YYYY-MM-DD]
 //   Prints the JSON report. Refuses to run on a shallow clone: a grafted
-//   boundary commit silently truncates the deletion history (CLAUDE.md's
-//   shallow-clone rule), so a shallow sweep would report "nothing more found"
-//   falsely — deepen first (`git fetch --unshallow origin main`).
+//   boundary commit silently truncates the deletion history
+//   (docs/agents/git-conventions.md, "If a checkout is still shallow"), so a
+//   shallow sweep would report "nothing more found" falsely — deepen first
+//   (`git fetch --unshallow origin main`).
 import { readdirSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { pathToFileURL } from 'node:url'
@@ -447,7 +448,7 @@ function assertNotShallow(cwd = root): void {
   if (git(['rev-parse', '--is-shallow-repository'], cwd).trim() === 'true') {
     throw new Error(
       'this clone is shallow — the deletion sweep would silently truncate at the graft boundary. ' +
-        'Run `git fetch --unshallow origin main` first (CLAUDE.md, shallow-clone rule).',
+        'Run `git fetch --unshallow origin main` first (docs/agents/git-conventions.md, "If a checkout is still shallow").',
     )
   }
 }
@@ -511,8 +512,8 @@ function readCataloguedIndex(cwd = root): CataloguedIndex {
 // ── Command ─────────────────────────────────────────────────────────────────
 
 /** The JSON contract the `midden-survey` Skill consumes: fresh candidates on
- *  top, everything the machine screened out reported underneath (never
- *  silently dropped — CLAUDE.md's no-silent-caps discipline). */
+ *  top, everything the machine screened out reported underneath, never
+ *  silently dropped. */
 export interface SurveyReport {
   since: string | null
   deletedFiles: DeletionCandidate[]
@@ -528,7 +529,7 @@ export interface SurveyReport {
 
 export function surveyReport(cwd = root, sinceIso?: string): SurveyReport {
   assertNotShallow(cwd)
-  // See `fetchOriginMain`'s doc comment (./git-helpers.ts) for why this is
+  // See `fetchOriginMain`'s doc comment (scripts/git-helpers.ts) for why this is
   // called before every read, and why a failure here is left fatal.
   fetchOriginMain(cwd)
 
