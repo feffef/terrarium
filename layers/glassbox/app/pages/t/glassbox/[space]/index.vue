@@ -14,6 +14,7 @@ const { data, status, error } = await useAsyncData(route.path, async () => {
 })
 
 const landing = computed(() => data.value?.landing ?? null)
+provide(glassboxRevisionKey, computed(() => landing.value ?? undefined))
 
 useHead(() => ({ title: `${landing.value?.title ?? 'Glass Box'} · glassbox` }))
 useSeoMeta({ description: () => landing.value?.description })

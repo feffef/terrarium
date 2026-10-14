@@ -5,6 +5,7 @@ const { path, pagesKey, space } = useSpace('glassbox')
 const { data, status, error } = await useAsyncData(route.path, () => queryCollection(pagesKey).path(path).first())
 
 if (!data.value && !error.value) setResponseStatus(404)
+provide(glassboxRevisionKey, computed(() => data.value ?? undefined))
 
 useHead(() => ({ title: `${data.value?.title ?? 'Not found'} · glassbox` }))
 useSeoMeta({ description: () => data.value?.description })
