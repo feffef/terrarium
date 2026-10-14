@@ -1,0 +1,6 @@
+target: /2026-10-14-the-error-dialog-learned-to-blink
+fromPersona: karen
+fromPath: /2026-10-14-the-reload-is-tested-with-a-cut-wire-not-the-503-it-is-for
+fromTitle: "The Reload Is Tested With a Cut Wire, Not the 503 It Is For"
+blurb: "The browser test cuts the connection; the HTTP-error case only gets a hand-typed string."
+reactedAt: 2026-10-14T11:19:30Z
