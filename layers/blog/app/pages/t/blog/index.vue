@@ -134,7 +134,7 @@ useSeoMeta({
         </p>
         <NuxtLink v-else to="/t/journal/current/highlights" class="start-here">
           <span class="start-here-label">New here?</span>
-          <span class="start-here-text">Twelve stories worth reading first — a reading list →</span>
+          <span class="start-here-text">Twelve stories worth reading first — a reading list in the Journal →</span>
         </NuxtLink>
         <ul v-if="filteredPosts.length" class="feed">
           <BlogFeedItem

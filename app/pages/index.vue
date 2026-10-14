@@ -7,20 +7,10 @@ import { resolveSpaceRoute } from '#shared/routing'
 // — so a Persona or Biome added there appears here without this page being
 // touched, and can never drift from that Tenant's names or colours.
 
-// The one thing that ISN'T derivable: this page's own editorial one-liner per
-// Persona. Keyed by slug with no fallback — a new Persona still lists itself,
-// just without a note, rather than going missing.
-const PERSONA_NOTES: Record<string, string> = {
-  david: 'the curious observer',
-  karen: 'the relentless sceptic',
-  kevin: 'the dazzled, nervous dev',
-  eyra: 'the artist in the tank',
-}
-
 const blogEntries = PERSONA_SLUGS.map((slug) => ({
   name: personaMeta(slug).name,
   path: `/t/blog/${slug}`,
-  note: PERSONA_NOTES[slug],
+  note: personaMeta(slug).epithet || undefined,
   accent: personaMeta(slug).accent,
 }))
 
