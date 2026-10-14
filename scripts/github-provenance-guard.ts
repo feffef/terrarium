@@ -58,6 +58,8 @@
 //     `gh pr --body` subcommands: out of scope in #1900.
 //   • a `curl` URL built by the shell, combined short flags (`-sd`), and a
 //     file changed between this check and the call.
+//   • lines after a `<<WORD` written inside quotes, up to a `WORD` line:
+//     `shell-reads.ts`, whose words this reads, takes them for a heredoc.
 //   • the `sh` pre-filter forwards only payloads naming `gh … api` or
 //     `api.github.com`.
 //
@@ -72,6 +74,7 @@ import { buildDenyOutput, denyUninspectable, prop, readHookPayload, runIfMain, t
 import { provenanceFooter } from './provenance-footer.ts'
 import { provenanceHeader, readProvenanceHeader, sessionIdsIn } from './provenance-header.ts'
 import { resolveGroundTruthFromTranscript } from './session-trace.ts'
+import { shellSegments, type Token } from './shell-reads.ts'
 
 const LABEL = 'provenance guard'
 const REF = 'ADR-0017'
@@ -264,9 +267,10 @@ function formatFinding(f: ProvenanceFinding): string {
   const head = `Blocked by the ADR-0017 provenance guard: \`${f.tool}\``
 
   if (f.kind === 'uninspectable') {
+    const header = f.expected ? `\n\n${prescribedMarker(f.surface, sessionUrl(f.expected))}` : ''
     return (
       `${head} sends a GitHub body this guard cannot read (${f.detail}), so its provenance cannot ` +
-      `be checked. The guard fails CLOSED (ADR-0017).`
+      `be checked. The guard fails CLOSED (ADR-0017).${header}`
     )
   }
 
@@ -396,157 +400,14 @@ export function formatAngleBracketMessage(f: AngleBracketFinding): string {
 
 // --- Bash `gh api` and `curl` writes (issue #1900) ---------------------------
 
-/** One shell word. `dynamic` when the shell would expand part of it (a
- *  variable, a command substitution, `$'…'`), so its real value is unknown. */
-interface Word {
-  text: string
-  dynamic: boolean
-}
-
-/** Splits a Bash command into simple commands, quote-aware: a newline or an
- *  operator inside quotes stays in its word, so a multi-line body is one word
- *  and a `gh api` quoted in prose is not a command. `$(…)` and backtick
- *  bodies, and the script of `sh -c`/`bash -c`/`eval`, become commands too.
- *  Heredoc bodies are skipped. Not a full shell parser: see the header's
- *  fail-opens. */
-export function shellCommands(src: string): Word[][] {
-  const out: Word[][] = []
-  const heredocs: string[] = []
-  let i = 0
-
-  const skipHeredocs = (): void => {
-    while (heredocs.length > 0 && i < src.length) {
-      const end = src.indexOf('\n', i)
-      const line = src.slice(i, end < 0 ? src.length : end)
-      i = end < 0 ? src.length : end + 1
-      if (line.replace(/^\t+/, '') === heredocs[0]) heredocs.shift()
-    }
-    heredocs.length = 0
-  }
-
-  const parse = (nested: boolean): void => {
-    let cmd: Word[] = []
-    let word = ''
-    let dynamic = false
-    let inWord = false
-    const endWord = (): void => {
-      if (inWord) cmd.push({ text: word, dynamic })
-      word = ''
-      dynamic = false
-      inWord = false
-    }
-    const endCmd = (): void => {
-      endWord()
-      if (cmd.length > 0) out.push(cmd)
-      cmd = []
-    }
-    /** `$(…)` or a backtick span starting at `i`: parse its commands, and leave
-     *  a marker in the word so a dynamic key still reads as dynamic. */
-    const substitution = (): void => {
-      dynamic = true
-      inWord = true
-      word += '$(…)'
-      if (src[i] === '`') {
-        const end = src.indexOf('`', i + 1)
-        const stop = end < 0 ? src.length : end
-        out.push(...shellCommands(src.slice(i + 1, stop)))
-        i = stop + 1
-      } else {
-        i += 2
-        parse(true)
-      }
-    }
-
-    while (i < src.length) {
-      const c = src[i]!
-      if (c === '\n') {
-        endCmd()
-        i++
-        skipHeredocs()
-      } else if (c === ' ' || c === '\t') {
-        endWord()
-        i++
-      } else if (c === ')' && nested) {
-        endCmd()
-        i++
-        return
-      } else if (c === '&' && (word.endsWith('>') || word.endsWith('<'))) {
-        word += c
-        i++
-      } else if (';&|()'.includes(c)) {
-        endCmd()
-        i++
-      } else if (c === '#' && !inWord) {
-        while (i < src.length && src[i] !== '\n') i++
-      } else if (c === '<' && src[i + 1] === '<' && src[i + 2] !== '<') {
-        endWord()
-        i += src[i + 2] === '-' ? 3 : 2
-        while (src[i] === ' ' || src[i] === '\t') i++
-        const delim = /^(['"]?)([^\s'";&|<>()]+)\1/.exec(src.slice(i))
-        if (delim) {
-          heredocs.push(delim[2]!)
-          i += delim[0].length
-        }
-      } else if (c === '\\') {
-        if (src[i + 1] !== '\n') {
-          word += src[i + 1] ?? ''
-          inWord = true
-        }
-        i += 2
-      } else if (c === "'") {
-        const end = src.indexOf("'", i + 1)
-        const stop = end < 0 ? src.length : end
-        word += src.slice(i + 1, stop)
-        inWord = true
-        i = stop + 1
-      } else if (c === '"') {
-        inWord = true
-        i++
-        while (i < src.length && src[i] !== '"') {
-          const d = src[i]!
-          if (d === '\\' && '$`"\\\n'.includes(src[i + 1] ?? '')) {
-            if (src[i + 1] !== '\n') word += src[i + 1]
-            i += 2
-          } else if (d === '`' || (d === '$' && src[i + 1] === '(')) {
-            substitution()
-          } else {
-            if (d === '$') dynamic = true
-            word += d
-            i++
-          }
-        }
-        i++
-      } else if (c === '`' || (c === '$' && src[i + 1] === '(')) {
-        substitution()
-      } else {
-        if (c === '$') dynamic = true
-        word += c
-        inWord = true
-        i++
-      }
-    }
-    endCmd()
-  }
-
-  parse(false)
-  // A script handed to a shell or `eval` is a command line of its own.
-  for (const cmd of [...out]) {
-    const k = cmd.findIndex((w, n) => /(?:^|\/)(?:ba|z|da)?sh$/.test(w.text) && /^-[a-z]*c$/.test(cmd[n + 1]?.text ?? ''))
-    const script = k >= 0 ? cmd[k + 2] : cmd[0]?.text === 'eval' ? { text: cmd.slice(1).map((w) => w.text).join(' '), dynamic: false } : undefined
-    if (script) out.push(...shellCommands(script.text))
-  }
-  return out
-}
-
-/** A body a Bash write sends: its text, or why it can't be read. */
 type BashBody = { text: string } | { uninspectable: string }
 
-/** Reads the file a body comes from. `cwd` is `null` once a `cd` the guard
- *  cannot follow has run, so a relative path is unknown. */
-function fileBody(path: Word, cwd: string | null): BashBody {
+/** `cwd` is `undefined` once a `cd` the guard cannot follow has run, so a
+ *  relative path is unknown. */
+function fileBody(path: Pick<Token, 'text' | 'dynamic'>, cwd: string | undefined): BashBody {
   if (path.dynamic) return { uninspectable: 'its file path is built by the shell' }
   if (path.text === '-') return { uninspectable: 'it is read from standard input' }
-  if (cwd === null && !isAbsolute(path.text)) return { uninspectable: `\`${path.text}\` is relative to a directory the guard cannot follow` }
+  if (cwd === undefined && !isAbsolute(path.text)) return { uninspectable: `\`${path.text}\` is relative to a directory the guard cannot follow` }
   try {
     return { text: readFileSync(resolve(cwd ?? '/', path.text), 'utf8') }
   } catch {
@@ -554,7 +415,6 @@ function fileBody(path: Word, cwd: string | null): BashBody {
   }
 }
 
-/** The `body` field of a JSON request, `null` when it has none. */
 function jsonBody(raw: BashBody): BashBody | null {
   if ('uninspectable' in raw) return raw
   let parsed: unknown
@@ -573,14 +433,14 @@ const DYNAMIC = { uninspectable: 'the shell builds it from a variable or command
 /** The bodies one `gh api` call sends: every `body` field (`-f`, `-F`,
  *  `--raw-field`, `--field`, in any of their spellings) and the `body` of an
  *  `--input` file. Only `-F`/`--field` read `@path`, as in gh itself. */
-function ghApiBodies(args: Word[], cwd: string | null): BashBody[] {
+function ghApiBodies(args: Token[], cwd: string | undefined): BashBody[] {
   const bodies: BashBody[] = []
   for (let j = 0; j < args.length; j++) {
     const a = args[j]!.text
     const field = /^(?:(-[fF])|(--(?:raw-)?field)(?:=|$))(.*)$/s.exec(a)
     const input = /^--input(?:=(.*))?$/s.exec(a)
     if (field) {
-      const attached = field[3] !== '' || a.startsWith('--') && a.includes('=')
+      const attached = field[3] !== '' || a.includes('=')
       const value = attached ? { text: field[3]!, dynamic: args[j]!.dynamic } : args[++j]
       if (!value) continue
       const eq = value.text.indexOf('=')
@@ -603,8 +463,7 @@ function ghApiBodies(args: Word[], cwd: string | null): BashBody[] {
   return bodies
 }
 
-/** The bodies one `curl` call to `api.github.com` sends in its data flags. */
-function curlBodies(args: Word[], cwd: string | null): BashBody[] {
+function curlBodies(args: Token[], cwd: string | undefined): BashBody[] {
   if (!args.some((w) => w.text.includes('api.github.com'))) return []
   const bodies: BashBody[] = []
   for (let j = 0; j < args.length; j++) {
@@ -631,29 +490,31 @@ function curlBodies(args: Word[], cwd: string | null): BashBody[] {
 export function checkBashGithubWrite(
   command: string,
   groundTruthId: string | null | undefined,
-  cwd: string,
+  cwd: string | undefined,
 ): ProvenanceFinding | null {
-  let dir: string | null = cwd
-  for (const cmd of shellCommands(command)) {
-    if (cmd[0]?.text === 'cd') {
-      const to = cmd[1]
-      dir = to && !to.dynamic && to.text !== '-' && (dir !== null || isAbsolute(to.text)) ? resolve(dir ?? '/', to.text) : null
-      continue
-    }
-    const gh = cmd.findIndex((w, k) => /(?:^|\/)gh$/.test(w.text) && cmd[k + 1]?.text === 'api')
-    const curl = cmd.findIndex((w) => /(?:^|\/)curl$/.test(w.text))
+  for (const { tokens, dir } of shellSegments(command, cwd)) {
+    // A script handed to a shell or `eval` is a command line of its own.
+    const sh = tokens.findIndex((w, n) => SHELL.test(w.text) && /^-[a-z]*c$/.test(tokens[n + 1]?.text ?? ''))
+    const script = sh >= 0 ? tokens[sh + 2]?.text : tokens[0]?.text === 'eval' ? tokens.slice(1).map((w) => w.text).join(' ') : undefined
+    const nested = script === undefined ? null : checkBashGithubWrite(script, groundTruthId, dir)
+    if (nested) return nested
+
+    const gh = tokens.findIndex((w, k) => /(?:^|\/)gh$/.test(w.text) && tokens[k + 1]?.text === 'api')
+    const curl = tokens.findIndex((w) => /(?:^|\/)curl$/.test(w.text))
     const [tool, bodies] =
-      gh >= 0 ? ['Bash: gh api', ghApiBodies(cmd.slice(gh + 2), dir)] : curl >= 0 ? ['Bash: curl', curlBodies(cmd.slice(curl + 1), dir)] : ['', []]
+      gh >= 0 ? ['Bash: gh api', ghApiBodies(tokens.slice(gh + 2), dir)] : curl >= 0 ? ['Bash: curl', curlBodies(tokens.slice(curl + 1), dir)] : ['', []]
     for (const body of bodies) {
       const finding =
         'uninspectable' in body
-          ? { kind: 'uninspectable' as const, tool, surface: 'body' as const, detail: body.uninspectable }
+          ? { kind: 'uninspectable' as const, tool, surface: 'body' as const, detail: body.uninspectable, expected: groundTruthId ?? undefined }
           : checkGithubProvenance(tool, { body: body.text }, groundTruthId, [{ tool }])
       if (finding) return finding
     }
   }
   return null
 }
+
+const SHELL = /(?:^|\/)(?:ba|z|da)?sh$/
 
 /** Reads the hook JSON on stdin, resolves ground truth, runs the pure check,
  *  and writes a deny control object to stdout for any finding.

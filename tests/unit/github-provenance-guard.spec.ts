@@ -593,6 +593,7 @@ describe('Bash `gh api` and `curl` writes (#1900)', () => {
       const msg = formatGuardMessage(check('gh api x -f body="$BODY"')!)
       expect(msg).toMatch(/cannot read/)
       expect(msg).toContain('mcp__github__')
+      expect(msg).toContain('\u{1F916} [<your model name>](https://claude.ai/code/session_REAL)')
     })
   })
 
@@ -639,6 +640,12 @@ describe('Bash `gh api` and `curl` writes (#1900)', () => {
       expect(check(`(gh api x -f body='no header')`)).toMatchObject({ kind: 'missing' })
       expect(check(`bash -c "gh api x -f body='no header'"`)).toMatchObject({ kind: 'missing' })
       expect(check(`eval gh api x -f body=nope`)).toMatchObject({ kind: 'missing' })
+      expect(check(`echo "$(gh api x -f body='no header')"`)).toMatchObject({ kind: 'missing' })
+    })
+
+    it('reads the rest of a call past a substitution in an earlier field', () => {
+      expect(check(`gh api x -f t=$(date) -f body='no header'`)).toMatchObject({ kind: 'missing' })
+      expect(check("gh api x -f t=`date` -f body='no header'")).toMatchObject({ kind: 'missing' })
     })
 
     it('denies if any one of several bodies fails', () => {
