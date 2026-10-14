@@ -63,8 +63,8 @@ blindness matters, so a person reads them before they land.
 ## Consequences
 
 - `scripts/merge-pr.ts` sees a PR's author, not the request behind it, and
-  enforces the path list, Public or fork authors, and a guest-pipeline PR, by
-  the `guest-pipeline` label the `guest-build` Skill puts on it. The other exceptions rest on the agent
+  enforces the path list, Public or fork authors, and the `guest-pipeline`
+  label `guest-build` puts on its PRs. The other exceptions rest on the agent
   recognising them, including any other PR built from a Public request: it
   looks Trusted because an agent opens it.
 
