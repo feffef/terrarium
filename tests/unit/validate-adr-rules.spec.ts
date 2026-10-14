@@ -3,7 +3,7 @@ import { adrHash, adrTokens, findAdrRuleProblems, newFormatProblems, ruleAdr, ru
 
 const ADR = '# ADR-0024: Mermaid\n\nDecision text.\n'
 const stamped = (body: string) => withRuleHash(body, adrHash(ADR))
-const POINTER_RULE = (n: string) => `If this rule seems relevant, you must read the full ADR first:\ndocs/adr/${n}-mermaid.md\n`
+const POINTER_RULE = (n: string) => `If this rule seems relevant to your task, you must read the full ADR first:\ndocs/adr/${n}-mermaid.md\n`
 const summaryFor = (n: string) => withRuleTokens(stamped(POINTER_RULE(n)), adrTokens(ADR))
 const summary = summaryFor('0024')
 
@@ -56,7 +56,7 @@ describe('ADR token estimate in the summary pointer', () => {
   })
 
   it('stamps the estimate, and restamps a stale one', () => {
-    expect(summary).toContain('If this rule seems relevant, you must read the full ADR first (about 100 tokens):\ndocs/adr/')
+    expect(summary).toContain('If this rule seems relevant to your task, you must read the full ADR first (about 100 tokens):\ndocs/adr/')
     expect(withRuleTokens(summary, 900)).toContain('(about 900 tokens):')
   })
 

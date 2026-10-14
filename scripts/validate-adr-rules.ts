@@ -6,7 +6,7 @@
 // updates it if the decision changed, then runs this script with `--write`.
 // Every other rule must have `paths` and name only `docs/` files that exist
 // (ADR-0029, issue #1765). A summary's pointer says the full ADR must be read
-// when the rule seems relevant and estimates its tokens, so an agent sees the
+// when the rule seems relevant to the task and estimates its tokens, so an agent sees the
 // read is cheap (issue #1939); `--write` stamps it too. An
 // ADR in the new shape carries no history (ADR-0030).
 //
@@ -60,8 +60,8 @@ export function withRuleHash(ruleText: string, hash: string): string {
 /** About 4 characters a token, rounded to the nearest 100. */
 export const adrTokens = (text: string) => Math.max(100, Math.round(text.length / 400) * 100)
 
-const POINTER = 'If this rule seems relevant, you must read the full ADR first'
-const POINTER_RE = /If this rule seems relevant, you must read the full ADR first(?: \(about \d+ tokens\))?:/
+const POINTER = 'If this rule seems relevant to your task, you must read the full ADR first'
+const POINTER_RE = /If this rule seems relevant to your task, you must read the full ADR first(?: \(about \d+ tokens\))?:/
 const pointerText = (tokens: number) => `${POINTER} (about ${tokens} tokens):`
 
 export const withRuleTokens = (ruleText: string, tokens: number) => ruleText.replace(POINTER_RE, pointerText(tokens))
