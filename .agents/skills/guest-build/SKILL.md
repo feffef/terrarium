@@ -80,7 +80,9 @@ building against the same issue (#555) — before a human intervened.
 3. **Review on a different model.** The impl is Sonnet; run `/code-review` in
    its worktree on the orchestrator's own model (a distinct model, as the demo
    requires), per `dispatch-subagents` §3 ("Scope and trust"). Once clean, the
-   agent pushes and you open a **gated PR** that `Closes #N`. **Post the verdict as a PR
+   agent pushes and you open a **gated PR** that `Closes #N`, labelled
+   `guest-pipeline` (`GUEST_PIPELINE_LABEL` in `scripts/merge-pr.ts`, which
+   refuses to merge it). **Post the verdict as a PR
    comment — every time, even when clean** — so the audit trail lives on the PR
    (`docs/agents/pr-workflow.md`).
 4. **Hand it to the owner.** Comment on the issue: the story is built, PR #N is

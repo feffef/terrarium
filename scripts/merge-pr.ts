@@ -19,8 +19,9 @@
 // `envToken`) is single-homed in `list-open-issues.ts` and imported below.
 //
 // Usage:  tsx scripts/merge-pr.ts <pr-number> [--merge-method merge|squash|rebase] [--interval-ms N] [--timeout-ms N]
-//   Refuses up front for a fork or Public-authored PR, for a PR that changes a
-//   Human-only path (ADR-0004), or unless this session's verdict is on the PR (#1276).
+//   Refuses up front for a fork or Public-authored PR, a PR labelled
+//   `guest-pipeline` (ADR-0023), a PR that changes a Human-only path (ADR-0004),
+//   or unless this session's verdict is on the PR (#1276).
 //   Then polls the PR's head-commit check runs every `interval-ms` (default 15s)
 //   until they resolve or `timeout-ms` (default 20 minutes) elapses, then:
 //     - all green  → merges via the given method (default `merge`, matching
@@ -178,14 +179,21 @@ export function humanMergeRefusal(files: string[], globs: string[]): string | nu
     : null
 }
 
+/** The label `guest-build` puts on every PR it opens. */
+export const GUEST_PIPELINE_LABEL = 'guest-pipeline'
+
 /** Why this script must not merge the PR, or null: a fork or Public-authored
- *  PR merges by human hand only (ADR-0020, `guest-contributions.md`). */
+ *  PR merges by human hand only (ADR-0020, `guest-contributions.md`), and so
+ *  does a guest-pipeline PR, though an agent opens it as the owner (ADR-0023). */
 export function prOriginRefusal(meta: PrMeta, owner: string, repo: string): string | null {
   if (meta.headRepo?.toLowerCase() !== `${owner}/${repo}`.toLowerCase()) {
     return `refused: head branch lives in ${meta.headRepo ?? 'a deleted repository'}, not ${owner}/${repo} — a fork PR is merged by a human`
   }
   if (!TRUSTED_ASSOCIATIONS.has(meta.authorAssociation)) {
     return `refused: PR author is ${meta.authorAssociation} (Public, ADR-0020) — merged by a human`
+  }
+  if (meta.labels.includes(GUEST_PIPELINE_LABEL)) {
+    return `refused: labelled ${GUEST_PIPELINE_LABEL} — the owner merges a guest-pipeline PR (ADR-0023)`
   }
   return null
 }
@@ -245,29 +253,39 @@ function readOriginUrl(cwd: string): string {
 
 /** The fields this script reads off one `pulls/{number}` GET: the head SHA
  *  (polled, then pinned on the merge), the body (issue #983), and the origin
- *  `prOriginRefusal` checks. */
+ *  and labels `prOriginRefusal` checks. */
 export interface PrMeta {
   sha: string
   body: string
   headRepo: string | null
   authorAssociation: string
+  labels: string[]
+}
+
+type RawPull = {
+  head: { sha: string; repo: { full_name: string } | null }
+  body: string | null
+  author_association: string
+  labels: { name: string }[]
+}
+
+/** `PrMeta` from the `pulls/{number}` JSON both fetch strategies read. */
+export function prMetaFromPull(pr: RawPull): PrMeta {
+  return {
+    sha: pr.head.sha,
+    body: pr.body ?? '',
+    headRepo: pr.head.repo?.full_name ?? null,
+    authorAssociation: pr.author_association,
+    labels: pr.labels.map((l) => l.name),
+  }
 }
 
 function readPrMetaViaGh(owner: string, repo: string, prNumber: number, cwd: string): PrMeta {
-  const raw = execFileSync(
-    'gh',
-    [
-      'api',
-      '--method',
-      'GET',
-      `repos/${owner}/${repo}/pulls/${prNumber}`,
-      '--jq',
-      '{sha: .head.sha, body: .body, headRepo: .head.repo.full_name, authorAssociation: .author_association}',
-    ],
-    { cwd, encoding: 'utf8' },
-  )
-  const parsed = JSON.parse(raw) as Omit<PrMeta, 'body'> & { body: string | null }
-  return { ...parsed, body: parsed.body ?? '' }
+  const raw = execFileSync('gh', ['api', '--method', 'GET', `repos/${owner}/${repo}/pulls/${prNumber}`], {
+    cwd,
+    encoding: 'utf8',
+  })
+  return prMetaFromPull(JSON.parse(raw) as RawPull)
 }
 
 function readCheckRunsViaGh(owner: string, repo: string, sha: string, cwd: string): RawCheckRun[] {
@@ -350,17 +368,9 @@ function curlRequestJson(
 }
 
 function readPrMetaViaRest(owner: string, repo: string, prNumber: number, token: string, cwd: string): PrMeta {
-  const pr = curlRequestJson('GET', `https://api.github.com/repos/${owner}/${repo}/pulls/${prNumber}`, token, cwd) as {
-    head: { sha: string; repo: { full_name: string } | null }
-    body: string | null
-    author_association: string
-  }
-  return {
-    sha: pr.head.sha,
-    body: pr.body ?? '',
-    headRepo: pr.head.repo?.full_name ?? null,
-    authorAssociation: pr.author_association,
-  }
+  return prMetaFromPull(
+    curlRequestJson('GET', `https://api.github.com/repos/${owner}/${repo}/pulls/${prNumber}`, token, cwd) as RawPull,
+  )
 }
 
 function readCheckRunsViaRest(owner: string, repo: string, sha: string, token: string, cwd: string): RawCheckRun[] {

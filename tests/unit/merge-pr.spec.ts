@@ -13,8 +13,10 @@ import {
   hasVerdictFromSession,
   humanMergeRefusal,
   mergeRequestFields,
+  GUEST_PIPELINE_LABEL,
   parseClosingKeywordIssues,
   pollUntilResolved,
+  prMetaFromPull,
   prOriginRefusal,
   reconcileClosingKeywords,
   verdictFromCheckRuns,
@@ -94,7 +96,7 @@ describe('mergeRequestFields()', () => {
 })
 
 describe('prOriginRefusal()', () => {
-  const meta = { sha: 's', body: '', headRepo: 'feffef/terrarium', authorAssociation: 'OWNER' }
+  const meta = { sha: 's', body: '', headRepo: 'feffef/terrarium', authorAssociation: 'OWNER', labels: ['bug'] }
 
   it('allows a Trusted-authored PR from this repo', () => {
     expect(prOriginRefusal(meta, 'feffef', 'terrarium')).toBeNull()
@@ -110,6 +112,37 @@ describe('prOriginRefusal()', () => {
     for (const a of ['CONTRIBUTOR', 'FIRST_TIME_CONTRIBUTOR', 'NONE']) {
       expect(prOriginRefusal({ ...meta, authorAssociation: a }, 'feffef', 'terrarium')).toMatch(/Public/)
     }
+  })
+
+  it('refuses a guest-pipeline PR, though an agent opened it as the owner (ADR-0023)', () => {
+    expect(GUEST_PIPELINE_LABEL).toBe('guest-pipeline')
+    expect(prOriginRefusal({ ...meta, labels: ['bug', 'guest-pipeline'] }, 'feffef', 'terrarium')).toMatch(
+      /owner merges a guest-pipeline PR \(ADR-0023\)/,
+    )
+  })
+})
+
+// `gh api` and the REST path read the same `pulls/{number}` JSON; both hand it here.
+describe('prMetaFromPull()', () => {
+  const pull = {
+    head: { sha: 'abc', repo: { full_name: 'feffef/terrarium' } },
+    body: null,
+    author_association: 'OWNER',
+    labels: [{ name: 'guest-pipeline' }, { name: 'bug' }],
+  }
+
+  it('reads the label names alongside the origin fields', () => {
+    expect(prMetaFromPull(pull)).toEqual({
+      sha: 'abc',
+      body: '',
+      headRepo: 'feffef/terrarium',
+      authorAssociation: 'OWNER',
+      labels: ['guest-pipeline', 'bug'],
+    })
+  })
+
+  it('reads a deleted head repo as null', () => {
+    expect(prMetaFromPull({ ...pull, head: { sha: 'abc', repo: null } }).headRepo).toBeNull()
   })
 })
 
