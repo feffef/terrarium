@@ -2,15 +2,17 @@ import { describe, expect, it } from 'vitest'
 import { glassboxDirectory, glassboxWalkthroughs } from '../../app/utils/subjects.ts'
 
 describe('glassboxWalkthroughs', () => {
-  it('lists only Walkthroughs, keeping their order', () => {
+  it('lists only Walkthroughs, Start here first, then by title', () => {
     expect(glassboxWalkthroughs([
       { path: '/', title: 'Landing' },
-      { path: '/walkthroughs/opening-a-page', title: 'Opening a page' },
-      { path: '/claude-code/claude-md', title: 'CLAUDE.md as the every-session contract' },
+      { path: '/walkthroughs/routines', title: 'The Routines' },
       { path: '/walkthroughs/friction-to-fix', title: 'A friction becomes a fix' },
+      { path: '/claude-code/claude-md', title: 'CLAUDE.md as the every-session contract' },
+      { path: '/walkthroughs/opening-a-page', title: 'Opening a page' },
     ])).toEqual([
       { path: '/walkthroughs/opening-a-page', title: 'Opening a page' },
       { path: '/walkthroughs/friction-to-fix', title: 'A friction becomes a fix' },
+      { path: '/walkthroughs/routines', title: 'The Routines' },
     ])
   })
 })

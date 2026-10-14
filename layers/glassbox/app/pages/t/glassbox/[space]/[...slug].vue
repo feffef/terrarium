@@ -16,14 +16,26 @@ const page = computed(() => data.value?.page ?? null)
 if (!page.value && !error.value) setResponseStatus(404)
 
 const menuOpen = ref(false)
+const menuButton = useTemplateRef<HTMLButtonElement>('menuButton')
 watch(() => route.path, () => { menuOpen.value = false })
+
+async function openMenu() {
+  menuOpen.value = true
+  await nextTick()
+  document.querySelector<HTMLElement>('#gb-nav .close')?.focus()
+}
+function closeMenu() {
+  if (!menuOpen.value) return
+  menuOpen.value = false
+  menuButton.value?.focus()
+}
 
 useHead(() => ({ title: `${page.value?.title ?? 'Not found'} · glassbox` }))
 useSeoMeta({ description: () => page.value?.description })
 </script>
 
 <template>
-  <main class="gb gb-doc" :class="{ 'menu-open': menuOpen }">
+  <main class="gb gb-doc" :class="{ 'menu-open': menuOpen }" @keydown.esc="closeMenu">
     <GlassboxSidebar
       id="gb-nav"
       class="gb-sidebar"
@@ -31,19 +43,20 @@ useSeoMeta({ description: () => page.value?.description })
       :path="path"
       :subjects="data?.subjects ?? []"
       :walkthroughs="data?.walkthroughs ?? []"
-      @close="menuOpen = false"
+      @close="closeMenu"
     />
 
     <div class="gb-main">
       <header class="gb-header">
-        <NuxtLink class="gb-brand" :to="base"><strong>Glass Box</strong> <span>Terrarium, explained from the inside</span></NuxtLink>
+        <GlassboxBrand :to="base" />
         <button
+          ref="menuButton"
           type="button"
           class="gb-menu"
           aria-controls="gb-nav"
           :aria-expanded="menuOpen"
           aria-label="Open menu"
-          @click="menuOpen = true"
+          @click="openMenu"
         >≡</button>
       </header>
 

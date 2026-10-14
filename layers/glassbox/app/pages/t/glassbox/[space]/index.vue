@@ -10,7 +10,7 @@ const { data, status, error } = await useAsyncData(route.path, async () => {
     queryCollection(pagesKey).path(glassboxStartHere).select('path', 'title', 'description').first(),
     queryCollection(pagesKey).order('stem', 'ASC').select('path', 'title').all(),
   ])
-  return { landing, startHere, directory: glassboxDirectory(pages) }
+  return { landing, startHere, directory: glassboxDirectory(pages), walkthroughs: glassboxWalkthroughs(pages) }
 })
 
 const landing = computed(() => data.value?.landing ?? null)
@@ -22,7 +22,7 @@ useSeoMeta({ description: () => landing.value?.description })
 <template>
   <main class="gb gb-landing">
     <header class="gb-header">
-      <NuxtLink class="gb-brand" :to="base"><strong>Glass Box</strong> <span>Terrarium, explained from the inside</span></NuxtLink>
+      <GlassboxBrand :to="base" />
     </header>
 
     <div class="hero">
@@ -39,17 +39,22 @@ useSeoMeta({ description: () => landing.value?.description })
       <span class="arrow" aria-hidden="true">→</span>
     </NuxtLink>
 
-    <section v-if="data?.directory.length" class="directory">
-      <div class="directory-head">
-        <h2>Subjects</h2>
-        <p>Each Subject is the tool whose official docs its Lessons link.</p>
-      </div>
+    <section v-if="data?.directory.length || data?.walkthroughs.length" class="directory">
+      <h2>Subjects</h2>
       <div class="cards">
         <section v-for="subject in data.directory" :key="subject.slug" class="card gb-pane">
           <h3>{{ subject.name }} <span>{{ subject.slug }}/</span></h3>
           <ul>
             <li v-for="lesson in subject.lessons" :key="lesson.path">
               <NuxtLink :to="`${base}${lesson.path}`">{{ lesson.title }}</NuxtLink>
+            </li>
+          </ul>
+        </section>
+        <section v-if="data.walkthroughs.length" class="card walkthroughs">
+          <h3>Walkthroughs <span>walkthroughs/</span></h3>
+          <ul>
+            <li v-for="page in data.walkthroughs" :key="page.path">
+              <NuxtLink :to="`${base}${page.path}`">{{ page.title }} →</NuxtLink>
             </li>
           </ul>
         </section>
@@ -109,16 +114,7 @@ h1 {
   color: var(--gb-solid-ink);
   font-size: 22px;
 }
-.directory-head {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  align-items: baseline;
-  gap: 4px 16px;
-  margin-bottom: 16px;
-}
-.directory-head h2 { margin: 0; font-size: 22px; font-weight: 600; }
-.directory-head p { margin: 0; font-size: 14px; color: var(--gb-muted); }
+.directory h2 { margin: 0 0 16px; font-size: 22px; font-weight: 600; }
 .cards { columns: 3 260px; column-gap: 14px; }
 .card {
   display: flex;
@@ -143,6 +139,11 @@ h1 {
 .card ul { display: flex; flex-direction: column; gap: 4px; margin: 0; padding: 0; list-style: none; font-size: 15px; line-height: 1.45; }
 .card a { color: var(--gb-ink-2); text-decoration: none; }
 .card a:hover { color: var(--gb-accent); }
+.walkthroughs { background: var(--gb-solid); color: var(--gb-solid-ink); }
+.walkthroughs h3 span { color: inherit; opacity: 0.6; }
+.walkthroughs ul { flex-flow: row wrap; gap: 4px 14px; font-size: 14px; }
+.walkthroughs a, .walkthroughs a:hover { color: inherit; }
+.walkthroughs a:hover { text-decoration: underline; }
 
 @media (max-width: 640px) {
   .hero { padding: 40px 0 32px; }

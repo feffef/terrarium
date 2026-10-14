@@ -61,9 +61,9 @@ const currentSubject = computed(() => props.path.split('/')[1])
   line-height: 1.35;
 }
 .panel-head { display: none; }
-a { color: inherit; text-decoration: none; }
+a { text-decoration: none; }
 a:hover { color: var(--gb-accent); }
-h2 { margin: 0; padding: 0 10px 8px; font-weight: 400; font-size: 10.5px; }
+h2 { margin: 0; padding: 0 10px 8px; }
 ul { list-style: none; margin: 0; padding: 0; }
 .start {
   display: flex;
@@ -72,8 +72,8 @@ ul { list-style: none; margin: 0; padding: 0; }
   padding: 12px 14px;
   border-radius: 12px;
   background: var(--gb-tint);
+  color: var(--gb-ink);
 }
-.start .gb-label { font-size: 10.5px; }
 summary {
   display: flex;
   justify-content: space-between;
@@ -113,7 +113,7 @@ li a[aria-current='page'] { background: var(--gb-solid); color: var(--gb-solid-i
     background: color-mix(in srgb, var(--gb-bg) 72%, transparent);
     backdrop-filter: blur(20px);
     border: 1px solid var(--gb-pane-edge);
-    box-shadow: 0 20px 50px rgb(15 40 55 / 0.18);
+    box-shadow: var(--gb-pane-shadow);
   }
   .panel-head {
     display: flex;

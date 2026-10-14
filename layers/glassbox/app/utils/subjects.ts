@@ -30,6 +30,10 @@ export function glassboxDirectory(pages: GlassboxPageLink[]) {
     .filter((subject) => subject.lessons.length)
 }
 
+/** Walkthroughs, Start here first, then by title. */
 export function glassboxWalkthroughs(pages: GlassboxPageLink[]) {
-  return pages.filter((page) => page.path.startsWith('/walkthroughs/'))
+  const rank = (page: GlassboxPageLink) => (page.path === glassboxStartHere ? 0 : 1)
+  return pages
+    .filter((page) => page.path.startsWith('/walkthroughs/'))
+    .sort((a, b) => rank(a) - rank(b) || a.title.localeCompare(b.title))
 }
