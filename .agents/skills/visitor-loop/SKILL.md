@@ -109,7 +109,7 @@ push, fixed point `origin/main`, with the tally as the spec. **Auto-fix every
 important finding yourself** — a real bug, a broken documented standard (an
 ADR included), an accessibility or honesty problem — never defer it to a human
 or a follow-up. Re-review and repeat until nothing important remains. Then
-push and open the PR — its body pastes, verbatim, the owner-memory lines of the tally file `--check` ran against, one per candidate. Post the review verdict on the PR, then land it
+push and open the PR — its body carries the tally, its owner-memory lines pasted verbatim from the file `--check` ran against. Post the review verdict on the PR, then land it
 per `docs/agents/pr-workflow.md` ("Closing a scheduled run's PR" and
 "The recipe"). Done when every *fix* item has DOM evidence, the last review
 has no important finding left unfixed, and the PR is merged — or left open and escalated
