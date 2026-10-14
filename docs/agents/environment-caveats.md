@@ -31,8 +31,13 @@ re-diagnose them as new. Incident detail lives in the cited issue.
 - **An agent session cannot write `.github/workflows/*` here — no `workflow`
   OAuth scope.** `workflow-edit-guard` ([guards](./guards.md)) denies the write.
   A commit that gets past it is rejected at
-  push, stranding every other commit in that push. The edit itself goes in
-  `docs/proposals/` ([README](../proposals/README.md)). (issues #659, #897)
+  push, stranding every other commit in that push. To recover, drop that commit
+  rather than revert it; the push check reads every commit:
+  `git rebase --onto <sha>^ <sha>` for a commit inside the branch, or for the
+  tip `git reset --soft HEAD~1`, `git reset -- <path>`, then re-commit without the
+  workflow file. Only on a branch you created. The edit itself goes
+  in `docs/proposals/` ([README](../proposals/README.md)). (issues #659, #897,
+  #1955)
 - **The agent proxy denies writes to repository-settings endpoints and any
   non-repo-scoped path.** `POST repos/{owner}/{repo}/rulesets` returns 403
   "Write access to this GitHub API path is not permitted through this proxy";
