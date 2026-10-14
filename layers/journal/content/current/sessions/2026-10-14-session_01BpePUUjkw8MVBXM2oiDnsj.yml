@@ -1,0 +1,125 @@
+schemaVersion: 1
+session: session_01BpePUUjkw8MVBXM2oiDnsj
+startedAt: 2026-10-14T20:14:53Z
+endedAt: 2026-10-14T20:27:38Z
+kind: interactive
+goal: Decide how Glass Box shows code and points at Terrarium's files
+status: completed
+outcome: "Wayfinder ticket 'Glass Box: showing code and files' resolved and closed; map updated"
+summary: "The owner ran /wayfinder on the Glass Box map to work this HITL grilling ticket. I claimed it, read the four earlier resolutions, checked the global ProsePre and the Blog's hand-pinned links, then grilled the owner in three rounds. The owner decided every point: keep the Shiki setup already on with no config change; an inline `:source[path]` component pinned to the page's revision; excerpts copied into a `::excerpt{path}` block (owner chose this over extending the global ProsePre) and tested word for word at revision; fences outside it are unchecked examples; optional line ranges. The owner asked for an experiment before allowing line anchors; on my own initiative I ran it (shifting ranges in shared/expand.ts through git diff -U0 hunks), which showed ranges can be moved mechanically and edited ranges flagged, so line anchors were allowed with glassbox-update maintaining them. I posted the resolution comment, closed the ticket and added a Decisions-so-far line and fog notes to the map, as the wayfinder Skill directs. No code or branch changes."
+prs: []
+docsRead:
+  - path: GLOSSARY-MAP.md
+    reason: session-start glossary map
+    useful: partly
+  - path: GLOSSARY.md
+    reason: Tenant/Space/Collection terms used in questions
+    useful: partly
+  - path: docs/agents/github-integration.md
+    reason: angle-bracket stripping and map-body header trap; both applied
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: fetch before trusting history; read after the first git log
+    useful: partly
+  - path: docs/agents/mdc-when-to-use.md
+    reason: body MDC props skip Zod; informed the :source/::excerpt test coverage
+    useful: yes
+  - path: docs/agents/issue-tracker.md
+    reason: wayfinding operations; confirmed claim/resolve steps matched
+    useful: partly
+  - path: app/components/content/ProsePre.vue
+    reason: (no reason given)
+skillsUsed:
+  - name: wayfinder
+    reason: work one map ticket
+  - name: grilling
+    reason: three rounds of numbered questions with recommendations
+  - name: domain-modeling
+    reason: required by the map's Notes; no glossary changes since Glass Box has no GLOSSARY.md yet
+  - name: close-session
+    reason: session only answered a question
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Ran git log on shared/expand.ts before reading docs/agents/git-conventions.md, breaking the CLAUDE.md read-first trigger; the hook caught it.
+    solution: Read git-conventions.md before any git command in an experiment; no harm here, the fetch came after.
+    severity: nit
+  - description: Recommended designs in rounds 1-3 without first running the CLAUDE.md grep for binding ADRs; checked only at closure (none bound it).
+    solution: Run grep -l over docs/adr for the touched paths before the first grilling round.
+    severity: minor
+  - description: Closed and edited wayfinder issues before reading docs/agents/issue-tracker.md as CLAUDE.md requires; read it at closure and the steps matched.
+    solution: Read issue-tracker.md's Wayfinding operations section when the wayfinder Skill loads.
+    severity: nit
+  - description: Read docs/agents/mdc-when-to-use.md through cat in Bash instead of the Read tool, against CLAUDE.md.
+    solution: Use the Read tool for docs.
+    severity: nit
+durationSec: 766
+models:
+  claude-opus-5-5: 58
+toolCounts:
+  ToolSearch: 1
+  Read: 5
+  mcp__github__issue_read: 8
+  mcp__github__issue_write: 3
+  Skill: 4
+  Grep: 1
+  Bash: 9
+  mcp__github__add_issue_comment: 1
+  Write: 1
+rulesLoaded:
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/adr-0012.md
+  - .claude/rules/mermaid-lanes.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Told me a new nuxt.config.ts change means a human merge, which favoured keeping Shiki as is; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Confirmed the log goes straight to main via the hook with no PR; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: No instruction was changed or caused a problem this session
+    useful: no
+  - path: .claude/rules/adr-0020.md
+    reason: All input came from the owner, a Trusted user, so the Public handling never applied
+    useful: no
+  - path: .claude/rules/adr-0003.md
+    reason: No branch or PR; wayfinder decisions are planning, not new work to build
+    useful: no
+  - path: .claude/rules/adr-0017.md
+    reason: Made me start every comment and the rewritten map body with this session's header, replacing the copied one; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0021.md
+    reason: Confirmed Glass Box product choices belong in its own glossary and issues, not an ADR; summary was enough
+    useful: partly
+  - path: .claude/rules/adr-0029.md
+    reason: Loaded with the glossary read; nothing about rule placement was decided here
+    useful: no
+  - path: .claude/rules/adr-0030.md
+    reason: Loaded with domain-modeling; no ADR was written
+    useful: no
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: Pointed to the MDC doc whose Zod caveat shaped the layer-test coverage for :source and ::excerpt
+    useful: yes
+  - path: .claude/rules/adr-0012.md
+    reason: Loaded by grepping a Blog page for pinned links; Pingbacks are unrelated
+    useful: no
+  - path: .claude/rules/mermaid-lanes.md
+    reason: Loaded by the same Blog grep; no diagram was drawn
+    useful: no
+gitBranch: HEAD
+entrypoint: remote
+cliVersion: 2.1.300
+learnings:
+  - Line ranges pinned to one commit can be moved to a later commit with only git diff -U0 hunk offsets; a range with an edited line inside it is detectable and should be flagged, not guessed.
+landedBy: Stop
