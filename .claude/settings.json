@@ -51,6 +51,10 @@
           {
             "type": "command",
             "command": "cd \"${CLAUDE_PROJECT_DIR:-.}\" && sh scripts/guard-wrap.sh double-background-guard -- sh scripts/double-background-guard.sh"
+          },
+          {
+            "type": "command",
+            "command": "cd \"${CLAUDE_PROJECT_DIR:-.}\" && sh scripts/guard-wrap.sh github-provenance-guard -- sh scripts/github-provenance-guard.sh"
           }
         ]
       },

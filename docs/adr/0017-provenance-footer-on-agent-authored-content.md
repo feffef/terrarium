@@ -13,9 +13,10 @@ opens with a one-line header; a commit ends with a two-line trailer.
 - **The mark names this session.** A link to another session is a wrong
   mark, so a body copied from another session gets a new header. The model
   name is optional; the session log records it.
-- **GitHub bodies written through the MCP tools are blocked without the
-  header.** The tool-call guard denies a write that lacks this session's
-  header, has it in another shape, or cannot be checked.
+- **GitHub bodies are blocked without the header.** The tool-call guard
+  denies a write through the MCP tools, or through `gh api` or `curl` in a
+  shell command, that lacks this session's header, has it in another shape,
+  or cannot be checked.
 - **The header alone marks a post as written by an agent.** It needs no
   further notice.
 - **Commits are repaired, not blocked.** The commit hook adds or corrects the
@@ -62,8 +63,9 @@ work.
 
 - Old posts are never rewritten, so code that finds agent posts must keep
   accepting every mark ever written, or it reads old agent posts as human.
-- The guard checks only the GitHub MCP tools; a write through `gh api` goes
-  unchecked.
+- The guard reads a shell command's text, not the shell running it, so a
+  `gh api` or `curl` write it cannot see (inside a script, say) goes
+  unchecked. Agents write through the MCP tools, which it always sees.
 
 ## See
 

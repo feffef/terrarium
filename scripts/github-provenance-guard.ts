@@ -46,12 +46,29 @@
 // `checkAngleBrackets` catches it here instead — the registry that already
 // enumerates every GitHub-write tool is the natural extension point.
 //
+// Third entry point (issue #1900): a Bash call that sends a GitHub body through
+// `gh api` (a `body` field, or the `body` of an `--input` file) or `curl` to
+// `api.github.com` (a data flag's JSON `body`) is judged exactly like an MCP
+// body (`checkBashGithubWrite`). A file it can read is checked; a body it cannot
+// read (stdin, a shell variable, a command substitution) is denied. Fail-opens,
+// since this reads a command string, not a running shell:
+//   • `gh api` or `curl` run by a script, an alias, `xargs`, or a shell the
+//     command names other than `sh`/`bash`/`zsh`/`dash -c` or `eval`.
+//   • a GraphQL mutation (`gh api graphql -f query=…`), and the `gh issue` /
+//     `gh pr --body` subcommands: out of scope in #1900.
+//   • a `curl` URL built by the shell, combined short flags (`-sd`), and a
+//     file changed between this check and the call.
+//   • the `sh` pre-filter forwards only payloads naming `gh … api` or
+//     `api.github.com`.
+//
 // Usage (normally invoked by the PreToolUse hook with the payload on stdin):
 //   tsx scripts/github-provenance-guard.ts
+//   sh scripts/github-provenance-guard.sh     # the Bash hook entry
 import { readFileSync } from 'node:fs'
+import { isAbsolute, resolve } from 'node:path'
 import { sessionUrl } from '../shared/session-url.ts'
 import { SESSION_TRAILER } from './git-helpers.ts'
-import { buildDenyOutput, denyUninspectable, readHookPayload, runIfMain, type DenyOutput } from './guard-io.ts'
+import { buildDenyOutput, denyUninspectable, prop, readHookPayload, runIfMain, type DenyOutput } from './guard-io.ts'
 import { provenanceFooter } from './provenance-footer.ts'
 import { provenanceHeader, readProvenanceHeader, sessionIdsIn } from './provenance-header.ts'
 import { resolveGroundTruthFromTranscript } from './session-trace.ts'
@@ -137,11 +154,13 @@ export const GITHUB_PROVENANCE_TOOLS: readonly ProvenanceTool[] = [
  *  `found` is present only on a `mismatch`. `expected` is absent only when
  *  ground truth could not be resolved. */
 export interface ProvenanceFinding {
-  kind: 'missing' | 'mismatch' | 'malformed' | 'unverified'
+  kind: 'missing' | 'mismatch' | 'malformed' | 'unverified' | 'uninspectable'
   tool: string
   surface: ProvenanceSurface
   found?: string
   expected?: string
+  /** Why a Bash write's body could not be read; only on `uninspectable`. */
+  detail?: string
 }
 
 /** Adjudicate `text` against `truth` once the designated slot has been read.
@@ -232,7 +251,24 @@ function prescribedMarker(surface: ProvenanceSurface, url: string): string {
  *  the real session id, and the exact marker to paste, so it works for an agent
  *  that has read no doc at all — which every recorded recurrence was. */
 export function formatGuardMessage(f: ProvenanceFinding): string {
+  const message = formatFinding(f)
+  return f.tool.startsWith('Bash') ? `${message}\n\n${USE_MCP}` : message
+}
+
+const USE_MCP =
+  'Write GitHub bodies through the GitHub MCP tools (`mcp__github__add_issue_comment`, ' +
+  '`mcp__github__issue_write`, `mcp__github__create_pull_request`, …), not `gh api` or `curl` ' +
+  '(docs/agents/github-integration.md).'
+
+function formatFinding(f: ProvenanceFinding): string {
   const head = `Blocked by the ADR-0017 provenance guard: \`${f.tool}\``
+
+  if (f.kind === 'uninspectable') {
+    return (
+      `${head} sends a GitHub body this guard cannot read (${f.detail}), so its provenance cannot ` +
+      `be checked. The guard fails CLOSED (ADR-0017).`
+    )
+  }
 
   if (f.kind === 'unverified') {
     return (
@@ -358,6 +394,267 @@ export function formatAngleBracketMessage(f: AngleBracketFinding): string {
   )
 }
 
+// --- Bash `gh api` and `curl` writes (issue #1900) ---------------------------
+
+/** One shell word. `dynamic` when the shell would expand part of it (a
+ *  variable, a command substitution, `$'…'`), so its real value is unknown. */
+interface Word {
+  text: string
+  dynamic: boolean
+}
+
+/** Splits a Bash command into simple commands, quote-aware: a newline or an
+ *  operator inside quotes stays in its word, so a multi-line body is one word
+ *  and a `gh api` quoted in prose is not a command. `$(…)` and backtick
+ *  bodies, and the script of `sh -c`/`bash -c`/`eval`, become commands too.
+ *  Heredoc bodies are skipped. Not a full shell parser: see the header's
+ *  fail-opens. */
+export function shellCommands(src: string): Word[][] {
+  const out: Word[][] = []
+  const heredocs: string[] = []
+  let i = 0
+
+  const skipHeredocs = (): void => {
+    while (heredocs.length > 0 && i < src.length) {
+      const end = src.indexOf('\n', i)
+      const line = src.slice(i, end < 0 ? src.length : end)
+      i = end < 0 ? src.length : end + 1
+      if (line.replace(/^\t+/, '') === heredocs[0]) heredocs.shift()
+    }
+    heredocs.length = 0
+  }
+
+  const parse = (nested: boolean): void => {
+    let cmd: Word[] = []
+    let word = ''
+    let dynamic = false
+    let inWord = false
+    const endWord = (): void => {
+      if (inWord) cmd.push({ text: word, dynamic })
+      word = ''
+      dynamic = false
+      inWord = false
+    }
+    const endCmd = (): void => {
+      endWord()
+      if (cmd.length > 0) out.push(cmd)
+      cmd = []
+    }
+    /** `$(…)` or a backtick span starting at `i`: parse its commands, and leave
+     *  a marker in the word so a dynamic key still reads as dynamic. */
+    const substitution = (): void => {
+      dynamic = true
+      inWord = true
+      word += '$(…)'
+      if (src[i] === '`') {
+        const end = src.indexOf('`', i + 1)
+        const stop = end < 0 ? src.length : end
+        out.push(...shellCommands(src.slice(i + 1, stop)))
+        i = stop + 1
+      } else {
+        i += 2
+        parse(true)
+      }
+    }
+
+    while (i < src.length) {
+      const c = src[i]!
+      if (c === '\n') {
+        endCmd()
+        i++
+        skipHeredocs()
+      } else if (c === ' ' || c === '\t') {
+        endWord()
+        i++
+      } else if (c === ')' && nested) {
+        endCmd()
+        i++
+        return
+      } else if (c === '&' && (word.endsWith('>') || word.endsWith('<'))) {
+        word += c
+        i++
+      } else if (';&|()'.includes(c)) {
+        endCmd()
+        i++
+      } else if (c === '#' && !inWord) {
+        while (i < src.length && src[i] !== '\n') i++
+      } else if (c === '<' && src[i + 1] === '<' && src[i + 2] !== '<') {
+        endWord()
+        i += src[i + 2] === '-' ? 3 : 2
+        while (src[i] === ' ' || src[i] === '\t') i++
+        const delim = /^(['"]?)([^\s'";&|<>()]+)\1/.exec(src.slice(i))
+        if (delim) {
+          heredocs.push(delim[2]!)
+          i += delim[0].length
+        }
+      } else if (c === '\\') {
+        if (src[i + 1] !== '\n') {
+          word += src[i + 1] ?? ''
+          inWord = true
+        }
+        i += 2
+      } else if (c === "'") {
+        const end = src.indexOf("'", i + 1)
+        const stop = end < 0 ? src.length : end
+        word += src.slice(i + 1, stop)
+        inWord = true
+        i = stop + 1
+      } else if (c === '"') {
+        inWord = true
+        i++
+        while (i < src.length && src[i] !== '"') {
+          const d = src[i]!
+          if (d === '\\' && '$`"\\\n'.includes(src[i + 1] ?? '')) {
+            if (src[i + 1] !== '\n') word += src[i + 1]
+            i += 2
+          } else if (d === '`' || (d === '$' && src[i + 1] === '(')) {
+            substitution()
+          } else {
+            if (d === '$') dynamic = true
+            word += d
+            i++
+          }
+        }
+        i++
+      } else if (c === '`' || (c === '$' && src[i + 1] === '(')) {
+        substitution()
+      } else {
+        if (c === '$') dynamic = true
+        word += c
+        inWord = true
+        i++
+      }
+    }
+    endCmd()
+  }
+
+  parse(false)
+  // A script handed to a shell or `eval` is a command line of its own.
+  for (const cmd of [...out]) {
+    const k = cmd.findIndex((w, n) => /(?:^|\/)(?:ba|z|da)?sh$/.test(w.text) && /^-[a-z]*c$/.test(cmd[n + 1]?.text ?? ''))
+    const script = k >= 0 ? cmd[k + 2] : cmd[0]?.text === 'eval' ? { text: cmd.slice(1).map((w) => w.text).join(' '), dynamic: false } : undefined
+    if (script) out.push(...shellCommands(script.text))
+  }
+  return out
+}
+
+/** A body a Bash write sends: its text, or why it can't be read. */
+type BashBody = { text: string } | { uninspectable: string }
+
+/** Reads the file a body comes from. `cwd` is `null` once a `cd` the guard
+ *  cannot follow has run, so a relative path is unknown. */
+function fileBody(path: Word, cwd: string | null): BashBody {
+  if (path.dynamic) return { uninspectable: 'its file path is built by the shell' }
+  if (path.text === '-') return { uninspectable: 'it is read from standard input' }
+  if (cwd === null && !isAbsolute(path.text)) return { uninspectable: `\`${path.text}\` is relative to a directory the guard cannot follow` }
+  try {
+    return { text: readFileSync(resolve(cwd ?? '/', path.text), 'utf8') }
+  } catch {
+    return { uninspectable: `\`${path.text}\` could not be read` }
+  }
+}
+
+/** The `body` field of a JSON request, `null` when it has none. */
+function jsonBody(raw: BashBody): BashBody | null {
+  if ('uninspectable' in raw) return raw
+  let parsed: unknown
+  try {
+    parsed = JSON.parse(raw.text)
+  } catch {
+    return { uninspectable: 'the request data is not JSON' }
+  }
+  const body = prop(parsed, 'body')
+  if (body === undefined) return null
+  return typeof body === 'string' ? { text: body } : { uninspectable: 'its `body` is not a string' }
+}
+
+const DYNAMIC = { uninspectable: 'the shell builds it from a variable or command' }
+
+/** The bodies one `gh api` call sends: every `body` field (`-f`, `-F`,
+ *  `--raw-field`, `--field`, in any of their spellings) and the `body` of an
+ *  `--input` file. Only `-F`/`--field` read `@path`, as in gh itself. */
+function ghApiBodies(args: Word[], cwd: string | null): BashBody[] {
+  const bodies: BashBody[] = []
+  for (let j = 0; j < args.length; j++) {
+    const a = args[j]!.text
+    const field = /^(?:(-[fF])|(--(?:raw-)?field)(?:=|$))(.*)$/s.exec(a)
+    const input = /^--input(?:=(.*))?$/s.exec(a)
+    if (field) {
+      const attached = field[3] !== '' || a.startsWith('--') && a.includes('=')
+      const value = attached ? { text: field[3]!, dynamic: args[j]!.dynamic } : args[++j]
+      if (!value) continue
+      const eq = value.text.indexOf('=')
+      const key = eq < 0 ? value.text : value.text.slice(0, eq)
+      const keyUnknown = value.dynamic && /[$`]/.test(key)
+      if (key !== 'body' && !keyUnknown) continue
+      if (value.dynamic) {
+        bodies.push(DYNAMIC)
+        continue
+      }
+      const text = value.text.slice(eq + 1)
+      const typed = field[1] === '-F' || field[2] === '--field'
+      bodies.push(typed && text.startsWith('@') ? fileBody({ text: text.slice(1), dynamic: false }, cwd) : { text })
+    } else if (input) {
+      const path = input[1] !== undefined ? { text: input[1], dynamic: args[j]!.dynamic } : args[++j]
+      const body = path && jsonBody(fileBody(path, cwd))
+      if (body) bodies.push(body)
+    }
+  }
+  return bodies
+}
+
+/** The bodies one `curl` call to `api.github.com` sends in its data flags. */
+function curlBodies(args: Word[], cwd: string | null): BashBody[] {
+  if (!args.some((w) => w.text.includes('api.github.com'))) return []
+  const bodies: BashBody[] = []
+  for (let j = 0; j < args.length; j++) {
+    const a = args[j]!.text
+    const flag = /^(?:-d|--json|--data(?:-raw|-binary|-ascii|-urlencode)?)(?==|$)|^-d(?=.)/.exec(a)
+    if (!flag) continue
+    const rest = a.slice(flag[0].length).replace(/^=/, '')
+    const attached = rest !== '' || a.includes('=')
+    const value = attached ? { text: rest, dynamic: args[j]!.dynamic } : args[++j]
+    if (!value) continue
+    const fromFile = value.text.startsWith('@') && flag[0] !== '--data-raw'
+    const body = value.dynamic
+      ? DYNAMIC
+      : jsonBody(fromFile ? fileBody({ text: value.text.slice(1), dynamic: false }, cwd) : { text: value.text })
+    if (body) bodies.push(body)
+  }
+  return bodies
+}
+
+/** The Bash half of the guard: does any `gh api` or `curl`-to-REST write in
+ *  `command` send a body without this session's header? Judged exactly as an
+ *  MCP body is (`checkGithubProvenance`); a body the guard cannot read is
+ *  `uninspectable`. `null` for a command that sends no body. Never throws. */
+export function checkBashGithubWrite(
+  command: string,
+  groundTruthId: string | null | undefined,
+  cwd: string,
+): ProvenanceFinding | null {
+  let dir: string | null = cwd
+  for (const cmd of shellCommands(command)) {
+    if (cmd[0]?.text === 'cd') {
+      const to = cmd[1]
+      dir = to && !to.dynamic && to.text !== '-' && (dir !== null || isAbsolute(to.text)) ? resolve(dir ?? '/', to.text) : null
+      continue
+    }
+    const gh = cmd.findIndex((w, k) => /(?:^|\/)gh$/.test(w.text) && cmd[k + 1]?.text === 'api')
+    const curl = cmd.findIndex((w) => /(?:^|\/)curl$/.test(w.text))
+    const [tool, bodies] =
+      gh >= 0 ? ['Bash: gh api', ghApiBodies(cmd.slice(gh + 2), dir)] : curl >= 0 ? ['Bash: curl', curlBodies(cmd.slice(curl + 1), dir)] : ['', []]
+    for (const body of bodies) {
+      const finding =
+        'uninspectable' in body
+          ? { kind: 'uninspectable' as const, tool, surface: 'body' as const, detail: body.uninspectable }
+          : checkGithubProvenance(tool, { body: body.text }, groundTruthId, [{ tool }])
+      if (finding) return finding
+    }
+  }
+  return null
+}
+
 /** Reads the hook JSON on stdin, resolves ground truth, runs the pure check,
  *  and writes a deny control object to stdout for any finding.
  *
@@ -393,8 +690,14 @@ export function main(): void {
 
   const groundTruthId = resolveGroundTruthFromTranscript(transcriptJsonl)
   const angle = checkAngleBrackets(payload.tool_name, payload.tool_input)
+  const command = prop(payload.tool_input, 'command')
+  const cwd = prop(payload, 'cwd')
+  const bash =
+    payload.tool_name === 'Bash' && typeof command === 'string'
+      ? checkBashGithubWrite(command, groundTruthId, typeof cwd === 'string' ? cwd : process.cwd())
+      : null
   const output =
-    denyOutputFor(checkGithubProvenance(payload.tool_name, payload.tool_input, groundTruthId)) ??
+    denyOutputFor(checkGithubProvenance(payload.tool_name, payload.tool_input, groundTruthId) ?? bash) ??
     (angle && buildDenyOutput(formatAngleBracketMessage(angle)))
   if (output) process.stdout.write(JSON.stringify(output))
 }

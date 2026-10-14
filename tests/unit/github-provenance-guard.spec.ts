@@ -13,6 +13,7 @@
 // The pure core is pinned directly; the CLI's stdin→deny-JSON path is exercised
 // end to end against the real script with a real transcript file, so the
 // regression cases are proven blocked rather than asserted in the abstract.
+import { execFileSync } from 'node:child_process'
 import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { dirname, join, resolve } from 'node:path'
@@ -21,6 +22,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 import {
   bareAngleBracketSpan,
   checkAngleBrackets,
+  checkBashGithubWrite,
   checkGithubProvenance,
   denyOutputFor,
   formatGuardMessage,
@@ -413,6 +415,22 @@ describe('the CLI as the PreToolUse hook would invoke it (stdin JSON → stdout 
     expect(deny?.hookSpecificOutput.permissionDecisionReason).toContain('fails CLOSED')
   })
 
+  it('END TO END #1900: denies a Bash `gh api` body without the header, through the sh pre-filter', () => {
+    writeTranscript('session_REAL')
+    const run = (command: string): string =>
+      execFileSync('sh', [join(root, 'scripts', 'github-provenance-guard.sh')], {
+        cwd: root,
+        input: JSON.stringify({ tool_name: 'Bash', tool_input: { command }, transcript_path: transcriptPath, cwd: scratch }),
+        env: { ...process.env, CLAUDE_CODE_REMOTE_SESSION_ID: '' },
+        encoding: 'utf8',
+      })
+    const deny = JSON.parse(run(`gh \\\n  api repos/o/r/issues/1/comments -f body='hi'`))
+    expect(deny.hookSpecificOutput.permissionDecision).toBe('deny')
+    expect(deny.hookSpecificOutput.permissionDecisionReason).toContain('https://claude.ai/code/session_REAL')
+    expect(run(`gh api x -f body='${header('session_REAL')}\n\nok'`)).toBe('')
+    expect(run('git status')).toBe('')
+  })
+
   it('END TO END: denies an unparseable hook payload instead of waving it through', () => {
     const out = runTsx(SCRIPT, { input: '{not json' }).trim()
     expect(JSON.parse(out).hookSpecificOutput.permissionDecision).toBe('deny')
@@ -474,6 +492,162 @@ describe('second condition — bare angle-bracket spans GitHub silently strips (
         message: 'fix: x\n\nCo-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>',
       }),
     ).toBeNull()
+  })
+})
+
+describe('Bash `gh api` and `curl` writes (#1900)', () => {
+  const ok = `${header('session_REAL')}\n\nfix applied`
+  const check = (command: string, cwd = root): ReturnType<typeof checkBashGithubWrite> =>
+    checkBashGithubWrite(command, 'session_REAL', cwd)
+
+  it('denies an inline body field with no header, naming the header and MCP', () => {
+    const finding = check(`gh api repos/o/r/issues/1/comments -f body='just a comment'`)
+    expect(finding).toMatchObject({ kind: 'missing', expected: 'session_REAL' })
+    const msg = formatGuardMessage(finding!)
+    expect(msg).toContain('\u{1F916} [<your model name>](https://claude.ai/code/session_REAL)')
+    expect(msg).toContain('mcp__github__add_issue_comment')
+  })
+
+  it('passes an inline body whose first line is this session\'s header', () => {
+    expect(check(`gh api repos/o/r/issues/1/comments -f body='${ok}'`)).toBeNull()
+  })
+
+  it('reads every field-flag spelling', () => {
+    for (const flag of ['-f body=', '-F body=', '--field body=', '--raw-field body=', '-fbody=', '--field=body=', '--raw-field=body=']) {
+      expect(check(`gh api x ${flag}"no header"`), flag).toMatchObject({ kind: 'missing' })
+      expect(check(`gh api x ${flag}"${ok}"`), flag).toBeNull()
+    }
+  })
+
+  it('judges a wrong session id as a mismatch, like an MCP body', () => {
+    expect(check(`gh api x -f body='${header('session_OTHER')}\n\nhi'`)).toMatchObject({ kind: 'mismatch', found: 'session_OTHER' })
+  })
+
+  it('ignores fields other than body, and a body-less read', () => {
+    expect(check('gh api repos/o/r/issues/1/comments')).toBeNull()
+    expect(check('gh api -X GET search/issues -f q=repo:o/r --jq .items')).toBeNull()
+    expect(check(`gh api repos/o/r/issues/1/labels -f 'labels[]=bug'`)).toBeNull()
+    expect(check(`gh api repos/o/r/pulls -f title='no header' -f head=h -f base=main`)).toBeNull()
+  })
+
+  describe('a body from a file', () => {
+    let dir: string
+    beforeEach(() => {
+      dir = mkdtempSync(join(tmpdir(), 'gh-api-body-'))
+      writeFileSync(join(dir, 'good.md'), ok)
+      writeFileSync(join(dir, 'bad.md'), 'no header')
+      writeFileSync(join(dir, 'good.json'), JSON.stringify({ title: 't', body: ok }))
+      writeFileSync(join(dir, 'bad.json'), JSON.stringify({ title: 't', body: 'no header' }))
+      writeFileSync(join(dir, 'labels.json'), JSON.stringify({ labels: ['bug'] }))
+    })
+    afterEach(() => rmSync(dir, { recursive: true, force: true }))
+
+    it('checks `-F body=@path`, relative to the hook cwd', () => {
+      expect(check('gh api x -F body=@good.md', dir)).toBeNull()
+      expect(check('gh api x -F body=@bad.md', dir)).toMatchObject({ kind: 'missing' })
+      expect(check(`gh api x --field body=@${join(dir, 'bad.md')}`)).toMatchObject({ kind: 'missing' })
+    })
+
+    it('treats `-f body=@path` as the literal text, as gh does', () => {
+      expect(check('gh api x -f body=@good.md', dir)).toMatchObject({ kind: 'missing' })
+    })
+
+    it('checks the `body` of an `--input` JSON file, and passes one with no body', () => {
+      expect(check('gh api x --input good.json', dir)).toBeNull()
+      expect(check('gh api x --input=bad.json', dir)).toMatchObject({ kind: 'missing' })
+      expect(check('gh api -X PUT x --input labels.json', dir)).toBeNull()
+    })
+
+    it('follows a leading `cd`, as every Bash call here starts', () => {
+      expect(check(`cd ${dir} && gh api x -F body=@bad.md`)).toMatchObject({ kind: 'missing' })
+      expect(check(`cd ${dir} && gh api x -F body=@good.md`)).toBeNull()
+    })
+
+    it('checks `curl -d @path` to the REST API', () => {
+      expect(check('curl -X POST https://api.github.com/repos/o/r/issues -d @good.json', dir)).toBeNull()
+      expect(check('curl https://api.github.com/repos/o/r/issues --data-binary @bad.json', dir)).toMatchObject({
+        kind: 'missing',
+        tool: 'Bash: curl',
+      })
+    })
+  })
+
+  describe('a body the guard cannot read is denied (fail-closed)', () => {
+    it.each([
+      ['stdin from a pipe', `echo '{"body":"x"}' | gh api x --input -`],
+      ['a `-F body=@-` heredoc', `gh api x -F body=@- <<'EOF'\n${ok}\nEOF`],
+      ['a variable', 'gh api x -f body="$BODY"'],
+      ['a bare variable', 'gh api x -f body=$BODY'],
+      ['a command substitution', 'gh api x -f body="$(cat notes.md)"'],
+      ['a variable key', 'gh api x -f "$K=no header"'],
+      ['a missing file', 'gh api x -F body=@/nonexistent/file.md'],
+      ['a file behind an unfollowable cd', 'cd "$DIR" && gh api x -F body=@notes.md'],
+      ['curl data from a variable', 'curl https://api.github.com/repos/o/r/issues -d "$DATA"'],
+      ['curl data from stdin', 'curl https://api.github.com/repos/o/r/issues -d @-'],
+      ['curl form data', 'curl https://api.github.com/repos/o/r/issues --data-urlencode body=hi'],
+    ])('%s', (_, command) => {
+      expect(check(command)).toMatchObject({ kind: 'uninspectable' })
+    })
+
+    it('says why, and points to MCP', () => {
+      const msg = formatGuardMessage(check('gh api x -f body="$BODY"')!)
+      expect(msg).toMatch(/cannot read/)
+      expect(msg).toContain('mcp__github__')
+    })
+  })
+
+  describe('curl', () => {
+    it('denies an inline JSON body with no header, and passes one with it', () => {
+      const url = 'https://api.github.com/repos/o/r/issues/1/comments'
+      expect(check(`curl -X POST ${url} -d '{"body":"hi"}'`)).toMatchObject({ kind: 'missing', tool: 'Bash: curl' })
+      expect(check(`curl -X POST ${url} --json '${JSON.stringify({ body: ok })}'`)).toBeNull()
+      expect(check(`curl ${url} --data='{"body":"hi"}'`)).toMatchObject({ kind: 'missing' })
+    })
+
+    it('ignores a read, data with no body, and hosts other than the REST API', () => {
+      expect(check('curl -s https://api.github.com/repos/o/r/issues/1')).toBeNull()
+      expect(check(`curl https://api.github.com/repos/o/r/issues/1 -X PATCH -d '{"state":"closed"}'`)).toBeNull()
+      expect(check(`curl https://example.com/hook -d '{"body":"hi"}'`)).toBeNull()
+    })
+  })
+
+  describe('multi-line and adversarial commands', () => {
+    it('reads a multi-line body as one value', () => {
+      expect(check(`gh api x \\\n  -f body='${ok}\n\nmore'`)).toBeNull()
+      expect(check(`gh api x \\\n  -f body='line one\n${ok}'`)).toMatchObject({ kind: 'malformed' })
+      expect(check(`gh \\\n  api x -f body='no header'`)).toMatchObject({ kind: 'missing' })
+    })
+
+    it('checks a write that follows an unrelated line', () => {
+      expect(check(`git status\ngh api x -f body='no header'`)).toMatchObject({ kind: 'missing' })
+      expect(check(`true && gh api x -f body='no header'; echo done`)).toMatchObject({ kind: 'missing' })
+    })
+
+    it('does not let a write borrow the header of another command on the next line', () => {
+      expect(check(`echo '${ok}'\ngh api x -f body='no header'`)).toMatchObject({ kind: 'missing' })
+    })
+
+    it('does not treat `gh api` quoted in prose or in a heredoc as a call', () => {
+      expect(check(`echo "run gh api x -f body=hi to post"`)).toBeNull()
+      expect(check(`cat > notes.md <<'EOF'\ngh api x -f body=hi\nEOF\ngit status`)).toBeNull()
+      expect(check('grep -n "gh api" docs/agents/github-integration.md')).toBeNull()
+    })
+
+    it('still sees a call hidden in a substitution, a subshell or `sh -c`', () => {
+      expect(check(`x=$(gh api x -f body='no header')`)).toMatchObject({ kind: 'missing' })
+      expect(check("x=`gh api x -f body=nope`")).toMatchObject({ kind: 'missing' })
+      expect(check(`(gh api x -f body='no header')`)).toMatchObject({ kind: 'missing' })
+      expect(check(`bash -c "gh api x -f body='no header'"`)).toMatchObject({ kind: 'missing' })
+      expect(check(`eval gh api x -f body=nope`)).toMatchObject({ kind: 'missing' })
+    })
+
+    it('denies if any one of several bodies fails', () => {
+      expect(check(`gh api x -f body='${ok}' && gh api y -f body='no header'`)).toMatchObject({ kind: 'missing' })
+    })
+
+    it('fails closed with no ground truth', () => {
+      expect(checkBashGithubWrite(`gh api x -f body='${ok}'`, null, root)).toMatchObject({ kind: 'unverified' })
+    })
   })
 })
 
