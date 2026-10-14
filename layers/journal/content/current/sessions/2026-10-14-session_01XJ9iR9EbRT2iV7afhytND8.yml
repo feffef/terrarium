@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01XJ9iR9EbRT2iV7afhytND8
 startedAt: 2026-10-14T12:37:06Z
-endedAt: 2026-10-14T13:43:40Z
+endedAt: 2026-10-14T13:56:01Z
 kind: interactive
 goal: "Early run of the issue #1778 checks on PR #1775's path-scoped rules and Bash rules hint"
 status: completed
-outcome: "Draft report, now with a misses section, given to the owner; not posted on #1778, no failure issues filed yet"
-summary: "The owner asked (human-instructed) to run the #1778 checks about 20 minutes before the issue's 13:00Z time gate, accounting for recent ADR and rule-summary changes, using an Explore agent for a log overview and a second agent for transcripts. I asked three questions first; the owner chose a draft-to-owner report (no posting), an extra post-#1909 (ADR-0030 rewrite) cohort row, and agent-picked transcript sessions. Checks 1, 2c, 4, 6, 7c pass; 2a fails for tenant-layers (88%), mdc-when-to-use (95%) and guards (50%) useful-no shares; 7a/7b fail for tenant-layers (doc unread 31% to 65%); check 3 found that the hint, wired only on PostToolUse, skips compound reads whose last step fails; check 5's harness half is not checkable in cloud events. In a follow-up the owner asked (human-instructed) for misses: sessions that needed a rule but never touched its paths. A third agent screened all 62 After sessions: zero confirmed misses for the three #1775 rules, one plausible adr-0004-human-merge miss (a clear-backlog build subagent returned an empty humanOnly list for .claude/rules edits, which I verified in the session log and the workflow script), and a few glob gaps with no session evidence. The owner then asked (human-instructed) to investigate the worktree hypothesis in a new session I start myself: I started session_01CJix3AqBpX5KrAENqNp1M7, which reports back here. Posting and filing failure issues wait on the owner."
+outcome: Draft report with misses, worktree, pointer, verdict and fold follow-ups given to the owner; not posted
+summary: "The owner asked (human-instructed) to run the #1778 checks about 20 minutes before the issue's 13:00Z gate, accounting for recent ADR changes, with an Explore overview and a transcript agent. Checks 1, 2c, 4, 6, 7c pass; 2a fails for tenant-layers (88%) and mdc-when-to-use (95%); 7a/7b fail for tenant-layers; check 3 found the hint skips compound reads whose last step fails (PostToolUse only); check 5's harness half is not checkable in the cloud. Human-instructed follow-ups, each run by an agent: a misses search (0 confirmed for the three rules); a new session I started, session_01CJix3AqBpX5KrAENqNp1M7, which showed rules do load in worktrees, so the #1896 empty humanOnly list was the brief, not a rule miss; an ADR-pointer check (0 agents followed \"read the full ADR first\", with or without the line count); a verdict reliability check (92% of 40 verdicts correct, 2a stands); and a fold check (about a third of rulesLoaded is subagent-only and drives most \"no\" verdicts overall, but not for tenant-layers/mdc). I misattributed the ADR-0030 rewrite to #1909 (it was #1898); the pointer agent caught it and I fixed the draft. Posting and filing issues wait on the owner."
 prs: []
 docsRead:
   - path: CONTEXT-MAP.md
@@ -22,6 +22,8 @@ docsRead:
     reason: fetch before trusting history
     useful: partly
   - path: .claude/settings.json
+    reason: (no reason given)
+  - path: .agents/skills/log-session/SKILL.md
     reason: (no reason given)
   - path: scripts/bash-rules-hint.ts
     reason: (no reason given)
@@ -53,22 +55,26 @@ frictions:
   - description: Tried ScheduleWakeup as a fallback while waiting on a subagent; the /loop-only guard blocked it
     solution: None needed; subagents self-notify, as the guard says
     severity: nit
-durationSec: 3994
+  - description: "Labelled the ADR-0030 rewrite as PR #1909 from a merge-commit list without checking its diff; it was #1898, and #1909 only changed hash lines"
+    solution: Check a merge's diff with git show --stat before naming it as the cause of a cohort split
+    severity: minor
+durationSec: 4735
 models:
-  claude-opus-5-5: 66
+  claude-opus-5-5: 92
 toolCounts:
-  Bash: 17
+  Bash: 23
   ToolSearch: 2
   mcp__github__issue_read: 2
   AskUserQuestion: 1
-  Agent: 3
+  Agent: 6
   mcp__github__get_job_logs: 3
   ScheduleWakeup: 1
-  Grep: 1
+  Grep: 3
   Read: 1
   Write: 2
   Skill: 2
   mcp__claude-code-remote__create_session: 1
+  ReadNotifications: 1
 rulesLoaded:
   - .claude/rules/adr-0021.md
   - .claude/rules/adr-0029.md
@@ -127,6 +133,12 @@ subagents:
     task: "Transcript deep-dive for #1778"
   - type: general-purpose
     task: Find rule false negatives
+  - type: general-purpose
+    task: Did agents follow ADR pointers?
+  - type: general-purpose
+    task: Rule verdict reliability check
+  - type: general-purpose
+    task: Subagent rule loads in parent log
 gitBranch: ccr-77f9ffb6-nydit3
 entrypoint: remote_mobile
 cliVersion: 2.1.299
