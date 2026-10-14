@@ -20,10 +20,9 @@ Platform home page, a curated showcase of hand-picked Tenants.
   `queryPages` adds each page's own URL. Code never reads another Tenant any
   other way: not by its manifest, a list of Tenants or its collection keys.
 - **The Platform home page is the exception.** `app/pages/index.vue` may read
-  the Tenants it features directly, through `resolveSpaceRoute` and their
-  collection keys. It is Platform code that picks those Tenants on purpose,
-  while this ADR guards against one Tenant coupling to another and against
-  views that look across Tenants from a hard-coded list.
+  the Tenants it features directly. It is Platform code that picks those
+  Tenants on purpose, while this ADR guards against one Tenant coupling to
+  another and against views that look across Tenants from a hard-coded list.
 - **Who may read across.** Any Tenant layer may call the read functions. A
   view whose whole job is to look across Tenants, such as Search or the
   Timeline, goes in the Commons Tenant as a new Space. The Commons's own pages
