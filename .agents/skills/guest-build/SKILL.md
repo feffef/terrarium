@@ -20,22 +20,17 @@ built.
 starts itself); see `guest-intake`'s Skill (issue #568).
 
 **It composes existing Skills — never restate them.** The dispatch-and-review
-machinery is `frictions-to-fixes` §5–§6: a **Sonnet** impl agent in its **own git
-worktree** that branches from `origin/main`, implements, clears the **safety
-gate**, and commits — never merging, never enabling auto-merge, never
-self-invoking `close-session`/`log-session`, and committing before it stops
-even mid-gate (read `frictions-to-fixes` §5 and the `dispatch-subagents` Skill
-for the exact mechanics). It pushes only after your `/code-review`; the land
+machinery is `frictions-to-fixes` §5–§6 and the `dispatch-subagents` Skill
+(§3, "Scope and trust": what an impl agent may and may not do); the land
 recipe is `docs/agents/pr-workflow.md`. This Skill adds
 only what a guest-demo build needs — and one hard subtraction.
 
 ## The one hard subtraction — it does NOT merge
 
 `frictions-to-fixes` reviews **and merges** its own dispatched PRs. This Skill
-does **not**. Every guest-driven PR is gated and **owner-merged** (ADR-0023): it reviews the branch, opens the PR, posts the review verdict
-as a PR comment, comments on the issue that the story awaits the owner's merge,
-and follows the PR without merging it. It never calls `merge_pull_request` and never enables
-auto-merge — the owner is the sole merge authority for guest work.
+does **not**: every guest-driven PR is gated and **owner-merged** (ADR-0023).
+It never calls `merge_pull_request` and never enables auto-merge — the owner is
+the sole merge authority for guest work.
 
 ## What it acts on
 
@@ -47,10 +42,9 @@ already applies both skips.
 
 ## Concurrency — the `guest-in-flight` marker
 
-`guest-intake` and `guest-build` can each fire on their own tight, independent
-interval, so nothing but this marker stops both from acting on the same issue
-at once. Issue #570: this already produced a near-miss — contradictory PRs
-building against the same issue (#555) — before a human intervened.
+`guest-intake` and `guest-build` each fire on their own interval, so only this
+marker stops both acting on one issue at once (issue #570: contradictory PRs
+against #555 before a human stepped in).
 
 - **Claim it before dispatching.** Before step 2 below (dispatching the impl
   agent), add `guest-in-flight` to the issue's label set via `issue_write`
@@ -64,7 +58,7 @@ building against the same issue (#555) — before a human intervened.
   `guest-in-flight` in the same `issue_write` call that applies the step's
   resulting label. A marker left behind after the Skill's own turn ends blocks
   every future pass, guest-intake's included, until it ages out.
-- **Staleness.** `scripts/guest-marker.ts` (`MARKER_STALE_MINUTES`) is the single home for the label name and the staleness window; its header comment gives the reasoning. `poll-guest-tickets.ts` re-surfaces an issue whose marker is older than that window, since a marker that old means the session that claimed it likely died mid-flight, not that it's still working. Don't hand-check label ages: trust the script's output (or, checking by hand, the most recent `labeled` event's `created_at` via `gh api repos/OWNER/REPO/issues/N/events`).
+- **Staleness.** `scripts/guest-marker.ts` (`MARKER_STALE_MINUTES`) is the single home for the label name and the staleness window, with its reasoning in the header comment. `poll-guest-tickets.ts` re-surfaces an issue whose marker is older than that window: its session likely died mid-flight. Trust the script's output; only when checking an issue by hand, read the most recent `labeled` event's `created_at` (`gh api repos/OWNER/REPO/issues/N/events`).
 
 ## Per ready story
 
@@ -73,8 +67,8 @@ building against the same issue (#555) — before a human intervened.
    owner (`ready-for-human` + a comment naming why, dropping the marker in the
    same update) and move on.
 2. **Claim the marker, then dispatch one Sonnet impl agent** (`model: sonnet`,
-   `isolation: 'worktree'`) with a self-contained brief per `dispatch-subagents`,
-   `frictions-to-fixes` §5, and the prohibitions above: read the issue, branch from `origin/main`,
+   `isolation: 'worktree'`) with a self-contained brief per `dispatch-subagents` and
+   `frictions-to-fixes` §5: read the issue, branch from `origin/main`,
    implement, clear the gate, and commit, unpushed — then stop and hand back
    rather than touch any human-only surface.
 3. **Review on a different model.** The impl is Sonnet; run `/code-review` in

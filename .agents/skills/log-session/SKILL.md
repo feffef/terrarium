@@ -3,24 +3,21 @@ name: log-session
 description: Create **or update** this session's log entry — the authored half (goal, outcome, summary, and every friction); the mechanical trace (timings, models, tools, files read/edited, subagents) is derived automatically. Writes an authored scratch; a committed hook stitches it with the trace and commits it to the Journal, live. Usually invoked *by* `close-session` at closure, but callable directly to amend an already-written log.
 ---
 
-Record one honest **session log** for this Claude session. You author only the
-**interpretive** half — goal, outcome, summary, and every friction. The
-**mechanical** half — exact timings, models, tool counts, files read/edited,
-subagents, branch — is *derived from the transcript* by a committed hook, so
-**do not write it**. Authoring just writes a scratch file;
-the hook stitches the two and commits to `main`. That commit normally happens
-live, on the `Stop` hook at the end of the turn you invoke this Skill in —
-**not** at session teardown: `SessionEnd` is only a fallback for a session `Stop`
-never fired for (it fails silently on a network-freezing suspend, PR #148).
+Record one honest **session log** for this Claude session. You write only the
+**interpretive** half: goal, outcome, summary, and every friction. A committed
+hook derives the **mechanical** half (timings, models, tool counts, files read
+and edited, subagents, branch) from the transcript, so **do not write it**. You
+write a scratch file; the hook stitches the two and commits to `main`, live on
+the `Stop` hook at the end of the turn you invoke this Skill in, not at session
+teardown. `SessionEnd` is only a fallback for a session `Stop` never fired for
+(it fails silently on a network-freezing suspend, PR #148).
 
 ## When to invoke
 
-**The normal entry point is `close-session`, not this Skill directly.**
-`close-session` owns the closure *trigger* (the "am I wrapping up?" judgment) and
-runs the whole closing sequence, of which authoring this log is one step — invoke
-that at closure and it calls this. Reach for `log-session` **directly** only to
-**update** an already-authored log (a new friction, a changed outcome) after
-you've closed.
+**At closure, invoke `close-session`, not this Skill.** It judges whether you
+are wrapping up and runs the closing sequence, which calls this one. Invoke
+`log-session` directly only to **update** a log you already authored (a new
+friction, a changed outcome).
 
 Whichever way you arrive here, a log records the session at **Session closure**
 (GLOSSARY.md's glossary term — self-judged, not the same as merged) — its
@@ -46,7 +43,7 @@ wording — and the next live `Stop` (or, failing that, a `SessionEnd`/resume
 fallback) lands the merged result. So if you call closure and then more work
 happens, just **invoke again**.
 
-**"Latest wording" means replace, verbatim, not append.** A re-invoke with `summary: "just fixed the CI flake"` makes that string the **entire summary**; it is not added to what you wrote before. Never pass a short delta or placeholder as `summary` (or `goal`/`outcome`) on a re-invoke: write the complete, current version of the field every time you set it, as if authoring it fresh.
+**"Latest wording" means replace, not append.** On a re-invoke, write `summary`, `goal` and `outcome` whole and current, never a short delta or placeholder: `summary: "just fixed the CI flake"` becomes the **entire summary**.
 
 **Merging only adds — it cannot remove or reword a friction you already
 authored.** To correct one, delete `.session-logs/pending.scratch.json` first,
@@ -56,9 +53,10 @@ Be honest, **especially about friction** — a flattering log is worse than none
 
 ## 1. Author the interpretive entry
 
-Write a small YAML file (e.g. under your scratchpad) with **only** these fields —
-the authored subset. Everything mechanical is derived; adding a derived field here
-is ignored at best and rejected at worst.
+Write a small YAML file (e.g. under your scratchpad) with **only** these authored
+fields. A derived field (`startedAt`/`endedAt`, `durationSec`, `models`,
+`toolCounts`, `filesEdited`, `subagents`, `gitBranch`, …) is ignored at best and
+rejected at worst.
 
 ```yaml
 session: session_01H…              # this session's canonical id (see "Recovering the id")
@@ -88,37 +86,28 @@ ideas:                             # OPTIONAL — omit unless something sparked
   - Auto-cluster recurring `ideas` entries into GitHub issues weekly, so an idea doesn't die in a YAML file no one re-reads
 ```
 
-- **`kind` is the autonomy spectrum — judged by who prompted, not by what the
-  session did.** The canonical definitions of `interactive` / `delegated` /
-  `autonomous` (including what does *not* count as a human prompt) live in
-  `GLOSSARY.md` → **Session** — classify against that entry, not from memory.
-- **`learnings`/`ideas` are optional notes — leave them off unless the session
-  genuinely produced one.** Don't pad them; an empty session log carries neither.
-  Definitions live in `GLOSSARY.md` → **Session** and **Idea** — don't restate them here.
+- **`kind` is judged by who prompted, not by what the session did.** Classify it
+  against `GLOSSARY.md` → **Session** (which also says what does *not* count as
+  a human prompt), not from memory.
+- **`learnings`/`ideas` are optional: add one only when the session genuinely
+  produced it.** `GLOSSARY.md` → **Session** and **Idea** define them; don't restate them here.
   - `learnings` — a fact you read from a file is a `docsRead` entry, not a
     learning. Some things you'd log as a `nit` friction are better here —
     research/interactive sessions often end with learnings and no friction at all.
-  - `ideas` — be creative *and* be concrete: name the actual thing to build and
-    say why it's worth doing — a fast tactical win and a big structural bet are
-    equally welcome, but "someone should look into X" isn't specific enough.
-    Write it so a later reader could turn it straight into a GitHub issue
-    without having to re-derive your reasoning.
+  - `ideas` — be creative and concrete: name the thing to build and why it's
+    worth doing, so a later reader could file it as a GitHub issue without
+    re-deriving your reasoning. A quick win and a big structural bet are equally
+    welcome; "someone should look into X" is too vague.
 
-- **Do NOT write** `startedAt`/`endedAt`, `durationSec`, `models`, `toolCounts`,
-  `filesEdited`, `subagents`, `gitBranch`, … — all derived.
-- **`external` is not for our logs.** The schema's optional `external` boolean
-  marks a log authored by a *different* harness/toolchain (an external
-  contributor's own agent, ADR-0009) — see `GLOSSARY.md`'s
-  **Session** term for the absent-⇒-internal semantics and the mining-exclusion/
-  ideas split. This authoring path doesn't set it.
+- **Don't set `external`.** That optional boolean marks a log from a *different*
+  harness (an outside contributor's own agent); absent means internal
+  (`GLOSSARY.md` → **Session**), and ADR-0009 says what it changes for mining.
 - `docsRead`/`skillsUsed` are your **curated** picks (the ones worth a `reason`).
   A `docsRead` `reason` says briefly what the doc told you; `useful` says
   whether that helped your task. Step 3 says what a `ruleVerdicts` entry says. You don't have to list
   everything you touched — the extractor folds observed reads in. A read you
-  *do* cite keeps your `reason`; the rest get a derived placeholder —
-  `(read before editing)` if the same path was also edited (the Edit/Write tool
-  requires reading it first, so that read wasn't unexplained, just uncited),
-  otherwise `(no reason given)`.
+  cite keeps your `reason`; the rest get `(read before editing)` if you also
+  edited that path, otherwise `(no reason given)`.
 - **frictions is the point.** List *every* one — anything that felt unnecessarily
   complex, token-heavy, or repetitive. A **doc contradiction found mid-session** is
   itself a friction: record it with a `solution` pointing at the single home to fix.
@@ -130,7 +119,7 @@ ideas:                             # OPTIONAL — omit unless something sparked
   agent-initiated** — don't leave that provenance to be inferred from context.
   ADR-0003's approval rule depends on
   this being legible to a later reader, not reconstructed after the fact.
-- **Quote any scalar value containing `[`, `{`, `#`, or `,`**, the top-level `goal`/`outcome` strings as much as `path`/`reason` values. Unquoted, `[` or `{` starts a YAML flow sequence/map; `#` starts a YAML comment and truncates everything after it; `,` inside a flow map (`{ … }`) ends the current value early. Any of these silently mangles the entry instead of erroring. The `#` case (a bare `PR #354` truncating to `PR`) is caught: the `--author` step below rejects an unquoted-`#` truncation loudly and prints the value to quote.
+- **Quote any scalar containing `[`, `{`, `#` or `,`**: `goal`/`outcome` as much as `path`/`reason`. Unquoted, each silently mangles the value instead of erroring: `[` or `{` starts a flow sequence or map, `#` starts a comment that truncates it (a bare `PR #354` becomes `PR`; `--author` rejects this one and prints the value to quote), and `,` inside `{ … }` ends the value early.
 - `goal` is a short, plain headline ("Weekly check of the Platform's own Skills",
   not "Run the scheduled audit-skills sweep: …"), `outcome` a one-liner; both for
   a stranger (name the thing, not "the issue"): they are the public dashboard's copy.

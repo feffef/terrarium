@@ -1,6 +1,5 @@
 // Helpers for hand-authoring Tinkerfund figures: a 400x300 canvas coloured only by
-// theme tokens. Built by the illustrator agents that drew the launch catalog; a
-// figure module composes these into { style, caption, svg } entries.
+// theme tokens. A figure module composes these into { style, caption, svg } entries.
 export const r1 = (n) => { const v = Math.round(n * 10) / 10; return Object.is(v, -0) ? 0 : v }
 export const f = (n) => String(r1(n))
 

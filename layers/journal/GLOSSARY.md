@@ -1,6 +1,6 @@
-# Context — Journal Tenant
+# Glossary — Journal Tenant
 
-> The Journal context: the one Tenant-local term it owns (Digest) and its
+> The Journal glossary: the one Tenant-local term it owns (Digest) and its
 > reason-to-exist. Unlike the Blog and Atlas, the Journal renders **platform-wide**
 > concepts — session log, Skill Inventory, Session, Friction, Agent Authorship —
 > which stay defined in the root `GLOSSARY.md` because any agent needs them

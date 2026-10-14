@@ -53,7 +53,7 @@ recent comment, or the body if there are none) and act only when it is
   override (ADR-0020). Obey it (e.g. "just build this" → `ready-for-agent`;
   "reject this" → close or `ready-for-human`) and do not interview the owner.
   Why the marker's absence, not the `OWNER` association, is what marks a real
-  owner comment: see `auto-triage/SKILL.md`'s eligibility section.
+  owner comment: the ADR-0017 rule (agents post as the owner).
 
 ## The bounded interview — bounded, not a relentless grilling
 
@@ -66,12 +66,10 @@ with a guest is neither, so this Skill is **bounded**:
   well-formed request skips straight to the confirmation summary with **zero**
   question rounds. Count rounds from this Skill's own prior question-comments in
   the thread (each carries the marker).
-- **Apply `needs-info` the moment you first engage a guest issue** — with the
-  first question round (or immediately, before it, for a still-unlabelled issue)
-  — so the ticket visibly enters the intake state machine from the start. Keep it
-  `needs-info` through every round and the confirmation ask, until the guest
-  confirms (→ `ready-for-agent`) or the screen escalates it (→ `ready-for-human`).
-  (`needs-info` is the "waiting on reporter" label — `docs/agents/triage-labels.md`.)
+- **Apply `needs-info` the moment you first engage a guest issue**, so it
+  visibly enters intake from the start, and keep it through every round and the
+  confirmation ask, until the guest confirms (→ `ready-for-agent`) or the screen
+  escalates it (→ `ready-for-human`).
 - Explore the codebase to answer anything answerable there, rather than asking
   the guest (per `/grilling`).
 
@@ -112,9 +110,8 @@ of it and don't just reject it either. In the same comment:
    this issue; still needs their explicit choice before anything is
    green-lit. Keep `needs-info` until they answer.
 
-This is a capability limit, not ADR-0023's checks below — check it
-whenever the raw idea hits the wall, even before round 3 (a well-formed but
-infeasible idea doesn't need three rounds to be recognized as infeasible). Once
+This is a capability limit, not ADR-0023's checks below: reframe as soon as
+the raw idea hits the wall, even before round 3. Once
 they pick a proposal, that proposal is what gets confirmed and screened below —
 not their original ask.
 
@@ -137,13 +134,10 @@ their story is queued to be built; `guest-build` takes it from there.
 
 ## Repeated escalation from one account — a cap across issues, not just within one
 
-The ≤3-rounds cap above is per issue. A single guest account can still probe
-via a *sequence* of separate issues, each individually bounded, each
-escalated or declined in turn — that pattern needs its own recognition and
-response, since the interview above never adds it up across issues (issue
-#604).
+The ≤3-rounds cap above is per issue, so one guest account can still probe
+through a series of issues, each escalated or declined in turn (issue #604).
 
-- **Recognize it**: within one UTC day (a single intake scan pass always falls inside one, so that is the only window that matters), count how many of one GitHub login's requests were escalated (`ready-for-human`, on a security/dependency/defacement concern) or declined (hit the build-time wall with no proposal picked) in a row.
+- **Recognize it**: within one UTC day, count how many of one GitHub login's requests in a row were escalated (`ready-for-human`, on a security/dependency/defacement concern) or declined (hit the build-time wall with no proposal picked).
 - **Threshold: 3 consecutive escalated-or-declined requests from the same
   login in that window.** Below it, keep negotiating each new issue exactly
   per the bounded interview above — a couple of bad-fit ideas from a
@@ -172,11 +166,9 @@ Same marker and rationale as `guest-build`'s "Concurrency" section (issue #570, 
 
 ## Run it
 
-1. **Resolve the guest set.** Run `.agents/skills/guest-intake/scripts/guest-intake-scan.ts` (or scan open
-   issues by hand); for each, check the newest activity against the
-   guest-authorship rule above; keep the guest-authored, drop the agent's-own
-   and (unless steering) the owner's. An issue currently held by a concurrent
-   session (a fresh `guest-in-flight` marker) is already excluded.
+1. **Resolve the guest set.** Run `pnpm exec tsx .agents/skills/guest-intake/scripts/guest-intake-scan.ts`:
+   its `actionable` list holds the guest-authored and owner-steering issues. Without
+   it, scan open issues by hand against the guest-authorship rule above.
 2. **One bounded step per issue** (parallel — the eligible set is small, since an
    issue only surfaces when a guest has written since the last intake action).
    Each issue is at exactly one stage: ask the next round, post the reframe

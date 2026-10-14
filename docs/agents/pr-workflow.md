@@ -51,9 +51,10 @@ findings.
    and on a fork PR would fake the human merge authority
    [`guest-contributions.md`](./guest-contributions.md) reserves (#301, #853).
 5. Land through `scripts/merge-pr.ts <pr-number>`, the only merge path. It
-   refuses without your step-4 verdict (#1276) and refuses fork and
-   Public-authored PRs, which a human merges (ADR-0020). Never call
-   `enable_pr_auto_merge` (#385).
+   refuses without your step-4 verdict (#1276), and refuses a fork or
+   Public-authored PR (ADR-0020), a `guest-pipeline` PR (ADR-0023) and one
+   that changes a Human-only path (ADR-0004), each of which a human merges.
+   Never call `enable_pr_auto_merge` (#385).
 6. Escalate a PR that needs a human merge (ADR-0004) or is out of scope to a
    human instead of merging it.
 

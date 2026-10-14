@@ -6,8 +6,7 @@ disable-model-invocation: true
 
 # Frictions to Fixes
 
-The precursor to fuller self-improvement automation (ADR-0009): read
-the **frictions** every session honestly logged, pick the ones worth retiring (only what this run can't land becomes an issue, §4),
+Read the **frictions** every session honestly logged (ADR-0009), pick the ones worth retiring (only what this run can't land becomes an issue, §4),
 dispatch fixes, then **review and land them yourself**. **Autonomy is the
 goal** — the impl agents author the PRs; you review and merge them against the
 ADR-0004 gate,
@@ -56,7 +55,7 @@ Its brief:
   sample** — read every session in it, don't chase frictions from older,
   likely-gone sessions. Each record's `id`/`file` point back to the full log —
   re-read it directly when a candidate needs more context than the triage
-extract carries. **External sessions are already excluded:** the survey script drops any log flagged `external: true` (`GLOSSARY.md` Session). Don't hunt the raw corpus for them.
+extract carries. **External sessions are already excluded:** the survey script drops any log flagged `external: true` (ADR-0009). Don't hunt the raw corpus for them.
 - **For a friction a doc already covers, check whether that session read the
   doc.** Each triage record carries `docsRead` (Read-tool opens plus any the
   author listed, and since 2026-10-10 shell reads). On an older log a
@@ -101,7 +100,7 @@ Never re-fix what is already fixed. **First, drop what isn't ours to change:** a
 an open **Prune Trial**'s territory (`.agents/prune-trials.yml`) is the trial's
 evidence, not a fix (ADR-0027). The drop reason quotes the matching `territory` path or keyword verbatim; with no quotable match the candidate is not on trial, so classify it below. A
 `blocker` is the exception: after the usual tracker search, file it, naming the
-trial. Then, for the rest: the §1 subagent applies these rules to every candidate, checking the tracker for an issue or PR that already covers it, and confirming against **`main`** where cheap (a "solution" isn't ripe if main already has it). `pnpm exec tsx scripts/merged-since.ts <friction session's startedAt>` lists every `origin/main` commit landed after that instant (UTC-normalized, newest-first, `isMerge`-flagged; add `--merges-only` for PR merges alone, else a window's output can overflow a subagent). Scan it for the fixing commit/PR to turn the already-fixed/regression join into a direct comparison instead of manual git-timestamp archaeology. (Redirect stdout and stderr separately when capturing its output: it writes diagnostics to stderr and its JSON result to stdout only, and combining them breaks JSON parsing.) **Before landing on "Never fixed," run a targeted keyword search of the tracker using the friction's tool name and error-message text as query terms** (not a paraphrase or a topic-level guess; keep the query narrow here too, per `docs/agents/github-integration.md`'s search-scoping guidance, not just at the start of this task). The search tools (e.g. `mcp__github__search_issues`) match natural language semantically, not by literal substring, so a miss is weaker evidence than a literal grep miss: a loosely-worded query can miss an issue or PR that already covers it and waste a dispatch on re-recommending a fix for something already closed. **A keyword-search miss alone is not sufficient proof of "never-fixed":** before finalizing that label, eyeball nearby issues (same file/script/mechanism as the candidate) for a closed issue covering the same root cause under different wording; a paraphrase or a nearby instance of an already-fixed cause is **fixed, not never-fixed** (issue #854). Classify each into one branch:
+trial. Then, for the rest: the §1 subagent applies these rules to every candidate, checking the tracker for an issue or PR that already covers it, and confirming against **`main`** where cheap (a "solution" isn't ripe if main already has it). `pnpm exec tsx scripts/merged-since.ts <friction session's startedAt>` lists every `origin/main` commit landed after that instant (UTC, newest-first, `isMerge`-flagged; `--merges-only` keeps PR merges alone, else a window's output can overflow a subagent). Find the fixing commit/PR in it rather than comparing git timestamps by hand. Capture stdout and stderr separately: diagnostics go to stderr, and mixing them into the JSON on stdout breaks parsing. **Before labelling a candidate "never fixed", search the tracker with the friction's tool name and error-message text** (not a paraphrase), with a narrow query (`docs/agents/github-integration.md`). The search tools (e.g. `mcp__github__search_issues`) match semantically, not by substring, so a miss alone doesn't prove never-fixed: also eyeball nearby issues (same file, script or mechanism) for a closed one covering the same root cause in other words. A paraphrase or a nearby instance of an already-fixed cause is **fixed, not never-fixed** (issue #854). Classify each into one branch:
 
 - **Never fixed** — no issue/PR addresses it, confirmed by the keyword search
   above. Carries on to step 3.
@@ -149,7 +148,7 @@ if your judgement differs, but don't re-derive the ranking from scratch.)
 Spend a hard slot on an open ledger entry with a `major` or `blocker` occurrence
 and a safe surface before filling simple ones; the hard slots exist for these.
 
-Drop one-offs and anything an ADR defers. A candidate that ranks but fails only the
+Drop a lone low-severity one-off (§1) and anything an ADR defers. A candidate that ranks but fails only the
 safe-surface test is **surface-blocked**: not dropped, §4 files it, uncapped. The
 caller may pass a lower count as the Skill's argument; with none, take everything
 that ranks, capped at the same 10-total / 2-hard limits.
@@ -244,16 +243,11 @@ post-dispatch check. Run at most 2 impl agents' full gates concurrently
 
 Every agent's brief is self-contained: read the issue(s), branch from `origin/main`,
 implement the **recommended** option only, clear the **safety gate**, and commit,
-unpushed (`dispatch-subagents` §3, "Scope and trust"). The brief must instruct
-the agent to run `pnpm typecheck` itself (not a bare `tsc --noEmit`, which skips this repo's `nuxt typecheck` step and can
-pass clean while `pnpm typecheck` still catches real errors) on touched files
-before committing — not just its targeted test file(s) — so a type error surfaces
-locally instead of on the next full CI gate round-trip. The impl agent **never
+unpushed (`dispatch-subagents` §3, "Scope and trust"). The gate's floor runs `pnpm typecheck` (`scripts/gate.ts`); the brief tells
+the agent never to substitute a bare `tsc --noEmit`, which skips the
+`nuxt typecheck` step and can pass while real errors remain. The impl agent **never
 merges and never enables auto-merge** — it hands the committed branch back to you. You are the reviewer (§6)
 and open the PR.
-**Dispatched worktree-isolated impl agents must NOT self-invoke `close-session`
-or `log-session`** — see `close-session/SKILL.md` for why and its mechanical
-enforcement.
 
 Done when every selection and the ledger edit are covered by a committed branch
 (every simple doc fix and the ledger edit by the one grouped branch, each other

@@ -94,10 +94,10 @@ Ordinary feature work is merged by the session that wrote it, once the gate is g
 
 Scheduled jobs are a handful, each with a deliberately narrow charter that fixes
 what it can produce before it starts: documentation, page content, their own
-inventory entries, or (for the visitor loop below) fixes and one small feature
-confined to the existing sites. One rule holds even inside that charter: in the
-friction-fixing loop below, a dispatched agent writes each change and a separate
-session reviews and merges it.
+inventory entries, fixes for logged frictions, or (for the visitor loop below)
+fixes and one small feature confined to the existing sites. One rule holds even
+inside that charter: in the friction-fixing loop below, a dispatched agent
+writes each change and the session that dispatched it reviews and merges it.
 
 ```mermaid
 graph TB

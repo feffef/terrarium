@@ -8,7 +8,7 @@ disable-model-invocation: true
 
 Keep the repo's prose honest against the code, and plain enough to act on.
 Agents act on documented state, so a stale or muddled doc is a **behavioural**
-bug (`CLAUDE.md`). This self-improvement Skill runs **without
+bug. This self-improvement Skill runs **without
 interaction**: it fact-checks each finding, fixes it, and self-merges its own
 gated PR on green. It files an issue only when it can't tell which of two
 conflicting facts is true.
@@ -54,7 +54,7 @@ Classify every surface **before** editing.
 
 ## The eight lenses, in four paired agents
 
-Run four read-only reviewer agents in parallel, two lenses each (Agent C may split into several). Each is a leaf:
+Run four read-only reviewer agents in parallel, two lenses each. Each is a leaf:
 tell it to do the review itself and return findings directly, with no
 sub-agents and no waiting on other agents. Every finding is the file plus
 the exact sentence, quoted whole, line breaks kept; no line ranges, which reviewers get wrong. A
@@ -139,9 +139,8 @@ Don't restore or reword it; record what you found as a Friction and leave it to
 Every finding is a hypothesis until checked against primary sources. Dispatch
 independent checkers (split a large pool) that re-derive each claim from
 scratch and return **CONFIRMED**, **CONFIRMED-BUT** (with the corrected line or
-quote), or **WRONG**. Act only on a checker's CONFIRMED(-BUT); a wrong finding
-acted on is new drift you authored. Never check inline instead: a finding no
-checker confirmed is left unfixed.
+quote), or **WRONG**. Act only on a checker's CONFIRMED(-BUT), never on your
+own inline check: a wrong finding acted on is new drift you authored.
 
 What each lens is checked against:
 
@@ -191,7 +190,7 @@ surface in a tier or on the Skip list. Done when every surface has one.
 
 ## 3. Review across the eight lenses
 
-Run the reviewer agents and pool their findings. Each reviewer returns its findings as text in its final reply: the file, the exact sentence quoted whole, line breaks kept (no line range), and replacement text. Save each reply verbatim to its own numbered scratchpad file; copy, never retype. Done when every one has
+Run the reviewer agents and pool their findings, each returned as text in the reviewer's final reply in the format above plus replacement text. Save each reply verbatim to its own numbered scratchpad file; copy, never retype. Done when every one has
 reported and every file in the concision family was read in full.
 
 ## 4. Dedupe the pool
@@ -225,10 +224,10 @@ floor still runs `verify:skills-lock` and `validate:content`. Done when green.
 ## 8. Commit, review, push, open one gated PR, self-merge on green
 
 Follow `docs/agents/pr-workflow.md`'s "Closing a scheduled run's PR".
-One self-merged commit and PR (the escalation PR below is separate); its subject
-ends with the family's name, e.g. `audit-docs: 2026-10-14 sweep (docs/research concision family)`; its body lists the fixes and any issue filed, and
-a one-line PR comment records the audit. It merges on green
-(ADR-0004), like `digest`.
+One commit and PR (the escalation PR below is separate), self-merged on green
+(ADR-0004) like `digest`; its subject ends with the family's name, e.g.
+`audit-docs: 2026-10-14 sweep (docs/research concision family)`; its body lists
+the fixes and any issue filed, and a one-line PR comment records the audit.
 
 **These fixes escalate instead:** any change to a Human-only path (the `paths`
 of `.claude/rules/adr-0004-human-merge.md`; any ADR edit, an Orphan-addition fix

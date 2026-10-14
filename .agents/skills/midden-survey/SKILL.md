@@ -31,21 +31,23 @@ firing one).
   pnpm exec tsx .agents/skills/midden-survey/scripts/midden-survey.ts [--since YYYY-MM-DD]
   ```
 
-  It enumerates **deleted files** and **dropped dependencies** on
-  `origin/main`, already screened for noise paths, relocations (a file that
-  moved rather than died — git's own rename records, followed forward across
-  commits so a move made *later* than the deletion still counts, plus exact
-  content standing at another path today), regrown paths / re-added
-  deps (the mechanical slice of Gate B), and candidates the trench or the stores already
-  catalogue — by provenance identity, or by a declared path, which screens a
-  whole subtree when it names a directory, and which, on a commit-kind artifact,
-  screens only the deletion that artifact's own commit performed (a commit-kind
-  path records what the commit *touched*, so a later death of that path is still
-  an uncatalogued find). The dependency sweep reads `package.json`
-  history, deliberately not the lockfile — transitive lockfile churn is not
-  discarded *work*, only a direct dependency someone chose and then dropped is. Bound the sweep with `--since` (e.g. the
-  previous survey's date, from the last survey-report issue) rather than
-  re-walking all history every run.
+  It lists **deleted files** and **dropped dependencies** on `origin/main`,
+  minus what it can already rule out:
+  - noise paths;
+  - relocations, files that moved rather than died: git's own rename records,
+    followed forward so a move made *later* than the deletion still counts,
+    plus exact content that one other path holds today;
+  - regrown paths and re-added deps (the mechanical slice of Gate B);
+  - finds the trench or the stores already catalogue, by provenance identity
+    or by declared path. A directory path screens its whole subtree. A
+    commit-kind path screens only the deletion that artifact's own commit made:
+    it records what the commit *touched*, so a later death of that path is
+    still an uncatalogued find.
+
+  It reads `package.json` history, not the lockfile: transitive lockfile churn
+  is not discarded *work*; a direct dependency someone chose and then dropped
+  is. Bound the sweep with `--since` (e.g. the previous survey's date, from the
+  last survey-report issue) rather than re-walking all history every run.
 
 ## 2. Sweep what git can't see — PRs and branches, via the GitHub MCP tools
 
@@ -90,9 +92,8 @@ passes **both** gates:
   commit's siblings moved the behavior before concluding nothing did. A
   candidate that *fails* Gate B because something renamed or superseded it in
   place is out of the Midden's scope — record it as a Gate-B exclusion rather
-  than silently dropping it. The report's `screenedOut.relocations` are already
-  exactly that: exclusions the machine could decide, carry them into the issue's
-  list alongside your own.
+  than silently dropping it. The report's `screenedOut.relocations` are
+  Gate-B exclusions the machine already decided; list them in the issue with your own.
 - **Cluster, don't enumerate**: a batch of files deleted by one commit for one
   reason (a prototype swept away, a component family retired together) is
   **one** candidate with several paths, not N candidates. The Midden
@@ -107,12 +108,11 @@ survey gets a comment, not a duplicate). For each surviving candidate:
 - what it was, and its **evidence**: the deleting/dropping commit or the
   PR/branch, dates, and links;
 - a **draft `provenance` block** in the artifact schema's shape
-  (`layers/midden/tenant.config.ts`), including a `continuityCheck` line
-  recording exactly which Gate-B check ran and what it found — plus a draft
-  `removedIn` where the terminal event is a commit (the script already reports
-  the deleting/dropping hash per candidate); `remains` stays out of the draft —
-  it is curator-curated by definition (`layers/midden/GLOSSARY.md`'s Artifact
-  term);
+  (`layers/midden/tenant.config.ts`), including a `continuityCheck` line saying
+  exactly which Gate-B check ran and what it found and, where the terminal event
+  is a commit, a draft `removedIn` (the script reports each deleting/dropping
+  hash). Leave `remains` out: the curator picks it (`layers/midden/GLOSSARY.md`,
+  Artifact);
 - one line on why it passes both gates.
 
 Leave `condition`, `stratum`, `site` and the `catalogNote` out of the issue —

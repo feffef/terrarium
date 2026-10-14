@@ -3,8 +3,7 @@
 // clusters via a NAIVE, MECHANICAL keyword-overlap signal — no model or
 // semantic pass (the owner's green-light on #440 scoped this prototype to the
 // mechanical path only; a new runtime dependency would also escalate the
-// merge bar, ADR-0004). This is the reusable input a later ideas-to-issue
-// promotion step would consume — promotion itself is out of scope here.
+// merge bar, ADR-0004).
 //
 // Mirrors `scripts/digest.ts`'s split: pure, unit-tested core (keyword
 // extraction, overlap scoring, clustering) behind a thin FS/CLI shell.
@@ -43,8 +42,7 @@ export interface NoteCluster {
 // A small, deliberately generic stopword list — enough to strip connective
 // filler from agent-authored prose so keyword overlap reflects topic words,
 // not shared grammar. Not exhaustive: a missed filler word only weakens a
-// cluster match, it doesn't corrupt one — acceptable for a mechanical-only
-// signal (#440), not a claim of linguistic correctness.
+// cluster match, it doesn't corrupt one.
 const STOP_WORDS = new Set([
   'about', 'across', 'after', 'agent', 'agents', 'also', 'and', 'before', 'being',
   'between', 'both', 'call', 'could', 'doing', 'done', 'down', 'each', 'every',
@@ -87,9 +85,7 @@ export const CLUSTER_THRESHOLD = 0.15
 
 /** Greedy single-link clustering on keyword overlap: each item joins the
  *  first existing cluster whose accumulated keyword set clears `threshold`,
- *  else starts its own. Order-dependent (first-fit, not globally optimal) —
- *  the deliberately cheap mechanical signal this prototype is scoped to
- *  (#440), not a semantic pass. */
+ *  else starts its own. Order-dependent (first-fit, not globally optimal). */
 export function clusterByKeywords<T extends { keywords: string[] }>(
   items: T[],
   threshold = CLUSTER_THRESHOLD,

@@ -26,7 +26,7 @@ Everything below is mechanism; the goal above is the point.
 **A trial is judgeable only once its prune has landed on `main` and sessions
 have run against it since.** `opened:` records when the entry was written, which
 is earlier and is never the window's start. Run
-`pnpm exec tsx scripts/prune-trial-window.ts` to get every open trial's real landing commit, timestamp, and `judgeable from:` time, taken from `git log -S`; never derive or recall them by hand (a hand-derived one is how PR #1061 judged a trial a day early against a landing commit that did not exist). Its `judgeable from:` time is a floor, not a deadline: judging at or after it is fine (nothing guarantees this Skill runs at a precise time); only judging before it is the failure. A `NOT FOUND` result means silence is not evidence: leave the entry alone and judge nothing.
+`pnpm exec tsx scripts/prune-trial-window.ts` to get every open trial's real landing commit, timestamp, and `judgeable from:` time, taken from `git log -S`; never derive or recall them by hand (a hand-derived one is how PR #1061 judged a trial a day early against a landing commit that did not exist). Its `judgeable from:` time is a floor, not a deadline: judge at or after it, never before. A `NOT FOUND` result means silence is not evidence: leave the entry alone and judge nothing.
 
 For each trial that has landed and is past its window: **apply** its `check`
 (prose, not a command), and read the Frictions logged since it landed

@@ -224,8 +224,9 @@ export interface Scorecard {
    *  (read by `audit-docs` and `frictions-to-fixes`). A doc a Skill tells you
    *  to read, sitting at 0, is evidence the pointer isn't landing — but only
    *  ever *corroborating* evidence, for three independent reasons: a
-   *  topic-scoped doc reads 0 because that work didn't come up; a `cat`/`grep`
-   *  inspection is invisible to the trace by design; and since subagent reads
+   *  topic-scoped doc reads 0 because that work didn't come up; a shell read
+   *  is credited only when its output shows the doc (`shell-reads.ts`' header
+   *  lists the gaps); and since subagent reads
    *  are folded into the parent's list (`session-trace.ts`'s
    *  `foldSubagentTrace`), "opened" can mean a subagent opened it, not the
    *  session that hit the friction. Never a finding alone. */

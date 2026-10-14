@@ -26,7 +26,7 @@ re-diagnose them as new. Incident detail lives in the cited issue.
   safer default option and say so in the output; for `send_later`, use
   `create_trigger` with `run_once_at`. (issues #145, #229, #359)
 - **A fired self-bind Routine's output may not surface as a visible turn.**
-  Check `last_fired_at` via `list_triggers` before concluding it didn't fire.
+  Check `last_run.fired_at` via `list_triggers` before concluding it didn't fire.
   (issue #834)
 - **An agent session cannot write `.github/workflows/*` here — no `workflow`
   OAuth scope.** `workflow-edit-guard` ([guards](./guards.md)) denies the write.
@@ -63,9 +63,8 @@ re-diagnose them as new. Incident detail lives in the cited issue.
 - **In an unattended run, a dispatched subagent's tool call that needs human
   approval blocks forever, and the orchestrator gets no signal** (`PreToolUse`
   hooks still fire for subagent calls). Treat long subagent silence as possibly
-  stuck, not slow, and never dispatch an unattended or scheduled session to
-  change a guard or its `.claude/settings.json` hook wiring. (issue #1215;
-  [guards](./guards.md) has the hook probe.)
+  stuck, not slow. (issue #1215; [guards](./guards.md) has the hook probe and
+  the rule against dispatching an unattended session to change a guard.)
 - **The harness's instruction-shaped-content scanner can false-positive on
   benign text** that merely mentions "settings.json" / "settings-json", e.g. a
   subagent's report on `.claude/settings.json` hook wiring. If a flagged

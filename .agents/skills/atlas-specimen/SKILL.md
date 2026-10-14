@@ -12,8 +12,8 @@ Biome, Specimen, Interaction, Observation). A specimen is the Atlas's atomic uni
 of contribution: one Markdown file carrying the museum-label record in its
 frontmatter, the field-note essay in its body, and the engraved plate as an inline
 SVG. This Skill is the **single home** for the two things that keep the guide
-coherent across the many sessions that will draw it: the **naturalist's voice**
-(#75) and the **engraved-plate art direction** (#74).
+coherent: the **naturalist's voice** (#75) and the **engraved-plate art
+direction** (#74).
 
 > **Manually invoked** (`disable-model-invocation: true`). Lands through an
 > ordinary gated PR on a feature branch.
@@ -116,7 +116,7 @@ Write to `layers/atlas/content/<biome>/pages/<slug>.md` where `<biome>` is one o
 museum-label record. The full schema is authoritative in
 `layers/atlas/tenant.config.ts`.
 
-**Give every new specimen its year.** The engraved almanac dial is the specimen page's primary instrument and reads the `phenology` block below (#279). Add `phenology` when you author a specimen, not afterward: a creature with no phases gives the dial nothing to show. `activity` still carries the daily fact as the museum-label caption (`activity.label` — "a dusk-flier"); its hour `bands` no longer drive the page's primary visual, so one honest band is enough.
+**Give every new specimen its year.** The engraved almanac dial is the specimen page's primary instrument and reads the `phenology` block below (#279). Add `phenology` when you author a specimen, not afterward: a creature with no phases gives the dial nothing to show. `activity` carries the daily fact as the museum-label caption (`activity.label` — "a dusk-flier"); its hour `bands` don't drive the page's primary visual, so one honest band is enough.
 
 ```markdown
 ---
@@ -181,15 +181,14 @@ dated observation nests inside the phase whose span contains its date.
 :::
 ```
 
-**`phenology.phases`** (#279) is the annual sibling of `activity`: where `activity`
-places the creature on the day, `phenology` places it on the **Glass Year** — the
-real 365-day calendar a specimen's `date`-bearing facts already live on, not an
-invented one. Each phase is free-form and per-creature — and **the essay is
-structured by them**: one `::phase-note` per phase, so a specimen's field note
-follows its own arc. The six Glass-Year *seasons* (a tenant-wide constant in
-`utils/almanac.ts`) stay on the dial's rim as informational context — don't
-restate or invent season names here; a phase is the creature-scoped thing the
-content is tied to. **Author phases as a gapless partition of the year** (every
+**`phenology.phases`** (#279) places the creature on the **Glass Year** as `activity`
+places it on the day; the Glass Year is the real 365-day calendar a specimen's
+`date`-bearing facts already use, not an invented one. Phases are free-form and
+per-creature, and **the essay is structured by them**: one `::phase-note` each, so
+a specimen's field note follows its own arc. The six Glass-Year *seasons* (a
+tenant-wide constant in `utils/almanac.ts`) stay on the dial's rim as context;
+don't restate or invent season names here, since the content is tied to the
+creature's phases. **Author phases as a gapless partition of the year** (every
 day in exactly one phase), so the dial always has exactly one note to show.
 
 - `name` — the phase's slug; a `::phase-note{of="<name>"}` binds its paragraph to
@@ -214,13 +213,13 @@ unless you're founding a new wing.
 
 If a field note ever composes an MDC block component (`::foo ... ::`), it
 needs its closing `::` or it silently degrades to prose with no error — see
-`docs/agents/mdc-when-to-use.md`.
+`docs/research/nuxt-content-review-grounding.md` §13.
 
 ## 4. Interactions (the food web, #70/#71)
 
-Each relationship is **one authored directed edge**, single-homed — the diagram
-and both specimens' Relations sections all derive from it (the reverse label is
-computed, so author each fact once). Same-biome only.
+Each relationship is **one authored directed edge**: the diagram and both
+specimens' Relations sections derive from it, and the reverse label is
+computed, so author each fact once.
 
 Write to `layers/atlas/content/<biome>/interactions/<from>-<kind>-<to>.yml`:
 ```yaml

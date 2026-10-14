@@ -1,8 +1,8 @@
 // Unit tests for the blog-rotation helper's pure core — the blog-post
-// Skill's rotation gate (`.agents/skills/blog-post/SKILL.md`, "1. Rotation gate"), reimplemented
-// verbatim rather than restated: `last`, the fewer-than-four edge case, the
-// all-in-last-four case, and the missing-Persona-collapses-eligible case. The
-// fs shell (frontmatter scan) is exercised by running the script directly.
+// Skill's rotation gate (`.agents/skills/blog-post/SKILL.md`, "1. Rotation gate"):
+// `last`, the fewer-than-four edge case, the all-in-last-four case, and the
+// missing-Persona-collapses-eligible case. The fs shell (frontmatter scan) is
+// exercised by running the script directly.
 import { describe, expect, it } from 'vitest'
 import { eligiblePersonas } from '../../scripts/blog-rotation.ts'
 

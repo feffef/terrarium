@@ -4,8 +4,7 @@ description: "Dispatch work to subagents — use when about to spawn one or seve
 ---
 
 Goal: every subagent's work lands, is right, and is never **stranded**
-(finished but uncommitted, or unseen by you). The steps: lock the shared axis →
-pick the isolation → write the brief → dispatch → verify.
+(finished but uncommitted, or unseen by you).
 
 ## 1. Lock the shared design axis first
 

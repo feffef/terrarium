@@ -124,7 +124,7 @@ paths, they don't *exempt* them from other rules:
 >   extensions/size.
 > — [Available rules for rulesets](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/available-rules-for-rulesets)
 
-There is no rule that says "require status checks/PR review for everything *except* commits touching `layers/journal/content/current/sessions/**`." The closest workaround is what this repo already does: **push path-scoping down to the pushing mechanism**. `scripts/log-session.ts`'s `SESSIONS_DIR` guard and `buildLogCommit`'s "commit changes exactly one path, or refuse" assertion (the `changed.length !== 1` check) *are* the path-scoping; GitHub-side config can only answer "does this actor bypass the whole rule," never "only for this path." So ADR-0009's "single enforcement point" is the only path-level enforcement available; the §2 bypass entry is a coarser, unavoidable complement, never a substitute.
+There is no rule that says "require status checks/PR review for everything *except* commits touching `layers/journal/content/current/sessions/**`." The closest workaround is what this repo already does: **push path-scoping down to the pushing mechanism**. `scripts/log-session.ts`'s `SESSIONS_DIR` guard and `buildLogCommit`'s "commit changes exactly one path, or refuse" assertion (the `changed.length !== 1` check) *are* the path-scoping; GitHub-side config can only answer "does this actor bypass the whole rule," never "only for this path." So the one script that ADR-0009 says "holds the boundary" is the only path-level enforcement available; the §2 bypass entry is a coarser, unavoidable complement, never a substitute.
 
 ## 4. What actually enables "Enable auto-merge" — verified against the issue's claim
 
