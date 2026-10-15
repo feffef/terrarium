@@ -8,6 +8,7 @@ import { splitFrontmatter } from '../../scripts/validate-content.ts'
 import { root } from '../../shared/expand.ts'
 import { glassboxLessonIds, glassboxLessonLabels } from './app/utils/lesson.ts'
 import { glassboxSubjects } from './app/utils/subjects.ts'
+import { glassboxStopNumber } from './app/utils/walkthrough.ts'
 import { glassboxExcerptGap, glassboxPageRefs, glassboxTermId, type FileRef } from './page-refs.ts'
 
 export interface GlassboxGit {
@@ -81,15 +82,21 @@ function readBody(body: string) {
   return { prose: prose.join('\n'), sections: sections.map((s) => ({ title: s.title, text: s.text.join('\n') })) }
 }
 
-/** A Walkthrough's stops are `## N. Title` h2s, each with one `::stop-links` block that links somewhere. */
-export function glassboxStopProblems(body: string): string[] {
-  const stops = readBody(body).sections.filter((s) => /^\d+\.\s/.test(s.title))
-  if (!stops.length) return ['Walkthrough has no "## N. Title" stops']
-  return stops.flatMap((s) => {
+/** The Walkthrough entry in GLOSSARY.md: at least one `## N. Title` stop, each with exactly one
+ *  `::stop-links` block holding a link or `:file`. Outside a stop the block renders unstyled. */
+export function glassboxStopProblems(body: string, walkthrough: boolean): string[] {
+  const stops = walkthrough ? readBody(body).sections.filter((s) => glassboxStopNumber(s.title)) : []
+  const problems = walkthrough && !stops.length ? ['Walkthrough has no "## N. Title" stops'] : []
+  let inStops = 0
+  for (const s of stops) {
     const blocks = glassboxPageRefs(s.text).stopLinks
-    if (blocks.length !== 1) return [`stop "${s.title}" has ${blocks.length} ::stop-links blocks, not 1`]
-    return blocks[0]!.links.length + blocks[0]!.files.length ? [] : [`stop "${s.title}" links nothing in its ::stop-links block`]
-  })
+    inStops += blocks.length
+    if (blocks.length !== 1) problems.push(`stop "${s.title}" has ${blocks.length} ::stop-links blocks, not 1`)
+    else if (!blocks[0]!.links.length && !blocks[0]!.files.length) problems.push(`stop "${s.title}" links nothing in its ::stop-links block`)
+  }
+  const stray = glassboxPageRefs(body).stopLinks.length - inStops
+  if (stray) problems.push(`${stray} ::stop-links block(s) sit outside a Walkthrough stop`)
+  return problems
 }
 
 function excerptFits(excerpt: string, file: string[]) {
@@ -168,8 +175,8 @@ export function glassboxPageProblems(file: string, source: string, site: Glassbo
   const refs = glassboxPageRefs(body)
   const problems = placeProblems(file)
   const folder = file.split('/')[0]
-  if (folder === 'walkthroughs') problems.push(...glassboxStopProblems(body))
-  else if (glassboxSubjects.some((s) => s.slug === folder)) problems.push(...lessonProblems(file, prose))
+  problems.push(...glassboxStopProblems(body, folder === 'walkthroughs'))
+  if (glassboxSubjects.some((s) => s.slug === folder)) problems.push(...lessonProblems(file, prose))
 
   const { revision, revisionDate } = frontmatter
   if (typeof revision === 'string') problems.push(...gitProblems(revision, revisionDate, refs.files, prose, git))
