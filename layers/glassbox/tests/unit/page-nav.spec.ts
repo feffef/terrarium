@@ -67,10 +67,12 @@ describe('glassboxSplitAtFirstSection', () => {
 })
 
 describe('glassboxFrameDiagrams', () => {
-  it('frames each top-level diagram and leaves other nodes alone', () => {
+  it('frames each diagram, nested or not, and leaves other nodes alone', () => {
     const diagram = ['pre', { language: 'mermaid', code: 'flowchart TD' }]
     const code = ['pre', { language: 'ts' }]
-    expect(glassboxFrameDiagrams([['p', {}, 'Lede'], diagram, code])).toEqual([['p', {}, 'Lede'], ['div', { class: 'gb-diagram' }, diagram], code])
+    const framed = ['div', { class: 'gb-diagram' }, diagram]
+    expect(glassboxFrameDiagrams([['p', {}, 'Lede'], diagram, code, ['div', { class: 'gb-card' }, diagram], 'text']))
+      .toEqual([['p', {}, 'Lede'], framed, code, ['div', { class: 'gb-card' }, framed], 'text'])
   })
 })
 

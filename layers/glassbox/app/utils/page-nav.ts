@@ -31,10 +31,13 @@ export function glassboxSplitAtFirstSection<T extends MinimarkNode>(nodes: T[]):
   return i < 0 ? [nodes, []] : [nodes.slice(0, i), nodes.slice(i)]
 }
 
-/** Each top-level diagram in a pane of its own, so the pane holds still while a
- *  diagram too wide to read scaled down scrolls inside it (theme.css). */
+/** Each diagram in a pane of its own, so the pane holds still while a diagram
+ *  too wide to read scaled down scrolls inside it (theme.css). */
 export function glassboxFrameDiagrams<T extends MinimarkNode>(nodes: T[]): T[] {
-  return nodes.map((node) => (isDiagram(node) ? ['div', { class: 'gb-diagram' }, node] as T : node))
+  return nodes.map((node) => {
+    if (isDiagram(node)) return ['div', { class: 'gb-diagram' }, node] as T
+    return Array.isArray(node) ? [node[0], node[1], ...glassboxFrameDiagrams(node.slice(2) as MinimarkNode[])] as T : node
+  })
 }
 
 /** The heading being read: the last one whose top has passed `line`, or the

@@ -38,7 +38,7 @@
   --gb-mono: 'Glass Box Mono', ui-monospace, monospace;
   /* The sticky bars: frosted, and opaque enough that text behind them doesn't
      read through; solid where the browser can't blur (below). */
-  --gb-bar: color-mix(in srgb, var(--gb-bg) 90%, transparent);
+  --gb-bar: color-mix(in srgb, var(--gb-bg) 94%, transparent);
   /* Sticky offsets, kept in step: the header (sticky below 1024px), the table
      of contents (GlassboxToc sets --gb-toc-h to its real height), and the room
      a heading leaves above itself when jumped to. */
