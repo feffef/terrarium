@@ -1,7 +1,7 @@
 ---
 title: Asking for a change
 description: How a request to an agent session becomes a merged PR, through the session's start, its reading, its own checks, CI and the log it leaves on main.
-revision: 'cf1b6c1b5bcb2cfbc84284ab38caec669f58bcbc'
+revision: '44541547053830ae7bffd21d2e8c95e6b03858a1'
 revisionDate: '2026-10-15'
 ---
 
@@ -86,6 +86,10 @@ Once the PR has merged, the session runs `close-session` again and marks its log
 ::stop-links
 [Session logs and Frictions](/t/glassbox/guide/terrarium-practice/session-logs) · :file[.agents/skills/close-session/SKILL.md]
 ::
+
+## A real case
+
+On 15 October 2026 a Trusted user asked a session to install the `retro` Skill from the `mattpocock/skills` pack. The session installed it with the skills CLI, moved it into `.agents/skills/` with a link in `.claude/skills/`, and opened PR #2089: four files, among them :file[.agents/skills/retro/SKILL.md], and no Human-only path. It ran `pnpm gate:scoped` but skipped `code-review`, since the diff was an unmodified copy of upstream, and its verdict comment said it was merging on that user's instruction. CI's Gate went green and the PR merged within four minutes of opening.
 
 ## Where next
 
