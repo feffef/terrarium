@@ -295,7 +295,7 @@ remains on the branch.
 Invoke the `close-session` Skill (not only `scripts/log-session.ts`) so the
 log records the run's final state.
 
-Done when: `close-session`'s three logging conditions hold.
+Done when: the log is on `origin/main` with its final status (`close-session`).
 
 ## Reference: the post
 

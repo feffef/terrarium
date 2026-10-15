@@ -23,6 +23,33 @@
 #            topic's tools correctly.
 trials:
   - problem: >
+      `close-session` SKILL.md rewritten plainly, 60 lines to 46 (-14): the
+      three logging conditions and the PR-open sequence cut to one goal-shaped
+      paragraph and a numbered list, every rule kept (re-read, log, re-invoke,
+      HUMAN-PROMPTED-CLOSURE, no worktree self-invoke). The rule failed as prose:
+      skipped after PR #1821 (#1859) and after the hint of PR #1868 (#2023, both
+      read in full via the search subagent). `read-first-hint.ts` now holds the
+      PR-open invocation, not the re-invocation. The subagent covered the
+      instruction corpus (not the Journal) and the tracker; runners-up: the
+      read-first triggers in CLAUDE.md (#1754, held by the same hint) and the
+      restart-after-merge paragraph in pr-workflow.md (held by
+      `stale-info-hint.ts`). The mass here was small. No trial was judgeable.
+    territory:
+      paths:
+        - ".agents/skills/close-session/SKILL.md (all of it)"
+        - ".agents/skills/blog-post/SKILL.md: the `Done when` line near the end"
+      keywords:
+        - HUMAN-PROMPTED-CLOSURE
+        - logging duty
+    opened: 2026-10-15
+    proven: true
+    check: >
+      Damage is a major or blocker Friction where a session ended with its log
+      missing or left at `in-review` after the work landed, or reran close-session
+      without the always-loaded re-read, and a line the old Skill carried would have
+      prevented it. NOT damage: the read-first hint firing, or a session that
+      logs `HUMAN-PROMPTED-CLOSURE` correctly.
+  - problem: >
       `docs/agents/github-integration.md` rewritten plainly, 190 lines to 159
       (-31): the overflow and precision traps merged and shortened (the
       `fields`-on-search rule is held by `github-search-fields-guard.ts`, which
