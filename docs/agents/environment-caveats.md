@@ -4,8 +4,11 @@ Platform limitations of this remote execution environment, not repo bugs; don't
 re-diagnose them as new. Incident detail lives in the cited issue.
 
 - **A `Claude_Code_Remote` `permissions.allow` entry is dead code — don't add
-  one.** A cloud session starts untrusted and drops the whole `permissions.allow`
-  array before matching any rule; a local CLI never has this server to allow in
+  one.** A multi-repository cloud session reads only
+  `enabledPlugins` and `extraKnownMarketplaces` from `.claude/settings.json`,
+  and a workspace that isn't trusted yet drops `permissions.allow` before
+  matching any rule ([settings](https://code.claude.com/docs/en/claude-code-on-the-web),
+  [permissions](https://code.claude.com/docs/en/permissions)); a local CLI never has this server to allow in
   the first place. `mcp__github__*` stays silent via a separate auto-approve
   path, not the allowlist. Works normally for a real MCP server in a **trusted
   local CLI**. (issue #288)
