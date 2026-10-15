@@ -75,9 +75,8 @@ so the font must be a concrete value during render, not a runtime variable — a
 different runtime font would leave the text mismatched to a layout computed for
 another font. The renderer therefore bakes both at fixed values
 (`MERMAID_RENDER_FONT`, or a Tenant's `mermaid-font.ts`, ADR-0024); only the
-seven **colour** tokens become live `var()` refs. A font-token change needs a
-re-render (the drift gate does not catch a CSS-token change, only a source
-change — an accepted limitation).
+seven **colour** tokens become live `var()` refs. Changing a font means
+drawing the diagrams again.
 
 ### Arrowheads re-theme; a legacy class does not (harmless)
 
