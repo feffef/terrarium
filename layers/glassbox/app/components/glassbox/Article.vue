@@ -7,11 +7,11 @@ const props = defineProps<{
   base: string
   surround: ReturnType<typeof glassboxSurround>
   through: GlassboxPageLink[]
+  draft: boolean
 }>()
 
 const subject = computed(() => glassboxSubjectOf(props.page.path))
 const walkthrough = computed(() => glassboxWalkthroughOf(props.page.path))
-const draft = computed(() => props.base === '/t/glassbox/drafts')
 const current = ref<string>()
 // Frames first, then separate renders so the table of contents sits between the
 // lede and the first section, and each Walkthrough stop can show it is current.
@@ -32,7 +32,7 @@ const parts = computed(() => {
 
 <template>
   <article class="article">
-    <p v-if="draft" class="draft">Draft: unfinished, and it may never join <NuxtLink to="/t/glassbox/guide">the guide</NuxtLink>.</p>
+    <p v-if="draft" class="draft">Draft: this page failed the guide's bar on its first attempt.</p>
     <p v-if="subject" class="chips"><span class="chip">{{ subject.name }}</span><span>Lesson</span></p>
     <p v-else-if="walkthrough" class="chips"><span class="chip">Walkthrough</span></p>
     <h1 :class="{ lesson: subject || walkthrough }">{{ page.title }}</h1>

@@ -80,7 +80,7 @@ useSeoMeta({ description: () => page.value?.description })
         >≡</button>
       </header>
 
-      <GlassboxArticle v-if="page" class="gb-column" :page="page" :base="base" :surround="data?.surround ?? null" :through="data?.through ?? []" />
+      <GlassboxArticle v-if="page" class="gb-column" :page="page" :base="base" :surround="data?.surround ?? null" :through="data?.through ?? []" :draft="space === 'drafts'" />
 
       <div v-else class="gb-column">
         <h1>Not found</h1>

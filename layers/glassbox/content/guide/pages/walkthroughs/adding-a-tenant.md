@@ -76,7 +76,7 @@ No test config names the new Tenant. The smoke test reads its entry addresses fr
 Its pages appear in the Commons Search only if its `pages` Collection names the `page` :term[kind]{id="collection-kind"}, as Marquee's does. The Platform home page lists no new Tenant by itself: it is a hand-picked showcase, and a Tenant joins it when someone adds its tile to :file[app/pages/index.vue].
 
 ::stop-links
-[Collections expanded from one manifest](/t/glassbox/guide/nuxt-content/manifest-collections)
+:file[layers/marquee/tenant.config.ts] · :file[app/pages/index.vue]
 ::
 
 ## Where next

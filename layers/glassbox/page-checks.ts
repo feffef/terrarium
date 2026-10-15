@@ -62,7 +62,7 @@ const sitePath = (base: string, file: string) => (contentRoute(file) ? `${base}/
 export const glassboxSitePath = (space: string, file: string) => sitePath(`/t/glassbox/${space}`, file)
 
 /** The repo paths each page cites, by site path, from its source by file in one Space. */
-export function glassboxCites(sources: Record<string, string>, space = 'guide'): Record<string, string[]> {
+export function glassboxCites(sources: Record<string, string>, space: string): Record<string, string[]> {
   return Object.fromEntries(Object.entries(sources).map(([file, source]) =>
     [glassboxSitePath(space, file), glassboxPageRefs(splitFrontmatter(source).body).files.map((ref) => ref.path)]))
 }
@@ -237,7 +237,7 @@ function nextProblems(prose: string): string[] {
 }
 
 /** `file` is relative to its Space's `pages/`. */
-export function glassboxPageProblems(file: string, source: string, site: GlassboxSite, git: GlassboxGit, space = 'guide'): string[] {
+export function glassboxPageProblems(file: string, source: string, site: GlassboxSite, git: GlassboxGit, space: string): string[] {
   const { frontmatter, body } = splitFrontmatter(source)
   const { prose } = readBody(body)
   const refs = glassboxPageRefs(body)
@@ -253,10 +253,11 @@ export function glassboxPageProblems(file: string, source: string, site: Glassbo
 
   const pages = new Set(site.pages)
   const journal = new Set(site.journal)
-  for (const [, link] of prose.matchAll(/\]\((\/t\/(?:glassbox\/(?:guide|drafts)|journal)(?:\/[^)\s#?]*)?)/g)) {
+  const guide = glassboxSitePath('guide', 'index.md')
+  for (const [, link] of prose.matchAll(/\]\((\/t\/(?:glassbox\/[a-z0-9]+|journal)(?:\/[^)\s#?]*)?)/g)) {
     const path = link!.replace(/\/$/, '')
     // The guide stands alone; drafts may lean on it (GLOSSARY.md, Two Spaces).
-    if (space === 'guide' && path.startsWith('/t/glassbox/drafts')) problems.push(`guide page links into drafts: ${link}`)
+    if (space === 'guide' && path.startsWith('/t/glassbox/') && path !== guide && !path.startsWith(`${guide}/`)) problems.push(`guide page links outside the guide: ${link}`)
     else if (path.startsWith('/t/glassbox/') ? !pages.has(path) : !journal.has(path)) problems.push(`link ${link} resolves to no page`)
   }
   // With one range, Excerpt.vue numbers only the runs that touch its ends.

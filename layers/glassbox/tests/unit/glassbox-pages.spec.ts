@@ -2,6 +2,7 @@ import { existsSync, globSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { root } from '../../../../shared/expand.ts'
+import glassbox from '../../tenant.config.ts'
 import { glassboxCites, glassboxJournalRoutes, glassboxPageProblems, glassboxSitePath, glassboxTermProblems, glassboxTerms, repoGit, type GlassboxGit, type GlassboxSite } from '../../page-checks.ts'
 
 const rev = 'a'.repeat(40)
@@ -189,10 +190,9 @@ describe('glassboxPageProblems on fixture pages', () => {
     expect(problemsOf(file, lesson).join('\n')).toContain(message)
   })
 
-  // The guide stands alone; drafts may lean on it (GLOSSARY.md, Two Spaces).
   it('fails a guide page linking into drafts, and passes a draft linking either way', () => {
     const toDraft = lesson.replace(gateItem, `${gateItem}- [Timestamps](/t/glassbox/drafts/zod/timestamps)\n`)
-    expect(problemsOf('nuxt-content/01.collections.md', toDraft)).toEqual(['guide page links into drafts: /t/glassbox/drafts/zod/timestamps'])
+    expect(problemsOf('nuxt-content/01.collections.md', toDraft)).toEqual(['guide page links outside the guide: /t/glassbox/drafts/zod/timestamps'])
     expect(problemsOf('nuxt-content/01.collections.md', toDraft, 'drafts')).toEqual([])
     expect(problemsOf('nuxt-content/01.collections.md', toDraft.replace('zod/timestamps', 'zod/gone'), 'drafts')).toEqual(['link /t/glassbox/drafts/zod/gone resolves to no page'])
   })
@@ -227,7 +227,7 @@ describe('glassboxTermProblems', () => {
 
 describe('every Glass Box page matches the code at its revision', () => {
   const content = join(root, 'layers/glassbox/content')
-  const spaces = ['guide', 'drafts']
+  const spaces = glassbox.spaces
   const read = (space: string, file: string) => readFileSync(join(content, space, 'pages', file), 'utf8')
   const files = Object.fromEntries(spaces.map((space) => [space, globSync('**/*.md', { cwd: join(content, space, 'pages') }).sort()]))
   const pages = spaces.flatMap((space) => files[space]!.map((file) => ({ space, file })))
