@@ -1,7 +1,7 @@
 ---
 title: Adding a Tenant
 description: How a new site joins Terrarium, from the approval to its first page, through one folder, one manifest, tables of its own and tests that find it by themselves.
-revision: '8fecf8b4e1b32da82557e42f42b2045bd12a05bb'
+revision: 'cf1b6c1b5bcb2cfbc84284ab38caec669f58bcbc'
 revisionDate: '2026-10-15'
 ---
 
