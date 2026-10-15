@@ -1,0 +1,137 @@
+schemaVersion: 1
+session: session_019ZQjo7wiuxrS9KLEG2GiTU
+startedAt: 2026-10-15T17:35:31Z
+endedAt: 2026-10-15T17:42:37Z
+kind: interactive
+goal: Let glassbox-update cover the drafts Space
+status: in-review
+outcome: --spaces option added and PR opened; the drafts pages themselves are not updated yet
+summary: 'The user ran /glassbox-update "on the drafts". I asked what that meant (the skill never mentions drafts); the user chose "only the drafts Space" and "stop and report" if the script skipped them. The script reads only the guide Space, so I stopped and reported. The user then asked for a --spaces parameter with guide as default (human-instructed). I built it, with a test and one SKILL.md clause. The Stop hook asked for a push; per ADR-0004 I ran gate:scoped and code-review (two read-only subagents) first. The reviews found real gaps (unknown Space silently a no-op, repeated Space processed twice, --spaces --write parsed as a name), which I fixed (agent-initiated, within the ask). Pushing, opening PR 2094 and subscribing were agent-initiated per ADR-0003. Open: drafts pages are still pinned to two old revisions and need the actual update run; terms still come from the guide Space only, and --write pins every named Space to one commit.'
+prs:
+  - "2094"
+docsRead:
+  - path: layers/glassbox/GLOSSARY.md
+    reason: Confirmed guide and drafts are the two Spaces and what drafts holds
+    useful: yes
+  - path: .agents/skills/glassbox-lesson/EVERY-PAGE.md
+    reason: Pin and Check steps; not needed once the task became a script change
+    useful: partly
+  - path: docs/agents/git-conventions.md
+    reason: Hook-prompted; commit via -F file and trailer check applied
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: Needed before the first mcp__github__ call; PR creation went through MCP
+    useful: yes
+  - path: docs/agents/pr-workflow.md
+    reason: Review-before-first-push steps and skips
+    useful: yes
+  - path: GLOSSARY-MAP.md
+    reason: Session-start read; pointed me to the Glass Box glossary
+    useful: yes
+  - path: docs/adr/0005-skill-model.md
+    reason: Standards subagent read it; found nothing in the diff violating it
+    useful: partly
+  - path: .agents/skills/glassbox-update/scripts/glassbox-update.ts
+    reason: (no reason given)
+  - path: .agents/skills/glassbox-update/tests/unit/glassbox-update.spec.ts
+    reason: (no reason given)
+  - path: CLAUDE.md
+    reason: (no reason given)
+skillsUsed:
+  - name: code-review
+    reason: Required by ADR-0004 before the first push; surfaced three real input-validation gaps
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: glassbox-update
+    reason: (invoked as a slash command)
+frictions:
+  - description: glassbox-update takes args like 'on the drafts' but neither skill nor script covers drafts, so the request was unanswerable as written.
+    solution: Now fixed by --spaces; SKILL.md could also say what args mean.
+    severity: minor
+  - description: I read git-conventions only after the PostToolUse hook told me to; my first git commands were rev-parse and status, which the rule allows.
+    solution: None needed; the late read was harmless.
+    severity: nit
+  - description: "Test runs print noisy 'fatal: expected acknowledgments' and 'no-such-ref' git lines that look like failures."
+    solution: Silence or document these fixture-git messages in the test support.
+    severity: nit
+durationSec: 426
+models:
+  claude-sonnet-5-5: 70
+toolCounts:
+  Grep: 2
+  AskUserQuestion: 1
+  Read: 8
+  Bash: 19
+  Edit: 1
+  Skill: 3
+  Agent: 2
+  ToolSearch: 1
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+  Write: 1
+filesEdited:
+  - .agents/skills/glassbox-update/SKILL.md
+rulesLoaded:
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0029.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0004-human-merge.md
+docsReadBySubagents:
+  - docs/adr/0005-skill-model.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Made me run gate:scoped and code-review before pushing despite the Stop hook; summary plus pr-workflow.md was enough, ADR unopened
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Told me to open and subscribe to the PR without asking; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Reminder to invoke close-session at PR open; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Required the session header on the PR body; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0005.md
+    reason: Loaded when I touched a Skill; confirmed script changes go through a gated PR, ADR unopened
+    useful: partly
+  - path: .claude/rules/adr-0020.md
+    reason: Trust tiers; the requester was Trusted so nothing changed
+    useful: no
+  - path: .claude/rules/adr-0021.md
+    reason: Glossary layout rule loaded on a glossary read; no glossary change here
+    useful: no
+  - path: .claude/rules/adr-0027.md
+    reason: Prune trials; no open trial covered the text I changed
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: Rule placement; unrelated to editing a script
+    useful: no
+  - path: .claude/rules/adr-0030.md
+    reason: Only the Standards subagent loaded it; it reported no application to this diff
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Only the Standards subagent loaded it; it reported no application
+    useful: no
+subagents:
+  - type: Explore
+    task: Standards review of diff
+  - type: Explore
+    task: Spec review of diff
+gitBranch: claude/zealous-galileo-ry1ck8
+entrypoint: remote
+cliVersion: 2.1.300
+ideas:
+  - Let glassbox-update take --spaces from the skill args so '/glassbox-update drafts' just works, instead of the agent translating prose.
+landedBy: Stop
