@@ -21,7 +21,8 @@
 // Usage:  tsx scripts/merge-pr.ts <pr-number> [--merge-method merge|squash|rebase] [--interval-ms N] [--timeout-ms N]
 //   Refuses up front for a fork or Public-authored PR, a PR labelled
 //   `guest-pipeline` (ADR-0023), a PR that changes a Human-only path (ADR-0004),
-//   or unless this session's verdict is on the PR (#1276).
+//   or unless this session's verdict, naming the head in a `Reviewed:` line, is
+//   on the PR (#1276, #1844).
 //   Then polls the PR's head-commit check runs every `interval-ms` (default 15s)
 //   until they resolve or `timeout-ms` (default 20 minutes) elapses, then:
 //     - all green  → merges via the given method (default `merge`, matching
@@ -101,7 +102,7 @@ export interface MergeResult {
   pr: number
   /** Refused before polling: `untrusted-origin` — see `prOriginRefusal`;
    *  `human-merge` — see `humanMergeRefusal`; `no-verdict` — see
-   *  `hasVerdictFromSession`. */
+   *  `verdictRefusal`. */
   verdict: ChecksVerdict | 'untrusted-origin' | 'human-merge' | 'no-verdict'
   merged: boolean
   mergeCommitSha?: string
@@ -152,17 +153,38 @@ export interface VerdictBody {
   authorAssociation: string
 }
 
-/** Whether any PR review/comment body is a verdict this session posted
- *  (`pr-workflow.md` step 4, issue #1276): an ADR-0017 marker, and — when the
- *  session is known — a header naming it. An unresolvable session accepts any
- *  marker rather than blocking a session whose environment lacks the id.
- *  Only Trusted authors count: the marker is forgeable by anyone (ADR-0020). */
-export function hasVerdictFromSession(bodies: VerdictBody[], sessionId: string | null): boolean {
-  return bodies.some(
-    ({ body: b, authorAssociation }) =>
-      TRUSTED_ASSOCIATIONS.has(authorAssociation) &&
-      (sessionId === null ? hasAuthorshipMarker(b) : readProvenanceHeader(b)?.sessionId === sessionId),
-  )
+/** A verdict's `Reviewed: <sha>` line: the commit its code review covered (#1844). */
+const REVIEWED_LINE_RE = /^Reviewed: `?([0-9a-f]{7,40})`?\s*$/gim
+
+/** Why the PR has no verdict this session posted on `headSha`, or null
+ *  (`pr-workflow.md` step 4, issues #1276, #1844). A verdict carries an
+ *  ADR-0017 marker and — when the session is known — a header naming it. An
+ *  unresolvable session accepts any marker rather than blocking a session whose
+ *  environment lacks the id. Only Trusted authors count: the marker is
+ *  forgeable by anyone (ADR-0020). The verdict must name `headSha` in a
+ *  `Reviewed:` line, so a push after the review needs a fresh one. */
+export function verdictRefusal(bodies: VerdictBody[], sessionId: string | null, headSha: string): string | null {
+  const mine = bodies
+    .filter(
+      ({ body: b, authorAssociation }) =>
+        TRUSTED_ASSOCIATIONS.has(authorAssociation) &&
+        (sessionId === null ? hasAuthorshipMarker(b) : readProvenanceHeader(b)?.sessionId === sessionId),
+    )
+    .map(({ body }) => body)
+  const next =
+    `Run the code-review Skill on ${headSha}, then post your step-4 verdict (docs/agents/pr-workflow.md) ` +
+    `with the line \`Reviewed: ${headSha}\` as a COMMENT-event review or an issue comment — never APPROVE — and re-run.`
+  if (mine.length === 0) {
+    return (
+      `refused: no review or comment on the PR carries this session's provenance header` +
+      `${sessionId ? ` (${sessionId})` : ''}. A verdict a subagent posted carries its own session id. ${next}`
+    )
+  }
+  const named = mine.flatMap((b) => [...b.matchAll(REVIEWED_LINE_RE)].map((m) => m[1]!.toLowerCase()))
+  if (named.some((sha) => headSha.toLowerCase().startsWith(sha))) return null
+  return named.length === 0
+    ? `refused: your verdict has no \`Reviewed: <sha>\` line naming the head ${headSha}. ${next}`
+    : `refused: your verdict names ${named.join(', ')}, but the head is ${headSha}. ${next}`
 }
 
 /** The single home of the Human-only list (ADR-0004): its frontmatter `paths`.
@@ -601,19 +623,12 @@ export async function mergePrWhenGreen(
   }
 
   const sessionId = resolveGroundTruthFromTranscript(findTranscriptContents(process.env) ?? '')
-  if (!hasVerdictFromSession(readVerdictBodies(strategy, owner, repo, prNumber, cwd), sessionId)) {
-    return {
-      pr: prNumber,
-      verdict: 'no-verdict',
-      merged: false,
-      message:
-        `refused: no review or comment on the PR carries this session's provenance header` +
-        `${sessionId ? ` (${sessionId})` : ''}. Post your step-4 verdict (docs/agents/pr-workflow.md) as a ` +
-        `COMMENT-event review or an issue comment — never APPROVE — then re-run.`,
-    }
+  const { sha, body: prBody } = meta
+  const noVerdict = verdictRefusal(readVerdictBodies(strategy, owner, repo, prNumber, cwd), sessionId, sha)
+  if (noVerdict !== null) {
+    return { pr: prNumber, verdict: 'no-verdict', merged: false, message: noVerdict }
   }
 
-  const { sha, body: prBody } = meta
   const { verdict, runs } = await pollUntilResolved(
     async () => readCheckRuns(strategy, owner, repo, sha, cwd),
     opts,
