@@ -73,10 +73,7 @@ useSeoMeta({ description: () => page.value?.description })
         >≡</button>
       </header>
 
-      <article v-if="page" class="gb-column">
-        <h1>{{ page.title }}</h1>
-        <ContentRenderer class="gb-prose" :value="page" />
-      </article>
+      <GlassboxArticle v-if="page" class="gb-column" :page="page" />
 
       <div v-else class="gb-column">
         <h1>Not found</h1>

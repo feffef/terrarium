@@ -32,11 +32,13 @@
   --gb-accent: oklch(0.48 0.12 220);
   --gb-solid: #0f1d26;
   --gb-solid-ink: #fff;
+  --gb-solid-accent: oklch(0.8 0.1 210);
   --gb-code-bg: #f6f8fa;
   --gb-sans: 'Glass Box Sans', system-ui, sans-serif;
   --gb-mono: 'Glass Box Mono', ui-monospace, monospace;
   /* The frosted bar; solid where the browser can't blur (below). */
   --gb-bar: var(--gb-pane);
+  --gb-header: 60px;
 
   /* MermaidDiagram's colour contract (app/utils/mermaid.ts). */
   --diagram-node-bg: var(--gb-bg);
@@ -105,7 +107,7 @@ body:has(.gb) { margin: 0; }
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  min-height: 60px;
+  min-height: var(--gb-header);
   font-size: 16px;
 }
 .gb .gb-brand {
@@ -174,6 +176,8 @@ body:has(.gb) { margin: 0; }
     background: var(--gb-bar);
     backdrop-filter: blur(14px);
   }
+  /* An anchor jump (the skip line) lands below the sticky header. */
+  .gb.gb-doc :is(h2, h3) { scroll-margin-top: calc(var(--gb-header) + 16px); }
   .gb.gb-doc .gb-menu {
     display: flex;
     align-items: center;

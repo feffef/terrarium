@@ -1,5 +1,13 @@
 import { describe, expect, it } from 'vitest'
-import { glassboxDirectory, glassboxWalkthroughs } from '../../app/utils/subjects.ts'
+import { glassboxDirectory, glassboxSubjectOf, glassboxWalkthroughs } from '../../app/utils/subjects.ts'
+
+describe('glassboxSubjectOf', () => {
+  it("names a Lesson's Subject from its folder, and none for other pages", () => {
+    expect(glassboxSubjectOf('/nuxt-vue/layers')?.name).toBe('Nuxt & Vue')
+    expect(glassboxSubjectOf('/walkthroughs/opening-a-page')).toBeUndefined()
+    expect(glassboxSubjectOf('/')).toBeUndefined()
+  })
+})
 
 describe('glassboxWalkthroughs', () => {
   it('lists only Walkthroughs, Start here first, then by title', () => {
