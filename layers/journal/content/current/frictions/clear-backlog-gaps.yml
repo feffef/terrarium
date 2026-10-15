@@ -3,8 +3,8 @@ cause: >-
   The clear-backlog Skill, new and revised by dry runs, left out rules a run needs (owner reservations, a wave rule, an outcome for parked issues, review order, chat discipline, an early exit when everything is owner-deferred), so runs improvised or skipped steps; the full-sweep pass on deferred issues cost 70-100k tokens per issue, and a later run skipped §1 Explore and reported done.
 surface: safe
 status: fixed
-fixedOn: "2026-10-14"
-ref: "PRs #1826, #1833, #1852, #1853; issue #1857 closed by PR #1864; PR #1863 (grill only the sweep's set); PR #1871 (phases as saved workflows); PR #1880 (one log summary line per branch, #1878); frictions-to-fixes 2026-10-13b grouped doc PR (zero-grill skip); commits 82cf835c (clear-backlog skips wayfinder-labelled issues) and 998c2086 (wayfinder exclusion in both set modes), 2026-10-14"
+fixedOn: "2026-10-15"
+ref: "PRs #1826, #1833, #1852, #1853; issue #1857 closed by PR #1864; PR #1863 (grill only the sweep's set); PR #1871 (phases as saved workflows); PR #1880 (one log summary line per branch, #1878); frictions-to-fixes 2026-10-13b grouped doc PR (zero-grill skip); commits 82cf835c (clear-backlog skips wayfinder-labelled issues) and 998c2086 (wayfinder exclusion in both set modes), 2026-10-14; frictions-to-fixes 2026-10-15 doc PR (picks per branch, label docs, dispatch-subagents trigger)"
 occurrences:
   - session: session_01DtK8w6aJ3361uPK73VAxhi
     date: "2026-10-12"
@@ -39,3 +39,6 @@ occurrences:
   - session: session_01ATdHzhyNozsTLHHtJGbLsa
     date: "2026-10-14"
     severity: moderate
+  - session: session_012NmfdSNbbPD9T5LPAwmdYG
+    date: "2026-10-15"
+    severity: minor

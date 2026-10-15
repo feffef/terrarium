@@ -79,7 +79,7 @@ built from the `grill` results. Where its format differs, this list wins:
 
 The answers are the owner's confirmation. Record an answer on its issue
 only when it changes the issue's state or scope, and set the label it
-implies.
+implies (`docs/agents/triage-labels.md`, `docs/agents/issue-tracker.md`).
 
 **Done:** every question is answered, and every issue in §1's set is
 `ready-for-agent`, closed, or parked by the owner.
@@ -87,10 +87,12 @@ implies.
 ## 3. Build and review
 
 Run `clear-backlog-build` with `{ session, branches: [...] }`, one entry
-per branch: `name`, `issues`, `brief`, the agreed `picks`, `model: "sonnet"`
+per branch: `name`, `issues`, `brief`, the agreed `picks` (only that branch's own, never the whole owner
+reply), `model: "sonnet"`
 for a change under the size ceiling the brief sets (`dispatch-subagents` §3), and
 `cherryPick` when a closed, unmerged PR already implements the agreed pick.
-Each branch is built in its own worktree off `origin/main`, then reviewed
+Running it satisfies the `dispatch-subagents` trigger: it isolates, briefs and
+reviews its agents itself. Each branch is built in its own worktree off `origin/main`, then reviewed
 on both `code-review` axes and fixed until only judgement calls remain. Its
 review rounds are the review before the first push (`pr-workflow.md`).
 
