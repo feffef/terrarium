@@ -1,20 +1,140 @@
 schemaVersion: 1
 session: session_01KVh6e6JUAssZvPRbuN5YDr
 startedAt: 2026-10-15T18:29:27Z
-endedAt: 2026-10-15T18:35:53Z
+endedAt: 2026-10-15T19:21:00Z
 kind: interactive
-goal: Review the Glass Box guide as a visitor via screenshots
-status: completed
-outcome: Local production build reviewed on desktop and mobile; findings relayed, no repo changes
-summary: The user directly asked for a background Sonnet agent to browse the Glass Box guide, take desktop and mobile screenshots and give a tech-curious visitor's impressions. The first agent failed because the sandbox network policy blocks terrarium.feffef.de (403 on CONNECT). I offered two options; the user answered "use the local prod build then". I ran pnpm build, started scripts/preview.ts, dispatched a second agent against the local URL, then stopped the server. The agent produced desktop and mobile shots and a review (hero too long, no architecture overview, no links to ADRs or glossary, ragged card grid). Everything was human-instructed; I made no repo changes and opened no PR.
-prs: []
+goal: Review the Glass Box guide as a visitor and polish its first impression
+status: in-review
+outcome: "PR 2100 open: short titles, teasers, From file to browser walkthrough, tidier landing; waits for human merge"
+summary: "The user asked for a Sonnet agent to screenshot the Glass Box guide as a tech-curious visitor. The public site was blocked by the sandbox network policy, so at the user's instruction I built the site locally and a second agent reviewed that. The user then gave detailed feedback (short consistent lesson titles with teasers, retire \"Opening a page\" as the featured page in favour of a file-to-browser picture, trim the intro, rename \"Terrarium practice\") and asked for a Fable agent to turn the review plus the spec into 10 improvements. The user approved them (new walkthrough, enforce length caps, \"House rules\", promote the draft) and told me to use an Opus agent to implement. The Opus agent built it in a worktree; I ran a two-axis code-review, made one small fix, pushed, opened PR 2100 and subscribed. All direction was human-instructed; the choice to leave the PR for a human merge and to exempt drafts from the caps came from the agent and me. The Fable brief said 2099 was open but it was already merged, so the implementer edited asking-for-a-change.md, which the PR explains. Open: human visual check of the landing and the shared SiteFooter."
+prs:
+  - "2100"
 docsRead:
   - path: docs/agents/verifying-ui-changes.md
     reason: Gave the preview.ts start and stop and screenshot workflow
     useful: yes
+  - path: docs/agents/github-integration.md
+    reason: Read before opening the PR; confirmed MCP writes and the provenance header
+    useful: yes
+  - path: docs/agents/pr-workflow.md
+    reason: Review-before-first-push steps and who merges
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: Fetch before trusting history; commit hygiene
+    useful: partly
+  - path: docs/agents/domain.md
+    reason: Checked glossary rules for the Subject rename
+    useful: partly
+  - path: layers/glassbox/GLOSSARY.md
+    reason: Lesson and Walkthrough contracts for the brief
+    useful: yes
+  - path: .agents/skills/glassbox-lesson/EVERY-PAGE.md
+    reason: Pin, diagram and check rules; I edited its length-cap line
+    useful: yes
+  - path: .agents/skills/glassbox-walkthrough/SKILL.md
+    reason: Walkthrough stop rules for the brief
+    useful: yes
+  - path: layers/glassbox/app/utils/subjects.ts
+    reason: (read before editing)
+  - path: layers/glassbox/app/pages/t/glassbox/[space]/index.vue
+    reason: (read before editing)
+  - path: layers/glassbox/page-checks.ts
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/index.md
+    reason: (read before editing)
+  - path: GLOSSARY-MAP.md
+    reason: (no reason given)
+  - path: GLOSSARY.md
+    reason: (no reason given)
+  - path: docs/agents/tenant-layers.md
+    reason: (no reason given)
+  - path: docs/adr/0028-navigation-reads-server-payloads.md
+    reason: (no reason given)
+  - path: docs/adr/0021-multi-context-domain-docs.md
+    reason: (no reason given)
+  - path: docs/adr/0024-build-time-mermaid-prerender.md
+    reason: (no reason given)
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: (no reason given)
+  - path: layers/glassbox/app/pages/t/glassbox/[space]/[...slug].vue
+    reason: (read before editing)
+  - path: layers/glassbox/app/components/glassbox/Updated.vue
+    reason: (read before editing)
+  - path: layers/glassbox/app/utils/revision.ts
+    reason: (no reason given)
+  - path: layers/glassbox/app/components/glassbox/Toc.vue
+    reason: (read before editing)
+  - path: app/components/SiteFooter.vue
+    reason: (read before editing)
+  - path: layers/glassbox/app/components/glassbox/Article.vue
+    reason: (read before editing)
+  - path: layers/glassbox/tests/unit/glassbox-pages.spec.ts
+    reason: (read before editing)
+  - path: layers/glassbox/tests/unit/subjects.spec.ts
+    reason: (read before editing)
+  - path: layers/glassbox/tests/e2e/glassbox.spec.ts
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/walkthroughs/opening-a-page.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/drafts/pages/walkthroughs/a-change-goes-live.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/walkthroughs/asking-for-a-change.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/walkthroughs/adding-a-tenant.md
+    reason: (no reason given)
+  - path: layers/glassbox/app/utils/walkthrough.ts
+    reason: (no reason given)
+  - path: layers/glassbox/app/assets/theme.css
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/nuxt-content/03.content-database.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/nuxt-vue/06.use-async-data.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/nuxt-content/01.manifest-collections.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/deploy/01.self-updating-container.md
+    reason: (no reason given)
+  - path: layers/glassbox/app/components/glassbox/Sidebar.vue
+    reason: (no reason given)
+  - path: layers/glassbox/content/drafts/pages/index.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/walkthroughs/a-change-goes-live.md
+    reason: (read before editing)
+  - path: .agents/skills/glassbox-lesson/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/glassbox-update/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/visitor-loop/SKILL.md
+    reason: (no reason given)
+  - path: layers/glassbox/tenant.config.ts
+    reason: (no reason given)
+  - path: layers/glassbox/app/utils/lesson.ts
+    reason: (no reason given)
+  - path: layers/glassbox/app/utils/page-nav.ts
+    reason: (no reason given)
+  - path: nuxt.config.ts
+    reason: (no reason given)
+  - path: content.config.ts
+    reason: (no reason given)
+  - path: shared/expand.ts
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/claude-code/01.claude-md.md
+    reason: (no reason given)
+  - path: layers/glassbox/app/components/content/File.vue
+    reason: (no reason given)
+  - path: docs/adr/0001-single-container-baked-multitenancy.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/nuxt-vue/02.file-routing.md
+    reason: (no reason given)
+  - path: docs/adr/0003-agent-operating-model-and-governance.md
+    reason: (no reason given)
 skillsUsed:
   - name: close-session
-    reason: Session only answered a question
+    reason: PR opened
+  - name: dispatch-subagents
+    reason: Worktree isolation and unpushed hand-back for the Opus implementer
+  - name: code-review
+    reason: Standards and Spec review before the first push
   - name: log-session
     reason: (no reason given)
 frictions:
@@ -27,18 +147,51 @@ frictions:
   - description: User preference said to ask clarifying questions first; I dispatched the agent without asking, though the request was specific.
     solution: Ask one short question when a preference demands it, even for clear tasks.
     severity: nit
-durationSec: 385
+  - description: Told the implementer not to edit asking-for-a-change.md because PR 2099 was open, repeating the Fable agent's claim without checking; 2099 was already merged and the page needed the edit.
+    solution: Check a PR's state with pull_request_read before putting it in a brief.
+    severity: minor
+  - description: Stop hook asked to push 7 commits that were only inherited from origin/main after my fast-forward, which cost an explanation turn.
+    solution: The hook should compare against origin/main, not the remote branch.
+    severity: nit
+durationSec: 3093
 models:
-  claude-sonnet-5-5: 24
+  claude-sonnet-5-5: 94
 toolCounts:
-  Agent: 2
-  Read: 1
-  Bash: 8
-  Skill: 2
-  Write: 1
+  Agent: 6
+  Read: 13
+  Bash: 23
+  Skill: 5
+  Write: 2
+  ToolSearch: 2
+  SendMessage: 1
+  Edit: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+filesEdited:
+  - .agents/skills/glassbox-lesson/EVERY-PAGE.md
+  - layers/glassbox/app/utils/subjects.ts
+  - layers/glassbox/page-checks.ts
+  - layers/glassbox/tests/unit/glassbox-pages.spec.ts
+  - layers/glassbox/tests/unit/subjects.spec.ts
+  - layers/glassbox/app/pages/t/glassbox/[space]/index.vue
+  - layers/glassbox/app/components/glassbox/Updated.vue
+  - layers/glassbox/app/pages/t/glassbox/[space]/[...slug].vue
+  - layers/glassbox/app/components/glassbox/Article.vue
+  - layers/glassbox/app/components/glassbox/Toc.vue
+  - app/components/SiteFooter.vue
+  - layers/glassbox/GLOSSARY.md
+  - layers/glassbox/content/guide/pages/walkthroughs/a-change-goes-live.md
+  - layers/glassbox/content/guide/pages/walkthroughs/from-file-to-browser.md
+  - layers/glassbox/content/guide/pages/index.md
 rulesLoaded:
   - .claude/rules/adr-0004-human-merge.md
   - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/adr-0006.md
+  - .claude/rules/adr-0016.md
+  - .claude/rules/mermaid-lanes.md
 rulesGlobal:
   - .claude/rules/adr-0004.md
   - .claude/rules/adr-0009.md
@@ -46,30 +199,84 @@ rulesGlobal:
   - .claude/rules/adr-0020.md
   - .claude/rules/adr-0003.md
   - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0028.md
+  - .claude/rules/adr-0001.md
+rulesLoadedBySubagents:
+  - .claude/rules/glassbox-content.md
+  - .claude/rules/adr-0001.md
+  - .claude/rules/adr-0013.md
+  - .claude/rules/adr-0018.md
+  - .claude/rules/adr-0028.md
+  - .claude/rules/adr-0011.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0002.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/adr-0007.md
+  - .claude/rules/adr-0024.md
+  - .claude/rules/adr-0025.md
+docsReadBySubagents:
+  - GLOSSARY-MAP.md
+  - GLOSSARY.md
+  - docs/agents/tenant-layers.md
+  - docs/adr/0028-navigation-reads-server-payloads.md
+  - docs/adr/0021-multi-context-domain-docs.md
+  - docs/adr/0024-build-time-mermaid-prerender.md
+  - docs/adr/0004-objective-safety-gate.md
+  - docs/adr/0003-agent-operating-model-and-governance.md
+  - .agents/skills/glassbox-lesson/SKILL.md
+  - .agents/skills/glassbox-update/SKILL.md
+  - .agents/skills/visitor-loop/SKILL.md
+  - docs/adr/0001-single-container-baked-multitenancy.md
 ruleVerdicts:
   - path: .claude/rules/adr-0003.md
-    reason: About PRs for changes; no change was made, so it did not apply; summary was enough
-    useful: no
+    reason: Told me to open the PR myself and subscribe; summary was enough
+    useful: yes
   - path: .claude/rules/adr-0004.md
-    reason: About the gate and merging; no push happened, so it did not apply
-    useful: no
+    reason: Made me run gate:scoped and code-review before the first push; summary was enough
+    useful: yes
   - path: .claude/rules/adr-0009.md
-    reason: Reminded me to close-session; summary was enough
+    reason: Reminded me to close-session at PR open; summary was enough
     useful: yes
   - path: .claude/rules/adr-0017.md
-    reason: About GitHub provenance; I wrote nothing to GitHub, so it did not apply
-    useful: no
+    reason: Required the session header on the PR body; summary was enough
+    useful: yes
   - path: .claude/rules/adr-0020.md
-    reason: About trust tiers; no outside content was acted on
-    useful: no
+    reason: Owner is Trusted, so the PR is mine to build; summary was enough
+    useful: partly
   - path: .claude/rules/adr-0027.md
-    reason: About prune trials; not relevant to browsing
-    useful: no
+    reason: Kept the instruction edit to one EVERY-PAGE line; summary was enough
+    useful: partly
   - path: .claude/rules/adr-0004-human-merge.md
-    reason: Loaded when I read scripts/preview.ts; I changed no Human-only file, so it did not apply
-    useful: no
+    reason: Loaded when I read scripts; confirmed no Human-only file changed
+    useful: partly
   - path: .claude/rules/adr-0029.md
-    reason: Loaded when I read a docs/agents file; about where instructions live, irrelevant to browsing
+    reason: Loaded when I read a docs/agents file; not needed for this task
+    useful: no
+  - path: .claude/rules/adr-0021.md
+    reason: Loaded when reading the glassbox glossary; the subagent handled the Subject rename
+    useful: partly
+  - path: .claude/rules/adr-0005.md
+    reason: Loaded when reading a Skill file; not needed
+    useful: no
+  - path: .claude/rules/glassbox-content.md
+    reason: Drift rule for page prose, passed to the implementer; summary was enough
+    useful: yes
+  - path: .claude/rules/mermaid-lanes.md
+    reason: classDef lanes for the new diagram, passed to the implementer
+    useful: yes
+  - path: .claude/rules/tenant-layers.md
+    reason: Loaded when reading layer files; context only
+    useful: partly
+  - path: .claude/rules/adr-0006.md
+    reason: Loaded with layer files; routing untouched
+    useful: no
+  - path: .claude/rules/adr-0016.md
+    reason: Loaded with layer files; no root page changed
     useful: no
 subagents:
   - type: general-purpose
@@ -78,9 +285,22 @@ subagents:
   - type: general-purpose
     task: Browse local glassbox guide
     model: sonnet
+  - type: general-purpose
+    task: "Fable: 10 Glass Box improvements"
+    model: fable
+  - type: general-purpose
+    task: Implement Glass Box improvements
+    model: opus
+  - type: general-purpose
+    task: Standards review of Glass Box diff
+    model: sonnet
+  - type: general-purpose
+    task: Spec review of Glass Box diff
+    model: sonnet
 gitBranch: claude/eager-ritchie-y27n4b
 entrypoint: remote
 cliVersion: 2.1.300
 learnings:
   - The cloud sandbox proxy denies terrarium.feffef.de; review the site through a local pnpm build and scripts/preview.ts start instead.
+  - "Terrarium prerenders nothing: Nuxt Content makes SQLite tables and SQL dumps at build, and HTML and _payload.json are rendered per request behind a 60 s route cache."
 landedBy: Stop
