@@ -22,7 +22,7 @@ flowchart TD
 The browser asks for a page under `/t/`. A Caddy proxy passes the request to the one container that serves every site, where Nuxt's server, Nitro, answers it. That container built the site from `main` itself, so all the content it can send was built before the request arrived.
 
 ::stop-links
-[One app, many sites: Nuxt layers](/t/glassbox/guide/nuxt-vue/layers) · [The self-updating container](/t/glassbox/guide/deploy/self-updating-container) · [Architecture & Deployment](/t/journal/current/architecture) · :file[deploy/README.md] · :file[docs/adr/0011-poc-self-updating-deploy-container.md]
+[One app, many sites: Nuxt layers](/t/glassbox/guide/nuxt-vue/layers) · [The self-updating container](/t/glassbox/guide/deploy/self-updating-container) · [Architecture & Deployment](/t/journal/current/architecture)
 ::
 
 ## 2. The server may already have it
@@ -30,7 +30,7 @@ The browser asks for a page under `/t/`. A Caddy proxy passes the request to the
 The server first checks its page cache. A Tenant page rendered a moment ago goes back as it is, the same copy for every visitor unless its route lists a request header it varies on, since content only changes with a new build. Only on a miss does the rest of this story run on the server.
 
 ::stop-links
-[useAsyncData, payloads and caching](/t/glassbox/guide/nuxt-vue/use-async-data) · :file[nuxt.config.ts] · :file[layers/tinkerfund/nuxt.config.ts] · :file[docs/adr/0028-navigation-reads-server-payloads.md]
+[useAsyncData, payloads and caching](/t/glassbox/guide/nuxt-vue/use-async-data) · :file[nuxt.config.ts]
 ::
 
 ## 3. The address picks one Tenant and one Space
@@ -38,7 +38,7 @@ The server first checks its page cache. A Tenant page rendered a moment ago goes
 Nuxt matches the path against its page files. The Platform's catch-all page answers any `/t/<tenant>/<space>/…` address, unless a Tenant's own layer holds a more specific page, as the Journal does. Either page calls `useSpace`, a composable it uses without an import, which looks the :term[Tenant] and :term[Space] up in the routing map built from the manifests, and gets back the keys of that one Space's Collections, or a 404. The bare `/t/<tenant>` above the Spaces belongs to the Tenant's own root page, if it has one.
 
 ::stop-links
-[One app, many sites: Nuxt layers](/t/glassbox/guide/nuxt-vue/layers) · [File routing: catch-all, Tenant overrides, root pages](/t/glassbox/guide/nuxt-vue/file-routing) · [A module that generates virtual # imports](/t/glassbox/guide/nuxt-vue/virtual-imports) · [Auto-imports and their one global namespace](/t/glassbox/guide/nuxt-vue/auto-imports) · [A composable as the only door: useSpace](/t/glassbox/guide/nuxt-vue/use-space) · [One table per key: the isolation unit](/t/glassbox/guide/nuxt-content/one-table-per-key) · :file[app/pages/t/] · :file[app/composables/space.ts] · :file[shared/routing.ts] · :file[docs/adr/0006-runtime-routing-path-prefix.md] · :file[docs/adr/0016-tenant-root-layer-routes.md]
+[File routing: catch-all, Tenant overrides, root pages](/t/glassbox/guide/nuxt-vue/file-routing) · [A composable as the only door: useSpace](/t/glassbox/guide/nuxt-vue/use-space) · [Auto-imports and their one global namespace](/t/glassbox/guide/nuxt-vue/auto-imports) · [A module that generates virtual # imports](/t/glassbox/guide/nuxt-vue/virtual-imports) · [One app, many sites: Nuxt layers](/t/glassbox/guide/nuxt-vue/layers)
 ::
 
 ## 4. Nuxt Content reads that Space's tables
@@ -46,7 +46,7 @@ Nuxt matches the path against its page files. The Platform's catch-all page answ
 The page asks Nuxt Content for its Document with `queryCollection` and the key it was given. Each Tenant, Space and :term[Collection] together make one table in the server's SQLite database, so the query cannot reach another Space's content. When a Collection is asked for, the server checks its table against the build and fills it from the build's dump only if it needs to. Reading another Tenant's content takes a separate path, open only to Collections that opted in.
 
 ::stop-links
-[Collections expanded from one manifest](/t/glassbox/guide/nuxt-content/manifest-collections) · [One table per key: the isolation unit](/t/glassbox/guide/nuxt-content/one-table-per-key) · [The content database](/t/glassbox/guide/nuxt-content/content-database) · [queryCollection patterns](/t/glassbox/guide/nuxt-content/query-collection-patterns) · [Reading across Tenants through opted-in kinds](/t/glassbox/guide/terrarium-practice/cross-tenant-kinds) · :file[shared/expand.ts] · :file[content.config.ts] · :file[docs/adr/0001-single-container-baked-multitenancy.md]
+[Collections expanded from one manifest](/t/glassbox/guide/nuxt-content/manifest-collections) · [One table per key: the isolation unit](/t/glassbox/guide/nuxt-content/one-table-per-key) · [The content database](/t/glassbox/guide/nuxt-content/content-database) · [queryCollection patterns](/t/glassbox/guide/nuxt-content/query-collection-patterns) · [Reading across Tenants through opted-in kinds](/t/glassbox/guide/terrarium-practice/cross-tenant-kinds)
 ::
 
 ## 5. Vue renders the page, data inside
@@ -54,7 +54,7 @@ The page asks Nuxt Content for its Document with `queryCollection` and the key i
 Vue renders the page to HTML on the server. `ContentRenderer` turns the Document's stored body into components: a prose component for each Markdown element, the component each MDC block names, and the committed SVG of each Mermaid diagram. Whatever the page's `useAsyncData` returned travels with it, so the browser shows the page at once. Then Vue takes over in the browser, and later clicks no longer reload the whole page.
 
 ::stop-links
-[useAsyncData, payloads and caching](/t/glassbox/guide/nuxt-vue/use-async-data) · [MDC components, and when not to use them](/t/glassbox/guide/nuxt-content/mdc-components) · [Overriding prose components](/t/glassbox/guide/nuxt-content/prose-overrides) · [Mermaid pre-rendered to committed SVG](/t/glassbox/guide/nuxt-content/mermaid-svg) · :file[docs/adr/0028-navigation-reads-server-payloads.md]
+[useAsyncData, payloads and caching](/t/glassbox/guide/nuxt-vue/use-async-data) · [MDC components, and when not to use them](/t/glassbox/guide/nuxt-content/mdc-components) · [Overriding prose components](/t/glassbox/guide/nuxt-content/prose-overrides) · [Mermaid pre-rendered to committed SVG](/t/glassbox/guide/nuxt-content/mermaid-svg)
 ::
 
 ## 6. A hover fetches the next page's data
@@ -62,7 +62,7 @@ Vue renders the page to HTML on the server. `ContentRenderer` turns the Document
 When the pointer rests on a link, a finger touches it or the keyboard focuses it, the browser fetches that route's code and, for a cached route, its `_payload.json`: the data the server rendered for it. A link that merely scrolls into view fetches nothing.
 
 ::stop-links
-[useAsyncData, payloads and caching](/t/glassbox/guide/nuxt-vue/use-async-data) · :file[docs/adr/0028-navigation-reads-server-payloads.md]
+[useAsyncData, payloads and caching](/t/glassbox/guide/nuxt-vue/use-async-data)
 ::
 
 ## 7. The click builds the next page
@@ -70,19 +70,13 @@ When the pointer rests on a link, a finger touches it or the keyboard focuses it
 Usually the route is cached, so the browser builds the page from its payload and runs no query. A page that opts out of the cache, like Tinkerfund's search, has no payload: its query runs in a database inside the browser, which first downloads the SQLite runtime, compiled to WebAssembly, and the dump of each Collection it queries. The same browser database steps in when a payload fails to load. If a download fails, the page reloads once; a second failure, or any other kind, shows a dialog that offers a reload.
 
 ::stop-links
-[useAsyncData, payloads and caching](/t/glassbox/guide/nuxt-vue/use-async-data) · [The content database](/t/glassbox/guide/nuxt-content/content-database) · :file[layers/tinkerfund/nuxt.config.ts] · :file[app/composables/contentLoadRecovery.ts] · :file[docs/adr/0019-patched-nuxt-content-client-db-loading.md]
+[useAsyncData, payloads and caching](/t/glassbox/guide/nuxt-vue/use-async-data) · [The content database](/t/glassbox/guide/nuxt-content/content-database)
 ::
 
 ## Where next
 
 - [One app, many sites: Nuxt layers](/t/glassbox/guide/nuxt-vue/layers)
 - [File routing: catch-all, Tenant overrides, root pages](/t/glassbox/guide/nuxt-vue/file-routing)
-- [A module that generates virtual # imports](/t/glassbox/guide/nuxt-vue/virtual-imports)
-- [Auto-imports and their one global namespace](/t/glassbox/guide/nuxt-vue/auto-imports)
 - [A composable as the only door: useSpace](/t/glassbox/guide/nuxt-vue/use-space)
+- [The content database](/t/glassbox/guide/nuxt-content/content-database)
 - [useAsyncData, payloads and caching](/t/glassbox/guide/nuxt-vue/use-async-data)
-- [Collections expanded from one manifest](/t/glassbox/guide/nuxt-content/manifest-collections)
-- [MDC components, and when not to use them](/t/glassbox/guide/nuxt-content/mdc-components)
-- [Overriding prose components](/t/glassbox/guide/nuxt-content/prose-overrides)
-- [Mermaid pre-rendered to committed SVG](/t/glassbox/guide/nuxt-content/mermaid-svg)
-- [Reading across Tenants through opted-in kinds](/t/glassbox/guide/terrarium-practice/cross-tenant-kinds)

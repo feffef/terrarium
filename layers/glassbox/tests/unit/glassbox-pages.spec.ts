@@ -171,6 +171,8 @@ describe('glassboxPageProblems on fixture pages', () => {
     ['a ::stop-links block in A real case', (s: string) => s.replace('## Where next', '## A real case\n\n::stop-links\n[Home](/t/glassbox/guide)\n::\n\n## Where next'), '1 ::stop-links block(s) sit outside'],
     ['a stop whose ::stop-links holds only a :term', (s: string) => s.replace(':file[shared/expand.ts]', ':term[Collection]'), 'stop "2. The page renders" links nothing'],
     ['a stop whose ::stop-links links nothing', (s: string) => s.replace(':file[shared/expand.ts]', 'Nothing.'), 'stop "2. The page renders" links nothing'],
+    ['a Where next over 5 pages', (s: string) => `${s}${gateItem.repeat(5)}`, 'Where next lists 6 pages, more than 5'],
+    ['a Journal page before a Lesson in Where next', (s: string) => `${s}${journalItem}${gateItem}`, 'Where next lists a Journal page before its end'],
   ])('fails a Walkthrough with %s', (_name, broken, message) => {
     expect(problemsOf('walkthroughs/opening-a-page.md', broken(walkthrough)).join('\n')).toContain(message)
   })
