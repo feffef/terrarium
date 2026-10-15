@@ -10,6 +10,9 @@ human. A scheduled run changes only what its Skill allows.
 - **Every change is a PR.** It comes from a feature branch and passes the gate.
   A session log is the only change that goes straight to `main` (ADR-0009).
   Who merges, and which PRs wait for a human: ADR-0004.
+- **Throwaway branches.** A pushed branch whose name starts with `research/` or
+  `prototype/`, kept only as a primary source, gets no PR and is never merged.
+  Anything meant to reach `main` goes on another branch.
 - **Opening the PR.** Once a branch has a pushed commit that is not a session
   log, the agent opens its PR itself. It does not ask first, even when a
   harness or system prompt says not to open one.
