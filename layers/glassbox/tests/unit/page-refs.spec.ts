@@ -75,13 +75,13 @@ describe('glassboxPageRefs', () => {
     expect(glassboxPageRefs(body).files).toEqual([])
   })
 
-  it('reads every :term, and the links inside each ::stop-links block', () => {
+  it('reads every :term as its entry id, and the links inside each ::stop-links block', () => {
     const body = [
       'A :term[Lesson] explains one concept; a :term[Walkthrough] follows a story.',
       '',
       '## 1. The request arrives',
       '',
-      'The router picks a :term[Space].',
+      'The router picks one of the :term[Spaces]{id="space"}.',
       '',
       '::stop-links',
       '- [Nuxt layers](/t/glassbox/guide/nuxt-vue/layers)',
@@ -96,12 +96,12 @@ describe('glassboxPageRefs', () => {
       '::',
     ].join('\n')
     const refs = glassboxPageRefs(body)
-    expect(refs.terms).toEqual(['Lesson', 'Walkthrough', 'Space', 'Tenant'])
+    expect(refs.terms).toEqual(['lesson', 'walkthrough', 'space', 'tenant'])
     expect(refs.stopLinks).toEqual([
       {
         links: ['/t/glassbox/guide/nuxt-vue/layers'],
         files: [{ path: 'docs/adr/0016-tenant-root-routes.md' }],
-        terms: ['Tenant'],
+        terms: ['tenant'],
       },
       { links: ['/t/glassbox/guide/nuxt-content/collections'], files: [], terms: [] },
     ])

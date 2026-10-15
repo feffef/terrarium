@@ -18,6 +18,12 @@ export function parseLineRange(lines: string | undefined): LineRange | undefined
   return { start: Number(m[1]), end: Number(m[2] ?? m[1]) }
 }
 
+/** A `:term`'s entry in the `terms` Collection: its `id`, else its text
+ *  (`Space` → `space.yml`). */
+export function glassboxTermId(text: string, id?: string) {
+  return id ?? text.trim().toLowerCase().replace(/\s+/g, '-')
+}
+
 function attr(attrs: string | undefined, name: string) {
   return attrs?.match(new RegExp(`\\b${name}="([^"]*)"`))?.[1]
 }
@@ -55,7 +61,7 @@ export interface StopLinksBlock extends CitedFilesAndTerms {
   links: string[]
 }
 
-/** Every `:file` and `::excerpt` (in order), every `:term`, and what each
+/** Every `:file` and `::excerpt` (in order), every `:term`'s entry id, and what each
  *  `::stop-links` block links to. Inline code and fences outside `::excerpt`
  *  show syntax, so they cite nothing. */
 export function glassboxPageRefs(body: string): CitedFilesAndTerms & { stopLinks: StopLinksBlock[] } {
@@ -102,9 +108,10 @@ export function glassboxPageRefs(body: string): CitedFilesAndTerms & { stopLinks
       files.push(ref)
       stop?.files.push(ref)
     }
-    for (const m of prose.matchAll(/:term\[([^\]]+)\]/g)) {
-      terms.push(m[1]!)
-      stop?.terms.push(m[1]!)
+    for (const m of prose.matchAll(/:term\[([^\]]+)\](?:\{([^}]*)\})?/g)) {
+      const id = glassboxTermId(m[1]!, attr(m[2], 'id'))
+      terms.push(id)
+      stop?.terms.push(id)
     }
     if (stop) for (const m of prose.matchAll(/\]\(([^)\s]+)/g)) stop.links.push(m[1]!)
   }
