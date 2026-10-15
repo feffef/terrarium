@@ -53,7 +53,7 @@ Nuxt matches the path against its page files. The Platform's catch-all page answ
 The page asks Nuxt Content for its Document with `queryCollection` and the key it was given. Each Tenant, Space and :term[Collection] together make one table in the server's SQLite database, so the query cannot reach another Space's content. When a Collection is asked for, the server checks its table against the build and fills it from the build's dump only if it needs to.
 
 ::stop-links
-:file[shared/expand.ts] · :file[content.config.ts] · :file[docs/adr/0001-single-container-baked-multitenancy.md]
+[Collections expanded from one manifest](/t/glassbox/guide/nuxt-content/manifest-collections) · :file[shared/expand.ts] · :file[content.config.ts] · :file[docs/adr/0001-single-container-baked-multitenancy.md]
 ::
 
 ## 5. Vue renders the page, data inside
