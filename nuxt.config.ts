@@ -28,7 +28,7 @@ export default defineNuxtConfig({
   sourcemap: { server: false, client: false },
 
   content: {
-    // Native node:sqlite (Node >= 22.5) — no better-sqlite3 native build in CI.
+    // Native node:sqlite (unflagged from Node 22.13) — no better-sqlite3 native build in CI.
     experimental: { sqliteConnector: 'native' },
   },
 
