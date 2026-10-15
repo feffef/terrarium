@@ -9,20 +9,19 @@ You click a link and a page appears. This Walkthrough follows that request from 
 
 ```mermaid
 flowchart TD
-  open([A visitor opens a page]) --> kept{Fresh copy?}
+  open([A visitor opens a page]) --> kept{Kept by the server?}
+  kept -- no --> render[One Space's content, rendered by Vue]
   kept -- yes --> shown[The browser shows the page]
-  kept -- no --> route[The address picks one Tenant and Space]
-  route --> query[Content is read from that Space's tables]
-  query --> render[Vue renders the page with its data]
   render --> shown
   shown --> next([The visitor hovers, then clicks a link])
   next --> cached{Cached?}
   cached -- yes --> payload[Built from the data the server prepared]
   cached -- no --> local[Queried in a database in the browser]
-  payload -. if the data fails to load .-> local
-  local -. if a download fails .-> reload[Reload once, then a dialog]
-  classDef browser stroke-dasharray: 5 4
-  class shown,next,cached,payload,local,reload browser
+  payload -- if the data fails to load --> local
+  payload --> shown
+  local --> shown
+  payload -. if a download fails .-> reload[Reload once, then a dialog]
+  local -. if a download fails .-> reload
 ```
 
 ## 1. The request reaches the one server
@@ -35,7 +34,7 @@ The browser asks for a page under `/t/`. A Caddy proxy passes the request to the
 
 ## 2. The server may already have it
 
-The server first checks its page cache. A Tenant page rendered a moment ago goes back as it is, the same copy for every visitor, since content only changes with a new build. Only on a miss does the rest of this story run on the server.
+The server first checks its page cache. A Tenant page rendered a moment ago goes back as it is, the same copy for every visitor unless the page declares a request header it varies on, since content only changes with a new build. Only on a miss does the rest of this story run on the server.
 
 ::stop-links
 :file[nuxt.config.ts] · :file[docs/adr/0028-navigation-reads-server-payloads.md]
@@ -51,7 +50,7 @@ Nuxt matches the path against its page files. The Platform's catch-all page answ
 
 ## 4. Nuxt Content reads that Space's tables
 
-The page asks Nuxt Content for its Document with `queryCollection` and the key it was given. Each Tenant, Space and :term[Collection] together make one table in the server's SQLite database, so the query cannot reach another Space's content. The first time a Collection is asked for after a deploy, the server fills its table from the dump the build made.
+The page asks Nuxt Content for its Document with `queryCollection` and the key it was given. Each Tenant, Space and :term[Collection] together make one table in the server's SQLite database, so the query cannot reach another Space's content. When a Collection is asked for, the server checks its table against the build and fills it from the build's dump only if it needs to.
 
 ::stop-links
 :file[shared/expand.ts] · :file[content.config.ts] · :file[docs/adr/0001-single-container-baked-multitenancy.md]
@@ -67,7 +66,7 @@ Vue renders the page to HTML on the server. Whatever the page's `useAsyncData` r
 
 ## 6. A hover fetches the next page's data
 
-When the pointer rests on a link, or a finger touches it, the browser fetches that route's code and, for a cached route, its `_payload.json`: the data the server rendered for it. A link that merely scrolls into view fetches nothing.
+When the pointer rests on a link, a finger touches it or the keyboard focuses it, the browser fetches that route's code and, for a cached route, its `_payload.json`: the data the server rendered for it. A link that merely scrolls into view fetches nothing.
 
 ::stop-links
 :file[nuxt.config.ts] · :file[docs/adr/0028-navigation-reads-server-payloads.md]
@@ -75,7 +74,7 @@ When the pointer rests on a link, or a finger touches it, the browser fetches th
 
 ## 7. The click builds the next page
 
-Usually the route is cached, so the browser builds the page from its payload and runs no query. A page that opts out of the cache, like Tinkerfund's search, has no payload: its query runs in a copy of the database inside the browser, SQLite compiled to WebAssembly, which first downloads each Collection's dump. The same browser database steps in when a payload fails to load. If a download fails, the page reloads once; a second failure, or any other kind, shows a dialog that offers a reload.
+Usually the route is cached, so the browser builds the page from its payload and runs no query. A page that opts out of the cache, like Tinkerfund's search, has no payload: its query runs in a database inside the browser, which first downloads the SQLite runtime, compiled to WebAssembly, and the dump of each Collection it queries. The same browser database steps in when a payload fails to load. If a download fails, the page reloads once; a second failure, or any other kind, shows a dialog that offers a reload.
 
 ::stop-links
 :file[layers/tinkerfund/nuxt.config.ts] · :file[app/composables/contentLoadRecovery.ts] · :file[docs/adr/0019-patched-nuxt-content-client-db-loading.md]

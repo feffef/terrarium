@@ -23,8 +23,8 @@ describe('glassboxLessonSections', () => {
       h2('try-it-in-your-project', 'Try it in your project'),
       ['p', {}, 'Step.'],
       h2('where-next', 'Where next'),
-      ['ul', {}, ['li', {}, 'Next.']],
-    ])).toEqual([
+      ['ul', {}, ['li', {}, ['a', { href: '/t/glassbox/guide/zod/schemas' }, 'Schemas']], ['li', {}, ['a', { href: '/t/journal/current/how-it-works' }, 'How']]],
+    ], '/t/glassbox/guide')).toEqual([
       ['p', {}, 'Lede.'],
       ['p', { class: 'gb-skip' }, 'Know it? Skip to ', ['a', { href: '#in-terrarium' }, 'In Terrarium']],
       ['div', { class: 'gb-concept' },
@@ -42,14 +42,17 @@ describe('glassboxLessonSections', () => {
       ],
       ['div', { class: 'gb-try' }, h2('try-it-in-your-project', 'Try it in your project'), ['p', {}, 'Step.']],
       h2('where-next', 'Where next'),
-      ['ul', { class: 'gb-next' }, ['li', {}, ['span', {}, 'Lesson'], 'Next.']],
+      ['ul', { class: 'gb-next' },
+        ['li', {}, ['span', {}, 'Lesson'], ['a', { href: '/t/glassbox/guide/zod/schemas' }, 'Schemas']],
+        ['li', {}, ['span', {}, 'Journal'], ['a', { href: '/t/journal/current/how-it-works' }, 'How']],
+      ],
     ])
   })
 
   it('ends a card at the next other h3, and leaves a page without those sections alone', () => {
     const walkthrough: MinimarkNode[] = [h2('1-a-reader-asks', '1. A reader asks'), ['p', {}, 'Stop.'], h3('aside', 'Aside')]
-    expect(glassboxLessonSections(walkthrough)).toEqual(walkthrough)
-    expect(glassboxLessonSections([h3('what-to-watch-for', 'What to watch for'), ['p', {}, 'Trap.'], h3('more', 'More')])).toEqual([
+    expect(glassboxLessonSections(walkthrough, '/t/glassbox/guide')).toEqual(walkthrough)
+    expect(glassboxLessonSections([h3('what-to-watch-for', 'What to watch for'), ['p', {}, 'Trap.'], h3('more', 'More')], '/t/glassbox/guide')).toEqual([
       ['div', { class: 'gb-cards' }, ['div', { class: 'gb-card' }, h3('what-to-watch-for', 'What to watch for'), ['p', {}, 'Trap.']]],
       h3('more', 'More'),
     ])

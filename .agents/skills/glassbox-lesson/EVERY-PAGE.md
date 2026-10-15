@@ -19,9 +19,7 @@ the page draws `title` as its heading, so the body has no h1.
   `ADR-NNNN (:file[docs/adr/NNNN-….md])`, and a Journal page by its site path
   (a content page, or `/t/journal/<space>/{skills,frictions,ideas}`). A path
   holding `[` can't go in `:file[…]`: cite its folder.
-- **Link only pages that exist**, and promise none. A Lesson with no related
-  Lesson yet gives Where next one sentence linking the nearest page that exists.
-  Each Where next list item is a bare link: the page draws it as a row.
+- **Link only pages that exist**, and promise none.
 - **Verify each official-docs URL** by fetching it and checking it says what
   you cite. If the network blocks the fetch, confirm the exact URL and title in
   web search results and say so in the PR. Zod links go to v3.zod.dev.
@@ -32,13 +30,12 @@ the page draws `title` as its heading, so the body has no h1.
 
 ## Diagrams
 
-Optional, and the prose carries every fact: #1985's *Diagrams* section says
-where one may go. Hand each to a subagent (`dispatch-subagents`): it drafts the
-` ```mermaid ` fence (labels name concepts, never paths, ids or counts; lanes
-per `.claude/rules/mermaid-lanes.md`), runs `pnpm render:mermaid`, looks at the
-page after `pnpm build` (below, both schemes), redraws until it reads at a
-glance, and commits the fence with its SVGs. With no subagent available, run
-that loop yourself and say so in the PR.
+Optional, and the prose carries every fact: #1985's *Diagrams* section has the
+rules. Hand each to a subagent (`dispatch-subagents`): it drafts the
+` ```mermaid ` fence, runs `pnpm render:mermaid`, looks at the page after
+`pnpm build` (below, both schemes), redraws until it reads at a glance, and
+commits the fence with its SVGs. With no subagent available, run that loop
+yourself and say so in the PR.
 
 ## Check
 
@@ -49,5 +46,3 @@ clone lacks `revision`. Then run
 `scripts/preview.ts shot` in light and dark at 1280x900 and 390x844, and look
 at every shot (`docs/agents/verifying-ui-changes.md`). Done when both are green
 and each shot matches the page's shape in the glossary.
-
-Land it through a gated PR (CLAUDE.md).

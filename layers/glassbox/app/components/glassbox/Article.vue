@@ -16,7 +16,7 @@ const current = ref<string>()
 // lede and the first section, and each Walkthrough stop can show it is current.
 const parts = computed(() => {
   const { body } = props.page
-  const framed = subject.value ? glassboxLessonSections(body.value) : body.value
+  const framed = subject.value ? glassboxLessonSections(body.value, props.base) : body.value
   const [intro, sections] = glassboxSplitAtFirstSection(framed)
   const withBody = (nodes: typeof intro) => ({ ...props.page, body: { ...body, value: nodes } })
   return {

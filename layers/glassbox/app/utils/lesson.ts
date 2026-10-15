@@ -1,4 +1,5 @@
 import type { MinimarkElement, MinimarkNode } from '@nuxt/content'
+import { glassboxSubjectOf, glassboxWalkthroughOf } from './subjects'
 
 // Design 1b frames a Lesson's sections without new syntax for writers (#2015):
 // the frames are added here, at render, keyed on the section ids. The section
@@ -18,13 +19,15 @@ export const glassboxLessonLabels = {
   fullReference: 'Full reference',
   lesson: 'Lesson',
   walkthrough: 'Walkthrough',
+  journal: 'Journal',
+  page: 'Page',
 } as const
 
 const ids = glassboxLessonIds
 const labels = glassboxLessonLabels
 
 /** A Lesson body with design 1b's section frames added; other nodes unchanged. */
-export function glassboxLessonSections(nodes: MinimarkNode[]): MinimarkNode[] {
+export function glassboxLessonSections(nodes: MinimarkNode[], base: string): MinimarkNode[] {
   const out: MinimarkNode[] = []
   let section = ''
   let box: MinimarkElement | undefined
@@ -46,7 +49,7 @@ export function glassboxLessonSections(nodes: MinimarkNode[]): MinimarkNode[] {
     }
     const inConcept = section === ids.concept
     const isNextList = section === ids.whereNext && tag === 'ul'
-    ;(box ?? out).push(inConcept ? fullReference(node) : isNextList ? nextList(node) : skipLine(node))
+    ;(box ?? out).push(inConcept ? fullReference(node) : isNextList ? glassboxNextList(node, base) : skipLine(node))
   }
   return out
 }
@@ -67,9 +70,21 @@ function skipLine(node: MinimarkNode): MinimarkNode {
   return skips ? ['p', { ...props, class: 'gb-skip' }, ...children] : node
 }
 
-function nextList(node: MinimarkNode): MinimarkNode {
+/** What a link leads to, for the label on its Where next row. */
+export function glassboxLinkLabel(href: string, base: string) {
+  const path = href.startsWith(`${base}/`) ? href.slice(base.length) : ''
+  if (glassboxSubjectOf(path)) return labels.lesson
+  if (glassboxWalkthroughOf(path)) return labels.walkthrough
+  return href.startsWith('/t/journal/') ? labels.journal : labels.page
+}
+
+/** A Where next list drawn as rows, each labelled by what its link leads to. */
+export function glassboxNextList(node: MinimarkNode, base: string): MinimarkNode {
   if (typeof node === 'string') return node
   const [, props, ...items] = node
-  return ['ul', { ...props, class: 'gb-next' }, ...items.map((item) =>
-    typeof item === 'string' ? item : [item[0], item[1], ['span', {}, labels.lesson], ...item.slice(2)] as MinimarkNode)]
+  return ['ul', { ...props, class: 'gb-next' }, ...(items as MinimarkNode[]).map((item) => {
+    if (typeof item === 'string') return item
+    const link = item.slice(2).find((child) => Array.isArray(child) && child[0] === 'a') as MinimarkElement | undefined
+    return [item[0], item[1], ['span', {}, glassboxLinkLabel(String(link?.[1].href ?? ''), base)], ...item.slice(2)] as MinimarkNode
+  })]
 }

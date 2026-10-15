@@ -1,5 +1,5 @@
 import type { MinimarkElement, MinimarkNode } from '@nuxt/content'
-import { glassboxLessonIds, glassboxLessonLabels } from './lesson'
+import { glassboxLessonIds, glassboxLessonLabels, glassboxNextList } from './lesson'
 import { glassboxSubjectOf, glassboxWalkthroughs, type GlassboxPageLink } from './subjects'
 
 // Design 1b's stops, keyed on the headings writers already write (#1993). The
@@ -42,21 +42,9 @@ export function glassboxWalkthroughParts(nodes: MinimarkNode[], base: string): G
     if (!parts.length) parts.push({ nodes: [] })
     const part = parts.at(-1)!
     const isNextList = section === glassboxLessonIds.whereNext && tag === 'ul'
-    ;(box ?? part.nodes).push(part.stop ? stopLinks(node, base) : isNextList ? nextRows(node, base) : node)
+    ;(box ?? part.nodes).push(part.stop ? stopLinks(node, base) : isNextList ? glassboxNextList(node, base) : node)
   }
   return parts
-}
-
-// Each row is labelled by what its link leads to.
-function nextRows(node: MinimarkNode, base: string): MinimarkNode {
-  if (typeof node === 'string') return node
-  const [, props, ...items] = node
-  return ['ul', { ...props, class: 'gb-next' }, ...(items as MinimarkNode[]).map((item) => {
-    if (typeof item === 'string') return item
-    const link = item.slice(2).find((child) => Array.isArray(child) && child[0] === 'a') as MinimarkElement | undefined
-    const label = link && isLesson(String(link[1].href), base) ? glassboxLessonLabels.lesson : glassboxLessonLabels.walkthrough
-    return [item[0], item[1], ['span', {}, label], ...item.slice(2)] as MinimarkNode
-  })]
 }
 
 // Chips are the block's inline content, cut at each `·`.
@@ -84,8 +72,19 @@ const target = (href: unknown) => String(href).replace(/[?#].*$/, '').replace(/\
 const linksTo = (nodes: MinimarkNode[], url: string): boolean => nodes.some((node) =>
   typeof node !== 'string' && ((node[0] === 'a' && target(node[1].href) === url) || linksTo(node.slice(2) as MinimarkNode[], url)))
 
-/** The Walkthroughs whose body links the Lesson at `lessonUrl`, each once,
- *  titles and paths only (ADR-0028). */
+// Only the story counts: the lede and Where next may link a Lesson the story never passes through.
+function storyNodes(nodes: MinimarkNode[]) {
+  let inStory = false
+  return nodes.filter((node) => {
+    if (typeof node !== 'string' && node[0] === 'h2') {
+      inStory = node[1].id === realCase || (typeof node[2] === 'string' && !!glassboxStopNumber(node[2]))
+    }
+    return inStory
+  })
+}
+
+/** The Walkthroughs whose stops or A real case link the Lesson at `lessonUrl`,
+ *  each once, titles and paths only (ADR-0028). */
 export function glassboxWalkthroughsThrough(walkthroughs: (GlassboxPageLink & { body: { value: MinimarkNode[] } })[], lessonUrl: string): GlassboxPageLink[] {
-  return glassboxWalkthroughs(walkthroughs.filter((page) => linksTo(page.body.value, lessonUrl)).map(({ path, title }) => ({ path, title })))
+  return glassboxWalkthroughs(walkthroughs.filter((page) => linksTo(storyNodes(page.body.value), lessonUrl)).map(({ path, title }) => ({ path, title })))
 }
