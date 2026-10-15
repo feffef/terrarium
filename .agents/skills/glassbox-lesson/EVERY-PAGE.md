@@ -21,8 +21,9 @@ the page draws `title` as its heading, so the body has no h1.
   holding `[` can't go in `:file[…]`: cite its folder.
 - **Link only pages that exist**, and promise none.
 - **Verify each official-docs URL** by fetching it and checking it says what
-  you cite. If the network blocks the fetch, read the page's source in the
-  published docs package (e.g. `@nuxt/docs` from npm) or the docs repo, confirm
+  you cite, and re-read the docs section that every *What to watch for* and
+  *Try it* line depends on. If the network blocks the fetch, read the page's
+  source in the published docs package (e.g. `@nuxt/docs` from npm) or the docs repo, confirm
   the exact URL and title in web search results, and say so in the PR. Zod
   links go to v3.zod.dev.
 - **A second tool gets its own link** at its first mention, even though *The
