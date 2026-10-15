@@ -29,6 +29,10 @@ the page draws `title` as its heading, so the body has no h1.
 - **Don't paraphrase an ADR.** In Terrarium and What to watch for don't retell
   an ADR's Scope or Why either: show the files and link the ADR.
 - **Link only pages that exist**, and promise none.
+- **Mechanism, not motive.** *In Terrarium* says what the code does, not why;
+  a design "because" belongs to the ADR link.
+- **Test the lede.** Check its summary claim against the edge cases the page
+  itself mentions.
 - **Verify each official-docs URL** by fetching it and checking it says what
   you cite, and re-read the docs section that every *What to watch for* and
   *Try it* line depends on. If the network blocks the fetch, read the page's
