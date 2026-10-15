@@ -1,0 +1,3 @@
+term: Rule
+definition: A short instruction in .claude/rules/ that reaches an agent on its own, at session start or when it works on the files the rule names.
+source: GLOSSARY.md

@@ -1,0 +1,3 @@
+term: Prune Trial
+definition: An instruction cut back to its goal and left that way for a while, so the problems later sessions report decide whether it comes back.
+source: GLOSSARY.md
