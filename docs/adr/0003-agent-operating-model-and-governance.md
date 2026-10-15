@@ -3,8 +3,8 @@
 Agents may propose anything, but they build new work only after a Trusted user
 approves it. Every change lands as a PR from a feature branch, which the agent
 opens without asking and follows until it is merged, closed or taken over by a
-human. A `research/` or `prototype/` branch kept only as a source gets no PR.
-A scheduled run changes only what its Skill allows.
+human. A `research/` or `prototype/` branch kept only as a primary source gets
+no PR. A scheduled run changes only what its Skill allows.
 
 ## Scope
 
