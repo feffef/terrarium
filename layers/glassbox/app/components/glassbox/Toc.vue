@@ -74,14 +74,11 @@ watch(entries, () => nextTick(track))
   padding: 6px 8px 6px 16px;
   border: 1px solid var(--gb-pane-edge);
   border-radius: 14px;
-  background: color-mix(in srgb, var(--gb-bg) 80%, transparent);
+  background: var(--gb-bar);
   box-shadow: var(--gb-pane-shadow);
   backdrop-filter: blur(16px);
   font-size: 14.5px;
   line-height: 1.3;
-}
-@supports not (backdrop-filter: blur(1px)) {
-  .toc { background: color-mix(in srgb, var(--gb-bg) 92%, transparent); }
 }
 .toggle { display: none; }
 .lead { flex: none; white-space: nowrap; }
