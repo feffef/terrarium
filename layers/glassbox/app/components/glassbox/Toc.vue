@@ -91,9 +91,12 @@ a {
 }
 a:hover { background: var(--gb-tint); }
 .depth-3 a { color: var(--gb-muted); }
-/* An h2's h3s read as one group ("Why · Watch for", design 1b). */
-.depth-3 + .depth-3 { display: flex; align-items: center; margin-left: -8px; }
-.depth-3 + .depth-3::before { content: '·'; margin-right: 2px; color: var(--gb-muted); }
+/* An h2's h3s read as one group ("Why · Watch for", design 1b). The dot ends
+   the earlier item, so a wrapped row never starts with it. */
+.depth-3:has(+ .depth-3) { display: flex; align-items: center; }
+.depth-3:has(+ .depth-3)::after { content: '·'; margin-left: 2px; color: var(--gb-muted); }
+.depth-3:has(+ .depth-3) a { padding-right: 4px; }
+.depth-3 + .depth-3 { margin-left: -2px; }
 .depth-3 + .depth-3 a { padding-left: 4px; }
 a[aria-current] { background: var(--gb-solid); color: var(--gb-solid-ink); }
 .stop .title { margin-left: 0.35em; }
@@ -129,9 +132,10 @@ a[aria-current] { background: var(--gb-solid); color: var(--gb-solid-ink); }
   }
   a { display: flex; align-items: center; min-height: 40px; padding: 0 10px; font-size: 15px; }
   .depth-3 a { padding-left: 24px; font-size: 14px; }
-  .depth-3 + .depth-3 { display: block; margin: 0; }
-  .depth-3 + .depth-3::before { content: none; }
-  .depth-3 + .depth-3 a { padding-left: 24px; }
+  .depth-3:has(+ .depth-3) { display: block; }
+  .depth-3:has(+ .depth-3)::after { content: none; }
+  .depth-3 + .depth-3 { margin: 0; }
+  .depth-3:has(+ .depth-3) a, .depth-3 + .depth-3 a { padding: 0 10px 0 24px; }
   .stop.only .title { position: static; width: auto; height: auto; clip-path: none; }
 }
 </style>

@@ -162,6 +162,8 @@ function placeProblems(file: string): string[] {
 
 // The Lesson contract in GLOSSARY.md: these sections, in this order; the two under In Terrarium are h3.
 const subsections: string[] = [glassboxLessonIds.why, glassboxLessonIds.watch]
+// Why it's built this way links its reasons and never restates them (GLOSSARY.md, Lesson).
+const whyLine = /^.+: (?:ADR-\d{4} \(:file\[docs\/adr\/\d{4}-[^\]\s]+\.md\]\)|:file\[(?!docs\/adr\/)[^\]\s]+\])\.$/
 
 function lessonProblems(file: string, prose: string): string[] {
   const headings = [...prose.matchAll(/^(#{2,3}) (.+)$/gm)].map((m) => ({ level: m[1]!.length, id: glassboxTermId(m[2]!) }))
@@ -173,6 +175,12 @@ function lessonProblems(file: string, prose: string): string[] {
     if (i < 0) problems.push(`Lesson has no h${level} #${id}`)
     else if (i < last) problems.push(`Lesson section #${id} is out of order`)
     else last = i
+  }
+  const lines = prose.split('\n')
+  const start = lines.findIndex((l) => /^### /.test(l) && glassboxTermId(l.slice(4)) === glassboxLessonIds.why)
+  const end = lines.findIndex((l, i) => i > start && /^#{2,3} /.test(l))
+  for (const line of start < 0 ? [] : lines.slice(start + 1, end < 0 ? undefined : end)) {
+    if (line.trim() && !whyLine.test(line)) problems.push(`Why it's built this way line is not "<topic>: ADR-NNNN (:file[…])." or "<topic>: :file[…].": ${line}`)
   }
   const fullReference = new RegExp(`^${glassboxLessonLabels.fullReference}:?\\s*\\[[^\\]]+\\]\\(https://`, 'm')
   if (!file.startsWith('terrarium-practice/') && !fullReference.test(prose)) problems.push('Lesson has no "Full reference" https link')

@@ -18,6 +18,7 @@ const files: Record<string, string | string[]> = {
   'shared/expand.ts': `${expandTs}\n`,
   'layers/': ['blog', 'glassbox'],
   'docs/adr/': ['0004-objective-safety-gate.md'],
+  'docs/adr/0004-objective-safety-gate.md': '# ADR-0004\n',
 }
 const commits: Record<string, { date: string; onMain: boolean }> = {
   [rev]: { date: '2026-10-14T23:03:14+00:00', onMain: true },
@@ -60,10 +61,14 @@ export function catalogFrom(cols) {
 
 ### Why it's built this way
 
-See ADR-0004, [how it works](/t/journal/current/how-it-works) and [the Skills](/t/journal/current/skills).
-Inline code shows syntax: \`ADR-9999\`, \`[x](/t/journal/nope)\`.
+The \`gate\`: ADR-0004 (:file[docs/adr/0004-objective-safety-gate.md]).
+
+The expansion: :file[shared/expand.ts].
 
 ### What to watch for
+
+See ADR-0004, [how it works](/t/journal/current/how-it-works) and [the Skills](/t/journal/current/skills).
+Inline code shows syntax: \`ADR-9999\`, \`[x](/t/journal/nope)\`.
 
 Issues like https://github.com/feffef/terrarium/issues/1985 are fine.
 
@@ -133,6 +138,9 @@ describe('glassboxPageProblems on fixture pages', () => {
     ['a ::stop-links block on a Lesson', (s: string) => `${s}\n::stop-links\n[Home](/t/glassbox/guide)\n::\n`, '1 ::stop-links block(s) sit outside a Walkthrough stop'],
     ['a :term with no entry', (s: string) => s.replace(':term[Collection]', ':term[Space]'), ':term space has no entry'],
     ['a hand-written blob link', (s: string) => `${s}\n[x](https://github.com/feffef/terrarium/blob/${rev}/shared/expand.ts)\n`, 'hand-written link'],
+    ['a Why line with a link', (s: string) => s.replace('The expansion: :file[shared/expand.ts].', 'See [how it works](/t/journal/current/how-it-works).'), 'Why it\'s built this way line is not'],
+    ['a Why line with two ADRs', (s: string) => s.replace('safety-gate.md]).\n', 'safety-gate.md]) and ADR-0004 (:file[docs/adr/0004-objective-safety-gate.md]).\n'), 'Why it\'s built this way line is not'],
+    ['a Why line citing an ADR file without its number', (s: string) => s.replace('The expansion: :file[shared/expand.ts]', 'More: :file[docs/adr/0004-objective-safety-gate.md]'), 'Why it\'s built this way line is not'],
     ['a hand-written tree link', (s: string) => `${s}\nhttps://github.com/feffef/terrarium/tree/main/layers\n`, 'hand-written link'],
   ])('fails %s', (_name, broken, message) => {
     expect(problemsOf('nuxt-content/01.collections.md', broken(lesson)).join('\n')).toContain(message)
