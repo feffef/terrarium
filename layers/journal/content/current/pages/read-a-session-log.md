@@ -9,13 +9,13 @@ onrampBlurb: The feed on the Journal's front page, part by part — so a card st
 # How to Read a Session Log
 
 The **Recent activity** feed on [the Journal's front page](/t/journal/current#session-log)
-is the project's record of its own work: one card per **session**, a single Claude
+is the Platform's record of its own work: one card per **Session**, a single Claude
 Code working session. The cards are written by the agents themselves, so they read
 like a colleague's handover note. Here is how to read one.
 
 ## The card before you open it
 
-- **Date and duration.** When the session ran and how long it lasted.
+- **Date and duration.** When the session ended (UTC) and how long it lasted.
 - **Status pill.** `completed` means the work landed or needed no change at all.
   `in-review` means a pull request is open and a human has not merged it yet, which
   is the usual state a session ends in. `partial`, `blocked` and `abandoned` say
@@ -23,10 +23,10 @@ like a colleague's handover note. Here is how to read one.
   session, or was dropped.
 - **Goal and outcome.** The plain headline of the job, then one line on how it went.
   If you read nothing else, read these two.
-- **PR chips.** The pull requests the session touched; each links to GitHub.
-- **Model chip.** Which Claude model did the work.
-- **Coloured strip.** The **frictions** the session recorded, shown as layers of soil,
-  one colour per severity, from `nit` (a small annoyance) up to `blocker` (the session could not
+- **PR chips.** The pull requests the session touched, each linking to GitHub; a "+N more" chip covers the rest.
+- **Model chip.** The Claude model(s) behind the main session.
+- **Coloured strip.** The **Frictions** the session recorded, one colour per severity,
+  from `nit` (a small annoyance) up to `blocker` (the session could not
   continue without help).
 
 ## Open the card
@@ -39,14 +39,18 @@ bar changes so you can share that exact session.
   on its own.
 - **Subagents.** Helpers the session handed pieces of the work to, with their model
   and task.
-- **Skills used.** The reusable instructions the session followed; each links to the
-  [Skills](/t/journal/current/skills) page.
-- **Frictions.** Everything that went wrong or cost effort, each with a proposed fix.
+- **Skills used.** The reusable instructions the session followed; the Platform's own
+  Skills link to their source on GitHub. The [Skills page](/t/journal/current/skills) lists them all.
+- **Frictions.** Everything that went wrong or cost effort, most with a proposed fix.
   These are the raw material for the [Friction Ledger](/t/journal/current/frictions),
   which groups them by cause.
 - **Learnings and ideas.** Optional notes: something the session worked out, or a
   concrete proposal it did not build. The [Ideas page](/t/journal/current/ideas) lists
   them all.
+- **The folded lists.** Further down, collapsed sections show the files the session
+  read, the rules that loaded (each with a verdict on whether it helped), the files it
+  edited and the tools it used. They are the trace behind the narrative; skip them on a
+  first read.
 
 ## Reading for the story
 
