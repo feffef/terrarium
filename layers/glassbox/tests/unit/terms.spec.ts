@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { glassboxPageTerms } from '../../app/utils/terms.ts'
+import { glassboxPageTerms } from '../../page-refs.ts'
 
 describe('glassboxPageTerms', () => {
   it('picks each term a page body uses once, by its entry id', () => {
@@ -17,7 +17,7 @@ describe('glassboxPageTerms', () => {
   })
 
   it('picks none from a body without terms, or no body', () => {
-    expect(glassboxPageTerms({ type: 'minimark', value: [['p', {}, 'Plain prose.']] })).toEqual([])
+    expect(glassboxPageTerms({ value: [['p', {}, 'Plain prose.']] })).toEqual([])
     expect(glassboxPageTerms(undefined)).toEqual([])
   })
 })

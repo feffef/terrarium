@@ -24,6 +24,22 @@ export function glassboxTermId(text: string, id?: string) {
   return id ?? text.trim().toLowerCase().replace(/\s+/g, '-')
 }
 
+/** The entry id of every `:term` in a page's parsed (minimark) body, once
+ *  each, so the payload carries only the terms the page uses (ADR-0028). */
+export function glassboxPageTerms(body: { value?: unknown[] } | null | undefined): string[] {
+  const ids = new Set<string>()
+  const walk = (nodes: unknown[]) => {
+    for (const node of nodes) {
+      if (!Array.isArray(node)) continue
+      const [tag, props, ...children] = node as [string, Record<string, unknown>, ...unknown[]]
+      if (tag !== 'term') walk(children)
+      else ids.add(glassboxTermId(children.filter((c) => typeof c === 'string').join(''), typeof props.id === 'string' ? props.id : undefined))
+    }
+  }
+  walk(body?.value ?? [])
+  return [...ids]
+}
+
 function attr(attrs: string | undefined, name: string) {
   return attrs?.match(new RegExp(`\\b${name}="([^"]*)"`))?.[1]
 }
