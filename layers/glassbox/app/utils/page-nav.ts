@@ -26,7 +26,7 @@ const isDiagram = (node: MinimarkNode) => Array.isArray(node) && node[0] === 'pr
 
 /** A minimark body cut before its first section or diagram, so the table of
  *  contents sits between the lede and either (design 1b). */
-export function glassboxSplitAtFirstSection<T extends MinimarkNode>(nodes: T[]): [T[], T[]] {
+export function glassboxSplitBeforeBody<T extends MinimarkNode>(nodes: T[]): [T[], T[]] {
   const i = nodes.findIndex((node) => holdsH2(node) || isDiagram(node))
   return i < 0 ? [nodes, []] : [nodes.slice(0, i), nodes.slice(i)]
 }

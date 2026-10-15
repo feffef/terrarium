@@ -54,7 +54,8 @@ Its body follows one contract, which the page frames like design 1b
   `### What to watch for`;
 - `## Try it in your project`;
 - `## Where next`, a list of bare links: related Lessons first, then
-  optionally one Journal page as evidence.
+  optionally one Journal page as evidence. A Lesson with no related Lesson
+  yet lists only that Journal page.
 
 ### Walkthrough
 A page that follows one story across several Lessons and links to them instead

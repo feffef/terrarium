@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { currentGlassboxHeading, glassboxFrameDiagrams, glassboxSplitAtFirstSection, glassboxSurround } from '../../app/utils/page-nav.ts'
+import { currentGlassboxHeading, glassboxFrameDiagrams, glassboxSplitBeforeBody, glassboxSurround } from '../../app/utils/page-nav.ts'
 
 describe('glassboxSurround', () => {
   // Stem order: Subject folders sort alphabetically, so the Subject map has to reorder them.
@@ -42,14 +42,14 @@ describe('glassboxSurround', () => {
   })
 })
 
-describe('glassboxSplitAtFirstSection', () => {
+describe('glassboxSplitBeforeBody', () => {
   it('splits before the first top-level node that holds an h2, wrapped or not', () => {
     const lede = ['p', {}, 'Lede']
     const skip = ['p', {}, 'Know X? ', ['a', { href: '#in-terrarium' }, 'Skip']]
     const concept = ['concept', {}, ['h2', { id: 'the-concept' }, 'The concept'], ['p', {}, 'Body']]
     const later = ['h2', { id: 'in-terrarium' }, 'In Terrarium']
-    expect(glassboxSplitAtFirstSection([lede, skip, concept, later])).toEqual([[lede, skip], [concept, later]])
-    expect(glassboxSplitAtFirstSection([lede, later])).toEqual([[lede], [later]])
+    expect(glassboxSplitBeforeBody([lede, skip, concept, later])).toEqual([[lede, skip], [concept, later]])
+    expect(glassboxSplitBeforeBody([lede, later])).toEqual([[lede], [later]])
   })
 
   // Design 1b: a Walkthrough's diagram comes after the table of contents.
@@ -57,12 +57,12 @@ describe('glassboxSplitAtFirstSection', () => {
     const lede = ['p', {}, 'Lede']
     const diagram = ['pre', { language: 'mermaid', code: 'flowchart TD' }]
     const stop = ['h2', { id: '1-a' }, '1. A']
-    expect(glassboxSplitAtFirstSection([lede, diagram, stop])).toEqual([[lede], [diagram, stop]])
-    expect(glassboxSplitAtFirstSection([lede, ['pre', { language: 'ts' }], stop])).toEqual([[lede, ['pre', { language: 'ts' }]], [stop]])
+    expect(glassboxSplitBeforeBody([lede, diagram, stop])).toEqual([[lede], [diagram, stop]])
+    expect(glassboxSplitBeforeBody([lede, ['pre', { language: 'ts' }], stop])).toEqual([[lede, ['pre', { language: 'ts' }]], [stop]])
   })
 
   it('keeps everything in the intro when there is no h2', () => {
-    expect(glassboxSplitAtFirstSection([['p', {}, 'Only'], 'text'])).toEqual([[['p', {}, 'Only'], 'text'], []])
+    expect(glassboxSplitBeforeBody([['p', {}, 'Only'], 'text'])).toEqual([[['p', {}, 'Only'], 'text'], []])
   })
 })
 

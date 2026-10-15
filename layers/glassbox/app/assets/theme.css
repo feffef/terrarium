@@ -243,12 +243,13 @@ body:has(.gb) { margin: 0; }
   background: var(--gb-pane);
   backdrop-filter: blur(16px);
 }
-/* The pane (glassboxFrameDiagrams) holds still; a diagram held at its least
-   scale (GlassboxArticle) scrolls inside it. */
+/* The pane (glassboxFrameDiagrams) holds still; a diagram at its least scale
+   scrolls inside it. */
 .gb .mermaid-diagram {
   overflow-x: auto;
 }
-.gb .mermaid-diagram svg { display: block; max-width: 100%; height: auto; margin: 0 auto; }
+/* Labels drawn at 16px (mermaid-font.ts) stay at 12px or larger. */
+.gb .mermaid-diagram svg { display: block; min-width: calc(var(--diagram-w, 0px) * 0.75); max-width: 100%; height: auto; margin: 0 auto; }
 @media (max-width: 640px) {
   .gb .gb-diagram { padding: 16px; }
 }

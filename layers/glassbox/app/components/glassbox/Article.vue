@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import type { MinimarkTree, Toc } from '@nuxt/content'
 import type { GlassboxPageLink } from '../../utils/subjects'
-import mermaidFont from '../../../mermaid-font.ts'
 
 const props = defineProps<{
   page: { path: string, title: string, revisionDate: string, body: MinimarkTree & { toc?: Toc } }
@@ -18,7 +17,7 @@ const current = ref<string>()
 const parts = computed(() => {
   const { body } = props.page
   const framed = subject.value ? glassboxLessonSections(body.value, props.base) : body.value
-  const [intro, rest] = glassboxSplitAtFirstSection(framed)
+  const [intro, rest] = glassboxSplitBeforeBody(framed)
   const sections = glassboxFrameDiagrams(rest)
   const withBody = (nodes: typeof intro) => ({ ...props.page, body: { ...body, value: nodes } })
   return {
@@ -28,22 +27,10 @@ const parts = computed(() => {
     toc: body.toc?.links ?? [],
   }
 })
-
-// A diagram scales down to fit, but never so far that its labels drop below
-// about 12px; past that it scrolls in its pane (theme.css).
-const article = useTemplateRef<HTMLElement>('article')
-const leastScale = 12 / Number.parseFloat(mermaidFont.fontSize)
-function holdDiagramScale() {
-  for (const svg of article.value?.querySelectorAll<SVGSVGElement>('.mermaid-diagram svg') ?? []) {
-    svg.style.minWidth = `${svg.viewBox.baseVal.width * leastScale}px`
-  }
-}
-onMounted(holdDiagramScale)
-watch(() => props.page.path, () => nextTick(holdDiagramScale))
 </script>
 
 <template>
-  <article ref="article" class="article">
+  <article class="article">
     <p v-if="subject" class="chips"><span class="chip">{{ subject.name }}</span><span>Lesson</span></p>
     <p v-else-if="walkthrough" class="chips"><span class="chip">Walkthrough</span></p>
     <h1 :class="{ lesson: subject || walkthrough }">{{ page.title }}</h1>
@@ -85,6 +72,8 @@ watch(() => props.page.path, () => nextTick(holdDiagramScale))
 
 .article :deep(.gb-concept) {
   --gb-concept-pad: 28px;
+  --gb-kicker-h: 18px;
+  --gb-kicker-gap: 8px;
   padding: var(--gb-concept-pad) 32px 30px;
   border: 1px solid var(--gb-pane-edge);
   border-radius: 18px;
@@ -98,9 +87,12 @@ watch(() => props.page.path, () => nextTick(holdDiagramScale))
   text-transform: uppercase;
   color: var(--gb-muted);
 }
-.article :deep(.gb-kicker) { margin: 0; line-height: 18px; }
-/* A jump to The concept clears its kicker too: pad, kicker and the h2's margin. */
-.article :deep(.gb-concept h2) { margin: 8px 0 14px; scroll-margin-top: calc(var(--gb-heading-clear) + var(--gb-concept-pad) + 26px); }
+.article :deep(.gb-kicker) { margin: 0; line-height: var(--gb-kicker-h); }
+/* A jump to The concept clears its kicker too. */
+.article :deep(.gb-concept h2) {
+  margin: var(--gb-kicker-gap) 0 14px;
+  scroll-margin-top: calc(var(--gb-heading-clear) + var(--gb-concept-pad) + var(--gb-kicker-h) + var(--gb-kicker-gap));
+}
 .article :deep(.gb-concept > :last-child) { margin-bottom: 0; }
 .article :deep(.gb-ref) {
   display: inline-flex;

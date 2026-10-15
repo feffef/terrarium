@@ -22,7 +22,6 @@ every page shares are in [`EVERY-PAGE.md`](EVERY-PAGE.md).
    Terrarium is checked against its file at `revision`.
 4. **Join the other pages.** Add the Lesson as a chip to the `::stop-links` of
    every Walkthrough stop whose mechanism it explains, and to the Where next of
-   every existing Lesson it relates to, above any Journal page there; drop a
-   Journal page that only stood in for a missing Lesson. Done when each such
-   stop and Where next links it.
+   every existing Lesson it relates to, above any Journal page there. Done
+   when each such stop and Where next links it.
 5. **Check** it (EVERY-PAGE.md).
