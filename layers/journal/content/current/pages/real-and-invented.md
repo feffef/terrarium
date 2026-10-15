@@ -1,15 +1,15 @@
 ---
 title: What's Real, What's Invented
-description: A map of Terrarium's eight sites — which are grounded in the actual, ongoing build, and which are practice grounds and demos that claim nothing about the build.
+description: A map of Terrarium's seven sites — which are grounded in the actual, ongoing build, and which are practice grounds and demos that claim nothing about the build.
 onramp: 5
 onrampLabel: What's real, what's invented
-onrampBlurb: A map of the five sites on the home page and three side rooms — which ones are grounded in the actual build, and which are practice grounds or demos.
+onrampBlurb: A map of the five sites on the home page and two side rooms — which ones are grounded in the actual build, and which are practice grounds or demos.
 ---
 
 # What's Real, What's Invented
 
-Terrarium hosts eight sites: five on the home page, plus three side rooms (the
-Commons, Glass Box and the Marquee) that the home page leaves out. They are not all the same
+Terrarium hosts seven sites: five on the home page, plus two side rooms (the
+Commons and the Marquee) that the home page leaves out. They are not all the same
 kind of thing. Each entry below ends with one page to start on.
 
 ## Grounded in the real build
@@ -30,11 +30,6 @@ kind of thing. Each entry below ends with one page to start on.
   other sites share, and a timeline of their dated pages and session logs — a view across the
   real record, adding nothing of its own. Start with
   [the Timeline](/t/commons/timeline).
-
-- **[Glass Box](/t/glassbox/guide)** is a textbook of the concepts Terrarium is
-  built on — Claude Code, Nuxt, testing, Git — with Terrarium as the worked
-  example, and it cites the Journal and the decision records as evidence.
-  Start with [its front page](/t/glassbox/guide).
 
 ## Invented practice grounds and demos
 

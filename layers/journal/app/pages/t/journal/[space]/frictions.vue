@@ -12,12 +12,14 @@ const { space, collections } = useSpace('journal')
 const { data } = await useAsyncData(route.path, async () => {
   const clusters = await queryCollection(collections.frictions).all()
   const sessions = await queryCollection(collections.sessions).select('session', 'goal').all()
-  return { clusters, sessionIds: sessions.map((s) => s.session), goals: Object.fromEntries(sessions.map((s) => [s.session, s.goal])) }
+  // Only the sessions a cluster cites travel in the payload (ADR-0028).
+  const cited = new Set(clusters.flatMap((c) => c.occurrences.map((o) => o.session)))
+  return { clusters, goals: Object.fromEntries(sessions.filter((s) => cited.has(s.session)).map((s) => [s.session, s.goal])) }
 })
 // Only two Spaces: a session not in this one was moved to the other.
 const otherSpace = Object.keys(routingMap.journal).find((s) => s !== space) ?? space
 const panels = computed(() =>
-  ledgerPanels(data.value?.clusters ?? [], space, new Set(data.value?.sessionIds ?? []), otherSpace, data.value?.goals),
+  ledgerPanels(data.value?.clusters ?? [], space, new Set(Object.keys(data.value?.goals ?? {})), otherSpace, data.value?.goals),
 )
 const sections = computed(() => [
   {
@@ -160,7 +162,7 @@ summary:focus-visible { outline: 2px solid var(--jd-accent); outline-offset: 2px
 .occ li { margin: 0; }
 .jd-prose .occ a { color: var(--jd-ink); text-decoration: none; }
 .jd-prose .occ a:hover { color: var(--jd-accent); text-decoration: underline; }
-.occ-goal { margin-left: 0.5rem; font-family: var(--jd-sans, inherit); font-size: 0.8rem; color: var(--jd-muted); }
+.occ-goal { margin-left: 0.5rem; font-family: var(--jd-serif, inherit); font-size: 0.8rem; color: var(--jd-muted); }
 .occ-sev { color: var(--jd-faint); margin-left: 0.4rem; }
 @media (max-width: 560px) {
   .ref-text, .occ { margin-left: 0; }
