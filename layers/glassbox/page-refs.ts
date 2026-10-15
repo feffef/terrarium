@@ -18,8 +18,30 @@ export function parseLineRange(lines: string | undefined): LineRange | undefined
   return { start: Number(m[1]), end: Number(m[2] ?? m[1]) }
 }
 
+/** A `:term`'s entry id: the rule is under "Term" in `GLOSSARY.md`. */
+export function glassboxTermId(text: string, id?: string) {
+  return id ?? text.toLowerCase().replace(/[^\p{L}\p{N}\s-]/gu, '').trim().replace(/\s+/g, '-')
+}
+
+/** The entry id of every `:term` in a page's parsed (minimark) body, once
+ *  each, so the payload carries only the terms the page uses (ADR-0028). */
+export function glassboxPageTerms(body: { value?: unknown[] } | null | undefined): string[] {
+  const ids = new Set<string>()
+  const walk = (nodes: unknown[]) => {
+    for (const node of nodes) {
+      if (!Array.isArray(node)) continue
+      const [tag, props, ...children] = node as [string, Record<string, unknown>, ...unknown[]]
+      if (tag === 'term') ids.add(glassboxTermId(children.filter((c) => typeof c === 'string').join(''), typeof props.id === 'string' ? props.id : undefined))
+      else walk(children)
+    }
+  }
+  walk(body?.value ?? [])
+  return [...ids]
+}
+
 function attr(attrs: string | undefined, name: string) {
-  return attrs?.match(new RegExp(`\\b${name}="([^"]*)"`))?.[1]
+  const m = attrs?.match(new RegExp(`\\b${name}=(?:"([^"]*)"|'([^']*)')`))
+  return m?.[1] ?? m?.[2]
 }
 
 function withLines(path: string, attrs: string | undefined): FileRef {
@@ -55,7 +77,7 @@ export interface StopLinksBlock extends CitedFilesAndTerms {
   links: string[]
 }
 
-/** Every `:file` and `::excerpt` (in order), every `:term`, and what each
+/** Every `:file` and `::excerpt` (in order), every `:term`'s entry id, and what each
  *  `::stop-links` block links to. Inline code and fences outside `::excerpt`
  *  show syntax, so they cite nothing. */
 export function glassboxPageRefs(body: string): CitedFilesAndTerms & { stopLinks: StopLinksBlock[] } {
@@ -102,9 +124,10 @@ export function glassboxPageRefs(body: string): CitedFilesAndTerms & { stopLinks
       files.push(ref)
       stop?.files.push(ref)
     }
-    for (const m of prose.matchAll(/:term\[([^\]]+)\]/g)) {
-      terms.push(m[1]!)
-      stop?.terms.push(m[1]!)
+    for (const m of prose.matchAll(/:term\[([^\]]+)\](?:\{([^}]*)\})?/g)) {
+      const id = glassboxTermId(m[1]!, attr(m[2], 'id'))
+      terms.push(id)
+      stop?.terms.push(id)
     }
     if (stop) for (const m of prose.matchAll(/\]\(([^)\s]+)/g)) stop.links.push(m[1]!)
   }

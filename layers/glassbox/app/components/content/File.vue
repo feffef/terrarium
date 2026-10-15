@@ -1,14 +1,11 @@
 <script setup lang="ts">
-import type { VNode } from 'vue'
 import { parseLineRange } from '../../../page-refs.ts'
 
 const props = defineProps<{ lines?: string }>()
 const slots = useSlots()
 const injected = inject(glassboxRevisionKey, undefined)
 const page = computed(() => injected?.value)
-
-// `:file[path]` passes the path as its slot text.
-const path = () => (slots.default?.() ?? []).map((v: VNode) => (typeof v.children === 'string' ? v.children : '')).join('').trim()
+const path = () => glassboxSlotText(slots)
 </script>
 
 <template>

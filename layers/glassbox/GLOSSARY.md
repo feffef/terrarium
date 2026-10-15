@@ -71,4 +71,9 @@ word for word against the file at the page's `revision`. A code fence outside
 
 ### Term
 A word a page expands inline, defined in Glass Box's own words. Definitions live
-in the `terms` Collection, each with an optional `source` glossary.
+in the `terms` Collection, each with an optional `source` glossary. A
+`:term[…]` finds its entry by its `id` attribute, else by its text lowercased,
+stripped of everything but letters, digits, hyphens and spaces, with spaces
+turned into hyphens: `:term[Nuxt & Vue]` reads `nuxt-vue.yml`,
+`:term[ADR-0004]` reads `adr-0004.yml`, and
+`:term[Spaces]{id="space"}` reads `space.yml`.
