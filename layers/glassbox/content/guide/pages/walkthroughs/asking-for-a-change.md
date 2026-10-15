@@ -17,7 +17,7 @@ A :term[Trusted] user, one with write access to the repository, asks a Claude Co
 
 ## 2. The session starts
 
-The session gets its own copy of the repository. A `SessionStart` hook in :file[.claude/settings.json] installs the packages and fetches the full git history if the copy is shallow, so the session never reads a truncated one.
+The session gets its own copy of the repository. A `SessionStart` hook in :file[.claude/settings.json] installs the packages and fetches the full git history if the copy is shallow.
 
 ::stop-links
 [Hooks](/t/glassbox/guide/claude-code/hooks) · :file[.claude/settings.json] · :file[scripts/unshallow-on-start.ts]

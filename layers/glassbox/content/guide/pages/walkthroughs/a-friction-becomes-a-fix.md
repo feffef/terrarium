@@ -27,7 +27,7 @@ Something costs a session effort: a doc misled it, a tool call was refused, a st
 
 ## 2. The log lands on `main`
 
-A hook commits the :term[session log] straight to `main`, without a PR, so the Friction is on record even when the session's own work never merges.
+A hook commits the :term[session log] straight to `main`, without a PR. The Friction is on record from then on, whether or not the session's own work ever merges.
 
 ::stop-links
 [Session logs and Frictions](/t/glassbox/guide/terrarium-practice/session-logs) · :file[scripts/log-session.ts] · :file[docs/adr/0009-session-logs-commit-directly-to-main.md]
