@@ -1,10 +1,16 @@
 // L3 — pure-function coverage for the build-time mermaid pre-render pipeline
 // (issue #379, ADR-0024): the content-hash key, the fence extractor, the
-// sentinel→CSS-var rewrite, and the drift reconciliation. No fs, no browser.
-import { describe, expect, it } from 'vitest'
+// sentinel→CSS-var rewrite, the drift reconciliation and diagram discovery
+// (on a temp fixture tree). No browser.
+import { existsSync, globSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
+import { tmpdir } from 'node:os'
+import { dirname, join } from 'node:path'
+import { afterEach, describe, expect, it } from 'vitest'
+import { discoverDiagrams } from '../../scripts/mermaid-lib.ts'
 import {
   extractMermaidBlocks,
   MERMAID_RENDER_FONT,
+  type MermaidFont,
   mermaidKey,
   normalizeMermaidSource,
 } from '../../app/utils/mermaid.ts'
@@ -31,6 +37,39 @@ describe('mermaidKey()', () => {
 
   it('is a filesystem-safe hex string', () => {
     expect(mermaidKey('graph TB')).toMatch(/^[0-9a-f]+$/)
+  })
+
+  it('keeps the default font out of the key, so existing SVG names hold', () => {
+    expect(mermaidKey('graph TB\n  A --> B', MERMAID_RENDER_FONT)).toBe(mermaidKey('graph TB\n  A --> B'))
+  })
+
+  it('gives a different key for the same source in another font', () => {
+    const other = { face: 'Other Sans', fontFamily: "'Other Sans', sans-serif", fontSize: '16px', weight: '400', woff2: 'x.woff2' }
+    expect(mermaidKey('graph TB\n  A --> B', other)).not.toBe(mermaidKey('graph TB\n  A --> B'))
+  })
+})
+
+describe('discoverDiagrams()', () => {
+  let dir = ''
+  afterEach(() => rmSync(dir, { recursive: true, force: true }))
+
+  it('draws the same source once per Tenant font, in that Tenant\'s font', async () => {
+    dir = mkdtempSync(join(tmpdir(), 'mermaid-'))
+    const src = '```mermaid\ngraph TB\n  A --> B\n```\n'
+    for (const tenant of ['plain', 'fancy']) {
+      mkdirSync(join(dir, `layers/${tenant}/content/s`), { recursive: true })
+      writeFileSync(join(dir, `layers/${tenant}/content/s/p.md`), src)
+    }
+    writeFileSync(
+      join(dir, 'layers/fancy/mermaid-font.ts'),
+      "export default { face: 'Fancy', fontFamily: \"'Fancy', sans-serif\", fontSize: '16px', weight: '400', woff2: 'f.woff2' }\n",
+    )
+    const diagrams = await discoverDiagrams(dir)
+    expect(diagrams.map((d) => [d.file, d.font.fontFamily]).sort()).toEqual([
+      ['layers/fancy/content/s/p.md', "'Fancy', sans-serif"],
+      ['layers/plain/content/s/p.md', MERMAID_RENDER_FONT.fontFamily],
+    ])
+    expect(diagrams.find((d) => d.file.startsWith('layers/plain'))!.key).toBe(mermaidKey('graph TB\n  A --> B'))
   })
 })
 
@@ -95,6 +134,30 @@ describe('MERMAID_RENDER_FONT', () => {
   // displayed in another, which is exactly the clip bug this pinning fixes (#379).
   it('pins the bundled Gelasio family so measure-font == display-font', () => {
     expect(MERMAID_RENDER_FONT.fontFamily).toMatch(/^Gelasio\b/)
+  })
+})
+
+describe('layer render fonts', () => {
+  // A layer's diagram font must be the face its own CSS serves for that same
+  // woff2, or the SVG is measured in one font and shown in another (ADR-0024).
+  const fontFiles = globSync('layers/*/mermaid-font.ts')
+
+  it.each(fontFiles)('%s matches an @font-face its layer serves', async (file) => {
+    const font = ((await import(`../../${file}`)) as { default: MermaidFont }).default
+    const layer = dirname(file)
+    expect(font.fontFamily.startsWith(`'${font.face}'`) || font.fontFamily.startsWith(font.face)).toBe(true)
+    expect(existsSync(font.woff2)).toBe(true)
+    const faces = globSync(`${layer}/app/assets/**/*.css`)
+      .flatMap((css) => [...readFileSync(css, 'utf8').matchAll(/@font-face\s*\{([^}]*)\}/g)].map((m) => m[1]!))
+    const woff2Name = font.woff2.split('/').pop()!
+    expect(
+      faces.some(
+        (f) =>
+          f.includes(`font-family: '${font.face}';`) &&
+          f.includes(`font-weight: ${font.weight};`) &&
+          f.includes(woff2Name),
+      ),
+    ).toBe(true)
   })
 })
 

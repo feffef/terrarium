@@ -13,18 +13,14 @@
 // colour token (DIAGRAM_TOKENS) set to a unique sentinel hex, then rewrite each
 // sentinel → `var(<css-var>, <fallback>)`. The result re-resolves against the
 // host Tenant's `--diagram-*` palette and `prefers-color-scheme: dark` with no
-// JS. Font family/size are baked (they drive getBBox layout geometry) — see
-// app/utils/mermaid.ts.
+// JS. Font family/size are baked (they drive getBBox layout geometry): each
+// diagram is drawn in its Tenant's font — see app/utils/mermaid.ts.
 import { existsSync, mkdirSync, readFileSync, unlinkSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { chromium } from 'playwright-core'
 import { resolveChromiumPath } from './chromium-path.ts'
-import {
-  DIAGRAM_TOKENS,
-  DIAGRAM_TOKEN_FALLBACKS,
-  MERMAID_RENDER_FONT,
-} from '../app/utils/mermaid.ts'
+import { DIAGRAM_TOKENS, DIAGRAM_TOKEN_FALLBACKS, type MermaidFont } from '../app/utils/mermaid.ts'
 import {
   type Diagram,
   committedSvgKeys,
@@ -42,10 +38,12 @@ export const SENTINELS: Record<string, string> = Object.fromEntries(
   TOKEN_NAMES.map((name, i) => [name, `#f0${(0xa0 + i).toString(16).padStart(2, '0')}01`]),
 )
 
-const themeVariables: Record<string, string> = {
-  ...Object.fromEntries(TOKEN_NAMES.map((name) => [name, SENTINELS[name]])),
-  fontFamily: MERMAID_RENDER_FONT.fontFamily,
-  fontSize: MERMAID_RENDER_FONT.fontSize,
+function themeVariables(font: MermaidFont): Record<string, string> {
+  return {
+    ...Object.fromEntries(TOKEN_NAMES.map((name) => [name, SENTINELS[name]!])),
+    fontFamily: font.fontFamily,
+    fontSize: font.fontSize,
+  }
 }
 
 /** Rewrite each sentinel hex in a rendered SVG to its live `var(--diagram-*, fallback)`. */
@@ -131,7 +129,7 @@ async function renderOne(page: import('playwright-core').Page, diagram: Diagram)
       const { svg } = await mermaid.render(id, code)
       return svg
     },
-    { code: diagram.source, id: `d-${diagram.key}`, themeVariables },
+    { code: diagram.source, id: `d-${diagram.key}`, themeVariables: themeVariables(diagram.font) },
   )
   return `${relaxNodeLabelOverflow(themeSvg(raw)).trim()}\n`
 }
@@ -141,7 +139,7 @@ async function main(): Promise<void> {
   const force = argv.includes('--force')
   const check = argv.includes('--check')
 
-  const diagrams = discoverDiagrams()
+  const diagrams = await discoverDiagrams()
   if (diagrams.length === 0) {
     console.log('render-mermaid: no ```mermaid blocks found in content — nothing to render')
     return
@@ -152,18 +150,24 @@ async function main(): Promise<void> {
     throw new Error(`render-mermaid: mermaid dist not found at ${mermaidUmd} (run \`pnpm install\`)`)
   }
 
-  // Measure against the SAME pinned webfont the browser will display
-  // (`MERMAID_RENDER_FONT`, shipped via MermaidDiagram.vue's @font-face) — the
-  // build container has no matching serif installed, so without this mermaid's
-  // getBBox measures a fallback and the baked geometry is wrong for real readers
-  // (issue #379). Inline as a data: URI so the render never touches the network.
-  const fontWoff2 = join(root, 'app/assets/fonts/gelasio-latin-400-normal.woff2')
-  if (!existsSync(fontWoff2)) {
-    throw new Error(`render-mermaid: pinned diagram font not found at ${fontWoff2}`)
-  }
-  const fontCss =
-    `@font-face{font-family:'Gelasio';font-style:normal;font-weight:400;` +
-    `src:url(data:font/woff2;base64,${readFileSync(fontWoff2).toString('base64')}) format('woff2');}`
+  // Measure against the SAME webfont the browser will display (each Tenant's
+  // woff2, under the family its page serves) — the build container has no
+  // matching font installed, so without this mermaid's getBBox measures a
+  // fallback and the baked geometry is wrong for real readers (issue #379).
+  // Inline as a data: URI so the render never touches the network.
+  // `format('woff2')` is only a support hint; Chromium applies a variable
+  // file's weight axis under it just as under `woff2-variations`.
+  const fonts = [...new Map(diagrams.map((d) => [d.font.face, d.font])).values()]
+  const fontCss = fonts
+    .map((font) => {
+      const woff2 = join(root, font.woff2)
+      if (!existsSync(woff2)) throw new Error(`render-mermaid: diagram font not found at ${woff2}`)
+      return (
+        `@font-face{font-family:'${font.face}';font-style:normal;font-weight:${font.weight};` +
+        `src:url(data:font/woff2;base64,${readFileSync(woff2).toString('base64')}) format('woff2');}`
+      )
+    })
+    .join('')
 
   const browser = await chromium.launch({
     executablePath: resolveChromiumPath(),
@@ -178,15 +182,15 @@ async function main(): Promise<void> {
     // getBBox races the font swap and measures the fallback anyway. `document`
     // is reached via globalThis (this callback runs in-browser, but is typed in
     // the Node context, which has no DOM lib — same cast the render callback uses).
-    await page.evaluate(async () => {
+    await page.evaluate(async (specs) => {
       const fonts = (
         globalThis as unknown as {
           document: { fonts: { load(f: string): Promise<unknown>; ready: Promise<unknown> } }
         }
       ).document.fonts
-      await fonts.load("20px 'Gelasio'")
+      for (const spec of specs) await fonts.load(spec)
       await fonts.ready
-    })
+    }, fonts.map((font) => `${font.fontSize} '${font.face}'`))
     await page.addScriptTag({ content: readFileSync(mermaidUmd, 'utf-8') })
 
     mkdirSync(join(root, SVG_DIR), { recursive: true })
