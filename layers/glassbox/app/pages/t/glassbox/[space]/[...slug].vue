@@ -9,10 +9,21 @@ const { data, status, error } = await useAsyncData(route.path, async () => {
     queryCollection(pagesKey).path(path).first(),
     queryCollection(pagesKey).order('stem', 'ASC').select('path', 'title').all(),
   ])
-  return { page, subjects: glassboxDirectory(pages), walkthroughs: glassboxWalkthroughs(pages) }
+  return { page, subjects: glassboxDirectory(pages), walkthroughs: glassboxWalkthroughs(pages), surround: glassboxSurround(pages, path) }
 })
 
 const page = computed(() => data.value?.page ?? null)
+// Two renders so the table of contents sits between the lede and the first section.
+const parts = computed(() => {
+  if (!page.value) return null
+  const { body } = page.value
+  const [intro, sections] = glassboxSplitAtFirstSection(body.value)
+  return {
+    intro: { ...page.value, body: { ...body, value: intro } },
+    sections: { ...page.value, body: { ...body, value: sections } },
+    toc: body.toc?.links ?? [],
+  }
+})
 if (!page.value && !error.value) setResponseStatus(404)
 
 const menuOpen = ref(false)
@@ -49,6 +60,7 @@ useSeoMeta({ description: () => page.value?.description })
     <div class="gb-main">
       <header class="gb-header">
         <GlassboxBrand :to="base" />
+        <GlassboxUpdated v-if="page" class="in-header" :date="page.revisionDate" />
         <button
           ref="menuButton"
           type="button"
@@ -60,9 +72,13 @@ useSeoMeta({ description: () => page.value?.description })
         >≡</button>
       </header>
 
-      <article v-if="page" class="gb-column">
+      <article v-if="page && parts" class="gb-column">
         <h1>{{ page.title }}</h1>
-        <ContentRenderer class="gb-prose" :value="page" />
+        <ContentRenderer class="gb-prose" :value="parts.intro" />
+        <GlassboxToc v-if="parts.toc.length" :links="parts.toc" />
+        <ContentRenderer class="gb-prose" :value="parts.sections" />
+        <GlassboxSurround v-if="data?.surround" :base="base" :prev="data.surround.prev" :next="data.surround.next" />
+        <GlassboxUpdated class="at-end" :date="page.revisionDate" />
       </article>
 
       <div v-else class="gb-column">

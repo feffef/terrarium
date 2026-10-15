@@ -209,6 +209,11 @@ body:has(.gb) { margin: 0; }
 .gb .gb-prose h2 { font-size: 28px; font-weight: 600; letter-spacing: -0.02em; line-height: 1.2; margin: 2.2em 0 0.5em; }
 .gb .gb-prose h3 { font-size: 20px; font-weight: 600; margin: 1.6em 0 0.4em; }
 .gb .gb-prose h2 a, .gb .gb-prose h3 a { color: inherit; text-decoration: none; }
+/* Clear the sticky table of contents (GlassboxToc), and the header below 1024px. */
+.gb .gb-prose :is(h2, h3) { scroll-margin-top: 84px; }
+@media (max-width: 1023.98px) {
+  .gb .gb-prose :is(h2, h3) { scroll-margin-top: 136px; }
+}
 .gb .gb-prose li + li { margin-top: 0.3em; }
 .gb .mermaid-diagram {
   padding: 24px;
