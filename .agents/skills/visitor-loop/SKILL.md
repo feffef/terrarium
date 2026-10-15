@@ -31,7 +31,8 @@ human (ADR-0003).
 Each run looks hard at one part of the Platform, so all three visitors see the
 same thing and their findings can agree. A focus given as the Skill's argument
 wins. Otherwise, through 2026-10-31 (UTC) the focus is `glassbox`: entry
-`/t/glassbox/guide`, note "Stay inside /t/glassbox." After that, take row
+`/t/glassbox/guide`, note "Stay inside /t/glassbox/guide." Its fixes and feature
+leave the `drafts` Space alone. After that, take row
 `$(( ($(date -u +%s)/86400 - $(date -u -d 2026-09-29 +%s)/86400) % 7 ))`:
 
 | # | Focus | Entry | Note |
