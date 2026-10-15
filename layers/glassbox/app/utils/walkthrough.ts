@@ -1,9 +1,16 @@
-import type { MinimarkNode } from '@nuxt/content'
+import type { MinimarkElement, MinimarkNode } from '@nuxt/content'
+import { glassboxLessonIds, glassboxLessonLabels } from './lesson'
 import { glassboxSubjectOf, glassboxWalkthroughs, type GlassboxPageLink } from './subjects'
 
 // Design 1b's stops, keyed on the headings writers already write (#1993). The
 // contract writers follow is the Walkthrough entry in layers/glassbox/GLOSSARY.md.
-const stopNumber = /^(\d+)\.\s+/
+const realCase = 'a-real-case'
+
+/** A stop heading's number and title (`1. Title`), or undefined for any other heading. */
+export function glassboxStopNumber(text: string) {
+  const m = text.match(/^(\d+)\.\s+/)
+  return m ? { n: m[1]!, title: text.slice(m[0].length) } : undefined
+}
 
 export interface GlassboxWalkthroughPart {
   stop?: string
@@ -13,24 +20,43 @@ export interface GlassboxWalkthroughPart {
 
 /** A Walkthrough body cut into parts: each stop (`## 1. Title` up to the next
  *  h2) on its own, its number moved out of the heading and its `::stop-links`
- *  drawn as chips; whatever lies between stops in plain parts. */
+ *  drawn as chips; whatever lies between stops in plain parts, with A real case
+ *  framed and Where next drawn as rows. */
 export function glassboxWalkthroughParts(nodes: MinimarkNode[], base: string): GlassboxWalkthroughPart[] {
   const parts: GlassboxWalkthroughPart[] = []
+  let section = ''
+  let box: MinimarkElement | undefined
   for (const node of nodes) {
-    if (typeof node !== 'string' && node[0] === 'h2') {
-      const [, props, first, ...rest] = node
-      const m = typeof first === 'string' ? first.match(stopNumber) : null
-      if (m) {
-        parts.push({ stop: m[1], id: String(props.id), nodes: [['h2', props, first!.slice(m[0].length), ...rest] as MinimarkNode] })
+    const [tag, props, first, ...rest] = typeof node === 'string' ? [] : node
+    if (tag === 'h2') {
+      section = String(props!.id)
+      box = undefined
+      const stop = typeof first === 'string' ? glassboxStopNumber(first) : undefined
+      if (stop) {
+        parts.push({ stop: stop.n, id: section, nodes: [['h2', props!, stop.title, ...rest] as MinimarkNode] })
         continue
       }
-      if (parts.at(-1)?.stop) parts.push({ nodes: [] })
+      if (!parts.length || parts.at(-1)!.stop) parts.push({ nodes: [] })
+      if (section === realCase) parts.at(-1)!.nodes.push(box = ['div', { class: 'gb-case' }])
     }
     if (!parts.length) parts.push({ nodes: [] })
     const part = parts.at(-1)!
-    part.nodes.push(part.stop ? stopLinks(node, base) : node)
+    const isNextList = section === glassboxLessonIds.whereNext && tag === 'ul'
+    ;(box ?? part.nodes).push(part.stop ? stopLinks(node, base) : isNextList ? nextRows(node, base) : node)
   }
   return parts
+}
+
+// Each row is labelled by what its link leads to.
+function nextRows(node: MinimarkNode, base: string): MinimarkNode {
+  if (typeof node === 'string') return node
+  const [, props, ...items] = node
+  return ['ul', { ...props, class: 'gb-next' }, ...(items as MinimarkNode[]).map((item) => {
+    if (typeof item === 'string') return item
+    const link = item.slice(2).find((child) => Array.isArray(child) && child[0] === 'a') as MinimarkElement | undefined
+    const label = link && isLesson(String(link[1].href), base) ? glassboxLessonLabels.lesson : glassboxLessonLabels.walkthrough
+    return [item[0], item[1], ['span', {}, label], ...item.slice(2)] as MinimarkNode
+  })]
 }
 
 // Chips are the block's inline content, cut at each `·`.
@@ -40,7 +66,7 @@ function stopLinks(node: MinimarkNode, base: string): MinimarkNode {
   const chips: MinimarkNode[][] = [[]]
   for (const child of inline) {
     if (typeof child !== 'string') {
-      if (child[0] === 'a' && isLesson(String(child[1].href), base)) chips.at(-1)!.push(['span', {}, 'Lesson'])
+      if (child[0] === 'a' && isLesson(String(child[1].href), base)) chips.at(-1)!.push(['span', {}, glassboxLessonLabels.lesson])
       chips.at(-1)!.push(child)
       continue
     }

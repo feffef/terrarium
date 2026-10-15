@@ -37,8 +37,6 @@ describe('glassboxWalkthroughParts', () => {
       ]],
       ['h2', { id: '2-end' }, '2. End'],
       ['p', {}, 'More.'],
-      ['h2', { id: 'where-next' }, 'Where next'],
-      ['ul', {}],
     ], base)).toEqual([
       { stop: '1', id: '1-start', nodes: [
         ['h2', { id: '1-start' }, 'Start'],
@@ -51,7 +49,23 @@ describe('glassboxWalkthroughParts', () => {
         ],
       ] },
       { stop: '2', id: '2-end', nodes: [['h2', { id: '2-end' }, 'End'], ['p', {}, 'More.']] },
-      { nodes: [['h2', { id: 'where-next' }, 'Where next'], ['ul', {}]] },
     ])
+  })
+
+  it('frames A real case and labels each Where next row by what it links', () => {
+    expect(glassboxWalkthroughParts([
+      ['h2', { id: '1-start' }, '1. Start'],
+      ['h2', { id: 'a-real-case' }, 'A real case'],
+      ['p', {}, 'Story.'],
+      ['h2', { id: 'where-next' }, 'Where next'],
+      ['ul', {}, ['li', {}, link(`${base}/nuxt-vue/layers`)], ['li', {}, link(`${base}/walkthroughs/other`)]],
+    ], base).slice(1)).toEqual([{ nodes: [
+      ['div', { class: 'gb-case' }, ['h2', { id: 'a-real-case' }, 'A real case'], ['p', {}, 'Story.']],
+      ['h2', { id: 'where-next' }, 'Where next'],
+      ['ul', { class: 'gb-next' },
+        ['li', {}, ['span', {}, 'Lesson'], link(`${base}/nuxt-vue/layers`)],
+        ['li', {}, ['span', {}, 'Walkthrough'], link(`${base}/walkthroughs/other`)],
+      ],
+    ] }])
   })
 })

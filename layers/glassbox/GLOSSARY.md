@@ -63,14 +63,17 @@ Its body, in `walkthroughs/`, follows one contract, which the page draws like
 design 1b (`app/utils/walkthrough.ts`):
 
 - a lede paragraph, then at most one diagram;
-- numbered **stops**, each `## 1. Title`: a few sentences of this story's part,
-  ending in a `::stop-links` block of chips separated by `·`. A chip is any
-  link (a Lesson where one exists, a Journal page), a `:file` or a `:term`;
-  each stop has at least one;
-- optionally `## A real case`, then `## Where next`, a list of links.
+- at least one numbered **stop**, each `## 1. Title`: a few sentences of this
+  story's part, ending in exactly one `::stop-links` block of chips separated
+  by `·`. A chip is a link (a Lesson where one exists, a Journal page), a
+  `:file` or a `:term`; each block holds at least one link or `:file`, since a
+  `:term` alone doesn't count;
+- optionally `## A real case`: one dated story;
+- `## Where next`, a list of links to Lessons and Walkthroughs.
 
-A Lesson lists, after its Where next, every Walkthrough that links it anywhere
-in its body; nobody writes that list.
+Link a Lesson by its full `/t/glassbox/guide/…` path. A Lesson lists, after
+its Where next, every Walkthrough that links it that way anywhere in its body;
+nobody writes that list.
 
 ### Subject
 The tool a Lesson belongs to: the one whose official docs its *The concept*

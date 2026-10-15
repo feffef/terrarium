@@ -8,8 +8,8 @@ const entries = computed(() => props.links.flatMap((link) => [link, ...(link.chi
 // The heading being read; a Walkthrough emphasises its stop too.
 const current = defineModel<string>('current')
 const open = ref(false)
-// A Walkthrough stop (`1. Title`) shows only its number until it is current (design 1b).
-const stopNumber = (text: string) => text.match(/^(\d+)\.\s/)?.[1]
+// A Walkthrough stop shows only its number until it is current (design 1b).
+const stops = computed(() => Object.fromEntries(entries.value.map((entry) => [entry.id, glassboxStopNumber(entry.text)])))
 const shown = computed(() => (entries.value.find((entry) => entry.id === current.value) ?? entries.value[0])?.text)
 
 let frame = 0
@@ -56,7 +56,7 @@ watch(entries, () => nextTick(track))
     <span class="gb-label lead">On this page</span>
     <ol id="gb-toc-list">
       <li v-for="entry in entries" :key="entry.id" :class="`depth-${entry.depth}`">
-        <a :href="`#${entry.id}`" :aria-current="entry.id === current ? 'location' : undefined" @click="open = false"><span v-if="stopNumber(entry.text)" class="stop" :class="{ only: entry.id !== current }"><span>{{ stopNumber(entry.text) }}</span><span class="title">{{ entry.text.replace(/^\d+\.\s+/, '') }}</span></span><template v-else>{{ entry.text }}</template></a>
+        <a :href="`#${entry.id}`" :aria-current="entry.id === current ? 'location' : undefined" @click="open = false"><span v-if="stops[entry.id]" class="stop" :class="{ only: entry.id !== current }"><span>{{ stops[entry.id]!.n }}</span><span class="title">{{ stops[entry.id]!.title }}</span></span><template v-else>{{ entry.text }}</template></a>
       </li>
     </ol>
   </nav>

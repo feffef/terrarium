@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import type { MinimarkTree, Toc } from '@nuxt/content'
 import type { GlassboxPageLink } from '../../utils/subjects'
-import type { GlassboxWalkthroughPart } from '../../utils/walkthrough'
 
 const props = defineProps<{
   page: { path: string, title: string, revisionDate: string, body: MinimarkTree & { toc?: Toc } }
@@ -11,7 +10,7 @@ const props = defineProps<{
 }>()
 
 const subject = computed(() => glassboxSubjectOf(props.page.path))
-const walkthrough = computed(() => props.page.path.startsWith('/walkthroughs/'))
+const walkthrough = computed(() => glassboxWalkthroughOf(props.page.path))
 const current = ref<string>()
 // Frames first, then separate renders so the table of contents sits between the
 // lede and the first section, and each Walkthrough stop can show it is current.
@@ -19,11 +18,11 @@ const parts = computed(() => {
   const { body } = props.page
   const framed = subject.value ? glassboxLessonSections(body.value) : body.value
   const [intro, sections] = glassboxSplitAtFirstSection(framed)
-  const value = (nodes: typeof intro) => ({ ...props.page, body: { ...body, value: nodes } })
+  const withBody = (nodes: typeof intro) => ({ ...props.page, body: { ...body, value: nodes } })
   return {
-    intro: value(intro),
+    intro: withBody(intro),
     sections: (walkthrough.value ? glassboxWalkthroughParts(sections, props.base) : [{ nodes: sections }])
-      .map((part: GlassboxWalkthroughPart) => ({ ...part, value: value(part.nodes) })),
+      .map((part) => ({ ...part, value: withBody(part.nodes) })),
     toc: body.toc?.links ?? [],
   }
 })
@@ -46,7 +45,7 @@ const parts = computed(() => {
     <template v-if="through.length">
       <h2>Walkthroughs through this Lesson</h2>
       <ul class="gb-next">
-        <li v-for="w in through" :key="w.path"><span>Walkthrough</span><NuxtLink :to="`${base}${w.path}`">{{ w.title }}</NuxtLink></li>
+        <li v-for="w in through" :key="w.path"><span>{{ glassboxLessonLabels.walkthrough }}</span><NuxtLink :to="`${base}${w.path}`">{{ w.title }}</NuxtLink></li>
       </ul>
     </template>
     <GlassboxSurround v-if="surround" :base="base" :prev="surround.prev" :next="surround.next" />
@@ -194,6 +193,22 @@ const parts = computed(() => {
 .stop-pane :deep(.gb-stop-links li > a:not(.file)) { color: var(--gb-ink); text-decoration: none; }
 .stop-pane :deep(.gb-stop-links li > a:not(.file))::after { content: ' →'; }
 
+.article :deep(.gb-case) {
+  margin-top: 36px;
+  padding: 24px 28px;
+  border: 1px solid color-mix(in srgb, var(--gb-accent) 25%, transparent);
+  border-radius: 18px;
+  background: var(--gb-tint);
+}
+.article :deep(.gb-case h2) {
+  margin: 0;
+  font: 11px var(--gb-mono);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gb-accent);
+}
+.article :deep(.gb-case p) { margin: 10px 0 0; }
+
 @media (prefers-color-scheme: dark) {
   .stop.current .stop-n { border-color: var(--gb-ink); background: var(--gb-ink); color: var(--gb-bg); }
   .article :deep(.gb-try) {
@@ -207,6 +222,7 @@ const parts = computed(() => {
   .stop:has(+ .stop)::before { top: 32px; left: 15.5px; }
   .stop-n { width: 32px; height: 32px; font-size: 13px; }
   .stop-pane { padding: 18px 16px; }
+  .article :deep(.gb-case) { padding: 18px; }
   .stop-pane :deep(h2) { font-size: 20px; }
   .article :deep(.gb-concept) { padding: 20px 18px; border-radius: 16px; }
   .article :deep(.gb-concept h2) { font-size: 23px; }
