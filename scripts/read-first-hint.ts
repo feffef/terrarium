@@ -64,7 +64,6 @@ export function triggeredDocs(tool: string, command: unknown): ReadFirst[] {
 
 const pointer = (r: ReadFirst) => `Read first: \`${r.doc}\` (CLAUDE.md: "${r.trigger}").`
 
-/** Closes the pointer lines: a late read that clears the call is no Friction. */
 export const LATE_READ_NOTE = 'If the doc shows your call was already right, the late read is not a Friction.'
 
 export const CLOSE_SESSION_HINT = 'PR opened: invoke the `close-session` Skill now for an in-review first log (CLAUDE.md); re-invoking it later is safe.'
