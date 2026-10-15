@@ -47,12 +47,16 @@ findings.
    across a wait of many hours, schedule `mcp__Claude_Code_Remote__send_later`
    check-ins at about 2h, then 6h, then every ~12h (#929).
 4. Before merging, post your verdict as a PR comment, even a clean "merging
-   as-is": the merge must never be the only trace. Use `event=COMMENT` or
+   as-is": the merge must never be the only trace. End it with a line
+   `Reviewed: <sha>` naming the head commit your `code-review` run (or your
+   Skill's own review step) covered; after any later push, review the new head
+   and post a new verdict. Use `event=COMMENT` or
    `add_issue_comment`, never an APPROVE review. APPROVE fails on our own PRs
    and on a fork PR would fake the human merge authority
    [`guest-contributions.md`](./guest-contributions.md) reserves (#301, #853).
 5. Land through `scripts/merge-pr.ts <pr-number>`, the only merge path. It
-   refuses without your step-4 verdict (#1276), and refuses a fork or
+   refuses without your step-4 verdict naming the PR's head (#1276, #1844),
+   and refuses a fork or
    Public-authored PR (ADR-0020), a `guest-pipeline` PR (ADR-0023) and one
    that changes a Human-only path (ADR-0004), each of which a human merges.
    Never call `enable_pr_auto_merge` (#385).

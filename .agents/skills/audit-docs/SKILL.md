@@ -227,7 +227,8 @@ Follow `docs/agents/pr-workflow.md`'s "Closing a scheduled run's PR".
 One commit and PR (the escalation PR below is separate), self-merged on green
 (ADR-0004) like `digest`; its subject ends with the family's name, e.g.
 `audit-docs: 2026-10-14 sweep (docs/research concision family)`; its body lists
-the fixes and any issue filed, and a one-line PR comment records the audit.
+the fixes and any issue filed, and a PR comment records the audit in one line
+plus `Reviewed: <head sha>`, as its step-4 verdict.
 
 **These fixes escalate instead:** any change to a Human-only path (the `paths`
 of `.claude/rules/adr-0004-human-merge.md`; any ADR edit, an Orphan-addition fix
