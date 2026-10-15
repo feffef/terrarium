@@ -23,14 +23,17 @@ that are not Human-only, and this Skill's `decisions.md`. Out of remit: a
 new Tenant, Space or Collection, a new dependency, any Human-only file,
 agent instructions, and editing authored history (published posts,
 session logs, Digests, Midden artifacts). File an out-of-remit finding as
-an issue (step 6). If anything else gets into a PR, leave it open for a
+an issue (step 7). If anything else gets into a PR, leave it open for a
 human (ADR-0003).
 
 ## Today's focus
 
 Each run looks hard at one part of the Platform, so all three visitors see the
 same thing and their findings can agree. A focus given as the Skill's argument
-wins; otherwise take row `$(( ($(date -u +%s)/86400 - $(date -u -d 2026-09-29 +%s)/86400) % 7 ))`:
+wins. Otherwise, through 2026-10-31 (UTC) the focus is `glassbox`: entry
+`/t/glassbox/guide`, note "Stay inside /t/glassbox/guide." Its fixes and feature
+leave the `drafts` Space alone. After that, take row
+`$(( ($(date -u +%s)/86400 - $(date -u -d 2026-09-29 +%s)/86400) % 7 ))`:
 
 | # | Focus | Entry | Note |
 |---|-------|-------|------|
@@ -86,7 +89,7 @@ Merge the three reports into one tally in your scratchpad:
   rework one, human issue comments about one). Read each candidate and
   resolve it on its own tally line that names it first (a PR by `#N` or URL, a
   comment by its URL): a rejected approach or standing preference becomes one
-  new line in `decisions.md` (committed with step 4's PR; say "decisions.md" on
+  new line in `decisions.md` (committed with step 5's PR; say "decisions.md" on
   the tally line); anything else is marked *not a ruling (why)*.
 - **Filters.** Then drop anything [`decisions.md`](decisions.md) rules out,
   anything an open or closed issue/PR already covers (search first; record
@@ -101,12 +104,25 @@ reported finding is in the tally, marked consensus or single; every consensus
 finding is marked *fix*, *dropped (why)*, or *out of remit*; and exactly one
 feature is chosen, with a line on why it beat the others.
 
-## 4. Fix PR
+## 4. Check fit
+
+Visitors judge the site from outside; they can't know why it is built the way it
+is. Dispatch one read-only subagent on `opus` with
+[`refiner-brief.md`](refiner-brief.md) verbatim and the tally's path filled in.
+It checks every *fix* item, every *out of remit* finding and the chosen feature
+against the ADRs, glossaries, repo docs and GitHub issues, and returns each
+one kept, refined (rewritten to fit) or dropped, each with the source it rests
+on. Apply its verdicts to the tally. If it drops the feature, choose the next
+best idea and send it back with `SendMessage`. Done when every item it checked
+carries its verdict and source in the tally and the feature it last saw is kept
+or refined (or no idea is left: then step 6 is skipped).
+
+## 5. Fix PR
 
 Use the session's designated branch (the cloud harness pins one); `claude/visitor-loop-fixes-<YYYY-MM-DD>` is only the fallback. Branch from `origin/main`. Fix every
-consensus finding marked *fix*. Prove each one in the rendered DOM, before and
+consensus finding marked *fix*, in the form step 4 left it. Prove each one in the rendered DOM, before and
 after (`docs/agents/verifying-ui-changes.md`: `probe.ts` to measure, `preview.ts shot` to screenshot; hand-roll a Playwright script only to prove a click those two can't reach, per the doc's recipe). Commit, then run **`/code-review`** before the first
-push, fixed point `origin/main`, with the tally as the spec. **Auto-fix every
+push, fixed point `origin/main`, with the refined tally as the spec. **Auto-fix every
 important finding yourself** — a real bug, a broken documented standard (an
 ADR included), an accessibility or honesty problem — never defer it to a human
 or a follow-up. Re-review and repeat until nothing important remains. Then
@@ -116,27 +132,27 @@ per `docs/agents/pr-workflow.md` ("Closing a scheduled run's PR" and
 has no important finding left unfixed, and the PR is merged — or left open and escalated
 with the reason.
 
-## 5. Feature PR
+## 6. Feature PR
 
-Only after step 4's PR has merged or been escalated, branch from the fresh
-`origin/main`: re-cut the session's designated branch if step 4's PR merged
+Only after step 5's PR has merged or been escalated, branch from the fresh
+`origin/main`: re-cut the session's designated branch if step 5's PR merged
 (`docs/agents/pr-workflow.md`'s restart-after-merge note), else
-`claude/visitor-loop-feature-<YYYY-MM-DD>`. Then build the chosen feature —
+`claude/visitor-loop-feature-<YYYY-MM-DD>`. Then build the refined feature —
 smallest version that a visitor would notice, in the site's existing voice and
 design. Tests where the Tenant already has them.
 Its body states the feature's search result and names any related issue, with a
 closing keyword only per `docs/agents/pr-workflow.md`. Review and land it the
-same way as step 4, with the chosen idea as the spec. Done when the feature is
+same way as step 5, with the refined idea as the spec. Done when the feature is
 visible on the rendered page, the PR body has that search line, the last review has no
 important finding left unfixed, and the PR is merged or escalated.
 
-## 6. File the rest, then close
+## 7. File the rest, then close
 
-For each consensus finding marked *out of remit*, open one issue
+For each *out of remit* finding step 4 kept or refined, open one issue
 (`needs-triage`) unless one already exists. Every unbuilt idea and
 single-visitor finding that survived step 3's filters goes into the session
 log's `ideas` instead: one short line each, a finding paired with a proposed
 fix, readable without this run's context. Done when every *out of remit*
-finding links to an issue and the rest are in `ideas`.
+finding step 4 kept or refined links to an issue and the rest are in `ideas`.
 
 Then invoke `close-session`.
