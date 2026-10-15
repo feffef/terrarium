@@ -1,6 +1,8 @@
 <script setup lang="ts">
-interface TocLink { id: string; text: string; depth: number; children?: TocLink[] }
+import type { TocLink } from '@nuxt/content'
+
 const props = defineProps<{ links: TocLink[] }>()
+const nav = useTemplateRef<HTMLElement>('nav')
 
 const entries = computed(() => props.links.flatMap((link) => [link, ...(link.children ?? [])]))
 const current = ref<string>()
@@ -19,12 +21,21 @@ function track() {
     current.value = currentGlassboxHeading(headings, innerHeight / 3, atEnd)
   })
 }
+// The bar wraps to as many rows as it needs, so jumped-to headings clear its measured height (theme.css).
+let resizes: ResizeObserver | undefined
 onMounted(() => {
   track()
   addEventListener('scroll', track, { passive: true })
   addEventListener('resize', track)
+  const root = nav.value!.closest<HTMLElement>('.gb')
+  // The open mobile panel is not what a heading has to clear once a link closes it.
+  resizes = new ResizeObserver(([entry]) => {
+    if (!open.value) root?.style.setProperty('--gb-toc-h', `${Math.ceil(entry!.borderBoxSize[0]!.blockSize)}px`)
+  })
+  resizes.observe(nav.value!)
 })
 onUnmounted(() => {
+  resizes?.disconnect()
   cancelAnimationFrame(frame)
   removeEventListener('scroll', track)
   removeEventListener('resize', track)
@@ -33,7 +44,7 @@ watch(entries, () => nextTick(track))
 </script>
 
 <template>
-  <nav class="toc" :class="{ open }" aria-label="On this page" @keydown.esc="open = false">
+  <nav ref="nav" class="toc" :class="{ open }" aria-label="On this page" @keydown.esc="open = false">
     <button type="button" class="toggle" :aria-expanded="open" aria-controls="gb-toc-list" @click="open = !open">
       <span class="gb-label">On this page</span>
       <span class="shown">{{ shown }}</span>
@@ -51,7 +62,7 @@ watch(entries, () => nextTick(track))
 <style scoped>
 .toc {
   position: sticky;
-  top: 12px;
+  top: var(--gb-toc-top);
   z-index: 5;
   display: flex;
   align-items: center;
@@ -60,11 +71,14 @@ watch(entries, () => nextTick(track))
   padding: 6px 8px 6px 16px;
   border: 1px solid var(--gb-pane-edge);
   border-radius: 14px;
-  background: color-mix(in srgb, var(--gb-bg) 86%, transparent);
+  background: color-mix(in srgb, var(--gb-bg) 80%, transparent);
   box-shadow: var(--gb-pane-shadow);
   backdrop-filter: blur(16px);
   font-size: 14.5px;
   line-height: 1.3;
+}
+@supports not (backdrop-filter: blur(1px)) {
+  .toc { background: color-mix(in srgb, var(--gb-bg) 92%, transparent); }
 }
 .toggle { display: none; }
 .lead { flex: none; white-space: nowrap; }
@@ -84,9 +98,9 @@ a:hover { background: var(--gb-tint); }
 .depth-3 + .depth-3 a { padding-left: 4px; }
 a[aria-current] { background: var(--gb-solid); color: var(--gb-solid-ink); }
 
-/* Below 1024px: a collapsed pill under the sticky header (.gb-header, theme.css). */
+/* Below 1024px: a collapsed pill under the sticky header. */
 @media (max-width: 1023.98px) {
-  .toc { top: 76px; display: block; margin: 20px 0; padding: 0; border-radius: 12px; }
+  .toc { display: block; margin: 20px 0; padding: 0; border-radius: 12px; }
   .lead { display: none; }
   .toggle {
     display: flex;

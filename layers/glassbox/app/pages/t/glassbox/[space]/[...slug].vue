@@ -60,7 +60,7 @@ useSeoMeta({ description: () => page.value?.description })
     <div class="gb-main">
       <header class="gb-header">
         <GlassboxBrand :to="base" />
-        <GlassboxUpdated v-if="page" class="in-header" :date="page.revisionDate" />
+        <GlassboxUpdated v-if="page" placement="header" :date="page.revisionDate" />
         <button
           ref="menuButton"
           type="button"
@@ -78,7 +78,7 @@ useSeoMeta({ description: () => page.value?.description })
         <GlassboxToc v-if="parts.toc.length" :links="parts.toc" />
         <ContentRenderer class="gb-prose" :value="parts.sections" />
         <GlassboxSurround v-if="data?.surround" :base="base" :prev="data.surround.prev" :next="data.surround.next" />
-        <GlassboxUpdated class="at-end" :date="page.revisionDate" />
+        <GlassboxUpdated placement="end" :date="page.revisionDate" />
       </article>
 
       <div v-else class="gb-column">

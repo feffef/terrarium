@@ -27,11 +27,6 @@ export function glassboxSplitAtFirstSection<T extends MinimarkNode>(nodes: T[]):
   return i < 0 ? [nodes, []] : [nodes.slice(0, i), nodes.slice(i)]
 }
 
-/** "14 Oct 2026" from a `revisionDate`. */
-export function formatGlassboxDate(date: string): string {
-  return new Date(`${date}T00:00:00Z`).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' })
-}
-
 /** The heading being read: the last one whose top has passed `line`, or the
  *  last of all once the page is scrolled to its end. */
 export function currentGlassboxHeading(headings: { id: string; top: number }[], line: number, atEnd: boolean): string | undefined {

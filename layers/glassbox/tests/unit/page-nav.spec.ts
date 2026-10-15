@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { currentGlassboxHeading, formatGlassboxDate, glassboxSplitAtFirstSection, glassboxSurround } from '../../app/utils/page-nav.ts'
+import { currentGlassboxHeading, glassboxSplitAtFirstSection, glassboxSurround } from '../../app/utils/page-nav.ts'
 
 describe('glassboxSurround', () => {
   // Stem order: Subject folders sort alphabetically, so the Subject map has to reorder them.
@@ -54,13 +54,6 @@ describe('glassboxSplitAtFirstSection', () => {
 
   it('keeps everything in the intro when there is no h2', () => {
     expect(glassboxSplitAtFirstSection([['p', {}, 'Only'], 'text'])).toEqual([[['p', {}, 'Only'], 'text'], []])
-  })
-})
-
-describe('formatGlassboxDate', () => {
-  it('reads like "14 Oct 2026"', () => {
-    expect(formatGlassboxDate('2026-10-14')).toBe('14 Oct 2026')
-    expect(formatGlassboxDate('2026-01-01')).toBe('1 Jan 2026')
   })
 })
 
