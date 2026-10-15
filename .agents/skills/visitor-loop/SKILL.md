@@ -149,9 +149,9 @@ important finding left unfixed, and the PR is merged or escalated.
 
 For each *out of remit* finding step 4 kept or refined, open one issue
 (`needs-triage`) unless one already exists. Every unbuilt idea and
-single-visitor finding that survived steps 3 and 4 goes into the session
+single-visitor finding that survived step 3's filters goes into the session
 log's `ideas` instead: one short line each, a finding paired with a proposed
 fix, readable without this run's context. Done when every *out of remit*
-finding links to an issue and the rest are in `ideas`.
+finding step 4 kept or refined links to an issue and the rest are in `ideas`.
 
 Then invoke `close-session`.

@@ -19,14 +19,16 @@ Then give each item one verdict:
 
 - **keep**: it fits as proposed;
 - **refine**: it fits only in another form; give the rewritten proposal, the
-  smallest one that still answers what the visitors noticed;
+  smallest one that still answers what the visitors noticed. A refined fix or
+  feature stays inside the Remit in `.agents/skills/visitor-loop/SKILL.md`;
+  one that can't becomes *out of remit*;
 - **drop**: it contradicts a decision or the intent, or an issue or PR
   already settles it.
 
 Every verdict names its source (ADR number, file and heading, `decisions.md`
 line, or issue/PR number) and says in one line what that source decides. A
-*keep* with no binding source says what you searched. Change nothing: modify
-no file and post nothing to GitHub.
+*keep* with no binding source says what you searched. Your only output is the
+report: modify no file and post nothing to GitHub.
 
 Report one line per item: `item | verdict | source | reason | refined
 proposal (refine only)`. Then, for each rule and doc you loaded or read: its
