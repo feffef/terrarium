@@ -10,6 +10,9 @@ Run `git fetch origin main`. Set `revision` to `origin/main`'s commit and
 `revisionDate` to the date part of `git show -s --format=%cI <revision>`. Read
 every file you cite as it is at that commit (`git show <revision>:<path>`): the
 page describes `main` at `revision`, and work not yet merged can't be cited.
+If the integration branch already changes a file you cite, word the page so it
+stays true after that change lands (diff the file between `revision` and the
+integration tip).
 Frontmatter holds `title`, `description`, `revision` and `revisionDate` only;
 the page draws `title` as its heading, so the body has no h1.
 
@@ -20,10 +23,16 @@ the page draws `title` as its heading, so the body has no h1.
   (a content page, or `/t/journal/<space>/{skills,frictions,ideas}`). A path
   holding `[` can't go in `:file[…]`: cite its folder. An Excerpt's `lines`
   starts on its first line and ends on its last; with two or more gaps, give
-  one range per run (Excerpt in the glossary).
+  one range per run (Excerpt in the glossary). Don't Excerpt a Markdown table
+  wider than about 80 characters: Excerpt the prose next to it, or link the
+  table.
 - **Don't paraphrase an ADR.** In Terrarium and What to watch for don't retell
   an ADR's Scope or Why either: show the files and link the ADR.
 - **Link only pages that exist**, and promise none.
+- **Mechanism, not motive.** *In Terrarium* says what the code does, not why;
+  a design "because" belongs to the ADR link.
+- **Test the lede.** Check its summary claim against the edge cases the page
+  itself mentions.
 - **Verify each official-docs URL** by fetching it and checking it says what
   you cite, and re-read the docs section that every *What to watch for* and
   *Try it* line depends on. If the network blocks the fetch, read the page's
@@ -37,6 +46,9 @@ the page draws `title` as its heading, so the body has no h1.
   *What to watch for* against the other Lessons in its Subject and the ADRs it
   cites; link a point one of them makes instead.
 - **In Terrarium gives no reasons:** no "so …" or "for …" clause saying why.
+- **Name the command.** A watch item about a stale `.nuxt/`, the type check or
+  a restart names the command it applies to, after checking what the repo's
+  `pnpm` scripts already run (`package.json`).
 - **Terms.** Wrap a word the reader may not know in `:term[…]`. For each id
   with no `layers/glassbox/content/guide/terms/<id>.yml`, add one: `term`, a
   `definition` in Glass Box's own words, and `source`, the glossary that
