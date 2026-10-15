@@ -8,8 +8,8 @@ permission prompt on that file stays.
 The idea came from an unattended run whose subagent stalled for hours on the
 prompt while wiring a guard. Pre-approving the edit looks like the fix, but:
 
-- **It would not help where the stall happened.** A cloud session drops the
-  whole `permissions.allow` array (`docs/agents/environment-caveats.md`,
+- **It would not help where the stall happened.** A cloud session can drop
+  `permissions.allow` (see `docs/agents/environment-caveats.md`,
   issue #288), and scheduled runs are cloud sessions.
 - **It would let an agent disarm its own guards.** `settings.json` wires the
   `PreToolUse` guards. An agent free to edit it can switch them off before any
