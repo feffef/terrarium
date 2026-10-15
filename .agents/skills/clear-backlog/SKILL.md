@@ -87,12 +87,12 @@ implies (`docs/agents/triage-labels.md`, `docs/agents/issue-tracker.md`).
 ## 3. Build and review
 
 Run `clear-backlog-build` with `{ session, branches: [...] }`, one entry
-per branch: `name`, `issues`, `brief`, the agreed `picks` (only that branch's own, never the whole owner
-reply), `model: "sonnet"`
-for a change under the size ceiling the brief sets (`dispatch-subagents` §3), and
-`cherryPick` when a closed, unmerged PR already implements the agreed pick.
-Running it satisfies the `dispatch-subagents` trigger: it isolates, briefs and
-reviews its agents itself. Each branch is built in its own worktree off `origin/main`, then reviewed
+per branch: `name`, `issues`, `brief`, the agreed `picks` (only that branch's
+own, never the whole owner reply), `model: "sonnet"` for a change under the
+size ceiling the brief sets (`dispatch-subagents` §3), and `cherryPick` when a
+closed, unmerged PR already implements the agreed pick. Running it satisfies
+the `dispatch-subagents` trigger: it isolates, briefs and reviews its agents
+itself. Each branch is built in its own worktree off `origin/main`, then reviewed
 on both `code-review` axes and fixed until only judgement calls remain. Its
 review rounds are the review before the first push (`pr-workflow.md`).
 
