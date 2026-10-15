@@ -6,7 +6,7 @@
 # requires rebuilding or redeploying this image. The image only changes when the
 # base tooling here does.
 #
-# node:22 (>= 22.13) is required for @nuxt/content's native `node:sqlite`
+# node:22 must meet package.json engines for @nuxt/content's native `node:sqlite`
 # connector (see nuxt.config.ts). pnpm comes from corepack, pinned by the repo's
 # `packageManager` field.
 
