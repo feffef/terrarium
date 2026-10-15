@@ -23,6 +23,10 @@ the page draws `title` as its heading, so the body has no h1.
 - **Verify each official-docs URL** by fetching it and checking it says what
   you cite. If the network blocks the fetch, confirm the exact URL and title in
   web search results and say so in the PR. Zod links go to v3.zod.dev.
+- **A second tool gets its own link** at its first mention, even though *The
+  concept* ends on one Full reference.
+- **Don't repeat a sibling.** Check a Lesson's *What to watch for* against the
+  other Lessons in its Subject; link a point one of them makes instead.
 - **Terms.** Wrap a word the reader may not know in `:term[…]`. For each id
   with no `layers/glassbox/content/guide/terms/<id>.yml`, add one: `term`, a
   `definition` in Glass Box's own words, and `source`, the glossary that
