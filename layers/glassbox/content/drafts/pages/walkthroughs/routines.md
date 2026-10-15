@@ -41,7 +41,7 @@ A Routine, set up in a claude.ai account and kept out of the repo, starts a clou
 
 ## 5. visitor-loop: fresh eyes on the site
 
-`visitor-loop` serves a production preview of the site and sends blind visitor subagents, each on a different model, through it with no knowledge of the repo. A read-only subagent then checks each finding and the chosen feature against the ADRs, glossaries and issues, and keeps, refines or drops each. The run fixes the problems at least two visitors hit on their own, in one PR, and builds the one feature idea it judges best in a second. Both stay inside existing Tenants and the app files an agent may merge. A finding outside that becomes an issue, and the rest become ideas in its session log.
+`visitor-loop` serves a production preview of the site and sends blind visitor subagents, each on a different model, through it with no knowledge of the repo, then a read-only subagent keeps, refines or drops each finding and the chosen feature against the ADRs, glossaries and issues. The run fixes the problems at least two visitors hit on their own, in one PR, and builds the one feature idea it judges best in a second. Both stay inside existing Tenants and the app files an agent may merge. A finding outside that becomes an issue, and the rest become ideas in its session log.
 
 ::stop-links
 [Subagents and worktrees](/t/glassbox/guide/claude-code/subagents-worktrees) · [The engineering loop](/t/glassbox/drafts/skill-pack/engineering-loop) · [Unit and e2e tests: each Tenant tests itself](/t/glassbox/drafts/testing/unit-and-e2e) · :file[.agents/skills/visitor-loop/SKILL.md] · :file[.agents/skills/visitor-loop/decisions.md]
