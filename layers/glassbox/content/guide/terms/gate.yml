@@ -1,0 +1,3 @@
+term: Gate
+definition: The fixed set of machine checks every change must pass before it merges. It runs locally and in CI, and the CI run decides.
+source: GLOSSARY.md

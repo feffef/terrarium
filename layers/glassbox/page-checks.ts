@@ -4,7 +4,7 @@
 import { execFileSync } from 'node:child_process'
 import { globSync, readdirSync } from 'node:fs'
 import { join } from 'node:path'
-import { splitFrontmatter } from '../../scripts/validate-content.ts'
+import { parseDocument, splitFrontmatter } from '../../scripts/validate-content.ts'
 import { root } from '../../shared/expand.ts'
 import { glassboxLessonIds, glassboxLessonLabels } from './app/utils/lesson.ts'
 import { glassboxSubjects } from './app/utils/subjects.ts'
@@ -191,6 +191,12 @@ export function glassboxPageProblems(file: string, source: string, site: Glassbo
   for (const id of refs.terms) if (!site.terms.includes(id)) problems.push(`:term ${id} has no entry in terms`)
   for (const [link] of prose.matchAll(/github\.com\/feffef\/terrarium\/(?:blob|tree)\/\S*/g)) problems.push(`hand-written link ${link}: use :file`)
   return problems
+}
+
+/** Every entry in the `terms` Collection, by id. */
+export function glassboxTerms(projectRoot = root): Record<string, { source?: string }> {
+  const dir = join(projectRoot, 'layers/glassbox/content/guide/terms')
+  return Object.fromEntries(globSync('**/*.yml', { cwd: dir }).map((f) => [f.replace(/\.yml$/, ''), parseDocument(join(dir, f)) as { source?: string }]))
 }
 
 export function glassboxTermProblems(terms: Record<string, { source?: string }>, exists: (path: string) => boolean): string[] {

@@ -1,9 +1,8 @@
 import { existsSync, globSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
-import { parseDocument } from '../../../../scripts/validate-content.ts'
 import { root } from '../../../../shared/expand.ts'
-import { glassboxJournalRoutes, glassboxPageProblems, glassboxTermProblems, repoGit, type GlassboxGit, type GlassboxSite } from '../../page-checks.ts'
+import { glassboxJournalRoutes, glassboxPageProblems, glassboxTermProblems, glassboxTerms, repoGit, type GlassboxGit, type GlassboxSite } from '../../page-checks.ts'
 
 const rev = 'a'.repeat(40)
 const expandTs = [
@@ -173,8 +172,7 @@ describe('glassboxTermProblems', () => {
 describe('every Glass Box page matches the code at its revision', () => {
   const content = join(root, 'layers/glassbox/content/guide')
   const pages = globSync('**/*.md', { cwd: join(content, 'pages') }).sort()
-  const terms = Object.fromEntries(globSync('**/*.yml', { cwd: join(content, 'terms') })
-    .map((f) => [f.replace(/\.yml$/, ''), parseDocument(join(content, 'terms', f)) as { source?: string }]))
+  const terms = glassboxTerms()
   const realSite: GlassboxSite = {
     pages,
     journal: glassboxJournalRoutes(),

@@ -1,0 +1,3 @@
+term: Heavy
+definition: The slow part of the Gate, its tests and build, which may be skipped only when every changed path is Inert.
+source: GLOSSARY.md
