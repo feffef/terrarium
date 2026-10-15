@@ -7,6 +7,7 @@ const props = defineProps<{
   base: string
   surround: ReturnType<typeof glassboxSurround>
   through: GlassboxPageLink[]
+  draft: boolean
 }>()
 
 const subject = computed(() => glassboxSubjectOf(props.page.path))
@@ -31,6 +32,7 @@ const parts = computed(() => {
 
 <template>
   <article class="article">
+    <p v-if="draft" class="draft">Draft: this page failed the guide's bar on its first attempt.</p>
     <p v-if="subject" class="chips"><span class="chip">{{ subject.name }}</span><span>Lesson</span></p>
     <p v-else-if="walkthrough" class="chips"><span class="chip">Walkthrough</span></p>
     <h1 :class="{ lesson: subject || walkthrough }">{{ page.title }}</h1>
@@ -66,6 +68,15 @@ const parts = computed(() => {
   color: var(--gb-ink);
 }
 .article h1.lesson { margin-top: 16px; }
+.draft {
+  margin: 40px 0 0;
+  padding: 10px 16px;
+  border: 1px dashed var(--gb-pane-edge);
+  border-radius: 12px;
+  font-size: 14.5px;
+  color: var(--gb-muted);
+}
+.draft + .chips { margin-top: 16px; }
 
 .article :deep(.gb-skip) { font-size: 15px; color: var(--gb-muted); }
 .article :deep(.gb-skip strong) { color: var(--gb-ink); font-weight: 600; }

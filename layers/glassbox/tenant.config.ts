@@ -5,7 +5,7 @@ import { defineTenant } from '../../shared/manifest'
 
 export default defineTenant({
   name: 'glassbox',
-  spaces: ['guide'],
+  spaces: ['guide', 'drafts'],
   collections: {
     pages: {
       type: 'page',

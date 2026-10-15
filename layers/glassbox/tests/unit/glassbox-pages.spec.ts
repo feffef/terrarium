@@ -2,7 +2,8 @@ import { existsSync, globSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { root } from '../../../../shared/expand.ts'
-import { glassboxCites, glassboxJournalRoutes, glassboxPageProblems, glassboxTermProblems, glassboxTerms, repoGit, type GlassboxGit, type GlassboxSite } from '../../page-checks.ts'
+import glassbox from '../../tenant.config.ts'
+import { glassboxCites, glassboxJournalRoutes, glassboxPageProblems, glassboxSitePath, glassboxTermProblems, glassboxTerms, repoGit, type GlassboxGit, type GlassboxSite } from '../../page-checks.ts'
 
 const rev = 'a'.repeat(40)
 const expandTs = [
@@ -29,7 +30,7 @@ const fakeGit: GlassboxGit = {
   read: (r, path) => (r === rev ? files[path] : undefined),
 }
 const site: GlassboxSite = {
-  pages: ['index.md', 'nuxt-content/01.collections.md', 'terrarium-practice/01.gate.md', 'walkthroughs/opening-a-page.md'],
+  pages: ['/t/glassbox/guide', '/t/glassbox/guide/nuxt-content/collections', '/t/glassbox/guide/terrarium-practice/gate', '/t/glassbox/guide/walkthroughs/opening-a-page', '/t/glassbox/drafts/zod/timestamps'],
   journal: ['/t/journal/current', '/t/journal/current/how-it-works', '/t/journal/current/skills'],
   terms: ['collection'],
   cites: { '/t/glassbox/guide/nuxt-content/collections': ['shared/expand.ts'] },
@@ -108,7 +109,7 @@ It reaches the router.
 - [Home](/t/glassbox/guide)
 `
 
-const problemsOf = (file: string, source: string) => glassboxPageProblems(file, source, site, fakeGit)
+const problemsOf = (file: string, source: string, space = 'guide') => glassboxPageProblems(file, source, site, fakeGit, space)
 
 describe('glassboxPageProblems on fixture pages', () => {
   it('passes a good Lesson, Terrarium practice Lesson, Walkthrough and landing page', () => {
@@ -189,6 +190,13 @@ describe('glassboxPageProblems on fixture pages', () => {
     expect(problemsOf(file, lesson).join('\n')).toContain(message)
   })
 
+  it('fails a guide page linking into drafts, and passes a draft linking either way', () => {
+    const toDraft = lesson.replace(gateItem, `${gateItem}- [Timestamps](/t/glassbox/drafts/zod/timestamps)\n`)
+    expect(problemsOf('nuxt-content/01.collections.md', toDraft)).toEqual(['guide page links outside the guide: /t/glassbox/drafts/zod/timestamps'])
+    expect(problemsOf('nuxt-content/01.collections.md', toDraft, 'drafts')).toEqual([])
+    expect(problemsOf('nuxt-content/01.collections.md', toDraft.replace('zod/timestamps', 'zod/gone'), 'drafts')).toEqual(['link /t/glassbox/drafts/zod/gone resolves to no page'])
+  })
+
   it('passes a Where next of 5 pages ending in one Journal page', () => {
     expect(problemsOf('nuxt-content/01.collections.md', `${lesson}${gateItem.repeat(3)}${journalItem}`)).toEqual([])
   })
@@ -218,26 +226,34 @@ describe('glassboxTermProblems', () => {
 })
 
 describe('every Glass Box page matches the code at its revision', () => {
-  const content = join(root, 'layers/glassbox/content/guide')
-  const pages = globSync('**/*.md', { cwd: join(content, 'pages') }).sort()
+  const content = join(root, 'layers/glassbox/content')
+  const spaces = glassbox.spaces
+  const read = (space: string, file: string) => readFileSync(join(content, space, 'pages', file), 'utf8')
+  const files = Object.fromEntries(spaces.map((space) => [space, globSync('**/*.md', { cwd: join(content, space, 'pages') }).sort()]))
+  const pages = spaces.flatMap((space) => files[space]!.map((file) => ({ space, file })))
   const terms = glassboxTerms()
   const realSite: GlassboxSite = {
-    pages,
+    pages: pages.map(({ space, file }) => glassboxSitePath(space, file)),
     journal: glassboxJournalRoutes(),
     terms: Object.keys(terms),
-    cites: glassboxCites(Object.fromEntries(pages.map((file) => [file, readFileSync(join(content, 'pages', file), 'utf8')]))),
+    cites: Object.assign({}, ...spaces.map((space) => glassboxCites(Object.fromEntries(files[space]!.map((file) => [file, read(space, file)])), space))),
   }
 
   it('reaches Journal content pages and the Journal\'s own Vue routes', () => {
     expect(realSite.journal).toEqual(expect.arrayContaining(['/t/journal/current', '/t/journal/current/how-it-works', '/t/journal/archived/skills']))
   })
 
-  it('finds the landing page (canary: the walk must not match nothing)', () => {
-    expect(pages).toContain('index.md')
+  it('finds the landing page and a draft (canary: the walk must not match nothing)', () => {
+    expect(files.guide).toContain('index.md')
+    expect(files.drafts!.length).toBeGreaterThan(0)
   })
 
-  it.each(pages)('%s', (file) => {
-    expect(glassboxPageProblems(file, readFileSync(join(content, 'pages', file), 'utf8'), realSite, repoGit)).toEqual([])
+  it.each(pages.map(({ space, file }) => [`${space}/${file}`, space, file]))('%s', (_name, space, file) => {
+    expect(glassboxPageProblems(file, read(space, file), realSite, repoGit, space)).toEqual([])
+  })
+
+  it('reads the drafts Space\'s terms through its link to the guide\'s', () => {
+    expect(globSync('*.yml', { cwd: join(content, 'drafts/terms') }).sort()).toEqual(globSync('*.yml', { cwd: join(content, 'guide/terms') }).sort())
   })
 
   it('every term source exists', () => {

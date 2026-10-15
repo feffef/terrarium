@@ -40,7 +40,7 @@ export const repoGit: GlassboxGit = {
 }
 
 export interface GlassboxSite {
-  /** Relative to `layers/glassbox/content/guide/pages/`. */
+  /** Every page's site path, in every Space, as `glassboxSitePath` gives them. */
   pages: string[]
   /** Site paths, as `glassboxJournalRoutes` gives them. */
   journal: string[]
@@ -58,10 +58,13 @@ function contentRoute(file: string) {
 }
 const sitePath = (base: string, file: string) => (contentRoute(file) ? `${base}/${contentRoute(file)}` : base)
 
-/** The repo paths each page cites, by site path, from its source by file. */
-export function glassboxCites(sources: Record<string, string>): Record<string, string[]> {
+/** A Glass Box page's site path, from its Space and its file in that Space's `pages/`. */
+export const glassboxSitePath = (space: string, file: string) => sitePath(`/t/glassbox/${space}`, file)
+
+/** The repo paths each page cites, by site path, from its source by file in one Space. */
+export function glassboxCites(sources: Record<string, string>, space: string): Record<string, string[]> {
   return Object.fromEntries(Object.entries(sources).map(([file, source]) =>
-    [sitePath('/t/glassbox/guide', file), glassboxPageRefs(splitFrontmatter(source).body).files.map((ref) => ref.path)]))
+    [glassboxSitePath(space, file), glassboxPageRefs(splitFrontmatter(source).body).files.map((ref) => ref.path)]))
 }
 
 /** Every Journal page a link may reach: its content pages and its own Vue routes, in each Space. */
@@ -233,7 +236,8 @@ function nextProblems(prose: string): string[] {
   return problems
 }
 
-export function glassboxPageProblems(file: string, source: string, site: GlassboxSite, git: GlassboxGit): string[] {
+/** `file` is relative to its Space's `pages/`. */
+export function glassboxPageProblems(file: string, source: string, site: GlassboxSite, git: GlassboxGit, space: string): string[] {
   const { frontmatter, body } = splitFrontmatter(source)
   const { prose } = readBody(body)
   const refs = glassboxPageRefs(body)
@@ -247,11 +251,14 @@ export function glassboxPageProblems(file: string, source: string, site: Glassbo
   if (typeof revision === 'string') problems.push(...gitProblems(revision, revisionDate, refs.files, prose, git))
   else problems.push('no revision')
 
-  const pages = new Set(site.pages.map((p) => sitePath('/t/glassbox/guide', p)))
+  const pages = new Set(site.pages)
   const journal = new Set(site.journal)
-  for (const [, link] of prose.matchAll(/\]\((\/t\/(?:glassbox\/guide|journal)(?:\/[^)\s#?]*)?)/g)) {
+  const guide = glassboxSitePath('guide', 'index.md')
+  for (const [, link] of prose.matchAll(/\]\((\/t\/(?:glassbox\/[a-z0-9]+|journal)(?:\/[^)\s#?]*)?)/g)) {
     const path = link!.replace(/\/$/, '')
-    if (path.startsWith('/t/glassbox/') ? !pages.has(path) : !journal.has(path)) problems.push(`link ${link} resolves to no page`)
+    // The guide stands alone; drafts may lean on it (GLOSSARY.md, Two Spaces).
+    if (space === 'guide' && path.startsWith('/t/glassbox/') && path !== guide && !path.startsWith(`${guide}/`)) problems.push(`guide page links outside the guide: ${link}`)
+    else if (path.startsWith('/t/glassbox/') ? !pages.has(path) : !journal.has(path)) problems.push(`link ${link} resolves to no page`)
   }
   // With one range, Excerpt.vue numbers only the runs that touch its ends.
   for (const ref of refs.files) {

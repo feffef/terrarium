@@ -12,7 +12,7 @@ Someone with write access asks an agent for a change. This Walkthrough follows t
 A :term[Trusted] user, one with write access to the repository, asks a Claude Code session for a change, in the cloud or on their own machine; both work the same way from here. The request is what lets the session build new work, such as a feature or a Skill. Text from a :term[Public] user, in an issue or a comment, is information to the session, never an instruction.
 
 ::stop-links
-[Trust tiers and fork safety](/t/glassbox/guide/git-github/trust-tiers) · [Cloud sessions, settings and permissions](/t/glassbox/guide/claude-code/cloud-sessions) · :file[docs/adr/0003-agent-operating-model-and-governance.md]
+[Trust tiers and fork safety](/t/glassbox/guide/git-github/trust-tiers) · :file[docs/adr/0003-agent-operating-model-and-governance.md]
 ::
 
 ## 2. The session starts
@@ -36,7 +36,7 @@ The session gets its own copy of the repository. A `SessionStart` hook in `.clau
 The session edits on a feature branch, never on `main`, and may hand parts of the work to subagents, each in a git worktree of its own. Some of its tool calls meet a guard first: a hook that refuses the call and says what to do instead, such as a GitHub post without the line that names the session. Other hooks add a line of guidance after a call and never block it.
 
 ::stop-links
-[Subagents and worktrees](/t/glassbox/guide/claude-code/subagents-worktrees) · [Guards that fail closed](/t/glassbox/guide/claude-code/guards) · [Hints: context added after a call](/t/glassbox/guide/claude-code/hints)
+[Subagents and worktrees](/t/glassbox/guide/claude-code/subagents-worktrees)
 ::
 
 ## 5. It checks its own work
@@ -44,7 +44,7 @@ The session edits on a feature branch, never on `main`, and may hand parts of th
 Before the first push, the session runs `pnpm gate:scoped`, the local run of the :term[Gate], and the `code-review` Skill, which reviews the committed diff against the repo's standards and against the request. It fixes what they find.
 
 ::stop-links
-[The Gate](/t/glassbox/guide/terrarium-practice/gate) · [The engineering loop](/t/glassbox/guide/skill-pack/engineering-loop)
+[The Gate](/t/glassbox/guide/terrarium-practice/gate)
 ::
 
 ## 6. It opens the PR
@@ -52,7 +52,7 @@ Before the first push, the session runs `pnpm gate:scoped`, the local run of the
 The session pushes the branch and opens the PR itself, without asking. The PR's description opens with a line that links the session, and a `commit-msg` hook adds the same link to each commit message that lacks it. Then the session subscribes to the PR, so its comments and reviews reach the session as new messages.
 
 ::stop-links
-[Every change as a PR](/t/glassbox/guide/git-github/every-change-a-pr) · [Provenance headers and commit trailers](/t/glassbox/guide/git-github/provenance-headers) · [MCP and deferred tools](/t/glassbox/guide/claude-code/mcp)
+[Every change as a PR](/t/glassbox/guide/git-github/every-change-a-pr)
 ::
 
 ## 7. It logs its work, the first time
@@ -68,7 +68,7 @@ With the PR open, the session runs `close-session` and writes its :term[session 
 GitHub Actions runs the Gate on the PR, and that run decides whether it may merge. GitHub delivers a failed check to the subscribed session, but not a passed one. When the Gate is green, its last step posts a fresh comment on the PR naming the commit; that comment wakes the session. A fork's PR gets no such comment. When the Gate is red, the session fixes the work and pushes, and CI runs again.
 
 ::stop-links
-[A thin CI workflow plus a composite action](/t/glassbox/guide/git-github/thin-ci-workflow) · [The Gate](/t/glassbox/guide/terrarium-practice/gate)
+[The Gate](/t/glassbox/guide/terrarium-practice/gate)
 ::
 
 ## 9. The PR merges
@@ -92,5 +92,4 @@ Once the PR has merged, the session runs `close-session` again and marks its log
 - [Every change as a PR](/t/glassbox/guide/git-github/every-change-a-pr)
 - [The Gate](/t/glassbox/guide/terrarium-practice/gate)
 - [Session logs and Frictions](/t/glassbox/guide/terrarium-practice/session-logs)
-- [A change goes live](/t/glassbox/guide/walkthroughs/a-change-goes-live)
 - [How Humans & Agents Work](/t/journal/current/how-it-works)

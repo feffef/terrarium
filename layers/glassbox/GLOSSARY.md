@@ -31,8 +31,11 @@ Terrarium applies them without reading the source.
   date in `revisionDate`), so it reads like a dated edition.
 - **A reference, not a course.** No global reading order: newcomers start at the
   "Opening a page" Walkthrough, experts use the Subject directory.
-- **One Space, `guide`**, at `/t/glassbox/guide`; `/t/glassbox` redirects there.
-  Walkthroughs sit in `walkthroughs/`. A two-digit filename prefix
+- **Two Spaces.** `guide`, at `/t/glassbox/guide`, holds only polished pages
+  central to Terrarium; `/t/glassbox` redirects there. `drafts` holds the pages
+  that failed the guide's bar on their first attempt; each may be improved and
+  moved to the guide. A guide page never links to a draft; a draft may link to
+  the guide. Walkthroughs sit in `walkthroughs/`. A two-digit filename prefix
   orders Lessons inside a folder; Subject order and names come from
   `glassboxSubjects` in `app/utils/subjects.ts`.
 - **Soft launch.** Online, but nothing on the Platform links to it yet, and
