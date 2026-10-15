@@ -1,6 +1,8 @@
 <script setup lang="ts">
+import { glassboxPageTerms } from '../../../../../page-refs.ts'
+
 const route = useRoute()
-const { path, pagesKey, space } = useSpace('glassbox')
+const { path, pagesKey, collections, space } = useSpace('glassbox')
 const base = `/t/glassbox/${space}`
 
 // The sidebar needs titles and paths only: they travel in the payload (ADR-0028).
@@ -9,12 +11,23 @@ const { data, status, error } = await useAsyncData(route.path, async () => {
     queryCollection(pagesKey).path(path).first(),
     queryCollection(pagesKey).order('stem', 'ASC').select('path', 'title').all(),
   ])
-  return { page, subjects: glassboxDirectory(pages), walkthroughs: glassboxWalkthroughs(pages), surround: glassboxSurround(pages, path) }
+  const termIds = glassboxPageTerms(page?.body)
+  const terms = termIds.length
+    ? await queryCollection(collections.terms).where('stem', 'IN', termIds).select('stem', 'definition', 'source').all()
+    : []
+  return {
+    page,
+    terms: Object.fromEntries(terms.map(({ stem, ...t }) => [stem, t])),
+    subjects: glassboxDirectory(pages),
+    walkthroughs: glassboxWalkthroughs(pages),
+    surround: glassboxSurround(pages, path),
+  }
 })
 
 const page = computed(() => data.value?.page ?? null)
 if (!page.value && !error.value) setResponseStatus(404)
 provide(glassboxRevisionKey, computed(() => page.value ?? undefined))
+provide(glassboxTermsKey, computed(() => data.value?.terms ?? {}))
 
 const menuOpen = ref(false)
 const menuButton = useTemplateRef<HTMLButtonElement>('menuButton')
