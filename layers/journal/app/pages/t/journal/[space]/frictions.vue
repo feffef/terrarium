@@ -60,7 +60,7 @@ useSeoMeta({ title: () => `${PAGE_TITLE} · journal/${space}` })
           <li v-for="e in sec.entries" :id="`cluster-${e.name}`" :key="e.name">
             <details>
               <summary>
-                <span class="count" :aria-label="`${e.count} sessions`">{{ e.count }}<small aria-hidden="true">{{ e.count === 1 ? 'session' : 'sessions' }}</small></span>
+                <span class="count">{{ e.count }}<small>{{ e.count === 1 ? 'session' : 'sessions' }}</small></span>
                 <span class="cause">{{ e.cause }}</span>
                 <span class="pills">
                   <span class="pill sev" :class="e.worst" :title="`Worst severity: ${e.worst}`">{{ e.worst }}</span>
@@ -162,7 +162,7 @@ summary:focus-visible { outline: 2px solid var(--jd-accent); outline-offset: 2px
 .occ li { margin: 0; }
 .jd-prose .occ a { color: var(--jd-ink); text-decoration: none; }
 .jd-prose .occ a:hover { color: var(--jd-accent); text-decoration: underline; }
-.occ-goal { margin-left: 0.5rem; font-family: var(--jd-serif, inherit); font-size: 0.8rem; color: var(--jd-muted); }
+.occ-goal { margin-left: 0.5rem; font-family: var(--jd-serif); font-size: 0.8rem; color: var(--jd-muted); }
 .occ-sev { color: var(--jd-faint); margin-left: 0.4rem; }
 @media (max-width: 560px) {
   .ref-text, .occ { margin-left: 0; }

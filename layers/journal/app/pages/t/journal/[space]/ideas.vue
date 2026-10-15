@@ -19,6 +19,13 @@ const notes = computed(() => sessionNotes(data.value ?? []))
 const NOTES_VISIBLE = 20
 const showAllIdeas = ref(false)
 const showAllLearnings = ref(false)
+// The button leaves the DOM once clicked; hand focus to the first note it revealed.
+async function revealNotes(list: 'ideas' | 'learnings') {
+  if (list === 'ideas') showAllIdeas.value = true
+  else showAllLearnings.value = true
+  await nextTick()
+  document.querySelectorAll(`#${list}-h + .notes li`)[NOTES_VISIBLE]?.querySelector<HTMLElement>('a')?.focus()
+}
 
 // Keyed by index: several ideas can share one session.
 const copiedIdeaIndex = ref<number | null>(null)
@@ -92,7 +99,7 @@ useSeoMeta({ title: () => `${PAGE_TITLE} · journal/${space}` })
           <NuxtLink class="src" :to="`/t/journal/${space}#${item.anchor}`" :aria-label="`Source session, ${item.date}`">{{ item.date }} →</NuxtLink>
         </li>
       </ol>
-      <button v-if="notes.ideas.length > NOTES_VISIBLE && !showAllIdeas" type="button" class="show-all" @click="showAllIdeas = true">
+      <button v-if="notes.ideas.length > NOTES_VISIBLE && !showAllIdeas" type="button" class="show-all" @click="revealNotes('ideas')">
         Show all {{ notes.ideas.length }} ideas
       </button>
       <p v-else-if="!notes.ideas.length">No ideas logged in this Space yet.</p>
@@ -105,7 +112,7 @@ useSeoMeta({ title: () => `${PAGE_TITLE} · journal/${space}` })
           <NuxtLink class="src" :to="`/t/journal/${space}#${item.anchor}`" :aria-label="`Source session, ${item.date}`">{{ item.date }} →</NuxtLink>
         </li>
       </ul>
-      <button v-if="notes.learnings.length > NOTES_VISIBLE && !showAllLearnings" type="button" class="show-all" @click="showAllLearnings = true">
+      <button v-if="notes.learnings.length > NOTES_VISIBLE && !showAllLearnings" type="button" class="show-all" @click="revealNotes('learnings')">
         Show all {{ notes.learnings.length }} learnings
       </button>
       <p v-else-if="!notes.learnings.length">No learnings logged in this Space yet.</p>
