@@ -1,0 +1,136 @@
+schemaVersion: 1
+session: session_0147UencKKZS3WLHvsbgywp7
+startedAt: 2026-10-15T13:14:10Z
+endedAt: 2026-10-15T13:22:24Z
+kind: autonomous
+goal: Scheduled prune trial of one instruction problem
+status: in-review
+outcome: "close-session Skill pruned 60 to 46 lines; PR #2063 open"
+summary: "Scheduled prune-trial run (agent-initiated, no human prompt). No open trial was judgeable yet (windows open 2026-10-16 and 2026-10-17), so none was judged. A search subagent found close-session at PR-open as the failed prose (#1859, #2023); I rewrote the Skill plainly, fixed one dangling pointer in blog-post, added a ledger entry, and a Sonnet probe pinned to the post-prune SHA answered a two-PR scenario correctly. My first ledger edit landed in the comment block (python replace hit the commented example); gate:scoped caught it and a second commit fixed it. I reviewed the prose-only diff inline instead of dispatching the two code-review subagents. PR #2063 is open and subscribed."
+prs:
+  - "2063"
+docsRead:
+  - path: GLOSSARY.md
+    reason: terms Friction, Rule, Prune Trial
+    useful: partly
+  - path: GLOSSARY-MAP.md
+    reason: read at start per CLAUDE.md; nothing bore on the task
+    useful: no
+  - path: .agents/prune-trials.yml
+    reason: open trials and the ledger format
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: required before first git command; nothing new
+    useful: partly
+  - path: docs/agents/pr-workflow.md
+    reason: review-before-push and closing a scheduled run's PR
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: required before first GitHub call; no new constraint hit
+    useful: partly
+  - path: .agents/skills/close-session/SKILL.md
+    reason: the pruned file
+    useful: yes
+  - path: .agents/skills/log-session/SKILL.md
+    reason: authoring format for the log
+    useful: yes
+  - path: docs/agents/guards.md
+    reason: "subagent: guard roster mapped issues to prose"
+    useful: yes
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: subagent grep hit only; not needed
+    useful: no
+skillsUsed:
+  - name: prune-trial
+    reason: the scheduled task
+  - name: code-review
+    reason: run before first push; reviewed inline
+  - name: close-session
+    reason: PR opened
+frictions:
+  - description: Inserted the ledger entry by string-replacing the first 'trials:' which sits in the comment example; YAML broke and gate:scoped failed.
+    solution: Anchor on the line '^trials:' when editing prune-trials.yml; or the file header could say where entries go.
+    severity: nit
+durationSec: 494
+models:
+  claude-sonnet-5-5: 53
+toolCounts:
+  Read: 7
+  Bash: 12
+  Agent: 2
+  ReadNotifications: 2
+  Grep: 2
+  Write: 1
+  Edit: 1
+  Skill: 2
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+filesEdited:
+  - .agents/skills/close-session/SKILL.md
+  - .agents/skills/blog-post/SKILL.md
+rulesLoaded:
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0012.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesLoadedBySubagents:
+  - .claude/rules/guards.md
+docsReadBySubagents:
+  - docs/agents/guards.md
+  - .agents/skills/dispatch-subagents/SKILL.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Told me to run gate:scoped and code-review before first push; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Session log goes to main via close-session; summary enough
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: "Prune-trial governance: do not touch trial territory; summary enough"
+    useful: yes
+  - path: .claude/rules/adr-0020.md
+    reason: Trust tiers; no Public input in this scheduled run
+    useful: no
+  - path: .claude/rules/adr-0003.md
+    reason: Open PR without asking and subscribe; scheduled-run scope; summary enough
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Provenance header on the PR body; summary enough
+    useful: yes
+  - path: .claude/rules/adr-0029.md
+    reason: Rules load with files; did not bear on the pruning
+    useful: no
+  - path: .claude/rules/adr-0030.md
+    reason: ADR history rule; I touched no ADR
+    useful: no
+  - path: .claude/rules/adr-0021.md
+    reason: Glossary split; no glossary change
+    useful: no
+  - path: .claude/rules/adr-0005.md
+    reason: Loaded on editing a Skill; confirmed Skills change by gated PR
+    useful: partly
+  - path: .claude/rules/adr-0012.md
+    reason: Pingbacks; loaded on a blog-post edit that was a one-line pointer fix, did not apply
+    useful: no
+  - path: .claude/rules/guards.md
+    reason: Loaded by the subagent; points to docs/agents/guards.md
+    useful: no
+subagents:
+  - type: general-purpose
+    task: Find failed-prose prune candidate
+  - type: general-purpose
+    task: Sonnet probe of pruned Skill
+    model: sonnet
+gitBranch: claude/practical-rubin-0d2cvt
+entrypoint: remote_trigger
+cliVersion: 2.1.300
+trigger: prune-trial
+landedBy: Stop
