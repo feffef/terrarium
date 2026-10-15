@@ -188,9 +188,8 @@ const parts = computed(() => {
   box-shadow: var(--gb-pane-shadow);
   backdrop-filter: blur(16px);
 }
-.stop-pane :deep(h2) { margin: 0 0 10px; font-size: 22px; }
 /* A jump to a stop clears its pane's top too; .article outranks theme.css's heading rule. */
-.article .stop-pane :deep(h2) { scroll-margin-top: calc(var(--gb-heading-clear) + var(--gb-stop-pad)); }
+.article .stop-pane :deep(h2) { margin: 0 0 10px; font-size: 22px; scroll-margin-top: calc(var(--gb-heading-clear) + var(--gb-stop-pad)); }
 .stop-pane :deep(> :last-child) { margin-bottom: 0; }
 .stop.current .stop-n { border-color: var(--gb-solid); background: var(--gb-solid); color: var(--gb-solid-ink); }
 .stop.current .stop-pane { border-color: color-mix(in srgb, var(--gb-accent) 45%, transparent); }
@@ -240,7 +239,7 @@ const parts = computed(() => {
   .stop-n { width: 32px; height: 32px; font-size: 13px; }
   .stop-pane { --gb-stop-pad: 18px; padding: var(--gb-stop-pad) 16px; }
   .article :deep(.gb-case) { padding: 18px; }
-  .stop-pane :deep(h2) { font-size: 20px; }
+  .article .stop-pane :deep(h2) { font-size: 20px; }
   .article :deep(.gb-concept) { --gb-concept-pad: 20px; padding: var(--gb-concept-pad) 18px; border-radius: 16px; }
   .article :deep(.gb-concept h2) { font-size: 23px; }
   .article :deep(.gb-cards) { grid-template-columns: 1fr; }

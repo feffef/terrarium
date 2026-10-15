@@ -2,7 +2,7 @@ import { existsSync, globSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { root } from '../../../../shared/expand.ts'
-import { glassboxJournalRoutes, glassboxPageProblems, glassboxTermProblems, glassboxTerms, repoGit, type GlassboxGit, type GlassboxSite } from '../../page-checks.ts'
+import { glassboxCites, glassboxJournalRoutes, glassboxPageProblems, glassboxTermProblems, glassboxTerms, repoGit, type GlassboxGit, type GlassboxSite } from '../../page-checks.ts'
 
 const rev = 'a'.repeat(40)
 const expandTs = [
@@ -32,6 +32,7 @@ const site: GlassboxSite = {
   pages: ['index.md', 'nuxt-content/01.collections.md', 'terrarium-practice/01.gate.md', 'walkthroughs/opening-a-page.md'],
   journal: ['/t/journal/current', '/t/journal/current/how-it-works', '/t/journal/current/skills'],
   terms: ['collection'],
+  cites: { '/t/glassbox/guide/nuxt-content/collections': ['shared/expand.ts'] },
 }
 
 const frontmatter = `---\ntitle: T\ndescription: D\nrevision: '${rev}'\nrevisionDate: '2026-10-14'\n---\n`
@@ -173,6 +174,8 @@ describe('glassboxPageProblems on fixture pages', () => {
     ['a stop whose ::stop-links links nothing', (s: string) => s.replace(':file[shared/expand.ts]', 'Nothing.'), 'stop "2. The page renders" links nothing'],
     ['a Where next over 5 pages', (s: string) => `${s}${gateItem.repeat(5)}`, 'Where next lists 6 pages, more than 5'],
     ['a Journal page before a Lesson in Where next', (s: string) => `${s}${journalItem}${gateItem}`, 'Where next lists a Journal page before its end'],
+    ['a stop with over 5 chips', (s: string) => s.replace(':file[shared/expand.ts]\n', `${Array(6).fill(':file[layers/]').join(' · ')}\n`), 'stop "2. The page renders" has 6 chips, more than 5'],
+    ['a stop :file a linked Lesson cites', (s: string) => s.replace('(/t/glassbox/guide/nuxt-content/collections)', '$& · :file[shared/expand.ts]'), 'stop "1. The request arrives" repeats shared/expand.ts, which /t/glassbox/guide/nuxt-content/collections cites'],
   ])('fails a Walkthrough with %s', (_name, broken, message) => {
     expect(problemsOf('walkthroughs/opening-a-page.md', broken(walkthrough)).join('\n')).toContain(message)
   })
@@ -222,6 +225,7 @@ describe('every Glass Box page matches the code at its revision', () => {
     pages,
     journal: glassboxJournalRoutes(),
     terms: Object.keys(terms),
+    cites: glassboxCites(Object.fromEntries(pages.map((file) => [file, readFileSync(join(content, 'pages', file), 'utf8')]))),
   }
 
   it('reaches Journal content pages and the Journal\'s own Vue routes', () => {

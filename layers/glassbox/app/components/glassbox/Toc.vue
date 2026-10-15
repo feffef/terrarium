@@ -17,6 +17,7 @@ const shown = computed(() => (entries.value.find((entry) => entry.id === current
 let clicked = false
 function pick(id: string) {
   clicked = true
+  cancelAnimationFrame(frame)
   current.value = id
   open.value = false
 }

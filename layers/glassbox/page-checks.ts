@@ -45,13 +45,24 @@ export interface GlassboxSite {
   /** Site paths, as `glassboxJournalRoutes` gives them. */
   journal: string[]
   terms: string[]
+  /** The repo paths each page cites, by site path, as `glassboxCites` gives them. */
+  cites: Record<string, string[]>
 }
+
+// The most chips a stop holds and pages a Where next lists (GLOSSARY.md, Lesson and Walkthrough).
+const cap = 5
 
 /** Nuxt Content's route for a content file: two-digit prefixes and `index` dropped. */
 function contentRoute(file: string) {
   return file.replace(/\.(md|vue)$/, '').split('/').map((s) => s.replace(/^\d+\./, '')).join('/').replace(/(^|\/)index$/, '')
 }
 const sitePath = (base: string, file: string) => (contentRoute(file) ? `${base}/${contentRoute(file)}` : base)
+
+/** The repo paths each page cites, by site path, from its source by file. */
+export function glassboxCites(sources: Record<string, string>): Record<string, string[]> {
+  return Object.fromEntries(Object.entries(sources).map(([file, source]) =>
+    [sitePath('/t/glassbox/guide', file), glassboxPageRefs(splitFrontmatter(source).body).files.map((ref) => ref.path)]))
+}
 
 /** Every Journal page a link may reach: its content pages and its own Vue routes, in each Space. */
 export function glassboxJournalRoutes(projectRoot = root) {
@@ -83,8 +94,9 @@ function readBody(body: string) {
 }
 
 /** The Walkthrough entry in GLOSSARY.md: at least one `## N. Title` stop, each with exactly one
- *  `::stop-links` block holding a link or `:file`. Outside a stop the block renders unstyled. */
-export function glassboxStopProblems(body: string, walkthrough: boolean): string[] {
+ *  `::stop-links` block holding a link or `:file`, at most `cap` chips and no `:file` a Lesson
+ *  it links cites. Outside a stop the block renders unstyled. */
+export function glassboxStopProblems(body: string, walkthrough: boolean, cites: GlassboxSite['cites']): string[] {
   const stops = walkthrough ? readBody(body).sections.filter((s) => glassboxStopNumber(s.title)) : []
   const problems = walkthrough && !stops.length ? ['Walkthrough has no "## N. Title" stops'] : []
   let inStops = 0
@@ -93,6 +105,15 @@ export function glassboxStopProblems(body: string, walkthrough: boolean): string
     inStops += blocks.length
     if (blocks.length !== 1) problems.push(`stop "${s.title}" has ${blocks.length} ::stop-links blocks, not 1`)
     else if (!blocks[0]!.links.length && !blocks[0]!.files.length) problems.push(`stop "${s.title}" links nothing in its ::stop-links block`)
+    else {
+      const { links, files, terms } = blocks[0]!
+      const chips = links.length + files.length + terms.length
+      if (chips > cap) problems.push(`stop "${s.title}" has ${chips} chips, more than ${cap}`)
+      for (const { path } of files) {
+        const by = links.find((link) => cites[link.replace(/\/$/, '')]?.includes(path))
+        if (by) problems.push(`stop "${s.title}" repeats ${path}, which ${by} cites`)
+      }
+    }
   }
   const stray = glassboxPageRefs(body).stopLinks.length - inStops
   if (stray) problems.push(`${stray} ::stop-links block(s) sit outside a Walkthrough stop`)
@@ -202,12 +223,12 @@ function lessonProblems(file: string, prose: string): string[] {
   return problems
 }
 
-// Where next holds the 5 closest pages, any one Journal page last (GLOSSARY.md, Lesson and Walkthrough).
+// Where next holds the closest pages, any one Journal page last.
 function nextProblems(prose: string): string[] {
   const lines = prose.split('\n')
   const at = lines.findIndex((l) => /^## /.test(l) && glassboxTermId(l.slice(3)) === glassboxLessonIds.whereNext)
   const next = at < 0 ? [] : lines.slice(at + 1).filter((l) => l.startsWith('- '))
-  const problems = next.length > 5 ? [`Where next lists ${next.length} pages, more than 5`] : []
+  const problems = next.length > cap ? [`Where next lists ${next.length} pages, more than ${cap}`] : []
   if (next.slice(0, -1).some((l) => l.includes('](/t/journal'))) problems.push('Where next lists a Journal page before its end')
   return problems
 }
@@ -218,7 +239,7 @@ export function glassboxPageProblems(file: string, source: string, site: Glassbo
   const refs = glassboxPageRefs(body)
   const problems = placeProblems(file)
   const route = `/${contentRoute(file)}`
-  problems.push(...glassboxStopProblems(body, glassboxWalkthroughOf(route)))
+  problems.push(...glassboxStopProblems(body, glassboxWalkthroughOf(route), site.cites))
   if (glassboxSubjectOf(route)) problems.push(...lessonProblems(file, prose))
   if (glassboxSubjectOf(route) || glassboxWalkthroughOf(route)) problems.push(...nextProblems(prose))
 

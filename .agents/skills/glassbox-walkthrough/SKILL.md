@@ -20,6 +20,7 @@ first: it holds the Walkthrough contract. The steps every page shares are in
 3. **Write** it to the contract, in plain words. The lede says what happens,
    from whose side, and where it ends. Each stop tells this story's part only;
    how the mechanism works belongs to what its chips link, a Lesson where one
-   exists. Done when every stop is checked against its files at `revision`.
+   exists, within the stop's chip rule in the glossary. Done when every stop
+   is checked against its files at `revision`.
 4. **Diagram** it if one earns its place (EVERY-PAGE.md).
 5. **Check** it (EVERY-PAGE.md).

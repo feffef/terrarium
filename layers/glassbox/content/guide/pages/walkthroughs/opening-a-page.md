@@ -30,7 +30,7 @@ The browser asks for a page under `/t/`. A Caddy proxy passes the request to the
 The server first checks its page cache. A Tenant page rendered a moment ago goes back as it is, the same copy for every visitor unless its route lists a request header it varies on, since content only changes with a new build. Only on a miss does the rest of this story run on the server.
 
 ::stop-links
-[useAsyncData, payloads and caching](/t/glassbox/guide/nuxt-vue/use-async-data) · :file[nuxt.config.ts]
+[useAsyncData, payloads and caching](/t/glassbox/guide/nuxt-vue/use-async-data)
 ::
 
 ## 3. The address picks one Tenant and one Space
@@ -78,5 +78,5 @@ Usually the route is cached, so the browser builds the page from its payload and
 - [One app, many sites: Nuxt layers](/t/glassbox/guide/nuxt-vue/layers)
 - [File routing: catch-all, Tenant overrides, root pages](/t/glassbox/guide/nuxt-vue/file-routing)
 - [A composable as the only door: useSpace](/t/glassbox/guide/nuxt-vue/use-space)
-- [The content database](/t/glassbox/guide/nuxt-content/content-database)
+- [One table per key: the isolation unit](/t/glassbox/guide/nuxt-content/one-table-per-key)
 - [useAsyncData, payloads and caching](/t/glassbox/guide/nuxt-vue/use-async-data)

@@ -74,9 +74,8 @@ design 1b (`app/utils/walkthrough.ts`):
   story's part, ending in exactly one `::stop-links` block of chips separated
   by `·`. A chip is a link (a Lesson where one exists, a Journal page), a
   `:file` or a `:term`; each block holds at least one link or `:file`, since a
-  `:term` alone doesn't count. A stop keeps about 5 chips at most, Lessons
-  first, each one its text uses, and no `:file` or ADR that a Lesson it links
-  already cites;
+  `:term` alone doesn't count. A stop holds at most 5 chips, Lessons first;
+  drop a `:file` or ADR a linked Lesson already cites;
 - optionally `## A real case`: one dated story;
 - `## Where next`, a list of bare links to at most the 5 closest pages:
   Lessons first, then Walkthroughs, then optionally one Journal page as
