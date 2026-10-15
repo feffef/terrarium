@@ -1,0 +1,114 @@
+schemaVersion: 1
+session: session_01672sKdk3qVR8DfkAWvR5Qz
+startedAt: 2026-10-15T00:16:24Z
+endedAt: 2026-10-15T00:24:34Z
+kind: autonomous
+goal: Write the 2026-10-14 Journal Digest
+status: completed
+outcome: Digest and retention sweep merged as PR 2018 on a green gate
+summary: "Scheduled digest run, no human prompt. One closed day (2026-10-14, 30 sessions) was gathered and written up, fact-checked by a subagent (2 wrong claims fixed: sweep count and which audit landed the 95 corrections), archive sweep moved 1 Digest and 15 session logs, gate:scoped green, PR 2018 opened, then merged on green CI. For a content-only diff I checked the changed paths myself instead of running the full two-agent code-review Skill."
+prs:
+  - "2018"
+docsRead:
+  - path: GLOSSARY.md
+    reason: terms for the Digest prose
+    useful: partly
+  - path: docs/agents/pr-workflow.md
+    reason: scheduled-run closing steps
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: commit hygiene
+    useful: partly
+  - path: docs/agents/github-integration.md
+    reason: read before first MCP call; nothing needed
+    useful: no
+  - path: GLOSSARY-MAP.md
+    reason: required start read; nothing needed for a digest
+    useful: no
+  - path: .agents/skills/log-session/SKILL.md
+    reason: how to author the log
+    useful: yes
+  - path: layers/journal/content/current/pages/digests/2026-10-14.md
+    reason: (no reason given)
+skillsUsed:
+  - name: digest
+    reason: the scheduled task itself
+  - name: code-review
+    reason: (no reason given)
+  - name: close-session
+    reason: (no reason given)
+frictions:
+  - description: Skipped the full two-agent code-review Skill for a content-only diff and checked paths by hand, a deviation from pr-workflow.
+    solution: Let pr-workflow name a lighter review for diffs holding only Digest pages and archive moves.
+    severity: nit
+  - description: The gather output's PR list repeats PR numbers, so the rollup's 70 merged PRs is inflated and could not be quoted.
+    solution: Dedupe PRs by number in scripts/digest.ts.
+    severity: minor
+durationSec: 489
+models:
+  claude-sonnet-5-5: 45
+toolCounts:
+  Read: 5
+  Bash: 18
+  Agent: 1
+  Skill: 2
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  mcp__github__add_issue_comment: 1
+rulesLoaded:
+  - .claude/rules/adr-0010.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0005.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesLoadedBySubagents:
+  - .claude/rules/mermaid-lanes.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Told me to run gate:scoped before pushing; summary was enough, did not open the ADR
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Log goes to main via hooks; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: About prune trials; not relevant to a digest
+    useful: no
+  - path: .claude/rules/adr-0020.md
+    reason: Trust tiers; no Public input this run
+    useful: no
+  - path: .claude/rules/adr-0003.md
+    reason: Open the PR myself and stay in the Skill's scope; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: PR body header with session id; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0010.md
+    reason: Digest landed by gated PR, never rewritten; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0021.md
+    reason: Glossary split; not relevant here
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: Rule loading; not relevant here
+    useful: no
+  - path: .claude/rules/adr-0005.md
+    reason: Skills as code; loaded by reading a Skill, not relevant
+    useful: no
+  - path: .claude/rules/mermaid-lanes.md
+    reason: Loaded only by the subagent; not asked
+    useful: no
+subagents:
+  - type: general-purpose
+    task: Fact-check 2026-10-14 digest
+    model: sonnet
+gitBranch: claude/compassionate-lovelace-mjw30t
+entrypoint: remote_trigger
+cliVersion: 2.1.300
+trigger: digest
+landedBy: Stop
