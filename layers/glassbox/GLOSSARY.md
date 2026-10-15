@@ -58,9 +58,9 @@ Its body follows one contract, which the page frames like design 1b
   related ADR. What to watch for warns about consequences for the reader, and
   links an ADR rather than restating its Scope or Consequences;
 - `## Try it in your project`;
-- `## Where next`, a list of bare links: related Lessons first, then
-  optionally one Journal page as evidence. A Lesson with no related Lesson
-  yet lists only that Journal page.
+- `## Where next`, a list of bare links to at most the 5 closest pages:
+  related Lessons first, then optionally one Journal page as evidence. A
+  Lesson with no related Lesson yet lists only that Journal page.
 
 ### Walkthrough
 A page that follows one story across several Lessons and links to them instead
@@ -70,14 +70,16 @@ Its body, in `walkthroughs/`, follows one contract, which the page draws like
 design 1b (`app/utils/walkthrough.ts`):
 
 - a lede paragraph, then at most one diagram;
-- at least one numbered **stop**, each `## 1. Title`: a few sentences of this
+- at least one numbered **stop**, each `## 1. Title`: 2–4 sentences of this
   story's part, ending in exactly one `::stop-links` block of chips separated
   by `·`. A chip is a link (a Lesson where one exists, a Journal page), a
   `:file` or a `:term`; each block holds at least one link or `:file`, since a
-  `:term` alone doesn't count;
+  `:term` alone doesn't count. A stop holds at most 5 chips, Lessons first;
+  drop a `:file` or ADR a linked Lesson already cites;
 - optionally `## A real case`: one dated story;
-- `## Where next`, a list of bare links: Lessons first, then Walkthroughs,
-  then optionally one Journal page as evidence.
+- `## Where next`, a list of bare links to at most the 5 closest pages:
+  Lessons first, then Walkthroughs, then optionally one Journal page as
+  evidence.
 
 Link a Lesson by its full `/t/glassbox/guide/…` path. A Lesson lists, after
 its Where next, every Walkthrough whose stops or A real case link it that way;

@@ -53,9 +53,7 @@ export function themeSvg(svg: string): string {
     const sentinel = SENTINELS[name]!
     const cssVar = DIAGRAM_TOKENS[name]!
     const fallback = DIAGRAM_TOKEN_FALLBACKS[name]!
-    // Case-insensitive: d3/mermaid emit the hex in both attributes and the
-    // embedded <style>, sometimes upper-cased.
-    out = out.replaceAll(new RegExp(escapeRegExp(sentinel), 'gi'), `var(${cssVar}, ${fallback})`)
+    out = out.replaceAll(sentinelPattern(sentinel), `var(${cssVar}, ${fallback})`)
   }
   return out
 }
@@ -91,17 +89,14 @@ export function relaxNodeLabelOverflow(svg: string): string {
  *  silently stop matching once a 17th token pushes a sentinel past `#f0af01`, and
  *  it never false-flags a non-sentinel hex in that family (issue #346 review). */
 export function leftoverSentinels(svg: string): string[] {
-  const haystack = svg.toLowerCase()
-  const found = new Set<string>()
-  for (const sentinel of Object.values(SENTINELS)) {
-    const lower = sentinel.toLowerCase()
-    if (haystack.includes(lower)) found.add(lower)
-  }
-  return [...found]
+  return Object.values(SENTINELS).filter((sentinel) => sentinelPattern(sentinel).test(svg))
 }
 
-function escapeRegExp(s: string): string {
-  return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+// d3/mermaid write a sentinel as hex, sometimes upper-cased, or as `rgba()`
+// with an alpha of its own (the edge-label wrapper), which the token replaces.
+function sentinelPattern(sentinel: string): RegExp {
+  const [r, g, b] = [1, 3, 5].map((i) => parseInt(sentinel.slice(i, i + 2), 16))
+  return new RegExp(`${sentinel}|rgba\\(${r}, ?${g}, ?${b}, ?[\\d.]+\\)`, 'gi')
 }
 
 async function renderOne(page: import('playwright-core').Page, diagram: Diagram): Promise<string> {

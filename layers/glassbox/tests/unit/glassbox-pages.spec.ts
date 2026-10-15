@@ -2,7 +2,7 @@ import { existsSync, globSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { root } from '../../../../shared/expand.ts'
-import { glassboxJournalRoutes, glassboxPageProblems, glassboxTermProblems, glassboxTerms, repoGit, type GlassboxGit, type GlassboxSite } from '../../page-checks.ts'
+import { glassboxCites, glassboxJournalRoutes, glassboxPageProblems, glassboxTermProblems, glassboxTerms, repoGit, type GlassboxGit, type GlassboxSite } from '../../page-checks.ts'
 
 const rev = 'a'.repeat(40)
 const expandTs = [
@@ -32,6 +32,7 @@ const site: GlassboxSite = {
   pages: ['index.md', 'nuxt-content/01.collections.md', 'terrarium-practice/01.gate.md', 'walkthroughs/opening-a-page.md'],
   journal: ['/t/journal/current', '/t/journal/current/how-it-works', '/t/journal/current/skills'],
   terms: ['collection'],
+  cites: { '/t/glassbox/guide/nuxt-content/collections': ['shared/expand.ts'] },
 }
 
 const frontmatter = `---\ntitle: T\ndescription: D\nrevision: '${rev}'\nrevisionDate: '2026-10-14'\n---\n`
@@ -83,6 +84,8 @@ see github.com/feffef/terrarium/blob/main/x.ts and ADR-9999
 
 - [The Gate](/t/glassbox/guide/terrarium-practice/gate)
 `
+const gateItem = '- [The Gate](/t/glassbox/guide/terrarium-practice/gate)\n'
+const journalItem = '- [How it works](/t/journal/current/how-it-works)\n'
 const walkthrough = `${frontmatter}
 How a page opens.
 
@@ -154,6 +157,9 @@ describe('glassboxPageProblems on fixture pages', () => {
     ['a Why line with two ADRs', (s: string) => s.replace('safety-gate.md]).\n', 'safety-gate.md]) and ADR-0004 (:file[docs/adr/0004-objective-safety-gate.md]).\n'), 'Why it\'s built this way line is not'],
     ['a Why line citing an ADR file without its number', (s: string) => s.replace('The expansion: :file[shared/expand.ts]', 'More: :file[docs/adr/0004-objective-safety-gate.md]'), 'Why it\'s built this way line is not'],
     ['a hand-written tree link', (s: string) => `${s}\nhttps://github.com/feffef/terrarium/tree/main/layers\n`, 'hand-written link'],
+    ['a Where next over 5 pages', (s: string) => `${s}${gateItem.repeat(5)}`, 'Where next lists 6 pages, more than 5'],
+    ['a Journal page before a Lesson in Where next', (s: string) => s.replace(gateItem, `${journalItem}${gateItem}`), 'Where next lists a Journal page before its end'],
+    ['two Journal pages in Where next', (s: string) => `${s}${journalItem}${journalItem}`, 'Where next lists a Journal page before its end'],
   ])('fails %s', (_name, broken, message) => {
     expect(problemsOf('nuxt-content/01.collections.md', broken(lesson)).join('\n')).toContain(message)
   })
@@ -166,6 +172,10 @@ describe('glassboxPageProblems on fixture pages', () => {
     ['a ::stop-links block in A real case', (s: string) => s.replace('## Where next', '## A real case\n\n::stop-links\n[Home](/t/glassbox/guide)\n::\n\n## Where next'), '1 ::stop-links block(s) sit outside'],
     ['a stop whose ::stop-links holds only a :term', (s: string) => s.replace(':file[shared/expand.ts]', ':term[Collection]'), 'stop "2. The page renders" links nothing'],
     ['a stop whose ::stop-links links nothing', (s: string) => s.replace(':file[shared/expand.ts]', 'Nothing.'), 'stop "2. The page renders" links nothing'],
+    ['a Where next over 5 pages', (s: string) => `${s}${gateItem.repeat(5)}`, 'Where next lists 6 pages, more than 5'],
+    ['a Journal page before a Lesson in Where next', (s: string) => `${s}${journalItem}${gateItem}`, 'Where next lists a Journal page before its end'],
+    ['a stop with over 5 chips', (s: string) => s.replace(':file[shared/expand.ts]\n', `${Array(6).fill(':file[layers/]').join(' · ')}\n`), 'stop "2. The page renders" has 6 chips, more than 5'],
+    ['a stop :file a linked Lesson cites', (s: string) => s.replace('(/t/glassbox/guide/nuxt-content/collections)', '$& · :file[shared/expand.ts]'), 'stop "1. The request arrives" repeats shared/expand.ts, which /t/glassbox/guide/nuxt-content/collections cites'],
   ])('fails a Walkthrough with %s', (_name, broken, message) => {
     expect(problemsOf('walkthroughs/opening-a-page.md', broken(walkthrough)).join('\n')).toContain(message)
   })
@@ -177,6 +187,10 @@ describe('glassboxPageProblems on fixture pages', () => {
     ['a page outside any folder', 'collections.md', 'outside a Subject folder'],
   ])('fails %s', (_name, file, message) => {
     expect(problemsOf(file, lesson).join('\n')).toContain(message)
+  })
+
+  it('passes a Where next of 5 pages ending in one Journal page', () => {
+    expect(problemsOf('nuxt-content/01.collections.md', `${lesson}${gateItem.repeat(3)}${journalItem}`)).toEqual([])
   })
 
   it('passes an Excerpt with one range per run', () => {
@@ -211,6 +225,7 @@ describe('every Glass Box page matches the code at its revision', () => {
     pages,
     journal: glassboxJournalRoutes(),
     terms: Object.keys(terms),
+    cites: glassboxCites(Object.fromEntries(pages.map((file) => [file, readFileSync(join(content, 'pages', file), 'utf8')]))),
   }
 
   it('reaches Journal content pages and the Journal\'s own Vue routes', () => {

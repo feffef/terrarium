@@ -128,16 +128,19 @@ const parts = computed(() => {
 .article :deep(.gb-card > :last-child) { margin-bottom: 0; }
 
 .article :deep(.gb-try) {
+  --gb-try-pad: 26px;
   margin-top: 36px;
-  padding: 26px 30px;
+  padding: var(--gb-try-pad) 30px;
   border-radius: 18px;
   background: var(--gb-solid);
   color: var(--gb-solid-ink);
   font-size: 18px;
   line-height: 1.55;
 }
+/* A jump to Try it clears the box's top too. */
 .article :deep(.gb-try h2) {
   margin: 0;
+  scroll-margin-top: calc(var(--gb-heading-clear) + var(--gb-try-pad));
   font: 11px var(--gb-mono);
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -177,14 +180,16 @@ const parts = computed(() => {
   font-weight: 600;
 }
 .stop-pane {
-  padding: 22px 24px;
+  --gb-stop-pad: 22px;
+  padding: var(--gb-stop-pad) 24px;
   border: 1px solid var(--gb-pane-edge);
   border-radius: 16px;
   background: var(--gb-pane);
   box-shadow: var(--gb-pane-shadow);
   backdrop-filter: blur(16px);
 }
-.stop-pane :deep(h2) { margin: 0 0 10px; font-size: 22px; }
+/* A jump to a stop clears its pane's top too; .article outranks theme.css's heading rule. */
+.article .stop-pane :deep(h2) { margin: 0 0 10px; font-size: 22px; scroll-margin-top: calc(var(--gb-heading-clear) + var(--gb-stop-pad)); }
 .stop-pane :deep(> :last-child) { margin-bottom: 0; }
 .stop.current .stop-n { border-color: var(--gb-solid); background: var(--gb-solid); color: var(--gb-solid-ink); }
 .stop.current .stop-pane { border-color: color-mix(in srgb, var(--gb-accent) 45%, transparent); }
@@ -232,13 +237,13 @@ const parts = computed(() => {
   .stop { grid-template-columns: 32px minmax(0, 1fr); gap: 10px; }
   .stop:has(+ .stop)::before { top: 32px; left: 15.5px; }
   .stop-n { width: 32px; height: 32px; font-size: 13px; }
-  .stop-pane { padding: 18px 16px; }
+  .stop-pane { --gb-stop-pad: 18px; padding: var(--gb-stop-pad) 16px; }
   .article :deep(.gb-case) { padding: 18px; }
-  .stop-pane :deep(h2) { font-size: 20px; }
+  .article .stop-pane :deep(h2) { font-size: 20px; }
   .article :deep(.gb-concept) { --gb-concept-pad: 20px; padding: var(--gb-concept-pad) 18px; border-radius: 16px; }
   .article :deep(.gb-concept h2) { font-size: 23px; }
   .article :deep(.gb-cards) { grid-template-columns: 1fr; }
-  .article :deep(.gb-try) { padding: 18px; font-size: 16px; }
+  .article :deep(.gb-try) { --gb-try-pad: 18px; padding: var(--gb-try-pad); font-size: 16px; }
   .article :deep(.gb-next li) { grid-template-columns: 100px minmax(0, 1fr) auto; }
 }
 </style>
