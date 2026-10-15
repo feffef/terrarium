@@ -1,7 +1,7 @@
 ---
 title: Opening a page
 description: How a click becomes a page, through one server for every site, one Space's content and a browser that builds the next page itself.
-revision: 'b7cf9901d85049d53c91c49979f9766642c2831d'
+revision: 'aef855b86532c024c8ac608e3722e4279c80a02f'
 revisionDate: '2026-10-15'
 ---
 
@@ -45,7 +45,7 @@ The server first checks its page cache. A Tenant page rendered a moment ago goes
 Nuxt matches the path against its page files. The Platform's catch-all page answers any `/t/<tenant>/<space>/…` address, unless a Tenant's own layer holds a more specific page, as the Journal does. Either page calls `useSpace`, which looks the :term[Tenant] and :term[Space] up in the routing map built from the manifests, and gets back the keys of that one Space's Collections, or a 404. The bare `/t/<tenant>` above the Spaces belongs to the Tenant's own root page, if it has one.
 
 ::stop-links
-:file[app/pages/t/] · :file[app/composables/space.ts] · :file[shared/routing.ts] · :file[docs/adr/0006-runtime-routing-path-prefix.md] · :file[docs/adr/0016-tenant-root-layer-routes.md]
+[One app, many sites: Nuxt layers](/t/glassbox/guide/nuxt-vue/layers) · :file[app/pages/t/] · :file[app/composables/space.ts] · :file[shared/routing.ts] · :file[docs/adr/0006-runtime-routing-path-prefix.md] · :file[docs/adr/0016-tenant-root-layer-routes.md]
 ::
 
 ## 4. Nuxt Content reads that Space's tables
