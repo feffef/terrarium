@@ -8,17 +8,29 @@ export interface LineRange {
 
 export interface FileRef {
   path: string
+  /** The whole span: the first range's start to the last one's end. */
   lines?: LineRange
+  /** An Excerpt's one range per run, when `lines` lists several. */
+  runs?: LineRange[]
   excerpt?: string
 }
 
 /** An Excerpt line that is only a comment holding `…` marks code left out. */
 export const glassboxExcerptGap = /^\s*(?:\/\/|#|--|\/\*|<!--)\s*…\s*(?:\*\/|-->)?\s*$/
 
+/** `lines` as its comma-separated ranges, one per Excerpt run. */
+export function parseLineRanges(lines: string | undefined): LineRange[] | undefined {
+  const ranges = lines?.split(',').map((r) => r.trim().match(/^(\d+)(?:-(\d+))?$/))
+  if (!ranges?.every(Boolean)) return undefined
+  return ranges.map((m) => ({ start: Number(m![1]), end: Number(m![2] ?? m![1]) }))
+}
+
+/** The span ranges cover, from the first one's start to the last one's end. */
+export const lineSpan = (ranges: LineRange[]): LineRange => ({ start: ranges[0]!.start, end: ranges.at(-1)!.end })
+
 export function parseLineRange(lines: string | undefined): LineRange | undefined {
-  const m = lines?.match(/^(\d+)(?:-(\d+))?$/)
-  if (!m) return undefined
-  return { start: Number(m[1]), end: Number(m[2] ?? m[1]) }
+  const ranges = parseLineRanges(lines)
+  return ranges && lineSpan(ranges)
 }
 
 export const rangeText = (r: LineRange) => (r.start === r.end ? `${r.start}` : `${r.start}-${r.end}`)
@@ -50,8 +62,9 @@ function attr(attrs: string | undefined, name: string) {
 }
 
 function withLines(path: string, attrs: string | undefined): FileRef {
-  const lines = parseLineRange(attr(attrs, 'lines'))
-  return lines ? { path, lines } : { path }
+  const runs = parseLineRanges(attr(attrs, 'lines'))
+  if (!runs) return { path }
+  return runs.length > 1 ? { path, lines: lineSpan(runs), runs } : { path, lines: runs[0] }
 }
 
 /** Moves `range` through the hunks of a `git diff -U0` of its file, or returns
@@ -87,7 +100,10 @@ type Relines = (ref: FileRef) => LineRange | undefined
 
 function relined(tag: string, ref: FileRef, relines?: Relines) {
   const to = ref.lines && relines?.(ref)
-  return to ? tag.replace(/\blines=(?:"[^"]*"|'[^']*')/, `lines="${rangeText(to)}"`) : tag
+  if (!to) return tag
+  const shift = to.start - ref.lines!.start
+  const text = ref.runs ? ref.runs.map((r) => rangeText({ start: r.start + shift, end: r.end + shift })).join(',') : rangeText(to)
+  return tag.replace(/\blines=(?:"[^"]*"|'[^']*')/, `lines="${text}"`)
 }
 
 function scan(body: string, relines?: Relines) {

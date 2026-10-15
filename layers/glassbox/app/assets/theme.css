@@ -25,7 +25,8 @@
   --gb-ink-2: #1d3340;
   --gb-muted: #4a5c66;
   --gb-line: rgb(15 40 55 / 0.12);
-  --gb-pane: rgb(255 255 255 / 0.5);
+  --gb-pane-white: 50%;
+  --gb-pane: color-mix(in srgb, #fff var(--gb-pane-white), transparent);
   --gb-pane-edge: rgb(255 255 255 / 0.85);
   --gb-pane-shadow: 0 10px 30px rgb(15 40 55 / 0.07);
   --gb-tint: rgb(140 200 230 / 0.2);
@@ -36,9 +37,9 @@
   --gb-code-bg: #f6f8fa;
   --gb-sans: 'Glass Box Sans', system-ui, sans-serif;
   --gb-mono: 'Glass Box Mono', ui-monospace, monospace;
-  /* The sticky bars: frosted, and opaque enough that text behind them doesn't
-     read through; solid where the browser can't blur (below). */
-  --gb-bar: color-mix(in srgb, var(--gb-bg) 94%, transparent);
+  /* The sticky bars and the menu panel: solid, since page text read through a
+     frosted one. */
+  --gb-bar: var(--gb-bg);
   /* Sticky offsets, kept in step: the header (sticky below 1024px), the table
      of contents (GlassboxToc sets --gb-toc-h to its real height), and the room
      a heading leaves above itself when jumped to. */
@@ -52,7 +53,8 @@
   --diagram-node-border: var(--gb-accent);
   --diagram-node-text: var(--gb-ink);
   --diagram-line: var(--gb-muted);
-  --diagram-edge-label-bg: var(--gb-bg);
+  /* The pane's colour made opaque, so a label hides the edge under it. */
+  --diagram-edge-label-bg: color-mix(in srgb, #fff var(--gb-pane-white), var(--gb-bg));
   --diagram-cluster-bg: transparent;
   --diagram-cluster-border: var(--gb-muted);
   --diagram-error: var(--gb-accent);
@@ -77,7 +79,7 @@
     --gb-ink-2: #c4d2d9;
     --gb-muted: #8ea1ab;
     --gb-line: rgb(255 255 255 / 0.09);
-    --gb-pane: rgb(255 255 255 / 0.045);
+    --gb-pane-white: 4.5%;
     --gb-pane-edge: rgb(255 255 255 / 0.09);
     --gb-pane-shadow: 0 10px 30px rgb(0 0 0 / 0.3);
     --gb-tint: rgb(140 200 230 / 0.1);
@@ -86,9 +88,6 @@
     --gb-solid-ink: #0a1216;
     --gb-code-bg: #0d1117;
   }
-}
-@supports not (backdrop-filter: blur(1px)) {
-  .gb { --gb-bar: var(--gb-bg); }
 }
 /* A scroller's right edge fades while it has more to show. Only a scroller
    that overflows has an active scroll timeline, so only it fades; the mask
@@ -196,7 +195,6 @@ body:has(.gb) { margin: 0; }
     margin: 0 -20px;
     padding: 8px 14px 8px 20px;
     background: var(--gb-bar);
-    backdrop-filter: blur(14px);
   }
   .gb.gb-doc .gb-menu {
     display: flex;
