@@ -6,7 +6,8 @@
 //   Edits `layers/journal/content/current/frictions/*.yml` in place and prints
 //   what it dropped. `--today` defaults to the current UTC date.
 //   `--summary` edits nothing and prints one line per entry: name, status,
-//   ref, in-horizon occurrence count, max severity (issue #1917).
+//   ref, in-horizon occurrence count, max severity (issue #1917), plus a note
+//   on a fixed entry with an occurrence after (or on) its fixedOn (issue #2024).
 import { readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
@@ -55,6 +56,16 @@ export function pruneLedger(today: string, cwd = root): string[] {
 
 const SEVERITIES = ['nit', 'minor', 'moderate', 'major', 'blocker']
 
+/** A fixed entry's note when an occurrence is dated after `fixedOn` (a possible
+ *  regression) or on it (the fix may have landed mid-session), else ''. */
+function regressionNote(e: { status?: unknown; fixedOn?: unknown; occurrences?: unknown }): string {
+  if (e.status !== 'fixed' || !e.fixedOn) return ''
+  const fixedOn = String(e.fixedOn)
+  const dates = (Array.isArray(e.occurrences) ? e.occurrences : []).map((o: { date?: unknown }) => String(o?.date))
+  if (dates.some((d) => d > fixedOn)) return ` | possible regression: occurrence after fixedOn ${fixedOn}`
+  return dates.includes(fixedOn) ? ` | check startedAt: occurrence on fixedOn ${fixedOn}` : ''
+}
+
 export function summarizeLedger(today: string, cwd = root): string[] {
   const start = horizonStart(today)
   const dir = join(cwd, LEDGER_DIR)
@@ -62,7 +73,7 @@ export function summarizeLedger(today: string, cwd = root): string[] {
     const e = parseYaml(readFileSync(join(dir, f), 'utf8')) ?? {}
     const occ = (Array.isArray(e.occurrences) ? e.occurrences : []).filter((o: { date?: unknown }) => String(o?.date) >= start)
     const max = Math.max(-1, ...occ.map((o: { severity?: string }) => SEVERITIES.indexOf(String(o?.severity))))
-    return [e.name ?? f, e.status, e.ref ?? '-', `${occ.length} in horizon`, SEVERITIES[max] ?? '-'].join(' | ')
+    return [e.name ?? f, e.status, e.ref ?? '-', `${occ.length} in horizon`, SEVERITIES[max] ?? '-'].join(' | ') + regressionNote(e)
   })
 }
 

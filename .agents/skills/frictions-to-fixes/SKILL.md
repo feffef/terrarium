@@ -44,7 +44,8 @@ Its brief:
   recurrence is its occurrences within it, counting only sessions that started
   after its fix merged when it has one. Return the ledger changes (new entries, appended occurrences,
   status changes, each with its evidence) in the report. Survey the ledger with
-  `pnpm exec tsx scripts/prune-friction-ledger.ts --summary` (one line per entry);
+  `pnpm exec tsx scripts/prune-friction-ledger.ts --summary` (one line per entry; it flags a `fixed` entry with a later
+  occurrence as a possible regression);
   open an entry file only for its evidence.
 - **Steer the budget at the unfixed tail.** A large share of the window's frictions are usually already resolved by a later in-window session or a merged fix. Screen those out fast as a §2 `drop` instead of re-deriving their history; save the deep archaeology for candidates with no in-window resolution.
 - **Read the window's session logs** via `pnpm exec tsx scripts/session-frictions.ts`
