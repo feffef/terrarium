@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01P7kLLJwHBgCaeVSUjhbScg
 startedAt: 2026-10-15T00:46:38Z
-endedAt: 2026-10-15T01:24:25Z
+endedAt: 2026-10-15T01:26:06Z
 kind: autonomous
 goal: Weekly check that the Platform's own Skills fire and deliver
-status: in-review
-outcome: "Two new findings filed (#2023, #2024); Inventory PR #2025 open"
-summary: "Entirely agent/schedule-initiated: a scheduled trigger fired the audit-skills Skill with no live human in the loop at any point. Ran the scorecard script, dispatched one read-only Sonnet behaviour-check subagent per the 12 behaviourChecks Skills in parallel, then independently re-verified every subagent's central claims against live GitHub/git rather than trusting the reports. Two found genuinely new, verified silent failures: close-session (session_01GG85r8HWMEdaMgKUaNUZH7 logged status:in-review with one PR, then opened and merged five more without re-invoking close-session despite #1859's PostToolUse hint firing on each one — a second, live instance of a structural gap this Inventory has tracked as an n=1 observation since 2026-09-28) and frictions-to-fixes (PR #1957 appended a post-fixedOn occurrence to the reviewer-line-ranges-off ledger entry without applying SKILL.md section 2's regression branch, and left the entry's fixedOn/ref pointing at the superseded fix). Filed both as needs-triage issues (#2023, #2024) after confirming no existing thread covered them. The other 10 Skills in the roster came back clean, with several spot-checked claims (closed issues, merged PRs, held fixes) independently re-verified live rather than inherited. Checked closure completeness (step 3): orphan scan clean, both candidates already carry resolvedBy, one humanPromptedClosures entry already recorded in a prior run, manuallyRescuedClosures empty; no coverage gaps (implement-spec and wait-what both on disk with zero all-time uses, correctly not added). Wrote one dated observations entry per Skill into all 12 Inventory YAML files (no grade/role changes), ran pnpm gate:scoped (green) and the code-review Skill (Standards + Spec, no hard violations) before the branch's first push, then opened PR #2025 and subscribed to its activity."
+status: completed
+outcome: "Two new findings filed (#2023, #2024); Inventory PR #2025 merged"
+summary: "Entirely agent/schedule-initiated: a scheduled trigger fired the audit-skills Skill with no live human in the loop at any point. Ran the scorecard script, dispatched one read-only Sonnet behaviour-check subagent per the 12 behaviourChecks Skills in parallel, then independently re-verified every subagent's central claims against live GitHub/git rather than trusting the reports. Two found genuinely new, verified silent failures: close-session (session_01GG85r8HWMEdaMgKUaNUZH7 logged status:in-review with one PR, then opened and merged five more without re-invoking close-session despite #1859's PostToolUse hint firing on each one — a second, live instance of a structural gap this Inventory has tracked as an n=1 observation since 2026-09-28) and frictions-to-fixes (PR #1957 appended a post-fixedOn occurrence to the reviewer-line-ranges-off ledger entry without applying SKILL.md section 2's regression branch, and left the entry's fixedOn/ref pointing at the superseded fix). Filed both as needs-triage issues (#2023, #2024) after confirming no existing thread covered them. The other 10 Skills in the roster came back clean, with several spot-checked claims (closed issues, merged PRs, held fixes) independently re-verified live rather than inherited. Checked closure completeness (step 3): orphan scan clean, both candidates already carry resolvedBy, one humanPromptedClosures entry already recorded in a prior run, manuallyRescuedClosures empty; no coverage gaps (implement-spec and wait-what both on disk with zero all-time uses, correctly not added). Wrote one dated observations entry per Skill into all 12 Inventory YAML files (no grade/role changes), ran pnpm gate:scoped (green) and the code-review Skill (Standards + Spec, no hard violations) before the branch's first push, then opened PR #2025, subscribed, posted the merge verdict, and self-merged it via scripts/merge-pr.ts once gate and label checks were green and mergeable_state was clean (Inventory-only diff, no Human-only path, no dependency change — self-merge per ADR-0004/0015)."
 prs:
   - "2025"
 docsRead:
@@ -195,19 +195,19 @@ frictions:
   - description: Polled a long-running background gate with many no-op Bash echo calls instead of simply waiting for its own completion notification, wasting turns
     solution: After starting a run_in_background command, stop calling tools and let the completion notification arrive rather than polling
     severity: minor
-durationSec: 2267
+durationSec: 2368
 models:
-  claude-sonnet-5: 402
+  claude-sonnet-5: 420
 toolCounts:
-  Skill: 4
-  Bash: 150
+  Skill: 5
+  Bash: 153
   Read: 36
-  Write: 3
+  Write: 4
   Agent: 14
   ToolSearch: 2
   mcp__github__list_issues: 1
   ListAgents: 2
-  mcp__github__pull_request_read: 7
+  mcp__github__pull_request_read: 9
   mcp__Claude_Code_Remote__get_session: 2
   mcp__github__search_issues: 3
   mcp__github__issue_read: 6
@@ -216,6 +216,9 @@ toolCounts:
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
   PushNotification: 1
+  ReadNotifications: 1
+  mcp__github__add_issue_comment: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/journal/content/current/skills/close-session.yml
   - layers/journal/content/current/skills/frictions-to-fixes.yml
