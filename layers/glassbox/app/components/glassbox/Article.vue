@@ -115,14 +115,15 @@ const parts = computed(() => {
 
 .article :deep(.gb-cards) { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 24px; }
 .article :deep(.gb-card) {
-  padding: 20px 22px;
+  --gb-card-pad: 20px;
+  padding: var(--gb-card-pad) 22px;
   border: 1px solid var(--gb-pane-edge);
   border-radius: 16px;
   background: var(--gb-pane);
   font-size: 15.5px;
   line-height: 1.6;
 }
-.article :deep(.gb-card h3) { margin: 0 0 10px; font-size: 17px; }
+.article :deep(.gb-card h3) { margin: 0 0 10px; font-size: 17px; scroll-margin-top: calc(var(--gb-heading-clear) + var(--gb-card-pad)); }
 .article :deep(.gb-card ul) { padding-left: 18px; }
 .article :deep(.gb-card > :last-child) { margin-bottom: 0; }
 

@@ -51,7 +51,8 @@ Its body follows one contract, which the page frames like design 1b
 - `## The concept`, whose last paragraph is `Full reference: [label](url)`
   (Terrarium practice Lessons have none);
 - `## In Terrarium`, with `### Why it's built this way` and
-  `### What to watch for`;
+  `### What to watch for`; Why it's built this way is one short sentence per ADR,
+  `<topic>: ADR-NNNN (:file[…])`, and never restates the ADR;
 - `## Try it in your project`;
 - `## Where next`, a list of bare links: related Lessons first, then
   optionally one Journal page as evidence. A Lesson with no related Lesson

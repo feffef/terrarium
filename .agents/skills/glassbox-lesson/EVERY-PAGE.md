@@ -19,6 +19,8 @@ the page draws `title` as its heading, so the body has no h1.
   `ADR-NNNN (:file[docs/adr/NNNN-….md])`, and a Journal page by its site path
   (a content page, or `/t/journal/<space>/{skills,frictions,ideas}`). A path
   holding `[` can't go in `:file[…]`: cite its folder.
+- **Don't paraphrase an ADR.** In Terrarium and What to watch for don't retell
+  an ADR's Scope or Why either: show the files and link the ADR.
 - **Link only pages that exist**, and promise none.
 - **Verify each official-docs URL** by fetching it and checking it says what
   you cite. If the network blocks the fetch, read the page's source in the

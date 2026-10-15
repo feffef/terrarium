@@ -27,10 +27,10 @@ The browser asks for a page under `/t/`. A Caddy proxy passes the request to the
 
 ## 2. The server may already have it
 
-The server first checks its page cache. A Tenant page rendered a moment ago goes back as it is, the same copy for every visitor unless the page declares a request header it varies on, since content only changes with a new build. Only on a miss does the rest of this story run on the server.
+The server first checks its page cache. A Tenant page rendered a moment ago goes back as it is, the same copy for every visitor unless its route lists a request header it varies on, since content only changes with a new build. Only on a miss does the rest of this story run on the server.
 
 ::stop-links
-:file[nuxt.config.ts] · :file[docs/adr/0028-navigation-reads-server-payloads.md]
+:file[nuxt.config.ts] · :file[layers/tinkerfund/nuxt.config.ts] · :file[docs/adr/0028-navigation-reads-server-payloads.md]
 ::
 
 ## 3. The address picks one Tenant and one Space
