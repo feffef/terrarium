@@ -42,6 +42,7 @@ describe('glassboxUpdate over a fixture repo history', () => {
     write(`${pagesDir}/claude-code/01.shifted.md`, page(base, shiftedBody('1-2')))
     write(`${pagesDir}/claude-code/02.edited.md`, page(base, 'See :file[src/a.ts]{lines="5-6"}.'))
     write(`${pagesDir}/walkthroughs/quiet.md`, page(base, 'See :file[src/b.ts] and a :term[Space].'))
+    write('layers/glassbox/content/drafts/pages/claude-code/03.draft.md', page(base, 'See :file[src/a.ts].'))
     write('layers/glassbox/content/guide/terms/space.yml', 'term: Space\ndefinition: A variant.\nsource: GLOSSARY.md\n')
     main = commit('2026-02-03T12:00:00+00:00')
     report = glassboxUpdate(dir, { main: 'main' })
@@ -55,6 +56,17 @@ describe('glassboxUpdate over a fixture repo history', () => {
       ['claude-code/01.shifted.md', ['src/a.ts', 'src/']],
       ['claude-code/02.edited.md', ['src/a.ts']],
     ])
+  })
+
+  it('covers only the guide Space unless given others', () => {
+    expect(report.pages.every((p) => p.space === 'guide')).toBe(true)
+    const both = glassboxUpdate(dir, { main: 'main', spaces: ['guide', 'drafts'] })
+    expect(both.pages.map((p) => [p.space, p.file])).toContainEqual(['drafts', 'claude-code/03.draft.md'])
+  })
+
+  it('refuses an unknown Space and ignores a repeated one', () => {
+    expect(() => glassboxUpdate(dir, { main: 'main', spaces: ['typo'] })).toThrow(/no Space "typo"/)
+    expect(glassboxUpdate(dir, { main: 'main', spaces: ['guide', 'guide'] }).pages).toHaveLength(report.pages.length)
   })
 
   it('shifts a range the diff moved, and flags a range the diff edited', () => {
