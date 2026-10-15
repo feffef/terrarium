@@ -60,7 +60,7 @@ A Routine, set up in a claude.ai account and kept out of the repo, starts a clou
 `blog-post` drafts three posts on real recent events in a :term[Persona]'s voice, every claim linked to its source, and a blind reader subagent picks one, which a separate subagent fact-checks before it ships. It may change only that post, in its Persona's own Space, and for a post that answers another Persona, a :term[Pingback] in that Persona's Space. The post leaves in one PR, and a reply from another Persona, if a fresh reader picks one, takes the same path.
 
 ::stop-links
-[Collections expanded from one manifest](/t/glassbox/guide/nuxt-content/manifest-collections) · [One table per key: the isolation unit](/t/glassbox/guide/nuxt-content/one-table-per-key) · :file[layers/blog/tenant.config.ts] · :file[docs/adr/0012-cross-persona-pingbacks-via-authored-denormalization.md]
+[Collections expanded from one manifest](/t/glassbox/guide/nuxt-content/manifest-collections) · [One table per key: the isolation unit](/t/glassbox/guide/nuxt-content/one-table-per-key) · :file[docs/adr/0012-cross-persona-pingbacks-via-authored-denormalization.md]
 ::
 
 ## 8. A run that changes something ends in its own PR
