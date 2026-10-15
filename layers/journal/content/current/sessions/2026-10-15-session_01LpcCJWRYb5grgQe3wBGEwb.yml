@@ -1,14 +1,16 @@
 schemaVersion: 1
 session: session_01LpcCJWRYb5grgQe3wBGEwb
 startedAt: 2026-10-15T14:18:52Z
-endedAt: 2026-10-15T14:37:25Z
+endedAt: 2026-10-15T14:46:02Z
 kind: interactive
 goal: Turn recent session frictions into fixes
 status: in-review
-outcome: Digest double-count fix in review (PR 2064); clear-backlog doc fix, ledger update and read-first hint wording in progress
-summary: 'The user invoked frictions-to-fixes. A survey subagent read the 7 sessions in the window (21 frictions) and the Friction Ledger and ranked the candidates. Selected as simple fixes (agent-initiated under the Skill): clear-backlog SKILL.md gaps (per-branch picks, label docs, the dispatch-subagents trigger) and the digest.ts PR double-count (git log without --first-parent counted branch commits ending "(#N)" as PRs, 70 vs 44 on 2026-10-14). Not taken: the flaky Journal e2e (one minor with no output) and bash-reads (needs an ADR change). The survey found #1819 (late reads of binding docs) closed without a fix. I asked the user whether to refile it. The user asked whether a deny was really better. The evidence since the hint landed showed nits and one classifier-caught near miss, so I recommended accepting late reads. The user then asked for, and approved, one hint sentence: "If the doc shows your call was already right, the late read is not a Friction." That change is human-instructed and goes to its own PR. The ledger records the acceptance.'
+outcome: Digest double-count fix merged (PR 2064); read-first hint wording (PR 2066) and clear-backlog doc fix with ledger update (PR 2067) await CI
+summary: "The user invoked frictions-to-fixes. A survey subagent read the 7 sessions in the window (21 frictions) and the Friction Ledger and ranked the candidates. Selected as simple fixes (agent-initiated under the Skill): clear-backlog SKILL.md gaps (per-branch picks, label docs, the dispatch-subagents trigger) and the digest.ts PR double-count (git log without --first-parent counted branch commits ending \"(#N)\" as PRs, 70 vs 44 on 2026-10-14), merged as PR 2064. Not taken: the flaky Journal e2e (one minor with no output) and bash-reads (needs an ADR change). The survey found #1819 (late reads of binding docs) closed without a fix. I asked the user whether to refile it. The user asked whether a deny was really better. The evidence since the hint landed showed nits and one classifier-caught near miss, so I recommended accepting late reads. The user then asked for, and approved, one hint sentence: \"If the doc shows your call was already right, the late read is not a Friction.\" That change is human-instructed and is PR 2066. The ledger records the acceptance in PR 2067. Review fixes I made myself: dropped a WHAT comment, put the why in the hint's script header, tightened the close-session test, and re-wrapped the SKILL.md lines."
 prs:
   - "2064"
+  - "2066"
+  - "2067"
 docsRead:
   - path: GLOSSARY-MAP.md
     reason: session-start glossary map
@@ -49,6 +51,10 @@ docsRead:
   - path: .agents/skills/blog-post/SKILL.md
     reason: survey subagent checked §2 to drop a git-log nit; reported useful
     useful: yes
+  - path: tests/unit/read-first-hint.spec.ts
+    reason: (read before editing)
+  - path: layers/journal/content/current/frictions/binding-docs-skipped.yml
+    reason: (read before editing)
   - path: CLAUDE.md
     reason: (no reason given)
   - path: scripts/digest.ts
@@ -61,8 +67,8 @@ docsRead:
     reason: (no reason given)
   - path: layers/journal/tests/e2e/journal.spec.ts
     reason: (no reason given)
-  - path: tests/unit/read-first-hint.spec.ts
-    reason: (read before editing)
+  - path: /home/user/terrarium/.agents/skills/audit-docs/SKILL.md
+    reason: (no reason given)
   - path: .claude/workflows/clear-backlog-build.js
     reason: (no reason given)
 skillsUsed:
@@ -99,23 +105,28 @@ frictions:
   - description: code-review's two parallel review agents for a one-line --first-parent diff cost about 125k subagent tokens
     solution: "Let code-review scale down to one inline pass for a diff under ~5 lines (pack Skill: note it in its Inventory entry)"
     severity: nit
-durationSec: 1113
+durationSec: 1630
 models:
-  claude-opus-5-5: 70
+  claude-opus-5-5: 129
 toolCounts:
-  Bash: 18
-  Read: 8
-  Agent: 6
+  Bash: 31
+  Read: 13
+  Agent: 10
   AskUserQuestion: 1
   Skill: 2
   ToolSearch: 1
-  mcp__github__create_pull_request: 1
-  mcp__github__add_issue_comment: 1
-  mcp__claude-code-remote__subscribe_pr_activity: 1
+  mcp__github__create_pull_request: 3
+  mcp__github__add_issue_comment: 3
+  mcp__claude-code-remote__subscribe_pr_activity: 3
   Write: 1
+  ReadNotifications: 3
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
+  Edit: 5
 filesEdited:
   - scripts/read-first-hint.ts
   - tests/unit/read-first-hint.spec.ts
+  - .agents/skills/clear-backlog/SKILL.md
+  - layers/journal/content/current/frictions/binding-docs-skipped.yml
   - zz-patch.mjs
   - layers/journal/content/current/frictions/clear-backlog-gaps.yml
   - ../commit-msg-frictions-docs.txt
@@ -229,6 +240,18 @@ subagents:
     model: sonnet
   - type: general-purpose
     task: Read-first hint wording
+    model: sonnet
+  - type: general-purpose
+    task: Standards review hint change
+    model: sonnet
+  - type: general-purpose
+    task: Spec review hint change
+    model: sonnet
+  - type: general-purpose
+    task: Standards review docs PR
+    model: sonnet
+  - type: general-purpose
+    task: Spec review docs PR
     model: sonnet
 gitBranch: claude/sweet-shannon-jkchr4
 entrypoint: remote
