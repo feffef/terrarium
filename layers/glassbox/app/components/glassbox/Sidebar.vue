@@ -110,8 +110,7 @@ li a[aria-current='page'] { background: var(--gb-solid); color: var(--gb-solid-i
     padding: 14px 18px 22px;
     font-size: 16px;
     border-radius: 22px;
-    background: color-mix(in srgb, var(--gb-bg) 92%, transparent);
-    backdrop-filter: blur(20px);
+    background: var(--gb-bar);
     border: 1px solid var(--gb-pane-edge);
     box-shadow: var(--gb-pane-shadow);
   }
