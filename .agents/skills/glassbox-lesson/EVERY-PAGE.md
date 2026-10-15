@@ -20,6 +20,10 @@ the page draws `title` as its heading, so the body has no h1.
   (a content page, or `/t/journal/<space>/{skills,frictions,ideas}`). A path
   holding `[` can't go in `:file[…]`: cite its folder.
 - **Link only pages that exist**, and promise none.
+- **Mechanism, not motive.** *In Terrarium* says what the code does, not why;
+  a design "because" belongs to the ADR link.
+- **Test the lede.** Check its summary claim against the edge cases the page
+  itself mentions.
 - **Verify each official-docs URL** by fetching it and checking it says what
   you cite, and re-read the docs section that every *What to watch for* and
   *Try it* line depends on. If the network blocks the fetch, read the page's
