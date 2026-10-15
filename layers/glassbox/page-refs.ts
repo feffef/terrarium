@@ -21,6 +21,8 @@ export function parseLineRange(lines: string | undefined): LineRange | undefined
   return { start: Number(m[1]), end: Number(m[2] ?? m[1]) }
 }
 
+export const rangeText = (r: LineRange) => (r.start === r.end ? `${r.start}` : `${r.start}-${r.end}`)
+
 /** A `:term`'s entry id: the rule is under "Term" in `GLOSSARY.md`. */
 export function glassboxTermId(text: string, id?: string) {
   return id ?? text.toLowerCase().replace(/[^\p{L}\p{N}\s-]/gu, '').trim().replace(/\s+/g, '-')
@@ -80,19 +82,26 @@ export interface StopLinksBlock extends CitedFilesAndTerms {
   links: string[]
 }
 
-/** Every `:file` and `::excerpt` (in order), every `:term`'s entry id, and what each
- *  `::stop-links` block links to. Inline code and fences outside `::excerpt`
- *  show syntax, so they cite nothing. */
-export function glassboxPageRefs(body: string): CitedFilesAndTerms & { stopLinks: StopLinksBlock[] } {
+/** A ref's new `lines`, or undefined to leave its tag as written. */
+type Relines = (ref: FileRef) => LineRange | undefined
+
+function relined(tag: string, ref: FileRef, relines?: Relines) {
+  const to = ref.lines && relines?.(ref)
+  return to ? tag.replace(/\blines=(?:"[^"]*"|'[^']*')/, `lines="${rangeText(to)}"`) : tag
+}
+
+function scan(body: string, relines?: Relines) {
   const files: FileRef[] = []
   const terms: string[] = []
   const stopLinks: StopLinksBlock[] = []
+  const out: string[] = []
   let fence: string | undefined
   let excerpt: FileRef | undefined
   let stop: StopLinksBlock | undefined
   let code: string[] = []
 
   for (const line of body.split(/\r?\n/)) {
+    out.push(line)
     const trimmed = line.trim()
     if (fence) {
       if (trimmed.startsWith(fence) && !trimmed.slice(fence.length).trim()) {
@@ -112,6 +121,7 @@ export function glassboxPageRefs(body: string): CitedFilesAndTerms & { stopLinks
     if (open) {
       excerpt = withLines(attr(open[1], 'path') ?? '', open[1])
       files.push(excerpt)
+      out[out.length - 1] = relined(line, excerpt, relines)
       continue
     }
     if (trimmed === '::stop-links') {
@@ -121,12 +131,18 @@ export function glassboxPageRefs(body: string): CitedFilesAndTerms & { stopLinks
     }
     if (trimmed === '::') excerpt = stop = undefined
 
-    const prose = line.replace(/(`+)[^`]*?\1/g, '')
+    // Blanked, not cut, so match indexes stay those of `line`.
+    const prose = line.replace(/(`+)[^`]*?\1/g, (m) => ' '.repeat(m.length))
+    let rewritten = ''
+    let from = 0
     for (const m of prose.matchAll(/:file\[([^\]]+)\](?:\{([^}]*)\})?/g)) {
       const ref = withLines(m[1]!, m[2])
       files.push(ref)
       stop?.files.push(ref)
+      rewritten += line.slice(from, m.index) + relined(m[0], ref, relines)
+      from = m.index + m[0].length
     }
+    out[out.length - 1] = rewritten + line.slice(from)
     for (const m of prose.matchAll(/:term\[([^\]]+)\](?:\{([^}]*)\})?/g)) {
       const id = glassboxTermId(m[1]!, attr(m[2], 'id'))
       terms.push(id)
@@ -134,5 +150,19 @@ export function glassboxPageRefs(body: string): CitedFilesAndTerms & { stopLinks
     }
     if (stop) for (const m of prose.matchAll(/\]\(([^)\s]+)/g)) stop.links.push(m[1]!)
   }
+  return { files, terms, stopLinks, body: out.join('\n') }
+}
+
+/** Every `:file` and `::excerpt` (in order), every `:term`'s entry id, and what each
+ *  `::stop-links` block links to. Inline code and fences outside `::excerpt`
+ *  show syntax, so they cite nothing. */
+export function glassboxPageRefs(body: string): CitedFilesAndTerms & { stopLinks: StopLinksBlock[] } {
+  const { files, terms, stopLinks } = scan(body)
   return { files, terms, stopLinks }
+}
+
+/** `body` with each cited `lines` range that `relines` moves rewritten, read as
+ *  `glassboxPageRefs` reads it (glassbox-update, issue #1998). */
+export function glassboxRelineRefs(body: string, relines: Relines): string {
+  return scan(body, relines).body
 }
