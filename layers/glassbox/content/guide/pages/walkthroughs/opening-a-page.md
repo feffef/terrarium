@@ -38,7 +38,7 @@ The server first checks its page cache. A Tenant page rendered a moment ago goes
 Nuxt matches the path against its page files. The Platform's catch-all page answers any `/t/<tenant>/<space>/…` address, unless a Tenant's own layer holds a more specific page, as the Journal does. Either page calls `useSpace`, which looks the :term[Tenant] and :term[Space] up in the routing map built from the manifests, and gets back the keys of that one Space's Collections, or a 404. The bare `/t/<tenant>` above the Spaces belongs to the Tenant's own root page, if it has one.
 
 ::stop-links
-[One app, many sites: Nuxt layers](/t/glassbox/guide/nuxt-vue/layers) · [A composable as the only door: useSpace](/t/glassbox/guide/nuxt-vue/use-space) · :file[app/pages/t/] · :file[app/composables/space.ts] · :file[shared/routing.ts] · :file[docs/adr/0006-runtime-routing-path-prefix.md] · :file[docs/adr/0016-tenant-root-layer-routes.md]
+[One app, many sites: Nuxt layers](/t/glassbox/guide/nuxt-vue/layers) · [A composable as the only door: useSpace](/t/glassbox/guide/nuxt-vue/use-space) · :file[app/pages/t/] · :file[docs/adr/0006-runtime-routing-path-prefix.md] · :file[docs/adr/0016-tenant-root-layer-routes.md]
 ::
 
 ## 4. Nuxt Content reads that Space's tables
@@ -62,7 +62,7 @@ Vue renders the page to HTML on the server. Whatever the page's `useAsyncData` r
 When the pointer rests on a link, a finger touches it or the keyboard focuses it, the browser fetches that route's code and, for a cached route, its `_payload.json`: the data the server rendered for it. A link that merely scrolls into view fetches nothing.
 
 ::stop-links
-[useAsyncData, payloads and caching](/t/glassbox/guide/nuxt-vue/use-async-data) · :file[nuxt.config.ts] · :file[docs/adr/0028-navigation-reads-server-payloads.md]
+[useAsyncData, payloads and caching](/t/glassbox/guide/nuxt-vue/use-async-data) · :file[docs/adr/0028-navigation-reads-server-payloads.md]
 ::
 
 ## 7. The click builds the next page

@@ -28,8 +28,10 @@ the page draws `title` as its heading, so the body has no h1.
   links go to v3.zod.dev.
 - **A second tool gets its own link** at its first mention, even though *The
   concept* ends on one Full reference.
-- **Don't repeat a sibling.** Check a Lesson's *What to watch for* against the
-  other Lessons in its Subject; link a point one of them makes instead.
+- **Don't repeat a sibling page or the ADR the page links.** Check a Lesson's
+  *What to watch for* against the other Lessons in its Subject and the ADRs it
+  cites; link a point one of them makes instead.
+- **In Terrarium gives no reasons:** no "so …" or "for …" clause saying why.
 - **Terms.** Wrap a word the reader may not know in `:term[…]`. For each id
   with no `layers/glassbox/content/guide/terms/<id>.yml`, add one: `term`, a
   `definition` in Glass Box's own words, and `source`, the glossary that
