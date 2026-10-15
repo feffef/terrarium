@@ -18,7 +18,9 @@ the page draws `title` as its heading, so the body has no h1.
 - **Cite** code with `:file[path]` or `::excerpt`, an ADR as
   `ADR-NNNN (:file[docs/adr/NNNN-….md])`, and a Journal page by its site path
   (a content page, or `/t/journal/<space>/{skills,frictions,ideas}`). A path
-  holding `[` can't go in `:file[…]`: cite its folder.
+  holding `[` can't go in `:file[…]`: cite its folder. Don't Excerpt a
+  Markdown table wider than about 80 characters: Excerpt the prose next to it,
+  or link the table.
 - **Link only pages that exist**, and promise none.
 - **Verify each official-docs URL** by fetching it and checking it says what
   you cite, and re-read the docs section that every *What to watch for* and
