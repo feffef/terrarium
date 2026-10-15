@@ -25,10 +25,12 @@ export function parseLineRanges(lines: string | undefined): LineRange[] | undefi
   return ranges.map((m) => ({ start: Number(m![1]), end: Number(m![2] ?? m![1]) }))
 }
 
-/** The span `lines` covers, from its first range's start to its last one's end. */
+/** The span ranges cover, from the first one's start to the last one's end. */
+export const lineSpan = (ranges: LineRange[]): LineRange => ({ start: ranges[0]!.start, end: ranges.at(-1)!.end })
+
 export function parseLineRange(lines: string | undefined): LineRange | undefined {
   const ranges = parseLineRanges(lines)
-  return ranges && { start: ranges[0]!.start, end: ranges.at(-1)!.end }
+  return ranges && lineSpan(ranges)
 }
 
 export const rangeText = (r: LineRange) => (r.start === r.end ? `${r.start}` : `${r.start}-${r.end}`)
@@ -62,8 +64,7 @@ function attr(attrs: string | undefined, name: string) {
 function withLines(path: string, attrs: string | undefined): FileRef {
   const runs = parseLineRanges(attr(attrs, 'lines'))
   if (!runs) return { path }
-  const lines = { start: runs[0]!.start, end: runs.at(-1)!.end }
-  return runs.length > 1 ? { path, lines, runs } : { path, lines }
+  return runs.length > 1 ? { path, lines: lineSpan(runs), runs } : { path, lines: runs[0] }
 }
 
 /** Moves `range` through the hunks of a `git diff -U0` of its file, or returns

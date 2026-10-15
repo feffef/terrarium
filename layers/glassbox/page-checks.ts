@@ -9,7 +9,7 @@ import { root } from '../../shared/expand.ts'
 import { glassboxLessonIds, glassboxLessonLabels } from './app/utils/lesson.ts'
 import { glassboxSubjectOf, glassboxSubjects, glassboxWalkthroughOf } from './app/utils/subjects.ts'
 import { glassboxStopNumber } from './app/utils/walkthrough.ts'
-import { glassboxExcerptGap, glassboxPageRefs, glassboxTermId, rangeText, type FileRef } from './page-refs.ts'
+import { glassboxExcerptGap, glassboxPageRefs, glassboxTermId, parseLineRanges, rangeText, type FileRef } from './page-refs.ts'
 
 export interface GlassboxGit {
   /** Undefined when this clone can't tell (no such commit, or no `origin/main`): the git checks skip. */
@@ -99,19 +99,20 @@ export function glassboxStopProblems(body: string, walkthrough: boolean): string
   return problems
 }
 
-// With `lines`, Excerpt.vue numbers rows from both ends of the range, so the
-// first run must open it and the last run close it.
+/** The Excerpt's runs between gaps, the empty ones included. */
 function excerptRuns(excerpt: string) {
   const runs: string[][] = [[]]
   for (const line of excerpt.split('\n')) {
     if (glassboxExcerptGap.test(line)) runs.push([])
     else runs.at(-1)!.push(line)
   }
-  return runs.filter((r) => r.length)
+  return runs
 }
 
+// With `lines`, Excerpt.vue numbers rows from both ends of the range, so the
+// first run must open it and the last run close it.
 function excerptFits(excerpt: string, file: string[], anchored: boolean) {
-  const kept = excerptRuns(excerpt)
+  const kept = excerptRuns(excerpt).filter((r) => r.length)
   let from = 0
   for (const [k, run] of kept.entries()) {
     const matches = (i: number) => run.every((line, j) => file[i + j] === line)
@@ -136,7 +137,7 @@ function fileProblems(ref: FileRef, rev: string, git: GlassboxGit): string[] {
   let lines = found.replace(/\n$/, '').split('\n')
   // One range per run: each run is exactly its range.
   if (ref.runs && ref.excerpt !== undefined) {
-    const runs = excerptRuns(ref.excerpt)
+    const runs = excerptRuns(ref.excerpt).filter((r) => r.length)
     const fits = runs.length === ref.runs.length && ref.runs.every(({ start, end }, k) => {
       const prev = ref.runs![k - 1]
       return start >= 1 && end >= start && (!prev || start > prev.end) && end <= lines.length && lines.slice(start - 1, end).join('\n') === runs[k]!.join('\n')
@@ -176,7 +177,7 @@ function placeProblems(file: string): string[] {
 // The Lesson contract in GLOSSARY.md: these sections, in this order; the two under In Terrarium are h3.
 const subsections: string[] = [glassboxLessonIds.why, glassboxLessonIds.watch]
 // Why it's built this way links its reasons and never restates them (GLOSSARY.md, Lesson).
-const whyLine = /^.+: (?:ADR-\d{4} \(:file\[docs\/adr\/\d{4}-[^\]\s]+\.md\]\)|:file\[(?!docs\/adr\/)[^\]\s]+\])\.$/
+const whyLine = /^(.+): (?:ADR-(\d{4}) \(:file\[docs\/adr\/\2-[^\]\s]+\.md\]\)|:file\[(?!docs\/adr\/)[^\]\s]+\])\.$/
 
 function lessonProblems(file: string, prose: string): string[] {
   const headings = [...prose.matchAll(/^(#{2,3}) (.+)$/gm)].map((m) => ({ level: m[1]!.length, id: glassboxTermId(m[2]!) }))
@@ -193,7 +194,8 @@ function lessonProblems(file: string, prose: string): string[] {
   const start = lines.findIndex((l) => /^### /.test(l) && glassboxTermId(l.slice(4)) === glassboxLessonIds.why)
   const end = lines.findIndex((l, i) => i > start && /^#{2,3} /.test(l))
   for (const line of start < 0 ? [] : lines.slice(start + 1, end < 0 ? undefined : end)) {
-    if (line.trim() && !whyLine.test(line)) problems.push(`Why it's built this way line is not "<topic>: ADR-NNNN (:file[…])." or "<topic>: :file[…].": ${line}`)
+    const m = line.match(whyLine)
+    if (line.trim() && (!m || /\bADR-\d{4}\b/.test(m[1]!))) problems.push(`Why it's built this way line is not "<topic>: ADR-NNNN (:file[…])." or "<topic>: :file[…].": ${line}`)
   }
   const fullReference = new RegExp(`^${glassboxLessonLabels.fullReference}:?\\s*\\[[^\\]]+\\]\\(https://`, 'm')
   if (!file.startsWith('terrarium-practice/') && !fullReference.test(prose)) problems.push('Lesson has no "Full reference" https link')
@@ -223,6 +225,11 @@ export function glassboxPageProblems(file: string, source: string, site: Glassbo
   for (const ref of refs.files) {
     const gaps = ref.excerpt?.split('\n').filter((l) => glassboxExcerptGap.test(l)).length ?? 0
     if (ref.lines && !ref.runs && gaps > 1) problems.push(`the Excerpt of ${ref.path} has ${gaps} gaps: give lines one range per run`)
+    // Excerpt.vue counts runs from the gap lines, so none may be empty but the last.
+    if (ref.runs && ref.excerpt !== undefined && excerptRuns(ref.excerpt).slice(0, -1).some((r) => !r.length)) problems.push(`the Excerpt of ${ref.path} opens with a gap or has two in a row`)
+  }
+  for (const [, a, b] of prose.matchAll(/\blines=(?:"([^"]*)"|'([^']*)')/g)) {
+    if (!parseLineRanges(a ?? b)) problems.push(`lines="${a ?? b}" is not one or more comma-separated ranges`)
   }
   for (const id of refs.terms) if (!site.terms.includes(id)) problems.push(`:term ${id} has no entry in terms`)
   for (const [link] of prose.matchAll(/github\.com\/feffef\/terrarium\/(?:blob|tree)\/\S*/g)) problems.push(`hand-written link ${link}: use :file`)

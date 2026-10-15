@@ -132,6 +132,14 @@ describe('glassboxPageProblems on fixture pages', () => {
     ['an Excerpt with one range and two gaps', (s: string) => s.replace('  // …\n  return out', '  // …\n  for (const col of cols) out[col.key] = col\n  // …\n  return out'), 'has 2 gaps: give lines one range per run'],
     ['an Excerpt run off its range', (s: string) => s.replace('  // …\n  return out', '  // …\n  for (const col of cols) out[col.key] = col\n  // …\n  return out').replace('lines="3-7"}\n```', 'lines="3,4,6-7"}\n```'), 'does not match its ranges 3,4,6-7'],
     ['an Excerpt with fewer ranges than runs', (s: string) => s.replace('  // …\n  return out', '  // …\n  for (const col of cols) out[col.key] = col\n  // …\n  return out').replace('lines="3-7"}\n```', 'lines="3,6-7"}\n```'), 'does not match its ranges 3,6-7'],
+    ['an Excerpt with ranges that open on a gap', (s: string) => s.replace('  // …\n  return out', '  // …\n  for (const col of cols) out[col.key] = col\n  // …\n  return out').replace('lines="3-7"}\n```ts\n', 'lines="3,5,6-7"}\n```ts\n  // …\n'), 'opens with a gap or has two in a row'],
+    ['an Excerpt with ranges and two gaps in a row', (s: string) => s.replace('  // …\n  return out', '  // …\n  for (const col of cols) out[col.key] = col\n  // …\n  return out').replace('lines="3-7"}\n```', 'lines="3,5,6-7"}\n```').replace('  // …\n  return out', '  // …\n  // …\n  return out'), 'opens with a gap or has two in a row'],
+    ['overlapping ranges', (s: string) => s.replace('  // …\n  return out', '  // …\n  for (const col of cols) out[col.key] = col\n  // …\n  return out').replace('lines="3-7"}\n```', 'lines="3,3-5,6-7"}\n```'), 'does not match its ranges 3,3-5,6-7'],
+    ['descending ranges', (s: string) => s.replace('  // …\n  return out', '  // …\n  for (const col of cols) out[col.key] = col\n  // …\n  return out').replace('lines="3-7"}\n```', 'lines="6-7,5,3"}\n```'), 'does not match its ranges 6-7,5,3'],
+    ['malformed lines', (s: string) => s.replace('{lines="3-7"}, one', '{lines="3,,5"}, one'), 'lines="3,,5" is not one or more'],
+    ['lines with inner spaces', (s: string) => s.replace('{lines="3-7"}, one', '{lines=" 3 - 5"}, one'), 'lines=" 3 - 5" is not one or more'],
+    ['a Why line whose ADR number is not its file', (s: string) => s.replace('ADR-0004 (:file[docs/adr/0004', 'ADR-0026 (:file[docs/adr/0004'), 'Why it\'s built this way line is not'],
+    ['a Why topic naming a second ADR', (s: string) => s.replace('The `gate`: ADR-0004', 'The gate, see ADR-0004: ADR-0004'), 'Why it\'s built this way line is not'],
     ['an ADR missing at revision', (s: string) => s.replace('ADR-0004', 'ADR-0099'), 'ADR-0099 does not exist'],
     ['a guide link to no page', (s: string) => s.replace('terrarium-practice/gate', 'terrarium-practice/gates'), 'link /t/glassbox/guide/terrarium-practice/gates resolves to no page'],
     ['a Journal link to no content file', (s: string) => s.replace('current/how-it-works', 'current/made-up'), 'link /t/journal/current/made-up resolves to no page'],
@@ -182,7 +190,7 @@ describe('glassboxPageProblems on fixture pages', () => {
   })
 
   it('skips the git checks where the clone lacks the revision, and still checks the rest', () => {
-    const shallow = lesson.replaceAll(rev, 'c'.repeat(40)).replace('ADR-0004', 'ADR-0099').replace('terrarium-practice/gate', 'nowhere')
+    const shallow = lesson.replaceAll(rev, 'c'.repeat(40)).replace('See ADR-0004', 'See ADR-0099').replace('terrarium-practice/gate', 'nowhere')
     expect(problemsOf('nuxt-content/01.collections.md', shallow)).toEqual(['link /t/glassbox/guide/nowhere resolves to no page'])
   })
 })

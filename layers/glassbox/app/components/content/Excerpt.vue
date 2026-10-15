@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import type { Slots, VNode } from 'vue'
-import { glassboxExcerptGap, parseLineRange, parseLineRanges } from '../../../page-refs.ts'
+import { glassboxExcerptGap, lineSpan, parseLineRanges } from '../../../page-refs.ts'
 
 const props = defineProps<{ path: string; lines?: string }>()
 const slots = useSlots()
 const injected = inject(glassboxRevisionKey, undefined)
 const page = computed(() => injected?.value)
-const range = computed(() => parseLineRange(props.lines))
 const runs = computed(() => parseLineRanges(props.lines))
+const range = computed(() => runs.value && lineSpan(runs.value))
 
 /** The fence's Shiki lines as gutter rows. With one range per run, each run
  *  counts from its own; with one range, numbers are known only up to the
