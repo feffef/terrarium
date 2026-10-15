@@ -36,7 +36,8 @@ the page draws `title` as its heading, so the body has no h1.
   with no `layers/glassbox/content/guide/terms/<id>.yml`, add one: `term`, a
   `definition` in Glass Box's own words, and `source`, the glossary that
   defines it, if one does. Check the definition against that glossary's
-  entry, not your memory of it.
+  entry, not your memory of it. First check the Glass Box integration branch
+  and open Glass Box PRs for the same id, and reuse one you find.
 
 ## Diagrams
 
@@ -56,5 +57,6 @@ clone lacks `revision`. Then run
 `pnpm exec vitest run layers/glassbox/tests/unit/glassbox-pages.spec.ts` and
 `pnpm validate:content`. After `pnpm build`, shoot the page with
 `scripts/preview.ts shot` in light and dark at 1280x900 and 390x844, and look
-at every shot (`docs/agents/verifying-ui-changes.md`). Done when both are green
-and each shot matches the page's shape in the glossary.
+at every shot (`docs/agents/verifying-ui-changes.md`). Retake the shots after
+the last content edit. Done when both are green and each shot matches the
+page's shape in the glossary.
