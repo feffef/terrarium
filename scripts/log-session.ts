@@ -862,7 +862,7 @@ export function reportUnexplainedReads(
     log(`  useful: ${VERDICTS}, as log-session step 3 says.`)
   }
   if (unrated.length) {
-    log(`  ${unrated.length} rule(s) or doc(s) only a subagent loaded or read, no verdict yet; ask the subagent, or it will show as unknown:`)
+    log(`  ${unrated.length} rule(s) or doc(s) only a subagent loaded or read, no verdict yet; take it from the subagent's final reply, or it shows as "no verdict provided":`)
     for (const [item, evidence] of unrated) {
       log(`    ${item}`)
       if (evidence) log(`      ${evidence}`)
