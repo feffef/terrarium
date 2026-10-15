@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_011HBcCLzMW7CshmqnHLnegb
 startedAt: 2026-10-15T04:01:24Z
-endedAt: 2026-10-15T04:19:50Z
+endedAt: 2026-10-15T04:23:09Z
 kind: autonomous
 goal: Scheduled sweep of the Platform's docs for drift and wordiness
-status: in-review
-outcome: PR opened with fact-checked doc fixes; two ADR-level items left for a human
-summary: "Scheduled audit-docs run (agent-initiated by the schedule; no human prompt). Concision family was journal (the next after the previous sweep's skills family). Five read-only reviewers and three independent checkers produced 29 confirmed fixes and 3 dropped as WRONG. Applied only checker text, ran gate:scoped (green) and code-review, fixed three of its notes, opened one gated PR (#2038). Not applied and left for a human, noted in the PR body: ADR-0020's bot bullet versus merge-pr.ts behaviour (tied to #1889), and ADR-0007/0013/0019 filename-versus-title mismatches (Human-only, would dangle historical logs). No issue filed."
+status: completed
+outcome: Doc fixes merged as PR 2038; two ADR-level items left for a human
+summary: "Scheduled audit-docs run (agent-initiated by the schedule; no human prompt). Concision family was journal (the next after the previous sweep's skills family). Five read-only reviewers and three independent checkers produced 29 confirmed fixes and 3 dropped as WRONG. Applied only checker text, ran gate:scoped (green) and code-review, fixed three of its notes, opened one gated PR (#2038), which merged on a green gate. Not applied and left for a human, noted in the PR body: ADR-0020's bot bullet versus merge-pr.ts behaviour (tied to #1889), and ADR-0007/0013/0019 filename-versus-title mismatches (Human-only, would dangle historical logs). No issue filed."
 prs:
   - "2038"
 docsRead:
@@ -297,18 +297,19 @@ frictions:
   - description: Subagent reports arrived as messages, not files, so 'save verbatim, never retype' was met only by having agents write their own reply files.
     solution: audit-docs step 3 could say agents write their reply to a named scratchpad file.
     severity: minor
-durationSec: 1106
+durationSec: 1306
 models:
-  claude-sonnet-5-5: 70
+  claude-sonnet-5-5: 82
 toolCounts:
   Read: 5
-  Bash: 16
+  Bash: 19
   Agent: 10
   Skill: 3
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
   mcp__github__add_issue_comment: 2
-  mcp__github__pull_request_read: 1
+  mcp__github__pull_request_read: 2
+  ReadNotifications: 2
 rulesLoaded:
   - .claude/rules/adr-0005.md
   - .claude/rules/adr-0015.md
