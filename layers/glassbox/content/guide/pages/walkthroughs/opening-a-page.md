@@ -43,18 +43,18 @@ Nuxt matches the path against its page files. The Platform's catch-all page answ
 
 ## 4. Nuxt Content reads that Space's tables
 
-The page asks Nuxt Content for its Document with `queryCollection` and the key it was given. Each Tenant, Space and :term[Collection] together make one table in the server's SQLite database, so the query cannot reach another Space's content. When a Collection is asked for, the server checks its table against the build and fills it from the build's dump only if it needs to.
+The page asks Nuxt Content for its Document with `queryCollection` and the key it was given. Each Tenant, Space and :term[Collection] together make one table in the server's SQLite database, so the query cannot reach another Space's content. When a Collection is asked for, the server checks its table against the build and fills it from the build's dump only if it needs to. Reading another Tenant's content takes a separate path, open only to Collections that opted in.
 
 ::stop-links
-[Collections expanded from one manifest](/t/glassbox/guide/nuxt-content/manifest-collections) · :file[shared/expand.ts] · :file[content.config.ts] · :file[docs/adr/0001-single-container-baked-multitenancy.md]
+[Collections expanded from one manifest](/t/glassbox/guide/nuxt-content/manifest-collections) · [Reading across Tenants through opted-in kinds](/t/glassbox/guide/terrarium-practice/cross-tenant-kinds) · :file[shared/expand.ts] · :file[content.config.ts] · :file[docs/adr/0001-single-container-baked-multitenancy.md]
 ::
 
 ## 5. Vue renders the page, data inside
 
-Vue renders the page to HTML on the server. Whatever the page's `useAsyncData` returned travels with it, so the browser shows the page at once. Then Vue takes over in the browser, and later clicks no longer reload the whole page.
+Vue renders the page to HTML on the server. `ContentRenderer` turns the Document's stored body into components: a prose component for each Markdown element, the component each MDC block names, and the committed SVG of each Mermaid diagram. Whatever the page's `useAsyncData` returned travels with it, so the browser shows the page at once. Then Vue takes over in the browser, and later clicks no longer reload the whole page.
 
 ::stop-links
-:file[docs/adr/0028-navigation-reads-server-payloads.md]
+[MDC components, and when not to use them](/t/glassbox/guide/nuxt-content/mdc-components) · [Overriding prose components](/t/glassbox/guide/nuxt-content/prose-overrides) · [Mermaid pre-rendered to committed SVG](/t/glassbox/guide/nuxt-content/mermaid-svg) · :file[docs/adr/0028-navigation-reads-server-payloads.md]
 ::
 
 ## 6. A hover fetches the next page's data
