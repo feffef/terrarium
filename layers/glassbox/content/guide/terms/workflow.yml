@@ -1,0 +1,3 @@
+term: Workflow
+definition: A script a Skill runs, kept in `.claude/workflows/`, that runs a fixed sequence of agent steps so the model can't skip or reorder them. Not a GitHub Actions workflow.
+source: GLOSSARY.md
