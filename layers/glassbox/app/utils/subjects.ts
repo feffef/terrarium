@@ -24,6 +24,11 @@ export function glassboxSubjectOf(path: string) {
   return glassboxSubjects.find((subject) => path.startsWith(`/${subject.slug}/`))
 }
 
+/** Whether `path` is a Walkthrough. */
+export function glassboxWalkthroughOf(path: string) {
+  return path.startsWith('/walkthroughs/')
+}
+
 /** Group Lessons under their Subject, in Subject order, dropping Subjects with
  *  no Lesson. Lessons keep the order they arrive in. */
 export function glassboxDirectory(pages: GlassboxPageLink[]) {
@@ -39,6 +44,6 @@ export function glassboxDirectory(pages: GlassboxPageLink[]) {
 export function glassboxWalkthroughs(pages: GlassboxPageLink[]) {
   const rank = (page: GlassboxPageLink) => (page.path === glassboxStartHere ? 0 : 1)
   return pages
-    .filter((page) => page.path.startsWith('/walkthroughs/'))
+    .filter((page) => glassboxWalkthroughOf(page.path))
     .sort((a, b) => rank(a) - rank(b) || a.title.localeCompare(b.title))
 }

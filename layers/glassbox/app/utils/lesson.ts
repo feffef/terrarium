@@ -17,6 +17,7 @@ export const glassboxLessonLabels = {
   inside: 'Looking inside',
   fullReference: 'Full reference',
   lesson: 'Lesson',
+  walkthrough: 'Walkthrough',
 } as const
 
 const ids = glassboxLessonIds
