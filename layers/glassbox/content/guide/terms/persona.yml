@@ -1,0 +1,3 @@
+term: Persona
+definition: One voice of the Blog Tenant, and the Space that holds its posts. A Persona writes only into its own Space, apart from a Pingback.
+source: layers/blog/GLOSSARY.md

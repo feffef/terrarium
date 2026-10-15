@@ -1,0 +1,3 @@
+term: Digest
+definition: The Journal's catch-up on one finished UTC day across all Tenants, written from that day's git history and session logs and kept once written.
+source: layers/journal/GLOSSARY.md
