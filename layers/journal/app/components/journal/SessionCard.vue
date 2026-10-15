@@ -32,7 +32,7 @@ const prParts = computed(() => ({
   shown: card.prs.slice(0, PR_SUB_MAX),
   rest: Math.max(0, card.prs.length - PR_SUB_MAX),
 }))
-const NO_VERDICT = 'unknown: no agent reported'
+const NO_VERDICT = 'no verdict provided, not reported back'
 const foldedFieldLabels = new Intl.ListFormat('en', { style: 'long', type: 'conjunction' }).format(
   FOLDED_TRACE_FIELDS.map((f) => f.label),
 )
