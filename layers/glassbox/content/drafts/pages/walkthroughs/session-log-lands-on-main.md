@@ -1,7 +1,7 @@
 ---
 title: A session log lands on main
 description: How an agent session's own record of its work reaches main without a PR, from the agent's judgement to one commit built with git's plumbing commands.
-revision: '8fecf8b4e1b32da82557e42f42b2045bd12a05bb'
+revision: 'b814fa1cbc100a9ebc249423ca536284604f5c10'
 revisionDate: '2026-10-15'
 ---
 

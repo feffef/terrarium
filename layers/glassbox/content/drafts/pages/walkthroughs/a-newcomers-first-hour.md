@@ -1,7 +1,7 @@
 ---
 title: A newcomer's first hour
 description: How a developer new to Terrarium finds their way in, from the home page through the Journal's short tour to the files every agent session reads first.
-revision: '8fecf8b4e1b32da82557e42f42b2045bd12a05bb'
+revision: 'b814fa1cbc100a9ebc249423ca536284604f5c10'
 revisionDate: '2026-10-15'
 ---
 

@@ -1,7 +1,7 @@
 ---
 title: Planning a big change
 description: How an idea too big for one session becomes a map of decision tickets, then a spec, then stories that agents build one PR at a time.
-revision: '8fecf8b4e1b32da82557e42f42b2045bd12a05bb'
+revision: 'b814fa1cbc100a9ebc249423ca536284604f5c10'
 revisionDate: '2026-10-15'
 ---
 
