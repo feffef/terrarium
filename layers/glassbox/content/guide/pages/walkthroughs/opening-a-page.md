@@ -77,3 +77,7 @@ Usually the route is cached, so the browser builds the page from its payload and
 
 - [One app, many sites: Nuxt layers](/t/glassbox/guide/nuxt-vue/layers)
 - [Collections expanded from one manifest](/t/glassbox/guide/nuxt-content/manifest-collections)
+- [MDC components, and when not to use them](/t/glassbox/guide/nuxt-content/mdc-components)
+- [Overriding prose components](/t/glassbox/guide/nuxt-content/prose-overrides)
+- [Mermaid pre-rendered to committed SVG](/t/glassbox/guide/nuxt-content/mermaid-svg)
+- [Reading across Tenants through opted-in kinds](/t/glassbox/guide/terrarium-practice/cross-tenant-kinds)

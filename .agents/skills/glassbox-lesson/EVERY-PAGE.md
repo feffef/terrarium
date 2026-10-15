@@ -10,6 +10,9 @@ Run `git fetch origin main`. Set `revision` to `origin/main`'s commit and
 `revisionDate` to the date part of `git show -s --format=%cI <revision>`. Read
 every file you cite as it is at that commit (`git show <revision>:<path>`): the
 page describes `main` at `revision`, and work not yet merged can't be cited.
+If the integration branch already changes a file you cite, word the page so it
+stays true after that change lands (diff the file between `revision` and the
+integration tip).
 Frontmatter holds `title`, `description`, `revision` and `revisionDate` only;
 the page draws `title` as its heading, so the body has no h1.
 
