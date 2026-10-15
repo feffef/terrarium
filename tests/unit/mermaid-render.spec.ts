@@ -108,6 +108,13 @@ describe('themeSvg()', () => {
     expect(leftoverSentinels(out)).toEqual([])
   })
 
+  // Mermaid writes its edge-label wrapper as the sentinel at half alpha.
+  it('rewrites a sentinel written as rgba(), and flags one left over', () => {
+    const svg = '.labelBkg{background-color:rgba(240, 164, 1, 0.5);}'
+    expect(leftoverSentinels(svg)).toEqual(['#f0a401'])
+    expect(themeSvg(svg)).toBe('.labelBkg{background-color:var(--diagram-edge-label-bg, #e8e8e8);}')
+  })
+
   it('leaves ordinary (author classDef) colours untouched', () => {
     const svg = '<svg><rect fill="#2c6e8f"/></svg>'
     expect(themeSvg(svg)).toBe(svg)
