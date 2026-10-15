@@ -157,7 +157,8 @@ command of this session or its subagents showed you that doc. The stitch drops a
 if shell output had credited it.
 
 Give one verdict per rule and per doc for the whole session. For one a
-subagent also loaded or read, take the verdicts from its final reply (CLAUDE.md), merge its view with yours, and say in the `reason` what it
+subagent also loaded or read, take the verdicts from its final reply
+(CLAUDE.md), merge its view with yours, and say in the `reason` what it
 reported. The report lists each rule or doc only a subagent loaded or read that
 has no verdict yet, a reminder, not a block: unanswered, it shows as unknown.
 
