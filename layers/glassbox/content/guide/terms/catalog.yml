@@ -1,0 +1,3 @@
+term: Catalog
+definition: The list, built with the site, of every Collection that opted into a shared shape, so code in other Tenants can read it. A Collection that doesn't opt in stays hidden from them.
+source: GLOSSARY.md
