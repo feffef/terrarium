@@ -34,8 +34,8 @@ export function diffMermaid(
   }
 }
 
-function main(): void {
-  const diagrams = discoverDiagrams()
+async function main(): Promise<void> {
+  const diagrams = await discoverDiagrams()
   const onDisk = committedSvgKeys()
   const drift = diffMermaid(diagrams, onDisk)
   const unsafe = onDisk
@@ -66,5 +66,5 @@ function main(): void {
 }
 
 if (import.meta.url === pathToFileURL(process.argv[1] ?? '').href) {
-  main()
+  await main()
 }

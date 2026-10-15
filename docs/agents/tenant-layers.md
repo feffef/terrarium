@@ -53,7 +53,8 @@ Practical implications:
   its tokens, via an opt-in contract.** Mermaid diagrams do this with
   `--diagram-*` (the list is in `app/utils/mermaid.ts`, the why in ADR-0024;
   journal's mapping is in `theme.css`). Map with `var(--jd-…)`, not literals,
-  so a dark-mode override flows through.
+  so a dark-mode override flows through. The diagram font can't be a token: a
+  layer names its own in `mermaid-font.ts` (Glass Box's is the example).
 
 ## 2. Content-component overrides (`components/content/`) resolve Platform-wide
 

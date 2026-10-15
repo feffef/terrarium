@@ -49,8 +49,9 @@ Classify every surface **before** editing.
   from the repo in a Live doc instead.
 
 **Skip entirely:** Tenant content that makes no claim about the Terrarium
-(`GLOSSARY-MAP.md`'s Relationships section says which Tenants),
-`docs/proposals/<N>-*.md` bodies, and `.out-of-scope/*.md`.
+(`GLOSSARY-MAP.md`'s Relationships section says which Tenants), Glass Box
+pages (`glassbox-update` keeps them), `docs/proposals/<N>-*.md`
+bodies, and `.out-of-scope/*.md`.
 
 ## The eight lenses, in four paired agents
 

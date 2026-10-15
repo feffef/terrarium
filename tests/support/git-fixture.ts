@@ -18,9 +18,9 @@ const IDENTITY = {
   GIT_COMMITTER_EMAIL: 'terrarium-test@example.invalid',
 }
 
-/** Run git in `cwd` with a deterministic committer identity. */
-export function git(cwd: string, args: string[]): string {
-  return execFileSync('git', args, { cwd, encoding: 'utf8', env: { ...process.env, ...IDENTITY } }).trim()
+/** Run git in `cwd` with a deterministic committer identity, plus `env` (such as `GIT_COMMITTER_DATE`). */
+export function git(cwd: string, args: string[], env: Record<string, string> = {}): string {
+  return execFileSync('git', args, { cwd, encoding: 'utf8', env: { ...process.env, ...IDENTITY, ...env } }).trim()
 }
 
 /** Write `path` (creating parents) and commit it. Returns the new commit's SHA. */

@@ -1,0 +1,3 @@
+term: session log
+definition: One agent session's own record of its work, kept in the Journal. The agent writes its goal, outcome and every Friction; the timings, tools and files it touched come from the transcript.
+source: GLOSSARY.md
