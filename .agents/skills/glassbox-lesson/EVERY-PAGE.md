@@ -42,8 +42,10 @@ the page draws `title` as its heading, so the body has no h1.
   links go to v3.zod.dev.
 - **A second tool gets its own link** at its first mention, even though *The
   concept* ends on one Full reference.
-- **Don't repeat a sibling.** Check a Lesson's *What to watch for* against the
-  other Lessons in its Subject; link a point one of them makes instead.
+- **Don't repeat a sibling page or the ADR the page links.** Check a Lesson's
+  *What to watch for* against the other Lessons in its Subject and the ADRs it
+  cites; link a point one of them makes instead.
+- **In Terrarium gives no reasons:** no "so …" or "for …" clause saying why.
 - **Name the command.** A watch item about a stale `.nuxt/`, the type check or
   a restart names the command it applies to, after checking what the repo's
   `pnpm` scripts already run (`package.json`).
