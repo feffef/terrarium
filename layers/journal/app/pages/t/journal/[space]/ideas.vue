@@ -14,6 +14,19 @@ const { data } = await useAsyncData(route.path, () =>
 )
 const notes = computed(() => sessionNotes(data.value ?? []))
 
+// Newest 20 of each list by default; `v-show`, not a slice, so every note stays in the HTML
+// (same reasoning as the session feed on index.vue).
+const NOTES_VISIBLE = 20
+const showAllIdeas = ref(false)
+const showAllLearnings = ref(false)
+// The button leaves the DOM once clicked; hand focus to the first note it revealed.
+async function revealNotes(list: 'ideas' | 'learnings') {
+  if (list === 'ideas') showAllIdeas.value = true
+  else showAllLearnings.value = true
+  await nextTick()
+  document.querySelectorAll(`#${list}-h + .notes li`)[NOTES_VISIBLE]?.querySelector<HTMLElement>('a')?.focus()
+}
+
 // Keyed by index: several ideas can share one session.
 const copiedIdeaIndex = ref<number | null>(null)
 let copiedResetTimer: ReturnType<typeof setTimeout> | null = null
@@ -54,7 +67,7 @@ useSeoMeta({ title: () => `${PAGE_TITLE} · journal/${space}` })
 
       <h2 id="ideas-h">Ideas <span class="n">{{ notes.ideas.length }}</span></h2>
       <ol v-if="notes.ideas.length" class="notes">
-        <li v-for="(item, i) in notes.ideas" :key="i">
+        <li v-for="(item, i) in notes.ideas" v-show="showAllIdeas || i < NOTES_VISIBLE" :key="i">
           <button
             type="button"
             class="idea-copy"
@@ -86,17 +99,23 @@ useSeoMeta({ title: () => `${PAGE_TITLE} · journal/${space}` })
           <NuxtLink class="src" :to="`/t/journal/${space}#${item.anchor}`" :aria-label="`Source session, ${item.date}`">{{ item.date }} →</NuxtLink>
         </li>
       </ol>
-      <p v-else>No ideas logged in this Space yet.</p>
+      <button v-if="notes.ideas.length > NOTES_VISIBLE && !showAllIdeas" type="button" class="show-all" @click="revealNotes('ideas')">
+        Show all {{ notes.ideas.length }} ideas
+      </button>
+      <p v-else-if="!notes.ideas.length">No ideas logged in this Space yet.</p>
 
       <h2 id="learnings-h">Learnings <span class="n">{{ notes.learnings.length }}</span></h2>
       <ul v-if="notes.learnings.length" class="notes">
-        <li v-for="(item, i) in notes.learnings" :key="i">
+        <li v-for="(item, i) in notes.learnings" v-show="showAllLearnings || i < NOTES_VISIBLE" :key="i">
           <span class="bullet" aria-hidden="true">›</span>
           <span>{{ item.note }}</span>
           <NuxtLink class="src" :to="`/t/journal/${space}#${item.anchor}`" :aria-label="`Source session, ${item.date}`">{{ item.date }} →</NuxtLink>
         </li>
       </ul>
-      <p v-else>No learnings logged in this Space yet.</p>
+      <button v-if="notes.learnings.length > NOTES_VISIBLE && !showAllLearnings" type="button" class="show-all" @click="revealNotes('learnings')">
+        Show all {{ notes.learnings.length }} learnings
+      </button>
+      <p v-else-if="!notes.learnings.length">No learnings logged in this Space yet.</p>
     </article>
 
     <SiteFooter />
@@ -118,6 +137,17 @@ useSeoMeta({ title: () => `${PAGE_TITLE} · journal/${space}` })
   border-top: 1px solid var(--jd-line);
   font-size: 0.92rem;
 }
+.show-all {
+  font: inherit;
+  font-size: 0.85rem;
+  padding: 0.4rem 0.9rem;
+  color: var(--jd-accent);
+  background: var(--jd-surface);
+  border: 1px solid var(--jd-line);
+  border-radius: var(--jd-radius);
+  cursor: pointer;
+}
+.show-all:hover { border-color: var(--jd-accent); }
 .notes li:first-child { border-top: 0; }
 .notes li > span:not(.bullet) { overflow-wrap: anywhere; }
 .bullet { color: var(--jd-accent); font-weight: 600; }
