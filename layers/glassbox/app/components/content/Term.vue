@@ -7,10 +7,7 @@ const slots = useSlots()
 const terms = inject(glassboxTermsKey, undefined)
 const open = ref(false)
 const definitionId = useId()
-
-// `:term[Space]` passes the word as its slot text.
-const text = () => (slots.default?.() ?? []).map((v) => (typeof v.children === 'string' ? v.children : '')).join('')
-const entry = computed(() => terms?.value[glassboxTermId(text(), props.id)])
+const entry = computed(() => terms?.value[glassboxTermId(glassboxSlotText(slots), props.id)])
 </script>
 
 <template>

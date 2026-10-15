@@ -18,10 +18,9 @@ export function parseLineRange(lines: string | undefined): LineRange | undefined
   return { start: Number(m[1]), end: Number(m[2] ?? m[1]) }
 }
 
-/** A `:term`'s entry in the `terms` Collection: its `id`, else its text
- *  (`Space` → `space.yml`). */
+/** A `:term`'s entry id: the rule is under "Term" in `GLOSSARY.md`. */
 export function glassboxTermId(text: string, id?: string) {
-  return id ?? text.trim().toLowerCase().replace(/\s+/g, '-')
+  return id ?? text.toLowerCase().replace(/[^\p{L}\p{N}\s-]/gu, '').trim().replace(/\s+/g, '-')
 }
 
 /** The entry id of every `:term` in a page's parsed (minimark) body, once
@@ -32,8 +31,8 @@ export function glassboxPageTerms(body: { value?: unknown[] } | null | undefined
     for (const node of nodes) {
       if (!Array.isArray(node)) continue
       const [tag, props, ...children] = node as [string, Record<string, unknown>, ...unknown[]]
-      if (tag !== 'term') walk(children)
-      else ids.add(glassboxTermId(children.filter((c) => typeof c === 'string').join(''), typeof props.id === 'string' ? props.id : undefined))
+      if (tag === 'term') ids.add(glassboxTermId(children.filter((c) => typeof c === 'string').join(''), typeof props.id === 'string' ? props.id : undefined))
+      else walk(children)
     }
   }
   walk(body?.value ?? [])
@@ -41,7 +40,8 @@ export function glassboxPageTerms(body: { value?: unknown[] } | null | undefined
 }
 
 function attr(attrs: string | undefined, name: string) {
-  return attrs?.match(new RegExp(`\\b${name}="([^"]*)"`))?.[1]
+  const m = attrs?.match(new RegExp(`\\b${name}=(?:"([^"]*)"|'([^']*)')`))
+  return m?.[1] ?? m?.[2]
 }
 
 function withLines(path: string, attrs: string | undefined): FileRef {

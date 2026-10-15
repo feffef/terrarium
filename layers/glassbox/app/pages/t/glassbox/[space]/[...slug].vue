@@ -13,7 +13,7 @@ const { data, status, error } = await useAsyncData(route.path, async () => {
   ])
   const termIds = glassboxPageTerms(page?.body)
   const terms = termIds.length
-    ? await queryCollection(collections.terms).where('stem', 'IN', termIds).select('stem', 'term', 'definition', 'source').all()
+    ? await queryCollection(collections.terms).where('stem', 'IN', termIds).select('stem', 'definition', 'source').all()
     : []
   return {
     page,
