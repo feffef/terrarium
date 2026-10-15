@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { glassboxPageRefs, glassboxPageTerms, glassboxTermId, shiftLines } from '../../page-refs.ts'
+import { glassboxPageRefs, glassboxPageTerms, glassboxRelineRefs, glassboxTermId, shiftLines } from '../../page-refs.ts'
 
 // `git diff -U0` output for one file: only hunk headers matter.
 const diff = (...hunks: string[]) =>
@@ -25,6 +25,21 @@ describe('shiftLines', () => {
       '@@ -216,2 +218,2 @@', // edited below
     )
     expect(shiftLines({ start: 196, end: 215 }, d)).toEqual({ start: 194, end: 213 })
+  })
+})
+
+describe('glassboxRelineRefs', () => {
+  it('rewrites the ranges it moves, in either quote style, and leaves code and other refs alone', () => {
+    const body = [
+      "Built in :file[a.ts]{lines='3-4'}, `:file[a.ts]{lines=\"3-4\"}` shows the syntax, :file[b.ts]{lines=\"3-4\"} stays.",
+      "::excerpt{lines='3-4' path='a.ts'}",
+      '```md',
+      ':file[a.ts]{lines="3-4"}',
+      '```',
+      '::',
+    ].join('\n')
+    const moved = glassboxRelineRefs(body, (ref) => (ref.path === 'a.ts' ? { start: 5, end: 5 } : undefined))
+    expect(moved).toBe(body.replace("{lines='3-4'}", '{lines="5"}').replace("{lines='3-4' path", '{lines="5" path'))
   })
 })
 
