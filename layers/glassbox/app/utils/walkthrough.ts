@@ -36,7 +36,7 @@ export function glassboxWalkthroughParts(nodes: MinimarkNode[], base: string): G
 // Chips are the block's inline content, cut at each `·`.
 function stopLinks(node: MinimarkNode, base: string): MinimarkNode {
   if (typeof node === 'string' || node[0] !== 'stop-links') return node
-  const inline = node.slice(2).flatMap((child) => typeof child !== 'string' && child[0] === 'p' ? child.slice(2) : [child]) as MinimarkNode[]
+  const inline = (node.slice(2) as MinimarkNode[]).flatMap((child) => typeof child !== 'string' && child[0] === 'p' ? child.slice(2) as MinimarkNode[] : [child])
   const chips: MinimarkNode[][] = [[]]
   for (const child of inline) {
     if (typeof child !== 'string') {

@@ -59,6 +59,19 @@ Its body follows one contract, which the page frames like design 1b
 A page that follows one story across several Lessons and links to them instead
 of repeating them.
 
+Its body, in `walkthroughs/`, follows one contract, which the page draws like
+design 1b (`app/utils/walkthrough.ts`):
+
+- a lede paragraph, then at most one diagram;
+- numbered **stops**, each `## 1. Title`: a few sentences of this story's part,
+  ending in a `::stop-links` block of chips separated by `·`. A chip is any
+  link (a Lesson where one exists, a Journal page), a `:file` or a `:term`;
+  each stop has at least one;
+- optionally `## A real case`, then `## Where next`, a list of links.
+
+A Lesson lists, after its Where next, every Walkthrough that links it anywhere
+in its body; nobody writes that list.
+
 ### Subject
 The tool a Lesson belongs to: the one whose official docs its *The concept*
 section links. Terrarium's own patterns with no official doc form the

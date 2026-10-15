@@ -1,21 +1,29 @@
 <script setup lang="ts">
 import type { MinimarkTree, Toc } from '@nuxt/content'
+import type { GlassboxPageLink } from '../../utils/subjects'
+import type { GlassboxWalkthroughPart } from '../../utils/walkthrough'
 
 const props = defineProps<{
   page: { path: string, title: string, revisionDate: string, body: MinimarkTree & { toc?: Toc } }
   base: string
   surround: ReturnType<typeof glassboxSurround>
+  through: GlassboxPageLink[]
 }>()
 
 const subject = computed(() => glassboxSubjectOf(props.page.path))
-// Frames first, then two renders so the table of contents sits between the lede and the first section.
+const walkthrough = computed(() => props.page.path.startsWith('/walkthroughs/'))
+const current = ref<string>()
+// Frames first, then separate renders so the table of contents sits between the
+// lede and the first section, and each Walkthrough stop can show it is current.
 const parts = computed(() => {
   const { body } = props.page
   const framed = subject.value ? glassboxLessonSections(body.value) : body.value
   const [intro, sections] = glassboxSplitAtFirstSection(framed)
+  const value = (nodes: typeof intro) => ({ ...props.page, body: { ...body, value: nodes } })
   return {
-    intro: { ...props.page, body: { ...body, value: intro } },
-    sections: { ...props.page, body: { ...body, value: sections } },
+    intro: value(intro),
+    sections: (walkthrough.value ? glassboxWalkthroughParts(sections, props.base) : [{ nodes: sections }])
+      .map((part: GlassboxWalkthroughPart) => ({ ...part, value: value(part.nodes) })),
     toc: body.toc?.links ?? [],
   }
 })
@@ -24,10 +32,23 @@ const parts = computed(() => {
 <template>
   <article class="article">
     <p v-if="subject" class="chips"><span class="chip">{{ subject.name }}</span><span>Lesson</span></p>
-    <h1 :class="{ lesson: subject }">{{ page.title }}</h1>
+    <p v-else-if="walkthrough" class="chips"><span class="chip">Walkthrough</span></p>
+    <h1 :class="{ lesson: subject || walkthrough }">{{ page.title }}</h1>
     <ContentRenderer class="gb-prose" :value="parts.intro" />
-    <GlassboxToc v-if="parts.toc.length" :links="parts.toc" />
-    <ContentRenderer class="gb-prose" :value="parts.sections" />
+    <GlassboxToc v-if="parts.toc.length" v-model:current="current" :links="parts.toc" />
+    <template v-for="(part, i) in parts.sections" :key="i">
+      <div v-if="part.stop" class="stop" :class="{ current: part.id === current }">
+        <span class="stop-n">{{ part.stop }}</span>
+        <ContentRenderer class="gb-prose stop-pane" :value="part.value" />
+      </div>
+      <ContentRenderer v-else class="gb-prose" :value="part.value" />
+    </template>
+    <template v-if="through.length">
+      <h2>Walkthroughs through this Lesson</h2>
+      <ul class="gb-next">
+        <li v-for="w in through" :key="w.path"><span>Walkthrough</span><NuxtLink :to="`${base}${w.path}`">{{ w.title }}</NuxtLink></li>
+      </ul>
+    </template>
     <GlassboxSurround v-if="surround" :base="base" :prev="surround.prev" :next="surround.next" />
     <GlassboxUpdated placement="end" :date="page.revisionDate" />
   </article>
@@ -131,7 +152,50 @@ const parts = computed(() => {
 .article :deep(.gb-next a) { color: var(--gb-ink); font-weight: 500; text-decoration: none; }
 .article :deep(.gb-next a)::after { content: ''; position: absolute; inset: 0; }
 
+/* Walkthrough stops: numbered circles on a thread, each stop its own pane. */
+.stop { position: relative; display: grid; grid-template-columns: 44px minmax(0, 1fr); gap: 16px; margin-top: 16px; }
+.stop:has(+ .stop)::before { content: ''; position: absolute; top: 44px; bottom: -16px; left: 21.5px; width: 1px; background: var(--gb-line); }
+.stop-n {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--gb-line);
+  border-radius: 50%;
+  background: var(--gb-bg);
+  font-size: 15px;
+  font-weight: 600;
+}
+.stop-pane {
+  padding: 22px 24px;
+  border: 1px solid var(--gb-pane-edge);
+  border-radius: 16px;
+  background: var(--gb-pane);
+  box-shadow: var(--gb-pane-shadow);
+  backdrop-filter: blur(16px);
+}
+.stop-pane :deep(h2) { margin: 0 0 10px; font-size: 22px; }
+.stop-pane :deep(> :last-child) { margin-bottom: 0; }
+.stop.current .stop-n { border-color: var(--gb-solid); background: var(--gb-solid); color: var(--gb-solid-ink); }
+.stop.current .stop-pane { border-color: color-mix(in srgb, var(--gb-accent) 45%, transparent); }
+.stop-pane :deep(.gb-stop-links) { display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0 0; padding: 0; list-style: none; }
+.stop-pane :deep(.gb-stop-links li) {
+  position: relative;
+  margin: 0;
+  padding: 3px 11px;
+  border: 1px solid var(--gb-pane-edge);
+  border-radius: 8px;
+  background: var(--gb-bg);
+  font-size: 14px;
+  line-height: 1.5;
+}
+.stop-pane :deep(.gb-stop-links span:first-child) { color: var(--gb-muted); }
+.stop-pane :deep(.gb-stop-links span:first-child)::after { content: ' · '; }
+.stop-pane :deep(.gb-stop-links li > a:not(.file)) { color: var(--gb-ink); text-decoration: none; }
+.stop-pane :deep(.gb-stop-links li > a:not(.file))::after { content: ' →'; }
+
 @media (prefers-color-scheme: dark) {
+  .stop.current .stop-n { border-color: var(--gb-ink); background: var(--gb-ink); color: var(--gb-bg); }
   .article :deep(.gb-try) {
     border: 1px solid color-mix(in srgb, var(--gb-accent) 25%, transparent);
     background: var(--gb-tint);
@@ -139,10 +203,15 @@ const parts = computed(() => {
   }
 }
 @media (max-width: 640px) {
+  .stop { grid-template-columns: 32px minmax(0, 1fr); gap: 10px; }
+  .stop:has(+ .stop)::before { top: 32px; left: 15.5px; }
+  .stop-n { width: 32px; height: 32px; font-size: 13px; }
+  .stop-pane { padding: 18px 16px; }
+  .stop-pane :deep(h2) { font-size: 20px; }
   .article :deep(.gb-concept) { padding: 20px 18px; border-radius: 16px; }
   .article :deep(.gb-concept h2) { font-size: 23px; }
   .article :deep(.gb-cards) { grid-template-columns: 1fr; }
   .article :deep(.gb-try) { padding: 18px; font-size: 16px; }
-  .article :deep(.gb-next li) { grid-template-columns: 84px minmax(0, 1fr) auto; }
+  .article :deep(.gb-next li) { grid-template-columns: 100px minmax(0, 1fr) auto; }
 }
 </style>

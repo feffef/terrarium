@@ -5,8 +5,11 @@ const props = defineProps<{ links: TocLink[] }>()
 const nav = useTemplateRef<HTMLElement>('nav')
 
 const entries = computed(() => props.links.flatMap((link) => [link, ...(link.children ?? [])]))
-const current = ref<string>()
+// The heading being read; a Walkthrough emphasises its stop too.
+const current = defineModel<string>('current')
 const open = ref(false)
+// A Walkthrough stop (`1. Title`) shows only its number until it is current (design 1b).
+const stopNumber = (text: string) => text.match(/^(\d+)\.\s/)?.[1]
 const shown = computed(() => (entries.value.find((entry) => entry.id === current.value) ?? entries.value[0])?.text)
 
 let frame = 0
@@ -53,7 +56,7 @@ watch(entries, () => nextTick(track))
     <span class="gb-label lead">On this page</span>
     <ol id="gb-toc-list">
       <li v-for="entry in entries" :key="entry.id" :class="`depth-${entry.depth}`">
-        <a :href="`#${entry.id}`" :aria-current="entry.id === current ? 'location' : undefined" @click="open = false">{{ entry.text }}</a>
+        <a :href="`#${entry.id}`" :aria-current="entry.id === current ? 'location' : undefined" @click="open = false"><span v-if="stopNumber(entry.text)" class="stop" :class="{ only: entry.id !== current }"><span>{{ stopNumber(entry.text) }}</span><span class="title">{{ entry.text.replace(/^\d+\.\s+/, '') }}</span></span><template v-else>{{ entry.text }}</template></a>
       </li>
     </ol>
   </nav>
@@ -97,6 +100,8 @@ a:hover { background: var(--gb-tint); }
 .depth-3 + .depth-3::before { content: '·'; margin-right: 2px; color: var(--gb-muted); }
 .depth-3 + .depth-3 a { padding-left: 4px; }
 a[aria-current] { background: var(--gb-solid); color: var(--gb-solid-ink); }
+.stop .title { margin-left: 0.35em; }
+.stop.only .title { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 
 /* Below 1024px: a collapsed pill under the sticky header. */
 @media (max-width: 1023.98px) {
@@ -131,5 +136,6 @@ a[aria-current] { background: var(--gb-solid); color: var(--gb-solid-ink); }
   .depth-3 + .depth-3 { display: block; margin: 0; }
   .depth-3 + .depth-3::before { content: none; }
   .depth-3 + .depth-3 a { padding-left: 24px; }
+  .stop.only .title { position: static; width: auto; height: auto; clip-path: none; }
 }
 </style>

@@ -7,9 +7,12 @@ const base = `/t/glassbox/${space}`
 
 // The sidebar needs titles and paths only: they travel in the payload (ADR-0028).
 const { data, status, error } = await useAsyncData(route.path, async () => {
-  const [page, pages] = await Promise.all([
+  const [page, pages, walkthroughs] = await Promise.all([
     queryCollection(pagesKey).path(path).first(),
     queryCollection(pagesKey).order('stem', 'ASC').select('path', 'title').all(),
+    glassboxSubjectOf(path)
+      ? queryCollection(pagesKey).where('path', 'LIKE', '/walkthroughs/%').select('path', 'title', 'body').all()
+      : [],
   ])
   const termIds = glassboxPageTerms(page?.body)
   const terms = termIds.length
@@ -17,6 +20,7 @@ const { data, status, error } = await useAsyncData(route.path, async () => {
     : []
   return {
     page,
+    through: glassboxWalkthroughsThrough(walkthroughs, `${base}${path}`),
     terms: Object.fromEntries(terms.map(({ stem, ...t }) => [stem, t])),
     subjects: glassboxDirectory(pages),
     walkthroughs: glassboxWalkthroughs(pages),
@@ -75,7 +79,7 @@ useSeoMeta({ description: () => page.value?.description })
         >≡</button>
       </header>
 
-      <GlassboxArticle v-if="page" class="gb-column" :page="page" :base="base" :surround="data?.surround ?? null" />
+      <GlassboxArticle v-if="page" class="gb-column" :page="page" :base="base" :surround="data?.surround ?? null" :through="data?.through ?? []" />
 
       <div v-else class="gb-column">
         <h1>Not found</h1>
