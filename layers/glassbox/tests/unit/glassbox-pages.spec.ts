@@ -3,6 +3,7 @@ import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { root } from '../../../../shared/expand.ts'
 import glassbox from '../../tenant.config.ts'
+import { glassboxStories } from '../../app/utils/subjects.ts'
 import { glassboxCites, glassboxJournalRoutes, glassboxPageProblems, glassboxSitePath, glassboxTermProblems, glassboxTerms, repoGit, type GlassboxGit, type GlassboxSite } from '../../page-checks.ts'
 
 const rev = 'a'.repeat(40)
@@ -30,7 +31,7 @@ const fakeGit: GlassboxGit = {
   read: (r, path) => (r === rev ? files[path] : undefined),
 }
 const site: GlassboxSite = {
-  pages: ['/t/glassbox/guide', '/t/glassbox/guide/nuxt-content/collections', '/t/glassbox/guide/terrarium-practice/gate', '/t/glassbox/guide/walkthroughs/opening-a-page', '/t/glassbox/drafts/zod/timestamps'],
+  pages: ['/t/glassbox/guide', '/t/glassbox/guide/nuxt-content/collections', '/t/glassbox/guide/terrarium-practice/gate', '/t/glassbox/guide/walkthroughs/from-file-to-browser', '/t/glassbox/drafts/zod/timestamps'],
   journal: ['/t/journal/current', '/t/journal/current/how-it-works', '/t/journal/current/skills'],
   terms: ['collection'],
   cites: { '/t/glassbox/guide/nuxt-content/collections': ['shared/expand.ts'] },
@@ -112,10 +113,10 @@ It reaches the router.
 const problemsOf = (file: string, source: string, space = 'guide') => glassboxPageProblems(file, source, site, fakeGit, space)
 
 describe('glassboxPageProblems on fixture pages', () => {
-  it('passes a good Lesson, Terrarium practice Lesson, Walkthrough and landing page', () => {
+  it('passes a good Lesson, House rules Lesson, Walkthrough and landing page', () => {
     expect(problemsOf('nuxt-content/01.collections.md', lesson)).toEqual([])
     expect(problemsOf('terrarium-practice/01.gate.md', lesson.replace(/^Full reference.*$/m, ''))).toEqual([])
-    expect(problemsOf('walkthroughs/opening-a-page.md', walkthrough)).toEqual([])
+    expect(problemsOf('walkthroughs/from-file-to-browser.md', walkthrough)).toEqual([])
     expect(problemsOf('index.md', `${frontmatter}\nWelcome.\n`)).toEqual([])
   })
 
@@ -178,7 +179,7 @@ describe('glassboxPageProblems on fixture pages', () => {
     ['a stop with over 5 chips', (s: string) => s.replace(':file[shared/expand.ts]\n', `${Array(6).fill(':file[layers/]').join(' · ')}\n`), 'stop "2. The page renders" has 6 chips, more than 5'],
     ['a stop :file a linked Lesson cites', (s: string) => s.replace('(/t/glassbox/guide/nuxt-content/collections)', '$& · :file[shared/expand.ts]'), 'stop "1. The request arrives" repeats shared/expand.ts, which /t/glassbox/guide/nuxt-content/collections cites'],
   ])('fails a Walkthrough with %s', (_name, broken, message) => {
-    expect(problemsOf('walkthroughs/opening-a-page.md', broken(walkthrough)).join('\n')).toContain(message)
+    expect(problemsOf('walkthroughs/from-file-to-browser.md', broken(walkthrough)).join('\n')).toContain(message)
   })
 
   it.each([
@@ -195,6 +196,18 @@ describe('glassboxPageProblems on fixture pages', () => {
     expect(problemsOf('nuxt-content/01.collections.md', toDraft)).toEqual(['guide page links outside the guide: /t/glassbox/drafts/zod/timestamps'])
     expect(problemsOf('nuxt-content/01.collections.md', toDraft, 'drafts')).toEqual([])
     expect(problemsOf('nuxt-content/01.collections.md', toDraft.replace('zod/timestamps', 'zod/gone'), 'drafts')).toEqual(['link /t/glassbox/drafts/zod/gone resolves to no page'])
+  })
+
+  it.each([
+    ['a Lesson title over 28 chars', 'nuxt-content/01.collections.md', lesson, 'title', 29, 'title "xxxxxxxxxxxxxxxxxxxxxxxxxxxxx" is 29 chars, more than 28'],
+    ['a Lesson description over 120 chars', 'nuxt-content/01.collections.md', lesson, 'description', 121, 'is 121 chars, more than 120'],
+    ['a Walkthrough title over 36 chars', 'walkthroughs/from-file-to-browser.md', walkthrough, 'title', 37, 'is 37 chars, more than 36'],
+    ['a Walkthrough description over 140 chars', 'walkthroughs/from-file-to-browser.md', walkthrough, 'description', 141, 'is 141 chars, more than 140'],
+  ])('fails %s in the guide, not in drafts', (_name, file, page, field, length, message) => {
+    const long = page.replace(field === 'title' ? 'title: T' : 'description: D', `${field}: ${'x'.repeat(length)}`)
+    expect(problemsOf(file, long).join('\n')).toContain(message)
+    expect(problemsOf(file, page.replace(field === 'title' ? 'title: T' : 'description: D', `${field}: ${'x'.repeat(length - 1)}`))).toEqual([])
+    expect(problemsOf(file, long, 'drafts').join('\n')).not.toContain('chars, more than')
   })
 
   it('passes a Where next of 5 pages ending in one Journal page', () => {
@@ -250,6 +263,10 @@ describe('every Glass Box page matches the code at its revision', () => {
 
   it.each(pages.map(({ space, file }) => [`${space}/${file}`, space, file]))('%s', (_name, space, file) => {
     expect(glassboxPageProblems(file, read(space, file), realSite, repoGit, space)).toEqual([])
+  })
+
+  it('finds every landing story in the guide', () => {
+    expect(glassboxStories.map(({ path }) => glassboxSitePath('guide', `${path.slice(1)}.md`)).filter((path) => !realSite.pages.includes(path))).toEqual([])
   })
 
   it('reads the drafts Space\'s terms through its link to the guide\'s', () => {

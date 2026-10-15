@@ -13,10 +13,11 @@ const sites = computed(() => SITES.filter((s) => s.to.split('/')[2] !== route.pa
   <footer class="site-footer" aria-label="Other sites in the terrarium, and its source">
     <span class="site-footer-label">Elsewhere:</span>
     <span class="site-footer-links">
-      <template v-for="(s, i) in sites" :key="s.to">
-        <span v-if="i" class="site-footer-sep" aria-hidden="true">·</span>
+      <!-- Each item carries the dot after it, so a wrapped row never starts or ends on a lone one. -->
+      <span v-for="(s, i) in sites" :key="s.to" class="site-footer-item">
         <span><NuxtLink :to="s.to">{{ s.name }}</NuxtLink> <span class="site-footer-gloss">({{ s.gloss }})</span></span>
-      </template>
+        <span v-if="i < sites.length - 1" class="site-footer-sep" aria-hidden="true">·</span>
+      </span>
     </span>
     <a class="site-footer-source" :href="REPO_URL">Source on GitHub</a>
   </footer>
@@ -37,6 +38,7 @@ const sites = computed(() => SITES.filter((s) => s.to.split('/')[2] !== route.pa
 }
 .site-footer-label { color: color-mix(in srgb, currentColor 55%, transparent); }
 .site-footer-links { display: inline-flex; flex-wrap: wrap; gap: 0.45rem; align-items: baseline; }
+.site-footer-item { display: inline-flex; gap: 0.45rem; align-items: baseline; white-space: nowrap; }
 .site-footer-gloss { color: color-mix(in srgb, currentColor 55%, transparent); }
 .site-footer-sep { color: color-mix(in srgb, currentColor 35%, transparent); }
 .site-footer a {
@@ -47,4 +49,7 @@ const sites = computed(() => SITES.filter((s) => s.to.split('/')[2] !== route.pa
 }
 .site-footer-source { margin-left: auto; }
 .site-footer a:hover { color: currentColor; text-decoration-color: currentColor; }
+@media (max-width: 480px) {
+  .site-footer-label { flex-basis: 100%; }
+}
 </style>

@@ -30,7 +30,7 @@ Terrarium applies them without reading the source.
   repeats them. Each page is pinned to one `main` commit (`revision`, with its
   date in `revisionDate`), so it reads like a dated edition.
 - **A reference, not a course.** No global reading order: newcomers start at the
-  "Opening a page" Walkthrough, experts use the Subject directory.
+  "From file to browser" Walkthrough, experts use the Subject directory.
 - **Two Spaces.** `guide`, at `/t/glassbox/guide`, holds only polished pages
   central to Terrarium; `/t/glassbox` redirects there. `drafts` holds the pages
   that failed the guide's bar on their first attempt; each may be improved and
@@ -52,7 +52,7 @@ Its body follows one contract, which the page frames like design 1b
 
 - a lede paragraph, then a skip line that links `[In Terrarium](#in-terrarium)`;
 - `## The concept`, whose last paragraph is `Full reference: [label](url)`
-  (Terrarium practice Lessons have none);
+  (House rules Lessons have none);
 - `## In Terrarium`, with `### Why it's built this way` and
   `### What to watch for`. Every line under Why it's built this way is
   `<topic>: ADR-NNNN (:file[…]).`, one per ADR, never restating it and
@@ -91,7 +91,8 @@ nobody writes that list.
 ### Subject
 The tool a Lesson belongs to: the one whose official docs its *The concept*
 section links. Terrarium's own patterns with no official doc form the
-**Terrarium practice** Subject. Each Subject is a folder.
+**House rules** Subject, in the folder `terrarium-practice/`. Each Subject is a
+folder.
 
 ### Excerpt
 Real Terrarium code copied into a page inside an `::excerpt` block, and checked

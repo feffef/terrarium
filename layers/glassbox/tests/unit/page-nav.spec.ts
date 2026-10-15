@@ -9,7 +9,7 @@ describe('glassboxSurround', () => {
     { path: '/claude-code/path-scoped-rules', title: 'Path-scoped rules' },
     { path: '/nuxt-vue/layers', title: 'One app, many sites' },
     { path: '/skill-pack/skill-pack', title: 'The Skill pack' },
-    { path: '/walkthroughs/opening-a-page', title: 'Opening a page' },
+    { path: '/walkthroughs/from-file-to-browser', title: 'From file to browser' },
   ]
 
   it('links the Lessons either side within a Subject', () => {
@@ -37,7 +37,7 @@ describe('glassboxSurround', () => {
   })
 
   it('leaves Walkthroughs and the landing page out of the chain', () => {
-    expect(glassboxSurround(pages, '/walkthroughs/opening-a-page')).toBeNull()
+    expect(glassboxSurround(pages, '/walkthroughs/from-file-to-browser')).toBeNull()
     expect(glassboxSurround(pages, '/')).toBeNull()
   })
 })

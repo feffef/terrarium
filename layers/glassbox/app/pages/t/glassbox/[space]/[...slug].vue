@@ -32,6 +32,8 @@ const { data, status, error } = await useAsyncData(route.path, async () => {
 const page = computed(() => data.value?.page ?? null)
 if (!page.value && !error.value) setResponseStatus(404)
 provide(glassboxRevisionKey, computed(() => page.value ?? undefined))
+// On main, not at `revision`: a page is pinned before it is written, so its own file there is older or missing.
+const source = computed(() => page.value ? glassboxFileUrl(`layers/glassbox/content/${space}/pages/${page.value.stem}.md`, 'main') : undefined)
 provide(glassboxTermsKey, computed(() => data.value?.terms ?? {}))
 
 const menuOpen = ref(false)
@@ -68,7 +70,7 @@ useSeoMeta({ description: () => page.value?.description })
     <div class="gb-main">
       <header class="gb-header">
         <GlassboxBrand :to="base" />
-        <GlassboxUpdated v-if="page" placement="header" :date="page.revisionDate" />
+        <GlassboxUpdated v-if="page" placement="header" :date="page.revisionDate" :source="source" />
         <button
           ref="menuButton"
           type="button"
@@ -80,7 +82,7 @@ useSeoMeta({ description: () => page.value?.description })
         >≡</button>
       </header>
 
-      <GlassboxArticle v-if="page" class="gb-column" :page="page" :base="base" :surround="data?.surround ?? null" :through="data?.through ?? []" :draft="space === 'drafts'" />
+      <GlassboxArticle v-if="page" class="gb-column" :page="page" :base="base" :surround="data?.surround ?? null" :through="data?.through ?? []" :draft="space === 'drafts'" :source="source" />
 
       <div v-else class="gb-column">
         <h1>Not found</h1>

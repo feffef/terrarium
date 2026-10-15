@@ -236,6 +236,18 @@ function nextProblems(prose: string): string[] {
   return problems
 }
 
+// The landing shows each `title` as a card row and its `description` as the teaser under it (EVERY-PAGE.md, Pin).
+const lengths = { lesson: { title: 28, description: 120 }, walkthrough: { title: 36, description: 140 } }
+
+function lengthProblems(route: string, frontmatter: Record<string, unknown>): string[] {
+  const limit = glassboxSubjectOf(route) ? lengths.lesson : glassboxWalkthroughOf(route) ? lengths.walkthrough : undefined
+  if (!limit) return []
+  return (['title', 'description'] as const).flatMap((field) => {
+    const text = String(frontmatter[field] ?? '')
+    return text.length > limit[field] ? [`${field} "${text}" is ${text.length} chars, more than ${limit[field]}`] : []
+  })
+}
+
 /** `file` is relative to its Space's `pages/`. */
 export function glassboxPageProblems(file: string, source: string, site: GlassboxSite, git: GlassboxGit, space: string): string[] {
   const { frontmatter, body } = splitFrontmatter(source)
@@ -246,6 +258,8 @@ export function glassboxPageProblems(file: string, source: string, site: Glassbo
   problems.push(...glassboxStopProblems(body, glassboxWalkthroughOf(route), site.cites))
   if (glassboxSubjectOf(route)) problems.push(...lessonProblems(file, prose))
   if (glassboxSubjectOf(route) || glassboxWalkthroughOf(route)) problems.push(...nextProblems(prose))
+  // Drafts sit below the guide's bar (GLOSSARY.md, Two Spaces); a promoted page meets it.
+  if (space === 'guide') problems.push(...lengthProblems(route, frontmatter))
 
   const { revision, revisionDate } = frontmatter
   if (typeof revision === 'string') problems.push(...gitProblems(revision, revisionDate, refs.files, prose, git))

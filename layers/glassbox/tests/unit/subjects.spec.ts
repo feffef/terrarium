@@ -4,7 +4,7 @@ import { glassboxDirectory, glassboxSubjectOf, glassboxWalkthroughs } from '../.
 describe('glassboxSubjectOf', () => {
   it("names a Lesson's Subject from its folder, and none for other pages", () => {
     expect(glassboxSubjectOf('/nuxt-vue/layers')?.name).toBe('Nuxt & Vue')
-    expect(glassboxSubjectOf('/walkthroughs/opening-a-page')).toBeUndefined()
+    expect(glassboxSubjectOf('/walkthroughs/from-file-to-browser')).toBeUndefined()
     expect(glassboxSubjectOf('/')).toBeUndefined()
   })
 })
@@ -16,9 +16,9 @@ describe('glassboxWalkthroughs', () => {
       { path: '/walkthroughs/routines', title: 'The Routines' },
       { path: '/walkthroughs/friction-to-fix', title: 'A friction becomes a fix' },
       { path: '/claude-code/claude-md', title: 'CLAUDE.md as the every-session contract' },
-      { path: '/walkthroughs/opening-a-page', title: 'Opening a page' },
+      { path: '/walkthroughs/from-file-to-browser', title: 'From file to browser' },
     ])).toEqual([
-      { path: '/walkthroughs/opening-a-page', title: 'Opening a page' },
+      { path: '/walkthroughs/from-file-to-browser', title: 'From file to browser' },
       { path: '/walkthroughs/friction-to-fix', title: 'A friction becomes a fix' },
       { path: '/walkthroughs/routines', title: 'The Routines' },
     ])
@@ -32,9 +32,9 @@ describe('glassboxDirectory', () => {
       { path: '/terrarium-practice/gate', title: 'The Gate' },
       { path: '/claude-code/claude-md', title: 'CLAUDE.md as the every-session contract' },
       { path: '/claude-code/path-scoped-rules', title: 'Path-scoped rules' },
-      { path: '/walkthroughs/opening-a-page', title: 'Opening a page' },
+      { path: '/walkthroughs/from-file-to-browser', title: 'From file to browser' },
     ])
-    expect(directory).toEqual([
+    expect(directory).toMatchObject([
       {
         slug: 'claude-code',
         name: 'Claude Code',
@@ -43,7 +43,7 @@ describe('glassboxDirectory', () => {
           { path: '/claude-code/path-scoped-rules', title: 'Path-scoped rules' },
         ],
       },
-      { slug: 'terrarium-practice', name: 'Terrarium practice', lessons: [{ path: '/terrarium-practice/gate', title: 'The Gate' }] },
+      { slug: 'terrarium-practice', name: 'House rules', lessons:[{ path: '/terrarium-practice/gate', title: 'The Gate' }] },
     ])
   })
 

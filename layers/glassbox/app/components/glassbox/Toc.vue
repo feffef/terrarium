@@ -136,7 +136,8 @@ a[aria-current] { background: var(--gb-solid); color: var(--gb-solid-ink); }
     text-align: left;
     cursor: pointer;
   }
-  .shown { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  /* A stop's number and title, wrapped to two lines at most. */
+  .shown { flex: 1; min-width: 0; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; padding: 4px 0; }
   ol { display: none; }
   .open ol {
     display: flex;
