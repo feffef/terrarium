@@ -1,0 +1,3 @@
+term: Friction Ledger
+definition: The Journal's list of Friction causes, one entry per root cause with every session that hit it, so a problem that keeps coming back is counted across weeks.
+source: GLOSSARY.md
