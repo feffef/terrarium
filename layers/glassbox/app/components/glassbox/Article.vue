@@ -17,7 +17,8 @@ const current = ref<string>()
 const parts = computed(() => {
   const { body } = props.page
   const framed = subject.value ? glassboxLessonSections(body.value, props.base) : body.value
-  const [intro, sections] = glassboxSplitAtFirstSection(framed)
+  const [intro, rest] = glassboxSplitBeforeBody(framed)
+  const sections = glassboxFrameDiagrams(rest)
   const withBody = (nodes: typeof intro) => ({ ...props.page, body: { ...body, value: nodes } })
   return {
     intro: withBody(intro),
@@ -70,7 +71,10 @@ const parts = computed(() => {
 .article :deep(.gb-skip strong) { color: var(--gb-ink); font-weight: 600; }
 
 .article :deep(.gb-concept) {
-  padding: 28px 32px 30px;
+  --gb-concept-pad: 28px;
+  --gb-kicker-h: 18px;
+  --gb-kicker-gap: 8px;
+  padding: var(--gb-concept-pad) 32px 30px;
   border: 1px solid var(--gb-pane-edge);
   border-radius: 18px;
   background: var(--gb-pane);
@@ -83,8 +87,12 @@ const parts = computed(() => {
   text-transform: uppercase;
   color: var(--gb-muted);
 }
-.article :deep(.gb-kicker) { margin: 0; }
-.article :deep(.gb-concept h2) { margin: 8px 0 14px; }
+.article :deep(.gb-kicker) { margin: 0; line-height: var(--gb-kicker-h); }
+/* A jump to The concept clears its kicker too. */
+.article :deep(.gb-concept h2) {
+  margin: var(--gb-kicker-gap) 0 14px;
+  scroll-margin-top: calc(var(--gb-heading-clear) + var(--gb-concept-pad) + var(--gb-kicker-h) + var(--gb-kicker-gap));
+}
 .article :deep(.gb-concept > :last-child) { margin-bottom: 0; }
 .article :deep(.gb-ref) {
   display: inline-flex;
@@ -224,7 +232,7 @@ const parts = computed(() => {
   .stop-pane { padding: 18px 16px; }
   .article :deep(.gb-case) { padding: 18px; }
   .stop-pane :deep(h2) { font-size: 20px; }
-  .article :deep(.gb-concept) { padding: 20px 18px; border-radius: 16px; }
+  .article :deep(.gb-concept) { --gb-concept-pad: 20px; padding: var(--gb-concept-pad) 18px; border-radius: 16px; }
   .article :deep(.gb-concept h2) { font-size: 23px; }
   .article :deep(.gb-cards) { grid-template-columns: 1fr; }
   .article :deep(.gb-try) { padding: 18px; font-size: 16px; }
