@@ -185,6 +185,11 @@ A saved Claude Code workflow script: a fixed sequence of agent steps that a
 named by it and kept in `.claude/workflows/` (ADR-0005). Not the GitHub Actions
 workflow that runs the **Gate** in CI (ADR-0026).
 
+### Routine
+A scheduled trigger, set up outside the repo, that runs one **Skill**. The Skill
+holds what the run does; the Routine holds only when (ADR-0005). A **Trusted**
+user who sets one up approves that Skill's runs (ADR-0003).
+
 ### Agent Authorship
 Platform-wide invariant: **agents are the authors of record for essentially all
 content and code.** **Trusted** users (those with write access) converse, direct,
