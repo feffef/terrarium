@@ -32,15 +32,16 @@
   --gb-accent: oklch(0.48 0.12 220);
   --gb-solid: #0f1d26;
   --gb-solid-ink: #fff;
+  --gb-solid-accent: oklch(0.8 0.1 210);
   --gb-code-bg: #f6f8fa;
   --gb-sans: 'Glass Box Sans', system-ui, sans-serif;
   --gb-mono: 'Glass Box Mono', ui-monospace, monospace;
   /* The frosted bar; solid where the browser can't blur (below). */
   --gb-bar: var(--gb-pane);
   /* Sticky offsets, kept in step: the header (sticky below 1024px), the table
-     of contents under it (GlassboxToc sets --gb-toc-h to its real height), and
-     the room a heading leaves above itself when jumped to. */
-  --gb-header-h: 0px;
+     of contents (GlassboxToc sets --gb-toc-h to its real height), and the room
+     a heading leaves above itself when jumped to. */
+  --gb-header-h: 60px;
   --gb-toc-top: 12px;
   --gb-toc-h: 84px;
   --gb-heading-clear: calc(var(--gb-toc-top) + var(--gb-toc-h) + 16px);
@@ -112,7 +113,7 @@ body:has(.gb) { margin: 0; }
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  min-height: 60px;
+  min-height: var(--gb-header-h);
   font-size: 16px;
 }
 .gb .gb-brand {
@@ -178,7 +179,6 @@ body:has(.gb) { margin: 0; }
     top: 0;
     z-index: 10;
     box-sizing: border-box;
-    min-height: var(--gb-header-h);
     margin: 0 -20px;
     padding: 8px 14px 8px 20px;
     background: var(--gb-bar);

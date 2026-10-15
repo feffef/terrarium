@@ -60,11 +60,14 @@
   // node/tsx program loads. Both modules are typechecked by the Nuxt program
   // (`layers/*/app/**/*`), and both specs assert their contract at runtime, so a
   // renamed field or a changed signature still fails `pnpm test`.
+  // Glass Box's revision spec is out the same way: revision.ts types its
+  // injection key with `vue`.
   // `node_modules` is listed because naming `exclude` at all replaces TypeScript's
   // implicit default (`node_modules`, `bower_components`, `jspm_packages`, outDir).
   "exclude": [
     "node_modules",
     "layers/journal/tests/unit/expand-transition.spec.ts",
-    "layers/journal/tests/unit/accordion-deep-link.spec.ts"
+    "layers/journal/tests/unit/accordion-deep-link.spec.ts",
+    "layers/glassbox/tests/unit/revision.spec.ts"
   ]
 }

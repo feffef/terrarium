@@ -19,6 +19,11 @@ export interface GlassboxPageLink {
   title: string
 }
 
+/** A Lesson's Subject, read from its folder; undefined for any other page. */
+export function glassboxSubjectOf(path: string) {
+  return glassboxSubjects.find((subject) => path.startsWith(`/${subject.slug}/`))
+}
+
 /** Group Lessons under their Subject, in Subject order, dropping Subjects with
  *  no Lesson. Lessons keep the order they arrive in. */
 export function glassboxDirectory(pages: GlassboxPageLink[]) {

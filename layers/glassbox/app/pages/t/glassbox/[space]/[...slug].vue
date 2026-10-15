@@ -13,18 +13,8 @@ const { data, status, error } = await useAsyncData(route.path, async () => {
 })
 
 const page = computed(() => data.value?.page ?? null)
-// Two renders so the table of contents sits between the lede and the first section.
-const parts = computed(() => {
-  if (!page.value) return null
-  const { body } = page.value
-  const [intro, sections] = glassboxSplitAtFirstSection(body.value)
-  return {
-    intro: { ...page.value, body: { ...body, value: intro } },
-    sections: { ...page.value, body: { ...body, value: sections } },
-    toc: body.toc?.links ?? [],
-  }
-})
 if (!page.value && !error.value) setResponseStatus(404)
+provide(glassboxRevisionKey, computed(() => page.value ?? undefined))
 
 const menuOpen = ref(false)
 const menuButton = useTemplateRef<HTMLButtonElement>('menuButton')
@@ -72,14 +62,7 @@ useSeoMeta({ description: () => page.value?.description })
         >≡</button>
       </header>
 
-      <article v-if="page && parts" class="gb-column">
-        <h1>{{ page.title }}</h1>
-        <ContentRenderer class="gb-prose" :value="parts.intro" />
-        <GlassboxToc v-if="parts.toc.length" :links="parts.toc" />
-        <ContentRenderer class="gb-prose" :value="parts.sections" />
-        <GlassboxSurround v-if="data?.surround" :base="base" :prev="data.surround.prev" :next="data.surround.next" />
-        <GlassboxUpdated placement="end" :date="page.revisionDate" />
-      </article>
+      <GlassboxArticle v-if="page" class="gb-column" :page="page" :base="base" :surround="data?.surround ?? null" />
 
       <div v-else class="gb-column">
         <h1>Not found</h1>
