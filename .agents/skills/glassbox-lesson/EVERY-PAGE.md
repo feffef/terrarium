@@ -30,6 +30,9 @@ the page draws `title` as its heading, so the body has no h1.
   concept* ends on one Full reference.
 - **Don't repeat a sibling.** Check a Lesson's *What to watch for* against the
   other Lessons in its Subject; link a point one of them makes instead.
+- **Name the command.** A watch item about a stale `.nuxt/`, the type check or
+  a restart names the command it applies to, after checking what the repo's
+  `pnpm` scripts already run (`package.json`).
 - **Terms.** Wrap a word the reader may not know in `:term[…]`. For each id
   with no `layers/glassbox/content/guide/terms/<id>.yml`, add one: `term`, a
   `definition` in Glass Box's own words, and `source`, the glossary that
