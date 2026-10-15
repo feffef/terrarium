@@ -1,0 +1,12 @@
+name: "throwaway-branch-vs-pr-rule"
+cause: "ADR-0003 says open a PR for any pushed non-log commit, but the pack Skills prototype and wayfinder say a throwaway branch gets no PR, so sessions follow one and break the other."
+surface: "human-only"
+status: "tracked"
+ref: "issue #2029"
+occurrences:
+  - session: "session_01BdQnbVQmdfrD1PPyZTnL9w"
+    date: "2026-10-14"
+    severity: "minor"
+  - session: "session_01JkzKjuQD4wH34MjxMjKHaX"
+    date: "2026-10-14"
+    severity: "minor"

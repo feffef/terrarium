@@ -18,7 +18,9 @@ Skill is the opt-in: run each by name with the Workflow tool, pass `args` as
 a JSON value, and act on the structured result. Pass `session` (this
 session's id, `session_…`) in both: every GitHub write carries it as the
 ADR-0017 header. A workflow can't ask the owner, wait on CI or merge, so you
-do those. To see what a run's agents did, read its `journal.jsonl`.
+do those. To see what a run's agents did, read its `journal.jsonl`. A run's saved
+`.output` nests the return value as JSON under `result`. A branch with
+`status: ready-to-push` has already passed `gate:scoped`.
 
 ## 1. Explore
 

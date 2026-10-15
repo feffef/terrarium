@@ -6,24 +6,6 @@ status: fixed
 fixedOn: "2026-10-10"
 ref: "issues #1422, #1684; PR #1438; ADR-0017 amendment e76caa79"
 occurrences:
-  - session: session_012G6YRvBigrXTRr4QHFQsfm
-    date: "2026-09-30"
-    severity: nit
-  - session: session_01GoNR7LgfGTcJfKqZ8gUDSx
-    date: "2026-09-30"
-    severity: nit
-  - session: session_01JJjnpQCtu8pinf5RioLwgZ
-    date: "2026-09-30"
-    severity: minor
-  - session: session_01NbSN3foQRduNSW6jJyZD5F
-    date: "2026-09-30"
-    severity: nit
-  - session: session_01RA14XShYErE96EXs3TMX3c
-    date: "2026-09-30"
-    severity: nit
-  - session: session_01UAeYQB1xoCmRvmzsd7EMBB
-    date: "2026-09-30"
-    severity: nit
   - session: session_015TVUDfeEoazwwnEyyKMa8M
     date: "2026-10-01"
     severity: nit

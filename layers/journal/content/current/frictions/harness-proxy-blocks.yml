@@ -3,6 +3,7 @@ cause: >-
   The cloud harness permission classifier or agent proxy refuses an owner-approved action (a guards dispatch, a rulesets POST, a numeric-id endpoint) with no in-session override.
 surface: outside
 status: open
+ref: "docs/agents/environment-caveats.md bullet listing blocked hosts, 2026-10-15"
 occurrences:
   - session: session_014aYTnetbYbfGH2MrSUDj9T
     date: "2026-10-01"
@@ -32,5 +33,14 @@ occurrences:
     date: "2026-10-14"
     severity: minor
   - session: session_01ERZa4fUGxpF81MeLhZMkSB
+    date: "2026-10-14"
+    severity: minor
+  - session: session_01JkzKjuQD4wH34MjxMjKHaX
+    date: "2026-10-14"
+    severity: minor
+  - session: session_01RBVYHX1FsYogHEgzgyRV6P
+    date: "2026-10-14"
+    severity: minor
+  - session: session_01Dcufz27EyPsKy6sYafpKRg
     date: "2026-10-14"
     severity: minor

@@ -3,8 +3,8 @@ cause: >-
   audit-docs reviewer subagents cite finding line ranges that are off by one or cover partial sentences, so the checkers must correct them in a second pass.
 surface: safe
 status: fixed
-fixedOn: "2026-10-12"
-ref: "commit a4802cf0c (audit-docs SKILL: quote whole, no line ranges)"
+fixedOn: "2026-10-14"
+ref: "PR #1957 (merged 2026-10-14T18:12Z), after commit a4802cf0c; regression flagged in issue #2024"
 occurrences:
   - session: session_01YVCyXmxSSDQ6csSBVJ554H
     date: "2026-10-11"
