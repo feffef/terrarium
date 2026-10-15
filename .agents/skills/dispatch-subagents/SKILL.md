@@ -81,7 +81,9 @@ every line that applies.
   agent for every fix, later ones included, and review again; it pushes once a
   review is clean, and you open and land the PR (`pr-workflow.md`).
 - Impl agents do not run `close-session`/`log-session` (guard-enforced), and
-  cannot spawn subagents: run `/code-review` and any nested dispatch yourself.
+  cannot spawn subagents here (the cloud environment sets
+  `CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH=1`): run `/code-review` and any
+  nested dispatch yourself.
 - Give a size ceiling for a "simple" fix ("under ~50 lines, one new test") and
   tell the agent to report back rather than exceed it (issue #1182).
 - When the work touches routing or architecture, name the binding ADR in the

@@ -117,7 +117,7 @@ function reviewPrompt(b, axis, wt, round) {
     : `the Spec axis, with the brief and picks above as the spec, plus the issues themselves (read them with mcp__github__issue_read via ToolSearch)`
   return `You are the ${axis.toUpperCase()} reviewer, round ${round}. ${common(b)}
 ## Task
-Review read-only in ${wt} (\`cd ${wt} && …\`): the diff \`git diff origin/main...HEAD\`. Read .agents/skills/code-review/SKILL.md with Read and apply ${what} yourself; you can't spawn subagents. Focus on simplicity: what could be smaller, plainer or deleted. Edit no file and run no git command that changes state.
+Review read-only in ${wt} (\`cd ${wt} && …\`): the diff \`git diff origin/main...HEAD\`. Read .agents/skills/code-review/SKILL.md with Read and apply ${what} yourself; you can't spawn subagents (the environment sets CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH=1). Focus on simplicity: what could be smaller, plainer or deleted. Edit no file and run no git command that changes state.
 Mark worthFixing false for a judgement call not worth another fix round. ${ASK_VERDICTS}`
 }
 
