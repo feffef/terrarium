@@ -1,0 +1,3 @@
+term: Document
+definition: One entry in a Collection, such as one page or one record. Each file is one Document, stored as one row.
+source: GLOSSARY.md
