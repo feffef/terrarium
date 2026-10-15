@@ -1,7 +1,7 @@
 ---
 title: Asking for a change
 description: How a request to an agent session becomes a merged PR, through the session's start, its reading, its own checks, CI and the log it leaves on main.
-revision: '8fecf8b4e1b32da82557e42f42b2045bd12a05bb'
+revision: 'cf1b6c1b5bcb2cfbc84284ab38caec669f58bcbc'
 revisionDate: '2026-10-15'
 ---
 
@@ -57,7 +57,7 @@ The session pushes the branch and opens the PR itself, without asking. The PR's 
 
 ## 7. It logs its work, the first time
 
-With the PR open, the session runs `close-session` and writes its :term[session log]: its goal, how far it got and every :term[Friction]. At the end of that turn a `Stop` hook commits that one file straight to `main`.
+With the PR open, the session runs `close-session`. A script first re-reads `CLAUDE.md` and the always-loaded rules, then the session writes its :term[session log]: its goal, how far it got and every :term[Friction], one for each rule it broke or skipped. At the end of that turn a `Stop` hook commits that one file straight to `main`.
 
 ::stop-links
 [Session logs and Frictions](/t/glassbox/guide/terrarium-practice/session-logs)
@@ -73,7 +73,7 @@ GitHub Actions runs the Gate on the PR, and that run decides whether it may merg
 
 ## 9. The PR merges
 
-If a reviewer asks for changes, the session pushes again and CI runs again. Then the session posts its verdict on the PR as a comment and merges through `scripts/merge-pr.ts`, which waits for green checks and refuses without that verdict. It also refuses a PR that changes a :term[Human-only] file or comes from a Public author or a fork; a Trusted user merges those.
+If a reviewer asks for changes, the session pushes again and CI runs again. Then the session posts its verdict on the PR as a comment and merges through `scripts/merge-pr.ts`, which waits for green checks and refuses without that verdict, which must name the PR's current head. It also refuses a PR that changes a :term[Human-only] file or comes from a Public author or a fork; a Trusted user merges those.
 
 ::stop-links
 [A Human-only list read from main](/t/glassbox/guide/terrarium-practice/human-only-list)

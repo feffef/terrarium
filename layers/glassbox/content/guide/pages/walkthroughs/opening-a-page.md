@@ -1,7 +1,7 @@
 ---
 title: Opening a page
 description: How a click becomes a page, through one server for every site, one Space's content and a browser that builds the next page itself.
-revision: '8fecf8b4e1b32da82557e42f42b2045bd12a05bb'
+revision: 'cf1b6c1b5bcb2cfbc84284ab38caec669f58bcbc'
 revisionDate: '2026-10-15'
 ---
 

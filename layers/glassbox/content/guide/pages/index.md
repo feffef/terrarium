@@ -1,7 +1,7 @@
 ---
 title: Terrarium, seen through the glass.
 description: Each Lesson explains one tool or practice in general terms, then shows how and why Terrarium uses it, with the real files.
-revision: '5de2cc75d29c6653285a70504b2879aa15073129'
+revision: 'cf1b6c1b5bcb2cfbc84284ab38caec669f58bcbc'
 revisionDate: '2026-10-15'
 ---
 
