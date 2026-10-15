@@ -17,7 +17,7 @@ When its work reaches a coherent state, such as a PR opened or a question answer
 
 ## 2. The agent writes only its judgement
 
-`close-session` calls `log-session`. The agent writes a small YAML file with the fields only it can know: its goal, a status, an outcome, a summary, the docs and Skills that mattered, and every :term[Friction]. `scripts/log-session.ts --author` checks those fields and saves them as a scratch file, `.session-logs/pending.scratch.json`, which git ignores. Nothing is committed yet. Run again later in the session, the command merges the new pass with the earlier one. It refuses to run from a linked git worktree, since a subagent working there shares its parent's scratch path and would overwrite the parent's log.
+`close-session` calls `log-session`. The agent writes a small YAML file with the fields only it can know: its goal, a status, an outcome, a summary, the docs and Skills that mattered, and every :term[Friction]. `scripts/log-session.ts --author` checks those fields and saves them as a scratch file, `.session-logs/pending.scratch.json`, which git ignores. Nothing is committed yet. Run again later in the session, the command merges the new pass with the earlier one. It refuses to run from a linked git worktree, where a dispatched subagent shares its parent's scratch path.
 
 ::stop-links
 [Session logs and Frictions](/t/glassbox/guide/terrarium-practice/session-logs) · [Subagents and worktrees](/t/glassbox/guide/claude-code/subagents-worktrees) · :file[.agents/skills/log-session/SKILL.md] · :file[scripts/log-session.ts]
@@ -25,7 +25,7 @@ When its work reaches a coherent state, such as a PR opened or a question answer
 
 ## 3. The turn ends and a hook takes over
 
-When Claude finishes responding, Claude Code fires the `Stop` hook wired in `.claude/settings.json`. It checks that a scratch file exists and, if so, runs `log-session.ts --land`, with the hook's payload on stdin; the payload names the session's transcript. Hooks on `SessionEnd` and on `SessionStart` at resume run the same command, in case `Stop` missed it. The lander never exits with an error, so a fault in it can't hold up the session, and if this exact scratch has landed already, it stops there.
+When Claude finishes responding, Claude Code fires the `Stop` hook wired in `.claude/settings.json`. It checks that a scratch file exists and, if so, runs `log-session.ts --land`, with the hook's payload on stdin; the payload names the session's transcript. Hooks on `SessionEnd` and on `SessionStart` at resume run the same command, in case `Stop` missed it. The lander never exits with an error, and if this exact scratch has landed already, it stops there.
 
 ::stop-links
 [Hooks](/t/glassbox/guide/claude-code/hooks) · :file[.claude/settings.json] · :file[docs/adr/0009-session-logs-commit-directly-to-main.md]
@@ -41,7 +41,7 @@ Nobody writes the rest of the log. `scripts/session-trace.ts` reads the transcri
 
 ## 5. The entry is checked against main
 
-The stitched entry must pass the session schema, and its file name is fixed: the date the session started, then its id. The lander compares the entry with the copy already on `main` at that path and does nothing if they match. It also checks the entry against `main`'s own copy of the schema, since the session may sit on a branch that changed it. An entry `main` would reject waits, and lands on the first turn that ends after the schema change merges.
+The stitched entry must pass the session schema, and its file name is fixed: the date the session started, then its id. The lander compares the entry with the copy already on `main` at that path and does nothing if they match. It also checks the entry against `main`'s own copy of the schema, which the session's branch may have changed. An entry `main` would reject waits, and lands on the first turn that ends after the schema change merges.
 
 ::stop-links
 [A schema that only grows](/t/glassbox/guide/zod/schema-only-grows) · :file[shared/schemas/session.ts] · :file[scripts/log-session.ts]
@@ -62,7 +62,7 @@ A normal `git commit` takes what the session has staged, on whatever branch it i
 ```
 ::
 
-`idxEnv` sets `GIT_INDEX_FILE` to the temporary index. Before pushing, the lander diffs the new commit against `main` and refuses unless the log is the only file that changed. It pushes the commit to `refs/heads/main`. If the push fails, say because another session's log landed first, it fetches and builds the commit again on the new `main`, a few times with growing waits; two logs never conflict, since each has its own file. The commit message ends in the session's trailer.
+`idxEnv` sets `GIT_INDEX_FILE` to the temporary index. Before pushing, the lander diffs the new commit against `main` and refuses unless the log is the only file that changed. It pushes the commit to `refs/heads/main`. If the push fails, say because another session's log landed first, it fetches and builds the commit again on the new `main`, a few times with growing waits. Each log has its own file, so two logs never conflict. The commit message ends in the session's trailer.
 
 ::stop-links
 [Every change as a PR](/t/glassbox/guide/git-github/every-change-a-pr) · [Provenance headers and commit trailers](/t/glassbox/guide/git-github/provenance-headers) · :file[scripts/log-session.ts] · :file[docs/adr/0009-session-logs-commit-directly-to-main.md]
