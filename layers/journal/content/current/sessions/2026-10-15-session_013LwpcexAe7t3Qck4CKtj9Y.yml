@@ -1,14 +1,15 @@
 schemaVersion: 1
 session: session_013LwpcexAe7t3Qck4CKtj9Y
 startedAt: 2026-10-15T17:44:21Z
-endedAt: 2026-10-15T18:30:56Z
+endedAt: 2026-10-15T18:43:41Z
 kind: delegated
 goal: "Visitor-loop run on Glass Box: fix what first-time visitors agree on"
-status: in-review
-outcome: Fix PR 2098 opened and awaiting CI; the feature PR has not started.
-summary: "Human-instructed: the user's single kickoff, running the visitor-loop Skill with no argument, so the focus was the glassbox pin. Everything after was agent-initiated within that Skill. Three blind visitors (sonnet, opus, fable) browsed /t/glassbox/guide. Consensus: the landing never says what Terrarium is, Subject badges look like 404 paths, Marquee is never introduced, footer glosses are cryptic, and the Opening a page flowchart is hard to read. The refiner kept C, D and E, refined A and B (owner-approved lede and design 1b badge, so link rather than drop) and dropped my first feature, a landing diagram, because owner decisions in 1970, 1972 and 2065 reject one. It then refined the replacement, a real case in Asking for a change with no Journal session-log link, since that anchor dies on archive. I redrew the flowchart twice because the first redraw was too wide to read at 390px. The gate run was killed by a worker restart and rerun; main moved meanwhile, so I rebased and re-pinned three pages. PR 2098 is open with its review verdict posted. Still open: CI and merge, then the feature PR."
+status: completed
+outcome: "Both PRs merged: consensus fixes in 2098, a real-case story in 2099."
+summary: "Human-instructed: the user's single kickoff, running the visitor-loop Skill with no argument, so the focus was the glassbox pin. Everything after was agent-initiated within that Skill. Three blind visitors (sonnet, opus, fable) browsed /t/glassbox/guide. Consensus: the landing never says what Terrarium is, Subject badges look like 404 paths, Marquee is never introduced, footer glosses are cryptic, and the Opening a page flowchart is hard to read. The refiner kept C, D and E, refined A and B (owner-approved lede and design 1b badge, so link rather than drop) and dropped my first feature, a landing diagram, because owner decisions in 1970, 1972 and 2065 reject one. The replacement, a real case in Asking for a change with no Journal session-log link (that anchor dies on archive), was refined and built from PR 2089. I redrew the flowchart twice because the first redraw was too wide at 390px. The first gate run was killed by a worker restart; main moved, so I rebased and re-pinned three pages. Both PRs merged on a green gate with verdicts posted; no finding was out of remit."
 prs:
   - "2098"
+  - "2099"
 docsRead:
   - path: docs/agents/git-conventions.md
     reason: read before the first fetch
@@ -107,22 +108,25 @@ frictions:
   - description: My first feature, a landing diagram, was dropped late because owner decisions in old issues rejected it, and I rewrote the flowchart twice for the 390px width.
     solution: Have visitor-loop step 3 grep the design resolutions on the focus Tenant before choosing a feature.
     severity: minor
-durationSec: 2796
+durationSec: 3561
 models:
-  claude-sonnet-5-5: 149
+  claude-sonnet-5-5: 203
 toolCounts:
-  Read: 9
-  Bash: 48
-  Agent: 6
+  Read: 10
+  Bash: 64
+  Agent: 8
   Write: 4
   ToolSearch: 2
   mcp__github__search_issues: 6
   mcp__github__search_pull_requests: 1
   SendMessage: 1
-  Skill: 3
-  mcp__github__create_pull_request: 1
-  mcp__claude-code-remote__subscribe_pr_activity: 1
-  mcp__github__add_issue_comment: 1
+  Skill: 4
+  mcp__github__create_pull_request: 2
+  mcp__claude-code-remote__subscribe_pr_activity: 2
+  mcp__github__add_issue_comment: 2
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 3
+  mcp__claude-code-remote__unsubscribe_pr_activity: 2
 rulesLoaded:
   - .claude/rules/adr-0028.md
   - .claude/rules/adr-0021.md
@@ -154,7 +158,6 @@ docsReadBySubagents:
   - .agents/skills/visitor-loop/SKILL.md
   - .agents/skills/glassbox-walkthrough/SKILL.md
   - docs/adr/0024-build-time-mermaid-prerender.md
-  - docs/adr/0003-agent-operating-model-and-governance.md
   - layers/tinkerfund/GLOSSARY.md
   - docs/agents/tenant-layers.md
   - docs/adr/0028-navigation-reads-server-payloads.md
@@ -242,7 +245,17 @@ subagents:
     task: "Review: Standards axis"
   - type: general-purpose
     task: "Review: Spec axis"
+  - type: general-purpose
+    task: "Review: Standards axis (feature)"
+  - type: general-purpose
+    task: "Review: Spec axis (feature)"
 gitBranch: claude/youthful-lovelace-866449
 entrypoint: remote
 cliVersion: 2.1.300
+ideas:
+  - Glass Box subject index pages (/t/glassbox/guide/claude-code) with a one-line summary per Lesson; needs a page-checks.ts placeProblems change so an index.md may sit in a Subject folder.
+  - "Per-Lesson Show the live result chip in Glass Box (layers: two Tenants side by side; Gate: latest CI run) so each In Terrarium section links evidence."
+  - Diagrams for the Adding a Tenant (folder tree) and Asking for a change (request-to-merge timeline) Walkthroughs, each a committed SVG.
+  - "Lesson contract: let a Why it's built this way line carry a one-line ADR summary, not only the ADR number and path (sonnet and opus found the bare paths cold)."
+  - "Glass Box reading progress: tick visited Lessons in the sidebar from localStorage and show N of M per Subject; weigh against the ADR-0028 payload note."
 landedBy: Stop
