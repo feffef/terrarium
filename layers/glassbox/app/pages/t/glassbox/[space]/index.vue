@@ -14,6 +14,7 @@ const { data, status, error } = await useAsyncData(route.path, async () => {
 })
 
 const landing = computed(() => data.value?.landing ?? null)
+const folderUrl = (slug: string) => landing.value && glassboxFileUrl(`layers/glassbox/content/${space}/pages/${slug}/`, landing.value.revision)
 provide(glassboxRevisionKey, computed(() => landing.value ?? undefined))
 
 useHead(() => ({ title: `${landing.value?.title ?? 'Glass Box'} · glassbox` }))
@@ -44,7 +45,7 @@ useSeoMeta({ description: () => landing.value?.description })
       <h2>Subjects</h2>
       <div class="cards">
         <section v-for="subject in data.directory" :key="subject.slug" class="card gb-pane">
-          <h3>{{ subject.name }} <span>{{ subject.slug }}/</span></h3>
+          <h3>{{ subject.name }} <a class="folder" :href="folderUrl(subject.slug)" title="Folder in the repo">{{ subject.slug }}/</a></h3>
           <ul>
             <li v-for="lesson in subject.lessons" :key="lesson.path">
               <NuxtLink :to="`${base}${lesson.path}`">{{ lesson.title }}</NuxtLink>
@@ -52,7 +53,7 @@ useSeoMeta({ description: () => landing.value?.description })
           </ul>
         </section>
         <section v-if="data.walkthroughs.length" class="card walkthroughs">
-          <h3>Walkthroughs <span>walkthroughs/</span></h3>
+          <h3>Walkthroughs <a class="folder" :href="folderUrl('walkthroughs')" title="Folder in the repo">walkthroughs/</a></h3>
           <ul>
             <li v-for="page in data.walkthroughs" :key="page.path">
               <NuxtLink :to="`${base}${page.path}`">{{ page.title }} →</NuxtLink>
@@ -140,12 +141,12 @@ h1 {
   font-weight: 600;
   line-height: 1.3;
 }
-.card h3 span { font: 400 11.5px var(--gb-mono); color: var(--gb-muted); }
+.card h3 .folder { font: 400 11.5px var(--gb-mono); color: var(--gb-muted); text-decoration: underline 1px dotted; text-underline-offset: 3px; }
 .card ul { display: flex; flex-direction: column; gap: 4px; margin: 0; padding: 0; list-style: none; font-size: 15px; line-height: 1.45; }
 .card a { color: var(--gb-ink-2); text-decoration: none; }
 .card a:hover { color: var(--gb-accent); }
 .walkthroughs { background: var(--gb-solid); color: var(--gb-solid-ink); }
-.walkthroughs h3 span { color: inherit; opacity: 0.6; }
+.walkthroughs h3 .folder { color: inherit; opacity: 0.6; }
 .walkthroughs ul { flex-flow: row wrap; gap: 4px 14px; font-size: 14px; }
 .walkthroughs a, .walkthroughs a:hover { color: inherit; }
 .walkthroughs a:hover { text-decoration: underline; }
