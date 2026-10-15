@@ -19,7 +19,8 @@ the page draws `title` as its heading, so the body has no h1.
   `ADR-NNNN (:file[docs/adr/NNNN-….md])`, and a Journal page by its site path
   (a content page, or `/t/journal/<space>/{skills,frictions,ideas}`). A path
   holding `[` can't go in `:file[…]`: cite its folder. An Excerpt's `lines`
-  range starts on its first line and ends on its last.
+  starts on its first line and ends on its last; with two or more gaps, give
+  one range per run (Excerpt in the glossary).
 - **Don't paraphrase an ADR.** In Terrarium and What to watch for don't retell
   an ADR's Scope or Why either: show the files and link the ADR.
 - **Link only pages that exist**, and promise none.

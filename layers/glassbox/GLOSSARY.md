@@ -55,7 +55,8 @@ Its body follows one contract, which the page frames like design 1b
   `<topic>: ADR-NNNN (:file[…]).`, one per ADR, never restating it and
   pointing nowhere else. A topic no ADR binds gets
   `<topic>: :file[<the doc that holds the reason>].`, never a loosely
-  related ADR;
+  related ADR. What to watch for warns about consequences for the reader, and
+  links an ADR rather than restating its Scope or Consequences;
 - `## Try it in your project`;
 - `## Where next`, a list of bare links: related Lessons first, then
   optionally one Journal page as evidence. A Lesson with no related Lesson
@@ -92,6 +93,10 @@ Real Terrarium code copied into a page inside an `::excerpt` block, and checked
 word for word against the file at the page's `revision`. A code fence outside
 `::excerpt` is an example, not an Excerpt. A line that is only a comment
 holding `…` (`// …`) marks code left out; the check allows a gap there.
+Its `lines` range starts on the Excerpt's first line and ends on its last. With
+more than one gap, `lines` gives one range per run, comma-separated
+(`lines="3,5-6,9"`), and each run must be exactly its range; the page numbers
+each run from its own.
 
 A page cites code only this way or through `:file`, never with a hand-written
 `github.com/…/blob/…` or `/tree/…` link, and every `ADR-NNNN` it names exists

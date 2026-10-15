@@ -128,6 +128,10 @@ describe('glassboxPageProblems on fixture pages', () => {
     ['an Excerpt that ends before its lines end', (s: string) => s.replace('  return out\n}\n```', '  return out\n```'), 'Excerpt of shared/expand.ts is not in the file'],
     ['an Excerpt with no gap shorter than its lines', (s: string) => s.replace('  // …\n  return out\n}', '  const out = {}'), 'Excerpt of shared/expand.ts is not in the file'],
     ['an Excerpt out of order across a gap', (s: string) => s.replace('  // …\n  return out', '  return out\n  // …\n  const out = {}'), 'Excerpt of shared/expand.ts is not in the file'],
+    // Excerpt.vue can't number a run between two gaps.
+    ['an Excerpt with one range and two gaps', (s: string) => s.replace('  // …\n  return out', '  // …\n  for (const col of cols) out[col.key] = col\n  // …\n  return out'), 'has 2 gaps: give lines one range per run'],
+    ['an Excerpt run off its range', (s: string) => s.replace('  // …\n  return out', '  // …\n  for (const col of cols) out[col.key] = col\n  // …\n  return out').replace('lines="3-7"}\n```', 'lines="3,4,6-7"}\n```'), 'does not match its ranges 3,4,6-7'],
+    ['an Excerpt with fewer ranges than runs', (s: string) => s.replace('  // …\n  return out', '  // …\n  for (const col of cols) out[col.key] = col\n  // …\n  return out').replace('lines="3-7"}\n```', 'lines="3,6-7"}\n```'), 'does not match its ranges 3,6-7'],
     ['an ADR missing at revision', (s: string) => s.replace('ADR-0004', 'ADR-0099'), 'ADR-0099 does not exist'],
     ['a guide link to no page', (s: string) => s.replace('terrarium-practice/gate', 'terrarium-practice/gates'), 'link /t/glassbox/guide/terrarium-practice/gates resolves to no page'],
     ['a Journal link to no content file', (s: string) => s.replace('current/how-it-works', 'current/made-up'), 'link /t/journal/current/made-up resolves to no page'],
@@ -165,6 +169,11 @@ describe('glassboxPageProblems on fixture pages', () => {
     ['a page outside any folder', 'collections.md', 'outside a Subject folder'],
   ])('fails %s', (_name, file, message) => {
     expect(problemsOf(file, lesson).join('\n')).toContain(message)
+  })
+
+  it('passes an Excerpt with one range per run', () => {
+    const multi = lesson.replace('  // …\n  return out', '  // …\n  for (const col of cols) out[col.key] = col\n  // …\n  return out').replace('lines="3-7"}\n```', 'lines="3,5,6-7"}\n```')
+    expect(problemsOf('nuxt-content/01.collections.md', multi)).toEqual([])
   })
 
   it('passes an Excerpt with no lines anywhere in its file', () => {

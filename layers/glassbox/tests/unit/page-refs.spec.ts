@@ -41,6 +41,19 @@ describe('glassboxRelineRefs', () => {
     const moved = glassboxRelineRefs(body, (ref) => (ref.path === 'a.ts' ? { start: 5, end: 5 } : undefined))
     expect(moved).toBe(body.replace("{lines='3-4'}", '{lines="5"}').replace("{lines='3-4' path", '{lines="5" path'))
   })
+
+  it('moves every range of an Excerpt with one range per run', () => {
+    const body = '::excerpt{path="a.ts" lines="3,5-6,9"}'
+    expect(glassboxRelineRefs(body, () => ({ start: 10, end: 16 }))).toBe('::excerpt{path="a.ts" lines="10,12-13,16"}')
+  })
+})
+
+describe('glassboxPageRefs on an Excerpt with one range per run', () => {
+  it('reads the whole span and each run\'s range', () => {
+    expect(glassboxPageRefs('::excerpt{path="a.ts" lines="3,5-6,9"}\n::').files).toEqual([
+      { path: 'a.ts', lines: { start: 3, end: 9 }, runs: [{ start: 3, end: 3 }, { start: 5, end: 6 }, { start: 9, end: 9 }] },
+    ])
+  })
 })
 
 describe('glassboxPageRefs', () => {
