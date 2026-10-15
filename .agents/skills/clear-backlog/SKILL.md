@@ -88,7 +88,7 @@ implies.
 
 Run `clear-backlog-build` with `{ session, branches: [...] }`, one entry
 per branch: `name`, `issues`, `brief`, the agreed `picks`, `model: "sonnet"`
-for a change within `dispatch-subagents` §3's "simple" size, and
+for a change under the size ceiling the brief sets (`dispatch-subagents` §3), and
 `cherryPick` when a closed, unmerged PR already implements the agreed pick.
 Each branch is built in its own worktree off `origin/main`, then reviewed
 on both `code-review` axes and fixed until only judgement calls remain. Its

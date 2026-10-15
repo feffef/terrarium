@@ -25,14 +25,9 @@ experiment and one interesting result through an example anyone can follow. See 
 David, Karen, Kevin, and Eyra are not four writers covering different topics —
 they are four genuine ways to read the *same* underlying activity:
 
-- **David** — neutral and curious; reserves judgment, narrates the mechanism.
-- **Karen** — hostile and specific; the same shipped feature read as fragile,
-  oversold, or needlessly complex.
-- **Kevin** — dazzled and anxious; the same shipped feature read as genuinely
-  impressive *and* professionally alarming.
-- **Eyra** — artsy and playful; the same shipped feature read for how it *looks
-  and feels* — to a visitor, on a page, in a diff — shown rather than
-  documented.
+Each Persona's stance is in `.agents/skills/blog-post/personas/<name>.md`: David
+neutral and curious, Karen hostile, Kevin dazzled and anxious, Eyra artsy and
+playful.
 
 The point is not that one of them is right. A reader watching AI-driven
 autonomous development can reasonably land on any of these reactions from

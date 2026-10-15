@@ -4,10 +4,11 @@ importance: essential
 gist: Wraps up a session and writes its honest closing diary entry.
 role: >-
   The model-facing front door for Session closure: when a session wraps up it
-  runs the closing sequence (coherent state, gated-PR discipline, the session
-  log written via `log-session`). It makes the self-judged "invoke at closure"
-  rule fire reliably; its invocation rate is the evidence for ADR-0009's choice
-  of a skill over an automatic safety net.
+  re-reads CLAUDE.md and the always-loaded rules, logs a Friction for each one
+  broken, writes the session log via `log-session`, and babysits its gated PR
+  to merge. It makes the self-judged "invoke at closure" rule fire reliably;
+  its invocation rate is the evidence for ADR-0009's choice of a Skill over a
+  reminder hook.
 observations:
   - date: 2026-09-27
     note: >-

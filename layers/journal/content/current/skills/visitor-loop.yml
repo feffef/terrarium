@@ -6,8 +6,8 @@ role: >-
   The Terrarium's self-growth loop: three blind first-time visitors, each a
   different model, browse one rotating part of a live build; the run fixes what
   two or more flag, builds their best feature idea, and self-merges both PRs on
-  a green gate after `code-review`. A script (prose alone failed 5/5) gathers
-  the owner's rulings for `decisions.md`, so rejected ideas stay rejected; it is
+  a green gate after `code-review`. A script lists candidate owner corrections
+  for `decisions.md` (prose alone failed 5/5), so rejected ideas stay rejected;
   not yet proven end-to-end on a real revert.
 observations:
   - date: 2026-09-27

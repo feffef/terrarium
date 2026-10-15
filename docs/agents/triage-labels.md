@@ -14,7 +14,7 @@ the AFK-ready triage label"), use that string.
 | `needs-triage`             | `needs-triage`       | Maintainer needs to evaluate this issue  |
 | `needs-info`               | `needs-info`         | Waiting on reporter for more information |
 | `ready-for-agent`          | `ready-for-agent`    | Fully specified, ready for an AFK agent  |
-| `ready-for-human`          | `ready-for-human`    | Requires human implementation            |
+| `ready-for-human`          | `ready-for-human`    | Needs a person: a judgment call, a decision or a human merge |
 | `wontfix`                  | `wontfix`            | Will not be actioned                     |
 
 > **Requester-trust gate.** A Public issue reaches `ready-for-agent` only
