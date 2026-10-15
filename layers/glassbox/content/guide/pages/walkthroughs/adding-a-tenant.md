@@ -49,10 +49,10 @@ The same expansion feeds :file[modules/routing.ts], which writes the routing map
 
 ## 6. It gets its own look
 
-For a design of its own, the Tenant adds pages under `app/pages/t/<tenant>/` in its layer. Their first segment is the Tenant's fixed name, so they outrank the catch-all for its addresses and no others. Its components go in a folder named after it, so Nuxt gives them its name as a prefix, as in `MarqueePoster`. Its stylesheet, listed in its `nuxt.config.ts`, loads on every page of every Tenant, so it prefixes its CSS custom properties with its own name and scopes its rules under a class only its pages carry. The Journal sets its tokens once on `.jd`, the wrapper of its pages, and every component inside reads them with `var()` from its own scoped styles, since custom properties are inherited down the page.
+For a design of its own, the Tenant adds pages under `app/pages/t/<tenant>/` in its layer. Their first segment is the Tenant's fixed name, so they outrank the catch-all for its addresses and no others. Its components go in a folder named after it, so Nuxt gives them its name as a prefix, as in `MarqueePoster`. Its stylesheet, listed in its `nuxt.config.ts`, loads on every page of every Tenant, so it prefixes its CSS custom properties with its own name and scopes its rules under a class only its pages carry. Its components read those properties with `var()`, so none of them repeats a colour.
 
 ::stop-links
-[File routing: catch-all, Tenant overrides, root pages](/t/glassbox/guide/nuxt-vue/file-routing) · [Auto-imports and their one global namespace](/t/glassbox/guide/nuxt-vue/auto-imports) · :file[docs/agents/tenant-layers.md] · :file[layers/marquee/app/assets/theme.css]
+[File routing: catch-all, Tenant overrides, root pages](/t/glassbox/guide/nuxt-vue/file-routing) · [Auto-imports and their one global namespace](/t/glassbox/guide/nuxt-vue/auto-imports) · [Theming with CSS custom properties on a wrapper class](/t/glassbox/guide/nuxt-vue/theming-wrapper-class) · :file[docs/agents/tenant-layers.md] · :file[layers/marquee/app/assets/theme.css]
 ::
 
 ## 7. It gets its own words
