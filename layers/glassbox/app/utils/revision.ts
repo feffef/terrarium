@@ -14,6 +14,12 @@ export function glassboxFileUrl(path: string, revision: string, lines?: LineRang
   return `${REPO_URL}/${path.endsWith('/') ? 'tree' : 'blob'}/${revision}/${path}${anchor}`
 }
 
+// Built by hand, not with toLocaleDateString: server and browser can format a
+// locale differently and break hydration (as in layers/midden/app/utils/find.ts).
+const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+
+/** `2026-10-14` → `14 Oct 2026`. */
 export function formatGlassboxDate(date: string) {
-  return new Date(date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' })
+  const [year, month, day] = date.split('-')
+  return `${Number(day)} ${months[Number(month) - 1]} ${year}`
 }

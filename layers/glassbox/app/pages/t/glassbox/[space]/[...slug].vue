@@ -20,6 +20,7 @@ const { data, status, error } = await useAsyncData(route.path, async () => {
     terms: Object.fromEntries(terms.map(({ stem, ...t }) => [stem, t])),
     subjects: glassboxDirectory(pages),
     walkthroughs: glassboxWalkthroughs(pages),
+    surround: glassboxSurround(pages, path),
   }
 })
 
@@ -62,6 +63,7 @@ useSeoMeta({ description: () => page.value?.description })
     <div class="gb-main">
       <header class="gb-header">
         <GlassboxBrand :to="base" />
+        <GlassboxUpdated v-if="page" placement="header" :date="page.revisionDate" />
         <button
           ref="menuButton"
           type="button"
@@ -73,7 +75,7 @@ useSeoMeta({ description: () => page.value?.description })
         >≡</button>
       </header>
 
-      <GlassboxArticle v-if="page" class="gb-column" :page="page" />
+      <GlassboxArticle v-if="page" class="gb-column" :page="page" :base="base" :surround="data?.surround ?? null" />
 
       <div v-else class="gb-column">
         <h1>Not found</h1>

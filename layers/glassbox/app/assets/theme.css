@@ -38,7 +38,13 @@
   --gb-mono: 'Glass Box Mono', ui-monospace, monospace;
   /* The frosted bar; solid where the browser can't blur (below). */
   --gb-bar: var(--gb-pane);
-  --gb-header: 60px;
+  /* Sticky offsets, kept in step: the header (sticky below 1024px), the table
+     of contents (GlassboxToc sets --gb-toc-h to its real height), and the room
+     a heading leaves above itself when jumped to. */
+  --gb-header-h: 60px;
+  --gb-toc-top: 12px;
+  --gb-toc-h: 84px;
+  --gb-heading-clear: calc(var(--gb-toc-top) + var(--gb-toc-h) + 16px);
 
   /* MermaidDiagram's colour contract (app/utils/mermaid.ts). */
   --diagram-node-bg: var(--gb-bg);
@@ -107,7 +113,7 @@ body:has(.gb) { margin: 0; }
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  min-height: var(--gb-header);
+  min-height: var(--gb-header-h);
   font-size: 16px;
 }
 .gb .gb-brand {
@@ -166,18 +172,18 @@ body:has(.gb) { margin: 0; }
   }
 }
 @media (max-width: 1023.98px) {
+  .gb.gb-doc { --gb-header-h: 76px; --gb-toc-top: var(--gb-header-h); --gb-toc-h: 44px; }
   .gb.gb-doc .gb-main { padding: 0 20px 48px; }
   .gb.gb-doc .gb-header {
     position: sticky;
     top: 0;
     z-index: 10;
+    box-sizing: border-box;
     margin: 0 -20px;
     padding: 8px 14px 8px 20px;
     background: var(--gb-bar);
     backdrop-filter: blur(14px);
   }
-  /* An anchor jump (the skip line) lands below the sticky header. */
-  .gb.gb-doc :is(h2, h3) { scroll-margin-top: calc(var(--gb-header) + 16px); }
   .gb.gb-doc .gb-menu {
     display: flex;
     align-items: center;
@@ -213,6 +219,7 @@ body:has(.gb) { margin: 0; }
 .gb .gb-prose h2 { font-size: 28px; font-weight: 600; letter-spacing: -0.02em; line-height: 1.2; margin: 2.2em 0 0.5em; }
 .gb .gb-prose h3 { font-size: 20px; font-weight: 600; margin: 1.6em 0 0.4em; }
 .gb .gb-prose h2 a, .gb .gb-prose h3 a { color: inherit; text-decoration: none; }
+.gb .gb-prose :is(h2, h3) { scroll-margin-top: var(--gb-heading-clear); }
 .gb .gb-prose li + li { margin-top: 0.3em; }
 .gb .mermaid-diagram {
   padding: 24px;

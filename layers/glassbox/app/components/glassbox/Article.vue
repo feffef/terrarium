@@ -1,19 +1,35 @@
 <script setup lang="ts">
-import type { MinimarkTree } from '@nuxt/content'
+import type { MinimarkTree, Toc } from '@nuxt/content'
 
-const props = defineProps<{ page: { path: string, title: string, body: MinimarkTree } }>()
+const props = defineProps<{
+  page: { path: string, title: string, revisionDate: string, body: MinimarkTree & { toc?: Toc } }
+  base: string
+  surround: ReturnType<typeof glassboxSurround>
+}>()
 
 const subject = computed(() => glassboxSubjectOf(props.page.path))
-const shown = computed(() => subject.value
-  ? { ...props.page, body: { ...props.page.body, value: glassboxLessonSections(props.page.body.value) } }
-  : props.page)
+// Frames first, then two renders so the table of contents sits between the lede and the first section.
+const parts = computed(() => {
+  const { body } = props.page
+  const framed = subject.value ? glassboxLessonSections(body.value) : body.value
+  const [intro, sections] = glassboxSplitAtFirstSection(framed)
+  return {
+    intro: { ...props.page, body: { ...body, value: intro } },
+    sections: { ...props.page, body: { ...body, value: sections } },
+    toc: body.toc?.links ?? [],
+  }
+})
 </script>
 
 <template>
   <article class="article">
     <p v-if="subject" class="chips"><span class="chip">{{ subject.name }}</span><span>Lesson</span></p>
     <h1 :class="{ lesson: subject }">{{ page.title }}</h1>
-    <ContentRenderer class="gb-prose" :value="shown" />
+    <ContentRenderer class="gb-prose" :value="parts.intro" />
+    <GlassboxToc v-if="parts.toc.length" :links="parts.toc" />
+    <ContentRenderer class="gb-prose" :value="parts.sections" />
+    <GlassboxSurround v-if="surround" :base="base" :prev="surround.prev" :next="surround.next" />
+    <GlassboxUpdated placement="end" :date="page.revisionDate" />
   </article>
 </template>
 
