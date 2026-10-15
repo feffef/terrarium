@@ -21,8 +21,10 @@ the page draws `title` as its heading, so the body has no h1.
   holding `[` can't go in `:file[…]`: cite its folder.
 - **Link only pages that exist**, and promise none.
 - **Verify each official-docs URL** by fetching it and checking it says what
-  you cite. If the network blocks the fetch, confirm the exact URL and title in
-  web search results and say so in the PR. Zod links go to v3.zod.dev.
+  you cite. If the network blocks the fetch, read the page's source in the
+  published docs package (e.g. `@nuxt/docs` from npm) or the docs repo, confirm
+  the exact URL and title in web search results, and say so in the PR. Zod
+  links go to v3.zod.dev.
 - **Terms.** Wrap a word the reader may not know in `:term[…]`. For each id
   with no `layers/glassbox/content/guide/terms/<id>.yml`, add one: `term`, a
   `definition` in Glass Box's own words, and `source`, the glossary that
@@ -35,7 +37,9 @@ rules. Hand each to a subagent (`dispatch-subagents`): it drafts the
 ` ```mermaid ` fence, runs `pnpm render:mermaid`, looks at the page after
 `pnpm build` (below, both schemes), redraws until it reads at a glance, and
 commits the fence with its SVGs. With no subagent available, run that loop
-yourself and say so in the PR.
+yourself and say so in the PR. Done when its label text reads at about 12px or
+larger in the 390px screenshot; if it doesn't, redraw it narrower (fewer nodes
+side by side, shorter labels) or drop it.
 
 ## Check
 

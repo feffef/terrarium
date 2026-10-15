@@ -29,7 +29,7 @@ flowchart TD
 The browser asks for a page under `/t/`. A Caddy proxy passes the request to the one container that serves every site, where Nuxt's server, Nitro, answers it. That container built the site from `main` itself, so all the content it can send was built before the request arrived.
 
 ::stop-links
-[Architecture & Deployment](/t/journal/current/architecture) · :file[deploy/README.md] · :file[docs/adr/0011-poc-self-updating-deploy-container.md]
+[One app, many sites: Nuxt layers](/t/glassbox/guide/nuxt-vue/layers) · [Architecture & Deployment](/t/journal/current/architecture) · :file[deploy/README.md] · :file[docs/adr/0011-poc-self-updating-deploy-container.md]
 ::
 
 ## 2. The server may already have it
