@@ -1,0 +1,3 @@
+term: Friction
+definition: One problem a session records in its log, such as something that went wrong, was needlessly complex or wasted effort, with a possible fix and a severity from nit through minor, moderate and major to blocker.
+source: GLOSSARY.md
