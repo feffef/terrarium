@@ -1,0 +1,3 @@
+term: Space
+definition: One variant of a Tenant's content. Spaces share the Tenant's components and model, but none of each other's data.
+source: GLOSSARY.md

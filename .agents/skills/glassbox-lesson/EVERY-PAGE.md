@@ -21,6 +21,7 @@ the page draws `title` as its heading, so the body has no h1.
   holding `[` can't go in `:file[…]`: cite its folder.
 - **Link only pages that exist**, and promise none. A Lesson with no related
   Lesson yet gives Where next one sentence linking the nearest page that exists.
+  Each Where next list item is a bare link: the page draws it as a row.
 - **Verify each official-docs URL** by fetching it and checking it says what
   you cite. If the network blocks the fetch, confirm the exact URL and title in
   web search results and say so in the PR. Zod links go to v3.zod.dev.
