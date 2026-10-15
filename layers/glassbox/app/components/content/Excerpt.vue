@@ -47,7 +47,7 @@ const codeBlock = computed(() => {
       :key="i"
       class="row"
       :class="{ gap: row.gap, highlight: row.highlight }"
-    ><span class="number">{{ row.lineNumber }}</span><component :is="row.line" /></span></code></pre>
+    ><span v-if="range" class="number">{{ row.lineNumber }}</span><component :is="row.line" /></span></code></pre>
   </figure>
 </template>
 
@@ -109,6 +109,9 @@ code {
   padding: 0 14px 0 0;
   background: none;
   box-shadow: none;
+}
+.excerpt pre .row > :deep(.line:first-child) {
+  padding-left: 14px;
 }
 .number {
   flex: none;

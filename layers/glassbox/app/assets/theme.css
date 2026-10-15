@@ -36,8 +36,9 @@
   --gb-code-bg: #f6f8fa;
   --gb-sans: 'Glass Box Sans', system-ui, sans-serif;
   --gb-mono: 'Glass Box Mono', ui-monospace, monospace;
-  /* The frosted bar; solid where the browser can't blur (below). */
-  --gb-bar: var(--gb-pane);
+  /* The sticky bars: frosted, and opaque enough that text behind them doesn't
+     read through; solid where the browser can't blur (below). */
+  --gb-bar: color-mix(in srgb, var(--gb-bg) 90%, transparent);
   /* Sticky offsets, kept in step: the header (sticky below 1024px), the table
      of contents (GlassboxToc sets --gb-toc-h to its real height), and the room
      a heading leaves above itself when jumped to. */
@@ -87,7 +88,20 @@
   }
 }
 @supports not (backdrop-filter: blur(1px)) {
-  .gb { --gb-bar: color-mix(in srgb, var(--gb-bg) 92%, transparent); }
+  .gb { --gb-bar: var(--gb-bg); }
+}
+/* A scroller's right edge fades while it has more to show. Only a scroller
+   that overflows has an active scroll timeline, so only it fades; the mask
+   sits on the scroller, so the fade holds still (#1476). */
+@property --gb-fade {
+  syntax: '<length>';
+  inherits: false;
+  initial-value: 0px;
+}
+@keyframes gb-scroll-cue {
+  from { --gb-fade: 48px; }
+  95% { --gb-fade: 48px; }
+  to { --gb-fade: 0px; }
 }
 body:has(.gb) { margin: 0; }
 
@@ -221,16 +235,30 @@ body:has(.gb) { margin: 0; }
 .gb .gb-prose h2 a, .gb .gb-prose h3 a { color: inherit; text-decoration: none; }
 .gb .gb-prose :is(h2, h3) { scroll-margin-top: var(--gb-heading-clear); }
 .gb .gb-prose li + li { margin-top: 0.3em; }
-.gb .mermaid-diagram {
+.gb .gb-diagram {
+  margin: 1.5em 0;
   padding: 24px;
   border: 1px solid var(--gb-pane-edge);
   border-radius: 18px;
   background: var(--gb-pane);
   backdrop-filter: blur(16px);
 }
+/* The pane (glassboxFrameDiagrams) holds still; a diagram held at its least
+   scale (GlassboxArticle) scrolls inside it. */
+.gb .mermaid-diagram {
+  overflow-x: auto;
+}
 .gb .mermaid-diagram svg { display: block; max-width: 100%; height: auto; margin: 0 auto; }
+@media (max-width: 640px) {
+  .gb .gb-diagram { padding: 16px; }
+}
 
 /* ── Code ───────────────────────────────────────────── */
+.gb :is(.mermaid-diagram, .excerpt pre) {
+  mask-image: linear-gradient(to right, #000 calc(100% - var(--gb-fade)), transparent);
+  animation: gb-scroll-cue linear both;
+  animation-timeline: scroll(self inline);
+}
 .gb pre {
   overflow-x: auto;
   margin: 1.2em 0;

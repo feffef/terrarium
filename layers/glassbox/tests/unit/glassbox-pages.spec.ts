@@ -118,6 +118,10 @@ describe('glassboxPageProblems on fixture pages', () => {
     ['a lines range past the file end', (s: string) => s.replace('{lines="3-7"}', '{lines="3-8"}'), 'lines 3-8 do not fit its 7 lines'],
     ['an Excerpt not word for word', (s: string) => s.replace('  return out', '  return outs'), 'Excerpt of shared/expand.ts is not in the file'],
     ['an Excerpt outside its lines', (s: string) => s.replace('lines="3-7"}\n```', 'lines="1-5"}\n```'), 'Excerpt of shared/expand.ts is not in the file'],
+    // Excerpt.vue numbers lines from both ends of `lines`, so the Excerpt must reach both.
+    ['an Excerpt that starts after its lines start', (s: string) => s.replace('lines="3-7"}\n```', 'lines="2-7"}\n```'), 'Excerpt of shared/expand.ts is not in the file'],
+    ['an Excerpt that ends before its lines end', (s: string) => s.replace('  return out\n}\n```', '  return out\n```'), 'Excerpt of shared/expand.ts is not in the file'],
+    ['an Excerpt with no gap shorter than its lines', (s: string) => s.replace('  // …\n  return out\n}', '  const out = {}'), 'Excerpt of shared/expand.ts is not in the file'],
     ['an Excerpt out of order across a gap', (s: string) => s.replace('  // …\n  return out', '  return out\n  // …\n  const out = {}'), 'Excerpt of shared/expand.ts is not in the file'],
     ['an ADR missing at revision', (s: string) => s.replace('ADR-0004', 'ADR-0099'), 'ADR-0099 does not exist'],
     ['a guide link to no page', (s: string) => s.replace('terrarium-practice/gate', 'terrarium-practice/gates'), 'link /t/glassbox/guide/terrarium-practice/gates resolves to no page'],
@@ -153,6 +157,11 @@ describe('glassboxPageProblems on fixture pages', () => {
     ['a page outside any folder', 'collections.md', 'outside a Subject folder'],
   ])('fails %s', (_name, file, message) => {
     expect(problemsOf(file, lesson).join('\n')).toContain(message)
+  })
+
+  it('passes an Excerpt with no lines anywhere in its file', () => {
+    const anywhere = lesson.replace('path="shared/expand.ts" lines="3-7"}', 'path="shared/expand.ts"}').replace('  // …\n  return out\n}', '  const out = {}')
+    expect(problemsOf('nuxt-content/01.collections.md', anywhere)).toEqual([])
   })
 
   it('skips the git checks where the clone lacks the revision, and still checks the rest', () => {

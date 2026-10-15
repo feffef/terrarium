@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { currentGlassboxHeading, glassboxSplitAtFirstSection, glassboxSurround } from '../../app/utils/page-nav.ts'
+import { currentGlassboxHeading, glassboxFrameDiagrams, glassboxSplitAtFirstSection, glassboxSurround } from '../../app/utils/page-nav.ts'
 
 describe('glassboxSurround', () => {
   // Stem order: Subject folders sort alphabetically, so the Subject map has to reorder them.
@@ -23,7 +23,7 @@ describe('glassboxSurround', () => {
       { path: '/skill-pack/skill-pack', title: 'The Skill pack', label: 'Leaving Claude Code → Skill pack' },
     )
     expect(glassboxSurround(pages, '/skill-pack/skill-pack')).toEqual({
-      prev: { path: '/claude-code/path-scoped-rules', title: 'Path-scoped rules', label: 'Leaving Skill pack → Claude Code' },
+      prev: { path: '/claude-code/path-scoped-rules', title: 'Path-scoped rules', label: '← Leaving Skill pack · Claude Code' },
       next: { path: '/nuxt-vue/layers', title: 'One app, many sites', label: 'Leaving Skill pack → Nuxt & Vue' },
     })
   })
@@ -52,8 +52,25 @@ describe('glassboxSplitAtFirstSection', () => {
     expect(glassboxSplitAtFirstSection([lede, later])).toEqual([[lede], [later]])
   })
 
+  // Design 1b: a Walkthrough's diagram comes after the table of contents.
+  it('splits before a diagram that comes before the first h2', () => {
+    const lede = ['p', {}, 'Lede']
+    const diagram = ['pre', { language: 'mermaid', code: 'flowchart TD' }]
+    const stop = ['h2', { id: '1-a' }, '1. A']
+    expect(glassboxSplitAtFirstSection([lede, diagram, stop])).toEqual([[lede], [diagram, stop]])
+    expect(glassboxSplitAtFirstSection([lede, ['pre', { language: 'ts' }], stop])).toEqual([[lede, ['pre', { language: 'ts' }]], [stop]])
+  })
+
   it('keeps everything in the intro when there is no h2', () => {
     expect(glassboxSplitAtFirstSection([['p', {}, 'Only'], 'text'])).toEqual([[['p', {}, 'Only'], 'text'], []])
+  })
+})
+
+describe('glassboxFrameDiagrams', () => {
+  it('frames each top-level diagram and leaves other nodes alone', () => {
+    const diagram = ['pre', { language: 'mermaid', code: 'flowchart TD' }]
+    const code = ['pre', { language: 'ts' }]
+    expect(glassboxFrameDiagrams([['p', {}, 'Lede'], diagram, code])).toEqual([['p', {}, 'Lede'], ['div', { class: 'gb-diagram' }, diagram], code])
   })
 })
 

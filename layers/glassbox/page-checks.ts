@@ -7,7 +7,7 @@ import { join } from 'node:path'
 import { parseDocument, splitFrontmatter } from '../../scripts/validate-content.ts'
 import { root } from '../../shared/expand.ts'
 import { glassboxLessonIds, glassboxLessonLabels } from './app/utils/lesson.ts'
-import { glassboxSubjects } from './app/utils/subjects.ts'
+import { glassboxSubjectOf, glassboxSubjects, glassboxWalkthroughOf } from './app/utils/subjects.ts'
 import { glassboxStopNumber } from './app/utils/walkthrough.ts'
 import { glassboxExcerptGap, glassboxPageRefs, glassboxTermId, type FileRef } from './page-refs.ts'
 
@@ -99,17 +99,27 @@ export function glassboxStopProblems(body: string, walkthrough: boolean): string
   return problems
 }
 
-function excerptFits(excerpt: string, file: string[]) {
-  let from = 0
+// With `lines`, Excerpt.vue numbers rows from both ends of the range, so the
+// first run must open it and the last run close it.
+function excerptFits(excerpt: string, file: string[], anchored: boolean) {
   const runs: string[][] = [[]]
   for (const line of excerpt.split('\n')) {
     if (glassboxExcerptGap.test(line)) runs.push([])
     else runs.at(-1)!.push(line)
   }
-  for (const run of runs.filter((r) => r.length)) {
-    let i = from
-    while (i + run.length <= file.length && run.some((line, j) => file[i + j] !== line)) i++
-    if (i + run.length > file.length) return false
+  const kept = runs.filter((r) => r.length)
+  let from = 0
+  for (const [k, run] of kept.entries()) {
+    const matches = (i: number) => run.every((line, j) => file[i + j] === line)
+    const first = anchored && k === 0
+    const last = anchored && k === kept.length - 1
+    let i = last ? file.length - run.length : from
+    if (first || last) {
+      if (i < from || (first && i !== 0) || !matches(i)) return false
+    } else {
+      while (i + run.length <= file.length && !matches(i)) i++
+      if (i + run.length > file.length) return false
+    }
     from = i + run.length
   }
   return true
@@ -125,7 +135,7 @@ function fileProblems(ref: FileRef, rev: string, git: GlassboxGit): string[] {
     if (start < 1 || end < start || end > lines.length) return [`${ref.path} lines ${start}-${end} do not fit its ${lines.length} lines`]
     lines = lines.slice(start - 1, end)
   }
-  return ref.excerpt !== undefined && !excerptFits(ref.excerpt, lines) ? [`the Excerpt of ${ref.path} is not in the file at revision`] : []
+  return ref.excerpt !== undefined && !excerptFits(ref.excerpt, lines, !!ref.lines) ? [`the Excerpt of ${ref.path} is not in the file at revision`] : []
 }
 
 function gitProblems(revision: string, revisionDate: unknown, refs: FileRef[], prose: string, git: GlassboxGit): string[] {
@@ -145,7 +155,7 @@ function gitProblems(revision: string, revisionDate: unknown, refs: FileRef[], p
 function placeProblems(file: string): string[] {
   const [folder, ...rest] = file.split('/')
   if (!rest.length) return file === 'index.md' ? [] : ['sits outside a Subject folder']
-  if (folder === 'walkthroughs') return []
+  if (glassboxWalkthroughOf(`/${contentRoute(file)}`)) return []
   if (!glassboxSubjects.some((s) => s.slug === folder)) return [`folder ${folder}/ is not in the Subject map`]
   return /^\d{2}\./.test(rest.at(-1)!) ? [] : ['Lesson file has no two-digit prefix']
 }
@@ -174,9 +184,9 @@ export function glassboxPageProblems(file: string, source: string, site: Glassbo
   const { prose } = readBody(body)
   const refs = glassboxPageRefs(body)
   const problems = placeProblems(file)
-  const folder = file.split('/')[0]
-  problems.push(...glassboxStopProblems(body, folder === 'walkthroughs'))
-  if (glassboxSubjects.some((s) => s.slug === folder)) problems.push(...lessonProblems(file, prose))
+  const route = `/${contentRoute(file)}`
+  problems.push(...glassboxStopProblems(body, glassboxWalkthroughOf(route)))
+  if (glassboxSubjectOf(route)) problems.push(...lessonProblems(file, prose))
 
   const { revision, revisionDate } = frontmatter
   if (typeof revision === 'string') problems.push(...gitProblems(revision, revisionDate, refs.files, prose, git))
