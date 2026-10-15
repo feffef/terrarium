@@ -1,7 +1,12 @@
 // L3 — pure-function coverage for the build-time mermaid pre-render pipeline
 // (issue #379, ADR-0024): the content-hash key, the fence extractor, the
-// sentinel→CSS-var rewrite, and the drift reconciliation. No fs, no browser.
+// sentinel→CSS-var rewrite, the drift reconciliation and diagram discovery
+// (on a temp fixture tree). No browser.
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs'
+import { tmpdir } from 'node:os'
+import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
+import { discoverDiagrams } from '../../scripts/mermaid-lib.ts'
 import {
   extractMermaidBlocks,
   MERMAID_RENDER_FONT,
@@ -31,6 +36,36 @@ describe('mermaidKey()', () => {
 
   it('is a filesystem-safe hex string', () => {
     expect(mermaidKey('graph TB')).toMatch(/^[0-9a-f]+$/)
+  })
+
+  it('keeps the default font out of the key, so existing SVG names hold', () => {
+    expect(mermaidKey('graph TB\n  A --> B', MERMAID_RENDER_FONT)).toBe(mermaidKey('graph TB\n  A --> B'))
+  })
+
+  it('gives a different key for the same source in another font', () => {
+    const other = { fontFamily: "'Other Sans', sans-serif", fontSize: '16px', woff2: 'x.woff2' }
+    expect(mermaidKey('graph TB\n  A --> B', other)).not.toBe(mermaidKey('graph TB\n  A --> B'))
+  })
+})
+
+describe('discoverDiagrams()', () => {
+  it('draws the same source once per Tenant font, in that Tenant\'s font', async () => {
+    const dir = mkdtempSync(join(tmpdir(), 'mermaid-'))
+    const src = '```mermaid\ngraph TB\n  A --> B\n```\n'
+    for (const tenant of ['plain', 'fancy']) {
+      mkdirSync(join(dir, `layers/${tenant}/content/s`), { recursive: true })
+      writeFileSync(join(dir, `layers/${tenant}/content/s/p.md`), src)
+    }
+    writeFileSync(
+      join(dir, 'layers/fancy/mermaid-font.ts'),
+      "export default { fontFamily: \"'Fancy', sans-serif\", fontSize: '16px', woff2: 'f.woff2' }\n",
+    )
+    const diagrams = await discoverDiagrams(dir)
+    expect(diagrams.map((d) => [d.file, d.font.fontFamily]).sort()).toEqual([
+      ['layers/fancy/content/s/p.md', "'Fancy', sans-serif"],
+      ['layers/plain/content/s/p.md', MERMAID_RENDER_FONT.fontFamily],
+    ])
+    expect(diagrams.find((d) => d.file.startsWith('layers/plain'))!.key).toBe(mermaidKey('graph TB\n  A --> B'))
   })
 })
 
@@ -95,6 +130,19 @@ describe('MERMAID_RENDER_FONT', () => {
   // displayed in another, which is exactly the clip bug this pinning fixes (#379).
   it('pins the bundled Gelasio family so measure-font == display-font', () => {
     expect(MERMAID_RENDER_FONT.fontFamily).toMatch(/^Gelasio\b/)
+  })
+})
+
+describe('layer render fonts', () => {
+  // A layer's diagram font must be the face its own CSS serves for that same
+  // woff2, or the SVG is measured in one font and shown in another (ADR-0024).
+  it('Glass Box draws in Instrument Sans under the family theme.css serves', async () => {
+    const font = (await import('../../layers/glassbox/mermaid-font.ts')).default
+    expect(font.woff2).toBe('layers/glassbox/app/assets/fonts/instrument-sans-latin-wght-normal.woff2')
+    expect(font.fontFamily).toMatch(/^'Glass Box Sans'/)
+    const css = readFileSync('layers/glassbox/app/assets/theme.css', 'utf8')
+    expect(css).toMatch(/font-family: 'Glass Box Sans';[^}]*instrument-sans-latin-wght-normal\.woff2/)
+    expect(existsSync(font.woff2)).toBe(true)
   })
 })
 

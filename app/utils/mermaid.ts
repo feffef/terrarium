@@ -12,7 +12,7 @@
 // dark`) with zero JS. Only COLOUR tokens live here: font family/size feed
 // mermaid's `getBBox` text-measurement geometry, which is BAKED into the SVG at
 // render time, so they cannot become live CSS vars without corrupting layout
-// (ADR-0024). They are rendered at fixed values (`MERMAID_RENDER_FONT`) instead.
+// (ADR-0024). They are rendered at a fixed `MermaidFont` per Tenant instead.
 export const DIAGRAM_TOKENS: Record<string, string> = {
   primaryColor: '--diagram-node-bg',
   primaryBorderColor: '--diagram-node-border',
@@ -36,21 +36,23 @@ export const DIAGRAM_TOKEN_FALLBACKS: Record<string, string> = {
   clusterBorder: '#aaaa33',
 }
 
-// Font geometry is baked into the committed SVG (see DIAGRAM_TOKENS note). These
-// are the fixed values the author-time renderer measures against. The family is a
-// PINNED, repo-bundled webfont (Gelasio — a Georgia-metric-compatible open serif,
-// `app/assets/fonts/`), injected into Chromium at render time AND shipped to the
-// browser via `@font-face` in MermaidDiagram.vue. Measuring and displaying against
-// the *same* font is what keeps baked geometry correct across machines: a bare
-// `serif` stack resolves to whatever each environment installs (the build
-// container has no Palatino/Iowan/Georgia — it fell back to a narrower serif and
-// labels clipped on wider-serif readers, issue #379). `Georgia, serif` stays as a
-// graceful fallback for the rare case the woff2 fails to load. Changing this
-// family/size requires re-running `pnpm render:mermaid` (baked, not a live var).
-export const MERMAID_RENDER_FONT = {
+/** A diagram's render font (ADR-0024). The first name in `fontFamily` must be
+ *  the `@font-face` family the page serves for `woff2` (a repo-relative path),
+ *  so the font measured when drawing is the font the reader sees. */
+export interface MermaidFont {
+  fontFamily: string
+  fontSize: string
+  woff2: string
+}
+
+// The default, for a Tenant whose layer has no `mermaid-font.ts`. Gelasio is a
+// Georgia-metric serif; `Georgia, serif` only covers a woff2 that fails to load
+// (issue #379). Its `@font-face` is in MermaidDiagram.vue.
+export const MERMAID_RENDER_FONT: MermaidFont = {
   fontFamily: 'Gelasio, Georgia, serif',
   fontSize: '20px',
-} as const
+  woff2: 'app/assets/fonts/gelasio-latin-400-normal.woff2',
+}
 
 /**
  * A stable, deterministic key for a mermaid source block — the committed SVG's
@@ -59,10 +61,13 @@ export const MERMAID_RENDER_FONT = {
  * browser (the component), so it is a plain sync string hash (FNV-1a over the
  * source, and again over its reverse, concatenated) rather than an async
  * SubtleCrypto digest. The source is normalised first so incidental
- * leading/trailing whitespace can't churn the key.
+ * leading/trailing whitespace can't churn the key. A non-default font joins
+ * the hash, so default-font keys (every SVG drawn before #1996) never change.
  */
-export function mermaidKey(code: string): string {
-  const s = normalizeMermaidSource(code)
+export function mermaidKey(code: string, font: MermaidFont = MERMAID_RENDER_FONT): string {
+  const isDefault =
+    font.fontFamily === MERMAID_RENDER_FONT.fontFamily && font.fontSize === MERMAID_RENDER_FONT.fontSize
+  const s = (isDefault ? '' : `${font.fontFamily} ${font.fontSize}\n`) + normalizeMermaidSource(code)
   return `${fnv1a(s)}${fnv1a(reverse(s))}`
 }
 

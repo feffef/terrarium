@@ -28,7 +28,18 @@ const bakedSvgs = import.meta.glob('../assets/mermaid/*.svg', {
   eager: true,
 }) as Record<string, string>
 
-const svg = computed(() => bakedSvgs[`../assets/mermaid/${mermaidKey(props.code)}.svg`])
+// A layer's own render font joins the key (ADR-0024); the Tenant is the route's
+// `/t/<tenant>/` segment.
+const layerFonts = import.meta.glob('../../layers/*/mermaid-font.ts', {
+  import: 'default',
+  eager: true,
+}) as Record<string, MermaidFont>
+const route = useRoute()
+
+const svg = computed(() => {
+  const font = layerFonts[`../../layers/${route.path.split('/')[2]}/mermaid-font.ts`]
+  return bakedSvgs[`../assets/mermaid/${mermaidKey(props.code, font)}.svg`]
+})
 </script>
 
 <style scoped>
@@ -42,11 +53,10 @@ const svg = computed(() => bakedSvgs[`../assets/mermaid/${mermaidKey(props.code)
 }
 </style>
 
-<!-- The baked SVG's geometry is measured at author time against Gelasio (a pinned,
-     repo-bundled serif — see app/utils/mermaid.ts / ADR-0024). Ship that exact font
-     so the browser lays the labels out identically instead of clipping under a
-     wider fallback serif (issue #379). Unscoped so the @font-face is global; it only
-     applies where `font-family: Gelasio` is used (the diagram's baked <style>). -->
+<!-- The default render font, Gelasio (app/utils/mermaid.ts, ADR-0024): ship the
+     face the SVG was measured in so labels don't clip under a wider fallback
+     (issue #379). A layer with its own font serves it from its own CSS. Unscoped
+     so the @font-face is global; it only applies where the baked <style> names it. -->
 <style>
 @font-face {
   font-family: 'Gelasio';

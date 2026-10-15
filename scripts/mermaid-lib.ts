@@ -4,10 +4,16 @@
 // `app/utils/mermaid.ts` and are imported here — this module owns only the
 // filesystem walk and path conventions so the two scripts can't drift on where
 // SVGs live or which content they scan.
-import { globSync, readFileSync } from 'node:fs'
+import { existsSync, globSync, readFileSync } from 'node:fs'
 import { dirname, join, relative, resolve } from 'node:path'
-import { fileURLToPath } from 'node:url'
-import { extractMermaidBlocks, mermaidKey, normalizeMermaidSource } from '../app/utils/mermaid.ts'
+import { fileURLToPath, pathToFileURL } from 'node:url'
+import {
+  extractMermaidBlocks,
+  MERMAID_RENDER_FONT,
+  type MermaidFont,
+  mermaidKey,
+  normalizeMermaidSource,
+} from '../app/utils/mermaid.ts'
 
 export const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 
@@ -23,8 +29,17 @@ export interface Diagram {
   file: string
   /** The raw mermaid source (normalised). */
   source: string
-  /** Its committed SVG's basename key (mermaidKey of the source). */
+  /** Its committed SVG's basename key (mermaidKey of the source and font). */
   key: string
+  /** Its Tenant's render font. */
+  font: MermaidFont
+}
+
+/** A Tenant's render font: its layer's `mermaid-font.ts` default export, or the default. */
+async function tenantFont(cwd: string, tenant: string): Promise<MermaidFont> {
+  const file = join(cwd, 'layers', tenant, 'mermaid-font.ts')
+  if (!existsSync(file)) return MERMAID_RENDER_FONT
+  return ((await import(pathToFileURL(file).href)) as { default: MermaidFont }).default
 }
 
 /** Repo-relative path of the committed SVG for a given key. */
@@ -34,18 +49,19 @@ export function svgPathFor(key: string): string {
 
 /**
  * Scan every Tenant's content for fenced ```mermaid blocks and return one
- * `Diagram` per DISTINCT source (deduped by key — the same diagram authored on
- * two pages renders once). Reads files only; never launches a browser, so both
- * the renderer and the drift gate can call it.
+ * `Diagram` per DISTINCT key (the same source in the same font renders once;
+ * in two Tenants with different fonts, twice). Reads files only; never launches
+ * a browser, so both the renderer and the drift gate can call it.
  */
-export function discoverDiagrams(cwd = root): Diagram[] {
+export async function discoverDiagrams(cwd = root): Promise<Diagram[]> {
   const byKey = new Map<string, Diagram>()
   for (const rel of globSync(CONTENT_GLOB, { cwd }).sort()) {
+    const font = await tenantFont(cwd, rel.split('/')[1]!)
     const md = readFileSync(join(cwd, rel), 'utf-8')
     for (const block of extractMermaidBlocks(md)) {
       const source = normalizeMermaidSource(block)
-      const key = mermaidKey(source)
-      if (!byKey.has(key)) byKey.set(key, { file: rel, source, key })
+      const key = mermaidKey(source, font)
+      if (!byKey.has(key)) byKey.set(key, { file: rel, source, key, font })
     }
   }
   return [...byKey.values()].sort((a, b) => a.key.localeCompare(b.key))
