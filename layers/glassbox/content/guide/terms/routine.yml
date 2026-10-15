@@ -1,0 +1,2 @@
+term: Routine
+definition: A timer, set outside the repo, that starts a session to run one Skill on a schedule. The Skill says what the run does; the Routine says only when.
