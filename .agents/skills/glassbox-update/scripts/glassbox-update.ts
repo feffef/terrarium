@@ -2,7 +2,7 @@
 // Glass Box page cites, between the page's `revision` and main.
 // Usage: pnpm exec tsx .agents/skills/glassbox-update/scripts/glassbox-update.ts [--spaces guide,drafts] [--write --to <sha>]
 import { execFileSync } from 'node:child_process'
-import { globSync, readFileSync, writeFileSync } from 'node:fs'
+import { existsSync, globSync, readFileSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { glassboxTerms } from '../../../../layers/glassbox/page-checks.ts'
@@ -48,7 +48,7 @@ function dependencies(packageJson: string): Record<string, string> {
   return { ...pkg.dependencies, ...pkg.devDependencies }
 }
 
-/** `spaces` picks the Spaces whose pages it covers. `write` shifts each page's ranges and pins it to `main`, except a page with an
+/** `write` shifts each page's ranges and pins it to `main`, except a page with an
  *  edited range: the Skill re-checks and pins that one itself. */
 export function glassboxUpdate(cwd = root, { main: mainRef = 'origin/main', write = false, spaces = ['guide'] } = {}): UpdateReport {
   const git = (...args: string[]) => execFileSync('git', args, { cwd, encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 })
@@ -61,7 +61,11 @@ export function glassboxUpdate(cwd = root, { main: mainRef = 'origin/main', writ
   const terms = glassboxTerms(cwd)
 
   const report: UpdateReport = { main, mainDate, pages: [], terms: [], versions: {} }
-  for (const [space, file] of spaces.flatMap((s) => globSync('**/*.md', { cwd: join(cwd, pagesDir(s)) }).sort().map((f) => [s, f] as const))) {
+  for (const space of new Set(spaces)) {
+    if (!existsSync(join(cwd, pagesDir(space)))) throw new Error(`no Space "${space}" under layers/glassbox/content`)
+  }
+  const pages = [...new Set(spaces)].flatMap((space) => globSync('**/*.md', { cwd: join(cwd, pagesDir(space)) }).sort().map((file) => ({ space, file })))
+  for (const { space, file } of pages) {
     const path = join(cwd, pagesDir(space), file)
     const source = readFileSync(path, 'utf8')
     const { frontmatter, body } = splitFrontmatter(source)
@@ -117,7 +121,7 @@ if (import.meta.url === pathToFileURL(process.argv[1] ?? '').href) {
     const write = argv.includes('--write')
     const spacesAt = argv.indexOf('--spaces')
     const spaces = spacesAt < 0 ? undefined : argv[spacesAt + 1]?.split(',').filter(Boolean)
-    if (spacesAt >= 0 && !spaces?.length) throw new Error('--spaces needs a comma-separated list, e.g. guide,drafts')
+    if (spacesAt >= 0 && (argv[spacesAt + 1]?.startsWith('--') || !spaces?.length)) throw new Error('--spaces needs a comma-separated list, e.g. guide,drafts')
     const to = argv.includes('--to') ? argv[argv.indexOf('--to') + 1] : undefined
     // Pin only to the commit the agent reviewed; a fresh fetch could pass unread changes.
     if (write && !to) throw new Error('--write needs --to <sha>, the `main` of the report you reviewed')

@@ -64,6 +64,11 @@ describe('glassboxUpdate over a fixture repo history', () => {
     expect(both.pages.map((p) => [p.space, p.file])).toContainEqual(['drafts', 'claude-code/03.draft.md'])
   })
 
+  it('refuses an unknown Space and ignores a repeated one', () => {
+    expect(() => glassboxUpdate(dir, { main: 'main', spaces: ['typo'] })).toThrow(/no Space "typo"/)
+    expect(glassboxUpdate(dir, { main: 'main', spaces: ['guide', 'guide'] }).pages).toHaveLength(report.pages.length)
+  })
+
   it('shifts a range the diff moved, and flags a range the diff edited', () => {
     const [shifted, edited] = report.pages
     expect(shifted!.shifted).toEqual([{ path: 'src/a.ts', from: '1-2', to: '3-4' }])
