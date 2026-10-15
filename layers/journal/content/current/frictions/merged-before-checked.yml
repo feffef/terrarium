@@ -2,8 +2,9 @@ name: merged-before-checked
 cause: >-
   An agent merged a PR or told the owner it was ready before the required check was complete (a bare "Yes" answering two questions, an inline-only review under clear-backlog's few-line exception, a self-merge before code-review), and the owner had to point it out.
 surface: safe
-status: tracked
-ref: "issue #1844 (open); regression-adjacent of PRs #1852, #1853, #1854: session_01TFojzw (audit-skills sweep, 2026-10-14) pushed before /code-review"
+status: fixed
+fixedOn: "2026-10-15"
+ref: "issue #1844 closed by PR #2058 (merged 2026-10-15T12:38Z: merge-pr.ts requires a verdict naming the PR head in a Reviewed line); earlier PRs #1852, #1853, #1854"
 occurrences:
   - session: session_01DtK8w6aJ3361uPK73VAxhi
     date: "2026-10-12"

@@ -2,8 +2,9 @@ name: binding-docs-skipped
 cause: >-
   CLAUDE.md's read-first triggers are prose; the hint (#1793) now covers git and GitHub docs, but GLOSSARY.md, full-ADR reads and the dispatch-subagents trigger are unhooked.
 surface: guard-or-hook
-status: tracked
-ref: "issue #1819 (regression of #1754/PR #1793: the read-first hint is PostToolUse, so it cannot stop the first git or GitHub call; GLOSSARY.md at session start is unhooked)"
+status: fixed
+fixedOn: "2026-10-15"
+ref: "PR #2066 (merged): the owner accepts late reads (no deny guard; #1819 closed and not refiled), so the hint now says a late read that clears the call is not a Friction; regression of #1754/PR #1793"
 occurrences:
   - session: session_01NyDGTR1fuP22hPo7XghCfz
     date: "2026-10-07"
@@ -233,3 +234,15 @@ occurrences:
   - session: session_01P7kLLJwHBgCaeVSUjhbScg
     date: "2026-10-15"
     severity: moderate
+  - session: session_01GLWVkt3R3EnHJj5XpQEJQt
+    date: "2026-10-15"
+    severity: nit
+  - session: session_011HBcCLzMW7CshmqnHLnegb
+    date: "2026-10-15"
+    severity: nit
+  - session: session_012NmfdSNbbPD9T5LPAwmdYG
+    date: "2026-10-15"
+    severity: minor
+  - session: session_01NoQubvnMfCpcq9nkicNsDq
+    date: "2026-10-15"
+    severity: nit
