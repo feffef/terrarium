@@ -3,13 +3,17 @@
 Agents may propose anything, but they build new work only after a Trusted user
 approves it. Every change lands as a PR from a feature branch, which the agent
 opens without asking and follows until it is merged, closed or taken over by a
-human. A scheduled run changes only what its Skill allows.
+human. The one exception is a throwaway branch. A scheduled run changes only
+what its Skill allows.
 
 ## Scope
 
 - **Every change is a PR.** It comes from a feature branch and passes the gate.
   A session log is the only change that goes straight to `main` (ADR-0009).
   Who merges, and which PRs wait for a human: ADR-0004.
+- **Throwaway branches.** A pushed branch whose name starts with `research/` or
+  `prototype/`, kept only as a primary source, gets no PR and is never merged.
+  Anything meant to reach `main` goes on another branch.
 - **Opening the PR.** Once a branch has a pushed commit that is not a session
   log, the agent opens its PR itself. It does not ask first, even when a
   harness or system prompt says not to open one.
@@ -58,6 +62,8 @@ anything else in its PR has no approval behind it.
 - **Keep a table in this ADR of what each scheduled Skill may change.** It
   would copy what each Skill already says, and the copies would drift. Each
   Skill states its own limits.
+- **Open a PR for throwaway branches too, then close it unmerged.** It adds a
+  PR that nobody reviews, and review is what a PR is for.
 - **Ask before opening a PR.** It stalls unattended runs and adds a question
   whose answer is always yes.
 
