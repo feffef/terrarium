@@ -19,34 +19,27 @@ and the production app read the committed SVGs.
   `--diagram-*` CSS variable, which a Tenant maps to its own tokens.
 - **Fonts and layout are fixed when the diagram is drawn.** Mermaid places
   each node by measuring its text, so font family and size cannot be CSS
-  variables. Each Tenant has one diagram font, a file the repo bundles and the
-  Tenant's pages serve under the same family name, so the font measured when
-  drawing is the font the reader sees. A layer may name its own font; one that
-  doesn't gets the default, Gelasio. Changing a Tenant's font means drawing its
-  diagrams again.
-- **The same source in two fonts is two SVGs.** The font joins the SVG's name
-  only when it isn't the default, so a Tenant that keeps the default never
-  sees its SVGs renamed.
+  variables. Each Tenant draws in one font, the default unless its layer names
+  another: a file the repo bundles and the Tenant's pages serve under the same
+  family name, so the font measured is the font the reader sees. A
+  non-default font joins the SVG's name, so one source in two fonts is two
+  SVGs. Changing a Tenant's font means drawing its diagrams again.
 - **The page inserts the SVG as raw HTML.** That is safe only because the file
   is our own and the gate refuses one that could run code.
 - **`mermaid` is a development dependency only.**
 
 ## Why
 
-A client-side renderer made every page with a diagram download hundreds of
-kilobytes of JavaScript. Mermaid cannot lay out a diagram without a real
-browser, because it measures drawn text, and the production container has
-none. So the browser must run before the build, and the result must be a
-static file.
+Rendering in the page costs hundreds of kilobytes of JavaScript. Mermaid
+measures drawn text, so it needs a real browser, and production has none: the
+browser must run before the build and leave a static file.
 
 Committing that file keeps CI and production free of the render step, and
 lets a reviewer see each diagram change in the PR diff. Drawing is
 deterministic, so the same source always gives the same SVG and the gate's
 check stays meaningful.
 
-A diagram should read like the page around it, and Tenants differ in type: a
-serif suits the Journal, a sans suits Glass Box. A font per Tenant gives that
-while keeping one font per drawing.
+A font per Tenant lets a diagram match the type of the page around it.
 
 ## Rejected alternatives
 
@@ -61,8 +54,6 @@ while keeping one font per drawing.
 - **Another rendering package or service** (mermaid-cli, mermaid-isomorphic,
   Kroki). Each adds a dependency or a running service; the renderer reuses the
   browser tooling the repo already has.
-- **One font for every Tenant.** Simplest, but a serif diagram on a sans
-  site looks borrowed.
 - **The font in the Tenant manifest.** The manifest schema is strict and
   needs a human merge to change; a file in the layer keeps the font beside
   the CSS that serves it.
@@ -74,15 +65,11 @@ while keeping one font per drawing.
 
 ## See
 
-- `app/utils/mermaid.ts`: the `--diagram-*` colour list, the default render
-  font and the key that matches a diagram to its SVG.
-- `layers/<tenant>/mermaid-font.ts`: a Tenant's own render font, if it has one.
-- `scripts/mermaid-lib.ts`: which font each diagram is drawn in.
+- `app/utils/mermaid.ts`: the `--diagram-*` colours, default font and SVG key.
+- `layers/<tenant>/mermaid-font.ts`: a Tenant's own render font, if any.
 - `scripts/render-mermaid.ts`: the authoring step and its options.
-- `scripts/verify-mermaid.ts` and `app/utils/svg.ts`: the gate check and what
-  counts as safe.
-- `app/components/MermaidDiagram.vue`: how a page shows the SVG, or the
-  source when the SVG is missing.
+- `scripts/verify-mermaid.ts`, `app/utils/svg.ts`: the gate check, what is safe.
+- `app/components/MermaidDiagram.vue`: how a page shows the SVG.
 - `app/assets/fonts/README.md`: the default font.
 - `docs/research/mermaid-server-side-rendering.md`: the options compared.
 - `.claude/rules/mermaid-lanes.md`: how to group lanes in a diagram.

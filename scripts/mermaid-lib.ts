@@ -35,7 +35,6 @@ export interface Diagram {
   font: MermaidFont
 }
 
-/** A Tenant's render font: its layer's `mermaid-font.ts` default export, or the default. */
 async function tenantFont(cwd: string, tenant: string): Promise<MermaidFont> {
   const file = join(cwd, 'layers', tenant, 'mermaid-font.ts')
   if (!existsSync(file)) return MERMAID_RENDER_FONT

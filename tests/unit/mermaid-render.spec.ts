@@ -2,14 +2,15 @@
 // (issue #379, ADR-0024): the content-hash key, the fence extractor, the
 // sentinel→CSS-var rewrite, the drift reconciliation and diagram discovery
 // (on a temp fixture tree). No browser.
-import { existsSync, mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs'
+import { existsSync, globSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
-import { join } from 'node:path'
-import { describe, expect, it } from 'vitest'
+import { dirname, join } from 'node:path'
+import { afterEach, describe, expect, it } from 'vitest'
 import { discoverDiagrams } from '../../scripts/mermaid-lib.ts'
 import {
   extractMermaidBlocks,
   MERMAID_RENDER_FONT,
+  type MermaidFont,
   mermaidKey,
   normalizeMermaidSource,
 } from '../../app/utils/mermaid.ts'
@@ -43,14 +44,17 @@ describe('mermaidKey()', () => {
   })
 
   it('gives a different key for the same source in another font', () => {
-    const other = { fontFamily: "'Other Sans', sans-serif", fontSize: '16px', woff2: 'x.woff2' }
+    const other = { face: 'Other Sans', fontFamily: "'Other Sans', sans-serif", fontSize: '16px', weight: '400', woff2: 'x.woff2' }
     expect(mermaidKey('graph TB\n  A --> B', other)).not.toBe(mermaidKey('graph TB\n  A --> B'))
   })
 })
 
 describe('discoverDiagrams()', () => {
+  let dir = ''
+  afterEach(() => rmSync(dir, { recursive: true, force: true }))
+
   it('draws the same source once per Tenant font, in that Tenant\'s font', async () => {
-    const dir = mkdtempSync(join(tmpdir(), 'mermaid-'))
+    dir = mkdtempSync(join(tmpdir(), 'mermaid-'))
     const src = '```mermaid\ngraph TB\n  A --> B\n```\n'
     for (const tenant of ['plain', 'fancy']) {
       mkdirSync(join(dir, `layers/${tenant}/content/s`), { recursive: true })
@@ -58,7 +62,7 @@ describe('discoverDiagrams()', () => {
     }
     writeFileSync(
       join(dir, 'layers/fancy/mermaid-font.ts'),
-      "export default { fontFamily: \"'Fancy', sans-serif\", fontSize: '16px', woff2: 'f.woff2' }\n",
+      "export default { face: 'Fancy', fontFamily: \"'Fancy', sans-serif\", fontSize: '16px', weight: '400', woff2: 'f.woff2' }\n",
     )
     const diagrams = await discoverDiagrams(dir)
     expect(diagrams.map((d) => [d.file, d.font.fontFamily]).sort()).toEqual([
@@ -136,13 +140,24 @@ describe('MERMAID_RENDER_FONT', () => {
 describe('layer render fonts', () => {
   // A layer's diagram font must be the face its own CSS serves for that same
   // woff2, or the SVG is measured in one font and shown in another (ADR-0024).
-  it('Glass Box draws in Instrument Sans under the family theme.css serves', async () => {
-    const font = (await import('../../layers/glassbox/mermaid-font.ts')).default
-    expect(font.woff2).toBe('layers/glassbox/app/assets/fonts/instrument-sans-latin-wght-normal.woff2')
-    expect(font.fontFamily).toMatch(/^'Glass Box Sans'/)
-    const css = readFileSync('layers/glassbox/app/assets/theme.css', 'utf8')
-    expect(css).toMatch(/font-family: 'Glass Box Sans';[^}]*instrument-sans-latin-wght-normal\.woff2/)
+  const fontFiles = globSync('layers/*/mermaid-font.ts')
+
+  it.each(fontFiles)('%s matches an @font-face its layer serves', async (file) => {
+    const font = ((await import(`../../${file}`)) as { default: MermaidFont }).default
+    const layer = dirname(file)
+    expect(font.fontFamily.startsWith(`'${font.face}'`) || font.fontFamily.startsWith(font.face)).toBe(true)
     expect(existsSync(font.woff2)).toBe(true)
+    const faces = globSync(`${layer}/app/assets/**/*.css`)
+      .flatMap((css) => [...readFileSync(css, 'utf8').matchAll(/@font-face\s*\{([^}]*)\}/g)].map((m) => m[1]!))
+    const woff2Name = font.woff2.split('/').pop()!
+    expect(
+      faces.some(
+        (f) =>
+          f.includes(`font-family: '${font.face}';`) &&
+          f.includes(`font-weight: ${font.weight};`) &&
+          f.includes(woff2Name),
+      ),
+    ).toBe(true)
   })
 })
 

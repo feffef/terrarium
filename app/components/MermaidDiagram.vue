@@ -28,8 +28,6 @@ const bakedSvgs = import.meta.glob('../assets/mermaid/*.svg', {
   eager: true,
 }) as Record<string, string>
 
-// A layer's own render font joins the key (ADR-0024); the Tenant is the route's
-// `/t/<tenant>/` segment.
 const layerFonts = import.meta.glob('../../layers/*/mermaid-font.ts', {
   import: 'default',
   eager: true,

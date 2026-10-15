@@ -46,11 +46,6 @@ function themeVariables(font: MermaidFont): Record<string, string> {
   }
 }
 
-/** The `@font-face` family name: the first entry of the font's stack, unquoted. */
-function faceName(font: MermaidFont): string {
-  return font.fontFamily.split(',')[0]!.trim().replace(/^['"]|['"]$/g, '')
-}
-
 /** Rewrite each sentinel hex in a rendered SVG to its live `var(--diagram-*, fallback)`. */
 export function themeSvg(svg: string): string {
   let out = svg
@@ -160,13 +155,15 @@ async function main(): Promise<void> {
   // matching font installed, so without this mermaid's getBBox measures a
   // fallback and the baked geometry is wrong for real readers (issue #379).
   // Inline as a data: URI so the render never touches the network.
-  const fonts = [...new Map(diagrams.map((d) => [faceName(d.font), d.font])).values()]
+  // `format('woff2')` is only a support hint; Chromium applies a variable
+  // file's weight axis under it just as under `woff2-variations`.
+  const fonts = [...new Map(diagrams.map((d) => [d.font.face, d.font])).values()]
   const fontCss = fonts
     .map((font) => {
       const woff2 = join(root, font.woff2)
       if (!existsSync(woff2)) throw new Error(`render-mermaid: diagram font not found at ${woff2}`)
       return (
-        `@font-face{font-family:'${faceName(font)}';font-style:normal;font-weight:400;` +
+        `@font-face{font-family:'${font.face}';font-style:normal;font-weight:${font.weight};` +
         `src:url(data:font/woff2;base64,${readFileSync(woff2).toString('base64')}) format('woff2');}`
       )
     })
@@ -193,7 +190,7 @@ async function main(): Promise<void> {
       ).document.fonts
       for (const spec of specs) await fonts.load(spec)
       await fonts.ready
-    }, fonts.map((font) => `${font.fontSize} '${faceName(font)}'`))
+    }, fonts.map((font) => `${font.fontSize} '${font.face}'`))
     await page.addScriptTag({ content: readFileSync(mermaidUmd, 'utf-8') })
 
     mkdirSync(join(root, SVG_DIR), { recursive: true })

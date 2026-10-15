@@ -36,12 +36,15 @@ export const DIAGRAM_TOKEN_FALLBACKS: Record<string, string> = {
   clusterBorder: '#aaaa33',
 }
 
-/** A diagram's render font (ADR-0024). The first name in `fontFamily` must be
- *  the `@font-face` family the page serves for `woff2` (a repo-relative path),
- *  so the font measured when drawing is the font the reader sees. */
+/** A diagram's render font (ADR-0024). `face`, `weight` and `woff2` (a
+ *  repo-relative path) must match the `@font-face` the Tenant's pages serve, so
+ *  the font measured when drawing is the font the reader sees. `fontFamily`
+ *  is the stack baked into the SVG and leads with `face`. */
 export interface MermaidFont {
+  face: string
   fontFamily: string
   fontSize: string
+  weight: string
   woff2: string
 }
 
@@ -49,8 +52,10 @@ export interface MermaidFont {
 // Georgia-metric serif; `Georgia, serif` only covers a woff2 that fails to load
 // (issue #379). Its `@font-face` is in MermaidDiagram.vue.
 export const MERMAID_RENDER_FONT: MermaidFont = {
+  face: 'Gelasio',
   fontFamily: 'Gelasio, Georgia, serif',
   fontSize: '20px',
+  weight: '400',
   woff2: 'app/assets/fonts/gelasio-latin-400-normal.woff2',
 }
 
@@ -61,8 +66,8 @@ export const MERMAID_RENDER_FONT: MermaidFont = {
  * browser (the component), so it is a plain sync string hash (FNV-1a over the
  * source, and again over its reverse, concatenated) rather than an async
  * SubtleCrypto digest. The source is normalised first so incidental
- * leading/trailing whitespace can't churn the key. A non-default font joins
- * the hash, so default-font keys (every SVG drawn before #1996) never change.
+ * leading/trailing whitespace can't churn the key. Only a non-default font
+ * joins the hash, so default-font keys stay stable (ADR-0024).
  */
 export function mermaidKey(code: string, font: MermaidFont = MERMAID_RENDER_FONT): string {
   const isDefault =
