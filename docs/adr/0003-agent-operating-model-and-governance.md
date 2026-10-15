@@ -62,8 +62,6 @@ anything else in its PR has no approval behind it.
 - **Keep a table in this ADR of what each scheduled Skill may change.** It
   would copy what each Skill already says, and the copies would drift. Each
   Skill states its own limits.
-- **Open a PR for throwaway branches too, then close it unmerged.** It adds a
-  PR that nobody reviews, and review is what a PR is for.
 - **Ask before opening a PR.** It stalls unattended runs and adds a question
   whose answer is always yes.
 
