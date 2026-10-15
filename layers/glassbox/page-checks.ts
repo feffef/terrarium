@@ -197,6 +197,11 @@ function lessonProblems(file: string, prose: string): string[] {
     const m = line.match(whyLine)
     if (line.trim() && (!m || /\bADR-\d{4}\b/.test(m[1]!))) problems.push(`Why it's built this way line is not "<topic>: ADR-NNNN (:file[…])." or "<topic>: :file[…].": ${line}`)
   }
+  // Where next holds the 5 closest pages, any one Journal page last (GLOSSARY.md, Lesson).
+  const nextAt = lines.findIndex((l) => /^## /.test(l) && glassboxTermId(l.slice(3)) === glassboxLessonIds.whereNext)
+  const next = nextAt < 0 ? [] : lines.slice(nextAt + 1).filter((l) => l.startsWith('- '))
+  if (next.length > 5) problems.push(`Where next lists ${next.length} pages, more than 5`)
+  if (next.slice(0, -1).some((l) => l.includes('](/t/journal'))) problems.push('Where next lists a Journal page before its end')
   const fullReference = new RegExp(`^${glassboxLessonLabels.fullReference}:?\\s*\\[[^\\]]+\\]\\(https://`, 'm')
   if (!file.startsWith('terrarium-practice/') && !fullReference.test(prose)) problems.push('Lesson has no "Full reference" https link')
   return problems

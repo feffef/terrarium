@@ -83,6 +83,8 @@ see github.com/feffef/terrarium/blob/main/x.ts and ADR-9999
 
 - [The Gate](/t/glassbox/guide/terrarium-practice/gate)
 `
+const gateItem = '- [The Gate](/t/glassbox/guide/terrarium-practice/gate)\n'
+const journalItem = '- [How it works](/t/journal/current/how-it-works)\n'
 const walkthrough = `${frontmatter}
 How a page opens.
 
@@ -154,6 +156,9 @@ describe('glassboxPageProblems on fixture pages', () => {
     ['a Why line with two ADRs', (s: string) => s.replace('safety-gate.md]).\n', 'safety-gate.md]) and ADR-0004 (:file[docs/adr/0004-objective-safety-gate.md]).\n'), 'Why it\'s built this way line is not'],
     ['a Why line citing an ADR file without its number', (s: string) => s.replace('The expansion: :file[shared/expand.ts]', 'More: :file[docs/adr/0004-objective-safety-gate.md]'), 'Why it\'s built this way line is not'],
     ['a hand-written tree link', (s: string) => `${s}\nhttps://github.com/feffef/terrarium/tree/main/layers\n`, 'hand-written link'],
+    ['a Where next over 5 pages', (s: string) => `${s}${gateItem.repeat(5)}`, 'Where next lists 6 pages, more than 5'],
+    ['a Journal page before a Lesson in Where next', (s: string) => s.replace(gateItem, `${journalItem}${gateItem}`), 'Where next lists a Journal page before its end'],
+    ['two Journal pages in Where next', (s: string) => `${s}${journalItem}${journalItem}`, 'Where next lists a Journal page before its end'],
   ])('fails %s', (_name, broken, message) => {
     expect(problemsOf('nuxt-content/01.collections.md', broken(lesson)).join('\n')).toContain(message)
   })
@@ -177,6 +182,10 @@ describe('glassboxPageProblems on fixture pages', () => {
     ['a page outside any folder', 'collections.md', 'outside a Subject folder'],
   ])('fails %s', (_name, file, message) => {
     expect(problemsOf(file, lesson).join('\n')).toContain(message)
+  })
+
+  it('passes a Where next of 5 pages ending in one Journal page', () => {
+    expect(problemsOf('nuxt-content/01.collections.md', `${lesson}${gateItem.repeat(3)}${journalItem}`)).toEqual([])
   })
 
   it('passes an Excerpt with one range per run', () => {
