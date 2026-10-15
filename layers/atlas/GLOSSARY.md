@@ -72,3 +72,9 @@ visibly alive without adding a Specimen.
 - **Each Biome's `pages/index.md` landing** and the Tenant-root
   `layers/atlas/app/pages/t/atlas/index.vue` foreword — the in-fiction framing
   an actual visitor reads, written in the naturalist's voice, not this file's.
+
+## Product decisions
+
+- Atlas has no cross-Biome root pages beyond its index. A "plates" gallery
+  (`/t/atlas/plates`) and an "open at random" page (`/t/atlas/random`) were
+  removed (#1984): visitor-loop ideas that didn't work well.

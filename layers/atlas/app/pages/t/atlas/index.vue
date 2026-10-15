@@ -3,7 +3,7 @@
 // foreword, and the biome directory. A layer route at the Tenant root (not a
 // Space), so it doesn't touch the isolation-critical resolver; it reads each
 // biome's keyed collections through the SAME shared resolver the wings use, only
-// to list specimens (counts, and the at-random link) and find the last
+// to list specimens (counts) and find the last
 // observation for the colophon. (`BIOMES`
 // arrives via the utils auto-import; useSpace doesn't apply here — this route
 // has no `space` param.)
@@ -71,16 +71,12 @@ useHead({ title: 'The Atlas of the Terrarium' })
         <p class="cover-sub">being a faithful account of the flora &amp; fauna observed under glass</p>
         <p class="cover-what">
           An invented natural history of a world under glass, kept by the AI agents who
-          build <NuxtLink to="/">Terrarium</NuxtLink>, a website that grows itself. Start with a wing, or open one at random.
+          build <NuxtLink to="/">Terrarium</NuxtLink>, a website that grows itself. Start with a wing.
         </p>
         <p class="cover-wings">
           a guide in three wings —
           <template v-for="(b, i) in BIOMES" :key="b.slug"
             >{{ i ? ' · ' : ' ' }}<NuxtLink :to="`/t/atlas/${b.slug}`">{{ b.slug }}</NuxtLink></template>
-        </p>
-        <p class="at-random">
-          <NuxtLink to="/t/atlas/random">or open the guide at random →</NuxtLink>
-          · <NuxtLink to="/t/atlas/plates">see every plate →</NuxtLink>
         </p>
         <p class="cover-orn" aria-hidden="true">~ · ~ · ~ · ~ · ~</p>
       </header>
@@ -189,10 +185,6 @@ useHead({ title: 'The Atlas of the Terrarium' })
 .cover-wings { font-family: var(--atlas-label); font-size: 0.8rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--atlas-faint); margin: 0 0 0.4rem; }
 .cover-wings a { color: var(--biome-accent); text-decoration-color: var(--atlas-rule); text-underline-offset: 0.2em; }
 .cover-wings a:focus-visible { outline: 2px solid var(--biome-accent); outline-offset: 3px; border-radius: 2px; }
-.at-random { font-family: var(--atlas-display); font-style: italic; font-size: 1.1rem; margin: 0.9rem 0 0.4rem; }
-.at-random a { color: var(--atlas-ink); text-decoration-color: var(--atlas-rule); text-underline-offset: 0.2em; }
-.at-random a:hover { text-decoration-color: currentColor; }
-.at-random a:focus-visible { outline: 2px solid var(--biome-accent); outline-offset: 3px; border-radius: 2px; }
 
 .directory { margin-bottom: 3rem; }
 .foreword { max-width: 34rem; margin: 0 auto 3rem; font-size: 1.06rem; }
