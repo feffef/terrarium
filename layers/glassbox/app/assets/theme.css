@@ -32,6 +32,7 @@
   --gb-accent: oklch(0.48 0.12 220);
   --gb-solid: #0f1d26;
   --gb-solid-ink: #fff;
+  --gb-solid-accent: oklch(0.8 0.1 210);
   --gb-code-bg: #f6f8fa;
   --gb-sans: 'Glass Box Sans', system-ui, sans-serif;
   --gb-mono: 'Glass Box Mono', ui-monospace, monospace;
@@ -75,6 +76,7 @@
     --gb-accent: oklch(0.8 0.1 210);
     --gb-solid: #dce7ec;
     --gb-solid-ink: #0a1216;
+    --gb-solid-accent: oklch(0.48 0.12 220);
     --gb-code-bg: #0d1117;
   }
 }
