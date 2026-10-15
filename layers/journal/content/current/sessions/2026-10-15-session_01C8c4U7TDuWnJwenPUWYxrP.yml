@@ -1,11 +1,11 @@
 schemaVersion: 1
 session: session_01C8c4U7TDuWnJwenPUWYxrP
 startedAt: 2026-10-15T17:03:33Z
-endedAt: 2026-10-15T17:23:33Z
+endedAt: 2026-10-15T17:30:54Z
 kind: interactive
 goal: Sync the Glass Box textbook pages to the current code
-status: in-review
-outcome: All Glass Box pages pinned to cf1b6c1b and the stale prose fixed; PR open, awaiting CI.
+status: completed
+outcome: All Glass Box pages pinned to cf1b6c1b and the stale prose fixed; PR merged.
 summary: "The user's first message was a /update-glassbox command that doesn't exist here, so I treated it as a plain request and tried to ask what it meant; they rejected the question and instead invoked the glassbox-update Skill, which is the explicit human instruction for everything after. I ran its script, advanced the pins to cf1b6c1b, and fanned the 17 flagged pages out to four subagents (agent-initiated delegation). Six pages needed prose edits (PR workflow Excerpt and Reviewed line, trust-tiers function name, read-first hint, NODE_ENV, nuxt.config comment Excerpt, two walkthrough stops); the rest were still true. No term definition moved. I checked the six changed pages in light and dark at both sizes, ran gate:scoped, ran code-review (two subagents), cut one redundant sentence it flagged, pushed and opened the PR myself (ADR-0003). Open: drafts pages stay on older pins because the script doesn't report them."
 prs:
   - "2091"
@@ -69,6 +69,8 @@ docsRead:
     reason: (no reason given)
   - path: layers/glassbox/content/guide/pages/terrarium-practice/04.session-logs.md
     reason: (no reason given)
+  - path: .agents/skills/glassbox-lesson/EVERY-PAGE.md
+    reason: (no reason given)
 skillsUsed:
   - name: glassbox-update
     reason: the task itself; its steps drove the run
@@ -94,24 +96,31 @@ frictions:
   - description: The glassbox-update script flags pages by directory-level paths such as .claude/rules/, so most flagged pages needed no edit and 17 pages took a four-agent sweep.
     solution: Have the script report changed files the page's prose or Excerpt names, not whole directories.
     severity: minor
-durationSec: 1200
+  - description: My own edit to cut one sentence deleted the blank line between two paragraphs, merging them; only the second code-review caught it, after I had retaken shots.
+    solution: Diff the page after every edit, and retake shots after the last edit before declaring the checks done.
+    severity: minor
+durationSec: 1641
 models:
-  claude-sonnet-5-5: 146
+  claude-sonnet-5-5: 192
 toolCounts:
   Grep: 1
   AskUserQuestion: 1
   Read: 42
-  Bash: 30
-  Agent: 6
+  Bash: 41
+  Agent: 8
   SendMessage: 1
   ListAgents: 2
   Skill: 3
-  Edit: 1
+  Edit: 2
   ToolSearch: 2
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
   Write: 1
   mcp__github__update_pull_request: 1
+  mcp__github__pull_request_read: 4
+  ReadNotifications: 3
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/glassbox/content/guide/pages/git-github/01.every-change-a-pr.md
   - layers/glassbox/content/guide/pages/deploy/01.self-updating-container.md
@@ -200,6 +209,10 @@ subagents:
     task: Review standards axis
   - type: general-purpose
     task: Review spec axis
+  - type: general-purpose
+    task: Pre-merge standards review
+  - type: general-purpose
+    task: Pre-merge spec review
 gitBranch: claude/eloquent-curie-uta1pl
 entrypoint: remote
 cliVersion: 2.1.300
