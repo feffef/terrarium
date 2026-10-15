@@ -11,13 +11,13 @@ const { space, collections } = useSpace('journal')
 
 const { data } = await useAsyncData(route.path, async () => {
   const clusters = await queryCollection(collections.frictions).all()
-  const sessions = await queryCollection(collections.sessions).select('session').all()
-  return { clusters, sessionIds: sessions.map((s) => s.session) }
+  const sessions = await queryCollection(collections.sessions).select('session', 'goal').all()
+  return { clusters, sessionIds: sessions.map((s) => s.session), goals: Object.fromEntries(sessions.map((s) => [s.session, s.goal])) }
 })
 // Only two Spaces: a session not in this one was moved to the other.
 const otherSpace = Object.keys(routingMap.journal).find((s) => s !== space) ?? space
 const panels = computed(() =>
-  ledgerPanels(data.value?.clusters ?? [], space, new Set(data.value?.sessionIds ?? []), otherSpace),
+  ledgerPanels(data.value?.clusters ?? [], space, new Set(data.value?.sessionIds ?? []), otherSpace, data.value?.goals),
 )
 const sections = computed(() => [
   {
@@ -58,7 +58,7 @@ useSeoMeta({ title: () => `${PAGE_TITLE} · journal/${space}` })
           <li v-for="e in sec.entries" :id="`cluster-${e.name}`" :key="e.name">
             <details>
               <summary>
-                <span class="count" :aria-label="`${e.count} sessions`">{{ e.count }}</span>
+                <span class="count" :aria-label="`${e.count} sessions`">{{ e.count }}<small aria-hidden="true">{{ e.count === 1 ? 'session' : 'sessions' }}</small></span>
                 <span class="cause">{{ e.cause }}</span>
                 <span class="pills">
                   <span class="pill sev" :class="e.worst" :title="`Worst severity: ${e.worst}`">{{ e.worst }}</span>
@@ -73,6 +73,7 @@ useSeoMeta({ title: () => `${PAGE_TITLE} · journal/${space}` })
                 <li v-for="(o, i) in e.occurrences" :key="i">
                   <span class="dot" :class="o.severity" :title="o.severity" />
                   <NuxtLink :to="o.to" :aria-label="`Session log, ${o.date}, ${o.severity}`">{{ o.date }} →</NuxtLink>
+                  <span v-if="o.goal" class="occ-goal">{{ o.goal }}</span>
                   <span class="occ-sev">{{ o.severity }}</span>
                 </li>
               </ul>
@@ -113,6 +114,7 @@ summary:focus-visible { outline: 2px solid var(--jd-accent); outline-offset: 2px
   text-align: right;
   color: var(--jd-ink);
 }
+.count small { display: block; font-size: 0.6rem; font-weight: 400; letter-spacing: 0.04em; color: var(--jd-muted); }
 .cause { overflow-wrap: anywhere; }
 .pills { display: flex; flex-wrap: wrap; gap: 0.35rem; }
 .pill {
@@ -150,14 +152,15 @@ summary:focus-visible { outline: 2px solid var(--jd-accent); outline-offset: 2px
   margin: 0 0 0.7rem 3.3rem;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr));
-  gap: 0.15rem 1rem;
+  grid-template-columns: 1fr;
+  gap: 0.25rem;
   font-family: var(--jd-mono);
   font-size: 0.75rem;
 }
 .occ li { margin: 0; }
 .jd-prose .occ a { color: var(--jd-ink); text-decoration: none; }
 .jd-prose .occ a:hover { color: var(--jd-accent); text-decoration: underline; }
+.occ-goal { margin-left: 0.5rem; font-family: var(--jd-sans, inherit); font-size: 0.8rem; color: var(--jd-muted); }
 .occ-sev { color: var(--jd-faint); margin-left: 0.4rem; }
 @media (max-width: 560px) {
   .ref-text, .occ { margin-left: 0; }

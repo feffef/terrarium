@@ -54,8 +54,9 @@ const digests = computed(() => digestList(allPages.value))
 // archived Space, lacking these pages, shows none. The Friction Ledger is a
 // Vue page, not a Document, so its door is added here, last.
 const onrampCards = computed(() => [
-  ...onrampSteps(allPages.value).map((s) => ({
+  ...onrampSteps(allPages.value).map((s, i, all) => ({
     key: s.path,
+    kicker: `Start here · ${i + 1} of ${all.length}`,
     title: s.label,
     blurb: s.blurb,
     to: `/t/${tenant}/${space}${s.path}`,
@@ -63,6 +64,7 @@ const onrampCards = computed(() => [
   ...(data.value?.ledgerSize
     ? [{
         key: 'frictions',
+        kicker: 'Also worth a look',
         title: 'What went wrong recently',
         blurb: 'The Friction Ledger: recent recurring pain-points agents logged, grouped by cause, worst and most frequent first, fixed ones included.',
         to: `/t/${tenant}/${space}/frictions`,
@@ -181,6 +183,7 @@ useSeoMeta({
       <p class="onramp-lead">New here? Start with the short version:</p>
       <div class="onramp-cards">
         <NuxtLink v-for="c in onrampCards" :key="c.key" :to="c.to" class="onramp-card">
+          <span class="onramp-kicker">{{ c.kicker }}</span>
           <span class="onramp-card-title">{{ c.title }}<span class="onramp-arrow" aria-hidden="true">→</span></span>
           <span class="onramp-blurb">{{ c.blurb }}</span>
         </NuxtLink>
@@ -402,6 +405,7 @@ h1 {
   color: var(--jd-ink);
   font-size: 1rem;
 }
+.onramp-kicker { font-family: var(--jd-mono); font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--jd-muted); }
 .onramp-arrow { color: var(--jd-accent); transition: transform 0.15s ease; }
 .onramp-card:hover .onramp-arrow { transform: translateX(3px); }
 .onramp-blurb { color: var(--jd-muted); font-size: 0.88rem; line-height: 1.45; }
@@ -472,7 +476,7 @@ h1 {
 .trend-raw { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 @media (max-width: 560px) {
   .trend-bars { overflow-x: auto; padding-bottom: 0.2rem; }
-  .trend-bars li { flex: 1 0 2.4rem; }
+  .trend-bars li { flex: 1 0 1.9rem; }
 }
 .pr-link { color: var(--jd-accent); text-decoration: none; }
 .pr-link:hover { text-decoration: underline; }

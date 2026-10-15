@@ -10,6 +10,7 @@ export interface LedgerOccurrence {
   date: string
   severity: Severity
   to: string
+  goal?: string
 }
 
 export interface LedgerEntry {
@@ -42,12 +43,14 @@ export const LEDGER_SEVERE_SIZE = 8
  *  (then how often it hit that, then total) go to `severe`, the rest to
  *  `frequent` by total. Relative, so `severe` fills whatever the worst
  *  severity is. `ownSessions` holds this Space's session ids; an occurrence
- *  missing from it links to `otherSpace`, where archiving moved it. */
+ *  missing from it links to `otherSpace`, where archiving moved it. `goals`
+ *  maps this Space's session ids to their goal line. */
 export function ledgerPanels(
   clusters: FrictionClusterDoc[],
   space: string,
   ownSessions: Set<string>,
   otherSpace: string,
+  goals: Record<string, string> = {},
 ): { severe: LedgerEntry[]; frequent: LedgerEntry[] } {
   const entries = clusters.map((c): LedgerEntry => {
     const worst = c.occurrences.reduce<Severity>((w, o) => (SEVERITY_RANK[o.severity] > SEVERITY_RANK[w] ? o.severity : w), 'nit')
@@ -65,6 +68,7 @@ export function ledgerPanels(
         .map((o) => ({
           date: o.date,
           severity: o.severity,
+          goal: goals[o.session],
           to: `/t/journal/${ownSessions.has(o.session) ? space : otherSpace}#${sessionAnchor(o.session)}`,
         }))
         .sort((a, b) => b.date.localeCompare(a.date)),

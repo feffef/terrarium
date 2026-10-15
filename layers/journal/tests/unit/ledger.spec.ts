@@ -41,6 +41,13 @@ describe('ledgerPanels', () => {
   })
 })
 
+describe('ledgerPanels goals', () => {
+  it('carries the session goal onto an occurrence when this Space has it', () => {
+    const [e] = ledgerPanels([cluster('x', ['nit'])], 'current', new Set(['x-0']), 'archived', { 'x-0': 'Fix the gate' }).severe
+    expect(e!.occurrences[0]!.goal).toBe('Fix the gate')
+  })
+})
+
 describe('ledgerRefLinks', () => {
   it('links the first issue and the first PR a ref names, whatever their order', () => {
     expect(ledgerRefLinks('PRs #1826, #1833; issue #1857 (filed)')).toEqual([
