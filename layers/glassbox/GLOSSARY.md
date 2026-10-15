@@ -70,7 +70,7 @@ Its body, in `walkthroughs/`, follows one contract, which the page draws like
 design 1b (`app/utils/walkthrough.ts`):
 
 - a lede paragraph, then at most one diagram;
-- at least one numbered **stop**, each `## 1. Title`: a few sentences of this
+- at least one numbered **stop**, each `## 1. Title`: 2–4 sentences of this
   story's part, ending in exactly one `::stop-links` block of chips separated
   by `·`. A chip is a link (a Lesson where one exists, a Journal page), a
   `:file` or a `:term`; each block holds at least one link or `:file`, since a

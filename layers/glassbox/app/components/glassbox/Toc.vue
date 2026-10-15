@@ -114,7 +114,8 @@ a:hover { background: var(--gb-tint); }
 .depth-3 + .depth-3 { margin-left: -2px; }
 .depth-3 + .depth-3 a { padding-left: 4px; }
 a[aria-current] { background: var(--gb-solid); color: var(--gb-solid-ink); }
-.stop .title { margin-left: 0.35em; }
+/* A long current stop title would push the bar onto a second row. */
+.stop .title { display: inline-block; max-width: 14em; margin-left: 0.35em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; vertical-align: bottom; }
 .stop.only .title { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 
 /* Below 1024px: a collapsed pill under the sticky header. */
@@ -151,6 +152,6 @@ a[aria-current] { background: var(--gb-solid); color: var(--gb-solid-ink); }
   .depth-3:has(+ .depth-3)::after { content: none; }
   .depth-3 + .depth-3 { margin: 0; }
   .depth-3:has(+ .depth-3) a, .depth-3 + .depth-3 a { padding: 0 10px 0 24px; }
-  .stop.only .title { position: static; width: auto; height: auto; clip-path: none; }
+  .stop .title, .stop.only .title { position: static; width: auto; max-width: none; height: auto; clip-path: none; white-space: normal; }
 }
 </style>
