@@ -1,11 +1,11 @@
 schemaVersion: 1
 session: session_019ZQjo7wiuxrS9KLEG2GiTU
 startedAt: 2026-10-15T17:35:31Z
-endedAt: 2026-10-15T17:42:37Z
+endedAt: 2026-10-15T17:44:03Z
 kind: interactive
 goal: Let glassbox-update cover the drafts Space
-status: in-review
-outcome: --spaces option added and PR opened; the drafts pages themselves are not updated yet
+status: completed
+outcome: --spaces option merged (PR 2094); the drafts pages themselves are not updated yet
 summary: 'The user ran /glassbox-update "on the drafts". I asked what that meant (the skill never mentions drafts); the user chose "only the drafts Space" and "stop and report" if the script skipped them. The script reads only the guide Space, so I stopped and reported. The user then asked for a --spaces parameter with guide as default (human-instructed). I built it, with a test and one SKILL.md clause. The Stop hook asked for a push; per ADR-0004 I ran gate:scoped and code-review (two read-only subagents) first. The reviews found real gaps (unknown Space silently a no-op, repeated Space processed twice, --spaces --write parsed as a name), which I fixed (agent-initiated, within the ask). Pushing, opening PR 2094 and subscribing were agent-initiated per ADR-0003. Open: drafts pages are still pinned to two old revisions and need the actual update run; terms still come from the guide Space only, and --write pins every named Space to one commit.'
 prs:
   - "2094"
@@ -56,14 +56,14 @@ frictions:
   - description: "Test runs print noisy 'fatal: expected acknowledgments' and 'no-such-ref' git lines that look like failures."
     solution: Silence or document these fixture-git messages in the test support.
     severity: nit
-durationSec: 426
+durationSec: 511
 models:
-  claude-sonnet-5-5: 70
+  claude-sonnet-5-5: 84
 toolCounts:
   Grep: 2
   AskUserQuestion: 1
   Read: 8
-  Bash: 19
+  Bash: 22
   Edit: 1
   Skill: 3
   Agent: 2
@@ -72,6 +72,11 @@ toolCounts:
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
   Write: 1
+  ReadNotifications: 2
+  mcp__claude-code-remote__send_later: 1
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
+  mcp__claude-code-remote__delete_trigger: 1
 filesEdited:
   - .agents/skills/glassbox-update/SKILL.md
 rulesLoaded:
