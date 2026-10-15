@@ -171,7 +171,7 @@ const REC = '\x1e' // record separator
 function readCommits(cwd = root): Commit[] {
   const out = execFileSync(
     'git',
-    ['log', `--pretty=format:%H${SEP}%cI${SEP}%P${SEP}%s${SEP}%b${REC}`],
+    ['log', '--first-parent', `--pretty=format:%H${SEP}%cI${SEP}%P${SEP}%s${SEP}%b${REC}`],
     { cwd, encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 },
   )
   return out
