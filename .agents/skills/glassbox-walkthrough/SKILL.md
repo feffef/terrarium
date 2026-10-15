@@ -18,8 +18,8 @@ first: it holds the Walkthrough contract. The steps every page shares are in
    `layers/glassbox/content/guide/pages/walkthroughs/<slug>.md`.
 2. **Pin** it (EVERY-PAGE.md).
 3. **Write** it to the contract, in plain words. The lede says what happens,
-   from whose side, and where it ends. A stop is 2–4 sentences; detail a
-   `SKILL.md` or a Lesson holds stays there. Stop text gives no 'so'/'since'/
+   from whose side, and where it ends. A stop keeps to the glossary's stop
+   length; detail a `SKILL.md` or a Lesson holds stays there. Stop text gives no 'so'/'since'/
    'because' reasons, and names the actor by tier (a Trusted user), not 'the
    owner', unless only the owner may act (ADR-0020). Each stop tells this story's part only;
    how the mechanism works belongs to what its chips link, a Lesson where one
