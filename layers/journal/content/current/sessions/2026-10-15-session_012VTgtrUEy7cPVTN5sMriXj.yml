@@ -1,14 +1,15 @@
 schemaVersion: 1
 session: session_012VTgtrUEy7cPVTN5sMriXj
 startedAt: 2026-10-15T10:59:47Z
-endedAt: 2026-10-15T14:40:53Z
+endedAt: 2026-10-15T14:56:42Z
 kind: interactive
-goal: "Glass Box: split pages into a polished guide and a drafts Space"
-status: completed
-outcome: "PR #2065 merged into the Glass Box integration branch: 39 pages moved to a new drafts Space, 23 stay in the guide"
-summary: "Picked up Glass Box follow-up work from HANDOFF.md and the #1985 wrap-up (the kickoff was a machine-injected handoff prompt). The owner parked the minor fixes and directed every step after that: run a first-time-reader review of all 62 pages, ask what Lessons a reader new to the tech would need, add a `drafts` Space (the owner named it, chose a terms symlink and ruled that guide pages never link into drafts), set a stricter bar (\"only high quality and highly relevant pages\"), approve the 22-page cut, have the starred pages trimmed, and add front-page text for both Spaces. The owner's go-ahead is the ADR-0003 approval for the new Space. Agent-initiated: the cut rule itself (min usefulness and readability >= 4 in both reader runs, concept weight >= 4, or Core in both with one trim), computing the link graph to size the fallout (54 guide links into drafts), the draft banner wording, and the review-driven fixes in the second commit. The reader agent ran twice, because the owner's follow-up question reached it after it finished; the two runs disagreed on about five pages, which was useful as a measure of judgement noise, so the cut used the minimum of both. The owner asked mid-session whether I had read the full ADRs the rule summaries point to. I had not; reading all eight afterwards changed nothing in the work and added one small fact (ADR-0003: the log must name the approver). PR #2065 passed CI's gate and I merged it into the integration branch with scripts/merge-pr.ts after posting the verdict; it reaches main with #2014, which the owner merges. New Lessons (What Terrarium is, a Claude Code session, Nuxt and Vue basics) and the HANDOFF minor fixes remain open."
+goal: "Glass Box follow-up: a drafts Space, and the handoff's open items filed"
+status: in-review
+outcome: "PR #2065 merged (drafts Space); 11 issues filed from HANDOFF.md; PR #2079 removing it is in review"
+summary: "Picked up Glass Box follow-up work from HANDOFF.md and the #1985 wrap-up (the kickoff was a machine-injected handoff prompt). The owner parked the minor fixes and directed every step after that: run a first-time-reader review of all 62 pages, ask what Lessons a reader new to the tech would need, add a `drafts` Space (the owner named it, chose a terms symlink and ruled that guide pages never link into drafts), set a stricter bar (\"only high quality and highly relevant pages\"), approve the 22-page cut, have the starred pages trimmed, and add front-page text for both Spaces. The owner's go-ahead is the ADR-0003 approval for the new Space. Agent-initiated: the cut rule itself (min usefulness and readability >= 4 in both reader runs, concept weight >= 4, or Core in both with one trim), computing the link graph to size the fallout (54 guide links into drafts), the draft banner wording, and the review-driven fixes in the second commit. The reader agent ran twice, because the owner's follow-up question reached it after it finished; the two runs disagreed on about five pages, which was useful as a measure of judgement noise, so the cut used the minimum of both. The owner asked mid-session whether I had read the full ADRs the rule summaries point to. I had not; reading all eight afterwards changed nothing in the work and added one small fact (ADR-0003: the log must name the approver). PR #2065 passed CI's gate and I merged it into the integration branch with scripts/merge-pr.ts after posting the verdict; it reaches main with #2014, which the owner merges. Then, at the owner's request, I had three read-only agents verify every HANDOFF open item against the code, checked the key claims myself (the NODE_ENV finding is real: the live server loads Vue's dev build), filed #2068-#2078, skipped items that did not hold up (the workflow-guard false positive is already documented; no worktree guard exists) or are tracked (#2029), and opened PR #2079 deleting HANDOFF.md. Agent-initiated: which items to file, their labels, and dropping two 'rules for the next writer' (the refspec trap did not reproduce; one-at-a- time merging was build-phase only). Sticky bars solid vs frosted is left as a question for the owner. New Lessons remain open."
 prs:
   - "2065"
+  - "2079"
 docsRead:
   - path: layers/glassbox/HANDOFF.md
     reason: state of Glass Box and its open items
@@ -73,6 +74,30 @@ docsRead:
   - path: .agents/skills/glassbox-update/SKILL.md
     reason: described the Skill accurately on the guide front page
     useful: yes
+  - path: docs/agents/issue-tracker.md
+    reason: how to file and label issues; no spec needed for these
+    useful: partly
+  - path: docs/agents/triage-labels.md
+    reason: chose needs-triage vs ready-for-human for the 11 issues
+    useful: yes
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: "a verifier subagent quoted its 'cannot spawn subagents' line for #2072"
+    useful: yes
+  - path: docs/agents/environment-caveats.md
+    reason: "a verifier subagent compared its permissions.allow caveat with the official docs for #2072"
+    useful: yes
+  - path: docs/agents/guards.md
+    reason: a verifier subagent used its guard list to show no worktree guard exists
+    useful: yes
+  - path: .agents/skills/auto-triage/SKILL.md
+    reason: "a verifier subagent found it labels wayfinder tickets, cited in #2074"
+    useful: yes
+  - path: docs/adr/0005-skill-model.md
+    reason: "a verifier subagent used it to say a Routine lives outside git, for #2075"
+    useful: yes
+  - path: .agents/skills/log-session/SKILL.md
+    reason: "a verifier subagent checked for a hand-back verdicts template, for #2078"
+    useful: partly
   - path: layers/glassbox/page-checks.ts
     reason: (no reason given)
   - path: layers/glassbox/app/pages/t/glassbox/[space]/[...slug].vue
@@ -119,26 +144,30 @@ frictions:
   - description: Read docs/agents/github-integration.md in the same parallel step as the first GitHub call, not before it; the hook flagged it.
     solution: Issue the doc read one step before the first mcp__github__ call.
     severity: nit
-durationSec: 13266
+  - description: "Filed #2076 with a guessed spec path (tests/e2e/ instead of layers/tinkerfund/tests/e2e/) before checking it; corrected the body right after."
+    solution: Verify a path with git ls-files before it goes into an issue body (CLAUDE.md Verify before you state).
+    severity: nit
+durationSec: 14215
 models:
-  claude-opus-5-5: 246
+  claude-opus-5-5: 328
 toolCounts:
-  Read: 37
-  Bash: 64
-  ToolSearch: 3
-  mcp__github__issue_read: 1
+  Read: 39
+  Bash: 80
+  ToolSearch: 4
+  mcp__github__issue_read: 3
   mcp__github__pull_request_read: 5
-  Agent: 3
+  Agent: 8
   SendMessage: 1
   Write: 3
-  Skill: 3
-  mcp__github__create_pull_request: 1
-  mcp__claude-code-remote__subscribe_pr_activity: 1
-  ReadNotifications: 2
-  mcp__claude-code-remote__send_later: 1
+  Skill: 4
+  mcp__github__create_pull_request: 2
+  mcp__claude-code-remote__subscribe_pr_activity: 2
+  ReadNotifications: 3
+  mcp__claude-code-remote__send_later: 2
   mcp__github__add_issue_comment: 1
   mcp__claude-code-remote__delete_trigger: 1
   mcp__claude-code-remote__unsubscribe_pr_activity: 1
+  mcp__github__issue_write: 12
 rulesLoaded:
   - .claude/rules/adr-0021.md
   - .claude/rules/adr-0029.md
@@ -154,6 +183,8 @@ rulesLoaded:
   - .claude/rules/glassbox-content.md
   - .claude/rules/mermaid-lanes.md
   - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0011.md
 rulesGlobal:
   - .claude/rules/adr-0004.md
   - .claude/rules/adr-0009.md
@@ -171,6 +202,22 @@ rulesFollowedUp:
   - .claude/rules/adr-0004-human-merge.md
   - .claude/rules/adr-0013.md
   - .claude/rules/adr-0006.md
+  - .claude/rules/adr-0005.md
+rulesLoadedBySubagents:
+  - .claude/rules/guards.md
+  - .claude/rules/adr-0018.md
+  - .claude/rules/adr-0026.md
+  - .claude/rules/adr-0028.md
+  - .claude/rules/adr-0008.md
+  - .claude/rules/adr-0014.md
+  - .claude/rules/adr-0015.md
+docsReadBySubagents:
+  - .agents/skills/dispatch-subagents/SKILL.md
+  - docs/agents/environment-caveats.md
+  - docs/agents/guards.md
+  - .agents/skills/auto-triage/SKILL.md
+  - docs/adr/0005-skill-model.md
+  - .agents/skills/log-session/SKILL.md
 ruleVerdicts:
   - path: .claude/rules/adr-0004.md
     reason: Made me run gate:scoped and code-review before the first push despite the Stop hook; read the full ADR only when the owner asked
@@ -232,6 +279,15 @@ ruleVerdicts:
   - path: .claude/rules/adr-0030.md
     reason: No ADR was edited
     useful: no
+  - path: .claude/rules/adr-0022.md
+    reason: "Loaded with the triage docs; I am not the auto-triage sweep, so it only informed #2074's wording"
+    useful: partly
+  - path: .claude/rules/adr-0011.md
+    reason: "Told me a deploy/ change reaches the server only on a manual image rebuild, noted in #2068; summary was enough"
+    useful: yes
+  - path: .claude/rules/adr-0015.md
+    reason: "A verifier subagent relied on it: pack Skills can't be edited, so #2074 needs a repo override"
+    useful: yes
 subagents:
   - type: Explore
     task: Reader review of Glass Box pages
@@ -239,6 +295,16 @@ subagents:
     task: Standards review of drafts Space diff
   - type: Explore
     task: Spec review of drafts Space diff
+  - type: Explore
+    task: Verify HANDOFF code-fix items
+  - type: Explore
+    task: Verify HANDOFF docs and tooling items
+  - type: Explore
+    task: Verify HANDOFF decisions and ideas
+  - type: Explore
+    task: "Standards review: handoff removal"
+  - type: Explore
+    task: "Spec review: handoff removal"
 gitBranch: claude/affectionate-lamport-fu16x5
 entrypoint: remote
 cliVersion: 2.1.300
