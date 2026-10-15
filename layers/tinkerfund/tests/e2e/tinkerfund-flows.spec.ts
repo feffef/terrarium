@@ -6,11 +6,11 @@
 // in parallel.
 import type { Page } from 'playwright-core'
 import { describe, expect, it } from 'vitest'
-import { createPage, url } from '@nuxt/test-utils/e2e'
+import { createPage, url, type NuxtPage } from '@nuxt/test-utils/e2e'
 import { collectUnknownElementTags, setupL2 } from '../../../../tests/support/e2e.ts'
 
 interface Flow {
-  page: Page
+  page: NuxtPage
   /** A full load of a qa path, so it hydrates. */
   visit: (path: string) => Promise<void>
   reload: () => Promise<void>
