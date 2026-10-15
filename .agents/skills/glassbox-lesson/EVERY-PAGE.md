@@ -15,6 +15,7 @@ stays true after that change lands (diff the file between `revision` and the
 integration tip).
 Frontmatter holds `title`, `description`, `revision` and `revisionDate` only;
 the page draws `title` as its heading, so the body has no h1.
+`title` is a short name (<=28 chars); `description` is one sentence a visitor reads before clicking (<=120).
 
 ## Write
 
