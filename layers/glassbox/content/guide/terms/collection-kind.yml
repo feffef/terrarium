@@ -1,0 +1,3 @@
+term: Collection kind
+definition: A named, shared shape a Collection can opt into so code in other Tenants can read it. Its contract is a minimum; the Collection adds its own fields on top.
+source: GLOSSARY.md
