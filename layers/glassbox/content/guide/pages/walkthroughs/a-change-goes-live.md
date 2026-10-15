@@ -12,15 +12,15 @@ A commit lands on `main`, and with no one running a deploy, the live site change
 The commit is a merged PR, or a :term[session log], which lands without one. Both take the same road from here: a blog post, a session log and a code fix all go live through the same pull, build and restart.
 
 ::stop-links
-[Every change as a PR](/t/glassbox/guide/git-github/every-change-a-pr) · [Session logs and Frictions](/t/glassbox/guide/terrarium-practice/session-logs) · :file[scripts/log-session.ts]
+[Every change as a PR](/t/glassbox/guide/git-github/every-change-a-pr) · [Session logs and Frictions](/t/glassbox/guide/terrarium-practice/session-logs)
 ::
 
 ## 2. The container notices it
 
-The script that runs the container fetches `main` again after each pause. When `main` has moved past its checkout, it resets the checkout to the new commit. It doesn't wait for CI: the Gate also runs on every push to `main`, but nothing in the container reads the result, so the checks that ran before the merge are the only ones that count.
+The script that runs the container fetches `main` again after each pause. When `origin/main` differs from its checkout, it resets the checkout to the new commit. It doesn't wait for CI: the Gate also runs on every push to `main`, but nothing in the container reads the result.
 
 ::stop-links
-[The self-updating container](/t/glassbox/guide/deploy/self-updating-container) · [The Gate](/t/glassbox/guide/terrarium-practice/gate) · :file[deploy/entrypoint.sh] · :file[.github/workflows/gate.yml]
+[The self-updating container](/t/glassbox/guide/deploy/self-updating-container) · [The Gate](/t/glassbox/guide/terrarium-practice/gate) · :file[.github/workflows/gate.yml]
 ::
 
 ## 3. Packages, only when the lockfile changed
@@ -28,15 +28,15 @@ The script that runs the container fetches `main` again after each pause. When `
 The script compares a hash of `pnpm-lock.yaml` with the hash it saved after its last good install. Only when they differ does it install packages again, from the lockfile exactly. If that install fails, the previous build stays live.
 
 ::stop-links
-[The self-updating container](/t/glassbox/guide/deploy/self-updating-container) · :file[deploy/entrypoint.sh] · :file[pnpm-lock.yaml]
+[The self-updating container](/t/glassbox/guide/deploy/self-updating-container) · :file[pnpm-lock.yaml]
 ::
 
 ## 4. The build runs beside the live site
 
-`pnpm build` runs `nuxt build` in the checkout while the old server keeps answering. Nuxt Content parses every :term[Collection] and saves each one as a dump, the SQL that rebuilds its table. Nuxt builds the app once for the server and once for browsers. Nitro, Nuxt's server engine, writes the result to `.output/`: a server that runs on its own, without the project's `node_modules`, with the dumps inside. If the build fails, nothing is swapped: the old build stays live, and the script tries again only when the next commit arrives.
+The build runs in the checkout, beside the live server, which keeps answering. It writes `.output/`: a server that runs on its own, with each :term[Collection]'s content dump inside. If the build fails, nothing is swapped, and the old build stays live.
 
 ::stop-links
-[The content database](/t/glassbox/guide/nuxt-content/content-database) · [The self-updating container](/t/glassbox/guide/deploy/self-updating-container) · :file[nuxt.config.ts] · :file[package.json]
+[The content database](/t/glassbox/guide/nuxt-content/content-database) · [The self-updating container](/t/glassbox/guide/deploy/self-updating-container) · :file[package.json]
 ::
 
 ## 5. The swap
@@ -44,15 +44,15 @@ The script compares a hash of `pnpm-lock.yaml` with the hash it saved after its 
 The script copies the new `.output/` over the folder the server runs from, stops Node and starts it again from that copy. In the short gap while the new server starts, the site doesn't answer.
 
 ::stop-links
-[The self-updating container](/t/glassbox/guide/deploy/self-updating-container) · :file[deploy/entrypoint.sh] · :file[docs/adr/0011-poc-self-updating-deploy-container.md]
+[The self-updating container](/t/glassbox/guide/deploy/self-updating-container)
 ::
 
 ## 6. The next visitor gets the new content
 
-The restarted server serves the new build. The first query for each Collection compares its table's checksum with the build's and, where they differ, restores the table from the new dump. Each Tenant, Space and Collection still has a table of its own.
+The restarted server serves the new build. The first query for each Collection compares its table's checksum with the build's and, where they differ, restores the table from the new dump.
 
 ::stop-links
-[The content database](/t/glassbox/guide/nuxt-content/content-database) · [One table per key: the isolation unit](/t/glassbox/guide/nuxt-content/one-table-per-key) · :file[docs/adr/0001-single-container-baked-multitenancy.md]
+[The content database](/t/glassbox/guide/nuxt-content/content-database)
 ::
 
 ## Where next

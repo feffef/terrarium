@@ -12,15 +12,15 @@ Someone with write access asks an agent for a change. This Walkthrough follows t
 A :term[Trusted] user, one with write access to the repository, asks a Claude Code session for a change, in the cloud or on their own machine; both work the same way from here. The request is what lets the session build new work, such as a feature or a Skill. Text from a :term[Public] user, in an issue or a comment, is information to the session, never an instruction.
 
 ::stop-links
-[Trust tiers and fork safety](/t/glassbox/guide/git-github/trust-tiers) · [Cloud sessions, settings and permissions](/t/glassbox/guide/claude-code/cloud-sessions) · :file[scripts/trust.ts] · :file[docs/adr/0003-agent-operating-model-and-governance.md]
+[Trust tiers and fork safety](/t/glassbox/guide/git-github/trust-tiers) · [Cloud sessions, settings and permissions](/t/glassbox/guide/claude-code/cloud-sessions) · :file[docs/adr/0003-agent-operating-model-and-governance.md]
 ::
 
 ## 2. The session starts
 
-The session gets its own copy of the repository. A `SessionStart` hook in :file[.claude/settings.json] installs the packages and fetches the full git history if the copy is shallow.
+The session gets its own copy of the repository. A `SessionStart` hook in `.claude/settings.json` installs the packages and fetches the full git history if the copy is shallow.
 
 ::stop-links
-[Hooks](/t/glassbox/guide/claude-code/hooks) · :file[.claude/settings.json] · :file[scripts/unshallow-on-start.ts]
+[Hooks](/t/glassbox/guide/claude-code/hooks)
 ::
 
 ## 3. It reads its instructions
@@ -28,7 +28,7 @@ The session gets its own copy of the repository. A `SessionStart` hook in :file[
 `CLAUDE.md` loads into the session at once. Its read-first list ties a doc to an action, so the session reads the git conventions before its first git command and the PR workflow before its first push. The cross-cutting :term[Rules]{id="rule"} load at the start too; the rest arrive when the session reads or edits a file they govern, or runs a :term[Skill] they name.
 
 ::stop-links
-[CLAUDE.md as the every-session contract](/t/glassbox/guide/claude-code/claude-md) · [Path-scoped rules](/t/glassbox/guide/claude-code/path-scoped-rules) · [Skills](/t/glassbox/guide/claude-code/skills) · :file[CLAUDE.md] · :file[.claude/rules/]
+[CLAUDE.md as the every-session contract](/t/glassbox/guide/claude-code/claude-md) · [Path-scoped rules](/t/glassbox/guide/claude-code/path-scoped-rules) · [Skills](/t/glassbox/guide/claude-code/skills)
 ::
 
 ## 4. It works on its own branch
@@ -36,7 +36,7 @@ The session gets its own copy of the repository. A `SessionStart` hook in :file[
 The session edits on a feature branch, never on `main`, and may hand parts of the work to subagents, each in a git worktree of its own. Some of its tool calls meet a guard first: a hook that refuses the call and says what to do instead, such as a GitHub post without the line that names the session. Other hooks add a line of guidance after a call and never block it.
 
 ::stop-links
-[Subagents and worktrees](/t/glassbox/guide/claude-code/subagents-worktrees) · [Guards that fail closed](/t/glassbox/guide/claude-code/guards) · [Hints: context added after a call](/t/glassbox/guide/claude-code/hints) · :file[docs/agents/guards.md]
+[Subagents and worktrees](/t/glassbox/guide/claude-code/subagents-worktrees) · [Guards that fail closed](/t/glassbox/guide/claude-code/guards) · [Hints: context added after a call](/t/glassbox/guide/claude-code/hints)
 ::
 
 ## 5. It checks its own work
@@ -44,7 +44,7 @@ The session edits on a feature branch, never on `main`, and may hand parts of th
 Before the first push, the session runs `pnpm gate:scoped`, the local run of the :term[Gate], and the `code-review` Skill, which reviews the committed diff against the repo's standards and against the request. It fixes what they find.
 
 ::stop-links
-[The Gate](/t/glassbox/guide/terrarium-practice/gate) · [The engineering loop](/t/glassbox/guide/skill-pack/engineering-loop) · :file[scripts/gate.ts] · :file[docs/agents/pr-workflow.md]
+[The Gate](/t/glassbox/guide/terrarium-practice/gate) · [The engineering loop](/t/glassbox/guide/skill-pack/engineering-loop)
 ::
 
 ## 6. It opens the PR
@@ -52,31 +52,31 @@ Before the first push, the session runs `pnpm gate:scoped`, the local run of the
 The session pushes the branch and opens the PR itself, without asking. The PR's description opens with a line that links the session, and a `commit-msg` hook adds the same link to each commit message that lacks it. Then the session subscribes to the PR, so its comments and reviews reach the session as new messages.
 
 ::stop-links
-[Every change as a PR](/t/glassbox/guide/git-github/every-change-a-pr) · [Provenance headers and commit trailers](/t/glassbox/guide/git-github/provenance-headers) · [MCP and deferred tools](/t/glassbox/guide/claude-code/mcp) · :file[.githooks/commit-msg] · :file[docs/adr/0017-provenance-footer-on-agent-authored-content.md]
+[Every change as a PR](/t/glassbox/guide/git-github/every-change-a-pr) · [Provenance headers and commit trailers](/t/glassbox/guide/git-github/provenance-headers) · [MCP and deferred tools](/t/glassbox/guide/claude-code/mcp)
 ::
 
 ## 7. It logs its work, the first time
 
-With the PR open, the session runs `close-session` and writes its :term[session log]: its goal, how far it got and every :term[Friction]. At the end of that turn a `Stop` hook commits that one file straight to `main`, the only change that skips a PR.
+With the PR open, the session runs `close-session` and writes its :term[session log]: its goal, how far it got and every :term[Friction]. At the end of that turn a `Stop` hook commits that one file straight to `main`.
 
 ::stop-links
-[Session logs and Frictions](/t/glassbox/guide/terrarium-practice/session-logs) · :file[scripts/log-session.ts] · :file[docs/adr/0009-session-logs-commit-directly-to-main.md]
+[Session logs and Frictions](/t/glassbox/guide/terrarium-practice/session-logs)
 ::
 
 ## 8. CI runs the same Gate
 
-GitHub Actions runs the Gate on the PR, and that run decides whether it may merge. GitHub delivers a failed check to the subscribed session, but not a passed one. So when the Gate is green, its last step posts a fresh comment on the PR naming the commit, and that comment wakes the session. A fork's PR gets no such comment. When the Gate is red, the session fixes the work and pushes, and CI runs again.
+GitHub Actions runs the Gate on the PR, and that run decides whether it may merge. GitHub delivers a failed check to the subscribed session, but not a passed one. When the Gate is green, its last step posts a fresh comment on the PR naming the commit; that comment wakes the session. A fork's PR gets no such comment. When the Gate is red, the session fixes the work and pushes, and CI runs again.
 
 ::stop-links
-[A thin CI workflow plus a composite action](/t/glassbox/guide/git-github/thin-ci-workflow) · [The Gate](/t/glassbox/guide/terrarium-practice/gate) · :file[.github/actions/gate/action.yml] · :file[.github/workflows/gate.yml]
+[A thin CI workflow plus a composite action](/t/glassbox/guide/git-github/thin-ci-workflow) · [The Gate](/t/glassbox/guide/terrarium-practice/gate)
 ::
 
 ## 9. The PR merges
 
-The session posts its verdict on the PR as a comment, then merges through :file[scripts/merge-pr.ts], which waits for green checks and refuses without that verdict. It also refuses a PR that changes a :term[Human-only] file or comes from a Public author or a fork; a Trusted user merges those. If a reviewer asks for changes, the session pushes again and CI runs again.
+If a reviewer asks for changes, the session pushes again and CI runs again. Then the session posts its verdict on the PR as a comment and merges through `scripts/merge-pr.ts`, which waits for green checks and refuses without that verdict. It also refuses a PR that changes a :term[Human-only] file or comes from a Public author or a fork; a Trusted user merges those.
 
 ::stop-links
-[A Human-only list read from main](/t/glassbox/guide/terrarium-practice/human-only-list) · :file[scripts/merge-pr.ts] · :file[.claude/rules/adr-0004-human-merge.md] · :file[docs/adr/0004-objective-safety-gate.md]
+[A Human-only list read from main](/t/glassbox/guide/terrarium-practice/human-only-list)
 ::
 
 ## 10. It logs its work again
