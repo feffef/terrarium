@@ -40,9 +40,11 @@ export function glassboxFrameDiagrams<T extends MinimarkNode>(nodes: T[]): T[] {
   })
 }
 
-/** The heading being read: the last one whose top has passed `line`, or the
- *  last of all once the page is scrolled to its end. */
+/** The heading being read: the last one whose top has passed `line`, the first
+ *  of a row that share its top, or the last of all once the page is scrolled to
+ *  its end. */
 export function currentGlassboxHeading(headings: { id: string; top: number }[], line: number, atEnd: boolean): string | undefined {
   if (atEnd) return headings.at(-1)?.id
-  return headings.findLast((heading) => heading.top <= line)?.id
+  const passed = headings.findLast((heading) => heading.top <= line)
+  return passed && headings.find((heading) => Math.abs(heading.top - passed.top) < 1)!.id
 }

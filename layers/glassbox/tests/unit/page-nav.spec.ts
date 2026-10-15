@@ -84,6 +84,12 @@ describe('currentGlassboxHeading', () => {
     expect(currentGlassboxHeading(headings, 100, false)).toBe('the-concept')
   })
 
+  // Why it's built this way and What to watch for sit side by side (design 1b).
+  it('is the first of headings that share a top', () => {
+    const cards = [{ id: 'in-terrarium', top: -300 }, { id: 'why-its-built-this-way', top: 100 }, { id: 'what-to-watch-for', top: 100 }]
+    expect(currentGlassboxHeading(cards, 200, false)).toBe('why-its-built-this-way')
+  })
+
   it('is none before the first heading reaches the line', () => {
     expect(currentGlassboxHeading([{ id: 'the-concept', top: 500 }], 200, false)).toBeUndefined()
   })

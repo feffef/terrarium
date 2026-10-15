@@ -12,8 +12,20 @@ const open = ref(false)
 const stops = computed(() => Object.fromEntries(entries.value.map((entry) => [entry.id, glassboxStopNumber(entry.text)])))
 const shown = computed(() => (entries.value.find((entry) => entry.id === current.value) ?? entries.value[0])?.text)
 
+// A clicked entry stays current until the reader scrolls: a jump can't bring a
+// short last section to the reading line, and side-by-side headings share it.
+let clicked = false
+function pick(id: string) {
+  clicked = true
+  current.value = id
+  open.value = false
+}
+const release = () => { clicked = false }
+const scrollInputs = ['wheel', 'touchmove', 'keydown', 'pointerdown'] as const
+
 let frame = 0
 function track() {
+  if (clicked) return
   cancelAnimationFrame(frame)
   frame = requestAnimationFrame(() => {
     const headings = entries.value.flatMap(({ id }) => {
@@ -30,6 +42,7 @@ onMounted(() => {
   track()
   addEventListener('scroll', track, { passive: true })
   addEventListener('resize', track)
+  for (const input of scrollInputs) addEventListener(input, release, { passive: true })
   const root = nav.value!.closest<HTMLElement>('.gb')
   // The open mobile panel is not what a heading has to clear once a link closes it.
   resizes = new ResizeObserver(([entry]) => {
@@ -42,6 +55,7 @@ onUnmounted(() => {
   cancelAnimationFrame(frame)
   removeEventListener('scroll', track)
   removeEventListener('resize', track)
+  for (const input of scrollInputs) removeEventListener(input, release)
 })
 watch(entries, () => nextTick(track))
 </script>
@@ -56,7 +70,7 @@ watch(entries, () => nextTick(track))
     <span class="gb-label lead">On this page</span>
     <ol id="gb-toc-list">
       <li v-for="entry in entries" :key="entry.id" :class="`depth-${entry.depth}`">
-        <a :href="`#${entry.id}`" :aria-current="entry.id === current ? 'location' : undefined" @click="open = false"><span v-if="stops[entry.id]" class="stop" :class="{ only: entry.id !== current }"><span>{{ stops[entry.id]!.n }}</span><span class="title">{{ stops[entry.id]!.title }}</span></span><template v-else>{{ entry.text }}</template></a>
+        <a :href="`#${entry.id}`" :aria-current="entry.id === current ? 'location' : undefined" @click="pick(entry.id)"><span v-if="stops[entry.id]" class="stop" :class="{ only: entry.id !== current }"><span>{{ stops[entry.id]!.n }}</span><span class="title">{{ stops[entry.id]!.title }}</span></span><template v-else>{{ entry.text }}</template></a>
       </li>
     </ol>
   </nav>
