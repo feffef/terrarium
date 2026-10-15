@@ -3,8 +3,7 @@
 // foreword, and the biome directory. A layer route at the Tenant root (not a
 // Space), so it doesn't touch the isolation-critical resolver; it reads each
 // biome's keyed collections through the SAME shared resolver the wings use, only
-// to list specimens (counts) and find the last
-// observation for the colophon. (`BIOMES`
+// to count specimens and find the last observation for the colophon. (`BIOMES`
 // arrives via the utils auto-import; useSpace doesn't apply here — this route
 // has no `space` param.)
 import { resolveSpaceRoute } from '#shared/routing'
