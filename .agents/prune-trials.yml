@@ -9,6 +9,19 @@
 # after the PR merges.
 #
 # trials:
+#   - problem: what the pruned prose was trying to prevent
+#     territory:                     # the next trial must not overlap these
+#       paths:
+#         - path/or/file/touched
+#       keywords:
+#         - keyword or phrase
+#     opened: 2026-08-23
+#     proven: false                  # only when §4's Sonnet probe could not run
+#     check: how you would tell this broke — written now, while you still
+#            remember what the prose was for. Prose, not a command; say what
+#            distinguishes real damage from a session simply using the pruned
+#            topic's tools correctly.
+trials:
   - problem: >
       `close-session` SKILL.md rewritten plainly, 60 lines to 46 (-14): the
       three logging conditions and the PR-open sequence cut to one goal-shaped
@@ -36,19 +49,6 @@
       without the always-loaded re-read, and a line the old Skill carried would have
       prevented it. NOT damage: the read-first hint firing, or a session that
       logs `HUMAN-PROMPTED-CLOSURE` correctly.
-#   - problem: what the pruned prose was trying to prevent
-#     territory:                     # the next trial must not overlap these
-#       paths:
-#         - path/or/file/touched
-#       keywords:
-#         - keyword or phrase
-#     opened: 2026-08-23
-#     proven: false                  # only when §4's Sonnet probe could not run
-#     check: how you would tell this broke — written now, while you still
-#            remember what the prose was for. Prose, not a command; say what
-#            distinguishes real damage from a session simply using the pruned
-#            topic's tools correctly.
-trials:
   - problem: >
       `docs/agents/github-integration.md` rewritten plainly, 190 lines to 159
       (-31): the overflow and precision traps merged and shortened (the
