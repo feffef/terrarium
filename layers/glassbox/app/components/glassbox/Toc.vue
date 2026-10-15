@@ -60,13 +60,14 @@ watch(entries, () => nextTick(track))
   padding: 6px 8px 6px 16px;
   border: 1px solid var(--gb-pane-edge);
   border-radius: 14px;
-  background: var(--gb-bar);
+  background: color-mix(in srgb, var(--gb-bg) 86%, transparent);
   box-shadow: var(--gb-pane-shadow);
   backdrop-filter: blur(16px);
   font-size: 14.5px;
   line-height: 1.3;
 }
 .toggle { display: none; }
+.lead { flex: none; white-space: nowrap; }
 ol { display: flex; flex-wrap: wrap; align-items: center; gap: 2px; margin: 0; padding: 0; list-style: none; }
 a {
   display: block;
@@ -79,7 +80,7 @@ a:hover { background: var(--gb-tint); }
 .depth-3 a { color: var(--gb-muted); }
 /* An h2's h3s read as one group ("Why · Watch for", design 1b). */
 .depth-3 + .depth-3 { display: flex; align-items: center; margin-left: -8px; }
-.depth-3 + .depth-3::before { content: '·'; color: var(--gb-muted); }
+.depth-3 + .depth-3::before { content: '·'; margin-right: 2px; color: var(--gb-muted); }
 .depth-3 + .depth-3 a { padding-left: 4px; }
 a[aria-current] { background: var(--gb-solid); color: var(--gb-solid-ink); }
 
