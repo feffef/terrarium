@@ -18,12 +18,17 @@ the page draws `title` as its heading, so the body has no h1.
 - **Cite** code with `:file[path]` or `::excerpt`, an ADR as
   `ADR-NNNN (:file[docs/adr/NNNN-….md])`, and a Journal page by its site path
   (a content page, or `/t/journal/<space>/{skills,frictions,ideas}`). A path
-  holding `[` can't go in `:file[…]`: cite its folder.
+  holding `[` can't go in `:file[…]`: cite its folder. An Excerpt's `lines`
+  starts on its first line and ends on its last; with two or more gaps, give
+  one range per run (Excerpt in the glossary).
+- **Don't paraphrase an ADR.** In Terrarium and What to watch for don't retell
+  an ADR's Scope or Why either: show the files and link the ADR.
 - **Link only pages that exist**, and promise none.
 - **Verify each official-docs URL** by fetching it and checking it says what
   you cite, and re-read the docs section that every *What to watch for* and
   *Try it* line depends on. If the network blocks the fetch, read the page's
-  source in the published docs package (e.g. `@nuxt/docs` from npm) or the docs repo, confirm
+  source in the published docs package (e.g. `@nuxt/docs` from npm) or the
+  docs repo (for docs.github.com, a sparse clone of `github/docs`), confirm
   the exact URL and title in web search results, and say so in the PR. Zod
   links go to v3.zod.dev.
 - **A second tool gets its own link** at its first mention, even though *The
