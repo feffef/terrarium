@@ -242,3 +242,15 @@ observations:
       decision ran a genuine dispatched-reader comparison, not a
       self-judged "none". 9 other sessions spot-re-verified against prior
       observations, held up. No new silent failure. Grade/role unchanged.
+  - date: "2026-10-15"
+    note: >-
+      Self-check (audit-skills behaviour check), all 10 usedIn sessions
+      checked (8 already verified in prior entries, 2 freshly audited
+      end-to-end: session_01RJh5bK46AQRRtwagmz8GjU PR #1934/#1935,
+      session_01Dfw9sJon2e4UsaVoiCLhSJ PR #1923/#1924). Step 7's fact-check
+      and step 12's reply-decision both ran genuinely in every session this
+      window, each PR body carrying a specific, non-boilerplate tally. #1479
+      and #1626 both independently re-confirmed CLOSED and holding. The
+      three "prune: blog-post step 12" commits (2026-10-13) rewrapped step-12
+      wording without changing its substance. No new silent failure.
+      Grade/role unchanged.

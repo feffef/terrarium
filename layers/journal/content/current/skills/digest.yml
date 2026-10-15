@@ -200,3 +200,15 @@ observations:
       fact-check subagent caught 3 real pre-merge errors. No missed days in
       16 consecutive digests now checked across this and prior audits. No
       new silent failure. Grade/role unchanged.
+  - date: "2026-10-15"
+    note: >-
+      Self-check (audit-skills behaviour check), all 8 usedIn sessions
+      checked; the one freshly-unaudited session, session_01672sKdk3qVR8DfkAWvR5Qz
+      (PR #2018, the 2026-10-14 Digest, graded against the current SKILL.md
+      since it started after all 9 in-window landings), independently
+      verified end-to-end — fact-check tally (18 claims, 2 wrong and fixed)
+      matches its own subagent dispatch, both pre-merge catches confirmed
+      against primary sources, retention sweep moved exactly 1 digest + 15
+      session logs matching RETAIN_DATES = 7. 16 consecutive clean daily
+      audits now since the single 2026-09-28 #1478 case. No new silent
+      failure. Grade/role unchanged.

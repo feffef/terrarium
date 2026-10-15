@@ -321,3 +321,20 @@ observations:
       #1732 was built to add — by the check's own unit-test logic, it does
       not. Grade/role unchanged pending a human decision on #1912's two
       options (loosen the SKILL.md promise vs. harden the check).
+  - date: "2026-10-15"
+    note: >-
+      Re-checked (audit-skills behaviour check), all 8 usedIn sessions.
+      #1912 independently re-confirmed CLOSED (not open, correcting the
+      brief's framing) via merged PR #1931 — a procedural fix (the PR body
+      must paste the checked tally's owner-memory lines verbatim) rather
+      than a regex hardening; unresolved() in owner-corrections.ts confirmed
+      byte-identical to before, still .match()-first-hit-only. The first
+      live test since the fix (session_01AdUi9nKLGKyPFfBe4HYvqG, PR
+      #1952/#1953) passed cleanly: 19 candidates, one per line, each with its
+      own verdict — the batching shape is gone. New evidence for the
+      historical record only (not escalated, predates both the #1721
+      escalation and its fix): PR #1709 (2026-10-09) shows the same
+      batch-dismissal shape one cycle earlier than previously recorded,
+      cited by two now-superseded prior entries as "genuine," under the
+      looser pre-#1912 bar. No new silent failure. Grade/role unchanged
+      (routine).

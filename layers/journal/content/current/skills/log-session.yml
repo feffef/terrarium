@@ -341,3 +341,19 @@ observations:
       Ledger/issue tracking it — filed today as issue #1915 so it stops
       being rediscovered from scratch. No new finding on log-session's own
       output correctness. Grade/role unchanged.
+  - date: "2026-10-15"
+    note: >-
+      Self-check (audit-skills behaviour check), all 10 usedIn sessions plus
+      all 9 notUsedWindow sessions read in full. All 19 clean: every used
+      session has honest, schema-valid, non-templated content; every
+      not-used session has a complete committed log on disk, confirming the
+      already-tracked skillsUsed transitive-invocation gap (close-session
+      calling log-session internally) rather than a missed invocation.
+      Correction to the 2026-10-14 entry's framing: issue #1915 (the
+      false-positive class itself) is not "unresolved... with no fix yet" —
+      it was closed the same day via merged PR #1933, which edited
+      audit-skills/SKILL.md's own missed-invocation check rather than
+      skillsUsed's population (confirmed live via issue_read); future
+      entries here should cite it as fixed, not carry it forward as open. No
+      new silent failure on this Skill's own output. Grade/role unchanged
+      (essential).

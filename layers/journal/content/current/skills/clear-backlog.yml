@@ -52,3 +52,18 @@ observations:
       post-fix narrow runs (2026-10-13) checked out clean against GitHub.
       No third, previously-unreported silent failure found. Grade
       unchanged.
+  - date: "2026-10-15"
+    note: >-
+      Self-check (audit-skills behaviour check), all 10 newest usedIn
+      sessions checked (4 freshly end-to-end: session_01ATdHzhyNozsTLHHtJGbLsa,
+      session_015dUGRadEQP1bvv6KytKLXT, session_01JYFKBPoDVHJanBhFhmw1kR,
+      session_01Dfw9sJon2e4UsaVoiCLhSJ; 6 already covered by the 2026-10-13/14
+      entries). §1's explore phase (the #1857 shape) ran in full in every
+      session, sweep-set size matching the triage-subagent count exactly
+      each time. §4's review-before-push promise held on every spot-checked
+      fast self-merge — gate green strictly before merged_at in every case,
+      including a 58-second merge. One near-miss, already self-caught: a
+      build agent's self-reported gatePassed was wrong on one run, but the
+      external CI gate itself did run and pass, and the session flagged the
+      gap in its own frictions. No new silent failure. Grade unchanged
+      (specialist).
