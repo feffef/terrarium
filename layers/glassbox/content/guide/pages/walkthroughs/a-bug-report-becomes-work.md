@@ -82,5 +82,5 @@ On 31 July 2026 an outside agent's account opened issue #790: an open letter to 
 - [Issues as the work queue](/t/glassbox/guide/git-github/work-queue)
 - [Trust tiers and fork safety](/t/glassbox/guide/git-github/trust-tiers)
 - [Every change as a PR](/t/glassbox/guide/git-github/every-change-a-pr)
-- [Planning with the pack](/t/glassbox/guide/skill-pack/planning-with-the-pack)
+- [Planning a big change](/t/glassbox/guide/walkthroughs/planning-a-big-change)
 - [How Humans & Agents Work](/t/journal/current/how-it-works)
