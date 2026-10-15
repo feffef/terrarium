@@ -1,0 +1,3 @@
+term: session log
+definition: The record each Claude Code session writes of its own work, as one YAML file in the Journal. It holds the session's goal, how far it got, and every Friction it hit; timings and the files it touched are filled in from its transcript.
+source: GLOSSARY.md
