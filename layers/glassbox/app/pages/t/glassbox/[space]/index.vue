@@ -66,7 +66,7 @@ useSeoMeta({ description: () => landing.value?.description })
     </nav>
 
     <section v-if="data?.walkthroughs.length" class="band">
-      <h2>More Walkthroughs</h2>
+      <h2>{{ data.stories.length ? 'More Walkthroughs' : 'Walkthroughs' }}</h2>
       <ul>
         <li v-for="page in data.walkthroughs" :key="page.path">
           <NuxtLink :to="`${base}${page.path}`"><strong>{{ page.title }} →</strong><span class="teaser">{{ page.description }}</span></NuxtLink>
@@ -231,6 +231,10 @@ section { margin-bottom: 56px; }
 .about { max-width: 720px; font-size: 16px; color: var(--gb-ink-2); }
 .about :deep(p) { margin: 0 0 0.8em; }
 
+/* A light slab glares on a dark page; Article.vue's Try it box does the same. */
+@media (prefers-color-scheme: dark) {
+  .band { border: 1px solid color-mix(in srgb, var(--gb-accent) 25%, transparent); background: var(--gb-tint); color: var(--gb-ink); }
+}
 @media (max-width: 860px) {
   .stories { grid-template-columns: minmax(0, 1fr); }
 }
