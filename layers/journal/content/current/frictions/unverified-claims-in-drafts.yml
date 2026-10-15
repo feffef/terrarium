@@ -5,9 +5,6 @@ surface: safe
 status: open
 ref: "PR #1756 (blog step 12 fallback); PRs #1852, #1853 (clear-backlog §4 'check every fix yourself')"
 occurrences:
-  - session: session_01U95GU6a93i4N25ZLgwXCSu
-    date: "2026-09-30"
-    severity: moderate
   - session: session_0168r95gLDEqJ8JBEV6UuUbo
     date: "2026-10-03"
     severity: moderate
@@ -107,3 +104,15 @@ occurrences:
   - session: session_015dUGRadEQP1bvv6KytKLXT
     date: "2026-10-14"
     severity: minor
+  - session: session_01675UWGBfCMALkurUr58cxM
+    date: "2026-10-14"
+    severity: moderate
+  - session: session_01BdQnbVQmdfrD1PPyZTnL9w
+    date: "2026-10-14"
+    severity: minor
+  - session: session_01Qp5NojwQhExSmToPJtnQNV
+    date: "2026-10-14"
+    severity: minor
+  - session: session_01RBVYHX1FsYogHEgzgyRV6P
+    date: "2026-10-14"
+    severity: nit

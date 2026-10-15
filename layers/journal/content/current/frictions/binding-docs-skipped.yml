@@ -194,3 +194,42 @@ occurrences:
   - session: session_015dUGRadEQP1bvv6KytKLXT
     date: "2026-10-14"
     severity: nit
+  - session: session_01675UWGBfCMALkurUr58cxM
+    date: "2026-10-14"
+    severity: minor
+  - session: session_01BdQnbVQmdfrD1PPyZTnL9w
+    date: "2026-10-14"
+    severity: minor
+  - session: session_01ATdHzhyNozsTLHHtJGbLsa
+    date: "2026-10-14"
+    severity: minor
+  - session: session_01JkzKjuQD4wH34MjxMjKHaX
+    date: "2026-10-14"
+    severity: minor
+  - session: session_01VkVtDd4YKNa2KYRyRo8Uvy
+    date: "2026-10-14"
+    severity: nit
+  - session: session_018wtKTCgkvJwgb3gS8o8JKA
+    date: "2026-10-14"
+    severity: minor
+  - session: session_01U6EF8qk4ANQLqE5KXmJgEY
+    date: "2026-10-14"
+    severity: moderate
+  - session: session_01G6m9SbDppX4TE87Mp3m5Dk
+    date: "2026-10-14"
+    severity: nit
+  - session: session_01BpePUUjkw8MVBXM2oiDnsj
+    date: "2026-10-14"
+    severity: minor
+  - session: session_01Qp5NojwQhExSmToPJtnQNV
+    date: "2026-10-14"
+    severity: minor
+  - session: session_01RBVYHX1FsYogHEgzgyRV6P
+    date: "2026-10-14"
+    severity: nit
+  - session: session_01R8ZgGod9KTmxwvnDyB4PQY
+    date: "2026-10-14"
+    severity: nit
+  - session: session_01P7kLLJwHBgCaeVSUjhbScg
+    date: "2026-10-15"
+    severity: moderate

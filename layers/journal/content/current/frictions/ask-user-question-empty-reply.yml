@@ -1,0 +1,13 @@
+name: "ask-user-question-empty-reply"
+cause: "AskUserQuestion returns 'user sent a message instead' with no message text; the text arrives a turn later and costs a round trip."
+surface: "outside"
+status: "fixed"
+fixedOn: "2026-10-15"
+ref: "docs/agents/environment-caveats.md AskUserQuestion bullet"
+occurrences:
+  - session: "session_01JkzKjuQD4wH34MjxMjKHaX"
+    date: "2026-10-14"
+    severity: "nit"
+  - session: "session_01RBVYHX1FsYogHEgzgyRV6P"
+    date: "2026-10-14"
+    severity: "nit"

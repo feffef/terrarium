@@ -12,6 +12,9 @@ re-diagnose them as new. Incident detail lives in the cited issue.
 - **`docs.github.com` 403s through the agent proxy.** Fetch
   `raw.githubusercontent.com/github/docs/...` instead when verifying GitHub's
   own documentation. (issue #888)
+- **`github.com/user-attachments` (403), `content.nuxt.com` and `zod.dev` are
+  also blocked.** Don't retry; ask the owner to paste the content into
+  the issue or chat.
 - **`~/.ssh/commit_signing_key.pub` can be unprovisioned (0 bytes) here** —
   `git commit -S`, and the Stop hook's `--reset-author` remedy for an
   "Unverified" commit, can silently fail to sign even with a correct author
@@ -25,6 +28,8 @@ re-diagnose them as new. Incident detail lives in the cited issue.
   "permission stream closed" error.** Retry once only. If the retry fails: for `AskUserQuestion`, take the
   safer default option and say so in the output; for `send_later`, use
   `create_trigger` with `run_once_at`. (issues #145, #229, #359)
+  A "user sent a message instead" result is not a failure: the text arrives
+  next turn, so don't re-ask.
 - **A fired self-bind Routine's output may not surface as a visible turn.**
   Check `last_run.fired_at` via `list_triggers` before concluding it didn't fire.
   (issue #834)

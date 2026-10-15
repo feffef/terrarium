@@ -2,9 +2,8 @@ name: findings-retyped-by-hand
 cause: >-
   Subagents cannot always write their findings where the parent can read them (harness refusals, non-extractable output), so the parent transcribes them by hand.
 surface: safe
-status: fixed
-fixedOn: "2026-10-13"
-ref: "PRs #1699, #1768 (audit-docs only); frictions-to-fixes 2026-10-13b grouped doc PR: survey subagent saves ledger changes as a patch file"
+status: tracked
+ref: "regression 2026-10-14: audit-docs says save each reply verbatim, but a hand-back arrives only as a SubagentHandback tool call; earlier fix PRs #1699, #1768; issue #2028"
 occurrences:
   - session: session_01GxJXNFxh3SQh8q1nkReAxJ
     date: "2026-10-04"
@@ -20,4 +19,7 @@ occurrences:
     severity: minor
   - session: session_01WUDXJjhrM6uHf9Sjjvw2N9
     date: "2026-10-13"
+    severity: minor
+  - session: session_01G6m9SbDppX4TE87Mp3m5Dk
+    date: "2026-10-14"
     severity: minor

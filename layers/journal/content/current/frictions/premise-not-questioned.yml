@@ -20,3 +20,9 @@ occurrences:
   - session: session_01CasnQoauTyLNUxd74agJsP
     date: "2026-10-11"
     severity: moderate
+  - session: session_01VkVtDd4YKNa2KYRyRo8Uvy
+    date: "2026-10-14"
+    severity: minor
+  - session: session_018wtKTCgkvJwgb3gS8o8JKA
+    date: "2026-10-14"
+    severity: minor
