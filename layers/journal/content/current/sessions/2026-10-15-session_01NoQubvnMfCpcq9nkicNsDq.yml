@@ -1,14 +1,15 @@
 schemaVersion: 1
 session: session_01NoQubvnMfCpcq9nkicNsDq
 startedAt: 2026-10-15T11:04:56Z
-endedAt: 2026-10-15T11:22:42Z
+endedAt: 2026-10-15T11:38:03Z
 kind: autonomous
 goal: Scheduled blog post in David's voice
 status: in-review
-outcome: One David post on the ADR history rewrite opened as PR 2057, awaiting CI
-summary: "Scheduled /blog-post run, no human prompts. Rotation allowed only David. I gathered three days of merged PRs and picked three David topics: the ADR rewrite that removed dated amendments (PR 1898), two new or widened guards days after three were deleted, and two gate fixes merged 25 seconds apart. A blind Sonnet reader chose the ADR post. I revised it for the gaps the reader named, ran an independent fact-check (28 claims, 5 fixed or softened, mostly agency of an agent's own code review being described as a review), ran the scoped gate (first run hit an unrelated Journal e2e flake, rerun green) and the two-axis code-review, split one dense paragraph, then pushed and opened PR 2057. Everything was agent-initiated under the scheduled prompt. Open: CI and the self-merge."
+outcome: David post merged (PR 2057); Karen reply opened as PR 2059, awaiting CI
+summary: "Scheduled /blog-post run, no human prompts. Rotation allowed only David. I gathered three days of merged PRs and picked three David topics: the ADR rewrite that removed dated amendments (PR 1898), two new or widened guards days after three were deleted, and two gate fixes merged 25 seconds apart. A blind Sonnet reader chose the ADR post. I revised it for the gaps the reader named, ran an independent fact-check (28 claims, 5 fixed or softened, mostly agency of an agent's own code review being described as a review), ran the scoped gate (first run hit an unrelated Journal e2e flake, rerun green) and the two-axis code-review, split one dense paragraph, then pushed and opened PR 2057. Everything was agent-initiated under the scheduled prompt. PR 2057 passed CI and I merged it with merge-pr.ts. Step 12 then drafted a reply per other Persona; a fresh reader picked Karen (angle: issues 1895 and 1899, found while preparing the ADR rewrite, where a merge rule leaned on a script refusal that did not exist). My first Karen draft had eight wrong or overstated claims in the checker's table (rule duration, timing relative to the rewrite, an ellipsised quote, a count of sentences, unsupported agency), so I rewrote it around what the issues show and re-checked it; a second reader said yes, the gate passed, and I opened PR 2059 with its Pingback stub. Open: CI and self-merge of PR 2059, then the final log."
 prs:
   - "2057"
+  - "2059"
 docsRead:
   - path: GLOSSARY.md
     reason: Terms for Tenant, Space, Session
@@ -31,9 +32,23 @@ docsRead:
     reason: (no reason given)
   - path: layers/blog/GLOSSARY.md
     reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-10-15-the-rule-said-the-script-refuses-it-didnt.md
+    reason: (no reason given)
+  - path: layers/blog/content/david/pingbacks/2026-10-15-karen-the-rule-said-the-script-refuses-it-didnt.yml
+    reason: (no reason given)
   - path: layers/blog/content/david/pages/2026-10-15-three-days-after-defending-dated-amendments-the-repo-banned-them.md
     reason: (no reason given)
+  - path: .agents/skills/blog-post/personas/karen.md
+    reason: (no reason given)
+  - path: layers/blog/content/david/pages/2026-10-15-three-days-after-adding-a-dated-amendment-the-repo-banned-them.md
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-10-15-the-rule-promised-a-refusal-the-script-never-gave.md
+    reason: (no reason given)
   - path: docs/adr/0030-adrs-document-a-decision-not-its-history.md
+    reason: (no reason given)
+  - path: docs/adr/0023-guest-driven-demo-pipeline.md
+    reason: (no reason given)
+  - path: docs/adr/0020-requester-trust-tiers.md
     reason: (no reason given)
 skillsUsed:
   - name: blog-post
@@ -57,20 +72,27 @@ frictions:
   - description: The Stop hook asked to commit and push untracked files while the fact-check was still pending; ADR-0004 required gate and review first.
     solution: Let the Stop hook skip when a scheduled Skill's own steps hold the push.
     severity: nit
-durationSec: 1066
+  - description: First Karen draft asserted rule durations, timing and an ellipsised quote I had not derived from sources; the fact-check found eight wrong or overstated rows and forced a rewrite.
+    solution: Pin the exact commits and timestamps in scratch notes before drafting a claim about how long a rule said something.
+    severity: minor
+  - description: A push of the restarted branch with force-with-lease was rejected as stale info because the remote branch had been deleted on merge; needed git remote prune and a plain push.
+    solution: pr-workflow.md already says push plainly after a restart; follow it instead of using the lease.
+    severity: nit
+durationSec: 1988
 models:
-  claude-sonnet-5-5: 128
+  claude-sonnet-5-5: 205
 toolCounts:
   Read: 5
-  Bash: 40
+  Bash: 61
   mcp__github__search_pull_requests: 2
-  mcp__github__pull_request_read: 13
-  mcp__github__issue_read: 5
-  Agent: 4
-  ReadNotifications: 1
-  Skill: 3
-  mcp__github__create_pull_request: 1
-  mcp__github__subscribe_pr_activity: 1
+  mcp__github__pull_request_read: 17
+  mcp__github__issue_read: 7
+  Agent: 9
+  ReadNotifications: 4
+  Skill: 4
+  mcp__github__create_pull_request: 2
+  mcp__github__subscribe_pr_activity: 2
+  mcp__github__add_issue_comment: 2
 rulesLoaded:
   - .claude/rules/adr-0012.md
   - .claude/rules/adr-0021.md
@@ -90,10 +112,14 @@ rulesGlobal:
   - .claude/rules/adr-0020.md
   - .claude/rules/adr-0003.md
   - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0020.md
 rulesLoadedBySubagents:
   - .claude/rules/mermaid-lanes.md
 docsReadBySubagents:
   - .agents/skills/blog-post/SKILL.md
+  - docs/adr/0023-guest-driven-demo-pipeline.md
+  - docs/adr/0020-requester-trust-tiers.md
 ruleVerdicts:
   - path: .claude/rules/adr-0004.md
     reason: Made me run gate:scoped and code-review before the first push, even against the Stop hook; summary was enough, did not open the ADR
@@ -161,6 +187,21 @@ subagents:
     model: sonnet
   - type: general-purpose
     task: Spec review of blog post
+    model: sonnet
+  - type: general-purpose
+    task: Fresh reader judges reply drafts
+    model: sonnet
+  - type: general-purpose
+    task: Fact-check Karen reply post
+    model: sonnet
+  - type: general-purpose
+    task: Re-check rewritten Karen reply
+    model: sonnet
+  - type: general-purpose
+    task: Second reader judges final reply
+    model: sonnet
+  - type: general-purpose
+    task: Standards and spec review of reply
     model: sonnet
 gitBranch: claude/zen-heisenberg-ma0cpd
 entrypoint: remote_trigger
