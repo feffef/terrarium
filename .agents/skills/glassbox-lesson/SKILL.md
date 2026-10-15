@@ -20,7 +20,9 @@ every page shares are in [`EVERY-PAGE.md`](EVERY-PAGE.md).
 3. **Write** it to the contract, in plain words. *The concept* is true of any
    project; *In Terrarium* is what this repo does. Done when every claim about
    Terrarium is checked against its file at `revision`.
-4. **Join the Walkthroughs.** Add the Lesson as a chip to the `::stop-links` of
-   every Walkthrough stop whose mechanism it explains. Done when each such stop
-   in `walkthroughs/` links it.
+4. **Join the other pages.** Add the Lesson as a chip to the `::stop-links` of
+   every Walkthrough stop whose mechanism it explains, and to the Where next of
+   every existing Lesson it relates to, above any Journal page there; drop a
+   Journal page that only stood in for a missing Lesson. Done when each such
+   stop and Where next links it.
 5. **Check** it (EVERY-PAGE.md).

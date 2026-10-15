@@ -9,19 +9,12 @@ You click a link and a page appears. This Walkthrough follows that request from 
 
 ```mermaid
 flowchart TD
-  open([A visitor opens a page]) --> kept{Kept by the server?}
-  kept -- no --> render[One Space's content, rendered by Vue]
-  kept -- yes --> shown[The browser shows the page]
+  kept{{"Kept by<br>the server?"}} -- no --> render["Vue renders<br>one Space"]
+  kept -- yes --> shown["The browser<br>shows it"]
   render --> shown
-  shown --> next([The visitor hovers, then clicks a link])
-  next --> cached{Cached?}
-  cached -- yes --> payload[Built from the data the server prepared]
-  cached -- no --> local[Queried in a database in the browser]
-  payload -- if the data fails to load --> local
-  payload --> shown
-  local --> shown
-  payload -. if a download fails .-> reload[Reload once, then a dialog]
-  local -. if a download fails .-> reload
+  shown -- a click --> cached{{Cached?}}
+  cached -- yes --> payload["Built from the<br>server's data"]
+  cached -- no --> local["Queried in<br>the browser"]
 ```
 
 ## 1. The request reaches the one server
@@ -82,4 +75,5 @@ Usually the route is cached, so the browser builds the page from its payload and
 
 ## Where next
 
-- [CLAUDE.md as the every-session contract](/t/glassbox/guide/claude-code/claude-md)
+- [One app, many sites: Nuxt layers](/t/glassbox/guide/nuxt-vue/layers)
+- [Collections expanded from one manifest](/t/glassbox/guide/nuxt-content/manifest-collections)
