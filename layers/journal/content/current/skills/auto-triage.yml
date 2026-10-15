@@ -150,3 +150,16 @@ observations:
       this window's 7 sessions could hit it — not a gap in this window, but
       worth a spot-check next cycle once a sweep runs under the fix. No new
       silent failure. Grade/role unchanged.
+  - date: "2026-10-15"
+    note: >-
+      Re-verified (audit-skills behaviour check), all 6 usedIn sessions (all
+      already deep-verified in the 2026-10-11 through 10-14 entries; no
+      session newer than those has used this Skill). Issues #1675, #1752,
+      #1859 and #1860 all independently re-confirmed CLOSED via live
+      `issue_read`, each via a real merged fix PR (#1735, directly by the
+      owner, #1868, #1869 respectively) — none a stale-state artifact. PR
+      #1983 (2026-10-14, concision pass) added a substantive carve-out for
+      on-hold specs/sub-issues alongside its wording trim, verified correct
+      against docs/agents/issue-tracker.md's Specs section but not yet
+      exercised by any session. No new silent failure or missed invocation.
+      Grade/role unchanged (specialist).

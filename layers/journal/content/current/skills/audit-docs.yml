@@ -253,3 +253,14 @@ observations:
       independently with the same fix, a 3rd recurrence never escalated
       before today. Rest of the 10 (incl. 3 freshly-read sessions) clean,
       no revert found. Grade/role unchanged.
+  - date: "2026-10-15"
+    note: >-
+      Self-check (audit-skills behaviour check), all 10 usedIn sessions
+      checked (same set the 2026-10-14 entry covered; no newer audit-docs
+      session exists since). #1913 (ADR-reversal guard) and #1914
+      (concision-family rotation keyed to the last sweep commit, not the
+      calendar) both independently re-confirmed fixed and holding via merged
+      PR #1932 — #1914's fix already passed its first live test the same
+      day (two same-day runs picked different families). No revert found in
+      the 2-week git-log sweep beyond cosmetic edits. No new silent failure.
+      Grade/role unchanged.

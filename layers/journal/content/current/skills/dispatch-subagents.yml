@@ -306,3 +306,20 @@ observations:
       skillsUsed-crediting gap (now also tracked at #1915). #1480/#1586
       reconfirmed closed/not_planned, no revert of this Skill's own
       mechanics. Grade/role unchanged.
+  - date: "2026-10-15"
+    note: >-
+      Self-check (audit-skills behaviour check), 10 newest usedIn sessions
+      checked in full plus 5 of 114 notUsedWindow sessions opened in full
+      (109 ruled out by goal text, matching already-documented patterns).
+      The one behaviourally significant SKILL.md change this window
+      (2026-10-12, impl agents hand back committed-but-unpushed branches for
+      orchestrator review before push) held cleanly across every
+      git-touching dispatch checked, including a 71-subagent run at scale.
+      #1480, #1585 and #1586 all independently re-confirmed via live
+      `issue_read`: #1585 closed/completed (fixed, still holding), #1480 and
+      #1586 both closed/not_planned (owner-accepted recurrence), no reopen,
+      no new recurrence of any of the three. One self-caught nit (a
+      Workflow-tool-dispatched build touching git without reading this Skill
+      first) matches #1586's shape on a different dispatch mechanism — not
+      escalated as new. No new silent failure or missed invocation.
+      Grade/role unchanged (essential).

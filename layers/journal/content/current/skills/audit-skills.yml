@@ -448,3 +448,38 @@ observations:
       `resolvedBy`, humanPromptedClosures' one entry
       (session_014uXxmT6359K4Z42a6We6Gh) already recorded 2026-10-13,
       manuallyRescuedClosures empty. Grade/role unchanged (routine).
+  - date: "2026-10-15"
+    note: >-
+      Self-check: dispatched 12 behaviour-check subagents this run (one per
+      behaviourChecks entry), each report independently verified against
+      primary sources before use (every PR/issue claim checked live via
+      GitHub, several freshly spot-checked beyond the subagent's own claims).
+      TWO new silent failures found and escalated as fresh issues, neither
+      had a standing open-issue home: #2023 (close-session:
+      session_01GG85r8HWMEdaMgKUaNUZH7, a live/still-idle overnight Glass Box
+      build, logged status: in-review with one PR at 23:29:16Z then opened
+      and merged 5 more PRs through 00:55:54Z without re-invoking
+      close-session despite #1859's PostToolUse hint firing on each
+      create_pull_request — the second real instance of the structural gap
+      this Inventory has tracked as an observation-only n=1 since
+      2026-09-28/settled 2026-10-06, now live and recurring) and #2024
+      (frictions-to-fixes: PR #1957 appended a 2026-10-14 occurrence to the
+      reviewer-line-ranges-off ledger entry — a session that started after
+      the entry's own fixedOn — without applying §2's regression branch, and
+      left fixedOn/ref pointing at the superseded fix). The other 10 —
+      audit-docs, auto-triage, blog-post, clear-backlog, digest,
+      dispatch-subagents, log-session, prune-trial, visitor-loop, and this
+      Skill's own self-check — came back clean or re-confirmed an
+      already-tracked fix holding (#1860/#1864/#1865/#1912/#1913/#1914/#1915/
+      #1931/#1932/#1933 all independently re-verified live via GitHub, not
+      inherited from the brief; #1915 in particular corrected here as fixed
+      via merged PR #1933, not "unresolved... no fix yet" as the prior entry
+      framed it). One brief-generation artifact noted, not a Skill defect:
+      this Skill's own "newest 10" brief supplied only 7 sessions (all that
+      exist in the window). Closure completeness (step 3): orphan scan clean,
+      both orphan candidates carry resolvedBy (left alone),
+      orphanSuppressionLog both entries plausible, humanPromptedClosures' one
+      entry (session_014uXxmT6359K4Z42a6We6Gh) already recorded 2026-10-13,
+      manuallyRescuedClosures empty. Coverage check: implement-spec and
+      wait-what both on disk, uninventoried, zero all-time uses — not added,
+      per this Skill's own rule. Grade/role unchanged (routine).

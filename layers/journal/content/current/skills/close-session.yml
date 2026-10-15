@@ -254,3 +254,26 @@ observations:
       10-11) "ran close-session's substantive steps via log-session alone,
       accurate final status, but skipped the CLAUDE.md-reread/Friction
       duty" gap — no new fact. No new silent failure. Grade/role unchanged.
+  - date: "2026-10-15"
+    note: >-
+      NEW, verified instance of the structural gap tracked since 2026-09-28
+      ("nothing re-verifies a log's status after the authoring turn ends") —
+      the first instance (session_01TMgZyrN42pwudxkUdHLKwP) was judged
+      settled/archived on 2026-10-06 after 8 consecutive re-checks found no
+      second one. session_01GG85r8HWMEdaMgKUaNUZH7 ("Build the Glass Box
+      Tenant overnight," still SESSION_STATUS_IDLE as of this check,
+      updated_at 2026-10-15T01:02:24Z) is a second, live one: its single log
+      commit (faeafef0, 2026-10-14T23:29:20Z) says status: in-review, one PR
+      (#2013); the session then opened and merged five more PRs
+      (#2016/#2017/#2019/#2020/#2021, independently confirmed via
+      pull_request_read) through 2026-10-15T00:55:54Z without re-invoking
+      close-session, despite #1859's create_pull_request PostToolUse hint
+      (fixed via merged PR #1868, confirmed present) firing on each of those
+      later opens. Same failure shape #1859 named (the nagging mechanism not
+      producing an invocation), now recurring on the re-invocation path
+      rather than #1859's first-invocation path. Escalated as issue #2023,
+      since a second instance clears this Inventory's own 2026-09-28 "worth a
+      fix if a second instance turns up" bar. Other 9 of 10 newest invocations
+      and the 2 window-not-used sessions re-checked clean. Grade/role
+      unchanged (essential) — a reliability finding on the re-closure path,
+      not core delivery.

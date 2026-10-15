@@ -216,3 +216,25 @@ observations:
       any fixed friction; one session even tripped the new #1869 guard and
       recovered cleanly, live evidence the fix mechanism works. No reverts
       in the 2-week sweep. No new silent failure. Grade/role unchanged.
+  - date: "2026-10-15"
+    note: >-
+      Re-checked (audit-skills behaviour check), 10 usedIn sessions (2 fresh
+      end-to-end, 8 corroborated from the existing daily trail). NEW silent
+      failure, escalated as issue #2024: PR #1957 (session_011JKK8rrCwea3xSmL4kw6si,
+      merged 2026-10-14T18:12:07Z) appended a 2026-10-14 occurrence
+      (session_01M9Ryb84DYs5HxKy2Z3cpA2, started 2026-10-14T04:01:02Z) to the
+      reviewer-line-ranges-off ledger entry, whose fixedOn/ref still read
+      2026-10-12/commit a4802cf0c — by §2's own started-after-fixedOn test
+      this is a regression, not an ordinary pick, and should have gone
+      through the distinct-issue-plus-alert branch instead of an ordinary
+      grouped doc fix. Neither happened, and the ledger's fixedOn/ref were
+      left pointing at the superseded first fix rather than bumped to PR
+      #1957's own landing — a data-hygiene bug that will misdate any future
+      recurrence check on this entry. The session's own logged friction
+      ("wrong fixedOn and ref... caught by code-review before the push") is
+      about a different authoring slip, not this miss. #1676/#1684 (the
+      prior, §4-side instance of "a written classification rule silently not
+      applied") both independently re-confirmed CLOSED via live `issue_read`,
+      holding with no recurrence of that specific shape. No reverts of this
+      Skill's own work in the 2-week sweep. Grade/role unchanged (routine) —
+      a new failure mode on §2's branch, not a repeat of #1676/#1684's §4 one.

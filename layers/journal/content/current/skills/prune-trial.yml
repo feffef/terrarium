@@ -317,3 +317,18 @@ observations:
       consistent with a live `prune-trial-window.ts` run, no quiet
       restoration of pruned text found. No new silent failure. Grade
       unchanged.
+  - date: "2026-10-15"
+    note: >-
+      Re-checked (audit-skills behaviour check), all 7 usedIn sessions, each
+      verdict independently re-derived against the actual pre-session ledger
+      state (not today's, which would wrongly pick up later deletions) and
+      cross-checked with a live run of prune-trial-window.ts. All 7 trials
+      judged comfortably past their true grace-adjusted floor (24min-~2 days
+      margin) except one correctly-declined case
+      (session_016ZibVzWmCmiQkdt6hF5fy9, 15m34s before its floor, correctly
+      reported nothing judgeable — a new, mild instance of the
+      already-closed #1677 narrow-margin pattern, handled as designed). The
+      already-tracked #1856 early-judgment instance re-confirmed the same
+      one, not a new occurrence; its fix (PR #1865) held in every later
+      judgment re-checked. No reverts of any judged trial in the 2-week
+      sweep. No new silent failure. Grade unchanged.
