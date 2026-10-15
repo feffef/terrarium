@@ -1,0 +1,170 @@
+schemaVersion: 1
+session: session_01GLWVkt3R3EnHJj5XpQEJQt
+startedAt: 2026-10-15T02:03:30Z
+endedAt: 2026-10-15T02:22:31Z
+kind: autonomous
+goal: Turn the last days' logged frictions into fixes
+status: completed
+outcome: Grouped doc PR with the ledger update merged; two issues filed for what a run cannot land
+summary: 'Scheduled frictions-to-fixes run (agent-initiated by the schedule, no human prompt). A survey subagent read 19 session logs and screened candidates. Simple doc fixes (blocked proxy hosts, AskUserQuestion reply note, dependency-edge guard clause, clear-backlog output key) plus the Friction Ledger update went to one Sonnet impl agent in a worktree as a single PR (#2030). Standards and Spec review ran; its findings (loose wording, dangling "this PR" refs, wordy clause) were applied by the same agent before the first push. Filed #2028 (audit-docs "save verbatim" regression) and #2029 (ADR-0003 vs throwaway-branch Skills, human-only). The top recurring friction, binding-docs-skipped, stays with open #1819. CI and merge green and PR #2030 merged by me via merge-pr.ts after a posted verdict.'
+prs:
+  - "2030"
+docsRead:
+  - path: GLOSSARY.md
+    reason: session-start vocabulary
+    useful: yes
+  - path: GLOSSARY-MAP.md
+    reason: session-start map
+    useful: partly
+  - path: docs/agents/git-conventions.md
+    reason: read after hook hint, before commits
+    useful: partly
+  - path: docs/agents/github-integration.md
+    reason: MCP tool surface before GitHub calls
+    useful: yes
+  - path: docs/agents/pr-workflow.md
+    reason: review and merge recipe
+    useful: yes
+  - path: docs/agents/issue-tracker.md
+    reason: before filing issues
+    useful: partly
+  - path: docs/agents/triage-labels.md
+    reason: label choice for filed issues
+    useful: yes
+  - path: .claude/skills/frictions-to-fixes/SKILL.md
+    reason: (no reason given)
+  - path: CLAUDE.md
+    reason: (no reason given)
+  - path: .agents/skills/prototype/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/auto-triage/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/clear-backlog/SKILL.md
+    reason: (no reason given)
+  - path: docs/adr/0029-instructions-load-with-the-files-they-govern.md
+    reason: (no reason given)
+  - path: docs/agents/environment-caveats.md
+    reason: (read before editing)
+skillsUsed:
+  - name: frictions-to-fixes
+    reason: the scheduled task
+  - name: dispatch-subagents
+    reason: brief for the worktree impl agent
+  - name: code-review
+    reason: pre-push Standards and Spec review
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Ran git status and ledger summary before reading git-conventions.md; the read-first hint came only after the command (PostToolUse).
+    solution: "Same as open #1819: a PreToolUse reminder, not post-call."
+    severity: nit
+  - description: log-session and close-session refuse from a linked worktree; after the impl agent's worktree became my cwd I had to cd back to the main checkout.
+    solution: Say in dispatch-subagents §5 to cd back before close-session.
+    severity: nit
+durationSec: 1141
+models:
+  claude-sonnet-5-5: 67
+toolCounts:
+  Read: 7
+  Bash: 11
+  Agent: 4
+  Skill: 4
+  ToolSearch: 1
+  Grep: 1
+  mcp__github__search_issues: 1
+  mcp__github__issue_write: 2
+  SendMessage: 2
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  Write: 1
+  mcp__github__add_issue_comment: 1
+  mcp__github__pull_request_read: 1
+  Edit: 2
+filesEdited:
+  - docs/agents/environment-caveats.md
+  - docs/agents/issue-tracker.md
+  - layers/journal/content/current/frictions/dependency-edge-body-guard.yml
+  - layers/journal/content/current/frictions/workflow-output-result-key.yml
+  - layers/journal/content/current/frictions/ask-user-question-empty-reply.yml
+rulesLoaded:
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0022.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0029.md
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0002.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0008.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/guards.md
+docsReadBySubagents:
+  - .agents/skills/prototype/SKILL.md
+  - .agents/skills/auto-triage/SKILL.md
+  - .agents/skills/clear-backlog/SKILL.md
+  - docs/adr/0029-instructions-load-with-the-files-they-govern.md
+  - docs/agents/environment-caveats.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Told me to run gate:scoped and code-review before the first push and to post a verdict; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Reminded me to log at PR open via close-session; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: "Prune Trials rule: made me screen candidates against trials and avoid github-integration.md; summary was enough"
+    useful: yes
+  - path: .claude/rules/adr-0020.md
+    reason: Trust tiers; all inputs here were Trusted-owned logs, little applied
+    useful: partly
+  - path: .claude/rules/adr-0003.md
+    reason: Open the PR myself and subscribe; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Provenance header on the issues and PR body; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0005.md
+    reason: Loaded with the Skill run; the Skill model did not bear on a doc-only fix
+    useful: no
+  - path: .claude/rules/adr-0015.md
+    reason: Pack Skills stay as installed; confirmed clear-backlog is repo-owned and the pack Skills are off limits
+    useful: yes
+  - path: .claude/rules/adr-0021.md
+    reason: Glossary split; no glossary term changed, did not apply
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: Rule placement; no rule added, did not apply
+    useful: no
+  - path: .claude/rules/adr-0022.md
+    reason: Triage sweep; I labelled issues but no sweep ran, did not apply
+    useful: no
+subagents:
+  - type: general-purpose
+    task: Friction survey and screen
+  - type: general-purpose
+    task: Grouped doc fixes and ledger edit
+    model: sonnet
+  - type: general-purpose
+    task: Standards review of doc PR
+  - type: general-purpose
+    task: Spec review of doc PR
+gitBranch: claude/eager-ptolemy-12dx8f
+entrypoint: remote_trigger
+cliVersion: 2.1.300
+trigger: frictions-to-fixes
+learnings:
+  - The harness switched my primary working directory into the impl agent's worktree after it finished; scripts/log-session.ts needs the main checkout.
+landedBy: Stop
