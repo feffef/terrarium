@@ -10,7 +10,7 @@ import { join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import type { Locator, Page, Response } from 'playwright-core'
 import { afterAll, expect } from 'vitest'
-import { createPage, fetch, setup, url } from '@nuxt/test-utils/e2e'
+import { createPage, fetch, setup, url, type NuxtPage } from '@nuxt/test-utils/e2e'
 import { findPreinstalledChromium, findSystemChrome } from '../../scripts/chromium-path.ts'
 import { entryRoutesFrom, expand, loadManifests } from '../../shared/expand.ts'
 import { mermaidRoutes } from './mermaid-pages.ts'
@@ -78,7 +78,7 @@ export const mermaidPageRoutes = mermaidRoutes(expandedCollections)
  */
 async function renderAndCollectErrors(
   route: string,
-): Promise<{ page: Page; errors: string[]; requests: string[]; response: Response | null }> {
+): Promise<{ page: NuxtPage; errors: string[]; requests: string[]; response: Response | null }> {
   const errors: string[] = []
   const requests: string[] = []
   // Un-navigated page (createPage() with no path skips its own goto), so the
@@ -127,7 +127,7 @@ export async function collectUnknownElementTags(page: Page): Promise<string[]> {
  */
 export async function withRendered(
   route: string,
-  fn: (page: Page, requests: string[], response: Response | null) => Promise<void>,
+  fn: (page: NuxtPage, requests: string[], response: Response | null) => Promise<void>,
 ): Promise<void> {
   const { page, errors, requests, response } = await renderAndCollectErrors(route)
   try {

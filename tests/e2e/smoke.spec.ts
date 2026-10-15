@@ -74,7 +74,7 @@ describe('L2 smoke render', async () => {
     })
 
     it('ships only the timeline entries the home page shows (#1702)', async () => {
-      const payload = await $fetch<string>('/_payload.json', { responseType: 'text' })
+      const payload = await $fetch('/_payload.json', { responseType: 'text' })
       // devalue escapes `/` as \u002F.
       expect(payload).toMatch(/\\u002Ft\\u002Fjournal\\u002F[a-z]+\\u002Fdigests\\u002F\d{4}-\d{2}-\d{2}/)
       expect(payload).not.toContain('#session-')

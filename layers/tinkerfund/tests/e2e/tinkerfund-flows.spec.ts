@@ -6,11 +6,11 @@
 // in parallel.
 import type { Page } from 'playwright-core'
 import { describe, expect, it } from 'vitest'
-import { createPage, url } from '@nuxt/test-utils/e2e'
+import { createPage, url, type NuxtPage } from '@nuxt/test-utils/e2e'
 import { collectUnknownElementTags, setupL2 } from '../../../../tests/support/e2e.ts'
 
 interface Flow {
-  page: Page
+  page: NuxtPage
   /** A full load of a qa path, so it hydrates. */
   visit: (path: string) => Promise<void>
   reload: () => Promise<void>
@@ -372,6 +372,8 @@ describe('tinkerfund Tenant', async () => {
       expect(await page.locator('[aria-current="step"]').textContent()).toContain('Payment')
       expect(await page.locator('.step input:not([type="radio"])').count()).toBe(0)
       await page.getByLabel('Promissory handshake').check()
+      // The code's own replace spreads route.query, so it would drop a `pay` not yet in it (#2076).
+      await expect.poll(() => page.url()).toContain('pay=handshake')
       await page.getByLabel('Discount code').fill('nope')
       await page.getByRole('button', { name: 'Apply' }).click()
       await expect.poll(() => summary.getByRole('alert').textContent()).toBe('That code isn’t valid')
