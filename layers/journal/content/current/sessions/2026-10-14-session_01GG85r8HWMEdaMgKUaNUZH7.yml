@@ -1,14 +1,48 @@
 schemaVersion: 1
 session: session_01GG85r8HWMEdaMgKUaNUZH7
 startedAt: 2026-10-14T23:07:15Z
-endedAt: 2026-10-14T23:29:16Z
+endedAt: 2026-10-15T10:09:37Z
 kind: interactive
 goal: Build the Glass Box Tenant overnight from its spec and stories
 status: in-review
-outcome: First story (Tenant skeleton) in review as a PR into the Glass Box integration branch
-summary: "Human-instructed: the owner asked for Glass Box (spec #1985 and its sub-issue stories) to be built unattended overnight, by orchestrating one implementer subagent per story. They first said to land each story on main, then mid-session changed that: every story PR targets the integration branch claude/affectionate-lamport-fu16x5, Human-only stories merge there too, a draft PR from that branch to main is left for the owner, and diagrams are allowed once the Mermaid font story is in. Agent-initiated: the brief template, review briefs and merge mechanics. The skeleton story (#1988) was built by a worktree subagent, reviewed on two axes (Standards and Spec, no hard findings), fixed and opened as PR 2013 into the integration branch. The remaining stories follow the blocked-by graph."
+outcome: All 23 Glass Box stories merged into the integration branch; PR 2014 to main is ready and waits for the owner
+summary: 'Human-instructed: the owner asked for Glass Box (spec #1985 and its sub-issue stories) to be built unattended overnight. I was to orchestrate one implementer subagent per story, with a three-round seed checkpoint and then the content stories. Early on they redirected every story PR to the integration branch claude/affectionate-lamport-fu16x5 instead of main. They also said Human-only stories merge there too (via MCP), a PR from that branch to main is left for them, and diagrams and the Mermaid font story #1996 are back in scope. They later told me to resume after a usage-limit pause. Everything else was agent-initiated: briefs, review briefs, batching and merge order. 34 story PRs merged into the integration branch (2013-2056), and PR 2014 is marked ready for the owner. The work went: stories, two seed checkpoint rounds, content Lessons for #2000-#2009 in batches, checkpoint round 3, then the ten Walkthroughs for #2010. Each content batch got a content review before its PR. Recurring review findings (ADR paraphrase, reason clauses, wide Where next lists, duplicate stop chips, "the owner" for any Trusted user) were turned into contract lines in the Glass Box glossary and Skills, and the layer test now enforces the Where next and stop-chip caps. Parallel content PRs kept conflicting on shared Where next lists and Opening a page chips, which forced serial merges with a re-merge before each. Writers twice reported "already up to date" against a stale origin ref, because a bare fetch in a linked worktree updated only FETCH_HEAD. I started verifying ancestry myself and told writers to fetch with an explicit refspec. No story got stuck. Owner items are in the #1985 wrap-up comment.'
 prs:
   - "2013"
+  - "2014"
+  - "2016"
+  - "2017"
+  - "2019"
+  - "2020"
+  - "2021"
+  - "2022"
+  - "2026"
+  - "2027"
+  - "2031"
+  - "2032"
+  - "2033"
+  - "2034"
+  - "2035"
+  - "2036"
+  - "2037"
+  - "2039"
+  - "2040"
+  - "2041"
+  - "2042"
+  - "2043"
+  - "2044"
+  - "2045"
+  - "2046"
+  - "2047"
+  - "2048"
+  - "2049"
+  - "2050"
+  - "2051"
+  - "2052"
+  - "2053"
+  - "2054"
+  - "2055"
+  - "2056"
 docsRead:
   - path: GLOSSARY-MAP.md
     reason: "session start: glossary map"
@@ -58,8 +92,128 @@ docsRead:
   - path: .agents/skills/code-review/SKILL.md
     reason: two-axis review steps I run per story
     useful: yes
+  - path: layers/glassbox/GLOSSARY.md
+    reason: Lesson and Walkthrough contracts that every review checked against
+    useful: yes
+  - path: docs/agents/environment-caveats.md
+    reason: proxy blocks and worktree guard behaviour behind writers' frictions
+    useful: partly
+  - path: docs/agents/issue-tracker.md
+    reason: spec and sub-issue conventions; Walkthrough reviews checked the no-label-on-hold rule
+    useful: partly
+  - path: docs/agents/triage-labels.md
+    reason: label names when reviewing work-queue and bug-report pages
+    useful: partly
+  - path: .agents/skills/glassbox-lesson/SKILL.md
+    reason: (read before editing)
+  - path: .agents/skills/glassbox-lesson/EVERY-PAGE.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/nuxt-content/01.manifest-collections.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/walkthroughs/opening-a-page.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/nuxt-content/02.one-table-per-key.md
+    reason: (read before editing)
+  - path: docs/agents/tenant-layers.md
+    reason: (read before editing)
+  - path: /home/user/terrarium/.claude/worktrees/agent-adac707e2ce36c869/layers/glassbox/app/assets/theme.css
+    reason: (no reason given)
+  - path: layers/glassbox/app/components/content/Excerpt.vue
+    reason: (read before editing)
+  - path: layers/glassbox/page-refs.ts
+    reason: (read before editing)
+  - path: layers/glassbox/app/pages/t/glassbox/[space]/[...slug].vue
+    reason: (read before editing)
+  - path: layers/glassbox/app/assets/theme.css
+    reason: (read before editing)
+  - path: layers/glassbox/app/utils/subjects.ts
+    reason: (read before editing)
+  - path: docs/agents/mdc-when-to-use.md
+    reason: (no reason given)
+  - path: layers/glassbox/tests/unit/subjects.spec.ts
+    reason: (read before editing)
+  - path: layers/glassbox/app/components/glassbox/Brand.vue
+    reason: (read before editing)
   - path: docs/agents/domain.md
     reason: (no reason given)
+  - path: layers/glassbox/app/components/glassbox/Article.vue
+    reason: (read before editing)
+  - path: layers/glassbox/app/utils/lesson.ts
+    reason: (read before editing)
+  - path: .agents/skills/glassbox-walkthrough/SKILL.md
+    reason: (read before editing)
+  - path: layers/glassbox/app/utils/walkthrough.ts
+    reason: (read before editing)
+  - path: layers/glassbox/page-checks.ts
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/walkthroughs/a-friction-becomes-a-fix.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/walkthroughs/asking-for-a-change.md
+    reason: (read before editing)
+  - path: layers/glassbox/tests/page-checks.ts
+    reason: (read before editing)
+  - path: layers/glassbox/tests/unit/glassbox-pages.spec.ts
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/claude-code/01.claude-md.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/claude-code/02.path-scoped-rules.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/skill-pack/01.skill-pack.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/terrarium-practice/01.gate.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/claude-code/05.guards.md
+    reason: (read before editing)
+  - path: layers/glassbox/app/components/glassbox/Sidebar.vue
+    reason: (read before editing)
+  - path: layers/tinkerfund/app/components/tinkerfund/campaign/SectionNav.vue
+    reason: (no reason given)
+  - path: layers/tinkerfund/app/utils/campaign.ts
+    reason: (no reason given)
+  - path: layers/glassbox/tenant.config.ts
+    reason: (read before editing)
+  - path: layers/glassbox/app/pages/t/glassbox/[space]/index.vue
+    reason: (read before editing)
+  - path: .githooks/commit-msg
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/index.md
+    reason: (read before editing)
+  - path: layers/glassbox/app/components/glassbox/Toc.vue
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/nuxt-vue/01.layers.md
+    reason: (read before editing)
+  - path: app/utils/mermaid.ts
+    reason: (read before editing)
+  - path: layers/glassbox/tests/unit/page-refs.spec.ts
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/claude-code/04.hooks.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/claude-code/03.skills.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/git-github/03.thin-ci-workflow.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/git-github/01.every-change-a-pr.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/claude-code/09.mcp.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/claude-code/10.routines.md
+    reason: (read before editing)
+  - path: docs/adr/0030-adrs-document-a-decision-not-its-history.md
+    reason: (no reason given)
+  - path: docs/adr/TEMPLATE.md
+    reason: (no reason given)
+  - path: scripts/render-mermaid.ts
+    reason: (read before editing)
+  - path: scripts/mermaid-lib.ts
+    reason: (read before editing)
+  - path: app/components/MermaidDiagram.vue
+    reason: (read before editing)
+  - path: scripts/verify-mermaid.ts
+    reason: (read before editing)
+  - path: tests/unit/mermaid-render.spec.ts
+    reason: (read before editing)
+  - path: app/assets/fonts/README.md
+    reason: (read before editing)
   - path: layers/marquee/tenant.config.ts
     reason: (no reason given)
   - path: layers/marquee/nuxt.config.ts
@@ -72,13 +226,201 @@ docsRead:
     reason: (no reason given)
   - path: layers/marquee/tests/e2e/marquee.spec.ts
     reason: (no reason given)
-  - path: docs/agents/tenant-layers.md
-    reason: (no reason given)
   - path: layers/marquee/GLOSSARY.md
     reason: (no reason given)
   - path: tests/support/mermaid-pages.ts
     reason: (read before editing)
-  - path: docs/agents/mdc-when-to-use.md
+  - path: layers/glassbox/content/guide/pages/terrarium-practice/02.adrs.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/terrarium-practice/03.glossaries.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/terrarium-practice/04.session-logs.md
+    reason: (read before editing)
+  - path: .agents/skills/writing-for-agents/SKILL.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/claude-code/06.hints.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/claude-code/07.subagents-worktrees.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/claude-code/08.workflow-scripts.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/walkthroughs/adding-a-tenant.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/walkthroughs/reading-across-tenants.md
+    reason: (read before editing)
+  - path: .agents/skills/tinkerfund-campaign/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/writing-for-agents/SKILL-MECHANICS.md
+    reason: (no reason given)
+  - path: docs/adr/0005-skill-model.md
+    reason: (no reason given)
+  - path: docs/diagrams/interactive-map/terrarium-overview.md
+    reason: (no reason given)
+  - path: scripts/read-first-hint.ts
+    reason: (no reason given)
+  - path: docs/adr/0029-instructions-load-with-the-files-they-govern.md
+    reason: (no reason given)
+  - path: docs/adr/0027-prune-trials.md
+    reason: (no reason given)
+  - path: docs/adr/0016-tenant-owned-urls.md
+    reason: (no reason given)
+  - path: docs/adr/0006-runtime-routing-path-prefix.md
+    reason: (no reason given)
+  - path: docs/adr/0001-single-container-baked-multitenancy.md
+    reason: (no reason given)
+  - path: layers/glassbox/tests/unit/walkthrough.spec.ts
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/git-github/06.work-queue.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/git-github/04.trust-tiers.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/skill-pack/02.planning-with-the-pack.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/skill-pack/03.engineering-loop.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/walkthroughs/a-bug-report-becomes-work.md
+    reason: (read before editing)
+  - path: layers/blog/tests/unit/blog-immutable-links.spec.ts
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/nuxt-content/03.content-database.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/nuxt-content/04.query-collection-patterns.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/nuxt-vue/03.virtual-imports.md
+    reason: (read before editing)
+  - path: layers/glassbox/app/utils/page-nav.ts
+    reason: (read before editing)
+  - path: layers/glassbox/app/components/content/Term.vue
+    reason: (read before editing)
+  - path: layers/glassbox/app/components/content/File.vue
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/claude-code/11.cloud-sessions.md
+    reason: (read before editing)
+  - path: layers/glassbox/app/utils/revision.ts
+    reason: (read before editing)
+  - path: layers/midden/app/components/midden/Gloss.vue
+    reason: (no reason given)
+  - path: app/composables/space.ts
+    reason: (no reason given)
+  - path: .agents/skills/midden-survey/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/midden-survey/scripts/midden-survey.ts
+    reason: (no reason given)
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: (read before editing)
+  - path: docs/adr/0003-agent-operating-model-and-governance.md
+    reason: (no reason given)
+  - path: tests/support/git-fixture.ts
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/testing/02.invariants-as-tests.md
+    reason: (read before editing)
+  - path: /home/user/terrarium/docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/walkthroughs/routines.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/walkthroughs/session-log-lands-on-main.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/git-github/05.provenance-headers.md
+    reason: (read before editing)
+  - path: scripts/validate-content-refs.ts
+    reason: (no reason given)
+  - path: docs/adr/0007-generated-config-committed-drift-checked.md
+    reason: (no reason given)
+  - path: layers/glassbox/tests/unit/page-nav.spec.ts
+    reason: (read before editing)
+  - path: docs/adr/0019-patched-nuxt-content-client-db-loading.md
+    reason: (no reason given)
+  - path: docs/adr/0014-build-time-virtual-routing-module.md
+    reason: (no reason given)
+  - path: .agents/skills/auto-triage/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/triage/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/triage/AGENT-BRIEF.md
+    reason: (no reason given)
+  - path: docs/adr/0022-autonomous-triage-sweep.md
+    reason: (no reason given)
+  - path: .agents/skills/clear-backlog/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/wayfinder/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/to-spec/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/to-tickets/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/close-session/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: (no reason given)
+  - path: docs/agents/guards.md
+    reason: (no reason given)
+  - path: .agents/skills/digest/SKILL.md
+    reason: (no reason given)
+  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
+    reason: (no reason given)
+  - path: docs/adr/0026-gate-workflow-thin-shell.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: (no reason given)
+  - path: docs/adr/0011-poc-self-updating-deploy-container.md
+    reason: (no reason given)
+  - path: .agents/skills/domain-modeling/ADR-FORMAT.md
+    reason: (no reason given)
+  - path: .agents/skills/log-session/SKILL.md
+    reason: (no reason given)
+  - path: docs/adr/0017-provenance-footer-on-agent-authored-content.md
+    reason: (no reason given)
+  - path: .agents/skills/guest-intake/SKILL.md
+    reason: (no reason given)
+  - path: docs/research/mermaid-server-side-rendering.md
+    reason: (no reason given)
+  - path: layers/blog/GLOSSARY.md
+    reason: (no reason given)
+  - path: docs/adr/0008-self-documentation-tenant-is-a-journal.md
+    reason: (no reason given)
+  - path: layers/journal/GLOSSARY.md
+    reason: (no reason given)
+  - path: .agents/skills/atlas-specimen/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+  - path: docs/adr/0002-manifest-driven-config-generation.md
+    reason: (no reason given)
+  - path: .agents/skills/prune-trial/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/triage/OUT-OF-SCOPE.md
+    reason: (no reason given)
+  - path: docs/agents/guest-contributions.md
+    reason: (no reason given)
+  - path: docs/adr/0020-requester-trust-tiers.md
+    reason: (no reason given)
+  - path: docs/adr/0013-dynamic-content-config-committed-routing-map.md
+    reason: (no reason given)
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/visitor-loop/SKILL.md
+    reason: (no reason given)
+  - path: docs/adr/0015-audit-skills-and-conditional-importance.md
+    reason: (no reason given)
+  - path: .agents/skills/setup-matt-pocock-skills/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/ask-matt/SKILL.md
+    reason: (no reason given)
+  - path: docs/research/content-client-queries-without-wasm.md
+    reason: (no reason given)
+  - path: .agents/skills/grilling/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/research/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/tdd/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/diagnosing-bugs/SKILL.md
+    reason: (no reason given)
+  - path: docs/proposals/1633-dependabot-automerge.md
+    reason: (no reason given)
+  - path: docs/research/making-repo-public.md
+    reason: (no reason given)
+  - path: docs/adr/0012-cross-persona-pingbacks-via-authored-denormalization.md
     reason: (no reason given)
 skillsUsed:
   - name: dispatch-subagents
@@ -88,8 +430,10 @@ skillsUsed:
   - name: close-session
     reason: log at PR open
   - name: log-session
-    reason: (no reason given)
+    reason: update the log at closure
   - name: tdd
+    reason: (no reason given)
+  - name: writing-for-agents
     reason: (no reason given)
 frictions:
   - description: Read several Skill and rule files with cat in Bash instead of the Read tool, against CLAUDE.md's Read-tool rule
@@ -101,48 +445,230 @@ frictions:
   - description: First plan landed stories on main per the kickoff; the user then redirected to an integration branch, a costless change only because no PR had opened yet
     solution: For a multi-story spec with Human-only stories, propose an integration branch up front
     severity: minor
-durationSec: 1321
+  - description: Writers twice reported the integration branch 'up to date' from a stale origin ref; a bare git fetch in a linked worktree updated only FETCH_HEAD
+    solution: In dispatch briefs, fetch with an explicit refspec and check rev-parse, or have the orchestrator verify merge-base ancestry before opening each PR
+    severity: moderate
+  - description: Parallel content PRs conflicted repeatedly on shared Where next lists and Opening a page chips; keeping both sides re-grew lists past the cap
+    solution: Cap Where next and stop chips in the contract from the start (now done), and merge content PRs serially
+    severity: moderate
+  - description: merge-pr.ts refused PR 2047 because I had not posted a verdict comment yet
+    solution: Post the verdict when opening the PR, as pr-workflow step 4 says
+    severity: nit
+  - description: A usage-limit stop killed five running subagents mid-task; each had to be resumed by message after the reset
+    solution: None needed beyond resuming by SendMessage; work was banked in commits
+    severity: minor
+  - description: Content PRs got a content review by subagent instead of the code-review Skill before their first push
+    solution: Have pr-workflow name content review as the review for content-only Glass Box PRs, or run code-review too
+    severity: minor
+  - description: Read scratch logs and review briefs with cat/tail/head in Bash rather than the Read tool
+    solution: Use Read for any file whose content matters
+    severity: nit
+  - description: Did not collect rule and doc verdicts from the roughly 40 subagents; their rules show as unknown in this log
+    solution: Ask each writer for verdicts in its hand-back template so no extra round trip is needed
+    severity: minor
+durationSec: 39742
 models:
-  claude-opus-5-5: 102
+  claude-opus-5-5: 1153
+  <synthetic>: 16
 toolCounts:
-  Bash: 25
-  Read: 14
-  Skill: 3
-  ToolSearch: 2
+  Bash: 198
+  Read: 39
+  Skill: 4
+  ToolSearch: 8
   mcp__github__issue_read: 1
-  Write: 4
-  Agent: 3
+  Write: 11
+  Agent: 83
   AskUserQuestion: 1
   Edit: 1
-  SendMessage: 1
-  mcp__github__create_pull_request: 1
-  mcp__claude-code-remote__subscribe_pr_activity: 1
-  mcp__github__add_issue_comment: 1
+  SendMessage: 76
+  mcp__github__create_pull_request: 35
+  mcp__claude-code-remote__subscribe_pr_activity: 13
+  mcp__github__add_issue_comment: 36
+  ReadNotifications: 89
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
+  mcp__github__issue_write: 1
+  mcp__github__update_pull_request: 7
+  mcp__github__merge_pull_request: 1
+  TaskStop: 4
 filesEdited:
-  - tests/unit/mermaid-routes.spec.ts
-  - tests/support/mermaid-pages.ts
+  - layers/glassbox/content/guide/pages/nuxt-content/02.one-table-per-key.md
+  - layers/glassbox/content/guide/pages/nuxt-content/03.content-database.md
+  - layers/glassbox/content/guide/pages/nuxt-content/04.query-collection-patterns.md
+  - .gb-tmp/dump.mjs
+  - .gb-tmp/ex.mjs
+  - layers/glassbox/tests/unit/page-refs.spec.ts
+  - layers/glassbox/page-refs.ts
+  - layers/glassbox/app/utils/revision.ts
+  - layers/glassbox/app/components/content/File.vue
+  - layers/glassbox/app/components/content/Excerpt.vue
+  - layers/glassbox/app/pages/t/glassbox/[space]/[...slug].vue
+  - layers/glassbox/app/pages/t/glassbox/[space]/index.vue
+  - layers/glassbox/content/guide/pages/claude-code/01.fixture-1991.md
+  - .gb-tmp/compare.mjs
+  - .gb-tmp/shots.sh
+  - layers/glassbox/content/guide/pages/claude-code/01.probe-mdc.md
+  - layers/glassbox/content/guide/pages/terrarium-practice/01.probe-plain.md
   - layers/glassbox/tests/unit/subjects.spec.ts
   - layers/glassbox/app/utils/subjects.ts
+  - layers/glassbox/tests/unit/lesson.spec.ts
+  - layers/glassbox/app/utils/lesson.ts
+  - layers/glassbox/app/components/glassbox/Article.vue
+  - layers/glassbox/content/guide/pages/claude-code/02.path-scoped-rules.md
+  - layers/glassbox/content/guide/pages/terrarium-practice/01.gate.md
+  - layers/glassbox/app/assets/theme.css
+  - layers/glassbox/GLOSSARY.md
+  - layers/glassbox/content/guide/pages/walkthroughs/asking-for-a-change.md
+  - layers/glassbox/content/guide/pages/walkthroughs/a-change-goes-live.md
+  - layers/glassbox/content/guide/pages/walkthroughs/a-friction-becomes-a-fix.md
+  - layers/glassbox/content/guide/pages/claude-code/03.skills.md
+  - layers/glassbox/content/guide/terms/routine.yml
+  - layers/glassbox/content/guide/pages/claude-code/04.hooks.md
+  - layers/glassbox/content/guide/pages/claude-code/05.guards.md
+  - layers/glassbox/content/guide/pages/claude-code/01.claude-md.md
+  - .agents/skills/glassbox-lesson/EVERY-PAGE.md
+  - layers/glassbox/content/guide/pages/skill-pack/01.skill-pack.md
+  - .shot-tmp.mjs
+  - layers/glassbox/tests/unit/page-nav.spec.ts
+  - layers/glassbox/app/utils/page-nav.ts
+  - layers/glassbox/app/components/glassbox/Toc.vue
+  - layers/glassbox/app/components/glassbox/Surround.vue
+  - layers/glassbox/app/components/glassbox/Updated.vue
+  - .gb1990-probe.ts
+  - layers/glassbox/app/utils/zz-temp-date.ts
+  - .gb1990-blur.ts
+  - layers/glassbox/tests/unit/revision.spec.ts
+  - layers/glassbox/content/guide/pages/nuxt-vue/01.layers.md
+  - layers/glassbox/content/guide/pages/walkthroughs/opening-a-page.md
+  - gb-shots.tmp.ts
+  - layers/glassbox/page-checks.ts
+  - layers/glassbox/tests/unit/glassbox-pages.spec.ts
+  - layers/glassbox/content/guide/pages/claude-code/09.mcp.md
+  - layers/glassbox/content/guide/pages/claude-code/10.routines.md
+  - layers/glassbox/content/guide/pages/claude-code/11.cloud-sessions.md
+  - layers/glassbox/content/guide/terms/proposal.yml
+  - layers/glassbox/content/guide/pages/git-github/03.thin-ci-workflow.md
+  - layers/glassbox/content/guide/pages/git-github/01.every-change-a-pr.md
+  - tests/unit/mermaid-render.spec.ts
+  - app/utils/mermaid.ts
+  - scripts/mermaid-lib.ts
+  - layers/glassbox/mermaid-font.ts
+  - scripts/render-mermaid.ts
+  - scripts/verify-mermaid.ts
+  - app/components/MermaidDiagram.vue
+  - app/assets/fonts/README.md
+  - docs/adr/0024-build-time-mermaid-prerender.md
+  - .claude/rules/adr-0024.md
+  - docs/agents/tenant-layers.md
+  - layers/glassbox/content/guide/pages/fixture-1996.md
+  - layers/journal/content/current/pages/fixture-1996.md
+  - layers/glassbox/tests/unit/mermaid-font.spec.ts
+  - tests/unit/mermaid-routes.spec.ts
+  - tests/support/mermaid-pages.ts
   - layers/glassbox/nuxt.config.ts
   - layers/glassbox/tenant.config.ts
   - layers/glassbox/content/guide/pages/index.md
   - layers/glassbox/app/pages/t/glassbox/index.vue
-  - layers/glassbox/app/pages/t/glassbox/[space]/index.vue
-  - layers/glassbox/app/pages/t/glassbox/[space]/[...slug].vue
   - layers/glassbox/tests/e2e/glassbox.spec.ts
-  - layers/glassbox/GLOSSARY.md
   - GLOSSARY.md
   - GLOSSARY-MAP.md
-  - layers/glassbox/content/guide/pages/nuxt-vue/01.layers.md
   - layers/glassbox/content/guide/pages/claude-code/02.rules.md
-  - layers/glassbox/content/guide/pages/claude-code/01.claude-md.md
-  - layers/glassbox/content/guide/pages/walkthroughs/opening-a-page.md
+  - layers/glassbox/content/guide/pages/terrarium-practice/02.adrs.md
+  - layers/glassbox/content/guide/pages/terrarium-practice/03.glossaries.md
+  - layers/glassbox/content/guide/terms/friction.yml
+  - layers/glassbox/content/guide/pages/terrarium-practice/04.session-logs.md
+  - layers/glassbox/content/guide/terms/session-log.yml
+  - layers/glassbox/content/guide/terms/friction-ledger.yml
+  - layers/glassbox/content/guide/pages/walkthroughs/adding-a-tenant.md
+  - layers/glassbox/content/guide/pages/walkthroughs/reading-across-tenants.md
+  - .agents/skills/glassbox-lesson/SKILL.md
+  - .agents/skills/glassbox-walkthrough/SKILL.md
+  - layers/glassbox/content/guide/pages/walkthroughs/a-bug-report-becomes-work.md
+  - layers/glassbox/content/guide/pages/walkthroughs/planning-a-big-change.md
+  - layers/glassbox/content/guide/pages/walkthroughs/a-newcomers-first-hour.md
+  - scripts/tmp-gb-review.ts
+  - scripts/tmp-gb-interact.ts
+  - scripts/tmp-gb-menu.ts
+  - layers/glassbox/content/guide/pages/skill-pack/02.planning-with-the-pack.md
+  - layers/glassbox/content/guide/pages/skill-pack/03.engineering-loop.md
+  - layers/glassbox/content/guide/pages/terrarium-practice/05.prune-trials.md
+  - layers/glassbox/content/guide/pages/terrarium-practice/06.out-of-scope-records.md
+  - layers/glassbox/content/guide/pages/terrarium-practice/07.human-only-list.md
+  - layers/glassbox/content/guide/pages/nuxt-vue/02.file-routing.md
+  - layers/glassbox/content/guide/pages/nuxt-vue/03.virtual-imports.md
+  - layers/glassbox/content/guide/pages/nuxt-vue/04.auto-imports.md
+  - layers/glassbox/tests/unit/walkthrough.spec.ts
+  - layers/glassbox/app/utils/walkthrough.ts
+  - layers/glassbox/content/guide/pages/claude-code/01.fixture-rules.md
+  - layers/glassbox/content/guide/pages/nuxt-vue/01.fixture-layers.md
+  - layers/glassbox/content/guide/pages/walkthroughs/fixture-friction.md
+  - layers/glassbox/content/guide/pages/zod/01.manifest-validation.md
+  - layers/glassbox/content/guide/terms/collection-kind.yml
+  - layers/glassbox/content/guide/pages/zod/02.timestamps-as-strings.md
+  - layers/glassbox/content/guide/pages/zod/03.schema-only-grows.md
+  - layers/glassbox/content/guide/pages/zod/04.schemas-column-types.md
+  - layers/glassbox/content/guide/pages/nuxt-content/05.mdc-components.md
+  - layers/glassbox/content/guide/pages/nuxt-content/06.prose-overrides.md
+  - layers/glassbox/content/guide/pages/nuxt-content/07.mermaid-svg.md
+  - layers/glassbox/content/guide/pages/terrarium-practice/08.cross-tenant-kinds.md
+  - .review-shots.ts
+  - .review-interact.ts
+  - .review-probe.ts
+  - layers/glassbox/content/guide/pages/nuxt-vue/05.use-space.md
+  - layers/glassbox/content/guide/pages/nuxt-vue/06.use-async-data.md
+  - layers/glassbox/content/guide/pages/nuxt-vue/07.theming-wrapper-class.md
+  - layers/glassbox/tests/unit/terms.spec.ts
+  - layers/glassbox/app/utils/terms.ts
+  - layers/glassbox/app/components/content/Term.vue
+  - layers/glassbox/content/guide/pages/claude-code/01.fixture-terms.md
+  - layers/glassbox/content/guide/terms/space.yml
+  - layers/glassbox/content/guide/terms/tenant.yml
+  - layers/glassbox/content/guide/terms/lesson.yml
+  - layers/glassbox/content/guide/terms/walkthrough.yml
+  - scripts/tmp-term-shot.ts
+  - layers/glassbox/content/guide/pages/nuxt-content/01.manifest-collections.md
+  - .agents/skills/glassbox-update/tests/unit/glassbox-update.spec.ts
+  - .agents/skills/glassbox-update/scripts/glassbox-update.ts
+  - .agents/skills/glassbox-update/SKILL.md
+  - .agents/skills/audit-docs/SKILL.md
+  - tests/support/git-fixture.ts
+  - layers/glassbox/content/guide/pages/typescript/01.two-type-checks.md
+  - layers/glassbox/content/guide/pages/testing/01.unit-and-e2e.md
+  - layers/glassbox/content/guide/pages/testing/02.invariants-as-tests.md
+  - layers/glassbox/content/guide/pages/deploy/01.self-updating-container.md
+  - layers/glassbox/content/guide/pages/git-github/04.trust-tiers.md
+  - .gbtmp/render.ts
+  - layers/glassbox/app/assets/fonts/README.md
+  - layers/glassbox/app/components/glassbox/Sidebar.vue
+  - .gbtmp/fixtures.py
+  - .gbtmp/shots.ts
+  - .gbtmp/probe.ts
+  - layers/glassbox/app/components/glassbox/Brand.vue
+  - layers/glassbox/content/guide/pages/claude-code/06.hints.md
+  - layers/glassbox/content/guide/pages/claude-code/07.subagents-worktrees.md
+  - layers/glassbox/content/guide/pages/claude-code/08.workflow-scripts.md
+  - layers/glassbox/content/guide/terms/public.yml
+  - layers/glassbox/content/guide/terms/digest.yml
+  - layers/glassbox/content/guide/terms/persona.yml
+  - layers/glassbox/content/guide/terms/pingback.yml
+  - layers/glassbox/content/guide/pages/walkthroughs/session-log-lands-on-main.md
+  - layers/glassbox/content/guide/pages/walkthroughs/routines.md
+  - layers/glassbox/content/guide/pages/git-github/05.provenance-headers.md
+  - layers/glassbox/content/guide/pages/git-github/06.work-queue.md
+  - layers/glassbox/content/guide/pages/git-github/07.dependabot-grouping.md
+  - scripts/tmp-gb-cp1-shots.ts
+  - layers/glassbox/tests/page-checks.ts
+  - r3-shots.ts
+  - r3-inter.ts
+  - scratch-cp3-probe.ts
+  - scratch-cp3-crop.ts
 rulesLoaded:
   - .claude/rules/adr-0021.md
   - .claude/rules/adr-0029.md
   - .claude/rules/adr-0030.md
   - .claude/rules/adr-0004-human-merge.md
   - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0022.md
+  - .claude/rules/tenant-layers.md
 rulesGlobal:
   - .claude/rules/adr-0004.md
   - .claude/rules/adr-0009.md
@@ -153,38 +679,126 @@ rulesGlobal:
 rulesFollowedUp:
   - .claude/rules/adr-0004.md
   - .claude/rules/adr-0021.md
-  - .claude/rules/adr-0018.md
+  - .claude/rules/adr-0004-human-merge.md
   - .claude/rules/adr-0028.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0017.md
+  - .claude/rules/adr-0024.md
+  - .claude/rules/adr-0018.md
   - .claude/rules/adr-0016.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0002.md
+  - .claude/rules/adr-0001.md
 rulesLoadedBySubagents:
-  - .claude/rules/tenant-layers.md
+  - .claude/rules/glassbox-content.md
+  - .claude/rules/mermaid-lanes.md
   - .claude/rules/adr-0002.md
   - .claude/rules/mdc-when-to-use.md
   - .claude/rules/adr-0001.md
   - .claude/rules/adr-0018.md
   - .claude/rules/adr-0028.md
+  - .claude/rules/adr-0013.md
   - .claude/rules/adr-0006.md
   - .claude/rules/adr-0016.md
-  - .claude/rules/adr-0013.md
-  - .claude/rules/glassbox-content.md
-  - .claude/rules/mermaid-lanes.md
+  - .claude/rules/adr-0014.md
+  - .claude/rules/adr-0024.md
+  - .claude/rules/adr-0007.md
+  - .claude/rules/adr-0012.md
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0026.md
+  - .claude/rules/guards.md
+  - .claude/rules/adr-0011.md
+  - .claude/rules/adr-0019.md
+  - .claude/rules/adr-0008.md
 docsReadBySubagents:
-  - docs/agents/domain.md
+  - layers/glassbox/GLOSSARY.md
+  - .agents/skills/glassbox-lesson/SKILL.md
+  - .agents/skills/glassbox-lesson/EVERY-PAGE.md
+  - docs/adr/0001-single-container-baked-multitenancy.md
+  - docs/adr/0019-patched-nuxt-content-client-db-loading.md
+  - docs/adr/0006-runtime-routing-path-prefix.md
+  - docs/adr/0014-build-time-virtual-routing-module.md
   - docs/agents/tenant-layers.md
-  - layers/marquee/GLOSSARY.md
+  - .agents/skills/glassbox-walkthrough/SKILL.md
+  - .agents/skills/auto-triage/SKILL.md
+  - .agents/skills/triage/SKILL.md
+  - .agents/skills/triage/AGENT-BRIEF.md
+  - docs/adr/0022-autonomous-triage-sweep.md
+  - .agents/skills/clear-backlog/SKILL.md
+  - .agents/skills/wayfinder/SKILL.md
+  - .agents/skills/to-spec/SKILL.md
+  - .agents/skills/to-tickets/SKILL.md
   - docs/agents/mdc-when-to-use.md
+  - docs/agents/domain.md
+  - docs/adr/0030-adrs-document-a-decision-not-its-history.md
+  - docs/adr/TEMPLATE.md
+  - .agents/skills/writing-for-agents/SKILL.md
+  - docs/diagrams/interactive-map/terrarium-overview.md
+  - .agents/skills/close-session/SKILL.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - docs/adr/0003-agent-operating-model-and-governance.md
+  - docs/agents/guards.md
+  - docs/adr/0005-skill-model.md
+  - .agents/skills/digest/SKILL.md
+  - .agents/skills/writing-for-agents/SKILL-MECHANICS.md
+  - docs/agents/environment-caveats.md
+  - docs/adr/0009-session-logs-commit-directly-to-main.md
+  - docs/adr/0026-gate-workflow-thin-shell.md
+  - docs/adr/0029-instructions-load-with-the-files-they-govern.md
+  - .agents/skills/blog-post/SKILL.md
+  - docs/adr/0011-poc-self-updating-deploy-container.md
+  - .agents/skills/domain-modeling/ADR-FORMAT.md
+  - .agents/skills/log-session/SKILL.md
+  - docs/adr/0017-provenance-footer-on-agent-authored-content.md
+  - .agents/skills/guest-intake/SKILL.md
+  - docs/research/mermaid-server-side-rendering.md
+  - layers/marquee/GLOSSARY.md
+  - layers/blog/GLOSSARY.md
+  - docs/adr/0008-self-documentation-tenant-is-a-journal.md
+  - layers/journal/GLOSSARY.md
+  - .agents/skills/atlas-specimen/SKILL.md
+  - .agents/skills/dispatch-subagents/SKILL.md
+  - docs/adr/0002-manifest-driven-config-generation.md
+  - docs/adr/0027-prune-trials.md
+  - .agents/skills/prune-trial/SKILL.md
+  - .agents/skills/triage/OUT-OF-SCOPE.md
+  - .agents/skills/audit-docs/SKILL.md
+  - .agents/skills/tinkerfund-campaign/SKILL.md
+  - docs/adr/0016-tenant-owned-urls.md
+  - docs/agents/guest-contributions.md
+  - docs/adr/0020-requester-trust-tiers.md
+  - docs/adr/0007-generated-config-committed-drift-checked.md
+  - docs/adr/0013-dynamic-content-config-committed-routing-map.md
+  - .agents/skills/audit-skills/SKILL.md
+  - .agents/skills/visitor-loop/SKILL.md
+  - docs/adr/0015-audit-skills-and-conditional-importance.md
+  - .agents/skills/setup-matt-pocock-skills/SKILL.md
+  - .agents/skills/ask-matt/SKILL.md
+  - docs/research/content-client-queries-without-wasm.md
+  - .agents/skills/grilling/SKILL.md
+  - .agents/skills/research/SKILL.md
+  - .agents/skills/tdd/SKILL.md
+  - .agents/skills/diagnosing-bugs/SKILL.md
+  - .agents/skills/midden-survey/SKILL.md
+  - docs/proposals/1633-dependabot-automerge.md
+  - docs/research/making-repo-public.md
+  - docs/adr/0012-cross-persona-pingbacks-via-authored-denormalization.md
 ruleVerdicts:
   - path: .claude/rules/adr-0004.md
-    reason: Set gate and review before push and merge-pr.ts on green; user asked me to read the full ADR
+    reason: "Decided every merge: verdict comment then merge-pr.ts on green, and MCP merge for the Human-only ADR-0024 PR; full ADR read at start"
     useful: yes
   - path: .claude/rules/adr-0009.md
     reason: Made me log at PR open; summary was enough
     useful: yes
   - path: .claude/rules/adr-0027.md
-    reason: No instruction text was cut or reworded this session
-    useful: no
+    reason: Kept me cutting or simplifying Skill lines instead of adding walls when reviews found recurring problems
+    useful: partly
   - path: .claude/rules/adr-0020.md
-    reason: All input came from the owner (Trusted); nothing Public to treat as data
+    reason: Every instruction came from the owner, a Trusted user; it only shaped page wording about tiers
     useful: no
   - path: .claude/rules/adr-0003.md
     reason: Confirmed the PR per story and subscribing; the owner approved the new Tenant
@@ -199,13 +813,19 @@ ruleVerdicts:
     reason: Explains why rules load per file; nothing to change here
     useful: partly
   - path: .claude/rules/adr-0030.md
-    reason: No ADR edited yet; applies to the Mermaid font story later
-    useful: no
+    reason: "Applied to the ADR-0024 rewrite in story #1996, which its subagent handled"
+    useful: partly
   - path: .claude/rules/adr-0004-human-merge.md
     reason: Loaded on reading the ADR list; its paths decide which story PRs merge-pr.ts refuses
     useful: partly
   - path: .claude/rules/adr-0005.md
     reason: Loaded on reading Skill files; relevant to the glassbox writing Skills later
+    useful: partly
+  - path: .claude/rules/adr-0022.md
+    reason: Loaded via issue-tracker docs; no issues were filed or labelled by me, so it didn't apply
+    useful: no
+  - path: .claude/rules/tenant-layers.md
+    reason: Loaded when touching layers/glassbox; confirmed the new Tenant's layout matched other layers
     useful: partly
 subagents:
   - type: general-purpose
@@ -214,7 +834,171 @@ subagents:
     task: "Standards review #1988"
   - type: general-purpose
     task: "Spec review #1988"
+  - type: general-purpose
+    task: "Implement #1989 visual identity"
+  - type: general-purpose
+    task: "Implement #1991 file/excerpt helper"
+  - type: general-purpose
+    task: "Standards review #1991"
+  - type: general-purpose
+    task: "Spec review #1991"
+  - type: general-purpose
+    task: "Standards review #1989"
+  - type: general-purpose
+    task: "Spec review #1989"
+  - type: general-purpose
+    task: "Implement #1990 TOC and prev/next"
+  - type: general-purpose
+    task: "Implement #2015 Lesson sections"
+  - type: general-purpose
+    task: "Implement #1996 Mermaid font"
+  - type: general-purpose
+    task: "Implement #1992 inline terms"
+  - type: general-purpose
+    task: "Standards review #1996"
+  - type: general-purpose
+    task: "Spec review #1996"
+  - type: general-purpose
+    task: "Standards review #2015"
+  - type: general-purpose
+    task: "Spec review #2015"
+  - type: general-purpose
+    task: "Standards review #1990"
+  - type: general-purpose
+    task: "Spec review #1990"
+  - type: general-purpose
+    task: "Standards review #1992"
+  - type: general-purpose
+    task: "Spec review #1992"
+  - type: general-purpose
+    task: "Implement #1993 Walkthrough stops"
+  - type: general-purpose
+    task: "Implement #1994 layer test"
+  - type: general-purpose
+    task: "Standards review #1994"
+  - type: general-purpose
+    task: "Spec review #1994"
+  - type: general-purpose
+    task: "Standards review #1993"
+  - type: general-purpose
+    task: "Spec review #1993"
+  - type: general-purpose
+    task: "Implement #1997 writing Skills + seeds"
+  - type: general-purpose
+    task: "Standards review #1997"
+  - type: general-purpose
+    task: "Spec+accuracy review #1997"
+  - type: general-purpose
+    task: Write seeds NV1 + NC1 (#1999a)
+  - type: general-purpose
+    task: Write seeds CC2, GH2, SP1 (#1999b)
+  - type: general-purpose
+    task: "Implement #1998 glassbox-update"
+  - type: general-purpose
+    task: "Standards review #1998"
+  - type: general-purpose
+    task: "Spec review #1998"
+  - type: general-purpose
+    task: "Content review #1999b"
+  - type: general-purpose
+    task: "Content review #1999a"
+  - type: general-purpose
+    task: Checkpoint review round 1
+  - type: general-purpose
+    task: Fix checkpoint round 1 findings
+  - type: general-purpose
+    task: Standards review checkpoint-1 fixes
+  - type: general-purpose
+    task: Write Claude Code Lessons batch A
+  - type: general-purpose
+    task: Write Skill pack Lessons
+  - type: general-purpose
+    task: Write Zod Lessons
+  - type: general-purpose
+    task: Write Terrarium practice Lessons A
+  - type: general-purpose
+    task: Checkpoint review round 2
+  - type: general-purpose
+    task: Write Claude Code Lessons batch B
+  - type: general-purpose
+    task: Write Git & GitHub Lessons batch A
+  - type: general-purpose
+    task: "Content review #2001"
+  - type: general-purpose
+    task: "Content review #2009a"
+  - type: general-purpose
+    task: "Content review #2000a"
+  - type: general-purpose
+    task: Fix checkpoint round 2 findings
+  - type: general-purpose
+    task: Write TS, Testing, Deploy Lessons
+  - type: general-purpose
+    task: Write Terrarium practice Lessons B
+  - type: general-purpose
+    task: "Content review #2004"
+  - type: general-purpose
+    task: "Content review #2008a"
+  - type: general-purpose
+    task: "Content review #2000b"
+  - type: general-purpose
+    task: Write Claude Code Lessons batch C
+  - type: general-purpose
+    task: Write Nuxt & Vue Lessons batch A
+  - type: general-purpose
+    task: "Content review #2009b"
+  - type: general-purpose
+    task: "Content review #2005-2007"
+  - type: general-purpose
+    task: Write Git & GitHub Lessons batch B
+  - type: general-purpose
+    task: Write Nuxt Content Lessons batch A
+  - type: general-purpose
+    task: Write Nuxt & Vue Lessons batch B
+  - type: general-purpose
+    task: Write Nuxt Content Lessons batch B
+  - type: general-purpose
+    task: "Content review #2000c"
+  - type: general-purpose
+    task: Review checkpoint round 2 fixes
+  - type: general-purpose
+    task: "Content review #2002a"
+  - type: general-purpose
+    task: "Content review #2008b"
+  - type: general-purpose
+    task: "Content review #2003a"
+  - type: general-purpose
+    task: Checkpoint review round 3
+  - type: general-purpose
+    task: "Content review #2002b"
+  - type: general-purpose
+    task: "Content review #2003b"
+  - type: general-purpose
+    task: Checkpoint round 3 fixes
+  - type: general-purpose
+    task: Write Walkthroughs batch A
+  - type: general-purpose
+    task: Write Walkthroughs batch B
+  - type: general-purpose
+    task: Write Walkthroughs batch C
+  - type: general-purpose
+    task: Write Walkthroughs batch D
+  - type: general-purpose
+    task: Standards review cp3
+  - type: general-purpose
+    task: Spec review cp3
+  - type: general-purpose
+    task: "Content review #2010d"
+  - type: general-purpose
+    task: "Content review #2010c"
+  - type: general-purpose
+    task: "Content review #2010a"
+  - type: general-purpose
+    task: "Content review #2010b"
 gitBranch: claude/affectionate-lamport-fu16x5
 entrypoint: remote
 cliVersion: 2.1.300
+learnings:
+  - In a linked worktree, `git fetch origin <branch>` can leave refs/remotes/origin/<branch> stale; the explicit refspec `<branch>:refs/remotes/origin/<branch>` fixes it
+ideas:
+  - Add a verdicts block to the content-writer hand-back template so every subagent reports rule and doc verdicts with its result, which feeds log-session step 3 for free
 landedBy: Stop
