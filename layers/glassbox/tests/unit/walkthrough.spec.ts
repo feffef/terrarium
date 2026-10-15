@@ -9,15 +9,25 @@ const walkthrough = (path: string, title: string, ...nodes: MinimarkNode[]) => (
 describe('glassboxWalkthroughsThrough', () => {
   const layers = `${base}/nuxt-vue/layers`
 
-  it('lists each Walkthrough that links the Lesson once, however often it links it', () => {
+  const stop = ['h2', { id: '1-start' }, '1. Start'] as MinimarkNode
+  const realCase = ['h2', { id: 'a-real-case' }, 'A real case'] as MinimarkNode
+  const whereNext = ['h2', { id: 'where-next' }, 'Where next'] as MinimarkNode
+
+  it('lists each Walkthrough whose stops or A real case link the Lesson, once however often', () => {
     expect(glassboxWalkthroughsThrough([
-      walkthrough('/walkthroughs/b', 'B', ['p', {}, link(layers)], ['stop-links', {}, ['p', {}, link(`${layers}#in-terrarium`)]]),
-      walkthrough('/walkthroughs/a', 'A', ['ul', {}, ['li', {}, link(`${layers}/`)]]),
-      walkthrough('/walkthroughs/c', 'C', ['p', {}, link(`${base}/nuxt-vue/layers-two`)]),
+      walkthrough('/walkthroughs/b', 'B', stop, ['p', {}, link(layers)], ['stop-links', {}, ['p', {}, link(`${layers}#in-terrarium`)]]),
+      walkthrough('/walkthroughs/a', 'A', realCase, ['ul', {}, ['li', {}, link(`${layers}/`)]]),
+      walkthrough('/walkthroughs/c', 'C', stop, ['p', {}, link(`${base}/nuxt-vue/layers-two`)]),
     ], layers)).toEqual([
       { path: '/walkthroughs/a', title: 'A' },
       { path: '/walkthroughs/b', title: 'B' },
     ])
+  })
+
+  it('ignores a link in the lede or in Where next', () => {
+    expect(glassboxWalkthroughsThrough([
+      walkthrough('/walkthroughs/a', 'A', ['p', {}, link(layers)], stop, ['p', {}, 'No link.'], whereNext, ['ul', {}, ['li', {}, link(layers)]]),
+    ], layers)).toEqual([])
   })
 
   it('is empty for a Lesson no Walkthrough links', () => {
@@ -58,13 +68,14 @@ describe('glassboxWalkthroughParts', () => {
       ['h2', { id: 'a-real-case' }, 'A real case'],
       ['p', {}, 'Story.'],
       ['h2', { id: 'where-next' }, 'Where next'],
-      ['ul', {}, ['li', {}, link(`${base}/nuxt-vue/layers`)], ['li', {}, link(`${base}/walkthroughs/other`)]],
+      ['ul', {}, ['li', {}, link(`${base}/nuxt-vue/layers`)], ['li', {}, link(`${base}/walkthroughs/other`)], ['li', {}, link('/t/journal/current')]],
     ], base).slice(1)).toEqual([{ nodes: [
       ['div', { class: 'gb-case' }, ['h2', { id: 'a-real-case' }, 'A real case'], ['p', {}, 'Story.']],
       ['h2', { id: 'where-next' }, 'Where next'],
       ['ul', { class: 'gb-next' },
         ['li', {}, ['span', {}, 'Lesson'], link(`${base}/nuxt-vue/layers`)],
         ['li', {}, ['span', {}, 'Walkthrough'], link(`${base}/walkthroughs/other`)],
+        ['li', {}, ['span', {}, 'Journal'], link('/t/journal/current')],
       ],
     ] }])
   })

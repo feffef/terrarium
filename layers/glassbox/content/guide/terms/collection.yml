@@ -1,0 +1,3 @@
+term: Collection
+definition: One type of content inside a Space, such as its pages. Each Tenant, Space and Collection together get their own table.
+source: GLOSSARY.md

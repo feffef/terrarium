@@ -1,0 +1,3 @@
+term: Tenant
+definition: One site inside Terrarium, with its own components and content model, built as a Nuxt layer.
+source: GLOSSARY.md

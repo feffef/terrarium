@@ -53,7 +53,9 @@ Its body follows one contract, which the page frames like design 1b
 - `## In Terrarium`, with `### Why it's built this way` and
   `### What to watch for`;
 - `## Try it in your project`;
-- `## Where next`, a list of links to Lessons.
+- `## Where next`, a list of bare links to related Lessons. Until one exists,
+  it is a one-item list linking the nearest page that does, such as a Journal
+  page.
 
 ### Walkthrough
 A page that follows one story across several Lessons and links to them instead
@@ -69,10 +71,12 @@ design 1b (`app/utils/walkthrough.ts`):
   `:file` or a `:term`; each block holds at least one link or `:file`, since a
   `:term` alone doesn't count;
 - optionally `## A real case`: one dated story;
-- `## Where next`, a list of links to Lessons and Walkthroughs.
+- `## Where next`, a list of bare links, Lessons first, then Walkthroughs.
+  Until one exists, it is a one-item list linking the nearest page that does,
+  such as a Journal page.
 
 Link a Lesson by its full `/t/glassbox/guide/…` path. A Lesson lists, after
-its Where next, every Walkthrough that links it that way anywhere in its body;
+its Where next, every Walkthrough whose stops or A real case link it that way;
 nobody writes that list.
 
 ### Subject
