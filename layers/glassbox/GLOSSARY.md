@@ -44,6 +44,17 @@ Terrarium applies them without reading the source.
 A page about one concept. It opens with a short general summary that links the
 official docs, then shows how and why Terrarium uses the concept.
 
+Its body follows one contract, which the page frames like design 1b
+(`app/utils/lesson.ts`):
+
+- a lede paragraph, then a skip line that links `[In Terrarium](#in-terrarium)`;
+- `## The concept`, whose last paragraph is `Full reference: [label](url)`
+  (Terrarium practice Lessons have none);
+- `## In Terrarium`, with `### Why it's built this way` and
+  `### What to watch for`;
+- `## Try it in your project`;
+- `## Where next`, a list of links to Lessons.
+
 ### Walkthrough
 A page that follows one story across several Lessons and links to them instead
 of repeating them.

@@ -10,6 +10,7 @@ describe('glassboxLessonSections', () => {
   it('wraps the sections design 1b frames, keeping every heading and its id', () => {
     expect(glassboxLessonSections([
       ['p', {}, 'Lede.'],
+      ['p', {}, 'Know it? Skip to ', ['a', { href: '#in-terrarium' }, 'In Terrarium']],
       h2('the-concept', 'The concept'),
       ['p', {}, 'General.'],
       ['p', {}, 'Full reference: ', link],
@@ -25,7 +26,9 @@ describe('glassboxLessonSections', () => {
       ['ul', {}, ['li', {}, 'Next.']],
     ])).toEqual([
       ['p', {}, 'Lede.'],
+      ['p', { class: 'gb-skip' }, 'Know it? Skip to ', ['a', { href: '#in-terrarium' }, 'In Terrarium']],
       ['div', { class: 'gb-concept' },
+        ['p', { class: 'gb-kicker' }, 'Outside the box · General'],
         h2('the-concept', 'The concept'),
         ['p', {}, 'General.'],
         ['p', { class: 'gb-ref' }, ['span', {}, 'Full reference'], link],
@@ -39,7 +42,7 @@ describe('glassboxLessonSections', () => {
       ],
       ['div', { class: 'gb-try' }, h2('try-it-in-your-project', 'Try it in your project'), ['p', {}, 'Step.']],
       h2('where-next', 'Where next'),
-      ['ul', {}, ['li', {}, 'Next.']],
+      ['ul', { class: 'gb-next' }, ['li', {}, ['span', {}, 'Lesson'], 'Next.']],
     ])
   })
 

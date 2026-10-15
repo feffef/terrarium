@@ -30,8 +30,8 @@ const shown = computed(() => subject.value
 }
 .article h1.lesson { margin-top: 16px; }
 
-.article :deep(p:has(> a[href="#in-terrarium"])) { font-size: 15px; color: var(--gb-muted); }
-.article :deep(p:has(> a[href="#in-terrarium"]) strong) { color: var(--gb-ink); font-weight: 600; }
+.article :deep(.gb-skip) { font-size: 15px; color: var(--gb-muted); }
+.article :deep(.gb-skip strong) { color: var(--gb-ink); font-weight: 600; }
 
 .article :deep(.gb-concept) {
   padding: 28px 32px 30px;
@@ -41,13 +41,13 @@ const shown = computed(() => subject.value
   box-shadow: var(--gb-pane-shadow);
   backdrop-filter: blur(16px);
 }
-.article :deep(.gb-concept)::before, .article :deep(.gb-divider) {
+.article :deep(:is(.gb-kicker, .gb-divider, .gb-next span)) {
   font: 11px var(--gb-mono);
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--gb-muted);
 }
-.article :deep(.gb-concept)::before { content: 'Outside the box · General'; }
+.article :deep(.gb-kicker) { margin: 0; }
 .article :deep(.gb-concept h2) { margin: 8px 0 14px; }
 .article :deep(.gb-concept > :last-child) { margin-bottom: 0; }
 .article :deep(.gb-ref) {
@@ -99,7 +99,21 @@ const shown = computed(() => subject.value
 }
 .article :deep(.gb-try :is(h2, a)) { color: var(--gb-solid-accent); }
 .article :deep(.gb-try p) { margin: 10px 0 0; }
-.article :deep(h2#where-next) { font-size: 22px; margin-top: 40px; }
+
+.article :deep(h2:has(+ .gb-next)) { font-size: 22px; margin-top: 40px; }
+.article :deep(.gb-next) { padding: 0; list-style: none; border-top: 1px solid var(--gb-line); font-size: 16px; }
+.article :deep(.gb-next li) {
+  position: relative;
+  display: grid;
+  grid-template-columns: 120px minmax(0, 1fr) auto;
+  align-items: center;
+  min-height: 48px;
+  margin: 0;
+  border-bottom: 1px solid var(--gb-line);
+}
+.article :deep(.gb-next li)::after { content: '→'; color: var(--gb-accent); }
+.article :deep(.gb-next a) { color: var(--gb-ink); font-weight: 500; text-decoration: none; }
+.article :deep(.gb-next a)::after { content: ''; position: absolute; inset: 0; }
 
 @media (prefers-color-scheme: dark) {
   .article :deep(.gb-try) {
@@ -107,12 +121,12 @@ const shown = computed(() => subject.value
     background: var(--gb-tint);
     color: var(--gb-ink);
   }
-  .article :deep(.gb-try :is(h2, a)) { color: var(--gb-accent); }
 }
 @media (max-width: 640px) {
   .article :deep(.gb-concept) { padding: 20px 18px; border-radius: 16px; }
   .article :deep(.gb-concept h2) { font-size: 23px; }
   .article :deep(.gb-cards) { grid-template-columns: 1fr; }
   .article :deep(.gb-try) { padding: 18px; font-size: 16px; }
+  .article :deep(.gb-next li) { grid-template-columns: 84px minmax(0, 1fr) auto; }
 }
 </style>
