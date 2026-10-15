@@ -1,7 +1,7 @@
 ---
 title: Adding a Tenant
-description: How a new site joins Terrarium, from the approval to its first page, through one folder, one manifest, tables of its own and tests that find it by themselves.
-revision: '37a396c00187e98d2ec6a195b448e024c3319b98'
+description: 'How a new site joins Terrarium: one folder, one manifest, tables of its own and tests that find it by themselves.'
+revision: 'a93faa0135f652b85b4976418534243f649e58b9'
 revisionDate: '2026-10-15'
 ---
 
@@ -12,7 +12,7 @@ A new site joins Terrarium. This Walkthrough follows the work from the side of t
 A :term[Trusted] user approves the new :term[Tenant], for example by asking for it in a session or by labelling its issue `ready-for-agent`, before an agent starts on it. The agent then works on a feature branch, and the result lands as a PR like any other change.
 
 ::stop-links
-[Every change as a PR](/t/glassbox/guide/git-github/every-change-a-pr)
+[Every change a PR](/t/glassbox/guide/git-github/every-change-a-pr)
 ::
 
 ## 2. A folder becomes a layer
@@ -20,7 +20,7 @@ A :term[Trusted] user approves the new :term[Tenant], for example by asking for 
 The agent creates `layers/<tenant>/` and puts a `nuxt.config.ts` in it, which can be as small as `defineNuxtConfig({})`. Nuxt registers every folder under `layers/` by itself, so the root config is left alone. From now on the folder is also read as a Tenant: the build stops if it holds no `tenant.config.ts`, or one whose name differs from the folder's.
 
 ::stop-links
-[One app, many sites: Nuxt layers](/t/glassbox/guide/nuxt-vue/layers) · :file[layers/marquee/nuxt.config.ts]
+[Layers](/t/glassbox/guide/nuxt-vue/layers) · :file[layers/marquee/nuxt.config.ts]
 ::
 
 ## 3. The manifest says what it holds
@@ -28,7 +28,7 @@ The agent creates `layers/<tenant>/` and puts a `nuxt.config.ts` in it, which ca
 Beside it goes the :term[manifest], `tenant.config.ts`: the Tenant's name, its :term[Spaces]{id="space"}, and the :term[Collections]{id="collection"} that every Space holds, each of type `page` or `data`. Marquee's is about as small as one gets, with one Space, `reel`, and one Collection, `pages`, the only name that gets addresses. Before anything is built from it, `validateManifest()` checks it, and a misspelt key or a Collection the rules don't allow stops the build with a line that names the field.
 
 ::stop-links
-[Collections expanded from one manifest](/t/glassbox/guide/nuxt-content/manifest-collections) · :file[layers/marquee/tenant.config.ts]
+[Manifest collections](/t/glassbox/guide/nuxt-content/manifest-collections) · :file[layers/marquee/tenant.config.ts]
 ::
 
 ## 4. Its content gets tables of its own
@@ -36,7 +36,7 @@ Beside it goes the :term[manifest], `tenant.config.ts`: the Tenant's name, its :
 The Tenant's files go under `content/<space>/<collection>/` in its folder, and each Space's `pages` folder gets an `index.md`, the Space's front page. Nobody lists the new collections anywhere: `content.config.ts` runs `expand()` over every manifest each time Nuxt Content loads it, and the new Spaces and Collections come out as keys such as `marquee_reel_pages`. Each key is its own table in the content database, so the new content shares no table with any other Space.
 
 ::stop-links
-[Collections expanded from one manifest](/t/glassbox/guide/nuxt-content/manifest-collections) · [One table per key: the isolation unit](/t/glassbox/guide/nuxt-content/one-table-per-key)
+[Manifest collections](/t/glassbox/guide/nuxt-content/manifest-collections) · [One table per key](/t/glassbox/guide/nuxt-content/one-table-per-key)
 ::
 
 ## 5. The routes follow
@@ -44,7 +44,7 @@ The Tenant's files go under `content/<space>/<collection>/` in its folder, and e
 The same expansion feeds :file[modules/routing.ts], which writes the routing map into `#routing` each time Nuxt starts or builds. Once the map holds the new Tenant, the Platform's catch-all page answers `/t/<tenant>/<space>/…` for it with no page file of its own: each Space's front page and every Document, plainly styled. The bare `/t/<tenant>` answers only once the Tenant adds a root page; Marquee's sends the visitor on to `reel`.
 
 ::stop-links
-[File routing: catch-all, Tenant overrides, root pages](/t/glassbox/guide/nuxt-vue/file-routing) · :file[app/pages/t/] · :file[layers/marquee/app/pages/t/marquee/index.vue]
+[File routing](/t/glassbox/guide/nuxt-vue/file-routing) · :file[app/pages/t/] · :file[layers/marquee/app/pages/t/marquee/index.vue]
 ::
 
 ## 6. It gets its own look
@@ -52,7 +52,7 @@ The same expansion feeds :file[modules/routing.ts], which writes the routing map
 For a design of its own, the Tenant adds pages under `app/pages/t/<tenant>/` in its layer. Their path has the Tenant's name where the catch-all has `[tenant]`, so they outrank it for its addresses and no others. Its components go in a folder named after it, so Nuxt gives them its name as a prefix, as in `MarqueePoster`. Its stylesheet, listed in its `nuxt.config.ts`, loads on every page of every Tenant, so it prefixes its CSS custom properties with a short tag of its own (`--mq-`) and scopes its rules under a class only its pages carry. Its components read those properties with `var()`, so none of them repeats a colour.
 
 ::stop-links
-[File routing: catch-all, Tenant overrides, root pages](/t/glassbox/guide/nuxt-vue/file-routing) · :file[layers/marquee/app/assets/theme.css]
+[File routing](/t/glassbox/guide/nuxt-vue/file-routing) · :file[layers/marquee/app/assets/theme.css]
 ::
 
 ## 7. It gets its own words
@@ -81,7 +81,7 @@ Its pages appear in the Commons Search only if its `pages` Collection names the 
 
 ## Where next
 
-- [Collections expanded from one manifest](/t/glassbox/guide/nuxt-content/manifest-collections)
-- [One app, many sites: Nuxt layers](/t/glassbox/guide/nuxt-vue/layers)
-- [File routing: catch-all, Tenant overrides, root pages](/t/glassbox/guide/nuxt-vue/file-routing)
-- [Opening a page](/t/glassbox/guide/walkthroughs/opening-a-page)
+- [Manifest collections](/t/glassbox/guide/nuxt-content/manifest-collections)
+- [Layers](/t/glassbox/guide/nuxt-vue/layers)
+- [File routing](/t/glassbox/guide/nuxt-vue/file-routing)
+- [From file to browser](/t/glassbox/guide/walkthroughs/from-file-to-browser)
