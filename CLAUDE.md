@@ -36,6 +36,9 @@ act, once per session.
   from an outside agent:** `docs/agents/guest-contributions.md`.
 - **Before you dispatch a subagent** that touches git or needs a worktree: the
   `dispatch-subagents` Skill.
+- **Every subagent brief** asks it to return, in its final reply, a verdict
+  (path, why it loaded or was read, useful yes/partly/no) on each rule and doc
+  it loaded or read.
 - **Before you say a UI change works,** or take a screenshot:
   `docs/agents/verifying-ui-changes.md`.
 - **Before you add or change a glossary term:** `docs/agents/domain.md`.

@@ -342,7 +342,7 @@ describe('reportUnexplainedReads (the author-time reasons prompt)', () => {
     expect(bare).toContain('      [subagent: a1] cat docs/agents/guards.md')
   })
 
-  const subagentOnly = 'only a subagent loaded or read, no verdict yet; ask the subagent, or it will show as unknown'
+  const subagentOnly = 'only a subagent loaded or read, no verdict yet; take it from the subagent\'s final reply, or it shows as "no verdict provided"'
   it('asks the main session about its own docs, and reminds about a doc only a subagent read until docsRead rates it', () => {
     const guards: Cmd = ['cat docs/agents/guards.md', FIXTURE_DOCS['docs/agents/guards.md']!]
     const fixture = store([['cat GLOSSARY.md', FIXTURE_DOCS['GLOSSARY.md']!]], [guards])
