@@ -78,7 +78,7 @@ publish() {
 
 start_server() {
   log "starting server on :$PORT"
-  HOST=0.0.0.0 PORT="$PORT" node "$SERVE_DIR/server/index.mjs" &
+  NODE_ENV=production HOST=0.0.0.0 PORT="$PORT" node "$SERVE_DIR/server/index.mjs" &
   SERVER_PID=$!
 }
 
