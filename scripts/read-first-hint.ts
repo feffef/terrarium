@@ -2,7 +2,9 @@
 // triggers are prose, and sessions read the doc after the action. At the first
 // matching git or GitHub call this adds one line pointing to the doc, alongside
 // that call's result (PostToolUse, and PostToolUseFailure for a failed call).
-// It cannot stop the first call. Once per doc per agent context: silent when the
+// It cannot stop the first call, and the owner accepts that, so a closing line
+// says a late read that clears the call is not a Friction (Friction Ledger
+// `binding-docs-skipped`). Once per doc per agent context: silent when the
 // transcript shows the doc read (Read tool, or a shell read the session trace
 // recognises) or already holds the pointer. A subagent dedupes against its own
 // transcript beside its parent's; if that is missing it points anyway. A missing

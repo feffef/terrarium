@@ -100,7 +100,7 @@ describe('the hook entry (sh pre-filter → tsx)', () => {
     }
     const ghRead = transcript('note-gh-read.jsonl', [toolUse('r', 'Read', { file_path: `${repo}/${GH}` })])
     const pr = run(call('x', { tool_name: 'mcp__github__create_pull_request', tool_input: {}, transcript_path: ghRead }))
-    expect(count(context(pr))).toBe(0)
+    expect(context(pr)).toBe(CLOSE_SESSION_HINT)
   })
 
   it('skips tsx and writes nothing for a command with no git or gh word', () => {
