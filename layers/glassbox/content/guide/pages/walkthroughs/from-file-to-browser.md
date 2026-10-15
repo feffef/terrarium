@@ -5,22 +5,20 @@ revision: 'a93faa0135f652b85b4976418534243f649e58b9'
 revisionDate: '2026-10-15'
 ---
 
-A Markdown file is committed, and later a visitor reads it as a page. This Walkthrough follows that file from the content's side: from its folder, through the manifest, the build and the container, to the server that renders it and the browser that reuses its data on the next click.
+A Markdown file is committed, and later a visitor reads it as a page. This Walkthrough follows that file from the content's side: from its folder, through the manifest and the build that writes it into a database, to the server that queries the database to render it and the browser that reuses its data on the next click. The diagram puts the database in the middle: the build writes it from one side, and the server and the browser read it from the other.
 
 ```mermaid
-flowchart TD
+flowchart LR
   file["A Markdown file<br>in a Space's folder"] --> key["The manifest's key<br>names its table"]
-  key --> build["The build writes<br>tables and dumps"]
-  build --> swap["The container<br>swaps in the build"]
-  swap --> cached{{"A request:<br>in the page cache?"}}
-  cached -- no --> render["The server renders,<br>querying one table"]
-  render --> html["HTML with<br>its data inside"]
-  cached -- yes --> html
-  html --> next["A click builds the<br>next page from its payload"]
+  key --> build["nuxt build<br>parses every file"]
+  build -- "writes" --> db[("SQLite tables<br>and their dumps")]
+  db -- "answers the<br>server's query" --> server["The server renders<br>a request"]
+  server -- "HTML and payload" --> browser["The browser"]
+  db -. "an uncached route:<br>the browser queries its own copy" .-> browser
   classDef repo stroke-dasharray:5 4
-  classDef browser stroke-width:2.5px
+  classDef reader stroke-width:2.5px
   class file,key,build repo
-  class html,next browser
+  class browser reader
 ```
 
 ## 1. A file lands in a Space's folder
