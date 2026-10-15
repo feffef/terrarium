@@ -1,7 +1,7 @@
 ---
 title: Opening a page
 description: How a click becomes a page, through one server for every site, one Space's content and a browser that builds the next page itself.
-revision: 'cf1b6c1b5bcb2cfbc84284ab38caec669f58bcbc'
+revision: '37a396c00187e98d2ec6a195b448e024c3319b98'
 revisionDate: '2026-10-15'
 ---
 
@@ -9,10 +9,11 @@ You click a link and a page appears. This Walkthrough follows that request from 
 
 ```mermaid
 flowchart TD
-  kept{{"Kept by<br>the server?"}} -- no --> render["Vue renders<br>one Space"]
+  start(["The request<br>reaches the server"]) --> kept{{"Already kept<br>by the server?"}}
+  kept -- no --> render["Vue renders<br>the page"]
   kept -- yes --> shown["The browser<br>shows it"]
   render --> shown
-  shown -- a click --> cached{{Cached?}}
+  shown -- a click --> cached{{"Cached on<br>the server?"}}
   cached -- yes --> payload["Built from the<br>server's data"]
   cached -- no --> local["Queried in<br>the browser"]
 ```
