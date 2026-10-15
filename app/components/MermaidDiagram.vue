@@ -1,7 +1,7 @@
 <template>
   <!-- Our own committed SVG (ADR-0024), checked script-free by verify:mermaid (app/utils/svg.ts). -->
   <!-- eslint-disable-next-line vue/no-v-html -->
-  <div v-if="svg" class="mermaid-diagram" v-html="svg" />
+  <div v-if="svg" class="mermaid-diagram" :style="width && { '--diagram-w': width }" v-html="svg" />
   <pre v-else class="mermaid-diagram-fallback">{{ code }}</pre>
 </template>
 
@@ -38,6 +38,9 @@ const svg = computed(() => {
   const font = layerFonts[`../../layers/${route.path.split('/')[2]}/mermaid-font.ts`]
   return bakedSvgs[`../assets/mermaid/${mermaidKey(props.code, font)}.svg`]
 })
+// The drawn width, for a Tenant that keeps a diagram from scaling below legible
+// (glassbox theme.css); set in the server render, so no layout shift.
+const width = computed(() => svg.value?.match(/max-width:\s*([\d.]+px)/)?.[1])
 </script>
 
 <style scoped>
