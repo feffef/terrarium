@@ -6,7 +6,7 @@ import { tmpdir } from 'node:os'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
-import { CLOSE_SESSION_HINT, READ_FIRST, triggeredDocs } from '../../scripts/read-first-hint.ts'
+import { CLOSE_SESSION_HINT, LATE_READ_NOTE, READ_FIRST, triggeredDocs } from '../../scripts/read-first-hint.ts'
 import { runTsx } from '../support/run-script.ts'
 
 const repo = resolve(dirname(fileURLToPath(import.meta.url)), '../..')
@@ -89,6 +89,18 @@ describe('the hook entry (sh pre-filter → tsx)', () => {
       expect(context(r)).not.toContain('Contents of .claude/rules/')
     }
     expect(context(run(call('x', { tool_name: 'mcp__github__get_me', tool_input: {} })))).toContain(GH)
+  })
+
+  it('ends a pointer hint with the late-read note exactly once, and not the close-session hint alone', () => {
+    const count = (s: string) => s.split(LATE_READ_NOTE).length - 1
+    for (const command of ['git log', 'git log && gh api x']) {
+      const hint = context(run(call(command)))
+      expect(count(hint), command).toBe(1)
+      expect(hint.endsWith(LATE_READ_NOTE), command).toBe(true)
+    }
+    const ghRead = transcript('note-gh-read.jsonl', [toolUse('r', 'Read', { file_path: `${repo}/${GH}` })])
+    const pr = run(call('x', { tool_name: 'mcp__github__create_pull_request', tool_input: {}, transcript_path: ghRead }))
+    expect(context(pr)).toBe(CLOSE_SESSION_HINT)
   })
 
   it('skips tsx and writes nothing for a command with no git or gh word', () => {

@@ -2,7 +2,9 @@
 // triggers are prose, and sessions read the doc after the action. At the first
 // matching git or GitHub call this adds one line pointing to the doc, alongside
 // that call's result (PostToolUse, and PostToolUseFailure for a failed call).
-// It cannot stop the first call. Once per doc per agent context: silent when the
+// It cannot stop the first call, and the owner accepts that, so a closing line
+// says a late read that clears the call is not a Friction (Friction Ledger
+// `binding-docs-skipped`). Once per doc per agent context: silent when the
 // transcript shows the doc read (Read tool, or a shell read the session trace
 // recognises) or already holds the pointer. A subagent dedupes against its own
 // transcript beside its parent's; if that is missing it points anyway. A missing
@@ -64,6 +66,8 @@ export function triggeredDocs(tool: string, command: unknown): ReadFirst[] {
 
 const pointer = (r: ReadFirst) => `Read first: \`${r.doc}\` (CLAUDE.md: "${r.trigger}").`
 
+export const LATE_READ_NOTE = 'If the doc shows your call was already right, the late read is not a Friction.'
+
 export const CLOSE_SESSION_HINT = 'PR opened: invoke the `close-session` Skill now for an in-review first log (CLAUDE.md); re-invoking it later is safe.'
 
 /** The docs this transcript already read or was pointed to. */
@@ -94,6 +98,7 @@ function hintFor(payload: unknown, dryRun = false): string | null {
   const trace = extractTrace(records, process.env, index)
   const skip = seen(records, docs, trace)
   const lines = docs.filter((r) => !skip.has(r.doc)).map(pointer)
+  if (lines.length) lines.push(LATE_READ_NOTE)
   if (prOpened && !trace.skillsUsed.includes('close-session')) lines.push(CLOSE_SESSION_HINT)
   return lines.length ? lines.join('\n') : null
 }
