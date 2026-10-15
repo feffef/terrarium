@@ -1,14 +1,15 @@
 schemaVersion: 1
 session: session_019e468BFBTvDPXZuGzLMAL7
 startedAt: 2026-10-15T16:48:28Z
-endedAt: 2026-10-15T17:25:29Z
+endedAt: 2026-10-15T17:36:07Z
 kind: autonomous
 goal: "Visitor-loop run on the Journal: fix what visitors agreed on"
-status: in-review
-outcome: "Fix PR #2090 open (gate green, reviewed); feature PR not yet built"
-summary: "Scheduled visitor-loop run, no human prompt. The date table gave focus journal; three blind visitors (sonnet, fable, opus) browsed /t/journal/current. Consensus fixes: start-here cards numbered N of 5 with the Ledger as Also worth a look, visible sessions label on Ledger counts, session goal on each Ledger occurrence, the per-day chart fitting 390px, and the Ideas page collapsed to the newest 20 per list. Main moved mid-run: the Skill gained a glassbox-through-October focus and a refiner step (#2087, #2088). I kept focus journal because the visitors had already browsed it, ran the refiner, and disclosed this in the PR. The refiner dropped the Glass Box roster edit (soft launch) and refined the Ledger payload change; code-review then found two accessibility issues, both fixed. Not yet done: the feature PR (a How to read a session log on-ramp page), the issue for Ledger cluster plain headlines, merge of #2090. All work was agent-initiated by the schedule."
+status: completed
+outcome: "Fix PR #2090 and feature PR #2092 merged; Ledger wording filed as #2093"
+summary: "Scheduled visitor-loop run, no human prompt. The date table gave focus journal; three blind visitors (sonnet, fable, opus) browsed /t/journal/current. Consensus fixes: start-here cards numbered N of 5 with the Ledger as Also worth a look, visible sessions label on Ledger counts, session goal on each Ledger occurrence, the per-day chart fitting 390px, and the Ideas page collapsed to the newest 20 per list. Main moved mid-run: the Skill gained a glassbox-through-October focus and a refiner step (#2087, #2088). I kept focus journal because the visitors had already browsed it, ran the refiner, and disclosed this in the PR. The refiner dropped the Glass Box roster edit (soft launch) and refined the Ledger payload change; code-review then found two accessibility issues, both fixed. Both PRs merged on a green gate. The feature, chosen from fable's ideas after filtering a logged Atlas last-visit idea, is a How to read a session log on-ramp page; code-review caught three wrong claims on it, fixed before push. Out-of-remit Ledger wording filed as #2093. All work was agent-initiated by the schedule."
 prs:
   - "2090"
+  - "2092"
 docsRead:
   - path: layers/journal/GLOSSARY.md
     reason: Refiner read it for Journal terms; I only grepped it
@@ -42,6 +43,10 @@ docsRead:
     reason: (no reason given)
   - path: docs/agents/github-integration.md
     reason: (no reason given)
+  - path: docs/agents/issue-tracker.md
+    reason: (no reason given)
+  - path: docs/agents/triage-labels.md
+    reason: (no reason given)
   - path: .agents/skills/visitor-loop/SKILL.md
     reason: (no reason given)
   - path: .agents/skills/visitor-loop/decisions.md
@@ -60,9 +65,17 @@ docsRead:
     reason: (no reason given)
   - path: layers/journal/app/components/journal/OnrampTour.vue
     reason: (no reason given)
+  - path: layers/journal/app/components/journal/SessionCard.vue
+    reason: (no reason given)
+  - path: layers/journal/app/components/journal/StatusPill.vue
+    reason: (no reason given)
+  - path: layers/journal/app/components/journal/FrictionStrata.vue
+    reason: (no reason given)
   - path: docs/agents/verifying-ui-changes.md
     reason: (no reason given)
   - path: .agents/skills/visitor-loop/refiner-brief.md
+    reason: (no reason given)
+  - path: .agents/skills/log-session/SKILL.md
     reason: (no reason given)
 skillsUsed:
   - name: visitor-loop
@@ -92,18 +105,20 @@ frictions:
   - description: Did not open the full ADR-0004, ADR-0003 or ADR-0017 though their summaries said to read them if relevant.
     solution: Summaries were enough for this change; none cost anything.
     severity: nit
-durationSec: 2221
+durationSec: 2859
 models:
-  claude-sonnet-5-5: 159
+  claude-sonnet-5-5: 187
 toolCounts:
-  Read: 10
-  Bash: 58
+  Read: 12
+  Bash: 65
   Agent: 7
   mcp__github__pull_request_read: 3
   Skill: 3
-  mcp__github__create_pull_request: 1
+  mcp__github__create_pull_request: 2
   mcp__claude-code-remote__subscribe_pr_activity: 1
-  mcp__github__add_issue_comment: 1
+  mcp__github__add_issue_comment: 2
+  ReadNotifications: 1
+  mcp__github__issue_write: 1
 rulesLoaded:
   - .claude/rules/adr-0028.md
   - .claude/rules/adr-0021.md
@@ -121,6 +136,7 @@ rulesLoaded:
   - .claude/rules/glassbox-content.md
   - .claude/rules/adr-0002.md
   - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/adr-0022.md
 rulesGlobal:
   - .claude/rules/adr-0004.md
   - .claude/rules/adr-0009.md
@@ -144,6 +160,7 @@ docsReadBySubagents:
   - docs/adr/0010-digests-derived-append-only-journal-pages.md
   - docs/adr/0004-objective-safety-gate.md
   - .agents/skills/frictions-to-fixes/SKILL.md
+  - .agents/skills/log-session/SKILL.md
 ruleVerdicts:
   - path: .claude/rules/adr-0001.md
     reason: Loaded with Journal files; no decision about it bore on presentational Journal changes.
