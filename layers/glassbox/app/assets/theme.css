@@ -176,6 +176,8 @@ body:has(.gb) { margin: 0; }
     background: var(--gb-bar);
     backdrop-filter: blur(14px);
   }
+  /* An anchor jump (the skip line) lands below the sticky header. */
+  .gb.gb-doc :is(h2, h3) { scroll-margin-top: 72px; }
   .gb.gb-doc .gb-menu {
     display: flex;
     align-items: center;
