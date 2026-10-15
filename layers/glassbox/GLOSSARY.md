@@ -83,7 +83,12 @@ section links. Terrarium's own patterns with no official doc form the
 ### Excerpt
 Real Terrarium code copied into a page inside an `::excerpt` block, and checked
 word for word against the file at the page's `revision`. A code fence outside
-`::excerpt` is an example, not an Excerpt.
+`::excerpt` is an example, not an Excerpt. A line that is only a comment
+holding `…` (`// …`) marks code left out; the check allows a gap there.
+
+A page cites code only this way or through `:file`, never with a hand-written
+`github.com/…/blob/…` or `/tree/…` link, and every `ADR-NNNN` it names exists
+at its `revision`. `page-checks.ts` checks every page in `pnpm test`.
 
 ### Term
 A word a page expands inline, defined in Glass Box's own words. Definitions live

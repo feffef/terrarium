@@ -12,6 +12,9 @@ export interface FileRef {
   excerpt?: string
 }
 
+/** An Excerpt line that is only a comment holding `…` marks code left out. */
+export const glassboxExcerptGap = /^\s*(?:\/\/|#|--|\/\*|<!--)\s*…\s*(?:\*\/|-->)?\s*$/
+
 export function parseLineRange(lines: string | undefined): LineRange | undefined {
   const m = lines?.match(/^(\d+)(?:-(\d+))?$/)
   if (!m) return undefined

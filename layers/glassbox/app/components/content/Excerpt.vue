@@ -1,15 +1,12 @@
 <script setup lang="ts">
 import type { Slots, VNode } from 'vue'
-import { parseLineRange } from '../../../page-refs.ts'
+import { glassboxExcerptGap, parseLineRange } from '../../../page-refs.ts'
 
 const props = defineProps<{ path: string; lines?: string }>()
 const slots = useSlots()
 const injected = inject(glassboxRevisionKey, undefined)
 const page = computed(() => injected?.value)
 const range = computed(() => parseLineRange(props.lines))
-
-// A line that is only a comment holding `…` marks code left out.
-const GAP = /^\s*(\/\/|#|--|\/\*|<!--)\s*…\s*(\*\/|-->)?\s*$/
 
 /** The fence's Shiki lines as gutter rows. Numbers are known from `lines`
  *  only up to the first gap and back from the end after the last one. */
@@ -18,7 +15,7 @@ const codeBlock = computed(() => {
   const code = (pre?.children as Slots | undefined)?.default?.()[0]
   const lines = ((code?.children ?? []) as VNode[]).filter((v) => String(v.props?.class ?? '').includes('line'))
   const text = String(pre?.props?.code ?? '').split('\n')
-  const gaps = text.flatMap((t, i) => (GAP.test(t) ? [i] : []))
+  const gaps = text.flatMap((t, i) => (glassboxExcerptGap.test(t) ? [i] : []))
   const r = range.value
   const lineNumber = (i: number) => {
     if (!r) return ''
