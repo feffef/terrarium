@@ -32,8 +32,9 @@ the page draws `title` as its heading, so the body has no h1.
 - **Terms.** Wrap a word the reader may not know in `:term[…]`. For each id
   with no `layers/glassbox/content/guide/terms/<id>.yml`, add one: `term`, a
   `definition` in Glass Box's own words, and `source`, the glossary that
-  defines it, if one does. First check the Glass Box integration branch and
-  open Glass Box PRs for the same id, and reuse one you find.
+  defines it, if one does. Check the definition against that glossary's
+  entry, not your memory of it. First check the Glass Box integration branch
+  and open Glass Box PRs for the same id, and reuse one you find.
 
 ## Diagrams
 
