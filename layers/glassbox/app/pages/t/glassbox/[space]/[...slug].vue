@@ -14,6 +14,7 @@ const { data, status, error } = await useAsyncData(route.path, async () => {
 
 const page = computed(() => data.value?.page ?? null)
 if (!page.value && !error.value) setResponseStatus(404)
+provide(glassboxRevisionKey, computed(() => page.value ?? undefined))
 
 const menuOpen = ref(false)
 const menuButton = useTemplateRef<HTMLButtonElement>('menuButton')
