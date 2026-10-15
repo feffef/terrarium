@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { glassboxPageRefs, glassboxPageTerms, glassboxRelineRefs, glassboxTermId, shiftLines } from '../../page-refs.ts'
+import { glassboxPageRefs, glassboxPageTerms, glassboxRelineRefs, glassboxTermId, parseLineRanges, shiftLines } from '../../page-refs.ts'
 
 // `git diff -U0` output for one file: only hunk headers matter.
 const diff = (...hunks: string[]) =>
@@ -40,6 +40,19 @@ describe('glassboxRelineRefs', () => {
     ].join('\n')
     const moved = glassboxRelineRefs(body, (ref) => (ref.path === 'a.ts' ? { start: 5, end: 5 } : undefined))
     expect(moved).toBe(body.replace("{lines='3-4'}", '{lines="5"}').replace("{lines='3-4' path", '{lines="5" path'))
+  })
+
+  it('moves every range of an Excerpt with one range per run', () => {
+    const body = '::excerpt{path="a.ts" lines="3,5-6,9"}'
+    expect(glassboxRelineRefs(body, () => ({ start: 10, end: 16 }))).toBe('::excerpt{path="a.ts" lines="10,12-13,16"}')
+  })
+})
+
+describe('glassboxPageRefs on an Excerpt with one range per run', () => {
+  it('reads the whole span and each run\'s range', () => {
+    expect(glassboxPageRefs('::excerpt{path="a.ts" lines="3,5-6,9"}\n::').files).toEqual([
+      { path: 'a.ts', lines: { start: 3, end: 9 }, runs: [{ start: 3, end: 3 }, { start: 5, end: 6 }, { start: 9, end: 9 }] },
+    ])
   })
 })
 
@@ -156,5 +169,17 @@ describe('glassboxPageTerms', () => {
   it('picks none from a body without terms, or no body', () => {
     expect(glassboxPageTerms({ value: [['p', {}, 'Plain prose.']] })).toEqual([])
     expect(glassboxPageTerms(undefined)).toEqual([])
+  })
+})
+
+describe('parseLineRanges', () => {
+  it('rejects malformed input, which the layer test then fails', () => {
+    expect(parseLineRanges('3,,5')).toBeUndefined()
+    expect(parseLineRanges(' 3 - 5')).toBeUndefined()
+  })
+
+  it('parses overlapping and descending ranges as written; the layer test rejects them against the Excerpt', () => {
+    expect(parseLineRanges('3-5,4')).toEqual([{ start: 3, end: 5 }, { start: 4, end: 4 }])
+    expect(parseLineRanges('9,5-6')).toEqual([{ start: 9, end: 9 }, { start: 5, end: 6 }])
   })
 })

@@ -1,15 +1,17 @@
 <script setup lang="ts">
 import type { Slots, VNode } from 'vue'
-import { glassboxExcerptGap, parseLineRange } from '../../../page-refs.ts'
+import { glassboxExcerptGap, lineSpan, parseLineRanges } from '../../../page-refs.ts'
 
 const props = defineProps<{ path: string; lines?: string }>()
 const slots = useSlots()
 const injected = inject(glassboxRevisionKey, undefined)
 const page = computed(() => injected?.value)
-const range = computed(() => parseLineRange(props.lines))
+const runs = computed(() => parseLineRanges(props.lines))
+const range = computed(() => runs.value && lineSpan(runs.value))
 
-/** The fence's Shiki lines as gutter rows. Numbers are known from `lines`
- *  only up to the first gap and back from the end after the last one. */
+/** The fence's Shiki lines as gutter rows. With one range per run, each run
+ *  counts from its own; with one range, numbers are known only up to the
+ *  first gap and back from the end after the last one. */
 const codeBlock = computed(() => {
   const pre = slots.default?.().find((v: VNode) => typeof v.props?.code === 'string')
   const code = (pre?.children as Slots | undefined)?.default?.()[0]
@@ -19,6 +21,9 @@ const codeBlock = computed(() => {
   const r = range.value
   const lineNumber = (i: number) => {
     if (!r) return ''
+    const run = gaps.filter((g) => g < i).length
+    const from = runs.value![run]?.start
+    if (runs.value!.length > 1) return from === undefined ? '' : String(from + i - (run ? gaps[run - 1]! + 1 : 0))
     if (!gaps.length || i < gaps[0]!) return String(r.start + i)
     if (i > gaps.at(-1)!) return String(r.end - (lines.length - 1 - i))
     return ''

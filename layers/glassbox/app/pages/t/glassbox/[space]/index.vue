@@ -116,15 +116,19 @@ h1 {
   font-size: 22px;
 }
 .directory h2 { margin: 0 0 16px; font-size: 22px; font-weight: 600; }
-.cards { columns: 3 260px; column-gap: 14px; }
+/* Row-first, at most three across, so the cards read in the Subject map's order. */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(max(260px, calc((100% - 28px) / 3)), 1fr));
+  align-items: start;
+  gap: 14px;
+}
 .card {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  margin-bottom: 14px;
   padding: 18px 20px;
   border-radius: 16px;
-  break-inside: avoid;
 }
 .card h3 {
   display: flex;
