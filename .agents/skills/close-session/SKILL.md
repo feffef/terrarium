@@ -3,57 +3,38 @@ name: close-session
 description: "Invoke when this Claude session is wrapping up — coming to a close, or the work has reached a coherent, honest state (a PR opened, changes committed, a question answered), whether or not anything has merged. The model-facing front door for Session closure: it records the session log via `log-session`. Judge closure yourself; invoke early and re-invoke if work continues — logging self-heals, so closing early costs nothing."
 ---
 
-You've reached **Session closure** — run the closing actions:
+You've reached **Session closure**. Goal: the Journal holds an honest log of
+this session, with its final status.
 
-- **Hard rule: re-read CLAUDE.md and the always-loaded rules in full before you
-  log: run `pnpm exec tsx .agents/skills/close-session/scripts/always-loaded.ts`.** Opening the rule files
-  yourself loads unrelated rules into your log. For every rule or
-  step in them that this session broke or skipped, log a Friction that names the
-  rule — even if you fixed it later. Say what impact breaking it had, or could
-  have had. If following the rule or reading the doc it points to would have
-  helped, also say what would have made you read it at the time.
-- **Record the session log: invoke `/log-session`.** Pick an honest `status` —
-  see `log-session` for the exact semantics of each of the five values
-  (`completed | in-review | partial | blocked | abandoned`); never default a
-  stalled or abandoned session to `completed`.
-- **For any gated PR:** open it, subscribe to its
-  activity, and babysit it to merge/close.
-- **If a call in that PR-open sequence (`subscribe_pr_activity`, or this
-  Skill's own trigger) is rejected, log anyway:** invoke `log-session` with
-  status `in-review`, naming the skipped step in the summary or a friction.
-  Waiting for a human to prompt closure is the `HUMAN-PROMPTED-CLOSURE`
-  failure below.
+1. **Re-read CLAUDE.md and the always-loaded rules** with
+   `pnpm exec tsx .agents/skills/close-session/scripts/always-loaded.ts`, not by
+   opening the rule files (that loads unrelated rules into your log). For every
+   rule or step in them that this session broke or skipped, log a Friction that
+   names the rule, even if you fixed it later. Say what impact breaking it had or
+   could have had, and what would have made you read it at the time.
+2. **Invoke `/log-session`** with an honest `status` (`log-session` defines the
+   five values). Never default a stalled or abandoned session to `completed`.
+   If a PR-open step (`subscribe_pr_activity`, or this Skill) was rejected, log
+   anyway, as `in-review`, and name the skipped step.
+3. **Gated PR:** open it, subscribe to its activity, and babysit it to merge or
+   close.
 
-**Closing isn't one-shot.** If you do more work after closing, invoke
-`/close-session` again — re-logging self-heals (`log-session` explains why).
+**Re-invoke** `/close-session` whenever more work follows, such as another PR or
+the merge. Each log replaces the last.
 
-**When is your logging duty actually finished?** Not when you author the scratch —
-only when the log commit is on `origin/main` carrying the session's **final**
-status. Three conditions, all required:
-1. the scratch has the **final** `status` — `completed` once the PR has merged,
-   never left at `in-review` when the work has actually landed;
-2. the `Stop` hook has stitched and **committed** the log (it fires at end of turn,
-   so it lands *after* you author — not visible in the same turn); and
-3. you have **verified that commit on `origin/main`** — after `git fetch origin
-   main`, `git log origin/main --grep=<this session's id>` shows it.
+**You are done logging only when** the scratch has the **final** status
+(`completed` once the PR merged), the `Stop` hook has committed the log (it fires
+at end of turn, so after you author), and `git fetch origin main` then
+`git log origin/main --grep=<this session's id>` shows that commit. Check it in a
+later babysitting turn. A scheduled run has no human to notice a missing log
+(issue #176), so authoring it yourself is the only way one gets committed.
 
-Authoring only arms (2). Since you stay alive to babysit any PR you opened,
-use a later babysitting turn to confirm (3), and — once the PR merges —
-**finalize the log via `log-session`** (status `completed`, plus any friction from
-closure), then re-verify. Until all three hold, the session is **not** logged.
-(For a **scheduled autonomous** run there is no human to notice a missing log and
-prompt you — issue #176 — so authoring it yourself is the only thing that makes the
-hooks commit one at all.)
+**If a human had to prompt this closure** after a PR was already opened or
+merged, you missed the PR-open log. Record a **`major`** Friction (fixed grade
+here) whose `description` contains the exact keyword **`HUMAN-PROMPTED-CLOSURE`**.
+Self-judged closure needs none.
 
-**If a human had to prompt this closure, that is the regression itself — log it.**
-If you are running `close-session` because the user asked in conversation, rather
-than because you self-judged closure, *and* a PR had already been opened or merged,
-then you failed to log at PR-open as you should have. Record it as a **`major`** friction (a fixed grade here, not
-GLOSSARY.md's cost-based one) whose `description` contains the exact
-keyword **`HUMAN-PROMPTED-CLOSURE`**, so the self-improvement Skills can also
-grep it. Self-judged closure at PR-open needs no such friction.
-
-**Dispatched worktree-isolated impl agents must not self-invoke this Skill** —
-they'd clobber the orchestrator's shared log. Guard-enforced: `log-session.ts
---author` refuses from a linked worktree (`--allow-worktree` escapes the
-legitimate `EnterWorktree` case); the refusal message explains why.
+**Dispatched worktree-isolated impl agents must not self-invoke this Skill**; they
+would clobber the orchestrator's shared log. `log-session.ts --author` refuses
+from a linked worktree (`--allow-worktree` for the legitimate `EnterWorktree`
+case).
