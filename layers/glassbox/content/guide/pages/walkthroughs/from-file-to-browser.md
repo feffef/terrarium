@@ -5,16 +5,18 @@ revision: 'a93faa0135f652b85b4976418534243f649e58b9'
 revisionDate: '2026-10-15'
 ---
 
-A Markdown file is committed, and later a visitor reads it as a page. This Walkthrough follows that file from the content's side: from its folder, through the manifest and the build that writes it into a database, to the server that queries the database to render it and the browser that reuses its data on the next click. The diagram puts the database in the middle: the build writes it from one side, and the server and the browser read it from the other.
+A Markdown file is committed, and later a visitor reads it as a page. This Walkthrough follows that file from the content's side: from its folder, through the manifest and the build, which packs it into a dump of its table. From the other side, the server loads that dump into its own SQLite database and queries it to render the page, and the browser reuses the page's data on the next click. Only for a route the server doesn't cache does the browser load the dump into an SQLite database of its own.
 
 ```mermaid
-flowchart LR
+flowchart TD
   file["A Markdown file<br>in a Space's folder"] --> key["The manifest's key<br>names its table"]
-  key --> build["nuxt build<br>parses every file"]
-  build -- "writes" --> db[("SQLite tables<br>and their dumps")]
-  db -- "answers the<br>server's query" --> server["The server renders<br>a request"]
-  server -- "HTML and payload" --> browser["The browser"]
-  db -. "an uncached route:<br>the browser queries its own copy" .-> browser
+  key --> build["The build packs<br>each table's dump"]
+  build --> dump[("The dumps,<br>inside the build")]
+  dump -- "first query" --> sdb[("The server's<br>SQLite")]
+  dump -. "uncached route" .-> bdb[("The browser's<br>SQLite")]
+  sdb --> server["The server<br>renders a page"]
+  server -- "HTML, payload" --> browser["The browser"]
+  bdb -.-> browser
   classDef repo stroke-dasharray:5 4
   classDef reader stroke-width:2.5px
   class file,key,build repo
