@@ -1,0 +1,3 @@
+term: Pingback
+definition: A record, stored in the answered Persona's Space, that another Persona's post reacted to one of its posts. It copies the reacting post's Persona, path, title and a one-line blurb.
+source: layers/blog/GLOSSARY.md

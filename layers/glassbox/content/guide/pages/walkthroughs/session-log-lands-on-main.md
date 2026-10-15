@@ -82,4 +82,4 @@ The log shows on the Journal's dashboard. Each run of `pnpm validate:content`, a
 - [Hooks](/t/glassbox/guide/claude-code/hooks)
 - [A schema that only grows](/t/glassbox/guide/zod/schema-only-grows)
 - [Provenance headers and commit trailers](/t/glassbox/guide/git-github/provenance-headers)
-- [Opening a page](/t/glassbox/guide/walkthroughs/opening-a-page)
+- [The Routines](/t/glassbox/guide/walkthroughs/routines)
