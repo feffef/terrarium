@@ -144,6 +144,8 @@ const parts = computed(() => {
 }
 .article :deep(.gb-try :is(h2, a)) { color: var(--gb-solid-accent); }
 .article :deep(.gb-try p) { margin: 10px 0 0; }
+/* A fence keeps its own code background, so it takes the page's ink, not the box's. */
+.article :deep(.gb-try pre) { color: var(--gb-ink); }
 
 .article :deep(h2:has(+ .gb-next)) { font-size: 22px; margin-top: 40px; }
 .article :deep(.gb-next) { padding: 0; list-style: none; border-top: 1px solid var(--gb-line); font-size: 16px; }
