@@ -1,14 +1,17 @@
 schemaVersion: 1
 session: session_012NmfdSNbbPD9T5LPAwmdYG
 startedAt: 2026-10-15T10:54:57Z
-endedAt: 2026-10-15T11:35:13Z
+endedAt: 2026-10-15T11:43:24Z
 kind: interactive
 goal: Clear the issue backlog in one owner-attended run
 status: in-review
-outcome: Six issues triaged and grilled; one closed, four branches built, first PR open
-summary: "The owner invoked clear-backlog (human-instructed) and answered a start question: skip the Glass Box spec and grill #1844. The default-mode sweep picked six issues: #2028, #2024, #2023, #2011, #1984 and #1844. All six came back as grill questions. In one sitting the owner picked 1b, 2a plus clearer no-verdict wording in the Journal, 3a, 4b, removing the Atlas plates and random pages and recording that as an owner product decision (instead of my pick, widening ADR-0016), and 6a. I recorded each answer on its issue, labelled five ready-for-agent, and closed #2023 as self-healed. clear-backlog-build built four branches. The #2011+#2028 branch hit the 3-round review cap with two small open findings (a log-session.ts reminder and the log-session SKILL.md still citing the old 'unknown' label), which I fixed directly (agent-initiated). I also rewrapped two lines the review flagged. PR #2058 (#1844, merge-pr.ts requires a 'Reviewed: <sha>' line naming the head) is open and waits for a human merge because it changes merge-pr.ts. The other three branches are gating before push."
+outcome: "Six issues settled: three PRs merged, one closed as self-healed, one PR waits for a human merge"
+summary: "The owner invoked clear-backlog (human-instructed) and answered a start question: skip the Glass Box spec and grill #1844. The default-mode sweep picked six issues: #2028, #2024, #2023, #2011, #1984 and #1844. All six came back as grill questions. In one sitting the owner picked 1b, 2a plus clearer no-verdict wording in the Journal, 3a, 4b, removing the Atlas plates and random pages and recording that as an owner product decision (instead of my pick, widening ADR-0016), and 6a. I recorded each answer on its issue, labelled five ready-for-agent, and closed #2023 as self-healed. clear-backlog-build built four branches. Merged: PR 2060 (every subagent brief asks for verdicts in the final reply, the SendMessage step is dropped, the Journal shows 'no verdict provided', audit-docs pools hand-backs instead of saving them verbatim; closes 2011 and 2028), PR 2061 (prune-friction-ledger --summary flags possible regressions; closes 2024) and PR 2062 (Atlas plates and random pages removed and the decision recorded in the Atlas glossary; closes 1984). Still open and waiting for a human merge: PR 2058 (merge-pr.ts requires a verdict whose 'Reviewed: <sha>' line names the PR head; 1844). It changes a Human-only file, and its CI is green. The 2060 branch hit the 3-round review cap with two small open findings, which I fixed directly (agent-initiated), plus two cosmetic rewraps. Judgement calls left open: where the CLAUDE.md verdict line sits, the negative e2e asserts in the Atlas test, and audit-docs repeating the Reviewed-line rule."
 prs:
   - "2058"
+  - "2060"
+  - "2061"
+  - "2062"
 docsRead:
   - path: GLOSSARY.md
     reason: session-start glossary
@@ -34,49 +37,75 @@ docsRead:
   - path: docs/agents/pr-workflow.md
     reason: landing recipe and verdict step
     useful: yes
-  - path: .agents/skills/triage/SKILL.md
-    reason: (no reason given)
+  - path: CLAUDE.md
+    reason: "Workflow agents: 15 reported (14 yes, 1 partly)"
+    useful: yes
   - path: docs/adr/0004-objective-safety-gate.md
-    reason: (no reason given)
+    reason: Confirmed which of the four PRs I may self-merge; only 2058 needs a human
+    useful: yes
+  - path: .agents/skills/triage/SKILL.md
+    reason: "Workflow agents: 6 reported (6 partly)"
+    useful: partly
   - path: docs/agents/triage-labels.md
-    reason: (no reason given)
-  - path: .agents/skills/dispatch-subagents/SKILL.md
-    reason: (read before editing)
+    reason: "Workflow agents: 6 reported (5 partly, 1 yes)"
+    useful: yes
+  - path: docs/adr/0016-tenant-root-layer-routes.md
+    reason: "Workflow agents: 1 reported (1 yes)"
+    useful: yes
+  - path: docs/adr/0006-runtime-routing-path-prefix.md
+    reason: "Workflow agents: 1 reported (1 yes)"
+    useful: yes
+  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
+    reason: "Workflow agents: 2 reported (2 yes)"
+    useful: yes
+  - path: docs/agents/issue-tracker.md
+    reason: "Workflow agents: 3 reported (1 partly, 2 no)"
+    useful: partly
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: "Workflow agents: 1 reported (1 yes)"
+    useful: yes
   - path: docs/adr/0027-prune-trials.md
-    reason: (no reason given)
+    reason: "Workflow agents: 1 reported (1 yes)"
+    useful: yes
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: "Workflow agents: 1 reported (1 yes)"
+    useful: yes
+  - path: .agents/skills/implement/SKILL.md
+    reason: "Workflow agents: 4 reported (4 partly)"
+    useful: partly
+  - path: .agents/skills/tdd/SKILL.md
+    reason: "Workflow agents: 1 reported (1 yes)"
+    useful: yes
+  - path: .agents/skills/code-review/SKILL.md
+    reason: "Workflow agents: 14 reported (10 yes, 4 partly)"
+    useful: yes
+  - path: .agents/skills/digest/SKILL.md
+    reason: "Workflow agents: 1 reported (1 yes)"
+    useful: yes
+  - path: .agents/skills/midden-catalogue/SKILL.md
+    reason: "Workflow agents: 1 reported (1 yes)"
+    useful: yes
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: "Workflow agents: 3 reported (3 yes)"
+    useful: yes
+  - path: .agents/prune-trials.yml
+    reason: "Workflow agents: 3 reported (3 yes)"
+    useful: yes
+  - path: .agents/skills/log-session/SKILL.md
+    reason: "Workflow agents: 2 reported (2 yes)"
+    useful: yes
+  - path: docs/adr/0021-multi-context-domain-docs.md
+    reason: "Workflow agents: 1 reported (1 yes)"
+    useful: yes
   - path: scripts/read-first-hint.ts
     reason: (no reason given)
-  - path: docs/adr/0016-tenant-root-layer-routes.md
-    reason: (no reason given)
-  - path: docs/adr/0006-runtime-routing-path-prefix.md
-    reason: (no reason given)
-  - path: docs/agents/issue-tracker.md
-    reason: (no reason given)
-  - path: .agents/skills/frictions-to-fixes/SKILL.md
-    reason: (no reason given)
-  - path: .agents/skills/code-review/SKILL.md
-    reason: (no reason given)
-  - path: .agents/skills/implement/SKILL.md
-    reason: (no reason given)
-  - path: .agents/skills/log-session/SKILL.md
-    reason: (read before editing)
   - path: scripts/merge-pr.ts
     reason: (read before editing)
   - path: tests/unit/merge-pr.spec.ts
     reason: (read before editing)
   - path: /home/user/terrarium/.agents/skills/digest/SKILL.md
     reason: (no reason given)
-  - path: .agents/skills/audit-docs/SKILL.md
-    reason: (read before editing)
-  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
-    reason: (no reason given)
-  - path: .agents/skills/digest/SKILL.md
-    reason: (no reason given)
   - path: .agents/skills/clear-backlog/SKILL.md
-    reason: (no reason given)
-  - path: docs/adr/0021-multi-context-domain-docs.md
-    reason: (no reason given)
-  - path: .agents/skills/midden-catalogue/SKILL.md
     reason: (no reason given)
   - path: layers/atlas/GLOSSARY.md
     reason: (no reason given)
@@ -86,7 +115,7 @@ skillsUsed:
   - name: close-session
     reason: first log at PR open
   - name: log-session
-    reason: (no reason given)
+    reason: authored the log
   - name: tdd
     reason: (no reason given)
 frictions:
@@ -105,20 +134,22 @@ frictions:
   - description: "The #2011+#2028 branch came back 'failed' at the 3-round review cap with two small worthFixing findings, so the orchestrator had to fix them by hand."
     solution: Fine as is; the cap worked. Optionally give the fixer one more round when only doc-wording findings remain.
     severity: nit
-durationSec: 2417
+durationSec: 2907
 models:
-  claude-opus-5-5: 89
+  claude-opus-5-5: 138
 toolCounts:
-  Bash: 29
-  Read: 1
+  Bash: 38
+  Read: 2
   ToolSearch: 3
   Workflow: 2
   PushNotification: 1
-  mcp__github__add_issue_comment: 6
+  mcp__github__add_issue_comment: 9
   mcp__github__issue_write: 6
-  mcp__github__create_pull_request: 1
-  mcp__claude-code-remote__subscribe_pr_activity: 1
+  mcp__github__create_pull_request: 4
+  mcp__claude-code-remote__subscribe_pr_activity: 4
   Skill: 2
+  ReadNotifications: 9
+  mcp__claude-code-remote__send_later: 1
 filesEdited:
   - CLAUDE.md
   - .agents/skills/dispatch-subagents/SKILL.md
@@ -148,6 +179,7 @@ rulesGlobal:
 rulesFollowedUp:
   - .claude/rules/adr-0022.md
   - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0004-human-merge.md
   - .claude/rules/adr-0009.md
   - .claude/rules/adr-0027.md
   - .claude/rules/adr-0006.md
@@ -161,7 +193,6 @@ rulesLoadedBySubagents:
   - .claude/rules/adr-0025.md
 docsReadBySubagents:
   - .agents/skills/triage/SKILL.md
-  - docs/adr/0004-objective-safety-gate.md
   - docs/agents/triage-labels.md
   - .agents/skills/code-review/SKILL.md
   - .agents/skills/dispatch-subagents/SKILL.md
@@ -223,6 +254,24 @@ ruleVerdicts:
     useful: no
   - path: .claude/rules/tenant-layers.md
     reason: Loaded on SessionCard.vue; no layer mechanics changed
+    useful: no
+  - path: .claude/rules/adr-0006.md
+    reason: "Workflow agents: 1 reported (1 yes)"
+    useful: yes
+  - path: .claude/rules/adr-0016.md
+    reason: "Workflow agents: 2 reported (1 yes, 1 partly)"
+    useful: yes
+  - path: .claude/rules/adr-0002.md
+    reason: "Workflow agents: 2 reported (2 no)"
+    useful: no
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: "Workflow agents: 2 reported (2 no)"
+    useful: no
+  - path: .claude/rules/adr-0015.md
+    reason: "Workflow agents: 7 reported (6 partly, 1 no)"
+    useful: partly
+  - path: .claude/rules/adr-0010.md
+    reason: "Workflow agents: 1 reported (1 no)"
     useful: no
 subagents:
   - type: workflow-subagent
