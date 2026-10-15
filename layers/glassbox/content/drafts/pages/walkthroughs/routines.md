@@ -1,7 +1,7 @@
 ---
 title: The Routines
 description: What Terrarium's scheduled runs do, one Routine at a time, from the docs and the Skills to the site, the day's news and the day's story. A run that changes something ends in its own PR.
-revision: '8fecf8b4e1b32da82557e42f42b2045bd12a05bb'
+revision: 'b814fa1cbc100a9ebc249423ca536284604f5c10'
 revisionDate: '2026-10-15'
 ---
 
@@ -41,7 +41,7 @@ A Routine, set up in a claude.ai account and kept out of the repo, starts a clou
 
 ## 5. visitor-loop: fresh eyes on the site
 
-`visitor-loop` serves a production preview of the site and sends blind visitor subagents, each on a different model, through it with no knowledge of the repo. It fixes the problems at least two of them hit on their own, in one PR, and builds the one feature idea it judges best in a second. Both stay inside existing Tenants and the app files an agent may merge. A finding outside that becomes an issue, and the rest become ideas in its session log.
+`visitor-loop` serves a production preview of the site and sends blind visitor subagents, each on a different model, through it with no knowledge of the repo, then a read-only subagent keeps, refines or drops each finding and the chosen feature against the ADRs, glossaries and issues. The run fixes the problems at least two visitors hit on their own, in one PR, and builds the one feature idea it judges best in a second. Both stay inside existing Tenants and the app files an agent may merge. A finding outside that becomes an issue, and the rest become ideas in its session log.
 
 ::stop-links
 [Subagents and worktrees](/t/glassbox/guide/claude-code/subagents-worktrees) · [The engineering loop](/t/glassbox/drafts/skill-pack/engineering-loop) · [Unit and e2e tests: each Tenant tests itself](/t/glassbox/drafts/testing/unit-and-e2e) · :file[.agents/skills/visitor-loop/SKILL.md] · :file[.agents/skills/visitor-loop/decisions.md]
@@ -65,7 +65,7 @@ A Routine, set up in a claude.ai account and kept out of the repo, starts a clou
 
 ## 8. A run that changes something ends in its own PR
 
-Each run that changes something closes the same way. It runs `pnpm gate:scoped`, the local run of the :term[Gate], commits, and opens one PR, or the ones its Skill names. At that moment it runs `close-session`, and its :term[session log] lands on `main`. Once CI is green, it posts its verdict and merges through `scripts/merge-pr.ts`, which refuses a PR that changes a Human-only file. If anything its Skill doesn't allow rode into the PR, or the Gate failed for a reason that isn't the run's own, it leaves the PR open for a person. When the PR is merged or left open, it logs again.
+Each run that changes something closes the same way. It runs `pnpm gate:scoped`, the local run of the :term[Gate], commits, and opens one PR, or the ones its Skill names. At that moment it runs `close-session`, and its :term[session log] lands on `main`. Once CI is green, it posts its verdict, naming the head commit it reviewed, and merges through `scripts/merge-pr.ts`, which refuses a PR that changes a Human-only file or has no such verdict. If anything its Skill doesn't allow rode into the PR, or the Gate failed for a reason that isn't the run's own, it leaves the PR open for a person. When the PR is merged or left open, it logs again.
 
 ::stop-links
 [Every change as a PR](/t/glassbox/guide/git-github/every-change-a-pr) · [The Gate](/t/glassbox/guide/terrarium-practice/gate) · [A Human-only list read from main](/t/glassbox/guide/terrarium-practice/human-only-list) · [Session logs and Frictions](/t/glassbox/guide/terrarium-practice/session-logs)

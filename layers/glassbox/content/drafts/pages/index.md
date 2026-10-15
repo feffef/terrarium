@@ -1,7 +1,7 @@
 ---
 title: Glass Box drafts
 description: Lessons and Walkthroughs that failed the guide's bar on their first attempt, kept here to be improved, rewritten and moved to the guide.
-revision: '8fecf8b4e1b32da82557e42f42b2045bd12a05bb'
+revision: 'b814fa1cbc100a9ebc249423ca536284604f5c10'
 revisionDate: '2026-10-15'
 ---
 
