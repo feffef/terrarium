@@ -1,0 +1,86 @@
+schemaVersion: 1
+session: session_01KVh6e6JUAssZvPRbuN5YDr
+startedAt: 2026-10-15T18:29:27Z
+endedAt: 2026-10-15T18:35:53Z
+kind: interactive
+goal: Review the Glass Box guide as a visitor via screenshots
+status: completed
+outcome: Local production build reviewed on desktop and mobile; findings relayed, no repo changes
+summary: The user directly asked for a background Sonnet agent to browse the Glass Box guide, take desktop and mobile screenshots and give a tech-curious visitor's impressions. The first agent failed because the sandbox network policy blocks terrarium.feffef.de (403 on CONNECT). I offered two options; the user answered "use the local prod build then". I ran pnpm build, started scripts/preview.ts, dispatched a second agent against the local URL, then stopped the server. The agent produced desktop and mobile shots and a review (hero too long, no architecture overview, no links to ADRs or glossary, ragged card grid). Everything was human-instructed; I made no repo changes and opened no PR.
+prs: []
+docsRead:
+  - path: docs/agents/verifying-ui-changes.md
+    reason: Gave the preview.ts start and stop and screenshot workflow
+    useful: yes
+skillsUsed:
+  - name: close-session
+    reason: Session only answered a question
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Skipped the CLAUDE.md session-start read of GLOSSARY-MAP.md and GLOSSARY.md; the task needed no glossary terms, so impact was low.
+    solution: Scope that trigger to sessions that name concepts or edit files.
+    severity: nit
+  - description: Dispatched the first subagent for the public URL before reading verifying-ui-changes.md and before checking network reach, so it failed with a 403 and cost a round trip.
+    solution: Run curl on the target URL before briefing a screenshot agent.
+    severity: minor
+  - description: User preference said to ask clarifying questions first; I dispatched the agent without asking, though the request was specific.
+    solution: Ask one short question when a preference demands it, even for clear tasks.
+    severity: nit
+durationSec: 385
+models:
+  claude-sonnet-5-5: 24
+toolCounts:
+  Agent: 2
+  Read: 1
+  Bash: 8
+  Skill: 2
+  Write: 1
+rulesLoaded:
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0029.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0003.md
+    reason: About PRs for changes; no change was made, so it did not apply; summary was enough
+    useful: no
+  - path: .claude/rules/adr-0004.md
+    reason: About the gate and merging; no push happened, so it did not apply
+    useful: no
+  - path: .claude/rules/adr-0009.md
+    reason: Reminded me to close-session; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: About GitHub provenance; I wrote nothing to GitHub, so it did not apply
+    useful: no
+  - path: .claude/rules/adr-0020.md
+    reason: About trust tiers; no outside content was acted on
+    useful: no
+  - path: .claude/rules/adr-0027.md
+    reason: About prune trials; not relevant to browsing
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Loaded when I read scripts/preview.ts; I changed no Human-only file, so it did not apply
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: Loaded when I read a docs/agents file; about where instructions live, irrelevant to browsing
+    useful: no
+subagents:
+  - type: general-purpose
+    task: Browse glassbox guide, screenshot
+    model: sonnet
+  - type: general-purpose
+    task: Browse local glassbox guide
+    model: sonnet
+gitBranch: claude/eager-ritchie-y27n4b
+entrypoint: remote
+cliVersion: 2.1.300
+learnings:
+  - The cloud sandbox proxy denies terrarium.feffef.de; review the site through a local pnpm build and scripts/preview.ts start instead.
+landedBy: Stop
