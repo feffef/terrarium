@@ -37,8 +37,7 @@ fix — `frictions-to-fixes` files those, naming the fix that didn't hold.
 - `major` or `blocker` damage that traces to the trial → restore the
   **minimum**: the one goal-shaped line that would have prevented it, never the
   wall that was there before.
-- `nit`, `minor`, silence → the prune holds.
-- `moderate` → your judgement; restore the same minimum if you do.
+- `nit`, `minor`, `moderate`, silence → the prune holds.
 
 Read every hit in full before counting it: a session using the pruned topic's
 tools *correctly* trips a keyword check without being damage.

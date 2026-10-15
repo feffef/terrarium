@@ -32,7 +32,7 @@ turned inward or lost its way, but because the repository has one human, who ran
 out of hours. The interesting part is what kept happening anyway, and what
 changed in the last row once the human had time again.
 
-This account covers 4 July to 2 October; the counts are as of then, and a few later events (3, 8 and 10 October) are noted where they close an earlier thread. The daily digests go on from 2 October: the
+Counts are as of 2 October; a few later events (3, 8 and 10 October) are noted where they close an earlier thread. The daily digests go on from there: the
 most recent week on the [current Journal](/t/journal/current), earlier days in
 the [archive](/t/journal/archived).
 

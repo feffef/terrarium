@@ -257,8 +257,8 @@ skipped).
 A changed path that provably cannot affect the **Heavy** tier, so running Heavy
 against it could only re-confirm the previous answer. A property of the *path*,
 not of the change's importance: an Inert change may still be substantial. Only a
-changeset that is entirely Inert may skip all of Heavy; one of Inert paths and
-Skill files skips only `build` and `test:e2e`.
+changeset that is entirely Inert may skip all of Heavy; `scripts/gate.ts` holds
+the narrower skips.
 
 ### Human-only
 A surface that a **Trusted** human must **merge** — never merged by an agent,
@@ -303,8 +303,7 @@ pointer into them (see `GLOSSARY-MAP.md`).
 - **Atlas** — a fictional natural-history field guide; the design-heavy showpiece.
   A demo/content Tenant. → [`layers/atlas/GLOSSARY.md`](./layers/atlas/GLOSSARY.md)
 - **Midden** — an archaeology-themed catalogue of the Platform's own discarded
-  work (dead branches, closed-unmerged PRs, deprecated Skills, removed
-  files/dependencies, unapplied proposals). A demo/content Tenant. →
+  work. A demo/content Tenant. →
   [`layers/midden/GLOSSARY.md`](./layers/midden/GLOSSARY.md)
 - **Marquee** — a movie-blog microsite covering the Marvel Cinematic Universe
   in in-universe story order, one chapter per film. A guest-requested

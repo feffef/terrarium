@@ -4,7 +4,6 @@ importance: essential
 installedSha256: 7b925d7b1e341a2eeae33ad68a8a8c0ab889a38ddd22a7598e4c240e5a7556a3
 gist: Keeps the project's shared vocabulary and decisions consistent.
 role: >-
-  Owns the GLOSSARY.md glossary and the ADR conventions — GLOSSARY.md's own
-  canonical `essential` example. Use before any structural change or new
-  vocabulary.
+  Owns the glossary and the ADR conventions — `GLOSSARY.md`'s own canonical
+  `essential` example. Use before any structural change or new vocabulary.
 observations: []

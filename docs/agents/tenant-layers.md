@@ -15,10 +15,10 @@ layer's top-level wrapper element:
 ```css
 /* layers/journal/app/assets/theme.css */
 .jd {
-  --jd-ground: #f3f5ef;
-  --jd-surface: #fbfcf9;
-  --jd-ink: #1a2420;
-  --jd-accent: #356a4c;
+  --jd-ground: …;
+  --jd-surface: …;
+  --jd-ink: …;
+  --jd-accent: …;
   /* … */
 }
 ```

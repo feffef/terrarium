@@ -10,7 +10,7 @@ overflow traps), see [`github-integration.md`](./github-integration.md).
 
 ## Review before the first push
 
-Pushing opens the PR (ADR-0003). So before a branch's first push, check that no
+Pushing is followed at once by opening the PR (ADR-0003), so before a branch's first push, check that no
 PR exists for it yet, run `pnpm gate:scoped`, then run the
 [`code-review`](../../.agents/skills/code-review/SKILL.md) Skill on its
 committed diff against `origin/main`, in the checkout that holds it, and fix
@@ -18,8 +18,8 @@ the findings, even when the Stop hook asks you to push. Skip it only where a Ski
 similar way before the push, as `midden-catalogue` §4 does. A session-log
 commit needs none.
 
-A later push of a change unlikely to break the gate (prose, docs) may skip
-`gate:scoped` and rely on CI's gate; run it first for a code change. If
+A later push that changes only prose or docs may skip `gate:scoped` and rely on
+CI's gate; run it first for any other change. If
 `gate:scoped` passed but CI failed, check for base drift, then log a
 `major` Friction.
 
@@ -35,7 +35,8 @@ findings.
 
 ## The recipe
 
-1. Run `pnpm gate:scoped` and wait. A red gate never merges.
+1. Run `pnpm gate:scoped` and wait (a prose- or docs-only follow-up push may skip
+   it, above). A red gate never merges.
 2. Run `pnpm exec tsx scripts/check-conflicting-issues.ts --pr <number>` and
    read any hits. It is advisory: a hit means read that issue (#798), not that
    there is a conflict.

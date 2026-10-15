@@ -4,10 +4,10 @@ importance: specialist
 gist: Sorts the open-issue backlog automatically, without a human.
 role: >-
   The unattended, batch sibling of `triage`: one brave sweep over issues needing
-  attention, applying triage's per-issue rules and stamping ready-for-agent under
-  ADR-0022, which counts a Trusted user's start of the run as approval. User-invoked, by hand or on an interval, to
-  keep the Trusted-authored backlog moving. Escalates judgment calls and design
-  uncertainty to a human.
+  attention, applying triage's per-issue rules and stamping `ready-for-agent`
+  under ADR-0022 (a Trusted user starting the run is the approval).
+  User-invoked, by hand or on an interval, to keep the Trusted-authored backlog
+  moving. Escalates judgment calls and design uncertainty to a human.
 observations:
   - date: "2026-09-30"
     note: >-
