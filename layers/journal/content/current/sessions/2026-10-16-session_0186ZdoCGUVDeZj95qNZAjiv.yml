@@ -1,0 +1,193 @@
+schemaVersion: 1
+session: session_0186ZdoCGUVDeZj95qNZAjiv
+startedAt: 2026-10-16T20:54:44Z
+endedAt: 2026-10-16T21:11:50Z
+kind: interactive
+goal: Shorten and bulletize the guide's 'Why it's built this way' sections
+status: in-review
+outcome: "PR open: 20 guide Lessons rewritten as bullets, contract and checker updated"
+summary: "The user asked (one direct ask) for the 'Why it's built this way' sections of the Glass Box guide to be shortened and turned into bullets like 'What to watch for'. Because the Lesson contract and page-checks.ts required 12-90 word paragraphs, I asked three questions first (per the user's stated preference); the user chose one bullet per reason, about 30% shorter with bold lead-ins, guide Space only. Agent-initiated: the 12-65 word bound and the bold-lead-in check, the spec cases, and dispatching four subagents to rewrite five pages each. Subagents reached about 24% shorter on average, not 30%. The code-review Skill (two parallel reviewers) found dropped reasons and inconsistent final periods; I restored the reasons that changed meaning and fixed the periods before pushing. Open: the 30% target was not met on every page."
+prs:
+  - "2169"
+docsRead:
+  - path: layers/glassbox/GLOSSARY.md
+    reason: Lesson entry is the contract for the section, which I changed
+    useful: yes
+  - path: docs/agents/pr-workflow.md
+    reason: Said review runs on the committed diff before first push
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: Read before opening the PR; nothing in it changed what I did
+    useful: partly
+  - path: docs/agents/git-conventions.md
+    reason: Commit via -F file, check trailer
+    useful: yes
+  - path: GLOSSARY-MAP.md
+    reason: Required start read; located the Glass Box glossary
+    useful: partly
+  - path: GLOSSARY.md
+    reason: Required start read; no term I needed beyond Lesson
+    useful: partly
+  - path: .agents/skills/glassbox-lesson/EVERY-PAGE.md
+    reason: Page rules; said nothing on bullet form but cite format reused
+    useful: partly
+  - path: layers/glassbox/content/guide/pages/terrarium-practice/01.gate.md
+    reason: (read before editing)
+  - path: layers/glassbox/page-checks.ts
+    reason: (read before editing)
+  - path: layers/glassbox/app/utils/lesson.ts
+    reason: (no reason given)
+  - path: layers/glassbox/tests/unit/glassbox-pages.spec.ts
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/nuxt-vue/02.file-routing.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/nuxt-vue/05.use-space.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/nuxt-vue/06.use-async-data.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/nuxt-vue/09.nitro.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/nuxt-content/01.manifest-collections.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/nuxt-content/02.one-table-per-key.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/nuxt-content/03.content-database.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/git-github/01.every-change-a-pr.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/git-github/04.trust-tiers.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/deploy/01.self-updating-container.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/claude-code/01.claude-md.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/claude-code/02.path-scoped-rules.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/claude-code/03.skills.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/claude-code/04.hooks.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/claude-code/07.subagents-worktrees.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/terrarium-practice/02.adrs.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/terrarium-practice/04.session-logs.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/terrarium-practice/07.human-only-list.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/nuxt-vue/01.layers.md
+    reason: (no reason given)
+skillsUsed:
+  - name: code-review
+    reason: (no reason given)
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Ran git fetch origin main before reading docs/agents/git-conventions.md, which CLAUDE.md requires before the first git command beyond status and diff.
+    solution: Read the doc first; a hint on first git command would catch it.
+    severity: nit
+  - description: Ran pnpm gate:scoped before committing, then learned pr-workflow wants the review on the committed diff; the gate had to be rerun after review fixes anyway.
+    solution: State in ADR-0004 summary that the commit comes first, then gate and review.
+    severity: nit
+  - description: Subagents shared one scratchpad; one overwrote another's helper script and a stray run rewrote other pages. I had to check the whole diff for strays.
+    solution: Tell subagents to use a per-agent subfolder of the scratchpad, or edit with Edit instead of scripts.
+    severity: minor
+  - description: Stop hook asked to commit and push four times while subagents were mid-rewrite, conflicting with ADR-0004 gate and review before first push.
+    solution: Have the hook skip when background subagents are running.
+    severity: nit
+durationSec: 1027
+models:
+  claude-sonnet-5-5: 93
+toolCounts:
+  Read: 13
+  Grep: 5
+  AskUserQuestion: 1
+  Edit: 7
+  Bash: 17
+  Agent: 6
+  Skill: 3
+  ToolSearch: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+filesEdited:
+  - layers/glassbox/page-checks.ts
+  - layers/glassbox/GLOSSARY.md
+  - layers/glassbox/tests/unit/glassbox-pages.spec.ts
+  - layers/glassbox/content/guide/pages/terrarium-practice/01.gate.md
+rulesLoaded:
+  - .claude/rules/adr-0021.md
+  - .claude/rules/glassbox-content.md
+  - .claude/rules/mermaid-lanes.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/tenant-layers.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0001.md
+  - .claude/rules/adr-0011.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Made me run gate:scoped and code-review before first push; summary was enough, so I skipped the full ADR
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Told me to invoke close-session when the PR opened; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Told me to open the PR myself and subscribe; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Provenance header on the PR body; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0021.md
+    reason: Loaded on glossary read; my glossary edit stayed in the Tenant glossary, as it says
+    useful: partly
+  - path: .claude/rules/glassbox-content.md
+    reason: Kept counts and ids out of the rewritten prose; subagents reported the same
+    useful: yes
+  - path: .claude/rules/mermaid-lanes.md
+    reason: About mermaid diagrams; none touched
+    useful: no
+  - path: .claude/rules/adr-0027.md
+    reason: About prune trials; unrelated to this edit
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: Told me to use the Read tool; otherwise unrelated
+    useful: partly
+  - path: .claude/rules/adr-0005.md
+    reason: About Skills layout; loaded by reading skill files, unrelated
+    useful: no
+  - path: .claude/rules/tenant-layers.md
+    reason: Loaded editing layers/glassbox; no layer code or CSS changed
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Subagents reported it did not apply; no Human-only file changed
+    useful: no
+  - path: .claude/rules/adr-0001.md
+    reason: Subagent said it confirmed the ADR cite on one page
+    useful: partly
+  - path: .claude/rules/adr-0011.md
+    reason: Subagent said it confirmed a deploy ADR cite
+    useful: partly
+subagents:
+  - task: Rewrite Why sections, batch A
+  - task: Rewrite Why sections, batch B
+  - task: Rewrite Why sections, batch C
+  - task: Rewrite Why sections, batch D
+  - type: general-purpose
+    task: Standards review of diff
+  - type: general-purpose
+    task: Spec review of diff
+gitBranch: claude/pensive-ritchie-tdbob8
+entrypoint: remote
+cliVersion: 2.1.301
+ideas:
+  - Make the glassbox page check report each Why bullet's word count and percent change versus main, so a rewrite against a shortening target is measured by the checker rather than by agents counting their own words.
+landedBy: Stop
