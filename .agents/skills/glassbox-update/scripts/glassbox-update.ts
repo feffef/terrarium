@@ -1,12 +1,11 @@
 // The mechanical half of the glassbox-update Skill: what changed in the code each
 // Glass Box page cites, between the page's `revision` and main.
 // Usage: pnpm exec tsx .agents/skills/glassbox-update/scripts/glassbox-update.ts [--spaces guide,drafts] [--write --to <sha>]
-import { execFileSync } from 'node:child_process'
 import { existsSync, globSync, readFileSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { glassboxTerms } from '../../../../layers/glassbox/page-checks.ts'
 import { glassboxPageRefs, glassboxRelineRefs, rangeText, shiftLines, type LineRange } from '../../../../layers/glassbox/page-refs.ts'
-import { fetchOriginMain } from '../../../../scripts/git-helpers.ts'
+import { fetchOriginMain, git } from '../../../../scripts/git-helpers.ts'
 import { splitFrontmatter } from '../../../../scripts/validate-content.ts'
 import { flagValue, isMain, root } from '../../../../scripts/lib/cli.ts'
 
@@ -50,13 +49,13 @@ function dependencies(packageJson: string): Record<string, string> {
 /** `write` shifts each page's ranges and pins it to `main`, except a page with an
  *  edited range: the Skill re-checks and pins that one itself. */
 export function glassboxUpdate(cwd = root, { main: mainRef = 'origin/main', write = false, spaces = ['guide'] } = {}): UpdateReport {
-  const git = (...args: string[]) => execFileSync('git', args, { cwd, encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 })
-  if (git('rev-parse', '--is-shallow-repository').trim() === 'true') {
+  const run = (...args: string[]) => git(args, cwd)
+  if (run('rev-parse', '--is-shallow-repository').trim() === 'true') {
     throw new Error('this clone is shallow, so a page\'s revision may be missing. Run `git fetch --unshallow origin main` first.')
   }
-  const main = git('rev-parse', `${mainRef}^{commit}`).trim()
-  const mainDate = git('show', '-s', '--format=%cI', main).slice(0, 10)
-  const mainDeps = dependencies(git('show', `${main}:package.json`))
+  const main = run('rev-parse', `${mainRef}^{commit}`).trim()
+  const mainDate = run('show', '-s', '--format=%cI', main).slice(0, 10)
+  const mainDeps = dependencies(run('show', `${main}:package.json`))
   const terms = glassboxTerms(cwd)
 
   const report: UpdateReport = { main, mainDate, pages: [], terms: [], versions: {} }
@@ -71,7 +70,7 @@ export function glassboxUpdate(cwd = root, { main: mainRef = 'origin/main', writ
     const revision = String(frontmatter.revision)
     const refs = glassboxPageRefs(body)
 
-    const changed = git('diff', '--name-only', '--no-renames', revision, main).split('\n').filter(Boolean)
+    const changed = run('diff', '--name-only', '--no-renames', revision, main).split('\n').filter(Boolean)
     const changedPaths = [...new Set(refs.files.map((r) => r.path))]
       .filter((p) => changed.some((c) => c === p || (p.endsWith('/') && c.startsWith(p))))
     const update: PageUpdate = { space, file, revision, changedPaths, shifted: [], edited: [] }
@@ -83,7 +82,7 @@ export function glassboxUpdate(cwd = root, { main: mainRef = 'origin/main', writ
       const key = `${ref.path}#${from}`
       if (seen.has(key)) continue
       seen.add(key)
-      const moved = shiftLines(ref.lines, git('diff', '-U0', '--no-renames', revision, main, '--', ref.path))
+      const moved = shiftLines(ref.lines, run('diff', '-U0', '--no-renames', revision, main, '--', ref.path))
       if (moved === 'edited') update.edited.push({ path: ref.path, lines: from })
       else if (rangeText(moved) !== from) {
         shifts.set(key, moved)
@@ -98,7 +97,7 @@ export function glassboxUpdate(cwd = root, { main: mainRef = 'origin/main', writ
     }
 
     if (!(revision in report.versions)) {
-      const before = dependencies(git('show', `${revision}:package.json`))
+      const before = dependencies(run('show', `${revision}:package.json`))
       const changes = Object.keys(mainDeps).sort().filter((name) => before[name] && before[name] !== mainDeps[name])
         .map((name) => ({ name, revision: before[name]!, main: mainDeps[name]!, major: major(before[name]!) !== major(mainDeps[name]!) }))
       if (changes.length) report.versions[revision] = changes

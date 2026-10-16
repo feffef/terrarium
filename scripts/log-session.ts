@@ -33,7 +33,7 @@ import { isPair, isScalar, parse as parseYaml, parseDocument, stringify as strin
 import { z } from 'zod'
 import { ruleVerdict, sessionSchema, usefulVerdict } from '../shared/schemas/session.ts'
 import { sessionUrl } from '../shared/session-url.ts'
-import { fetchOriginMain } from './git-helpers.ts'
+import { fetchOriginMain, git } from './git-helpers.ts'
 import { FALLBACK_MODEL, provenanceFooter } from './provenance-footer.ts'
 import { SESSIONS_DIR } from './session-logs.ts'
 import {
@@ -291,24 +291,14 @@ export function isLinkedWorktree(cwd: string): boolean {
 
 // ── Building and pushing the one log commit ─────────────────────────────────
 
-/** Run git. `cwd` defaults to the project root; it is injectable so the push loop can
- *  be exercised end-to-end against a throwaway repo + bare remote in tests. */
-function git(args: string[], opts?: { env?: NodeJS.ProcessEnv; cwd?: string }): string {
-  return execFileSync('git', args, {
-    cwd: opts?.cwd ?? root,
-    encoding: 'utf8',
-    env: opts?.env ?? process.env,
-  }).trim()
-}
-
 /** git identity for the log commit — configured identity, or a stable fallback so a
  *  cold autonomous session can still author its log. */
 function commitEnv(cwd: string = root): NodeJS.ProcessEnv {
   let name = ''
   let email = ''
   try {
-    name = git(['config', 'user.name'], { cwd })
-    email = git(['config', 'user.email'], { cwd })
+    name = git(['config', 'user.name'], cwd).trim()
+    email = git(['config', 'user.email'], cwd).trim()
   } catch {
     /* unset — fall through to defaults */
   }
@@ -360,10 +350,10 @@ export function buildLogCommit(
   const indexFile = join(indexDir, 'index')
   const idxEnv = { ...env, GIT_INDEX_FILE: indexFile }
   try {
-    git(['read-tree', base], { env: idxEnv, cwd }) // start from main's tree
-    const blob = git(['hash-object', '-w', absPath], { cwd })
-    git(['update-index', '--add', '--cacheinfo', `100644,${blob},${relPath}`], { env: idxEnv, cwd })
-    const tree = git(['write-tree'], { env: idxEnv, cwd })
+    git(['read-tree', base], cwd, { env: idxEnv }) // start from main's tree
+    const blob = git(['hash-object', '-w', absPath], cwd).trim()
+    git(['update-index', '--add', '--cacheinfo', `100644,${blob},${relPath}`], cwd, { env: idxEnv })
+    const tree = git(['write-tree'], cwd, { env: idxEnv }).trim()
     const subject = `journal(sessions): log ${basename(relPath, '.yml')}`
     // Separate `-m` paragraph, per ADR-0017 — a trailer needs its own paragraph or git
     // won't recognize it as one. The footer format is single-homed in
@@ -372,9 +362,9 @@ export function buildLogCommit(
       deriveModelName(absPath),
       sessionUrl(sessionIdFromRelPath(relPath)),
     )
-    const commit = git(['commit-tree', tree, '-p', base, '-m', subject, '-m', trailer], { env, cwd })
+    const commit = git(['commit-tree', tree, '-p', base, '-m', subject, '-m', trailer], cwd, { env }).trim()
 
-    const changed = git(['diff', '--name-only', base, commit], { cwd }).split('\n').filter(Boolean)
+    const changed = git(['diff', '--name-only', base, commit], cwd).split('\n').filter(Boolean)
     if (changed.length !== 1 || changed[0] !== relPath) {
       throw new Error(
         `refusing to push: commit would change ${JSON.stringify(changed)}, expected only [${relPath}]`,
@@ -412,9 +402,9 @@ export function pushWithRetry(
       sleep(delay)
     }
     try {
-      git(['fetch', remote, 'main'], { cwd })
+      git(['fetch', remote, 'main'], cwd)
       const commit = buildLogCommit(relPath, absPath, remote, cwd)
-      git(['push', remote, `${commit}:refs/heads/main`], { cwd })
+      git(['push', remote, `${commit}:refs/heads/main`], cwd)
       return commit
     } catch (err) {
       lastErr = err

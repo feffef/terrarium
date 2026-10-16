@@ -1,7 +1,7 @@
 // Shared, unit-tested git-log helpers reused across the git-log-based scripts
 // (audit-skills, gate:scoped, merged-since, recent-prs) — single-homes guards
 // that would otherwise be re-derived, and re-broken, per script (#451).
-import { execFileSync } from 'node:child_process'
+import { execFileSync, type StdioOptions } from 'node:child_process'
 
 const FIELD_SEP = '\x1f'
 const RECORD_SEP = '\x1e'
@@ -24,6 +24,13 @@ export interface RawMergeCommit {
  *  Single-homed so every read-only fetch site shares one tuned value instead
  *  of duplicating the number per call site. */
 export const FETCH_TIMEOUT_MS = 10_000
+
+/** Run git in `cwd`; stdout as-is, untrimmed. Throws on a non-zero exit. `stdio`
+ *  and `env` are the caller's to set; stderr is inherited unless `stdio` says
+ *  otherwise. */
+export function git(args: string[], cwd?: string, opts: { env?: NodeJS.ProcessEnv; stdio?: StdioOptions } = {}): string {
+  return execFileSync('git', args, { cwd, encoding: 'utf8', maxBuffer: 64 * 1024 * 1024, ...opts })
+}
 
 /** True when `err` (thrown by a `timeout`-bounded `execFileSync` git call)
  *  was killed for exceeding its timeout, rather than failing some other way

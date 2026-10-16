@@ -20,9 +20,8 @@
 //   (`git fetch --unshallow origin main`).
 import { readdirSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
-import { execFileSync } from 'node:child_process'
 import { parse as parseYaml } from 'yaml'
-import { fetchOriginMain } from '../../../../scripts/git-helpers.ts'
+import { fetchOriginMain, git } from '../../../../scripts/git-helpers.ts'
 import { fail, flagValue, root, runIfMain } from '../../../../scripts/lib/cli.ts'
 
 const FIELD_SEP = '\x1f'
@@ -438,10 +437,6 @@ export function screenCatalogued<T>(
 }
 
 // ── Git / filesystem shell (thin) ────────────────────────────────────────────
-
-function git(args: string[], cwd = root): string {
-  return execFileSync('git', args, { cwd, encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 })
-}
 
 function assertNotShallow(cwd = root): void {
   if (git(['rev-parse', '--is-shallow-repository'], cwd).trim() === 'true') {

@@ -24,6 +24,7 @@ import { execFileSync } from 'node:child_process'
 import { copyFileSync, existsSync, mkdtempSync, rmSync, statSync, utimesSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { dirname, join, resolve } from 'node:path'
+import { git } from './git-helpers.ts'
 import { root, isMain } from './lib/cli.ts'
 
 // ── Types ───────────────────────────────────────────────────────────────────
@@ -182,10 +183,6 @@ export function sweep(states: WorktreeState[]): SweepResult {
 
 // ── Git shell (thin) ─────────────────────────────────────────────────────────
 
-function git(args: string[], cwd: string): string {
-  return execFileSync('git', args, { cwd, encoding: 'utf8' }).trim()
-}
-
 /** Like `git()`, but for a probe that's *expected* to fail some of the time
  *  (e.g. no upstream configured) — `null` on failure instead of throwing, and
  *  stderr suppressed so an expected failure doesn't read as a live error. */
@@ -198,7 +195,7 @@ function tryGit(args: string[], cwd: string): string | null {
 }
 
 function isDirty(path: string): boolean {
-  return git(['status', '--porcelain'], path).length > 0
+  return git(['status', '--porcelain'], path).trim().length > 0
 }
 
 /** Commits on this worktree's HEAD not yet on its remote. Prefers the
@@ -240,7 +237,7 @@ export function contentMatchesRemoteCommit(path: string): boolean {
   const dir = mkdtempSync(join(tmpdir(), 'check-worktrees-index-'))
   try {
     const index = join(dir, 'index')
-    const realIndex = resolve(path, git(['rev-parse', '--git-path', 'index'], path))
+    const realIndex = resolve(path, git(['rev-parse', '--git-path', 'index'], path).trim())
     // Keep the real index's mtime: a fresher copy hides git's racy-timestamp
     // check, so a same-size rewrite within one clock tick reads as unchanged
     // (issue #1818).
@@ -261,9 +258,9 @@ export function contentMatchesRemoteCommit(path: string): boolean {
 }
 
 function readWorktreeStates(cwd = root): WorktreeState[] {
-  const porcelain = git(['worktree', 'list', '--porcelain'], cwd)
+  const porcelain = git(['worktree', 'list', '--porcelain'], cwd).trim()
   const raw = parseWorktreeList(porcelain)
-  const commonDir = resolve(cwd, git(['rev-parse', '--git-common-dir'], cwd))
+  const commonDir = resolve(cwd, git(['rev-parse', '--git-common-dir'], cwd).trim())
   const primaryPath = primaryWorktreePath(commonDir)
   return raw.map((wt) => {
     // A bare worktree has no working tree to be dirty or ahead — report it
