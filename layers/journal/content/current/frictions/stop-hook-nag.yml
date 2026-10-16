@@ -6,6 +6,13 @@ cause: >-
 surface: outside
 status: open
 ref: "issue #1653 (closed not-planned 2026-10-10: harness-side stop-hook-git-check.sh); PRs #1588, #1612 (caveat docs)"
+fixes:
+  - pr: 1588
+    date: "2026-10-04"
+    summary: "Documented that the end-of-turn commit reminder cannot see running checks: commit work in progress, never push unverified work."
+  - pr: 1612
+    date: "2026-10-05"
+    summary: "Moved the end-of-turn reminder caveat into the main project instructions so more sessions read it."
 occurrences:
   - session: session_01BK3hyL2f3mxedQimjd719K
     date: "2026-10-02"

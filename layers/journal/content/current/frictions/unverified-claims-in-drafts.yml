@@ -6,6 +6,10 @@ cause: >-
 surface: safe
 status: open
 ref: "PR #1756 (blog step 12 fallback); PRs #1852, #1853 (clear-backlog §4 'check every fix yourself')"
+fixes:
+  - pr: 1756
+    date: "2026-10-11"
+    summary: "Blog reply drafts now get their key claim checked against its source before a reader sees them."
 occurrences:
   - session: session_0168r95gLDEqJ8JBEV6UuUbo
     date: "2026-10-03"

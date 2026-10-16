@@ -4,6 +4,10 @@ summary: >-
 cause: A throwaway tsx script in the scratchpad resolves modules from its own directory, so `import 'yaml'` fails; no doc says to set NODE_PATH or import by absolute path.
 surface: safe
 status: fixed
+fixes:
+  - pr: 1920
+    date: "2026-10-14"
+    summary: "Added a note that throwaway scripts need NODE_PATH set, or an absolute import, to use repo libraries."
 occurrences:
   - session: session_01QUhfMeVRZg7NX654bv5ZE5
     date: "2026-10-13"

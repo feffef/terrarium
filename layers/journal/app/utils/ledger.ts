@@ -21,6 +21,10 @@ export interface LedgerEntry {
   fixedOn?: string
   ref?: string
   refLinks: { label: string; url: string }[]
+  /** The PR that merged the fix on `fixedOn`, shown in the status pill. */
+  fixedPr?: { number: number; url: string }
+  /** Newest first. */
+  fixes: { pr: number; url: string; date: string; summary: string }[]
   worst: Severity
   worstCount: number
   count: number
@@ -65,7 +69,7 @@ export function ledgerPanels(
   ownSessions: Set<string>,
   otherSpace: string,
   goals: Record<string, string> = {},
-  fixes: SessionFixes = {},
+  sessionFixes: SessionFixes = {},
 ): { severe: LedgerEntry[]; frequent: LedgerEntry[] } {
   const entries = clusters.map((c): LedgerEntry => {
     const worst = c.occurrences.reduce<Severity>((w, o) => (SEVERITY_RANK[o.severity] > SEVERITY_RANK[w] ? o.severity : w), 'nit')
@@ -74,7 +78,7 @@ export function ledgerPanels(
         date: o.date,
         severity: o.severity,
         goal: goals[o.session],
-        solution: occurrenceSolution(fixes[o.session], o.severity),
+        solution: occurrenceSolution(sessionFixes[o.session], o.severity),
         to: `/t/journal/${ownSessions.has(o.session) ? space : otherSpace}#${sessionAnchor(o.session)}`,
       }))
       .sort((a, b) => b.date.localeCompare(a.date))
@@ -82,6 +86,10 @@ export function ledgerPanels(
       .filter((o): o is typeof o & { solution: string } => !!o.solution)
       .filter((o, i, all) => all.findIndex((x) => x.solution === o.solution) === i)
       .map((o) => ({ text: o.solution, date: o.date, to: o.to }))
+    const fixes = [...(c.fixes ?? [])]
+      .sort((a, b) => b.date.localeCompare(a.date))
+      .map((f) => ({ ...f, url: `${REPO_URL}/pull/${f.pr}` }))
+    const fixedPr = c.status === 'fixed' ? (fixes.find((f) => f.date === c.fixedOn) ?? fixes[0]) : undefined
     return {
       name: c.name,
       summary: c.summary,
@@ -89,7 +97,10 @@ export function ledgerPanels(
       status: c.status,
       fixedOn: c.fixedOn,
       ref: c.ref,
-      refLinks: ledgerRefLinks(c.ref),
+      // A fixed pill that names its PR makes the free-text PR link redundant.
+      refLinks: ledgerRefLinks(c.ref).filter((r) => !(fixedPr && r.label.startsWith('PR'))),
+      fixedPr: fixedPr && { number: fixedPr.pr, url: fixedPr.url },
+      fixes,
       worst,
       worstCount: c.occurrences.filter((o) => o.severity === worst).length,
       count: c.occurrences.length,

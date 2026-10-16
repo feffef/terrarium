@@ -71,6 +71,11 @@ export const frictionClusterSchema = z
     // What backs the status: the tracking issue or PR, the trial's territory
     // match, the fix, or on an `open` entry earlier partial fixes.
     ref: z.string().optional(),
+    // The merged PRs that fixed (part of) the cause, oldest first: what the
+    // Ledger shows as "Fixes applied". `date` is the merge date.
+    fixes: z
+      .array(z.object({ pr: z.number().int().positive(), date: utcDate, summary: z.string() }))
+      .default([]),
     // One per session, or a session read twice by overlapping windows would
     // inflate the recurrence count.
     occurrences: z

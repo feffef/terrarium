@@ -7,6 +7,10 @@ surface: guard-or-hook
 status: fixed
 fixedOn: "2026-10-12"
 ref: "issue #1835; PR #1840 (unshallow after pnpm install)"
+fixes:
+  - pr: 1840
+    date: "2026-10-12"
+    summary: "The history-unshallow step now runs after dependencies install, instead of in parallel where it failed."
 occurrences:
   - session: session_01SZwdbK8GbYtyj926UyJT6o
     date: "2026-10-12"

@@ -6,6 +6,10 @@ cause: >-
 surface: safe
 status: open
 ref: "PR #1821 (adds the rule); frictions-to-fixes 2026-10-16: read-first-hint entry for screenshots (PR pending)"
+fixes:
+  - pr: 1821
+    date: "2026-10-12"
+    summary: "Added a rule: show a rough draft of diagrams and layouts for reaction before polishing; passing checks is not enough."
 occurrences:
   - session: session_01P7a2zqJxuariDNfYqWQRHs
     date: "2026-10-03"

@@ -7,6 +7,10 @@ surface: guard-or-hook
 status: fixed
 fixedOn: "2026-10-10"
 ref: "issues #835, #1651; commit b02ca418"
+fixes:
+  - pr: 1735
+    date: "2026-10-10"
+    summary: "Removed the guard that blocked the no-op background flag on subagent dispatch, so it no longer denies calls."
 occurrences:
   - session: session_01C48djYtfD6dTcY8aESJJUD
     date: "2026-10-02"

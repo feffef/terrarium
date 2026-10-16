@@ -6,6 +6,10 @@ cause: >-
 surface: outside
 status: open
 ref: "docs/agents/environment-caveats.md bullet listing blocked hosts, 2026-10-15"
+fixes:
+  - pr: 2030
+    date: "2026-10-15"
+    summary: "Documented more blocked hosts and not to retry them, and that a skipped question is not a failure."
 occurrences:
   - session: session_01CF4k9jXS9wLrcPVsGduZmn
     date: "2026-10-08"

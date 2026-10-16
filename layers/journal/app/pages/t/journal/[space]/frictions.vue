@@ -85,6 +85,7 @@ useSeoMeta({ title: () => `${PAGE_TITLE} · journal/${space}` })
                   <span class="pill sev" :class="e.worst" :title="`Worst severity: ${e.worst}`">{{ e.worst }}</span>
                   <span class="pill status" :class="e.status" :title="e.fixedOn ? `Fixed on ${e.fixedOn}` : undefined">
                     {{ e.status.replace('-', ' ') }}{{ e.fixedOn ? ` ${e.fixedOn.slice(5)}` : '' }}
+                    <template v-if="e.fixedPr">· <a :href="e.fixedPr.url" @click.stop>PR #{{ e.fixedPr.number }}</a></template>
                   </span>
                   <a v-for="r in e.refLinks" :key="r.url" class="pill ref" :href="r.url" @click.stop>{{ r.label }}</a>
                 </span>
@@ -108,6 +109,15 @@ useSeoMeta({ title: () => `${PAGE_TITLE} · journal/${space}` })
                 <ul class="sol">
                   <li v-for="s in e.solutions" :key="s.text">
                     {{ s.text }} <NuxtLink :to="s.to" :aria-label="`Session log, ${s.date}`">{{ s.date }}</NuxtLink>
+                  </li>
+                </ul>
+              </template>
+              <template v-if="e.fixes.length">
+                <h3 class="occ-h">Fixes applied</h3>
+                <p class="occ-intro">Merged PRs that fixed it, newest first.</p>
+                <ul class="sol">
+                  <li v-for="f in e.fixes" :key="f.pr">
+                    {{ f.summary }} <a :href="f.url">PR #{{ f.pr }}</a> <span class="fix-date">{{ f.date }}</span>
                   </li>
                 </ul>
               </template>
@@ -200,6 +210,8 @@ details[open] .summary::before { content: '▾'; }
 .occ, .sol { max-height: 24rem; overflow-y: auto; overscroll-behavior: contain; }
 .sol { margin: 0 0 0.7rem 3.3rem; padding-left: 1.1rem; font-size: 0.78rem; color: var(--jd-muted); overflow-wrap: anywhere; }
 .jd-prose .sol a { color: var(--jd-faint); font-family: var(--jd-mono); font-size: 0.7rem; }
+.jd-prose .pill.status a { color: inherit; text-decoration: underline; }
+.fix-date { color: var(--jd-faint); font-family: var(--jd-mono); font-size: 0.7rem; }
 .jd-prose .occ a { color: var(--jd-ink); text-decoration: none; }
 .jd-prose .occ a:hover { color: var(--jd-accent); text-decoration: underline; }
 .occ-goal { margin-left: 0.5rem; font-family: var(--jd-serif); font-size: 0.8rem; color: var(--jd-muted); }

@@ -7,6 +7,40 @@ surface: safe
 status: fixed
 fixedOn: "2026-10-15"
 ref: "PRs #1826, #1833, #1852, #1853; issue #1857 closed by PR #1864; PR #1863 (grill only the sweep's set); PR #1871 (phases as saved workflows); PR #1880 (one log summary line per branch, #1878); frictions-to-fixes 2026-10-13b grouped doc PR (zero-grill skip); commits 82cf835c (clear-backlog skips wayfinder-labelled issues) and 998c2086 (wayfinder exclusion in both set modes), 2026-10-14; frictions-to-fixes 2026-10-15 doc PR (picks per branch, label docs, dispatch-subagents trigger)"
+fixes:
+  - pr: 1826
+    date: "2026-10-12"
+    summary: "Added the clear-backlog Skill and folded in findings from its first dry run."
+  - pr: 1833
+    date: "2026-10-12"
+    summary: "Folded in second dry-run findings: deferred issues stay in grilling; dropped an extra triage check."
+  - pr: 1852
+    date: "2026-10-12"
+    summary: "clear-backlog now reviews before opening PRs, has agents build everything, and keeps chat quiet."
+  - pr: 1853
+    date: "2026-10-12"
+    summary: "Every branch is reviewed with code-review before its first push; fresh issues are triaged first."
+  - pr: 1863
+    date: "2026-10-13"
+    summary: "The grilling now covers only issues the run's own sweep picked up."
+  - pr: 1864
+    date: "2026-10-13"
+    summary: "clear-backlog's explore step is done only when each issue has its own triage report."
+  - pr: 1871
+    date: "2026-10-13"
+    summary: "Turned clear-backlog's explore and build phases into saved workflows so code enforces them."
+  - pr: 1880
+    date: "2026-10-13"
+    summary: "The session log now gets one summary line per merged or opened branch."
+  - pr: 1882
+    date: "2026-10-13"
+    summary: "Doc fixes from the frictions review, including skipping the grilling when there is nothing to ask."
+  - pr: 1977
+    date: "2026-10-14"
+    summary: "clear-backlog now leaves out wayfinder-labelled issues in both sweep modes."
+  - pr: 2067
+    date: "2026-10-15"
+    summary: "Fixed remaining clear-backlog gaps: per-branch picks, label docs, and a dispatch-subagents trigger."
 occurrences:
   - session: session_01DtK8w6aJ3361uPK73VAxhi
     date: "2026-10-12"

@@ -7,6 +7,10 @@ surface: guard-or-hook
 status: fixed
 fixedOn: "2026-10-11"
 ref: "issues #873, #1769; PR #1793 (guard removed)"
+fixes:
+  - pr: 1793
+    date: "2026-10-11"
+    summary: "Removed the check that blocked whole commands for ending in a pipe to tail or head."
 occurrences:
   - session: session_01BXoQpiEuaGZJVRQB7XpsFi
     date: "2026-10-02"

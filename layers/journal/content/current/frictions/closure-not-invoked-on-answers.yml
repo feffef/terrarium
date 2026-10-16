@@ -7,6 +7,16 @@ surface: safe
 status: fixed
 fixedOn: "2026-10-13"
 ref: "PR #1801 (answers case); PR #1821 (PR-open case, regressed); issue #1859 closed by PR #1868 (merged 2026-10-13T06:11Z, read-first-hint reminds close-session after a PR opens)"
+fixes:
+  - pr: 1801
+    date: "2026-10-12"
+    summary: "Added a CLAUDE.md rule to run close-session when a session only answers a question."
+  - pr: 1821
+    date: "2026-10-12"
+    summary: "Doc fix so close-session is also invoked when a PR is opened."
+  - pr: 1868
+    date: "2026-10-13"
+    summary: "The read-first hint now reminds the session to run close-session after it opens a PR."
 occurrences:
   - session: session_01DRBxySwYL4HR4xEEJc3CXX
     date: "2026-10-11"
