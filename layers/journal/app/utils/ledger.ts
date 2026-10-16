@@ -20,8 +20,6 @@ export interface LedgerEntry {
   status: FrictionClusterDoc['status']
   fixedOn?: string
   ref?: string
-  /** The PR that merged the fix on `fixedOn`, shown in the status pill. */
-  fixedPr?: { number: number; url: string }
   /** Newest first. */
   fixes: { pr: number; url: string; date: string; summary: string }[]
   worst: Severity
@@ -77,7 +75,6 @@ export function ledgerPanels(
     const fixes = [...(c.fixes ?? [])]
       .sort((a, b) => b.date.localeCompare(a.date))
       .map((f) => ({ ...f, url: `${REPO_URL}/pull/${f.pr}` }))
-    const fixedPr = c.status === 'fixed' ? (fixes.find((f) => f.date === c.fixedOn) ?? fixes[0]) : undefined
     return {
       name: c.name,
       summary: c.summary,
@@ -85,7 +82,6 @@ export function ledgerPanels(
       status: c.status,
       fixedOn: c.fixedOn,
       ref: c.ref,
-      fixedPr: fixedPr && { number: fixedPr.pr, url: fixedPr.url },
       fixes,
       worst,
       worstCount: c.occurrences.filter((o) => o.severity === worst).length,

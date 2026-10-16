@@ -85,7 +85,10 @@ useSeoMeta({ title: () => `${PAGE_TITLE} · journal/${space}` })
                   <span class="pill sev" :class="e.worst" :title="`Worst severity: ${e.worst}`">{{ e.worst }}</span>
                   <span class="pill status" :class="e.status" :title="e.fixedOn ? `Fixed on ${e.fixedOn}` : undefined">
                     {{ e.status.replace('-', ' ') }}{{ e.fixedOn ? ` ${e.fixedOn.slice(5)}` : '' }}
-                    <template v-if="e.fixedPr">· <a :href="e.fixedPr.url" @click.stop>PR #{{ e.fixedPr.number }}</a></template>
+                    <template v-if="e.status === 'fixed' && e.fixes.length">
+                      · {{ e.fixes.length === 1 ? 'PR' : 'PRs' }}
+                      <template v-for="(f, i) in e.fixes" :key="f.pr"><a :href="f.url" @click.stop>#{{ f.pr }}</a>{{ i < e.fixes.length - 1 ? ', ' : '' }}</template>
+                    </template>
                   </span>
                 </span>
               </summary>
@@ -211,6 +214,7 @@ details[open] .summary::before { content: '▾'; }
 .sol li { margin-bottom: 0.35rem; }
 .proposed { display: block; color: var(--jd-ink); }
 .jd-prose .sol a { color: var(--jd-faint); font-family: var(--jd-mono); font-size: 0.7rem; }
+.pill.status { white-space: normal; border-radius: 0.9rem; }
 .jd-prose .pill.status a { color: inherit; text-decoration: underline; }
 .fix-date { color: var(--jd-faint); font-family: var(--jd-mono); font-size: 0.7rem; }
 .jd-prose .occ a { color: var(--jd-ink); text-decoration: none; }

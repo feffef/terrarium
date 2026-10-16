@@ -90,20 +90,10 @@ describe('ledgerPanels fixes', () => {
     fixes: fixes.map((f) => ({ ...f, summary: `fix ${f.pr}` })),
   })
 
-  it('lists fixes newest first with their PR link, and names the PR merged on fixedOn in the pill', () => {
+  it('lists fixes newest first with their PR link, and none when there are none', () => {
     const [e] = ledgerPanels([fixed([{ pr: 1, date: '2026-10-05' }, { pr: 2, date: '2026-10-12' }])], 'current', new Set(), 'archived').severe
     expect(e!.fixes.map((f) => f.pr)).toEqual([2, 1])
     expect(e!.fixes[0]).toMatchObject({ summary: 'fix 2', url: 'https://github.com/feffef/terrarium/pull/2' })
-    expect(e!.fixedPr).toEqual({ number: 2, url: 'https://github.com/feffef/terrarium/pull/2' })
-  })
-
-  it('falls back to the newest fix, and shows no PR for a cluster that is not fixed or has no fixes', () => {
-    const [a] = ledgerPanels([fixed([{ pr: 1, date: '2026-10-05' }], '2026-10-09')], 'current', new Set(), 'archived').severe
-    expect(a!.fixedPr?.number).toBe(1)
-    const [b] = ledgerPanels([{ ...fixed([{ pr: 1, date: '2026-10-05' }]), status: 'open' }], 'current', new Set(), 'archived').severe
-    expect(b!.fixedPr).toBeUndefined()
-    expect(b!.fixes).toHaveLength(1)
-    const [c] = ledgerPanels([fixed([])], 'current', new Set(), 'archived').severe
-    expect(c).toMatchObject({ fixes: [], fixedPr: undefined })
+    expect(ledgerPanels([fixed([])], 'current', new Set(), 'archived').severe[0]!.fixes).toEqual([])
   })
 })
