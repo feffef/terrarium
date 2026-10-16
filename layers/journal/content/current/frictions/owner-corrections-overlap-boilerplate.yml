@@ -1,0 +1,17 @@
+name: owner-corrections-overlap-boilerplate
+summary: The visitor-loop owner-memory check lists many unrelated file-overlap candidates, and each needs its own boilerplate line in the PR body.
+cause: owner-corrections.ts prints a 'rework' candidate for every merged non-bot PR touching a file a visitor-loop PR touched in the prior 3 days (16-26 per run); --check wants one tally line each (#1912 made that strict on purpose).
+surface: safe
+status: open
+ref: "No open issue. #1912 (closed) tightened the same check in the opposite direction; a grouped-line fix would reopen it, so filter the candidates instead."
+occurrences:
+  - session: session_01AdUi9nKLGKyPFfBe4HYvqG
+    date: "2026-10-14"
+    severity: minor
+    description: "Owner-corrections printed 19 file-overlap reworks unrelated to the Blog; each needed its own tally line, which was boilerplate."
+    solution: "Have the script drop reworks whose overlap is only agent-infra files."
+  - session: session_019e468BFBTvDPXZuGzLMAL7
+    date: "2026-10-15"
+    severity: minor
+    description: "owner-corrections.ts returned 26 file-overlap candidates; the check needs one tally line each, costing a long boilerplate list in the PR body."
+    solution: "Let --check accept one grouped line for pure file-overlap candidates with no review or comment."

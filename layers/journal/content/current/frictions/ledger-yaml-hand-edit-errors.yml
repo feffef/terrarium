@@ -16,3 +16,8 @@ occurrences:
     severity: minor
     description: "Docs impl agent's first pass at applying the YAML ledger patch unquoted dates and replaced a full ref; it had to repair both"
     solution: "Ship the ledger patch as a small apply script, or have the survey write per-file edits"
+  - session: session_011JKK8rrCwea3xSmL4kw6si
+    date: "2026-10-14"
+    severity: minor
+    description: "The doc agent truncated a ledger cause at an unquoted hash and left new dates unquoted; the Standards review caught both."
+    solution: "Have the patch writer quote causes and dates so applying it is a copy."

@@ -13,6 +13,9 @@ fixes:
   - pr: 1612
     date: "2026-10-05"
     summary: "Moved the end-of-turn reminder caveat into the main project instructions so more sessions read it."
+  - pr: 2123
+    date: "2026-10-16"
+    summary: "git-conventions now says no push is needed when the Stop hook counts main's commits and origin/main..HEAD is empty."
 occurrences:
   - session: session_01BK3hyL2f3mxedQimjd719K
     date: "2026-10-02"
@@ -309,3 +312,13 @@ occurrences:
     severity: nit
     description: "Stop hook asked to push 7 commits that were only inherited from origin/main after my fast-forward, which cost an explanation turn."
     solution: "The hook should compare against origin/main, not the remote branch."
+  - session: session_01RnZJ7VrgWpgzfJUCEdif77
+    date: "2026-10-16"
+    severity: nit
+    description: "Stop hook asked to push three times while branches awaited review; each time I had to hold per ADR-0004, costing turns."
+    solution: "Harness-side hook, already tracked as stop-hook-nag."
+  - session: session_01DNheR1Cpt9b6vFsmGdzvxq
+    date: "2026-10-16"
+    severity: nit
+    description: "The Stop hook asked to push a half-built branch; I committed locally and held the push for the gate and review, as ADR-0004 says."
+    solution: "Let the hook skip a branch whose gate has not run, or say so in its message."

@@ -465,3 +465,23 @@ occurrences:
     severity: nit
     description: "Ran the first git command before reading git-conventions.md; hook caught it afterwards."
     solution: "Read the doc at session start."
+  - session: session_017xginqTj2NjZ8XgrbRqvkm
+    date: "2026-10-16"
+    severity: nit
+    description: "Edited ADR-0009 text after reading only its rejected-alternatives section, not the full ADR the summary rule asks for; a checker did read it in full."
+    solution: "Read the whole ADR before editing it."
+  - session: session_013Wjv51Wj4dYhJXpTgvxCN4
+    date: "2026-10-16"
+    severity: nit
+    description: "Ran git log on origin/main before reading docs/agents/git-conventions.md, against CLAUDE.md's before-first-git-command rule."
+    solution: "Read git-conventions.md together with the other start-of-task docs when a task names a PR."
+  - session: session_01Fay2GiWTwxDKnnqS9DznHk
+    date: "2026-10-16"
+    severity: minor
+    description: "Ran git fetch before reading docs/agents/git-conventions.md, against CLAUDE.md's read-first trigger; no harm, but the order was wrong."
+    solution: "The read-first hint could also fire on git fetch/merge, not only later commands."
+  - session: session_01AaqTUSRhRmRpBxM8E4QSPR
+    date: "2026-10-16"
+    severity: minor
+    description: "Did not grep docs/adr for ADRs binding Excerpt.vue before changing it"
+    solution: "Run grep -l Excerpt docs/adr/* before editing, as CLAUDE.md asks"

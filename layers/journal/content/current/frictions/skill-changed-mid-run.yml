@@ -11,3 +11,8 @@ occurrences:
     severity: moderate
     description: "visitor-loop Skill changed on main mid-run (#2087/#2088, glassbox focus, new refiner step), so my stale copy gave the wrong focus and skipped a step; I recovered by running the refiner late."
     solution: "Have the Skill's step 1 re-read SKILL.md after fetching origin/main, or pin the date range."
+  - session: session_01ATdHzhyNozsTLHHtJGbLsa
+    date: "2026-10-14"
+    severity: minor
+    description: "Main dropped subagentVerdicts mid-run (c82a0ac19); my session-start copy of log-session still asked for it, so the first final log was held."
+    solution: "Re-fetch main before closing a long session (main already updated clear-backlog to match)."

@@ -16,3 +16,18 @@ occurrences:
     severity: minor
     description: "Committed small wording fixes on the 2029 and 2071 worktrees after their gate ran and pushed without rerunning gate:scoped (validate-adr-rules only); the nuxt.config.ts edit is a comment in a code file"
     solution: "Run pnpm validate:content or gate:scoped for any non-doc follow-up, even a comment"
+  - session: session_01JkzKjuQD4wH34MjxMjKHaX
+    date: "2026-10-14"
+    severity: nit
+    description: "Pushed the prototype branch without pnpm gate:scoped, code-review or reading pr-workflow.md (ADR-0004, CLAUDE.md read-first). Low impact: Markdown on a never-merged branch."
+    solution: "Same exception as above: state that never-merged prototype branches skip the pre-push steps."
+  - session: session_01GG85r8HWMEdaMgKUaNUZH7
+    date: "2026-10-14"
+    severity: minor
+    description: "Content PRs got a content review by subagent instead of the code-review Skill before their first push"
+    solution: "Have pr-workflow name content review as the review for content-only Glass Box PRs, or run code-review too"
+  - session: session_01VPNHf6qDdJPXX23GghKs74
+    date: "2026-10-16"
+    severity: nit
+    description: "Fixed preview.ts stop's exit code myself after the build review and pushed with gate:scoped only, without another code-review pass on that one-line delta"
+    solution: "Re-run the branch through clear-backlog-build with the fix in its brief, or run code-review on the delta"

@@ -1,0 +1,12 @@
+name: worktree-fetch-stale-ref
+summary: Helper agents in a linked worktree thought a branch was up to date because their git fetch had not updated the branch they compared against.
+cause: "In a linked worktree a bare 'git fetch' updated only FETCH_HEAD for the integration branch, so merge-base checks used a stale origin ref (Glass Box integration run). Not reproduced: this clone's remote.origin.fetch is the full +refs/heads/*:refs/remotes/origin/*."
+surface: safe
+status: open
+ref: One occurrence; candidate to drop at the next horizon prune.
+occurrences:
+  - session: session_01GG85r8HWMEdaMgKUaNUZH7
+    date: "2026-10-14"
+    severity: moderate
+    description: "Writers twice reported the integration branch 'up to date' from a stale origin ref; a bare git fetch in a linked worktree updated only FETCH_HEAD"
+    solution: "In dispatch briefs, fetch with an explicit refspec and check rev-parse, or have the orchestrator verify merge-base ancestry before opening each PR"

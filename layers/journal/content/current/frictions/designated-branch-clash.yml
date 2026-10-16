@@ -36,3 +36,13 @@ occurrences:
     severity: minor
     description: "Impl agent proposed a Skill sentence authorising a second pushed branch against the harness rule; auto mode flagged its report as instruction poisoning."
     solution: "Keep authority changes human-decided; the designated-branch conflict needs an owner decision."
+  - session: session_01DNheR1Cpt9b6vFsmGdzvxq
+    date: "2026-10-16"
+    severity: minor
+    description: "The Fable agent's worktree branch name differed from the branch I may push to, so I had to wait for a PR to merge and cherry-pick its commits onto my branch; the Stop hook kept asking to push the other branch."
+    solution: "Tell worktree-isolated impl agents in the brief to name their branch after the session's designated branch, or let the Stop hook skip unreviewed worktree branches."
+  - session: session_01ATdHzhyNozsTLHHtJGbLsa
+    date: "2026-10-14"
+    severity: nit
+    description: "Building on the session branch made the worktree use a local branch named worktree-wf_..., so it needed a refspec push to reach claude/upbeat-albattani-2ryjxo."
+    solution: "clear-backlog-build could detect a branch already checked out and push HEAD to the named branch itself."

@@ -1,0 +1,30 @@
+name: subagent-brief-omits-verdict-ask
+summary: Briefs for helper agents left out the request for rule and doc verdicts, so those reads have no verdict in the session log.
+cause: "CLAUDE.md asks every subagent brief for a rule/doc verdict in the final reply (PR #2060); nothing checks briefs, so orchestrators omit it. Signals: 'briefs didn't ask for rule and doc verdicts', 'no verdict provided'."
+surface: safe
+status: fixed
+fixedOn: "2026-10-15"
+ref: "Owner kept the request (issue #2115 closed not-planned 2026-10-16); 01E2zbWE (nit, after the fix) shows it still gets omitted."
+fixes:
+  - pr: 1964
+    date: "2026-10-14"
+    summary: Session logs now show one verdict list per session, with subagents' answers merged in.
+  - pr: 2060
+    date: "2026-10-15"
+    summary: A CLAUDE.md line asks every subagent brief for verdicts in its final reply; the later SendMessage step is removed.
+occurrences:
+  - session: session_01BdQnbVQmdfrD1PPyZTnL9w
+    date: "2026-10-14"
+    severity: nit
+    description: "My three subagent briefs didn't ask for rule and doc verdicts, so 49 subagent-only reads have no verdict in this log."
+    solution: "Read the dispatch-subagents Skill before dispatching any subagent, not only git-touching ones, and add its verdict request to each brief."
+  - session: session_01GG85r8HWMEdaMgKUaNUZH7
+    date: "2026-10-14"
+    severity: minor
+    description: "Did not collect rule and doc verdicts from the roughly 40 subagents; their rules show as unknown in this log"
+    solution: "Ask each writer for verdicts in its hand-back template so no extra round trip is needed"
+  - session: session_01E2zbWEQmuUrEhWvbzNpBba
+    date: "2026-10-15"
+    severity: nit
+    description: "Two of the three deep-research briefs omitted the rule/doc verdict request CLAUDE.md requires of every subagent brief."
+    solution: "Append the verdict line to every brief, including Skill-templated ones."

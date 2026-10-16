@@ -379,3 +379,38 @@ occurrences:
     severity: nit
     description: "I read github-integration.md only after my first GitHub search call, and used cat via Bash for several files instead of the Read tool."
     solution: "Read the doc before the first mcp__github call and use Read for repo files."
+  - session: session_01RnZJ7VrgWpgzfJUCEdif77
+    date: "2026-10-16"
+    severity: nit
+    description: "I read the human-merge rule and the ledger patch with cat via Bash instead of the Read tool, against CLAUDE.md."
+    solution: "None needed beyond the existing rule; slip."
+  - session: session_017xginqTj2NjZ8XgrbRqvkm
+    date: "2026-10-16"
+    severity: nit
+    description: "Used Bash cat/sed to read a rule file and scripts instead of the Read tool, against the CLAUDE.md read-with-Read rule; the hook injected rules anyway."
+    solution: "Use Read for rule files and sources."
+  - session: session_013Wjv51Wj4dYhJXpTgvxCN4
+    date: "2026-10-16"
+    severity: nit
+    description: "Read several files with cat and sed in Bash instead of the Read tool, against CLAUDE.md's Read-tool rule (ADR-0029)."
+    solution: "Use the Read tool for docs and source, so their rules load."
+  - session: session_01VPNHf6qDdJPXX23GghKs74
+    date: "2026-10-16"
+    severity: nit
+    description: "Broke CLAUDE.md 'Read files with the Read tool': read ADR-0022, guards.md and an issue body with cat/head in Bash"
+    solution: "Use Read for repo docs; the rule-loading hint only partly covers shell reads"
+  - session: session_01NFv67izdzVGrFHb2EVwZJ2
+    date: "2026-10-16"
+    severity: nit
+    description: "Broke CLAUDE.md 'Read files with the Read tool, not cat': read nuxt.config.ts, entrypoint.sh, tinkerfund config and page-cache.spec.ts via cat in Bash"
+    solution: "Rules for those files still surfaced via the PostToolUse hook; reaching for Read first would have been cleaner"
+  - session: session_01Fay2GiWTwxDKnnqS9DznHk
+    date: "2026-10-16"
+    severity: nit
+    description: "Read and edited files mostly via cat/sed/python in auto mode instead of the Read tool that CLAUDE.md asks for."
+    solution: "Use Read for files I edit so their rules load reliably."
+  - session: session_01AaqTUSRhRmRpBxM8E4QSPR
+    date: "2026-10-16"
+    severity: minor
+    description: "Read several docs with cat in Bash instead of the Read tool, against CLAUDE.md's Read-tool rule"
+    solution: "Use the Read tool for docs; rule loading depends on it (ADR-0029)"

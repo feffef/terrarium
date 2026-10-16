@@ -1,0 +1,12 @@
+name: parallel-branches-same-lines-conflict
+summary: Parallel branches editing the same shared list lines conflicted again and again, and merging kept re-growing the lists.
+cause: "Parallel content PRs each edit the same shared lists (Where next, Opening a page chips); keeping both sides re-grew lists past the cap. Related earlier occurrence in clear-backlog-gaps (015dUGRa: parallel builds on the same adr-0002 pointer line)."
+surface: safe
+status: open
+ref: One occurrence from the Glass Box backfill; candidate to drop.
+occurrences:
+  - session: session_01GG85r8HWMEdaMgKUaNUZH7
+    date: "2026-10-14"
+    severity: moderate
+    description: "Parallel content PRs conflicted repeatedly on shared Where next lists and Opening a page chips; keeping both sides re-grew lists past the cap"
+    solution: "Cap Where next and stop chips in the contract from the start (now done), and merge content PRs serially"

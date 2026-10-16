@@ -1,0 +1,22 @@
+name: clear-backlog-build-review-cap-fails
+summary: The backlog build script reports a branch as failed when review hits its three-round limit with only small findings left, so the main agent fixes them by hand.
+cause: "reviewBranch in .claude/workflows/clear-backlog-build.js returns status 'failed' with openFindings when round 3 still has worthFixing findings; clear-backlog SKILL.md section 3 says only 'failed: fix the brief and re-run'. Signals: 'review capped at 3 rounds', 'came back failed at the 3-round cap'."
+surface: safe
+status: tracked
+ref: this run's grouped doc PR (frictions-fixes-2026-10-16)
+occurrences:
+  - session: session_015dUGRadEQP1bvv6KytKLXT
+    date: "2026-10-14"
+    severity: minor
+    description: "The 1937/1938 build hit the 3-round review cap with two one-line findings open, so I fixed them by hand"
+    solution: "Let clear-backlog-build return the open findings with ready-to-push when they are all small, or allow a 4th fix-only round"
+  - session: session_012NmfdSNbbPD9T5LPAwmdYG
+    date: "2026-10-15"
+    severity: nit
+    description: "The #2011+#2028 branch came back 'failed' at the 3-round review cap with two small worthFixing findings, so the orchestrator had to fix them by hand."
+    solution: "Fine as is; the cap worked. Optionally give the fixer one more round when only doc-wording findings remain."
+  - session: session_01NqN7omu3o4kxoGeQzzSXhK
+    date: "2026-10-15"
+    severity: minor
+    description: "clear-backlog-build returned status failed for the 2069/2076 branch only because review hit its 3-round cap, though every remaining finding was a judgement call (worthFixing false)"
+    solution: "Have the workflow return ready-to-push when the final round's findings are all worthFixing false"

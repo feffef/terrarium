@@ -4,9 +4,8 @@ summary: >-
 cause: >-
   CI tests the merge ref against the current main with its own git version; the local gate tests the branch as cut with the container git and may skip Heavy as Inert, so a local green still fails in CI.
 surface: safe
-status: fixed
-fixedOn: "2026-10-12"
-ref: "PR #1483 (git-version caveat); issues #1817, #1818 closed by PR #1824 (merged 2026-10-12T15:28Z, two flaky tests fixed)"
+status: tracked
+ref: "issue #2138 (regression of #1824, filed 2026-10-16)"
 fixes:
   - pr: 1483
     date: "2026-09-29"
@@ -35,3 +34,8 @@ occurrences:
     severity: major
     description: "gate:scoped passed but CI failed on ec89520d in tinkerfund-flows.spec.ts:388 (checkbox state after goForward), which this diff doesn't touch; base drift is unlikely since it passed on earlier commits."
     solution: "Likely a back/forward form-restore flake in the tinkerfund e2e test; worth an issue if it recurs. Commented on PR 1812 and re-ran once."
+  - session: session_01VPNHf6qDdJPXX23GghKs74
+    date: "2026-10-16"
+    severity: major
+    description: "gate:scoped passed on the Glass Box branch but CI failed: main gained a Nitro lesson whose 'Nitro' link text failed the new link-text check"
+    solution: "clear-backlog could fetch and merge origin/main into a branch just before push, so a new check meets the latest content"
