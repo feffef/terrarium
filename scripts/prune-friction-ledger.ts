@@ -6,8 +6,10 @@
 //   Edits `layers/journal/content/current/frictions/*.yml` in place and prints
 //   what it dropped. `--today` defaults to the current UTC date.
 //   `--summary` edits nothing and prints one line per entry: name, status,
-//   ref, in-horizon occurrence count, max severity (issue #1917), plus a note
-//   on a fixed entry with an occurrence after (or on) its fixedOn (issue #2024).
+//   ref, in-horizon occurrence count, max severity (issue #1917), fix count and
+//   latest fix, plus a note on a fixed entry with an occurrence after (or on)
+//   its latest fix (issue #2024) or with no fix dated its fixedOn. It ends with
+//   every friction two clusters share, for the survey to judge.
 import { readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
@@ -56,25 +58,59 @@ export function pruneLedger(today: string, cwd = root): string[] {
 
 const SEVERITIES = ['nit', 'minor', 'moderate', 'major', 'blocker']
 
-/** A fixed entry's note when an occurrence is dated after `fixedOn` (a possible
- *  regression) or on it (the fix may have landed mid-session), else ''. */
-function regressionNote(e: { status?: unknown; fixedOn?: unknown; occurrences?: unknown }): string {
-  if (e.status !== 'fixed' || !e.fixedOn) return ''
-  const fixedOn = String(e.fixedOn)
-  const dates = (Array.isArray(e.occurrences) ? e.occurrences : []).map((o: { date?: unknown }) => String(o?.date))
-  if (dates.some((d) => d > fixedOn)) return ` | possible regression: occurrence after fixedOn ${fixedOn}`
-  return dates.includes(fixedOn) ? ` | check startedAt: occurrence on fixedOn ${fixedOn}` : ''
+interface Entry {
+  name?: string
+  status?: string
+  fixedOn?: string
+  ref?: string
+  fixes?: { pr: number; date: string }[]
+  occurrences?: { session?: string; date?: string; severity?: string; description?: string }[]
+}
+
+/** Notes on a fixed entry: an occurrence after its latest fix (a possible
+ *  regression) or on it (the fix may have landed mid-session); no fix at all;
+ *  no fix dated `fixedOn`. */
+function fixNotes(e: Entry): string {
+  if (e.status !== 'fixed') return ''
+  const fixes = e.fixes ?? []
+  const notes: string[] = []
+  if (!fixes.length) notes.push('fixed with no fixes entry')
+  else if (!fixes.some((f) => f.date === e.fixedOn)) notes.push(`no fix dated fixedOn ${e.fixedOn}`)
+  const latest = [e.fixedOn ?? '', ...fixes.map((f) => f.date)].sort().at(-1)!
+  const dates = (e.occurrences ?? []).map((o) => String(o.date))
+  if (!latest) return notes.map((n) => ` | ${n}`).join('')
+  if (dates.some((d) => d > latest)) notes.push(`possible regression: occurrence after latest fix ${latest}`)
+  else if (dates.includes(latest)) notes.push(`check startedAt: occurrence on latest fix ${latest}`)
+  return notes.map((n) => ` | ${n}`).join('')
+}
+
+function readEntries(cwd: string): [string, Entry][] {
+  const dir = join(cwd, LEDGER_DIR)
+  return readdirSync(dir).filter((n) => n.endsWith('.yml')).sort().map((f) => [f, parseYaml(readFileSync(join(dir, f), 'utf8')) ?? {}])
 }
 
 export function summarizeLedger(today: string, cwd = root): string[] {
   const start = horizonStart(today)
-  const dir = join(cwd, LEDGER_DIR)
-  return readdirSync(dir).filter((n) => n.endsWith('.yml')).sort().map((f) => {
-    const e = parseYaml(readFileSync(join(dir, f), 'utf8')) ?? {}
-    const occ = (Array.isArray(e.occurrences) ? e.occurrences : []).filter((o: { date?: unknown }) => String(o?.date) >= start)
-    const max = Math.max(-1, ...occ.map((o: { severity?: string }) => SEVERITIES.indexOf(String(o?.severity))))
-    return [e.name ?? f, e.status, e.ref ?? '-', `${occ.length} in horizon`, SEVERITIES[max] ?? '-'].join(' | ') + regressionNote(e)
+  return readEntries(cwd).map(([f, e]) => {
+    const occ = (e.occurrences ?? []).filter((o) => String(o.date) >= start)
+    const max = Math.max(-1, ...occ.map((o) => SEVERITIES.indexOf(String(o.severity))))
+    const last = [...(e.fixes ?? [])].sort((a, b) => a.date.localeCompare(b.date)).at(-1)
+    const fixes = last ? `${e.fixes!.length} ${e.fixes!.length === 1 ? 'fix' : 'fixes'}, latest #${last.pr} ${last.date}` : 'no fixes'
+    return [e.name ?? f, e.status, e.ref ?? '-', `${occ.length} in horizon`, SEVERITIES[max] ?? '-', fixes].join(' | ') + fixNotes(e)
   })
+}
+
+/** A friction (session + description) two clusters both hold: right only when
+ *  its text names both causes, so the survey re-judges each. */
+export function sharedFrictions(cwd = root): string[] {
+  const holders = new Map<string, string[]>()
+  for (const [f, e] of readEntries(cwd)) {
+    for (const o of e.occurrences ?? []) {
+      const key = `${o.session} "${o.description}"`
+      holders.set(key, [...(holders.get(key) ?? []), e.name ?? f])
+    }
+  }
+  return [...holders].filter(([, names]) => names.length > 1).map(([key, names]) => `${names.join(', ')}: ${key}`)
 }
 
 if (import.meta.url === pathToFileURL(process.argv[1] ?? '').href) {
@@ -86,6 +122,8 @@ if (import.meta.url === pathToFileURL(process.argv[1] ?? '').href) {
   }
   if (process.argv.includes('--summary')) {
     console.log(summarizeLedger(today).join('\n'))
+    const shared = sharedFrictions()
+    if (shared.length) console.log(`\nfrictions in two clusters (keep only when the text names both causes):\n${shared.join('\n')}`)
     process.exit(0)
   }
   const report = pruneLedger(today)

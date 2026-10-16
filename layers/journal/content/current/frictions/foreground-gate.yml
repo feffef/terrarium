@@ -35,3 +35,5 @@ occurrences:
   - session: session_01AdUi9nKLGKyPFfBe4HYvqG
     date: "2026-10-14"
     severity: nit
+    description: "I chained preview stop with several long commands in one call; it exceeded the 2-minute limit and was moved to the background."
+    solution: "Run stop alone; the tool output of stop is tiny and fast."

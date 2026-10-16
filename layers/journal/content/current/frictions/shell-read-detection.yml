@@ -107,6 +107,3 @@ occurrences:
     severity: moderate
     description: "SHELL-READ-DETECTION false positive: docs/agents/mdc-when-to-use.md was credited from shell output, but the session marked it (not read)"
     solution: "Find the crediting command in the transcript and tighten scripts/shell-reads.ts"
-  - session: session_01NVG22rfEsjhW9zkcCco6W8
-    date: "2026-10-14"
-    severity: nit

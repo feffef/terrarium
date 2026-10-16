@@ -113,6 +113,8 @@ occurrences:
   - session: session_01KnHp9a9Ljbiuu8NjLLx8i1
     date: "2026-10-11"
     severity: minor
+    description: "CLAUDE.md requires reading docs/agents/github-integration.md before this session's first GitHub operation. I ran several mcp__github__ calls (issue_read, issue_write, add_issue_comment, subscribe_pr_activity) before reading it — only read it incidentally, right before opening the PR."
+    solution: "No damage this run (no overflow, no HTML-entity-encoding mishap), but it was blind luck. Read the trigger docs before the first matching tool call, not after — check the \"docs you must read first\" list against the next tool call before making it, not just at session start."
   - session: session_01YBJaRLtVQEr4RshMQG1X7D
     date: "2026-10-11"
     severity: minor
@@ -221,6 +223,8 @@ occurrences:
   - session: session_015LwBgLjaCn36ayZedges6G
     date: "2026-10-12"
     severity: minor
+    description: "Labelled #1844 ready-for-agent without first reading docs/agents/issue-tracker.md and triage-labels.md, which CLAUDE.md requires before labelling"
+    solution: "A read-first hint on issue_write label changes, like the git/GitHub one, would have surfaced them"
   - session: session_01Rn5xT34AdjnywsTJdUtaDm
     date: "2026-10-13"
     severity: nit
@@ -329,6 +333,8 @@ occurrences:
   - session: session_01675UWGBfCMALkurUr58cxM
     date: "2026-10-14"
     severity: minor
+    description: "Never read CONTEXT-MAP.md and CONTEXT.md at session start, though CLAUDE.md requires it; the task was about those very files being renamed."
+    solution: "Read them first; a session-start read list in a hook output would make the skip visible."
   - session: session_01BdQnbVQmdfrD1PPyZTnL9w
     date: "2026-10-14"
     severity: minor
@@ -359,9 +365,6 @@ occurrences:
     severity: moderate
     description: "Tried 'git checkout origin/main -- .' plus 'git stash' to read files from main; the classifier blocked it. git-conventions.md forbids it, and it could have overwritten the tree."
     solution: "Use git show or git grep on origin/main to read main's files, as git-conventions.md says."
-  - session: session_01G6m9SbDppX4TE87Mp3m5Dk
-    date: "2026-10-14"
-    severity: nit
   - session: session_01BpePUUjkw8MVBXM2oiDnsj
     date: "2026-10-14"
     severity: minor

@@ -46,6 +46,3 @@ occurrences:
     severity: nit
     description: "Skipped the code-review Skill before the first push, which ADR-0004 says to run even for a Stop-hook push; I judged it pointless on a verbatim upstream copy."
     solution: "Let pr-workflow.md name verbatim pack installs as a skip case, so agents need not decide alone."
-  - session: session_011t1xXHxqwrfAjt83s9oTEP
-    date: "2026-10-15"
-    severity: minor

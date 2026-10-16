@@ -28,8 +28,11 @@
 // caller that wants a smaller read regardless (issues #951, #1755). It prints one
 // unindented JSON line per session (issue #1917).
 //
-// --unledgered drops sessions already cited as an occurrence in the Friction
-// Ledger, leaving only those the survey has yet to cover.
+// --unledgered drops every friction the Friction Ledger already carries as an
+// occurrence (same session, same description) and then every session with no
+// friction left, so a session the ledger cites once is still surveyed for the
+// rest. Each friction keeps its `index` in the log, the handle
+// `scripts/ledger-occurrence.ts` takes.
 //
 // --out PATH always writes the JSON to PATH instead of the shared tmpdir
 // default, regardless of size — for a caller that wants the output at a
@@ -57,6 +60,8 @@ export const LEDGER_DIR = 'layers/journal/content/current/frictions'
 // ── Types ───────────────────────────────────────────────────────────────────
 
 export interface TriageFriction {
+  /** Position in the log's `frictions` list; stable after filtering. */
+  index: number
   description: string
   solution: string
   severity: string
@@ -93,6 +98,7 @@ export interface CompactSubagent {
   count: number
 }
 export interface CompactFriction {
+  index: number
   description: string
   severity: string
 }
@@ -139,6 +145,12 @@ function collapseSessionLogReads(docsRead: Record<string, unknown>[]): TriageDoc
   return n ? [...kept, { path: `${n} session logs`, reason: '' }] : kept
 }
 
+/** The whitespace-normalised form the ledger stores a friction's text in, and
+ *  `layers/journal/tests/unit/ledger-content.spec.ts` checks it by. */
+export function flattenText(text: unknown): string {
+  return String(text ?? '').replace(/\s+/g, ' ').trim()
+}
+
 /** Reduce one parsed session-log record to its triage-essential fields. */
 export function toTriageSession(raw: Record<string, unknown>, file: string): TriageSession {
   const frictions = Array.isArray(raw.frictions) ? raw.frictions : []
@@ -163,9 +175,10 @@ export function toTriageSession(raw: Record<string, unknown>, file: string): Tri
       if (typeof s.model === 'string') ref.model = s.model
       return ref
     }),
-    frictions: frictions.map((fr: Record<string, unknown>) => ({
-      description: String(fr.description ?? '').replace(/\s+/g, ' ').trim(),
-      solution: String(fr.solution ?? '').replace(/\s+/g, ' ').trim(),
+    frictions: frictions.map((fr: Record<string, unknown>, index: number) => ({
+      index,
+      description: flattenText(fr.description),
+      solution: flattenText(fr.solution),
       severity: String(fr.severity ?? ''),
     })),
   }
@@ -197,7 +210,7 @@ export function toCompactSession(s: TriageSession): CompactSession {
     prs: s.prs,
     docsRead: s.docsRead.map((d) => d.path),
     subagents: collapseSubagents(s.subagents),
-    frictions: s.frictions.map((fr) => ({ description: fr.description, severity: fr.severity })),
+    frictions: s.frictions.map((fr) => ({ index: fr.index, description: fr.description, severity: fr.severity })),
   }
 }
 
@@ -225,15 +238,18 @@ function lastLedgerCommit(cwd: string): number | null {
   }
 }
 
-/** Sessions the Friction Ledger already cites, so the survey can skip them. */
+/** The frictions the Friction Ledger does not carry yet, by session; a session
+ *  with none left is dropped. */
 export function dropLedgered(sessions: TriageSession[], cwd = root): TriageSession[] {
   const dir = join(cwd, LEDGER_DIR)
   const seen = new Set<string>()
   for (const f of readdirSync(dir).filter((n) => n.endsWith('.yml'))) {
     const occ = parseYaml(readFileSync(join(dir, f), 'utf8'))?.occurrences
-    for (const o of Array.isArray(occ) ? occ : []) seen.add(String(o?.session))
+    for (const o of Array.isArray(occ) ? occ : []) seen.add(`${o?.session}\n${o?.description}`)
   }
-  return sessions.filter((s) => !seen.has(s.id))
+  return sessions
+    .map((s) => ({ ...s, frictions: s.frictions.filter((fr) => !seen.has(`${s.id}\n${fr.description}`)) }))
+    .filter((s) => s.frictions.length > 0)
 }
 
 // ── Command ─────────────────────────────────────────────────────────────────

@@ -19,10 +19,18 @@ describe('Friction Ledger content', () => {
     const wrong: string[] = []
     for (const cluster of read(join(content, 'current/frictions'))) {
       for (const o of cluster.occurrences) {
-        if (o.description === undefined && o.solution === undefined) continue
         const logged = sessions.get(o.session)?.frictions.some((f) => f.severity === o.severity && flat(f.description) === o.description && flat(f.solution) === o.solution)
         if (!logged) wrong.push(`${cluster.name} ${o.session}`)
       }
+    }
+    expect(wrong).toEqual([])
+  })
+
+  it('gives a fixed cluster, and only one, a fixedOn with a fix merged that day', () => {
+    const wrong: string[] = []
+    for (const c of read(join(content, 'current/frictions'))) {
+      const fixed = c.status === 'fixed'
+      if (fixed !== (c.fixedOn !== undefined) || (fixed && !(c.fixes ?? []).some((f: { date: string }) => f.date === c.fixedOn))) wrong.push(c.name)
     }
     expect(wrong).toEqual([])
   })

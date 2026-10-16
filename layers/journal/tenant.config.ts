@@ -65,11 +65,12 @@ export const frictionClusterSchema = z
     surface: z.enum(['safe', 'human-only', 'guard-or-hook', 'outside']),
     // `open`: no open issue or PR covers it. `tracked`: one does. `on-trial`:
     // inside a Prune Trial's territory (ADR-0027). `fixed`: the fix merged
-    // on `fixedOn`.
+    // on `fixedOn`, so `fixes` holds one dated it (the manifest takes no
+    // cluster-level refine; `tests/unit/ledger-content.spec.ts` checks).
     status: z.enum(['open', 'tracked', 'on-trial', 'fixed']),
     fixedOn: utcDate.optional(),
-    // What backs the status: the tracking issue or PR, the trial's territory
-    // match, the fix, or on an `open` entry earlier partial fixes.
+    // Agents' notes on the status, not rendered: the tracking issue, the
+    // trial's territory match, what a fix left open. Merged PRs go in `fixes`.
     ref: z.string().optional(),
     // The merged PRs meant to fix (part of) the cause, oldest first: what the
     // Ledger shows as "Merged PRs to fix it"; a merge does not prove the fix held. `date` is the merge date.
@@ -86,9 +87,9 @@ export const frictionClusterSchema = z
           severity: sessionSchema.shape.frictions.element.shape.severity,
           // A copy of the session's friction this occurrence is about, whose
           // severity is `severity`, so a later run can re-cluster without
-          // reading the session logs.
-          description: z.string().optional(),
-          solution: z.string().optional(),
+          // reading the session logs (`scripts/ledger-occurrence.ts` prints it).
+          description: z.string(),
+          solution: z.string(),
         }),
       )
       .refine((occ) => new Set(occ.map((o) => o.session)).size === occ.length, 'a session is listed twice'),
