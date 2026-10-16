@@ -182,6 +182,4 @@ Same marker and rationale as `guest-build`'s "Concurrency" section (issue #570, 
 teardown) or `/loop` (within a live session). Idempotency above keeps a tight
 interval cheap.
 
-Comment via `add_issue_comment` (never `issue_write` — that overwrites the body);
-label via `issue_write`; read via `issue_read` and decode HTML entities before
-quoting. See `docs/agents/github-integration.md` for the MCP-tool mechanics.
+MCP-tool mechanics (comment, label, read): `docs/agents/github-integration.md`.

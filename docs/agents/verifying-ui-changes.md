@@ -26,8 +26,9 @@ layout bug, or asserting a style took effect.
 - **A URL that is already serving:** `scripts/screenshot.ts <url> <out.png> [WxH]`
   drives the pre-installed Chromium directly.
 
-**Browser facts verified against** (from `node_modules`, re-check if they've
-moved): `playwright-core` **1.64.0**, `nuxt` **4.6.1**. Entries that came from a specific session cite it.
+**Browser facts verified against** (from `node_modules`; re-check if they've
+moved): `playwright-core` **1.64.0**, `nuxt` **4.6.1**. Entries from a specific
+session cite it.
 
 ## The methodology
 
@@ -110,12 +111,12 @@ wrong region, so pass `fullPage: true` when clipping below the fold. (Session `�
 ### Desktop Chromium ignores the page's `<meta name="viewport">`
 
 Playwright's `viewport` option (`newPage({ viewport })`) sizes the CSS layout
-viewport **directly**; the page's own `<meta name="viewport">` is a
-mobile-emulation input and is ignored in an ordinary desktop launch. So a
-"missing viewport meta" theory for a mobile-overflow bug is usually a dead end
-once you've confirmed the tag is present — reproduce the narrow width by setting
-the viewport via the driver instead. (Session `…Bhu3Y1`.) **Don't reach for a
-`--window-size` launch arg as an equivalent** — it leaves a Chromium
+viewport **directly**; the page's `<meta name="viewport">` is a
+mobile-emulation input and is ignored in an ordinary desktop launch. So once
+you've confirmed the tag is present, a "missing viewport meta" theory for a
+mobile-overflow bug is usually a dead end: set the viewport via the driver to
+reproduce the narrow width. (Session `…Bhu3Y1`.) **Don't reach for a
+`--window-size` launch arg as an equivalent**: it leaves a Chromium
 chrome/viewport offset uncompensated and ships a frame shorter than requested;
 `scripts/screenshot.ts` hit exactly this and switched to `newPage({ viewport })`
 (issue #575).
@@ -143,12 +144,11 @@ well), checking the actual console/warning output.
 
 ### `<ClientOnly>` attaches its slot DOM *after* `onMounted`
 
-Nuxt's `<ClientOnly>` returns its default slot only once its own `mounted` ref
-flips to `true` in its `onMounted` (`nuxt/dist/app/components/client-only.js`),
-so the slot's DOM attaches on the render *after* both child and parent
-`onMounted` fire. A
-parent `onMounted` that reads a `ref` pointing *inside* a `<ClientOnly>` slot
-therefore reads `null`. Drive the render from
+Nuxt's `<ClientOnly>` renders its default slot only after its own `onMounted`
+sets its `mounted` ref to `true` (`nuxt/dist/app/components/client-only.js`), so
+the slot's DOM attaches on the render *after* both child and parent `onMounted`
+have fired. A parent `onMounted` that reads a `ref` pointing *inside* the slot
+therefore gets `null`. Drive the render from
 `watch(theRef, …, { immediate: true })` instead, so it fires when the ref
 actually attaches. (Session `…pm7Vkb` — a Mermaid diagram that rendered blank
 because its container ref was null in `onMounted`.)

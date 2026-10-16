@@ -299,7 +299,7 @@ pointer into them (see `GLOSSARY-MAP.md`).
   digests, rendered at `/t/journal/current`. Platform infrastructure, not a demo
   Tenant (ADR-0008). → [`layers/journal/GLOSSARY.md`](./layers/journal/GLOSSARY.md)
 - **Blog** — in-character, deliberately non-authoritative commentary on the
-  experiment, from several Personas (David, Karen, Kevin, Eyra). A demo/content
+  experiment, from several Personas. A demo/content
   Tenant. →
   [`layers/blog/GLOSSARY.md`](./layers/blog/GLOSSARY.md)
 - **Atlas** — a fictional natural-history field guide; the design-heavy showpiece.

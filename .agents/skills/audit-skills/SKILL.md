@@ -97,7 +97,7 @@ or dropped, and each clean report has had one claim checked.
 ## 3. Check closure completeness
 
 These mechanical signals cover `close-session`'s missed invocations. They are
-the measure ADR-0009 uses to decide whether a reminder hook should come back.
+the measure ADR-0009 uses to decide whether to widen its reminder hook.
 
 - `orphanedSessions`: sessions that shipped a merged PR but never logged.
   Read `orphanScan` first. `scanned: false` means nothing was looked at, so

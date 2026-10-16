@@ -38,9 +38,9 @@ under `PostToolUse`, `PostToolUseFailure` and `UserPromptSubmit`.
 
 - **A crash.** If a hint crashes, the action goes ahead. If a guard crashes, or
   can't read its context or payload, the action is blocked, except
-  `deferred-tool-guard`, which lets it go ahead. Every guard but
-  `deferred-tool-guard.ts` runs through `scripts/guard-wrap.sh` (#1223); that one
-  and all four hints use a bare `|| true`.
+  `deferred-tool-guard`, which lets it go ahead. `scripts/guard-wrap.sh` wraps
+  every guard but `deferred-tool-guard.ts` (#1223); that guard and all four hints
+  use a bare `|| true`.
 - **Matcher-scoped, never `"*"`.** Each `tsx` start (~0.3s) would hit every
   Read/Edit/Bash call. The `Bash`, `Edit` and `Write` guards add an `sh`
   pre-filter so only a payload that could match pays it.
