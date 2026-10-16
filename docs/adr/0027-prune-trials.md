@@ -12,10 +12,13 @@ hit and leave the cut alone until it is judged.
 - **What a trial may change:** any text that instructs our agents: `CLAUDE.md`,
   `GLOSSARY.md`, `docs/`, our own Skills, and comments in scripts. A whole-file
   rewrite keeps every rule and decision the file holds.
-- **What it may not change:** ADRs and their summary rules (ADR-0030), pack
-  Skills (ADR-0015), session logs, and anything that changes what runs. When a
-  verdict shows a behaviour needs a hook, the trial files an issue, and a
-  session with a human present builds it.
+- **What it may not change:** pack Skills (ADR-0015), session logs, and
+  anything that changes what runs. When a verdict shows a behaviour needs a
+  hook, the trial files an issue, and a session with a human present builds it.
+- **ADRs and their summary rules** change in a trial only when a Trusted user
+  starts it. The same PR re-checks the summary (ADR-0030), and a human merges
+  it (ADR-0004). A `major` or `blocker` verdict restores the cut text, since
+  one line can't hold a decision and its reasons.
 - **Retiring a Skill or a Routine** is never a trial; it needs a Trusted
   user's approval (ADR-0003).
 - **The verdict.** A trial is judged only after its window has passed since
@@ -54,8 +57,8 @@ verdict.
 - **Judge each rule by reading it,** as `audit-docs` does for drift. That keeps
   the text consistent but never smaller, and reading can't show what a rule
   still prevents.
-- **Let trials rewrite ADRs.** An ADR holds a decision and its reasons, which
-  a person weighs before it changes.
+- **Let the Skill pick ADRs for its own trials.** An ADR holds a decision and
+  its reasons, which a person weighs before it changes.
 - **Let a trial write the hook its verdict calls for.** A hook changes what
   runs unattended, which a scheduled run must not decide alone.
 
