@@ -1,0 +1,16 @@
+name: build-before-shape-settled
+summary: The main agent started builds or a many-agent fan-out before the design was settled, and the work had to be redone.
+cause: Orchestrator briefs build or polish agents (1947 subagent-verdict UI; 20 Glass Box polish agents) before asking the owner or fixing the shape, forcing a redesign PR or a second polish pass. dispatch-subagents SKILL.md line 12 says to settle choices with grilling first.
+surface: safe
+status: open
+occurrences:
+  - session: session_015dUGRadEQP1bvv6KytKLXT
+    date: "2026-10-14"
+    severity: moderate
+    description: "I briefed the 1947 build with a separate subagent-verdict list and card section without asking the owner how it should look; it shipped and needed a redesign PR (1964)"
+    solution: "When a change alters what a person sees, put the layout to the owner as a grilling question before building"
+  - session: session_01Fay2GiWTwxDKnnqS9DznHk
+    date: "2026-10-16"
+    severity: moderate
+    description: "I dispatched 20 agents before settling paragraph length and per-reason ownership, so a second 5-agent polish pass was needed."
+    solution: "Settle length bound and an ownership map of shared reasons in the first brief (dispatch-subagents §1)."

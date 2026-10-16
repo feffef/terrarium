@@ -46,3 +46,23 @@ occurrences:
     severity: nit
     description: "Skipped the code-review Skill before the first push, which ADR-0004 says to run even for a Stop-hook push; I judged it pointless on a verbatim upstream copy."
     solution: "Let pr-workflow.md name verbatim pack installs as a skip case, so agents need not decide alone."
+  - session: session_01RnZJ7VrgWpgzfJUCEdif77
+    date: "2026-10-16"
+    severity: nit
+    description: "ADR-0004 asks code-review before every first push; I ran the two-agent review on one of three branches and read the other diffs myself (a one-line deletion, a ledger and doc diff)."
+    solution: "Let the rule or pr-workflow name a size floor below which a read of the diff counts."
+  - session: session_01DNheR1Cpt9b6vFsmGdzvxq
+    date: "2026-10-16"
+    severity: nit
+    description: "code-review Skill mandates two parallel sub-agents, disproportionate for a 5-line CSS and markup change; I reviewed inline."
+    solution: "Let the pre-push rule allow an inline review for diffs under a few dozen lines."
+  - session: session_01AaqTUSRhRmRpBxM8E4QSPR
+    date: "2026-10-16"
+    severity: minor
+    description: "Two parallel review subagents plus a doc-heavy PR flow for a two-line template change cost far more than the change"
+    solution: "Let code-review run inline for diffs of a few lines"
+  - session: session_01LpcCJWRYb5grgQe3wBGEwb
+    date: "2026-10-15"
+    severity: nit
+    description: "code-review's two parallel review agents for a one-line --first-parent diff cost about 125k subagent tokens"
+    solution: "Let code-review scale down to one inline pass for a diff under ~5 lines (pack Skill: note it in its Inventory entry)"

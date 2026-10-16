@@ -53,3 +53,8 @@ occurrences:
     severity: minor
     description: "Subagent reports arrived as messages, not files, so 'save verbatim, never retype' was met only by having agents write their own reply files."
     solution: "audit-docs step 3 could say agents write their reply to a named scratchpad file."
+  - session: session_01DNheR1Cpt9b6vFsmGdzvxq
+    date: "2026-10-16"
+    severity: minor
+    description: "Subagents could not write result files, so I retyped three large JSON hand-backs into scratch files to merge them; slow and error-prone."
+    solution: "Have a brief ask for the result in a fixed schema and let a script ingest a subagent's final message, or allow subagents scratch writes."

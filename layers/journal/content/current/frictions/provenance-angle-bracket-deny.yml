@@ -22,3 +22,8 @@ occurrences:
     severity: nit
     description: "My PR body had a bare angle-bracket span and the provenance guard blocked it once; I re-sent it without."
     solution: "None needed; the guard worked as designed."
+  - session: session_01AaqTUSRhRmRpBxM8E4QSPR
+    date: "2026-10-16"
+    severity: nit
+    description: "Read github-integration.md after starting the PR flow and still put a bare angle-bracket span in the PR title; guard blocked it"
+    solution: "Read the GitHub doc before the first MCP write; the guard caught it"

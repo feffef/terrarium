@@ -5,11 +5,14 @@ cause: >-
   Diagrams, illustrations and layouts ship after the agent's own screenshot check; the human first sees the result after it is published and judges it poor.
 surface: safe
 status: open
-ref: "PR #1821 (adds the rule); frictions-to-fixes 2026-10-16: read-first-hint entry for screenshots (PR pending)"
+ref: "PR #1821 (adds the rule); frictions-to-fixes 2026-10-16: read-first-hint entry for screenshots (PR #2107, 2026-10-16)"
 fixes:
   - pr: 1821
     date: "2026-10-12"
     summary: "Added a rule: show a rough draft of diagrams and layouts for reaction before polishing; passing checks is not enough."
+  - pr: 2107
+    date: "2026-10-16"
+    summary: "The read-first hint now points to verifying-ui-changes.md when a session takes a screenshot."
 occurrences:
   - session: session_01P7a2zqJxuariDNfYqWQRHs
     date: "2026-10-03"

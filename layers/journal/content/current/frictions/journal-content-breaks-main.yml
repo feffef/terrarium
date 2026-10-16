@@ -57,3 +57,8 @@ occurrences:
     severity: moderate
     description: "Archive sweep moves a session quoting 'live snapshot' into archived, breaking a fragile Journal e2e test and turning the gate red for the Digest PR."
     solution: "Make the archived-dashboard test assert on the rendered badge element, not raw page text; or have the sweep run gate checks."
+  - session: session_013Wjv51Wj4dYhJXpTgvxCN4
+    date: "2026-10-16"
+    severity: minor
+    description: "The digest run's PR description diagnosed the failure but did not notice that main had already fixed it, so the PR sat red for hours."
+    solution: "Have the digest Skill fetch main and re-check a red gate against it before leaving a PR for a human."

@@ -1,0 +1,21 @@
+name: worktree-guard-false-positive
+summary: The container's worktree safety check refused ordinary git commands, so helper agents worked around it.
+cause: "Container-level worktree-isolation guard refuses a command that names git twice, counting a branch name containing 'git' (git-conventions-stop-hook-note) or compound/heredoc Bash. environment-caveats.md lists 'a command naming git twice' but not branch names; the build workflow brief only says one git command per call. Signals: 'worktree guard refused', 'containing git twice'."
+surface: outside
+status: tracked
+ref: this run's grouped doc PR (frictions-fixes-2026-10-16)
+fixes:
+  - pr: 1825
+    date: "2026-10-12"
+    summary: The dispatch Skill and environment-caveats now list what the worktree guard wrongly blocks and say one git command per call.
+occurrences:
+  - session: session_01VPNHf6qDdJPXX23GghKs74
+    date: "2026-10-16"
+    severity: minor
+    description: "The worktree guard refused any git command containing 'git' twice, so the build agent for branch git-conventions-stop-hook-note committed on a temp branch"
+    solution: "Fix the worktree guard's match so a branch name containing 'git' is not read as a second git command"
+  - session: session_01LpcCJWRYb5grgQe3wBGEwb
+    date: "2026-10-15"
+    severity: nit
+    description: "Digest impl agent: the worktree guard refused several compound Bash commands (loops, variables, heredocs piped to node), forcing plain calls and a helper script"
+    solution: "The dispatch brief could say up front to write helper scripts with Write instead of compound Bash"

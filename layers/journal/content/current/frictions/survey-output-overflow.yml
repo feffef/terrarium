@@ -50,3 +50,8 @@ occurrences:
     severity: minor
     description: "Survey subagent: audit-skills.ts output plus a broad grep printed 56 KB and was persisted to a file; it re-ran with narrow extraction"
     solution: "audit-skills.ts could offer a --doc-read-counts-only flag"
+  - session: session_01RnZJ7VrgWpgzfJUCEdif77
+    date: "2026-10-16"
+    severity: nit
+    description: "audit-skills.ts printed about 478 KB when run bare by the survey subagent, which had to redirect it to a file."
+    solution: "PR 2109 notes the redirect in frictions-to-fixes section 4."

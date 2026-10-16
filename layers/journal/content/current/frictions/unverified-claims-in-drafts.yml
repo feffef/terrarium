@@ -221,3 +221,8 @@ occurrences:
     severity: minor
     description: "Told the implementer not to edit asking-for-a-change.md because PR 2099 was open, repeating the Fable agent's claim without checking; 2099 was already merged and the page needed the edit."
     solution: "Check a PR's state with pull_request_read before putting it in a brief."
+  - session: session_01NFv67izdzVGrFHb2EVwZJ2
+    date: "2026-10-16"
+    severity: minor
+    description: "First draft said the typed-route {} type appeared 'after a fresh install', backwards from the session logs where a clean reinstall fixed it; Spec reviewer caught it"
+    solution: "Quote the friction's own wording when turning a session-log friction into a watch item"

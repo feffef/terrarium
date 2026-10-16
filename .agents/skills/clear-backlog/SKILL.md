@@ -104,11 +104,18 @@ Act on each branch's `status`:
   it returned one (without, the branch restarts from `origin/main`). The rest
   keep going.
 - `failed`: read the journal for the cause, then fix the brief and re-run the
-  branch, or report it.
+  branch, or report it. `failed` with `openFindings` means the review cap was
+  reached with small findings left: fix them by hand in its `worktree`, run
+  `pnpm gate:scoped`, and treat the branch as `ready-to-push`; re-run only for
+  other failures.
 - `ready-to-push`: check its `commits` against
   `git log origin/main..HEAD` in its `worktree`, and each claimed fix and
   decision in its diff, before you trust it: past runs relayed subagent
   claims unchecked.
+
+After a session resume or restart, check the run journal's mtime before you
+call a build live: a restart kills running workflows.
+A `resumeFromRunId` resume must pass the original `args`.
 
 An issue that can't start yet (time-gated, or its output is not a PR) goes to
 the report.

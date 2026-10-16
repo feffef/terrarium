@@ -3,8 +3,13 @@ summary: >-
   Rules disagreed on whether a throwaway branch needs a pull request.
 cause: "ADR-0003 says open a PR for any pushed non-log commit, but the pack Skills prototype and wayfinder say a throwaway branch gets no PR, so sessions follow one and break the other."
 surface: "human-only"
-status: "tracked"
-ref: "issue #2029"
+status: "fixed"
+fixedOn: "2026-10-15"
+ref: "issue #2029 closed by PR #2085. Left open: ADR-0004 still asks gate:scoped plus code-review before a research/ or prototype/ branch's first push (01JkzKju pushed one without)."
+fixes:
+  - pr: 2085
+    date: "2026-10-15"
+    summary: "ADR-0003 now says a pushed research/ or prototype/ branch kept only as a primary source gets no PR and is never merged."
 occurrences:
   - session: "session_01BdQnbVQmdfrD1PPyZTnL9w"
     date: "2026-10-14"
