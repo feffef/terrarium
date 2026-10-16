@@ -84,7 +84,7 @@ simple or hard selection. It gets the §2 issue if it ranks in the top **three**
 of the run by severity, occurrence count and proof of regression (occurrences
 dated after the fix) together. List the rest in the description of the PR that
 carries the ledger edit (§4); they wait in the ledger for the next run.
-Drop a lone low-severity one-off (survey-brief.md) and anything an ADR defers. A candidate that ranks but fails only the
+Drop a lone low-severity one-off (the survey drops it) and anything an ADR defers. A candidate that ranks but fails only the
 safe-surface test is **surface-blocked**: not dropped, §4 files it, uncapped. The
 caller may pass a lower count as the Skill's argument; with none, take everything
 that ranks, capped at the same 10-total / 2-hard limits.
@@ -183,7 +183,7 @@ not a bystander waiting for a human. For each branch:
 2. **Code-review the diff** before the first push, per `dispatch-subagents` §3
    ("Scope and trust"). Check it implements the issue's recommended option, matches repo
    conventions, and confines itself to a safe surface. **For a doc PR, also
-   confirm it clears `audit-docs`' house rules** (§5): a fix that would itself be
+   confirm it clears `audit-docs`' house rules** ([`impl-brief.md`](impl-brief.md)): a fix that would itself be
    a future audit-docs finding is bounced back, not merged.
 3. **Have the agent push, then open the PR.** A hard selection's PR cites and
    `Closes` its issue; a simple selection's PR carries its problem/evidence/fix
