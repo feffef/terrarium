@@ -1,4 +1,4 @@
-// Prunes the Friction Ledger to its horizon (`frictions-to-fixes` §1): drops
+// Prunes the Friction Ledger to its horizon (`LEDGER_HORIZON_DAYS`): drops
 // every occurrence dated before it and deletes an entry left with none, so the
 // ledger never carries history git already keeps.
 //

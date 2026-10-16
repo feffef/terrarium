@@ -23,138 +23,35 @@ sessions has piled up unaddressed friction.
 ## 1. Survey & screen the frictions — in a subagent
 
 Reading a window of logs and surveying the whole tracker is context-heavy (the tracker JSON
-alone overflows the tool-result limit), so **delegate steps 1–2 to a single
-subagent** (`general-purpose`, so it can run `tsx` and the GitHub MCP tools). It
+alone overflows the tool-result limit), so **delegate the survey and screen to a single
+subagent** (`general-purpose`, so it can run `tsx` and the GitHub MCP tools), with
+[`survey-brief.md`](survey-brief.md) verbatim and the scratchpad path filled in. It
 surveys, screens, and returns a **distilled, ranked report**; the main session
 works only from that report and never re-reads the raw corpus. The subagent
 **surveys only** — it files no issues, opens no PRs, changes no code.
 
-Its brief:
+Its report holds **(a)** the ranked actionable candidates, **(b)** a dropped list,
+**(c)** the subagent's own frictions (they belong in this session's log too, §6),
+**(d)** the ledger changes and the path of their YAML patch file, **(e)** the
+regressions, and **(f)** the frictions two clusters share. Done when it has
+returned all six.
 
-- **Start from the Friction Ledger** (`layers/journal/content/current/frictions/*.yml`;
-  schema in `layers/journal/tenant.config.ts`): one entry per cluster of
-  frictions with a common cause, carrying its `status`, `surface` and every
-  `occurrence` so far. Append each friction in the window that matches an
-  entry, whatever its severity; a session counts once, at its highest
-  severity. An occurrence is the block
-  `pnpm exec tsx scripts/ledger-occurrence.ts <session> <index> [<session> <index> …]`
-  prints (the friction's text copied from the log; a content test checks the
-  copy), never retyped; pass all pairs in one call, as each takes seconds. A
-  friction sits in one cluster unless its text names two causes. A new entry needs a cause seen twice, or one `moderate`, `major` or
-  `blocker`. Its `summary` is one plain sentence a visitor can read; its
-  `cause` names the root mechanism and the signals that identify a new
-  occurrence (error text, file or tool, trigger), so a later run can match it.
-  A cluster is a shared **root cause**: two frictions days apart, on different
-  tools, belong together when one change would retire both. The ledger's
-  **horizon** is the last 14 days (§4 prunes it to that): an entry's
-  recurrence is its occurrences within it, counting only sessions that started
-  after its fix merged when it has one. Return the ledger changes (new entries, appended occurrences,
-  status changes, each with its evidence) in the report. Survey the ledger with
-  `pnpm exec tsx scripts/prune-friction-ledger.ts --summary` (one line per entry
-  with its fixes and its state; it lists the frictions two clusters share, for
-  you to re-judge);
-  open an entry file only for its evidence.
-- **Re-cluster when the ledger says so.** The stored texts show a broad entry
-  that holds several causes, or two entries with one: split or merge them,
-  moving the occurrences, without reopening the logs.
-- **Record each PR that merged to fix a cluster** as a `fixes` entry on its cluster, oldest
-  first: `pr`, `date` (its UTC merge date) and a one-line `summary` of what the
-  PR changed, written from the PR's description, not the friction's. Count a PR
-  only if it tries to change the cause (not a ledger-only, tracking or session-log
-  one); add every partial fix. Never record that a fix worked: `status` is the
-  tracking state (`open`, `tracked`, `on-trial`), and for an entry with `fixes`
-  the page and `--summary` derive `fix landed`, `likely fixed` (no occurrence
-  for 3 days after the latest PR) or `still recurring` (occurrences dated after
-  it, counted), so a re-fix after a regression needs only its `fixes` entry.
-  `ref` is not rendered: it
-  holds the tracking issue, the trial's territory match or what a fix left
-  open, never the PR list. `gh api repos/feffef/terrarium/commits/<sha>/pulls`
-  maps a commit to its PR and `gh api repos/feffef/terrarium/pulls/<N>` gives
-  its body and `merged_at` (`gh pr view` is blocked); read the body, since a
-  batched doc PR's title names no cluster. This run's own PRs are recorded
-  by §6; a PR an earlier run missed (still `tracked`, or in that run's log `prs`
-  but in no `fixes`) is recorded here.
-- **Steer the budget at the unfixed tail.** A large share of the window's frictions are usually already resolved by a later in-window session or a merged fix. Screen those out fast as a §2 `drop` instead of re-deriving their history; save the deep archaeology for candidates with no in-window resolution.
-- **Read the window's session logs** via `pnpm exec tsx scripts/session-frictions.ts`
-  (it prints where the window starts; bare `tsx` isn't on PATH). Large output goes to
-  `/tmp/session-frictions-output.json` and stdout gets only a notice — read the file, or
-  pass `--out PATH`; don't parse stdout. Use `--compact --unledgered` (the latter drops every friction the ledger already carries, and a session with none left; `--compact` keeps `docsRead` paths,
-  `subagents` and each friction's `index`, drops prose) and re-read a full log via its `file` only when a candidate needs it. This is a **recency window, not a
-  sample** — read every session in it, don't chase frictions from older,
-  likely-gone sessions. Each record's `id`/`file` point back to the full log —
-  re-read it directly when a candidate needs more context than the triage
-extract carries. **External sessions are already excluded:** the survey script drops any log flagged `external: true` (ADR-0009). Don't hunt the raw corpus for them.
-- **For a friction a doc already covers, check whether that session read the
-  doc.** Each triage record carries `docsRead` (Read-tool opens plus any the
-  author listed, and since 2026-10-10 shell reads). On an older log a
-  `cat`/`grep` read shows only in the full log's deprecated
-  `docsReadViaShell`, so check the record's `file` before calling a doc *not
-  opened*. This
-  splits one question into two very different frictions: **doc not opened** ⇒ a
-  *discoverability* failure — the rule's home is wrong, or prose is the wrong
-  mechanism entirely; **doc opened and the friction happened anyway** ⇒ the
-  prose itself is unclear, wrong, or too easy to read past. Report which, with
-the paths as evidence. **"Opened" can mean a subagent opened it:** subagent reads are folded into the parent's list (`session-trace.ts`'s `foldSubagentTrace`), so on a session that delegated, check the `subagents` field before concluding the agent that hit the friction had the rule in front of it. A doc only a subagent opened is closer to *not opened*. This repo has paid for the distinction repeatedly: the fixes for #241/#425 landed in `docs/agents/github-integration.md`, which the affected sessions had no reason to open, and the friction kept recurring until a `PreToolUse` guard replaced the prose.
-- **For a friction alleging a detector/tool/mechanism bug, check the `subagents` field and read the relevant mechanism source before trusting the friction's own root-cause guess.** A self-diagnosis logged in the moment, without source access, is not evidence: e.g. "detector over-credits reads" can be `foldSubagentTrace` correctly unioning a dispatched subagent's reads, not a real detector gap. Verify against source before ranking it.
-- **Group and rank.** A candidate is a ledger entry (one per root cause) or a
-  window friction too new for one; rank by **recurrence and severity together** (severity is an ordered rank, not a number: weigh it qualitatively, never multiply it). **Prioritize `moderate`, `major`, and `blocker` frictions**: these earn a fix on severity alone, even logged once. **A low-severity friction is not automatically dropped:** a `nit` or `minor` that **recurs across sessions _and_ is easy to fix** is still worth retiring, since cheap repeated papercuts add up. What gets dropped is the lone low-severity one-off (a single `nit` with a non-trivial fix), not every `nit`.
-- **Screen against the tracker** — apply the §2 rules to every candidate.
-- **Earlier runs' decisions are the ledger's `status` and `ref`.** When an entry
-  lacks them, the window's `trigger: frictions-to-fixes` logs (`summary`,
-  `outcome`, `prs`) are the fallback; a run's summary can be wrong or partial, so
-  verify against the PR or `main` before dropping.
-- **GitHub-MCP hygiene** (a recurring friction — heed it): load the
-  `mcp__github__*` tools you need via `ToolSearch` before the first call (e.g.
-  `select:mcp__github__search_issues,mcp__github__search_pull_requests,mcp__github__issue_read,mcp__github__pull_request_read`
-  — the §2 nearby-issue eyeball step needs the read tools too).
-  `docs/agents/github-integration.md` owns name resolution and the
-  `list_*`/`search_*` overflow guidance.
+## 2. Act on the screen
 
-**The subagent also reports its own frictions.** Whatever it hits while running the survey — an MCP disconnect, a tool that only resolved under its full id, an oversized result it had to slice — it records and **returns alongside** the screened list, so this run's own frictions feed the next cycle (they belong in this session's log too, §6).
+The subagent labels every candidate **never-fixed**, **drop**, **open-already** or
+**regression**, citing the issue/PR where one exists:
 
-Done when the subagent returns a structured report: **(a) ranked actionable
-candidates** — each with its ledger entry, severity, recurrence (as §1 counts it), sessions, tracker
-classification (never-fixed / open-already #N / regression of #N), fix type
-(doc/code/config), surface-blocked flag (fails §3's safe-surface test: human-only,
-guard or hook wiring), difficulty (simple/hard), a one-line
-recommended fix, and evidence quotes; **(b) a dropped list** with one-line reasons (an on-trial one quotes its territory match, §2);
-**(c) the subagent's own frictions** from the run; **(d) the ledger changes**, also saved as a YAML patch file in the
-scratchpad whose path it names: a list of whole entries, each exactly as its file
-reads (never invented keys such as `fixes_append`), with occurrence blocks as
-`ledger-occurrence.ts` printed them; **(e) the regressions**: every cluster
-`--summary` shows as `still recurring`, with its count since the latest PR and its highest severity since; and
-**(f) each friction `--summary` lists in two clusters**, moved or kept because its text names
-both causes.
-
-## 2. Screen against fixes already shipped (the subagent's rules)
-
-Never re-fix what is already fixed. **First, drop what isn't ours to change:** a candidate whose only fix edits an **external pack Skill's `SKILL.md`** is off limits (ADR-0015; the gate rejects it). A repo-specific fit-note belongs in that Skill's Inventory entry: `audit-skills`' job, not a friction fix.
-**Next, drop what is on trial:** a candidate whose fix would restore prose inside
-an open **Prune Trial**'s territory (`.agents/prune-trials.yml`) is the trial's
-evidence, not a fix (ADR-0027). The drop reason quotes the matching `territory` path or keyword verbatim; with no quotable match the candidate is not on trial, so classify it below. A
-`blocker` is the exception: after the usual tracker search, file it, naming the
-trial. Then, for the rest: the §1 subagent applies these rules to every candidate, checking the tracker for an issue or PR that already covers it, and confirming against **`main`** where cheap (a "solution" isn't ripe if main already has it). `pnpm exec tsx scripts/merged-since.ts <friction session's startedAt>` lists every `origin/main` commit landed after that instant (UTC, newest-first, `isMerge`-flagged; `--merges-only` keeps PR merges alone, else a window's output can overflow a subagent). Find the fixing commit/PR in it rather than comparing git timestamps by hand. Capture stdout and stderr separately: diagnostics go to stderr, and mixing them into the JSON on stdout breaks parsing. **Before labelling a candidate "never fixed", search the tracker with the friction's tool name and error-message text** (not a paraphrase), with a narrow query (`docs/agents/github-integration.md`). The search tools (e.g. `mcp__github__search_issues`) match semantically, not by substring, so a miss alone doesn't prove never-fixed: also eyeball nearby issues (same file, script or mechanism) for a closed one covering the same root cause in other words. A paraphrase or a nearby instance of an already-fixed cause is **fixed, not never-fixed** (issue #854). Classify each into one branch:
-
-- **Never fixed** — no issue/PR addresses it, confirmed by the keyword search
-  above. Carries on to step 3.
-- **Fixed, and not logged since the fix merged** — drop it (cite the issue/PR).
-  Done is done; spending a PR here is duplicate work.
-- **Open already** — an **open** issue or **open** PR already tracks it (the
-  ledger's `tracked`; cite the number). Don't file a duplicate. One with no
-  commit or comment within the horizon is idle: surface it as a candidate for
-  the main session to pick up or escalate.
-- **Reappeared _after_ its fix merged** (a friction logged in a session that
-  started later than the fixing PR landed; the entry's latest fix dates it,
-  and `--summary` shows it as `still recurring`) —
-  this is a **regression**: the fix that
-  was supposed to be in place did not hold. Do **not** route it through the ordinary
-  simplest-fix dispatch — a change that already failed once needs human eyes, not a
-  second run of the same idea. The main session files a distinct issue that flags
-  the earlier fix as ineffective (link the prior issue/PR and quote both the
+- **Never fixed** carries on to step 3.
+- **Drop** is done; spending a PR there is duplicate work. A `blocker` dropped
+  only for an open Prune Trial is the exception: after the usual tracker search,
+  file it, naming the trial.
+- **Open already**: don't file a duplicate. One the subagent flags idle (no
+  commit or comment within the horizon) is yours to pick up or escalate.
+- **Regression** (its fix merged and the friction recurred): do **not** route it
+  through the ordinary simplest-fix dispatch — a change that already failed once
+  needs human eyes, not a second run of the same idea. File a distinct issue that
+  flags the earlier fix as ineffective (link the prior issue/PR and quote both the
   original and the recurring friction); §3 caps these issues per run.
-
-Done when every candidate is labelled never-fixed, drop, open-already, or
-regression — each with its citing issue/PR number where one exists.
 
 ## 3. Pick what to fix — up to 10, at most 2 hard
 
@@ -187,7 +84,7 @@ simple or hard selection. It gets the §2 issue if it ranks in the top **three**
 of the run by severity, occurrence count and proof of regression (occurrences
 dated after the fix) together. List the rest in the description of the PR that
 carries the ledger edit (§4); they wait in the ledger for the next run.
-Drop a lone low-severity one-off (§1) and anything an ADR defers. A candidate that ranks but fails only the
+Drop a lone low-severity one-off (the survey drops it) and anything an ADR defers. A candidate that ranks but fails only the
 safe-surface test is **surface-blocked**: not dropped, §4 files it, uncapped. The
 caller may pass a lower count as the Skill's argument; with none, take everything
 that ranks, capped at the same 10-total / 2-hard limits.
@@ -255,38 +152,22 @@ post-dispatch check. Run at most 2 impl agents' full gates concurrently
 - **Doc-only fixes** (Markdown / prose — CLAUDE.md, a **repo-owned** SKILL, a Skill
   Inventory entry): hand them **all to one agent as a single grouped PR**,
   with this run's ledger edit (§4) in the brief, as the path to §1's patch file
-  plus any changes to it, ending with the prune script. These
+  plus any changes to it. These
   are ordinarily **simple** selections with no issue filed (§4) — the PR
   description carries each fix's problem/evidence/recommended-fix directly
   instead of a `Closes #N`; a doc selection that came out **hard** still cites its
-  issue. **Never an external pack Skill's `SKILL.md`**
-  (a `skills-lock.json` name) — those are off limits (screened out in §2). Many one-line doc PRs are pure review overhead; one batched PR is
+  issue. Many one-line doc PRs are pure review overhead; one batched PR is
   cheaper to review than several.
-  - **The doc fix must itself clear `audit-docs`' house rules** — that Skill is
-    the home for them (`audit-docs/SKILL.md`, not restated here), and since this
-    Skill self-merges its doc commits too (§6), they hold to the same standard the
-    doc-audit sweep verifies. Two axes: (1) respect each surface's **tier** — Live
-    is fixable, but **never edit an ADR** (its PR needs a human merge, ADR-0004, and this Skill merges its own), **a Historical
-    record** (session logs, blog posts) **or a Pack-generic template**;
-    (2) don't *author* any defect audit-docs' eight lenses catch — above all
-    **single-home rather than restate** (the CLAUDE.md rule), and make any new
-    `docs/agents/*` file reachable (ADR-0029; audit-docs' orphan-addition
-    lens). A
-    friction doc fix that would become the next audit-docs finding isn't done.
-    Put this in the doc-fix agent's brief.
 - **Code or config fixes**: one PR each — they carry distinct review and CI surface
   and shouldn't ride on each other. (A single issue that already grouped related
   frictions is still one PR.) A **simple** code/config selection carries its
   problem/evidence/fix in the PR description with no issue to cite; a **hard**
   one cites its issue and `Closes` it.
 
-Every agent's brief is self-contained: read the issue(s), branch from `origin/main`,
-implement the **recommended** option only, clear the **safety gate**, and commit,
-unpushed (`dispatch-subagents` §3, "Scope and trust"). The gate's floor runs `pnpm typecheck` (`scripts/gate.ts`); the brief tells
-the agent never to substitute a bare `tsc --noEmit`, which skips the
-`nuxt typecheck` step and can pass while real errors remain. The impl agent **never
-merges and never enables auto-merge** — it hands the committed branch back to you. You are the reviewer (§6)
-and open the PR.
+Each agent's brief is [`impl-brief.md`](impl-brief.md) verbatim, with its
+selections and (for the doc-fix agent, or the lone ledger agent of §4) the ledger
+edit filled in, plus `dispatch-subagents` §3's lines. It hands the committed
+branch back to you, unpushed; you are the reviewer (§6) and open the PR.
 
 Done when every selection and the ledger edit are covered by a committed branch
 (every simple doc fix and the ledger edit by the one grouped branch, each other
@@ -302,7 +183,7 @@ not a bystander waiting for a human. For each branch:
 2. **Code-review the diff** before the first push, per `dispatch-subagents` §3
    ("Scope and trust"). Check it implements the issue's recommended option, matches repo
    conventions, and confines itself to a safe surface. **For a doc PR, also
-   confirm it clears `audit-docs`' house rules** (§5): a fix that would itself be
+   confirm it clears `audit-docs`' house rules** ([`impl-brief.md`](impl-brief.md)): a fix that would itself be
    a future audit-docs finding is bounced back, not merged.
 3. **Have the agent push, then open the PR.** A hard selection's PR cites and
    `Closes` its issue; a simple selection's PR carries its problem/evidence/fix
