@@ -4,7 +4,8 @@ summary: >-
 cause: >-
   Session logs land straight on main (ADR-0009), so origin/main moves during a session; a two-dot diff or a reset --soft onto it shows or deletes files this branch never touched. git-conventions.md already says to anchor on the merge-base. Signals: 'two-dot', 'reset --soft origin/main', an unrelated session log in a diff.
 surface: safe
-status: open
+status: tracked
+ref: "fix dispatched by the 2026-10-16 frictions-to-fixes run (git-conventions.md)"
 fixes: []
 occurrences:
   - session: session_01G6m9SbDppX4TE87Mp3m5Dk

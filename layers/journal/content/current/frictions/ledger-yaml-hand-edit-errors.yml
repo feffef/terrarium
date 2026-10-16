@@ -2,10 +2,13 @@ name: ledger-yaml-hand-edit-errors
 summary: >-
   Hand edits to this ledger's data files by text replacement broke their format.
 cause: >-
-  Ledger and prune-trials YAML are patched by string replacement (or a survey patch that repeats a session); unquoted dates, replaced refs or a match inside a comment broke the file (gate or repair needed). The status enum also lacks a value for an accepted cause.
+  Ledger and prune-trials YAML are patched by string replacement (or a survey patch that repeats a session); unquoted dates, replaced refs or a match inside a comment broke the file (gate or repair needed).
 surface: safe
-status: tracked
-ref: "issue #2148 (no ledger status for an accepted cause)"
+status: open
+fixes:
+  - pr: 2154
+    date: "2026-10-16"
+    summary: "The survey commits its own ledger changes, built with ledger-occurrence.ts, instead of handing an impl agent a patch."
 occurrences:
   - session: session_0147UencKKZS3WLHvsbgywp7
     date: "2026-10-15"
