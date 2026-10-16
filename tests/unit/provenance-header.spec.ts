@@ -19,7 +19,6 @@ import {
 
 const URL = 'https://claude.ai/code/session_019hdkXjoebyR8etKVNyjn7S'
 const ID = 'session_019hdkXjoebyR8etKVNyjn7S'
-/** A local CLI session has no `session_` id: its id is the transcript's raw UUID. */
 const LOCAL_ID = 'e34491a0-8237-4285-88b7-1a0b73cd29e7'
 const LOCAL_URL = `https://claude.ai/code/${LOCAL_ID}`
 
