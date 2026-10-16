@@ -1,11 +1,11 @@
 schemaVersion: 1
 session: session_01WynjtDHvk8MajTsgr59Ckt
 startedAt: 2026-10-16T21:04:56Z
-endedAt: 2026-10-16T22:14:39Z
+endedAt: 2026-10-16T22:18:47Z
 kind: interactive
 goal: Feature Glass Box on the homepage
-status: in-review
-outcome: "Two PRs merged; third open: guide landing leads with Subjects, no Start here Walkthrough"
+status: completed
+outcome: "Three PRs merged: Glass Box on the homepage, guide framed as the focus, Lessons lead over Walkthroughs"
 summary: "The owner asked where Glass Box should go on the homepage, in which existing section, and whether to break the pattern, advertising it as the newest, work-in-progress experiment. I recommended its own full-width band under the hero (neither section fits: \"Commentary\" is the outside view, \"What the agents build\" is practice sites, and a third tile leaves an odd grid row). Over three rounds of questions the owner decided: guide and drafts both shown; Catalog opt-in yes; publishedAt only when a page changes substantially (agent judgement, not a script, which killed my --stamp script idea); new and promoted pages count; no backfill. The owner left \"slot vs one-off\" and \"long-term home\" to me: one-off, and the band stays put with the label dropped later. The owner then said \"build it\" (human-instructed); the HomeShowcase `wide` layout, the `.gb-tokens` split and the e2e test were my implementation choices. Code review caught a contradiction I wrote into EVERY-PAGE.md and a duplicated rule in the glossary; screenshots caught a padding bug the e2e test couldn't see. After the merge the owner asked (human-instructed) to stop calling the guide \"finished pages\" (it's the pages in focus) and to stop featuring the Walkthrough, which doesn't work well yet; they picked a Lesson of the day and a glossary update. I chose to also reword the drafts index and draft banner, which carried the same \"failed the guide's bar\" framing. Review caught my glossary overclaiming that nothing leads with Walkthroughs. The owner then said yes to removing Start here from the guide landing and sidebar, and chose to move the story tiles below the Subjects as one plain list."
 prs:
   - "2170"
@@ -88,11 +88,11 @@ frictions:
   - description: "Restyle stopped short: Walkthroughs kept the dark slab after moving, though I had offered the owner a plain list"
     solution: Check the built page against the exact option wording before review; the Spec reviewer caught it
     severity: nit
-durationSec: 4182
+durationSec: 4431
 models:
-  claude-opus-5-5: 295
+  claude-opus-5-5: 306
 toolCounts:
-  Bash: 100
+  Bash: 102
   Edit: 2
   Skill: 4
   Agent: 6
@@ -100,12 +100,12 @@ toolCounts:
   ToolSearch: 3
   mcp__github__create_pull_request: 3
   mcp__claude-code-remote__subscribe_pr_activity: 3
-  ReadNotifications: 6
-  mcp__github__pull_request_read: 4
+  ReadNotifications: 8
+  mcp__github__pull_request_read: 5
   mcp__claude-code-remote__send_later: 3
-  mcp__github__add_issue_comment: 2
-  mcp__claude-code-remote__delete_trigger: 2
-  mcp__claude-code-remote__unsubscribe_pr_activity: 2
+  mcp__github__add_issue_comment: 3
+  mcp__claude-code-remote__delete_trigger: 3
+  mcp__claude-code-remote__unsubscribe_pr_activity: 3
   AskUserQuestion: 2
 filesEdited:
   - tests/e2e/smoke.spec.ts
