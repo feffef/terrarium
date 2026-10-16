@@ -21,7 +21,7 @@ export const glassboxStories = [
   { verb: 'Ship', path: '/walkthroughs/a-change-goes-live' },
 ] as const
 
-/** The landing's term strip: the `terms` entries guide pages expand most, most first. */
+/** The landing's term strip: `terms` entries a newcomer meets first, picked from what guide Lessons expand most. */
 export const glassboxLandingTerms = ['gate', 'tenant', 'human-only', 'collection', 'space', 'skill', 'rule', 'manifest'] as const
 
 export interface GlassboxPageLink {

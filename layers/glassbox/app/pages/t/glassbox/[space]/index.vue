@@ -41,8 +41,9 @@ const sources = [
   { path: 'GLOSSARY.md', label: 'Terms' },
   { path: 'layers/glassbox/', label: "This site's code" },
 ]
-const openWord = ref<string>()
-const openEntry = computed(() => data.value?.words.find((word) => word.stem === openWord.value))
+const openTerm = ref<string>()
+const openEntry = computed(() => data.value?.words.find((word) => word.stem === openTerm.value))
+const definitionId = useId()
 provide(glassboxRevisionKey, computed(() => landing.value ?? undefined))
 
 useHead(() => ({ title: `${landing.value?.title ?? 'Glass Box'} · glassbox` }))
@@ -99,18 +100,18 @@ useSeoMeta({ description: () => landing.value?.description })
     </section>
 
     <section v-if="data?.words.length" class="words" aria-labelledby="words-h">
-      <h2 id="words-h" class="gb-label">Terms the Lessons use most</h2>
+      <h2 id="words-h" class="gb-label">Terms you’ll meet</h2>
       <ul>
         <li v-for="word in data.words" :key="word.stem">
           <button
             type="button"
-            :aria-expanded="openWord === word.stem"
-            aria-controls="words-definition"
-            @click="openWord = openWord === word.stem ? undefined : word.stem"
+            :aria-expanded="openTerm === word.stem"
+            :aria-controls="definitionId"
+            @click="openTerm = openTerm === word.stem ? undefined : word.stem"
           >{{ word.term }}</button>
         </li>
       </ul>
-      <p v-show="openEntry" id="words-definition" class="definition" role="note">{{ openEntry?.definition }}<File v-if="openEntry?.source" class="source">{{ openEntry.source }}</File></p>
+      <p v-show="openEntry" :id="definitionId" class="definition" role="note" aria-live="polite">{{ openEntry?.definition }}<File v-if="openEntry?.source" class="source">{{ openEntry.source }}</File></p>
     </section>
 
     <section v-if="landing" class="sources">
