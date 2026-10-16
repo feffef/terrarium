@@ -15,15 +15,20 @@ occurrences:
   - session: session_01RGKoFL9ZKfvji8zENgRVBT
     date: "2026-10-07"
     severity: nit
+    friction: 0
   - session: session_01WFq4ZnYVWTyGHAAxqo5wKb
     date: "2026-10-10"
     severity: minor
+    friction: 0
   - session: session_0147GPfMLJfFV6JbmC4HZGHb
     date: "2026-10-12"
     severity: minor
+    friction: 1
   - session: session_01BkB4AFUGkEudyf13aa44Wy
     date: "2026-10-12"
     severity: minor
+    friction: 1
   - session: session_01RAEu4CBfQptjCtKnJpUw8q
     date: "2026-10-14"
     severity: nit
+    friction: 0

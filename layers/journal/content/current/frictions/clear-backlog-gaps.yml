@@ -45,36 +45,48 @@ occurrences:
   - session: session_01DtK8w6aJ3361uPK73VAxhi
     date: "2026-10-12"
     severity: minor
+    friction: 5
   - session: session_01SZwdbK8GbYtyj926UyJT6o
     date: "2026-10-12"
     severity: moderate
+    friction: 3
   - session: session_01La82mxqduxHnRS9jRfNHmU
     date: "2026-10-12"
     severity: moderate
+    friction: 1
   - session: session_017NBxJhtBSd9AoCwTzsg6pM
     date: "2026-10-12"
     severity: major
+    friction: 1
   - session: session_018KSwetqxttBFszkhTKZkF1
     date: "2026-10-12"
     severity: major
+    friction: 1
   - session: session_015LwBgLjaCn36ayZedges6G
     date: "2026-10-12"
     severity: major
+    friction: 4
   - session: session_01STVS35HcxNZp7dQ1pPnrhW
     date: "2026-10-13"
     severity: moderate
+    friction: 0
   - session: session_013FXrBeYrgCUvFvJjysR7yM
     date: "2026-10-13"
     severity: nit
+    friction: 3
   - session: session_016gu9e44jjfAEFMo3CBxzUQ
     date: "2026-10-13"
     severity: moderate
+    friction: 4
   - session: session_015dUGRadEQP1bvv6KytKLXT
     date: "2026-10-14"
     severity: minor
+    friction: 6
   - session: session_01ATdHzhyNozsTLHHtJGbLsa
     date: "2026-10-14"
     severity: moderate
+    friction: 0
   - session: session_012NmfdSNbbPD9T5LPAwmdYG
     date: "2026-10-15"
     severity: minor
+    friction: 3

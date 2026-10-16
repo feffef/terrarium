@@ -14,39 +14,51 @@ occurrences:
   - session: session_01CF4k9jXS9wLrcPVsGduZmn
     date: "2026-10-08"
     severity: moderate
+    friction: 0
   - session: session_018i6d2BQPkf9cq6jSEqCNSX
     date: "2026-10-10"
     severity: moderate
+    friction: 4
   - session: session_01BLrfuHbMMEmjZZ7STpe1AN
     date: "2026-10-11"
     severity: minor
+    friction: 4
   - session: session_016iE4LmQUcg6ap5YMxJg4oC
     date: "2026-10-12"
     severity: minor
+    friction: 2
   - session: session_017NBxJhtBSd9AoCwTzsg6pM
     date: "2026-10-12"
     severity: minor
+    friction: 6
   - session: session_01STVS35HcxNZp7dQ1pPnrhW
     date: "2026-10-13"
     severity: minor
+    friction: 5
   - session: session_01XJ9iR9EbRT2iV7afhytND8
     date: "2026-10-14"
     severity: minor
+    friction: 2
   - session: session_01CJix3AqBpX5KrAENqNp1M7
     date: "2026-10-14"
     severity: minor
+    friction: 0
   - session: session_01ERZa4fUGxpF81MeLhZMkSB
     date: "2026-10-14"
     severity: minor
   - session: session_01JkzKjuQD4wH34MjxMjKHaX
     date: "2026-10-14"
     severity: minor
+    friction: 6
   - session: session_01RBVYHX1FsYogHEgzgyRV6P
     date: "2026-10-14"
     severity: minor
+    friction: 0
   - session: session_01Dcufz27EyPsKy6sYafpKRg
     date: "2026-10-14"
     severity: minor
+    friction: 1
   - session: session_01KVh6e6JUAssZvPRbuN5YDr
     date: "2026-10-15"
     severity: minor
+    friction: 1

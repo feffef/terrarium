@@ -14,21 +14,28 @@ occurrences:
   - session: session_01P7a2zqJxuariDNfYqWQRHs
     date: "2026-10-03"
     severity: moderate
+    friction: 2
   - session: session_01TiCx5GDdDdFGwCEs6xxr89
     date: "2026-10-03"
     severity: major
+    friction: 9
   - session: 1f97b613-f529-4487-a7e9-1115a44b84c7
     date: "2026-10-08"
     severity: major
+    friction: 2
   - session: 355d2d64-55fc-4515-81c1-e831f8b84601
     date: "2026-10-08"
     severity: major
+    friction: 0
   - session: 49f1fea0-270e-4851-9cc7-3dbf8cc8609a
     date: "2026-10-08"
     severity: major
+    friction: 0
   - session: session_01E2zbWEQmuUrEhWvbzNpBba
     date: "2026-10-15"
     severity: moderate
+    friction: 3
   - session: session_013LwpcexAe7t3Qck4CKtj9Y
     date: "2026-10-15"
     severity: minor
+    friction: 4

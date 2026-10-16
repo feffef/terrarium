@@ -13,6 +13,8 @@ occurrences:
   - session: session_01STVS35HcxNZp7dQ1pPnrhW
     date: "2026-10-13"
     severity: nit
+    friction: 2
   - session: session_017XWy7odnhW5S5AEuekatR8
     date: "2026-10-13"
     severity: minor
+    friction: 4

@@ -21,9 +21,12 @@ occurrences:
   - session: session_01548Bi1ZiGcknAp8CMLNMZB
     date: "2026-10-03"
     severity: moderate
+    friction: 2
   - session: session_018i6d2BQPkf9cq6jSEqCNSX
     date: "2026-10-10"
     severity: minor
+    friction: 5
   - session: session_01SZwdbK8GbYtyj926UyJT6o
     date: "2026-10-12"
     severity: minor
+    friction: 4

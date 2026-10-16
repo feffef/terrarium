@@ -15,3 +15,4 @@ occurrences:
   - session: session_01STVS35HcxNZp7dQ1pPnrhW
     date: "2026-10-13"
     severity: major
+    friction: 3

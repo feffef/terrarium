@@ -24,12 +24,16 @@ occurrences:
   - session: session_01DtK8w6aJ3361uPK73VAxhi
     date: "2026-10-12"
     severity: major
+    friction: 7
   - session: session_017NBxJhtBSd9AoCwTzsg6pM
     date: "2026-10-12"
     severity: major
+    friction: 2
   - session: session_018KSwetqxttBFszkhTKZkF1
     date: "2026-10-12"
     severity: major
+    friction: 2
   - session: session_01TFojzwXEByz1nbqt3wcKNL
     date: "2026-10-14"
     severity: moderate
+    friction: 0

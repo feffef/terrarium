@@ -9,6 +9,8 @@ occurrences:
   - session: session_01Lwanyry6GWtqHYoMAgGGLa
     date: "2026-10-15"
     severity: minor
+    friction: 1
   - session: session_01Q4KbJ3FxhATe3QXaMbo1AM
     date: "2026-10-16"
     severity: minor
+    friction: 0

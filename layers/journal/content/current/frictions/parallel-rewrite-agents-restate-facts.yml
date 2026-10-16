@@ -9,3 +9,4 @@ occurrences:
   - session: session_011xN2Zi67cjpCguuMiZbsJ6
     date: "2026-10-13"
     severity: moderate
+    friction: 9

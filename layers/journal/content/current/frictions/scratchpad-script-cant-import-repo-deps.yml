@@ -12,7 +12,9 @@ occurrences:
   - session: session_01QUhfMeVRZg7NX654bv5ZE5
     date: "2026-10-13"
     severity: nit
+    friction: 1
   - session: session_01WUDXJjhrM6uHf9Sjjvw2N9
     date: "2026-10-13"
     severity: nit
+    friction: 3
 fixedOn: "2026-10-14"

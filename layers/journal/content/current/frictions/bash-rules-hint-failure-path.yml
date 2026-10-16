@@ -15,3 +15,4 @@ occurrences:
   - session: session_01NVG22rfEsjhW9zkcCco6W8
     date: "2026-10-14"
     severity: moderate
+    friction: 0

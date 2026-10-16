@@ -15,9 +15,12 @@ occurrences:
   - session: session_01NRVHQoPm4cP1F7iVUvh9rJ
     date: "2026-10-04"
     severity: blocker
+    friction: 2
   - session: 355d2d64-55fc-4515-81c1-e831f8b84601
     date: "2026-10-08"
     severity: blocker
+    friction: 5
   - session: 49f1fea0-270e-4851-9cc7-3dbf8cc8609a
     date: "2026-10-08"
     severity: blocker
+    friction: 7

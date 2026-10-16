@@ -14,9 +14,12 @@ occurrences:
   - session: session_01Dfw9sJon2e4UsaVoiCLhSJ
     date: "2026-10-14"
     severity: nit
+    friction: 7
   - session: session_015dUGRadEQP1bvv6KytKLXT
     date: "2026-10-14"
     severity: nit
+    friction: 2
   - session: session_01ATdHzhyNozsTLHHtJGbLsa
     date: "2026-10-14"
     severity: nit
+    friction: 6

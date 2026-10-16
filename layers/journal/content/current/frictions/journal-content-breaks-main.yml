@@ -20,24 +20,32 @@ occurrences:
   - session: a1af4e46-8293-4f33-bf41-c956bd7f6306
     date: "2026-10-03"
     severity: major
+    friction: 6
   - session: session_01DU7WbYNfKmdNgRpry9qzeV
     date: "2026-10-03"
     severity: moderate
+    friction: 2
   - session: session_01CF4k9jXS9wLrcPVsGduZmn
     date: "2026-10-08"
     severity: moderate
+    friction: 9
   - session: session_01KCWd4fWsUfUxL6uT4Bephj
     date: "2026-10-08"
     severity: moderate
+    friction: 0
   - session: session_015BjYk46dntcMuAWMn1z4Zw
     date: "2026-10-10"
     severity: major
+    friction: 11
   - session: session_01LzWPjhbEKVo8HK7oTPqWK9
     date: "2026-10-10"
     severity: minor
+    friction: 6
   - session: session_01WoJ2cTAuA3Qo9Mi9fd6Tki
     date: "2026-10-11"
     severity: minor
+    friction: 3
   - session: session_01F3a2MbH4xUH7J7Y1hLg2TX
     date: "2026-10-16"
     severity: moderate
+    friction: 0

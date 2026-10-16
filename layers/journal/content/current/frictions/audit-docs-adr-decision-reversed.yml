@@ -14,3 +14,4 @@ occurrences:
   - session: session_01QvnVVurQdA4cvYSZToBvud
     date: "2026-10-13"
     severity: moderate
+    friction: 7

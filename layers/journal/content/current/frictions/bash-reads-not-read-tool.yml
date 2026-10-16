@@ -17,219 +17,291 @@ occurrences:
   - session: session_01Mw8k3DVnAyVho8fcDofChZ
     date: "2026-10-10"
     severity: minor
+    friction: 1
   - session: session_015BjYk46dntcMuAWMn1z4Zw
     date: "2026-10-10"
     severity: nit
+    friction: 1
   - session: session_01FW11yrFCnfGNcEXNtrWeko
     date: "2026-10-11"
     severity: nit
+    friction: 1
   - session: session_01LARTWkGx5vBwRwsMrdftPD
     date: "2026-10-11"
     severity: moderate
+    friction: 0
   - session: session_01SLCo4c8kt3y2B3vP4XQsG4
     date: "2026-10-11"
     severity: nit
+    friction: 2
   - session: session_01DRBxySwYL4HR4xEEJc3CXX
     date: "2026-10-11"
     severity: minor
+    friction: 1
   - session: session_01WoJ2cTAuA3Qo9Mi9fd6Tki
     date: "2026-10-11"
     severity: minor
+    friction: 0
   - session: session_01BBQnwhyfsvoksh4oV9MXsU
     date: "2026-10-11"
     severity: nit
+    friction: 1
   - session: session_01CasnQoauTyLNUxd74agJsP
     date: "2026-10-11"
     severity: minor
+    friction: 0
   - session: session_0177ZCpnHq4Sw5wicAEmriDh
     date: "2026-10-11"
     severity: minor
+    friction: 0
   - session: session_01Tjsmye34hk57NtioyWQG4h
     date: "2026-10-11"
     severity: minor
+    friction: 0
   - session: session_01WuJh8gfMFWfS5bWEJcdScC
     date: "2026-10-11"
     severity: minor
+    friction: 1
   - session: session_01YVCyXmxSSDQ6csSBVJ554H
     date: "2026-10-11"
     severity: nit
+    friction: 1
   - session: session_01V3bxJaTSH8AWjrtSoBhNxK
     date: "2026-10-11"
     severity: nit
+    friction: 2
   - session: session_01LuXuScHA2QsY4RXipy9nAt
     date: "2026-10-11"
     severity: nit
+    friction: 2
   - session: session_01D3gBoQCQTmjVwEyuA3qZkQ
     date: "2026-10-11"
     severity: minor
+    friction: 0
   - session: session_01BLrfuHbMMEmjZZ7STpe1AN
     date: "2026-10-11"
     severity: minor
+    friction: 1
   - session: session_01Nxo7EM7AbxUU6FFvEEQ7s8
     date: "2026-10-12"
     severity: nit
+    friction: 0
   - session: session_01Dz52W6wWZWUgKwPtdxabzJ
     date: "2026-10-12"
     severity: minor
+    friction: 0
   - session: session_014uXxmT6359K4Z42a6We6Gh
     date: "2026-10-12"
     severity: nit
+    friction: 2
   - session: session_01Xw7ZN8ghC7PDemvu9cA9Lo
     date: "2026-10-12"
     severity: minor
+    friction: 0
   - session: session_01VGLAakRJNm67PuNHpgbEc7
     date: "2026-10-12"
     severity: minor
+    friction: 2
   - session: session_018PnYQH5cA1JUv9mZbi1NDp
     date: "2026-10-12"
     severity: nit
+    friction: 1
   - session: session_01LtYEkEsZ2cxf4uRFJvq4n9
     date: "2026-10-12"
     severity: nit
+    friction: 1
   - session: session_01DtK8w6aJ3361uPK73VAxhi
     date: "2026-10-12"
     severity: minor
+    friction: 0
   - session: session_01SZwdbK8GbYtyj926UyJT6o
     date: "2026-10-12"
     severity: nit
+    friction: 2
   - session: session_017NBxJhtBSd9AoCwTzsg6pM
     date: "2026-10-12"
     severity: nit
+    friction: 9
   - session: session_015LwBgLjaCn36ayZedges6G
     date: "2026-10-12"
     severity: nit
+    friction: 1
   - session: session_01FJuuzCvFL2h6ueukNEqi1R
     date: "2026-10-13"
     severity: minor
+    friction: 0
   - session: session_01STVS35HcxNZp7dQ1pPnrhW
     date: "2026-10-13"
     severity: minor
+    friction: 1
   - session: session_017XWy7odnhW5S5AEuekatR8
     date: "2026-10-13"
     severity: minor
+    friction: 2
   - session: session_013FXrBeYrgCUvFvJjysR7yM
     date: "2026-10-13"
     severity: nit
+    friction: 2
   - session: session_01RDtAc5Vv37kkRH4yCtRDQB
     date: "2026-10-13"
     severity: minor
+    friction: 0
   - session: session_01DqPT8JpBjhHPEubNDJuVuN
     date: "2026-10-13"
     severity: nit
+    friction: 0
   - session: session_01AnHXyvzXukt6izZTYs3YMr
     date: "2026-10-13"
     severity: minor
+    friction: 0
   - session: session_01JW1NEbkjzCyx2myBjt9X8V
     date: "2026-10-13"
     severity: minor
+    friction: 0
   - session: session_01QUhfMeVRZg7NX654bv5ZE5
     date: "2026-10-13"
     severity: minor
+    friction: 0
   - session: session_01WUDXJjhrM6uHf9Sjjvw2N9
     date: "2026-10-13"
     severity: nit
+    friction: 4
   - session: session_01N2WiBqiw2rFsAqpy41VnhA
     date: "2026-10-13"
     severity: nit
+    friction: 1
   - session: session_01PGvPc9bv3tGwoaLDDZsg6a
     date: "2026-10-13"
     severity: nit
+    friction: 2
   - session: session_01QvnVVurQdA4cvYSZToBvud
     date: "2026-10-13"
     severity: nit
+    friction: 2
   - session: session_01EdZyfmrUBL5o3ePoaobtae
     date: "2026-10-13"
     severity: nit
+    friction: 1
   - session: session_01TW6hQ1C1Fm1aeaaoxQeHEp
     date: "2026-10-13"
     severity: nit
+    friction: 1
   - session: session_01TFojzwXEByz1nbqt3wcKNL
     date: "2026-10-14"
     severity: nit
   - session: session_011xN2Zi67cjpCguuMiZbsJ6
     date: "2026-10-13"
     severity: minor
+    friction: 3
   - session: session_01Dfw9sJon2e4UsaVoiCLhSJ
     date: "2026-10-14"
     severity: nit
+    friction: 0
   - session: session_01JYFKBPoDVHJanBhFhmw1kR
     date: "2026-10-14"
     severity: nit
+    friction: 0
   - session: session_01XJ9iR9EbRT2iV7afhytND8
     date: "2026-10-14"
     severity: nit
+    friction: 1
   - session: session_01CJix3AqBpX5KrAENqNp1M7
     date: "2026-10-14"
     severity: nit
+    friction: 1
   - session: session_015dUGRadEQP1bvv6KytKLXT
     date: "2026-10-14"
     severity: minor
+    friction: 0
   - session: session_01AdUi9nKLGKyPFfBe4HYvqG
     date: "2026-10-14"
     severity: nit
+    friction: 1
   - session: session_01BdQnbVQmdfrD1PPyZTnL9w
     date: "2026-10-14"
     severity: nit
+    friction: 2
   - session: session_01ATdHzhyNozsTLHHtJGbLsa
     date: "2026-10-14"
     severity: minor
+    friction: 1
   - session: session_01JkzKjuQD4wH34MjxMjKHaX
     date: "2026-10-14"
     severity: nit
+    friction: 5
   - session: session_01VkVtDd4YKNa2KYRyRo8Uvy
     date: "2026-10-14"
     severity: nit
+    friction: 0
   - session: session_01U6EF8qk4ANQLqE5KXmJgEY
     date: "2026-10-14"
     severity: nit
+    friction: 2
   - session: session_01G6m9SbDppX4TE87Mp3m5Dk
     date: "2026-10-14"
     severity: nit
+    friction: 4
   - session: session_01BpePUUjkw8MVBXM2oiDnsj
     date: "2026-10-14"
     severity: nit
+    friction: 3
   - session: session_01Nh8fwUMyekCqCTFjgVzv5Z
     date: "2026-10-14"
     severity: nit
+    friction: 0
   - session: session_01Qp5NojwQhExSmToPJtnQNV
     date: "2026-10-14"
     severity: nit
+    friction: 0
   - session: session_01Dcufz27EyPsKy6sYafpKRg
     date: "2026-10-14"
     severity: nit
+    friction: 2
   - session: session_01R8ZgGod9KTmxwvnDyB4PQY
     date: "2026-10-14"
     severity: nit
+    friction: 2
   - session: session_01GG85r8HWMEdaMgKUaNUZH7
     date: "2026-10-14"
     severity: nit
+    friction: 0
   - session: session_01P7kLLJwHBgCaeVSUjhbScg
     date: "2026-10-15"
     severity: nit
+    friction: 3
   - session: session_011HBcCLzMW7CshmqnHLnegb
     date: "2026-10-15"
     severity: nit
+    friction: 0
   - session: session_012NmfdSNbbPD9T5LPAwmdYG
     date: "2026-10-15"
     severity: minor
+    friction: 0
   - session: session_012VTgtrUEy7cPVTN5sMriXj
     date: "2026-10-15"
     severity: nit
+    friction: 2
   - session: session_01LpcCJWRYb5grgQe3wBGEwb
     date: "2026-10-15"
     severity: nit
+    friction: 1
   - session: session_01NqN7omu3o4kxoGeQzzSXhK
     date: "2026-10-15"
     severity: minor
+    friction: 0
   - session: session_011t1xXHxqwrfAjt83s9oTEP
     date: "2026-10-15"
     severity: minor
+    friction: 1
   - session: session_019e468BFBTvDPXZuGzLMAL7
     date: "2026-10-15"
     severity: nit
+    friction: 1
   - session: session_01C8c4U7TDuWnJwenPUWYxrP
     date: "2026-10-15"
     severity: nit
+    friction: 1
   - session: session_013LwpcexAe7t3Qck4CKtj9Y
     date: "2026-10-15"
     severity: nit
+    friction: 2

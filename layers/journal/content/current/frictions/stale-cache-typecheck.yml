@@ -9,9 +9,12 @@ occurrences:
   - session: a1af4e46-8293-4f33-bf41-c956bd7f6306
     date: "2026-10-03"
     severity: moderate
+    friction: 1
   - session: session_01DtFw6GBViQZp25jvQV7gEF
     date: "2026-10-03"
     severity: moderate
+    friction: 0
   - session: session_01WhVjfShqpBDDjMPkTrpvZH
     date: "2026-10-03"
     severity: moderate
+    friction: 0

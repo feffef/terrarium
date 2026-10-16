@@ -20,57 +20,75 @@ occurrences:
   - session: session_01BXoQpiEuaGZJVRQB7XpsFi
     date: "2026-10-02"
     severity: moderate
+    friction: 3
   - session: session_01VC6tZCm3HYs9BsJ7JrQQ5Z
     date: "2026-10-02"
     severity: moderate
+    friction: 6
   - session: a1af4e46-8293-4f33-bf41-c956bd7f6306
     date: "2026-10-03"
     severity: moderate
+    friction: 5
   - session: session_01SWRyFbuNXxVWi47tGB8GX6
     date: "2026-10-03"
     severity: moderate
+    friction: 0
   - session: session_01LEQpnXw4SeWsfw4THR5NbX
     date: "2026-10-04"
     severity: moderate
+    friction: 5
   - session: session_01CF4k9jXS9wLrcPVsGduZmn
     date: "2026-10-08"
     severity: moderate
+    friction: 7
   - session: session_01VaPP7iMRxMvKvX8KQh1qeY
     date: "2026-10-09"
     severity: moderate
+    friction: 9
   - session: session_01JR1AZGGyi6AEh1SHTp6qsH
     date: "2026-10-10"
     severity: moderate
+    friction: 4
   - session: session_015Hx2GtEuH6WZBL8Hp4aDgg
     date: "2026-10-11"
     severity: moderate
+    friction: 1
   - session: session_0177ZCpnHq4Sw5wicAEmriDh
     date: "2026-10-11"
     severity: moderate
+    friction: 4
   - session: session_01YBJaRLtVQEr4RshMQG1X7D
     date: "2026-10-11"
     severity: moderate
+    friction: 1
   - session: session_01YVCyXmxSSDQ6csSBVJ554H
     date: "2026-10-11"
     severity: moderate
+    friction: 7
   - session: session_01QfaLuSd5cnBQPu8CCRrvkn
     date: "2026-10-12"
     severity: moderate
+    friction: 2
   - session: session_01DXuGrxEAsk3MjyRx98QTb2
     date: "2026-10-12"
     severity: moderate
+    friction: 3
   - session: session_0147GPfMLJfFV6JbmC4HZGHb
     date: "2026-10-12"
     severity: moderate
+    friction: 3
   - session: session_018KSwetqxttBFszkhTKZkF1
     date: "2026-10-12"
     severity: moderate
+    friction: 6
   - session: session_01Rn5xT34AdjnywsTJdUtaDm
     date: "2026-10-13"
     severity: moderate
+    friction: 3
   - session: session_01STVS35HcxNZp7dQ1pPnrhW
     date: "2026-10-13"
     severity: moderate
+    friction: 8
   - session: session_01NVG22rfEsjhW9zkcCco6W8
     date: "2026-10-14"
     severity: nit

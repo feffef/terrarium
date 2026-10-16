@@ -9,6 +9,8 @@ occurrences:
   - session: "session_01BdQnbVQmdfrD1PPyZTnL9w"
     date: "2026-10-14"
     severity: "minor"
+    friction: 0
   - session: "session_01JkzKjuQD4wH34MjxMjKHaX"
     date: "2026-10-14"
     severity: "minor"
+    friction: 0

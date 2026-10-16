@@ -14,6 +14,8 @@ occurrences:
   - session: session_01AnHXyvzXukt6izZTYs3YMr
     date: "2026-10-13"
     severity: minor
+    friction: 2
   - session: session_01QvnVVurQdA4cvYSZToBvud
     date: "2026-10-13"
     severity: minor
+    friction: 0

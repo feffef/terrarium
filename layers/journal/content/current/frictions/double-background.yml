@@ -9,30 +9,40 @@ occurrences:
   - session: session_01KyKW5E8oFPkSu3a4mCpT25
     date: "2026-10-05"
     severity: nit
+    friction: 2
   - session: session_01AQ91ENQEqf8iMne1PrzFiu
     date: "2026-10-07"
     severity: nit
+    friction: 4
   - session: session_01FjXKYqhJLRWNRcbDvdhNxQ
     date: "2026-10-07"
     severity: nit
+    friction: 1
   - session: session_01449u16G5rFweMPGkKZe9Tv
     date: "2026-10-08"
     severity: minor
+    friction: 3
   - session: session_01KRLFYUD31NaEVTs4Qs1Tzj
     date: "2026-10-10"
     severity: nit
+    friction: 2
   - session: session_01Tjsmye34hk57NtioyWQG4h
     date: "2026-10-11"
     severity: nit
+    friction: 1
   - session: session_01Dz52W6wWZWUgKwPtdxabzJ
     date: "2026-10-12"
     severity: nit
+    friction: 1
   - session: session_01MZBQ3PanPQVwCutYuAmbUp
     date: "2026-10-13"
     severity: nit
+    friction: 1
   - session: session_01Dfw9sJon2e4UsaVoiCLhSJ
     date: "2026-10-14"
     severity: nit
+    friction: 3
   - session: session_019e468BFBTvDPXZuGzLMAL7
     date: "2026-10-15"
     severity: nit
+    friction: 4
