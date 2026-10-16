@@ -26,14 +26,12 @@
 import { execFileSync } from 'node:child_process'
 import { existsSync, mkdirSync, readdirSync, readFileSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
-import { fileURLToPath, pathToFileURL } from 'node:url'
 import { parse as parseYaml } from 'yaml'
 import { ARCHIVED_SESSIONS_DIR, SESSIONS_DIR } from './session-logs.ts'
 import { ARCHIVED_DIGESTS_DIR, DIGESTS_DIR } from './digest.ts'
+import { root, runIfMain } from './lib/cli.ts'
 
 export { ARCHIVED_DIGESTS_DIR }
-
-const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 
 /** How many dates' worth of each kind stay on `current` after a sweep — 7
  *  Digests, and every session log belonging to the newest 7 session dates. */
@@ -180,11 +178,6 @@ export function applyArchive(cwd: string, plan: ArchivePlan): void {
 
 // ── CLI ───────────────────────────────────────────────────────────────────────
 
-function fail(msg: string): never {
-  console.error(`archive-journal-content: ${msg}`)
-  process.exit(1)
-}
-
 function describePart(label: string, part: ArchivePlanPart): string {
   const { retained, keep, archive } = part
   const span = retained.length === 0 ? 'none' : `${retained[0]!}..${retained.at(-1)!}`
@@ -211,10 +204,4 @@ function main(): void {
   )
 }
 
-if (import.meta.url === pathToFileURL(process.argv[1] ?? '').href) {
-  try {
-    main()
-  } catch (err) {
-    fail(err instanceof Error ? err.message : String(err))
-  }
-}
+runIfMain(import.meta.url, main)

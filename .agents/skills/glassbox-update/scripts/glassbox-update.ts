@@ -4,12 +4,11 @@
 import { execFileSync } from 'node:child_process'
 import { existsSync, globSync, readFileSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
-import { pathToFileURL } from 'node:url'
 import { glassboxTerms } from '../../../../layers/glassbox/page-checks.ts'
 import { glassboxPageRefs, glassboxRelineRefs, rangeText, shiftLines, type LineRange } from '../../../../layers/glassbox/page-refs.ts'
 import { fetchOriginMain } from '../../../../scripts/git-helpers.ts'
 import { splitFrontmatter } from '../../../../scripts/validate-content.ts'
-import { root } from '../../../../shared/expand.ts'
+import { flagValue, isMain, root } from '../../../../scripts/lib/cli.ts'
 
 const pagesDir = (space: string) => `layers/glassbox/content/${space}/pages`
 
@@ -115,14 +114,14 @@ export function glassboxUpdate(cwd = root, { main: mainRef = 'origin/main', writ
   return report
 }
 
-if (import.meta.url === pathToFileURL(process.argv[1] ?? '').href) {
+if (isMain(import.meta.url)) {
   try {
     const argv = process.argv.slice(2)
     const write = argv.includes('--write')
-    const spacesAt = argv.indexOf('--spaces')
-    const spaces = spacesAt < 0 ? undefined : argv[spacesAt + 1]?.split(',').filter(Boolean)
-    if (spacesAt >= 0 && (argv[spacesAt + 1]?.startsWith('--') || !spaces?.length)) throw new Error('--spaces needs a comma-separated list, e.g. guide,drafts')
-    const to = argv.includes('--to') ? argv[argv.indexOf('--to') + 1] : undefined
+    const spacesArg = flagValue(argv, '--spaces')
+    const spaces = spacesArg?.split(',').filter(Boolean)
+    if (argv.includes('--spaces') && (spacesArg?.startsWith('--') || !spaces?.length)) throw new Error('--spaces needs a comma-separated list, e.g. guide,drafts')
+    const to = flagValue(argv, '--to')
     // Pin only to the commit the agent reviewed; a fresh fetch could pass unread changes.
     if (write && !to) throw new Error('--write needs --to <sha>, the `main` of the report you reviewed')
     if (!to) fetchOriginMain(root)

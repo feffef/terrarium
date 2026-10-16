@@ -17,7 +17,6 @@
 // diagram is drawn in its Tenant's font — see app/utils/mermaid.ts.
 import { existsSync, mkdirSync, readFileSync, unlinkSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
-import { pathToFileURL } from 'node:url'
 import { chromium } from 'playwright-core'
 import { resolveChromiumPath } from './chromium-path.ts'
 import { DIAGRAM_TOKENS, DIAGRAM_TOKEN_FALLBACKS, type MermaidFont } from '../app/utils/mermaid.ts'
@@ -30,6 +29,7 @@ import {
   SVG_DIR,
 } from './mermaid-lib.ts'
 import { diffMermaid } from './verify-mermaid.ts'
+import { isMain } from './lib/cli.ts'
 
 // A unique, deliberately-unusual sentinel hex per colour token — far from any
 // palette or author `classDef` colour so the rewrite can't hit a real value.
@@ -233,7 +233,7 @@ async function main(): Promise<void> {
   }
 }
 
-if (import.meta.url === pathToFileURL(process.argv[1] ?? '').href) {
+if (isMain(import.meta.url)) {
   main().catch((err) => {
     console.error(err instanceof Error ? err.stack ?? err.message : String(err))
     process.exit(1)

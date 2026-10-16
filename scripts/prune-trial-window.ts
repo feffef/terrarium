@@ -30,12 +30,11 @@
 //                                                        # problem text contains this
 import { readFileSync } from 'node:fs'
 import { execFileSync } from 'node:child_process'
-import { dirname, resolve } from 'node:path'
-import { fileURLToPath, pathToFileURL } from 'node:url'
+import { resolve } from 'node:path'
 import { parse as parseYaml } from 'yaml'
 import { fetchOriginMain } from './git-helpers.ts'
+import { root, isMain } from './lib/cli.ts'
 
-const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const LEDGER_PATH = '.agents/prune-trials.yml'
 const WINDOW_MS = 3 * 24 * 60 * 60 * 1000 // the trial window (ADR-0027); this constant is its home
 // The Routine that opens a trial also judges it three days later, so a trial
@@ -203,6 +202,6 @@ function main(): void {
   for (const w of buildWindows(selected)) console.log(formatWindow(w) + '\n')
 }
 
-if (import.meta.url === pathToFileURL(process.argv[1] ?? '').href) {
+if (isMain(import.meta.url)) {
   main()
 }

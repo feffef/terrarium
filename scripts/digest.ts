@@ -22,11 +22,9 @@
 import { execFileSync } from 'node:child_process'
 import { existsSync, readdirSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
-import { dirname, join, resolve } from 'node:path'
-import { fileURLToPath, pathToFileURL } from 'node:url'
+import { join } from 'node:path'
 import { readSessionLogs } from './session-logs.ts'
-
-const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
+import { fail, flagValue, resolveOutputTarget as outputTarget, root, runIfMain } from './lib/cli.ts'
 
 /** The Journal paths this helper reads. Digests are pages under a subfolder (ADR-0010). */
 export const DIGESTS_DIR = 'layers/journal/content/current/pages/digests'
@@ -245,32 +243,15 @@ export function cmdGather(date: string, cwd = root): DayMaterials {
 
 // ── CLI ───────────────────────────────────────────────────────────────────────
 
-// Mirrors session-frictions.ts's OUTPUT_FILE_THRESHOLD/PATH (issue #976): below
-// common inline-capture caps, with margin for the cap varying by caller.
-export const OUTPUT_FILE_THRESHOLD = 20_000
 export const OUTPUT_FILE_PATH = join(tmpdir(), 'digest-gather-output.json')
-
-/** Where to send `gather`'s JSON output: `--out PATH` always writes there;
- *  otherwise falls back to the shared tmpdir default only once `jsonLength`
- *  exceeds the inline-capture threshold. `null` means stdout. Mirrors
- *  session-frictions.ts's resolveOutputTarget(). */
-export function resolveOutputTarget(argv: string[], jsonLength: number): string | null {
-  const idx = argv.indexOf('--out')
-  const out = idx >= 0 ? argv[idx + 1] : undefined
-  if (out) return out
-  return jsonLength > OUTPUT_FILE_THRESHOLD ? OUTPUT_FILE_PATH : null
-}
-
-function fail(msg: string): never {
-  console.error(`digest: ${msg}`)
-  process.exit(1)
-}
+export const resolveOutputTarget = (argv: string[], jsonLength: number) =>
+  outputTarget(argv, jsonLength, OUTPUT_FILE_PATH)
 
 function main(): void {
   const argv = process.argv.slice(2)
   const cmd = argv[0]
-  const nowIdx = argv.indexOf('--now')
-  const now = nowIdx >= 0 && argv[nowIdx + 1] ? new Date(argv[nowIdx + 1] as string) : new Date()
+  const nowArg = flagValue(argv, '--now')
+  const now = nowArg ? new Date(nowArg) : new Date()
 
   if (cmd === 'list') {
     process.stdout.write(cmdList(now).join('\n') + '\n')
@@ -291,10 +272,4 @@ function main(): void {
 }
 
 // Only run when executed directly (not when imported by the unit test).
-if (import.meta.url === pathToFileURL(process.argv[1] ?? '').href) {
-  try {
-    main()
-  } catch (err) {
-    fail(err instanceof Error ? err.message : String(err))
-  }
-}
+runIfMain(import.meta.url, main)

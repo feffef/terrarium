@@ -13,13 +13,11 @@
 //   count and latest fix. It ends with every friction two clusters share, for
 //   the survey to judge.
 import { readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
-import { dirname, join, resolve } from 'node:path'
-import { fileURLToPath, pathToFileURL } from 'node:url'
+import { join } from 'node:path'
 import { isMap, isSeq, parse as parseYaml, parseDocument } from 'yaml'
 import { LEDGER_HORIZON_DAYS, ledgerFixState } from '../layers/journal/app/utils/ledger.ts'
 import { LEDGER_DIR } from './session-frictions.ts'
-
-const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
+import { flagValue, isMain, root } from './lib/cli.ts'
 
 /** The oldest occurrence date the horizon keeps. */
 export function horizonStart(today: string): string {
@@ -101,9 +99,9 @@ export function sharedFrictions(cwd = root): string[] {
   return [...holders].filter(([, names]) => names.length > 1).map(([key, names]) => `${names.join(', ')}: ${key}`)
 }
 
-if (import.meta.url === pathToFileURL(process.argv[1] ?? '').href) {
-  const i = process.argv.indexOf('--today')
-  const today = i >= 0 ? process.argv[i + 1] ?? '' : new Date().toISOString().slice(0, 10)
+if (isMain(import.meta.url)) {
+  const todayArg = process.argv.includes('--today') ? flagValue(process.argv, '--today') ?? '' : undefined
+  const today = todayArg ?? new Date().toISOString().slice(0, 10)
   if (!/^\d{4}-\d{2}-\d{2}$/.test(today)) {
     console.error('prune-friction-ledger: --today must be YYYY-MM-DD')
     process.exit(1)

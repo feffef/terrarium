@@ -29,7 +29,6 @@ import { createHash } from 'node:crypto'
 import { existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { basename, dirname, join, resolve } from 'node:path'
-import { fileURLToPath, pathToFileURL } from 'node:url'
 import { isPair, isScalar, parse as parseYaml, parseDocument, stringify as stringifyYaml, visit } from 'yaml'
 import { z } from 'zod'
 import { ruleVerdict, sessionSchema, usefulVerdict } from '../shared/schemas/session.ts'
@@ -62,8 +61,7 @@ import {
   type SubagentJsonl,
 } from './session-trace.ts'
 import { canonicalizeInstructionPath, isInstructionDoc, type DocLineIndex } from './shell-reads.ts'
-
-const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
+import { fail, flagValue, root, runIfMain } from './lib/cli.ts'
 
 /** The grow-only `sessions` schema (ADR-0009) — the shared `session` collection kind,
  *  single-homed in shared/schemas/session.ts (ADR-0025). The Journal manifest now
@@ -249,7 +247,6 @@ export function mergeAuthored(existing: AuthoredScratch | undefined, incoming: A
     ideas: union(existing.ideas, incoming.ideas),
   }
 }
-
 
 /** True when `cwd` sits inside a LINKED git worktree — a checkout created by
  *  `git worktree add`, distinct from the repo's main/primary working tree — used
@@ -748,11 +745,6 @@ export function handle(
 
 // ── CLI entry points ────────────────────────────────────────────────────────
 
-function fail(msg: string): never {
-  console.error(`log-session: ${msg}`)
-  process.exit(1)
-}
-
 /** How many near-misses to show. Capped: the list exists to make a MISS
  *  recognisable at a glance, and an uncapped dump of every rejected candidate
  *  would bury the reads it sits beside. */
@@ -1116,10 +1108,9 @@ function main(): void {
     return
   }
   const dryRun = argv.includes('--dry-run')
-  const remoteIdx = argv.indexOf('--remote')
   let remote = 'origin'
-  if (remoteIdx >= 0) {
-    const value = argv[remoteIdx + 1]
+  if (argv.includes('--remote')) {
+    const value = flagValue(argv, '--remote')
     if (value === undefined) fail('--remote requires a value')
     remote = value
   }
@@ -1163,10 +1154,4 @@ function main(): void {
 }
 
 // Only run when executed directly (not when imported by the unit test).
-if (import.meta.url === pathToFileURL(process.argv[1] ?? '').href) {
-  try {
-    main()
-  } catch (err) {
-    fail(err instanceof Error ? err.message : String(err))
-  }
-}
+runIfMain(import.meta.url, main)

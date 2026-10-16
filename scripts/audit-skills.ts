@@ -7,8 +7,7 @@
 // Usage:  tsx scripts/audit-skills.ts [--days N]
 import { execFileSync } from 'node:child_process'
 import { existsSync, readFileSync, readdirSync } from 'node:fs'
-import { dirname, join, resolve } from 'node:path'
-import { fileURLToPath, pathToFileURL } from 'node:url'
+import { join } from 'node:path'
 import { parse as parseYaml } from 'yaml'
 import { isContentPath } from './session-trace.ts'
 import { isExternalSession } from '../shared/schemas/session.ts'
@@ -16,8 +15,7 @@ import { SESSION_TRAILER } from './git-helpers.ts'
 import { getJson, paginate, PER_PAGE, resolveAccess } from './lib/github-client.ts'
 import { readProvenanceHeader } from './provenance-header.ts'
 import { ARCHIVED_SESSIONS_DIR, readSessionLogs, SESSIONS_DIR } from './session-logs.ts'
-
-const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
+import { fail, flagValue, root, runIfMain } from './lib/cli.ts'
 
 /** The observation window, in days before now. Time-based rather than a session
  *  count, so the scheduled Routines' own runs can't shrink it to a couple of days. */
@@ -786,7 +784,6 @@ function readOnDiskSkills(cwd: string, skillNames: ReadonlySet<string>): Map<str
   return out
 }
 
-
 function readInventory(cwd = root): Map<string, InventoryEntry> {
   const dir = join(cwd, INVENTORY_DIR)
   const out = new Map<string, InventoryEntry>()
@@ -886,15 +883,10 @@ export function scorecard(windowDays = DEFAULT_WINDOW_DAYS, cwd = root, now = Da
 
 // ── CLI ───────────────────────────────────────────────────────────────────────
 
-function fail(msg: string): never {
-  console.error(`audit-skills: ${msg}`)
-  process.exit(1)
-}
-
 function main(): void {
   const argv = process.argv.slice(2)
-  const i = argv.indexOf('--days')
-  const days = i >= 0 && argv[i + 1] ? Number(argv[i + 1]) : DEFAULT_WINDOW_DAYS
+  const daysArg = flagValue(argv, '--days')
+  const days = daysArg ? Number(daysArg) : DEFAULT_WINDOW_DAYS
   if (!Number.isInteger(days) || days <= 0) fail('--days must be a positive integer')
   const card = scorecard(days)
   for (const row of card.skills) {
@@ -906,10 +898,4 @@ function main(): void {
 }
 
 // Only run when executed directly (not when imported by the unit test).
-if (import.meta.url === pathToFileURL(process.argv[1] ?? '').href) {
-  try {
-    main()
-  } catch (err) {
-    fail(err instanceof Error ? err.message : String(err))
-  }
-}
+runIfMain(import.meta.url, main)

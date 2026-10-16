@@ -5,8 +5,8 @@
 // filesystem walk and path conventions so the two scripts can't drift on where
 // SVGs live or which content they scan.
 import { existsSync, globSync, readFileSync } from 'node:fs'
-import { dirname, join, relative, resolve } from 'node:path'
-import { fileURLToPath, pathToFileURL } from 'node:url'
+import { join, relative } from 'node:path'
+import { pathToFileURL } from 'node:url'
 import {
   extractMermaidBlocks,
   MERMAID_RENDER_FONT,
@@ -14,8 +14,9 @@ import {
   mermaidKey,
   normalizeMermaidSource,
 } from '../app/utils/mermaid.ts'
+import { root } from './lib/cli.ts'
 
-export const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
+export { root }
 
 /** Where committed, theme-adaptive SVGs live — bundled into the client by the
  *  component's `import.meta.glob` (app/components/MermaidDiagram.vue). */

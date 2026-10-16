@@ -32,10 +32,10 @@
 // 'L1 · content validation' step (ADR-0004 L1, .github/actions/gate/action.yml).
 import { globSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
-import { pathToFileURL } from 'node:url'
 import { parse as parseYaml } from 'yaml'
 import { expand, loadManifests, root, type ExpandedCollection } from '../shared/expand.ts'
 import { findTruncatedScalars } from './log-session.ts'
+import { isMain } from './lib/cli.ts'
 
 /** Coerce a parsed YAML/JSON value into a plain object, or `{}` for anything
  *  else (`null`, a scalar, an array) — a Document's data is always a record. */
@@ -186,6 +186,6 @@ function main(): void {
 }
 
 // Only run when executed directly (not when imported by the unit test).
-if (import.meta.url === pathToFileURL(process.argv[1] ?? '').href) {
+if (isMain(import.meta.url)) {
   main()
 }

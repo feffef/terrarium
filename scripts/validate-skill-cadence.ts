@@ -18,9 +18,9 @@
 //   otherwise.
 import { globSync } from 'node:fs'
 import { join } from 'node:path'
-import { pathToFileURL } from 'node:url'
 import { expand, loadManifests, root, type ExpandedCollection } from '../shared/expand.ts'
 import { parseDocument } from './validate-content.ts'
+import { isMain } from './lib/cli.ts'
 
 export interface CadenceViolation {
   file: string
@@ -132,6 +132,6 @@ function main(): void {
   if (violations.length > 0) process.exit(1)
 }
 
-if (import.meta.url === pathToFileURL(process.argv[1] ?? '').href) {
+if (isMain(import.meta.url)) {
   main()
 }

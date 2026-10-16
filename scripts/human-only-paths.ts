@@ -4,9 +4,9 @@
 // Usage: pnpm exec tsx scripts/human-only-paths.ts <worktree>
 import { execFileSync } from 'node:child_process'
 import { matchesGlob } from 'node:path'
-import { pathToFileURL } from 'node:url'
 import { HUMAN_MERGE_RULE } from './merge-pr.ts'
 import { rulePaths } from './validate-adr-rules.ts'
+import { isMain } from './lib/cli.ts'
 
 const git = (cwd: string, args: string[]) => execFileSync('git', args, { cwd, encoding: 'utf8', stdio: 'pipe' })
 
@@ -18,7 +18,7 @@ export function humanOnlyPaths(cwd: string): string[] {
   return files.filter((f) => globs.some((g) => matchesGlob(f, g)))
 }
 
-if (import.meta.url === pathToFileURL(process.argv[1] ?? '').href) {
+if (isMain(import.meta.url)) {
   try {
     console.log(humanOnlyPaths(process.argv[2] ?? process.cwd()).join('\n'))
   } catch (err) {

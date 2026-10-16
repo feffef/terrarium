@@ -19,11 +19,10 @@
 //   package.json). Exits 0 (silent beyond the summary line) when the ledger
 //   parses cleanly, 1 with the parser's own error otherwise.
 import { readFileSync } from 'node:fs'
-import { dirname, resolve } from 'node:path'
-import { fileURLToPath, pathToFileURL } from 'node:url'
+import { resolve } from 'node:path'
 import { parse as parseYaml } from 'yaml'
+import { root, isMain } from './lib/cli.ts'
 
-const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 export const LEDGER_PATH = '.agents/prune-trials.yml'
 
 export interface PruneTrialsValidation {
@@ -61,6 +60,6 @@ function main(): void {
   if (!result.ok) process.exit(1)
 }
 
-if (import.meta.url === pathToFileURL(process.argv[1] ?? '').href) {
+if (isMain(import.meta.url)) {
   main()
 }

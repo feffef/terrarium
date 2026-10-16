@@ -42,12 +42,11 @@
 // carries the marker.
 import { readFileSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
-import { pathToFileURL } from 'node:url'
 import { isAiAuthored } from '../../../../scripts/check-triage-drift.ts'
 import { decodeHtmlEntities, listAll, resolveAccess, type Access } from '../../../../scripts/lib/github-client.ts'
 import { hasMarker, isMarkerFresh, type RawLabelEventRecord } from '../../../../scripts/guest-marker.ts'
 import { PUBLIC_ASSOCIATIONS, TRUSTED_ASSOCIATIONS } from '../../../../scripts/trust.ts'
-import { root } from '../../../../shared/expand.ts'
+import { root, fail, runIfMain } from '../../../../scripts/lib/cli.ts'
 
 const DEFAULT_LIMIT = 100
 
@@ -318,11 +317,6 @@ export function guestIntakeScan(limit = DEFAULT_LIMIT, cwd = root): ScanReport {
 
 // ── CLI ───────────────────────────────────────────────────────────────────────
 
-function fail(msg: string): never {
-  console.error(`guest-intake-scan: ${msg}`)
-  process.exit(1)
-}
-
 function main(): void {
   const argv = process.argv.slice(2)
   const limitArg = argv[0]
@@ -336,10 +330,4 @@ function main(): void {
 }
 
 // Only run when executed directly (not when imported by the unit test).
-if (import.meta.url === pathToFileURL(process.argv[1] ?? '').href) {
-  try {
-    main()
-  } catch (err) {
-    fail(err instanceof Error ? err.message : String(err))
-  }
-}
+runIfMain(import.meta.url, main)

@@ -31,8 +31,7 @@
 // Usage:  tsx scripts/session-trace.ts <transcript.jsonl>
 //   Prints the derived trace as JSON.
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs'
-import { basename, dirname, join, resolve } from 'node:path'
-import { fileURLToPath, pathToFileURL } from 'node:url'
+import { basename, dirname, join } from 'node:path'
 import type { RuleVerdict, UsefulVerdict } from '../shared/schemas/session.ts'
 import { DERIVED_REASON, FOLDED_TRACE_FIELDS } from '../shared/trace-fields.ts'
 import {
@@ -47,6 +46,7 @@ import {
   type ShellCommand,
 } from './shell-reads.ts'
 import { ruleAdr, ruleBlockFiles } from './validate-adr-rules.ts'
+import { isMain, root } from './lib/cli.ts'
 
 export { DERIVED_REASON, FOLDED_TRACE_FIELDS } from '../shared/trace-fields.ts'
 
@@ -882,12 +882,12 @@ function main(): void {
     console.error('usage: tsx scripts/session-trace.ts <transcript.jsonl>')
     process.exit(1)
   }
-  const docIndex = loadDocLineIndex(resolve(dirname(fileURLToPath(import.meta.url)), '..'))
+  const docIndex = loadDocLineIndex(root)
   const trace = extractTrace(parseTranscript(readFileSync(path, 'utf8')), process.env, docIndex)
   const folded = foldSubagentTrace(trace, readSubagentJsonls(path).map((s) => ({ records: parseTranscript(s.jsonl), agent: s.agent })), process.env, docIndex)
   console.log(JSON.stringify(folded, null, 2))
 }
 
-if (import.meta.url === pathToFileURL(process.argv[1] ?? '').href) {
+if (isMain(import.meta.url)) {
   main()
 }

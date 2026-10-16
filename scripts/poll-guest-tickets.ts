@@ -32,14 +32,11 @@
 // timeline fetch below already covers this for free — the Timeline API's
 // `labeled` events carry the same `created_at`/`label` shape the marker
 // check needs, so no second API call is added for it.
-import { dirname, resolve } from 'node:path'
-import { fileURLToPath, pathToFileURL } from 'node:url'
 import { decodeHtmlEntities, listAll, resolveAccess } from './lib/github-client.ts'
 import type { RawIssueApiRecord } from './list-open-issues.ts'
 import { hasMarker, isMarkerFresh } from './guest-marker.ts'
 import { PUBLIC_ASSOCIATIONS } from './trust.ts'
-
-const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
+import { root, runIfMain } from './lib/cli.ts'
 
 const READY_FOR_AGENT_LABEL = 'ready-for-agent'
 
@@ -139,17 +136,10 @@ export async function pollGuestTickets(cwd = root): Promise<GuestReadyIssue[]> {
 
 // ── CLI ───────────────────────────────────────────────────────────────────────
 
-function fail(msg: string): never {
-  console.error(`poll-guest-tickets: ${msg}`)
-  process.exit(1)
-}
-
 async function main(): Promise<void> {
   const candidates = await pollGuestTickets()
   process.stdout.write(JSON.stringify(candidates) + '\n')
 }
 
 // Only run when executed directly (not when imported by the unit test).
-if (import.meta.url === pathToFileURL(process.argv[1] ?? '').href) {
-  main().catch((err) => fail(err instanceof Error ? err.message : String(err)))
-}
+runIfMain(import.meta.url, main)

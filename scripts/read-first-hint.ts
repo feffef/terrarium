@@ -20,11 +20,11 @@
 //   tsx scripts/read-first-hint.ts --dry-run (--input '<payload json>' | --input-file <path>)
 //     (with no transcript_path, the dry run assumes an empty transcript)
 import { readFileSync } from 'node:fs'
-import { basename, dirname, join } from 'node:path'
-import { fileURLToPath } from 'node:url'
+import { basename, join } from 'node:path'
 import { printDryRunResult, prop, readTranscript, resolveDryRunInput, runIfMain } from './guard-io.ts'
 import { extractTrace, hintText, subagentTranscript } from './session-trace.ts'
 import { buildDocLineIndex, commandWords } from './shell-reads.ts'
+import { root as ROOT } from './lib/cli.ts'
 
 interface ReadFirst {
   doc: string
@@ -34,7 +34,6 @@ interface ReadFirst {
   matches: (tool: string, segs: string[][]) => boolean
 }
 
-const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..')
 const runs = (segs: string[][], name: string, ok = (_w: string[]) => true) => segs.some((w) => basename(w[0] ?? '') === name && ok(w))
 
 /** git's subcommand: the first word after its global options. */

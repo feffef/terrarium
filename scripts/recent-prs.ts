@@ -17,17 +17,14 @@
 // Usage:  tsx scripts/recent-prs.ts [N]
 //   Prints the last N merged PRs (default 20) on `origin/main` as JSON:
 //   { number, title, mergedAtUtc }. Newest-first.
-import { dirname, resolve } from 'node:path'
-import { fileURLToPath, pathToFileURL } from 'node:url'
 import { readMergeCommits, type RawMergeCommit } from './git-helpers.ts'
 import { toUtcIso } from './merged-since.ts'
+import { root, fail, runIfMain } from './lib/cli.ts'
 
 // Re-exported so an existing importer of `RawMergeCommit` from this module
 // (its original home) keeps working now that `git-helpers.ts` owns it
 // (issue #448 code review — single-homing the shared merge-log reader).
 export type { RawMergeCommit } from './git-helpers.ts'
-
-const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 
 const DEFAULT_LIMIT = 20
 
@@ -96,11 +93,6 @@ export function recentPrsOnMain(limit = DEFAULT_LIMIT, cwd = root): RecentPr[] {
 
 // ── CLI ───────────────────────────────────────────────────────────────────────
 
-function fail(msg: string): never {
-  console.error(`recent-prs: ${msg}`)
-  process.exit(1)
-}
-
 function main(): void {
   const argv = process.argv.slice(2)
   const limitArg = argv[0]
@@ -113,10 +105,4 @@ function main(): void {
 }
 
 // Only run when executed directly (not when imported by the unit test).
-if (import.meta.url === pathToFileURL(process.argv[1] ?? '').href) {
-  try {
-    main()
-  } catch (err) {
-    fail(err instanceof Error ? err.message : String(err))
-  }
-}
+runIfMain(import.meta.url, main)

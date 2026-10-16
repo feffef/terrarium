@@ -41,14 +41,12 @@
 import { execFileSync } from 'node:child_process'
 import { readdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
-import { dirname, join, resolve } from 'node:path'
-import { fileURLToPath, pathToFileURL } from 'node:url'
+import { join } from 'node:path'
 import { parse as parseYaml } from 'yaml'
 import { isExternalSession } from '../shared/schemas/session.ts'
 import type { SubagentRef } from './session-trace.ts'
 import { readSessionLogs } from './session-logs.ts'
-
-const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
+import { fail, flagValue, resolveOutputTarget as outputTarget, root, runIfMain } from './lib/cli.ts'
 
 /** 48 hours lets a friction too minor for its own ledger entry be seen
  *  recurring across two daily runs; reaching back that far from the ledger's
@@ -261,39 +259,19 @@ export function survey(start?: number, cwd = root, now = Date.now()): { since: n
 
 // ── CLI ───────────────────────────────────────────────────────────────────────
 
-// Below common inline-capture caps (issue #976 cites ~30KB overflows), with
-// margin for the cap varying by caller.
-export const OUTPUT_FILE_THRESHOLD = 20_000
 export const OUTPUT_FILE_PATH = join(tmpdir(), 'session-frictions-output.json')
-
-/** Where to send the JSON output: `--out PATH` always writes there, letting a
- *  caller pick its own location instead of the shared tmpdir default (a
- *  recurring session friction); otherwise falls back to the default only
- *  once `jsonLength` exceeds the inline-capture threshold, unchanged from
- *  prior behavior. `null` means stdout. */
-export function resolveOutputTarget(argv: string[], jsonLength: number): string | null {
-  const idx = argv.indexOf('--out')
-  const out = idx >= 0 ? argv[idx + 1] : undefined
-  if (out) return out
-  return jsonLength > OUTPUT_FILE_THRESHOLD ? OUTPUT_FILE_PATH : null
-}
-
-function fail(msg: string): never {
-  console.error(`session-frictions: ${msg}`)
-  process.exit(1)
-}
+export const resolveOutputTarget = (argv: string[], jsonLength: number) =>
+  outputTarget(argv, jsonLength, OUTPUT_FILE_PATH)
 
 function main(): void {
   const argv = process.argv.slice(2)
-  const dIdx = argv.indexOf('--days')
-  const sIdx = argv.indexOf('--since')
   let start: number | undefined
-  if (dIdx >= 0) {
-    const days = Number(argv[dIdx + 1])
+  if (argv.includes('--days')) {
+    const days = Number(flagValue(argv, '--days'))
     if (!(days > 0)) fail('--days must be a positive number')
     start = Date.now() - days * 86_400_000
-  } else if (sIdx >= 0) {
-    start = Date.parse(argv[sIdx + 1] ?? '')
+  } else if (argv.includes('--since')) {
+    start = Date.parse(flagValue(argv, '--since') ?? '')
     if (Number.isNaN(start)) fail('--since must be an ISO timestamp')
   }
   const { since: startMs, sessions: all } = survey(start)
@@ -311,10 +289,4 @@ function main(): void {
 }
 
 // Only run when executed directly (not when imported by the unit test).
-if (import.meta.url === pathToFileURL(process.argv[1] ?? '').href) {
-  try {
-    main()
-  } catch (err) {
-    fail(err instanceof Error ? err.message : String(err))
-  }
-}
+runIfMain(import.meta.url, main)

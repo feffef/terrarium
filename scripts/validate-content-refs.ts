@@ -43,13 +43,13 @@
 import { execFileSync } from 'node:child_process'
 import { globSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
-import { pathToFileURL } from 'node:url'
 import type { z } from 'zod'
 import { expand, loadManifests, root, type ExpandedCollection } from '../shared/expand.ts'
 import { DIG_SEASON_SLUGS, digSeasonOf, type DigSeason } from '../layers/midden/app/utils/strata.ts'
 import { TINKERFUND_OFFSET, resolveTinkerfundOffset } from '../layers/tinkerfund/app/utils/clock.ts'
 import type { campaign, pledge, updateLog } from '../layers/tinkerfund/schemas.ts'
 import { parseDocument, splitFrontmatter } from './validate-content.ts'
+import { isMain } from './lib/cli.ts'
 
 export interface RefViolation {
   /** The collection key (e.g. `atlas_canopy_pages`) or interactions/observations key. */
@@ -799,6 +799,6 @@ function main(): void {
   if (report.violations.length > 0) process.exit(1)
 }
 
-if (import.meta.url === pathToFileURL(process.argv[1] ?? '').href) {
+if (isMain(import.meta.url)) {
   main()
 }

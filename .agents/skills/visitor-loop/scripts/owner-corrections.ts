@@ -17,11 +17,10 @@
 //   under the owner's login, from the owner's own.
 import { execFileSync } from 'node:child_process'
 import { readFileSync } from 'node:fs'
-import { pathToFileURL } from 'node:url'
 import { isAiAuthored } from '../../../../scripts/check-triage-drift.ts'
 import { fetchOriginMain } from '../../../../scripts/git-helpers.ts'
 import { getJson, paginate, parseOwnerRepo, PER_PAGE, readOriginUrl } from '../../../../scripts/lib/github-client.ts'
-import { root } from '../../../../shared/expand.ts'
+import { root, fail, runIfMain } from '../../../../scripts/lib/cli.ts'
 
 const DECISIONS = '.agents/skills/visitor-loop/decisions.md'
 // The harness pins most runs to a session branch, so the title is the stable marker (issue #1515).
@@ -292,11 +291,6 @@ export function ownerCorrections(since: string | undefined, cwd = root): Candida
 
 // ── CLI ───────────────────────────────────────────────────────────────────────
 
-function fail(msg: string): never {
-  console.error(`owner-corrections: ${msg}`)
-  process.exit(1)
-}
-
 function main(): void {
   const argv = process.argv.slice(2)
   const flags = new Map<string, string>()
@@ -319,10 +313,4 @@ function main(): void {
 }
 
 // Only run when executed directly (not when imported by the unit test).
-if (import.meta.url === pathToFileURL(process.argv[1] ?? '').href) {
-  try {
-    main()
-  } catch (err) {
-    fail(err instanceof Error ? err.message : String(err))
-  }
-}
+runIfMain(import.meta.url, main)

@@ -24,9 +24,7 @@ import { execFileSync } from 'node:child_process'
 import { copyFileSync, existsSync, mkdtempSync, rmSync, statSync, utimesSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { dirname, join, resolve } from 'node:path'
-import { fileURLToPath, pathToFileURL } from 'node:url'
-
-const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
+import { root, isMain } from './lib/cli.ts'
 
 // ── Types ───────────────────────────────────────────────────────────────────
 
@@ -324,6 +322,6 @@ function main(): void {
 }
 
 // Only run when executed directly (not when imported by the unit test).
-if (import.meta.url === pathToFileURL(process.argv[1] ?? '').href) {
+if (isMain(import.meta.url)) {
   main()
 }

@@ -14,11 +14,10 @@
 //   pnpm exec tsx scripts/validate-adr-rules.ts [--write]
 import { createHash } from 'node:crypto'
 import { existsSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
-import { dirname, join, resolve } from 'node:path'
-import { fileURLToPath, pathToFileURL } from 'node:url'
+import { join } from 'node:path'
 import { parse as parseYaml } from 'yaml'
+import { root, isMain } from './lib/cli.ts'
 
-const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const ADR_DIR = 'docs/adr'
 export const RULES_DIR = '.claude/rules'
 
@@ -189,4 +188,4 @@ function main(): void {
   console.log(`validate-adr-rules: PASS — ${Object.keys({ ...input.rules, ...input.otherRules?.files }).length} rule(s)`)
 }
 
-if (import.meta.url === pathToFileURL(process.argv[1] ?? '').href) main()
+if (isMain(import.meta.url)) main()

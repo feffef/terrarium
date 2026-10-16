@@ -25,12 +25,9 @@
 // JSON, breaking any JSON parser. Redirect stdout and stderr separately
 // (e.g. `... > out.json 2> err.log`) when the output needs to be parsed as
 // JSON.
-import { dirname, resolve } from 'node:path'
-import { fileURLToPath, pathToFileURL } from 'node:url'
 import { execFileSync } from 'node:child_process'
 import { fetchOriginMain } from './git-helpers.ts'
-
-const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
+import { root, fail, runIfMain } from './lib/cli.ts'
 
 // ── Types ───────────────────────────────────────────────────────────────────
 
@@ -132,11 +129,6 @@ export function mergedSinceOnMain(sinceUtcIso: string[], cwd = root, mergesOnly 
 
 // ── CLI ───────────────────────────────────────────────────────────────────────
 
-function fail(msg: string): never {
-  console.error(`merged-since: ${msg}`)
-  process.exit(1)
-}
-
 function main(): void {
   const args = process.argv.slice(2)
   const mergesOnly = args.includes('--merges-only')
@@ -154,10 +146,4 @@ function main(): void {
 }
 
 // Only run when executed directly (not when imported by the unit test).
-if (import.meta.url === pathToFileURL(process.argv[1] ?? '').href) {
-  try {
-    main()
-  } catch (err) {
-    fail(err instanceof Error ? err.message : String(err))
-  }
-}
+runIfMain(import.meta.url, main)

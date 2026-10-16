@@ -30,13 +30,10 @@
 //   Checks up to N open issues (default 50, newest-updated-first) and prints
 //   the flagged subset as JSON: { number, title, claimedLabel, liveLabels,
 //   commentUrl, commentCreatedAt }.
-import { dirname, resolve } from 'node:path'
-import { fileURLToPath, pathToFileURL } from 'node:url'
 import { decodeHtmlEntities, listAll, resolveAccess } from './lib/github-client.ts'
 import type { RawIssueApiRecord } from './list-open-issues.ts'
 import { hasAuthorshipMarker } from './provenance-header.ts'
-
-const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
+import { root, fail, runIfMain } from './lib/cli.ts'
 
 const DEFAULT_LIMIT = 50
 
@@ -223,11 +220,6 @@ export async function checkTriageDrift(limit = DEFAULT_LIMIT, cwd = root): Promi
 
 // ── CLI ───────────────────────────────────────────────────────────────────────
 
-function fail(msg: string): never {
-  console.error(`check-triage-drift: ${msg}`)
-  process.exit(1)
-}
-
 async function main(): Promise<void> {
   const argv = process.argv.slice(2)
   const limitArg = argv[0]
@@ -241,6 +233,4 @@ async function main(): Promise<void> {
 }
 
 // Only run when executed directly (not when imported by the unit test).
-if (import.meta.url === pathToFileURL(process.argv[1] ?? '').href) {
-  main().catch((err) => fail(err instanceof Error ? err.message : String(err)))
-}
+runIfMain(import.meta.url, main)

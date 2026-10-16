@@ -7,13 +7,10 @@
 //   `index` is the friction's position in the log's `frictions` list, as
 //   `session-frictions.ts --compact` prints it. Output is ready to paste under
 //   a cluster's `occurrences:`.
-import { dirname, resolve } from 'node:path'
-import { fileURLToPath, pathToFileURL } from 'node:url'
 import { Document, Scalar } from 'yaml'
 import { flattenText } from './session-frictions.ts'
 import { readSessionLogs } from './session-logs.ts'
-
-const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
+import { root, isMain } from './lib/cli.ts'
 
 export function occurrenceBlock(log: Record<string, unknown>, index: number): string {
   const frictions = Array.isArray(log.frictions) ? log.frictions : []
@@ -42,7 +39,7 @@ function main(): void {
   }
 }
 
-if (import.meta.url === pathToFileURL(process.argv[1] ?? '').href) {
+if (isMain(import.meta.url)) {
   try {
     main()
   } catch (err) {

@@ -30,8 +30,7 @@
 // Usage:  tsx scripts/list-open-issues.ts [N]
 //   Prints up to N open issues (default 50) as JSON:
 //   { number, title, labels, updatedAt }. Newest-updated-first.
-import { dirname, resolve } from 'node:path'
-import { fileURLToPath, pathToFileURL } from 'node:url'
+import { fail, root, runIfMain } from './lib/cli.ts'
 import { decodeHtmlEntities, listAll, NO_ACCESS_MESSAGE, resolveAccess, type Access } from './lib/github-client.ts'
 
 export {
@@ -44,8 +43,6 @@ export {
   pickFetchStrategy,
   type FetchStrategy,
 } from './lib/github-client.ts'
-
-const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 
 const DEFAULT_LIMIT = 50
 
@@ -131,11 +128,6 @@ export function listOpenIssues(limit = DEFAULT_LIMIT, cwd = root): OpenIssue[] {
 
 // ── CLI ───────────────────────────────────────────────────────────────────────
 
-function fail(msg: string): never {
-  console.error(`list-open-issues: ${msg}`)
-  process.exit(1)
-}
-
 function main(): void {
   const argv = process.argv.slice(2)
   const limitArg = argv[0]
@@ -148,10 +140,4 @@ function main(): void {
 }
 
 // Only run when executed directly (not when imported by the unit test).
-if (import.meta.url === pathToFileURL(process.argv[1] ?? '').href) {
-  try {
-    main()
-  } catch (err) {
-    fail(err instanceof Error ? err.message : String(err))
-  }
-}
+runIfMain(import.meta.url, main)

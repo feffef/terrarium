@@ -28,11 +28,9 @@
 // so its pin) once the Skill is first observed in use.
 import { createHash } from 'node:crypto'
 import { existsSync, readFileSync, writeFileSync } from 'node:fs'
-import { dirname, join, resolve } from 'node:path'
-import { fileURLToPath, pathToFileURL } from 'node:url'
+import { join } from 'node:path'
 import { parse as parseYaml } from 'yaml'
-
-const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
+import { root, isMain } from './lib/cli.ts'
 
 /** Where pack Skills live on disk. */
 export const SKILLS_DIR = '.agents/skills'
@@ -231,6 +229,6 @@ function main(argv: string[]): void {
 }
 
 // Only run when executed directly (not when imported by the unit test).
-if (import.meta.url === pathToFileURL(process.argv[1] ?? '').href) {
+if (isMain(import.meta.url)) {
   main(process.argv.slice(2))
 }

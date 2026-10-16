@@ -36,8 +36,6 @@
 //   matchedKeyword }[]. Empty array (`[]`) means no hits — still exits 0
 //   either way; this is advisory, never a failing gate.
 import { execFileSync } from 'node:child_process'
-import { dirname, resolve } from 'node:path'
-import { fileURLToPath, pathToFileURL } from 'node:url'
 import {
   decodeHtmlEntities,
   getJson,
@@ -49,8 +47,7 @@ import {
   type Access,
   type RestPage,
 } from './lib/github-client.ts'
-
-const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
+import { root, fail, runIfMain } from './lib/cli.ts'
 
 // ── Types ───────────────────────────────────────────────────────────────────
 
@@ -267,11 +264,6 @@ async function checkConflictingIssuesForFiles(changedFiles: string[], cwd: strin
 
 // ── CLI ───────────────────────────────────────────────────────────────────────
 
-function fail(msg: string): never {
-  console.error(`check-conflicting-issues: ${msg}`)
-  process.exit(1)
-}
-
 function usage(): string {
   return (
     'usage: tsx scripts/check-conflicting-issues.ts <base> <head>\n' +
@@ -303,6 +295,4 @@ async function main(): Promise<void> {
 }
 
 // Only run when executed directly (not when imported by the unit test).
-if (import.meta.url === pathToFileURL(process.argv[1] ?? '').href) {
-  main().catch((err) => fail(err instanceof Error ? err.message : String(err)))
-}
+runIfMain(import.meta.url, main)
