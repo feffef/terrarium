@@ -72,6 +72,8 @@ useSeoMeta({ title: () => `${PAGE_TITLE} · journal/${space}` })
               </summary>
               <p class="cause">{{ e.cause }}</p>
               <p v-if="e.ref" class="ref-text">{{ e.ref }}</p>
+              <h3 class="occ-h">Occurrences</h3>
+              <p class="occ-intro">One per session that hit this cause, newest first. Each date links to that session's log.</p>
               <ul class="occ">
                 <li v-for="(o, i) in e.occurrences" :key="i">
                   <span class="dot" :class="o.severity" :title="o.severity" />
@@ -150,6 +152,8 @@ summary:focus-visible { outline: 2px solid var(--jd-accent); outline-offset: 2px
 .jd-prose .pill.ref { color: var(--jd-accent); }
 .jd-prose .pill.ref:hover { border-color: var(--jd-accent); }
 .cause, .ref-text { margin: 0 0 0.4rem 3.3rem; font-size: 0.8rem; color: var(--jd-muted); overflow-wrap: anywhere; }
+.jd-prose .occ-h { margin: 0.6rem 0 0.1rem 3.3rem; font-size: 0.8rem; color: var(--jd-ink); }
+.occ-intro { margin: 0 0 0.4rem 3.3rem; font-size: 0.75rem; color: var(--jd-muted); }
 .occ {
   list-style: none;
   margin: 0 0 0.7rem 3.3rem;
@@ -166,6 +170,6 @@ summary:focus-visible { outline: 2px solid var(--jd-accent); outline-offset: 2px
 .occ-goal { margin-left: 0.5rem; font-family: var(--jd-serif); font-size: 0.8rem; color: var(--jd-muted); }
 .occ-sev { color: var(--jd-faint); margin-left: 0.4rem; }
 @media (max-width: 560px) {
-  .cause, .ref-text, .occ { margin-left: 0; }
+  .cause, .ref-text, .occ, .jd-prose .occ-h, .occ-intro { margin-left: 0; }
 }
 </style>
