@@ -60,13 +60,13 @@ export function withRuleHash(ruleText: string, hash: string): string {
 /** About 4 characters a token, rounded to the nearest 100. */
 export const adrTokens = (text: string) => Math.max(100, Math.round(text.length / 400) * 100)
 
-const POINTER_SHAPE = 'Read the full ADR before you change this decision, or when <case>:'
-const ESTIMATE_RE = /^Read the full ADR(?: \(~\d+ tokens\))?/
-const POINTER_RE = new RegExp(`${ESTIMATE_RE.source} before you change this decision, or when \\S[^\\n]*:$`, 'm')
-const estimated = (tokens: number) => `Read the full ADR (~${tokens} tokens)`
+const POINTER_SHAPE = 'Read `docs/adr/NNNN-<name>.md` before you change this decision, or when <case>.'
+const ESTIMATE_RE = /^(Read `docs\/adr\/(\d{4})-[\w.-]+\.md`)(?: \(~\d+ tokens\))?/
+const POINTER_RE = new RegExp(`${ESTIMATE_RE.source} before you change this decision, or when \\S[^\\n]*\\.$`, 'm')
+const estimate = (tokens: number) => ` (~${tokens} tokens) before`
 
 export const withRuleTokens = (ruleText: string, tokens: number) =>
-  ruleText.replace(POINTER_RE, (line) => line.replace(ESTIMATE_RE, estimated(tokens)))
+  ruleText.replace(POINTER_RE, (line) => line.replace(ESTIMATE_RE, `$1 (~${tokens} tokens)`))
 
 const isSummary = (file: string) => /^adr-\d{4}\.md$/.test(file)
 
@@ -126,10 +126,11 @@ export function findAdrRuleProblems(input: AdrRuleInput): string[] {
   }
   for (const [file, text] of Object.entries(rules)) {
     const adr = adrs[ruleAdr(file) ?? '']
-    const pointer = POINTER_RE.exec(text)?.[0]
-    if (adr === undefined || !isSummary(file) || pointer?.startsWith(`${estimated(adrTokens(adr))} `)) continue
+    const pointer = POINTER_RE.exec(text)
+    const own = pointer?.[2] === ruleAdr(file)
+    if (adr === undefined || !isSummary(file) || (own && pointer![0].includes(estimate(adrTokens(adr))))) continue
     problems.push(
-      pointer
+      own
         ? `${RULES_DIR}/${file} gives a stale token estimate: run \`pnpm exec tsx scripts/validate-adr-rules.ts --write\`.`
         : `${RULES_DIR}/${file} must point to its ADR with a line "${POINTER_SHAPE}".`,
     )
