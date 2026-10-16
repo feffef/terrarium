@@ -15,7 +15,8 @@ Platform glossary always; read a Tenant's glossary when you work on that Tenant.
 - **Journal** — [`layers/journal/GLOSSARY.md`](./layers/journal/GLOSSARY.md) —
   Digest.
 - **Midden** — [`layers/midden/GLOSSARY.md`](./layers/midden/GLOSSARY.md) — Site,
-  Dig season (Stratum), Artifact, Condition, the two-gate inclusion test.
+  Dig season (Stratum), Artifact, Condition, the Stores, the inclusion bar
+  (two-gate test).
 - **Marquee** — [`layers/marquee/GLOSSARY.md`](./layers/marquee/GLOSSARY.md) —
   Screening, Chapter, Poster.
 - **Tinkerfund** — [`layers/tinkerfund/GLOSSARY.md`](./layers/tinkerfund/GLOSSARY.md) —

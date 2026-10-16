@@ -21,9 +21,9 @@ Its job: **let authors compose from a palette of components without writing Vue
 or leaving the Markdown file.** The lens for every decision below is
 *author-facing, in-prose composition*.
 
-A layer without MDC needs a `components/content/` dir and a new SFC
-(mechanics: the research doc's §13). Journal has none (it keeps its components
-in a *prefixed* `components/journal/` dir); atlas, glassbox and midden have one.
+Using MDC in a layer needs a `components/content/` dir and a new SFC
+(mechanics: the research doc's §13). Atlas, glassbox and midden have one;
+Journal has none (its components sit in the prefixed `components/journal/` dir).
 
 ## The validation caveat (important in this repo)
 
@@ -31,10 +31,10 @@ in a *prefixed* `components/journal/` dir); atlas, glassbox and midden have one.
 `safeParse`s only a `.md` file's frontmatter** (why, and what a collection
 `schema` is and isn't used for at build:
 `docs/research/nuxt-content-review-grounding.md` §2). So a typo'd key or
-missing field in body MDC props surfaces only at render, if at all, while
-`pnpm validate:content` catches the same mistake in frontmatter. In a repo
-where schemas are contracts and agents write nearly everything, that gap is a
-real trade-off.
+missing field in body MDC props surfaces only at render, if at all;
+`pnpm validate:content` catches the same mistake in frontmatter. Schemas are
+contracts here and agents write nearly everything, so the gap is a real
+trade-off.
 
 ## When MDC is a good fit
 

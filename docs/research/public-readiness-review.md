@@ -55,11 +55,8 @@ Actions logs, and the agent workflow's attack surface.**
      therefore also the RCE boundary and must stay strict; consider
      `pnpm install --frozen-lockfile --ignore-scripts` in the deploy path.
 
-   → **Addressed** — **ADR-0020** (accepted) draws the trust line at write
-   access: Trusted (write access) vs. Public (read-only), whose
-   issues/PRs agents treat as untrusted input — never implemented without a
-   Trusted green-light, never auto-merged. The mechanical half (fork-PR workflow
-   approval + human-only merge for Public PRs) needed enabling at the flip;
+   → **Addressed** by ADR-0020 (the trust tiers). Mechanically, fork-PR workflow
+   approval and human-only merge for Public PRs needed enabling at the flip;
    whether it was turned on can't be verified from repo state (GitHub Settings
    aren't tracked in the tree), so it stays open. The deploy-path
    `--ignore-scripts` hardening is also still open.

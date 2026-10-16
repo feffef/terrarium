@@ -24,10 +24,10 @@ layer's top-level wrapper element:
 
 Every page that mounts a layer view wraps its template in that class (e.g.
 `<main class="jd">` in both `[space]/index.vue` and `[space]/[...slug].vue`).
-CSS custom properties inherit down the DOM tree, and Vue's `scoped` attribute
-selectors block only cross-component selector leakage, not inheritance, so child
-components anywhere under `.jd` can read the tokens in their own **scoped**
-`<style>` with no re-declaration or prop-drilling:
+CSS custom properties inherit down the DOM tree, and Vue's `scoped` styles limit
+only selector leakage between components, not inheritance. So any child
+component under `.jd` can read the tokens in its own **scoped** `<style>`, with
+no re-declaration or prop-drilling:
 
 ```css
 /* layers/journal/app/components/journal/StatTile.vue — scoped, no --jd-* here */
@@ -45,9 +45,9 @@ Practical implications:
   layer's pages render (registered globally via the layer's `nuxt.config.ts`
   `css: [...]`), not per component.
 - If a new component under the layer looks unstyled or falls back to
-  browser defaults, check whether it's actually mounted under the wrapper
-  element (`.jd`) in the render tree — a component rendered outside that
-  wrapper (e.g. via `<Teleport>` to `<body>`) won't see the tokens.
+  browser defaults, check that it is mounted under the wrapper (`.jd`) in the
+  render tree; one rendered outside it (e.g. via `<Teleport>` to `<body>`) won't
+  see the tokens.
 - **A Platform-generic component can theme itself from a Tenant without naming
   its tokens, via an opt-in contract.** Mermaid diagrams do this with
   `--diagram-*` (the list is in `app/utils/mermaid.ts`, the why in ADR-0024;

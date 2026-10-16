@@ -18,7 +18,7 @@ that shifts after agents have started forces a full redo.
   Agent call. Without it, parallel agents share one checkout and race on
   branches.
 - **`EnterWorktree`/`ExitWorktree`** moves your whole session. Use only when the
-  user says "worktree" or CLAUDE.md directs it.
+  user says "worktree".
 - **Manual `git worktree add`** is for your own one-off inspection, never a
   subagent's brief. Put it under `.claude/worktrees/NAME/`: path-scoped rules
   don't load for files outside the project folder (issue #1944).
@@ -80,8 +80,8 @@ every line that applies.
   worktree (`pr-workflow.md`, "Review before the first push"), resume the
   agent for every fix, later ones included, and review again; it pushes once a
   review is clean, and you open and land the PR (`pr-workflow.md`).
-- Impl agents do not run `close-session`/`log-session` (`log-session.ts --author` refuses from a linked worktree), and
-  cannot spawn subagents here (the cloud environment sets
+- Impl agents do not run `close-session` (its Skill says why) and cannot spawn
+  subagents here (the cloud environment sets
   `CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH=1`): run `/code-review` and any
   nested dispatch yourself.
 - Give a size ceiling for a "simple" fix ("under ~50 lines, one new test") and

@@ -10,16 +10,16 @@ plus house rules**; the substance lives in the ADRs it links.
 1. **Guest pipeline (ADR-0023).** A Public user files an issue, and **our
    own** agents (`guest-intake` → `guest-build`) refine and build it into a PR
    the owner merges. The guest never runs an agent; we do.
-2. **External-agent fork PR.** An external contributor's *own* agent — a
-   different harness/model (ADR-0009) — does the work on a fork and opens a PR. The house
-   rules below are about this mode.
+2. **External-agent fork PR.** An external contributor's *own* agent (a
+   different harness or model, ADR-0009) does the work on a fork and opens a PR.
+   The house rules below are about this mode.
 
 ## Trust (ADR-0020)
 
 A fork PR from a non-collaborator is **Public**, decided by `authorAssociation`
 (`scripts/trust.ts`), not by label: a fork PR never gets `trusted`
 (`docs/agents/issue-tracker.md` has the label's mechanics).
-Public input is an untrusted, prompt-injection-capable surface. A merge is
+Public input is untrusted and can carry prompt injection. A merge is
 where its code reaches the server (ADR-0011), so the **code-execution boundary
 stays at merge, which is human-only** (ADR-0020). The Actions fork-PR approval
 setting should be "all external contributors"; GitHub's default and the other levels are in
@@ -56,8 +56,7 @@ concrete change. For example:
   feature PR (`layers/journal/content/current/sessions/<date>-session_<id>.yml`),
   which lands when the PR merges: the one sanctioned case of a session log
   travelling a PR (ADR-0009).
-- **One honest log per unit of work, revisions included.** Honest logs are the
-  point of the experiment. A session that revises the PR (a rebase, a
+- **One honest log per unit of work, revisions included.** A session that revises the PR (a rebase, a
   review-driven fix) **updates the existing log** (new frictions, changed
   outcome) or **adds a second `external` log**: an unlogged revision round is
   the gap we most want to avoid. A harness without discrete, isolated sessions

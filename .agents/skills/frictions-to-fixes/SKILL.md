@@ -49,7 +49,7 @@ The subagent labels every candidate **never-fixed**, **drop**, **open-already** 
   only for an open Prune Trial is the exception: after the usual tracker search,
   file it, naming the trial.
 - **Open already**: don't file a duplicate. One the subagent flags idle (no
-  commit or comment within the horizon) is yours to pick up or escalate.
+  commit or comment within the ledger's horizon) is yours to pick up or escalate.
 - **Regression** (its fix merged and the friction recurred): never picked or
   dispatched — a change that already failed once needs human eyes, not a second
   run of the same idea. File a distinct issue that flags the earlier fix as
@@ -93,7 +93,8 @@ A fix is never dispatched when it touches a human-only surface (the `paths` of
 hook wiring (`docs/agents/guards.md`'s own rule, since editing it needs a
 human-attended session), or when it turns on a design choice a human should make.
 
-**File an issue** for each fix you don't dispatch, at most **three** per run,
+**File an issue** for each fix you don't dispatch, at most **three** per run
+(§2's regression issues are separate and don't count),
 the highest-ranked first (one blocked only by a human-only surface doesn't count
 against the cap); list the rest in the description of the ledger PR,
 where they wait in the ledger for the next run. A
