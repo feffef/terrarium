@@ -4,8 +4,11 @@ summary: >-
 cause: >-
   Orchestrators write briefs from memory: an unfilled {PAGES} placeholder, paths relative to a Skill folder or missing the Collection folder, a status value restated wrongly, a check grepping output that lists only failures. The agent runs on the bad brief before anyone notices. Signals: "brief", "placeholder", "path did not exist".
 surface: safe
-status: tracked
-ref: "this run's grouped doc PR (dispatch-subagents §3 brief re-read line)"
+status: open
+fixes:
+  - pr: 2150
+    date: "2026-10-16"
+    summary: dispatch-subagents §3 now says to re-read a brief before dispatch (placeholders filled, paths existing, values copied from source).
 occurrences:
   - session: session_011JKK8rrCwea3xSmL4kw6si
     date: "2026-10-14"
