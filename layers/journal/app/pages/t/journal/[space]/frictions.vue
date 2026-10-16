@@ -91,12 +91,10 @@ useSeoMeta({ title: () => `${PAGE_TITLE} · journal/${space}` })
                   <span class="pill sev" :class="e.worst" :title="`Worst severity: ${e.worst}`">{{ e.worst }}</span>
                   <span class="pill status" :class="e.state.replace(' ', '-')" :title="stateHint(e)">
                     {{ e.state }}
-                    <template v-if="e.state === 'still recurring'">
-                      · {{ e.since }} since <a :href="e.fixes[0]!.url" @click.stop>#{{ e.fixes[0]!.pr }}</a>{{ e.fixes.length > 1 ? ' ' : '' }}
-                      <template v-if="e.fixes.length > 1">(earlier: <template v-for="(f, i) in e.fixes.slice(1)" :key="f.pr"><a :href="f.url" @click.stop>#{{ f.pr }}</a>{{ i < e.fixes.length - 2 ? ', ' : '' }}</template>)</template>
-                    </template>
-                    <template v-else-if="e.fixes.length">
-                      {{ e.fixes[0]!.date.slice(5) }} · {{ e.fixes.length === 1 ? 'PR' : 'PRs' }}
+                    <template v-if="e.state === 'still recurring'"> · {{ e.since }} since latest</template>
+                    <template v-else-if="e.fixes.length"> {{ e.fixes[0]!.date.slice(5) }}</template>
+                    <template v-if="e.fixes.length">
+                      · {{ e.fixes.length === 1 ? 'PR' : 'PRs' }}
                       <template v-for="(f, i) in e.fixes" :key="f.pr"><a :href="f.url" @click.stop>#{{ f.pr }}</a>{{ i < e.fixes.length - 1 ? ', ' : '' }}</template>
                     </template>
                   </span>
@@ -106,7 +104,7 @@ useSeoMeta({ title: () => `${PAGE_TITLE} · journal/${space}` })
               <p v-if="e.ref" class="ref-text"><strong>References:</strong> {{ e.ref }}</p>
               <template v-if="e.fixes.length">
                 <h3 class="occ-h">Merged PRs to fix it</h3>
-                <p class="occ-intro">Newest first. Merged to fix it, which does not prove it worked.</p>
+                <p class="occ-intro">Newest first, up to {{ LEDGER_MAX_PRS }}. Merged to fix it, which does not prove it worked.</p>
                 <ul class="sol">
                   <li v-for="f in e.fixes" :key="f.pr">
                     {{ f.summary }} <a :href="f.url">PR #{{ f.pr }}</a> <span class="fix-date">{{ f.date }}</span>

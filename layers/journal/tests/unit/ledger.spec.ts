@@ -106,6 +106,12 @@ describe('ledgerPanels fixes and state', () => {
     expect(ledgerPanels([merged([])], 'current', new Set(), 'archived').severe[0]!.fixes).toEqual([])
   })
 
+  it('lists at most the newest five PRs', () => {
+    const many = Array.from({ length: 7 }, (_, i) => ({ pr: i + 1, date: `2026-09-0${i + 1}` }))
+    const [e] = ledgerPanels([merged(many)], 'current', new Set(), 'archived').severe
+    expect(e!.fixes.map((f) => f.pr)).toEqual([7, 6, 5, 4, 3])
+  })
+
   it('shows the stored status without a merged PR and the derived state with one, measured to the newest occurrence in the ledger', () => {
     const clusters = [
       { ...cluster('plain', ['nit']), status: 'on-trial' as const },

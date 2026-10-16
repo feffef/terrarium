@@ -11,6 +11,9 @@ const SEVERITY_RANK: Record<Severity, number> = { nit: 0, minor: 1, moderate: 2,
 export type FixState = 'fix landed' | 'likely fixed' | 'still recurring'
 export type LedgerState = FixState | 'open' | 'tracked' | 'on trial'
 
+/** The newest merged PRs the page lists, in the pill and the list alike. */
+export const LEDGER_MAX_PRS = 5
+
 /** Days without a new occurrence after the latest PR before it reads "likely fixed". */
 export const LEDGER_QUIET_DAYS = 3
 
@@ -98,7 +101,7 @@ export function ledgerPanels(
       cause: c.cause,
       ...(derived ? { state: derived.state, since: derived.since } : { state: c.status.replace('-', ' ') as LedgerState, since: 0 }),
       ref: c.ref,
-      fixes,
+      fixes: fixes.slice(0, LEDGER_MAX_PRS),
       worst,
       worstCount: c.occurrences.filter((o) => o.severity === worst).length,
       count: c.occurrences.length,
