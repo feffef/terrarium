@@ -64,8 +64,11 @@ findings.
    human instead of merging it.
 
 Use a closing keyword (`Closes`/`Fixes`/`Resolves #N`) only for an issue the PR
-completes; it auto-closes everything it names (#326). Otherwise write
-"relates to #N". `merge-pr.ts` closes any named issue GitHub left open
+completes; it auto-closes everything it names (#326). GitHub matches the
+keyword with an optional colon (`Fixes: #N`), whatever words or quotes
+surround it, so a quoted or negated mention closes too (#2104). Otherwise
+write "relates to #N". `merge-pr.ts` refuses a PR whose closing keywords name
+an open `ready-for-human` issue, and closes any named issue GitHub left open
 (#983); on any other merge path, check each one with `issue_read`.
 
 Before pushing a follow-up to an existing PR branch, check with

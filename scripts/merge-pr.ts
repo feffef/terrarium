@@ -21,6 +21,7 @@
 // Usage:  tsx scripts/merge-pr.ts <pr-number> [--merge-method merge|squash|rebase] [--interval-ms N] [--timeout-ms N]
 //   Refuses up front for a fork or Public-authored PR, a PR labelled
 //   `guest-pipeline` (ADR-0023), a PR that changes a Human-only path (ADR-0004),
+//   a PR whose closing keywords name an open `ready-for-human` issue (#2104),
 //   or unless this session's verdict, naming the head in a `Reviewed:` line, is
 //   on the PR (#1276, #1844).
 //   Then polls the PR's head-commit check runs every `interval-ms` (default 15s)
@@ -101,9 +102,9 @@ export interface PollOptions {
 export interface MergeResult {
   pr: number
   /** Refused before polling: `untrusted-origin` — see `prOriginRefusal`;
-   *  `human-merge` — see `humanMergeRefusal`; `no-verdict` — see
-   *  `verdictRefusal`. */
-  verdict: ChecksVerdict | 'untrusted-origin' | 'human-merge' | 'no-verdict'
+   *  `human-merge` — see `humanMergeRefusal`; `closes-ready-for-human` — see
+   *  `readyForHumanRefusal`; `no-verdict` — see `verdictRefusal`. */
+  verdict: ChecksVerdict | 'untrusted-origin' | 'human-merge' | 'closes-ready-for-human' | 'no-verdict'
   merged: boolean
   mergeCommitSha?: string
   message: string
@@ -223,14 +224,15 @@ export function prOriginRefusal(meta: PrMeta, owner: string, repo: string): stri
 // ── Closing-keyword reconciliation (pure, issue #983) ────────────────────────
 
 /** GitHub's documented closing keywords: `close(s|d)`, `fix(es|ed)`,
- *  `resolve(s|d)`. The capture group grabs the keyword's own `#N` plus any
+ *  `resolve(s|d)`, with an optional colon, whatever words or quotes surround
+ *  them (#2104). The capture group grabs the keyword's own `#N` plus any
  *  further `#N`s joined by a comma (optionally with "and") — the shape GitHub
  *  itself does *not* treat as additional closing references (only the first
  *  `#N` right after the keyword is), but which this reconciliation step
  *  treats as the same intent and closes in full (see header comment). A bare
  *  `owner/repo#N` cross-repo reference is deliberately not matched — this
  *  reconciliation only ever targets this repo's own issues. */
-const CLOSING_KEYWORD_RE = /\b(?:close[sd]?|fix(?:e[sd])?|resolve[sd]?)\b((?:\s+#\d+|\s*,\s*(?:and\s+)?#\d+)+)/gi
+const CLOSING_KEYWORD_RE = /\b(?:close[sd]?|fix(?:e[sd])?|resolve[sd]?)\b:?((?:\s+#\d+|\s*,\s*(?:and\s+)?#\d+)+)/gi
 
 /** Every issue number named by a closing keyword anywhere in `body`,
  *  deduplicated and ascending. Pure and independently testable — the actual
@@ -243,6 +245,23 @@ export function parseClosingKeywordIssues(body: string): number[] {
     }
   }
   return [...found].sort((a, b) => a - b)
+}
+
+export interface IssueFacts {
+  number: number
+  state: string
+  labels: string[]
+}
+
+/** Why merging would auto-close an open `ready-for-human` issue, or null:
+ *  PR #2030 closed #1819 that way (#2104). */
+export function readyForHumanRefusal(issues: IssueFacts[]): string | null {
+  const hits = issues.filter((i) => i.state === 'open' && i.labels.includes('ready-for-human')).map((i) => i.number)
+  if (hits.length === 0) return null
+  return (
+    `refused: the PR body's closing keywords would close open ready-for-human issue(s) ` +
+    `${hits.map((n) => `#${n}`).join(', ')}. Reword each to ${hits.map((n) => `"relates to #${n}"`).join(', ')} and re-run.`
+  )
 }
 
 // ── Poll loop ─────────────────────────────────────────────────────────────────
@@ -424,23 +443,7 @@ function mergePrViaRest(
   return result.sha
 }
 
-function readIssueStateViaGh(owner: string, repo: string, issueNumber: number, cwd: string): string {
-  return execFileSync(
-    'gh',
-    ['api', '--method', 'GET', `repos/${owner}/${repo}/issues/${issueNumber}`, '--jq', '.state'],
-    { cwd, encoding: 'utf8' },
-  ).trim()
-}
-
-function readIssueStateViaRest(owner: string, repo: string, issueNumber: number, token: string, cwd: string): string {
-  const issue = curlRequestJson(
-    'GET',
-    `https://api.github.com/repos/${owner}/${repo}/issues/${issueNumber}`,
-    token,
-    cwd,
-  ) as { state: string }
-  return issue.state
-}
+type RawIssue = { state: string; labels: { name: string }[] }
 
 function closeIssueViaGh(owner: string, repo: string, issueNumber: number, cwd: string): void {
   execFileSync(
@@ -519,9 +522,13 @@ function readVerdictBodies(strategy: FetchStrategy, owner: string, repo: string,
   })
 }
 
-function readIssueState(strategy: FetchStrategy, owner: string, repo: string, issueNumber: number, cwd: string): string {
-  if (strategy === 'gh') return readIssueStateViaGh(owner, repo, issueNumber, cwd)
-  return readIssueStateViaRest(owner, repo, issueNumber, envToken()!, cwd)
+function readIssue(strategy: FetchStrategy, owner: string, repo: string, issueNumber: number, cwd: string): IssueFacts {
+  const url = `repos/${owner}/${repo}/issues/${issueNumber}`
+  const issue =
+    strategy === 'gh'
+      ? (JSON.parse(execFileSync('gh', ['api', '--method', 'GET', url], { cwd, encoding: 'utf8' })) as RawIssue)
+      : (curlRequestJson('GET', `https://api.github.com/${url}`, envToken()!, cwd) as RawIssue)
+  return { number: issueNumber, state: issue.state, labels: issue.labels.map((l) => l.name) }
 }
 
 function closeIssue(strategy: FetchStrategy, owner: string, repo: string, issueNumber: number, cwd: string): void {
@@ -622,6 +629,13 @@ export async function mergePrWhenGreen(
     return { pr: prNumber, verdict: 'human-merge', merged: false, message: humanRefusal }
   }
 
+  const closesReadyForHuman = readyForHumanRefusal(
+    parseClosingKeywordIssues(meta.body).map((n) => readIssue(strategy, owner, repo, n, cwd)),
+  )
+  if (closesReadyForHuman !== null) {
+    return { pr: prNumber, verdict: 'closes-ready-for-human', merged: false, message: closesReadyForHuman }
+  }
+
   const sessionId = resolveGroundTruthFromTranscript(findTranscriptContents(process.env) ?? '')
   const { sha, body: prBody } = meta
   const noVerdict = verdictRefusal(readVerdictBodies(strategy, owner, repo, prNumber, cwd), sessionId, sha)
@@ -669,7 +683,7 @@ export async function mergePrWhenGreen(
   // merge into a reported failure; it's folded into the message instead.
   const { closed, failed } = await reconcileClosingKeywords(
     prBody,
-    (issueNumber) => readIssueState(strategy, owner, repo, issueNumber, cwd),
+    (issueNumber) => readIssue(strategy, owner, repo, issueNumber, cwd).state,
     (issueNumber) => closeIssue(strategy, owner, repo, issueNumber, cwd),
   )
   const reconcileNote =
