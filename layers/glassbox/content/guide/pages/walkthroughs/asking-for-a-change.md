@@ -1,8 +1,8 @@
 ---
 title: Asking for a change
 description: How a request to an agent session becomes a merged PR, and the log the session leaves on main.
-revision: 'a93faa0135f652b85b4976418534243f649e58b9'
-revisionDate: '2026-10-15'
+revision: '1f6fb016361185f92aed44a388093315402b5aa8'
+revisionDate: '2026-10-17'
 ---
 
 Someone with write access asks an agent for a change. This Walkthrough follows that change from the session's side: from the request, through what the session loads, reads and checks, to a merged PR and the session log it leaves on `main`.
