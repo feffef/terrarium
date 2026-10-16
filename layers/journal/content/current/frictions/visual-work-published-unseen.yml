@@ -5,7 +5,7 @@ cause: >-
   Diagrams, illustrations and layouts ship after the agent's own screenshot check; the human first sees the result after it is published and judges it poor.
 surface: safe
 status: open
-ref: "PR #1821 (adds the rule); frictions-to-fixes 2026-10-16: read-first-hint entry for screenshots (PR #2107, 2026-10-16)"
+ref: "the 2026-10-16 run also added a read-first-hint entry for screenshots"
 fixes:
   - pr: 1821
     date: "2026-10-12"
