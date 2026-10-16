@@ -57,8 +57,9 @@ Its body follows one contract, which the page frames like design 1b
   `### What to watch for`. Why it's built this way gives each reason one
   short paragraph a newcomer can follow, with no unexplained jargon: the
   problem, what Terrarium chose, and what that costs, if anything. It may end
-  with the ADR that records the decision, as
-  `ADR-NNNN (:file[…])`, never a loosely related one. What to watch for warns
+  with the ADR that records the decision, as `ADR-NNNN (:file[…])`, or, when
+  no ADR does, with the file that holds the reason, as `:file[…]`; never a
+  loosely related ADR. What to watch for warns
   about consequences for the reader, and links an ADR rather than restating
   its Scope or Consequences;
 - `## Try it in your project`;

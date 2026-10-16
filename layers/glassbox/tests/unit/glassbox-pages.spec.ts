@@ -66,9 +66,9 @@ export function catalogFrom(cols) {
 
 ### Why it's built this way
 
-Agents write most changes, so a check every PR must pass keeps mistakes off \`main\`: ADR-0004 (:file[docs/adr/0004-objective-safety-gate.md]).
+Agents write most changes, so a check every PR must pass keeps mistakes off \`main\`. ADR-0004 (:file[docs/adr/0004-objective-safety-gate.md]).
 
-One expansion step turns a manifest into Collections, so a Tenant never writes them by hand: :file[shared/expand.ts].
+One expansion step turns a manifest into Collections, so a Tenant never writes them by hand. :file[shared/expand.ts].
 
 ### What to watch for
 
