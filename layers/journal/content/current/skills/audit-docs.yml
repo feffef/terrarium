@@ -264,3 +264,17 @@ observations:
       day (two same-day runs picked different families). No revert found in
       the 2-week git-log sweep beyond cosmetic edits. No new silent failure.
       Grade/role unchanged.
+  - date: "2026-10-16"
+    note: >-
+      Re-checked (audit-skills behaviour check), 2 newly-landed sessions
+      beyond the 10-15 entry: session_011HBcCLzMW7CshmqnHLnegb (PR #2038,
+      2026-10-15, journal concision family) and
+      session_01G6m9SbDppX4TE87Mp3m5Dk (PR #1983, 2026-10-14, skills
+      concision family), both confirmed merged with bodies matching their
+      logs' claimed fix lists. PR #1983 correctly filed issue #1984
+      (ADR-0016 vs. Atlas's /t/atlas/plates+/random pages) as a genuine
+      two-source conflict; now confirmed closed via human-merged PR #2062
+      ("Atlas: remove the plates and random pages") — the escalation path
+      worked end to end. Revert sweep (`-i --grep/-G "audit-docs"`, 204
+      hits) found no revert of anything this Skill delivered. No new silent
+      failure. Grade/role unchanged.

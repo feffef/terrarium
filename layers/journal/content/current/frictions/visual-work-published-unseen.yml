@@ -3,7 +3,7 @@ cause: >-
   Diagrams, illustrations and layouts ship after the agent's own screenshot check; the human first sees the result after it is published and judges it poor.
 surface: safe
 status: open
-ref: "PR #1821 (adds the rule)"
+ref: "PR #1821 (adds the rule); frictions-to-fixes 2026-10-16: read-first-hint entry for screenshots (PR pending)"
 occurrences:
   - session: session_01P7a2zqJxuariDNfYqWQRHs
     date: "2026-10-03"
@@ -20,3 +20,9 @@ occurrences:
   - session: 49f1fea0-270e-4851-9cc7-3dbf8cc8609a
     date: "2026-10-08"
     severity: major
+  - session: session_01E2zbWEQmuUrEhWvbzNpBba
+    date: "2026-10-15"
+    severity: moderate
+  - session: session_013LwpcexAe7t3Qck4CKtj9Y
+    date: "2026-10-15"
+    severity: minor

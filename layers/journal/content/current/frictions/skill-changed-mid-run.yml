@@ -1,0 +1,9 @@
+name: skill-changed-mid-run
+cause: >-
+  A Skill merged to main minutes after a run started, so the run used a stale copy (visitor-loop focus and refiner step); one-off race.
+surface: safe
+status: open
+occurrences:
+  - session: session_019e468BFBTvDPXZuGzLMAL7
+    date: "2026-10-15"
+    severity: moderate

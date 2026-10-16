@@ -5,8 +5,8 @@
 > concepts — session log, Skill Inventory, Session, Friction, Agent Authorship —
 > which stay defined in the root `GLOSSARY.md` because any agent needs them
 > regardless of task. This file narrates the *website*, not those concepts.
-> The Journal is Platform infrastructure (its rationale is ADR-0008), not a demo
-> Tenant like the Blog/Atlas.
+> The Journal is Platform infrastructure (rationale: ADR-0008), not a demo
+> Tenant.
 
 ## Why it exists — and why it isn't optional
 

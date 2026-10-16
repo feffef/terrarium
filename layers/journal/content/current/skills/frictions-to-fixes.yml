@@ -238,3 +238,29 @@ observations:
       holding with no recurrence of that specific shape. No reverts of this
       Skill's own work in the 2-week sweep. Grade/role unchanged (routine) —
       a new failure mode on §2's branch, not a repeat of #1676/#1684's §4 one.
+  - date: "2026-10-16"
+    note: >-
+      Re-checked (audit-skills behaviour check), 10 newest usedIn sessions.
+      NEW silent failure, escalated as issue #2104: issue #1819
+      (ready-for-human, needs a Human-only `.claude/settings.json` change)
+      was closed by GitHub's own native auto-close one second after PR
+      #2030 (session_01GLWVkt3R3EnHJj5XpQEJQt, unattended/remote_trigger)
+      merged, even though the PR's body deliberately used non-keyword
+      prose ("no new fix: #1819") to avoid exactly that — confirmed
+      `scripts/merge-pr.ts`'s own `CLOSING_KEYWORD_RE` does not match the
+      text, so this was GitHub's own matching, more permissive (tolerates a
+      colon) than this project's docs/regex assume. §3/§4's promise that a
+      surface-blocked, human-only candidate gets a human's decision was
+      bypassed by accident; the owner independently ratified the same
+      outcome 12h later (PR #2066), so no real-world harm this time, but
+      nothing in this Skill's own process caught the bypass itself — this
+      audit did. #2024 (regression silently merged with stale fixedOn/ref)
+      independently re-confirmed durably fixed via merged PR #2061 (git
+      diff confirms `prune-friction-ledger.ts --summary` now flags
+      "possible regression", tests added). Other 2 newly-checked sessions
+      (session_01LpcCJWRYb5grgQe3wBGEwb's PRs #2064/#2066/#2067;
+      session_01GLWVkt3R3EnHJj5XpQEJQt's PR #2030 and issues #2028/#2029)
+      all confirmed merged/correct apart from the #1819 side-effect above.
+      No reverts of this Skill's own work in the 2-week sweep. Grade/role
+      unchanged (routine) — the bypass is a shared-tooling/GitHub-behavior
+      gap, not this Skill's own promise breaking.

@@ -483,3 +483,39 @@ observations:
       manuallyRescuedClosures empty. Coverage check: implement-spec and
       wait-what both on disk, uninventoried, zero all-time uses — not added,
       per this Skill's own rule. Grade/role unchanged (routine).
+  - date: "2026-10-16"
+    note: >-
+      Self-check: dispatched 12 behaviour-check subagents this run, each
+      report independently verified against primary sources before use. ONE
+      new silent failure found and escalated as issue #2104: issue #1819
+      (ready-for-human, needing a Human-only `.claude/settings.json` change)
+      was closed by GitHub's own native auto-close one second after PR
+      #2030 merged, even though that PR's body used deliberately
+      non-keyword prose ("no new fix: #1819") to avoid exactly this —
+      confirmed `scripts/merge-pr.ts`'s own `CLOSING_KEYWORD_RE` does not
+      match that text, so this was GitHub itself, more permissive than the
+      project's own regex/docs assume (tolerates a colon between the
+      keyword and the `#N`). No real damage this time (the owner
+      independently ratified the same outcome in PR #2066 later that day),
+      but the human-only gate was bypassed by accident, undetected until
+      this audit. ONE repeated-pattern escalation, issue #2105: digest's
+      retention sweep broke a fragile e2e assertion by moving archived
+      content across a Space boundary for a third time (PR #2103, currently
+      open/blocked) — the 2026-10-08 observation had already flagged a
+      third occurrence as deserving human attention. Two sub-threshold
+      findings recorded only as observations on their own Skills, not
+      escalated: prune-trial's session_0147UencKKZS3WLHvsbgywp7 misreported
+      a line-count delta (-14 claimed vs. -19 actual) with no substantive
+      harm; dispatch-subagents' SendMessage-verdict step broke twice right
+      after landing (PR #1947) but was already self-caught (issue #2011)
+      and fixed (PR #2060) within the window, confirmed holding on its next
+      live use. The other 8 Skills (audit-docs, audit-skills's own
+      self-check, auto-triage, blog-post, clear-backlog, close-session,
+      log-session, visitor-loop) came back clean, each re-verified live
+      rather than inherited from prior entries. Closure completeness (step
+      3): orphan scan clean (`scanned: true`, 1342 merged PRs, 1188 with a
+      session), both orphan candidates carry `resolvedBy`, humanPromptedClosures'
+      one entry already settled, manuallyRescuedClosures empty.
+      Coverage gaps added this run: `glassbox-update` (2 uses, both verified
+      merged) and `retro` (1 use, verified genuine — 2 real issues filed
+      from its candidates). Grade/role unchanged (routine).

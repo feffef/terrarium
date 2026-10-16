@@ -1,6 +1,6 @@
 // A hint, not a guard (issue #1754): CLAUDE.md's action-bound "read first"
 // triggers are prose, and sessions read the doc after the action. At the first
-// matching git or GitHub call this adds one line pointing to the doc, alongside
+// matching git, GitHub or screenshot call this adds one line pointing to the doc, alongside
 // that call's result (PostToolUse, and PostToolUseFailure for a failed call).
 // It cannot stop the first call, and the owner accepts that, so a closing line
 // says a late read that clears the call is not a Friction (Friction Ledger
@@ -56,6 +56,12 @@ export const READ_FIRST: ReadFirst[] = [
     doc: 'docs/agents/github-integration.md',
     trigger: 'Before your first GitHub operation',
     matches: (tool, segs) => tool.startsWith('mcp__github__') || runs(segs, 'gh'),
+  },
+  {
+    doc: 'docs/agents/verifying-ui-changes.md',
+    trigger: 'Before you say a UI change works, or take a screenshot',
+    // Run through tsx, the script path is a later word, not the verb.
+    matches: (_t, segs) => segs.some((w) => w.some((x, i) => /(^|\/)screenshot\.ts$/.test(x) || (/(^|\/)preview\.ts$/.test(x) && w[i + 1] === 'shot'))),
   },
 ]
 

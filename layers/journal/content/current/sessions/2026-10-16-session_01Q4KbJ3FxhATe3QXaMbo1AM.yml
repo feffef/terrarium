@@ -1,0 +1,374 @@
+schemaVersion: 1
+session: session_01Q4KbJ3FxhATe3QXaMbo1AM
+startedAt: 2026-10-16T00:46:12Z
+endedAt: 2026-10-16T01:24:33Z
+kind: autonomous
+goal: Scheduled /audit-skills run — check whether the Platform's own Skills fire and deliver what they promise, keep the Skill Inventory in line with that evidence.
+status: completed
+outcome: "PR #2106 merged: 12 Skill Inventory entries updated, 2 new coverage-gap entries added, two new issues filed (#2104, #2105)."
+summary: "Fully agent-initiated, scheduled run (no human prompt): ran scripts/audit-skills.ts for the 7-day scorecard, then dispatched one read-only Sonnet subagent per Skill in behaviourChecks (12 total), all in parallel, each briefed with its SKILL.md path, changesInWindow, newest-10 usedIn sessions, prior observations, and (for modelInvoked Skills) notUsedWindow sessions. Verified every subagent's claims against GitHub/git myself before trusting them, per dispatch-subagents' \"a subagent's report is hearsay\" rule. Two findings cleared the escalation bar: issue #1819 (ready-for-human, needing a Human-only settings.json change) was closed by GitHub's own native auto-close on prose that deliberately avoided a literal closing keyword, bypassing the human-only gate — filed as #2104 after confirming merge-pr.ts's own CLOSING_KEYWORD_RE does not match the text, so this was GitHub itself, more permissive than the project assumes. digest's retention sweep broke a fragile e2e test for a third flagged occurrence of the same cross-Space side-effect pattern — filed as #2105, since the Inventory's own 2026-09-28 observation had already said a third occurrence deserves human attention. Checked closure completeness (step 3): orphan scan clean, both orphan candidates and the one humanPromptedClosures entry already settled. Tuned the Inventory (step 5): appended a dated, cited observation to each of the 12 behaviourChecks entries, added two coverage-gap entries (glassbox-update, retro) for Skills used this window with no prior entry, left every grade unchanged (no finding cleared the ≥2-session bar for a grade move). Ran pnpm gate:scoped (green: lint, typecheck, validate:content, unit tests, build, 138/138 e2e) and the code-review Skill (Standards + Spec subagents) before the first push, per ADR-0004; both axes found real citation-rule misses in my own draft, fixed before pushing. Posted a merge verdict naming the head commit, ran check-conflicting-issues.ts (no hits), and self-merged via scripts/merge-pr.ts (PR #2106, merge commit 07e90bed)."
+prs:
+  - "2106"
+docsRead:
+  - path: GLOSSARY-MAP.md
+    reason: session-start read
+    useful: yes
+  - path: GLOSSARY.md
+    reason: session-start read; Importance/Role definitions used throughout grading
+    useful: yes
+  - path: docs/adr/0015-audit-skills-and-conditional-importance.md
+    reason: full ADR read since this Skill's rule was directly relevant
+    useful: yes
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: before dispatching 12 parallel read-only subagents
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: before my first git command beyond status/diff, fetch/log to draw a conclusion
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: hook-prompted after my first direct mcp__github__ call; confirmed my tool choices were already correct
+    useful: partly
+  - path: docs/agents/pr-workflow.md
+    reason: Closing a scheduled run's PR recipe
+    useful: yes
+  - path: layers/journal/tenant.config.ts
+    reason: skillSchema field definitions, to write valid Inventory entries
+    useful: yes
+  - path: scripts/verify-skills-lock.ts
+    reason: after the gate failed on retro.yml's wrong installedSha256, to learn the pin is NOT skills-lock.json's computedHash
+    useful: yes
+  - path: .agents/skills/glassbox-update/SKILL.md
+    reason: read to learn what the Skill promises, for writing its coverage-gap Inventory role/gist
+    useful: yes
+  - path: .agents/skills/retro/SKILL.md
+    reason: read to learn what the Skill promises, for writing its coverage-gap Inventory role
+    useful: yes
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: Subagent (Audit audit-skills Skill behaviour) read it in full as instructed to learn the promise it graded against
+    useful: yes
+  - path: .agents/skills/prune-trial/SKILL.md
+    reason: Subagent (Audit prune-trial Skill behaviour) loaded it per brief to learn the Skill's promises
+    useful: yes
+  - path: .agents/skills/auto-triage/SKILL.md
+    reason: Subagent (Audit auto-triage Skill behaviour) read it as the audited Skill's own text, essential to its grading
+    useful: yes
+  - path: .agents/skills/close-session/SKILL.md
+    reason: Subagent (Audit close-session Skill behaviour) read the Skill under audit in full
+    useful: yes
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: Subagent (Audit audit-docs Skill behaviour) read it as its core task, to learn the Skill's promises/tiers/steps
+    useful: yes
+  - path: .agents/skills/digest/SKILL.md
+    reason: Subagent (Audit digest Skill behaviour) read it to learn the Skill's promised steps/outcomes
+    useful: yes
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: Subagent (Audit frictions-to-fixes Skill behaviour) read it as the Skill under audit, defining every promise graded
+    useful: yes
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: Subagent (Audit blog-post Skill behaviour) read it in full to learn the Skill's promises/Done-when criteria per step
+    useful: yes
+  - path: .agents/skills/clear-backlog/SKILL.md
+    reason: Subagent (Audit clear-backlog Skill behaviour) read it to learn the Skill's promise/Done criteria per section
+    useful: yes
+  - path: .agents/skills/log-session/SKILL.md
+    reason: Subagent (Audit log-session Skill behaviour) read it to learn the Skill's current promises/steps
+    useful: yes
+  - path: .agents/skills/visitor-loop/SKILL.md
+    reason: Subagent (Audit visitor-loop Skill behaviour) read the current text plus diffed 4 historical revisions, essential to grading
+    useful: yes
+  - path: layers/journal/content/current/skills/midden-catalogue.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-15-session_01C8c4U7TDuWnJwenPUWYxrP.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-15-session_019ZQjo7wiuxrS9KLEG2GiTU.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/skills/handoff.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/skills/grill-me.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/skills/audit-docs.yml
+    reason: (read before editing)
+  - path: layers/journal/content/current/skills/audit-skills.yml
+    reason: (read before editing)
+  - path: layers/journal/content/current/skills/auto-triage.yml
+    reason: (read before editing)
+  - path: layers/journal/content/current/skills/blog-post.yml
+    reason: (read before editing)
+  - path: layers/journal/content/current/skills/clear-backlog.yml
+    reason: (read before editing)
+  - path: layers/journal/content/current/skills/close-session.yml
+    reason: (read before editing)
+  - path: layers/journal/content/current/skills/digest.yml
+    reason: (read before editing)
+  - path: layers/journal/content/current/skills/dispatch-subagents.yml
+    reason: (read before editing)
+  - path: layers/journal/content/current/skills/frictions-to-fixes.yml
+    reason: (read before editing)
+  - path: layers/journal/content/current/skills/log-session.yml
+    reason: (read before editing)
+  - path: layers/journal/content/current/skills/prune-trial.yml
+    reason: (read before editing)
+  - path: layers/journal/content/current/skills/visitor-loop.yml
+    reason: (read before editing)
+  - path: layers/journal/content/current/sessions/2026-10-15-session_0147UencKKZS3WLHvsbgywp7.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-14-session_01RAEu4CBfQptjCtKnJpUw8q.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-12-session_017NBxJhtBSd9AoCwTzsg6pM.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/skills/domain-modeling.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/skills/glassbox-update.yml
+    reason: (read before editing)
+  - path: layers/journal/content/current/sessions/2026-10-16-session_01F3a2MbH4xUH7J7Y1hLg2TX.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-15-session_01E2zbWEQmuUrEhWvbzNpBba.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-15-session_01KVh6e6JUAssZvPRbuN5YDr.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-15-session_013LwpcexAe7t3Qck4CKtj9Y.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-15-session_019e468BFBTvDPXZuGzLMAL7.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-15-session_01Lwanyry6GWtqHYoMAgGGLa.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-15-session_01NqN7omu3o4kxoGeQzzSXhK.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-15-session_011t1xXHxqwrfAjt83s9oTEP.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-14-session_01NVG22rfEsjhW9zkcCco6W8.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-15-session_011HBcCLzMW7CshmqnHLnegb.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-14-session_01G6m9SbDppX4TE87Mp3m5Dk.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/digests/2026-10-15.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-15-session_01LpcCJWRYb5grgQe3wBGEwb.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-15-session_01GLWVkt3R3EnHJj5XpQEJQt.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-15-session_01NoQubvnMfCpcq9nkicNsDq.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-15-session_012NmfdSNbbPD9T5LPAwmdYG.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-14-session_01GG85r8HWMEdaMgKUaNUZH7.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-15-session_012VTgtrUEy7cPVTN5sMriXj.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-15-session_01672sKdk3qVR8DfkAWvR5Qz.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-14-session_01675UWGBfCMALkurUr58cxM.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-14-session_01RJh5bK46AQRRtwagmz8GjU.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/skills/retro.yml
+    reason: (read before editing)
+skillsUsed:
+  - name: dispatch-subagents
+    reason: 12 parallel read-only Sonnet audit subagents
+  - name: code-review
+    reason: Standards + Spec review before first push, per ADR-0004
+  - name: close-session
+    reason: this invocation (PR-open, then final on merge)
+  - name: log-session
+    reason: (no reason given)
+  - name: audit-skills
+    reason: (invoked as a slash command)
+frictions:
+  - description: Pinned retro.yml's installedSha256 to skills-lock.json's computedHash instead of the actual on-disk SKILL.md sha256, wasting one full gate run before verify-skills-lock caught the drift.
+    solution: scripts/verify-skills-lock.ts's own header comment already explains why the lock's computedHash can't be reused (it hashes upstream source, not the installed file) — read that comment before guessing a pin value, or just run pnpm verify:skills-lock --write instead of hand-computing it.
+    severity: minor
+  - description: Three of the fourteen appended Inventory observations initially broke audit-skills' own step-5 rule (only append when it cites a session no remaining entry already cites) — two cited no genuinely new session at all, one carried a redundant already-cited session id — caught only by the mandated code-review subagents, not self-caught.
+    solution: Before appending each observation, grep the target file for existing session ids and confirm at least one id in the new note is absent from that list, instead of trusting my own summary judgment that this is new ground.
+    severity: minor
+durationSec: 2301
+models:
+  claude-sonnet-5: 362
+toolCounts:
+  Read: 40
+  Bash: 82
+  Agent: 14
+  Write: 18
+  ToolSearch: 6
+  mcp__github__pull_request_read: 6
+  mcp__github__issue_read: 5
+  mcp__github__search_issues: 5
+  mcp__github__issue_write: 2
+  Edit: 18
+  ScheduleWakeup: 1
+  Skill: 4
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  ReadNotifications: 1
+  mcp__github__add_issue_comment: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+filesEdited:
+  - layers/journal/content/current/skills/audit-docs.yml
+  - layers/journal/content/current/skills/audit-skills.yml
+  - layers/journal/content/current/skills/auto-triage.yml
+  - layers/journal/content/current/skills/blog-post.yml
+  - layers/journal/content/current/skills/clear-backlog.yml
+  - layers/journal/content/current/skills/close-session.yml
+  - layers/journal/content/current/skills/digest.yml
+  - layers/journal/content/current/skills/dispatch-subagents.yml
+  - layers/journal/content/current/skills/frictions-to-fixes.yml
+  - layers/journal/content/current/skills/log-session.yml
+  - layers/journal/content/current/skills/prune-trial.yml
+  - layers/journal/content/current/skills/visitor-loop.yml
+  - layers/journal/content/current/skills/glassbox-update.yml
+  - layers/journal/content/current/skills/retro.yml
+rulesLoaded:
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0002.md
+  - .claude/rules/adr-0008.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0007.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0015.md
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0010.md
+  - .claude/rules/mermaid-lanes.md
+  - .claude/rules/adr-0012.md
+  - .claude/rules/adr-0028.md
+docsReadBySubagents:
+  - .agents/skills/audit-skills/SKILL.md
+  - .agents/skills/prune-trial/SKILL.md
+  - .agents/skills/close-session/SKILL.md
+  - .agents/skills/auto-triage/SKILL.md
+  - .agents/skills/audit-docs/SKILL.md
+  - .agents/skills/digest/SKILL.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - .agents/skills/blog-post/SKILL.md
+  - .agents/skills/clear-backlog/SKILL.md
+  - .agents/skills/log-session/SKILL.md
+  - .agents/skills/visitor-loop/SKILL.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Made me run gate:scoped and code-review before pushing despite Stop-hook nudges; summary was enough, did not open the full ADR
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Told me to invoke close-session at PR open and log honestly; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: Would have blocked restoring/rewording text under an open prune trial, but nothing I edited (Inventory YAML only) fell under one
+    useful: no
+  - path: .claude/rules/adr-0020.md
+    reason: Trust-tier rule for Public actors; no Public issue or PR appeared in this run, so it had nothing to change
+    useful: no
+  - path: .claude/rules/adr-0003.md
+    reason: Told me to open the PR myself without asking and subscribe to it; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Required the session-id header on every issue/PR body I wrote and the commit trailer; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0015.md
+    reason: The core rule for this whole task — defines what audit-skills may edit and how; read the full ADR
+    useful: yes
+  - path: .claude/rules/adr-0021.md
+    reason: Glossary-placement rule, loaded on the session-start GLOSSARY read; I added no glossary term
+    useful: no
+  - path: .claude/rules/adr-0030.md
+    reason: ADRs document a decision not its history; loaded on a doc read, irrelevant since I rewrote no ADR
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Loaded on a governed-file read; none of my edits touched a Human-only path (pure Inventory YAML)
+    useful: no
+  - path: .claude/rules/adr-0005.md
+    reason: Confirmed I must never edit a Skill's own SKILL.md while writing coverage-gap entries that reference them — I only read, never edited, SKILL.md files
+    useful: yes
+  - path: .claude/rules/adr-0002.md
+    reason: Loaded when I read layers/journal/tenant.config.ts for the skillSchema; confirmed where the schema lives, I only read the manifest, didn't edit it
+    useful: partly
+  - path: .claude/rules/adr-0008.md
+    reason: Loaded on the same tenant.config.ts read; confirmed the Inventory is derived/refreshed-in-place, consistent with what this run did
+    useful: yes
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: MDC/content-component checklist, loaded alongside the tenant.config.ts read; no MDC or component work this run
+    useful: no
+  - path: .claude/rules/tenant-layers.md
+    reason: Nuxt layer conventions, loaded alongside the tenant.config.ts read; no layer code touched this run
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: Rule about where instructions live; background only, not load-bearing for this content-only task
+    useful: no
+  - path: .claude/rules/adr-0007.md
+    reason: Derived-files rule, loaded on the tenant.config.ts read; the Inventory is hand-curated, not a generated/derived file, so it didn't apply
+    useful: no
+  - path: .claude/rules/adr-0022.md
+    reason: Subagent (Audit auto-triage Skill behaviour) had it auto-load on its SKILL.md read; it defines the ready-for-agent/ready-for-human boundary the subagent graded sessions against
+    useful: yes
+  - path: .claude/rules/adr-0010.md
+    reason: Subagent (Audit digest Skill behaviour) had it auto-surface; confirmed Digests land via PR, consistent with what the subagent verified
+    useful: partly
+  - path: .claude/rules/mermaid-lanes.md
+    reason: Subagent (Audit digest Skill behaviour) had it auto-surface alongside other rules; not germane to the digest text/PR findings
+    useful: no
+  - path: .claude/rules/adr-0012.md
+    reason: "Subagent (Audit blog-post Skill behaviour) had it auto-surface while checking the Karen reply's pingback; confirmed PR #2059 followed the cross-Space stub rule"
+    useful: yes
+  - path: .claude/rules/adr-0028.md
+    reason: Loaded by a subagent with no reported reason or finding tied to it in any hand-back; not load-bearing for anything reported
+    useful: no
+subagents:
+  - type: general-purpose
+    task: Audit audit-docs Skill behaviour
+    model: sonnet
+  - type: general-purpose
+    task: Audit audit-skills Skill behaviour
+    model: sonnet
+  - type: general-purpose
+    task: Audit auto-triage Skill behaviour
+    model: sonnet
+  - type: general-purpose
+    task: Audit blog-post Skill behaviour
+    model: sonnet
+  - type: general-purpose
+    task: Audit clear-backlog Skill behaviour
+    model: sonnet
+  - type: general-purpose
+    task: Audit close-session Skill behaviour
+    model: sonnet
+  - type: general-purpose
+    task: Audit digest Skill behaviour
+    model: sonnet
+  - type: general-purpose
+    task: Audit dispatch-subagents Skill behaviour
+    model: sonnet
+  - type: general-purpose
+    task: Audit frictions-to-fixes Skill behaviour
+    model: sonnet
+  - type: general-purpose
+    task: Audit log-session Skill behaviour
+    model: sonnet
+  - type: general-purpose
+    task: Audit prune-trial Skill behaviour
+    model: sonnet
+  - type: general-purpose
+    task: Audit visitor-loop Skill behaviour
+    model: sonnet
+  - type: general-purpose
+    task: Standards review of Inventory YAML diff
+    model: sonnet
+  - type: general-purpose
+    task: Spec review of Inventory YAML diff
+    model: sonnet
+gitBranch: claude/upbeat-sagan-yenzdp
+entrypoint: remote_trigger
+cliVersion: 2.1.301
+trigger: audit-skills
+landedBy: Stop

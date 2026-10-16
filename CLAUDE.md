@@ -76,9 +76,8 @@ layers/<tenant>/          one Tenant: tenant.config.ts (its manifest — edit th
                           content/<space>/<collection>/, GLOSSARY.md, tests/
 shared/                   manifest types, expansion, routing (mostly Human-only: ADR-0004)
 docs/adr/                 decisions
-.claude/rules/            important instructions (ADR summaries, the human-merge
-                          list) that Claude Code injects into your context, at
-                          session start, or when you touch a file or run a Skill they govern
+.claude/rules/            rules (ADR summaries, the human-merge list), loaded at
+                          session start or when you touch a file or run a Skill they govern
 docs/agents/              how-to docs for agents
 docs/research/            dated reference notes
 .agents/skills/           our Skills (.claude/skills/ links here)

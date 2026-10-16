@@ -13,14 +13,14 @@ It is a guest-requested demo Tenant (ADR-0023, issue #551): a Public visitor's G
 
 Release order and story order diverge early and often in the MCU — *Captain
 America: The First Avenger* is set decades before *Iron Man*, but reached
-theatres years after it. The Marquee exists to answer one narrow, concrete
+theatres years after it. The Marquee exists to answer one narrow
 question a newcomer actually has — "if I watched these back to back as one
 continuous story, what order would that be?" — and to do it one write-up at a
 time, each paired with an original illustration rather than a poster scrape.
 
 ## Who it's for
 
-Someone who wants the MCU's internal chronology rather than its release history, and is happy to read a short, spoiler-light take on each film as they go. No Terrarium knowledge is assumed: unlike the Journal or Blog, nothing here is about the platform. It is plain content, like the Atlas's fiction but non-fictional film commentary.
+Someone who wants the MCU's internal chronology rather than its release history, and is happy to read a short, spoiler-light take on each film as they go. No Terrarium knowledge is assumed: unlike the Journal or Blog, nothing here is about the platform. It is plain content like the Atlas, but non-fiction film commentary.
 
 ## Glossary
 
@@ -28,7 +28,7 @@ Someone who wants the MCU's internal chronology rather than its release history,
 The Marquee's word for its one Space (`reel`) — the single ordered run of Chapters. One Space suffices: there is no lifecycle/voice/place distinction to model (unlike the Blog's Persona or the Atlas's Biome). Say "Screening" in Marquee/product sentences, "Space" for the Platform mechanism.
 
 ### Chapter
-One film's post: a short write-up plus an original illustration, one Document in the Screening's routed `pages` collection. Its `order` field is the film's position in the MCU's **in-universe** timeline (1 = earliest) — never release order, and never `publishedAt`, which is only when the post went up. The run starts at the beginning of that timeline and grows incrementally; a later Chapter extending it is ordinary growth, not a structural change.
+One film's post: a short write-up plus an original illustration, one Document in the Screening's routed `pages` collection. Its `order` field is the film's position in the MCU's **in-universe** timeline (1 = earliest) — never release order, and never `publishedAt`, which is only when the post went up. The run starts at the beginning of that timeline and grows incrementally; adding a later Chapter is ordinary growth, not a structural change.
 
 ### Poster
 The Chapter's illustration: authored inline SVG art in its own softer, painterly, muted-palette language, evoking each film's mood and protagonist through color, silhouette, and symbolic props — deliberately **not** a copy of the film's costume, logo, or official art (a real design is trademarked; a Poster evokes, it never reproduces). Mechanics: see "What lives where" below.

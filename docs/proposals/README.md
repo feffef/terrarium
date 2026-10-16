@@ -5,7 +5,7 @@
 The handoff for a change an agent can't apply itself: a `.github/workflows/*`
 edit, or a repository setting such as a ruleset (why:
 `docs/agents/environment-caveats.md`). An agent writes the intended change here;
-a human applies it by hand. This README owns the format and discipline below.
+a human applies it by hand.
 
 ## File format
 
@@ -20,22 +20,20 @@ Each proposal file must contain:
    `.github/workflows/gate.yml`), plus the proposed diff or full new content;
    for a repository setting, the settings page and the exact API call.
 3. **Rationale** — why the change is needed.
-4. **Companion change** — which agent PR (if any) this change must be
-   applied *alongside* (see the discipline below). State "none" if the
-   proposal stands alone.
+4. **Companion change** — the agent PR (if any) this change must be
+   applied *alongside* (see below); otherwise "none".
 
 ## Companion-change discipline
 
 When a change needs both an agent-authored edit and a companion workflow edit,
-the two are applied **together** — the human applies the workflow half and
-merges the agent's PR in the same sitting, not the agent half first and the
-workflow half later. ADR-0026 records the cost of drifting apart: CI ran a stale subset of `pnpm gate`.
+the two are applied **together**: the human applies the workflow half and
+merges the agent's PR in the same sitting, never the agent half first. ADR-0026 records the cost of drifting apart: CI ran a stale subset of `pnpm gate`.
 
 A human applies the proposal by hand (editing the workflow file, or making the setting) and, once landed, deletes the proposal file in the same commit; this directory tracks only *pending* proposals.
 
 ## Superseding a pending proposal
 
-A proposal that a later proposal replaces must say so on its own file; readers won't notice the contradiction otherwise (issue #890). Whoever adds the superseding proposal adds, in the same PR, a banner as the **first line** of the superseded file's body naming the replacement:
+A superseded proposal must say so on its own file, or readers miss the contradiction (issue #890). The PR that adds the superseding proposal also adds, as the **first line** of the superseded file's body, a banner naming the replacement:
 
 ```
 > **Superseded by [`docs/proposals/NNN-new-slug.md`](./NNN-new-slug.md).**

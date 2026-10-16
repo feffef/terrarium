@@ -254,3 +254,14 @@ observations:
       three "prune: blog-post step 12" commits (2026-10-13) rewrapped step-12
       wording without changing its substance. No new silent failure.
       Grade/role unchanged.
+  - date: "2026-10-16"
+    note: >-
+      Re-checked (audit-skills behaviour check), all 10 usedIn sessions (9
+      already verified in prior entries, 1 freshly audited end-to-end:
+      session_01NoQubvnMfCpcq9nkicNsDq, 2026-10-15, PR #2057/#2059). Both PRs
+      confirmed merged; #2059's grounding issues #1895/#1899 confirmed real
+      and closed by merged PRs #1925/#1927 exactly as claimed; genuine
+      two-round fact-check and second-reader verdict present. #1479/#1626
+      re-confirmed closed and holding. Durability sweep found only the two
+      already-known, owner-directed replacements (31601c0f, 467dbf1d) — no
+      new reverts. No new silent failure. Grade/role unchanged.

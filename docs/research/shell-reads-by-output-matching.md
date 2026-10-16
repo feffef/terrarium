@@ -11,7 +11,9 @@ frictions the Journal has accumulated, or only trade them for new ones?
 following commit; `git show aa86e131:scripts/shell-reads-by-output.prototype.ts`
 to read it). Every number in the results table is that script's printed
 output; anything else that is a count over the logs or an ad-hoc probe says so.
-The proposal that follows from it is issue #1545, not this note.
+**Status: adopted (#1545, ADR-0009).** `scripts/shell-reads.ts` now credits a
+doc from the command's output; the numbers below are the 2026-10-03 measurement
+of the old command-text detector against the prototype.
 
 ## The corpus
 

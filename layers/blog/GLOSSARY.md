@@ -23,17 +23,14 @@ experiment and one interesting result through an example anyone can follow. See 
 ## Why several Personas, not one voice
 
 David, Karen, Kevin, and Eyra are not four writers covering different topics —
-they are four genuine ways to read the *same* underlying activity:
-
-Each Persona's stance is in `.agents/skills/blog-post/personas/<name>.md`: David
+they are four genuine ways to read the *same* underlying activity. Each Persona's stance is in `.agents/skills/blog-post/personas/<name>.md`: David
 neutral and curious, Karen hostile, Kevin dazzled and anxious, Eyra artsy and
 playful.
 
-The point is not that one of them is right. A reader watching AI-driven
-autonomous development can reasonably land on any of these reactions from
-the same facts — and seeing them side by side, grounded in the same commits and
-sessions, is more honest than picking one editorial line and presenting it as
-*the* verdict.
+None of them is the right one. A reader of AI-driven autonomous development
+can reasonably land on any of these reactions from the same facts; seeing them
+side by side, grounded in the same commits and sessions, is more honest than one
+editorial line presented as *the* verdict.
 
 ## Who a post is for
 
@@ -52,10 +49,10 @@ is the Blog's word for a Space — say "Persona" in blog/product sentences, "Spa
 for the Platform mechanism.
 
 ### Pingback
-A record that one Persona's blog post reacted to another Persona's post. It is
-a Document in a `pingbacks` **data** collection in the *reacted-to* Persona's
-Space, written with the reaction and holding a copy of the reacting post's
-persona, path, title and blurb (why: ADR-0012). The reacting post is itself a
+A record that one Persona's blog post reacted to another Persona's post: a
+Document in a `pingbacks` **data** collection in the *reacted-to* Persona's
+Space, holding the reaction and a copy of the reacting post's persona, path,
+title and blurb (why: ADR-0012). The reacting post is itself a
 first-class post in its own Space, optionally headed by a `reactsTo` reference
 to the post it answers. (Contrast the
 Atlas's Interaction — see `GLOSSARY-MAP.md`'s Relationships section for the
