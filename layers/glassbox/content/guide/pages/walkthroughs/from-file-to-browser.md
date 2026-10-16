@@ -1,8 +1,8 @@
 ---
 title: From file to browser
 description: How a Markdown file in a Tenant folder becomes a table, a dump, a rendered page and a payload the browser reuses.
-revision: 'a93faa0135f652b85b4976418534243f649e58b9'
-revisionDate: '2026-10-15'
+revision: '592e3e22c323e2d4e489cf197f1d730037341cd9'
+revisionDate: '2026-10-16'
 ---
 
 A Markdown file is committed, and later a visitor reads it as a page. This Walkthrough follows that file from the content's side: from its folder, through the manifest and the build, which packs it into a dump of its table. From the other side, the server loads that dump into its own SQLite database and queries it to render the page, and the browser reuses the page's data on the next click. Only for a route the server doesn't cache does the browser load the dump into an SQLite database of its own.
@@ -52,15 +52,15 @@ The Tenant's :term[manifest] lists its Spaces and Collections. Each time Nuxt Co
 On the live server, one container notices the new commit on `main` and builds it beside the running site. Only if the build succeeds does it copy the new `.output/` over the served one and restart Node.
 
 ::stop-links
-[Self-updating container](/t/glassbox/guide/deploy/self-updating-container) · [Architecture & Deployment](/t/journal/current/architecture)
+[Self-updating container](/t/glassbox/guide/deploy/self-updating-container) · [Nitro: the server under Nuxt](/t/glassbox/guide/nuxt-vue/nitro) · [Architecture & Deployment](/t/journal/current/architecture)
 ::
 
 ## 5. A request renders it, or the cache answers
 
-A Caddy proxy passes the visitor's request to Nitro, Nuxt's server, which first checks its page cache: a copy rendered moments ago goes back as it is. On a miss, Nuxt picks the page file that matches the address, and its `useSpace` turns the address into the keys of one Space's Collections, or a 404. The page's `useAsyncData` then calls `queryCollection` with its key, on the server.
+A Caddy proxy passes the visitor's request to :term[Nitro], Nuxt's server, which first checks its page cache: a copy rendered moments ago goes back as it is. On a miss, Nuxt picks the page file that matches the address, and its `useSpace` turns the address into the keys of one Space's Collections, or a 404. The page's `useAsyncData` then calls `queryCollection` with its key, on the server.
 
 ::stop-links
-[useAsyncData & payloads](/t/glassbox/guide/nuxt-vue/use-async-data) · [File routing](/t/glassbox/guide/nuxt-vue/file-routing) · [useSpace](/t/glassbox/guide/nuxt-vue/use-space)
+[Nitro: the server under Nuxt](/t/glassbox/guide/nuxt-vue/nitro) · [useAsyncData & payloads](/t/glassbox/guide/nuxt-vue/use-async-data) · [File routing](/t/glassbox/guide/nuxt-vue/file-routing) · [useSpace](/t/glassbox/guide/nuxt-vue/use-space)
 ::
 
 ## 6. The first query restores the table from the dump

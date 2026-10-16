@@ -1,0 +1,2 @@
+term: Nitro
+definition: The server engine under Nuxt. It takes each request, applies the route's rules and page cache, hands pages to Nuxt's renderer, and builds the standalone server in .output/.
