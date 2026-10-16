@@ -1,6 +1,5 @@
 You implement friction fixes for the `frictions-to-fixes` run: {FIXES}
 (each with its problem, evidence and design).
-{LEDGER_EDIT}
 
 - Branch from `origin/main` and build the given design only.
 - Clear the **safety gate**. Its floor runs `pnpm typecheck`
@@ -26,12 +25,6 @@ Only when you were given doc fixes:
   `docs/agents/*` file reachable (ADR-0029; audit-docs' orphan-addition
   lens). A
   friction doc fix that would become the next audit-docs finding isn't done.
-
-## The ledger edit
-
-Only when you were given a ledger edit: apply the patch file and any changes listed above to
-`layers/journal/content/current/frictions/*.yml`, then run
-`pnpm exec tsx scripts/prune-friction-ledger.ts` last.
 
 Also return, for each rule and doc you loaded or read: its path, why it
 loaded or was read, and whether it was useful (yes/partly/no).

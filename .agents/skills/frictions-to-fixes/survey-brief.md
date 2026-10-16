@@ -1,7 +1,8 @@
 You survey and screen this window's session-log frictions for the
 `frictions-to-fixes` run and return a **distilled, ranked report**; the main
 session works only from it and never re-reads the raw corpus. You **survey
-only**: file no issues, open no PRs, change no code. The scratchpad is
+only**: file no issues, open no PRs, and change nothing but the Friction
+Ledger, which you commit (Report, (d)). The scratchpad is
 {SCRATCH_DIR}.
 
 ## Survey
@@ -23,8 +24,8 @@ only**: file no issues, open no PRs, change no code. The scratchpad is
   tools, belong together when one change would retire both. The ledger's
   **horizon** is the last 14 days (the run prunes it to that): an entry's
   recurrence is its occurrences within it, counting only sessions that started
-  after its fix merged when it has one. Return the ledger changes (new entries, appended occurrences,
-  status changes, each with its evidence) in the report. Survey the ledger with
+  after its fix merged when it has one. Write the ledger changes (new entries, appended occurrences,
+  status changes) to the entry files. Survey the ledger with
   `pnpm exec tsx scripts/prune-friction-ledger.ts --summary` (one line per entry
   with its fixes and its state; it lists the frictions two clusters share, for
   you to re-judge);
@@ -42,13 +43,14 @@ only**: file no issues, open no PRs, change no code. The scratchpad is
   for 3 days after the latest PR) or `still recurring` (occurrences dated after
   it, counted), so a re-fix after a regression needs only its `fixes` entry.
   `ref` is not rendered: it
-  holds the tracking issue, the trial's territory match or what a fix left
-  open, never the PR list. `gh api repos/feffef/terrarium/commits/<sha>/pulls`
+  holds the tracking issue or open PR, the trial's territory match or what a fix left
+  open, never the merged PRs. `gh api repos/feffef/terrarium/commits/<sha>/pulls`
   maps a commit to its PR and `gh api repos/feffef/terrarium/pulls/<N>` gives
   its body and `merged_at` (`gh pr view` is blocked); read the body, since a
   batched doc PR's title names no cluster. This run's own PRs are recorded
   by the main session; a PR an earlier run missed (still `tracked`, or in that run's log `prs`
-  but in no `fixes`) is recorded here.
+  but in no `fixes`) is recorded here. A `tracked` entry whose PR closed
+  unmerged, or whose `ref` names no open issue or PR, goes back to `open`.
 - **Steer the budget at the unfixed tail.** A large share of the window's frictions are usually already resolved by a later in-window session or a merged fix. Screen those out fast as a `drop` (Screen, below) instead of re-deriving their history; save the deep archaeology for candidates with no in-window resolution.
 - **Read the window's session logs** via `pnpm exec tsx scripts/session-frictions.ts`
   (it prints where the window starts; bare `tsx` isn't on PATH). Large output goes to
@@ -115,10 +117,11 @@ it that the session logs don't hold (what you found in the source, on `main`,
 in the ledger or on the tracker, and any fix idea it gave you): a later design
 agent reads the full logs and designs the fix from your findings. Cite GitHub
 sources by issue or PR number or commit hash only, without copying their text; **(b) a dropped list** with one-line reasons (an on-trial one quotes its territory match);
-**(c) your own frictions** from the run; **(d) the ledger changes**, also saved as a YAML patch file in the
-scratchpad whose path you name: a list of whole entries, each exactly as its file
-reads (never invented keys such as `fixes_append`), with occurrence blocks as
-`ledger-occurrence.ts` printed them; **(e) the regressions**: every cluster
+**(c) your own frictions** from the run; **(d) the ledger changes**, each with its evidence, and the hash of the one
+commit on the current branch that holds them (`git commit -F <file>`; don't push
+or switch branches). Write each entry as the schema reads (never invented keys
+such as `fixes_append`), with occurrence blocks as `ledger-occurrence.ts`
+printed them; **(e) the regressions**: every cluster
 `--summary` shows as `still recurring`, with its count since the latest PR and its highest severity since; and
 **(f) each friction `--summary` lists in two clusters**, moved or kept because its text names
 both causes.

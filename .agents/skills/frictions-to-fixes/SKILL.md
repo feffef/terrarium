@@ -1,6 +1,6 @@
 ---
 name: frictions-to-fixes
-description: Mine the Journal's session-log frictions and ship fixes autonomously — keep the Friction Ledger, pick up to 10 per run, have a design agent design each fix and assess its risk, dispatch the safe ones to Sonnet impl agents as gated PRs and file the rest as issues, then review-and-merge the PRs yourself, escalating only genuinely high-risk changes to humans.
+description: Mine the Journal's session-log frictions and ship fixes autonomously — keep the Friction Ledger and merge it to main in its own PR every run, pick up to 10 per run, have a design agent design each fix and assess its risk, dispatch the safe ones to Sonnet impl agents as gated PRs and file the rest as issues, then review-and-merge the PRs yourself, escalating only genuinely high-risk changes to humans.
 disable-model-invocation: true
 ---
 
@@ -29,11 +29,12 @@ subagent** (`general-purpose`, so it can run `tsx` and the GitHub MCP tools), wi
 [`survey-brief.md`](survey-brief.md) verbatim and the scratchpad path filled in. It
 surveys, screens, and returns a **distilled, ranked report**; the main session
 works only from that report and never re-reads the raw corpus. The subagent
-**surveys only** — it files no issues, opens no PRs, changes no code.
+**surveys only** — it files no issues, opens no PRs, and changes nothing but the
+ledger, which it commits on the session's branch.
 
 Its report holds **(a)** the ranked actionable candidates, **(b)** a dropped list,
 **(c)** the subagent's own frictions (they belong in this session's log too, §7),
-**(d)** the ledger changes and the path of their YAML patch file, **(e)** the
+**(d)** the ledger changes and the commit that holds them, **(e)** the
 regressions, and **(f)** the frictions two clusters share. Done when it has
 returned all six.
 
@@ -54,7 +55,7 @@ The subagent labels every candidate **never-fixed**, **drop**, **open-already** 
   ineffective (link the prior issue/PR and quote both the original and the
   recurring friction) for the top **three** of the run by severity, occurrence
   count and proof of regression (occurrences dated after the fix) together.
-  List the rest in the description of the PR that carries the ledger edit (§5);
+  List the rest in the description of the ledger PR (§5);
   they wait in the ledger for the next run.
 
 ## 3. Pick what to fix — up to 10
@@ -92,8 +93,8 @@ hook wiring (`docs/agents/guards.md`'s own rule, since editing it needs a
 human-attended session), or when it turns on a design choice a human should make.
 
 **File an issue** for each fix you don't dispatch, at most **three** per run,
-the highest-ranked first; list the rest in the description of the PR that
-carries the ledger edit, where they wait in the ledger for the next run. A
+the highest-ranked first; list the rest in the description of the ledger PR,
+where they wait in the ledger for the next run. A
 group of related frictions is one issue, not several. Each issue holds the **problem** with its evidence (quote the logging
 sessions + severities — for a group, all of them) and the **design**. Search the tracker first to avoid duplicates. Label
 one blocked only by a human-only surface `ready-for-human` (an agent may still
@@ -106,22 +107,22 @@ A dispatched fix gets **no issue**: it is reviewed and merged inside this run
 its problem, evidence and design into §6's brief and into the PR description;
 the merged PR is the record.
 
-**Update the ledger every run, fixes or none.** It is the run's durable
-record. The ledger edit is:
+**Update the ledger every run, fixes or none,** in a PR of its own, so it
+reaches `main` whatever happens to the fix PRs. On the session's branch, on top
+of the survey's commit (§1), commit:
 
-- the subagent's ledger changes (§1), `fixes` included;
-- `status` and `ref` for what this run files, dispatches or escalates: a
-  dispatched fix is `tracked` until its PR merges, and §7 records it in `fixes`;
-- last, `pnpm exec tsx scripts/prune-friction-ledger.ts`, which drops every
-  occurrence before the horizon and deletes an entry left with none (git
-  keeps them).
+- `status: tracked` for what this run files or dispatches, with the issue in
+  `ref` for a filed fix (a dispatched fix gets its PR in §8);
+- then the result of `pnpm exec tsx scripts/prune-friction-ledger.ts`, which
+  drops every occurrence before the horizon and deletes an entry left with none
+  (git keeps them).
 
-You review and merge; you never author. So
-the ledger edit rides in the grouped doc PR (§6), or, on a run that dispatches
-none, goes to one Sonnet agent of its own.
+Push, open the **ledger PR**, review its diff yourself, and land it by
+`docs/agents/pr-workflow.md`'s recipe once CI is green; §6 need not wait for it.
 
 Done when every fix is ready to dispatch, has an open issue, or is listed for
-the next run, and the top three regressions have their issues.
+the next run, the top three regressions have their issues, and the ledger PR is
+open.
 
 ## 6. Dispatch Sonnet impl agents — batch the doc fixes
 
@@ -133,9 +134,8 @@ post-dispatch check. Run at most 2 impl agents' full gates concurrently
 (dispatch-subagents §3); dispatch the rest as those finish:
 
 - **Doc-only fixes** (Markdown / prose — CLAUDE.md, a **repo-owned** SKILL, a Skill
-  Inventory entry): hand them **all to one agent as a single grouped PR**,
-  with this run's ledger edit (§5) in the brief, as the path to §1's patch file
-  plus any changes to it. Many one-line doc PRs are pure review overhead; one
+  Inventory entry): hand them **all to one agent as a single grouped PR**.
+  Many one-line doc PRs are pure review overhead; one
   batched PR is cheaper to review than several.
 - **Code or config fixes**: one PR each — they carry distinct review and CI surface
   and shouldn't ride on each other.
@@ -144,13 +144,12 @@ Each PR description carries its fixes' problem, evidence and design (§5); a fix
 picked up from an open issue (§2) also `Closes` it.
 
 Each agent's brief is [`impl-brief.md`](impl-brief.md) verbatim, with its
-fixes and (for the doc-fix agent, or the lone ledger agent of §5) the ledger
-edit filled in, plus `dispatch-subagents` §3's lines. It hands the committed
+fixes filled in, plus `dispatch-subagents` §3's lines. It hands the committed
 branch back to you, unpushed; you are the reviewer (§7) and open the PR.
 
-Done when every dispatched fix and the ledger edit are covered by a committed branch
-(every doc fix and the ledger edit by the one grouped branch, each other
-fix by its own), gate green, awaiting your review.
+Done when every dispatched fix is covered by a committed branch (every doc fix by
+the one grouped branch, each other fix by its own), gate green, awaiting your
+review.
 
 ## 7. Review and merge — autonomously, escalate only high-risk
 
@@ -181,18 +180,23 @@ not a bystander waiting for a human. For each branch:
      observe); check the diff against them rather than guessing. Leave the PR open, say precisely why it is
      high-risk, in a PR comment.
 
-5. **Record the PRs you merged in `fixes` right away**, not in the next run:
-   merge the grouped doc PR (§6) last. Once every other PR of the run is merged,
-   append a commit to the grouped doc PR that adds a `fixes` entry (`pr`, today's
-   UTC date, a one-line summary from the PR's description) to each cluster those
-   PRs fixed, the doc PR's own number included, and drops `tracked` from them.
-   Re-run the gate, post a fresh review comment, then merge. A PR you did not
-   merge gets no entry.
-
 A PR is finished only when **merged** (by you) or **escalated/abandoned**, not at push time (the ADR-0003 rule).
 
 Done when every dispatched PR carries a posted review comment and is merged or
-escalated/abandoned, and every PR you merged is in `fixes`.
+escalated/abandoned.
+
+## 8. Close the ledger — one status-only PR
+
+Once the ledger PR (§5) has merged and every PR of §7 is merged, escalated or
+abandoned, branch from `origin/main` and commit status updates only:
+
+- for each PR you merged, a `fixes` entry (`pr`, its UTC merge date, a one-line
+  summary from its description), dropping `tracked`;
+- for each PR still open, its number in `ref`, staying `tracked`;
+- for each PR abandoned, `open` again.
+
+Open it as a PR to `main` and land it like the ledger PR. Done when it has
+merged.
 
 Log the session. Among its frictions, name each place this Skill or its briefs
 were confusing or contradicted themselves, and each step that was hard to
