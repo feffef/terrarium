@@ -278,3 +278,18 @@ observations:
       and the 2 window-not-used sessions re-checked clean. Grade/role
       unchanged (essential) — a reliability finding on the re-closure path,
       not core delivery.
+  - date: "2026-10-16"
+    note: >-
+      Re-checked (audit-skills behaviour check), 10 newest invocations
+      (2026-10-15/16, PRs #2080-#2103, both honest in-review cases — #2103
+      gate genuinely red, #2102 genuinely awaiting human review), all
+      independently verified against live GitHub. 1 notUsedWindow session
+      (session_01NVG22rfEsjhW9zkcCco6W8) re-confirmed the known
+      equivalent-closure pattern via log-session alone, not a missed
+      invocation. Issue #2023 (close-session not re-invoked on later PRs,
+      2026-10-15 finding) independently re-confirmed CLOSED as self-healed
+      2026-10-15T11:19:50Z — the session's own later log commit replaced the
+      stale status with all 35 PRs, and the owner explicitly declined to
+      harden the hint further (ADR-0009's accepted trade-off). No new
+      instance in this window's 10 sessions. No reverts of close-session
+      mechanics in the 2-week sweep. Grade/role unchanged (essential).

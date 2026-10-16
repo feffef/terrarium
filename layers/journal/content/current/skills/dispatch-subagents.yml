@@ -323,3 +323,23 @@ observations:
       first) matches #1586's shape on a different dispatch mechanism — not
       escalated as new. No new silent failure or missed invocation.
       Grade/role unchanged (essential).
+  - date: "2026-10-16"
+    note: >-
+      Self-check (audit-skills behaviour check): one real silent failure
+      found, already self-caught and fixed within the window — not
+      escalated as new. PR #1947 (landed 2026-10-14T16:45:57Z) added
+      SKILL.md §5's "ask each subagent for a rule/doc verdict via
+      SendMessage afterward" promise; it broke immediately in the next 2
+      real sessions (session_01G6m9SbDppX4TE87Mp3m5Dk: 0/18
+      rulesLoadedBySubagents got a verdict; session_01GG85r8HWMEdaMgKUaNUZH7:
+      self-logged the gap verbatim). Caught by a separate investigation
+      session (session_01U6EF8qk4ANQLqE5KXmJgEY), filed as issue #2011
+      (confirmed closed via merged PR #2060). The fix removed the
+      SendMessage-afterward step entirely, relocating the ask to a
+      per-brief instruction in CLAUDE.md instead — verified holding on its
+      next live use (session_01KVh6e6JUAssZvPRbuN5YDr's ruleVerdicts
+      correctly populated; PR #2100 merged). Other 9 of newest10UsedSessions
+      and 16 of 112 notUsedWindowSessions opened in full: no stranding, no
+      branch collisions, no merge-pr.ts-to-subagent violations, no new
+      missed invocation. No reverts in the 2-week sweep. Grade/role
+      unchanged (essential).

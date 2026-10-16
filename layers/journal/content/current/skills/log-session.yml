@@ -357,3 +357,24 @@ observations:
       entries here should cite it as fixed, not carry it forward as open. No
       new silent failure on this Skill's own output. Grade/role unchanged
       (essential).
+  - date: "2026-10-16"
+    note: >-
+      Self-check (audit-skills behaviour check), 10 newest usedIn sessions
+      (2026-10-15/16, none previously cited here — newest
+      session_01F3a2MbH4xUH7J7Y1hLg2TX, session_01E2zbWEQmuUrEhWvbzNpBba,
+      session_019e468BFBTvDPXZuGzLMAL7, session_012VTgtrUEy7cPVTN5sMriXj
+      among them) plus 6 freshly-read notUsedWindow sessions
+      (session_01NqN7omu3o4kxoGeQzzSXhK, session_01LpcCJWRYb5grgQe3wBGEwb,
+      session_0147UencKKZS3WLHvsbgywp7, session_01672sKdk3qVR8DfkAWvR5Qz,
+      session_01675UWGBfCMALkurUr58cxM, session_01RJh5bK46AQRRtwagmz8GjU),
+      read/checked in full. All 10 used sessions schema-complete, honest
+      about friction, all PR claims cross-checked live (10 PRs, 2 honestly
+      still open/in-review). All checked not-used sessions have
+      `close-session` in skillsUsed instead of literal `log-session` —
+      confirmed close-session's SKILL.md step 2 still invokes
+      `/log-session`, so the outcome is delivered transitively every time;
+      none are missed invocations. Issue #1915 re-confirmed still
+      closed/completed via merged PR #1933 — an unfixed cosmetic
+      skillsUsed-population gap that doesn't affect this Skill's actual
+      output. No new silent failure, no reverts in the 2-week sweep.
+      Grade/role unchanged (essential).

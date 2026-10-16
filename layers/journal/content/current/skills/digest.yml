@@ -211,3 +211,21 @@ observations:
       session logs matching RETAIN_DATES = 7. 16 consecutive clean daily
       audits now since the single 2026-09-28 #1478 case. No new silent
       failure. Grade/role unchanged.
+  - date: "2026-10-16"
+    note: >-
+      Self-check (audit-skills behaviour check), all 7 usedIn sessions
+      checked. Newest, session_01F3a2MbH4xUH7J7Y1hLg2TX (PR #2103, the
+      2026-10-15 Digest), independently verified end-to-end — numbers
+      re-derived directly (`scripts/digest.ts gather`) match the published
+      text exactly; PR is open/blocked with gate genuinely red on an
+      unrelated e2e assertion, correctly left for a human per SKILL.md's
+      own escalation clause, not silent. Escalated as issue #2105: this is
+      the THIRD occurrence of the "retention sweep's side effects reach
+      outside its own Space" pattern the 2026-10-08 entry already flagged
+      as deserving human attention at a third occurrence (archived session
+      text containing "live snapshot" now breaks the archived-dashboard
+      e2e test). A caught near-miss, not a silent failure: `readCommits`
+      lacked `--first-parent` until PR #2064 (2026-10-15), inflating
+      `prsMerged`, but the gap was caught as a friction before being quoted
+      in any published Digest and fixed same-day. Other 6 sessions
+      re-confirmed merged, none reverted. Grade/role unchanged (routine).
