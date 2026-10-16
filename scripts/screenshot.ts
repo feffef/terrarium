@@ -83,8 +83,6 @@ function parseWindowSize(windowSize: string): [width: number, height: number] {
   return [width, height]
 }
 
-/** Shared by both capture paths. `fullPage` captures the whole scrollable page;
- *  `mobile` emulates a touch phone at 2x pixel density (issue #2112). */
 export interface CaptureOptions {
   windowSize?: string
   colorScheme?: ColorScheme

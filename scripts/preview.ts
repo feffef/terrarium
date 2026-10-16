@@ -30,11 +30,7 @@
 //   - `shot` folds the whole lifecycle into one process, so the common
 //     screenshot path has no teardown step for a shell to drop at all.
 //
-// Usage:
-//   pnpm exec tsx scripts/preview.ts shot <route> <out.png> [WxH] [--scheme light|dark] [--full] [--mobile] [--dev]
-//   pnpm exec tsx scripts/preview.ts review <route> <out-dir> [--dev]  # four full-page shots
-//   pnpm exec tsx scripts/preview.ts start [--dev]     # prints PID= and URL=
-//   pnpm exec tsx scripts/preview.ts stop <pid>        # always exits 0
+// Usage: see `USAGE` below.
 //
 // `shot` is the frictionless default (one-shot screenshot, no teardown to get
 // wrong). `start`/`stop` keep a server up for multi-navigation tools that need
@@ -272,12 +268,11 @@ export async function stopPreview(pid: number): Promise<void> {
   await killGroup(pid)
 }
 
-/** `shot`'s and `review`'s raw flag values; `waitMs` and `scheme` are validated later. */
 interface ShotOptions {
-  waitMs?: string
+  waitMs: number
   /** A CSS selector to await before capturing. */
   waitForSelector?: string
-  scheme?: string
+  scheme?: ColorScheme
   fullPage: boolean
   mobile: boolean
 }
@@ -352,17 +347,8 @@ async function doShot(args: string[], dev: boolean, opts: ShotOptions): Promise<
     console.error(`Invalid size "${sizeArg}" — expected <width>x<height>, e.g. 1280x1600.`)
     return 1
   }
-  let waitMs: number
-  let colorScheme: ColorScheme | undefined
-  try {
-    waitMs = parseWaitMs(opts.waitMs)
-    colorScheme = parseScheme(opts.scheme)
-  } catch (err) {
-    console.error((err as Error).message)
-    return 1
-  }
-  const { fullPage, mobile } = opts
-  return withServer(route, dev, (url) => capture(url, out, waitMs, opts.waitForSelector, { windowSize, colorScheme, fullPage, mobile }))
+  const { waitMs, waitForSelector, scheme: colorScheme, fullPage, mobile } = opts
+  return withServer(route, dev, (url) => capture(url, out, waitMs, waitForSelector, { windowSize, colorScheme, fullPage, mobile }))
 }
 
 async function doReview(args: string[], dev: boolean, opts: ShotOptions): Promise<number> {
@@ -371,17 +357,10 @@ async function doReview(args: string[], dev: boolean, opts: ShotOptions): Promis
     console.error(USAGE)
     return 1
   }
-  let waitMs: number
-  try {
-    waitMs = parseWaitMs(opts.waitMs)
-  } catch (err) {
-    console.error((err as Error).message)
-    return 1
-  }
   mkdirSync(outDir, { recursive: true })
   return withServer(route, dev, async (url) => {
     for (const shot of reviewShots(outDir)) {
-      await capture(url, shot.out, waitMs, opts.waitForSelector, {
+      await capture(url, shot.out, opts.waitMs, opts.waitForSelector, {
         windowSize: shot.windowSize,
         colorScheme: shot.scheme,
         fullPage: true,
@@ -427,7 +406,13 @@ async function main(): Promise<number> {
   const waitMs = extractFlag(waitFor.rest, '--wait')
   const scheme = extractFlag(waitMs.rest, '--scheme')
   const args = scheme.rest
-  const opts = { waitMs: waitMs.value, waitForSelector: waitFor.value, scheme: scheme.value, fullPage: full.on, mobile: mobile.on }
+  let opts: ShotOptions
+  try {
+    opts = { waitMs: parseWaitMs(waitMs.value), waitForSelector: waitFor.value, scheme: parseScheme(scheme.value), fullPage: full.on, mobile: mobile.on }
+  } catch (err) {
+    console.error((err as Error).message)
+    return 1
+  }
   switch (verb) {
     case 'shot':
       return doShot(args, dev.on, opts)
