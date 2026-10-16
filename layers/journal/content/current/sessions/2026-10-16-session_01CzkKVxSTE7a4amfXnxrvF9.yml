@@ -1,0 +1,304 @@
+schemaVersion: 1
+session: session_01CzkKVxSTE7a4amfXnxrvF9
+startedAt: 2026-10-16T17:24:01Z
+endedAt: 2026-10-16T18:17:18Z
+kind: interactive
+goal: Make each ADR summary say when its full ADR is worth reading
+status: in-review
+outcome: "PR 2165 open, held for a human merge: 30 summary rules name the case where the full ADR pays off"
+summary: "The owner asked me to look at issue #2146 (binding-docs-skipped regression) and read the full logs of the last 20 sessions in that Friction cluster. I sorted the 20 occurrences: skipped full ADR reads (mostly \"summary was enough\"), no ADR grep before recommending (mostly in wayfinder or grilling sessions), skipped session-start glossary reads, and one misfiled git near-miss. At the owner's request, an Explore agent then surveyed every rated ADR read since ratings began. It found the full read pays off in a few task-specific cases (merge decisions, triage, the Skill audit, trial verdicts, editing rules or ADRs, design work), not by file path. I offered three options. My option 3 (a prune trial) was wrong: ADR-0027 forbids trials on summary rules, and the validator enforces the pointer. I corrected that after reading ADR-0027. The owner chose per-ADR \"when\" clauses. I read all 30 ADRs and summary rules and drafted the clauses, the owner asked for shorter, more open ones and a better 0001 clause, and approved the result. The owner asked to start the change but not merge it. PR 2165 rewrites the 30 pointers to \"Read the full ADR (~N tokens) before you change this decision, or when <case>:\" and updates validate-adr-rules.ts and its test. No ADR changes: ADR-0029 already says a summary says when to read in full. Human-instructed: the analysis, both surveys, the clause approach, the clause wording and the PR. Agent-initiated: the shared prefix, keeping the token estimate in a shorter form (the owner asked, I recommended), and a regex cleanup from code-review. A second Explore agent, also owner-requested, checked whether the six always-loaded rules could become path-scoped. Only 0020 and 0027 would save context; each would need its action line moved into CLAUDE.md. I recommended a separate PR for that; the owner hasn't decided yet. The PR waits for a human merge (.claude/rules is Human-only)."
+prs:
+  - "2165"
+docsRead:
+  - path: GLOSSARY-MAP.md
+    reason: session-start read; Tenant roster
+    useful: partly
+  - path: GLOSSARY.md
+    reason: Friction, Friction Ledger, Rule and Human-only terms used throughout
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: MCP tool mapping and fully-qualified ToolSearch names
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: git show origin/main for reads; amend only the tip with -F
+    useful: yes
+  - path: docs/agents/pr-workflow.md
+    reason: gate:scoped and code-review before first push despite the Stop hook; verdict line
+    useful: yes
+  - path: layers/journal/content/current/frictions/binding-docs-skipped.yml
+    reason: the cluster and its 60 occurrences, source of the last 20 sessions
+    useful: yes
+  - path: docs/adr/0027-prune-trials.md
+    reason: showed trials may not change summary rules, so my prune-trial option was invalid
+    useful: yes
+  - path: docs/adr/0029-instructions-load-with-the-files-they-govern.md
+    reason: already says a summary says when to read in full, so no ADR change was needed
+    useful: yes
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: drafting its clause; confirmed the package.json minor-bump contradiction
+    useful: yes
+  - path: docs/adr/0001-single-container-baked-multitenancy.md
+    reason: read all 30 ADRs to draft each when-clause from Scope, alternatives and revisit
+    useful: yes
+  - path: docs/adr/0002-manifest-driven-config-generation.md
+    reason: read in full to draft its when-clause from Scope, alternatives and revisit
+    useful: yes
+  - path: docs/adr/0003-agent-operating-model-and-governance.md
+    reason: read in full to draft its when-clause from Scope, alternatives and revisit
+    useful: yes
+  - path: docs/adr/0005-skill-model.md
+    reason: read in full to draft its when-clause from Scope, alternatives and revisit
+    useful: yes
+  - path: docs/adr/0006-runtime-routing-path-prefix.md
+    reason: read in full to draft its when-clause from Scope, alternatives and revisit
+    useful: yes
+  - path: docs/adr/0007-derived-files-built-not-committed.md
+    reason: read in full to draft its when-clause from Scope, alternatives and revisit
+    useful: yes
+  - path: docs/adr/0008-self-documentation-tenant-is-a-journal.md
+    reason: read in full to draft its when-clause from Scope, alternatives and revisit
+    useful: yes
+  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
+    reason: read in full to draft its when-clause from Scope, alternatives and revisit
+    useful: yes
+  - path: docs/adr/0010-digests-derived-append-only-journal-pages.md
+    reason: read in full to draft its when-clause from Scope, alternatives and revisit
+    useful: yes
+  - path: docs/adr/0011-poc-self-updating-deploy-container.md
+    reason: read in full to draft its when-clause from Scope, alternatives and revisit
+    useful: yes
+  - path: docs/adr/0012-cross-persona-pingbacks-via-authored-denormalization.md
+    reason: read in full to draft its when-clause from Scope, alternatives and revisit
+    useful: yes
+  - path: docs/adr/0013-content-config-built-from-manifests.md
+    reason: read in full to draft its when-clause from Scope, alternatives and revisit
+    useful: yes
+  - path: docs/adr/0014-build-time-virtual-routing-module.md
+    reason: read in full to draft its when-clause from Scope, alternatives and revisit
+    useful: yes
+  - path: docs/adr/0015-audit-skills-and-conditional-importance.md
+    reason: read in full to draft its when-clause from Scope, alternatives and revisit
+    useful: yes
+  - path: docs/adr/0016-tenant-root-layer-routes.md
+    reason: read in full to draft its when-clause from Scope, alternatives and revisit
+    useful: yes
+  - path: docs/adr/0017-provenance-footer-on-agent-authored-content.md
+    reason: read in full to draft its when-clause from Scope, alternatives and revisit
+    useful: yes
+  - path: docs/adr/0018-tenant-layers-under-layers-directory.md
+    reason: read in full to draft its when-clause from Scope, alternatives and revisit
+    useful: yes
+  - path: docs/adr/0019-content-load-error-recovery.md
+    reason: read in full to draft its when-clause from Scope, alternatives and revisit
+    useful: yes
+  - path: docs/adr/0020-requester-trust-tiers.md
+    reason: read in full to draft its when-clause from Scope, alternatives and revisit
+    useful: yes
+  - path: docs/adr/0021-multi-context-domain-docs.md
+    reason: read in full to draft its when-clause from Scope, alternatives and revisit
+    useful: yes
+  - path: docs/adr/0022-autonomous-triage-sweep.md
+    reason: read in full to draft its when-clause from Scope, alternatives and revisit
+    useful: yes
+  - path: docs/adr/0023-guest-driven-demo-pipeline.md
+    reason: read in full to draft its when-clause from Scope, alternatives and revisit
+    useful: yes
+  - path: docs/adr/0024-build-time-mermaid-prerender.md
+    reason: read in full to draft its when-clause from Scope, alternatives and revisit
+    useful: yes
+  - path: docs/adr/0025-cross-tenant-catalog-and-collection-kinds.md
+    reason: read in full to draft its when-clause from Scope, alternatives and revisit
+    useful: yes
+  - path: docs/adr/0026-gate-workflow-thin-shell.md
+    reason: read in full to draft its when-clause from Scope, alternatives and revisit
+    useful: yes
+  - path: docs/adr/0028-navigation-reads-server-payloads.md
+    reason: read in full to draft its when-clause from Scope, alternatives and revisit
+    useful: yes
+  - path: docs/adr/0030-adrs-document-a-decision-not-its-history.md
+    reason: read in full to draft its when-clause from Scope, alternatives and revisit
+    useful: yes
+  - path: .agents/skills/log-session/SKILL.md
+    reason: checked how rule verdicts ask about opening the full ADR
+    useful: partly
+  - path: .agents/skills/close-session/SKILL.md
+    reason: "subagent: checked 0009/0003 overlap with close-session; it reported yes"
+    useful: yes
+  - path: docs/agents/guest-contributions.md
+    reason: "subagent: checked 0020 overlap for the path-scoping survey; it reported partly"
+    useful: partly
+  - path: layers/journal/content/current/sessions/2026-10-14-session_01BdQnbVQmdfrD1PPyZTnL9w.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-14-session_01VkVtDd4YKNa2KYRyRo8Uvy.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-14-session_018wtKTCgkvJwgb3gS8o8JKA.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-14-session_01U6EF8qk4ANQLqE5KXmJgEY.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-14-session_01BpePUUjkw8MVBXM2oiDnsj.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-14-session_01Qp5NojwQhExSmToPJtnQNV.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-14-session_01R8ZgGod9KTmxwvnDyB4PQY.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-15-session_01P7kLLJwHBgCaeVSUjhbScg.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-15-session_011HBcCLzMW7CshmqnHLnegb.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-15-session_012VTgtrUEy7cPVTN5sMriXj.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-15-session_01LpcCJWRYb5grgQe3wBGEwb.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-15-session_011t1xXHxqwrfAjt83s9oTEP.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-15-session_019e468BFBTvDPXZuGzLMAL7.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-15-session_01C8c4U7TDuWnJwenPUWYxrP.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-15-session_01Lwanyry6GWtqHYoMAgGGLa.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-15-session_013LwpcexAe7t3Qck4CKtj9Y.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-15-session_01E2zbWEQmuUrEhWvbzNpBba.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-15-session_01KVh6e6JUAssZvPRbuN5YDr.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-16-session_017xginqTj2NjZ8XgrbRqvkm.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-16-session_01AaqTUSRhRmRpBxM8E4QSPR.yml
+    reason: (no reason given)
+  - path: scripts/validate-adr-rules.ts
+    reason: (read before editing)
+  - path: tests/unit/validate-adr-rules.spec.ts
+    reason: (read before editing)
+skillsUsed:
+  - name: code-review
+    reason: Standards and Spec review before first push; one regex cleanup applied
+  - name: close-session
+    reason: PR-open log
+  - name: log-session
+    reason: this log
+  - name: context
+    reason: (invoked as a slash command)
+frictions:
+  - description: Offered a prune trial as option 3 before reading ADR-0027, which forbids trials on summary rules; broke CLAUDE.md's grep-and-read-before-recommending step
+    solution: Grep docs/adr for the mechanism named in each option before offering it; I corrected it one turn later
+    severity: minor
+  - description: Read several files with cat/sed via Bash (glossaries, validate-adr-rules.ts excerpt, log-session SKILL.md lines) instead of the Read tool, against CLAUDE.md
+    solution: Use Read for repo docs; the Bash hint loaded the rules anyway
+    severity: nit
+  - description: The Stop hook asked to push four times while gate:scoped and code-review were still running; each needed a reply
+    solution: Let the hook stay quiet while a background gate or review runs
+    severity: nit
+  - description: First code-review spec brief had to be built by hand from chat; the approved clause list existed only in conversation
+    solution: Write owner-approved wording to a scratch spec file as soon as it is approved
+    severity: nit
+durationSec: 3197
+models:
+  claude-opus-5-5: 206
+toolCounts:
+  Bash: 31
+  ToolSearch: 2
+  mcp__github__issue_read: 2
+  Read: 80
+  Agent: 4
+  Grep: 2
+  Edit: 9
+  Skill: 3
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+  mcp__github__add_issue_comment: 1
+  Write: 1
+filesEdited:
+  - scripts/validate-adr-rules.ts
+  - tests/unit/validate-adr-rules.spec.ts
+rulesLoaded:
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/glassbox-content.md
+  - .claude/rules/mermaid-lanes.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0030.md
+docsReadBySubagents:
+  - .agents/skills/close-session/SKILL.md
+  - docs/agents/guest-contributions.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Held my push until gate:scoped and code-review passed despite Stop-hook nags; summary was enough, I read the ADR only to draft its clause
+    useful: yes
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Its paths confirmed .claude/rules is Human-only, so the PR waits for a human merge
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Told me to log at PR open; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: Its summary already said trials never touch summary rules; I missed that until reading the full ADR
+    useful: yes
+  - path: .claude/rules/adr-0020.md
+    reason: All input came from the Trusted owner, so it did not apply
+    useful: no
+  - path: .claude/rules/adr-0003.md
+    reason: Owner request was the approval; told me to open the PR myself; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Header on the PR body and comment, commit trailer checked; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0021.md
+    reason: Loaded on the glossary read; no glossary change in this work
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: "Core to the change: summaries say when to read in full; I read the full ADR to confirm no ADR edit was needed"
+    useful: yes
+  - path: .claude/rules/adr-0030.md
+    reason: Confirmed rewriting summary rules needs no ADR history; read in full while drafting clauses
+    useful: partly
+  - path: .claude/rules/adr-0005.md
+    reason: Loaded on reading a Skill file; no Skill changed
+    useful: no
+  - path: .claude/rules/glassbox-content.md
+    reason: Loaded when checking a Glass Box page for old pointer wording; no page edited
+    useful: no
+  - path: .claude/rules/mermaid-lanes.md
+    reason: Loaded with the same Glass Box read; no diagram involved
+    useful: no
+subagents:
+  - type: Explore
+    task: Find sessions where full ADR reads helped
+  - type: Explore
+    task: Could always-loaded rules be path-based?
+  - type: general-purpose
+    task: Standards review of pointer diff
+    model: sonnet
+  - type: general-purpose
+    task: Spec review of pointer diff
+    model: sonnet
+gitBranch: ccr-36472b9a-c9t7aa
+entrypoint: remote_mobile
+cliVersion: 2.1.301
+learnings:
+  - Full ADR reads pay off by task (merge decisions, triage, Skill audit, trial verdicts, editing rules or ADRs, design), almost never by which file a session touched.
+  - Path-scoping an always-loaded rule only saves context when the path set excludes most sessions; for 0003, 0004, 0009 and 0017 any covering set still loads in over 90% of sessions.
+ideas:
+  - "Split ADR-0020 and ADR-0027 into one CLAUDE.md action line each plus a path-scoped rule (paths from the survey: guest-contributions.md, trust.ts, triage and auto-triage Skills; prune-trials.yml and the instruction-editing Skills), cutting about 2k tokens from most sessions."
+  - Have log-session drop the 'did you open the full ADR' question for rules whose when-clause did not apply, so sessions stop logging skipped-read nits.
+landedBy: Stop
