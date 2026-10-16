@@ -1,4 +1,6 @@
 name: agent-background-flag-guard
+summary: >-
+  A safety check blocked agents for spelling out a setting that was already the default, when starting a helper agent.
 cause: >-
   Skills implied a synchronous Agent dispatch, sessions passed run_in_background: false, and the guard denied the no-op flag.
 surface: guard-or-hook

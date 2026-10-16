@@ -1,4 +1,6 @@
 name: designated-branch-clash
+summary: >-
+  The rule to stay on one git branch clashed with tasks that need another branch or several pull requests.
 cause: >-
   CLAUDE.md's "Stay on the branch your session started on" and the session's designated-branch instruction collide with tasks that need a PR's branch or several independent PRs, so the session asks or breaks the rule.
 surface: safe

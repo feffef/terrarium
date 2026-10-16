@@ -1,4 +1,6 @@
 name: pack-skill-install-pitfalls
+summary: >-
+  No doc explains how to add an outside Skill, and the install tool put it in the wrong place.
 cause: >-
   No doc covers adding a pack Skill; the skills CLI installed under .claude/skills (needs move plus link) and skills-lock computedHash is not the on-disk installedSha256.
 surface: safe

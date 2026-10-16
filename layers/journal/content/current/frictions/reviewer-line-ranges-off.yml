@@ -1,4 +1,6 @@
 name: reviewer-line-ranges-off
+summary: >-
+  Doc reviewers cited slightly wrong line numbers, so a second pass had to correct them.
 cause: >-
   audit-docs reviewer subagents cite finding line ranges that are off by one or cover partial sentences, so the checkers must correct them in a second pass.
 surface: safe

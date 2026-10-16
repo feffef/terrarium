@@ -1,4 +1,6 @@
 name: shell-read-detection
+summary: >-
+  A warning fired when an agent said it had not read a doc that the tracker saw it read through the shell.
 cause: >-
   The advisory fires when an agent marks `(not read)` a doc the detector credited from shell output, often one a subagent opened; the detector is usually right, and `--author` hides subagent shell reads (#1786 re-triage).
 surface: safe

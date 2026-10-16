@@ -1,4 +1,6 @@
 name: merge-pr-refuses-dependabot
+summary: >-
+  The merge script refused small automated dependency updates that the rules say agents may merge.
 cause: package.json is Human-only and Dependabot PRs come from a Public author, so merge-pr.ts refuses minor/patch bumps that ADR-0004's summary says agents may merge.
 surface: human-only
 status: tracked

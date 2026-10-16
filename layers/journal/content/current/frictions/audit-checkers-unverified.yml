@@ -1,4 +1,6 @@
 name: audit-checkers-unverified
+summary: >-
+  Review runs trusted an earlier run's conclusion instead of checking the source again themselves.
 cause: >-
   audit-docs, audit-skills and prune-trial runs inherit a prior run's conclusion or a tool's description instead of checking the primary source this run.
 surface: safe

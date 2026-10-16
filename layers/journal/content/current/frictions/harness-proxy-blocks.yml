@@ -1,4 +1,6 @@
 name: harness-proxy-blocks
+summary: >-
+  The hosting environment blocked actions the owner had approved, with no way to override it in the session.
 cause: >-
   The cloud harness permission classifier or agent proxy refuses an owner-approved action (a guards dispatch, a rulesets POST, a numeric-id endpoint) with no in-session override.
 surface: outside

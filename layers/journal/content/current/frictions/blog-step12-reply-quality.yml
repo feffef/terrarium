@@ -1,4 +1,6 @@
 name: blog-step12-reply-quality
+summary: >-
+  The blog Skill's step for writing a reply post often produced a weak reply or none at all.
 cause: >-
   blog-post step 12's reader judges sketches against a novelty bar, so a weak reply ships or both finalists fail fact-check and the run ends with no reply.
 surface: safe

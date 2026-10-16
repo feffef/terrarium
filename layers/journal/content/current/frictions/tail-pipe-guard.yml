@@ -1,4 +1,6 @@
 name: tail-pipe-guard
+summary: >-
+  A safety check blocked whole commands that ended by trimming their output.
 cause: >-
   The tail-pipe guard denies a whole chained command for a trailing pipe into tail or head; most sessions hit it on their first verification command.
 surface: guard-or-hook

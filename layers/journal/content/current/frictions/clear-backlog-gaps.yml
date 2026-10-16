@@ -1,4 +1,6 @@
 name: clear-backlog-gaps
+summary: >-
+  The new backlog-clearing Skill left out steps a run needs, so runs improvised or skipped them.
 cause: >-
   The clear-backlog Skill, new and revised by dry runs, left out rules a run needs (owner reservations, a wave rule, an outcome for parked issues, review order, chat discipline, an early exit when everything is owner-deferred), so runs improvised or skipped steps; the full-sweep pass on deferred issues cost 70-100k tokens per issue, and a later run skipped §1 Explore and reported done.
 surface: safe

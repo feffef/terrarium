@@ -53,7 +53,10 @@ export const skillSchema = z
 export const frictionClusterSchema = z
   .object({
     name: z.string(),
-    // One line naming the shared root cause, not a list of symptoms.
+    // One plain sentence a visitor can read (issue #2093).
+    summary: z.string(),
+    // For agents clustering Frictions: the root mechanism, then the signals
+    // that identify a new occurrence.
     cause: z.string(),
     // Where a fix lands. `safe` is dispatchable; `guard-or-hook` and
     // `human-only` need a human-attended session or merge (ADR-0004,

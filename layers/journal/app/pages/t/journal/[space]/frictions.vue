@@ -50,7 +50,7 @@ useSeoMeta({ title: () => `${PAGE_TITLE} · journal/${space}` })
         <strong>frictions</strong> agents logged in their session logs; the
         <code>frictions-to-fixes</code> Skill keeps it current. Fixed clusters stay
         listed: what went wrong matters as much as what is still open. Expand one
-        for the sessions that hit it.
+        for its detailed cause and the sessions that hit it.
       </p>
 
       <template v-for="sec in sections" :key="sec.id">
@@ -61,7 +61,7 @@ useSeoMeta({ title: () => `${PAGE_TITLE} · journal/${space}` })
             <details>
               <summary>
                 <span class="count">{{ e.count }}<small>{{ e.count === 1 ? 'session' : 'sessions' }}</small></span>
-                <span class="cause">{{ e.cause }}</span>
+                <span class="summary">{{ e.summary }}</span>
                 <span class="pills">
                   <span class="pill sev" :class="e.worst" :title="`Worst severity: ${e.worst}`">{{ e.worst }}</span>
                   <span class="pill status" :class="e.status" :title="e.fixedOn ? `Fixed on ${e.fixedOn}` : undefined">
@@ -70,6 +70,7 @@ useSeoMeta({ title: () => `${PAGE_TITLE} · journal/${space}` })
                   <a v-for="r in e.refLinks" :key="r.url" class="pill ref" :href="r.url" @click.stop>{{ r.label }}</a>
                 </span>
               </summary>
+              <p class="cause">{{ e.cause }}</p>
               <p v-if="e.ref" class="ref-text">{{ e.ref }}</p>
               <ul class="occ">
                 <li v-for="(o, i) in e.occurrences" :key="i">
@@ -117,7 +118,7 @@ summary:focus-visible { outline: 2px solid var(--jd-accent); outline-offset: 2px
   color: var(--jd-ink);
 }
 .count small { display: block; font-size: 0.6rem; font-weight: 400; letter-spacing: 0.04em; color: var(--jd-muted); }
-.cause { overflow-wrap: anywhere; }
+.summary { overflow-wrap: anywhere; }
 .pills { display: flex; flex-wrap: wrap; gap: 0.35rem; }
 .pill {
   font-family: var(--jd-mono);
@@ -148,7 +149,7 @@ summary:focus-visible { outline: 2px solid var(--jd-accent); outline-offset: 2px
 .pill.status.open { color: var(--jd-ink); border-color: var(--jd-ink); }
 .jd-prose .pill.ref { color: var(--jd-accent); }
 .jd-prose .pill.ref:hover { border-color: var(--jd-accent); }
-.ref-text { margin: 0 0 0.4rem 3.3rem; font-size: 0.8rem; color: var(--jd-muted); }
+.cause, .ref-text { margin: 0 0 0.4rem 3.3rem; font-size: 0.8rem; color: var(--jd-muted); overflow-wrap: anywhere; }
 .occ {
   list-style: none;
   margin: 0 0 0.7rem 3.3rem;
@@ -165,6 +166,6 @@ summary:focus-visible { outline: 2px solid var(--jd-accent); outline-offset: 2px
 .occ-goal { margin-left: 0.5rem; font-family: var(--jd-serif); font-size: 0.8rem; color: var(--jd-muted); }
 .occ-sev { color: var(--jd-faint); margin-left: 0.4rem; }
 @media (max-width: 560px) {
-  .ref-text, .occ { margin-left: 0; }
+  .cause, .ref-text, .occ { margin-left: 0; }
 }
 </style>

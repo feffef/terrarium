@@ -1,4 +1,6 @@
 name: shallow-clone-history
+summary: >-
+  The repository's history was cut short at startup, so history lookups gave wrong answers.
 cause: >-
   The SessionStart unshallow hook ran beside pnpm install and failed ("tsx not found"), so the clone stayed shallow and history reads (git log, merge-base) were truncated.
 surface: guard-or-hook

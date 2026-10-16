@@ -1,4 +1,6 @@
 name: survey-output-overflow
+summary: >-
+  The data this ledger's own survey reads was too large to read in one go.
 cause: >-
   The frictions-to-fixes survey reads (session-frictions --compact at about 135-150 KB, the ledger directory at about 40 KB) overflow tool results, so subagents slice or hand-digest them.
 surface: safe

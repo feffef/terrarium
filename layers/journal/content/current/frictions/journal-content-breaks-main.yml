@@ -1,4 +1,6 @@
 name: journal-content-breaks-main
+summary: >-
+  One session log that broke the tests landed without checks and turned every open change red.
 cause: >-
   Session logs and Digests land on main without a gate (ADR-0009) while e2e tests and the strict session schema assert on them, so one log turns main and every open PR red.
 surface: safe

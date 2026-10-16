@@ -1,4 +1,6 @@
 name: prepush-gate-review-skipped
+summary: >-
+  Agents pushed changes without running the required checks and review first.
 cause: >-
   ADR-0004's before-first-push gate:scoped plus code-review is skipped or the gate is not rerun after late edits.
 surface: guard-or-hook

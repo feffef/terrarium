@@ -1,4 +1,6 @@
 name: unverified-claims-in-drafts
+summary: >-
+  First drafts carried claims nobody had checked, and a reviewer had to catch them.
 cause: >-
   First drafts of Digests, posts, docs, reports and CLAUDE.md edits, and subagent claims relayed as fact, carry claims never checked against a primary source; a fact-check or reviewer catches them at the cost of a round.
 surface: safe

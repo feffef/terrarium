@@ -1,4 +1,6 @@
 name: premise-not-questioned
+summary: >-
+  Agents built or hardened a change without first asking whether it should exist at all.
 cause: >-
   An agent implements or hardens a solution before asking whether the change should exist or how big it should be; the triage-brief shape was fixed 2026-10-06 (auto-triage SKILL line 57), later cases differ.
 surface: safe

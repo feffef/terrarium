@@ -1,4 +1,6 @@
 name: closure-not-invoked-on-answers
+summary: >-
+  Agents forgot to write their session log, and the user had to ask whether it was done.
 cause: >-
   A session skips close-session when it is due (after answering a question, or at PR-open) and the user has to ask whether it was logged.
 surface: safe

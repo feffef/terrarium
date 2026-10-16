@@ -1,4 +1,6 @@
 name: ledger-yaml-hand-edit-errors
+summary: >-
+  Hand edits to this ledger's data files by text replacement broke their format.
 cause: >-
   Ledger and prune-trials YAML are patched by string replacement; unquoted dates, replaced refs or a match inside a comment broke the file (gate or repair needed). The status enum also lacks a value for an accepted cause.
 surface: safe

@@ -1,4 +1,6 @@
 name: parallel-rewrite-agents-restate-facts
+summary: >-
+  Agents rewriting docs in parallel each repeated the same fact, so a cleanup pass was needed.
 cause: Parallel rewrite agents (ADR rewrite campaign) each restated the same fact in several ADRs, needing a separate consistency pass; campaign-specific, expected not to recur.
 surface: safe
 status: open

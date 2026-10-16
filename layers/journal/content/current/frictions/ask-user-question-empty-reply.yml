@@ -1,4 +1,6 @@
 name: "ask-user-question-empty-reply"
+summary: >-
+  When an agent asked the user a multiple-choice question, the user's typed answer arrived one turn late, wasting a round trip.
 cause: "AskUserQuestion returns 'user sent a message instead' with no message text; the text arrives a turn later and costs a round trip."
 surface: "outside"
 status: "fixed"

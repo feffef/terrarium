@@ -1,4 +1,6 @@
 name: flaky-e2e-matcher-timeouts
+summary: >-
+  Browser tests gave up after one second, so slow pages failed unrelated changes and passed on a retry.
 cause: e2e specs assert with vitest's expect.poll, whose default timeout is 1000 ms (vitest.config.ts does not raise it), so slow hydration or a loaded gate fails an unrelated PR and passes on re-run.
 surface: safe
 status: fixed

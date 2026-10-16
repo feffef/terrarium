@@ -1,4 +1,6 @@
 name: provenance-angle-bracket-deny
+summary: >-
+  A safety check blocked GitHub posts containing angle brackets, so agents had to resend them.
 cause: >-
   The provenance guard denies an issue body containing a bare angle-bracket span, and the session resends once.
 surface: guard-or-hook

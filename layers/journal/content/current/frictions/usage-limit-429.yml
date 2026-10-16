@@ -1,4 +1,6 @@
 name: usage-limit-429
+summary: >-
+  Hitting the usage limit stopped helper agents mid-run until the limit reset.
 cause: >-
   A session usage limit (HTTP 429) kills parallel subagents mid-run; work resumes only after the hourly reset.
 surface: outside

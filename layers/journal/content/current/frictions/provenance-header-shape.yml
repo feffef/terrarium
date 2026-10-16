@@ -1,4 +1,6 @@
 name: provenance-header-shape
+summary: >-
+  The exact first line every agent post on GitHub needs was written down only in the error that rejects it.
 cause: >-
   The ADR-0017 header's exact first-line shape lives only in the guard's deny message, and until 2026-10-10 the ADR's example named a model the harness forbids, so a session's first PR or comment is denied.
 surface: guard-or-hook

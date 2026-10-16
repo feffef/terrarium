@@ -1,4 +1,6 @@
 name: merged-before-checked
+summary: >-
+  An agent merged a change, or called it ready, before the required checks had finished.
 cause: >-
   An agent merged a PR or told the owner it was ready before the required check was complete (a bare "Yes" answering two questions, an inline-only review under clear-backlog's few-line exception, a self-merge before code-review), and the owner had to point it out.
 surface: safe
