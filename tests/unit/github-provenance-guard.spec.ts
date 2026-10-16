@@ -97,6 +97,11 @@ describe('body surface — GitHub prose requires the header, first', () => {
     expect(checkGithubProvenance(COMMENT, { body: `${header('session_REAL')}\n\nfix applied` }, 'session_REAL')).toBeNull()
   })
 
+  it("passes a local session's raw-UUID header", () => {
+    const local = 'e34491a0-8237-4285-88b7-1a0b73cd29e7'
+    expect(checkGithubProvenance(COMMENT, { body: `${header(local)}\n\nfix applied` }, local)).toBeNull()
+  })
+
   it('#692: a body quoting another agent post passes, in either order, on its own header', () => {
     const mine = header('session_REAL')
     const quoted = header('session_OLD')

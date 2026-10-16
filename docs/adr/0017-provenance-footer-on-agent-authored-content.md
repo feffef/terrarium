@@ -11,8 +11,10 @@ opens with a one-line header; a commit ends with a two-line trailer.
   commit, including session-log commits and commits made through the GitHub
   API tools. A write with no text, such as a label change, carries nothing.
 - **The mark names this session.** A link to another session is a wrong
-  mark, so a body copied from another session gets a new header. The model
-  name is optional; the session log records it.
+  mark, so a body copied from another session gets a new header. A local
+  session has no claude.ai/code link, so its mark carries its raw session id
+  where a cloud session's carries `session_<id>`. The model name is optional;
+  the session log records it.
 - **GitHub bodies are blocked without the header.** The tool-call guard
   denies a write through the MCP tools, or through `gh api` or `curl` in a
   shell command, that lacks this session's header, has it in another shape,

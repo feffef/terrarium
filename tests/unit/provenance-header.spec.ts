@@ -19,6 +19,8 @@ import {
 
 const URL = 'https://claude.ai/code/session_019hdkXjoebyR8etKVNyjn7S'
 const ID = 'session_019hdkXjoebyR8etKVNyjn7S'
+const LOCAL_ID = 'e34491a0-8237-4285-88b7-1a0b73cd29e7'
+const LOCAL_URL = `https://claude.ai/code/${LOCAL_ID}`
 
 describe('provenanceHeader() — the format', () => {
   it('is a bot icon, the model name, and a markdown link to the session', () => {
@@ -48,6 +50,17 @@ describe('provenanceHeader() — the format', () => {
 
   it('returns null for a body with no header', () => {
     expect(readProvenanceHeader('just prose')).toBeNull()
+  })
+
+  it("reads a local session's raw-UUID header, the id its ground truth resolves to", () => {
+    expect(readProvenanceHeader(`${provenanceHeader('Claude', LOCAL_URL)}\n\nLGTM`)?.sessionId).toBe(LOCAL_ID)
+    expect(hasAuthorshipMarker(provenanceHeader('Claude', LOCAL_URL))).toBe(true)
+    expect(sessionIdsIn(provenanceHeader('Claude', LOCAL_URL))).toEqual([LOCAL_ID])
+  })
+
+  it('reads no id from a claude.ai/code path that is neither form', () => {
+    expect(readProvenanceHeader(provenanceHeader('Claude', 'https://claude.ai/code/artifacts'))).toBeNull()
+    expect(sessionIdsIn('https://claude.ai/code/e34491a0')).toEqual([])
   })
 })
 
