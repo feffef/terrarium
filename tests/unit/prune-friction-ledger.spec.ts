@@ -74,6 +74,14 @@ describe('summarizeLedger()', () => {
       'x | open | - | 1 in horizon | nit | no fixes',
     ])
   })
+  it('takes the latest fix by date whatever their order, and says "fix" for one', () => {
+    const dir = setup()
+    writeFileSync(join(dir, 'a.yml'), fixed('2026-10-12', fixes([7, '2026-10-12'], [1, '2026-10-02']), ['a', '2026-10-01']))
+    writeFileSync(join(dir, 'b.yml'), fixed('2026-10-12', fixes([7, '2026-10-12']), ['a', '2026-10-01']))
+    const [a2, b2] = summarizeLedger('2026-10-13', cwd)
+    expect(a2).toContain('2 fixes, latest #7 2026-10-12')
+    expect(b2).toContain('1 fix, latest #7 2026-10-12')
+  })
   it('flags an occurrence after the latest fix, and asks to check startedAt on the same day', () => {
     const dir = setup()
     const occ: [string, string][] = [['a', '2026-10-01'], ['b', '2026-10-05']]

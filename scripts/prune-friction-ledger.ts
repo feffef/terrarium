@@ -78,6 +78,7 @@ function fixNotes(e: Entry): string {
   else if (!fixes.some((f) => f.date === e.fixedOn)) notes.push(`no fix dated fixedOn ${e.fixedOn}`)
   const latest = [e.fixedOn ?? '', ...fixes.map((f) => f.date)].sort().at(-1)!
   const dates = (e.occurrences ?? []).map((o) => String(o.date))
+  if (!latest) return notes.map((n) => ` | ${n}`).join('')
   if (dates.some((d) => d > latest)) notes.push(`possible regression: occurrence after latest fix ${latest}`)
   else if (dates.includes(latest)) notes.push(`check startedAt: occurrence on latest fix ${latest}`)
   return notes.map((n) => ` | ${n}`).join('')
@@ -93,8 +94,8 @@ export function summarizeLedger(today: string, cwd = root): string[] {
   return readEntries(cwd).map(([f, e]) => {
     const occ = (e.occurrences ?? []).filter((o) => String(o.date) >= start)
     const max = Math.max(-1, ...occ.map((o) => SEVERITIES.indexOf(String(o.severity))))
-    const last = e.fixes?.at(-1)
-    const fixes = last ? `${e.fixes!.length} fixes, latest #${last.pr} ${last.date}` : 'no fixes'
+    const last = [...(e.fixes ?? [])].sort((a, b) => a.date.localeCompare(b.date)).at(-1)
+    const fixes = last ? `${e.fixes!.length} ${e.fixes!.length === 1 ? 'fix' : 'fixes'}, latest #${last.pr} ${last.date}` : 'no fixes'
     return [e.name ?? f, e.status, e.ref ?? '-', `${occ.length} in horizon`, SEVERITIES[max] ?? '-', fixes].join(' | ') + fixNotes(e)
   })
 }
