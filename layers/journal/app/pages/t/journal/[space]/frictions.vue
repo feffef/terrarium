@@ -126,7 +126,7 @@ useSeoMeta({ title: () => `${PAGE_TITLE} · journal/${space}` })
 .jd-prose { max-width: 80ch; }
 .n { color: var(--jd-faint); font-weight: 400; margin-left: 0.4rem; }
 .intro { color: var(--jd-muted); font-size: 0.88rem; }
-.ledger { list-style: none; padding: 0 0.6rem; margin: 0; max-height: 28rem; overflow-y: auto; overscroll-behavior: contain; border: 1px solid var(--jd-line); border-radius: 6px; }
+.ledger { list-style: none; padding: 0; margin: 0; }
 .ledger > li { margin: 0; border-top: 1px solid var(--jd-line); }
 .ledger > li:first-child { border-top: 0; }
 summary {
@@ -196,6 +196,8 @@ details[open] .summary::before { content: '▾'; }
   font-size: 0.75rem;
 }
 .occ li { margin: 0; }
+/* About 20 lines, then scroll inside the list. */
+.occ, .sol { max-height: 24rem; overflow-y: auto; overscroll-behavior: contain; }
 .sol { margin: 0 0 0.7rem 3.3rem; padding-left: 1.1rem; font-size: 0.78rem; color: var(--jd-muted); overflow-wrap: anywhere; }
 .jd-prose .sol a { color: var(--jd-faint); font-family: var(--jd-mono); font-size: 0.7rem; }
 .jd-prose .occ a { color: var(--jd-ink); text-decoration: none; }
