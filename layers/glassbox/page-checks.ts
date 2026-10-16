@@ -47,6 +47,8 @@ export interface GlassboxSite {
   terms: string[]
   /** The repo paths each page cites, by site path, as `glassboxCites` gives them. */
   cites: Record<string, string[]>
+  /** Each page's frontmatter `title`, by site path. */
+  titles: Record<string, string>
 }
 
 // The most chips a stop holds and pages a Where next lists (GLOSSARY.md, Lesson and Walkthrough).
@@ -277,8 +279,11 @@ export function glassboxPageProblems(file: string, source: string, site: Glassbo
   const pages = new Set(site.pages)
   const journal = new Set(site.journal)
   const guide = glassboxSitePath('guide', 'index.md')
-  for (const [, link] of prose.matchAll(/\]\((\/t\/(?:glassbox\/[a-z0-9]+|journal)(?:\/[^)\s#?]*)?)/g)) {
+  for (const [, text, link] of prose.matchAll(/\[([^\]]*)\]\((\/t\/(?:glassbox\/[a-z0-9]+|journal)(?:\/[^)\s#?]*)?)/g)) {
     const path = link!.replace(/\/$/, '')
+    // A link quoting its target's title goes stale when the title changes; lowercase text is running prose (#2114).
+    const title = site.titles[path]
+    if (space === 'guide' && title !== undefined && !/^[a-z]/.test(text!) && text !== title) problems.push(`link text "${text}" is not the title "${title}" of ${path}`)
     // The guide stands alone; drafts may lean on it (GLOSSARY.md, Two Spaces).
     if (space === 'guide' && path.startsWith('/t/glassbox/') && path !== guide && !path.startsWith(`${guide}/`)) problems.push(`guide page links outside the guide: ${link}`)
     else if (path.startsWith('/t/glassbox/') ? !pages.has(path) : !journal.has(path)) problems.push(`link ${link} resolves to no page`)

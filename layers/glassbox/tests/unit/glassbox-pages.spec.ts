@@ -1,6 +1,7 @@
 import { existsSync, globSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
+import { splitFrontmatter } from '../../../../scripts/validate-content.ts'
 import { root } from '../../../../shared/expand.ts'
 import glassbox from '../../tenant.config.ts'
 import { glassboxStories } from '../../app/utils/subjects.ts'
@@ -35,6 +36,7 @@ const site: GlassboxSite = {
   journal: ['/t/journal/current', '/t/journal/current/how-it-works', '/t/journal/current/skills'],
   terms: ['collection'],
   cites: { '/t/glassbox/guide/nuxt-content/collections': ['shared/expand.ts'] },
+  titles: { '/t/glassbox/guide': 'Home', '/t/glassbox/guide/nuxt-content/collections': 'Collections', '/t/glassbox/guide/terrarium-practice/gate': 'The Gate', '/t/glassbox/drafts/zod/timestamps': 'Timestamps' },
 }
 
 const frontmatter = `---\ntitle: T\ndescription: D\nrevision: '${rev}'\nrevisionDate: '2026-10-14'\n---\n`
@@ -218,6 +220,13 @@ describe('glassboxPageProblems on fixture pages', () => {
     expect(problemsOf(file, long, 'drafts').join('\n')).not.toContain('chars, more than')
   })
 
+  it('fails guide link text that is not its target\'s title, unless it starts lowercase, and passes it in drafts', () => {
+    const stale = lesson.replace('[The Gate](', '[The Old Gate](')
+    expect(problemsOf('nuxt-content/01.collections.md', stale)).toEqual(['link text "The Old Gate" is not the title "The Gate" of /t/glassbox/guide/terrarium-practice/gate'])
+    expect(problemsOf('nuxt-content/01.collections.md', stale, 'drafts')).toEqual([])
+    expect(problemsOf('nuxt-content/01.collections.md', lesson.replace('[The Gate](', '[the gate step]('))).toEqual([])
+  })
+
   it('passes a Where next of 5 pages ending in one Journal page', () => {
     expect(problemsOf('nuxt-content/01.collections.md', `${lesson}${gateItem.repeat(3)}${journalItem}`)).toEqual([])
   })
@@ -258,6 +267,7 @@ describe('every Glass Box page matches the code at its revision', () => {
     journal: glassboxJournalRoutes(),
     terms: Object.keys(terms),
     cites: Object.assign({}, ...spaces.map((space) => glassboxCites(Object.fromEntries(files[space]!.map((file) => [file, read(space, file)])), space))),
+    titles: Object.fromEntries(pages.map(({ space, file }) => [glassboxSitePath(space, file), String(splitFrontmatter(read(space, file)).frontmatter.title)])),
   }
 
   it('reaches Journal content pages and the Journal\'s own Vue routes', () => {
