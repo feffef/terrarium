@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01VPNHf6qDdJPXX23GghKs74
 startedAt: 2026-10-16T05:35:37Z
-endedAt: 2026-10-16T06:26:29Z
+endedAt: 2026-10-16T06:35:36Z
 kind: interactive
-goal: "Clear the triage backlog: triage, grill the owner, build and open PRs"
+goal: "Clear the triage backlog: triage, grill the owner, build and land PRs"
 status: in-review
-outcome: 10 issues triaged; 3 closed, 7 built into 5 open PRs (#2119-#2123)
-summary: "The owner invoked /clear-backlog (human-instructed). The default sweep picked up 10 needs-triage issues; #2073 was left out because it changes guard wiring, and the 11 older ready-for-human issues were skipped because an agent had commented last. clear-backlog-explore triaged all 10: #2105 was closed as already done (PR #2108), #2112 and #2113 came back ready-for-agent, and 7 needed the owner. One grilling round plus a short follow-up settled them (owner answers): #2097 and #2115 closed as not planned; #2104 refuse in merge-pr.ts; #2096 both Spaces; #2114 guide only; #2093 a required plain summary field shown always with cause on expand; #2116 a one-sentence doc note. The agent regrouped the explore proposal: #2112+#2113 on one branch (shared doc), #2096+#2114 on another (page-checks.ts). Builds ran in clear-backlog-build; a container restart killed both runs mid-way, which the agent noticed only when the owner asked, and resumed them (the first resume failed without args). Before pushing, the agent fixed one review judgement call itself (preview.ts stop must always exit 0), re-ran gate:scoped, verified every branch's commits and diff, and opened PRs #2119-#2123. #2120 changes Human-only merge-pr.ts and waits for a human merge. Open: CI and merges."
+outcome: "10 issues triaged; 4 PRs merged, merge-pr.ts PR #2120 waits for a human merge"
+summary: "The owner invoked /clear-backlog (human-instructed). The default sweep picked up 10 needs-triage issues; #2073 was left out because it changes guard wiring, and 11 older ready-for-human issues were skipped because an agent had commented last. clear-backlog-explore triaged all 10: #2105 was closed as already done (PR #2108), #2112 and #2113 came back ready-for-agent, and 7 went to the owner. The owner answered in one grilling round and a short follow-up: #2097 and #2115 closed as not planned; #2104 refuse in merge-pr.ts; #2096 both Spaces; #2114 guide only; #2093 a required plain summary field shown always with cause on expand (the owner's own variant of the offered options); #2116 a one-sentence doc note. The agent regrouped the explore proposal into five branches. A container restart killed both build runs; the agent noticed only when the owner asked and resumed them. Before pushing, the agent itself fixed one review judgement call on #2119 (preview.ts stop always exits 0). PRs #2119 (#2112, #2113), #2121 (#2096, #2114), #2122 (#2093) and #2123 (#2116) merged. #2121's first CI run failed: a Nitro lesson landed on main after the branch was cut and linked as \"Nitro\", which the new link-text check caught; the agent merged main and fixed the two links. #2120 (#2104) is green and waits for a human merge (Human-only merge-pr.ts). Judgement calls left open: run-on rewrites of some Walkthrough stops (#2121), and the unmatched 'Fixes:#N' no-space form (#2120)."
 prs:
   - "2119"
   - "2120"
@@ -21,26 +21,26 @@ docsRead:
     reason: session-start read; Friction Ledger, Trusted/Public, Human-only terms
     useful: partly
   - path: .agents/skills/auto-triage/SKILL.md
-    reason: "step 1 set resolution: eligibility by last-comment authorship"
+    reason: "Mine and all 10 triage agents: eligibility, brave line, single comment"
     useful: yes
   - path: docs/agents/git-conventions.md
-    reason: fetch before history; commit trailer check
+    reason: "Mine and subagents: fetch first, trailer check (7 yes, 10 partly, 1 no)"
     useful: partly
   - path: docs/agents/github-integration.md
-    reason: label replace semantics; add_issue_comment for comments
-    useful: yes
+    reason: "Mine and subagents: label replace, comment tool; mostly partly"
+    useful: partly
   - path: docs/agents/pr-workflow.md
-    reason: review before first push; merge-pr.ts path; closing keywords
+    reason: "Mine and the #2104 build: verdict before merge, closing keywords"
     useful: yes
   - path: docs/agents/triage-labels.md
-    reason: label strings for owner answers
+    reason: "Mine and triage agents: label strings"
     useful: partly
   - path: docs/agents/issue-tracker.md
-    reason: external PR listing recipe; blocking
+    reason: "Mine: external-PR recipe; one subagent found it not needed"
     useful: partly
   - path: docs/adr/0022-autonomous-triage-sweep.md
-    reason: what the sweep may label; full read as its rule demanded
-    useful: partly
+    reason: "Mine and 9 triage agents: when to send to a person"
+    useful: yes
   - path: docs/agents/guards.md
     reason: "to decide #2073 and #2116 against the guard-wiring exclusion"
     useful: yes
@@ -50,12 +50,56 @@ docsRead:
   - path: .agents/skills/log-session/SKILL.md
     reason: "authoring this log; a triage subagent also read it for #2115"
     useful: yes
+  - path: CLAUDE.md
+    reason: "Mine and 18 subagents: keep-it-short and one-home-per-fact shaped builds and reviews"
+    useful: yes
+  - path: .agents/skills/triage/SKILL.md
+    reason: "Triage agents: label state machine and redundancy check (8 yes, 2 partly)"
+    useful: yes
+  - path: .agents/skills/code-review/SKILL.md
+    reason: "Review agents: the Standards/Spec axes and smell baseline"
+    useful: yes
+  - path: .agents/skills/implement/SKILL.md
+    reason: Build agents followed it; all five rated it partly
+    useful: partly
+  - path: .agents/skills/tdd/SKILL.md
+    reason: "One build agent: red-green on the preview helpers"
+    useful: yes
+  - path: .claude/skills/tdd/SKILL.md
+    reason: Same tdd Skill via its link, one build agent
+    useful: yes
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: "Triage and build of #2093: the Skill that writes cause and now summary"
+    useful: yes
+  - path: .agents/skills/glassbox-lesson/EVERY-PAGE.md
+    reason: Edited by two branches (Check step, caps pointer)
+    useful: yes
+  - path: .agents/skills/glassbox-update/SKILL.md
+    reason: "Triage of #2097: what the report feeds"
+    useful: yes
+  - path: .agents/skills/prune-trial/SKILL.md
+    reason: "Triage of #2115: a trial can't be aimed at one line"
+    useful: yes
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: "Triage of #2104: merge-pr.ts is Human-only"
+    useful: yes
+  - path: docs/adr/0008-self-documentation-tenant-is-a-journal.md
+    reason: "Triage of #2093: Inventories refresh in place"
+    useful: partly
+  - path: docs/adr/0027-prune-trials.md
+    reason: "Triage of #2115: trials exclude code changes"
+    useful: yes
+  - path: docs/agents/environment-caveats.md
+    reason: "Triage of #2113: checked the blocked-host list for a second copy"
+    useful: yes
+  - path: docs/agents/verifying-ui-changes.md
+    reason: "Builds of #2112/#2113 (edited) and #2093 (UI check)"
+    useful: yes
+  - path: layers/glassbox/GLOSSARY.md
+    reason: "Triage of #2096: the 2-4 sentence stop rule"
+    useful: yes
   - path: scripts/preview.ts
     reason: (read before editing)
-  - path: .agents/skills/code-review/SKILL.md
-    reason: (no reason given)
-  - path: .agents/skills/implement/SKILL.md
-    reason: (no reason given)
   - path: scripts/merge-pr.ts
     reason: (read before editing)
   - path: tests/unit/merge-pr.spec.ts
@@ -65,8 +109,6 @@ docsRead:
   - path: layers/glassbox/tests/unit/glassbox-pages.spec.ts
     reason: (read before editing)
   - path: layers/glassbox/content/drafts/pages/walkthroughs/session-log-lands-on-main.md
-    reason: (read before editing)
-  - path: .agents/skills/glassbox-lesson/EVERY-PAGE.md
     reason: (read before editing)
   - path: /home/user/terrarium/.claude/worktrees/wf_685f6c27-807-2/.agents/skills/code-review/SKILL.md
     reason: (no reason given)
@@ -78,37 +120,17 @@ docsRead:
     reason: (no reason given)
   - path: layers/journal/tests/unit/ledger.spec.ts
     reason: (no reason given)
-  - path: .agents/skills/frictions-to-fixes/SKILL.md
-    reason: (read before editing)
-  - path: docs/agents/verifying-ui-changes.md
-    reason: (read before editing)
-  - path: .agents/skills/triage/SKILL.md
-    reason: (no reason given)
   - path: .agents/skills/glassbox-update/scripts/glassbox-update.ts
-    reason: (no reason given)
-  - path: .agents/skills/glassbox-update/SKILL.md
-    reason: (no reason given)
-  - path: docs/adr/0027-prune-trials.md
     reason: (no reason given)
   - path: .agents/prune-trials.yml
     reason: (no reason given)
   - path: scripts/log-session.ts
-    reason: (no reason given)
-  - path: .agents/skills/prune-trial/SKILL.md
     reason: (no reason given)
   - path: scripts/screenshot.ts
     reason: (read before editing)
   - path: scripts/read-first-hint.ts
     reason: (read before editing)
   - path: tests/unit/preview-flags.spec.ts
-    reason: (no reason given)
-  - path: docs/adr/0004-objective-safety-gate.md
-    reason: (no reason given)
-  - path: docs/agents/environment-caveats.md
-    reason: (no reason given)
-  - path: layers/glassbox/GLOSSARY.md
-    reason: (no reason given)
-  - path: docs/adr/0008-self-documentation-tenant-is-a-journal.md
     reason: (no reason given)
 skillsUsed:
   - name: clear-backlog
@@ -138,21 +160,27 @@ frictions:
   - description: Fixed preview.ts stop's exit code myself after the build review and pushed with gate:scoped only, without another code-review pass on that one-line delta
     solution: Re-run the branch through clear-backlog-build with the fix in its brief, or run code-review on the delta
     severity: nit
-durationSec: 3052
+  - description: "gate:scoped passed on the Glass Box branch but CI failed: main gained a Nitro lesson whose 'Nitro' link text failed the new link-text check"
+    solution: clear-backlog could fetch and merge origin/main into a branch just before push, so a new check meets the latest content
+    severity: major
+durationSec: 3600
 models:
-  claude-opus-5-5: 130
+  claude-opus-5-5: 179
 toolCounts:
-  Bash: 30
+  Bash: 48
   Read: 9
   Workflow: 7
   ToolSearch: 3
   PushNotification: 1
-  mcp__github__add_issue_comment: 7
+  mcp__github__add_issue_comment: 11
   mcp__github__issue_write: 7
   Edit: 2
   mcp__github__create_pull_request: 5
   mcp__claude-code-remote__subscribe_pr_activity: 5
   Skill: 1
+  ReadNotifications: 4
+  mcp__github__pull_request_read: 1
+  mcp__claude-code-remote__send_later: 1
 filesEdited:
   - scripts/preview.ts
   - tests/unit/merge-pr.spec.ts
@@ -221,40 +249,73 @@ docsReadBySubagents:
   - docs/adr/0008-self-documentation-tenant-is-a-journal.md
 ruleVerdicts:
   - path: .claude/rules/adr-0004.md
-    reason: Made me run gate:scoped before pushing and decide which PR waits for a human; summary was enough
+    reason: gate:scoped before push and which PR waits for a human; mostly no for read-only subagents
     useful: yes
   - path: .claude/rules/adr-0004-human-merge.md
-    reason: "Confirmed merge-pr.ts is Human-only, so #2120 waits for a human merge"
+    reason: "Confirmed merge-pr.ts is Human-only so #2120 waits; no for subagents not touching such files"
     useful: yes
   - path: .claude/rules/adr-0009.md
-    reason: Told me to invoke close-session at PR open; summary was enough
+    reason: Told me to log at PR open; 30 of 31 subagents said no as they write no logs
     useful: yes
   - path: .claude/rules/adr-0027.md
-    reason: No instruction text was pruned or restored in this run
-    useful: no
+    reason: Prompted a prune-trials check before doc edits; no trial covered them
+    useful: partly
   - path: .claude/rules/adr-0020.md
-    reason: Every issue in the set was Trusted-authored, so it changed nothing
+    reason: All issues Trusted, so it only confirmed the tier; 15 of 31 subagents said no
     useful: partly
   - path: .claude/rules/adr-0003.md
-    reason: Opened each PR right after push and subscribed; summary was enough
+    reason: Opened each PR at push and subscribed; 24 of 31 subagents said no as the orchestrator owns PRs
     useful: yes
   - path: .claude/rules/adr-0017.md
-    reason: Every issue comment and PR body carried the session header
+    reason: Every issue comment, PR body and commit carried the session header; subagents split yes/partly/no by whether they wrote
     useful: yes
   - path: .claude/rules/adr-0022.md
-    reason: Set what the sweep may label; I read the full ADR as it demanded and it added little beyond the summary
-    useful: partly
+    reason: "Mine and 10 triage agents: set which issues the sweep may label ready-for-agent; full ADR read"
+    useful: yes
   - path: .claude/rules/adr-0021.md
-    reason: Loaded on the glossary read; no glossary change this run
+    reason: Loaded on glossary reads; no glossary change
     useful: no
   - path: .claude/rules/adr-0005.md
-    reason: Loaded with Skill files; workflows are Skill code, no change made here
+    reason: Loaded with Skill files; no Skill placement decision (25 of 29 no)
     useful: no
   - path: .claude/rules/adr-0029.md
-    reason: Loaded on doc reads; no rule placement decision this run
+    reason: Loaded on doc reads; no rule placement decision (19 of 23 no)
     useful: no
   - path: .claude/rules/adr-0030.md
-    reason: Loaded on the ADR read; no ADR edited
+    reason: Loaded on ADR reads; no ADR edited (9 of 9 no)
+    useful: no
+  - path: .claude/rules/adr-0002.md
+    reason: "Triage and build of #2093: the schema lives in the manifest"
+    useful: partly
+  - path: .claude/rules/adr-0008.md
+    reason: "Triage of #2093: Inventories are refreshed in place"
+    useful: yes
+  - path: .claude/rules/adr-0015.md
+    reason: frictions-to-fixes is not a pack Skill, so editable
+    useful: partly
+  - path: .claude/rules/adr-0006.md
+    reason: Loaded on a layer file; not relevant
+    useful: no
+  - path: .claude/rules/adr-0016.md
+    reason: Loaded on a layer file; not relevant
+    useful: no
+  - path: .claude/rules/adr-0028.md
+    reason: Loaded on a script read; not relevant
+    useful: no
+  - path: .claude/rules/glassbox-content.md
+    reason: "Glass Box build: content conventions while rewriting stops"
+    useful: partly
+  - path: .claude/rules/guards.md
+    reason: Preview build touched read-first-hint.ts; one agent found it useful, one not
+    useful: partly
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: Loaded on layer files; not relevant
+    useful: no
+  - path: .claude/rules/mermaid-lanes.md
+    reason: Loaded on a Glass Box page; no diagram changed
+    useful: no
+  - path: .claude/rules/tenant-layers.md
+    reason: Loaded on layer files; not relevant to these changes
     useful: no
 subagents:
   - type: workflow-subagent
