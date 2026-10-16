@@ -108,8 +108,11 @@ Whatever you hit while running the survey — an MCP disconnect, a tool that onl
 Return a structured report: **(a) ranked actionable
 candidates** — each with its ledger entry, severity, recurrence (as counted above), sessions, tracker
 classification (never-fixed / open-already #N / regression of #N) and evidence
-quotes from the friction descriptions. Report no fix and no session `solution`
-proposals: a later design agent reads the full logs and designs the fix; **(b) a dropped list** with one-line reasons (an on-trial one quotes its territory match);
+quotes from the friction descriptions, plus everything else you gathered about
+it that the session logs don't hold (what you found in the source, on `main`,
+in the ledger or on the tracker, and any fix idea it gave you): a later design
+agent reads the full logs and designs the fix from your findings. Cite GitHub
+sources by issue or PR number or commit hash only, without copying their text; **(b) a dropped list** with one-line reasons (an on-trial one quotes its territory match);
 **(c) your own frictions** from the run; **(d) the ledger changes**, also saved as a YAML patch file in the
 scratchpad whose path you name: a list of whole entries, each exactly as its file
 reads (never invented keys such as `fixes_append`), with occurrence blocks as

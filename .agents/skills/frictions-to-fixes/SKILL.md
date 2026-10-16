@@ -50,9 +50,12 @@ The subagent labels every candidate **never-fixed**, **drop**, **open-already** 
   commit or comment within the horizon) is yours to pick up or escalate.
 - **Regression** (its fix merged and the friction recurred): never picked or
   dispatched — a change that already failed once needs human eyes, not a second
-  run of the same idea. File a distinct issue for every one that flags the
-  earlier fix as ineffective (link the prior issue/PR and quote both the
-  original and the recurring friction).
+  run of the same idea. File a distinct issue that flags the earlier fix as
+  ineffective (link the prior issue/PR and quote both the original and the
+  recurring friction) for the top **three** of the run by severity, occurrence
+  count and proof of regression (occurrences dated after the fix) together.
+  List the rest in the description of the PR that carries the ledger edit (§5);
+  they wait in the ledger for the next run.
 
 ## 3. Pick what to fix — up to 10
 
@@ -69,10 +72,11 @@ and you can state in one line why it earns a fix.
 ## 4. Design the picks — in a subagent
 
 Dispatch **one** design subagent (`general-purpose`) for all picks, with
-[`design-brief.md`](design-brief.md) verbatim, with the picks and the scratchpad path filled in. It reads
+[`design-brief.md`](design-brief.md) verbatim, with the picks (each with everything
+the survey reported on it) and the scratchpad path filled in. It reads
 the full session log of every occurrence, explores the source, and returns, per
-fix: the problem with its evidence, the sessions' own proposals, the design it
-recommends, a risk assessment and a recommendation (dispatch or issue). It
+fix: the problem with its evidence, one precise design, a risk assessment and a
+recommendation (dispatch or issue). It
 designs only — it files no issues, opens no PRs, changes no code.
 
 Done when every pick has a design and a recommendation.
@@ -86,10 +90,11 @@ A fix is never dispatched when it touches a human-only surface (the `paths` of
 hook wiring (`docs/agents/guards.md`'s own rule, since editing it needs a
 human-attended session), or when it turns on a design choice a human should make.
 
-**File an issue** for each fix you don't dispatch (a group of related frictions
-is one issue, not several): the **problem** with its evidence (quote the logging
-sessions + severities — for a group, all of them), the **solutions** weighed,
-and the **recommended** one. Search the tracker first to avoid duplicates. Label
+**File an issue** for each fix you don't dispatch, at most **three** per run,
+the highest-ranked first; list the rest in the description of the PR that
+carries the ledger edit, where they wait in the ledger for the next run. A
+group of related frictions is one issue, not several. Each issue holds the **problem** with its evidence (quote the logging
+sessions + severities — for a group, all of them) and the **design**. Search the tracker first to avoid duplicates. Label
 one blocked only by a human-only surface `ready-for-human` (an agent may still
 write the fix; only the merge needs a human), except a guard fix:
 `docs/agents/guards.md` routes it. Otherwise it ages out of the window
@@ -114,8 +119,8 @@ You review and merge; you never author. So
 the ledger edit rides in the grouped doc PR (§6), or, on a run that dispatches
 none, goes to one Sonnet agent of its own.
 
-Done when every fix is either ready to dispatch or has an open issue, and every
-regression has its issue.
+Done when every fix is ready to dispatch, has an open issue, or is listed for
+the next run, and the top three regressions have their issues.
 
 ## 6. Dispatch Sonnet impl agents — batch the doc fixes
 

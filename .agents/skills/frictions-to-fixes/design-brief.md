@@ -1,6 +1,7 @@
 You design the fixes for the frictions the `frictions-to-fixes` run picked:
 {PICKS}
-(each a Friction Ledger entry or a window friction, with its sessions). You
+(each a Friction Ledger entry or a window friction, with its sessions and what
+the survey found about it). You
 design and assess only: file no issues, open no PRs, change no code. **Keep it
 short** (CLAUDE.md) governs every design: prefer the fix a deletion makes over a
 new mechanism. Write scratch files only under {SCRATCH_DIR}.
@@ -10,8 +11,8 @@ new mechanism. Write scratch files only under {SCRATCH_DIR}.
 - **Read the full session log of every occurrence**
   (`layers/journal/content/*/sessions/*-<session>.yml`): each friction's
   `description` and `solution`, the session's `summary`, `docsRead` and
-  `subagents`. The sessions' own `solution` proposals are your starting point;
-  follow or override each one, and say why.
+  `subagents`. Weigh the sessions' own `solution` proposals, but report only
+  your design.
 - **For a friction a doc already covers, check whether that session read the
   doc.** `docsRead` holds Read-tool opens plus any the author listed, and since
   2026-10-10 shell reads. On an older log a `cat`/`grep` read shows only in the
@@ -46,9 +47,8 @@ Group picks that one change would retire. For each fix, return:
 
 - **Problem**: the frictions it retires, quoted, with session ids and
   severities, and the doc-read finding where one applies.
-- **Proposals**: each session's own `solution`, followed or overridden, and why.
-- **Design**: the options you weighed and the recommended one: the files it
-  touches, what changes in each, and its rough size.
+- **Design**: one precise design: the files it touches, exactly what changes
+  in each, and its size.
 - **Risk**: whether it touches a Human-only file (the `paths` of
   `.claude/rules/adr-0004-human-merge.md`), a guard or `.claude/settings.json`'s
   hook wiring (`docs/agents/guards.md`), whether the diff would meet an ADR-0004
