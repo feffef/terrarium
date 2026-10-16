@@ -36,6 +36,7 @@ function stateHint(e: { state: string; since: number }): string {
   if (e.state === 'still recurring') return `${e.since} occurrence(s) dated after the latest merged PR`
   if (e.state === 'likely fixed') return `Merged PR(s) and no occurrence for ${LEDGER_QUIET_DAYS}+ days`
   if (e.state === 'fix landed') return `Merged PR(s), no occurrence yet, under ${LEDGER_QUIET_DAYS} days old`
+  if (e.state === 'accepted') return 'The owner accepts this cost; occurrences are still counted'
   return ''
 }
 const panels = computed(() =>
@@ -74,7 +75,8 @@ useSeoMeta({ title: () => `${PAGE_TITLE} · journal/${space}` })
         PRs a cluster reads <em>fix landed</em> (no occurrence since, under
         {{ LEDGER_QUIET_DAYS }} days), <em>likely fixed</em> (quiet for longer) or
         <em>still recurring</em> (occurrences after the latest PR); a merge is an
-        attempt, not proof. A cluster
+        attempt, not proof. One reads <em>accepted</em> when the owner accepts
+        its cost, whatever its PRs; its occurrences are still counted. A cluster
         sits in the list where it ranks higher. Click a cluster (▸) to expand its
         cause, merged PRs, sessions and logged frictions.
       </p>

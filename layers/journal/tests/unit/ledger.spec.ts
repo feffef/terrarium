@@ -75,7 +75,7 @@ describe('ledgerPanels reports', () => {
 
 describe('ledgerFixState', () => {
   const asOf = '2026-10-20'
-  const state = (fixDates: string[], occurrences: string[]) => ledgerFixState(fixDates.map((date) => ({ date })), occurrences, asOf)
+  const state = (fixDates: string[], occurrences: string[]) => ledgerFixState('tracked', fixDates.map((date) => ({ date })), occurrences, asOf)
 
   it('has no state without a merged PR', () => {
     expect(state([], ['2026-10-01'])).toBeUndefined()
@@ -89,6 +89,10 @@ describe('ledgerFixState', () => {
     expect(state(['2026-10-05'], ['2026-10-01', '2026-10-05'])).toEqual({ state: 'likely fixed', since: 0 })
     expect(state(['2026-10-17'], ['2026-10-01'])).toEqual({ state: 'likely fixed', since: 0 })
     expect(state(['2026-10-18'], ['2026-10-01'])).toEqual({ state: 'fix landed', since: 0 })
+  })
+
+  it('has no state for an accepted cluster, even with merged PRs and later occurrences', () => {
+    expect(ledgerFixState('accepted', [{ date: '2026-10-02' }], ['2026-10-05'], asOf)).toBeUndefined()
   })
 })
 
@@ -122,5 +126,12 @@ describe('ledgerPanels fixes and state', () => {
     const byName = Object.fromEntries([...severe, ...frequent].map((e) => [e.name, e]))
     expect(byName.plain).toMatchObject({ state: 'on trial', since: 0 })
     expect(byName.late).toMatchObject({ state: 'still recurring', since: 1 })
+  })
+
+  it('shows accepted over the derived state, still counting and listing occurrences and fixes', () => {
+    const accepted = { ...merged([{ pr: 1, date: '2026-09-30' }]), status: 'accepted' as const }
+    const [e] = ledgerPanels([accepted], 'current', new Set(), 'archived').severe
+    expect(e).toMatchObject({ state: 'accepted', since: 0, count: 1 })
+    expect(e!.fixes.map((f) => f.pr)).toEqual([1])
   })
 })

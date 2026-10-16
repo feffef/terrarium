@@ -38,10 +38,11 @@ Ledger, which you commit (Report, (d)). The scratchpad is
   PR changed, written from the PR's description, not the friction's. Count a PR
   only if it tries to change the cause (not a ledger-only, tracking or session-log
   one); add every partial fix. Never record that a fix worked: `status` is the
-  tracking state (`open`, `tracked`, `on-trial`), and for an entry with `fixes`
+  tracking state (`open`, `tracked`, `on-trial`, `accepted`), and for an entry with `fixes`
   the page and `--summary` derive `fix landed`, `likely fixed` (no occurrence
   for 3 days after the latest PR) or `still recurring` (occurrences dated after
   it, counted), so a re-fix after a regression needs only its `fixes` entry.
+  An `accepted` cluster (the owner accepts its cost) is never re-proposed for a fix.
   `ref` is not rendered: it
   holds the tracking issue or open PR, the trial's territory match or what a fix left
   open, never the merged PRs. `gh api repos/feffef/terrarium/commits/<sha>/pulls`
