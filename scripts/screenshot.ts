@@ -57,6 +57,11 @@ export function extractFlag(args: string[], flag: string): { value: string | und
   return { value, rest }
 }
 
+/** Pull a boolean `--flag` out of `args`, reporting whether it was present. */
+export function extractSwitch(args: string[], flag: string): { on: boolean; rest: string[] } {
+  return { on: args.includes(flag), rest: args.filter((arg) => arg !== flag) }
+}
+
 /** An absent `--scheme` leaves Chromium's default; a bad one throws a usage message. */
 export function parseScheme(value: string | undefined): ColorScheme | undefined {
   if (value === undefined || value === 'light' || value === 'dark') return value
@@ -78,13 +83,22 @@ function parseWindowSize(windowSize: string): [width: number, height: number] {
   return [width, height]
 }
 
+/** Shared by both capture paths. `fullPage` captures the whole scrollable page;
+ *  `mobile` emulates a touch phone at 2x pixel density (issue #2112). */
+export interface CaptureOptions {
+  windowSize?: string
+  colorScheme?: ColorScheme
+  fullPage?: boolean
+  mobile?: boolean
+}
+
 /**
  * Launch the pre-installed Chromium via playwright-core, open a page sized to
  * `width`x`height` (the direct-viewport fix for issue #575), run `fn` against
  * it, then always close the browser — shared by both capture paths below so
  * the launch args and viewport handling stay single-homed.
  */
-async function withPage<T>(width: number, height: number, colorScheme: ColorScheme | undefined, fn: (page: Page) => Promise<T>): Promise<T> {
+async function withPage<T>(width: number, height: number, { colorScheme, mobile }: CaptureOptions, fn: (page: Page) => Promise<T>): Promise<T> {
   const browser = await chromium.launch({
     executablePath: resolveChromiumPath(),
     // --hide-scrollbars: the raw-binary invocation this replaced always
@@ -92,7 +106,8 @@ async function withPage<T>(width: number, height: number, colorScheme: ColorSche
     args: ['--no-sandbox', '--disable-gpu', '--hide-scrollbars'],
   })
   try {
-    const page = await browser.newPage({ viewport: { width, height }, colorScheme })
+    const device = mobile ? { isMobile: true, hasTouch: true, deviceScaleFactor: 2 } : {}
+    const page = await browser.newPage({ viewport: { width, height }, colorScheme, ...device })
     return await fn(page)
   }
   finally {
@@ -112,11 +127,11 @@ async function withPage<T>(width: number, height: number, colorScheme: ColorSche
 export async function captureScreenshot(
   url: string,
   out: string,
-  { windowSize = '1280,800', waitMs = DEFAULT_WAIT_MS, colorScheme }: { windowSize?: string; waitMs?: number; colorScheme?: ColorScheme } = {},
+  { windowSize = '1280,800', waitMs = DEFAULT_WAIT_MS, ...opts }: CaptureOptions & { waitMs?: number } = {},
 ): Promise<void> {
   const [width, height] = parseWindowSize(windowSize)
   const anchor = new URL(url).hash.slice(1)
-  await withPage(width, height, colorScheme, async (page) => {
+  await withPage(width, height, opts, async (page) => {
     await page.goto(url)
     if (waitMs > 0) await page.waitForTimeout(waitMs)
     // The browser's native anchor-scroll fires once, at navigation time —
@@ -124,7 +139,7 @@ export async function captureScreenshot(
     // the DOM, so it never actually scrolls anywhere (issue #965). Re-scroll
     // explicitly now that hydration has had the wait above to complete.
     if (anchor) await page.locator(`#${anchor}`).scrollIntoViewIfNeeded({ timeout: waitMs > 0 ? waitMs : 5000 })
-    await page.screenshot({ path: out })
+    await page.screenshot({ path: out, fullPage: opts.fullPage })
   })
 }
 
@@ -139,13 +154,13 @@ export async function captureScreenshotWaitingFor(
   url: string,
   out: string,
   selector: string,
-  { windowSize = '1280,800', timeoutMs = 15_000, colorScheme }: { windowSize?: string; timeoutMs?: number; colorScheme?: ColorScheme } = {},
+  { windowSize = '1280,800', timeoutMs = 15_000, ...opts }: CaptureOptions & { timeoutMs?: number } = {},
 ): Promise<void> {
   const [width, height] = parseWindowSize(windowSize)
-  await withPage(width, height, colorScheme, async (page) => {
+  await withPage(width, height, opts, async (page) => {
     await page.goto(url, { waitUntil: 'networkidle' })
     await page.locator(selector).first().waitFor({ state: 'attached', timeout: timeoutMs })
-    await page.screenshot({ path: out })
+    await page.screenshot({ path: out, fullPage: opts.fullPage })
   })
 }
 

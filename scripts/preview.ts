@@ -31,7 +31,8 @@
 //     screenshot path has no teardown step for a shell to drop at all.
 //
 // Usage:
-//   pnpm exec tsx scripts/preview.ts shot <route> <out.png> [WxH] [--scheme light|dark] [--dev]
+//   pnpm exec tsx scripts/preview.ts shot <route> <out.png> [WxH] [--scheme light|dark] [--full] [--mobile] [--dev]
+//   pnpm exec tsx scripts/preview.ts review <route> <out-dir> [--dev]  # four full-page shots
 //   pnpm exec tsx scripts/preview.ts start [--dev]     # prints PID= and URL=
 //   pnpm exec tsx scripts/preview.ts stop <pid>        # always exits 0
 //
@@ -43,11 +44,20 @@
 // overlay makes it wrong for a trusted screenshot — see docs/agents/verifying-ui-changes.md).
 import { spawn, type ChildProcess } from 'node:child_process'
 import { createServer } from 'node:net'
-import { existsSync, openSync, closeSync, readFileSync, realpathSync, rmSync } from 'node:fs'
+import { existsSync, mkdirSync, openSync, closeSync, readFileSync, realpathSync, rmSync } from 'node:fs'
 import { join } from 'node:path'
 import { tmpdir } from 'node:os'
 import { fileURLToPath } from 'node:url'
-import { captureScreenshot, captureScreenshotWaitingFor, extractFlag, parseScheme, parseSize } from './screenshot'
+import {
+  captureScreenshot,
+  captureScreenshotWaitingFor,
+  extractFlag,
+  extractSwitch,
+  parseScheme,
+  parseSize,
+  type CaptureOptions,
+  type ColorScheme,
+} from './screenshot'
 
 const HOST = '127.0.0.1'
 const READY_TIMEOUT_MS = 45_000
@@ -57,7 +67,8 @@ const SERVER_ENTRY = '.output/server/index.mjs'
 
 const USAGE =
   'Usage:\n' +
-  '  pnpm exec tsx scripts/preview.ts shot <route> <out.png> [WxH] [--wait <ms>] [--wait-for <selector>] [--scheme light|dark] [--dev]\n' +
+  '  pnpm exec tsx scripts/preview.ts shot <route> <out.png> [WxH] [--wait <ms>] [--wait-for <selector>] [--scheme light|dark] [--full] [--mobile] [--dev]\n' +
+  '  pnpm exec tsx scripts/preview.ts review <route> <out-dir> [--wait <ms>] [--wait-for <selector>] [--dev]\n' +
   '  pnpm exec tsx scripts/preview.ts start [--dev]\n' +
   '  pnpm exec tsx scripts/preview.ts stop <pid>\n' +
   '  <route>            a path on the site, e.g. /t/journal/current\n' +
@@ -67,6 +78,10 @@ const USAGE =
   '  --wait-for <sel>   wait until <sel> attaches to the DOM instead of a fixed\n' +
   "                     wait (e.g. '.mermaid-diagram svg' for an async diagram)\n" +
   "  --scheme <s>       light or dark: emulate the visitor's colour scheme\n" +
+  '  --full             capture the whole scrollable page, not just the viewport\n' +
+  '  --mobile           emulate a touch phone at 2x pixel density (pair with e.g. 390x844)\n' +
+  '  review             one server, four full-page shots in <out-dir>: desktop-light.png,\n' +
+  '                     desktop-dark.png (1280x900), mobile-light.png, mobile-dark.png (390x844)\n' +
   '  --dev              use `nuxt dev` instead of a built `preview` server (fast, but\n' +
   '                     the DevTools overlay makes it unfit for a trusted screenshot)'
 
@@ -257,12 +272,73 @@ export async function stopPreview(pid: number): Promise<void> {
   await killGroup(pid)
 }
 
-/** `shot`'s raw flag values, still strings; validated in `doShot`. */
+/** `shot`'s and `review`'s raw flag values; `waitMs` and `scheme` are validated later. */
 interface ShotOptions {
   waitMs?: string
   /** A CSS selector to await before capturing. */
   waitForSelector?: string
   scheme?: string
+  fullPage: boolean
+  mobile: boolean
+}
+
+function parseWaitMs(value: string | undefined): number {
+  if (value === undefined) return 2000
+  const parsed = Number(value)
+  if (!Number.isInteger(parsed) || parsed < 0) {
+    throw new Error(`Invalid --wait "${value}" — expected a non-negative integer (ms).`)
+  }
+  return parsed
+}
+
+export interface ReviewShot {
+  out: string
+  windowSize: string
+  scheme: ColorScheme
+  mobile: boolean
+}
+
+/** The `review` verb's four shots, named so a reviewer knows each file unseen. */
+export function reviewShots(outDir: string): ReviewShot[] {
+  const devices = [
+    { name: 'desktop', windowSize: '1280,900', mobile: false },
+    { name: 'mobile', windowSize: '390,844', mobile: true },
+  ]
+  return devices.flatMap(({ name, windowSize, mobile }) =>
+    (['light', 'dark'] as const).map((scheme) => ({ out: join(outDir, `${name}-${scheme}.png`), windowSize, scheme, mobile })),
+  )
+}
+
+/** Start a server, run `fn` against its URL for `route`, and always stop it. */
+async function withServer(route: string, dev: boolean, fn: (url: string) => Promise<void>): Promise<number> {
+  let server: PreviewServer
+  try {
+    server = await startPreview({ dev })
+  } catch (err) {
+    console.error(err instanceof Error ? err.message : String(err))
+    return 1
+  }
+  const path = route.startsWith('/') ? route : `/${route}`
+  try {
+    await fn(`${server.url}${path}`)
+    return 0
+  } catch (err) {
+    console.error(err instanceof Error ? err.message : String(err))
+    return 1
+  } finally {
+    await stopPreview(server.pid)
+    try {
+      rmSync(server.logPath)
+    } catch {
+      // best-effort cleanup
+    }
+  }
+}
+
+async function capture(url: string, out: string, waitMs: number, waitForSelector: string | undefined, opts: CaptureOptions): Promise<void> {
+  if (waitForSelector) await captureScreenshotWaitingFor(url, out, waitForSelector, opts)
+  else await captureScreenshot(url, out, { ...opts, waitMs })
+  console.log(`Wrote ${out} (${url})`)
 }
 
 async function doShot(args: string[], dev: boolean, opts: ShotOptions): Promise<number> {
@@ -276,52 +352,43 @@ async function doShot(args: string[], dev: boolean, opts: ShotOptions): Promise<
     console.error(`Invalid size "${sizeArg}" — expected <width>x<height>, e.g. 1280x1600.`)
     return 1
   }
-  let waitMs = 2000
-  if (opts.waitMs !== undefined) {
-    const parsed = Number(opts.waitMs)
-    if (!Number.isInteger(parsed) || parsed < 0) {
-      console.error(`Invalid --wait "${opts.waitMs}" — expected a non-negative integer (ms).`)
-      return 1
-    }
-    waitMs = parsed
-  }
-  let colorScheme
+  let waitMs: number
+  let colorScheme: ColorScheme | undefined
   try {
+    waitMs = parseWaitMs(opts.waitMs)
     colorScheme = parseScheme(opts.scheme)
   } catch (err) {
     console.error((err as Error).message)
     return 1
   }
+  const { fullPage, mobile } = opts
+  return withServer(route, dev, (url) => capture(url, out, waitMs, opts.waitForSelector, { windowSize, colorScheme, fullPage, mobile }))
+}
 
-  let server: PreviewServer
-  try {
-    server = await startPreview({ dev })
-  } catch (err) {
-    console.error(err instanceof Error ? err.message : String(err))
+async function doReview(args: string[], dev: boolean, opts: ShotOptions): Promise<number> {
+  const [route, outDir] = args
+  if (!route || !outDir) {
+    console.error(USAGE)
     return 1
   }
-  const path = route.startsWith('/') ? route : `/${route}`
-  const url = `${server.url}${path}`
+  let waitMs: number
   try {
-    if (opts.waitForSelector) {
-      await captureScreenshotWaitingFor(url, out, opts.waitForSelector, { windowSize, colorScheme })
-    }
-    else {
-      await captureScreenshot(url, out, { windowSize, waitMs, colorScheme })
-    }
-    console.log(`Wrote ${out} (${url})`)
-    return 0
+    waitMs = parseWaitMs(opts.waitMs)
   } catch (err) {
-    console.error(err instanceof Error ? err.message : String(err))
+    console.error((err as Error).message)
     return 1
-  } finally {
-    await stopPreview(server.pid)
-    try {
-      rmSync(server.logPath)
-    } catch {
-      // best-effort cleanup
-    }
   }
+  mkdirSync(outDir, { recursive: true })
+  return withServer(route, dev, async (url) => {
+    for (const shot of reviewShots(outDir)) {
+      await capture(url, shot.out, waitMs, opts.waitForSelector, {
+        windowSize: shot.windowSize,
+        colorScheme: shot.scheme,
+        fullPage: true,
+        mobile: shot.mobile,
+      })
+    }
+  })
 }
 
 async function doStart(dev: boolean): Promise<number> {
@@ -353,17 +420,21 @@ async function doStop(args: string[]): Promise<number> {
 
 async function main(): Promise<number> {
   const [verb, ...rest] = process.argv.slice(2)
-  const dev = rest.includes('--dev')
-  const withoutDev = rest.filter((arg) => arg !== '--dev')
-  const waitFor = extractFlag(withoutDev, '--wait-for')
+  const dev = extractSwitch(rest, '--dev')
+  const full = extractSwitch(dev.rest, '--full')
+  const mobile = extractSwitch(full.rest, '--mobile')
+  const waitFor = extractFlag(mobile.rest, '--wait-for')
   const waitMs = extractFlag(waitFor.rest, '--wait')
   const scheme = extractFlag(waitMs.rest, '--scheme')
   const args = scheme.rest
+  const opts = { waitMs: waitMs.value, waitForSelector: waitFor.value, scheme: scheme.value, fullPage: full.on, mobile: mobile.on }
   switch (verb) {
     case 'shot':
-      return doShot(args, dev, { waitMs: waitMs.value, waitForSelector: waitFor.value, scheme: scheme.value })
+      return doShot(args, dev.on, opts)
+    case 'review':
+      return doReview(args, dev.on, opts)
     case 'start':
-      return doStart(dev)
+      return doStart(dev.on)
     case 'stop':
       return doStop(args)
     default:

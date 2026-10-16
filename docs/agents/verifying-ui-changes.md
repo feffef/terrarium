@@ -7,12 +7,20 @@ layout bug, or asserting a style took effect.
 
 ## Capture tooling
 
-- **One screenshot:** `pnpm exec tsx scripts/preview.ts shot <route> <out.png> [WxH] [--dev] [--scheme light|dark]`.
+- **The deployed site (terrarium.feffef.de) is blocked in cloud sessions:** the
+  proxy answers 403 on CONNECT. Review a local production build instead:
+  `pnpm build`, then `scripts/preview.ts start`, `shot` or `review`.
+- **One screenshot:** `pnpm exec tsx scripts/preview.ts shot <route> <out.png> [WxH] [--dev] [--scheme light|dark] [--full] [--mobile]`.
   It starts a server on its own port, takes the shot and stops the server, so
   there is nothing to `pkill` (issue #240). By default it serves the production
   build (run `pnpm build` first). `--dev` is faster, but its DevTools overlay
   badge can cover real content and look like a UI bug. `WxH` sets the window
-  size; a `#anchor` in `<route>` scrolls to an element.
+  size; a `#anchor` in `<route>` scrolls to an element. `--full` captures the
+  whole page; `--mobile` emulates a touch phone at 2x pixel density.
+- **A page review:** `scripts/preview.ts review <route> <out-dir> [--dev] [--wait <ms>] [--wait-for <selector>]`
+  writes four full-page shots from one server: `desktop-light.png` and
+  `desktop-dark.png` at 1280x900, `mobile-light.png` and `mobile-dark.png` at
+  390x844.
 - **A server that stays up:** `scripts/preview.ts start [--dev]` prints `PID=`
   and `URL=`; `scripts/preview.ts stop <pid>` stops it (always exits 0).
 - **A URL that is already serving:** `scripts/screenshot.ts <url> <out.png> [WxH]`

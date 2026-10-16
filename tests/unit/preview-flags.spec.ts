@@ -1,9 +1,11 @@
 // L3 — pure arg-parsing seam for the value-taking flags of `scripts/preview.ts shot`
-// and `scripts/screenshot.ts` (`--wait`, `--wait-for`, issue #364; `--scheme`).
+// and `scripts/screenshot.ts` (`--wait`, `--wait-for`, issue #364; `--scheme`;
+// `--full`, `--mobile` and the `review` verb's shots, issue #2112).
 // Keeps the positional `<route> <out> [WxH]` parsing unaware of the flags, so
 // this is where the extraction contract is pinned.
 import { describe, expect, it } from 'vitest'
-import { extractFlag, parseScheme } from '../../scripts/screenshot.ts'
+import { extractFlag, extractSwitch, parseScheme } from '../../scripts/screenshot.ts'
+import { reviewShots } from '../../scripts/preview.ts'
 
 describe('extractFlag()', () => {
   it('pulls a flag and its value out, leaving the positionals', () => {
@@ -54,5 +56,26 @@ describe('parseScheme()', () => {
 
   it('throws a usage message for anything else', () => {
     expect(() => parseScheme('Dark')).toThrow('Invalid --scheme "Dark"')
+  })
+})
+
+describe('extractSwitch()', () => {
+  it('reports a present switch and removes it, keeping the positionals', () => {
+    expect(extractSwitch(['/r', '--full', 'out.png'], '--full')).toEqual({ on: true, rest: ['/r', 'out.png'] })
+  })
+
+  it('reports an absent switch and leaves the args unchanged', () => {
+    expect(extractSwitch(['/r', 'out.png', '390x844'], '--mobile')).toEqual({ on: false, rest: ['/r', 'out.png', '390x844'] })
+  })
+})
+
+describe('reviewShots()', () => {
+  it('plans four full-page shots: desktop and mobile, light and dark', () => {
+    expect(reviewShots('out')).toEqual([
+      { out: 'out/desktop-light.png', windowSize: '1280,900', scheme: 'light', mobile: false },
+      { out: 'out/desktop-dark.png', windowSize: '1280,900', scheme: 'dark', mobile: false },
+      { out: 'out/mobile-light.png', windowSize: '390,844', scheme: 'light', mobile: true },
+      { out: 'out/mobile-dark.png', windowSize: '390,844', scheme: 'dark', mobile: true },
+    ])
   })
 })
