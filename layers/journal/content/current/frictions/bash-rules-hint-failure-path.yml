@@ -7,6 +7,10 @@ surface: guard-or-hook
 status: fixed
 ref: "issue #1954 closed completed 2026-10-14T19:16Z: stale-session false alarm, fix PR #1946 holds"
 fixedOn: "2026-10-14"
+fixes:
+  - pr: 1946
+    date: "2026-10-14"
+    summary: "Made the Bash rules hint also run when a Bash call fails, such as a compound read."
 occurrences:
   - session: session_01NVG22rfEsjhW9zkcCco6W8
     date: "2026-10-14"

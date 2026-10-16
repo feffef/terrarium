@@ -6,6 +6,16 @@ cause: >-
 surface: safe
 status: tracked
 ref: "issue #1786 (reopened 2026-10-12; PR #1792 refuses (not read) only for Read-tool docs); closed #1482, #1542, #1723; PRs #1485, #1725"
+fixes:
+  - pr: 1485
+    date: "2026-09-29"
+    summary: "The read detector now counts doc reads via extensionless wildcards and 'git log -p'."
+  - pr: 1725
+    date: "2026-10-10"
+    summary: "The read detector stopped crediting docs that merely appeared quoted in GitHub or session-log output."
+  - pr: 1792
+    date: "2026-10-11"
+    summary: "Session logging now refuses '(not read)' for docs the Read tool opened, and shows where each read came from."
 occurrences:
   - session: session_01BXoQpiEuaGZJVRQB7XpsFi
     date: "2026-10-02"

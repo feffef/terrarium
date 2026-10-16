@@ -49,6 +49,17 @@ Its brief:
   `pnpm exec tsx scripts/prune-friction-ledger.ts --summary` (one line per entry;
   it flags a possible regression);
   open an entry file only for its evidence.
+- **Record each fix that merged** as a `fixes` entry on its cluster, oldest
+  first: `pr`, `date` (its UTC merge date) and a one-line `summary` of what the
+  PR changed, written from the PR's description, not the friction's. Count a PR
+  only if it changes the cause (not a ledger-only, tracking or session-log
+  one); add every partial fix, and give a `fixed` entry one dated its
+  `fixedOn`. `ref` often names an issue or commit, not the PR, and misses
+  earlier partial fixes: `gh api repos/feffef/terrarium/commits/<sha>/pulls`
+  maps a commit to its PR and `gh api repos/feffef/terrarium/pulls/<N>` gives
+  its body and `merged_at` (`gh pr view` is blocked); read the body, since a
+  batched doc PR's title names no cluster. This run's own PRs have no number
+  yet: the next run records them.
 - **Steer the budget at the unfixed tail.** A large share of the window's frictions are usually already resolved by a later in-window session or a merged fix. Screen those out fast as a §2 `drop` instead of re-deriving their history; save the deep archaeology for candidates with no in-window resolution.
 - **Read the window's session logs** via `pnpm exec tsx scripts/session-frictions.ts`
   (it prints where the window starts; bare `tsx` isn't on PATH). Large output goes to
@@ -165,7 +176,7 @@ subsumes).
 **Update the ledger every run, fixes or none.** It is the run's durable
 record. The ledger edit is:
 
-- the subagent's ledger changes (§1);
+- the subagent's ledger changes (§1), `fixes` included;
 - `status` and `ref` for what this run files, dispatches or escalates, with
   `fixedOn` on anything it marks `fixed`;
 - last, `pnpm exec tsx scripts/prune-friction-ledger.ts`, which drops every

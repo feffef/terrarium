@@ -7,6 +7,16 @@ surface: safe
 status: fixed
 fixedOn: "2026-10-12"
 ref: "PR #1588 (doc; regressed 2026-10-10); issue #1800 closed by PRs #1845, #1850 (gate:scoped caps Heavy tiers at 2 per container); clear-backlog §3 wave rule"
+fixes:
+  - pr: 1588
+    date: "2026-10-04"
+    summary: "Documented the limit on running several full check runs at once (small doc fixes batch)."
+  - pr: 1845
+    date: "2026-10-12"
+    summary: "The scoped check run now allows at most two heavy test runs at once per container."
+  - pr: 1850
+    date: "2026-10-12"
+    summary: "Skill-only changes no longer queue for a heavy-test slot."
 occurrences:
   - session: session_01548Bi1ZiGcknAp8CMLNMZB
     date: "2026-10-03"

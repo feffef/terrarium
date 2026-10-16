@@ -7,6 +7,13 @@ surface: safe
 status: fixed
 fixedOn: "2026-10-14"
 ref: "issue #1917 closed 2026-10-14T02:23Z by PR #1918; audit-skills output redirect in frictions-to-fixes §4, 2026-10-16"
+fixes:
+  - pr: 1918
+    date: "2026-10-14"
+    summary: "Shrank the survey's data reads: compact one-line-per-session output and a short summary of each ledger entry."
+  - pr: 2109
+    date: "2026-10-16"
+    summary: "The survey instructions now say to save the large skill-audit output to a file and read only one part."
 occurrences:
   - session: session_01GEqB5frKCNtJYAr9KaRxDo
     date: "2026-10-10"

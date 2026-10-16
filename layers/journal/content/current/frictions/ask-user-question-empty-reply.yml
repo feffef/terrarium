@@ -6,6 +6,10 @@ surface: "outside"
 status: "fixed"
 fixedOn: "2026-10-15"
 ref: "docs/agents/environment-caveats.md AskUserQuestion bullet"
+fixes:
+  - pr: 2030
+    date: "2026-10-15"
+    summary: "Documented that a 'user sent a message instead' result is not a failure; the text arrives next turn."
 occurrences:
   - session: "session_01JkzKjuQD4wH34MjxMjKHaX"
     date: "2026-10-14"

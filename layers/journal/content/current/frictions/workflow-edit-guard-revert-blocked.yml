@@ -6,6 +6,10 @@ surface: guard-or-hook
 status: fixed
 ref: "issue #1955 closed by PR #1976 (undo recipe in docs)"
 fixedOn: "2026-10-14"
+fixes:
+  - pr: 1976
+    date: "2026-10-14"
+    summary: "Documented how to drop a committed workflow-file edit with a rebase or soft reset, since revert is blocked."
 occurrences:
   - session: session_011xN2Zi67cjpCguuMiZbsJ6
     date: "2026-10-13"

@@ -7,6 +7,13 @@ surface: guard-or-hook
 status: fixed
 fixedOn: "2026-10-15"
 ref: "PR #2066 (merged): the owner accepts late reads (no deny guard; #1819 closed and not refiled), so the hint now says a late read that clears the call is not a Friction; regression of #1754/PR #1793"
+fixes:
+  - pr: 1793
+    date: "2026-10-11"
+    summary: "Added a hint pointing to the git and GitHub docs at a session's first matching call."
+  - pr: 2066
+    date: "2026-10-15"
+    summary: "Hint now says a late read that clears the call is not a Friction."
 occurrences:
   - session: session_01NyDGTR1fuP22hPo7XghCfz
     date: "2026-10-07"

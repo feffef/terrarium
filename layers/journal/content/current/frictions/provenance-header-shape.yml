@@ -7,6 +7,13 @@ surface: guard-or-hook
 status: fixed
 fixedOn: "2026-10-10"
 ref: "issues #1422, #1684; PR #1438; ADR-0017 amendment e76caa79"
+fixes:
+  - pr: 1438
+    date: "2026-09-27"
+    summary: "The guard's block message now says the header label is free text and to write 'Claude' if no model is named."
+  - pr: 1735
+    date: "2026-10-10"
+    summary: "The provenance rule now requires only the session link, not a model name, and its example label is 'Claude'."
 occurrences:
   - session: session_01BEQMve6mV2yNDTMmjiCAYL
     date: "2026-10-02"

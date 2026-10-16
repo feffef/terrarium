@@ -6,6 +6,10 @@ cause: >-
 surface: safe
 status: open
 ref: "PR #1821 (adds the rule)"
+fixes:
+  - pr: 1821
+    date: "2026-10-12"
+    summary: "Added a working rule to ask whether a change should exist and how big, before building it."
 occurrences:
   - session: session_01548Bi1ZiGcknAp8CMLNMZB
     date: "2026-10-03"

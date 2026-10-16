@@ -6,6 +6,13 @@ cause: >-
 surface: safe
 status: open
 ref: "issue #1778 closed; owner may cut the CLAUDE.md bullet via prune-trial"
+fixes:
+  - pr: 1775
+    date: "2026-10-11"
+    summary: "Added path-scoped rules and a Bash hint that loads a governed file's rules when read through Bash."
+  - pr: 1946
+    date: "2026-10-14"
+    summary: "Made the Bash rules hint also run when a Bash call fails, such as a compound read."
 occurrences:
   - session: session_01Mw8k3DVnAyVho8fcDofChZ
     date: "2026-10-10"

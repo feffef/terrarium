@@ -7,6 +7,16 @@ surface: safe
 status: fixed
 fixedOn: "2026-10-15"
 ref: "issues #2028, #2011 closed by PR #2060 (merged 2026-10-15T11:42Z: subagents give verdicts in the final reply; audit-docs pools findings from hand-backs); earlier PRs #1699, #1768"
+fixes:
+  - pr: 1699
+    date: "2026-10-09"
+    summary: "Documented that audit-docs reviewers write their findings to files, alongside naming the probe tools."
+  - pr: 1768
+    date: "2026-10-11"
+    summary: "Audit-docs reviewers now return their findings in their reply and the lead saves them."
+  - pr: 2060
+    date: "2026-10-15"
+    summary: "Every helper agent is asked for its verdicts in its final reply; audit-docs pools findings from hand-backs."
 occurrences:
   - session: session_01GxJXNFxh3SQh8q1nkReAxJ
     date: "2026-10-04"

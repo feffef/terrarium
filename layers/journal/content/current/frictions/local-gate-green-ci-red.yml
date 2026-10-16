@@ -7,6 +7,13 @@ surface: safe
 status: fixed
 fixedOn: "2026-10-12"
 ref: "PR #1483 (git-version caveat); issues #1817, #1818 closed by PR #1824 (merged 2026-10-12T15:28Z, two flaky tests fixed)"
+fixes:
+  - pr: 1483
+    date: "2026-09-29"
+    summary: "Documented that the container's git version can differ from CI's and affect test fixtures."
+  - pr: 1824
+    date: "2026-10-12"
+    summary: "Fixed two flaky tests (worktree check timing and a checkout test) that passed locally but failed in CI."
 occurrences:
   - session: session_014mna6dsd4t2Ui98gbs3jCF
     date: "2026-10-05"
