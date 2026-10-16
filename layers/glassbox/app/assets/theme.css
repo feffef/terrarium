@@ -1,7 +1,9 @@
 /* Glass Box's look, design 1b (issue #1989): frosted panes over a faint grid.
    A layer's CSS loads on every page, so every rule sits under `.gb`, and the
    faces (Instrument Sans, JetBrains Mono) get our own family names: the
-   Journal's mono stack names 'JetBrains Mono' and would pick up this file. */
+   Journal's mono stack names 'JetBrains Mono' and would pick up this file.
+   `.gb-tokens` carries the palette alone, without the page chrome, for the
+   Platform homepage's tile. */
 
 @font-face {
   font-family: 'Glass Box Sans';
@@ -17,7 +19,8 @@
   src: url('./fonts/jetbrains-mono-latin-400-normal.woff2') format('woff2');
 }
 
-.gb {
+.gb,
+.gb-tokens {
   --gb-bg: #e6edf0;
   --gb-grid: rgb(15 40 55 / 0.06);
   --gb-glow: rgb(255 255 255 / 0.7);
@@ -37,6 +40,8 @@
   --gb-code-bg: #f6f8fa;
   --gb-sans: 'Glass Box Sans', system-ui, sans-serif;
   --gb-mono: 'Glass Box Mono', ui-monospace, monospace;
+}
+.gb {
   /* The sticky bars and the menu panel: solid, since page text read through a
      frosted one. */
   --gb-bar: var(--gb-bg);
@@ -71,7 +76,8 @@
   -webkit-font-smoothing: antialiased;
 }
 @media (prefers-color-scheme: dark) {
-  .gb {
+  .gb,
+  .gb-tokens {
     --gb-bg: #0a1216;
     --gb-grid: rgb(255 255 255 / 0.035);
     --gb-glow: rgb(80 160 200 / 0.12);

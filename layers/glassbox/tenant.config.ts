@@ -1,5 +1,4 @@
-// Manifest for the Glass Box Tenant (layers/glassbox/GLOSSARY.md). No `kind`
-// on `pages`: the soft launch keeps Glass Box out of the Catalog (issue #1985).
+// Manifest for the Glass Box Tenant (layers/glassbox/GLOSSARY.md).
 import { z } from 'zod'
 import { defineTenant } from '../../shared/manifest'
 
@@ -9,6 +8,7 @@ export default defineTenant({
   collections: {
     pages: {
       type: 'page',
+      kind: 'page', // opt into the cross-Tenant #catalog (ADR-0025)
       source: '**/*.md',
       schema: z.object({
         title: z.string(),

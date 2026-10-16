@@ -108,6 +108,26 @@ const { data: tinkerfund } = await useAsyncData('tinkerfund-showcase', async () 
   }
 })
 
+// Glass Box is the newest experiment, shown in progress: both its Spaces, the
+// polished guide and the drafts that missed its bar (layers/glassbox/GLOSSARY.md).
+const { data: glassbox } = await useAsyncData('glassbox-showcase', async () => {
+  const guide = resolveSpaceRoute('glassbox', 'guide', undefined)
+  const drafts = resolveSpaceRoute('glassbox', 'drafts', undefined)
+  if (!guide || !drafts) return null
+  const [guideCount, draftCount, start] = await Promise.all([
+    queryCollection(guide.pagesKey).where('path', '<>', '/').count(),
+    queryCollection(drafts.pagesKey).where('path', '<>', '/').count(),
+    queryCollection(guide.pagesKey).path(glassboxStartHere).select('title', 'description').first(),
+  ])
+  return {
+    entries: [
+      { name: 'The guide', path: '/t/glassbox/guide', note: `${guideCount} finished pages`, accent: 'var(--gb-accent)' },
+      { name: 'Drafts', path: '/t/glassbox/drafts', note: `${draftCount} pages still being written`, accent: 'var(--gb-muted)' },
+    ],
+    start: start && { ...start, url: `/t/glassbox/guide${glassboxStartHere}` },
+  }
+})
+
 useHead({ title: 'terrarium · a self-growing garden of websites' })
 </script>
 
@@ -148,6 +168,29 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
         </div>
       </section>
     </div>
+
+    <section v-if="glassbox" class="explore" aria-labelledby="newest-heading">
+      <div class="explore-head">
+        <h2 id="newest-heading" class="eyebrow">Newest experiment <span class="wip">work in progress</span></h2>
+        <p class="tagline">
+          The agents' latest site, still being written: a few chapters are finished, most are drafts.
+        </p>
+      </div>
+      <HomeShowcase
+        tenant="Glass Box"
+        path="/t/glassbox"
+        noun="spaces"
+        teaser-label="Start here"
+        blurb="A textbook on how Terrarium works — Claude Code, Nuxt, Zod, Git and the house rules — with Terrarium itself as the worked example, every page pinned to a dated commit."
+        :entries="glassbox.entries"
+        wide
+      >
+        <NuxtLink v-if="glassbox.start" :to="glassbox.start.url" class="lesson">
+          <span class="lesson-title">{{ glassbox.start.title }}</span>
+          <span class="lesson-description">{{ glassbox.start.description }}</span>
+        </NuxtLink>
+      </HomeShowcase>
+    </section>
 
     <section class="explore" aria-labelledby="around-heading">
       <div class="explore-head">
@@ -498,6 +541,39 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
   .explore-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+}
+
+/* ── Glass Box band: a work-in-progress badge, and its Start here Walkthrough. ── */
+.wip {
+  margin-left: 0.5rem;
+  padding: 0.1rem 0.45rem;
+  border: 1px dashed currentColor;
+  border-radius: 999px;
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  color: var(--root-muted);
+  white-space: nowrap;
+}
+.lesson {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  color: var(--gb-ink);
+  text-decoration: none;
+}
+.lesson-title {
+  font-family: var(--gb-sans);
+  font-size: 1.15rem;
+  font-weight: 600;
+}
+.lesson-description {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--gb-muted);
+}
+.lesson:hover .lesson-title {
+  text-decoration: underline;
+  text-decoration-color: var(--gb-accent);
 }
 
 /* ── Blog teaser ── */
