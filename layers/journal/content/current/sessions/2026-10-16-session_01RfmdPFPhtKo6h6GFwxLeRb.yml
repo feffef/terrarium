@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01RfmdPFPhtKo6h6GFwxLeRb
 startedAt: 2026-10-16T13:20:56Z
-endedAt: 2026-10-16T13:31:52Z
+endedAt: 2026-10-16T13:35:36Z
 kind: autonomous
 goal: "Scheduled prune trial: judge open trials, prune one problem"
-status: in-review
-outcome: "PR #2153 opened: pr-workflow.md plain rewrite (-12), blog-post trial judged and deleted"
-summary: Scheduled /prune-trial run, no human prompt. Judged the blog-post step 12 trial (judgeable per the window script; only nit/minor Frictions, no regression issue) and deleted it. A search subagent ranked failed-prose rules; I chose the self-merge discipline in docs/agents/pr-workflow.md, already held by scripts/merge-pr.ts, and rewrote the doc plainly (116 to 104 lines), keeping step numbers and section names others cite. merge-pr.ts is Human-only so its header history was left. A Sonnet probe pinned to the post-prune SHA answered correctly; gate:scoped was green and code-review found no hard findings. The mass was small; the other two open trials were not yet judgeable. All work was agent-initiated under the scheduled prompt.
+status: completed
+outcome: "PR #2153 merged: pr-workflow.md plain rewrite (-12), blog-post trial judged and deleted"
+summary: Scheduled /prune-trial run, no human prompt. Judged the blog-post step 12 trial (judgeable per the window script; only nit/minor Frictions, no regression issue) and deleted it. A search subagent ranked failed-prose rules; I chose the self-merge discipline in docs/agents/pr-workflow.md, already held by scripts/merge-pr.ts, and rewrote the doc plainly (116 to 104 lines), keeping step numbers and section names others cite. merge-pr.ts is Human-only so its header history was left. A Sonnet probe pinned to the post-prune SHA answered correctly; gate:scoped was green and code-review found no hard findings. The mass was small; the other two open trials were not yet judgeable. PR merged after green CI. All work was agent-initiated under the scheduled prompt.
 prs:
   - "2153"
 docsRead:
@@ -72,12 +72,12 @@ frictions:
   - description: The code-review Spec subagent flagged the blog-post trial deletion as unsupported because its git log -S queries found no landing commit, though the window script showed it landed and was judgeable.
     solution: Tell review briefs to run prune-trial-window.ts rather than log -S.
     severity: nit
-durationSec: 655
+durationSec: 879
 models:
-  claude-sonnet-5-5: 65
+  claude-sonnet-5-5: 80
 toolCounts:
   Read: 6
-  Bash: 15
+  Bash: 18
   mcp__github__search_issues: 2
   Skill: 4
   Agent: 4
@@ -85,6 +85,10 @@ toolCounts:
   ToolSearch: 1
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - docs/agents/pr-workflow.md
 rulesLoaded:
