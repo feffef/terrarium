@@ -6,6 +6,7 @@
 // lookup logic instead of re-deriving it by hand each session.
 import { accessSync, constants, readdirSync, statSync } from 'node:fs'
 import { join } from 'node:path'
+import { chromium } from 'playwright-core'
 
 function existsAndExecutable(path: string): boolean {
   try {
@@ -90,4 +91,10 @@ export function resolveChromiumPath(): string {
     )
   }
   return chromium
+}
+
+/** Launch the pre-installed Chromium for a script; the caller closes it.
+ *  `extraArgs` go after the flags every launch needs in this sandbox. */
+export function launchChromium(extraArgs: string[] = []) {
+  return chromium.launch({ executablePath: resolveChromiumPath(), args: ['--no-sandbox', '--disable-gpu', ...extraArgs] })
 }

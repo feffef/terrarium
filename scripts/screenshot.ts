@@ -20,8 +20,8 @@
 // absolute path baked into the script.
 import { realpathSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
-import { chromium, type Page } from 'playwright-core'
-import { resolveChromiumPath } from './chromium-path'
+import type { Page } from 'playwright-core'
+import { launchChromium } from './chromium-path.ts'
 
 // A fixed pre-capture wait so client-only/async content (a dynamically-imported
 // mermaid diagram, a chart) has rendered before the shutter fires — a bare
@@ -97,12 +97,9 @@ export interface CaptureOptions {
  * the launch args and viewport handling stay single-homed.
  */
 async function withPage<T>(width: number, height: number, { colorScheme, mobile }: CaptureOptions, fn: (page: Page) => Promise<T>): Promise<T> {
-  const browser = await chromium.launch({
-    executablePath: resolveChromiumPath(),
-    // --hide-scrollbars: the raw-binary invocation this replaced always
-    // passed it (issue #575); keep captures scrollbar-free by default.
-    args: ['--no-sandbox', '--disable-gpu', '--hide-scrollbars'],
-  })
+  // --hide-scrollbars: the raw-binary invocation this replaced always
+  // passed it (issue #575); keep captures scrollbar-free by default.
+  const browser = await launchChromium(['--hide-scrollbars'])
   try {
     const device = mobile ? { isMobile: true, hasTouch: true, deviceScaleFactor: 2 } : {}
     const page = await browser.newPage({ viewport: { width, height }, colorScheme, ...device })

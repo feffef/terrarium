@@ -53,7 +53,7 @@ import {
   parseSize,
   type CaptureOptions,
   type ColorScheme,
-} from './screenshot'
+} from './screenshot.ts'
 
 const HOST = '127.0.0.1'
 const READY_TIMEOUT_MS = 45_000

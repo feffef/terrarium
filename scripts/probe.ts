@@ -18,9 +18,8 @@
 // Example:
 //   pnpm exec tsx scripts/probe.ts http://localhost:3000/t/journal/current \
 //     "getComputedStyle(document.querySelector('.foo')).color"
-import { chromium } from 'playwright-core'
-import { resolveChromiumPath } from './chromium-path'
-import { extractFlag, parseSize } from './screenshot'
+import { launchChromium } from './chromium-path.ts'
+import { extractFlag, parseSize } from './screenshot.ts'
 
 const DEFAULT_WAIT_MS = 300
 
@@ -31,10 +30,7 @@ const USAGE =
   `  --viewport WxH   page viewport size, e.g. 390x844; defaults to Playwright's 1280x720`
 
 async function evaluate(url: string, expression: string, waitMs: number, viewport?: { width: number; height: number }): Promise<unknown> {
-  const browser = await chromium.launch({
-    executablePath: resolveChromiumPath(),
-    args: ['--no-sandbox', '--disable-gpu'],
-  })
+  const browser = await launchChromium()
   try {
     const page = await browser.newPage({ viewport })
     await page.goto(url)

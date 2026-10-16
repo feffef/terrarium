@@ -17,8 +17,7 @@
 // diagram is drawn in its Tenant's font — see app/utils/mermaid.ts.
 import { existsSync, mkdirSync, readFileSync, unlinkSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
-import { chromium } from 'playwright-core'
-import { resolveChromiumPath } from './chromium-path.ts'
+import { launchChromium } from './chromium-path.ts'
 import { DIAGRAM_TOKENS, DIAGRAM_TOKEN_FALLBACKS, type MermaidFont } from '../app/utils/mermaid.ts'
 import {
   type Diagram,
@@ -164,10 +163,7 @@ async function main(): Promise<void> {
     })
     .join('')
 
-  const browser = await chromium.launch({
-    executablePath: resolveChromiumPath(),
-    args: ['--no-sandbox', '--disable-gpu'],
-  })
+  const browser = await launchChromium()
   const drift: string[] = []
   try {
     const page = await browser.newPage()
