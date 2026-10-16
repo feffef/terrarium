@@ -13,8 +13,12 @@ commit under review.
 
 - Scope `git log -S<string>` to `origin/main`, never `--all`. Divergent branch
   histories can make an old file look newly created.
-- Before resetting onto the merge-base, check it is not empty. Empty means the
-  checkout is an unrelated root, and the reset would destroy real history.
+- Session logs land on `main` mid-session (ADR-0009), so `origin/main` moves
+  under you. Diff with `origin/main...HEAD` (three dots), and squash with
+  `git reset --soft "$(git merge-base origin/main HEAD)"`, never onto
+  `origin/main` itself: that commit would delete the logs `main` gained. Check
+  the merge-base is not empty first: empty means the checkout is an unrelated
+  root, and the reset would destroy real history.
 - In a long session, re-fetch and rebase periodically, especially before
   landing a PR on a doc or list other sessions edit. Before starting work a
   Trusted user just directed, fetch that branch and read its latest commits:
