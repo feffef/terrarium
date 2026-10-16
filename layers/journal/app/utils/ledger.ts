@@ -11,6 +11,9 @@ const SEVERITY_RANK: Record<Severity, number> = { nit: 0, minor: 1, moderate: 2,
 export type FixState = 'fix landed' | 'likely fixed' | 'still recurring'
 export type LedgerState = FixState | 'open' | 'tracked' | 'on trial'
 
+/** Occurrences older than this many days are dropped (`prune-friction-ledger.ts`). */
+export const LEDGER_HORIZON_DAYS = 14
+
 /** The newest merged PRs the page lists, in the pill and the list alike. */
 export const LEDGER_MAX_PRS = 5
 

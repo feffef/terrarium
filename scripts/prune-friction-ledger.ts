@@ -15,15 +15,14 @@ import { readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import { isMap, isSeq, parse as parseYaml, parseDocument } from 'yaml'
-import { ledgerFixState } from '../layers/journal/app/utils/ledger.ts'
+import { LEDGER_HORIZON_DAYS, ledgerFixState } from '../layers/journal/app/utils/ledger.ts'
 import { LEDGER_DIR } from './session-frictions.ts'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
-const HORIZON_DAYS = 14
 
 /** The oldest occurrence date the horizon keeps. */
 export function horizonStart(today: string): string {
-  return new Date(Date.parse(`${today}T00:00:00Z`) - HORIZON_DAYS * 86_400_000).toISOString().slice(0, 10)
+  return new Date(Date.parse(`${today}T00:00:00Z`) - LEDGER_HORIZON_DAYS * 86_400_000).toISOString().slice(0, 10)
 }
 
 /** One ledger file pruned: its new text, or `null` when no occurrence is left.
