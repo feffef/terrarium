@@ -13,8 +13,15 @@ page describes `main` at `revision`, and work not yet merged can't be cited.
 If the integration branch already changes a file you cite, word the page so it
 stays true after that change lands (diff the file between `revision` and the
 integration tip).
-Frontmatter holds `title`, `description`, `revision` and `revisionDate` only;
-the page draws `title` as its heading, so the body has no h1.
+
+Set `publishedAt` to now (`date -u +%Y-%m-%dT%H:%M:%SZ`) when you write a page,
+move it to the guide, or change what it teaches; it puts the page on the
+Commons Timeline. Leave it as it is for a re-pin, a typo or a moved `lines`
+range.
+
+Frontmatter holds `title`, `description`, `revision`, `revisionDate` and
+`publishedAt` only; the page draws `title` as its heading, so the body has no
+h1.
 `title` is a short name and `description` one sentence a visitor reads before
 clicking, each within its cap in `lengths` in `layers/glassbox/page-checks.ts`.
 

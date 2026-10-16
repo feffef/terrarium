@@ -38,8 +38,11 @@ Terrarium applies them without reading the source.
   the guide. Walkthroughs sit in `walkthroughs/`. A two-digit filename prefix
   orders Lessons inside a folder; Subject order and names come from
   `glassboxSubjects` in `app/utils/subjects.ts`.
-- **Soft launch.** Online, but nothing on the Platform links to it yet, and
-  `pages` has no Collection kind, so it stays out of the Catalog.
+- **Shown in progress.** The Platform homepage gives Glass Box its own band
+  under the hero, guide and drafts both, labelled the newest experiment and
+  work in progress; when it's finished, the label changes and the band stays.
+  Its `pages` are in the Catalog, and reach the Commons Timeline only when they
+  teach something new (`publishedAt`: EVERY-PAGE.md's Pin).
 
 ## Glossary
 

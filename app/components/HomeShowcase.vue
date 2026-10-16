@@ -2,8 +2,8 @@
 // One Tenant's tile on the root index: header, that Tenant's rooms (the main way
 // in), then a teaser (the default slot, supplied by the page).
 // The Tenant's own global tokens tint the tile (each layer's theme.css registers
-// them on :root, or — Tinkerfund — on `.tf-tokens`, which the tile then
-// carries), so the tile tracks the Tenant's palette and light/dark pairs
+// them on :root, or — Tinkerfund, Glass Box — on `.tf-tokens` / `.gb-tokens`,
+// which the tile then carries), so the tile tracks the Tenant's palette and light/dark pairs
 // without copying a colour.
 const props = defineProps<{
   tenant: string
@@ -14,6 +14,8 @@ const props = defineProps<{
   /** `accent` is any CSS colour — including a `var()` reference to a Tenant's own token. */
   entries: { name: string; path: string; note?: string; accent: string }[]
   teaserLabel: string
+  /** Spans a whole row: the teaser sits beside the header and entries. */
+  wide?: boolean
 }>()
 
 const dress = props.path.split('/')[2]
@@ -26,7 +28,10 @@ const overflow = props.entries.length - listed.length
 </script>
 
 <template>
-  <article class="tile" :class="[`tile--${dress}`, { 'tf-tokens': dress === 'tinkerfund' }]">
+  <article
+    class="tile"
+    :class="[`tile--${dress}`, { 'tf-tokens': dress === 'tinkerfund', 'gb-tokens': dress === 'glassbox', 'tile--wide': wide }]"
+  >
     <span class="rail" aria-hidden="true">
       <span v-for="e in entries" :key="e.path" class="rail-seg" :style="{ background: e.accent }" />
     </span>
@@ -102,6 +107,12 @@ const overflow = props.entries.length - listed.length
   --tile-display: var(--midden-serif);
   --tile-panel: var(--midden-paper-2);
   --tile-panel-line: var(--midden-rule);
+}
+.tile--glassbox {
+  --tile-accent: var(--gb-accent);
+  --tile-display: var(--gb-sans);
+  --tile-panel: color-mix(in srgb, var(--gb-bg) 60%, var(--root-bg));
+  --tile-panel-line: var(--gb-line);
 }
 .tile--tinkerfund {
   --tile-accent: var(--tf-accent);
@@ -212,6 +223,25 @@ const overflow = props.entries.length - listed.length
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--tile-accent);
+}
+
+@media (min-width: 56.01rem) {
+  .tile--wide {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: auto auto 1fr;
+  }
+  .tile--wide .rail {
+    grid-column: 1 / -1;
+  }
+  .tile--wide .rooms {
+    padding-bottom: 1rem;
+  }
+  .tile--wide .teaser {
+    grid-column: 2;
+    grid-row: 2 / span 2;
+    margin-top: 0.8rem;
+  }
 }
 
 /* index.vue's own focus rule is scoped to its DOM and never reaches these links. */
