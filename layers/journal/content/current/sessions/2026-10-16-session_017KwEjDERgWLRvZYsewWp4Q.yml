@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_017KwEjDERgWLRvZYsewWp4Q
 startedAt: 2026-10-16T23:29:35Z
-endedAt: 2026-10-16T23:48:41Z
+endedAt: 2026-10-16T23:50:53Z
 kind: interactive
 goal: Stop the Stop hook's push nag for commits inherited from main
 status: completed
 outcome: "git-conventions now says to push a branch whose only unpushed commits are on main; PR #2188 merged by the user"
-summary: "The user asked, in chat, whether there was an easy way around the harness Stop hook asking to push commits that are already on main (the session log picked up when a branch is brought level with main). I read the harness script and the stop-hook-nag ledger cluster: the hook counts origin/<branch>..HEAD, and the advice merged earlier today (#2123) told agents \"no push is needed\", which keeps the nag going every turn. I proposed changing that line to \"push the branch\"; the user chose that option (human-instructed) and asked that the doc make clear only the session's branch is pushed, never main. They paused me mid-run to confirm no local work would go out, then green-lit tightening the wording and pushing. Review findings (say \"never main\" and \"never forced\", narrow \"the hook stops\" to that nag, say no PR follows, rename the section heading) were agent-applied. The user merged it."
+summary: "The user asked, in chat, whether there was an easy way around the harness Stop hook asking to push commits that are already on main (the session log picked up when a branch is brought level with main). I read the harness script and the stop-hook-nag ledger cluster: the hook counts origin/<branch>..HEAD, and the advice merged earlier today (#2123) told agents \"no push is needed\", which keeps the nag going every turn. I proposed changing that line to \"push the branch\"; the user chose that option (human-instructed) and asked that the doc make clear only the session's branch is pushed, never main. They paused me mid-run to confirm no local work would go out, then green-lit tightening the wording and pushing. Review findings (say \"never main\" and \"never forced\", narrow \"the hook stops\" to that nag, say no PR follows, rename the section heading) were agent-applied. The user merged it. After a /retro the user asked for a watch-list issue (#2190, needs-triage) covering misreadings to catch, the ledger fix entry, and the retro's review-cost and Spec-check ideas."
 prs:
   - "2188"
 docsRead:
@@ -25,6 +25,10 @@ docsRead:
   - path: .agents/skills/writing-for-agents/SKILL.md
     reason: "Standards subagent: its pruning and co-location points flagged duplication and the off-topic heading"
     useful: yes
+  - path: docs/agents/issue-tracker.md
+    reason: (no reason given)
+  - path: docs/agents/triage-labels.md
+    reason: (no reason given)
 skillsUsed:
   - name: code-review
     reason: Standards and Spec review of the doc change before first push
@@ -32,6 +36,10 @@ skillsUsed:
     reason: PR-open log
   - name: log-session
     reason: (no reason given)
+  - name: writing-for-agents
+    reason: (no reason given)
+  - name: retro
+    reason: (invoked as a slash command)
 frictions:
   - description: Skipped reading GLOSSARY-MAP.md and GLOSSARY.md at session start, as CLAUDE.md requires; no glossary term was at stake, so no visible impact.
     solution: A session-start hint that names the unread glossary would have reminded me.
@@ -48,15 +56,15 @@ frictions:
   - description: The Stop hook asked to push my own ungated doc commit while the user had asked me to wait.
     solution: Known harness-side stop-hook-nag; held the push until gate and review passed.
     severity: nit
-durationSec: 1145
+durationSec: 1277
 models:
-  claude-opus-5-5: 83
+  claude-opus-5-5: 98
 toolCounts:
-  Bash: 28
+  Bash: 31
   Edit: 3
-  Skill: 4
+  Skill: 5
   Agent: 2
-  ToolSearch: 1
+  ToolSearch: 2
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
   ReadNotifications: 1
@@ -64,6 +72,8 @@ toolCounts:
   mcp__claude-code-remote__send_later: 1
   mcp__claude-code-remote__unsubscribe_pr_activity: 1
   mcp__claude-code-remote__delete_trigger: 1
+  mcp__github__search_issues: 1
+  mcp__github__issue_write: 1
 filesEdited:
   - docs/agents/git-conventions.md
 rulesLoaded:
@@ -72,13 +82,14 @@ rulesLoaded:
   - .claude/rules/adr-0027.md
   - .claude/rules/adr-0029.md
   - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0022.md
 rulesGlobal:
   - .claude/rules/adr-0004.md
   - .claude/rules/adr-0009.md
   - .claude/rules/adr-0003.md
   - .claude/rules/adr-0017.md
 rulesLoadedBySubagents:
-  - .claude/rules/adr-0005.md
   - .claude/rules/adr-0021.md
 docsReadBySubagents:
   - .agents/skills/writing-for-agents/SKILL.md
