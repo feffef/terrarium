@@ -60,10 +60,10 @@ export function withRuleHash(ruleText: string, hash: string): string {
 /** About 4 characters a token, rounded to the nearest 100. */
 export const adrTokens = (text: string) => Math.max(100, Math.round(text.length / 400) * 100)
 
-const POINTER_SHAPE = 'Read `docs/adr/NNNN-<name>.md` before you change this decision, or when <case>.'
+const POINTER_SHAPE = 'Read `docs/adr/NNNN-<name>.md` to change it or review work it governs[, or <what else it answers>].'
 const ESTIMATE_RE = /^(Read `docs\/adr\/(\d{4})-[\w.-]+\.md`)(?: \(~\d+ tokens\))?/
-const POINTER_RE = new RegExp(`${ESTIMATE_RE.source} before you change this decision, or when \\S[^\\n]*\\.$`, 'm')
-const estimate = (tokens: number) => ` (~${tokens} tokens) before`
+const POINTER_RE = new RegExp(`${ESTIMATE_RE.source} to change it or review work it governs(?:, or \\S[^\\n]*)?\\.$`, 'm')
+const estimate = (tokens: number) => ` (~${tokens} tokens) to`
 
 export const withRuleTokens = (ruleText: string, tokens: number) =>
   ruleText.replace(POINTER_RE, (line) => line.replace(ESTIMATE_RE, `$1 (~${tokens} tokens)`))
