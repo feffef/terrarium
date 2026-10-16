@@ -64,7 +64,7 @@ useSeoMeta({ title: () => `${PAGE_TITLE} · journal/${space}` })
         <code>frictions-to-fixes</code> Skill keeps it current. Fixed clusters stay
         listed: what went wrong matters as much as what is still open. A cluster
         sits in the list where it ranks higher. Click a cluster (▸) to expand its
-        cause, sessions, logged frictions and merged PRs.
+        cause, merged PRs, sessions and logged frictions.
       </p>
 
       <template v-for="sec in sections" :key="sec.id">
@@ -89,6 +89,15 @@ useSeoMeta({ title: () => `${PAGE_TITLE} · journal/${space}` })
               </summary>
               <p class="cause">{{ e.cause }}</p>
               <p v-if="e.ref" class="ref-text"><strong>References:</strong> {{ e.ref }}</p>
+              <template v-if="e.fixes.length">
+                <h3 class="occ-h">Merged PRs to fix it</h3>
+                <p class="occ-intro">Newest first. Merged to fix it, which does not prove it worked.</p>
+                <ul class="sol">
+                  <li v-for="f in e.fixes" :key="f.pr">
+                    {{ f.summary }} <a :href="f.url">PR #{{ f.pr }}</a> <span class="fix-date">{{ f.date }}</span>
+                  </li>
+                </ul>
+              </template>
               <h3 class="occ-h">Occurrences</h3>
               <p class="occ-intro">Newest first: date (links to the session log) → the session's goal.</p>
               <ul class="occ">
@@ -108,15 +117,6 @@ useSeoMeta({ title: () => `${PAGE_TITLE} · journal/${space}` })
                     {{ r.description }}
                     <span class="proposed">→ {{ r.solution }}</span>
                     <NuxtLink :to="r.to" :aria-label="`Session log, ${r.date}`">{{ r.date }}</NuxtLink>
-                  </li>
-                </ul>
-              </template>
-              <template v-if="e.fixes.length">
-                <h3 class="occ-h">Merged PRs to fix it</h3>
-                <p class="occ-intro">Newest first. Merged to fix it, which does not prove it worked.</p>
-                <ul class="sol">
-                  <li v-for="f in e.fixes" :key="f.pr">
-                    {{ f.summary }} <a :href="f.url">PR #{{ f.pr }}</a> <span class="fix-date">{{ f.date }}</span>
                   </li>
                 </ul>
               </template>
