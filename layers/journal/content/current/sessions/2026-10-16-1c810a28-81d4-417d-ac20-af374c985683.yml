@@ -1,149 +1,114 @@
 schemaVersion: 1
 session: 1c810a28-81d4-417d-ac20-af374c985683
 startedAt: 2026-10-16T22:19:34Z
-endedAt: 2026-10-16T22:26:33Z
+endedAt: 2026-10-16T22:34:23Z
 kind: interactive
-goal: Let local sessions edit and push GitHub workflow files
+goal: Fix tinkerfund e2e tests that fail outside UTC
 status: in-review
-outcome: "PR #2177 (guard scoped to cloud sessions) waits for a human merge; PR #2179 (session id caveat) is green-gated but merge-pr.ts can't merge from a local session"
-summary: "The owner asked me to read issue #2174, then said \"fix\" (an explicit green-light for the build). The issue: the workflow-edit guard and the docs claimed no agent can push .github/workflows/, but only cloud sessions lack the workflow scope; a local session pushes with the owner's SSH key. I scoped the guard to sessions where CLAUDE_CODE_REMOTE_SESSION_ID is set (the signal the issue proposed) and rewrote ADR-0026, its rule, the environment caveat, the guard roster and the proposals README to match (PR #2177, Human-only). Agent-initiated: rewriting ADR-0026's rejected alternative, whose old reason (\"no part left that only a human can apply\") no longer holds for a local session; the PR flags it. The session started with every guard crashing on a stale TMPDIR, which needed a restart by the owner. Auto mode blocked the first commit as a security weakening; the owner left auto mode and said \"try again\". The local gate was red only on two Tinkerfund e2e tests the owner pointed me to as #2175. Review fixes were small. The owner questioned a cse_ test fixture and confirmed the shape from a cloud session, then asked (human-instructed) that the cse_ env value versus the session_ id claude.ai/code uses be documented in environment-caveats.md, noting there is no local session link: PR #2179. scripts/merge-pr.ts then refused #2179: its header regex accepts only session_<id>, but a local session's id is a raw UUID, so no verdict from a local session can ever pass. Left for the owner to merge or decide."
+outcome: "Diagnosed an app bug in tinkerfund's pinned clock; fix open as PR #2181"
+summary: "The user asked me to read issue #2175 and find a solution in a worktree, then said \"yes do it all\" to gate, review, PR and merge. I cut a fresh worktree off origin/main, reproduced both failures with TZ=Europe/Berlin, and read the rendered time elements: qa's pinned now came out as 10:00Z instead of 12:00Z. Cause: Nuxt Content stores a z.string().datetime() field as a zone-less DATETIME string, and tinkerfundNow's Date.parse read it as local time, so it is an app bug (also hitting browsers outside UTC on client navigation). The fix reads a zone-less value as UTC, plus a unit test that forces a non-UTC TZ so UTC-only CI would catch a regression. The Spec reviewer proposed the better-altitude fix of switching shop.now to the shared utcTimestamp; I tried it, and pnpm build failed because Nuxt's Vite builder externalizes shared/ in the server bundle and the config loader can't resolve the #shared alias, while layers/tinkerfund/schemas.ts is loaded both ways. I went back to the reader fix and recorded the dropped alternative in the PR. gate:scoped is green and the full e2e suite passed 141/141 under Berlin time."
 prs:
-  - "2177"
-  - "2179"
+  - "2181"
 docsRead:
   - path: GLOSSARY-MAP.md
-    reason: "session start: Tenant roster"
+    reason: session-start read; no term turned on it
     useful: partly
   - path: GLOSSARY.md
-    reason: "session start: Session, Human-only, Proposal terms"
+    reason: session-start read; Space and Tenant wording for the PR
     useful: partly
   - path: docs/agents/github-integration.md
-    reason: local CLI uses gh; reads and the PR went through gh
+    reason: local CLI uses gh; header format for writes
     useful: yes
   - path: docs/agents/git-conventions.md
-    reason: commit -F for backticks; check the trailer landed
+    reason: fetch before cutting the branch; amend only the tip commit; check the trailer
     useful: yes
   - path: docs/agents/pr-workflow.md
-    reason: gate:scoped and code-review before first push; check no PR exists
+    reason: gate then code-review before first push; verdict comment and merge-pr.ts
     useful: yes
-  - path: docs/agents/guards.md
-    reason: guard conventions and the roster row to scope
+  - path: shared/schemas/timestamp.ts
+    reason: the shared single home for zone-safe timestamps the Spec reviewer pointed to
     useful: yes
-  - path: docs/agents/environment-caveats.md
-    reason: the workflow caveat bullet to scope
-    useful: yes
-  - path: docs/adr/0026-gate-workflow-thin-shell.md
-    reason: the ADR to rewrite in place
-    useful: yes
-  - path: docs/proposals/README.md
-    reason: also claimed workflow edits always need a human
-    useful: yes
-  - path: .agents/skills/log-session/SKILL.md
-    reason: checked how the session id is documented (copy from commit template)
-    useful: partly
-  - path: docs/adr/0030-adrs-document-a-decision-not-its-history.md
-    reason: "Standards agent read it: confirmed the ADR-0026 rewrite was in place with no history"
-    useful: yes
+  - path: docs/agents/tenant-layers.md
+    reason: Standards subagent read it; it reported it covers CSS, overrides and routing, nothing for a clock fix
+    useful: no
   - path: /Users/feffef/Development/ai-playground/terrarium-2175/layers/tinkerfund/app/utils/clock.ts
     reason: (read before editing)
   - path: /Users/feffef/Development/ai-playground/terrarium-2175/layers/tinkerfund/tests/unit/clock.spec.ts
     reason: (read before editing)
+  - path: /Users/feffef/Development/ai-playground/terrarium-2175/layers/tinkerfund/schemas.ts
+    reason: (read before editing)
 skillsUsed:
   - name: code-review
-    reason: Standards and Spec review before the first push
+    reason: Standards and Spec agents; Spec found the utcTimestamp altitude question
   - name: close-session
-    reason: "PR #2177 opened"
+    reason: log at PR open
   - name: log-session
-    reason: this log
+    reason: author this log
 frictions:
-  - description: "Every guard hook crashed at session start: TMPDIR pointed at root's temp dir after a terminal suspend, so tsx failed with EACCES"
-    solution: Have guard-wrap.sh detect an unwritable TMPDIR and print the restart command instead of a generic guard fault
-    severity: blocker
-  - description: Auto mode's classifier blocked the git commit of a guard change (Security Weaken), and then even a cat of the gate log
-    solution: Expected for a guard-loosening change; the owner left auto mode. A doc note that guard edits need a human-attended, non-auto session would set expectations
-    severity: moderate
-  - description: Local gate:scoped went red on two Tinkerfund e2e tests that fail outside UTC (#2175), unrelated to the diff
-    solution: "Fix #2175, e.g. pin TZ=UTC for the e2e run"
+  - description: "Switching shop.now to the shared utcTimestamp broke pnpm build: Nuxt externalizes shared/ in the server bundle and #shared fails in config load"
+    solution: Note in shared/schemas/timestamp.ts that a layer schemas.ts the app imports at runtime can't import it, or give layers a way to share it
     severity: minor
-  - description: "Broke CLAUDE.md 'Verify before you state': adopted a reviewer's cse_ fixture from a code regex without checking the real value; the owner had to verify it in a cloud session"
-    solution: Document the cse_ env value and session_ URL id in one home, so neither agent nor reviewer has to infer it
-    severity: minor
-  - description: CLAUDE.md 'Stay on the branch your session started on' has no case for a start branch whose PR already merged; I cut a new branch
-    solution: "Add the merged-branch case to that line: cut a fresh branch from origin/main"
+  - description: Cut a new branch in a worktree instead of staying on the session's start branch claude/2174-local-workflow-edits
+    solution: "Justified: the user asked for a worktree and the start branch was unrelated work; CLAUDE.md could name the worktree case"
     severity: nit
-  - description: ADR-0017's header says session_<id>, but a local session only has a raw UUID; the rule doesn't say which to use
-    solution: State in ADR-0017's home which id a local session uses in the header
-    severity: minor
-  - description: zsh treated echo ===== as a command lookup, so a chained read stopped partway
-    solution: Use dashes for separators in zsh
+  - description: Dispatched two review subagents that ran read-only git diff in a worktree without loading dispatch-subagents first
+    solution: Load dispatch-subagents whenever a brief names a worktree, even for read-only git
     severity: nit
-  - description: "Skipped ADR-0003's subscribe-to-PR-activity step: no subscription tool in a local CLI session"
-    solution: Say in pr-workflow.md what a local session does instead (poll with gh pr checks)
-    severity: minor
-  - description: "merge-pr.ts refused PR #2179 from a local session: PROVENANCE_HEADER only matches session_<id>, but a local session's resolved id is a raw UUID, so no verdict can match"
-    solution: Let provenance-header.ts accept a raw UUID id (or have merge-pr compare normalized ids) so a local session can post a verdict that counts
-    severity: moderate
-  - description: An untracked .archify/ folder counted as a changed non-inert path, so gate:scoped ran the full gate on a docs-only diff
-    solution: Have gate:scoped ignore untracked files, or gitignore .archify/
-    severity: minor
-durationSec: 419
+durationSec: 889
 models:
-  claude-opus-5-5: 72
+  claude-opus-5-5: 139
 toolCounts:
-  Bash: 34
-  Read: 4
-  Edit: 8
-  Skill: 1
+  Bash: 60
+  Read: 5
+  Edit: 14
+  Skill: 3
   Agent: 2
+  Write: 2
 filesEdited:
   - /Users/feffef/Development/ai-playground/terrarium-2175/layers/tinkerfund/app/utils/clock.ts
   - /Users/feffef/Development/ai-playground/terrarium-2175/layers/tinkerfund/tests/unit/clock.spec.ts
+  - /Users/feffef/Development/ai-playground/terrarium-2175/layers/tinkerfund/schemas.ts
 rulesLoaded:
   - .claude/rules/adr-0021.md
   - .claude/rules/adr-0027.md
   - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0004-human-merge.md
 rulesGlobal:
   - .claude/rules/adr-0004.md
   - .claude/rules/adr-0009.md
   - .claude/rules/adr-0003.md
   - .claude/rules/adr-0017.md
+docsReadBySubagents:
+  - docs/agents/tenant-layers.md
 ruleVerdicts:
-  - path: .claude/rules/adr-0026.md
-    reason: Its claim was the thing to change; I read the full ADR because I had to rewrite it
-    useful: yes
-  - path: .claude/rules/adr-0004-human-merge.md
-    reason: Confirmed the guard, ADR and rule are Human-only, so the PR says it waits for a human merge
-    useful: yes
-  - path: .claude/rules/adr-0030.md
-    reason: Made me rewrite ADR-0026 in place with no history and update its rule in the same PR; summary was enough
-    useful: yes
   - path: .claude/rules/adr-0004.md
-    reason: Made me run gate:scoped and code-review before pushing; summary was enough
+    reason: Made me run gate:scoped and code-review before the first push and confirmed I may self-merge; summary was enough, full ADR not opened
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Told me to log at PR open and again at merge; summary was enough
     useful: yes
   - path: .claude/rules/adr-0003.md
-    reason: Opened the PR right after the push; could not subscribe to PR activity locally
-    useful: partly
-  - path: .claude/rules/adr-0017.md
-    reason: Header on the PR body; it says session_<id> but a local session only has a raw UUID, which I used
-    useful: partly
-  - path: .claude/rules/adr-0009.md
-    reason: Told me to log at PR open; summary was enough
+    reason: Told me to open the PR right after pushing and keep working it to merge; a bug fix the owner asked for needs no further approval
     useful: yes
-  - path: .claude/rules/guards.md
-    reason: Only points to docs/agents/guards.md, which I read anyway
-    useful: partly
-  - path: .claude/rules/adr-0029.md
-    reason: Loaded on editing the rule; confirmed the summary decides nothing the ADR doesn't
-    useful: partly
-  - path: .claude/rules/adr-0027.md
-    reason: Loaded on a guard edit; no prune trial covered this text
-    useful: no
-  - path: .claude/rules/adr-0005.md
-    reason: Loaded on reading the log-session Skill; not about this task
-    useful: no
+  - path: .claude/rules/adr-0017.md
+    reason: Gave the PR body header form, and its update says a local session uses its raw UUID; summary was enough
+    useful: yes
   - path: .claude/rules/adr-0021.md
-    reason: Both review agents loaded it with GLOSSARY.md; glossary split was not at issue here
+    reason: Loaded by the glossary read; no glossary term changed in this fix
     useful: no
+  - path: .claude/rules/adr-0027.md
+    reason: Loaded by the glossary read; no instruction was cut or covered by an open trial
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: Loaded by the glossary read; no rule was added or moved
+    useful: no
+  - path: .claude/rules/adr-0030.md
+    reason: Loaded when I touched shared/schemas; no ADR was written or changed
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Its paths confirmed my final diff touches no Human-only file, so self-merge is allowed; only importing shared/schemas, not editing it
+    useful: yes
 subagents:
   - type: Explore
     task: "Standards review of #2175 fix"
@@ -153,5 +118,8 @@ gitBranch: claude/2174-local-workflow-edits
 entrypoint: cli
 cliVersion: 2.1.302
 learnings:
-  - CLAUDE_CODE_REMOTE_SESSION_ID in a cloud session is cse_<id>; claude.ai/code loads the session at session_<id>, the same id after the prefix (owner-verified 2026-10-17)
+  - Nuxt Content 3 stores a zod .datetime() field as a zone-less DATETIME string ('2026-06-01 12:00:00'); Date.parse reads that as local time
+  - Setting process.env.TZ at runtime in Node changes Date's local-zone interpretation in the same process, so a unit test can force a non-UTC zone
+ideas:
+  - "Run the gate's e2e step in CI under a non-UTC TZ (e.g. Pacific/Chatham, offset +12:45) so zone bugs like #2175 fail in CI instead of only on contributors' machines"
 landedBy: Stop
