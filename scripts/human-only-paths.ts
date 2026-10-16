@@ -5,7 +5,7 @@
 import { matchesGlob } from 'node:path'
 import { git } from './git-helpers.ts'
 import { HUMAN_MERGE_RULE } from './merge-pr.ts'
-import { rulePaths } from './validate-adr-rules.ts'
+import { rulePaths } from './lib/adr-rules.ts'
 import { isMain } from './lib/cli.ts'
 
 /** Throws when main's rule is missing or yields no globs: fail closed, like `humanMergeRefusal`. */

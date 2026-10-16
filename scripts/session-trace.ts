@@ -45,7 +45,7 @@ import {
   type NearMiss,
   type ShellCommand,
 } from './shell-reads.ts'
-import { ruleAdr, ruleBlockFiles } from './validate-adr-rules.ts'
+import { ruleAdr, ruleBlockFiles } from './lib/adr-rules.ts'
 import { isMain, root } from './lib/cli.ts'
 
 export { DERIVED_REASON, FOLDED_TRACE_FIELDS } from '../shared/trace-fields.ts'

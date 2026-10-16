@@ -34,7 +34,7 @@ import { globSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { parse as parseYaml } from 'yaml'
 import { expand, loadManifests, root, type ExpandedCollection } from '../shared/expand.ts'
-import { findTruncatedScalars } from './log-session.ts'
+import { findTruncatedScalars } from './session-logs.ts'
 import { isMain } from './lib/cli.ts'
 import { asRecord, frontmatterBlock, splitFrontmatter } from './lib/frontmatter.ts'
 
