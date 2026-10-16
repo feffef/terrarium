@@ -185,19 +185,20 @@ A PR is finished only when **merged** (by you) or **escalated/abandoned**, not a
 Done when every dispatched PR carries a posted review comment and is merged or
 escalated/abandoned.
 
-## 8. Close the ledger — one status-only PR
+## 8. Close the ledger
 
-Once the ledger PR (§5) has merged and every PR of §7 is merged, escalated or
-abandoned, branch from `origin/main` and commit status updates only:
+Once the ledger PR (§5) has merged and no fix PR of §7 waits on you (each is
+merged, abandoned or escalated), land **one combined** status-only PR from
+`origin/main`, as you landed the ledger PR:
 
-- for each PR you merged, a `fixes` entry (`pr`, its UTC merge date, a one-line
-  summary from its description), dropping `tracked`;
-- for each PR still open, its number in `ref`, staying `tracked`;
-- for each PR abandoned, `open` again.
+- a `fixes` entry (`pr`, its UTC merge date, a one-line summary from its
+  description) for each merged PR, dropping `tracked`;
+- `open` again for each abandoned one;
+- its PR number in `ref` for each escalated one, staying `tracked`.
 
-Open it as a PR to `main` and land it like the ledger PR. You keep watching each
-escalated PR (the ADR-0003 rule); when one merges or closes, land the same update
-for it the same way. Done when every update has merged.
+Then, as each escalated PR merges or closes (you keep watching it, the ADR-0003
+rule), land **one small** PR with that entry's update. Done when every update
+has merged.
 
 Log the session. Among its frictions, name each place this Skill or its briefs
 were confusing or contradicted themselves, and each step that was hard to
