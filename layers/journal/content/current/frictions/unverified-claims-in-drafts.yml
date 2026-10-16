@@ -14,167 +14,208 @@ occurrences:
   - session: session_0168r95gLDEqJ8JBEV6UuUbo
     date: "2026-10-03"
     severity: moderate
-    friction: 2
+    description: "My first draft added unsupported claims (nits blamed on human sessions, 'caught on a re-read', 'so rules and guards are tested'); only the fact-check caught them."
+    solution: "Verify every interpretive attribution against the logs before writing, not just the numbers."
   - session: session_01SWRyFbuNXxVWi47tGB8GX6
     date: "2026-10-03"
     severity: moderate
-    friction: 6
+    description: "Code review found five claims in my research note that the committed prototype could not back: a table row from a variant removed before aa86e131 was committed, 29 cases where the script holds 30, a wrong advisory failure cell, and two counts over logs presented as run output."
+    solution: "Commit the prototype first, then write the note from its printed output using the script's own config names as row labels; never retype a number from an earlier run."
   - session: session_018DwTn5rSUpmtMHwXBrWqGL
     date: "2026-10-04"
     severity: moderate
-    friction: 0
+    description: "Drafted a link with a made-up commit SHA in a candidate post; caught on my own re-read before anything shipped, but only because I re-read."
+    solution: "Never type a SHA; always paste from git rev-parse output. blog-post's citation reference could say so next to the 40-char rule."
   - session: session_01EE8wFRkAWLtXgzdcoceCto
     date: "2026-10-04"
     severity: moderate
-    friction: 0
+    description: "My survey said the probe PR left no recorded finding, but its session log recorded one; I had not read the session logs at survey time, so placement had to be reopened with the user after they had decided."
+    solution: "midden-survey step 3 should say to read the session log of each PR candidate before judging significance or suggesting a placement."
   - session: session_01NyDGTR1fuP22hPo7XghCfz
     date: "2026-10-07"
     severity: moderate
-    friction: 1
+    description: "I wrote unverified or false claims into CLAUDE.md ('main has no branch protection', 'CI runs the full gate on every PR'). A self-check and a reviewer caught them."
+    solution: "Apply verify-before-you-state to my own instruction text, not only to session reports"
   - session: 1f97b613-f529-4487-a7e9-1115a44b84c7
     date: "2026-10-08"
     severity: moderate
-    friction: 1
+    description: "The overview's first draft carried several unchecked simplifications: guards as 'code that blocks', audit-docs as 'docs vs code', 'Nitro runs the Vue app', and 'design' as the only difference between tenants. Each was easy to verify in the skill or guard docs but went unchecked until the maintainer's review."
+    solution: "Before handing over a plain-language summary, re-read the primary file behind each one-line description (SKILL.md, guards.md, the package source) and check the simplification still holds"
   - session: session_01S1WwkpNHDfbvKAf5T1afKq
     date: "2026-10-08"
     severity: moderate
-    friction: 6
+    description: "My first Part 2 rewrite had internal contradictions that all three cold checkers caught (multi-target steps, one file listed on two nodes, accent count, an over-complex feature set). The merge of 10 proposals wasn't self-checked."
+    solution: "After merging many proposals, run one adversarial consistency pass myself, or with one agent, before the cold check."
   - session: session_01YSGRZcurrkv9WYqPfnRH2t
     date: "2026-10-10"
     severity: moderate
-    friction: 2
+    description: "The reader judged step-12 replies from scratch drafts whose premises were not verified. Both finalists failed fact-check after about 4 extra subagent rounds, and the run ended with no reply."
+    solution: "Before sending reply drafts to the reader, check each draft's one load-bearing claim against its primary source. The Skill exempts reply drafts from full citation-checking, and that let both premises through."
   - session: session_01Tcn6x6mZizT14rJuQqYivt
     date: "2026-10-10"
     severity: minor
-    friction: 2
+    description: "Posted a PR verdict comment with approximate verdict counts (about 33 confirmed) without tallying, breaking verify-before-you-state; needed a correcting comment."
+    solution: "Tally from the verdict files before writing any count."
   - session: session_01Mw8k3DVnAyVho8fcDofChZ
     date: "2026-10-10"
     severity: minor
-    friction: 5
+    description: "My first drafts overstated several facts that the fact-check then caught. I read \"bot switched on\" off the config commit's author time instead of its merge, said \"both checks were there before\" without dating them, and wrote \"every saved change\" and \"the record holds none\"."
+    solution: "Date a config's effect from its merge to main, not its commit. Check \"every\", \"both\" and \"none\" claims against a listing before writing them. The Skill's two-reviewer loop worked as intended."
   - session: session_01LARTWkGx5vBwRwsMrdftPD
     date: "2026-10-11"
     severity: minor
-    friction: 1
+    description: "Broke 'Verify before you state': declared Bash reads never load rules from one chained-command test; PR #1741 evidence and controlled tests showed lone single-file reads do."
+    solution: "Vary one factor per test before generalising; check prior evidence (PR #1741 Checks) first."
   - session: session_01CasnQoauTyLNUxd74agJsP
     date: "2026-10-11"
     severity: minor
-    friction: 5
+    description: "Triage subagent for #1752 posted a wrong claim then edited its comment, and the #1770 agent's Verified section overstated that referenced issues were read; I relayed both without checking the comments."
+    solution: "Verify each triage comment's Verified section against the issue before reporting, or brief agents to read every cited issue."
   - session: session_0177ZCpnHq4Sw5wicAEmriDh
     date: "2026-10-11"
     severity: nit
-    friction: 2
+    description: "Fact-check subagent found the first draft's description overbroad; two drafted counts also disagreed with the PR body (CLAUDE.md lines, commit counts), costing re-derivation."
+    solution: "Re-derive counts from git before drafting, as the Skill says."
   - session: session_01V3bxJaTSH8AWjrtSoBhNxK
     date: "2026-10-11"
     severity: moderate
-    friction: 3
+    description: "Broke CLAUDE.md 'Verify before you state' — my first answer relayed subagent counts (about 35 fixes, about 210 papercut frictions, three guards removed) without checking each; the ADR-0017 change was an amendment, not a guard removal."
+    solution: "Mark subagent-derived counts as approximate or recount them from the extract before stating them."
   - session: session_018i6d2BQPkf9cq6jSEqCNSX
     date: "2026-10-10"
     severity: minor
-    friction: 2
+    description: "My #868 resolution and #1730 brief called the Journal leak test ADR-0004 L2; it is L3 (isolation invariant). A reviewer caught it, costing one fix round and a correction comment"
+    solution: "Verify level/term definitions against the ADR before stating them in a brief"
   - session: session_01LuXuScHA2QsY4RXipy9nAt
     date: "2026-10-11"
     severity: minor
-    friction: 1
+    description: "The survey subagent stated that PR 1775 rewrote scripts/shell-reads.ts and called it a regression of that PR; git log showed no such change. It also admitted it never read the mechanism source."
+    solution: "The Skill brief already asks to read mechanism source for detector claims; make the survey brief require citing the commit for any 'PR X changed file Y' claim."
   - session: session_01BLrfuHbMMEmjZZ7STpe1AN
     date: "2026-10-11"
     severity: nit
-    friction: 5
+    description: "Two facts in my briefs were wrong: the content DB path (`.output/server/contents.sqlite`, actually `.data/content/contents.sqlite`) copied from an earlier agent's claim, and a stale unit-file count (99, actually 101); the agents caught both."
+    solution: "Re-check a subagent's factual claim against the source before pasting it into the next brief, as dispatch-subagents already says."
   - session: session_016iE4LmQUcg6ap5YMxJg4oC
     date: "2026-10-12"
     severity: moderate
-    friction: 0
+    description: "Misdiagnosed the warnings as a Vite chunk-size warning from a local build and truncated CI log, wasting a build, a question to the user and a revert."
+    solution: "Read the gate check-run annotations (lint warnings) first; the user's PrisePre typo and truncated log tail invited the guess."
   - session: session_01VGLAakRJNm67PuNHpgbEc7
     date: "2026-10-12"
     severity: moderate
-    friction: 3
+    description: "My first 'loaded' prefix regex was written without checking the real data; about 70 reasons read 'loaded at start;' and would have rendered as broken fragments."
+    solution: "Grep landed logs for the actual variants before writing a text transform; the spec reviewer caught it."
   - session: session_01LtYEkEsZ2cxf4uRFJvq4n9
     date: "2026-10-12"
     severity: minor
-    friction: 4
+    description: "Ledger occurrences were appended from the subagent's tally and I reviewed only the diff, not each session id against the logs, so the counts rest on one agent's reading."
+    solution: "Have the survey write the ledger changes via a script reading the logs, so the PR reviewer can re-run it."
   - session: session_01596W4GVWwvN1kfaHsV4ax8
     date: "2026-10-12"
     severity: nit
-    friction: 1
+    description: "I relayed subagent claims (for example the #1818 cause) without re-checking them against the source myself."
+    solution: "Spot-check one claim per hand-back, or have briefs require cited lines."
   - session: session_01DtK8w6aJ3361uPK73VAxhi
     date: "2026-10-12"
     severity: moderate
-    friction: 3
+    description: "The first draft stated that a PR built from a Public issue waits for a human merge, but merge-pr.ts only refuses Public-authored and fork PRs; the Standards reviewer caught it."
+    solution: "Check a stated enforcement claim against the enforcing script before writing it into a Skill."
   - session: session_01La82mxqduxHnRS9jRfNHmU
     date: "2026-10-12"
     severity: minor
-    friction: 3
+    description: "My triage brief said the 16:43Z resets undid dry-run-1 answers, but only 4 issues had resets; 8 subagents each flagged the ambiguity"
+    solution: "Check which issues carry a reset before writing a shared brief; the Skill could say how a prior run's answers bind"
   - session: session_017NBxJhtBSd9AoCwTzsg6pM
     date: "2026-10-12"
     severity: moderate
-    friction: 5
+    description: "#1834's premise (a missing commit trailer) came from an earlier subagent's guess relayed unchecked; it cost a triage plus an investigation."
+    solution: "Verify subagent causal claims against the transcript before filing them as issues (CLAUDE.md 'Verify before you state')."
   - session: session_017XWy7odnhW5S5AEuekatR8
     date: "2026-10-13"
     severity: moderate
-    friction: 1
+    description: "I stated the workflow concurrency cap as fixed and unconfigurable before checking the docs; the owner had to ask, and an env var sets it."
+    solution: "Verify a harness limit against the current docs before calling it a constraint (CLAUDE.md Verify before you state)."
   - session: session_016gu9e44jjfAEFMo3CBxzUQ
     date: "2026-10-13"
     severity: nit
-    friction: 1
+    description: "I pushed on the build workflow's report of a passing gate:scoped. I checked its commits and diff, but did not re-run the gate myself."
+    solution: "clear-backlog §3 could say whether the orchestrator should re-run gate:scoped or trust the workflow's gatePassed."
   - session: session_01AnHXyvzXukt6izZTYs3YMr
     date: "2026-10-13"
     severity: nit
-    friction: 1
+    description: "First PR body stated 49 CONFIRMED verdicts without summing the three checker reports; the true count was 45, corrected by an edit."
+    solution: "Sum counts from the saved checker files before writing them anywhere (CLAUDE.md Verify before you state)."
   - session: session_01QvnVVurQdA4cvYSZToBvud
     date: "2026-10-13"
     severity: minor
-    friction: 4
+    description: "PR #1908 body first stated verdict counts 22/22/5 without tallying every checker item; corrected to 21/22/4 after counting"
+    solution: "Tally verdicts from the checker files before writing a count (CLAUDE.md: a count is a fact only after you read every item)"
   - session: session_01743kiGL2igSyAHJ77heWSV
     date: "2026-10-13"
     severity: minor
-    friction: 2
+    description: "First log pass falsely claimed the ADR-0004 summary rule held the minor/patch allowance; the user caught it"
+    solution: "Write ruleVerdicts from what the rule actually says, not from what I recall concluding"
   - session: session_011xN2Zi67cjpCguuMiZbsJ6
     date: "2026-10-13"
     severity: minor
-    friction: 2
+    description: "Stated 6,600 old ADR lines in the PR body without counting; the real total was 3,768. Broke CLAUDE.md 'Verify before you state'."
+    solution: "Count before writing any number into a PR body."
   - session: session_01Dfw9sJon2e4UsaVoiCLhSJ
     date: "2026-10-14"
     severity: minor
-    friction: 1
+    description: "First draft's closing claim was wrong (a human does the merging); the fact-check caught it, but I had not read issue 1889's comments."
+    solution: "Read an issue's comments, not just its body, before claiming the state of an open decision."
   - session: session_01XJ9iR9EbRT2iV7afhytND8
     date: "2026-10-14"
     severity: minor
-    friction: 4
+    description: "Labelled the ADR-0030 rewrite as PR #1909 from a merge-commit list without checking its diff; it was #1898, and #1909 only changed hash lines"
+    solution: "Check a merge's diff with git show --stat before naming it as the cause of a cohort split"
   - session: session_015dUGRadEQP1bvv6KytKLXT
     date: "2026-10-14"
     severity: minor
-    friction: 4
+    description: "The 1940 build agent reported gatePassed while saying it had not rerun the gate after its last round, and it could not do a live hook check in-session"
+    solution: "Have clear-backlog-build re-run gate:scoped on the final commit before it returns ready-to-push"
   - session: session_01675UWGBfCMALkurUr58cxM
     date: "2026-10-14"
     severity: moderate
-    friction: 2
+    description: "I told the user only domain-modeling changed after diffing one skill; nine other pack skills also carried the rename, costing two extra decision rounds."
+    solution: "Grep the whole skills diff for renamed terms before reporting scope."
   - session: session_01BdQnbVQmdfrD1PPyZTnL9w
     date: "2026-10-14"
     severity: minor
   - session: session_01Qp5NojwQhExSmToPJtnQNV
     date: "2026-10-14"
     severity: minor
-    friction: 3
+    description: "A closed decision ticket (#1971) chose MDC syntax `:source` without checking it against MDC; source is an HTML tag so the component would never render. Caught here only by chance"
+    solution: "Decision tickets that pick an MDC component name should check it against MDC's html-tags-list and the global component namespace"
   - session: session_01RBVYHX1FsYogHEgzgyRV6P
     date: "2026-10-14"
     severity: nit
-    friction: 3
+    description: "Told the owner the sidebar fits ADR-0028 from the spec's summary without reading ADR-0028 in full"
+    solution: "Grep and read binding ADRs before giving an opinion, as CLAUDE.md asks"
   - session: session_01NoQubvnMfCpcq9nkicNsDq
     date: "2026-10-15"
     severity: minor
-    friction: 4
+    description: "First Karen draft asserted rule durations, timing and an ellipsised quote I had not derived from sources; the fact-check found eight wrong or overstated rows and forced a rewrite."
+    solution: "Pin the exact commits and timestamps in scratch notes before drafting a claim about how long a rule said something."
   - session: session_012VTgtrUEy7cPVTN5sMriXj
     date: "2026-10-15"
     severity: nit
-    friction: 4
+    description: "Filed #2076 with a guessed spec path (tests/e2e/ instead of layers/tinkerfund/tests/e2e/) before checking it; corrected the body right after."
+    solution: "Verify a path with git ls-files before it goes into an issue body (CLAUDE.md Verify before you state)."
   - session: session_01NqN7omu3o4kxoGeQzzSXhK
     date: "2026-10-15"
     severity: minor
-    friction: 2
+    description: "Build agents' decisions contradicted themselves: 2071 said the 22.13 claim was both verified and unverified; 2069 said expand-transition was left excluded, then kept re-included"
+    solution: "Have the fix agent rewrite decisions whole each round instead of appending, so stale lines drop out"
   - session: session_01E2zbWEQmuUrEhWvbzNpBba
     date: "2026-10-15"
     severity: minor
-    friction: 5
+    description: "The harvest's rater panel twice rated already-done or moot items highly (#96 stale gate, #70 guards that no longer exist); only my own code check caught it."
+    solution: "Brief raters to verify each premise in code before scoring."
   - session: session_01KVh6e6JUAssZvPRbuN5YDr
     date: "2026-10-15"
     severity: minor
-    friction: 3
+    description: "Told the implementer not to edit asking-for-a-change.md because PR 2099 was open, repeating the Fable agent's claim without checking; 2099 was already merged and the page needed the edit."
+    solution: "Check a PR's state with pull_request_read before putting it in a brief."

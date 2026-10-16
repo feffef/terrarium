@@ -9,12 +9,15 @@ occurrences:
   - session: a1af4e46-8293-4f33-bf41-c956bd7f6306
     date: "2026-10-03"
     severity: moderate
-    friction: 1
+    description: "Local pnpm typecheck fails in layers/atlas FoodWeb.vue:247 and RelationsWeb.vue:245 (string|null vs string|undefined). CI passes on the same commit and lockfile; regenerating .nuxt did not help."
+    solution: "Diagnose the local-vs-CI typecheck divergence (node 22.16 locally?) and record it in docs/agents/environment-caveats.md if environmental."
   - session: session_01DtFw6GBViQZp25jvQV7gEF
     date: "2026-10-03"
     severity: moderate
-    friction: 0
+    description: "pnpm typecheck failed with 'Cannot find module #shared/session-url' after the alias switch; it looked like nuxt typecheck and the stale-.nuxt caveat, but came from tsc -p tsconfig.node.json, which maps #routing and #catalog but not #shared"
+    solution: "Added the #shared path there (in PR 1548). Better: derive tsconfig.node.json paths from the Nuxt-generated aliases so a root alias can never be missing from the node program"
   - session: session_01WhVjfShqpBDDjMPkTrpvZH
     date: "2026-10-03"
     severity: moderate
-    friction: 0
+    description: "Dev server kept serving the old history page after editing history.md, even across dev-server restarts; stale Nitro route cache in .nuxt/cache/nitro/routes"
+    solution: "rm -rf .nuxt/cache/nitro/routes before each capture; document this in docs/agents/verifying-ui-changes.md or have preview.ts clear it"

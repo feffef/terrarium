@@ -36,9 +36,9 @@ Its brief:
   frictions with a common cause, carrying its `status`, `surface` and every
   `occurrence` so far. Append each friction in the window that matches an
   entry, whatever its severity; a session counts once, at its highest
-  severity. Each occurrence names its `friction`: that friction's 0-based position in the
-  session's `frictions` (the survey prints them in order), whose severity is the
-  occurrence's. A new entry needs a cause seen twice, or one `moderate`, `major` or
+  severity. Each occurrence copies that friction's `description` and `solution` from
+  the session log (the compact survey omits `solution`: read the log's `file`),
+  so a later run can re-cluster from the ledger alone. A new entry needs a cause seen twice, or one `moderate`, `major` or
   `blocker`. Its `summary` is one plain sentence a visitor can read; its
   `cause` names the root mechanism and the signals that identify a new
   occurrence (error text, file or tool, trigger), so a later run can match it.
@@ -51,6 +51,9 @@ Its brief:
   `pnpm exec tsx scripts/prune-friction-ledger.ts --summary` (one line per entry;
   it flags a possible regression);
   open an entry file only for its evidence.
+- **Re-cluster when the ledger says so.** The stored texts show a broad entry
+  that holds several causes, or two entries with one: split or merge them,
+  moving the occurrences, without reopening the logs.
 - **Record each PR that merged to fix a cluster** as a `fixes` entry on its cluster, oldest
   first: `pr`, `date` (its UTC merge date) and a one-line `summary` of what the
   PR changed, written from the PR's description, not the friction's. Count a PR

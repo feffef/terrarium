@@ -30,8 +30,6 @@ export interface LedgerEntry {
   reports: { description: string; solution: string; date: string; to: string }[]
 }
 
-/** The Frictions the clusters cite, by session id, then position in the log. */
-export type SessionFrictions = Record<string, Record<number, { description: string; solution: string }>>
 
 /** The severity levels the `severe` list covers: the highest that exist and the next. */
 const SEVERE_LEVELS = 2
@@ -48,7 +46,6 @@ export function ledgerPanels(
   ownSessions: Set<string>,
   otherSpace: string,
   goals: Record<string, string> = {},
-  sessionFrictions: SessionFrictions = {},
 ): { severe: LedgerEntry[]; frequent: LedgerEntry[] } {
   const entries = clusters.map((c): LedgerEntry => {
     const worst = c.occurrences.reduce<Severity>((w, o) => (SEVERITY_RANK[o.severity] > SEVERITY_RANK[w] ? o.severity : w), 'nit')
@@ -57,7 +54,7 @@ export function ledgerPanels(
         date: o.date,
         severity: o.severity,
         goal: goals[o.session],
-        report: o.friction === undefined ? undefined : sessionFrictions[o.session]?.[o.friction],
+        report: o.description === undefined || o.solution === undefined ? undefined : { description: o.description, solution: o.solution },
         to: `/t/journal/${ownSessions.has(o.session) ? space : otherSpace}#${sessionAnchor(o.session)}`,
       }))
       .sort((a, b) => b.date.localeCompare(a.date))

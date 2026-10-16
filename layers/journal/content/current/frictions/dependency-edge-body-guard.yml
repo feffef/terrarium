@@ -14,8 +14,10 @@ occurrences:
   - session: "session_01BdQnbVQmdfrD1PPyZTnL9w"
     date: "2026-10-14"
     severity: "nit"
-    friction: 1
+    description: "Wired blocking edges with gh api --input stdin; the provenance guard blocked it even though the body was only an issue id."
+    solution: "Follow issue-tracker.md's -F issue_id= form from the start; it passed the guard."
   - session: "session_01Dcufz27EyPsKy6sYafpKRg"
     date: "2026-10-14"
     severity: "minor"
-    friction: 0
+    description: "The ADR-0017 guard blocked a curl loop that built dependency-edge bodies from variables, so I had to rewrite it as 44 literal curl calls"
+    solution: "Add an MCP tool or a small repo script for issue dependencies, so blocking edges need no hand-written curl"

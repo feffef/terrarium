@@ -9,4 +9,5 @@ occurrences:
   - session: session_011xN2Zi67cjpCguuMiZbsJ6
     date: "2026-10-13"
     severity: moderate
-    friction: 9
+    description: "Parallel rewrite agents restated the same fact in several ADRs (merge-pr gap, generated-config alternative); it took a separate consistency pass to find and fix."
+    solution: "Rewrite in dependency order or add a mandatory cross-batch dedupe step to the rewrite guide."

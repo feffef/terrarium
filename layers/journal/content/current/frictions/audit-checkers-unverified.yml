@@ -10,8 +10,10 @@ occurrences:
   - session: session_01HSTMSUy4WCqqRtVVakyZm3
     date: "2026-10-04"
     severity: moderate
-    friction: 3
+    description: "audit-skills reopened #1515 and rewrote the visitor-loop Inventory role on a timing claim it never checked (fix merged 29 min after the run started), repeating #1479's error."
+    solution: "PR #1591 fixes the grader; the #1515 comment and Inventory entry still need a correction, left to the owner's call."
   - session: session_01Jej4qtE56V9dtLCNobJ39K
     date: "2026-10-06"
     severity: moderate
-    friction: 7
+    description: "A checker confirmed a doc 'fix' from a tool's own description (list_triggers lacks last_fired_at) without calling the tool; real output has the field, so the original doc was right. Owner chose to defer a Skill rule."
+    solution: "Proposed for audit-docs: a checker verifies any tool-behaviour claim with a read-only call, and cross-checker disagreements go back for a re-verdict. Deferred by the owner; revisit if it recurs."

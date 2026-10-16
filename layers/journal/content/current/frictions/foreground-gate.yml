@@ -15,19 +15,23 @@ occurrences:
   - session: session_015BjYk46dntcMuAWMn1z4Zw
     date: "2026-10-10"
     severity: minor
-    friction: 3
+    description: "Ran `pnpm gate:scoped` in the foreground despite CLAUDE.md's rule to background commands that can take over 2 minutes."
+    solution: "Start the gate with run_in_background and redirect it to a log; it took about 3 minutes."
   - session: session_013GkBtC56M36dmz5AtEb1Hp
     date: "2026-10-11"
     severity: nit
-    friction: 1
+    description: "Ran gate:scoped in the foreground (about 3 minutes) instead of in the background as CLAUDE.md requires for long commands."
+    solution: "Start the gate with run_in_background and redirect output to a file."
   - session: session_01WuJh8gfMFWfS5bWEJcdScC
     date: "2026-10-11"
     severity: nit
-    friction: 2
+    description: "Ran pnpm gate:scoped in the foreground (about 156s) instead of with run_in_background and an output file as CLAUDE.md says for commands over 2 minutes."
+    solution: "Start the gate in the background with output redirected to a file."
   - session: session_01YVCyXmxSSDQ6csSBVJ554H
     date: "2026-10-11"
     severity: nit
-    friction: 0
+    description: "Ran gate:scoped in the foreground (about 3 minutes) though CLAUDE.md says to background any command that can exceed 2 minutes."
+    solution: "Start the gate with run_in_background and redirect output to a file, as CLAUDE.md says."
   - session: session_01AdUi9nKLGKyPFfBe4HYvqG
     date: "2026-10-14"
     severity: nit

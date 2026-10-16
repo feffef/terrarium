@@ -17,236 +17,295 @@ occurrences:
   - session: session_01BK3hyL2f3mxedQimjd719K
     date: "2026-10-02"
     severity: minor
-    friction: 0
+    description: "Stop hook demanded a commit while the full `pnpm gate:scoped` run was still in progress in the background, before I'd confirmed it was green — the same pattern already recorded as a friction in visitor-loop's 2026-10-01 session (session_01BNbm6z4gohjBmVoeadKibZ)."
+    solution: "Let scheduled runs defer the stop-hook git check until the closing step, as that session's own solution already proposed — this is a second, independent recurrence of the same gap."
   - session: session_01FRVSQVFVfLCWyn2cBtG9qM
     date: "2026-10-02"
     severity: nit
-    friction: 0
+    description: "Stop hook nagged twice to commit an unverified trial upgrade while the gate ran and while awaiting the user's choice"
+    solution: "Stop-hook git check could tolerate uncommitted changes when a background task is running or a question is pending"
   - session: session_01HDNTJNfSFzDsgeaG92ZttX
     date: "2026-10-02"
     severity: nit
-    friction: 0
+    description: "Stop hook demanded commit and push while the fact-check and gate were still running, forcing an early push and a follow-up wording commit."
+    solution: "Let the hook defer while background tasks are pending."
   - session: session_01VC6tZCm3HYs9BsJ7JrQQ5Z
     date: "2026-10-02"
     severity: minor
-    friction: 3
+    description: "The Stop hook pressed to commit and push a half-applied working tree right after the user had explicitly paused the apply phase"
+    solution: "The hook cannot know about a user pause; I reported the state and waited. A hook that only nags on a turn that ends without an open user question would avoid the contradiction"
   - session: session_01CbWrei9SvmrH9vjNx2MB2f
     date: "2026-10-03"
     severity: nit
-    friction: 2
+    description: "Stop hook demanded commit and push while the gate was still running, pressuring against the recipe's green-before-commit order."
+    solution: "Have the stop hook skip while a backgrounded gate log is unfinished."
   - session: session_01DtFw6GBViQZp25jvQV7gEF
     date: "2026-10-03"
     severity: nit
-    friction: 3
+    description: "The stop hook demanded commit-and-push several times while the full gate was still running, pushing toward an unverified push"
+    solution: "Have the hook tolerate a running gate:scoped, or say verify-then-push rather than push"
   - session: session_01JUVBufFxrv8bKoVBV5rgYN
     date: "2026-10-03"
     severity: minor
-    friction: 3
+    description: "The Stop hook demanded a commit and push twice while the fact-check and gate were still running, forcing two commits on a single-post PR."
+    solution: "Already tracked as a recurrent friction (Stop hook vs a running gate). It needs the human-only settings.json hook change."
   - session: session_01JzzBErytZGXxGg7v9vqZts
     date: "2026-10-03"
     severity: nit
-    friction: 0
+    description: "The Stop hook flagged the untracked post as uncommitted while the fact-check subagent was still running, before the commit was due."
+    solution: "The hook cannot know a subagent is pending; waiting then committing was correct. A hook note about pending background agents would remove the nag."
   - session: session_01P7a2zqJxuariDNfYqWQRHs
     date: "2026-10-03"
     severity: moderate
-    friction: 1
+    description: "The Stop hook demanded commit-and-push on every turn while subagents were mid-edit on files, forcing repeated 'not yet' turns."
+    solution: "The stop-hook git check could tolerate files a still-running background agent is editing, or I could have dispatched agents into worktrees."
   - session: session_01WoSzRemGryY3vGQMWf2347
     date: "2026-10-03"
     severity: nit
-    friction: 1
+    description: "Stop hook demanded commit and push while the fact-check and gate were still running, forcing an early push and a follow-up wording commit."
+    solution: "Stop hook should skip while a background command is running."
   - session: session_016o8vxfkAFpgZMedEsKZqKT
     date: "2026-10-04"
     severity: nit
-    friction: 1
+    description: "Committed only after the Stop hook nagged about uncommitted changes, while the gate was still running."
+    solution: "Commit as soon as the edit is done, then run the gate."
   - session: session_018DwTn5rSUpmtMHwXBrWqGL
     date: "2026-10-04"
     severity: nit
-    friction: 4
+    description: "Stop hook asked twice to commit untracked files while the post was still awaiting fact-check and the gate, so committing then would have been premature."
+    solution: "Let the stop-hook git check skip when a background command is still running, or accept it as noise."
   - session: session_01GxJXNFxh3SQh8q1nkReAxJ
     date: "2026-10-04"
     severity: nit
-    friction: 5
+    description: "The Stop hook demanded commit and push while the background gate was still running, which pushes toward committing before verification."
+    solution: "Have the stop hook skip or defer while a gate:scoped run for the same tree is in progress."
   - session: session_01LEQpnXw4SeWsfw4THR5NbX
     date: "2026-10-04"
     severity: nit
-    friction: 3
+    description: "The Stop hook demanded an unpushed-commit push while the gate was still running and before the PR existed, so I pushed ahead of the gate."
+    solution: "The hook could tolerate a commit whose gate is running in the background, as an earlier session also suggested."
   - session: session_01MBV1mwgJPMcnYw7J9eXMmG
     date: "2026-10-04"
     severity: minor
-    friction: 2
+    description: "Stop hook nagged for commits mid-run while the fact-check subagent was still pending, forcing early local commits."
+    solution: "Let the stop hook tolerate a running subagent."
   - session: session_01QS72zRhKidx1uP468fuAFK
     date: "2026-10-04"
     severity: minor
-    friction: 1
+    description: "Stop hook demanded commits and pushes mid-run while builds and gates were still running, forcing early commits before verification finished."
+    solution: "Have the stop hook skip when a background command is still running, or accept a WIP-commit convention."
   - session: session_01XMzcTEcNXy3sKiUWtEKGLW
     date: "2026-10-04"
     severity: nit
-    friction: 2
+    description: "I went idle waiting on the gate and subagent, drawing two stop-hook nags about uncommitted changes."
+    solution: "Commit the digest to the branch before the gate, then amend-free follow-up commit for fact-check fixes."
   - session: session_011L5Vf6kXGJ1jQTwrKjFTTL
     date: "2026-10-05"
     severity: nit
-    friction: 0
+    description: "Stop hook demanded commit and push while the gate and fact-check were still running, pushing toward committing before verification."
+    solution: "Stop hook could skip nagging while a background task is pending."
   - session: session_01AbPzFC2mns85YxwqznmJUe
     date: "2026-10-05"
     severity: minor
-    friction: 3
+    description: "Stop hook nagged about uncommitted changes four times while the gate and build were legitimately running; CLAUDE.md says not to push unverified work."
+    solution: "Have the stop-git-check hook skip when a background task is still running or the gate log is not yet finished."
   - session: session_01VKEB6VDDPrzTmGAt2obTsH
     date: "2026-10-05"
     severity: nit
-    friction: 2
+    description: "Stop hook nagged about the untracked post while the fact-check was still running; I held the push until the gate was green."
+    solution: "Known Stop-nag caveat; no change needed."
   - session: session_01XEDYTXqBBWAqtftzqeMLrU
     date: "2026-10-05"
     severity: nit
-    friction: 0
+    description: "The Stop hook nagged three times to push unpushed commits while gate:scoped was still running, which pushes toward sending unverified work"
+    solution: "CLAUDE.md already says not to push unverified work. The hook could stay silent while a background gate task is running"
   - session: session_015pcFLucxsdwj7nSLKtozGP
     date: "2026-10-06"
     severity: nit
-    friction: 2
+    description: "Stop hook nagged about uncommitted changes four times while the fact-check and gate were legitimately running."
+    solution: "Hook could detect a running background gate."
   - session: session_01BT5bPRncBfCNwhim2d71Hh
     date: "2026-10-07"
     severity: minor
-    friction: 2
+    description: "The Stop hook repeatedly asked to push unpushed commits while pnpm gate:scoped was still running, conflicting with CLAUDE.md's gate-first rule."
+    solution: "Make the stop-hook reminder aware of a running or pending gate, or point to the gate-first rule in its message."
   - session: session_01H84NG8cxGEwFS4jL3DWi1S
     date: "2026-10-07"
     severity: nit
-    friction: 0
+    description: "The Stop-hook uncommitted-changes nag fired while gate:scoped was legitimately running, the exact friction filed as 1653"
+    solution: "Resolve 1653; the source is harness-side ~/.claude/stop-hook-git-check.sh, so likely accept and drop the CLAUDE.md caveat"
   - session: session_01QLxPLD6AQ2Y6GyWHE1dkKp
     date: "2026-10-07"
     severity: minor
-    friction: 2
+    description: "The Stop hook repeatedly demanded pushing unpushed commits while gate:scoped was still running, conflicting with CLAUDE.md's push-only-after-gate rule; cost several explanatory turns."
+    solution: "Make the Stop hook detect a running gate or accept a gate-pending marker."
   - session: session_01RGKoFL9ZKfvji8zENgRVBT
     date: "2026-10-07"
     severity: nit
-    friction: 2
+    description: "The Stop hook asked twice to commit untracked files while the fact-check and gate were still pending, so committing then would have broken the don't-push-unverified rule"
+    solution: "Let the stop-hook git check skip while a background task or subagent is running"
   - session: session_01TY4CnbUTCjYqaKpHAHKHku
     date: "2026-10-07"
     severity: nit
-    friction: 0
+    description: "Stop hook nagged about uncommitted changes twice while the fact-check and gate were legitimately running."
+    solution: "Let the hook detect a running background gate or pending subagent."
   - session: session_01449u16G5rFweMPGkKZe9Tv
     date: "2026-10-08"
     severity: nit
-    friction: 4
+    description: "The Stop hook reminder to commit and push fired twice while the gate and the fact-check were still running."
+    solution: "Have the reminder skip while a backgrounded gate:scoped or subagent is running"
   - session: session_016ZmB2wonEm8Aki1P4V59cK
     date: "2026-10-08"
     severity: minor
-    friction: 4
+    description: "Pushed and opened the PR after the gate but before the fact-check subagent reported, out of the blog-post Skill's step order, under repeated Stop-hook push reminders; the PR body carries no tally yet."
+    solution: "Treat the Stop hook's push nag as noise while a dispatched checker is running, or have the hook honour a pending-check marker in the scratchpad."
   - session: session_017tt8CbwHqFWqw7PJZ7u7AL
     date: "2026-10-08"
     severity: nit
-    friction: 3
+    description: "The Stop hook demanded a push while the gate was still running; CLAUDE.md says to wait, so I had to hold the push against the hook's reminder."
+    solution: "Known: the hook cannot see a running gate (CLAUDE.md Self-verification). No change needed."
   - session: session_01CF4k9jXS9wLrcPVsGduZmn
     date: "2026-10-08"
     severity: nit
-    friction: 6
+    description: "The harness Stop hook demanded a push while gate:scoped was still running, as CLAUDE.md predicts."
+    solution: "Already documented; ignored it and pushed after the gate passed."
   - session: session_01KCWd4fWsUfUxL6uT4Bephj
     date: "2026-10-08"
     severity: minor
-    friction: 1
+    description: "Stop hook asked to commit and push three times while the fact-check and gate were still running, costing explanatory turns."
+    solution: "Make the Stop hook aware of a running gate."
   - session: session_01S1WwkpNHDfbvKAf5T1afKq
     date: "2026-10-08"
     severity: moderate
-    friction: 3
+    description: "Read 'let me review and decide' as 'do not push'; the maintainer had to ask twice to commit and push so they could review on GitHub, while the Stop hook kept nagging."
+    solution: "On an open PR branch, push the reviewable draft after gate:scoped and say it is a draft; reviewing happens on GitHub."
   - session: session_01StQjYSNRStTihgZimvvx2r
     date: "2026-10-08"
     severity: nit
-    friction: 5
+    description: "The Stop hook repeatedly told me to push unpushed commits while CLAUDE.md says push only after gate:scoped passes; I held the push each time."
+    solution: "Make the Stop hook aware of a running gate, as CLAUDE.md already notes it cannot."
   - session: session_01Jo3m1r8fyuGvjtRE9qDrPH
     date: "2026-10-09"
     severity: nit
-    friction: 4
+    description: "The Stop-hook commit-and-push reminder fired several times while the gate and appliers were still running, against the gate-first rule."
+    solution: "Make the reminder aware of a running gate or background agents."
   - session: session_01Pps6pXDX7ahChHwQajVZNc
     date: "2026-10-09"
     severity: minor
-    friction: 5
+    description: "The Stop hook asked to commit and push twice while the fact-check and gate were still running, costing two explanatory turns."
+    solution: "Stop hook could see a running background gate."
   - session: session_01EmaH5A6Ziwjndz9esnsJ22
     date: "2026-10-10"
     severity: minor
-    friction: 4
+    description: "The Stop hook asked to commit and push four times while the fact-check and gate were still running, costing turns."
+    solution: "Stop hook could detect a running gate or pending subagent."
   - session: session_01KRLFYUD31NaEVTs4Qs1Tzj
     date: "2026-10-10"
     severity: minor
-    friction: 4
+    description: "The Stop hook pushed to commit and push twice while the gate was still running, conflicting with CLAUDE.md's gate-first rule; the Skill's section 4 also says push before the probe, which needs the gate to pass first."
+    solution: "State in prune-trial section 4 that the push waits for gate:scoped."
   - session: session_01Tcn6x6mZizT14rJuQqYivt
     date: "2026-10-10"
     severity: nit
-    friction: 3
+    description: "The Stop hook demanded a push while the gate was still running; CLAUDE.md already anticipates this and was followed."
+    solution: "None needed."
   - session: session_01CasnQoauTyLNUxd74agJsP
     date: "2026-10-11"
     severity: minor
-    friction: 3
+    description: "The Stop hook demanded a push about fifteen times while an owner-requested review was still running, and each reply spent tokens declining."
+    solution: "Let the Stop git check honour a session-level hold marker, or fire once per unpushed SHA set."
   - session: session_01GbMt1vGTDZpQxZ3h4pNsF8
     date: "2026-10-11"
     severity: nit
-    friction: 3
+    description: "Stop hook asked to push uncommitted work while the gate was running; ADR-0004 says push only after it passes, so I waited."
+    solution: "The hook could check for a running or failed gate before nagging."
   - session: session_01LARTWkGx5vBwRwsMrdftPD
     date: "2026-10-11"
     severity: nit
-    friction: 5
+    description: "Stop hook asked twice to push while gate:scoped was still running; ADR-0004 says to wait, so the hook nag was noise."
+    solution: "Have the Stop hook skip its push reminder while a gate run is in progress (the audit-docs session logged the same)."
   - session: session_01Tjsmye34hk57NtioyWQG4h
     date: "2026-10-11"
     severity: nit
-    friction: 2
+    description: "The Stop hook asked three times to commit and push while the fact-check and gate were still pending, each time costing a reply to decline per ADR-0004."
+    solution: "Let the Stop git check honour a pending-gate marker or fire once per unpushed SHA set."
   - session: session_01V3bxJaTSH8AWjrtSoBhNxK
     date: "2026-10-11"
     severity: nit
-    friction: 6
+    description: "Stop hook asked twice to push while gate:scoped was still running."
+    solution: "Known stop-hook-nag cluster in the new ledger."
   - session: session_01X7EjwNGgzS9n6614B4PTU3
     date: "2026-10-10"
     severity: nit
-    friction: 2
+    description: "Left the session's designated branch (ccr-0682b7a0-5kimb5) to work on the PR's branch, against 'stay on the branch your session started on'; the task required it, and the Stop hook then counted main's merged commits as 22 unpushed"
+    solution: "CLAUDE.md could note that resolving an existing PR's conflict means working on that PR's branch"
   - session: session_01LuXuScHA2QsY4RXipy9nAt
     date: "2026-10-11"
     severity: nit
-    friction: 4
+    description: "The Stop hook demanded commit and push while the scoped gate was still running, against ADR-0004's push-after-gate rule."
+    solution: "Harness-side (issue 1653, closed not-planned); no repo fix."
   - session: session_01BLrfuHbMMEmjZZ7STpe1AN
     date: "2026-10-11"
     severity: nit
-    friction: 6
+    description: "The Stop hook asked three times to commit and push while agents had work in flight and the gate had not run; each nag cost a turn to decline."
+    solution: "The ADR-0004 rule already covers it; nothing to add."
   - session: session_01QfaLuSd5cnBQPu8CCRrvkn
     date: "2026-10-12"
     severity: nit
-    friction: 1
+    description: "The Stop hook asked to commit and push twice while gate:scoped was still running, each time costing a reply to decline per ADR-0004."
+    solution: "Make the Stop hook skip its nag while a gate run is active."
   - session: session_018KSwetqxttBFszkhTKZkF1
     date: "2026-10-12"
     severity: minor
-    friction: 4
+    description: "Stop hook repeatedly asks to push unreviewed local commits, contrary to the new review-before-push rule."
+    solution: "pr-workflow now says the rule holds even when the Stop hook asks; the hook could check for a pending review."
   - session: session_01Rn5xT34AdjnywsTJdUtaDm
     date: "2026-10-13"
     severity: nit
-    friction: 1
+    description: "Stop hook asked to commit and push twice while the fact-check and gate were still pending."
+    solution: "Have the hook skip when a scheduled Skill has an unfinished gate."
   - session: session_017XWy7odnhW5S5AEuekatR8
     date: "2026-10-13"
     severity: nit
-    friction: 5
+    description: "The Stop hook asked to push unreviewed commits five times while the gate and reviews were still running."
+    solution: "The Stop hook could recognise a running gate or pending review subagent and stay quiet."
   - session: session_01RDtAc5Vv37kkRH4yCtRDQB
     date: "2026-10-13"
     severity: nit
-    friction: 4
+    description: "Stop hook asked three times to push before the gate and code review finished, against ADR-0004's push-after-gate rule."
+    solution: "Harness-side stop-hook-git-check.sh (stop-hook-nag cluster, issue #1653)."
   - session: session_01N2WiBqiw2rFsAqpy41VnhA
     date: "2026-10-13"
     severity: minor
-    friction: 3
+    description: "The Stop hook repeatedly asked me to push before the code review finished, against ADR-0004's review-first rule; I held the push."
+    solution: "Make the Stop hook skip its push reminder while a review agent is running."
   - session: session_011JKK8rrCwea3xSmL4kw6si
     date: "2026-10-14"
     severity: nit
-    friction: 2
+    description: "The Stop hook repeatedly asked me to push or commit a subagent worktree's scratch log and unpushed commit while the branch was still under review."
+    solution: "Let the hook skip linked worktrees that hold a branch under review."
   - session: session_01675UWGBfCMALkurUr58cxM
     date: "2026-10-14"
     severity: minor
-    friction: 3
+    description: "Stop hook asked four times to commit and push while a conflict decision and review were pending; ADR-0004 and pr-workflow require review before the first push."
+    solution: "Let the hook defer when a stop-and-report question or code-review is pending."
   - session: session_01NoQubvnMfCpcq9nkicNsDq
     date: "2026-10-15"
     severity: nit
-    friction: 3
+    description: "The Stop hook asked to commit and push untracked files while the fact-check was still pending; ADR-0004 required gate and review first."
+    solution: "Let the Stop hook skip when a scheduled Skill's own steps hold the push."
   - session: session_01C8c4U7TDuWnJwenPUWYxrP
     date: "2026-10-15"
     severity: nit
-    friction: 3
+    description: "The Stop hook asked to commit and push five times while subagents were still editing and gate and review were not yet run."
+    solution: "Let the hook stay quiet while background subagents are running."
   - session: session_013LwpcexAe7t3Qck4CKtj9Y
     date: "2026-10-15"
     severity: nit
-    friction: 0
+    description: "Stop hook asked to push the branch five times when only commits fast-forwarded from main were unpushed, since the branch had no upstream."
+    solution: "Make the hook compare against origin/main when the branch has no upstream."
   - session: session_01KVh6e6JUAssZvPRbuN5YDr
     date: "2026-10-15"
     severity: nit
-    friction: 4
+    description: "Stop hook asked to push 7 commits that were only inherited from origin/main after my fast-forward, which cost an explanation turn."
+    solution: "The hook should compare against origin/main, not the remote branch."

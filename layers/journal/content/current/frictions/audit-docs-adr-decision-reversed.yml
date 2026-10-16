@@ -14,4 +14,5 @@ occurrences:
   - session: session_01QvnVVurQdA4cvYSZToBvud
     date: "2026-10-13"
     severity: moderate
-    friction: 7
+    description: "Escalation PR first rewrote ADR-0004's minor/patch clause to 'not by itself an exception', changing what the ADR decided; the owner caught it in review (agents are meant to merge such bumps)"
+    solution: "When an ADR contradicts its own Human-only list, keep the decision and name the conflict (or ask the owner) rather than pick the side the code enforces; audit-docs already says never change what an ADR decided"

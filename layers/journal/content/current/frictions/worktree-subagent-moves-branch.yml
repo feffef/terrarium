@@ -9,8 +9,10 @@ occurrences:
   - session: session_01TiCx5GDdDdFGwCEs6xxr89
     date: "2026-10-03"
     severity: moderate
-    friction: 3
+    description: "An impl agent's `git checkout -B <session-branch>` in its worktree moved the branch my primary checkout had checked out, leaving my tree looking like a reversed diff of its commits"
+    solution: "Detach the orchestrator checkout before dispatching agents that push the same branch; worth a line in dispatch-subagents for single-branch serial integration"
   - session: session_01Dz52W6wWZWUgKwPtdxabzJ
     date: "2026-10-12"
     severity: nit
-    friction: 2
+    description: "A reviewer subagent ran git checkout --detach origin/main by mistake and switched back; no harm, but it touched the shared checkout."
+    solution: "Tell read-only reviewer briefs not to run any state-changing git command."

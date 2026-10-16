@@ -18,8 +18,10 @@ occurrences:
   - session: session_01YSGRZcurrkv9WYqPfnRH2t
     date: "2026-10-10"
     severity: moderate
-    friction: 2
+    description: "The reader judged step-12 replies from scratch drafts whose premises were not verified. Both finalists failed fact-check after about 4 extra subagent rounds, and the run ended with no reply."
+    solution: "Before sending reply drafts to the reader, check each draft's one load-bearing claim against its primary source. The Skill exempts reply drafts from full citation-checking, and that let both premises through."
   - session: session_0177ZCpnHq4Sw5wicAEmriDh
     date: "2026-10-11"
     severity: moderate
-    friction: 3
+    description: "Shipped a Karen reply the owner found uninteresting and hard to understand; step 12's reader judged only sketches on novelty and I should have accepted none."
+    solution: "Issue 1773 - default step 12 to none, have the reader judge the finished draft for interest and clarity, cut an unverifiable thesis."

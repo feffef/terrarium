@@ -3,7 +3,6 @@
 // the sibling `[...slug].vue`; reads only this Space's collections via useSpace.
 import { routingMap } from '#routing'
 import { resolveSpaceRoute } from '#shared/routing'
-import type { SessionFrictions } from '../../../../utils/ledger'
 
 definePageMeta({ name: 'journal-frictions' })
 const PAGE_TITLE = 'Friction Ledger'
@@ -16,21 +15,13 @@ const otherSpace = Object.keys(routingMap.journal).find((s) => s !== space) ?? s
 const { data } = await useAsyncData(route.path, async () => {
   const clusters = await queryCollection(collections.frictions).all()
   // Only the sessions a cluster cites travel in the payload (ADR-0028).
-  const cited = new Map<string, Set<number>>()
-  for (const o of clusters.flatMap((c) => c.occurrences)) {
-    const frictionsOf = cited.get(o.session) ?? new Set<number>()
-    if (o.friction !== undefined) frictionsOf.add(o.friction)
-    cited.set(o.session, frictionsOf)
-  }
+  const cited = new Set(clusters.flatMap((c) => c.occurrences.map((o) => o.session)))
   const goals: Record<string, string> = {}
-  const frictions: SessionFrictions = {}
   const own: string[] = []
   const read = async (sessions: typeof collections.sessions, isOwn: boolean) => {
-    for (const s of await queryCollection(sessions).select('session', 'goal', 'frictions').all()) {
-      const indexes = cited.get(s.session)
-      if (!indexes || s.session in goals) continue
+    for (const s of await queryCollection(sessions).select('session', 'goal').all()) {
+      if (!cited.has(s.session) || s.session in goals) continue
       goals[s.session] = s.goal
-      frictions[s.session] = Object.fromEntries([...indexes].map((i) => [i, { description: s.frictions[i]!.description, solution: s.frictions[i]!.solution }]))
       if (isOwn) own.push(s.session)
     }
   }
@@ -38,10 +29,10 @@ const { data } = await useAsyncData(route.path, async () => {
   // Archiving moved older sessions to the other Space; read it for what is still missing.
   const other = cited.size > own.length ? resolveSpaceRoute('journal', otherSpace, undefined) : null
   if (other && otherSpace !== space) await read(other.collections.sessions, false)
-  return { clusters, goals, frictions, own }
+  return { clusters, goals, own }
 })
 const panels = computed(() =>
-  ledgerPanels(data.value?.clusters ?? [], space, new Set(data.value?.own), otherSpace, data.value?.goals, data.value?.frictions),
+  ledgerPanels(data.value?.clusters ?? [], space, new Set(data.value?.own), otherSpace, data.value?.goals),
 )
 const sections = computed(() => [
   {

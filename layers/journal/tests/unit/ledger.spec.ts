@@ -61,21 +61,19 @@ describe('ledgerPanels goals', () => {
 })
 
 describe('ledgerPanels reports', () => {
-  const withFriction = (name: string, frictions: (number | undefined)[]): FrictionClusterDoc => ({
-    ...cluster(name, frictions.map(() => 'nit')),
-    occurrences: frictions.map((friction, i) => ({ session: `${name}-${i}`, date: `2026-10-0${i + 1}`, severity: 'nit' as const, friction })),
+  const logged = (name: string, texts: ({ description: string; solution: string } | undefined)[]): FrictionClusterDoc => ({
+    ...cluster(name, texts.map(() => 'nit')),
+    occurrences: texts.map((t, i) => ({ session: `${name}-${i}`, date: `2026-10-0${i + 1}`, severity: 'nit' as const, ...t })),
   })
 
-  it("lists the friction an occurrence names with its solution once, linked to the Space that holds it", () => {
-    const logged = { 1: { description: 'Gate ran twice', solution: 'Add a guard' } }
-    const [e] = ledgerPanels([withFriction('x', [1, 1])], 'current', new Set(['x-0']), 'archived', {}, { 'x-0': logged, 'x-1': logged }).severe
-    expect(e!.reports).toEqual([
-      { description: 'Gate ran twice', solution: 'Add a guard', date: '2026-10-02', to: '/t/journal/archived#session-x-1' },
-    ])
+  it('lists the friction an occurrence carries with its solution once, linked to the Space that holds it', () => {
+    const t = { description: 'Gate ran twice', solution: 'Add a guard' }
+    const [e] = ledgerPanels([logged('x', [t, t])], 'current', new Set(['x-0']), 'archived').severe
+    expect(e!.reports).toEqual([{ ...t, date: '2026-10-02', to: '/t/journal/archived#session-x-1' }])
   })
 
-  it('shows nothing for an occurrence that names no friction, or one the session lacks', () => {
-    const [e] = ledgerPanels([withFriction('x', [undefined, 5])], 'current', new Set(), 'archived', {}, { 'x-1': { 0: { description: 'a', solution: 'A' } } }).severe
+  it('shows nothing for an occurrence that carries no friction text', () => {
+    const [e] = ledgerPanels([logged('x', [undefined])], 'current', new Set(), 'archived').severe
     expect(e!.reports).toEqual([])
   })
 })

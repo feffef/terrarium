@@ -14,12 +14,15 @@ occurrences:
   - session: session_01Dfw9sJon2e4UsaVoiCLhSJ
     date: "2026-10-14"
     severity: nit
-    friction: 7
+    description: "The explore workflow output nests its results under a result key, so my first parse of the task output found nothing."
+    solution: "clear-backlog could say where the structured result sits in the task output."
   - session: session_015dUGRadEQP1bvv6KytKLXT
     date: "2026-10-14"
     severity: nit
-    friction: 2
+    description: "The workflow's .output file wraps the script's return value under a 'result' key, so my first parse failed with KeyError"
+    solution: "clear-backlog could say that the task output file nests the return value under result"
   - session: session_01ATdHzhyNozsTLHHtJGbLsa
     date: "2026-10-14"
     severity: nit
-    friction: 6
+    description: "Workflow output nests results as a JSON string under result, so my first parse printed nothing useful and needed a second pass."
+    solution: "Document the output shape in the clear-backlog Skill or return a flat object."

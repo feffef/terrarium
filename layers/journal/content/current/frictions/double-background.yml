@@ -9,40 +9,50 @@ occurrences:
   - session: session_01KyKW5E8oFPkSu3a4mCpT25
     date: "2026-10-05"
     severity: nit
-    friction: 2
+    description: "Combined `run_in_background: true` with a shell-level `nohup ... &` when starting the gate run; blocked by the double-background guard."
+    solution: "Use run_in_background alone with a plain foreground command, never both."
   - session: session_01AQ91ENQEqf8iMne1PrzFiu
     date: "2026-10-07"
     severity: nit
-    friction: 4
+    description: "The Agent-background-flag guard denied run_in_background false that the blog-post Skill's step 6 wording invites, and the double-background guard denied a Bash call that had both the flag and a trailing ampersand; each cost a retry."
+    solution: "Fix the blog-post Skill's step 6 and 9 wording to say Agent calls are always async; use one background mechanism only."
   - session: session_01FjXKYqhJLRWNRcbDvdhNxQ
     date: "2026-10-07"
     severity: nit
-    friction: 1
+    description: "First gate launch used run_in_background plus a text-level ampersand and was blocked by the double-background guard; cost one retry."
+    solution: "Use run_in_background alone with a plain foreground command, as the guard message says."
   - session: session_01449u16G5rFweMPGkKZe9Tv
     date: "2026-10-08"
     severity: minor
-    friction: 3
+    description: "My first combined Bash call put run_in_background true and a trailing ampersand; the double-background guard denied the whole call, including an unrelated edit, costing a retry."
+    solution: "Pass run_in_background alone with a plain foreground command, and keep file edits in a separate call"
   - session: session_01KRLFYUD31NaEVTs4Qs1Tzj
     date: "2026-10-10"
     severity: nit
-    friction: 2
+    description: "Stacked run_in_background true with a trailing ampersand; double-background-guard denied it, costing one retry."
+    solution: "Use one background mechanism only."
   - session: session_01Tjsmye34hk57NtioyWQG4h
     date: "2026-10-11"
     severity: nit
-    friction: 1
+    description: "Combined run_in_background with a trailing & in one command; the double-background guard blocked it and the edit in the same command did not run."
+    solution: "Keep edits and the backgrounded gate in separate calls, as the guard says."
   - session: session_01Dz52W6wWZWUgKwPtdxabzJ
     date: "2026-10-12"
     severity: nit
-    friction: 1
+    description: "A Bash call with run_in_background plus a trailing ampersand was denied by the double-background guard; a chained sleep was also blocked."
+    solution: "Use run_in_background alone and Monitor with an until-loop; the guard message said so."
   - session: session_01MZBQ3PanPQVwCutYuAmbUp
     date: "2026-10-13"
     severity: nit
-    friction: 1
+    description: "A Bash call that set run_in_background and also ended with a shell ampersand was blocked as a whole, so the python edit chained in it did not run; I only noticed on the next step."
+    solution: "Pick one background mechanism per call and keep edits in a separate call."
   - session: session_01Dfw9sJon2e4UsaVoiCLhSJ
     date: "2026-10-14"
     severity: nit
-    friction: 3
+    description: "A Bash call with run_in_background plus a trailing ampersand was blocked by the double-background guard, so its edits did not run either."
+    solution: "Keep edits and the backgrounded command in separate calls."
   - session: session_019e468BFBTvDPXZuGzLMAL7
     date: "2026-10-15"
     severity: nit
-    friction: 4
+    description: "Combined run_in_background with a trailing & and the double-background guard rejected the whole command."
+    solution: "None needed; the guard worked as designed."

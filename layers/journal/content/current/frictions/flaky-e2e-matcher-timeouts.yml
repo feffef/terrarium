@@ -14,20 +14,25 @@ occurrences:
   - session: session_01JW1NEbkjzCyx2myBjt9X8V
     date: "2026-10-13"
     severity: minor
-    friction: 4
+    description: "CI gate failed once in the Journal accordion e2e test (journal.spec.ts:393) on a prose-only PR; passed locally on the merged state and on main"
+    solution: "Investigate flakiness of the session-card head toggle in CI (likely timing on the first card); needs a robust wait or retry in the test"
   - session: session_01MZBQ3PanPQVwCutYuAmbUp
     date: "2026-10-13"
     severity: minor
-    friction: 0
+    description: "gate:scoped failed on an unrelated Journal accordion e2e test (matcher timeout) and passed on re-run; cost about three minutes."
+    solution: "Make that e2e test robust against slow hydration, or log it as a known flake."
   - session: session_01TW6hQ1C1Fm1aeaaoxQeHEp
     date: "2026-10-13"
     severity: minor
-    friction: 2
+    description: "First gate:scoped failed on an unrelated tinkerfund-flows e2e timeout (Cart and checkout), costing a full re-run"
+    solution: "Raise that matcher's timeout or file a flake issue for tinkerfund-flows.spec.ts:387"
   - session: session_011xN2Zi67cjpCguuMiZbsJ6
     date: "2026-10-13"
     severity: minor
-    friction: 5
+    description: "The Tinkerfund e2e history step (tinkerfund-flows.spec.ts:387) timed out once in gate:scoped and passed on re-run; this branch changed only a comment there."
+    solution: "File the flake if it recurs; poll with a longer timeout on goForward."
   - session: session_01NoQubvnMfCpcq9nkicNsDq
     date: "2026-10-15"
     severity: minor
-    friction: 1
+    description: "pnpm gate:scoped failed once on an unrelated Journal e2e accordion test and passed on rerun, costing about a minute of gate time."
+    solution: "Fix or quarantine the flaky accordion e2e test."

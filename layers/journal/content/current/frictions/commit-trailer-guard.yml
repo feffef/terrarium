@@ -15,124 +15,155 @@ occurrences:
   - session: session_019e8Gy8cuUFcMzNkEYLfuP4
     date: "2026-10-02"
     severity: nit
-    friction: 1
+    description: "Hand-wrote the commit trailer because the harness system-reminder asked for it; the commit-trailer guard denied the call"
+    solution: "Guard worked as designed; the repo convention already wins over that reminder"
   - session: session_01BEQMve6mV2yNDTMmjiCAYL
     date: "2026-10-02"
     severity: nit
-    friction: 0
+    description: "Hand-writing the commit trailer from the harness reminder was denied by the commit-trailer guard, costing one retry."
+    solution: "The harness attribution reminder and the repo guard disagree; the reminder should defer to the repo convention."
   - session: session_01C48djYtfD6dTcY8aESJJUD
     date: "2026-10-02"
     severity: minor
-    friction: 0
+    description: "The commit-trailer guard denied my first commit because the harness reminder told me to hand-write the trailer the guard forbids."
+    solution: "Make the harness attribution reminder and the guard agree, or have the CLAUDE.md note say the reminder's trailer is superseded."
   - session: session_01FRVSQVFVfLCWyn2cBtG9qM
     date: "2026-10-02"
     severity: nit
-    friction: 1
+    description: "Hand-wrote the commit trailer from the system-reminder attribution template; the commit-trailer guard denied it"
+    solution: "Guard worked as designed; the harness reminder conflicts with the repo rule, which CLAUDE.md already flags"
   - session: session_0168r95gLDEqJ8JBEV6UuUbo
     date: "2026-10-03"
     severity: minor
-    friction: 1
+    description: "Hand-wrote the commit trailer because a system reminder said to; the commit-trailer guard denied the whole call."
+    solution: "Follow CLAUDE.md over the harness reminder: commit with subject/body only."
   - session: session_01CbWrei9SvmrH9vjNx2MB2f
     date: "2026-10-03"
     severity: minor
-    friction: 1
+    description: "The harness attribution reminder says to hand-write commit trailers, but the commit-trailer guard denied that exact message and the whole chained call."
+    solution: "Make the harness reminder and the repo guard agree; the reminder should say nothing for this repo."
   - session: session_01DU7WbYNfKmdNgRpry9qzeV
     date: "2026-10-03"
     severity: nit
-    friction: 1
+    description: "First commit attempt hand-wrote the Co-Authored-By and Claude-Session trailer because the system reminder said to; the commit-trailer guard denied it."
+    solution: "Already guarded; the CLAUDE.md rule and guard deny message cover it."
   - session: session_01JUVBufFxrv8bKoVBV5rgYN
     date: "2026-10-03"
     severity: nit
-    friction: 2
+    description: "Hand-wrote the commit trailer from the system-reminder's attribution instruction and was denied by the commit-trailer guard. The harness reminder and the repo convention conflict."
+    solution: "Follow the repo guard: never hand-write trailers, whatever the harness reminder says."
   - session: session_01JzzBErytZGXxGg7v9vqZts
     date: "2026-10-03"
     severity: minor
-    friction: 1
+    description: "First commit attempt hand-wrote the attribution trailer from the system reminder and the commit-trailer guard denied it, because the repo forbids hand-written trailers."
+    solution: "The harness attribution reminder and CLAUDE.md conflict; the blog-post Skill could say commit with no trailer."
   - session: session_0163x7FmxRtXcQALXQ6UdygK
     date: "2026-10-04"
     severity: nit
-    friction: 2
+    description: "Harness system-reminder said to end the commit message with Co-Authored-By/Claude-Session lines; the repo's commit-trailer guard denied the commit for exactly that"
+    solution: "Known tension, guard message was clear and the retry without a trailer landed both lines; nothing to change in the repo"
   - session: session_016RHjBGGBWx1EUSJbEjRR15
     date: "2026-10-04"
     severity: minor
-    friction: 1
+    description: "System-reminder told me to end commits with attribution trailers; the commit-trailer guard then denied the whole commit command for hand-writing them"
+    solution: "Harness attribution reminder and repo guard contradict; the repo guard should be named in the reminder or the reminder should be dropped for this repo"
   - session: session_016o8vxfkAFpgZMedEsKZqKT
     date: "2026-10-04"
     severity: nit
-    friction: 0
+    description: "Hand-wrote the commit trailer from the system-reminder attribution; commit-trailer guard denied it and I re-ran without it."
+    solution: "The guard worked as intended; the conflicting harness reminder is the source, already noted in the guard message."
   - session: session_018DwTn5rSUpmtMHwXBrWqGL
     date: "2026-10-04"
     severity: minor
-    friction: 2
+    description: "The harness attribution reminder told me to hand-write commit trailers; the commit-trailer guard denied the whole chained git add and commit and I had to rerun."
+    solution: "The harness template and the repo guard disagree; drop the trailer instruction from the reminder for this repo, or the guard should allow what the reminder emits."
   - session: session_01GxJXNFxh3SQh8q1nkReAxJ
     date: "2026-10-04"
     severity: minor
-    friction: 0
+    description: "Harness attribution reminder told me to hand-write the Co-Authored-By and Claude-Session commit trailer; the commit-trailer guard then denied the commit and the whole chained call."
+    solution: "Single-home the rule: the harness reminder and the repo guard contradict. Repo guard should win, so the reminder wording for this repo should say the trailer is landed automatically."
   - session: session_01MBV1mwgJPMcnYw7J9eXMmG
     date: "2026-10-04"
     severity: nit
-    friction: 1
+    description: "Hand-written commit trailer from the harness reminder was denied by the commit-trailer guard, costing a retry."
+    solution: "Harness attribution reminder and the guard disagree; the guard is right in this repo."
   - session: session_01XMzcTEcNXy3sKiUWtEKGLW
     date: "2026-10-04"
     severity: minor
-    friction: 0
+    description: "The commit-trailer guard denied my first commit because the harness reminder said to hand-write the trailer; the guard and reminder contradict."
+    solution: "Make the harness template and guard agree, or note in CLAUDE.md that the reminder is overridden."
   - session: session_01AbPzFC2mns85YxwqznmJUe
     date: "2026-10-05"
     severity: minor
-    friction: 2
+    description: "Harness attribution reminder says to end commits with Co-Authored-By and Claude-Session lines, but the commit-trailer guard denies hand-written trailers. First commit attempt was blocked."
+    solution: "Make the harness reminder defer to the repo guard in this repo, or drop the instruction here."
   - session: session_01EPZv5jBQyJYPqy8eVn8e8h
     date: "2026-10-05"
     severity: minor
-    friction: 2
+    description: "The harness attribution reminder told me to end commits with Co-Authored-By and Claude-Session lines, while the commit-trailer guard denies hand-written trailers; the first commit attempt followed the reminder and was denied."
+    solution: "Make the harness reminder yield to the repo convention, or note the conflict in guards.md next to the commit-trailer guard."
   - session: session_01QrvPXx1uquc4vvjJXhz1MU
     date: "2026-10-06"
     severity: nit
-    friction: 1
+    description: "Hand-wrote the commit trailer from the harness's attribution reminder; commit-trailer-guard denied it"
+    solution: "Guard worked as designed; the harness reminder conflicts with the repo rule. Already covered by CLAUDE.md and the deny message"
   - session: session_01RCmFsgtMbJiafbzPg48LYh
     date: "2026-10-06"
     severity: nit
-    friction: 0
+    description: "The commit-trailer guard denied my first commit because the system-reminder attribution told me to hand-write the trailer; the whole chained call, including the ledger append, was dropped."
+    solution: "Harness attribution reminder and repo guard conflict; the guard message was clear and one retry fixed it."
   - session: session_01AQ91ENQEqf8iMne1PrzFiu
     date: "2026-10-07"
     severity: minor
-    friction: 0
+    description: "I hand-wrote the Co-Authored-By and Claude-Session commit trailer from the harness attribution reminder, though CLAUDE.md says never to hand-write it; the guard did not deny a git commit -F."
+    solution: "Let the commit-msg hook add the trailer, and say in the harness reminder that the repo rule wins."
   - session: session_01H84NG8cxGEwFS4jL3DWi1S
     date: "2026-10-07"
     severity: nit
-    friction: 1
+    description: "Harness attribution reminder said to end commits with Co-Authored-By/Claude-Session lines; CLAUDE.md forbids hand-writing them. I knew to omit them, but the contradiction is live (filed 1652)"
+    solution: "Resolve 1652 so the guard accepts the correct trailer"
   - session: session_01S6auRmvHwvmSRZNciYFDbD
     date: "2026-10-07"
     severity: nit
-    friction: 0
+    description: "Hand-wrote the Co-Authored-By trailer in a commit command and the commit-trailer guard denied it; the system reminder told me to add it."
+    solution: "Reconcile the harness attribution reminder with the guard, or have the skill say never to add trailers."
   - session: session_01UwY4ZKweYsmaf9zZrzj92k
     date: "2026-10-07"
     severity: nit
-    friction: 1
+    description: "First git commit hand-typed the Co-Authored-By and Claude-Session trailer from the system reminder; commit-trailer-guard denied it and the chained ledger append had to be redone."
+    solution: "The harness attribution reminder conflicts with CLAUDE.md; the reminder should say the trailer is landed automatically."
   - session: session_015UvXah6phvbuMpUWmf5rYs
     date: "2026-10-08"
     severity: minor
-    friction: 2
+    description: "Hand-wrote Co-Authored-By and Claude-Session trailers in a commit, copying the harness reminder; commit-trailer-guard denied it, nothing ran."
+    solution: "The system reminder's attribution text conflicts with the CLAUDE.md rule; the repo rule should win, or the reminder should be dropped here."
   - session: session_01UvFUKPkQSkZS1qS7VndRqX
     date: "2026-10-08"
     severity: nit
-    friction: 2
+    description: "The harness attribution reminder says to end commits and PR bodies with trailers, but CLAUDE.md says never hand-write the commit trailer; I followed CLAUDE.md and the hook added it."
+    solution: "Make the harness reminder and CLAUDE.md agree, or point CLAUDE.md at the guard that names the marker."
   - session: session_01GGSSswkV3J9p255u5hcvSp
     date: "2026-10-09"
     severity: minor
-    friction: 0
+    description: "Hand-wrote Co-Authored-By and Claude-Session trailers in a git commit command; the commit-trailer guard denied the whole call, so the staged edit and gate chain did not run (CLAUDE.md: never hand-write the commit trailer)."
+    solution: "The attribution system-reminder says to end commits with those lines while CLAUDE.md forbids it; make the reminder defer to the guard."
   - session: session_01NHHafnvmf9qkvq85pvMYzc
     date: "2026-10-09"
     severity: nit
-    friction: 1
+    description: "The harness attribution reminder says to hand-write the Co-Authored-By trailer; the repo commit-trailer guard denies that. The denied Bash call also dropped an earlier python edit in the same call, so it had to be re-run."
+    solution: "Keep file edits and commits in separate Bash calls; the guard message should state it denies the whole call, and the attribution reminder should defer to the repo."
   - session: session_01VaPP7iMRxMvKvX8KQh1qeY
     date: "2026-10-09"
     severity: minor
-    friction: 6
+    description: "commit-trailer-guard denied a Bash python heredoc that only edited a test file, because the heredoc text contained a git commit fixture and a Claude-Session: string. Worked around by writing the script to a file first."
+    solution: "The guard could ignore text inside heredoc bodies, or anchor git commit at command position, the same fix this PR applies to session-id-guard."
   - session: session_01KRLFYUD31NaEVTs4Qs1Tzj
     date: "2026-10-10"
     severity: nit
-    friction: 1
+    description: "Tried to hand-write the Co-Authored-By trailer from the attribution reminder in a git commit; commit-trailer-guard denied the whole call, including a chained file edit."
+    solution: "Never chain edits with a commit; write the message without a trailer."
   - session: session_01Tcn6x6mZizT14rJuQqYivt
     date: "2026-10-10"
     severity: nit
-    friction: 1
+    description: "Hand-wrote Co-Authored-By and Claude-Session trailers in the first commit, copying the harness attribution reminder; the commit-trailer guard denied it."
+    solution: "The harness reminder and the repo rule conflict; the guard caught it at no cost. Reminder text should defer to the guard."

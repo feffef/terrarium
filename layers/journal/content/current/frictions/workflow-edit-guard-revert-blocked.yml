@@ -14,4 +14,5 @@ occurrences:
   - session: session_011xN2Zi67cjpCguuMiZbsJ6
     date: "2026-10-13"
     severity: moderate
-    friction: 0
+    description: "A comment edit to .github/workflows/ got committed with the work; the push was rejected, and the workflow-edit guard then blocked even the revert to main's version."
+    solution: "Caller-repoint briefs should exclude .github/workflows/ explicitly; the guard (#897) could allow restoring a workflow file to origin/main's content."

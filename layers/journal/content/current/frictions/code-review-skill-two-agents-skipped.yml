@@ -9,35 +9,43 @@ occurrences:
   - session: session_016ZibVzWmCmiQkdt6hF5fy9
     date: "2026-10-13"
     severity: nit
-    friction: 0
+    description: "code-review skill prescribes two parallel subagents; for a 2-file prose diff I self-reviewed instead, deviating from the skill as written."
+    solution: "Let code-review state a prose-only shortcut."
   - session: session_01AvdPELZeDaDwyikp4dxVZG
     date: "2026-10-14"
     severity: nit
-    friction: 0
+    description: "Invoked the code-review Skill but did not run its two parallel subagents; self-reviewed a prose-only diff instead, deviating from the Skill."
+    solution: "Let pr-workflow state that content-only digest diffs may skip the two-axis review."
   - session: session_01ERZa4fUGxpF81MeLhZMkSB
     date: "2026-10-14"
     severity: nit
-    friction: 1
+    description: "Skipped the code-review Skill on the two small PRs (poll config, docs) and reviewed inline, though pr-workflow says run it before the first push."
+    solution: "Either run it for tiny diffs or let pr-workflow state a size skip."
   - session: session_01RJh5bK46AQRRtwagmz8GjU
     date: "2026-10-14"
     severity: minor
-    friction: 0
+    description: "I invoked code-review but skipped its two sub-agents for a one-file prose diff, against ADR-0004's before-first-push rule; the post had already had a blind read and fact-check."
+    solution: "Let pr-workflow name a skip for blog-post runs, whose own steps already review the diff, as it does for midden-catalogue."
   - session: session_01AdUi9nKLGKyPFfBe4HYvqG
     date: "2026-10-14"
     severity: nit
-    friction: 2
+    description: "The code-review Skill says to spawn two parallel sub-agents; I reviewed the four-file diff inline instead, a deviation from the Skill."
+    solution: "Let the Skill say when a tiny diff may be reviewed inline."
   - session: session_01672sKdk3qVR8DfkAWvR5Qz
     date: "2026-10-15"
     severity: nit
-    friction: 0
+    description: "Skipped the full two-agent code-review Skill for a content-only diff and checked paths by hand, a deviation from pr-workflow."
+    solution: "Let pr-workflow name a lighter review for diffs holding only Digest pages and archive moves."
   - session: session_01F3a2MbH4xUH7J7Y1hLg2TX
     date: "2026-10-16"
     severity: nit
-    friction: 1
+    description: "Skipped the full two-agent code-review Skill for a diff of only Digest and archive moves; checked paths by hand."
+    solution: "State in pr-workflow that content-only scheduled diffs may skip it."
   - session: session_01Lwanyry6GWtqHYoMAgGGLa
     date: "2026-10-15"
     severity: nit
-    friction: 2
+    description: "Skipped the code-review Skill before the first push, which ADR-0004 says to run even for a Stop-hook push; I judged it pointless on a verbatim upstream copy."
+    solution: "Let pr-workflow.md name verbatim pack installs as a skip case, so agents need not decide alone."
   - session: session_011t1xXHxqwrfAjt83s9oTEP
     date: "2026-10-15"
     severity: minor

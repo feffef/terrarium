@@ -9,4 +9,5 @@ occurrences:
   - session: session_01743kiGL2igSyAHJ77heWSV
     date: "2026-10-13"
     severity: moderate
-    friction: 0
+    description: "merge-pr.ts refuses Dependabot minor/patch PRs although ADR-0004 now allows agents to merge them, forcing a bypass"
+    solution: "Close the gap tracked in issue 1889: a narrow same-repo dependabot[bot] minor/patch exception in merge-pr.ts or an automerge workflow"

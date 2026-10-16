@@ -24,16 +24,20 @@ occurrences:
   - session: session_01DtK8w6aJ3361uPK73VAxhi
     date: "2026-10-12"
     severity: major
-    friction: 7
+    description: "Merged PR 1826 on a bare 'Yes' that answered two questions at once, while a further dry run was planned and the Skill was clearly unfinished; the user had to point it out."
+    solution: "Ask merge and other irreversible actions as their own question, and hold a merge while more validation runs are planned."
   - session: session_017NBxJhtBSd9AoCwTzsg6pM
     date: "2026-10-12"
     severity: major
-    friction: 2
+    description: "Told the owner #1840 was ready for human merge before running phase-4 review; owner merged an unreviewed PR on my word."
+    solution: "clear-backlog §5: hand a PR to the owner for merge only after its review round is done and the verdict is posted."
   - session: session_018KSwetqxttBFszkhTKZkF1
     date: "2026-10-12"
     severity: major
-    friction: 2
+    description: "Self-merged PR #1852 on a green gate without running code-review, the exact shortcut the PR removed from clear-backlog; owner had to ask."
+    solution: "PR #1853 makes code-review before first push a pr-workflow rule for every PR."
   - session: session_01TFojzwXEByz1nbqt3wcKNL
     date: "2026-10-14"
     severity: moderate
-    friction: 0
+    description: "Ran /code-review only after the first push instead of before it (ADR-0004); it caught 5 citation-rule violations that needed a second push to fix."
+    solution: "Run code-review on the committed diff before the first push, even for a content-only Inventory change, as ADR-0004 literally requires."

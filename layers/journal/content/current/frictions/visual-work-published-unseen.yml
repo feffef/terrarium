@@ -14,28 +14,35 @@ occurrences:
   - session: session_01P7a2zqJxuariDNfYqWQRHs
     date: "2026-10-03"
     severity: moderate
-    friction: 2
+    description: "An agent drew circles as zero-length arcs (`a r r 0 1 0 .1 0`), which centres them r units off the start point; the loupe misplacement survived two review rounds."
+    solution: "Brief agents to use <circle>/<ellipse> for round shapes; I reviewed at too small a scale to spot the geometry until rendering at 420px."
   - session: session_01TiCx5GDdDdFGwCEs6xxr89
     date: "2026-10-03"
     severity: major
-    friction: 9
+    description: "Shipped a visible bug in merged #1581: the Readout stayed sticky and slid over Recently backed on scroll. The implementer wrongly assumed sticky is bounded by its grid row; the per-story review endorsed that reasoning, and every screenshot was static so none scrolled"
+    solution: "For sticky or scroll-dependent layout, verify with a scrolled measurement (bounding boxes after scrollTo), not a static screenshot; worth a line in docs/agents/verifying-ui-changes.md"
   - session: 1f97b613-f529-4487-a7e9-1115a44b84c7
     date: "2026-10-08"
     severity: major
-    friction: 2
+    description: "Three review rounds optimised the two briefs locally (terms, tables, completeness) but never questioned their framing. The diagrams built from them missed the most basic fact (everything lives in one repo and becomes a database at build time) and over-weighted build internals; only the maintainer's verdict on the rendered diagrams exposed it"
+    solution: "For overview docs, start by grilling the maintainer on the framing (zones, audience, what one picture must show) before any review rounds polish the details"
   - session: 355d2d64-55fc-4515-81c1-e831f8b84601
     date: "2026-10-08"
     severity: major
-    friction: 0
+    description: "User judged both published diagrams not to work well; I published after one self-check each and never showed a draft or layout sketch before building"
+    solution: "For a diagram from a brief, share a rough layout or a first draft for a quick reaction before polishing and publishing; record the user's reasons in the briefs"
   - session: 49f1fea0-270e-4851-9cc7-3dbf8cc8609a
     date: "2026-10-08"
     severity: major
-    friction: 0
+    description: "User judged both delivered diagrams not to work well for several reasons, despite every Archify gate passing and my own screenshot review; reasons not yet stated."
+    solution: "Before rendering, agree with the user on the reader, the one question each diagram answers, and the scope per view; treat passing gates as necessary, not sufficient."
   - session: session_01E2zbWEQmuUrEhWvbzNpBba
     date: "2026-10-15"
     severity: moderate
-    friction: 3
+    description: "First diagram version was committed unreadable at 390px and factually wrong about one shared database; I checked only a 1000px screenshot and skipped docs/agents/verifying-ui-changes.md before screenshotting."
+    solution: "Read verifying-ui-changes.md and EVERY-PAGE.md's diagram bar before drawing, and screenshot at 390px."
   - session: session_013LwpcexAe7t3Qck4CKtj9Y
     date: "2026-10-15"
     severity: minor
-    friction: 4
+    description: "My first feature, a landing diagram, was dropped late because owner decisions in old issues rejected it, and I rewrote the flowchart twice for the 390px width."
+    solution: "Have visitor-loop step 3 grep the design resolutions on the focus Tenant before choosing a feature."

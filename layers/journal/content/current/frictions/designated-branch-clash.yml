@@ -9,24 +9,30 @@ occurrences:
   - session: session_01X7EjwNGgzS9n6614B4PTU3
     date: "2026-10-10"
     severity: nit
-    friction: 2
+    description: "Left the session's designated branch (ccr-0682b7a0-5kimb5) to work on the PR's branch, against 'stay on the branch your session started on'; the task required it, and the Stop hook then counted main's merged commits as 22 unpushed"
+    solution: "CLAUDE.md could note that resolving an existing PR's conflict means working on that PR's branch"
   - session: session_017inrpS21UKrpEun2DpjLd7
     date: "2026-10-11"
     severity: nit
-    friction: 2
+    description: "Created a new branch against the session's designated-branch instruction, then undid it before any commit."
+    solution: "Skill's fallback branch name invites this; state the designated branch wins more loudly."
   - session: session_01D3gBoQCQTmjVwEyuA3qZkQ
     date: "2026-10-11"
     severity: minor
-    friction: 5
+    description: "The session's single designated branch clashed with several independent changes; I had to ask before using extra branches."
+    solution: "The owner's rule (one branch per change unless clearly related) could live in issue-tracker.md's caller-set-branch line."
   - session: session_01AnHXyvzXukt6izZTYs3YMr
     date: "2026-10-13"
     severity: minor
-    friction: 3
+    description: "audit-docs step 8 wants a separate escalation PR, but the session may push only its own branch; had to defer the ADR edit to a follow-up PR on the same branch."
+    solution: "Say in audit-docs step 8 that a session limited to one branch opens the escalation as a follow-up PR on that branch after the main PR merges."
   - session: session_01QvnVVurQdA4cvYSZToBvud
     date: "2026-10-13"
     severity: nit
-    friction: 5
+    description: "Harness says never push to another branch, while audit-docs requires a separate escalation PR; pushed claude/charming-faraday-w968b5-adr on the Skill's authority"
+    solution: "audit-docs could name the escalation branch convention (designated branch + -adr) so the conflict is resolved in one place"
   - session: session_01ERZa4fUGxpF81MeLhZMkSB
     date: "2026-10-14"
     severity: minor
-    friction: 2
+    description: "Impl agent proposed a Skill sentence authorising a second pushed branch against the harness rule; auto mode flagged its report as instruction poisoning."
+    solution: "Keep authority changes human-decided; the designated-branch conflict needs an owner decision."

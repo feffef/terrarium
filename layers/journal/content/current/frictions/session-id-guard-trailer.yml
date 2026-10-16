@@ -15,12 +15,15 @@ occurrences:
   - session: session_01NRVHQoPm4cP1F7iVUvh9rJ
     date: "2026-10-04"
     severity: blocker
-    friction: 2
+    description: "issue #387: Claude-Session trailer mismatch on this session's own commit(s): session-id-guard: fabricated or mismatched Claude-Session trailer(s) on this session's own commit(s) (issue #387 — CLAUDE.md: never predict/reconstruct a session id): 32ef9ef556f3: Claude-Session trailer says session_016RHjBGGBWx1EUSJbEjRR15, expected session_01NRVHQoPm4cP1F7iVUvh9rJ 55ecc4279d50: Claude-Session trailer says session_016RHjBGGBWx1EUSJbEjRR15, expected session_01NRVHQoPm4cP1F7iVUvh9rJ 0b5e1ea6bcf3: Claude-Session trailer says session_016RHjBGGBWx1EUSJbEjRR15, expected session_01NRVHQoPm4cP1F7iVUvh9rJ"
+    solution: "Investigate the offending commit(s): CLAUDE.md forbids predicting/reconstructing a session id (never copy one seen elsewhere in context) — resolve the real id from $CLAUDE_CODE_REMOTE_SESSION_ID or the transcript at the moment of writing, and escalate per issue #387 if the divergence is unexplained."
   - session: 355d2d64-55fc-4515-81c1-e831f8b84601
     date: "2026-10-08"
     severity: blocker
-    friction: 5
+    description: "issue #387: Claude-Session trailer mismatch on this session's own commit(s): session-id-guard: fabricated or mismatched Claude-Session trailer(s) on this session's own commit(s) (issue #387 — CLAUDE.md: never predict/reconstruct a session id): 8486535e3d53: Claude-Session trailer says 1f97b613-f529-4487-a7e9-1115a44b84c7, expected 355d2d64-55fc-4515-81c1-e831f8b84601 b90b6ae4503c: Claude-Session trailer says 1f97b613-f529-4487-a7e9-1115a44b84c7, expected 355d2d64-55fc-4515-81c1-e831f8b84601 b488881f9a6f: Claude-Session trailer says 1f97b613-f529-4487-a7e9-1115a44b84c7, expected 355d2d64-55fc-4515-81c1-e831f8b84601"
+    solution: "Investigate the offending commit(s): CLAUDE.md forbids predicting/reconstructing a session id (never copy one seen elsewhere in context) — resolve the real id from $CLAUDE_CODE_REMOTE_SESSION_ID or the transcript at the moment of writing, and escalate per issue #387 if the divergence is unexplained."
   - session: 49f1fea0-270e-4851-9cc7-3dbf8cc8609a
     date: "2026-10-08"
     severity: blocker
-    friction: 7
+    description: "issue #387: Claude-Session trailer mismatch on this session's own commit(s): session-id-guard: fabricated or mismatched Claude-Session trailer(s) on this session's own commit(s) (issue #387 — CLAUDE.md: never predict/reconstruct a session id): 8486535e3d53: Claude-Session trailer says 1f97b613-f529-4487-a7e9-1115a44b84c7, expected 49f1fea0-270e-4851-9cc7-3dbf8cc8609a b90b6ae4503c: Claude-Session trailer says 1f97b613-f529-4487-a7e9-1115a44b84c7, expected 49f1fea0-270e-4851-9cc7-3dbf8cc8609a b488881f9a6f: Claude-Session trailer says 1f97b613-f529-4487-a7e9-1115a44b84c7, expected 49f1fea0-270e-4851-9cc7-3dbf8cc8609a"
+    solution: "Investigate the offending commit(s): CLAUDE.md forbids predicting/reconstructing a session id (never copy one seen elsewhere in context) — resolve the real id from $CLAUDE_CODE_REMOTE_SESSION_ID or the transcript at the moment of writing, and escalate per issue #387 if the divergence is unexplained."
