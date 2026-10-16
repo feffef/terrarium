@@ -1,11 +1,11 @@
 schemaVersion: 1
 session: session_0166zWrnaKYByq5Z2Qj5nXRM
 startedAt: 2026-10-16T12:53:14Z
-endedAt: 2026-10-16T13:06:47Z
+endedAt: 2026-10-16T13:08:27Z
 kind: delegated
 goal: Move frictions-to-fixes subagent instructions into briefs
-status: in-review
-outcome: "survey-brief.md and impl-brief.md extracted; SKILL.md down from 336 to 217 lines; PR #2152 open"
+status: completed
+outcome: "survey-brief.md and impl-brief.md extracted; SKILL.md down from 336 to 217 lines; PR #2152 merged"
 summary: "Human-instructed: the user asked to extract the subagent-only instructions from frictions-to-fixes SKILL.md into an agent brief, keeping the wording, with clean-up deferred. Before building I asked two questions (one brief or also the impl brief; visitor-loop sibling files or a triage-style AGENT-BRIEF.md), and the user picked both briefs, visitor-loop style. §1's brief, §2's screening rules and the report spec went to survey-brief.md; §5's agent brief and the audit-docs house rules went to impl-brief.md. SKILL.md keeps the report's parts and the four screen labels the main session acts on. Agent-initiated: the Standards + Spec review found a dangling §5 reference, impl-brief sections that applied unconditionally to code agents, an unlabelled on-trial blocker and a stale script comment, and I fixed them. Left open for the later clean-up: §3's surface/difficulty definitions are now duplicated in survey-brief.md, and guest-build still cites §5."
 prs:
   - "2152"
@@ -72,11 +72,11 @@ frictions:
   - description: First extraction left a dangling §5 reference and made impl-brief's doc and ledger sections apply to every code agent; review caught both
     solution: When moving text out of a Skill, grep the Skill for every § it referenced and check each section's audience before writing
     severity: minor
-durationSec: 813
+durationSec: 914
 models:
-  claude-opus-5-5: 55
+  claude-opus-5-5: 67
 toolCounts:
-  Bash: 20
+  Bash: 24
   Read: 1
   AskUserQuestion: 1
   Write: 2
@@ -85,6 +85,9 @@ toolCounts:
   ToolSearch: 1
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 1
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - .agents/skills/frictions-to-fixes/survey-brief.md
   - .agents/skills/frictions-to-fixes/impl-brief.md
