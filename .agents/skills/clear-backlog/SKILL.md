@@ -44,10 +44,10 @@ blocked outside the chat (an upstream release, a date, an owner action), and
 the owner reserved ("I decide this one", directly or relayed).
 
 The result holds one triage `results[n]` per issue, the `missing` ones, and
-a proposed `grouping`: one branch per group of issues that each directly share a file or
-are clearly related to every other in the group. Adjust the grouping where you know better; a grouping
-you are unsure of is a grilling question. Then start §3 for the groups whose
-issues are all `build`, and grill while it runs.
+a proposed `grouping`: one branch per group of issues in which every pair
+shares a file or is clearly related. Adjust the grouping where you know
+better; a grouping you are unsure of is a grilling question. Then start §3
+for the groups whose issues are all `build`, and grill while it runs.
 
 **Done:** every issue has a result, or is in `missing` and goes to the
 report with that word.

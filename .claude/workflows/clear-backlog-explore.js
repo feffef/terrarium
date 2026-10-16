@@ -114,7 +114,7 @@ for (const [i, issue] of input.entries()) {
 }
 if (missing.length) log(`MISSING after retry: #${missing.join(', #')}`)
 
-// A group holds only issues that pairwise overlap directly, so A-B and B-C never chain A with C (#2147).
+// Direct overlap only, no transitive chains (#2147).
 const open = Object.keys(results).map(Number).filter(n => ['build', 'grill'].includes(results[n].outcome)).sort((a, b) => a - b)
 const linked = (a, b) =>
   results[a].relatedTo.includes(b) || results[b].relatedTo.includes(a) || results[a].files.some(f => results[b].files.includes(f))
