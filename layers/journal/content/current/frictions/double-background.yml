@@ -56,3 +56,8 @@ occurrences:
     severity: nit
     description: "Combined run_in_background with a trailing & and the double-background guard rejected the whole command."
     solution: "None needed; the guard worked as designed."
+  - session: session_01N9bwDKW51kMS6WJvK2nfSU
+    date: "2026-10-16"
+    severity: nit
+    description: "A Bash call with run_in_background plus a trailing & was blocked by the double-background guard, and a sleep-then-tail wait was blocked, costing two retries."
+    solution: "Use run_in_background alone and a Monitor until-loop from the start."

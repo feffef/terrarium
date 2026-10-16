@@ -4,8 +4,8 @@ summary: >-
 cause: >-
   First drafts of Digests, posts, docs, reports and CLAUDE.md edits, and subagent claims relayed as fact, carry claims never checked against a primary source; a fact-check or reviewer catches them at the cost of a round.
 surface: safe
-status: open
-ref: "PR #1756 (blog step 12 fallback); PRs #1852, #1853 (clear-backlog §4 'check every fix yourself')"
+status: tracked
+ref: "regression issue #2144; PR #1756 (blog step 12 fallback); PRs #1852, #1853 (clear-backlog §4 'check every fix yourself')"
 fixes:
   - pr: 1756
     date: "2026-10-11"

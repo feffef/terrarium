@@ -1,0 +1,13 @@
+name: edit-leaves-contradicting-sibling
+summary: >-
+  An edit to a template left an old bullet that contradicted the new section, caught only by review.
+cause: >-
+  After adding a section, the author did not search the same file for statements the new text overrides. Signals: leftover bullet contradicting a new section; caught by code-review.
+surface: safe
+status: open
+occurrences:
+  - session: session_01Fay2GiWTwxDKnnqS9DznHk
+    date: "2026-10-16"
+    severity: moderate
+    description: "My first template edit left EVERY-PAGE.md's 'In Terrarium gives no reasons' bullet, contradicting the new Why section; the review caught it."
+    solution: "When changing a contract, grep the Skill docs for every rule naming that section before dispatching agents."

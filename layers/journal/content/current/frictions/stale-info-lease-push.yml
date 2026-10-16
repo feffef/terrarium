@@ -1,0 +1,23 @@
+name: stale-info-lease-push
+summary: >-
+  A push with --force-with-lease after a PR merged was rejected, because the remote branch had been deleted.
+cause: >-
+  After a PR merges its remote branch is auto-deleted; a restarted branch pushed with --force-with-lease is rejected as stale info. pr-workflow.md says to push plainly and stale-info-hint.ts explains the rejection. Signals: `(stale info)` after `git push --force-with-lease`.
+surface: safe
+status: open
+ref: "The hint fired and both sessions recovered in one retry; cost is one rejected push."
+fixes:
+  - pr: 1735
+    date: "2026-10-10"
+    summary: "Added a hint that explains a push rejected as stale info after its PR merged."
+occurrences:
+  - session: session_01NoQubvnMfCpcq9nkicNsDq
+    date: "2026-10-15"
+    severity: nit
+    description: "A push of the restarted branch with force-with-lease was rejected as stale info because the remote branch had been deleted on merge; needed git remote prune and a plain push."
+    solution: "pr-workflow.md already says push plainly after a restart; follow it instead of using the lease."
+  - session: session_01DNheR1Cpt9b6vFsmGdzvxq
+    date: "2026-10-16"
+    severity: nit
+    description: "git push --force-with-lease was rejected as stale info after the earlier PR merged and its remote branch was deleted."
+    solution: "pr-workflow.md says to push plainly on a restarted branch; point the restart recipe at git remote prune first."

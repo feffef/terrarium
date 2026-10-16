@@ -1,0 +1,19 @@
+name: clear-backlog-explore-transitive-grouping
+summary: >-
+  The backlog Skill's explore step put unrelated issues on one branch because it chained them through other issues' shared files.
+cause: >-
+  .claude/workflows/clear-backlog-explore.js unions issues by any shared file or relatedTo link with union-find, so the connected component can hold issues that share no file with each other. Signals: "chained", "grouping bundled", regroup by hand.
+surface: safe
+status: tracked
+ref: "issue #2147"
+occurrences:
+  - session: session_015dUGRadEQP1bvv6KytKLXT
+    date: "2026-10-14"
+    severity: minor
+    description: "The explore run's grouping chained six unrelated issues into one branch through transitive shared files, so I had to regroup by hand"
+    solution: "Group only on direct file overlap in clear-backlog-explore, not on the transitive closure"
+  - session: session_01VPNHf6qDdJPXX23GghKs74
+    date: "2026-10-16"
+    severity: nit
+    description: "Explore's proposed grouping bundled #2112/#2113 with the Glass Box issues though they share no file with them"
+    solution: "Have the explore grouping union only issues that share a file, not chain through unrelated shared files"

@@ -97,6 +97,8 @@ every line that applies.
 - For a review, give the path of a scratch or draft file and have the agent
   `Read` it; never paste its content (a paste once dropped its links, issues
   #981, #1114). Scope a blind reviewer to named paths rather than banning `Read`.
+- Before dispatching, re-read the brief: every `{…}` filled, every path
+  repo-relative and existing, every value copied from its source.
 - A subagent's prose is candidate material: re-check any factual or attribution
   claim (who did what, in what order) against the source it cites before it
   ships (issue #1137).
