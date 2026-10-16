@@ -1,0 +1,110 @@
+schemaVersion: 1
+session: session_01DNheR1Cpt9b6vFsmGdzvxq
+startedAt: 2026-10-16T07:14:04Z
+endedAt: 2026-10-16T07:19:14Z
+kind: delegated
+goal: Explain the occurrence list on the Friction Ledger
+status: in-review
+outcome: Heading and intro added; PR 2125 open, gate green
+summary: One human prompt asked for a short heading between a Friction Ledger cluster's cause and its dated occurrence list, explaining the list and that the dates link to session logs. Everything after that (edit, gate, review, push, PR, subscription) was agent-initiated follow-through of that ask. The user's example heading said "proposed solutions", but the list holds only date, session goal and severity, so I used "Occurrences" plus a one-line intro (newest first, dates link to the session log) and said so in the PR. I did not ask a clarifying question first despite the user's stated preference, because the ask was concrete. The code-review Skill was run inline on the 5-line diff instead of with two sub-agents.
+prs:
+  - "2125"
+docsRead:
+  - path: GLOSSARY.md
+    reason: Friction Ledger term
+    useful: yes
+  - path: GLOSSARY-MAP.md
+    reason: required at start; Journal pointer only
+    useful: partly
+  - path: docs/agents/git-conventions.md
+    reason: commit via -F file, trailer check
+    useful: yes
+  - path: docs/agents/pr-workflow.md
+    reason: gate and review before first push
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: write via MCP; nothing new needed
+    useful: partly
+  - path: layers/journal/app/pages/t/journal/[space]/frictions.vue
+    reason: (read before editing)
+skillsUsed:
+  - name: code-review
+    reason: required before first push; run inline given a 5-line diff
+  - name: close-session
+    reason: PR opened
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: code-review Skill mandates two parallel sub-agents, disproportionate for a 5-line CSS and markup change; I reviewed inline.
+    solution: Let the pre-push rule allow an inline review for diffs under a few dozen lines.
+    severity: nit
+durationSec: 310
+models:
+  claude-sonnet-5-5: 43
+toolCounts:
+  Read: 6
+  Grep: 4
+  Glob: 2
+  Edit: 3
+  Bash: 8
+  Skill: 3
+  ToolSearch: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+filesEdited:
+  - layers/journal/app/pages/t/journal/[space]/frictions.vue
+rulesLoaded:
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0006.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/adr-0016.md
+  - .claude/rules/adr-0008.md
+  - .claude/rules/adr-0029.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Made me run gate:scoped and code-review before pushing; summary was enough, did not open the full ADR
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Told me to invoke close-session on PR open; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: About prune trials; nothing here touched an open trial, did not apply
+    useful: no
+  - path: .claude/rules/adr-0020.md
+    reason: Trust tiers; the requester was the Trusted owner, so it did not apply
+    useful: no
+  - path: .claude/rules/adr-0003.md
+    reason: Told me to open the PR myself and subscribe despite the system prompt; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Provenance header on the PR body; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0021.md
+    reason: Glossary layout; no glossary change was made, so it did not apply
+    useful: no
+  - path: .claude/rules/adr-0006.md
+    reason: Routing rule loaded on the page edit; the change did not touch routing
+    useful: no
+  - path: .claude/rules/tenant-layers.md
+    reason: Loaded on a layer file; the edit needed none of its points
+    useful: no
+  - path: .claude/rules/adr-0016.md
+    reason: Tenant root pages; the edited page is not a root page
+    useful: no
+  - path: .claude/rules/adr-0008.md
+    reason: Confirmed the Ledger is derived, not hand-edited; summary was enough
+    useful: partly
+  - path: .claude/rules/adr-0029.md
+    reason: Loaded with the git docs read; no instruction placement was involved
+    useful: no
+gitBranch: claude/brave-knuth-ajti5d
+entrypoint: remote
+cliVersion: 2.1.301
+landedBy: Stop
