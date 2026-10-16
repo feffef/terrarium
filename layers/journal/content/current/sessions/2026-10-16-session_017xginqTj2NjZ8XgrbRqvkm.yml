@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_017xginqTj2NjZ8XgrbRqvkm
 startedAt: 2026-10-16T04:01:14Z
-endedAt: 2026-10-16T04:29:49Z
+endedAt: 2026-10-16T05:35:16Z
 kind: autonomous
 goal: Scheduled audit of the Platform's docs
-status: in-review
-outcome: "Sweep PR #2110 merged; escalation PR #2111 waits for a human merge"
-summary: "Scheduled audit-docs run (agent-initiated by the schedule; no human prompt). Concision family was root. Five read-only reviewers (freshness, single-home, two concision splits, coherence) reported; I pooled and deduped their findings and three checkers re-derived them (self-merge pool: 15 CONFIRMED, 9 CONFIRMED-BUT, 4 WRONG; Human-only pool: 1 WRONG, 1 TRUE-CONFLICT left unedited, others confirmed or confirmed with a narrower text). Applied the confirmed Live-doc fixes in #2110 (gate:scoped green, code-review run, one wording fix) and the ADR-0009 and two rule-summary fixes in the separate human-merge PR #2111. Left for the owner: ADR-0004 minor-bump vs Human-only package.json (tracked in #1889), ADR-0020 Dependabot wording, ADR-0021 See line (unchecked), and the journal page's \"seven sites\" (Glass Box is deliberately unlinked). No issue filed. #2110 merged green via merge-pr; #2111 waits for a human."
+status: completed
+outcome: "Sweep PR #2110 and escalation PR #2111 both merged"
+summary: "Scheduled audit-docs run (agent-initiated by the schedule; no human prompt). Concision family was root. Five read-only reviewers (freshness, single-home, two concision splits, coherence) reported; I pooled and deduped their findings and three checkers re-derived them (self-merge pool: 15 CONFIRMED, 9 CONFIRMED-BUT, 4 WRONG; Human-only pool: 1 WRONG, 1 TRUE-CONFLICT left unedited, others confirmed or confirmed with a narrower text). Applied the confirmed Live-doc fixes in #2110 (gate:scoped green, code-review run, one wording fix) and the ADR-0009 and two rule-summary fixes in the separate human-merge PR #2111. Left for the owner: ADR-0004 minor-bump vs Human-only package.json (tracked in #1889), ADR-0020 Dependabot wording, ADR-0021 See line (unchecked), and the journal page's \"seven sites\" (Glass Box is deliberately unlinked). No issue filed. #2110 merged green via merge-pr; #2111 was merged by a human."
 prs:
   - "2110"
   - "2111"
@@ -224,11 +224,11 @@ frictions:
   - description: Sent a placeholder replacement in an Edit by mistake; it failed harmlessly because the old string did not match.
     solution: Write the final replacement text before calling Edit.
     severity: nit
-durationSec: 1715
+durationSec: 5642
 models:
-  claude-sonnet-5-5: 177
+  claude-sonnet-5-5: 187
 toolCounts:
-  Bash: 23
+  Bash: 24
   Read: 28
   Agent: 11
   Write: 2
@@ -237,7 +237,7 @@ toolCounts:
   Skill: 3
   mcp__github__create_pull_request: 2
   mcp__github__subscribe_pr_activity: 2
-  ReadNotifications: 1
+  ReadNotifications: 4
   mcp__github__add_issue_comment: 1
   mcp__github__pull_request_read: 1
   PushNotification: 1
