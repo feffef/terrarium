@@ -1,0 +1,212 @@
+schemaVersion: 1
+session: session_01Mf4dUxuWB7WtkC5fVzByH6
+startedAt: 2026-10-16T12:07:54Z
+endedAt: 2026-10-16T12:42:28Z
+kind: interactive
+goal: Turn the latest session frictions into fixes
+status: completed
+outcome: Both PRs merged (ledger refresh plus a doc fix, and a cap on regression issues); five issues filed and open
+summary: "The user ran frictions-to-fixes. A survey subagent read the 44 sessions of the window and returned a ranked report and a ledger patch. Agent-initiated, per the Skill: picking one simple doc fix (a brief re-read line in dispatch-subagents), dispatching a Sonnet agent for the grouped doc PR with the ledger edit, and opening the two PRs. Human-instructed: the user answered two questions (file only the top 3 regressions; file both hard issues, so issues 2144 to 2148 went up) and then asked for the Skill to cap regression issues at three per run, ranked by severity, occurrence and proof of regression, as a separate PR (2149). The doc and ledger PR is 2150. The survey patch listed some sessions twice in a cluster, which the schema forbids; the impl agent dropped 23 duplicate occurrences (keeping the first, highest severity), and the counts quoted in my regression issues were the pre-dedupe ones, corrected by comment. Both PRs merged after green CI; PR 2150 is recorded in the ledger as the subagent-brief-defects fix. The five issues stay open for the owner."
+prs:
+  - "2149"
+  - "2150"
+docsRead:
+  - path: GLOSSARY-MAP.md
+    reason: session-start glossary read
+    useful: partly
+  - path: GLOSSARY.md
+    reason: Friction Ledger, regression and Human-only terms
+    useful: yes
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: brief checklist and worktree isolation for the impl agent
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: tool loading and overflow traps before the first GitHub call
+    useful: yes
+  - path: docs/agents/issue-tracker.md
+    reason: before filing the five issues
+    useful: partly
+  - path: docs/agents/triage-labels.md
+    reason: ready-for-human label meaning for the regression and hard issues
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: commit -F and trailer check, before the Stop-hook commit
+    useful: yes
+  - path: docs/agents/pr-workflow.md
+    reason: review before first push; PR comment and merge-pr recipe
+    useful: yes
+  - path: .agents/skills/log-session/SKILL.md
+    reason: authoring format for this log
+    useful: yes
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: the Skill being run and edited; the cap went into its section 3
+    useful: yes
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: Standards subagent applied its Duplication and Verbose lenses; partly applicable
+    useful: partly
+  - path: .agents/skills/writing-for-agents/SKILL.md
+    reason: Standards subagent used its no-op and single-source tests
+    useful: yes
+  - path: .claude/skills/frictions-to-fixes/SKILL.md
+    reason: (read before editing)
+  - path: CLAUDE.md
+    reason: (no reason given)
+  - path: layers/journal/tenant.config.ts
+    reason: (no reason given)
+  - path: /home/user/terrarium/.claude/skills/frictions-to-fixes/SKILL.md
+    reason: (no reason given)
+skillsUsed:
+  - name: frictions-to-fixes
+    reason: the run itself
+  - name: dispatch-subagents
+    reason: brief for the doc agent
+  - name: code-review
+    reason: Standards and Spec pass before each first push
+  - name: close-session
+    reason: PR-open log
+frictions:
+  - description: Quoted survey regression counts (28, 20, 10) in three issues before the ledger patch was applied; the schema-deduped counts were 26, 19, 6, so issues needed correction comments.
+    solution: File regression issues after the ledger edit is applied, or have the Skill say to quote counts from --summary run on the patched ledger.
+    severity: minor
+  - description: The survey subagent's ledger patch listed sessions twice in clusters, failing validate-content; the impl agent dropped 23 occurrences and one distinct description was lost.
+    solution: Have the survey brief require the patch to pass validate:content, merging repeat sessions into one occurrence.
+    severity: moderate
+  - description: The ledger patch is a YAML list but each ledger file is one mapping, so the impl agent had to write a splitter script.
+    solution: Say in the Skill that the patch is one entry per file, or provide a script that applies it.
+    severity: nit
+  - description: I forgot the CLAUDE.md verdict request in the two code-review spec briefs for the first PR and used wording from memory in the second; no verdicts came back from them.
+    solution: Put the verdict line into the code-review Skill's sub-agent briefs, or a shared brief snippet.
+    severity: nit
+  - description: The Skill says every regression gets an issue; 13 clusters regressed, so I had to ask the user how many to file.
+    solution: Cap regression issues per run (now PR 2149).
+    severity: minor
+  - description: The Stop hook asked to push unpushed commits twice before the ADR-0004 gate and code-review were done.
+    solution: None needed; the rule said to wait, and I did.
+    severity: nit
+durationSec: 2074
+models:
+  claude-sonnet-5-5: 142
+toolCounts:
+  Read: 11
+  Agent: 6
+  AskUserQuestion: 1
+  ToolSearch: 1
+  Bash: 37
+  mcp__github__issue_write: 5
+  Grep: 1
+  Edit: 6
+  Write: 6
+  mcp__github__list_pull_requests: 1
+  Skill: 2
+  mcp__github__create_pull_request: 2
+  mcp__claude-code-remote__subscribe_pr_activity: 2
+  mcp__github__add_issue_comment: 5
+  mcp__github__pull_request_read: 1
+  mcp__github__update_pull_request: 1
+  mcp__github__list_issues: 1
+filesEdited:
+  - .claude/skills/frictions-to-fixes/SKILL.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - .agents/skills/dispatch-subagents/SKILL.md
+  - layers/journal/content/current/frictions/subagent-brief-defects.yml
+rulesLoaded:
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0022.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/guards.md
+  - .claude/rules/adr-0002.md
+  - .claude/rules/adr-0008.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/tenant-layers.md
+docsReadBySubagents:
+  - .agents/skills/audit-docs/SKILL.md
+  - .agents/skills/writing-for-agents/SKILL.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Made me run gate:scoped and code-review before each first push; summary was enough, read pr-workflow instead of the ADR
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Open the PR and subscribe after pushing; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Header line on every issue, comment and PR body; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Told me to invoke close-session at PR open; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: Checked that no open Prune Trial covers the edited Skill text via the survey; did not open the ADR
+    useful: partly
+  - path: .claude/rules/adr-0020.md
+    reason: All authors Trusted; did not apply
+    useful: no
+  - path: .claude/rules/adr-0005.md
+    reason: Confirmed a Skill edit goes through a gated PR; summary was enough
+    useful: partly
+  - path: .claude/rules/adr-0015.md
+    reason: Reminded that pack Skills are off limits; none touched
+    useful: partly
+  - path: .claude/rules/adr-0021.md
+    reason: About glossaries; no glossary term changed
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: Skill-folder edit; no rule files changed
+    useful: no
+  - path: .claude/rules/adr-0022.md
+    reason: Triage sweep rule; unrelated to this run
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Loaded for the survey; neither PR touches a Human-only path
+    useful: yes
+  - path: .claude/rules/adr-0030.md
+    reason: Loaded in a subagent; unrelated to this run
+    useful: no
+  - path: .claude/rules/guards.md
+    reason: Loaded in a subagent; guards were not touched
+    useful: no
+  - path: .claude/rules/adr-0002.md
+    reason: Loaded by a hook in a subagent; unrelated
+    useful: no
+  - path: .claude/rules/adr-0008.md
+    reason: Loaded by a hook in a subagent; unrelated
+    useful: no
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: Loaded by a hook in a subagent; unrelated
+    useful: no
+  - path: .claude/rules/tenant-layers.md
+    reason: Loaded by a hook in a subagent when it read ledger files; unrelated
+    useful: no
+subagents:
+  - type: general-purpose
+    task: Survey and screen frictions
+  - type: general-purpose
+    task: Grouped doc fix and ledger edit
+    model: sonnet
+  - type: general-purpose
+    task: Standards review of skill edit
+    model: sonnet
+  - type: general-purpose
+    task: Spec review of skill edit
+    model: sonnet
+  - type: general-purpose
+    task: Standards review of ledger PR
+    model: sonnet
+  - type: general-purpose
+    task: Spec review of ledger PR
+    model: sonnet
+gitBranch: ccr-9bb7249a-zazowa
+entrypoint: remote_mobile
+cliVersion: 2.1.301
+landedBy: Stop
