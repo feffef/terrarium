@@ -61,7 +61,7 @@ export const READ_FIRST: ReadFirst[] = [
     doc: 'docs/agents/verifying-ui-changes.md',
     trigger: 'Before you say a UI change works, or take a screenshot',
     // Run through tsx, the script path is a later word, not the verb.
-    matches: (_t, segs) => segs.some((w) => w.some((x, i) => /(^|\/)screenshot\.ts$/.test(x) || (/(^|\/)preview\.ts$/.test(x) && w[i + 1] === 'shot'))),
+    matches: (_t, segs) => segs.some((w) => w.some((x, i) => /(^|\/)screenshot\.ts$/.test(x) || (/(^|\/)preview\.ts$/.test(x) && ['shot', 'review'].includes(w[i + 1]!)))),
   },
 ]
 

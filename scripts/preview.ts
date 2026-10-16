@@ -1,5 +1,5 @@
-// Local preview/dev server lifecycle (issue #240). One tool, three verbs —
-// `shot`, `start`, `stop` — so agents stop hand-rolling the start-server /
+// Local preview/dev server lifecycle (issue #240). One tool (verbs in
+// `USAGE` below), so agents stop hand-rolling the start-server /
 // screenshot / `pkill -f` teardown dance that has now silently corrupted work
 // three times running.
 //
@@ -25,7 +25,7 @@
 //   - Each instance binds its OWN ephemeral port (chosen at start), so two
 //     agents in one container never collide — the concurrency case that makes
 //     any fixed key (port 3000, or a name pattern) wrong.
-//   - `stop` ALWAYS exits 0 (teardown is never a "failure"); `shot`/`start`
+//   - `stop` ALWAYS exits 0 (teardown is never a "failure"); `shot`/`start`/`review`
 //     exit non-zero WITH diagnostics only on a genuine failure to come up.
 //   - `shot` folds the whole lifecycle into one process, so the common
 //     screenshot path has no teardown step for a shell to drop at all.
