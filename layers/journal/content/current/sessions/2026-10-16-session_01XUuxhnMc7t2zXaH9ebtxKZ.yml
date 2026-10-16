@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01XUuxhnMc7t2zXaH9ebtxKZ
 startedAt: 2026-10-16T10:55:56Z
-endedAt: 2026-10-16T11:18:38Z
+endedAt: 2026-10-16T11:25:00Z
 kind: delegated
 goal: Retire recurring session frictions
-status: in-review
-outcome: One grouped doc PR (#2140) open with three fixes and the Friction Ledger update; one regression issue (#2138) filed for a human.
-summary: "The owner invoked the frictions-to-fixes Skill (one human prompt, the kickoff); everything after was agent-initiated under that Skill. A survey subagent read all 48 sessions since 2026-10-14, screened them against the tracker, open Prune Trials and pack-Skill limits, and returned ranked candidates plus a ledger patch. I picked three simple, safe-surface doc fixes (worktree-guard wording in the build workflow brief, restart and resume note and the review-cap `failed` note in clear-backlog SKILL.md), and filed #2138 for the one regression (local-gate-green-ci-red, whose earlier fix #1824 only fixed flaky tests). One Sonnet agent in a worktree built the doc fixes and the ledger edit; I ran both code-review axes, trimmed one sentence of incident narration, pushed, opened PR #2140 and subscribed. Not dispatched: owner-corrections-overlap-boilerplate (design tension with closed #1912) and blocked-waiting (unverified value). Still open: CI, my verdict comment and the merge. The three tracked ledger entries carry a prose ref because the PR number did not exist yet."
+status: completed
+outcome: "Grouped doc PR #2140 merged with three fixes and the Friction Ledger update; regression issue #2138 filed for a human."
+summary: "The owner invoked the frictions-to-fixes Skill (one human prompt, the kickoff); everything after was agent-initiated under that Skill. A survey subagent read all 48 sessions since 2026-10-14, screened them against the tracker, open Prune Trials and pack-Skill limits, and returned ranked candidates plus a ledger patch. I picked three simple, safe-surface doc fixes (worktree-guard wording in the build workflow brief, restart and resume note and the review-cap `failed` note in clear-backlog SKILL.md), and filed #2138 for the one regression (local-gate-green-ci-red, whose earlier fix #1824 only fixed flaky tests). One Sonnet agent in a worktree built the doc fixes and the ledger edit; I ran both code-review axes, trimmed one sentence of incident narration, pushed, opened PR #2140 and subscribed. Not dispatched: owner-corrections-overlap-boilerplate (design tension with closed #1912) and blocked-waiting (unverified value). CI passed, I posted my verdict and merged #2140 with merge-pr.ts. The three tracked ledger entries carry a prose ref because the PR number did not exist yet."
 prs:
   - "2140"
 docsRead:
@@ -77,21 +77,25 @@ frictions:
   - description: The impl agent's Bash commands hit the worktree guard on compound commands and a pipe, the same behaviour fix 1 addresses.
     solution: The new clause in the build workflow brief; the guard itself is outside the repo.
     severity: nit
-durationSec: 1362
+durationSec: 1744
 models:
-  claude-sonnet-5-5: 56
+  claude-sonnet-5-5: 70
 toolCounts:
   Read: 10
   ToolSearch: 2
   Skill: 4
   Agent: 4
-  Bash: 8
+  Bash: 11
   mcp__github__issue_write: 1
   Write: 2
   Edit: 1
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
-  mcp__github__pull_request_read: 1
+  mcp__github__pull_request_read: 2
+  ReadNotifications: 2
+  mcp__claude-code-remote__send_later: 1
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__delete_trigger: 1
 filesEdited:
   - .agents/skills/clear-backlog/SKILL.md
   - .claude/workflows/clear-backlog-build.js
