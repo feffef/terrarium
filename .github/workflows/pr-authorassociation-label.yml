@@ -13,9 +13,9 @@
 # same-repo PRs lets us apply `trusted` safely and never needs a token on a
 # fork; the untrusted case is simply the unlabeled default.
 #
-# Trigger is plain `pull_request`, never `pull_request_target`/`workflow_run`:
-# ADR-0020 requires it because those bypass the "require approval to run fork
-# PR workflows" Actions setting. See docs/research/making-repo-public.md §3.
+# Trigger is plain `pull_request`: fork code must not run in CI before a Trusted
+# user approves the run (ADR-0020), and `pull_request_target`/`workflow_run` skip
+# that approval when they check out PR code. See docs/research/making-repo-public.md §3.
 
 name: pr-authorassociation-label
 
