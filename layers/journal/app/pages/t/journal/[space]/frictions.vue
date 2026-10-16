@@ -64,7 +64,7 @@ useSeoMeta({ title: () => `${PAGE_TITLE} · journal/${space}` })
         <code>frictions-to-fixes</code> Skill keeps it current. Fixed clusters stay
         listed: what went wrong matters as much as what is still open. A cluster
         sits in the list where it ranks higher. Click a cluster (▸) to expand its
-        cause, sessions, logged frictions and merged PRs.
+        cause, sessions, proposed solutions and merged PRs.
       </p>
 
       <template v-for="sec in sections" :key="sec.id">
@@ -100,14 +100,12 @@ useSeoMeta({ title: () => `${PAGE_TITLE} · journal/${space}` })
                   <span class="occ-sev">{{ o.severity }}</span>
                 </li>
               </ul>
-              <template v-if="e.reports.length">
-                <h3 class="occ-h">Logged frictions and proposed solution</h3>
-                <p class="occ-intro">As described by the agents that hit it.</p>
+              <template v-if="e.solutions.length">
+                <h3 class="occ-h">Proposed solutions</h3>
+                <p class="occ-intro">As proposed by the agents that hit it.</p>
                 <ul class="sol">
-                  <li v-for="r in e.reports" :key="r.description + r.solution">
-                    {{ r.description }}
-                    <span class="proposed">→ {{ r.solution }}</span>
-                    <NuxtLink :to="r.to" :aria-label="`Session log, ${r.date}`">{{ r.date }}</NuxtLink>
+                  <li v-for="s in e.solutions" :key="s.text">
+                    {{ s.text }} <NuxtLink :to="s.to" :aria-label="`Session log, ${s.date}`">{{ s.date }}</NuxtLink>
                   </li>
                 </ul>
               </template>
@@ -207,7 +205,6 @@ details[open] .summary::before { content: '▾'; }
 .occ, .sol { max-height: 24rem; overflow-y: auto; overscroll-behavior: contain; }
 .sol { margin: 0 0 0.7rem 3.3rem; padding-left: 1.1rem; font-size: 0.78rem; color: var(--jd-muted); overflow-wrap: anywhere; }
 .sol li { margin-bottom: 0.35rem; }
-.proposed { display: block; color: var(--jd-ink); }
 .jd-prose .sol a { color: var(--jd-faint); font-family: var(--jd-mono); font-size: 0.7rem; }
 .pill.status { white-space: normal; border-radius: 0.9rem; }
 .jd-prose .pill.status a { color: inherit; text-decoration: underline; }

@@ -60,21 +60,23 @@ describe('ledgerPanels goals', () => {
   })
 })
 
-describe('ledgerPanels reports', () => {
-  const logged = (name: string, texts: ({ description: string; solution: string } | undefined)[]): FrictionClusterDoc => ({
-    ...cluster(name, texts.map(() => 'nit')),
-    occurrences: texts.map((t, i) => ({ session: `${name}-${i}`, date: `2026-10-0${i + 1}`, severity: 'nit' as const, ...t })),
+describe('ledgerPanels solutions', () => {
+  const proposed = (name: string, solutions: (string | undefined)[]): FrictionClusterDoc => ({
+    ...cluster(name, solutions.map(() => 'nit')),
+    occurrences: solutions.map((solution, i) => ({ session: `${name}-${i}`, date: `2026-10-0${i + 1}`, severity: 'nit' as const, solution })),
   })
 
-  it('lists the friction an occurrence carries with its solution once, linked to the Space that holds it', () => {
-    const t = { description: 'Gate ran twice', solution: 'Add a guard' }
-    const [e] = ledgerPanels([logged('x', [t, t])], 'current', new Set(['x-0']), 'archived').severe
-    expect(e!.reports).toEqual([{ ...t, date: '2026-10-02', to: '/t/journal/archived#session-x-1' }])
+  it('lists each distinct proposed solution once, newest first, linked to the Space that holds its session', () => {
+    const [e] = ledgerPanels([proposed('x', ['Add a guard', 'Add a guard', 'Drop the hook'])], 'current', new Set(['x-0']), 'archived').severe
+    expect(e!.solutions).toEqual([
+      { text: 'Drop the hook', date: '2026-10-03', to: '/t/journal/archived#session-x-2' },
+      { text: 'Add a guard', date: '2026-10-02', to: '/t/journal/archived#session-x-1' },
+    ])
   })
 
-  it('shows nothing for an occurrence that carries no friction text', () => {
-    const [e] = ledgerPanels([logged('x', [undefined])], 'current', new Set(), 'archived').severe
-    expect(e!.reports).toEqual([])
+  it('shows nothing for an occurrence that carries no solution', () => {
+    const [e] = ledgerPanels([proposed('x', [undefined])], 'current', new Set(), 'archived').severe
+    expect(e!.solutions).toEqual([])
   })
 })
 
