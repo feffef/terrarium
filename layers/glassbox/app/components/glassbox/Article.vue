@@ -34,7 +34,7 @@ const parts = computed(() => {
 <template>
   <article class="article">
     <p v-if="draft" class="draft">Draft: this page failed the guide's bar on its first attempt.</p>
-    <p v-if="subject" class="chips"><span class="chip">{{ subject.name }}</span><span>Lesson</span></p>
+    <p v-if="subject" class="chips"><NuxtLink class="chip" :to="`${base}#${subject.slug}`">{{ subject.name }}</NuxtLink><span>Lesson</span></p>
     <p v-else-if="walkthrough" class="chips"><span class="chip">Walkthrough</span></p>
     <h1 :class="{ lesson: subject || walkthrough }">{{ page.title }}</h1>
     <ContentRenderer class="gb-prose" :value="parts.intro" />
@@ -62,6 +62,7 @@ const parts = computed(() => {
 .chips { display: flex; gap: 8px; margin: 40px 0 0; font-size: 13px; color: var(--gb-muted); }
 .chips span { padding: 5px 12px; }
 .chips .chip {
+  text-decoration: none;
   border: 1px solid var(--gb-pane-edge);
   border-radius: 99px;
   background: var(--gb-pane);
@@ -215,6 +216,8 @@ const parts = computed(() => {
   background: var(--gb-bg);
   font-size: 14px;
   line-height: 1.5;
+  max-width: 100%;
+  overflow-wrap: anywhere;
 }
 .stop-pane :deep(.gb-stop-links span:first-child) { color: var(--gb-muted); }
 .stop-pane :deep(.gb-stop-links span:first-child)::after { content: ' · '; }

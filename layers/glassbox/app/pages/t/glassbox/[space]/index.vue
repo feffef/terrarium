@@ -72,13 +72,13 @@ useSeoMeta({ description: () => landing.value?.description })
           <NuxtLink :to="`${base}${page.path}`"><strong>{{ page.title }} →</strong><span class="teaser">{{ page.description }}</span></NuxtLink>
         </li>
       </ul>
-      <a class="folder" :href="folderUrl('walkthroughs')" title="Folder in the repo">folder ↗</a>
+      <a class="folder" :href="folderUrl('walkthroughs')" title="Folder in the repo">files on GitHub ↗</a>
     </section>
 
     <section v-if="data?.directory.length" class="directory">
       <h2>Subjects</h2>
       <div class="cards">
-        <section v-for="subject in data.directory" :key="subject.slug" class="card gb-pane">
+        <section v-for="subject in data.directory" :id="subject.slug" :key="subject.slug" class="card gb-pane">
           <div class="card-head">
             <h3>{{ subject.name }}</h3>
             <span class="count">{{ subject.lessons.length }} {{ subject.lessons.length === 1 ? 'Lesson' : 'Lessons' }}</span>
@@ -89,7 +89,7 @@ useSeoMeta({ description: () => landing.value?.description })
               <NuxtLink :to="`${base}${lesson.path}`"><span class="title">{{ lesson.title }}</span><span class="teaser">{{ lesson.description }}</span></NuxtLink>
             </li>
           </ul>
-          <a class="folder" :href="folderUrl(subject.slug)" title="Folder in the repo">folder ↗</a>
+          <a class="folder" :href="folderUrl(subject.slug)" title="Folder in the repo">files on GitHub ↗</a>
         </section>
       </div>
     </section>
@@ -220,6 +220,7 @@ section { margin-bottom: 56px; }
 .card ul { display: flex; flex-direction: column; gap: 10px; margin: 0; padding: 0; list-style: none; }
 .card li a { display: flex; flex-direction: column; gap: 1px; text-decoration: none; }
 .card .title { font-size: 15px; line-height: 1.4; color: var(--gb-ink); font-weight: 500; }
+.card .title::after { content: ' →'; color: var(--gb-muted); }
 .card li a:hover .title { color: var(--gb-accent); }
 
 .sources ul { display: flex; flex-wrap: wrap; gap: 10px; margin: 0; padding: 0; list-style: none; }
