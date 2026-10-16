@@ -1,7 +1,7 @@
 schemaVersion: 1
 session: session_018sAirSgDY1Nv82JVogjcyR
 startedAt: 2026-10-16T14:36:41Z
-endedAt: 2026-10-16T15:08:56Z
+endedAt: 2026-10-16T15:15:58Z
 kind: delegated
 goal: Turn the last two weeks of logged session frictions into fixes
 status: completed
@@ -95,13 +95,16 @@ frictions:
   - description: The Stop hook asked me to push the unpushed survey commit before the gate and review ADR-0004 requires; I declined.
     solution: Have the hook skip the nag while a frictions-to-fixes ledger branch awaits its gate.
     severity: nit
-durationSec: 1935
+  - description: I opened the ledger PR only after design, dispatch and the doc-fix PR, about 25 minutes after the survey committed the ledger; section 5 is ordered after 'Decide' and does not say the PR can open first.
+    solution: In frictions-to-fixes section 5, say to open the ledger PR right after the survey's commit and add status edits in a follow-up commit.
+    severity: minor
+durationSec: 2357
 models:
-  claude-sonnet-5-5: 101
+  claude-sonnet-5-5: 110
 toolCounts:
   Read: 8
   Skill: 4
-  Bash: 25
+  Bash: 26
   Agent: 5
   Edit: 3
   Write: 2
@@ -111,6 +114,7 @@ toolCounts:
   mcp__claude-code-remote__subscribe_pr_activity: 3
   mcp__github__add_issue_comment: 4
   mcp__github__pull_request_read: 2
+  ReadNotifications: 1
 filesEdited:
   - layers/journal/content/current/frictions/ledger-yaml-hand-edit-errors.yml
   - layers/journal/content/current/frictions/moved-main-stale-base.yml
