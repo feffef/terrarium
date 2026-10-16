@@ -11,7 +11,7 @@ describe('glassboxSubjectOf', () => {
 })
 
 describe('glassboxWalkthroughs', () => {
-  it('lists only Walkthroughs, Start here first, then by title', () => {
+  it('lists only Walkthroughs, by title', () => {
     expect(glassboxWalkthroughs([
       { path: '/', title: 'Landing' },
       { path: '/walkthroughs/routines', title: 'The Routines' },
@@ -19,8 +19,8 @@ describe('glassboxWalkthroughs', () => {
       { path: '/claude-code/claude-md', title: 'CLAUDE.md as the every-session contract' },
       { path: '/walkthroughs/from-file-to-browser', title: 'From file to browser' },
     ])).toEqual([
-      { path: '/walkthroughs/from-file-to-browser', title: 'From file to browser' },
       { path: '/walkthroughs/friction-to-fix', title: 'A friction becomes a fix' },
+      { path: '/walkthroughs/from-file-to-browser', title: 'From file to browser' },
       { path: '/walkthroughs/routines', title: 'The Routines' },
     ])
   })

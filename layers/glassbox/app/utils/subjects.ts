@@ -12,15 +12,6 @@ export const glassboxSubjects = [
   { slug: 'terrarium-practice', name: 'House rules', blurb: 'The Gate, ADRs, session logs, the Human-only list.' },
 ] as const
 
-export const glassboxStartHere = '/walkthroughs/from-file-to-browser'
-
-/** The landing's story tiles, Start here first; a test checks each is a guide Walkthrough. */
-export const glassboxStories = [
-  { verb: 'Read', path: glassboxStartHere },
-  { verb: 'Change', path: '/walkthroughs/asking-for-a-change' },
-  { verb: 'Ship', path: '/walkthroughs/a-change-goes-live' },
-] as const
-
 /** The landing's term strip: `terms` entries a newcomer meets first, picked from what guide Lessons expand most. */
 export const glassboxLandingTerms = ['gate', 'tenant', 'human-only', 'collection', 'space', 'skill', 'rule', 'manifest'] as const
 
@@ -51,10 +42,9 @@ export function glassboxDirectory<T extends GlassboxPageLink>(pages: T[]) {
     .filter((subject) => subject.lessons.length)
 }
 
-/** Walkthroughs, Start here first, then by title. */
+/** Walkthroughs, by title. */
 export function glassboxWalkthroughs<T extends GlassboxPageLink>(pages: T[]) {
-  const rank = (page: T) => (page.path === glassboxStartHere ? 0 : 1)
   return pages
     .filter((page) => glassboxWalkthroughOf(page.path))
-    .sort((a, b) => rank(a) - rank(b) || a.title.localeCompare(b.title))
+    .sort((a, b) => a.title.localeCompare(b.title))
 }

@@ -9,7 +9,6 @@ const props = defineProps<{
 }>()
 defineEmits<{ close: [] }>()
 
-const startHere = computed(() => props.walkthroughs.find((page) => page.path === glassboxStartHere))
 const currentSubject = computed(() => props.path.split('/')[1])
 </script>
 
@@ -19,11 +18,6 @@ const currentSubject = computed(() => props.path.split('/')[1])
       <span>Subjects</span>
       <button type="button" class="close" aria-label="Close menu" @click="$emit('close')">✕</button>
     </div>
-
-    <NuxtLink v-if="startHere" class="start" :to="`${base}${startHere.path}`">
-      <span class="gb-label">Start here</span>
-      <strong>{{ startHere.title }}</strong>
-    </NuxtLink>
 
     <section v-if="subjects.length">
       <h2 class="gb-label">Subjects</h2>
@@ -65,15 +59,6 @@ a { text-decoration: none; }
 a:hover { color: var(--gb-accent); }
 h2 { margin: 0; padding: 0 10px 8px; }
 ul { list-style: none; margin: 0; padding: 0; }
-.start {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-  padding: 12px 14px;
-  border-radius: 12px;
-  background: var(--gb-tint);
-  color: var(--gb-ink);
-}
 summary {
   display: flex;
   justify-content: space-between;
@@ -131,7 +116,6 @@ li a[aria-current='page'] { background: var(--gb-solid); color: var(--gb-solid-i
     font-size: 16px;
     cursor: pointer;
   }
-  .start { flex-direction: row; justify-content: space-between; align-items: center; min-height: 48px; padding: 0 14px; margin-bottom: 6px; }
   section > h2 { display: none; }
   section + section > h2 { display: block; padding-top: 16px; }
   summary { min-height: 44px; padding: 0 4px; border-radius: 0; border-bottom: 1px solid var(--gb-line); font-size: 16px; }
