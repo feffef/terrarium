@@ -5,9 +5,10 @@
 // hash, so the summary cannot go stale silently: the author re-reads the rule,
 // updates it if the decision changed, then runs this script with `--write`.
 // Every other rule must have `paths` and name only `docs/` files that exist
-// (ADR-0029, issue #1765). A summary's pointer estimates its ADR's tokens so
-// the read looks cheap (issue #1939); `--write` stamps it too. An ADR in the
-// new shape carries no history (ADR-0030).
+// (ADR-0029, issue #1765). A summary's pointer says when to read its ADR in
+// full, so the read happens where it pays off (issue #2146), and estimates the
+// ADR's tokens so the read looks cheap (issue #1939); `--write` stamps the
+// estimate. An ADR in the new shape carries no history (ADR-0030).
 //
 // Usage: pnpm validate:content (chained), or
 //   pnpm exec tsx scripts/validate-adr-rules.ts [--write]
@@ -59,11 +60,13 @@ export function withRuleHash(ruleText: string, hash: string): string {
 /** About 4 characters a token, rounded to the nearest 100. */
 export const adrTokens = (text: string) => Math.max(100, Math.round(text.length / 400) * 100)
 
-const POINTER = 'If this rule seems relevant to your task, you must read the full ADR first'
-const POINTER_RE = /If this rule seems relevant to your task, you must read the full ADR first(?: \(about \d+ tokens\))?:/
-const pointerText = (tokens: number) => `${POINTER} (about ${tokens} tokens):`
+const POINTER_SHAPE = 'Read `docs/adr/NNNN-<name>.md` to change it or review work it governs[, or <what else it answers>].'
+const ESTIMATE_RE = /^(Read `docs\/adr\/(\d{4})-[\w.-]+\.md`)(?: \(~\d+ tokens\))?/
+const POINTER_RE = new RegExp(`${ESTIMATE_RE.source} to change it or review work it governs(?:, or \\S[^\\n]*)?\\.$`, 'm')
+const estimate = (tokens: number) => ` (~${tokens} tokens) to`
 
-export const withRuleTokens = (ruleText: string, tokens: number) => ruleText.replace(POINTER_RE, pointerText(tokens))
+export const withRuleTokens = (ruleText: string, tokens: number) =>
+  ruleText.replace(POINTER_RE, (line) => line.replace(ESTIMATE_RE, `$1 (~${tokens} tokens)`))
 
 const isSummary = (file: string) => /^adr-\d{4}\.md$/.test(file)
 
@@ -123,11 +126,13 @@ export function findAdrRuleProblems(input: AdrRuleInput): string[] {
   }
   for (const [file, text] of Object.entries(rules)) {
     const adr = adrs[ruleAdr(file) ?? '']
-    if (adr === undefined || !isSummary(file) || text.includes(pointerText(adrTokens(adr)))) continue
+    const pointer = POINTER_RE.exec(text)
+    const own = pointer?.[2] === ruleAdr(file)
+    if (adr === undefined || !isSummary(file) || (own && pointer![0].includes(estimate(adrTokens(adr))))) continue
     problems.push(
-      POINTER_RE.test(text)
+      own
         ? `${RULES_DIR}/${file} gives a stale token estimate: run \`pnpm exec tsx scripts/validate-adr-rules.ts --write\`.`
-        : `${RULES_DIR}/${file} must point to its ADR with "${POINTER}:".`,
+        : `${RULES_DIR}/${file} must point to its ADR with a line "${POINTER_SHAPE}".`,
     )
   }
   const other = input.otherRules
