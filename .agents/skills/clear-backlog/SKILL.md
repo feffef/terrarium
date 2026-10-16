@@ -114,7 +114,7 @@ Act on each branch's `status`:
   claims unchecked.
 
 After a session resume or restart, check the run journal's mtime before you
-call a build live: a restart kills running workflows and gate runs (exit 137).
+call a build live: a restart kills running workflows.
 A `resumeFromRunId` resume must pass the original `args`.
 
 An issue that can't start yet (time-gated, or its output is not a PR) goes to
