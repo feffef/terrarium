@@ -54,12 +54,14 @@ Its body follows one contract, which the page frames like design 1b
 - `## The concept`, whose last paragraph is `Full reference: [label](url)`
   (House rules Lessons have none);
 - `## In Terrarium`, with `### Why it's built this way` and
-  `### What to watch for`. Every line under Why it's built this way is
-  `<topic>: ADR-NNNN (:file[…]).`, one per ADR, never restating it and
-  pointing nowhere else. A topic no ADR binds gets
-  `<topic>: :file[<the doc that holds the reason>].`, never a loosely
-  related ADR. What to watch for warns about consequences for the reader, and
-  links an ADR rather than restating its Scope or Consequences;
+  `### What to watch for`. Why it's built this way gives each reason one
+  short paragraph a newcomer can follow, with no unexplained jargon: the
+  problem, what Terrarium chose, and what that costs, if anything. It may end
+  with the ADR that records the decision, as `ADR-NNNN (:file[…])`, or, when
+  no ADR does, with the file that holds the reason, as `:file[…]`; never a
+  loosely related ADR. What to watch for warns
+  about consequences for the reader, and links an ADR rather than restating
+  its Scope or Consequences;
 - `## Try it in your project`;
 - `## Where next`, a list of bare links to at most the 5 closest pages:
   related Lessons first, then optionally one Journal page as evidence. A
