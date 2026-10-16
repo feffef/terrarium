@@ -23,6 +23,35 @@
 #            topic's tools correctly.
 trials:
   - problem: >
+      Started by the owner (a Trusted user, ADR-0027): the "read files with the
+      Read tool, not cat" instruction cut from CLAUDE.md's Working conventions
+      and from ADR-0029's Scope (-4). Its only reason was that the Read tool
+      always loads a file's rules. It failed as prose: 85 "used cat/sed instead
+      of Read" Frictions in 82 of 137 sessions, 2026-10-11 to 10-16 (all nit or
+      minor). The rules still load: Claude Code itself loads them on a simple
+      one-file Bash read, `bash-rules-hint.ts` does for the rest, `skill-rules-hint.ts`
+      on a Skill run, and Edit refuses a file the Read tool hasn't opened.
+      A read-only survey of that window found at most 225 of 521 useful
+      path-scoped rule loads came only from a read, about 40 of which changed an
+      action, mostly where the governing doc was read in the same command. The
+      hook and every rule's `paths` are unchanged.
+    territory:
+      paths:
+        - "CLAUDE.md: the Working conventions bullet on reading files"
+        - "docs/adr/0029-instructions-load-with-the-files-they-govern.md: the Scope bullet on reading files, and the See entry for bash-rules-hint.ts"
+      keywords:
+        - Read tool
+        - not `cat`
+    opened: 2026-10-16
+    proven: true
+    check: >
+      Damage is a major or blocker Friction where a session missed guidance a
+      path-scoped rule holds, because it read the governing file in a way that
+      loaded no rule, and acted against that rule. NOT damage: a session reading
+      with cat or sed; the Bash hook or a Skill run loading a rule; a rule
+      loading where it didn't apply. Since this trial cuts an ADR, a major or
+      blocker verdict restores the cut text in both files.
+  - problem: >
       `close-session` SKILL.md rewritten plainly, 60 lines to 46 (-14): the
       three logging conditions and the PR-open sequence cut to one goal-shaped
       paragraph and a numbered list, every rule kept (re-read, log, re-invoke,

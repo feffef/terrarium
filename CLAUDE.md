@@ -63,8 +63,6 @@ act, once per session.
   fact and reality differ, fix its home.
 - **Code comments say WHY, never WHAT.** Default to no comment. When the why
   isn't obvious, point to the doc that holds it (an ADR, an issue).
-- **Read files with the Read tool**, not `cat`: Edit refuses a file you haven't
-  Read, and only the Read tool always loads a file's rules (ADR-0029).
 
 ## Repo layout
 

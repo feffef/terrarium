@@ -32,8 +32,6 @@ commit or a PR, stay in `CLAUDE.md`.
   edit that loads it, so it can't order a step before that or make the agent
   read its source. Such steps stay in `CLAUDE.md`. A rule that loads at
   session start may say when to act.
-- **Read files with the Read tool.** It always loads a file's rules. A hook
-  adds them for most Bash reads too, but only as a backstop.
 
 ## Why
 
@@ -71,7 +69,7 @@ each kind of instruction has one home.
 
 - `scripts/validate-adr-rules.ts`: the gate's checks on rules.
 - `scripts/skill-rules-hint.ts`: adds a Skill's rules when it runs.
-- `scripts/bash-rules-hint.ts`: which Bash reads load rules; the backstop.
+- `scripts/bash-rules-hint.ts`: which Bash reads load rules.
 - `scripts/read-first-hint.ts`: points to a doc at a matching action.
 - `.agents/skills/audit-docs/SKILL.md`: checks that `docs/agents/` is reached.
 - `.agents/skills/log-session/SKILL.md`: logging an unrelated rule.
