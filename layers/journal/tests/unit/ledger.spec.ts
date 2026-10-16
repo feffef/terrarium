@@ -60,24 +60,24 @@ describe('ledgerPanels goals', () => {
   })
 })
 
-describe('ledgerPanels solutions', () => {
-  const fix = (severity: Severity, solution: string) => ({ severity, solution })
+describe('ledgerPanels reports', () => {
+  const logged = (severity: Severity, description: string, solution: string) => ({ severity, description, solution })
 
-  it('lists a session\'s solution once, linked to the Space that holds it', () => {
+  it("lists what a session logged with its solution once, linked to the Space that holds it", () => {
     const c = cluster('x', ['nit', 'nit'])
-    const [e] = ledgerPanels([c], 'current', new Set(['x-0']), 'archived', {}, {
-      'x-0': [fix('nit', 'Add a guard')],
-      'x-1': [fix('nit', 'Add a guard')],
-    }).severe
-    expect(e!.solutions).toEqual([{ text: 'Add a guard', date: '2026-10-02', to: '/t/journal/archived#session-x-1' }])
+    const same = [logged('nit', 'Gate ran twice', 'Add a guard')]
+    const [e] = ledgerPanels([c], 'current', new Set(['x-0']), 'archived', {}, { 'x-0': same, 'x-1': same }).severe
+    expect(e!.reports).toEqual([
+      { description: 'Gate ran twice', solution: 'Add a guard', date: '2026-10-02', to: '/t/journal/archived#session-x-1' },
+    ])
   })
 
   it('skips a session whose Frictions of that severity are ambiguous, and is empty without any', () => {
     const [e] = ledgerPanels([cluster('x', ['nit'])], 'current', new Set(['x-0']), 'archived', {}, {
-      'x-0': [fix('nit', 'A'), fix('nit', 'B'), fix('major', 'C')],
+      'x-0': [logged('nit', 'a', 'A'), logged('nit', 'b', 'B'), logged('major', 'c', 'C')],
     }).severe
-    expect(e!.solutions).toEqual([])
-    expect(ledgerPanels([cluster('y', ['nit'])], 'current', new Set(), 'archived').severe[0]!.solutions).toEqual([])
+    expect(e!.reports).toEqual([])
+    expect(ledgerPanels([cluster('y', ['nit'])], 'current', new Set(), 'archived').severe[0]!.reports).toEqual([])
   })
 })
 
@@ -90,20 +90,10 @@ describe('ledgerPanels fixes', () => {
     fixes: fixes.map((f) => ({ ...f, summary: `fix ${f.pr}` })),
   })
 
-  it('lists fixes newest first with their PR link, and names the PR merged on fixedOn in the pill', () => {
+  it('lists fixes newest first with their PR link, and none when there are none', () => {
     const [e] = ledgerPanels([fixed([{ pr: 1, date: '2026-10-05' }, { pr: 2, date: '2026-10-12' }])], 'current', new Set(), 'archived').severe
     expect(e!.fixes.map((f) => f.pr)).toEqual([2, 1])
     expect(e!.fixes[0]).toMatchObject({ summary: 'fix 2', url: 'https://github.com/feffef/terrarium/pull/2' })
-    expect(e!.fixedPr).toEqual({ number: 2, url: 'https://github.com/feffef/terrarium/pull/2' })
-  })
-
-  it('falls back to the newest fix, and shows no PR for a cluster that is not fixed or has no fixes', () => {
-    const [a] = ledgerPanels([fixed([{ pr: 1, date: '2026-10-05' }], '2026-10-09')], 'current', new Set(), 'archived').severe
-    expect(a!.fixedPr?.number).toBe(1)
-    const [b] = ledgerPanels([{ ...fixed([{ pr: 1, date: '2026-10-05' }]), status: 'open' }], 'current', new Set(), 'archived').severe
-    expect(b!.fixedPr).toBeUndefined()
-    expect(b!.fixes).toHaveLength(1)
-    const [c] = ledgerPanels([fixed([])], 'current', new Set(), 'archived').severe
-    expect(c).toMatchObject({ fixes: [], fixedPr: undefined })
+    expect(ledgerPanels([fixed([])], 'current', new Set(), 'archived').severe[0]!.fixes).toEqual([])
   })
 })

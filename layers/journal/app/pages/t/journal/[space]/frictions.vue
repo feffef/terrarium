@@ -3,7 +3,7 @@
 // the sibling `[...slug].vue`; reads only this Space's collections via useSpace.
 import { routingMap } from '#routing'
 import { resolveSpaceRoute } from '#shared/routing'
-import type { SessionFixes } from '../../../../utils/ledger'
+import type { SessionFrictions } from '../../../../utils/ledger'
 
 definePageMeta({ name: 'journal-frictions' })
 const PAGE_TITLE = 'Friction Ledger'
@@ -19,14 +19,14 @@ const { data } = await useAsyncData(route.path, async () => {
   const cited = new Map<string, Set<string>>()
   for (const o of clusters.flatMap((c) => c.occurrences)) cited.set(o.session, (cited.get(o.session) ?? new Set()).add(o.severity))
   const goals: Record<string, string> = {}
-  const fixes: SessionFixes = {}
+  const frictions: SessionFrictions = {}
   const own: string[] = []
   const read = async (sessions: typeof collections.sessions, isOwn: boolean) => {
     for (const s of await queryCollection(sessions).select('session', 'goal', 'frictions').all()) {
       const severities = cited.get(s.session)
       if (!severities || s.session in goals) continue
       goals[s.session] = s.goal
-      fixes[s.session] = s.frictions.filter((f) => severities.has(f.severity)).map(({ severity, solution }) => ({ severity, solution }))
+      frictions[s.session] = s.frictions.filter((f) => severities.has(f.severity)).map(({ severity, description, solution }) => ({ severity, description, solution }))
       if (isOwn) own.push(s.session)
     }
   }
@@ -34,10 +34,10 @@ const { data } = await useAsyncData(route.path, async () => {
   // Archiving moved older sessions to the other Space; read it for what is still missing.
   const other = cited.size > own.length ? resolveSpaceRoute('journal', otherSpace, undefined) : null
   if (other && otherSpace !== space) await read(other.collections.sessions, false)
-  return { clusters, goals, fixes, own }
+  return { clusters, goals, frictions, own }
 })
 const panels = computed(() =>
-  ledgerPanels(data.value?.clusters ?? [], space, new Set(data.value?.own), otherSpace, data.value?.goals, data.value?.fixes),
+  ledgerPanels(data.value?.clusters ?? [], space, new Set(data.value?.own), otherSpace, data.value?.goals, data.value?.frictions),
 )
 const sections = computed(() => [
   {
@@ -69,7 +69,7 @@ useSeoMeta({ title: () => `${PAGE_TITLE} · journal/${space}` })
         <code>frictions-to-fixes</code> Skill keeps it current. Fixed clusters stay
         listed: what went wrong matters as much as what is still open. A cluster
         sits in the list where it ranks higher. Click a cluster (▸) to expand its
-        cause, sessions and proposed solutions.
+        cause, sessions, logged frictions and merged PRs.
       </p>
 
       <template v-for="sec in sections" :key="sec.id">
@@ -85,12 +85,15 @@ useSeoMeta({ title: () => `${PAGE_TITLE} · journal/${space}` })
                   <span class="pill sev" :class="e.worst" :title="`Worst severity: ${e.worst}`">{{ e.worst }}</span>
                   <span class="pill status" :class="e.status" :title="e.fixedOn ? `Fixed on ${e.fixedOn}` : undefined">
                     {{ e.status.replace('-', ' ') }}{{ e.fixedOn ? ` ${e.fixedOn.slice(5)}` : '' }}
-                    <template v-if="e.fixedPr">· <a :href="e.fixedPr.url" @click.stop>PR #{{ e.fixedPr.number }}</a></template>
+                    <template v-if="e.status === 'fixed' && e.fixes.length">
+                      · {{ e.fixes.length === 1 ? 'PR' : 'PRs' }}
+                      <template v-for="(f, i) in e.fixes" :key="f.pr"><a :href="f.url" @click.stop>#{{ f.pr }}</a>{{ i < e.fixes.length - 1 ? ', ' : '' }}</template>
+                    </template>
                   </span>
                 </span>
               </summary>
               <p class="cause">{{ e.cause }}</p>
-              <p v-if="e.ref" class="ref-text">{{ e.ref }}</p>
+              <p v-if="e.ref" class="ref-text"><strong>References:</strong> {{ e.ref }}</p>
               <h3 class="occ-h">Occurrences</h3>
               <p class="occ-intro">Newest first: date (links to the session log) → the session's goal.</p>
               <ul class="occ">
@@ -102,12 +105,14 @@ useSeoMeta({ title: () => `${PAGE_TITLE} · journal/${space}` })
                   <span class="occ-sev">{{ o.severity }}</span>
                 </li>
               </ul>
-              <template v-if="e.solutions.length">
-                <h3 class="occ-h">Proposed solutions</h3>
-                <p class="occ-intro">As proposed by the agents that hit it.</p>
+              <template v-if="e.reports.length">
+                <h3 class="occ-h">Logged frictions and proposed solution</h3>
+                <p class="occ-intro">As described by the agents that hit it.</p>
                 <ul class="sol">
-                  <li v-for="s in e.solutions" :key="s.text">
-                    {{ s.text }} <NuxtLink :to="s.to" :aria-label="`Session log, ${s.date}`">{{ s.date }}</NuxtLink>
+                  <li v-for="r in e.reports" :key="r.description + r.solution">
+                    {{ r.description }}
+                    <span class="proposed">→ {{ r.solution }}</span>
+                    <NuxtLink :to="r.to" :aria-label="`Session log, ${r.date}`">{{ r.date }}</NuxtLink>
                   </li>
                 </ul>
               </template>
@@ -206,7 +211,10 @@ details[open] .summary::before { content: '▾'; }
 /* About 20 lines, then scroll inside the list. */
 .occ, .sol { max-height: 24rem; overflow-y: auto; overscroll-behavior: contain; }
 .sol { margin: 0 0 0.7rem 3.3rem; padding-left: 1.1rem; font-size: 0.78rem; color: var(--jd-muted); overflow-wrap: anywhere; }
+.sol li { margin-bottom: 0.35rem; }
+.proposed { display: block; color: var(--jd-ink); }
 .jd-prose .sol a { color: var(--jd-faint); font-family: var(--jd-mono); font-size: 0.7rem; }
+.pill.status { white-space: normal; border-radius: 0.9rem; }
 .jd-prose .pill.status a { color: inherit; text-decoration: underline; }
 .fix-date { color: var(--jd-faint); font-family: var(--jd-mono); font-size: 0.7rem; }
 .jd-prose .occ a { color: var(--jd-ink); text-decoration: none; }
