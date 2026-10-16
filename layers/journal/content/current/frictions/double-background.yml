@@ -4,7 +4,8 @@ summary: >-
 cause: >-
   Sessions combine run_in_background: true with a trailing & or nohup, and the double-background guard denies it.
 surface: guard-or-hook
-status: open
+status: tracked
+ref: "PR #2172: the deny message now says nothing in the call ran; waits for a human merge"
 occurrences:
   - session: session_01KyKW5E8oFPkSu3a4mCpT25
     date: "2026-10-05"

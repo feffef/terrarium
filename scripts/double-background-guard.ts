@@ -3,9 +3,9 @@
 // (a bare `&` anywhere, `nohup … &` included) silently lies about
 // completion — the outer tool call returns as soon as the text-level `&`
 // detaches the process, not when the real command finishes, so "completed"
-// stops meaning anything. CLAUDE.md warned about this in prose only; two
-// in-window recurrences (2026-09-08, 2026-09-09) show the prose isn't
-// holding.
+// stops meaning anything. A prose warning in CLAUDE.md didn't hold
+// (recurrences 2026-09-08, 2026-09-09) and has since been cut, so the deny
+// message is the rule's only home.
 //
 // Deliberately caller-agnostic — no `detectAgentContext` gate at all.
 // `subagent-background-guard.ts`'s rule is "a subagent may never background
@@ -58,9 +58,9 @@ export function checkDoubleBackground(toolName: string, toolInput: unknown): boo
   return command !== '' && hasBackgroundOperator(command)
 }
 
-/** Self-contained by design: CLAUDE.md's prose warning about this exact
- *  combo was already in place for both recorded recurrences — the deny
- *  message is the rule's teaching surface. */
+/** The nothing-ran line is there because sessions chained edits or commits
+ *  into the denied call and noticed late that they never ran (Friction
+ *  Ledger entry `double-background`). */
 export function formatGuardMessage(): string {
   return (
     `Blocked by the ${LABEL} (${REF}): this Bash call sets \`run_in_background: true\` AND the command text ` +
@@ -68,11 +68,9 @@ export function formatGuardMessage(): string {
     `tool call returns as soon as the text-level \`&\` detaches the process, not when the real command ` +
     `finishes, so "completed" stops meaning anything. This is broken the same way for a main session as for a ` +
     `subagent — it is not the subagent-only rule \`subagent-background-guard.ts\` enforces.\n\n` +
-    `Do instead — pick ONE background mechanism, not both:\n` +
-    `  • To background: pass \`run_in_background: true\` alone, with a plain foreground command — no ` +
-    `trailing \`&\`, no \`nohup ... &\`.\n` +
-    `  • Or drop \`run_in_background\` and let the command's own \`&\`/\`nohup ... &\` background it in the ` +
-    `shell.\n\n` +
+    `Nothing in this call ran, including commands chained with \`&&\` or \`;\`; resend them separately.\n\n` +
+    `Do instead: pass \`run_in_background: true\` alone, with a plain foreground command — no trailing ` +
+    `\`&\`, no \`nohup ... &\`.\n\n` +
     `If you believe this genuinely is a single background operation, that is a gap in this guard — report it ` +
     `on ${REF} rather than routing around it.`
   )

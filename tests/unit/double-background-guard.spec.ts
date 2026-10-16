@@ -106,11 +106,21 @@ describe('checkDoubleBackground() — the pure predicate (issue #1208)', () => {
 })
 
 describe('formatGuardMessage()', () => {
-  it('names the issue, the pick-one-mechanism fix, and the sibling guard it is not', () => {
+  it('names the issue, the flag-alone fix, and the sibling guard it is not', () => {
     const msg = formatGuardMessage()
     expect(msg).toContain('issue #1208')
-    expect(msg).toMatch(/pick ONE background mechanism/)
+    expect(msg).toMatch(/pass `run_in_background: true` alone/)
     expect(msg).toContain('subagent-background-guard.ts')
+  })
+
+  it('says nothing in the call ran, chained commands included, and to resend them', () => {
+    expect(formatGuardMessage()).toContain(
+      'Nothing in this call ran, including commands chained with `&&` or `;`; resend them separately.',
+    )
+  })
+
+  it('no longer offers the shell-level `&` as an alternative', () => {
+    expect(formatGuardMessage()).not.toMatch(/drop `run_in_background`/)
   })
 })
 
