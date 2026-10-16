@@ -81,6 +81,7 @@ The closure Stop hook can flag inherited commits already on `origin/main`. Run
 history, so never rebase or rewrite it (for example via the hook's suggested
 `--reset-author`). Even inside the list, a commit is yours to fix only if this
 session made it; in a working copy shared with other sessions, the list also
-holds theirs.
+holds theirs. If the hook reports unpushed commits but that list is empty, no
+push is needed: the hook counts against the remote branch, not `origin/main`.
 `--reset-author` may also fail to sign: see the signing-key caveat in
 [`environment-caveats.md`](./environment-caveats.md).
