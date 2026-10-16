@@ -181,9 +181,6 @@ not a bystander waiting for a human. For each branch:
      high-risk, in a PR comment. First have the agent merge `origin/main` (once
      the ledger PR of §5 has merged) and commit the PR's own `fixes` entry,
      dated today, so the ledger updates when a human merges it; the next run's
-     survey corrects the date. First have the agent merge `origin/main` (once
-     the ledger PR of §5 has merged) and commit the PR's own `fixes` entry,
-     dated today, so the ledger updates when a human merges it; the next run's
      survey corrects the date.
 
 A PR is finished only when **merged** (by you) or **escalated/abandoned**, not at push time (the ADR-0003 rule).
