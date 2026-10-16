@@ -2,7 +2,7 @@
 # .github/actions/gate/action.yml, where agents can push them (ADR-0026) — the
 # `workflow` OAuth scope is fenced at .github/workflows/ only. This file is the
 # shell: triggers, permissions, checkout, and the doorbell token. Both files are
-# human-only to merge (ADR-0004's high-risk set).
+# Human-only to merge (ADR-0004).
 
 name: safety-gate
 
@@ -22,8 +22,8 @@ jobs:
         with:
           # The composite's Scope step needs the PR's base commit and a real
           # merge-base. A shallow checkout has neither, and scripts/gate.ts then
-          # refuses to classify at all — which costs a Full gate, not a wrong
-          # one. See ADR-0026.
+          # refuses to classify at all — which costs a full gate, not a wrong
+          # one (`scripts/gate.ts`).
           fetch-depth: 0
 
       # Everything the Gate actually does. `secrets` is unreachable inside a
