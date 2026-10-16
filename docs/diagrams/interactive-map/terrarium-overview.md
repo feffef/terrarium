@@ -557,30 +557,33 @@ next session's log.
    already fixed on `main`, already tracked in an issue or pull request,
    inside a rule that `prune-trial` is testing, or only fixable in an
    outside skill.
-5. **Pick.** `frictions-to-fixes` picks up to ten, at most two of them hard
-   (several files, or a design choice). Some runs find nothing worth fixing.
-   *Decision.*
-6. **Fix.** `helper-agents` write the fixes, each in its own copy of the
+5. **Pick.** `frictions-to-fixes` picks up to ten. Some runs find nothing
+   worth fixing. *Decision.*
+6. **Design.** A helper in `helper-agents` reads the picked frictions' full
+   `logs`, designs each fix and rates its risk. `frictions-to-fixes` sends the
+   safe ones on and files the rest as `issues`. *Decision.*
+7. **Fix.** `helper-agents` write the fixes, each in its own copy of the
    repository, and open pull requests in `prs`: one for all doc fixes, one
-   per code fix. A hard fix also gets an issue. Helpers never merge.
-7. **Check.** `ci` runs the checks on each pull request.
-8. **Review.** `frictions-to-fixes` reviews each pull request in `prs` and
+   per code fix. Helpers never merge.
+8. **Check.** `ci` runs the checks on each pull request.
+9. **Review.** `frictions-to-fixes` reviews each pull request in `prs` and
    posts its verdict as a comment. *Decision.*
-9. **Merge.** `frictions-to-fixes` may merge itself; the merge script
-   refuses without the verdict. The fix lands in `rules` (or in `skills`,
-   `scripts` or `code`).
-10. **The loop closes.** The next session, in `sessions`, reads the changed
+10. **Merge.** `frictions-to-fixes` may merge itself; the merge script
+    refuses without the verdict. The fix lands in `rules` (or in `skills`,
+    `scripts` or `code`).
+11. **The loop closes.** The next session, in `sessions`, reads the changed
     rule (thick). Its log lists that file among the docs it read.
 
 Branches:
-- at step 5: **fix it** (usual) → step 6. **Leave it to the maintainer:** the
-  fix would touch a guard, a hook, or a file only the maintainer may merge.
-  The routine files a `ready-for-human` issue in `issues` with the fix it
-  recommends, and stops; it never builds a guard → ends. **Came back after a
-  fix:** an earlier fix didn't hold. The routine files a new issue in
+- at step 4: **Came back after a fix:** an earlier fix didn't hold. The routine files a new issue in
   `issues` that names the old fix, alerts the maintainer, and doesn't try the
   same fix again → ends.
-- at step 8: **low risk** (usual) → step 9. **Risky:** the pull request
+- at step 6: **fix it** (usual) → step 7. **Leave it to the maintainer:** the
+  fix would touch a guard, a hook, or a file only the maintainer may merge, or
+  needs a design choice a human should make.
+  The routine files an issue in `issues` with the fix it
+  recommends, and stops; it never builds a guard → ends.
+- at step 9: **low risk** (usual) → step 10. **Risky:** the pull request
   stays open, the routine says why, and `maintainer` decides → ends.
 
 Close-up: `frictions-to-fixes`.

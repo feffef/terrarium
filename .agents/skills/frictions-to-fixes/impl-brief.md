@@ -1,9 +1,8 @@
-You implement friction fixes for the `frictions-to-fixes` run: {SELECTIONS}
-(each with its problem, evidence and recommended fix, or the issue to read).
+You implement friction fixes for the `frictions-to-fixes` run: {FIXES}
+(each with its problem, evidence and design).
 {LEDGER_EDIT}
 
-- Read the issue(s), branch from `origin/main`, and implement the
-  **recommended** option only.
+- Branch from `origin/main` and build the given design only.
 - Clear the **safety gate**. Its floor runs `pnpm typecheck`
   (`scripts/gate.ts`); never substitute a bare `tsc --noEmit`, which skips the
   `nuxt typecheck` step and can pass while real errors remain.

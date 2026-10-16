@@ -59,20 +59,9 @@ only**: file no issues, open no PRs, change no code. The scratchpad is
   likely-gone sessions. Each record's `id`/`file` point back to the full log —
   re-read it directly when a candidate needs more context than the triage
 extract carries. **External sessions are already excluded:** the survey script drops any log flagged `external: true` (ADR-0009). Don't hunt the raw corpus for them.
-- **For a friction a doc already covers, check whether that session read the
-  doc.** Each triage record carries `docsRead` (Read-tool opens plus any the
-  author listed, and since 2026-10-10 shell reads). On an older log a
-  `cat`/`grep` read shows only in the full log's deprecated
-  `docsReadViaShell`, so check the record's `file` before calling a doc *not
-  opened*. This
-  splits one question into two very different frictions: **doc not opened** ⇒ a
-  *discoverability* failure — the rule's home is wrong, or prose is the wrong
-  mechanism entirely; **doc opened and the friction happened anyway** ⇒ the
-  prose itself is unclear, wrong, or too easy to read past. Report which, with
-the paths as evidence. **"Opened" can mean a subagent opened it:** subagent reads are folded into the parent's list (`session-trace.ts`'s `foldSubagentTrace`), so on a session that delegated, check the `subagents` field before concluding the agent that hit the friction had the rule in front of it. A doc only a subagent opened is closer to *not opened*. This repo has paid for the distinction repeatedly: the fixes for #241/#425 landed in `docs/agents/github-integration.md`, which the affected sessions had no reason to open, and the friction kept recurring until a `PreToolUse` guard replaced the prose.
 - **For a friction alleging a detector/tool/mechanism bug, check the `subagents` field and read the relevant mechanism source before trusting the friction's own root-cause guess.** A self-diagnosis logged in the moment, without source access, is not evidence: e.g. "detector over-credits reads" can be `foldSubagentTrace` correctly unioning a dispatched subagent's reads, not a real detector gap. Verify against source before ranking it.
 - **Group and rank.** A candidate is a ledger entry (one per root cause) or a
-  window friction too new for one; rank by **recurrence and severity together** (severity is an ordered rank, not a number: weigh it qualitatively, never multiply it). **Prioritize `moderate`, `major`, and `blocker` frictions**: these earn a fix on severity alone, even logged once. **A low-severity friction is not automatically dropped:** a `nit` or `minor` that **recurs across sessions _and_ is easy to fix** is still worth retiring, since cheap repeated papercuts add up. What gets dropped is the lone low-severity one-off (a single `nit` with a non-trivial fix), not every `nit`.
+  window friction too new for one; rank by **recurrence and severity together** (severity is an ordered rank, not a number: weigh it qualitatively, never multiply it). **Prioritize `moderate`, `major`, and `blocker` frictions**: these earn a fix on severity alone, even logged once. **A low-severity friction is not automatically dropped:** a `nit` or `minor` that **recurs across sessions** is still worth retiring, since cheap repeated papercuts add up. What gets dropped is the lone low-severity one-off, not every `nit`.
 - **Screen against the tracker** — apply the Screen rules below to every candidate.
 - **Earlier runs' decisions are the ledger's `status` and `ref`.** When an entry
   lacks them, the window's `trigger: frictions-to-fixes` logs (`summary`,
@@ -118,12 +107,8 @@ Whatever you hit while running the survey — an MCP disconnect, a tool that onl
 
 Return a structured report: **(a) ranked actionable
 candidates** — each with its ledger entry, severity, recurrence (as counted above), sessions, tracker
-classification (never-fixed / open-already #N / regression of #N), fix type
-(doc/code/config), surface-blocked flag (touches a human-only file — the `paths`
-of `.claude/rules/adr-0004-human-merge.md` — a guard, or `.claude/settings.json`'s
-hook wiring), difficulty (simple: one small change to a single file, no redesign;
-hard: 2 or more files, or a non-obvious design decision), a one-line
-recommended fix, and evidence quotes; **(b) a dropped list** with one-line reasons (an on-trial one quotes its territory match);
+classification (never-fixed / open-already #N / regression of #N) and evidence
+quotes; no fix: a later agent designs it; **(b) a dropped list** with one-line reasons (an on-trial one quotes its territory match);
 **(c) your own frictions** from the run; **(d) the ledger changes**, also saved as a YAML patch file in the
 scratchpad whose path you name: a list of whole entries, each exactly as its file
 reads (never invented keys such as `fixes_append`), with occurrence blocks as

@@ -20,7 +20,7 @@ built.
 starts itself); see `guest-intake`'s Skill (issue #568).
 
 **It composes existing Skills — never restate them.** The dispatch-and-review
-machinery is `frictions-to-fixes` §5–§6 and the `dispatch-subagents` Skill
+machinery is `frictions-to-fixes` §6–§7 and the `dispatch-subagents` Skill
 (§3, "Scope and trust": what an impl agent may and may not do); the land
 recipe is `docs/agents/pr-workflow.md`. This Skill adds
 only what a guest-demo build needs — and one hard subtraction.
@@ -68,7 +68,7 @@ against #555 before a human stepped in).
    same update) and move on.
 2. **Claim the marker, then dispatch one Sonnet impl agent** (`model: sonnet`,
    `isolation: 'worktree'`) with a self-contained brief per `dispatch-subagents` and
-   `frictions-to-fixes` §5: read the issue, branch from `origin/main`,
+   `frictions-to-fixes` §6: read the issue, branch from `origin/main`,
    implement, clear the gate, and commit, unpushed — then stop and hand back
    rather than touch any human-only surface.
 3. **Review on a different model.** The impl is Sonnet; run `/code-review` in
