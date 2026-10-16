@@ -56,6 +56,27 @@ describe('ledgerPanels goals', () => {
   })
 })
 
+describe('ledgerPanels solutions', () => {
+  const fix = (severity: Severity, solution: string) => ({ severity, solution })
+
+  it('lists a session\'s solution once, linked to the Space that holds it', () => {
+    const c = cluster('x', ['nit', 'nit'])
+    const [e] = ledgerPanels([c], 'current', new Set(['x-0']), 'archived', {}, {
+      'x-0': [fix('nit', 'Add a guard')],
+      'x-1': [fix('nit', 'Add a guard')],
+    }).severe
+    expect(e!.solutions).toEqual([{ text: 'Add a guard', date: '2026-10-02', to: '/t/journal/archived#session-x-1' }])
+  })
+
+  it('skips a session whose Frictions of that severity are ambiguous, and is empty without any', () => {
+    const [e] = ledgerPanels([cluster('x', ['nit'])], 'current', new Set(['x-0']), 'archived', {}, {
+      'x-0': [fix('nit', 'A'), fix('nit', 'B'), fix('major', 'C')],
+    }).severe
+    expect(e!.solutions).toEqual([])
+    expect(ledgerPanels([cluster('y', ['nit'])], 'current', new Set(), 'archived').severe[0]!.solutions).toEqual([])
+  })
+})
+
 describe('ledgerRefLinks', () => {
   it('links the first issue and the first PR a ref names, whatever their order', () => {
     expect(ledgerRefLinks('PRs #1826, #1833; issue #1857 (filed)')).toEqual([

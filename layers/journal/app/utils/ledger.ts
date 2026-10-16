@@ -25,7 +25,19 @@ export interface LedgerEntry {
   worstCount: number
   count: number
   occurrences: LedgerOccurrence[]
+  solutions: { text: string; date: string; to: string }[]
 }
+
+/** A cluster stores no link to the exact Friction, so an occurrence's solution
+ *  is the session's only Friction of that severity; two or more are ambiguous
+ *  and show none. */
+function occurrenceSolution(fixes: SessionFixes[string] | undefined, severity: Severity): string | undefined {
+  const same = fixes?.filter((f) => f.severity === severity) ?? []
+  return same.length === 1 ? same[0]!.solution : undefined
+}
+
+/** Each session's Frictions, by session id. */
+export type SessionFixes = Record<string, { severity: Severity; solution: string }[]>
 
 /** The first issue and the first PR a cluster's free-text `ref` names: a ref
  *  often cites old PRs before the issue that tracks it now. */
@@ -45,16 +57,30 @@ export const LEDGER_SEVERE_SIZE = 8
  *  `frequent` by total. Relative, so `severe` fills whatever the worst
  *  severity is. `ownSessions` holds this Space's session ids; an occurrence
  *  missing from it links to `otherSpace`, where archiving moved it. `goals`
- *  maps this Space's session ids to their goal line. */
+ *  maps session ids to their goal line. */
 export function ledgerPanels(
   clusters: FrictionClusterDoc[],
   space: string,
   ownSessions: Set<string>,
   otherSpace: string,
   goals: Record<string, string> = {},
+  fixes: SessionFixes = {},
 ): { severe: LedgerEntry[]; frequent: LedgerEntry[] } {
   const entries = clusters.map((c): LedgerEntry => {
     const worst = c.occurrences.reduce<Severity>((w, o) => (SEVERITY_RANK[o.severity] > SEVERITY_RANK[w] ? o.severity : w), 'nit')
+    const occurrences = c.occurrences
+      .map((o) => ({
+        date: o.date,
+        severity: o.severity,
+        goal: goals[o.session],
+        solution: occurrenceSolution(fixes[o.session], o.severity),
+        to: `/t/journal/${ownSessions.has(o.session) ? space : otherSpace}#${sessionAnchor(o.session)}`,
+      }))
+      .sort((a, b) => b.date.localeCompare(a.date))
+    const solutions = occurrences
+      .filter((o): o is typeof o & { solution: string } => !!o.solution)
+      .filter((o, i, all) => all.findIndex((x) => x.solution === o.solution) === i)
+      .map((o) => ({ text: o.solution, date: o.date, to: o.to }))
     return {
       name: c.name,
       summary: c.summary,
@@ -66,14 +92,8 @@ export function ledgerPanels(
       worst,
       worstCount: c.occurrences.filter((o) => o.severity === worst).length,
       count: c.occurrences.length,
-      occurrences: c.occurrences
-        .map((o) => ({
-          date: o.date,
-          severity: o.severity,
-          goal: goals[o.session],
-          to: `/t/journal/${ownSessions.has(o.session) ? space : otherSpace}#${sessionAnchor(o.session)}`,
-        }))
-        .sort((a, b) => b.date.localeCompare(a.date)),
+      occurrences: occurrences.map(({ solution: _solution, ...o }) => o),
+      solutions,
     }
   })
   const bySeverity = (a: LedgerEntry, b: LedgerEntry) =>
