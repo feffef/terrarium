@@ -1,0 +1,234 @@
+schemaVersion: 1
+session: session_01RKUs8JUM5uASMfiE3hvXRA
+startedAt: 2026-10-16T16:48:28Z
+endedAt: 2026-10-16T17:26:38Z
+kind: autonomous
+goal: Scheduled visitor-loop run on the Glass Box guide
+status: in-review
+outcome: Fix PR 2163 open; the feature PR follows once it merges
+summary: "Scheduled run, no human prompt; every change was agent-initiated under the visitor-loop Skill's remit. Built and served the site, sent three blind visitors (sonnet, fable, opus) through /t/glassbox/guide, tallied five consensus findings and dropped a sixth (code-excerpt scroll cue already exists). An opus refiner narrowed four of them (#2100, #2124, ADR-0006). Fixed: landing lede says what Terrarium is, walkthrough file chips wrap at 390px, Subject cards and pills link properly and /subject redirects to its card, Gate Lesson cites each ADR once. The code review caught a lost pill padding and a 404-after-redirect; both fixed. Opened PR 2163. Open: land it, then build the chosen feature, a \"Words we use\" strip on the landing."
+prs:
+  - "2163"
+docsRead:
+  - path: GLOSSARY.md
+    reason: Platform terms
+    useful: yes
+  - path: docs/agents/pr-workflow.md
+    reason: review before push, closing a scheduled run's PR
+    useful: yes
+  - path: docs/agents/verifying-ui-changes.md
+    reason: probe, shot, Playwright gotchas
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: read after my first git commands; nothing changed
+    useful: partly
+  - path: docs/agents/github-integration.md
+    reason: read after the first gh call; MCP-only writes
+    useful: partly
+  - path: .agents/skills/glassbox-lesson/EVERY-PAGE.md
+    reason: pin rules for re-pinning the landing and Gate pages
+    useful: yes
+  - path: .agents/skills/visitor-loop/SKILL.md
+    reason: Refiner read it for the Remit; it held that the refined items stay in remit
+    useful: yes
+  - path: .agents/skills/glassbox-lesson/SKILL.md
+    reason: Refiner read it for who may edit Lessons; partly relevant
+    useful: partly
+  - path: .agents/skills/glassbox-update/SKILL.md
+    reason: Refiner read it for the re-pin question; partly relevant
+    useful: partly
+  - path: docs/adr/0006-runtime-routing-path-prefix.md
+    reason: "Refiner: a redirect inside the layer's page fits the resolver"
+    useful: yes
+  - path: docs/adr/0016-tenant-root-layer-routes.md
+    reason: "Refiner: only covers the Tenant root, a precedent for the redirect"
+    useful: partly
+  - path: docs/adr/0021-multi-context-domain-docs.md
+    reason: "Refiner: glossary edits stay out of the feature"
+    useful: partly
+  - path: docs/adr/0028-navigation-reads-server-payloads.md
+    reason: "Refiner: the feature's payload carries only what it shows"
+    useful: yes
+  - path: GLOSSARY-MAP.md
+    reason: (no reason given)
+  - path: .claude/skills/visitor-loop/visitor-brief.md
+    reason: (no reason given)
+  - path: .claude/skills/visitor-loop/decisions.md
+    reason: (no reason given)
+  - path: .claude/skills/visitor-loop/refiner-brief.md
+    reason: (no reason given)
+  - path: layers/glassbox/app/pages/t/glassbox/[space]/index.vue
+    reason: (no reason given)
+  - path: layers/glassbox/app/pages/t/glassbox/[space]/[...slug].vue
+    reason: (read before editing)
+  - path: layers/glassbox/app/components/glassbox/Article.vue
+    reason: (no reason given)
+  - path: layers/glassbox/GLOSSARY.md
+    reason: (no reason given)
+  - path: .agents/skills/visitor-loop/decisions.md
+    reason: (no reason given)
+  - path: .agents/skills/visitor-loop/refiner-brief.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/index.md
+    reason: (no reason given)
+  - path: layers/glassbox/app/pages/t/glassbox/index.vue
+    reason: (no reason given)
+  - path: layers/glassbox/app/utils/subjects.ts
+    reason: (no reason given)
+  - path: layers/glassbox/page-checks.ts
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/terrarium-practice/01.gate.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/walkthroughs/adding-a-tenant.md
+    reason: (no reason given)
+  - path: layers/glassbox/app/components/content/File.vue
+    reason: (no reason given)
+  - path: layers/glassbox/app/components/glassbox/Sidebar.vue
+    reason: (no reason given)
+  - path: layers/glassbox/app/components/content/Term.vue
+    reason: (no reason given)
+  - path: layers/glassbox/app/utils/terms.ts
+    reason: (no reason given)
+skillsUsed:
+  - name: visitor-loop
+    reason: the scheduled task
+  - name: code-review
+    reason: both axes before the first push
+  - name: close-session
+    reason: PR-open log
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Read git-conventions.md and github-integration.md only after my first git and gh commands, against the CLAUDE.md triggers.
+    solution: Read them in the start-of-session batch for scheduled runs.
+    severity: nit
+  - description: Used cat and sed on repo files in a few places instead of the Read tool.
+    solution: Use Read for repo files; keep Bash for command output.
+    severity: nit
+  - description: "First Playwright script failed twice: scratchpad .ts is CJS under tsx, and playwright-core would not resolve from outside the repo."
+    solution: The Skill could point at scripts/probe.ts first, or the doc could say scratchpad scripts need .mts plus absolute imports.
+    severity: minor
+  - description: owner-corrections.ts listed 16 candidates; 13 came from file overlap with unrelated Journal Friction Ledger PRs, and each needed its own tally line.
+    solution: Skip overlap candidates whose title and body never name a visitor-loop PR.
+    severity: minor
+durationSec: 2291
+models:
+  claude-sonnet-5-5: 155
+toolCounts:
+  Read: 14
+  Bash: 52
+  Agent: 7
+  ToolSearch: 2
+  mcp__github__search_issues: 5
+  Skill: 3
+  Edit: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+  mcp__github__add_issue_comment: 1
+filesEdited:
+  - layers/glassbox/app/pages/t/glassbox/[space]/[...slug].vue
+rulesLoaded:
+  - .claude/rules/adr-0028.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0006.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/adr-0016.md
+  - .claude/rules/glassbox-content.md
+  - .claude/rules/mermaid-lanes.md
+  - .claude/rules/adr-0002.md
+  - .claude/rules/mdc-when-to-use.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0028.md
+  - .claude/rules/adr-0006.md
+  - .claude/rules/adr-0016.md
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0014.md
+docsReadBySubagents:
+  - .agents/skills/visitor-loop/SKILL.md
+  - .agents/skills/glassbox-lesson/SKILL.md
+  - .agents/skills/glassbox-update/SKILL.md
+  - docs/adr/0006-runtime-routing-path-prefix.md
+  - docs/adr/0016-tenant-root-layer-routes.md
+  - docs/adr/0021-multi-context-domain-docs.md
+  - docs/adr/0028-navigation-reads-server-payloads.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Made me run gate:scoped and code-review before pushing; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Open the PR at once and subscribe; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Header line on the PR body; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Log goes to main, not the branch; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0020.md
+    reason: No Public input in this run, so it did not apply
+    useful: no
+  - path: .claude/rules/adr-0027.md
+    reason: No prune trial touches the text I changed
+    useful: no
+  - path: .claude/rules/adr-0028.md
+    reason: Kept the landing payload small; the refiner read the full ADR, I did not
+    useful: partly
+  - path: .claude/rules/glassbox-content.md
+    reason: No changing facts added to Lesson prose; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Loaded on glassbox files; none of my paths are Human-only
+    useful: no
+  - path: .claude/rules/adr-0030.md
+    reason: Loaded on reading docs; nothing in it applied to this task
+    useful: no
+  - path: .claude/rules/adr-0014.md
+    reason: Loaded when reading a Skill; did not apply to this task
+    useful: no
+subagents:
+  - type: general-purpose
+    task: Visitor 1 (sonnet)
+    model: sonnet
+  - type: general-purpose
+    task: Visitor 2 (fable)
+    model: fable
+  - type: general-purpose
+    task: Visitor 3 (opus)
+    model: opus
+  - type: general-purpose
+    task: Refiner fit check
+    model: opus
+  - type: general-purpose
+    task: Standards review
+    model: opus
+  - type: general-purpose
+    task: Spec review
+    model: opus
+  - type: general-purpose
+    task: Feature review
+    model: opus
+gitBranch: claude/adoring-galileo-eta2pq
+entrypoint: remote_trigger
+cliVersion: 2.1.301
+trigger: visitor-loop
+ideas:
+  - "Glass Box: glossary terms link to GLOSSARY.md on GitHub; link them to an in-site term view instead."
+  - "Glass Box: the 'A real case' box in Asking for a change names a PR but does not link it or its session log; link both."
+  - "Glass Box: the Session logs Lesson never shows a real log; link one Journal entry."
+  - "Glass Box: the Walkthrough 'On this page' bar shows bare numbers on desktop; show 'n · short title'."
+  - "Glass Box: the landing <title> reads 'Terrarium, seen through the glass. · glassbox'; use 'Glass Box · Terrarium, explained from the inside'."
+  - "Glass Box: pages pin three different commits with no single edition commit shown; show one edition hash in the header."
+  - "Glass Box: the trust.ts excerpt lacks line numbers unlike every other excerpt; render it with the line-numbered component."
+landedBy: Stop
