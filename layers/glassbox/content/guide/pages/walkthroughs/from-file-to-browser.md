@@ -5,22 +5,22 @@ revision: 'a93faa0135f652b85b4976418534243f649e58b9'
 revisionDate: '2026-10-15'
 ---
 
-A Markdown file is committed, and later a visitor reads it as a page. This Walkthrough follows that file from the content's side: from its folder, through the manifest, the build and the container, to the server that renders it and the browser that reuses its data on the next click.
+A Markdown file is committed, and later a visitor reads it as a page. This Walkthrough follows that file from the content's side: from its folder, through the manifest and the build, which packs it into a dump of its table. From the other side, the server loads that dump into its own SQLite database and queries it to render the page, and the browser reuses the page's data on the next click. Only for a route the server doesn't cache does the browser load the dump into an SQLite database of its own.
 
 ```mermaid
 flowchart TD
   file["A Markdown file<br>in a Space's folder"] --> key["The manifest's key<br>names its table"]
-  key --> build["The build writes<br>tables and dumps"]
-  build --> swap["The container<br>swaps in the build"]
-  swap --> cached{{"A request:<br>in the page cache?"}}
-  cached -- no --> render["The server renders,<br>querying one table"]
-  render --> html["HTML with<br>its data inside"]
-  cached -- yes --> html
-  html --> next["A click builds the<br>next page from its payload"]
+  key --> build["The build packs<br>each table's dump"]
+  build --> dump[("The dumps,<br>inside the build")]
+  dump -- "first query" --> sdb[("The server's<br>SQLite")]
+  dump -. "uncached route" .-> bdb[("The browser's<br>SQLite")]
+  sdb --> server["The server<br>renders a page"]
+  server -- "HTML, payload" --> browser["The browser"]
+  bdb -.-> browser
   classDef repo stroke-dasharray:5 4
-  classDef browser stroke-width:2.5px
+  classDef reader stroke-width:2.5px
   class file,key,build repo
-  class html,next browser
+  class browser reader
 ```
 
 ## 1. A file lands in a Space's folder
