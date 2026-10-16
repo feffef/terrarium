@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01AaqTUSRhRmRpBxM8E4QSPR
 startedAt: 2026-10-16T09:25:54Z
-endedAt: 2026-10-16T09:34:58Z
+endedAt: 2026-10-16T09:37:28Z
 kind: delegated
 goal: Glass Box Excerpt captions show "as of" a date instead of a commit link
-status: in-review
-outcome: "PR #2130 open: date is plain text, file link carries the arrow"
-summary: 'Human-instructed: the owner asked to drop the commit link from the date pill in Glass Box Excerpt captions and show "as of <date>" instead, noting the file link is the relevant one but lacks an arrow. Agent-initiated: reading that note as a request, I added " ↗" to the file link, kept the year in the date (formatGlassboxDate), wrapped it in a time element, and removed the .pill text-decoration rule the standards review found dead. Verified with a production-build screenshot and gate:scoped; code-review found nothing else.'
+status: completed
+outcome: "PR #2130 merged: date is plain text, file link carries the arrow"
+summary: 'Human-instructed: the owner asked to drop the commit link from the date pill in Glass Box Excerpt captions and show "as of <date>" instead, noting the file link is the relevant one but lacks an arrow. Agent-initiated: reading that note as a request, I added " ↗" to the file link, kept the year in the date (formatGlassboxDate), wrapped it in a time element, and removed the .pill text-decoration rule the standards review found dead. Verified with a production-build screenshot and gate:scoped; code-review found nothing else. CI green; merged via merge-pr.ts.'
 prs:
   - "2130"
 docsRead:
@@ -56,19 +56,25 @@ frictions:
   - description: Two parallel review subagents plus a doc-heavy PR flow for a two-line template change cost far more than the change
     solution: Let code-review run inline for diffs of a few lines
     severity: minor
-durationSec: 544
+durationSec: 694
 models:
-  claude-opus-5-5: 53
+  claude-opus-5-5: 71
 toolCounts:
-  Bash: 14
+  Bash: 17
   Read: 3
   Edit: 3
   Skill: 3
   Agent: 2
-  ToolSearch: 1
+  ToolSearch: 2
   mcp__github__create_pull_request: 2
   mcp__claude-code-remote__subscribe_pr_activity: 1
   Write: 1
+  ReadNotifications: 2
+  mcp__claude-code-remote__send_later: 1
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__delete_trigger: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/glassbox/app/components/content/Excerpt.vue
 rulesLoaded:
