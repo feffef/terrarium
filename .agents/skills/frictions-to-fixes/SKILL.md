@@ -190,4 +190,6 @@ A PR is finished only when **merged** (by you) or **escalated/abandoned**, not a
 Done when every dispatched PR carries a posted review comment and is merged or
 escalated/abandoned, and every PR you merged is in `fixes`.
 
-Log the session.
+Log the session. Among its frictions, name each place this Skill or its briefs
+were confusing or contradicted themselves, and each step that was hard to
+follow with this run's data.
