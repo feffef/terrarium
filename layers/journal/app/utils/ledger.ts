@@ -6,6 +6,37 @@ import { sessionAnchor } from './dashboard'
 
 const SEVERITY_RANK: Record<Severity, number> = { nit: 0, minor: 1, moderate: 2, major: 3, blocker: 4 }
 
+/** A cluster with merged PRs shows one of these, derived from its `fixes` and
+ *  occurrences so nobody has to maintain it; one without shows its stored status. */
+export type FixState = 'fix landed' | 'likely fixed' | 'still recurring'
+export type LedgerState = FixState | 'open' | 'tracked' | 'on trial'
+
+/** Occurrences older than this many days are dropped (`prune-friction-ledger.ts`). */
+export const LEDGER_HORIZON_DAYS = 14
+
+/** The newest merged PRs the page lists, in the pill and the list alike. */
+export const LEDGER_MAX_PRS = 5
+
+/** Days without a new occurrence after the latest PR before it reads "likely fixed". */
+export const LEDGER_QUIET_DAYS = 3
+
+/** The fix state of a cluster with merged PRs, or `undefined` without any.
+ *  `since` counts occurrences dated after the latest PR; "now" is `asOf`, the
+ *  newest occurrence date in the ledger, so the result needs no clock. A date
+ *  has day precision: an occurrence on the PR's own day does not count. */
+export function ledgerFixState(
+  fixes: { date: string }[],
+  occurrenceDates: string[],
+  asOf: string,
+): { state: FixState; since: number } | undefined {
+  const latest = fixes.map((f) => f.date).sort().at(-1)
+  if (!latest) return undefined
+  const since = occurrenceDates.filter((d) => d > latest).length
+  if (since) return { state: 'still recurring', since }
+  const quietDays = (Date.parse(asOf) - Date.parse(latest)) / 86_400_000
+  return { state: quietDays >= LEDGER_QUIET_DAYS ? 'likely fixed' : 'fix landed', since: 0 }
+}
+
 export interface LedgerOccurrence {
   date: string
   severity: Severity
@@ -17,8 +48,9 @@ export interface LedgerEntry {
   name: string
   summary: string
   cause: string
-  status: FrictionClusterDoc['status']
-  fixedOn?: string
+  state: LedgerState
+  /** Occurrences dated after the latest PR; only a "still recurring" state has any. */
+  since: number
   ref?: string
   /** Newest first. */
   fixes: { pr: number; url: string; date: string; summary: string }[]
@@ -47,6 +79,7 @@ export function ledgerPanels(
   otherSpace: string,
   goals: Record<string, string> = {},
 ): { severe: LedgerEntry[]; frequent: LedgerEntry[] } {
+  const asOf = clusters.flatMap((c) => c.occurrences.map((o) => o.date)).sort().at(-1) ?? ''
   const entries = clusters.map((c): LedgerEntry => {
     const worst = c.occurrences.reduce<Severity>((w, o) => (SEVERITY_RANK[o.severity] > SEVERITY_RANK[w] ? o.severity : w), 'nit')
     const occurrences = c.occurrences
@@ -64,14 +97,14 @@ export function ledgerPanels(
     const fixes = [...(c.fixes ?? [])]
       .sort((a, b) => b.date.localeCompare(a.date))
       .map((f) => ({ ...f, url: `${REPO_URL}/pull/${f.pr}` }))
+    const derived = ledgerFixState(fixes, c.occurrences.map((o) => o.date), asOf)
     return {
       name: c.name,
       summary: c.summary,
       cause: c.cause,
-      status: c.status,
-      fixedOn: c.fixedOn,
+      ...(derived ? { state: derived.state, since: derived.since } : { state: c.status.replace('-', ' ') as LedgerState, since: 0 }),
       ref: c.ref,
-      fixes,
+      fixes: fixes.slice(0, LEDGER_MAX_PRS),
       worst,
       worstCount: c.occurrences.filter((o) => o.severity === worst).length,
       count: c.occurrences.length,

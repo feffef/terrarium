@@ -56,8 +56,7 @@ describe('summarizeLedger()', () => {
   let cwd: string
   afterEach(() => rmSync(cwd, { recursive: true, force: true }))
   const fixes = (...prs: [pr: number, date: string][]) => `fixes:\n${prs.map(([p, d]) => `  - pr: ${p}\n    date: "${d}"\n    summary: s\n`).join('')}`
-  const fixed = (fixedOn: string, fixesText: string, ...occ: [string, string][]) =>
-    entry(...occ).replace('status: open', `status: fixed\nfixedOn: "${fixedOn}"\n${fixesText}`)
+  const withFixes = (fixesText: string, ...occ: [string, string][]) => entry(...occ).replace('status: open', `status: open\n${fixesText}`)
   const setup = () => {
     cwd = mkdtempSync(join(tmpdir(), 'ledger-'))
     const dir = join(cwd, LEDGER_DIR)
@@ -65,44 +64,35 @@ describe('summarizeLedger()', () => {
     return dir
   }
 
-  it('lists name, status, ref, in-horizon count, max severity and the latest fix', () => {
+  it('lists name, state, ref, in-horizon count, max severity and the latest fix', () => {
     const dir = setup()
-    writeFileSync(join(dir, 'x.yml'), fixed('2026-10-02', fixes([1, '2026-10-02'], [7, '2026-10-12']), ['a', '2026-09-01'], ['b', '2026-10-01']).replace('fixedOn', 'ref: "issue #5"\nfixedOn'))
+    writeFileSync(join(dir, 'x.yml'), withFixes(fixes([1, '2026-10-02'], [7, '2026-10-12']), ['a', '2026-09-01'], ['b', '2026-10-01']).replace('status: open', 'ref: "issue #5"\nstatus: open'))
     writeFileSync(join(dir, 'y.yml'), entry(['a', '2026-10-01']))
     expect(summarizeLedger('2026-10-13', cwd)).toEqual([
-      'x | fixed | issue #5 | 1 in horizon | nit | 2 fixes, latest #7 2026-10-12',
+      'x | fix landed | issue #5 | 1 in horizon | nit | 2 fixes, latest #7 2026-10-12',
       'x | open | - | 1 in horizon | nit | no fixes',
     ])
   })
   it('takes the latest fix by date whatever their order, and says "fix" for one', () => {
     const dir = setup()
-    writeFileSync(join(dir, 'a.yml'), fixed('2026-10-12', fixes([7, '2026-10-12'], [1, '2026-10-02']), ['a', '2026-10-01']))
-    writeFileSync(join(dir, 'b.yml'), fixed('2026-10-12', fixes([7, '2026-10-12']), ['a', '2026-10-01']))
+    writeFileSync(join(dir, 'a.yml'), withFixes(fixes([7, '2026-10-12'], [1, '2026-10-02']), ['a', '2026-10-01']))
+    writeFileSync(join(dir, 'b.yml'), withFixes(fixes([7, '2026-10-12']), ['a', '2026-10-01']))
     const [a2, b2] = summarizeLedger('2026-10-13', cwd)
     expect(a2).toContain('2 fixes, latest #7 2026-10-12')
     expect(b2).toContain('1 fix, latest #7 2026-10-12')
   })
-  it('flags an occurrence after the latest fix, and asks to check startedAt on the same day', () => {
+  it('derives still recurring with the count, likely fixed after a quiet spell, and fix landed before it', () => {
     const dir = setup()
-    const occ: [string, string][] = [['a', '2026-10-01'], ['b', '2026-10-05']]
-    writeFileSync(join(dir, 'later.yml'), fixed('2026-10-02', fixes([1, '2026-10-02']), ...occ))
-    writeFileSync(join(dir, 'refixed.yml'), fixed('2026-10-02', fixes([1, '2026-10-02'], [2, '2026-10-06']), ...occ))
-    writeFileSync(join(dir, 'same.yml'), fixed('2026-10-05', fixes([1, '2026-10-05']), ...occ))
-    writeFileSync(join(dir, 'clean.yml'), fixed('2026-10-06', fixes([1, '2026-10-06']), ...occ))
-    const [clean, later, refixed, same] = summarizeLedger('2026-10-13', cwd)
-    expect(later).toContain('possible regression: occurrence after latest fix 2026-10-02')
-    expect(refixed).not.toMatch(/regression|startedAt/)
-    expect(same).toContain('check startedAt: occurrence on latest fix 2026-10-05')
-    expect(same).not.toContain('regression')
-    expect(clean).not.toMatch(/regression|startedAt/)
-  })
-  it('flags a fixed entry with no fixes, or none dated its fixedOn', () => {
-    const dir = setup()
-    writeFileSync(join(dir, 'none.yml'), fixed('2026-10-06', '', ['a', '2026-10-01']))
-    writeFileSync(join(dir, 'other.yml'), fixed('2026-10-06', fixes([1, '2026-10-03']), ['a', '2026-10-01']))
-    const [none, other] = summarizeLedger('2026-10-13', cwd)
-    expect(none).toContain('fixed with no fixes entry')
-    expect(other).toContain('no fix dated fixedOn 2026-10-06')
+    writeFileSync(join(dir, 'pad.yml'), entry(['a', '2026-10-20']))
+    writeFileSync(join(dir, 'recurring.yml'), withFixes(fixes([1, '2026-10-02']), ['a', '2026-10-01'], ['b', '2026-10-05'], ['c', '2026-10-06']))
+    writeFileSync(join(dir, 'refixed.yml'), withFixes(fixes([1, '2026-10-02'], [2, '2026-10-06']), ['a', '2026-10-01'], ['b', '2026-10-05']))
+    writeFileSync(join(dir, 'sameday.yml'), withFixes(fixes([1, '2026-10-05']), ['a', '2026-10-01'], ['b', '2026-10-05']))
+    writeFileSync(join(dir, 'young.yml'), withFixes(fixes([1, '2026-10-19']), ['a', '2026-10-01']))
+    const [, recurring, refixed, sameday, young] = summarizeLedger('2026-10-21', cwd)
+    expect(recurring).toContain('| still recurring (2 since #1) |')
+    expect(refixed).toContain('| likely fixed |')
+    expect(sameday).toContain('| likely fixed |')
+    expect(young).toContain('| fix landed |')
   })
 })
 
