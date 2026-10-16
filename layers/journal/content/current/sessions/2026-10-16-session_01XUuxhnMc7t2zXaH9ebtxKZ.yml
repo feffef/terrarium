@@ -1,0 +1,196 @@
+schemaVersion: 1
+session: session_01XUuxhnMc7t2zXaH9ebtxKZ
+startedAt: 2026-10-16T10:55:56Z
+endedAt: 2026-10-16T11:18:38Z
+kind: delegated
+goal: Retire recurring session frictions
+status: in-review
+outcome: One grouped doc PR (#2140) open with three fixes and the Friction Ledger update; one regression issue (#2138) filed for a human.
+summary: "The owner invoked the frictions-to-fixes Skill (one human prompt, the kickoff); everything after was agent-initiated under that Skill. A survey subagent read all 48 sessions since 2026-10-14, screened them against the tracker, open Prune Trials and pack-Skill limits, and returned ranked candidates plus a ledger patch. I picked three simple, safe-surface doc fixes (worktree-guard wording in the build workflow brief, restart and resume note and the review-cap `failed` note in clear-backlog SKILL.md), and filed #2138 for the one regression (local-gate-green-ci-red, whose earlier fix #1824 only fixed flaky tests). One Sonnet agent in a worktree built the doc fixes and the ledger edit; I ran both code-review axes, trimmed one sentence of incident narration, pushed, opened PR #2140 and subscribed. Not dispatched: owner-corrections-overlap-boilerplate (design tension with closed #1912) and blocked-waiting (unverified value). Still open: CI, my verdict comment and the merge. The three tracked ledger entries carry a prose ref because the PR number did not exist yet."
+prs:
+  - "2140"
+docsRead:
+  - path: GLOSSARY.md
+    reason: Friction, Friction Ledger and Prune Trial terms
+    useful: yes
+  - path: docs/agents/pr-workflow.md
+    reason: review-before-push steps and verdict recipe
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: MCP tool loading and search traps
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: commit and fetch conventions before the first git command
+    useful: partly
+  - path: docs/agents/issue-tracker.md
+    reason: "read before filing #2138"
+    useful: partly
+  - path: docs/agents/triage-labels.md
+    reason: chose ready-for-human for the regression issue
+    useful: yes
+  - path: GLOSSARY-MAP.md
+    reason: session-start read; pointed to the Tenant glossaries, none needed
+    useful: partly
+  - path: .agents/skills/clear-backlog/SKILL.md
+    reason: read section 3 to place the two doc fixes
+    useful: yes
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: reviewer subagent applied its single-home and tier rules to the diff
+    useful: partly
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: impl agent read the ledger rules to apply the patch
+    useful: yes
+  - path: docs/agents/environment-caveats.md
+    reason: survey agent confirmed the guard text lives there but build agents never read it
+    useful: yes
+  - path: .agents/skills/visitor-loop/SKILL.md
+    reason: survey agent checked the owner-corrections mechanism
+    useful: partly
+  - path: .claude/workflows/clear-backlog-build.js
+    reason: (read before editing)
+  - path: /home/user/terrarium/CLAUDE.md
+    reason: (no reason given)
+  - path: layers/journal/tenant.config.ts
+    reason: (no reason given)
+  - path: CLAUDE.md
+    reason: (no reason given)
+  - path: .agents/prune-trials.yml
+    reason: (no reason given)
+skillsUsed:
+  - name: frictions-to-fixes
+    reason: the task itself
+  - name: dispatch-subagents
+    reason: worktree isolation and brief checklist for the impl agent
+  - name: code-review
+    reason: Standards and Spec axes before the first push
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Read the ledger patch and two Skill files with shell grep and sed instead of the Read tool, against CLAUDE.md.
+    solution: No change needed; the cost was small. A hint when Bash greps a file under .agents/skills would catch it.
+    severity: nit
+  - description: Ledger refs for the three tracked entries could not name this run's PR, because it did not exist when the ledger was edited.
+    solution: Let a ledger ref hold a branch name now, and have the next run record the PR number in fixes, as the Skill already says.
+    severity: nit
+  - description: The impl agent's Bash commands hit the worktree guard on compound commands and a pipe, the same behaviour fix 1 addresses.
+    solution: The new clause in the build workflow brief; the guard itself is outside the repo.
+    severity: nit
+durationSec: 1362
+models:
+  claude-sonnet-5-5: 56
+toolCounts:
+  Read: 10
+  ToolSearch: 2
+  Skill: 4
+  Agent: 4
+  Bash: 8
+  mcp__github__issue_write: 1
+  Write: 2
+  Edit: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+  mcp__github__pull_request_read: 1
+filesEdited:
+  - .agents/skills/clear-backlog/SKILL.md
+  - .claude/workflows/clear-backlog-build.js
+rulesLoaded:
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0030.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesLoadedBySubagents:
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/adr-0002.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/adr-0008.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/guards.md
+  - .claude/rules/adr-0028.md
+docsReadBySubagents:
+  - .agents/skills/audit-docs/SKILL.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - docs/agents/environment-caveats.md
+  - .agents/skills/visitor-loop/SKILL.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Made me run gate and code-review before the first push; summary was enough, I did not open the full ADR
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Told me to invoke close-session at PR open; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: Reminded me to check open Prune Trials before dropping or fixing; the survey did it
+    useful: yes
+  - path: .claude/rules/adr-0020.md
+    reason: Trust tiers; every input here was Trusted or our own logs, so it did not apply
+    useful: no
+  - path: .claude/rules/adr-0003.md
+    reason: Said to open the PR myself and subscribe, which I did; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Required the session header on the issue and PR bodies; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0005.md
+    reason: Workflow script is its Skill's code; confirmed the build-script edit belongs in the PR
+    useful: partly
+  - path: .claude/rules/adr-0015.md
+    reason: Pack Skills stay untouched; made me drop the code-review note
+    useful: yes
+  - path: .claude/rules/adr-0021.md
+    reason: Glossary split; no glossary change here, so it did not apply
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: Rules load with files; no rule change here, so it did not apply
+    useful: no
+  - path: .claude/rules/adr-0022.md
+    reason: Triage sweep; this run did no triage, loaded unrelated by a script read
+    useful: no
+  - path: .claude/rules/adr-0030.md
+    reason: ADR rewriting; no ADR touched, loaded unrelated by a file read
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Human-only path list; confirmed the diff touched none
+    useful: yes
+  - path: .claude/rules/tenant-layers.md
+    reason: Loaded for a subagent ledger edit; did not apply
+    useful: no
+  - path: .claude/rules/adr-0002.md
+    reason: Loaded for a subagent; did not apply
+    useful: no
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: Loaded for a subagent; did not apply
+    useful: no
+  - path: .claude/rules/adr-0008.md
+    reason: Loaded for a subagent; did not apply
+    useful: no
+  - path: .claude/rules/guards.md
+    reason: Loaded for a subagent; did not apply
+    useful: no
+  - path: .claude/rules/adr-0028.md
+    reason: Loaded for a subagent; did not apply
+    useful: no
+subagents:
+  - type: general-purpose
+    task: Friction survey and screening
+  - type: general-purpose
+    task: Grouped doc fixes and ledger edit
+    model: sonnet
+  - type: general-purpose
+    task: Standards review of doc PR
+  - type: general-purpose
+    task: Spec review of doc PR
+gitBranch: ccr-05f23f51-lwa3ys
+entrypoint: remote_mobile
+cliVersion: 2.1.301
+landedBy: Stop
