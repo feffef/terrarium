@@ -66,3 +66,14 @@ observations:
       external CI gate itself did run and pass, and the session flagged the
       gap in its own frictions. No new silent failure. Grade unchanged
       (specialist).
+  - date: "2026-10-16"
+    note: >-
+      Re-checked (audit-skills behaviour check), all 10 newest usedIn
+      sessions (2 freshly end-to-end: session_01NqN7omu3o4kxoGeQzzSXhK PR
+      #2080-#2086, session_012NmfdSNbbPD9T5LPAwmdYG PR #2058/#2060-#2062; 8
+      already covered by prior entries, spot-re-verified). Human-merge rule
+      held correctly on every Human-only path hit (NODE_ENV env-gate case,
+      ADR-0003 rule file, nuxt.config.ts/package.json); every self-merge
+      carried a posted `Reviewed: <sha>` verdict naming the PR's actual head
+      plus a green gate comment before merge. No new silent failure. Grade
+      unchanged (specialist).

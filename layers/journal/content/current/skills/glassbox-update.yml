@@ -1,0 +1,21 @@
+name: glassbox-update
+category: platform-operation
+importance: specialist
+gist: Keeps every Glass Box page pinned to what the code now does.
+role: >-
+  The one-way code-to-pages sync for the Glass Box textbook: re-pins every
+  page and term to a commit, flags the ones whose prose or diagrams may now
+  be stale, and lands a self-merging PR once they're re-checked. Essential
+  to keeping Glass Box honest as the Platform it documents changes under it.
+observations:
+  - date: "2026-10-16"
+    note: >-
+      Coverage gap found (audit-skills sweep): used twice this window
+      (allTimeUses: 2), on disk, no prior Inventory entry. Both uses
+      verified merged and genuine: session_01C8c4U7TDuWnJwenPUWYxrP's PR
+      #2091 (guide Space sync, 17 pages flagged, 6 edited, pinned to
+      cf1b6c1b) and session_019ZQjo7wiuxrS9KLEG2GiTU's PR #2094 (added
+      --spaces, fixing 3 code-review-found gaps first) + PR #2095 (first
+      drafts-Space sync, 40 pages, 9 edited, pinned to b814fa1c) — all
+      three confirmed merged via pull_request_read. Below the ≥3-session
+      bar for a dedicated behaviour check this window.

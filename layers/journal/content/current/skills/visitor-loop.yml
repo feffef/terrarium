@@ -338,3 +338,20 @@ observations:
       cited by two now-superseded prior entries as "genuine," under the
       looser pre-#1912 bar. No new silent failure. Grade/role unchanged
       (routine).
+  - date: "2026-10-16"
+    note: >-
+      Audited (audit-skills behaviour check), the 2 sessions newest since
+      the 2026-10-15 entry (session_013LwpcexAe7t3Qck4CKtj9Y glassbox,
+      session_019e468BFBTvDPXZuGzLMAL7 journal), both independently
+      re-verified via GitHub + git history. 2 SKILL.md changes landed
+      between them (a6603a3a added a "Check fit" refiner step +
+      glassbox-focus override; 73f4f85d a wording fix) — the earlier
+      session started 39s before the first change merged and self-caught
+      the mid-run drift, disclosed as a moderate friction, not a silent
+      skip; the later session correctly used the new override. PRs #2098,
+      #2099 (glassbox), #2090, #2092 (journal) all confirmed merged, #2090's
+      diff matches its decisions.md claim verbatim. First live use of the
+      new "Check fit" refiner step ran correctly in both sessions with real
+      keep/refine/drop verdicts citing real sources. Owner-memory step held
+      again (2/2 since the #1912 fix). No reverts in the 2-week sweep. No
+      new silent failure. Grade/role unchanged (routine).
