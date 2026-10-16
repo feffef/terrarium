@@ -1,5 +1,6 @@
+import { existsSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
-import { glassboxDirectory, glassboxSubjectOf, glassboxWalkthroughs } from '../../app/utils/subjects.ts'
+import { glassboxDirectory, glassboxLandingTerms, glassboxSubjectOf, glassboxWalkthroughs } from '../../app/utils/subjects.ts'
 
 describe('glassboxSubjectOf', () => {
   it("names a Lesson's Subject from its folder, and none for other pages", () => {
@@ -49,5 +50,13 @@ describe('glassboxDirectory', () => {
 
   it('is empty when no Subject has a Lesson', () => {
     expect(glassboxDirectory([{ path: '/', title: 'Landing' }])).toEqual([])
+  })
+})
+
+describe('glassboxLandingTerms', () => {
+  it.each(['guide', 'drafts'])("has a term file in the %s Space for every landing word", (space) => {
+    for (const id of glassboxLandingTerms) {
+      expect(existsSync(new URL(`../../content/${space}/terms/${id}.yml`, import.meta.url)), id).toBe(true)
+    }
   })
 })
