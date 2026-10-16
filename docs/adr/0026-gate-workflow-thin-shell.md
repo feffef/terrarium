@@ -24,8 +24,9 @@ change to either file.
 
 Cloud sessions cannot push `.github/workflows/`: their token lacks GitHub's
 `workflow` permission. A local session pushes with the owner's key, which has
-it. The fence covers that folder only; `.github/actions/` is pushable. With the steps in the workflow file, every gate change waited for
-a human to copy YAML by hand.
+it. The fence covers that folder only; `.github/actions/` is pushable. With
+the steps in the workflow file, every gate change waited for a human to copy
+YAML by hand.
 
 The real cost was drift. A new check landed in `package.json` while its CI step
 waited, so CI checked less than the local gate claimed. Nothing could detect

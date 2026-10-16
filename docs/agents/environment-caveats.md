@@ -39,16 +39,16 @@ re-diagnose them as new. Incident detail lives in the cited issue.
   (issue #834)
 - **A cloud session cannot write `.github/workflows/*` — its token has no
   `workflow` OAuth scope.** `workflow-edit-guard` ([guards](./guards.md)) denies
-  the write there. A local session pushes with the owner's key, so the guard
-  lets it through (issue #2174).
-  A commit that gets past it is rejected at
-  push, stranding every other commit in that push. To recover, drop that commit
+  the write there. A local session pushing over SSH with the owner's key can
+  push it, so the guard lets it through; one pushing over HTTPS with a token
+  that lacks the scope is still rejected. A commit that is rejected at
+  push strands every other commit in that push. To recover, drop that commit
   rather than revert it; the push check reads every commit:
   `git rebase --onto <sha>^ <sha>` for a commit inside the branch, or for the
   tip `git reset --soft HEAD~1`, `git reset -- <path>`, then re-commit without the
   workflow file. Only on a branch you created. The edit itself goes
   in `docs/proposals/` ([README](../proposals/README.md)). (issues #659, #897,
-  #1955)
+  #1955, #2174)
 - **The agent proxy denies writes to repository-settings endpoints and any
   non-repo-scoped path.** `POST repos/{owner}/{repo}/rulesets` returns 403
   "Write access to this GitHub API path is not permitted through this proxy";
