@@ -1,13 +1,14 @@
 <script setup lang="ts">
 const route = useRoute()
-const { pagesKey, space } = useSpace('glassbox')
+const { pagesKey, collections, space } = useSpace('glassbox')
 const base = `/t/glassbox/${space}`
 
 // Shaped here so the payload carries only what the page shows (ADR-0028).
 const { data, status, error } = await useAsyncData(route.path, async () => {
-  const [landing, pages] = await Promise.all([
+  const [landing, pages, terms] = await Promise.all([
     queryCollection(pagesKey).path('/').first(),
     queryCollection(pagesKey).order('stem', 'ASC').select('path', 'title', 'description').all(),
+    queryCollection(collections.terms).where('stem', 'IN', [...glassboxLandingTerms]).select('stem', 'term', 'definition').all(),
   ])
   const stories = glassboxStories.flatMap((story) => {
     const page = pages.find((p) => p.path === story.path)
@@ -17,6 +18,7 @@ const { data, status, error } = await useAsyncData(route.path, async () => {
   return {
     landing,
     stories,
+    words: glassboxLandingTerms.flatMap((id) => terms.filter((t) => t.stem === id)),
     directory: glassboxDirectory(pages),
     walkthroughs: glassboxWalkthroughs(pages).filter((page) => !told.has(page.path)),
   }
@@ -64,6 +66,13 @@ useSeoMeta({ description: () => landing.value?.description })
         <span class="arrow" aria-hidden="true">→</span>
       </NuxtLink>
     </nav>
+
+    <section v-if="data?.words.length" class="words" aria-labelledby="words-h">
+      <h2 id="words-h">Words we use</h2>
+      <dl>
+        <div v-for="word in data.words" :key="word.stem" class="gb-pane"><dt>{{ word.term }}</dt><dd>{{ word.definition }}</dd></div>
+      </dl>
+    </section>
 
     <section v-if="data?.walkthroughs.length" class="band">
       <h2>{{ data.stories.length ? 'More Walkthroughs' : 'Walkthroughs' }}</h2>
@@ -180,6 +189,12 @@ section { margin-bottom: 56px; }
   font-size: 18px;
 }
 .story:hover strong { color: var(--gb-accent); }
+
+/* Words we use: the Terms every first Lesson leans on. */
+.words dl { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; margin: 0; }
+.words .gb-pane { display: flex; flex-direction: column; gap: 4px; padding: 16px 20px; border-radius: 16px; }
+.words dt { font-size: 16px; font-weight: 600; }
+.words dd { margin: 0; font-size: 14px; line-height: 1.5; color: var(--gb-ink-2); }
 
 /* The other Walkthroughs, one full-width band. */
 .band {

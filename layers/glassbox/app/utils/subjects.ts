@@ -21,6 +21,9 @@ export const glassboxStories = [
   { verb: 'Ship', path: '/walkthroughs/a-change-goes-live' },
 ] as const
 
+/** The landing's "Words we use": ids of `terms` entries, in the order a newcomer meets them. */
+export const glassboxLandingTerms = ['tenant', 'space', 'collection', 'document'] as const
+
 export interface GlassboxPageLink {
   path: string
   title: string
