@@ -68,8 +68,8 @@ export const frictionClusterSchema = z
     // the merged PRs in `fixes` worked is not stored: the page derives it
     // (`ledgerFixState` in `app/utils/ledger.ts`).
     status: z.enum(['open', 'tracked', 'on-trial']),
-    // Agents' notes on the status, not rendered: the tracking issue, the
-    // trial's territory match, what a fix left open. Merged PRs go in `fixes`.
+    // Agents' notes on the status, not rendered: the tracking issue or open PR,
+    // the trial's territory match, what a fix left open. Merged PRs go in `fixes`.
     ref: z.string().optional(),
     // The merged PRs meant to fix (part of) the cause, oldest first: what the
     // Ledger shows as "Merged PRs to fix it"; a merge does not prove the fix held. `date` is the merge date.

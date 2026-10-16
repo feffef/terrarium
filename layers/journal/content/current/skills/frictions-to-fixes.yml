@@ -5,8 +5,9 @@ gist: Turns agents' logged annoyances into filed and fixed bugs.
 role: >-
   The consuming half of the self-improvement loop `log-session` feeds. Keeps
   the Friction Ledger (every logged friction by root cause, with the PRs that
-  tried to fix it), picks up to 10 frictions (at most 2 hard; hard and
-  surface-blocked ones are filed as issues), dispatches impl agents, reviews
+  tried to fix it), picks up to 10 frictions, has a design agent design
+  each fix and rate its risk, files the risky ones as issues, dispatches impl
+  agents for the rest, reviews
   and merges their gated PRs itself, and escalates only genuinely high-risk
   changes. Reach for it when frictions pile up.
 observations:
