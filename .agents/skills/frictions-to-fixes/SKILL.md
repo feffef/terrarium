@@ -151,8 +151,7 @@ trial. Then, for the rest: the §1 subagent applies these rules to every candida
   simplest-fix dispatch — a change that already failed once needs human eyes, not a
   second run of the same idea. The main session files a distinct issue that flags
   the earlier fix as ineffective (link the prior issue/PR and quote both the
-  original and the recurring friction), and **alerts the user** (§3 caps these
-  issues per run).
+  original and the recurring friction); §3 caps these issues per run.
 
 Done when every candidate is labelled never-fixed, drop, open-already, or
 regression — each with its citing issue/PR number where one exists.
@@ -184,10 +183,10 @@ Spend a hard slot on an open ledger entry with a `major` or `blocker` occurrence
 and a safe surface before filling simple ones; the hard slots exist for these.
 
 A cluster `--summary` shows as `still recurring` is a §2 regression: never a
-simple or hard selection. It gets the user alert, and the §2 issue if it ranks
-in the top **three** of the run by severity, occurrence count and proof of
-regression (occurrences dated after the fix) together; the rest wait in the
-ledger for the next run.
+simple or hard selection. It gets the §2 issue if it ranks in the top **three**
+of the run by severity, occurrence count and proof of regression (occurrences
+dated after the fix) together. List the rest in the description of the PR that
+carries the ledger edit (§4); they wait in the ledger for the next run.
 Drop a lone low-severity one-off (§1) and anything an ADR defers. A candidate that ranks but fails only the
 safe-surface test is **surface-blocked**: not dropped, §4 files it, uncapped. The
 caller may pass a lower count as the Skill's argument; with none, take everything
@@ -318,7 +317,7 @@ not a bystander waiting for a human. For each branch:
    - **Escalate to a human** only when the actual diff meets an ADR-0004
      exception (its *Scope* lists them, with examples of behaviour no test can
      observe); check the diff against them rather than guessing. Leave the PR open, say precisely why it is
-     high-risk, and **alert the user**. A **hard** selection (§3) usually lands
+     high-risk, in a PR comment. A **hard** selection (§3) usually lands
      here — that is expected.
 
 5. **Record the PRs you merged in `fixes` right away**, not in the next run:
