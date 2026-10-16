@@ -1,0 +1,139 @@
+schemaVersion: 1
+session: session_01JuCbPDE6DkKs6mTCFAKQNr
+startedAt: 2026-10-16T22:05:19Z
+endedAt: 2026-10-16T22:22:46Z
+kind: interactive
+goal: Tone down the Glass Box landing's term section
+status: in-review
+outcome: The "Words we use" cards became a compact chip strip above Primary sources
+summary: 'The owner said the "Words we use" section on the Glass Box landing was too prominent and odd. Following their preference, I asked questions before building. They confirmed it was too prominent, in the wrong place and showed the wrong terms, noted that Lessons already highlight terms inline with :term, and chose a compact strip. From two follow-up options they chose to put it above Primary sources and to show the terms guide Lessons expand most (I counted them). Human-instructed: the change, the placement and the term set. Agent-initiated: the heading wording, capitalizing Manifest in its term files, and the review fixes (aria-live, useId, Term naming, a heading that also holds on drafts). The Spec review rightly flagged that "use most" was untrue on drafts. Verified with screenshots and a Playwright click; scoped gate green.'
+prs:
+  - "2178"
+docsRead:
+  - path: GLOSSARY-MAP.md
+    reason: session-start glossary map
+    useful: partly
+  - path: GLOSSARY.md
+    reason: Platform terms; Human-only and Gate definitions
+    useful: partly
+  - path: layers/glassbox/GLOSSARY.md
+    reason: Term concept and how :term looks up entries
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: fetch and commit hygiene before committing
+    useful: partly
+  - path: docs/agents/verifying-ui-changes.md
+    reason: preview.ts review and the Playwright click recipe
+    useful: yes
+  - path: docs/agents/pr-workflow.md
+    reason: gate and code-review before the first push
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: MCP tool use for opening the PR
+    useful: partly
+  - path: docs/agents/tenant-layers.md
+    reason: "Standards agent: checked layer conventions, nothing violated"
+    useful: partly
+skillsUsed:
+  - name: code-review
+    reason: Standards and Spec review before the first push
+  - name: close-session
+    reason: PR-open log
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: A python re.sub with DOTALL for the old CSS block ate the rest of the stylesheet; the build failed and I restored it from git.
+    solution: Replace exact strings with asserts, never a greedy DOTALL regex over a file.
+    severity: minor
+  - description: Started pnpm gate:scoped in the background, then edited files during it, so it had to run a second time on the final head.
+    solution: Finish review fixes before starting the gate, or start it only after the last commit.
+    severity: minor
+  - description: My first chip screenshot used clip with fullPage after a click scroll and captured the wrong region.
+    solution: Use locator.screenshot() for an element; verifying-ui-changes.md already warns about clip.
+    severity: nit
+  - description: Read GLOSSARY-MAP.md and GLOSSARY.md after the first questions, not at session start as CLAUDE.md asks; ran git log before git-conventions.md. No harm resulted.
+    solution: Read the session-start docs before the first tool call.
+    severity: nit
+  - description: Recommended placement options without first grepping docs/adr for the Glass Box landing, as CLAUDE.md asks before recommending a change.
+    solution: Run grep -l glassbox docs/adr/* before offering design options.
+    severity: nit
+durationSec: 1047
+models:
+  claude-opus-5-5: 94
+toolCounts:
+  Bash: 32
+  AskUserQuestion: 2
+  Read: 5
+  Skill: 3
+  Agent: 2
+  ToolSearch: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+  SendUserFile: 1
+rulesLoaded:
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/glassbox-content.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0006.md
+  - .claude/rules/adr-0016.md
+docsReadBySubagents:
+  - docs/agents/tenant-layers.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Made me run gate:scoped and code-review before the first push despite the Stop hook; the summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Kept the log off the branch and told me to close-session at PR open; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Told me to open the PR myself and subscribe; the owner directly approved this small change
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Gave the session header for the PR body; summary was enough
+    useful: yes
+  - path: .claude/rules/tenant-layers.md
+    reason: Confirmed auto-imported utils and scoped CSS in the layer; both reviewers found nothing violated
+    useful: partly
+  - path: .claude/rules/adr-0021.md
+    reason: Loaded on reading GLOSSARY.md; the Spec agent said it explained why Manifest has no GLOSSARY source
+    useful: partly
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: Loaded on reading content; this change added no MDC component or Collection
+    useful: no
+  - path: .claude/rules/adr-0027.md
+    reason: Loaded with docs; no instruction was pruned or restored here
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: Loaded with docs; no rule or instruction placement changed
+    useful: no
+  - path: .claude/rules/glassbox-content.md
+    reason: Its spirit (no drifting facts) backed both reviewers' push to drop the 'use most' claim from the heading
+    useful: partly
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: "Standards agent: loaded, no bearing; no Human-only path is touched"
+    useful: no
+  - path: .claude/rules/adr-0006.md
+    reason: "Standards agent: loaded, no bearing on a landing-page layout change"
+    useful: no
+  - path: .claude/rules/adr-0016.md
+    reason: "Standards agent: loaded, no bearing on this diff"
+    useful: no
+subagents:
+  - type: general-purpose
+    task: Standards review of term strip
+  - type: general-purpose
+    task: Spec review of term strip
+gitBranch: claude/amazing-knuth-klnj53
+entrypoint: remote
+cliVersion: 2.1.302
+landedBy: Stop
