@@ -1,0 +1,189 @@
+schemaVersion: 1
+session: session_0166zWrnaKYByq5Z2Qj5nXRM
+startedAt: 2026-10-16T12:53:14Z
+endedAt: 2026-10-16T13:06:47Z
+kind: delegated
+goal: Move frictions-to-fixes subagent instructions into briefs
+status: in-review
+outcome: "survey-brief.md and impl-brief.md extracted; SKILL.md down from 336 to 217 lines; PR #2152 open"
+summary: "Human-instructed: the user asked to extract the subagent-only instructions from frictions-to-fixes SKILL.md into an agent brief, keeping the wording, with clean-up deferred. Before building I asked two questions (one brief or also the impl brief; visitor-loop sibling files or a triage-style AGENT-BRIEF.md), and the user picked both briefs, visitor-loop style. §1's brief, §2's screening rules and the report spec went to survey-brief.md; §5's agent brief and the audit-docs house rules went to impl-brief.md. SKILL.md keeps the report's parts and the four screen labels the main session acts on. Agent-initiated: the Standards + Spec review found a dangling §5 reference, impl-brief sections that applied unconditionally to code agents, an unlabelled on-trial blocker and a stale script comment, and I fixed them. Left open for the later clean-up: §3's surface/difficulty definitions are now duplicated in survey-brief.md, and guest-build still cites §5."
+prs:
+  - "2152"
+docsRead:
+  - path: GLOSSARY-MAP.md
+    reason: session-start read; Friction and Friction Ledger terms
+    useful: partly
+  - path: GLOSSARY.md
+    reason: session-start read; only the first 150 lines, covering Friction and Friction Ledger
+    useful: partly
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: the file being split
+    useful: yes
+  - path: .agents/skills/visitor-loop/SKILL.md
+    reason: precedent for a verbatim sibling brief with placeholders
+    useful: yes
+  - path: .agents/skills/visitor-loop/visitor-brief.md
+    reason: brief format precedent
+    useful: yes
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: §3 brief checklist, so impl-brief avoids restating it
+    useful: yes
+  - path: .agents/skills/writing-for-agents/SKILL.md
+    reason: progressive disclosure rationale for the split
+    useful: partly
+  - path: docs/agents/git-conventions.md
+    reason: required before commit; commit -F for backticks
+    useful: yes
+  - path: docs/agents/pr-workflow.md
+    reason: required before push; gate then code-review then PR
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: required before the first MCP call
+    useful: partly
+  - path: docs/adr/0005-skill-model.md
+    reason: Skill files live in the Skill folder
+    useful: partly
+  - path: .agents/prune-trials.yml
+    reason: checked that no open trial covers frictions-to-fixes
+    useful: yes
+  - path: .agents/skills/frictions-to-fixes/survey-brief.md
+    reason: written this session; Spec reviewer checked it against the old SKILL.md
+    useful: yes
+  - path: .agents/skills/frictions-to-fixes/impl-brief.md
+    reason: written this session; Spec reviewer found its unconditional sections
+    useful: yes
+  - path: .agents/skills/guest-build/SKILL.md
+    reason: Standards reviewer checked its §5 cross-references; still resolve
+    useful: yes
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: Standards reviewer grepped it for the duplication lens
+    useful: partly
+skillsUsed:
+  - name: code-review
+    reason: Standards + Spec review before first push; found 5 real fixes
+  - name: close-session
+    reason: PR opened
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Read GLOSSARY.md, docs and skills with cat/head in Bash, not the Read tool as CLAUDE.md asks; GLOSSARY.md was read only partly
+    solution: Use the Read tool for instruction docs; the auto-mode note that permits cat overrides it in practice
+    severity: nit
+  - description: First extraction left a dangling §5 reference and made impl-brief's doc and ledger sections apply to every code agent; review caught both
+    solution: When moving text out of a Skill, grep the Skill for every § it referenced and check each section's audience before writing
+    severity: minor
+durationSec: 813
+models:
+  claude-opus-5-5: 55
+toolCounts:
+  Bash: 20
+  Read: 1
+  AskUserQuestion: 1
+  Write: 2
+  Skill: 3
+  Agent: 2
+  ToolSearch: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+filesEdited:
+  - .agents/skills/frictions-to-fixes/survey-brief.md
+  - .agents/skills/frictions-to-fixes/impl-brief.md
+rulesLoaded:
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0028.md
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0001.md
+  - .claude/rules/adr-0002.md
+  - .claude/rules/adr-0008.md
+  - .claude/rules/adr-0023.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0030.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0005.md
+docsReadBySubagents:
+  - .agents/skills/guest-build/SKILL.md
+  - .agents/skills/audit-docs/SKILL.md
+  - .agents/skills/frictions-to-fixes/survey-brief.md
+  - .agents/skills/frictions-to-fixes/impl-brief.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Made me run gate:scoped and code-review before the first push; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Told me to log at PR open and keep the log off the branch; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: Made me check prune-trials.yml for a trial covering this Skill; none did; summary enough
+    useful: yes
+  - path: .claude/rules/adr-0020.md
+    reason: Request came from the Trusted owner, so no trust handling applied
+    useful: no
+  - path: .claude/rules/adr-0003.md
+    reason: Told me to open the PR myself despite the harness saying not to; summary enough
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Gave the session header line for the PR body; summary enough
+    useful: yes
+  - path: .claude/rules/adr-0005.md
+    reason: Confirmed brief files belong in the Skill folder; opened the ADR to check workflow vs brief placement
+    useful: partly
+  - path: .claude/rules/adr-0021.md
+    reason: Loaded by reading GLOSSARY files; no glossary change in this task
+    useful: no
+  - path: .claude/rules/adr-0022.md
+    reason: Loaded by reading the triage Skill listing; no triage sweep here
+    useful: no
+  - path: .claude/rules/adr-0028.md
+    reason: Navigation payloads; unrelated to a Skill-text edit
+    useful: no
+  - path: .claude/rules/adr-0015.md
+    reason: Confirmed the external pack Skill clause moved into impl-brief stays correct; summary enough
+    useful: partly
+  - path: .claude/rules/adr-0001.md
+    reason: Loaded by a grep over scripts; unrelated to this Skill edit
+    useful: no
+  - path: .claude/rules/adr-0002.md
+    reason: Loaded by a grep over scripts; no manifest change
+    useful: no
+  - path: .claude/rules/adr-0008.md
+    reason: Context that the Friction Ledger is a derived inventory; nothing changed by it
+    useful: no
+  - path: .claude/rules/adr-0023.md
+    reason: Loaded via guest-build grep; no guest pipeline work
+    useful: no
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: Loaded by a grep; no content Collection work
+    useful: no
+  - path: .claude/rules/tenant-layers.md
+    reason: Loaded by a grep touching layers paths; no layer code changed
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Checked that scripts/prune-friction-ledger.ts is not Human-only, so the PR can self-merge
+    useful: yes
+  - path: .claude/rules/adr-0029.md
+    reason: Confirmed Skill briefs need no docs/agents reachability; summary enough
+    useful: partly
+  - path: .claude/rules/adr-0030.md
+    reason: Loaded with the human-merge read; no ADR edited
+    useful: no
+subagents:
+  - type: general-purpose
+    task: Standards review
+  - type: general-purpose
+    task: Spec review
+gitBranch: ccr-d1590e98-4fd9rn
+entrypoint: remote_mobile
+cliVersion: 2.1.301
+landedBy: Stop
