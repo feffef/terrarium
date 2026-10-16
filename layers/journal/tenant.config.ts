@@ -64,10 +64,11 @@ export const frictionClusterSchema = z
     // repo cannot change.
     surface: z.enum(['safe', 'human-only', 'guard-or-hook', 'outside']),
     // The tracking state: `open`: no open issue or PR covers it. `tracked`:
-    // one does. `on-trial`: inside a Prune Trial's territory (ADR-0027). Whether
-    // the merged PRs in `fixes` worked is not stored: the page derives it
-    // (`ledgerFixState` in `app/utils/ledger.ts`).
-    status: z.enum(['open', 'tracked', 'on-trial']),
+    // one does. `on-trial`: inside a Prune Trial's territory (ADR-0027).
+    // `accepted`: the owner accepts the cause as a cost; it shows over the fix
+    // state (issue #2148). Whether the merged PRs in `fixes` worked is not
+    // stored: the page derives it (`ledgerFixState` in `app/utils/ledger.ts`).
+    status: z.enum(['open', 'tracked', 'on-trial', 'accepted']),
     // Agents' notes on the status, not rendered: the tracking issue or open PR,
     // the trial's territory match, what a fix left open. Merged PRs go in `fixes`.
     ref: z.string().optional(),

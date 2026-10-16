@@ -123,4 +123,11 @@ describe('ledgerPanels fixes and state', () => {
     expect(byName.plain).toMatchObject({ state: 'on trial', since: 0 })
     expect(byName.late).toMatchObject({ state: 'still recurring', since: 1 })
   })
+
+  it('shows accepted over the derived state, still counting and listing occurrences and fixes', () => {
+    const accepted = { ...merged([{ pr: 1, date: '2026-09-30' }]), status: 'accepted' as const }
+    const [e] = ledgerPanels([accepted], 'current', new Set(), 'archived').severe
+    expect(e).toMatchObject({ state: 'accepted', since: 0, count: 1 })
+    expect(e!.fixes.map((f) => f.pr)).toEqual([1])
+  })
 })

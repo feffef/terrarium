@@ -2,17 +2,10 @@ name: binding-docs-skipped
 summary: >-
   Agents skipped docs they are told to read first, because nothing enforces most of those reminders.
 cause: >-
-  CLAUDE.md's read-first triggers are prose; the hint (#1793) now covers git and GitHub docs, but GLOSSARY.md, full-ADR reads and the dispatch-subagents trigger are unhooked.
+  CLAUDE.md's read-first rules are prose, and nothing hooks the session-start GLOSSARY.md reads, full-ADR reads or the ADR grep before a recommendation. A late read of a step-triggered doc (git-conventions.md, github-integration.md and the like) belongs to late-read-first-docs, which the owner accepted.
 surface: guard-or-hook
 status: tracked
-ref: "regression issue #2146; PR #2066 (merged): the owner accepts late reads (no deny guard; #1819 closed and not refiled), so the hint now says a late read that clears the call is not a Friction; regression of #1754/PR #1793"
-fixes:
-  - pr: 1793
-    date: "2026-10-11"
-    summary: "Added a hint pointing to the git and GitHub docs at a session's first matching call."
-  - pr: 2066
-    date: "2026-10-15"
-    summary: "Hint now says a late read that clears the call is not a Friction."
+ref: "issue #2146: the owner decides whether these need a new mechanism; its accepted late reads and PRs #1793/#2066 moved to late-read-first-docs"
 occurrences:
   - session: session_01NyDGTR1fuP22hPo7XghCfz
     date: "2026-10-07"
@@ -34,21 +27,11 @@ occurrences:
     severity: moderate
     description: "Broke CLAUDE.md 'Read files with the Read tool': read many governed files via chained or piped Bash, so their path rules (human-merge on .claude/settings.json) never loaded."
     solution: "Auto-mode harness text invites cat/sed/grep; a PostToolUse Bash hint for compound reads (ADR-0029 follow-up) would make this harmless."
-  - session: session_01AuUp8RpGpxhyoa3yctctHN
-    date: "2026-10-09"
-    severity: nit
-    description: "My git-conventions.md read was cut off by a head -200 pipe before subagents ran git log/show (CLAUDE.md read-before-git rule); harmless here as all git use was read-only"
-    solution: "Read required docs with the Read tool, not a truncated cat chain"
   - session: session_01EmaH5A6Ziwjndz9esnsJ22
     date: "2026-10-10"
     severity: nit
     description: "Read CONTEXT.md only to line 60 and only ADR-0010 of the ADRs found by grep, not in full as CLAUDE.md's read-first rules require."
     solution: "Read the full file or skip claiming it read; the digest touched nothing those parts govern, so no impact."
-  - session: session_01Kvr69UAPnNL8SwEMG9GFxF
-    date: "2026-10-10"
-    severity: nit
-    description: "Called mcp__github__issue_read before reading docs/agents/github-integration.md, which CLAUDE.md requires before the first GitHub operation."
-    solution: "Read it at the first GitHub call; a one-issue read had no harm here, but the trigger applies to reads too."
   - session: session_01YSGRZcurrkv9WYqPfnRH2t
     date: "2026-10-10"
     severity: nit
@@ -59,11 +42,6 @@ occurrences:
     severity: minor
     description: "Skipped required reads: CONTEXT.md in full, the ADR list-and-grep, and tenant-layers.md before editing layers/commons and journal pages (CLAUDE.md docs-you-must-read-first)."
     solution: "Low impact here since checkers read the binding ADRs, but a reader-trigger inside audit-docs step 6 for layers/ edits would have prompted it."
-  - session: session_01WFq4ZnYVWTyGHAAxqo5wKb
-    date: "2026-10-10"
-    severity: minor
-    description: "Called mcp__github__search_pull_requests before reading docs/agents/github-integration.md; the unscoped search returned six full PR bodies (~15k tokens), the overflow trap that doc warns about."
-    solution: "Read github-integration.md before the first mcp__github call, and pass fields omitting body to search_pull_requests."
   - session: session_018AsNh8hqd6jam8x7cSd136
     date: "2026-10-10"
     severity: minor
@@ -109,16 +87,6 @@ occurrences:
     severity: nit
     description: "Skipped the session-start read of CONTEXT-MAP.md and CONTEXT.md that CLAUDE.md requires; no impact on this read-only answer."
     solution: "For pure Q&A sessions, a short hook reminder at session start would make the rule hard to skip."
-  - session: session_01KnHp9a9Ljbiuu8NjLLx8i1
-    date: "2026-10-11"
-    severity: minor
-    description: "CLAUDE.md requires reading docs/agents/github-integration.md before this session's first GitHub operation. I ran several mcp__github__ calls (issue_read, issue_write, add_issue_comment, subscribe_pr_activity) before reading it — only read it incidentally, right before opening the PR."
-    solution: "No damage this run (no overflow, no HTML-entity-encoding mishap), but it was blind luck. Read the trigger docs before the first matching tool call, not after — check the \"docs you must read first\" list against the next tool call before making it, not just at session start."
-  - session: session_01YBJaRLtVQEr4RshMQG1X7D
-    date: "2026-10-11"
-    severity: minor
-    description: "Survey subagent made github calls before reading github-integration.md and had to slice a 288KB session-frictions output over several passes."
-    solution: "Issue #1755 makes --compact keep docsRead and subagents and names it in the Skill; #1754 proposes a trigger-time doc reminder hook."
   - session: session_01SLCo4c8kt3y2B3vP4XQsG4
     date: "2026-10-11"
     severity: minor
@@ -169,41 +137,11 @@ occurrences:
     severity: nit
     description: "Did not read the full ADR-0003, ADR-0004 and ADR-0010 though their rules say to when the topic is touched; relied on the rule summaries."
     solution: "Digest Skill could state that its own steps suffice and the ADR rules need no full read."
-  - session: session_014uXxmT6359K4Z42a6We6Gh
-    date: "2026-10-12"
-    severity: minor
-    description: "Opened PR #1806 before reading docs/agents/pr-workflow.md, and made the first GitHub call before github-integration.md; a hook reminded me only afterwards."
-    solution: "Read both docs when the visitor-loop Skill reaches step 4, or have the Skill's step 4 name pr-workflow.md up front as it does for verifying-ui-changes."
-  - session: session_01Xw7ZN8ghC7PDemvu9cA9Lo
-    date: "2026-10-12"
-    severity: nit
-    description: "Ran my first git commands in the same parallel batch as the git-conventions read, so the doc was not read before them."
-    solution: "Read the doc in a separate earlier call."
-  - session: session_016iE4LmQUcg6ap5YMxJg4oC
-    date: "2026-10-12"
-    severity: nit
-    description: "Ran git branch --show-current before reading git-conventions.md, which CLAUDE.md requires before the first git command."
-    solution: "Read the doc at session start when the task will involve git."
   - session: session_01VGLAakRJNm67PuNHpgbEc7
     date: "2026-10-12"
     severity: moderate
     description: "Recommended option 2 before grepping docs/adr for the ADRs that bind it (CLAUDE.md: an opinion asked in chat counts); I later found ADR-0009 defines the reason field."
     solution: "Run grep -l for the touched paths in docs/adr before recommending; ADR-0009's reason definition would have surfaced in the first answer."
-  - session: session_0147GPfMLJfFV6JbmC4HZGHb
-    date: "2026-10-12"
-    severity: nit
-    description: "Ran the window script (which fetches) and a GitHub search before reading git-conventions.md and github-integration.md, as CLAUDE.md requires."
-    solution: "The prune-trial Skill's first command is a git fetch; have it say to read git-conventions first."
-  - session: session_01LtYEkEsZ2cxf4uRFJvq4n9
-    date: "2026-10-12"
-    severity: nit
-    description: "Dispatched the survey subagent, which ran git commands, before reading the dispatch-subagents Skill that CLAUDE.md names for subagents touching git."
-    solution: "No change needed beyond the existing trigger; I treated a read-only survey as exempt, which the trigger wording does not say."
-  - session: session_01596W4GVWwvN1kfaHsV4ax8
-    date: "2026-10-12"
-    severity: nit
-    description: "I did not read the dispatch-subagents Skill before dispatching; the subagents touched no git, so no harm came of it."
-    solution: "CLAUDE.md trigger says git or worktree only; fine as written."
   - session: session_01DtK8w6aJ3361uPK73VAxhi
     date: "2026-10-12"
     severity: minor
@@ -219,21 +157,6 @@ occurrences:
     severity: nit
     description: "Skipped reading CONTEXT-MAP.md and CONTEXT.md at session start, as CLAUDE.md requires; went straight to dispatching the Explore agent."
     solution: "Read them first; low impact here since the task was a Skill prose edit using no glossary-sensitive terms."
-  - session: session_015LwBgLjaCn36ayZedges6G
-    date: "2026-10-12"
-    severity: minor
-    description: "Labelled #1844 ready-for-agent without first reading docs/agents/issue-tracker.md and triage-labels.md, which CLAUDE.md requires before labelling"
-    solution: "A read-first hint on issue_write label changes, like the git/GitHub one, would have surfaced them"
-  - session: session_01Rn5xT34AdjnywsTJdUtaDm
-    date: "2026-10-13"
-    severity: nit
-    description: "Ran git fetch and git log in a batch before reading git-conventions.md was cleanly sequenced; first git command beyond status ran (digest.ts list) before the doc was read."
-    solution: "Read git-conventions.md at session start in scheduled Skills that always commit."
-  - session: session_01AA2LXTN4qUsCEPgYEmWW4C
-    date: "2026-10-13"
-    severity: minor
-    description: "Made one mcp__github__search_issues call before reading docs/agents/github-integration.md; the PostToolUse hook caught it immediately afterward."
-    solution: "Read github-integration.md proactively before the first GitHub-shaped tool call, not only after a hook names it."
   - session: session_01HNLMJQDMabmJ9U54iWwtiH
     date: "2026-10-13"
     severity: nit
@@ -244,26 +167,11 @@ occurrences:
     severity: minor
     description: "Never read CONTEXT-MAP.md or CONTEXT.md at session start, as CLAUDE.md requires; the session added a glossary term through a subagent."
     solution: "Read both in the first batch of calls; impact low because the subagent read domain.md and CONTEXT.md itself."
-  - session: session_013FXrBeYrgCUvFvJjysR7yM
-    date: "2026-10-13"
-    severity: minor
-    description: "Dispatched worktree subagents via the build workflow without first reading the dispatch-subagents Skill, which CLAUDE.md requires; I only grepped its 'simple' size line."
-    solution: "clear-backlog §3 could say the workflow carries dispatch-subagents' rules, so the orchestrator need not read it, or tell the orchestrator to read it."
-  - session: session_016gu9e44jjfAEFMo3CBxzUQ
-    date: "2026-10-13"
-    severity: nit
-    description: "I ran list-open-issues and gh api before reading github-integration.md, so the read-first hint fired after the fact."
-    solution: "Read the GitHub doc at session start whenever the Skill is clear-backlog, since it always touches GitHub."
   - session: session_01RDtAc5Vv37kkRH4yCtRDQB
     date: "2026-10-13"
     severity: nit
     description: "Did not grep docs/adr for ADRs binding the new page before planning it, as CLAUDE.md asks; path-loaded rules covered it this time."
     solution: "Run grep -l journal docs/adr/* before proposing a design."
-  - session: session_01DqPT8JpBjhHPEubNDJuVuN
-    date: "2026-10-13"
-    severity: nit
-    description: "The issue-tracker.md and triage-labels.md triggers (before triage) and the dispatch-subagents trigger (before a worktree subagent) were not read by me; the workflows do the triage and dispatch, so their agents read them"
-    solution: "Have CLAUDE.md, or the clear-backlog Skill, say that running a saved workflow satisfies those triggers for the orchestrator"
   - session: session_01JW1NEbkjzCyx2myBjt9X8V
     date: "2026-10-13"
     severity: nit
@@ -299,36 +207,11 @@ occurrences:
     severity: nit
     description: "Skipped reading CONTEXT.md at session start (read only CONTEXT-MAP.md), against CLAUDE.md's read-first list"
     solution: "No glossary term was needed here, so no impact; a session-start hook printing a reminder would have caught it"
-  - session: session_011xN2Zi67cjpCguuMiZbsJ6
-    date: "2026-10-13"
-    severity: nit
-    description: "Ran git log in a compound command before reading git-conventions.md, against CLAUDE.md's first-git-command trigger."
-    solution: "Read git-conventions.md at session start when the task is git-heavy."
-  - session: session_01XJ9iR9EbRT2iV7afhytND8
-    date: "2026-10-14"
-    severity: nit
-    description: "Ran git status/log in the same Bash call that first printed git-conventions.md, so the doc was read after, not before, the first git log"
-    solution: "Read git-conventions.md in its own call before any git command beyond status/diff"
-  - session: session_01RAEu4CBfQptjCtKnJpUw8q
-    date: "2026-10-14"
-    severity: nit
-    description: "Ran git fetch and merge-base before reading git-conventions.md, and a GitHub search before github-integration.md; the search was also denied for missing fields."
-    solution: "Read the trigger docs first; the search guard message was clear."
   - session: session_01Dfw9sJon2e4UsaVoiCLhSJ
     date: "2026-10-14"
     severity: nit
     description: "Did not read the full ADR-0004 doc though its rule says to when it touches the task; read only pr-workflow and an excerpt."
     solution: "Rule could say which step the full read changes."
-  - session: session_01JYFKBPoDVHJanBhFhmw1kR
-    date: "2026-10-14"
-    severity: minor
-    description: "Did not read docs/agents/issue-tracker.md or triage-labels.md myself; the triage subagents did the labelling, but #1905 stays needs-triage while blocked and I did not check that label"
-    solution: "The explore workflow could say which label a blocked issue should carry"
-  - session: session_015dUGRadEQP1bvv6KytKLXT
-    date: "2026-10-14"
-    severity: nit
-    description: "I didn't read docs/agents/issue-tracker.md and triage-labels.md in full before triage, which CLAUDE.md requires; the triage agents did the labelling, but the orchestrator still decided set membership"
-    solution: "clear-backlog section 1 could name those two docs as orchestrator reads, or say explicitly that only the triage agents need them"
   - session: session_01675UWGBfCMALkurUr58cxM
     date: "2026-10-14"
     severity: minor
@@ -339,16 +222,6 @@ occurrences:
     severity: minor
     description: "Recommended the new Tenant's shape without reading ADR-0021/0003 in full myself, as CLAUDE.md's plan-or-recommend trigger asks; relied on the Explore agent's summary."
     solution: "Read the ADRs a new-Tenant plan binds (0003, 0018, 0021) before the breadth-first round."
-  - session: session_01ATdHzhyNozsTLHHtJGbLsa
-    date: "2026-10-14"
-    severity: minor
-    description: "Labelled and closed issues (1954, 1955, 1959, 1967, 1968) without reading issue-tracker.md and triage-labels.md first, as CLAUDE.md requires."
-    solution: "Read them before the first label write; the clear-backlog Skill could name them at §2."
-  - session: session_01JkzKjuQD4wH34MjxMjKHaX
-    date: "2026-10-14"
-    severity: minor
-    description: "Made my first GitHub calls before reading github-integration.md (CLAUDE.md read-first); get_sub_issues overflowed exactly as that doc warns."
-    solution: "Read the doc before the first mcp__github__ call; a guard or hint at the first GitHub call would catch it earlier than the PostToolUse reminder."
   - session: session_01VkVtDd4YKNa2KYRyRo8Uvy
     date: "2026-10-14"
     severity: nit
@@ -374,11 +247,6 @@ occurrences:
     severity: minor
     description: "Did not grep and read the full ADRs binding the spec (ADR-0003, 0004, 0021, 0025) before recommending the build frame; relied on the summary rules"
     solution: "Before writing a spec's human-merge marks, read ADR-0004 in full"
-  - session: session_01RBVYHX1FsYogHEgzgyRV6P
-    date: "2026-10-14"
-    severity: nit
-    description: "Took screenshots of the design without first reading docs/agents/verifying-ui-changes.md as CLAUDE.md requires"
-    solution: "The trigger reads as being about our own UI changes; it could say whether it also covers external mockups"
   - session: session_01R8ZgGod9KTmxwvnDyB4PQY
     date: "2026-10-14"
     severity: nit
@@ -389,26 +257,11 @@ occurrences:
     severity: moderate
     description: "Did not read GLOSSARY-MAP.md then GLOSSARY.md in full at session start, against CLAUDE.md's \"at session start\" rule, before acting on the scheduled prompt"
     solution: "Read both at the very start of every session before acting, even when the scheduled prompt already carries extensive inline context"
-  - session: session_01GLWVkt3R3EnHJj5XpQEJQt
-    date: "2026-10-15"
-    severity: nit
-    description: "Ran git status and ledger summary before reading git-conventions.md; the read-first hint came only after the command (PostToolUse)."
-    solution: "Same as open #1819: a PreToolUse reminder, not post-call."
   - session: session_011HBcCLzMW7CshmqnHLnegb
     date: "2026-10-15"
     severity: nit
     description: "Did not open the full ADR-0003/0004/0009/0017 texts that their summary rules point to; the summaries sufficed for this doc-only run."
     solution: "None needed beyond the summaries for a scheduled doc sweep."
-  - session: session_012NmfdSNbbPD9T5LPAwmdYG
-    date: "2026-10-15"
-    severity: minor
-    description: "Labelled and closed issues without first reading docs/agents/triage-labels.md and all of issue-tracker.md, as CLAUDE.md's trigger requires; read only its Specs section."
-    solution: "clear-backlog §2 could name the two docs at the point where it says to set labels."
-  - session: session_01NoQubvnMfCpcq9nkicNsDq
-    date: "2026-10-15"
-    severity: nit
-    description: "Called search_pull_requests without fields before reading github-integration.md, breaking CLAUDE.md's read-first rule; the guard denied it and cost one retry."
-    solution: "None needed; the guard did its job. The read-first line was simply skipped."
   - session: session_012VTgtrUEy7cPVTN5sMriXj
     date: "2026-10-15"
     severity: minor
@@ -439,11 +292,6 @@ occurrences:
     severity: nit
     description: "Did not read the full ADR-0003 or ADR-0004 although their summaries say to if relevant; relied on the summaries and pr-workflow.md."
     solution: "None needed if summaries suffice for a pack install; consider a no-ADR-read note for trivial pack installs."
-  - session: session_019ZQjo7wiuxrS9KLEG2GiTU
-    date: "2026-10-15"
-    severity: nit
-    description: "I read git-conventions only after the PostToolUse hook told me to; my first git commands were rev-parse and status, which the rule allows."
-    solution: "None needed; the late read was harmless."
   - session: session_013LwpcexAe7t3Qck4CKtj9Y
     date: "2026-10-15"
     severity: nit
@@ -459,38 +307,13 @@ occurrences:
     severity: nit
     description: "Skipped the CLAUDE.md session-start read of GLOSSARY-MAP.md and GLOSSARY.md; the task needed no glossary terms, so impact was low."
     solution: "Scope that trigger to sessions that name concepts or edit files."
-  - session: session_01F3a2MbH4xUH7J7Y1hLg2TX
-    date: "2026-10-16"
-    severity: nit
-    description: "Ran the first git command before reading git-conventions.md; hook caught it afterwards."
-    solution: "Read the doc at session start."
   - session: session_017xginqTj2NjZ8XgrbRqvkm
     date: "2026-10-16"
     severity: nit
     description: "Edited ADR-0009 text after reading only its rejected-alternatives section, not the full ADR the summary rule asks for; a checker did read it in full."
     solution: "Read the whole ADR before editing it."
-  - session: session_013Wjv51Wj4dYhJXpTgvxCN4
-    date: "2026-10-16"
-    severity: nit
-    description: "Ran git log on origin/main before reading docs/agents/git-conventions.md, against CLAUDE.md's before-first-git-command rule."
-    solution: "Read git-conventions.md together with the other start-of-task docs when a task names a PR."
-  - session: session_01Fay2GiWTwxDKnnqS9DznHk
-    date: "2026-10-16"
-    severity: minor
-    description: "Ran git fetch before reading docs/agents/git-conventions.md, against CLAUDE.md's read-first trigger; no harm, but the order was wrong."
-    solution: "The read-first hint could also fire on git fetch/merge, not only later commands."
   - session: session_01AaqTUSRhRmRpBxM8E4QSPR
     date: "2026-10-16"
     severity: minor
     description: "Did not grep docs/adr for ADRs binding Excerpt.vue before changing it"
     solution: "Run grep -l Excerpt docs/adr/* before editing, as CLAUDE.md asks"
-  - session: session_01N9bwDKW51kMS6WJvK2nfSU
-    date: "2026-10-16"
-    severity: minor
-    description: "Ran git log and git fetch before reading docs/agents/git-conventions.md, and an MCP GitHub call before github-integration.md, against CLAUDE.md read-first triggers; hooks reminded me afterwards."
-    solution: "Read both docs right after the session-start glossaries on any scheduled run that will use git and GitHub."
-  - session: session_01RfmdPFPhtKo6h6GFwxLeRb
-    date: "2026-10-16"
-    severity: nit
-    description: "My first search_issues call omitted fields and the guard denied it; I read github-integration.md only afterwards, though CLAUDE.md says read it before any GitHub operation."
-    solution: "Read the doc first; the guard message was enough to recover."

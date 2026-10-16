@@ -6,8 +6,9 @@
 //   Edits `layers/journal/content/current/frictions/*.yml` in place and prints
 //   what it dropped. `--today` defaults to the current UTC date.
 //   `--summary` edits nothing and prints one line per entry: name, state (the
-//   stored status, or with merged PRs what the page shows: fix landed, likely
-//   fixed, still recurring with the count since the latest PR, issue #2024),
+//   stored status, or with merged PRs and not `accepted` what the page shows:
+//   fix landed, likely fixed, still recurring with the count since the latest
+//   PR, issue #2024),
 //   ref, in-horizon occurrence count, max severity (issue #1917), and the fix
 //   count and latest fix. It ends with every friction two clusters share, for
 //   the survey to judge.
@@ -81,7 +82,7 @@ export function summarizeLedger(today: string, cwd = root): string[] {
     const max = Math.max(-1, ...occ.map((o) => SEVERITIES.indexOf(String(o.severity))))
     const last = [...(e.fixes ?? [])].sort((a, b) => a.date.localeCompare(b.date)).at(-1)
     const fixes = last ? `${e.fixes!.length} ${e.fixes!.length === 1 ? 'fix' : 'fixes'}, latest #${last.pr} ${last.date}` : 'no fixes'
-    const derived = ledgerFixState(e.fixes ?? [], (e.occurrences ?? []).map((o) => String(o.date)), asOf)
+    const derived = e.status === 'accepted' ? undefined : ledgerFixState(e.fixes ?? [], (e.occurrences ?? []).map((o) => String(o.date)), asOf)
     const state = derived ? `${derived.state}${derived.since ? ` (${derived.since} since #${last!.pr})` : ''}` : e.status
     return [e.name ?? f, state, e.ref ?? '-', `${occ.length} in horizon`, SEVERITIES[max] ?? '-', fixes].join(' | ')
   })

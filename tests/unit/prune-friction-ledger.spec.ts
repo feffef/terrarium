@@ -94,6 +94,11 @@ describe('summarizeLedger()', () => {
     expect(sameday).toContain('| likely fixed |')
     expect(young).toContain('| fix landed |')
   })
+  it('shows accepted over the derived state', () => {
+    const dir = setup()
+    writeFileSync(join(dir, 'x.yml'), withFixes(fixes([1, '2026-10-02']), ['a', '2026-10-01'], ['b', '2026-10-05']).replace('status: open', 'status: accepted'))
+    expect(summarizeLedger('2026-10-13', cwd)).toEqual(['x | accepted | - | 2 in horizon | nit | 1 fix, latest #1 2026-10-02'])
+  })
 })
 
 describe('sharedFrictions()', () => {

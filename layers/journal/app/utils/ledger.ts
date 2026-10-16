@@ -7,9 +7,10 @@ import { sessionAnchor } from './dashboard'
 const SEVERITY_RANK: Record<Severity, number> = { nit: 0, minor: 1, moderate: 2, major: 3, blocker: 4 }
 
 /** A cluster with merged PRs shows one of these, derived from its `fixes` and
- *  occurrences so nobody has to maintain it; one without shows its stored status. */
+ *  occurrences so nobody has to maintain it; one without, or one `accepted`
+ *  (the owner accepts the cause as a cost, issue #2148), shows its stored status. */
 export type FixState = 'fix landed' | 'likely fixed' | 'still recurring'
-export type LedgerState = FixState | 'open' | 'tracked' | 'on trial'
+export type LedgerState = FixState | 'open' | 'tracked' | 'on trial' | 'accepted'
 
 /** Occurrences older than this many days are dropped (`prune-friction-ledger.ts`). */
 export const LEDGER_HORIZON_DAYS = 14
@@ -97,7 +98,7 @@ export function ledgerPanels(
     const fixes = [...(c.fixes ?? [])]
       .sort((a, b) => b.date.localeCompare(a.date))
       .map((f) => ({ ...f, url: `${REPO_URL}/pull/${f.pr}` }))
-    const derived = ledgerFixState(fixes, c.occurrences.map((o) => o.date), asOf)
+    const derived = c.status === 'accepted' ? undefined : ledgerFixState(fixes, c.occurrences.map((o) => o.date), asOf)
     return {
       name: c.name,
       summary: c.summary,
