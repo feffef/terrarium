@@ -9,6 +9,10 @@ occurrences:
   - session: session_011t1xXHxqwrfAjt83s9oTEP
     date: "2026-10-15"
     severity: minor
+    description: "Pushed follow-up branch for PR #2088 before running gate:scoped and code-review, which ADR-0004 asks for before a first push."
+    solution: "Treat a branch restarted after merge as a first push; run gate:scoped before git push. It passed afterwards."
   - session: session_01NqN7omu3o4kxoGeQzzSXhK
     date: "2026-10-15"
     severity: minor
+    description: "Committed small wording fixes on the 2029 and 2071 worktrees after their gate ran and pushed without rerunning gate:scoped (validate-adr-rules only); the nuxt.config.ts edit is a comment in a code file"
+    solution: "Run pnpm validate:content or gate:scoped for any non-doc follow-up, even a comment"

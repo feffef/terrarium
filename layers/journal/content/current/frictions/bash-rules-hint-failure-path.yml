@@ -15,3 +15,5 @@ occurrences:
   - session: session_01NVG22rfEsjhW9zkcCco6W8
     date: "2026-10-14"
     severity: moderate
+    description: "SHELL: PR 1946 hint missing. `cat .claude/rules/guards.md; ls /nonexistent-path-xyz` failed with exit 2 and its result carried no 'governed by these rules' hint."
+    solution: "Emit the hint on non-zero exits too (PostToolUseFailure path), or fix the hook if it skips failed calls."

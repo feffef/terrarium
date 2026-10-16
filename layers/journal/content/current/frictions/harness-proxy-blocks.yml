@@ -14,39 +14,63 @@ occurrences:
   - session: session_01CF4k9jXS9wLrcPVsGduZmn
     date: "2026-10-08"
     severity: moderate
+    description: "The agent proxy refuses POST repos/{owner}/{repo}/rulesets (403 'Write access to this GitHub API path is not permitted'), so the owner-approved ruleset could not be applied from the session."
+    solution: "Recorded in environment-caveats; the config shipped as a Proposal with a one-line local gh command. Stage 2 (issue 1689) notes the same proxy may block an App token mint."
   - session: session_018i6d2BQPkf9cq6jSEqCNSX
     date: "2026-10-10"
     severity: moderate
+    description: "Auto-mode classifier denied the guards-cluster dispatch twice as Self-Modification, even after the owner approved in chat; it ran only after the owner left auto mode"
+    solution: "For guard or hook changes, ask the owner to leave auto mode before dispatching, instead of discovering the denial"
   - session: session_01BLrfuHbMMEmjZZ7STpe1AN
     date: "2026-10-11"
     severity: minor
+    description: "The REST job-log endpoint (`gh api repos/.../actions/jobs/<id>/logs`) is blocked here: its redirect to blob storage returns Forbidden; only mcp__github__get_job_logs works, and its single-line output needs a parser."
+    solution: "Add the blocked endpoint to environment-caveats.md next to the existing proxy notes, pointing at get_job_logs with a large tail_lines."
   - session: session_016iE4LmQUcg6ap5YMxJg4oC
     date: "2026-10-12"
     severity: minor
+    description: "CI job log download via curl was blocked (403 proxy) and get_job_logs with return_content overflowed, hiding the earlier build lines."
+    solution: "Use check-run annotations or save logs to a file and slice, as github-integration.md says."
   - session: session_017NBxJhtBSd9AoCwTzsg6pM
     date: "2026-10-12"
     severity: minor
+    description: "The auto-mode classifier denied the .claude/settings.json edit (Self-Modification) before the owner approved it in chat."
+    solution: "List Human-only settings edits as an explicit approval question in the grilling up front."
   - session: session_01STVS35HcxNZp7dQ1pPnrhW
     date: "2026-10-13"
     severity: minor
+    description: "Auto-mode classifier blocked both the build agent's and my edit/commit of .claude/settings.json as self-modification despite the owner's approval in the grilling; needed an extra AskUserQuestion round"
+    solution: "guards.md could say the settings.json edit needs an explicit permission grant from the owner before dispatch, so it is asked once, up front"
   - session: session_01XJ9iR9EbRT2iV7afhytND8
     date: "2026-10-14"
     severity: minor
+    description: "gh api job logs redirect to a blob host the proxy blocks; MCP get_job_logs tail only showed cleanup lines. Check-run annotations gave the cause"
+    solution: "github-integration.md could name check-run annotations as the cheap way to get a gate failure's cause"
   - session: session_01CJix3AqBpX5KrAENqNp1M7
     date: "2026-10-14"
     severity: minor
+    description: "Auto-mode classifier denied appending marker lines to a throwaway worktree's .claude/rules copies, which blocked the direct which-copy test"
+    solution: "Use subagent rule labels and a nested non-worktree control dir instead; it worked, so no change needed"
   - session: session_01ERZa4fUGxpF81MeLhZMkSB
     date: "2026-10-14"
     severity: minor
   - session: session_01JkzKjuQD4wH34MjxMjKHaX
     date: "2026-10-14"
     severity: minor
+    description: "The proxy blocked content.nuxt.com and zod.dev, so two official-docs links in the drafts stay unverified."
+    solution: "Allow those doc hosts in the environment network policy, or verify links in a session that can reach them."
   - session: session_01RBVYHX1FsYogHEgzgyRV6P
     date: "2026-10-14"
     severity: minor
+    description: "github.com/user-attachments downloads return 403 from the agent proxy, so the owner's attached design files were unreachable"
+    solution: "Add a caveat to docs/agents/environment-caveats.md: ask the owner to upload attachments into the session instead"
   - session: session_01Dcufz27EyPsKy6sYafpKRg
     date: "2026-10-14"
     severity: minor
+    description: "Glass Box tickets keep citing user-attachments design files that the proxy blocks; this session could not check design 1b details itself"
+    solution: "Commit design exports to a branch, or have the owner upload them, when a design pass resolves"
   - session: session_01KVh6e6JUAssZvPRbuN5YDr
     date: "2026-10-15"
     severity: minor
+    description: "Dispatched the first subagent for the public URL before reading verifying-ui-changes.md and before checking network reach, so it failed with a 403 and cost a round trip."
+    solution: "Run curl on the target URL before briefing a screenshot agent."

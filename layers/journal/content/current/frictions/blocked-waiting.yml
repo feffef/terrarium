@@ -10,3 +10,5 @@ occurrences:
   - session: session_015LBxMJwGsviZMj4ScFXD38
     date: "2026-10-03"
     severity: moderate
+    description: "Started `pnpm gate:scoped` via shell `nohup … &` instead of the Bash tool's `run_in_background: true` — exactly the footgun CLAUDE.md's Working Conventions already name, which I was simultaneously relying on to audit other sessions' compliance with it."
+    solution: "Always pass `run_in_background: true` on the Bash call itself for an expected-long command (full gate, build, e2e); never shell out `nohup … &` by hand."

@@ -9,3 +9,5 @@ occurrences:
   - session: session_01VC6tZCm3HYs9BsJ7JrQQ5Z
     date: "2026-10-02"
     severity: moderate
+    description: "Session rate limit (HTTP 429, resets hourly) killed the slice-D review agent mid-run and restarted the worker; resumed via SendMessage after the reset"
+    solution: "Nothing in-repo; resuming the same agent id (not re-dispatching) preserved its scratch work. Worth noting in environment-caveats that a 429 can abort a subagent silently"

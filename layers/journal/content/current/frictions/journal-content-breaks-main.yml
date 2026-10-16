@@ -20,24 +20,40 @@ occurrences:
   - session: a1af4e46-8293-4f33-bf41-c956bd7f6306
     date: "2026-10-03"
     severity: major
+    description: "This session's own log (local CLI, bare-UUID id) turned main's gate red. Two journal e2e tests assumed the newest card's session id starts with session_. I did not notice until the user asked, about 20 minutes after the log landed."
+    solution: "After the Stop hook lands a log, check the next main gate run. Make tests that read the newest real Document data-independent (done in #1575)."
   - session: session_01DU7WbYNfKmdNgRpry9qzeV
     date: "2026-10-03"
     severity: moderate
+    description: "Local gate:scoped fails on main content: a session log (2026-10-03-a1af4e46…) has a non-session_ id, breaking two journal e2e chip tests unrelated to this PR."
+    solution: "The lander or schema should reject or normalise non-session_ ids; or the e2e test should pick a card with a session_ link."
   - session: session_01CF4k9jXS9wLrcPVsGduZmn
     date: "2026-10-08"
     severity: moderate
+    description: "The e2e smoke tests' not.toContain('No document at') checks can be tripped by any Journal content that quotes the 404 page, which an idea in a session log did; main's push gate went red for three runs and every open PR with it."
+    solution: "PR 1695 matches the markup. Consider the same review for other prose-substring assertions in the e2e suites."
   - session: session_01KCWd4fWsUfUxL6uT4Bephj
     date: "2026-10-08"
     severity: moderate
+    description: "Retention sweep archived a Digest that a blog e2e test hard-coded under current, failing the gate and forcing an out-of-scope test edit."
+    solution: "Make the blog e2e check date-independent, or have the digest Skill warn that the sweep can break date-pinned tests."
   - session: session_015BjYk46dntcMuAWMn1z4Zw
     date: "2026-10-10"
     severity: major
+    description: "Nearly shipped a stitch that writes a new schema field; this session's log would have landed on main and failed main's strict schema for every PR until merge."
+    solution: "Make the lander validate against origin/main's session schema too, or document an expand-then-write order for schema fields in ADR-0009's evolution policy."
   - session: session_01LzWPjhbEKVo8HK7oTPqWK9
     date: "2026-10-10"
     severity: minor
+    description: "Working on the rulesFollowedUp branch, which lacked #1748, risked landing this session's own log with a field main rejects"
+    solution: "Switched back to the #1748 branch before Stop; with #1748 merged, the lander now refuses such logs itself"
   - session: session_01WoJ2cTAuA3Qo9Mi9fd6Tki
     date: "2026-10-11"
     severity: minor
+    description: "The lander validates logs against main's schema, so a session adding log fields cannot use them in its own log until merge; found by reading log-session.ts"
+    solution: "Mention it in the log-session Skill next to the schema note"
   - session: session_01F3a2MbH4xUH7J7Y1hLg2TX
     date: "2026-10-16"
     severity: moderate
+    description: "Archive sweep moves a session quoting 'live snapshot' into archived, breaking a fragile Journal e2e test and turning the gate red for the Digest PR."
+    solution: "Make the archived-dashboard test assert on the rendered badge element, not raw page text; or have the sweep run gate checks."

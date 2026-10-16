@@ -14,3 +14,5 @@ occurrences:
   - session: session_01PGvPc9bv3tGwoaLDDZsg6a
     date: "2026-10-13"
     severity: moderate
+    description: "The ADR-vs-ADR conflict-resolution rule existed only in a PR description; audit-docs would have filed an issue for every future contradiction."
+    solution: "Added one line to audit-docs in #1898."

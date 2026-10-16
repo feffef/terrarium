@@ -14,21 +14,35 @@ occurrences:
   - session: session_01548Bi1ZiGcknAp8CMLNMZB
     date: "2026-10-03"
     severity: moderate
+    description: "#1549 was triaged ready-for-agent and implemented without anyone asking whether a zod major bump had any benefit; the owner caught that it was cost-only after a full impl + review cycle"
+    solution: "Triage of dependency-sweep majors should state the concrete benefit in the brief, and route a no-benefit bump with a transitive-dependency mismatch to ready-for-human"
   - session: session_016o8vxfkAFpgZMedEsKZqKT
     date: "2026-10-04"
     severity: moderate
+    description: "Took 'address them all' as licence for a 16-file token rename that reached Campaign content and a Skill's figure generator; the user interrupted and reversed direction."
+    solution: "When a review fix widens far past the reviewed files, check with the user first, especially given their ask-first preference."
   - session: session_014mna6dsd4t2Ui98gbs3jCF
     date: "2026-10-05"
     severity: moderate
+    description: "The #1608 triage brief (made ready-for-agent) encoded a policy the owner rejected at review; a full impl + review + fix cycle was spent before the premise was questioned"
+    solution: "A 'which behaviour is right' bug against a self-merge tier is an owner judgement call; route it ready-for-human"
   - session: session_01VaPP7iMRxMvKvX8KQh1qeY
     date: "2026-10-09"
     severity: moderate
+    description: "I spent two fix-and-review rounds hardening session-id-guard's ownership parsing before checking whether the guard caught anything at all; the Journal showed its three findings ever were all false positives, so the right fix was deletion. The user had to prompt the step back."
+    solution: "Before fixing a recurring false positive in a guard, count its true positives in the Journal first; a guard with none and a stronger point-of-action cover is a deletion candidate (CLAUDE.md: cut before you add)."
   - session: session_01CasnQoauTyLNUxd74agJsP
     date: "2026-10-11"
     severity: moderate
+    description: "Five fix rounds on one PR: directory matching and simple-read silence were my design additions beyond the issues, and the late pre-filter optimization caused the only major flaw."
+    solution: "Split such work into three PRs, keep the hook to file paths first, and add optimizations only after observed noise."
   - session: session_01VkVtDd4YKNa2KYRyRo8Uvy
     date: "2026-10-14"
     severity: minor
+    description: "Round 1 offered #1966's subject merges as a recommendation without a rationale of my own; the owner asked why, and the honest answer was that the merges only existed to limit Space count."
+    solution: "Re-derive inherited recommendations against the current premise before offering them."
   - session: session_018wtKTCgkvJwgb3gS8o8JKA
     date: "2026-10-14"
     severity: minor
+    description: "Proposed files/docs frontmatter that duplicated the body; the owner had to question it before I saw the one-home violation"
+    solution: "Check every proposed field against one-home-per-fact before recommending it"

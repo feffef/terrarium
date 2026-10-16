@@ -21,9 +21,15 @@ occurrences:
   - session: session_01548Bi1ZiGcknAp8CMLNMZB
     date: "2026-10-03"
     severity: moderate
+    description: "Five parallel full gates in one container exhausted memory: test:e2e died with a setup-hook timeout or worker SIGKILL on #1566, #1567 and #1569 while every other step passed; e2e alone or CI passed each time"
+    solution: "Record in docs/agents/environment-caveats.md: test:e2e SIGKILL/hook timeout under concurrent gates is memory pressure; serialize heavy gates across parallel impl agents or re-run e2e alone before diagnosing"
   - session: session_018i6d2BQPkf9cq6jSEqCNSX
     date: "2026-10-10"
     severity: minor
+    description: "I ran three full gates in parallel against dispatch-subagents' limit of two; three gate runs died with exit 137 and had to be rerun"
+    solution: "Stagger heavy-gate agents strictly: at most two at a time, including review-fix rounds"
   - session: session_01SZwdbK8GbYtyj926UyJT6o
     date: "2026-10-12"
     severity: minor
+    description: "clear-backlog gives no wave rule that respects the 2-Heavy-gate cap; a literal wave of 3 build agents can reproduce the #1800 OOM"
+    solution: "Say waves are limited by concurrent Heavy gates, not agent count (moot once PR 1828 lands)"

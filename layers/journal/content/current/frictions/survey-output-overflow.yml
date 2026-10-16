@@ -18,21 +18,35 @@ occurrences:
   - session: session_01GEqB5frKCNtJYAr9KaRxDo
     date: "2026-10-10"
     severity: minor
+    description: "session-frictions.ts writes 280 KB for a 40-session window with no compact mode; the survey subagent had to dump frictions-only text and slice it."
+    solution: "Add a compact or frictions-only flag to scripts/session-frictions.ts."
   - session: session_01YBJaRLtVQEr4RshMQG1X7D
     date: "2026-10-11"
     severity: minor
+    description: "Survey subagent made github calls before reading github-integration.md and had to slice a 288KB session-frictions output over several passes."
+    solution: "Issue #1755 makes --compact keep docsRead and subagents and names it in the Skill; #1754 proposes a trigger-time doc reminder hook."
   - session: session_01V3bxJaTSH8AWjrtSoBhNxK
     date: "2026-10-11"
     severity: nit
+    description: "Survey subagent: a 55KB tool result was cut to a 2KB preview, and a Python regex used \\| as alternation and silently matched nothing; both re-run."
+    solution: "Write large extracts to files first; use | in Python regex."
   - session: session_01DXuGrxEAsk3MjyRx98QTb2
     date: "2026-10-12"
     severity: nit
+    description: "Survey subagent's ledger directory read overflowed (38KB) and the compact friction extract is still 135KB, so it hand-built a digest."
+    solution: "Give session-frictions.ts a ledger summary mode or a smaller default window output."
   - session: session_01YKBUn5rG2GoAZevbZooXWj
     date: "2026-10-13"
     severity: minor
+    description: "The survey subagent's cat of the whole friction ledger directory overflowed the tool result (51 KB)."
+    solution: "survey-output-overflow ledger entry: give the ledger a compact summary script as session-frictions has."
   - session: session_01ERZa4fUGxpF81MeLhZMkSB
     date: "2026-10-14"
     severity: minor
+    description: "Survey subagent's compact output and ledger dir still overflowed reads (73 KB, 2004 lines), the already-known survey-output-overflow cause."
+    solution: "PR 1918 (compact one-line sessions, ledger --summary)."
   - session: session_01LpcCJWRYb5grgQe3wBGEwb
     date: "2026-10-15"
     severity: minor
+    description: "Survey subagent: audit-skills.ts output plus a broad grep printed 56 KB and was persisted to a file; it re-ran with narrow extraction"
+    solution: "audit-skills.ts could offer a --doc-read-counts-only flag"

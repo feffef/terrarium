@@ -9,6 +9,10 @@ occurrences:
   - session: session_0147UencKKZS3WLHvsbgywp7
     date: "2026-10-15"
     severity: nit
+    description: "Inserted the ledger entry by string-replacing the first 'trials:' which sits in the comment example; YAML broke and gate:scoped failed."
+    solution: "Anchor on the line '^trials:' when editing prune-trials.yml; or the file header could say where entries go."
   - session: session_01LpcCJWRYb5grgQe3wBGEwb
     date: "2026-10-15"
     severity: minor
+    description: "Docs impl agent's first pass at applying the YAML ledger patch unquoted dates and replaced a full ref; it had to repair both"
+    solution: "Ship the ledger patch as a small apply script, or have the survey write per-file edits"

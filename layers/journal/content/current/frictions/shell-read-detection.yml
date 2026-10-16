@@ -20,57 +20,93 @@ occurrences:
   - session: session_01BXoQpiEuaGZJVRQB7XpsFi
     date: "2026-10-02"
     severity: moderate
+    description: "SHELL-READ-DETECTION miss: command 'cd /home/user/terrarium/docs/adr && for f in 000*.md; do echo \"=== $f\"; cat \"$f\"; done' (and 001*, 002*) streamed every docs/adr/00NN-*.md ADR, but none appear as detected or rejected"
+    solution: "Teach the extractor to resolve a for-loop glob fed to cat relative to the cd target; note the output was also read back via Read on a tool-results file, which credits no ADR path either"
   - session: session_01VC6tZCm3HYs9BsJ7JrQQ5Z
     date: "2026-10-02"
     severity: moderate
+    description: "SHELL-READ-DETECTION miss: a subagent's glob loop `for f in docs/adr/0001* docs/adr/0006* docs/adr/0021* docs/adr/0028*; do echo \"=== $f\"; cat \"$f\"; done` was rejected as 'not a reader command', so docs/adr/0001-single-container-baked-multitenancy.md is uncredited (0006/0021/0028 were credited by other commands); a sibling loop with `cat docs/adr/$f-*.md` WAS counted"
+    solution: "Teach the detector that a `for ... in <globs>; do cat \"$f\"` loop reads each glob's expansion, as it already does for the `$f-*.md` form"
   - session: a1af4e46-8293-4f33-bf41-c956bd7f6306
     date: "2026-10-03"
     severity: moderate
+    description: "SHELL-READ-DETECTION miss. Command: git switch -c claude/445-apply-gate-shell origin/main && cat docs/proposals/879-gate-yml-thin-shell.md && cat docs/proposals/README.md. Expected path: docs/proposals/879-gate-yml-thin-shell.md, reported 'named but output shows no line'. Its full text was printed (README after it was credited). Possibly because the file was deleted from the working tree later in the session."
+    solution: "Have the detector match output against the file's content at read time (or from git HEAD) when the path no longer exists on disk."
   - session: session_01SWRyFbuNXxVWi47tGB8GX6
     date: "2026-10-03"
     severity: moderate
+    description: "SHELL-READ-DETECTION false positive: `diff .agents/skills/setup-matt-pocock-skills/triage-labels.md docs/agents/triage-labels.md` credited .agents/skills/setup-matt-pocock-skills/triage-labels.md, but the output held only `>` add-hunks from the right-hand file, so no line of the left-hand file was ever shown."
+    solution: "diff credits both positionals unconditionally; credit only the side whose lines appear in the output (`<` for left, `>` for right), or adopt the output-matching derivation measured in docs/research/shell-reads-by-output-matching.md, which gets this case right."
   - session: session_01LEQpnXw4SeWsfw4THR5NbX
     date: "2026-10-04"
     severity: moderate
+    description: "SHELL-READ-DETECTION miss: command `grep -n -i -E \"44rem|narrow|owner-correct|owner correct\" .agents/skills/visitor-loop/decisions.md | head` printed line 8 of that file (\"On narrow screens the Blog's persona/tag panel stays above the posts...\"), yet the report lists .agents/skills/visitor-loop/decisions.md as named but showing no line (the command it cites is a different one, so which command was matched is unclear)."
+    solution: "Check whether grep -n output with its line-number prefix is matched against the doc, and whether the report picks the first command that names a path rather than the one that showed it."
   - session: session_01CF4k9jXS9wLrcPVsGduZmn
     date: "2026-10-08"
     severity: moderate
+    description: "SHELL-READ-DETECTION miss: `cat docs/adr/0009-session-logs-commit-directly-to-main.md && echo ===== && cat docs/adr/0003-agent-operating-model-and-governance.md && echo ===== && cat docs/adr/0004-objective-safety-gate.md` overflowed, the harness persisted the output to a tool-results file and showed a 2KB preview, and I read the full text with Read on that file; the detector credits only ADR-0009 (in the preview) and reports ADR-0003 and ADR-0004 as 'named by the command, but its output shows no line of this doc'. Both were read in full. Same session: .agents/skills/triage/SKILL.md was credited because an issue comment printed by `gh api .../issues/348/comments` quoted a line of it, which is a GitHub body echoing a doc, not a read."
+    solution: "Let the trace follow a persisted-output pointer ('Full output saved to: <path>') and match the saved file's content, or treat a Read of a tool-results file as the Bash command's output. For the quoted-line case, consider excluding output of gh api calls that return GitHub bodies."
   - session: session_01VaPP7iMRxMvKvX8KQh1qeY
     date: "2026-10-09"
     severity: moderate
+    description: "SHELL-READ-DETECTION false positive: docs/agents/environment-caveats.md credited from command `sed -n 70,96p layers/journal/content/current/sessions/2026-10-08-1f97b613-f529-4487-a7e9-1115a44b84c7.yml; grep -rn worktree CLAUDE.md docs/agents/*.md | head`. Its output was a session log's friction quoting the doc's fix, not the doc; grep -rn showed only one environment-caveats line about a worktree guard."
+    solution: "Credit a doc only when the matching line's output source is that file (grep -rn prefixes it); a quoted fix inside another file should not count."
   - session: session_01JR1AZGGyi6AEh1SHTp6qsH
     date: "2026-10-10"
     severity: moderate
+    description: "SHELL-READ-DETECTION: docsReadViaShell credited .agents/skills/wait-what/SKILL.md and .agents/skills/ask-matt/SKILL.md from one subagent command: `ls layers/journal/content/current/skills/ | grep -i wait; echo \"---\"; grep -rn \"wait-what\" layers/journal/...` (the \"Behaviour-check audit-skills\" subagent, checking the wait-what coverage-gap call). That command only reads layers/journal/content/current/skills/ and never cats or greps either SKILL.md under .agents/skills/, so its output cannot contain a line from either file."
+    solution: "False positive, direction credited-but-not-read, on both paths. Same shape as the already-tracked SHELL-READ-DETECTION false-positive family (#1482/#1542) — a short/generic string (\"wait\") matched somewhere unrelated to the actual file content."
   - session: session_015Hx2GtEuH6WZBL8Hp4aDgg
     date: "2026-10-11"
     severity: moderate
+    description: "SHELL-READ-DETECTION false positive: .agents/skills/blog-post/SKILL.md was credited from shell output, but the session marked it (not read)"
+    solution: "Find the crediting command in the transcript and tighten scripts/shell-reads.ts"
   - session: session_0177ZCpnHq4Sw5wicAEmriDh
     date: "2026-10-11"
     severity: moderate
+    description: "SHELL-READ-DETECTION false positive: docs/agents/github-integration.md was credited from shell output, but the session marked it (not read)"
+    solution: "Find the crediting command in the transcript and tighten scripts/shell-reads.ts"
   - session: session_01YBJaRLtVQEr4RshMQG1X7D
     date: "2026-10-11"
     severity: moderate
+    description: "SHELL-READ-DETECTION false positive: .agents/skills/blog-post/SKILL.md was credited from shell output, but the session marked it (not read)"
+    solution: "Find the crediting command in the transcript and tighten scripts/shell-reads.ts"
   - session: session_01YVCyXmxSSDQ6csSBVJ554H
     date: "2026-10-11"
     severity: moderate
+    description: "SHELL-READ-DETECTION false positive: .agents/skills/audit-docs/SKILL.md was credited from shell output, but the session marked it (not read)"
+    solution: "Find the crediting command in the transcript and tighten scripts/shell-reads.ts"
   - session: session_01QfaLuSd5cnBQPu8CCRrvkn
     date: "2026-10-12"
     severity: moderate
+    description: "SHELL-READ-DETECTION false positive: docs/adr/0029-instructions-load-with-the-files-they-govern.md was credited from shell output, but the session marked it (not read)"
+    solution: "Find the crediting command in the transcript and tighten scripts/shell-reads.ts"
   - session: session_01DXuGrxEAsk3MjyRx98QTb2
     date: "2026-10-12"
     severity: moderate
+    description: "SHELL-READ-DETECTION false positive: .agents/skills/auto-triage/SKILL.md was credited from shell output, but the session marked it (not read)"
+    solution: "Find the crediting command in the transcript and tighten scripts/shell-reads.ts"
   - session: session_0147GPfMLJfFV6JbmC4HZGHb
     date: "2026-10-12"
     severity: moderate
+    description: "SHELL-READ-DETECTION false positive: docs/research/rulebook-migration-table.md was credited from shell output, but the session marked it (not read)"
+    solution: "Find the crediting command in the transcript and tighten scripts/shell-reads.ts"
   - session: session_018KSwetqxttBFszkhTKZkF1
     date: "2026-10-12"
     severity: moderate
+    description: "SHELL-READ-DETECTION false positive: .agents/skills/log-session/SKILL.md was credited from shell output, but the session marked it (not read)"
+    solution: "Find the crediting command in the transcript and tighten scripts/shell-reads.ts"
   - session: session_01Rn5xT34AdjnywsTJdUtaDm
     date: "2026-10-13"
     severity: moderate
+    description: "SHELL-READ-DETECTION false positive: .agents/skills/clear-backlog/SKILL.md was credited from shell output, but the session marked it (not read)"
+    solution: "Find the crediting command in the transcript and tighten scripts/shell-reads.ts"
   - session: session_01STVS35HcxNZp7dQ1pPnrhW
     date: "2026-10-13"
     severity: moderate
+    description: "SHELL-READ-DETECTION false positive: docs/agents/mdc-when-to-use.md was credited from shell output, but the session marked it (not read)"
+    solution: "Find the crediting command in the transcript and tighten scripts/shell-reads.ts"
   - session: session_01NVG22rfEsjhW9zkcCco6W8
     date: "2026-10-14"
     severity: nit

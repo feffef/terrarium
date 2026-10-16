@@ -21,21 +21,35 @@ occurrences:
   - session: session_01GxJXNFxh3SQh8q1nkReAxJ
     date: "2026-10-04"
     severity: moderate
+    description: "Three of five second-pass subagent reports were not extractable from their output files, so I retyped 85 per-post labels by hand into a script; a transcription slip would silently mis-tag posts."
+    solution: "Have classification subagents write their JSON lines to a scratchpad file (or return them in the final assistant message) so results can be parsed instead of retyped."
   - session: session_017tt8CbwHqFWqw7PJZ7u7AL
     date: "2026-10-08"
     severity: moderate
+    description: "Checkers cannot see my context, so I retyped about 12k tokens of reviewer findings into scratchpad pool files before they could be verified."
+    solution: "Have reviewers write findings to a scratchpad file themselves (numbered, with exact replacement text) so checkers can read them directly."
   - session: session_01GbMt1vGTDZpQxZ3h4pNsF8
     date: "2026-10-11"
     severity: moderate
+    description: "Three of six reviewer subagents could not write their findings file (harness refused), so I transcribed findings into scratchpad files by hand and had to chase C2 a second time."
+    solution: "Tell reviewers up front to return findings as text, and let the orchestrator write the files."
   - session: session_01UZ53YdNvwr2RN4WgF5EjEZ
     date: "2026-10-13"
     severity: minor
+    description: "Subagent reports arrive as large pasted text with ledger YAML I then had to re-type into a spec file for the impl agent."
+    solution: "Ask the survey subagent to write the ledger changes to a scratchpad file the impl agent can Read."
   - session: session_01WUDXJjhrM6uHf9Sjjvw2N9
     date: "2026-10-13"
     severity: minor
+    description: "A subagent asked to save its report to a file was stopped mid-write by a safety filter; another was refused writing a summary file"
+    solution: "Extract handback text from the agent transcript with a script, as done here"
   - session: session_01G6m9SbDppX4TE87Mp3m5Dk
     date: "2026-10-14"
     severity: minor
+    description: "Subagent hand-backs arrive only as a SubagentHandback tool call, so saving each reply verbatim (step 3) needed a JSONL extraction script"
+    solution: "audit-docs step 3 could name how to save a hand-back verbatim, or the harness could expose the hand-back text as a file"
   - session: session_011HBcCLzMW7CshmqnHLnegb
     date: "2026-10-15"
     severity: minor
+    description: "Subagent reports arrived as messages, not files, so 'save verbatim, never retype' was met only by having agents write their own reply files."
+    solution: "audit-docs step 3 could say agents write their reply to a named scratchpad file."

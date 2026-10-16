@@ -10,9 +10,15 @@ occurrences:
   - session: session_01GEqB5frKCNtJYAr9KaRxDo
     date: "2026-10-10"
     severity: nit
+    description: "github-provenance-guard denied the first issue body because of a bare angle-bracket path placeholder; fixed from the deny message on retry."
+    solution: "None needed, the guard worked as designed."
   - session: session_01LuXuScHA2QsY4RXipy9nAt
     date: "2026-10-11"
     severity: nit
+    description: "The provenance guard rejected an issue body for a bare angle-bracket span in prose; one resend was needed."
+    solution: "Already documented in github-integration.md; no change."
   - session: session_01AdUi9nKLGKyPFfBe4HYvqG
     date: "2026-10-14"
     severity: nit
+    description: "My PR body had a bare angle-bracket span and the provenance guard blocked it once; I re-sent it without."
+    solution: "None needed; the guard worked as designed."

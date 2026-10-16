@@ -15,6 +15,10 @@ occurrences:
   - session: session_01SZwdbK8GbYtyj926UyJT6o
     date: "2026-10-12"
     severity: moderate
+    description: "Dispatched 14 triage agents on a shallow clone (107 commits); git-conventions says unshallow before trusting history, and two agents reported truncated git log results"
+    solution: "Check git rev-parse --is-shallow-repository before any history-dependent dispatch; clear-backlog/auto-triage could say so; the SessionStart hook errored (tsx not found) which likely skipped unshallow-on-start"
   - session: session_01La82mxqduxHnRS9jRfNHmU
     date: "2026-10-12"
     severity: minor
+    description: "SessionStart hook errored (tsx not found) and the clone started shallow again; unshallow-on-start likely skipped"
+    solution: "Make the SessionStart hook install deps before running tsx scripts, or order them so tsx exists"

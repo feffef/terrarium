@@ -12,7 +12,11 @@ occurrences:
   - session: session_01QUhfMeVRZg7NX654bv5ZE5
     date: "2026-10-13"
     severity: nit
+    description: "A throwaway tsx script in the scratchpad could not import 'yaml' (module resolution is from the script's dir), so I copied it into scripts/ temporarily."
+    solution: "Run ad-hoc scans with node -e from the repo root, or a short note in environment-caveats that scratchpad scripts don't resolve repo deps."
   - session: session_01WUDXJjhrM6uHf9Sjjvw2N9
     date: "2026-10-13"
     severity: nit
+    description: "Scratch analysis script failed: yaml package not resolvable from the scratchpad, needed an absolute import path"
+    solution: "Import /home/user/terrarium/node_modules/yaml directly, or run scripts via tsx from the repo root"
 fixedOn: "2026-10-14"

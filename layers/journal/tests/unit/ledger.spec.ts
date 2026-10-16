@@ -61,23 +61,20 @@ describe('ledgerPanels goals', () => {
 })
 
 describe('ledgerPanels reports', () => {
-  const logged = (severity: Severity, description: string, solution: string) => ({ severity, description, solution })
-
-  it("lists what a session logged with its solution once, linked to the Space that holds it", () => {
-    const c = cluster('x', ['nit', 'nit'])
-    const same = [logged('nit', 'Gate ran twice', 'Add a guard')]
-    const [e] = ledgerPanels([c], 'current', new Set(['x-0']), 'archived', {}, { 'x-0': same, 'x-1': same }).severe
-    expect(e!.reports).toEqual([
-      { description: 'Gate ran twice', solution: 'Add a guard', date: '2026-10-02', to: '/t/journal/archived#session-x-1' },
-    ])
+  const logged = (name: string, texts: ({ description: string; solution: string } | undefined)[]): FrictionClusterDoc => ({
+    ...cluster(name, texts.map(() => 'nit')),
+    occurrences: texts.map((t, i) => ({ session: `${name}-${i}`, date: `2026-10-0${i + 1}`, severity: 'nit' as const, ...t })),
   })
 
-  it('skips a session whose Frictions of that severity are ambiguous, and is empty without any', () => {
-    const [e] = ledgerPanels([cluster('x', ['nit'])], 'current', new Set(['x-0']), 'archived', {}, {
-      'x-0': [logged('nit', 'a', 'A'), logged('nit', 'b', 'B'), logged('major', 'c', 'C')],
-    }).severe
+  it('lists the friction an occurrence carries with its solution once, linked to the Space that holds it', () => {
+    const t = { description: 'Gate ran twice', solution: 'Add a guard' }
+    const [e] = ledgerPanels([logged('x', [t, t])], 'current', new Set(['x-0']), 'archived').severe
+    expect(e!.reports).toEqual([{ ...t, date: '2026-10-02', to: '/t/journal/archived#session-x-1' }])
+  })
+
+  it('shows nothing for an occurrence that carries no friction text', () => {
+    const [e] = ledgerPanels([logged('x', [undefined])], 'current', new Set(), 'archived').severe
     expect(e!.reports).toEqual([])
-    expect(ledgerPanels([cluster('y', ['nit'])], 'current', new Set(), 'archived').severe[0]!.reports).toEqual([])
   })
 })
 

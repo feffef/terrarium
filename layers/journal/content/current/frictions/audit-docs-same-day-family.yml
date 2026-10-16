@@ -14,6 +14,10 @@ occurrences:
   - session: session_01AnHXyvzXukt6izZTYs3YMr
     date: "2026-10-13"
     severity: minor
+    description: "audit-docs picks the concision family by day of year, so a second sweep on the same day re-audits the family the morning sweep just tightened."
+    solution: "Have audit-docs skip or rotate the concision family when an audit-docs commit for the same family landed in the last 24h."
   - session: session_01QvnVVurQdA4cvYSZToBvud
     date: "2026-10-13"
     severity: minor
+    description: "audit-docs picks the concision family by day of year, so a third same-day run re-audited docs/agents already tightened twice; concision findings were thin"
+    solution: "Pick the family from the last audit-docs commit's family (next in rotation) instead of the date, in the audit-docs Skill"
