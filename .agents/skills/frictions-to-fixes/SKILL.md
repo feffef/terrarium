@@ -37,9 +37,10 @@ Its brief:
   `occurrence` so far. Append each friction in the window that matches an
   entry, whatever its severity; a session counts once, at its highest
   severity. An occurrence is the block
-  `pnpm exec tsx scripts/ledger-occurrence.ts <session> <index>` prints (the
-  friction's text copied from the log; a content test checks the copy), never
-  retyped. A friction sits in one cluster unless its text names two causes. A new entry needs a cause seen twice, or one `moderate`, `major` or
+  `pnpm exec tsx scripts/ledger-occurrence.ts <session> <index> [<session> <index> …]`
+  prints (the friction's text copied from the log; a content test checks the
+  copy), never retyped; pass all pairs in one call, as each takes seconds. A
+  friction sits in one cluster unless its text names two causes. A new entry needs a cause seen twice, or one `moderate`, `major` or
   `blocker`. Its `summary` is one plain sentence a visitor can read; its
   `cause` names the root mechanism and the signals that identify a new
   occurrence (error text, file or tool, trigger), so a later run can match it.
@@ -70,9 +71,9 @@ Its brief:
   open, never the PR list. `gh api repos/feffef/terrarium/commits/<sha>/pulls`
   maps a commit to its PR and `gh api repos/feffef/terrarium/pulls/<N>` gives
   its body and `merged_at` (`gh pr view` is blocked); read the body, since a
-  batched doc PR's title names no cluster. This run's own PRs have no number
-  yet: the next run records them from this run's log (`prs` in the survey of
-  a `trigger: frictions-to-fixes` session).
+  batched doc PR's title names no cluster. This run's own PRs are recorded
+  by §6; a PR an earlier run missed (still `tracked`, or in that run's log `prs`
+  but in no `fixes`) is recorded here.
 - **Steer the budget at the unfixed tail.** A large share of the window's frictions are usually already resolved by a later in-window session or a merged fix. Screen those out fast as a §2 `drop` instead of re-deriving their history; save the deep archaeology for candidates with no in-window resolution.
 - **Read the window's session logs** via `pnpm exec tsx scripts/session-frictions.ts`
   (it prints where the window starts; bare `tsx` isn't on PATH). Large output goes to
@@ -117,10 +118,13 @@ classification (never-fixed / open-already #N / regression of #N), fix type
 (doc/code/config), surface-blocked flag (fails §3's safe-surface test: human-only,
 guard or hook wiring), difficulty (simple/hard), a one-line
 recommended fix, and evidence quotes; **(b) a dropped list** with one-line reasons (an on-trial one quotes its territory match, §2);
-**(c) the subagent's own frictions** from the run; and **(d) the ledger changes**, also saved as a YAML patch file in the
-scratchpad whose path it names: each new or changed entry in the ledger's own
-shape (`fixes` and `ref` included), with occurrence blocks as
-`ledger-occurrence.ts` printed them.
+**(c) the subagent's own frictions** from the run; **(d) the ledger changes**, also saved as a YAML patch file in the
+scratchpad whose path it names: a list of whole entries, each exactly as its file
+reads (never invented keys such as `fixes_append`), with occurrence blocks as
+`ledger-occurrence.ts` printed them; **(e) the regressions**: every cluster
+`--summary` shows as `still recurring`, with its count since the latest PR; and
+**(f) each friction `--summary` lists in two clusters**, moved or kept because its text names
+both causes.
 
 ## 2. Screen against fixes already shipped (the subagent's rules)
 
@@ -178,6 +182,8 @@ if your judgement differs, but don't re-derive the ranking from scratch.)
 Spend a hard slot on an open ledger entry with a `major` or `blocker` occurrence
 and a safe surface before filling simple ones; the hard slots exist for these.
 
+A cluster `--summary` shows as `still recurring` is a §2 regression: never a
+simple or hard selection; it gets the §2 issue and a user alert.
 Drop a lone low-severity one-off (§1) and anything an ADR defers. A candidate that ranks but fails only the
 safe-surface test is **surface-blocked**: not dropped, §4 files it, uncapped. The
 caller may pass a lower count as the Skill's argument; with none, take everything
@@ -194,8 +200,7 @@ record. The ledger edit is:
 
 - the subagent's ledger changes (§1), `fixes` included;
 - `status` and `ref` for what this run files, dispatches or escalates: a
-  dispatched fix is `tracked` until the next run sees it merged and records it
-  in `fixes`;
+  dispatched fix is `tracked` until its PR merges, and §6 records it in `fixes`;
 - last, `pnpm exec tsx scripts/prune-friction-ledger.ts`, which drops every
   occurrence before the horizon and deletes an entry left with none (git
   keeps them).
@@ -312,9 +317,17 @@ not a bystander waiting for a human. For each branch:
      high-risk, and **alert the user**. A **hard** selection (§3) usually lands
      here — that is expected.
 
+5. **Record the PRs you merged in `fixes` right away**, not in the next run:
+   merge the grouped doc PR (§5) last. Once every other PR of the run is merged,
+   append a commit to the grouped doc PR that adds a `fixes` entry (`pr`, today's
+   UTC date, a one-line summary from the PR's description) to each cluster those
+   PRs fixed, the doc PR's own number included, and drops `tracked` from them.
+   Re-run the gate, post a fresh review comment, then merge. A PR you did not
+   merge gets no entry.
+
 A PR is finished only when **merged** (by you) or **escalated/abandoned**, not at push time (the ADR-0003 rule).
 
 Done when every dispatched PR carries a posted review comment and is merged or
-escalated/abandoned.
+escalated/abandoned, and every PR you merged is in `fixes`.
 
 Log the session.
