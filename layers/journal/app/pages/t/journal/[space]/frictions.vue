@@ -43,13 +43,13 @@ const sections = computed(() => [
   {
     id: 'severe-h',
     title: 'Most severe',
-    intro: 'Ranked by the worst severity a cluster has reached, then by how often it hit that, then by its total.',
+    intro: 'The two highest severities reached, ranked by worst severity, then how often it hit that, then total.',
     entries: panels.value.severe,
   },
   {
     id: 'frequent-h',
     title: 'Most frequent',
-    intro: 'Every other cluster, ranked by how many sessions hit it.',
+    intro: 'The other clusters, ranked by how many sessions hit them.',
     entries: panels.value.frequent,
   },
 ])
@@ -67,8 +67,9 @@ useSeoMeta({ title: () => `${PAGE_TITLE} · journal/${space}` })
         What went wrong, grouped by root cause. Each cluster gathers the
         <strong>frictions</strong> agents logged in their session logs; the
         <code>frictions-to-fixes</code> Skill keeps it current. Fixed clusters stay
-        listed: what went wrong matters as much as what is still open. Expand one
-        for its detailed cause and the sessions that hit it.
+        listed: what went wrong matters as much as what is still open. A cluster
+        sits in the list where it ranks higher. Click a cluster (▸) to expand its
+        cause, sessions and proposed solutions.
       </p>
 
       <template v-for="sec in sections" :key="sec.id">
@@ -125,7 +126,7 @@ useSeoMeta({ title: () => `${PAGE_TITLE} · journal/${space}` })
 .jd-prose { max-width: 80ch; }
 .n { color: var(--jd-faint); font-weight: 400; margin-left: 0.4rem; }
 .intro { color: var(--jd-muted); font-size: 0.88rem; }
-.ledger { list-style: none; padding: 0; margin: 0; }
+.ledger { list-style: none; padding: 0 0.6rem; margin: 0; max-height: 28rem; overflow-y: auto; overscroll-behavior: contain; border: 1px solid var(--jd-line); border-radius: 6px; }
 .ledger > li { margin: 0; border-top: 1px solid var(--jd-line); }
 .ledger > li:first-child { border-top: 0; }
 summary {
@@ -149,6 +150,8 @@ summary:focus-visible { outline: 2px solid var(--jd-accent); outline-offset: 2px
 }
 .count small { display: block; font-size: 0.6rem; font-weight: 400; letter-spacing: 0.04em; color: var(--jd-muted); }
 .summary { overflow-wrap: anywhere; }
+.summary::before { content: '▸'; display: inline-block; width: 1rem; color: var(--jd-muted); }
+details[open] .summary::before { content: '▾'; }
 .pills { display: flex; flex-wrap: wrap; gap: 0.35rem; }
 .pill {
   font-family: var(--jd-mono);

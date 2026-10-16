@@ -50,12 +50,13 @@ export function ledgerRefLinks(ref: string | undefined): LedgerEntry['refLinks']
   ]
 }
 
-export const LEDGER_SEVERE_SIZE = 8
+/** The severity levels the `severe` list covers: the highest that exist and the next. */
+const SEVERE_LEVELS = 2
 
-/** Every cluster exactly once: the top LEDGER_SEVERE_SIZE by worst severity
- *  (then how often it hit that, then total) go to `severe`, the rest to
- *  `frequent` by total. Relative, so `severe` fills whatever the worst
- *  severity is. `ownSessions` holds this Space's session ids; an occurrence
+/** Every cluster exactly once, in the list where it ranks higher. `severe`
+ *  ranks the clusters whose worst severity is one of the two highest that exist
+ *  (by worst severity, then how often it hit that, then total); `frequent`
+ *  ranks all clusters by total. A tie goes to `severe`. `ownSessions` holds this Space's session ids; an occurrence
  *  missing from it links to `otherSpace`, where archiving moved it. `goals`
  *  maps session ids to their goal line. */
 export function ledgerPanels(
@@ -100,9 +101,11 @@ export function ledgerPanels(
     SEVERITY_RANK[b.worst] - SEVERITY_RANK[a.worst] || b.worstCount - a.worstCount || b.count - a.count || a.name.localeCompare(b.name)
   const byCount = (a: LedgerEntry, b: LedgerEntry) =>
     b.count - a.count || SEVERITY_RANK[b.worst] - SEVERITY_RANK[a.worst] || a.name.localeCompare(b.name)
-  const ranked = entries.sort(bySeverity)
-  return {
-    severe: ranked.slice(0, LEDGER_SEVERE_SIZE),
-    frequent: ranked.slice(LEDGER_SEVERE_SIZE).sort(byCount),
-  }
+  const topLevels = [...new Set(entries.map((e) => SEVERITY_RANK[e.worst]))].sort((a, b) => b - a).slice(0, SEVERE_LEVELS)
+  const bySevere = entries.filter((e) => topLevels.includes(SEVERITY_RANK[e.worst])).sort(bySeverity)
+  const byFrequency = [...entries].sort(byCount)
+  const severeRank = new Map(bySevere.map((e, i) => [e.name, i]))
+  const frequentRank = new Map(byFrequency.map((e, i) => [e.name, i]))
+  const isSevere = (e: LedgerEntry) => (severeRank.get(e.name) ?? Infinity) <= frequentRank.get(e.name)!
+  return { severe: bySevere.filter(isSevere), frequent: byFrequency.filter((e) => !isSevere(e)) }
 }
