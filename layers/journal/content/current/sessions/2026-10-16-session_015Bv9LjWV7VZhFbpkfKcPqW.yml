@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_015Bv9LjWV7VZhFbpkfKcPqW
 startedAt: 2026-10-16T22:39:56Z
-endedAt: 2026-10-16T22:50:19Z
+endedAt: 2026-10-16T22:54:00Z
 kind: autonomous
 goal: Scheduled sync of Glass Box guide pages to main
-status: in-review
-outcome: "PR 2182 opened: 24 guide pages re-pinned, 7 pages and 1 term edited"
-summary: Scheduled glassbox-update run (agent-initiated by the schedule; no human instruction beyond the stored prompt). Ran the script, advanced pins to 1f6fb016, then read the commit range against every flagged page. Found renamed ADR files (0013, 0019), a stale pr-workflow.md Excerpt the layer test did not catch, and prose that moved (Read-tool advice cut, cloud-session workflow fence, ADR summary pointer check, Friction Ledger fixes). Gate green, one page screenshotted, a Standards subagent reviewed and its wording fix was taken. Drafts Space left alone as out of scope. PR 2182 awaits CI and merge.
+status: completed
+outcome: "PR 2182 merged: 24 guide pages re-pinned, 7 pages and 1 term edited"
+summary: Scheduled glassbox-update run (agent-initiated by the schedule; no human instruction beyond the stored prompt). Ran the script, advanced pins to 1f6fb016, then read the commit range against every flagged page. Found renamed ADR files (0013, 0019), a stale pr-workflow.md Excerpt the layer test did not catch, and prose that moved (Read-tool advice cut, cloud-session workflow fence, ADR summary pointer check, Friction Ledger fixes). Gate green, one page screenshotted, a Standards subagent reviewed and its wording fix was taken. Drafts Space left alone as out of scope. PR 2182 passed CI and was merged by me with merge-pr.ts.
 prs:
   - "2182"
 docsRead:
@@ -28,20 +28,33 @@ docsRead:
   - path: docs/agents/verifying-ui-changes.md
     reason: review shots command
     useful: yes
+  - path: .agents/skills/close-session/SKILL.md
+    reason: read only via a grep of its subagent lines; Skill text itself loaded at closure
+    useful: yes
+  - path: docs/adr/0026-gate-workflow-thin-shell.md
+    reason: grepped for token and cloud wording to confirm the gate page claim
+    useful: yes
   - path: GLOSSARY-MAP.md
-    reason: (no reason given)
+    reason: "session-start read: glossary index"
+    useful: yes
   - path: GLOSSARY.md
-    reason: (no reason given)
+    reason: "session-start read: term definitions for the friction-ledger term"
+    useful: yes
   - path: .agents/skills/dispatch-subagents/SKILL.md
-    reason: (no reason given)
+    reason: only diffed to compare with the subagents page
+    useful: yes
   - path: docs/agents/guards.md
-    reason: (no reason given)
+    reason: only diffed to compare with the hooks page
+    useful: yes
   - path: .agents/skills/log-session/SKILL.md
-    reason: (no reason given)
+    reason: authoring the log
+    useful: yes
   - path: docs/agents/guest-contributions.md
-    reason: (no reason given)
+    reason: only diffed to check the trust-tiers page
+    useful: partly
   - path: docs/adr/0013-content-config-built-from-manifests.md
-    reason: (no reason given)
+    reason: confirmed the rename left the decision unchanged
+    useful: yes
 skillsUsed:
   - name: code-review
     reason: (no reason given)
@@ -56,18 +69,20 @@ frictions:
   - description: glassbox-update script pins pages that have changed paths but no edited range, so flagged pages look done before they are reviewed.
     solution: Report flagged pages after --write too, or pin only after review.
     severity: nit
-durationSec: 624
+durationSec: 844
 models:
-  claude-sonnet-5-5: 102
+  claude-sonnet-5-5: 120
 toolCounts:
-  Bash: 46
+  Bash: 52
   Read: 2
   Skill: 2
   Agent: 1
-  ReadNotifications: 1
+  ReadNotifications: 3
   ToolSearch: 1
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 rulesLoaded:
   - .claude/rules/adr-0021.md
   - .claude/rules/adr-0005.md
