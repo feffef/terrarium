@@ -1,0 +1,19 @@
+name: rule-loading-probe-confounded
+summary: >-
+  A test of when rules load was spoiled because the test's own steps loaded the rules early.
+cause: >-
+  A brief or check script for a rule-loading probe has the tester read rule files or frontmatter first, which loads or credits the rule before the governed-file reads it was meant to observe, so checks cannot be seen. Signals: 'rule files before the governed files', 'frontmatter first', 'could not be observed'.
+surface: safe
+status: open
+fixes: []
+occurrences:
+  - session: session_015dUGRadEQP1bvv6KytKLXT
+    date: "2026-10-14"
+    severity: minor
+    description: "My first test-session brief told it to read the rule files before the governed files, which loaded those rules early and hid two of the six checks; it needed a second session"
+    solution: "When briefing a rule-loading test, order the steps so that no step loads a rule a later step checks, and work out each step's expected rules up front"
+  - session: session_01NVG22rfEsjhW9zkcCco6W8
+    date: "2026-10-14"
+    severity: minor
+    description: "The check 2 script has me read each rule's frontmatter first, which marks it loaded, so reads of governed files showed nothing and 2b to 2d could not be observed."
+    solution: "Have a subagent or later session read the governed files first, or tell the tester to check frontmatter with a Bash command that is not credited as a rule read."

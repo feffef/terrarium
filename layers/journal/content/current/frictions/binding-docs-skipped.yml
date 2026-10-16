@@ -489,3 +489,8 @@ occurrences:
     severity: minor
     description: "Ran git log and git fetch before reading docs/agents/git-conventions.md, and an MCP GitHub call before github-integration.md, against CLAUDE.md read-first triggers; hooks reminded me afterwards."
     solution: "Read both docs right after the session-start glossaries on any scheduled run that will use git and GitHub."
+  - session: session_01RfmdPFPhtKo6h6GFwxLeRb
+    date: "2026-10-16"
+    severity: nit
+    description: "My first search_issues call omitted fields and the guard denied it; I read github-integration.md only afterwards, though CLAUDE.md says read it before any GitHub operation."
+    solution: "Read the doc first; the guard message was enough to recover."

@@ -226,3 +226,13 @@ occurrences:
     severity: minor
     description: "First draft said the typed-route {} type appeared 'after a fresh install', backwards from the session logs where a clean reinstall fixed it; Spec reviewer caught it"
     solution: "Quote the friction's own wording when turning a session-log friction into a watch item"
+  - session: session_01Mf4dUxuWB7WtkC5fVzByH6
+    date: "2026-10-16"
+    severity: minor
+    description: "Quoted survey regression counts (28, 20, 10) in three issues before the ledger patch was applied; the schema-deduped counts were 26, 19, 6, so issues needed correction comments."
+    solution: "File regression issues after the ledger edit is applied, or have the Skill say to quote counts from --summary run on the patched ledger."
+  - session: session_0166zWrnaKYByq5Z2Qj5nXRM
+    date: "2026-10-16"
+    severity: minor
+    description: "Agreed with the user that the survey cannot know which files a fix touches without checking; three run transcripts showed it routinely did"
+    solution: "Verify a claim about how a Skill runs against a recent run's transcript before agreeing to redesign around it"

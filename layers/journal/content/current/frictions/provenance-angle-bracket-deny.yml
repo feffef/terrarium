@@ -4,8 +4,8 @@ summary: >-
 cause: >-
   The provenance guard denies an issue body containing a bare angle-bracket span, and the session resends once.
 surface: guard-or-hook
-status: tracked
-ref: "issue #886 (guard denies by design; docs/agents/github-integration.md documents it)"
+status: open
+ref: "issue #886 closed 2026-09-05 (guard denies by design; docs/agents/github-integration.md documents it)"
 occurrences:
   - session: session_01GEqB5frKCNtJYAr9KaRxDo
     date: "2026-10-10"

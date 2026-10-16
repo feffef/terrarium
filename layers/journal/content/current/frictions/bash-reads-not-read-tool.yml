@@ -424,3 +424,8 @@ occurrences:
     severity: nit
     description: "Broke CLAUDE.md 'Read files with the Read tool, not cat': read posts and session logs through cat, head and sed in Bash, so their rules loaded unreliably."
     solution: "Use Read for files I rely on; only grep and git show through Bash."
+  - session: session_0166zWrnaKYByq5Z2Qj5nXRM
+    date: "2026-10-16"
+    severity: nit
+    description: "Read GLOSSARY.md, docs and skills with cat/head in Bash, not the Read tool as CLAUDE.md asks; GLOSSARY.md was read only partly"
+    solution: "Use the Read tool for instruction docs; the auto-mode note that permits cat overrides it in practice"
