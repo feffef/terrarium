@@ -14,12 +14,21 @@ import {
   checkWorkflowEdit,
   denyOutputFor,
   formatGuardMessage,
+  isCloudSession,
 } from '../../scripts/workflow-edit-guard.ts'
 import { envWithTsxShim, runTsx } from '../support/run-script.ts'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '../..')
 const SCRIPT = join(root, 'scripts', 'workflow-edit-guard.ts')
 const PREFILTER = join(root, 'scripts', 'workflow-edit-guard.sh')
+/** The guard denies only in a cloud session (issue #2174), so its CLI runs get one. */
+const CLOUD = { CLAUDE_CODE_REMOTE_SESSION_ID: 'cse_01TestCloudSession' }
+const cloudEnv = (): NodeJS.ProcessEnv => ({ ...process.env, ...CLOUD })
+const localEnv = (): NodeJS.ProcessEnv => {
+  const env = { ...process.env }
+  delete env.CLAUDE_CODE_REMOTE_SESSION_ID
+  return env
+}
 
 /** A PreToolUse payload in the shape the harness sends. */
 function payloadFor(tool: string, input: Record<string, unknown>): Record<string, unknown> {
@@ -31,6 +40,14 @@ function payloadFor(tool: string, input: Record<string, unknown>): Record<string
     tool_input: input,
   }
 }
+
+describe('isCloudSession() — only a cloud session lacks the `workflow` scope (issue #2174)', () => {
+  it('is true when the cloud session id is set, false when it is unset or empty', () => {
+    expect(isCloudSession(CLOUD)).toBe(true)
+    expect(isCloudSession({})).toBe(false)
+    expect(isCloudSession({ CLAUDE_CODE_REMOTE_SESSION_ID: '' })).toBe(false)
+  })
+})
 
 describe('checkWorkflowEdit() — Edit/Write file paths (issue #897)', () => {
   it('DENIES a repo-relative workflow path', () => {
@@ -138,8 +155,8 @@ describe('the deny message (the rule’s whole teaching surface for an agent tha
 })
 
 describe('the CLI as the PreToolUse hook would invoke it (stdin JSON → stdout deny)', () => {
-  function runHook(payload: unknown): { hookSpecificOutput: Record<string, string> } | null {
-    const out = runTsx(SCRIPT, { input: typeof payload === 'string' ? payload : JSON.stringify(payload) }).trim()
+  function runHook(payload: unknown, env = cloudEnv()): { hookSpecificOutput: Record<string, string> } | null {
+    const out = runTsx(SCRIPT, { input: typeof payload === 'string' ? payload : JSON.stringify(payload), env }).trim()
     return out ? JSON.parse(out) : null
   }
 
@@ -152,6 +169,11 @@ describe('the CLI as the PreToolUse hook would invoke it (stdin JSON → stdout 
   it('END TO END: stays silent for an ordinary edit and for a read of a workflow', () => {
     expect(runHook(payloadFor('Write', { file_path: 'docs/proposals/897.md' }))).toBeNull()
     expect(runHook(payloadFor('Bash', { command: 'cat .github/workflows/gate.yml' }))).toBeNull()
+  })
+
+  it('END TO END: stays silent in a local session, which can push workflows (issue #2174)', () => {
+    expect(runHook(payloadFor('Edit', { file_path: '.github/workflows/gate.yml' }), localEnv())).toBeNull()
+    expect(runHook(payloadFor('Bash', { command: 'rm .github/workflows/x.yml' }), localEnv())).toBeNull()
   })
 
   it('END TO END: denies uninspectable stdin (not JSON) — fail-closed', () => {
@@ -168,7 +190,7 @@ describe('the workflow-edit-guard.sh hot-path pre-filter', () => {
   function runPrefilter(payload: unknown): string {
     return execFileSync('sh', [PREFILTER], {
       cwd: root,
-      env: envWithTsxShim(),
+      env: { ...envWithTsxShim(), ...CLOUD },
       input: typeof payload === 'string' ? payload : JSON.stringify(payload),
       encoding: 'utf8',
     }).trim()
@@ -222,9 +244,9 @@ describe('the guarded tools and the live hook matcher must not drift', () => {
 })
 
 describe('the --dry-run path (docs/agents/guards.md: exercise a guard by hand)', () => {
-  function dryRun(args: string[]): { decision: string; via?: string; reason?: string } {
+  function dryRun(args: string[], env = cloudEnv()): { decision: string; via?: string; reason?: string } {
     return JSON.parse(
-      runTsx(SCRIPT, { args: ['--dry-run', ...args] }),
+      runTsx(SCRIPT, { args: ['--dry-run', ...args], env }),
     )
   }
 
@@ -234,8 +256,10 @@ describe('the --dry-run path (docs/agents/guards.md: exercise a guard by hand)',
     expect(out.via).toBe('file_path')
   })
 
-  it('prints the allow decision for an ordinary edit', () => {
+  it('prints the allow decision for an ordinary edit, and for a workflow edit in a local session', () => {
     expect(dryRun(['--tool', 'Edit', '--input', '{"file_path":"CLAUDE.md"}']).decision).toBe('allow')
+    const input = JSON.stringify({ file_path: '.github/workflows/gate.yml' })
+    expect(dryRun(['--tool', 'Edit', '--input', input], localEnv()).decision).toBe('allow')
   })
 
   // A denying Bash `--input` cannot be passed inline: that probe is itself the

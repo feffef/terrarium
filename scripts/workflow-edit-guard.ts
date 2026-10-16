@@ -1,5 +1,5 @@
-// Mechanical backstop for issue #897: an agent session has no `workflow` OAuth
-// scope, so a commit touching `.github/workflows/*` is rejected at push time —
+// Mechanical backstop for issue #897: a cloud session's token has no `workflow`
+// OAuth scope, so a commit touching `.github/workflows/*` is rejected at push time —
 // and the rejection covers the WHOLE ref update, stranding every other commit in
 // the push behind history surgery. `docs/agents/environment-caveats.md` records
 // the mechanic; nothing stopped the edit before the commit existed. This does.
@@ -17,6 +17,9 @@
 //   tsx scripts/workflow-edit-guard.ts --dry-run --tool Edit --input '<json>'
 //
 // Fail-open by construction, in rough order of how often it will matter:
+//   - A local session is never policed: it pushes with the owner's key, which
+//     can push workflows (issue #2174). One pushing over HTTPS with a token
+//     that lacks the scope is still rejected at push.
 //   - A command that names no workflow path cannot be matched at all: `git add .`
 //     and `git add -A`, and `git commit -a` after an out-of-band modification.
 //     The push rejection stays the backstop for those.
@@ -85,6 +88,11 @@ const WRITE_IN_PLACE = new RegExp(
  *  a row here, never a change to `checkWorkflowEdit`. */
 export const BASH_WRITE_SHAPES: readonly RegExp[] = [WRITE_COMMANDS, WRITE_REDIRECT, WRITE_IN_PLACE]
 
+/** The variable the provenance guards also read; only a cloud session sets it. */
+export function isCloudSession(env: NodeJS.ProcessEnv = process.env): boolean {
+  return Boolean(env.CLAUDE_CODE_REMOTE_SESSION_ID)
+}
+
 export interface WorkflowEditFinding {
   tool: string
   /** How the write was spotted — the argument the agent should look at. */
@@ -122,7 +130,7 @@ export function checkWorkflowEdit(
  *  the rule already, and the recorded failure was a session that had opened
  *  neither — the deny message is this rule's teaching surface. */
 export function formatGuardMessage(f: WorkflowEditFinding): string {
-  const cannot = `and an agent session cannot land that by any path here`
+  const cannot = `and a cloud session cannot land that by any path here`
   // The command goes on its own line: inlined mid-sentence it ran into the
   // clause after it and the message read as garbled (probed live, #897).
   const what =
@@ -131,7 +139,7 @@ export function formatGuardMessage(f: WorkflowEditFinding): string {
       : `is write-shaped against \`.github/workflows/\`, ${cannot}:\n\n    ${f.target.split('\n')[0]}`
   return (
     `Blocked by the workflow-edit guard (issue #897): this \`${f.tool}\` call ${what}\n\n` +
-    `The sharp edge is the COMMIT, not the push. Agent credentials lack the \`workflow\` OAuth scope, ` +
+    `The sharp edge is the COMMIT, not the push. Cloud-session credentials lack the \`workflow\` OAuth scope, ` +
     `and the rejection is evaluated over every commit in the ref update — so one workflow edit committed ` +
     `alongside real work means you can push NONE of it, and the only escape is history surgery on a ` +
     `branch that by then holds that work.\n\n` +
@@ -153,6 +161,7 @@ export function denyOutputFor(finding: WorkflowEditFinding | null): DenyOutput |
 
 /** Always exits 0 — the deny travels in stdout, not the exit code. */
 export function main(): void {
+  if (!isCloudSession()) return
   const result = readHookPayload()
   if (result.kind === 'none') return
   if (result.kind === 'invalid') return denyUninspectable(LABEL, REF, 'the hook payload was not valid JSON')
@@ -168,7 +177,7 @@ function dryRun(argv: string[]): void {
   // `--input-file`: a denying `--input` cannot always survive the trip, since
   // this guard blocks write-shaped Bash calls.
   const input = resolveDryRunInput(argv)
-  const finding = checkWorkflowEdit(tool, input)
+  const finding = isCloudSession() ? checkWorkflowEdit(tool, input) : null
   printDryRunResult({
     tool,
     decision: finding ? 'deny' : 'allow',
