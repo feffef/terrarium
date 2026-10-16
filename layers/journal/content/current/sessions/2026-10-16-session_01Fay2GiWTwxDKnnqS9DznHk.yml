@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01Fay2GiWTwxDKnnqS9DznHk
 startedAt: 2026-10-16T06:36:10Z
-endedAt: 2026-10-16T07:12:25Z
+endedAt: 2026-10-16T07:14:16Z
 kind: interactive
 goal: "Glass Box guide: explain the reasons behind each Lesson in plain words"
-status: in-review
-outcome: "PR #2124 open: new Why contract, check and Skill, plus 20 rewritten guide Lessons"
-summary: "Human-instructed: the user asked that Glass Box guide Lessons' \"Why it's built this way\" sections explain the real reasons in newbie-friendly language (ADR links optional), that the template and Skill be adjusted, and that one agent per Lesson do deep research across ADRs, code, PRs, commits and issues. Per the user's preference I asked first; the user chose guide only (20 Lessons), short paragraphs per reason, no PR/issue ids in prose, and one PR. I changed the Lesson contract in layers/glassbox/GLOSSARY.md, replaced the link-only whyLine check in page-checks.ts with an ADR-citation check plus a 12-90 own-words bound on guide pages (drafts exempt until promoted), and updated the glassbox-lesson Skill. 20 research agents (shared checkout, one file each, no git writes) rewrote and re-pinned the Lessons. The two-axis code review then found my own template edits left a contradiction (EVERY-PAGE still banned reasons in In Terrarium), a restated contract, no length bound, jargon and many cross-Lesson repeats; agent-initiated follow-ups added the word cap, an ownership map so a repeated reason becomes a link to the Lesson that owns it, and a 5-agent polish pass. A re-review was clean but for small items I fixed directly. Gate green, 178 tests, two pages screenshotted. Open: whether the \"cost\" sentence (my addition beyond the user's \"problem, then the choice\") is wanted."
+status: completed
+outcome: "PR #2124 merged: new Why contract, check and Skill, plus 20 rewritten guide Lessons"
+summary: "Human-instructed: the user asked that Glass Box guide Lessons' \"Why it's built this way\" sections explain the real reasons in newbie-friendly language (ADR links optional), that the template and Skill be adjusted, and that one agent per Lesson do deep research across ADRs, code, PRs, commits and issues. Per the user's preference I asked first; the user chose guide only (20 Lessons), short paragraphs per reason, no PR/issue ids in prose, and one PR. I changed the Lesson contract in layers/glassbox/GLOSSARY.md, replaced the link-only whyLine check in page-checks.ts with an ADR-citation check plus a 12-90 own-words bound on guide pages (drafts exempt until promoted), and updated the glassbox-lesson Skill. 20 research agents (shared checkout, one file each, no git writes) rewrote and re-pinned the Lessons. The two-axis code review then found my own template edits left a contradiction (EVERY-PAGE still banned reasons in In Terrarium), a restated contract, no length bound, jargon and many cross-Lesson repeats; agent-initiated follow-ups added the word cap, an ownership map so a repeated reason becomes a link to the Lesson that owns it, and a 5-agent polish pass. A re-review was clean but for small items I fixed directly. Gate green, 178 tests, two pages screenshotted; merged on green CI. Open: whether the \"cost\" sentence (my addition beyond the user's \"problem, then the choice\") is wanted."
 prs:
   - "2124"
 docsRead:
@@ -203,20 +203,23 @@ frictions:
   - description: Did not read docs/agents/domain.md before editing layers/glassbox/GLOSSARY.md, though I changed a contract, not a term.
     solution: The trigger names glossary terms; a contract edit may not need it, but checking costs little.
     severity: nit
-durationSec: 2175
+durationSec: 2286
 models:
-  claude-opus-5-5: 211
+  claude-opus-5-5: 225
 toolCounts:
-  Bash: 47
+  Bash: 51
   AskUserQuestion: 1
   Skill: 4
   Edit: 7
   Agent: 29
-  ReadNotifications: 1
+  ReadNotifications: 2
   Read: 2
   ToolSearch: 1
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/glassbox/GLOSSARY.md
   - layers/glassbox/page-checks.ts
