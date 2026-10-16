@@ -17,6 +17,6 @@ describe('glassbox Tenant', async () => {
     const html = await $fetch<string>('/t/glassbox/guide')
     expect(html).not.toContain('Start here')
     expect(html.indexOf('class="directory"')).toBeGreaterThan(0)
-    expect(html.indexOf('class="band"')).toBeGreaterThan(html.indexOf('class="directory"'))
+    expect(html.indexOf('class="walkthroughs"')).toBeGreaterThan(html.indexOf('class="directory"'))
   })
 })

@@ -78,7 +78,7 @@ useSeoMeta({ description: () => landing.value?.description })
       </div>
     </section>
 
-    <section v-if="data?.walkthroughs.length" class="band">
+    <section v-if="data?.walkthroughs.length" class="walkthroughs">
       <h2>Walkthroughs</h2>
       <ul>
         <li v-for="page in data.walkthroughs" :key="page.path">
@@ -147,21 +147,12 @@ section { margin-bottom: 56px; }
 .words dt { font-size: 16px; font-weight: 600; }
 .words dd { margin: 0; font-size: 14px; line-height: 1.5; color: var(--gb-ink-2); }
 
-.band {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  padding: 22px 24px;
-  border-radius: 20px;
-  background: var(--gb-solid);
-  color: var(--gb-solid-ink);
-}
-.band h2 { margin-bottom: 10px; font-size: 18px; }
-.band ul { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px 24px; margin: 0; padding: 0; list-style: none; }
-.band a { display: flex; flex-direction: column; gap: 2px; color: inherit; text-decoration: none; }
-.band a:hover strong { text-decoration: underline; }
-.band strong { font-weight: 600; }
-.band .teaser, .band .folder { color: inherit; opacity: 0.7; }
+/* Plain, not a pane: Walkthroughs aren't ready to stand out (GLOSSARY.md). */
+.walkthroughs { display: flex; flex-direction: column; gap: 4px; }
+.walkthroughs ul { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px 24px; margin: 0 0 6px; padding: 0; list-style: none; }
+.walkthroughs a { display: flex; flex-direction: column; gap: 2px; color: inherit; text-decoration: none; }
+.walkthroughs a:hover strong { color: var(--gb-accent); }
+.walkthroughs strong { font-weight: 600; }
 
 /* Row-first, at most three across, so the cards read in the Subject map's order. */
 .cards {
@@ -197,10 +188,6 @@ section { margin-bottom: 56px; }
 .about { max-width: 720px; font-size: 16px; color: var(--gb-ink-2); }
 .about :deep(p) { margin: 0 0 0.8em; }
 
-/* A light slab glares on a dark page; Article.vue's Try it box does the same. */
-@media (prefers-color-scheme: dark) {
-  .band { border: 1px solid color-mix(in srgb, var(--gb-accent) 25%, transparent); background: var(--gb-tint); color: var(--gb-ink); }
-}
 @media (max-width: 640px) {
   .hero { padding: 28px 0 32px; }
   .lede { font-size: 17px; }

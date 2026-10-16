@@ -30,8 +30,9 @@ Terrarium applies them without reading the source.
   repeats them. Each page is pinned to one `main` commit (`revision`, with its
   date in `revisionDate`), so it reads like a dated edition.
 - **A reference, not a course.** No global reading order: readers use the
-  Subject directory. Lessons lead, on the homepage and the guide's landing;
-  Walkthroughs follow the Subjects while they are still being worked out.
+  Subject directory. Lessons lead, on the homepage, the guide's landing and
+  its sidebar; Walkthroughs follow the Subjects, plainly listed, and none is
+  named a starting point while they are still being worked out.
 - **Two Spaces.** `guide`, at `/t/glassbox/guide`, holds the pages central to
   Terrarium that the work focuses on; `/t/glassbox` redirects there. `drafts`
   holds the rest; each may be improved and moved to the guide. A guide page never links to a draft; a draft may link to
