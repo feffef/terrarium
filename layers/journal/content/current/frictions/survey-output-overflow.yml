@@ -54,3 +54,8 @@ occurrences:
     severity: nit
     description: "audit-skills.ts printed about 478 KB when run bare by the survey subagent, which had to redirect it to a file."
     solution: "PR 2109 notes the redirect in frictions-to-fixes section 4."
+  - session: session_01RfmdPFPhtKo6h6GFwxLeRb
+    date: "2026-10-16"
+    severity: minor
+    description: "session-frictions output was a 670KB JSON file; finding blog-post hits needed an ad-hoc node filter script."
+    solution: "Give the helper a --grep option for keywords."

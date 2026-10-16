@@ -1,0 +1,19 @@
+name: moved-main-stale-base
+summary: >-
+  A diff or squash against a stale local main picked up other sessions' log commits.
+cause: >-
+  Session logs land straight on main (ADR-0009), so origin/main moves during a session; a two-dot diff or a reset --soft onto it shows or deletes files this branch never touched. git-conventions.md already says to anchor on the merge-base. Signals: 'two-dot', 'reset --soft origin/main', an unrelated session log in a diff.
+surface: safe
+status: open
+fixes: []
+occurrences:
+  - session: session_01G6m9SbDppX4TE87Mp3m5Dk
+    date: "2026-10-14"
+    severity: minor
+    description: "git reset --soft origin/main to squash, after origin/main had gained two session logs, made my commit delete them; caught in the name-status check before push"
+    solution: "Squash with reset --soft onto the merge-base, or rebase first; git-conventions could note it"
+  - session: session_01NqN7omu3o4kxoGeQzzSXhK
+    date: "2026-10-15"
+    severity: nit
+    description: "First diffed a worktree with two-dot origin/main..HEAD and saw an unrelated session log file because main had moved"
+    solution: "Use three-dot diffs as git-conventions says; I switched once I saw the stray file"

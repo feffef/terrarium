@@ -27,3 +27,8 @@ occurrences:
     severity: nit
     description: "Two of the three deep-research briefs omitted the rule/doc verdict request CLAUDE.md requires of every subagent brief."
     solution: "Append the verdict line to every brief, including Skill-templated ones."
+  - session: session_01Mf4dUxuWB7WtkC5fVzByH6
+    date: "2026-10-16"
+    severity: nit
+    description: "I forgot the CLAUDE.md verdict request in the two code-review spec briefs for the first PR and used wording from memory in the second; no verdicts came back from them."
+    solution: "Put the verdict line into the code-review Skill's sub-agent briefs, or a shared brief snippet."
