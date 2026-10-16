@@ -821,8 +821,8 @@ export function stitch(authored: AuthoredScratch, trace: MechanicalTrace): Recor
   const editedSet = new Set(trace.filesEdited)
   const notRead = new Set((authored.docsRead ?? []).filter((d) => d.reason === NOT_READ_REASON).map((d) => d.path))
   const detectorErrors = trace.docsReadViaShell.filter((p) => notRead.has(p)).map((p) => ({
-    description: `SHELL-READ-DETECTION false positive: ${p} was credited from shell output, but the session marked it ${NOT_READ_REASON}`,
-    solution: 'Find the crediting command in the transcript and tighten scripts/shell-reads.ts',
+    description: `SHELL-READ-DETECTION: ${p} was credited from shell output, but the session marked it ${NOT_READ_REASON}`,
+    solution: 'Check the transcript for which command (or subagent) read it; only if none did, tighten scripts/shell-reads.ts',
     severity: 'moderate',
   }))
   const docsRead = mergeRefs(
