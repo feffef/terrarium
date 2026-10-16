@@ -1,0 +1,363 @@
+schemaVersion: 1
+session: session_015vXkKcdLwYRQqKKVJ8BLJJ
+startedAt: 2026-10-16T15:41:18Z
+endedAt: 2026-10-16T16:18:56Z
+kind: interactive
+goal: Clear the issue backlog with a full triage sweep and owner grilling
+status: in-review
+outcome: "16 issues triaged; owner settled 4; two PRs open (#2159, #2160); the rest deferred"
+summary: "The owner invoked /clear-backlog and, when asked, chose a full sweep over all 16 open issues (#2073 was left out because it changes guard wiring). The explore workflow gave 13 grill results and 3 blocked: #2137 waits for 2026-10-23, #2075 waits for the owner to create the Routine, and #1551 waits on upstream TS 7.1. I put 13 grilling questions to the owner. The owner rejected Q1's pick: under the \"survey stops recording\" option the system has no way to know a cause was accepted, so they chose an `accepted` status. They chose to split partly accepted clusters, asked for only three simple-to-build questions, and deferred the rest. Owner answers: #2148 `accepted` status plus splitting binding-docs-skipped's late reads into their own accepted cluster; #1786 neutral stitch text, then close; #1745 closed as not planned; #2145 deferred. Human-instructed: the scope, every decision and the builds. Agent-initiated: the triage comments and the label changes that recorded those answers. The build workflow produced #2159 (accepted status and ledger split) and #2160 (shell-read text), both reviewed and gate:scoped green, with no Human-only paths. Deferred and still ready-for-human: #2146, #2145, #2144, #1889, #1689, #1904, #2138, #1552, #1549, #1897."
+prs:
+  - "2159"
+  - "2160"
+docsRead:
+  - path: GLOSSARY-MAP.md
+    reason: session start; Tenant glossary map
+    useful: partly
+  - path: GLOSSARY.md
+    reason: session start; Friction Ledger and Friction terms used in the questions
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: fetch before trusting history; worktree checks
+    useful: partly
+  - path: docs/agents/github-integration.md
+    reason: label updates replace the set; REST via gh api in cloud
+    useful: yes
+  - path: docs/agents/guards.md
+    reason: "confirmed #2073 is a guard/settings change to leave out"
+    useful: yes
+  - path: docs/agents/triage-labels.md
+    reason: which label an owner answer implies
+    useful: yes
+  - path: docs/agents/pr-workflow.md
+    reason: review before first push, verdict before merge
+    useful: yes
+  - path: docs/adr/0022-autonomous-triage-sweep.md
+    reason: what the sweep may label
+    useful: yes
+  - path: .agents/skills/auto-triage/SKILL.md
+    reason: step 1 set resolution and eligibility rule
+    useful: yes
+  - path: .agents/skills/grilling/SKILL.md
+    reason: question format
+    useful: partly
+  - path: .agents/skills/triage/SKILL.md
+    reason: "13 subagent(s): 2 yes, 11 partly, 0 no; e.g. Task brief required it; state machine and outcomes"
+    useful: partly
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: "5 subagent(s): 4 yes, 1 partly, 0 no; e.g. A binding ADR for who merges a major dependency bump."
+    useful: yes
+  - path: docs/adr/0026-gate-workflow-thin-shell.md
+    reason: "3 subagent(s): 2 yes, 1 partly, 0 no; e.g. Binding ADR: the Gate action holds the Node pin and agents can push it."
+    useful: yes
+  - path: docs/adr/0011-poc-self-updating-deploy-container.md
+    reason: "1 subagent(s): 1 yes, 0 partly, 0 no; e.g. Binding ADR for the deploy image. It showed that ADR-0011 no longer names a Node version."
+    useful: yes
+  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
+    reason: "1 subagent(s): 1 yes, 0 partly, 0 no; e.g. The binding ADR. Its 'When to revisit' names #1689, and it would need a rewrite under (b) or (c)."
+    useful: yes
+  - path: docs/adr/0030-adrs-document-a-decision-not-its-history.md
+    reason: "2 subagent(s): 2 yes, 0 partly, 0 no; e.g. Read in full as the binding ADR. Its rejected-alternatives list names #1745."
+    useful: yes
+  - path: CLAUDE.md
+    reason: "8 subagent(s): 3 yes, 5 partly, 0 no; e.g. Loaded as project instructions; 'One home per fact' and 'Keep it short' drove the main findings"
+    useful: partly
+  - path: docs/adr/0020-requester-trust-tiers.md
+    reason: "2 subagent(s): 2 yes, 0 partly, 0 no; e.g. Binding ADR; its bot clause conflicts with trust.ts"
+    useful: yes
+  - path: docs/adr/0021-multi-context-domain-docs.md
+    reason: "1 subagent(s): 1 yes, 0 partly, 0 no; e.g. A binding ADR for retiring ADR-0012. It showed the target is now GLOSSARY.md, not CONTEXT.md."
+    useful: yes
+  - path: docs/adr/0003-agent-operating-model-and-governance.md
+    reason: "1 subagent(s): 1 yes, 0 partly, 0 no; e.g. Read the approval section to confirm creating the Routine is the Trusted user's approval step"
+    useful: yes
+  - path: docs/adr/0027-prune-trials.md
+    reason: "2 subagent(s): 2 yes, 0 partly, 0 no; e.g. Open trial on pr-workflow.md"
+    useful: yes
+  - path: docs/adr/0029-instructions-load-with-the-files-they-govern.md
+    reason: "2 subagent(s): 2 yes, 0 partly, 0 no; e.g. The binding ADR. It already calls the Bash hint a backstop and the Read rule the primary mechanism."
+    useful: yes
+  - path: layers/journal/content/current/frictions/bash-reads-not-read-tool.yml
+    reason: "1 subagent(s): 1 yes, 0 partly, 0 no; e.g. The primary source for the cluster. Its severities and causes shaped the pick."
+    useful: yes
+  - path: docs/agents/issue-tracker.md
+    reason: "1 subagent(s): 0 yes, 0 partly, 1 no; e.g. CLAUDE.md trigger before labelling; nothing here changed the outcome."
+    useful: no
+  - path: docs/adr/0008-self-documentation-tenant-is-a-journal.md
+    reason: "1 subagent(s): 0 yes, 1 partly, 0 no; e.g. Binding ADR for the Friction Ledger (found by grep), read in full."
+    useful: partly
+  - path: .agents/skills/implement/SKILL.md
+    reason: "2 subagent(s): 1 yes, 1 partly, 0 no; e.g. Brief told me to follow it; short and straightforward."
+    useful: yes
+  - path: .claude/skills/tdd (Skill)
+    reason: "1 subagent(s): 1 yes, 0 partly, 0 no; e.g. Required by the brief; red-then-green per seam"
+    useful: yes
+  - path: .agents/skills/code-review/SKILL.md
+    reason: "6 subagent(s): 6 yes, 0 partly, 0 no; e.g. The task said to read it for the Standards axis and the smell baseline"
+    useful: yes
+  - path: .agents/skills/log-session/SKILL.md
+    reason: "2 subagent(s): 2 yes, 0 partly, 0 no; e.g. Read lines 175-186 via sed to confirm the SHELL-READ-DETECTION marker is a shared convention."
+    useful: yes
+  - path: layers/journal/content/current/frictions/unverified-claims-in-drafts.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/frictions/binding-docs-skipped.yml
+    reason: (read before editing)
+  - path: scripts/read-first-hint.ts
+    reason: (no reason given)
+  - path: layers/journal/app/utils/ledger.ts
+    reason: (no reason given)
+  - path: layers/journal/tests/unit/ledger.spec.ts
+    reason: (read before editing)
+  - path: scripts/prune-friction-ledger.ts
+    reason: (no reason given)
+  - path: layers/journal/content/current/frictions/late-read-first-docs.yml
+    reason: (no reason given)
+  - path: layers/journal/tenant.config.ts
+    reason: (no reason given)
+  - path: tests/unit/prune-friction-ledger.spec.ts
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: (no reason given)
+  - path: docs/proposals/1897-workflow-comments-adr-rewrite.md
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/survey-brief.md
+    reason: (no reason given)
+skillsUsed:
+  - name: clear-backlog
+    reason: owner-invoked backlog run
+  - name: close-session
+    reason: PR-open log
+  - name: tdd
+    reason: (no reason given)
+frictions:
+  - description: Grilling Q1 relayed the triage agent's pick (no schema change) without checking how the system would know a cause was accepted; the owner caught it
+    solution: Before relaying a pick, check that it can be carried out with the data that exists; picks that rely on free-text conventions are a warning sign
+    severity: minor
+  - description: Read files with cat/sed/head through Bash instead of the Read tool (CLAUDE.md), including a head -300 that cut guards.md short
+    solution: Use Read for docs; bash-rules-hint loaded the rules anyway
+    severity: nit
+  - description: Labelled issues after reading triage-labels.md but not docs/agents/issue-tracker.md in full, which CLAUDE.md requires before labelling
+    solution: Read issue-tracker.md alongside triage-labels.md before the first label write
+    severity: minor
+durationSec: 2258
+models:
+  claude-opus-5-5: 76
+toolCounts:
+  Bash: 22
+  AskUserQuestion: 1
+  Workflow: 2
+  ToolSearch: 3
+  Read: 1
+  PushNotification: 1
+  mcp__github__add_issue_comment: 3
+  mcp__github__issue_write: 3
+  mcp__github__create_pull_request: 2
+  mcp__claude-code-remote__subscribe_pr_activity: 2
+  Skill: 1
+filesEdited:
+  - layers/journal/tests/unit/ledger.spec.ts
+  - /home/user/terrarium//.claude/worktrees/wf_7b0beb8b-076-1/tests/unit/prune-friction-ledger.spec.ts
+  - layers/journal/content/current/frictions/binding-docs-skipped.yml
+  - tests/unit/session-trace.spec.ts
+rulesLoaded:
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0030.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0026.md
+  - .claude/rules/adr-0008.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0011.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0001.md
+  - .claude/rules/adr-0013.md
+  - .claude/rules/adr-0026.md
+  - .claude/rules/adr-0002.md
+  - .claude/rules/adr-0008.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/adr-0011.md
+  - .claude/rules/guards.md
+docsReadBySubagents:
+  - .agents/skills/triage/SKILL.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - docs/proposals/1897-workflow-comments-adr-rewrite.md
+  - docs/adr/0026-gate-workflow-thin-shell.md
+  - docs/adr/0020-requester-trust-tiers.md
+  - docs/adr/0004-objective-safety-gate.md
+  - docs/adr/0027-prune-trials.md
+  - docs/agents/issue-tracker.md
+  - docs/adr/0008-self-documentation-tenant-is-a-journal.md
+  - docs/adr/0029-instructions-load-with-the-files-they-govern.md
+  - docs/adr/0030-adrs-document-a-decision-not-its-history.md
+  - docs/adr/0011-poc-self-updating-deploy-container.md
+  - docs/adr/0009-session-logs-commit-directly-to-main.md
+  - docs/adr/0003-agent-operating-model-and-governance.md
+  - .agents/skills/implement/SKILL.md
+  - .agents/skills/frictions-to-fixes/survey-brief.md
+  - .agents/skills/code-review/SKILL.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: "Made the build run gate:scoped and code-review before push, and decide merge rights; summary enough, full ADR read by subagents. Subagents: 25 subagent(s): 4 yes, 13 partly, 8 no; e.g. Loaded at session start. A major dependency bump plus human-only schema files means a human merges."
+    useful: yes
+  - path: .claude/rules/adr-0020.md
+    reason: "Confirmed every issue was OWNER-authored so Trusted; summary enough. Subagents: 25 subagent(s): 6 yes, 11 partly, 8 no; e.g. Loaded at session start. The author is the owner, so Trusted."
+    useful: partly
+  - path: .claude/rules/adr-0022.md
+    reason: "Set what the sweep may label; read the full ADR to confirm owner answers make ready-for-agent. Subagents: 13 subagent(s): 13 yes, 0 partly, 0 no; e.g. Loaded with the triage Skill. A major bump with no concrete benefit is a judgment call."
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: "Opened PRs at once after push and subscribed; summary enough. Subagents: 25 subagent(s): 1 yes, 3 partly, 21 no; e.g. Loaded at start; says a Routine set up by a Trusted user is the approval"
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: "Told me to log at PR open and keep logs out of branches; summary enough. Subagents: 25 subagent(s): 1 yes, 5 partly, 19 no; e.g. Loaded at session start. It is the governing ADR's summary and pointed me to the full ADR."
+    useful: partly
+  - path: .claude/rules/adr-0017.md
+    reason: "Every GitHub body got the session header; summary enough. Subagents: 25 subagent(s): 4 yes, 4 partly, 17 no; e.g. Loaded at session start. Used for the comment's provenance header."
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: "Backed the cut-before-add reasoning in the ledger questions; summary enough. Subagents: 25 subagent(s): 5 yes, 6 partly, 14 no; e.g. Loaded at session start; showed that the pr-workflow.md fix collides with an open Prune Trial"
+    useful: partly
+  - path: .claude/rules/adr-0005.md
+    reason: "Confirmed the saved workflows are the Skill code to run by name; summary enough. Subagents: 21 subagent(s): 0 yes, 1 partly, 20 no; e.g. Loaded on the Skill files; confirmed the Skill edit goes through a gated PR"
+    useful: partly
+  - path: .claude/rules/adr-0029.md
+    reason: "Loaded on doc reads; no rule placement decisions this session. Subagents: 22 subagent(s): 2 yes, 2 partly, 18 no; e.g. Loaded through the Bash hint after I grepped the ADR. It is the governing ADR."
+    useful: no
+  - path: .claude/rules/adr-0030.md
+    reason: "Loaded on reading ADRs; no ADR rewrite this session. Subagents: 13 subagent(s): 1 yes, 4 partly, 8 no; e.g. Loaded on reading ADR-0030. It is the decision that supersedes the issue."
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: "Reminded me to check Human-only paths; human-only-paths.ts showed none. Subagents: 13 subagent(s): 3 yes, 7 partly, 3 no; e.g. Loaded when I read the Gate action and ADRs. Confirms they are Human-only files."
+    useful: partly
+  - path: .claude/rules/adr-0026.md
+    reason: "2 subagent(s): 1 yes, 1 partly, 0 no; e.g. Loaded when I read the Gate action. It pointed to the binding ADR."
+    useful: yes
+  - path: .claude/rules/adr-0011.md
+    reason: "1 subagent(s): 0 yes, 1 partly, 0 no; e.g. Loaded when I read the deploy files."
+    useful: partly
+  - path: .claude/rules/adr-0001.md
+    reason: "2 subagent(s): 0 yes, 0 partly, 2 no; e.g. Loaded when I read the deploy files. Not relevant."
+    useful: no
+  - path: .claude/rules/adr-0015.md
+    reason: "3 subagent(s): 0 yes, 0 partly, 3 no; e.g. Loaded on reading Skill files; not relevant"
+    useful: no
+  - path: .claude/rules/adr-0013.md
+    reason: "1 subagent(s): 0 yes, 0 partly, 1 no; e.g. Loaded on reading the tenant config; not relevant"
+    useful: no
+  - path: .claude/rules/guards.md
+    reason: "1 subagent(s): 0 yes, 1 partly, 0 no; e.g. Loaded on reading scripts/read-first-hint.ts. It flagged that hooks follow a roster, which informed option C."
+    useful: partly
+  - path: .claude/rules/adr-0008.md
+    reason: "3 subagent(s): 0 yes, 2 partly, 1 no; e.g. Loaded on reading journal files; full ADR read. Confirmed the Ledger is a derived Inventory, refreshed in place."
+    useful: partly
+  - path: .claude/rules/adr-0002.md
+    reason: "2 subagent(s): 0 yes, 2 partly, 0 no; e.g. Loaded on reading tenant.config.ts; confirmed the schema change would go in the manifest."
+    useful: partly
+  - path: .claude/rules/tenant-layers.md
+    reason: "3 subagent(s): 0 yes, 1 partly, 2 no; e.g. Loaded on layer files; auto-import naming and relative imports"
+    useful: no
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: "2 subagent(s): 0 yes, 0 partly, 2 no; e.g. Loaded on reading journal files; not relevant here."
+    useful: no
+  - path: .claude/rules/adr-0021.md
+    reason: Loaded on the glossary read; no glossary change this session
+    useful: no
+subagents:
+  - type: workflow-subagent
+    task: "triage #2144"
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: "triage #1897"
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: "triage #2138"
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: "triage #1551"
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: "triage #1549"
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: "triage #2148"
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: "triage #2137"
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: "triage #2145"
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: "triage #1786"
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: "triage #1745"
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: "triage #1889"
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: "triage #1904"
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: "triage #1552"
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: "triage #2146"
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: "triage #1689"
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: "triage #2075"
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: fix claude/2148-ledger-accepted-status r1
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: build claude/2148-ledger-accepted-status
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: Spec claude/2148-ledger-accepted-status r1
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: Spec claude/2148-ledger-accepted-status r2
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: Standards claude/1786-neutral-shell-read-advisory r1
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: build claude/1786-neutral-shell-read-advisory
+    model: claude-sonnet-5-5
+  - type: workflow-subagent
+    task: Standards claude/2148-ledger-accepted-status r2
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: Standards claude/2148-ledger-accepted-status r1
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: Spec claude/1786-neutral-shell-read-advisory r1
+    model: claude-opus-5-5
+gitBranch: ccr-79892164-anmlyw
+entrypoint: remote_mobile
+cliVersion: 2.1.301
+landedBy: Stop
