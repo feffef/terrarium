@@ -1,6 +1,6 @@
 // The Friction Ledger page's ranking (layers/journal/app/utils/ledger.ts).
 import { describe, expect, it } from 'vitest'
-import { ledgerPanels, ledgerRefLinks } from '../../app/utils/ledger.ts'
+import { ledgerPanels } from '../../app/utils/ledger.ts'
 import type { FrictionClusterDoc, Severity } from '../../app/types/journal.ts'
 
 function cluster(name: string, severities: Severity[]): FrictionClusterDoc {
@@ -95,7 +95,6 @@ describe('ledgerPanels fixes', () => {
     expect(e!.fixes.map((f) => f.pr)).toEqual([2, 1])
     expect(e!.fixes[0]).toMatchObject({ summary: 'fix 2', url: 'https://github.com/feffef/terrarium/pull/2' })
     expect(e!.fixedPr).toEqual({ number: 2, url: 'https://github.com/feffef/terrarium/pull/2' })
-    expect(e!.refLinks.map((r) => r.label)).toEqual(['issue #5'])
   })
 
   it('falls back to the newest fix, and shows no PR for a cluster that is not fixed or has no fixes', () => {
@@ -106,20 +105,5 @@ describe('ledgerPanels fixes', () => {
     expect(b!.fixes).toHaveLength(1)
     const [c] = ledgerPanels([fixed([])], 'current', new Set(), 'archived').severe
     expect(c).toMatchObject({ fixes: [], fixedPr: undefined })
-    expect(c!.refLinks.map((r) => r.label)).toEqual(['issue #5', 'PR #7'])
-  })
-})
-
-describe('ledgerRefLinks', () => {
-  it('links the first issue and the first PR a ref names, whatever their order', () => {
-    expect(ledgerRefLinks('PRs #1826, #1833; issue #1857 (filed)')).toEqual([
-      { label: 'issue #1857', url: 'https://github.com/feffef/terrarium/issues/1857' },
-      { label: 'PR #1826', url: 'https://github.com/feffef/terrarium/pull/1826' },
-    ])
-    expect(ledgerRefLinks('issues #835, #1651; commit b02ca418')).toEqual([
-      { label: 'issue #835', url: 'https://github.com/feffef/terrarium/issues/835' },
-    ])
-    expect(ledgerRefLinks('docs only')).toEqual([])
-    expect(ledgerRefLinks(undefined)).toEqual([])
   })
 })

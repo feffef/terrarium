@@ -87,7 +87,6 @@ useSeoMeta({ title: () => `${PAGE_TITLE} · journal/${space}` })
                     {{ e.status.replace('-', ' ') }}{{ e.fixedOn ? ` ${e.fixedOn.slice(5)}` : '' }}
                     <template v-if="e.fixedPr">· <a :href="e.fixedPr.url" @click.stop>PR #{{ e.fixedPr.number }}</a></template>
                   </span>
-                  <a v-for="r in e.refLinks" :key="r.url" class="pill ref" :href="r.url" @click.stop>{{ r.label }}</a>
                 </span>
               </summary>
               <p class="cause">{{ e.cause }}</p>
@@ -190,8 +189,6 @@ details[open] .summary::before { content: '▾'; }
 .pill.sev.blocker::before, .dot.blocker { background: var(--jd-sev-blocker); }
 .pill.status.fixed { color: var(--jd-surface); background: var(--jd-accent); border-color: var(--jd-accent); }
 .pill.status.open { color: var(--jd-ink); border-color: var(--jd-ink); }
-.jd-prose .pill.ref { color: var(--jd-accent); }
-.jd-prose .pill.ref:hover { border-color: var(--jd-accent); }
 .cause, .ref-text { margin: 0 0 0.4rem 3.3rem; font-size: 0.8rem; color: var(--jd-muted); overflow-wrap: anywhere; }
 .jd-prose .occ-h { margin: 0.6rem 0 0.1rem 3.3rem; font-size: 0.8rem; color: var(--jd-ink); }
 .occ-intro { margin: 0 0 0.4rem 3.3rem; font-size: 0.75rem; color: var(--jd-muted); }
