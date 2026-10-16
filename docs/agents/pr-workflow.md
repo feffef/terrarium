@@ -4,77 +4,69 @@ Who merges, and what needs a human merge: ADR-0004, with
 `.claude/rules/adr-0004-human-merge.md` for the paths. What a scheduled run may
 change: its Skill (ADR-0003). `main`'s branch-protection state:
 `docs/research/github-branch-protection-vs-autonomous-log-commits.md` (issue #348).
-
-For the `mcp__github__*` tool surface this recipe runs on (retries, polling,
-overflow traps), see [`github-integration.md`](./github-integration.md).
+The `mcp__github__*` tool surface (retries, polling, overflow traps):
+[`github-integration.md`](./github-integration.md).
 
 ## Review before the first push
 
-Pushing is followed at once by opening the PR (ADR-0003), so before a branch's first push, check that no
-PR exists for it yet, run `pnpm gate:scoped`, then run the
+Opening the PR follows the push at once (ADR-0003). So before a branch's first
+push, check that no PR exists for it, run `pnpm gate:scoped`, then run the
 [`code-review`](../../.agents/skills/code-review/SKILL.md) Skill on its
-committed diff against `origin/main`, in the checkout that holds it, and fix
-the findings, even when the Stop hook asks you to push. Skip it only where a Skill's own steps already review the diff in a
-similar way before the push, as `midden-catalogue` §4 does. A session-log
-commit needs none.
+committed diff against `origin/main`, in the checkout that holds it, and fix the
+findings, even when the Stop hook asks you to push. Skip the review only where a
+Skill's own steps already review the diff before the push, as
+`midden-catalogue` §4 does. A session-log commit needs none.
 
 A later push that changes only prose or docs may skip `gate:scoped` and rely on
-CI's gate; run it first for any other change. If
-`gate:scoped` passed but CI failed, check for base drift, then log a
-`major` Friction.
+CI's gate; run it first for any other change. If `gate:scoped` passed but CI
+failed, check for base drift, then log a `major` Friction.
 
 ## Assembling several stories into one integration PR
 
 Before opening an integration PR that stacks several already-reviewed stories,
-run [`code-review`](../../.agents/skills/code-review/SKILL.md) **once more on
-the whole diff**, with the branch's base as its fixed point, not a single
-story's start. Per-story review can't see how independently correct stories
-interact (e.g. both ship the same thing, or stack discounts meant to be
-mutually exclusive; issue #1421). Don't re-review each story or repeat its
-findings.
+run `code-review` **once more on the whole diff**, with the branch's base as its
+fixed point. Per-story review can't see how independently correct stories
+interact (e.g. both ship the same thing; issue #1421). Don't re-review each
+story or repeat its findings.
 
 ## The recipe
 
 1. Run `pnpm gate:scoped` and wait (a prose- or docs-only follow-up push may skip
-   it, above). A red gate never merges.
-2. Run `pnpm exec tsx scripts/check-conflicting-issues.ts --pr <number>` and
-   read any hits. It is advisory: a hit means read that issue (#798), not that
-   there is a conflict.
+   it). A red gate never merges.
+2. Run `pnpm exec tsx scripts/check-conflicting-issues.ts --pr <number>`. It is
+   advisory: a hit means read that issue (#798), not that there is a conflict.
 3. Wait for green checks: `in_progress` is not failing. A clean mergeable state
    says you don't conflict, not that your rationale still holds: if the PR cites
    an ADR or proposal and the base has moved, re-read the cited doc (#889).
-   `scripts/merge-pr.ts` does the polling for you (step 5). When babysitting
-   across a wait of many hours, schedule `mcp__Claude_Code_Remote__send_later`
-   check-ins at about 2h, then 6h, then every ~12h (#929).
+   `scripts/merge-pr.ts` polls for you (step 5). When babysitting across a wait
+   of many hours, schedule `mcp__Claude_Code_Remote__send_later` check-ins at
+   about 2h, then 6h, then every ~12h (#929).
 4. Before merging, post your verdict as a PR comment, even a clean "merging
    as-is": the merge must never be the only trace. End it with a line
    `Reviewed: <sha>` naming the head commit your `code-review` run (or your
    Skill's own review step) covered; after any later push, review the new head
-   and post a new verdict. Use `event=COMMENT` or
-   `add_issue_comment`, never an APPROVE review. APPROVE fails on our own PRs
-   and on a fork PR would fake the human merge authority
-   [`guest-contributions.md`](./guest-contributions.md) reserves (#301, #853).
-5. Land through `scripts/merge-pr.ts <pr-number>`, the only merge path. It
-   refuses without your step-4 verdict naming the PR's head (#1276, #1844),
-   and refuses a fork or
-   Public-authored PR (ADR-0020), a `guest-pipeline` PR (ADR-0023) and one
-   that changes a Human-only path (ADR-0004), each of which a human merges.
-   Never call `enable_pr_auto_merge` (#385).
-6. Escalate a PR that needs a human merge (ADR-0004) or is out of scope to a
-   human instead of merging it.
+   and post a new verdict. Use `event=COMMENT` or `add_issue_comment`, never an
+   APPROVE review: it fails on our own PRs, and on a fork PR it would fake the
+   human merge authority [`guest-contributions.md`](./guest-contributions.md)
+   reserves.
+5. Land through `scripts/merge-pr.ts <pr-number>`, the only merge path; never
+   call `enable_pr_auto_merge`. The script refuses what a human must merge
+   (ADR-0004, ADR-0020, ADR-0023) and a PR without your step-4 verdict
+   naming its head (why: #1276).
+6. Escalate a PR that needs a human merge or is out of scope instead of merging
+   it.
 
 Use a closing keyword (`Closes`/`Fixes`/`Resolves #N`) only for an issue the PR
-completes; it auto-closes everything it names (#326). GitHub matches the
-keyword with an optional colon (`Fixes: #N`), whatever words or quotes
-surround it, so a quoted or negated mention closes too (#2104). Otherwise
-write "relates to #N". `merge-pr.ts` refuses a PR whose closing keywords name
-an open `ready-for-human` issue, and closes any named issue GitHub left open
-(#983); on any other merge path, check each one with `issue_read`.
+completes. GitHub matches it loosely (optional colon, any surrounding words or
+quotes), so a quoted or negated mention closes too (#2104). Otherwise write
+"relates to #N". `merge-pr.ts` refuses a PR whose keywords name an open
+`ready-for-human` issue and closes any named issue GitHub left open; on any
+other merge path, check each one with `issue_read`.
 
 Before pushing a follow-up to an existing PR branch, check with
-`pull_request_read` that it isn't already merged, or the push silently
-recreates the branch. That is fine for a branch restarted after the merge:
-push plainly, without `--force-with-lease`.
+`pull_request_read` that it isn't already merged, or the push silently recreates
+the branch. A branch restarted after the merge is fine: push plainly, without
+`--force-with-lease`.
 
 Reply on a review thread before calling `resolve_review_thread`: a resolved
 thread with no reply leaves no record.
@@ -85,13 +77,10 @@ description.
 
 ## Who merges
 
-The authoring session merges its PR on a green gate unless ADR-0004 names
-an exception. `frictions-to-fixes`, `guest-build` and `midden-catalogue` narrow
-that; their SKILL.md says how.
-
-- Dependabot PRs: leave them for a human. `merge-pr.ts` refuses every one:
-  their author counts as Public, and they change Human-only files
-  (`package.json`, `.github/`). #1889 decides how they should merge.
+The authoring session merges its PR on a green gate unless ADR-0004 names an
+exception. `frictions-to-fixes`, `guest-build` and `midden-catalogue` narrow
+that; their SKILL.md says how. Leave Dependabot PRs for a human: `merge-pr.ts`
+refuses them (#1889 decides how they should merge).
 
 ## Closing a scheduled run's PR
 

@@ -77,26 +77,31 @@ trials:
       line the old page carried would have prevented it. NOT damage: the
       fields guard denying and the session fixing itself from the message.
   - problem: >
-      `blog-post` step 12 (the reply decision), `.agents/skills/blog-post/SKILL.md`:
-      38 lines cut to 23, every rule kept, the "skipped five times" history cut to
-      a pointer to #1626. The rule failed as prose: skipped in 4 live runs, narrowed
-      to "owed" (PR #1602), skipped a fifth time (#1626, read in full via the
-      search subagent's report of it). No guard or test holds it. No trial was
-      judgeable this run (all three land inside their window). The search
-      subagent covered the instruction corpus, the tracker (#1626, #1610, #1859,
-      #1785 read) and guard records; runners-up: close-session-at-PR-open (held
-      now by the read-first hint, #1868) and foreground gate:scoped (3 lines).
-      Net about -15 lines; the mass here was small.
+      `docs/agents/pr-workflow.md` rewritten plainly, 116 lines to 104 (-12): the
+      self-merge discipline (verdict comment, `Reviewed: <sha>`, no auto-merge,
+      closing keywords) cut to the rule and a pointer to `merge-pr.ts`, which now
+      holds it mechanically; issue histories cut. Step numbers and section names
+      kept (cited elsewhere). The rule failed as prose: #1113 then #1276 (read in
+      full via the search subagent), fixed by the `merge-pr.ts` check (#1311).
+      The subagent covered the instruction corpus, guard headers and the tracker;
+      runners-up: provenance-header restatements (about half is skill-specific),
+      backgrounding rules (about 8 lines). `merge-pr.ts` itself is Human-only, so
+      its header was left. Same run judged and deleted the `blog-post` step 12
+      trial (landed 6a8a02ca, judgeable from 2026-10-16T12:30Z per the window script): only
+      nit/minor Frictions, no regression issue. Sonnet probe read SHA a5eaf65b. The mass
+      here was small; no criterion-1 candidate cleared the bar for a larger cut.
     territory:
       paths:
-        - ".agents/skills/blog-post/SKILL.md: step 12 only"
+        - "docs/agents/pr-workflow.md (all of it)"
       keywords:
-        - Decide on a reply
-        - reply decision
-    opened: 2026-10-13
+        - Reviewed:
+        - enable_pr_auto_merge
+        - closing keyword
+    opened: 2026-10-16
     proven: true
     check: >
-      Damage is a major or blocker Friction where a blog-post run merged its post
-      and ended without a reader-dispatched reply decision, or shipped a reply
-      without the second reader, and a line the old step carried would have
-      prevented it. NOT damage: a reader's "none" with a comment on the first PR.
+      Damage is a major or blocker Friction where a session merged without a
+      verdict naming the head, called `enable_pr_auto_merge`, closed an issue its
+      PR only related to, or skipped the pre-push review, and a line the old page
+      carried would have prevented it. NOT damage: `merge-pr.ts` refusing and the
+      session fixing itself from its message.
