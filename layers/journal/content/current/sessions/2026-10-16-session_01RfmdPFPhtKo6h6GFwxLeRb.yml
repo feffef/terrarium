@@ -1,0 +1,164 @@
+schemaVersion: 1
+session: session_01RfmdPFPhtKo6h6GFwxLeRb
+startedAt: 2026-10-16T13:20:56Z
+endedAt: 2026-10-16T13:31:52Z
+kind: autonomous
+goal: "Scheduled prune trial: judge open trials, prune one problem"
+status: in-review
+outcome: "PR #2153 opened: pr-workflow.md plain rewrite (-12), blog-post trial judged and deleted"
+summary: Scheduled /prune-trial run, no human prompt. Judged the blog-post step 12 trial (judgeable per the window script; only nit/minor Frictions, no regression issue) and deleted it. A search subagent ranked failed-prose rules; I chose the self-merge discipline in docs/agents/pr-workflow.md, already held by scripts/merge-pr.ts, and rewrote the doc plainly (116 to 104 lines), keeping step numbers and section names others cite. merge-pr.ts is Human-only so its header history was left. A Sonnet probe pinned to the post-prune SHA answered correctly; gate:scoped was green and code-review found no hard findings. The mass was small; the other two open trials were not yet judgeable. All work was agent-initiated under the scheduled prompt.
+prs:
+  - "2153"
+docsRead:
+  - path: GLOSSARY.md
+    reason: session-start read; Prune Trial and Friction terms
+    useful: yes
+  - path: GLOSSARY-MAP.md
+    reason: session-start read
+    useful: partly
+  - path: docs/agents/git-conventions.md
+    reason: read before first git command; nothing new applied
+    useful: partly
+  - path: docs/agents/github-integration.md
+    reason: read after a guard denied my first search call; fields rule explained it
+    useful: yes
+  - path: docs/agents/pr-workflow.md
+    reason: the prune target and the push/PR procedure
+    useful: yes
+  - path: .agents/skills/writing-for-agents/SKILL.md
+    reason: "Standards subagent: confirmed the cuts fit one-home-per-fact"
+    useful: partly
+  - path: .agents/skills/prune-trial/SKILL.md
+    reason: Spec subagent read it as the spec
+    useful: yes
+  - path: docs/agents/environment-caveats.md
+    reason: "Search subagent: densest issue-cited prose"
+    useful: yes
+  - path: docs/agents/guards.md
+    reason: "Search subagent: guard roster mapping rules to issues"
+    useful: yes
+  - path: docs/agents/verifying-ui-changes.md
+    reason: Search subagent only grepped it; no failed rules
+    useful: no
+  - path: .agents/skills/guest-intake/SKILL.md
+    reason: Search subagent grepped provenance restatements
+    useful: partly
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: Brief rules for the subagents; search subagent also found backgrounding citations
+    useful: yes
+  - path: .agents/skills/visitor-loop/decisions.md
+    reason: Search subagent grepped it; product decisions, not failed rules
+    useful: no
+  - path: .agents/prune-trials.yml
+    reason: (no reason given)
+skillsUsed:
+  - name: prune-trial
+    reason: the run's task
+  - name: dispatch-subagents
+    reason: briefing the search and probe agents
+  - name: code-review
+    reason: pre-push review
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: My first search_issues call omitted fields and the guard denied it; I read github-integration.md only afterwards, though CLAUDE.md says read it before any GitHub operation.
+    solution: Read the doc first; the guard message was enough to recover.
+    severity: nit
+  - description: session-frictions output was a 670KB JSON file; finding blog-post hits needed an ad-hoc node filter script.
+    solution: Give the helper a --grep option for keywords.
+    severity: minor
+  - description: The code-review Spec subagent flagged the blog-post trial deletion as unsupported because its git log -S queries found no landing commit, though the window script showed it landed and was judgeable.
+    solution: Tell review briefs to run prune-trial-window.ts rather than log -S.
+    severity: nit
+durationSec: 655
+models:
+  claude-sonnet-5-5: 65
+toolCounts:
+  Read: 6
+  Bash: 15
+  mcp__github__search_issues: 2
+  Skill: 4
+  Agent: 4
+  Write: 1
+  ToolSearch: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+filesEdited:
+  - docs/agents/pr-workflow.md
+rulesLoaded:
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0004-human-merge.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0005.md
+docsReadBySubagents:
+  - .agents/skills/writing-for-agents/SKILL.md
+  - docs/agents/environment-caveats.md
+  - docs/agents/guards.md
+  - docs/agents/verifying-ui-changes.md
+  - .agents/skills/guest-intake/SKILL.md
+  - .agents/skills/dispatch-subagents/SKILL.md
+  - .agents/skills/visitor-loop/decisions.md
+  - .agents/skills/prune-trial/SKILL.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Told me to run gate:scoped and code-review before the first push; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Log goes to main via close-session; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: "Trial rules: avoid open-trial territory, don't restore pruned text; summary was enough"
+    useful: yes
+  - path: .claude/rules/adr-0020.md
+    reason: Trust tiers; no Public input in this scheduled run, so it did not apply
+    useful: no
+  - path: .claude/rules/adr-0003.md
+    reason: Open the PR and subscribe without asking; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Reminded me to put the session header on the PR body; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0029.md
+    reason: Rule-loading design; context only for this prune of a docs page
+    useful: partly
+  - path: .claude/rules/adr-0030.md
+    reason: ADR style; I touched no ADR, so it did not apply
+    useful: no
+  - path: .claude/rules/adr-0021.md
+    reason: Glossary split; I changed no glossary term, so it did not apply
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Showed merge-pr.ts is Human-only, so I left its header alone
+    useful: yes
+  - path: .claude/rules/adr-0005.md
+    reason: Loaded for a subagent only; reported as ADR rule, out of scope
+    useful: no
+subagents:
+  - type: Explore
+    task: Find failed-prose rule candidates
+    model: sonnet
+  - type: general-purpose
+    task: Probe pruned pr-workflow doc
+    model: sonnet
+  - type: general-purpose
+    task: Standards review of prune diff
+    model: sonnet
+  - type: general-purpose
+    task: Spec review of prune diff
+    model: sonnet
+gitBranch: claude/practical-rubin-hgbqi0
+entrypoint: remote_trigger
+cliVersion: 2.1.301
+trigger: prune-trial
+landedBy: Stop
