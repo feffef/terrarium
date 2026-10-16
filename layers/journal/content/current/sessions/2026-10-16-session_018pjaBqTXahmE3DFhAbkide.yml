@@ -1,0 +1,224 @@
+schemaVersion: 1
+session: session_018pjaBqTXahmE3DFhAbkide
+startedAt: 2026-10-16T21:00:00Z
+endedAt: 2026-10-16T21:52:48Z
+kind: interactive
+goal: Why the double-background Friction cluster stayed unfixed
+status: in-review
+outcome: "PR #2172 makes the guard's deny message say nothing in the call ran; waits for a human merge"
+summary: "The owner asked why frictions-to-fixes never addressed the double-background cluster (11 occurrences, 2026-10-05..16, status open, no ref). I found the guard (PR 1210) already exists and every occurrence is nit/minor and the guard working as designed, and a guard fix can't be dispatched by that Skill; no run recorded why it skipped the cluster. At the owner's request, three background agents read 10 of the 11 transcripts and traced our instructions: every case was a gate launch with a hand-built \"( ... ) &\" subshell, often with edits or a commit chained into the same call, which the deny silently dropped; the CLAUDE.md prose warning was cut by the 2026-10-07 prune trial. The owner then asked what changed around run_in_background (I traced the commits) and whether sleep/Monitor waits rose after 10-07 (session-log tool counts: no clear rise, two outlier sessions). I proposed a small PR; the owner approved it (\"yes\"). Built: the deny message adds the owner-approved \"nothing in this call ran\" sentence and drops the shell-& option; header and guards.md roster fixed; tests updated; code-review findings (paraphrased sentence, an unverified \"you are notified\" claim) fixed; ledger entry set to tracked. A gate.ts exit-line idea was dropped as weak on its own."
+prs:
+  - "2172"
+docsRead:
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: how picks and guard fixes are routed; guard fixes never dispatched
+    useful: yes
+  - path: docs/agents/guards.md
+    reason: guard conventions, roster row to fix, human-attended rule
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: commit -F for backticks, fetch before trusting history
+    useful: partly
+  - path: docs/agents/pr-workflow.md
+    reason: gate and code-review before first push, human-merge escalation
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: search needs fields, read every hit
+    useful: partly
+  - path: scripts/double-background-guard.ts
+    reason: the deny message being changed
+    useful: yes
+  - path: scripts/gate.ts
+    reason: whether the gate prints an end line; found it is Human-only
+    useful: yes
+  - path: GLOSSARY.md
+    reason: grep for Friction Ledger and frictions-to-fixes terms only, not a full read
+    useful: partly
+  - path: .agents/skills/frictions-to-fixes/survey-brief.md
+    reason: "grep of its drop rules: lone low-severity one-offs dropped, recurring nits ranked"
+    useful: yes
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: subagent A read step 10 wording; it asks for the flag alone, so not the source of the &
+    useful: partly
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: subagent C read §3 lines; foreground rule for subagents, no & prompt
+    useful: partly
+  - path: docs/agents/environment-caveats.md
+    reason: subagent C hit it from a grep; nothing relevant
+    useful: no
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: subagent B read §7 to rule it out as a source of the &
+    useful: yes
+  - path: tests/unit/double-background-guard.spec.ts
+    reason: (read before editing)
+  - path: layers/journal/content/current/frictions/double-background.yml
+    reason: (read before editing)
+  - path: layers/journal/content/archived/sessions/2026-10-05-session_01KyKW5E8oFPkSu3a4mCpT25.yml
+    reason: (no reason given)
+  - path: layers/journal/content/archived/sessions/2026-10-07-session_01AQ91ENQEqf8iMne1PrzFiu.yml
+    reason: (no reason given)
+  - path: layers/journal/content/archived/sessions/2026-10-07-session_01FjXKYqhJLRWNRcbDvdhNxQ.yml
+    reason: (no reason given)
+  - path: layers/journal/content/archived/sessions/2026-10-08-session_01449u16G5rFweMPGkKZe9Tv.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-10-session_01KRLFYUD31NaEVTs4Qs1Tzj.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-11-session_01Tjsmye34hk57NtioyWQG4h.yml
+    reason: (no reason given)
+  - path: scripts/subagent-background-guard.ts
+    reason: (no reason given)
+  - path: scripts/double-background-guard.sh
+    reason: (no reason given)
+  - path: .agents/prune-trials.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-12-session_01Dz52W6wWZWUgKwPtdxabzJ.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-13-session_01MZBQ3PanPQVwCutYuAmbUp.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-14-session_01Dfw9sJon2e4UsaVoiCLhSJ.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-15-session_019e468BFBTvDPXZuGzLMAL7.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-16-session_01N9bwDKW51kMS6WJvK2nfSU.yml
+    reason: (no reason given)
+skillsUsed:
+  - name: code-review
+    reason: required before first push; found the paraphrased approved sentence
+  - name: close-session
+    reason: PR-open log
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Skipped the session-start full reads of GLOSSARY-MAP.md and GLOSSARY.md; only grepped GLOSSARY.md for two terms.
+    solution: Read both at session start as CLAUDE.md says; a hook could flag a first turn without them.
+    severity: nit
+  - description: Read git-conventions.md and github-integration.md only after the read-first hint fired on my first git log and GitHub search.
+    solution: Read them before the first git or GitHub call; the hint caught it and the calls were already correct.
+    severity: nit
+  - description: Recommended fixes without first grepping docs/adr for the guard and gate, as CLAUDE.md asks before a recommendation.
+    solution: Run grep -l on the paths in docs/adr before proposing a change.
+    severity: minor
+  - description: Told the owner the gate.ts change was agent-mergeable; gate.ts is on the Human-only list. Caught and corrected one turn later.
+    solution: Check the human-merge rule's paths before stating who may merge a file.
+    severity: minor
+  - description: Did not invoke close-session after the earlier answer-only turns, as CLAUDE.md asks when a session only answers a question.
+    solution: Log after the first answered question; re-invoking later is cheap.
+    severity: nit
+  - description: First draft of the deny message paraphrased the owner-approved sentence and added an unverified 'you are notified' claim, false for subagents; code-review caught both.
+    solution: Paste approved wording verbatim and add nothing the owner did not approve.
+    severity: minor
+  - description: One session-reading subagent skipped a 3.6 h transcript because paging list_events was too slow, so one occurrence came from its log only.
+    solution: list_events with kinds filtering still pages the whole transcript; a search-by-tool filter would help for long sessions.
+    severity: nit
+  - description: frictions-to-fixes runs left an 11-occurrence cluster open with no recorded reason, so the owner had to ask why.
+    solution: Have the ledger PR description name each high-occurrence open cluster it skipped and why.
+    severity: minor
+durationSec: 3168
+models:
+  claude-opus-5-5: 140
+toolCounts:
+  Bash: 40
+  Read: 9
+  ToolSearch: 2
+  mcp__github__search_issues: 1
+  mcp__github__search_pull_requests: 1
+  Agent: 5
+  Edit: 8
+  Skill: 3
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+  Write: 1
+filesEdited:
+  - scripts/double-background-guard.ts
+  - tests/unit/double-background-guard.spec.ts
+  - docs/agents/guards.md
+  - layers/journal/content/current/frictions/double-background.yml
+rulesLoaded:
+  - .claude/rules/adr-0008.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/guards.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0026.md
+  - .claude/rules/adr-0030.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0012.md
+docsReadBySubagents:
+  - .agents/skills/blog-post/SKILL.md
+  - .agents/skills/dispatch-subagents/SKILL.md
+  - docs/agents/environment-caveats.md
+  - .agents/skills/audit-docs/SKILL.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Made me run gate:scoped and code-review before the first push despite two Stop-hook nags; summary was enough.
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Told me to log at PR open; summary enough, the ledger edit stayed in the PR and the log goes to main.
+    useful: partly
+  - path: .claude/rules/adr-0003.md
+    reason: Made me open the PR right after the push and subscribe; owner approval was explicit in chat, so no full read.
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Gave the provenance header for the PR body and the commit trailer I checked; summary was enough.
+    useful: yes
+  - path: .claude/rules/adr-0008.md
+    reason: Confirmed the Friction Ledger is a derived Inventory refreshed in place, so editing its status was fine.
+    useful: partly
+  - path: .claude/rules/adr-0021.md
+    reason: Loaded on a glossary grep; no glossary term was added or changed.
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Showed gate.ts and the guard are Human-only, correcting my claim and marking the PR for a human merge.
+    useful: yes
+  - path: .claude/rules/guards.md
+    reason: Pointed to guards.md, whose roster row I fixed and whose human-attended rule explained the routing.
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: Made me check prune-trials.yml; no open trial covers backgrounding, so rewording the guard was allowed.
+    useful: yes
+  - path: .claude/rules/adr-0015.md
+    reason: Loaded on reading a Skill; no pack Skill or Inventory entry was involved.
+    useful: no
+  - path: .claude/rules/adr-0005.md
+    reason: Loaded on reading frictions-to-fixes; no Skill was changed.
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: Loaded on docs reads; no instruction placement was decided.
+    useful: no
+  - path: .claude/rules/adr-0026.md
+    reason: Loaded on reading gate.ts; confirmed gate steps were not being changed, so parity tests stayed untouched.
+    useful: partly
+  - path: .claude/rules/adr-0030.md
+    reason: Loaded on reading files; no ADR was edited.
+    useful: no
+  - path: .claude/rules/adr-0012.md
+    reason: Subagents loaded it with the blog-post Skill and reported it did not apply to a read-only check.
+    useful: no
+subagents:
+  - type: general-purpose
+    task: Analyze double-background sessions A
+  - type: general-purpose
+    task: Analyze double-background sessions B
+  - type: general-purpose
+    task: Trace instructions prompting trailing &
+  - type: general-purpose
+    task: Standards review of guard diff
+  - type: general-purpose
+    task: Spec review of guard diff
+gitBranch: claude/kind-brown-f0ni4l
+entrypoint: remote
+cliVersion: 2.1.302
+learnings:
+  - A PreToolUse deny blocks the whole Bash call, so commands chained before a trailing & never run; agents rarely realise it from the deny text alone.
+ideas:
+  - "frictions-to-fixes survey: require a one-line written reason in the ledger PR for every open cluster with 5+ occurrences it does not pick, so a long-running skip like double-background is visible without a human asking."
+landedBy: Stop
