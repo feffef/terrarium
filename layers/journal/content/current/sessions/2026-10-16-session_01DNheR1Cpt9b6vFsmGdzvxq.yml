@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01DNheR1Cpt9b6vFsmGdzvxq
 startedAt: 2026-10-16T07:14:04Z
-endedAt: 2026-10-16T10:03:29Z
+endedAt: 2026-10-16T10:22:23Z
 kind: delegated
 goal: Explain the occurrence list on the Friction Ledger
 status: completed
-outcome: Ledger heading, archived goals, solutions, scrolling and rankings merged (2125 to 2132)
-summary: "Ten human prompts. (1) Add a heading explaining the Friction Ledger's occurrence list (PR 2125). (2) The text after each date arrow was unexplained: after one clarifying question the user asked to show a hint for empty goals (archived sessions), read archived sessions too, and list proposed solutions as a bullet section (PR 2126). (3) Cap the lists at about 20 lines with inner scrolling, add an expand cue, and rank every cluster in both lists, placing it where it ranks higher, with \"most severe\" covering the two highest severities that exist (also PR 2126). (4) I had put the scroll on the cluster lists; the user meant each cluster's sessions and solutions lists, fixed in PR 2127 (my misreading of \"the lists\"; I had flagged the assumption in my reply). (5) Record the merged fix PRs per Friction Ledger cluster as structured data, show them as a third list and in the fixed pill, backfill with a subagent, and extend frictions-to-fixes (PR 2128). I used three parallel read-only subagents (about 18 clusters each) instead of one, checked every PR number and date against merge commits, and dropped three entries that did not fit; I added a per-fix date and a glossary phrase unasked and said so. (6) Reword the list so a merged PR is shown as an attempt to fix, not proof it worked (PR 2129). (7) The stop-hook-nag cluster showed PR pills but no fixed pill: I explained it is open on purpose and asked what to show; the user chose pills only from structured data, so the pills parsed from the free-text ref were removed (PR 2131). (8) Show each friction with its proposed solution under one headline, label the refs, and list every PR in the fixed pill (PR 2132). (9, 10) Two questions answered in chat without changes: why fewer proposed solutions than sessions (only 125 of 566 occurrences match exactly one friction of the session's severity; the rest are ambiguous because clusters store no friction index) and why the clear-backlog cluster has 11 PRs (a broad cluster for a new skill revised over days, plus batch PRs). I recommended storing the friction on each occurrence. Everything else (gate, review, pushes, PRs, merges) was agent-initiated follow-through. Two judgement calls: a solution is shown only when the session has exactly one friction of the occurrence's severity, because clusters store no link to the exact friction; and I read \"higher ranking\" as the smaller position number, ties to most severe. Both are stated in the PR. The user's first-message example heading said \"proposed solutions\", which the list did not hold, so I left it out then. Code review was done inline, not with two sub-agents."
+outcome: Ledger heading, archived goals, solutions, scrolling and rankings merged (2125 to 2133)
+summary: "Thirteen human prompts. (1) Add a heading explaining the Friction Ledger's occurrence list (PR 2125). (2) The text after each date arrow was unexplained: after one clarifying question the user asked to show a hint for empty goals (archived sessions), read archived sessions too, and list proposed solutions as a bullet section (PR 2126). (3) Cap the lists at about 20 lines with inner scrolling, add an expand cue, and rank every cluster in both lists, placing it where it ranks higher, with \"most severe\" covering the two highest severities that exist (also PR 2126). (4) I had put the scroll on the cluster lists; the user meant each cluster's sessions and solutions lists, fixed in PR 2127 (my misreading of \"the lists\"; I had flagged the assumption in my reply). (5) Record the merged fix PRs per Friction Ledger cluster as structured data, show them as a third list and in the fixed pill, backfill with a subagent, and extend frictions-to-fixes (PR 2128). I used three parallel read-only subagents (about 18 clusters each) instead of one, checked every PR number and date against merge commits, and dropped three entries that did not fit; I added a per-fix date and a glossary phrase unasked and said so. (6) Reword the list so a merged PR is shown as an attempt to fix, not proof it worked (PR 2129). (7) The stop-hook-nag cluster showed PR pills but no fixed pill: I explained it is open on purpose and asked what to show; the user chose pills only from structured data, so the pills parsed from the free-text ref were removed (PR 2131). (8) Show each friction with its proposed solution under one headline, label the refs, and list every PR in the fixed pill (PR 2132). (9, 10) Two questions answered in chat without changes: why fewer proposed solutions than sessions (only 125 of 566 occurrences match exactly one friction of the session's severity; the rest are ambiguous because clusters store no friction index) and why the clear-backlog cluster has 11 PRs (a broad cluster for a new skill revised over days, plus batch PRs). I recommended storing the friction on each occurrence. (11-13) Store the friction on each occurrence (first as an index, then as the full text on the user's suggestion so the skill can re-cluster, PR 2133), plus a question about how the skill and scripts must change, answered in chat with a prioritised list and no code. The 441 ambiguous occurrences were matched by five sonnet subagents and checked by two blind opus subagents (127 of 134 agreed); 10 occurrences were left without text. Everything else (gate, review, pushes, PRs, merges) was agent-initiated follow-through. Two judgement calls: a solution is shown only when the session has exactly one friction of the occurrence's severity, because clusters store no link to the exact friction; and I read \"higher ranking\" as the smaller position number, ties to most severe. Both are stated in the PR. The user's first-message example heading said \"proposed solutions\", which the list did not hold, so I left it out then. Code review was done inline, not with two sub-agents."
 prs:
   - "2125"
   - "2126"
@@ -15,6 +15,7 @@ prs:
   - "2129"
   - "2131"
   - "2132"
+  - "2133"
 docsRead:
   - path: GLOSSARY.md
     reason: Friction Ledger term
@@ -65,27 +66,30 @@ frictions:
   - description: The Stop hook asked to push a half-built branch; I committed locally and held the push for the gate and review, as ADR-0004 says.
     solution: Let the hook skip a branch whose gate has not run, or say so in its message.
     severity: nit
-durationSec: 10164
+  - description: The first backfill plan used an index, the user then preferred full text; the index commits and schema were built and thrown away within one PR.
+    solution: When a data-shape choice is cheap to ask about, ask it before building; I only answered with a size comparison afterwards.
+    severity: nit
+durationSec: 11299
 models:
-  claude-sonnet-5-5: 362
+  claude-sonnet-5-5: 484
 toolCounts:
   Read: 13
   Grep: 6
   Glob: 2
   Edit: 14
-  Bash: 99
+  Bash: 136
   Skill: 4
   ToolSearch: 1
-  mcp__github__create_pull_request: 7
-  mcp__claude-code-remote__subscribe_pr_activity: 7
-  ReadNotifications: 22
-  mcp__github__pull_request_read: 14
-  mcp__github__add_issue_comment: 7
-  mcp__claude-code-remote__unsubscribe_pr_activity: 7
+  mcp__github__create_pull_request: 8
+  mcp__claude-code-remote__subscribe_pr_activity: 8
+  ReadNotifications: 26
+  mcp__github__pull_request_read: 16
+  mcp__github__add_issue_comment: 8
+  mcp__claude-code-remote__unsubscribe_pr_activity: 8
   AskUserQuestion: 2
-  mcp__github__update_pull_request: 2
-  Agent: 3
-  Write: 3
+  mcp__github__update_pull_request: 3
+  Agent: 10
+  Write: 5
 filesEdited:
   - layers/journal/app/pages/t/journal/[space]/frictions.vue
   - layers/journal/app/utils/ledger.ts
@@ -159,6 +163,27 @@ subagents:
   - type: general-purpose
     task: Backfill fixes, chunk 2
     model: sonnet
+  - type: general-purpose
+    task: Match frictions, part 0
+    model: sonnet
+  - type: general-purpose
+    task: Match frictions, part 1
+    model: sonnet
+  - type: general-purpose
+    task: Match frictions, part 2
+    model: sonnet
+  - type: general-purpose
+    task: Match frictions, part 3
+    model: sonnet
+  - type: general-purpose
+    task: Match frictions, part 4
+    model: sonnet
+  - type: general-purpose
+    task: Verify matches, part 0
+    model: opus
+  - type: general-purpose
+    task: Verify matches, part 1
+    model: opus
 gitBranch: claude/brave-knuth-ajti5d
 entrypoint: remote
 cliVersion: 2.1.301
