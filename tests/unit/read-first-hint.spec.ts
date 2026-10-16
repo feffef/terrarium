@@ -16,7 +16,7 @@ const bashDocs = (command: string) => triggeredDocs('Bash', command).map((r) => 
 
 describe('the registry', () => {
   it('names docs that exist, under a trigger CLAUDE.md states', () => {
-    const claude = readFileSync(join(repo, 'CLAUDE.md'), 'utf8').replace(/\s+/g, ' ')
+    const claude = readFileSync(join(repo, 'CLAUDE.md'), 'utf8').replace(/\*\*/g, '').replace(/\s+/g, ' ')
     for (const r of READ_FIRST) {
       expect(existsSync(join(repo, r.doc)), r.doc).toBe(true)
       expect(claude, r.doc).toContain(r.doc)
@@ -47,6 +47,18 @@ describe('triggeredDocs()', () => {
       ['gh api repos/x/y', [GH]],
       ['git status && gh pr view 1', [GH]],
       ['git push && gh pr create', [GIT, GH]],
+    ]
+    for (const [command, docs] of cases) expect(bashDocs(command), command).toEqual(docs)
+  })
+
+  it('matches a screenshot script run directly or through tsx, not preview stop', () => {
+    const UI = 'docs/agents/verifying-ui-changes.md'
+    const cases: [string, string[]][] = [
+      ['scripts/preview.ts shot /x', [UI]],
+      ['pnpm exec tsx scripts/preview.ts shot --width 390 /x', [UI]],
+      ['node_modules/.bin/tsx scripts/screenshot.ts /x', [UI]],
+      ['scripts/preview.ts stop 123', []],
+      ['cat scripts/preview.ts', []],
     ]
     for (const [command, docs] of cases) expect(bashDocs(command), command).toEqual(docs)
   })
